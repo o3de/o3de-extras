@@ -8,5 +8,10 @@ set(FILES
     Source/Clock/SimulationClock.h
     Source/ROS2ModuleInterface.h
     Source/ROS2SystemComponent.cpp
-    Source/ROS2SystemComponent.h 
+    Source/ROS2SystemComponent.h
+    Source/ROS2LidarSensorComponent.cpp
+    Source/ROS2LidarSensorComponent.h
+    Source/LidarRaycaster.cpp
+    Source/LidarRaycaster.h
+    Source/LidarTemplate.h
 )
