@@ -39,5 +39,5 @@ void LidarRaycaster::PerformRaycast(const AZ::Vector3 &start, const AZStd::vecto
             }
         }
     }
-    else { /* TODO - handle error */ }
+    else { AZ_Warning("LidarRaycaster", false, "No valid scene handle"); }
 }

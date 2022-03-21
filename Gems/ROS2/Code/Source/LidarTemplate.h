@@ -3,6 +3,8 @@
 #include <map>
 #include <AzCore/Math/Vector3.h>
 #include <AzCore/Math/Quaternion.h>
+#include <AzCore/Math/Matrix4x4.h>
+#include <AzCore/Utils/Utils.h>
 
 namespace ROS2
 {
@@ -40,8 +42,8 @@ namespace ROS2
                     .m_name = "SickMRS6000",
                     .m_minHAngle = -120.0f,
                     .m_maxHAngle = 120.0f,
-                    .m_minVAngle = 3.5f,
-                    .m_maxVAngle = -1.5f,
+                    .m_minVAngle = 35.0f, //Test
+                    .m_maxVAngle = -35.0f, //Test
                     .m_layers = 24,
                     .m_numberOfIncrements = 924,
                     .m_maxRange = 100.0f
@@ -77,10 +79,10 @@ namespace ROS2
                 {
                     float angle = lidarTemplate.m_minVAngle + (float)layer * vertIncrement;
                     float azimuth = lidarTemplate.m_minHAngle + incr * azimuthIncrAngle;
-                    AZ::Vector3 angles(angle, azimuth, 0);
+                    AZ::Vector3 angles(0, angle, azimuth);
                     AZ::Vector3 normalizedForward = AZ::Vector3::CreateAxisX(1.0f);
-                    auto rotation = AZ::Quaternion::CreateFromEulerAnglesDegrees(angles);
-                    directions.push_back(rotation.TransformVector(normalizedForward));
+                    auto quat = AZ::Quaternion::CreateFromEulerAnglesDegrees(angles);
+                    directions.push_back(quat.TransformVector(normalizedForward));
                 }
             }
         }

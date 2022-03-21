@@ -63,18 +63,22 @@ void ROS2LidarSensorComponent::OnTick([[maybe_unused]] float deltaTime, [[maybe_
     {   // Frequency higher than possible, not catching up, just keep going with each frame.
         elapsed = 0;
     }
-    //const Az::Vector3 &start, const AZStd::vector<Az::Vector3> &directions,
-    //                   float distance, AZStd::vector<Az::Vector3> &results
 
     AZStd::vector<AZ::Vector3> directions;
     AZStd::vector<AZ::Vector3> results;
     float distance = LidarTemplateUtils::GetTemplate(m_lidarModel).m_maxRange;
     LidarTemplateUtils::PopulateRayDirections(m_lidarModel, directions);
-    AZ::Vector3 start = AZ::Vector3::CreateZero(); // TODO - get transform
+    //AZ_TracePrintf("Lidar Sensor Component", "Populated with %d", int(directions.size()));
+    AZ::Vector3 start(0.0f, 0.0f, 5.0f); // TODO - get transform
     m_lidarRaycaster.PerformRaycast(start, directions, distance, results);
 
     if (results.size() < 1)
+    {
+        AZ_TracePrintf("Lidar Sensor Component", "No results from raycast");
         return;
+    }
+
+    //AZ_TracePrintf("Lidar Sensor Component", "Raycast done, results ready");
 
     auto message = sensor_msgs::msg::PointCloud2();
     message.header.frame_id = m_frameName.data();
