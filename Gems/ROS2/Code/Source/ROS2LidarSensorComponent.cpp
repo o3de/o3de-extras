@@ -64,10 +64,9 @@ void ROS2LidarSensorComponent::OnTick([[maybe_unused]] float deltaTime, [[maybe_
         elapsed = 0;
     }
 
-    AZStd::vector<AZ::Vector3> directions;
     AZStd::vector<AZ::Vector3> results;
     float distance = LidarTemplateUtils::GetTemplate(m_lidarModel).m_maxRange;
-    LidarTemplateUtils::PopulateRayDirections(m_lidarModel, directions);
+    const auto directions = LidarTemplateUtils::PopulateRayDirections(m_lidarModel);
     //AZ_TracePrintf("Lidar Sensor Component", "Populated with %d", int(directions.size()));
     AZ::Vector3 start(0.0f, 0.0f, 5.0f); // TODO - get transform
     m_lidarRaycaster.PerformRaycast(start, directions, distance, results);

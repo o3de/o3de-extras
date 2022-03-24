@@ -67,9 +67,8 @@ namespace ROS2
         }
 
         // TODO - lidars in reality do not have uniform distributions - populating needs to be defined per model
-        static void PopulateRayDirections(LidarTemplate::LidarModel model, AZStd::vector<AZ::Vector3> &directions)
+        static AZStd::vector<AZ::Vector3> PopulateRayDirections(LidarTemplate::LidarModel model)
         {
-            directions.clear();
             auto lidarTemplate = GetTemplate(model);
 
             const float minVertAngle = AZ::DegToRad(lidarTemplate.m_minVAngle);
@@ -81,6 +80,8 @@ namespace ROS2
                 / static_cast<float>(lidarTemplate.m_layers);
             const float horizontalStep = (maxHorAngle - minHorAngle)
                 / static_cast<float>(lidarTemplate.m_numberOfIncrements);
+
+            AZStd::vector<AZ::Vector3> directions;
 
             for (int incr = 0; incr < lidarTemplate.m_numberOfIncrements; incr++)
             {
@@ -97,6 +98,8 @@ namespace ROS2
                     directions.push_back(AZ::Vector3(x, y, z));
                 }
             }
+
+            return directions;
         }
     };
 }
