@@ -6,10 +6,6 @@
 
 using namespace ROS2;
 
-LidarRaycaster::LidarRaycaster()
-{
-}
-
 // A simplified, non-optimized first version. TODO - generalize results (fields)
 AZStd::vector<AZ::Vector3> LidarRaycaster::PerformRaycast(const AZ::Vector3 &start, const AZStd::vector<AZ::Vector3> &directions, float distance)
 {

@@ -5,9 +5,7 @@ using namespace ROS2;
 
 void ROS2LidarSensorComponent::Init()
 {
-    //ROS2Requests* requests = ROS2Interface::Get();
     auto ros2_node = ROS2Interface::Get()->GetNode();
-    //EBUS_EVENT_RESULT(ros2_node, ROS2RequestBus, GetNode); // ...in case of no response
     m_pointCloudPublisher = ros2_node->create_publisher<sensor_msgs::msg::PointCloud2>("point_cloud", 10);
 }
 
@@ -79,19 +77,19 @@ void ROS2LidarSensorComponent::OnTick([[maybe_unused]] float deltaTime, [[maybe_
         AZ_TracePrintf("Lidar Sensor Component", "No results from raycast");
         return;
     }
-
     //AZ_TracePrintf("Lidar Sensor Component", "Raycast done, results ready");
 
     auto message = sensor_msgs::msg::PointCloud2();
     message.header.frame_id = m_frameName.data();
     message.height = 1;
     message.width = results.size();
-    message.point_step = sizeof(AZ::Vector3); // TODO - check
+    message.point_step = sizeof(AZ::Vector3); // TODO - Point Fields can be custom
     message.row_step = message.width * message.point_step;
 
+    // TODO - a list of supported fields should be returned by lidar implementation
     std::vector<std::string> point_field_names = { "x", "y", "z"};
     for (int i = 0; i < point_field_names.size(); i++)
-    {
+    {   // TODO - placeholder impl
         sensor_msgs::msg::PointField pf;
         pf.name = point_field_names[i];
         pf.offset = i * 4;
