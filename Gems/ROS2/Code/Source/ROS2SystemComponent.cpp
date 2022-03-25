@@ -6,6 +6,7 @@
  *
  */
 #include <ROS2SystemComponent.h>
+
 #include <AzCore/Serialization/SerializeContext.h>
 #include <AzCore/Serialization/EditContext.h>
 #include <AzCore/Serialization/EditContextConstants.inl>
@@ -109,4 +110,5 @@ namespace ROS2
             m_executor->spin_some();
         }
     }
+
 } // namespace ROS2
