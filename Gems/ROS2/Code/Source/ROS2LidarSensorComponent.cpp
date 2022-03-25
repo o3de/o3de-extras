@@ -1,3 +1,4 @@
+#include <AzCore/Component/Entity.h>
 #include "ROS2LidarSensorComponent.h"
 
 using namespace ROS2;
@@ -15,6 +16,8 @@ void ROS2LidarSensorComponent::Activate()
     // TODO - add range validation (Attributes?)
     m_frameTime = m_hz == 0 ? 1 : 1 / m_hz;
     AZ::TickBus::Handler::BusConnect();
+    entityTransform = GetEntity()->FindComponent<AzFramework::TransformComponent>();
+
 }
 
 void ROS2LidarSensorComponent::Deactivate()
@@ -64,14 +67,14 @@ void ROS2LidarSensorComponent::OnTick([[maybe_unused]] float deltaTime, [[maybe_
         elapsed = 0;
     }
 
-    AZStd::vector<AZ::Vector3> results;
+    ;
     float distance = LidarTemplateUtils::GetTemplate(m_lidarModel).m_maxRange;
     const auto directions = LidarTemplateUtils::PopulateRayDirections(m_lidarModel);
-    //AZ_TracePrintf("Lidar Sensor Component", "Populated with %d", int(directions.size()));
-    AZ::Vector3 start(0.0f, 0.0f, 5.0f); // TODO - get transform
-    m_lidarRaycaster.PerformRaycast(start, directions, distance, results);
+    AZ::Vector3 start = entityTransform->GetWorldTM().GetTranslation();
+    start.SetZ(start.GetZ() + 1.0f);
+    AZStd::vector<AZ::Vector3> results = m_lidarRaycaster.PerformRaycast(start, directions, distance);
 
-    if (results.size() < 1)
+    if (results.empty())
     {
         AZ_TracePrintf("Lidar Sensor Component", "No results from raycast");
         return;

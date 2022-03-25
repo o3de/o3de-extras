@@ -1,6 +1,7 @@
 #pragma once
 
 #include <AzCore/Component/Component.h>
+#include <AzFramework/Components/TransformComponent.h>
 
 #include <memory>
 #include "rclcpp/rclcpp.hpp"
@@ -40,5 +41,6 @@ namespace ROS2
         float m_frameTime;
         LidarRaycaster m_lidarRaycaster;
         rclcpp::Publisher<sensor_msgs::msg::PointCloud2>::SharedPtr m_pointCloudPublisher;
+        AzFramework::TransformComponent* entityTransform;
     };
 }  // namespace ROS2

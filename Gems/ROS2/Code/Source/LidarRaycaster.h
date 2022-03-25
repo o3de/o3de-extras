@@ -8,7 +8,6 @@ namespace ROS2
     {
     public:
         LidarRaycaster();
-        void PerformRaycast(const AZ::Vector3 &start, const AZStd::vector<AZ::Vector3> &directions,
-                       float distance, AZStd::vector<AZ::Vector3> &results);
+        AZStd::vector<AZ::Vector3> PerformRaycast(const AZ::Vector3 &start, const AZStd::vector<AZ::Vector3> &directions, float distance);
     };
 }  // namespace ROS2

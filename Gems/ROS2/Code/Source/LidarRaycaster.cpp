@@ -11,10 +11,9 @@ LidarRaycaster::LidarRaycaster()
 }
 
 // A simplified, non-optimized first version. TODO - generalize results (fields)
-void LidarRaycaster::PerformRaycast(const AZ::Vector3 &start, const AZStd::vector<AZ::Vector3> &directions,
-                                    float distance, AZStd::vector<AZ::Vector3> &results)
+AZStd::vector<AZ::Vector3> LidarRaycaster::PerformRaycast(const AZ::Vector3 &start, const AZStd::vector<AZ::Vector3> &directions, float distance)
 {
-    results.clear();
+    AZStd::vector<AZ::Vector3> results;
     AzPhysics::SceneQueryRequests requests;
     for (const AZ::Vector3 &direction : directions)
     {   // NOTE - performance-wise, consider reusing requests
@@ -27,17 +26,19 @@ void LidarRaycaster::PerformRaycast(const AZ::Vector3 &start, const AZStd::vecto
     }
 
     auto* sceneInterface = AZ::Interface<AzPhysics::SceneInterface>::Get();
-    if (AzPhysics::SceneHandle sceneHandle = sceneInterface->GetSceneHandle(AzPhysics::DefaultPhysicsSceneName);
-                sceneHandle != AzPhysics::InvalidSceneHandle)
+    AzPhysics::SceneHandle sceneHandle = sceneInterface->GetSceneHandle(AzPhysics::DefaultPhysicsSceneName);
+    if (sceneHandle == AzPhysics::InvalidSceneHandle)
     {
-        auto requestResults = sceneInterface->QuerySceneBatch(sceneHandle, requests);
-        for (const auto &requestResult : requestResults)
-        {   // TODO - check flag for SceneQuery::ResultFlags::Position
-            if (requestResult.m_hits.size() > 0)
-            {
-                results.push_back(requestResult.m_hits[0].m_position);
-            }
+        AZ_Warning("LidarRaycaster", false, "No valid scene handle");
+        return results;
+    }
+    auto requestResults = sceneInterface->QuerySceneBatch(sceneHandle, requests);
+    for (const auto &requestResult : requestResults)
+    {   // TODO - check flag for SceneQuery::ResultFlags::Position
+        if (requestResult.m_hits.size() > 0)
+        {
+            results.push_back(requestResult.m_hits[0].m_position);
         }
     }
-    else { AZ_Warning("LidarRaycaster", false, "No valid scene handle"); }
+    return results;
 }
