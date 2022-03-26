@@ -1,5 +1,10 @@
-#include <AzCore/Component/Entity.h>
 #include "ROS2LidarSensorComponent.h"
+#include "ROS2/ROS2Bus.h"
+
+#include <AzCore/Component/Entity.h>
+#include <AzCore/Serialization/SerializeContext.h>
+#include <AzCore/Serialization/EditContext.h>
+#include <AzCore/Serialization/EditContextConstants.inl>
 
 using namespace ROS2;
 

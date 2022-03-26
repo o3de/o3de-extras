@@ -1,5 +1,6 @@
 #include "LidarRaycaster.h"
 #include <AzFramework/Physics/PhysicsScene.h>
+#include <AzCore/Interface/Interface.h>
 #include <AzFramework/Physics/Common/PhysicsSceneQueries.h>
 #include <AzCore/std/smart_ptr/shared_ptr.h>
 #include <AzCore/std/smart_ptr/make_shared.h>
@@ -21,7 +22,7 @@ AZStd::vector<AZ::Vector3> LidarRaycaster::PerformRaycast(const AZ::Vector3 &sta
         requests.emplace_back(AZStd::move(request));
     }
 
-    auto* sceneInterface = AZ::Interface<AzPhysics::SceneInterface>::Get();
+    auto *sceneInterface = AZ::Interface<AzPhysics::SceneInterface>::Get();
     AzPhysics::SceneHandle sceneHandle = sceneInterface->GetSceneHandle(AzPhysics::DefaultPhysicsSceneName);
     if (sceneHandle == AzPhysics::InvalidSceneHandle)
     {

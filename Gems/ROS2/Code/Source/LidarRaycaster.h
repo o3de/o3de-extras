@@ -1,5 +1,6 @@
 #pragma once
 #include <AzCore/Math/Vector3.h>
+#include <AzCore/std/containers/vector.h>
 
 // TODO - switch to interface
 namespace ROS2
