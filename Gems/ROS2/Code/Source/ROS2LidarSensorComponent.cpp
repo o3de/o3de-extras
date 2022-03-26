@@ -86,6 +86,7 @@ void ROS2LidarSensorComponent::OnTick([[maybe_unused]] float deltaTime, [[maybe_
 
     auto message = sensor_msgs::msg::PointCloud2();
     message.header.frame_id = m_frameName.data();
+    message.header.stamp = ROS2Interface::Get()->GetROSTimestamp();
     message.height = 1;
     message.width = results.size();
     message.point_step = sizeof(AZ::Vector3); // TODO - Point Fields can be custom

@@ -14,4 +14,6 @@ set(FILES
     Source/ROS2ModuleInterface.h
     Source/ROS2SystemComponent.cpp
     Source/ROS2SystemComponent.h
+    Source/SimulationClock.cpp
+    Source/SimulationClock.h
 )
