@@ -102,5 +102,5 @@ namespace ROS2
             return directions;
         }
     };
-}
+} // namespace ROS2
 
