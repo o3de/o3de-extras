@@ -61,7 +61,7 @@ namespace ROS2
             return it->second;
         }
 
-        static size_t TotalPointCount(const LidarTemplate &t)
+        static size_t TotalPointCount(const LidarTemplate& t)
         {
             return t.m_layers * t.m_numberOfIncrements;
         }

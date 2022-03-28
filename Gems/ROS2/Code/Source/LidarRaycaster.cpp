@@ -8,11 +8,11 @@
 using namespace ROS2;
 
 // A simplified, non-optimized first version. TODO - generalize results (fields)
-AZStd::vector<AZ::Vector3> LidarRaycaster::PerformRaycast(const AZ::Vector3 &start, const AZStd::vector<AZ::Vector3> &directions, float distance)
+AZStd::vector<AZ::Vector3> LidarRaycaster::PerformRaycast(const AZ::Vector3& start, const AZStd::vector<AZ::Vector3>& directions, float distance)
 {
     AZStd::vector<AZ::Vector3> results;
     AzPhysics::SceneQueryRequests requests;
-    for (const AZ::Vector3 &direction : directions)
+    for (const AZ::Vector3& direction : directions)
     {   // NOTE - performance-wise, consider reusing requests
         AZStd::shared_ptr<AzPhysics::RayCastRequest> request = AZStd::make_shared<AzPhysics::RayCastRequest>();
         request->m_start = start;
@@ -22,7 +22,7 @@ AZStd::vector<AZ::Vector3> LidarRaycaster::PerformRaycast(const AZ::Vector3 &sta
         requests.emplace_back(AZStd::move(request));
     }
 
-    auto *sceneInterface = AZ::Interface<AzPhysics::SceneInterface>::Get();
+    auto* sceneInterface = AZ::Interface<AzPhysics::SceneInterface>::Get();
     AzPhysics::SceneHandle sceneHandle = sceneInterface->GetSceneHandle(AzPhysics::DefaultPhysicsSceneName);
     if (sceneHandle == AzPhysics::InvalidSceneHandle)
     {
@@ -30,7 +30,7 @@ AZStd::vector<AZ::Vector3> LidarRaycaster::PerformRaycast(const AZ::Vector3 &sta
         return results;
     }
     auto requestResults = sceneInterface->QuerySceneBatch(sceneHandle, requests);
-    for (const auto &requestResult : requestResults)
+    for (const auto& requestResult : requestResults)
     {   // TODO - check flag for SceneQuery::ResultFlags::Position
         if (requestResult.m_hits.size() > 0)
         {

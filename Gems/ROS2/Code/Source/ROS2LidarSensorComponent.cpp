@@ -10,8 +10,8 @@ using namespace ROS2;
 
 void ROS2LidarSensorComponent::Init()
 {
-    auto ros2_node = ROS2Interface::Get()->GetNode();
-    m_pointCloudPublisher = ros2_node->create_publisher<sensor_msgs::msg::PointCloud2>("point_cloud", 10);
+    auto ros2Node = ROS2Interface::Get()->GetNode();
+    m_pointCloudPublisher = ros2Node->create_publisher<sensor_msgs::msg::PointCloud2>("point_cloud", 10);
 }
 
 void ROS2LidarSensorComponent::Activate()
@@ -19,7 +19,7 @@ void ROS2LidarSensorComponent::Activate()
     // TODO - add range validation (Attributes?)
     m_frameTime = m_hz == 0 ? 1 : 1 / m_hz;
     AZ::TickBus::Handler::BusConnect();
-    entityTransform = GetEntity()->FindComponent<AzFramework::TransformComponent>();
+    m_entityTransform = GetEntity()->FindComponent<AzFramework::TransformComponent>();
 
 }
 
@@ -73,7 +73,7 @@ void ROS2LidarSensorComponent::OnTick([[maybe_unused]] float deltaTime, [[maybe_
     ;
     float distance = LidarTemplateUtils::GetTemplate(m_lidarModel).m_maxRange;
     const auto directions = LidarTemplateUtils::PopulateRayDirections(m_lidarModel);
-    AZ::Vector3 start = entityTransform->GetWorldTM().GetTranslation();
+    AZ::Vector3 start = m_entityTransform->GetWorldTM().GetTranslation();
     start.SetZ(start.GetZ() + 1.0f);
     AZStd::vector<AZ::Vector3> results = m_lidarRaycaster.PerformRaycast(start, directions, distance);
 

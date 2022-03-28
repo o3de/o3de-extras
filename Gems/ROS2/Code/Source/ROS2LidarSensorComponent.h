@@ -41,6 +41,6 @@ namespace ROS2
         float m_frameTime;
         LidarRaycaster m_lidarRaycaster;
         rclcpp::Publisher<sensor_msgs::msg::PointCloud2>::SharedPtr m_pointCloudPublisher;
-        AzFramework::TransformComponent* entityTransform;
+        AzFramework::TransformComponent* m_entityTransform;
     };
 }  // namespace ROS2

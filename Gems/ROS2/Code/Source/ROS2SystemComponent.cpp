@@ -110,5 +110,4 @@ namespace ROS2
             m_executor->spin_some();
         }
     }
-
 } // namespace ROS2
