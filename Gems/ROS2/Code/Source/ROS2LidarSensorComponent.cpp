@@ -27,7 +27,6 @@ namespace ROS2
         m_frameTime = m_hz == 0 ? 1 : 1 / m_hz;
         AZ::TickBus::Handler::BusConnect();
         m_entityTransform = GetEntity()->FindComponent<AzFramework::TransformComponent>();
-
     }
 
     void ROS2LidarSensorComponent::Deactivate()
@@ -50,7 +49,7 @@ namespace ROS2
             {
                 ec->Class<ROS2LidarSensorComponent>("Lidar Sensor", "[Simple Lidar component]")
                     ->ClassElement(AZ::Edit::ClassElements::EditorData, "")
-                        ->Attribute(AZ::Edit::Attributes::AppearsInAddComponentMenu, AZ_CRC("Game"))
+                        ->Attribute(AZ::Edit::Attributes::AppearsInAddComponentMenu, AZ_CRC("Game")) // TODO - "Simulation"?
                     ->DataElement(AZ::Edit::UIHandlers::Default, &ROS2LidarSensorComponent::m_hz, "Hz", "Lidar data acquisition and publish frequency")
                     ->DataElement(AZ::Edit::UIHandlers::Default, &ROS2LidarSensorComponent::m_frameName, "Frame Name", "Lidar ros2 message frame")
                     ->DataElement(AZ::Edit::UIHandlers::Default, &ROS2LidarSensorComponent::m_lidarModel, "Lidar Model", "Lidar model")
