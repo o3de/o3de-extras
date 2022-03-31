@@ -21,4 +21,6 @@ set(FILES
     Source/ROS2SystemComponent.h
     Source/Utilities/ROS2Conversions.cpp
     Source/Utilities/ROS2Conversions.h
+    Source/UrdfParser.cpp
+    Source/UrdfParser.h
 )

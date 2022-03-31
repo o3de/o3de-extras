@@ -29,7 +29,7 @@ ly_add_target(
             AZ::AzFramework
 )
 
-target_depends_on_ros2_packages(ROS2.Static rclcpp builtin_interfaces std_msgs sensor_msgs)
+target_depends_on_ros2_packages(ROS2.Static rclcpp builtin_interfaces std_msgs sensor_msgs urdfdom)
 
 ly_add_target(
     NAME ROS2.API HEADERONLY
