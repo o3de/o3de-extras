@@ -11,7 +11,7 @@
 #include <fstream>
 #include <string>
 
-#include "urdf_model/model.h"
+#include <urdf_model/model.h>
 
 namespace ROS2
 {
