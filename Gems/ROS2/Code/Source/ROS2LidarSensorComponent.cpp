@@ -5,7 +5,9 @@
  * SPDX-License-Identifier: Apache-2.0 OR MIT
  *
  */
-#include "ROS2LidarSensorComponent.h"
+
+#include "Lidar/ROS2LidarSensorComponent.h"
+#include "Transform/ROS2FrameComponent.h"
 #include "ROS2/ROS2Bus.h"
 
 #include <AzCore/Component/Entity.h>
@@ -15,33 +17,12 @@
 
 namespace ROS2
 {
-    void ROS2LidarSensorComponent::Init()
-    {
-        auto ros2Node = ROS2Interface::Get()->GetNode();
-        m_pointCloudPublisher = ros2Node->create_publisher<sensor_msgs::msg::PointCloud2>("point_cloud", 10);
-    }
-
-    void ROS2LidarSensorComponent::Activate()
-    {
-        // TODO - add range validation (Attributes?)
-        m_frameTime = m_hz == 0 ? 1 : 1 / m_hz;
-        AZ::TickBus::Handler::BusConnect();
-        m_entityTransform = GetEntity()->FindComponent<AzFramework::TransformComponent>();
-    }
-
-    void ROS2LidarSensorComponent::Deactivate()
-    {
-        AZ::TickBus::Handler::BusDisconnect();
-    }
-
     void ROS2LidarSensorComponent::Reflect(AZ::ReflectContext* context)
     {
         if (AZ::SerializeContext* serialize = azrtti_cast<AZ::SerializeContext*>(context))
         {
-            serialize->Class<ROS2LidarSensorComponent, AZ::Component>()
+            serialize->Class<ROS2LidarSensorComponent, ROS2SensorComponent>()
                 ->Version(1)
-                ->Field("hz", &ROS2LidarSensorComponent::m_hz)
-                ->Field("frameName", &ROS2LidarSensorComponent::m_frameName)
                 ->Field("lidarModel", &ROS2LidarSensorComponent::m_lidarModel)
                 ;
 
@@ -49,37 +30,35 @@ namespace ROS2
             {
                 ec->Class<ROS2LidarSensorComponent>("Lidar Sensor", "[Simple Lidar component]")
                     ->ClassElement(AZ::Edit::ClassElements::EditorData, "")
-                        ->Attribute(AZ::Edit::Attributes::AppearsInAddComponentMenu, AZ_CRC("Game")) // TODO - "Simulation"?
-                    ->DataElement(AZ::Edit::UIHandlers::Default, &ROS2LidarSensorComponent::m_hz, "Hz", "Lidar data acquisition and publish frequency")
-                    ->DataElement(AZ::Edit::UIHandlers::Default, &ROS2LidarSensorComponent::m_frameName, "Frame Name", "Lidar ros2 message frame")
+                        ->Attribute(AZ::Edit::Attributes::AppearsInAddComponentMenu, AZ_CRC("Simulation"))
                     ->DataElement(AZ::Edit::UIHandlers::Default, &ROS2LidarSensorComponent::m_lidarModel, "Lidar Model", "Lidar model")
                     ;
             }
         }
     }
 
-    void ROS2LidarSensorComponent::GetRequiredServices(AZ::ComponentDescriptor::DependencyArrayType& required)
+    void ROS2LidarSensorComponent::Activate()
     {
-        required.push_back(AZ_CRC("TransformService"));
+        ROS2SensorComponent::Activate();
+        auto ros2Node = ROS2Interface::Get()->GetNode();
+        auto config = GetConfiguration();
+
+        // TODO - also use QoS
+        m_pointCloudPublisher = ros2Node->create_publisher<sensor_msgs::msg::PointCloud2>(GetFullTopic().data(), 10);
     }
 
-    void ROS2LidarSensorComponent::OnTick([[maybe_unused]] float deltaTime, [[maybe_unused]] AZ::ScriptTimePoint time)
+    void ROS2LidarSensorComponent::Deactivate()
     {
-        static float elapsed = 0;
-        elapsed += deltaTime;
-        if (elapsed < m_frameTime)
-            return;
+        ROS2SensorComponent::Deactivate();
+        m_pointCloudPublisher.reset();
+    }
 
-        elapsed -= m_frameTime;
-        if (deltaTime > m_frameTime)
-        {   // Frequency higher than possible, not catching up, just keep going with each frame.
-            elapsed = 0;
-        }
-
-        ;
+    void ROS2LidarSensorComponent::FrequencyTick()
+    {
         float distance = LidarTemplateUtils::GetTemplate(m_lidarModel).m_maxRange;
         const auto directions = LidarTemplateUtils::PopulateRayDirections(m_lidarModel);
-        AZ::Vector3 start = m_entityTransform->GetWorldTM().GetTranslation();
+        auto entityTransform = GetEntity()->FindComponent<AzFramework::TransformComponent>(); // TODO - go through ROS2Frame
+        AZ::Vector3 start = entityTransform->GetWorldTM().GetTranslation();
         start.SetZ(start.GetZ() + 1.0f);
         AZStd::vector<AZ::Vector3> results = m_lidarRaycaster.PerformRaycast(start, directions, distance);
 
@@ -90,8 +69,9 @@ namespace ROS2
         }
         //AZ_TracePrintf("Lidar Sensor Component", "Raycast done, results ready");
 
+        auto ros2Frame = GetEntity()->FindComponent<ROS2FrameComponent>();
         auto message = sensor_msgs::msg::PointCloud2();
-        message.header.frame_id = m_frameName.data();
+        message.header.frame_id = ros2Frame->GetFrameID().data();
         message.header.stamp = ROS2Interface::Get()->GetROSTimestamp();
         message.height = 1;
         message.width = results.size();

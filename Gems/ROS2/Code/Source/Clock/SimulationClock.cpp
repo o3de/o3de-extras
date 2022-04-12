@@ -5,6 +5,8 @@
  * SPDX-License-Identifier: Apache-2.0 OR MIT
  *
  */
+
+#include "ROS2/ROS2Bus.h"
 #include "SimulationClock.h"
 #include <ROS2/ROS2Bus.h>
 #include <rclcpp/qos.hpp>

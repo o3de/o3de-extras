@@ -18,5 +18,6 @@ namespace ROS2
     public:
         static AZ::Vector3 FromROS2Vector3(const geometry_msgs::msg::Vector3& ros2vector);
         static geometry_msgs::msg::Vector3 ToROS2Vector3(const AZ::Vector3& azvector);
+        static geometry_msgs::msg::Quaternion ToROS2Quaternion(const AZ::Quaternion& azquaternion);
     };
 }  // namespace ROS2

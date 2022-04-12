@@ -19,8 +19,18 @@ set(FILES
     Source/ROS2ModuleInterface.h
     Source/ROS2SystemComponent.cpp
     Source/ROS2SystemComponent.h
+    Source/Sensor/ROS2SensorComponent.cpp
+    Source/Sensor/ROS2SensorComponent.h
+    Source/Sensor/SensorConfiguration.cpp
+    Source/Sensor/SensorConfiguration.h
+    Source/Transform/ROS2FrameComponent.cpp
+    Source/Transform/ROS2FrameComponent.h
+    Source/Transform/TransformPublisher.cpp
+    Source/Transform/TransformPublisher.h
     Source/Utilities/ROS2Conversions.cpp
     Source/Utilities/ROS2Conversions.h
+    Source/Utilities/ROS2Names.cpp
+    Source/Utilities/ROS2Names.h
     Source/UrdfParser.cpp
     Source/UrdfParser.h
 )

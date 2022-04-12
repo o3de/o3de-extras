@@ -22,4 +22,14 @@ namespace ROS2
         ros2vector.z = azvector.GetZ();
         return ros2vector;
     }
+
+    geometry_msgs::msg::Quaternion ROS2Conversions::ToROS2Quaternion(const AZ::Quaternion& azquaternion)
+    {
+        geometry_msgs::msg::Quaternion ros2Quaternion;
+        ros2Quaternion.x = azquaternion.GetX();
+        ros2Quaternion.y = azquaternion.GetY();
+        ros2Quaternion.z = azquaternion.GetZ();
+        ros2Quaternion.w = azquaternion.GetW();
+        return ros2Quaternion;
+    }
 }  // namespace ROS2
