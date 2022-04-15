@@ -1,6 +1,6 @@
 # o3de-demo-project
 
-Requires o3de-ros2-gem to run. Follow these steps to register the game with your o3de engine:
+Requires [o3de-ros2-gem](https://github.com/RobotecAI/o3de-ros2-gem) to run. Follow these steps to register the game with your o3de engine:
 
 follow instructions to setup o3de engine:
 - clone o3de-ros2-gem
