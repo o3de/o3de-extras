@@ -3,9 +3,7 @@
 #
 # SPDX-License-Identifier: Apache-2.0 OR MIT
 
-cmake_minimum_required(VERSION 3.12)
-# find_package for ROS2 looks for a FindROS2.cmake in this directory first (available in 3.12)
-set(ROS2_ROOT ${CMAKE_CURRENT_LIST_DIR}/Code)
+list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/Code")
 
 set(gem_path ${CMAKE_CURRENT_LIST_DIR})
 set(gem_json ${gem_path}/gem.json)
