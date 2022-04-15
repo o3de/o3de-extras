@@ -1,0 +1,11 @@
+{
+    "repo_name":"o3de-ros2-gem",
+    "origin":"RobotecAI",
+    "repo_uri": "https://github.com/RobotecAI/o3de-ros2-gem",
+    "summary": "A Gem Repository for ROS2 support",
+    "additional_info": "",
+    "last_updated": "",
+    "gems": [
+        "https://github.com/RobotecAI/o3de-ros2-gem"
+    ]
+}
