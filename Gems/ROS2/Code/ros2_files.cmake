@@ -31,6 +31,6 @@ set(FILES
     Source/Utilities/ROS2Conversions.h
     Source/Utilities/ROS2Names.cpp
     Source/Utilities/ROS2Names.h
-    Source/UrdfParser.cpp
-    Source/UrdfParser.h
+    Source/URDF/UrdfParser.cpp
+    Source/URDF/UrdfParser.h
 )
