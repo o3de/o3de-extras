@@ -44,7 +44,7 @@ namespace ROS2
 
             if (AZ::EditContext* ec = serialize->GetEditContext())
             {
-                ec->Class<ROS2RobotControlComponent>("Robot control", "[Customizable robot control component]")
+                ec->Class<ROS2RobotControlComponent>("ROS2 Robot control", "[Customizable robot control component]")
                     ->ClassElement(AZ::Edit::ClassElements::EditorData, "")
                         ->Attribute(AZ::Edit::Attributes::AppearsInAddComponentMenu, AZ_CRC("Game")) // TODO - "Simulation"?
                     ->DataElement(AZ::Edit::UIHandlers::Default, &ROS2RobotControlComponent::m_topic, "Topic", "ROS2 topic to subscribe to")

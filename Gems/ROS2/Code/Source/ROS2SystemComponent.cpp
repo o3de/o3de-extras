@@ -25,7 +25,7 @@ namespace ROS2
 
             if (AZ::EditContext* ec = serialize->GetEditContext())
             {
-                ec->Class<ROS2SystemComponent>("ROS2", "[Description of functionality provided by this System Component]")
+                ec->Class<ROS2SystemComponent>("ROS2 System Component", "[Description of functionality provided by this System Component]")
                     ->ClassElement(AZ::Edit::ClassElements::EditorData, "")
                         ->Attribute(AZ::Edit::Attributes::AppearsInAddComponentMenu, AZ_CRC("System"))
                         ->Attribute(AZ::Edit::Attributes::AutoExpand, true)

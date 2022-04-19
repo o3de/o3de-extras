@@ -83,7 +83,7 @@ namespace ROS2
 
             if (AZ::EditContext* ec = serialize->GetEditContext())
             {
-                ec->Class<ROS2FrameComponent>("ROS2 Frame Component", "[ROS2 Frame component]")
+                ec->Class<ROS2FrameComponent>("ROS2 Frame", "[ROS2 Frame component]")
                         ->ClassElement(AZ::Edit::ClassElements::EditorData, "")
                             ->Attribute(AZ::Edit::Attributes::AppearsInAddComponentMenu, AZ_CRC("Game"))
                         ->DataElement(AZ::Edit::UIHandlers::Default, &ROS2FrameComponent::m_namespace, "Namespace", "Namespace")

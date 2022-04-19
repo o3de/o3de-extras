@@ -28,7 +28,7 @@ namespace ROS2
 
             if (AZ::EditContext* ec = serialize->GetEditContext())
             {
-                ec->Class<ROS2LidarSensorComponent>("Lidar Sensor", "[Simple Lidar component]")
+                ec->Class<ROS2LidarSensorComponent>("ROS2 Lidar Sensor", "[Simple Lidar component]")
                     ->ClassElement(AZ::Edit::ClassElements::EditorData, "")
                         ->Attribute(AZ::Edit::Attributes::AppearsInAddComponentMenu, AZ_CRC("Game"))
                     ->DataElement(AZ::Edit::UIHandlers::Default, &ROS2LidarSensorComponent::m_lidarModel, "Lidar Model", "Lidar model")

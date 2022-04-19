@@ -36,7 +36,7 @@ namespace ROS2
 
             if (AZ::EditContext* ec = serialize->GetEditContext())
             {
-                ec->Class<ROS2SensorComponent>("ROS2 Sensor Component", "[Base component for sensors]")
+                ec->Class<ROS2SensorComponent>("ROS2 Sensor", "[Base component for sensors]")
                         ->ClassElement(AZ::Edit::ClassElements::EditorData, "")
                             ->Attribute(AZ::Edit::Attributes::AppearsInAddComponentMenu, AZ_CRC("Game"))
                         ->DataElement(AZ::Edit::UIHandlers::Default, &ROS2SensorComponent::m_sensorConfiguration, "Sensor configuration", "Sensor configuration")
