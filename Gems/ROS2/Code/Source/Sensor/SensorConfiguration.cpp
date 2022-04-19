@@ -24,7 +24,7 @@ namespace ROS2
                 ->Field("Visualise", &SensorConfiguration::m_visualise)
                 ;
 
-            if (AZ::EditContext* ec = serialize->GetEditContext())
+            if (AZ::EditContext* ec = serializeContext->GetEditContext())
             {
                 ec->Class<SensorConfiguration>("ROS2 Sensor Component", "[Base component for sensors]")
                         ->DataElement(AZ::Edit::UIHandlers::Default, &SensorConfiguration::m_topic, "Topic", "Topic")

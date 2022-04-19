@@ -25,8 +25,8 @@ set(FILES
     Source/Sensor/SensorConfiguration.h
     Source/Transform/ROS2FrameComponent.cpp
     Source/Transform/ROS2FrameComponent.h
-    Source/Transform/TransformPublisher.cpp
-    Source/Transform/TransformPublisher.h
+    Source/Transform/ROS2Transform.cpp
+    Source/Transform/ROS2Transform.h
     Source/Utilities/ROS2Conversions.cpp
     Source/Utilities/ROS2Conversions.h
     Source/Utilities/ROS2Names.cpp

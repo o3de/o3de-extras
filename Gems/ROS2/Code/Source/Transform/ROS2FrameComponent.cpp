@@ -17,12 +17,46 @@ namespace ROS2
 {
     void ROS2FrameComponent::Activate()
     {
-        m_transformPublisher = AZStd::make_unique<TransformPublisher>(GetParentFrameID(), GetFrameID(), GetFrameTransform());
+        if (m_publishTransform)
+        {
+            m_ros2Transform = AZStd::make_unique<ROS2Transform>(GetParentFrameID(), GetFrameID(), IsDynamic());
+            if (IsDynamic())
+            {
+                AZ::TickBus::Handler::BusConnect();
+            }
+            else
+            {
+                m_ros2Transform->Publish(GetFrameTransform());
+            }
+        }
     }
 
     void ROS2FrameComponent::Deactivate()
     {
-        m_transformPublisher.reset();
+        if (m_publishTransform)
+        {
+            if (IsDynamic())
+            {
+                AZ::TickBus::Handler::BusDisconnect();
+            }
+            m_ros2Transform.reset();
+        }
+    }
+
+    void ROS2FrameComponent::OnTick([[maybe_unused]] float deltaTime, [[maybe_unused]] AZ::ScriptTimePoint time)
+    {
+        m_ros2Transform->Publish(GetFrameTransform());
+    }
+
+    AZStd::string ROS2FrameComponent::GetGlobalFrameName()
+    {
+        // TODO - parametrize this, sometimes it is "world" and sometimes "map".
+        return "world";
+    }
+
+    bool ROS2FrameComponent::IsDynamic() const
+    {   // TODO - determine by joint type
+        return GetGlobalFrameName() == GetParentFrameID();
     }
 
     const ROS2FrameComponent* ROS2FrameComponent::GetParentROS2FrameComponent() const
@@ -58,7 +92,7 @@ namespace ROS2
         {
             return parentFrame->GetFrameID();
         }
-        return "world"; // TODO - parametrize this, sometimes it is "world" and sometimes "map"
+        return GetGlobalFrameName();
     }
 
     AZStd::string ROS2FrameComponent::GetFrameID() const
@@ -79,6 +113,7 @@ namespace ROS2
                 ->Version(1)
                 ->Field("Namespace", &ROS2FrameComponent::m_namespace)
                 ->Field("Frame Name", &ROS2FrameComponent::m_frameName)
+                ->Field("Publish Transform", &ROS2FrameComponent::m_publishTransform)
                 ;
 
             if (AZ::EditContext* ec = serialize->GetEditContext())
@@ -88,6 +123,7 @@ namespace ROS2
                             ->Attribute(AZ::Edit::Attributes::AppearsInAddComponentMenu, AZ_CRC("Game"))
                         ->DataElement(AZ::Edit::UIHandlers::Default, &ROS2FrameComponent::m_namespace, "Namespace", "Namespace")
                         ->DataElement(AZ::Edit::UIHandlers::Default, &ROS2FrameComponent::m_frameName, "Frame Name", "Frame Name")
+                        ->DataElement(AZ::Edit::UIHandlers::Default, &ROS2FrameComponent::m_publishTransform, "Publish Transform", "Publish Transform")
                         ;
             }
         }

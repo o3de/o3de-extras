@@ -7,7 +7,7 @@
  */
 #pragma once
 
-#include "TransformPublisher.h"
+#include "Transform/ROS2Transform.h"
 #include <AzCore/Component/Component.h>
 #include <AzCore/std/smart_ptr/unique_ptr.h>
 #include <AzFramework/Components/TransformComponent.h>
@@ -19,6 +19,7 @@ namespace ROS2
     /// and helping to export robot prefab to URDF.
     class ROS2FrameComponent
         : public AZ::Component
+        , public AZ::TickBus::Handler
     {
     public:
         AZ_COMPONENT(ROS2FrameComponent, "{EE743472-3E25-41EA-961B-14096AC1D66F}", AZ::Component);
@@ -38,7 +39,15 @@ namespace ROS2
         // Transform for direct parent if parent ROS2Frame is found, otherwise transformation is global ("world")
         const AZ::Transform& GetFrameTransform() const;
 
+        // Returns whatever is set as global frame name in ros2 ecosystem (typically, "map" or "world")
+        static AZStd::string GetGlobalFrameName();
+
+        // Whether transformation to parent frame can change during the simulation, or is fixed
+        bool IsDynamic() const;
+
     private:
+        void OnTick(float deltaTime, AZ::ScriptTimePoint time) override;
+
         AZ::TransformInterface* GetEntityTransformInterface() const;
         const ROS2FrameComponent* GetParentROS2FrameComponent() const;
 
@@ -49,12 +58,7 @@ namespace ROS2
         AZStd::string m_namespace; // TODO - option to fill from entity name, default = true, validation
         AZStd::string m_frameName = "sensor_frame"; // TODO - option to fill from entity name, validation
 
-        // Whether relationship to parent frame is static (fixed joint) or dynamic
-        // TODO - this will be extended to URDF joint types
-        // bool m_isDynamic = true; // TODO - determine automatically
-
-        // TODO - transform-related data (ROS2Transform needs ROS2Frame, ROS2Publisher also needs ROS2Frame)
-        // bool m_publishTransform = true;
-        AZStd::unique_ptr<TransformPublisher> m_transformPublisher;
+        bool m_publishTransform = true;
+        AZStd::unique_ptr<ROS2Transform> m_ros2Transform;
     };
 }  // namespace ROS2
