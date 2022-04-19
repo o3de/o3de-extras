@@ -10,6 +10,7 @@
 #include "TransformPublisher.h"
 #include <AzCore/Component/Component.h>
 #include <AzCore/std/smart_ptr/unique_ptr.h>
+#include <AzFramework/Components/TransformComponent.h>
 
 namespace ROS2
 {
@@ -20,7 +21,7 @@ namespace ROS2
         : public AZ::Component
     {
     public:
-        AZ_COMPONENT(ROS2SensorComponent, "{EE743472-3E25-41EA-961B-14096AC1D66F}", AZ::Component);
+        AZ_COMPONENT(ROS2FrameComponent, "{EE743472-3E25-41EA-961B-14096AC1D66F}", AZ::Component);
 
         void Activate() override;
         void Deactivate() override;

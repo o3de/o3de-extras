@@ -23,6 +23,16 @@ namespace ROS2
                 ->Field("Frequency (HZ)", &SensorConfiguration::m_frequency)
                 ->Field("Visualise", &SensorConfiguration::m_visualise)
                 ;
+
+            if (AZ::EditContext* ec = serialize->GetEditContext())
+            {
+                ec->Class<SensorConfiguration>("ROS2 Sensor Component", "[Base component for sensors]")
+                        ->DataElement(AZ::Edit::UIHandlers::Default, &SensorConfiguration::m_topic, "Topic", "Topic")
+                        ->DataElement(AZ::Edit::UIHandlers::Default, &SensorConfiguration::m_publishingEnabled, "Publishing Enabled", "Publishing Enabled")
+                        ->DataElement(AZ::Edit::UIHandlers::Default, &SensorConfiguration::m_frequency, "Frequency", "Frequency (HZ)")
+                        ->DataElement(AZ::Edit::UIHandlers::Default, &SensorConfiguration::m_visualise, "Visualise", "Visualise")
+                        ;
+            }
         }
     }
 }  // namespace ROS2

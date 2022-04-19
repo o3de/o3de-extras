@@ -25,7 +25,7 @@ namespace ROS2
         static void Reflect(AZ::ReflectContext* context);
 
         // TODO - publishing-related data
-        AZStd::string m_topic; // TODO - apply namespace, default to standard names per type, validation
+        AZStd::string m_topic = "default_topic"; // TODO - apply namespace, default to standard names per type, validation
         bool m_publishingEnabled = true; // TODO - support this flag
         float m_frequency = 10;
         // TODO - add QoS here (struct, mapped to ros2 QoS).

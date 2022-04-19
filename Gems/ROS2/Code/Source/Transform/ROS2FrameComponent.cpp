@@ -6,8 +6,11 @@
  *
  */
 #include "ROS2/ROS2Bus.h"
+#include "Transform/ROS2FrameComponent.h"
 #include "Utilities/ROS2Names.h"
 #include <AzCore/Component/Entity.h>
+#include <AzCore/Serialization/EditContext.h>
+#include <AzCore/Serialization/EditContextConstants.inl>
 #include <AzCore/Serialization/SerializeContext.h>
 
 namespace ROS2
@@ -77,6 +80,16 @@ namespace ROS2
                 ->Field("Namespace", &ROS2FrameComponent::m_namespace)
                 ->Field("Frame Name", &ROS2FrameComponent::m_frameName)
                 ;
+
+            if (AZ::EditContext* ec = serialize->GetEditContext())
+            {
+                ec->Class<ROS2FrameComponent>("ROS2 Frame Component", "[ROS2 Frame component]")
+                        ->ClassElement(AZ::Edit::ClassElements::EditorData, "")
+                            ->Attribute(AZ::Edit::Attributes::AppearsInAddComponentMenu, AZ_CRC("Game"))
+                        ->DataElement(AZ::Edit::UIHandlers::Default, &ROS2FrameComponent::m_namespace, "Namespace", "Namespace")
+                        ->DataElement(AZ::Edit::UIHandlers::Default, &ROS2FrameComponent::m_frameName, "Frame Name", "Frame Name")
+                        ;
+            }
         }
     }
 

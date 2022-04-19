@@ -26,12 +26,22 @@ namespace ROS2
 
     void ROS2SensorComponent::Reflect(AZ::ReflectContext* context)
     {
+        SensorConfiguration::Reflect(context);
         if (AZ::SerializeContext* serialize = azrtti_cast<AZ::SerializeContext*>(context))
         {
             serialize->Class<ROS2SensorComponent, AZ::Component>()
                 ->Version(1)
                 ->Field("SensorConfiguration", &ROS2SensorComponent::m_sensorConfiguration)
                 ;
+
+            if (AZ::EditContext* ec = serialize->GetEditContext())
+            {
+                ec->Class<ROS2SensorComponent>("ROS2 Sensor Component", "[Base component for sensors]")
+                        ->ClassElement(AZ::Edit::ClassElements::EditorData, "")
+                            ->Attribute(AZ::Edit::Attributes::AppearsInAddComponentMenu, AZ_CRC("Game"))
+                        ->DataElement(AZ::Edit::UIHandlers::Default, &ROS2SensorComponent::m_sensorConfiguration, "Sensor configuration", "Sensor configuration")
+                        ;
+            }
         }
     }
 
