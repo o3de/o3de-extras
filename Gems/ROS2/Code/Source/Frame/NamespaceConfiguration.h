@@ -38,7 +38,12 @@ namespace ROS2
     private:
         AZStd::string m_namespace;
         NamespaceStrategy m_namespaceStrategy;
-        bool IsNamespaceReadOnly();
+        bool m_isTop;
+        AZStd::string m_entityName;
+
+        bool IsNamespaceCustom();
+        void UpdateNamespace();
+        AZ::Crc32 OnNamespaceStrategySelected();
     };
 }  // namespace ROS2
 

@@ -17,20 +17,33 @@ namespace ROS2
 {
     void NamespaceConfiguration::PopulateNamespace(bool isTop, const AZStd::string &entityName)
     {
+        m_isTop = isTop;
+        m_entityName = entityName;
+        OnNamespaceStrategySelected();
+    }
+
+    void NamespaceConfiguration::UpdateNamespace()
+    {
         auto nss = m_namespaceStrategy;
         if (NamespaceStrategy::Custom == nss)
         {   // Leave the name as it is
             return;
         }
 
-        if (NamespaceStrategy::Empty == nss || (!isTop && NamespaceStrategy::Default == nss))
+        if (NamespaceStrategy::Empty == nss || (!m_isTop && NamespaceStrategy::Default == nss))
         {
             m_namespace = "";
         }
-        else if (NamespaceStrategy::FromEntityName == nss || (isTop && NamespaceStrategy::Default == nss))
+        else if (NamespaceStrategy::FromEntityName == nss || (m_isTop && NamespaceStrategy::Default == nss))
         {
-            m_namespace = ROS2Names::RosifyName(entityName);
+            m_namespace = ROS2Names::RosifyName(m_entityName);
         }
+    }
+
+    AZ::Crc32 NamespaceConfiguration::OnNamespaceStrategySelected()
+    {
+        UpdateNamespace();
+        return AZ::Edit::PropertyRefreshLevels::EntireTree;
     }
 
     AZStd::string NamespaceConfiguration::GetNamespace(const AZStd::string& parentNamespace) const
@@ -48,9 +61,9 @@ namespace ROS2
         return ROS2Names::GetNamespacedName(parentNamespace, m_namespace);
     }
 
-    bool NamespaceConfiguration::IsNamespaceReadOnly()
+    bool NamespaceConfiguration::IsNamespaceCustom()
     {
-        return m_namespaceStrategy != NamespaceConfiguration::NamespaceStrategy::Custom;
+        return m_namespaceStrategy == NamespaceConfiguration::NamespaceStrategy::Custom;
     }
 
     void NamespaceConfiguration::Reflect(AZ::ReflectContext* context)
@@ -68,12 +81,13 @@ namespace ROS2
                 ec->Class<NamespaceConfiguration>("Namespace Configuration", "Handles ROS2 namespaces")
                     ->DataElement(AZ::Edit::UIHandlers::ComboBox, &NamespaceConfiguration::m_namespaceStrategy,
                             "Namespace strategy", "Determines how namespace for frames and topics is created in hierarchy")
+                        ->Attribute(AZ::Edit::Attributes::ChangeNotify, &NamespaceConfiguration::OnNamespaceStrategySelected)
                         ->EnumAttribute(NamespaceConfiguration::NamespaceStrategy::Default, "Default")
                         ->EnumAttribute(NamespaceConfiguration::NamespaceStrategy::Empty, "Empty")
                         ->EnumAttribute(NamespaceConfiguration::NamespaceStrategy::FromEntityName, "Generate from entity name")
                         ->EnumAttribute(NamespaceConfiguration::NamespaceStrategy::Custom, "Custom")
                     ->DataElement(AZ::Edit::UIHandlers::Default, &NamespaceConfiguration::m_namespace, "Namespace", "Namespace")
-                        ->Attribute(AZ::Edit::Attributes::ReadOnly, &NamespaceConfiguration::IsNamespaceReadOnly)
+                        ->Attribute(AZ::Edit::Attributes::Visibility, &NamespaceConfiguration::IsNamespaceCustom)
                         ;
             }
         }
