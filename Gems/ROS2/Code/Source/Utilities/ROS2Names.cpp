@@ -7,6 +7,7 @@
  */
 
 #include "ROS2Names.h"
+#include <AzCore/std/string/regex.h>
 
 namespace ROS2
 {
@@ -17,6 +18,19 @@ namespace ROS2
             return name;
 
         }
+
         return AZStd::string::format("%s/%s", ns.c_str(), name.c_str());;
+    }
+
+    AZStd::string ROS2Names::RosifyName(const AZStd::string& input)
+    {
+        // TODO - add unit tests
+
+        // TODO - implement stricter guidelines and differentiate: https://design.ros2.org/articles/topic_and_service_names.html
+        // TODO - add check whether it begins with a number (and if so, prepend underscore)
+
+        AZStd::string rosified;
+        const AZStd::regex ros2Disallowedlist("[^0-9|a-z|A-Z|_]");
+        return AZStd::regex_replace(input, ros2Disallowedlist, "_");
     }
 }  // namespace ROS2

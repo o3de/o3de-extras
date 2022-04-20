@@ -7,7 +7,8 @@
  */
 #pragma once
 
-#include "Transform/ROS2Transform.h"
+#include "Frame/NamespaceConfiguration.h"
+#include "Frame/ROS2Transform.h"
 #include <AzCore/Component/Component.h>
 #include <AzCore/std/smart_ptr/unique_ptr.h>
 #include <AzFramework/Components/TransformComponent.h>
@@ -42,11 +43,14 @@ namespace ROS2
         // Returns whatever is set as global frame name in ros2 ecosystem (typically, "map" or "world")
         static AZStd::string GetGlobalFrameName();
 
-        // Whether transformation to parent frame can change during the simulation, or is fixed
-        bool IsDynamic() const;
-
     private:
         void OnTick(float deltaTime, AZ::ScriptTimePoint time) override;
+
+        // True if this entity does not have a parent entity with ROS2 Frame
+        bool IsTopLevel() const;
+
+        // Whether transformation to parent frame can change during the simulation, or is fixed
+        bool IsDynamic() const;
 
         AZ::TransformInterface* GetEntityTransformInterface() const;
         const ROS2FrameComponent* GetParentROS2FrameComponent() const;
@@ -55,7 +59,7 @@ namespace ROS2
         AZStd::string GetParentFrameID() const;
 
         // TODO - Editor component: validation of fields, constraints between values and so on
-        AZStd::string m_namespace; // TODO - option to fill from entity name, default = true, validation
+        NamespaceConfiguration m_namespaceConfiguration; // TODO - validation
         AZStd::string m_frameName = "sensor_frame"; // TODO - option to fill from entity name, validation
 
         bool m_publishTransform = true;

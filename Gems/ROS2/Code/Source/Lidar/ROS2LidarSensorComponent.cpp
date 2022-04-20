@@ -7,7 +7,7 @@
  */
 
 #include "Lidar/ROS2LidarSensorComponent.h"
-#include "Transform/ROS2FrameComponent.h"
+#include "Frame/ROS2FrameComponent.h"
 #include "ROS2/ROS2Bus.h"
 
 #include <AzCore/Component/Entity.h>

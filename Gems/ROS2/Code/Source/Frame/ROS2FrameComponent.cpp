@@ -6,7 +6,7 @@
  *
  */
 #include "ROS2/ROS2Bus.h"
-#include "Transform/ROS2FrameComponent.h"
+#include "Frame/ROS2FrameComponent.h"
 #include "Utilities/ROS2Names.h"
 #include <AzCore/Component/Entity.h>
 #include <AzCore/Serialization/EditContext.h>
@@ -29,6 +29,7 @@ namespace ROS2
                 m_ros2Transform->Publish(GetFrameTransform());
             }
         }
+        m_namespaceConfiguration.PopulateNamespace(IsTopLevel(), GetEntity()->GetName());
     }
 
     void ROS2FrameComponent::Deactivate()
@@ -54,9 +55,14 @@ namespace ROS2
         return "world";
     }
 
+    bool ROS2FrameComponent::IsTopLevel() const
+    {
+        return GetGlobalFrameName() == GetParentFrameID();
+    }
+
     bool ROS2FrameComponent::IsDynamic() const
     {   // TODO - determine by joint type
-        return GetGlobalFrameName() == GetParentFrameID();
+        return IsTopLevel();
     }
 
     const ROS2FrameComponent* ROS2FrameComponent::GetParentROS2FrameComponent() const
@@ -97,21 +103,28 @@ namespace ROS2
 
     AZStd::string ROS2FrameComponent::GetFrameID() const
     {
-        return ROS2Names::GetNamespacedName(m_namespace, m_frameName);
+        return ROS2Names::GetNamespacedName(GetNamespace(), m_frameName);
     }
 
     AZStd::string ROS2FrameComponent::GetNamespace() const
     {
-        return m_namespace;
+        auto parentFrame = GetParentROS2FrameComponent();
+        AZStd::string parentNamespace("");
+        if (parentFrame != nullptr)
+        {
+            parentNamespace = parentFrame->GetNamespace();
+        }
+        return m_namespaceConfiguration.GetNamespace(parentNamespace);
     }
 
     void ROS2FrameComponent::Reflect(AZ::ReflectContext* context)
     {
+        NamespaceConfiguration::Reflect(context);
         if (AZ::SerializeContext* serialize = azrtti_cast<AZ::SerializeContext*>(context))
         {
             serialize->Class<ROS2FrameComponent, AZ::Component>()
                 ->Version(1)
-                ->Field("Namespace", &ROS2FrameComponent::m_namespace)
+                ->Field("Namespace Configuration", &ROS2FrameComponent::m_namespaceConfiguration)
                 ->Field("Frame Name", &ROS2FrameComponent::m_frameName)
                 ->Field("Publish Transform", &ROS2FrameComponent::m_publishTransform)
                 ;
@@ -121,7 +134,7 @@ namespace ROS2
                 ec->Class<ROS2FrameComponent>("ROS2 Frame", "[ROS2 Frame component]")
                         ->ClassElement(AZ::Edit::ClassElements::EditorData, "")
                             ->Attribute(AZ::Edit::Attributes::AppearsInAddComponentMenu, AZ_CRC("Game"))
-                        ->DataElement(AZ::Edit::UIHandlers::Default, &ROS2FrameComponent::m_namespace, "Namespace", "Namespace")
+                        ->DataElement(AZ::Edit::UIHandlers::Default, &ROS2FrameComponent::m_namespaceConfiguration, "Namespace Configuration", "Namespace Configuration")
                         ->DataElement(AZ::Edit::UIHandlers::Default, &ROS2FrameComponent::m_frameName, "Frame Name", "Frame Name")
                         ->DataElement(AZ::Edit::UIHandlers::Default, &ROS2FrameComponent::m_publishTransform, "Publish Transform", "Publish Transform")
                         ;

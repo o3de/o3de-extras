@@ -8,9 +8,9 @@
 #include <AzCore/Memory/SystemAllocator.h>
 #include <AzCore/Module/Module.h>
 #include <ROS2SystemComponent.h>
+#include <Frame/ROS2FrameComponent.h>
 #include <Lidar/ROS2LidarSensorComponent.h>
 #include <RobotControl/ROS2RobotControlComponent.h>
-#include <Transform/ROS2FrameComponent.h>
 
 namespace ROS2
 {

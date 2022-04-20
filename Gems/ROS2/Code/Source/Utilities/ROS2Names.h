@@ -15,5 +15,6 @@ namespace ROS2
     {
     public:
         static AZStd::string GetNamespacedName(const AZStd::string& ns, const AZStd::string& name);
+        static AZStd::string RosifyName(const AZStd::string& input);
     };
 }  // namespace ROS2
