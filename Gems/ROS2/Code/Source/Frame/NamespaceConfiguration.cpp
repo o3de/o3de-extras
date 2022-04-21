@@ -15,9 +15,9 @@
 
 namespace ROS2
 {
-    void NamespaceConfiguration::PopulateNamespace(bool isTop, const AZStd::string &entityName)
+    void NamespaceConfiguration::PopulateNamespace(bool isRoot, const AZStd::string &entityName)
     {
-        m_isTop = isTop;
+        m_isRoot = isRoot;
         m_entityName = entityName;
         OnNamespaceStrategySelected();
     }
@@ -30,11 +30,11 @@ namespace ROS2
             return;
         }
 
-        if (NamespaceStrategy::Empty == nss || (!m_isTop && NamespaceStrategy::Default == nss))
+        if (NamespaceStrategy::Empty == nss || (!m_isRoot && NamespaceStrategy::Default == nss))
         {
             m_namespace = "";
         }
-        else if (NamespaceStrategy::FromEntityName == nss || (m_isTop && NamespaceStrategy::Default == nss))
+        else if (NamespaceStrategy::FromEntityName == nss || (m_isRoot && NamespaceStrategy::Default == nss))
         {
             m_namespace = ROS2Names::RosifyName(m_entityName);
         }
@@ -88,6 +88,7 @@ namespace ROS2
                         ->EnumAttribute(NamespaceConfiguration::NamespaceStrategy::Custom, "Custom")
                     ->DataElement(AZ::Edit::UIHandlers::Default, &NamespaceConfiguration::m_namespace, "Namespace", "Namespace")
                         ->Attribute(AZ::Edit::Attributes::Visibility, &NamespaceConfiguration::IsNamespaceCustom)
+                        // TODO - hide for now, but desired Editor component behavior would be to show a read only value
                         ;
             }
         }

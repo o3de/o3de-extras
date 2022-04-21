@@ -67,11 +67,9 @@ namespace ROS2
 
     const ROS2FrameComponent* ROS2FrameComponent::GetParentROS2FrameComponent() const
     {
-        if (const AZ::EntityId parentEntityId = GetEntityTransformInterface()->GetParentId(); parentEntityId.IsValid())
-        {
-            // TODO - is there really no better way???
-            AZ::Entity* parentEntity = nullptr;
-            AZ::ComponentApplicationBus::BroadcastResult(parentEntity, &AZ::ComponentApplicationRequests::FindEntity, parentEntityId);
+        if (const AZ::TransformInterface* parentTI = GetEntityTransformInterface()->GetParent(); parentTI != nullptr)
+        {   // Does not use BroadCastResult as opposed to AZ::EntityUtils::FirstDerivedComponent
+            const AZ::Entity* parentEntity = azrtti_cast<const AzFramework::TransformComponent*>(parentTI)->GetEntity();
             return parentEntity->FindComponent<ROS2FrameComponent>();
         }
         return nullptr;

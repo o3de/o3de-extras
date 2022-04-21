@@ -30,7 +30,7 @@ namespace ROS2
             Custom   // Non-empty but unrelated to entity name
         };
 
-        void PopulateNamespace(bool isTop, const AZStd::string &entityName);
+        void PopulateNamespace(bool isRoot, const AZStd::string &entityName);
         AZStd::string GetNamespace(const AZStd::string& parentNamespace) const;
 
         static void Reflect(AZ::ReflectContext* context);
@@ -38,7 +38,7 @@ namespace ROS2
     private:
         AZStd::string m_namespace;
         NamespaceStrategy m_namespaceStrategy;
-        bool m_isTop;
+        bool m_isRoot;
         AZStd::string m_entityName;
 
         bool IsNamespaceCustom();
