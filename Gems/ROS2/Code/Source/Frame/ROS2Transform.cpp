@@ -9,6 +9,7 @@
 #include "Frame/ROS2Transform.h"
 #include "ROS2/ROS2Bus.h"
 #include "Utilities/ROS2Conversions.h"
+#include <tf2_ros/qos.hpp>
 
 namespace ROS2
 {
@@ -22,8 +23,8 @@ namespace ROS2
                 if (m_published)
                     return; // Consider adding a warning here as well
 
-                return ROS2Interface::Get()->BroadcastStaticTransform(transformMessage);
                 m_published = true;
+                return ROS2Interface::Get()->BroadcastStaticTransform(transformMessage);
             }
 
         private:
@@ -36,10 +37,7 @@ namespace ROS2
             DynamicTransformPublisher()
             {
                 auto ros2Node = ROS2Interface::Get()->GetNode();
-
-                // TODO - determine whether default QoS is good and what is good practice for queue size. Compare to tf2 broadcaster
-                const size_t keepLastQueueSize = 10;
-                m_dynamicTFPublisher = ros2Node->create_publisher<geometry_msgs::msg::TransformStamped>("/tf", keepLastQueueSize);
+                m_dynamicTFPublisher = ros2Node->create_publisher<geometry_msgs::msg::TransformStamped>("/tf", tf2_ros::DynamicBroadcasterQoS());
             }
 
             void Publish(const geometry_msgs::msg::TransformStamped& transformMessage) override
@@ -55,11 +53,11 @@ namespace ROS2
         {
             if (isDynamic)
             {
-                return std::make_unique<DynamicTransformPublisher>();
+                return AZStd::make_unique<DynamicTransformPublisher>();
             }
             else
             {
-                return std::make_unique<StaticTransformPublisher>();
+                return AZStd::make_unique<StaticTransformPublisher>();
             }
         }
     }

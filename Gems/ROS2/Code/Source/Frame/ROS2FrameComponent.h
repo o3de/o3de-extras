@@ -23,7 +23,7 @@ namespace ROS2
         , public AZ::TickBus::Handler
     {
     public:
-        AZ_COMPONENT(ROS2FrameComponent, "{EE743472-3E25-41EA-961B-14096AC1D66F}", AZ::Component);
+        AZ_COMPONENT(ROS2FrameComponent, "{EE743472-3E25-41EA-961B-14096AC1D66F}");
 
         void Activate() override;
         void Deactivate() override;
@@ -41,7 +41,7 @@ namespace ROS2
         const AZ::Transform& GetFrameTransform() const;
 
         // Returns whatever is set as global frame name in ros2 ecosystem (typically, "map" or "world")
-        static AZStd::string GetGlobalFrameName();
+        static const char* GetGlobalFrameName();
 
     private:
         void OnTick(float deltaTime, AZ::ScriptTimePoint time) override;

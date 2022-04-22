@@ -61,7 +61,7 @@ namespace ROS2
         return ROS2Names::GetNamespacedName(parentNamespace, m_namespace);
     }
 
-    bool NamespaceConfiguration::IsNamespaceCustom()
+    bool NamespaceConfiguration::IsNamespaceCustom() const
     {
         return m_namespaceStrategy == NamespaceConfiguration::NamespaceStrategy::Custom;
     }
@@ -80,7 +80,7 @@ namespace ROS2
             {
                 ec->Class<NamespaceConfiguration>("Namespace Configuration", "Handles ROS2 namespaces")
                     ->DataElement(AZ::Edit::UIHandlers::ComboBox, &NamespaceConfiguration::m_namespaceStrategy,
-                            "Namespace strategy", "Determines how namespace for frames and topics is created in hierarchy")
+                            "Namespace strategy", "Determines how namespace for frames and topics is created from the hierarchy")
                         ->Attribute(AZ::Edit::Attributes::ChangeNotify, &NamespaceConfiguration::OnNamespaceStrategySelected)
                         ->EnumAttribute(NamespaceConfiguration::NamespaceStrategy::Default, "Default")
                         ->EnumAttribute(NamespaceConfiguration::NamespaceStrategy::Empty, "Empty")

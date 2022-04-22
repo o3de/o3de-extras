@@ -49,7 +49,7 @@ namespace ROS2
         m_ros2Transform->Publish(GetFrameTransform());
     }
 
-    AZStd::string ROS2FrameComponent::GetGlobalFrameName()
+    const char* ROS2FrameComponent::GetGlobalFrameName()
     {
         // TODO - parametrize this, sometimes it is "world" and sometimes "map".
         return "world";

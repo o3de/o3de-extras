@@ -37,11 +37,11 @@ namespace ROS2
 
     private:
         AZStd::string m_namespace;
-        NamespaceStrategy m_namespaceStrategy;
+        NamespaceStrategy m_namespaceStrategy = NamespaceStrategy::Default;
         bool m_isRoot;
         AZStd::string m_entityName;
 
-        bool IsNamespaceCustom();
+        bool IsNamespaceCustom() const;
         void UpdateNamespace();
         AZ::Crc32 OnNamespaceStrategySelected();
     };
