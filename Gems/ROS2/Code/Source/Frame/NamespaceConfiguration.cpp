@@ -24,19 +24,23 @@ namespace ROS2
 
     void NamespaceConfiguration::UpdateNamespace()
     {
-        auto nss = m_namespaceStrategy;
-        if (NamespaceStrategy::Custom == nss)
-        {   // Leave the name as it is
-            return;
-        }
-
-        if (NamespaceStrategy::Empty == nss || (!m_isRoot && NamespaceStrategy::Default == nss))
+        switch(m_namespaceStrategy)
         {
-            m_namespace = "";
-        }
-        else if (NamespaceStrategy::FromEntityName == nss || (m_isRoot && NamespaceStrategy::Default == nss))
-        {
-            m_namespace = ROS2Names::RosifyName(m_entityName);
+            case NamespaceStrategy::Empty:
+                m_namespace = "";
+                break;
+            case NamespaceStrategy::Default:
+                m_namespace = m_isRoot ? ROS2Names::RosifyName(m_entityName) : "";
+                break;
+            case NamespaceStrategy::FromEntityName:
+                m_namespace = ROS2Names::RosifyName(m_entityName);
+                break;
+            case NamespaceStrategy::Custom:
+                // Leave the namespace as is
+                break;
+            default:
+                AZ_Assert(false, "Unhandled namespace strategy");
+                break;
         }
     }
 
