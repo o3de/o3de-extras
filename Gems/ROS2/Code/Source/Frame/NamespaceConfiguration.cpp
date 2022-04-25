@@ -15,10 +15,10 @@
 
 namespace ROS2
 {
-    void NamespaceConfiguration::PopulateNamespace(bool isRoot, const AZStd::string &entityName)
+    void NamespaceConfiguration::PopulateNamespace(bool isRoot, AZStd::string entityName)
     {
         m_isRoot = isRoot;
-        m_entityName = entityName;
+        m_entityName = AZStd::move(entityName);
         OnNamespaceStrategySelected();
     }
 

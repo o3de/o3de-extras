@@ -30,7 +30,7 @@ namespace ROS2
    class ROS2Transform
    {
    public:
-       ROS2Transform(const AZStd::string& parentFrame, const AZStd::string &childFrame, bool isDynamic);
+       ROS2Transform(AZStd::string parentFrame, AZStd::string childFrame, bool isDynamic);
        void Publish(const AZ::Transform& transform);
 
    private:

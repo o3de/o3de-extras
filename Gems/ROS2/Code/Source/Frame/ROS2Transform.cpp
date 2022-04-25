@@ -62,8 +62,8 @@ namespace ROS2
         }
     }
 
-    ROS2Transform::ROS2Transform(const AZStd::string& parentFrame, const AZStd::string& childFrame, bool isDynamic)
-        : m_parentFrame(parentFrame), m_childFrame(childFrame)
+    ROS2Transform::ROS2Transform(AZStd::string parentFrame, AZStd::string childFrame, bool isDynamic)
+        : m_parentFrame(AZStd::move(childFrame)), m_childFrame(AZStd::move(childFrame))
     {
         m_transformPublisher = Internal::TransformPublisher::CreateTransformPublisher(isDynamic);
     }
