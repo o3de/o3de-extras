@@ -16,26 +16,30 @@ namespace ROS2
 {
     void SensorConfiguration::Reflect(AZ::ReflectContext* context)
     {
+        PublisherConfiguration::Reflect(context);
         if (auto serializeContext = azrtti_cast<AZ::SerializeContext*>(context))
         {
+            serializeContext->RegisterGenericType<AZStd::vector<PublisherConfiguration>>();
             serializeContext->Class<SensorConfiguration>()
                 ->Version(1)
-                ->Field("Topic", &SensorConfiguration::m_topic)
+                ->Field("Visualise", &SensorConfiguration::m_visualise)
                 ->Field("Publishing Enabled", &SensorConfiguration::m_publishingEnabled)
                 ->Field("Frequency (HZ)", &SensorConfiguration::m_frequency)
-                ->Field("Visualise", &SensorConfiguration::m_visualise)
+                ->Field("Publishers", &SensorConfiguration::m_publishersConfigurations)
                 ;
 
             if (AZ::EditContext* ec = serializeContext->GetEditContext())
             {
                 ec->Class<SensorConfiguration>("ROS2 Sensor Component", "[Base component for sensors]")
-                        ->DataElement(AZ::Edit::UIHandlers::Default, &SensorConfiguration::m_topic, "Topic", "Topic")
-                        ->DataElement(AZ::Edit::UIHandlers::Default, &SensorConfiguration::m_publishingEnabled, "Publishing Enabled", "Publishing Enabled")
-                        ->DataElement(AZ::Edit::UIHandlers::Default, &SensorConfiguration::m_frequency, "Frequency", "Frequency (HZ)")
-                        ->DataElement(AZ::Edit::UIHandlers::Default, &SensorConfiguration::m_visualise, "Visualise", "Visualise")
-                        ;
+                    ->DataElement(AZ::Edit::UIHandlers::Default, &SensorConfiguration::m_visualise, "Visualise", "Visualise")
+                    ->DataElement(AZ::Edit::UIHandlers::Default, &SensorConfiguration::m_publishingEnabled, "Publishing Enabled", "Toggle publishing for topic")
+                    ->DataElement(AZ::Edit::UIHandlers::Default, &SensorConfiguration::m_frequency, "Frequency", "Frequency of publishing")
+                        ->Attribute(AZ::Edit::Attributes::Min, 1)
+                        ->Attribute(AZ::Edit::Attributes::Max, 100)
+                    ->DataElement(AZ::Edit::UIHandlers::Default, &SensorConfiguration::m_publishersConfigurations, "Publishers", "Publishers")
+                        ->Attribute(AZ::Edit::Attributes::ContainerCanBeModified, false)
+                    ;
             }
         }
     }
 }  // namespace ROS2
-

@@ -14,6 +14,11 @@
 
 namespace ROS2
 {
+    void ROS2SensorComponent::Init()
+    {
+        m_sensorConfiguration = DefaultConfiguration();
+    }
+
     void ROS2SensorComponent::Activate()
     {
         AZ::TickBus::Handler::BusConnect();
@@ -57,11 +62,6 @@ namespace ROS2
         return ros2Frame->GetNamespace();
     };
 
-    AZStd::string ROS2SensorComponent::GetFullTopic() const
-    {
-        return ROS2Names::GetNamespacedName(GetNamespace(), m_sensorConfiguration.m_topic);
-    }
-
     AZStd::string ROS2SensorComponent::GetFrameID() const
     {
         auto ros2Frame = GetEntity()->FindComponent<ROS2FrameComponent>();
@@ -98,5 +98,13 @@ namespace ROS2
 
         // Note that sensor frequency can be limited by simulation tick rate (if higher sensor Hz is desired).
         FrequencyTick();
+    }
+
+    SensorConfiguration ROS2SensorComponent::DefaultConfiguration() const
+    {
+        SensorConfiguration sc;
+        PublisherConfiguration pc;
+        sc.m_publishersConfigurations = { pc };
+        return sc;
     }
 } // namespace ROS2

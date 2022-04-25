@@ -10,6 +10,9 @@
 
 #include <AzCore/RTTI/RTTI.h>
 #include <AzCore/Serialization/SerializeContext.h>
+#include <AzCore/std/smart_ptr/shared_ptr.h>
+#include <AzCore/std/containers/vector.h>
+#include "PublisherConfiguration.h"
 
 namespace ROS2
 {
@@ -18,18 +21,17 @@ namespace ROS2
     {
     public:
         AZ_RTTI(SensorConfiguration, "{4755363D-0B5A-42D7-BBEF-152D87BA10D7}");
-
         SensorConfiguration() = default;
         virtual ~SensorConfiguration() = default;
-
         static void Reflect(AZ::ReflectContext* context);
 
-        // TODO - publishing-related data
-        AZStd::string m_topic = "default_topic"; // TODO - apply namespace, default to standard names per type, validation
-        bool m_publishingEnabled = true;
-        float m_frequency = 10;
-        // TODO - add QoS here (struct, mapped to ros2 QoS).
+        // Will typically be 1-3 elements (3 max for known sensors).
+        AZStd::vector<PublisherConfiguration> m_publishersConfigurations;
 
+        // TODO - consider moving frequency, publishingEnabled to publisherConfiguration if any sensor has
+        // a couple of publishers for which we want different values of these fields
+        float m_frequency = 10;
+        bool m_publishingEnabled = true;
         bool m_visualise = true;
     };
 }  // namespace ROS2

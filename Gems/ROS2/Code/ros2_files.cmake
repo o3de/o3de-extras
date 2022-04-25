@@ -19,6 +19,8 @@ set(FILES
     Source/ROS2ModuleInterface.h
     Source/ROS2SystemComponent.cpp
     Source/ROS2SystemComponent.h
+    Source/Sensor/PublisherConfiguration.cpp
+    Source/Sensor/PublisherConfiguration.h
     Source/Sensor/ROS2SensorComponent.cpp
     Source/Sensor/ROS2SensorComponent.h
     Source/Sensor/SensorConfiguration.cpp

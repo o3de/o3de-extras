@@ -29,6 +29,7 @@ namespace ROS2
 
     private:
         void FrequencyTick() override;
+        SensorConfiguration DefaultConfiguration() const override;
 
         LidarTemplate::LidarModel m_lidarModel = LidarTemplate::SickMRS6000;
         LidarRaycaster m_lidarRaycaster;
