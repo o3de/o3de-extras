@@ -6,7 +6,7 @@
  *
  */
 
-#include <UrdfParser.h>
+#include <URDF/UrdfParser.h>
 
 #include <AzTest/AzTest.h>
 

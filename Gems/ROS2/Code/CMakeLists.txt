@@ -112,14 +112,12 @@ endif()
 ################################################################################
 # See if globally, tests are supported
 if(PAL_TRAIT_BUILD_TESTS_SUPPORTED)
-    # We globally support tests, see if we support tests on this platform for ROS2.Static
-    if(PAL_TRAIT_ROS2_TEST_SUPPORTED)
+    if(PAL_TRAIT_TEST_GOOGLE_TEST_SUPPORTED)
         # We support ROS2.Tests on this platform, add ROS2.Tests target which depends on ROS2.Static
         ly_add_target(
             NAME ROS2.Tests ${PAL_TRAIT_TEST_TARGET_TYPE}
             NAMESPACE Gem
             FILES_CMAKE
-                ros2_files.cmake
                 ros2_tests_files.cmake
             INCLUDE_DIRECTORIES
                 PRIVATE
@@ -128,7 +126,6 @@ if(PAL_TRAIT_BUILD_TESTS_SUPPORTED)
             BUILD_DEPENDENCIES
                 PRIVATE
                     AZ::AzTest
-                    AZ::AzFramework
                     Gem::ROS2.Static
         )
 
@@ -140,8 +137,7 @@ if(PAL_TRAIT_BUILD_TESTS_SUPPORTED)
 
     # If we are a host platform we want to add tools test like editor tests here
     if(PAL_TRAIT_BUILD_HOST_TOOLS)
-        # We are a host platform, see if Editor tests are supported on this platform
-        if(PAL_TRAIT_ROS2_EDITOR_TEST_SUPPORTED)
+        if(PAL_TRAIT_TEST_GOOGLE_TEST_SUPPORTED)
             # We support ROS2.Editor.Tests on this platform, add ROS2.Editor.Tests target which depends on ROS2.Editor
             ly_add_target(
                 NAME ROS2.Editor.Tests ${PAL_TRAIT_TEST_TARGET_TYPE}
