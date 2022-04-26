@@ -1,0 +1,18 @@
+{
+    "Amazon": {
+        "AssetProcessor": {
+            "Settings": {
+                "ScanFolder OpenXRTest/Assets": {
+                    "watch": "@GEMROOT:OpenXRTest@/Assets",
+                    "recursive": 1,
+                    "order": 101
+                },
+                "ScanFolder OpenXRTest/Registry": {
+                    "watch": "@GEMROOT:OpenXRTest@/Registry",
+                    "recursive": 1,
+                    "order": 102
+                }
+            }
+        }
+    }
+}
