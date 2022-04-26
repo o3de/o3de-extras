@@ -19,6 +19,7 @@ namespace ROS2
     {
         if (auto serializeContext = azrtti_cast<AZ::SerializeContext*>(context))
         {
+            serializeContext->RegisterGenericType<AZStd::vector<PublisherConfiguration>>();
             serializeContext->Class<PublisherConfiguration>()
                 ->Version(1)
                 ->Field("Type", &PublisherConfiguration::m_type)
@@ -29,10 +30,9 @@ namespace ROS2
             if (AZ::EditContext* ec = serializeContext->GetEditContext())
             {
                 ec->Class<PublisherConfiguration>("ROS2 Publisher configuration", "Publisher configuration")
-                        ->DataElement(AZ::Edit::UIHandlers::Default, &PublisherConfiguration::m_type, "Type", "Type of topic")
-                            ->Attribute(AZ::Edit::Attributes::ReadOnly, true)
-                        ->DataElement(AZ::Edit::UIHandlers::Default, &PublisherConfiguration::m_topic, "Topic", "Topic with no namespace")
-                        ;
+                    ->ClassElement(AZ::Edit::ClassElements::EditorData, "")
+                    ->DataElement(AZ::Edit::UIHandlers::Default, &PublisherConfiguration::m_topic, "Topic", "Topic with no namespace")
+                    ;
             }
         }
     };

@@ -33,6 +33,9 @@ namespace ROS2
         float m_frequency = 10;
         bool m_publishingEnabled = true;
         bool m_visualise = true;
+
+    private:
+        AZStd::string GetPublisherLabel(int index) const;
     };
 }  // namespace ROS2
 
