@@ -28,7 +28,7 @@ namespace ROS2
         static void Reflect(AZ::ReflectContext* context);
 
     private:
-        AZStd::string m_topic = "/o3de_robot_control";
+        AZStd::string m_topic = "o3de_robot_control";
         std::unique_ptr<IRobotControl> m_robotControl;
     };
 }  // namespace ROS2
