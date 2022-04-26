@@ -7,6 +7,6 @@
 #
 
 set(FILES
-    OpenXRVk_Platform.h
-    OpenXRVk_Android.h
+    XR_Platform.h
+    XR_Android.h
 )

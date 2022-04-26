@@ -7,5 +7,5 @@
 #
 
 set(FILES
-    OpenXRVk_Platform.h
+    XR_Platform.h
 )

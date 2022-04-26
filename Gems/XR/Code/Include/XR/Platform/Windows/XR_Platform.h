@@ -6,4 +6,4 @@
  */
 #pragma once
 
-#include <OpenXRVk_Windows.h>
+#include <XR_Windows.h>

@@ -10,23 +10,23 @@ set(FILES
     Include/XR/XRDevice.h
     Include/XR/XRFactory.h
     Include/XR/XRGraphicsBinding.h
-    Include/XRVk/XRInput.h
-    Include/XRVk/XRInstance.h
-    Include/XRVk/XRPhysicalDevice.h
-    Include/XRVk/XRSession.h
-    Include/XRVk/XRSpace.h
-    Include/XRVk/XRSwapChain.h
-    Include/XRVk/XRSystem.h
-    Include/XRVk/XRUtils.h
-    Source/XRVkDevice.cpp
-    Source/XRVkFactory.cpp
-    Source/XRVkGraphicsBinding.cpp
-    Source/XRVkInput.cpp
-    Source/XRVkInstance.cpp
-    Source/XRVkPhysicalDevice.cpp
-    Source/XRVkSession.cpp
-    Source/XRVkSpace.cpp
-    Source/XRVkSwapChain.cpp
-    Source/XRVkSystem.cpp
-    Source/XRVkUtils.cpp
+    Include/XR/XRInput.h
+    Include/XR/XRInstance.h
+    Include/XR/XRPhysicalDevice.h
+    Include/XR/XRSession.h
+    Include/XR/XRSpace.h
+    Include/XR/XRSwapChain.h
+    Include/XR/XRSystem.h
+    Include/XR/XRUtils.h
+    Source/XRDevice.cpp
+    Source/XRFactory.cpp
+    Source/XRGraphicsBinding.cpp
+    Source/XRInput.cpp
+    Source/XRInstance.cpp
+    Source/XRPhysicalDevice.cpp
+    Source/XRSession.cpp
+    Source/XRSpace.cpp
+    Source/XRSwapChain.cpp
+    Source/XRSystem.cpp
+    Source/XRUtils.cpp
 )

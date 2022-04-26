@@ -7,6 +7,6 @@
 #
 
 set(FILES
-    OpenXRVk_Platform.h
-    OpenXRVk_Windows.h
+    XR_Platform.h
+    XR_Windows.h
 )

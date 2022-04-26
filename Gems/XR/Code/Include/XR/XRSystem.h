@@ -20,17 +20,17 @@ namespace AZ
     {
         namespace XR
         {
-            class SystemInterface
+            class System
             {
             public:
-                AZ_RTTI(SystemInterface, "{0B08E0D2-FB6C-4290-89BB-556F36CCF50A}");
+                AZ_RTTI(System, "{0B08E0D2-FB6C-4290-89BB-556F36CCF50A}");
 
-                AZ_DISABLE_COPY_MOVE(SystemInterface);
+                AZ_DISABLE_COPY_MOVE(System);
 
-                static SystemInterface* Get();
+                static System* Get();
 
-                SystemInterface() = default;
-                virtual ~SystemInterface() = default;
+                System() = default;
+                virtual ~System() = default;
 
                 // Creates the XR::Instance which is responsible for managing
                 // XrInstance (amongst other things) for OpenXR backend
