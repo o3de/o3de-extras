@@ -12,25 +12,26 @@
 #include <AzCore/Serialization/EditContext.h>
 #include <AzCore/Serialization/EditContextConstants.inl>
 
-#include "ROS2RobotControlComponent.h"
-#include "TwistControl.h"
+#include "RobotControl/ROS2RobotControlComponent.h"
+#include "RobotControl/TwistControl.h"
+#include "Utilities/ROS2Names.h"
 
 namespace ROS2
 {
-    void ROS2RobotControlComponent::Init()
-    {
-        // TODO - instead, create/reset robot control in Activate based on selected implementation (in the component)
-        m_robotControl = std::make_unique<TwistControl>();
-    }
-
     void ROS2RobotControlComponent::Activate()
     {
-        m_robotControl->Activate(GetEntity(), m_topic);
+        auto ros2Frame = GetEntity()->FindComponent<ROS2FrameComponent>();
+        auto namespacedTopic = ROS2Names::GetNamespacedName(ros2Frame->GetNamespace(), m_topic);
+
+        // TODO - instead, create/reset robot control in Activate based on selected implementation (in the component)
+        m_robotControl = std::make_unique<TwistControl>();
+        m_robotControl->Activate(GetEntity(), namespacedTopic);
     }
 
     void ROS2RobotControlComponent::Deactivate()
     {
         m_robotControl->Deactivate();
+        m_robotControl.reset();
     }
 
     void ROS2RobotControlComponent::Reflect(AZ::ReflectContext* context)
@@ -53,10 +54,9 @@ namespace ROS2
         }
     }
 
-    /*
     void ROS2RobotControlComponent::GetRequiredServices(AZ::ComponentDescriptor::DependencyArrayType& required)
     {
-        // TODO - query current/selected RobotControl implementation for what components are required
+        // TODO - also, dependent on current/selected RobotControl implementation for what components are required
+        required.push_back(AZ_CRC("ROS2Frame"));
     }
-    */
 }  // namespace ROS2
