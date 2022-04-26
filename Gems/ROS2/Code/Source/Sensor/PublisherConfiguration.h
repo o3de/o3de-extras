@@ -19,7 +19,7 @@ namespace ROS2
     struct PublisherConfiguration
     {
     public:
-        AZ_RTTI(PublisherConfiguration, "{{7F875348-F2F9-404A-841E-D9A749EA4E79}}");
+        AZ_RTTI(PublisherConfiguration, "{7F875348-F2F9-404A-841E-D9A749EA4E79}");
         PublisherConfiguration() = default;
         virtual ~PublisherConfiguration() = default;
         static void Reflect(AZ::ReflectContext* context);

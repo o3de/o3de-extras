@@ -25,7 +25,6 @@ namespace ROS2
         AZ_COMPONENT(ROS2SensorComponent, "{91BCC1E9-6D93-4466-9CDB-E73D497C6B5E}", AZ::Component);
 
         // AZ::Component interface implementation.
-        void Init() override;
         void Activate() override;
         void Deactivate() override;
 
@@ -37,13 +36,11 @@ namespace ROS2
     protected:
         AZStd::string GetNamespace() const;
         AZStd::string GetFrameID() const; // includes namespace
-        const SensorConfiguration& GetConfiguration() const;
-
-    private:
-        virtual SensorConfiguration DefaultConfiguration() const; // Override to provide default sensor config
-        virtual void FrequencyTick() { }; // Override to implement sensor behavior
 
         // TODO - Editor component: validation of fields, constraints between values and so on
         SensorConfiguration m_sensorConfiguration;
+
+    private:
+        virtual void FrequencyTick() { }; // Override to implement sensor behavior
     };
 }  // namespace ROS2

@@ -14,11 +14,6 @@
 
 namespace ROS2
 {
-    void ROS2SensorComponent::Init()
-    {
-        m_sensorConfiguration = DefaultConfiguration();
-    }
-
     void ROS2SensorComponent::Activate()
     {
         AZ::TickBus::Handler::BusConnect();
@@ -36,23 +31,8 @@ namespace ROS2
         {
             serialize->Class<ROS2SensorComponent, AZ::Component>()
                 ->Version(1)
-                ->Field("SensorConfiguration", &ROS2SensorComponent::m_sensorConfiguration)
                 ;
-
-            if (AZ::EditContext* ec = serialize->GetEditContext())
-            {
-                ec->Class<ROS2SensorComponent>("ROS2 Sensor", "[Base component for sensors]")
-                        ->ClassElement(AZ::Edit::ClassElements::EditorData, "")
-                            ->Attribute(AZ::Edit::Attributes::AppearsInAddComponentMenu, AZ_CRC("Game"))
-                        ->DataElement(AZ::Edit::UIHandlers::Default, &ROS2SensorComponent::m_sensorConfiguration, "Sensor configuration", "Sensor configuration")
-                        ;
-            }
         }
-    }
-
-    const SensorConfiguration& ROS2SensorComponent::GetConfiguration() const
-    {
-        return m_sensorConfiguration;
     }
 
     AZStd::string ROS2SensorComponent::GetNamespace() const
@@ -98,13 +78,5 @@ namespace ROS2
 
         // Note that sensor frequency can be limited by simulation tick rate (if higher sensor Hz is desired).
         FrequencyTick();
-    }
-
-    SensorConfiguration ROS2SensorComponent::DefaultConfiguration() const
-    {
-        SensorConfiguration sc;
-        PublisherConfiguration pc;
-        sc.m_publishersConfigurations = { pc };
-        return sc;
     }
 } // namespace ROS2

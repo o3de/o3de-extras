@@ -23,13 +23,14 @@ namespace ROS2
     {
     public:
         AZ_COMPONENT(ROS2LidarSensorComponent, "{502A955F-7742-4E23-AD77-5E4063739DCA}", ROS2SensorComponent);
+        ROS2LidarSensorComponent();
+        ~ROS2LidarSensorComponent() = default;
         static void Reflect(AZ::ReflectContext* context);
         void Activate() override;
         void Deactivate() override;
 
     private:
         void FrequencyTick() override;
-        SensorConfiguration DefaultConfiguration() const override;
 
         LidarTemplate::LidarModel m_lidarModel = LidarTemplate::SickMRS6000;
         LidarRaycaster m_lidarRaycaster;
