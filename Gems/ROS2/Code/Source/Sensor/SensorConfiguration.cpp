@@ -29,14 +29,11 @@ namespace ROS2
 
             if (AZ::EditContext* ec = serializeContext->GetEditContext())
             {
-                ec->Class<SensorConfiguration>("ROS2 Sensor Component", "[Base component for sensors]")
+                ec->Class<SensorConfiguration>("ROS2 Sensor Configuration", "Sensor configuration")
                     ->ClassElement(AZ::Edit::ClassElements::EditorData, "")
                     ->DataElement(AZ::Edit::UIHandlers::Default, &SensorConfiguration::m_visualise, "Visualise", "Visualise")
                     ->DataElement(AZ::Edit::UIHandlers::Default, &SensorConfiguration::m_publishingEnabled, "Publishing Enabled", "Toggle publishing for topic")
                     ->DataElement(AZ::Edit::UIHandlers::Default, &SensorConfiguration::m_frequency, "Frequency", "Frequency of publishing")
-                        ->Attribute(AZ::Edit::Attributes::Min, 1)
-                        ->Attribute(AZ::Edit::Attributes::Max, 100)
-                        ->Attribute(AZ::Edit::Attributes::Step, 1)
                     ->DataElement(AZ::Edit::UIHandlers::Default, &SensorConfiguration::m_publishersConfigurations, "Publishers", "Publishers")
                         ->Attribute(AZ::Edit::Attributes::ContainerCanBeModified, false)
                         ->Attribute(AZ::Edit::Attributes::AutoExpand, true)

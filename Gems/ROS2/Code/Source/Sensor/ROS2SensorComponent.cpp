@@ -31,7 +31,15 @@ namespace ROS2
         {
             serialize->Class<ROS2SensorComponent, AZ::Component>()
                 ->Version(1)
+                ->Field("SensorConfiguration", &ROS2SensorComponent::m_sensorConfiguration)
                 ;
+
+            if (AZ::EditContext* ec = serialize->GetEditContext())
+            {
+                ec->Class<ROS2SensorComponent>("ROS2 Sensor", "Base component for sensors")
+                    ->DataElement(AZ::Edit::UIHandlers::Default, &ROS2SensorComponent::m_sensorConfiguration, "Sensor configuration", "Sensor configuration")
+                    ;
+            }
         }
     }
 

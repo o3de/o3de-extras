@@ -25,16 +25,14 @@ namespace ROS2
             serialize->Class<ROS2LidarSensorComponent, ROS2SensorComponent>()
                 ->Version(1)
                 ->Field("lidarModel", &ROS2LidarSensorComponent::m_lidarModel)
-                ->Field("SensorConfiguration", &ROS2LidarSensorComponent::m_sensorConfiguration)
                 ;
 
             if (AZ::EditContext* ec = serialize->GetEditContext())
             {
-                ec->Class<ROS2LidarSensorComponent>("ROS2 Lidar Sensor", "[Simple Lidar component]")
+                ec->Class<ROS2LidarSensorComponent>("ROS2 Lidar Sensor", "Lidar sensor component")
                     ->ClassElement(AZ::Edit::ClassElements::EditorData, "")
                         ->Attribute(AZ::Edit::Attributes::AppearsInAddComponentMenu, AZ_CRC("Game"))
                     ->DataElement(AZ::Edit::UIHandlers::Default, &ROS2LidarSensorComponent::m_lidarModel, "Lidar Model", "Lidar model")
-                    ->DataElement(AZ::Edit::UIHandlers::Default, &ROS2LidarSensorComponent::m_sensorConfiguration, "Sensor configuration", "Sensor configuration")
                     ;
             }
         }
@@ -42,7 +40,6 @@ namespace ROS2
 
     ROS2LidarSensorComponent::ROS2LidarSensorComponent()
     {   // TODO - replace with EditorComponent behavior
-        SensorConfiguration sc;
         PublisherConfiguration pc;
         pc.m_type = "sensor_msgs::msg::PointCloud2";
         pc.m_topic = "pc";
