@@ -18,6 +18,11 @@
 
 namespace ROS2
 {
+    namespace Internal
+    {
+        const char* kPointCloudType = "sensor_msgs::msg::PointCloud2";
+    }
+
     void ROS2LidarSensorComponent::Reflect(AZ::ReflectContext* context)
     {
         if (AZ::SerializeContext* serialize = azrtti_cast<AZ::SerializeContext*>(context))
@@ -40,11 +45,13 @@ namespace ROS2
 
     ROS2LidarSensorComponent::ROS2LidarSensorComponent()
     {   // TODO - replace with EditorComponent behavior
-        PublisherConfiguration pc;
-        pc.m_type = "sensor_msgs::msg::PointCloud2";
-        pc.m_topic = "pc";
+        auto pc = AZStd::make_shared<PublisherConfiguration>();
+        auto type = Internal::kPointCloudType;
+        pc->m_type = type;
+        pc->m_topic = "pc";
         m_sensorConfiguration.m_frequency = 10; // TODO - dependent on lidar type
-        m_sensorConfiguration.m_publishersConfigurations = { pc };
+
+        m_sensorConfiguration.m_publishersConfigurations.insert(AZStd::make_pair(type, pc));
     }
 
     void ROS2LidarSensorComponent::Activate()
@@ -53,9 +60,9 @@ namespace ROS2
         auto ros2Node = ROS2Interface::Get()->GetNode();
         AZ_Assert(m_sensorConfiguration.m_publishersConfigurations.size() == 1, "Invalid configuration of publishers for lidar sensor");
 
-        const auto& publisherConfig = m_sensorConfiguration.m_publishersConfigurations.front();
-        AZStd::string fullTopic = ROS2Names::GetNamespacedName(GetNamespace(), publisherConfig.m_topic);
-        m_pointCloudPublisher = ros2Node->create_publisher<sensor_msgs::msg::PointCloud2>(fullTopic.data(), publisherConfig.m_qos);
+        const auto publisherConfig = m_sensorConfiguration.m_publishersConfigurations[Internal::kPointCloudType];
+        AZStd::string fullTopic = ROS2Names::GetNamespacedName(GetNamespace(), publisherConfig->m_topic);
+        m_pointCloudPublisher = ros2Node->create_publisher<sensor_msgs::msg::PointCloud2>(fullTopic.data(), publisherConfig->m_qos);
     }
 
     void ROS2LidarSensorComponent::Deactivate()

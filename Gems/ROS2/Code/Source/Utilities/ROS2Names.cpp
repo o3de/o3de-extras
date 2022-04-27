@@ -16,7 +16,6 @@ namespace ROS2
         if (ns.empty())
         {
             return name;
-
         }
 
         return AZStd::string::format("%s/%s", ns.c_str(), name.c_str());;

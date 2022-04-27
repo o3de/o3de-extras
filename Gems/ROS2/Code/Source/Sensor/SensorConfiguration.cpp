@@ -19,8 +19,10 @@ namespace ROS2
         PublisherConfiguration::Reflect(context);
         if (auto serializeContext = azrtti_cast<AZ::SerializeContext*>(context))
         {
+            serializeContext->RegisterGenericType<AZStd::shared_ptr<PublisherConfiguration>>();
+            serializeContext->RegisterGenericType<AZStd::map<AZStd::string, AZStd::shared_ptr<PublisherConfiguration>>>();
             serializeContext->Class<SensorConfiguration>()
-                ->Version(1)
+                ->Version(2)
                 ->Field("Visualise", &SensorConfiguration::m_visualise)
                 ->Field("Publishing Enabled", &SensorConfiguration::m_publishingEnabled)
                 ->Field("Frequency (HZ)", &SensorConfiguration::m_frequency)
@@ -35,16 +37,12 @@ namespace ROS2
                     ->DataElement(AZ::Edit::UIHandlers::Default, &SensorConfiguration::m_publishingEnabled, "Publishing Enabled", "Toggle publishing for topic")
                     ->DataElement(AZ::Edit::UIHandlers::Default, &SensorConfiguration::m_frequency, "Frequency", "Frequency of publishing")
                     ->DataElement(AZ::Edit::UIHandlers::Default, &SensorConfiguration::m_publishersConfigurations, "Publishers", "Publishers")
-                        ->Attribute(AZ::Edit::Attributes::ContainerCanBeModified, false)
                         ->Attribute(AZ::Edit::Attributes::AutoExpand, true)
-                        ->Attribute(AZ::Edit::Attributes::IndexedChildNameLabelOverride, &SensorConfiguration::GetPublisherLabel)
+                        ->Attribute(AZ::Edit::Attributes::Visibility, AZ::Edit::PropertyVisibility::ShowChildrenOnly)
+                        ->Attribute(AZ::Edit::Attributes::ContainerCanBeModified, false)
+                        ->ElementAttribute(AZ::Edit::Attributes::AutoExpand, true)
                     ;
             }
         }
-    }
-
-    AZStd::string SensorConfiguration::GetPublisherLabel(int index) const
-    {
-        return m_publishersConfigurations[index].m_type;
     }
 }  // namespace ROS2
