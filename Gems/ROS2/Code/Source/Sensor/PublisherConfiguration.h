@@ -11,7 +11,7 @@
 #include <AzCore/RTTI/RTTI.h>
 #include <AzCore/Serialization/SerializeContext.h>
 #include <AzCore/std/string/string.h>
-#include <rclcpp/qos.hpp>
+#include "QoS/QoS.h"
 
 namespace ROS2
 {
@@ -36,7 +36,11 @@ namespace ROS2
 
         AZStd::string m_type = "std_msgs::msg::Empty";
         AZStd::string m_topic = "default_topic";
-        rclcpp::QoS m_qos = 10;
+
+        rclcpp::QoS GetQoS() const { return m_qos.GetQoS(); }
+
+    private:
+        QoS m_qos = rclcpp::SensorDataQoS();
     };
 }  // namespace ROS2
 

@@ -17,7 +17,7 @@ namespace ROS2
     class IRobotControl
     {
     public:
-        virtual void Activate(const AZ::Entity* entity, const AZStd::string& topicName) = 0;
+        virtual void Activate(const AZ::Entity* entity, const AZStd::string& topicName, const QoS &qos) = 0;
         virtual void Deactivate() = 0;
         virtual ~IRobotControl() = default;
     };
@@ -27,15 +27,14 @@ namespace ROS2
     {
     public:
         // TODO - pass component args (qos, topic name, etc) as editor-enabled serializable struct
-        void Activate(const AZ::Entity* entity, const AZStd::string& topicName) final
+        void Activate(const AZ::Entity* entity, const AZStd::string& topicName, const QoS &qos) final
         {
             SetTargetComponent(entity);
             m_active = true;
             if (!m_controlSubscription)
             {
                 auto ros2Node = ROS2Interface::Get()->GetNode();
-                rclcpp::QoS qos(10); // TODO - expose QoS
-                m_controlSubscription = ros2Node->create_subscription<T>(topicName.data(), qos,
+                m_controlSubscription = ros2Node->create_subscription<T>(topicName.data(), qos.GetQoS(),
                     std::bind(&RobotControl<T>::OnControlMessage, this, std::placeholders::_1));
             }
         };

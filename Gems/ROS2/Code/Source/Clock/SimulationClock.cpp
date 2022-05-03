@@ -41,10 +41,8 @@ namespace ROS2
         if (!m_clockPublisher)
         {   //Lazy construct
             auto ros2Node = ROS2Interface::Get()->GetNode();
-
-            // Standard QoS for /clock topic is best_effort, keep_last 1
-            rclcpp::QoS qos(1);
-            qos.best_effort();
+            
+            rclcpp::ClockQoS qos;
             m_clockPublisher = ros2Node->create_publisher<rosgraph_msgs::msg::Clock>("/clock", qos);
         }
 

@@ -10,6 +10,7 @@
 #include <AzCore/Math/Transform.h>
 #include <AzCore/std/string/string.h>
 #include <AzCore/std/smart_ptr/unique_ptr.h>
+#include <geometry_msgs/msg/transform_stamped.hpp>
 
 namespace ROS2
 {

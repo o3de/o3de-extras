@@ -17,13 +17,14 @@ namespace ROS2
     /// A struct used to create and configure publishers
     void PublisherConfiguration::Reflect(AZ::ReflectContext* context)
     {
+        QoS::Reflect(context);
         if (auto serializeContext = azrtti_cast<AZ::SerializeContext*>(context))
         {
             serializeContext->Class<PublisherConfiguration>()
                 ->Version(1)
                 ->Field("Type", &PublisherConfiguration::m_type)
                 ->Field("Topic", &PublisherConfiguration::m_topic)
-                // TODO - also enable QoS
+                ->Field("QoS", &PublisherConfiguration::m_qos)
                 ;
 
             if (AZ::EditContext* ec = serializeContext->GetEditContext())
@@ -33,6 +34,7 @@ namespace ROS2
                     ->DataElement(AZ::Edit::UIHandlers::Default, &PublisherConfiguration::m_type, "Type", "Type of topic messages")
                         ->Attribute(AZ::Edit::Attributes::ReadOnly, true)
                     ->DataElement(AZ::Edit::UIHandlers::Default, &PublisherConfiguration::m_topic, "Topic", "Topic with no namespace")
+                    ->DataElement(AZ::Edit::UIHandlers::Default, &PublisherConfiguration::m_qos, "QoS", "Quality of Service")
                     ;
             }
         }

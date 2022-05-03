@@ -5,11 +5,15 @@
  * SPDX-License-Identifier: Apache-2.0 OR MIT
  *
  */
+
+#include "Frame/ROS2FrameComponent.h"
 #include "Sensor/ROS2SensorComponent.h"
 #include "ROS2/ROS2Bus.h"
 #include "Utilities/ROS2Names.h"
 
 #include <AzCore/Component/Entity.h>
+#include <AzCore/Serialization/EditContext.h>
+#include <AzCore/Serialization/EditContextConstants.inl>
 #include <AzCore/Serialization/SerializeContext.h>
 
 namespace ROS2

@@ -11,6 +11,8 @@ set(FILES
     Source/Lidar/LidarTemplate.h
     Source/Lidar/ROS2LidarSensorComponent.cpp
     Source/Lidar/ROS2LidarSensorComponent.h
+    Source/QoS/QoS.cpp
+    Source/QoS/QoS.h
     Source/RobotControl/RobotControl.h
     Source/RobotControl/ROS2RobotControlComponent.cpp
     Source/RobotControl/ROS2RobotControlComponent.h

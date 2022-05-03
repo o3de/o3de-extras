@@ -25,7 +25,7 @@ namespace ROS2
 
         // TODO - instead, create/reset robot control in Activate based on selected implementation (in the component)
         m_robotControl = std::make_unique<TwistControl>();
-        m_robotControl->Activate(GetEntity(), namespacedTopic);
+        m_robotControl->Activate(GetEntity(), namespacedTopic, m_qos);
     }
 
     void ROS2RobotControlComponent::Deactivate()
@@ -36,11 +36,13 @@ namespace ROS2
 
     void ROS2RobotControlComponent::Reflect(AZ::ReflectContext* context)
     {
+        QoS::Reflect(context);
         if (AZ::SerializeContext* serialize = azrtti_cast<AZ::SerializeContext*>(context))
         {
             serialize->Class<ROS2RobotControlComponent, AZ::Component>()
                 ->Version(1)
                 ->Field("topic", &ROS2RobotControlComponent::m_topic)
+                ->Field("qos", &ROS2RobotControlComponent::m_qos)
                 ;
 
             if (AZ::EditContext* ec = serialize->GetEditContext())
@@ -49,6 +51,7 @@ namespace ROS2
                     ->ClassElement(AZ::Edit::ClassElements::EditorData, "")
                         ->Attribute(AZ::Edit::Attributes::AppearsInAddComponentMenu, AZ_CRC("Game")) // TODO - "Simulation"?
                     ->DataElement(AZ::Edit::UIHandlers::Default, &ROS2RobotControlComponent::m_topic, "Topic", "ROS2 topic to subscribe to")
+                    ->DataElement(AZ::Edit::UIHandlers::Default, &ROS2RobotControlComponent::m_qos, "QoS", "Quality of Service settings for subscriber")
                     ;
             }
         }
