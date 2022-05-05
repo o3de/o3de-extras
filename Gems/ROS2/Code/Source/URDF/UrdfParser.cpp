@@ -11,6 +11,7 @@
 #include <fstream>
 #include <string>
 
+#include <AzCore/Debug/Trace.h>
 #include <urdf_model/model.h>
 
 namespace ROS2
