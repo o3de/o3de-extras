@@ -14,20 +14,8 @@
 
 namespace ROS2
 {
-    namespace Internal
-    {
-        class TransformPublisher
-        {
-        public:
-            TransformPublisher() = default;
-            virtual ~TransformPublisher() = default;
-            static AZStd::unique_ptr<TransformPublisher> CreateTransformPublisher(bool isDynamic);
-            virtual void Publish(const geometry_msgs::msg::TransformStamped& transformMessage) = 0;
-        };
-    }
-
    /// Publishes transforms as standard ros2 tf2 messages. Static transforms are published once.
-   // TODO - differentiate between static and dynamic publisher. Rework this class (name, function)
+   // TODO - Rework this class (name, function). Separate broadcaster out of ROS2SystemComponent
    class ROS2Transform
    {
    public:
@@ -39,7 +27,6 @@ namespace ROS2
 
        const AZStd::string m_parentFrame;
        const AZStd::string m_childFrame;
-
-       AZStd::unique_ptr<Internal::TransformPublisher> m_transformPublisher;
+       bool m_isDynamic;
    };
 }  // namespace ROS2

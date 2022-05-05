@@ -14,59 +14,9 @@
 
 namespace ROS2
 {
-    namespace Internal
-    {
-        class StaticTransformPublisher : public TransformPublisher
-        {
-        public:
-            void Publish(const geometry_msgs::msg::TransformStamped& transformMessage) override
-            {
-                if (m_published)
-                    return; // Consider adding a warning here as well
-
-                m_published = true;
-                return ROS2Interface::Get()->BroadcastStaticTransform(transformMessage);
-            }
-
-        private:
-            bool m_published = false;
-        };
-
-        class DynamicTransformPublisher : public TransformPublisher
-        {
-        public:
-            DynamicTransformPublisher()
-            {
-                auto ros2Node = ROS2Interface::Get()->GetNode();
-                m_dynamicTFPublisher = AZStd::make_unique<tf2_ros::TransformBroadcaster>(ros2Node);
-            }
-
-            void Publish(const geometry_msgs::msg::TransformStamped& transformMessage) override
-            {
-                m_dynamicTFPublisher->sendTransform(transformMessage);
-            }
-
-        private:
-            AZStd::unique_ptr<tf2_ros::TransformBroadcaster> m_dynamicTFPublisher;
-        };
-
-        AZStd::unique_ptr<TransformPublisher> TransformPublisher::CreateTransformPublisher(bool isDynamic)
-        {
-            if (isDynamic)
-            {
-                return AZStd::make_unique<DynamicTransformPublisher>();
-            }
-            else
-            {
-                return AZStd::make_unique<StaticTransformPublisher>();
-            }
-        }
-    }
-
     ROS2Transform::ROS2Transform(AZStd::string parentFrame, AZStd::string childFrame, bool isDynamic)
-        : m_parentFrame(AZStd::move(parentFrame)), m_childFrame(AZStd::move(childFrame))
+        : m_parentFrame(AZStd::move(parentFrame)), m_childFrame(AZStd::move(childFrame)), m_isDynamic(isDynamic)
     {
-        m_transformPublisher = Internal::TransformPublisher::CreateTransformPublisher(isDynamic);
     }
 
     geometry_msgs::msg::TransformStamped ROS2Transform::CreateTransformMessage(const AZ::Transform& o3deTransform)
@@ -82,6 +32,12 @@ namespace ROS2
 
     void ROS2Transform::Publish(const AZ::Transform& transform)
     {
-        m_transformPublisher->Publish(CreateTransformMessage(transform));
+        static bool isPublished = false;
+        if (isPublished && !m_isDynamic)
+        {   // Only publish static transforms once
+            return;
+        }
+        ROS2Interface::Get()->BroadcastTransform(CreateTransformMessage(transform), m_isDynamic);
+        isPublished = true;
     }
 }  // namespace ROS2

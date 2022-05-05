@@ -24,7 +24,7 @@ namespace ROS2
         // Put your public methods here
         virtual std::shared_ptr<rclcpp::Node> GetNode() const = 0;
         virtual builtin_interfaces::msg::Time GetROSTimestamp() const = 0;
-        virtual void BroadcastStaticTransform(const geometry_msgs::msg::TransformStamped& t) const = 0;
+        virtual void BroadcastTransform(const geometry_msgs::msg::TransformStamped& t, bool isDynamic) const = 0;
     };
     
     class ROS2BusTraits
