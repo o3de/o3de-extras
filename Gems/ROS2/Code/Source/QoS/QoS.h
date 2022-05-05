@@ -18,9 +18,8 @@ namespace ROS2
     struct QoS
     {
     public:
-        AZ_RTTI(QoS, "{46692EA4-EA4C-495E-AD3C-426EAB8954D3}");
+        AZ_TYPE_INFO(QoS, "{46692EA4-EA4C-495E-AD3C-426EAB8954D3}");
         QoS(const rclcpp::QoS& qos = rclcpp::QoS(rmw_qos_profile_default.depth));
-        virtual ~QoS() = default;
         static void Reflect(AZ::ReflectContext* context);
         rclcpp::QoS GetQoS() const;
 

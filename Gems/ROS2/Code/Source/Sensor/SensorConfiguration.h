@@ -21,10 +21,7 @@ namespace ROS2
     struct SensorConfiguration
     {
     public:
-        AZ_CLASS_ALLOCATOR(SensorConfiguration, AZ::SystemAllocator, 0);
-        AZ_RTTI(SensorConfiguration, "{4755363D-0B5A-42D7-BBEF-152D87BA10D7}");
-        SensorConfiguration() = default;
-        virtual ~SensorConfiguration() = default;
+        AZ_TYPE_INFO(SensorConfiguration, "{4755363D-0B5A-42D7-BBEF-152D87BA10D7}");
         static void Reflect(AZ::ReflectContext* context);
 
         // Will typically be 1-3 elements (3 max for known sensors).

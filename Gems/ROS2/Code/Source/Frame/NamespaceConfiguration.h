@@ -8,19 +8,18 @@
 
 #pragma once
 
-#include <AzCore/std/string/string.h>
 #include <AzCore/RTTI/RTTI.h>
 #include <AzCore/Serialization/SerializeContext.h>
+#include <AzCore/std/string/string.h>
 
 namespace ROS2
 {
-    /// Configuration for handling of namespaces
+    /// Configuration for handling of namespaces. Namespaces are useful for various ROS 2 components.
     struct NamespaceConfiguration
     {
     public:
-        AZ_RTTI(NamespaceConfiguration, "{5E5BC6EA-DD01-480E-A4D1-6857CF70FDC8}");
-        NamespaceConfiguration() = default;
-        virtual ~NamespaceConfiguration() = default;
+        AZ_TYPE_INFO(NamespaceConfiguration, "{5E5BC6EA-DD01-480E-A4D1-6857CF70FDC8}");
+        static void Reflect(AZ::ReflectContext* context);
 
         enum NamespaceStrategy
         {
@@ -29,11 +28,9 @@ namespace ROS2
             FromEntityName,
             Custom   // Non-empty but unrelated to entity name
         };
-
+        
         void PopulateNamespace(bool isRoot, AZStd::string entityName);
         AZStd::string GetNamespace(const AZStd::string& parentNamespace) const;
-
-        static void Reflect(AZ::ReflectContext* context);
 
     private:
         AZStd::string m_namespace;
