@@ -38,7 +38,7 @@ namespace ROS2
             DynamicTransformPublisher()
             {
                 auto ros2Node = ROS2Interface::Get()->GetNode();
-                m_dynamicTFPublisher = std::make_unique<tf2_ros::TransformBroadcaster>(ros2Node);
+                m_dynamicTFPublisher = AZStd::make_unique<tf2_ros::TransformBroadcaster>(ros2Node);
             }
 
             void Publish(const geometry_msgs::msg::TransformStamped& transformMessage) override
