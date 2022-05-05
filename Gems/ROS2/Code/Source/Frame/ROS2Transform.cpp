@@ -9,6 +9,7 @@
 #include "Frame/ROS2Transform.h"
 #include "ROS2/ROS2Bus.h"
 #include "Utilities/ROS2Conversions.h"
+#include <tf2_ros/transform_broadcaster.h>
 #include <tf2_ros/qos.hpp>
 
 namespace ROS2
@@ -37,16 +38,16 @@ namespace ROS2
             DynamicTransformPublisher()
             {
                 auto ros2Node = ROS2Interface::Get()->GetNode();
-                m_dynamicTFPublisher = ros2Node->create_publisher<geometry_msgs::msg::TransformStamped>("/tf", tf2_ros::DynamicBroadcasterQoS());
+                m_dynamicTFPublisher = std::make_unique<tf2_ros::TransformBroadcaster>(ros2Node);
             }
 
             void Publish(const geometry_msgs::msg::TransformStamped& transformMessage) override
             {
-                m_dynamicTFPublisher->publish(transformMessage);
+                m_dynamicTFPublisher->sendTransform(transformMessage);
             }
 
         private:
-            rclcpp::Publisher<geometry_msgs::msg::TransformStamped>::SharedPtr m_dynamicTFPublisher;
+            AZStd::unique_ptr<tf2_ros::TransformBroadcaster> m_dynamicTFPublisher;
         };
 
         AZStd::unique_ptr<TransformPublisher> TransformPublisher::CreateTransformPublisher(bool isDynamic)
@@ -63,7 +64,7 @@ namespace ROS2
     }
 
     ROS2Transform::ROS2Transform(AZStd::string parentFrame, AZStd::string childFrame, bool isDynamic)
-        : m_parentFrame(AZStd::move(childFrame)), m_childFrame(AZStd::move(childFrame))
+        : m_parentFrame(AZStd::move(parentFrame)), m_childFrame(AZStd::move(childFrame))
     {
         m_transformPublisher = Internal::TransformPublisher::CreateTransformPublisher(isDynamic);
     }
