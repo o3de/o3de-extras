@@ -9,9 +9,7 @@
 
 #include <rclcpp/publisher.hpp>
 #include <sensor_msgs/msg/point_cloud2.hpp>
-
-#include <AzCore/Component/Component.h>
-
+#include <AzCore/Serialization/SerializeContext.h>
 #include "Sensor/ROS2SensorComponent.h"
 #include "Lidar/LidarTemplate.h"
 #include "Lidar/LidarRaycaster.h"
@@ -32,7 +30,7 @@ namespace ROS2
     private:
         void FrequencyTick() override;
 
-        LidarTemplate::LidarModel m_lidarModel = LidarTemplate::SickMRS6000;
+        LidarTemplate::LidarModel m_lidarModel = LidarTemplate::Generic3DLidar;
         LidarRaycaster m_lidarRaycaster;
         std::shared_ptr<rclcpp::Publisher<sensor_msgs::msg::PointCloud2>> m_pointCloudPublisher;
         // TODO - also add a data acquisition implementation choice (and consider propagating abstraction upwards)

@@ -7,12 +7,11 @@
  */
 
 #include "Lidar/ROS2LidarSensorComponent.h"
+#include "Lidar/LidarTemplateUtils.h"
 #include "Frame/ROS2FrameComponent.h"
-#include "ROS2/ROS2Bus.h"
 #include "Utilities/ROS2Names.h"
 
 #include <AzCore/Component/Entity.h>
-#include <AzCore/Serialization/SerializeContext.h>
 #include <AzCore/Serialization/EditContext.h>
 #include <AzCore/Serialization/EditContextConstants.inl>
 
@@ -25,6 +24,7 @@ namespace ROS2
 
     void ROS2LidarSensorComponent::Reflect(AZ::ReflectContext* context)
     {
+        LidarTemplate::Reflect(context);
         if (AZ::SerializeContext* serialize = azrtti_cast<AZ::SerializeContext*>(context))
         {
             serialize->Class<ROS2LidarSensorComponent, ROS2SensorComponent>()
@@ -37,20 +37,21 @@ namespace ROS2
                 ec->Class<ROS2LidarSensorComponent>("ROS2 Lidar Sensor", "Lidar sensor component")
                     ->ClassElement(AZ::Edit::ClassElements::EditorData, "")
                         ->Attribute(AZ::Edit::Attributes::AppearsInAddComponentMenu, AZ_CRC("Game"))
-                    ->DataElement(AZ::Edit::UIHandlers::Default, &ROS2LidarSensorComponent::m_lidarModel, "Lidar Model", "Lidar model")
+                    ->DataElement(AZ::Edit::UIHandlers::ComboBox, &ROS2LidarSensorComponent::m_lidarModel, "Lidar Model", "Lidar model")
+                        ->EnumAttribute(LidarTemplate::LidarModel::Generic3DLidar, "Generic Lidar")
+                        // TODO - show lidar template field values (read only) - see Reflect for LidarTemplate
                     ;
             }
         }
     }
 
     ROS2LidarSensorComponent::ROS2LidarSensorComponent()
-    {   // TODO - replace with EditorComponent behavior
+    {
         auto pc = AZStd::make_shared<PublisherConfiguration>();
         auto type = Internal::kPointCloudType;
         pc->m_type = type;
         pc->m_topic = "pc";
         m_sensorConfiguration.m_frequency = 10; // TODO - dependent on lidar type
-
         m_sensorConfiguration.m_publishersConfigurations.insert(AZStd::make_pair(type, pc));
     }
 
