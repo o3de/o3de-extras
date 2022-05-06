@@ -35,8 +35,6 @@ namespace OpenXRVk
 
         static AZStd::intrusive_ptr<Session> Create();
 
-        virtual AZ::RHI::ResultCode InitSessionInternal() override;
-
         void LogReferenceSpaces();
         void HandleSessionStateChangedEvent(
             const XrEventDataSessionStateChanged& stateChangedEvent,
