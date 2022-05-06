@@ -36,7 +36,6 @@ namespace ROS2
 
     void ROS2RobotControlComponent::Reflect(AZ::ReflectContext* context)
     {
-        QoS::Reflect(context);
         if (AZ::SerializeContext* serialize = azrtti_cast<AZ::SerializeContext*>(context))
         {
             serialize->Class<ROS2RobotControlComponent, AZ::Component>()
