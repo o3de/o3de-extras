@@ -8,61 +8,89 @@
 
 #pragma once
 
-#include <Atom/RPI.Public/XR/XRResult.h>
 #include <AzCore/std/containers/vector.h>
 #include <AzCore/std/smart_ptr/intrusive_ptr.h>
+#include <Atom/RPI.Public/XR/XRSystemInterface.h>
 
-namespace AZ
+namespace XR
 {
-    namespace RPI
+    class SwapChainDescriptor
     {
-        namespace XR
+    public:
+        AZ_RTTI(SwapChainDescriptor, "{EC10B9A1-9D32-4BC0-AE21-216B1503BBDA}");
+
+        SwapChainDescriptor() = default;
+        virtual ~SwapChainDescriptor() = default;
+
+        //any extra info for a generic xr swap chain descriptor
+    };
+
+    class SwapChainImageDescriptor
+        : public AZ::RPI::XRSwapChainImageDescriptor
+    {
+    public:
+        AZ_RTTI(SwapChainImageDescriptor, "{A42444A3-D1E1-489B-8E6F-C0285C7482F3}", AZ::RPI::XRSwapChainImageDescriptor);
+
+        SwapChainImageDescriptor() = default;
+        virtual ~SwapChainImageDescriptor() = default;
+
+        //any extra info for a generic xr swap chain
+        AZ::u16 m_width;
+        AZ::u16 m_height;
+        AZ::u16 m_arraySize;
+    };
+
+    // This class will be responsible for creating multiple XR::SwapChain::ViewSwapchains
+    // (one per view). Each XR::SwapChain::ViewSwapchain will then be responsible
+    // for manging and synchronizing multiple swap chain images
+    class SwapChain
+    {
+    public:
+        AZ_RTTI(SwapChain, "{0C666E76-E4B7-4097-8D14-713DC2C446EF}");
+
+        SwapChain() = default;
+        virtual ~SwapChain() = default;
+
+        class Image
         {
-            // This class will be responsible for creating multiple XR::SwapChain::ViewSwapchains
-            // (one per view). Each XR::SwapChain::ViewSwapchain will then be responsible
-            // for manging and synchronizing multiple swap chain images
-            class SwapChain
-            {
-            public:
-                virtual ~SwapChain() = default;
+        public:
+            AZ_RTTI(Image, "{4037835D-F1BB-4407-BC98-2299CC7BE0A3}");
 
-                class Image
-                {
-                public:
-                    class Descriptor
-                    {
-                    public:
-                        uint16_t m_width;
-                        uint16_t m_height;
-                        uint16_t m_arraySize;
-                    };
-                    AZStd::intrusive_ptr<Descriptor> m_descriptor;
-                };
+            Image() = default;
+            virtual ~Image() = default;
 
-                class View
-                {
-                public:
-                    //! All the images associated with this ViewSwapChain
-                    AZStd::vector<AZStd::intrusive_ptr<SwapChain::Image>> m_images;
+            AZStd::intrusive_ptr<SwapChainImageDescriptor> m_descriptor;
+        };
 
-                    //! The current image index.
-                    uint32_t m_currentImageIndex = 0;
-                };
+        class View
+        {
+        public:
+            AZ_RTTI(View, "{774EB724-8261-4684-AA78-EDF6BBECD48A}");
 
-                //! Returns the view swap chain related to the index
-                SwapChain::View* GetView(const uint32_t swapChainIndex) const;
+            View() = default;
+            virtual ~View() = default;
 
-                //! Returns the image associated with the provided image
-                //! index and view swap chain index
-                SwapChain::Image* GetImage(uint32_t imageIndex, uint32_t swapChainIndex) const;
+            //! All the images associated with this ViewSwapChain
+            AZStd::vector<AZStd::intrusive_ptr<SwapChain::Image>> m_images;
 
-                ResultCode Init();
+            //! The current image index.
+            AZ::u16 m_currentImageIndex = 0;
+        };
 
-                virtual ResultCode InitInternal();
+        //! Returns the view swap chain related to the index
+        SwapChain::View* GetView(const AZ::u16 swapChainIndex) const;
 
-            private:
-                AZStd::vector<AZStd::intrusive_ptr<SwapChain::View>> m_viewSwapchains;
-            };
-        } // namespace XR
-    } // namespace RPI
-} // namespace AZ
+        //! Returns the image associated with the provided image
+        //! index and view swap chain index
+        SwapChain::Image* GetImage(AZ::u16 imageIndex, AZ::u16 swapChainIndex) const;
+
+        AZ::RHI::ResultCode Init();
+
+        virtual AZ::RHI::ResultCode InitInternal();
+
+        AZStd::intrusive_ptr<SwapChainDescriptor> m_descriptor;
+
+    private:
+        AZStd::vector<AZStd::intrusive_ptr<SwapChain::View>> m_viewSwapchains;
+    };
+} // namespace XR

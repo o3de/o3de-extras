@@ -6,29 +6,33 @@
  *
  */
 
-#include <Atom/RPI.Public/XR/XRFactory.h>
+#include <AzCore/Interface/Interface.h>
+#include <XR/XRFactory.h>
 
-namespace AZ
+namespace XR
 {
-    namespace RPI
+    //! Registers the global factory instance.
+    void Factory::Register(Factory* instance)
     {
-        namespace XR
-        {
-            //! Registers the global factory instance.
-            void Factory::Register(Factory* /*instance*/)
-            {
-            }
+        AZ::Interface<Factory>::Register(instance);
+    }
 
-            //! Unregisters the global factory instance.
-            void Factory::Unregister(Factory* /*instance*/)
-            {
-            }
+    //! Unregisters the global factory instance.
+    void Factory::Unregister(Factory* instance)
+    {
+        AZ::Interface<Factory>::Unregister(instance);
+    }
 
-            //! Access the global factory instance.
-            Factory& Factory::Get()
-            {
-                return;
-            }
-        } // namespace XR
-    } // namespace RPI
-} // namespace AZ
+    bool Factory::IsReady()
+    {
+        return AZ::Interface<Factory>::Get() != nullptr;
+    }
+
+    //! Access the global factory instance.
+    Factory& Factory::Get()
+    {
+        Factory* factory = AZ::Interface<Factory>::Get();
+        AZ_Assert(factory, "XR::Factory failed to create!!!");
+        return *factory;
+    }
+} // namespace XR

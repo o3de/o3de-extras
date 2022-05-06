@@ -6,19 +6,12 @@
  *
  */
 
-#include <Atom/RPI.Public/XR/XRInstance.h>
+#include <XR/XRInstance.h>
 
-namespace AZ
+namespace XR
 {
-    namespace RPI
+    AZ::RHI::ResultCode Instance::InitInstanceInternal()
     {
-        namespace XR
-        {
-            ResultCode Instance::InitInstanceInternal()
-            {
-                return ResultCode::Success;
-            }
-        } // namespace XR
-    } // namespace RPI
-} // namespace AZ
-
+        return AZ::RHI::ResultCode::Success;
+    }
+} // namespace XR

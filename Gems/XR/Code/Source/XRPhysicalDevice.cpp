@@ -6,15 +6,9 @@
  *
  */
 
-#include <Atom/RPI.Public/XR/XRPhysicalDevice.h>
+#include <XR/XRPhysicalDevice.h>
 
-namespace AZ
+namespace XR
 {
-    namespace RPI
-    {
-        namespace XR
-        {
 
-        } // namespace XR
-    } // namespace RPI
-} // namespace AZ
+} // namespace XR

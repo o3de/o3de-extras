@@ -10,6 +10,3 @@
 #include <AzCore/base.h>
 #include <AzCore/PlatformIncl.h>
 #include <AzCore/std/algorithm.h>
-
-
-

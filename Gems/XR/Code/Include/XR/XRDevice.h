@@ -8,36 +8,33 @@
 
 #pragma once
 
-#include <Atom/RHI/Device_Platform.h>
-#include <Atom/RPI.Public/XR/XRPhysicalDevice.h>
-#include <Atom/RPI.Public/XR/XRResult.h>
+#include <Atom/RPI.Public/XR/XRSystemInterface.h>
 
-namespace AZ
+namespace XR
 {
-    namespace RPI
+    class DeviceDescriptor
+        : public AZ::RPI::XRDeviceDescriptor
     {
-        namespace XR
-        {
-            // This class will be responsible for creating XR::Device instance
-            // which will then be passed to the renderer to be used as needed.
-            class Device
-            {
-            public:
-                Device() = default;
-                virtual ~Device() = default;
+    public:
+        AZ_RTTI(DeviceDescriptor, "{1FF2D68D-DA6A-47B3-A5BE-18E3A100C830}");
 
-                class Descriptor
-                {
-                public:
-                    Descriptor() = default;
-                    ~Descriptor() = default;
+        DeviceDescriptor() = default;
+        virtual ~DeviceDescriptor() = default;
 
-                    PhysicalDevice* physicalDevice;
-                };
+        //any extra info for a generic xr device
+    };
 
-                virtual ResultCode InitDeviceInternal(Device::Descriptor descriptor) = 0;
-                Device::Descriptor m_descriptor;
-            };
-        } // namespace XR
-    } // namespace RPI
-} // namespace AZ
+    class Device
+    {
+    public:
+        AZ_RTTI(Device, "{A31B0DC2-BD54-443E-9350-EB1B10670FF9}");
+
+        Device() = default;
+        virtual ~Device() = default;
+
+        AZStd::intrusive_ptr<DeviceDescriptor> m_descriptor;
+
+        virtual AZ::RHI::ResultCode InitDeviceInternal() = 0;
+    };
+} // namespace XR
+

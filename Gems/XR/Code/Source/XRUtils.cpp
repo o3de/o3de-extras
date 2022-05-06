@@ -6,15 +6,9 @@
  *
  */
 
-#include <Atom/RPI.Public/XR/XRUtils.h>
+#include <XR/XRUtils.h>
 
-namespace AZ
+namespace XR
 {
-    namespace RPI
-    {
-        namespace XR
-        {
 
-        }
-    }
 }

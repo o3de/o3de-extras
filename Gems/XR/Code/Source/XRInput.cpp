@@ -6,19 +6,13 @@
  *
  */
 
-#include <Atom/RPI.Public/XR/XRInput.h>
+#include <XR/XRInput.h>
 
-namespace AZ
+namespace XR
 {
-    namespace RPI
+    AZ::RHI::ResultCode Input::Init()
     {
-        namespace XR
-        {
-            ResultCode Input::Init(Input::Descriptor descriptor)
-            {
-                m_session = descriptor.m_session;
-                return InitInternal();
-            }
-        } // namespace XR
-    } // namespace RPI
-} // namespace AZ
+        //m_session = descriptor.m_session;
+        return InitInternal();
+    }
+} // namespace XR

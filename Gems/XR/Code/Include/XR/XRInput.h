@@ -8,43 +8,41 @@
 
 #pragma once
 
-#include <Atom/RPI.Public/XR/XRResult.h>
 #include <AzCore/std/smart_ptr/intrusive_ptr.h>
-#include <Atom/RPI.Public/XR/XRSession.h>
+#include <XR/XRSession.h>
 
-namespace AZ
+namespace XR
 {
-    namespace RPI
+    class InputDescriptor
     {
-        namespace XR
-        {
-            // This class will be responsible for creating XR::Input
-            // which manage event queue or poll actions
-            class Input
-            {
-            public:
-                Input() = default;
-                virtual ~Input() = default;
+    public:
+        AZ_RTTI(InputDescriptor, "{C690ABBF-D8A9-4348-98E6-45BBF432D673}");
 
-                class Descriptor
-                {
-                public:
-                    Descriptor() = default;
-                    ~Descriptor() = default;
+        InputDescriptor() = default;
+        virtual ~InputDescriptor() = default;
 
-                    Session* m_session;
-                };
+        //any extra info for a generic xr InputDescriptor
+        AZStd::intrusive_ptr<Session> m_session;
+    };
 
-                ResultCode Init(Input::Descriptor descriptor);
+    // This class will be responsible for creating XR::Input
+    // which manage event queue or poll actions
+    class Input
+    {
+    public:
+        AZ_RTTI(Input, "{DCDFC6A7-B457-414B-BC24-0831C2AC628B}");
 
-                virtual void InitializeActions() = 0;
-                virtual void PollActions() = 0;
-                virtual void PollEvents() = 0;
-                virtual ResultCode InitInternal() = 0;
+        Input() = default;
+        virtual ~Input() = default;
 
-            private:
-                AZStd::intrusive_ptr<Session> m_session;
-            };
-        } // namespace XR
-    } // namespace RPI
-} // namespace AZ
+        AZ::RHI::ResultCode Init();
+
+        virtual void InitializeActions() = 0;
+        virtual void PollActions() = 0;
+        virtual void PollEvents() = 0;
+        virtual AZ::RHI::ResultCode InitInternal() = 0;
+
+    private:
+        AZStd::intrusive_ptr<InputDescriptor> m_descriptor;
+    };
+} // namespace XR

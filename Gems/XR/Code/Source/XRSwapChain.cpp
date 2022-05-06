@@ -6,31 +6,25 @@
  *
  */
 
-#include <Atom/RPI.Public/XR/XRSwapChain.h>
+#include <XR/XRSwapChain.h>
 
-namespace AZ
+namespace XR
 {
-    namespace RPI
+    //! Returns the view swap chain related to the index
+    SwapChain::View* SwapChain::GetView(const AZ::u16 swapchainIndex) const
     {
-        namespace XR
-        {
-            //! Returns the view swap chain related to the index
-            SwapChain::View* SwapChain::GetView(const uint32_t swapchainIndex) const
-            {
-                return m_viewSwapchains[swapchainIndex].get();
-            }
+        return m_viewSwapchains[swapchainIndex].get();
+    }
 
-            //! Returns the image associated with the provided image
-            //! index and view swap chain index
-            SwapChain::Image* SwapChain::GetImage(uint32_t imageIndex, uint32_t swapchainIndex) const
-            {
-                return GetView(swapchainIndex)->m_images[imageIndex].get();
-            }
+    //! Returns the image associated with the provided image
+    //! index and view swap chain index
+    SwapChain::Image* SwapChain::GetImage(AZ::u16 imageIndex, AZ::u16 swapchainIndex) const
+    {
+        return GetView(swapchainIndex)->m_images[imageIndex].get();
+    }
 
-            ResultCode SwapChain::Init()
-            {
-                return InitInternal();
-            }
-        } // namespace XR
-    } // namespace RPI
-} // namespace AZ
+    AZ::RHI::ResultCode SwapChain::Init()
+    {
+        return InitInternal();
+    }
+} // namespace XR

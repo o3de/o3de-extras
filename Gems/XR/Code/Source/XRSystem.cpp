@@ -6,19 +6,13 @@
  *
  */
 
-#include <Atom/RPI.Public/XR/XRSystemInterface.h>
 #include <AZCore/Interface/Interface.h>
+#include <XR/XRSystem.h>
 
-namespace AZ
+namespace XR
 {
-    namespace RPI
+    System* System::Get()
     {
-        namespace XR
-        {
-            SystemInterface* SystemInterface::Get()
-            {
-                return Interface<SystemInterface>::Get();
-            }
-        } // namespace XR
-    } // namespace RPI
-} // namespace AZ
+        return AZ::Interface<System>::Get();
+    }
+} // namespace XR

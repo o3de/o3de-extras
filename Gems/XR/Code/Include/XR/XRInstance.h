@@ -8,32 +8,33 @@
 
 #pragma once
 
-#include <Atom/RPI.Public/XR/XRResult.h>
-#include <Atom/RPI.Public/XR/XRPhysicalDevice.h>
+#include <Atom/RPI.Public/XR/XRSystemInterface.h>
 
-namespace AZ
+namespace XR
 {
-    namespace RPI
+    class InstanceDescriptor
+        : public AZ::RPI::XRInstanceDescriptor
     {
-        namespace XR
-        {
-            // XR::Instance class. It will be responsible for collecting all the data like
-            // form factor, physical device etc that will be needed to initialize an instance
-            class Instance
-            {
-            public:
-                Instance() = default;
-                virtual ~Instance() = default;
+    public:
+        AZ_RTTI(InstanceDescriptor, "{1C457924-56A4-444F-BC72-4D31A097BA70}");
 
-                class Descriptor
-                {
-                public:
-                    // Form Factor enum
-                    PhysicalDevice* physicalDevice;
-                };
+        InstanceDescriptor() = default;
+        virtual ~InstanceDescriptor() = default;
 
-                virtual ResultCode InitInstanceInternal() = 0;
-            };
-        } // namespace XR
-    } // namespace RPI
-} // namespace AZ
+        //any extra info a generic xr instance descriptor needs
+    };
+
+    class Instance
+    {
+    public:
+        AZ_RTTI(Instance, "{1C457924-56A4-444F-BC72-4D31A097BA70}");
+
+        Instance() = default;
+        virtual ~Instance() = default;
+
+        AZStd::intrusive_ptr<InstanceDescriptor> m_descriptor;
+
+        virtual AZ::RHI::ResultCode InitInstanceInternal();
+    };
+
+} // namespace XR

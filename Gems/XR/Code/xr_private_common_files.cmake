@@ -23,6 +23,7 @@ set(FILES
     Source/XRGraphicsBinding.cpp
     Source/XRInput.cpp
     Source/XRInstance.cpp
+    Source/XRModule.cpp
     Source/XRPhysicalDevice.cpp
     Source/XRSession.cpp
     Source/XRSpace.cpp

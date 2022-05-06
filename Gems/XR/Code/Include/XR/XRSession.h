@@ -8,37 +8,40 @@
 
 #pragma once
 
-#include <Atom/RPI.Public/XR/XRResult.h>
-#include <Atom/RPI.Public/XR/XRGraphicsBinding.h>
+#include <XR/XRGraphicsBinding.h>
 
-namespace AZ
+namespace XR
 {
-    namespace RPI
+    class SessionDescriptor
     {
-        namespace XR
-        {
-            // This class will be responsible for creating XR::Session and
-            // all the code around managing the session state
-            class Session
-            {
-            public:
-                class Descriptor
-                {
-                public:
-                    // Graphics Binding will contain renderer related data to start a xr session
-                    GraphicsBinding* m_graphicsBinding;
-                };
+    public:
+        AZ_RTTI(SessionDescriptor, "{F76B99EF-ED66-4AAA-BA35-578339CAB428}");
 
-                ResultCode Init(Session::Descriptor sessionDesc);
-                bool IsSessionRunning() const;
-                bool IsSessionFocused() const;
-                virtual ResultCode InitSessionInternal(Session::Descriptor descriptor);
+        SessionDescriptor() = default;
+        virtual ~SessionDescriptor() = default;
 
-            private:
-                Session::Descriptor m_descriptor;
-                bool m_sessionRunning = false;
-                bool m_sessionFocused = false;
-            };
-        } // namespace XR
-    } // namespace RPI
-} // namespace AZ
+        // Graphics Binding will contain renderer related data to start a xr session
+        AZStd::intrusive_ptr<GraphicsBinding> m_graphicsBinding;
+    };
+
+    // This class will be responsible for creating XR::Session and
+    // all the code around managing the session state
+    class Session
+    {
+    public:
+        AZ_RTTI(Session, "{E7276FE1-94B8-423A-9C1D-1BCF1A0066BC}");
+
+        Session() = default;
+        virtual ~Session() = default;
+
+        AZ::RHI::ResultCode Init();
+        virtual bool IsSessionRunning() const;
+        virtual bool IsSessionFocused() const;
+        virtual AZ::RHI::ResultCode InitInternal();
+
+    private:
+        AZStd::intrusive_ptr<SessionDescriptor> m_descriptor;
+        bool m_sessionRunning = false;
+        bool m_sessionFocused = false;
+    };
+} // namespace XR

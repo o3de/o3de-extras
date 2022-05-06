@@ -6,33 +6,27 @@
  *
  */
 
-#include <Atom/RPI.Public/XR/XRSession.h>
+#include <XR/XRSession.h>
 
-namespace AZ
+namespace XR
 {
-    namespace RPI
+    AZ::RHI::ResultCode Session::Init()
     {
-        namespace XR
-        {
-            ResultCode Session::Init(Session::Descriptor sessionDesc)
-            {
-                return InitSessionInternal(sessionDesc);
-            }
+        return Session::InitInternal();
+    }
 
-            bool Session::IsSessionRunning() const
-            {
-                return m_sessionRunning;
-            }
+    bool Session::IsSessionRunning() const
+    {
+        return m_sessionRunning;
+    }
 
-            bool Session::IsSessionFocused() const
-            {
-                return m_sessionFocused;
-            }
+    bool Session::IsSessionFocused() const
+    {
+        return m_sessionFocused;
+    }
 
-            ResultCode Session::InitSessionInternal(Session::Descriptor descriptor)
-            {
-                return ResultCode::Success;
-            }
-        } // namespace XR
-    } // namespace RPI
-} // namespace AZ
+    AZ::RHI::ResultCode Session::InitInternal()
+    {
+        return AZ::RHI::ResultCode::Success;
+    }
+} // namespace XR

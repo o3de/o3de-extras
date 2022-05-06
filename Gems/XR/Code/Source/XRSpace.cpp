@@ -6,18 +6,12 @@
  *
  */
 
-#include <Atom/RPI.Public/XR/XRSpace.h>
+#include <XR/XRSpace.h>
 
-namespace AZ
+namespace XR
 {
-    namespace RPI
+    ResultCode Space::InitInternal()
     {
-        namespace XR
-        {
-            ResultCode Space::InitInternal()
-            {
-                return ResultCode::Success;
-            }
-        } // namespace XR
-    } // namespace RPI
-} // namespace AZ
+        return ResultCode::Success;
+    }
+} // namespace XR

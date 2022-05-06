@@ -19,7 +19,7 @@ if(NOT PAL_TRAIT_XR_SUPPORTED)
 
     # Create stub modules. Once we support gem loading configuration, we can remove this stubbed targets
     ly_add_target(
-        NAME XR.Private ${PAL_TRAIT_MONOLITHIC_DRIVEN_MODULE_TYPE}
+        NAME XR ${PAL_TRAIT_MONOLITHIC_DRIVEN_MODULE_TYPE}
         NAMESPACE Gem
         FILES_CMAKE
             xr_stub_module.cmake
@@ -36,7 +36,7 @@ if(NOT PAL_TRAIT_XR_SUPPORTED)
 endif()
 
 ly_add_target(
-    NAME XR.Private.Static STATIC
+    NAME XR.Static STATIC
     NAMESPACE Gem
     FILES_CMAKE
         xr_private_common_files.cmake
@@ -55,11 +55,12 @@ ly_add_target(
         PUBLIC
             AZ::AzCore
             AZ::AzFramework
+            AZ::AtomCore
             Gem::Atom_RPI.Public
 )
 
 ly_add_target(
-    NAME XR.Private ${PAL_TRAIT_MONOLITHIC_DRIVEN_MODULE_TYPE}
+    NAME XR ${PAL_TRAIT_MONOLITHIC_DRIVEN_MODULE_TYPE}
     NAMESPACE Gem
     FILES_CMAKE
         xr_private_common_shared_files.cmake
@@ -71,6 +72,6 @@ ly_add_target(
             Include
     BUILD_DEPENDENCIES
         PRIVATE
-            
+            Gem::XR.Static
 )
 

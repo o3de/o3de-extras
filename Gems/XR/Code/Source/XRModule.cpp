@@ -6,41 +6,27 @@
  *
  */
 
+#include <AzCore/Memory/SystemAllocator.h>
 #include <AzCore/Module/Module.h>
 
-namespace AZ
+namespace XR
 {
-    namespace XR
+    class Module
+        : public AZ::Module
     {
-        class Module
-            : public AZ::Module
+    public:
+        AZ_RTTI(Module, "{71A99524-7D31-42D3-955E-3F4774F310AC}", AZ::Module);
+        AZ_CLASS_ALLOCATOR(Module, AZ::SystemAllocator, 0);
+
+        Module()
+            : AZ::Module()
         {
-        public:
-            AZ_RTTI(Module, "{71A99524-7D31-42D3-955E-3F4774F310AC}", AZ::Module);
+        }
 
-            Module()
-            {
-                m_descriptors.insert(m_descriptors.end(), {
-                    ReflectSystemComponent::CreateDescriptor(),
-                    FactoryManagerSystemComponent::CreateDescriptor(),
-                    FactoryRegistrationFinalizerSystemComponent::CreateDescriptor()
-                });
-            }
-            ~Module() override = default;
-
-            AZ::ComponentTypeList GetRequiredSystemComponents() const override
-            {
-                return AZ::ComponentTypeList
-                {
-                    azrtti_typeid<FactoryManagerSystemComponent>(),
-                    azrtti_typeid<FactoryRegistrationFinalizerSystemComponent>()
-                };
-            }
-        };
-    }
+    };
 }
 
 // DO NOT MODIFY THIS LINE UNLESS YOU RENAME THE GEM
 // The first parameter should be GemName_GemIdLower
 // The second should be the fully qualified name of the class above
-AZ_DECLARE_MODULE_CLASS(XR_Private, AZ::XR::Module)
+AZ_DECLARE_MODULE_CLASS(Gem_XR, XR::Module)

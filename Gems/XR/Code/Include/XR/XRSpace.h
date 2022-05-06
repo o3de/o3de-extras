@@ -8,20 +8,16 @@
 
 #pragma once
 
-#include <Atom/RPI.Public/XR/XRResult.h>
+#include <XR/XRResult.h>
 
-namespace AZ
+namespace XR
 {
-    namespace RPI
+    // This class will be responsible for managing XR Space
+    class Space
     {
-        namespace XR
-        {
-            // This class will be responsible for managing XR Space
-            class Space
-            {
-            public:
-                virtual ResultCode InitInternal() = 0;
-            };
-        } // namespace XR
-    } // namespace RPI
-} // namespace AZ
+    public:
+        AZ_RTTI(Space, "{A78A37F1-8861-4EB4-8FC6-0E9C11394EF1}");
+
+        virtual AZ::RHI::ResultCode InitInternal() = 0;
+    };
+} // namespace XR

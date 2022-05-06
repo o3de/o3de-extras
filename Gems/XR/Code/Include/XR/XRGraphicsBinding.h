@@ -8,29 +8,31 @@
 
 #pragma once
 
-#include <Atom/RHI/GraphicsBinding.h>
+#include <Atom/RPI.Public/XR/XRSystemInterface.h>
 
-namespace AZ
+namespace XR
 {
-    namespace RPI
+    class GraphicsBindingDescriptor
+        : public AZ::RPI::XRGraphicsBindingDescriptor
     {
-        namespace XR
-        {
-            class GraphicsBinding
-                : public AZ::RHI::GraphicsBinding
-            {
-            public:
-                GraphicsBinding() = default;
-                ~GraphicsBinding() = default;
+    public:
+        AZ_RTTI(GraphicsBindingDescriptor, "{6027891C-8920-4B36-83B6-FDF4E3DDDEC7}");
 
-                class Descriptor
-                    : public AZ::RHI::GraphicsBinding::Descriptor
-                {
-                public:
-                    Descriptor() = default;
-                    ~Descriptor() = default;
-                };
-            };
-        } // namespace XR
-    } // namespace RPI
-} // namespace AZ
+        GraphicsBindingDescriptor() = default;
+        virtual ~GraphicsBindingDescriptor() = default;
+
+        //any extra info for a generic xr GraphicsBindingDescriptor
+    };
+
+    class GraphicsBinding
+    {
+    public:
+        AZ_RTTI(GraphicsBinding, "{0520401C-26B2-49E0-8EFD-6AD8E0720E84}");
+
+        GraphicsBinding() = default;
+        virtual ~GraphicsBinding() = default;
+
+        AZStd::intrusive_ptr<GraphicsBindingDescriptor> m_descriptor;
+    };
+} // namespace XR
+

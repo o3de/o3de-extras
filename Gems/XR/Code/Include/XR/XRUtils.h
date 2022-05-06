@@ -8,13 +8,7 @@
 
 #pragma once
 
-namespace AZ
+namespace XR
 {
-    namespace RPI
-    {
-        namespace XR
-        {
 
-        }
-    }
 }

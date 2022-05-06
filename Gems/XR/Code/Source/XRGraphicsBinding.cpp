@@ -6,14 +6,8 @@
  *
  */
 
-#include <Atom/RPI.Public/XR/XRGraphicsBinding.h>
+#include <XR/XRGraphicsBinding.h>
 
-namespace AZ
+namespace XR
 {
-    namespace RPI
-    {
-        namespace XR
-        {
-        } // namespace XR
-    } // namespace RPI
-} // namespace AZ
+} // namespace XR

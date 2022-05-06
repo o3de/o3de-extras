@@ -6,18 +6,9 @@
  *
  */
 
-#include <Atom/RPI.Public/XR/XRDevice.h>
+#include <XR/XRDevice.h>
 
-namespace AZ
+namespace XR
 {
-    namespace RPI
-    {
-        namespace XR
-        {
-            ResultCode Device::InitDeviceInternal(Device::Descriptor /* descriptor */)
-            {
-                return ResultCode::Success;
-            }
-        } // namespace XR
-    } // namespace RPI
-} // namespace AZ
+
+} // namespace XR

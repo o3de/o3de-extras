@@ -8,40 +8,31 @@
 
 #pragma once
 
-#include <Atom/RHI/PhysicalDevice.h>
-#include <Atom/RHI.Reflect/PhysicalDeviceDescriptor.h>
+#include <Atom/RPI.Public/XR/XRSystemInterface.h>
 
-namespace AZ
+namespace XR
 {
-    namespace RPI
+    class PhysicalDeviceDescriptor
     {
-        namespace XR
-        {
-            class PhysicalDeviceDescriptor
-                : public AZ::RHI::PhysicalDeviceDescriptor
-            {
-            public:
-                AZ_RTTI(PhysicalDeviceDescriptor, "{4E11244B-FDED-4CD6-89D7-DC3B4A1C33A8}", AZ::RHI::PhysicalDeviceDescriptor);
+    public:
+        AZ_RTTI(PhysicalDeviceDescriptor, "{4E11244B-FDED-4CD6-89D7-DC3B4A1C33A8}");
 
-                PhysicalDeviceDescriptor() = default;
-                virtual ~PhysicalDeviceDescriptor() = default;
+        PhysicalDeviceDescriptor() = default;
+        virtual ~PhysicalDeviceDescriptor() = default;
 
-                // Other data related to xr device
-            };
+        // Other data related to physical device
+    };
 
-            // This class will be responsible for iterating over all the compatible physical
-            // devices and picking one that will be used for the app
-            class PhysicalDevice
-                : public AZ::RHI::PhysicalDevice
-            {
-            public:
-                AZ_RTTI(PhysicalDevice, "{E7B78CC5-53A9-492E-AA1C-8815FB882E0A}", AZ::RHI::PhysicalDevice);
+    // This class will be responsible for iterating over all the compatible physical
+    // devices and picking one that will be used for the app
+    class PhysicalDevice
+    {
+    public:
+        AZ_RTTI(PhysicalDevice, "{E7B78CC5-53A9-492E-AA1C-8815FB882E0A}");
 
-                PhysicalDevice() = default;
-                virtual ~PhysicalDevice() = default;
+        PhysicalDevice() = default;
+        virtual ~PhysicalDevice() = default;
 
-                PhysicalDeviceDescriptor m_descriptor;
-            };
-        } // namespace XR
-    } // namespace RPI
-} // namespace AZ
+        AZStd::intrusive_ptr<PhysicalDeviceDescriptor> m_descriptor;
+    };
+} // namespace XR
