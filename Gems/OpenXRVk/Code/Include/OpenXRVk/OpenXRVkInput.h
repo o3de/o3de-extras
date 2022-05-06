@@ -8,41 +8,53 @@
 
 #pragma once
 
-#include <Atom/RPI.Public/XR/XRinput.h>
-#include <openxr/openxr.h>
-#include <openxr/openxr_platform.h>
-#include <openxr/openxr_reflection.h>
+#include <XR/XRinput.h>
+#include <OpenXRVk_Platform.h>
 
-namespace AZ
+namespace OpenXRVk
 {
-    namespace OpenXRVk
+    class InputDescriptor final
+        : public XR::InputDescriptor
     {
-        // Class that will help manage XrActionSet/XrAction
-        class Input final
-            : public AZ::RPI::XR::Input
+    public:
+        AZ_RTTI(InputDescriptor, "{5CE5E693-775B-42A5-9B32-7C1006C69975}", XR::InputDescriptor);
+
+        InputDescriptor() = default;
+        virtual ~InputDescriptor() = default;
+
+        //any extra info for a generic xr InputDescriptor
+    };
+
+    // Class that will help manage XrActionSet/XrAction
+    class Input final
+        : public XR::Input
+    {
+    public:
+        AZ_RTTI(Input, "{97ADD1FE-27DF-4F36-9F61-683F881F9477}", XR::Input);
+
+        Input() = default;
+        virtual ~Input() = default;
+
+        static AZStd::intrusive_ptr<XR::Input> Create();
+
+        AZ::RHI::ResultCode Init() override;
+        void InitializeActions() override;
+        void PollActions() override;
+        void PollEvents() override;
+
+    private:
+        struct InputState
         {
-        public:
-            static AZStd::intrusive_ptr<AZ::RPI::XR::Input> Create();
-
-            AZ::RPI::XR::ResultCode Init(AZ::RPI::XR::Input::Descriptor descriptor) override;
-            void InitializeActions() override;
-            void PollActions() override;
-            void PollEvents() override;
-
-        private:
-            struct InputState
-            {
-                XrActionSet actionSet{ XR_NULL_HANDLE };
-                XrAction grabAction{ XR_NULL_HANDLE };
-                XrAction poseAction{ XR_NULL_HANDLE };
-                XrAction vibrateAction{ XR_NULL_HANDLE };
-                XrAction quitAction{ XR_NULL_HANDLE };
-                AZStd::array<XrPath, Side::COUNT> handSubactionPath;
-                AZStd::array<XrSpace, Side::COUNT> handSpace;
-                AZStd::array<float, Side::COUNT> handScale = { { 1.0f, 1.0f } };
-                AZStd::array<XrBool32, Side::COUNT> handActive;
-            };
-            InputState m_input;
+            XrActionSet actionSet{ XR_NULL_HANDLE };
+            XrAction grabAction{ XR_NULL_HANDLE };
+            XrAction poseAction{ XR_NULL_HANDLE };
+            XrAction vibrateAction{ XR_NULL_HANDLE };
+            XrAction quitAction{ XR_NULL_HANDLE };
+            AZStd::array<XrPath, Side::COUNT> handSubactionPath;
+            AZStd::array<XrSpace, Side::COUNT> handSpace;
+            AZStd::array<float, Side::COUNT> handScale = { { 1.0f, 1.0f } };
+            AZStd::array<XrBool32, Side::COUNT> handActive;
         };
-    } // namespace OpenXRVk
-} // namespace AZ
+        InputState m_input;
+    };
+}

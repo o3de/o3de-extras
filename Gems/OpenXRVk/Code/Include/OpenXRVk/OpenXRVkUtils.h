@@ -7,14 +7,13 @@
  */
 
 #pragma once
-#include <openxr/openxr.h>
-#include <openxr/openxr_platform.h>
-#include <openxr/openxr_reflection.h>
 
-namespace AZ
+#include <Atom/RHI.Reflect/Base.h>
+
+#include <OpenXRVk_Platform.h>
+
+namespace OpenXRVk
 {
-    namespace OpenXRVk
-    {
-        bool IsSuccess(XrResult result);
-    }
-} // namespace AZ
+    AZ::RHI::ResultCode ConvertResult(XrResult xrResult);
+    bool IsSuccess(XrResult result);
+}

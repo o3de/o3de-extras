@@ -8,23 +8,34 @@
 
 #pragma once
 
-#include <Atom/RPI.Public/XR/XRDevice.h>
+#include <XR/XRDevice.h>
 #include <OpenXRVk_Platform.h>
 
-namespace AZ
+namespace OpenXRVk
 {
-    namespace OpenXRVk
+    class DeviceDescriptor final
+        : public XR::DeviceDescriptor
     {
-        // Class that will help manage VkDevice
-        class Device final
-            : public AZ::RPI::XR::Device
-        {
-        public:
-            static AZStd::intrusive_ptr<Device> Create();
-            AZ::RPI::XR::ResultCode InitDeviceInternal(AZ::RPI::XR::PhysicalDevice& physicalDevice) override;
+    public:
+        AZ_RTTI(DeviceDescriptor, "{B0DB4670-A233-4F3F-A5C7-5D2B76F6D911}", XR::DeviceDescriptor);
 
-        private:
-            VkDevice m_nativeDevice;
-        };
-    } // namespace OpenXRVk
-} // namespace AZ
+        DeviceDescriptor() = default;
+        virtual ~DeviceDescriptor() = default;
+
+        //any extra info for a generic xr device
+    };
+
+    // Class that will help manage VkDevice
+    class Device final
+        : public XR::Device
+    {
+    public:
+        AZ_RTTI(Device, "{81FD9B99-EDA5-4381-90EC-335073554379}", XR::Device);
+
+        static AZStd::intrusive_ptr<Device> Create();
+        AZ::RHI::ResultCode InitDeviceInternal() override;
+
+    private:
+        VkDevice m_nativeDevice;
+    };
+}

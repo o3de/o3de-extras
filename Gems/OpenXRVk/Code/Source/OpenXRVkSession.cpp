@@ -8,46 +8,51 @@
 
 #include <OpenXRVk/OpenXRVkSession.h>
 
-namespace AZ
+namespace OpenXRVk
 {
-    namespace OpenXRVk
+    AZStd::intrusive_ptr<Session> Session::Create();
     {
-        AZStd::intrusive_ptr<Session> Session::Create();
-        {
-        }
+        return nullptr;
+    }
 
-        AZ::RPI::XR::ResultCode Session::InitSessionInternal(AZ::RPI::XR::Session::Descriptor descriptor) override
-        {
-            // AZStd::intrusive_ptr<GraphicsBinding> gBinding = static_cast<GraphicsBinding>(descriptor.m_graphicsBinding);
-            // xrCreateSession(..m_session,gBinding,..)
-            return AZ::RPI::XR::ResultCode::Success;
-        }
+    AZ::RHI::ResultCode Session::InitInternal()
+    {
+        // AZStd::intrusive_ptr<GraphicsBinding> gBinding = static_cast<GraphicsBinding>(descriptor.m_graphicsBinding);
+        // xrCreateSession(..m_session,gBinding,..)
+        return AZ::RHI::ResultCode::Success;
+    }
 
-        void Session::LogReferenceSpaces()
-        {
-            //..xrEnumerateReferenceSpaces/
-        }
+    void Session::LogReferenceSpaces()
+    {
+        //..xrEnumerateReferenceSpaces/
+    }
 
-        void Session::HandleSessionStateChangedEvent(
-            const XrEventDataSessionStateChanged& stateChangedEvent, bool* exitRenderLoop, bool* requestRestart)
-        {
-            // Handle Session state changes
-        }
+    void Session::HandleSessionStateChangedEvent(
+        const XrEventDataSessionStateChanged& stateChangedEvent,
+        bool* exitRenderLoop,
+        bool* requestRestart)
+    {
+        // Handle Session state changes
+    }
 
-        XrSession Session::GetSession()
-        {
-            return m_session;
-        }
+    XrSession Session::GetXrSession()
+    {
+        return m_session;
+    }
 
-        bool Session::IsSessionFocused() const override
-        {
-            return m_sessionState == XR_SESSION_STATE_FOCUSED;
-        }
+    bool Session::IsSessionRunning() const
+    {
+        return true;
+    }
 
-        AZ::RPI::XR::ResultCode Session::InitInternal()
-        {
-            // Init specific code
-            return AZ::RPI::XR::ResultCode::Success;
-        }
-    } // namespace OpenXRVk
-} // namespace AZ
+    bool Session::IsSessionFocused() const
+    {
+        return m_sessionState == XR_SESSION_STATE_FOCUSED;
+    }
+
+    AZ::RHI::ResultCode Session::InitInternal()
+    {
+        // Init specific code
+        return AZ::RHI::ResultCode::Success;
+    }
+}

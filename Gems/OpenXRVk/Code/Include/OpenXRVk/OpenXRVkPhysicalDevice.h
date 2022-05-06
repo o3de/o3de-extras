@@ -8,11 +8,34 @@
 
 #pragma once
 
-#include <Atom/RPI.Public/XR/XRPhysicalDevice.h>
+#include <XR/XRPhysicalDevice.h>
+#include <OpenXRVk_Platform.h>
 
-namespace AZ
+namespace OpenXRVk
 {
-    namespace OpenXRVk
+    class PhysicalDeviceDescriptor final
+        : public XR::PhysicalDeviceDescriptor
     {
-    }
-} // namespace AZ
+    public:
+        AZ_RTTI(PhysicalDeviceDescriptor, "{CB485C38-E723-4593-ADCF-DFE220A6A24B}", XR::PhysicalDeviceDescriptor);
+
+        PhysicalDeviceDescriptor() = default;
+        virtual ~PhysicalDeviceDescriptor() = default;
+
+        // Other data related to openxr physical device
+    };
+
+    // This class will be responsible for iterating over all the compatible physical
+    // devices and picking one that will be used for the app
+    class PhysicalDevice final
+        : public XR::PhysicalDevice
+    {
+    public:
+        AZ_RTTI(PhysicalDevice, "{7CE8D7C1-7CC6-4841-9505-DED2761617AC}", XR::PhysicalDevice);
+
+        PhysicalDevice() = default;
+        virtual ~PhysicalDevice() = default;
+
+    };
+} // namespace XR
+

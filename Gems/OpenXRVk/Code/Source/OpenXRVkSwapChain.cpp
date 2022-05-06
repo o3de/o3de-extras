@@ -7,43 +7,44 @@
  */
 
 #include <OpenXRVk/OpenXRVkSwapChain.h>
+#include <OpenXRVk/OpenXRVkFactory.h>
 
-namespace AZ
+namespace OpenXRVk
 {
-    namespace OpenXRVk
+    AZStd::intrusive_ptr<SwapChain> SwapChain::Create()
     {
-        AZStd::intrusive_ptr<AZ::RPI::XR::SwapChain> SwapChain::Create()
-        {
-        }
+        return nullptr;
+    }
 
-        AZStd::intrusive_ptr<AZ::RPI::XR::SwapChain::Image> SwapChain::Image::Create()
-        {
-        }
+    AZStd::intrusive_ptr<SwapChain::Image> SwapChain::Image::Create()
+    {
+        return nullptr;
+    }
 
-        AZStd::intrusive_ptr<AZ::RPI::XR::SwapChain::View> SwapChain::View::Create()
-        {
-        }
+    AZStd::intrusive_ptr<SwapChain::View> SwapChain::View::Create()
+    {
+        return nullptr;
+    }
 
-        AZ::RPI::XR::ResultCode SwapChain::View::Init(XrSwapchain handle, uint32_t width, uint32_t height)
-        {
-            return AZ::RPI::XR::ResultCode::Success;
-        }
+    AZ::RHI::ResultCode SwapChain::View::Init(XrSwapchain handle, AZ::u32 width, AZ::u32 height)
+    {
+        return AZ::RHI::ResultCode::Success;
+    }
 
-        AZ::RPI::XR::ResultCode SwapChain::InitInternal()
+    AZ::RHI::ResultCode SwapChain::InitInternal()
+    {
+        // xrEnumerateViewConfigurationViews
+        for (int i = 0; i < m_views.size(); i++)
         {
-            // xrEnumerateViewConfigurationViews
-            for (int i = 0; i < m_views.size(); i++)
-            {
-                // xrCreateSwapchain
-                AZStd::intrusive_ptr<SwapChain::View> vSwapChain = Factory::Get()->ViewSwapChain();
+            // xrCreateSwapchain
+            //AZStd::intrusive_ptr<SwapChain::View> vSwapChain = OpenXRVk::Factory::Get()->ViewSwapChain();
 
-                if (vSwapChain)
-                {
-                    xrCreateSwapchain(.., xrSwapchainHandle, .) vSwapChain->Init(xrSwapchainHandle, ..);
-                    m_viewSwapchains.push_back(vSwapChain);
-                }
-            }
-            return AZ::RPI::XR::ResultCode::Success;
+            //if (vSwapChain)
+            //{
+                //xrCreateSwapchain(.., xrSwapchainHandle, .) vSwapChain->Init(xrSwapchainHandle, ..);
+                //m_viewSwapchains.push_back(vSwapChain);
+            //}
         }
-    } // namespace OpenXRVk
-} // namespace AZ
+        return AZ::RHI::ResultCode::Success;
+    }
+}

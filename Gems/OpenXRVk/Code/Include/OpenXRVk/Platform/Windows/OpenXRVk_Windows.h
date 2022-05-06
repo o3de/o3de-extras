@@ -11,8 +11,8 @@
 #include <AzCore/PlatformIncl.h>
 #include <AzCore/std/algorithm.h>
 #include <limits.h>
+
+#include <glad/vulkan.h>
 #include <openxr/openxr.h>
 #include <openxr/openxr_platform.h>
 #include <openxr/openxr_reflection.h>
-
-

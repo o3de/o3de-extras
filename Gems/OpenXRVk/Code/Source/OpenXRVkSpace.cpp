@@ -8,16 +8,14 @@
 
 #include <OpenXRVk/OpenXRVkSpace.h>
 
-namespace AZ
+namespace OpenXRVk
 {
-    namespace OpenXRVk
+    AZStd::intrusive_ptr<AZ::RPI::XR::Space> Space::Create()
     {
-        AZStd::intrusive_ptr<AZ::RPI::XR::Space> Space::Create()
-        {
-        }
+    }
 
-        XrSpaceLocation GetSpace(XrSpace space)
-        {
-        }
-    } // namespace OpenXRVk
-} // namespace AZ
+    //XrSpaceLocation GetSpace(XrSpace space)
+    //{
+     //   return XrSpaceLocation()
+    //}
+}

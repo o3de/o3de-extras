@@ -8,10 +8,7 @@
 
 #include <OpenXRVk/OpenXRVkGraphicsBinding.h>
 
-namespace AZ
+namespace OpenXRVk
 {
-    namespace OpenXRVk
-    {
 
-    } // namespace OpenXRVk
-} // namespace AZ
+}

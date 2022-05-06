@@ -6,18 +6,30 @@
  *
  */
 
-namespace AZ
+#include <OpenXRVk/OpenXRVkUtils.h>
+
+namespace OpenXRVk
 {
-    namespace OpenXRVk
+    AZ::RHI::ResultCode ConvertResult(XrResult xrResult)
     {
-        bool IsSuccess(XrResult result)
+        switch (xrResult)
         {
-            if (result != XR_SUCCESS)
-            {
-                AZ_Error("XR", false, "ERROR: XR API method failed: %s", GetResultString(result));
-                return false;
-            }
-            return true;
+        case XR_SUCCESS:
+            return AZ::RHI::ResultCode::Success;
+        case XR_ERROR_OUT_OF_MEMORY:
+            return AZ::RHI::ResultCode::OutOfMemory;
+        default:
+            return AZ::RHI::ResultCode::Fail;
         }
-    } // namespace OpenXRVk
-} // namespace AZ
+    }
+
+    bool IsSuccess(XrResult result)
+    {
+        if (result != XR_SUCCESS)
+        {
+            AZ_Error("XR", false, "ERROR: XR API method failed: %s", GetResultString(result));
+            return false;
+        }
+        return true;
+    }
+}

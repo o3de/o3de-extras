@@ -8,20 +8,19 @@
 
 #include <OpenXRVk/OpenXRVkInstance.h>
 
-namespace AZ
+namespace OpenXRVk
 {
-    namespace OpenXRVk
+    AZStd::intrusive_ptr<Instance> Instance::Create();
     {
-        AZStd::intrusive_ptr<Instance> Instance::Create();
-        {
-        }
+        return nullptr;
+    }
 
-        XR::ResultCode Instance::InitInstanceInternal();
-        {
-            // xrCreateInstance(m_xrInstance)
-            // xrGetSystem(m_systemId)
-            // vkCreateInstance(m_instance)
-            return AZ::RPI::XR::ResultCode::Success;
-        }
-    } // namespace OpenXRVk
-} // namespace AZ
+    AZ::RHI::ResultCode Instance::InitInstanceInternal();
+    {
+        AZ::RHI::ResultCode res = XR::Instance::InitInstanceInternal();
+        // xrCreateInstance(m_xrInstance)
+        // xrGetSystem(m_systemId)
+        // vkCreateInstance(m_instance)
+        return res;
+    }
+}

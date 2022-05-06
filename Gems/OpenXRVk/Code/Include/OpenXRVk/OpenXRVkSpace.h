@@ -8,26 +8,21 @@
 
 #pragma once
 
-#include <Atom/RPI.Public/XR/XRSpace.h>
-#include <openxr/openxr.h>
-#include <openxr/openxr_platform.h>
-#include <openxr/openxr_reflection.h>
+#include <XR/XRSpace.h>
+#include <OpenXRVk_Platform.h>
 
-namespace AZ
+namespace OpenXRVk
 {
-    namespace OpenXRVk
+    // Class that will help manage XrSpaces
+    class Space final
+        : public XR::Space
     {
-        // Class that will help manage XrSpaces
-        class Space final
-            : public AZ::RPI::XR::Space
-        {
-        public:
-            static AZStd::intrusive_ptr<AZ::RPI::XR::Space> Create();
+    public:
+        static AZStd::intrusive_ptr<Space> Create();
 
-            XrSpaceLocation GetSpace(XrSpace space);
+        //XrSpaceLocation GetSpace(XrSpace space);
 
-        private:
-            XrSpace m_baseSpace{ XR_NULL_HANDLE };
-        };
-    } // namespace OpenXRVk
-} // namespace AZ
+    private:
+        XrSpace m_baseSpace{ XR_NULL_HANDLE };
+    };
+}

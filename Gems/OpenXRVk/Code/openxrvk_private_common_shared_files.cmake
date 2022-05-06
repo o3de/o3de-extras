@@ -7,5 +7,5 @@
 #
 
 set(FILES
-    Source/Module.cpp
+    Source/OpenXRVkModule.cpp
 )

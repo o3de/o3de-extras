@@ -8,58 +8,78 @@
 
 #pragma once
 
-#include <Atom/RPI.Public/XR/XRSwapChain.h>
-#include <glad/vulkan.h>
-#include <openxr/openxr.h>
-#include <openxr/openxr_platform.h>
-#include <openxr/openxr_reflection.h>
+#include <XR/XRSwapChain.h>
+#include <OpenXRVk_Platform.h>
 
-namespace AZ
+namespace OpenXRVk
 {
-    namespace OpenXRVk
+    class SwapChainDescriptor final
+        : public XR::SwapChainDescriptor
     {
-        // Class that will help manage XrSwapchain
-        class SwapChain final
-            : public AZ::RPI::XR::SwapChain
+    public:
+        AZ_RTTI(SwapChainDescriptor, "{0C6214B3-9271-4972-B6B0-13C4A23D9155}", XR::SwapChainDescriptor);
+
+        SwapChainDescriptor() = default;
+        virtual ~SwapChainDescriptor() = default;
+
+        //any extra info for a openxr swap chain descriptor
+    };
+
+    class SwapChainImageDescriptor final
+        : public XR::SwapChainImageDescriptor
+    {
+    public:
+        AZ_RTTI(SwapChainImageDescriptor, "{056D30CF-4B1E-4EC3-9990-A7D9C38C895B}", XR::SwapChainImageDescriptor);
+
+        SwapChainImageDescriptor() = default;
+        virtual ~SwapChainImageDescriptor() = default;
+
+        //any extra info for a openxr swap chain image descriptor
+    };
+
+    // Class that will help manage XrSwapchain
+    class SwapChain final
+        : public XR::SwapChain
+    {
+    public:
+        virtual ~SwapChain() = default;
+
+        static AZStd::intrusive_ptr<SwapChain> Create();
+
+        class Image final
+            : public XR::SwapChain::Image
         {
         public:
-            static AZStd::intrusive_ptr<AZ::RPI::XR::SwapChain> Create();
+            AZ_RTTI(Image, "{717ABDD4-C050-4FDF-8E93-3784F81FE315}", XR::SwapChain::Image);
 
-            class Image final
-                : public AZ::RPI::XR::SwapChain::Image
-            {
-            public:
-                class Descriptor final
-                    : public AZ::RPI::XR::SwapChain::Image::Descriptor
-                {
-                public:
-                };
-                static AZStd::intrusive_ptr<AZ::RPI::XR::SwapChain::Image> Create();
-
-            private:
-                VkImage m_image;
-                XrSwapchainImageBaseHeader* m_swapChainImageHeader;
-            };
-
-            class View final
-                : public AZ::RPI::XR::SwapChain::View
-            {
-            public:
-                static AZStd::intrusive_ptr<View> Create();
-                AZ::RPI::XR::ResultCode Init(XrSwapchain handle, uint32_t width, uint32_t height);
-
-            private:
-                XrSwapchain m_handle;
-                int32_t m_width;
-                int32_t m_height;
-            };
-
-            AZ::RPI::XR::ResultCode InitInternal() override;
+            static AZStd::intrusive_ptr<Image> Create();
 
         private:
-            AZStd::vector<XrViewConfigurationView> m_configViews;
-            AZStd::vector<XrView> m_views;
-            int64_t m_colorSwapchainFormat{ -1 };
+            VkImage m_image;
+            XrSwapchainImageBaseHeader* m_swapChainImageHeader;
         };
-    } // namespace OpenXRVk
-} // namespace AZ
+
+        class View final
+            : public XR::SwapChain::View
+        {
+        public:
+            AZ_RTTI(View, "{F8312427-AC2D-4737-9A8F-A16ADA5319D0}", XR::SwapChain::View);
+
+            static AZStd::intrusive_ptr<View> Create();
+            
+            AZ::RHI::ResultCode Init(XrSwapchain handle, AZ::u32 width, AZ::u32 height);
+
+        private:
+            XrSwapchain m_handle;
+            AZ::u32 m_width;
+            AZ::u32 m_height;
+        };
+
+        AZ::RHI::ResultCode InitInternal() override;
+
+    private:
+        AZStd::vector<XrViewConfigurationView> m_configViews;
+        AZStd::vector<XrView> m_views;
+        int64_t m_colorSwapchainFormat{ -1 };
+    };
+}

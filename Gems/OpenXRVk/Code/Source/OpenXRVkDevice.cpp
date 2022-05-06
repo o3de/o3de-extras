@@ -8,18 +8,17 @@
 
 #include <OpenXRVk/OpenXRVkDevice.h>
 
-namespace AZ
+namespace OpenXRVk
 {
-    namespace OpenXRVk
+    AZStd::intrusive_ptr<Device> Device::Create()
     {
-        static AZStd::intrusive_ptr<Device> Device::Create()
-        {
-        }
+        return nullptr;
+    }
 
-        XR::ResultCode Device::InitDeviceInternal(XR::PhysicalDevice& physicalDevice)
-        {
-            // Create Vulkan Device
-            return AZ::RPI::XR::ResultCode::Success;
-        }
-    } // namespace OpenXRVk
-} // namespace AZ
+    AZ::RHI::ResultCode Device::InitDeviceInternal()
+    {
+        // Create Vulkan Device
+        //m_nativeDevice = Create();
+        return AZ::RHI::ResultCode::Success;
+    }
+}

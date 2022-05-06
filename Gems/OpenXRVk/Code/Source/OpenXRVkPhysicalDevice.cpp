@@ -8,9 +8,6 @@
 
 #include <OpenXRVk/OpenXRVkPhysicalDevice.h>
 
-namespace AZ
+namespace OpenXRVk
 {
-    namespace OpenXRVk
-    {
-    } // OpenXRVk
-} // namespace AZ
+}

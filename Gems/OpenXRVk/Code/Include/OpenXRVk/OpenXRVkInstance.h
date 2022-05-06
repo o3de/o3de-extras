@@ -8,34 +8,44 @@
 
 #pragma once
 
-#include <Atom/RPI.Public/XR/XRInstance.h>
-#include <Atom/RPI.Public/XR/XRResult.h>
+#include <XR/XRInstance.h>
 #include <AzCore/std/containers/vector.h>
 #include <AzCore/std/smart_ptr/intrusive_ptr.h>
-#include <glad/vulkan.h>
-#include <openxr/openxr.h>
-#include <openxr/openxr_platform.h>
-#include <openxr/openxr_reflection.h>
+#include <OpenXRVk_Platform.h>
 
-namespace AZ
+namespace OpenXRVk
 {
-    namespace OpenXRVk
+    class InstanceDescriptor final
+        : public XR::InstanceDescriptor
     {
-        // Class that will help manage XrInstance
-        class Instance final
-            : public AZ::RPI::XR::Instance
-        {
-        public:
-            static AZStd::intrusive_ptr<Instance> Create();
-            AZ::RPI::ResultCode InitInstanceInternal() override;
+    public:
+        AZ_RTTI(InstanceDescriptor, "{F7D29A7A-5841-4B6F-ADFE-3734316BC63D}", XR::InstanceDescriptor);
 
-        private:
-            XrInstance m_xrInstance{ XR_NULL_HANDLE };
-            AZStd::vector<XrApiLayerProperties> m_layers;
-            AZStd::vector<XrExtensionProperties> m_extensions;
-            XrFormFactor m_formFactor{ XR_FORM_FACTOR_HEAD_MOUNTED_DISPLAY };
-            XrSystemId m_systemId{ XR_NULL_SYSTEM_ID };
-            VkInstance m_instance = VK_NULL_HANDLE;
-        };
-    } // namespace OpenXRVk
-} // namespace AZ
+        InstanceDescriptor() = default;
+        virtual ~InstanceDescriptor() = default;
+
+        //any extra info a openxr instance descriptor needs
+    };
+
+    // Class that will help manage XrInstance
+    class Instance final
+        : public XR::Instance
+    {
+    public:
+        AZ_RTTI(Instance, "{1A62DF32-2909-431C-A938-B1E841A50768}", XR::Instance);
+
+        Instance() = default;
+        virtual ~Instance() = default;
+
+        static AZStd::intrusive_ptr<Instance> Create();
+        virtual AZ::RHI::ResultCode InitInstanceInternal() override;
+
+    private:
+        XrInstance m_xrInstance{ XR_NULL_HANDLE };
+        AZStd::vector<XrApiLayerProperties> m_layers;
+        AZStd::vector<XrExtensionProperties> m_extensions;
+        XrFormFactor m_formFactor{ XR_FORM_FACTOR_HEAD_MOUNTED_DISPLAY };
+        XrSystemId m_systemId{ XR_NULL_SYSTEM_ID };
+        VkInstance m_instance = VK_NULL_HANDLE;
+    };
+}

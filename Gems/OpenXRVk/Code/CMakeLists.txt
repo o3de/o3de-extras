@@ -19,7 +19,7 @@ if(NOT PAL_TRAIT_OPENXRVK_SUPPORTED)
 
     # Create stub modules. Once we support gem loading configuration, we can remove this stubbed targets
     ly_add_target(
-        NAME OpenXRVk.Private ${PAL_TRAIT_MONOLITHIC_DRIVEN_MODULE_TYPE}
+        NAME OpenXRVk ${PAL_TRAIT_MONOLITHIC_DRIVEN_MODULE_TYPE}
         NAMESPACE Gem
         FILES_CMAKE
             openxrvk_stub_module.cmake
@@ -36,7 +36,7 @@ if(NOT PAL_TRAIT_OPENXRVK_SUPPORTED)
 endif()
 
 ly_add_target(
-    NAME OpenXRVk.Private.Static STATIC
+    NAME OpenXRVk.Static STATIC
     NAMESPACE Gem
     FILES_CMAKE
         openxrvk_private_common_files.cmake
@@ -57,11 +57,13 @@ ly_add_target(
             AZ::AzFramework
             3rdParty::OpenXR
             3rdParty::glad_vulkan
+            AZ::AtomCore
             Gem::Atom_RPI.Public
+            Gem::XR
 )
 
 ly_add_target(
-    NAME OpenXRVk.Private ${PAL_TRAIT_MONOLITHIC_DRIVEN_MODULE_TYPE}
+    NAME OpenXRVk ${PAL_TRAIT_MONOLITHIC_DRIVEN_MODULE_TYPE}
     NAMESPACE Gem
     FILES_CMAKE
         openxrvk_private_common_shared_files.cmake
@@ -71,8 +73,9 @@ ly_add_target(
             ${pal_source_dir}
         PUBLIC
             Include
+            ${pal_include_dir}
     BUILD_DEPENDENCIES
         PRIVATE
-            
+            Gem::OpenXRVk.Static
 )
 

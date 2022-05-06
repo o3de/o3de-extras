@@ -8,36 +8,34 @@
 
 #include <OpenXRVk/OpenXRVkInput.h>
 
-namespace AZ
+namespace OpenXRVk
 {
-    namespace OpenXRVk
+    AZStd::intrusive_ptr<XR::Input> Input::Create()
     {
-        AZStd::intrusive_ptr<AZ::RPI::XR::Input> Input::Create()
-        {
-        }
+        return nullptr;
+    }
 
-        AZ::RPI::XR::ResultCode Input::Init()
-        {
-            InitializeActions();
-        }
+    AZ::RHI::ResultCode Input::Init()
+    {
+        InitializeActions();
+    }
 
-        void Input::InitializeActions()
-        {
-            // Code to populate m_input
-            // xrCreateActionSet
-            // xrCreateAction
-            // xrCreateActionSpace
-            // xrAttachSessionActionSets
-        }
+    void Input::InitializeActions()
+    {
+        // Code to populate m_input
+        // xrCreateActionSet
+        // xrCreateAction
+        // xrCreateActionSpace
+        // xrAttachSessionActionSets
+    }
 
-        void Input::PollActions()
-        {
-            // xrSyncActions
-        }
+    void Input::PollActions()
+    {
+        // xrSyncActions
+    }
 
-        void Input::PollEvents()
-        {
-            // m_session->HandleSessionStateChangedEvent
-        }
-    } // namespace OpenXRVk
-} // namespace AZ
+    void Input::PollEvents()
+    {
+        // m_session->HandleSessionStateChangedEvent
+    }
+}

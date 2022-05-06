@@ -8,7 +8,8 @@
 
 #pragma once
 
-#include <Atom/RPI.Public/XR/XRFactory.h>
+#include <XR/XRFactory.h>
+#include <OpenXRVk_Platform.h>
 #include <OpenXRVk/OpenXRVkDevice.h>
 #include <OpenXRVk/OpenXRVkInstance.h>
 #include <OpenXRVk/OpenXRVkPhysicalDevice.h>
@@ -17,48 +18,45 @@
 #include <OpenXRVk/OpenXRVkSwapChain.h>
 #include <OpenXRVk/OpenXRVkGraphicsBinding.h>
 
-namespace AZ
+namespace OpenXRVk
 {
-    namespace OpenXRVk
+    //! Interface responsible for creating all the XR objects which are
+    //! internally backed by concrete objects
+    class Factory final
+        : public XR::Factory
     {
-        //! Interface responsible for creating all the XR objects which are
-        //! internally backed by concrete objects
-        class Factory final
-            : public AZ::RPI::XR::Factory
-        {
-        public:
-            AZ_CLASS_ALLOCATOR(Factory, AZ::SystemAllocator, 0);
+    public:
+        AZ_CLASS_ALLOCATOR(Factory, AZ::SystemAllocator, 0);
 
-            AZ_DISABLE_COPY_MOVE(Factory);
+        AZ_DISABLE_COPY_MOVE(Factory);
 
-            Factory();
-            ~Factory();
+        Factory();
+        ~Factory();
 
-            // Create XR::Instance object
-            AZStd::intrusive_ptr<AZ::RPI::XR::Instance> CreateInstance() override;
+        // Create XR::Instance object
+        AZStd::intrusive_ptr<XR::Instance> CreateInstance() override;
 
-            // Create XR::Device object
-            AZStd::intrusive_ptr<AZ::RPI::XR::Device> CreateDevice() override;
+        // Create XR::Device object
+        AZStd::intrusive_ptr<XR::Device> CreateDevice() override;
 
-            // Return a list of XR::PhysicalDevice
-            AZStd::vector<AZStd::intrusive_ptr<AZ::RPI::XR::PhysicalDevice>> EnumerateDeviceList() override;
+        // Return a list of XR::PhysicalDevice
+        AZStd::vector<AZStd::intrusive_ptr<XR::PhysicalDevice>> EnumerateDeviceList() override;
 
-            // Create XR::Session object
-            AZStd::intrusive_ptr<AZ::RPI::XR::Session> CreateSession() override;
+        // Create XR::Session object
+        AZStd::intrusive_ptr<XR::Session> CreateSession() override;
 
-            // Create XR::Input object
-            AZStd::intrusive_ptr<AZ::RPI::XR::Input> CreateInput() override;
+        // Create XR::Input object
+        AZStd::intrusive_ptr<XR::Input> CreateInput() override;
 
-            // Create XR::SwapChain object
-            AZStd::intrusive_ptr<AZ::RPI::XR::SwapChain> CreateSwapchain() override;
+        // Create XR::SwapChain object
+        AZStd::intrusive_ptr<XR::SwapChain> CreateSwapchain() override;
 
-            // Create XR::ViewSwapChain object
-            AZStd::intrusive_ptr<AZ::RPI::XR::SwapChain::View> CreateViewSwapchain() override;
+        // Create XR::ViewSwapChain object
+        AZStd::intrusive_ptr<XR::SwapChain::View> CreateViewSwapchain() override;
 
-            // Create RPI::XR::GraphicsBindingDescriptor that will contain
-            // renderer information needed to start a session
-            AZStd::intrusive_ptr<AZ::RPI::XR::GraphicsBinding::Descriptor> CreateGraphicsBindingDescriptor() override;
+        // Create RPI::XR::GraphicsBindingDescriptor that will contain
+        // renderer information needed to start a session
+        AZStd::intrusive_ptr<XR::GraphicsBindingDescriptor> CreateGraphicsBindingDescriptor() override;
 
-        };
-    } // namespace OpenXRVk
-} // namespace AZ
+    };
+}

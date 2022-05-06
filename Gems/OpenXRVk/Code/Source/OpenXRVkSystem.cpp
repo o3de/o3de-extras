@@ -8,170 +8,167 @@
 
 #include <OpenXRVk/OpenXRVkSystem.h>
 
-namespace AZ
+namespace OpenXRVk
 {
-    namespace OpenXRVk
+    // Accessor functions for RHI objects that are populated by backend XR gems
+    // This will allow XR gem to provide device related data to RHI
+    AZ::RPI::XRDeviceDescriptor* OpenXRVk::System::GetDeviceDescriptor()
     {
-        // Accessor functions for RHI objects that are populated by backend XR gems
-        // This will allow XR gem to provide device related data to RHI
-        AZ::RPI::XR::Device::Descriptor* OpenXRVk::System::GetDeviceDescriptor()
+        return m_deviceDesc.get();
+    }
+
+    // Provide access to instance specific data to RHI
+    AZ::RPI::XRInstanceDescriptor* OpenXRVk::System::GetInstanceDescriptor()
+    {
+        return m_instanceDesc.get();
+    }
+
+    // Provide Swapchain specific data to RHI
+    AZ::RPI::XRSwapChainImageDescriptor* OpenXRVk::System::GetSwapChainImageDescriptor(int swapchainIndex)
+    {
+        return m_swapchainDesc->m_descriptor.get();
+    }
+
+    // Provide access to Graphics Binding specific data that RHI can populate
+    AZ::RPI::XRGraphicsBindingDescriptor* OpenXRVk::System::GetGraphicsBindingDescriptor()
+    {
+        return m_graphicsBindingDesc.get();
+    }
+
+    // Access supported Layers and extension names
+    const AZStd::vector<AZStd::string>& OpenXRVk::System::GetLayerNames()
+    {
+    }
+
+    const AZStd::vector<AZStd::string>& OpenXRVk::System::GetExtensionNames()
+    {
+    }
+
+    // Create XR instance object and initialize it
+    AZ::RHI::ResultCode OpenXRVk::System::InitInstance()
+    {
+        m_instance = XR::Factory::Get()->CreateInstance();
+
+        if (m_instance)
         {
-            return m_deviceDesc.get();
+            return m_instance->InitInstanceInternal();
+        }
+        return AZ::RPI::XR::ResultCode::Fail;
+    }
+
+    // Create XR device object and initialize it
+    AZ::RHI::ResultCode OpenXRVk::System::InitDevice()
+    {
+        m_device = XR::Factory::Get()->CreateDevice();
+
+        // Get a list of XR compatible devices
+        AZStd::vector<AZStd::intrusive_ptr<PhysicalDevice>> physicalDeviceList = Factory::Get()->EnumerateDeviceList();
+
+        // Code to pick the correct device.
+        // For now we can just pick the first device in the list
+
+        if (m_device)
+        {
+            return m_device->InitDeviceInternal();
+        }
+        return AZ::RHI::ResultCode::Fail;
+    }
+
+    // Initialize XR instance and device
+    AZ::RHI::ResultCode OpenXRVk::System::InitializeSystem()
+    {
+        AZ::RHI::ResultCode instResult = InitInstance();
+        if (instResult != AZ::RHI::ResultCode::Success)
+        {
+            AZ_Assert(false, "XR Instance creation failed");
+            return instResult;
         }
 
-        // Provide access to instance specific data to RHI
-        RPI::XR::Instance::Descriptor* OpenXRVk::System::GetInstanceDescriptor()
+        AZ::RHI::ResultCode deviceResult = InitDevice();
+        if (deviceResult != AZ::RHI::ResultCode::Success)
         {
-            return m_instanceDesc.get();
+            AZ_Assert(false, "XR device creation failed");
+            return deviceResult;
+        }
+        return AZ::RHI::ResultCode::Success;
+    }
+
+    // Initialize a XR session
+    AZ::RHI::ResultCode OpenXRVk::System::InitializeSession(AZStd::intrusive_ptr<GraphicsBinding> graphicsBinding)
+    {
+        m_session = XR::Factory::Get()->CreateSession();
+
+        if (m_session)
+        {
+            XR::SessionDescriptor sessionDesc;
+            m_gbDesc = XR::Factory::Get()->CreateGraphicsBindingDescriptor();
+            sessionDesc.m_graphicsBinding = RPISystem::Get()->PopulateGrapicsBinding(m_graphicsBindingDesc);
+            AZ::RHI::ResultCode sessionResult = m_session->Init(sessionDesc);
+            AZ_Assert(sessionResult == AZ::RHI::ResultCode::Success, "Session init failed");
+
+            m_xrInput = XR::Factory::Get()->CreateInput();
+            return m_xrInput->InitializeActions();
+        }
+        return AZ::RHI::ResultCode::Fail;
+    }
+
+    // Manage session lifecycle to track if RenderFrame should be called.
+    bool OpenXRVk::System::IsSessionRunning() const
+    {
+        return m_session->IsSessionRunning();
+    }
+
+    // Create a Swapchain which will responsible for managing
+    // multiple XR swapchains and multiple swapchain images within it
+    AZ::RHI::ResultCode OpenXRVk::System::CreateSwapchain()
+    {
+        m_swapChain = XR::Factory::Get()->CreateSwapchain();
+
+        if (m_swapChain)
+        {
+            ResultCode swapchainCreationResult = m_swapChain->Init(sessionDesc);
+            AZ_Assert(sessionResult == ResultCode::Success, "Swapchain init failed");
+            return swapchainCreationResult;
+        }
+        return AZ::RHI::ResultCode::Fail;
+    }
+
+    // Indicate start of a frame
+    void OpenXRVk::System::BeginFrame()
+    {
+    }
+
+    // Indicate end of a frame
+    void OpenXRVk::System::EndFrame()
+    {
+    }
+
+    // Indicate start of a XR view to help with synchronizing XR swapchain
+    void OpenXRVk::System::BeginView()
+    {
+    }
+
+    // Indicate end of a XR view to help with synchronizing XR swapchain
+    void OpenXRVk::System::EndView()
+    {
+    }
+
+    AZ::RHI::ResultCode OpenXRVk::System::InitInstance()
+    {
+    }
+
+    // System Tick to poll input data
+    void OpenXRVk::System::OnSystemTick()
+    {
+        m_input->PollEvents();
+        if (exitRenderLoop)
+        {
+            break;
         }
 
-        // Provide Swapchain specific data to RHI
-        RPI::XR::SwapChain::Image::Descriptor* OpenXRVk::System::GetSwapChainImageDescriptor(int swapchainIndex)
+        if (IsSessionRunning())
         {
-            return m_swapchainDesc->m_descriptor.get();
+            m_input->PollActions();
         }
-
-        // Provide access to Graphics Binding specific data that RHI can populate
-        RHI::GraphicsBinding::Descriptor* OpenXRVk::System::GetGraphicsBindingDescriptor()
-        {
-            return m_graphicsBindingDesc.get();
-        }
-
-        // Access supported Layers and extension names
-        const AZStd::vector<AZStd::string>& OpenXRVk::System::GetLayerNames()
-        {
-        }
-
-        const AZStd::vector<AZStd::string>& OpenXRVk::System::GetExtensionNames()
-        {
-        }
-
-        // Create XR instance object and initialize it
-        AZ::RPI::XR::ResultCode OpenXRVk::System::InitInstance()
-        {
-            m_instance = Factory::Get()->CreateXRInstance();
-
-            if (m_instance)
-            {
-                return m_instance->InitInstanceInternal();
-            }
-            return AZ::RPI::XR::ResultCode::Fail;
-        }
-
-        // Create XR device object and initialize it
-        AZ::RPI::XR::ResultCode OpenXRVk::System::InitDevice()
-        {
-            m_device = Factory::Get()->CreateXRDevice();
-
-            // Get a list of XR compatible devices
-            AZStd::vector<AZStd::intrusive_ptr<PhysicalDevice>> physicalDeviceList = Factory::Get()->EnumerateDeviceList();
-
-            // Code to pick the correct device.
-            // For now we can just pick the first device in the list
-
-            if (m_device)
-            {
-                return m_device->InitDeviceInternal();
-            }
-            return AZ::RPI::XR::ResultCode::Fail;
-        }
-
-        // Initialize XR instance and device
-        AZ::RPI::XR::ResultCode OpenXRVk::System::InitializeSystem() override
-        {
-            AZ::RPI::XR::ResultCode instResult = InitInstance();
-            if (instResult != AZ::RPI::XR::ResultCode::Success)
-            {
-                AZ_Assert(false, "XR Instance creation failed");
-                return instResult;
-            }
-
-            AZ::RPI::XR::ResultCode deviceResult = InitDevice();
-            if (deviceResult != AZ::RPI::XR::ResultCode::Success)
-            {
-                AZ_Assert(false, "XR device creation failed");
-                return deviceResult;
-            }
-            return AZ::RPI::XR::ResultCode::Success;
-        }
-
-        // Initialize a XR session
-        AZ::RPI::XR::ResultCode OpenXRVk::System::InitializeSession(AZStd::intrusive_ptr<GraphicsBinding> graphicsBinding) override
-        {
-            m_session = Factory::Get()->CreateXRSession();
-
-            if (m_session)
-            {
-                AZ::RPI::XR::Session::Descriptor sessionDesc;
-                m_gbDesc = Factory::Get()->CreateGraphicsBindingDescriptor();
-                sessionDesc.m_graphicsBinding = RPISystem::Get()->PopulateGrapicsBinding(m_graphicsBindingDesc);
-                ResultCode sessionResult = m_session->Init(sessionDesc);
-                AZ_Assert(sessionResult == ResultCode::Success, "Session init failed");
-
-                m_xrInput = Factory::Get()->CreateXRInput();
-                return m_xrInput->InitializeActions();
-            }
-            return AZ::RPI::XR::ResultCode::Fail;
-        }
-
-        // Manage session lifecycle to track if RenderFrame should be called.
-        bool OpenXRVk::System::IsSessionRunning() const override
-        {
-            return m_session->IsSessionRunning();
-        }
-
-        // Create a Swapchain which will responsible for managing
-        // multiple XR swapchains and multiple swapchain images within it
-        AZ::RPI::XR::ResultCode OpenXRVk::System::CreateSwapchain() override
-        {
-            m_swapChain = Factory::Get()->CreateSwapchain();
-
-            if (m_swapChain)
-            {
-                ResultCode swapchainCreationResult = m_swapChain->Init(sessionDesc);
-                AZ_Assert(sessionResult == ResultCode::Success, "Swapchain init failed");
-                return swapchainCreationResult;
-            }
-            return AZ::RPI::XR::ResultCode::Fail;
-        }
-
-        // Indicate start of a frame
-        void OpenXRVk::System::BeginFrame() override
-        {
-        }
-
-        // Indicate end of a frame
-        void OpenXRVk::System::EndFrame() override
-        {
-        }
-
-        // Indicate start of a XR view to help with synchronizing XR swapchain
-        void OpenXRVk::System::BeginXRView() override
-        {
-        }
-
-        // Indicate end of a XR view to help with synchronizing XR swapchain
-        void OpenXRVk::System::EndXRView() override
-        {
-        }
-
-        AZ::RPI::XR::ResultCode OpenXRVk::System::InitInstance()
-        {
-        }
-
-        // System Tick to poll input data
-        void OpenXRVk::System::OnSystemTick() override
-        {
-            m_input->PollEvents();
-            if (exitRenderLoop)
-            {
-                break;
-            }
-
-            if (IsSessionRunning())
-            {
-                m_input->PollActions();
-            }
-        }
-    } // namespace OpenXRVk
-} // namespace AZ
+    }
+}
