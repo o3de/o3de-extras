@@ -21,8 +21,8 @@ namespace ROS2
     {
     public:
         ROS2SensorComponent() = default;
-        virtual ~ROS2SensorComponent() = default;
-        AZ_COMPONENT(ROS2SensorComponent, "{91BCC1E9-6D93-4466-9CDB-E73D497C6B5E}", AZ::Component);
+        ~ROS2SensorComponent() = default;
+        AZ_COMPONENT(ROS2SensorComponent, "{91BCC1E9-6D93-4466-9CDB-E73D497C6B5E}");
 
         // AZ::Component interface implementation.
         void Activate() override;

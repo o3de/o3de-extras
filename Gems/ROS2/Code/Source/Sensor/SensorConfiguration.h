@@ -25,7 +25,7 @@ namespace ROS2
         static void Reflect(AZ::ReflectContext* context);
 
         // Will typically be 1-3 elements (3 max for known sensors).
-        AZStd::map<AZStd::string, AZStd::shared_ptr<PublisherConfiguration>> m_publishersConfigurations;
+        AZStd::map<AZStd::string, PublisherConfiguration> m_publishersConfigurations;
 
         // TODO - consider moving frequency, publishingEnabled to publisherConfiguration if any sensor has
         // a couple of publishers for which we want different values of these fields

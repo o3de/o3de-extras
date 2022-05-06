@@ -31,6 +31,7 @@ namespace ROS2
     void ROS2SensorComponent::Reflect(AZ::ReflectContext* context)
     {
         SensorConfiguration::Reflect(context);
+
         if (AZ::SerializeContext* serialize = azrtti_cast<AZ::SerializeContext*>(context))
         {
             serialize->Class<ROS2SensorComponent, AZ::Component>()

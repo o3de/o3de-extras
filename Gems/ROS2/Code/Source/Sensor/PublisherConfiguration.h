@@ -22,16 +22,6 @@ namespace ROS2
         AZ_TYPE_INFO(PublisherConfiguration, "{7F875348-F2F9-404A-841E-D9A749EA4E79}");
         static void Reflect(AZ::ReflectContext* context);
 
-        bool operator==(const PublisherConfiguration& other) const
-        {
-            if (m_type != other.m_type)
-            {
-                return false;
-            }
-
-            return m_topic == other.m_topic;
-        }
-
         AZStd::string m_type = "std_msgs::msg::Empty";
         AZStd::string m_topic = "default_topic";
 
