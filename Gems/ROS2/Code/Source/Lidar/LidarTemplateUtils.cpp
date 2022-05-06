@@ -74,7 +74,7 @@ namespace ROS2
         {
             for (int layer = 0; layer < lidarTemplate.m_layers; layer++)
             {
-                // roll is equal to 0, so it's skipped in the calculations
+                // TODO: also include roll. Move to quaternions to avoid abnormalities
                 const float pitch = minVertAngle + layer * verticalStep + rootRotation.GetY();
                 const float yaw = minHorAngle + incr * horizontalStep + rootRotation.GetZ();
 
