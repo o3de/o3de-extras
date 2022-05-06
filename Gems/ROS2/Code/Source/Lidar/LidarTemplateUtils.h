@@ -17,6 +17,7 @@ namespace ROS2
     public:
         static LidarTemplate GetTemplate(LidarTemplate::LidarModel model);
         static size_t TotalPointCount(const LidarTemplate& t);
+        //! Root rotation as Euler angles in radians.
         static AZStd::vector<AZ::Vector3> PopulateRayDirections(LidarTemplate::LidarModel model,
                                                                 const AZ::Vector3& rootRotation);
     };
