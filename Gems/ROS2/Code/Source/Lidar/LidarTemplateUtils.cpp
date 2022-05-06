@@ -53,7 +53,8 @@ namespace ROS2
     }
 
     // TODO - lidars in reality do not have uniform distributions - populating needs to be defined per model
-    AZStd::vector<AZ::Vector3> LidarTemplateUtils::PopulateRayDirections(LidarTemplate::LidarModel model)
+    AZStd::vector<AZ::Vector3> LidarTemplateUtils::PopulateRayDirections(LidarTemplate::LidarModel model,
+                                                                         const AZ::Vector3& rootRotation)
     {
         auto lidarTemplate = GetTemplate(model);
 
@@ -74,8 +75,8 @@ namespace ROS2
             for (int layer = 0; layer < lidarTemplate.m_layers; layer++)
             {
                 // roll is equal to 0, so it's skipped in the calculations
-                const float pitch = minVertAngle + layer * verticalStep;
-                const float yaw = minHorAngle + incr * horizontalStep;
+                const float pitch = minVertAngle + layer * verticalStep + rootRotation.GetY();
+                const float yaw = minHorAngle + incr * horizontalStep + rootRotation.GetZ();
 
                 const float x = AZ::Cos(yaw) * AZ::Cos(pitch);
                 const float y = AZ::Sin(yaw) * AZ::Cos(pitch);

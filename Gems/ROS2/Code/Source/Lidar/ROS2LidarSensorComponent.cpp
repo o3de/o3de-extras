@@ -75,8 +75,8 @@ namespace ROS2
     void ROS2LidarSensorComponent::FrequencyTick()
     {
         float distance = LidarTemplateUtils::GetTemplate(m_lidarModel).m_maxRange;
-        const auto directions = LidarTemplateUtils::PopulateRayDirections(m_lidarModel);
         auto entityTransform = GetEntity()->FindComponent<AzFramework::TransformComponent>(); // TODO - go through ROS2Frame
+        const auto directions = LidarTemplateUtils::PopulateRayDirections(m_lidarModel, entityTransform->GetWorldTM().GetEulerRadians());
         AZ::Vector3 start = entityTransform->GetWorldTM().GetTranslation();
         start.SetZ(start.GetZ() + 1.0f);
         AZStd::vector<AZ::Vector3> results = m_lidarRaycaster.PerformRaycast(start, directions, distance);
@@ -110,6 +110,16 @@ namespace ROS2
         }
 
         message.data.resize(message.row_step);
+
+        auto lidarTM = entityTransform->GetWorldTM();
+        lidarTM.Invert();
+
+        // TODO - improve performance
+        for(auto& point : results)
+        {
+            point = lidarTM.TransformPoint(point);
+        }
+
         memcpy(message.data.data(), results.data(), message.data.size());
 
         m_pointCloudPublisher->publish(message);
