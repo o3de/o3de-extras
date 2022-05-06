@@ -27,6 +27,7 @@ namespace ROS2
 
        const AZStd::string m_parentFrame;
        const AZStd::string m_childFrame;
+       bool m_isPublished = false;
        bool m_isDynamic;
    };
 }  // namespace ROS2

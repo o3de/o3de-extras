@@ -32,12 +32,11 @@ namespace ROS2
 
     void ROS2Transform::Publish(const AZ::Transform& transform)
     {
-        static bool isPublished = false;
-        if (isPublished && !m_isDynamic)
+        if (m_isPublished && !m_isDynamic)
         {   // Only publish static transforms once
             return;
         }
         ROS2Interface::Get()->BroadcastTransform(CreateTransformMessage(transform), m_isDynamic);
-        isPublished = true;
+        m_isPublished = true;
     }
 }  // namespace ROS2
