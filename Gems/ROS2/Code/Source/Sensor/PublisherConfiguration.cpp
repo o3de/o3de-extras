@@ -17,7 +17,6 @@ namespace ROS2
     /// A struct used to create and configure publishers
     void PublisherConfiguration::Reflect(AZ::ReflectContext* context)
     {
-        QoS::Reflect(context);
         if (auto serializeContext = azrtti_cast<AZ::SerializeContext*>(context))
         {
             serializeContext->Class<PublisherConfiguration>()

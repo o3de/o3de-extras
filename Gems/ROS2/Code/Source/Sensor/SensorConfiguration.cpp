@@ -16,7 +16,6 @@ namespace ROS2
 {
     void SensorConfiguration::Reflect(AZ::ReflectContext* context)
     {
-        PublisherConfiguration::Reflect(context);
         if (auto serializeContext = azrtti_cast<AZ::SerializeContext*>(context))
         {
             serializeContext->RegisterGenericType<AZStd::shared_ptr<PublisherConfiguration>>();
