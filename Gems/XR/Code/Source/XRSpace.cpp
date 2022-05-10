@@ -10,8 +10,5 @@
 
 namespace XR
 {
-    ResultCode Space::InitInternal()
-    {
-        return ResultCode::Success;
-    }
+
 } // namespace XR

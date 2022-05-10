@@ -8,6 +8,7 @@
 
 #pragma once
 
+#include <AzCore/Memory/SystemAllocator.h>
 #include <AzCore/std/containers/vector.h>
 #include <AzCore/std/smart_ptr/intrusive_ptr.h>
 #include <AzCore/Interface/Interface.h>
@@ -27,7 +28,8 @@ namespace XR
     class Factory
     {
     public:
-        AZ_TYPE_INFO(Factory, "{A3D7271A-64FD-442C-9116-DBC32224222F}");
+        AZ_CLASS_ALLOCATOR(Factory, AZ::SystemAllocator, 0);
+        AZ_RTTI(Factory, "{A3D7271A-64FD-442C-9116-DBC32224222F}");
 
         Factory() = default;
         virtual ~Factory() = default;

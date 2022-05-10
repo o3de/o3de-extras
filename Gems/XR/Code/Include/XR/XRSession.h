@@ -8,13 +8,17 @@
 
 #pragma once
 
+#include <AzCore/Memory/SystemAllocator.h>
+
 #include <XR/XRGraphicsBinding.h>
 
 namespace XR
 {
-    class SessionDescriptor
+    class SessionDescriptor 
+        : public AZStd::intrusive_base
     {
     public:
+        AZ_CLASS_ALLOCATOR(SessionDescriptor, AZ::SystemAllocator, 0);
         AZ_RTTI(SessionDescriptor, "{F76B99EF-ED66-4AAA-BA35-578339CAB428}");
 
         SessionDescriptor() = default;
@@ -27,8 +31,10 @@ namespace XR
     // This class will be responsible for creating XR::Session and
     // all the code around managing the session state
     class Session
+        : public AZStd::intrusive_base
     {
     public:
+        AZ_CLASS_ALLOCATOR(Session, AZ::SystemAllocator, 0);
         AZ_RTTI(Session, "{E7276FE1-94B8-423A-9C1D-1BCF1A0066BC}");
 
         Session() = default;

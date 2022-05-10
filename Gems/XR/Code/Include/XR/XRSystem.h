@@ -8,6 +8,8 @@
 
 #pragma once
 
+#include <AzCore/Memory/SystemAllocator.h>
+
 #include <Atom/RPI.Public/XR/XRSystemInterface.h>
 
 namespace XR
@@ -16,7 +18,8 @@ namespace XR
         : public AZ::RPI::XRSystemInterface
     {
     public:
-        AZ_RTTI(System, "{C3E0291D-FB30-4E27-AB0D-14606A8C3C1F}" AZ::RPI::XRSystemInterface);
+        AZ_CLASS_ALLOCATOR(System, AZ::SystemAllocator, 0);
+        AZ_RTTI(System, "{C3E0291D-FB30-4E27-AB0D-14606A8C3C1F}", AZ::RPI::XRSystemInterface);
 
         AZ_DISABLE_COPY_MOVE(System);
 
@@ -47,7 +50,7 @@ namespace XR
 
         // Create a swap chain which will responsible for managing
         // multiple XR swap chains and multiple swap chain images within it
-        virtual void CreateSwapchain() = 0;
+        virtual AZ::RHI::ResultCode CreateSwapchain() = 0;
 
         // This will allow XR gem to provide device related data to RHI
         virtual AZ::RPI::XRDeviceDescriptor* GetDeviceDescriptor() = 0;
@@ -56,7 +59,7 @@ namespace XR
         virtual AZ::RPI::XRInstanceDescriptor* GetInstanceDescriptor() = 0;
 
         // Provide swap chain specific data to RHI
-        virtual AZ::RPI::XRSwapChainImageDescriptor* GetSwapChainImageDescriptor(int swapchainIndex) = 0;
+        virtual AZ::RPI::XRSwapChainImageDescriptor* GetSwapChainImageDescriptor(AZ::u16 swapchainIndex) = 0;
 
         // Provide access to Graphics Binding specific data that RHI can populate
         virtual AZ::RPI::XRGraphicsBindingDescriptor* GetGraphicsBindingDescriptor() = 0;
