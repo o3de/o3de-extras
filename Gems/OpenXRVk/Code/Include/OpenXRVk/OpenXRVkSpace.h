@@ -8,6 +8,7 @@
 
 #pragma once
 
+
 #include <XR/XRSpace.h>
 #include <OpenXRVk_Platform.h>
 
@@ -18,6 +19,9 @@ namespace OpenXRVk
         : public XR::Space
     {
     public:
+        AZ_CLASS_ALLOCATOR(Space, AZ::SystemAllocator, 0);
+        AZ_RTTI(Space, "{E99557D0-9061-4691-9524-CE0ACC3A14FA}", XR::Space);
+        
         static AZStd::intrusive_ptr<Space> Create();
 
         //XrSpaceLocation GetSpace(XrSpace space);

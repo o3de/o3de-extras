@@ -9,6 +9,7 @@
 #pragma once
 
 #include <XR/XRFactory.h>
+
 #include <OpenXRVk_Platform.h>
 #include <OpenXRVk/OpenXRVkDevice.h>
 #include <OpenXRVk/OpenXRVkInstance.h>
@@ -27,8 +28,7 @@ namespace OpenXRVk
     {
     public:
         AZ_CLASS_ALLOCATOR(Factory, AZ::SystemAllocator, 0);
-
-        AZ_DISABLE_COPY_MOVE(Factory);
+        AZ_RTTI(Factory, "{11C46EF4-2AB5-47F7-B4F6-D30DDD53F1D8}", XR::Factory);
 
         Factory();
         ~Factory();

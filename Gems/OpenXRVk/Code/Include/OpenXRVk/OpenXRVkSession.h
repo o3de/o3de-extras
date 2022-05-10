@@ -18,6 +18,7 @@ namespace OpenXRVk
         : public XR::SessionDescriptor 
     {
     public:
+        AZ_CLASS_ALLOCATOR(SessionDescriptor, AZ::SystemAllocator, 0);
         AZ_RTTI(SessionDescriptor, "{775CCED3-9676-4F48-B419-BDADE0F7F447}", XR::SessionDescriptor);
 
         SessionDescriptor() = default;
@@ -31,6 +32,7 @@ namespace OpenXRVk
         : public XR::Session
     {
     public:
+        AZ_CLASS_ALLOCATOR(Session, AZ::SystemAllocator, 0);
         AZ_RTTI(Session, "{6C899F0C-9A3D-4D79-8E4F-92AFB67E5EB1}", XR::Session);
 
         static AZStd::intrusive_ptr<Session> Create();

@@ -24,49 +24,49 @@ namespace OpenXRVk
     // Create XR::Instance object
     AZStd::intrusive_ptr<XR::Instance> CreateInstance()
     {
-        return aznew OpenXRVk::Instance;
+        return aznew Instance;
     }
 
     // Create XR::Device object
     AZStd::intrusive_ptr<XR::Device> CreateDevice()
     {
-        return aznew OpenXRVk::Device;
+        return aznew Device;
     }
 
     // Return a list of XR::PhysicalDevice
     AZStd::vector<AZStd::intrusive_ptr<XR::PhysicalDevice>> EnumerateDeviceList()
     {
-        return OpenXRVk::PhysicalDevice::EnumerateList();
+        return PhysicalDevice::EnumerateDeviceList();
     }
 
     // Create XR::Session object
     AZStd::intrusive_ptr<XR::Session> CreateSession()
     {
-        return aznew OpenXRVk::Session;
+        return aznew Session;
     }
 
     // Create XR::Input object
     AZStd::intrusive_ptr<XR::Input> CreateInput()
     {
-        return aznew OpenXRVk::Input;
+        return aznew Input;
     }
 
     // Create XR::SwapChain object
     AZStd::intrusive_ptr<XR::SwapChain> CreateSwapchain()
     {
-        return aznew OpenXRVk::SwapChain;
+        return aznew SwapChain;
     }
 
     // Create XR::ViewSwapChain object
     AZStd::intrusive_ptr<XR::SwapChain::View> CreateViewSwapchain()
     {
-        return aznew OpenXRVk::SwapChain::View;
+        return aznew SwapChain::View;
     }
 
     // Create RPI::XR::GraphicsBindingDescriptor that will contain
     // renderer information needed to start a session
     AZStd::intrusive_ptr<XR::GraphicsBindingDescriptor> CreateGraphicsBindingDescriptor()
     {
-        return aznew OpenXRVk::SwapChain::View;
+        return aznew GraphicsBindingDescriptor;
     }
 }

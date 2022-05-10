@@ -10,12 +10,12 @@
 
 namespace OpenXRVk
 {
-    AZStd::intrusive_ptr<Instance> Instance::Create();
+    AZStd::intrusive_ptr<Instance> Instance::Create()
     {
         return nullptr;
     }
 
-    AZ::RHI::ResultCode Instance::InitInstanceInternal();
+    AZ::RHI::ResultCode Instance::InitInstanceInternal()
     {
         AZ::RHI::ResultCode res = XR::Instance::InitInstanceInternal();
         // xrCreateInstance(m_xrInstance)

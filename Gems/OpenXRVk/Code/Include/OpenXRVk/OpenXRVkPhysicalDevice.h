@@ -17,6 +17,7 @@ namespace OpenXRVk
         : public XR::PhysicalDeviceDescriptor
     {
     public:
+        AZ_CLASS_ALLOCATOR(PhysicalDeviceDescriptor, AZ::SystemAllocator, 0);
         AZ_RTTI(PhysicalDeviceDescriptor, "{CB485C38-E723-4593-ADCF-DFE220A6A24B}", XR::PhysicalDeviceDescriptor);
 
         PhysicalDeviceDescriptor() = default;
@@ -31,11 +32,13 @@ namespace OpenXRVk
         : public XR::PhysicalDevice
     {
     public:
+        AZ_CLASS_ALLOCATOR(PhysicalDevice, AZ::SystemAllocator, 0);
         AZ_RTTI(PhysicalDevice, "{7CE8D7C1-7CC6-4841-9505-DED2761617AC}", XR::PhysicalDevice);
 
         PhysicalDevice() = default;
         virtual ~PhysicalDevice() = default;
 
+        static AZStd::vector<AZStd::intrusive_ptr<XR::PhysicalDevice>> EnumerateDeviceList();
     };
 } // namespace XR
 

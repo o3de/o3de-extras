@@ -8,6 +8,8 @@
 
 #pragma once
 
+#include <AzCore/Component/TickBus.h>
+
 #include <XR/XRSystem.h>
 
 #include <OpenXRVk_Platform.h>
@@ -19,8 +21,6 @@
 #include <OpenXRVk/OpenXRVkSession.h>
 #include <OpenXRVk/OpenXRVkGraphicsBinding.h>
 
-#include <AzCore/Component/TickBus.h>
-
 namespace OpenXRVk
 {
     class System final
@@ -28,6 +28,7 @@ namespace OpenXRVk
         , public AZ::SystemTickBus::Handler
     {
     public:
+        AZ_CLASS_ALLOCATOR(System, AZ::SystemAllocator, 0);
         AZ_RTTI(System, "{FBAFDEE2-0A03-4EA8-98E9-A1C8DB32DBCF}", XR::System);
 
         ///////////////////////////////////////////////////////////////////////////////////
@@ -65,7 +66,7 @@ namespace OpenXRVk
         AZ::RPI::XRInstanceDescriptor* GetInstanceDescriptor() override;
 
         // Provide Swap chain specific data to RHI
-        AZ::RPI::XRSwapChainImageDescriptor* GetSwapChainImageDescriptor(int swapchainIndex) override;
+        AZ::RPI::XRSwapChainImageDescriptor* GetSwapChainImageDescriptor(AZ::u16 swapchainIndex) override;
 
         // Provide access to Graphics Binding specific data that RHI can populate
         AZ::RPI::XRGraphicsBindingDescriptor* GetGraphicsBindingDescriptor() override;
@@ -84,13 +85,15 @@ namespace OpenXRVk
         AZ::RHI::ResultCode InitDevice();
 
     private:
-        AZ::RHI::ResultCode InitInstance();
 
         ///////////////////////////////////////////////////////////////////////////////////
         // SystemTickBus
         // System Tick to poll input data
         void OnSystemTick() override;
         //////////////////////////////////////////////////////////////////////////////////
+
+        AZStd::vector<AZStd::string> m_layerNames;
+        AZStd::vector<AZStd::string> m_extentionNames;
 
         AZStd::intrusive_ptr<OpenXRVk::Instance> m_instance;
         AZStd::intrusive_ptr<OpenXRVk::Device> m_device;
@@ -101,7 +104,8 @@ namespace OpenXRVk
         bool m_exitRenderLoop = false;
         AZStd::intrusive_ptr<OpenXRVk::DeviceDescriptor> m_deviceDesc;
         AZStd::intrusive_ptr<OpenXRVk::InstanceDescriptor> m_instanceDesc;
-        AZStd::intrusive_ptr<OpenXRVk::SwapChainDescriptor> m_swapchainDesc;
+        AZStd::vector<AZStd::intrusive_ptr<OpenXRVk::SwapChainDescriptor>> m_swapchainDesc;
+        AZStd::vector<AZStd::intrusive_ptr<OpenXRVk::SwapChainImageDescriptor>> m_swapchainImageDesc;
         AZStd::intrusive_ptr<OpenXRVk::GraphicsBindingDescriptor> m_graphicsBindingDesc;
     };
 }

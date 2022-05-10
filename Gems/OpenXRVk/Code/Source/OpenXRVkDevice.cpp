@@ -12,7 +12,7 @@ namespace OpenXRVk
 {
     AZStd::intrusive_ptr<Device> Device::Create()
     {
-        return nullptr;
+        return aznew Device;
     }
 
     AZ::RHI::ResultCode Device::InitDeviceInternal()

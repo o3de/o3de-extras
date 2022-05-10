@@ -17,6 +17,7 @@ namespace OpenXRVk
         : public XR::SwapChainDescriptor
     {
     public:
+        AZ_CLASS_ALLOCATOR(SwapChainDescriptor, AZ::SystemAllocator, 0);
         AZ_RTTI(SwapChainDescriptor, "{0C6214B3-9271-4972-B6B0-13C4A23D9155}", XR::SwapChainDescriptor);
 
         SwapChainDescriptor() = default;
@@ -29,6 +30,7 @@ namespace OpenXRVk
         : public XR::SwapChainImageDescriptor
     {
     public:
+        AZ_CLASS_ALLOCATOR(SwapChainImageDescriptor, AZ::SystemAllocator, 0);
         AZ_RTTI(SwapChainImageDescriptor, "{056D30CF-4B1E-4EC3-9990-A7D9C38C895B}", XR::SwapChainImageDescriptor);
 
         SwapChainImageDescriptor() = default;
@@ -42,6 +44,10 @@ namespace OpenXRVk
         : public XR::SwapChain
     {
     public:
+        AZ_CLASS_ALLOCATOR(SwapChain, AZ::SystemAllocator, 0);
+        AZ_RTTI(SwapChain, "{3DD88236-8C9F-4864-86F5-018C198BC07E}", XR::SwapChain);
+
+        SwapChain() = default;
         virtual ~SwapChain() = default;
 
         static AZStd::intrusive_ptr<SwapChain> Create();
@@ -50,6 +56,7 @@ namespace OpenXRVk
             : public XR::SwapChain::Image
         {
         public:
+            AZ_CLASS_ALLOCATOR(Image, AZ::SystemAllocator, 0);
             AZ_RTTI(Image, "{717ABDD4-C050-4FDF-8E93-3784F81FE315}", XR::SwapChain::Image);
 
             static AZStd::intrusive_ptr<Image> Create();
@@ -63,6 +70,7 @@ namespace OpenXRVk
             : public XR::SwapChain::View
         {
         public:
+            AZ_CLASS_ALLOCATOR(View, AZ::SystemAllocator, 0);
             AZ_RTTI(View, "{F8312427-AC2D-4737-9A8F-A16ADA5319D0}", XR::SwapChain::View);
 
             static AZStd::intrusive_ptr<View> Create();
