@@ -10,8 +10,9 @@
 
 namespace OpenXRVk
 {
-    AZStd::intrusive_ptr<AZ::RPI::XR::Space> Space::Create()
+    AZStd::intrusive_ptr<Space> Space::Create()
     {
+        return nullptr;
     }
 
     //XrSpaceLocation GetSpace(XrSpace space)

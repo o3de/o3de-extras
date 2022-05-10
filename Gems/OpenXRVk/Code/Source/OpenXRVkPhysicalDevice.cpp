@@ -10,4 +10,9 @@
 
 namespace OpenXRVk
 {
+    AZStd::vector<AZStd::intrusive_ptr<XR::PhysicalDevice>> PhysicalDevice::EnumerateDeviceList()
+    {
+        AZStd::vector<AZStd::intrusive_ptr<XR::PhysicalDevice>> res;
+        return res;
+    }
 }

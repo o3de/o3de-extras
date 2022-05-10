@@ -12,7 +12,14 @@
 #include <AzCore/std/algorithm.h>
 #include <limits.h>
 
+#include <Unknwn.h>
+
 #include <glad/vulkan.h>
+
+ // Tell OpenXR what platform code we'll be using
+#define XR_USE_PLATFORM_WIN32
+#define XR_USE_GRAPHICS_API_VULKAN
+
 #include <openxr/openxr.h>
 #include <openxr/openxr_platform.h>
 #include <openxr/openxr_reflection.h>

@@ -7,6 +7,7 @@
  */
 
 #include <OpenXRVk/OpenXRVkUtils.h>
+//#include <AzCore/Debug/Trace.h>
 
 namespace OpenXRVk
 {
@@ -27,7 +28,7 @@ namespace OpenXRVk
     {
         if (result != XR_SUCCESS)
         {
-            AZ_Error("XR", false, "ERROR: XR API method failed: %s", GetResultString(result));
+            //AZ_Error("XR", false, "ERROR: XR API method failed: %s", GetResultString(result));
             return false;
         }
         return true;

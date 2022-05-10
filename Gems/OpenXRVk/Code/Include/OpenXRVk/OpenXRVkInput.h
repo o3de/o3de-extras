@@ -17,6 +17,7 @@ namespace OpenXRVk
         : public XR::InputDescriptor
     {
     public:
+        AZ_CLASS_ALLOCATOR(InputDescriptor, AZ::SystemAllocator, 0);
         AZ_RTTI(InputDescriptor, "{5CE5E693-775B-42A5-9B32-7C1006C69975}", XR::InputDescriptor);
 
         InputDescriptor() = default;
@@ -30,6 +31,7 @@ namespace OpenXRVk
         : public XR::Input
     {
     public:
+        AZ_CLASS_ALLOCATOR(Input, AZ::SystemAllocator, 0);
         AZ_RTTI(Input, "{97ADD1FE-27DF-4F36-9F61-683F881F9477}", XR::Input);
 
         Input() = default;
@@ -41,6 +43,7 @@ namespace OpenXRVk
         void InitializeActions() override;
         void PollActions() override;
         void PollEvents() override;
+        AZ::RHI::ResultCode InitInternal() override;
 
     private:
         struct InputState
@@ -50,10 +53,10 @@ namespace OpenXRVk
             XrAction poseAction{ XR_NULL_HANDLE };
             XrAction vibrateAction{ XR_NULL_HANDLE };
             XrAction quitAction{ XR_NULL_HANDLE };
-            AZStd::array<XrPath, Side::COUNT> handSubactionPath;
-            AZStd::array<XrSpace, Side::COUNT> handSpace;
-            AZStd::array<float, Side::COUNT> handScale = { { 1.0f, 1.0f } };
-            AZStd::array<XrBool32, Side::COUNT> handActive;
+            AZStd::array<XrPath, 2> handSubactionPath;
+            AZStd::array<XrSpace, 2> handSpace;
+            AZStd::array<float, 2> handScale = { { 1.0f, 1.0f } };
+            AZStd::array<XrBool32, 2> handActive;
         };
         InputState m_input;
     };

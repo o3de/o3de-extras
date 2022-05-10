@@ -17,6 +17,7 @@ namespace OpenXRVk
         : public XR::GraphicsBindingDescriptor
     {
     public:
+        AZ_CLASS_ALLOCATOR(GraphicsBindingDescriptor, AZ::SystemAllocator, 0);
         AZ_RTTI(GraphicsBindingDescriptor, "{1083C93E-FB2B-4441-B705-5C44427F2961}", XR::GraphicsBindingDescriptor);
 
         XrGraphicsBindingVulkan2KHR m_graphicsBinding{ XR_TYPE_GRAPHICS_BINDING_VULKAN2_KHR };
@@ -26,6 +27,7 @@ namespace OpenXRVk
         : public XR::GraphicsBinding
     {
     public:
+        AZ_CLASS_ALLOCATOR(GraphicsBinding, AZ::SystemAllocator, 0);
         AZ_RTTI(GraphicsBinding, "{1001E681-EA2E-4898-AC08-B93AA5B63508}", XR::GraphicsBinding);
 
     };

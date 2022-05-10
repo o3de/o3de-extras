@@ -13,20 +13,20 @@ namespace OpenXRVk
 {
     AZStd::intrusive_ptr<SwapChain> SwapChain::Create()
     {
-        return nullptr;
+        return aznew SwapChain;
     }
 
     AZStd::intrusive_ptr<SwapChain::Image> SwapChain::Image::Create()
     {
-        return nullptr;
+        return aznew SwapChain::Image;
     }
 
     AZStd::intrusive_ptr<SwapChain::View> SwapChain::View::Create()
     {
-        return nullptr;
+        return aznew SwapChain::View;
     }
 
-    AZ::RHI::ResultCode SwapChain::View::Init(XrSwapchain handle, AZ::u32 width, AZ::u32 height)
+    AZ::RHI::ResultCode SwapChain::View::Init(XrSwapchain /*handle*/, AZ::u32 /*width*/, AZ::u32 /*height*/)
     {
         return AZ::RHI::ResultCode::Success;
     }

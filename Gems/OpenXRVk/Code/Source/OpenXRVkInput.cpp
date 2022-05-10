@@ -17,7 +17,17 @@ namespace OpenXRVk
 
     AZ::RHI::ResultCode Input::Init()
     {
-        InitializeActions();
+        if(XR::Input::Init() == AZ::RHI::ResultCode::Success)
+        {
+            InitializeActions();
+        }
+
+        return AZ::RHI::ResultCode::Success;
+    }
+
+    AZ::RHI::ResultCode Input::InitInternal()
+    {
+        return AZ::RHI::ResultCode::Success;
     }
 
     void Input::InitializeActions()

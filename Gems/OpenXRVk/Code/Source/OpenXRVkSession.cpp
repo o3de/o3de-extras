@@ -10,7 +10,7 @@
 
 namespace OpenXRVk
 {
-    AZStd::intrusive_ptr<Session> Session::Create();
+    AZStd::intrusive_ptr<Session> Session::Create()
     {
         return nullptr;
     }
@@ -28,9 +28,9 @@ namespace OpenXRVk
     }
 
     void Session::HandleSessionStateChangedEvent(
-        const XrEventDataSessionStateChanged& stateChangedEvent,
-        bool* exitRenderLoop,
-        bool* requestRestart)
+        const XrEventDataSessionStateChanged& /*stateChangedEvent*/,
+        bool* /*exitRenderLoop*/,
+        bool* /*requestRestart*/)
     {
         // Handle Session state changes
     }
@@ -50,9 +50,4 @@ namespace OpenXRVk
         return m_sessionState == XR_SESSION_STATE_FOCUSED;
     }
 
-    AZ::RHI::ResultCode Session::InitInternal()
-    {
-        // Init specific code
-        return AZ::RHI::ResultCode::Success;
-    }
 }

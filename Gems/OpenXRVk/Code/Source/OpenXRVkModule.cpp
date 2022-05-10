@@ -21,10 +21,10 @@ namespace AZ
             : public AZ::Module
         {
         public:
-            AZ_RTTI(PlatformModule, "{C34AA64E-0983-4D30-A33C-0D7C7676A20E}", AZ::Module);
-            AZ_CLASS_ALLOCATOR(PlatformModule, AZ::SystemAllocator, 0);
+            AZ_RTTI(Module, "{C34AA64E-0983-4D30-A33C-0D7C7676A20E}", AZ::Module);
+            AZ_CLASS_ALLOCATOR(Module, AZ::SystemAllocator, 0);
 
-            PlatformModule()
+            Module()
                 : AZ::Module()
             {
             }
@@ -35,4 +35,4 @@ namespace AZ
 // DO NOT MODIFY THIS LINE UNLESS YOU RENAME THE GEM
 // The first parameter should be GemName_GemIdLower
 // The second should be the fully qualified name of the class above
-AZ_DECLARE_MODULE_CLASS(Gem_OpenXRVk, AZ::OpenXRVk::PlatformModule)
+AZ_DECLARE_MODULE_CLASS(Gem_OpenXRVk, AZ::OpenXRVk::Module)

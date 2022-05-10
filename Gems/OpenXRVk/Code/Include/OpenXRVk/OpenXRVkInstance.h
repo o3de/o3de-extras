@@ -19,6 +19,7 @@ namespace OpenXRVk
         : public XR::InstanceDescriptor
     {
     public:
+        AZ_CLASS_ALLOCATOR(InstanceDescriptor, AZ::SystemAllocator, 0);
         AZ_RTTI(InstanceDescriptor, "{F7D29A7A-5841-4B6F-ADFE-3734316BC63D}", XR::InstanceDescriptor);
 
         InstanceDescriptor() = default;
@@ -32,6 +33,7 @@ namespace OpenXRVk
         : public XR::Instance
     {
     public:
+        AZ_CLASS_ALLOCATOR(Instance, AZ::SystemAllocator, 0);
         AZ_RTTI(Instance, "{1A62DF32-2909-431C-A938-B1E841A50768}", XR::Instance);
 
         Instance() = default;
