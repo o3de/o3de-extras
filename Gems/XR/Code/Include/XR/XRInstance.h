@@ -8,6 +8,8 @@
 
 #pragma once
 
+#include <AzCore/Memory/SystemAllocator.h>
+
 #include <Atom/RPI.Public/XR/XRSystemInterface.h>
 
 namespace XR
@@ -16,6 +18,7 @@ namespace XR
         : public AZ::RPI::XRInstanceDescriptor
     {
     public:
+        AZ_CLASS_ALLOCATOR(InstanceDescriptor, AZ::SystemAllocator, 0);
         AZ_RTTI(InstanceDescriptor, "{1C457924-56A4-444F-BC72-4D31A097BA70}");
 
         InstanceDescriptor() = default;
@@ -25,8 +28,10 @@ namespace XR
     };
 
     class Instance
+        : public AZStd::intrusive_base
     {
     public:
+        AZ_CLASS_ALLOCATOR(Instance, AZ::SystemAllocator, 0);
         AZ_RTTI(Instance, "{1C457924-56A4-444F-BC72-4D31A097BA70}");
 
         Instance() = default;

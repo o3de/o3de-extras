@@ -8,6 +8,7 @@
 
 #pragma once
 
+#include <AzCore/Memory/SystemAllocator.h>
 #include <Atom/RPI.Public/XR/XRSystemInterface.h>
 
 namespace XR
@@ -16,7 +17,8 @@ namespace XR
         : public AZ::RPI::XRDeviceDescriptor
     {
     public:
-        AZ_RTTI(DeviceDescriptor, "{1FF2D68D-DA6A-47B3-A5BE-18E3A100C830}");
+        AZ_CLASS_ALLOCATOR(DeviceDescriptor, AZ::SystemAllocator, 0);
+        AZ_RTTI(DeviceDescriptor, "{1FF2D68D-DA6A-47B3-A5BE-18E3A100C830}", AZ::RPI::XRDeviceDescriptor);
 
         DeviceDescriptor() = default;
         virtual ~DeviceDescriptor() = default;
@@ -25,8 +27,10 @@ namespace XR
     };
 
     class Device
+        : public AZStd::intrusive_base
     {
     public:
+        AZ_CLASS_ALLOCATOR(Device, AZ::SystemAllocator, 0);
         AZ_RTTI(Device, "{A31B0DC2-BD54-443E-9350-EB1B10670FF9}");
 
         Device() = default;

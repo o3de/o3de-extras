@@ -8,14 +8,18 @@
 
 #pragma once
 
-#include <XR/XRResult.h>
+#include <AzCore/Memory/SystemAllocator.h>
+
+#include <Atom/RPI.Public/XR/XRSystemInterface.h>
 
 namespace XR
 {
     // This class will be responsible for managing XR Space
     class Space
+        : public AZStd::intrusive_base
     {
     public:
+        AZ_CLASS_ALLOCATOR(Space, AZ::SystemAllocator, 0);
         AZ_RTTI(Space, "{A78A37F1-8861-4EB4-8FC6-0E9C11394EF1}");
 
         virtual AZ::RHI::ResultCode InitInternal() = 0;

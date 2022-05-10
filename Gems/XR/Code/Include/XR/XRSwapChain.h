@@ -8,15 +8,19 @@
 
 #pragma once
 
+#include <AzCore/Memory/SystemAllocator.h>
 #include <AzCore/std/containers/vector.h>
 #include <AzCore/std/smart_ptr/intrusive_ptr.h>
+
 #include <Atom/RPI.Public/XR/XRSystemInterface.h>
 
 namespace XR
 {
-    class SwapChainDescriptor
+    class SwapChainDescriptor 
+        : public AZStd::intrusive_base
     {
     public:
+        AZ_CLASS_ALLOCATOR(SwapChainDescriptor, AZ::SystemAllocator, 0);
         AZ_RTTI(SwapChainDescriptor, "{EC10B9A1-9D32-4BC0-AE21-216B1503BBDA}");
 
         SwapChainDescriptor() = default;
@@ -29,6 +33,7 @@ namespace XR
         : public AZ::RPI::XRSwapChainImageDescriptor
     {
     public:
+        AZ_CLASS_ALLOCATOR(SwapChainImageDescriptor, AZ::SystemAllocator, 0);
         AZ_RTTI(SwapChainImageDescriptor, "{A42444A3-D1E1-489B-8E6F-C0285C7482F3}", AZ::RPI::XRSwapChainImageDescriptor);
 
         SwapChainImageDescriptor() = default;
@@ -43,17 +48,21 @@ namespace XR
     // This class will be responsible for creating multiple XR::SwapChain::ViewSwapchains
     // (one per view). Each XR::SwapChain::ViewSwapchain will then be responsible
     // for manging and synchronizing multiple swap chain images
-    class SwapChain
+    class SwapChain 
+        : public AZStd::intrusive_base
     {
     public:
+        AZ_CLASS_ALLOCATOR(SwapChain, AZ::SystemAllocator, 0);
         AZ_RTTI(SwapChain, "{0C666E76-E4B7-4097-8D14-713DC2C446EF}");
 
         SwapChain() = default;
         virtual ~SwapChain() = default;
 
-        class Image
+        class Image 
+            : public AZStd::intrusive_base
         {
         public:
+            AZ_CLASS_ALLOCATOR(Image, AZ::SystemAllocator, 0);
             AZ_RTTI(Image, "{4037835D-F1BB-4407-BC98-2299CC7BE0A3}");
 
             Image() = default;
@@ -62,9 +71,11 @@ namespace XR
             AZStd::intrusive_ptr<SwapChainImageDescriptor> m_descriptor;
         };
 
-        class View
+        class View 
+            : public AZStd::intrusive_base
         {
         public:
+            AZ_CLASS_ALLOCATOR(View, AZ::SystemAllocator, 0);
             AZ_RTTI(View, "{774EB724-8261-4684-AA78-EDF6BBECD48A}");
 
             View() = default;
