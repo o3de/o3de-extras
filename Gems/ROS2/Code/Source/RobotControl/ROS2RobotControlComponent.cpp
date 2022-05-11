@@ -50,6 +50,7 @@ namespace ROS2
                     ->ClassElement(AZ::Edit::ClassElements::EditorData, "")
                         ->Attribute(AZ::Edit::Attributes::AppearsInAddComponentMenu, AZ_CRC("Game")) // TODO - "Simulation"?
                     ->DataElement(AZ::Edit::UIHandlers::Default, &ROS2RobotControlComponent::m_topic, "Topic", "ROS2 topic to subscribe to")
+                        ->Attribute(AZ::Edit::Attributes::ChangeValidate, &ROS2Names::ValidateTopicField)
                     ->DataElement(AZ::Edit::UIHandlers::Default, &ROS2RobotControlComponent::m_qos, "QoS", "Quality of Service settings for subscriber")
                     ;
             }
