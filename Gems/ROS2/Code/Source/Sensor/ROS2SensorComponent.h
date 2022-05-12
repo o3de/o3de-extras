@@ -42,5 +42,6 @@ namespace ROS2
 
     private:
         virtual void FrequencyTick() { }; // Override to implement sensor behavior
+        virtual void Visualise() { };
     };
 }  // namespace ROS2

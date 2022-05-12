@@ -27,8 +27,8 @@ namespace ROS2
             {
                 .m_model = LidarTemplate::Generic3DLidar,
                 .m_name = "GenericLidar",
-                .m_minHAngle = -120.0f,
-                .m_maxHAngle = 120.0f,
+                .m_minHAngle = -180.0f,
+                .m_maxHAngle = 180.0f,
                 .m_minVAngle = 35.0f,
                 .m_maxVAngle = -35.0f,
                 .m_layers = 24,

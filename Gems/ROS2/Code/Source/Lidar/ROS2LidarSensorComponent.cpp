@@ -11,6 +11,9 @@
 #include "Frame/ROS2FrameComponent.h"
 #include "Utilities/ROS2Names.h"
 
+#include <Atom/RPI.Public/AuxGeom/AuxGeomFeatureProcessorInterface.h>
+#include <Atom/RPI.Public/RPISystemInterface.h>
+#include <Atom/RPI.Public/Scene.h>
 #include <AzCore/Component/Entity.h>
 #include <AzCore/Serialization/EditContext.h>
 #include <AzCore/Serialization/EditContextConstants.inl>
@@ -55,6 +58,27 @@ namespace ROS2
         m_sensorConfiguration.m_publishersConfigurations.insert(AZStd::make_pair(type, pc));
     }
 
+    void ROS2LidarSensorComponent::Visualise()
+    {
+        if (m_visualisationPoints.empty())
+        {
+            return;
+        }
+
+        if (m_drawQueue)
+        {
+            const uint8_t pixelSize = 2;
+            AZ::RPI::AuxGeomDraw::AuxGeomDynamicDrawArguments drawArgs;
+            drawArgs.m_verts = m_visualisationPoints.data();
+            drawArgs.m_vertCount = m_visualisationPoints.size();
+            drawArgs.m_colors = &AZ::Colors::Red;
+            drawArgs.m_colorCount = 1;
+            drawArgs.m_opacityType = AZ::RPI::AuxGeomDraw::OpacityType::Opaque;
+            drawArgs.m_size = pixelSize;
+            m_drawQueue->DrawPoints(drawArgs);
+        }
+    }
+
     void ROS2LidarSensorComponent::Activate()
     {
         ROS2SensorComponent::Activate();
@@ -64,6 +88,12 @@ namespace ROS2
         const PublisherConfiguration& publisherConfig = m_sensorConfiguration.m_publishersConfigurations[Internal::kPointCloudType];
         AZStd::string fullTopic = ROS2Names::GetNamespacedName(GetNamespace(), publisherConfig.m_topic);
         m_pointCloudPublisher = ros2Node->create_publisher<sensor_msgs::msg::PointCloud2>(fullTopic.data(), publisherConfig.GetQoS());
+
+        if (m_sensorConfiguration.m_visualise)
+        {
+            auto defaultScene = AZ::RPI::Scene::GetSceneForEntityId(GetEntityId());
+            m_drawQueue = AZ::RPI::AuxGeomFeatureProcessorInterface::GetDrawQueueForScene(defaultScene);
+        }
     }
 
     void ROS2LidarSensorComponent::Deactivate()
@@ -79,21 +109,24 @@ namespace ROS2
         const auto directions = LidarTemplateUtils::PopulateRayDirections(m_lidarModel, entityTransform->GetWorldTM().GetEulerRadians());
         AZ::Vector3 start = entityTransform->GetWorldTM().GetTranslation();
         start.SetZ(start.GetZ() + 1.0f);
-        AZStd::vector<AZ::Vector3> results = m_lidarRaycaster.PerformRaycast(start, directions, distance);
-
-        if (results.empty())
+        m_lastScanResults = m_lidarRaycaster.PerformRaycast(start, directions, distance);
+        if (m_lastScanResults.empty())
         {
             AZ_TracePrintf("Lidar Sensor Component", "No results from raycast");
             return;
         }
-        //AZ_TracePrintf("Lidar Sensor Component", "Raycast done, results ready");
+
+        if (m_sensorConfiguration.m_visualise)
+        {   // Store points for visualisation purposes, before transformations occur
+            m_visualisationPoints = m_lastScanResults;
+        }
 
         auto ros2Frame = GetEntity()->FindComponent<ROS2FrameComponent>();
         auto message = sensor_msgs::msg::PointCloud2();
         message.header.frame_id = ros2Frame->GetFrameID().data();
         message.header.stamp = ROS2Interface::Get()->GetROSTimestamp();
         message.height = 1;
-        message.width = results.size();
+        message.width = m_lastScanResults.size();
         message.point_step = sizeof(AZ::Vector3); // TODO - Point Fields can be custom
         message.row_step = message.width * message.point_step;
 
@@ -115,13 +148,12 @@ namespace ROS2
         lidarTM.Invert();
 
         // TODO - improve performance
-        for(auto& point : results)
+        for (auto& point : m_lastScanResults)
         {
             point = lidarTM.TransformPoint(point);
         }
 
-        memcpy(message.data.data(), results.data(), message.data.size());
-
+        memcpy(message.data.data(), m_lastScanResults.data(), message.data.size());
         m_pointCloudPublisher->publish(message);
     }
 } // namespace ROS2
