@@ -8,7 +8,12 @@
 #pragma once
 #include <memory>
 #include <rclcpp/rclcpp.hpp>
-#include <ROS2/ROS2Bus.h>
+
+#include "ROS2/ROS2Bus.h"
+#include "Utilities/ROS2Names.h"
+#include "RobotControl/ControlConfiguration.h"
+#include "RobotControl/RobotConfiguration.h"
+#include "Frame/ROS2FrameComponent.h"
 
 namespace ROS2
 {
@@ -17,7 +22,7 @@ namespace ROS2
     class IRobotControl
     {
     public:
-        virtual void Activate(const AZ::Entity* entity, const AZStd::string& topicName, const QoS &qos) = 0;
+        virtual void Activate(const AZ::Entity* entity) = 0;
         virtual void Deactivate() = 0;
         virtual ~IRobotControl() = default;
     };
@@ -26,15 +31,23 @@ namespace ROS2
     class RobotControl : public IRobotControl
     {
     public:
-        // TODO - pass component args (qos, topic name, etc) as editor-enabled serializable struct
-        void Activate(const AZ::Entity* entity, const AZStd::string& topicName, const QoS &qos) final
+        explicit RobotControl(ControlConfiguration controlConfiguration)
+            : m_controlConfiguration{std::move(controlConfiguration)} {}
+
+        void Activate(const AZ::Entity* entity) final
         {
-            SetTargetComponent(entity);
             m_active = true;
             if (!m_controlSubscription)
             {
+                auto ros2Frame = entity->FindComponent<ROS2FrameComponent>();
+                AZStd::string namespacedTopic = ROS2Names::GetNamespacedName(
+                        ros2Frame->GetNamespace(),
+                        m_controlConfiguration.m_topic);
+
                 auto ros2Node = ROS2Interface::Get()->GetNode();
-                m_controlSubscription = ros2Node->create_subscription<T>(topicName.data(), qos.GetQoS(),
+                m_controlSubscription = ros2Node->create_subscription<T>(
+                    namespacedTopic.data(),
+                    m_controlConfiguration.m_qos.GetQoS(),
                     std::bind(&RobotControl<T>::OnControlMessage, this, std::placeholders::_1));
             }
         };
@@ -45,22 +58,28 @@ namespace ROS2
             m_controlSubscription.reset(); // Note: topic and qos can change, need to re-subscribe
         };
 
+        virtual ~RobotControl() = default;
+
+    protected:
+        ControlConfiguration m_controlConfiguration;
+
     private:
         void OnControlMessage(const T& message)
         {
-            if (m_active)
+            if (!m_active) return;
+
+            if (m_controlConfiguration.m_broadcastBusMode)
             {
+                BroadcastBus(message);
+            } else {
                 ApplyControl(message);
             }
         };
 
         virtual void ApplyControl(const T& message) = 0;
-
-        // Subclass implementations will extract necessary services or components to manipulate
-        virtual void SetTargetComponent(const AZ::Entity* entity) = 0;
+        virtual void BroadcastBus(const T& message) = 0;
 
         bool m_active = false;
-        std::string m_topicName;
 
         typename rclcpp::Subscription<T>::SharedPtr m_controlSubscription;
     };

@@ -9,8 +9,8 @@
 
 #include <memory>
 #include <AzCore/Component/Component.h>
-#include "QoS/QoS.h"
 #include "RobotControl/RobotControl.h"
+#include "ControlConfiguration.h"
 
 namespace ROS2
 {
@@ -29,8 +29,7 @@ namespace ROS2
         static void Reflect(AZ::ReflectContext* context);
 
     private:
-        QoS m_qos;
-        AZStd::string m_topic = "o3de_robot_control";
         std::unique_ptr<IRobotControl> m_robotControl;
+        ControlConfiguration m_controlConfiguration;
     };
 }  // namespace ROS2

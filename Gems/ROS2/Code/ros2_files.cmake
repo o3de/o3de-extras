@@ -19,8 +19,14 @@ set(FILES
     Source/RobotControl/RobotControl.h
     Source/RobotControl/ROS2RobotControlComponent.cpp
     Source/RobotControl/ROS2RobotControlComponent.h
-    Source/RobotControl/TwistControl.cpp
-    Source/RobotControl/TwistControl.h
+    Source/RobotControl/ControlConfiguration.cpp
+    Source/RobotControl/ControlConfiguration.h
+    Source/RobotControl/RobotConfiguration.cpp
+    Source/RobotControl/RobotConfiguration.h
+    Source/RobotControl/TwistControl/TwistControl.cpp
+    Source/RobotControl/TwistControl/TwistControl.h
+    Source/RobotControl/TwistControl/TwistBus.h
+    Source/RobotControl/TwistControl/TwistBus.cpp
     Source/ROS2ModuleInterface.h
     Source/ROS2SystemComponent.cpp
     Source/ROS2SystemComponent.h
