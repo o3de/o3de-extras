@@ -48,4 +48,6 @@ set(FILES
     Source/Utilities/ROS2Names.h
     Source/URDF/UrdfParser.cpp
     Source/URDF/UrdfParser.h
+    Source/Imu/ROS2ImuSensorComponent.cpp
+    Source/Imu/ROS2ImuSensorComponent.h
 )

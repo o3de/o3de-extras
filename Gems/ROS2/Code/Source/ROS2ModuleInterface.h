@@ -10,6 +10,7 @@
 #include <ROS2SystemComponent.h>
 #include <Frame/ROS2FrameComponent.h>
 #include <Lidar/ROS2LidarSensorComponent.h>
+#include <Imu/ROS2ImuSensorComponent.h>
 #include <RobotControl/ROS2RobotControlComponent.h>
 
 namespace ROS2
@@ -30,6 +31,7 @@ namespace ROS2
             m_descriptors.insert(m_descriptors.end(), {
                 ROS2SystemComponent::CreateDescriptor(),
                 ROS2SensorComponent::CreateDescriptor(),
+                ROS2ImuSensorComponent::CreateDescriptor(),
                 ROS2LidarSensorComponent::CreateDescriptor(),
                 ROS2RobotControlComponent::CreateDescriptor(),
                 ROS2FrameComponent::CreateDescriptor()
