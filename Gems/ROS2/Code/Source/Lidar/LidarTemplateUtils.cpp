@@ -25,15 +25,15 @@ namespace ROS2
         {
             LidarTemplate generic3DLidar =
             {
-                .m_model = LidarTemplate::Generic3DLidar,
-                .m_name = "GenericLidar",
-                .m_minHAngle = -180.0f,
-                .m_maxHAngle = 180.0f,
-                .m_minVAngle = 35.0f,
-                .m_maxVAngle = -35.0f,
-                .m_layers = 24,
-                .m_numberOfIncrements = 924,
-                .m_maxRange = 100.0f
+                /*.m_model = */LidarTemplate::Generic3DLidar,
+                /*.m_name = */"GenericLidar",
+                /*.m_minHAngle = */-180.0f,
+                /*.m_maxHAngle = */180.0f,
+                /*.m_minVAngle = */35.0f,
+                /*.m_maxVAngle = */-35.0f,
+                /*.m_layers = */24,
+                /*.m_numberOfIncrements = */924,
+                /*.m_maxRange = */100.0f
             };
             templates[LidarTemplate::Generic3DLidar] = generic3DLidar;
         }

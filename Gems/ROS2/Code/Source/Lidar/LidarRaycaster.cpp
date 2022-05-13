@@ -19,6 +19,7 @@ namespace ROS2
     {
         AZStd::vector<AZ::Vector3> results;
         AzPhysics::SceneQueryRequests requests;
+        requests.reserve(directions.size());
         for (const AZ::Vector3& direction : directions)
         {   // NOTE - performance-wise, consider reusing requests
             AZStd::shared_ptr<AzPhysics::RayCastRequest> request = AZStd::make_shared<AzPhysics::RayCastRequest>();

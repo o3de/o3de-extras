@@ -112,7 +112,7 @@ namespace ROS2
         m_lastScanResults = m_lidarRaycaster.PerformRaycast(start, directions, distance);
         if (m_lastScanResults.empty())
         {
-            AZ_TracePrintf("Lidar Sensor Component", "No results from raycast");
+            AZ_TracePrintf("Lidar Sensor Component", "No results from raycast\n");
             return;
         }
 
@@ -142,8 +142,6 @@ namespace ROS2
             message.fields.push_back(pf);
         }
 
-        message.data.resize(message.row_step);
-
         auto lidarTM = entityTransform->GetWorldTM();
         lidarTM.Invert();
 
@@ -153,7 +151,10 @@ namespace ROS2
             point = lidarTM.TransformPoint(point);
         }
 
-        memcpy(message.data.data(), m_lastScanResults.data(), message.data.size());
+        size_t sizeInBytes = m_lastScanResults.size() * sizeof(AZ::Vector3);
+        message.data.resize(sizeInBytes);
+        AZ_Assert(message.row_step * message.height == sizeInBytes, "Inconsistency in the size of point cloud data");
+        memcpy(message.data.data(), m_lastScanResults.data(), sizeInBytes);
         m_pointCloudPublisher->publish(message);
     }
 } // namespace ROS2
