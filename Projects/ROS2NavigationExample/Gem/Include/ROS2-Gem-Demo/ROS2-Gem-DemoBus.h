@@ -1,4 +1,3 @@
-// {BEGIN_LICENSE}
 /*
  * Copyright (c) Contributors to the Open 3D Engine Project.
  * For complete copyright and license terms please see the LICENSE at the root of this distribution.
@@ -6,8 +5,6 @@
  * SPDX-License-Identifier: Apache-2.0 OR MIT
  *
  */
-// {END_LICENSE}
-
 #pragma once
 
 #include <AzCore/EBus/EBus.h>
@@ -18,7 +15,7 @@ namespace ROS2_Gem_Demo
     class ROS2_Gem_DemoRequests
     {
     public:
-        AZ_RTTI(ROS2_Gem_DemoRequests, "{0347d2ff-c2db-471f-8ad2-0408d808cc91}");
+        AZ_RTTI(ROS2_Gem_DemoRequests, "{16673c77-215c-41c6-8bbf-6cd2412568e9}");
         virtual ~ROS2_Gem_DemoRequests() = default;
         // Put your public methods here
     };

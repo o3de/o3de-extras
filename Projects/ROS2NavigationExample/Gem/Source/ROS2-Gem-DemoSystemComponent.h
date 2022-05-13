@@ -1,4 +1,3 @@
-// {BEGIN_LICENSE}
 /*
  * Copyright (c) Contributors to the Open 3D Engine Project.
  * For complete copyright and license terms please see the LICENSE at the root of this distribution.
@@ -6,7 +5,6 @@
  * SPDX-License-Identifier: Apache-2.0 OR MIT
  *
  */
- // {END_LICENSE}
 
 #pragma once
 
@@ -21,7 +19,7 @@ namespace ROS2_Gem_Demo
         , protected ROS2_Gem_DemoRequestBus::Handler
     {
     public:
-        AZ_COMPONENT(ROS2_Gem_DemoSystemComponent, "{24d1ad58-703b-4153-bcf7-0d8d2f83d25f}");
+        AZ_COMPONENT(ROS2_Gem_DemoSystemComponent, "{c5c1e616-e0bd-4b49-afd0-053756e0f455}");
 
         static void Reflect(AZ::ReflectContext* context);
 
