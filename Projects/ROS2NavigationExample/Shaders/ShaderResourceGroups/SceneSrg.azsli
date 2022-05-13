@@ -1,0 +1,11 @@
+
+#ifndef AZ_COLLECTING_PARTIAL_SRGS
+#error Do not include this file directly. Include the main .srgi file instead.
+#endif
+
+partial ShaderResourceGroup SceneSrg
+{
+    float m_time;
+    float m_deltaTime;
+}
+
