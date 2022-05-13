@@ -56,7 +56,7 @@ namespace ROS2
 
         if (input != rosified)
         {
-            AZ_TracePrintf("RosifyName", "Name '%s' has been changed to '%s' to conform with ros2 naming restrictions", input.c_str(), rosified.c_str());
+            AZ_TracePrintf("RosifyName", "Name '%s' has been changed to '%s' to conform with ros2 naming restrictions\n", input.c_str(), rosified.c_str());
         }
         return rosified;
     }
@@ -65,7 +65,7 @@ namespace ROS2
     {
         auto ros2GlobalizedNamespace = ros2Namespace;
         const char namespacePrefix = '/';
-        if (ros2Namespace.find(namespacePrefix, 0) != 0)
+        if (!ros2Namespace.starts_with(namespacePrefix))
         {  // Prepend "/" if not included, this is done automatically by rclcpp so "/"-less namespaces are ok.
             ros2GlobalizedNamespace = namespacePrefix + ros2Namespace;
         }
@@ -88,6 +88,11 @@ namespace ROS2
 
     AZ::Outcome<void, AZStd::string> ROS2Names::ValidateNamespaceField(void* newValue, [[maybe_unused]] const AZ::Uuid& valueType)
     {
+        if (azrtti_typeid<AZStd::string>() != valueType)
+        {
+            return AZ::Failure(AZStd::string("Unexpected field type: the only valid input is a character string"));
+        }
+
         AZStd::string ros2Namespace(static_cast<const char*>(newValue));
         return ValidateNamespace(ros2Namespace);
     }
@@ -112,6 +117,11 @@ namespace ROS2
 
     AZ::Outcome<void, AZStd::string> ROS2Names::ValidateTopicField(void* newValue, [[maybe_unused]] const AZ::Uuid& valueType)
     {
+        if (azrtti_typeid<AZStd::string>() != valueType)
+        {
+            return AZ::Failure(AZStd::string("Unexpected field type: the only valid input is a character string"));
+        }
+
         AZStd::string topic(static_cast<const char*>(newValue));
         return ValidateTopic(topic);
     }
