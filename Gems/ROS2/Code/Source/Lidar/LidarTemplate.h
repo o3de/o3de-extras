@@ -26,12 +26,12 @@ namespace ROS2
 
         LidarModel m_model;
         AZStd::string m_name;
-        float m_minHAngle;
-        float m_maxHAngle;
-        float m_minVAngle;
-        float m_maxVAngle;
-        int m_layers;
-        int m_numberOfIncrements;
-        float m_maxRange;
+        float m_minHAngle = 0.0f;
+        float m_maxHAngle = 0.0f;
+        float m_minVAngle = 0.0f;
+        float m_maxVAngle = 0.0f;
+        int m_layers = 0;
+        int m_numberOfIncrements = 0;
+        float m_maxRange = 0.0f;
     };
 } // namespace ROS2
