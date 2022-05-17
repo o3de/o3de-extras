@@ -93,7 +93,7 @@ namespace ROS2
             return AZ::Failure(AZStd::string("Unexpected field type: the only valid input is a character string"));
         }
 
-        AZStd::string ros2Namespace(static_cast<const char*>(newValue));
+        const AZStd::string& ros2Namespace(*reinterpret_cast<const AZStd::string*>(newValue));
         return ValidateNamespace(ros2Namespace);
     }
 
@@ -122,7 +122,7 @@ namespace ROS2
             return AZ::Failure(AZStd::string("Unexpected field type: the only valid input is a character string"));
         }
 
-        AZStd::string topic(static_cast<const char*>(newValue));
+        const AZStd::string& topic(*reinterpret_cast<const AZStd::string*>(newValue));
         return ValidateTopic(topic);
     }
 }  // namespace ROS2
