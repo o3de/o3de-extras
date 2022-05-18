@@ -37,8 +37,8 @@ namespace ROS2
         std::shared_ptr<rclcpp::Publisher<sensor_msgs::msg::Imu>> m_imuPublisher;
 
         sensor_msgs::msg::Imu m_imuMsg;
-        double m_previousTime;
-        AZ::Transform m_previousPose;
+        double m_previousTime = 0.0;
+        AZ::Transform m_previousPose = AZ::Transform::CreateIdentity();
         AZ::Vector3 m_previousLinearVelocity = AZ::Vector3::CreateZero();
     };
 }  // namespace ROS2
