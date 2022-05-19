@@ -86,7 +86,7 @@ namespace ROS2
         return AZ::Success();
     }
 
-    AZ::Outcome<void, AZStd::string> ROS2Names::ValidateNamespaceField(void* newValue, [[maybe_unused]] const AZ::Uuid& valueType)
+    AZ::Outcome<void, AZStd::string> ROS2Names::ValidateNamespaceField(void* newValue, const AZ::Uuid& valueType)
     {
         if (azrtti_typeid<AZStd::string>() != valueType)
         {
@@ -115,7 +115,7 @@ namespace ROS2
         return AZ::Success();
     }
 
-    AZ::Outcome<void, AZStd::string> ROS2Names::ValidateTopicField(void* newValue, [[maybe_unused]] const AZ::Uuid& valueType)
+    AZ::Outcome<void, AZStd::string> ROS2Names::ValidateTopicField(void* newValue, const AZ::Uuid& valueType)
     {
         if (azrtti_typeid<AZStd::string>() != valueType)
         {
