@@ -13,7 +13,7 @@
 namespace ROS2
 {
     class TwistNotifications
-            : public AZ::EBusTraits
+        : public AZ::EBusTraits
     {
     public:
         static const AZ::EBusHandlerPolicy HandlerPolicy = AZ::EBusHandlerPolicy::Multiple;

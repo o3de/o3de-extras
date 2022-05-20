@@ -6,8 +6,6 @@
 *
 */
 
-#pragma once
-
 #include <AzCore/Serialization/EditContext.h>
 #include <AzCore/Serialization/EditContextConstants.inl>
 #include <AzCore/Component/ComponentApplicationBus.h>
@@ -26,7 +24,7 @@ AZ::Outcome<void, AZStd::string> RobotConfiguration::ValidateField(void* newValu
     }
 
     // Check if entity id is valid
-    AZ::EntityId actualEntityId = static_cast<AZ::EntityId>(*((AZ::EntityId*)newValue));
+    AZ::EntityId actualEntityId = *reinterpret_cast<AZ::EntityId*>(newValue);
     if (!actualEntityId.IsValid())
     {
         return AZ::Failure(AZStd::string("Invalid entity ID."));

@@ -6,8 +6,6 @@
 *
 */
 
-#pragma once
-
 #include <AzCore/Serialization/EditContext.h>
 #include <AzCore/Serialization/EditContextConstants.inl>
 

@@ -48,7 +48,7 @@ namespace ROS2
                 m_controlSubscription = ros2Node->create_subscription<T>(
                     namespacedTopic.data(),
                     m_controlConfiguration.m_qos.GetQoS(),
-                    std::bind(&RobotControl<T>::OnControlMessage, this, std::placeholders::_1));
+                    [this](const T& message) { OnControlMessage(message); });
             }
         };
 
