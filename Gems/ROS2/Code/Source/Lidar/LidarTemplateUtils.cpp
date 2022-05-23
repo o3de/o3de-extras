@@ -5,7 +5,6 @@
  * SPDX-License-Identifier: Apache-2.0 OR MIT
  *
  */
-#pragma once
 
 #include "LidarTemplateUtils.h"
 #include <AzCore/std/containers/unordered_map.h>

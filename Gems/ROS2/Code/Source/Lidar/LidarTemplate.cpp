@@ -5,7 +5,6 @@
  * SPDX-License-Identifier: Apache-2.0 OR MIT
  *
  */
-#pragma once
 
 #include "LidarTemplate.h"
 #include <AzCore/Serialization/EditContext.h>

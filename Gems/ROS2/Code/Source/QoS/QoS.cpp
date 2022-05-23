@@ -6,8 +6,6 @@
 *
 */
 
-#pragma once
-
 #include "QoS.h"
 #include <AzCore/Serialization/EditContext.h>
 #include <AzCore/Serialization/SerializeContext.h>
