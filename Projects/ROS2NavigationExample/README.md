@@ -111,3 +111,14 @@ $ cd $DEMO_BASE
 
 
 ```
+
+## Troubleshooting
+
+Sometimes when there were problems while the AssetProcessor was working (for example, disk space ran out),
+subsequent executions of the Editor fail to re-start the process for such Assets. This might be due to a
+limitation of the number of files that can be watched by a single user. You can fix this by increasing the
+value, for example:
+
+```
+sudo sysctl -w fs.inotify.max_user_watches=524288
+```
