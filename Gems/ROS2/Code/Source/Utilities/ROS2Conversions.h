@@ -8,6 +8,7 @@
 #pragma once
 
 #include <AzCore/Math/Vector3.h>
+#include <AzCore/Math/Quaternion.h>
 #include "geometry_msgs/msg/vector3.hpp"
 #include "geometry_msgs/msg/pose.hpp"
 

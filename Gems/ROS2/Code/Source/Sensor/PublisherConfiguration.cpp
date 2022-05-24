@@ -6,8 +6,6 @@
 *
 */
 
-#pragma once
-
 #include "PublisherConfiguration.h"
 #include "Utilities/ROS2Names.h"
 #include <AzCore/Serialization/EditContext.h>
