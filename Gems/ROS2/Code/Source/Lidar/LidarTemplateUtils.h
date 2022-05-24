@@ -8,6 +8,7 @@
 #pragma once
 
 #include "LidarTemplate.h"
+#include <AzCore/Math/Vector3.h>
 #include <AzCore/std/containers/vector.h>
 
 namespace ROS2
