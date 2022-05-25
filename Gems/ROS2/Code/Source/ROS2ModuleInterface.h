@@ -7,11 +7,11 @@
  */
 #include <AzCore/Memory/SystemAllocator.h>
 #include <AzCore/Module/Module.h>
-#include <ROS2SystemComponent.h>
 #include <Frame/ROS2FrameComponent.h>
 #include <Lidar/ROS2LidarSensorComponent.h>
-#include <Imu/ROS2ImuSensorComponent.h>
 #include <RobotControl/ROS2RobotControlComponent.h>
+#include <Imu/ROS2ImuSensorComponent.h>
+#include <ROS2SystemComponent.h>
 
 namespace ROS2
 {
@@ -33,8 +33,8 @@ namespace ROS2
                 ROS2SensorComponent::CreateDescriptor(),
                 ROS2ImuSensorComponent::CreateDescriptor(),
                 ROS2LidarSensorComponent::CreateDescriptor(),
-                ROS2RobotControlComponent::CreateDescriptor(),
-                ROS2FrameComponent::CreateDescriptor()
+                ROS2FrameComponent::CreateDescriptor(),
+                ROS2RobotControlComponent::CreateDescriptor()
                 });
         }
 

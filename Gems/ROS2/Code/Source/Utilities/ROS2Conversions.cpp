@@ -5,12 +5,13 @@
  * SPDX-License-Identifier: Apache-2.0 OR MIT
  *
  */
+
 #include "ROS2Conversions.h"
 
 namespace ROS2
-{   // Same coordinate systems - just translate types
+{
     AZ::Vector3 ROS2Conversions::FromROS2Vector3(const geometry_msgs::msg::Vector3& ros2vector)
-    {
+    {   // Same coordinate systems - just translate types
         return AZ::Vector3(ros2vector.x, ros2vector.y, ros2vector.z);
     }
 
