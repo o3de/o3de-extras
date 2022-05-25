@@ -9,14 +9,14 @@
 #include "Imu/ROS2ImuSensorComponent.h"
 #include "Frame/ROS2FrameComponent.h"
 #include "ROS2/ROS2Bus.h"
-#include "Utilities/ROS2Names.h"
 #include "Utilities/ROS2Conversions.h"
+#include "Utilities/ROS2Names.h"
 
-#include <AzCore/Script/ScriptTimePoint.h>
-#include <AzCore/std/smart_ptr/make_shared.h>
 #include <AzCore/Component/Entity.h>
+#include <AzCore/Script/ScriptTimePoint.h>
 #include <AzCore/Serialization/EditContext.h>
 #include <AzCore/Serialization/EditContextConstants.inl>
+#include <AzCore/std/smart_ptr/make_shared.h>
 
 namespace ROS2
 {

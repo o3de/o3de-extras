@@ -5,8 +5,9 @@
  * SPDX-License-Identifier: Apache-2.0 OR MIT
  *
  */
-#include "ROS2/ROS2Bus.h"
+
 #include "Frame/ROS2FrameComponent.h"
+#include "ROS2/ROS2Bus.h"
 #include "Utilities/ROS2Names.h"
 #include <AzCore/Component/Entity.h>
 #include <AzCore/Serialization/EditContext.h>
@@ -51,7 +52,7 @@ namespace ROS2
 
     const char* ROS2FrameComponent::GetGlobalFrameName()
     {
-        // TODO - parametrize this, sometimes it is "world" and sometimes "map".
+        // TODO - parametrize this (typically: "odom", "world" and sometimes "map")
         return "world";
     }
 

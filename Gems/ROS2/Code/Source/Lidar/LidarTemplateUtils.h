@@ -13,12 +13,17 @@
 
 namespace ROS2
 {
+    //! Utility class for Lidar model computations
     class LidarTemplateUtils
     {
     public:
         static LidarTemplate GetTemplate(LidarTemplate::LidarModel model);
         static size_t TotalPointCount(const LidarTemplate& t);
-        //! Root rotation as Euler angles in radians.
+
+        //! Compute ray directions based on lidar model and rotation.
+        //! @param model Lidar model to use. Note that different models will produce different number of rays.
+        //! @param rootRotation Root rotation as Euler angles in radians.
+        //! @return All ray directions which can be used to perform ray-casting simulation of lidar operation.
         static AZStd::vector<AZ::Vector3> PopulateRayDirections(LidarTemplate::LidarModel model,
                                                                 const AZ::Vector3& rootRotation);
     };

@@ -14,20 +14,24 @@
 
 namespace ROS2
 {
-    /// A wrapper on rclcpp::QoS (Quality of Service for DDS) with reflection
+    //! A wrapper for rclcpp::QoS (Quality of Service for DDS) with reflection.
+    //! @see <a href="https://design.ros2.org/articles/qos.html">Quality of Service policies</a>.
     struct QoS
     {
     public:
         AZ_TYPE_INFO(QoS, "{46692EA4-EA4C-495E-AD3C-426EAB8954D3}");
         QoS(const rclcpp::QoS& qos = rclcpp::QoS(rmw_qos_profile_default.depth));
         static void Reflect(AZ::ReflectContext* context);
+
+        //! Create and return QoS based on member values (Editor combos selection).
+        //! @return a <a href="https://docs.ros2.org/latest/api/rclcpp/classrclcpp_1_1QoS.html">ROS2 QoS struct</a>.
         rclcpp::QoS GetQoS() const;
 
     private:
         AZ::Crc32 OnQoSSelected();
 
         // TODO - only for Editor component
-        // Can be extended to also expose history and liveliness
+        //! If necessary, extend to also expose history and liveliness
         rclcpp::ReliabilityPolicy m_reliabilityPolicy;
         rclcpp::DurabilityPolicy m_durabilityPolicy;
         uint32_t m_depth;

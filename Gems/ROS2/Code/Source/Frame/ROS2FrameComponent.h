@@ -15,9 +15,11 @@
 
 namespace ROS2
 {
-    /// This component marks an interesting reference frame and captures common behavior
-    /// for sensor data frame of reference, publishing ros2 static and dynamic transforms (tf)
-    /// and helping to export robot prefab to URDF.
+    //! This component marks an interesting reference frame for ROS2 ecosystem.
+    //! It serves as sensor data frame of reference and is responsible, through ROS2Transform, for publishing
+    //! ros2 static and dynamic transforms (/tf_static, /tf). It also facilitates namespace handling.
+    //! An entity can only have a single ROS2Frame on each level. Many ROS2 Components require this component.
+    //! @note A robot should have this component on every level of entity hierarchy (for each joint, fixed or dynamic)
     class ROS2FrameComponent
         : public AZ::Component
         , public AZ::TickBus::Handler
@@ -33,34 +35,41 @@ namespace ROS2
         static void GetIncompatibleServices(AZ::ComponentDescriptor::DependencyArrayType& incompatible);
         static void GetRequiredServices(AZ::ComponentDescriptor::DependencyArrayType& required);
 
-        // namespaced and validated, ready to send in ros2 messages (TODO-validate)
+        //! Get a frame id, which is needed for any ROS2 message with a Header
+        //! @return Frame id which includes the namespace, ready to send in a ROS2 message
         AZStd::string GetFrameID() const;
+
+        //! Get a namespace, which should be used for any publisher or subscriber in the same entity.
+        //! @return A complete namespace (including parent namespaces)
         AZStd::string GetNamespace() const;
 
-        // Transform for direct parent if parent ROS2Frame is found, otherwise transformation is global ("world")
+        //! Get AZ Transform for this frame
+        //! @return If parent ROS2Frame is found, return its Transform.
+        //! Otherwise, return a global Transform.
         const AZ::Transform& GetFrameTransform() const;
 
-        // Returns whatever is set as global frame name in ros2 ecosystem (typically, "map" or "world")
-        static const char* GetGlobalFrameName();
+        //! Global frame name in ros2 ecosystem.
+        //! @return The name of the global frame. It is typically "odom", "map", "world".
+        static const char* GetGlobalFrameName(); // TODO - allow to configure global frame in a specialized component
 
     private:
         void OnTick(float deltaTime, AZ::ScriptTimePoint time) override;
 
-        // True if this entity does not have a parent entity with ROS2 Frame
-        bool IsTopLevel() const;
+        bool IsTopLevel() const; //!< True if this entity does not have a parent entity with ROS2.
 
-        // Whether transformation to parent frame can change during the simulation, or is fixed
+        //! Whether transformation to parent frame can change during the simulation, or is fixed
         bool IsDynamic() const;
 
         AZ::TransformInterface* GetEntityTransformInterface() const;
         const ROS2FrameComponent* GetParentROS2FrameComponent() const;
 
-        // If parent entity does not exist or does not have a ROS2Frame component, return ros2 default global frame: "world"
+        //! If parent entity does not exist or does not have a ROS2FrameComponent, return ROS2 default global frame.
+        //! @see GetGlobalFrameName().
         AZStd::string GetParentFrameID() const;
 
         // TODO - Editor component: validation of fields, constraints between values and so on
-        NamespaceConfiguration m_namespaceConfiguration; // TODO - validation
-        AZStd::string m_frameName = "sensor_frame"; // TODO - option to fill from entity name, validation
+        NamespaceConfiguration m_namespaceConfiguration;
+        AZStd::string m_frameName = "sensor_frame"; // TODO - option to fill from entity name
 
         bool m_publishTransform = true;
         AZStd::unique_ptr<ROS2Transform> m_ros2Transform;

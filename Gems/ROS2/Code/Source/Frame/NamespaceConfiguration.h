@@ -5,7 +5,6 @@
 * SPDX-License-Identifier: Apache-2.0 OR MIT
 *
 */
-
 #pragma once
 
 #include <AzCore/RTTI/RTTI.h>
@@ -14,21 +13,31 @@
 
 namespace ROS2
 {
-    /// Configuration for handling of namespaces. Namespaces are useful for various ROS 2 components.
+    //! Configuration for handling of namespaces.
+    //! Namespaces are useful for various ROS2 components. This structure encapsulates the namespace itself,
+    //! composing namespaces and context-dependent default values.
+    //! @note This structure is handled through ROS2FrameComponent.
     struct NamespaceConfiguration
     {
     public:
         AZ_TYPE_INFO(NamespaceConfiguration, "{5E5BC6EA-DD01-480E-A4D1-6857CF70FDC8}");
         static void Reflect(AZ::ReflectContext* context);
 
+        //! A choice of methods to handle namespaces.
+        //! @note Top level ROS2FrameComponent will likely be associated with an interesting object (robot). For multi-robot
+        //! simulation, namespaces are often derived from the robot name itself. For this reason, the default behavior
+        //! for top level ROS2FrameComponent is to generate namespace from entity name.
         enum NamespaceStrategy
         {
-            Default, // FromEntityName for top-level frames, Empty otherwise
+            Default, //!< FromEntityName for top-level frames, Empty otherwise
             Empty,
-            FromEntityName,
-            Custom   // Non-empty but unrelated to entity name
+            FromEntityName, //!< Generate from Entity name, but substitute disallowed characters through RosifyName
+            Custom   //!< Non-empty and based on user-provided value
         };
-        
+
+        //! Set namespace based on context.
+        //! @param isRoot Whether namespace belongs to top-level entity in the entity hierarchy.
+        //! @param entityName Raw (not ros-ified) name of the entity to which the namespace belongs.
         void PopulateNamespace(bool isRoot, AZStd::string entityName);
         AZStd::string GetNamespace(const AZStd::string& parentNamespace) const;
 

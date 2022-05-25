@@ -7,18 +7,23 @@
  */
 #pragma once
 
-#include <AzCore/std/string/string.h>
 #include <AzCore/RTTI/RTTI.h>
 #include <AzCore/Serialization/SerializeContext.h>
+#include <AzCore/std/string/string.h>
 
 namespace ROS2
 {
+    //! Configuration reflecting a specific Lidar model.
+    //! This is meant to capture differences between different Lidars available on the market.
+    //! @note Current implementation is simplified. Rays in real lidars are often not uniformly
+    //! distributed among angular range, there is noise etc.
     struct LidarTemplate
     {
     public:
         AZ_TYPE_INFO(LidarTemplate, "{9E9EF583-733D-4450-BBA0-ADD4D1BEFBF2}");
         static void Reflect(AZ::ReflectContext* context);
 
+        // TODO - implement more models. Add at least one realistic model.
         enum LidarModel
         {
             Generic3DLidar

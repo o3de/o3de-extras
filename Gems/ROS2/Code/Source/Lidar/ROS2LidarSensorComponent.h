@@ -7,16 +7,21 @@
  */
 #pragma once
 
+#include "Lidar/LidarRaycaster.h"
+#include "Lidar/LidarTemplate.h"
+#include "Sensor/ROS2SensorComponent.h"
+#include <AzCore/Serialization/SerializeContext.h>
+#include <Atom/RPI.Public/AuxGeom/AuxGeomDraw.h>
 #include <rclcpp/publisher.hpp>
 #include <sensor_msgs/msg/point_cloud2.hpp>
-#include <Atom/RPI.Public/AuxGeom/AuxGeomDraw.h>
-#include <AzCore/Serialization/SerializeContext.h>
-#include "Sensor/ROS2SensorComponent.h"
-#include "Lidar/LidarTemplate.h"
-#include "Lidar/LidarRaycaster.h"
 
 namespace ROS2
 {
+    //! Lidar sensor Component.
+    //! Lidars (Light Detection and Ranging) emit laser light and measure it after reflection.
+    //! Lidar Component allows customization of lidar type and behavior and encapsulates both simulation
+    //! and data publishing. Lidar Component requires ROS2FrameComponent.
+    // TODO - Add selection of implementation choice (PhysX, GPU, other), noise
     class ROS2LidarSensorComponent
         : public ROS2SensorComponent
     {
@@ -35,7 +40,6 @@ namespace ROS2
         LidarTemplate::LidarModel m_lidarModel = LidarTemplate::Generic3DLidar;
         LidarRaycaster m_lidarRaycaster;
         std::shared_ptr<rclcpp::Publisher<sensor_msgs::msg::PointCloud2>> m_pointCloudPublisher;
-        // TODO - also add a data acquisition implementation choice (and consider propagating abstraction upwards)
 
         // Used only when visualisation is on - points differ since they are in global transform as opposed to local
         AZStd::vector<AZ::Vector3> m_visualisationPoints;

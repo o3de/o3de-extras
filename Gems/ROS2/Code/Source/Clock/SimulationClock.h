@@ -7,8 +7,6 @@
  */
 #pragma once
 
-#include <memory>
-#include <AzCore/Time/ITime.h>
 #include <builtin_interfaces/msg/time.hpp>
 #include <rosgraph_msgs/msg/clock.hpp>
 #include <rclcpp/publisher.hpp>

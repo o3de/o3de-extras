@@ -6,11 +6,11 @@
  *
  */
 #include "LidarRaycaster.h"
-#include <AzFramework/Physics/PhysicsScene.h>
 #include <AzCore/Interface/Interface.h>
-#include <AzFramework/Physics/Common/PhysicsSceneQueries.h>
 #include <AzCore/std/smart_ptr/shared_ptr.h>
 #include <AzCore/std/smart_ptr/make_shared.h>
+#include <AzFramework/Physics/Common/PhysicsSceneQueries.h>
+#include <AzFramework/Physics/PhysicsScene.h>
 
 namespace ROS2
 {
