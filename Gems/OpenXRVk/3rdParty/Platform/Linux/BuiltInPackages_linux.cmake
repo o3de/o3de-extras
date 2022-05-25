@@ -9,4 +9,4 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 #
 
-ly_associate_package(PACKAGE_NAME OpenXR-1.0.22-rev1-linux  TARGETS OpenXR  PACKAGE_HASH 919237b00b79faf11120d6e866773598a77b12fbcf7ccae4b8967d57e6f0719f)
+ly_associate_package(PACKAGE_NAME OpenXR-1.0.22-rev2-linux  TARGETS OpenXR  PACKAGE_HASH 7d9045de0078a3f4a88bea2e3167e2c159acc8c62ac40ae15f8a31902b8d1f08)

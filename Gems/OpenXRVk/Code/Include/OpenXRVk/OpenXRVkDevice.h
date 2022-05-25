@@ -8,38 +8,33 @@
 
 #pragma once
 
-
-
 #include <XR/XRDevice.h>
 #include <OpenXRVk_Platform.h>
 
 namespace OpenXRVk
 {
-    class DeviceDescriptor final
-        : public XR::DeviceDescriptor
-    {
-    public:
-        AZ_CLASS_ALLOCATOR(DeviceDescriptor, AZ::SystemAllocator, 0);
-        AZ_RTTI(DeviceDescriptor, "{B0DB4670-A233-4F3F-A5C7-5D2B76F6D911}", XR::DeviceDescriptor);
-
-        DeviceDescriptor() = default;
-        virtual ~DeviceDescriptor() = default;
-
-        //any extra info for a generic xr device
-    };
-
-    // Class that will help manage VkDevice
+    //! Vulkan specific XR device back-end class that will help manage 
+    //! xr specific vulkan native objects related to device.
     class Device final
-        : public XR::Device
+    : public XR::Device
     {
     public:
         AZ_CLASS_ALLOCATOR(Device, AZ::SystemAllocator, 0);
         AZ_RTTI(Device, "{81FD9B99-EDA5-4381-90EC-335073554379}", XR::Device);
 
-        static AZStd::intrusive_ptr<Device> Create();
-        AZ::RHI::ResultCode InitDeviceInternal() override;
+        static XR::Ptr<Device> Create();
+
+        //////////////////////////////////////////////////////////////////////////
+        // XR::Device overrides
+        // Create the xr specific native device object and populate the XRDeviceDescriptor with it.
+        AZ::RHI::ResultCode InitDeviceInternal(AZ::RHI::XRDeviceDescriptor* instanceDescriptor) override;
+        //////////////////////////////////////////////////////////////////////////
 
     private:
-        VkDevice m_nativeDevice;
+
+        //! Clean native objects.
+        void ShutdownInternal() override;
+
+        VkDevice m_xrVkDevice = VK_NULL_HANDLE;
     };
 }

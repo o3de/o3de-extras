@@ -13,6 +13,8 @@
 
 namespace OpenXRVk
 {
+    //Todo: Pull this in when needed or remove
+    /*
     class InputDescriptor final
         : public XR::InputDescriptor
     {
@@ -60,4 +62,5 @@ namespace OpenXRVk
         };
         InputState m_input;
     };
+    */
 }

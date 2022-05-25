@@ -8,46 +8,82 @@
 
 #pragma once
 
-#include <XR/XRInstance.h>
 #include <AzCore/std/containers/vector.h>
-#include <AzCore/std/smart_ptr/intrusive_ptr.h>
+#include <Atom/RHI/ValidationLayer.h>
 #include <OpenXRVk_Platform.h>
+#include <OpenXRVk/OpenXRVkFunctionLoader.h>
+#include <OpenXRVk/OpenXRVkPhysicalDevice.h>
+#include <XR/XRInstance.h>
 
 namespace OpenXRVk
 {
-    class InstanceDescriptor final
-        : public XR::InstanceDescriptor
-    {
-    public:
-        AZ_CLASS_ALLOCATOR(InstanceDescriptor, AZ::SystemAllocator, 0);
-        AZ_RTTI(InstanceDescriptor, "{F7D29A7A-5841-4B6F-ADFE-3734316BC63D}", XR::InstanceDescriptor);
-
-        InstanceDescriptor() = default;
-        virtual ~InstanceDescriptor() = default;
-
-        //any extra info a openxr instance descriptor needs
-    };
-
-    // Class that will help manage XrInstance
+    //! Vulkan specific XR instance back-end class that will help manage 
+    //! XR specific vulkan native objects
     class Instance final
-        : public XR::Instance
+    : public XR::Instance
     {
     public:
         AZ_CLASS_ALLOCATOR(Instance, AZ::SystemAllocator, 0);
         AZ_RTTI(Instance, "{1A62DF32-2909-431C-A938-B1E841A50768}", XR::Instance);
 
         Instance() = default;
-        virtual ~Instance() = default;
+        ~Instance() = default;
 
-        static AZStd::intrusive_ptr<Instance> Create();
-        virtual AZ::RHI::ResultCode InitInstanceInternal() override;
+        static XR::Ptr<Instance> Create();
+
+        //////////////////////////////////////////////////////////////////////////
+        // XR::Instance overrides
+        AZ::RHI::ResultCode InitInstanceInternal(AZ::RHI::ValidationMode m_validationMode) override;
+        AZ::RHI::ResultCode InitNativeInstance(AZ::RHI::XRInstanceDescriptor* instanceDescriptor) override;
+        AZ::u32 GetNumPhysicalDevices() override;
+        AZ::RHI::ResultCode GetXRPhysicalDevice(AZ::RHI::XRPhysicalDeviceDescriptor* physicalDeviceDescriptor, int32_t index) override;
+        //////////////////////////////////////////////////////////////////////////
+		
+        //! Enumerate supported extension names.
+        XR::StringList GetInstanceExtensionNames(const char* layerName = nullptr) const;
+		
+        //! Enumerate supported layer names.
+        XR::StringList GetInstanceLayerNames() const;
+
+        //! Enumerate and log view configurations.
+        void LogViewConfigurations();
+
+        //! Enumerate and log environment blend mode.
+        void LogEnvironmentBlendMode(XrViewConfigurationType type);
+
+        //! Get the XRInstance.
+        XrInstance GetXRInstance();
+
+        //! Get System id.
+        XrSystemId GetXRSystemId();
+
+        //! Get native VkInstance.
+        VkInstance GetVkInstance();
+
+        //! Get XR environment blend mode.
+        XrEnvironmentBlendMode GetEnvironmentBlendMode();
+
+        //! Get XR configuration type.
+        XrViewConfigurationType GetViewConfigType();
+
+        //! Ge the active VkPhysicalDevice.
+        VkPhysicalDevice GetActivePhysicalDevice();
 
     private:
+
+        //! Clean native objects. 
+        void ShutdownInternal() override;
+
         XrInstance m_xrInstance{ XR_NULL_HANDLE };
-        AZStd::vector<XrApiLayerProperties> m_layers;
-        AZStd::vector<XrExtensionProperties> m_extensions;
+        VkInstance m_xrVkInstance = VK_NULL_HANDLE;
         XrFormFactor m_formFactor{ XR_FORM_FACTOR_HEAD_MOUNTED_DISPLAY };
-        XrSystemId m_systemId{ XR_NULL_SYSTEM_ID };
-        VkInstance m_instance = VK_NULL_HANDLE;
+        XrViewConfigurationType m_viewConfigType{ XR_VIEW_CONFIGURATION_TYPE_PRIMARY_STEREO };
+        XrEnvironmentBlendMode m_environmentBlendMode{ XR_ENVIRONMENT_BLEND_MODE_OPAQUE };
+        XrSystemId m_xrSystemId{ XR_NULL_SYSTEM_ID };
+        XR::RawStringList m_requiredLayers;
+        XR::RawStringList m_requiredExtensions;
+        AZStd::unique_ptr<FunctionLoader> m_functionLoader;
+        AZStd::vector<VkPhysicalDevice> m_supportedXRDevices;
+        AZ::u32 m_physicalDeviceActiveIndex = 0;
     };
 }

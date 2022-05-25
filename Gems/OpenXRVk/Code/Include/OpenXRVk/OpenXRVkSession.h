@@ -14,6 +14,8 @@
 
 namespace OpenXRVk
 {
+    //Todo: Pull this in when needed or remove
+    /*
     class SessionDescriptor final
         : public XR::SessionDescriptor 
     {
@@ -53,4 +55,5 @@ namespace OpenXRVk
         XrSessionState m_sessionState{ XR_SESSION_STATE_UNKNOWN };
         XrFrameState m_frameState{ XR_TYPE_FRAME_STATE };
     };
+    */
 }

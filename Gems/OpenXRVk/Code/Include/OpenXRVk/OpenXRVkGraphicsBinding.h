@@ -13,6 +13,8 @@
 
 namespace OpenXRVk
 {
+    //todo:: Pull this in if needed or remove
+    /*
     class GraphicsBindingDescriptor final
         : public XR::GraphicsBindingDescriptor
     {
@@ -31,4 +33,5 @@ namespace OpenXRVk
         AZ_RTTI(GraphicsBinding, "{1001E681-EA2E-4898-AC08-B93AA5B63508}", XR::GraphicsBinding);
 
     };
+    */
 }

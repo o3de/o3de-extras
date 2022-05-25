@@ -10,6 +10,8 @@
 
 namespace OpenXRVk
 {
+    //Todo: Pull this in when needed or remove
+    /*
     AZStd::intrusive_ptr<Session> Session::Create()
     {
         return nullptr;
@@ -28,9 +30,9 @@ namespace OpenXRVk
     }
 
     void Session::HandleSessionStateChangedEvent(
-        const XrEventDataSessionStateChanged& /*stateChangedEvent*/,
-        bool* /*exitRenderLoop*/,
-        bool* /*requestRestart*/)
+        const XrEventDataSessionStateChanged&,
+        bool*,
+        bool*)
     {
         // Handle Session state changes
     }
@@ -49,5 +51,5 @@ namespace OpenXRVk
     {
         return m_sessionState == XR_SESSION_STATE_FOCUSED;
     }
-
+    */
 }

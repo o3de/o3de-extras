@@ -7,10 +7,11 @@
  */
 
 #include <OpenXRVk/OpenXRVkSwapChain.h>
-#include <OpenXRVk/OpenXRVkFactory.h>
 
 namespace OpenXRVk
 {
+    //Pull this in if needed or remove
+    /*
     AZStd::intrusive_ptr<SwapChain> SwapChain::Create()
     {
         return aznew SwapChain;
@@ -26,7 +27,7 @@ namespace OpenXRVk
         return aznew SwapChain::View;
     }
 
-    AZ::RHI::ResultCode SwapChain::View::Init(XrSwapchain /*handle*/, AZ::u32 /*width*/, AZ::u32 /*height*/)
+    AZ::RHI::ResultCode SwapChain::View::Init(XrSwapchain handle, AZ::u32 width, AZ::u32 height)
     {
         return AZ::RHI::ResultCode::Success;
     }
@@ -47,4 +48,5 @@ namespace OpenXRVk
         }
         return AZ::RHI::ResultCode::Success;
     }
+    */
 }

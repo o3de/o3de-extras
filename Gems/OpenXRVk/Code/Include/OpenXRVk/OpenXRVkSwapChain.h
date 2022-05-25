@@ -13,6 +13,8 @@
 
 namespace OpenXRVk
 {
+    //Pull this in if needed or remove
+    /*
     class SwapChainDescriptor final
         : public XR::SwapChainDescriptor
     {
@@ -90,4 +92,5 @@ namespace OpenXRVk
         AZStd::vector<XrView> m_views;
         int64_t m_colorSwapchainFormat{ -1 };
     };
+    */
 }

@@ -7,3 +7,5 @@
  */
 #pragma once
 
+#define VULKAN_DLL "vulkan.dll"
+#define VULKAN_1_DLL "vulkan-1.dll"

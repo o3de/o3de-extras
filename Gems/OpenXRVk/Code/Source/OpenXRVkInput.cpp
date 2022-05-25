@@ -10,6 +10,8 @@
 
 namespace OpenXRVk
 {
+    //Todo: Pull this in when needed or remove
+    /*
     AZStd::intrusive_ptr<XR::Input> Input::Create()
     {
         return nullptr;
@@ -48,4 +50,5 @@ namespace OpenXRVk
     {
         // m_session->HandleSessionStateChangedEvent
     }
+    */
 }

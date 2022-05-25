@@ -8,37 +8,12 @@
 
 #pragma once
 
-#include <XR/XRPhysicalDevice.h>
+#include <AzCore/std/containers/vector.h>
 #include <OpenXRVk_Platform.h>
 
-namespace OpenXRVk
+namespace OpenXRVk::PhysicalDevice
 {
-    class PhysicalDeviceDescriptor final
-        : public XR::PhysicalDeviceDescriptor
-    {
-    public:
-        AZ_CLASS_ALLOCATOR(PhysicalDeviceDescriptor, AZ::SystemAllocator, 0);
-        AZ_RTTI(PhysicalDeviceDescriptor, "{CB485C38-E723-4593-ADCF-DFE220A6A24B}", XR::PhysicalDeviceDescriptor);
-
-        PhysicalDeviceDescriptor() = default;
-        virtual ~PhysicalDeviceDescriptor() = default;
-
-        // Other data related to openxr physical device
-    };
-
-    // This class will be responsible for iterating over all the compatible physical
-    // devices and picking one that will be used for the app
-    class PhysicalDevice final
-        : public XR::PhysicalDevice
-    {
-    public:
-        AZ_CLASS_ALLOCATOR(PhysicalDevice, AZ::SystemAllocator, 0);
-        AZ_RTTI(PhysicalDevice, "{7CE8D7C1-7CC6-4841-9505-DED2761617AC}", XR::PhysicalDevice);
-
-        PhysicalDevice() = default;
-        virtual ~PhysicalDevice() = default;
-
-        static AZStd::vector<AZStd::intrusive_ptr<XR::PhysicalDevice>> EnumerateDeviceList();
-    };
-} // namespace XR
+    //! API to enumerate and return physical devices.
+    static AZStd::vector<VkPhysicalDevice> EnumerateDeviceList(XrSystemId xrSystemId, XrInstance xrInstance, VkInstance vkInstance); 
+}
 
