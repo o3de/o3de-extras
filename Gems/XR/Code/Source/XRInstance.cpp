@@ -10,8 +10,14 @@
 
 namespace XR
 {
-    AZ::RHI::ResultCode Instance::InitInstanceInternal()
+    AZ::RHI::ResultCode Instance::Init(AZ::RHI::ValidationMode validationMode)
     {
-        return AZ::RHI::ResultCode::Success;
+        m_validationMode = validationMode;
+        return InitInstanceInternal(validationMode);;
+    }
+
+    void Instance::Shutdown()
+    {
+        ShutdownInternal();
     }
 } // namespace XR

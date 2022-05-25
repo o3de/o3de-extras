@@ -9,26 +9,15 @@
 #pragma once
 
 #include <AzCore/Memory/SystemAllocator.h>
-
-#include <Atom/RPI.Public/XR/XRSystemInterface.h>
+#include <Atom/RHI/ValidationLayer.h>
+#include <Atom/RHI/XRRenderingInterface.h>
+#include <XR/XRBase.h>
+#include <XR/XRObject.h>
 
 namespace XR
 {
-    class InstanceDescriptor
-        : public AZ::RPI::XRInstanceDescriptor
-    {
-    public:
-        AZ_CLASS_ALLOCATOR(InstanceDescriptor, AZ::SystemAllocator, 0);
-        AZ_RTTI(InstanceDescriptor, "{1C457924-56A4-444F-BC72-4D31A097BA70}");
-
-        InstanceDescriptor() = default;
-        virtual ~InstanceDescriptor() = default;
-
-        //any extra info a generic xr instance descriptor needs
-    };
-
     class Instance
-        : public AZStd::intrusive_base
+        : public XR::Object
     {
     public:
         AZ_CLASS_ALLOCATOR(Instance, AZ::SystemAllocator, 0);
@@ -37,9 +26,34 @@ namespace XR
         Instance() = default;
         virtual ~Instance() = default;
 
-        AZStd::intrusive_ptr<InstanceDescriptor> m_descriptor;
+        //! Init the back-end instance. It is responsible for figuring out supported layers and extensions 
+        //! and based on that a xr instance is created. It also has logging support based on validation mode.  
+        AZ::RHI::ResultCode Init(AZ::RHI::ValidationMode validationMode);
 
-        virtual AZ::RHI::ResultCode InitInstanceInternal();
+        //! API to init the native instance object and populate the XRInstanceDecriptor with it.
+        virtual AZ::RHI::ResultCode InitNativeInstance(AZ::RHI::XRInstanceDescriptor* instanceDescriptor) = 0;
+
+        //! Get number of physical devices for XR.
+        virtual AZ::u32 GetNumPhysicalDevices() = 0;
+
+        //! API to retrieve the native physical device for a specific index.
+        virtual AZ::RHI::ResultCode GetXRPhysicalDevice(AZ::RHI::XRPhysicalDeviceDescriptor* physicalDeviceDescriptor, int32_t index) = 0;
+
+    private:
+
+        ///////////////////////////////////////////////////////////////////
+        // XR::Object
+        void Shutdown() override;
+        ///////////////////////////////////////////////////////////////////
+
+        //! Called when the XR instance is being shutdown.
+        virtual void ShutdownInternal() = 0;
+
+        //! API to allow backend object to initialize native xr instance. 
+        virtual AZ::RHI::ResultCode InitInstanceInternal(AZ::RHI::ValidationMode m_validationMode) = 0;
+       
+        //Cache validation mode in case the backend object needs to use it.
+        AZ::RHI::ValidationMode m_validationMode = AZ::RHI::ValidationMode::Disabled;
     };
 
 } // namespace XR

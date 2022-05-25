@@ -9,11 +9,13 @@
 #pragma once
 
 #include <AzCore/Memory/SystemAllocator.h>
-#include <AzCore/std/smart_ptr/intrusive_ptr.h>
+#include <XR/XRBase.h>
 #include <XR/XRSession.h>
 
 namespace XR
 {
+    //Todo: Pull this in when needed or remove
+    /*
     class InputDescriptor 
         : public AZStd::intrusive_base
     {
@@ -25,7 +27,7 @@ namespace XR
         virtual ~InputDescriptor() = default;
 
         //any extra info for a generic xr InputDescriptor
-        AZStd::intrusive_ptr<Session> m_session;
+        Ptr<Session> m_session;
     };
 
     // This class will be responsible for creating XR::Input
@@ -48,6 +50,7 @@ namespace XR
         virtual AZ::RHI::ResultCode InitInternal() = 0;
 
     private:
-        AZStd::intrusive_ptr<InputDescriptor> m_descriptor;
+        Ptr<InputDescriptor> m_descriptor;
     };
+    */
 } // namespace XR

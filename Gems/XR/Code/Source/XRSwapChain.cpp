@@ -10,6 +10,8 @@
 
 namespace XR
 {
+    //Todo: Pull this in when needed or remove
+    /*
     //! Returns the view swap chain related to the index
     SwapChain::View* SwapChain::GetView(const AZ::u16 swapchainIndex) const
     {
@@ -27,4 +29,5 @@ namespace XR
     {
         return InitInternal();
     }
+    */
 } // namespace XR

@@ -9,25 +9,15 @@
 #pragma once
 
 #include <AzCore/Memory/SystemAllocator.h>
-#include <Atom/RPI.Public/XR/XRSystemInterface.h>
+#include <Atom/RHI/XRRenderingInterface.h>
+#include <XR/XRBase.h>
+#include <XR/XRInstance.h>
+#include <XR/XRObject.h>
 
 namespace XR
 {
-    class DeviceDescriptor
-        : public AZ::RPI::XRDeviceDescriptor
-    {
-    public:
-        AZ_CLASS_ALLOCATOR(DeviceDescriptor, AZ::SystemAllocator, 0);
-        AZ_RTTI(DeviceDescriptor, "{1FF2D68D-DA6A-47B3-A5BE-18E3A100C830}", AZ::RPI::XRDeviceDescriptor);
-
-        DeviceDescriptor() = default;
-        virtual ~DeviceDescriptor() = default;
-
-        //any extra info for a generic xr device
-    };
-
     class Device
-        : public AZStd::intrusive_base
+        : public XR::Object
     {
     public:
         AZ_CLASS_ALLOCATOR(Device, AZ::SystemAllocator, 0);
@@ -36,9 +26,27 @@ namespace XR
         Device() = default;
         virtual ~Device() = default;
 
-        AZStd::intrusive_ptr<DeviceDescriptor> m_descriptor;
+        //////////////////////////////////////////////////////////////////////////
+        //! Create the xr specific native device object and populate the XRDeviceDescriptor with it.
+        virtual AZ::RHI::ResultCode InitDeviceInternal(AZ::RHI::XRDeviceDescriptor* instanceDescriptor) = 0;
+        //////////////////////////////////////////////////////////////////////////
+        
+        //! Init the XR device.
+        AZ::RHI::ResultCode Init(Ptr<Instance> instance);
+        
+        //! Retrieve the XR instance.
+        Ptr<Instance> GetInstance();
 
-        virtual AZ::RHI::ResultCode InitDeviceInternal() = 0;
+    private:
+
+        ///////////////////////////////////////////////////////////////////
+        // XR::Object
+        void Shutdown() override final;
+        ///////////////////////////////////////////////////////////////////
+
+        //! Called when the device is being shutdown.
+        virtual void ShutdownInternal() = 0;
+
+        Ptr<Instance> m_instance;
     };
-} // namespace XR
-
+}

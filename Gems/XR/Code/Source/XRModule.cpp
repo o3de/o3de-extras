@@ -8,11 +8,11 @@
 
 #include <AzCore/Memory/SystemAllocator.h>
 #include <AzCore/Module/Module.h>
+#include <XR/XRSystemComponent.h>
 
 namespace XR
 {
-    class Module
-        : public AZ::Module
+    class Module : public AZ::Module
     {
     public:
         AZ_RTTI(Module, "{71A99524-7D31-42D3-955E-3F4774F310AC}", AZ::Module);
@@ -21,8 +21,17 @@ namespace XR
         Module()
             : AZ::Module()
         {
+            m_descriptors.insert(
+                m_descriptors.end(),
+                {
+                    SystemComponent::CreateDescriptor(),
+                });
         }
 
+        AZ::ComponentTypeList GetRequiredSystemComponents() const override
+        {
+            return { azrtti_typeid<XR::SystemComponent>() };
+        }
     };
 }
 

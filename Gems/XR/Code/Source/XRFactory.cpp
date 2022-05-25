@@ -11,13 +11,16 @@
 
 namespace XR
 {
-    //! Registers the global factory instance.
+    AZ::u32 Factory::GetPlatformService()
+    {
+        return AZ_CRC_CE("XRPlatformService");
+    }
+
     void Factory::Register(Factory* instance)
     {
         AZ::Interface<Factory>::Register(instance);
     }
 
-    //! Unregisters the global factory instance.
     void Factory::Unregister(Factory* instance)
     {
         AZ::Interface<Factory>::Unregister(instance);
@@ -28,7 +31,6 @@ namespace XR
         return AZ::Interface<Factory>::Get() != nullptr;
     }
 
-    //! Access the global factory instance.
     Factory& Factory::Get()
     {
         Factory* factory = AZ::Interface<Factory>::Get();

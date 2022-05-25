@@ -12,10 +12,11 @@
 #include <AzCore/std/containers/vector.h>
 #include <AzCore/std/smart_ptr/intrusive_ptr.h>
 
-#include <Atom/RPI.Public/XR/XRSystemInterface.h>
 
 namespace XR
 {
+    //Pull this in when able to test
+    /*
     class SwapChainDescriptor 
         : public AZStd::intrusive_base
     {
@@ -68,7 +69,7 @@ namespace XR
             Image() = default;
             virtual ~Image() = default;
 
-            AZStd::intrusive_ptr<SwapChainImageDescriptor> m_descriptor;
+            Ptr<SwapChainImageDescriptor> m_descriptor;
         };
 
         class View 
@@ -82,7 +83,7 @@ namespace XR
             virtual ~View() = default;
 
             //! All the images associated with this ViewSwapChain
-            AZStd::vector<AZStd::intrusive_ptr<SwapChain::Image>> m_images;
+            AZStd::vector<Ptr<SwapChain::Image>> m_images;
 
             //! The current image index.
             AZ::u16 m_currentImageIndex = 0;
@@ -99,9 +100,12 @@ namespace XR
 
         virtual AZ::RHI::ResultCode InitInternal();
 
-        AZStd::intrusive_ptr<SwapChainDescriptor> m_descriptor;
+        Ptr<SwapChainDescriptor> m_descriptor;
 
     private:
-        AZStd::vector<AZStd::intrusive_ptr<SwapChain::View>> m_viewSwapchains;
+        AZStd::vector<Ptr<SwapChain::View>> m_viewSwapchains;
     };
+
+    */
+
 } // namespace XR

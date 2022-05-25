@@ -9,8 +9,7 @@
 #pragma once
 
 #include <AzCore/Memory/SystemAllocator.h>
-
-#include <Atom/RPI.Public/XR/XRSystemInterface.h>
+#include <AzCore/std/smart_ptr/intrusive_base.h>
 
 namespace XR
 {
@@ -18,10 +17,13 @@ namespace XR
     class Space
         : public AZStd::intrusive_base
     {
+	    //Todo: Pull this in when needed or remove
+        /*
     public:
         AZ_CLASS_ALLOCATOR(Space, AZ::SystemAllocator, 0);
         AZ_RTTI(Space, "{A78A37F1-8861-4EB4-8FC6-0E9C11394EF1}");
 
         virtual AZ::RHI::ResultCode InitInternal() = 0;
+        */
     };
 } // namespace XR

@@ -10,5 +10,21 @@
 
 namespace XR
 {
+    AZ::RHI::ResultCode Device::Init(Ptr<Instance> instance)
+    {
+        m_instance = instance;
+        return AZ::RHI::ResultCode::Success;
+    }
+
+    Ptr<Instance> Device::GetInstance()
+    {
+        return m_instance;
+    }
+
+    void Device::Shutdown()
+    {
+        ShutdownInternal();
+        m_instance = nullptr;
+    }
 
 } // namespace XR

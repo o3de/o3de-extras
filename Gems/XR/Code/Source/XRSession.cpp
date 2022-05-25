@@ -10,6 +10,8 @@
 
 namespace XR
 {
+    //Todo: Pull this in when needed or remove
+    /*
     AZ::RHI::ResultCode Session::Init()
     {
         return Session::InitInternal();
@@ -29,4 +31,5 @@ namespace XR
     {
         return AZ::RHI::ResultCode::Success;
     }
+    */
 } // namespace XR

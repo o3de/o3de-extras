@@ -11,9 +11,12 @@
 #include <AzCore/Memory/SystemAllocator.h>
 
 #include <XR/XRGraphicsBinding.h>
+#include <XR/XRBase.h>
 
 namespace XR
 {
+    //Todo: Pull this in when needed or remove
+    /*
     class SessionDescriptor 
         : public AZStd::intrusive_base
     {
@@ -25,7 +28,7 @@ namespace XR
         virtual ~SessionDescriptor() = default;
 
         // Graphics Binding will contain renderer related data to start a xr session
-        AZStd::intrusive_ptr<GraphicsBinding> m_graphicsBinding;
+        Ptr<GraphicsBinding> m_graphicsBinding;
     };
 
     // This class will be responsible for creating XR::Session and
@@ -39,15 +42,16 @@ namespace XR
 
         Session() = default;
         virtual ~Session() = default;
-
+        
         AZ::RHI::ResultCode Init();
         virtual bool IsSessionRunning() const;
         virtual bool IsSessionFocused() const;
         virtual AZ::RHI::ResultCode InitInternal();
-
+        
     private:
-        AZStd::intrusive_ptr<SessionDescriptor> m_descriptor;
+        Ptr<SessionDescriptor> m_descriptor;
         bool m_sessionRunning = false;
         bool m_sessionFocused = false;
     };
+    */
 } // namespace XR

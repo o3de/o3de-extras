@@ -10,9 +10,12 @@
 
 namespace XR
 {
+    //Todo: Pull this in when needed or remove
+    /*
     AZ::RHI::ResultCode Input::Init()
     {
         //m_session = descriptor.m_session;
         return InitInternal();
     }
+    */
 } // namespace XR

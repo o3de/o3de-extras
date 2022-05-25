@@ -9,11 +9,12 @@
 #pragma once
 
 #include <AzCore/Memory/SystemAllocator.h>
-
-#include <Atom/RPI.Public/XR/XRSystemInterface.h>
+#include <XR/XRBase.h>
 
 namespace XR
 {
+    //Todo: Pull this in when needed or remove
+    /*
     class GraphicsBindingDescriptor
         : public AZ::RPI::XRGraphicsBindingDescriptor
     {
@@ -36,7 +37,8 @@ namespace XR
         GraphicsBinding() = default;
         virtual ~GraphicsBinding() = default;
 
-        AZStd::intrusive_ptr<GraphicsBindingDescriptor> m_descriptor;
+        Ptr<GraphicsBindingDescriptor> m_descriptor;
     };
+    */
 } // namespace XR
 

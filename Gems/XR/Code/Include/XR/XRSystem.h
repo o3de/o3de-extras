@@ -8,60 +8,69 @@
 
 #pragma once
 
+#include <AzCore/base.h>
 #include <AzCore/Memory/SystemAllocator.h>
 
-#include <Atom/RPI.Public/XR/XRSystemInterface.h>
+#include <Atom/RHI/XRRenderingInterface.h>
+#include <Atom/RPI.Public/XR/XRRenderingInterface.h>
+#include <XR/XRInstance.h>
+#include <XR/XRDevice.h>
+#include <Atom/RHI/ValidationLayer.h>
 
 namespace XR
 {
+    //! This class is the window to everything XR related. It implements 
+    //! RPI::RenderingInterface and RHI::RenderingInterface but
+    //! can be extended to implement other non rendering interfaces if needed. 
     class System
-        : public AZ::RPI::XRSystemInterface
+        : public AZ::RPI::XRRenderingInterface
+        , public AZ::RHI::XRRenderingInterface
+        , public AZStd::intrusive_base
     {
     public:
         AZ_CLASS_ALLOCATOR(System, AZ::SystemAllocator, 0);
-        AZ_RTTI(System, "{C3E0291D-FB30-4E27-AB0D-14606A8C3C1F}", AZ::RPI::XRSystemInterface);
+        AZ_RTTI(System, "{C3E0291D-FB30-4E27-AB0D-14606A8C3C1F}");
 
         AZ_DISABLE_COPY_MOVE(System);
 
-        static System* Get();
+        System() = default;
+        ~System() = default;
 
-        // Creates the XR::Instance which is responsible for managing
-        // XrInstance (amongst other things) for OpenXR backend
-        // Also initializes the XR::Device
-        virtual AZ::RHI::ResultCode InitializeSystem() = 0;
+        struct Descriptor
+        {
+            AZ::RHI::ValidationMode m_validationMode = AZ::RHI::ValidationMode::Disabled;
+        };
 
-        // Create a Session and other basic session-level initialization.
-        virtual AZ::RHI::ResultCode InitializeSession() = 0;
+        //! Init the XRSystem.
+        void Init(const Descriptor& descriptor);
 
-        // Start of the frame related XR work
-        virtual void BeginFrame() = 0;
+        //! Destroy any relevant objects held by this .class 
+        void Shutdown();
 
-        // End of the frame related XR work
-        virtual void EndFrame() = 0;
+        ///////////////////////////////////////////////////////////////////
+        // AZ::RPI::XRRenderingInterface overrides
+        //! Init the XR Instance.
+        AZ::RHI::ResultCode InitInstance() override;
+        ///////////////////////////////////////////////////////////////////
 
-        // Start of the XR view related work
-        virtual void BeginView() = 0;
+        ///////////////////////////////////////////////////////////////////
+        // AZ::RHI::XRRenderingInterface overrides
+        //! Api to init the backend specific native Instance.
+        AZ::RHI::ResultCode InitNativeInstance(AZ::RHI::XRInstanceDescriptor* instanceDescriptor) override;
+        
+        //! Get the number of XR physical devices. 
+        AZ::u32 GetNumPhysicalDevices() override;
+        
+        //! Get the Physical device for a given index.
+        AZ::RHI::ResultCode GetXRPhysicalDevice(AZ::RHI::XRPhysicalDeviceDescriptor* physicalDeviceDescriptor, int32_t index) override;
+        
+        //! API to create XR native device for the renderer.
+        AZ::RHI::ResultCode CreateDevice(AZ::RHI::XRDeviceDescriptor* deviceDescriptor) override;
+        ///////////////////////////////////////////////////////////////////
 
-        // End of the XR view related work
-        virtual void EndView() = 0;
-
-        // Manage session lifecycle to track if RenderFrame should be called.
-        virtual bool IsSessionRunning() const = 0;
-
-        // Create a swap chain which will responsible for managing
-        // multiple XR swap chains and multiple swap chain images within it
-        virtual AZ::RHI::ResultCode CreateSwapchain() = 0;
-
-        // This will allow XR gem to provide device related data to RHI
-        virtual AZ::RPI::XRDeviceDescriptor* GetDeviceDescriptor() = 0;
-
-        // Provide access to instance specific data to RHI
-        virtual AZ::RPI::XRInstanceDescriptor* GetInstanceDescriptor() = 0;
-
-        // Provide swap chain specific data to RHI
-        virtual AZ::RPI::XRSwapChainImageDescriptor* GetSwapChainImageDescriptor(AZ::u16 swapchainIndex) = 0;
-
-        // Provide access to Graphics Binding specific data that RHI can populate
-        virtual AZ::RPI::XRGraphicsBindingDescriptor* GetGraphicsBindingDescriptor() = 0;
+    private:
+        Ptr<Instance> m_instance;
+        Ptr<Device> m_device;
+        AZ::RHI::ValidationMode m_validationMode = AZ::RHI::ValidationMode::Disabled;
     };
 } // namespace XR
