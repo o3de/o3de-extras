@@ -1,0 +1,28 @@
+<?xml version="1.0" ?>
+<robot name="AstroVAC" xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+<xacro:include filename="$(find AstroVAC_description)/urdf/materials.xacro" />
+<xacro:include filename="$(find AstroVAC_description)/urdf/AstroVAC.trans" />
+<xacro:include filename="$(find AstroVAC_description)/urdf/AstroVAC.gazebo" />
+<link name="base_link">
+  <inertial>
+    <origin rpy="0 0 0" xyz="0.0019059908818002708 0.0608844023332045 -0.0034283510341363856"/>
+    <mass value="0.36154745357135626"/>
+    <inertia ixx="0.006594" ixy="-7e-05" ixz="-2e-06" iyy="0.009366" iyz="-6e-06" izz="0.00326"/>
+  </inertial>
+  <visual>
+    <origin rpy="0 0 0" xyz="0 0 0"/>
+    <geometry>
+      <mesh filename="package://AstroVAC_description/meshes/base_link.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+    <material name="silver"/>
+  </visual>
+  <collision>
+    <origin rpy="0 0 0" xyz="0 0 0"/>
+    <geometry>
+      <mesh filename="package://AstroVAC_description/meshes/base_link.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+  </collision>
+</link>
+
+</robot>

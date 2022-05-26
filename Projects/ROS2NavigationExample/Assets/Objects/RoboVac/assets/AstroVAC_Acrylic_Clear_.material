@@ -1,0 +1,29 @@
+{
+    "materialType": "Materials/Types/StandardPBR.materialtype",
+    "materialTypeVersion": 5,
+    "propertyValues": {
+        "baseColor.color": [
+            0.9647058844566345,
+            0.9647058844566345,
+            0.9529411792755127,
+            1.0
+        ],
+        "baseColor.factor": 0.07000000029802322,
+        "emissive.color": [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+        ],
+        "general.applySpecularAA": true,
+        "general.doubleSided": true,
+        "general.forwardPassIBLSpecular": true,
+        "metallic.factor": 0.18000000715255737,
+        "opacity.alphaAffectsSpecular": 0.47999998927116394,
+        "opacity.alphaSource": "Split",
+        "opacity.factor": 1.0,
+        "opacity.mode": "Blended",
+        "roughness.factor": 0.33000001311302185,
+        "specularF0.factor": 0.3499999940395355
+    }
+}
