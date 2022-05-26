@@ -46,8 +46,15 @@ set(FILES
     Source/Utilities/ROS2Conversions.h
     Source/Utilities/ROS2Names.cpp
     Source/Utilities/ROS2Names.h
-    Source/URDF/UrdfParser.cpp
-    Source/URDF/UrdfParser.h
     Source/Imu/ROS2ImuSensorComponent.cpp
     Source/Imu/ROS2ImuSensorComponent.h
+    Source/URDF/UrdfParser.cpp
+    Source/URDF/UrdfParser.h
+    Source/URDF/FbxGenerator.cpp
+    Source/URDF/FbxGenerator.h
+    Source/URDF/FbxNode.cpp
+    Source/URDF/FbxNode.h
+    Source/URDF/UniqueIdGenerator.h
+    Source/URDF/UrdfToFbxConverter.cpp
+    Source/URDF/UrdfToFbxConverter.h
 )

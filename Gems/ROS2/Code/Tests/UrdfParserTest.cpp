@@ -9,81 +9,82 @@
 #include <URDF/UrdfParser.h>
 
 #include <AzTest/AzTest.h>
+#include <AzCore/UnitTest/TestTypes.h>
+#include <AzCore/std/string/string.h>
 
-namespace {
-
-class UrdfParserTest : public ::testing::Test
+namespace UnitTest
 {
-    public:
-        std::string GetUrdfWithOneLink()
-        {
-            std::string xmlStr =
-                "<robot name=\"test_one_link\">"
-                "  <link name=\"link1\">"
-                "    <inertial>"
-                "      <mass value=\"1.0\"/>"
-                "      <inertia ixx=\"1.0\" iyy=\"1.0\" izz=\"1.0\" ixy=\"0\" ixz=\"0\" iyz=\"0\"/>"
-                "    </inertial>"
-                "    <visual>"
-                "      <geometry>"
-                "        <box size=\"1.0 2.0 1.0\"/>"
-                "      </geometry>"
-                "      <material name=\"black\"/>"
-                "    </visual>"
-                "    <collision>"
-                "      <geometry>"
-                "        <box size=\"1.0 2.0 1.0\"/>"
-                "      </geometry>"
-                "    </collision>"
-                "  </link>"
-                "</robot>";
-            return xmlStr;
-        }
 
-        std::string GetUrdfWithTwoLinksAndJoint()
-        {
-            std::string xmlStr =
-                "<robot name=\"test_two_links_one_joint\">"
-                "  <link name=\"link1\">"
-                "    <inertial>"
-                "      <mass value=\"1.0\"/>"
-                "      <inertia ixx=\"1.0\" iyy=\"1.0\" izz=\"1.0\" ixy=\"0\" ixz=\"0\" iyz=\"0\"/>"
-                "    </inertial>"
-                "    <visual>"
-                "      <geometry>"
-                "        <box size=\"1.0 2.0 1.0\"/>"
-                "      </geometry>"
-                "      <material name=\"black\"/>"
-                "    </visual>"
-                "  </link>"
-                "  <link name=\"link2\">"
-                "    <inertial>"
-                "      <mass value=\"1.0\"/>"
-                "      <inertia ixx=\"1.0\" iyy=\"1.0\" izz=\"1.0\" ixy=\"0\" ixz=\"0\" iyz=\"0\"/>"
-                "    </inertial>"
-                "    <visual>"
-                "      <geometry>"
-                "        <box size=\"1.0 1.0 1.0\"/>"
-                "      </geometry>"
-                "      <material name=\"black\"/>"
-                "    </visual>"
-                "  </link>"
-                "  <joint name=\"joint12\" type=\"fixed\">"
-                "    <parent link=\"link1\"/>"
-                "    <child link=\"link2\"/>"
-                "    <origin rpy=\"0 0 0\" xyz=\"1.0 0.5 0.0\"/>"
-                "    <dynamics damping=\"10.0\" friction=\"5.0\"/>"
-                "    <limit lower=\"10.0\" upper=\"20.0\" effort=\"90.0\" velocity=\"10.0\"/>"
-                "  </joint>"
-                "</robot>";
-            return xmlStr;
-        }
-    protected:
-        ROS2::UrdfParser parser; 
+class UrdfParserTest : public AllocatorsTestFixture
+{
+public:
+    AZStd::string GetUrdfWithOneLink()
+    {
+        return
+            "<robot name=\"test_one_link\">"
+            "  <link name=\"link1\">"
+            "    <inertial>"
+            "      <mass value=\"1.0\"/>"
+            "      <inertia ixx=\"1.0\" iyy=\"1.0\" izz=\"1.0\" ixy=\"0\" ixz=\"0\" iyz=\"0\"/>"
+            "    </inertial>"
+            "    <visual>"
+            "      <geometry>"
+            "        <box size=\"1.0 2.0 1.0\"/>"
+            "      </geometry>"
+            "      <material name=\"black\"/>"
+            "    </visual>"
+            "    <collision>"
+            "      <geometry>"
+            "        <box size=\"1.0 2.0 1.0\"/>"
+            "      </geometry>"
+            "    </collision>"
+            "  </link>"
+            "</robot>";
+    }
+
+    AZStd::string GetUrdfWithTwoLinksAndJoint()
+    {
+        return
+            "<robot name=\"test_two_links_one_joint\">"
+            "  <link name=\"link1\">"
+            "    <inertial>"
+            "      <mass value=\"1.0\"/>"
+            "      <inertia ixx=\"1.0\" iyy=\"1.0\" izz=\"1.0\" ixy=\"0\" ixz=\"0\" iyz=\"0\"/>"
+            "    </inertial>"
+            "    <visual>"
+            "      <geometry>"
+            "        <box size=\"1.0 2.0 1.0\"/>"
+            "      </geometry>"
+            "      <material name=\"black\"/>"
+            "    </visual>"
+            "  </link>"
+            "  <link name=\"link2\">"
+            "    <inertial>"
+            "      <mass value=\"1.0\"/>"
+            "      <inertia ixx=\"1.0\" iyy=\"1.0\" izz=\"1.0\" ixy=\"0\" ixz=\"0\" iyz=\"0\"/>"
+            "    </inertial>"
+            "    <visual>"
+            "      <geometry>"
+            "        <box size=\"1.0 1.0 1.0\"/>"
+            "      </geometry>"
+            "      <material name=\"black\"/>"
+            "    </visual>"
+            "  </link>"
+            "  <joint name=\"joint12\" type=\"fixed\">"
+            "    <parent link=\"link1\"/>"
+            "    <child link=\"link2\"/>"
+            "    <origin rpy=\"0 0 0\" xyz=\"1.0 0.5 0.0\"/>"
+            "    <dynamics damping=\"10.0\" friction=\"5.0\"/>"
+            "    <limit lower=\"10.0\" upper=\"20.0\" effort=\"90.0\" velocity=\"10.0\"/>"
+            "  </joint>"
+            "</robot>";
+    }
 };
 
 TEST_F(UrdfParserTest, ParseUrdfWithOneLink)
 {
+    ROS2::UrdfParser parser;
+
     const auto xmlStr = GetUrdfWithOneLink();
     const auto urdf = parser.Parse(xmlStr);
 
@@ -120,6 +121,8 @@ TEST_F(UrdfParserTest, ParseUrdfWithOneLink)
 
 TEST_F(UrdfParserTest, ParseUrdfWithTwoLinksAndJoint)
 {
+    ROS2::UrdfParser parser;
+
     const auto xmlStr = GetUrdfWithTwoLinksAndJoint();
     const auto urdf = parser.Parse(xmlStr);
 
@@ -160,4 +163,4 @@ TEST_F(UrdfParserTest, ParseUrdfWithTwoLinksAndJoint)
     EXPECT_EQ(joint12->limits->velocity, 10.0);
 }
 
-} // namespace
+} // namespace UnitTest

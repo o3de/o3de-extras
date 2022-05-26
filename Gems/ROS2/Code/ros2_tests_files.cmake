@@ -6,4 +6,6 @@
 set(FILES
     Tests/ROS2Test.cpp
     Tests/UrdfParserTest.cpp
+    Tests/FbxGeneratorTest.cpp
+    Tests/UrdfToFbxConverterTest.cpp
 )
