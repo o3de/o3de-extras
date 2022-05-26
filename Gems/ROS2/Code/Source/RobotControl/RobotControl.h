@@ -6,27 +6,32 @@
  *
  */
 #pragma once
+
+#include "Frame/ROS2FrameComponent.h"
+#include "RobotControl/ControlConfiguration.h"
+#include "RobotControl/RobotConfiguration.h"
+#include "ROS2/ROS2Bus.h"
+#include "Utilities/ROS2Names.h"
 #include <memory>
 #include <rclcpp/rclcpp.hpp>
 
-#include "ROS2/ROS2Bus.h"
-#include "Utilities/ROS2Names.h"
-#include "RobotControl/ControlConfiguration.h"
-#include "RobotControl/RobotConfiguration.h"
-#include "Frame/ROS2FrameComponent.h"
-
 namespace ROS2
 {
-    // Component extension enabling polymorphic use of generics
+    //! Component extension enabling polymorphic use of generics.
     // TODO - naming (this is a component activation interface capturing component and entity state)
     class IRobotControl
     {
     public:
+        //! Activate the Control with the Component activation.
+        //! Only activated IRobotControl will receive and process control messages.
+        //! @param entity Activation context for the owning Component - the entity it belongs to.
         virtual void Activate(const AZ::Entity* entity) = 0;
         virtual void Deactivate() = 0;
         virtual ~IRobotControl() = default;
     };
 
+    //! The generic class for handling subscriptions to ROS2 control messages of different types.
+    //! @see ControlConfiguration::Steering.
     template <typename T>
     class RobotControl : public IRobotControl
     {

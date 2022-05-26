@@ -31,7 +31,7 @@ namespace ROS2
         AZ::Crc32 OnQoSSelected();
 
         // TODO - only for Editor component
-        //! If necessary, extend to also expose history and liveliness
+        //! If necessary, extend to also expose history and liveliness.
         rclcpp::ReliabilityPolicy m_reliabilityPolicy;
         rclcpp::DurabilityPolicy m_durabilityPolicy;
         uint32_t m_depth;

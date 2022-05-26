@@ -8,11 +8,16 @@
 #pragma once
 
 #include "RobotControl/RobotControl.h"
-
-#include "geometry_msgs/msg/twist.hpp"
+#include <geometry_msgs/msg/twist.hpp>
 
 namespace ROS2
 {
+    //! Specialization of RobotControl for Twist messages.
+    //! Twist control moves robot through supplying linear and angular velocities.
+    //! The control message can be broadcast to EBus system or directly applied to a selected body.
+    //! This class is used through ROS2RobotControlComponent.
+    //! @note How these velocities are reached might depend on a particular robot drive.
+    //! @see <a href="https://docs.ros2.org/latest/api/geometry_msgs/msg/Twist.html">ROS2 Twist message</a>.
     class TwistControl : public RobotControl<geometry_msgs::msg::Twist>
     {
     public:

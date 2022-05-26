@@ -9,11 +9,12 @@
 
 #include <AzCore/Math/Vector3.h>
 #include <AzCore/Math/Quaternion.h>
-#include "geometry_msgs/msg/pose.hpp"
-#include "geometry_msgs/msg/vector3.hpp"
+#include <geometry_msgs/msg/pose.hpp>
+#include <geometry_msgs/msg/vector3.hpp>
 
 namespace ROS2
 {
+    //! Utility class for conversions between ROS2 types and O3DE (AZ::) types.
     class ROS2Conversions
     {
     public:

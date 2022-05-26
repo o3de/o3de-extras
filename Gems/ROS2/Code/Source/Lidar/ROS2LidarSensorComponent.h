@@ -19,7 +19,7 @@ namespace ROS2
 {
     //! Lidar sensor Component.
     //! Lidars (Light Detection and Ranging) emit laser light and measure it after reflection.
-    //! Lidar Component allows customization of lidar type and behavior and encapsulates both simulation
+    //! Lidar Component allows customization of lidar type and behavior and encapsulates both simulation.
     //! and data publishing. Lidar Component requires ROS2FrameComponent.
     // TODO - Add selection of implementation choice (PhysX, GPU, other), noise
     class ROS2LidarSensorComponent

@@ -13,7 +13,7 @@
 // TODO - switch to interface
 namespace ROS2
 {
-    //! A simple implementation of Lidar operation in terms of raycasting
+    //! A simple implementation of Lidar operation in terms of raycasting.
     class LidarRaycaster
     {
     public:

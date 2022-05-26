@@ -6,16 +6,13 @@
  *
  */
 
-#include <memory>
-
-#include <AzCore/Component/Entity.h>
-#include <AzCore/Serialization/SerializeContext.h>
-#include <AzCore/Serialization/EditContext.h>
-#include <AzCore/Serialization/EditContextConstants.inl>
-#include <AzCore/Debug/Trace.h>
-
 #include "RobotControl/ROS2RobotControlComponent.h"
 #include "RobotControl/TwistControl/TwistControl.h"
+#include <AzCore/Component/Entity.h>
+#include <AzCore/Debug/Trace.h>
+#include <AzCore/Serialization/EditContext.h>
+#include <AzCore/Serialization/EditContextConstants.inl>
+#include <AzCore/Serialization/SerializeContext.h>
 
 namespace ROS2
 {
@@ -33,7 +30,7 @@ namespace ROS2
             default:
                 break;
         }
-        if(m_robotControl)
+        if (m_robotControl)
         {
             m_robotControl->Activate(GetEntity());
         }
@@ -41,7 +38,7 @@ namespace ROS2
 
     void ROS2RobotControlComponent::Deactivate()
     {
-        if(m_robotControl)
+        if (m_robotControl)
         {
             m_robotControl->Deactivate();
             m_robotControl.reset();

@@ -9,19 +9,19 @@
 
 namespace ROS2
 {
-void TwistNotificationHandler::TwistReceived(const AZ::Vector3& v, const AZ::Vector3 &a)
-{
-    Call(FN_TwistReceived, v, a);
-}
-
-void TwistNotificationHandler::Reflect(AZ::ReflectContext* context)
-{
-    if (AZ::BehaviorContext* behaviorContext = azrtti_cast<AZ::BehaviorContext*>(context))
+    void TwistNotificationHandler::TwistReceived(const AZ::Vector3& v, const AZ::Vector3 &a)
     {
-        behaviorContext->EBus<TwistNotificationBus>("TwistNotificationBus")->
-                Handler<TwistNotificationHandler>()->
-                Event("TwistReceived", &TwistNotificationBus::Events::TwistReceived)
-                ;
+        Call(FN_TwistReceived, v, a);
     }
-}
+
+    void TwistNotificationHandler::Reflect(AZ::ReflectContext* context)
+    {
+        if (AZ::BehaviorContext* behaviorContext = azrtti_cast<AZ::BehaviorContext*>(context))
+        {
+            behaviorContext->EBus<TwistNotificationBus>("TwistNotificationBus")->
+                    Handler<TwistNotificationHandler>()->
+                    Event("TwistReceived", &TwistNotificationBus::Events::TwistReceived)
+                    ;
+        }
+    }
 }

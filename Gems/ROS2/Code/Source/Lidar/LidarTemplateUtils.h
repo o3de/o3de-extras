@@ -13,7 +13,7 @@
 
 namespace ROS2
 {
-    //! Utility class for Lidar model computations
+    //! Utility class for Lidar model computations.
     class LidarTemplateUtils
     {
     public:

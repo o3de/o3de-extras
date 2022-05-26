@@ -13,9 +13,12 @@
 
 namespace ROS2
 {
+    //! Simulation clock which can tick and serve time stamps.
     class SimulationClock
     {
     public:
+        //! Get simulation time as ROS2 message.
+        //! @see ROS2Requests::GetROSTimestamp() for more details.
         builtin_interfaces::msg::Time GetROSTimestamp() const;
 
         // TODO - consider having it called internally, also perhaps in a thread with a given frequency

@@ -29,10 +29,10 @@ namespace ROS2
         //! for top level ROS2FrameComponent is to generate namespace from entity name.
         enum NamespaceStrategy
         {
-            Default, //!< FromEntityName for top-level frames, Empty otherwise
+            Default, //!< FromEntityName for top-level frames, Empty otherwise.
             Empty,
-            FromEntityName, //!< Generate from Entity name, but substitute disallowed characters through RosifyName
-            Custom   //!< Non-empty and based on user-provided value
+            FromEntityName, //!< Generate from Entity name, but substitute disallowed characters through RosifyName.
+            Custom   //!< Non-empty and based on user-provided value.
         };
 
         //! Set namespace based on context.

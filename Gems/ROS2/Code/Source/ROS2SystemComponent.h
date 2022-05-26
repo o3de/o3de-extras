@@ -7,21 +7,20 @@
  */
 #pragma once
 
+#include "Clock/SimulationClock.h"
+#include "ROS2/ROS2Bus.h"
 #include <AzCore/Component/Component.h>
 #include <AzCore/Component/TickBus.h>
 #include <AzCore/std/smart_ptr/unique_ptr.h>
-#include <ROS2/ROS2Bus.h>
-
 #include <memory>
-#include "rclcpp/rclcpp.hpp"
-#include "builtin_interfaces/msg/time.hpp"
+#include <builtin_interfaces/msg/time.hpp>
+#include <rclcpp/rclcpp.hpp>
 #include <tf2_ros/transform_broadcaster.h>
 #include <tf2_ros/static_transform_broadcaster.h>
 
-#include "Clock/SimulationClock.h"
-
 namespace ROS2
 {
+    //! Central singleton-like System Component for ROS2 Gem.
     class ROS2SystemComponent
         : public AZ::Component
         , protected ROS2RequestBus::Handler
@@ -40,18 +39,16 @@ namespace ROS2
         ROS2SystemComponent();
         ~ROS2SystemComponent();
 
+        //! @see ROS2Requests::GetNode()
         std::shared_ptr<rclcpp::Node> GetNode() const override;
-        builtin_interfaces::msg::Time GetROSTimestamp() const override;
 
+        //! @see ROS2Requests::GetROSTimestamp()
+        builtin_interfaces::msg::Time GetROSTimestamp() const override;
+        
         // TODO - rethink ownership of this one. It needs to be a singleton-like behavior, but not necessarily here
         void BroadcastTransform(const geometry_msgs::msg::TransformStamped& t, bool isDynamic) const override;
 
     protected:
-        ////////////////////////////////////////////////////////////////////////
-        // ROS2RequestBus interface implementation
-
-        ////////////////////////////////////////////////////////////////////////
-
         ////////////////////////////////////////////////////////////////////////
         // AZ::Component interface implementation
         void Init() override;
@@ -71,5 +68,4 @@ namespace ROS2
         AZStd::unique_ptr<tf2_ros::StaticTransformBroadcaster> m_staticTFBroadcaster;
         SimulationClock m_simulationClock;
     };
-
 } // namespace ROS2

@@ -5,13 +5,13 @@
  * SPDX-License-Identifier: Apache-2.0 OR MIT
  *
  */
-#include <AzFramework/Physics/RigidBodyBus.h>
-#include <AzCore/Component/TransformBus.h>
-#include <AzCore/Math/MathUtils.h>
 
 #include "RobotControl/TwistControl/TwistBus.h"
 #include "RobotControl/TwistControl/TwistControl.h"
 #include "Utilities/ROS2Conversions.h"
+#include <AzCore/Component/TransformBus.h>
+#include <AzCore/Math/MathUtils.h>
+#include <AzFramework/Physics/RigidBodyBus.h>
 
 namespace ROS2
 {

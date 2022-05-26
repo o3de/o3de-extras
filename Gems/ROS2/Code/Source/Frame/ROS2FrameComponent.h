@@ -43,7 +43,7 @@ namespace ROS2
         //! @return A complete namespace (including parent namespaces)
         AZStd::string GetNamespace() const;
 
-        //! Get AZ Transform for this frame
+        //! Get AZ Transform for this frame.
         //! @return If parent ROS2Frame is found, return its Transform.
         //! Otherwise, return a global Transform.
         const AZ::Transform& GetFrameTransform() const;
@@ -57,7 +57,7 @@ namespace ROS2
 
         bool IsTopLevel() const; //!< True if this entity does not have a parent entity with ROS2.
 
-        //! Whether transformation to parent frame can change during the simulation, or is fixed
+        //! Whether transformation to parent frame can change during the simulation, or is fixed.
         bool IsDynamic() const;
 
         AZ::TransformInterface* GetEntityTransformInterface() const;

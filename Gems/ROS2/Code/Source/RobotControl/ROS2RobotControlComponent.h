@@ -7,13 +7,16 @@
  */
 #pragma once
 
-#include <memory>
-#include <AzCore/Component/Component.h>
-#include "RobotControl/RobotControl.h"
 #include "ControlConfiguration.h"
+#include "RobotControl/RobotControl.h"
+#include <AzCore/Component/Component.h>
+#include <AzCore/std/smart_ptr/unique_ptr.h>
 
 namespace ROS2
 {
+    //! A Component responsible for controlling a robot movement.
+    //! Uses IRobotControl implementation depending on type of ROS2 control message.
+    //! Depends on ROS2FrameComponent. Can be configured through ControlConfiguration.
     class ROS2RobotControlComponent
         : public AZ::Component
     {
@@ -29,7 +32,7 @@ namespace ROS2
         static void Reflect(AZ::ReflectContext* context);
 
     private:
-        std::unique_ptr<IRobotControl> m_robotControl;
+        AZStd::unique_ptr<IRobotControl> m_robotControl;
         ControlConfiguration m_controlConfiguration;
     };
 }  // namespace ROS2
