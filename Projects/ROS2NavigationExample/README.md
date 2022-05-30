@@ -122,3 +122,5 @@ value, for example:
 ```
 sudo sysctl -w fs.inotify.max_user_watches=524288
 ```
+
+To make this setting permanent, add it to `/etc/systctl.conf` file.
