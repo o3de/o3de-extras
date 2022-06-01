@@ -44,7 +44,7 @@
                 "$type": "EditorEntitySortComponent",
                 "Id": 901516877242196147,
                 "Child Entity Order": [
-                    "Entity_[690707340010]"
+                    "Entity_[799444499120]"
                 ]
             },
             "Component_[9830322531478794982]": {
@@ -56,7 +56,7 @@
     "Entities": {
         "Entity_[690707340010]": {
             "Id": "Entity_[690707340010]",
-            "Name": "shape",
+            "Name": "Imu",
             "Components": {
                 "Component_[10340392978555572105]": {
                     "$type": "EditorVisibilityComponent",
@@ -104,7 +104,10 @@
                 },
                 "Component_[12417918822595867875]": {
                     "$type": "EditorEntitySortComponent",
-                    "Id": 12417918822595867875
+                    "Id": 12417918822595867875,
+                    "Child Entity Order": [
+                        "Entity_[799444499120]"
+                    ]
                 },
                 "Component_[13004836012029176840]": {
                     "$type": "EditorInspectorComponent",
@@ -166,6 +169,79 @@
                     "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
                     "Id": 16208993720168044799,
                     "Parent Entity": "ContainerEntity"
+                }
+            }
+        },
+        "Entity_[799444499120]": {
+            "Id": "Entity_[799444499120]",
+            "Name": "sensor",
+            "Components": {
+                "Component_[11165492144511882665]": {
+                    "$type": "EditorEntityIconComponent",
+                    "Id": 11165492144511882665
+                },
+                "Component_[12018107220451562856]": {
+                    "$type": "EditorInspectorComponent",
+                    "Id": 12018107220451562856
+                },
+                "Component_[13764353402899190262]": {
+                    "$type": "SelectionComponent",
+                    "Id": 13764353402899190262
+                },
+                "Component_[14000889612025468259]": {
+                    "$type": "EditorLockComponent",
+                    "Id": 14000889612025468259
+                },
+                "Component_[14513347572674200286]": {
+                    "$type": "EditorDisabledCompositionComponent",
+                    "Id": 14513347572674200286
+                },
+                "Component_[15502515964653740915]": {
+                    "$type": "GenericComponentWrapper",
+                    "Id": 15502515964653740915,
+                    "m_template": {
+                        "$type": "ROS2ImuSensorComponent",
+                        "SensorConfiguration": {
+                            "Publishers": {
+                                "sensor_msgs::msg::Imu": {
+                                    "Type": "sensor_msgs::msg::Imu",
+                                    "Topic": "imu"
+                                }
+                            }
+                        }
+                    }
+                },
+                "Component_[16218438073533307497]": {
+                    "$type": "EditorPendingCompositionComponent",
+                    "Id": 16218438073533307497
+                },
+                "Component_[16632774364418825439]": {
+                    "$type": "EditorOnlyEntityComponent",
+                    "Id": 16632774364418825439
+                },
+                "Component_[3132451334418324807]": {
+                    "$type": "EditorEntitySortComponent",
+                    "Id": 3132451334418324807
+                },
+                "Component_[6224354809090239739]": {
+                    "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
+                    "Id": 6224354809090239739,
+                    "Parent Entity": "Entity_[690707340010]"
+                },
+                "Component_[8034005069780921515]": {
+                    "$type": "GenericComponentWrapper",
+                    "Id": 8034005069780921515,
+                    "m_template": {
+                        "$type": "ROS2FrameComponent",
+                        "Namespace Configuration": {
+                            "Namespace Strategy": 1
+                        },
+                        "Frame Name": "imu"
+                    }
+                },
+                "Component_[993718121342624828]": {
+                    "$type": "EditorVisibilityComponent",
+                    "Id": 993718121342624828
                 }
             }
         }
