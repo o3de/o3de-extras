@@ -46,5 +46,8 @@ namespace ROS2
         AZ::RPI::AuxGeomDrawPtr m_drawQueue;
 
         AZStd::vector<AZ::Vector3> m_lastScanResults;
+
+        // EntityId for self collision filter
+        AZ::EntityId m_selfColliderEntityId;
     };
 }  // namespace ROS2

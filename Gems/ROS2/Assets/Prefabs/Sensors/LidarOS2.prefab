@@ -54,9 +54,90 @@
         }
     },
     "Entities": {
+        "Entity_[1273969985848]": {
+            "Id": "Entity_[1273969985848]",
+            "Name": "Sensor",
+            "Components": {
+                "Component_[10527242310063513328]": {
+                    "$type": "SelectionComponent",
+                    "Id": 10527242310063513328
+                },
+                "Component_[1058300359310703890]": {
+                    "$type": "GenericComponentWrapper",
+                    "Id": 1058300359310703890,
+                    "m_template": {
+                        "$type": "ROS2FrameComponent",
+                        "Namespace Configuration": {
+                            "Namespace Strategy": 1
+                        },
+                        "Frame Name": "lidar"
+                    }
+                },
+                "Component_[1067011392942644324]": {
+                    "$type": "EditorEntityIconComponent",
+                    "Id": 1067011392942644324
+                },
+                "Component_[10842630456390194262]": {
+                    "$type": "GenericComponentWrapper",
+                    "Id": 10842630456390194262,
+                    "m_template": {
+                        "$type": "ROS2LidarSensorComponent",
+                        "SensorConfiguration": {
+                            "Publishers": {
+                                "sensor_msgs::msg::PointCloud2": {
+                                    "Type": "sensor_msgs::msg::PointCloud2",
+                                    "Topic": "pc"
+                                }
+                            }
+                        },
+                        "selfCollisionEntityId": "Entity_[417184227077]"
+                    }
+                },
+                "Component_[13013301136498148727]": {
+                    "$type": "EditorPendingCompositionComponent",
+                    "Id": 13013301136498148727
+                },
+                "Component_[13444160964623421011]": {
+                    "$type": "EditorLockComponent",
+                    "Id": 13444160964623421011
+                },
+                "Component_[14110476541514862518]": {
+                    "$type": "EditorOnlyEntityComponent",
+                    "Id": 14110476541514862518
+                },
+                "Component_[17124975368240161289]": {
+                    "$type": "EditorVisibilityComponent",
+                    "Id": 17124975368240161289
+                },
+                "Component_[1863593986687460136]": {
+                    "$type": "EditorDisabledCompositionComponent",
+                    "Id": 1863593986687460136
+                },
+                "Component_[3070834537283917104]": {
+                    "$type": "EditorInspectorComponent",
+                    "Id": 3070834537283917104
+                },
+                "Component_[7054215981025466544]": {
+                    "$type": "EditorEntitySortComponent",
+                    "Id": 7054215981025466544
+                },
+                "Component_[8854312938977545065]": {
+                    "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
+                    "Id": 8854312938977545065,
+                    "Parent Entity": "Entity_[417184227077]",
+                    "Transform Data": {
+                        "Translate": [
+                            0.0,
+                            0.0,
+                            0.06961321830749512
+                        ]
+                    }
+                }
+            }
+        },
         "Entity_[417184227077]": {
             "Id": "Entity_[417184227077]",
-            "Name": "shape",
+            "Name": "LidarOS2",
             "Components": {
                 "Component_[10387713135725007135]": {
                     "$type": "AZ::Render::EditorMeshComponent",
@@ -85,6 +166,9 @@
                     "$type": "EditorColliderComponent",
                     "Id": 14535670656735835043,
                     "ColliderConfiguration": {
+                        "CollisionGroupId": {
+                            "GroupId": "{DED3A46E-3588-4BB8-BADF-E3114DBA95A6}"
+                        },
                         "MaterialSelection": {
                             "MaterialIds": [
                                 {}
@@ -161,7 +245,10 @@
                 },
                 "Component_[8808389010192194694]": {
                     "$type": "EditorEntitySortComponent",
-                    "Id": 8808389010192194694
+                    "Id": 8808389010192194694,
+                    "Child Entity Order": [
+                        "Entity_[1273969985848]"
+                    ]
                 }
             }
         }

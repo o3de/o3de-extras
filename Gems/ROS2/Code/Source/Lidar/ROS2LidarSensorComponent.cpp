@@ -33,6 +33,7 @@ namespace ROS2
             serialize->Class<ROS2LidarSensorComponent, ROS2SensorComponent>()
                 ->Version(1)
                 ->Field("lidarModel", &ROS2LidarSensorComponent::m_lidarModel)
+                ->Field("selfCollisionEntityId", &ROS2LidarSensorComponent::m_selfColliderEntityId)
                 ;
 
             if (AZ::EditContext* ec = serialize->GetEditContext())
@@ -43,6 +44,8 @@ namespace ROS2
                     ->DataElement(AZ::Edit::UIHandlers::ComboBox, &ROS2LidarSensorComponent::m_lidarModel, "Lidar Model", "Lidar model")
                         ->EnumAttribute(LidarTemplate::LidarModel::Generic3DLidar, "Generic Lidar")
                         // TODO - show lidar template field values (read only) - see Reflect for LidarTemplate
+                    ->DataElement(AZ::Edit::UIHandlers::EntityId, &ROS2LidarSensorComponent::m_selfColliderEntityId, "Self collision Entity",
+                                  "Entity to be transparent for the lidar. If not set, use this entity")
                     ;
             }
         }
@@ -94,6 +97,15 @@ namespace ROS2
             auto defaultScene = AZ::RPI::Scene::GetSceneForEntityId(GetEntityId());
             m_drawQueue = AZ::RPI::AuxGeomFeatureProcessorInterface::GetDrawQueueForScene(defaultScene);
         }
+
+        if (m_selfColliderEntityId.IsValid())
+        {
+            m_lidarRaycaster.setSelfColliderEntity(m_selfColliderEntityId);
+        } 
+        else 
+        {
+            m_lidarRaycaster.setSelfColliderEntity(GetEntityId());
+        }
     }
 
     void ROS2LidarSensorComponent::Deactivate()
@@ -106,9 +118,11 @@ namespace ROS2
     {
         float distance = LidarTemplateUtils::GetTemplate(m_lidarModel).m_maxRange;
         auto entityTransform = GetEntity()->FindComponent<AzFramework::TransformComponent>(); // TODO - go through ROS2Frame
-        const auto directions = LidarTemplateUtils::PopulateRayDirections(m_lidarModel, entityTransform->GetWorldTM().GetEulerRadians());
+        const auto directions = LidarTemplateUtils::PopulateRayDirections(m_lidarModel,
+                                                                          entityTransform->GetWorldTM().GetEulerRadians());
         AZ::Vector3 start = entityTransform->GetWorldTM().GetTranslation();
-        start.SetZ(start.GetZ() + 1.0f);
+        start.SetZ(start.GetZ());
+
         m_lastScanResults = m_lidarRaycaster.PerformRaycast(start, directions, distance);
         if (m_lastScanResults.empty())
         {

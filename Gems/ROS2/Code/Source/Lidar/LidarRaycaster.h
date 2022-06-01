@@ -7,6 +7,7 @@
  */
 #pragma once
 
+#include <AzCore/Component/EntityId.h>
 #include <AzCore/Math/Vector3.h>
 #include <AzCore/std/containers/vector.h>
 
@@ -27,5 +28,10 @@ namespace ROS2
         // TODO - different starting points for rays, distance from reference point, noise models, rotating mirror sim, other
         // TODO - customized settings. Encapsulate in lidar definition and pass in constructor, update transform.
         AZStd::vector<AZ::Vector3> PerformRaycast(const AZ::Vector3& start, const AZStd::vector<AZ::Vector3>& directions, float distance);
+
+        void setSelfColliderEntity(const AZ::EntityId &selfColliderEntity);
+
+    private:
+        AZ::EntityId m_selfColliderEntityId;
     };
 }  // namespace ROS2

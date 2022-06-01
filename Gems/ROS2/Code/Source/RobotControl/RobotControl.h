@@ -76,7 +76,9 @@ namespace ROS2
             if (m_controlConfiguration.m_broadcastBusMode)
             {
                 BroadcastBus(message);
-            } else {
+            } 
+            else
+            {
                 ApplyControl(message);
             }
         };

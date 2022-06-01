@@ -27,6 +27,16 @@ namespace ROS2
             request->m_direction = direction;
             request->m_distance = distance;
             request->m_reportMultipleHits = false;
+            request->m_filterCallback = [selfCollider = m_selfColliderEntityId](const AzPhysics::SimulatedBody* simBody, const Physics::Shape *) {
+                if (simBody->GetEntityId() == selfCollider)
+                {
+                    return AzPhysics::SceneQuery::QueryHitType::None;
+                } 
+                else 
+                {
+                    return AzPhysics::SceneQuery::QueryHitType::Block;
+                }
+            };
             requests.emplace_back(AZStd::move(request));
         }
 
@@ -46,5 +56,9 @@ namespace ROS2
             }
         }
         return results;
+    }
+
+    void LidarRaycaster::setSelfColliderEntity(const AZ::EntityId &selfColliderEntity) {
+        m_selfColliderEntityId = selfColliderEntity;
     }
 } // namespace ROS2
