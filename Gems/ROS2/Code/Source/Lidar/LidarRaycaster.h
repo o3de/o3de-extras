@@ -10,6 +10,7 @@
 #include <AzCore/Component/EntityId.h>
 #include <AzCore/Math/Vector3.h>
 #include <AzCore/std/containers/vector.h>
+#include <AzFramework/Physics/PhysicsScene.h>
 
 // TODO - switch to interface
 namespace ROS2
@@ -18,6 +19,15 @@ namespace ROS2
     class LidarRaycaster
     {
     public:
+
+        //! Set the Scene for the ray-casting.
+        //! This should be the scene with the Entity that holds the sensor.
+        //! @code
+        //! auto sceneHandle = AZ::RPI::Scene::GetSceneForEntityId(GetEntityId());
+        //! @endcode
+        //! @param scene that will be subject to ray-casting.
+        void SetRaycasterScene(const AzPhysics::SceneHandle& handle);
+
         //! Perform raycast against the current scene.
         //! @param start Starting point of rays. This is a simplification since there can be multiple starting points
         //! in real sensors.
@@ -29,9 +39,17 @@ namespace ROS2
         // TODO - customized settings. Encapsulate in lidar definition and pass in constructor, update transform.
         AZStd::vector<AZ::Vector3> PerformRaycast(const AZ::Vector3& start, const AZStd::vector<AZ::Vector3>& directions, float distance);
 
-        void setSelfColliderEntity(const AZ::EntityId &selfColliderEntity);
+        //! Set the lidar entity to use to filter out this lidar's collider(s) from ray-casting scene.
+        //! For example, if a lidar prefab contains a physical model with a collider, we would like ray-casts to
+        //! ignore it completely. This is a simplification due to lack of handling of transparency (e.g. lidar front glass).
+        //! @param lidarTransparentEntity entity to ignore in ray-casts. Note that all colliders within the entity will be ignored.
+        //! @note in robotics, self-detection (or ego-detection) is means detecting any part of the robot.
+        //! As such, it should be simulated to match the real data (which will also initially include self-detection).
+        void setLidarTransparentEntity(const AZ::EntityId& lidarTransparentEntityId);
 
     private:
-        AZ::EntityId m_selfColliderEntityId;
+        AzPhysics::SceneHandle m_sceneHandle;
+        AZ::EntityId m_lidarTransparentEntityId;
     };
 }  // namespace ROS2
+

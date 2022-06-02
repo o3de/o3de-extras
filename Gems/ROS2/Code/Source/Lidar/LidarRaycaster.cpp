@@ -11,13 +11,25 @@
 #include <AzCore/std/smart_ptr/make_shared.h>
 #include <AzFramework/Physics/Common/PhysicsSceneQueries.h>
 #include <AzFramework/Physics/PhysicsScene.h>
+#include <AzFramework/Physics/PhysicsSystem.h>
 
 namespace ROS2
 {
+    void LidarRaycaster::SetRaycasterScene(const AzPhysics::SceneHandle& handle)
+    {
+        m_sceneHandle = handle;
+    }
+
     // A simplified, non-optimized first version. TODO - generalize results (fields)
     AZStd::vector<AZ::Vector3> LidarRaycaster::PerformRaycast(const AZ::Vector3& start, const AZStd::vector<AZ::Vector3>& directions, float distance)
     {
         AZStd::vector<AZ::Vector3> results;
+        if (m_sceneHandle == AzPhysics::InvalidSceneHandle)
+        {
+            AZ_Warning("LidarRaycaster", false, "No valid scene handle");
+            return results;
+        }
+
         AzPhysics::SceneQueryRequests requests;
         requests.reserve(directions.size());
         for (const AZ::Vector3& direction : directions)
@@ -27,27 +39,23 @@ namespace ROS2
             request->m_direction = direction;
             request->m_distance = distance;
             request->m_reportMultipleHits = false;
-            request->m_filterCallback = [selfCollider = m_selfColliderEntityId](const AzPhysics::SimulatedBody* simBody, const Physics::Shape *) {
-                if (simBody->GetEntityId() == selfCollider)
-                {
-                    return AzPhysics::SceneQuery::QueryHitType::None;
-                } 
-                else 
-                {
-                    return AzPhysics::SceneQuery::QueryHitType::Block;
-                }
-            };
+            request->m_filterCallback = [transparentEntityId = m_lidarTransparentEntityId]
+                    (const AzPhysics::SimulatedBody* simBody, const Physics::Shape*)
+                    {
+                        if (simBody->GetEntityId() == transparentEntityId)
+                        {
+                            return AzPhysics::SceneQuery::QueryHitType::None;
+                        }
+                        else
+                        {
+                            return AzPhysics::SceneQuery::QueryHitType::Block;
+                        }
+                    };
             requests.emplace_back(AZStd::move(request));
         }
 
         auto* sceneInterface = AZ::Interface<AzPhysics::SceneInterface>::Get();
-        AzPhysics::SceneHandle sceneHandle = sceneInterface->GetSceneHandle(AzPhysics::DefaultPhysicsSceneName);
-        if (sceneHandle == AzPhysics::InvalidSceneHandle)
-        {
-            AZ_Warning("LidarRaycaster", false, "No valid scene handle");
-            return results;
-        }
-        auto requestResults = sceneInterface->QuerySceneBatch(sceneHandle, requests);
+        auto requestResults = sceneInterface->QuerySceneBatch(m_sceneHandle, requests);
         for (const auto& requestResult : requestResults)
         {   // TODO - check flag for SceneQuery::ResultFlags::Position
             if (requestResult.m_hits.size() > 0)
@@ -58,7 +66,8 @@ namespace ROS2
         return results;
     }
 
-    void LidarRaycaster::setSelfColliderEntity(const AZ::EntityId &selfColliderEntity) {
-        m_selfColliderEntityId = selfColliderEntity;
+    void LidarRaycaster::setLidarTransparentEntity(const AZ::EntityId& lidarTransparentEntityId)
+    {
+        m_lidarTransparentEntityId = lidarTransparentEntityId;
     }
 } // namespace ROS2

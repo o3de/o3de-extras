@@ -17,6 +17,7 @@
 #include <Atom/RPI.Public/AuxGeom/AuxGeomFeatureProcessorInterface.h>
 #include <Atom/RPI.Public/RPISystemInterface.h>
 #include <Atom/RPI.Public/Scene.h>
+#include <AzFramework/Physics/PhysicsSystem.h>
 
 namespace ROS2
 {
@@ -33,7 +34,7 @@ namespace ROS2
             serialize->Class<ROS2LidarSensorComponent, ROS2SensorComponent>()
                 ->Version(1)
                 ->Field("lidarModel", &ROS2LidarSensorComponent::m_lidarModel)
-                ->Field("selfCollisionEntityId", &ROS2LidarSensorComponent::m_selfColliderEntityId)
+                ->Field("LidarTransparentEntityId", &ROS2LidarSensorComponent::m_lidarTransparentEntityId)
                 ;
 
             if (AZ::EditContext* ec = serialize->GetEditContext())
@@ -44,8 +45,9 @@ namespace ROS2
                     ->DataElement(AZ::Edit::UIHandlers::ComboBox, &ROS2LidarSensorComponent::m_lidarModel, "Lidar Model", "Lidar model")
                         ->EnumAttribute(LidarTemplate::LidarModel::Generic3DLidar, "Generic Lidar")
                         // TODO - show lidar template field values (read only) - see Reflect for LidarTemplate
-                    ->DataElement(AZ::Edit::UIHandlers::EntityId, &ROS2LidarSensorComponent::m_selfColliderEntityId, "Self collision Entity",
-                                  "Entity to be transparent for the lidar. If not set, use this entity")
+                    ->DataElement(AZ::Edit::UIHandlers::EntityId, &ROS2LidarSensorComponent::m_lidarTransparentEntityId,
+                                  "Lidar-transparent Entity",
+                                  "Entity to be transparent for the lidar. If not set, use this component's entity")
                     ;
             }
         }
@@ -82,9 +84,23 @@ namespace ROS2
         }
     }
 
+    void ROS2LidarSensorComponent::SetPhysicsScene()
+    {
+        auto* physicsSystem = AZ::Interface<AzPhysics::SystemInterface>::Get();
+        auto foundBody = physicsSystem->FindAttachedBodyHandleFromEntityId(GetEntityId());
+        auto lidarPhysicsSceneHandle = foundBody.first;
+        if (foundBody.first == AzPhysics::InvalidSceneHandle)
+        {
+            auto* sceneInterface = AZ::Interface<AzPhysics::SceneInterface>::Get();
+            lidarPhysicsSceneHandle = sceneInterface->GetSceneHandle(AzPhysics::DefaultPhysicsSceneName);
+        }
+
+        AZ_Assert(lidarPhysicsSceneHandle != AzPhysics::InvalidSceneHandle, "Invalid physics scene handle for entity");
+        m_lidarRaycaster.SetRaycasterScene(lidarPhysicsSceneHandle);
+    }
+
     void ROS2LidarSensorComponent::Activate()
     {
-        ROS2SensorComponent::Activate();
         auto ros2Node = ROS2Interface::Get()->GetNode();
         AZ_Assert(m_sensorConfiguration.m_publishersConfigurations.size() == 1, "Invalid configuration of publishers for lidar sensor");
 
@@ -92,20 +108,22 @@ namespace ROS2
         AZStd::string fullTopic = ROS2Names::GetNamespacedName(GetNamespace(), publisherConfig.m_topic);
         m_pointCloudPublisher = ros2Node->create_publisher<sensor_msgs::msg::PointCloud2>(fullTopic.data(), publisherConfig.GetQoS());
 
+        SetPhysicsScene();
         if (m_sensorConfiguration.m_visualise)
         {
-            auto defaultScene = AZ::RPI::Scene::GetSceneForEntityId(GetEntityId());
-            m_drawQueue = AZ::RPI::AuxGeomFeatureProcessorInterface::GetDrawQueueForScene(defaultScene);
+            auto* entityScene = AZ::RPI::Scene::GetSceneForEntityId(GetEntityId());
+            m_drawQueue = AZ::RPI::AuxGeomFeatureProcessorInterface::GetDrawQueueForScene(entityScene);
         }
 
-        if (m_selfColliderEntityId.IsValid())
+        if (m_lidarTransparentEntityId.IsValid())
         {
-            m_lidarRaycaster.setSelfColliderEntity(m_selfColliderEntityId);
+            m_lidarRaycaster.setLidarTransparentEntity(m_lidarTransparentEntityId);
         } 
         else 
         {
-            m_lidarRaycaster.setSelfColliderEntity(GetEntityId());
+            m_lidarRaycaster.setLidarTransparentEntity(GetEntityId());
         }
+        ROS2SensorComponent::Activate();
     }
 
     void ROS2LidarSensorComponent::Deactivate()
