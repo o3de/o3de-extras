@@ -1,0 +1,44 @@
+{
+    "values": [
+        {
+            "$type": "{5B03C8E6-8CEE-4DA0-A7FA-CD88689DD45B} MeshGroup",
+            "id": "{64C0CE17-1B32-5AFA-8B1D-C56E382A36FB}",
+            "name": "Astro_Vac_base_link",
+            "NodeSelectionList": {
+                "selectedNodes": [
+                    "RootNode.base_link_001"
+                ],
+                "unselectedNodes": [
+                    {},
+                    "RootNode"
+                ]
+            },
+            "export method": 1,
+            "MaterialSlots": [
+                "ABS (White)"
+            ],
+            "PhysicsMaterials": [
+                "<Default Physics Material>"
+            ]
+        },
+        {
+            "$type": "{07B356B7-3635-40B5-878A-FAC4EFD5AD86} MeshGroup",
+            "name": "Astro_Vac_base_link",
+            "nodeSelectionList": {
+                "selectedNodes": [
+                    {},
+                    "RootNode",
+                    "RootNode.base_link_001"
+                ]
+            },
+            "rules": {
+                "rules": [
+                    {
+                        "$type": "MaterialRule"
+                    }
+                ]
+            },
+            "id": "{CF07CD9E-AF36-5868-9235-C8EAD3A0D2B0}"
+        }
+    ]
+}

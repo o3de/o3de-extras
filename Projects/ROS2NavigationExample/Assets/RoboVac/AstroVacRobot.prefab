@@ -40,7 +40,8 @@
                 "$type": "EditorEntitySortComponent",
                 "Id": 761745188714332364,
                 "Child Entity Order": [
-                    "Entity_[30055431164411]"
+                    "Entity_[30055431164411]",
+                    "Entity_[10338002873617]"
                 ]
             },
             "Component_[8724271900824416155]": {
@@ -54,6 +55,173 @@
         }
     },
     "Entities": {
+        "Entity_[10338002873617]": {
+            "Id": "Entity_[10338002873617]",
+            "Name": "Housing",
+            "Components": {
+                "Component_[10527348526107316484]": {
+                    "$type": "EditorEntityIconComponent",
+                    "Id": 10527348526107316484
+                },
+                "Component_[12335181096345038273]": {
+                    "$type": "EditorVisibilityComponent",
+                    "Id": 12335181096345038273
+                },
+                "Component_[12641644843216691802]": {
+                    "$type": "EditorOnlyEntityComponent",
+                    "Id": 12641644843216691802
+                },
+                "Component_[13173372676369075129]": {
+                    "$type": "EditorEntitySortComponent",
+                    "Id": 13173372676369075129
+                },
+                "Component_[14808541554257721637]": {
+                    "$type": "EditorLockComponent",
+                    "Id": 14808541554257721637
+                },
+                "Component_[14895185060300952195]": {
+                    "$type": "AZ::Render::EditorMeshComponent",
+                    "Id": 14895185060300952195,
+                    "Controller": {
+                        "Configuration": {
+                            "ModelAsset": {
+                                "assetId": {
+                                    "guid": "{8A2E7A82-D7C3-5E9C-A56C-6EDA70876347}",
+                                    "subId": 268721130
+                                },
+                                "assetHint": "materialeditor/viewportmodels/cylinder.azmodel"
+                            }
+                        }
+                    }
+                },
+                "Component_[15289797216389442796]": {
+                    "$type": "EditorDisabledCompositionComponent",
+                    "Id": 15289797216389442796
+                },
+                "Component_[1897174239157429322]": {
+                    "$type": "EditorInspectorComponent",
+                    "Id": 1897174239157429322
+                },
+                "Component_[2848861693028550561]": {
+                    "$type": "SelectionComponent",
+                    "Id": 2848861693028550561
+                },
+                "Component_[4576443438466266764]": {
+                    "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
+                    "Id": 4576443438466266764,
+                    "Parent Entity": "Entity_[6506158658343]",
+                    "Transform Data": {
+                        "Translate": [
+                            0.0,
+                            0.0,
+                            0.09076517820358276
+                        ],
+                        "Rotate": [
+                            0.0,
+                            0.0,
+                            180.0
+                        ],
+                        "UniformScale": 0.11999999731779099
+                    }
+                },
+                "Component_[7132771805032153524]": {
+                    "$type": "EditorPendingCompositionComponent",
+                    "Id": 7132771805032153524
+                },
+                "Component_[7986560093861392284]": {
+                    "$type": "EditorMaterialComponent",
+                    "Id": 7986560093861392284,
+                    "Controller": {
+                        "Configuration": {
+                            "materials": [
+                                {
+                                    "Key": {
+                                        "materialSlotStableId": 1803671422
+                                    },
+                                    "Value": {
+                                        "MaterialAsset": {
+                                            "assetId": {
+                                                "guid": "{4B90F891-25DC-5520-9205-D9166E2BAD1B}",
+                                                "subId": 3436397348
+                                            },
+                                            "assetHint": "assets/robovac/assets/astro_vac_cpucover_plastic___sensor_4527151474816533284.azmaterial"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        },
+        "Entity_[15934909250224]": {
+            "Id": "Entity_[15934909250224]",
+            "Name": "FollowCamera",
+            "Components": {
+                "Component_[11652808273036794860]": {
+                    "$type": "SelectionComponent",
+                    "Id": 11652808273036794860
+                },
+                "Component_[16797873418433915706]": {
+                    "$type": "EditorVisibilityComponent",
+                    "Id": 16797873418433915706
+                },
+                "Component_[17541973633878539421]": {
+                    "$type": "EditorOnlyEntityComponent",
+                    "Id": 17541973633878539421
+                },
+                "Component_[2741853701054493828]": {
+                    "$type": "EditorPendingCompositionComponent",
+                    "Id": 2741853701054493828
+                },
+                "Component_[3599238926902838088]": {
+                    "$type": "EditorEntityIconComponent",
+                    "Id": 3599238926902838088
+                },
+                "Component_[3816953534651368458]": {
+                    "$type": "EditorLockComponent",
+                    "Id": 3816953534651368458
+                },
+                "Component_[4358438849696264694]": {
+                    "$type": "{CA11DA46-29FF-4083-B5F6-E02C3A8C3A3D} EditorCameraComponent",
+                    "Id": 4358438849696264694,
+                    "Controller": {
+                        "Configuration": {
+                            "EditorEntityId": 9001170798352072270
+                        }
+                    }
+                },
+                "Component_[5247198885622374930]": {
+                    "$type": "EditorDisabledCompositionComponent",
+                    "Id": 5247198885622374930
+                },
+                "Component_[6432147303510452185]": {
+                    "$type": "EditorInspectorComponent",
+                    "Id": 6432147303510452185
+                },
+                "Component_[6482509919667147636]": {
+                    "$type": "EditorEntitySortComponent",
+                    "Id": 6482509919667147636
+                },
+                "Component_[935550930618451361]": {
+                    "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
+                    "Id": 935550930618451361,
+                    "Parent Entity": "Entity_[30055431164411]",
+                    "Transform Data": {
+                        "Translate": [
+                            -1.1628849506378174,
+                            -0.000001043081283569336,
+                            0.4787519574165344
+                        ],
+                        "Rotate": [
+                            -0.000027373178454581648,
+                            25.242046356201172,
+                            -89.99995422363281
+                        ]
+                    }
+                }
+            }
+        },
         "Entity_[29844977766907]": {
             "Id": "Entity_[29844977766907]",
             "Name": "astro_vac_display",
@@ -79,9 +247,9 @@
                                     "Value": {
                                         "MaterialAsset": {
                                             "assetId": {
-                                                "guid": "{39F41183-6EBA-5706-ADD9-FAA7553E7551}"
+                                                "guid": "{52A0FB0C-D02D-5558-A423-C1CAAD851543}"
                                             },
-                                            "assetHint": "props/robovac/assets/astrovac_display.azmaterial"
+                                            "assetHint": "assets/robovac/assets/astrovac_display.azmaterial"
                                         }
                                     }
                                 },
@@ -89,14 +257,7 @@
                                     "Key": {
                                         "materialSlotStableId": 3328602885
                                     },
-                                    "Value": {
-                                        "MaterialAsset": {
-                                            "assetId": {
-                                                "guid": "{39F41183-6EBA-5706-ADD9-FAA7553E7551}"
-                                            },
-                                            "assetHint": "props/robovac/assets/astrovac_display.azmaterial"
-                                        }
-                                    }
+                                    "Value": {}
                                 }
                             ]
                         }
@@ -113,10 +274,10 @@
                         "Configuration": {
                             "ModelAsset": {
                                 "assetId": {
-                                    "guid": "{14497723-CB57-5B41-AA91-E9137E5907B5}",
+                                    "guid": "{DD3DC4F5-CB4E-53AA-8C47-3C4ADD72FE6F}",
                                     "subId": 279473666
                                 },
-                                "assetHint": "props/robovac/assets/astro_vac_display.azmodel"
+                                "assetHint": "assets/robovac/assets/astro_vac_display.azmodel"
                             }
                         }
                     }
@@ -140,7 +301,7 @@
                 "Component_[8797991750568259235]": {
                     "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
                     "Id": 8797991750568259235,
-                    "Parent Entity": "Entity_[30055431164411]"
+                    "Parent Entity": "Entity_[6506158658343]"
                 },
                 "Component_[9127282801278350722]": {
                     "$type": "EditorInspectorComponent",
@@ -148,8 +309,7 @@
                 },
                 "Component_[9237683100440409518]": {
                     "$type": "EditorVisibilityComponent",
-                    "Id": 9237683100440409518,
-                    "VisibilityFlag": false
+                    "Id": 9237683100440409518
                 }
             }
         },
@@ -182,9 +342,9 @@
                                     "Value": {
                                         "MaterialAsset": {
                                             "assetId": {
-                                                "guid": "{AD7295EF-1A8A-5E90-B2A9-E79EB4E7A352}"
+                                                "guid": "{D0B3791A-5AD8-5793-B332-1FBBFFC6330A}"
                                             },
-                                            "assetHint": "props/robovac/assets/astrovac_steel_-_satin.azmaterial"
+                                            "assetHint": "assets/robovac/assets/astrovac_steel_-_satin.azmaterial"
                                         }
                                     }
                                 }
@@ -195,7 +355,7 @@
                 "Component_[16356173703235151267]": {
                     "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
                     "Id": 16356173703235151267,
-                    "Parent Entity": "Entity_[30055431164411]"
+                    "Parent Entity": "Entity_[6506158658343]"
                 },
                 "Component_[17905695045664625886]": {
                     "$type": "EditorEntitySortComponent",
@@ -216,18 +376,17 @@
                         "Configuration": {
                             "ModelAsset": {
                                 "assetId": {
-                                    "guid": "{A945FDB3-AA78-5094-8872-7D8A9323928E}",
+                                    "guid": "{1B52990F-069D-5847-9CF5-DB9141E06743}",
                                     "subId": 277310680
                                 },
-                                "assetHint": "props/robovac/assets/astro_vac_suspensionbracketright.azmodel"
+                                "assetHint": "assets/robovac/assets/astro_vac_suspensionbracketright.azmodel"
                             }
                         }
                     }
                 },
                 "Component_[6851231101142110419]": {
                     "$type": "EditorVisibilityComponent",
-                    "Id": 6851231101142110419,
-                    "VisibilityFlag": false
+                    "Id": 6851231101142110419
                 },
                 "Component_[7645880101176993360]": {
                     "$type": "EditorOnlyEntityComponent",
@@ -254,18 +413,17 @@
                         "Configuration": {
                             "ModelAsset": {
                                 "assetId": {
-                                    "guid": "{02620D9A-2951-5941-A2E8-C15908140875}",
+                                    "guid": "{202B51BD-FEAC-5120-B303-5DD572031956}",
                                     "subId": 268801846
                                 },
-                                "assetHint": "props/robovac/assets/astro_vac_pariscopetube1.azmodel"
+                                "assetHint": "assets/robovac/assets/astro_vac_pariscopetube1.azmodel"
                             }
                         }
                     }
                 },
                 "Component_[10800271596998239108]": {
                     "$type": "EditorVisibilityComponent",
-                    "Id": 10800271596998239108,
-                    "VisibilityFlag": false
+                    "Id": 10800271596998239108
                 },
                 "Component_[11818208575759954307]": {
                     "$type": "EditorOnlyEntityComponent",
@@ -278,7 +436,7 @@
                 "Component_[13566021088355530138]": {
                     "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
                     "Id": 13566021088355530138,
-                    "Parent Entity": "Entity_[30055431164411]"
+                    "Parent Entity": "Entity_[6506158658343]"
                 },
                 "Component_[15311464831601862343]": {
                     "$type": "EditorDisabledCompositionComponent",
@@ -301,9 +459,9 @@
                                     "Value": {
                                         "MaterialAsset": {
                                             "assetId": {
-                                                "guid": "{AD7295EF-1A8A-5E90-B2A9-E79EB4E7A352}"
+                                                "guid": "{D0B3791A-5AD8-5793-B332-1FBBFFC6330A}"
                                             },
-                                            "assetHint": "props/robovac/assets/astrovac_steel_-_satin.azmaterial"
+                                            "assetHint": "assets/robovac/assets/astrovac_steel_-_satin.azmaterial"
                                         }
                                     }
                                 }
@@ -335,8 +493,7 @@
                 },
                 "Component_[16497743669364808333]": {
                     "$type": "EditorVisibilityComponent",
-                    "Id": 16497743669364808333,
-                    "VisibilityFlag": false
+                    "Id": 16497743669364808333
                 },
                 "Component_[17623093821625011299]": {
                     "$type": "SelectionComponent",
@@ -357,10 +514,10 @@
                         "Configuration": {
                             "ModelAsset": {
                                 "assetId": {
-                                    "guid": "{6FD94B45-178F-541C-806E-6EE76B64F7FC}",
+                                    "guid": "{1A9EFC73-7955-559E-9452-47BF49D5FF03}",
                                     "subId": 276294814
                                 },
-                                "assetHint": "props/robovac/assets/astro_vac_pariscope.azmodel"
+                                "assetHint": "assets/robovac/assets/astro_vac_pariscope.azmodel"
                             }
                         }
                     }
@@ -382,9 +539,9 @@
                                     "Value": {
                                         "MaterialAsset": {
                                             "assetId": {
-                                                "guid": "{AD7295EF-1A8A-5E90-B2A9-E79EB4E7A352}"
+                                                "guid": "{D0B3791A-5AD8-5793-B332-1FBBFFC6330A}"
                                             },
-                                            "assetHint": "props/robovac/assets/astrovac_steel_-_satin.azmaterial"
+                                            "assetHint": "assets/robovac/assets/astrovac_steel_-_satin.azmaterial"
                                         }
                                     }
                                 }
@@ -395,7 +552,7 @@
                 "Component_[8608222016900599759]": {
                     "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
                     "Id": 8608222016900599759,
-                    "Parent Entity": "Entity_[30055431164411]"
+                    "Parent Entity": "Entity_[6506158658343]"
                 },
                 "Component_[919166424632691535]": {
                     "$type": "EditorInspectorComponent",
@@ -417,8 +574,7 @@
             "Components": {
                 "Component_[10473678182139113293]": {
                     "$type": "EditorVisibilityComponent",
-                    "Id": 10473678182139113293,
-                    "VisibilityFlag": false
+                    "Id": 10473678182139113293
                 },
                 "Component_[11711118031855619896]": {
                     "$type": "EditorInspectorComponent",
@@ -447,7 +603,7 @@
                 "Component_[5513140803037900469]": {
                     "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
                     "Id": 5513140803037900469,
-                    "Parent Entity": "Entity_[30055431164411]",
+                    "Parent Entity": "Entity_[6506158658343]",
                     "Transform Data": {
                         "Translate": [
                             0.0,
@@ -469,9 +625,9 @@
                                     "Value": {
                                         "MaterialAsset": {
                                             "assetId": {
-                                                "guid": "{C42BA082-6BDD-5FA3-869F-1F0B99767C2D}"
+                                                "guid": "{E8288A2B-DB8D-5A9B-B9AD-ED41B0F1C7B3}"
                                             },
-                                            "assetHint": "props/robovac/assets/astrovac_absgrey.azmaterial"
+                                            "assetHint": "assets/robovac/assets/astrovac_absgrey.azmaterial"
                                         }
                                     }
                                 },
@@ -482,9 +638,9 @@
                                     "Value": {
                                         "MaterialAsset": {
                                             "assetId": {
-                                                "guid": "{00E9B9E1-E982-551F-B8AE-042049AD742B}"
+                                                "guid": "{2C63DBDB-2C71-57E0-A084-74D5B7797658}"
                                             },
-                                            "assetHint": "props/robovac/assets/astrovac_abs_white_.azmaterial"
+                                            "assetHint": "assets/robovac/assets/astrovac_abs_white_.azmaterial"
                                         }
                                     }
                                 }
@@ -499,10 +655,10 @@
                         "Configuration": {
                             "ModelAsset": {
                                 "assetId": {
-                                    "guid": "{677C69E9-FD14-5CFE-8C6B-E3829DF85E13}",
+                                    "guid": "{FB526907-BB86-508B-8A0B-3D602A6D9846}",
                                     "subId": 278599159
                                 },
-                                "assetHint": "props/robovac/assets/astro_vac_bottombase.azmodel"
+                                "assetHint": "assets/robovac/assets/astro_vac_bottombase.azmodel"
                             }
                         }
                     }
@@ -523,8 +679,7 @@
             "Components": {
                 "Component_[10356958028194817037]": {
                     "$type": "EditorVisibilityComponent",
-                    "Id": 10356958028194817037,
-                    "VisibilityFlag": false
+                    "Id": 10356958028194817037
                 },
                 "Component_[12000926685701110958]": {
                     "$type": "EditorOnlyEntityComponent",
@@ -541,7 +696,7 @@
                 "Component_[14551909316430055988]": {
                     "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
                     "Id": 14551909316430055988,
-                    "Parent Entity": "Entity_[30055431164411]"
+                    "Parent Entity": "Entity_[6506158658343]"
                 },
                 "Component_[15559936702154199996]": {
                     "$type": "EditorInspectorComponent",
@@ -576,9 +731,9 @@
                                     "Value": {
                                         "MaterialAsset": {
                                             "assetId": {
-                                                "guid": "{BB788716-865B-5FBF-822E-6719D73C541C}"
+                                                "guid": "{3FAE87E2-55C0-56F8-9BA3-C9FCA58C723F}"
                                             },
-                                            "assetHint": "props/robovac/assets/astrovac_paint_-_enamel_glossy_black_.azmaterial"
+                                            "assetHint": "assets/robovac/assets/astrovac_paint_-_enamel_glossy_black_.azmaterial"
                                         }
                                     }
                                 }
@@ -593,10 +748,10 @@
                         "Configuration": {
                             "ModelAsset": {
                                 "assetId": {
-                                    "guid": "{103C19BD-E5AA-5405-85CE-40133284B019}",
+                                    "guid": "{85BB8213-7B66-5B64-975A-B191D7B7821F}",
                                     "subId": 269988289
                                 },
-                                "assetHint": "props/robovac/assets/astro_vac_cpucase.azmodel"
+                                "assetHint": "assets/robovac/assets/astro_vac_cpucase.azmodel"
                             }
                         }
                     }
@@ -613,8 +768,7 @@
                 },
                 "Component_[14342767911560119442]": {
                     "$type": "EditorVisibilityComponent",
-                    "Id": 14342767911560119442,
-                    "VisibilityFlag": false
+                    "Id": 14342767911560119442
                 },
                 "Component_[14803829603787579583]": {
                     "$type": "EditorEntityIconComponent",
@@ -633,9 +787,9 @@
                                     "Value": {
                                         "MaterialAsset": {
                                             "assetId": {
-                                                "guid": "{AD7295EF-1A8A-5E90-B2A9-E79EB4E7A352}"
+                                                "guid": "{D0B3791A-5AD8-5793-B332-1FBBFFC6330A}"
                                             },
-                                            "assetHint": "props/robovac/assets/astrovac_steel_-_satin.azmaterial"
+                                            "assetHint": "assets/robovac/assets/astrovac_steel_-_satin.azmaterial"
                                         }
                                     }
                                 },
@@ -646,9 +800,9 @@
                                     "Value": {
                                         "MaterialAsset": {
                                             "assetId": {
-                                                "guid": "{68FC5154-C758-58CE-8435-F940DE26BDB8}"
+                                                "guid": "{CAED33FE-4A6D-56F1-9A2C-DAD7A7FC7A66}"
                                             },
-                                            "assetHint": "props/robovac/assets/astrovac_chip.azmaterial"
+                                            "assetHint": "assets/robovac/assets/astrovac_chip.azmaterial"
                                         }
                                     }
                                 }
@@ -667,10 +821,10 @@
                         "Configuration": {
                             "ModelAsset": {
                                 "assetId": {
-                                    "guid": "{1546B1F3-8763-5EB3-B0F6-0EC861A77441}",
+                                    "guid": "{9EF2FEDC-30BC-5817-8D70-C8BED4733466}",
                                     "subId": 274686378
                                 },
-                                "assetHint": "props/robovac/assets/astro_vac_pariscopesenesor.azmodel"
+                                "assetHint": "assets/robovac/assets/astro_vac_pariscopesenesor.azmodel"
                             }
                         }
                     }
@@ -694,7 +848,7 @@
                 "Component_[6476914044393995797]": {
                     "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
                     "Id": 6476914044393995797,
-                    "Parent Entity": "Entity_[30055431164411]"
+                    "Parent Entity": "Entity_[6506158658343]"
                 },
                 "Component_[9206431687324815402]": {
                     "$type": "EditorOnlyEntityComponent",
@@ -725,10 +879,10 @@
                         "Configuration": {
                             "ModelAsset": {
                                 "assetId": {
-                                    "guid": "{0B273493-7E64-5A8D-A9DF-77F4D2C676BA}",
+                                    "guid": "{6688719D-4AE0-5B58-886A-9E48E2A29598}",
                                     "subId": 276585387
                                 },
-                                "assetHint": "props/robovac/assets/astro_vac_o_centersensor.azmodel"
+                                "assetHint": "assets/robovac/assets/astro_vac_o_centersensor.azmodel"
                             }
                         }
                     }
@@ -736,7 +890,7 @@
                 "Component_[14912635637951794805]": {
                     "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
                     "Id": 14912635637951794805,
-                    "Parent Entity": "Entity_[30055431164411]"
+                    "Parent Entity": "Entity_[6506158658343]"
                 },
                 "Component_[3403129396161458684]": {
                     "$type": "EditorDisabledCompositionComponent",
@@ -752,8 +906,7 @@
                 },
                 "Component_[5595142197387249384]": {
                     "$type": "EditorVisibilityComponent",
-                    "Id": 5595142197387249384,
-                    "VisibilityFlag": false
+                    "Id": 5595142197387249384
                 },
                 "Component_[5718110209361401452]": {
                     "$type": "SelectionComponent",
@@ -772,9 +925,9 @@
                                     "Value": {
                                         "MaterialAsset": {
                                             "assetId": {
-                                                "guid": "{C42BA082-6BDD-5FA3-869F-1F0B99767C2D}"
+                                                "guid": "{E8288A2B-DB8D-5A9B-B9AD-ED41B0F1C7B3}"
                                             },
-                                            "assetHint": "props/robovac/assets/astrovac_absgrey.azmaterial"
+                                            "assetHint": "assets/robovac/assets/astrovac_absgrey.azmaterial"
                                         }
                                     }
                                 },
@@ -785,9 +938,9 @@
                                     "Value": {
                                         "MaterialAsset": {
                                             "assetId": {
-                                                "guid": "{4C5739F8-6443-57B9-B8AA-AACB06B9D467}"
+                                                "guid": "{9E70F394-632D-5731-9EF5-6FEBB3D1EB47}"
                                             },
-                                            "assetHint": "props/robovac/assets/astrovac_acrylic_clear_.azmaterial"
+                                            "assetHint": "assets/robovac/assets/astrovac_acrylic_clear_.azmaterial"
                                         }
                                     }
                                 }
@@ -818,9 +971,9 @@
                                     "Value": {
                                         "MaterialAsset": {
                                             "assetId": {
-                                                "guid": "{BB788716-865B-5FBF-822E-6719D73C541C}"
+                                                "guid": "{3FAE87E2-55C0-56F8-9BA3-C9FCA58C723F}"
                                             },
-                                            "assetHint": "props/robovac/assets/astrovac_paint_-_enamel_glossy_black_.azmaterial"
+                                            "assetHint": "assets/robovac/assets/astrovac_paint_-_enamel_glossy_black_.azmaterial"
                                         }
                                     }
                                 }
@@ -828,10 +981,42 @@
                         }
                     }
                 },
+                "Component_[12927181747641970582]": {
+                    "$type": "EditorColliderComponent",
+                    "Id": 12927181747641970582,
+                    "ColliderConfiguration": {
+                        "MaterialSelection": {
+                            "MaterialIds": [
+                                {}
+                            ]
+                        }
+                    },
+                    "ShapeConfiguration": {
+                        "PhysicsAsset": {
+                            "Asset": {
+                                "assetId": {
+                                    "guid": "{80D48B96-8C20-518B-A7AA-671A8ECBCDE5}",
+                                    "subId": 3058355074
+                                },
+                                "assetHint": "assets/robovac/assets/astro_vac_screenbody.pxmesh"
+                            },
+                            "Configuration": {
+                                "PhysicsAsset": {
+                                    "assetId": {
+                                        "guid": "{80D48B96-8C20-518B-A7AA-671A8ECBCDE5}",
+                                        "subId": 3058355074
+                                    },
+                                    "loadBehavior": "QueueLoad",
+                                    "assetHint": "assets/robovac/assets/astro_vac_screenbody.pxmesh"
+                                }
+                            }
+                        }
+                    }
+                },
                 "Component_[14426575678646087440]": {
                     "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
                     "Id": 14426575678646087440,
-                    "Parent Entity": "Entity_[30055431164411]"
+                    "Parent Entity": "Entity_[6506158658343]"
                 },
                 "Component_[15166588050066116986]": {
                     "$type": "EditorEntitySortComponent",
@@ -851,8 +1036,7 @@
                 },
                 "Component_[3402092418478522962]": {
                     "$type": "EditorVisibilityComponent",
-                    "Id": 3402092418478522962,
-                    "VisibilityFlag": false
+                    "Id": 3402092418478522962
                 },
                 "Component_[375381335037281218]": {
                     "$type": "SelectionComponent",
@@ -877,10 +1061,10 @@
                         "Configuration": {
                             "ModelAsset": {
                                 "assetId": {
-                                    "guid": "{8A2FDAC7-2B11-58F2-A4DA-D0A87CDEDEC4}",
+                                    "guid": "{80D48B96-8C20-518B-A7AA-671A8ECBCDE5}",
                                     "subId": 270679725
                                 },
-                                "assetHint": "props/robovac/assets/astro_vac_screenbody.azmodel"
+                                "assetHint": "assets/robovac/assets/astro_vac_screenbody.azmodel"
                             }
                         }
                     }
@@ -906,7 +1090,7 @@
                 "Component_[1687230777002068203]": {
                     "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
                     "Id": 1687230777002068203,
-                    "Parent Entity": "Entity_[30055431164411]"
+                    "Parent Entity": "Entity_[6506158658343]"
                 },
                 "Component_[1810120344199685136]": {
                     "$type": "SelectionComponent",
@@ -918,8 +1102,7 @@
                 },
                 "Component_[2312105305446844838]": {
                     "$type": "EditorVisibilityComponent",
-                    "Id": 2312105305446844838,
-                    "VisibilityFlag": false
+                    "Id": 2312105305446844838
                 },
                 "Component_[4865491440710470583]": {
                     "$type": "EditorEntityIconComponent",
@@ -942,9 +1125,9 @@
                                     "Value": {
                                         "MaterialAsset": {
                                             "assetId": {
-                                                "guid": "{AD7295EF-1A8A-5E90-B2A9-E79EB4E7A352}"
+                                                "guid": "{D0B3791A-5AD8-5793-B332-1FBBFFC6330A}"
                                             },
-                                            "assetHint": "props/robovac/assets/astrovac_steel_-_satin.azmaterial"
+                                            "assetHint": "assets/robovac/assets/astrovac_steel_-_satin.azmaterial"
                                         }
                                     }
                                 }
@@ -959,10 +1142,10 @@
                         "Configuration": {
                             "ModelAsset": {
                                 "assetId": {
-                                    "guid": "{3DDCD33B-DD50-5B3B-84B6-6D2880806913}",
+                                    "guid": "{7E00071E-7DE4-5977-BA12-7A029E6C5714}",
                                     "subId": 270690264
                                 },
-                                "assetHint": "props/robovac/assets/astro_vac_pariscopetube.azmodel"
+                                "assetHint": "assets/robovac/assets/astro_vac_pariscopetube.azmodel"
                             }
                         }
                     }
@@ -994,9 +1177,9 @@
                                     "Value": {
                                         "MaterialAsset": {
                                             "assetId": {
-                                                "guid": "{7DF1E6CA-6102-5A91-ADDC-3476F2967122}"
+                                                "guid": "{811B7B98-0326-57BE-96BE-D7C5885987FE}"
                                             },
-                                            "assetHint": "props/robovac/assets/astrovac_plastic_-_sensor.azmaterial"
+                                            "assetHint": "assets/robovac/assets/astrovac_plastic_-_sensor.azmaterial"
                                         }
                                     }
                                 }
@@ -1007,7 +1190,39 @@
                 "Component_[11371991638107009117]": {
                     "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
                     "Id": 11371991638107009117,
-                    "Parent Entity": "Entity_[30055431164411]"
+                    "Parent Entity": "Entity_[6506158658343]"
+                },
+                "Component_[14386255473429959438]": {
+                    "$type": "EditorColliderComponent",
+                    "Id": 14386255473429959438,
+                    "ColliderConfiguration": {
+                        "MaterialSelection": {
+                            "MaterialIds": [
+                                {}
+                            ]
+                        }
+                    },
+                    "ShapeConfiguration": {
+                        "PhysicsAsset": {
+                            "Asset": {
+                                "assetId": {
+                                    "guid": "{4B90F891-25DC-5520-9205-D9166E2BAD1B}",
+                                    "subId": 2981717856
+                                },
+                                "assetHint": "assets/robovac/assets/astro_vac_cpucover.pxmesh"
+                            },
+                            "Configuration": {
+                                "PhysicsAsset": {
+                                    "assetId": {
+                                        "guid": "{4B90F891-25DC-5520-9205-D9166E2BAD1B}",
+                                        "subId": 2981717856
+                                    },
+                                    "loadBehavior": "QueueLoad",
+                                    "assetHint": "assets/robovac/assets/astro_vac_cpucover.pxmesh"
+                                }
+                            }
+                        }
+                    }
                 },
                 "Component_[14595306096618604571]": {
                     "$type": "EditorOnlyEntityComponent",
@@ -1019,8 +1234,7 @@
                 },
                 "Component_[16147848150206823670]": {
                     "$type": "EditorVisibilityComponent",
-                    "Id": 16147848150206823670,
-                    "VisibilityFlag": false
+                    "Id": 16147848150206823670
                 },
                 "Component_[17368774951420809643]": {
                     "$type": "EditorDisabledCompositionComponent",
@@ -1037,10 +1251,10 @@
                         "Configuration": {
                             "ModelAsset": {
                                 "assetId": {
-                                    "guid": "{7518E9AA-F7DF-59F7-9E61-109BB901D710}",
+                                    "guid": "{4B90F891-25DC-5520-9205-D9166E2BAD1B}",
                                     "subId": 273526738
                                 },
-                                "assetHint": "props/robovac/assets/astro_vac_cpucover.azmodel"
+                                "assetHint": "assets/robovac/assets/astro_vac_cpucover.azmodel"
                             }
                         }
                     }
@@ -1065,8 +1279,7 @@
             "Components": {
                 "Component_[11433011431204834190]": {
                     "$type": "EditorVisibilityComponent",
-                    "Id": 11433011431204834190,
-                    "VisibilityFlag": false
+                    "Id": 11433011431204834190
                 },
                 "Component_[1367065363202865187]": {
                     "$type": "EditorInspectorComponent",
@@ -1087,10 +1300,10 @@
                         "Configuration": {
                             "ModelAsset": {
                                 "assetId": {
-                                    "guid": "{E37A7D22-CC9E-53D2-91CC-28743E12B5A8}",
+                                    "guid": "{97AAF9C9-6050-5441-A33D-6A27685E6418}",
                                     "subId": 269226811
                                 },
-                                "assetHint": "props/robovac/assets/astro_vac_navdisplaycamera.azmodel"
+                                "assetHint": "assets/robovac/assets/astro_vac_navdisplaycamera.azmodel"
                             }
                         }
                     }
@@ -1116,9 +1329,9 @@
                                     "Value": {
                                         "MaterialAsset": {
                                             "assetId": {
-                                                "guid": "{BB788716-865B-5FBF-822E-6719D73C541C}"
+                                                "guid": "{3FAE87E2-55C0-56F8-9BA3-C9FCA58C723F}"
                                             },
-                                            "assetHint": "props/robovac/assets/astrovac_paint_-_enamel_glossy_black_.azmaterial"
+                                            "assetHint": "assets/robovac/assets/astrovac_paint_-_enamel_glossy_black_.azmaterial"
                                         }
                                     }
                                 },
@@ -1129,9 +1342,9 @@
                                     "Value": {
                                         "MaterialAsset": {
                                             "assetId": {
-                                                "guid": "{4C5739F8-6443-57B9-B8AA-AACB06B9D467}"
+                                                "guid": "{9E70F394-632D-5731-9EF5-6FEBB3D1EB47}"
                                             },
-                                            "assetHint": "props/robovac/assets/astrovac_acrylic_clear_.azmaterial"
+                                            "assetHint": "assets/robovac/assets/astrovac_acrylic_clear_.azmaterial"
                                         }
                                     }
                                 }
@@ -1142,7 +1355,7 @@
                 "Component_[40546633900605231]": {
                     "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
                     "Id": 40546633900605231,
-                    "Parent Entity": "Entity_[30055431164411]"
+                    "Parent Entity": "Entity_[6506158658343]"
                 },
                 "Component_[6193008417045434597]": {
                     "$type": "EditorEntityIconComponent",
@@ -1183,9 +1396,9 @@
                                     "Value": {
                                         "MaterialAsset": {
                                             "assetId": {
-                                                "guid": "{BB788716-865B-5FBF-822E-6719D73C541C}"
+                                                "guid": "{3FAE87E2-55C0-56F8-9BA3-C9FCA58C723F}"
                                             },
-                                            "assetHint": "props/robovac/assets/astrovac_paint_-_enamel_glossy_black_.azmaterial"
+                                            "assetHint": "assets/robovac/assets/astrovac_paint_-_enamel_glossy_black_.azmaterial"
                                         }
                                     }
                                 }
@@ -1200,7 +1413,7 @@
                 "Component_[15097518247046901590]": {
                     "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
                     "Id": 15097518247046901590,
-                    "Parent Entity": "Entity_[30055431164411]",
+                    "Parent Entity": "Entity_[6506158658343]",
                     "Transform Data": {
                         "Translate": [
                             0.0,
@@ -1232,10 +1445,10 @@
                         "Configuration": {
                             "ModelAsset": {
                                 "assetId": {
-                                    "guid": "{96F5B770-C00C-530D-A2D1-1C2AE1F75383}",
+                                    "guid": "{810E38B5-CE8C-5A8E-9E11-F3450F656B0D}",
                                     "subId": 274196495
                                 },
-                                "assetHint": "props/robovac/assets/astro_vac_battery.azmodel"
+                                "assetHint": "assets/robovac/assets/astro_vac_battery.azmodel"
                             }
                         }
                     }
@@ -1246,8 +1459,7 @@
                 },
                 "Component_[7746097945937138952]": {
                     "$type": "EditorVisibilityComponent",
-                    "Id": 7746097945937138952,
-                    "VisibilityFlag": false
+                    "Id": 7746097945937138952
                 }
             }
         },
@@ -1262,7 +1474,7 @@
                 "Component_[11693874107024939493]": {
                     "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
                     "Id": 11693874107024939493,
-                    "Parent Entity": "Entity_[30055431164411]"
+                    "Parent Entity": "Entity_[6506158658343]"
                 },
                 "Component_[12680365327553012751]": {
                     "$type": "EditorMaterialComponent",
@@ -1277,9 +1489,9 @@
                                     "Value": {
                                         "MaterialAsset": {
                                             "assetId": {
-                                                "guid": "{BB788716-865B-5FBF-822E-6719D73C541C}"
+                                                "guid": "{3FAE87E2-55C0-56F8-9BA3-C9FCA58C723F}"
                                             },
-                                            "assetHint": "props/robovac/assets/astrovac_paint_-_enamel_glossy_black_.azmaterial"
+                                            "assetHint": "assets/robovac/assets/astrovac_paint_-_enamel_glossy_black_.azmaterial"
                                         }
                                     }
                                 }
@@ -1298,10 +1510,10 @@
                         "Configuration": {
                             "ModelAsset": {
                                 "assetId": {
-                                    "guid": "{33473F4D-3401-53E9-BD06-9D6C4E5136DD}",
+                                    "guid": "{33D17CE1-2CBB-5B19-BA99-F0D2CA3161F6}",
                                     "subId": 278579783
                                 },
-                                "assetHint": "props/robovac/assets/astro_vac_cpucoverdoor.azmodel"
+                                "assetHint": "assets/robovac/assets/astro_vac_cpucoverdoor.azmodel"
                             }
                         }
                     }
@@ -1324,8 +1536,7 @@
                 },
                 "Component_[8533221928053165578]": {
                     "$type": "EditorVisibilityComponent",
-                    "Id": 8533221928053165578,
-                    "VisibilityFlag": false
+                    "Id": 8533221928053165578
                 },
                 "Component_[8900053515996941211]": {
                     "$type": "EditorPendingCompositionComponent",
@@ -1359,8 +1570,7 @@
                 },
                 "Component_[15124373171622813264]": {
                     "$type": "EditorVisibilityComponent",
-                    "Id": 15124373171622813264,
-                    "VisibilityFlag": false
+                    "Id": 15124373171622813264
                 },
                 "Component_[17861282930077705308]": {
                     "$type": "EditorInspectorComponent",
@@ -1377,10 +1587,10 @@
                         "Configuration": {
                             "ModelAsset": {
                                 "assetId": {
-                                    "guid": "{FFFDC6FD-B06B-59DF-AEB4-BCE1B4245A06}",
+                                    "guid": "{8DE8498B-2EA4-5164-BB68-4670F077346F}",
                                     "subId": 277621925
                                 },
-                                "assetHint": "props/robovac/assets/astro_vac_depthdensorleft.azmodel"
+                                "assetHint": "assets/robovac/assets/astro_vac_depthdensorleft.azmodel"
                             }
                         }
                     }
@@ -1388,7 +1598,7 @@
                 "Component_[5902437826772068932]": {
                     "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
                     "Id": 5902437826772068932,
-                    "Parent Entity": "Entity_[30055431164411]"
+                    "Parent Entity": "Entity_[6506158658343]"
                 },
                 "Component_[6155037425782808290]": {
                     "$type": "EditorMaterialComponent",
@@ -1403,9 +1613,9 @@
                                     "Value": {
                                         "MaterialAsset": {
                                             "assetId": {
-                                                "guid": "{AD7295EF-1A8A-5E90-B2A9-E79EB4E7A352}"
+                                                "guid": "{D0B3791A-5AD8-5793-B332-1FBBFFC6330A}"
                                             },
-                                            "assetHint": "props/robovac/assets/astrovac_steel_-_satin.azmaterial"
+                                            "assetHint": "assets/robovac/assets/astrovac_steel_-_satin.azmaterial"
                                         }
                                     }
                                 },
@@ -1416,9 +1626,9 @@
                                     "Value": {
                                         "MaterialAsset": {
                                             "assetId": {
-                                                "guid": "{BB788716-865B-5FBF-822E-6719D73C541C}"
+                                                "guid": "{3FAE87E2-55C0-56F8-9BA3-C9FCA58C723F}"
                                             },
-                                            "assetHint": "props/robovac/assets/astrovac_paint_-_enamel_glossy_black_.azmaterial"
+                                            "assetHint": "assets/robovac/assets/astrovac_paint_-_enamel_glossy_black_.azmaterial"
                                         }
                                     }
                                 },
@@ -1429,9 +1639,9 @@
                                     "Value": {
                                         "MaterialAsset": {
                                             "assetId": {
-                                                "guid": "{4C5739F8-6443-57B9-B8AA-AACB06B9D467}"
+                                                "guid": "{9E70F394-632D-5731-9EF5-6FEBB3D1EB47}"
                                             },
-                                            "assetHint": "props/robovac/assets/astrovac_acrylic_clear_.azmaterial"
+                                            "assetHint": "assets/robovac/assets/astrovac_acrylic_clear_.azmaterial"
                                         }
                                     }
                                 }
@@ -1459,8 +1669,7 @@
                 },
                 "Component_[12094592484391732975]": {
                     "$type": "EditorVisibilityComponent",
-                    "Id": 12094592484391732975,
-                    "VisibilityFlag": false
+                    "Id": 12094592484391732975
                 },
                 "Component_[12573602655672009410]": {
                     "$type": "EditorEntityIconComponent",
@@ -1473,7 +1682,7 @@
                 "Component_[16494407832622749468]": {
                     "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
                     "Id": 16494407832622749468,
-                    "Parent Entity": "Entity_[30055431164411]",
+                    "Parent Entity": "Entity_[6506158658343]",
                     "Transform Data": {
                         "Translate": [
                             0.0,
@@ -1495,9 +1704,9 @@
                                     "Value": {
                                         "MaterialAsset": {
                                             "assetId": {
-                                                "guid": "{C42BA082-6BDD-5FA3-869F-1F0B99767C2D}"
+                                                "guid": "{E8288A2B-DB8D-5A9B-B9AD-ED41B0F1C7B3}"
                                             },
-                                            "assetHint": "props/robovac/assets/astrovac_absgrey.azmaterial"
+                                            "assetHint": "assets/robovac/assets/astrovac_absgrey.azmaterial"
                                         }
                                     }
                                 }
@@ -1516,10 +1725,10 @@
                         "Configuration": {
                             "ModelAsset": {
                                 "assetId": {
-                                    "guid": "{B003938B-7E80-5659-8E27-B9BA9F278E45}",
+                                    "guid": "{093E2042-9EE7-5492-853B-EB2521928B4E}",
                                     "subId": 275987692
                                 },
-                                "assetHint": "props/robovac/assets/astro_vac_backbumper.azmodel"
+                                "assetHint": "assets/robovac/assets/astro_vac_backbumper.azmodel"
                             }
                         }
                     }
@@ -1556,8 +1765,7 @@
                 },
                 "Component_[13349755174293871721]": {
                     "$type": "EditorVisibilityComponent",
-                    "Id": 13349755174293871721,
-                    "VisibilityFlag": false
+                    "Id": 13349755174293871721
                 },
                 "Component_[14236251140759845637]": {
                     "$type": "AZ::Render::EditorMeshComponent",
@@ -1566,10 +1774,10 @@
                         "Configuration": {
                             "ModelAsset": {
                                 "assetId": {
-                                    "guid": "{C3FFD5DB-BF9F-594B-821F-C53BB0EC5674}",
+                                    "guid": "{07874E33-F17A-5471-B6B4-E5CF2356D37D}",
                                     "subId": 273883346
                                 },
-                                "assetHint": "props/robovac/assets/astro_vac_depthdensorright.azmodel"
+                                "assetHint": "assets/robovac/assets/astro_vac_depthdensorright.azmodel"
                             }
                         }
                     }
@@ -1603,9 +1811,9 @@
                                     "Value": {
                                         "MaterialAsset": {
                                             "assetId": {
-                                                "guid": "{AD7295EF-1A8A-5E90-B2A9-E79EB4E7A352}"
+                                                "guid": "{D0B3791A-5AD8-5793-B332-1FBBFFC6330A}"
                                             },
-                                            "assetHint": "props/robovac/assets/astrovac_steel_-_satin.azmaterial"
+                                            "assetHint": "assets/robovac/assets/astrovac_steel_-_satin.azmaterial"
                                         }
                                     }
                                 },
@@ -1616,9 +1824,9 @@
                                     "Value": {
                                         "MaterialAsset": {
                                             "assetId": {
-                                                "guid": "{BB788716-865B-5FBF-822E-6719D73C541C}"
+                                                "guid": "{3FAE87E2-55C0-56F8-9BA3-C9FCA58C723F}"
                                             },
-                                            "assetHint": "props/robovac/assets/astrovac_paint_-_enamel_glossy_black_.azmaterial"
+                                            "assetHint": "assets/robovac/assets/astrovac_paint_-_enamel_glossy_black_.azmaterial"
                                         }
                                     }
                                 },
@@ -1629,9 +1837,9 @@
                                     "Value": {
                                         "MaterialAsset": {
                                             "assetId": {
-                                                "guid": "{4C5739F8-6443-57B9-B8AA-AACB06B9D467}"
+                                                "guid": "{9E70F394-632D-5731-9EF5-6FEBB3D1EB47}"
                                             },
-                                            "assetHint": "props/robovac/assets/astrovac_acrylic_clear_.azmaterial"
+                                            "assetHint": "assets/robovac/assets/astrovac_acrylic_clear_.azmaterial"
                                         }
                                     }
                                 }
@@ -1650,7 +1858,7 @@
                 "Component_[9378645190676979903]": {
                     "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
                     "Id": 9378645190676979903,
-                    "Parent Entity": "Entity_[30055431164411]"
+                    "Parent Entity": "Entity_[6506158658343]"
                 }
             }
         },
@@ -1675,9 +1883,9 @@
                                     "Value": {
                                         "MaterialAsset": {
                                             "assetId": {
-                                                "guid": "{AD7295EF-1A8A-5E90-B2A9-E79EB4E7A352}"
+                                                "guid": "{D0B3791A-5AD8-5793-B332-1FBBFFC6330A}"
                                             },
-                                            "assetHint": "props/robovac/assets/astrovac_steel_-_satin.azmaterial"
+                                            "assetHint": "assets/robovac/assets/astrovac_steel_-_satin.azmaterial"
                                         }
                                     }
                                 }
@@ -1704,7 +1912,7 @@
                 "Component_[17050674051210069790]": {
                     "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
                     "Id": 17050674051210069790,
-                    "Parent Entity": "Entity_[30055431164411]"
+                    "Parent Entity": "Entity_[6506158658343]"
                 },
                 "Component_[3733454906690206524]": {
                     "$type": "AZ::Render::EditorMeshComponent",
@@ -1713,10 +1921,10 @@
                         "Configuration": {
                             "ModelAsset": {
                                 "assetId": {
-                                    "guid": "{00128687-3631-5013-AE48-4F3FA736C32C}",
+                                    "guid": "{7CF79979-B662-5F93-AD69-D9E88615A13F}",
                                     "subId": 284116138
                                 },
-                                "assetHint": "props/robovac/assets/astro_vac_screenboltright.azmodel"
+                                "assetHint": "assets/robovac/assets/astro_vac_screenboltright.azmodel"
                             }
                         }
                     }
@@ -1735,8 +1943,7 @@
                 },
                 "Component_[8636090317667778661]": {
                     "$type": "EditorVisibilityComponent",
-                    "Id": 8636090317667778661,
-                    "VisibilityFlag": false
+                    "Id": 8636090317667778661
                 }
             }
         },
@@ -1773,9 +1980,9 @@
                                     "Value": {
                                         "MaterialAsset": {
                                             "assetId": {
-                                                "guid": "{BB788716-865B-5FBF-822E-6719D73C541C}"
+                                                "guid": "{3FAE87E2-55C0-56F8-9BA3-C9FCA58C723F}"
                                             },
-                                            "assetHint": "props/robovac/assets/astrovac_paint_-_enamel_glossy_black_.azmaterial"
+                                            "assetHint": "assets/robovac/assets/astrovac_paint_-_enamel_glossy_black_.azmaterial"
                                         }
                                     }
                                 },
@@ -1786,9 +1993,9 @@
                                     "Value": {
                                         "MaterialAsset": {
                                             "assetId": {
-                                                "guid": "{68FC5154-C758-58CE-8435-F940DE26BDB8}"
+                                                "guid": "{CAED33FE-4A6D-56F1-9A2C-DAD7A7FC7A66}"
                                             },
-                                            "assetHint": "props/robovac/assets/astrovac_chip.azmaterial"
+                                            "assetHint": "assets/robovac/assets/astrovac_chip.azmaterial"
                                         }
                                     }
                                 },
@@ -1799,9 +2006,9 @@
                                     "Value": {
                                         "MaterialAsset": {
                                             "assetId": {
-                                                "guid": "{0F4F73D4-464A-5555-9979-B636E741694E}"
+                                                "guid": "{B6913DC9-2805-529F-B327-AF282423A02D}"
                                             },
-                                            "assetHint": "props/robovac/assets/astrovac_gold_-_polished.azmaterial"
+                                            "assetHint": "assets/robovac/assets/astrovac_gold_-_polished.azmaterial"
                                         }
                                     }
                                 }
@@ -1828,7 +2035,7 @@
                 "Component_[8442266590165968802]": {
                     "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
                     "Id": 8442266590165968802,
-                    "Parent Entity": "Entity_[30055431164411]"
+                    "Parent Entity": "Entity_[6506158658343]"
                 },
                 "Component_[8700461298150480671]": {
                     "$type": "AZ::Render::EditorMeshComponent",
@@ -1837,18 +2044,17 @@
                         "Configuration": {
                             "ModelAsset": {
                                 "assetId": {
-                                    "guid": "{7FCEFA1C-2C98-5E79-8551-0BFC748B275E}",
+                                    "guid": "{4F8B837B-20A3-5CBB-A6FB-7F779B9518E7}",
                                     "subId": 281913857
                                 },
-                                "assetHint": "props/robovac/assets/astro_vac_navlogicboard.azmodel"
+                                "assetHint": "assets/robovac/assets/astro_vac_navlogicboard.azmodel"
                             }
                         }
                     }
                 },
                 "Component_[89094339636559295]": {
                     "$type": "EditorVisibilityComponent",
-                    "Id": 89094339636559295,
-                    "VisibilityFlag": false
+                    "Id": 89094339636559295
                 }
             }
         },
@@ -1869,9 +2075,9 @@
                                     "Value": {
                                         "MaterialAsset": {
                                             "assetId": {
-                                                "guid": "{4C5739F8-6443-57B9-B8AA-AACB06B9D467}"
+                                                "guid": "{9E70F394-632D-5731-9EF5-6FEBB3D1EB47}"
                                             },
-                                            "assetHint": "props/robovac/assets/astrovac_acrylic_clear_.azmaterial"
+                                            "assetHint": "assets/robovac/assets/astrovac_acrylic_clear_.azmaterial"
                                         }
                                     }
                                 }
@@ -1894,10 +2100,10 @@
                         "Configuration": {
                             "ModelAsset": {
                                 "assetId": {
-                                    "guid": "{AB0730D2-2D9B-56F2-BF0A-486A26436B05}",
+                                    "guid": "{F8BD39B8-DBAA-5643-B91B-ECDF651E3A60}",
                                     "subId": 271005855
                                 },
-                                "assetHint": "props/robovac/assets/astro_vac_screenglass.azmodel"
+                                "assetHint": "assets/robovac/assets/astro_vac_screenglass.azmodel"
                             }
                         }
                     }
@@ -1908,8 +2114,7 @@
                 },
                 "Component_[17206641155412004585]": {
                     "$type": "EditorVisibilityComponent",
-                    "Id": 17206641155412004585,
-                    "VisibilityFlag": false
+                    "Id": 17206641155412004585
                 },
                 "Component_[2796450025346289110]": {
                     "$type": "EditorLockComponent",
@@ -1934,7 +2139,7 @@
                 "Component_[8572598678422046028]": {
                     "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
                     "Id": 8572598678422046028,
-                    "Parent Entity": "Entity_[30055431164411]"
+                    "Parent Entity": "Entity_[6506158658343]"
                 }
             }
         },
@@ -1949,10 +2154,10 @@
                         "Configuration": {
                             "ModelAsset": {
                                 "assetId": {
-                                    "guid": "{EA156E66-F1A7-5D05-86AA-5081E838476C}",
+                                    "guid": "{4B127F97-149F-5DC9-8EB2-A9F1D85C1E01}",
                                     "subId": 274221379
                                 },
-                                "assetHint": "props/robovac/assets/astro_vac_pariscopeglass.azmodel"
+                                "assetHint": "assets/robovac/assets/astro_vac_pariscopeglass.azmodel"
                             }
                         }
                     }
@@ -1967,8 +2172,7 @@
                 },
                 "Component_[1459036190848484461]": {
                     "$type": "EditorVisibilityComponent",
-                    "Id": 1459036190848484461,
-                    "VisibilityFlag": false
+                    "Id": 1459036190848484461
                 },
                 "Component_[16761550464080407825]": {
                     "$type": "EditorEntityIconComponent",
@@ -1977,7 +2181,7 @@
                 "Component_[16890571128475542206]": {
                     "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
                     "Id": 16890571128475542206,
-                    "Parent Entity": "Entity_[30055431164411]"
+                    "Parent Entity": "Entity_[6506158658343]"
                 },
                 "Component_[5467404870256653685]": {
                     "$type": "SelectionComponent",
@@ -2008,9 +2212,9 @@
                                     "Value": {
                                         "MaterialAsset": {
                                             "assetId": {
-                                                "guid": "{4C5739F8-6443-57B9-B8AA-AACB06B9D467}"
+                                                "guid": "{9E70F394-632D-5731-9EF5-6FEBB3D1EB47}"
                                             },
-                                            "assetHint": "props/robovac/assets/astrovac_acrylic_clear_.azmaterial"
+                                            "assetHint": "assets/robovac/assets/astrovac_acrylic_clear_.azmaterial"
                                         }
                                     }
                                 }
@@ -2049,9 +2253,9 @@
                                     "Value": {
                                         "MaterialAsset": {
                                             "assetId": {
-                                                "guid": "{C42BA082-6BDD-5FA3-869F-1F0B99767C2D}"
+                                                "guid": "{E8288A2B-DB8D-5A9B-B9AD-ED41B0F1C7B3}"
                                             },
-                                            "assetHint": "props/robovac/assets/astrovac_absgrey.azmaterial"
+                                            "assetHint": "assets/robovac/assets/astrovac_absgrey.azmaterial"
                                         }
                                     }
                                 },
@@ -2062,9 +2266,9 @@
                                     "Value": {
                                         "MaterialAsset": {
                                             "assetId": {
-                                                "guid": "{4C5739F8-6443-57B9-B8AA-AACB06B9D467}"
+                                                "guid": "{9E70F394-632D-5731-9EF5-6FEBB3D1EB47}"
                                             },
-                                            "assetHint": "props/robovac/assets/astrovac_acrylic_clear_.azmaterial"
+                                            "assetHint": "assets/robovac/assets/astrovac_acrylic_clear_.azmaterial"
                                         }
                                     }
                                 }
@@ -2079,23 +2283,22 @@
                         "Configuration": {
                             "ModelAsset": {
                                 "assetId": {
-                                    "guid": "{CADFC54C-E729-55BC-8754-529C0511D3BF}",
+                                    "guid": "{D1986A1E-4B6F-554A-B5E2-EE9AC348F6F7}",
                                     "subId": 269644895
                                 },
-                                "assetHint": "props/robovac/assets/astro_vac_o_rightsensor.azmodel"
+                                "assetHint": "assets/robovac/assets/astro_vac_o_rightsensor.azmodel"
                             }
                         }
                     }
                 },
                 "Component_[16955695451460729126]": {
                     "$type": "EditorVisibilityComponent",
-                    "Id": 16955695451460729126,
-                    "VisibilityFlag": false
+                    "Id": 16955695451460729126
                 },
                 "Component_[3967112649105054567]": {
                     "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
                     "Id": 3967112649105054567,
-                    "Parent Entity": "Entity_[30055431164411]"
+                    "Parent Entity": "Entity_[6506158658343]"
                 },
                 "Component_[4558962009475079380]": {
                     "$type": "EditorOnlyEntityComponent",
@@ -2140,9 +2343,9 @@
                                     "Value": {
                                         "MaterialAsset": {
                                             "assetId": {
-                                                "guid": "{AD7295EF-1A8A-5E90-B2A9-E79EB4E7A352}"
+                                                "guid": "{D0B3791A-5AD8-5793-B332-1FBBFFC6330A}"
                                             },
-                                            "assetHint": "props/robovac/assets/astrovac_steel_-_satin.azmaterial"
+                                            "assetHint": "assets/robovac/assets/astrovac_steel_-_satin.azmaterial"
                                         }
                                     }
                                 }
@@ -2173,7 +2376,7 @@
                 "Component_[3326445525557959534]": {
                     "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
                     "Id": 3326445525557959534,
-                    "Parent Entity": "Entity_[30055431164411]"
+                    "Parent Entity": "Entity_[6506158658343]"
                 },
                 "Component_[3619274201172812811]": {
                     "$type": "AZ::Render::EditorMeshComponent",
@@ -2182,10 +2385,10 @@
                         "Configuration": {
                             "ModelAsset": {
                                 "assetId": {
-                                    "guid": "{5A7181DE-6050-59D7-9228-C5E55D0A5996}",
+                                    "guid": "{5731F31B-2228-5711-8D5D-C5C36084B523}",
                                     "subId": 283782507
                                 },
-                                "assetHint": "props/robovac/assets/astro_vac_suspensionpinright.azmodel"
+                                "assetHint": "assets/robovac/assets/astro_vac_suspensionpinright.azmodel"
                             }
                         }
                     }
@@ -2204,8 +2407,7 @@
                 },
                 "Component_[9010939866745871567]": {
                     "$type": "EditorVisibilityComponent",
-                    "Id": 9010939866745871567,
-                    "VisibilityFlag": false
+                    "Id": 9010939866745871567
                 }
             }
         },
@@ -2226,9 +2428,9 @@
                                     "Value": {
                                         "MaterialAsset": {
                                             "assetId": {
-                                                "guid": "{AD7295EF-1A8A-5E90-B2A9-E79EB4E7A352}"
+                                                "guid": "{D0B3791A-5AD8-5793-B332-1FBBFFC6330A}"
                                             },
-                                            "assetHint": "props/robovac/assets/astrovac_steel_-_satin.azmaterial"
+                                            "assetHint": "assets/robovac/assets/astrovac_steel_-_satin.azmaterial"
                                         }
                                     }
                                 },
@@ -2239,9 +2441,9 @@
                                     "Value": {
                                         "MaterialAsset": {
                                             "assetId": {
-                                                "guid": "{BB788716-865B-5FBF-822E-6719D73C541C}"
+                                                "guid": "{3FAE87E2-55C0-56F8-9BA3-C9FCA58C723F}"
                                             },
-                                            "assetHint": "props/robovac/assets/astrovac_paint_-_enamel_glossy_black_.azmaterial"
+                                            "assetHint": "assets/robovac/assets/astrovac_paint_-_enamel_glossy_black_.azmaterial"
                                         }
                                     }
                                 }
@@ -2259,8 +2461,7 @@
                 },
                 "Component_[17639246189034827164]": {
                     "$type": "EditorVisibilityComponent",
-                    "Id": 17639246189034827164,
-                    "VisibilityFlag": false
+                    "Id": 17639246189034827164
                 },
                 "Component_[18302758798047544602]": {
                     "$type": "EditorInspectorComponent",
@@ -2273,10 +2474,10 @@
                         "Configuration": {
                             "ModelAsset": {
                                 "assetId": {
-                                    "guid": "{CE213D21-AF8D-54D8-8A13-16D2A011ABFC}",
+                                    "guid": "{BC101FC2-B22E-5392-AE70-6AC015666C1F}",
                                     "subId": 272367078
                                 },
-                                "assetHint": "props/robovac/assets/astro_vac_towertop.azmodel"
+                                "assetHint": "assets/robovac/assets/astro_vac_towertop.azmodel"
                             }
                         }
                     }
@@ -2284,7 +2485,7 @@
                 "Component_[4466859611759804964]": {
                     "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
                     "Id": 4466859611759804964,
-                    "Parent Entity": "Entity_[30055431164411]"
+                    "Parent Entity": "Entity_[6506158658343]"
                 },
                 "Component_[5731077585958708357]": {
                     "$type": "EditorLockComponent",
@@ -2314,8 +2515,7 @@
             "Components": {
                 "Component_[10607103240231917169]": {
                     "$type": "EditorVisibilityComponent",
-                    "Id": 10607103240231917169,
-                    "VisibilityFlag": false
+                    "Id": 10607103240231917169
                 },
                 "Component_[10774933117776932712]": {
                     "$type": "EditorMaterialComponent",
@@ -2330,9 +2530,9 @@
                                     "Value": {
                                         "MaterialAsset": {
                                             "assetId": {
-                                                "guid": "{E230CDC0-8085-5EC2-9843-0C73F5CC517D}"
+                                                "guid": "{117B83D8-BCCA-5AF7-B7E9-F5A32F2FFEE9}"
                                             },
-                                            "assetHint": "props/robovac/assets/astrovac_rubber_-_weathered.azmaterial"
+                                            "assetHint": "assets/robovac/assets/astrovac_rubber_-_weathered.azmaterial"
                                         }
                                     }
                                 }
@@ -2347,10 +2547,10 @@
                         "Configuration": {
                             "ModelAsset": {
                                 "assetId": {
-                                    "guid": "{4A15DD14-DF47-5F48-BD67-C059D9820F9A}",
+                                    "guid": "{E79160B7-7D05-5339-88F8-BB802719D160}",
                                     "subId": 270217474
                                 },
-                                "assetHint": "props/robovac/assets/astro_vac_backbumpersensor.azmodel"
+                                "assetHint": "assets/robovac/assets/astro_vac_backbumpersensor.azmodel"
                             }
                         }
                     }
@@ -2374,7 +2574,7 @@
                 "Component_[3992404803994896552]": {
                     "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
                     "Id": 3992404803994896552,
-                    "Parent Entity": "Entity_[30055431164411]",
+                    "Parent Entity": "Entity_[6506158658343]",
                     "Transform Data": {
                         "Translate": [
                             0.0,
@@ -2426,9 +2626,9 @@
                                     "Value": {
                                         "MaterialAsset": {
                                             "assetId": {
-                                                "guid": "{3A2DCD90-F942-5754-9451-E11698AB305A}"
+                                                "guid": "{AA7B1CC3-CD67-5EE5-8F2A-9294ADC177E5}"
                                             },
-                                            "assetHint": "props/robovac/assets/astrovac_rubber_-_bumpy.azmaterial"
+                                            "assetHint": "assets/robovac/assets/astrovac_rubber_-_bumpy.azmaterial"
                                         }
                                     }
                                 }
@@ -2447,10 +2647,10 @@
                         "Configuration": {
                             "ModelAsset": {
                                 "assetId": {
-                                    "guid": "{E6D25F87-498C-59AE-8454-6C518C4784AC}",
+                                    "guid": "{1808D022-5CA0-510B-972D-4AB8DC41B63C}",
                                     "subId": 269413408
                                 },
-                                "assetHint": "props/robovac/assets/astro_vac_brushb.azmodel"
+                                "assetHint": "assets/robovac/assets/astro_vac_brushb.azmodel"
                             }
                         }
                     }
@@ -2466,7 +2666,7 @@
                 "Component_[202200107630449173]": {
                     "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
                     "Id": 202200107630449173,
-                    "Parent Entity": "Entity_[30055431164411]",
+                    "Parent Entity": "Entity_[6506158658343]",
                     "Transform Data": {
                         "Translate": [
                             56.0,
@@ -2477,8 +2677,7 @@
                 },
                 "Component_[5852860452079171804]": {
                     "$type": "EditorVisibilityComponent",
-                    "Id": 5852860452079171804,
-                    "VisibilityFlag": false
+                    "Id": 5852860452079171804
                 },
                 "Component_[7098133004677005239]": {
                     "$type": "EditorPendingCompositionComponent",
@@ -2509,7 +2708,7 @@
                 "Component_[11547087866408447036]": {
                     "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
                     "Id": 11547087866408447036,
-                    "Parent Entity": "Entity_[30055431164411]"
+                    "Parent Entity": "Entity_[6506158658343]"
                 },
                 "Component_[12726666706066360153]": {
                     "$type": "EditorPendingCompositionComponent",
@@ -2544,9 +2743,9 @@
                                     "Value": {
                                         "MaterialAsset": {
                                             "assetId": {
-                                                "guid": "{00E9B9E1-E982-551F-B8AE-042049AD742B}"
+                                                "guid": "{2C63DBDB-2C71-57E0-A084-74D5B7797658}"
                                             },
-                                            "assetHint": "props/robovac/assets/astrovac_abs_white_.azmaterial"
+                                            "assetHint": "assets/robovac/assets/astrovac_abs_white_.azmaterial"
                                         }
                                     }
                                 }
@@ -2561,10 +2760,10 @@
                         "Configuration": {
                             "ModelAsset": {
                                 "assetId": {
-                                    "guid": "{397A5CB6-91B5-5E3A-A74B-DFDCD045F151}",
+                                    "guid": "{419076E7-7757-54EA-81F9-446246D854FE}",
                                     "subId": 274928668
                                 },
-                                "assetHint": "props/robovac/assets/astro_vac_wheel_left.azmodel"
+                                "assetHint": "assets/robovac/assets/astro_vac_wheel_left.azmodel"
                             }
                         }
                     }
@@ -2575,8 +2774,7 @@
                 },
                 "Component_[7938151298383120238]": {
                     "$type": "EditorVisibilityComponent",
-                    "Id": 7938151298383120238,
-                    "VisibilityFlag": false
+                    "Id": 7938151298383120238
                 }
             }
         },
@@ -2599,7 +2797,7 @@
                 "Component_[15111140379365606835]": {
                     "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
                     "Id": 15111140379365606835,
-                    "Parent Entity": "Entity_[30055431164411]"
+                    "Parent Entity": "Entity_[6506158658343]"
                 },
                 "Component_[15605340846412630545]": {
                     "$type": "EditorPendingCompositionComponent",
@@ -2618,9 +2816,9 @@
                                     "Value": {
                                         "MaterialAsset": {
                                             "assetId": {
-                                                "guid": "{AD7295EF-1A8A-5E90-B2A9-E79EB4E7A352}"
+                                                "guid": "{D0B3791A-5AD8-5793-B332-1FBBFFC6330A}"
                                             },
-                                            "assetHint": "props/robovac/assets/astrovac_steel_-_satin.azmaterial"
+                                            "assetHint": "assets/robovac/assets/astrovac_steel_-_satin.azmaterial"
                                         }
                                     }
                                 }
@@ -2643,10 +2841,10 @@
                         "Configuration": {
                             "ModelAsset": {
                                 "assetId": {
-                                    "guid": "{C6B57ACF-63A9-5F0F-A778-401C33744286}",
+                                    "guid": "{0AB692E8-D0BF-5204-8ECA-B9C8D5E133F2}",
                                     "subId": 276008996
                                 },
-                                "assetHint": "props/robovac/assets/astro_vac_suspensionbracketleft.azmodel"
+                                "assetHint": "assets/robovac/assets/astro_vac_suspensionbracketleft.azmodel"
                             }
                         }
                     }
@@ -2661,8 +2859,7 @@
                 },
                 "Component_[9880047728119638596]": {
                     "$type": "EditorVisibilityComponent",
-                    "Id": 9880047728119638596,
-                    "VisibilityFlag": false
+                    "Id": 9880047728119638596
                 }
             }
         },
@@ -2673,7 +2870,7 @@
                 "Component_[1156667096148260854]": {
                     "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
                     "Id": 1156667096148260854,
-                    "Parent Entity": "Entity_[30055431164411]"
+                    "Parent Entity": "Entity_[6506158658343]"
                 },
                 "Component_[14076738285367838024]": {
                     "$type": "EditorDisabledCompositionComponent",
@@ -2681,8 +2878,7 @@
                 },
                 "Component_[14164259235291776849]": {
                     "$type": "EditorVisibilityComponent",
-                    "Id": 14164259235291776849,
-                    "VisibilityFlag": false
+                    "Id": 14164259235291776849
                 },
                 "Component_[14655558145422723260]": {
                     "$type": "EditorOnlyEntityComponent",
@@ -2701,9 +2897,9 @@
                                     "Value": {
                                         "MaterialAsset": {
                                             "assetId": {
-                                                "guid": "{C42BA082-6BDD-5FA3-869F-1F0B99767C2D}"
+                                                "guid": "{E8288A2B-DB8D-5A9B-B9AD-ED41B0F1C7B3}"
                                             },
-                                            "assetHint": "props/robovac/assets/astrovac_absgrey.azmaterial"
+                                            "assetHint": "assets/robovac/assets/astrovac_absgrey.azmaterial"
                                         }
                                     }
                                 },
@@ -2714,9 +2910,9 @@
                                     "Value": {
                                         "MaterialAsset": {
                                             "assetId": {
-                                                "guid": "{AD7295EF-1A8A-5E90-B2A9-E79EB4E7A352}"
+                                                "guid": "{D0B3791A-5AD8-5793-B332-1FBBFFC6330A}"
                                             },
-                                            "assetHint": "props/robovac/assets/astrovac_steel_-_satin.azmaterial"
+                                            "assetHint": "assets/robovac/assets/astrovac_steel_-_satin.azmaterial"
                                         }
                                     }
                                 },
@@ -2727,9 +2923,9 @@
                                     "Value": {
                                         "MaterialAsset": {
                                             "assetId": {
-                                                "guid": "{68FC5154-C758-58CE-8435-F940DE26BDB8}"
+                                                "guid": "{CAED33FE-4A6D-56F1-9A2C-DAD7A7FC7A66}"
                                             },
-                                            "assetHint": "props/robovac/assets/astrovac_chip.azmaterial"
+                                            "assetHint": "assets/robovac/assets/astrovac_chip.azmaterial"
                                         }
                                     }
                                 }
@@ -2756,10 +2952,10 @@
                         "Configuration": {
                             "ModelAsset": {
                                 "assetId": {
-                                    "guid": "{FA826C0D-5BF4-5373-BD9D-2E8ED574C6E2}",
+                                    "guid": "{6EB87AE0-6F84-59BD-B321-8BA12833EE19}",
                                     "subId": 271390525
                                 },
-                                "assetHint": "props/robovac/assets/astro_vac_o_sensor_board.azmodel"
+                                "assetHint": "assets/robovac/assets/astro_vac_o_sensor_board.azmodel"
                             }
                         }
                     }
@@ -2789,7 +2985,7 @@
                 "Component_[11439563233684343748]": {
                     "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
                     "Id": 11439563233684343748,
-                    "Parent Entity": "Entity_[30055431164411]"
+                    "Parent Entity": "Entity_[6506158658343]"
                 },
                 "Component_[1614729706419118426]": {
                     "$type": "EditorInspectorComponent",
@@ -2802,10 +2998,10 @@
                         "Configuration": {
                             "ModelAsset": {
                                 "assetId": {
-                                    "guid": "{97FE55A4-E53C-5AFF-85EE-AD03F9D0B6A4}",
+                                    "guid": "{A13F64A2-E1F3-569F-8960-6683DB6DF842}",
                                     "subId": 269272716
                                 },
-                                "assetHint": "props/robovac/assets/astro_vac_pariscopetube2.azmodel"
+                                "assetHint": "assets/robovac/assets/astro_vac_pariscopetube2.azmodel"
                             }
                         }
                     }
@@ -2820,8 +3016,7 @@
                 },
                 "Component_[18410157112535562065]": {
                     "$type": "EditorVisibilityComponent",
-                    "Id": 18410157112535562065,
-                    "VisibilityFlag": false
+                    "Id": 18410157112535562065
                 },
                 "Component_[3523791602667311912]": {
                     "$type": "EditorEntitySortComponent",
@@ -2844,9 +3039,9 @@
                                     "Value": {
                                         "MaterialAsset": {
                                             "assetId": {
-                                                "guid": "{AD7295EF-1A8A-5E90-B2A9-E79EB4E7A352}"
+                                                "guid": "{D0B3791A-5AD8-5793-B332-1FBBFFC6330A}"
                                             },
-                                            "assetHint": "props/robovac/assets/astrovac_steel_-_satin.azmaterial"
+                                            "assetHint": "assets/robovac/assets/astrovac_steel_-_satin.azmaterial"
                                         }
                                     }
                                 }
@@ -2871,7 +3066,7 @@
                 "Component_[12018261331184779302]": {
                     "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
                     "Id": 12018261331184779302,
-                    "Parent Entity": "Entity_[30055431164411]"
+                    "Parent Entity": "Entity_[6506158658343]"
                 },
                 "Component_[13869793106570217102]": {
                     "$type": "SelectionComponent",
@@ -2884,10 +3079,10 @@
                         "Configuration": {
                             "ModelAsset": {
                                 "assetId": {
-                                    "guid": "{DFD66BE7-CDBF-5F06-9344-031F44F67A34}",
+                                    "guid": "{DBFAEE97-2915-5460-84EE-01666DE4D6C9}",
                                     "subId": 272632730
                                 },
-                                "assetHint": "props/robovac/assets/astro_vac_navsensor_right.azmodel"
+                                "assetHint": "assets/robovac/assets/astro_vac_navsensor_right.azmodel"
                             }
                         }
                     }
@@ -2913,9 +3108,9 @@
                                     "Value": {
                                         "MaterialAsset": {
                                             "assetId": {
-                                                "guid": "{C42BA082-6BDD-5FA3-869F-1F0B99767C2D}"
+                                                "guid": "{E8288A2B-DB8D-5A9B-B9AD-ED41B0F1C7B3}"
                                             },
-                                            "assetHint": "props/robovac/assets/astrovac_absgrey.azmaterial"
+                                            "assetHint": "assets/robovac/assets/astrovac_absgrey.azmaterial"
                                         }
                                     }
                                 }
@@ -2941,8 +3136,7 @@
                 },
                 "Component_[800566869202382851]": {
                     "$type": "EditorVisibilityComponent",
-                    "Id": 800566869202382851,
-                    "VisibilityFlag": false
+                    "Id": 800566869202382851
                 },
                 "Component_[8051037575167622138]": {
                     "$type": "EditorPendingCompositionComponent",
@@ -2969,7 +3163,7 @@
                 "Component_[15074524417671635060]": {
                     "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
                     "Id": 15074524417671635060,
-                    "Parent Entity": "Entity_[30055431164411]"
+                    "Parent Entity": "Entity_[6506158658343]"
                 },
                 "Component_[16418433750839317280]": {
                     "$type": "EditorDisabledCompositionComponent",
@@ -2988,9 +3182,9 @@
                                     "Value": {
                                         "MaterialAsset": {
                                             "assetId": {
-                                                "guid": "{C42BA082-6BDD-5FA3-869F-1F0B99767C2D}"
+                                                "guid": "{E8288A2B-DB8D-5A9B-B9AD-ED41B0F1C7B3}"
                                             },
-                                            "assetHint": "props/robovac/assets/astrovac_absgrey.azmaterial"
+                                            "assetHint": "assets/robovac/assets/astrovac_absgrey.azmaterial"
                                         }
                                     }
                                 },
@@ -3001,9 +3195,9 @@
                                     "Value": {
                                         "MaterialAsset": {
                                             "assetId": {
-                                                "guid": "{4C5739F8-6443-57B9-B8AA-AACB06B9D467}"
+                                                "guid": "{9E70F394-632D-5731-9EF5-6FEBB3D1EB47}"
                                             },
-                                            "assetHint": "props/robovac/assets/astrovac_acrylic_clear_.azmaterial"
+                                            "assetHint": "assets/robovac/assets/astrovac_acrylic_clear_.azmaterial"
                                         }
                                     }
                                 }
@@ -3013,8 +3207,7 @@
                 },
                 "Component_[17576515446066858482]": {
                     "$type": "EditorVisibilityComponent",
-                    "Id": 17576515446066858482,
-                    "VisibilityFlag": false
+                    "Id": 17576515446066858482
                 },
                 "Component_[233329025438305653]": {
                     "$type": "SelectionComponent",
@@ -3027,10 +3220,10 @@
                         "Configuration": {
                             "ModelAsset": {
                                 "assetId": {
-                                    "guid": "{0381FCA9-9473-542D-8738-D83EA4BF31E6}",
+                                    "guid": "{ED661A2C-FA64-5B93-B178-11524229E203}",
                                     "subId": 273364249
                                 },
-                                "assetHint": "props/robovac/assets/astro_vac_o_leftsensor.azmodel"
+                                "assetHint": "assets/robovac/assets/astro_vac_o_leftsensor.azmodel"
                             }
                         }
                     }
@@ -3067,8 +3260,7 @@
                 },
                 "Component_[14302659583683576937]": {
                     "$type": "EditorVisibilityComponent",
-                    "Id": 14302659583683576937,
-                    "VisibilityFlag": false
+                    "Id": 14302659583683576937
                 },
                 "Component_[15205423224621303423]": {
                     "$type": "EditorMaterialComponent",
@@ -3083,9 +3275,9 @@
                                     "Value": {
                                         "MaterialAsset": {
                                             "assetId": {
-                                                "guid": "{AD7295EF-1A8A-5E90-B2A9-E79EB4E7A352}"
+                                                "guid": "{D0B3791A-5AD8-5793-B332-1FBBFFC6330A}"
                                             },
-                                            "assetHint": "props/robovac/assets/astrovac_steel_-_satin.azmaterial"
+                                            "assetHint": "assets/robovac/assets/astrovac_steel_-_satin.azmaterial"
                                         }
                                     }
                                 },
@@ -3096,9 +3288,9 @@
                                     "Value": {
                                         "MaterialAsset": {
                                             "assetId": {
-                                                "guid": "{7DF1E6CA-6102-5A91-ADDC-3476F2967122}"
+                                                "guid": "{811B7B98-0326-57BE-96BE-D7C5885987FE}"
                                             },
-                                            "assetHint": "props/robovac/assets/astrovac_plastic_-_sensor.azmaterial"
+                                            "assetHint": "assets/robovac/assets/astrovac_plastic_-_sensor.azmaterial"
                                         }
                                     }
                                 }
@@ -3113,7 +3305,7 @@
                 "Component_[18005221952569609025]": {
                     "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
                     "Id": 18005221952569609025,
-                    "Parent Entity": "Entity_[30055431164411]"
+                    "Parent Entity": "Entity_[6506158658343]"
                 },
                 "Component_[2001254569755661517]": {
                     "$type": "EditorLockComponent",
@@ -3126,10 +3318,10 @@
                         "Configuration": {
                             "ModelAsset": {
                                 "assetId": {
-                                    "guid": "{BD77DB3E-800B-51BD-820F-2D138B5E38A7}",
+                                    "guid": "{FDFC9C2E-6A4A-58E1-8BA7-9225FF98937A}",
                                     "subId": 280399620
                                 },
-                                "assetHint": "props/robovac/assets/astro_vac_gearboxleft.azmodel"
+                                "assetHint": "assets/robovac/assets/astro_vac_gearboxleft.azmodel"
                             }
                         }
                     }
@@ -3171,10 +3363,10 @@
                         "Configuration": {
                             "ModelAsset": {
                                 "assetId": {
-                                    "guid": "{2A81B6EF-0A13-5225-967E-BAFF07662E53}",
+                                    "guid": "{75050D57-7A0E-5995-A549-735CDBE94A11}",
                                     "subId": 277541711
                                 },
-                                "assetHint": "props/robovac/assets/astro_vac_suspensionpinleft.azmodel"
+                                "assetHint": "assets/robovac/assets/astro_vac_suspensionpinleft.azmodel"
                             }
                         }
                     }
@@ -3204,9 +3396,9 @@
                                     "Value": {
                                         "MaterialAsset": {
                                             "assetId": {
-                                                "guid": "{AD7295EF-1A8A-5E90-B2A9-E79EB4E7A352}"
+                                                "guid": "{D0B3791A-5AD8-5793-B332-1FBBFFC6330A}"
                                             },
-                                            "assetHint": "props/robovac/assets/astrovac_steel_-_satin.azmaterial"
+                                            "assetHint": "assets/robovac/assets/astrovac_steel_-_satin.azmaterial"
                                         }
                                     }
                                 }
@@ -3221,12 +3413,11 @@
                 "Component_[4613754866214292476]": {
                     "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
                     "Id": 4613754866214292476,
-                    "Parent Entity": "Entity_[30055431164411]"
+                    "Parent Entity": "Entity_[6506158658343]"
                 },
                 "Component_[4713074442491719492]": {
                     "$type": "EditorVisibilityComponent",
-                    "Id": 4713074442491719492,
-                    "VisibilityFlag": false
+                    "Id": 4713074442491719492
                 },
                 "Component_[4882396129806514916]": {
                     "$type": "EditorEntitySortComponent",
@@ -3244,8 +3435,7 @@
                 },
                 "Component_[1380808013849181618]": {
                     "$type": "EditorVisibilityComponent",
-                    "Id": 1380808013849181618,
-                    "VisibilityFlag": false
+                    "Id": 1380808013849181618
                 },
                 "Component_[16263631943659708417]": {
                     "$type": "EditorOnlyEntityComponent",
@@ -3254,7 +3444,7 @@
                 "Component_[16570651763080717548]": {
                     "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
                     "Id": 16570651763080717548,
-                    "Parent Entity": "Entity_[30055431164411]"
+                    "Parent Entity": "Entity_[6506158658343]"
                 },
                 "Component_[16696465630512642554]": {
                     "$type": "AZ::Render::EditorMeshComponent",
@@ -3263,10 +3453,10 @@
                         "Configuration": {
                             "ModelAsset": {
                                 "assetId": {
-                                    "guid": "{87C26ED2-9756-5811-9050-2CE14A040D05}",
+                                    "guid": "{3965EDFE-EEC1-53D3-A46E-31B107FEE6CA}",
                                     "subId": 269042475
                                 },
-                                "assetHint": "props/robovac/assets/astro_vac_navsensor_left.azmodel"
+                                "assetHint": "assets/robovac/assets/astro_vac_navsensor_left.azmodel"
                             }
                         }
                     }
@@ -3288,9 +3478,9 @@
                                     "Value": {
                                         "MaterialAsset": {
                                             "assetId": {
-                                                "guid": "{C42BA082-6BDD-5FA3-869F-1F0B99767C2D}"
+                                                "guid": "{E8288A2B-DB8D-5A9B-B9AD-ED41B0F1C7B3}"
                                             },
-                                            "assetHint": "props/robovac/assets/astrovac_absgrey.azmaterial"
+                                            "assetHint": "assets/robovac/assets/astrovac_absgrey.azmaterial"
                                         }
                                     }
                                 }
@@ -3326,8 +3516,7 @@
             "Components": {
                 "Component_[11880722833110957786]": {
                     "$type": "EditorVisibilityComponent",
-                    "Id": 11880722833110957786,
-                    "VisibilityFlag": false
+                    "Id": 11880722833110957786
                 },
                 "Component_[11987811603410743577]": {
                     "$type": "EditorEntityIconComponent",
@@ -3346,9 +3535,9 @@
                                     "Value": {
                                         "MaterialAsset": {
                                             "assetId": {
-                                                "guid": "{2267A408-B83C-534D-9C78-72E3F7E98A1A}"
+                                                "guid": "{00748A17-685A-544D-AD32-6407B71BF517}"
                                             },
-                                            "assetHint": "props/robovac/assets/astrovac_polymide_kapton_.azmaterial"
+                                            "assetHint": "assets/robovac/assets/astrovac_polymide_kapton_.azmaterial"
                                         }
                                     }
                                 }
@@ -3375,7 +3564,7 @@
                 "Component_[7162383783240629247]": {
                     "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
                     "Id": 7162383783240629247,
-                    "Parent Entity": "Entity_[30055431164411]"
+                    "Parent Entity": "Entity_[6506158658343]"
                 },
                 "Component_[7755340245799285993]": {
                     "$type": "AZ::Render::EditorMeshComponent",
@@ -3384,10 +3573,10 @@
                         "Configuration": {
                             "ModelAsset": {
                                 "assetId": {
-                                    "guid": "{BD419631-97A4-5EE2-B17D-86EB8F02B377}",
+                                    "guid": "{17032AE6-ADF7-5E24-B796-305545A5BC82}",
                                     "subId": 278342146
                                 },
-                                "assetHint": "props/robovac/assets/astro_vac_vacvasedoor.azmodel"
+                                "assetHint": "assets/robovac/assets/astro_vac_vacvasedoor.azmodel"
                             }
                         }
                     }
@@ -3420,13 +3609,12 @@
                 },
                 "Component_[2435213322421110972]": {
                     "$type": "EditorVisibilityComponent",
-                    "Id": 2435213322421110972,
-                    "VisibilityFlag": false
+                    "Id": 2435213322421110972
                 },
                 "Component_[2489777411115429950]": {
                     "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
                     "Id": 2489777411115429950,
-                    "Parent Entity": "Entity_[30055431164411]",
+                    "Parent Entity": "Entity_[6506158658343]",
                     "Transform Data": {
                         "Translate": [
                             0.0,
@@ -3458,10 +3646,10 @@
                         "Configuration": {
                             "ModelAsset": {
                                 "assetId": {
-                                    "guid": "{E387AEE4-BC5E-5979-B2AA-03465AFC9950}",
+                                    "guid": "{10091CD5-D89D-5386-9B55-434BADC9A1FA}",
                                     "subId": 283407610
                                 },
-                                "assetHint": "props/robovac/assets/astro_vac_bottomwheelone.azmodel"
+                                "assetHint": "assets/robovac/assets/astro_vac_bottomwheelone.azmodel"
                             }
                         }
                     }
@@ -3487,9 +3675,9 @@
                                     "Value": {
                                         "MaterialAsset": {
                                             "assetId": {
-                                                "guid": "{BB788716-865B-5FBF-822E-6719D73C541C}"
+                                                "guid": "{3FAE87E2-55C0-56F8-9BA3-C9FCA58C723F}"
                                             },
-                                            "assetHint": "props/robovac/assets/astrovac_paint_-_enamel_glossy_black_.azmaterial"
+                                            "assetHint": "assets/robovac/assets/astrovac_paint_-_enamel_glossy_black_.azmaterial"
                                         }
                                     }
                                 },
@@ -3500,9 +3688,9 @@
                                     "Value": {
                                         "MaterialAsset": {
                                             "assetId": {
-                                                "guid": "{00E9B9E1-E982-551F-B8AE-042049AD742B}"
+                                                "guid": "{2C63DBDB-2C71-57E0-A084-74D5B7797658}"
                                             },
-                                            "assetHint": "props/robovac/assets/astrovac_abs_white_.azmaterial"
+                                            "assetHint": "assets/robovac/assets/astrovac_abs_white_.azmaterial"
                                         }
                                     }
                                 }
@@ -3518,8 +3706,7 @@
             "Components": {
                 "Component_[13583003163065014935]": {
                     "$type": "EditorVisibilityComponent",
-                    "Id": 13583003163065014935,
-                    "VisibilityFlag": false
+                    "Id": 13583003163065014935
                 },
                 "Component_[15067095634436349471]": {
                     "$type": "EditorDisabledCompositionComponent",
@@ -3528,7 +3715,7 @@
                 "Component_[16011275311072274726]": {
                     "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
                     "Id": 16011275311072274726,
-                    "Parent Entity": "Entity_[30055431164411]"
+                    "Parent Entity": "Entity_[6506158658343]"
                 },
                 "Component_[16838630867639204964]": {
                     "$type": "EditorMaterialComponent",
@@ -3543,9 +3730,9 @@
                                     "Value": {
                                         "MaterialAsset": {
                                             "assetId": {
-                                                "guid": "{AD7295EF-1A8A-5E90-B2A9-E79EB4E7A352}"
+                                                "guid": "{D0B3791A-5AD8-5793-B332-1FBBFFC6330A}"
                                             },
-                                            "assetHint": "props/robovac/assets/astrovac_steel_-_satin.azmaterial"
+                                            "assetHint": "assets/robovac/assets/astrovac_steel_-_satin.azmaterial"
                                         }
                                     }
                                 }
@@ -3568,10 +3755,10 @@
                         "Configuration": {
                             "ModelAsset": {
                                 "assetId": {
-                                    "guid": "{D5980A06-7090-5022-862A-10C433A731AD}",
+                                    "guid": "{E89E4BF5-4F07-53D3-BD72-80A5AA30309D}",
                                     "subId": 279157851
                                 },
-                                "assetHint": "props/robovac/assets/astro_vac_rails.azmodel"
+                                "assetHint": "assets/robovac/assets/astro_vac_rails.azmodel"
                             }
                         }
                     }
@@ -3625,10 +3812,10 @@
                         "Configuration": {
                             "ModelAsset": {
                                 "assetId": {
-                                    "guid": "{31D45E3B-EE26-536F-BF8E-C14D3EDBEEA1}",
+                                    "guid": "{9911653C-E16E-5E80-8A97-4EA1F0D73713}",
                                     "subId": 277330500
                                 },
-                                "assetHint": "props/robovac/assets/astro_vac_capture.azmodel"
+                                "assetHint": "assets/robovac/assets/astro_vac_capture.azmodel"
                             }
                         }
                     }
@@ -3636,12 +3823,11 @@
                 "Component_[17717685925639233758]": {
                     "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
                     "Id": 17717685925639233758,
-                    "Parent Entity": "Entity_[30055431164411]"
+                    "Parent Entity": "Entity_[6506158658343]"
                 },
                 "Component_[17812014709847617194]": {
                     "$type": "EditorVisibilityComponent",
-                    "Id": 17812014709847617194,
-                    "VisibilityFlag": false
+                    "Id": 17812014709847617194
                 },
                 "Component_[17911155472116189313]": {
                     "$type": "EditorLockComponent",
@@ -3660,9 +3846,9 @@
                                     "Value": {
                                         "MaterialAsset": {
                                             "assetId": {
-                                                "guid": "{00E9B9E1-E982-551F-B8AE-042049AD742B}"
+                                                "guid": "{2C63DBDB-2C71-57E0-A084-74D5B7797658}"
                                             },
-                                            "assetHint": "props/robovac/assets/astrovac_abs_white_.azmaterial"
+                                            "assetHint": "assets/robovac/assets/astrovac_abs_white_.azmaterial"
                                         }
                                     }
                                 }
@@ -3677,6 +3863,38 @@
                 "Component_[7390230706451251440]": {
                     "$type": "EditorOnlyEntityComponent",
                     "Id": 7390230706451251440
+                },
+                "Component_[8268085526766040256]": {
+                    "$type": "EditorColliderComponent",
+                    "Id": 8268085526766040256,
+                    "ColliderConfiguration": {
+                        "MaterialSelection": {
+                            "MaterialIds": [
+                                {}
+                            ]
+                        }
+                    },
+                    "ShapeConfiguration": {
+                        "PhysicsAsset": {
+                            "Asset": {
+                                "assetId": {
+                                    "guid": "{9911653C-E16E-5E80-8A97-4EA1F0D73713}",
+                                    "subId": 1449434469
+                                },
+                                "assetHint": "assets/robovac/assets/astro_vac_capture.pxmesh"
+                            },
+                            "Configuration": {
+                                "PhysicsAsset": {
+                                    "assetId": {
+                                        "guid": "{9911653C-E16E-5E80-8A97-4EA1F0D73713}",
+                                        "subId": 1449434469
+                                    },
+                                    "loadBehavior": "QueueLoad",
+                                    "assetHint": "assets/robovac/assets/astro_vac_capture.pxmesh"
+                                }
+                            }
+                        }
+                    }
                 },
                 "Component_[9400612936246896464]": {
                     "$type": "EditorEntitySortComponent",
@@ -3715,10 +3933,10 @@
                         "Configuration": {
                             "ModelAsset": {
                                 "assetId": {
-                                    "guid": "{849A201A-4307-5AEE-AD29-C3B46F1D59EC}",
+                                    "guid": "{84FE3FC5-5E81-5B11-B39D-86CEC4C4AE14}",
                                     "subId": 269219354
                                 },
-                                "assetHint": "props/robovac/assets/astro_vac_pariscopetube3.azmodel"
+                                "assetHint": "assets/robovac/assets/astro_vac_pariscopetube3.azmodel"
                             }
                         }
                     }
@@ -3734,7 +3952,7 @@
                 "Component_[654981359032710042]": {
                     "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
                     "Id": 654981359032710042,
-                    "Parent Entity": "Entity_[30055431164411]"
+                    "Parent Entity": "Entity_[6506158658343]"
                 },
                 "Component_[7326914943494189567]": {
                     "$type": "EditorMaterialComponent",
@@ -3749,9 +3967,9 @@
                                     "Value": {
                                         "MaterialAsset": {
                                             "assetId": {
-                                                "guid": "{AD7295EF-1A8A-5E90-B2A9-E79EB4E7A352}"
+                                                "guid": "{D0B3791A-5AD8-5793-B332-1FBBFFC6330A}"
                                             },
-                                            "assetHint": "props/robovac/assets/astrovac_steel_-_satin.azmaterial"
+                                            "assetHint": "assets/robovac/assets/astrovac_steel_-_satin.azmaterial"
                                         }
                                     }
                                 }
@@ -3761,8 +3979,7 @@
                 },
                 "Component_[7703415841191096284]": {
                     "$type": "EditorVisibilityComponent",
-                    "Id": 7703415841191096284,
-                    "VisibilityFlag": false
+                    "Id": 7703415841191096284
                 },
                 "Component_[8457773976516588943]": {
                     "$type": "EditorEntityIconComponent",
@@ -3774,6 +3991,38 @@
             "Id": "Entity_[30016776458747]",
             "Name": "astro_vac_base_link",
             "Components": {
+                "Component_[1817880946152815022]": {
+                    "$type": "EditorColliderComponent",
+                    "Id": 1817880946152815022,
+                    "ColliderConfiguration": {
+                        "MaterialSelection": {
+                            "MaterialIds": [
+                                {}
+                            ]
+                        }
+                    },
+                    "ShapeConfiguration": {
+                        "PhysicsAsset": {
+                            "Asset": {
+                                "assetId": {
+                                    "guid": "{BD6D6251-25F8-5DC5-B62F-0A5F70B467D0}",
+                                    "subId": 3876031564
+                                },
+                                "assetHint": "assets/robovac/assets/astro_vac_base_link.pxmesh"
+                            },
+                            "Configuration": {
+                                "PhysicsAsset": {
+                                    "assetId": {
+                                        "guid": "{BD6D6251-25F8-5DC5-B62F-0A5F70B467D0}",
+                                        "subId": 3876031564
+                                    },
+                                    "loadBehavior": "QueueLoad",
+                                    "assetHint": "assets/robovac/assets/astro_vac_base_link.pxmesh"
+                                }
+                            }
+                        }
+                    }
+                },
                 "Component_[344085018016650483]": {
                     "$type": "EditorPendingCompositionComponent",
                     "Id": 344085018016650483
@@ -3785,18 +4034,17 @@
                         "Configuration": {
                             "ModelAsset": {
                                 "assetId": {
-                                    "guid": "{45EE9E73-CFA3-5364-830D-D1E2F7239296}",
+                                    "guid": "{BD6D6251-25F8-5DC5-B62F-0A5F70B467D0}",
                                     "subId": 282259871
                                 },
-                                "assetHint": "props/robovac/assets/astro_vac_base_link.azmodel"
+                                "assetHint": "assets/robovac/assets/astro_vac_base_link.azmodel"
                             }
                         }
                     }
                 },
                 "Component_[3767947283461603081]": {
                     "$type": "EditorVisibilityComponent",
-                    "Id": 3767947283461603081,
-                    "VisibilityFlag": false
+                    "Id": 3767947283461603081
                 },
                 "Component_[3845306205339995033]": {
                     "$type": "EditorLockComponent",
@@ -3805,7 +4053,7 @@
                 "Component_[4855684525398601046]": {
                     "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
                     "Id": 4855684525398601046,
-                    "Parent Entity": "Entity_[30055431164411]"
+                    "Parent Entity": "Entity_[6506158658343]"
                 },
                 "Component_[4975798632544902102]": {
                     "$type": "EditorEntityIconComponent",
@@ -3824,9 +4072,9 @@
                                     "Value": {
                                         "MaterialAsset": {
                                             "assetId": {
-                                                "guid": "{00E9B9E1-E982-551F-B8AE-042049AD742B}"
+                                                "guid": "{2C63DBDB-2C71-57E0-A084-74D5B7797658}"
                                             },
-                                            "assetHint": "props/robovac/assets/astrovac_abs_white_.azmaterial"
+                                            "assetHint": "assets/robovac/assets/astrovac_abs_white_.azmaterial"
                                         }
                                     }
                                 }
@@ -3885,9 +4133,9 @@
                                     "Value": {
                                         "MaterialAsset": {
                                             "assetId": {
-                                                "guid": "{AD7295EF-1A8A-5E90-B2A9-E79EB4E7A352}"
+                                                "guid": "{D0B3791A-5AD8-5793-B332-1FBBFFC6330A}"
                                             },
-                                            "assetHint": "props/robovac/assets/astrovac_steel_-_satin.azmaterial"
+                                            "assetHint": "assets/robovac/assets/astrovac_steel_-_satin.azmaterial"
                                         }
                                     }
                                 }
@@ -3902,10 +4150,10 @@
                         "Configuration": {
                             "ModelAsset": {
                                 "assetId": {
-                                    "guid": "{C26C8EFC-FBE9-5CB7-A72D-1EE74B9B2A17}",
+                                    "guid": "{A1B2945A-6C45-5D1C-A522-33BB9220194A}",
                                     "subId": 277429173
                                 },
-                                "assetHint": "props/robovac/assets/astro_vac_towerstablebase.azmodel"
+                                "assetHint": "assets/robovac/assets/astro_vac_towerstablebase.azmodel"
                             }
                         }
                     }
@@ -3921,7 +4169,7 @@
                 "Component_[4470687351955558889]": {
                     "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
                     "Id": 4470687351955558889,
-                    "Parent Entity": "Entity_[30055431164411]"
+                    "Parent Entity": "Entity_[6506158658343]"
                 },
                 "Component_[5476737228447272011]": {
                     "$type": "EditorPendingCompositionComponent",
@@ -3933,8 +4181,7 @@
                 },
                 "Component_[845623584106570611]": {
                     "$type": "EditorVisibilityComponent",
-                    "Id": 845623584106570611,
-                    "VisibilityFlag": false
+                    "Id": 845623584106570611
                 },
                 "Component_[9791205326329950834]": {
                     "$type": "EditorDisabledCompositionComponent",
@@ -3948,13 +4195,12 @@
             "Components": {
                 "Component_[11486843524168740793]": {
                     "$type": "EditorVisibilityComponent",
-                    "Id": 11486843524168740793,
-                    "VisibilityFlag": false
+                    "Id": 11486843524168740793
                 },
                 "Component_[11517677698538696102]": {
                     "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
                     "Id": 11517677698538696102,
-                    "Parent Entity": "Entity_[30055431164411]"
+                    "Parent Entity": "Entity_[6506158658343]"
                 },
                 "Component_[11892970256911596569]": {
                     "$type": "EditorEntitySortComponent",
@@ -3971,10 +4217,10 @@
                         "Configuration": {
                             "ModelAsset": {
                                 "assetId": {
-                                    "guid": "{AF657980-15B3-5C7F-BEA3-B32C1C43CD82}",
+                                    "guid": "{13520B7C-B773-560D-BC46-DD88DB5B41C0}",
                                     "subId": 272791661
                                 },
-                                "assetHint": "props/robovac/assets/astro_vac_bottomwheeltwo.azmodel"
+                                "assetHint": "assets/robovac/assets/astro_vac_bottomwheeltwo.azmodel"
                             }
                         }
                     }
@@ -4016,9 +4262,9 @@
                                     "Value": {
                                         "MaterialAsset": {
                                             "assetId": {
-                                                "guid": "{BB788716-865B-5FBF-822E-6719D73C541C}"
+                                                "guid": "{3FAE87E2-55C0-56F8-9BA3-C9FCA58C723F}"
                                             },
-                                            "assetHint": "props/robovac/assets/astrovac_paint_-_enamel_glossy_black_.azmaterial"
+                                            "assetHint": "assets/robovac/assets/astrovac_paint_-_enamel_glossy_black_.azmaterial"
                                         }
                                     }
                                 },
@@ -4029,9 +4275,9 @@
                                     "Value": {
                                         "MaterialAsset": {
                                             "assetId": {
-                                                "guid": "{00E9B9E1-E982-551F-B8AE-042049AD742B}"
+                                                "guid": "{2C63DBDB-2C71-57E0-A084-74D5B7797658}"
                                             },
-                                            "assetHint": "props/robovac/assets/astrovac_abs_white_.azmaterial"
+                                            "assetHint": "assets/robovac/assets/astrovac_abs_white_.azmaterial"
                                         }
                                     }
                                 }
@@ -4052,10 +4298,10 @@
                         "Configuration": {
                             "ModelAsset": {
                                 "assetId": {
-                                    "guid": "{09582D99-4924-5C1B-B8AB-7E7861CCE9FC}",
+                                    "guid": "{08C1C1A7-B906-5903-B7FD-9EDEF2D64988}",
                                     "subId": 274187737
                                 },
-                                "assetHint": "props/robovac/assets/astro_vac_mainlogicboard.azmodel"
+                                "assetHint": "assets/robovac/assets/astro_vac_mainlogicboard.azmodel"
                             }
                         }
                     }
@@ -4086,8 +4332,7 @@
                 },
                 "Component_[4300523563177321077]": {
                     "$type": "EditorVisibilityComponent",
-                    "Id": 4300523563177321077,
-                    "VisibilityFlag": false
+                    "Id": 4300523563177321077
                 },
                 "Component_[5331318633270037190]": {
                     "$type": "EditorMaterialComponent",
@@ -4102,9 +4347,9 @@
                                     "Value": {
                                         "MaterialAsset": {
                                             "assetId": {
-                                                "guid": "{AD7295EF-1A8A-5E90-B2A9-E79EB4E7A352}"
+                                                "guid": "{D0B3791A-5AD8-5793-B332-1FBBFFC6330A}"
                                             },
-                                            "assetHint": "props/robovac/assets/astrovac_steel_-_satin.azmaterial"
+                                            "assetHint": "assets/robovac/assets/astrovac_steel_-_satin.azmaterial"
                                         }
                                     }
                                 },
@@ -4115,9 +4360,9 @@
                                     "Value": {
                                         "MaterialAsset": {
                                             "assetId": {
-                                                "guid": "{00E9B9E1-E982-551F-B8AE-042049AD742B}"
+                                                "guid": "{2C63DBDB-2C71-57E0-A084-74D5B7797658}"
                                             },
-                                            "assetHint": "props/robovac/assets/astrovac_abs_white_.azmaterial"
+                                            "assetHint": "assets/robovac/assets/astrovac_abs_white_.azmaterial"
                                         }
                                     }
                                 },
@@ -4128,9 +4373,9 @@
                                     "Value": {
                                         "MaterialAsset": {
                                             "assetId": {
-                                                "guid": "{68FC5154-C758-58CE-8435-F940DE26BDB8}"
+                                                "guid": "{CAED33FE-4A6D-56F1-9A2C-DAD7A7FC7A66}"
                                             },
-                                            "assetHint": "props/robovac/assets/astrovac_chip.azmaterial"
+                                            "assetHint": "assets/robovac/assets/astrovac_chip.azmaterial"
                                         }
                                     }
                                 },
@@ -4141,9 +4386,9 @@
                                     "Value": {
                                         "MaterialAsset": {
                                             "assetId": {
-                                                "guid": "{A21ACD04-C9B1-5AFD-82B9-B745BF2095EF}"
+                                                "guid": "{FDF24C3B-3910-567C-840D-06964B62EF66}"
                                             },
-                                            "assetHint": "props/robovac/assets/astrovac_fr4.azmaterial"
+                                            "assetHint": "assets/robovac/assets/astrovac_fr4.azmaterial"
                                         }
                                     }
                                 }
@@ -4162,7 +4407,7 @@
                 "Component_[5980272100921284882]": {
                     "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
                     "Id": 5980272100921284882,
-                    "Parent Entity": "Entity_[30055431164411]"
+                    "Parent Entity": "Entity_[6506158658343]"
                 }
             }
         },
@@ -4183,9 +4428,9 @@
                                     "Value": {
                                         "MaterialAsset": {
                                             "assetId": {
-                                                "guid": "{E230CDC0-8085-5EC2-9843-0C73F5CC517D}"
+                                                "guid": "{117B83D8-BCCA-5AF7-B7E9-F5A32F2FFEE9}"
                                             },
-                                            "assetHint": "props/robovac/assets/astrovac_rubber_-_weathered.azmaterial"
+                                            "assetHint": "assets/robovac/assets/astrovac_rubber_-_weathered.azmaterial"
                                         }
                                     }
                                 }
@@ -4196,7 +4441,7 @@
                 "Component_[11205876090528442303]": {
                     "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
                     "Id": 11205876090528442303,
-                    "Parent Entity": "Entity_[30055431164411]"
+                    "Parent Entity": "Entity_[6506158658343]"
                 },
                 "Component_[11387276796358957676]": {
                     "$type": "EditorEntitySortComponent",
@@ -4204,8 +4449,7 @@
                 },
                 "Component_[114464133465390289]": {
                     "$type": "EditorVisibilityComponent",
-                    "Id": 114464133465390289,
-                    "VisibilityFlag": false
+                    "Id": 114464133465390289
                 },
                 "Component_[1788839891950967143]": {
                     "$type": "AZ::Render::EditorMeshComponent",
@@ -4214,10 +4458,10 @@
                         "Configuration": {
                             "ModelAsset": {
                                 "assetId": {
-                                    "guid": "{3ADE4CA3-51E7-5EDD-8099-C81EBD0BAAF9}",
+                                    "guid": "{4031F3FC-4EA7-5D3E-A340-EF2997D0E5C4}",
                                     "subId": 269081782
                                 },
-                                "assetHint": "props/robovac/assets/astro_vac_brushc.azmodel"
+                                "assetHint": "assets/robovac/assets/astro_vac_brushc.azmodel"
                             }
                         }
                     }
@@ -4278,13 +4522,12 @@
                 },
                 "Component_[16194815260036076114]": {
                     "$type": "EditorVisibilityComponent",
-                    "Id": 16194815260036076114,
-                    "VisibilityFlag": false
+                    "Id": 16194815260036076114
                 },
                 "Component_[2519269325213884748]": {
                     "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
                     "Id": 2519269325213884748,
-                    "Parent Entity": "Entity_[30055431164411]"
+                    "Parent Entity": "Entity_[6506158658343]"
                 },
                 "Component_[3780554651226155816]": {
                     "$type": "EditorPendingCompositionComponent",
@@ -4307,9 +4550,9 @@
                                     "Value": {
                                         "MaterialAsset": {
                                             "assetId": {
-                                                "guid": "{AD7295EF-1A8A-5E90-B2A9-E79EB4E7A352}"
+                                                "guid": "{D0B3791A-5AD8-5793-B332-1FBBFFC6330A}"
                                             },
-                                            "assetHint": "props/robovac/assets/astrovac_steel_-_satin.azmaterial"
+                                            "assetHint": "assets/robovac/assets/astrovac_steel_-_satin.azmaterial"
                                         }
                                     }
                                 },
@@ -4320,9 +4563,9 @@
                                     "Value": {
                                         "MaterialAsset": {
                                             "assetId": {
-                                                "guid": "{BB788716-865B-5FBF-822E-6719D73C541C}"
+                                                "guid": "{3FAE87E2-55C0-56F8-9BA3-C9FCA58C723F}"
                                             },
-                                            "assetHint": "props/robovac/assets/astrovac_paint_-_enamel_glossy_black_.azmaterial"
+                                            "assetHint": "assets/robovac/assets/astrovac_paint_-_enamel_glossy_black_.azmaterial"
                                         }
                                     }
                                 }
@@ -4337,10 +4580,10 @@
                         "Configuration": {
                             "ModelAsset": {
                                 "assetId": {
-                                    "guid": "{3BA55ADD-F605-5BF4-95B5-8D6C92B8A2DE}",
+                                    "guid": "{7A950F06-4AF2-5355-9E60-D1DC562A7771}",
                                     "subId": 278104335
                                 },
-                                "assetHint": "props/robovac/assets/astro_vac_gearboxright.azmodel"
+                                "assetHint": "assets/robovac/assets/astro_vac_gearboxright.azmodel"
                             }
                         }
                     }
@@ -4378,10 +4621,10 @@
                         "Configuration": {
                             "ModelAsset": {
                                 "assetId": {
-                                    "guid": "{8098A3FA-0B1D-5E76-B8E3-A81A3043C602}",
+                                    "guid": "{0A1B030F-3079-5C75-B3D0-97401E545B58}",
                                     "subId": 272423989
                                 },
-                                "assetHint": "props/robovac/assets/astro_vac_rightdrivegear.azmodel"
+                                "assetHint": "assets/robovac/assets/astro_vac_rightdrivegear.azmodel"
                             }
                         }
                     }
@@ -4415,9 +4658,9 @@
                                     "Value": {
                                         "MaterialAsset": {
                                             "assetId": {
-                                                "guid": "{AD7295EF-1A8A-5E90-B2A9-E79EB4E7A352}"
+                                                "guid": "{D0B3791A-5AD8-5793-B332-1FBBFFC6330A}"
                                             },
-                                            "assetHint": "props/robovac/assets/astrovac_steel_-_satin.azmaterial"
+                                            "assetHint": "assets/robovac/assets/astrovac_steel_-_satin.azmaterial"
                                         }
                                     }
                                 }
@@ -4428,12 +4671,11 @@
                 "Component_[6124322051370137604]": {
                     "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
                     "Id": 6124322051370137604,
-                    "Parent Entity": "Entity_[30055431164411]"
+                    "Parent Entity": "Entity_[6506158658343]"
                 },
                 "Component_[8035867096751189057]": {
                     "$type": "EditorVisibilityComponent",
-                    "Id": 8035867096751189057,
-                    "VisibilityFlag": false
+                    "Id": 8035867096751189057
                 }
             }
         },
@@ -4466,9 +4708,9 @@
                                     "Value": {
                                         "MaterialAsset": {
                                             "assetId": {
-                                                "guid": "{00E9B9E1-E982-551F-B8AE-042049AD742B}"
+                                                "guid": "{2C63DBDB-2C71-57E0-A084-74D5B7797658}"
                                             },
-                                            "assetHint": "props/robovac/assets/astrovac_abs_white_.azmaterial"
+                                            "assetHint": "assets/robovac/assets/astrovac_abs_white_.azmaterial"
                                         }
                                     }
                                 },
@@ -4479,9 +4721,9 @@
                                     "Value": {
                                         "MaterialAsset": {
                                             "assetId": {
-                                                "guid": "{E230CDC0-8085-5EC2-9843-0C73F5CC517D}"
+                                                "guid": "{117B83D8-BCCA-5AF7-B7E9-F5A32F2FFEE9}"
                                             },
-                                            "assetHint": "props/robovac/assets/astrovac_rubber_-_weathered.azmaterial"
+                                            "assetHint": "assets/robovac/assets/astrovac_rubber_-_weathered.azmaterial"
                                         }
                                     }
                                 }
@@ -4499,13 +4741,12 @@
                 },
                 "Component_[14844364127576081774]": {
                     "$type": "EditorVisibilityComponent",
-                    "Id": 14844364127576081774,
-                    "VisibilityFlag": false
+                    "Id": 14844364127576081774
                 },
                 "Component_[14949361985832914947]": {
                     "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
                     "Id": 14949361985832914947,
-                    "Parent Entity": "Entity_[30055431164411]"
+                    "Parent Entity": "Entity_[6506158658343]"
                 },
                 "Component_[18038086914908374883]": {
                     "$type": "EditorDisabledCompositionComponent",
@@ -4522,10 +4763,10 @@
                         "Configuration": {
                             "ModelAsset": {
                                 "assetId": {
-                                    "guid": "{6B92FB67-52E8-5D61-B96C-60FD88487794}",
+                                    "guid": "{40B6E5CE-E0B4-5389-B394-71A796CADF92}",
                                     "subId": 268485826
                                 },
-                                "assetHint": "props/robovac/assets/astro_vac_wheel_right.azmodel"
+                                "assetHint": "assets/robovac/assets/astro_vac_wheel_right.azmodel"
                             }
                         }
                     }
@@ -4547,10 +4788,10 @@
                         "Configuration": {
                             "ModelAsset": {
                                 "assetId": {
-                                    "guid": "{F0205956-AA3D-5E23-86F7-27E88166E7C5}",
+                                    "guid": "{B2583265-26A6-5A23-8027-89DC367C4AAD}",
                                     "subId": 282833332
                                 },
-                                "assetHint": "props/robovac/assets/astro_vac_vaccase.azmodel"
+                                "assetHint": "assets/robovac/assets/astro_vac_vaccase.azmodel"
                             }
                         }
                     }
@@ -4580,9 +4821,9 @@
                                     "Value": {
                                         "MaterialAsset": {
                                             "assetId": {
-                                                "guid": "{2267A408-B83C-534D-9C78-72E3F7E98A1A}"
+                                                "guid": "{00748A17-685A-544D-AD32-6407B71BF517}"
                                             },
-                                            "assetHint": "props/robovac/assets/astrovac_polymide_kapton_.azmaterial"
+                                            "assetHint": "assets/robovac/assets/astrovac_polymide_kapton_.azmaterial"
                                         }
                                     }
                                 }
@@ -4593,7 +4834,7 @@
                 "Component_[16829937000198065444]": {
                     "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
                     "Id": 16829937000198065444,
-                    "Parent Entity": "Entity_[30055431164411]"
+                    "Parent Entity": "Entity_[6506158658343]"
                 },
                 "Component_[17219561062194009311]": {
                     "$type": "EditorLockComponent",
@@ -4601,8 +4842,7 @@
                 },
                 "Component_[2013876049405035287]": {
                     "$type": "EditorVisibilityComponent",
-                    "Id": 2013876049405035287,
-                    "VisibilityFlag": false
+                    "Id": 2013876049405035287
                 },
                 "Component_[3253640819864547065]": {
                     "$type": "SelectionComponent",
@@ -4626,14 +4866,278 @@
             "Id": "Entity_[30055431164411]",
             "Name": "AstroVacRobot",
             "Components": {
+                "Component_[10044771047696910406]": {
+                    "$type": "GenericComponentWrapper",
+                    "Id": 10044771047696910406,
+                    "m_template": {
+                        "$type": "ROS2FrameComponent",
+                        "Namespace Configuration": {
+                            "Namespace Strategy": 1
+                        },
+                        "Frame Name": "base_link"
+                    }
+                },
                 "Component_[12335778149585122117]": {
                     "$type": "EditorEntityIconComponent",
                     "Id": 12335778149585122117
+                },
+                "Component_[13195787262642532680]": {
+                    "$type": "EditorRigidBodyComponent",
+                    "Id": 13195787262642532680,
+                    "Configuration": {
+                        "entityId": "",
+                        "Mass": 0.14227384328842163,
+                        "Centre of mass offset": [
+                            6.424532461579702e-9,
+                            -2.240314600499005e-9,
+                            4.244342377557331e-11
+                        ],
+                        "Inertia tensor": {
+                            "roll": 0.0,
+                            "pitch": 0.0,
+                            "yaw": 0.0,
+                            "scale": 868.24072265625
+                        }
+                    }
+                },
+                "Component_[15286078445589088466]": {
+                    "$type": "EditorShapeColliderComponent",
+                    "Id": 15286078445589088466,
+                    "ColliderConfiguration": {
+                        "MaterialSelection": {
+                            "MaterialIds": [
+                                {
+                                    "MaterialId": "{4080A6D4-AF4E-41CE-B7C9-7699C07123E7}"
+                                }
+                            ]
+                        }
+                    },
+                    "ShapeConfigs": [
+                        {
+                            "$type": "CookedMeshShapeConfiguration",
+                            "CookedData": "TlhTAUNWWE0NAAAAAAAAAElDRQFDTEhMCQAAACAAAAAwAAAAEgAAAGAAAAAcSiq+iRKNPQrXo7scSiq+iRKNPQrXozt9VQK+e1UCPgrXozt9VQK+e1UCPgrXo7vsUTi+DSyHsgrXo7vsUTi+DSyHsgrXozuKEo09HEoqPgrXozt8VQI+fFUCPgrXozt8VQI+fFUCPgrXo7uKEo09HEoqPgrXo7sNLAey7FE4PgrXo7sNLAey7FE4PgrXozsbSiq+jRKNvQrXo7t7VQK+fVUCvgrXo7t7VQK+fVUCvgrXozsbSiq+jRKNvQrXozuHEo29HEoqvgrXo7uHEo29HEoqvgrXozsUwsoy7FE4vgrXo7sUwsoy7FE4vgrXozsbSio+ixKNPQrXozsbSio+ixKNPQrXo7uMEo29G0oqPgrXozuOEo09G0oqvgrXozt+VQI+e1UCvgrXozsdSio+hxKNvQrXozvsUTg+AAAAAArXozvsUTg+AAAAAArXo7uMEo29G0oqPgrXo7sdSio+hxKNvQrXo7t+VQI+e1UCvgrXo7uOEo09G0oqvgrXo7sAAAAAAAAAAAAAgD8K16O7AAAQADHbVL/aOQ4/AAAAAELHNL4QAAQYvhR7v7rFRz4AAAAAQsc0vhQABBncOQ4/MNtUPwAAAABCxzS+GAAEDbrFRz6+FHs/AAAAAELHNL4cAAQQLttUv9w5Dr8AAAAAQcc0viAABAe+FHu/yMVHvgAAAABDxzS+JAAEFNg5Dr8z21S/AAAAAEHHNL4oAAQGu8VHvr4Ue78AAAAAQsc0viwABAYx21Q/2jkOPwAAAABCxzS+MAAEDL4Uez/IxUc+AAAAAELHNL40AAQE3DkOvzDbVD8AAAAAQsc0vjgABBfIxUe+vhR7PwAAAABDxzS+PAAEEjPbVD/YOQ6/AAAAAEPHNL5AAAQAwBR7P7PFR74AAAAAQ8c0vkQABAQAAAAAAAAAAAAAgL8K16O7SAAQAdw5Dj8w21S/AAAAAELHNL5YAAQCyMVHPr4Ue78AAAAAQ8c0vlwABAoUBwYLFgIBBQ8OERMXGBkaAAECAwAEBQEGBwgJBgkKCwwNDg8MDwUEEBEODRASExEUFQgHFBobFRwDAhYcFgsKHRkYHh0bGhkfEhANDAQAAxwKCQgVGx0eHx4YFx8XExIACQADAAQADAALAAEAAgAGAAUABwAIABEAEAANAA4ACgECAQsBDwIPAgYDCQMPAwQEDwQMBQ8FBwUGBg8HCAcPCA8IEQkKCQ8KDgoPCw8LDAwPDQ4NEA0PDg8PEQ8QEBEBAg8AAQIAAQsBCw8CBg8AAgYAAwQAAwkDCQ8DBA8EDA8ABAwFBg8FBw8ABQcABQYHCA8ABwgIDxEACBEACQoJCg8ACwwAEBEADRAADQ4ACg4KDg8LDA8NDg8NDxAPEBEAAAAA7FE4vuxROL4K16O77FE4PuxROD4K16M7KQOCOuaDAzccpd4p4Xv9Jhyl3inmgwM39lA9nOF7/Sb2UD2cZmCDN160DzHmQoYxpySmrgAAgL8K16M7Zrs3PqcvPTunLz07",
+                            "Type": 1
+                        }
+                    ]
                 },
                 "Component_[15309293085555674908]": {
                     "$type": "EditorEntitySortComponent",
                     "Id": 15309293085555674908,
                     "Child Entity Order": [
+                        "Entity_[15934909250224]",
+                        "Entity_[6506158658343]",
+                        "Entity_[8859800736551]"
+                    ]
+                },
+                "Component_[15975670446214446929]": {
+                    "$type": "GenericComponentWrapper",
+                    "Id": 15975670446214446929,
+                    "m_template": {
+                        "$type": "ROS2RobotControlComponent",
+                        "ControlConfiguration": {
+                            "Topic": "cmd_vel",
+                            "BroadcastBusMode": false,
+                            "RobotConfiguration": {
+                                "Body": "Entity_[30055431164411]",
+                                "Front left wheel": "",
+                                "Front right wheel": "",
+                                "Rear left wheel": "",
+                                "Rear right wheel": ""
+                            }
+                        }
+                    }
+                },
+                "Component_[16572099067667838198]": {
+                    "$type": "EditorVisibilityComponent",
+                    "Id": 16572099067667838198
+                },
+                "Component_[18115319375137189991]": {
+                    "$type": "EditorCylinderShapeComponent",
+                    "Id": 18115319375137189991,
+                    "ShapeColor": [
+                        1.0,
+                        1.0,
+                        0.7803921699523926
+                    ],
+                    "CylinderShape": {
+                        "Configuration": {
+                            "DrawColor": [
+                                1.0,
+                                1.0,
+                                0.7803921699523926
+                            ],
+                            "Height": 0.009999999776482582,
+                            "Radius": 0.18000000715255737
+                        }
+                    }
+                },
+                "Component_[223082360444566403]": {
+                    "$type": "EditorInspectorComponent",
+                    "Id": 223082360444566403,
+                    "ComponentOrderEntryArray": [
+                        {
+                            "ComponentId": 8050084937550776360
+                        }
+                    ]
+                },
+                "Component_[2317561115070792535]": {
+                    "$type": "EditorLockComponent",
+                    "Id": 2317561115070792535
+                },
+                "Component_[5567970943382624113]": {
+                    "$type": "EditorOnlyEntityComponent",
+                    "Id": 5567970943382624113
+                },
+                "Component_[5767297440188226980]": {
+                    "$type": "SelectionComponent",
+                    "Id": 5767297440188226980
+                },
+                "Component_[5957548067248555519]": {
+                    "$type": "EditorPendingCompositionComponent",
+                    "Id": 5957548067248555519
+                },
+                "Component_[8050084937550776360]": {
+                    "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
+                    "Id": 8050084937550776360,
+                    "Parent Entity": "ContainerEntity"
+                },
+                "Component_[9387051024545712596]": {
+                    "$type": "EditorDisabledCompositionComponent",
+                    "Id": 9387051024545712596
+                }
+            }
+        },
+        "Entity_[30059726131707]": {
+            "Id": "Entity_[30059726131707]",
+            "Name": "astro_vac_osensorboardholder",
+            "Components": {
+                "Component_[10741789439431487362]": {
+                    "$type": "EditorDisabledCompositionComponent",
+                    "Id": 10741789439431487362
+                },
+                "Component_[12823283736088704650]": {
+                    "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
+                    "Id": 12823283736088704650,
+                    "Parent Entity": "Entity_[6506158658343]"
+                },
+                "Component_[12872069760461567186]": {
+                    "$type": "EditorOnlyEntityComponent",
+                    "Id": 12872069760461567186
+                },
+                "Component_[13270684703792889476]": {
+                    "$type": "AZ::Render::EditorMeshComponent",
+                    "Id": 13270684703792889476,
+                    "Controller": {
+                        "Configuration": {
+                            "ModelAsset": {
+                                "assetId": {
+                                    "guid": "{3EA64C4C-B6EB-5C07-B4E9-EB3151649547}",
+                                    "subId": 276203028
+                                },
+                                "assetHint": "assets/robovac/assets/astro_vac_osensorboardholder.azmodel"
+                            }
+                        }
+                    }
+                },
+                "Component_[13285217915550335661]": {
+                    "$type": "EditorInspectorComponent",
+                    "Id": 13285217915550335661
+                },
+                "Component_[16122814623279561882]": {
+                    "$type": "EditorEntityIconComponent",
+                    "Id": 16122814623279561882
+                },
+                "Component_[17667284355890202398]": {
+                    "$type": "EditorLockComponent",
+                    "Id": 17667284355890202398
+                },
+                "Component_[3439142514294566174]": {
+                    "$type": "EditorVisibilityComponent",
+                    "Id": 3439142514294566174
+                },
+                "Component_[5750714056929933670]": {
+                    "$type": "EditorEntitySortComponent",
+                    "Id": 5750714056929933670
+                },
+                "Component_[6065822064279006146]": {
+                    "$type": "EditorMaterialComponent",
+                    "Id": 6065822064279006146,
+                    "Controller": {
+                        "Configuration": {
+                            "materials": [
+                                {
+                                    "Key": {
+                                        "materialSlotStableId": 713658209
+                                    },
+                                    "Value": {
+                                        "MaterialAsset": {
+                                            "assetId": {
+                                                "guid": "{3FAE87E2-55C0-56F8-9BA3-C9FCA58C723F}"
+                                            },
+                                            "assetHint": "assets/robovac/assets/astrovac_paint_-_enamel_glossy_black_.azmaterial"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                },
+                "Component_[7866814265491933405]": {
+                    "$type": "EditorPendingCompositionComponent",
+                    "Id": 7866814265491933405
+                },
+                "Component_[925554487059946934]": {
+                    "$type": "SelectionComponent",
+                    "Id": 925554487059946934
+                }
+            }
+        },
+        "Entity_[6506158658343]": {
+            "Id": "Entity_[6506158658343]",
+            "Name": "Mesh",
+            "Components": {
+                "Component_[10933917820466561585]": {
+                    "$type": "EditorInspectorComponent",
+                    "Id": 10933917820466561585
+                },
+                "Component_[1120705527766950611]": {
+                    "$type": "EditorEntityIconComponent",
+                    "Id": 1120705527766950611
+                },
+                "Component_[11366492275209164279]": {
+                    "$type": "EditorPendingCompositionComponent",
+                    "Id": 11366492275209164279
+                },
+                "Component_[1295897211617435201]": {
+                    "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
+                    "Id": 1295897211617435201,
+                    "Parent Entity": "Entity_[30055431164411]",
+                    "Transform Data": {
+                        "Translate": [
+                            0.0,
+                            0.0,
+                            -0.005482405424118042
+                        ],
+                        "Rotate": [
+                            0.0,
+                            0.0,
+                            180.0
+                        ]
+                    }
+                },
+                "Component_[17292014662385689158]": {
+                    "$type": "SelectionComponent",
+                    "Id": 17292014662385689158
+                },
+                "Component_[17642228670508097488]": {
+                    "$type": "EditorLockComponent",
+                    "Id": 17642228670508097488
+                },
+                "Component_[4175025945549480712]": {
+                    "$type": "EditorEntitySortComponent",
+                    "Id": 4175025945549480712,
+                    "Child Entity Order": [
+                        "Entity_[10338002873617]",
                         "Entity_[29909402276347]",
                         "Entity_[29948056982011]",
                         "Entity_[30016776458747]",
@@ -4686,132 +5190,119 @@
                         "Entity_[30046841229819]"
                     ]
                 },
-                "Component_[16572099067667838198]": {
+                "Component_[5075023512203644777]": {
                     "$type": "EditorVisibilityComponent",
-                    "Id": 16572099067667838198,
-                    "VisibilityFlag": false
+                    "Id": 5075023512203644777
                 },
-                "Component_[223082360444566403]": {
-                    "$type": "EditorInspectorComponent",
-                    "Id": 223082360444566403,
-                    "ComponentOrderEntryArray": [
-                        {
-                            "ComponentId": 8050084937550776360
-                        }
-                    ]
-                },
-                "Component_[2317561115070792535]": {
-                    "$type": "EditorLockComponent",
-                    "Id": 2317561115070792535
-                },
-                "Component_[5567970943382624113]": {
-                    "$type": "EditorOnlyEntityComponent",
-                    "Id": 5567970943382624113
-                },
-                "Component_[5767297440188226980]": {
-                    "$type": "SelectionComponent",
-                    "Id": 5767297440188226980
-                },
-                "Component_[5957548067248555519]": {
-                    "$type": "EditorPendingCompositionComponent",
-                    "Id": 5957548067248555519
-                },
-                "Component_[8050084937550776360]": {
-                    "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
-                    "Id": 8050084937550776360,
-                    "Parent Entity": "ContainerEntity"
-                },
-                "Component_[9387051024545712596]": {
+                "Component_[9106650773510172942]": {
                     "$type": "EditorDisabledCompositionComponent",
-                    "Id": 9387051024545712596
+                    "Id": 9106650773510172942
+                },
+                "Component_[9115969056810346082]": {
+                    "$type": "EditorOnlyEntityComponent",
+                    "Id": 9115969056810346082
                 }
             }
         },
-        "Entity_[30059726131707]": {
-            "Id": "Entity_[30059726131707]",
-            "Name": "astro_vac_osensorboardholder",
+        "Entity_[8859800736551]": {
+            "Id": "Entity_[8859800736551]",
+            "Name": "Sensors",
             "Components": {
-                "Component_[10741789439431487362]": {
+                "Component_[11093905779932289212]": {
                     "$type": "EditorDisabledCompositionComponent",
-                    "Id": 10741789439431487362
+                    "Id": 11093905779932289212
                 },
-                "Component_[12823283736088704650]": {
-                    "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
-                    "Id": 12823283736088704650,
-                    "Parent Entity": "Entity_[30055431164411]"
-                },
-                "Component_[12872069760461567186]": {
-                    "$type": "EditorOnlyEntityComponent",
-                    "Id": 12872069760461567186
-                },
-                "Component_[13270684703792889476]": {
-                    "$type": "AZ::Render::EditorMeshComponent",
-                    "Id": 13270684703792889476,
-                    "Controller": {
-                        "Configuration": {
-                            "ModelAsset": {
-                                "assetId": {
-                                    "guid": "{7DCA9C50-A999-531C-838D-7F7383081C5E}",
-                                    "subId": 276203028
-                                },
-                                "assetHint": "props/robovac/assets/astro_vac_osensorboardholder.azmodel"
-                            }
-                        }
-                    }
-                },
-                "Component_[13285217915550335661]": {
-                    "$type": "EditorInspectorComponent",
-                    "Id": 13285217915550335661
-                },
-                "Component_[16122814623279561882]": {
+                "Component_[12228418348456879928]": {
                     "$type": "EditorEntityIconComponent",
-                    "Id": 16122814623279561882
+                    "Id": 12228418348456879928
                 },
-                "Component_[17667284355890202398]": {
-                    "$type": "EditorLockComponent",
-                    "Id": 17667284355890202398
+                "Component_[13857446899256065726]": {
+                    "$type": "SelectionComponent",
+                    "Id": 13857446899256065726
                 },
-                "Component_[3439142514294566174]": {
-                    "$type": "EditorVisibilityComponent",
-                    "Id": 3439142514294566174,
-                    "VisibilityFlag": false
-                },
-                "Component_[5750714056929933670]": {
+                "Component_[14081951032431453423]": {
                     "$type": "EditorEntitySortComponent",
-                    "Id": 5750714056929933670
+                    "Id": 14081951032431453423,
+                    "Child Entity Order": [
+                        "Instance_[8975764853543]/ContainerEntity",
+                        "Instance_[8898455442215]/ContainerEntity"
+                    ]
                 },
-                "Component_[6065822064279006146]": {
-                    "$type": "EditorMaterialComponent",
-                    "Id": 6065822064279006146,
-                    "Controller": {
-                        "Configuration": {
-                            "materials": [
-                                {
-                                    "Key": {
-                                        "materialSlotStableId": 713658209
-                                    },
-                                    "Value": {
-                                        "MaterialAsset": {
-                                            "assetId": {
-                                                "guid": "{BB788716-865B-5FBF-822E-6719D73C541C}"
-                                            },
-                                            "assetHint": "props/robovac/assets/astrovac_paint_-_enamel_glossy_black_.azmaterial"
-                                        }
-                                    }
-                                }
-                            ]
-                        }
+                "Component_[2172420079327414534]": {
+                    "$type": "EditorPendingCompositionComponent",
+                    "Id": 2172420079327414534
+                },
+                "Component_[2939692639054844657]": {
+                    "$type": "EditorVisibilityComponent",
+                    "Id": 2939692639054844657
+                },
+                "Component_[3624826975054373222]": {
+                    "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
+                    "Id": 3624826975054373222,
+                    "Parent Entity": "Entity_[30055431164411]",
+                    "Transform Data": {
+                        "Translate": [
+                            0.0,
+                            0.0,
+                            0.007144808769226074
+                        ]
                     }
                 },
-                "Component_[7866814265491933405]": {
-                    "$type": "EditorPendingCompositionComponent",
-                    "Id": 7866814265491933405
+                "Component_[6166339791366712155]": {
+                    "$type": "EditorOnlyEntityComponent",
+                    "Id": 6166339791366712155
                 },
-                "Component_[925554487059946934]": {
-                    "$type": "SelectionComponent",
-                    "Id": 925554487059946934
+                "Component_[8798470866560069553]": {
+                    "$type": "EditorLockComponent",
+                    "Id": 8798470866560069553
+                },
+                "Component_[9079236517366404702]": {
+                    "$type": "EditorInspectorComponent",
+                    "Id": 9079236517366404702
                 }
             }
+        }
+    },
+    "Instances": {
+        "Instance_[8898455442215]": {
+            "Source": "Prefabs/Sensors/LidarOS2.prefab",
+            "Patches": [
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/Component_[5989395931141545750]/Parent Entity",
+                    "value": "../Entity_[8859800736551]"
+                },
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/Component_[5989395931141545750]/Transform Data/Translate/2",
+                    "value": 0.1960870325565338
+                }
+            ]
+        },
+        "Instance_[8975764853543]": {
+            "Source": "Prefabs/Sensors/Imu.prefab",
+            "Patches": [
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/Component_[6700600896017100313]/Parent Entity",
+                    "value": "../Entity_[8859800736551]"
+                },
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/Component_[6700600896017100313]/Transform Data/Translate/0",
+                    "value": -0.09387588500976564
+                },
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/Component_[6700600896017100313]/Transform Data/Translate/2",
+                    "value": 0.08034273982048035
+                },
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/Component_[901516877242196147]/Child Entity Order/0",
+                    "value": "Entity_[690707340010]"
+                }
+            ]
         }
     }
 }

@@ -1,0 +1,44 @@
+{
+    "values": [
+        {
+            "$type": "{5B03C8E6-8CEE-4DA0-A7FA-CD88689DD45B} MeshGroup",
+            "id": "{1C525C8C-2D53-5DF5-86EB-25AEBE8CB737}",
+            "name": "Astro_Vac_CPUCover",
+            "NodeSelectionList": {
+                "selectedNodes": [
+                    "RootNode.CPUCover"
+                ],
+                "unselectedNodes": [
+                    {},
+                    "RootNode"
+                ]
+            },
+            "export method": 1,
+            "MaterialSlots": [
+                "Plastic - Sensor"
+            ],
+            "PhysicsMaterials": [
+                "<Default Physics Material>"
+            ]
+        },
+        {
+            "$type": "{07B356B7-3635-40B5-878A-FAC4EFD5AD86} MeshGroup",
+            "name": "Astro_Vac_CPUCover",
+            "nodeSelectionList": {
+                "selectedNodes": [
+                    {},
+                    "RootNode",
+                    "RootNode.CPUCover"
+                ]
+            },
+            "rules": {
+                "rules": [
+                    {
+                        "$type": "MaterialRule"
+                    }
+                ]
+            },
+            "id": "{341DFF1F-F908-50C1-BF06-48303E3858D5}"
+        }
+    ]
+}

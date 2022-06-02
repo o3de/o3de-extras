@@ -8,7 +8,6 @@
             0.0,
             1.0
         ],
-        "baseColor.textureBlendMode": "Lerp",
-        "baseColor.textureMap": "Props/RoboVac/textures/Eye_BaseColor.png"
+        "baseColor.textureBlendMode": "Lerp"
     }
 }
