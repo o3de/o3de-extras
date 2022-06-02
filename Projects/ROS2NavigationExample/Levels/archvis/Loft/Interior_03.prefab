@@ -23,7 +23,8 @@
                     "Entity_[4844759642882]",
                     "Entity_[4857644544770]",
                     "Entity_[50747416825914]",
-                    "Entity_[2425721989581]"
+                    "Entity_[2425721989581]",
+                    "Entity_[14870551177679]"
                 ]
             },
             "Component_[15230859088967841193]": {
@@ -429,7 +430,7 @@
                                 },
                                 "assetHint": "levels/archvis/interior_03/reflectionprobes/reflection_computerdesk__c8761f0c-24e4-4160-8d76-fc9cc08875f0__iblspecularcm128.dds.streamingimage"
                             },
-                            "EntityId": 11206823811684634105,
+                            "EntityId": 16157464862043722965,
                             "ShowVisualization": false
                         }
                     },
@@ -613,7 +614,7 @@
                     "Controller": {
                         "Configuration": {
                             "Field of View": 60.00014877319336,
-                            "EditorEntityId": 13825764214116,
+                            "EditorEntityId": 14227257511619008281,
                             "MakeActiveViewOnActivation": false
                         }
                     }
@@ -621,6 +622,105 @@
                 "Component_[9757437734182996498]": {
                     "$type": "EditorOnlyEntityComponent",
                     "Id": 9757437734182996498
+                }
+            }
+        },
+        "Entity_[14870551177679]": {
+            "Id": "Entity_[14870551177679]",
+            "Name": "InvisibleFloor",
+            "Components": {
+                "Component_[15497122865743212243]": {
+                    "$type": "EditorShapeColliderComponent",
+                    "Id": 15497122865743212243,
+                    "ColliderConfiguration": {
+                        "MaterialSelection": {
+                            "MaterialIds": [
+                                {}
+                            ]
+                        }
+                    },
+                    "ShapeConfigs": [
+                        {
+                            "$type": "BoxShapeConfiguration",
+                            "Configuration": [
+                                50.0,
+                                50.0,
+                                0.019999999552965164
+                            ]
+                        }
+                    ]
+                },
+                "Component_[1663372033902359099]": {
+                    "$type": "EditorInspectorComponent",
+                    "Id": 1663372033902359099
+                },
+                "Component_[18062519268240208005]": {
+                    "$type": "EditorPendingCompositionComponent",
+                    "Id": 18062519268240208005
+                },
+                "Component_[18239979855763464070]": {
+                    "$type": "EditorDisabledCompositionComponent",
+                    "Id": 18239979855763464070
+                },
+                "Component_[18426896540480674167]": {
+                    "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
+                    "Id": 18426896540480674167,
+                    "Parent Entity": "Entity_[4857644544770]",
+                    "Transform Data": {
+                        "Translate": [
+                            1.4699822664260864,
+                            1.9429869651794434,
+                            0.0003572404384613037
+                        ]
+                    }
+                },
+                "Component_[3573214581520380321]": {
+                    "$type": "EditorEntityIconComponent",
+                    "Id": 3573214581520380321
+                },
+                "Component_[4127533718137560427]": {
+                    "$type": "EditorOnlyEntityComponent",
+                    "Id": 4127533718137560427
+                },
+                "Component_[5167817179620176617]": {
+                    "$type": "EditorLockComponent",
+                    "Id": 5167817179620176617
+                },
+                "Component_[5602582080643917891]": {
+                    "$type": "EditorEntitySortComponent",
+                    "Id": 5602582080643917891
+                },
+                "Component_[6598010094106569809]": {
+                    "$type": "SelectionComponent",
+                    "Id": 6598010094106569809
+                },
+                "Component_[7729626731739806323]": {
+                    "$type": "EditorVisibilityComponent",
+                    "Id": 7729626731739806323
+                },
+                "Component_[9055380297160970078]": {
+                    "$type": "EditorBoxShapeComponent",
+                    "Id": 9055380297160970078,
+                    "Visible": false,
+                    "ShapeColor": [
+                        1.0,
+                        1.0,
+                        0.7803921699523926
+                    ],
+                    "BoxShape": {
+                        "Configuration": {
+                            "DrawColor": [
+                                1.0,
+                                1.0,
+                                0.7803921699523926
+                            ],
+                            "Dimensions": [
+                                50.0,
+                                50.0,
+                                0.019999999552965164
+                            ]
+                        }
+                    }
                 }
             }
         },
@@ -669,7 +769,7 @@
                                 },
                                 "assetHint": "reflectionprobes/reflection_main__55e4bf1b-3c8d-4302-b6e1-0a8254976bdd__iblspecularcm512.dds.streamingimage"
                             },
-                            "EntityId": 10904052151376551496,
+                            "EntityId": 16329675175358670554,
                             "ShowVisualization": false
                         }
                     },
@@ -969,7 +1069,6 @@
                                 "guid": "{7003B5DC-6EEB-5B8A-8D6A-B7A374779C13}",
                                 "subId": 1
                             },
-                            "loadBehavior": "QueueLoad",
                             "assetHint": "scripts/profiling/outputprofiledata.luac"
                         }
                     },
@@ -1064,7 +1163,7 @@
                             ],
                             "Intensity": 8.0,
                             "AngularDiameter": 1.0,
-                            "CameraEntityId": "Entity_[2511113093496]",
+                            "CameraEntityId": "",
                             "ShadowFarClipDistance": 8.0,
                             "ShadowmapSize": "Size2048",
                             "CascadeCount": 1,
@@ -2943,7 +3042,7 @@
                     "Id": 11374458009190363397,
                     "Controller": {
                         "Configuration": {
-                            "EditorEntityId": 2351562991095658060
+                            "EditorEntityId": 10252185498337496454
                         }
                     }
                 },
@@ -2953,14 +3052,14 @@
                     "Parent Entity": "Entity_[1146574390643]",
                     "Transform Data": {
                         "Translate": [
-                            -1.9582091569900513,
-                            7.74528169631958,
-                            1.1697092056274414
+                            -2.461962938308716,
+                            9.09637451171875,
+                            1.3191319704055786
                         ],
                         "Rotate": [
-                            -2.5297389030456543,
-                            -0.8444189429283142,
-                            -161.55294799804688
+                            3.0383594036102295,
+                            2.818028211593628,
+                            -137.1929473876953
                         ]
                     }
                 },
@@ -3996,7 +4095,7 @@
                                 },
                                 "assetHint": "levels/archvis/interior_03/reflectionprobes/reflection_kitchen__bc3d31dc-2109-4b78-aaac-a819d100f77f__iblspecularcm128.dds.streamingimage"
                             },
-                            "EntityId": 12495628496118832218
+                            "EntityId": 6153810264646120856
                         }
                     },
                     "bakedCubeMapRelativePath": "ReflectionProbes/Reflection_Kitchen__EB11F20A-D88A-4994-87B8-F6F527C1A806__iblspecularcm256.dds",
@@ -4599,7 +4698,7 @@
                                 },
                                 "assetHint": "levels/archvis/interior_03/reflectionprobes/reflection_livingroom__08eadce6-da11-42de-b55d-62aae4d80878__iblspecularcm128.dds.streamingimage"
                             },
-                            "EntityId": 9318338882240431636,
+                            "EntityId": 10963006500862704793,
                             "ShowVisualization": false
                         }
                     },
@@ -5065,6 +5164,8 @@
                     "$type": "EditorEntitySortComponent",
                     "Id": 3152360288513841949,
                     "Child Entity Order": [
+                        "Entity_[14870551177679]",
+                        "Instance_[2485335167382]/ContainerEntity",
                         "Instance_[13283805038176]/ContainerEntity",
                         "Entity_[4840464675586]",
                         "Entity_[2519703028088]",
@@ -5758,6 +5859,61 @@
                     "op": "replace",
                     "path": "/ContainerEntity/Components/Component_[6094737195784703032]/Transform Data/Rotate/2",
                     "value": 89.99994659423828
+                }
+            ]
+        },
+        "Instance_[2485335167382]": {
+            "Source": "Assets/RoboVac/AstroVacRobot.prefab",
+            "Patches": [
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/Component_[10968750635921263389]/Parent Entity",
+                    "value": "../Entity_[4857644544770]"
+                },
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/Component_[10968750635921263389]/Transform Data/Translate/0",
+                    "value": -1.3768727779388428
+                },
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/Component_[10968750635921263389]/Transform Data/Translate/1",
+                    "value": 7.608648777008057
+                },
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/Component_[10968750635921263389]/Transform Data/Translate/2",
+                    "value": 0.5022367835044861
+                },
+                {
+                    "op": "replace",
+                    "path": "/Entities/Entity_[15934909250224]/Components/Component_[4358438849696264694]/Controller/Configuration/EditorEntityId",
+                    "value": 13495511068447120829
+                },
+                {
+                    "op": "replace",
+                    "path": "/Entities/Entity_[30055431164411]/Components/Component_[13195787262642532680]/Configuration/Mass",
+                    "value": 0.13886816799640656
+                },
+                {
+                    "op": "replace",
+                    "path": "/Entities/Entity_[30055431164411]/Components/Component_[13195787262642532680]/Configuration/Centre of mass offset/0",
+                    "value": 2.091176787288873e-9
+                },
+                {
+                    "op": "replace",
+                    "path": "/Entities/Entity_[30055431164411]/Components/Component_[13195787262642532680]/Configuration/Centre of mass offset/1",
+                    "value": 3.9075187530102085e-9
+                },
+                {
+                    "op": "replace",
+                    "path": "/Entities/Entity_[30055431164411]/Components/Component_[13195787262642532680]/Configuration/Centre of mass offset/2",
+                    "value": -7.555317482754731e-11
+                },
+                {
+                    "op": "replace",
+                    "path": "/Entities/Entity_[30055431164411]/Components/Component_[13195787262642532680]/Configuration/Inertia tensor/scale",
+                    "value": 911.2044067382813
                 }
             ]
         },
