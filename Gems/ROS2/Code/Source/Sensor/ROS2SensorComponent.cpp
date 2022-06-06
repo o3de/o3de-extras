@@ -78,15 +78,14 @@ namespace ROS2
         // TODO - add range validation (Attributes?)
         auto frameTime = frequency == 0 ? 1 : 1 / frequency;
 
-        static float elapsed = 0;
-        elapsed += deltaTime;
-        if (elapsed < frameTime)
+        m_timeElapsedSinceLastTick += deltaTime;
+        if (m_timeElapsedSinceLastTick < frameTime)
             return;
 
-        elapsed -= frameTime;
+        m_timeElapsedSinceLastTick -= frameTime;
         if (deltaTime > frameTime)
         {   // Frequency higher than possible, not catching up, just keep going with each frame.
-            elapsed = 0;
+            m_timeElapsedSinceLastTick = 0.0f;
         }
 
         // Note that sensor frequency can be limited by simulation tick rate (if higher sensor Hz is desired).

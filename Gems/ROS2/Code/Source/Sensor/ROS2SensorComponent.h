@@ -47,5 +47,7 @@ namespace ROS2
         //! For example, draw points or rays for a lidar, viewport for a camera, etc.
         //! Visualisation can be turned on or off in SensorConfiguration.
         virtual void Visualise() { };
+
+        float m_timeElapsedSinceLastTick = 0.0f;
     };
 }  // namespace ROS2
