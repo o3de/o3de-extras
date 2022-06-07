@@ -4886,17 +4886,19 @@
                     "Id": 13195787262642532680,
                     "Configuration": {
                         "entityId": "",
-                        "Mass": 0.14227384328842163,
+                        "Compute Mass": false,
+                        "Mass": 5.0,
                         "Centre of mass offset": [
                             6.424532461579702e-9,
                             -2.240314600499005e-9,
                             4.244342377557331e-11
                         ],
+                        "Compute inertia": false,
                         "Inertia tensor": {
                             "roll": 0.0,
                             "pitch": 0.0,
                             "yaw": 0.0,
-                            "scale": 868.24072265625
+                            "scale": 124.99999237060547
                         }
                     }
                 },
