@@ -41,7 +41,7 @@
                 "Id": 761745188714332364,
                 "Child Entity Order": [
                     "Entity_[30055431164411]",
-                    "Entity_[10338002873617]"
+                    ""
                 ]
             },
             "Component_[8724271900824416155]": {
@@ -55,105 +55,6 @@
         }
     },
     "Entities": {
-        "Entity_[10338002873617]": {
-            "Id": "Entity_[10338002873617]",
-            "Name": "Housing",
-            "Components": {
-                "Component_[10527348526107316484]": {
-                    "$type": "EditorEntityIconComponent",
-                    "Id": 10527348526107316484
-                },
-                "Component_[12335181096345038273]": {
-                    "$type": "EditorVisibilityComponent",
-                    "Id": 12335181096345038273
-                },
-                "Component_[12641644843216691802]": {
-                    "$type": "EditorOnlyEntityComponent",
-                    "Id": 12641644843216691802
-                },
-                "Component_[13173372676369075129]": {
-                    "$type": "EditorEntitySortComponent",
-                    "Id": 13173372676369075129
-                },
-                "Component_[14808541554257721637]": {
-                    "$type": "EditorLockComponent",
-                    "Id": 14808541554257721637
-                },
-                "Component_[14895185060300952195]": {
-                    "$type": "AZ::Render::EditorMeshComponent",
-                    "Id": 14895185060300952195,
-                    "Controller": {
-                        "Configuration": {
-                            "ModelAsset": {
-                                "assetId": {
-                                    "guid": "{8A2E7A82-D7C3-5E9C-A56C-6EDA70876347}",
-                                    "subId": 268721130
-                                },
-                                "assetHint": "materialeditor/viewportmodels/cylinder.azmodel"
-                            }
-                        }
-                    }
-                },
-                "Component_[15289797216389442796]": {
-                    "$type": "EditorDisabledCompositionComponent",
-                    "Id": 15289797216389442796
-                },
-                "Component_[1897174239157429322]": {
-                    "$type": "EditorInspectorComponent",
-                    "Id": 1897174239157429322
-                },
-                "Component_[2848861693028550561]": {
-                    "$type": "SelectionComponent",
-                    "Id": 2848861693028550561
-                },
-                "Component_[4576443438466266764]": {
-                    "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
-                    "Id": 4576443438466266764,
-                    "Parent Entity": "Entity_[6506158658343]",
-                    "Transform Data": {
-                        "Translate": [
-                            0.0,
-                            0.0,
-                            0.09076517820358276
-                        ],
-                        "Rotate": [
-                            0.0,
-                            0.0,
-                            180.0
-                        ],
-                        "UniformScale": 0.11999999731779099
-                    }
-                },
-                "Component_[7132771805032153524]": {
-                    "$type": "EditorPendingCompositionComponent",
-                    "Id": 7132771805032153524
-                },
-                "Component_[7986560093861392284]": {
-                    "$type": "EditorMaterialComponent",
-                    "Id": 7986560093861392284,
-                    "Controller": {
-                        "Configuration": {
-                            "materials": [
-                                {
-                                    "Key": {
-                                        "materialSlotStableId": 1803671422
-                                    },
-                                    "Value": {
-                                        "MaterialAsset": {
-                                            "assetId": {
-                                                "guid": "{4B90F891-25DC-5520-9205-D9166E2BAD1B}",
-                                                "subId": 3436397348
-                                            },
-                                            "assetHint": "assets/robovac/assets/astro_vac_cpucover_plastic___sensor_4527151474816533284.azmaterial"
-                                        }
-                                    }
-                                }
-                            ]
-                        }
-                    }
-                }
-            }
-        },
         "Entity_[15934909250224]": {
             "Id": "Entity_[15934909250224]",
             "Name": "FollowCamera",
@@ -187,7 +88,7 @@
                     "Id": 4358438849696264694,
                     "Controller": {
                         "Configuration": {
-                            "EditorEntityId": 9001170798352072270
+                            "EditorEntityId": 16579625358662007847
                         }
                     }
                 },
@@ -1192,38 +1093,6 @@
                     "Id": 11371991638107009117,
                     "Parent Entity": "Entity_[6506158658343]"
                 },
-                "Component_[14386255473429959438]": {
-                    "$type": "EditorColliderComponent",
-                    "Id": 14386255473429959438,
-                    "ColliderConfiguration": {
-                        "MaterialSelection": {
-                            "MaterialIds": [
-                                {}
-                            ]
-                        }
-                    },
-                    "ShapeConfiguration": {
-                        "PhysicsAsset": {
-                            "Asset": {
-                                "assetId": {
-                                    "guid": "{4B90F891-25DC-5520-9205-D9166E2BAD1B}",
-                                    "subId": 2981717856
-                                },
-                                "assetHint": "assets/robovac/assets/astro_vac_cpucover.pxmesh"
-                            },
-                            "Configuration": {
-                                "PhysicsAsset": {
-                                    "assetId": {
-                                        "guid": "{4B90F891-25DC-5520-9205-D9166E2BAD1B}",
-                                        "subId": 2981717856
-                                    },
-                                    "loadBehavior": "QueueLoad",
-                                    "assetHint": "assets/robovac/assets/astro_vac_cpucover.pxmesh"
-                                }
-                            }
-                        }
-                    }
-                },
                 "Component_[14595306096618604571]": {
                     "$type": "EditorOnlyEntityComponent",
                     "Id": 14595306096618604571
@@ -1238,7 +1107,41 @@
                 },
                 "Component_[17368774951420809643]": {
                     "$type": "EditorDisabledCompositionComponent",
-                    "Id": 17368774951420809643
+                    "Id": 17368774951420809643,
+                    "DisabledComponents": [
+                        {
+                            "$type": "EditorColliderComponent",
+                            "Id": 14386255473429959438,
+                            "ColliderConfiguration": {
+                                "MaterialSelection": {
+                                    "MaterialIds": [
+                                        {}
+                                    ]
+                                }
+                            },
+                            "ShapeConfiguration": {
+                                "PhysicsAsset": {
+                                    "Asset": {
+                                        "assetId": {
+                                            "guid": "{4B90F891-25DC-5520-9205-D9166E2BAD1B}",
+                                            "subId": 2981717856
+                                        },
+                                        "assetHint": "assets/robovac/assets/astro_vac_cpucover.pxmesh"
+                                    },
+                                    "Configuration": {
+                                        "PhysicsAsset": {
+                                            "assetId": {
+                                                "guid": "{4B90F891-25DC-5520-9205-D9166E2BAD1B}",
+                                                "subId": 2981717856
+                                            },
+                                            "loadBehavior": "QueueLoad",
+                                            "assetHint": "assets/robovac/assets/astro_vac_cpucover.pxmesh"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    ]
                 },
                 "Component_[18180067841158939512]": {
                     "$type": "EditorPendingCompositionComponent",
@@ -2670,8 +2573,8 @@
                     "Transform Data": {
                         "Translate": [
                             56.0,
-                            0.0,
-                            0.0
+                            37.874290466308594,
+                            -2.2000176906585693
                         ]
                     }
                 },
@@ -3864,38 +3767,6 @@
                     "$type": "EditorOnlyEntityComponent",
                     "Id": 7390230706451251440
                 },
-                "Component_[8268085526766040256]": {
-                    "$type": "EditorColliderComponent",
-                    "Id": 8268085526766040256,
-                    "ColliderConfiguration": {
-                        "MaterialSelection": {
-                            "MaterialIds": [
-                                {}
-                            ]
-                        }
-                    },
-                    "ShapeConfiguration": {
-                        "PhysicsAsset": {
-                            "Asset": {
-                                "assetId": {
-                                    "guid": "{9911653C-E16E-5E80-8A97-4EA1F0D73713}",
-                                    "subId": 1449434469
-                                },
-                                "assetHint": "assets/robovac/assets/astro_vac_capture.pxmesh"
-                            },
-                            "Configuration": {
-                                "PhysicsAsset": {
-                                    "assetId": {
-                                        "guid": "{9911653C-E16E-5E80-8A97-4EA1F0D73713}",
-                                        "subId": 1449434469
-                                    },
-                                    "loadBehavior": "QueueLoad",
-                                    "assetHint": "assets/robovac/assets/astro_vac_capture.pxmesh"
-                                }
-                            }
-                        }
-                    }
-                },
                 "Component_[9400612936246896464]": {
                     "$type": "EditorEntitySortComponent",
                     "Id": 9400612936246896464
@@ -4898,7 +4769,7 @@
                             "roll": 0.0,
                             "pitch": 0.0,
                             "yaw": 0.0,
-                            "scale": 124.99999237060547
+                            "scale": 911.2044067382813
                         }
                     }
                 },
@@ -5094,6 +4965,96 @@
                 }
             }
         },
+        "Entity_[5002252716067]": {
+            "Id": "Entity_[5002252716067]",
+            "Name": "Lidar",
+            "Components": {
+                "Component_[14456088025367877347]": {
+                    "$type": "EditorEntitySortComponent",
+                    "Id": 14456088025367877347
+                },
+                "Component_[14551933034245337847]": {
+                    "$type": "EditorPendingCompositionComponent",
+                    "Id": 14551933034245337847
+                },
+                "Component_[15934807076508388308]": {
+                    "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
+                    "Id": 15934807076508388308,
+                    "Parent Entity": "Entity_[8859800736551]",
+                    "Transform Data": {
+                        "Translate": [
+                            0.1501830816268921,
+                            -0.010563373565673828,
+                            0.035237789154052734
+                        ]
+                    }
+                },
+                "Component_[15975027362231334963]": {
+                    "$type": "EditorDisabledCompositionComponent",
+                    "Id": 15975027362231334963
+                },
+                "Component_[1621831901319912704]": {
+                    "$type": "EditorEntityIconComponent",
+                    "Id": 1621831901319912704
+                },
+                "Component_[16456422260517615133]": {
+                    "$type": "EditorVisibilityComponent",
+                    "Id": 16456422260517615133
+                },
+                "Component_[17357346482856591089]": {
+                    "$type": "GenericComponentWrapper",
+                    "Id": 17357346482856591089,
+                    "m_template": {
+                        "$type": "ROS2LidarSensorComponent",
+                        "SensorConfiguration": {
+                            "Publishers": {
+                                "sensor_msgs::msg::PointCloud2": {
+                                    "Type": "sensor_msgs::msg::PointCloud2",
+                                    "Topic": "pc"
+                                }
+                            }
+                        },
+                        "LidarTransparentEntityId": "",
+                        "LidarParameters": {
+                            "Layers": 16,
+                            "Points per layer": 516,
+                            "Min horizontal angle": -90.0,
+                            "Max horizontal angle": 90.0,
+                            "Min vertical angle": 5.0,
+                            "Max vertical angle": -10.0,
+                            "Max range": 30.0
+                        }
+                    }
+                },
+                "Component_[18249910351855492071]": {
+                    "$type": "EditorLockComponent",
+                    "Id": 18249910351855492071
+                },
+                "Component_[2557939551744106306]": {
+                    "$type": "SelectionComponent",
+                    "Id": 2557939551744106306
+                },
+                "Component_[3490167280358485747]": {
+                    "$type": "GenericComponentWrapper",
+                    "Id": 3490167280358485747,
+                    "m_template": {
+                        "$type": "ROS2FrameComponent",
+                        "Namespace Configuration": {
+                            "Namespace Strategy": 1
+                        },
+                        "Frame Name": "lidar"
+                    }
+                },
+                "Component_[5861697099478679034]": {
+                    "$type": "EditorInspectorComponent",
+                    "Id": 5861697099478679034
+                },
+                "Component_[8530803261175423250]": {
+                    "$type": "EditorOnlyEntityComponent",
+                    "Id": 8530803261175423250
+                }
+            }
+        },
         "Entity_[6506158658343]": {
             "Id": "Entity_[6506158658343]",
             "Name": "Mesh",
@@ -5139,7 +5100,6 @@
                     "$type": "EditorEntitySortComponent",
                     "Id": 4175025945549480712,
                     "Child Entity Order": [
-                        "Entity_[10338002873617]",
                         "Entity_[29909402276347]",
                         "Entity_[29948056982011]",
                         "Entity_[30016776458747]",
@@ -5227,7 +5187,7 @@
                     "Id": 14081951032431453423,
                     "Child Entity Order": [
                         "Instance_[8975764853543]/ContainerEntity",
-                        "Instance_[8898455442215]/ContainerEntity"
+                        "Entity_[5002252716067]"
                     ]
                 },
                 "Component_[2172420079327414534]": {
@@ -5266,21 +5226,6 @@
         }
     },
     "Instances": {
-        "Instance_[8898455442215]": {
-            "Source": "Prefabs/Sensors/LidarOS2.prefab",
-            "Patches": [
-                {
-                    "op": "replace",
-                    "path": "/ContainerEntity/Components/Component_[5989395931141545750]/Parent Entity",
-                    "value": "../Entity_[8859800736551]"
-                },
-                {
-                    "op": "replace",
-                    "path": "/ContainerEntity/Components/Component_[5989395931141545750]/Transform Data/Translate/2",
-                    "value": 0.1960870325565338
-                }
-            ]
-        },
         "Instance_[8975764853543]": {
             "Source": "Prefabs/Sensors/Imu.prefab",
             "Patches": [

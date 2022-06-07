@@ -6,14 +6,15 @@
             "name": "Astro_Vac_base_link",
             "NodeSelectionList": {
                 "selectedNodes": [
-                    "RootNode.base_link_001"
+                    "RootNode.base_link_001",
+                    "RootNode.base_link_001.custom_properties",
+                    "RootNode.base_link_001.Texture UVs",
+                    "RootNode.base_link_001.ABS (White)"
                 ],
                 "unselectedNodes": [
-                    {},
                     "RootNode"
                 ]
             },
-            "export method": 1,
             "MaterialSlots": [
                 "ABS (White)"
             ],
@@ -26,9 +27,11 @@
             "name": "Astro_Vac_base_link",
             "nodeSelectionList": {
                 "selectedNodes": [
-                    {},
                     "RootNode",
-                    "RootNode.base_link_001"
+                    "RootNode.base_link_001",
+                    "RootNode.base_link_001.custom_properties",
+                    "RootNode.base_link_001.Texture UVs",
+                    "RootNode.base_link_001.ABS (White)"
                 ]
             },
             "rules": {

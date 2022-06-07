@@ -5886,6 +5886,10 @@
                     "value": 0.5022367835044861
                 },
                 {
+                    "op": "remove",
+                    "path": "/ContainerEntity/Components/Component_[761745188714332364]/Child Entity Order/1"
+                },
+                {
                     "op": "replace",
                     "path": "/Entities/Entity_[15934909250224]/Components/Component_[4358438849696264694]/Controller/Configuration/EditorEntityId",
                     "value": 13495511068447120829
