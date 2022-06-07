@@ -52,11 +52,9 @@ namespace ROS2
     }
 
     // TODO - lidars in reality do not have uniform distributions - populating needs to be defined per model
-    AZStd::vector<AZ::Vector3> LidarTemplateUtils::PopulateRayDirections(LidarTemplate::LidarModel model,
+    AZStd::vector<AZ::Vector3> LidarTemplateUtils::PopulateRayDirections(const LidarTemplate& lidarTemplate,
                                                                          const AZ::Vector3& rootRotation)
     {
-        auto lidarTemplate = GetTemplate(model);
-
         const float minVertAngle = AZ::DegToRad(lidarTemplate.m_minVAngle);
         const float maxVertAngle = AZ::DegToRad(lidarTemplate.m_maxVAngle);
         const float minHorAngle = AZ::DegToRad(lidarTemplate.m_minHAngle);

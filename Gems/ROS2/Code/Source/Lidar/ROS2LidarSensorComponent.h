@@ -9,6 +9,7 @@
 
 #include "Lidar/LidarRaycaster.h"
 #include "Lidar/LidarTemplate.h"
+#include "Lidar/LidarTemplateUtils.h"
 #include "Sensor/ROS2SensorComponent.h"
 #include <AzCore/Serialization/SerializeContext.h>
 #include <Atom/RPI.Public/AuxGeom/AuxGeomDraw.h>
@@ -38,7 +39,11 @@ namespace ROS2
         void Visualise() override;
         void SetPhysicsScene();
 
+        AZ::Crc32 OnLidarModelSelected();
+        bool IsConfigurationVisible() const;
+
         LidarTemplate::LidarModel m_lidarModel = LidarTemplate::Generic3DLidar;
+        LidarTemplate m_lidarParameters = LidarTemplateUtils::GetTemplate(LidarTemplate::Generic3DLidar);
         LidarRaycaster m_lidarRaycaster;
         std::shared_ptr<rclcpp::Publisher<sensor_msgs::msg::PointCloud2>> m_pointCloudPublisher;
 

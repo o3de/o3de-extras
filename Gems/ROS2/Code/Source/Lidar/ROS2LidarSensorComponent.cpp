@@ -35,6 +35,7 @@ namespace ROS2
                 ->Version(1)
                 ->Field("lidarModel", &ROS2LidarSensorComponent::m_lidarModel)
                 ->Field("LidarTransparentEntityId", &ROS2LidarSensorComponent::m_lidarTransparentEntityId)
+                ->Field("LidarParameters", &ROS2LidarSensorComponent::m_lidarParameters)
                 ;
 
             if (AZ::EditContext* ec = serialize->GetEditContext())
@@ -43,14 +44,28 @@ namespace ROS2
                     ->ClassElement(AZ::Edit::ClassElements::EditorData, "")
                         ->Attribute(AZ::Edit::Attributes::AppearsInAddComponentMenu, AZ_CRC("Game"))
                     ->DataElement(AZ::Edit::UIHandlers::ComboBox, &ROS2LidarSensorComponent::m_lidarModel, "Lidar Model", "Lidar model")
+                        ->Attribute(AZ::Edit::Attributes::ChangeNotify, &ROS2LidarSensorComponent::OnLidarModelSelected)
                         ->EnumAttribute(LidarTemplate::LidarModel::Generic3DLidar, "Generic Lidar")
                         // TODO - show lidar template field values (read only) - see Reflect for LidarTemplate
                     ->DataElement(AZ::Edit::UIHandlers::EntityId, &ROS2LidarSensorComponent::m_lidarTransparentEntityId,
-                                  "Lidar-transparent Entity",
-                                  "Entity to be transparent for the lidar. If not set, use this component's entity")
+                          "Lidar-transparent Entity", "Entity to be transparent for the lidar. If not set, use this component's entity")
+                    ->DataElement(AZ::Edit::UIHandlers::EntityId, &ROS2LidarSensorComponent::m_lidarParameters,
+                          "Lidar parameters", "Configuration of Generic lidar")
+                        ->Attribute(AZ::Edit::Attributes::Visibility, &ROS2LidarSensorComponent::IsConfigurationVisible)
                     ;
             }
         }
+    }
+
+    bool ROS2LidarSensorComponent::IsConfigurationVisible() const
+    {
+        return m_lidarModel == LidarTemplate::Generic3DLidar;
+    }
+
+    AZ::Crc32 ROS2LidarSensorComponent::OnLidarModelSelected()
+    {
+        m_lidarParameters = LidarTemplateUtils::GetTemplate(m_lidarModel);
+        return AZ::Edit::PropertyRefreshLevels::EntireTree;
     }
 
     ROS2LidarSensorComponent::ROS2LidarSensorComponent()
@@ -136,7 +151,7 @@ namespace ROS2
     {
         float distance = LidarTemplateUtils::GetTemplate(m_lidarModel).m_maxRange;
         auto entityTransform = GetEntity()->FindComponent<AzFramework::TransformComponent>(); // TODO - go through ROS2Frame
-        const auto directions = LidarTemplateUtils::PopulateRayDirections(m_lidarModel,
+        const auto directions = LidarTemplateUtils::PopulateRayDirections(m_lidarParameters,
                                                                           entityTransform->GetWorldTM().GetEulerRadians());
         AZ::Vector3 start = entityTransform->GetWorldTM().GetTranslation();
         start.SetZ(start.GetZ());
