@@ -110,14 +110,14 @@
                     "Parent Entity": "Entity_[30055431164411]",
                     "Transform Data": {
                         "Translate": [
-                            -1.1628849506378174,
-                            -0.000001043081283569336,
-                            0.4787519574165344
+                            -1.484060287475586,
+                            0.11170625686645508,
+                            0.7430511116981506
                         ],
                         "Rotate": [
-                            -0.000027373178454581648,
-                            25.242046356201172,
-                            -89.99995422363281
+                            0.8662934899330139,
+                            9.706164360046387,
+                            -95.1249771118164
                         ]
                     }
                 }
@@ -158,7 +158,17 @@
                                     "Key": {
                                         "materialSlotStableId": 3328602885
                                     },
-                                    "Value": {}
+                                    "Value": {
+                                        "PropertyOverrides": {
+                                            "baseColor.textureMap": {
+                                                "$type": "AssetId",
+                                                "Value": {
+                                                    "guid": "{C86377E6-04B6-54CF-9909-B9392E646FA9}",
+                                                    "subId": 1000
+                                                }
+                                            }
+                                        }
+                                    }
                                 }
                             ]
                         }
@@ -886,6 +896,13 @@
                     "$type": "EditorColliderComponent",
                     "Id": 12927181747641970582,
                     "ColliderConfiguration": {
+                        "MaterialSlots": {
+                            "Slots": [
+                                {
+                                    "Name": "Entire object"
+                                }
+                            ]
+                        },
                         "MaterialSelection": {
                             "MaterialIds": [
                                 {}
@@ -1113,6 +1130,13 @@
                             "$type": "EditorColliderComponent",
                             "Id": 14386255473429959438,
                             "ColliderConfiguration": {
+                                "MaterialSlots": {
+                                    "Slots": [
+                                        {
+                                            "Name": "Entire object"
+                                        }
+                                    ]
+                                },
                                 "MaterialSelection": {
                                     "MaterialIds": [
                                         {}
@@ -3866,6 +3890,13 @@
                     "$type": "EditorColliderComponent",
                     "Id": 1817880946152815022,
                     "ColliderConfiguration": {
+                        "MaterialSlots": {
+                            "Slots": [
+                                {
+                                    "Name": "Entire object"
+                                }
+                            ]
+                        },
                         "MaterialSelection": {
                             "MaterialIds": [
                                 {}
@@ -4769,7 +4800,7 @@
                             "roll": 0.0,
                             "pitch": 0.0,
                             "yaw": 0.0,
-                            "scale": 911.2044067382813
+                            "scale": 0.0010974486358463764
                         }
                     }
                 },
@@ -4777,6 +4808,13 @@
                     "$type": "EditorShapeColliderComponent",
                     "Id": 15286078445589088466,
                     "ColliderConfiguration": {
+                        "MaterialSlots": {
+                            "Slots": [
+                                {
+                                    "Name": "Entire object"
+                                }
+                            ]
+                        },
                         "MaterialSelection": {
                             "MaterialIds": [
                                 {
