@@ -19,7 +19,7 @@
                 "$type": "EditorEntitySortComponent",
                 "Id": 14126657869720434043,
                 "Child Entity Order": [
-                    "Instance_[2485335167382]/ContainerEntity",
+                    "",
                     "Entity_[2511113093496]",
                     "Entity_[4844759642882]",
                     "Entity_[4857644544770]",
@@ -51,6 +51,11 @@
                         }
                     }
                 }
+            },
+            "Component_[6517238246329906992]": {
+                "$type": "LocalViewBookmarkComponent",
+                "Id": 6517238246329906992,
+                "LocalBookmarkFileName": "Interior_03_1388466444937.setreg"
             },
             "Component_[6545738857812235305]": {
                 "$type": "SelectionComponent",
@@ -589,14 +594,14 @@
                     "Parent Entity": "Entity_[50747416825914]",
                     "Transform Data": {
                         "Translate": [
-                            4.550556182861328,
-                            -7.3159894943237305,
-                            0.4337831735610962
+                            4.551455497741699,
+                            -7.316291809082031,
+                            0.43408381938934326
                         ],
                         "Rotate": [
-                            -9.12112045288086,
-                            7.361390590667725,
-                            -38.59132385253906
+                            -9.127589225769043,
+                            7.356801509857178,
+                            -38.5538444519043
                         ]
                     }
                 },
@@ -5870,65 +5875,6 @@
                 }
             ]
         },
-        "Instance_[2485335167382]": {
-            "Source": "Assets/RoboVac/AstroVacRobot.prefab",
-            "Patches": [
-                {
-                    "op": "replace",
-                    "path": "/ContainerEntity/Components/Component_[10968750635921263389]/Parent Entity",
-                    "value": "../Entity_[1146574390643]"
-                },
-                {
-                    "op": "replace",
-                    "path": "/ContainerEntity/Components/Component_[10968750635921263389]/Transform Data/Translate/0",
-                    "value": -1.3768727779388428
-                },
-                {
-                    "op": "replace",
-                    "path": "/ContainerEntity/Components/Component_[10968750635921263389]/Transform Data/Translate/1",
-                    "value": 7.608648777008057
-                },
-                {
-                    "op": "replace",
-                    "path": "/ContainerEntity/Components/Component_[10968750635921263389]/Transform Data/Translate/2",
-                    "value": 0.06635439395904541
-                },
-                {
-                    "op": "replace",
-                    "path": "/ContainerEntity/Components/Component_[10968750635921263389]/Transform Data/Rotate/2",
-                    "value": -46.42683410644531
-                },
-                {
-                    "op": "remove",
-                    "path": "/ContainerEntity/Components/Component_[761745188714332364]/Child Entity Order/1"
-                },
-                {
-                    "op": "replace",
-                    "path": "/Entities/Entity_[15934909250224]/Components/Component_[4358438849696264694]/Controller/Configuration/EditorEntityId",
-                    "value": 13495511068447120829
-                },
-                {
-                    "op": "replace",
-                    "path": "/Entities/Entity_[30055431164411]/Components/Component_[13195787262642532680]/Configuration/Mass",
-                    "value": 0.13886816799640656
-                },
-                {
-                    "op": "replace",
-                    "path": "/Entities/Entity_[30055431164411]/Components/Component_[13195787262642532680]/Configuration/Centre of mass offset/0",
-                    "value": 2.091176787288873e-9
-                },
-                {
-                    "op": "replace",
-                    "path": "/Entities/Entity_[30055431164411]/Components/Component_[13195787262642532680]/Configuration/Centre of mass offset/1",
-                    "value": 3.9075187530102085e-9
-                },
-                {
-                    "op": "replace",
-                    "path": "/Entities/Entity_[30055431164411]/Components/Component_[13195787262642532680]/Configuration/Centre of mass offset/2",
-                    "value": -7.555317482754731e-11
-                }
-            ]
-        },
         "Instance_[25190231870688]": {
             "Source": "Props/Potted_Plant_TRBP000045/potted_plant.prefab",
             "Patches": [
@@ -6466,6 +6412,40 @@
                     "op": "add",
                     "path": "/ContainerEntity/Components/Component_[6344033096247669466]/Child Entity Order/0",
                     "value": "Entity_[2303873983193]"
+                }
+            ]
+        },
+        "Instance_[5038061704469]": {
+            "Source": "Assets/RoboVac/AstroVacRobot.prefab",
+            "Patches": [
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/Component_[10968750635921263389]/Parent Entity",
+                    "value": "../Entity_[1146574390643]"
+                },
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/Component_[10968750635921263389]/Transform Data/Translate/0",
+                    "value": 1.2663843631744385
+                },
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/Component_[10968750635921263389]/Transform Data/Translate/1",
+                    "value": 3.818905830383301
+                },
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/Component_[10968750635921263389]/Transform Data/Translate/2",
+                    "value": 0.053635746240615845
+                },
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/Component_[10968750635921263389]/Transform Data/Rotate/2",
+                    "value": 65.050537109375
+                },
+                {
+                    "op": "remove",
+                    "path": "/ContainerEntity/Components/Component_[761745188714332364]/Child Entity Order/1"
                 }
             ]
         },
