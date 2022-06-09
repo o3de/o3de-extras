@@ -166,6 +166,14 @@
                                                     "guid": "{C86377E6-04B6-54CF-9909-B9392E646FA9}",
                                                     "subId": 1000
                                                 }
+                                            },
+                                            "baseColor.useTexture": {
+                                                "$type": "bool",
+                                                "Value": true
+                                            },
+                                            "baseColor.textureBlendMode": {
+                                                "$type": "unsigned int",
+                                                "Value": 3
                                             }
                                         }
                                     }
@@ -2593,14 +2601,7 @@
                 "Component_[202200107630449173]": {
                     "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
                     "Id": 202200107630449173,
-                    "Parent Entity": "Entity_[6506158658343]",
-                    "Transform Data": {
-                        "Translate": [
-                            56.0,
-                            37.874290466308594,
-                            -2.2000176906585693
-                        ]
-                    }
+                    "Parent Entity": "Entity_[6506158658343]"
                 },
                 "Component_[5852860452079171804]": {
                     "$type": "EditorVisibilityComponent",
@@ -4788,8 +4789,10 @@
                     "Id": 13195787262642532680,
                     "Configuration": {
                         "entityId": "",
+                        "Linear damping": 0.009999999776482582,
+                        "Angular damping": 0.10000000149011612,
                         "Compute Mass": false,
-                        "Mass": 5.0,
+                        "Mass": 3.0,
                         "Centre of mass offset": [
                             6.424532461579702e-9,
                             -2.240314600499005e-9,
@@ -4800,7 +4803,7 @@
                             "roll": 0.0,
                             "pitch": 0.0,
                             "yaw": 0.0,
-                            "scale": 0.0010974486358463764
+                            "scale": 100.0
                         }
                     }
                 },

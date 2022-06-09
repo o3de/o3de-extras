@@ -19,12 +19,12 @@
                 "$type": "EditorEntitySortComponent",
                 "Id": 14126657869720434043,
                 "Child Entity Order": [
+                    "Instance_[2485335167382]/ContainerEntity",
                     "Entity_[2511113093496]",
                     "Entity_[4844759642882]",
                     "Entity_[4857644544770]",
                     "Entity_[50747416825914]",
-                    "Entity_[2425721989581]",
-                    "Entity_[14870551177679]"
+                    "Entity_[2425721989581]"
                 ]
             },
             "Component_[15230859088967841193]": {
@@ -633,6 +633,13 @@
                     "$type": "EditorShapeColliderComponent",
                     "Id": 15497122865743212243,
                     "ColliderConfiguration": {
+                        "MaterialSlots": {
+                            "Slots": [
+                                {
+                                    "Name": "Entire object"
+                                }
+                            ]
+                        },
                         "MaterialSelection": {
                             "MaterialIds": [
                                 {}
@@ -1018,7 +1025,56 @@
             "Components": {
                 "Component_[1139584416914842089]": {
                     "$type": "EditorDisabledCompositionComponent",
-                    "Id": 1139584416914842089
+                    "Id": 1139584416914842089,
+                    "DisabledComponents": [
+                        {
+                            "$type": "ScriptEditorComponent",
+                            "Id": 14630136217036010474,
+                            "ScriptComponent": {
+                                "Properties": {
+                                    "Properties": [
+                                        {
+                                            "$type": "AzFramework::ScriptPropertyNumber",
+                                            "id": 2278759636,
+                                            "name": "FrameCaptureCount",
+                                            "value": 100.0
+                                        },
+                                        {
+                                            "$type": "AzFramework::ScriptPropertyNumber",
+                                            "id": 4087794795,
+                                            "name": "FrameDelayCount",
+                                            "value": 100.0
+                                        },
+                                        {
+                                            "$type": "AzFramework::ScriptPropertyString",
+                                            "id": 3186282179,
+                                            "name": "ProfileName",
+                                            "value": "LoftSample"
+                                        },
+                                        {
+                                            "$type": "AzFramework::ScriptPropertyBoolean",
+                                            "id": 1762171146,
+                                            "name": "QuitOnComplete"
+                                        }
+                                    ]
+                                },
+                                "Script": {
+                                    "assetId": {
+                                        "guid": "{7003B5DC-6EEB-5B8A-8D6A-B7A374779C13}",
+                                        "subId": 1
+                                    },
+                                    "assetHint": "scripts/profiling/outputprofiledata.luac"
+                                }
+                            },
+                            "ScriptAsset": {
+                                "assetId": {
+                                    "guid": "{7003B5DC-6EEB-5B8A-8D6A-B7A374779C13}",
+                                    "subId": 1
+                                },
+                                "assetHint": "scripts/profiling/outputprofiledata.luac"
+                            }
+                        }
+                    ]
                 },
                 "Component_[12857517895964335700]": {
                     "$type": "SelectionComponent",
@@ -1032,53 +1088,6 @@
                 "Component_[13824613473265908415]": {
                     "$type": "EditorPendingCompositionComponent",
                     "Id": 13824613473265908415
-                },
-                "Component_[14630136217036010474]": {
-                    "$type": "ScriptEditorComponent",
-                    "Id": 14630136217036010474,
-                    "ScriptComponent": {
-                        "Properties": {
-                            "Properties": [
-                                {
-                                    "$type": "AzFramework::ScriptPropertyNumber",
-                                    "id": 2278759636,
-                                    "name": "FrameCaptureCount",
-                                    "value": 100.0
-                                },
-                                {
-                                    "$type": "AzFramework::ScriptPropertyNumber",
-                                    "id": 4087794795,
-                                    "name": "FrameDelayCount",
-                                    "value": 100.0
-                                },
-                                {
-                                    "$type": "AzFramework::ScriptPropertyString",
-                                    "id": 3186282179,
-                                    "name": "ProfileName",
-                                    "value": "LoftSample"
-                                },
-                                {
-                                    "$type": "AzFramework::ScriptPropertyBoolean",
-                                    "id": 1762171146,
-                                    "name": "QuitOnComplete"
-                                }
-                            ]
-                        },
-                        "Script": {
-                            "assetId": {
-                                "guid": "{7003B5DC-6EEB-5B8A-8D6A-B7A374779C13}",
-                                "subId": 1
-                            },
-                            "assetHint": "scripts/profiling/outputprofiledata.luac"
-                        }
-                    },
-                    "ScriptAsset": {
-                        "assetId": {
-                            "guid": "{7003B5DC-6EEB-5B8A-8D6A-B7A374779C13}",
-                            "subId": 1
-                        },
-                        "assetHint": "scripts/profiling/outputprofiledata.luac"
-                    }
                 },
                 "Component_[14675633212452723131]": {
                     "$type": "EditorEntityIconComponent",
@@ -5165,7 +5174,6 @@
                     "Id": 3152360288513841949,
                     "Child Entity Order": [
                         "Entity_[14870551177679]",
-                        "Instance_[2485335167382]/ContainerEntity",
                         "Instance_[13283805038176]/ContainerEntity",
                         "Entity_[4840464675586]",
                         "Entity_[2519703028088]",
@@ -5868,7 +5876,7 @@
                 {
                     "op": "replace",
                     "path": "/ContainerEntity/Components/Component_[10968750635921263389]/Parent Entity",
-                    "value": "../Entity_[4857644544770]"
+                    "value": "../Entity_[1146574390643]"
                 },
                 {
                     "op": "replace",
@@ -5883,7 +5891,12 @@
                 {
                     "op": "replace",
                     "path": "/ContainerEntity/Components/Component_[10968750635921263389]/Transform Data/Translate/2",
-                    "value": 0.5022367835044861
+                    "value": 0.06635439395904541
+                },
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/Component_[10968750635921263389]/Transform Data/Rotate/2",
+                    "value": -46.42683410644531
                 },
                 {
                     "op": "remove",
@@ -5913,11 +5926,6 @@
                     "op": "replace",
                     "path": "/Entities/Entity_[30055431164411]/Components/Component_[13195787262642532680]/Configuration/Centre of mass offset/2",
                     "value": -7.555317482754731e-11
-                },
-                {
-                    "op": "replace",
-                    "path": "/Entities/Entity_[30055431164411]/Components/Component_[13195787262642532680]/Configuration/Inertia tensor/scale",
-                    "value": 911.2044067382813
                 }
             ]
         },
