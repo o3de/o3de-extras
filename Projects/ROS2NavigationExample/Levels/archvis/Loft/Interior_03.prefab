@@ -19,12 +19,12 @@
                 "$type": "EditorEntitySortComponent",
                 "Id": 14126657869720434043,
                 "Child Entity Order": [
-                    "",
                     "Entity_[2511113093496]",
                     "Entity_[4844759642882]",
                     "Entity_[4857644544770]",
                     "Entity_[50747416825914]",
-                    "Entity_[2425721989581]"
+                    "Entity_[2425721989581]",
+                    "Instance_[5038061704469]/ContainerEntity"
                 ]
             },
             "Component_[15230859088967841193]": {
@@ -6426,12 +6426,12 @@
                 {
                     "op": "replace",
                     "path": "/ContainerEntity/Components/Component_[10968750635921263389]/Transform Data/Translate/0",
-                    "value": 1.2663843631744385
+                    "value": -1.412977695465088
                 },
                 {
                     "op": "replace",
                     "path": "/ContainerEntity/Components/Component_[10968750635921263389]/Transform Data/Translate/1",
-                    "value": 3.818905830383301
+                    "value": 7.628579139709473
                 },
                 {
                     "op": "replace",
@@ -6441,7 +6441,7 @@
                 {
                     "op": "replace",
                     "path": "/ContainerEntity/Components/Component_[10968750635921263389]/Transform Data/Rotate/2",
-                    "value": 65.050537109375
+                    "value": -34.31183624267578
                 },
                 {
                     "op": "remove",
