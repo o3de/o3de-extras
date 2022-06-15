@@ -8,4 +8,5 @@ set(FILES
     Tests/UrdfParserTest.cpp
     Tests/FbxGeneratorTest.cpp
     Tests/UrdfToFbxConverterTest.cpp
+    Tests/GNSSTest.cpp
 )

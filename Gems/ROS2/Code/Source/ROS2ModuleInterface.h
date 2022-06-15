@@ -9,6 +9,7 @@
 
 #include "Frame/ROS2FrameComponent.h"
 #include "Imu/ROS2ImuSensorComponent.h"
+#include "GNSS/ROS2GNSSSensorComponent.h"
 #include "Lidar/ROS2LidarSensorComponent.h"
 #include "RobotControl/ROS2RobotControlComponent.h"
 #include "ROS2SystemComponent.h"
@@ -34,6 +35,7 @@ namespace ROS2
                 ROS2SystemComponent::CreateDescriptor(),
                 ROS2SensorComponent::CreateDescriptor(),
                 ROS2ImuSensorComponent::CreateDescriptor(),
+                ROS2GNSSSensorComponent::CreateDescriptor(),
                 ROS2LidarSensorComponent::CreateDescriptor(),
                 ROS2FrameComponent::CreateDescriptor(),
                 ROS2RobotControlComponent::CreateDescriptor()

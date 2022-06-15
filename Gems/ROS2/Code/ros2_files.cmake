@@ -46,6 +46,10 @@ set(FILES
     Source/Utilities/ROS2Conversions.h
     Source/Utilities/ROS2Names.cpp
     Source/Utilities/ROS2Names.h
+    Source/GNSS/ROS2GNSSSensorComponent.cpp
+    Source/GNSS/ROS2GNSSSensorComponent.h
+    Source/GNSS/GNSSFormatConversions.cpp
+    Source/GNSS/GNSSFormatConversions.h
     Source/Imu/ROS2ImuSensorComponent.cpp
     Source/Imu/ROS2ImuSensorComponent.h
     Source/URDF/UrdfParser.cpp
