@@ -22,6 +22,9 @@ The following steps will assume the following
 - You have permissions to all of the github repos descripted in the requirements
 - The instructions will be based off of a common base folder: $DEMO_BASE. For the steps below, we will set DEMO_BASE to ~/github. 
 - This current project has been fetched to $DEMO_BASE
+- You have ROS2 installed and sourced 
+  - for debian package Galactic installation, in your bash console, run `source /opt/ros/galactic/setup.bash`
+  - you could also add this line to your `.profile`
 
 
 
