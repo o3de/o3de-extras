@@ -2,6 +2,8 @@
 
 This project will demonstrate the ROS2 Gems and O3DE using assets from the Loft demo scene and ROS 2 navigation stack.
 
+![image](https://user-images.githubusercontent.com/16702721/174113203-e22cfd37-1bd5-4e42-a543-17b92de96c13.png)
+
 ## Requirements
 
 This project will only run on Ubuntu 20.04 since the ROS 2 Gem is not yet developed for Windows. 
@@ -29,7 +31,6 @@ The following steps will assume the following
   - for debian package Galactic installation, in your bash console, run `source /opt/ros/galactic/setup.bash`
   - you could also add this line to your `.profile`
   - check if ROS 2 is sourced in your current console with `echo $ROS_DISTRO`. You should see `galactic`.
-
 
 ### 1. Clone O3DE (or install) and register the engine
 
@@ -79,6 +80,46 @@ $ cd $DEMO_BASE
 ~/$ cd o3de-demo-project/build/linux/bin/profile
 ~/o3de-demo-project/build/linux/bin/profile$ ./Editor
 ```
+
+## Running ROS2 navigation example
+
+We can run ROS2 navigation stack with our simulation scene and robot. When we run the navigation stack, it will start SLAM and build the map of environment based on Lidar sensor data. You can set navigation goals for the robot using RViz2 (which is also started with the launch file).
+
+- It is assumed that you have your [ROS2 environment sourced](https://docs.ros.org/en/galactic/Tutorials/Configuring-ROS2-Environment.html).
+- It is also assumed that you followed all the steps before build and launch the Editor.
+
+### 1. Install dependencies for navigation 
+
+These packages are required to run ROS 2 navigation stack for our robot:
+
+```
+sudo apt install ros-galactic-slam-toolbox
+sudo apt install ros-galactic-navigation2
+sudo apt install ros-galactic-nav2-bringup
+sudo apt install ros-galactic-pointcloud-to-laserscan
+```
+
+### 2. Run the simulation
+
+1. In `O3DE` Editor, open `DemoLevel`
+1. Start simulation by clicking `Play Game` button or press `CTRL+G`
+
+### 3. Run the navigation stack
+
+The launch file is included in this repository
+
+```
+~/o3de-demo-project/launch$ ros2 launch navigation.launch.py
+```
+
+You should see output in the console as well as RViz2 window.
+
+### 4. Set robot target goal
+
+Use RViz GUI to set the goal by using the `2D Goal Pose` tool (upper toolbar). 
+You can drag it to indicate direction you would like your robot to face when reaching the goal.
+
+Watch your robot go. You can set subsequent goals.
 
 ## Troubleshooting
 
