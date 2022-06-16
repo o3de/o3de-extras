@@ -142,3 +142,6 @@ This could be caused by a firewall, disabled multicast or issues with docker.
 
 Please refer to [ROS 2 troubleshooting guide](https://docs.ros.org/en/galactic/How-To-Guides/Installation-Troubleshooting.html).
 
+#### Memory / resource issues with the scene
+
+If your machine is a bit less powerful, you can try a lightweight, [simple Warehouse scene](https://github.com/RobotecAI/Ros2WarehouseDemo) instead of the Loft scene. 
