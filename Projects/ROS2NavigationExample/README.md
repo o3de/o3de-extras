@@ -101,7 +101,7 @@ sudo apt install ros-galactic-pointcloud-to-laserscan
 
 ### 2. Run the simulation
 
-1. In `O3DE` Editor, open `DemoLevel`
+1. In `O3DE` Editor, select the `Loft` Level.
 1. Start simulation by clicking `Play Game` button or press `CTRL+G`
 
 ### 3. Run the navigation stack
