@@ -50,6 +50,10 @@ scripts/o3de.sh enable-gem -gn ROS2 -pp <PATH_TO_YOUR_PROJECT>
 You can test O3DE ROS2 Gem with [this project](https://github.com/RobotecAI/Ros2WarehouseDemo).
 It will allow you to run robot navigation. All necessary assets are included.
 
+## User Guide
+
+Follow the [ROS 2 Gem User Guide](docs/user-guide/ros2-gem.md) to understand its concepts and components.
+
 ## How to create your own robotic simulation
 
 >This section is to be detailed.
