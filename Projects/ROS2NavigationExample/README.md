@@ -13,7 +13,7 @@ Refer to the [O3DE System Requirements](https://www.o3de.org/docs/welcome-guide/
 This project has the following dependencies:
 
 - [O3DE](https://github.com/o3de/o3de)
-  -  Should work with `develop` branch and newest releases, but the project was tested with commit #89ab3eae.
+  -  Should work with `develop` branch and newest releases, but the project was tested with commit `#89ab3eae`.
 - [ROS2 Gem](https://github.com/RobotecAI/o3de-ros2-gem)
   - `develop` branch (the default) should work. The project was tested with version tag `0.3`.
   - ROS 2 (Galactic) itself is also required, see [Gem Requirements](https://github.com/RobotecAI/o3de-ros2-gem#requirements)  
