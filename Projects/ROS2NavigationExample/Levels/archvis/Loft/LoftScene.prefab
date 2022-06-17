@@ -24,7 +24,7 @@
                     "Entity_[4857644544770]",
                     "Entity_[50747416825914]",
                     "Entity_[2425721989581]",
-                    "Instance_[5038061704469]/ContainerEntity"
+                    ""
                 ]
             },
             "Component_[15230859088967841193]": {
@@ -5960,6 +5960,40 @@
                 }
             ]
         },
+        "Instance_[2783631341276]": {
+            "Source": "Assets/RoboVac/RobotVacuum.prefab",
+            "Patches": [
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/Component_[10968750635921263389]/Parent Entity",
+                    "value": "../Entity_[1146574390643]"
+                },
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/Component_[10968750635921263389]/Transform Data/Translate/0",
+                    "value": -1.4129999876022339
+                },
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/Component_[10968750635921263389]/Transform Data/Translate/1",
+                    "value": 7.629000186920166
+                },
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/Component_[10968750635921263389]/Transform Data/Translate/2",
+                    "value": 0.05400000140070915
+                },
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/Component_[10968750635921263389]/Transform Data/Rotate/2",
+                    "value": -34.3120002746582
+                },
+                {
+                    "op": "remove",
+                    "path": "/ContainerEntity/Components/Component_[761745188714332364]/Child Entity Order/1"
+                }
+            ]
+        },
         "Instance_[28120923599882]": {
             "Source": "Props/Office_Desk_Chair_B082BLFMRC/office_desk_chair.prefab",
             "Patches": [
@@ -6412,40 +6446,6 @@
                     "op": "add",
                     "path": "/ContainerEntity/Components/Component_[6344033096247669466]/Child Entity Order/0",
                     "value": "Entity_[2303873983193]"
-                }
-            ]
-        },
-        "Instance_[5038061704469]": {
-            "Source": "Assets/RoboVac/AstroVacRobot.prefab",
-            "Patches": [
-                {
-                    "op": "replace",
-                    "path": "/ContainerEntity/Components/Component_[10968750635921263389]/Parent Entity",
-                    "value": "../Entity_[1146574390643]"
-                },
-                {
-                    "op": "replace",
-                    "path": "/ContainerEntity/Components/Component_[10968750635921263389]/Transform Data/Translate/0",
-                    "value": -1.412977695465088
-                },
-                {
-                    "op": "replace",
-                    "path": "/ContainerEntity/Components/Component_[10968750635921263389]/Transform Data/Translate/1",
-                    "value": 7.628579139709473
-                },
-                {
-                    "op": "replace",
-                    "path": "/ContainerEntity/Components/Component_[10968750635921263389]/Transform Data/Translate/2",
-                    "value": 0.053635746240615845
-                },
-                {
-                    "op": "replace",
-                    "path": "/ContainerEntity/Components/Component_[10968750635921263389]/Transform Data/Rotate/2",
-                    "value": -34.31183624267578
-                },
-                {
-                    "op": "remove",
-                    "path": "/ContainerEntity/Components/Component_[761745188714332364]/Child Entity Order/1"
                 }
             ]
         },

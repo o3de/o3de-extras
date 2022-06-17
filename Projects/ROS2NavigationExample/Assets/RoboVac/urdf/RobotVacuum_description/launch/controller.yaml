@@ -1,4 +1,4 @@
-AstroVAC_controller:
+RobotVacuum_controller:
   # Publish all joint states -----------------------------------
   joint_state_controller:
     type: joint_state_controller/JointStateController

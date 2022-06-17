@@ -1,9 +1,9 @@
 <?xml version="1.0" ?>
-<robot name="AstroVAC" xmlns:xacro="http://www.ros.org/wiki/xacro">
+<robot name="RobotVacuum" xmlns:xacro="http://www.ros.org/wiki/xacro">
 
-<xacro:include filename="$(find AstroVAC_description)/urdf/materials.xacro" />
-<xacro:include filename="$(find AstroVAC_description)/urdf/AstroVAC.trans" />
-<xacro:include filename="$(find AstroVAC_description)/urdf/AstroVAC.gazebo" />
+<xacro:include filename="$(find RobotVacuum_description)/urdf/materials.xacro" />
+<xacro:include filename="$(find RobotVacuum_description)/urdf/RobotVacuum.trans" />
+<xacro:include filename="$(find RobotVacuum_description)/urdf/RobotVacuum.gazebo" />
 <link name="base_link">
   <inertial>
     <origin rpy="0 0 0" xyz="0.0019059908818002708 0.0608844023332045 -0.0034283510341363856"/>
@@ -13,14 +13,14 @@
   <visual>
     <origin rpy="0 0 0" xyz="0 0 0"/>
     <geometry>
-      <mesh filename="package://AstroVAC_description/meshes/base_link.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="package://RobotVacuum_description/meshes/base_link.stl" scale="0.001 0.001 0.001"/>
     </geometry>
     <material name="silver"/>
   </visual>
   <collision>
     <origin rpy="0 0 0" xyz="0 0 0"/>
     <geometry>
-      <mesh filename="package://AstroVAC_description/meshes/base_link.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="package://RobotVacuum_description/meshes/base_link.stl" scale="0.001 0.001 0.001"/>
     </geometry>
   </collision>
 </link>

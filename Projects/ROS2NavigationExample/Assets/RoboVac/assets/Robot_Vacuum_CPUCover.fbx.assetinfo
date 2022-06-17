@@ -2,11 +2,11 @@
     "values": [
         {
             "$type": "{5B03C8E6-8CEE-4DA0-A7FA-CD88689DD45B} MeshGroup",
-            "id": "{67E72016-67D0-5326-9265-2D5ABBF5112C}",
-            "name": "Astro_Vac_ScreenBody",
+            "id": "{1C525C8C-2D53-5DF5-86EB-25AEBE8CB737}",
+            "name": "Robot_Vacuum_CPUCover",
             "NodeSelectionList": {
                 "selectedNodes": [
-                    "RootNode.ScreenBody"
+                    "RootNode.CPUCover"
                 ],
                 "unselectedNodes": [
                     {},
@@ -15,7 +15,7 @@
             },
             "export method": 1,
             "MaterialSlots": [
-                "Paint - Enamel Glossy (Black)"
+                "Plastic - Sensor"
             ],
             "PhysicsMaterials": [
                 "<Default Physics Material>"
@@ -23,12 +23,12 @@
         },
         {
             "$type": "{07B356B7-3635-40B5-878A-FAC4EFD5AD86} MeshGroup",
-            "name": "Astro_Vac_ScreenBody",
+            "name": "Robot_Vacuum_CPUCover",
             "nodeSelectionList": {
                 "selectedNodes": [
                     {},
                     "RootNode",
-                    "RootNode.ScreenBody"
+                    "RootNode.CPUCover"
                 ]
             },
             "rules": {
@@ -38,7 +38,7 @@
                     }
                 ]
             },
-            "id": "{FEDF80F3-FAD1-503E-855E-6956B0D99A1D}"
+            "id": "{341DFF1F-F908-50C1-BF06-48303E3858D5}"
         }
     ]
 }

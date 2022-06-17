@@ -1,7 +1,7 @@
 {
     "ContainerEntity": {
         "Id": "ContainerEntity",
-        "Name": "AstroVacRobot",
+        "Name": "RobotVacuum",
         "Components": {
             "Component_[10968750635921263389]": {
                 "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
@@ -125,7 +125,7 @@
         },
         "Entity_[29844977766907]": {
             "Id": "Entity_[29844977766907]",
-            "Name": "astro_vac_display",
+            "Name": "robot_vacuum_display",
             "Components": {
                 "Component_[12985102679617967668]": {
                     "$type": "EditorEntitySortComponent",
@@ -143,22 +143,15 @@
                             "materials": [
                                 {
                                     "Key": {
-                                        "materialSlotStableId": 713658209
+                                        "materialSlotStableId": 3328602885
                                     },
                                     "Value": {
                                         "MaterialAsset": {
                                             "assetId": {
-                                                "guid": "{52A0FB0C-D02D-5558-A423-C1CAAD851543}"
+                                                "guid": "{B40251EE-D393-5721-BD0D-4B7E974FED9E}"
                                             },
-                                            "assetHint": "assets/robovac/assets/astrovac_display.azmaterial"
-                                        }
-                                    }
-                                },
-                                {
-                                    "Key": {
-                                        "materialSlotStableId": 3328602885
-                                    },
-                                    "Value": {
+                                            "assetHint": "assets/robovac/assets/robotvacuum_display.azmaterial"
+                                        },
                                         "PropertyOverrides": {
                                             "baseColor.textureMap": {
                                                 "$type": "AssetId",
@@ -193,10 +186,10 @@
                         "Configuration": {
                             "ModelAsset": {
                                 "assetId": {
-                                    "guid": "{DD3DC4F5-CB4E-53AA-8C47-3C4ADD72FE6F}",
-                                    "subId": 279473666
+                                    "guid": "{E8A04E15-DBF1-5627-AAAC-866820CB04A9}",
+                                    "subId": 275937803
                                 },
-                                "assetHint": "assets/robovac/assets/astro_vac_display.azmodel"
+                                "assetHint": "assets/robovac/assets/robot_vacuum_display.azmodel"
                             }
                         }
                     }
@@ -234,7 +227,7 @@
         },
         "Entity_[29849272734203]": {
             "Id": "Entity_[29849272734203]",
-            "Name": "astro_vac_suspensionbracketright",
+            "Name": "robot_vacuum_suspensionbracketright",
             "Components": {
                 "Component_[10298441692952143132]": {
                     "$type": "EditorDisabledCompositionComponent",
@@ -261,9 +254,9 @@
                                     "Value": {
                                         "MaterialAsset": {
                                             "assetId": {
-                                                "guid": "{D0B3791A-5AD8-5793-B332-1FBBFFC6330A}"
+                                                "guid": "{F577C6B7-C42B-5CE8-87C2-8248A315A468}"
                                             },
-                                            "assetHint": "assets/robovac/assets/astrovac_steel_-_satin.azmaterial"
+                                            "assetHint": "assets/robovac/assets/robotvacuum_steel_-_satin.azmaterial"
                                         }
                                     }
                                 }
@@ -295,10 +288,10 @@
                         "Configuration": {
                             "ModelAsset": {
                                 "assetId": {
-                                    "guid": "{1B52990F-069D-5847-9CF5-DB9141E06743}",
-                                    "subId": 277310680
+                                    "guid": "{FC8FF4AA-7522-5CE2-9EC9-DF772B4DE574}",
+                                    "subId": 272040854
                                 },
-                                "assetHint": "assets/robovac/assets/astro_vac_suspensionbracketright.azmodel"
+                                "assetHint": "assets/robovac/assets/robot_vacuum_suspensionbracketright.azmodel"
                             }
                         }
                     }
@@ -319,7 +312,7 @@
         },
         "Entity_[29853567701499]": {
             "Id": "Entity_[29853567701499]",
-            "Name": "astro_vac_pariscopetube1",
+            "Name": "robot_vacuum_pariscopetube1",
             "Components": {
                 "Component_[1002136966040176776]": {
                     "$type": "EditorLockComponent",
@@ -332,10 +325,10 @@
                         "Configuration": {
                             "ModelAsset": {
                                 "assetId": {
-                                    "guid": "{202B51BD-FEAC-5120-B303-5DD572031956}",
-                                    "subId": 268801846
+                                    "guid": "{410C68DE-BBC0-5593-A494-AE6B2ECA7F9C}",
+                                    "subId": 275150240
                                 },
-                                "assetHint": "assets/robovac/assets/astro_vac_pariscopetube1.azmodel"
+                                "assetHint": "assets/robovac/assets/robot_vacuum_pariscopetube1.azmodel"
                             }
                         }
                     }
@@ -378,9 +371,9 @@
                                     "Value": {
                                         "MaterialAsset": {
                                             "assetId": {
-                                                "guid": "{D0B3791A-5AD8-5793-B332-1FBBFFC6330A}"
+                                                "guid": "{F577C6B7-C42B-5CE8-87C2-8248A315A468}"
                                             },
-                                            "assetHint": "assets/robovac/assets/astrovac_steel_-_satin.azmaterial"
+                                            "assetHint": "assets/robovac/assets/robotvacuum_steel_-_satin.azmaterial"
                                         }
                                     }
                                 }
@@ -404,7 +397,7 @@
         },
         "Entity_[29857862668795]": {
             "Id": "Entity_[29857862668795]",
-            "Name": "astro_vac_pariscope",
+            "Name": "robot_vacuum_pariscope",
             "Components": {
                 "Component_[12715334844369802531]": {
                     "$type": "EditorPendingCompositionComponent",
@@ -433,10 +426,10 @@
                         "Configuration": {
                             "ModelAsset": {
                                 "assetId": {
-                                    "guid": "{1A9EFC73-7955-559E-9452-47BF49D5FF03}",
-                                    "subId": 276294814
+                                    "guid": "{56843DF7-DC70-5F7F-9747-DDC149EBFD43}",
+                                    "subId": 275770736
                                 },
-                                "assetHint": "assets/robovac/assets/astro_vac_pariscope.azmodel"
+                                "assetHint": "assets/robovac/assets/robot_vacuum_pariscope.azmodel"
                             }
                         }
                     }
@@ -458,9 +451,9 @@
                                     "Value": {
                                         "MaterialAsset": {
                                             "assetId": {
-                                                "guid": "{D0B3791A-5AD8-5793-B332-1FBBFFC6330A}"
+                                                "guid": "{F577C6B7-C42B-5CE8-87C2-8248A315A468}"
                                             },
-                                            "assetHint": "assets/robovac/assets/astrovac_steel_-_satin.azmaterial"
+                                            "assetHint": "assets/robovac/assets/robotvacuum_steel_-_satin.azmaterial"
                                         }
                                     }
                                 }
@@ -489,7 +482,7 @@
         },
         "Entity_[29862157636091]": {
             "Id": "Entity_[29862157636091]",
-            "Name": "astro_vac_bottombase",
+            "Name": "robot_vacuum_bottombase",
             "Components": {
                 "Component_[10473678182139113293]": {
                     "$type": "EditorVisibilityComponent",
@@ -544,9 +537,9 @@
                                     "Value": {
                                         "MaterialAsset": {
                                             "assetId": {
-                                                "guid": "{E8288A2B-DB8D-5A9B-B9AD-ED41B0F1C7B3}"
+                                                "guid": "{52A3E0FB-AF6E-527E-AAF3-21FFA27B1919}"
                                             },
-                                            "assetHint": "assets/robovac/assets/astrovac_absgrey.azmaterial"
+                                            "assetHint": "assets/robovac/assets/robotvacuum_absgrey.azmaterial"
                                         }
                                     }
                                 },
@@ -557,9 +550,9 @@
                                     "Value": {
                                         "MaterialAsset": {
                                             "assetId": {
-                                                "guid": "{2C63DBDB-2C71-57E0-A084-74D5B7797658}"
+                                                "guid": "{241AAEC3-59DF-5792-B463-93287A162A83}"
                                             },
-                                            "assetHint": "assets/robovac/assets/astrovac_abs_white_.azmaterial"
+                                            "assetHint": "assets/robovac/assets/robotvacuum_abs_white_.azmaterial"
                                         }
                                     }
                                 }
@@ -574,10 +567,10 @@
                         "Configuration": {
                             "ModelAsset": {
                                 "assetId": {
-                                    "guid": "{FB526907-BB86-508B-8A0B-3D602A6D9846}",
-                                    "subId": 278599159
+                                    "guid": "{6C355820-2D59-577D-A9B2-ED406064741F}",
+                                    "subId": 283296393
                                 },
-                                "assetHint": "assets/robovac/assets/astro_vac_bottombase.azmodel"
+                                "assetHint": "assets/robovac/assets/robot_vacuum_bottombase.azmodel"
                             }
                         }
                     }
@@ -594,7 +587,7 @@
         },
         "Entity_[29866452603387]": {
             "Id": "Entity_[29866452603387]",
-            "Name": "astro_vac_cpucase",
+            "Name": "robot_vacuum_cpucase",
             "Components": {
                 "Component_[10356958028194817037]": {
                     "$type": "EditorVisibilityComponent",
@@ -650,9 +643,9 @@
                                     "Value": {
                                         "MaterialAsset": {
                                             "assetId": {
-                                                "guid": "{3FAE87E2-55C0-56F8-9BA3-C9FCA58C723F}"
+                                                "guid": "{F0459FD0-3485-565F-89B9-BC678699B78D}"
                                             },
-                                            "assetHint": "assets/robovac/assets/astrovac_paint_-_enamel_glossy_black_.azmaterial"
+                                            "assetHint": "assets/robovac/assets/robotvacuum_paint_-_enamel_glossy_black_.azmaterial"
                                         }
                                     }
                                 }
@@ -667,10 +660,10 @@
                         "Configuration": {
                             "ModelAsset": {
                                 "assetId": {
-                                    "guid": "{85BB8213-7B66-5B64-975A-B191D7B7821F}",
-                                    "subId": 269988289
+                                    "guid": "{4E46E0A8-9380-541D-AC32-D79018377184}",
+                                    "subId": 281912776
                                 },
-                                "assetHint": "assets/robovac/assets/astro_vac_cpucase.azmodel"
+                                "assetHint": "assets/robovac/assets/robot_vacuum_cpucase.azmodel"
                             }
                         }
                     }
@@ -679,7 +672,7 @@
         },
         "Entity_[29870747570683]": {
             "Id": "Entity_[29870747570683]",
-            "Name": "astro_vac_pariscopesenesor",
+            "Name": "robot_vacuum_pariscopesenesor",
             "Components": {
                 "Component_[14057256557477939584]": {
                     "$type": "EditorInspectorComponent",
@@ -706,9 +699,9 @@
                                     "Value": {
                                         "MaterialAsset": {
                                             "assetId": {
-                                                "guid": "{D0B3791A-5AD8-5793-B332-1FBBFFC6330A}"
+                                                "guid": "{F577C6B7-C42B-5CE8-87C2-8248A315A468}"
                                             },
-                                            "assetHint": "assets/robovac/assets/astrovac_steel_-_satin.azmaterial"
+                                            "assetHint": "assets/robovac/assets/robotvacuum_steel_-_satin.azmaterial"
                                         }
                                     }
                                 },
@@ -719,9 +712,9 @@
                                     "Value": {
                                         "MaterialAsset": {
                                             "assetId": {
-                                                "guid": "{CAED33FE-4A6D-56F1-9A2C-DAD7A7FC7A66}"
+                                                "guid": "{B410214E-804E-5CD7-A152-17B36FBEA0E6}"
                                             },
-                                            "assetHint": "assets/robovac/assets/astrovac_chip.azmaterial"
+                                            "assetHint": "assets/robovac/assets/robotvacuum_chip.azmaterial"
                                         }
                                     }
                                 }
@@ -740,10 +733,10 @@
                         "Configuration": {
                             "ModelAsset": {
                                 "assetId": {
-                                    "guid": "{9EF2FEDC-30BC-5817-8D70-C8BED4733466}",
-                                    "subId": 274686378
+                                    "guid": "{BED398BE-2FA7-57A9-9FFC-5EE0E8C44376}",
+                                    "subId": 272685569
                                 },
-                                "assetHint": "assets/robovac/assets/astro_vac_pariscopesenesor.azmodel"
+                                "assetHint": "assets/robovac/assets/robot_vacuum_pariscopesenesor.azmodel"
                             }
                         }
                     }
@@ -777,7 +770,7 @@
         },
         "Entity_[29875042537979]": {
             "Id": "Entity_[29875042537979]",
-            "Name": "astro_vac_o_centersensor",
+            "Name": "robot_vacuum_o_centersensor",
             "Components": {
                 "Component_[116219169295708513]": {
                     "$type": "EditorLockComponent",
@@ -798,10 +791,10 @@
                         "Configuration": {
                             "ModelAsset": {
                                 "assetId": {
-                                    "guid": "{6688719D-4AE0-5B58-886A-9E48E2A29598}",
-                                    "subId": 276585387
+                                    "guid": "{007D6954-ABCC-5A0A-A8E6-EC2A663AD278}",
+                                    "subId": 270514493
                                 },
-                                "assetHint": "assets/robovac/assets/astro_vac_o_centersensor.azmodel"
+                                "assetHint": "assets/robovac/assets/robot_vacuum_o_centersensor.azmodel"
                             }
                         }
                     }
@@ -844,9 +837,9 @@
                                     "Value": {
                                         "MaterialAsset": {
                                             "assetId": {
-                                                "guid": "{E8288A2B-DB8D-5A9B-B9AD-ED41B0F1C7B3}"
+                                                "guid": "{52A3E0FB-AF6E-527E-AAF3-21FFA27B1919}"
                                             },
-                                            "assetHint": "assets/robovac/assets/astrovac_absgrey.azmaterial"
+                                            "assetHint": "assets/robovac/assets/robotvacuum_absgrey.azmaterial"
                                         }
                                     }
                                 },
@@ -857,9 +850,9 @@
                                     "Value": {
                                         "MaterialAsset": {
                                             "assetId": {
-                                                "guid": "{9E70F394-632D-5731-9EF5-6FEBB3D1EB47}"
+                                                "guid": "{18DE1187-52B8-5414-BA97-1247B28DCE4F}"
                                             },
-                                            "assetHint": "assets/robovac/assets/astrovac_acrylic_clear_.azmaterial"
+                                            "assetHint": "assets/robovac/assets/robotvacuum_acrylic_clear_.azmaterial"
                                         }
                                     }
                                 }
@@ -875,7 +868,7 @@
         },
         "Entity_[29879337505275]": {
             "Id": "Entity_[29879337505275]",
-            "Name": "astro_vac_screenbody",
+            "Name": "robot_vacuum_screenbody",
             "Components": {
                 "Component_[12038150070017414966]": {
                     "$type": "EditorMaterialComponent",
@@ -890,9 +883,9 @@
                                     "Value": {
                                         "MaterialAsset": {
                                             "assetId": {
-                                                "guid": "{3FAE87E2-55C0-56F8-9BA3-C9FCA58C723F}"
+                                                "guid": "{F0459FD0-3485-565F-89B9-BC678699B78D}"
                                             },
-                                            "assetHint": "assets/robovac/assets/astrovac_paint_-_enamel_glossy_black_.azmaterial"
+                                            "assetHint": "assets/robovac/assets/robotvacuum_paint_-_enamel_glossy_black_.azmaterial"
                                         }
                                     }
                                 }
@@ -921,19 +914,19 @@
                         "PhysicsAsset": {
                             "Asset": {
                                 "assetId": {
-                                    "guid": "{80D48B96-8C20-518B-A7AA-671A8ECBCDE5}",
+                                    "guid": "{472B20AC-6801-58F9-B178-6ECB7D489E22}",
                                     "subId": 3058355074
                                 },
-                                "assetHint": "assets/robovac/assets/astro_vac_screenbody.pxmesh"
+                                "assetHint": "assets/robovac/assets/robot_vacuum_screenbody.pxmesh"
                             },
                             "Configuration": {
                                 "PhysicsAsset": {
                                     "assetId": {
-                                        "guid": "{80D48B96-8C20-518B-A7AA-671A8ECBCDE5}",
+                                        "guid": "{472B20AC-6801-58F9-B178-6ECB7D489E22}",
                                         "subId": 3058355074
                                     },
                                     "loadBehavior": "QueueLoad",
-                                    "assetHint": "assets/robovac/assets/astro_vac_screenbody.pxmesh"
+                                    "assetHint": "assets/robovac/assets/robot_vacuum_screenbody.pxmesh"
                                 }
                             }
                         }
@@ -987,10 +980,10 @@
                         "Configuration": {
                             "ModelAsset": {
                                 "assetId": {
-                                    "guid": "{80D48B96-8C20-518B-A7AA-671A8ECBCDE5}",
-                                    "subId": 270679725
+                                    "guid": "{472B20AC-6801-58F9-B178-6ECB7D489E22}",
+                                    "subId": 274459091
                                 },
-                                "assetHint": "assets/robovac/assets/astro_vac_screenbody.azmodel"
+                                "assetHint": "assets/robovac/assets/robot_vacuum_screenbody.azmodel"
                             }
                         }
                     }
@@ -999,7 +992,7 @@
         },
         "Entity_[29883632472571]": {
             "Id": "Entity_[29883632472571]",
-            "Name": "astro_vac_pariscopetube",
+            "Name": "robot_vacuum_pariscopetube",
             "Components": {
                 "Component_[11337381847282403410]": {
                     "$type": "EditorEntitySortComponent",
@@ -1051,9 +1044,9 @@
                                     "Value": {
                                         "MaterialAsset": {
                                             "assetId": {
-                                                "guid": "{D0B3791A-5AD8-5793-B332-1FBBFFC6330A}"
+                                                "guid": "{F577C6B7-C42B-5CE8-87C2-8248A315A468}"
                                             },
-                                            "assetHint": "assets/robovac/assets/astrovac_steel_-_satin.azmaterial"
+                                            "assetHint": "assets/robovac/assets/robotvacuum_steel_-_satin.azmaterial"
                                         }
                                     }
                                 }
@@ -1068,10 +1061,10 @@
                         "Configuration": {
                             "ModelAsset": {
                                 "assetId": {
-                                    "guid": "{7E00071E-7DE4-5977-BA12-7A029E6C5714}",
-                                    "subId": 270690264
+                                    "guid": "{EA6AAF93-0D8C-57CE-8D94-4A562B041C71}",
+                                    "subId": 284014725
                                 },
-                                "assetHint": "assets/robovac/assets/astro_vac_pariscopetube.azmodel"
+                                "assetHint": "assets/robovac/assets/robot_vacuum_pariscopetube.azmodel"
                             }
                         }
                     }
@@ -1084,7 +1077,7 @@
         },
         "Entity_[29887927439867]": {
             "Id": "Entity_[29887927439867]",
-            "Name": "astro_vac_cpucover",
+            "Name": "robot_vacuum_cpucover",
             "Components": {
                 "Component_[10025315339984209842]": {
                     "$type": "EditorEntitySortComponent",
@@ -1103,9 +1096,9 @@
                                     "Value": {
                                         "MaterialAsset": {
                                             "assetId": {
-                                                "guid": "{811B7B98-0326-57BE-96BE-D7C5885987FE}"
+                                                "guid": "{0AF7BE25-7818-5DEB-A848-FBF2575C04CA}"
                                             },
-                                            "assetHint": "assets/robovac/assets/astrovac_plastic_-_sensor.azmaterial"
+                                            "assetHint": "assets/robovac/assets/robotvacuum_plastic_-_sensor.azmaterial"
                                         }
                                     }
                                 }
@@ -1141,7 +1134,7 @@
                                 "MaterialSlots": {
                                     "Slots": [
                                         {
-                                            "Name": "Entire object"
+                                            "Name": "Plastic - Sensor"
                                         }
                                     ]
                                 },
@@ -1155,19 +1148,19 @@
                                 "PhysicsAsset": {
                                     "Asset": {
                                         "assetId": {
-                                            "guid": "{4B90F891-25DC-5520-9205-D9166E2BAD1B}",
+                                            "guid": "{44254E4F-53F4-5C53-BF81-411AFEB75789}",
                                             "subId": 2981717856
                                         },
-                                        "assetHint": "assets/robovac/assets/astro_vac_cpucover.pxmesh"
+                                        "assetHint": "assets/robovac/assets/robot_vacuum_cpucover.pxmesh"
                                     },
                                     "Configuration": {
                                         "PhysicsAsset": {
                                             "assetId": {
-                                                "guid": "{4B90F891-25DC-5520-9205-D9166E2BAD1B}",
+                                                "guid": "{44254E4F-53F4-5C53-BF81-411AFEB75789}",
                                                 "subId": 2981717856
                                             },
                                             "loadBehavior": "QueueLoad",
-                                            "assetHint": "assets/robovac/assets/astro_vac_cpucover.pxmesh"
+                                            "assetHint": "assets/robovac/assets/robot_vacuum_cpucover.pxmesh"
                                         }
                                     }
                                 }
@@ -1186,10 +1179,10 @@
                         "Configuration": {
                             "ModelAsset": {
                                 "assetId": {
-                                    "guid": "{4B90F891-25DC-5520-9205-D9166E2BAD1B}",
-                                    "subId": 273526738
+                                    "guid": "{44254E4F-53F4-5C53-BF81-411AFEB75789}",
+                                    "subId": 285199714
                                 },
-                                "assetHint": "assets/robovac/assets/astro_vac_cpucover.azmodel"
+                                "assetHint": "assets/robovac/assets/robot_vacuum_cpucover.azmodel"
                             }
                         }
                     }
@@ -1210,7 +1203,7 @@
         },
         "Entity_[29892222407163]": {
             "Id": "Entity_[29892222407163]",
-            "Name": "astro_vac_navdisplaycamera",
+            "Name": "robot_vacuum_navdisplaycamera",
             "Components": {
                 "Component_[11433011431204834190]": {
                     "$type": "EditorVisibilityComponent",
@@ -1235,10 +1228,10 @@
                         "Configuration": {
                             "ModelAsset": {
                                 "assetId": {
-                                    "guid": "{97AAF9C9-6050-5441-A33D-6A27685E6418}",
-                                    "subId": 269226811
+                                    "guid": "{4191CA27-DC5C-51B5-B12B-FA42849FF266}",
+                                    "subId": 269723792
                                 },
-                                "assetHint": "assets/robovac/assets/astro_vac_navdisplaycamera.azmodel"
+                                "assetHint": "assets/robovac/assets/robot_vacuum_navdisplaycamera.azmodel"
                             }
                         }
                     }
@@ -1264,9 +1257,9 @@
                                     "Value": {
                                         "MaterialAsset": {
                                             "assetId": {
-                                                "guid": "{3FAE87E2-55C0-56F8-9BA3-C9FCA58C723F}"
+                                                "guid": "{F0459FD0-3485-565F-89B9-BC678699B78D}"
                                             },
-                                            "assetHint": "assets/robovac/assets/astrovac_paint_-_enamel_glossy_black_.azmaterial"
+                                            "assetHint": "assets/robovac/assets/robotvacuum_paint_-_enamel_glossy_black_.azmaterial"
                                         }
                                     }
                                 },
@@ -1277,9 +1270,9 @@
                                     "Value": {
                                         "MaterialAsset": {
                                             "assetId": {
-                                                "guid": "{9E70F394-632D-5731-9EF5-6FEBB3D1EB47}"
+                                                "guid": "{18DE1187-52B8-5414-BA97-1247B28DCE4F}"
                                             },
-                                            "assetHint": "assets/robovac/assets/astrovac_acrylic_clear_.azmaterial"
+                                            "assetHint": "assets/robovac/assets/robotvacuum_acrylic_clear_.azmaterial"
                                         }
                                     }
                                 }
@@ -1308,7 +1301,7 @@
         },
         "Entity_[29896517374459]": {
             "Id": "Entity_[29896517374459]",
-            "Name": "astro_vac_battery",
+            "Name": "robot_vacuum_battery",
             "Components": {
                 "Component_[10423770966231978871]": {
                     "$type": "EditorInspectorComponent",
@@ -1331,9 +1324,9 @@
                                     "Value": {
                                         "MaterialAsset": {
                                             "assetId": {
-                                                "guid": "{3FAE87E2-55C0-56F8-9BA3-C9FCA58C723F}"
+                                                "guid": "{F0459FD0-3485-565F-89B9-BC678699B78D}"
                                             },
-                                            "assetHint": "assets/robovac/assets/astrovac_paint_-_enamel_glossy_black_.azmaterial"
+                                            "assetHint": "assets/robovac/assets/robotvacuum_paint_-_enamel_glossy_black_.azmaterial"
                                         }
                                     }
                                 }
@@ -1380,10 +1373,10 @@
                         "Configuration": {
                             "ModelAsset": {
                                 "assetId": {
-                                    "guid": "{810E38B5-CE8C-5A8E-9E11-F3450F656B0D}",
-                                    "subId": 274196495
+                                    "guid": "{DF2994F3-CDAF-5AA1-89F0-13E822ED5B67}",
+                                    "subId": 277740550
                                 },
-                                "assetHint": "assets/robovac/assets/astro_vac_battery.azmodel"
+                                "assetHint": "assets/robovac/assets/robot_vacuum_battery.azmodel"
                             }
                         }
                     }
@@ -1400,7 +1393,7 @@
         },
         "Entity_[29900812341755]": {
             "Id": "Entity_[29900812341755]",
-            "Name": "astro_vac_cpucoverdoor",
+            "Name": "robot_vacuum_cpucoverdoor",
             "Components": {
                 "Component_[1160898461646756509]": {
                     "$type": "EditorEntitySortComponent",
@@ -1424,9 +1417,9 @@
                                     "Value": {
                                         "MaterialAsset": {
                                             "assetId": {
-                                                "guid": "{3FAE87E2-55C0-56F8-9BA3-C9FCA58C723F}"
+                                                "guid": "{F0459FD0-3485-565F-89B9-BC678699B78D}"
                                             },
-                                            "assetHint": "assets/robovac/assets/astrovac_paint_-_enamel_glossy_black_.azmaterial"
+                                            "assetHint": "assets/robovac/assets/robotvacuum_paint_-_enamel_glossy_black_.azmaterial"
                                         }
                                     }
                                 }
@@ -1445,10 +1438,10 @@
                         "Configuration": {
                             "ModelAsset": {
                                 "assetId": {
-                                    "guid": "{33D17CE1-2CBB-5B19-BA99-F0D2CA3161F6}",
-                                    "subId": 278579783
+                                    "guid": "{058D9B06-830E-51BC-B66D-CC0BA948501A}",
+                                    "subId": 277978673
                                 },
-                                "assetHint": "assets/robovac/assets/astro_vac_cpucoverdoor.azmodel"
+                                "assetHint": "assets/robovac/assets/robot_vacuum_cpucoverdoor.azmodel"
                             }
                         }
                     }
@@ -1485,7 +1478,7 @@
         },
         "Entity_[29905107309051]": {
             "Id": "Entity_[29905107309051]",
-            "Name": "astro_vac_depthdensorleft",
+            "Name": "robot_vacuum_depthdensorleft",
             "Components": {
                 "Component_[11494312482997210625]": {
                     "$type": "EditorPendingCompositionComponent",
@@ -1522,10 +1515,10 @@
                         "Configuration": {
                             "ModelAsset": {
                                 "assetId": {
-                                    "guid": "{8DE8498B-2EA4-5164-BB68-4670F077346F}",
-                                    "subId": 277621925
+                                    "guid": "{4C43FC92-2409-58E9-8DDE-D9BCCC84F4CE}",
+                                    "subId": 284522806
                                 },
-                                "assetHint": "assets/robovac/assets/astro_vac_depthdensorleft.azmodel"
+                                "assetHint": "assets/robovac/assets/robot_vacuum_depthdensorleft.azmodel"
                             }
                         }
                     }
@@ -1548,9 +1541,9 @@
                                     "Value": {
                                         "MaterialAsset": {
                                             "assetId": {
-                                                "guid": "{D0B3791A-5AD8-5793-B332-1FBBFFC6330A}"
+                                                "guid": "{F577C6B7-C42B-5CE8-87C2-8248A315A468}"
                                             },
-                                            "assetHint": "assets/robovac/assets/astrovac_steel_-_satin.azmaterial"
+                                            "assetHint": "assets/robovac/assets/robotvacuum_steel_-_satin.azmaterial"
                                         }
                                     }
                                 },
@@ -1561,9 +1554,9 @@
                                     "Value": {
                                         "MaterialAsset": {
                                             "assetId": {
-                                                "guid": "{3FAE87E2-55C0-56F8-9BA3-C9FCA58C723F}"
+                                                "guid": "{F0459FD0-3485-565F-89B9-BC678699B78D}"
                                             },
-                                            "assetHint": "assets/robovac/assets/astrovac_paint_-_enamel_glossy_black_.azmaterial"
+                                            "assetHint": "assets/robovac/assets/robotvacuum_paint_-_enamel_glossy_black_.azmaterial"
                                         }
                                     }
                                 },
@@ -1574,9 +1567,9 @@
                                     "Value": {
                                         "MaterialAsset": {
                                             "assetId": {
-                                                "guid": "{9E70F394-632D-5731-9EF5-6FEBB3D1EB47}"
+                                                "guid": "{18DE1187-52B8-5414-BA97-1247B28DCE4F}"
                                             },
-                                            "assetHint": "assets/robovac/assets/astrovac_acrylic_clear_.azmaterial"
+                                            "assetHint": "assets/robovac/assets/robotvacuum_acrylic_clear_.azmaterial"
                                         }
                                     }
                                 }
@@ -1596,7 +1589,7 @@
         },
         "Entity_[29909402276347]": {
             "Id": "Entity_[29909402276347]",
-            "Name": "astro_vac_backbumper",
+            "Name": "robot_vacuum_backbumper",
             "Components": {
                 "Component_[1014096401474372943]": {
                     "$type": "EditorOnlyEntityComponent",
@@ -1639,9 +1632,9 @@
                                     "Value": {
                                         "MaterialAsset": {
                                             "assetId": {
-                                                "guid": "{E8288A2B-DB8D-5A9B-B9AD-ED41B0F1C7B3}"
+                                                "guid": "{52A3E0FB-AF6E-527E-AAF3-21FFA27B1919}"
                                             },
-                                            "assetHint": "assets/robovac/assets/astrovac_absgrey.azmaterial"
+                                            "assetHint": "assets/robovac/assets/robotvacuum_absgrey.azmaterial"
                                         }
                                     }
                                 }
@@ -1660,10 +1653,10 @@
                         "Configuration": {
                             "ModelAsset": {
                                 "assetId": {
-                                    "guid": "{093E2042-9EE7-5492-853B-EB2521928B4E}",
-                                    "subId": 275987692
+                                    "guid": "{7C1552C5-7322-5C3D-B1FE-5C71BBD9941F}",
+                                    "subId": 279299367
                                 },
-                                "assetHint": "assets/robovac/assets/astro_vac_backbumper.azmodel"
+                                "assetHint": "assets/robovac/assets/default_robot_vacuum_backbumper_67301715_5cb3_52f8_917e_6921a5bf842c_.azmodel"
                             }
                         }
                     }
@@ -1688,7 +1681,7 @@
         },
         "Entity_[29913697243643]": {
             "Id": "Entity_[29913697243643]",
-            "Name": "astro_vac_depthdensorright",
+            "Name": "robot_vacuum_depthdensorright",
             "Components": {
                 "Component_[11687252647046139603]": {
                     "$type": "EditorPendingCompositionComponent",
@@ -1709,10 +1702,10 @@
                         "Configuration": {
                             "ModelAsset": {
                                 "assetId": {
-                                    "guid": "{07874E33-F17A-5471-B6B4-E5CF2356D37D}",
-                                    "subId": 273883346
+                                    "guid": "{53886C06-FC86-5589-BDB4-65F7F7035E35}",
+                                    "subId": 273455993
                                 },
-                                "assetHint": "assets/robovac/assets/astro_vac_depthdensorright.azmodel"
+                                "assetHint": "assets/robovac/assets/robot_vacuum_depthdensorright.azmodel"
                             }
                         }
                     }
@@ -1746,9 +1739,9 @@
                                     "Value": {
                                         "MaterialAsset": {
                                             "assetId": {
-                                                "guid": "{D0B3791A-5AD8-5793-B332-1FBBFFC6330A}"
+                                                "guid": "{F577C6B7-C42B-5CE8-87C2-8248A315A468}"
                                             },
-                                            "assetHint": "assets/robovac/assets/astrovac_steel_-_satin.azmaterial"
+                                            "assetHint": "assets/robovac/assets/robotvacuum_steel_-_satin.azmaterial"
                                         }
                                     }
                                 },
@@ -1759,9 +1752,9 @@
                                     "Value": {
                                         "MaterialAsset": {
                                             "assetId": {
-                                                "guid": "{3FAE87E2-55C0-56F8-9BA3-C9FCA58C723F}"
+                                                "guid": "{F0459FD0-3485-565F-89B9-BC678699B78D}"
                                             },
-                                            "assetHint": "assets/robovac/assets/astrovac_paint_-_enamel_glossy_black_.azmaterial"
+                                            "assetHint": "assets/robovac/assets/robotvacuum_paint_-_enamel_glossy_black_.azmaterial"
                                         }
                                     }
                                 },
@@ -1772,9 +1765,9 @@
                                     "Value": {
                                         "MaterialAsset": {
                                             "assetId": {
-                                                "guid": "{9E70F394-632D-5731-9EF5-6FEBB3D1EB47}"
+                                                "guid": "{18DE1187-52B8-5414-BA97-1247B28DCE4F}"
                                             },
-                                            "assetHint": "assets/robovac/assets/astrovac_acrylic_clear_.azmaterial"
+                                            "assetHint": "assets/robovac/assets/robotvacuum_acrylic_clear_.azmaterial"
                                         }
                                     }
                                 }
@@ -1799,7 +1792,7 @@
         },
         "Entity_[29917992210939]": {
             "Id": "Entity_[29917992210939]",
-            "Name": "astro_vac_screenboltright",
+            "Name": "robot_vacuum_screenboltright",
             "Components": {
                 "Component_[10162029102991806017]": {
                     "$type": "SelectionComponent",
@@ -1818,9 +1811,9 @@
                                     "Value": {
                                         "MaterialAsset": {
                                             "assetId": {
-                                                "guid": "{D0B3791A-5AD8-5793-B332-1FBBFFC6330A}"
+                                                "guid": "{F577C6B7-C42B-5CE8-87C2-8248A315A468}"
                                             },
-                                            "assetHint": "assets/robovac/assets/astrovac_steel_-_satin.azmaterial"
+                                            "assetHint": "assets/robovac/assets/robotvacuum_steel_-_satin.azmaterial"
                                         }
                                     }
                                 }
@@ -1856,10 +1849,10 @@
                         "Configuration": {
                             "ModelAsset": {
                                 "assetId": {
-                                    "guid": "{7CF79979-B662-5F93-AD69-D9E88615A13F}",
-                                    "subId": 284116138
+                                    "guid": "{F6B52F5E-A2AF-5AF0-9A75-F7BADC2A75E4}",
+                                    "subId": 278270265
                                 },
-                                "assetHint": "assets/robovac/assets/astro_vac_screenboltright.azmodel"
+                                "assetHint": "assets/robovac/assets/robot_vacuum_screenboltright.azmodel"
                             }
                         }
                     }
@@ -1884,7 +1877,7 @@
         },
         "Entity_[29922287178235]": {
             "Id": "Entity_[29922287178235]",
-            "Name": "astro_vac_navlogicboard",
+            "Name": "robot_vacuum_navlogicboard",
             "Components": {
                 "Component_[10051983211610109492]": {
                     "$type": "EditorEntitySortComponent",
@@ -1915,9 +1908,9 @@
                                     "Value": {
                                         "MaterialAsset": {
                                             "assetId": {
-                                                "guid": "{3FAE87E2-55C0-56F8-9BA3-C9FCA58C723F}"
+                                                "guid": "{F0459FD0-3485-565F-89B9-BC678699B78D}"
                                             },
-                                            "assetHint": "assets/robovac/assets/astrovac_paint_-_enamel_glossy_black_.azmaterial"
+                                            "assetHint": "assets/robovac/assets/robotvacuum_paint_-_enamel_glossy_black_.azmaterial"
                                         }
                                     }
                                 },
@@ -1928,9 +1921,9 @@
                                     "Value": {
                                         "MaterialAsset": {
                                             "assetId": {
-                                                "guid": "{CAED33FE-4A6D-56F1-9A2C-DAD7A7FC7A66}"
+                                                "guid": "{B410214E-804E-5CD7-A152-17B36FBEA0E6}"
                                             },
-                                            "assetHint": "assets/robovac/assets/astrovac_chip.azmaterial"
+                                            "assetHint": "assets/robovac/assets/robotvacuum_chip.azmaterial"
                                         }
                                     }
                                 },
@@ -1941,9 +1934,9 @@
                                     "Value": {
                                         "MaterialAsset": {
                                             "assetId": {
-                                                "guid": "{B6913DC9-2805-529F-B327-AF282423A02D}"
+                                                "guid": "{B732DCB8-247F-5040-8956-17BE3CE61ECB}"
                                             },
-                                            "assetHint": "assets/robovac/assets/astrovac_gold_-_polished.azmaterial"
+                                            "assetHint": "assets/robovac/assets/robotvacuum_gold_-_polished.azmaterial"
                                         }
                                     }
                                 }
@@ -1979,10 +1972,10 @@
                         "Configuration": {
                             "ModelAsset": {
                                 "assetId": {
-                                    "guid": "{4F8B837B-20A3-5CBB-A6FB-7F779B9518E7}",
-                                    "subId": 281913857
+                                    "guid": "{D3805517-8DC0-567A-B40C-340FC11DDF4E}",
+                                    "subId": 268596572
                                 },
-                                "assetHint": "assets/robovac/assets/astro_vac_navlogicboard.azmodel"
+                                "assetHint": "assets/robovac/assets/robot_vacuum_navlogicboard.azmodel"
                             }
                         }
                     }
@@ -1995,7 +1988,7 @@
         },
         "Entity_[29926582145531]": {
             "Id": "Entity_[29926582145531]",
-            "Name": "astro_vac_screenglass",
+            "Name": "robot_vacuum_screenglass",
             "Components": {
                 "Component_[12002731711356285631]": {
                     "$type": "EditorMaterialComponent",
@@ -2010,9 +2003,9 @@
                                     "Value": {
                                         "MaterialAsset": {
                                             "assetId": {
-                                                "guid": "{9E70F394-632D-5731-9EF5-6FEBB3D1EB47}"
+                                                "guid": "{18DE1187-52B8-5414-BA97-1247B28DCE4F}"
                                             },
-                                            "assetHint": "assets/robovac/assets/astrovac_acrylic_clear_.azmaterial"
+                                            "assetHint": "assets/robovac/assets/robotvacuum_acrylic_clear_.azmaterial"
                                         }
                                     }
                                 }
@@ -2035,10 +2028,10 @@
                         "Configuration": {
                             "ModelAsset": {
                                 "assetId": {
-                                    "guid": "{F8BD39B8-DBAA-5643-B91B-ECDF651E3A60}",
-                                    "subId": 271005855
+                                    "guid": "{D74CBC2A-3B76-580E-BC60-1DD127B8D1B2}",
+                                    "subId": 282926451
                                 },
-                                "assetHint": "assets/robovac/assets/astro_vac_screenglass.azmodel"
+                                "assetHint": "assets/robovac/assets/robot_vacuum_screenglass.azmodel"
                             }
                         }
                     }
@@ -2080,7 +2073,7 @@
         },
         "Entity_[29930877112827]": {
             "Id": "Entity_[29930877112827]",
-            "Name": "astro_vac_pariscopeglass",
+            "Name": "robot_vacuum_pariscopeglass",
             "Components": {
                 "Component_[10442046716566583284]": {
                     "$type": "AZ::Render::EditorMeshComponent",
@@ -2089,10 +2082,10 @@
                         "Configuration": {
                             "ModelAsset": {
                                 "assetId": {
-                                    "guid": "{4B127F97-149F-5DC9-8EB2-A9F1D85C1E01}",
-                                    "subId": 274221379
+                                    "guid": "{C61E6543-D095-5E81-B289-3F63B1305D3B}",
+                                    "subId": 272346069
                                 },
-                                "assetHint": "assets/robovac/assets/astro_vac_pariscopeglass.azmodel"
+                                "assetHint": "assets/robovac/assets/robot_vacuum_pariscopeglass.azmodel"
                             }
                         }
                     }
@@ -2147,9 +2140,9 @@
                                     "Value": {
                                         "MaterialAsset": {
                                             "assetId": {
-                                                "guid": "{9E70F394-632D-5731-9EF5-6FEBB3D1EB47}"
+                                                "guid": "{18DE1187-52B8-5414-BA97-1247B28DCE4F}"
                                             },
-                                            "assetHint": "assets/robovac/assets/astrovac_acrylic_clear_.azmaterial"
+                                            "assetHint": "assets/robovac/assets/robotvacuum_acrylic_clear_.azmaterial"
                                         }
                                     }
                                 }
@@ -2165,7 +2158,7 @@
         },
         "Entity_[29935172080123]": {
             "Id": "Entity_[29935172080123]",
-            "Name": "astro_vac_o_rightsensor",
+            "Name": "robot_vacuum_o_rightsensor",
             "Components": {
                 "Component_[11218109192251318216]": {
                     "$type": "EditorEntitySortComponent",
@@ -2188,9 +2181,9 @@
                                     "Value": {
                                         "MaterialAsset": {
                                             "assetId": {
-                                                "guid": "{E8288A2B-DB8D-5A9B-B9AD-ED41B0F1C7B3}"
+                                                "guid": "{52A3E0FB-AF6E-527E-AAF3-21FFA27B1919}"
                                             },
-                                            "assetHint": "assets/robovac/assets/astrovac_absgrey.azmaterial"
+                                            "assetHint": "assets/robovac/assets/robotvacuum_absgrey.azmaterial"
                                         }
                                     }
                                 },
@@ -2201,9 +2194,9 @@
                                     "Value": {
                                         "MaterialAsset": {
                                             "assetId": {
-                                                "guid": "{9E70F394-632D-5731-9EF5-6FEBB3D1EB47}"
+                                                "guid": "{18DE1187-52B8-5414-BA97-1247B28DCE4F}"
                                             },
-                                            "assetHint": "assets/robovac/assets/astrovac_acrylic_clear_.azmaterial"
+                                            "assetHint": "assets/robovac/assets/robotvacuum_acrylic_clear_.azmaterial"
                                         }
                                     }
                                 }
@@ -2218,10 +2211,10 @@
                         "Configuration": {
                             "ModelAsset": {
                                 "assetId": {
-                                    "guid": "{D1986A1E-4B6F-554A-B5E2-EE9AC348F6F7}",
-                                    "subId": 269644895
+                                    "guid": "{C8D87B76-1AC1-5E08-84FE-939B73E6857E}",
+                                    "subId": 282962690
                                 },
-                                "assetHint": "assets/robovac/assets/astro_vac_o_rightsensor.azmodel"
+                                "assetHint": "assets/robovac/assets/robot_vacuum_o_rightsensor.azmodel"
                             }
                         }
                     }
@@ -2263,7 +2256,7 @@
         },
         "Entity_[29939467047419]": {
             "Id": "Entity_[29939467047419]",
-            "Name": "astro_vac_suspensionpinright",
+            "Name": "robot_vacuum_suspensionpinright",
             "Components": {
                 "Component_[13661706989266729235]": {
                     "$type": "EditorMaterialComponent",
@@ -2278,9 +2271,9 @@
                                     "Value": {
                                         "MaterialAsset": {
                                             "assetId": {
-                                                "guid": "{D0B3791A-5AD8-5793-B332-1FBBFFC6330A}"
+                                                "guid": "{F577C6B7-C42B-5CE8-87C2-8248A315A468}"
                                             },
-                                            "assetHint": "assets/robovac/assets/astrovac_steel_-_satin.azmaterial"
+                                            "assetHint": "assets/robovac/assets/robotvacuum_steel_-_satin.azmaterial"
                                         }
                                     }
                                 }
@@ -2320,10 +2313,10 @@
                         "Configuration": {
                             "ModelAsset": {
                                 "assetId": {
-                                    "guid": "{5731F31B-2228-5711-8D5D-C5C36084B523}",
-                                    "subId": 283782507
+                                    "guid": "{2707E8B4-F734-5A5A-8608-BE8E67739A55}",
+                                    "subId": 279595858
                                 },
-                                "assetHint": "assets/robovac/assets/astro_vac_suspensionpinright.azmodel"
+                                "assetHint": "assets/robovac/assets/robot_vacuum_suspensionpinright.azmodel"
                             }
                         }
                     }
@@ -2348,7 +2341,7 @@
         },
         "Entity_[29943762014715]": {
             "Id": "Entity_[29943762014715]",
-            "Name": "astro_vac_towertop",
+            "Name": "robot_vacuum_towertop",
             "Components": {
                 "Component_[10901145661741858064]": {
                     "$type": "EditorMaterialComponent",
@@ -2363,9 +2356,9 @@
                                     "Value": {
                                         "MaterialAsset": {
                                             "assetId": {
-                                                "guid": "{D0B3791A-5AD8-5793-B332-1FBBFFC6330A}"
+                                                "guid": "{F577C6B7-C42B-5CE8-87C2-8248A315A468}"
                                             },
-                                            "assetHint": "assets/robovac/assets/astrovac_steel_-_satin.azmaterial"
+                                            "assetHint": "assets/robovac/assets/robotvacuum_steel_-_satin.azmaterial"
                                         }
                                     }
                                 },
@@ -2376,9 +2369,9 @@
                                     "Value": {
                                         "MaterialAsset": {
                                             "assetId": {
-                                                "guid": "{3FAE87E2-55C0-56F8-9BA3-C9FCA58C723F}"
+                                                "guid": "{F0459FD0-3485-565F-89B9-BC678699B78D}"
                                             },
-                                            "assetHint": "assets/robovac/assets/astrovac_paint_-_enamel_glossy_black_.azmaterial"
+                                            "assetHint": "assets/robovac/assets/robotvacuum_paint_-_enamel_glossy_black_.azmaterial"
                                         }
                                     }
                                 }
@@ -2409,10 +2402,10 @@
                         "Configuration": {
                             "ModelAsset": {
                                 "assetId": {
-                                    "guid": "{BC101FC2-B22E-5392-AE70-6AC015666C1F}",
-                                    "subId": 272367078
+                                    "guid": "{9679E0B7-D5F3-53B1-AE62-90E1E4435A30}",
+                                    "subId": 277454678
                                 },
-                                "assetHint": "assets/robovac/assets/astro_vac_towertop.azmodel"
+                                "assetHint": "assets/robovac/assets/robot_vacuum_towertop.azmodel"
                             }
                         }
                     }
@@ -2446,7 +2439,7 @@
         },
         "Entity_[29948056982011]": {
             "Id": "Entity_[29948056982011]",
-            "Name": "astro_vac_backbumpersensor",
+            "Name": "robot_vacuum_backbumpersensor",
             "Components": {
                 "Component_[10607103240231917169]": {
                     "$type": "EditorVisibilityComponent",
@@ -2465,9 +2458,9 @@
                                     "Value": {
                                         "MaterialAsset": {
                                             "assetId": {
-                                                "guid": "{117B83D8-BCCA-5AF7-B7E9-F5A32F2FFEE9}"
+                                                "guid": "{996BEAD2-C595-5851-BC40-A2A0F94A39A3}"
                                             },
-                                            "assetHint": "assets/robovac/assets/astrovac_rubber_-_weathered.azmaterial"
+                                            "assetHint": "assets/robovac/assets/robotvacuum_rubber_-_weathered.azmaterial"
                                         }
                                     }
                                 }
@@ -2482,10 +2475,10 @@
                         "Configuration": {
                             "ModelAsset": {
                                 "assetId": {
-                                    "guid": "{E79160B7-7D05-5339-88F8-BB802719D160}",
-                                    "subId": 270217474
+                                    "guid": "{200D5507-75F1-5A03-AE9F-C7E1067DD835}",
+                                    "subId": 268733097
                                 },
-                                "assetHint": "assets/robovac/assets/astro_vac_backbumpersensor.azmodel"
+                                "assetHint": "assets/robovac/assets/robot_vacuum_backbumpersensor.azmodel"
                             }
                         }
                     }
@@ -2538,7 +2531,7 @@
         },
         "Entity_[29952351949307]": {
             "Id": "Entity_[29952351949307]",
-            "Name": "astro_vac_brushb",
+            "Name": "robot_vacuum_brushb",
             "Components": {
                 "Component_[11545099847174619426]": {
                     "$type": "SelectionComponent",
@@ -2561,9 +2554,9 @@
                                     "Value": {
                                         "MaterialAsset": {
                                             "assetId": {
-                                                "guid": "{AA7B1CC3-CD67-5EE5-8F2A-9294ADC177E5}"
+                                                "guid": "{A1E7367C-4A8E-5C11-A768-0661925C18AC}"
                                             },
-                                            "assetHint": "assets/robovac/assets/astrovac_rubber_-_bumpy.azmaterial"
+                                            "assetHint": "assets/robovac/assets/robotvacuum_rubber_-_bumpy.azmaterial"
                                         }
                                     }
                                 }
@@ -2582,10 +2575,10 @@
                         "Configuration": {
                             "ModelAsset": {
                                 "assetId": {
-                                    "guid": "{1808D022-5CA0-510B-972D-4AB8DC41B63C}",
-                                    "subId": 269413408
+                                    "guid": "{526E0345-A3AB-5384-B659-43C54D108444}",
+                                    "subId": 270271159
                                 },
-                                "assetHint": "assets/robovac/assets/astro_vac_brushb.azmodel"
+                                "assetHint": "assets/robovac/assets/robot_vacuum_brushb.azmodel"
                             }
                         }
                     }
@@ -2623,7 +2616,7 @@
         },
         "Entity_[29956646916603]": {
             "Id": "Entity_[29956646916603]",
-            "Name": "astro_vac_wheel_left",
+            "Name": "robot_vacuum_wheel_left",
             "Components": {
                 "Component_[11141106687995282983]": {
                     "$type": "SelectionComponent",
@@ -2671,9 +2664,22 @@
                                     "Value": {
                                         "MaterialAsset": {
                                             "assetId": {
-                                                "guid": "{2C63DBDB-2C71-57E0-A084-74D5B7797658}"
+                                                "guid": "{241AAEC3-59DF-5792-B463-93287A162A83}"
                                             },
-                                            "assetHint": "assets/robovac/assets/astrovac_abs_white_.azmaterial"
+                                            "assetHint": "assets/robovac/assets/robotvacuum_abs_white_.azmaterial"
+                                        }
+                                    }
+                                },
+                                {
+                                    "Key": {
+                                        "materialSlotStableId": 1979588969
+                                    },
+                                    "Value": {
+                                        "MaterialAsset": {
+                                            "assetId": {
+                                                "guid": "{996BEAD2-C595-5851-BC40-A2A0F94A39A3}"
+                                            },
+                                            "assetHint": "assets/robovac/assets/robotvacuum_rubber_-_weathered.azmaterial"
                                         }
                                     }
                                 }
@@ -2688,10 +2694,10 @@
                         "Configuration": {
                             "ModelAsset": {
                                 "assetId": {
-                                    "guid": "{419076E7-7757-54EA-81F9-446246D854FE}",
-                                    "subId": 274928668
+                                    "guid": "{4C0493EF-CE6C-523F-83C7-91D11E710079}",
+                                    "subId": 270189410
                                 },
-                                "assetHint": "assets/robovac/assets/astro_vac_wheel_left.azmodel"
+                                "assetHint": "assets/robovac/assets/robot_vacuum_wheel_left.azmodel"
                             }
                         }
                     }
@@ -2708,7 +2714,7 @@
         },
         "Entity_[29960941883899]": {
             "Id": "Entity_[29960941883899]",
-            "Name": "astro_vac_suspensionbracketleft",
+            "Name": "robot_vacuum_suspensionbracketleft",
             "Components": {
                 "Component_[10843760723871178303]": {
                     "$type": "EditorEntitySortComponent",
@@ -2744,9 +2750,9 @@
                                     "Value": {
                                         "MaterialAsset": {
                                             "assetId": {
-                                                "guid": "{D0B3791A-5AD8-5793-B332-1FBBFFC6330A}"
+                                                "guid": "{F577C6B7-C42B-5CE8-87C2-8248A315A468}"
                                             },
-                                            "assetHint": "assets/robovac/assets/astrovac_steel_-_satin.azmaterial"
+                                            "assetHint": "assets/robovac/assets/robotvacuum_steel_-_satin.azmaterial"
                                         }
                                     }
                                 }
@@ -2769,10 +2775,10 @@
                         "Configuration": {
                             "ModelAsset": {
                                 "assetId": {
-                                    "guid": "{0AB692E8-D0BF-5204-8ECA-B9C8D5E133F2}",
-                                    "subId": 276008996
+                                    "guid": "{BA8E1DF2-159C-5C10-BC64-0EC2256578B5}",
+                                    "subId": 280150939
                                 },
-                                "assetHint": "assets/robovac/assets/astro_vac_suspensionbracketleft.azmodel"
+                                "assetHint": "assets/robovac/assets/robot_vacuum_suspensionbracketleft.azmodel"
                             }
                         }
                     }
@@ -2793,7 +2799,7 @@
         },
         "Entity_[29965236851195]": {
             "Id": "Entity_[29965236851195]",
-            "Name": "astro_vac_o_sensor_board",
+            "Name": "robot_vacuum_o_sensor_board",
             "Components": {
                 "Component_[1156667096148260854]": {
                     "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
@@ -2825,9 +2831,9 @@
                                     "Value": {
                                         "MaterialAsset": {
                                             "assetId": {
-                                                "guid": "{E8288A2B-DB8D-5A9B-B9AD-ED41B0F1C7B3}"
+                                                "guid": "{52A3E0FB-AF6E-527E-AAF3-21FFA27B1919}"
                                             },
-                                            "assetHint": "assets/robovac/assets/astrovac_absgrey.azmaterial"
+                                            "assetHint": "assets/robovac/assets/robotvacuum_absgrey.azmaterial"
                                         }
                                     }
                                 },
@@ -2838,9 +2844,9 @@
                                     "Value": {
                                         "MaterialAsset": {
                                             "assetId": {
-                                                "guid": "{D0B3791A-5AD8-5793-B332-1FBBFFC6330A}"
+                                                "guid": "{F577C6B7-C42B-5CE8-87C2-8248A315A468}"
                                             },
-                                            "assetHint": "assets/robovac/assets/astrovac_steel_-_satin.azmaterial"
+                                            "assetHint": "assets/robovac/assets/robotvacuum_steel_-_satin.azmaterial"
                                         }
                                     }
                                 },
@@ -2851,9 +2857,9 @@
                                     "Value": {
                                         "MaterialAsset": {
                                             "assetId": {
-                                                "guid": "{CAED33FE-4A6D-56F1-9A2C-DAD7A7FC7A66}"
+                                                "guid": "{B410214E-804E-5CD7-A152-17B36FBEA0E6}"
                                             },
-                                            "assetHint": "assets/robovac/assets/astrovac_chip.azmaterial"
+                                            "assetHint": "assets/robovac/assets/robotvacuum_chip.azmaterial"
                                         }
                                     }
                                 }
@@ -2880,10 +2886,10 @@
                         "Configuration": {
                             "ModelAsset": {
                                 "assetId": {
-                                    "guid": "{6EB87AE0-6F84-59BD-B321-8BA12833EE19}",
-                                    "subId": 271390525
+                                    "guid": "{AD4B016C-E6FB-553B-A2C8-AF607D64F268}",
+                                    "subId": 273610155
                                 },
-                                "assetHint": "assets/robovac/assets/astro_vac_o_sensor_board.azmodel"
+                                "assetHint": "assets/robovac/assets/robot_vacuum_o_sensor_board.azmodel"
                             }
                         }
                     }
@@ -2904,7 +2910,7 @@
         },
         "Entity_[29969531818491]": {
             "Id": "Entity_[29969531818491]",
-            "Name": "astro_vac_pariscopetube2",
+            "Name": "robot_vacuum_pariscopetube2",
             "Components": {
                 "Component_[10304117471988230418]": {
                     "$type": "EditorOnlyEntityComponent",
@@ -2926,10 +2932,10 @@
                         "Configuration": {
                             "ModelAsset": {
                                 "assetId": {
-                                    "guid": "{A13F64A2-E1F3-569F-8960-6683DB6DF842}",
-                                    "subId": 269272716
+                                    "guid": "{C4782BA6-ED02-5D3C-8197-460309515802}",
+                                    "subId": 275719194
                                 },
-                                "assetHint": "assets/robovac/assets/astro_vac_pariscopetube2.azmodel"
+                                "assetHint": "assets/robovac/assets/robot_vacuum_pariscopetube2.azmodel"
                             }
                         }
                     }
@@ -2967,9 +2973,9 @@
                                     "Value": {
                                         "MaterialAsset": {
                                             "assetId": {
-                                                "guid": "{D0B3791A-5AD8-5793-B332-1FBBFFC6330A}"
+                                                "guid": "{F577C6B7-C42B-5CE8-87C2-8248A315A468}"
                                             },
-                                            "assetHint": "assets/robovac/assets/astrovac_steel_-_satin.azmaterial"
+                                            "assetHint": "assets/robovac/assets/robotvacuum_steel_-_satin.azmaterial"
                                         }
                                     }
                                 }
@@ -2989,7 +2995,7 @@
         },
         "Entity_[29973826785787]": {
             "Id": "Entity_[29973826785787]",
-            "Name": "astro_vac_navsensor_right",
+            "Name": "robot_vacuum_navsensor_right",
             "Components": {
                 "Component_[12018261331184779302]": {
                     "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
@@ -3007,10 +3013,10 @@
                         "Configuration": {
                             "ModelAsset": {
                                 "assetId": {
-                                    "guid": "{DBFAEE97-2915-5460-84EE-01666DE4D6C9}",
-                                    "subId": 272632730
+                                    "guid": "{C352F5A2-0626-5B90-A283-5E8251D6B693}",
+                                    "subId": 272195081
                                 },
-                                "assetHint": "assets/robovac/assets/astro_vac_navsensor_right.azmodel"
+                                "assetHint": "assets/robovac/assets/robot_vacuum_navsensor_right.azmodel"
                             }
                         }
                     }
@@ -3036,9 +3042,9 @@
                                     "Value": {
                                         "MaterialAsset": {
                                             "assetId": {
-                                                "guid": "{E8288A2B-DB8D-5A9B-B9AD-ED41B0F1C7B3}"
+                                                "guid": "{52A3E0FB-AF6E-527E-AAF3-21FFA27B1919}"
                                             },
-                                            "assetHint": "assets/robovac/assets/astrovac_absgrey.azmaterial"
+                                            "assetHint": "assets/robovac/assets/robotvacuum_absgrey.azmaterial"
                                         }
                                     }
                                 }
@@ -3074,7 +3080,7 @@
         },
         "Entity_[29978121753083]": {
             "Id": "Entity_[29978121753083]",
-            "Name": "astro_vac_o_leftsensor",
+            "Name": "robot_vacuum_o_leftsensor",
             "Components": {
                 "Component_[11066946282277036911]": {
                     "$type": "EditorPendingCompositionComponent",
@@ -3110,9 +3116,9 @@
                                     "Value": {
                                         "MaterialAsset": {
                                             "assetId": {
-                                                "guid": "{E8288A2B-DB8D-5A9B-B9AD-ED41B0F1C7B3}"
+                                                "guid": "{52A3E0FB-AF6E-527E-AAF3-21FFA27B1919}"
                                             },
-                                            "assetHint": "assets/robovac/assets/astrovac_absgrey.azmaterial"
+                                            "assetHint": "assets/robovac/assets/robotvacuum_absgrey.azmaterial"
                                         }
                                     }
                                 },
@@ -3123,9 +3129,9 @@
                                     "Value": {
                                         "MaterialAsset": {
                                             "assetId": {
-                                                "guid": "{9E70F394-632D-5731-9EF5-6FEBB3D1EB47}"
+                                                "guid": "{18DE1187-52B8-5414-BA97-1247B28DCE4F}"
                                             },
-                                            "assetHint": "assets/robovac/assets/astrovac_acrylic_clear_.azmaterial"
+                                            "assetHint": "assets/robovac/assets/robotvacuum_acrylic_clear_.azmaterial"
                                         }
                                     }
                                 }
@@ -3148,10 +3154,10 @@
                         "Configuration": {
                             "ModelAsset": {
                                 "assetId": {
-                                    "guid": "{ED661A2C-FA64-5B93-B178-11524229E203}",
-                                    "subId": 273364249
+                                    "guid": "{F18D5EFA-5B8D-53EC-AA6F-ADDDD0891EC2}",
+                                    "subId": 272654703
                                 },
-                                "assetHint": "assets/robovac/assets/astro_vac_o_leftsensor.azmodel"
+                                "assetHint": "assets/robovac/assets/robot_vacuum_o_leftsensor.azmodel"
                             }
                         }
                     }
@@ -3172,7 +3178,7 @@
         },
         "Entity_[29982416720379]": {
             "Id": "Entity_[29982416720379]",
-            "Name": "astro_vac_gearboxleft",
+            "Name": "robot_vacuum_gearboxleft",
             "Components": {
                 "Component_[11984952559158485498]": {
                     "$type": "EditorDisabledCompositionComponent",
@@ -3203,9 +3209,9 @@
                                     "Value": {
                                         "MaterialAsset": {
                                             "assetId": {
-                                                "guid": "{D0B3791A-5AD8-5793-B332-1FBBFFC6330A}"
+                                                "guid": "{F577C6B7-C42B-5CE8-87C2-8248A315A468}"
                                             },
-                                            "assetHint": "assets/robovac/assets/astrovac_steel_-_satin.azmaterial"
+                                            "assetHint": "assets/robovac/assets/robotvacuum_steel_-_satin.azmaterial"
                                         }
                                     }
                                 },
@@ -3216,9 +3222,9 @@
                                     "Value": {
                                         "MaterialAsset": {
                                             "assetId": {
-                                                "guid": "{811B7B98-0326-57BE-96BE-D7C5885987FE}"
+                                                "guid": "{0AF7BE25-7818-5DEB-A848-FBF2575C04CA}"
                                             },
-                                            "assetHint": "assets/robovac/assets/astrovac_plastic_-_sensor.azmaterial"
+                                            "assetHint": "assets/robovac/assets/robotvacuum_plastic_-_sensor.azmaterial"
                                         }
                                     }
                                 }
@@ -3246,10 +3252,10 @@
                         "Configuration": {
                             "ModelAsset": {
                                 "assetId": {
-                                    "guid": "{FDFC9C2E-6A4A-58E1-8BA7-9225FF98937A}",
-                                    "subId": 280399620
+                                    "guid": "{1AC71EDF-C901-5B2A-B7CB-8FC6A83C423D}",
+                                    "subId": 273459944
                                 },
-                                "assetHint": "assets/robovac/assets/astro_vac_gearboxleft.azmodel"
+                                "assetHint": "assets/robovac/assets/robot_vacuum_gearboxleft.azmodel"
                             }
                         }
                     }
@@ -3270,7 +3276,7 @@
         },
         "Entity_[29986711687675]": {
             "Id": "Entity_[29986711687675]",
-            "Name": "astro_vac_suspensionpinleft",
+            "Name": "robot_vacuum_suspensionpinleft",
             "Components": {
                 "Component_[11644099126241511922]": {
                     "$type": "EditorEntityIconComponent",
@@ -3291,10 +3297,10 @@
                         "Configuration": {
                             "ModelAsset": {
                                 "assetId": {
-                                    "guid": "{75050D57-7A0E-5995-A549-735CDBE94A11}",
-                                    "subId": 277541711
+                                    "guid": "{2F2FAB67-CA72-54E7-838D-766CB087679A}",
+                                    "subId": 283612820
                                 },
-                                "assetHint": "assets/robovac/assets/astro_vac_suspensionpinleft.azmodel"
+                                "assetHint": "assets/robovac/assets/robot_vacuum_suspensionpinleft.azmodel"
                             }
                         }
                     }
@@ -3324,9 +3330,9 @@
                                     "Value": {
                                         "MaterialAsset": {
                                             "assetId": {
-                                                "guid": "{D0B3791A-5AD8-5793-B332-1FBBFFC6330A}"
+                                                "guid": "{F577C6B7-C42B-5CE8-87C2-8248A315A468}"
                                             },
-                                            "assetHint": "assets/robovac/assets/astrovac_steel_-_satin.azmaterial"
+                                            "assetHint": "assets/robovac/assets/robotvacuum_steel_-_satin.azmaterial"
                                         }
                                     }
                                 }
@@ -3355,7 +3361,7 @@
         },
         "Entity_[29991006654971]": {
             "Id": "Entity_[29991006654971]",
-            "Name": "astro_vac_navsensor_left",
+            "Name": "robot_vacuum_navsensor_left",
             "Components": {
                 "Component_[11045847107324823647]": {
                     "$type": "SelectionComponent",
@@ -3381,10 +3387,10 @@
                         "Configuration": {
                             "ModelAsset": {
                                 "assetId": {
-                                    "guid": "{3965EDFE-EEC1-53D3-A46E-31B107FEE6CA}",
-                                    "subId": 269042475
+                                    "guid": "{1FD55167-737B-5E3F-8AFD-9F833B6CECCB}",
+                                    "subId": 275423677
                                 },
-                                "assetHint": "assets/robovac/assets/astro_vac_navsensor_left.azmodel"
+                                "assetHint": "assets/robovac/assets/robot_vacuum_navsensor_left.azmodel"
                             }
                         }
                     }
@@ -3406,9 +3412,9 @@
                                     "Value": {
                                         "MaterialAsset": {
                                             "assetId": {
-                                                "guid": "{E8288A2B-DB8D-5A9B-B9AD-ED41B0F1C7B3}"
+                                                "guid": "{52A3E0FB-AF6E-527E-AAF3-21FFA27B1919}"
                                             },
-                                            "assetHint": "assets/robovac/assets/astrovac_absgrey.azmaterial"
+                                            "assetHint": "assets/robovac/assets/robotvacuum_absgrey.azmaterial"
                                         }
                                     }
                                 }
@@ -3440,7 +3446,7 @@
         },
         "Entity_[29995301622267]": {
             "Id": "Entity_[29995301622267]",
-            "Name": "astro_vac_vacvasedoor",
+            "Name": "robot_vacuum_vacvasedoor",
             "Components": {
                 "Component_[11880722833110957786]": {
                     "$type": "EditorVisibilityComponent",
@@ -3463,9 +3469,9 @@
                                     "Value": {
                                         "MaterialAsset": {
                                             "assetId": {
-                                                "guid": "{00748A17-685A-544D-AD32-6407B71BF517}"
+                                                "guid": "{E1884D12-B60F-5CF7-8BD0-D8EAFF0FE181}"
                                             },
-                                            "assetHint": "assets/robovac/assets/astrovac_polymide_kapton_.azmaterial"
+                                            "assetHint": "assets/robovac/assets/robotvacuum_polymide_kapton_.azmaterial"
                                         }
                                     }
                                 }
@@ -3501,10 +3507,10 @@
                         "Configuration": {
                             "ModelAsset": {
                                 "assetId": {
-                                    "guid": "{17032AE6-ADF7-5E24-B796-305545A5BC82}",
-                                    "subId": 278342146
+                                    "guid": "{9EC51CAC-6D19-5CE6-822D-114E6A0A9686}",
+                                    "subId": 275582958
                                 },
-                                "assetHint": "assets/robovac/assets/astro_vac_vacvasedoor.azmodel"
+                                "assetHint": "assets/robovac/assets/robot_vacuum_vacvasedoor.azmodel"
                             }
                         }
                     }
@@ -3525,7 +3531,7 @@
         },
         "Entity_[29999596589563]": {
             "Id": "Entity_[29999596589563]",
-            "Name": "astro_vac_bottomwheelone",
+            "Name": "robot_vacuum_bottomwheelone",
             "Components": {
                 "Component_[17098427013790263647]": {
                     "$type": "EditorEntitySortComponent",
@@ -3574,10 +3580,10 @@
                         "Configuration": {
                             "ModelAsset": {
                                 "assetId": {
-                                    "guid": "{10091CD5-D89D-5386-9B55-434BADC9A1FA}",
-                                    "subId": 283407610
+                                    "guid": "{ED25280D-25D6-5B96-98FF-5609D1F5B19D}",
+                                    "subId": 277321324
                                 },
-                                "assetHint": "assets/robovac/assets/astro_vac_bottomwheelone.azmodel"
+                                "assetHint": "assets/robovac/assets/robot_vacuum_bottomwheelone.azmodel"
                             }
                         }
                     }
@@ -3603,9 +3609,9 @@
                                     "Value": {
                                         "MaterialAsset": {
                                             "assetId": {
-                                                "guid": "{3FAE87E2-55C0-56F8-9BA3-C9FCA58C723F}"
+                                                "guid": "{F0459FD0-3485-565F-89B9-BC678699B78D}"
                                             },
-                                            "assetHint": "assets/robovac/assets/astrovac_paint_-_enamel_glossy_black_.azmaterial"
+                                            "assetHint": "assets/robovac/assets/robotvacuum_paint_-_enamel_glossy_black_.azmaterial"
                                         }
                                     }
                                 },
@@ -3616,9 +3622,9 @@
                                     "Value": {
                                         "MaterialAsset": {
                                             "assetId": {
-                                                "guid": "{2C63DBDB-2C71-57E0-A084-74D5B7797658}"
+                                                "guid": "{241AAEC3-59DF-5792-B463-93287A162A83}"
                                             },
-                                            "assetHint": "assets/robovac/assets/astrovac_abs_white_.azmaterial"
+                                            "assetHint": "assets/robovac/assets/robotvacuum_abs_white_.azmaterial"
                                         }
                                     }
                                 }
@@ -3630,7 +3636,7 @@
         },
         "Entity_[30003891556859]": {
             "Id": "Entity_[30003891556859]",
-            "Name": "astro_vac_rails",
+            "Name": "robot_vacuum_rails",
             "Components": {
                 "Component_[13583003163065014935]": {
                     "$type": "EditorVisibilityComponent",
@@ -3658,9 +3664,9 @@
                                     "Value": {
                                         "MaterialAsset": {
                                             "assetId": {
-                                                "guid": "{D0B3791A-5AD8-5793-B332-1FBBFFC6330A}"
+                                                "guid": "{F577C6B7-C42B-5CE8-87C2-8248A315A468}"
                                             },
-                                            "assetHint": "assets/robovac/assets/astrovac_steel_-_satin.azmaterial"
+                                            "assetHint": "assets/robovac/assets/robotvacuum_steel_-_satin.azmaterial"
                                         }
                                     }
                                 }
@@ -3683,10 +3689,10 @@
                         "Configuration": {
                             "ModelAsset": {
                                 "assetId": {
-                                    "guid": "{E89E4BF5-4F07-53D3-BD72-80A5AA30309D}",
-                                    "subId": 279157851
+                                    "guid": "{B7B22E2E-8891-5074-A6D1-59F52E4ED9D5}",
+                                    "subId": 279195488
                                 },
-                                "assetHint": "assets/robovac/assets/astro_vac_rails.azmodel"
+                                "assetHint": "assets/robovac/assets/robot_vacuum_rails.azmodel"
                             }
                         }
                     }
@@ -3715,7 +3721,7 @@
         },
         "Entity_[30008186524155]": {
             "Id": "Entity_[30008186524155]",
-            "Name": "astro_vac_capture",
+            "Name": "robot_vacuum_capture",
             "Components": {
                 "Component_[10407116969981419608]": {
                     "$type": "EditorEntityIconComponent",
@@ -3740,10 +3746,10 @@
                         "Configuration": {
                             "ModelAsset": {
                                 "assetId": {
-                                    "guid": "{9911653C-E16E-5E80-8A97-4EA1F0D73713}",
-                                    "subId": 277330500
+                                    "guid": "{ECF1C183-6C68-5CCD-AD24-4924C65CB0C7}",
+                                    "subId": 274574925
                                 },
-                                "assetHint": "assets/robovac/assets/astro_vac_capture.azmodel"
+                                "assetHint": "assets/robovac/assets/robot_vacuum_capture.azmodel"
                             }
                         }
                     }
@@ -3774,9 +3780,9 @@
                                     "Value": {
                                         "MaterialAsset": {
                                             "assetId": {
-                                                "guid": "{2C63DBDB-2C71-57E0-A084-74D5B7797658}"
+                                                "guid": "{241AAEC3-59DF-5792-B463-93287A162A83}"
                                             },
-                                            "assetHint": "assets/robovac/assets/astrovac_abs_white_.azmaterial"
+                                            "assetHint": "assets/robovac/assets/robotvacuum_abs_white_.azmaterial"
                                         }
                                     }
                                 }
@@ -3800,7 +3806,7 @@
         },
         "Entity_[30012481491451]": {
             "Id": "Entity_[30012481491451]",
-            "Name": "astro_vac_pariscopetube3",
+            "Name": "robot_vacuum_pariscopetube3",
             "Components": {
                 "Component_[12880168912967059759]": {
                     "$type": "EditorLockComponent",
@@ -3829,10 +3835,10 @@
                         "Configuration": {
                             "ModelAsset": {
                                 "assetId": {
-                                    "guid": "{84FE3FC5-5E81-5B11-B39D-86CEC4C4AE14}",
-                                    "subId": 269219354
+                                    "guid": "{64119CB4-A7C6-5969-B6C0-1EE5E6FC2252}",
+                                    "subId": 275256460
                                 },
-                                "assetHint": "assets/robovac/assets/astro_vac_pariscopetube3.azmodel"
+                                "assetHint": "assets/robovac/assets/robot_vacuum_pariscopetube3.azmodel"
                             }
                         }
                     }
@@ -3863,9 +3869,9 @@
                                     "Value": {
                                         "MaterialAsset": {
                                             "assetId": {
-                                                "guid": "{D0B3791A-5AD8-5793-B332-1FBBFFC6330A}"
+                                                "guid": "{F577C6B7-C42B-5CE8-87C2-8248A315A468}"
                                             },
-                                            "assetHint": "assets/robovac/assets/astrovac_steel_-_satin.azmaterial"
+                                            "assetHint": "assets/robovac/assets/robotvacuum_steel_-_satin.azmaterial"
                                         }
                                     }
                                 }
@@ -3885,7 +3891,7 @@
         },
         "Entity_[30016776458747]": {
             "Id": "Entity_[30016776458747]",
-            "Name": "astro_vac_base_link",
+            "Name": "robot_vacuum_base_link",
             "Components": {
                 "Component_[1817880946152815022]": {
                     "$type": "EditorColliderComponent",
@@ -3908,19 +3914,19 @@
                         "PhysicsAsset": {
                             "Asset": {
                                 "assetId": {
-                                    "guid": "{BD6D6251-25F8-5DC5-B62F-0A5F70B467D0}",
+                                    "guid": "{5AE935FF-A90A-59AF-BFD4-F38CEB3F8CDF}",
                                     "subId": 3876031564
                                 },
-                                "assetHint": "assets/robovac/assets/astro_vac_base_link.pxmesh"
+                                "assetHint": "assets/robovac/assets/robot_vacuum_base_link.pxmesh"
                             },
                             "Configuration": {
                                 "PhysicsAsset": {
                                     "assetId": {
-                                        "guid": "{BD6D6251-25F8-5DC5-B62F-0A5F70B467D0}",
+                                        "guid": "{5AE935FF-A90A-59AF-BFD4-F38CEB3F8CDF}",
                                         "subId": 3876031564
                                     },
                                     "loadBehavior": "QueueLoad",
-                                    "assetHint": "assets/robovac/assets/astro_vac_base_link.pxmesh"
+                                    "assetHint": "assets/robovac/assets/robot_vacuum_base_link.pxmesh"
                                 }
                             }
                         }
@@ -3937,10 +3943,10 @@
                         "Configuration": {
                             "ModelAsset": {
                                 "assetId": {
-                                    "guid": "{BD6D6251-25F8-5DC5-B62F-0A5F70B467D0}",
-                                    "subId": 282259871
+                                    "guid": "{5AE935FF-A90A-59AF-BFD4-F38CEB3F8CDF}",
+                                    "subId": 281735281
                                 },
-                                "assetHint": "assets/robovac/assets/astro_vac_base_link.azmodel"
+                                "assetHint": "assets/robovac/assets/robot_vacuum_base_link.azmodel"
                             }
                         }
                     }
@@ -3975,9 +3981,9 @@
                                     "Value": {
                                         "MaterialAsset": {
                                             "assetId": {
-                                                "guid": "{2C63DBDB-2C71-57E0-A084-74D5B7797658}"
+                                                "guid": "{241AAEC3-59DF-5792-B463-93287A162A83}"
                                             },
-                                            "assetHint": "assets/robovac/assets/astrovac_abs_white_.azmaterial"
+                                            "assetHint": "assets/robovac/assets/robotvacuum_abs_white_.azmaterial"
                                         }
                                     }
                                 }
@@ -4009,7 +4015,7 @@
         },
         "Entity_[30021071426043]": {
             "Id": "Entity_[30021071426043]",
-            "Name": "astro_vac_towerstablebase",
+            "Name": "robot_vacuum_towerstablebase",
             "Components": {
                 "Component_[12475386664588628871]": {
                     "$type": "EditorEntitySortComponent",
@@ -4036,9 +4042,9 @@
                                     "Value": {
                                         "MaterialAsset": {
                                             "assetId": {
-                                                "guid": "{D0B3791A-5AD8-5793-B332-1FBBFFC6330A}"
+                                                "guid": "{F577C6B7-C42B-5CE8-87C2-8248A315A468}"
                                             },
-                                            "assetHint": "assets/robovac/assets/astrovac_steel_-_satin.azmaterial"
+                                            "assetHint": "assets/robovac/assets/robotvacuum_steel_-_satin.azmaterial"
                                         }
                                     }
                                 }
@@ -4053,10 +4059,10 @@
                         "Configuration": {
                             "ModelAsset": {
                                 "assetId": {
-                                    "guid": "{A1B2945A-6C45-5D1C-A522-33BB9220194A}",
-                                    "subId": 277429173
+                                    "guid": "{F07142B9-F47B-5A34-BDCA-1A951A2B722B}",
+                                    "subId": 284192294
                                 },
-                                "assetHint": "assets/robovac/assets/astro_vac_towerstablebase.azmodel"
+                                "assetHint": "assets/robovac/assets/robot_vacuum_towerstablebase.azmodel"
                             }
                         }
                     }
@@ -4094,7 +4100,7 @@
         },
         "Entity_[30025366393339]": {
             "Id": "Entity_[30025366393339]",
-            "Name": "astro_vac_bottomwheeltwo",
+            "Name": "robot_vacuum_bottomwheeltwo",
             "Components": {
                 "Component_[11486843524168740793]": {
                     "$type": "EditorVisibilityComponent",
@@ -4120,10 +4126,10 @@
                         "Configuration": {
                             "ModelAsset": {
                                 "assetId": {
-                                    "guid": "{13520B7C-B773-560D-BC46-DD88DB5B41C0}",
-                                    "subId": 272791661
+                                    "guid": "{30F3B098-95A6-511D-86FC-1F9E8B626477}",
+                                    "subId": 270637819
                                 },
-                                "assetHint": "assets/robovac/assets/astro_vac_bottomwheeltwo.azmodel"
+                                "assetHint": "assets/robovac/assets/robot_vacuum_bottomwheeltwo.azmodel"
                             }
                         }
                     }
@@ -4165,9 +4171,9 @@
                                     "Value": {
                                         "MaterialAsset": {
                                             "assetId": {
-                                                "guid": "{3FAE87E2-55C0-56F8-9BA3-C9FCA58C723F}"
+                                                "guid": "{F0459FD0-3485-565F-89B9-BC678699B78D}"
                                             },
-                                            "assetHint": "assets/robovac/assets/astrovac_paint_-_enamel_glossy_black_.azmaterial"
+                                            "assetHint": "assets/robovac/assets/robotvacuum_paint_-_enamel_glossy_black_.azmaterial"
                                         }
                                     }
                                 },
@@ -4178,9 +4184,9 @@
                                     "Value": {
                                         "MaterialAsset": {
                                             "assetId": {
-                                                "guid": "{2C63DBDB-2C71-57E0-A084-74D5B7797658}"
+                                                "guid": "{241AAEC3-59DF-5792-B463-93287A162A83}"
                                             },
-                                            "assetHint": "assets/robovac/assets/astrovac_abs_white_.azmaterial"
+                                            "assetHint": "assets/robovac/assets/robotvacuum_abs_white_.azmaterial"
                                         }
                                     }
                                 }
@@ -4192,7 +4198,7 @@
         },
         "Entity_[30029661360635]": {
             "Id": "Entity_[30029661360635]",
-            "Name": "astro_vac_mainlogicboard",
+            "Name": "robot_vacuum_mainlogicboard",
             "Components": {
                 "Component_[10241546628040874120]": {
                     "$type": "AZ::Render::EditorMeshComponent",
@@ -4201,10 +4207,10 @@
                         "Configuration": {
                             "ModelAsset": {
                                 "assetId": {
-                                    "guid": "{08C1C1A7-B906-5903-B7FD-9EDEF2D64988}",
-                                    "subId": 274187737
+                                    "guid": "{8F190CD8-69E6-5910-9246-B2C3E22FC6B3}",
+                                    "subId": 271853391
                                 },
-                                "assetHint": "assets/robovac/assets/astro_vac_mainlogicboard.azmodel"
+                                "assetHint": "assets/robovac/assets/robot_vacuum_mainlogicboard.azmodel"
                             }
                         }
                     }
@@ -4250,9 +4256,9 @@
                                     "Value": {
                                         "MaterialAsset": {
                                             "assetId": {
-                                                "guid": "{D0B3791A-5AD8-5793-B332-1FBBFFC6330A}"
+                                                "guid": "{F577C6B7-C42B-5CE8-87C2-8248A315A468}"
                                             },
-                                            "assetHint": "assets/robovac/assets/astrovac_steel_-_satin.azmaterial"
+                                            "assetHint": "assets/robovac/assets/robotvacuum_steel_-_satin.azmaterial"
                                         }
                                     }
                                 },
@@ -4263,9 +4269,9 @@
                                     "Value": {
                                         "MaterialAsset": {
                                             "assetId": {
-                                                "guid": "{2C63DBDB-2C71-57E0-A084-74D5B7797658}"
+                                                "guid": "{241AAEC3-59DF-5792-B463-93287A162A83}"
                                             },
-                                            "assetHint": "assets/robovac/assets/astrovac_abs_white_.azmaterial"
+                                            "assetHint": "assets/robovac/assets/robotvacuum_abs_white_.azmaterial"
                                         }
                                     }
                                 },
@@ -4276,9 +4282,9 @@
                                     "Value": {
                                         "MaterialAsset": {
                                             "assetId": {
-                                                "guid": "{CAED33FE-4A6D-56F1-9A2C-DAD7A7FC7A66}"
+                                                "guid": "{B410214E-804E-5CD7-A152-17B36FBEA0E6}"
                                             },
-                                            "assetHint": "assets/robovac/assets/astrovac_chip.azmaterial"
+                                            "assetHint": "assets/robovac/assets/robotvacuum_chip.azmaterial"
                                         }
                                     }
                                 },
@@ -4289,9 +4295,9 @@
                                     "Value": {
                                         "MaterialAsset": {
                                             "assetId": {
-                                                "guid": "{FDF24C3B-3910-567C-840D-06964B62EF66}"
+                                                "guid": "{72A191F2-05C0-50A8-9590-896336FEC9AC}"
                                             },
-                                            "assetHint": "assets/robovac/assets/astrovac_fr4.azmaterial"
+                                            "assetHint": "assets/robovac/assets/robotvacuum_fr4.azmaterial"
                                         }
                                     }
                                 }
@@ -4316,7 +4322,7 @@
         },
         "Entity_[30033956327931]": {
             "Id": "Entity_[30033956327931]",
-            "Name": "astro_vac_brushc",
+            "Name": "robot_vacuum_brushc",
             "Components": {
                 "Component_[10056716655303761556]": {
                     "$type": "EditorMaterialComponent",
@@ -4331,9 +4337,9 @@
                                     "Value": {
                                         "MaterialAsset": {
                                             "assetId": {
-                                                "guid": "{117B83D8-BCCA-5AF7-B7E9-F5A32F2FFEE9}"
+                                                "guid": "{996BEAD2-C595-5851-BC40-A2A0F94A39A3}"
                                             },
-                                            "assetHint": "assets/robovac/assets/astrovac_rubber_-_weathered.azmaterial"
+                                            "assetHint": "assets/robovac/assets/robotvacuum_rubber_-_weathered.azmaterial"
                                         }
                                     }
                                 }
@@ -4361,10 +4367,10 @@
                         "Configuration": {
                             "ModelAsset": {
                                 "assetId": {
-                                    "guid": "{4031F3FC-4EA7-5D3E-A340-EF2997D0E5C4}",
-                                    "subId": 269081782
+                                    "guid": "{8A17DB80-F64A-5B35-90BC-DF7A390F2001}",
+                                    "subId": 270217761
                                 },
-                                "assetHint": "assets/robovac/assets/astro_vac_brushc.azmodel"
+                                "assetHint": "assets/robovac/assets/robot_vacuum_brushc.azmodel"
                             }
                         }
                     }
@@ -4401,7 +4407,7 @@
         },
         "Entity_[30038251295227]": {
             "Id": "Entity_[30038251295227]",
-            "Name": "astro_vac_gearboxright",
+            "Name": "robot_vacuum_gearboxright",
             "Components": {
                 "Component_[1133023484187037027]": {
                     "$type": "EditorInspectorComponent",
@@ -4453,9 +4459,9 @@
                                     "Value": {
                                         "MaterialAsset": {
                                             "assetId": {
-                                                "guid": "{D0B3791A-5AD8-5793-B332-1FBBFFC6330A}"
+                                                "guid": "{F577C6B7-C42B-5CE8-87C2-8248A315A468}"
                                             },
-                                            "assetHint": "assets/robovac/assets/astrovac_steel_-_satin.azmaterial"
+                                            "assetHint": "assets/robovac/assets/robotvacuum_steel_-_satin.azmaterial"
                                         }
                                     }
                                 },
@@ -4466,9 +4472,9 @@
                                     "Value": {
                                         "MaterialAsset": {
                                             "assetId": {
-                                                "guid": "{3FAE87E2-55C0-56F8-9BA3-C9FCA58C723F}"
+                                                "guid": "{F0459FD0-3485-565F-89B9-BC678699B78D}"
                                             },
-                                            "assetHint": "assets/robovac/assets/astrovac_paint_-_enamel_glossy_black_.azmaterial"
+                                            "assetHint": "assets/robovac/assets/robotvacuum_paint_-_enamel_glossy_black_.azmaterial"
                                         }
                                     }
                                 }
@@ -4483,10 +4489,10 @@
                         "Configuration": {
                             "ModelAsset": {
                                 "assetId": {
-                                    "guid": "{7A950F06-4AF2-5355-9E60-D1DC562A7771}",
-                                    "subId": 278104335
+                                    "guid": "{D9ECA641-E87C-5379-8EF6-164558ED841B}",
+                                    "subId": 278453625
                                 },
-                                "assetHint": "assets/robovac/assets/astro_vac_gearboxright.azmodel"
+                                "assetHint": "assets/robovac/assets/robot_vacuum_gearboxright.azmodel"
                             }
                         }
                     }
@@ -4499,7 +4505,7 @@
         },
         "Entity_[30042546262523]": {
             "Id": "Entity_[30042546262523]",
-            "Name": "astro_vac_rightdrivegear",
+            "Name": "robot_vacuum_rightdrivegear",
             "Components": {
                 "Component_[10170119661745965980]": {
                     "$type": "EditorInspectorComponent",
@@ -4524,10 +4530,10 @@
                         "Configuration": {
                             "ModelAsset": {
                                 "assetId": {
-                                    "guid": "{0A1B030F-3079-5C75-B3D0-97401E545B58}",
-                                    "subId": 272423989
+                                    "guid": "{B378D436-3D8F-593D-9D4A-B910E43FACBB}",
+                                    "subId": 274677411
                                 },
-                                "assetHint": "assets/robovac/assets/astro_vac_rightdrivegear.azmodel"
+                                "assetHint": "assets/robovac/assets/robot_vacuum_rightdrivegear.azmodel"
                             }
                         }
                     }
@@ -4561,9 +4567,9 @@
                                     "Value": {
                                         "MaterialAsset": {
                                             "assetId": {
-                                                "guid": "{D0B3791A-5AD8-5793-B332-1FBBFFC6330A}"
+                                                "guid": "{F577C6B7-C42B-5CE8-87C2-8248A315A468}"
                                             },
-                                            "assetHint": "assets/robovac/assets/astrovac_steel_-_satin.azmaterial"
+                                            "assetHint": "assets/robovac/assets/robotvacuum_steel_-_satin.azmaterial"
                                         }
                                     }
                                 }
@@ -4584,7 +4590,7 @@
         },
         "Entity_[30046841229819]": {
             "Id": "Entity_[30046841229819]",
-            "Name": "astro_vac_wheel_right",
+            "Name": "robot_vacuum_wheel_right",
             "Components": {
                 "Component_[10318422179640899640]": {
                     "$type": "EditorInspectorComponent",
@@ -4611,9 +4617,9 @@
                                     "Value": {
                                         "MaterialAsset": {
                                             "assetId": {
-                                                "guid": "{2C63DBDB-2C71-57E0-A084-74D5B7797658}"
+                                                "guid": "{241AAEC3-59DF-5792-B463-93287A162A83}"
                                             },
-                                            "assetHint": "assets/robovac/assets/astrovac_abs_white_.azmaterial"
+                                            "assetHint": "assets/robovac/assets/robotvacuum_abs_white_.azmaterial"
                                         }
                                     }
                                 },
@@ -4624,9 +4630,9 @@
                                     "Value": {
                                         "MaterialAsset": {
                                             "assetId": {
-                                                "guid": "{117B83D8-BCCA-5AF7-B7E9-F5A32F2FFEE9}"
+                                                "guid": "{996BEAD2-C595-5851-BC40-A2A0F94A39A3}"
                                             },
-                                            "assetHint": "assets/robovac/assets/astrovac_rubber_-_weathered.azmaterial"
+                                            "assetHint": "assets/robovac/assets/robotvacuum_rubber_-_weathered.azmaterial"
                                         }
                                     }
                                 }
@@ -4666,10 +4672,10 @@
                         "Configuration": {
                             "ModelAsset": {
                                 "assetId": {
-                                    "guid": "{40B6E5CE-E0B4-5389-B394-71A796CADF92}",
-                                    "subId": 268485826
+                                    "guid": "{552355B7-B59D-589D-A162-46D2141B1462}",
+                                    "subId": 284877102
                                 },
-                                "assetHint": "assets/robovac/assets/astro_vac_wheel_right.azmodel"
+                                "assetHint": "assets/robovac/assets/robot_vacuum_wheel_right.azmodel"
                             }
                         }
                     }
@@ -4682,7 +4688,7 @@
         },
         "Entity_[30051136197115]": {
             "Id": "Entity_[30051136197115]",
-            "Name": "astro_vac_vaccase",
+            "Name": "robot_vacuum_vaccase",
             "Components": {
                 "Component_[10171691559656925088]": {
                     "$type": "AZ::Render::EditorMeshComponent",
@@ -4691,10 +4697,10 @@
                         "Configuration": {
                             "ModelAsset": {
                                 "assetId": {
-                                    "guid": "{B2583265-26A6-5A23-8027-89DC367C4AAD}",
-                                    "subId": 282833332
+                                    "guid": "{3A435A14-ECF6-5787-86B1-B8B438A11F15}",
+                                    "subId": 268543421
                                 },
-                                "assetHint": "assets/robovac/assets/astro_vac_vaccase.azmodel"
+                                "assetHint": "assets/robovac/assets/robot_vacuum_vaccase.azmodel"
                             }
                         }
                     }
@@ -4724,9 +4730,9 @@
                                     "Value": {
                                         "MaterialAsset": {
                                             "assetId": {
-                                                "guid": "{00748A17-685A-544D-AD32-6407B71BF517}"
+                                                "guid": "{E1884D12-B60F-5CF7-8BD0-D8EAFF0FE181}"
                                             },
-                                            "assetHint": "assets/robovac/assets/astrovac_polymide_kapton_.azmaterial"
+                                            "assetHint": "assets/robovac/assets/robotvacuum_polymide_kapton_.azmaterial"
                                         }
                                     }
                                 }
@@ -4767,7 +4773,7 @@
         },
         "Entity_[30055431164411]": {
             "Id": "Entity_[30055431164411]",
-            "Name": "AstroVacRobot",
+            "Name": "RobotVacuum",
             "Components": {
                 "Component_[12335778149585122117]": {
                     "$type": "EditorEntityIconComponent",
@@ -4792,7 +4798,7 @@
                             "roll": 0.0,
                             "pitch": 0.0,
                             "yaw": 0.0,
-                            "scale": 0.5
+                            "scale": 2.0
                         }
                     }
                 },
@@ -4923,7 +4929,7 @@
         },
         "Entity_[30059726131707]": {
             "Id": "Entity_[30059726131707]",
-            "Name": "astro_vac_osensorboardholder",
+            "Name": "robot_vacuum_osensorboardholder",
             "Components": {
                 "Component_[10741789439431487362]": {
                     "$type": "EditorDisabledCompositionComponent",
@@ -4945,10 +4951,10 @@
                         "Configuration": {
                             "ModelAsset": {
                                 "assetId": {
-                                    "guid": "{3EA64C4C-B6EB-5C07-B4E9-EB3151649547}",
-                                    "subId": 276203028
+                                    "guid": "{3DFC70D2-228C-505C-9078-89970FBE1E84}",
+                                    "subId": 272031789
                                 },
-                                "assetHint": "assets/robovac/assets/astro_vac_osensorboardholder.azmodel"
+                                "assetHint": "assets/robovac/assets/robot_vacuum_osensorboardholder.azmodel"
                             }
                         }
                     }
@@ -4986,9 +4992,9 @@
                                     "Value": {
                                         "MaterialAsset": {
                                             "assetId": {
-                                                "guid": "{3FAE87E2-55C0-56F8-9BA3-C9FCA58C723F}"
+                                                "guid": "{F0459FD0-3485-565F-89B9-BC678699B78D}"
                                             },
-                                            "assetHint": "assets/robovac/assets/astrovac_paint_-_enamel_glossy_black_.azmaterial"
+                                            "assetHint": "assets/robovac/assets/robotvacuum_paint_-_enamel_glossy_black_.azmaterial"
                                         }
                                     }
                                 }

@@ -3,7 +3,7 @@
         {
             "$type": "{5B03C8E6-8CEE-4DA0-A7FA-CD88689DD45B} MeshGroup",
             "id": "{68DE7E71-7B71-5C30-812B-F1807971D3DA}",
-            "name": "Astro_Vac_Capture",
+            "name": "Robot_Vacuum_Capture",
             "NodeSelectionList": {
                 "selectedNodes": [
                     "RootNode.Capture"
@@ -23,7 +23,7 @@
         },
         {
             "$type": "{07B356B7-3635-40B5-878A-FAC4EFD5AD86} MeshGroup",
-            "name": "Astro_Vac_Capture",
+            "name": "Robot_Vacuum_Capture",
             "nodeSelectionList": {
                 "selectedNodes": [
                     {},
