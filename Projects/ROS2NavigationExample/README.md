@@ -1,6 +1,6 @@
 # O3DE ROS 2 Gem navigation demo project
 
-This project will demonstrate the ROS2 Gems and O3DE using assets from the Loft demo scene and ROS 2 navigation stack.
+This project demonstrates how ROS2 Gem for O3DE can be used with a scene (The Loft project) and ROS 2 navigation stack.
 
 ![image](https://user-images.githubusercontent.com/16702721/174113203-e22cfd37-1bd5-4e42-a543-17b92de96c13.png)
 
