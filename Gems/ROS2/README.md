@@ -52,7 +52,7 @@ It will allow you to run robot navigation. All necessary assets are included.
 
 ## User Guide
 
-Follow the [ROS 2 Gem User Guide](docs/user-guide/ros2-gem.md) to understand its concepts and components.
+Follow the [ROS 2 Gem User Guide](docs/user_guide/ros2-gem.md) to understand its concepts and components.
 
 ## How to create your own robotic simulation
 
