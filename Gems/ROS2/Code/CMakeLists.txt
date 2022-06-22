@@ -28,6 +28,8 @@ ly_add_target(
             AZ::AzCore
             AZ::AzFramework
             Gem::Atom_RPI.Public
+            Gem::Atom_Feature_Common.Static
+            Gem::Atom_Component_DebugCamera.Static
 )
 
 target_depends_on_ros2_packages(ROS2.Static rclcpp builtin_interfaces std_msgs sensor_msgs urdfdom tf2_ros)
@@ -56,6 +58,7 @@ ly_add_target(
     BUILD_DEPENDENCIES
         PRIVATE
             Gem::ROS2.Static
+            Gem::Atom_Feature_Common.Static
 )
 
 # By default, we will specify that the above target ROS2 would be used by
@@ -99,6 +102,7 @@ if(PAL_TRAIT_BUILD_HOST_TOOLS)
         BUILD_DEPENDENCIES
             PUBLIC
                 Gem::ROS2.Editor.Static
+                Gem::Atom_Feature_Common.Static
     )
 
     # By default, we will specify that the above target ROS2 would be used by

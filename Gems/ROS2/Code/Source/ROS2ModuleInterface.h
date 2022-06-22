@@ -13,6 +13,7 @@
 #include "Lidar/ROS2LidarSensorComponent.h"
 #include "RobotControl/ROS2RobotControlComponent.h"
 #include "ROS2SystemComponent.h"
+#include "Camera/ROS2CameraSensorComponent.h"
 #include <AzCore/Memory/SystemAllocator.h>
 #include <AzCore/Module/Module.h>
 
@@ -38,7 +39,8 @@ namespace ROS2
                 ROS2GNSSSensorComponent::CreateDescriptor(),
                 ROS2LidarSensorComponent::CreateDescriptor(),
                 ROS2FrameComponent::CreateDescriptor(),
-                ROS2RobotControlComponent::CreateDescriptor()
+                ROS2RobotControlComponent::CreateDescriptor(),
+                ROS2CameraSensorComponent::CreateDescriptor()
                 });
         }
 
