@@ -10,11 +10,24 @@
 
 
 #include <XR/XRSpace.h>
+#include <XR/XRBase.h>
 #include <OpenXRVk_Platform.h>
+#include <AzCore/Preprocessor/Enum.h>
 
 namespace OpenXRVk
 {
-    // Class that will help manage XrSpaces
+    AZ_ENUM(SpaceType,
+        View,
+        ViewFront,
+        Local,
+        Stage,
+        StageLeft,
+        StageRight,
+        StageLeftRotated,
+        StageRightRotated,
+        Count);
+
+    //!This class is responsible for managing specific space coordinates tracked by the device
     class Space final
         : public XR::Space
     {
@@ -22,11 +35,26 @@ namespace OpenXRVk
         AZ_CLASS_ALLOCATOR(Space, AZ::SystemAllocator, 0);
         AZ_RTTI(Space, "{E99557D0-9061-4691-9524-CE0ACC3A14FA}", XR::Space);
         
-        static AZStd::intrusive_ptr<Space> Create();
+        static XR::Ptr<Space> Create();           
+        AZ::RHI::ResultCode InitInternal() override;
+        void ShutdownInternal() override;
+    
+        //!Initialize XrSpace per SpaceType we want to track
+        void CreateVisualizedSpaces(XrSession xrSession);
 
-        //XrSpaceLocation GetSpace(XrSpace space);
+        //! Return the XrReferenceSpaceCreateInfo associated with each SpaceType
+        XrReferenceSpaceCreateInfo GetXrReferenceSpaceCreateInfo(SpaceType spaceType);
+
+        //! Get the XrSpace for a given SpaceType
+        XrSpace GetXrSpace(SpaceType spaceType) const;
 
     private:
-        XrSpace m_baseSpace{ XR_NULL_HANDLE };
+
+        //! XrPose specific matrix translation, Rotation functions
+        XrPosef Identity();
+        XrPosef Translation(const XrVector3f& translation);
+        XrPosef RotateCCWAboutYAxis(float radians, XrVector3f translation);
+
+        AZStd::vector<XrSpace> m_xrSpaces;
     };
 }

@@ -15,8 +15,8 @@ namespace OpenXRVk
 {
     //! This class is the component related to the vulkan backend of XR.
     class SystemComponent final
-    : public AZ::Component
-    , public XR::Factory
+        : public AZ::Component
+        , public XR::Factory
     {
     public:
         AZ_COMPONENT(SystemComponent, "{C0ABD1CE-FD3C-48C3-8AE8-C098BCCFC604}");
@@ -35,11 +35,29 @@ namespace OpenXRVk
 
         ///////////////////////////////////////////////////////////////////
         // XR::Factory overrides
-        // Create OpenXRVk::Instance object
-        virtual XR::Ptr<XR::Instance> CreateInstance();
+        //! Create OpenXRVk::Instance object
+        XR::Ptr<XR::Instance> CreateInstance() override;
 
-        // Create OpenXRVk::Device object
-        virtual XR::Ptr<XR::Device> CreateDevice();
+        //! Create OpenXRVk::Device object
+        XR::Ptr<XR::Device> CreateDevice() override;
+
+        //! Create XR::Session object.
+        XR::Ptr<XR::Session> CreateSession() override;
+
+        //! Create XR::Input object.
+        XR::Ptr<XR::Input> CreateInput() override;
+
+        //! Create XR::Space object.
+        XR::Ptr<XR::Space> CreateSpace() override;
+
+        //! Create XR::Swapchain object.
+        XR::Ptr<XR::SwapChain> CreateSwapChain() override;
+
+        //! Create XR::Swapchain::View object.
+        XR::Ptr<XR::SwapChain::View> CreateSwapChainView() override;
+
+        //! Create XR::Swapchain::Image object.
+        XR::Ptr<XR::SwapChain::Image> CreateSwapChainImage() override;
         ///////////////////////////////////////////////////////////////////
     };
 }

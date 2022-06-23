@@ -8,27 +8,13 @@
 
 #pragma once
 
-#include <XR/XRSession.h>
 #include <AzCore/std/smart_ptr/intrusive_ptr.h>
 #include <OpenXRVk_Platform.h>
+#include <OpenXRVk/OpenXRVkSpace.h>
+#include <XR/XRSession.h>
 
 namespace OpenXRVk
 {
-    //Todo: Pull this in when needed or remove
-    /*
-    class SessionDescriptor final
-        : public XR::SessionDescriptor 
-    {
-    public:
-        AZ_CLASS_ALLOCATOR(SessionDescriptor, AZ::SystemAllocator, 0);
-        AZ_RTTI(SessionDescriptor, "{775CCED3-9676-4F48-B419-BDADE0F7F447}", XR::SessionDescriptor);
-
-        SessionDescriptor() = default;
-        virtual ~SessionDescriptor() = default;
-
-        //any openxr specific session descriptor data
-    };
-
     // Class that will help manage XrSession
     class Session final
         : public XR::Session
@@ -37,23 +23,50 @@ namespace OpenXRVk
         AZ_CLASS_ALLOCATOR(Session, AZ::SystemAllocator, 0);
         AZ_RTTI(Session, "{6C899F0C-9A3D-4D79-8E4F-92AFB67E5EB1}", XR::Session);
 
-        static AZStd::intrusive_ptr<Session> Create();
+        static XR::Ptr<Session> Create();
 
+        //! Print out all the supported Reference space
         void LogReferenceSpaces();
-        void HandleSessionStateChangedEvent(
-            const XrEventDataSessionStateChanged& stateChangedEvent,
-            bool* exitRenderLoop,
-            bool* requestRestart);
-        XrSession GetXrSession();
-        virtual bool IsSessionRunning() const override;
-        virtual bool IsSessionFocused() const override;
-        virtual AZ::RHI::ResultCode InitInternal();
+
+        //! Process session state when it is updated
+        void HandleSessionStateChangedEvent(const XrEventDataSessionStateChanged& stateChangedEvent);
+
+        //! Try and poll the next event 
+        const XrEventDataBaseHeader* TryReadNextEvent();
+
+        //! Return the native session
+        XrSession GetXrSession() const;
+
+        //! Return the Xrspace related to the SpaceType enum
+        XrSpace GetXrSpace(SpaceType spaceType) const;
+
+        //////////////////////////////////////////////////////////////////////////
+        // XR::Session overrides
+        AZ::RHI::ResultCode InitInternal(AZ::RHI::XRSessionDescriptor* descriptor) override;
+        bool IsSessionRunning() const override;
+        bool IsSessionFocused() const override;
+        bool IsRestartRequested() const override;
+        bool IsExitRenderLoopRequested() const override;
+        void PollEvents() override;
+        void LocateControllerSpace(AZ::u32 handIndex) override;
+        AZ::RPI::PoseData GetControllerPose(AZ::u32 handIndex) const override;
+        AZ::RPI::PoseData GetViewFrontPose() const override;
+        float GetControllerScale(AZ::u32 handIndex) const override;
+        //////////////////////////////////////////////////////////////////////////
 
     private:
-        XrSession m_session{ XR_NULL_HANDLE };
-        // Application's current lifecycle state according to the runtime
-        XrSessionState m_sessionState{ XR_SESSION_STATE_UNKNOWN };
-        XrFrameState m_frameState{ XR_TYPE_FRAME_STATE };
+
+        void ShutdownInternal() override;
+        void LogActionSourceName(XrAction action, const AZStd::string_view actionName) const;
+        
+        XrSession m_session = XR_NULL_HANDLE;
+        XrSessionState m_sessionState = XR_SESSION_STATE_UNKNOWN;
+        XrEventDataBuffer m_eventDataBuffer;
+        XrInstance m_xrInstance = XR_NULL_HANDLE;
+        XrGraphicsBindingVulkan2KHR m_graphicsBinding{ XR_TYPE_GRAPHICS_BINDING_VULKAN2_KHR };
+
+        bool m_sessionRunning = false;
+        bool m_exitRenderLoop = false;
+        bool m_requestRestart = false;        
     };
-    */
 }

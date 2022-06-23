@@ -32,8 +32,8 @@ namespace OpenXRVk
 
     bool GladFunctionLoader::InitInternal()
     {
-        // Since que don't have the vulkan instance or device yet, we just load the function pointers from the loader
-        // using dlsym or similar.
+        // Since we don't have the vulkan instance or device yet, we just load the function pointers from the loader
+        // using dlsym or something similar.
         return gladLoadVulkanUserPtr(VK_NULL_HANDLE, &LoadFunctionFromLibrary, m_moduleHandle.get()) != 0;
     }
 

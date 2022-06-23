@@ -42,11 +42,6 @@ namespace OpenXRVk
     if (result != XR_SUCCESS) {\
         return;\
     }
-
-#define RETURN_RESULTCODE_IF_UNSUCCESSFUL(result) \
-    if (result != AZ::RHI::ResultCode::SUCCESS) {\
-        return result;\
-    }
     
 #define WARN_IF_UNSUCCESSFUL(result) \
     if (result != XR_SUCCESS) {\

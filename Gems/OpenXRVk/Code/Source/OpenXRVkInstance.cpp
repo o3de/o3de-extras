@@ -13,7 +13,7 @@
 
 namespace OpenXRVk
 {
-    AZStd::intrusive_ptr<Instance> Instance::Create()
+    XR::Ptr<Instance> Instance::Create()
     {
         return aznew Instance;
     }
@@ -362,38 +362,38 @@ namespace OpenXRVk
         return AZ::RHI::ResultCode::Fail;
     }
 
-    AZ::u32 Instance::GetNumPhysicalDevices()
+    AZ::u32 Instance::GetNumPhysicalDevices() const
     {
         return aznumeric_cast<AZ::u32>(m_supportedXRDevices.size());
     }
 
-    VkPhysicalDevice Instance::GetActivePhysicalDevice()
+    VkPhysicalDevice Instance::GetActivePhysicalDevice() const
     {
         AZ_Assert(m_physicalDeviceActiveIndex < m_supportedXRDevices.size(), "Index out of range");
         return m_supportedXRDevices[m_physicalDeviceActiveIndex];
     }
 
-    XrInstance Instance::GetXRInstance()
+    XrInstance Instance::GetXRInstance() const
     {
         return m_xrInstance;
     }
 
-    XrSystemId Instance::GetXRSystemId()
+    XrSystemId Instance::GetXRSystemId() const
     {
         return m_xrSystemId;
     }
 
-    VkInstance Instance::GetVkInstance()
+    VkInstance Instance::GetNativeInstance() const
     {
         return m_xrVkInstance;
     }
 
-    XrEnvironmentBlendMode Instance::GetEnvironmentBlendMode()
+    XrEnvironmentBlendMode Instance::GetEnvironmentBlendMode() const
     {
         return m_environmentBlendMode;
     }
 
-    XrViewConfigurationType Instance::GetViewConfigType()
+    XrViewConfigurationType Instance::GetViewConfigType() const
     {
         return m_viewConfigType;
     }

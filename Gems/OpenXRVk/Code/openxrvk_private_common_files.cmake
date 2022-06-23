@@ -8,7 +8,6 @@
 
 set(FILES
     Include/OpenXRVk/OpenXRVkDevice.h
-    Include/OpenXRVk/OpenXRVkGraphicsBinding.h
     Include/OpenXRVk/OpenXRVkInput.h
     Include/OpenXRVk/OpenXRVkInstance.h
     Include/OpenXRVk/OpenXRVkPhysicalDevice.h
@@ -20,7 +19,6 @@ set(FILES
     Include/OpenXRVk/OpenXRVkFunctionLoader.h
     Include/OpenXRVk/OpenXRVkGladFunctionLoader.h
     Source/OpenXRVkDevice.cpp
-    Source/OpenXRVkGraphicsBinding.cpp
     Source/OpenXRVkInput.cpp
     Source/OpenXRVkInstance.cpp
     Source/OpenXRVkPhysicalDevice.cpp

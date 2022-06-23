@@ -6,10 +6,14 @@
  *
  */
 
-#include <OpenXrVk/OpenXrVkSystemComponent.h>
-#include <OpenXrVk/OpenXrVkInstance.h>
-#include <OpenXrVk/OpenXrVkDevice.h>
 #include <AzCore/Serialization/SerializeContext.h>
+#include <OpenXrVk/OpenXrVkDevice.h>
+#include <OpenXrVk/OpenXrVkInput.h>
+#include <OpenXrVk/OpenXrVkInstance.h>
+#include <OpenXrVk/OpenXrVkSession.h>
+#include <OpenXrVk/OpenXrVkSpace.h>
+#include <OpenXrVk/OpenXrVkSwapchain.h>
+#include <OpenXrVk/OpenXrVkSystemComponent.h>
 
 namespace OpenXRVk
 {
@@ -46,6 +50,36 @@ namespace OpenXRVk
     XR::Ptr<XR::Device> SystemComponent::CreateDevice()
     {
         return Device::Create();
+    }
+
+    XR::Ptr<XR::Session> SystemComponent::CreateSession()
+    {
+        return Session::Create();
+    }
+    
+    XR::Ptr<XR::Input> SystemComponent::CreateInput()
+    {
+        return Input::Create();
+    }
+
+    XR::Ptr<XR::Space> SystemComponent::CreateSpace()
+    {
+        return Space::Create();
+    }
+
+    XR::Ptr<XR::SwapChain> SystemComponent::CreateSwapChain()
+    {
+        return SwapChain::Create();
+    }
+
+    XR::Ptr<XR::SwapChain::View> SystemComponent::CreateSwapChainView()
+    {
+        return SwapChain::View::Create();
+    }
+
+    XR::Ptr<XR::SwapChain::Image> SystemComponent::CreateSwapChainImage()
+    {
+        return SwapChain::Image::Create();
     }
 
     void SystemComponent::Activate()
