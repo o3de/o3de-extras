@@ -11,6 +11,12 @@
     "user_tags": [
         "OpenXRTest"
     ],
+    "android_settings": {
+        "package_name": "org.o3de.OpenXRTest",
+        "version_number": 1,
+        "version_name": "1.0.0",
+        "orientation": "landscape"
+    },
     "icon_path": "preview.png",
     "engine": "o3de",
     "external_subdirectories": [
