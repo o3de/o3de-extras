@@ -9,25 +9,36 @@
 #include <XR/XRSwapChain.h>
 
 namespace XR
-{
-    //Todo: Pull this in when needed or remove
-    /*
-    //! Returns the view swap chain related to the index
-    SwapChain::View* SwapChain::GetView(const AZ::u16 swapchainIndex) const
+{ 
+    SwapChain::View* SwapChain::GetView(const AZ::u32 swapchainIndex) const
     {
         return m_viewSwapchains[swapchainIndex].get();
     }
 
-    //! Returns the image associated with the provided image
-    //! index and view swap chain index
-    SwapChain::Image* SwapChain::GetImage(AZ::u16 imageIndex, AZ::u16 swapchainIndex) const
+    SwapChain::Image* SwapChain::GetImage(AZ::u32 imageIndex, AZ::u32 swapchainIndex) const
     {
         return GetView(swapchainIndex)->m_images[imageIndex].get();
     }
 
-    AZ::RHI::ResultCode SwapChain::Init()
+    AZ::RHI::ResultCode SwapChain::Init(const Descriptor& descriptor)
     {
+        m_descriptor = descriptor;
         return InitInternal();
     }
-    */
+    
+    const SwapChain::Descriptor& SwapChain::GetDescriptor() const
+    {
+        return m_descriptor;
+    }
+
+    AZ::u32 SwapChain::GetNumViews() const
+    {
+        return m_numViews;
+    }
+
+    void SwapChain::Shutdown()
+    {
+        ShutdownInternal();
+        m_viewSwapchains.clear();
+    }
 } // namespace XR

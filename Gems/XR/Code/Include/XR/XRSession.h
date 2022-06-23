@@ -10,48 +10,89 @@
 
 #include <AzCore/Memory/SystemAllocator.h>
 
-#include <XR/XRGraphicsBinding.h>
 #include <XR/XRBase.h>
+#include <XR/XRInput.h>
+#include <XR/XRObject.h>
+#include <XR/XRSpace.h>
 
 namespace XR
 {
-    //Todo: Pull this in when needed or remove
-    /*
-    class SessionDescriptor 
-        : public AZStd::intrusive_base
-    {
-    public:
-        AZ_CLASS_ALLOCATOR(SessionDescriptor, AZ::SystemAllocator, 0);
-        AZ_RTTI(SessionDescriptor, "{F76B99EF-ED66-4AAA-BA35-578339CAB428}");
-
-        SessionDescriptor() = default;
-        virtual ~SessionDescriptor() = default;
-
-        // Graphics Binding will contain renderer related data to start a xr session
-        Ptr<GraphicsBinding> m_graphicsBinding;
-    };
+    class Device;
 
     // This class will be responsible for creating XR::Session and
     // all the code around managing the session state
     class Session
-        : public AZStd::intrusive_base
+        : public XR::Object
     {
     public:
         AZ_CLASS_ALLOCATOR(Session, AZ::SystemAllocator, 0);
         AZ_RTTI(Session, "{E7276FE1-94B8-423A-9C1D-1BCF1A0066BC}");
 
+        struct Descriptor
+        {
+            AZ::RHI::ValidationMode m_validationMode = AZ::RHI::ValidationMode::Disabled;
+            Ptr<Device> m_device;
+            Ptr<Instance> m_instance;
+        };
+
         Session() = default;
         virtual ~Session() = default;
         
-        AZ::RHI::ResultCode Init();
-        virtual bool IsSessionRunning() const;
-        virtual bool IsSessionFocused() const;
-        virtual AZ::RHI::ResultCode InitInternal();
+        //! Initialize the XrSession object which is responsible for creating
+        //! XrInput and XrSpace
+        AZ::RHI::ResultCode Init(const Descriptor& descriptor);
+
+        //! Get the descriptor for the class
+        const Descriptor& GetDescriptor() const;
+
+        //! Get the Xr Input object
+        Input* GetInput() const;
+
+        //! Get the Xr Space object
+        Space* GetSpace() const;
         
+        //! Return true if session is running
+        virtual bool IsSessionRunning() const = 0;
+
+        //! Return true if session is focused
+        virtual bool IsSessionFocused() const = 0;
+
+        //! Return true if a restart is requested
+        virtual bool IsRestartRequested() const = 0;
+    
+        //! Return true if render loop skip is requested
+        virtual bool IsExitRenderLoopRequested() const = 0;
+
+        //! Poll events and process the pending messages accordingly
+        virtual void PollEvents() = 0;
+
+        //! All the back end object to initialize properly
+        virtual AZ::RHI::ResultCode InitInternal(AZ::RHI::XRSessionDescriptor* descriptor) = 0;
+
+        //! Allow the back-end to cache the controller space data
+        virtual void LocateControllerSpace(AZ::u32 handIndex) = 0;
+
+        //! Api to retrieve the controller space data
+        virtual AZ::RPI::PoseData GetControllerPose(AZ::u32 handIndex) const = 0;
+
+        //! Api to retrieve the controller scale data
+        virtual float GetControllerScale(AZ::u32 handIndex) const = 0;
+
+        //! Api to retrieve the front view space data
+        virtual AZ::RPI::PoseData GetViewFrontPose() const = 0;
+
     private:
-        Ptr<SessionDescriptor> m_descriptor;
-        bool m_sessionRunning = false;
-        bool m_sessionFocused = false;
+
+        ///////////////////////////////////////////////////////////////////
+        // XR::Object
+        void Shutdown() override;
+        ///////////////////////////////////////////////////////////////////
+
+        //! Called when the XR instance is being shutdown.
+        virtual void ShutdownInternal() = 0;
+
+        Ptr<Input> m_input;
+        Ptr<Space> m_space;
+        Descriptor m_descriptor;
     };
-    */
 } // namespace XR

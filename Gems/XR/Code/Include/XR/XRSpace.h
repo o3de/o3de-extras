@@ -10,20 +10,37 @@
 
 #include <AzCore/Memory/SystemAllocator.h>
 #include <AzCore/std/smart_ptr/intrusive_base.h>
+#include <XR/XRObject.h>
 
 namespace XR
 {
-    // This class will be responsible for managing XR Space
+    //! Base XR Space class which will provide access to the back-end concrete object
     class Space
-        : public AZStd::intrusive_base
+        : public ::XR::Object
     {
-	    //Todo: Pull this in when needed or remove
-        /*
+	    
     public:
         AZ_CLASS_ALLOCATOR(Space, AZ::SystemAllocator, 0);
         AZ_RTTI(Space, "{A78A37F1-8861-4EB4-8FC6-0E9C11394EF1}");
 
+        struct Descriptor
+        {
+            AZ::RHI::ValidationMode m_validationMode = AZ::RHI::ValidationMode::Disabled;
+        };
+
+        AZ::RHI::ResultCode Init(Descriptor descriptor);
+        const Space::Descriptor& GetDescriptor() const;
+    private:
+
+        ///////////////////////////////////////////////////////////////////
+        // XR::Object
+        void Shutdown() override;
+        ///////////////////////////////////////////////////////////////////
+
+        //! Called when the XR instance is being shutdown.
+        virtual void ShutdownInternal() = 0;
         virtual AZ::RHI::ResultCode InitInternal() = 0;
-        */
+       
+        Descriptor m_descriptor;
     };
 } // namespace XR

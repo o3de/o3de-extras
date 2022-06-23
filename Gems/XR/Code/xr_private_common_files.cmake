@@ -10,7 +10,6 @@ set(FILES
     Include/XR/XRBase.h
     Include/XR/XRDevice.h
     Include/XR/XRFactory.h
-    Include/XR/XRGraphicsBinding.h
     Include/XR/XRInput.h
     Include/XR/XRInstance.h
     Include/XR/XRSession.h
@@ -22,7 +21,6 @@ set(FILES
     Include/XR/XRObject.h
     Source/XRDevice.cpp
     Source/XRFactory.cpp
-    Source/XRGraphicsBinding.cpp
     Source/XRInput.cpp
     Source/XRInstance.cpp
     Source/XRSession.cpp

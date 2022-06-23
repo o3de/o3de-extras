@@ -10,12 +10,16 @@
 
 #include <AzCore/Memory/SystemAllocator.h>
 #include <Atom/RHI/XRRenderingInterface.h>
+#include <Atom/RPI.Public/XR/XRRenderingInterface.h>
 #include <XR/XRBase.h>
 #include <XR/XRInstance.h>
+#include <XR/XRSwapChain.h>
 #include <XR/XRObject.h>
 
 namespace XR
 {
+    //! Base XR device class which will provide access to the back-end concrete object
+    class Session;
     class Device
         : public XR::Object
     {
@@ -26,27 +30,71 @@ namespace XR
         Device() = default;
         virtual ~Device() = default;
 
-        //////////////////////////////////////////////////////////////////////////
+        struct Descriptor
+        {
+            AZ::RHI::ValidationMode m_validationMode = AZ::RHI::ValidationMode::Disabled;
+            Ptr<Instance> m_instance;
+        };
+
         //! Create the xr specific native device object and populate the XRDeviceDescriptor with it.
         virtual AZ::RHI::ResultCode InitDeviceInternal(AZ::RHI::XRDeviceDescriptor* instanceDescriptor) = 0;
-        //////////////////////////////////////////////////////////////////////////
         
+        //! Returns true if rendering data is valid for the current frame.
+        virtual bool ShouldRender() const = 0;
+        
+        //! Returns fov data for a give view index.
+        virtual AZ::RPI::FovData GetViewFov(AZ::u32 viewIndex) const = 0;
+
+        //! Returns pose data for a give view index.
+        virtual AZ::RPI::PoseData GetViewPose(AZ::u32 viewIndex) const = 0;
+
         //! Init the XR device.
-        AZ::RHI::ResultCode Init(Ptr<Instance> instance);
+        AZ::RHI::ResultCode Init(Descriptor descriptor);
         
-        //! Retrieve the XR instance.
-        Ptr<Instance> GetInstance();
+        //! Signal Begin frame to the underlying back end.
+        bool BeginFrame();
+
+        //! Signal End frame to the underlying back end.
+        void EndFrame(Ptr<SwapChain>);
+
+        //! Signal the back-end to acquire swapchain images.
+        bool AcquireSwapChainImage(AZ::u32 viewIndex, SwapChain* swapChain);
+
+        //! Register XR session with the device.
+        void RegisterSession(Ptr<Session> session);
+    
+        //! UnRegister XR session with the device.
+        void UnRegisterSession();
+
+        //! Get the descriptor.
+        const Descriptor& GetDescriptor() const;
+
+        //! Get the xr session registered with the device
+        Ptr<Session> GetSession() const;
+
+    protected:
+    
+        //! Called when the device is being shutdown.
+        virtual void ShutdownInternal() = 0;
+
+        //! Called when the device is beginning a frame for processing.
+        virtual bool BeginFrameInternal() = 0;
+
+        //! Called when the device is ending a frame for processing. 
+        //! Pass in the active swapchain in order to allow the back end to release the swap chain images
+        virtual void EndFrameInternal(XR::Ptr<XR::SwapChain>) = 0;
+
+        //! Called when the device is beginning a frame for processing.
+        virtual bool AcquireSwapChainImageInternal(AZ::u32 viewIndex, XR::SwapChain* baseSwapChain) = 0;
 
     private:
 
         ///////////////////////////////////////////////////////////////////
         // XR::Object
-        void Shutdown() override final;
+        void Shutdown() override;
         ///////////////////////////////////////////////////////////////////
 
-        //! Called when the device is being shutdown.
-        virtual void ShutdownInternal() = 0;
-
-        Ptr<Instance> m_instance;
+        Ptr<Session> m_session;
+        Descriptor m_descriptor;
     };
 }

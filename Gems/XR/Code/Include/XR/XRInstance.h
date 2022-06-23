@@ -34,7 +34,7 @@ namespace XR
         virtual AZ::RHI::ResultCode InitNativeInstance(AZ::RHI::XRInstanceDescriptor* instanceDescriptor) = 0;
 
         //! Get number of physical devices for XR.
-        virtual AZ::u32 GetNumPhysicalDevices() = 0;
+        virtual AZ::u32 GetNumPhysicalDevices() const = 0;
 
         //! API to retrieve the native physical device for a specific index.
         virtual AZ::RHI::ResultCode GetXRPhysicalDevice(AZ::RHI::XRPhysicalDeviceDescriptor* physicalDeviceDescriptor, int32_t index) = 0;

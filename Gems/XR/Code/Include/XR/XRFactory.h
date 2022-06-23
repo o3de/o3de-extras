@@ -16,8 +16,8 @@
 #include <XR/XRDevice.h>
 #include <XR/XRSession.h>
 #include <XR/XRInput.h>
+#include <XR/XRSpace.h>
 #include <XR/XRSwapChain.h>
-#include <XR/XRGraphicsBinding.h>
 
 namespace XR
 {
@@ -43,7 +43,7 @@ namespace XR
         //! Unregisters the global factory instance.
         static void Unregister(XR::Factory* instance);
 
-        //! REturns if the factory ready.
+        //! Returns if the factory ready.
         static bool IsReady();
 
         //! Access the global factory instance.
@@ -54,6 +54,24 @@ namespace XR
 
         //! Create XR::Device object.
         virtual Ptr<XR::Device> CreateDevice() = 0;
+
+        //! Create XR::Session object.
+        virtual Ptr<XR::Session> CreateSession() = 0;
+
+        //! Create XR::Input object.
+        virtual Ptr<XR::Input> CreateInput() = 0;
+
+        //! Create XR::Space object.
+        virtual Ptr<XR::Space> CreateSpace() = 0;
+
+        //! Create XR::Swapchain object.
+        virtual Ptr<XR::SwapChain> CreateSwapChain() = 0;
+
+        //! Create XR::Swapchain::View object.
+        virtual Ptr<XR::SwapChain::View> CreateSwapChainView() = 0;
+
+        //! Create XR::Swapchain::Image object.
+        virtual Ptr<XR::SwapChain::Image> CreateSwapChainImage() = 0;
     };
 } // namespace XR
 

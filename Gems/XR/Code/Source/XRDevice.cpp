@@ -7,24 +7,54 @@
  */
 
 #include <XR/XRDevice.h>
+#include <XR/XRSwapChain.h>
 
 namespace XR
 {
-    AZ::RHI::ResultCode Device::Init(Ptr<Instance> instance)
+    AZ::RHI::ResultCode Device::Init(Descriptor descriptor)
     {
-        m_instance = instance;
+        m_descriptor = descriptor;
         return AZ::RHI::ResultCode::Success;
     }
-
-    Ptr<Instance> Device::GetInstance()
+    
+    const Device::Descriptor& Device::GetDescriptor() const
     {
-        return m_instance;
+        return m_descriptor;
+    }
+
+    Ptr<Session> Device::GetSession() const
+    {
+        return m_session;
+    }
+
+    bool Device::BeginFrame()
+    {
+        return BeginFrameInternal();
+    }
+
+    void Device::EndFrame(Ptr<SwapChain> swapChain)
+    {
+        EndFrameInternal(swapChain);
+    }
+
+    bool Device::AcquireSwapChainImage(AZ::u32 viewIndex, XR::SwapChain* baseSwapChain)
+    {
+        return AcquireSwapChainImageInternal(viewIndex, baseSwapChain);
+    }
+
+    void Device::RegisterSession(Ptr<Session> session)
+    {
+        m_session = session;
+    }
+
+    void Device::UnRegisterSession()
+    {
+        m_session = nullptr;
     }
 
     void Device::Shutdown()
     {
         ShutdownInternal();
-        m_instance = nullptr;
     }
 
 } // namespace XR

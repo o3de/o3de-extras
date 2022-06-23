@@ -10,12 +10,20 @@
 
 namespace XR
 {
-    //Todo: Pull this in when needed or remove
-    /*
-    AZ::RHI::ResultCode Input::Init()
+    AZ::RHI::ResultCode Input::Init(Descriptor descriptor)
     {
-        //m_session = descriptor.m_session;
+        m_descriptor = descriptor;
         return InitInternal();
     }
-    */
+
+    const Input::Descriptor& Input::GetDescriptor() const
+    {
+        return m_descriptor;
+    }
+
+    void Input::Shutdown()
+    {
+        ShutdownInternal();
+    }
+
 } // namespace XR

@@ -10,30 +10,16 @@
 
 #include <AzCore/Memory/SystemAllocator.h>
 #include <XR/XRBase.h>
-#include <XR/XRSession.h>
+#include <XR/XRObject.h>
 
 namespace XR
-{
-    //Todo: Pull this in when needed or remove
-    /*
-    class InputDescriptor 
-        : public AZStd::intrusive_base
-    {
-    public:
-        AZ_CLASS_ALLOCATOR(InputDescriptor, AZ::SystemAllocator, 0);
-        AZ_RTTI(InputDescriptor, "{C690ABBF-D8A9-4348-98E6-45BBF432D673}");
-
-        InputDescriptor() = default;
-        virtual ~InputDescriptor() = default;
-
-        //any extra info for a generic xr InputDescriptor
-        Ptr<Session> m_session;
-    };
-
+{ 
+    class Session;
+    class Instance;
     // This class will be responsible for creating XR::Input
     // which manage event queue or poll actions
     class Input
-        : public AZStd::intrusive_base
+        : public XR::Object
     {
     public:
         AZ_CLASS_ALLOCATOR(Input, AZ::SystemAllocator, 0);
@@ -41,16 +27,29 @@ namespace XR
 
         Input() = default;
         virtual ~Input() = default;
+        
+        struct Descriptor
+        {
+            Ptr<Instance> m_instance;
+            Ptr<Device> m_device;
+            Ptr<Session> m_session;
+        };
+        
+        AZ::RHI::ResultCode Init(Descriptor descriptor);
+        const Descriptor& GetDescriptor() const;
 
-        virtual AZ::RHI::ResultCode Init();
-
-        virtual void InitializeActions() = 0;
         virtual void PollActions() = 0;
-        virtual void PollEvents() = 0;
+       
+    private:
+        ///////////////////////////////////////////////////////////////////
+        // XR::Object
+        void Shutdown() override;
+        ///////////////////////////////////////////////////////////////////
+
+        //! Called when the XR instance is being shutdown.
+        virtual void ShutdownInternal() = 0;
         virtual AZ::RHI::ResultCode InitInternal() = 0;
 
-    private:
-        Ptr<InputDescriptor> m_descriptor;
+        Descriptor m_descriptor;
     };
-    */
 } // namespace XR

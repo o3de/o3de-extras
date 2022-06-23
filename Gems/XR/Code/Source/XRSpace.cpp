@@ -10,5 +10,19 @@
 
 namespace XR
 {
+    AZ::RHI::ResultCode Space::Init(Descriptor descriptor)
+    {
+        m_descriptor = descriptor;
+        return InitInternal();
+    }
 
+    const Space::Descriptor& Space::GetDescriptor() const
+    {
+        return m_descriptor;
+    }
+
+    void Space::Shutdown()
+    {
+        ShutdownInternal();
+    }
 } // namespace XR

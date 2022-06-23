@@ -13,7 +13,7 @@ namespace XR
     AZ::RHI::ResultCode Instance::Init(AZ::RHI::ValidationMode validationMode)
     {
         m_validationMode = validationMode;
-        return InitInstanceInternal(validationMode);;
+        return InitInstanceInternal(validationMode);
     }
 
     void Instance::Shutdown()

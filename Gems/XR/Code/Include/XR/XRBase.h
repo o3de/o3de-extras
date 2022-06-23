@@ -22,5 +22,17 @@ namespace XR
 
     using StringList = AZStd::vector<AZStd::string>;
     using RawStringList = AZStd::vector<const char*>;
+    
+    enum class  Side : uint32_t
+    {
+        Left = 0,
+        Right,
+        Count
+    }; 
+
+#define RETURN_RESULTCODE_IF_UNSUCCESSFUL(result) \
+    if (result != AZ::RHI::ResultCode::Success) {\
+        return result;\
+    }
 }
 
