@@ -23,7 +23,7 @@ For more details on the steps above, refer to [Setting up O3DE from GitHub](http
     ```
 2. Register gems with this command:
     ```
-    scripts\o3de.bat register -gp <your path to o3de-extras>/<gem name>
+    scripts\o3de.bat register -gp <your path to o3de-extras>/Gems/<gem name>
     ```
 3. Add these gems to your project with this command:
     ```
