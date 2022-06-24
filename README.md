@@ -23,12 +23,16 @@ For more details on the steps above, refer to [Setting up O3DE from GitHub](http
     ```
 2. Register gems with this command:
     ```
-    scripts\o3de.bat register -gp <your path to o3de-extras>/<gem name>
+    scripts\o3de.bat register -gp <your path to o3de-extras>/Gems/<gem name>
     ```
+    > To recursively register all gems in the path, use the `-agp` or `--all-gems-path` parameter
+
 3. Add these gems to your project with this command:
     ```
     scripts\o3de.bat enable-gem -gn <gem name> -pn <your project name>
     ```
+    > To enable all gems in a path, use the `-agp` or `--all-gems-paths` parameter
+
 4. Configure a solution for your project.
     ```
     cmake -B <your project build path> -S <your new project source path> -G "Visual Studio 16"
