@@ -35,7 +35,7 @@ It is intended to support any modern ROS 2 version, following these priorities:
 - The always-fresh [ROS 2 Rolling](https://docs.ros.org/en/rolling/Installation.html).
 - Older versions.
 
-Currently tested and validated versions / platforms will are detailed in the [project repository](https://github.com/RobotecAI/o3de-ros2-gem).
+Currently tested and validated versions / platforms will be detailed in the [project repository](https://github.com/RobotecAI/o3de-ros2-gem).
 
 If you have multiple versions installed, make sure you [source](https://docs.ros.org/en/galactic/Tutorials/Workspace/Creating-A-Workspace.html#source-the-overlay) the one you want to use.
 You can check which version is sourced in your console by checking the value of `ROS_DISTRO` environment variable (`echo $ROS_DISTRO`).
