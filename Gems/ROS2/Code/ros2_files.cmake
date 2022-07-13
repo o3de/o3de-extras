@@ -4,8 +4,6 @@
 # SPDX-License-Identifier: Apache-2.0 OR MIT
 
 set(FILES
-    Source/Camera/CameraCaptureScheduler.cpp
-    Source/Camera/CameraCaptureScheduler.h
     Source/Camera/CameraSensor.cpp
     Source/Camera/CameraSensor.h
     Source/Camera/ROS2CameraSensorComponent.cpp

@@ -21,8 +21,6 @@
 
 #include <PostProcess/PostProcessFeatureProcessor.h>
 
-#include <Camera/CameraCaptureScheduler.h>
-
 namespace ROS2 {
     CameraSensorDescription::CameraSensorDescription(const AZStd::string& cameraName, float verticalFov, int width, int height)
     : verticalFieldOfViewDeg(verticalFov)
@@ -101,6 +99,15 @@ namespace ROS2 {
         m_view->SetWorldToViewMatrix(AZ::Matrix4x4::CreateFromQuaternionAndTranslation(inverse.GetRotation(),
                                                                                        inverse.GetTranslation()));
 
-        CameraCaptureScheduler::Get().TryRequestFrame(m_passHierarchy, std::move(callback), m_pipeline);
+        size_t userId = AZ::Render::FrameCaptureRequests::s_InvalidFrameCaptureId;
+
+        m_pipeline->AddToRenderTickOnce();
+        AZ::Render::FrameCaptureRequestBus::BroadcastResult(
+                userId,
+                &AZ::Render::FrameCaptureRequestBus::Events::CapturePassAttachmentWithCallback,
+                m_passHierarchy,
+                AZStd::string("Output"),
+                callback,
+                AZ::RPI::PassAttachmentReadbackOption::Output);
     }
 }
