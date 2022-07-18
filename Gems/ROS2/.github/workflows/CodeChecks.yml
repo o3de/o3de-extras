@@ -1,0 +1,45 @@
+name: CodeChecks
+
+on:
+  pull_request:
+    types: [opened, reopened]
+    branches:
+      - development
+
+permissions:
+  contents: read
+
+jobs:
+  clang-format:
+    name: Check code formatting with clang-format-13
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Clone the Gem repository
+        uses: actions/checkout@v3
+      - name: Clone the run-clang-format repository
+        uses: actions/checkout@v3
+        with:
+          repository: Sarcasm/run-clang-format
+          ref: 39081c9c42768ab5e8321127a7494ad1647c6a2f
+          path: run-clang-format
+      - name: Install clang-format-13
+        run: |
+          wget https://apt.llvm.org/llvm.sh
+          chmod +x llvm.sh
+          sudo ./llvm.sh 13
+          sudo apt update && sudo apt install clang-format-13
+      - name: Run the 'run-clang-format.py' file
+        run: |
+          cp run-clang-format/run-clang-format.py run-clang-format.py
+          sudo rm -r run-clang-format
+          ./run-clang-format.py -r --style=file --clang-format-executable=clang-format-13 Code
+
+  license:
+    name: Check license headers
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: apache/skywalking-eyes@v0.4.0
+        with:
+          mode: check
+          config: .licenserc.yaml
