@@ -1,17 +1,17 @@
 /*
-* Copyright (c) Contributors to the Open 3D Engine Project.
-* For complete copyright and license terms please see the LICENSE at the root of this distribution.
-*
-* SPDX-License-Identifier: Apache-2.0 OR MIT
-*
-*/
+ * Copyright (c) Contributors to the Open 3D Engine Project.
+ * For complete copyright and license terms please see the LICENSE at the root of this distribution.
+ *
+ * SPDX-License-Identifier: Apache-2.0 OR MIT
+ *
+ */
 #pragma once
 
 #include <AzCore/EBus/EBus.h>
 #include <AzCore/Interface/Interface.h>
-#include <rclcpp/node.hpp>
 #include <builtin_interfaces/msg/time.hpp>
 #include <geometry_msgs/msg/transform_stamped.hpp>
+#include <rclcpp/node.hpp>
 
 namespace ROS2
 {
@@ -43,16 +43,16 @@ namespace ROS2
         virtual builtin_interfaces::msg::Time GetROSTimestamp() const = 0;
 
         //! Send transformation between ROS2 frames.
-        //! @param t is a <a href="https://docs.ros2.org/latest/api/geometry_msgs/msg/TransformStamped.html">ROS2 TransformStamped message</a>.
+        //! @param t is a <a href="https://docs.ros2.org/latest/api/geometry_msgs/msg/TransformStamped.html">ROS2 TransformStamped
+        //! message</a>.
         //! @param isDynamic controls whether a static or dynamic transform is sent. Static transforms are published
         //! only once and are to be used when the spatial relationship between two frames does not change.
         //! @note Transforms are already published by each ROS2FrameComponent.
         //! Use this function directly only when default behavior of ROS2FrameComponent is not sufficient.
         virtual void BroadcastTransform(const geometry_msgs::msg::TransformStamped& t, bool isDynamic) const = 0;
     };
-    
-    class ROS2BusTraits
-        : public AZ::EBusTraits
+
+    class ROS2BusTraits : public AZ::EBusTraits
     {
     public:
         //////////////////////////////////////////////////////////////////////////

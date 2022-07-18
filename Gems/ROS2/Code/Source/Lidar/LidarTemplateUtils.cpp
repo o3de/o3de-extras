@@ -7,12 +7,12 @@
  */
 
 #include "LidarTemplateUtils.h"
-#include <AzCore/std/containers/unordered_map.h>
 #include <AzCore/Math/MathUtils.h>
 #include <AzCore/Math/Matrix4x4.h>
-#include <AzCore/Math/Vector3.h>
 #include <AzCore/Math/Quaternion.h>
+#include <AzCore/Math/Vector3.h>
 #include <AzCore/Utils/Utils.h>
+#include <AzCore/std/containers/unordered_map.h>
 
 namespace ROS2
 {
@@ -22,18 +22,15 @@ namespace ROS2
 
         if (templates.empty())
         {
-            LidarTemplate generic3DLidar =
-            {
-                /*.m_model = */LidarTemplate::Generic3DLidar,
-                /*.m_name = */"GenericLidar",
-                /*.m_minHAngle = */-180.0f,
-                /*.m_maxHAngle = */180.0f,
-                /*.m_minVAngle = */35.0f,
-                /*.m_maxVAngle = */-35.0f,
-                /*.m_layers = */24,
-                /*.m_numberOfIncrements = */924,
-                /*.m_maxRange = */100.0f
-            };
+            LidarTemplate generic3DLidar = { /*.m_model = */ LidarTemplate::Generic3DLidar,
+                                             /*.m_name = */ "GenericLidar",
+                                             /*.m_minHAngle = */ -180.0f,
+                                             /*.m_maxHAngle = */ 180.0f,
+                                             /*.m_minVAngle = */ 35.0f,
+                                             /*.m_maxVAngle = */ -35.0f,
+                                             /*.m_layers = */ 24,
+                                             /*.m_numberOfIncrements = */ 924,
+                                             /*.m_maxRange = */ 100.0f };
             templates[LidarTemplate::Generic3DLidar] = generic3DLidar;
         }
 
@@ -52,18 +49,16 @@ namespace ROS2
     }
 
     // TODO - lidars in reality do not have uniform distributions - populating needs to be defined per model
-    AZStd::vector<AZ::Vector3> LidarTemplateUtils::PopulateRayDirections(const LidarTemplate& lidarTemplate,
-                                                                         const AZ::Vector3& rootRotation)
+    AZStd::vector<AZ::Vector3> LidarTemplateUtils::PopulateRayDirections(
+        const LidarTemplate& lidarTemplate, const AZ::Vector3& rootRotation)
     {
         const float minVertAngle = AZ::DegToRad(lidarTemplate.m_minVAngle);
         const float maxVertAngle = AZ::DegToRad(lidarTemplate.m_maxVAngle);
         const float minHorAngle = AZ::DegToRad(lidarTemplate.m_minHAngle);
         const float maxHorAngle = AZ::DegToRad(lidarTemplate.m_maxHAngle);
 
-        const float verticalStep = (maxVertAngle - minVertAngle)
-            / static_cast<float>(lidarTemplate.m_layers);
-        const float horizontalStep = (maxHorAngle - minHorAngle)
-            / static_cast<float>(lidarTemplate.m_numberOfIncrements);
+        const float verticalStep = (maxVertAngle - minVertAngle) / static_cast<float>(lidarTemplate.m_layers);
+        const float horizontalStep = (maxHorAngle - minHorAngle) / static_cast<float>(lidarTemplate.m_numberOfIncrements);
 
         AZStd::vector<AZ::Vector3> directions;
 

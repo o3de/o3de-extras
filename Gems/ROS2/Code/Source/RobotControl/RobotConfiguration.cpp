@@ -1,10 +1,10 @@
 /*
-* Copyright (c) Contributors to the Open 3D Engine Project.
-* For complete copyright and license terms please see the LICENSE at the root of this distribution.
-*
-* SPDX-License-Identifier: Apache-2.0 OR MIT
-*
-*/
+ * Copyright (c) Contributors to the Open 3D Engine Project.
+ * For complete copyright and license terms please see the LICENSE at the root of this distribution.
+ *
+ * SPDX-License-Identifier: Apache-2.0 OR MIT
+ *
+ */
 
 #include "RobotControl/RobotConfiguration.h"
 #include <AzCore/Component/ComponentApplicationBus.h>
@@ -40,7 +40,8 @@ namespace ROS2
 
         // Check if object is a physics simulation body
         AzPhysics::SimulatedBody* simulatedBody = nullptr;
-        AzPhysics::SimulatedBodyComponentRequestsBus::EventResult(simulatedBody, actualEntityId, &AzPhysics::SimulatedBodyComponentRequests::GetSimulatedBody);
+        AzPhysics::SimulatedBodyComponentRequestsBus::EventResult(
+            simulatedBody, actualEntityId, &AzPhysics::SimulatedBodyComponentRequests::GetSimulatedBody);
 
         if (simulatedBody == nullptr)
         {
@@ -50,42 +51,37 @@ namespace ROS2
         return AZ::Success();
     }
 
-    void RobotConfiguration::Reflect(AZ::ReflectContext* context) {
+    void RobotConfiguration::Reflect(AZ::ReflectContext* context)
+    {
         if (auto serializeContext = azrtti_cast<AZ::SerializeContext*>(context))
         {
             serializeContext->Class<RobotConfiguration>()
-                    ->Version(1)
-                    ->Field("Body", &RobotConfiguration::m_body)
-                    ->Field("Front left wheel", &RobotConfiguration::m_wheelFrontLeft)
-                    ->Field("Front right wheel", &RobotConfiguration::m_wheelFrontRight)
-                    ->Field("Rear left wheel", &RobotConfiguration::m_wheelBackLeft)
-                    ->Field("Rear right wheel", &RobotConfiguration::m_wheelBackRight)
-                    ;
+                ->Version(1)
+                ->Field("Body", &RobotConfiguration::m_body)
+                ->Field("Front left wheel", &RobotConfiguration::m_wheelFrontLeft)
+                ->Field("Front right wheel", &RobotConfiguration::m_wheelFrontRight)
+                ->Field("Rear left wheel", &RobotConfiguration::m_wheelBackLeft)
+                ->Field("Rear right wheel", &RobotConfiguration::m_wheelBackRight);
 
             if (AZ::EditContext* ec = serializeContext->GetEditContext())
             {
                 ec->Class<RobotConfiguration>("Robot control", "Handles robot control")
-                        ->DataElement(AZ::Edit::UIHandlers::Default, &RobotConfiguration::m_body,
-                                      "Body", "Robot body")
-                            ->Attribute(AZ::Edit::Attributes::ChangeValidate, &RobotConfiguration::ValidateField)
-                        ->DataElement(AZ::Edit::UIHandlers::Default, &RobotConfiguration::m_wheelFrontLeft,
-                                      "Front left wheel", "Robot wheel")
-                            ->Attribute(AZ::Edit::Attributes::ChangeValidate, &RobotConfiguration::ValidateField)
-                            ->Attribute(AZ::Edit::Attributes::Visibility, false)  // not functional yet
-                        ->DataElement(AZ::Edit::UIHandlers::Default, &RobotConfiguration::m_wheelFrontRight,
-                                      "Front right wheel", "Robot wheel")
-                            ->Attribute(AZ::Edit::Attributes::ChangeValidate, &RobotConfiguration::ValidateField)
-                            ->Attribute(AZ::Edit::Attributes::Visibility, false)  // not functional yet
-                        ->DataElement(AZ::Edit::UIHandlers::Default, &RobotConfiguration::m_wheelBackLeft,
-                                      "Back left wheel", "Robot wheel")
-                            ->Attribute(AZ::Edit::Attributes::ChangeValidate, &RobotConfiguration::ValidateField)
-                            ->Attribute(AZ::Edit::Attributes::Visibility, false)  // not functional yet
-                        ->DataElement(AZ::Edit::UIHandlers::Default, &RobotConfiguration::m_wheelBackRight,
-                                      "Back right wheel", "Robot wheel")
-                            ->Attribute(AZ::Edit::Attributes::ChangeValidate, &RobotConfiguration::ValidateField)
-                            ->Attribute(AZ::Edit::Attributes::Visibility, false)  // not functional yet
-                        ;
+                    ->DataElement(AZ::Edit::UIHandlers::Default, &RobotConfiguration::m_body, "Body", "Robot body")
+                    ->Attribute(AZ::Edit::Attributes::ChangeValidate, &RobotConfiguration::ValidateField)
+                    ->DataElement(AZ::Edit::UIHandlers::Default, &RobotConfiguration::m_wheelFrontLeft, "Front left wheel", "Robot wheel")
+                    ->Attribute(AZ::Edit::Attributes::ChangeValidate, &RobotConfiguration::ValidateField)
+                    ->Attribute(AZ::Edit::Attributes::Visibility, false) // not functional yet
+                    ->DataElement(AZ::Edit::UIHandlers::Default, &RobotConfiguration::m_wheelFrontRight, "Front right wheel", "Robot wheel")
+                    ->Attribute(AZ::Edit::Attributes::ChangeValidate, &RobotConfiguration::ValidateField)
+                    ->Attribute(AZ::Edit::Attributes::Visibility, false) // not functional yet
+                    ->DataElement(AZ::Edit::UIHandlers::Default, &RobotConfiguration::m_wheelBackLeft, "Back left wheel", "Robot wheel")
+                    ->Attribute(AZ::Edit::Attributes::ChangeValidate, &RobotConfiguration::ValidateField)
+                    ->Attribute(AZ::Edit::Attributes::Visibility, false) // not functional yet
+                    ->DataElement(AZ::Edit::UIHandlers::Default, &RobotConfiguration::m_wheelBackRight, "Back right wheel", "Robot wheel")
+                    ->Attribute(AZ::Edit::Attributes::ChangeValidate, &RobotConfiguration::ValidateField)
+                    ->Attribute(AZ::Edit::Attributes::Visibility, false) // not functional yet
+                    ;
             }
         }
     }
-}  // namespace ROS2
+} // namespace ROS2

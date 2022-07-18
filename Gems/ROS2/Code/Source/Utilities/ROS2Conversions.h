@@ -7,8 +7,8 @@
  */
 #pragma once
 
-#include <AzCore/Math/Vector3.h>
 #include <AzCore/Math/Quaternion.h>
+#include <AzCore/Math/Vector3.h>
 #include <geometry_msgs/msg/pose.hpp>
 #include <geometry_msgs/msg/vector3.hpp>
 
@@ -22,4 +22,4 @@ namespace ROS2
         static geometry_msgs::msg::Vector3 ToROS2Vector3(const AZ::Vector3& azvector);
         static geometry_msgs::msg::Quaternion ToROS2Quaternion(const AZ::Quaternion& azquaternion);
     };
-}  // namespace ROS2
+} // namespace ROS2

@@ -6,17 +6,17 @@
  *
  */
 
-#include "Frame/ROS2FrameComponent.h"
 #include "Lidar/ROS2LidarSensorComponent.h"
+#include "Frame/ROS2FrameComponent.h"
 #include "Lidar/LidarTemplateUtils.h"
 #include "ROS2/ROS2Bus.h"
 #include "Utilities/ROS2Names.h"
-#include <AzCore/Component/Entity.h>
-#include <AzCore/Serialization/EditContext.h>
-#include <AzCore/Serialization/EditContextConstants.inl>
 #include <Atom/RPI.Public/AuxGeom/AuxGeomFeatureProcessorInterface.h>
 #include <Atom/RPI.Public/RPISystemInterface.h>
 #include <Atom/RPI.Public/Scene.h>
+#include <AzCore/Component/Entity.h>
+#include <AzCore/Serialization/EditContext.h>
+#include <AzCore/Serialization/EditContextConstants.inl>
 #include <AzFramework/Physics/PhysicsSystem.h>
 
 namespace ROS2
@@ -35,24 +35,28 @@ namespace ROS2
                 ->Version(1)
                 ->Field("lidarModel", &ROS2LidarSensorComponent::m_lidarModel)
                 ->Field("LidarTransparentEntityId", &ROS2LidarSensorComponent::m_lidarTransparentEntityId)
-                ->Field("LidarParameters", &ROS2LidarSensorComponent::m_lidarParameters)
-                ;
+                ->Field("LidarParameters", &ROS2LidarSensorComponent::m_lidarParameters);
 
             if (AZ::EditContext* ec = serialize->GetEditContext())
             {
                 ec->Class<ROS2LidarSensorComponent>("ROS2 Lidar Sensor", "Lidar sensor component")
                     ->ClassElement(AZ::Edit::ClassElements::EditorData, "")
-                        ->Attribute(AZ::Edit::Attributes::AppearsInAddComponentMenu, AZ_CRC("Game"))
+                    ->Attribute(AZ::Edit::Attributes::AppearsInAddComponentMenu, AZ_CRC("Game"))
                     ->DataElement(AZ::Edit::UIHandlers::ComboBox, &ROS2LidarSensorComponent::m_lidarModel, "Lidar Model", "Lidar model")
-                        ->Attribute(AZ::Edit::Attributes::ChangeNotify, &ROS2LidarSensorComponent::OnLidarModelSelected)
-                        ->EnumAttribute(LidarTemplate::LidarModel::Generic3DLidar, "Generic Lidar")
-                        // TODO - show lidar template field values (read only) - see Reflect for LidarTemplate
-                    ->DataElement(AZ::Edit::UIHandlers::EntityId, &ROS2LidarSensorComponent::m_lidarTransparentEntityId,
-                          "Lidar-transparent Entity", "Entity to be transparent for the lidar. If not set, use this component's entity")
-                    ->DataElement(AZ::Edit::UIHandlers::EntityId, &ROS2LidarSensorComponent::m_lidarParameters,
-                          "Lidar parameters", "Configuration of Generic lidar")
-                        ->Attribute(AZ::Edit::Attributes::Visibility, &ROS2LidarSensorComponent::IsConfigurationVisible)
-                    ;
+                    ->Attribute(AZ::Edit::Attributes::ChangeNotify, &ROS2LidarSensorComponent::OnLidarModelSelected)
+                    ->EnumAttribute(LidarTemplate::LidarModel::Generic3DLidar, "Generic Lidar")
+                    // TODO - show lidar template field values (read only) - see Reflect for LidarTemplate
+                    ->DataElement(
+                        AZ::Edit::UIHandlers::EntityId,
+                        &ROS2LidarSensorComponent::m_lidarTransparentEntityId,
+                        "Lidar-transparent Entity",
+                        "Entity to be transparent for the lidar. If not set, use this component's entity")
+                    ->DataElement(
+                        AZ::Edit::UIHandlers::EntityId,
+                        &ROS2LidarSensorComponent::m_lidarParameters,
+                        "Lidar parameters",
+                        "Configuration of Generic lidar")
+                    ->Attribute(AZ::Edit::Attributes::Visibility, &ROS2LidarSensorComponent::IsConfigurationVisible);
             }
         }
     }
@@ -133,8 +137,8 @@ namespace ROS2
         if (m_lidarTransparentEntityId.IsValid())
         {
             m_lidarRaycaster.setLidarTransparentEntity(m_lidarTransparentEntityId);
-        } 
-        else 
+        }
+        else
         {
             m_lidarRaycaster.setLidarTransparentEntity(GetEntityId());
         }
@@ -151,8 +155,8 @@ namespace ROS2
     {
         float distance = LidarTemplateUtils::GetTemplate(m_lidarModel).m_maxRange;
         auto entityTransform = GetEntity()->FindComponent<AzFramework::TransformComponent>(); // TODO - go through ROS2Frame
-        const auto directions = LidarTemplateUtils::PopulateRayDirections(m_lidarParameters,
-                                                                          entityTransform->GetWorldTM().GetEulerRadians());
+        const auto directions =
+            LidarTemplateUtils::PopulateRayDirections(m_lidarParameters, entityTransform->GetWorldTM().GetEulerRadians());
         AZ::Vector3 start = entityTransform->GetWorldTM().GetTranslation();
         start.SetZ(start.GetZ());
 
@@ -164,7 +168,7 @@ namespace ROS2
         }
 
         if (m_sensorConfiguration.m_visualise)
-        {   // Store points for visualisation purposes, before transformations occur
+        { // Store points for visualisation purposes, before transformations occur
             m_visualisationPoints = m_lastScanResults;
         }
 
@@ -178,9 +182,9 @@ namespace ROS2
         message.row_step = message.width * message.point_step;
 
         // TODO - a list of supported fields should be returned by lidar implementation
-        std::vector<std::string> point_field_names = { "x", "y", "z"};
+        std::vector<std::string> point_field_names = { "x", "y", "z" };
         for (int i = 0; i < point_field_names.size(); i++)
-        {   // TODO - placeholder impl
+        { // TODO - placeholder impl
             sensor_msgs::msg::PointField pf;
             pf.name = point_field_names[i];
             pf.offset = i * 4;

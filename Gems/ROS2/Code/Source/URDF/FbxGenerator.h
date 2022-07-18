@@ -8,10 +8,10 @@
 
 #pragma once
 
-#include <AzCore/std/containers/vector.h>
-#include <AzCore/std/string/string.h>
 #include <AzCore/Memory/SystemAllocator.h>
+#include <AzCore/std/containers/vector.h>
 #include <AzCore/std/smart_ptr/make_shared.h>
+#include <AzCore/std/string/string.h>
 
 #include "FbxNode.h"
 #include "UniqueIdGenerator.h"
@@ -21,13 +21,19 @@ namespace ROS2
     namespace Fbx
     {
         //! Define type of the FBX file.
-        enum class FileType { Text, Binary };
+        enum class FileType
+        {
+            Text,
+            Binary
+        };
 
         //! RGB color
         struct Color
         {
             Color(float r, float g, float b)
-                : r(r), g(g), b(b) {};
+                : r(r)
+                , g(g)
+                , b(b){};
             float r = 0;
             float g = 0;
             float b = 0;
@@ -62,7 +68,7 @@ namespace ROS2
             //! @note only ASCII version is supported.
             //! @param filePath is a path of the generated file.
             //! @param type of the generated FBX file.
-            void SaveToFile(const AZStd::string & filePath, FileType type = FileType::Text);
+            void SaveToFile(const AZStd::string& filePath, FileType type = FileType::Text);
 
             //! Get the string with FBX data.
             //! @return The string with ASCII version of current FBX structure.
@@ -79,12 +85,12 @@ namespace ROS2
             //! @param size A size of the cube in meters.
             //! @param materialId The id of the created previously material that will be used in object.
             //! @return id of created object.
-            Id AddCubeObject(const AZStd::string & objectName, double size, Id materialId);
+            Id AddCubeObject(const AZStd::string& objectName, double size, Id materialId);
 
             //! Add default material and return its id.
             //! @note TODO: add more material parameters.
             //! @return id of created material.
-            Id AddMaterial(const AZStd::string & materialName, const Color & color);
+            Id AddMaterial(const AZStd::string& materialName, const Color& color);
 
             //! Create relation between objects
             //! @param parentId The id of the parent object in created relation.
@@ -98,7 +104,11 @@ namespace ROS2
                 AZ_CLASS_ALLOCATOR(Connection, AZ::SystemAllocator, 0);
 
                 Connection(Id parent, Id child, AZStd::string connectionType)
-                    : parentId(parent), childId(child), type(connectionType) {}
+                    : parentId(parent)
+                    , childId(child)
+                    , type(connectionType)
+                {
+                }
 
                 Id parentId = -1;
                 Id childId = -1;
@@ -121,8 +131,8 @@ namespace ROS2
             Node GetDefinitions() const;
 
             // Objects creation
-            NodeWithId CreateModel(const AZStd::string & modelName) const;
-            NodeWithId CreateMaterial(const AZStd::string & name, const Color & color) const;
+            NodeWithId CreateModel(const AZStd::string& modelName) const;
+            NodeWithId CreateMaterial(const AZStd::string& name, const Color& color) const;
             NodeWithId CreateGeometryCube(double size = 1.0) const;
 
             // Generate connections based on the m_connections.

@@ -8,12 +8,12 @@
 
 #include "UrdfToFbxConverter.h"
 
-#include <AzCore/std/string/string.h>
 #include <AzCore/Console/Console.h>
+#include <AzCore/std/string/string.h>
 
 namespace ROS2
 {
-    AZStd::string UrdfToFbxConverter::Convert(const AZStd::string & urdfString)
+    AZStd::string UrdfToFbxConverter::Convert(const AZStd::string& urdfString)
     {
         // 1. Parse URDF
         const auto urdf = UrdfParser::Parse(urdfString.data());
@@ -27,7 +27,7 @@ namespace ROS2
         std::stack<urdf::Link> stack;
         stack.push(*root);
 
-        while(!stack.empty())
+        while (!stack.empty())
         {
             const auto link = stack.top();
             stack.pop();
@@ -35,7 +35,7 @@ namespace ROS2
             AddLinkToFbxGenerator(link);
 
             // Add childs to stack
-            for (const auto & child : link.child_links)
+            for (const auto& child : link.child_links)
             {
                 stack.push(*child);
             }
@@ -44,8 +44,7 @@ namespace ROS2
         return m_generator.GetFbxString().data();
     }
 
-    AZStd::string UrdfToFbxConverter::ConvertAndSaveToFile(
-        const AZStd::string & urdfString, const AZStd::string & filePath)
+    AZStd::string UrdfToFbxConverter::ConvertAndSaveToFile(const AZStd::string& urdfString, const AZStd::string& filePath)
     {
         const auto fbxContent = Convert(urdfString);
         m_generator.SaveToFile(filePath.data());
@@ -53,7 +52,7 @@ namespace ROS2
         return fbxContent;
     }
 
-    void UrdfToFbxConverter::AddLinkToFbxGenerator(const urdf::Link & link)
+    void UrdfToFbxConverter::AddLinkToFbxGenerator(const urdf::Link& link)
     {
         const auto linkGeometry = link.visual->geometry;
 
@@ -72,7 +71,7 @@ namespace ROS2
 
         // Set proper relations between links (only root has no parent)
         // TODO: handle joints tranformations
-        if (const auto & parent = link.getParent())
+        if (const auto& parent = link.getParent())
         {
             const auto parentId = m_objectNameToObjectId[parent->name.c_str()];
             const auto childId = m_objectNameToObjectId[link.name.c_str()];
@@ -80,7 +79,7 @@ namespace ROS2
         }
     }
 
-    void UrdfToFbxConverter::AddMaterialsToFbxGenerator(const urdf::ModelInterfaceSharedPtr & urdfModel)
+    void UrdfToFbxConverter::AddMaterialsToFbxGenerator(const urdf::ModelInterfaceSharedPtr& urdfModel)
     {
         if (!urdfModel)
         {
@@ -88,7 +87,7 @@ namespace ROS2
             return;
         }
 
-        for (const auto & e : urdfModel->materials_)
+        for (const auto& e : urdfModel->materials_)
         {
             const auto material = e.second;
             const AZStd::string materialName(material->name.c_str());

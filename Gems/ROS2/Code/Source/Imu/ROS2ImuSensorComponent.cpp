@@ -35,8 +35,7 @@ namespace ROS2
             {
                 ec->Class<ROS2ImuSensorComponent>("ROS2 Imu Sensor", "Imu sensor component")
                     ->ClassElement(AZ::Edit::ClassElements::EditorData, "")
-                        ->Attribute(AZ::Edit::Attributes::AppearsInAddComponentMenu, AZ_CRC("Game"))
-                ;
+                    ->Attribute(AZ::Edit::Attributes::AppearsInAddComponentMenu, AZ_CRC("Game"));
             }
         }
     }
@@ -82,8 +81,8 @@ namespace ROS2
         const auto frequency = 1.0 / timeDiff;
 
         // Calculate angular velocity
-        const auto & currentRotation = currentPose.GetRotation();
-        const auto & previousRotation = m_previousPose.GetRotation();
+        const auto& currentRotation = currentPose.GetRotation();
+        const auto& previousRotation = m_previousPose.GetRotation();
         const auto deltaRotation = currentRotation * previousRotation.GetInverseFull();
         AZ::Vector3 axis;
         float angle;
@@ -91,7 +90,7 @@ namespace ROS2
         const auto angularVelocity = frequency * angle * axis;
 
         // Calculate linear acceleration
-        const auto & currentPosition = currentPose.GetTranslation();
+        const auto& currentPosition = currentPose.GetTranslation();
         const auto deltaPositions = currentPosition - m_previousPose.GetTranslation();
         const auto linearVelocity = currentPose.GetInverse().TransformVector(deltaPositions) * frequency;
         const auto linearAcceleration = (linearVelocity - m_previousLinearVelocity) * frequency;
@@ -120,17 +119,17 @@ namespace ROS2
         m_imuMsg.orientation.w = 1.0;
 
         // Set covariances to 0
-        for (auto & e : m_imuMsg.orientation_covariance)
+        for (auto& e : m_imuMsg.orientation_covariance)
         {
             e = 0.0;
         }
 
-        for (auto & e : m_imuMsg.angular_velocity_covariance)
+        for (auto& e : m_imuMsg.angular_velocity_covariance)
         {
             e = 0.0;
         }
 
-        for (auto & e : m_imuMsg.linear_acceleration_covariance)
+        for (auto& e : m_imuMsg.linear_acceleration_covariance)
         {
             e = 0.0;
         }

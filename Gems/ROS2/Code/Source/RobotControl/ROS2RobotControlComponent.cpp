@@ -20,15 +20,15 @@ namespace ROS2
     {
         switch (m_controlConfiguration.m_steering)
         {
-            case ControlConfiguration::Twist:
-                m_robotControl = AZStd::make_unique<TwistControl>(m_controlConfiguration);
-                break;
-            case ControlConfiguration::Ackermann:
-                //TODO add ackermann
-                AZ_Error("ROS2RobotControlComponent", false, "Ackermann steering not yet implemented");
-                break;
-            default:
-                break;
+        case ControlConfiguration::Twist:
+            m_robotControl = AZStd::make_unique<TwistControl>(m_controlConfiguration);
+            break;
+        case ControlConfiguration::Ackermann:
+            // TODO add ackermann
+            AZ_Error("ROS2RobotControlComponent", false, "Ackermann steering not yet implemented");
+            break;
+        default:
+            break;
         }
         if (m_robotControl)
         {
@@ -52,18 +52,19 @@ namespace ROS2
 
         if (AZ::SerializeContext* serialize = azrtti_cast<AZ::SerializeContext*>(context))
         {
-            serialize->Class<ROS2RobotControlComponent, AZ::Component>()
-                ->Version(1)
-                ->Field("ControlConfiguration", &ROS2RobotControlComponent::m_controlConfiguration)
-                ;
+            serialize->Class<ROS2RobotControlComponent, AZ::Component>()->Version(1)->Field(
+                "ControlConfiguration", &ROS2RobotControlComponent::m_controlConfiguration);
 
             if (AZ::EditContext* ec = serialize->GetEditContext())
             {
                 ec->Class<ROS2RobotControlComponent>("ROS2 Robot control", "[Customizable robot control component]")
                     ->ClassElement(AZ::Edit::ClassElements::EditorData, "")
-                        ->Attribute(AZ::Edit::Attributes::AppearsInAddComponentMenu, AZ_CRC("Game")) // TODO - "Simulation"?
-                    ->DataElement(AZ::Edit::UIHandlers::Default, &ROS2RobotControlComponent::m_controlConfiguration, "Control settings", "Control bus Configuration")
-                    ;
+                    ->Attribute(AZ::Edit::Attributes::AppearsInAddComponentMenu, AZ_CRC("Game")) // TODO - "Simulation"?
+                    ->DataElement(
+                        AZ::Edit::UIHandlers::Default,
+                        &ROS2RobotControlComponent::m_controlConfiguration,
+                        "Control settings",
+                        "Control bus Configuration");
             }
         }
     }
@@ -73,4 +74,4 @@ namespace ROS2
         // TODO - also, dependent on current/selected RobotControl implementation for what components are required
         required.push_back(AZ_CRC("ROS2Frame"));
     }
-}  // namespace ROS2
+} // namespace ROS2

@@ -62,14 +62,14 @@ namespace ROS2
     }
 
     bool ROS2FrameComponent::IsDynamic() const
-    {   // TODO - determine by joint type
+    { // TODO - determine by joint type
         return IsTopLevel();
     }
 
     const ROS2FrameComponent* ROS2FrameComponent::GetParentROS2FrameComponent() const
     {
         if (const AZ::TransformInterface* parentTI = GetEntityTransformInterface()->GetParent(); parentTI != nullptr)
-        {   // Does not use BroadCastResult as opposed to AZ::EntityUtils::FirstDerivedComponent
+        { // Does not use BroadCastResult as opposed to AZ::EntityUtils::FirstDerivedComponent
             const AZ::Entity* parentEntity = azrtti_cast<const AzFramework::TransformComponent*>(parentTI)->GetEntity();
             return parentEntity->FindComponent<ROS2FrameComponent>();
         }
@@ -125,18 +125,21 @@ namespace ROS2
                 ->Version(1)
                 ->Field("Namespace Configuration", &ROS2FrameComponent::m_namespaceConfiguration)
                 ->Field("Frame Name", &ROS2FrameComponent::m_frameName)
-                ->Field("Publish Transform", &ROS2FrameComponent::m_publishTransform)
-                ;
+                ->Field("Publish Transform", &ROS2FrameComponent::m_publishTransform);
 
             if (AZ::EditContext* ec = serialize->GetEditContext())
             {
                 ec->Class<ROS2FrameComponent>("ROS2 Frame", "[ROS2 Frame component]")
-                        ->ClassElement(AZ::Edit::ClassElements::EditorData, "")
-                            ->Attribute(AZ::Edit::Attributes::AppearsInAddComponentMenu, AZ_CRC("Game"))
-                        ->DataElement(AZ::Edit::UIHandlers::Default, &ROS2FrameComponent::m_namespaceConfiguration, "Namespace Configuration", "Namespace Configuration")
-                        ->DataElement(AZ::Edit::UIHandlers::Default, &ROS2FrameComponent::m_frameName, "Frame Name", "Frame Name")
-                        ->DataElement(AZ::Edit::UIHandlers::Default, &ROS2FrameComponent::m_publishTransform, "Publish Transform", "Publish Transform")
-                        ;
+                    ->ClassElement(AZ::Edit::ClassElements::EditorData, "")
+                    ->Attribute(AZ::Edit::Attributes::AppearsInAddComponentMenu, AZ_CRC("Game"))
+                    ->DataElement(
+                        AZ::Edit::UIHandlers::Default,
+                        &ROS2FrameComponent::m_namespaceConfiguration,
+                        "Namespace Configuration",
+                        "Namespace Configuration")
+                    ->DataElement(AZ::Edit::UIHandlers::Default, &ROS2FrameComponent::m_frameName, "Frame Name", "Frame Name")
+                    ->DataElement(
+                        AZ::Edit::UIHandlers::Default, &ROS2FrameComponent::m_publishTransform, "Publish Transform", "Publish Transform");
             }
         }
     }

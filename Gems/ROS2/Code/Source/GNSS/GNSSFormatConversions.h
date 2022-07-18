@@ -10,7 +10,8 @@
 
 #include "AzCore/Math/Matrix4x4.h"
 
-namespace ROS2::GNSS {
+namespace ROS2::GNSS
+{
     //! Converts radians to degrees
     float Rad2Deg(float rad);
 

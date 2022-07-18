@@ -12,10 +12,12 @@
 
 class Entity;
 
-namespace ROS2 {
+namespace ROS2
+{
 
     //! Structure containing all information required to create the camera sensor
-    struct CameraSensorDescription {
+    struct CameraSensorDescription
+    {
         //! Constructor to create the description
         //! @param cameraName - name of the camera; used to differentiate cameras in a multi-camera setup
         //! @param verticalFov - vertical field of view of camera sensor
@@ -24,11 +26,11 @@ namespace ROS2 {
         CameraSensorDescription(const AZStd::string& cameraName, float verticalFov, int width, int height);
 
         const float verticalFieldOfViewDeg; //!< camera vertical field of view
-        const int width;                    //!< camera image width in pixels
-        const int height;                   //!< camera image height in pixels
-        const AZStd::string cameraName;     //!< camera name to differentiate cameras in a multi-camera setup
+        const int width; //!< camera image width in pixels
+        const int height; //!< camera image height in pixels
+        const AZStd::string cameraName; //!< camera name to differentiate cameras in a multi-camera setup
 
-        const float aspectRatio;              //!< camera image aspect ratio; equal to (width / height)
+        const float aspectRatio; //!< camera image aspect ratio; equal to (width / height)
         const AZ::Matrix4x4 viewToClipMatrix; //!< camera view to clip space transform matrix; derived from other parameters
 
     private:
@@ -38,7 +40,8 @@ namespace ROS2 {
 
     //! Class to create camera sensor using Atom renderer
     //! It creates dedicated rendering pipeline for each camera
-    class CameraSensor {
+    class CameraSensor
+    {
     public:
         //! Initializes rendering pipeline for the camera sensor
         //! @param cameraSensorDescription - camera sensor description used to create camera pipeline
@@ -51,7 +54,8 @@ namespace ROS2 {
         //! @param cameraPose - current camera pose from which the rendering should take place
         //! @param callback - callback function object that will be called when capture is ready
         //!                   it's argument is readback structure containing, among other thins, captured image
-        void RequestFrame(const AZ::Transform& cameraPose, std::function<void(const AZ::RPI::AttachmentReadback::ReadbackResult& result)> callback);
+        void RequestFrame(
+            const AZ::Transform& cameraPose, std::function<void(const AZ::RPI::AttachmentReadback::ReadbackResult& result)> callback);
 
     private:
         AZStd::vector<AZStd::string> m_passHierarchy;
@@ -60,4 +64,4 @@ namespace ROS2 {
         AZ::RPI::Scene* m_scene = nullptr;
     };
 
-}
+} // namespace ROS2

@@ -25,8 +25,7 @@ namespace ROS2
     //!   - camera image width and height in pixels
     //!   - camera vertical field of view in degrees
     //! Camera frustum is facing negative Z axis; image plane is parallel to X,Y plane: X - right, Y - up
-    class ROS2CameraSensorComponent
-        : public ROS2SensorComponent
+    class ROS2CameraSensorComponent : public ROS2SensorComponent
     {
     public:
         ROS2CameraSensorComponent();
@@ -48,4 +47,4 @@ namespace ROS2
         std::shared_ptr<rclcpp::Publisher<sensor_msgs::msg::Image>> m_imagePublisher;
         std::optional<CameraSensor> m_cameraSensor;
     };
-}  // namespace ROS2
+} // namespace ROS2

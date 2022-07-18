@@ -11,7 +11,7 @@
 namespace ROS2
 {
     AZ::Vector3 ROS2Conversions::FromROS2Vector3(const geometry_msgs::msg::Vector3& ros2vector)
-    {   // Same coordinate systems - just translate types
+    { // Same coordinate systems - just translate types
         return AZ::Vector3(ros2vector.x, ros2vector.y, ros2vector.z);
     }
 
@@ -33,4 +33,4 @@ namespace ROS2
         ros2Quaternion.w = azquaternion.GetW();
         return ros2Quaternion;
     }
-}  // namespace ROS2
+} // namespace ROS2

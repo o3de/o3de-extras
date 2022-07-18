@@ -8,9 +8,9 @@
 #pragma once
 
 #include "Frame/ROS2FrameComponent.h"
+#include "ROS2/ROS2Bus.h"
 #include "RobotControl/ControlConfiguration.h"
 #include "RobotControl/RobotConfiguration.h"
-#include "ROS2/ROS2Bus.h"
 #include "Utilities/ROS2Names.h"
 #include <memory>
 #include <rclcpp/rclcpp.hpp>
@@ -32,12 +32,14 @@ namespace ROS2
 
     //! The generic class for handling subscriptions to ROS2 control messages of different types.
     //! @see ControlConfiguration::Steering.
-    template <typename T>
+    template<typename T>
     class RobotControl : public IRobotControl
     {
     public:
         explicit RobotControl(ControlConfiguration controlConfiguration)
-            : m_controlConfiguration{std::move(controlConfiguration)} {}
+            : m_controlConfiguration{ std::move(controlConfiguration) }
+        {
+        }
 
         void Activate(const AZ::Entity* entity) final
         {
@@ -45,15 +47,16 @@ namespace ROS2
             if (!m_controlSubscription)
             {
                 auto ros2Frame = entity->FindComponent<ROS2FrameComponent>();
-                AZStd::string namespacedTopic = ROS2Names::GetNamespacedName(
-                        ros2Frame->GetNamespace(),
-                        m_controlConfiguration.m_topic);
+                AZStd::string namespacedTopic = ROS2Names::GetNamespacedName(ros2Frame->GetNamespace(), m_controlConfiguration.m_topic);
 
                 auto ros2Node = ROS2Interface::Get()->GetNode();
                 m_controlSubscription = ros2Node->create_subscription<T>(
                     namespacedTopic.data(),
                     m_controlConfiguration.m_qos.GetQoS(),
-                    [this](const T& message) { OnControlMessage(message); });
+                    [this](const T& message)
+                    {
+                        OnControlMessage(message);
+                    });
             }
         };
 
@@ -71,12 +74,13 @@ namespace ROS2
     private:
         void OnControlMessage(const T& message)
         {
-            if (!m_active) return;
+            if (!m_active)
+                return;
 
             if (m_controlConfiguration.m_broadcastBusMode)
             {
                 BroadcastBus(message);
-            } 
+            }
             else
             {
                 ApplyControl(message);
@@ -90,4 +94,4 @@ namespace ROS2
 
         typename rclcpp::Subscription<T>::SharedPtr m_controlSubscription;
     };
-}  // namespace ROS2
+} // namespace ROS2

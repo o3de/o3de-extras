@@ -8,18 +8,18 @@
 
 #include "FbxNode.h"
 
-#include <iomanip>
 #include <fstream>
+#include <iomanip>
 #include <string>
 
-#include <AzCore/std/string/string.h>
 #include <AzCore/Console/Console.h>
+#include <AzCore/std/string/string.h>
 
 namespace ROS2
 {
     namespace Fbx
     {
-        AZStd::string AnyToString(const std::any & a)
+        AZStd::string AnyToString(const std::any& a)
         {
             if (a.type() == typeid(int))
             {
@@ -54,12 +54,12 @@ namespace ROS2
             return "";
         }
 
-        Node::Node(
-            const AZStd::string & name, const Properties & properties, const Nodes & children)
+        Node::Node(const AZStd::string& name, const Properties& properties, const Nodes& children)
             : m_name(name)
             , m_properties(properties)
             , m_children(children)
-        {}
+        {
+        }
 
         AZStd::string Node::GetName() const
         {
@@ -86,22 +86,22 @@ namespace ROS2
             return !m_properties.empty();
         }
 
-        void Node::AddProperty(const Property & property)
+        void Node::AddProperty(const Property& property)
         {
             m_properties.push_back(property);
         }
 
-        void Node::AddChild(const Node & child)
+        void Node::AddChild(const Node& child)
         {
             m_children.push_back(child);
         }
 
-        void Node::AddChild(const AZStd::string & name, const Property & property)
+        void Node::AddChild(const AZStd::string& name, const Property& property)
         {
             m_children.push_back(Node(name, { property }));
         }
 
-        void Node::AddChild(const Node && child)
+        void Node::AddChild(const Node&& child)
         {
             m_children.push_back(child);
         }
@@ -111,7 +111,7 @@ namespace ROS2
             // Calculate offset
             constexpr int spacesPerIndentLevel = 2;
             std::stringstream offsetStream;
-            offsetStream << std::setfill(' ') << std::setw(nodeDepth * spacesPerIndentLevel ) << "";
+            offsetStream << std::setfill(' ') << std::setw(nodeDepth * spacesPerIndentLevel) << "";
             std::string offset = offsetStream.str();
 
             // Write name
@@ -128,9 +128,9 @@ namespace ROS2
             if (HasProperties())
             {
                 bool hasPrevious = false;
-                for(const auto & property : m_properties)
+                for (const auto& property : m_properties)
                 {
-                    if(hasPrevious)
+                    if (hasPrevious)
                     {
                         ss << ", ";
                     }
@@ -145,9 +145,9 @@ namespace ROS2
             {
                 ss << " {\n";
 
-                if(m_children.size() > 0)
+                if (m_children.size() > 0)
                 {
-                    for(auto node : m_children)
+                    for (auto node : m_children)
                     {
                         ss << node.ToString(nodeDepth + 1).c_str();
                     }

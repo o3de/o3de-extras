@@ -6,9 +6,9 @@
  *
  */
 
+#include "Sensor/ROS2SensorComponent.h"
 #include "Frame/ROS2FrameComponent.h"
 #include "ROS2/ROS2Bus.h"
-#include "Sensor/ROS2SensorComponent.h"
 #include "Utilities/ROS2Names.h"
 #include <AzCore/Component/Entity.h>
 #include <AzCore/Serialization/EditContext.h>
@@ -33,16 +33,17 @@ namespace ROS2
 
         if (AZ::SerializeContext* serialize = azrtti_cast<AZ::SerializeContext*>(context))
         {
-            serialize->Class<ROS2SensorComponent, AZ::Component>()
-                ->Version(1)
-                ->Field("SensorConfiguration", &ROS2SensorComponent::m_sensorConfiguration)
-                ;
+            serialize->Class<ROS2SensorComponent, AZ::Component>()->Version(1)->Field(
+                "SensorConfiguration", &ROS2SensorComponent::m_sensorConfiguration);
 
             if (AZ::EditContext* ec = serialize->GetEditContext())
             {
                 ec->Class<ROS2SensorComponent>("ROS2 Sensor", "Base component for sensors")
-                    ->DataElement(AZ::Edit::UIHandlers::Default, &ROS2SensorComponent::m_sensorConfiguration, "Sensor configuration", "Sensor configuration")
-                    ;
+                    ->DataElement(
+                        AZ::Edit::UIHandlers::Default,
+                        &ROS2SensorComponent::m_sensorConfiguration,
+                        "Sensor configuration",
+                        "Sensor configuration");
             }
         }
     }
@@ -84,7 +85,7 @@ namespace ROS2
 
         m_timeElapsedSinceLastTick -= frameTime;
         if (deltaTime > frameTime)
-        {   // Frequency higher than possible, not catching up, just keep going with each frame.
+        { // Frequency higher than possible, not catching up, just keep going with each frame.
             m_timeElapsedSinceLastTick = 0.0f;
         }
 

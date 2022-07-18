@@ -74,4 +74,4 @@ namespace ROS2
         bool m_publishTransform = true;
         AZStd::unique_ptr<ROS2Transform> m_ros2Transform;
     };
-}  // namespace ROS2
+} // namespace ROS2

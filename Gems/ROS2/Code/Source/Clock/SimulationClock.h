@@ -8,8 +8,8 @@
 #pragma once
 
 #include <builtin_interfaces/msg/time.hpp>
-#include <rosgraph_msgs/msg/clock.hpp>
 #include <rclcpp/publisher.hpp>
+#include <rosgraph_msgs/msg/clock.hpp>
 
 namespace ROS2
 {

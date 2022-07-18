@@ -19,7 +19,6 @@ namespace ROS2
     class LidarRaycaster
     {
     public:
-
         //! Set the Scene for the ray-casting.
         //! This should be the scene with the Entity that holds the sensor.
         //! @code
@@ -51,5 +50,4 @@ namespace ROS2
         AzPhysics::SceneHandle m_sceneHandle;
         AZ::EntityId m_lidarTransparentEntityId;
     };
-}  // namespace ROS2
-
+} // namespace ROS2

@@ -1,10 +1,10 @@
 /*
-* Copyright (c) Contributors to the Open 3D Engine Project.
-* For complete copyright and license terms please see the LICENSE at the root of this distribution.
-*
-* SPDX-License-Identifier: Apache-2.0 OR MIT
-*
-*/
+ * Copyright (c) Contributors to the Open 3D Engine Project.
+ * For complete copyright and license terms please see the LICENSE at the root of this distribution.
+ *
+ * SPDX-License-Identifier: Apache-2.0 OR MIT
+ *
+ */
 #pragma once
 
 #include <AzCore/Math/Transform.h>
@@ -13,25 +13,25 @@
 
 namespace ROS2
 {
-   //! Publishes transforms as standard ROS2 tf2 messages. Static transforms are published once.
-   //! @note This class is already used through ROS2FrameComponent.
-   // TODO - Rework this class (name, function). Separate broadcaster out of ROS2SystemComponent
-   class ROS2Transform
-   {
-   public:
-       ROS2Transform(AZStd::string parentFrame, AZStd::string childFrame, bool isDynamic);
+    //! Publishes transforms as standard ROS2 tf2 messages. Static transforms are published once.
+    //! @note This class is already used through ROS2FrameComponent.
+    // TODO - Rework this class (name, function). Separate broadcaster out of ROS2SystemComponent
+    class ROS2Transform
+    {
+    public:
+        ROS2Transform(AZStd::string parentFrame, AZStd::string childFrame, bool isDynamic);
 
-       //! Construct and delegate publishing of a transform according to members' values.
-       //! @param transform AZ::Transform with current transformation between m_parentFrame and m_childFrame.
-       //! @note The actual publishing is done by singleton tf broadcasters.
-       void Publish(const AZ::Transform& transform);
+        //! Construct and delegate publishing of a transform according to members' values.
+        //! @param transform AZ::Transform with current transformation between m_parentFrame and m_childFrame.
+        //! @note The actual publishing is done by singleton tf broadcasters.
+        void Publish(const AZ::Transform& transform);
 
-   private:
-       geometry_msgs::msg::TransformStamped CreateTransformMessage(const AZ::Transform& transform);
+    private:
+        geometry_msgs::msg::TransformStamped CreateTransformMessage(const AZ::Transform& transform);
 
-       const AZStd::string m_parentFrame;
-       const AZStd::string m_childFrame;
-       bool m_isPublished = false;
-       bool m_isDynamic;
-   };
-}  // namespace ROS2
+        const AZStd::string m_parentFrame;
+        const AZStd::string m_childFrame;
+        bool m_isPublished = false;
+        bool m_isDynamic;
+    };
+} // namespace ROS2

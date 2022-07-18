@@ -1,10 +1,10 @@
 /*
-* Copyright (c) Contributors to the Open 3D Engine Project.
-* For complete copyright and license terms please see the LICENSE at the root of this distribution.
-*
-* SPDX-License-Identifier: Apache-2.0 OR MIT
-*
-*/
+ * Copyright (c) Contributors to the Open 3D Engine Project.
+ * For complete copyright and license terms please see the LICENSE at the root of this distribution.
+ *
+ * SPDX-License-Identifier: Apache-2.0 OR MIT
+ *
+ */
 #pragma once
 
 #include <AzCore/RTTI/RTTI.h>
@@ -32,7 +32,7 @@ namespace ROS2
             Default, //!< FromEntityName for top-level frames, Empty otherwise.
             Empty,
             FromEntityName, //!< Generate from Entity name, but substitute disallowed characters through RosifyName.
-            Custom   //!< Non-empty and based on user-provided value.
+            Custom //!< Non-empty and based on user-provided value.
         };
 
         //! Set namespace based on context.
@@ -51,5 +51,4 @@ namespace ROS2
         void UpdateNamespace();
         AZ::Crc32 OnNamespaceStrategySelected();
     };
-}  // namespace ROS2
-
+} // namespace ROS2

@@ -1,10 +1,10 @@
 /*
-* Copyright (c) Contributors to the Open 3D Engine Project.
-* For complete copyright and license terms please see the LICENSE at the root of this distribution.
-*
-* SPDX-License-Identifier: Apache-2.0 OR MIT
-*
-*/
+ * Copyright (c) Contributors to the Open 3D Engine Project.
+ * For complete copyright and license terms please see the LICENSE at the root of this distribution.
+ *
+ * SPDX-License-Identifier: Apache-2.0 OR MIT
+ *
+ */
 #pragma once
 
 #include "QoS/QoS.h"
@@ -26,9 +26,12 @@ namespace ROS2
 
         //! Get topic QoS (Quality of Service) settings.
         //! @see ROS2::QoS.
-        rclcpp::QoS GetQoS() const { return m_qos.GetQoS(); }
+        rclcpp::QoS GetQoS() const
+        {
+            return m_qos.GetQoS();
+        }
 
     private:
         QoS m_qos = rclcpp::SensorDataQoS();
     };
-}  // namespace ROS2
+} // namespace ROS2

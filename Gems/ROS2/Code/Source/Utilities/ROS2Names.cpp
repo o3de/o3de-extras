@@ -21,7 +21,8 @@ namespace ROS2
             return name;
         }
 
-        return AZStd::string::format("%s/%s", ns.c_str(), name.c_str());;
+        return AZStd::string::format("%s/%s", ns.c_str(), name.c_str());
+        ;
     }
 
     AZStd::string ROS2Names::RosifyName(const AZStd::string& input)
@@ -38,18 +39,19 @@ namespace ROS2
         const char underscore = '_';
         if (input[0] == underscore)
         {
-            AZ_Warning("RosifyName",
-               false,
-               "'%s' name starts with an underscore, which makes topic/namespace/parameter hidden by default. Is this intended?",
-               input.c_str());
+            AZ_Warning(
+                "RosifyName",
+                false,
+                "'%s' name starts with an underscore, which makes topic/namespace/parameter hidden by default. Is this intended?",
+                input.c_str());
         }
-        
+
         const AZStd::string stringToReplaceViolations(1, underscore);
         const AZStd::regex ros2Disallowedlist("[^0-9|a-z|A-Z|_]");
         rosified = AZStd::regex_replace(rosified, ros2Disallowedlist, stringToReplaceViolations);
 
         if (std::isdigit(rosified[0]) || (input[0] != underscore && rosified[0] == underscore))
-        {   // Prepend "o3de_" if it would otherwise start with a number (which would violate ros2 name requirements)
+        { // Prepend "o3de_" if it would otherwise start with a number (which would violate ros2 name requirements)
             // Also, starting with '_' is not desired unless explicit. Topics/namespaces/parameters starting with "_" are hidden by default.
             const AZStd::string prependToNumberStart = "o3de_";
             rosified = prependToNumberStart + rosified;
@@ -57,7 +59,11 @@ namespace ROS2
 
         if (input != rosified)
         {
-            AZ_TracePrintf("RosifyName", "Name '%s' has been changed to '%s' to conform with ros2 naming restrictions\n", input.c_str(), rosified.c_str());
+            AZ_TracePrintf(
+                "RosifyName",
+                "Name '%s' has been changed to '%s' to conform with ros2 naming restrictions\n",
+                input.c_str(),
+                rosified.c_str());
         }
         return rosified;
     }
@@ -67,7 +73,7 @@ namespace ROS2
         auto ros2GlobalizedNamespace = ros2Namespace;
         const char namespacePrefix = '/';
         if (!ros2Namespace.starts_with(namespacePrefix))
-        {  // Prepend "/" if not included, this is done automatically by rclcpp so "/"-less namespaces are ok.
+        { // Prepend "/" if not included, this is done automatically by rclcpp so "/"-less namespaces are ok.
             ros2GlobalizedNamespace = namespacePrefix + ros2Namespace;
         }
 
@@ -126,4 +132,4 @@ namespace ROS2
         const AZStd::string& topic(*reinterpret_cast<const AZStd::string*>(newValue));
         return ValidateTopic(topic);
     }
-}  // namespace ROS2
+} // namespace ROS2

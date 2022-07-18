@@ -36,4 +36,4 @@ namespace ROS2
         //! Validate topic field. Fits ChangeValidate for Editor fields.
         static AZ::Outcome<void, AZStd::string> ValidateTopicField(void* newValue, const AZ::Uuid& valueType);
     };
-}  // namespace ROS2
+} // namespace ROS2

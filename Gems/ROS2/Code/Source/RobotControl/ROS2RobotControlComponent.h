@@ -17,8 +17,7 @@ namespace ROS2
     //! A Component responsible for controlling a robot movement.
     //! Uses IRobotControl implementation depending on type of ROS2 control message.
     //! Depends on ROS2FrameComponent. Can be configured through ControlConfiguration.
-    class ROS2RobotControlComponent
-        : public AZ::Component
+    class ROS2RobotControlComponent : public AZ::Component
     {
     public:
         AZ_COMPONENT(ROS2RobotControlComponent, "{CBFB0764-99F9-40EE-9FEE-F5F5A66E59D2}", AZ::Component);
@@ -35,4 +34,4 @@ namespace ROS2
         AZStd::unique_ptr<IRobotControl> m_robotControl;
         ControlConfiguration m_controlConfiguration;
     };
-}  // namespace ROS2
+} // namespace ROS2

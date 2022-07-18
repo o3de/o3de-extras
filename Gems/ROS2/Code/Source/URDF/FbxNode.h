@@ -10,9 +10,9 @@
 
 #include <any>
 
+#include <AzCore/Memory/SystemAllocator.h>
 #include <AzCore/std/containers/vector.h>
 #include <AzCore/std/string/string.h>
-#include <AzCore/Memory/SystemAllocator.h>
 
 #include "UniqueIdGenerator.h"
 
@@ -32,8 +32,10 @@ namespace ROS2
         //! But in very rare cases it's necessary to add field without quotation marks.
         struct RawString
         {
-            RawString(const AZStd::string & str)
-                : data(str) {}
+            RawString(const AZStd::string& str)
+                : data(str)
+            {
+            }
             AZStd::string data;
         };
 
@@ -44,8 +46,7 @@ namespace ROS2
         public:
             AZ_CLASS_ALLOCATOR(Node, AZ::SystemAllocator, 0);
 
-            Node(const AZStd::string & name,
-                const Properties & properties = {}, const Nodes & children = {});
+            Node(const AZStd::string& name, const Properties& properties = {}, const Nodes& children = {});
 
             //! Get name of the node.
             //! @return A name of the node.
@@ -63,20 +64,20 @@ namespace ROS2
 
             //! Add new property to existing node
             //! @param property A property that will be added to node.
-            void AddProperty(const Property & property);
+            void AddProperty(const Property& property);
 
             //! Add new child node to existing node.
-            void AddChild(const Node & child);
+            void AddChild(const Node& child);
             //! Add new child node to existing node.
-            void AddChild(const AZStd::string & name, const Property & property);
+            void AddChild(const AZStd::string& name, const Property& property);
             //! Add new child node to existing node.
-            void AddChild(const Node && child);
+            void AddChild(const Node&& child);
 
             //! Convert the node to string (ASCII Fbx).
             //! @param nodeDepth A node depth in FBX tree structure.
             //! Used to calculate offset in text version of the node.
             //! @return A string that contains text version of the node.
-            AZStd::string ToString(int nodeDepth = 0)  const;
+            AZStd::string ToString(int nodeDepth = 0) const;
 
         private:
             AZStd::string m_name;
@@ -87,11 +88,17 @@ namespace ROS2
         //! A node with unique id
         struct NodeWithId
         {
-            NodeWithId(Id id, const Node & node)
-                : id(id), node(node) {}
+            NodeWithId(Id id, const Node& node)
+                : id(id)
+                , node(node)
+            {
+            }
 
-            NodeWithId(Id id, const Node && node)
-                : id(id), node(std::move(node)) {}
+            NodeWithId(Id id, const Node&& node)
+                : id(id)
+                , node(std::move(node))
+            {
+            }
 
             Id id;
             Node node;

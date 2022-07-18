@@ -10,25 +10,25 @@
 
 #include <fstream>
 
-#include <AzCore/std/string/string.h>
 #include <AzCore/Debug/Trace.h>
+#include <AzCore/std/string/string.h>
 
 #include <urdf_model/model.h>
 
 namespace ROS2
 {
-    urdf::ModelInterfaceSharedPtr UrdfParser::Parse(const AZStd::string & xmlString)
+    urdf::ModelInterfaceSharedPtr UrdfParser::Parse(const AZStd::string& xmlString)
     {
         return urdf::parseURDF(xmlString.c_str());
     }
 
-    urdf::ModelInterfaceSharedPtr UrdfParser::ParseFromFile(const AZStd::string & filePath)
+    urdf::ModelInterfaceSharedPtr UrdfParser::ParseFromFile(const AZStd::string& filePath)
     {
         std::ifstream istream(filePath.c_str());
         if (!istream)
         {
-          AZ_Error("UrdfParser", false, "File %s not exist", filePath.c_str());
-          return urdf::ModelInterfaceSharedPtr();
+            AZ_Error("UrdfParser", false, "File %s not exist", filePath.c_str());
+            return urdf::ModelInterfaceSharedPtr();
         }
 
         std::string xmlStr((std::istreambuf_iterator<char>(istream)), std::istreambuf_iterator<char>());

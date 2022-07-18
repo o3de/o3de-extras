@@ -22,9 +22,12 @@ namespace ROS2
     {
     public:
         explicit TwistControl(ControlConfiguration controlConfiguration)
-            : RobotControl<geometry_msgs::msg::Twist>{std::move(controlConfiguration)} {}
+            : RobotControl<geometry_msgs::msg::Twist>{ std::move(controlConfiguration) }
+        {
+        }
+
     private:
         void BroadcastBus(const geometry_msgs::msg::Twist& message) override;
         void ApplyControl(const geometry_msgs::msg::Twist& message) override;
     };
-}  // namespace ROS2
+} // namespace ROS2

@@ -6,8 +6,8 @@
  *
  */
 
-#include "ROS2/ROS2Bus.h"
 #include "SimulationClock.h"
+#include "ROS2/ROS2Bus.h"
 #include <AzCore/Time/ITime.h>
 #include <rclcpp/qos.hpp>
 
@@ -39,9 +39,9 @@ namespace ROS2
     void SimulationClock::Tick()
     {
         if (!m_clockPublisher)
-        {   //Lazy construct
+        { // Lazy construct
             auto ros2Node = ROS2Interface::Get()->GetNode();
-            
+
             rclcpp::ClockQoS qos;
             m_clockPublisher = ros2Node->create_publisher<rosgraph_msgs::msg::Clock>("/clock", qos);
         }
