@@ -8,4 +8,5 @@
 
 set(FILES
     XR_Platform.h
+    XR_Linux.h
 )

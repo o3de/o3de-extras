@@ -8,4 +8,5 @@
 
 set(FILES
     OpenXRVk_Platform.h
+    OpenXRVk_Linux.h
 )
