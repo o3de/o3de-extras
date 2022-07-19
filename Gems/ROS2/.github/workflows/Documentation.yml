@@ -4,6 +4,13 @@ on:
   push:
     branches:
       - development
+  workflow_run:
+# DISCLAIMER: This trigger will only work if this workflow is located on the default branch!
+    workflows: ["Documentation Configuration Changed"]
+    branches:
+      - "gh-pages"
+    types:
+      - completed
 
 permissions:
   contents: write
