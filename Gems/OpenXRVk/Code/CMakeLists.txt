@@ -58,7 +58,7 @@ ly_add_target(
             3rdParty::OpenXR
             3rdParty::glad_vulkan
             AZ::AtomCore
-	    Gem::Atom_RHI_Vulkan.Reflect
+            Gem::Atom_RHI_Vulkan.Reflect
             Gem::XR.Static
 )
 
