@@ -10,7 +10,7 @@
 #define GLAD_VULKAN_IMPLEMENTATION
 #include <OpenXRVk_Platform.h>
 
-#include <OpenXRVk/OpenXRVkGladFunctionLoader.h>
+#include <OpenXRVk/OpenXRVkGladFuncLoader.h>
 #include <AzCore/Module/DynamicModuleHandle.h>
 
 namespace

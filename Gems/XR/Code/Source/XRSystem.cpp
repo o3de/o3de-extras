@@ -6,7 +6,7 @@
  *
  */
 
-#include <AZCore/Interface/Interface.h>
+#include <AzCore/Interface/Interface.h>
 #include <AzCore/Debug/Profiler.h>
 #include <XR/XRFactory.h>
 #include <XR/XRSystem.h>

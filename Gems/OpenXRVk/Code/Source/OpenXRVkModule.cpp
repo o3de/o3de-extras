@@ -8,7 +8,7 @@
 
 #include <AzCore/Memory/SystemAllocator.h>
 #include <AzCore/Module/Module.h>
-#include <OpenXrVk/OpenXrVkSystemComponent.h>
+#include <OpenXRVk/OpenXRVkSystemComponent.h>
 
 namespace OpenXRVk
 {   

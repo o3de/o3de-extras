@@ -75,3 +75,6 @@ ly_add_target(
             Gem::XR.Static
 )
 
+# use the XR module in clients and tools:
+ly_create_alias(NAME XR.Clients NAMESPACE Gem TARGETS Gem::XR)
+ly_create_alias(NAME XR.Tools NAMESPACE Gem TARGETS Gem::XR)

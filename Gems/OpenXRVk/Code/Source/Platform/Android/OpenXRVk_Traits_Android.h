@@ -7,5 +7,5 @@
  */
 #pragma once
 
-#define VULKAN_DLL "vulkan.dll"
-#define VULKAN_1_DLL "vulkan-1.dll"
+#define VULKAN_DLL "libvulkan.so"
+#define VULKAN_1_DLL "libvulkan.so.1"

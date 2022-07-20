@@ -58,7 +58,7 @@ ly_add_target(
             3rdParty::OpenXR
             3rdParty::glad_vulkan
             AZ::AtomCore
-	    Gem::Atom_RHI_Vulkan.Reflect
+            Gem::Atom_RHI_Vulkan.Reflect
             Gem::XR.Static
 )
 
@@ -79,3 +79,6 @@ ly_add_target(
             Gem::OpenXRVk.Static
 )
 
+# use the OpenXRVk module in clients and tools:
+ly_create_alias(NAME OpenXRVk.Clients NAMESPACE Gem TARGETS Gem::OpenXRVk)
+ly_create_alias(NAME OpenXRVk.Tools NAMESPACE Gem TARGETS Gem::OpenXRVk)
