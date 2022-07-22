@@ -16,6 +16,33 @@
 #include <OpenXRVk/OpenXRVkUtils.h>
 #include <XR/XRFactory.h>
 
+// TODO: Expose ConvertFormat in Vulkan RHI::Reflect
+#include <../Source/RHI/Formats.inl>
+
+namespace AZ::Vulkan
+{
+    RHI::Format ConvertFormat(VkFormat format)
+    {
+#define RHIVK_VK_TO_RHI(_FormatID, _VKFormat, _Color, _Depth, _Stencil) \
+case _VKFormat: \
+    return RHI::Format::_FormatID;
+
+        switch (format)
+        {
+        case VK_FORMAT_UNDEFINED:
+            return RHI::Format::Unknown;
+
+        RHIVK_EXPAND_FOR_FORMATS(RHIVK_VK_TO_RHI)
+
+        default:
+            AZ_Assert(false, "unhandled conversion in ConvertFormat");
+            return RHI::Format::Unknown;
+        }
+
+#undef RHIVK_VK_TO_RHI
+    }
+}
+
 namespace OpenXRVk
 {
 
@@ -141,7 +168,7 @@ namespace OpenXRVk
                 AZStd::string swapchainFormatsString;
                 for (int64_t format : swapChainFormats)
                 {
-                    const bool selected = format == m_colorSwapChainFormat;
+                    const bool selected = format == static_cast<int64_t>(m_colorSwapChainFormat);
                     swapchainFormatsString += " ";
                     if (selected)
                     {
@@ -175,7 +202,7 @@ namespace OpenXRVk
                     // Create the xr swapchain.
                     XrSwapchainCreateInfo swapchainCreateInfo{ XR_TYPE_SWAPCHAIN_CREATE_INFO };
                     swapchainCreateInfo.arraySize = m_arraySize;
-                    swapchainCreateInfo.format = m_colorSwapChainFormat;
+                    swapchainCreateInfo.format = static_cast<int64_t>(m_colorSwapChainFormat);
                     swapchainCreateInfo.width = configView.recommendedImageRectWidth;
                     swapchainCreateInfo.height = configView.recommendedImageRectHeight;
                     swapchainCreateInfo.mipCount = m_mipCount;
@@ -223,10 +250,10 @@ namespace OpenXRVk
         return AZ::RHI::ResultCode::Success;
     }
 
-    AZ::s64 SwapChain::SelectColorSwapChainFormat(const AZStd::vector<int64_t>& runtimeFormats) const
+    VkFormat SwapChain::SelectColorSwapChainFormat(const AZStd::vector<int64_t>& runtimeFormats) const
     {
         // List of supported color swapchain formats.
-        constexpr AZ::s64 SupportedColorSwapchainFormats[] = { VK_FORMAT_B8G8R8A8_UNORM };
+        constexpr int64_t SupportedColorSwapchainFormats[] = { VK_FORMAT_B8G8R8A8_UNORM, VK_FORMAT_R8G8B8A8_UNORM };
 
         auto swapchainFormatIt =
             AZStd::find_first_of(runtimeFormats.begin(), runtimeFormats.end(), AZStd::begin(SupportedColorSwapchainFormats),
@@ -234,9 +261,10 @@ namespace OpenXRVk
         if (swapchainFormatIt == runtimeFormats.end()) 
         {
             AZ_Error("OpenXRVk", false, "No runtime swapchain format supported for color swapchain");
+            return VK_FORMAT_UNDEFINED;
         }
 
-        return *swapchainFormatIt;
+        return static_cast<VkFormat>(*swapchainFormatIt);
     }
 
     AZStd::vector<XrViewConfigurationView> SwapChain::GetViewConfigs() const
@@ -264,6 +292,11 @@ namespace OpenXRVk
     AZ::u32 SwapChain::GetSwapChainHeight(AZ::u32 viewIndex) const
     {
         return m_configViews[viewIndex].recommendedImageRectHeight;
+    }
+
+    AZ::RHI::Format SwapChain::GetSwapChainFormat([[maybe_unused]] AZ::u32 viewIndex) const
+    {
+        return AZ::Vulkan::ConvertFormat(m_colorSwapChainFormat);
     }
 
     void SwapChain::ShutdownInternal()
