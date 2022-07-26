@@ -1,0 +1,71 @@
+name: Build
+
+on:
+  pull_request:
+    branches:
+      - development
+
+permissions:
+  contents: read
+
+jobs:
+  build-with-empty-project:
+    name: Build the Gem with an empty Project
+    runs-on: self-hosted
+    timeout-minutes: 60
+    env:
+#     vv Change the o3de hash (LONG FORMAT!) here to fit the build vv
+      O3DE_SHA: bb79fa363586e907de7c736dee554fbdae6e570d
+      ROS_DISTRO: galactic
+    steps:
+      - name: O3DE ROS 2 Gem checkout
+        uses: actions/checkout@v3
+        with:
+          path: o3de-ros2-gem
+      - name: O3DE checkout
+        uses: actions/checkout@v3
+        with:
+          repository: o3de/o3de
+          ref: ${{ env.O3DE_SHA }}
+          path: o3de
+      - name: O3DE git-lfs pull
+        run: |
+          cd o3de
+          git lfs pull
+          cd ..
+      - name: Set RUNNER_HOME
+        run: |
+          RUNNER_WORK=$(pwd)
+          cd ../../..
+          echo "RUNNER_HOME=$(pwd)" >> $GITHUB_ENV
+          cd $RUNNER_WORK
+      - name: Register the Engine
+        run: |
+          mkdir -p ${{ env.RUNNER_HOME }}/o3de-packages
+          o3de/python/get_python.sh
+          o3de/scripts/o3de.sh register --this-engine --force
+      - name: Create an empty Project
+        run: |
+          o3de/scripts/o3de.sh create-project \
+            --project-path ${{ env.RUNNER_HOME }}/o3de-projects/EmptyProject
+      - name: Add the O3DE ROS2 Gem to the Project
+        run: |
+          o3de/scripts/o3de.sh register --gem-path o3de-ros2-gem
+          o3de/scripts/o3de.sh enable-gem -gn ROS2 \
+            -pp ${{ env.RUNNER_HOME }}/o3de-projects/EmptyProject
+      - name: Create the Linux build project for the Project
+        run: |
+          cd ${{ env.RUNNER_HOME }}/o3de-projects/EmptyProject
+          cmake -B build/linux -S . -G "Ninja Multi-Config" \
+            -DLY_3RDPARTY_PATH=${{ env.RUNNER_HOME }}/o3de-packages
+      - name: Build the Project
+        run: >
+          cmake
+          --build ${{ env.RUNNER_HOME }}/o3de-projects/EmptyProject/build/linux
+          --config release
+          --target EmptyProject Editor
+          -j $(($(nproc) / 2))
+      - name: Project Cleanup
+        if: always()
+        run: |
+          rm -r ${{ env.RUNNER_HOME }}/o3de-projects/EmptyProject 2> /dev/null
