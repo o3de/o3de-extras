@@ -41,9 +41,6 @@ namespace OpenXRVk
         //! Get the native device
         VkDevice GetNativeDevice() const;
 
-        //! Get glad vulkan context.
-        const GladVulkanContext& GetContext() const;
-
         //! Reserve space for appropriate number of views 
         void InitXrViews(uint32_t numViews);
 
@@ -71,6 +68,5 @@ namespace OpenXRVk
         AZStd::vector<XrCompositionLayerProjectionView> m_projectionLayerViews;
         AZStd::vector<XrView> m_views;
         uint32_t m_viewCountOutput = 0;
-        GladVulkanContext m_context;
     };
 }

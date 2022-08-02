@@ -393,11 +393,6 @@ namespace OpenXRVk
         return m_context;
     }
 
-    AZ::Vulkan::FunctionLoader& Instance::GetFunctionLoader()
-    {
-        return *m_functionLoader;
-    }
-
     XrEnvironmentBlendMode Instance::GetEnvironmentBlendMode() const
     {
         return m_environmentBlendMode;

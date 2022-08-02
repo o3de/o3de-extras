@@ -73,13 +73,6 @@ namespace OpenXRVk
             return AZ::RHI::ResultCode::Fail;
         }
 
-        if (!xrVkInstance->GetFunctionLoader().LoadProcAddresses(
-            &m_context, xrVkInstance->GetNativeInstance(), xrVkInstance->GetActivePhysicalDevice(), m_xrVkDevice))
-        {
-            AZ_Warning("OpenXRVk", false, "Failed to initialize function loader.");
-            return AZ::RHI::ResultCode::Fail;
-        }
-
         //Populate the output data of the descriptor
         xrDeviceDescriptor->m_outputData.m_xrVkDevice = m_xrVkDevice;
 
@@ -223,11 +216,6 @@ namespace OpenXRVk
         return m_xrVkDevice;
     }
 
-    const GladVulkanContext& Device::GetContext() const
-    {
-        return m_context;
-    }
-
     AZ::RPI::FovData Device::GetViewFov(AZ::u32 viewIndex) const
     {
         AZ::RPI::FovData viewFov;
@@ -271,7 +259,9 @@ namespace OpenXRVk
         m_xrLayers.clear();
         if (m_xrVkDevice != VK_NULL_HANDLE)
         {
-            m_context.DestroyDevice(m_xrVkDevice, nullptr);
+            Instance* xrVkInstance = static_cast<Instance*>(GetDescriptor().m_instance.get());
+            AZ_Assert(xrVkInstance != nullptr, "Invalid vulkan instance");
+            xrVkInstance->GetContext().DestroyDevice(m_xrVkDevice, nullptr);
             m_xrVkDevice = VK_NULL_HANDLE;
         }
     }
