@@ -25,13 +25,8 @@ namespace OpenXRVk
     AZ::RHI::ResultCode Device::InitDeviceInternal(AZ::RHI::XRDeviceDescriptor* deviceDescriptor)
     {
         AZ::Vulkan::XRDeviceDescriptor* xrDeviceDescriptor = static_cast<AZ::Vulkan::XRDeviceDescriptor*>(deviceDescriptor);
+        VkDeviceCreateInfo* vulkanCreateInfo = xrDeviceDescriptor->m_inputData.m_deviceCreateInfo;
         Instance* xrVkInstance = static_cast<Instance*>(GetDescriptor().m_instance.get());
-        XrVulkanDeviceCreateInfoKHR xrDeviceCreateInfo{ XR_TYPE_VULKAN_DEVICE_CREATE_INFO_KHR };
-        xrDeviceCreateInfo.systemId = xrVkInstance->GetXRSystemId();
-        xrDeviceCreateInfo.pfnGetInstanceProcAddr = vkGetInstanceProcAddr;
-        xrDeviceCreateInfo.vulkanCreateInfo = xrDeviceDescriptor->m_inputData.m_deviceCreateInfo;
-        xrDeviceCreateInfo.vulkanPhysicalDevice = xrVkInstance->GetActivePhysicalDevice();
-        xrDeviceCreateInfo.vulkanAllocator = nullptr;
 
         PFN_xrGetVulkanDeviceExtensionsKHR pfnGetVulkanDeviceExtensionsKHR = nullptr;
         XrResult result = xrGetInstanceProcAddr(
@@ -39,25 +34,25 @@ namespace OpenXRVk
         ASSERT_IF_UNSUCCESSFUL(result);
 
         AZ::u32 deviceExtensionNamesSize = 0;
-        result = pfnGetVulkanDeviceExtensionsKHR(xrVkInstance->GetXRInstance(), xrDeviceCreateInfo.systemId, 0, &deviceExtensionNamesSize, nullptr);
+        result = pfnGetVulkanDeviceExtensionsKHR(xrVkInstance->GetXRInstance(), xrVkInstance->GetXRSystemId(), 0, &deviceExtensionNamesSize, nullptr);
         ASSERT_IF_UNSUCCESSFUL(result);
 
         AZStd::vector<char> deviceExtensionNames(deviceExtensionNamesSize);
         result = pfnGetVulkanDeviceExtensionsKHR(
-	        xrVkInstance->GetXRInstance(), xrDeviceCreateInfo.systemId, deviceExtensionNamesSize, &deviceExtensionNamesSize, &deviceExtensionNames[0]);
+	        xrVkInstance->GetXRInstance(), xrVkInstance->GetXRSystemId(), deviceExtensionNamesSize, &deviceExtensionNamesSize, &deviceExtensionNames[0]);
         ASSERT_IF_UNSUCCESSFUL(result);
 
         AZStd::vector<const char*> extensions = ParseExtensionString(&deviceExtensionNames[0]);
-        for (uint32_t i = 0; i < xrDeviceCreateInfo.vulkanCreateInfo->enabledExtensionCount; ++i)
+        for (uint32_t i = 0; i < vulkanCreateInfo->enabledExtensionCount; ++i)
         {
-            extensions.push_back(xrDeviceCreateInfo.vulkanCreateInfo->ppEnabledExtensionNames[i]);
+            extensions.push_back(vulkanCreateInfo->ppEnabledExtensionNames[i]);
         }
 
         VkPhysicalDeviceFeatures features{};
-        memcpy(&features, xrDeviceCreateInfo.vulkanCreateInfo->pEnabledFeatures, sizeof(features));
+        memcpy(&features, vulkanCreateInfo->pEnabledFeatures, sizeof(features));
 
         VkPhysicalDeviceFeatures availableFeatures{};
-        vkGetPhysicalDeviceFeatures(xrVkInstance->GetActivePhysicalDevice(), &availableFeatures);
+        xrVkInstance->GetContext().GetPhysicalDeviceFeatures(xrVkInstance->GetActivePhysicalDevice(), &availableFeatures);
         if (availableFeatures.shaderStorageImageMultisample == VK_TRUE)
         {
             // Setting this quiets down a validation error triggered by the Oculus runtime
@@ -65,19 +60,26 @@ namespace OpenXRVk
         }
 
         VkDeviceCreateInfo deviceInfo{ VK_STRUCTURE_TYPE_DEVICE_CREATE_INFO };
-        memcpy(&deviceInfo, xrDeviceCreateInfo.vulkanCreateInfo, sizeof(deviceInfo));
+        memcpy(&deviceInfo, vulkanCreateInfo, sizeof(deviceInfo));
         deviceInfo.pEnabledFeatures = &features;
         deviceInfo.enabledExtensionCount = aznumeric_cast<AZ::u32>(extensions.size());
         deviceInfo.ppEnabledExtensionNames = extensions.empty() ? nullptr : extensions.data();
 
         //Create VkDevice
-        auto pfnCreateDevice = (PFN_vkCreateDevice)xrDeviceCreateInfo.pfnGetInstanceProcAddr(xrVkInstance->GetNativeInstance(), "vkCreateDevice");
-        VkResult vulkanResult = pfnCreateDevice(xrDeviceCreateInfo.vulkanPhysicalDevice, &deviceInfo, xrDeviceCreateInfo.vulkanAllocator, &m_xrVkDevice);
+        VkResult vulkanResult = xrVkInstance->GetContext().CreateDevice(xrVkInstance->GetActivePhysicalDevice(), &deviceInfo, nullptr, &m_xrVkDevice);
         if (vulkanResult != VK_SUCCESS)
         {
+            AZ_Warning("OpenXRVk", false, "Failed to create device.");
             return AZ::RHI::ResultCode::Fail;
         }
-		
+
+        if (!xrVkInstance->GetFunctionLoader().LoadProcAddresses(
+            &m_context, xrVkInstance->GetNativeInstance(), xrVkInstance->GetActivePhysicalDevice(), m_xrVkDevice))
+        {
+            AZ_Warning("OpenXRVk", false, "Failed to initialize function loader.");
+            return AZ::RHI::ResultCode::Fail;
+        }
+
         //Populate the output data of the descriptor
         xrDeviceDescriptor->m_outputData.m_xrVkDevice = m_xrVkDevice;
 
@@ -221,6 +223,11 @@ namespace OpenXRVk
         return m_xrVkDevice;
     }
 
+    const GladVulkanContext& Device::GetContext() const
+    {
+        return m_context;
+    }
+
     AZ::RPI::FovData Device::GetViewFov(AZ::u32 viewIndex) const
     {
         AZ::RPI::FovData viewFov;
@@ -264,7 +271,7 @@ namespace OpenXRVk
         m_xrLayers.clear();
         if (m_xrVkDevice != VK_NULL_HANDLE)
         {
-            vkDestroyDevice(m_xrVkDevice, nullptr);
+            m_context.DestroyDevice(m_xrVkDevice, nullptr);
             m_xrVkDevice = VK_NULL_HANDLE;
         }
     }

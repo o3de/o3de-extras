@@ -12,7 +12,7 @@
 #include <AzCore/std/algorithm.h>
 #include <limits.h>
 
-#include <glad/vulkan.h>
+#include <vulkan/vulkan.h>
 
 #include <jni.h>
 

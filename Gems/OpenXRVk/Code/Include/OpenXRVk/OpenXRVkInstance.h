@@ -10,8 +10,8 @@
 
 #include <AzCore/std/containers/vector.h>
 #include <Atom/RHI/ValidationLayer.h>
+#include <Atom/RHI.Loader/FunctionLoader.h>
 #include <OpenXRVk_Platform.h>
-#include <OpenXRVk/OpenXRVkFunctionLoader.h>
 #include <OpenXRVk/OpenXRVkPhysicalDevice.h>
 #include <XR/XRInstance.h>
 
@@ -57,6 +57,12 @@ namespace OpenXRVk
         //! Get native VkInstance.
         VkInstance GetNativeInstance() const;
 
+        //! Get glad vulkan context.
+        GladVulkanContext& GetContext();
+
+        //! Get function loader.
+        AZ::Vulkan::FunctionLoader& GetFunctionLoader();
+
         //! Get XR environment blend mode.
         XrEnvironmentBlendMode GetEnvironmentBlendMode() const;
 
@@ -79,7 +85,8 @@ namespace OpenXRVk
         XrSystemId m_xrSystemId = XR_NULL_SYSTEM_ID;
         XR::RawStringList m_requiredLayers;
         XR::RawStringList m_requiredExtensions;
-        AZStd::unique_ptr<FunctionLoader> m_functionLoader;
+        GladVulkanContext m_context;
+        AZStd::unique_ptr<AZ::Vulkan::FunctionLoader> m_functionLoader;
         AZStd::vector<VkPhysicalDevice> m_supportedXRDevices;
         AZ::u32 m_physicalDeviceActiveIndex = 0;
     };

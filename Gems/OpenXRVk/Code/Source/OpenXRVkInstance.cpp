@@ -277,19 +277,16 @@ namespace OpenXRVk
 
     AZ::RHI::ResultCode Instance::InitNativeInstance(AZ::RHI::XRInstanceDescriptor* instanceDescriptor)
     {
-        m_functionLoader = FunctionLoader::Create();
-        if (!m_functionLoader->Init())
+        m_functionLoader = AZ::Vulkan::FunctionLoader::Create();
+        if (!m_functionLoader->Init() ||
+            !m_functionLoader->LoadProcAddresses(&m_context, VK_NULL_HANDLE, VK_NULL_HANDLE, VK_NULL_HANDLE))
         {
-            AZ_Warning("Vulkan", false, "OpenXRVk Could not initialized function loader.");
+            AZ_Warning("OpenXRVk", false, "Failed to initialize function loader.");
             return AZ::RHI::ResultCode::Fail;
         }
 
         AZ::Vulkan::XRInstanceDescriptor* xrInstanceDescriptor = static_cast<AZ::Vulkan::XRInstanceDescriptor*>(instanceDescriptor);
-        XrVulkanInstanceCreateInfoKHR createInfo{ XR_TYPE_VULKAN_INSTANCE_CREATE_INFO_KHR };
-        createInfo.systemId = m_xrSystemId;
-        createInfo.pfnGetInstanceProcAddr = vkGetInstanceProcAddr;
-        createInfo.vulkanCreateInfo = xrInstanceDescriptor->m_inputData.m_createInfo;
-        createInfo.vulkanAllocator = nullptr;
+        VkInstanceCreateInfo* vulkanCreateInfo = xrInstanceDescriptor->m_inputData.m_createInfo;
 
         PFN_xrGetVulkanInstanceExtensionsKHR pfnGetVulkanInstanceExtensionsKHR = nullptr;
         XrResult result = xrGetInstanceProcAddr(m_xrInstance, "xrGetVulkanInstanceExtensionsKHR", reinterpret_cast<PFN_xrVoidFunction*>(&pfnGetVulkanInstanceExtensionsKHR));
@@ -304,23 +301,26 @@ namespace OpenXRVk
         ASSERT_IF_UNSUCCESSFUL(result);
 		
         AZStd::vector<const char*> extensions = ParseExtensionString(&extensionNames[0]);
-        for (uint32_t i = 0; i < createInfo.vulkanCreateInfo->enabledExtensionCount; ++i)
+        for (uint32_t i = 0; i < vulkanCreateInfo->enabledExtensionCount; ++i)
         {
-            extensions.push_back(createInfo.vulkanCreateInfo->ppEnabledExtensionNames[i]);
+            extensions.push_back(vulkanCreateInfo->ppEnabledExtensionNames[i]);
         }
 
         VkInstanceCreateInfo instInfo{ VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO };
-        memcpy(&instInfo, createInfo.vulkanCreateInfo, sizeof(instInfo));
+        memcpy(&instInfo, vulkanCreateInfo, sizeof(instInfo));
         instInfo.enabledExtensionCount = aznumeric_cast<AZ::u32>(extensions.size());
         instInfo.ppEnabledExtensionNames = extensions.empty() ? nullptr : extensions.data();
 
-        auto pfnCreateInstance = (PFN_vkCreateInstance)createInfo.pfnGetInstanceProcAddr(nullptr, "vkCreateInstance");
-        VkResult vkResult = pfnCreateInstance(&instInfo, nullptr, &m_xrVkInstance);
+        VkResult vkResult = m_context.CreateInstance(&instInfo, nullptr, &m_xrVkInstance);
         if (vkResult != VK_SUCCESS)
         {
+            AZ_Warning("OpenXRVk", false, "Failed to create instance.");
             return AZ::RHI::ResultCode::Fail;
         }
-		
+
+        // Now that we have created the instance, load the function pointers for it.
+        m_functionLoader->LoadProcAddresses(&m_context, m_xrVkInstance, VK_NULL_HANDLE, VK_NULL_HANDLE);
+
         //Populate the instance descriptor with the correct VkInstance
         xrInstanceDescriptor->m_outputData.m_xrVkInstance = m_xrVkInstance;
 
@@ -340,8 +340,8 @@ namespace OpenXRVk
         {
             m_supportedXRDevices.clear();
 
-            vkDestroyInstance(m_xrVkInstance, nullptr);
-            m_functionLoader = VK_NULL_HANDLE;
+            m_context.DestroyInstance(m_xrVkInstance, nullptr);
+            m_xrVkInstance = VK_NULL_HANDLE;
         }
 
         if (m_functionLoader)
@@ -386,6 +386,16 @@ namespace OpenXRVk
     VkInstance Instance::GetNativeInstance() const
     {
         return m_xrVkInstance;
+    }
+
+    GladVulkanContext& Instance::GetContext()
+    {
+        return m_context;
+    }
+
+    AZ::Vulkan::FunctionLoader& Instance::GetFunctionLoader()
+    {
+        return *m_functionLoader;
     }
 
     XrEnvironmentBlendMode Instance::GetEnvironmentBlendMode() const
