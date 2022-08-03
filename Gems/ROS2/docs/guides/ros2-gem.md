@@ -114,4 +114,4 @@ Remember to __always have your ROS 2 overlay sourced__ when building and running
 
 Some classes with relationships and functions are presented on this diagram. Specific sensor classes (e.g. Lidar) are not included.
 
-![classes diagram](diagrams/diagram_ros2_gem.png)
+![classes diagram](static/diagrams/diagram_ros2_gem.png)
