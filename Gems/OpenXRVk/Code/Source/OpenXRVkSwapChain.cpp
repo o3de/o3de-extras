@@ -95,12 +95,12 @@ namespace OpenXRVk
         if(GetDescriptor().m_validationMode == AZ::RHI::ValidationMode::Enabled)
         {
             // Log system properties.
-            AZ_Printf("OpenXrVk", "System Properties: Name=%s VendorId=%d\n", systemProperties.systemName, systemProperties.vendorId);
-            AZ_Printf("OpenXrVk",
+            AZ_Printf("OpenXRVk", "System Properties: Name=%s VendorId=%d\n", systemProperties.systemName, systemProperties.vendorId);
+            AZ_Printf("OpenXRVk",
                 "System Graphics Properties: MaxWidth=%d MaxHeight=%d MaxLayers=%d\n",
                     systemProperties.graphicsProperties.maxSwapchainImageWidth, systemProperties.graphicsProperties.maxSwapchainImageHeight,
                     systemProperties.graphicsProperties.maxLayerCount);
-            AZ_Printf("OpenXrVk",
+            AZ_Printf("OpenXRVk",
                 "System Tracking Properties: OrientationTracking=%s PositionTracking=%s\n",
                     systemProperties.trackingProperties.orientationTracking == XR_TRUE ? "True" : "False",
                     systemProperties.trackingProperties.positionTracking == XR_TRUE ? "True" : "False");
@@ -147,13 +147,13 @@ namespace OpenXRVk
                     {
                         swapchainFormatsString += "[";
                     }
-                    swapchainFormatsString += AZStd::string::format("%i", format);
+                    swapchainFormatsString += AZStd::string::format("%" PRId64, format);
                     if (selected)
                     {
                         swapchainFormatsString += "]";
                     }
                 }
-                AZ_Printf("OpenXrVk", "Swapchain Formats: %s\n", swapchainFormatsString.c_str());
+                AZ_Printf("OpenXRVk", "Swapchain Formats: %s\n", swapchainFormatsString.c_str());
             }
 
             // Create a swapchain for each view.
@@ -163,7 +163,7 @@ namespace OpenXRVk
 
                 if (GetDescriptor().m_validationMode == AZ::RHI::ValidationMode::Enabled)
                 {
-                    AZ_Printf("OpenXrVk",
+                    AZ_Printf("OpenXRVk",
                           "Creating swapchain for view %d with dimensions Width=%d Height=%d SampleCount=%d\n", i,
                         configView.recommendedImageRectWidth, configView.recommendedImageRectHeight, configView.recommendedSwapchainSampleCount);
                 }
@@ -233,7 +233,7 @@ namespace OpenXRVk
                 AZStd::end(SupportedColorSwapchainFormats));
         if (swapchainFormatIt == runtimeFormats.end()) 
         {
-            AZ_Error("OpenXrVk", false, "No runtime swapchain format supported for color swapchain");
+            AZ_Error("OpenXRVk", false, "No runtime swapchain format supported for color swapchain");
         }
 
         return *swapchainFormatIt;

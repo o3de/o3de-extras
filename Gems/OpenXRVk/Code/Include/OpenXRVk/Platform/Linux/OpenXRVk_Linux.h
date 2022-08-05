@@ -10,8 +10,23 @@
 #include <AzCore/base.h>
 #include <AzCore/PlatformIncl.h>
 #include <AzCore/std/algorithm.h>
-#include <vulkan/vulkan.h>
 #include <limits.h>
-#include <RHI/Vulkan.h>
 
-#define AZ_VULKAN_SURFACE_EXTENSION_NAME VK_KHR_XCB_SURFACE_EXTENSION_NAME
+#if defined(PAL_TRAIT_LINUX_WINDOW_MANAGER_XCB)
+    #include <xcb/xcb.h> // needed for glad vulkan
+#endif
+#include <glad/vulkan.h>
+
+ // Tell OpenXR what platform code we'll be using
+#if defined(PAL_TRAIT_LINUX_WINDOW_MANAGER_XCB)
+    #define XR_USE_PLATFORM_XCB
+#elif defined(PAL_TRAIT_LINUX_WINDOW_MANAGER_WAYLAND)
+    #define XR_USE_PLATFORM_WAYLAND
+#else
+    #error "Linux Window Manager not recognized."
+#endif
+#define XR_USE_GRAPHICS_API_VULKAN
+
+#include <openxr/openxr.h>
+#include <openxr/openxr_platform.h>
+#include <openxr/openxr_reflection.h>

@@ -84,8 +84,8 @@ namespace OpenXRVk
 
     AZ::RHI::ResultCode Instance::InitInstanceInternal(AZ::RHI::ValidationMode validationMode)
     {
-        XR::RawStringList optionalLayers = XR::RawStringList{};
-        XR::RawStringList optionalExtensions = XR::RawStringList{ { XR_KHR_VULKAN_ENABLE_EXTENSION_NAME } };
+        XR::RawStringList optionalLayers;
+        XR::RawStringList optionalExtensions = { XR_KHR_VULKAN_ENABLE_EXTENSION_NAME };
 
         XR::StringList instanceLayerNames = GetInstanceLayerNames();
         XR::RawStringList supportedLayers = FilterList(optionalLayers, instanceLayerNames);
@@ -97,16 +97,16 @@ namespace OpenXRVk
 
         if (validationMode == AZ::RHI::ValidationMode::Enabled)
         {
-            AZ_Printf("OpenXrVk", "Available Extensions: (%i)\n", instanceExtensions.size());
+            AZ_Printf("OpenXRVk", "Available Extensions: (%i)\n", instanceExtensions.size());
             for (const AZStd::string& extension : instanceExtensions)
             {
-                AZ_Printf("OpenXrVk", "Name=%s\n", extension.c_str());
+                AZ_Printf("OpenXRVk", "Name=%s\n", extension.c_str());
             }
 
-            AZ_Printf("OpenXrVk", "Available Layers: (%i)\n", instanceLayerNames.size());
+            AZ_Printf("OpenXRVk", "Available Layers: (%i)\n", instanceLayerNames.size());
             for (const AZStd::string& layerName : instanceLayerNames)
             {
-                AZ_Printf("OpenXrVk", "Name=%s \n", layerName.c_str());
+                AZ_Printf("OpenXRVk", "Name=%s \n", layerName.c_str());
             }
         }
 
@@ -125,7 +125,7 @@ namespace OpenXRVk
         XrResult result = xrCreateInstance(&createInfo, &m_xrInstance);
         if(IsError(result))
         {
-            AZ_Warning("OpenXrVk", false, "Failed to create XR instance");
+            AZ_Warning("OpenXRVk", false, "Failed to create XR instance");
             return AZ::RHI::ResultCode::Fail;
         }
 
@@ -139,7 +139,7 @@ namespace OpenXRVk
                 XR_VERSION_MAJOR(instanceProperties.runtimeVersion),
                 XR_VERSION_MINOR(instanceProperties.runtimeVersion),
                 XR_VERSION_PATCH(instanceProperties.runtimeVersion));
-                AZ_Printf("OpenXrVk", "Instance RuntimeName=%s RuntimeVersion=%s\n", instanceProperties.runtimeName, verStr.c_str());
+                AZ_Printf("OpenXRVk", "Instance RuntimeName=%s RuntimeVersion=%s\n", instanceProperties.runtimeName, verStr.c_str());
             }
         }
 
@@ -160,7 +160,7 @@ namespace OpenXRVk
         result = xrGetSystem(m_xrInstance, &systemInfo, &m_xrSystemId);
         if (IsError(result))
         {
-            AZ_Warning("OpenXrVk", false, "Failed to get XR System id");
+            AZ_Warning("OpenXRVk", false, "Failed to get XR System id");
             return AZ::RHI::ResultCode::Fail;
         }
 
@@ -179,17 +179,17 @@ namespace OpenXRVk
 
         if (validationMode == AZ::RHI::ValidationMode::Enabled)
         {
-            AZ_Printf("OpenXrVk", "graphicsRequirements.maxApiVersionSupported %d.%d.%d\n",
+            AZ_Printf("OpenXRVk", "graphicsRequirements.maxApiVersionSupported %d.%d.%d\n",
             XR_VERSION_MAJOR(graphicsRequirements.maxApiVersionSupported),
             XR_VERSION_MINOR(graphicsRequirements.maxApiVersionSupported),
             XR_VERSION_PATCH(graphicsRequirements.maxApiVersionSupported));
 
-            AZ_Printf("OpenXrVk", "graphicsRequirements.minApiVersionSupported %d.%d.%d\n",
+            AZ_Printf("OpenXRVk", "graphicsRequirements.minApiVersionSupported %d.%d.%d\n",
             XR_VERSION_MAJOR(graphicsRequirements.minApiVersionSupported),
             XR_VERSION_MINOR(graphicsRequirements.minApiVersionSupported),
             XR_VERSION_PATCH(graphicsRequirements.minApiVersionSupported));
 
-            AZ_Printf("OpenXrVk", "Using system %d for form factor %s\n", m_xrSystemId, to_string(m_formFactor));
+            AZ_Printf("OpenXRVk", "Using system %d for form factor %s\n", m_xrSystemId, to_string(m_formFactor));
             LogViewConfigurations();
         }
 		
@@ -206,19 +206,19 @@ namespace OpenXRVk
         result = xrEnumerateViewConfigurations(m_xrInstance, m_xrSystemId, viewConfigTypeCount, &viewConfigTypeCount, viewConfigTypes.data());
         RETURN_IF_UNSUCCESSFUL(result);
 
-        AZ_Warning("OpenXrVk", aznumeric_cast<AZ::u32>(viewConfigTypes.size()) == viewConfigTypeCount, "Size Mismatch");
+        AZ_Warning("OpenXRVk", aznumeric_cast<AZ::u32>(viewConfigTypes.size()) == viewConfigTypeCount, "Size Mismatch");
 
-        AZ_Printf("OpenXrVk", "Available View Configuration Types: (%d)\n", viewConfigTypeCount);
+        AZ_Printf("OpenXRVk", "Available View Configuration Types: (%d)\n", viewConfigTypeCount);
         for (XrViewConfigurationType viewConfigType : viewConfigTypes)
         {
-            AZ_Printf("OpenXrVk", "View Configuration Type: %s %s\n", to_string(viewConfigType),
+            AZ_Printf("OpenXRVk", "View Configuration Type: %s %s\n", to_string(viewConfigType),
             viewConfigType == m_viewConfigType ? "(Selected)" : "");
 
             XrViewConfigurationProperties viewConfigProperties{ XR_TYPE_VIEW_CONFIGURATION_PROPERTIES };
             result = xrGetViewConfigurationProperties(m_xrInstance, m_xrSystemId, viewConfigType, &viewConfigProperties);
             RETURN_IF_UNSUCCESSFUL(result);
 
-            AZ_Printf("OpenXrVk", "View configuration FovMutable=%s\n", viewConfigProperties.fovMutable == XR_TRUE ? "True" : "False");
+            AZ_Printf("OpenXRVk", "View configuration FovMutable=%s\n", viewConfigProperties.fovMutable == XR_TRUE ? "True" : "False");
 
             AZ::u32 viewCount = 0;
             result = xrEnumerateViewConfigurationViews(m_xrInstance, m_xrSystemId, viewConfigType, 0, &viewCount, nullptr);
@@ -237,16 +237,16 @@ namespace OpenXRVk
                 {
                     const XrViewConfigurationView& view = views[i];
                     AZ_Printf(
-                        "OpenXrVk", "View [%d]: Recommended Width=%d Height=%d SampleCount=%d\n", i, view.recommendedImageRectWidth,
+                        "OpenXRVk", "View [%d]: Recommended Width=%d Height=%d SampleCount=%d\n", i, view.recommendedImageRectWidth,
                         view.recommendedImageRectHeight, view.recommendedSwapchainSampleCount);
                     AZ_Printf(
-                        "OpenXrVk", "View [%d]:     Maximum Width=%d Height=%d SampleCount=%d\n", i, view.maxImageRectWidth,
+                        "OpenXRVk", "View [%d]:     Maximum Width=%d Height=%d SampleCount=%d\n", i, view.maxImageRectWidth,
                         view.maxImageRectHeight, view.maxSwapchainSampleCount);
                 }
             }
             else
             {
-                AZ_Printf("OpenXrVk", "Empty view configuration type\n");
+                AZ_Printf("OpenXRVk", "Empty view configuration type\n");
             }
 
             LogEnvironmentBlendMode(viewConfigType);
@@ -257,20 +257,20 @@ namespace OpenXRVk
     {
         AZ::u32 count = 0;
         XrResult result = xrEnumerateEnvironmentBlendModes(m_xrInstance, m_xrSystemId, type, 0, &count, nullptr);
-        AZ_Warning("OpenXrVk", count > 0, "BlendModes not supported");
+        AZ_Warning("OpenXRVk", count > 0, "BlendModes not supported");
         RETURN_IF_UNSUCCESSFUL(result);
 
-        AZ_Printf("OpenXrVk", "Available Environment Blend Mode count : (%d)\n", count);
+        AZ_Printf("OpenXRVk", "Available Environment Blend Mode count : (%d)\n", count);
 
         AZStd::vector<XrEnvironmentBlendMode> blendModes(count);
         result = xrEnumerateEnvironmentBlendModes(m_xrInstance, m_xrSystemId, type, count, &count, blendModes.data());
         RETURN_IF_UNSUCCESSFUL(result);
 
-        bool blendModeFound = false;
+        [[maybe_unused]] bool blendModeFound = false;
         for (XrEnvironmentBlendMode mode : blendModes)
         {
             const bool blendModeMatch = (mode == m_environmentBlendMode);
-            AZ_Printf("OpenXrVk", "Environment Blend Mode (%s) : %s\n", to_string(mode), blendModeMatch ? "(Selected)" : "");
+            AZ_Printf("OpenXRVk", "Environment Blend Mode (%s) : %s\n", to_string(mode), blendModeMatch ? "(Selected)" : "");
             blendModeFound |= blendModeMatch;
         }
     }

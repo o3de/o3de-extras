@@ -7,4 +7,4 @@
  */
 #pragma once
 
-#include <OpenXRVk_Traits_Android.h>
+#include <XR_Traits_Android.h>

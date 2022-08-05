@@ -45,7 +45,7 @@ namespace OpenXRVk
     
 #define WARN_IF_UNSUCCESSFUL(result) \
     if (result != XR_SUCCESS) {\
-        AZ_Warning("OpenXrVk", false, "Warning error code: %s", to_string(result));\
+        AZ_Warning("OpenXRVk", false, "Warning error code: %s", to_string(result));\
     }
 
 #define ASSERT_IF_UNSUCCESSFUL(result) \

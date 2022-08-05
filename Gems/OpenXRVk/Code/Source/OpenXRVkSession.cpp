@@ -30,7 +30,7 @@ namespace OpenXRVk
         Device* xrVkDevice = static_cast<Device*>(GetDescriptor().m_device.get());
 
         m_xrInstance = xrVkInstance->GetXRInstance();
-        AZ_Printf("OpenXrVk", "Creating session...\n");
+        AZ_Printf("OpenXRVk", "Creating session...\n");
         m_graphicsBinding.instance = xrVkInstance->GetNativeInstance();
         m_graphicsBinding.physicalDevice = xrVkInstance->GetActivePhysicalDevice();
         m_graphicsBinding.device = xrVkDevice->GetNativeDevice();
@@ -73,10 +73,10 @@ namespace OpenXRVk
             AZStd::vector<XrReferenceSpaceType> spaces(spaceCount);
             result = xrEnumerateReferenceSpaces(m_session, spaceCount, &spaceCount, spaces.data());
 
-            AZ_Printf("OpenXrVk", "Available reference spaces: %d\n", spaceCount);
+            AZ_Printf("OpenXRVk", "Available reference spaces: %d\n", spaceCount);
             for (XrReferenceSpaceType space : spaces)
             {
-                AZ_Printf("OpenXrVk", "  Name: %s\n", to_string(space));
+                AZ_Printf("OpenXRVk", "  Name: %s\n", to_string(space));
             }
         }
     }
@@ -181,7 +181,7 @@ namespace OpenXRVk
                     if (GetDescriptor().m_validationMode == AZ::RHI::ValidationMode::Enabled)
                     {
                         [[maybe_unused]] const auto& instanceLossPending = *reinterpret_cast<const XrEventDataInstanceLossPending*>(event);
-                        AZ_Printf("OpenXrVk", "XrEventDataInstanceLossPending by %lld\n", instanceLossPending.lossTime);
+                        AZ_Printf("OpenXRVk", "XrEventDataInstanceLossPending by %lld\n", instanceLossPending.lossTime);
                     }
                     m_exitRenderLoop = true;
                     m_requestRestart = true;
@@ -211,7 +211,7 @@ namespace OpenXRVk
                 {
                     if (GetDescriptor().m_validationMode == AZ::RHI::ValidationMode::Enabled)
                     {
-                        AZ_Printf("OpenXrVk", "Ignoring event type %d\n", event->type);
+                        AZ_Printf("OpenXRVk", "Ignoring event type %d\n", event->type);
                     }
                     break;
                 }
