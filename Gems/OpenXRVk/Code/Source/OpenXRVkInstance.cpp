@@ -281,7 +281,7 @@ namespace OpenXRVk
         if (!m_functionLoader->Init() ||
             !m_functionLoader->LoadProcAddresses(&m_context, VK_NULL_HANDLE, VK_NULL_HANDLE, VK_NULL_HANDLE))
         {
-            m_functionLoader = nullptr;
+            m_functionLoader.reset();
             AZ_Error("OpenXRVk", false, "Could not initialize function loader.");
             return AZ::RHI::ResultCode::Fail;
         }
