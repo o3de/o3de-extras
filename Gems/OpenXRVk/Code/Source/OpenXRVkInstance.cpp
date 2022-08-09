@@ -281,45 +281,48 @@ namespace OpenXRVk
         if (!m_functionLoader->Init() ||
             !m_functionLoader->LoadProcAddresses(&m_context, VK_NULL_HANDLE, VK_NULL_HANDLE, VK_NULL_HANDLE))
         {
-            AZ_Warning("OpenXRVk", false, "Failed to initialize function loader.");
+            AZ_Error("OpenXRVk", false, "Could not initialized function loader.");
             return AZ::RHI::ResultCode::Fail;
         }
 
         AZ::Vulkan::XRInstanceDescriptor* xrInstanceDescriptor = static_cast<AZ::Vulkan::XRInstanceDescriptor*>(instanceDescriptor);
-        VkInstanceCreateInfo* vulkanCreateInfo = xrInstanceDescriptor->m_inputData.m_createInfo;
+        XrVulkanInstanceCreateInfoKHR createInfo{ XR_TYPE_VULKAN_INSTANCE_CREATE_INFO_KHR };
+        createInfo.systemId = m_xrSystemId;
+        createInfo.pfnGetInstanceProcAddr = m_context.GetInstanceProcAddr;
+        createInfo.vulkanCreateInfo = xrInstanceDescriptor->m_inputData.m_createInfo;
+        createInfo.vulkanAllocator = nullptr;
 
         PFN_xrGetVulkanInstanceExtensionsKHR pfnGetVulkanInstanceExtensionsKHR = nullptr;
         XrResult result = xrGetInstanceProcAddr(m_xrInstance, "xrGetVulkanInstanceExtensionsKHR", reinterpret_cast<PFN_xrVoidFunction*>(&pfnGetVulkanInstanceExtensionsKHR));
         ASSERT_IF_UNSUCCESSFUL(result);
-
         AZ::u32 extensionNamesSize = 0;
         result = pfnGetVulkanInstanceExtensionsKHR(m_xrInstance, m_xrSystemId, 0, &extensionNamesSize, nullptr);
         ASSERT_IF_UNSUCCESSFUL(result);
-
         AZStd::vector<char> extensionNames(extensionNamesSize);
         result = pfnGetVulkanInstanceExtensionsKHR(m_xrInstance, m_xrSystemId, extensionNamesSize, &extensionNamesSize, &extensionNames[0]);
         ASSERT_IF_UNSUCCESSFUL(result);
-		
+
         AZStd::vector<const char*> extensions = ParseExtensionString(&extensionNames[0]);
-        for (uint32_t i = 0; i < vulkanCreateInfo->enabledExtensionCount; ++i)
+        for (uint32_t i = 0; i < createInfo.vulkanCreateInfo->enabledExtensionCount; ++i)
         {
-            extensions.push_back(vulkanCreateInfo->ppEnabledExtensionNames[i]);
+            extensions.push_back(createInfo.vulkanCreateInfo->ppEnabledExtensionNames[i]);
         }
 
         VkInstanceCreateInfo instInfo{ VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO };
-        memcpy(&instInfo, vulkanCreateInfo, sizeof(instInfo));
+        memcpy(&instInfo, createInfo.vulkanCreateInfo, sizeof(instInfo));
         instInfo.enabledExtensionCount = aznumeric_cast<AZ::u32>(extensions.size());
         instInfo.ppEnabledExtensionNames = extensions.empty() ? nullptr : extensions.data();
 
-        VkResult vkResult = m_context.CreateInstance(&instInfo, nullptr, &m_xrVkInstance);
+        auto pfnCreateInstance = (PFN_vkCreateInstance)createInfo.pfnGetInstanceProcAddr(nullptr, "vkCreateInstance");
+        VkResult vkResult = pfnCreateInstance(&instInfo, nullptr, &m_xrVkInstance);
         if (vkResult != VK_SUCCESS)
         {
-            AZ_Warning("OpenXRVk", false, "Failed to create instance.");
+            AZ_Error("OpenXRVk", false, "Failed to create instance.");
             return AZ::RHI::ResultCode::Fail;
         }
 
         // Now that we have created the instance, load the function pointers for it.
-        m_functionLoader->LoadProcAddresses(&m_context, m_xrVkInstance, VK_NULL_HANDLE, VK_NULL_HANDLE);
+        //m_functionLoader->LoadProcAddresses(&m_context, m_xrVkInstance, VK_NULL_HANDLE, VK_NULL_HANDLE);
 
         //Populate the instance descriptor with the correct VkInstance
         xrInstanceDescriptor->m_outputData.m_xrVkInstance = m_xrVkInstance;
