@@ -281,7 +281,8 @@ namespace OpenXRVk
         if (!m_functionLoader->Init() ||
             !m_functionLoader->LoadProcAddresses(&m_context, VK_NULL_HANDLE, VK_NULL_HANDLE, VK_NULL_HANDLE))
         {
-            AZ_Error("OpenXRVk", false, "Could not initialized function loader.");
+            m_functionLoader = nullptr;
+            AZ_Error("OpenXRVk", false, "Could not initialize function loader.");
             return AZ::RHI::ResultCode::Fail;
         }
 
@@ -295,9 +296,11 @@ namespace OpenXRVk
         PFN_xrGetVulkanInstanceExtensionsKHR pfnGetVulkanInstanceExtensionsKHR = nullptr;
         XrResult result = xrGetInstanceProcAddr(m_xrInstance, "xrGetVulkanInstanceExtensionsKHR", reinterpret_cast<PFN_xrVoidFunction*>(&pfnGetVulkanInstanceExtensionsKHR));
         ASSERT_IF_UNSUCCESSFUL(result);
+
         AZ::u32 extensionNamesSize = 0;
         result = pfnGetVulkanInstanceExtensionsKHR(m_xrInstance, m_xrSystemId, 0, &extensionNamesSize, nullptr);
         ASSERT_IF_UNSUCCESSFUL(result);
+
         AZStd::vector<char> extensionNames(extensionNamesSize);
         result = pfnGetVulkanInstanceExtensionsKHR(m_xrInstance, m_xrSystemId, extensionNamesSize, &extensionNamesSize, &extensionNames[0]);
         ASSERT_IF_UNSUCCESSFUL(result);
@@ -317,23 +320,34 @@ namespace OpenXRVk
         VkResult vkResult = pfnCreateInstance(&instInfo, nullptr, &m_xrVkInstance);
         if (vkResult != VK_SUCCESS)
         {
-            AZ_Error("OpenXRVk", false, "Failed to create instance.");
+            ShutdownInternal();
+            AZ_Error("OpenXRVk", false, "Failed to create the instance.");
             return AZ::RHI::ResultCode::Fail;
         }
 
         // Now that we have created the instance, load the function pointers for it.
-        //m_functionLoader->LoadProcAddresses(&m_context, m_xrVkInstance, VK_NULL_HANDLE, VK_NULL_HANDLE);
+        if (!m_functionLoader->LoadProcAddresses(&m_context, m_xrVkInstance, VK_NULL_HANDLE, VK_NULL_HANDLE))
+        {
+            ShutdownInternal();
+            AZ_Warning("OpenXRVk", false, "Failed to initialize function loader for the instance.");
+            return AZ::RHI::ResultCode::Fail;
+        }
 
         //Populate the instance descriptor with the correct VkInstance
         xrInstanceDescriptor->m_outputData.m_xrVkInstance = m_xrVkInstance;
 
         //Get the list of Physical devices
         m_supportedXRDevices = PhysicalDevice::EnumerateDeviceList(m_xrSystemId, m_xrInstance, m_xrVkInstance);
-        if (m_supportedXRDevices.size() > 1)
+        if (m_supportedXRDevices.empty())
         {
-            //Just use the first device at the moment.
-            m_physicalDeviceActiveIndex = 0;
+            ShutdownInternal();
+            AZ_Error("OpenXRVk", false, "No physical devices found.");
+            return AZ::RHI::ResultCode::Fail;
         }
+
+        //Just use the first device at the moment.
+        m_physicalDeviceActiveIndex = 0;
+
         return AZ::RHI::ResultCode::Success;
     }
 
@@ -394,6 +408,11 @@ namespace OpenXRVk
     GladVulkanContext& Instance::GetContext()
     {
         return m_context;
+    }
+
+    AZ::Vulkan::FunctionLoader& Instance::GetFunctionLoader()
+    {
+        return *m_functionLoader;
     }
 
     XrEnvironmentBlendMode Instance::GetEnvironmentBlendMode() const

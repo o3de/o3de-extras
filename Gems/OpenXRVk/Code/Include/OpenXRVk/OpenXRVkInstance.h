@@ -60,6 +60,9 @@ namespace OpenXRVk
         //! Get glad vulkan context.
         GladVulkanContext& GetContext();
 
+        //! Get function loader.
+        AZ::Vulkan::FunctionLoader& GetFunctionLoader();
+
         //! Get XR environment blend mode.
         XrEnvironmentBlendMode GetEnvironmentBlendMode() const;
 
