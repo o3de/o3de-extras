@@ -28,7 +28,7 @@ namespace OpenXRVk
         Instance* xrVkInstance = static_cast<Instance*>(GetDescriptor().m_instance.get());
         XrVulkanDeviceCreateInfoKHR xrDeviceCreateInfo{ XR_TYPE_VULKAN_DEVICE_CREATE_INFO_KHR };
         xrDeviceCreateInfo.systemId = xrVkInstance->GetXRSystemId();
-        xrDeviceCreateInfo.pfnGetInstanceProcAddr = vkGetInstanceProcAddr;
+        xrDeviceCreateInfo.pfnGetInstanceProcAddr = xrVkInstance->GetContext().GetInstanceProcAddr;
         xrDeviceCreateInfo.vulkanCreateInfo = xrDeviceDescriptor->m_inputData.m_deviceCreateInfo;
         xrDeviceCreateInfo.vulkanPhysicalDevice = xrVkInstance->GetActivePhysicalDevice();
         xrDeviceCreateInfo.vulkanAllocator = nullptr;
@@ -44,7 +44,7 @@ namespace OpenXRVk
 
         AZStd::vector<char> deviceExtensionNames(deviceExtensionNamesSize);
         result = pfnGetVulkanDeviceExtensionsKHR(
-	        xrVkInstance->GetXRInstance(), xrDeviceCreateInfo.systemId, deviceExtensionNamesSize, &deviceExtensionNamesSize, &deviceExtensionNames[0]);
+            xrVkInstance->GetXRInstance(), xrDeviceCreateInfo.systemId, deviceExtensionNamesSize, &deviceExtensionNamesSize, &deviceExtensionNames[0]);
         ASSERT_IF_UNSUCCESSFUL(result);
 
         AZStd::vector<const char*> extensions = ParseExtensionString(&deviceExtensionNames[0]);
@@ -57,7 +57,7 @@ namespace OpenXRVk
         memcpy(&features, xrDeviceCreateInfo.vulkanCreateInfo->pEnabledFeatures, sizeof(features));
 
         VkPhysicalDeviceFeatures availableFeatures{};
-        vkGetPhysicalDeviceFeatures(xrVkInstance->GetActivePhysicalDevice(), &availableFeatures);
+        xrVkInstance->GetContext().GetPhysicalDeviceFeatures(xrVkInstance->GetActivePhysicalDevice(), &availableFeatures);
         if (availableFeatures.shaderStorageImageMultisample == VK_TRUE)
         {
             // Setting this quiets down a validation error triggered by the Oculus runtime
@@ -75,9 +75,26 @@ namespace OpenXRVk
         VkResult vulkanResult = pfnCreateDevice(xrDeviceCreateInfo.vulkanPhysicalDevice, &deviceInfo, xrDeviceCreateInfo.vulkanAllocator, &m_xrVkDevice);
         if (vulkanResult != VK_SUCCESS)
         {
+            ShutdownInternal();
+            AZ_Error("OpenXRVk", false, "Failed to create the device.");
             return AZ::RHI::ResultCode::Fail;
         }
-		
+
+        // Now that we have created the device, load the function pointers for it.
+        // NOTE: Passing the xr physical device to LoadProcAddresses causes a crash in glad vulkan
+        //       inside 'glad_vk_find_core_vulkan' function when calling 'context->GetPhysicalDeviceProperties'.
+        //       It's OK to pass VK_NULL_HANDLE at the moment, which means glad vulkan will use only device and instance
+        //       to check for vulkan extensions.
+        if (!xrVkInstance->GetFunctionLoader().LoadProcAddresses(
+            &m_context, xrVkInstance->GetNativeInstance(), VK_NULL_HANDLE/*xrVkInstance->GetActivePhysicalDevice()*/, m_xrVkDevice))
+        {
+            // Something went wrong loading function pointers, use the glad context from the instance to shut down the device.
+            m_context = xrVkInstance->GetContext();
+            ShutdownInternal();
+            AZ_Error("OpenXRVk", false, "Failed to initialize function loader for the device.");
+            return AZ::RHI::ResultCode::Fail;
+        }
+
         //Populate the output data of the descriptor
         xrDeviceDescriptor->m_outputData.m_xrVkDevice = m_xrVkDevice;
 
@@ -221,6 +238,11 @@ namespace OpenXRVk
         return m_xrVkDevice;
     }
 
+    const GladVulkanContext& Device::GetContext() const
+    {
+        return m_context;
+    }
+
     AZ::RPI::FovData Device::GetViewFov(AZ::u32 viewIndex) const
     {
         AZ::RPI::FovData viewFov;
@@ -264,7 +286,7 @@ namespace OpenXRVk
         m_xrLayers.clear();
         if (m_xrVkDevice != VK_NULL_HANDLE)
         {
-            vkDestroyDevice(m_xrVkDevice, nullptr);
+            m_context.DestroyDevice(m_xrVkDevice, nullptr);
             m_xrVkDevice = VK_NULL_HANDLE;
         }
     }

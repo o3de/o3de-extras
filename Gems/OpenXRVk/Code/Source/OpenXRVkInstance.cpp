@@ -277,17 +277,19 @@ namespace OpenXRVk
 
     AZ::RHI::ResultCode Instance::InitNativeInstance(AZ::RHI::XRInstanceDescriptor* instanceDescriptor)
     {
-        m_functionLoader = FunctionLoader::Create();
-        if (!m_functionLoader->Init())
+        m_functionLoader = AZ::Vulkan::FunctionLoader::Create();
+        if (!m_functionLoader->Init() ||
+            !m_functionLoader->LoadProcAddresses(&m_context, VK_NULL_HANDLE, VK_NULL_HANDLE, VK_NULL_HANDLE))
         {
-            AZ_Warning("Vulkan", false, "OpenXRVk Could not initialized function loader.");
+            m_functionLoader.reset();
+            AZ_Error("OpenXRVk", false, "Could not initialize function loader.");
             return AZ::RHI::ResultCode::Fail;
         }
 
         AZ::Vulkan::XRInstanceDescriptor* xrInstanceDescriptor = static_cast<AZ::Vulkan::XRInstanceDescriptor*>(instanceDescriptor);
         XrVulkanInstanceCreateInfoKHR createInfo{ XR_TYPE_VULKAN_INSTANCE_CREATE_INFO_KHR };
         createInfo.systemId = m_xrSystemId;
-        createInfo.pfnGetInstanceProcAddr = vkGetInstanceProcAddr;
+        createInfo.pfnGetInstanceProcAddr = m_context.GetInstanceProcAddr;
         createInfo.vulkanCreateInfo = xrInstanceDescriptor->m_inputData.m_createInfo;
         createInfo.vulkanAllocator = nullptr;
 
@@ -302,7 +304,7 @@ namespace OpenXRVk
         AZStd::vector<char> extensionNames(extensionNamesSize);
         result = pfnGetVulkanInstanceExtensionsKHR(m_xrInstance, m_xrSystemId, extensionNamesSize, &extensionNamesSize, &extensionNames[0]);
         ASSERT_IF_UNSUCCESSFUL(result);
-		
+
         AZStd::vector<const char*> extensions = ParseExtensionString(&extensionNames[0]);
         for (uint32_t i = 0; i < createInfo.vulkanCreateInfo->enabledExtensionCount; ++i)
         {
@@ -318,19 +320,34 @@ namespace OpenXRVk
         VkResult vkResult = pfnCreateInstance(&instInfo, nullptr, &m_xrVkInstance);
         if (vkResult != VK_SUCCESS)
         {
+            ShutdownInternal();
+            AZ_Error("OpenXRVk", false, "Failed to create the instance.");
             return AZ::RHI::ResultCode::Fail;
         }
-		
+
+        // Now that we have created the instance, load the function pointers for it.
+        if (!m_functionLoader->LoadProcAddresses(&m_context, m_xrVkInstance, VK_NULL_HANDLE, VK_NULL_HANDLE))
+        {
+            ShutdownInternal();
+            AZ_Warning("OpenXRVk", false, "Failed to initialize function loader for the instance.");
+            return AZ::RHI::ResultCode::Fail;
+        }
+
         //Populate the instance descriptor with the correct VkInstance
         xrInstanceDescriptor->m_outputData.m_xrVkInstance = m_xrVkInstance;
 
         //Get the list of Physical devices
         m_supportedXRDevices = PhysicalDevice::EnumerateDeviceList(m_xrSystemId, m_xrInstance, m_xrVkInstance);
-        if (m_supportedXRDevices.size() > 1)
+        if (m_supportedXRDevices.empty())
         {
-            //Just use the first device at the moment.
-            m_physicalDeviceActiveIndex = 0;
+            ShutdownInternal();
+            AZ_Error("OpenXRVk", false, "No physical devices found.");
+            return AZ::RHI::ResultCode::Fail;
         }
+
+        //Just use the first device at the moment.
+        m_physicalDeviceActiveIndex = 0;
+
         return AZ::RHI::ResultCode::Success;
     }
 
@@ -340,8 +357,8 @@ namespace OpenXRVk
         {
             m_supportedXRDevices.clear();
 
-            vkDestroyInstance(m_xrVkInstance, nullptr);
-            m_functionLoader = VK_NULL_HANDLE;
+            m_context.DestroyInstance(m_xrVkInstance, nullptr);
+            m_xrVkInstance = VK_NULL_HANDLE;
         }
 
         if (m_functionLoader)
@@ -386,6 +403,16 @@ namespace OpenXRVk
     VkInstance Instance::GetNativeInstance() const
     {
         return m_xrVkInstance;
+    }
+
+    GladVulkanContext& Instance::GetContext()
+    {
+        return m_context;
+    }
+
+    AZ::Vulkan::FunctionLoader& Instance::GetFunctionLoader()
+    {
+        return *m_functionLoader;
     }
 
     XrEnvironmentBlendMode Instance::GetEnvironmentBlendMode() const

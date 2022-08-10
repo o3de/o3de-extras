@@ -6,6 +6,3 @@
  *
  */
 #pragma once
-
-#define VULKAN_DLL "libvulkan.so"
-#define VULKAN_1_DLL "libvulkan.so.1"
