@@ -14,7 +14,7 @@
 
 #include <Unknwn.h>
 
-#include <glad/vulkan.h>
+#include <vulkan/vulkan.h>
 
  // Tell OpenXR what platform code we'll be using
 #define XR_USE_PLATFORM_WIN32
