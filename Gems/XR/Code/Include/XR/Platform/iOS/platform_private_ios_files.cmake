@@ -7,4 +7,5 @@
 #
 
 set(FILES
+    XR_Platform.h
 )

@@ -8,7 +8,7 @@
 
 #pragma once
 
-#include <XR/XRinput.h>
+#include <XR/XRInput.h>
 #include <OpenXRVk_Platform.h>
 
 namespace OpenXRVk

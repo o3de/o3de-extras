@@ -7,13 +7,13 @@
  */
 
 #include <AzCore/Serialization/SerializeContext.h>
-#include <OpenXrVk/OpenXrVkDevice.h>
-#include <OpenXrVk/OpenXrVkInput.h>
-#include <OpenXrVk/OpenXrVkInstance.h>
-#include <OpenXrVk/OpenXrVkSession.h>
-#include <OpenXrVk/OpenXrVkSpace.h>
-#include <OpenXrVk/OpenXrVkSwapchain.h>
-#include <OpenXrVk/OpenXrVkSystemComponent.h>
+#include <OpenXRVk/OpenXRVkDevice.h>
+#include <OpenXRVk/OpenXRVkInput.h>
+#include <OpenXRVk/OpenXRVkInstance.h>
+#include <OpenXRVk/OpenXRVkSession.h>
+#include <OpenXRVk/OpenXRVkSpace.h>
+#include <OpenXRVk/OpenXRVkSwapChain.h>
+#include <OpenXRVk/OpenXRVkSystemComponent.h>
 
 namespace OpenXRVk
 {

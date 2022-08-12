@@ -10,8 +10,16 @@
 #include <AzCore/base.h>
 #include <AzCore/PlatformIncl.h>
 #include <AzCore/std/algorithm.h>
-#include <vulkan/vulkan.h>
 #include <limits.h>
-#include <RHI/Vulkan.h>
 
-#define AZ_VULKAN_SURFACE_EXTENSION_NAME VK_KHR_ANDROID_SURFACE_EXTENSION_NAME
+#include <vulkan/vulkan.h>
+
+#include <jni.h>
+
+ // Tell OpenXR what platform code we'll be using
+#define XR_USE_PLATFORM_ANDROID
+#define XR_USE_GRAPHICS_API_VULKAN
+
+#include <openxr/openxr.h>
+#include <openxr/openxr_platform.h>
+#include <openxr/openxr_reflection.h>

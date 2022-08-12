@@ -16,8 +16,6 @@ set(FILES
     Include/OpenXRVk/OpenXRVkSwapChain.h
     Include/OpenXRVk/OpenXRVkSystemComponent.h
     Include/OpenXRVk/OpenXRVkUtils.h
-    Include/OpenXRVk/OpenXRVkFunctionLoader.h
-    Include/OpenXRVk/OpenXRVkGladFunctionLoader.h
     Source/OpenXRVkDevice.cpp
     Source/OpenXRVkInput.cpp
     Source/OpenXRVkInstance.cpp
@@ -27,13 +25,4 @@ set(FILES
     Source/OpenXRVkSwapChain.cpp
     Source/OpenXRVkSystemComponent.cpp
     Source/OpenXRVkUtils.cpp
-    Source/OpenXRVkFunctionLoader.cpp
-    Source/OpenXRVkGladFunctionLoader.cpp
-)
-
-set(SKIP_UNITY_BUILD_INCLUSION_FILES
-    # The following file defines GLAD_VULKAN_IMPLEMENTATION before including vulkan.h changing
-    # the behavior inside vulkan.h. Other files also includes vulkan.h so this file cannot
-    # be added to unity, other files could end up including vulkan.h and making this one fail.
-    Source/OpenXRVkGladFunctionLoader.cpp
 )
