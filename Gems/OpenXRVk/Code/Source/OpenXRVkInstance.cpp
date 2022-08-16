@@ -96,7 +96,8 @@ namespace OpenXRVk
             
             PFN_xrInitializeLoaderKHR initializeLoader = nullptr;
             XrResult resultLoader = xrGetInstanceProcAddr(
-            XR_NULL_HANDLE, "xrInitializeLoaderKHR", reinterpret_cast<PFN_xrVoidFunction*>(&initializeLoader));
+                XR_NULL_HANDLE, "xrInitializeLoaderKHR",
+                reinterpret_cast<PFN_xrVoidFunction*>(&initializeLoader));
             ASSERT_IF_UNSUCCESSFUL(resultLoader);
 
             XrLoaderInitInfoAndroidKHR loaderInitInfoAndroid;
