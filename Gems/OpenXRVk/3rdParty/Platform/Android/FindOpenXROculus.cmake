@@ -32,11 +32,11 @@ if(NOT EXISTS ${PATH_TO_SHARED_LIBS}/Release/libopenxr_loader.so)
     return()
 endif()
 
-set(${MY_NAME}_SHARED_LIBRARIES ${PATH_TO_SHARED_LIBS}/$<IF:$<CONFIG:debug>,Debug,Release>/libopenxr_loader.so)
-
-add_library(${TARGET_WITH_NAMESPACE} INTERFACE IMPORTED GLOBAL)
+add_library(${TARGET_WITH_NAMESPACE} SHARED IMPORTED GLOBAL)
 ly_target_include_system_directories(TARGET ${TARGET_WITH_NAMESPACE} INTERFACE ${${MY_NAME}_INCLUDE_DIR})
-target_link_libraries(${TARGET_WITH_NAMESPACE} INTERFACE ${${MY_NAME}_SHARED_LIBRARIES})
-ly_add_target_files(TARGETS ${TARGET_WITH_NAMESPACE} FILES ${${MY_NAME}_SHARED_LIBRARIES})
+set_target_properties(${TARGET_WITH_NAMESPACE}
+    PROPERTIES
+        IMPORTED_LOCATION ${PATH_TO_SHARED_LIBS}/Release/libopenxr_loader.so
+        IMPORTED_LOCATION_DEBUG ${PATH_TO_SHARED_LIBS}/Debug/libopenxr_loader.so)
 
 set(${MY_NAME}_FOUND True)

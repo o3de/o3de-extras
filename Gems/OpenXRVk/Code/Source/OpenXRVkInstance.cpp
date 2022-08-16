@@ -107,7 +107,7 @@ namespace OpenXRVk
             loaderInitInfoAndroid.applicationVM = androidEnv->GetActivityJavaVM();
             loaderInitInfoAndroid.applicationContext = androidEnv->GetActivityRef();
             
-            initializeLoader((const XrLoaderInitInfoBaseHeaderKHR*)&loaderInitInfoAndroid);
+            initializeLoader(reinterpret_cast<const XrLoaderInitInfoBaseHeaderKHR*>(&loaderInitInfoAndroid));
         }
 #endif
 
