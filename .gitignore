@@ -21,6 +21,6 @@ _savebackup/
 *.swatches
 /imgui.ini
 
-# Ignore Oculus OpenXR Mobile SDK files except the README.txt file
+# Ignore Oculus OpenXR Mobile SDK files except the README.md file
 Gems/OpenXRVk/External/OculusOpenXRMobileSDK/**
 !Gems/OpenXRVk/External/OculusOpenXRMobileSDK/README.md
