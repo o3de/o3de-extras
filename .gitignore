@@ -23,4 +23,4 @@ _savebackup/
 
 # Ignore Oculus OpenXR Mobile SDK files except the README.txt file
 Gems/OpenXRVk/External/OculusOpenXRMobileSDK/**
-!Gems/OpenXRVk/External/OculusOpenXRMobileSDK/README.txt
+!Gems/OpenXRVk/External/OculusOpenXRMobileSDK/README.md
