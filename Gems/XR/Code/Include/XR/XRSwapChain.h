@@ -11,7 +11,7 @@
 #include <AzCore/Memory/SystemAllocator.h>
 #include <AzCore/std/containers/vector.h>
 #include <AzCore/std/smart_ptr/intrusive_ptr.h>
-#include <Atom/RHI/XRRenderingInterface.h>
+#include <Atom/RHI.Reflect/Format.h>
 #include <XR/XRObject.h>
 
 namespace XR
@@ -103,6 +103,9 @@ namespace XR
         
         //! Api to allow the back end to report the recommended swapchain height
         virtual AZ::u32 GetSwapChainHeight(AZ::u32 viewIndex) const = 0;
+
+        //! Api to allow the back end to report the swapchain format.
+        virtual AZ::RHI::Format GetSwapChainFormat(AZ::u32 viewIndex) const = 0;
 
     protected:
         
