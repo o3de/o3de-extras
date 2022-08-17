@@ -11,7 +11,7 @@
 #include <OpenXRVk/OpenXRVkUtils.h>
 #include <OpenXRInitializeLoader_Android.h>
 
-namespace OpenXRVk
+namespace OpenXRVk::Platform
 {
     bool OpenXRInitializeLoader()
     {

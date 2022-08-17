@@ -85,8 +85,8 @@ namespace OpenXRVk
 
     AZ::RHI::ResultCode Instance::InitInstanceInternal(AZ::RHI::ValidationMode validationMode)
     {
-#if OPENXRVK_NEEDS_INITIALIZE_XR_LOADER
-        if (!OpenXRInitializeLoader())
+#if OPENXRVK_TRAIT_NEEDS_INITIALIZE_XR_LOADER
+        if (!Platform::OpenXRInitializeLoader())
         {
             AZ_Error("OpenXRVk", false, "Could not initialize xr loader.");
             return AZ::RHI::ResultCode::Fail;

@@ -7,6 +7,6 @@
  */
 #pragma once
 
-#define OPENXRVK_NEEDS_INITIALIZE_XR_LOADER 1
+#define OPENXRVK_TRAIT_NEEDS_INITIALIZE_XR_LOADER 1
 
 #include <OpenXRInitializeLoader_Android.h>

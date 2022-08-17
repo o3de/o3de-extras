@@ -7,7 +7,7 @@
  */
 #pragma once
 
-namespace OpenXRVk
+namespace OpenXRVk::Platform
 {
     // Initializes the XR loader for Android platform
     bool OpenXRInitializeLoader();
