@@ -10,10 +10,7 @@
 #include <OpenXRVk/OpenXRVkUtils.h>
 #include <Atom/RHI.Reflect/Vulkan/XRVkDescriptors.h>
 #include <AzCore/Casting/numeric_cast.h>
-
-#ifdef AZ_PLATFORM_ANDROID
-#include <AzCore/Android/AndroidEnv.h>
-#endif
+#include <OpenXRVk_Traits_Platform.h>
 
 namespace OpenXRVk
 {
@@ -88,26 +85,11 @@ namespace OpenXRVk
 
     AZ::RHI::ResultCode Instance::InitInstanceInternal(AZ::RHI::ValidationMode validationMode)
     {
-#ifdef AZ_PLATFORM_ANDROID
-        // Initialize the loader for Android platform
+#if OPENXRVK_NEEDS_INITIALIZE_XR_LOADER
+        if (!OpenXRInitializeLoader())
         {
-            AZ::Android::AndroidEnv* androidEnv = AZ::Android::AndroidEnv::Get();
-            AZ_Assert(androidEnv != nullptr, "Invalid android enviroment");
-            
-            PFN_xrInitializeLoaderKHR initializeLoader = nullptr;
-            XrResult resultLoader = xrGetInstanceProcAddr(
-                XR_NULL_HANDLE, "xrInitializeLoaderKHR",
-                reinterpret_cast<PFN_xrVoidFunction*>(&initializeLoader));
-            ASSERT_IF_UNSUCCESSFUL(resultLoader);
-
-            XrLoaderInitInfoAndroidKHR loaderInitInfoAndroid;
-            memset(&loaderInitInfoAndroid, 0, sizeof(loaderInitInfoAndroid));
-            loaderInitInfoAndroid.type = XR_TYPE_LOADER_INIT_INFO_ANDROID_KHR;
-            loaderInitInfoAndroid.next = nullptr;
-            loaderInitInfoAndroid.applicationVM = androidEnv->GetActivityJavaVM();
-            loaderInitInfoAndroid.applicationContext = androidEnv->GetActivityRef();
-            
-            initializeLoader(reinterpret_cast<const XrLoaderInitInfoBaseHeaderKHR*>(&loaderInitInfoAndroid));
+            AZ_Error("OpenXRVk", false, "Could not initialize xr loader.");
+            return AZ::RHI::ResultCode::Fail;
         }
 #endif
 

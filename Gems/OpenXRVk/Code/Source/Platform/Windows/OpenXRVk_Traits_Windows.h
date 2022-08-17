@@ -6,3 +6,5 @@
  *
  */
 #pragma once
+
+#define OPENXRVK_NEEDS_INITIALIZE_XR_LOADER 0

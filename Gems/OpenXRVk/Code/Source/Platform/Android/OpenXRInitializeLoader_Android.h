@@ -7,4 +7,8 @@
  */
 #pragma once
 
-#define OPENXRVK_NEEDS_INITIALIZE_XR_LOADER 0
+namespace OpenXRVk
+{
+    // Initializes the XR loader for Android platform
+    bool OpenXRInitializeLoader();
+}
