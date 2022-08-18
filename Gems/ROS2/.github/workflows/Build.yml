@@ -4,7 +4,12 @@ on:
   pull_request:
     branches:
       - development
-
+    paths:
+      - ".github/workflows/Build.yml"
+      - "Code/**"
+      - "CMakeLists.txt"
+      - "gem.json"
+      
 permissions:
   contents: read
 

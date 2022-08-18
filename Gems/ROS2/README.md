@@ -52,9 +52,9 @@ It will allow you to run robot navigation. All necessary assets are included.
 
 ## User Guides
 
-Follow the [ROS 2 Gem User Guide](docs/user_guide/ros2-gem.md) to understand its concepts and components.
+Follow the [ROS 2 Gem User Guide](docs/guides/ros2-gem.md) to understand its concepts and components.
 
-If you plan on contributing please follow the [Pull Request Publishing](docs/guides/pr_publishing.md) guide. For those using the Clion IDE we advise to follow the [Development in Clion](docs/static/development_in_clion.md) guide.
+If you plan on contributing please follow the [Pull Request Publishing](docs/guides/pr_publishing.md) guide. For those using the Clion IDE we advise to follow the [Development in Clion](docs/guides/development_in_clion.md) guide.
 
 ## How to create your own robotic simulation
 
