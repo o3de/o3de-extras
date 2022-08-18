@@ -6,6 +6,7 @@
  *
  */
 
+#include <Atom/RHI.Reflect/Vulkan/Conversion.h>
 #include <Atom/RHI.Reflect/Vulkan/XRVkDescriptors.h>
 #include <AzCore/Casting/numeric_cast.h>
 #include <AzCore/std/containers/set.h>
@@ -15,33 +16,6 @@
 #include <OpenXRVk/OpenXRVkSwapChain.h>
 #include <OpenXRVk/OpenXRVkUtils.h>
 #include <XR/XRFactory.h>
-
-// TODO: Expose ConvertFormat in Vulkan RHI::Reflect
-#include <../Source/RHI/Formats.inl>
-
-namespace AZ::Vulkan
-{
-    RHI::Format ConvertFormat(VkFormat format)
-    {
-#define RHIVK_VK_TO_RHI(_FormatID, _VKFormat, _Color, _Depth, _Stencil) \
-case _VKFormat: \
-    return RHI::Format::_FormatID;
-
-        switch (format)
-        {
-        case VK_FORMAT_UNDEFINED:
-            return RHI::Format::Unknown;
-
-        RHIVK_EXPAND_FOR_FORMATS(RHIVK_VK_TO_RHI)
-
-        default:
-            AZ_Assert(false, "unhandled conversion in ConvertFormat");
-            return RHI::Format::Unknown;
-        }
-
-#undef RHIVK_VK_TO_RHI
-    }
-}
 
 namespace OpenXRVk
 {
