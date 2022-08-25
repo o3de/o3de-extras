@@ -1,6 +1,16 @@
 {
-    "ENABLE_GEMS": [
+    "REGISTER_ENGINES": [
+    ],
+    "REGISTER_PROJECTS": [
+    ],
+    "REGISTER_GEMS": [
         "Gems/XR",
-        "Gems/OpenXRVk"
+        "Gems/OpenXrVK"
+    ],
+    "REGISTER_TEMPLATES": [
+    ],
+    "REGISTER_RESTRICTED": [
+    ],
+    "ENABLE_GEMS": [
     ]
 {
