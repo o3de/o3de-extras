@@ -1,0 +1,6 @@
+{
+    "ENABLE_GEMS": [
+        "Gems/XR",
+        "Gems/OpenXRVk"
+    ]
+{
