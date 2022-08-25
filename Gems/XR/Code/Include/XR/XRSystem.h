@@ -61,6 +61,7 @@ namespace XR
         AZ::RHI::ResultCode GetSwapChainImage(AZ::RHI::XRSwapChainDescriptor* swapchainDescriptor) const override;
         AZ::u32 GetSwapChainWidth(AZ::u32 viewIndex) const override;
         AZ::u32 GetSwapChainHeight(AZ::u32 viewIndex) const override;
+        AZ::RHI::Format GetSwapChainFormat(AZ::u32 viewIndex) const override;
         AZ::RPI::FovData GetViewFov(AZ::u32 viewIndex) const override;
         AZ::RPI::PoseData GetViewPose(AZ::u32 viewIndex) const override;
         AZ::RPI::PoseData GetViewFrontPose() const override;
@@ -70,6 +71,7 @@ namespace XR
         AZ::Matrix4x4 CreateProjectionOffset(float angleLeft, float angleRight, 
                                              float angleBottom, float angleTop, 
                                              float nearDist, float farDist) override;
+        AZ::RHI::XRRenderingInterface* GetRHIXRRenderingInterface() override;
         ///////////////////////////////////////////////////////////////////
 
         ///////////////////////////////////////////////////////////////////

@@ -10,6 +10,7 @@
 #include <OpenXRVk/OpenXRVkUtils.h>
 #include <Atom/RHI.Reflect/Vulkan/XRVkDescriptors.h>
 #include <AzCore/Casting/numeric_cast.h>
+#include <OpenXRVk_Traits_Platform.h>
 
 namespace OpenXRVk
 {
@@ -84,6 +85,14 @@ namespace OpenXRVk
 
     AZ::RHI::ResultCode Instance::InitInstanceInternal(AZ::RHI::ValidationMode validationMode)
     {
+#if OPENXRVK_TRAIT_NEEDS_INITIALIZE_XR_LOADER
+        if (!Platform::OpenXRInitializeLoader())
+        {
+            AZ_Error("OpenXRVk", false, "Could not initialize xr loader.");
+            return AZ::RHI::ResultCode::Fail;
+        }
+#endif
+
         XR::RawStringList optionalLayers;
         XR::RawStringList optionalExtensions = { XR_KHR_VULKAN_ENABLE_EXTENSION_NAME };
 

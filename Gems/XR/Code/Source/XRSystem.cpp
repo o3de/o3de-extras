@@ -122,6 +122,16 @@ namespace XR
         return 0;
     }
 
+    AZ::RHI::Format System::GetSwapChainFormat(AZ::u32 viewIndex) const
+    {
+        AZ_Assert(m_swapChain, "SwapChain is null");
+        if (m_swapChain)
+        {
+            return m_swapChain->GetSwapChainFormat(viewIndex);
+        }
+        return AZ::RHI::Format::Unknown;
+    }
+
     void System::OnSystemTick()
     {
         m_session->PollEvents();
@@ -218,6 +228,11 @@ namespace XR
                                                  float nearDist, float farDist)
     {
         return XR::CreateProjectionOffset(angleLeft, angleRight, angleBottom, angleTop, nearDist, farDist);
+    }
+
+    AZ::RHI::XRRenderingInterface* System::GetRHIXRRenderingInterface()
+    {
+        return this;
     }
 
     void System::Shutdown()
