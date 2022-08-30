@@ -6,7 +6,7 @@
     ],
     "REGISTER_GEMS": [
         "Gems/XR",
-        "Gems/OpenXrVK"
+        "Gems/OpenXRVk"
     ],
     "REGISTER_TEMPLATES": [
     ],
@@ -14,6 +14,6 @@
     ],
     "ENABLE_GEMS": [
         "Gems/XR",
-        "Gems/OpenXrVK"
+        "Gems/OpenXRVk"
     ]
 }
