@@ -2,6 +2,7 @@
     "REGISTER_ENGINES": [
     ],
     "REGISTER_PROJECTS": [
+        "Projects/OpenXRTest"
     ],
     "REGISTER_GEMS": [
         "Gems/XR",
