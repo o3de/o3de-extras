@@ -198,7 +198,7 @@ namespace OpenXRVk
                     if (GetDescriptor().m_validationMode == AZ::RHI::ValidationMode::Enabled)
                     {
                         Input* xrVkInput = static_cast<Input*>(GetInput());
-                        LogActionSourceName(xrVkInput->GetGrabAction(), "Grab");
+                        LogActionSourceName(xrVkInput->GetSqueezeAction(), "Squeeze");
                         LogActionSourceName(xrVkInput->GetQuitAction(), "Quit");
                         LogActionSourceName(xrVkInput->GetPoseAction(), "Pose");
                         LogActionSourceName(xrVkInput->GetVibrationAction(), "Vibrate");
@@ -271,22 +271,83 @@ namespace OpenXRVk
         xrInput->LocateControllerSpace(device->GetPredictedDisplayTime(), space->GetXrSpace(OpenXRVk::SpaceType::View), handIndex);
     }
 
-    AZ::RPI::PoseData Session::GetControllerPose(AZ::u32 handIndex) const
+    AZ::RHI::ResultCode Session::GetControllerPose(const AZ::u32 handIndex, AZ::RPI::PoseData& outPoseData) const
     {
         Input* xrInput = static_cast<Input*>(GetInput());
-        return xrInput->GetControllerPose(handIndex);
+        return xrInput->GetControllerPose(handIndex, outPoseData);
     }
     
-    float Session::GetControllerScale(AZ::u32 handIndex) const
+    AZ::RHI::ResultCode Session::GetControllerStagePose(const AZ::u32 handIndex, AZ::RPI::PoseData& outPoseData) const
+    {
+        Input* xrInput = static_cast<Input*>(GetInput());
+        return handIndex == 0 ? xrInput->GetVisualizedSpacePose(OpenXRVk::SpaceType::StageLeft, outPoseData) :
+            xrInput->GetVisualizedSpacePose(OpenXRVk::SpaceType::StageRight, outPoseData);
+    }
+
+    AZ::RHI::ResultCode Session::GetViewFrontPose(AZ::RPI::PoseData& outPoseData) const
+    {
+        Input* xrInput = static_cast<Input*>(GetInput());
+        return xrInput->GetVisualizedSpacePose(OpenXRVk::SpaceType::ViewFront, outPoseData);
+    }
+
+    AZ::RHI::ResultCode Session::GetViewLocalPose(AZ::RPI::PoseData& outPoseData) const
+    {
+        Input* xrInput = static_cast<Input*>(GetInput());
+        return xrInput->GetVisualizedSpacePose(OpenXRVk::SpaceType::Local, outPoseData);
+    }
+
+    float Session::GetControllerScale(const AZ::u32 handIndex) const
     {
         Input* xrInput = static_cast<Input*>(GetInput());
         return xrInput->GetControllerScale(handIndex);
     }
 
-    AZ::RPI::PoseData Session::GetViewFrontPose() const
+    float Session::GetSqueezeState(const AZ::u32 handIndex) const
     {
         Input* xrInput = static_cast<Input*>(GetInput());
-        return xrInput->GetVisualizedSpacePose(OpenXRVk::SpaceType::ViewFront);
+        return xrInput->GetSqueezeState(handIndex);
+    }
+
+    float Session::GetTriggerState(const AZ::u32 handIndex) const
+    {
+        Input* xrInput = static_cast<Input*>(GetInput());
+        return xrInput->GetTriggerState(handIndex);
+    }
+
+    float Session::GetXButtonState() const
+    {
+        Input* xrInput = static_cast<Input*>(GetInput());
+        return xrInput->GetXButtonState();
+    }
+
+    float Session::GetYButtonState() const
+    {
+        Input* xrInput = static_cast<Input*>(GetInput());
+        return xrInput->GetYButtonState();
+    }
+
+    float Session::GetAButtonState() const
+    {
+        Input* xrInput = static_cast<Input*>(GetInput());
+        return xrInput->GetAButtonState();
+    }
+
+    float Session::GetBButtonState() const
+    {
+        Input* xrInput = static_cast<Input*>(GetInput());
+        return xrInput->GetBButtonState();
+    }
+
+    float Session::GetXJoyStickState(const AZ::u32 handIndex) const
+    {
+        Input* xrInput = static_cast<Input*>(GetInput());
+        return xrInput->GetXJoyStickState(handIndex);
+    }
+    
+    float Session::GetYJoyStickState(const AZ::u32 handIndex) const
+    {
+        Input* xrInput = static_cast<Input*>(GetInput());
+        return xrInput->GetYJoyStickState(handIndex);
     }
 
     XrSession Session::GetXrSession() const

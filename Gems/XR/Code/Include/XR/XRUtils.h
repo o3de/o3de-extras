@@ -13,5 +13,5 @@
 namespace XR
 {
     //! Creates an off-center projection matrix suitable for VR
-    AZ::Matrix4x4 CreateProjectionOffset(float angleLeft, float angleRight, float angleBottom, float angleTop, float nearDist, float farDist);
+    AZ::Matrix4x4 CreateProjectionOffset(float angleLeft, float angleRight, float angleBottom, float angleTop, float nearDist, float farDist, bool reverseDepth);
 }

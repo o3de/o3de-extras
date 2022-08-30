@@ -258,17 +258,17 @@ namespace OpenXRVk
         return AZ::RHI::ResultCode::Success;
     }
 
-    AZ::u32 SwapChain::GetSwapChainWidth(AZ::u32 viewIndex) const
+    AZ::u32 SwapChain::GetSwapChainWidth(const AZ::u32 viewIndex) const
     {
         return m_configViews[viewIndex].recommendedImageRectWidth;
     }
 
-    AZ::u32 SwapChain::GetSwapChainHeight(AZ::u32 viewIndex) const
+    AZ::u32 SwapChain::GetSwapChainHeight(const AZ::u32 viewIndex) const
     {
         return m_configViews[viewIndex].recommendedImageRectHeight;
     }
 
-    AZ::RHI::Format SwapChain::GetSwapChainFormat([[maybe_unused]] AZ::u32 viewIndex) const
+    AZ::RHI::Format SwapChain::GetSwapChainFormat([[maybe_unused]] const AZ::u32 viewIndex) const
     {
         return AZ::Vulkan::ConvertFormat(m_colorSwapChainFormat);
     }

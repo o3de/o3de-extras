@@ -99,13 +99,13 @@ namespace XR
         virtual AZ::RHI::ResultCode GetSwapChainImage(AZ::RHI::XRSwapChainDescriptor* swapchainDescriptor) const = 0;
        
         //! Api to allow the back end to report the recommended swapchain width
-        virtual AZ::u32 GetSwapChainWidth(AZ::u32 viewIndex) const = 0;
+        virtual AZ::u32 GetSwapChainWidth(const AZ::u32 viewIndex) const = 0;
         
         //! Api to allow the back end to report the recommended swapchain height
-        virtual AZ::u32 GetSwapChainHeight(AZ::u32 viewIndex) const = 0;
+        virtual AZ::u32 GetSwapChainHeight(const AZ::u32 viewIndex) const = 0;
 
         //! Api to allow the back end to report the swapchain format.
-        virtual AZ::RHI::Format GetSwapChainFormat(AZ::u32 viewIndex) const = 0;
+        virtual AZ::RHI::Format GetSwapChainFormat(const AZ::u32 viewIndex) const = 0;
 
     protected:
         

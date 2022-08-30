@@ -56,22 +56,32 @@ namespace XR
         ///////////////////////////////////////////////////////////////////
         // AZ::RPI::XRRenderingInterface overrides
         AZ::RHI::ResultCode InitInstance() override;
-        void AcquireSwapChainImage(AZ::u32 viewIndex) override;
+        void AcquireSwapChainImage(const AZ::u32 viewIndex) override;
         AZ::u32 GetNumViews() const override;
         AZ::RHI::ResultCode GetSwapChainImage(AZ::RHI::XRSwapChainDescriptor* swapchainDescriptor) const override;
-        AZ::u32 GetSwapChainWidth(AZ::u32 viewIndex) const override;
-        AZ::u32 GetSwapChainHeight(AZ::u32 viewIndex) const override;
-        AZ::RHI::Format GetSwapChainFormat(AZ::u32 viewIndex) const override;
-        AZ::RPI::FovData GetViewFov(AZ::u32 viewIndex) const override;
-        AZ::RPI::PoseData GetViewPose(AZ::u32 viewIndex) const override;
-        AZ::RPI::PoseData GetViewFrontPose() const override;
-        AZ::RPI::PoseData GetControllerPose(AZ::u32 handIndex) const override;
-        float GetControllerScale(AZ::u32 handIndex) const override;
+        AZ::u32 GetSwapChainWidth(const AZ::u32 viewIndex) const override;
+        AZ::u32 GetSwapChainHeight(const AZ::u32 viewIndex) const override;
+        AZ::RHI::Format GetSwapChainFormat(const AZ::u32 viewIndex) const override;
+        AZ::RHI::ResultCode GetViewFov(const AZ::u32 viewIndex, AZ::RPI::FovData& outFovData) const override;
+        AZ::RHI::ResultCode GetViewPose(const AZ::u32 viewIndex, AZ::RPI::PoseData& outPoseData) const override;
+        AZ::RHI::ResultCode GetViewFrontPose(AZ::RPI::PoseData& outPoseData) const override;
+        AZ::RHI::ResultCode GetViewLocalPose(AZ::RPI::PoseData& outPoseData) const override;
+        AZ::RHI::ResultCode GetControllerStagePose(const AZ::u32 handIndex, AZ::RPI::PoseData& outPoseData) const override;
+        AZ::RHI::ResultCode GetControllerPose(const AZ::u32 handIndex, AZ::RPI::PoseData& outPoseData) const override;
+        float GetControllerScale(const AZ::u32 handIndex) const override;
         bool ShouldRender() const override;
         AZ::Matrix4x4 CreateProjectionOffset(float angleLeft, float angleRight, 
                                              float angleBottom, float angleTop, 
-                                             float nearDist, float farDist) override;
+                                             float nearDist, float farDist, bool reverseDepth) override;
         AZ::RHI::XRRenderingInterface* GetRHIXRRenderingInterface() override;
+        float GetXButtonState() const override;
+        float GetYButtonState() const override;
+        float GetAButtonState() const override;
+        float GetBButtonState() const override;
+        float GetXJoyStickState(const AZ::u32 handIndex) const override;
+        float GetYJoyStickState(const AZ::u32 handIndex) const override;
+        float GetSqueezeState(const AZ::u32 handIndex) const override;
+        float GetTriggerState(const AZ::u32 handIndex) const override;
         ///////////////////////////////////////////////////////////////////
 
         ///////////////////////////////////////////////////////////////////

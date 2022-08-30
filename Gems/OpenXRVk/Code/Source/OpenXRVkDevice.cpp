@@ -168,7 +168,7 @@ namespace OpenXRVk
         }
     }
 
-    bool Device::AcquireSwapChainImageInternal(AZ::u32 viewIndex, XR::SwapChain* baseSwapChain)
+    bool Device::AcquireSwapChainImageInternal(const AZ::u32 viewIndex, XR::SwapChain* baseSwapChain)
     {
         SwapChain* swapChain = static_cast<SwapChain*>(baseSwapChain);
         XR::SwapChain::View* baseSwapChainView = baseSwapChain->GetView(viewIndex);
@@ -243,35 +243,35 @@ namespace OpenXRVk
         return m_context;
     }
 
-    AZ::RPI::FovData Device::GetViewFov(AZ::u32 viewIndex) const
+    AZ::RHI::ResultCode Device::GetViewFov(const AZ::u32 viewIndex, AZ::RPI::FovData& outFovData) const
     {
-        AZ::RPI::FovData viewFov;
         if(viewIndex < m_projectionLayerViews.size())
         { 
-            viewFov.m_angleLeft = m_projectionLayerViews[viewIndex].fov.angleLeft;
-            viewFov.m_angleRight = m_projectionLayerViews[viewIndex].fov.angleRight;
-            viewFov.m_angleUp = m_projectionLayerViews[viewIndex].fov.angleUp;
-            viewFov.m_angleDown = m_projectionLayerViews[viewIndex].fov.angleDown;     
+            outFovData.m_angleLeft = m_projectionLayerViews[viewIndex].fov.angleLeft;
+            outFovData.m_angleRight = m_projectionLayerViews[viewIndex].fov.angleRight;
+            outFovData.m_angleUp = m_projectionLayerViews[viewIndex].fov.angleUp;
+            outFovData.m_angleDown = m_projectionLayerViews[viewIndex].fov.angleDown;
+            return AZ::RHI::ResultCode::Success;
         }
-        return viewFov;
+        return AZ::RHI::ResultCode::Fail;
     }
 
-    AZ::RPI::PoseData Device::GetViewPose(AZ::u32 viewIndex) const
-    {
-        AZ::RPI::PoseData viewPose;
+    AZ::RHI::ResultCode Device::GetViewPose(const AZ::u32 viewIndex, AZ::RPI::PoseData& outPoseData) const
+    { 
         if (viewIndex < m_projectionLayerViews.size())
         {
             const XrQuaternionf& orientation = m_projectionLayerViews[viewIndex].pose.orientation;
             const XrVector3f& position = m_projectionLayerViews[viewIndex].pose.position;
-            viewPose.orientation = AZ::Quaternion(orientation.x,
-                                                  orientation.y, 
-                                                  orientation.z, 
-                                                  orientation.w);
-            viewPose.position = AZ::Vector3(position.x, 
-                                            position.y, 
-                                            position.z);
-        }        
-        return viewPose;
+            outPoseData.m_orientation.Set(orientation.x,
+                                          orientation.y, 
+                                          orientation.z, 
+                                          orientation.w);
+            outPoseData.m_position.Set(position.x,
+                                       position.y, 
+                                       position.z);
+            return AZ::RHI::ResultCode::Success;
+        }
+        return AZ::RHI::ResultCode::Fail;
     }
 
     XrTime Device::GetPredictedDisplayTime() const

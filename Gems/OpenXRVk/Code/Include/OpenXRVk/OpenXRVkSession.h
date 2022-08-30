@@ -49,9 +49,19 @@ namespace OpenXRVk
         bool IsExitRenderLoopRequested() const override;
         void PollEvents() override;
         void LocateControllerSpace(AZ::u32 handIndex) override;
-        AZ::RPI::PoseData GetControllerPose(AZ::u32 handIndex) const override;
-        AZ::RPI::PoseData GetViewFrontPose() const override;
+        AZ::RHI::ResultCode GetControllerPose(const AZ::u32 handIndex, AZ::RPI::PoseData& outPoseData) const override;
+        AZ::RHI::ResultCode GetControllerStagePose(const AZ::u32 handIndex, AZ::RPI::PoseData& outPoseData) const override;
+        AZ::RHI::ResultCode GetViewFrontPose(AZ::RPI::PoseData& outPoseData) const override;
+        AZ::RHI::ResultCode GetViewLocalPose(AZ::RPI::PoseData& outPoseData) const override;
         float GetControllerScale(AZ::u32 handIndex) const override;
+        float GetXButtonState() const override;
+        float GetYButtonState() const override;
+        float GetAButtonState() const override;
+        float GetBButtonState() const override;
+        float GetXJoyStickState(const AZ::u32 handIndex) const override;
+        float GetYJoyStickState(const AZ::u32 handIndex) const override;
+        float GetSqueezeState(const AZ::u32 handIndex) const override;
+        float GetTriggerState(const AZ::u32 handIndex) const override;
         //////////////////////////////////////////////////////////////////////////
 
     private:

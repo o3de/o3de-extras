@@ -102,7 +102,7 @@ namespace XR
         return AZ::RHI::ResultCode::Fail;
     }
 
-    AZ::u32 System::GetSwapChainWidth(AZ::u32 viewIndex) const
+    AZ::u32 System::GetSwapChainWidth(const AZ::u32 viewIndex) const
     {
         AZ_Assert(m_swapChain, "SwapChain is null");
         if (m_swapChain)
@@ -112,7 +112,7 @@ namespace XR
         return 0;
     }
 
-    AZ::u32 System::GetSwapChainHeight(AZ::u32 viewIndex) const
+    AZ::u32 System::GetSwapChainHeight(const AZ::u32 viewIndex) const
     {
         AZ_Assert(m_swapChain, "SwapChain is null");
         if (m_swapChain)
@@ -122,7 +122,7 @@ namespace XR
         return 0;
     }
 
-    AZ::RHI::Format System::GetSwapChainFormat(AZ::u32 viewIndex) const
+    AZ::RHI::Format System::GetSwapChainFormat(const AZ::u32 viewIndex) const
     {
         AZ_Assert(m_swapChain, "SwapChain is null");
         if (m_swapChain)
@@ -158,7 +158,7 @@ namespace XR
         }
     }
 
-    void System::AcquireSwapChainImage(AZ::u32 viewIndex)
+    void System::AcquireSwapChainImage(const AZ::u32 viewIndex)
     {
         if (m_isInFrame && m_device->ShouldRender())
         {
@@ -171,7 +171,7 @@ namespace XR
         return m_swapChain->GetNumViews();
     }
 
-    AZ::u32 System::GetCurrentImageIndex(AZ::u32 viewIndex) const
+    AZ::u32 System::GetCurrentImageIndex(const AZ::u32 viewIndex) const
     {
         SwapChain::View* viewSwapchain = m_swapChain->GetView(viewIndex);
         return viewSwapchain->m_activeImageIndex;
@@ -186,26 +186,53 @@ namespace XR
         return false;
     }
 
-    AZ::RPI::FovData System::GetViewFov(AZ::u32 viewIndex) const
+    AZ::RHI::ResultCode System::GetViewFov(const AZ::u32 viewIndex, AZ::RPI::FovData& outFovData) const
     {
-        return m_device->GetViewFov(viewIndex);
+        return m_device->GetViewFov(viewIndex, outFovData);
     }
 
-    AZ::RPI::PoseData System::GetViewPose(AZ::u32 viewIndex) const
+    AZ::RHI::ResultCode System::GetViewPose(const AZ::u32 viewIndex, AZ::RPI::PoseData& outPoseData) const
     {
-        return m_device->GetViewPose(viewIndex);
+        return m_device->GetViewPose(viewIndex, outPoseData);
     }
 
-    AZ::RPI::PoseData System::GetControllerPose(AZ::u32 handIndex) const
+    AZ::RHI::ResultCode System::GetControllerPose(const AZ::u32 handIndex, AZ::RPI::PoseData& outPoseData) const
     {
         if (m_session->IsSessionRunning())
         {
-            return m_session->GetControllerPose(handIndex);
+            return m_session->GetControllerPose(handIndex, outPoseData);
         }
-        return AZ::RPI::PoseData();
+        return AZ::RHI::ResultCode::Fail;
     }
 
-    float System::GetControllerScale(AZ::u32 handIndex) const
+    AZ::RHI::ResultCode System::GetControllerStagePose(const AZ::u32 handIndex, AZ::RPI::PoseData& outPoseData) const
+    {
+        if (m_session->IsSessionRunning())
+        {
+            return m_session->GetControllerStagePose(handIndex, outPoseData);
+        }
+        return AZ::RHI::ResultCode::Fail;
+    }
+
+    AZ::RHI::ResultCode System::GetViewFrontPose(AZ::RPI::PoseData& outPoseData) const
+    {
+        if (m_session->IsSessionRunning())
+        {
+            return m_session->GetViewFrontPose(outPoseData);
+        }
+        return AZ::RHI::ResultCode::Fail;
+    }
+
+    AZ::RHI::ResultCode System::GetViewLocalPose(AZ::RPI::PoseData& outPoseData) const
+    {
+        if (m_session->IsSessionRunning())
+        {
+            return m_session->GetViewLocalPose(outPoseData);
+        }
+        return AZ::RHI::ResultCode::Fail;
+    }
+
+    float System::GetControllerScale(const AZ::u32 handIndex) const
     {
         if (m_session->IsSessionRunning())
         {
@@ -214,20 +241,83 @@ namespace XR
         return 1.0f;
     }
 
-    AZ::RPI::PoseData System::GetViewFrontPose() const
+    float System::GetSqueezeState(const AZ::u32 handIndex) const
     {
         if (m_session->IsSessionRunning())
         {
-            return m_session->GetViewFrontPose();
+            return m_session->GetSqueezeState(handIndex);
         }
-        return AZ::RPI::PoseData();
+        return 0.0f;
+    }
+
+    float System::GetTriggerState(const AZ::u32 handIndex) const
+    {
+        if (m_session->IsSessionRunning())
+        {
+            return m_session->GetTriggerState(handIndex);
+        }
+        return 0.0f;
+    }
+
+    float System::GetXButtonState() const
+    {
+        if (m_session->IsSessionRunning())
+        {
+            return m_session->GetXButtonState();
+        }
+        return 0.0f;
+    }
+
+    float System::GetYButtonState() const
+    {
+        if (m_session->IsSessionRunning())
+        {
+            return m_session->GetYButtonState();
+        }
+        return 0.0f;
+    }
+
+    float System::GetAButtonState() const
+    {
+        if (m_session->IsSessionRunning())
+        {
+            return m_session->GetAButtonState();
+        }
+        return 0.0f;
+    }
+
+    float System::GetBButtonState() const
+    {
+        if (m_session->IsSessionRunning())
+        {
+            return m_session->GetBButtonState();
+        }
+        return 0.0f;
+    }
+
+    float System::GetXJoyStickState(const AZ::u32 handIndex) const
+    {
+        if (m_session->IsSessionRunning())
+        {
+            return m_session->GetXJoyStickState(handIndex);
+        }
+        return 0.0f;
+    }
+
+    float System::GetYJoyStickState(const AZ::u32 handIndex) const
+    {
+        if (m_session->IsSessionRunning())
+        {
+            return m_session->GetYJoyStickState(handIndex);
+        }
+        return 0.0f;
     }
 
     AZ::Matrix4x4 System::CreateProjectionOffset(float angleLeft, float angleRight, 
                                                  float angleBottom, float angleTop, 
-                                                 float nearDist, float farDist)
+                                                 float nearDist, float farDist, bool reverseDepth)
     {
-        return XR::CreateProjectionOffset(angleLeft, angleRight, angleBottom, angleTop, nearDist, farDist);
+        return XR::CreateProjectionOffset(angleLeft, angleRight, angleBottom, angleTop, nearDist, farDist, reverseDepth);
     }
 
     AZ::RHI::XRRenderingInterface* System::GetRHIXRRenderingInterface()
