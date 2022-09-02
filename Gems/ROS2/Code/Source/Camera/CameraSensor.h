@@ -25,16 +25,20 @@ namespace ROS2
         //! @param height - camera image height in pixels
         CameraSensorDescription(const AZStd::string& cameraName, float verticalFov, int width, int height);
 
-        const float verticalFieldOfViewDeg; //!< camera vertical field of view
-        const int width; //!< camera image width in pixels
-        const int height; //!< camera image height in pixels
-        const AZStd::string cameraName; //!< camera name to differentiate cameras in a multi-camera setup
+        const float m_verticalFieldOfViewDeg; //!< camera vertical field of view
+        const int m_width; //!< camera image width in pixels
+        const int m_height; //!< camera image height in pixels
+        const AZStd::string m_cameraName; //!< camera name to differentiate cameras in a multi-camera setup
 
-        const float aspectRatio; //!< camera image aspect ratio; equal to (width / height)
-        const AZ::Matrix4x4 viewToClipMatrix; //!< camera view to clip space transform matrix; derived from other parameters
+        const float m_aspectRatio; //!< camera image aspect ratio; equal to (width / height)
+        const AZ::Matrix4x4 m_viewToClipMatrix; //!< camera view to clip space transform matrix; derived from other parameters
+        const std::array<double, 9> m_cameraIntrinsics; //!< camera intrinsics; derived from other parameters
 
     private:
         AZ::Matrix4x4 MakeViewToClipMatrix() const;
+
+        std::array<double, 9> MakeCameraIntrinsics() const;
+
         void validateParameters() const;
     };
 
@@ -57,7 +61,11 @@ namespace ROS2
         void RequestFrame(
             const AZ::Transform& cameraPose, std::function<void(const AZ::RPI::AttachmentReadback::ReadbackResult& result)> callback);
 
+        //! Function to get camera sensor description
+        [[nodiscard]] const CameraSensorDescription& GetCameraSensorDescription() const;
+
     private:
+        CameraSensorDescription m_cameraSensorDescription;
         AZStd::vector<AZStd::string> m_passHierarchy;
         AZ::RPI::RenderPipelinePtr m_pipeline;
         AZ::RPI::ViewPtr m_view;

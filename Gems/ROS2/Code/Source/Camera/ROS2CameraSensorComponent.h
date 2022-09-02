@@ -8,6 +8,7 @@
 #pragma once
 
 #include <rclcpp/publisher.hpp>
+#include <sensor_msgs/msg/camera_info.hpp>
 #include <sensor_msgs/msg/image.hpp>
 
 #include "Sensor/ROS2SensorComponent.h"
@@ -45,6 +46,7 @@ namespace ROS2
         void FrequencyTick() override;
 
         std::shared_ptr<rclcpp::Publisher<sensor_msgs::msg::Image>> m_imagePublisher;
+        std::shared_ptr<rclcpp::Publisher<sensor_msgs::msg::CameraInfo>> m_cameraInfoPublisher;
         std::optional<CameraSensor> m_cameraSensor;
     };
 } // namespace ROS2
