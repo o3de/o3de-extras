@@ -43,7 +43,7 @@ namespace OpenXRVk
         void LocateVisualizedSpace(XrTime predictedDisplayTime, XrSpace space, XrSpace baseSpace, OpenXRVk::SpaceType visualizedSpaceType);
 
         //! Return Pose data for a controller attached to a view index
-        AZ::RHI::ResultCode GetControllerPose(const AZ::u32 handIndex, AZ::RPI::PoseData& outPoseData) const;
+        AZ::RHI::ResultCode GetControllerPose(AZ::u32 handIndex, AZ::RPI::PoseData& outPoseData) const;
 
         //! Return scale for a controller attached to a view index
         float GetControllerScale(AZ::u32 viewIndex) const;
@@ -76,16 +76,16 @@ namespace OpenXRVk
         float GetBButtonState() const;
 
         //! Get the joystick state for x-axis
-        float GetXJoyStickState(const AZ::u32 handIndex) const;
+        float GetXJoyStickState(AZ::u32 handIndex) const;
 
         //! Get the joystick state for y-axis
-        float GetYJoyStickState(const AZ::u32 handIndex) const;
+        float GetYJoyStickState(AZ::u32 handIndex) const;
 
         //! Get the Squeeze action
-        float GetSqueezeState(const AZ::u32 handIndex) const;
+        float GetSqueezeState(AZ::u32 handIndex) const;
 
         //! Get the Squeeze action
-        float GetTriggerState(const AZ::u32 handIndex) const;
+        float GetTriggerState(AZ::u32 handIndex) const;
 
     private:
 

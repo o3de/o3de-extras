@@ -73,10 +73,10 @@ namespace XR
         virtual void LocateControllerSpace(AZ::u32 handIndex) = 0;
 
         //! Api to retrieve the controller space data
-        virtual AZ::RHI::ResultCode GetControllerPose(const AZ::u32 handIndex, AZ::RPI::PoseData& outPoseData) const = 0;
+        virtual AZ::RHI::ResultCode GetControllerPose(AZ::u32 handIndex, AZ::RPI::PoseData& outPoseData) const = 0;
 
         //! Api to retrieve the controller space data associated with local view translated and rotated by 60 deg left or right based on handIndex
-        virtual AZ::RHI::ResultCode GetControllerStagePose(const AZ::u32 handIndex, AZ::RPI::PoseData& outPoseData) const = 0;
+        virtual AZ::RHI::ResultCode GetControllerStagePose(AZ::u32 handIndex, AZ::RPI::PoseData& outPoseData) const = 0;
 
         //! Api to retrieve the controller scale data
         virtual float GetControllerScale(AZ::u32 handIndex) const = 0;
@@ -100,16 +100,16 @@ namespace XR
         virtual float GetBButtonState() const = 0;
 
         //! Api to retrieve the joystick controller state related to x-axis
-        virtual float GetXJoyStickState(const AZ::u32 handIndex) const = 0;
+        virtual float GetXJoyStickState(AZ::u32 handIndex) const = 0;
 
         //! Api to retrieve the joystick controller state related to y-axis
-        virtual float GetYJoyStickState(const AZ::u32 handIndex) const = 0;
+        virtual float GetYJoyStickState(AZ::u32 handIndex) const = 0;
 
         //! Api to retrieve the controller Y button state
-        virtual float GetSqueezeState(const AZ::u32 handIndex) const = 0;
+        virtual float GetSqueezeState(AZ::u32 handIndex) const = 0;
 
         //! Api to retrieve the controller Y button state
-        virtual float GetTriggerState(const AZ::u32 handIndex) const = 0;
+        virtual float GetTriggerState(AZ::u32 handIndex) const = 0;
 
     private:
 

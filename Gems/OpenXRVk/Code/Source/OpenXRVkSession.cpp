@@ -271,13 +271,13 @@ namespace OpenXRVk
         xrInput->LocateControllerSpace(device->GetPredictedDisplayTime(), space->GetXrSpace(OpenXRVk::SpaceType::View), handIndex);
     }
 
-    AZ::RHI::ResultCode Session::GetControllerPose(const AZ::u32 handIndex, AZ::RPI::PoseData& outPoseData) const
+    AZ::RHI::ResultCode Session::GetControllerPose(AZ::u32 handIndex, AZ::RPI::PoseData& outPoseData) const
     {
         Input* xrInput = static_cast<Input*>(GetInput());
         return xrInput->GetControllerPose(handIndex, outPoseData);
     }
     
-    AZ::RHI::ResultCode Session::GetControllerStagePose(const AZ::u32 handIndex, AZ::RPI::PoseData& outPoseData) const
+    AZ::RHI::ResultCode Session::GetControllerStagePose(AZ::u32 handIndex, AZ::RPI::PoseData& outPoseData) const
     {
         Input* xrInput = static_cast<Input*>(GetInput());
         return handIndex == 0 ? xrInput->GetVisualizedSpacePose(OpenXRVk::SpaceType::StageLeft, outPoseData) :
@@ -296,19 +296,19 @@ namespace OpenXRVk
         return xrInput->GetVisualizedSpacePose(OpenXRVk::SpaceType::Local, outPoseData);
     }
 
-    float Session::GetControllerScale(const AZ::u32 handIndex) const
+    float Session::GetControllerScale(AZ::u32 handIndex) const
     {
         Input* xrInput = static_cast<Input*>(GetInput());
         return xrInput->GetControllerScale(handIndex);
     }
 
-    float Session::GetSqueezeState(const AZ::u32 handIndex) const
+    float Session::GetSqueezeState(AZ::u32 handIndex) const
     {
         Input* xrInput = static_cast<Input*>(GetInput());
         return xrInput->GetSqueezeState(handIndex);
     }
 
-    float Session::GetTriggerState(const AZ::u32 handIndex) const
+    float Session::GetTriggerState(AZ::u32 handIndex) const
     {
         Input* xrInput = static_cast<Input*>(GetInput());
         return xrInput->GetTriggerState(handIndex);
@@ -338,13 +338,13 @@ namespace OpenXRVk
         return xrInput->GetBButtonState();
     }
 
-    float Session::GetXJoyStickState(const AZ::u32 handIndex) const
+    float Session::GetXJoyStickState(AZ::u32 handIndex) const
     {
         Input* xrInput = static_cast<Input*>(GetInput());
         return xrInput->GetXJoyStickState(handIndex);
     }
     
-    float Session::GetYJoyStickState(const AZ::u32 handIndex) const
+    float Session::GetYJoyStickState(AZ::u32 handIndex) const
     {
         Input* xrInput = static_cast<Input*>(GetInput());
         return xrInput->GetYJoyStickState(handIndex);

@@ -69,13 +69,13 @@ namespace OpenXRVk
         CreateAction(m_joyStickYAction.m_actionHandle, XR_ACTION_TYPE_FLOAT_INPUT, "joystick_y", "JoyStick Y Object",
             aznumeric_cast<uint32_t>(m_handSubactionPath.size()), m_handSubactionPath.data());
 
-        AZStd::array<XrPath, static_cast<uint32_t>(XR::Side::Count)> squeezeValuePath;
-        AZStd::array<XrPath, static_cast<uint32_t>(XR::Side::Count)> triggerValuePath;
-        AZStd::array<XrPath, static_cast<uint32_t>(XR::Side::Count)> posePath;
-        AZStd::array<XrPath, static_cast<uint32_t>(XR::Side::Count)> hapticPath;
-        AZStd::array<XrPath, static_cast<uint32_t>(XR::Side::Count)> menuClickPath;
-        AZStd::array<XrPath, static_cast<uint32_t>(XR::Side::Count)> joyStickXPath;
-        AZStd::array<XrPath, static_cast<uint32_t>(XR::Side::Count)> joyStickYPath;
+        AZStd::array<XrPath, AZ::RPI::XRNumControllers> squeezeValuePath;
+        AZStd::array<XrPath, AZ::RPI::XRNumControllers> triggerValuePath;
+        AZStd::array<XrPath, AZ::RPI::XRNumControllers> posePath;
+        AZStd::array<XrPath, AZ::RPI::XRNumControllers> hapticPath;
+        AZStd::array<XrPath, AZ::RPI::XRNumControllers> menuClickPath;
+        AZStd::array<XrPath, AZ::RPI::XRNumControllers> joyStickXPath;
+        AZStd::array<XrPath, AZ::RPI::XRNumControllers> joyStickYPath;
         XrPath xButtonValuePath;
         XrPath yButtonValuePath;
         XrPath aButtonValuePath;
@@ -328,7 +328,7 @@ namespace OpenXRVk
         }
     }
 
-    AZ::RHI::ResultCode Input::GetControllerPose(const AZ::u32 handIndex, AZ::RPI::PoseData& outPoseData) const
+    AZ::RHI::ResultCode Input::GetControllerPose(AZ::u32 handIndex, AZ::RPI::PoseData& outPoseData) const
     {
         if (handIndex < m_handSpaceLocation.size())
         {
@@ -400,22 +400,22 @@ namespace OpenXRVk
         return m_bButtonAction.m_actionState;
     }
 
-    float Input::GetXJoyStickState(const AZ::u32 handIndex) const
+    float Input::GetXJoyStickState(AZ::u32 handIndex) const
     {
         return m_joyStickXAction.m_actionState[handIndex];
     }
 
-    float Input::GetYJoyStickState(const AZ::u32 handIndex) const
+    float Input::GetYJoyStickState(AZ::u32 handIndex) const
     {
         return m_joyStickYAction.m_actionState[handIndex];
     }
 
-    float Input::GetSqueezeState(const AZ::u32 handIndex) const
+    float Input::GetSqueezeState(AZ::u32 handIndex) const
     {
         return m_squeezeAction.m_actionState[handIndex];
     }
 
-    float Input::GetTriggerState(const AZ::u32 handIndex) const
+    float Input::GetTriggerState(AZ::u32 handIndex) const
     {
         return m_triggerAction.m_actionState[handIndex];
     }

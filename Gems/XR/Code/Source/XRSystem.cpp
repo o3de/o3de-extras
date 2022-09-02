@@ -186,17 +186,17 @@ namespace XR
         return false;
     }
 
-    AZ::RHI::ResultCode System::GetViewFov(const AZ::u32 viewIndex, AZ::RPI::FovData& outFovData) const
+    AZ::RHI::ResultCode System::GetViewFov(AZ::u32 viewIndex, AZ::RPI::FovData& outFovData) const
     {
         return m_device->GetViewFov(viewIndex, outFovData);
     }
 
-    AZ::RHI::ResultCode System::GetViewPose(const AZ::u32 viewIndex, AZ::RPI::PoseData& outPoseData) const
+    AZ::RHI::ResultCode System::GetViewPose(AZ::u32 viewIndex, AZ::RPI::PoseData& outPoseData) const
     {
         return m_device->GetViewPose(viewIndex, outPoseData);
     }
 
-    AZ::RHI::ResultCode System::GetControllerPose(const AZ::u32 handIndex, AZ::RPI::PoseData& outPoseData) const
+    AZ::RHI::ResultCode System::GetControllerPose(AZ::u32 handIndex, AZ::RPI::PoseData& outPoseData) const
     {
         if (m_session->IsSessionRunning())
         {
@@ -205,7 +205,7 @@ namespace XR
         return AZ::RHI::ResultCode::Fail;
     }
 
-    AZ::RHI::ResultCode System::GetControllerStagePose(const AZ::u32 handIndex, AZ::RPI::PoseData& outPoseData) const
+    AZ::RHI::ResultCode System::GetControllerStagePose(AZ::u32 handIndex, AZ::RPI::PoseData& outPoseData) const
     {
         if (m_session->IsSessionRunning())
         {
@@ -232,7 +232,7 @@ namespace XR
         return AZ::RHI::ResultCode::Fail;
     }
 
-    float System::GetControllerScale(const AZ::u32 handIndex) const
+    float System::GetControllerScale(AZ::u32 handIndex) const
     {
         if (m_session->IsSessionRunning())
         {
@@ -241,7 +241,7 @@ namespace XR
         return 1.0f;
     }
 
-    float System::GetSqueezeState(const AZ::u32 handIndex) const
+    float System::GetSqueezeState(AZ::u32 handIndex) const
     {
         if (m_session->IsSessionRunning())
         {
@@ -250,7 +250,7 @@ namespace XR
         return 0.0f;
     }
 
-    float System::GetTriggerState(const AZ::u32 handIndex) const
+    float System::GetTriggerState(AZ::u32 handIndex) const
     {
         if (m_session->IsSessionRunning())
         {
@@ -295,7 +295,7 @@ namespace XR
         return 0.0f;
     }
 
-    float System::GetXJoyStickState(const AZ::u32 handIndex) const
+    float System::GetXJoyStickState(AZ::u32 handIndex) const
     {
         if (m_session->IsSessionRunning())
         {
@@ -304,7 +304,7 @@ namespace XR
         return 0.0f;
     }
 
-    float System::GetYJoyStickState(const AZ::u32 handIndex) const
+    float System::GetYJoyStickState(AZ::u32 handIndex) const
     {
         if (m_session->IsSessionRunning())
         {
