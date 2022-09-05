@@ -1,0 +1,20 @@
+{
+    "gem_name": "ONNX",
+    "display_name": "ONNX",
+    "license": "Apache-2.0 Or MIT",
+    "license_url": "https://github.com/o3de/o3de/blob/development/LICENSE.txt",
+    "origin": "Open 3D Engine - o3de.org",
+    "type": "Code",
+    "summary": "This is an experimental gem implementing ONNX Runtime in O3DE and demoing it using inference examples from the MNIST dataset with an Editor dashboard displaying inference statistics.",
+    "canonical_tags": [
+        "Gem"
+    ],
+    "user_tags": [
+        "Simulation"
+    ],
+    "icon_path": "preview.png",
+    "requirements": "",
+    "dependencies": [
+        "ImGui"
+    ]
+}
