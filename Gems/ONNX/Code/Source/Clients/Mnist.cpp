@@ -81,8 +81,6 @@ namespace Mnist
         AZStd::vector<float> image(mnist.m_imageSize);
         input.push_back(image);
         mnist.m_input = input;
-        //AZStd::vector<float> output(10);
-        //mnist.m_output = output;
 
         Mnist::InitSettings modelInitSettings;
 

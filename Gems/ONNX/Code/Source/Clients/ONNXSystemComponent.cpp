@@ -50,7 +50,7 @@ namespace ONNX
 
             if (AZ::EditContext* ec = serialize->GetEditContext())
             {
-                ec->Class<ONNXSystemComponent>("ONNX", "[Description of functionality provided by this System Component]")
+                ec->Class<ONNXSystemComponent>("ONNX", "Provides ONNX Runtime functionality in O3DE")
                     ->ClassElement(AZ::Edit::ClassElements::EditorData, "")
                     ->Attribute(AZ::Edit::Attributes::AppearsInAddComponentMenu, AZ_CRC("System"))
                     ->Attribute(AZ::Edit::Attributes::AutoExpand, true);
@@ -126,17 +126,10 @@ namespace ONNX
     void ONNXSystemComponent::Activate()
     {
         ONNXRequestBus::Handler::BusConnect();
-        AZ::TickBus::Handler::BusConnect();
     }
 
     void ONNXSystemComponent::Deactivate()
     {
         AZ::TickBus::Handler::BusDisconnect();
-        ONNXRequestBus::Handler::BusDisconnect();
     }
-
-    void ONNXSystemComponent::OnTick([[maybe_unused]] float deltaTime, [[maybe_unused]] AZ::ScriptTimePoint time)
-    {
-    }
-
 } // namespace ONNX

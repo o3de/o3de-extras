@@ -22,7 +22,6 @@ namespace ONNX
     class ONNXSystemComponent
         : public AZ::Component
         , protected ONNXRequestBus::Handler
-        , public AZ::TickBus::Handler
         , public ImGui::ImGuiUpdateListenerBus::Handler
     {
     public:
@@ -60,11 +59,6 @@ namespace ONNX
         void Init() override;
         void Activate() override;
         void Deactivate() override;
-        ////////////////////////////////////////////////////////////////////////
-
-        ////////////////////////////////////////////////////////////////////////
-        // AZTickBus interface implementation
-        void OnTick(float deltaTime, AZ::ScriptTimePoint time) override;
         ////////////////////////////////////////////////////////////////////////
     };
 

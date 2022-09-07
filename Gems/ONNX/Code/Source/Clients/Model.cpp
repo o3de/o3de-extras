@@ -145,7 +145,7 @@ namespace ONNX
         runOptions.SetRunLogVerbosityLevel(ORT_LOGGING_LEVEL_VERBOSE); // Gives more useful logging info if m_session.Run() fails.
         m_session.Run(runOptions, m_inputNames.data(), inputTensors.data(), m_inputCount, m_outputNames.data(), outputTensors.data(), m_outputCount);
 
-        float delta = 1000 * m_timer.GetDeltaTimeInSeconds(); // Finish timing of inference and get time in milliseconds.
+        float delta = 1000.f * m_timer.GetDeltaTimeInSeconds(); // Finish timing of inference and get time in milliseconds.
         m_delta = delta;
 
         ONNXRequestBus::Broadcast(&::ONNX::ONNXRequestBus::Events::AddTimingSample, m_modelName.c_str(), m_delta, m_modelColor);
