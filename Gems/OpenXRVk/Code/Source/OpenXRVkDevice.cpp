@@ -168,7 +168,7 @@ namespace OpenXRVk
         }
     }
 
-    bool Device::AcquireSwapChainImageInternal(const AZ::u32 viewIndex, XR::SwapChain* baseSwapChain)
+    bool Device::AcquireSwapChainImageInternal(AZ::u32 viewIndex, XR::SwapChain* baseSwapChain)
     {
         SwapChain* swapChain = static_cast<SwapChain*>(baseSwapChain);
         XR::SwapChain::View* baseSwapChainView = baseSwapChain->GetView(viewIndex);
@@ -243,7 +243,7 @@ namespace OpenXRVk
         return m_context;
     }
 
-    AZ::RHI::ResultCode Device::GetViewFov(const AZ::u32 viewIndex, AZ::RPI::FovData& outFovData) const
+    AZ::RHI::ResultCode Device::GetViewFov(AZ::u32 viewIndex, AZ::RPI::FovData& outFovData) const
     {
         if(viewIndex < m_projectionLayerViews.size())
         { 
@@ -256,7 +256,7 @@ namespace OpenXRVk
         return AZ::RHI::ResultCode::Fail;
     }
 
-    AZ::RHI::ResultCode Device::GetViewPose(const AZ::u32 viewIndex, AZ::RPI::PoseData& outPoseData) const
+    AZ::RHI::ResultCode Device::GetViewPose(AZ::u32 viewIndex, AZ::RPI::PoseData& outPoseData) const
     { 
         if (viewIndex < m_projectionLayerViews.size())
         {

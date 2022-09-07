@@ -43,10 +43,10 @@ namespace XR
         virtual bool ShouldRender() const = 0;
         
         //! Returns fov data for a give view index.
-        virtual AZ::RHI::ResultCode GetViewFov(const AZ::u32 viewIndex, AZ::RPI::FovData& outFovData) const = 0;
+        virtual AZ::RHI::ResultCode GetViewFov(AZ::u32 viewIndex, AZ::RPI::FovData& outFovData) const = 0;
 
         //! Returns pose data for a give view index.
-        virtual AZ::RHI::ResultCode GetViewPose(const AZ::u32 viewIndex, AZ::RPI::PoseData& outPoseData) const = 0;
+        virtual AZ::RHI::ResultCode GetViewPose(AZ::u32 viewIndex, AZ::RPI::PoseData& outPoseData) const = 0;
 
         //! Init the XR device.
         AZ::RHI::ResultCode Init(Descriptor descriptor);
@@ -58,7 +58,7 @@ namespace XR
         void EndFrame(Ptr<SwapChain>);
 
         //! Signal the back-end to acquire swapchain images.
-        bool AcquireSwapChainImage(const AZ::u32 viewIndex, SwapChain* swapChain);
+        bool AcquireSwapChainImage(AZ::u32 viewIndex, SwapChain* swapChain);
 
         //! Register XR session with the device.
         void RegisterSession(Ptr<Session> session);
@@ -85,7 +85,7 @@ namespace XR
         virtual void EndFrameInternal(XR::Ptr<XR::SwapChain>) = 0;
 
         //! Called when the device is beginning a frame for processing.
-        virtual bool AcquireSwapChainImageInternal(const AZ::u32 viewIndex, XR::SwapChain* baseSwapChain) = 0;
+        virtual bool AcquireSwapChainImageInternal(AZ::u32 viewIndex, XR::SwapChain* baseSwapChain) = 0;
 
     private:
 

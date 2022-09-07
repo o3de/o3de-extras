@@ -37,7 +37,7 @@ namespace XR
         EndFrameInternal(swapChain);
     }
 
-    bool Device::AcquireSwapChainImage(const AZ::u32 viewIndex, XR::SwapChain* baseSwapChain)
+    bool Device::AcquireSwapChainImage(AZ::u32 viewIndex, XR::SwapChain* baseSwapChain)
     {
         return AcquireSwapChainImageInternal(viewIndex, baseSwapChain);
     }

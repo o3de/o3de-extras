@@ -102,7 +102,7 @@ namespace XR
         return AZ::RHI::ResultCode::Fail;
     }
 
-    AZ::u32 System::GetSwapChainWidth(const AZ::u32 viewIndex) const
+    AZ::u32 System::GetSwapChainWidth(AZ::u32 viewIndex) const
     {
         AZ_Assert(m_swapChain, "SwapChain is null");
         if (m_swapChain)
@@ -112,7 +112,7 @@ namespace XR
         return 0;
     }
 
-    AZ::u32 System::GetSwapChainHeight(const AZ::u32 viewIndex) const
+    AZ::u32 System::GetSwapChainHeight(AZ::u32 viewIndex) const
     {
         AZ_Assert(m_swapChain, "SwapChain is null");
         if (m_swapChain)
@@ -122,7 +122,7 @@ namespace XR
         return 0;
     }
 
-    AZ::RHI::Format System::GetSwapChainFormat(const AZ::u32 viewIndex) const
+    AZ::RHI::Format System::GetSwapChainFormat(AZ::u32 viewIndex) const
     {
         AZ_Assert(m_swapChain, "SwapChain is null");
         if (m_swapChain)
@@ -158,7 +158,7 @@ namespace XR
         }
     }
 
-    void System::AcquireSwapChainImage(const AZ::u32 viewIndex)
+    void System::AcquireSwapChainImage(AZ::u32 viewIndex)
     {
         if (m_isInFrame && m_device->ShouldRender())
         {
@@ -171,7 +171,7 @@ namespace XR
         return m_swapChain->GetNumViews();
     }
 
-    AZ::u32 System::GetCurrentImageIndex(const AZ::u32 viewIndex) const
+    AZ::u32 System::GetCurrentImageIndex(AZ::u32 viewIndex) const
     {
         SwapChain::View* viewSwapchain = m_swapChain->GetView(viewIndex);
         return viewSwapchain->m_activeImageIndex;

@@ -68,9 +68,9 @@ namespace OpenXRVk
 
         // XR::SwapChain overrides...
         AZ::RHI::ResultCode GetSwapChainImage(AZ::RHI::XRSwapChainDescriptor* swapchainDescriptor) const override;
-        AZ::u32 GetSwapChainWidth(const AZ::u32 viewIndex) const override;
-        AZ::u32 GetSwapChainHeight(const AZ::u32 viewIndex) const override;
-        AZ::RHI::Format GetSwapChainFormat(const AZ::u32 viewIndex) const override;
+        AZ::u32 GetSwapChainWidth(AZ::u32 viewIndex) const override;
+        AZ::u32 GetSwapChainHeight(AZ::u32 viewIndex) const override;
+        AZ::RHI::Format GetSwapChainFormat(AZ::u32 viewIndex) const override;
 
         //! Get the view configurations supported by the drivers
         AZStd::vector<XrViewConfigurationView> GetViewConfigs() const;
