@@ -11,6 +11,7 @@
 #include <AzCore/std/smart_ptr/intrusive_ptr.h>
 #include <OpenXRVk_Platform.h>
 #include <OpenXRVk/OpenXRVkSpace.h>
+#include <OpenXRVk/OpenXRVkInput.h>
 #include <XR/XRSession.h>
 
 namespace OpenXRVk
@@ -68,7 +69,8 @@ namespace OpenXRVk
 
         void ShutdownInternal() override;
         void LogActionSourceName(XrAction action, const AZStd::string_view actionName) const;
-        
+        Input* GetNativeInput() const;
+
         XrSession m_session = XR_NULL_HANDLE;
         XrSessionState m_sessionState = XR_SESSION_STATE_UNKNOWN;
         XrEventDataBuffer m_eventDataBuffer;

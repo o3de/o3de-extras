@@ -47,7 +47,7 @@ namespace OpenXRVk
         ASSERT_IF_UNSUCCESSFUL(result);
         
         LogReferenceSpaces();
-        Input* xrVkInput = static_cast<Input*>(GetInput());
+        Input* xrVkInput = GetNativeInput();
         xrVkInput->InitializeActionSpace(m_session);
         xrVkInput->InitializeActionSets(m_session);
 
@@ -197,7 +197,7 @@ namespace OpenXRVk
                 {
                     if (GetDescriptor().m_validationMode == AZ::RHI::ValidationMode::Enabled)
                     {
-                        Input* xrVkInput = static_cast<Input*>(GetInput());
+                        Input* xrVkInput = GetNativeInput();
                         LogActionSourceName(xrVkInput->GetSqueezeAction(), "Squeeze");
                         LogActionSourceName(xrVkInput->GetQuitAction(), "Quit");
                         LogActionSourceName(xrVkInput->GetPoseAction(), "Pose");
@@ -265,7 +265,7 @@ namespace OpenXRVk
 
     void Session::LocateControllerSpace(AZ::u32 handIndex)
     {
-        Input* xrInput = static_cast<Input*>(GetInput());
+        Input* xrInput = GetNativeInput();
         Device* device = static_cast<Device*>(GetDescriptor().m_device.get());
         Space* space = static_cast<Space*>(GetSpace());
         xrInput->LocateControllerSpace(device->GetPredictedDisplayTime(), space->GetXrSpace(OpenXRVk::SpaceType::View), handIndex);
@@ -273,81 +273,69 @@ namespace OpenXRVk
 
     AZ::RHI::ResultCode Session::GetControllerPose(AZ::u32 handIndex, AZ::RPI::PoseData& outPoseData) const
     {
-        Input* xrInput = static_cast<Input*>(GetInput());
-        return xrInput->GetControllerPose(handIndex, outPoseData);
+        return GetNativeInput()->GetControllerPose(handIndex, outPoseData);
     }
     
     AZ::RHI::ResultCode Session::GetControllerStagePose(AZ::u32 handIndex, AZ::RPI::PoseData& outPoseData) const
     {
-        Input* xrInput = static_cast<Input*>(GetInput());
+        Input* xrInput = GetNativeInput();
         return handIndex == 0 ? xrInput->GetVisualizedSpacePose(OpenXRVk::SpaceType::StageLeft, outPoseData) :
             xrInput->GetVisualizedSpacePose(OpenXRVk::SpaceType::StageRight, outPoseData);
     }
 
     AZ::RHI::ResultCode Session::GetViewFrontPose(AZ::RPI::PoseData& outPoseData) const
     {
-        Input* xrInput = static_cast<Input*>(GetInput());
-        return xrInput->GetVisualizedSpacePose(OpenXRVk::SpaceType::ViewFront, outPoseData);
+        return GetNativeInput()->GetVisualizedSpacePose(OpenXRVk::SpaceType::ViewFront, outPoseData);
     }
 
     AZ::RHI::ResultCode Session::GetViewLocalPose(AZ::RPI::PoseData& outPoseData) const
     {
-        Input* xrInput = static_cast<Input*>(GetInput());
-        return xrInput->GetVisualizedSpacePose(OpenXRVk::SpaceType::Local, outPoseData);
+        return GetNativeInput()->GetVisualizedSpacePose(OpenXRVk::SpaceType::Local, outPoseData);
     }
 
     float Session::GetControllerScale(AZ::u32 handIndex) const
     {
-        Input* xrInput = static_cast<Input*>(GetInput());
-        return xrInput->GetControllerScale(handIndex);
+        return GetNativeInput()->GetControllerScale(handIndex);
     }
 
     float Session::GetSqueezeState(AZ::u32 handIndex) const
     {
-        Input* xrInput = static_cast<Input*>(GetInput());
-        return xrInput->GetSqueezeState(handIndex);
+        return GetNativeInput()->GetSqueezeState(handIndex);
     }
 
     float Session::GetTriggerState(AZ::u32 handIndex) const
     {
-        Input* xrInput = static_cast<Input*>(GetInput());
-        return xrInput->GetTriggerState(handIndex);
+        return GetNativeInput()->GetTriggerState(handIndex);
     }
 
     float Session::GetXButtonState() const
     {
-        Input* xrInput = static_cast<Input*>(GetInput());
-        return xrInput->GetXButtonState();
+        return GetNativeInput()->GetXButtonState();
     }
 
     float Session::GetYButtonState() const
     {
-        Input* xrInput = static_cast<Input*>(GetInput());
-        return xrInput->GetYButtonState();
+        return GetNativeInput()->GetYButtonState();
     }
 
     float Session::GetAButtonState() const
     {
-        Input* xrInput = static_cast<Input*>(GetInput());
-        return xrInput->GetAButtonState();
+        return GetNativeInput()->GetAButtonState();
     }
 
     float Session::GetBButtonState() const
     {
-        Input* xrInput = static_cast<Input*>(GetInput());
-        return xrInput->GetBButtonState();
+        return GetNativeInput()->GetBButtonState();
     }
 
     float Session::GetXJoyStickState(AZ::u32 handIndex) const
     {
-        Input* xrInput = static_cast<Input*>(GetInput());
-        return xrInput->GetXJoyStickState(handIndex);
+        return GetNativeInput()->GetXJoyStickState(handIndex);
     }
     
     float Session::GetYJoyStickState(AZ::u32 handIndex) const
     {
-        Input* xrInput = static_cast<Input*>(GetInput());
-        return xrInput->GetYJoyStickState(handIndex);
+        return GetNativeInput()->GetYJoyStickState(handIndex);
     }
 
     XrSession Session::GetXrSession() const
@@ -387,5 +375,10 @@ namespace OpenXRVk
         {
             xrDestroySession(m_session);
         }
+    }
+
+    Input* Session::GetNativeInput() const
+    {
+        return static_cast<Input*>(GetInput());
     }
 }
