@@ -54,17 +54,17 @@ namespace ONNX
         AZStd::vector<AZStd::vector<float>> m_outputs; //!< Outputs of latest inference (initialized by Load() - size and shape extracted from onnx model file).
 
     protected:
-        bool m_cudaEnable; // Determines if inferencing of the model instance will be run on gpu using CUDA (run on CPU by default).
+        bool m_cudaEnable = false; // Determines if inferencing of the model instance will be run on gpu using CUDA (run on CPU by default).
         AZStd::string m_modelName; // Used to create groupings for ImGui dashboard graphs in editor, idea is that the inference runtimes from the same model instance get displayed on the same graph.
-        AZ::Color m_modelColor; // Sets the color of the dashboard graph for runtime statistics of this model instance.
+        AZ::Color m_modelColor = AZ::Color::CreateFromRgba(229, 56, 59, 255); // Sets the color of the dashboard graph for runtime statistics of this model instance.
         AZ::Debug::Timer m_timer; // Timer instance that is used within Run() to calculate inference runtime, and obtain the value in m_delta.
         Ort::MemoryInfo m_memoryInfo{ nullptr }; // Created by Load() and holds information about the memory allocator used by the instance and the memory type. These are set to OrtDeviceAllocator and OrtMemTypeCpu for both CPU and GPU execution (contrary to how it may seem this is the correct MemType for CUDA as well).
         Ort::Session m_session{ nullptr }; // Created by Load(), and is unique to the model.onnx file used - created using the Ort::Env and SessionOptions which are used to specify CPU or CUDA execution.
         AZStd::vector<AZStd::vector<int64_t>> m_inputShapes; // A vector of the dimensions of input, eg vectors specifying dimension and magnitude of dimension such as { 1, 1, 28, 28 }.
-        size_t m_inputCount; // The number of inputs in the model.onnx file. Corresponds with the number of input names.
+        size_t m_inputCount = 0; // The number of inputs in the model.onnx file. Corresponds with the number of input names.
         AZStd::vector<const char*> m_inputNames; // A vector of the input names extracted from the model.onnx file.
         AZStd::vector<AZStd::vector<int64_t>> m_outputShapes; // A vector of the dimensions of output, eg vectors specifying dimension and magnitude of dimension such as { 1, 10 }.
-        size_t m_outputCount; // The number of outputs in the model.onnx file. Corresponds with the number of output names.
+        size_t m_outputCount = 0; // The number of outputs in the model.onnx file. Corresponds with the number of output names.
         AZStd::vector<const char*> m_outputNames; // A vector of the output names extracted from the model.onnx file.
     };
 } // namespace ONNX

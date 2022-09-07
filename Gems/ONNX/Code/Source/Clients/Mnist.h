@@ -19,17 +19,17 @@ namespace Mnist
     //! Only used by MnistExample().
     struct MnistReturnValues
     {
-        int64_t m_inference;
-        float m_runtime;
+        int64_t m_inference = 0;
+        float m_runtime = 0.0f;
     };
 
     //! Holds the data gathered from RunMnistSuite(), which tests the MNIST ONNX model against images from the MNIST dataset.
     struct InferenceData
     {
-        float m_totalRuntimeInMs;
-        float m_averageRuntimeInMs;
-        int m_totalNumberOfInferences;
-        int64_t m_numberOfCorrectInferences;
+        float m_totalRuntimeInMs = 0.0f;
+        float m_averageRuntimeInMs = 0.0f;
+        int m_totalNumberOfInferences = 0;
+        int64_t m_numberOfCorrectInferences = 0;
     };
 
     //! Extension of ONNX Model used for Mnist example.
@@ -53,9 +53,7 @@ namespace Mnist
         int m_imageSize = 784;
 
         AZStd::vector<AZStd::vector<float>> m_input; //!< This is the input that gets passed into Run(). A binary representation of the pixels in the image.
-        int64_t m_result{
-            0
-        }; //!< This will be the digit with the highest probability from the inference (what the model thinks the input number was).
+        int64_t m_result{ 0 }; //!< This will be the digit with the highest probability from the inference (what the model thinks the input number was).
 
     private:
         // Converts vector of output values into vector of probabilities.

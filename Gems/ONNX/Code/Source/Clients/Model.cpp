@@ -29,7 +29,7 @@ namespace ONNX
         // If no model name is provided, will default to the name of the onnx model file.
         if (initSettings.m_modelName.empty())
         {
-            AZ::StringFunc::Path::GetFileName(onnxModelPath.c_str(), m_modelName);
+            m_modelName = onnxModelPath.Filename().Stem().FixedMaxPathString();
         }
         else
         {
@@ -68,8 +68,8 @@ namespace ONNX
         m_inputCount = m_session.GetInputCount();
         for (size_t i = 0; i < m_inputCount; i++)
         {
-            const char* in_name = m_session.GetInputName(i, *m_allocator);
-            m_inputNames.push_back(in_name);
+            const char* inName = m_session.GetInputName(i, *m_allocator);
+            m_inputNames.push_back(inName);
 
             std::vector<int64_t> inputShape = m_session.GetInputTypeInfo(i).GetTensorTypeAndShapeInfo().GetShape();
             AZStd::vector<int64_t> azInputShape(inputShape.begin(), inputShape.end());
@@ -90,8 +90,8 @@ namespace ONNX
         AZStd::vector<AZStd::vector<float>> outputs(m_outputCount);
         for (size_t i = 0; i < m_outputCount; i++)
         {
-            const char* out_name = m_session.GetOutputName(i, *m_allocator);
-            m_outputNames.push_back(out_name);
+            const char* outName = m_session.GetOutputName(i, *m_allocator);
+            m_outputNames.push_back(outName);
 
             std::vector<int64_t> outputShape = m_session.GetOutputTypeInfo(0).GetTensorTypeAndShapeInfo().GetShape();
             AZStd::vector<int64_t> azOutputShape(outputShape.begin(), outputShape.end());
@@ -130,7 +130,7 @@ namespace ONNX
         {
             Ort::Value inputTensor =
                 Ort::Value::CreateTensor<float>(m_memoryInfo, inputs[i].data(), inputs[i].size(), m_inputShapes[i].data(), m_inputShapes[i].size());
-            inputTensors.push_back(std::move(inputTensor));
+            inputTensors.push_back(AZStd::move(inputTensor));
         }
 
         AZStd::vector<Ort::Value> outputTensors;
@@ -138,7 +138,7 @@ namespace ONNX
         {
             Ort::Value outputTensor =
                 Ort::Value::CreateTensor<float>(m_memoryInfo, m_outputs[i].data(), m_outputs[i].size(), m_outputShapes[i].data(), m_outputShapes[i].size());
-            outputTensors.push_back(std::move(outputTensor));
+            outputTensors.push_back(AZStd::move(outputTensor));
         }
 
         Ort::RunOptions runOptions;
