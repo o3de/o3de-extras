@@ -202,7 +202,7 @@ namespace XR
         {
             return m_session->GetControllerPose(handIndex, outPoseData);
         }
-        return AZ::RHI::ResultCode::Fail;
+        return AZ::RHI::ResultCode::NotReady;
     }
 
     AZ::RHI::ResultCode System::GetControllerStagePose(AZ::u32 handIndex, AZ::RPI::PoseData& outPoseData) const
@@ -211,7 +211,7 @@ namespace XR
         {
             return m_session->GetControllerStagePose(handIndex, outPoseData);
         }
-        return AZ::RHI::ResultCode::Fail;
+        return AZ::RHI::ResultCode::NotReady;
     }
 
     AZ::RHI::ResultCode System::GetViewFrontPose(AZ::RPI::PoseData& outPoseData) const
@@ -220,7 +220,7 @@ namespace XR
         {
             return m_session->GetViewFrontPose(outPoseData);
         }
-        return AZ::RHI::ResultCode::Fail;
+        return AZ::RHI::ResultCode::NotReady;
     }
 
     AZ::RHI::ResultCode System::GetViewLocalPose(AZ::RPI::PoseData& outPoseData) const
@@ -229,7 +229,7 @@ namespace XR
         {
             return m_session->GetViewLocalPose(outPoseData);
         }
-        return AZ::RHI::ResultCode::Fail;
+        return AZ::RHI::ResultCode::NotReady;
     }
 
     float System::GetControllerScale(AZ::u32 handIndex) const

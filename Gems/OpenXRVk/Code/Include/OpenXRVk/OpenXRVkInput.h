@@ -98,7 +98,7 @@ namespace OpenXRVk
         struct DualActionData
         {
             XrAction m_actionHandle{ XR_NULL_HANDLE };
-            AZStd::array<float, AZ::RPI::XRNumControllers> m_actionState = { { 0.0f, 0.0f } };
+            AZStd::array<float, AZ::RPI::XRMaxNumControllers> m_actionState = { { 0.0f, 0.0f } };
         };
 
         struct ControllerActionData
@@ -126,12 +126,12 @@ namespace OpenXRVk
         DualActionData m_squeezeAction{ XR_NULL_HANDLE, 0.0f };
         DualActionData m_triggerAction{ XR_NULL_HANDLE, 0.0f };
 
-        AZStd::array<XrPath, AZ::RPI::XRNumControllers> m_handSubactionPath;
-        AZStd::array<XrSpace, AZ::RPI::XRNumControllers> m_handSpace;
-        AZStd::array<float, AZ::RPI::XRNumControllers> m_handScale = { { 1.0f, 1.0f } };
-        AZStd::array<XrBool32, AZ::RPI::XRNumControllers> m_handActive;
+        AZStd::array<XrPath, AZ::RPI::XRMaxNumControllers> m_handSubactionPath;
+        AZStd::array<XrSpace, AZ::RPI::XRMaxNumControllers> m_handSpace;
+        AZStd::array<float, AZ::RPI::XRMaxNumControllers> m_handScale = { { 1.0f, 1.0f } };
+        AZStd::array<XrBool32, AZ::RPI::XRMaxNumControllers> m_handActive;
 
-        AZStd::array<XrSpaceLocation, AZ::RPI::XRNumControllers> m_handSpaceLocation;
+        AZStd::array<XrSpaceLocation, AZ::RPI::XRMaxNumControllers> m_handSpaceLocation;
         AZStd::array<XrSpaceLocation, SpaceType::Count> m_xrVisualizedSpaceLocations;
 
         //Todo: This is assuming Quest 2 controller. Needs better abstraction to cover other types of controllers

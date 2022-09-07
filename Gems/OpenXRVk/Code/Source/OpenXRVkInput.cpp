@@ -69,13 +69,13 @@ namespace OpenXRVk
         CreateAction(m_joyStickYAction.m_actionHandle, XR_ACTION_TYPE_FLOAT_INPUT, "joystick_y", "JoyStick Y Object",
             aznumeric_cast<uint32_t>(m_handSubactionPath.size()), m_handSubactionPath.data());
 
-        AZStd::array<XrPath, AZ::RPI::XRNumControllers> squeezeValuePath;
-        AZStd::array<XrPath, AZ::RPI::XRNumControllers> triggerValuePath;
-        AZStd::array<XrPath, AZ::RPI::XRNumControllers> posePath;
-        AZStd::array<XrPath, AZ::RPI::XRNumControllers> hapticPath;
-        AZStd::array<XrPath, AZ::RPI::XRNumControllers> menuClickPath;
-        AZStd::array<XrPath, AZ::RPI::XRNumControllers> joyStickXPath;
-        AZStd::array<XrPath, AZ::RPI::XRNumControllers> joyStickYPath;
+        AZStd::array<XrPath, AZ::RPI::XRMaxNumControllers> squeezeValuePath;
+        AZStd::array<XrPath, AZ::RPI::XRMaxNumControllers> triggerValuePath;
+        AZStd::array<XrPath, AZ::RPI::XRMaxNumControllers> posePath;
+        AZStd::array<XrPath, AZ::RPI::XRMaxNumControllers> hapticPath;
+        AZStd::array<XrPath, AZ::RPI::XRMaxNumControllers> menuClickPath;
+        AZStd::array<XrPath, AZ::RPI::XRMaxNumControllers> joyStickXPath;
+        AZStd::array<XrPath, AZ::RPI::XRMaxNumControllers> joyStickYPath;
         XrPath xButtonValuePath;
         XrPath yButtonValuePath;
         XrPath aButtonValuePath;
@@ -127,7 +127,7 @@ namespace OpenXRVk
         result = xrSuggestInteractionProfileBindings(xrInstance, &suggestedBindings);
         WARN_IF_UNSUCCESSFUL(result);
         
-        for (int i = 0; i < AZ::RPI::XRNumControllers; i++)
+        for (int i = 0; i < AZ::RPI::XRMaxNumControllers; i++)
         {
             m_handSpaceLocation[i].pose.orientation.x = 0.0f;
             m_handSpaceLocation[i].pose.orientation.y = 0.0f;
