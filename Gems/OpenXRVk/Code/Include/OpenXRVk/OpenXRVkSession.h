@@ -11,6 +11,7 @@
 #include <AzCore/std/smart_ptr/intrusive_ptr.h>
 #include <OpenXRVk_Platform.h>
 #include <OpenXRVk/OpenXRVkSpace.h>
+#include <OpenXRVk/OpenXRVkInput.h>
 #include <XR/XRSession.h>
 
 namespace OpenXRVk
@@ -49,16 +50,27 @@ namespace OpenXRVk
         bool IsExitRenderLoopRequested() const override;
         void PollEvents() override;
         void LocateControllerSpace(AZ::u32 handIndex) override;
-        AZ::RPI::PoseData GetControllerPose(AZ::u32 handIndex) const override;
-        AZ::RPI::PoseData GetViewFrontPose() const override;
+        AZ::RHI::ResultCode GetControllerPose(AZ::u32 handIndex, AZ::RPI::PoseData& outPoseData) const override;
+        AZ::RHI::ResultCode GetControllerStagePose(AZ::u32 handIndex, AZ::RPI::PoseData& outPoseData) const override;
+        AZ::RHI::ResultCode GetViewFrontPose(AZ::RPI::PoseData& outPoseData) const override;
+        AZ::RHI::ResultCode GetViewLocalPose(AZ::RPI::PoseData& outPoseData) const override;
         float GetControllerScale(AZ::u32 handIndex) const override;
+        float GetXButtonState() const override;
+        float GetYButtonState() const override;
+        float GetAButtonState() const override;
+        float GetBButtonState() const override;
+        float GetXJoyStickState(AZ::u32 handIndex) const override;
+        float GetYJoyStickState(AZ::u32 handIndex) const override;
+        float GetSqueezeState(AZ::u32 handIndex) const override;
+        float GetTriggerState(AZ::u32 handIndex) const override;
         //////////////////////////////////////////////////////////////////////////
 
     private:
 
         void ShutdownInternal() override;
         void LogActionSourceName(XrAction action, const AZStd::string_view actionName) const;
-        
+        Input* GetNativeInput() const;
+
         XrSession m_session = XR_NULL_HANDLE;
         XrSessionState m_sessionState = XR_SESSION_STATE_UNKNOWN;
         XrEventDataBuffer m_eventDataBuffer;
