@@ -10,6 +10,7 @@
 
 #include <AzCore/Memory/SystemAllocator.h>
 #include <XR/XRBase.h>
+#include <XR/XRDevice.h>
 #include <XR/XRObject.h>
 
 namespace XR
