@@ -11,6 +11,7 @@
 #include <AzCore/Casting/numeric_cast.h>
 #include <AzCore/std/containers/set.h>
 #include <AzCore/std/containers/vector.h>
+#include <OpenXRVk/OpenXRVkDevice.h>
 #include <OpenXRVk/OpenXRVkInstance.h>
 #include <OpenXRVk/OpenXRVkSession.h>
 #include <OpenXRVk/OpenXRVkSwapChain.h>
