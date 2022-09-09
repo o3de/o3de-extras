@@ -10,7 +10,7 @@
 
 namespace XR
 { 
-    SwapChain::View* SwapChain::GetView(const AZ::u32 swapchainIndex) const
+    SwapChain::View* SwapChain::GetView(AZ::u32 swapchainIndex) const
     {
         return m_viewSwapchains[swapchainIndex].get();
     }

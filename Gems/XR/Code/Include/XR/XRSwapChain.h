@@ -80,7 +80,7 @@ namespace XR
         };
 
         //! Returns the view swap chain related to the index.
-        SwapChain::View* GetView(const AZ::u32 swapChainIndex) const;
+        SwapChain::View* GetView(AZ::u32 swapChainIndex) const;
 
         //! Returns the image associated with the provided image
         //! index and view swap chain index.
