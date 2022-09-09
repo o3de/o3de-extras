@@ -11,6 +11,7 @@
 #include <AzCore/std/smart_ptr/intrusive_ptr.h>
 #include <AzCore/std/string/string.h>
 #include <AzCore/std/containers/vector.h>
+#include <Atom/RHI.Reflect/Base.h>      // For AZ::RHI::ResultCode
 
 namespace XR
 {
