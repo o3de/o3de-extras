@@ -1,0 +1,384 @@
+/*
+ * Copyright (c) Contributors to the Open 3D Engine Project.
+ * For complete copyright and license terms please see the LICENSE at the root of this distribution.
+ *
+ * SPDX-License-Identifier: Apache-2.0 OR MIT
+ *
+ */
+
+#include <OpenXRVk/InputDeviceXRController.h>
+
+#include <AzCore/RTTI/BehaviorContext.h>
+#include <AzFramework/Input/Utils/AdjustAnalogInputForDeadZone.h>
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+namespace AzFramework
+{
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    // static
+    bool InputDeviceXRController::IsXRControllerDevice(const InputDeviceId& inputDeviceId)
+    {
+        // Only check the name (crc) and ignore the index for this check.
+        return (inputDeviceId.GetNameCrc32() == IdForIndex0.GetNameCrc32());
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    void InputDeviceXRController::Reflect(AZ::ReflectContext* context)
+    {
+        if (auto behaviorContext = azrtti_cast<AZ::BehaviorContext*>(context))
+        {
+            behaviorContext->Class<InputDeviceXRController>()
+                ->Attribute(AZ::Script::Attributes::Storage, AZ::Script::Attributes::StorageType::RuntimeOwn)
+                ->Constant("name", BehaviorConstant(IdForIndex0.GetName()))
+
+                ->Constant(Button::A.GetName(), BehaviorConstant(Button::A.GetName()))
+                ->Constant(Button::B.GetName(), BehaviorConstant(Button::B.GetName()))
+                ->Constant(Button::X.GetName(), BehaviorConstant(Button::X.GetName()))
+                ->Constant(Button::Y.GetName(), BehaviorConstant(Button::Y.GetName()))
+                ->Constant(Button::Home.GetName(), BehaviorConstant(Button::Home.GetName()))
+                ->Constant(Button::Menu.GetName(), BehaviorConstant(Button::Menu.GetName()))
+                ->Constant(Button::L3.GetName(), BehaviorConstant(Button::L3.GetName()))
+                ->Constant(Button::R3.GetName(), BehaviorConstant(Button::R3.GetName()))
+
+                ->Constant(Button::TA.GetName(), BehaviorConstant(Button::TA.GetName()))
+                ->Constant(Button::TB.GetName(), BehaviorConstant(Button::TB.GetName()))
+                ->Constant(Button::TX.GetName(), BehaviorConstant(Button::TX.GetName()))
+                ->Constant(Button::TY.GetName(), BehaviorConstant(Button::TY.GetName()))
+                ->Constant(Button::TLStick.GetName(), BehaviorConstant(Button::TLStick.GetName()))
+                ->Constant(Button::TRStick.GetName(), BehaviorConstant(Button::TRStick.GetName()))
+                ->Constant(Button::TLRest.GetName(), BehaviorConstant(Button::TLRest.GetName()))
+                ->Constant(Button::TRRest.GetName(), BehaviorConstant(Button::TRRest.GetName()))
+                ->Constant(Button::TLTrig.GetName(), BehaviorConstant(Button::TLTrig.GetName()))
+                ->Constant(Button::TRTrig.GetName(), BehaviorConstant(Button::TRTrig.GetName()))
+                ->Constant(Button::TLThumb.GetName(), BehaviorConstant(Button::TLThumb.GetName()))
+                ->Constant(Button::TRThumb.GetName(), BehaviorConstant(Button::TRThumb.GetName()))
+                ->Constant(Button::TLIndex.GetName(), BehaviorConstant(Button::TLIndex.GetName()))
+                ->Constant(Button::TRIndex.GetName(), BehaviorConstant(Button::TRIndex.GetName()))
+
+                ->Constant(Trigger::LTrigger.GetName(), BehaviorConstant(Trigger::LTrigger.GetName()))
+                ->Constant(Trigger::RTrigger.GetName(), BehaviorConstant(Trigger::RTrigger.GetName()))
+                ->Constant(Trigger::LGrip.GetName(), BehaviorConstant(Trigger::LGrip.GetName()))
+                ->Constant(Trigger::RGrip.GetName(), BehaviorConstant(Trigger::RGrip.GetName()))
+
+                ->Constant(ThumbStickAxis1D::LX.GetName(), BehaviorConstant(ThumbStickAxis1D::LX.GetName()))
+                ->Constant(ThumbStickAxis1D::LY.GetName(), BehaviorConstant(ThumbStickAxis1D::LY.GetName()))
+                ->Constant(ThumbStickAxis1D::RX.GetName(), BehaviorConstant(ThumbStickAxis1D::RX.GetName()))
+                ->Constant(ThumbStickAxis1D::RY.GetName(), BehaviorConstant(ThumbStickAxis1D::RY.GetName()))
+
+                ->Constant(ThumbStickAxis2D::L.GetName(), BehaviorConstant(ThumbStickAxis2D::L.GetName()))
+                ->Constant(ThumbStickAxis2D::R.GetName(), BehaviorConstant(ThumbStickAxis2D::R.GetName()))
+
+                ->Constant(ThumbStickDirection::LU.GetName(), BehaviorConstant(ThumbStickDirection::LU.GetName()))
+                ->Constant(ThumbStickDirection::LD.GetName(), BehaviorConstant(ThumbStickDirection::LD.GetName()))
+                ->Constant(ThumbStickDirection::LL.GetName(), BehaviorConstant(ThumbStickDirection::LL.GetName()))
+                ->Constant(ThumbStickDirection::LR.GetName(), BehaviorConstant(ThumbStickDirection::LR.GetName()))
+                ->Constant(ThumbStickDirection::RU.GetName(), BehaviorConstant(ThumbStickDirection::RU.GetName()))
+                ->Constant(ThumbStickDirection::RD.GetName(), BehaviorConstant(ThumbStickDirection::RD.GetName()))
+                ->Constant(ThumbStickDirection::RL.GetName(), BehaviorConstant(ThumbStickDirection::RL.GetName()))
+                ->Constant(ThumbStickDirection::RR.GetName(), BehaviorConstant(ThumbStickDirection::RR.GetName()))
+
+                ->Constant(ControllerPosePosition::LPos.GetName(), BehaviorConstant(ControllerPosePosition::LPos.GetName()))
+                ->Constant(ControllerPosePosition::RPos.GetName(), BehaviorConstant(ControllerPosePosition::RPos.GetName()))
+                ->Constant(ControllerPosePosition::LVel.GetName(), BehaviorConstant(ControllerPosePosition::LVel.GetName()))
+                ->Constant(ControllerPosePosition::RVel.GetName(), BehaviorConstant(ControllerPosePosition::RVel.GetName()))
+                ->Constant(ControllerPosePosition::LAcc.GetName(), BehaviorConstant(ControllerPosePosition::LAcc.GetName()))
+                ->Constant(ControllerPosePosition::RAcc.GetName(), BehaviorConstant(ControllerPosePosition::RAcc.GetName()))
+
+                ->Constant(ControllerPoseOrientation::LOrient.GetName(), BehaviorConstant(ControllerPoseOrientation::LOrient.GetName()))
+                ->Constant(ControllerPoseOrientation::ROrient.GetName(), BehaviorConstant(ControllerPoseOrientation::ROrient.GetName()))
+            ;
+        }
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    InputDeviceXRController::InputDeviceXRController()
+        : InputDeviceXRController(InputDeviceId(Name, 0))
+    {
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    InputDeviceXRController::InputDeviceXRController(const InputDeviceId& inputDeviceId,
+                                                     ImplementationFactory implFactoryFn)
+        : InputDevice(inputDeviceId)
+    {
+        // Create all digital button input channels
+        for (const InputChannelId& channelId : Button::All)
+        {
+            auto channel = aznew InputChannelDigital(channelId, *this);
+            m_allChannelsById[channelId] = channel;
+            m_buttonChannelsById[channelId] = channel;
+        }
+
+        // Create all analog trigger input channels
+        for (const InputChannelId& channelId : Trigger::All)
+        {
+            auto channel = aznew InputChannelAnalog(channelId, *this);
+            m_allChannelsById[channelId] = channel;
+            m_triggerChannelsById[channelId] = channel;
+        }
+
+        // Create all 1D thumb-stick input channels
+        for (const InputChannelId& channelId : ThumbStickAxis1D::All)
+        {
+            auto channel = aznew InputChannelAxis1D(channelId, *this);
+            m_allChannelsById[channelId] = channel;
+            m_thumbStick1DChannelsById[channelId] = channel;
+        }
+
+        // Create all 2D thumb-stick input channels
+        for (const InputChannelId& channelId : ThumbStickAxis2D::All)
+        {
+            auto channel = aznew InputChannelAxis2D(channelId, *this);
+            m_allChannelsById[channelId] = channel;
+            m_thumbStick2DChannelsById[channelId] = channel;
+        }
+
+        // Create all analog thumb-stick direction input channels
+        for (const InputChannelId& channelId : ThumbStickDirection::All)
+        {
+            auto channel = aznew InputChannelAnalog(channelId, *this);
+            m_allChannelsById[channelId] = channel;
+            m_thumbStickDirectionChannelsById[channelId] = channel;
+        }
+
+        // Create all 3D controller position input channels
+        for (const InputChannelId& channelId : ControllerPosePosition::All)
+        {
+            auto channel = aznew InputChannelAxis3D(channelId, *this);
+            m_allChannelsById[channelId] = channel;
+            m_controllerPositionChannelsById[channelId] = channel;
+        }
+
+        // Create all Quat controller orientation input channels
+        for (const InputChannelId& channelId : ControllerPoseOrientation::All)
+        {
+            auto channel = aznew InputChannelQuaternion(channelId, *this);
+            m_allChannelsById[channelId] = channel;
+            m_controllerOrientationChannelsById[channelId] = channel;
+        }
+
+        // Create the custom implementation
+        m_pimpl.reset(implFactoryFn ? implFactoryFn(*this) : nullptr);
+
+        // Connect to haptic feedback request bus
+        InputHapticFeedbackRequestBus::Handler::BusConnect(GetInputDeviceId());
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    InputDeviceXRController::~InputDeviceXRController()
+    {
+        // Disconnect from haptic feedback request bus
+        InputHapticFeedbackRequestBus::Handler::BusDisconnect(GetInputDeviceId());
+
+        // Destroy the custom implementation
+        m_pimpl.reset();
+
+        // Destroy all input channels
+        for (const auto& channelById : m_allChannelsById)
+        {
+            delete channelById.second;
+        }
+
+        //// Destroy all controller orientation input channels
+        //for (const auto& channelById : m_controllerOrientationChannelsById)
+        //{
+        //    delete channelById.second;
+        //}
+
+        //// Destroy all controller position input channels
+        //for (const auto& channelById : m_controllerPositionChannelsById)
+        //{
+        //    delete channelById.second;
+        //}
+
+        //// Destroy all analog thumb-stick direction input channels
+        //for (const auto& channelById : m_thumbStickDirectionChannelsById)
+        //{
+        //    delete channelById.second;
+        //}
+
+        //// Destroy all thumb-stick 2D input channels
+        //for (const auto& channelById : m_thumbStick2DChannelsById)
+        //{
+        //    delete channelById.second;
+        //}
+
+        //// Destroy all thumb-stick 1D input channels
+        //for (const auto& channelById : m_thumbStick1DChannelsById)
+        //{
+        //    delete channelById.second;
+        //}
+
+        //// Destroy all analog trigger input channels
+        //for (const auto& channelById : m_triggerChannelsById)
+        //{
+        //    delete channelById.second;
+        //}
+
+        //// Destroy all digital button input channels
+        //for (const auto& channelById : m_buttonChannelsById)
+        //{
+        //    delete channelById.second;
+        //}
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    const InputDevice::InputChannelByIdMap& InputDeviceXRController::GetInputChannelsById() const
+    {
+        return m_allChannelsById;
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    bool InputDeviceXRController::IsSupported() const
+    {
+        return m_pimpl != nullptr;
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    bool InputDeviceXRController::IsConnected() const
+    {
+        return m_pimpl ? m_pimpl->IsConnected() : false;
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    void InputDeviceXRController::TickInputDevice()
+    {
+        if (m_pimpl)
+        {
+            m_pimpl->TickInputDevice();
+        }
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    void InputDeviceXRController::SetVibration(float leftMotorSpeedNormalized, float rightMotorSpeedNormalized)
+    {
+        if (m_pimpl)
+        {
+            m_pimpl->SetVibration(leftMotorSpeedNormalized, rightMotorSpeedNormalized);
+        }
+    }
+
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    //! InputDeviceXRController::Implementation
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    InputDeviceXRController::Implementation::Implementation(InputDeviceXRController& inputDevice)
+        : m_inputDevice(inputDevice)
+    {
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    void InputDeviceXRController::Implementation::BroadcastInputDeviceConnectedEvent() const
+    {
+        m_inputDevice.BroadcastInputDeviceConnectedEvent();
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    void InputDeviceXRController::Implementation::BroadcastInputDeviceDisconnectedEvent() const
+    {
+        m_inputDevice.BroadcastInputDeviceDisconnectedEvent();
+    }
+
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    //! InputDeviceXRController::Implementation::RawXRControllerState
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    InputDeviceXRController::Implementation::RawXRControllerState::RawXRControllerState(const DigitalButtonIdByBitMaskMap& digitalButtonIdsByBitMask)
+        : m_digitalButtonIdsByBitMask(digitalButtonIdsByBitMask)
+        , m_triggerMaxValue(1.f)
+        , m_gripMaxValue(1.f)
+        , m_thumbStickMaxValue(1.f)
+    {
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    void InputDeviceXRController::Implementation::RawXRControllerState::Reset()
+    {
+        m_digitalButtonStates = 0;
+        m_leftTriggerState = 0.f;
+        m_rightTriggerState = 0.f;
+        m_leftGripState = 0.f;
+        m_rightGripState = 0.f;
+        m_leftThumbStickXState = 0.f;
+        m_leftThumbStickYState = 0.f;
+        m_rightThumbStickXState = 0.f;
+        m_rightThumbStickYState = 0.f;
+        m_leftPositionState = AZ::Vector3::CreateZero();
+        m_rightPositionState = AZ::Vector3::CreateZero();
+        m_leftOrientationState = AZ::Quaternion::CreateIdentity();
+        m_rightOrientationState = AZ::Quaternion::CreateIdentity();
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    float InputDeviceXRController::Implementation::RawXRControllerState::GetLeftTriggerAdjustedForDeadZoneAndNormalized() const
+    {
+        return AdjustForDeadZoneAndNormalizeAnalogInput(m_leftTriggerState, m_triggerDeadZoneValue, m_triggerMaxValue);
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    float InputDeviceXRController::Implementation::RawXRControllerState::GetRightTriggerAdjustedForDeadZoneAndNormalized() const
+    {
+        return AdjustForDeadZoneAndNormalizeAnalogInput(m_rightTriggerState, m_triggerDeadZoneValue, m_triggerMaxValue);
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    float InputDeviceXRController::Implementation::RawXRControllerState::GetLeftGripAdjustedForDeadZoneAndNormalized() const
+    {
+        return AdjustForDeadZoneAndNormalizeAnalogInput(m_leftGripState, m_gripDeadZoneValue, m_gripMaxValue);
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    float InputDeviceXRController::Implementation::RawXRControllerState::GetRightGripAdjustedForDeadZoneAndNormalized() const
+    {
+        return AdjustForDeadZoneAndNormalizeAnalogInput(m_rightGripState, m_gripDeadZoneValue, m_gripMaxValue);
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    AZ::Vector2 InputDeviceXRController::Implementation::RawXRControllerState::GetLeftThumbStickAdjustedForDeadZoneAndNormalized() const
+    {
+        return AdjustForDeadZoneAndNormalizeThumbStickInput(m_leftThumbStickXState, m_leftThumbStickYState, 
+                                                            m_leftThumbStickDeadZoneValue, m_thumbStickMaxValue);
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    AZ::Vector2 InputDeviceXRController::Implementation::RawXRControllerState::GetRightThumbStickAdjustedForDeadZoneAndNormalized() const
+    {
+        return AdjustForDeadZoneAndNormalizeThumbStickInput(m_rightThumbStickXState, m_rightThumbStickYState,
+                                                            m_rightThumbStickDeadZoneValue, m_thumbStickMaxValue);
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    AZ::Vector2 InputDeviceXRController::Implementation::RawXRControllerState::GetLeftThumbStickNormalizedValues() const
+    {
+        return AZ::Vector2(m_leftThumbStickXState / m_thumbStickMaxValue, m_leftThumbStickYState / m_thumbStickMaxValue);
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    AZ::Vector2 InputDeviceXRController::Implementation::RawXRControllerState::GetRightThumbStickNormalizedValues() const
+    {
+        return AZ::Vector2(m_rightThumbStickXState / m_thumbStickMaxValue, m_rightThumbStickYState / m_thumbStickMaxValue);
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    void InputDeviceXRController::Implementation::ProcessRawControllerState([[maybe_unused]] const RawXRControllerState& rawControllerState)
+    {
+        // TODO
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    void InputDeviceXRController::Implementation::ResetInputChannelStates()
+    {
+        m_inputDevice.ResetInputChannelStates();
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    AZ::u32 InputDeviceXRController::Implementation::GetInputDeviceIndex() const
+    {
+        return m_inputDevice.GetInputDeviceId().GetIndex();
+    }
+
+} // namespace AzFramework
