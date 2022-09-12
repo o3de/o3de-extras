@@ -178,48 +178,6 @@ namespace AzFramework
         {
             delete channelById.second;
         }
-
-        //// Destroy all controller orientation input channels
-        //for (const auto& channelById : m_controllerOrientationChannelsById)
-        //{
-        //    delete channelById.second;
-        //}
-
-        //// Destroy all controller position input channels
-        //for (const auto& channelById : m_controllerPositionChannelsById)
-        //{
-        //    delete channelById.second;
-        //}
-
-        //// Destroy all analog thumb-stick direction input channels
-        //for (const auto& channelById : m_thumbStickDirectionChannelsById)
-        //{
-        //    delete channelById.second;
-        //}
-
-        //// Destroy all thumb-stick 2D input channels
-        //for (const auto& channelById : m_thumbStick2DChannelsById)
-        //{
-        //    delete channelById.second;
-        //}
-
-        //// Destroy all thumb-stick 1D input channels
-        //for (const auto& channelById : m_thumbStick1DChannelsById)
-        //{
-        //    delete channelById.second;
-        //}
-
-        //// Destroy all analog trigger input channels
-        //for (const auto& channelById : m_triggerChannelsById)
-        //{
-        //    delete channelById.second;
-        //}
-
-        //// Destroy all digital button input channels
-        //for (const auto& channelById : m_buttonChannelsById)
-        //{
-        //    delete channelById.second;
-        //}
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -366,7 +324,64 @@ namespace AzFramework
     ////////////////////////////////////////////////////////////////////////////////////////////////
     void InputDeviceXRController::Implementation::ProcessRawControllerState([[maybe_unused]] const RawXRControllerState& rawControllerState)
     {
-        // TODO
+        // Update digital button channels...
+        for (const auto& [bitMask, channelIdPtr] : rawControllerState.m_digitalButtonIdsByBitMask)
+        {
+            const AZ::u32 buttonState = (rawControllerState.m_digitalButtonStates & bitMask);
+            m_inputDevice.m_buttonChannelsById[*channelIdPtr]->ProcessRawInputEvent(buttonState != 0);
+        }
+
+        using xrc = InputDeviceXRController;
+        // Update the analog triggers...
+        float triggerL = rawControllerState.GetLeftTriggerAdjustedForDeadZoneAndNormalized();
+        float triggerR = rawControllerState.GetRightTriggerAdjustedForDeadZoneAndNormalized();
+        float gripL = rawControllerState.GetLeftGripAdjustedForDeadZoneAndNormalized();
+        float gripR = rawControllerState.GetRightGripAdjustedForDeadZoneAndNormalized();
+        m_inputDevice.m_triggerChannelsById[xrc::Trigger::LTrigger]->ProcessRawInputEvent(triggerL);
+        m_inputDevice.m_triggerChannelsById[xrc::Trigger::RTrigger]->ProcessRawInputEvent(triggerR);
+        m_inputDevice.m_triggerChannelsById[xrc::Trigger::LGrip]->ProcessRawInputEvent(gripL);
+        m_inputDevice.m_triggerChannelsById[xrc::Trigger::RGrip]->ProcessRawInputEvent(gripR);
+
+        // Update thumb-stick channels...
+        const AZ::Vector2 leftThumbStick = rawControllerState.GetLeftThumbStickAdjustedForDeadZoneAndNormalized();
+        const AZ::Vector2 leftThumbStickPreDeadZone = rawControllerState.GetLeftThumbStickNormalizedValues();
+        float leftStickUp = AZ::GetClamp(leftThumbStick.GetY(), 0.f, 1.f);
+        float leftStickDown = fabsf(AZ::GetClamp(leftThumbStick.GetY(), -1.f, 0.f));
+        float leftStickLeft = fabsf(AZ::GetClamp(leftThumbStick.GetX(), -1.f, 0.f));
+        float leftStickRight = AZ::GetClamp(leftThumbStick.GetX(), 0.f, 1.f);
+        const AZ::Vector2 rightThumbStick = rawControllerState.GetRightThumbStickAdjustedForDeadZoneAndNormalized();
+        const AZ::Vector2 rightThumbStickPreDeadZone = rawControllerState.GetRightThumbStickNormalizedValues();
+        float rightStickUp = AZ::GetClamp(rightThumbStick.GetY(), 0.f, 1.f);
+        float rightStickDown = fabsf(AZ::GetClamp(rightThumbStick.GetY(), -1.f, 0.f));
+        float rightStickLeft = fabsf(AZ::GetClamp(rightThumbStick.GetX(), -1.f, 0.f));
+        float rightStickRight = AZ::GetClamp(rightThumbStick.GetX(), 0.f, 1.f);
+
+        m_inputDevice.m_thumbStick2DChannelsById[xrc::ThumbStickAxis2D::L]->ProcessRawInputEvent(leftThumbStick, &leftThumbStickPreDeadZone);
+        m_inputDevice.m_thumbStick1DChannelsById[xrc::ThumbStickAxis1D::LX]->ProcessRawInputEvent(leftThumbStick.GetX());
+        m_inputDevice.m_thumbStick1DChannelsById[xrc::ThumbStickAxis1D::LY]->ProcessRawInputEvent(leftThumbStick.GetY());
+        m_inputDevice.m_thumbStickDirectionChannelsById[xrc::ThumbStickDirection::LU]->ProcessRawInputEvent(leftStickUp);
+        m_inputDevice.m_thumbStickDirectionChannelsById[xrc::ThumbStickDirection::LD]->ProcessRawInputEvent(leftStickDown);
+        m_inputDevice.m_thumbStickDirectionChannelsById[xrc::ThumbStickDirection::LL]->ProcessRawInputEvent(leftStickLeft);
+        m_inputDevice.m_thumbStickDirectionChannelsById[xrc::ThumbStickDirection::LR]->ProcessRawInputEvent(leftStickRight);
+        m_inputDevice.m_thumbStick2DChannelsById[xrc::ThumbStickAxis2D::R]->ProcessRawInputEvent(rightThumbStick, &rightThumbStickPreDeadZone);
+        m_inputDevice.m_thumbStick1DChannelsById[xrc::ThumbStickAxis1D::RX]->ProcessRawInputEvent(rightThumbStick.GetX());
+        m_inputDevice.m_thumbStick1DChannelsById[xrc::ThumbStickAxis1D::RY]->ProcessRawInputEvent(rightThumbStick.GetY());
+        m_inputDevice.m_thumbStickDirectionChannelsById[xrc::ThumbStickDirection::RU]->ProcessRawInputEvent(rightStickUp);
+        m_inputDevice.m_thumbStickDirectionChannelsById[xrc::ThumbStickDirection::RD]->ProcessRawInputEvent(rightStickDown);
+        m_inputDevice.m_thumbStickDirectionChannelsById[xrc::ThumbStickDirection::RL]->ProcessRawInputEvent(rightStickLeft);
+        m_inputDevice.m_thumbStickDirectionChannelsById[xrc::ThumbStickDirection::RR]->ProcessRawInputEvent(rightStickRight);
+
+        m_inputDevice.m_controllerPositionChannelsById[xrc::ControllerPosePosition::LPos]
+            ->ProcessRawInputEvent(rawControllerState.m_leftPositionState);
+        m_inputDevice.m_controllerPositionChannelsById[xrc::ControllerPosePosition::RPos]
+            ->ProcessRawInputEvent(rawControllerState.m_rightPositionState);
+        // process vel and accel... (TBD)
+
+        // m_controllerOrientationChannelsById
+        m_inputDevice.m_controllerOrientationChannelsById[xrc::ControllerPoseOrientation::LOrient]
+            ->ProcessRawInputEvent(rawControllerState.m_leftOrientationState);
+        m_inputDevice.m_controllerOrientationChannelsById[xrc::ControllerPoseOrientation::ROrient]
+            ->ProcessRawInputEvent(rawControllerState.m_rightOrientationState);
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
