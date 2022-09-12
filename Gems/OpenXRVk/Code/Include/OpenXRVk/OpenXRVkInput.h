@@ -124,8 +124,8 @@ namespace OpenXRVk
         XrAction m_poseAction{ XR_NULL_HANDLE };
         XrAction m_vibrateAction{ XR_NULL_HANDLE };
         XrAction m_quitAction{ XR_NULL_HANDLE };
-        DualActionData m_squeezeAction{ XR_NULL_HANDLE, 0.0f };
-        DualActionData m_triggerAction{ XR_NULL_HANDLE, 0.0f };
+        DualActionData m_squeezeAction;
+        DualActionData m_triggerAction;
 
         AZStd::array<XrPath, AZ::RPI::XRMaxNumControllers> m_handSubactionPath;
         AZStd::array<XrSpace, AZ::RPI::XRMaxNumControllers> m_handSpace;
@@ -136,11 +136,11 @@ namespace OpenXRVk
         AZStd::array<XrSpaceLocation, SpaceType::Count> m_xrVisualizedSpaceLocations;
 
         //Todo: This is assuming Quest 2 controller. Needs better abstraction to cover other types of controllers
-        SingleActionData m_xButtonAction{XR_NULL_HANDLE, 0.0f};
-        SingleActionData m_yButtonAction{XR_NULL_HANDLE, 0.0f};
-        SingleActionData m_aButtonAction{XR_NULL_HANDLE, 0.0f};
-        SingleActionData m_bButtonAction{XR_NULL_HANDLE, 0.0f};
-        DualActionData m_joyStickXAction{ XR_NULL_HANDLE, 0.0f };
-        DualActionData m_joyStickYAction{ XR_NULL_HANDLE, 0.0f };
+        SingleActionData m_xButtonAction;
+        SingleActionData m_yButtonAction;
+        SingleActionData m_aButtonAction;
+        SingleActionData m_bButtonAction;
+        DualActionData m_joyStickXAction;
+        DualActionData m_joyStickYAction;
     };
 }
