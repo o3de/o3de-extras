@@ -170,9 +170,6 @@ namespace OpenXRVk
 
     bool Device::AcquireSwapChainImageInternal(AZ::u32 viewIndex, XR::SwapChain* baseSwapChain)
     {
-#if !defined(RELEASE)
-        SwapChain* swapChain = static_cast<SwapChain*>(baseSwapChain);
-#endif
         XR::SwapChain::View* baseSwapChainView = baseSwapChain->GetView(viewIndex);
         SwapChain::View* swapChainView = static_cast<SwapChain::View*>(baseSwapChainView);
         Space* xrSpace = static_cast<Space*>(GetSession()->GetSpace());
@@ -200,7 +197,7 @@ namespace OpenXRVk
         }
 
         AZ_Assert(m_viewCountOutput == viewCapacityInput, "Size mismatch between xrLocateViews %i and xrEnumerateViewConfigurationViews %i", m_viewCountOutput, viewCapacityInput);
-        AZ_Assert(m_viewCountOutput == swapChain->GetViewConfigs().size(), "Size mismatch between xrLocateViews %i and xrEnumerateViewConfigurationViews %i", m_viewCountOutput, swapChain->GetViewConfigs().size());
+        AZ_Assert(m_viewCountOutput == static_cast<SwapChain*>(baseSwapChain)->GetViewConfigs().size(), "Size mismatch between xrLocateViews %i and xrEnumerateViewConfigurationViews %i", m_viewCountOutput, swapChain->GetViewConfigs().size());
 
         m_projectionLayerViews.resize(m_viewCountOutput);
         XrSwapchainImageAcquireInfo acquireInfo{ XR_TYPE_SWAPCHAIN_IMAGE_ACQUIRE_INFO };
