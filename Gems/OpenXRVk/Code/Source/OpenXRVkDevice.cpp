@@ -170,7 +170,9 @@ namespace OpenXRVk
 
     bool Device::AcquireSwapChainImageInternal(AZ::u32 viewIndex, XR::SwapChain* baseSwapChain)
     {
+#if !defined(RELEASE)
         SwapChain* swapChain = static_cast<SwapChain*>(baseSwapChain);
+#endif
         XR::SwapChain::View* baseSwapChainView = baseSwapChain->GetView(viewIndex);
         SwapChain::View* swapChainView = static_cast<SwapChain::View*>(baseSwapChainView);
         Space* xrSpace = static_cast<Space*>(GetSession()->GetSpace());
