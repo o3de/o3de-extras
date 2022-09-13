@@ -5,6 +5,7 @@
  * SPDX-License-Identifier: Apache-2.0 OR MIT
  *
  */
+#include "RobotImporter/ROS2RobotImporterEditorSystemComponent.h"
 #include <ROS2EditorSystemComponent.h>
 #include <ROS2ModuleInterface.h>
 
@@ -24,9 +25,7 @@ namespace ROS2
             // EditContext. This happens through the [MyComponent]::Reflect() function.
             m_descriptors.insert(
                 m_descriptors.end(),
-                {
-                    ROS2EditorSystemComponent::CreateDescriptor(),
-                });
+                { ROS2EditorSystemComponent::CreateDescriptor(), ROS2RobotImporterEditorSystemComponent::CreateDescriptor() });
         }
 
         /**
@@ -37,6 +36,7 @@ namespace ROS2
         {
             return AZ::ComponentTypeList{
                 azrtti_typeid<ROS2EditorSystemComponent>(),
+                azrtti_typeid<ROS2RobotImporterEditorSystemComponent>(),
             };
         }
     };

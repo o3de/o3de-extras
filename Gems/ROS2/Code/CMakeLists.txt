@@ -29,6 +29,7 @@ ly_add_target(
         PUBLIC
             AZ::AzCore
             AZ::AzFramework
+            AZ::AzToolsFramework
             Gem::Atom_RPI.Public
             Gem::Atom_Feature_Common.Static
             Gem::Atom_Component_DebugCamera.Static
@@ -87,6 +88,9 @@ if(PAL_TRAIT_BUILD_HOST_TOOLS)
         BUILD_DEPENDENCIES
             PUBLIC
                 AZ::AzToolsFramework
+                Gem::AtomLyIntegration_CommonFeatures.Editor.Static
+                Gem::LmbrCentral.API
+                Gem::PhysX.Editor.Static
                 Gem::ROS2.Static
     )
 
@@ -95,7 +99,10 @@ if(PAL_TRAIT_BUILD_HOST_TOOLS)
         NAMESPACE Gem
         AUTOMOC
         FILES_CMAKE
+            ros2_editor_files.cmake
             ros2_editor_shared_files.cmake
+        PLATFORM_INCLUDE_FILES
+            ${CMAKE_CURRENT_LIST_DIR}/Platform/Common/${PAL_TRAIT_COMPILER_ID}/ros2_static_${PAL_TRAIT_COMPILER_ID_LOWERCASE}.cmake
         INCLUDE_DIRECTORIES
             PRIVATE
                 Source

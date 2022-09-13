@@ -21,6 +21,11 @@ namespace ROS2
     {
     public:
         AZ_COMPONENT(ROS2RobotControlComponent, "{CBFB0764-99F9-40EE-9FEE-F5F5A66E59D2}", AZ::Component);
+        ROS2RobotControlComponent() = default;
+        ROS2RobotControlComponent(ControlConfiguration controlConfiguration)
+            : m_controlConfiguration(AZStd::move(controlConfiguration))
+        {
+        }
 
         // AZ::Component interface implementation.
         void Activate() override;

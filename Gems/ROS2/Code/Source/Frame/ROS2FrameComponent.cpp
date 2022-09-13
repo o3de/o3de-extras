@@ -13,6 +13,8 @@
 #include <AzCore/Serialization/EditContext.h>
 #include <AzCore/Serialization/EditContextConstants.inl>
 #include <AzCore/Serialization/SerializeContext.h>
+#include <AzToolsFramework/Entity/EditorEntityHelpers.h>
+#include <AzToolsFramework/ToolsComponents/TransformComponent.h>
 
 namespace ROS2
 {
@@ -77,9 +79,16 @@ namespace ROS2
 
     const ROS2FrameComponent* ROS2FrameComponent::GetParentROS2FrameComponent() const
     {
-        if (const AZ::TransformInterface* parentTI = GetEntityTransformInterface()->GetParent(); parentTI != nullptr)
-        { // Does not use BroadCastResult as opposed to AZ::EntityUtils::FirstDerivedComponent
-            const AZ::Entity* parentEntity = azrtti_cast<const AzFramework::TransformComponent*>(parentTI)->GetEntity();
+        auto* transformInterface = GetEntityTransformInterface();
+        if (!transformInterface)
+        {
+            AZ_Error("GetParentROS2FrameComponent", false, "No transform interface, but it is required!");
+            return nullptr;
+        }
+
+        if (AZ::EntityId parentEntityId = GetEntityTransformInterface()->GetParentId(); parentEntityId.IsValid())
+        {
+            const AZ::Entity* parentEntity = AzToolsFramework::GetEntityById(parentEntityId);
             return parentEntity->FindComponent<ROS2FrameComponent>();
         }
         return nullptr;
@@ -97,7 +106,13 @@ namespace ROS2
 
     AZ::TransformInterface* ROS2FrameComponent::GetEntityTransformInterface() const
     {
-        return GetEntity()->FindComponent<AzFramework::TransformComponent>();
+        // TODO - instead, use EditorFrameComponent to handle Editor-context queries and here only use the "Game" version
+        auto* interface = GetEntity()->FindComponent<AzFramework::TransformComponent>();
+        if (interface)
+        {
+            return interface;
+        }
+        return GetEntity()->FindComponent<AzToolsFramework::Components::TransformComponent>();
     }
 
     AZStd::string ROS2FrameComponent::GetParentFrameID() const
@@ -166,5 +181,12 @@ namespace ROS2
     void ROS2FrameComponent::GetRequiredServices(AZ::ComponentDescriptor::DependencyArrayType& required)
     {
         required.push_back(AZ_CRC("TransformService"));
+    }
+
+    ROS2FrameComponent::ROS2FrameComponent() = default;
+
+    ROS2FrameComponent::ROS2FrameComponent(AZStd::string frameId)
+        : m_frameName(AZStd::move(frameId))
+    {
     }
 } // namespace ROS2

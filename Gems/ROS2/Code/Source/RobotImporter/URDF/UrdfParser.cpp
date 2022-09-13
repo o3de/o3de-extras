@@ -27,13 +27,11 @@ namespace ROS2
         std::ifstream istream(filePath.c_str());
         if (!istream)
         {
-            AZ_Error("UrdfParser", false, "File %s not exist", filePath.c_str());
-            return urdf::ModelInterfaceSharedPtr();
+            AZ_Error("UrdfParser", false, "File %s does not exist", filePath.c_str());
+            return nullptr;
         }
 
         std::string xmlStr((std::istreambuf_iterator<char>(istream)), std::istreambuf_iterator<char>());
-
         return Parse(xmlStr.c_str());
     }
-
 } // namespace ROS2
