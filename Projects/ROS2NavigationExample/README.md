@@ -17,12 +17,12 @@ Refer to the [O3DE System Requirements](https://www.o3de.org/docs/welcome-guide/
 This project has the following dependencies:
 
 - [O3DE](https://github.com/o3de/o3de)
-  -  Should work with `develop` branch and newest releases, but the project was tested with commit `#381a6e0f`.
+  -  Should work with `stabilization/2210` as well as `develop` branch and newest releases. The project was tested with Galactic with commit `#381a6e0f`.
 - [ROS2 Gem](https://github.com/RobotecAI/o3de-ros2-gem)
-  - `develop` branch (the default) should work. The project was tested with version tag `0.3`.
+  - `develop` branch (the default) should work. The project was tested with Galactic with version tag `0.3`.
   - ROS 2 (Galactic or Humble) itself is also required, see [Gem Requirements](https://github.com/RobotecAI/o3de-ros2-gem#requirements)  
 - [Loft Scene Sample](https://github.com/aws-lumberyard/loft-arch-vis-sample)
-  - Use `scene_fixes` branch 
+  - Use `main` branch. The project was tested with Galactic on `scene_fixes` branch 
 
 
 ## Setup Instructions
