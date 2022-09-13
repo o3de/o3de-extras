@@ -9,6 +9,7 @@ This project demonstrates how ROS2 Gem for O3DE can be used with a scene (The Lo
 This project will run on 
 - Ubuntu 20.04 with ROS 2 Galactic
 - Ubuntu 22.04 with ROS 2 Humble
+
 The ROS 2 Gem is not yet developed for Windows. 
 
 Refer to the [O3DE System Requirements](https://www.o3de.org/docs/welcome-guide/requirements/) documentation to make sure that the system/hardware requirements are met
