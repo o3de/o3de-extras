@@ -6,7 +6,10 @@ This project demonstrates how ROS2 Gem for O3DE can be used with a scene (The Lo
 
 ## Requirements
 
-This project will only run on Ubuntu 20.04 since the ROS 2 Gem is not yet developed for Windows. 
+This project will run on 
+- Ubuntu 20.04 with ROS 2 Galactic
+- Ubuntu 22.04 with ROS 2 Humble
+The ROS 2 Gem is not yet developed for Windows. 
 
 Refer to the [O3DE System Requirements](https://www.o3de.org/docs/welcome-guide/requirements/) documentation to make sure that the system/hardware requirements are met
 
@@ -16,7 +19,7 @@ This project has the following dependencies:
   -  Should work with `develop` branch and newest releases, but the project was tested with commit `#381a6e0f`.
 - [ROS2 Gem](https://github.com/RobotecAI/o3de-ros2-gem)
   - `develop` branch (the default) should work. The project was tested with version tag `0.3`.
-  - ROS 2 (Galactic) itself is also required, see [Gem Requirements](https://github.com/RobotecAI/o3de-ros2-gem#requirements)  
+  - ROS 2 (Galactic or Humble) itself is also required, see [Gem Requirements](https://github.com/RobotecAI/o3de-ros2-gem#requirements)  
 - [Loft Scene Sample](https://github.com/aws-lumberyard/loft-arch-vis-sample)
   - Use `scene_fixes` branch 
 
@@ -28,9 +31,9 @@ The following steps will assume the following
 - The instructions will be based off of a common base folder: $DEMO_BASE. For the steps below, we will use DEMO_BASE of ~/ for simplicty. 
 - This current project has been fetched to $DEMO_BASE
 - You have ROS2 installed and sourced 
-  - for debian package Galactic installation, in your bash console, run `source /opt/ros/galactic/setup.bash`
+  - for debian package Galactic/Humble installation, in your bash console, run `source /opt/ros/<distro>/setup.bash`
   - you could also add this line to your `.profile`
-  - check if ROS 2 is sourced in your current console with `echo $ROS_DISTRO`. You should see `galactic`.
+  - check if ROS 2 is sourced in your current console with `echo $ROS_DISTRO`. You should see `galactic` or `humble`.
 
 ### 1. Clone O3DE (or install) and register the engine
 
@@ -85,12 +88,12 @@ $ cd $DEMO_BASE
 
 We can run ROS2 navigation stack with our simulation scene and robot. When we run the navigation stack, it will start SLAM and build the map of environment based on Lidar sensor data. You can set navigation goals for the robot using RViz2 (which is also started with the launch file).
 
-- It is assumed that you have your [ROS2 environment sourced](https://docs.ros.org/en/galactic/Tutorials/Configuring-ROS2-Environment.html).
+- It is assumed that you have your [ROS2 environment sourced](https://docs.ros.org/en/rolling/Tutorials/Configuring-ROS2-Environment.html).
 - It is also assumed that you followed all the steps before build and launch the Editor.
 
 ### 1. Install dependencies for navigation 
 
-These packages are required to run ROS 2 navigation stack for our robot:
+These packages are required to run ROS 2 navigation stack for our robot. For ROS 2 Humble, replace `galactic` with `humble`.
 
 ```
 sudo apt install ros-galactic-slam-toolbox
@@ -140,7 +143,7 @@ To make this setting permanent, add it to `/etc/systctl.conf` file.
 
 This could be caused by a firewall, disabled multicast or issues with docker.
 
-Please refer to [ROS 2 troubleshooting guide](https://docs.ros.org/en/galactic/How-To-Guides/Installation-Troubleshooting.html).
+Please refer to [ROS 2 troubleshooting guide](https://docs.ros.org/en/rolling/How-To-Guides/Installation-Troubleshooting.html).
 
 #### Memory / resource issues with the scene
 
