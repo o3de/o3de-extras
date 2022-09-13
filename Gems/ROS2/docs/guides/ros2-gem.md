@@ -5,9 +5,11 @@ The Gem and its build instructions can be found in [this repository](https://git
 The ROS 2 Gem helps to build robotic simulations with [ROS 2 / Robot Operating System](https://www.ros.org/).
 For an example of use see [Warehouse Demo Project](https://github.com/RobotecAI/Ros2WarehouseDemo).
 
-## Components overview
+## Doxygen documentation
 
-> TBD: Link to Doxygen
+You can browse Doxygen-generated documentation on [Gem's GitHub page](https://robotecai.github.io/o3de-ros2-gem/).
+
+## Components overview
 
 - __Central Singleton__
   - ROS2SystemComponent
@@ -26,7 +28,7 @@ For an example of use see [Warehouse Demo Project](https://github.com/RobotecAI/
 
 ### Supported Platforms and versions
 
-The Gem is currently Linux-only and is being tested with ROS 2 Galactic and Ubuntu 20.04.
+The Gem is currently Linux-only and is being tested with ROS 2 Humble on Ubuntu 22.04 as well as ROS 2 Galactic with Ubuntu 20.04.
 
 It is intended to support any modern ROS 2 version, following these priorities:
 - The most recent LTS version (e.g. in June 2022, [ROS 2 Humble](https://docs.ros.org/en/humble/Installation.html)).

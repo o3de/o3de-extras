@@ -4,11 +4,11 @@ This Gem enables users to develop robotic simulations through ROS2 tools and com
 
 ## Requirements
 
-> To be determined: supported versions
-
+* Ubuntu 20.04 or 22.04. Other Ubuntu versions and Linux distros could also work as long as they can support ROS 2.
 * [O3DE](https://www.o3de.org/)
-* [ROS2 Galactic](https://docs.ros.org/en/galactic/Installation.html) (not tested but could also work with Foxy and Humble). 
-* Ubuntu 20.04.
+* Modern version of ROS 2. We support and tested with:
+  * [ROS 2 Galactic](https://docs.ros.org/en/galactic/Installation.html) with Ubuntu 20.04.
+  * [ROS 2 Humble](https://docs.ros.org/en/humble/Installation.html) with Ubuntu 22.04.
 
 ## Features
 
@@ -64,7 +64,8 @@ Once you are set up and familiar with the example project, consider the followin
 1. [Create a new O3DE project](https://www.o3de.org/docs/welcome-guide/create/) with [this Gem enabled](#adding-gem-to-your-project).
 2. Create or import Assets for your robots and environment. 
    1. You can use formats supported by O3DE.
-   2. It will be possible to import your robot from URDF in the future. The work is ongoing.
+   2. You can import your robot from URDF.
+   3. Imported models might require some adjustments to be simulation-ready.
 3. Determine which sensors you need to simulate. 
    1. Some sensors are already implemented in this Gem.
       1. They might require specialization (implementation specific for particular models).
@@ -75,4 +76,4 @@ Once you are set up and familiar with the example project, consider the followin
    1. This would also be a valuable contribution to the Gem.
 6. Develop your scene and simulation scenario, placing Assets and configuring Components.
 
-Enjoy simulation with some of many [ROS2 packages](https://index.ros.org/packages/#galactic) and projects in [ROS2 ecosystem](https://project-awesome.org/fkromer/awesome-ros2).
+Enjoy simulation with some of many [ROS2 packages](https://index.ros.org/packages/#humble) and projects in [ROS2 ecosystem](https://project-awesome.org/fkromer/awesome-ros2).
