@@ -9,6 +9,7 @@
 #pragma once
 
 #include <XR/XRInput.h>
+#include <OpenXRVk/InputDeviceXRController.h>
 #include <OpenXRVk/OpenXRVkSpace.h>
 #include <OpenXRVk_Platform.h>
 

@@ -228,7 +228,7 @@ namespace AzFramework
         static void Reflect(AZ::ReflectContext* context);
 
         ////////////////////////////////////////////////////////////////////////////////////////////
-        // Forward declare the internal implementation class so it can be passed to the constructor
+        // The internal implementation class that is passed to the constructor
         class Implementation
         {
         public:
@@ -330,32 +330,32 @@ namespace AzFramework
 
                 ////////////////////////////////////////////////////////////////////////////////////
                 // Raw Data
-                AZ::u32 m_digitalButtonStates{};          //!< The state of all digital buttons
-                float m_leftTriggerState{};               //!< The left trigger value
-                float m_rightTriggerState{};              //!< The right trigger value
-                float m_leftGripState{};                  //!< The left grip value
-                float m_rightGripState{};                 //!< The right grip value
-                float m_leftThumbStickXState{};           //!< The left thumb-stick x-axis
-                float m_leftThumbStickYState{};           //!< The left thumb-stick y-axis
-                float m_rightThumbStickXState{};          //!< The right thumb-stick x-axis
-                float m_rightThumbStickYState{};          //!< The right thumb-stick y-axis
+                AZ::u32 m_digitalButtonStates{};            //!< The state of all digital buttons
+                float m_leftTriggerState{};                 //!< The left trigger value
+                float m_rightTriggerState{};                //!< The right trigger value
+                float m_leftGripState{};                    //!< The left grip value
+                float m_rightGripState{};                   //!< The right grip value
+                float m_leftThumbStickXState{};             //!< The left thumb-stick x-axis
+                float m_leftThumbStickYState{};             //!< The left thumb-stick y-axis
+                float m_rightThumbStickXState{};            //!< The right thumb-stick x-axis
+                float m_rightThumbStickYState{};            //!< The right thumb-stick y-axis
 
-                AZ::Vector3 m_leftPositionState{};        //!< The left controller position
-                AZ::Vector3 m_rightPositionState{};       //!< The right controller position
-                //AZ::Vector3 m_leftVelocityState;
-                //AZ::Vector3 m_rightVelocityState;
-                //AZ::Vector3 m_leftAccelerationState;
-                //AZ::Vector3 m_rightAccelerationState;
-                AZ::Quaternion m_leftOrientationState{};  //!< The left controller orientation
-                AZ::Quaternion m_rightOrientationState{}; //!< The right controller orientation
+                AZ::Vector3 m_leftPositionState{};          //!< The left controller position
+                AZ::Vector3 m_rightPositionState{};         //!< The right controller position
+                //AZ::Vector3 m_leftVelocityState;          // TBD ...
+                //AZ::Vector3 m_rightVelocityState;         //
+                //AZ::Vector3 m_leftAccelerationState;      //
+                //AZ::Vector3 m_rightAccelerationState;     //
+                AZ::Quaternion m_leftOrientationState{};    //!< The left controller orientation
+                AZ::Quaternion m_rightOrientationState{};   //!< The right controller orientation
 
-                float m_triggerMaxValue{};                //!< The maximum value of the analog triggers
-                float m_triggerDeadZoneValue{};           //!< The dead zone value of the analog triggers
-                float m_gripMaxValue{};                   //!< The maximum value of the grip triggers
-                float m_gripDeadZoneValue{};              //!< The dead zone value of the grip triggers
-                float m_thumbStickMaxValue{};             //!< The maximum value of the thumb-sticks
-                float m_leftThumbStickDeadZoneValue{};    //!< The left thumb-stick dead zone value
-                float m_rightThumbStickDeadZoneValue{};   //!< The right thumb-stick dead zone value
+                float m_triggerMaxValue{};                  //!< The maximum value of the analog triggers
+                float m_triggerDeadZoneValue{};             //!< The dead zone value of the analog triggers
+                float m_gripMaxValue{};                     //!< The maximum value of the grip triggers
+                float m_gripDeadZoneValue{};                //!< The dead zone value of the grip triggers
+                float m_thumbStickMaxValue{};               //!< The maximum value of the thumb-sticks
+                float m_leftThumbStickDeadZoneValue{};      //!< The left thumb-stick dead zone value
+                float m_rightThumbStickDeadZoneValue{};     //!< The right thumb-stick dead zone value
             }; // struct RawXRControllerState
 
             ////////////////////////////////////////////////////////////////////////////////////////

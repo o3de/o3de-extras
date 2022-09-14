@@ -332,6 +332,7 @@ namespace AzFramework
         }
 
         using xrc = InputDeviceXRController;
+
         // Update the analog triggers...
         float triggerL = rawControllerState.GetLeftTriggerAdjustedForDeadZoneAndNormalized();
         float triggerR = rawControllerState.GetRightTriggerAdjustedForDeadZoneAndNormalized();
@@ -375,7 +376,7 @@ namespace AzFramework
             ->ProcessRawInputEvent(rawControllerState.m_leftPositionState);
         m_inputDevice.m_controllerPositionChannelsById[xrc::ControllerPosePosition::RPos]
             ->ProcessRawInputEvent(rawControllerState.m_rightPositionState);
-        // process vel and accel... (TBD)
+        // process vel and accel... (TBD) ...
 
         // m_controllerOrientationChannelsById
         m_inputDevice.m_controllerOrientationChannelsById[xrc::ControllerPoseOrientation::LOrient]
