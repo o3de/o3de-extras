@@ -6,11 +6,11 @@
  *
  */
 
-#include <URDF/UrdfParser.h>
-
+#include "RobotImporter/Utils/RobotImporterUtils.h"
 #include <AzCore/UnitTest/TestTypes.h>
 #include <AzCore/std/string/string.h>
 #include <AzTest/AzTest.h>
+#include <RobotImporter/URDF/UrdfParser.h>
 
 namespace UnitTest
 {
@@ -76,6 +76,49 @@ namespace UnitTest
                    "    <limit lower=\"10.0\" upper=\"20.0\" effort=\"90.0\" velocity=\"10.0\"/>"
                    "  </joint>"
                    "</robot>";
+        }
+        AZStd::string GetURDFWithWheel(
+            const AZStd::string& wheel_name,
+            const AZStd::string& wheel_joint_type,
+            bool wheel_has_visual = true,
+            bool wheel_has_collider = true)
+        {
+            // clang-format off
+            return "<robot name=\"wheel_test\">\n"
+                   "    <link name=\"base_link\">\n"
+                   "        <inertial>\n"
+                   "            <origin xyz=\"0. 0. 0.\"/>\n"
+                   "            <mass value=\"1.\"/>\n"
+                   "            <inertia ixx=\"1.\" ixy=\"0.\" ixz=\"0.\" iyy=\"1.\" iyz=\"0.\" izz=\"1.\"/>\n"
+                   "        </inertial>\n"
+                   "    </link>\n"
+                   "    <link name=\""+wheel_name+"\">\n"
+                   "        <inertial>\n"
+                   "            <origin xyz=\"0. 0. 0.\"/>\n"
+                   "            <mass value=\"1.\"/>\n"
+                   "            <inertia ixx=\"1.\" ixy=\"0.\" ixz=\"0.\" iyy=\"1.\" iyz=\"0.\" izz=\"1.\"/>\n"
+                   "        </inertial>\n"
+                   +(wheel_has_visual?"<visual>\n"
+                   "            <origin rpy=\"0 0 0\" xyz=\"0 0 0\"/>\n"
+                   "            <geometry>\n"
+                   "                <box size=\"1 1 1\"/>\n"
+                   "            </geometry>\n"
+                   "        </visual>\n":"")+
+                   +(wheel_has_collider?"<collision>\n"
+                   "            <origin rpy=\"0 0 0\" xyz=\"0 0 0\"/>\n"
+                   "            <geometry>\n"
+                   "                <box size=\"1 1 1\"/>\n"
+                   "            </geometry>\n"
+                   "        </collision>\n":"")+
+                   "    </link>\n"
+                   "    <joint name=\"joint0\" type=\""+wheel_joint_type+"\">\n"
+                   "        <parent link=\"base_link\"/>\n"
+                   "        <child link=\""+wheel_name+"\"/>\n"
+                   "        <axis xyz=\"0. 0. 1.\"/>\n"
+                   "        <origin rpy=\"0. 0. 0.\" xyz=\"2. 0. 0.\"/>\n"
+                   "    </joint>\n"
+                   "</robot>";
+            // clang-format on
         }
     };
 
@@ -159,6 +202,61 @@ namespace UnitTest
         EXPECT_EQ(joint12->limits->upper, 20.0);
         EXPECT_EQ(joint12->limits->effort, 90.0);
         EXPECT_EQ(joint12->limits->velocity, 10.0);
+    }
+
+    TEST_F(UrdfParserTest, WheelHeuristicNameValid)
+    {
+        ROS2::UrdfParser parser;
+        const AZStd::string wheel_name("wheel_left_link");
+        const auto xmlStr = GetURDFWithWheel(wheel_name, "continuous");
+        const auto urdf = parser.Parse(xmlStr);
+        auto wheel_candidate = urdf->getLink(wheel_name.c_str());
+        ASSERT_TRUE(wheel_candidate);
+        EXPECT_EQ(ROS2::Utils::IsWheelURDFHeuristics(wheel_candidate), true);
+    }
+
+    TEST_F(UrdfParserTest, WheelHeuristicNameNotValid1)
+    {
+        ROS2::UrdfParser parser;
+        const AZStd::string wheel_name("wheel_left_joint");
+        const auto xmlStr = GetURDFWithWheel(wheel_name, "continuous");
+        const auto urdf = parser.Parse(xmlStr);
+        auto wheel_candidate = urdf->getLink(wheel_name.c_str());
+        ASSERT_TRUE(wheel_candidate);
+        EXPECT_EQ(ROS2::Utils::IsWheelURDFHeuristics(wheel_candidate), false);
+    }
+
+    TEST_F(UrdfParserTest, WheelHeuristicJointNotValid)
+    {
+        ROS2::UrdfParser parser;
+        const AZStd::string wheel_name("wheel_left_link");
+        const auto xmlStr = GetURDFWithWheel(wheel_name, "fixed");
+        const auto urdf = parser.Parse(xmlStr);
+        auto wheel_candidate = urdf->getLink(wheel_name.c_str());
+        ASSERT_TRUE(wheel_candidate);
+        EXPECT_EQ(ROS2::Utils::IsWheelURDFHeuristics(wheel_candidate), false);
+    }
+
+    TEST_F(UrdfParserTest, WheelHeuristicJointVisualNotValid)
+    {
+        ROS2::UrdfParser parser;
+        const AZStd::string wheel_name("wheel_left_link");
+        const auto xmlStr = GetURDFWithWheel(wheel_name, "continuous", false, true);
+        const auto urdf = parser.Parse(xmlStr);
+        auto wheel_candidate = urdf->getLink(wheel_name.c_str());
+        ASSERT_TRUE(wheel_candidate);
+        EXPECT_EQ(ROS2::Utils::IsWheelURDFHeuristics(wheel_candidate), false);
+    }
+
+    TEST_F(UrdfParserTest, WheelHeuristicJointColliderNotValid)
+    {
+        ROS2::UrdfParser parser;
+        const AZStd::string wheel_name("wheel_left_link");
+        const auto xmlStr = GetURDFWithWheel(wheel_name, "continuous", true, false);
+        const auto urdf = parser.Parse(xmlStr);
+        auto wheel_candidate = urdf->getLink(wheel_name.c_str());
+        ASSERT_TRUE(wheel_candidate);
+        EXPECT_EQ(ROS2::Utils::IsWheelURDFHeuristics(wheel_candidate), false);
     }
 
 } // namespace UnitTest

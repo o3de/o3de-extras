@@ -9,29 +9,27 @@
 #include "RobotImporter/URDF/CollidersMaker.h"
 #include "RobotImporter/URDF/PrefabMakerUtils.h"
 #include "RobotImporter/URDF/TypeConversions.h"
+#include "RobotImporter/Utils/RobotImporterUtils.h"
 #include <AzCore/Serialization/Json/JsonUtils.h>
 #include <AzCore/StringFunc/StringFunc.h>
 #include <AzToolsFramework/API/EditorAssetSystemAPI.h>
 #include <AzToolsFramework/Entity/EditorEntityHelpers.h>
-#include <LmbrCentral/Shape/BoxShapeComponentBus.h>
-#include <LmbrCentral/Shape/CylinderShapeComponentBus.h>
-#include <LmbrCentral/Shape/SphereShapeComponentBus.h>
 #include <SceneAPI/SceneCore/Containers/Scene.h>
-#include <SceneAPI/SceneCore/Containers/SceneManifest.h>
 #include <SceneAPI/SceneCore/Containers/Utilities/Filters.h>
 #include <SceneAPI/SceneCore/DataTypes/Groups/ISceneNodeGroup.h>
 #include <SceneAPI/SceneCore/Events/AssetImportRequest.h>
 #include <SceneAPI/SceneCore/Events/SceneSerializationBus.h>
 #include <SceneAPI/SceneCore/Utilities/SceneGraphSelector.h>
 #include <Source/EditorColliderComponent.h>
-#include <Source/EditorShapeColliderComponent.h>
 
 namespace ROS2
 {
+
     CollidersMaker::CollidersMaker(AZStd::string modelPath)
         : m_modelPath(AZStd::move(modelPath))
         , m_stopBuildFlag(false)
     {
+        FindWheelMaterial();
     }
 
     CollidersMaker::~CollidersMaker()
@@ -39,6 +37,36 @@ namespace ROS2
         m_stopBuildFlag = true;
         m_buildThread.join();
     };
+
+    void CollidersMaker::FindWheelMaterial()
+    {
+        bool assetFound = false;
+        AZ::Data::AssetInfo assetInfo;
+        AZStd::string watchDir;
+        AzToolsFramework::AssetSystemRequestBus::BroadcastResult(
+            assetFound,
+            &AzToolsFramework::AssetSystem::AssetSystemRequest::GetSourceInfoBySourcePath,
+            "Materials/wheel_material.physxmaterial",
+            assetInfo,
+            watchDir);
+
+        if (assetFound)
+        {
+            AZ_Printf(
+                "Wheel Material",
+                "path: %s type:  %s id: %s found %d\n",
+                assetInfo.m_relativePath.c_str(),
+                assetInfo.m_assetType.ToString<AZStd::string>().c_str(),
+                assetInfo.m_assetId.ToString<AZStd::string>().c_str(),
+                assetFound);
+            m_wheelMaterial = AZ::Data::Asset<Physics::MaterialAsset>(
+                assetInfo.m_assetId, Physics::MaterialAsset::TYPEINFO_Uuid(), assetInfo.m_relativePath);
+        }
+        else
+        {
+            AZ_Warning("Wheel Material", false, "Cannot load wheel material");
+        }
+    }
 
     void CollidersMaker::BuildColliders(urdf::LinkSharedPtr link)
     {
@@ -182,20 +210,32 @@ namespace ROS2
     void CollidersMaker::AddColliders(urdf::LinkSharedPtr link, AZ::EntityId entityId)
     {
         AZStd::string typeString = "collider";
+        const bool isWheelEntity = Utils::IsWheelURDFHeuristics(link);
+        if (isWheelEntity)
+        {
+            AZ_Printf("AddColliders", "%s is wheel", link->name.c_str());
+        }
+        const AZ::Data::Asset<Physics::MaterialAsset> materialAsset =
+            isWheelEntity ? m_wheelMaterial : AZ::Data::Asset<Physics::MaterialAsset>();
         size_t nameSuffixIndex = 0; // For disambiguation when multiple unnamed colliders are present. The order does not matter here
         for (auto collider : link->collision_array)
         { // one or more colliders - the array is used
-            AddCollider(collider, entityId, PrefabMakerUtils::MakeEntityName(link->name.c_str(), typeString, nameSuffixIndex));
+            AddCollider(
+                collider, entityId, PrefabMakerUtils::MakeEntityName(link->name.c_str(), typeString, nameSuffixIndex), materialAsset);
             nameSuffixIndex++;
         }
 
         if (nameSuffixIndex == 0)
         { // no colliders in the array - zero or one in total, the element member is used instead
-            AddCollider(link->collision, entityId, PrefabMakerUtils::MakeEntityName(link->name.c_str(), typeString));
+            AddCollider(link->collision, entityId, PrefabMakerUtils::MakeEntityName(link->name.c_str(), typeString), materialAsset);
         }
     }
 
-    void CollidersMaker::AddCollider(urdf::CollisionSharedPtr collision, AZ::EntityId entityId, const AZStd::string& generatedName)
+    void CollidersMaker::AddCollider(
+        urdf::CollisionSharedPtr collision,
+        AZ::EntityId entityId,
+        const AZStd::string& generatedName,
+        const AZ::Data::Asset<Physics::MaterialAsset>& materialAsset)
     {
         if (!collision)
         { // it is ok not to have collision in a link
@@ -210,20 +250,31 @@ namespace ROS2
             return;
         }
 
-        AddColliderToEntity(collision, entityId);
+        AddColliderToEntity(collision, entityId, materialAsset);
     }
 
-    void CollidersMaker::AddColliderToEntity(urdf::CollisionSharedPtr collision, AZ::EntityId entityId)
+    void CollidersMaker::AddColliderToEntity(
+        urdf::CollisionSharedPtr collision, AZ::EntityId entityId, const AZ::Data::Asset<Physics::MaterialAsset>& materialAsset)
     {
         // TODO - we are unable to set collider origin. Sub-entities don't work since they would need to parent visuals etc.
         // TODO - solution: once Collider Component supports Cylinder Shape, switch to it from Shape Collider Component.
 
         AZ::Entity* entity = AzToolsFramework::GetEntityById(entityId);
+        AZ_Assert(entity, "AddColliderToEntity called with invalid entityId");
         auto geometry = collision->geometry;
         bool isPrimitiveShape = geometry->type != urdf::Geometry::MESH;
+
+        Physics::ColliderConfiguration colliderConfig;
+
+        colliderConfig.m_materialSlots.SetMaterialAsset(0, materialAsset);
+        colliderConfig.m_position = URDF::TypeConversions::ConvertVector3(collision->origin.position);
+        colliderConfig.m_rotation = URDF::TypeConversions::ConvertQuaternion(collision->origin.rotation);
         if (!isPrimitiveShape)
         {
-            entity->CreateComponent<PhysX::EditorColliderComponent>();
+            // TODO move setting mesh with ebus here - othervise material is not assigned
+            Physics::PhysicsAssetShapeConfiguration shapeConfiguration;
+            shapeConfiguration.m_useMaterialsFromAsset = false;
+            entity->CreateComponent<PhysX::EditorColliderComponent>(colliderConfig, shapeConfiguration);
             entity->Activate();
 
             AZ_Printf("CollisionMaker", "Adding mesh collider to %s\n", entityId.ToString().c_str());
@@ -251,7 +302,6 @@ namespace ROS2
             AZ::Data::AssetType assetType = AZ::AzTypeInfo<PhysX::Pipeline::MeshAsset>::Uuid();
             AZ::Data::AssetCatalogRequestBus::BroadcastResult(
                 assetId, &AZ::Data::AssetCatalogRequests::GetAssetIdByPath, pxmodelPath.c_str(), assetType, false);
-
             // Insert pxmesh into the collider component
             PhysX::MeshColliderComponentRequestsBus::Event(entityId, &PhysX::MeshColliderComponentRequests::SetMeshAsset, assetId);
             entity->Deactivate();
@@ -259,43 +309,45 @@ namespace ROS2
             return;
         }
 
-        entity->CreateComponent<PhysX::EditorShapeColliderComponent>();
+        AZ_Printf("Collision", "URDF geometry type : %d\n", geometry->type);
         switch (geometry->type)
         {
         case urdf::Geometry::SPHERE:
             {
-                entity->CreateComponent(LmbrCentral::EditorSphereShapeComponentTypeId);
                 auto sphereGeometry = std::dynamic_pointer_cast<urdf::Sphere>(geometry);
                 AZ_Assert(sphereGeometry, "geometry is not sphereGeometry");
-                entity->Activate();
-                LmbrCentral::SphereShapeComponentRequestsBus::Event(
-                    entityId, &LmbrCentral::SphereShapeComponentRequests::SetRadius, sphereGeometry->radius);
-                entity->Deactivate();
+                const Physics::SphereShapeConfiguration cfg{ static_cast<float>(sphereGeometry->radius) };
+                entity->CreateComponent<PhysX::EditorColliderComponent>(colliderConfig, cfg);
             }
             break;
         case urdf::Geometry::BOX:
             {
-                entity->CreateComponent(LmbrCentral::EditorBoxShapeComponentTypeId);
-                auto boxGeometry = std::dynamic_pointer_cast<urdf::Box>(geometry);
+                const auto boxGeometry = std::dynamic_pointer_cast<urdf::Box>(geometry);
                 AZ_Assert(boxGeometry, "geometry is not boxGeometry");
-                entity->Activate();
-                LmbrCentral::BoxShapeComponentRequestsBus::Event(
-                    entityId,
-                    &LmbrCentral::BoxShapeComponentRequests::SetBoxDimensions,
-                    URDF::TypeConversions::ConvertVector3(boxGeometry->dim));
-                entity->Deactivate();
+                const Physics::BoxShapeConfiguration cfg{ URDF::TypeConversions::ConvertVector3(boxGeometry->dim) };
+                entity->CreateComponent<PhysX::EditorColliderComponent>(colliderConfig, cfg);
             }
             break;
         case urdf::Geometry::CYLINDER:
             {
-                entity->CreateComponent(LmbrCentral::EditorCylinderShapeComponentTypeId);
                 auto cylinderGeometry = std::dynamic_pointer_cast<urdf::Cylinder>(geometry);
                 AZ_Assert(cylinderGeometry, "geometry is not cylinderGeometry");
+                // TODO HACK Underlying API of O3DE  does not have Physic::CylinderShapeConfiguration implementation
+                Physics::BoxShapeConfiguration cfg;
+                auto* component = entity->CreateComponent<PhysX::EditorColliderComponent>(colliderConfig, cfg);
                 entity->Activate();
-                LmbrCentral::CylinderShapeComponentRequestsBus::Event(
-                    entityId, &LmbrCentral::CylinderShapeComponentRequests::SetHeight, cylinderGeometry->length);
-                LmbrCentral::CylinderShapeComponentRequestsBus::Event(
-                    entityId, &LmbrCentral::CylinderShapeComponentRequests::SetRadius, cylinderGeometry->radius);
+                PhysX::EditorColliderComponentRequestBus::Event(
+                    AZ::EntityComponentIdPair(entityId, component->GetId()),
+                    &PhysX::EditorColliderComponentRequests::SetShapeType,
+                    Physics::ShapeType::Cylinder);
+                PhysX::EditorColliderComponentRequestBus::Event(
+                    AZ::EntityComponentIdPair(entityId, component->GetId()),
+                    &PhysX::EditorColliderComponentRequests::SetCylinderHeight,
+                    cylinderGeometry->length);
+                PhysX::EditorColliderComponentRequestBus::Event(
+                    AZ::EntityComponentIdPair(entityId, component->GetId()),
+                    &PhysX::EditorColliderComponentRequests::SetCylinderRadius,
+                    cylinderGeometry->radius);
                 entity->Deactivate();
             }
             break;

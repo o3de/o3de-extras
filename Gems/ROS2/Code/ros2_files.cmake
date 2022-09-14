@@ -60,6 +60,8 @@ set(FILES
     Source/RobotImporter/ROS2RobotImporterSystemComponent.h
     Source/RobotImporter/URDF/UrdfParser.cpp
     Source/RobotImporter/URDF/UrdfParser.h
+    Source/RobotImporter/Utils/RobotImporterUtils.h
+    Source/RobotImporter/Utils/RobotImporterUtils.cpp
     Source/Converters/URDF/ToFBX/FbxGenerator.cpp
     Source/Converters/URDF/ToFBX/FbxGenerator.h
     Source/Converters/URDF/ToFBX/FbxNode.cpp
