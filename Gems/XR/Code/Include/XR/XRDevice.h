@@ -43,10 +43,10 @@ namespace XR
         virtual bool ShouldRender() const = 0;
         
         //! Returns fov data for a give view index.
-        virtual AZ::RPI::FovData GetViewFov(AZ::u32 viewIndex) const = 0;
+        virtual AZ::RHI::ResultCode GetViewFov(AZ::u32 viewIndex, AZ::RPI::FovData& outFovData) const = 0;
 
         //! Returns pose data for a give view index.
-        virtual AZ::RPI::PoseData GetViewPose(AZ::u32 viewIndex) const = 0;
+        virtual AZ::RHI::ResultCode GetViewPose(AZ::u32 viewIndex, AZ::RPI::PoseData& outPoseData) const = 0;
 
         //! Init the XR device.
         AZ::RHI::ResultCode Init(Descriptor descriptor);

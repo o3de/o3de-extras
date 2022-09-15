@@ -1,0 +1,19 @@
+{
+    "REGISTER_ENGINES": [
+    ],
+    "REGISTER_PROJECTS": [
+        "Projects/OpenXRTest"
+    ],
+    "REGISTER_GEMS": [
+        "Gems/XR",
+        "Gems/OpenXRVk"
+    ],
+    "REGISTER_TEMPLATES": [
+    ],
+    "REGISTER_RESTRICTED": [
+    ],
+    "ENABLE_GEMS": [
+        "Gems/XR",
+        "Gems/OpenXRVk"
+    ]
+}

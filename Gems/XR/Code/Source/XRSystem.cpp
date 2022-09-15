@@ -122,6 +122,16 @@ namespace XR
         return 0;
     }
 
+    AZ::RHI::Format System::GetSwapChainFormat(AZ::u32 viewIndex) const
+    {
+        AZ_Assert(m_swapChain, "SwapChain is null");
+        if (m_swapChain)
+        {
+            return m_swapChain->GetSwapChainFormat(viewIndex);
+        }
+        return AZ::RHI::Format::Unknown;
+    }
+
     void System::OnSystemTick()
     {
         m_session->PollEvents();
@@ -176,23 +186,50 @@ namespace XR
         return false;
     }
 
-    AZ::RPI::FovData System::GetViewFov(AZ::u32 viewIndex) const
+    AZ::RHI::ResultCode System::GetViewFov(AZ::u32 viewIndex, AZ::RPI::FovData& outFovData) const
     {
-        return m_device->GetViewFov(viewIndex);
+        return m_device->GetViewFov(viewIndex, outFovData);
     }
 
-    AZ::RPI::PoseData System::GetViewPose(AZ::u32 viewIndex) const
+    AZ::RHI::ResultCode System::GetViewPose(AZ::u32 viewIndex, AZ::RPI::PoseData& outPoseData) const
     {
-        return m_device->GetViewPose(viewIndex);
+        return m_device->GetViewPose(viewIndex, outPoseData);
     }
 
-    AZ::RPI::PoseData System::GetControllerPose(AZ::u32 handIndex) const
+    AZ::RHI::ResultCode System::GetControllerPose(AZ::u32 handIndex, AZ::RPI::PoseData& outPoseData) const
     {
         if (m_session->IsSessionRunning())
         {
-            return m_session->GetControllerPose(handIndex);
+            return m_session->GetControllerPose(handIndex, outPoseData);
         }
-        return AZ::RPI::PoseData();
+        return AZ::RHI::ResultCode::NotReady;
+    }
+
+    AZ::RHI::ResultCode System::GetControllerStagePose(AZ::u32 handIndex, AZ::RPI::PoseData& outPoseData) const
+    {
+        if (m_session->IsSessionRunning())
+        {
+            return m_session->GetControllerStagePose(handIndex, outPoseData);
+        }
+        return AZ::RHI::ResultCode::NotReady;
+    }
+
+    AZ::RHI::ResultCode System::GetViewFrontPose(AZ::RPI::PoseData& outPoseData) const
+    {
+        if (m_session->IsSessionRunning())
+        {
+            return m_session->GetViewFrontPose(outPoseData);
+        }
+        return AZ::RHI::ResultCode::NotReady;
+    }
+
+    AZ::RHI::ResultCode System::GetViewLocalPose(AZ::RPI::PoseData& outPoseData) const
+    {
+        if (m_session->IsSessionRunning())
+        {
+            return m_session->GetViewLocalPose(outPoseData);
+        }
+        return AZ::RHI::ResultCode::NotReady;
     }
 
     float System::GetControllerScale(AZ::u32 handIndex) const
@@ -204,20 +241,88 @@ namespace XR
         return 1.0f;
     }
 
-    AZ::RPI::PoseData System::GetViewFrontPose() const
+    float System::GetSqueezeState(AZ::u32 handIndex) const
     {
         if (m_session->IsSessionRunning())
         {
-            return m_session->GetViewFrontPose();
+            return m_session->GetSqueezeState(handIndex);
         }
-        return AZ::RPI::PoseData();
+        return 0.0f;
+    }
+
+    float System::GetTriggerState(AZ::u32 handIndex) const
+    {
+        if (m_session->IsSessionRunning())
+        {
+            return m_session->GetTriggerState(handIndex);
+        }
+        return 0.0f;
+    }
+
+    float System::GetXButtonState() const
+    {
+        if (m_session->IsSessionRunning())
+        {
+            return m_session->GetXButtonState();
+        }
+        return 0.0f;
+    }
+
+    float System::GetYButtonState() const
+    {
+        if (m_session->IsSessionRunning())
+        {
+            return m_session->GetYButtonState();
+        }
+        return 0.0f;
+    }
+
+    float System::GetAButtonState() const
+    {
+        if (m_session->IsSessionRunning())
+        {
+            return m_session->GetAButtonState();
+        }
+        return 0.0f;
+    }
+
+    float System::GetBButtonState() const
+    {
+        if (m_session->IsSessionRunning())
+        {
+            return m_session->GetBButtonState();
+        }
+        return 0.0f;
+    }
+
+    float System::GetXJoyStickState(AZ::u32 handIndex) const
+    {
+        if (m_session->IsSessionRunning())
+        {
+            return m_session->GetXJoyStickState(handIndex);
+        }
+        return 0.0f;
+    }
+
+    float System::GetYJoyStickState(AZ::u32 handIndex) const
+    {
+        if (m_session->IsSessionRunning())
+        {
+            return m_session->GetYJoyStickState(handIndex);
+        }
+        return 0.0f;
     }
 
     AZ::Matrix4x4 System::CreateProjectionOffset(float angleLeft, float angleRight, 
                                                  float angleBottom, float angleTop, 
-                                                 float nearDist, float farDist)
+                                                 float nearDist, float farDist, bool reverseDepth)
     {
-        return XR::CreateProjectionOffset(angleLeft, angleRight, angleBottom, angleTop, nearDist, farDist);
+        return XR::CreateProjectionOffset(angleLeft, angleRight, angleBottom, angleTop, nearDist, farDist, reverseDepth);
+    }
+
+    AZ::RHI::XRRenderingInterface* System::GetRHIXRRenderingInterface()
+    {
+        return this;
     }
 
     void System::Shutdown()

@@ -55,7 +55,7 @@ ly_add_target(
         PUBLIC
             AZ::AzCore
             AZ::AzFramework
-            3rdParty::OpenXR
+            ${openxr_dependency}
             AZ::AtomCore
             Gem::Atom_RHI_Vulkan.Reflect
             Gem::Atom_RHI_Vulkan.Glad.Static

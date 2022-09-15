@@ -9,6 +9,7 @@
 #pragma once
 
 #include <XR/XRInput.h>
+#include <OpenXRVk/OpenXRVkSpace.h>
 #include <OpenXRVk_Platform.h>
 
 namespace OpenXRVk
@@ -43,16 +44,16 @@ namespace OpenXRVk
         void LocateVisualizedSpace(XrTime predictedDisplayTime, XrSpace space, XrSpace baseSpace, OpenXRVk::SpaceType visualizedSpaceType);
 
         //! Return Pose data for a controller attached to a view index
-        AZ::RPI::PoseData GetControllerPose(AZ::u32 viewIndex) const;
+        AZ::RHI::ResultCode GetControllerPose(AZ::u32 handIndex, AZ::RPI::PoseData& outPoseData) const;
 
         //! Return scale for a controller attached to a view index
         float GetControllerScale(AZ::u32 viewIndex) const;
 
         //! Return Pose data for a tracked space type (i.e visualizedSpaceType)
-        AZ::RPI::PoseData GetVisualizedSpacePose(OpenXRVk::SpaceType visualizedSpaceType) const;
+        AZ::RHI::ResultCode GetVisualizedSpacePose(OpenXRVk::SpaceType visualizedSpaceType, AZ::RPI::PoseData& outPoseData) const;
 
-        //! Get the Grab action
-        XrAction GetGrabAction() const;
+        //! Get the Pose action
+        XrAction GetSqueezeAction() const;
 
         //! Get the Pose action
         XrAction GetPoseAction() const;
@@ -62,7 +63,50 @@ namespace OpenXRVk
 
         //! Get the Quit action
         XrAction GetQuitAction() const;
+
+        //! Get the X button state
+        float GetXButtonState() const;
+
+        //! Get the Y button state
+        float GetYButtonState() const;
+
+        //! Get the A button state
+        float GetAButtonState() const;
+
+        //! Get the B button state
+        float GetBButtonState() const;
+
+        //! Get the joystick state for x-axis
+        float GetXJoyStickState(AZ::u32 handIndex) const;
+
+        //! Get the joystick state for y-axis
+        float GetYJoyStickState(AZ::u32 handIndex) const;
+
+        //! Get the Squeeze action
+        float GetSqueezeState(AZ::u32 handIndex) const;
+
+        //! Get the Squeeze action
+        float GetTriggerState(AZ::u32 handIndex) const;
+
     private:
+
+        struct SingleActionData
+        {
+            XrAction m_actionHandle{ XR_NULL_HANDLE };
+            float m_actionState = 0.0f;
+        };
+
+        struct DualActionData
+        {
+            XrAction m_actionHandle{ XR_NULL_HANDLE };
+            AZStd::array<float, AZ::RPI::XRMaxNumControllers> m_actionState = { { 0.0f, 0.0f } };
+        };
+
+        struct ControllerActionData
+        {
+            SingleActionData m_actionData;
+            uint16_t m_handIndex = 0;
+        };
 
         //! Create a XrAction
         void CreateAction(XrAction& action, XrActionType actionType,
@@ -72,17 +116,31 @@ namespace OpenXRVk
         //! Destroy native objects
         void ShutdownInternal() override;
 
+        bool GetActionState(XrSession xrSession, XrAction xrAction, uint16_t handIndex, float& outputSate);
+        bool UpdateActionState(XrSession xrSession, SingleActionData& actionData, uint16_t handIndex);
+        bool UpdateActionState(XrSession xrSession, DualActionData& actionData, uint16_t handIndex);
+
         XrActionSet m_actionSet{ XR_NULL_HANDLE };
-        XrAction m_grabAction{ XR_NULL_HANDLE };
         XrAction m_poseAction{ XR_NULL_HANDLE };
         XrAction m_vibrateAction{ XR_NULL_HANDLE };
         XrAction m_quitAction{ XR_NULL_HANDLE };
-        AZStd::array<XrPath, 2> m_handSubactionPath;
-        AZStd::array<XrSpace, 2> m_handSpace;
-        AZStd::array<float, 2> m_handScale = { { 1.0f, 1.0f } };
-        AZStd::array<XrBool32, 2> m_handActive;
+        DualActionData m_squeezeAction;
+        DualActionData m_triggerAction;
 
-        AZStd::array<XrSpaceLocation, 2> m_handSpaceLocation;
+        AZStd::array<XrPath, AZ::RPI::XRMaxNumControllers> m_handSubactionPath;
+        AZStd::array<XrSpace, AZ::RPI::XRMaxNumControllers> m_handSpace;
+        AZStd::array<float, AZ::RPI::XRMaxNumControllers> m_handScale = { { 1.0f, 1.0f } };
+        AZStd::array<XrBool32, AZ::RPI::XRMaxNumControllers> m_handActive;
+
+        AZStd::array<XrSpaceLocation, AZ::RPI::XRMaxNumControllers> m_handSpaceLocation;
         AZStd::array<XrSpaceLocation, SpaceType::Count> m_xrVisualizedSpaceLocations;
+
+        //Todo: This is assuming Quest 2 controller. Needs better abstraction to cover other types of controllers
+        SingleActionData m_xButtonAction;
+        SingleActionData m_yButtonAction;
+        SingleActionData m_aButtonAction;
+        SingleActionData m_bButtonAction;
+        DualActionData m_joyStickXAction;
+        DualActionData m_joyStickYAction;
     };
 }
