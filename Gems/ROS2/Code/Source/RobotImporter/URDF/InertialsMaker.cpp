@@ -25,9 +25,12 @@ namespace ROS2
         AZ::Entity* entity = AzToolsFramework::GetEntityById(entityId);
         PhysX::EditorRigidBodyConfiguration rigidBodyConfiguration;
         rigidBodyConfiguration.m_mass = inertial->mass;
+        rigidBodyConfiguration.m_computeMass = false;
 
         // TODO - Check whether this is a correct offset for every case (consider entity transform and collider origin)
         rigidBodyConfiguration.m_centerOfMassOffset = URDF::TypeConversions::ConvertVector3(inertial->origin.position);
+        rigidBodyConfiguration.m_computeCenterOfMass = false;
+
         if (!URDF::TypeConversions::ConvertQuaternion(inertial->origin.rotation).IsIdentity())
         { // There is a rotation component in URDF that we are not able to apply
             // TODO - determine a solution to also include rotation in import
@@ -40,6 +43,8 @@ namespace ROS2
             AZ::Vector3(inertial->ixy, inertial->iyy, inertial->iyz),
             AZ::Vector3(inertial->ixz, inertial->iyz, inertial->izz));
         rigidBodyConfiguration.m_inertiaTensor = inertiaMatrix;
+        rigidBodyConfiguration.m_computeInertiaTensor = false;
+
         entity->CreateComponent<PhysX::EditorRigidBodyComponent>(rigidBodyConfiguration);
     }
 } // namespace ROS2
