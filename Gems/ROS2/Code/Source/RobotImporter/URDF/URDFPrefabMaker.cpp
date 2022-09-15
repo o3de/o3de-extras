@@ -11,8 +11,11 @@
 #include "RobotControl/ROS2RobotControlComponent.h"
 #include "RobotImporter/URDF/CollidersMaker.h"
 #include "RobotImporter/URDF/PrefabMakerUtils.h"
+#include <API/EditorAssetSystemAPI.h>
 #include <AzCore/IO/FileIO.h>
 #include <AzToolsFramework/Entity/EditorEntityHelpers.h>
+#include <AzToolsFramework/Prefab/PrefabLoaderInterface.h>
+#include <AzToolsFramework/Prefab/PrefabSystemComponentInterface.h>
 
 namespace ROS2
 {
@@ -60,8 +63,26 @@ namespace ROS2
         AddRobotControl(contentEntityId);
 
         // Create prefab, save it to disk immediately
+        // Remove prefab, if it was already created.
+
+        AZ::EntityId entityId = createEntityResult.GetValue();
+
+        auto prefabSystemComponent = AZ::Interface<AzToolsFramework::Prefab::PrefabSystemComponentInterface>::Get();
+        auto prefabLoaderInterface = AZ::Interface<AzToolsFramework::Prefab::PrefabLoaderInterface>::Get();
         auto prefabInterface = AZ::Interface<AzToolsFramework::Prefab::PrefabPublicInterface>::Get();
-        auto outcome = prefabInterface->CreatePrefabInDisk(AzToolsFramework::EntityIdList{ contentEntityId }, m_prefabPath.c_str());
+
+        AZ::IO::Path relativeFilePath = prefabLoaderInterface->GenerateRelativePath(m_prefabPath.c_str());
+
+        const auto templateId = prefabSystemComponent->GetTemplateIdFromFilePath(relativeFilePath);
+        AZ_TracePrintf("CreatePrefabFromURDF", "GetTemplateIdFromFilePath  %s -> %d \n", m_prefabPath.c_str(), templateId);
+
+        if (templateId != AzToolsFramework::Prefab::InvalidTemplateId)
+        {
+            AZ_TracePrintf("CreatePrefabFromURDF", "Prefab was already loaded \n");
+            prefabSystemComponent->RemoveTemplate(templateId);
+        }
+
+        auto outcome = prefabInterface->CreatePrefabInDisk(AzToolsFramework::EntityIdList{ entityId }, m_prefabPath.c_str());
         if (outcome.IsSuccess())
         {
             AZ::EntityId prefabContainerEntityId = outcome.GetValue();

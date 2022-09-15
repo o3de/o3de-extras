@@ -14,16 +14,20 @@ namespace ROS2
     RobotImporter::RobotImporter(LoggerFunction logger)
         : m_logger(std::move(logger))
         , m_isProcessingAssets(false)
+        , m_loadingURDFFailed(false)
     {
     }
 
     void RobotImporter::ParseURDFAndStartLoadingAssets(const RobotImporterConfig& config)
     {
+        m_prefabMaker.reset();
+        m_loadingURDFFailed.store(false);
         m_logger(LogLevel::Info, "Importing robot definition file: " + config.urdfFilePath);
 
         urdf::ModelInterfaceSharedPtr urdfModel = UrdfParser::ParseFromFile(config.urdfFilePath);
         if (!urdfModel)
         {
+            m_loadingURDFFailed.store(true);
             m_logger(LogLevel::Error, "Failed to parse the robot definition file");
             return;
         }
@@ -42,21 +46,28 @@ namespace ROS2
 
     void RobotImporter::CheckIfAssetsWereLoadedAndCreatePrefab(std::function<void()> importFinishedCb)
     {
-        AZ_Assert(m_prefabMaker, "Prefab maker is not initialized");
-        if (m_isProcessingAssets)
+        if (m_loadingURDFFailed)
         {
-            return;
-        }
-
-        auto outcome = m_prefabMaker->CreatePrefabFromURDF();
-        if (!outcome)
-        {
-            auto errorMessage = AZStd::string::format("Importing robot definition failed with error: %s", outcome.GetError().c_str());
-            m_logger(LogLevel::Error, errorMessage);
             importFinishedCb();
             return;
         }
-        m_logger(LogLevel::Info, AZStd::string::format("Imported %s", m_prefabMaker->GetPrefabPath().c_str()));
-        importFinishedCb();
+        AZ_Assert(m_prefabMaker, "Prefab maker is not initialized");
+        if (m_prefabMaker)
+        {
+            if (m_isProcessingAssets)
+            {
+                return;
+            }
+            auto outcome = m_prefabMaker->CreatePrefabFromURDF();
+            if (!outcome)
+            {
+                auto errorMessage = AZStd::string::format("Importing robot definition failed with error: %s", outcome.GetError().c_str());
+                m_logger(LogLevel::Error, errorMessage);
+                importFinishedCb();
+                return;
+            }
+            m_logger(LogLevel::Info, AZStd::string::format("Imported %s", m_prefabMaker->GetPrefabPath().c_str()));
+            importFinishedCb();
+        }
     }
 } // namespace ROS2
