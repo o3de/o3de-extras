@@ -103,19 +103,7 @@
             "isTemplated": false
         },
         {
-            "file": "BURT/Motions/AimStrafe_Shoot_Zero.fbx",
-            "isTemplated": false
-        },
-        {
-            "file": "BURT/Motions/Aim_1D_Down.fbx",
-            "isTemplated": false
-        },
-        {
             "file": "BURT/Motions/Aim_1D_Level.fbx",
-            "isTemplated": false
-        },
-        {
-            "file": "BURT/Motions/Aim_1D_Up.fbx",
             "isTemplated": false
         },
         {
@@ -239,10 +227,6 @@
             "isTemplated": false
         },
         {
-            "file": "BURT/Motions/Jump_Running_Float.fbx",
-            "isTemplated": false
-        },
-        {
             "file": "BURT/Motions/Jump_Running_Land_To_Idle.fbx",
             "isTemplated": false
         },
@@ -252,14 +236,6 @@
         },
         {
             "file": "BURT/Motions/Jump_Up.fbx",
-            "isTemplated": false
-        },
-        {
-            "file": "BURT/Motions/Melee.fbx",
-            "isTemplated": false
-        },
-        {
-            "file": "BURT/Motions/ModeSwitch.fbx",
             "isTemplated": false
         },
         {
@@ -344,10 +320,6 @@
         },
         {
             "file": "BURT/Motions/Shoot.fbx.assetinfo",
-            "isTemplated": false
-        },
-        {
-            "file": "BURT/Motions/Shoot_Zero.fbx",
             "isTemplated": false
         },
         {
@@ -467,18 +439,6 @@
             "isTemplated": false
         },
         {
-            "file": "BURT/Motions/Strafe_Walk_Left.fbx",
-            "isTemplated": false
-        },
-        {
-            "file": "BURT/Motions/Strafe_Walk_Left.fbx.assetinfo",
-            "isTemplated": false
-        },
-        {
-            "file": "BURT/Motions/Strafe_Walk_Right.fbx",
-            "isTemplated": false
-        },
-        {
             "file": "BURT/Motions/Take_Damage_Front.fbx",
             "isTemplated": false
         },
@@ -511,26 +471,6 @@
             "isTemplated": false
         },
         {
-            "file": "BURT/Motions/Taunt.fbx",
-            "isTemplated": false
-        },
-        {
-            "file": "BURT/Motions/Turn_AimStrafe_180_Left.fbx",
-            "isTemplated": false
-        },
-        {
-            "file": "BURT/Motions/Turn_AimStrafe_180_Right.fbx",
-            "isTemplated": false
-        },
-        {
-            "file": "BURT/Motions/Turn_AimStrafe_90_Left.fbx",
-            "isTemplated": false
-        },
-        {
-            "file": "BURT/Motions/Turn_AimStrafe_90_Right.fbx",
-            "isTemplated": false
-        },
-        {
             "file": "BURT/Motions/Turn_OnSpot_180_Left.fbx",
             "isTemplated": false
         },
@@ -539,27 +479,11 @@
             "isTemplated": false
         },
         {
-            "file": "BURT/Motions/Turn_OnSpot_45_Left.fbx",
-            "isTemplated": false
-        },
-        {
-            "file": "BURT/Motions/Turn_OnSpot_45_Right.fbx",
-            "isTemplated": false
-        },
-        {
             "file": "BURT/Motions/Turn_OnSpot_90_Left.fbx",
             "isTemplated": false
         },
         {
             "file": "BURT/Motions/Turn_OnSpot_90_Right.fbx",
-            "isTemplated": false
-        },
-        {
-            "file": "BURT/Motions/Turn_OnSpot_Clockwise.fbx",
-            "isTemplated": false
-        },
-        {
-            "file": "BURT/Motions/Turn_OnSpot_CounterClockwise.fbx",
             "isTemplated": false
         },
         {
@@ -595,19 +519,11 @@
             "isTemplated": false
         },
         {
-            "file": "BURT/Motions/Turn_Tight_Walk_Left - Copy.fbx",
-            "isTemplated": false
-        },
-        {
             "file": "BURT/Motions/Turn_Tight_Walk_Left.fbx",
             "isTemplated": false
         },
         {
             "file": "BURT/Motions/Turn_Tight_Walk_Left_Backwards.fbx",
-            "isTemplated": false
-        },
-        {
-            "file": "BURT/Motions/Turn_Tight_Walk_Right - Copy.fbx",
             "isTemplated": false
         },
         {
@@ -619,35 +535,11 @@
             "isTemplated": false
         },
         {
-            "file": "BURT/Motions/Turn_Zero_Movement_Left.fbx",
-            "isTemplated": false
-        },
-        {
-            "file": "BURT/Motions/Turn_Zero_Movement_Right.fbx",
-            "isTemplated": false
-        },
-        {
             "file": "BURT/Motions/Victory.fbx",
             "isTemplated": false
         },
         {
-            "file": "BURT/Motions/Zero_Movement.fbx",
-            "isTemplated": false
-        },
-        {
-            "file": "BURT/Motions/Zero_Movement_Down.fbx",
-            "isTemplated": false
-        },
-        {
-            "file": "BURT/Motions/Zero_Movement_Up.fbx",
-            "isTemplated": false
-        },
-        {
             "file": "BURT/Textures/BURT_ddn.tif",
-            "isTemplated": false
-        },
-        {
-            "file": "BURT/Textures/BURT_ddn.tif.imagesettings",
             "isTemplated": false
         },
         {
@@ -659,27 +551,7 @@
             "isTemplated": false
         },
         {
-            "file": "BURT/Textures/BURT_spec.tif",
-            "isTemplated": false
-        },
-        {
             "file": "BURT/Textures/BURT_spec_02_spec.tif",
-            "isTemplated": false
-        },
-        {
-            "file": "BURT/Textures/burt_diff.tif.exportsettings",
-            "isTemplated": false
-        },
-        {
-            "file": "BURT/Textures/burt_emis.tif.exportsettings",
-            "isTemplated": false
-        },
-        {
-            "file": "BURT/Textures/burt_spec.tif.exportsettings",
-            "isTemplated": false
-        },
-        {
-            "file": "BURT/Textures/burt_spec_02_spec.tif.exportsettings",
             "isTemplated": false
         },
         {
@@ -967,10 +839,6 @@
             "isTemplated": true
         },
         {
-            "file": "Gem/Resources/CryEngineLogoLauncher.bmp",
-            "isTemplated": false
-        },
-        {
             "file": "Gem/Resources/GameSDK.ico",
             "isTemplated": false
         },
@@ -1211,19 +1079,7 @@
             "isTemplated": true
         },
         {
-            "file": "Registry/assetsprocessor_settings.setreg",
-            "isTemplated": true
-        },
-        {
             "file": "Registry/editorpreferences.setreg",
-            "isTemplated": false
-        },
-        {
-            "file": "Registry/physxdebugconfiguration.setreg",
-            "isTemplated": false
-        },
-        {
-            "file": "Registry/physxdefaultsceneconfiguration.setreg",
             "isTemplated": false
         },
         {
