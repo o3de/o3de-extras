@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+
+<Component
+    Name="NetworkRandomComponent" 
+    Namespace="${Name}" 
+    OverrideComponent="false" 
+    OverrideController="true" 
+    OverrideInclude="Source/Components/NetworkRandomComponent.h"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:noNamespaceSchemaLocation="MultiplayerAutoComponentSchema.xsd">
+
+    <NetworkProperty Type="uint64_t" Init="0" Name="Seed" ReplicateFrom="Authority" ReplicateTo="Client" Container="Object" IsPublic="true" IsRewindable="false" IsPredictable="false" ExposeToEditor="false" ExposeToScript="false" GenerateEventBindings="false" Description="The RNG seed" />
+
+</Component>

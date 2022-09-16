@@ -1,0 +1,25 @@
+{
+    "Amazon": {
+        "AssetProcessor": {
+            "Settings": {
+                "RC cgf": {
+                    "ignore": true
+                },
+                "RC fbx": {
+                    "ignore": true
+                },
+                "ScanFolder ${Name}Data": {
+                    "watch": "@GEMROOT:Atom@/TestData",
+                    "recursive": 1,
+                    "order": 1000
+                },
+                "Exclude Work In Progress Folders": {
+                    "pattern": ".*\\\\/WIP\\\\/.*"
+                },
+                "Exclude art source Folders": {
+                    "pattern": ".*\\\\/.source\\\\/.*"
+                }
+            }
+        }
+    }
+}
