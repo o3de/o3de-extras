@@ -6,7 +6,7 @@
  *
  */
 
-#include <URDF/FbxGenerator.h>
+#include <Converters/URDF/ToFBX/FbxGenerator.h>
 
 #include <AzCore/UnitTest/TestTypes.h>
 #include <AzTest/AzTest.h>
