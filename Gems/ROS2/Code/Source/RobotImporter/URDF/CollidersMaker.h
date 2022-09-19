@@ -52,7 +52,6 @@ namespace ROS2
             const AZ::Data::Asset<Physics::MaterialAsset>& materialAsset);
         void AddColliderToEntity(
             urdf::CollisionSharedPtr collision, AZ::EntityId entityId, const AZ::Data::Asset<Physics::MaterialAsset>& materialAsset);
-        AZ::IO::Path GetFullURDFMeshPath(AZ::IO::Path modelPath, AZ::IO::Path meshPath);
 
         AZStd::string m_modelPath;
 
