@@ -74,7 +74,24 @@ namespace ROS2
         PhysX::EditorJointComponent* jointComponent = nullptr;
         // TODO - ATM, there is no support withing Joint Components for the following:
         // TODO <calibration> <dynamics> <mimic>, friction, effort, velocity, joint safety and several joint types
-        // TODO - apply <axis>
+
+        // URDF has a joint axis configurable by a normalized vector - that is given by the 'axis' sub-element in the joint element.
+        // The o3de has a slightly different way of configuring the axis of the joint. The o3de has an axis around positive `X` and rotation
+        // with Euler angles can be applied to configure the desirable direction of the joint. A quaternion that transforms a unit vector X
+        // {1,0,0} to a vector given by the URDF joint need to be found. Heavily suboptimal element in this conversion is needed of
+        // converting the unit quaternion to Euler vector.
+        const AZ::Vector3 o3de_joint_dir{ 1.0, 0.0, 0.0 };
+        const AZ::Vector3 joint_axis = URDF::TypeConversions::ConvertVector3(joint->axis);
+        const auto quaternion = AZ::Quaternion::CreateShortestArc(o3de_joint_dir, joint_axis);
+        AZ_Printf(
+            "JointsMaker",
+            "Quaternion from URDF to o3de %f, %f, %f, %f",
+            quaternion.GetX(),
+            quaternion.GetY(),
+            quaternion.GetZ(),
+            quaternion.GetW());
+        const AZ::Vector3 rotation = quaternion.GetEulerDegrees();
+
         switch (joint->type)
         { // TODO - replace with a generic member function
         case urdf::Joint::FIXED:
@@ -86,11 +103,19 @@ namespace ROS2
             { // Implemented as Hinge with limit set to -2*PI and 2*PI deg. Works fine in the Engine
                 jointComponent = followColliderEntity->CreateComponent<PhysX::EditorHingeJointComponent>();
                 followColliderEntity->Activate();
+
+                PhysX::EditorJointRequestBus::Event(
+                    AZ::EntityComponentIdPair(followColliderEntityId, jointComponent->GetId()),
+                    &PhysX::EditorJointRequests::SetVector3Value,
+                    PhysX::JointsComponentModeCommon::ParamaterNames::Rotation,
+                    rotation);
+
                 PhysX::EditorJointRequestBus::Event(
                     AZ::EntityComponentIdPair(followColliderEntityId, jointComponent->GetId()),
                     &PhysX::EditorJointRequests::SetLinearValuePair,
                     PhysX::JointsComponentModeCommon::ParamaterNames::TwistLimits,
                     PhysX::AngleLimitsFloatPair(AZ::RadToDeg(AZ::Constants::TwoPi), -AZ::RadToDeg(AZ::Constants::TwoPi)));
+
                 followColliderEntity->Deactivate();
             }
             break;
@@ -98,11 +123,28 @@ namespace ROS2
             { // Hinge
                 jointComponent = followColliderEntity->CreateComponent<PhysX::EditorHingeJointComponent>();
                 followColliderEntity->Activate();
+
+                const double limitUpper = AZ::RadToDeg(joint->limits->upper);
+                const double limitLower = AZ::RadToDeg(joint->limits->lower);
+                AZ_Printf(
+                    "JointsMaker",
+                    "Setting limits : upper: %.1f lower: %.1f (URDF:%f,%f)",
+                    limitUpper,
+                    limitLower,
+                    joint->limits->upper,
+                    joint->limits->lower);
+                PhysX::EditorJointRequestBus::Event(
+                    AZ::EntityComponentIdPair(followColliderEntityId, jointComponent->GetId()),
+                    &PhysX::EditorJointRequests::SetVector3Value,
+                    PhysX::JointsComponentModeCommon::ParamaterNames::Rotation,
+                    rotation);
+
                 PhysX::EditorJointRequestBus::Event(
                     AZ::EntityComponentIdPair(followColliderEntityId, jointComponent->GetId()),
                     &PhysX::EditorJointRequests::SetLinearValuePair,
                     PhysX::JointsComponentModeCommon::ParamaterNames::TwistLimits,
-                    PhysX::AngleLimitsFloatPair(AZ::RadToDeg(joint->limits->upper), AZ::RadToDeg(joint->limits->lower)));
+                    PhysX::AngleLimitsFloatPair(limitUpper, limitLower));
+
                 followColliderEntity->Deactivate();
             }
             break;
