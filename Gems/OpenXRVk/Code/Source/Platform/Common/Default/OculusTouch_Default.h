@@ -24,7 +24,8 @@ namespace AzFramework
         AZ_CLASS_ALLOCATOR(InputDeviceOculusTouch, AZ::SystemAllocator, 0);
 
         ////////////////////////////////////////////////////////////////////////////////////////////
-        InputDeviceOculusTouch(InputDeviceXRController& inputDevice);
+        explicit InputDeviceOculusTouch(InputDeviceXRController& inputDevice);
+        AZ_DISABLE_COPY_MOVE(InputDeviceOculusTouch);
         ~InputDeviceOculusTouch() override;
 
     private:

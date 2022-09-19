@@ -28,7 +28,7 @@ namespace XR
         AZ_RTTI(Input, "{DCDFC6A7-B457-414B-BC24-0831C2AC628B}");
 
         Input() = default;
-        virtual ~Input() = default;
+        ~Input() override = default;
         
         struct Descriptor
         {

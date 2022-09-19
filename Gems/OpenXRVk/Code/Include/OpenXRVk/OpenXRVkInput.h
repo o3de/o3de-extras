@@ -12,6 +12,7 @@
 #include <OpenXRVk/InputDeviceXRController.h>
 #include <OpenXRVk/OpenXRVkSpace.h>
 #include <OpenXRVk_Platform.h>
+#include <Atom/RPI.Public/XR/XRRenderingInterface.h>
 
 namespace OpenXRVk
 {
@@ -36,7 +37,7 @@ namespace OpenXRVk
         AZ::RHI::ResultCode InitializeActionSpace(XrSession xrSession);
 
         //! Attach action sets
-        AZ::RHI::ResultCode InitializeActionSets(XrSession xrSession);
+        AZ::RHI::ResultCode InitializeActionSets(XrSession xrSession) const;
 
         //! Update Controller space information
         void LocateControllerSpace(XrTime predictedDisplayTime, XrSpace baseSpace, AZ::u32 handIndex);
@@ -112,7 +113,7 @@ namespace OpenXRVk
         //! Create a XrAction
         void CreateAction(XrAction& action, XrActionType actionType,
                           const char* actionName, const char* localizedActionName,
-                          uint32_t countSubactionPathCount, const XrPath* subActionPaths);
+                          uint32_t countSubactionPathCount, const XrPath* subActionPaths) const;
 
         //! Destroy native objects
         void ShutdownInternal() override;
@@ -128,13 +129,13 @@ namespace OpenXRVk
         DualActionData m_squeezeAction;
         DualActionData m_triggerAction;
 
-        AZStd::array<XrPath, AZ::RPI::XRMaxNumControllers> m_handSubactionPath;
-        AZStd::array<XrSpace, AZ::RPI::XRMaxNumControllers> m_handSpace;
+        AZStd::array<XrPath, AZ::RPI::XRMaxNumControllers> m_handSubactionPath{};
+        AZStd::array<XrSpace, AZ::RPI::XRMaxNumControllers> m_handSpace{};
         AZStd::array<float, AZ::RPI::XRMaxNumControllers> m_handScale = { { 1.0f, 1.0f } };
-        AZStd::array<XrBool32, AZ::RPI::XRMaxNumControllers> m_handActive;
+        AZStd::array<XrBool32, AZ::RPI::XRMaxNumControllers> m_handActive{};
 
-        AZStd::array<XrSpaceLocation, AZ::RPI::XRMaxNumControllers> m_handSpaceLocation;
-        AZStd::array<XrSpaceLocation, SpaceType::Count> m_xrVisualizedSpaceLocations;
+        AZStd::array<XrSpaceLocation, AZ::RPI::XRMaxNumControllers> m_handSpaceLocation{};
+        AZStd::array<XrSpaceLocation, SpaceType::Count> m_xrVisualizedSpaceLocations{};
 
         //Todo: This is assuming Quest 2 controller. Needs better abstraction to cover other types of controllers
         SingleActionData m_xButtonAction;
