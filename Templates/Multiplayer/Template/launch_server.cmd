@@ -9,4 +9,4 @@ REM
 REM Continuous Integration CLI entrypoint script to start CTest, triggering post-build tests
 REM
 
-.\build\windows\bin\profile\MultiplayerSample.${Name}.exe --console-command-file=launch_server.cfg
+.\build\windows\bin\profile\${Name}.ServerLauncher.exe --console-command-file=launch_server.cfg
