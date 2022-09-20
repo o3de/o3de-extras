@@ -9,7 +9,7 @@
 #include <AzTest/AzTest.h>
 #include "XRTest.h"
 
-#if !AZ_TRAIT_DISABLE_ALL_XR_TESTS
+#if !O3DE_TRAIT_DISABLE_ALL_XR_TESTS
 
 void XRTest::SetUp()
 {
@@ -26,6 +26,15 @@ TEST_F(XRTest, PassThisTest)
     EXPECT_TRUE(true);
 }
 
-#endif // !AZ_TRAIT_DISABLE_ALL_XR_TESTS
+#if O3DE_TRAIT_DISABLE_FAILED_XR_TESTS
+TEST_F(XRTest, DISABLED_ExpectTrue)
+#else
+TEST_F(XRTest, ExpectTrue)
+#endif // O3DE_TRAIT_DISABLE_FAILED_XR_TESTS
+{
+    EXPECT_TRUE(false);
+}
+
+#endif // !O3DE_TRAIT_DISABLE_ALL_XR_TESTS
 
 AZ_UNIT_TEST_HOOK(DEFAULT_UNIT_TEST_ENV);

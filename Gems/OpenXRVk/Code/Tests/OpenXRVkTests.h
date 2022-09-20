@@ -9,13 +9,15 @@
 #pragma once
 
 #include <AzTest/AzTest.h>
-#include <AzCore/UnitTest/TestTypes.h>
 
-class OpenXRVkTestFixture
+class OpenXRVkTest
     : public ::testing::Test
 {
 protected:
     void SetUp() override;
     void TearDown() override;
+
+    void SetupInternal();
+    void TearDownInternal();
 };
 

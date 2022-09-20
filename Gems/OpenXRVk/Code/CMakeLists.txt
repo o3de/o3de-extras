@@ -94,11 +94,13 @@ if(PAL_TRAIT_BUILD_TESTS_SUPPORTED)
         OUTPUT_NAME OpenXRVk.Tests.Gem
         FILES_CMAKE
             openxrvk_tests_files.cmake
+            ${pal_source_dir}/platform_test_${PAL_PLATFORM_NAME_LOWERCASE}_files.cmake
         INCLUDE_DIRECTORIES
             PRIVATE
                 Tests
                 .
                 Source
+                ${pal_source_dir}
         BUILD_DEPENDENCIES
             PRIVATE
                 AZ::AzTestShared

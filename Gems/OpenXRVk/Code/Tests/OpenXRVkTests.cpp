@@ -7,25 +7,29 @@
  */
 
 #include <AzTest/AzTest.h>
-
-#include "OpemXRVkTest.h"
+#include "OpenXRVkTests.h"
 
 #if !O3DE_TRAIT_DISABLE_ALL_OPENXRVK_TESTS
 
-void OpenXRVkTestFixture::SetUp()
+void OpenXRVkTest::SetUp()
 {
-
+    SetupInternal();
 }
 
-void OpenXRVkTestFixture::TearDown()
+void OpenXRVkTest::TearDown()
 {
+    TearDownInternal();
+}
 
+TEST_F(OpenXRVkTest, PassThisTest)
+{
+    EXPECT_TRUE(true);
 }
 
 #if O3DE_TRAIT_DISABLE_FAILED_OPENXRVK_TESTS
-TEST_F(OpenXRVkTestFixture, DISABLED_ExpectTrue)
+TEST_F(OpenXRVkTest, DISABLED_ExpectTrue)
 #else
-TEST_F(OpenXRVkTestFixture, ExpectTrue)
+TEST_F(OpenXRVkTest, ExpectTrue)
 #endif // O3DE_TRAIT_DISABLE_FAILED_OPENXRVK_TESTS
 {
     EXPECT_TRUE(false);

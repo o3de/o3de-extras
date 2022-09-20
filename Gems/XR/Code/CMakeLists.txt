@@ -70,6 +70,7 @@ ly_add_target(
             ${pal_source_dir}
         PUBLIC
             Include
+            ${pal_include_dir}
     BUILD_DEPENDENCIES
         PRIVATE
             Gem::XR.Static
