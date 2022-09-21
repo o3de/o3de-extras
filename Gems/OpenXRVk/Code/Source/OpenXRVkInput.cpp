@@ -100,7 +100,7 @@ namespace OpenXRVk
         result = xrStringToPath(xrInstance, "/user/hand/left/input/y/click", &yButtonValuePath);
         result = xrStringToPath(xrInstance, "/user/hand/right/input/a/click", &aButtonValuePath);
         result = xrStringToPath(xrInstance, "/user/hand/right/input/b/click", &bButtonValuePath);
-        
+
         // Bindings for the Oculus Touch.
         XrPath oculusTouchInteractionProfilePath;
         result = xrStringToPath(xrInstance, "/interaction_profiles/oculus/touch_controller", &oculusTouchInteractionProfilePath);
@@ -236,7 +236,7 @@ namespace OpenXRVk
                 if (m_squeezeAction.m_actionState[static_cast<uint32_t>(hand)] > 0.9f)
                 {
                     //This vibration event is currently added here for testing purposes.
-                    //Remove this when this is moved to an event that is triggered externally 
+                    //Remove this when this is moved to an event that is triggered externally
                     XrHapticVibration vibration{};
                     vibration.type = XR_TYPE_HAPTIC_VIBRATION;
                     vibration.amplitude = 0.5;
@@ -328,7 +328,7 @@ namespace OpenXRVk
     }
 
 
-    void Input::LocateControllerSpace(XrTime predictedDisplayTime, XrSpace baseSpace, uint32_t handIndex)
+    void Input::LocateControllerSpace(XrTime predictedDisplayTime, XrSpace baseSpace, AZ::u32 handIndex)
     {
         XrSpaceLocation spaceLocation{};
         spaceLocation.type = XR_TYPE_SPACE_LOCATION;
@@ -336,7 +336,7 @@ namespace OpenXRVk
             result == XR_SUCCESS)
         {
             if ((spaceLocation.locationFlags & XR_SPACE_LOCATION_POSITION_VALID_BIT) != 0 &&
-                (spaceLocation.locationFlags & XR_SPACE_LOCATION_ORIENTATION_VALID_BIT) != 0) 
+                (spaceLocation.locationFlags & XR_SPACE_LOCATION_ORIENTATION_VALID_BIT) != 0)
             {
                 m_handSpaceLocation[handIndex] = spaceLocation;
             }

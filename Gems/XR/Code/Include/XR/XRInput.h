@@ -13,7 +13,7 @@
 #include <XR/XRObject.h>
 
 namespace XR
-{ 
+{
     class Session;
     class Instance;
     class Device;
@@ -29,19 +29,19 @@ namespace XR
 
         Input() = default;
         ~Input() override = default;
-        
+
         struct Descriptor
         {
             Ptr<Instance> m_instance;
             Ptr<Device> m_device;
             Ptr<Session> m_session;
         };
-        
+
         AZ::RHI::ResultCode Init(Descriptor descriptor);
         const Descriptor& GetDescriptor() const;
 
         virtual void PollActions() = 0;
-       
+
     private:
         ///////////////////////////////////////////////////////////////////
         // XR::Object

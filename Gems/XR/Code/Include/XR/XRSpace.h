@@ -18,7 +18,6 @@ namespace XR
     class Space
         : public ::XR::Object
     {
-	    
     public:
         AZ_CLASS_ALLOCATOR(Space, AZ::SystemAllocator, 0);
         AZ_RTTI(Space, "{A78A37F1-8861-4EB4-8FC6-0E9C11394EF1}");
@@ -30,8 +29,8 @@ namespace XR
 
         AZ::RHI::ResultCode Init(Descriptor descriptor);
         const Space::Descriptor& GetDescriptor() const;
-    private:
 
+    private:
         ///////////////////////////////////////////////////////////////////
         // XR::Object
         void Shutdown() override;
@@ -40,7 +39,7 @@ namespace XR
         //! Called when the XR instance is being shutdown.
         virtual void ShutdownInternal() = 0;
         virtual AZ::RHI::ResultCode InitInternal() = 0;
-       
+
         Descriptor m_descriptor;
     };
 } // namespace XR

@@ -36,8 +36,8 @@ namespace XR
         };
 
         Session() = default;
-        virtual ~Session() = default;
-        
+        ~Session() override = default;
+
         //! Initialize the XrSession object which is responsible for creating
         //! XrInput and XrSpace
         AZ::RHI::ResultCode Init(const Descriptor& descriptor);
@@ -50,7 +50,7 @@ namespace XR
 
         //! Get the Xr Space object
         Space* GetSpace() const;
-        
+
         //! Return true if session is running
         virtual bool IsSessionRunning() const = 0;
 
@@ -59,7 +59,7 @@ namespace XR
 
         //! Return true if a restart is requested
         virtual bool IsRestartRequested() const = 0;
-    
+
         //! Return true if render loop skip is requested
         virtual bool IsExitRenderLoopRequested() const = 0;
 
@@ -112,7 +112,6 @@ namespace XR
         virtual float GetTriggerState(AZ::u32 handIndex) const = 0;
 
     private:
-
         ///////////////////////////////////////////////////////////////////
         // XR::Object
         void Shutdown() override;

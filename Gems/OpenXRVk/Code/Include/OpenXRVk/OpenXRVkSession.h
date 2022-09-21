@@ -8,7 +8,6 @@
 
 #pragma once
 
-#include <AzCore/std/smart_ptr/intrusive_ptr.h>
 #include <OpenXRVk_Platform.h>
 #include <OpenXRVk/OpenXRVkSpace.h>
 #include <OpenXRVk/OpenXRVkInput.h>
@@ -32,7 +31,7 @@ namespace OpenXRVk
         //! Process session state when it is updated
         void HandleSessionStateChangedEvent(const XrEventDataSessionStateChanged& stateChangedEvent);
 
-        //! Try and poll the next event 
+        //! Try and poll the next event
         const XrEventDataBaseHeader* TryReadNextEvent();
 
         //! Return the native session
@@ -66,7 +65,6 @@ namespace OpenXRVk
         //////////////////////////////////////////////////////////////////////////
 
     private:
-
         void ShutdownInternal() override;
         void LogActionSourceName(XrAction action, const AZStd::string_view actionName) const;
         Input* GetNativeInput() const;
@@ -79,6 +77,6 @@ namespace OpenXRVk
 
         bool m_sessionRunning = false;
         bool m_exitRenderLoop = false;
-        bool m_requestRestart = false;        
+        bool m_requestRestart = false;
     };
 }

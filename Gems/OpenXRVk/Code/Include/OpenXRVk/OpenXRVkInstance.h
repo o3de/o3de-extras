@@ -17,7 +17,7 @@
 
 namespace OpenXRVk
 {
-    //! Vulkan specific XR instance back-end class that will help manage 
+    //! Vulkan specific XR instance back-end class that will help manage
     //! XR specific vulkan native objects
     class Instance final
     : public XR::Instance
@@ -35,10 +35,10 @@ namespace OpenXRVk
         AZ::u32 GetNumPhysicalDevices() const override;
         AZ::RHI::ResultCode GetXRPhysicalDevice(AZ::RHI::XRPhysicalDeviceDescriptor* physicalDeviceDescriptor, int32_t index) override;
         //////////////////////////////////////////////////////////////////////////
-		
+
         //! Enumerate supported extension names.
         XR::StringList GetInstanceExtensionNames(const char* layerName = nullptr) const;
-		
+
         //! Enumerate supported layer names.
         XR::StringList GetInstanceLayerNames() const;
 
@@ -73,8 +73,7 @@ namespace OpenXRVk
         VkPhysicalDevice GetActivePhysicalDevice() const;
 
     private:
-
-        //! Clean native objects. 
+        //! Clean native objects.
         void ShutdownInternal() override;
 
         XrInstance m_xrInstance = XR_NULL_HANDLE;

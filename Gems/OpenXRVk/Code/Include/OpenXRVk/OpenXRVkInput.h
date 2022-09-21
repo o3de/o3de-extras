@@ -25,9 +25,9 @@ namespace OpenXRVk
         AZ_RTTI(Input, "{97ADD1FE-27DF-4F36-9F61-683F881F9477}", XR::Input);
 
         static XR::Ptr<Input> Create();
-    
+
         //! Sync all the actions and update controller
-        //! as well as various tracked space poses 
+        //! as well as various tracked space poses
         void PollActions() override;
 
         //! Initialize various actions/actions sets and add support for Oculus touch bindings
@@ -91,7 +91,6 @@ namespace OpenXRVk
         float GetTriggerState(AZ::u32 handIndex) const;
 
     private:
-
         struct SingleActionData
         {
             XrAction m_actionHandle{ XR_NULL_HANDLE };

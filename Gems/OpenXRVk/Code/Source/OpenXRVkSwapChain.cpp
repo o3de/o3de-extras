@@ -43,7 +43,7 @@ namespace OpenXRVk
         m_height = height;
         return AZ::RHI::ResultCode::Success;
     }
-    
+
     AZ::u32 SwapChain::View::GetCurrentImageIndex() const
     {
         return m_activeImageIndex;
@@ -64,7 +64,7 @@ namespace OpenXRVk
     {
         return m_handle;
     }
-        
+
     AZ::u32 SwapChain::View::GetWidth() const
     {
         return m_width;
@@ -111,13 +111,13 @@ namespace OpenXRVk
         //Only supporting XR_VIEW_CONFIGURATION_TYPE_PRIMARY_STEREO for now
         XrViewConfigurationType viewConfigType = XR_VIEW_CONFIGURATION_TYPE_PRIMARY_STEREO;
 
-        result = xrEnumerateViewConfigurationViews(xrInstance, xrSystemId, 
-                                                            viewConfigType, 0, &m_numViews, nullptr);
+        result = xrEnumerateViewConfigurationViews(xrInstance, xrSystemId,
+                                                   viewConfigType, 0, &m_numViews, nullptr);
         WARN_IF_UNSUCCESSFUL(result);
 
         m_configViews.resize(m_numViews, { XR_TYPE_VIEW_CONFIGURATION_VIEW });
-        result = xrEnumerateViewConfigurationViews(xrInstance, xrSystemId, 
-                                                viewConfigType, m_numViews, &m_numViews, m_configViews.data());
+        result = xrEnumerateViewConfigurationViews(xrInstance, xrSystemId,
+                                                   viewConfigType, m_numViews, &m_numViews, m_configViews.data());
         WARN_IF_UNSUCCESSFUL(result);
 
         // Create and cache view buffer for xrLocateViews later.
@@ -131,7 +131,7 @@ namespace OpenXRVk
             result = xrEnumerateSwapchainFormats(xrSession, 0, &swapchainFormatCount, nullptr);
             AZStd::vector<int64_t> swapChainFormats(swapchainFormatCount);
             result = xrEnumerateSwapchainFormats(xrSession, aznumeric_cast<uint32_t>(swapChainFormats.size()),
-                                                &swapchainFormatCount, swapChainFormats.data());
+                                                 &swapchainFormatCount, swapChainFormats.data());
             WARN_IF_UNSUCCESSFUL(result);
             AZ_Assert(swapchainFormatCount == swapChainFormats.size(), "Size mismatch swapchainFormatCount %i swapChainFormats size %i", swapchainFormatCount, swapChainFormats.size());
 
@@ -191,14 +191,14 @@ namespace OpenXRVk
 
                     AZ::RHI::ResultCode resultCode = viewSwapChain->Init(handle, swapchainCreateInfo.width, swapchainCreateInfo.height);
                     if(resultCode == AZ::RHI::ResultCode::Success)
-                    { 
+                    {
                         m_viewSwapchains.push_back(viewSwapChain);
                     }
                 }
 
                 result = xrEnumerateSwapchainImages(viewSwapChain->GetSwapChainHandle(), 0, &viewSwapChain->m_numImages, nullptr);
                 WARN_IF_UNSUCCESSFUL(result);
-                
+
                 viewSwapChain->m_swapChainImageHeaders.resize(viewSwapChain->m_numImages);
                 viewSwapChain->m_swapchainImages.resize(viewSwapChain->m_numImages);
                 for (AZ::u32 j = 0; j < viewSwapChain->m_numImages; ++j)
@@ -233,7 +233,7 @@ namespace OpenXRVk
         auto swapchainFormatIt =
             AZStd::find_first_of(runtimeFormats.begin(), runtimeFormats.end(), AZStd::begin(SupportedColorSwapchainFormats),
                 AZStd::end(SupportedColorSwapchainFormats));
-        if (swapchainFormatIt == runtimeFormats.end()) 
+        if (swapchainFormatIt == runtimeFormats.end())
         {
             AZ_Error("OpenXRVk", false, "No runtime swapchain format supported for color swapchain");
             return VK_FORMAT_UNDEFINED;
@@ -252,7 +252,7 @@ namespace OpenXRVk
         AZ::Vulkan::XRSwapChainDescriptor* xrSwapChainDescriptor = static_cast<AZ::Vulkan::XRSwapChainDescriptor*>(swapchainDescriptor);
         uint32_t swapChainIndex = xrSwapChainDescriptor->m_inputData.m_swapChainIndex;
         uint32_t swapChainImageIndex = xrSwapChainDescriptor->m_inputData.m_swapChainImageIndex;
-        
+
         XR::SwapChain::View* viewSwapChain = GetView(swapChainIndex);
         SwapChain::Image* swapchainImage = static_cast<SwapChain::Image*>(viewSwapChain->m_images[swapChainImageIndex].get());
         xrSwapChainDescriptor->m_outputData.m_nativeImage = swapchainImage->GetNativeImage();
