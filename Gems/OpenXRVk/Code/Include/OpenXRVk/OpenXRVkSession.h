@@ -75,7 +75,7 @@ namespace OpenXRVk
         XrSessionState m_sessionState = XR_SESSION_STATE_UNKNOWN;
         XrEventDataBuffer m_eventDataBuffer;
         XrInstance m_xrInstance = XR_NULL_HANDLE;
-        XrGraphicsBindingVulkan2KHR m_graphicsBinding{ XR_TYPE_GRAPHICS_BINDING_VULKAN2_KHR };
+        XrGraphicsBindingVulkan2KHR m_graphicsBinding{ XR_TYPE_GRAPHICS_BINDING_VULKAN_KHR };
 
         bool m_sessionRunning = false;
         bool m_exitRenderLoop = false;
