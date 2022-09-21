@@ -121,27 +121,24 @@ namespace ROS2
 
     void CollidersMaker::FindWheelMaterial()
     {
-        bool assetFound = false;
-        AZ::Data::AssetInfo assetInfo;
-        AZStd::string watchDir;
-        AzToolsFramework::AssetSystemRequestBus::BroadcastResult(
-            assetFound,
-            &AzToolsFramework::AssetSystem::AssetSystemRequest::GetSourceInfoBySourcePath,
-            "Materials/wheel_material.physxmaterial",
-            assetInfo,
-            watchDir);
+        // The `wheel_material.physicsmaterial` is created by Asset Processor from `Materials/wheel_material.physxmaterial`
+        // that is provided by this Gem source. The `wheel_material.physicsmaterial` is located in project's cache
+        // and that is a critical asset that is automatically loaded.
+        const char* physicsMaterialAssetRelPath = "materials/wheel_material.physicsmaterial"; // relative path to cache folder.
+        AZ::Data::AssetId assetId;
+        AZ::Data::AssetCatalogRequestBus::BroadcastResult(
+            assetId,
+            &AZ::Data::AssetCatalogRequestBus::Events::GetAssetIdByPath,
+            physicsMaterialAssetRelPath,
+            Physics::MaterialAsset::TYPEINFO_Uuid(),
+            false);
 
-        if (assetFound)
+        if (assetId.IsValid())
         {
-            AZ_Printf(
-                Internal::collidersMakerLoggingTag,
-                "path: %s type:  %s id: %s found %d\n",
-                assetInfo.m_relativePath.c_str(),
-                assetInfo.m_assetType.ToString<AZStd::string>().c_str(),
-                assetInfo.m_assetId.ToString<AZStd::string>().c_str(),
-                assetFound);
-            m_wheelMaterial = AZ::Data::Asset<Physics::MaterialAsset>(
-                assetInfo.m_assetId, Physics::MaterialAsset::TYPEINFO_Uuid(), assetInfo.m_relativePath);
+            m_wheelMaterial =
+                AZ::Data::Asset<Physics::MaterialAsset>(assetId, Physics::MaterialAsset::TYPEINFO_Uuid(), physicsMaterialAssetRelPath);
+            AZ_TracePrintf(Internal::collidersMakerLoggingTag, "Wait for loading asset\n");
+            m_wheelMaterial.BlockUntilLoadComplete();
         }
         else
         {
