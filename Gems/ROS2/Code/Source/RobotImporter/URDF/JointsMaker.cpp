@@ -63,9 +63,7 @@ namespace ROS2
         if (!entity->FindComponent<PhysX::EditorRigidBodyComponent>())
         {
             AZ_TracePrintf("AddColliderForFixedJoint", "Adding RigidBody for entity id:%s", entityId.ToString().c_str());
-            PhysX::EditorRigidBodyConfiguration config;
-            config.m_kinematic = true;
-            entity->CreateComponent<PhysX::EditorRigidBodyComponent>(config);
+            entity->CreateComponent<PhysX::EditorRigidBodyComponent>();
         }
     }
 
