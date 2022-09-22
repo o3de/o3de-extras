@@ -108,7 +108,7 @@
                         <xs:attribute name="IsRewindable" type="xs:boolean" use="required"/>
                         <xs:attribute name="IsPredictable" type="xs:boolean" use="required"/>
                         <xs:attribute name="ExposeToEditor" type="xs:boolean" use="required"/>
-                        <xs:attribute name="ExposeToScript" type="xs:boolean" use="optional" default="false"/>
+                        <xs:attribute name="ExposeToScript" type="xs:boolean" use="required"/>
                         <xs:attribute name="GenerateEventBindings" type="xs:boolean" use="required"/>
                         <xs:attribute name="Description" type="xs:string" use="required"/>
                     </xs:complexType>
