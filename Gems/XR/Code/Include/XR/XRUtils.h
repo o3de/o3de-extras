@@ -18,5 +18,5 @@ namespace XR
     //! Right handed coord system as Openxr provides data in that system
     //! Provides support for reverse depth in case we want better depth precision
     //! Handles the case where farDist is less than nearDist whereby it will place far plane at infinity. 
-    AZ::Matrix4x4 CreateProjectionOffset(float angleLeft, float angleRight, float angleBottom, float angleTop, float nearDist, float farDist, bool reverseDepth);
+    AZ::Matrix4x4 CreateStereoscopicProjection(float angleLeft, float angleRight, float angleBottom, float angleTop, float nearDist, float farDist, bool reverseDepth);
 }

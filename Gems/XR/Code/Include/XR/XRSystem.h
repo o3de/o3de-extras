@@ -70,9 +70,9 @@ namespace XR
         AZ::RHI::ResultCode GetControllerPose(AZ::u32 handIndex, AZ::RPI::PoseData& outPoseData) const override;
         float GetControllerScale(AZ::u32 handIndex) const override;
         bool ShouldRender() const override;
-        AZ::Matrix4x4 CreateProjectionOffset(float angleLeft, float angleRight, 
-                                             float angleBottom, float angleTop, 
-                                             float nearDist, float farDist, bool reverseDepth) override;
+        AZ::Matrix4x4 CreateStereoscopicProjection(float angleLeft, float angleRight,
+                                                float angleBottom, float angleTop, 
+                                                float nearDist, float farDist, bool reverseDepth) override;
         AZ::RHI::XRRenderingInterface* GetRHIXRRenderingInterface() override;
         float GetXButtonState() const override;
         float GetYButtonState() const override;
