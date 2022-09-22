@@ -5,6 +5,20 @@
  * SPDX-License-Identifier: Apache-2.0 OR MIT
  *
  */
-#pragma once
 
-#define O3DE_TRAIT_DISABLE_FAILED_XR_TESTS
+#include <AzTest/AzTest.h>
+
+#include "XR_Traits_Platform.h"
+#include "XRTest.h"
+
+void XRTest::SetupInternal()
+{
+
+}
+
+void XRTest::TearDownInternal()
+{
+
+}
+
+

@@ -7,4 +7,4 @@
  */
 #pragma once
 
-#define O3DE_TRAIT_DISABLE_FAILED_XR_TESTS
+#include <XR_Traits_Mac.h>

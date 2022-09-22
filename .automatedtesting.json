@@ -13,7 +13,5 @@
     "REGISTER_RESTRICTED": [
     ],
     "ENABLE_GEMS": [
-        "Gems/XR",
-        "Gems/OpenXRVk"
     ]
 }
