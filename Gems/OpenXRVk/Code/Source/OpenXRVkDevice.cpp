@@ -81,15 +81,11 @@ namespace OpenXRVk
         }
 
         // Now that we have created the device, load the function pointers for it.
-        // NOTE: Passing the xr physical device to LoadProcAddresses causes a crash in glad vulkan
-        //       inside 'glad_vk_find_core_vulkan' function when calling 'context->GetPhysicalDeviceProperties'.
-        //       It's OK to pass VK_NULL_HANDLE at the moment, which means glad vulkan will use only device and instance
-        //       to check for vulkan extensions.
-        if (!xrVkInstance->GetFunctionLoader().LoadProcAddresses(
-            &m_context, xrVkInstance->GetNativeInstance(), VK_NULL_HANDLE/*xrVkInstance->GetActivePhysicalDevice()*/, m_xrVkDevice))
+        bool functionsLoaded = xrVkInstance->GetFunctionLoader().LoadProcAddresses(
+            &xrVkInstance->GetContext(), xrVkInstance->GetNativeInstance(), xrVkInstance->GetActivePhysicalDevice(), m_xrVkDevice);
+        m_context = xrVkInstance->GetContext();
+        if (!functionsLoaded)
         {
-            // Something went wrong loading function pointers, use the glad context from the instance to shut down the device.
-            m_context = xrVkInstance->GetContext();
             ShutdownInternal();
             AZ_Error("OpenXRVk", false, "Failed to initialize function loader for the device.");
             return AZ::RHI::ResultCode::Fail;
