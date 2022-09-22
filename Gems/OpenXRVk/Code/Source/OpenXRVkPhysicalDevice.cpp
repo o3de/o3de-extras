@@ -18,7 +18,7 @@ namespace OpenXRVk
             xrInstance, "xrGetVulkanGraphicsDeviceKHR", reinterpret_cast<PFN_xrVoidFunction*>(&pfnGetVulkanGraphicsDeviceKHR));
         ASSERT_IF_UNSUCCESSFUL(result);
 
-        //TODO::Look into api that can retreive multiple physicall devices if connected
+        //TODO::Look into api that can retreive multiple physical devices if connected
         VkPhysicalDevice vkPhysicalDevice = VK_NULL_HANDLE;
         result = pfnGetVulkanGraphicsDeviceKHR(xrInstance, xrSystemId, vkInstance, &vkPhysicalDevice);
         ASSERT_IF_UNSUCCESSFUL(result);
