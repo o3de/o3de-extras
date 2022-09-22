@@ -25,6 +25,7 @@ namespace ROS2
                       "Robot Importer", "Use this component to import robot definition from supported formats")
                     ->ClassElement(AZ::Edit::ClassElements::EditorData, "")
                     ->Attribute(AZ::Edit::Attributes::AppearsInAddComponentMenu, AZ_CRC("System"))
+                    ->Attribute(AZ::Edit::Attributes::Category, "ROS2")
                     ->Attribute(AZ::Edit::Attributes::AutoExpand, true);
             }
         }

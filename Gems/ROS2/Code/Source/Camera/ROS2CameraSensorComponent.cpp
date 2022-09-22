@@ -62,6 +62,7 @@ namespace ROS2
             {
                 ec->Class<ROS2CameraSensorComponent>("ROS2 Camera Sensor", "[Camera component]")
                     ->ClassElement(AZ::Edit::ClassElements::EditorData, "")
+                    ->Attribute(AZ::Edit::Attributes::Category, "ROS2")
                     ->Attribute(AZ::Edit::Attributes::AppearsInAddComponentMenu, AZ_CRC("Game"))
                     ->DataElement(
                         AZ::Edit::UIHandlers::Default, &ROS2CameraSensorComponent::m_cameraName, "Camera Name", "This is the camera name.")

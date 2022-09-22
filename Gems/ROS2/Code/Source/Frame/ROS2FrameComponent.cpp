@@ -155,6 +155,7 @@ namespace ROS2
             {
                 ec->Class<ROS2FrameComponent>("ROS2 Frame", "[ROS2 Frame component]")
                     ->ClassElement(AZ::Edit::ClassElements::EditorData, "")
+                    ->Attribute(AZ::Edit::Attributes::Category, "ROS2")
                     ->Attribute(AZ::Edit::Attributes::AppearsInAddComponentMenu, AZ_CRC("Game"))
                     ->DataElement(
                         AZ::Edit::UIHandlers::Default,
