@@ -9,12 +9,8 @@
 set(ENABLED_GEMS
     ROS2-Gem-Demo
     Atom
-    AudioSystem
-    AWSCore
     CameraFramework
     DebugDraw
-    EditorPythonBindings
-    EMotionFX
     GameState
     ImGui
     LandscapeCanvas
