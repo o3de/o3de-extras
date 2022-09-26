@@ -427,6 +427,10 @@ namespace ROS2
                     AZ::EntityComponentIdPair(entityId, component->GetId()),
                     &PhysX::EditorColliderComponentRequests::SetCylinderRadius,
                     cylinderGeometry->radius);
+                PhysX::EditorColliderComponentRequestBus::Event(
+                    AZ::EntityComponentIdPair(entityId, component->GetId()),
+                    &PhysX::EditorColliderComponentRequests::SetCylinderSubdivisionCount,
+                    32);
                 entity->Deactivate();
             }
             break;
