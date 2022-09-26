@@ -28,6 +28,7 @@ namespace ROS2
     namespace Internal
     {
         static const char* collidersMakerLoggingTag = "CollidersMaker";
+
         AZ::IO::Path GetFullURDFMeshPath(AZ::IO::Path modelPath, AZ::IO::Path meshPath)
         {
             modelPath.RemoveFilename();
