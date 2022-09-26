@@ -69,4 +69,6 @@ set(FILES
     Source/Converters/URDF/ToFBX/UniqueIdGenerator.h
     Source/Converters/URDF/ToFBX/UrdfToFbxConverter.cpp
     Source/Converters/URDF/ToFBX/UrdfToFbxConverter.h
+    Source/Spawner/ROS2SpawnerComponent.h
+    Source/Spawner/ROS2SpawnerComponent.cpp
 )
