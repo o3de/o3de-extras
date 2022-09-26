@@ -30,7 +30,7 @@ namespace AzFramework
             behaviorContext->Class<InputDeviceXRController>()
                 ->Attribute(AZ::Script::Attributes::Storage, AZ::Script::Attributes::StorageType::RuntimeOwn)
                 ->Constant("name", BehaviorConstant(IdForIndex0.GetName()))
-
+                // Standard digital buttons...
                 ->Constant(Button::A.GetName(), BehaviorConstant(Button::A.GetName()))
                 ->Constant(Button::B.GetName(), BehaviorConstant(Button::B.GetName()))
                 ->Constant(Button::X.GetName(), BehaviorConstant(Button::X.GetName()))
@@ -39,7 +39,7 @@ namespace AzFramework
                 ->Constant(Button::Menu.GetName(), BehaviorConstant(Button::Menu.GetName()))
                 ->Constant(Button::L3.GetName(), BehaviorConstant(Button::L3.GetName()))
                 ->Constant(Button::R3.GetName(), BehaviorConstant(Button::R3.GetName()))
-
+                // Touch capacitive...
                 ->Constant(Button::TA.GetName(), BehaviorConstant(Button::TA.GetName()))
                 ->Constant(Button::TB.GetName(), BehaviorConstant(Button::TB.GetName()))
                 ->Constant(Button::TX.GetName(), BehaviorConstant(Button::TX.GetName()))
@@ -50,24 +50,20 @@ namespace AzFramework
                 ->Constant(Button::TRRest.GetName(), BehaviorConstant(Button::TRRest.GetName()))
                 ->Constant(Button::TLTrig.GetName(), BehaviorConstant(Button::TLTrig.GetName()))
                 ->Constant(Button::TRTrig.GetName(), BehaviorConstant(Button::TRTrig.GetName()))
-                ->Constant(Button::TLThumb.GetName(), BehaviorConstant(Button::TLThumb.GetName()))
-                ->Constant(Button::TRThumb.GetName(), BehaviorConstant(Button::TRThumb.GetName()))
-                ->Constant(Button::TLIndex.GetName(), BehaviorConstant(Button::TLIndex.GetName()))
-                ->Constant(Button::TRIndex.GetName(), BehaviorConstant(Button::TRIndex.GetName()))
-
+                // Analog triggers...
                 ->Constant(Trigger::LTrigger.GetName(), BehaviorConstant(Trigger::LTrigger.GetName()))
                 ->Constant(Trigger::RTrigger.GetName(), BehaviorConstant(Trigger::RTrigger.GetName()))
                 ->Constant(Trigger::LGrip.GetName(), BehaviorConstant(Trigger::LGrip.GetName()))
                 ->Constant(Trigger::RGrip.GetName(), BehaviorConstant(Trigger::RGrip.GetName()))
-
+                // Thumbsticks (1D)...
                 ->Constant(ThumbStickAxis1D::LX.GetName(), BehaviorConstant(ThumbStickAxis1D::LX.GetName()))
                 ->Constant(ThumbStickAxis1D::LY.GetName(), BehaviorConstant(ThumbStickAxis1D::LY.GetName()))
                 ->Constant(ThumbStickAxis1D::RX.GetName(), BehaviorConstant(ThumbStickAxis1D::RX.GetName()))
                 ->Constant(ThumbStickAxis1D::RY.GetName(), BehaviorConstant(ThumbStickAxis1D::RY.GetName()))
-
+                // Thumbsticks (2D)...
                 ->Constant(ThumbStickAxis2D::L.GetName(), BehaviorConstant(ThumbStickAxis2D::L.GetName()))
                 ->Constant(ThumbStickAxis2D::R.GetName(), BehaviorConstant(ThumbStickAxis2D::R.GetName()))
-
+                // Thumbstick directions...
                 ->Constant(ThumbStickDirection::LU.GetName(), BehaviorConstant(ThumbStickDirection::LU.GetName()))
                 ->Constant(ThumbStickDirection::LD.GetName(), BehaviorConstant(ThumbStickDirection::LD.GetName()))
                 ->Constant(ThumbStickDirection::LL.GetName(), BehaviorConstant(ThumbStickDirection::LL.GetName()))
@@ -76,14 +72,14 @@ namespace AzFramework
                 ->Constant(ThumbStickDirection::RD.GetName(), BehaviorConstant(ThumbStickDirection::RD.GetName()))
                 ->Constant(ThumbStickDirection::RL.GetName(), BehaviorConstant(ThumbStickDirection::RL.GetName()))
                 ->Constant(ThumbStickDirection::RR.GetName(), BehaviorConstant(ThumbStickDirection::RR.GetName()))
-
+                // Position (3D)...
                 ->Constant(ControllerPosePosition::LPos.GetName(), BehaviorConstant(ControllerPosePosition::LPos.GetName()))
                 ->Constant(ControllerPosePosition::RPos.GetName(), BehaviorConstant(ControllerPosePosition::RPos.GetName()))
                 ->Constant(ControllerPosePosition::LVel.GetName(), BehaviorConstant(ControllerPosePosition::LVel.GetName()))
                 ->Constant(ControllerPosePosition::RVel.GetName(), BehaviorConstant(ControllerPosePosition::RVel.GetName()))
                 ->Constant(ControllerPosePosition::LAcc.GetName(), BehaviorConstant(ControllerPosePosition::LAcc.GetName()))
                 ->Constant(ControllerPosePosition::RAcc.GetName(), BehaviorConstant(ControllerPosePosition::RAcc.GetName()))
-
+                // Orientation (quaternion)...
                 ->Constant(ControllerPoseOrientation::LOrient.GetName(), BehaviorConstant(ControllerPoseOrientation::LOrient.GetName()))
                 ->Constant(ControllerPoseOrientation::ROrient.GetName(), BehaviorConstant(ControllerPoseOrientation::ROrient.GetName()))
             ;
@@ -91,8 +87,12 @@ namespace AzFramework
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
+    //! Default constructor
+    //! Using the default constructor will not create an implementation.  It is then up to the user
+    //! to call InputDeviceXRController::SetImplementation and supply either a unique_ptr<Implementation>
+    //! or an ImplementationFactory function.
     InputDeviceXRController::InputDeviceXRController()
-        : InputDeviceXRController(InputDeviceId(Name, 0))
+        : InputDeviceXRController(InputDeviceId(Name, 0), nullptr)
     {
     }
 
@@ -158,7 +158,7 @@ namespace AzFramework
         }
 
         // Create the custom implementation
-        m_pimpl.reset(implFactoryFn ? implFactoryFn(*this) : nullptr);
+        SetImplementation(implFactoryFn);
 
         // Connect to haptic feedback request bus
         InputHapticFeedbackRequestBus::Handler::BusConnect(GetInputDeviceId());
@@ -215,6 +215,26 @@ namespace AzFramework
             m_pimpl->SetVibration(leftMotorSpeedNormalized, rightMotorSpeedNormalized);
         }
     }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    void InputDeviceXRController::SetImplementation(AZStd::unique_ptr<Implementation> impl)
+    {
+        m_pimpl = AZStd::move(impl);
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    void InputDeviceXRController::SetImplementation(ImplementationFactory implFactoryFn)
+    {
+        if (implFactoryFn)
+        {
+            m_pimpl.reset(implFactoryFn(*this));
+        }
+    }
+
+    //InputDeviceXRController::Implementation* InputDeviceXRController::GetImplementation() const
+    //{
+    //    return m_pimpl.get();
+    //}
 
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -298,7 +318,7 @@ namespace AzFramework
     ////////////////////////////////////////////////////////////////////////////////////////////////
     AZ::Vector2 InputDeviceXRController::Implementation::RawXRControllerState::GetLeftThumbStickAdjustedForDeadZoneAndNormalized() const
     {
-        return AdjustForDeadZoneAndNormalizeThumbStickInput(m_leftThumbStickXState, m_leftThumbStickYState, 
+        return AdjustForDeadZoneAndNormalizeThumbStickInput(m_leftThumbStickXState, m_leftThumbStickYState,
                                                             m_leftThumbStickDeadZoneValue, m_thumbStickMaxValue);
     }
 
@@ -312,13 +332,15 @@ namespace AzFramework
     ////////////////////////////////////////////////////////////////////////////////////////////////
     AZ::Vector2 InputDeviceXRController::Implementation::RawXRControllerState::GetLeftThumbStickNormalizedValues() const
     {
-        return AZ::Vector2(m_leftThumbStickXState / m_thumbStickMaxValue, m_leftThumbStickYState / m_thumbStickMaxValue);
+        return AZ::Vector2(m_leftThumbStickXState / m_thumbStickMaxValue,
+                           m_leftThumbStickYState / m_thumbStickMaxValue);
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
     AZ::Vector2 InputDeviceXRController::Implementation::RawXRControllerState::GetRightThumbStickNormalizedValues() const
     {
-        return AZ::Vector2(m_rightThumbStickXState / m_thumbStickMaxValue, m_rightThumbStickYState / m_thumbStickMaxValue);
+        return AZ::Vector2(m_rightThumbStickXState / m_thumbStickMaxValue,
+                           m_rightThumbStickYState / m_thumbStickMaxValue);
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -327,8 +349,8 @@ namespace AzFramework
         // Update digital button channels...
         for (const auto& [bitMask, channelIdPtr] : rawControllerState.m_digitalButtonIdsByBitMask)
         {
-            const AZ::u32 buttonState = (rawControllerState.m_digitalButtonStates & bitMask);
-            m_inputDevice.m_buttonChannelsById[*channelIdPtr]->ProcessRawInputEvent(buttonState != 0);
+            const bool buttonState = (rawControllerState.m_digitalButtonStates & bitMask) != 0;
+            m_inputDevice.m_buttonChannelsById[*channelIdPtr]->ProcessRawInputEvent(buttonState);
         }
 
         using xrc = InputDeviceXRController;
@@ -372,13 +394,15 @@ namespace AzFramework
         m_inputDevice.m_thumbStickDirectionChannelsById[xrc::ThumbStickDirection::RL]->ProcessRawInputEvent(rightStickLeft);
         m_inputDevice.m_thumbStickDirectionChannelsById[xrc::ThumbStickDirection::RR]->ProcessRawInputEvent(rightStickRight);
 
+        // Position update...
         m_inputDevice.m_controllerPositionChannelsById[xrc::ControllerPosePosition::LPos]
             ->ProcessRawInputEvent(rawControllerState.m_leftPositionState);
         m_inputDevice.m_controllerPositionChannelsById[xrc::ControllerPosePosition::RPos]
             ->ProcessRawInputEvent(rawControllerState.m_rightPositionState);
-        // process vel and accel... (TBD) ...
 
-        // m_controllerOrientationChannelsById
+        // TBD: Process Velocity and Acceleration...
+
+        // Orientation update...
         m_inputDevice.m_controllerOrientationChannelsById[xrc::ControllerPoseOrientation::LOrient]
             ->ProcessRawInputEvent(rawControllerState.m_leftOrientationState);
         m_inputDevice.m_controllerOrientationChannelsById[xrc::ControllerPoseOrientation::ROrient]

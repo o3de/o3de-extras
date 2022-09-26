@@ -64,10 +64,6 @@ namespace AzFramework
             static constexpr InputChannelId TRRest{ "xr_controller_touch_thumbrest_r" }; //!< The right thumb-rest touch detection
             static constexpr InputChannelId TLTrig{ "xr_controller_touch_trigger_l" }; //!< The left trigger touch detection
             static constexpr InputChannelId TRTrig{ "xr_controller_touch_trigger_r" }; //!< The right trigger touch detection
-            static constexpr InputChannelId TLThumb{ "xr_controller_thumb_pointing_up_l" }; //!< The left thumb pointing up
-            static constexpr InputChannelId TRThumb{ "xr_controller_thumb_pointing_up_r" }; //!< The right thumb pointing up
-            static constexpr InputChannelId TLIndex{ "xr_controller_index_pointing_fwd_l" }; //!< The left index pointing forward
-            static constexpr InputChannelId TRIndex{ "xr_controller_index_pointing_fwd_r" }; //!< The right index pointing forward
 
             //! All digital XR controller button ids
             static constexpr AZStd::array All
@@ -90,10 +86,6 @@ namespace AzFramework
                 TRRest,
                 TLTrig,
                 TRTrig,
-                TLThumb,
-                TRThumb,
-                TLIndex,
-                TRIndex
             };
         };
 
@@ -342,8 +334,8 @@ namespace AzFramework
 
                 AZ::Vector3 m_leftPositionState{};          //!< The left controller position
                 AZ::Vector3 m_rightPositionState{};         //!< The right controller position
-                //AZ::Vector3 m_leftVelocityState;          // TBD ...
-                //AZ::Vector3 m_rightVelocityState;         //
+                //AZ::Vector3 m_leftVelocityState;          // TODO (implement)
+                //AZ::Vector3 m_rightVelocityState;         // ...
                 //AZ::Vector3 m_leftAccelerationState;      //
                 //AZ::Vector3 m_rightAccelerationState;     //
                 AZ::Quaternion m_leftOrientationState{};    //!< The left controller orientation
@@ -377,7 +369,7 @@ namespace AzFramework
 
         ////////////////////////////////////////////////////////////////////////////////////////////
         // Alias for the function type used to create a custom implementation for this input device
-        using ImplementationFactory = Implementation*(InputDeviceXRController&);
+        using ImplementationFactory = AZStd::function<Implementation*(InputDeviceXRController&)>;
 
         ////////////////////////////////////////////////////////////////////////////////////////////
         InputDeviceXRController();
@@ -403,7 +395,17 @@ namespace AzFramework
         ////////////////////////////////////////////////////////////////////////////////////////////
         //! Set the implementation of this input device
         //! @param impl The Implementation to use
-        void SetImplementation(AZStd::unique_ptr<Implementation> impl) { m_pimpl = AZStd::move(impl); }
+        void SetImplementation(AZStd::unique_ptr<Implementation> impl);
+
+        ////////////////////////////////////////////////////////////////////////////////////////////
+        //! Set the implementation of this input device
+        //! @param implFactoryFn The Implementation factory create function to use
+        void SetImplementation(ImplementationFactory implFactoryFn);
+
+        ////////////////////////////////////////////////////////////////////////////////////////////
+        //! Get the non-owning pointer to the implementation of this input device
+        //! @return The raw implementation pointer
+        //Implementation* GetImplementation() const;
 
     protected:
         ////////////////////////////////////////////////////////////////////////////////////////////

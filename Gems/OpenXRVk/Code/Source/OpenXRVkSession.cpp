@@ -14,6 +14,7 @@
 #include <OpenXRVk/OpenXRVkUtils.h>
 #include <AzCore/Debug/Trace.h>
 #include <AzCore/Casting/numeric_cast.h>
+#include <Atom/RHI.Reflect/Vulkan/XRVkDescriptors.h>
 #include <XR/XRBase.h>
 
 namespace OpenXRVk
