@@ -9,12 +9,14 @@ This Gem enables users to develop robotic simulations through ROS2 tools and com
 * Modern version of ROS 2. We support and tested with:
   * [ROS 2 Galactic](https://docs.ros.org/en/galactic/Installation.html) with Ubuntu 20.04.
   * [ROS 2 Humble](https://docs.ros.org/en/humble/Installation.html) with Ubuntu 22.04.
+  * Additional ROS2 packages required:
+    * gazebo_msgs ( sudo apt install ros-${ROS_DISTRO}-gazebo-msgs)
 
 #### Additional ros packages required
 
 Replace `<distro>` with ROS 2 distribution name (galactic, humble, ..).
 
-* gazebo_msgs ( sudo apt install ros-${ROS_DISTRO}-gazebo-msgs)
+* gazebo_msgs ( `sudo apt install ros-${ROS_DISTRO}-gazebo-msgs` )
 
 ## Features
 

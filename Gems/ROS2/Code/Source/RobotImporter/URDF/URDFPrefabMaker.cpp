@@ -16,6 +16,9 @@
 #include <AzToolsFramework/Entity/EditorEntityHelpers.h>
 #include <AzToolsFramework/Prefab/PrefabLoaderInterface.h>
 #include <AzToolsFramework/Prefab/PrefabSystemComponentInterface.h>
+#include <AzToolsFramework/ToolsComponents/TransformComponent.h>
+
+#include <Spawner/SpawnerBus.h>
 
 namespace ROS2
 {
@@ -128,6 +131,8 @@ namespace ROS2
             m_jointsMaker.AddJoint(link, childLink, childEntityId, entityId);
         }
 
+        MoveEntityToDefaultSpawnPoint(entityId);
+
         return AZ::Success(entityId);
     }
 
@@ -145,5 +150,27 @@ namespace ROS2
     const AZStd::string& URDFPrefabMaker::GetPrefabPath() const
     {
         return m_prefabPath;
+    }
+
+    void URDFPrefabMaker::MoveEntityToDefaultSpawnPoint(const AZ::EntityId& rootEntityId)
+    {
+        auto spawner = ROS2::SpawnerInterface::Get();
+
+        if (spawner == nullptr)
+        {
+            AZ_TracePrintf("URDF Importer", "Spawner not found - creating entity in (0,0,0)") return;
+        }
+
+        auto entity_ = AzToolsFramework::GetEntityById(rootEntityId);
+        auto* transformInterface_ = entity_->FindComponent<AzToolsFramework::Components::TransformComponent>();
+
+        if (transformInterface_ == nullptr)
+        {
+            AZ_TracePrintf("URDF Importer", "TransformComponent not found in created entity") return;
+        }
+
+        auto pose = spawner->GetDefaultSpawnPose();
+
+        transformInterface_->SetWorldTM(pose);
     }
 } // namespace ROS2

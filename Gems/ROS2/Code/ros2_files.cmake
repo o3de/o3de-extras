@@ -71,4 +71,5 @@ set(FILES
     Source/Converters/URDF/ToFBX/UrdfToFbxConverter.h
     Source/Spawner/ROS2SpawnerComponent.h
     Source/Spawner/ROS2SpawnerComponent.cpp
+    Source/Spawner/SpawnerBus.h
 )

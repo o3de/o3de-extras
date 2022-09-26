@@ -36,6 +36,7 @@ namespace ROS2
         AzToolsFramework::Prefab::PrefabEntityResult AddEntitiesForLink(urdf::LinkSharedPtr link, AZ::EntityId parentEntityId);
         void BuildAssetsForLink(urdf::LinkSharedPtr link);
         void AddRobotControl(AZ::EntityId rootEntityId);
+        static void MoveEntityToDefaultSpawnPoint(const AZ::EntityId& rootEntityId);
 
         urdf::ModelInterfaceSharedPtr m_model;
         AZStd::string m_prefabPath;

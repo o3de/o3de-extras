@@ -7,6 +7,7 @@
  */
 #pragma once
 
+#include "SpawnerBus.h"
 #include <AzCore/Component/Component.h>
 #include <AzFramework/Spawnable/Spawnable.h>
 #include <AzFramework/Spawnable/SpawnableEntitiesInterface.h>
@@ -23,15 +24,17 @@ namespace ROS2
 
     //! Manages robots spawning.
     //! Allows user to set spawnable prefabs in the Editor and spawn them using ROS2 service during the simulation.
-    class ROS2SpawnerComponent : public AZ::Component
+    class ROS2SpawnerComponent
+        : public AZ::Component
+        , public SpawnerRequestsBus::Handler
     {
     public:
-        AZ_COMPONENT(ROS2SpawnerComponent, "{5950AC6B-75F3-4E0F-BA5C-17C877013710}", AZ::Component);
+        AZ_COMPONENT(ROS2SpawnerComponent, "{5950AC6B-75F3-4E0F-BA5C-17C877013710}", AZ::Component, SpawnerRequestsBus::Handler);
 
         // AZ::Component interface implementation.
-        ROS2SpawnerComponent() = default;
+        ROS2SpawnerComponent();
 
-        ~ROS2SpawnerComponent() = default;
+        ~ROS2SpawnerComponent();
 
         void Activate() override;
 
@@ -40,12 +43,16 @@ namespace ROS2
         // Required Reflect function.
         static void Reflect(AZ::ReflectContext* context);
 
+        const AZ::Transform& GetDefaultSpawnPose() const override;
+
     private:
         AZStd::unordered_map<AZStd::string, AZ::Data::Asset<AzFramework::Spawnable>> m_spawnables;
         AZStd::unordered_map<AZStd::string, AzFramework::EntitySpawnTicket> m_tickets;
 
         rclcpp::Service<gazebo_msgs::srv::GetWorldProperties>::SharedPtr m_getNamesService;
         rclcpp::Service<gazebo_msgs::srv::SpawnEntity>::SharedPtr m_spawnService;
+
+        AZ::Transform m_defaultSpawnPose = { AZ::Vector3{ 0, 0, 0 }, AZ::Quaternion{ 0, 0, 0, 1 }, 1.0 };
 
         void GetAvailableSpawnableNames(const GetAvailableSpawnableNamesRequest request, GetAvailableSpawnableNamesResponse response);
 

@@ -15,6 +15,16 @@
 
 namespace ROS2
 {
+    ROS2SpawnerComponent::ROS2SpawnerComponent()
+    {
+        SpawnerInterface::Register(this);
+    }
+
+    ROS2SpawnerComponent::~ROS2SpawnerComponent()
+    {
+        SpawnerInterface::Unregister(this);
+    }
+
     void ROS2SpawnerComponent::Activate()
     {
         auto ros2Node = ROS2Interface::Get()->GetNode();
@@ -44,14 +54,22 @@ namespace ROS2
     {
         if (AZ::SerializeContext* serialize = azrtti_cast<AZ::SerializeContext*>(context))
         {
-            serialize->Class<ROS2SpawnerComponent, AZ::Component>()->Version(1)->Field("Spawnables", &ROS2SpawnerComponent::m_spawnables);
+            serialize->Class<ROS2SpawnerComponent, AZ::Component>()
+                ->Version(1)
+                ->Field("Spawnables", &ROS2SpawnerComponent::m_spawnables)
+                ->Field("Default spawn point", &ROS2SpawnerComponent::m_defaultSpawnPose);
 
             if (AZ::EditContext* ec = serialize->GetEditContext())
             {
                 ec->Class<ROS2SpawnerComponent>("ROS2 Spawner", "Spawner component")
                     ->ClassElement(AZ::Edit::ClassElements::EditorData, "Manages spawning of robots in configurable locations")
                     ->Attribute(AZ::Edit::Attributes::AppearsInAddComponentMenu, AZ_CRC("Game"))
-                    ->DataElement(AZ::Edit::UIHandlers::EntityId, &ROS2SpawnerComponent::m_spawnables, "Spawnables", "Spawnables");
+                    ->DataElement(AZ::Edit::UIHandlers::EntityId, &ROS2SpawnerComponent::m_spawnables, "Spawnables", "Spawnables")
+                    ->DataElement(
+                        AZ::Edit::UIHandlers::EntityId,
+                        &ROS2SpawnerComponent::m_defaultSpawnPose,
+                        "Default spawn pose",
+                        "Default spawn pose");
             }
         }
     }
@@ -69,9 +87,7 @@ namespace ROS2
     {
         AZStd::string_view key(request->name.c_str(), request->name.size());
 
-        auto spawnable = m_spawnables.find(key);
-
-        if (spawnable == m_spawnables.end())
+        if (!m_spawnables.contains(key))
         {
             response->success = false;
             response->status_message = "Requested spawnable name not found";
@@ -82,6 +98,7 @@ namespace ROS2
         {
             // if a ticket for this spawnable was not created but the spawnable name is correct, create the ticket and then use it to
             // spawn an entity
+            auto spawnable = m_spawnables.find(key);
             m_tickets.emplace(spawnable->first, AzFramework::EntitySpawnTicket(spawnable->second));
         }
 
@@ -123,4 +140,8 @@ namespace ROS2
         transformInterface_->SetWorldTM(transform);
     }
 
+    const AZ::Transform& ROS2SpawnerComponent::GetDefaultSpawnPose() const
+    {
+        return m_defaultSpawnPose;
+    }
 } // namespace ROS2
