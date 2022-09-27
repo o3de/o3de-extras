@@ -6,6 +6,7 @@
  *
  */
 #include "LidarRaycaster.h"
+#include "LidarTemplateUtils.h"
 #include <AzCore/Interface/Interface.h>
 #include <AzCore/std/smart_ptr/make_shared.h>
 #include <AzCore/std/smart_ptr/shared_ptr.h>
@@ -16,19 +17,58 @@
 
 namespace ROS2
 {
+    LidarRaycaster::LidarRaycaster(const AZ::Uuid& uuid)
+        : m_uuid{ uuid }
+    {
+        ROS2::LidarRaycasterRequestBus::Handler::BusConnect(uuid);
+    }
+
+    LidarRaycaster::LidarRaycaster(LidarRaycaster&& lidarRaycaster) noexcept
+        : m_uuid{ lidarRaycaster.m_uuid }
+        , m_sceneHandle{ lidarRaycaster.m_sceneHandle }
+        , m_range{ lidarRaycaster.m_range }
+        , m_addMaxRangePoints{ lidarRaycaster.m_addMaxRangePoints }
+        , m_rayRotations{ AZStd::move(lidarRaycaster.m_rayRotations) }
+        , m_ignoreLayer{ lidarRaycaster.m_ignoreLayer }
+        , m_ignoredLayerIndex{ lidarRaycaster.m_ignoredLayerIndex }
+    {
+        lidarRaycaster.BusDisconnect();
+        lidarRaycaster.m_uuid = AZ::Uuid::CreateNull();
+
+        ROS2::LidarRaycasterRequestBus::Handler::BusConnect(m_uuid);
+    }
+
+    LidarRaycaster::~LidarRaycaster()
+    {
+        if (!m_uuid.IsNull())
+        {
+            ROS2::LidarRaycasterRequestBus::Handler::BusDisconnect();
+        }
+    }
+
     void LidarRaycaster::SetRaycasterScene(const AzPhysics::SceneHandle& handle)
     {
         m_sceneHandle = handle;
     }
 
-    AZStd::vector<AZ::Vector3> LidarRaycaster::PerformRaycast(
-        const AZ::Vector3& start,
-        const AZStd::vector<AZ::Vector3>& directions,
-        const AZ::Transform& globalToLidarTM,
-        float distance,
-        bool ignoreLayer,
-        unsigned int ignoredLayerIndex) const
+    void LidarRaycaster::ConfigureRayOrientations(const AZStd::vector<AZ::Vector3>& orientations)
     {
+        ValidateRayOrientations(orientations);
+        m_rayRotations = orientations;
+    }
+
+    void LidarRaycaster::ConfigureRayRange(float range)
+    {
+        ValidateRayRange(range);
+        m_range = range;
+    }
+
+    // A simplified, non-optimized first version. TODO - generalize results (fields)
+    AZStd::vector<AZ::Vector3> LidarRaycaster::PerformRaycast(const AZ::Transform& lidarTransform)
+    {
+        AZ_Assert(!m_rayRotations.empty(), "Ray poses are not configured. Unable to Perform a raycast.");
+        AZ_Assert(m_range > 0.0f, "Ray range is not configured. Unable to Perform a raycast.");
+
         AZStd::vector<AZ::Vector3> results;
         if (m_sceneHandle == AzPhysics::InvalidSceneHandle)
         {
@@ -36,20 +76,24 @@ namespace ROS2
             return results;
         }
 
+        AZStd::vector<AZ::Vector3> rayDirections =
+            LidarTemplateUtils::RotationsToDirections(m_rayRotations, lidarTransform.GetEulerRadians());
+
+        AZ::Vector3 lidarPosition = lidarTransform.GetTranslation();
+
         AzPhysics::SceneQueryRequests requests;
-        requests.reserve(directions.size());
-        results.reserve(directions.size());
-        for (const AZ::Vector3& direction : directions)
+        requests.reserve(rayDirections.size());
+        results.reserve(rayDirections.size());
+        for (const AZ::Vector3& direction : rayDirections)
         {
             AZStd::shared_ptr<AzPhysics::RayCastRequest> request = AZStd::make_shared<AzPhysics::RayCastRequest>();
-            request->m_start = start;
+            request->m_start = lidarPosition;
             request->m_direction = direction;
-            request->m_distance = distance;
+            request->m_distance = m_range;
             request->m_reportMultipleHits = false;
-            request->m_filterCallback =
-                [ignoreLayer, ignoredLayerIndex](const AzPhysics::SimulatedBody* simBody, const Physics::Shape* shape)
+            request->m_filterCallback = [this](const AzPhysics::SimulatedBody* simBody, const Physics::Shape* shape)
             {
-                if (ignoreLayer && (shape->GetCollisionLayer().GetIndex() == ignoredLayerIndex))
+                if (m_ignoreLayer && (shape->GetCollisionLayer().GetIndex() == m_ignoredLayerIndex))
                 {
                     return AzPhysics::SceneQuery::QueryHitType::None;
                 }
@@ -63,26 +107,30 @@ namespace ROS2
 
         auto* sceneInterface = AZ::Interface<AzPhysics::SceneInterface>::Get();
         auto requestResults = sceneInterface->QuerySceneBatch(m_sceneHandle, requests);
-        AZ_Assert(requestResults.size() == directions.size(), "request size should be equal to directions size");
+        AZ_Assert(requestResults.size() == rayDirections.size(), "Request size should be equal to directions size");
         for (int i = 0; i < requestResults.size(); i++)
         {
             const auto& requestResult = requestResults[i];
             if (!requestResult.m_hits.empty())
             {
-                auto globalHitPoint = requestResult.m_hits[0].m_position;
-                results.push_back(globalToLidarTM.TransformPoint(globalHitPoint)); // Transform back to local frame
+                results.push_back(requestResult.m_hits[0].m_position);
             }
-            else if (m_addPointsMaxRange)
+            else if (m_addMaxRangePoints)
             {
-                results.push_back(globalToLidarTM.TransformPoint(start + directions[i] * distance));
+                AZ::Vector3 maxPoint = lidarTransform.TransformPoint(rayDirections[i] * m_range);
+                results.push_back(maxPoint);
             }
         }
         return results;
     }
 
-    void LidarRaycaster::SetAddPointsMaxRange(bool addPointsMaxRange)
+    void LidarRaycaster::ConfigureLayerIgnoring(bool ignoreLayer, unsigned int layerIndex)
     {
-        m_addPointsMaxRange = addPointsMaxRange;
+        m_ignoreLayer = ignoreLayer;
+        m_ignoredLayerIndex = layerIndex;
     }
-
+    void LidarRaycaster::ConfigureMaxRangePointAddition(bool addMaxRangePoints)
+    {
+        m_addMaxRangePoints = addMaxRangePoints;
+    }
 } // namespace ROS2

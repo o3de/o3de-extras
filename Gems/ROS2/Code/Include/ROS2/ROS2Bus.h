@@ -9,6 +9,7 @@
 
 #include <AzCore/EBus/EBus.h>
 #include <AzCore/Interface/Interface.h>
+#include <AzCore/std/string/string.h>
 #include <builtin_interfaces/msg/time.hpp>
 #include <geometry_msgs/msg/transform_stamped.hpp>
 #include <rclcpp/node.hpp>
@@ -50,6 +51,15 @@ namespace ROS2
         //! @note Transforms are already published by each ROS2FrameComponent.
         //! Use this function directly only when default behavior of ROS2FrameComponent is not sufficient.
         virtual void BroadcastTransform(const geometry_msgs::msg::TransformStamped& t, bool isDynamic) const = 0;
+
+        //! Registers a new lidar system under the provided name.
+        //! @param lidarSystemName name of the newly registered lidar system.
+        //! @return id of this lidar system (id that the lidar system bus handler should connect with).
+        virtual int RegisterLidarSystem(const char* lidarSystemName) = 0;
+
+        //! Gets a list of all registered lidar systems.
+        //! @return a vector of id - name pairs representing registered lidar systems.
+        virtual AZStd::vector<AZStd::pair<int, AZStd::string>> GetRegisteredLidarSystems() = 0;
     };
 
     class ROS2BusTraits : public AZ::EBusTraits

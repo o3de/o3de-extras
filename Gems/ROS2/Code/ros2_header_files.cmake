@@ -11,6 +11,8 @@ set(FILES
         Include/ROS2/Manipulator/MotorizedJointComponent.h
         Include/ROS2/RobotControl/ControlConfiguration.h
         Include/ROS2/RobotControl/ControlSubscriptionHandler.h
+        Include/ROS2/Lidar/LidarRaycasterBus.h
+        Include/ROS2/Lidar/LidarSystemBus.h
         Include/ROS2/ROS2Bus.h
         Include/ROS2/ROS2GemUtilities.h
         Include/ROS2/Sensor/ROS2SensorComponent.h

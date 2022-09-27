@@ -104,6 +104,8 @@ namespace ROS2
 
         ROS2RequestBus::Handler::BusConnect();
         AZ::TickBus::Handler::BusConnect();
+
+        m_lidarSystem.Activate(RegisterLidarSystem("PhysX"));
     }
 
     void ROS2SystemComponent::Deactivate()
@@ -113,6 +115,27 @@ namespace ROS2
         m_loadTemplatesHandler.Disconnect();
         m_dynamicTFBroadcaster.reset();
         m_staticTFBroadcaster.reset();
+    }
+
+    int ROS2SystemComponent::RegisterLidarSystem(const char* raycasterName)
+    {
+        m_raycasters.emplace_back(raycasterName);
+        return static_cast<int>(m_raycasters.size()) - 1;
+    }
+
+    AZStd::vector<AZStd::pair<int, AZStd::string>> ROS2SystemComponent::GetRegisteredLidarSystems()
+    {
+        AZStd::vector<AZStd::pair<int, AZStd::string>> registeredLidarSystems;
+        registeredLidarSystems.reserve(m_raycasters.size());
+        for (int lidarSystemIndex = 0; lidarSystemIndex != static_cast<int>(m_raycasters.size()); ++lidarSystemIndex)
+        {
+            registeredLidarSystems.push_back({
+                lidarSystemIndex,
+                m_raycasters[lidarSystemIndex],
+            });
+        }
+
+        return registeredLidarSystems;
     }
 
     builtin_interfaces::msg::Time ROS2SystemComponent::GetROSTimestamp() const

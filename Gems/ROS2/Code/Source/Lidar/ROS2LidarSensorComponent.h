@@ -10,6 +10,7 @@
 #include "LidarRaycaster.h"
 #include "LidarTemplate.h"
 #include "LidarTemplateUtils.h"
+#include <ROS2/Lidar/LidarRaycasterBus.h>
 #include <Atom/RPI.Public/AuxGeom/AuxGeomDraw.h>
 #include <AzCore/Serialization/SerializeContext.h>
 #include <ROS2/Sensor/ROS2SensorComponent.h>
@@ -40,15 +41,25 @@ namespace ROS2
         // ROS2SensorComponent overrides
         void FrequencyTick() override;
         void Visualise() override;
-        //////////////////////////////////////////////////////////////////////////
-        void SetPhysicsScene();
 
         AZ::Crc32 OnLidarModelSelected();
+        AZ::Crc32 OnLidarImplementationSelected();
+        void FetchLidarImplementationFeatures();
         bool IsConfigurationVisible() const;
+        bool IsIgnoredLayerConfigurationVisible() const;
+        bool IsMaxPointsConfigurationVisible() const;
+        AZStd::vector<AZStd::pair<int, AZStd::string>> GetRegisteredLidarSystems();
+        void ConnectToLidarRaycaster();
+        void ConfigureLidarRaycaster();
 
-        LidarTemplate::LidarModel m_lidarModel = LidarTemplate::LidarModel::Generic3DLidar;
-        LidarTemplate m_lidarParameters = LidarTemplateUtils::GetTemplate(LidarTemplate::LidarModel::Generic3DLidar);
-        LidarRaycaster m_lidarRaycaster;
+        LidarImplementationFeatures m_lidarImplementationFeatures;
+        LidarTemplate::LidarModel m_lidarModel = LidarTemplate::LidarModel::Custom3DLidar;
+        LidarTemplate m_lidarParameters = LidarTemplateUtils::GetTemplate(LidarTemplate::LidarModel::Custom3DLidar);
+        AZStd::vector<AZ::Vector3> m_lastRotations;
+
+        int m_lidarSystemId;
+        AZStd::unordered_map<int, AZ::Uuid> m_lidarRaycasterIds;
+        AZ::Uuid m_lidarRaycasterUuid;
         std::shared_ptr<rclcpp::Publisher<sensor_msgs::msg::PointCloud2>> m_pointCloudPublisher;
 
         // Used only when visualisation is on - points differ since they are in global transform as opposed to local
@@ -59,5 +70,6 @@ namespace ROS2
 
         unsigned int m_ignoredLayerIndex = 0;
         bool m_ignoreLayer = false;
+        bool m_addPointsAtMax = false;
     };
 } // namespace ROS2

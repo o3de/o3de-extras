@@ -7,6 +7,7 @@
  */
 #pragma once
 
+#include "Lidar/LidarSystem.h"
 #include <Atom/RPI.Public/Pass/PassSystemInterface.h>
 #include <AzCore/Component/Component.h>
 #include <AzCore/Component/TickBus.h>
@@ -38,7 +39,7 @@ namespace ROS2
         static void GetDependentServices(AZ::ComponentDescriptor::DependencyArrayType& dependent);
 
         ROS2SystemComponent();
-        ~ROS2SystemComponent();
+        ~ROS2SystemComponent() override;
 
         //////////////////////////////////////////////////////////////////////////
         // ROS2RequestBus::Handler overrides
@@ -46,6 +47,10 @@ namespace ROS2
         builtin_interfaces::msg::Time GetROSTimestamp() const override;
         void BroadcastTransform(const geometry_msgs::msg::TransformStamped& t, bool isDynamic) const override;
         //////////////////////////////////////////////////////////////////////////
+
+        int RegisterLidarSystem(const char* raycasterName) override;
+
+        AZStd::vector<AZStd::pair<int, AZStd::string>> GetRegisteredLidarSystems() override;
 
     protected:
         ////////////////////////////////////////////////////////////////////////
@@ -61,6 +66,8 @@ namespace ROS2
         ////////////////////////////////////////////////////////////////////////
 
     private:
+        LidarSystem m_lidarSystem;
+        AZStd::vector<AZStd::string> m_raycasters;
         std::shared_ptr<rclcpp::Node> m_ros2Node;
         AZStd::shared_ptr<rclcpp::executors::SingleThreadedExecutor> m_executor;
         AZStd::unique_ptr<tf2_ros::TransformBroadcaster> m_dynamicTFBroadcaster;
