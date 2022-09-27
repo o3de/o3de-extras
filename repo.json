@@ -1,0 +1,11 @@
+{
+    "repo_name": "O3DE Extras - Extras gems, projects, and templates for O3DE",
+    "origin": "o3de-extras",
+    "repo_uri": "https://raw.githubusercontent.com/o3de/o3de-extras/development",
+    "summary": "A repository to hold various gems, projects, and templates for the O3DE engine.",
+    "additional_info": "See the README.md at the root of this repository for more information",
+    "last_updated": "2022-09-27",
+    "templates": [
+        "https://raw.githubusercontent.com/o3de/o3de-extras/development/Templates/Multiplayer"
+    ]
+}

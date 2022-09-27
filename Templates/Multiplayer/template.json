@@ -1,6 +1,9 @@
 {
     "template_name": "Multiplayer",
     "origin": "The primary repo for Multiplayer goes here: i.e. http://www.mydomain.com",
+    "origin_url": "https://github.com/o3de/o3de-extras",
+    "origin_uri": "https://github.com/o3de/o3de-extras/releases/download/1.0/Template_Multiplayer.zip",
+    "repo_uri": "https://raw.githubusercontent.com/o3de/o3de-extras/development/Templates/Multiplayer",
     "license": "https://opensource.org/licenses/MIT",
     "display_name": "Multiplayer",
     "summary": "A multiplayer project template. Includes a built in network 3rd person player, player spawner, and network filtering example.",
