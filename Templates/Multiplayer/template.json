@@ -4,7 +4,7 @@
     "origin_url": "https://github.com/o3de/o3de-extras",
     "origin_uri": "https://github.com/o3de/o3de-extras/releases/download/1.0/Template_Multiplayer.zip",
     "sha256": "CDBB2AF158BDDFBF7801413DAEB37A509930574C8654815EF2E3E5020359D4DF",
-    "repo_uri": "https://raw.githubusercontent.com/o3de/o3de-extras/development/Templates/Multiplayer",
+    "repo_uri": "https://raw.githubusercontent.com/o3de/o3de-extras/development",
     "license": "https://opensource.org/licenses/MIT",
     "display_name": "Multiplayer",
     "summary": "A multiplayer project template. Includes a built in network 3rd person player, player spawner, and network filtering example.",
