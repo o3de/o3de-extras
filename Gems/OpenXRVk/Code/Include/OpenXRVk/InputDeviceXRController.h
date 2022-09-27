@@ -175,20 +175,20 @@ namespace AzFramework
         {
             static constexpr InputChannelId LPos{ "xr_controller_position_l" }; //!< The left-hand position
             static constexpr InputChannelId RPos{ "xr_controller_position_r" }; //!< The right-hand position
-            static constexpr InputChannelId LVel{ "xr_controller_velocity_l" }; //!< The left-hand velocity
-            static constexpr InputChannelId RVel{ "xr_controller_velocity_r" }; //!< The right-hand velocity
-            static constexpr InputChannelId LAcc{ "xr_controller_acceleration_l" }; //!< The left-hand acceleration
-            static constexpr InputChannelId RAcc{ "xr_controller_acceleration_r" }; //!< The right-hand acceleration
+            //static constexpr InputChannelId LVel{ "xr_controller_velocity_l" }; //!< The left-hand velocity
+            //static constexpr InputChannelId RVel{ "xr_controller_velocity_r" }; //!< The right-hand velocity
+            //static constexpr InputChannelId LAcc{ "xr_controller_acceleration_l" }; //!< The left-hand acceleration
+            //static constexpr InputChannelId RAcc{ "xr_controller_acceleration_r" }; //!< The right-hand acceleration
 
             //! All XR Controller position input ids
             static constexpr AZStd::array All
             {
                 LPos,
                 RPos,
-                LVel,
-                RVel,
-                LAcc,
-                RAcc
+                //LVel,
+                //RVel,
+                //LAcc,
+                //RAcc
             };
         };
 
@@ -236,6 +236,18 @@ namespace AzFramework
             virtual ~Implementation() = default;
 
             ////////////////////////////////////////////////////////////////////////////////////////
+            //! Query for a path representing an input channel
+            //! Used for initializing Xr inputs.
+            virtual AZStd::string_view GetInputChannelPath(const InputChannelId& channelId) const = 0;
+
+            virtual AZStd::string_view GetInputDeviceProfilePath() const = 0;
+            virtual AZStd::string_view GetLeftHandSubPath() const = 0;
+            virtual AZStd::string_view GetRightHandSubPath() const = 0;
+
+            using TickCallbackFn = AZStd::function<void()>;
+            virtual void RegisterTickCallback(TickCallbackFn callbackFn) = 0;
+
+            ////////////////////////////////////////////////////////////////////////////////////////
             //! Query the connected state of the device
             //! @return True if the input device is currently connected, False otherwise
             virtual bool IsConnected() const = 0;
@@ -261,7 +273,7 @@ namespace AzFramework
 
             using DigitalButtonIdByBitMaskMap = AZStd::unordered_map<AZ::u32, const InputChannelId*>;
 
-        protected:
+        //protected:
             ////////////////////////////////////////////////////////////////////////////////////////
             //! Platform agnostic repreesentation of raw XR Controller state
             struct RawXRControllerState
@@ -269,7 +281,7 @@ namespace AzFramework
                 ////////////////////////////////////////////////////////////////////////////////////
                 //! Constructor
                 //! @param digitalButtonMap A map of digital button ids by bitmask
-                RawXRControllerState(const DigitalButtonIdByBitMaskMap& digitalButtonMap);
+                explicit RawXRControllerState(const DigitalButtonIdByBitMaskMap& digitalButtonMap);
 
                 AZ_DISABLE_COPY_MOVE(RawXRControllerState);
                 ~RawXRControllerState() = default;
@@ -350,6 +362,9 @@ namespace AzFramework
                 float m_rightThumbStickDeadZoneValue{};     //!< The right thumb-stick dead zone value
             }; // struct RawXRControllerState
 
+            virtual RawXRControllerState& GetRawState() = 0;
+
+        protected:
             ////////////////////////////////////////////////////////////////////////////////////////
             //! Process a controller state that has been obtained since the last call to this function.
             //! @param rawControllerState The raw controller state
@@ -405,7 +420,7 @@ namespace AzFramework
         ////////////////////////////////////////////////////////////////////////////////////////////
         //! Get the non-owning pointer to the implementation of this input device
         //! @return The raw implementation pointer
-        //Implementation* GetImplementation() const;
+        Implementation* GetImplementation() const;
 
     protected:
         ////////////////////////////////////////////////////////////////////////////////////////////

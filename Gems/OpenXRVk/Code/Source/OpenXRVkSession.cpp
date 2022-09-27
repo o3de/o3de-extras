@@ -199,9 +199,11 @@ namespace OpenXRVk
                     if (GetDescriptor().m_validationMode == AZ::RHI::ValidationMode::Enabled)
                     {
                         Input* xrVkInput = GetNativeInput();
-                        LogActionSourceName(xrVkInput->GetSqueezeAction(), "Squeeze");
+                        LogActionSourceName(xrVkInput->GetSqueezeAction(static_cast<AZ::u32>(XR::Side::Left)), "Squeeze Left");
+                        LogActionSourceName(xrVkInput->GetSqueezeAction(static_cast<AZ::u32>(XR::Side::Right)), "Squeeze Right");
                         LogActionSourceName(xrVkInput->GetQuitAction(), "Quit");
-                        LogActionSourceName(xrVkInput->GetPoseAction(), "Pose");
+                        LogActionSourceName(xrVkInput->GetPoseAction(static_cast<AZ::u32>(XR::Side::Left)), "Pose Left");
+                        LogActionSourceName(xrVkInput->GetPoseAction(static_cast<AZ::u32>(XR::Side::Right)), "Pose Right");
                         LogActionSourceName(xrVkInput->GetVibrationAction(), "Vibrate");
                     }
                     break;

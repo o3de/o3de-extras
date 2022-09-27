@@ -27,8 +27,8 @@ namespace XR
         AZ_CLASS_ALLOCATOR(Input, AZ::SystemAllocator, 0);
         AZ_RTTI(Input, "{DCDFC6A7-B457-414B-BC24-0831C2AC628B}");
 
-        Input() = default;
-        ~Input() override = default;
+        //Input() = default;
+        //~Input() override = default;
 
         struct Descriptor
         {
@@ -40,7 +40,7 @@ namespace XR
         AZ::RHI::ResultCode Init(Descriptor descriptor);
         const Descriptor& GetDescriptor() const;
 
-        virtual void PollActions() = 0;
+        //virtual void PollActions() = 0;
 
     private:
         ///////////////////////////////////////////////////////////////////

@@ -9,6 +9,7 @@
 #pragma once
 
 #include <OpenXRVk/InputDeviceXRController.h>
+#include <AzCore/std/containers/map.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 namespace AzFramework
@@ -27,6 +28,13 @@ namespace AzFramework
         explicit InputDeviceOculusTouch(InputDeviceXRController& inputDevice);
         AZ_DISABLE_COPY_MOVE(InputDeviceOculusTouch);
         ~InputDeviceOculusTouch() override;
+
+        AZStd::string_view GetInputChannelPath(const InputChannelId& channelId) const override;
+        AZStd::string_view GetInputDeviceProfilePath() const override;
+        AZStd::string_view GetLeftHandSubPath() const override;
+        AZStd::string_view GetRightHandSubPath() const override;
+        void RegisterTickCallback(TickCallbackFn callbackFn) override;
+        RawXRControllerState& GetRawState() override;
 
     private:
         ////////////////////////////////////////////////////////////////////////////////////////////
@@ -49,11 +57,15 @@ namespace AzFramework
         // Data
         RawXRControllerState m_rawControllerState;  //!< The latest raw xr controller input state
         bool m_isConnected{}; //!< Is the controller(s) currently connected?
+
+        TickCallbackFn m_tickCallback{ nullptr };
+
+        AZStd::unordered_map<const InputChannelId*, const AZStd::string_view> m_xrPathMap{};
     };
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
     // static
-    InputDeviceXRController::Implementation* InputDeviceXRController::Implementation::Create(
+    inline InputDeviceXRController::Implementation* InputDeviceXRController::Implementation::Create(
         InputDeviceXRController& inputDevice)
     {
         // Should check and make sure that OpenXR api is "available" here.  ??
