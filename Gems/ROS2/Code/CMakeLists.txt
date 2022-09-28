@@ -134,6 +134,8 @@ if(PAL_TRAIT_BUILD_TESTS_SUPPORTED)
             NAMESPACE Gem
             FILES_CMAKE
                 ros2_tests_files.cmake
+            PLATFORM_INCLUDE_FILES
+                ${CMAKE_CURRENT_LIST_DIR}/Platform/Common/${PAL_TRAIT_COMPILER_ID}/ros2_static_${PAL_TRAIT_COMPILER_ID_LOWERCASE}.cmake
             INCLUDE_DIRECTORIES
                 PRIVATE
                     Tests
@@ -159,6 +161,8 @@ if(PAL_TRAIT_BUILD_TESTS_SUPPORTED)
                 NAMESPACE Gem
                 FILES_CMAKE
                     ros2_editor_tests_files.cmake
+                PLATFORM_INCLUDE_FILES
+                    ${CMAKE_CURRENT_LIST_DIR}/Platform/Common/${PAL_TRAIT_COMPILER_ID}/ros2_static_${PAL_TRAIT_COMPILER_ID_LOWERCASE}.cmake
                 INCLUDE_DIRECTORIES
                     PRIVATE
                         Tests

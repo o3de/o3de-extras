@@ -132,7 +132,7 @@ namespace ROS2
         AZ::Transform inverse = cameraPose.GetInverse();
         m_view->SetWorldToViewMatrix(AZ::Matrix4x4::CreateFromQuaternionAndTranslation(inverse.GetRotation(), inverse.GetTranslation()));
 
-        size_t userId = AZ::Render::FrameCaptureRequests::s_InvalidFrameCaptureId;
+        size_t userId = AZ::Render::InvalidFrameCaptureId;
 
         m_pipeline->AddToRenderTickOnce();
         AZ::Render::FrameCaptureRequestBus::BroadcastResult(
