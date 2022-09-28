@@ -107,7 +107,7 @@ namespace ROS2
 
     AZ::Transform ROS2GNSSSensorComponent::GetCurrentPose() const
     {
-        auto ros2Frame = GetEntity()->FindComponent<ROS2FrameComponent>();
+        auto* ros2Frame = AzToolsFramework::FindWrappedComponentForEntity<ROS2FrameComponent>(GetEntity());
         return ros2Frame->GetFrameTransform();
     }
 } // namespace ROS2

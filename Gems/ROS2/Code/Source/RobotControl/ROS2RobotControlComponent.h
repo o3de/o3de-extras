@@ -11,6 +11,7 @@
 #include "ControlSubscriptionHandler.h"
 #include <AzCore/Component/Component.h>
 #include <AzCore/std/smart_ptr/unique_ptr.h>
+#include <AzToolsFramework/ToolsComponents/GenericComponentWrapper.h>
 
 namespace ROS2
 {
@@ -26,6 +27,10 @@ namespace ROS2
             : m_controlConfiguration(AZStd::move(controlConfiguration))
         {
         }
+
+        const ControlConfiguration& GetControlConfiguration() const;
+
+        void SetControlConfiguration(const ControlConfiguration& controlConfiguration);
 
         // AZ::Component interface implementation.
         void Activate() override;

@@ -89,7 +89,8 @@ namespace ROS2
         if (AZ::EntityId parentEntityId = GetEntityTransformInterface()->GetParentId(); parentEntityId.IsValid())
         {
             const AZ::Entity* parentEntity = AzToolsFramework::GetEntityById(parentEntityId);
-            return parentEntity->FindComponent<ROS2FrameComponent>();
+            auto* component = AzToolsFramework::FindWrappedComponentForEntity<ROS2FrameComponent>(parentEntity);
+            return component;
         }
         return nullptr;
     }
@@ -127,6 +128,11 @@ namespace ROS2
     AZStd::string ROS2FrameComponent::GetFrameID() const
     {
         return ROS2Names::GetNamespacedName(GetNamespace(), m_frameName);
+    }
+
+    void ROS2FrameComponent::SetFrameID(const AZStd::string& frameId)
+    {
+        m_frameName = frameId;
     }
 
     AZStd::string ROS2FrameComponent::GetNamespace() const

@@ -52,13 +52,13 @@ namespace ROS2
     AZStd::string ROS2SensorComponent::GetNamespace() const
     {
         // TODO - hold frame?
-        auto ros2Frame = GetEntity()->FindComponent<ROS2FrameComponent>();
+        auto* ros2Frame = AzToolsFramework::FindWrappedComponentForEntity<ROS2FrameComponent>(GetEntity());
         return ros2Frame->GetNamespace();
     };
 
     AZStd::string ROS2SensorComponent::GetFrameID() const
     {
-        auto ros2Frame = GetEntity()->FindComponent<ROS2FrameComponent>();
+        auto* ros2Frame = AzToolsFramework::FindWrappedComponentForEntity<ROS2FrameComponent>(GetEntity());
         return ros2Frame->GetFrameID();
     }
 

@@ -11,11 +11,13 @@
 #include "RobotControl/ROS2RobotControlComponent.h"
 #include "RobotImporter/URDF/CollidersMaker.h"
 #include "RobotImporter/URDF/PrefabMakerUtils.h"
+#include "RobotImporter/Utils/RobotImporterUtils.h"
 #include <API/EditorAssetSystemAPI.h>
 #include <AzCore/IO/FileIO.h>
 #include <AzToolsFramework/Entity/EditorEntityHelpers.h>
 #include <AzToolsFramework/Prefab/PrefabLoaderInterface.h>
 #include <AzToolsFramework/Prefab/PrefabSystemComponentInterface.h>
+#include <AzToolsFramework/ToolsComponents/GenericComponentWrapper.h>
 #include <AzToolsFramework/ToolsComponents/TransformComponent.h>
 
 #include <Spawner/SpawnerBus.h>
@@ -112,8 +114,13 @@ namespace ROS2
 
         // Add ROS2FrameComponent - TODO: only for top level and joints
         // TODO - add unique namespace to the robot's top level frame
-        entity->CreateComponent<ROS2FrameComponent>(link->name.c_str());
-
+        const auto frameCompontentId = Utils::CreateComponent(entityId, ROS2FrameComponent::TYPEINFO_Uuid());
+        if (frameCompontentId)
+        {
+            auto* component = AzToolsFramework::FindWrappedComponentForEntity<ROS2FrameComponent>(entity);
+            AZ_Assert(component, "Component not exists for %s", entityId.ToString().c_str());
+            component->SetFrameID(AZStd::string(link->name.c_str(), link->name.size()));
+        }
         m_visualsMaker.AddVisuals(link, entityId);
         m_collidersMaker.AddColliders(link, entityId);
         m_inertialsMaker.AddInertial(link->inertial, entityId);
@@ -138,11 +145,15 @@ namespace ROS2
 
     void URDFPrefabMaker::AddRobotControl(AZ::EntityId rootEntityId)
     {
-        // TODO - check for RigidBody
-        ControlConfiguration controlConfiguration;
-        controlConfiguration.m_topic = "cmd_vel";
-        AZ::Entity* rootEntity = AzToolsFramework::GetEntityById(rootEntityId);
-        rootEntity->CreateComponent<ROS2RobotControlComponent>(controlConfiguration);
+        const auto componentId = Utils::CreateComponent(rootEntityId, ROS2RobotControlComponent::TYPEINFO_Uuid());
+        if (componentId)
+        {
+            ControlConfiguration controlConfiguration;
+            controlConfiguration.m_topic = "cmd_vel";
+            AZ::Entity* rootEntity = AzToolsFramework::GetEntityById(rootEntityId);
+            auto* component = AzToolsFramework::FindWrappedComponentForEntity<ROS2RobotControlComponent>(rootEntity);
+            component->SetControlConfiguration(controlConfiguration);
+        }
     }
 
     const AZStd::string& URDFPrefabMaker::GetPrefabPath() const

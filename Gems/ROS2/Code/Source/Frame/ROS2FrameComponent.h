@@ -12,6 +12,7 @@
 #include <AzCore/Component/Component.h>
 #include <AzCore/std/smart_ptr/unique_ptr.h>
 #include <AzFramework/Components/TransformComponent.h>
+#include <AzToolsFramework/ToolsComponents/GenericComponentWrapper.h>
 
 namespace ROS2
 {
@@ -41,6 +42,9 @@ namespace ROS2
         //! Get a frame id, which is needed for any ROS2 message with a Header
         //! @return Frame id which includes the namespace, ready to send in a ROS2 message
         AZStd::string GetFrameID() const;
+
+        //! Set a above-mentioned frame id
+        void SetFrameID(const AZStd::string& frameId);
 
         //! Get a namespace, which should be used for any publisher or subscriber in the same entity.
         //! @return A complete namespace (including parent namespaces)
