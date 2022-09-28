@@ -9,4 +9,6 @@
 
 #define OPENXRVK_TRAIT_NEEDS_INITIALIZE_XR_LOADER 1
 
+#define O3DE_TRAIT_DISABLE_FAILED_OPENXRVK_TESTS
+
 #include <OpenXRInitializeLoader_Android.h>

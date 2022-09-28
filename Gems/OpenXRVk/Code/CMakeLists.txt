@@ -82,3 +82,33 @@ ly_add_target(
 # use the OpenXRVk module in clients and tools:
 ly_create_alias(NAME OpenXRVk.Clients NAMESPACE Gem TARGETS Gem::OpenXRVk)
 ly_create_alias(NAME OpenXRVk.Tools NAMESPACE Gem TARGETS Gem::OpenXRVk)
+
+################################################################################
+# Tests
+################################################################################
+if(PAL_TRAIT_BUILD_TESTS_SUPPORTED)
+
+    ly_add_target(
+        NAME OpenXRVk.Tests MODULE
+        NAMESPACE Gem
+        OUTPUT_NAME OpenXRVk.Tests.Gem
+        FILES_CMAKE
+            openxrvk_tests_files.cmake
+            ${pal_source_dir}/platform_test_${PAL_PLATFORM_NAME_LOWERCASE}_files.cmake
+        INCLUDE_DIRECTORIES
+            PRIVATE
+                Tests
+                .
+                Source
+                ${pal_source_dir}
+        BUILD_DEPENDENCIES
+            PRIVATE
+                AZ::AzTestShared
+                AZ::AzTest
+                Gem::OpenXRVk.Static
+    )
+    ly_add_googletest(
+        NAME Gem::OpenXRVk.Tests
+    )
+
+endif()

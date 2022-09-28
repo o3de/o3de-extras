@@ -5,6 +5,19 @@
  * SPDX-License-Identifier: Apache-2.0 OR MIT
  *
  */
+
 #pragma once
 
-#define O3DE_TRAIT_DISABLE_FAILED_XR_TESTS
+#include <AzTest/AzTest.h>
+
+class OpenXRVkTest
+    : public ::testing::Test
+{
+protected:
+    void SetUp() override;
+    void TearDown() override;
+
+    void SetupInternal();
+    void TearDownInternal();
+};
+
