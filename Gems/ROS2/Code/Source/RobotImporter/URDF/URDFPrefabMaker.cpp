@@ -140,8 +140,6 @@ namespace ROS2
     {
         // TODO - check for RigidBody
         ControlConfiguration controlConfiguration;
-        controlConfiguration.m_robotConfiguration.m_body = rootEntityId;
-        controlConfiguration.m_broadcastBusMode = false;
         controlConfiguration.m_topic = "cmd_vel";
         AZ::Entity* rootEntity = AzToolsFramework::GetEntityById(rootEntityId);
         rootEntity->CreateComponent<ROS2RobotControlComponent>(controlConfiguration);

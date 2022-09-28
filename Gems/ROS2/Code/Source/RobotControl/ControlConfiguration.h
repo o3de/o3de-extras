@@ -8,7 +8,6 @@
 #pragma once
 
 #include "QoS/QoS.h"
-#include "RobotControl/RobotConfiguration.h"
 #include <AzCore/Component/Entity.h>
 #include <AzCore/RTTI/RTTI.h>
 #include <AzCore/Serialization/SerializeContext.h>
@@ -35,14 +34,7 @@ namespace ROS2
         static void Reflect(AZ::ReflectContext* context);
 
         QoS m_qos;
-        AZStd::string m_topic = "o3de_robot_control";
+        AZStd::string m_topic = "cmd_vel";
         Steering m_steering = Steering::Twist;
-        RobotConfiguration m_robotConfiguration;
-
-        //! Switch between two modes. If enabled, only notification bus is running and no control is handled withing the Component.
-        bool m_broadcastBusMode = true;
-
-    private:
-        [[nodiscard]] bool IsBroadcastBusModeDisabled() const;
     };
 } // namespace ROS2

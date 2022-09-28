@@ -18,9 +18,6 @@ namespace ROS2
     class TwistNotifications : public AZ::EBusTraits
     {
     public:
-        static const AZ::EBusHandlerPolicy HandlerPolicy = AZ::EBusHandlerPolicy::Multiple;
-        static const AZ::EBusAddressPolicy AddressPolicy = AZ::EBusAddressPolicy::Single;
-
         //! Handle control command
         //! @param linear Linear speed in each axis, in robot reference frame, in m/s.
         //! @param angular Angular speed in each axis, in robot reference frame, in m/s.
@@ -28,15 +25,4 @@ namespace ROS2
     };
 
     using TwistNotificationBus = AZ::EBus<TwistNotifications>;
-
-    class TwistNotificationHandler
-        : public TwistNotificationBus::Handler
-        , public AZ::BehaviorEBusHandler
-    {
-    public:
-        AZ_EBUS_BEHAVIOR_BINDER(TwistNotificationHandler, "{CD26E702-6F40-4FF9-816D-4DCB652D97DF}", AZ::SystemAllocator, TwistReceived);
-
-        void TwistReceived(const AZ::Vector3& v, const AZ::Vector3& a) override;
-        static void Reflect(AZ::ReflectContext* context);
-    };
 } // namespace ROS2

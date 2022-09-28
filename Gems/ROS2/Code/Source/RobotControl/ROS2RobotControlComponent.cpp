@@ -7,7 +7,8 @@
  */
 
 #include "RobotControl/ROS2RobotControlComponent.h"
-#include "RobotControl/TwistControl/TwistControl.h"
+#include "RobotControl/Ackermann/AckermannSubscriptionHandler.h"
+#include "RobotControl/Twist/TwistSubscriptionHandler.h"
 #include <AzCore/Component/Entity.h>
 #include <AzCore/Debug/Trace.h>
 #include <AzCore/Serialization/EditContext.h>
@@ -21,34 +22,35 @@ namespace ROS2
         switch (m_controlConfiguration.m_steering)
         {
         case ControlConfiguration::Twist:
-            m_robotControl = AZStd::make_unique<TwistControl>(m_controlConfiguration);
+            m_subscriptionHandler = AZStd::make_unique<TwistSubscriptionHandler>();
             break;
         case ControlConfiguration::Ackermann:
             // TODO add ackermann
-            AZ_Error("ROS2RobotControlComponent", false, "Ackermann steering not yet implemented");
+            m_subscriptionHandler = AZStd::make_unique<AckermannSubscriptionHandler>();
             break;
         default:
+            AZ_Error("ROS2RobotControlComponent", false, "Control type %d not implemented", m_controlConfiguration.m_steering);
             break;
         }
-        if (m_robotControl)
+
+        if (m_subscriptionHandler)
         {
-            m_robotControl->Activate(GetEntity());
+            m_subscriptionHandler->Activate(GetEntity(), m_controlConfiguration);
         }
     }
 
     void ROS2RobotControlComponent::Deactivate()
     {
-        if (m_robotControl)
+        if (m_subscriptionHandler)
         {
-            m_robotControl->Deactivate();
-            m_robotControl.reset();
+            m_subscriptionHandler->Deactivate();
+            m_subscriptionHandler.reset();
         }
     }
 
     void ROS2RobotControlComponent::Reflect(AZ::ReflectContext* context)
     {
         ControlConfiguration::Reflect(context);
-        RobotConfiguration::Reflect(context);
 
         if (AZ::SerializeContext* serialize = azrtti_cast<AZ::SerializeContext*>(context))
         {
@@ -57,7 +59,7 @@ namespace ROS2
 
             if (AZ::EditContext* ec = serialize->GetEditContext())
             {
-                ec->Class<ROS2RobotControlComponent>("ROS2 Robot control", "[Customizable robot control component]")
+                ec->Class<ROS2RobotControlComponent>("ROS2 Robot control", "Customizable robot control component")
                     ->ClassElement(AZ::Edit::ClassElements::EditorData, "")
                     ->Attribute(AZ::Edit::Attributes::Category, "ROS2")
                     ->Attribute(AZ::Edit::Attributes::AppearsInAddComponentMenu, AZ_CRC("Game")) // TODO - "Simulation"?
@@ -65,7 +67,7 @@ namespace ROS2
                         AZ::Edit::UIHandlers::Default,
                         &ROS2RobotControlComponent::m_controlConfiguration,
                         "Control settings",
-                        "Control bus Configuration");
+                        "Control subscription setting and type of control");
             }
         }
     }
@@ -74,5 +76,10 @@ namespace ROS2
     {
         // TODO - also, dependent on current/selected RobotControl implementation for what components are required
         required.push_back(AZ_CRC("ROS2Frame"));
+    }
+
+    void ROS2RobotControlComponent::GetProvidedServices(AZ::ComponentDescriptor::DependencyArrayType& provided)
+    {
+        provided.push_back(AZ_CRC_CE("ROS2RobotControl"));
     }
 } // namespace ROS2

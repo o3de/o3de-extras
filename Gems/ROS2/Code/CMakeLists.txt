@@ -33,9 +33,10 @@ ly_add_target(
             Gem::Atom_RPI.Public
             Gem::Atom_Feature_Common.Static
             Gem::Atom_Component_DebugCamera.Static
+            Gem::StartingPointInput
 )
 
-target_depends_on_ros2_packages(ROS2.Static rclcpp builtin_interfaces std_msgs sensor_msgs urdfdom tf2_ros gazebo_msgs)
+target_depends_on_ros2_packages(ROS2.Static rclcpp builtin_interfaces std_msgs sensor_msgs urdfdom tf2_ros ackermann_msgs gazebo_msgs control_toolbox)
 
 ly_add_target(
     NAME ROS2.API HEADERONLY
