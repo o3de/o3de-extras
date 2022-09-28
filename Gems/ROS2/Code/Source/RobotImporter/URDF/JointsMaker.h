@@ -27,8 +27,6 @@ namespace ROS2
         void AddJoint(urdf::LinkSharedPtr parentLink, urdf::LinkSharedPtr childLink, AZ::EntityId linkChildId, AZ::EntityId linkParentId);
 
     private:
-        void AddJoint(urdf::JointSharedPtr joint, AZ::EntityId linkChildId, AZ::EntityId linkParentId);
-        void AddColliderForFixedJoint(urdf::JointSharedPtr joint, AZ::EntityId entityId);
         void AddJointComponent(urdf::JointSharedPtr joint, AZ::EntityId followColliderEntityId, AZ::EntityId leadColliderEntityId);
     };
 } // namespace ROS2
