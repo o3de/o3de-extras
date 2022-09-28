@@ -1,0 +1,57 @@
+#
+# Copyright (c) Contributors to the Open 3D Engine Project
+#
+# SPDX-License-Identifier: Apache-2.0 OR MIT
+#
+#
+
+set(FILES
+    Include/NetworkPrefabSpawnerInterface.h
+    Source/AutoGen/NetworkAiComponent.AutoComponent.xml
+    Source/AutoGen/NetworkAnimationComponent.AutoComponent.xml
+    Source/AutoGen/NetworkHealthComponent.AutoComponent.xml
+    Source/AutoGen/NetworkPlayerSpawnerComponent.AutoComponent.xml
+    Source/AutoGen/NetworkRandomComponent.AutoComponent.xml
+    Source/AutoGen/NetworkWeaponsComponent.AutoComponent.xml
+    Source/AutoGen/NetworkSimplePlayerCameraComponent.AutoComponent.xml
+    Source/AutoGen/NetworkPlayerMovementComponent.AutoComponent.xml
+    Source/Components/ExampleFilteredEntityComponent.h
+    Source/Components/ExampleFilteredEntityComponent.cpp
+    Source/Components/NetworkAiComponent.cpp
+    Source/Components/NetworkAiComponent.h
+    Source/Components/NetworkAnimationComponent.cpp
+    Source/Components/NetworkAnimationComponent.h
+    Source/Components/NetworkHealthComponent.cpp
+    Source/Components/NetworkHealthComponent.h
+    Source/Components/NetworkPlayerSpawnerComponent.cpp
+    Source/Components/NetworkPlayerSpawnerComponent.h
+    Source/Components/NetworkRandomComponent.cpp
+    Source/Components/NetworkRandomComponent.h
+    Source/Components/NetworkWeaponsComponent.cpp
+    Source/Components/NetworkWeaponsComponent.h
+    Source/Components/NetworkSimplePlayerCameraComponent.cpp
+    Source/Components/NetworkSimplePlayerCameraComponent.h
+    Source/Components/NetworkPrefabSpawnerComponent.cpp
+    Source/Components/NetworkPrefabSpawnerComponent.h
+    Source/Components/NetworkPlayerMovementComponent.cpp
+    Source/Components/NetworkPlayerMovementComponent.h
+    Source/Spawners/IPlayerSpawner.h
+    Source/Spawners/RoundRobinSpawner.h
+    Source/Spawners/RoundRobinSpawner.cpp
+    Source/Weapons/BaseWeapon.cpp
+    Source/Weapons/BaseWeapon.h
+    Source/Weapons/IWeapon.h
+    Source/Weapons/ProjectileWeapon.cpp
+    Source/Weapons/ProjectileWeapon.h
+    Source/Weapons/TraceWeapon.cpp
+    Source/Weapons/TraceWeapon.h
+    Source/Weapons/WeaponGathers.cpp
+    Source/Weapons/WeaponGathers.h
+    Source/Weapons/WeaponTypes.cpp
+    Source/Weapons/WeaponTypes.h
+    Source/Weapons/SceneQuery.cpp
+    Source/Weapons/SceneQuery.h
+    Source/${Name}SystemComponent.cpp
+    Source/${Name}SystemComponent.h
+    Source/${Name}Types.h
+)
