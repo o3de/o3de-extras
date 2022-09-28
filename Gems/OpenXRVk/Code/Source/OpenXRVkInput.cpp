@@ -127,6 +127,7 @@ namespace OpenXRVk
         result = xrSuggestInteractionProfileBindings(xrInstance, &suggestedBindings);
         WARN_IF_UNSUCCESSFUL(result);
         
+        //Init the location data so we dont read bad data when the device is in a bad state at start
         for (int i = 0; i < AZ::RPI::XRMaxNumControllers; i++)
         {
             m_handSpaceLocation[i].pose.orientation.x = 0.0f;
@@ -138,6 +139,16 @@ namespace OpenXRVk
             m_handSpaceLocation[i].pose.position.z = 0.0f;
         }
 
+        for (int i = 0; i < SpaceType::Count; i++)
+        {
+            m_xrVisualizedSpaceLocations[i].pose.orientation.x = 0.0f;
+            m_xrVisualizedSpaceLocations[i].pose.orientation.y = 0.0f;
+            m_xrVisualizedSpaceLocations[i].pose.orientation.z = 0.0f;
+            m_xrVisualizedSpaceLocations[i].pose.orientation.w = 0.0f;
+            m_xrVisualizedSpaceLocations[i].pose.position.x = 0.0f;
+            m_xrVisualizedSpaceLocations[i].pose.position.y = 0.0f;
+            m_xrVisualizedSpaceLocations[i].pose.position.z = 0.0f;
+        }
         return ConvertResult(result);
     }
 
