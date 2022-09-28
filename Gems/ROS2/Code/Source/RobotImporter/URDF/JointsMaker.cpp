@@ -13,6 +13,7 @@
 #include <Source/EditorColliderComponent.h>
 #include <Source/EditorFixedJointComponent.h>
 #include <Source/EditorHingeJointComponent.h>
+#include <Source/EditorPrismaticJointComponent.h>
 #include <Source/EditorRigidBodyComponent.h>
 
 namespace ROS2
@@ -96,6 +97,26 @@ namespace ROS2
         case urdf::Joint::FIXED:
             {
                 jointComponent = followColliderEntity->CreateComponent<PhysX::EditorFixedJointComponent>();
+            }
+            break;
+        case urdf::Joint::PRISMATIC:
+            {
+                jointComponent = followColliderEntity->CreateComponent<PhysX::EditorPrismaticJointComponent>();
+                followColliderEntity->Activate();
+
+                PhysX::EditorJointRequestBus::Event(
+                    AZ::EntityComponentIdPair(followColliderEntityId, jointComponent->GetId()),
+                    &PhysX::EditorJointRequests::SetVector3Value,
+                    PhysX::JointsComponentModeCommon::ParamaterNames::Rotation,
+                    rotation);
+
+                PhysX::EditorJointRequestBus::Event(
+                    AZ::EntityComponentIdPair(followColliderEntityId, jointComponent->GetId()),
+                    &PhysX::EditorJointRequests::SetLinearValuePair,
+                    PhysX::JointsComponentModeCommon::ParamaterNames::LinearLimits,
+                    PhysX::AngleLimitsFloatPair(joint->limits->upper, joint->limits->lower));
+
+                followColliderEntity->Deactivate();
             }
             break;
         case urdf::Joint::CONTINUOUS:
