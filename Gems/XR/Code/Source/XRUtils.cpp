@@ -10,7 +10,7 @@
 
 namespace XR
 {
-    AZ::Matrix4x4 CreateProjectionOffset(float angleLeft, float angleRight, float angleBottom, float angleTop, float nearDist, float farDist, bool reverseDepth)
+    AZ::Matrix4x4 CreateStereoscopicProjection(float angleLeft, float angleRight, float angleBottom, float angleTop, float nearDist, float farDist, bool reverseDepth)
     {
         AZ::Matrix4x4 result;
         AZ_MATH_ASSERT(nearDist > 0.0f, "Near plane distance must be greater than 0");

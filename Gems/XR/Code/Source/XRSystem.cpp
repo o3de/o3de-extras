@@ -313,11 +313,11 @@ namespace XR
         return 0.0f;
     }
 
-    AZ::Matrix4x4 System::CreateProjectionOffset(float angleLeft, float angleRight, 
+    AZ::Matrix4x4 System::CreateStereoscopicProjection(float angleLeft, float angleRight,
                                                  float angleBottom, float angleTop, 
                                                  float nearDist, float farDist, bool reverseDepth)
     {
-        return XR::CreateProjectionOffset(angleLeft, angleRight, angleBottom, angleTop, nearDist, farDist, reverseDepth);
+        return XR::CreateStereoscopicProjection(angleLeft, angleRight, angleBottom, angleTop, nearDist, farDist, reverseDepth);
     }
 
     AZ::RHI::XRRenderingInterface* System::GetRHIXRRenderingInterface()

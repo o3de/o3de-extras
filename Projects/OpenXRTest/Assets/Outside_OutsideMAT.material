@@ -1,0 +1,23 @@
+{
+    "materialType": "Materials/Types/StandardPBR.materialtype",
+    "materialTypeVersion": 5,
+    "propertyValues": {
+        "baseColor.color": [
+            0.800000011920929,
+            0.800000011920929,
+            0.800000011920929,
+            1.0
+        ],
+        "baseColor.textureMap": "Assets/textures/Outside.png",
+        "emissive.color": [
+            0.38776227831840515,
+            0.38776227831840515,
+            0.38776227831840515,
+            1.0
+        ],
+        "emissive.enable": true,
+        "emissive.textureMap": "Assets/textures/Outside.png",
+        "irradiance.irradianceColorSource": "BaseColor",
+        "opacity.factor": 1.0
+    }
+}

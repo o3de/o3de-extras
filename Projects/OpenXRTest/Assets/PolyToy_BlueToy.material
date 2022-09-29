@@ -1,0 +1,21 @@
+{
+    "materialType": "Materials/Types/StandardPBR.materialtype",
+    "materialTypeVersion": 5,
+    "propertyValues": {
+        "baseColor.color": [
+            0.04157340154051781,
+            0.0,
+            0.8000000715255737,
+            1.0
+        ],
+        "emissive.color": [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+        ],
+        "irradiance.irradianceColorSource": "BaseColor",
+        "opacity.factor": 1.0,
+        "roughness.factor": 0.30000001192092896
+    }
+}
