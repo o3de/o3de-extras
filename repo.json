@@ -6,6 +6,6 @@
     "additional_info": "See the README.md at the root of this repository for more information",
     "last_updated": "2022-09-27",
     "templates": [
-        "https://raw.githubusercontent.com/o3de/o3de-extras/development/Templates/Multiplayer"
+        "https://github.com/o3de/o3de-extras.git/Templates/Multiplayer"
     ]
 }
