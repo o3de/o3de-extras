@@ -38,3 +38,139 @@ This is an experimental gem implementing [ONNX Runtime](https://onnxruntime.ai/)
 - [CUDA Toolkit](https://developer.nvidia.com/cuda-toolkit) v11.4 or greater.
 - [CUDNN library](https://developer.nvidia.com/cudnn) v8.2.4 or greater.
 - [zlib](https://zlib.net/) v1.2.3 or greater.
+
+## Additional developer docs
+
+### **What is ONNX?**
+- [Open Neural Network Exchange](https://onnx.ai/)
+- An open standard for machine learning models, defining an extensible computation graph model, operators and data types
+- Its key benefit is interoperability - the idea is that you can generate a model using different ML frameworks (such as Tensorflow, Keras, PyTorch), export it as an ONNX model, and in theory these models should behave the same
+- It has also recently become a member of the [Linux Foundation](https://www.linuxfoundation.org/)
+
+### **Why do we need an ONNX Gem in O3DE?**
+- We want to give users the ability to easily inference ONNX models within the engine and measure inference performance
+- There are many uses for ML within games, such as Terrain Generation, ML Agents, Computer Vision and Animation
+- The existing [ONNX Runtime C++ API](https://onnxruntime.ai/docs/api/c/namespace_ort.html) is not user friendly and requires a lot of additional steps for integration with the engine
+- Provide a plug-and-play experience, removing as much prerequisite knowledge required as possible, so that people with no ML knowledge can still implement ML model inferencing using ONNX Runtime within the engine
+
+### **General steps to run an inference using the Ort::Api**
+1. Include and link [ONNX Runtime libs](https://github.com/microsoft/onnxruntime)
+2. Create the [Ort::Env](https://onnxruntime.ai/docs/api/c/struct_ort_1_1_env.html)
+3. Specify [SessionOptions](https://onnxruntime.ai/docs/api/c/struct_ort_1_1_session_options.html)
+4. Create [Ort::Session](https://onnxruntime.ai/docs/api/c/struct_ort_1_1_session.html)
+5. Create [Ort::MemoryInfo](https://onnxruntime.ai/docs/api/c/struct_ort_1_1_memory_info.html)
+6. Create [Ort::Allocator](https://onnxruntime.ai/docs/api/c/struct_ort_1_1_allocator_with_default_options.html)
+7. Specify ONNX file location
+8. Specify input names
+9. Specify input shapes
+10. Specify input count
+11. Specify output names
+12. Specify output shapes
+13. Specify output count
+14. Create input vector
+15. Create [input tensor](https://onnxruntime.ai/docs/api/c/struct_ort_1_1_value.html#a3898146b5fc35b838bd48db807dd6c8e) from input vector
+16. Create output vector
+17. Create [output tensor](https://onnxruntime.ai/docs/api/c/struct_ort_1_1_value.html#a3898146b5fc35b838bd48db807dd6c8e) from output vector
+18. Configure [RunOptions](https://onnxruntime.ai/docs/api/c/struct_ort_1_1_run_options.html)
+19. [Run inference](https://onnxruntime.ai/docs/api/c/struct_ort_1_1_session.html#ae1149a662d2a2e218e5740672bbf0ebe)
+20. Retrieve data from output tensor
+
+- These are broadly the steps that the ONNX Gem uses in order to run an inference, however as opposed to the Ort::Api, most of these are hidden from the end user
+
+### **Help me understand the code?**
+The gem is fairly well commented, and should give you a general idea of how it works. I recommend starting with [Model.h](https://github.com/o3de/o3de-extras/blob/onnx-experimental/Gems/ONNX/Code/Include/ONNX/Model.h) as that it where the Model class lives. Along with the general steps to run an inference using the Ort::Api above, as well as the [documentation for the Ort::Api](https://onnxruntime.ai/docs/api/c/namespace_ort.html), take a look at:
+
+1. The class member variables
+2. The `InitSettings` struct
+3. The `Load()` function
+4. The `Run()` function
+
+In that order, looking through the implementation in the [Model.cpp](https://github.com/o3de/o3de-extras/blob/onnx-experimental/Gems/ONNX/Code/Source/Clients/Model.cpp) file for each of the functions.
+
+The `Ort::Env`, use of eBuses, and all ImGui functionality is implemented in the [ONNXBus.h](https://github.com/o3de/o3de-extras/blob/onnx-experimental/Gems/ONNX/Code/Include/ONNX/ONNXBus.h), [ONNXSystemComponent.h](https://github.com/o3de/o3de-extras/blob/onnx-experimental/Gems/ONNX/Code/Source/Clients/ONNXSystemComponent.h) and [ONNXSystemComponent.cpp](https://github.com/o3de/o3de-extras/blob/onnx-experimental/Gems/ONNX/Code/Source/Clients/ONNXSystemComponent.cpp). The thing to note with the `Ort::Env` is that it is initialized only once, and only one instance of it exists inside the gem, and is retrieved using the `ONNXRequestBus`. All instances of the Model use the same `Ort::Env` instance. 
+
+The ImGui dashboard provides basic debugging functionality for the gem, providing information about the time taken to inference for each time the `Run()` function is called. In that function, you'll see that an `AZ::Debug::Timer` being used to time its execution - this is then dispatched to a function `AddTimingSample` in the `ONNXRequestBus`, which adds that value to the ImGui `HistogramGroup` for that model instance.
+
+### **What does the MNIST bit do?**
+[Mnist.h](https://github.com/o3de/o3de-extras/blob/onnx-experimental/Gems/ONNX/Code/Source/Clients/Mnist.h) and [Mnist.cpp](https://github.com/o3de/o3de-extras/blob/onnx-experimental/Gems/ONNX/Code/Source/Clients/Mnist.cpp) implement the inferencing of [MNIST models](https://en.wikipedia.org/wiki/MNIST_database) in the ONNX.Tests project using the `Model` class. They define an `Mnist` struct which extends the `Model` class, as well as several functions which inference several thousand MNIST images using an MNIST ONNX model file. These are executed by running the tests project, which calculates an accuracy by measuring the number of correct inferences and ensures it is above 90% - a good MNIST model will easily exceed this level of accuracy. The Mnist components used to be part of the main ONNX gem during development, used for testing features which were being added. Once the gem reached a usable state, the Mnist part of the gem was moved to the Tests project as the typical user will not want to just inference Mnist models, but it's useful leaving it in as a test to make sure everything is set up properly and as a demo so users can see the inferencing process.
+
+### **How do I run a basic inference using the gem?**
+
+1. Include the ONNX gem as a build dependency in your CMakeLists.txt - the example here is integrating it into the MotionMatching gem.
+
+```
+ly_add_target(
+    NAME MotionMatching.Static STATIC
+    NAMESPACE Gem
+    FILES_CMAKE
+        motionmatching_files.cmake
+    INCLUDE_DIRECTORIES
+        PUBLIC
+            Include
+        PRIVATE
+            Source
+    BUILD_DEPENDENCIES
+        PUBLIC
+            AZ::AzCore
+            AZ::AzFramework
+            Gem::EMotionFXStaticLib
+            Gem::ImguiAtom.Static
+            ONNX.Private.Object
+)
+```
+
+2. Include ONNX/Model.h in your file.
+
+```
+#include <ONNX/Model.h>
+```
+
+3. Initialize an `ONNX::Model`
+
+```
+ONNX::Model onnxModel;
+```
+
+4. Initialize your input vector
+
+```
+AZStd::vector<AZStd::vector<float>> onnxInput;
+//Fill input vector here
+```
+
+5. Initialize `InitSettings`
+
+```
+ONNX::Model::InitSettings onnxSettings;
+onnxSettings.m_modelFile = "D:/MyModel.onnx";
+onnxSettings.m_modelName = "Best Model Ever";
+onnxSettings.m_modelColor = AZ::Colors::Tomato;
+onnxSettings.m_cudaEnable = true;
+
+//////////////////////////////////////////////////////////////////
+DEFAULTS:
+
+m_modelFile = “@gemroot:ONNX@/Assets/model.onnx”;
+m_modelName = <Model filename without extension>;
+m_modelColor = AZ::Color::CreateFromRgba(229, 56, 59, 255)
+m_cudaEnable = false;
+//////////////////////////////////////////////////////////////////
+```
+
+6. Load the model (this only needs to happen once when first initializing the model)
+
+```
+onnxModel.Load(onnxSettings);
+```
+
+7. Run the model
+
+```
+onnxModel.Run(onnxInput);
+```
+
+8. Retrieve the outputs of the inference from the `m_outputs` member
+
+```
+AZStd::vector<AZStd::vector<float>> myAmazingResults = onnxModel.m_outputs;
+```
