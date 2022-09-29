@@ -46,7 +46,7 @@ This is an experimental gem implementing [ONNX Runtime](https://onnxruntime.ai/)
 
 - [Open Neural Network Exchange](https://onnx.ai/)
 - An open standard for machine learning models, defining an extensible computation graph model, operators and data types.
-- Its key benefit is interoperability - the idea is that you can generate a model using different ML frameworks (such as Tensorflow, Keras, PyTorch), export it as an ONNX model, and in theory these models should behave the same.
+- Its key benefit is interoperability - the idea is that you can generate a model using different ML frameworks (such as Tensorflow, Keras, PyTorch), export it as an ONNX model, and these models should behave the same.
 - It has also recently become a member of the [Linux Foundation](https://www.linuxfoundation.org/).
 
 ### Why do we need an ONNX Gem in O3DE?
