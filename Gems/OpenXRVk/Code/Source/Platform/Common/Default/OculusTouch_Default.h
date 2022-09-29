@@ -9,7 +9,7 @@
 #pragma once
 
 #include <OpenXRVk/InputDeviceXRController.h>
-#include <AzCore/std/containers/map.h>
+#include <AzCore/std/containers/unordered_map.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 namespace AzFramework

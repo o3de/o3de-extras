@@ -271,9 +271,8 @@ namespace AzFramework
             //! Broadcast an event when the input device disconnects from the system
             void BroadcastInputDeviceDisconnectedEvent() const;
 
-            using DigitalButtonIdByBitMaskMap = AZStd::unordered_map<AZ::u32, const InputChannelId*>;
+            using ButtonIdToBitMaskMap = AZStd::unordered_map<const InputChannelId*, AZ::u32>;
 
-        //protected:
             ////////////////////////////////////////////////////////////////////////////////////////
             //! Platform agnostic repreesentation of raw XR Controller state
             struct RawXRControllerState
@@ -281,7 +280,7 @@ namespace AzFramework
                 ////////////////////////////////////////////////////////////////////////////////////
                 //! Constructor
                 //! @param digitalButtonMap A map of digital button ids by bitmask
-                explicit RawXRControllerState(const DigitalButtonIdByBitMaskMap& digitalButtonMap);
+                explicit RawXRControllerState(ButtonIdToBitMaskMap digitalButtonMap);
 
                 AZ_DISABLE_COPY_MOVE(RawXRControllerState);
                 ~RawXRControllerState() = default;
@@ -330,7 +329,7 @@ namespace AzFramework
                 //! @return The normalized right thumb-stick values
                 AZ::Vector2 GetRightThumbStickNormalizedValues() const;
 
-                const DigitalButtonIdByBitMaskMap m_digitalButtonIdsByBitMask;
+                const ButtonIdToBitMaskMap m_buttonIdsToBitMasks;
 
                 ////////////////////////////////////////////////////////////////////////////////////
                 // Raw Data
@@ -415,7 +414,7 @@ namespace AzFramework
         ////////////////////////////////////////////////////////////////////////////////////////////
         //! Set the implementation of this input device
         //! @param implFactoryFn The Implementation factory create function to use
-        void SetImplementation(ImplementationFactory implFactoryFn);
+        void SetImplementation(const ImplementationFactory& implFactoryFn);
 
         ////////////////////////////////////////////////////////////////////////////////////////////
         //! Get the non-owning pointer to the implementation of this input device

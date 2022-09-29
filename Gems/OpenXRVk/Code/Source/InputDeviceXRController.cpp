@@ -104,7 +104,7 @@ namespace AzFramework
         // Create all digital button input channels
         for (const InputChannelId& channelId : Button::All)
         {
-            auto channel = aznew InputChannelDigital(channelId, *this);
+            const auto channel = aznew InputChannelDigital(channelId, *this);
             m_allChannelsById[channelId] = channel;
             m_buttonChannelsById[channelId] = channel;
         }
@@ -112,7 +112,7 @@ namespace AzFramework
         // Create all analog trigger input channels
         for (const InputChannelId& channelId : Trigger::All)
         {
-            auto channel = aznew InputChannelAnalog(channelId, *this);
+            const auto channel = aznew InputChannelAnalog(channelId, *this);
             m_allChannelsById[channelId] = channel;
             m_triggerChannelsById[channelId] = channel;
         }
@@ -120,7 +120,7 @@ namespace AzFramework
         // Create all 1D thumb-stick input channels
         for (const InputChannelId& channelId : ThumbStickAxis1D::All)
         {
-            auto channel = aznew InputChannelAxis1D(channelId, *this);
+            const auto channel = aznew InputChannelAxis1D(channelId, *this);
             m_allChannelsById[channelId] = channel;
             m_thumbStick1DChannelsById[channelId] = channel;
         }
@@ -128,7 +128,7 @@ namespace AzFramework
         // Create all 2D thumb-stick input channels
         for (const InputChannelId& channelId : ThumbStickAxis2D::All)
         {
-            auto channel = aznew InputChannelAxis2D(channelId, *this);
+            const auto channel = aznew InputChannelAxis2D(channelId, *this);
             m_allChannelsById[channelId] = channel;
             m_thumbStick2DChannelsById[channelId] = channel;
         }
@@ -136,7 +136,7 @@ namespace AzFramework
         // Create all analog thumb-stick direction input channels
         for (const InputChannelId& channelId : ThumbStickDirection::All)
         {
-            auto channel = aznew InputChannelAnalog(channelId, *this);
+            const auto channel = aznew InputChannelAnalog(channelId, *this);
             m_allChannelsById[channelId] = channel;
             m_thumbStickDirectionChannelsById[channelId] = channel;
         }
@@ -144,7 +144,7 @@ namespace AzFramework
         // Create all 3D controller position input channels
         for (const InputChannelId& channelId : ControllerPosePosition::All)
         {
-            auto channel = aznew InputChannelAxis3D(channelId, *this);
+            const auto channel = aznew InputChannelAxis3D(channelId, *this);
             m_allChannelsById[channelId] = channel;
             m_controllerPositionChannelsById[channelId] = channel;
         }
@@ -152,13 +152,13 @@ namespace AzFramework
         // Create all Quat controller orientation input channels
         for (const InputChannelId& channelId : ControllerPoseOrientation::All)
         {
-            auto channel = aznew InputChannelQuaternion(channelId, *this);
+            const auto channel = aznew InputChannelQuaternion(channelId, *this);
             m_allChannelsById[channelId] = channel;
             m_controllerOrientationChannelsById[channelId] = channel;
         }
 
         // Create the custom implementation
-        SetImplementation(implFactoryFn);
+        SetImplementation(AZStd::move(implFactoryFn));
 
         // Connect to haptic feedback request bus
         InputHapticFeedbackRequestBus::Handler::BusConnect(GetInputDeviceId());
@@ -223,7 +223,7 @@ namespace AzFramework
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
-    void InputDeviceXRController::SetImplementation(ImplementationFactory implFactoryFn)
+    void InputDeviceXRController::SetImplementation(const ImplementationFactory& implFactoryFn)
     {
         if (implFactoryFn)
         {
@@ -231,6 +231,7 @@ namespace AzFramework
         }
     }
 
+    ////////////////////////////////////////////////////////////////////////////////////////////////
     InputDeviceXRController::Implementation* InputDeviceXRController::GetImplementation() const
     {
         return m_pimpl.get();
@@ -264,9 +265,8 @@ namespace AzFramework
     ////////////////////////////////////////////////////////////////////////////////////////////////
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
-    InputDeviceXRController::Implementation::RawXRControllerState::RawXRControllerState(
-        const DigitalButtonIdByBitMaskMap& digitalButtonMap)
-        : m_digitalButtonIdsByBitMask(digitalButtonMap)
+    InputDeviceXRController::Implementation::RawXRControllerState::RawXRControllerState(ButtonIdToBitMaskMap digitalButtonMap)
+        : m_buttonIdsToBitMasks(AZStd::move(digitalButtonMap))
         , m_triggerMaxValue(1.f)
         , m_gripMaxValue(1.f)
         , m_thumbStickMaxValue(1.f)
@@ -347,7 +347,7 @@ namespace AzFramework
     void InputDeviceXRController::Implementation::ProcessRawControllerState([[maybe_unused]] const RawXRControllerState& rawControllerState)
     {
         // Update digital button channels...
-        for (const auto& [bitMask, channelIdPtr] : rawControllerState.m_digitalButtonIdsByBitMask)
+        for (const auto& [channelIdPtr, bitMask] : rawControllerState.m_buttonIdsToBitMasks)
         {
             const bool buttonState = (rawControllerState.m_digitalButtonStates & bitMask) != 0;
             m_inputDevice.m_buttonChannelsById[*channelIdPtr]->ProcessRawInputEvent(buttonState);
@@ -356,10 +356,10 @@ namespace AzFramework
         using xrc = InputDeviceXRController;
 
         // Update the analog triggers...
-        float triggerL = rawControllerState.GetLeftTriggerAdjustedForDeadZoneAndNormalized();
-        float triggerR = rawControllerState.GetRightTriggerAdjustedForDeadZoneAndNormalized();
-        float gripL = rawControllerState.GetLeftGripAdjustedForDeadZoneAndNormalized();
-        float gripR = rawControllerState.GetRightGripAdjustedForDeadZoneAndNormalized();
+        const float triggerL = rawControllerState.GetLeftTriggerAdjustedForDeadZoneAndNormalized();
+        const float triggerR = rawControllerState.GetRightTriggerAdjustedForDeadZoneAndNormalized();
+        const float gripL = rawControllerState.GetLeftGripAdjustedForDeadZoneAndNormalized();
+        const float gripR = rawControllerState.GetRightGripAdjustedForDeadZoneAndNormalized();
         m_inputDevice.m_triggerChannelsById[xrc::Trigger::LTrigger]->ProcessRawInputEvent(triggerL);
         m_inputDevice.m_triggerChannelsById[xrc::Trigger::RTrigger]->ProcessRawInputEvent(triggerR);
         m_inputDevice.m_triggerChannelsById[xrc::Trigger::LGrip]->ProcessRawInputEvent(gripL);
@@ -368,16 +368,16 @@ namespace AzFramework
         // Update thumb-stick channels...
         const AZ::Vector2 leftThumbStick = rawControllerState.GetLeftThumbStickAdjustedForDeadZoneAndNormalized();
         const AZ::Vector2 leftThumbStickPreDeadZone = rawControllerState.GetLeftThumbStickNormalizedValues();
-        float leftStickUp = AZ::GetClamp(leftThumbStick.GetY(), 0.f, 1.f);
-        float leftStickDown = fabsf(AZ::GetClamp(leftThumbStick.GetY(), -1.f, 0.f));
-        float leftStickLeft = fabsf(AZ::GetClamp(leftThumbStick.GetX(), -1.f, 0.f));
-        float leftStickRight = AZ::GetClamp(leftThumbStick.GetX(), 0.f, 1.f);
+        const float leftStickUp = AZ::GetClamp(leftThumbStick.GetY(), 0.f, 1.f);
+        const float leftStickDown = fabsf(AZ::GetClamp(leftThumbStick.GetY(), -1.f, 0.f));
+        const float leftStickLeft = fabsf(AZ::GetClamp(leftThumbStick.GetX(), -1.f, 0.f));
+        const float leftStickRight = AZ::GetClamp(leftThumbStick.GetX(), 0.f, 1.f);
         const AZ::Vector2 rightThumbStick = rawControllerState.GetRightThumbStickAdjustedForDeadZoneAndNormalized();
         const AZ::Vector2 rightThumbStickPreDeadZone = rawControllerState.GetRightThumbStickNormalizedValues();
-        float rightStickUp = AZ::GetClamp(rightThumbStick.GetY(), 0.f, 1.f);
-        float rightStickDown = fabsf(AZ::GetClamp(rightThumbStick.GetY(), -1.f, 0.f));
-        float rightStickLeft = fabsf(AZ::GetClamp(rightThumbStick.GetX(), -1.f, 0.f));
-        float rightStickRight = AZ::GetClamp(rightThumbStick.GetX(), 0.f, 1.f);
+        const float rightStickUp = AZ::GetClamp(rightThumbStick.GetY(), 0.f, 1.f);
+        const float rightStickDown = fabsf(AZ::GetClamp(rightThumbStick.GetY(), -1.f, 0.f));
+        const float rightStickLeft = fabsf(AZ::GetClamp(rightThumbStick.GetX(), -1.f, 0.f));
+        const float rightStickRight = AZ::GetClamp(rightThumbStick.GetX(), 0.f, 1.f);
 
         m_inputDevice.m_thumbStick2DChannelsById[xrc::ThumbStickAxis2D::L]->ProcessRawInputEvent(leftThumbStick, &leftThumbStickPreDeadZone);
         m_inputDevice.m_thumbStick1DChannelsById[xrc::ThumbStickAxis1D::LX]->ProcessRawInputEvent(leftThumbStick.GetX());

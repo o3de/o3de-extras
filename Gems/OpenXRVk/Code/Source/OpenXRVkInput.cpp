@@ -33,106 +33,15 @@ namespace OpenXRVk
 
         // Create an action set.
         CreateActionSet(xrInstance);
-        //XrActionSetCreateInfo actionSetInfo{};
-        //actionSetInfo.type = XR_TYPE_ACTION_SET_CREATE_INFO;
-        //azstrcpy(actionSetInfo.actionSetName, sizeof(actionSetInfo.actionSetName), "gameplay");
-        //azstrcpy(actionSetInfo.localizedActionSetName, sizeof(actionSetInfo.localizedActionSetName), "Gameplay");
-        //actionSetInfo.priority = 0;
-        //XrResult result = xrCreateActionSet(xrInstance, &actionSetInfo, &m_actionSet);
-        //WARN_IF_UNSUCCESSFUL(result);
 
+        // Create all the XrActions
         CreateAllActions(xrInstance);
-
-        // Get the XrPath for the left and right hands - we will use them as subaction paths.
-        //result = xrStringToPath(xrInstance, "/user/hand/left", &m_handSubactionPath[static_cast<uint32_t>(XR::Side::Left)]);
-        //WARN_IF_UNSUCCESSFUL(result);
-        //result = xrStringToPath(xrInstance, "/user/hand/right", &m_handSubactionPath[static_cast<uint32_t>(XR::Side::Right)]);
-        //WARN_IF_UNSUCCESSFUL(result);
-
-        // Create actions.
-        // Create an input action for grabbing objects with the left and right hands.
-        //CreateAction(m_squeezeAction.m_actionHandle, XR_ACTION_TYPE_FLOAT_INPUT, "squeeze_object", "Squeeze Object",
-        //    aznumeric_cast<uint32_t>(AZStd::size(m_handSubactionPath)), m_handSubactionPath.data());
-
-        //CreateAction(m_triggerAction.m_actionHandle, XR_ACTION_TYPE_FLOAT_INPUT, "trigger_object", "Trigger Object",
-        //    aznumeric_cast<uint32_t>(AZStd::size(m_handSubactionPath)), m_handSubactionPath.data());
-
-        //CreateAction(m_poseAction, XR_ACTION_TYPE_POSE_INPUT, "hand_pose", "Hand Pose",
-        //    aznumeric_cast<uint32_t>(AZStd::size(m_handSubactionPath)), m_handSubactionPath.data());
-
-        //CreateAction(m_vibrateAction, XR_ACTION_TYPE_VIBRATION_OUTPUT, "vibrate_hand", "Vibrate Hand",
-        //    aznumeric_cast<uint32_t>(AZStd::size(m_handSubactionPath)), m_handSubactionPath.data());
-
-        //CreateAction(m_quitAction, XR_ACTION_TYPE_BOOLEAN_INPUT, "quit_session", "Quit Session", 0, nullptr);
-
-        //CreateAction(m_xButtonAction.m_actionHandle, XR_ACTION_TYPE_FLOAT_INPUT, "x_button", "X Button Object",
-        //    aznumeric_cast<uint32_t>(AZStd::size(m_handSubactionPath)), m_handSubactionPath.data());
-        //CreateAction(m_yButtonAction.m_actionHandle, XR_ACTION_TYPE_FLOAT_INPUT, "y_button", "Y Button Object",
-        //    aznumeric_cast<uint32_t>(AZStd::size(m_handSubactionPath)), m_handSubactionPath.data());
-        //CreateAction(m_aButtonAction.m_actionHandle, XR_ACTION_TYPE_FLOAT_INPUT, "a_button", "A Button Object",
-        //    aznumeric_cast<uint32_t>(AZStd::size(m_handSubactionPath)), m_handSubactionPath.data());
-        //CreateAction(m_bButtonAction.m_actionHandle, XR_ACTION_TYPE_FLOAT_INPUT, "b_button", "B Button Object",
-        //    aznumeric_cast<uint32_t>(AZStd::size(m_handSubactionPath)), m_handSubactionPath.data());
-        //CreateAction(m_joyStickXAction.m_actionHandle, XR_ACTION_TYPE_FLOAT_INPUT, "joystick_x", "JoyStick X Object",
-        //    aznumeric_cast<uint32_t>(AZStd::size(m_handSubactionPath)), m_handSubactionPath.data());
-        //CreateAction(m_joyStickYAction.m_actionHandle, XR_ACTION_TYPE_FLOAT_INPUT, "joystick_y", "JoyStick Y Object",
-        //    aznumeric_cast<uint32_t>(AZStd::size(m_handSubactionPath)), m_handSubactionPath.data());
-
-        //AZStd::array<XrPath, AZ::RPI::XRMaxNumControllers> squeezeValuePath{};
-        //AZStd::array<XrPath, AZ::RPI::XRMaxNumControllers> triggerValuePath{};
-        //AZStd::array<XrPath, AZ::RPI::XRMaxNumControllers> posePath{};
-        //AZStd::array<XrPath, AZ::RPI::XRMaxNumControllers> hapticPath{};
-        //AZStd::array<XrPath, AZ::RPI::XRMaxNumControllers> menuClickPath{};
-        //AZStd::array<XrPath, AZ::RPI::XRMaxNumControllers> joyStickXPath{};
-        //AZStd::array<XrPath, AZ::RPI::XRMaxNumControllers> joyStickYPath{};
-        //XrPath xButtonValuePath;
-        //XrPath yButtonValuePath;
-        //XrPath aButtonValuePath;
-        //XrPath bButtonValuePath;
-
-        //result = xrStringToPath(xrInstance, "/user/hand/left/input/squeeze/value", &squeezeValuePath[static_cast<uint32_t>(XR::Side::Left)]);
-        //result = xrStringToPath(xrInstance, "/user/hand/right/input/squeeze/value", &squeezeValuePath[static_cast<uint32_t>(XR::Side::Right)]);
-        //result = xrStringToPath(xrInstance, "/user/hand/left/input/trigger/value", &triggerValuePath[static_cast<uint32_t>(XR::Side::Left)]);
-        //result = xrStringToPath(xrInstance, "/user/hand/right/input/trigger/value", &triggerValuePath[static_cast<uint32_t>(XR::Side::Right)]);
-        //result = xrStringToPath(xrInstance, "/user/hand/left/input/grip/pose", &posePath[static_cast<uint32_t>(XR::Side::Left)]);
-        //result = xrStringToPath(xrInstance, "/user/hand/right/input/grip/pose", &posePath[static_cast<uint32_t>(XR::Side::Right)]);
-        //result = xrStringToPath(xrInstance, "/user/hand/left/output/haptic", &hapticPath[static_cast<uint32_t>(XR::Side::Left)]);
-        //result = xrStringToPath(xrInstance, "/user/hand/right/output/haptic", &hapticPath[static_cast<uint32_t>(XR::Side::Right)]);
-        //result = xrStringToPath(xrInstance, "/user/hand/left/input/menu/click", &menuClickPath[static_cast<uint32_t>(XR::Side::Left)]);
-        //result = xrStringToPath(xrInstance, "/user/hand/right/input/menu/click", &menuClickPath[static_cast<uint32_t>(XR::Side::Right)]);
-        //result = xrStringToPath(xrInstance, "/user/hand/left/input/thumbstick/x", &joyStickXPath[static_cast<uint32_t>(XR::Side::Left)]);
-        //result = xrStringToPath(xrInstance, "/user/hand/right/input/thumbstick/x", &joyStickXPath[static_cast<uint32_t>(XR::Side::Right)]);
-        //result = xrStringToPath(xrInstance, "/user/hand/left/input/thumbstick/y", &joyStickYPath[static_cast<uint32_t>(XR::Side::Left)]);
-        //result = xrStringToPath(xrInstance, "/user/hand/right/input/thumbstick/y", &joyStickYPath[static_cast<uint32_t>(XR::Side::Right)]);
-        //result = xrStringToPath(xrInstance, "/user/hand/left/input/x/click", &xButtonValuePath);
-        //result = xrStringToPath(xrInstance, "/user/hand/left/input/y/click", &yButtonValuePath);
-        //result = xrStringToPath(xrInstance, "/user/hand/right/input/a/click", &aButtonValuePath);
-        //result = xrStringToPath(xrInstance, "/user/hand/right/input/b/click", &bButtonValuePath);
 
         // Bindings for the Oculus Touch.
         XrPath oculusTouchInteractionProfilePath;
         AZStd::string controllerProfilePath{ m_xrControllerImpl->GetInputDeviceProfilePath() };
         [[maybe_unused]] XrResult result = xrStringToPath(xrInstance, controllerProfilePath.data(), &oculusTouchInteractionProfilePath);
         WARN_IF_UNSUCCESSFUL(result);
-        //AZStd::vector<XrActionSuggestedBinding> bindings{
-            //{ m_squeezeAction.m_actionHandle, squeezeValuePath[static_cast<uint32_t>(XR::Side::Left)] },
-            //{ m_squeezeAction.m_actionHandle, squeezeValuePath[static_cast<uint32_t>(XR::Side::Right)] },
-            //{ m_triggerAction.m_actionHandle, triggerValuePath[static_cast<uint32_t>(XR::Side::Left)] },
-            //{ m_triggerAction.m_actionHandle, triggerValuePath[static_cast<uint32_t>(XR::Side::Right)] },
-            //{ m_poseAction, posePath[static_cast<uint32_t>(XR::Side::Left)] },
-            //{ m_poseAction, posePath[static_cast<uint32_t>(XR::Side::Right)] },
-            //{ m_quitAction, menuClickPath[static_cast<uint32_t>(XR::Side::Left)] },
-            //{ m_vibrateAction, hapticPath[static_cast<uint32_t>(XR::Side::Left)] },
-            //{ m_vibrateAction, hapticPath[static_cast<uint32_t>(XR::Side::Right)] },
-            //{ m_joyStickXAction.m_actionHandle, joyStickXPath[static_cast<uint32_t>(XR::Side::Left)] },
-            //{ m_joyStickXAction.m_actionHandle, joyStickXPath[static_cast<uint32_t>(XR::Side::Right)] },
-            //{ m_joyStickYAction.m_actionHandle, joyStickYPath[static_cast<uint32_t>(XR::Side::Left)] },
-            //{ m_joyStickYAction.m_actionHandle, joyStickYPath[static_cast<uint32_t>(XR::Side::Right)] },
-            //{ m_xButtonAction.m_actionHandle, xButtonValuePath },
-            //{ m_yButtonAction.m_actionHandle, yButtonValuePath },
-            //{ m_aButtonAction.m_actionHandle, aButtonValuePath },
-            //{ m_bButtonAction.m_actionHandle, bButtonValuePath }
-        //};
 
         XrInteractionProfileSuggestedBinding suggestedBindings{};
         suggestedBindings.type = XR_TYPE_INTERACTION_PROFILE_SUGGESTED_BINDING;
@@ -265,14 +174,13 @@ namespace OpenXRVk
             WARN_IF_UNSUCCESSFUL(pathResult);
         }
 
-        m_xrControllerImpl->RegisterTickCallback(AZStd::bind(&Input::PollActions, this));
+        m_xrControllerImpl->RegisterTickCallback([this]()->void { PollActions(); });
     }
 
     AZ::RHI::ResultCode Input::InitializeActionSpace(XrSession xrSession)
     {
         XrActionSpaceCreateInfo actionSpaceInfo{};
         actionSpaceInfo.type = XR_TYPE_ACTION_SPACE_CREATE_INFO;
-        //actionSpaceInfo.action = m_poseAction;
         actionSpaceInfo.action = GetAction(AzFramework::InputDeviceXRController::ControllerPosePosition::LPos);
         actionSpaceInfo.poseInActionSpace.orientation.w = 1.f;
         actionSpaceInfo.subactionPath = m_handSubactionPath[static_cast<uint32_t>(XR::Side::Left)];
@@ -310,6 +218,10 @@ namespace OpenXRVk
             }
             xrDestroyActionSet(m_actionSet);
         }
+
+        // Turn off the tick callback and reset the impl pointer (non-owning) to null
+        m_xrControllerImpl->RegisterTickCallback(nullptr);
+        m_xrControllerImpl = nullptr;
     }
 
     XrAction Input::GetAction(const AzFramework::InputChannelId& channelId) const
@@ -318,7 +230,7 @@ namespace OpenXRVk
         // initialize structures in this class should be used.
 
         // this will assert if the channelId is something unexpected for xr controller
-        auto index = m_xrActionIndices.at(&channelId);
+        const auto index = m_xrActionIndices.at(&channelId);
         return m_xrActionPaths[index].action;
     }
 
@@ -346,13 +258,13 @@ namespace OpenXRVk
         using namespace AzFramework;
         using xrc = InputDeviceXRController;
 
-        // Updating digital buttons is unique, it compacts them all to a u32 with bit masks...
-        for (const auto& [bitMask, channelId] : rawControllerData.m_digitalButtonIdsByBitMask)
+        // Updating digital buttons is unique, because it compacts them all to a u32 with bit masks...
+        for (const auto& [channelIdPtr, bitMask] : rawControllerData.m_buttonIdsToBitMasks)
         {
             XrActionStateGetInfo getButtonInfo{};
             getButtonInfo.type = XR_TYPE_ACTION_STATE_GET_INFO;
             getButtonInfo.next = nullptr;
-            getButtonInfo.action = GetAction(*channelId);
+            getButtonInfo.action = GetAction(*channelIdPtr);
             getButtonInfo.subactionPath = XR_NULL_PATH;
 
             XrActionStateBoolean buttonValue{};
@@ -441,16 +353,7 @@ namespace OpenXRVk
             m_handActive[static_cast<uint32_t>(hand)] = poseState.isActive;
 
             LocateControllerSpace(device->GetPredictedDisplayTime(), session->GetXrSpace(OpenXRVk::SpaceType::View), static_cast<uint32_t>(hand));
-
-            //UpdateActionState(xrSession, m_triggerAction, static_cast<uint16_t>(hand));
-            //UpdateActionState(xrSession, m_joyStickXAction, static_cast<uint16_t>(hand));
-            //UpdateActionState(xrSession, m_joyStickYAction, static_cast<uint16_t>(hand));
         }
-
-        //UpdateActionState(xrSession, m_xButtonAction, static_cast<uint32_t>(XR::Side::Left));
-        //UpdateActionState(xrSession, m_yButtonAction, static_cast<uint32_t>(XR::Side::Left));
-        //UpdateActionState(xrSession, m_aButtonAction, static_cast<uint32_t>(XR::Side::Right));
-        //UpdateActionState(xrSession, m_bButtonAction, static_cast<uint32_t>(XR::Side::Right));
 
         //Cache 3d location information
         for (AZ::u32 i = 0; i < static_cast<AZ::u32>(SpaceType::Count); i++)
@@ -470,42 +373,14 @@ namespace OpenXRVk
         quitValue.type = XR_TYPE_ACTION_STATE_BOOLEAN;
         result = xrGetActionStateBoolean(xrSession, &getInfo, &quitValue);
         WARN_IF_UNSUCCESSFUL(result);
+        // This is redundant because the digital buttons were already sync'd.  The only difference here is that this is also checking
+        // that the button changedSinceLastSync.  Probably doing this to prevent double quitting, but maybe we can do that by other means.
         if ((quitValue.isActive == XR_TRUE) && (quitValue.changedSinceLastSync == XR_TRUE) && (quitValue.currentState == XR_TRUE))
         {
             result = xrRequestExitSession(xrSession);
             WARN_IF_UNSUCCESSFUL(result);
         }
     }
-
-    //bool Input::GetActionState(XrSession xrSession, XrAction xrAction, uint16_t handIndex, float& outputSate)
-    //{
-    //    XrActionStateGetInfo buttonGetInfo{};
-    //    buttonGetInfo.type = XR_TYPE_ACTION_STATE_GET_INFO;
-    //    buttonGetInfo.action = xrAction;
-    //    buttonGetInfo.subactionPath = m_handSubactionPath[handIndex];
-
-    //    XrActionStateFloat buttonValue{};
-    //    buttonValue.type = XR_TYPE_ACTION_STATE_FLOAT;
-    //    const XrResult result = xrGetActionStateFloat(xrSession, &buttonGetInfo, &buttonValue);
-    //    WARN_IF_UNSUCCESSFUL(result);
-    //    if (buttonValue.isActive == XR_TRUE)
-    //    {
-    //        outputSate = buttonValue.currentState;
-    //        return true;
-    //    }
-    //    return false;
-    //}
-
-    //bool Input::UpdateActionState(XrSession xrSession, SingleActionData& actionData, uint16_t handIndex)
-    //{
-    //    return GetActionState(xrSession, actionData.m_actionHandle, handIndex, actionData.m_actionState);
-    //}
-
-    //bool Input::UpdateActionState(XrSession xrSession, DualActionData& actionData, uint16_t handIndex)
-    //{
-    //    return GetActionState(xrSession, actionData.m_actionHandle, handIndex, actionData.m_actionState[handIndex]);
-    //}
-
 
     void Input::LocateControllerSpace(XrTime predictedDisplayTime, XrSpace baseSpace, AZ::u32 handIndex)
     {
@@ -574,7 +449,6 @@ namespace OpenXRVk
         return (handIndex == static_cast<AZ::u32>(XR::Side::Left))
             ? GetAction(AzFramework::InputDeviceXRController::Trigger::LGrip)
             : GetAction(AzFramework::InputDeviceXRController::Trigger::RGrip);
-        //return m_squeezeAction.m_actionHandle;
     }
 
     XrAction Input::GetPoseAction(AZ::u32 handIndex) const
@@ -582,7 +456,6 @@ namespace OpenXRVk
         return (handIndex == static_cast<AZ::u32>(XR::Side::Left))
             ? GetAction(AzFramework::InputDeviceXRController::ControllerPosePosition::LPos)
             : GetAction(AzFramework::InputDeviceXRController::ControllerPosePosition::RPos);
-        //return m_poseAction;
     }
 
     XrAction Input::GetVibrationAction() const
@@ -594,32 +467,34 @@ namespace OpenXRVk
     XrAction Input::GetQuitAction() const
     {
         return GetAction(AzFramework::InputDeviceXRController::Button::Home);
-        //return m_quitAction;
     }
 
-    float Input::GetXButtonState() const
+    bool Input::GetXButtonState() const
     {
-        return 0.f;
-        //return m_xrControllerImpl->GetRawState().m_digitalButtonStates & ???
-        //return m_xButtonAction.m_actionState;
+        const auto& state = m_xrControllerImpl->GetRawState();
+        const AZ::u32 mask = state.m_buttonIdsToBitMasks.at(&AzFramework::InputDeviceXRController::Button::X);
+        return (state.m_digitalButtonStates & mask) != 0;
     }
 
-    float Input::GetYButtonState() const
+    bool Input::GetYButtonState() const
     {
-        return 0.f;
-        //return m_yButtonAction.m_actionState;
+        const auto& state = m_xrControllerImpl->GetRawState();
+        const AZ::u32 mask = state.m_buttonIdsToBitMasks.at(&AzFramework::InputDeviceXRController::Button::Y);
+        return (state.m_digitalButtonStates & mask) != 0;
     }
 
-    float Input::GetAButtonState() const
+    bool Input::GetAButtonState() const
     {
-        return 0.f;
-        //return m_aButtonAction.m_actionState;
+        const auto& state = m_xrControllerImpl->GetRawState();
+        const AZ::u32 mask = state.m_buttonIdsToBitMasks.at(&AzFramework::InputDeviceXRController::Button::A);
+        return (state.m_digitalButtonStates & mask) != 0;
     }
 
-    float Input::GetBButtonState() const
+    bool Input::GetBButtonState() const
     {
-        return 0.f;
-        //return m_bButtonAction.m_actionState;
+        const auto& state = m_xrControllerImpl->GetRawState();
+        const AZ::u32 mask = state.m_buttonIdsToBitMasks.at(&AzFramework::InputDeviceXRController::Button::B);
+        return (state.m_digitalButtonStates & mask) != 0;
     }
 
     float Input::GetXJoyStickState(AZ::u32 handIndex) const
@@ -628,7 +503,6 @@ namespace OpenXRVk
         return (handIndex == static_cast<AZ::u32>(XR::Side::Left))
             ? state.m_leftThumbStickXState
             : state.m_rightThumbStickXState;
-        //return m_joyStickXAction.m_actionState[handIndex];
     }
 
     float Input::GetYJoyStickState(AZ::u32 handIndex) const
@@ -637,7 +511,6 @@ namespace OpenXRVk
         return (handIndex == static_cast<AZ::u32>(XR::Side::Left))
             ? state.m_leftThumbStickYState
             : state.m_rightThumbStickYState;
-        //return m_joyStickYAction.m_actionState[handIndex];
     }
 
     float Input::GetSqueezeState(AZ::u32 handIndex) const
@@ -646,7 +519,6 @@ namespace OpenXRVk
         return (handIndex == static_cast<AZ::u32>(XR::Side::Left))
             ? state.m_leftGripState
             : state.m_rightGripState;
-        //return m_squeezeAction.m_actionState[handIndex];
     }
 
     float Input::GetTriggerState(AZ::u32 handIndex) const
@@ -655,6 +527,5 @@ namespace OpenXRVk
         return (handIndex == static_cast<AZ::u32>(XR::Side::Left))
             ? state.m_leftTriggerState
             : state.m_rightTriggerState;
-        //return m_triggerAction.m_actionState[handIndex];
     }
 }

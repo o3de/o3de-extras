@@ -313,22 +313,22 @@ namespace OpenXRVk
 
     float Session::GetXButtonState() const
     {
-        return GetNativeInput()->GetXButtonState();
+        return (GetNativeInput()->GetXButtonState() ? 1.f : 0.f);
     }
 
     float Session::GetYButtonState() const
     {
-        return GetNativeInput()->GetYButtonState();
+        return (GetNativeInput()->GetYButtonState() ? 1.f : 0.f);
     }
 
     float Session::GetAButtonState() const
     {
-        return GetNativeInput()->GetAButtonState();
+        return (GetNativeInput()->GetAButtonState() ? 1.f : 0.f);
     }
 
     float Session::GetBButtonState() const
     {
-        return GetNativeInput()->GetBButtonState();
+        return (GetNativeInput()->GetBButtonState() ? 1.f : 0.f);
     }
 
     float Session::GetXJoyStickState(AZ::u32 handIndex) const

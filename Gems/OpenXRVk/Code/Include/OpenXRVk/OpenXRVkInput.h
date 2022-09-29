@@ -28,7 +28,6 @@ namespace OpenXRVk
 
         //! Sync all the actions and update controller
         //! as well as various tracked space poses
-        //void PollActions() override;
         void PollActions();
 
         //! Initialize various actions/actions sets and add support for Oculus touch bindings
@@ -68,16 +67,16 @@ namespace OpenXRVk
         XrAction GetQuitAction() const;
 
         //! Get the X button state
-        float GetXButtonState() const;
+        bool GetXButtonState() const;
 
         //! Get the Y button state
-        float GetYButtonState() const;
+        bool GetYButtonState() const;
 
         //! Get the A button state
-        float GetAButtonState() const;
+        bool GetAButtonState() const;
 
         //! Get the B button state
-        float GetBButtonState() const;
+        bool GetBButtonState() const;
 
         //! Get the joystick state for x-axis
         float GetXJoyStickState(AZ::u32 handIndex) const;
@@ -92,25 +91,7 @@ namespace OpenXRVk
         float GetTriggerState(AZ::u32 handIndex) const;
 
     private:
-        //struct SingleActionData
-        //{
-        //    XrAction m_actionHandle{ XR_NULL_HANDLE };
-        //    float m_actionState = 0.0f;
-        //};
-
-        //struct DualActionData
-        //{
-        //    XrAction m_actionHandle{ XR_NULL_HANDLE };
-        //    AZStd::array<float, AZ::RPI::XRMaxNumControllers> m_actionState = { { 0.0f, 0.0f } };
-        //};
-
-        //struct ControllerActionData
-        //{
-        //    SingleActionData m_actionData;
-        //    uint16_t m_handIndex = 0;
-        //};
-
-        //! Create a XrAction
+        //! Creates an XrAction
         void CreateAction(XrAction& action, XrActionType actionType,
                           const char* actionName, const char* localizedActionName,
                           uint32_t countSubactionPathCount, const XrPath* subActionPaths) const;
@@ -118,26 +99,15 @@ namespace OpenXRVk
 
         void CreateActionSet(const XrInstance& xrInstance);
         void CreateAllActions(const XrInstance& xrInstance);
+        XrAction GetAction(const AzFramework::InputChannelId& channelId) const;
 
         //! Destroy native objects
         void ShutdownInternal() override;
-
-        XrAction GetAction(const AzFramework::InputChannelId& channelId) const;
-
-        //bool GetActionState(XrSession xrSession, XrAction xrAction, uint16_t handIndex, float& outputSate);
-        //bool UpdateActionState(XrSession xrSession, SingleActionData& actionData, uint16_t handIndex);
-        //bool UpdateActionState(XrSession xrSession, DualActionData& actionData, uint16_t handIndex);
 
         XrActionSet m_actionSet{ XR_NULL_HANDLE };
 
         AZStd::vector<XrActionSuggestedBinding> m_xrActionPaths{};
         AZStd::unordered_map<const AzFramework::InputChannelId*, AZStd::size_t> m_xrActionIndices{};
-
-        //XrAction m_poseAction{ XR_NULL_HANDLE };
-        //XrAction m_vibrateAction{ XR_NULL_HANDLE };
-        //XrAction m_quitAction{ XR_NULL_HANDLE };
-        //DualActionData m_squeezeAction;
-        //DualActionData m_triggerAction;
 
         AZStd::array<XrPath, AZ::RPI::XRMaxNumControllers> m_handSubactionPath{};
         AZStd::array<XrSpace, AZ::RPI::XRMaxNumControllers> m_handSpace{};
@@ -146,14 +116,6 @@ namespace OpenXRVk
 
         AZStd::array<XrSpaceLocation, AZ::RPI::XRMaxNumControllers> m_handSpaceLocation{};
         AZStd::array<XrSpaceLocation, SpaceType::Count> m_xrVisualizedSpaceLocations{};
-
-        //Todo: This is assuming Quest 2 controller. Needs better abstraction to cover other types of controllers
-        //SingleActionData m_xButtonAction;
-        //SingleActionData m_yButtonAction;
-        //SingleActionData m_aButtonAction;
-        //SingleActionData m_bButtonAction;
-        //DualActionData m_joyStickXAction;
-        //DualActionData m_joyStickYAction;
 
         // New Stuff!
         AzFramework::InputDeviceXRController m_xrController{};
