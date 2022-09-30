@@ -461,30 +461,22 @@ namespace OpenXRVk
 
     bool Input::GetXButtonState() const
     {
-        const auto& state = m_xrControllerImpl->GetRawState();
-        const AZ::u32 mask = state.m_buttonIdsToBitMasks.at(AzFramework::InputDeviceXRController::Button::X);
-        return (state.m_digitalButtonStates & mask) != 0;
+        return GetButtonState(AzFramework::InputDeviceXRController::Button::X);
     }
 
     bool Input::GetYButtonState() const
     {
-        const auto& state = m_xrControllerImpl->GetRawState();
-        const AZ::u32 mask = state.m_buttonIdsToBitMasks.at(AzFramework::InputDeviceXRController::Button::Y);
-        return (state.m_digitalButtonStates & mask) != 0;
+        return GetButtonState(AzFramework::InputDeviceXRController::Button::Y);
     }
 
     bool Input::GetAButtonState() const
     {
-        const auto& state = m_xrControllerImpl->GetRawState();
-        const AZ::u32 mask = state.m_buttonIdsToBitMasks.at(AzFramework::InputDeviceXRController::Button::A);
-        return (state.m_digitalButtonStates & mask) != 0;
+        return GetButtonState(AzFramework::InputDeviceXRController::Button::A);
     }
 
     bool Input::GetBButtonState() const
     {
-        const auto& state = m_xrControllerImpl->GetRawState();
-        const AZ::u32 mask = state.m_buttonIdsToBitMasks.at(AzFramework::InputDeviceXRController::Button::B);
-        return (state.m_digitalButtonStates & mask) != 0;
+        return GetButtonState(AzFramework::InputDeviceXRController::Button::B);
     }
 
     float Input::GetXJoyStickState(AZ::u32 handIndex) const
