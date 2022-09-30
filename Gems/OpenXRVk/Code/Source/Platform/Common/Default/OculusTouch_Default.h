@@ -50,10 +50,6 @@ namespace AzFramework
         void TickInputDevice() override;
 
         ////////////////////////////////////////////////////////////////////////////////////////////
-        //! @see AzFramework::InputDeviceXRController::Implementation::OnRawInputDeviceChangeEvent
-        //void OnRawInputDeviceChangeEvent() override;
-
-        ////////////////////////////////////////////////////////////////////////////////////////////
         // Data
         RawXRControllerState m_rawControllerState;  //!< The latest raw xr controller input state
         bool m_isConnected{}; //!< Is the controller(s) currently connected?
@@ -68,7 +64,6 @@ namespace AzFramework
     inline InputDeviceXRController::Implementation* InputDeviceXRController::Implementation::Create(
         InputDeviceXRController& inputDevice)
     {
-        // Should check and make sure that OpenXR api is "available" here.  ??
         return aznew InputDeviceOculusTouch(inputDevice);
     }
 
