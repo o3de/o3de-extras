@@ -38,7 +38,6 @@ namespace ROS2
             // failed to get game object, let us retry as editor
             component = AzToolsFramework::FindWrappedComponentForEntity<ComponentType>(entity);
             AZ_Assert(entity, "Entity %s has no component of type", entity->GetId());
-            // no component found
             return component;
         }
 
