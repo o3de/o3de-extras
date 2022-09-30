@@ -7,6 +7,7 @@
  */
 #pragma once
 
+#include "ROS2GemUtilities.h"
 #include "SensorConfiguration.h"
 #include <AzCore/Component/Component.h>
 #include <AzCore/Component/TickBus.h>

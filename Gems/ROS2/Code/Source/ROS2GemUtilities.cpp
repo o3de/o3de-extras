@@ -5,9 +5,11 @@
  * SPDX-License-Identifier: Apache-2.0 OR MIT
  *
  */
+
 #include "ROS2GemUtilities.h"
 #include <AzCore/std/string/regex.h>
 #include <AzToolsFramework/API/EntityCompositionRequestBus.h>
+
 namespace ROS2
 {
 
