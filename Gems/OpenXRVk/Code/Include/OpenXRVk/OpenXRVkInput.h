@@ -111,7 +111,7 @@ namespace OpenXRVk
 
         XrAction m_hapticAction{};
         AZStd::vector<XrActionSuggestedBinding> m_xrActionPaths{};
-        AZStd::unordered_map<const AzFramework::InputChannelId*, AZStd::size_t> m_xrActionIndices{};
+        AZStd::unordered_map<AzFramework::InputChannelId, AZStd::size_t> m_xrActionIndices{};
 
         AZStd::array<XrPath, AZ::RPI::XRMaxNumControllers> m_handSubactionPath{};
         AZStd::array<XrSpace, AZ::RPI::XRMaxNumControllers> m_handSpace{};

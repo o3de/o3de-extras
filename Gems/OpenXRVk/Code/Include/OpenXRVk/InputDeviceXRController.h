@@ -271,7 +271,7 @@ namespace AzFramework
             //! Broadcast an event when the input device disconnects from the system
             void BroadcastInputDeviceDisconnectedEvent() const;
 
-            using ButtonIdToBitMaskMap = AZStd::unordered_map<const InputChannelId*, AZ::u32>;
+            using ButtonIdToBitMaskMap = AZStd::unordered_map<InputChannelId, AZ::u32>;
 
             ////////////////////////////////////////////////////////////////////////////////////////
             //! Platform agnostic repreesentation of raw XR Controller state

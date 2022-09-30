@@ -347,10 +347,10 @@ namespace AzFramework
     void InputDeviceXRController::Implementation::ProcessRawControllerState([[maybe_unused]] const RawXRControllerState& rawControllerState)
     {
         // Update digital button channels...
-        for (const auto& [channelIdPtr, bitMask] : rawControllerState.m_buttonIdsToBitMasks)
+        for (const auto& [channelId, bitMask] : rawControllerState.m_buttonIdsToBitMasks)
         {
             const bool buttonState = (rawControllerState.m_digitalButtonStates & bitMask) != 0;
-            m_inputDevice.m_buttonChannelsById[*channelIdPtr]->ProcessRawInputEvent(buttonState);
+            m_inputDevice.m_buttonChannelsById[channelId]->ProcessRawInputEvent(buttonState);
         }
 
         using xrc = InputDeviceXRController;

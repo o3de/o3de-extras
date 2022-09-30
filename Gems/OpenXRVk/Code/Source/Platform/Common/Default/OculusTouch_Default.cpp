@@ -19,24 +19,24 @@ namespace AzFramework
     {
         using xrc = InputDeviceXRController;
         return {
-            { &xrc::Button::A, (1 << 0) },
-            { &xrc::Button::B, (1 << 1) },
-            { &xrc::Button::X, (1 << 2) },
-            { &xrc::Button::Y, (1 << 3) },
-            { &xrc::Button::Home, (1 << 4) },
-            { &xrc::Button::Menu, (1 << 5) },
-            { &xrc::Button::L3, (1 << 6) },
-            { &xrc::Button::R3, (1 << 7) },
-            { &xrc::Button::TA, (1 << 8) },
-            { &xrc::Button::TB, (1 << 9) },
-            { &xrc::Button::TX, (1 << 10) },
-            { &xrc::Button::TY, (1 << 11) },
-            { &xrc::Button::TLStick, (1 << 12) },
-            { &xrc::Button::TRStick, (1 << 13) },
-            { &xrc::Button::TLRest, (1 << 14) },
-            { &xrc::Button::TRRest, (1 << 15) },
-            { &xrc::Button::TLTrig, (1 << 16) },
-            { &xrc::Button::TRTrig, (1 << 17) },
+            { xrc::Button::A, (1 << 0) },
+            { xrc::Button::B, (1 << 1) },
+            { xrc::Button::X, (1 << 2) },
+            { xrc::Button::Y, (1 << 3) },
+            { xrc::Button::Home, (1 << 4) },
+            { xrc::Button::Menu, (1 << 5) },
+            { xrc::Button::L3, (1 << 6) },
+            { xrc::Button::R3, (1 << 7) },
+            { xrc::Button::TA, (1 << 8) },
+            { xrc::Button::TB, (1 << 9) },
+            { xrc::Button::TX, (1 << 10) },
+            { xrc::Button::TY, (1 << 11) },
+            { xrc::Button::TLStick, (1 << 12) },
+            { xrc::Button::TRStick, (1 << 13) },
+            { xrc::Button::TLRest, (1 << 14) },
+            { xrc::Button::TRRest, (1 << 15) },
+            { xrc::Button::TLTrig, (1 << 16) },
+            { xrc::Button::TRTrig, (1 << 17) },
         };
     }
 
@@ -54,36 +54,36 @@ namespace AzFramework
 
         using xrc = InputDeviceXRController;
         m_xrPathMap = {
-            { &xrc::Button::A, "/user/hand/right/input/a/click" },
-            { &xrc::Button::B, "/user/hand/right/input/b/click" },
-            { &xrc::Button::X, "/user/hand/left/input/x/click" },
-            { &xrc::Button::Y, "/user/hand/left/input/y/click" },
-            { &xrc::Button::Home, "/user/hand/right/input/system/click" },
-            { &xrc::Button::Menu, "/user/hand/left/input/menu/click" },
-            { &xrc::Button::L3, "/user/hand/left/input/thumbstick/click" },
-            { &xrc::Button::R3, "/user/hand/right/input/thumbstick/click" },
-            { &xrc::Button::TA, "/user/hand/right/input/a/touch" },
-            { &xrc::Button::TB, "/user/hand/right/input/b/touch" },
-            { &xrc::Button::TX, "/user/hand/left/input/x/touch" },
-            { &xrc::Button::TY, "/user/hand/left/input/y/touch" },
-            { &xrc::Button::TLStick, "/user/hand/left/input/thumbstick/touch" },
-            { &xrc::Button::TRStick, "/user/hand/right/input/thumbstick/touch" },
-            { &xrc::Button::TLRest, "/user/hand/left/input/thumbrest/touch" },
-            { &xrc::Button::TRRest, "/user/hand/right/input/thumbrest/touch" },
-            { &xrc::Button::TLTrig, "/user/hand/left/input/trigger/touch" },
-            { &xrc::Button::TRTrig, "/user/hand/right/input/trigger/touch" },
-            { &xrc::Trigger::LTrigger, "/user/hand/left/input/trigger/value" },
-            { &xrc::Trigger::RTrigger, "/user/hand/right/input/trigger/value" },
-            { &xrc::Trigger::LGrip, "/user/hand/left/input/squeeze/value" },
-            { &xrc::Trigger::RGrip, "/user/hand/right/input/squeeze/value" },
-            { &xrc::ThumbStickAxis1D::LX, "/user/hand/left/input/thumbstick/x" },
-            { &xrc::ThumbStickAxis1D::LY, "/user/hand/left/input/thumbstick/y" },
-            { &xrc::ThumbStickAxis1D::RX, "/user/hand/right/input/thumbstick/x" },
-            { &xrc::ThumbStickAxis1D::RY, "/user/hand/right/input/thumbstick/y" },
-            { &xrc::ControllerPosePosition::LPos, "/user/hand/left/input/grip/pose" },
-            { &xrc::ControllerPosePosition::RPos, "/user/hand/right/input/grip/pose" },
-            { &xrc::ControllerPoseOrientation::LOrient, "/user/hand/left/input/aim/pose" },
-            { &xrc::ControllerPoseOrientation::ROrient, "/user/hand/right/input/aim/pose" },
+            { xrc::Button::A, "/user/hand/right/input/a/click" },
+            { xrc::Button::B, "/user/hand/right/input/b/click" },
+            { xrc::Button::X, "/user/hand/left/input/x/click" },
+            { xrc::Button::Y, "/user/hand/left/input/y/click" },
+            { xrc::Button::Home, "/user/hand/right/input/system/click" },
+            { xrc::Button::Menu, "/user/hand/left/input/menu/click" },
+            { xrc::Button::L3, "/user/hand/left/input/thumbstick/click" },
+            { xrc::Button::R3, "/user/hand/right/input/thumbstick/click" },
+            { xrc::Button::TA, "/user/hand/right/input/a/touch" },
+            { xrc::Button::TB, "/user/hand/right/input/b/touch" },
+            { xrc::Button::TX, "/user/hand/left/input/x/touch" },
+            { xrc::Button::TY, "/user/hand/left/input/y/touch" },
+            { xrc::Button::TLStick, "/user/hand/left/input/thumbstick/touch" },
+            { xrc::Button::TRStick, "/user/hand/right/input/thumbstick/touch" },
+            { xrc::Button::TLRest, "/user/hand/left/input/thumbrest/touch" },
+            { xrc::Button::TRRest, "/user/hand/right/input/thumbrest/touch" },
+            { xrc::Button::TLTrig, "/user/hand/left/input/trigger/touch" },
+            { xrc::Button::TRTrig, "/user/hand/right/input/trigger/touch" },
+            { xrc::Trigger::LTrigger, "/user/hand/left/input/trigger/value" },
+            { xrc::Trigger::RTrigger, "/user/hand/right/input/trigger/value" },
+            { xrc::Trigger::LGrip, "/user/hand/left/input/squeeze/value" },
+            { xrc::Trigger::RGrip, "/user/hand/right/input/squeeze/value" },
+            { xrc::ThumbStickAxis1D::LX, "/user/hand/left/input/thumbstick/x" },
+            { xrc::ThumbStickAxis1D::LY, "/user/hand/left/input/thumbstick/y" },
+            { xrc::ThumbStickAxis1D::RX, "/user/hand/right/input/thumbstick/x" },
+            { xrc::ThumbStickAxis1D::RY, "/user/hand/right/input/thumbstick/y" },
+            { xrc::ControllerPosePosition::LPos, "/user/hand/left/input/grip/pose" },
+            { xrc::ControllerPosePosition::RPos, "/user/hand/right/input/grip/pose" },
+            { xrc::ControllerPoseOrientation::LOrient, "/user/hand/left/input/aim/pose" },
+            { xrc::ControllerPoseOrientation::ROrient, "/user/hand/right/input/aim/pose" },
         };
     }
 
@@ -93,7 +93,7 @@ namespace AzFramework
     ////////////////////////////////////////////////////////////////////////////////////////////////
     AZStd::string_view InputDeviceOculusTouch::GetInputChannelPath(const InputChannelId& channelId) const
     {
-        if (const auto it = m_xrPathMap.find(&channelId);
+        if (const auto it = m_xrPathMap.find(channelId);
             it != m_xrPathMap.end())
         {
             return it->second;

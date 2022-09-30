@@ -60,7 +60,7 @@ namespace AzFramework
 
         TickCallbackFn m_tickCallback{ nullptr };
 
-        AZStd::unordered_map<const InputChannelId*, const AZStd::string_view> m_xrPathMap{};
+        AZStd::unordered_map<InputChannelId, const AZStd::string_view> m_xrPathMap{};
     };
 
     ////////////////////////////////////////////////////////////////////////////////////////////////

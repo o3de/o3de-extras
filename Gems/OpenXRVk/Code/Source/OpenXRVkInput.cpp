@@ -120,7 +120,7 @@ namespace OpenXRVk
         using namespace AzFramework;
         auto createXrAction = [this, &xrInstance](const InputChannelId& channelId, const XrActionType actionType) -> void
         {
-            m_xrActionIndices[&channelId] = m_xrActionPaths.size();
+            m_xrActionIndices[channelId] = m_xrActionPaths.size();
             m_xrActionPaths.push_back({});
             
             CreateAction(m_xrActionPaths.back().action, actionType, channelId.GetName(), channelId.GetName(),
@@ -215,7 +215,7 @@ namespace OpenXRVk
         // initialize structures in this class should be passed.
 
         // "at" will assert if the channelId is something unexpected for xr controller
-        const auto index = m_xrActionIndices.at(&channelId);
+        const auto index = m_xrActionIndices.at(channelId);
         return m_xrActionPaths[index].action;
     }
 
@@ -227,6 +227,7 @@ namespace OpenXRVk
         m_handActive = { XR_FALSE, XR_FALSE };
 
         auto& rawControllerData = m_xrControllerImpl->GetRawState();
+
         // Might not need to reset if we're constantly refreshing all raw values.
         // In the future we may want to store off a couple ticks of data in a history
         // so that derivatives and edge detection can be computed.
@@ -238,18 +239,20 @@ namespace OpenXRVk
         syncInfo.type = XR_TYPE_ACTIONS_SYNC_INFO;
         syncInfo.countActiveActionSets = 1;
         syncInfo.activeActionSets = &activeActionSet;
+
         XrResult result = xrSyncActions(xrSession, &syncInfo);
+        WARN_IF_UNSUCCESSFUL(result);
 
         using namespace AzFramework;
         using xrc = InputDeviceXRController;
 
         // Updating digital buttons is somewhat unique, because it compacts and combines them all to a u32 with bit masks...
-        for (const auto& [channelIdPtr, bitMask] : rawControllerData.m_buttonIdsToBitMasks)
+        for (const auto& [channelId, bitMask] : rawControllerData.m_buttonIdsToBitMasks)
         {
             XrActionStateGetInfo getButtonInfo{};
             getButtonInfo.type = XR_TYPE_ACTION_STATE_GET_INFO;
             getButtonInfo.next = nullptr;
-            getButtonInfo.action = GetAction(*channelIdPtr);
+            getButtonInfo.action = GetAction(channelId);
             getButtonInfo.subactionPath = XR_NULL_PATH;
 
             XrActionStateBoolean buttonValue{};
@@ -452,35 +455,35 @@ namespace OpenXRVk
     bool Input::GetButtonState(const AzFramework::InputChannelId& channelId) const
     {
         const auto& state = m_xrControllerImpl->GetRawState();
-        const AZ::u32 mask = state.m_buttonIdsToBitMasks.at(&channelId);
+        const AZ::u32 mask = state.m_buttonIdsToBitMasks.at(channelId);
         return (state.m_digitalButtonStates & mask) != 0;
     }
 
     bool Input::GetXButtonState() const
     {
         const auto& state = m_xrControllerImpl->GetRawState();
-        const AZ::u32 mask = state.m_buttonIdsToBitMasks.at(&AzFramework::InputDeviceXRController::Button::X);
+        const AZ::u32 mask = state.m_buttonIdsToBitMasks.at(AzFramework::InputDeviceXRController::Button::X);
         return (state.m_digitalButtonStates & mask) != 0;
     }
 
     bool Input::GetYButtonState() const
     {
         const auto& state = m_xrControllerImpl->GetRawState();
-        const AZ::u32 mask = state.m_buttonIdsToBitMasks.at(&AzFramework::InputDeviceXRController::Button::Y);
+        const AZ::u32 mask = state.m_buttonIdsToBitMasks.at(AzFramework::InputDeviceXRController::Button::Y);
         return (state.m_digitalButtonStates & mask) != 0;
     }
 
     bool Input::GetAButtonState() const
     {
         const auto& state = m_xrControllerImpl->GetRawState();
-        const AZ::u32 mask = state.m_buttonIdsToBitMasks.at(&AzFramework::InputDeviceXRController::Button::A);
+        const AZ::u32 mask = state.m_buttonIdsToBitMasks.at(AzFramework::InputDeviceXRController::Button::A);
         return (state.m_digitalButtonStates & mask) != 0;
     }
 
     bool Input::GetBButtonState() const
     {
         const auto& state = m_xrControllerImpl->GetRawState();
-        const AZ::u32 mask = state.m_buttonIdsToBitMasks.at(&AzFramework::InputDeviceXRController::Button::B);
+        const AZ::u32 mask = state.m_buttonIdsToBitMasks.at(AzFramework::InputDeviceXRController::Button::B);
         return (state.m_digitalButtonStates & mask) != 0;
     }
 
