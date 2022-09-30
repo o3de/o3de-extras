@@ -8,6 +8,7 @@
 
 #include "RobotImporter/URDF/URDFPrefabMaker.h"
 #include "Frame/ROS2FrameComponent.h"
+#include "ROS2GemUtilities.h"
 #include "RobotControl/ROS2RobotControlComponent.h"
 #include "RobotImporter/URDF/CollidersMaker.h"
 #include "RobotImporter/URDF/PrefabMakerUtils.h"
@@ -117,7 +118,7 @@ namespace ROS2
         const auto frameCompontentId = Utils::CreateComponent(entityId, ROS2FrameComponent::TYPEINFO_Uuid());
         if (frameCompontentId)
         {
-            auto* component = AzToolsFramework::FindWrappedComponentForEntity<ROS2FrameComponent>(entity);
+            auto* component = Utils::GetGameOrEditorComponent<ROS2FrameComponent>(entity);
             AZ_Assert(component, "Component not exists for %s", entityId.ToString().c_str());
             component->SetFrameID(AZStd::string(link->name.c_str(), link->name.size()));
         }
@@ -151,7 +152,7 @@ namespace ROS2
             ControlConfiguration controlConfiguration;
             controlConfiguration.m_topic = "cmd_vel";
             AZ::Entity* rootEntity = AzToolsFramework::GetEntityById(rootEntityId);
-            auto* component = AzToolsFramework::FindWrappedComponentForEntity<ROS2RobotControlComponent>(rootEntity);
+            auto* component = Utils::GetGameOrEditorComponent<ROS2RobotControlComponent>(rootEntity);
             component->SetControlConfiguration(controlConfiguration);
         }
     }

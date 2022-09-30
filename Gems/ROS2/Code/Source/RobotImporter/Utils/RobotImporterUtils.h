@@ -16,11 +16,5 @@ namespace ROS2
     {
         bool IsWheelURDFHeuristics(const urdf::LinkConstSharedPtr& link);
 
-        /// Create component for a given entity in safe way.
-        /// \param entityId entity that will own component
-        /// \param componentType Uuid of component to create
-        /// \return created componentId, if it fails, it returns invalid id
-        AZ::ComponentId CreateComponent(const AZ::EntityId entityId, const AZ::Uuid componentType);
-
     } // namespace Utils
 } // namespace ROS2

@@ -173,7 +173,7 @@ namespace ROS2
             m_visualisationPoints = m_lastScanResults;
         }
 
-        auto* ros2Frame = AzToolsFramework::FindWrappedComponentForEntity<ROS2FrameComponent>(GetEntity());
+        auto* ros2Frame = Utils::GetGameOrEditorComponent<ROS2FrameComponent>(GetEntity());
         auto message = sensor_msgs::msg::PointCloud2();
         message.header.frame_id = ros2Frame->GetFrameID().data();
         message.header.stamp = ROS2Interface::Get()->GetROSTimestamp();

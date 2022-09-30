@@ -89,7 +89,7 @@ namespace ROS2
         if (AZ::EntityId parentEntityId = GetEntityTransformInterface()->GetParentId(); parentEntityId.IsValid())
         {
             const AZ::Entity* parentEntity = AzToolsFramework::GetEntityById(parentEntityId);
-            auto* component = AzToolsFramework::FindWrappedComponentForEntity<ROS2FrameComponent>(parentEntity);
+            auto* component = Utils::GetGameOrEditorComponent<ROS2FrameComponent>(parentEntity);
             return component;
         }
         return nullptr;

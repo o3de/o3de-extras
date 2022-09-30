@@ -20,6 +20,8 @@ set(FILES
         Source/Lidar/ROS2LidarSensorComponent.h
         Source/QoS/QoS.cpp
         Source/QoS/QoS.h
+        Source/ROS2GemUtilities.cpp
+        Source/ROS2GemUtilities.h
         Source/RobotControl/ControlConfiguration.cpp
         Source/RobotControl/ControlConfiguration.h
         Source/RobotControl/ControlSubscriptionHandler.h

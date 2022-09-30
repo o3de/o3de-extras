@@ -7,6 +7,7 @@
  */
 #pragma once
 
+#include "ROS2GemUtilities.h"
 #include <Atom/Feature/Utils/FrameCaptureBus.h>
 #include <chrono>
 

@@ -9,6 +9,7 @@
 #include "Sensor/ROS2SensorComponent.h"
 #include "Frame/ROS2FrameComponent.h"
 #include "ROS2/ROS2Bus.h"
+#include "ROS2GemUtilities.h"
 #include "Utilities/ROS2Names.h"
 #include <AzCore/Component/Entity.h>
 #include <AzCore/Serialization/EditContext.h>
@@ -52,13 +53,13 @@ namespace ROS2
     AZStd::string ROS2SensorComponent::GetNamespace() const
     {
         // TODO - hold frame?
-        auto* ros2Frame = AzToolsFramework::FindWrappedComponentForEntity<ROS2FrameComponent>(GetEntity());
+        auto* ros2Frame = Utils::GetGameOrEditorComponent<ROS2FrameComponent>(GetEntity());
         return ros2Frame->GetNamespace();
     };
 
     AZStd::string ROS2SensorComponent::GetFrameID() const
     {
-        auto* ros2Frame = AzToolsFramework::FindWrappedComponentForEntity<ROS2FrameComponent>(GetEntity());
+        auto* ros2Frame = Utils::GetGameOrEditorComponent<ROS2FrameComponent>(GetEntity());
         return ros2Frame->GetFrameID();
     }
 

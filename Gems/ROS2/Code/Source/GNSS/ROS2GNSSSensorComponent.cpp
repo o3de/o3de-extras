@@ -10,6 +10,7 @@
 #include "AzCore/Math/Matrix4x4.h"
 #include "Frame/ROS2FrameComponent.h"
 #include "ROS2/ROS2Bus.h"
+#include "ROS2GemUtilities.h"
 #include "Utilities/ROS2Conversions.h"
 #include "Utilities/ROS2Names.h"
 
@@ -107,7 +108,7 @@ namespace ROS2
 
     AZ::Transform ROS2GNSSSensorComponent::GetCurrentPose() const
     {
-        auto* ros2Frame = AzToolsFramework::FindWrappedComponentForEntity<ROS2FrameComponent>(GetEntity());
+        auto* ros2Frame = Utils::GetGameOrEditorComponent<ROS2FrameComponent>(GetEntity());
         return ros2Frame->GetFrameTransform();
     }
 } // namespace ROS2

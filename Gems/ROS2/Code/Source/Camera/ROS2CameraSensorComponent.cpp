@@ -116,7 +116,7 @@ namespace ROS2
             [this](const AZ::RPI::AttachmentReadback::ReadbackResult& result)
             {
                 const AZ::RHI::ImageDescriptor& descriptor = result.m_imageDescriptor;
-                const auto* component = AzToolsFramework::FindWrappedComponentForEntity<ROS2FrameComponent>(GetEntity());
+                const auto* component = Utils::GetGameOrEditorComponent<ROS2FrameComponent>(GetEntity());
                 AZStd::string frameName = component->GetFrameID();
                 sensor_msgs::msg::Image message;
                 message.encoding = sensor_msgs::image_encodings::RGBA8;

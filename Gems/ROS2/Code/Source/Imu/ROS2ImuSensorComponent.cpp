@@ -144,7 +144,7 @@ namespace ROS2
 
     AZ::Transform ROS2ImuSensorComponent::GetCurrentPose() const
     {
-        auto* ros2Frame = AzToolsFramework::FindWrappedComponentForEntity<ROS2FrameComponent>(GetEntity());
+        auto* ros2Frame = Utils::GetGameOrEditorComponent<ROS2FrameComponent>(GetEntity());
         return ros2Frame->GetFrameTransform();
     }
 
