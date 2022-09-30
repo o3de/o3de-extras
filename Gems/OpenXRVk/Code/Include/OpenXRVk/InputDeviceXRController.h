@@ -343,6 +343,17 @@ namespace AzFramework
                 float m_rightThumbStickXState{};            //!< The right thumb-stick x-axis
                 float m_rightThumbStickYState{};            //!< The right thumb-stick y-axis
 
+                float m_triggerMaxValue{};                  //!< The maximum value of the analog triggers
+                float m_triggerDeadZoneValue{};             //!< The dead zone value of the analog triggers
+                float m_gripMaxValue{};                     //!< The maximum value of the grip triggers
+                float m_gripDeadZoneValue{};                //!< The dead zone value of the grip triggers
+                float m_thumbStickMaxValue{};               //!< The maximum value of the thumb-sticks
+                float m_leftThumbStickDeadZoneValue{};      //!< The left thumb-stick dead zone value
+                float m_rightThumbStickDeadZoneValue{};     //!< The right thumb-stick dead zone value
+
+                float m_leftMotorVibrationValue{};          //!< The vibration amount of the left motor
+                float m_rightMotorVibrationValue{};         //!< The vibration amount of the right motor
+
                 AZ::Vector3 m_leftPositionState{};          //!< The left controller position
                 AZ::Vector3 m_rightPositionState{};         //!< The right controller position
                 //AZ::Vector3 m_leftVelocityState;          // TODO (implement)
@@ -351,14 +362,6 @@ namespace AzFramework
                 //AZ::Vector3 m_rightAccelerationState;     //
                 AZ::Quaternion m_leftOrientationState{};    //!< The left controller orientation
                 AZ::Quaternion m_rightOrientationState{};   //!< The right controller orientation
-
-                float m_triggerMaxValue{};                  //!< The maximum value of the analog triggers
-                float m_triggerDeadZoneValue{};             //!< The dead zone value of the analog triggers
-                float m_gripMaxValue{};                     //!< The maximum value of the grip triggers
-                float m_gripDeadZoneValue{};                //!< The dead zone value of the grip triggers
-                float m_thumbStickMaxValue{};               //!< The maximum value of the thumb-sticks
-                float m_leftThumbStickDeadZoneValue{};      //!< The left thumb-stick dead zone value
-                float m_rightThumbStickDeadZoneValue{};     //!< The right thumb-stick dead zone value
             }; // struct RawXRControllerState
 
             virtual RawXRControllerState& GetRawState() = 0;

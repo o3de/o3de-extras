@@ -45,11 +45,11 @@ namespace OpenXRVk
         //! Update information for a specific tracked space type (i.e visualizedSpaceType)
         void LocateVisualizedSpace(XrTime predictedDisplayTime, XrSpace space, XrSpace baseSpace, OpenXRVk::SpaceType visualizedSpaceType);
 
-        //! Return Pose data for a controller attached to a view index
+        //! Return Pose data for a controller attached to a hand index
         AZ::RHI::ResultCode GetControllerPose(AZ::u32 handIndex, AZ::RPI::PoseData& outPoseData) const;
 
-        //! Return scale for a controller attached to a view index
-        float GetControllerScale(AZ::u32 viewIndex) const;
+        //! Return scale for a controller attached to a hand index
+        float GetControllerScale(AZ::u32 handIndex) const;
 
         //! Return Pose data for a tracked space type (i.e visualizedSpaceType)
         AZ::RHI::ResultCode GetVisualizedSpacePose(OpenXRVk::SpaceType visualizedSpaceType, AZ::RPI::PoseData& outPoseData) const;
@@ -65,6 +65,9 @@ namespace OpenXRVk
 
         //! Get the Quit action
         XrAction GetQuitAction() const;
+
+        //! Get any button state
+        bool GetButtonState(const AzFramework::InputChannelId& channelId) const;
 
         //! Get the X button state
         bool GetXButtonState() const;
@@ -106,12 +109,13 @@ namespace OpenXRVk
 
         XrActionSet m_actionSet{ XR_NULL_HANDLE };
 
+        XrAction m_hapticAction{};
         AZStd::vector<XrActionSuggestedBinding> m_xrActionPaths{};
         AZStd::unordered_map<const AzFramework::InputChannelId*, AZStd::size_t> m_xrActionIndices{};
 
         AZStd::array<XrPath, AZ::RPI::XRMaxNumControllers> m_handSubactionPath{};
         AZStd::array<XrSpace, AZ::RPI::XRMaxNumControllers> m_handSpace{};
-        AZStd::array<float, AZ::RPI::XRMaxNumControllers> m_handScale = { { 1.0f, 1.0f } };
+        AZStd::array<float, AZ::RPI::XRMaxNumControllers> m_handScale{ { 1.0f, 1.0f } };
         AZStd::array<XrBool32, AZ::RPI::XRMaxNumControllers> m_handActive{};
 
         AZStd::array<XrSpaceLocation, AZ::RPI::XRMaxNumControllers> m_handSpaceLocation{};
@@ -120,5 +124,6 @@ namespace OpenXRVk
         // New Stuff!
         AzFramework::InputDeviceXRController m_xrController{};
         AzFramework::InputDeviceXRController::Implementation* m_xrControllerImpl{};
+        bool m_wasQuitPressedLastSync{ false };
     };
 }

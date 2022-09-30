@@ -138,13 +138,13 @@ namespace AzFramework
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
-    void InputDeviceOculusTouch::SetVibration(
-        [[maybe_unused]] float leftMotorSpeedNormalized,
-        [[maybe_unused]] float rightMotorSpeedNormalized)
+    void InputDeviceOculusTouch::SetVibration(float leftMotorSpeedNormalized, float rightMotorSpeedNormalized)
     {
         if (m_isConnected)
         {
-            // TBD ...
+            // Set vibration values on the raw data structure, they will be consumed on the next tick
+            m_rawControllerState.m_leftMotorVibrationValue = leftMotorSpeedNormalized;
+            m_rawControllerState.m_rightMotorVibrationValue = rightMotorSpeedNormalized;
         }
     }
 

@@ -87,6 +87,7 @@ namespace OpenXRVk
         azstrcpy(actionInfo.localizedActionName, sizeof(actionInfo.localizedActionName), localizedActionName);
         actionInfo.countSubactionPaths = countSubactionPathCount;
         actionInfo.subactionPaths = subActionPaths;
+
         [[maybe_unused]] const XrResult result = xrCreateAction(m_actionSet, &actionInfo, &action);
         WARN_IF_UNSUCCESSFUL(result);
     }
@@ -99,6 +100,7 @@ namespace OpenXRVk
         azstrcpy(actionSetInfo.actionSetName, sizeof(actionSetInfo.actionSetName), "gameplay");
         azstrcpy(actionSetInfo.localizedActionSetName, sizeof(actionSetInfo.localizedActionSetName), "Gameplay");
         actionSetInfo.priority = 0;
+
         [[maybe_unused]] const XrResult result = xrCreateActionSet(xrInstance, &actionSetInfo, &m_actionSet);
         WARN_IF_UNSUCCESSFUL(result);
     }
@@ -108,70 +110,50 @@ namespace OpenXRVk
         // Get the XrPath for the left and right hands - we will use them as subaction paths.
         const AZStd::string leftHandPath{ m_xrControllerImpl->GetLeftHandSubPath() };
         const AZStd::string rightHandPath{ m_xrControllerImpl->GetRightHandSubPath() };
+
         XrResult result = xrStringToPath(xrInstance, leftHandPath.data(), &m_handSubactionPath[static_cast<uint32_t>(XR::Side::Left)]);
         WARN_IF_UNSUCCESSFUL(result);
         result = xrStringToPath(xrInstance, rightHandPath.data(), &m_handSubactionPath[static_cast<uint32_t>(XR::Side::Right)]);
         WARN_IF_UNSUCCESSFUL(result);
 
+        // Lambda to create an action and path, store them in m_xrActionPaths
         using namespace AzFramework;
-        for (const InputChannelId& channelId : InputDeviceXRController::Button::All)
+        auto createXrAction = [this, &xrInstance](const InputChannelId& channelId, const XrActionType actionType) -> void
         {
             m_xrActionIndices[&channelId] = m_xrActionPaths.size();
             m_xrActionPaths.push_back({});
-            CreateAction(m_xrActionPaths.back().action, XR_ACTION_TYPE_BOOLEAN_INPUT, channelId.GetName(), channelId.GetName(),
+            
+            CreateAction(m_xrActionPaths.back().action, actionType, channelId.GetName(), channelId.GetName(),
                 aznumeric_cast<AZ::u32>(AZStd::size(m_handSubactionPath)), m_handSubactionPath.data());
 
             const AZStd::string xrPathStr{ m_xrControllerImpl->GetInputChannelPath(channelId) };
             [[maybe_unused]] const XrResult pathResult = xrStringToPath(xrInstance, xrPathStr.data(), &m_xrActionPaths.back().binding);
             WARN_IF_UNSUCCESSFUL(pathResult);
+        };
+
+        for (const InputChannelId& channelId : InputDeviceXRController::Button::All)
+        {
+            createXrAction(channelId, XR_ACTION_TYPE_BOOLEAN_INPUT);
         }
 
         for (const InputChannelId& channelId : InputDeviceXRController::Trigger::All)
         {
-            m_xrActionIndices[&channelId] = m_xrActionPaths.size();
-            m_xrActionPaths.push_back({});
-            CreateAction(m_xrActionPaths.back().action, XR_ACTION_TYPE_FLOAT_INPUT, channelId.GetName(), channelId.GetName(),
-                aznumeric_cast<AZ::u32>(AZStd::size(m_handSubactionPath)), m_handSubactionPath.data());
-
-            const AZStd::string xrPathStr{ m_xrControllerImpl->GetInputChannelPath(channelId) };
-            [[maybe_unused]] const XrResult pathResult = xrStringToPath(xrInstance, xrPathStr.data(), &m_xrActionPaths.back().binding);
-            WARN_IF_UNSUCCESSFUL(pathResult);
+            createXrAction(channelId, XR_ACTION_TYPE_FLOAT_INPUT);
         }
 
         for (const InputChannelId& channelId : InputDeviceXRController::ThumbStickAxis1D::All)
         {
-            m_xrActionIndices[&channelId] = m_xrActionPaths.size();
-            m_xrActionPaths.push_back({});
-            CreateAction(m_xrActionPaths.back().action, XR_ACTION_TYPE_FLOAT_INPUT, channelId.GetName(), channelId.GetName(),
-                aznumeric_cast<AZ::u32>(AZStd::size(m_handSubactionPath)), m_handSubactionPath.data());
-
-            const AZStd::string xrPathStr{ m_xrControllerImpl->GetInputChannelPath(channelId) };
-            [[maybe_unused]] const XrResult pathResult = xrStringToPath(xrInstance, xrPathStr.data(), &m_xrActionPaths.back().binding);
-            WARN_IF_UNSUCCESSFUL(pathResult);
+            createXrAction(channelId, XR_ACTION_TYPE_FLOAT_INPUT);
         }
 
         for (const InputChannelId& channelId : InputDeviceXRController::ControllerPosePosition::All)
         {
-            m_xrActionIndices[&channelId] = m_xrActionPaths.size();
-            m_xrActionPaths.push_back({});
-            CreateAction(m_xrActionPaths.back().action, XR_ACTION_TYPE_POSE_INPUT, channelId.GetName(), channelId.GetName(),
-                aznumeric_cast<AZ::u32>(AZStd::size(m_handSubactionPath)), m_handSubactionPath.data());
-
-            const AZStd::string xrPathStr{ m_xrControllerImpl->GetInputChannelPath(channelId) };
-            [[maybe_unused]] const XrResult pathResult = xrStringToPath(xrInstance, xrPathStr.data(), &m_xrActionPaths.back().binding);
-            WARN_IF_UNSUCCESSFUL(pathResult);
+            createXrAction(channelId, XR_ACTION_TYPE_POSE_INPUT);
         }
 
         for (const InputChannelId& channelId : InputDeviceXRController::ControllerPoseOrientation::All)
         {
-            m_xrActionIndices[&channelId] = m_xrActionPaths.size();
-            m_xrActionPaths.push_back({});
-            CreateAction(m_xrActionPaths.back().action, XR_ACTION_TYPE_POSE_INPUT, channelId.GetName(), channelId.GetName(),
-                aznumeric_cast<AZ::u32>(AZStd::size(m_handSubactionPath)), m_handSubactionPath.data());
-
-            const AZStd::string xrPathStr{ m_xrControllerImpl->GetInputChannelPath(channelId) };
-            [[maybe_unused]] const XrResult pathResult = xrStringToPath(xrInstance, xrPathStr.data(), &m_xrActionPaths.back().binding);
-            WARN_IF_UNSUCCESSFUL(pathResult);
+            createXrAction(channelId, XR_ACTION_TYPE_POSE_INPUT); // is this correct?
         }
 
         m_xrControllerImpl->RegisterTickCallback([this]()->void { PollActions(); });
@@ -184,12 +166,14 @@ namespace OpenXRVk
         actionSpaceInfo.action = GetAction(AzFramework::InputDeviceXRController::ControllerPosePosition::LPos);
         actionSpaceInfo.poseInActionSpace.orientation.w = 1.f;
         actionSpaceInfo.subactionPath = m_handSubactionPath[static_cast<uint32_t>(XR::Side::Left)];
+
         XrResult result = xrCreateActionSpace(xrSession, &actionSpaceInfo, &m_handSpace[static_cast<uint32_t>(XR::Side::Left)]);
         WARN_IF_UNSUCCESSFUL(result);
         RETURN_RESULTCODE_IF_UNSUCCESSFUL(ConvertResult(result));
 
         actionSpaceInfo.action = GetAction(AzFramework::InputDeviceXRController::ControllerPosePosition::RPos);
         actionSpaceInfo.subactionPath = m_handSubactionPath[static_cast<uint32_t>(XR::Side::Right)];
+
         result = xrCreateActionSpace(xrSession, &actionSpaceInfo, &m_handSpace[static_cast<uint32_t>(XR::Side::Right)]);
         WARN_IF_UNSUCCESSFUL(result);
 
@@ -202,6 +186,7 @@ namespace OpenXRVk
         attachInfo.type = XR_TYPE_SESSION_ACTION_SETS_ATTACH_INFO;
         attachInfo.countActionSets = 1;
         attachInfo.actionSets = &m_actionSet;
+
         const XrResult result = xrAttachSessionActionSets(xrSession, &attachInfo);
         WARN_IF_UNSUCCESSFUL(result);
 
@@ -219,7 +204,7 @@ namespace OpenXRVk
             xrDestroyActionSet(m_actionSet);
         }
 
-        // Turn off the tick callback and reset the impl pointer (non-owning) to null
+        // Turn off the tick callback and reset the (non-owning) impl pointer back to null
         m_xrControllerImpl->RegisterTickCallback(nullptr);
         m_xrControllerImpl = nullptr;
     }
@@ -227,9 +212,9 @@ namespace OpenXRVk
     XrAction Input::GetAction(const AzFramework::InputChannelId& channelId) const
     {
         // this is a private function and only input channel ids that were used to
-        // initialize structures in this class should be used.
+        // initialize structures in this class should be passed.
 
-        // this will assert if the channelId is something unexpected for xr controller
+        // "at" will assert if the channelId is something unexpected for xr controller
         const auto index = m_xrActionIndices.at(&channelId);
         return m_xrActionPaths[index].action;
     }
@@ -258,7 +243,7 @@ namespace OpenXRVk
         using namespace AzFramework;
         using xrc = InputDeviceXRController;
 
-        // Updating digital buttons is unique, because it compacts them all to a u32 with bit masks...
+        // Updating digital buttons is somewhat unique, because it compacts and combines them all to a u32 with bit masks...
         for (const auto& [channelIdPtr, bitMask] : rawControllerData.m_buttonIdsToBitMasks)
         {
             XrActionStateGetInfo getButtonInfo{};
@@ -280,7 +265,7 @@ namespace OpenXRVk
             );
         }
 
-        // lambda that obtains a float from an action...
+        // lambda that obtains a float state from an action...
         auto getActionStateFloat = [&xrSession, this](const InputChannelId& channelId) -> float
         {
             XrActionStateGetInfo getAnalogInfo{};
@@ -302,7 +287,7 @@ namespace OpenXRVk
             return 0.f;
         };
 
-        // Analog values...
+        // Update Analog values...
         rawControllerData.m_leftTriggerState = getActionStateFloat(xrc::Trigger::LTrigger);
         rawControllerData.m_rightTriggerState = getActionStateFloat(xrc::Trigger::RTrigger);
         rawControllerData.m_leftGripState = getActionStateFloat(xrc::Trigger::LGrip);
@@ -312,50 +297,56 @@ namespace OpenXRVk
         rawControllerData.m_rightThumbStickXState = getActionStateFloat(xrc::ThumbStickAxis1D::RX);
         rawControllerData.m_rightThumbStickYState = getActionStateFloat(xrc::ThumbStickAxis1D::RY);
 
-        // Position and Orientation
+        // Scale the rendered hand by 1.0f (open) to 0.5f (fully squeezed).
+        m_handScale[static_cast<AZ::u32>(XR::Side::Left)] = 1.f - 0.5f * rawControllerData.m_leftGripState;
+        m_handScale[static_cast<AZ::u32>(XR::Side::Right)] = 1.f - 0.5f * rawControllerData.m_rightGripState;
 
-
-        // Get pose and grab action state and start haptic vibrate when hand is 90% squeezed for testing purposes
-        for (auto hand : { XR::Side::Left, XR::Side::Right })
+        // lambda that outputs vibration amount to a particular side
+        auto setHapticVibration = [this, &xrSession](AZ::u32 side, float amount)
         {
-            //if (const bool isActive = UpdateActionState(xrSession, m_squeezeAction, static_cast<uint16_t>(hand));
-            //    isActive)
-            //{
-            //    // Scale the rendered hand by 1.0f (open) to 0.5f (fully squeezed).
-            //    m_handScale[static_cast<uint32_t>(hand)] = 1.0f - 0.5f * m_squeezeAction.m_actionState[static_cast<uint32_t>(hand)];
-            //    if (m_squeezeAction.m_actionState[static_cast<uint32_t>(hand)] > 0.9f)
-            //    {
-            //        //This vibration event is currently added here for testing purposes.
-            //        //Remove this when this is moved to an event that is triggered externally
-            //        XrHapticVibration vibration{};
-            //        vibration.type = XR_TYPE_HAPTIC_VIBRATION;
-            //        vibration.amplitude = 0.5;
-            //        vibration.duration = XR_MIN_HAPTIC_DURATION;
-            //        vibration.frequency = XR_FREQUENCY_UNSPECIFIED;
+            if (amount > 0.f)
+            {
+                XrHapticVibration hapticVibration{};
+                hapticVibration.type = XR_TYPE_HAPTIC_VIBRATION;
+                hapticVibration.amplitude = amount;
+                hapticVibration.duration = XR_MIN_HAPTIC_DURATION;
+                hapticVibration.frequency = XR_FREQUENCY_UNSPECIFIED;
 
-            //        XrHapticActionInfo hapticActionInfo{};
-            //        hapticActionInfo.type = XR_TYPE_HAPTIC_ACTION_INFO;
-            //        hapticActionInfo.action = m_vibrateAction;
-            //        hapticActionInfo.subactionPath = m_handSubactionPath[static_cast<uint32_t>(hand)];
-            //        result = xrApplyHapticFeedback(xrSession, &hapticActionInfo, reinterpret_cast<XrHapticBaseHeader*>(&vibration));
-            //        WARN_IF_UNSUCCESSFUL(result);
-            //    }
-            //}
+                XrHapticActionInfo hapticActionInfo{};
+                hapticActionInfo.type = XR_TYPE_HAPTIC_ACTION_INFO;
+                hapticActionInfo.action = m_hapticAction;
+                hapticActionInfo.subactionPath = m_handSubactionPath[side];
 
+                [[maybe_unused]] const XrResult result = xrApplyHapticFeedback(
+                    xrSession, &hapticActionInfo, reinterpret_cast<XrHapticBaseHeader*>(&hapticVibration));
+                WARN_IF_UNSUCCESSFUL(result);
+            }
+        };
+
+        setHapticVibration(static_cast<AZ::u32>(XR::Side::Left), rawControllerData.m_leftMotorVibrationValue);
+        setHapticVibration(static_cast<AZ::u32>(XR::Side::Right), rawControllerData.m_rightMotorVibrationValue);
+        // after the vibration values have been used, reset them
+        rawControllerData.m_leftMotorVibrationValue = 0.f;
+        rawControllerData.m_rightMotorVibrationValue = 0.f;
+
+        // Update poses
+        for (const auto hand : { XR::Side::Left, XR::Side::Right })
+        {
             XrActionStateGetInfo getInfo{};
             getInfo.type = XR_TYPE_ACTION_STATE_GET_INFO;
-            //getInfo.action = m_poseAction;
             getInfo.action = GetPoseAction(static_cast<AZ::u32>(hand));
+
             XrActionStatePose poseState{};
             poseState.type = XR_TYPE_ACTION_STATE_POSE;
+
             result = xrGetActionStatePose(xrSession, &getInfo, &poseState);
             WARN_IF_UNSUCCESSFUL(result);
             m_handActive[static_cast<uint32_t>(hand)] = poseState.isActive;
 
-            LocateControllerSpace(device->GetPredictedDisplayTime(), session->GetXrSpace(OpenXRVk::SpaceType::View), static_cast<uint32_t>(hand));
+            LocateControllerSpace(device->GetPredictedDisplayTime(), session->GetXrSpace(OpenXRVk::SpaceType::View), static_cast<AZ::u32>(hand));
         }
 
-        //Cache 3d location information
+        // Cache 3d location information
         for (AZ::u32 i = 0; i < static_cast<AZ::u32>(SpaceType::Count); i++)
         {
             const auto spaceType = static_cast<SpaceType>(i);
@@ -363,23 +354,13 @@ namespace OpenXRVk
                                   session->GetXrSpace(OpenXRVk::SpaceType::View), spaceType);
         }
 
-        // There were no subaction paths specified for the quit action, because we don't care which hand did it.
-        XrActionStateGetInfo getInfo{};
-        getInfo.type = XR_TYPE_ACTION_STATE_GET_INFO;
-        getInfo.next = nullptr;
-        getInfo.action = GetQuitAction();
-        getInfo.subactionPath = XR_NULL_PATH;
-        XrActionStateBoolean quitValue{};
-        quitValue.type = XR_TYPE_ACTION_STATE_BOOLEAN;
-        result = xrGetActionStateBoolean(xrSession, &getInfo, &quitValue);
-        WARN_IF_UNSUCCESSFUL(result);
-        // This is redundant because the digital buttons were already sync'd.  The only difference here is that this is also checking
-        // that the button changedSinceLastSync.  Probably doing this to prevent double quitting, but maybe we can do that by other means.
-        if ((quitValue.isActive == XR_TRUE) && (quitValue.changedSinceLastSync == XR_TRUE) && (quitValue.currentState == XR_TRUE))
+        const bool quitPressed = GetButtonState(InputDeviceXRController::Button::Home);
+        if (quitPressed && !m_wasQuitPressedLastSync)
         {
             result = xrRequestExitSession(xrSession);
             WARN_IF_UNSUCCESSFUL(result);
         }
+        m_wasQuitPressedLastSync = quitPressed;
     }
 
     void Input::LocateControllerSpace(XrTime predictedDisplayTime, XrSpace baseSpace, AZ::u32 handIndex)
@@ -439,9 +420,9 @@ namespace OpenXRVk
         return AZ::RHI::ResultCode::Fail;
     }
 
-    float Input::GetControllerScale(AZ::u32 viewIndex) const
+    float Input::GetControllerScale(AZ::u32 handIndex) const
     {
-        return m_handScale[viewIndex];
+        return m_handScale[handIndex];
     }
 
     XrAction Input::GetSqueezeAction(AZ::u32 handIndex) const
@@ -460,13 +441,19 @@ namespace OpenXRVk
 
     XrAction Input::GetVibrationAction() const
     {
-        return {};  // TBD ...
-        //return m_vibrateAction;
+        return m_hapticAction;
     }
 
     XrAction Input::GetQuitAction() const
     {
         return GetAction(AzFramework::InputDeviceXRController::Button::Home);
+    }
+
+    bool Input::GetButtonState(const AzFramework::InputChannelId& channelId) const
+    {
+        const auto& state = m_xrControllerImpl->GetRawState();
+        const AZ::u32 mask = state.m_buttonIdsToBitMasks.at(&channelId);
+        return (state.m_digitalButtonStates & mask) != 0;
     }
 
     bool Input::GetXButtonState() const
