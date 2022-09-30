@@ -12,18 +12,22 @@ This Gem enables users to develop robotic simulations through ROS2 tools and com
 
 #### Additional ros packages required
 
-Replace `<distro>` with ROS 2 distribution name (galactic, humble, ..).
+Once the desired version of ROS 2 is installed, you will need to install additional ROS 2 packages. 
+Before running the following commands, make sure that the ROS 2 environment is setup. Replace \<distro\> with the ROS 2 distribution name (galactic, humble, ..) below and run the following command:
+```
+source /opt/ros/<distro>/setup.bash
+```
 
-* gazebo_msgs: `sudo apt install ros-<distro>-gazebo-msgs
-* Ackermann messages: `sudo apt install ros-<distro>-ackermann-msgs`
-* Control toolbox `sudo apt install ros-<distro>-control-toolbox`
+* gazebo_msgs: `sudo apt install ros-${ROS_DISTRO}-gazebo-msgs`
+* Ackermann messages: `sudo apt install ros-${ROS_DISTRO}-ackermann-msgs`
+* Control toolbox `sudo apt install ros-${ROS_DISTRO}-control-toolbox`
 
 If a `desktop` installation of ROS 2 distro was selected, everything else should be there.
 
-Use this helpful command to install for **Humble**:
+Use this helpful command to install:
 
 ```
-sudo apt install ros-humble-ackermann-msgs ros-humble-control-toolbox ros-humble-gazebo-msgs
+sudo apt install ros-${ROS_DISTRO}-ackermann-msgs ros-${ROS_DISTRO}-control-toolbox ros-${ROS_DISTRO}-gazebo-msgs
 ```
 
 ## Features
