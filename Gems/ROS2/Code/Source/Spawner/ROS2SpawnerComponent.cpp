@@ -7,10 +7,9 @@
  */
 
 #include "ROS2SpawnerComponent.h"
-#include <AzCore/Math/Quaternion.h>
 #include <AzCore/Serialization/EditContext.h>
 #include <AzFramework/Components/TransformComponent.h>
-#include <AzToolsFramework/UI/PropertyEditor/PropertyEditorAPI.h>
+#include <AzToolsFramework/Entity/EditorEntityHelpers.h>
 #include <ROS2/ROS2Bus.h>
 
 namespace ROS2
@@ -29,7 +28,7 @@ namespace ROS2
     {
         auto ros2Node = ROS2Interface::Get()->GetNode();
 
-        m_getNamesService = ros2Node->create_service<gazebo_msgs::srv::GetWorldProperties>(
+        m_getSpawnablesNamesService = ros2Node->create_service<gazebo_msgs::srv::GetWorldProperties>(
             "get_available_spawnable_names",
             [this](const GetAvailableSpawnableNamesRequest request, GetAvailableSpawnableNamesResponse response)
             {
@@ -42,12 +41,28 @@ namespace ROS2
             {
                 this->SpawnEntity(request, response);
             });
+
+        m_getSpawnPointInfoService = ros2Node->create_service<gazebo_msgs::srv::GetModelState>(
+            "get_spawn_point_info",
+            [this](const GetSpawnPointInfoRequest request, GetSpawnPointInfoResponse response)
+            {
+                this->GetSpawnPointInfo(request, response);
+            });
+
+        m_getSpawnPointsNamesService = ros2Node->create_service<gazebo_msgs::srv::GetWorldProperties>(
+            "get_spawn_points_names",
+            [this](const GetSpawnPointsNamesRequest request, GetSpawnPointsNamesResponse response)
+            {
+                this->GetSpawnPointsNames(request, response);
+            });
     }
 
     void ROS2SpawnerComponent::Deactivate()
     {
-        m_getNamesService.reset();
+        m_getSpawnablesNamesService.reset();
         m_spawnService.reset();
+        m_getSpawnPointInfoService.reset();
+        m_getSpawnPointsNamesService.reset();
     }
 
     void ROS2SpawnerComponent::Reflect(AZ::ReflectContext* context)
@@ -64,6 +79,7 @@ namespace ROS2
                 ec->Class<ROS2SpawnerComponent>("ROS2 Spawner", "Spawner component")
                     ->ClassElement(AZ::Edit::ClassElements::EditorData, "Manages spawning of robots in configurable locations")
                     ->Attribute(AZ::Edit::Attributes::AppearsInAddComponentMenu, AZ_CRC("Game"))
+                    ->Attribute(AZ::Edit::Attributes::Category, "ROS2")
                     ->DataElement(AZ::Edit::UIHandlers::EntityId, &ROS2SpawnerComponent::m_spawnables, "Spawnables", "Spawnables")
                     ->DataElement(
                         AZ::Edit::UIHandlers::EntityId,
@@ -85,20 +101,25 @@ namespace ROS2
 
     void ROS2SpawnerComponent::SpawnEntity(const SpawnEntityRequest request, SpawnEntityResponse response)
     {
-        AZStd::string_view key(request->name.c_str(), request->name.size());
+        AZStd::string_view spawnable_name(request->name.c_str(), request->name.size());
+        // xml parameter of the request is used here like a regular string and stores name of a spawn point
+        // todo: use xml format in this parameter
+        AZStd::string_view spawn_point_name(request->xml.c_str(), request->xml.size());
 
-        if (!m_spawnables.contains(key))
+        auto spawn_points = GetSpawnPoints();
+
+        if (!m_spawnables.contains(spawnable_name))
         {
             response->success = false;
-            response->status_message = "Requested spawnable name not found";
+            response->status_message = "Could not find spawnable with given name: " + request->name;
             return;
         }
 
-        if (!m_tickets.contains(key))
+        if (!m_tickets.contains(spawnable_name))
         {
             // if a ticket for this spawnable was not created but the spawnable name is correct, create the ticket and then use it to
             // spawn an entity
-            auto spawnable = m_spawnables.find(key);
+            auto spawnable = m_spawnables.find(spawnable_name);
             m_tickets.emplace(spawnable->first, AzFramework::EntitySpawnTicket(spawnable->second));
         }
 
@@ -106,18 +127,29 @@ namespace ROS2
 
         AzFramework::SpawnAllEntitiesOptionalArgs optionalArgs;
 
-        optionalArgs.m_preInsertionCallback = [this, position = request->initial_pose](auto id, auto view)
+        AZ::Transform transform;
+
+        if (spawn_points.contains(spawn_point_name))
         {
-            this->PreSpawn(
-                id,
-                view,
-                AZ::Transform(
-                    AZ::Vector3(position.position.x, position.position.y, position.position.z),
-                    AZ::Quaternion(position.orientation.x, position.orientation.y, position.orientation.z, position.orientation.w),
-                    1.0f));
+            transform = spawn_points.at(spawn_point_name).pose;
+        }
+        else
+        {
+            transform = { AZ::Vector3(request->initial_pose.position.x, request->initial_pose.position.y, request->initial_pose.position.z),
+                          AZ::Quaternion(
+                              request->initial_pose.orientation.x,
+                              request->initial_pose.orientation.y,
+                              request->initial_pose.orientation.z,
+                              request->initial_pose.orientation.w),
+                          1.0f };
+        }
+
+        optionalArgs.m_preInsertionCallback = [this, transform](auto id, auto view)
+        {
+            this->PreSpawn(id, view, transform);
         };
 
-        spawner->SpawnAllEntities(m_tickets.at(key), optionalArgs);
+        spawner->SpawnAllEntities(m_tickets.at(spawnable_name), optionalArgs);
 
         response->success = true;
     }
@@ -143,5 +175,68 @@ namespace ROS2
     const AZ::Transform& ROS2SpawnerComponent::GetDefaultSpawnPose() const
     {
         return m_defaultSpawnPose;
+    }
+
+    void ROS2SpawnerComponent::GetSpawnPointsNames(
+        const ROS2::GetSpawnPointsNamesRequest request, ROS2::GetSpawnPointsNamesResponse response)
+    {
+        for (auto spawn_point : GetSpawnPoints())
+        {
+            response->model_names.emplace_back(spawn_point.first.c_str());
+        }
+    }
+
+    void ROS2SpawnerComponent::GetSpawnPointInfo(const ROS2::GetSpawnPointInfoRequest request, ROS2::GetSpawnPointInfoResponse response)
+    {
+        const AZStd::string_view key(request->model_name.c_str(), request->model_name.size());
+
+        auto spawn_points = GetSpawnPoints();
+        if (spawn_points.contains(key))
+        {
+            auto info = spawn_points.at(key);
+
+            geometry_msgs::msg::Pose pose;
+            pose.position.x = info.pose.GetTranslation().GetX();
+            pose.position.y = info.pose.GetTranslation().GetY();
+            pose.position.z = info.pose.GetTranslation().GetZ();
+            pose.orientation.x = info.pose.GetRotation().GetX();
+            pose.orientation.y = info.pose.GetRotation().GetY();
+            pose.orientation.z = info.pose.GetRotation().GetZ();
+            pose.orientation.w = info.pose.GetRotation().GetW();
+
+            response->pose = pose;
+            response->status_message = info.info.c_str();
+        }
+        else
+        {
+            response->status_message = "Could not find spawn point with given name: " + request->model_name;
+        }
+    }
+
+    AZStd::unordered_map<AZStd::string, SpawnPointInfo> ROS2SpawnerComponent::GetSpawnPoints()
+    {
+        AZStd::vector<AZ::EntityId> children;
+        AZ::TransformBus::EventResult(children, GetEntityId(), &AZ::TransformBus::Events::GetChildren);
+
+        AZStd::unordered_map<AZStd::string, SpawnPointInfo> result;
+
+        for (const auto child : children)
+        {
+            auto child_entity = AzToolsFramework::GetEntityById(child);
+
+            auto spawn_point = child_entity->FindComponent<ROS2SpawnPointComponent>();
+
+            if (spawn_point == nullptr)
+            {
+                continue;
+            }
+
+            result.insert(spawn_point->GetInfo());
+        }
+
+        // setting name of spawn point component "default" in a child entity will have no effect since it is overwritten here with the
+        // default spawn pose of spawner
+        result["default"] = SpawnPointInfo{ "Default spawn pose defined in the Editor", m_defaultSpawnPose };
+        return result;
     }
 } // namespace ROS2

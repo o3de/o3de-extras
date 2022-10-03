@@ -100,5 +100,7 @@ set(FILES
         Source/VehicleDynamics/WheelDynamicsData.h
         Source/Spawner/ROS2SpawnerComponent.h
         Source/Spawner/ROS2SpawnerComponent.cpp
+        Source/Spawner/ROS2SpawnPointComponent.cpp
+        Source/Spawner/ROS2SpawnPointComponent.h
         Source/Spawner/SpawnerBus.h
         )

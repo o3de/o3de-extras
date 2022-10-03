@@ -26,6 +26,7 @@ You can browse Doxygen-generated documentation on [Gem's GitHub page](https://ro
   - RigidBodyTwistControlComponent
 - __Spawner__
   - ROS2SpawnerComponent
+  - ROS2SpawnPointComponent
 - __Vehicle dynamics__
   - VehicleModelComponent
   - WheelControllerComponent
@@ -162,13 +163,25 @@ It is possible to implement your own control mechanisms with this Component.
 
 `ROS2SpawnerComponent` handles spawning entities during simulation.
 Available spawnables have to be set up as the component's field before the simulation.
+User is able to define named spawn points inside the Editor. This can be done by adding `ROS2SpawnPointComponent` to a child entity of an entity with `ROS2SpawnerComponent`.
 
-During the simulation user can access names of available spawnables and request spawning using ros2 services. The names of services are "/get_available_spawnable_names" and "/spawn_entity" respectivly. GetWorldProperties.srv and SpawnEntity.srv types from gazebo_msgs are used to handle these features.
+During the simulation user can access names of available spawnables and request spawning using ros2 services. 
+The names of services are `/get_available_spawnable_names` and `/spawn_entity` respectivly. 
+GetWorldProperties.srv and SpawnEntity.srv types are used to handle these features.
+In order to request defined spawn points names user can use `/get_spawn_points_names` service with GetWorldProperties.srv type.
+Detailed information about specific spawn point (e.g. pose) can be accessed using `/get_spawn_point_info` service with GetModelState.srv type.
+All used services types are defined in gazebo_msgs package.
 
 - Spawning: spawnable name should be passed in request.name and the position of entity in request.initial_pose
   - example call: `ros2 service call /spawn_entity gazebo_msgs/srv/SpawnEntity '{name: 'robot', initial_pose: {position:{ x: 4, y: 4, z: 0.2}, orientation: {x: 0.0, y: 0.0, z: 0.0, w: 1.0}}}'`
+- Spawning in defined spawn point: spawnable name should be passed in request.name and the name of the spawn point in request.xml
+  - example call: `ros2 service call /spawn_entity gazebo_msgs/srv/SpawnEntity '{name: 'robot', xml: 'spawn_spot'}'`
 - Available spawnable names access: names of available spawnables are sent in response.model_names
   - example call: `ros2 service call /get_available_spawnable_names gazebo_msgs/srv/GetWorldProperties`
+- Defined spawn points' names access: names of defined points are sent in response.model_names
+  - example call: `ros2 service call /get_spawn_points_names gazebo_msgs/srv/GetWorldProperties`
+- Detailed spawn point info access: spawn point name should be passed in request.model_name. Defined pose is sent in response.pose.
+  - example call: `ros2 service call /get_spawn_point_info gazebo_msgs/srv/GetModelState '{model_name: 'spawn_spot'}'`
 
 ## Handling custom ROS 2 dependencies
 
