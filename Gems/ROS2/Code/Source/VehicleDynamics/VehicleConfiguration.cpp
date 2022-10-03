@@ -20,7 +20,11 @@ namespace VehicleDynamics
         AxleConfiguration::Reflect(context);
         if (AZ::SerializeContext* serialize = azrtti_cast<AZ::SerializeContext*>(context))
         {
-            serialize->Class<VehicleConfiguration>()->Version(1)->Field("AxlesConfigurations", &VehicleConfiguration::m_axles);
+            serialize->Class<VehicleConfiguration>()
+                ->Version(1)
+                ->Field("AxlesConfigurations", &VehicleConfiguration::m_axles)
+                ->Field("Track", &VehicleConfiguration::m_track)
+                ->Field("Wheelbase", &VehicleConfiguration::m_wheelbase);
 
             if (AZ::EditContext* ec = serialize->GetEditContext())
             {
@@ -29,7 +33,17 @@ namespace VehicleDynamics
                     ->Attribute(AZ::Edit::Attributes::Category, "ROS2")
                     ->DataElement(
                         AZ::Edit::UIHandlers::Default, &VehicleConfiguration::m_axles, "Axles", "Configurations of axles for this vehicle")
-                    ->Attribute(AZ::Edit::Attributes::AutoExpand, true);
+                    ->Attribute(AZ::Edit::Attributes::AutoExpand, true)
+                    ->DataElement(
+                        AZ::Edit::UIHandlers::Default,
+                        &VehicleConfiguration::m_track,
+                        "Track",
+                        "The distance in meters between the hub flanges on an axle")
+                    ->DataElement(
+                        AZ::Edit::UIHandlers::Default,
+                        &VehicleConfiguration::m_wheelbase,
+                        "Wheelbase",
+                        "The distance in meters between the midpoints of vehicles front and rear wheels");
             }
         }
     }

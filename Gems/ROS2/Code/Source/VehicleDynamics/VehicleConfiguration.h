@@ -23,5 +23,7 @@ namespace VehicleDynamics
         static void Reflect(AZ::ReflectContext* context);
 
         AZStd::vector<AxleConfiguration> m_axles; //!> Axles of the vehicle, front to rear
+        float m_wheelbase = 2.0; //!> The distance in meters between the midpoints of vehicles front and rear wheels
+        float m_track = 1.0; //!> The distance in meters between the hub flanges on an axle
     };
 } // namespace VehicleDynamics

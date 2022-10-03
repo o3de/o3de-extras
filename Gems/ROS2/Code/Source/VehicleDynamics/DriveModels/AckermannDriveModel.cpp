@@ -6,7 +6,7 @@
  *
  */
 
-#include "SimplifiedDriveModel.h"
+#include "AckermannDriveModel.h"
 #include "VehicleDynamics/Utilities.h"
 #include <AzCore/Component/TransformBus.h>
 #include <AzCore/Serialization/EditContext.h>
@@ -16,35 +16,41 @@
 
 namespace VehicleDynamics
 {
-    void SimplifiedDriveModel::Reflect(AZ::ReflectContext* context)
+    void AckermannDriveModel::Reflect(AZ::ReflectContext* context)
     {
         PidConfiguration::Reflect(context);
         if (AZ::SerializeContext* serialize = azrtti_cast<AZ::SerializeContext*>(context))
         {
-            serialize->Class<SimplifiedDriveModel, DriveModel>()
+            serialize->Class<AckermannDriveModel, DriveModel>()
                 ->Version(1)
-                ->Field("SteeringPID", &SimplifiedDriveModel::m_steeringPid)
-                ->Field("SpeedPID", &SimplifiedDriveModel::m_speedPid);
+                ->Field("SteeringPID", &AckermannDriveModel::m_steeringPid)
+                ->Field("SpeedPID", &AckermannDriveModel::m_speedPid)
+                ->Field("SteeringDeadZone", &AckermannDriveModel::m_steeringDeadZone);
 
             if (AZ::EditContext* ec = serialize->GetEditContext())
             {
-                ec->Class<SimplifiedDriveModel>("Simplified Drive Model", "Configuration of a simplified vehicle dynamics drive model")
+                ec->Class<AckermannDriveModel>("Simplified Drive Model", "Configuration of a simplified vehicle dynamics drive model")
                     ->ClassElement(AZ::Edit::ClassElements::EditorData, "")
                     ->DataElement(
                         AZ::Edit::UIHandlers::Default,
-                        &SimplifiedDriveModel::m_steeringPid,
+                        &AckermannDriveModel::m_steeringDeadZone,
+                        "Steering dead zone",
+                        "The maximum absolute value in radians for which the steering is discarded")
+                    ->DataElement(
+                        AZ::Edit::UIHandlers::Default,
+                        &AckermannDriveModel::m_steeringPid,
                         "Steering PID",
                         "Configuration of steering PID controller")
                     ->DataElement(
                         AZ::Edit::UIHandlers::Default,
-                        &SimplifiedDriveModel::m_speedPid,
+                        &AckermannDriveModel::m_speedPid,
                         "Speed PID",
                         "Configuration of speed PID controller");
             }
         }
     }
 
-    void SimplifiedDriveModel::Activate(const VehicleConfiguration& vehicleConfig)
+    void AckermannDriveModel::Activate(const VehicleConfiguration& vehicleConfig)
     {
         m_driveWheelsData.clear();
         m_steeringData.clear();
@@ -53,7 +59,7 @@ namespace VehicleDynamics
         m_steeringPid.InitializePid();
     }
 
-    void SimplifiedDriveModel::ApplyInputState(const VehicleInputsState& inputs, uint64_t deltaTimeNs)
+    void AckermannDriveModel::ApplyInputState(const VehicleInputsState& inputs, uint64_t deltaTimeNs)
     {
         if (m_driveWheelsData.empty())
         {
@@ -69,8 +75,29 @@ namespace VehicleDynamics
         ApplySpeed(inputs.m_speed.GetValue(), deltaTimeNs);
     }
 
+    void AckermannDriveModel::ApplyWheelSteering(SteeringDynamicsData& wheelData, float steering, double deltaTimeNs)
+    {
+        const double deltaTimeSec = double(deltaTimeNs) / 1e9;
+
+        auto steeringEntity = wheelData.m_steeringEntity;
+        AZ::Vector3 currentSteeringElementRotation;
+        AZ::TransformBus::EventResult(currentSteeringElementRotation, steeringEntity, &AZ::TransformBus::Events::GetLocalRotation);
+        auto currentSteeringAngle = currentSteeringElementRotation.Dot(wheelData.m_turnAxis);
+        double pidCommand = m_steeringPid.ComputeCommand(steering - currentSteeringAngle, deltaTimeNs);
+        if (AZ::IsClose(pidCommand, 0.0)) // TODO - use the third argument with some reasonable value which means "close enough"
+        {
+            return;
+        }
+
+        auto torque = pidCommand * deltaTimeSec;
+        AZ::Transform steeringElementTransform;
+        AZ::TransformBus::EventResult(steeringElementTransform, steeringEntity, &AZ::TransformBus::Events::GetWorldTM);
+        auto transformedTorqueVector = steeringElementTransform.TransformVector(wheelData.m_turnAxis * torque);
+        Physics::RigidBodyRequestBus::Event(steeringEntity, &Physics::RigidBodyRequests::ApplyAngularImpulse, transformedTorqueVector);
+    }
+
     // TODO - speed and steering handling is quite similar, possible to refactor?
-    void SimplifiedDriveModel::ApplySteering(float steering, uint64_t deltaTimeNs)
+    void AckermannDriveModel::ApplySteering(float steering, uint64_t deltaTimeNs)
     {
         if (m_steeringData.empty())
         {
@@ -78,28 +105,21 @@ namespace VehicleDynamics
             return;
         }
 
-        const double deltaTimeSec = double(deltaTimeNs) / 1e9;
-        for (const auto& steeringElementData : m_steeringData)
-        {
-            auto steeringEntity = steeringElementData.m_steeringEntity;
-            AZ::Vector3 currentSteeringElementRotation;
-            AZ::TransformBus::EventResult(currentSteeringElementRotation, steeringEntity, &AZ::TransformBus::Events::GetLocalRotation);
-            auto currentSteeringAngle = currentSteeringElementRotation.Dot(steeringElementData.m_turnAxis);
-            double pidCommand = m_steeringPid.ComputeCommand(steering - currentSteeringAngle, deltaTimeNs);
-            if (AZ::IsClose(pidCommand, 0.0)) // TODO - use the third argument with some reasonable value which means "close enough"
-            {
-                continue;
-            }
+        auto innerSteering = atan(
+            (m_vehicleConfiguration.m_wheelbase * tan(steering)) /
+            (m_vehicleConfiguration.m_wheelbase - 0.5 * m_vehicleConfiguration.m_track * tan(steering)));
+        auto outerSteering = atan(
+            (m_vehicleConfiguration.m_wheelbase * tan(steering)) /
+            (m_vehicleConfiguration.m_wheelbase + 0.5 * m_vehicleConfiguration.m_track * tan(steering)));
 
-            auto torque = pidCommand * deltaTimeSec;
-            AZ::Transform steeringElementTransform;
-            AZ::TransformBus::EventResult(steeringElementTransform, steeringEntity, &AZ::TransformBus::Events::GetWorldTM);
-            auto transformedTorqueVector = steeringElementTransform.TransformVector(steeringElementData.m_turnAxis * torque);
-            Physics::RigidBodyRequestBus::Event(steeringEntity, &Physics::RigidBodyRequests::ApplyAngularImpulse, transformedTorqueVector);
+        if (AZ::Abs(steering) > m_steeringDeadZone)
+        {
+            ApplyWheelSteering(m_steeringData.front(), innerSteering, deltaTimeNs);
+            ApplyWheelSteering(m_steeringData.back(), outerSteering, deltaTimeNs);
         }
     }
 
-    void SimplifiedDriveModel::ApplySpeed(float speed, uint64_t deltaTimeNs)
+    void AckermannDriveModel::ApplySpeed(float speed, uint64_t deltaTimeNs)
     {
         if (m_driveWheelsData.empty())
         {

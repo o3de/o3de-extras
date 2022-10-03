@@ -9,7 +9,7 @@
 
 #include "ManualControlEventHandler.h"
 #include "VehicleConfiguration.h"
-#include "VehicleDynamics/DriveModels/SimplifiedDriveModel.h"
+#include "VehicleDynamics/DriveModels/AckermannDriveModel.h"
 #include "VehicleInputControlBus.h"
 #include "VehicleInputsState.h"
 #include "VehicleModelLimits.h"
@@ -47,7 +47,7 @@ namespace VehicleDynamics
         ManualControlEventHandler m_manualControlEventHandler;
         VehicleConfiguration m_vehicleConfiguration;
         VehicleInputsState m_inputsState;
-        SimplifiedDriveModel m_driveModel; // TODO - use abstraction here (DriveModel)
+        AckermannDriveModel m_driveModel; // TODO - use abstraction here (DriveModel)
         VehicleModelLimits m_vehicleLimits;
         // TODO - Engine, Transmission, Lights, etc.
     };

@@ -7,7 +7,7 @@
  */
 
 #include "VehicleDynamics/VehicleModelComponent.h"
-#include "VehicleDynamics/DriveModels/SimplifiedDriveModel.h"
+#include "VehicleDynamics/DriveModels/AckermannDriveModel.h"
 #include "VehicleDynamics/Utilities.h"
 #include "VehicleDynamics/VehicleConfiguration.h"
 #include <AzCore/Debug/Trace.h>
@@ -37,7 +37,7 @@ namespace VehicleDynamics
     {
         VehicleConfiguration::Reflect(context);
         DriveModel::Reflect(context);
-        SimplifiedDriveModel::Reflect(context);
+        AckermannDriveModel::Reflect(context);
         VehicleModelLimits::Reflect(context);
         if (AZ::SerializeContext* serialize = azrtti_cast<AZ::SerializeContext*>(context))
         {
