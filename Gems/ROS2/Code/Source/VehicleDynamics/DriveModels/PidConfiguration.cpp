@@ -24,7 +24,8 @@ namespace VehicleDynamics
                 ->Field("D", &PidConfiguration::m_d)
                 ->Field("IMin", &PidConfiguration::m_iMin)
                 ->Field("IMax", &PidConfiguration::m_iMax)
-                ->Field("Anti windup", &PidConfiguration::m_antiWindup);
+                ->Field("Anti windup", &PidConfiguration::m_antiWindup)
+                ->Field("Output limit", &PidConfiguration::m_outputLimit);
 
             if (AZ::EditContext* ec = serializeContext->GetEditContext())
             {
@@ -39,7 +40,13 @@ namespace VehicleDynamics
                     ->Attribute(AZ::Edit::Attributes::Min, 0.0)
                     ->DataElement(AZ::Edit::UIHandlers::Default, &PidConfiguration::m_iMax, "IMax", "Maximum allowable integral term")
                     ->Attribute(AZ::Edit::Attributes::Min, 0.0)
-                    ->DataElement(AZ::Edit::UIHandlers::Default, &PidConfiguration::m_antiWindup, "AntiWindup", "Anti windup");
+                    ->DataElement(AZ::Edit::UIHandlers::Default, &PidConfiguration::m_antiWindup, "AntiWindup", "Anti windup")
+                    ->DataElement(
+                        AZ::Edit::UIHandlers::Default,
+                        &PidConfiguration::m_outputLimit,
+                        "OutputLimit",
+                        "Limit of the PID output [0, INF]. Set to 0.0 to disable.")
+                    ->Attribute(AZ::Edit::Attributes::Min, 0.0);
             }
         }
     }
@@ -51,6 +58,11 @@ namespace VehicleDynamics
 
     double PidConfiguration::ComputeCommand(double error, uint64_t deltaTimeNanoseconds)
     {
-        return m_pid.computeCommand(error, deltaTimeNanoseconds);
+        double output = m_pid.computeCommand(error, deltaTimeNanoseconds);
+        if (m_outputLimit > 0.0)
+        {
+            output = AZStd::clamp<float>(output, -m_outputLimit, m_outputLimit);
+        }
+        return output;
     }
 } // namespace VehicleDynamics

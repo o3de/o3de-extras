@@ -37,6 +37,7 @@ namespace VehicleDynamics
         double m_iMax = 10.0; //!< maximal allowable integral term
         double m_iMin = -10.0; //!< minimal allowable integral term
         bool m_antiWindup = false; //!< prevents condition of integrator overflow in integral action
+        double m_outputLimit = 0.0; //!< limit PID output; set to 0.0 to disable
 
         control_toolbox::Pid m_pid;
     };
