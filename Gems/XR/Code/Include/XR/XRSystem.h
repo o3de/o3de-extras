@@ -95,6 +95,7 @@ namespace XR
         AZ::u32 GetCurrentImageIndex(AZ::u32 viewIndex) const override;
         void BeginFrame() override;
         void EndFrame() override;
+        void PostFrame() override;
         ///////////////////////////////////////////////////////////////////
 
     private:

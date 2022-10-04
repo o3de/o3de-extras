@@ -8,7 +8,6 @@
 
 set(FILES
     OpenXRVk_Traits_Android.h
+    OpenXRVk_Traits_Android.cpp
     OpenXRVk_Traits_Platform.h
-    OpenXRInitializeLoader_Android.h
-    OpenXRInitializeLoader_Android.cpp
 )

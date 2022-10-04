@@ -60,6 +60,8 @@ namespace OpenXRVk
         bool BeginFrameInternal() override;
         //! Release the oldest swapchain image and inform the drivers that the frame is ending 
         void EndFrameInternal(XR::Ptr<XR::SwapChain>) override;
+        //! Called after EndFrame has been executed.
+        void PostFrameInternal() override;
         //! Locate views, acquire swapchain image and synchronize gpu with cpu
         bool AcquireSwapChainImageInternal(AZ::u32 viewIndex, XR::SwapChain* baseSwapChain) override;
         //////////////////////////////////////////////////////////////////////////

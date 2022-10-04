@@ -52,10 +52,16 @@ namespace XR
         AZ::RHI::ResultCode Init(Descriptor descriptor);
         
         //! Signal Begin frame to the underlying back end.
+        //! @note This function is called from the thread related to the presentation queue.
         bool BeginFrame();
 
         //! Signal End frame to the underlying back end.
+        //! @note This function is called from the thread related to the presentation queue.
         void EndFrame(Ptr<SwapChain>);
+
+        //! Signal after Endframe has been executed to the underlying back end.
+        //! @note This function is called from the main thread.
+        void PostFrame();
 
         //! Signal the back-end to acquire swapchain images.
         bool AcquireSwapChainImage(AZ::u32 viewIndex, SwapChain* swapChain);
@@ -78,11 +84,17 @@ namespace XR
         virtual void ShutdownInternal() = 0;
 
         //! Called when the device is beginning a frame for processing.
+        //! @note This function is called from the thread related to the presentation queue.
         virtual bool BeginFrameInternal() = 0;
 
         //! Called when the device is ending a frame for processing. 
         //! Pass in the active swapchain in order to allow the back end to release the swap chain images
+        //! @note This function is called from the thread related to the presentation queue.
         virtual void EndFrameInternal(XR::Ptr<XR::SwapChain>) = 0;
+
+        //! Called after the EndFrame has been executed.
+        //! @note This function is called from the main thread.
+        virtual void PostFrameInternal() = 0;
 
         //! Called when the device is beginning a frame for processing.
         virtual bool AcquireSwapChainImageInternal(AZ::u32 viewIndex, XR::SwapChain* baseSwapChain) = 0;

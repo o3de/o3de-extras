@@ -8,5 +8,6 @@
 
 set(FILES
     OpenXRVk_Traits_Linux.h
+    OpenXRVk_Traits_Linux.cpp
     OpenXRVk_Traits_Platform.h
 )
