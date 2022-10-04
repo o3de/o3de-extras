@@ -75,10 +75,6 @@ namespace AzFramework
                 // Position (3D)...
                 ->Constant(ControllerPosePosition::LPos.GetName(), BehaviorConstant(ControllerPosePosition::LPos.GetName()))
                 ->Constant(ControllerPosePosition::RPos.GetName(), BehaviorConstant(ControllerPosePosition::RPos.GetName()))
-                //->Constant(ControllerPosePosition::LVel.GetName(), BehaviorConstant(ControllerPosePosition::LVel.GetName()))
-                //->Constant(ControllerPosePosition::RVel.GetName(), BehaviorConstant(ControllerPosePosition::RVel.GetName()))
-                //->Constant(ControllerPosePosition::LAcc.GetName(), BehaviorConstant(ControllerPosePosition::LAcc.GetName()))
-                //->Constant(ControllerPosePosition::RAcc.GetName(), BehaviorConstant(ControllerPosePosition::RAcc.GetName()))
                 // Orientation (quaternion)...
                 ->Constant(ControllerPoseOrientation::LOrient.GetName(), BehaviorConstant(ControllerPoseOrientation::LOrient.GetName()))
                 ->Constant(ControllerPoseOrientation::ROrient.GetName(), BehaviorConstant(ControllerPoseOrientation::ROrient.GetName()))

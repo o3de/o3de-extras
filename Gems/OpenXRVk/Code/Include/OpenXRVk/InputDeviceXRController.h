@@ -175,20 +175,12 @@ namespace AzFramework
         {
             static constexpr InputChannelId LPos{ "xr_controller_position_l" }; //!< The left-hand position
             static constexpr InputChannelId RPos{ "xr_controller_position_r" }; //!< The right-hand position
-            //static constexpr InputChannelId LVel{ "xr_controller_velocity_l" }; //!< The left-hand velocity
-            //static constexpr InputChannelId RVel{ "xr_controller_velocity_r" }; //!< The right-hand velocity
-            //static constexpr InputChannelId LAcc{ "xr_controller_acceleration_l" }; //!< The left-hand acceleration
-            //static constexpr InputChannelId RAcc{ "xr_controller_acceleration_r" }; //!< The right-hand acceleration
 
             //! All XR Controller position input ids
             static constexpr AZStd::array All
             {
                 LPos,
                 RPos,
-                //LVel,
-                //RVel,
-                //LAcc,
-                //RAcc
             };
         };
 
@@ -274,7 +266,7 @@ namespace AzFramework
             using ButtonIdToBitMaskMap = AZStd::unordered_map<InputChannelId, AZ::u32>;
 
             ////////////////////////////////////////////////////////////////////////////////////////
-            //! Platform agnostic repreesentation of raw XR Controller state
+            //! Platform agnostic representation of raw XR Controller state
             struct RawXRControllerState
             {
                 ////////////////////////////////////////////////////////////////////////////////////
@@ -286,7 +278,7 @@ namespace AzFramework
                 ~RawXRControllerState() = default;
 
                 ////////////////////////////////////////////////////////////////////////////////////
-                //! Reset the raw gamepad state
+                //! Reset the raw xr controller data
                 void Reset();
 
                 ////////////////////////////////////////////////////////////////////////////////////
@@ -333,35 +325,31 @@ namespace AzFramework
 
                 ////////////////////////////////////////////////////////////////////////////////////
                 // Raw Data
-                AZ::u32 m_digitalButtonStates{};            //!< The state of all digital buttons
-                float m_leftTriggerState{};                 //!< The left trigger value
-                float m_rightTriggerState{};                //!< The right trigger value
-                float m_leftGripState{};                    //!< The left grip value
-                float m_rightGripState{};                   //!< The right grip value
-                float m_leftThumbStickXState{};             //!< The left thumb-stick x-axis
-                float m_leftThumbStickYState{};             //!< The left thumb-stick y-axis
-                float m_rightThumbStickXState{};            //!< The right thumb-stick x-axis
-                float m_rightThumbStickYState{};            //!< The right thumb-stick y-axis
+                AZ::u32 m_digitalButtonStates = 0;          //!< The state of all digital buttons
+                float m_leftTriggerState = 0.f;             //!< The left trigger value
+                float m_rightTriggerState = 0.f;            //!< The right trigger value
+                float m_leftGripState = 0.f;                //!< The left grip value
+                float m_rightGripState = 0.f;               //!< The right grip value
+                float m_leftThumbStickXState = 0.f;         //!< The left thumb-stick x-axis
+                float m_leftThumbStickYState = 0.f;         //!< The left thumb-stick y-axis
+                float m_rightThumbStickXState = 0.f;        //!< The right thumb-stick x-axis
+                float m_rightThumbStickYState = 0.f;        //!< The right thumb-stick y-axis
 
-                float m_triggerMaxValue{};                  //!< The maximum value of the analog triggers
-                float m_triggerDeadZoneValue{};             //!< The dead zone value of the analog triggers
-                float m_gripMaxValue{};                     //!< The maximum value of the grip triggers
-                float m_gripDeadZoneValue{};                //!< The dead zone value of the grip triggers
-                float m_thumbStickMaxValue{};               //!< The maximum value of the thumb-sticks
-                float m_leftThumbStickDeadZoneValue{};      //!< The left thumb-stick dead zone value
-                float m_rightThumbStickDeadZoneValue{};     //!< The right thumb-stick dead zone value
+                float m_triggerMaxValue = 0.f;              //!< The maximum value of the analog triggers
+                float m_triggerDeadZoneValue = 0.f;         //!< The dead zone value of the analog triggers
+                float m_gripMaxValue = 0.f;                 //!< The maximum value of the grip triggers
+                float m_gripDeadZoneValue = 0.f;            //!< The dead zone value of the grip triggers
+                float m_thumbStickMaxValue = 0.f;           //!< The maximum value of the thumb-sticks
+                float m_leftThumbStickDeadZoneValue = 0.f;  //!< The left thumb-stick dead zone value
+                float m_rightThumbStickDeadZoneValue = 0.f; //!< The right thumb-stick dead zone value
 
-                float m_leftMotorVibrationValue{};          //!< The vibration amount of the left motor
-                float m_rightMotorVibrationValue{};         //!< The vibration amount of the right motor
+                float m_leftMotorVibrationValue = 0.f;      //!< The vibration amount of the left motor
+                float m_rightMotorVibrationValue = 0.f;     //!< The vibration amount of the right motor
 
-                AZ::Vector3 m_leftPositionState{};          //!< The left controller position
-                AZ::Vector3 m_rightPositionState{};         //!< The right controller position
-                //AZ::Vector3 m_leftVelocityState;          // TODO (implement)
-                //AZ::Vector3 m_rightVelocityState;         // ...
-                //AZ::Vector3 m_leftAccelerationState;      //
-                //AZ::Vector3 m_rightAccelerationState;     //
-                AZ::Quaternion m_leftOrientationState{};    //!< The left controller orientation
-                AZ::Quaternion m_rightOrientationState{};   //!< The right controller orientation
+                AZ::Vector3 m_leftPositionState = AZ::Vector3::CreateZero();                //!< The left controller position
+                AZ::Vector3 m_rightPositionState = AZ::Vector3::CreateZero();               //!< The right controller position
+                AZ::Quaternion m_leftOrientationState = AZ::Quaternion::CreateIdentity();   //!< The left controller orientation
+                AZ::Quaternion m_rightOrientationState = AZ::Quaternion::CreateIdentity();  //!< The right controller orientation
             }; // struct RawXRControllerState
 
             virtual RawXRControllerState& GetRawState() = 0;
