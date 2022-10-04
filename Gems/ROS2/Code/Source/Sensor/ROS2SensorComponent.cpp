@@ -7,10 +7,10 @@
  */
 
 #include "Sensor/ROS2SensorComponent.h"
-#include "Frame/ROS2FrameComponent.h"
+#include "ROS2/Frame/ROS2FrameComponent.h"
 #include "ROS2/ROS2Bus.h"
-#include "ROS2GemUtilities.h"
-#include "Utilities/ROS2Names.h"
+#include "ROS2/Utilities/ROS2Names.h"
+#include "ROS2/ROS2GemUtilities.h"
 #include <AzCore/Component/Entity.h>
 #include <AzCore/Serialization/EditContext.h>
 #include <AzCore/Serialization/EditContextConstants.inl>

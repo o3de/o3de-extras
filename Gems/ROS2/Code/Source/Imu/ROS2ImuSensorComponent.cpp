@@ -7,10 +7,10 @@
  */
 
 #include "Imu/ROS2ImuSensorComponent.h"
-#include "Frame/ROS2FrameComponent.h"
+#include "ROS2/Frame/ROS2FrameComponent.h"
 #include "ROS2/ROS2Bus.h"
 #include "Utilities/ROS2Conversions.h"
-#include "Utilities/ROS2Names.h"
+#include "ROS2/Utilities/ROS2Names.h"
 
 #include <AzCore/Component/Entity.h>
 #include <AzCore/Script/ScriptTimePoint.h>

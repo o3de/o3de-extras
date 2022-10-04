@@ -10,14 +10,12 @@
 #include <AzCore/Math/MatrixUtils.h>
 
 #include <Atom/RPI.Public/Base.h>
+#include <Atom/RPI.Public/Pass/Specific/RenderToTexturePass.h>
 #include <Atom/RPI.Public/RPISystemInterface.h>
 #include <Atom/RPI.Public/RenderPipeline.h>
 #include <Atom/RPI.Public/Scene.h>
-
 #include <AzFramework/Components/TransformComponent.h>
 #include <AzFramework/Scene/SceneSystemInterface.h>
-
-#include <Atom/RPI.Public/Pass/Specific/RenderToTexturePass.h>
 
 #include <PostProcess/PostProcessFeatureProcessor.h>
 

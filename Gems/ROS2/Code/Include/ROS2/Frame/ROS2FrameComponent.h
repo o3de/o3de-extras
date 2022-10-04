@@ -7,9 +7,9 @@
  */
 #pragma once
 
-#include "Frame/NamespaceConfiguration.h"
-#include "Frame/ROS2Transform.h"
-#include "ROS2GemUtilities.h"
+#include "ROS2/Frame/NamespaceConfiguration.h"
+#include "ROS2/Frame/ROS2Transform.h"
+#include "ROS2/ROS2GemUtilities.h"
 #include <AzCore/Component/Component.h>
 #include <AzCore/std/smart_ptr/unique_ptr.h>
 #include <AzFramework/Components/TransformComponent.h>

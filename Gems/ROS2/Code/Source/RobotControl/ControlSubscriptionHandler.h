@@ -7,10 +7,10 @@
  */
 #pragma once
 
-#include "Frame/ROS2FrameComponent.h"
+#include "ROS2/Frame/ROS2FrameComponent.h"
 #include "ROS2/ROS2Bus.h"
 #include "RobotControl/ControlConfiguration.h"
-#include "Utilities/ROS2Names.h"
+#include "ROS2/Utilities/ROS2Names.h"
 #include <rclcpp/rclcpp.hpp>
 
 namespace ROS2

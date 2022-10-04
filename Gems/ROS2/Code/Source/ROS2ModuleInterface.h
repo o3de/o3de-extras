@@ -7,8 +7,8 @@
  */
 #pragma once
 
+#include "../Include/ROS2/Frame/ROS2FrameComponent.h"
 #include "Camera/ROS2CameraSensorComponent.h"
-#include "Frame/ROS2FrameComponent.h"
 #include "GNSS/ROS2GNSSSensorComponent.h"
 #include "Imu/ROS2ImuSensorComponent.h"
 #include "Lidar/ROS2LidarSensorComponent.h"

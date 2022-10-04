@@ -6,7 +6,7 @@
  *
  */
 
-#include "ROS2Names.h"
+#include "ROS2/Utilities/ROS2Names.h"
 #include <AzCore/RTTI/RTTI.h>
 #include <AzCore/std/string/regex.h>
 #include <rcl/validate_topic_name.h>

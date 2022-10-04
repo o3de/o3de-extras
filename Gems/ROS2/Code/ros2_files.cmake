@@ -21,7 +21,6 @@ set(FILES
         Source/QoS/QoS.cpp
         Source/QoS/QoS.h
         Source/ROS2GemUtilities.cpp
-        Source/ROS2GemUtilities.h
         Source/RobotControl/ControlConfiguration.cpp
         Source/RobotControl/ControlConfiguration.h
         Source/RobotControl/ControlSubscriptionHandler.h
@@ -48,15 +47,11 @@ set(FILES
         Source/Sensor/SensorConfiguration.cpp
         Source/Sensor/SensorConfiguration.h
         Source/Frame/NamespaceConfiguration.cpp
-        Source/Frame/NamespaceConfiguration.h
         Source/Frame/ROS2FrameComponent.cpp
-        Source/Frame/ROS2FrameComponent.h
         Source/Frame/ROS2Transform.cpp
-        Source/Frame/ROS2Transform.h
         Source/Utilities/ROS2Conversions.cpp
         Source/Utilities/ROS2Conversions.h
         Source/Utilities/ROS2Names.cpp
-        Source/Utilities/ROS2Names.h
         Source/GNSS/ROS2GNSSSensorComponent.cpp
         Source/GNSS/ROS2GNSSSensorComponent.h
         Source/GNSS/GNSSFormatConversions.cpp

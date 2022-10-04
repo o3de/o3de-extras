@@ -6,8 +6,8 @@
  *
  */
 
-#include "Frame/NamespaceConfiguration.h"
-#include "Utilities/ROS2Names.h"
+#include "ROS2/Frame/NamespaceConfiguration.h"
+#include "ROS2/Utilities/ROS2Names.h"
 #include <AzCore/Serialization/EditContext.h>
 #include <AzCore/Serialization/EditContextConstants.inl>
 

@@ -7,15 +7,15 @@
  */
 
 #include "Camera/ROS2CameraSensorComponent.h"
-#include "Frame/ROS2FrameComponent.h"
+#include "ROS2/Frame/ROS2FrameComponent.h"
 #include "ROS2/ROS2Bus.h"
+#include "ROS2/Utilities/ROS2Names.h"
 
 #include <AzCore/Component/Entity.h>
 #include <AzCore/Component/TransformBus.h>
 #include <AzCore/Serialization/EditContext.h>
 #include <AzCore/Serialization/SerializeContext.h>
 
-#include <Utilities/ROS2Names.h>
 #include <sensor_msgs/distortion_models.hpp>
 #include <sensor_msgs/image_encodings.hpp>
 
