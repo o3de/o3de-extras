@@ -12,12 +12,12 @@
 #include <AzCore/std/containers/unordered_map.h>
 
 
-namespace AzFramework
+namespace OpenXRVk
 {
     ////////////////////////////////////////////////////////////////////////////////////////////////
     //! Platform/API-specific implementation for Oculus Touch Controller input device
     class InputDeviceOculusTouch
-        : public InputDeviceXRController::Implementation
+        : public AzFramework::InputDeviceXRController::Implementation
     {
     public:
         ////////////////////////////////////////////////////////////////////////////////////////////
@@ -25,11 +25,11 @@ namespace AzFramework
         AZ_CLASS_ALLOCATOR(InputDeviceOculusTouch, AZ::SystemAllocator, 0);
 
         ////////////////////////////////////////////////////////////////////////////////////////////
-        explicit InputDeviceOculusTouch(InputDeviceXRController& inputDevice);
+        explicit InputDeviceOculusTouch(AzFramework::InputDeviceXRController& inputDevice);
         AZ_DISABLE_COPY_MOVE(InputDeviceOculusTouch);
         ~InputDeviceOculusTouch() override;
 
-        AZStd::string GetInputChannelPath(const InputChannelId& channelId) const override;
+        AZStd::string GetInputChannelPath(const AzFramework::InputChannelId& channelId) const override;
         AZStd::string GetInputDeviceProfilePath() const override;
         AZStd::string GetLeftHandSubPath() const override;
         AZStd::string GetRightHandSubPath() const override;
@@ -56,15 +56,15 @@ namespace AzFramework
 
         TickCallbackFn m_tickCallback{ nullptr };
 
-        AZStd::unordered_map<InputChannelId, const AZStd::string_view> m_xrPathMap{};
+        AZStd::unordered_map<AzFramework::InputChannelId, const AZStd::string_view> m_xrPathMap{};
     };
 
-    ////////////////////////////////////////////////////////////////////////////////////////////////
-    // static
-    inline InputDeviceXRController::Implementation* InputDeviceXRController::Implementation::Create(
-        InputDeviceXRController& inputDevice)
-    {
-        return aznew InputDeviceOculusTouch(inputDevice);
-    }
+} // namespace OpenXRVk
 
-} // namespace AzFramework
+////////////////////////////////////////////////////////////////////////////////////////////////
+// static
+inline AzFramework::InputDeviceXRController::Implementation* AzFramework::InputDeviceXRController::Implementation::Create(
+    InputDeviceXRController& inputDevice)
+{
+    return aznew OpenXRVk::InputDeviceOculusTouch(inputDevice);
+}

@@ -366,16 +366,16 @@ namespace AzFramework
         // Update thumb-stick channels...
         const AZ::Vector2 leftThumbStick = rawControllerState.GetLeftThumbStickAdjustedForDeadZoneAndNormalized();
         const AZ::Vector2 leftThumbStickPreDeadZone = rawControllerState.GetLeftThumbStickNormalizedValues();
-        const float leftStickUp = AZ::GetClamp(leftThumbStick.GetY(), 0.f, 1.f);
-        const float leftStickDown = fabsf(AZ::GetClamp(leftThumbStick.GetY(), -1.f, 0.f));
-        const float leftStickLeft = fabsf(AZ::GetClamp(leftThumbStick.GetX(), -1.f, 0.f));
-        const float leftStickRight = AZ::GetClamp(leftThumbStick.GetX(), 0.f, 1.f);
+        const float leftStickUp = AZ::GetClamp(leftThumbStick.GetY(), s_thumbStickCenterValue, s_thumbStickMaxValue);
+        const float leftStickDown = fabsf(AZ::GetClamp(leftThumbStick.GetY(), s_thumbStickMinValue, s_thumbStickCenterValue));
+        const float leftStickLeft = fabsf(AZ::GetClamp(leftThumbStick.GetX(), s_thumbStickMinValue, s_thumbStickCenterValue));
+        const float leftStickRight = AZ::GetClamp(leftThumbStick.GetX(), s_thumbStickCenterValue, s_thumbStickMaxValue);
         const AZ::Vector2 rightThumbStick = rawControllerState.GetRightThumbStickAdjustedForDeadZoneAndNormalized();
         const AZ::Vector2 rightThumbStickPreDeadZone = rawControllerState.GetRightThumbStickNormalizedValues();
-        const float rightStickUp = AZ::GetClamp(rightThumbStick.GetY(), 0.f, 1.f);
-        const float rightStickDown = fabsf(AZ::GetClamp(rightThumbStick.GetY(), -1.f, 0.f));
-        const float rightStickLeft = fabsf(AZ::GetClamp(rightThumbStick.GetX(), -1.f, 0.f));
-        const float rightStickRight = AZ::GetClamp(rightThumbStick.GetX(), 0.f, 1.f);
+        const float rightStickUp = AZ::GetClamp(rightThumbStick.GetY(), s_thumbStickCenterValue, s_thumbStickMaxValue);
+        const float rightStickDown = fabsf(AZ::GetClamp(rightThumbStick.GetY(), s_thumbStickMinValue, s_thumbStickCenterValue));
+        const float rightStickLeft = fabsf(AZ::GetClamp(rightThumbStick.GetX(), s_thumbStickMinValue, s_thumbStickCenterValue));
+        const float rightStickRight = AZ::GetClamp(rightThumbStick.GetX(), s_thumbStickCenterValue, s_thumbStickMaxValue);
 
         m_inputDevice.m_thumbStick2DChannelsById[xrc::ThumbStickAxis2D::L]->ProcessRawInputEvent(leftThumbStick, &leftThumbStickPreDeadZone);
         m_inputDevice.m_thumbStick1DChannelsById[xrc::ThumbStickAxis1D::LX]->ProcessRawInputEvent(leftThumbStick.GetX());

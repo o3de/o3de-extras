@@ -413,6 +413,10 @@ namespace AzFramework
         Implementation* GetImplementation() const;
 
     protected:
+        static constexpr float s_thumbStickMaxValue{ 1.f };
+        static constexpr float s_thumbStickMinValue{ -1.f };
+        static constexpr float s_thumbStickCenterValue{ 0.f };
+
         ////////////////////////////////////////////////////////////////////////////////////////////
         using ButtonChannelByIdMap = AZStd::unordered_map<InputChannelId, InputChannelDigital*>;
         using TriggerChannelByIdMap = AZStd::unordered_map<InputChannelId, InputChannelAnalog*>;

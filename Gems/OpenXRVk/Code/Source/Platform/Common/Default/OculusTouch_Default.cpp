@@ -10,14 +10,13 @@
 
 #include <OpenXRVk_Platform.h>
 
-////////////////////////////////////////////////////////////////////////////////////////////////////
-namespace AzFramework
+namespace OpenXRVk
 {
     ////////////////////////////////////////////////////////////////////////////////////////////////
     //! Map of digital button ids keyed by their button bitmask
-    const InputDeviceXRController::Implementation::ButtonIdToBitMaskMap GetButtonIdToBitMaskMap()
+    const AzFramework::InputDeviceXRController::Implementation::ButtonIdToBitMaskMap GetButtonIdToBitMaskMap()
     {
-        using xrc = InputDeviceXRController;
+        using xrc = AzFramework::InputDeviceXRController;
         return {
             { xrc::Button::A, (1 << 0) },
             { xrc::Button::B, (1 << 1) },
@@ -41,8 +40,8 @@ namespace AzFramework
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
-    InputDeviceOculusTouch::InputDeviceOculusTouch(InputDeviceXRController& inputDevice)
-        : InputDeviceXRController::Implementation(inputDevice)
+    InputDeviceOculusTouch::InputDeviceOculusTouch(AzFramework::InputDeviceXRController& inputDevice)
+        : AzFramework::InputDeviceXRController::Implementation(inputDevice)
         , m_rawControllerState(GetButtonIdToBitMaskMap())
     {
         // These are guesses for now
@@ -52,7 +51,7 @@ namespace AzFramework
         m_rawControllerState.m_leftThumbStickDeadZoneValue = 0.1f;
         m_rawControllerState.m_rightThumbStickDeadZoneValue = 0.1f;
 
-        using xrc = InputDeviceXRController;
+        using xrc = AzFramework::InputDeviceXRController;
         m_xrPathMap = {
             { xrc::Button::A, "/user/hand/right/input/a/click" },
             { xrc::Button::B, "/user/hand/right/input/b/click" },
@@ -91,7 +90,7 @@ namespace AzFramework
     InputDeviceOculusTouch::~InputDeviceOculusTouch() = default;
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
-    AZStd::string InputDeviceOculusTouch::GetInputChannelPath(const InputChannelId& channelId) const
+    AZStd::string InputDeviceOculusTouch::GetInputChannelPath(const AzFramework::InputChannelId& channelId) const
     {
         if (const auto it = m_xrPathMap.find(channelId);
             it != m_xrPathMap.end())
@@ -159,4 +158,4 @@ namespace AzFramework
         }
     }
 
-} // namespace AzFramework
+} // namespace OpenXRVk
