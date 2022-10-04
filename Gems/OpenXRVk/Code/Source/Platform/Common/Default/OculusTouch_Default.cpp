@@ -91,30 +91,30 @@ namespace AzFramework
     InputDeviceOculusTouch::~InputDeviceOculusTouch() = default;
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
-    AZStd::string_view InputDeviceOculusTouch::GetInputChannelPath(const InputChannelId& channelId) const
+    AZStd::string InputDeviceOculusTouch::GetInputChannelPath(const InputChannelId& channelId) const
     {
         if (const auto it = m_xrPathMap.find(channelId);
             it != m_xrPathMap.end())
         {
-            return it->second;
+            return{ it->second };
         }
         return {};
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
-    AZStd::string_view InputDeviceOculusTouch::GetInputDeviceProfilePath() const
+    AZStd::string InputDeviceOculusTouch::GetInputDeviceProfilePath() const
     {
         return { "/interaction_profiles/oculus/touch_controller" };
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
-    AZStd::string_view InputDeviceOculusTouch::GetLeftHandSubPath() const
+    AZStd::string InputDeviceOculusTouch::GetLeftHandSubPath() const
     {
         return { "/user/hand/left" };
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
-    AZStd::string_view InputDeviceOculusTouch::GetRightHandSubPath() const
+    AZStd::string InputDeviceOculusTouch::GetRightHandSubPath() const
     {
         return { "/user/hand/right" };
     }

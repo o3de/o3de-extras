@@ -118,11 +118,11 @@ namespace OpenXRVk
 
         // Lambda to create an action and path, store them in m_xrActionPaths
         using namespace AzFramework;
-        auto createXrAction = [this, &xrInstance](const InputChannelId& channelId, const XrActionType actionType) -> void
+        auto createXrAction = [this, &xrInstance](const InputChannelId& channelId, const XrActionType actionType)
         {
             m_xrActionIndices[channelId] = m_xrActionPaths.size();
             m_xrActionPaths.push_back({});
-            
+
             CreateAction(m_xrActionPaths.back().action, actionType, channelId.GetName(), channelId.GetName(),
                 aznumeric_cast<AZ::u32>(AZStd::size(m_handSubactionPath)), m_handSubactionPath.data());
 
@@ -156,7 +156,7 @@ namespace OpenXRVk
             createXrAction(channelId, XR_ACTION_TYPE_POSE_INPUT); // is this correct?
         }
 
-        m_xrControllerImpl->RegisterTickCallback([this]()->void { PollActions(); });
+        m_xrControllerImpl->RegisterTickCallback([this](){ PollActions(); });
     }
 
     AZ::RHI::ResultCode Input::InitializeActionSpace(XrSession xrSession)

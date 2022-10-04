@@ -121,7 +121,6 @@ namespace OpenXRVk
         AZStd::array<XrSpaceLocation, AZ::RPI::XRMaxNumControllers> m_handSpaceLocation{};
         AZStd::array<XrSpaceLocation, SpaceType::Count> m_xrVisualizedSpaceLocations{};
 
-        // New Stuff!
         AzFramework::InputDeviceXRController m_xrController{};
         AzFramework::InputDeviceXRController::Implementation* m_xrControllerImpl{};
         bool m_wasQuitPressedLastSync{ false };

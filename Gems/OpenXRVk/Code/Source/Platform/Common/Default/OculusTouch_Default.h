@@ -11,7 +11,7 @@
 #include <OpenXRVk/InputDeviceXRController.h>
 #include <AzCore/std/containers/unordered_map.h>
 
-////////////////////////////////////////////////////////////////////////////////////////////////////
+
 namespace AzFramework
 {
     ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -29,10 +29,10 @@ namespace AzFramework
         AZ_DISABLE_COPY_MOVE(InputDeviceOculusTouch);
         ~InputDeviceOculusTouch() override;
 
-        AZStd::string_view GetInputChannelPath(const InputChannelId& channelId) const override;
-        AZStd::string_view GetInputDeviceProfilePath() const override;
-        AZStd::string_view GetLeftHandSubPath() const override;
-        AZStd::string_view GetRightHandSubPath() const override;
+        AZStd::string GetInputChannelPath(const InputChannelId& channelId) const override;
+        AZStd::string GetInputDeviceProfilePath() const override;
+        AZStd::string GetLeftHandSubPath() const override;
+        AZStd::string GetRightHandSubPath() const override;
         void RegisterTickCallback(TickCallbackFn callbackFn) override;
         RawXRControllerState& GetRawState() override;
 

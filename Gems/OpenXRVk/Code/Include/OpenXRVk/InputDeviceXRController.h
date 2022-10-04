@@ -230,11 +230,11 @@ namespace AzFramework
             ////////////////////////////////////////////////////////////////////////////////////////
             //! Query for a path representing an input channel
             //! Used for initializing Xr inputs.
-            virtual AZStd::string_view GetInputChannelPath(const InputChannelId& channelId) const = 0;
+            virtual AZStd::string GetInputChannelPath(const InputChannelId& channelId) const = 0;
 
-            virtual AZStd::string_view GetInputDeviceProfilePath() const = 0;
-            virtual AZStd::string_view GetLeftHandSubPath() const = 0;
-            virtual AZStd::string_view GetRightHandSubPath() const = 0;
+            virtual AZStd::string GetInputDeviceProfilePath() const = 0;
+            virtual AZStd::string GetLeftHandSubPath() const = 0;
+            virtual AZStd::string GetRightHandSubPath() const = 0;
 
             using TickCallbackFn = AZStd::function<void()>;
             virtual void RegisterTickCallback(TickCallbackFn callbackFn) = 0;
@@ -434,7 +434,7 @@ namespace AzFramework
     private:
         ////////////////////////////////////////////////////////////////////////////////////////////
         //! Private pointer to the platform implementation
-        AZStd::unique_ptr<Implementation> m_pimpl;
+        AZStd::unique_ptr<Implementation> m_impl;
     };
 
 } // namespace AzFramework
