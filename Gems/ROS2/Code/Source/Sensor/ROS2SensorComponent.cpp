@@ -40,7 +40,6 @@ namespace ROS2
             if (AZ::EditContext* ec = serialize->GetEditContext())
             {
                 ec->Class<ROS2SensorComponent>("ROS2 Sensor", "Base component for sensors")
-                    ->Attribute(AZ::Edit::Attributes::Category, "ROS2")
                     ->DataElement(
                         AZ::Edit::UIHandlers::Default,
                         &ROS2SensorComponent::m_sensorConfiguration,
