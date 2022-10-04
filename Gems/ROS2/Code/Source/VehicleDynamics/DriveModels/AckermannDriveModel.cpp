@@ -24,18 +24,12 @@ namespace VehicleDynamics
             serialize->Class<AckermannDriveModel, DriveModel>()
                 ->Version(1)
                 ->Field("SteeringPID", &AckermannDriveModel::m_steeringPid)
-                ->Field("SpeedPID", &AckermannDriveModel::m_speedPid)
-                ->Field("SteeringDeadZone", &AckermannDriveModel::m_steeringDeadZone);
+                ->Field("SpeedPID", &AckermannDriveModel::m_speedPid);
 
             if (AZ::EditContext* ec = serialize->GetEditContext())
             {
                 ec->Class<AckermannDriveModel>("Simplified Drive Model", "Configuration of a simplified vehicle dynamics drive model")
                     ->ClassElement(AZ::Edit::ClassElements::EditorData, "")
-                    ->DataElement(
-                        AZ::Edit::UIHandlers::Default,
-                        &AckermannDriveModel::m_steeringDeadZone,
-                        "Steering dead zone",
-                        "The maximum absolute value in radians for which the steering is discarded")
                     ->DataElement(
                         AZ::Edit::UIHandlers::Default,
                         &AckermannDriveModel::m_steeringPid,
@@ -112,11 +106,8 @@ namespace VehicleDynamics
             (m_vehicleConfiguration.m_wheelbase * tan(steering)) /
             (m_vehicleConfiguration.m_wheelbase + 0.5 * m_vehicleConfiguration.m_track * tan(steering)));
 
-        if (AZ::Abs(steering) > m_steeringDeadZone)
-        {
-            ApplyWheelSteering(m_steeringData.front(), innerSteering, deltaTimeNs);
-            ApplyWheelSteering(m_steeringData.back(), outerSteering, deltaTimeNs);
-        }
+        ApplyWheelSteering(m_steeringData.front(), innerSteering, deltaTimeNs);
+        ApplyWheelSteering(m_steeringData.back(), outerSteering, deltaTimeNs);
     }
 
     void AckermannDriveModel::ApplySpeed(float speed, uint64_t deltaTimeNs)
