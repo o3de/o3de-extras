@@ -54,10 +54,10 @@ namespace OpenXRVk::Platform
     
     void OpenXREndFrameInternal()
     {
-        // OpenXR's xrEndFrame function uses Java VM internally passed when initializing the loader in OpenXRInitializeLoader.
-        // xrEndFrame is called for the thread related to the presentation queue (not the main thread) and
+        // OpenXR's xrEndFrame function internally uses the application's Java VM (passed in OpenXRInitializeLoader).
+        // xrEndFrame function is called from the thread related to the presentation queue (not the main thread) and
         // that causes to create a temporary JNI Environment for this thread, which is not optimal.
-        // Calling GetJniEnv() will internally call AttachCurrentThread to attach the JNI Environment to this thread.
+        // Calling GetJniEnv() will attach the JNI Environment to this thread.
         AZ::Android::AndroidEnv* androidEnv = AZ::Android::AndroidEnv::Get();
         AZ_Assert(androidEnv != nullptr, "Invalid android environment");
         androidEnv->GetJniEnv();
