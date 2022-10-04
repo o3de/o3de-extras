@@ -4,6 +4,7 @@
 # SPDX-License-Identifier: Apache-2.0 OR MIT
 
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/Code")
+set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} PARENT_SCOPE)
 
 set(gem_path ${CMAKE_CURRENT_LIST_DIR})
 set(gem_json ${gem_path}/gem.json)
