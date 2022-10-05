@@ -28,7 +28,7 @@ namespace OpenXRVk
 
     AZ::RHI::ResultCode Input::InitInternal()
     {
-        const auto xrVkInstance = dynamic_cast<Instance*>(GetDescriptor().m_instance.get());
+        const auto xrVkInstance = static_cast<Instance*>(GetDescriptor().m_instance.get());
         const XrInstance xrInstance = xrVkInstance->GetXRInstance();
 
         // Create an action set.
@@ -221,9 +221,9 @@ namespace OpenXRVk
 
     void Input::PollActions()
     {
-        const auto session = dynamic_cast<Session*>(GetDescriptor().m_session.get());
+        const auto session = static_cast<Session*>(GetDescriptor().m_session.get());
         XrSession xrSession = session->GetXrSession();
-        const auto device = dynamic_cast<Device*>(GetDescriptor().m_device.get());
+        const auto device = static_cast<Device*>(GetDescriptor().m_device.get());
         m_handActive = { XR_FALSE, XR_FALSE };
 
         auto& rawControllerData = m_xrControllerImpl->GetRawState();
