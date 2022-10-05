@@ -39,14 +39,9 @@ namespace ROS2
 
         // AZ::Component interface implementation.
         ROS2SpawnerComponent();
-
         ~ROS2SpawnerComponent();
-
         void Activate() override;
-
         void Deactivate() override;
-
-        // Required Reflect function.
         static void Reflect(AZ::ReflectContext* context);
 
         const AZ::Transform& GetDefaultSpawnPose() const override;
@@ -63,13 +58,14 @@ namespace ROS2
         AZ::Transform m_defaultSpawnPose = { AZ::Vector3{ 0, 0, 0 }, AZ::Quaternion{ 0, 0, 0, 1 }, 1.0 };
 
         void GetAvailableSpawnableNames(const GetAvailableSpawnableNamesRequest request, GetAvailableSpawnableNamesResponse response);
-
         void SpawnEntity(const SpawnEntityRequest request, SpawnEntityResponse response);
-
-        void PreSpawn(AzFramework::EntitySpawnTicket::Id, AzFramework::SpawnableEntityContainerView, const AZ::Transform&);
+        void PreSpawn(
+            AzFramework::EntitySpawnTicket::Id,
+            AzFramework::SpawnableEntityContainerView,
+            const AZ::Transform&,
+            const AZStd::string& spawnable_name);
 
         void GetSpawnPointsNames(const GetSpawnPointsNamesRequest request, GetSpawnPointsNamesResponse response);
-
         void GetSpawnPointInfo(const GetSpawnPointInfoRequest request, GetSpawnPointInfoResponse response);
 
         AZStd::unordered_map<AZStd::string, SpawnPointInfo> GetSpawnPoints();

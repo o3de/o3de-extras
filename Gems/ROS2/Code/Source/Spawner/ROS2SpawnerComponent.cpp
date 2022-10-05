@@ -7,21 +7,24 @@
  */
 
 #include "ROS2SpawnerComponent.h"
+#include "ROS2/Frame/ROS2FrameComponent.h"
+#include "ROS2/ROS2Bus.h"
+#include "ROS2/ROS2GemUtilities.h"
 #include <AzCore/Serialization/EditContext.h>
 #include <AzFramework/Components/TransformComponent.h>
 #include <AzToolsFramework/Entity/EditorEntityHelpers.h>
-#include <ROS2/ROS2Bus.h>
 
 namespace ROS2
 {
     ROS2SpawnerComponent::ROS2SpawnerComponent()
     {
-        SpawnerInterface::Register(this);
+        // TODO - currently causes errors on close. It is here to enable URDF spawning in default point.
+        // SpawnerInterface::Register(this);
     }
 
     ROS2SpawnerComponent::~ROS2SpawnerComponent()
     {
-        SpawnerInterface::Unregister(this);
+        // SpawnerInterface::Unregister(this);
     }
 
     void ROS2SpawnerComponent::Activate()
@@ -144,9 +147,9 @@ namespace ROS2
                           1.0f };
         }
 
-        optionalArgs.m_preInsertionCallback = [this, transform](auto id, auto view)
+        optionalArgs.m_preInsertionCallback = [this, transform, spawnable_name](auto id, auto view)
         {
-            this->PreSpawn(id, view, transform);
+            this->PreSpawn(id, view, transform, spawnable_name);
         };
 
         spawner->SpawnAllEntities(m_tickets.at(spawnable_name), optionalArgs);
@@ -157,19 +160,30 @@ namespace ROS2
     void ROS2SpawnerComponent::PreSpawn(
         AzFramework::EntitySpawnTicket::Id id [[maybe_unused]],
         AzFramework::SpawnableEntityContainerView view,
-        const AZ::Transform& transform)
+        const AZ::Transform& transform,
+        const AZStd::string& spawnable_name)
     {
         if (view.empty())
         {
             return;
         }
-
         AZ::Entity* root = *view.begin();
 
         // TODO: probably it would be better to use TransformBus here
-        auto* transformInterface_ = root->FindComponent<AzFramework::TransformComponent>();
+        auto* transformInterface = root->FindComponent<AzFramework::TransformComponent>();
+        transformInterface->SetWorldTM(transform);
 
-        transformInterface_->SetWorldTM(transform);
+        static int counter = 1;
+        AZStd::string instanceName = AZStd::string::format("%s_%d", spawnable_name.c_str(), counter++);
+        for (AZ::Entity* entity : view)
+        { // Update name for the first entity with ROS2Frame in hierarchy (left to right)
+            const auto* frameComponent = Utils::GetGameOrEditorComponent<ROS2FrameComponent>(entity);
+            if (frameComponent)
+            {
+                entity->SetName(instanceName);
+                break;
+            }
+        }
     }
 
     const AZ::Transform& ROS2SpawnerComponent::GetDefaultSpawnPose() const
