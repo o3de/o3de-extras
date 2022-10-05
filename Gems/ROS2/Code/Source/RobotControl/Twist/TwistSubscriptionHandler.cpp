@@ -12,10 +12,10 @@
 
 namespace ROS2
 {
-    void TwistSubscriptionHandler::BroadcastBus(const geometry_msgs::msg::Twist& message)
+    void TwistSubscriptionHandler::SendToBus(const geometry_msgs::msg::Twist& message)
     {
         const AZ::Vector3 linearVelocity = ROS2Conversions::FromROS2Vector3(message.linear);
         const AZ::Vector3 angularVelocity = ROS2Conversions::FromROS2Vector3(message.angular);
-        TwistNotificationBus::Broadcast(&TwistNotifications::TwistReceived, linearVelocity, angularVelocity);
+        TwistNotificationBus::Event(GetEntityId(), &TwistNotifications::TwistReceived, linearVelocity, angularVelocity);
     }
 } // namespace ROS2

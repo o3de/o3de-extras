@@ -54,25 +54,23 @@ namespace VehicleDynamics
     class ManualControlEventHandler
     {
     public:
-        ManualControlEventHandler()
+        void Activate(AZ::EntityId ownerEntity)
         {
             m_eventHandlers.push_back(ManualControlSingleEventHandler(
                 "steering",
-                [](float inputValue)
+                [ownerEntity](float inputValue)
                 {
-                    VehicleInputControlRequestBus::Broadcast(&VehicleInputControlRequests::SetTargetSteeringFraction, inputValue);
+                    VehicleInputControlRequestBus::Event(ownerEntity, &VehicleInputControlRequests::SetTargetSteeringFraction, inputValue);
                 }));
 
             m_eventHandlers.push_back(ManualControlSingleEventHandler(
                 "accelerate",
-                [](float inputValue)
+                [ownerEntity](float inputValue)
                 {
-                    VehicleInputControlRequestBus::Broadcast(&VehicleInputControlRequests::SetTargetLinearSpeedFraction, inputValue);
+                    VehicleInputControlRequestBus::Event(
+                        ownerEntity, &VehicleInputControlRequests::SetTargetLinearSpeedFraction, inputValue);
                 }));
-        }
 
-        void Activate()
-        {
             for (auto& handler : m_eventHandlers)
             {
                 handler.Activate();

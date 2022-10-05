@@ -7,6 +7,7 @@
  */
 #pragma once
 
+#include <AzCore/Component/EntityId.h>
 #include <AzCore/EBus/EBus.h>
 #include <AzCore/Interface/Interface.h>
 
@@ -15,10 +16,12 @@ namespace VehicleDynamics
     //! Inputs (speed, steering, acceleration etc.) for vehicle dynamics system
     //! Inputs are valid for a short time (configurable) and need to be repeated if continuous movement is needed.
     //! (Use cruise system to set cruise speed).
-    class VehicleInputControlRequests
+    class VehicleInputControlRequests : public AZ::EBusTraits
     {
     public:
-        AZ_RTTI(VehicleInputControlRequests, "{AB0F1D2A-3A73-41B6-B882-62316DE32010}");
+        static constexpr AZ::EBusAddressPolicy AddressPolicy = AZ::EBusAddressPolicy::ById;
+        using BusIdType = AZ::EntityId;
+
         virtual ~VehicleInputControlRequests() = default;
 
         //! Set target for the vehicle linear speed. It should be realized over time according to drive model.
@@ -45,12 +48,5 @@ namespace VehicleDynamics
         virtual void SetTargetLinearSpeedFraction(float speedFraction) = 0;
     };
 
-    class VehicleInputControlBusTraits : public AZ::EBusTraits
-    {
-    public:
-        static constexpr AZ::EBusHandlerPolicy HandlerPolicy = AZ::EBusHandlerPolicy::Single;
-        static constexpr AZ::EBusAddressPolicy AddressPolicy = AZ::EBusAddressPolicy::Single;
-    };
-    using VehicleInputControlRequestBus = AZ::EBus<VehicleInputControlRequests, VehicleInputControlBusTraits>;
-    using VehicleInputControlInterface = AZ::Interface<VehicleInputControlRequests>;
+    using VehicleInputControlRequestBus = AZ::EBus<VehicleInputControlRequests>;
 } // namespace VehicleDynamics

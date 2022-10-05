@@ -12,7 +12,7 @@
 
 namespace ROS2
 {
-    void AckermannSubscriptionHandler::BroadcastBus(const ackermann_msgs::msg::AckermannDrive& message)
+    void AckermannSubscriptionHandler::SendToBus(const ackermann_msgs::msg::AckermannDrive& message)
     {
         AckermannCommandStruct acs;
         acs.m_acceleration = message.acceleration;
@@ -20,6 +20,6 @@ namespace ROS2
         acs.m_speed = message.speed;
         acs.m_steeringAngle = message.steering_angle;
         acs.m_steeringAngleVelocity = message.steering_angle_velocity;
-        AckermannNotificationBus::Broadcast(&AckermannNotifications::AckermannReceived, acs);
+        AckermannNotificationBus::Event(GetEntityId(), &AckermannNotifications::AckermannReceived, acs);
     }
 } // namespace ROS2

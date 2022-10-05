@@ -20,8 +20,8 @@ namespace VehicleDynamics
 {
     void VehicleModelComponent::Activate()
     {
-        VehicleInputControlRequestBus::Handler::BusConnect();
-        m_manualControlEventHandler.Activate();
+        VehicleInputControlRequestBus::Handler::BusConnect(GetEntityId());
+        m_manualControlEventHandler.Activate(GetEntityId());
         AZ::TickBus::Handler::BusConnect();
         m_driveModel.Activate(m_vehicleConfiguration);
     }
@@ -75,6 +75,11 @@ namespace VehicleDynamics
     void VehicleModelComponent::GetProvidedServices(AZ::ComponentDescriptor::DependencyArrayType& provided)
     {
         provided.push_back(AZ_CRC_CE("VehicleModelService"));
+    }
+
+    void VehicleModelComponent::GetIncompatibleServices(AZ::ComponentDescriptor::DependencyArrayType& incompatible)
+    { // Only one per entity
+        incompatible.push_back(AZ_CRC_CE("VehicleModelService"));
     }
 
     void VehicleModelComponent::SetTargetLinearSpeed(float speedMps)

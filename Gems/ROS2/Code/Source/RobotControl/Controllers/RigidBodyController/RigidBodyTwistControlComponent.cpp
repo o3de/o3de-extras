@@ -32,7 +32,7 @@ namespace ROS2
 
     void RigidBodyTwistControlComponent::Activate()
     {
-        TwistNotificationBus::Handler::BusConnect();
+        TwistNotificationBus::Handler::BusConnect(GetEntityId());
     }
 
     void RigidBodyTwistControlComponent::Deactivate()

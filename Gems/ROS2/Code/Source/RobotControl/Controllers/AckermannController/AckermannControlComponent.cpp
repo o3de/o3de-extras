@@ -31,7 +31,7 @@ namespace ROS2
 
     void AckermannControlComponent::Activate()
     {
-        AckermannNotificationBus::Handler::BusConnect();
+        AckermannNotificationBus::Handler::BusConnect(GetEntityId());
     }
     void AckermannControlComponent::Deactivate()
     {
@@ -47,9 +47,9 @@ namespace ROS2
     void AckermannControlComponent::AckermannReceived(const AckermannCommandStruct& acs)
     {
         // Notify input system for vehicle dynamics. Only speed and steering is currently supported.
-        VehicleDynamics::VehicleInputControlRequestBus::Broadcast(
-            &VehicleDynamics::VehicleInputControlRequests::SetTargetLinearSpeed, acs.m_speed);
-        VehicleDynamics::VehicleInputControlRequestBus::Broadcast(
-            &VehicleDynamics::VehicleInputControlRequests::SetTargetSteering, acs.m_steeringAngle);
+        VehicleDynamics::VehicleInputControlRequestBus::Event(
+            GetEntityId(), &VehicleDynamics::VehicleInputControlRequests::SetTargetLinearSpeed, acs.m_speed);
+        VehicleDynamics::VehicleInputControlRequestBus::Event(
+            GetEntityId(), &VehicleDynamics::VehicleInputControlRequests::SetTargetSteering, acs.m_steeringAngle);
     }
 } // namespace ROS2

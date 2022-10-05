@@ -18,6 +18,9 @@ namespace ROS2
     class TwistNotifications : public AZ::EBusTraits
     {
     public:
+        static constexpr AZ::EBusAddressPolicy AddressPolicy = AZ::EBusAddressPolicy::ById;
+        using BusIdType = AZ::EntityId;
+
         //! Handle control command
         //! @param linear Linear speed in each axis, in robot reference frame, in m/s.
         //! @param angular Angular speed in each axis, in robot reference frame, in m/s.

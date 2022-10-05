@@ -18,6 +18,9 @@ namespace ROS2
     class AckermannNotifications : public AZ::EBusTraits
     {
     public:
+        static constexpr AZ::EBusAddressPolicy AddressPolicy = AZ::EBusAddressPolicy::ById;
+        using BusIdType = AZ::EntityId;
+
         //! Handle Ackermann command
         //! @param ackermannCommand A structure with AckermannDrive message fields
         virtual void AckermannReceived(const AckermannCommandStruct& angular) = 0;
