@@ -6,24 +6,21 @@ This project demonstrates how ROS2 Gem for O3DE can be used with a scene (The Lo
 
 ## Requirements
 
-This project will run on 
-- Ubuntu 20.04 with ROS 2 Galactic
-- Ubuntu 22.04 with ROS 2 Humble
-
-The ROS 2 Gem is not yet developed for Windows. 
+- This project will run on Ubuntu 20.04 with ROS 2 Galactic. 
+- Support Ubuntu 22.04 with ROS 2 Humble is coming soon.
+- The ROS 2 Gem is not yet developed for Windows. 
 
 Refer to the [O3DE System Requirements](https://www.o3de.org/docs/welcome-guide/requirements/) documentation to make sure that the system/hardware requirements are met
 
 This project has the following dependencies:
 
 - [O3DE](https://github.com/o3de/o3de)
-  -  Should work with `stabilization/2210` as well as `develop` branch and newest releases. The project was tested with Galactic with commit `#381a6e0f`.
+  -  Should work with the `development` branch and newest releases. The project was tested with Galactic with commit `#381a6e0f`.
 - [ROS2 Gem](https://github.com/RobotecAI/o3de-ros2-gem)
-  - `develop` branch (the default) should work. The project was tested with Galactic with version tag `0.3`.
+  - This project was last tested with the `0.3`tag branch.
   - ROS 2 (Galactic or Humble) itself is also required, see [Gem Requirements](https://github.com/RobotecAI/o3de-ros2-gem#requirements)  
 - [Loft Scene Sample](https://github.com/aws-lumberyard/loft-arch-vis-sample)
-  - Use `main` branch. The project was tested with Galactic on `scene_fixes` branch 
-
+  - `development` branch (the default) should work.
 
 ## Setup Instructions
 
@@ -31,26 +28,27 @@ The following steps will assume the following
 
 - The instructions will be based off of a common base folder: $DEMO_BASE. For the steps below, we will use DEMO_BASE of ~/ for simplicty. 
 - This current project has been fetched to $DEMO_BASE
-- You have ROS2 installed and sourced 
-  - for debian package Galactic/Humble installation, in your bash console, run `source /opt/ros/<distro>/setup.bash`
+- You have [ROS2 Galactic](https://docs.ros.org/en/galactic/Installation/Ubuntu-Install-Debians.html) installed and sourced 
+  - for debian package Galactic installation, in your bash console, run `source /opt/ros/<distro>/setup.bash`
   - you could also add this line to your `.profile`
-  - check if ROS 2 is sourced in your current console with `echo $ROS_DISTRO`. You should see `galactic` or `humble`.
+  - check if ROS 2 is sourced in your current console with `echo $ROS_DISTRO`. You should see `galactic`.
 
 ### 1. Clone O3DE (or install) and register the engine
 
 ```
-$ cd $DEMO_BASE
+~$ cd $DEMO_BASE
 ~$ git clone https://github.com/o3de/o3de.git
 ~$ cd o3de
 ~/o3de$ git lfs install
 ~/o3de$ git lfs pull
+~/o3de$ python/get_python.sh
 ~/o3de$ scripts/o3de.sh register --this-engine
 ```
 
 ### 2. Clone and register the ROS2 Gem locally
 
 ```
-$ cd $DEMO_BASE
+~$ cd $DEMO_BASE
 ~$ git clone https://github.com/RobotecAI/o3de-ros2-gem.git
 ~$ $DEMO_BASE/o3de/scripts/o3de.sh register --gem-path $DEMO_BASE/o3de-ros2-gem
 ```
@@ -58,10 +56,9 @@ $ cd $DEMO_BASE
 ### 3. Clone and register the Loft Scene project locally
 
 ```
-$ cd $DEMO_BASE
-~$ git clone https://github.com/aws-lumberyard/loft-arch-vis-sample.git
+~$ cd $DEMO_BASE
+~$ git clone https://github.com/aws-lumberyard/loft-arch-vis-sample.git --branch 0.3
 ~$ cd loft-arch-vis-sample
-~/loft-arch-vis-sample$ git checkout scene_fixes
 ~/loft-arch-vis-sample$ git lfs install
 ~/loft-arch-vis-sample$ git lfs pull
 ~$ $DEMO_BASE/o3de/scripts/o3de.sh register --gem-path $DEMO_BASE/loft-arch-vis-sample/Gems/ArchVis
@@ -70,11 +67,11 @@ $ cd $DEMO_BASE
 ### 4. Register this project and build it
 
 ```
-$ cd $DEMO_BASE
-~/$ o3de/scripts/o3de.sh register -pp $DEMO_BASE/o3de-demo-project
-~/$ cd o3de-demo-project
-~/o3de-demo-project$ cmake -B build/linux -G "Ninja Multi-Config" -DLY_UNITY_BUILD=OFF -DCMAKE_EXPORT_COMPILE_COMMANDS=ON -DLY_PARALLEL_LINK_JOBS=16 -DLY_STRIP_DEBUG_SYMBOLS=OFF
-~/o3de-demo-project$ cmake --build build/linux --config profile --target ROS2-Gem-Demo Editor AssetProcessor
+$ 
+~$ $DEMO_BASE/o3de/scripts/o3de.sh register -pp $DEMO_BASE/o3de-demo-project
+~$ cd $DEMO_BASE/o3de-demo-project
+~/o3de-demo-project$ cmake -B build/linux -G "Ninja Multi-Config" -DLY_STRIP_DEBUG_SYMBOLS=ON
+~/o3de-demo-project$ cmake --build build/linux --config profile --target ROS2-Gem-Demo Editor AssetProcessor ROS2-Gem-Demo.Assets
 ```
 
 ### 5. Launch Editor
