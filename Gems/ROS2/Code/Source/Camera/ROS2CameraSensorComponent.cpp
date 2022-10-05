@@ -34,6 +34,14 @@ namespace ROS2
             config.m_type = messageType;
             return AZStd::make_pair(messageType, config);
         }
+
+        AZStd::string GetCameraNameFromFrame(const AZ::Entity* entity)
+        {
+            const auto* component = Utils::GetGameOrEditorComponent<ROS2FrameComponent>(entity);
+            AZStd::string cameraName = component->GetFrameID();
+            AZStd::replace(cameraName.begin(), cameraName.end(), '/', '_');
+            return cameraName;
+        }
     } // namespace Internal
 
     ROS2CameraSensorComponent::ROS2CameraSensorComponent()
@@ -52,7 +60,6 @@ namespace ROS2
         {
             serialize->Class<ROS2CameraSensorComponent, ROS2SensorComponent>()
                 ->Version(1)
-                ->Field("CameraName", &ROS2CameraSensorComponent::m_cameraName)
                 ->Field("VerticalFieldOfViewDeg", &ROS2CameraSensorComponent::m_VerticalFieldOfViewDeg)
                 ->Field("Width", &ROS2CameraSensorComponent::m_width)
                 ->Field("Height", &ROS2CameraSensorComponent::m_height);
@@ -64,8 +71,6 @@ namespace ROS2
                     ->ClassElement(AZ::Edit::ClassElements::EditorData, "")
                     ->Attribute(AZ::Edit::Attributes::Category, "ROS2")
                     ->Attribute(AZ::Edit::Attributes::AppearsInAddComponentMenu, AZ_CRC("Game"))
-                    ->DataElement(
-                        AZ::Edit::UIHandlers::Default, &ROS2CameraSensorComponent::m_cameraName, "Camera Name", "This is the camera name.")
                     ->DataElement(
                         AZ::Edit::UIHandlers::Default,
                         &ROS2CameraSensorComponent::m_VerticalFieldOfViewDeg,
@@ -94,7 +99,8 @@ namespace ROS2
         m_cameraInfoPublisher =
             ros2Node->create_publisher<sensor_msgs::msg::CameraInfo>(cameraInfoFullTopic.data(), cameraInfoPublisherConfig.GetQoS());
 
-        m_cameraSensor.emplace(CameraSensorDescription{ m_cameraName, m_VerticalFieldOfViewDeg, m_width, m_height });
+        m_cameraSensor.emplace(
+            CameraSensorDescription{ Internal::GetCameraNameFromFrame(GetEntity()), m_VerticalFieldOfViewDeg, m_width, m_height });
     }
 
     void ROS2CameraSensorComponent::Deactivate()
@@ -123,6 +129,8 @@ namespace ROS2
 
                 message.width = descriptor.m_size.m_width;
                 message.height = descriptor.m_size.m_height;
+                message.step = message.width * sensor_msgs::image_encodings::bitDepth(message.encoding) / 8 *
+                    sensor_msgs::image_encodings::numChannels(message.encoding);
                 message.data = std::vector<uint8_t>(result.m_dataBuffer->data(), result.m_dataBuffer->data() + result.m_dataBuffer->size());
                 message.header.frame_id = frameName.c_str();
 

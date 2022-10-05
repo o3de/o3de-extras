@@ -41,7 +41,6 @@ namespace ROS2
         float m_VerticalFieldOfViewDeg = 90.0f;
         int m_width = 640;
         int m_height = 480;
-        AZStd::string m_cameraName = "camera";
 
         void FrequencyTick() override;
 
