@@ -7,8 +7,8 @@
  */
 
 #include "Lidar/ROS2LidarSensorComponent.h"
-#include "ROS2/Frame/ROS2FrameComponent.h"
 #include "Lidar/LidarTemplateUtils.h"
+#include "ROS2/Frame/ROS2FrameComponent.h"
 #include "ROS2/ROS2Bus.h"
 #include "ROS2/Utilities/ROS2Names.h"
 #include <Atom/RPI.Public/AuxGeom/AuxGeomFeatureProcessorInterface.h>
