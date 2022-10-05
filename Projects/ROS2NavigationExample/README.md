@@ -49,7 +49,7 @@ The following steps will assume the following
 
 ```
 ~$ cd $DEMO_BASE
-~$ git clone https://github.com/RobotecAI/o3de-ros2-gem.git
+~$ git clone https://github.com/RobotecAI/o3de-ros2-gem.git --branch 0.3
 ~$ $DEMO_BASE/o3de/scripts/o3de.sh register --gem-path $DEMO_BASE/o3de-ros2-gem
 ```
 
@@ -57,7 +57,7 @@ The following steps will assume the following
 
 ```
 ~$ cd $DEMO_BASE
-~$ git clone https://github.com/aws-lumberyard/loft-arch-vis-sample.git --branch 0.3
+~$ git clone https://github.com/aws-lumberyard/loft-arch-vis-sample.git
 ~$ cd loft-arch-vis-sample
 ~/loft-arch-vis-sample$ git lfs install
 ~/loft-arch-vis-sample$ git lfs pull
