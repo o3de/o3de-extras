@@ -50,7 +50,6 @@ set(FILES
         Source/Frame/ROS2FrameComponent.cpp
         Source/Frame/ROS2Transform.cpp
         Source/Utilities/ROS2Conversions.cpp
-        Source/Utilities/ROS2Conversions.h
         Source/Utilities/ROS2Names.cpp
         Source/GNSS/ROS2GNSSSensorComponent.cpp
         Source/GNSS/ROS2GNSSSensorComponent.h

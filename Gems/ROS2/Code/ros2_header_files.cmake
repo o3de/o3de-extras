@@ -9,5 +9,6 @@ set(FILES
         Include/ROS2/Frame/ROS2Transform.h
         Include/ROS2/ROS2Bus.h
         Include/ROS2/ROS2GemUtilities.h
+        Include/ROS2/Utilities/ROS2Conversions.h
         Include/ROS2/Utilities/ROS2Names.h
         )
