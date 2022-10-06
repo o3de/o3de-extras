@@ -158,6 +158,14 @@ namespace XR
         }
     }
 
+    void System::PostFrame()
+    {
+        if (m_device && m_session && m_session->IsSessionRunning())
+        {
+            m_device->PostFrame();
+        }
+    }
+
     void System::AcquireSwapChainImage(AZ::u32 viewIndex)
     {
         if (m_isInFrame && m_device->ShouldRender())

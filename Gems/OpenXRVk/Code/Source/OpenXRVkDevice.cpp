@@ -12,6 +12,7 @@
 #include <OpenXRVk/OpenXRVkSwapChain.h>
 #include <OpenXRVk/OpenXRVkSpace.h>
 #include <OpenXRVk/OpenXRVkUtils.h>
+#include <OpenXRVk_Traits_Platform.h>
 #include <Atom/RHI.Reflect/Vulkan/XRVkDescriptors.h>
 #include <AzCore/Casting/numeric_cast.h>
 
@@ -99,6 +100,8 @@ namespace OpenXRVk
 
     bool Device::BeginFrameInternal()
     {
+        Platform::OpenXRBeginFrameInternal();
+
         Session* session = static_cast<Session*>(GetSession().get());
         XrSession xrSession = session->GetXrSession();
 
@@ -121,6 +124,8 @@ namespace OpenXRVk
 
     void Device::EndFrameInternal(XR::Ptr<XR::SwapChain> baseSwapChain)
     {
+        Platform::OpenXREndFrameInternal();
+
         Session* session = static_cast<Session*>(GetSession().get());
         Instance* instance = static_cast<Instance*>(GetDescriptor().m_instance.get());
         SwapChain* swapChain = static_cast<SwapChain*>(baseSwapChain.get());
@@ -162,6 +167,11 @@ namespace OpenXRVk
         {
             WARN_IF_UNSUCCESSFUL(result);
         }
+    }
+
+    void Device::PostFrameInternal()
+    {
+        Platform::OpenXRPostFrameInternal();
     }
 
     bool Device::AcquireSwapChainImageInternal(AZ::u32 viewIndex, XR::SwapChain* baseSwapChain)
