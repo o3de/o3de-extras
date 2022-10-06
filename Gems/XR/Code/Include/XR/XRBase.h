@@ -32,8 +32,8 @@ namespace XR
     };
 
 #define RETURN_RESULTCODE_IF_UNSUCCESSFUL(result) \
-    if (result != AZ::RHI::ResultCode::Success) {\
-        return result;\
+    if ((result) != AZ::RHI::ResultCode::Success) {\
+        return (result);\
     }
 }
 
