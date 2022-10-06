@@ -14,6 +14,7 @@
 #include <OpenXRVk/OpenXRVkUtils.h>
 #include <AzCore/Debug/Trace.h>
 #include <AzCore/Casting/numeric_cast.h>
+#include <Atom/RHI.Reflect/Vulkan/XRVkDescriptors.h>
 #include <XR/XRBase.h>
 
 namespace OpenXRVk
@@ -198,9 +199,11 @@ namespace OpenXRVk
                     if (GetDescriptor().m_validationMode == AZ::RHI::ValidationMode::Enabled)
                     {
                         Input* xrVkInput = GetNativeInput();
-                        LogActionSourceName(xrVkInput->GetSqueezeAction(), "Squeeze");
+                        LogActionSourceName(xrVkInput->GetSqueezeAction(static_cast<AZ::u32>(XR::Side::Left)), "Squeeze Left");
+                        LogActionSourceName(xrVkInput->GetSqueezeAction(static_cast<AZ::u32>(XR::Side::Right)), "Squeeze Right");
                         LogActionSourceName(xrVkInput->GetQuitAction(), "Quit");
-                        LogActionSourceName(xrVkInput->GetPoseAction(), "Pose");
+                        LogActionSourceName(xrVkInput->GetPoseAction(static_cast<AZ::u32>(XR::Side::Left)), "Pose Left");
+                        LogActionSourceName(xrVkInput->GetPoseAction(static_cast<AZ::u32>(XR::Side::Right)), "Pose Right");
                         LogActionSourceName(xrVkInput->GetVibrationAction(), "Vibrate");
                     }
                     break;
@@ -310,22 +313,22 @@ namespace OpenXRVk
 
     float Session::GetXButtonState() const
     {
-        return GetNativeInput()->GetXButtonState();
+        return (GetNativeInput()->GetXButtonState() ? 1.f : 0.f);
     }
 
     float Session::GetYButtonState() const
     {
-        return GetNativeInput()->GetYButtonState();
+        return (GetNativeInput()->GetYButtonState() ? 1.f : 0.f);
     }
 
     float Session::GetAButtonState() const
     {
-        return GetNativeInput()->GetAButtonState();
+        return (GetNativeInput()->GetAButtonState() ? 1.f : 0.f);
     }
 
     float Session::GetBButtonState() const
     {
-        return GetNativeInput()->GetBButtonState();
+        return (GetNativeInput()->GetBButtonState() ? 1.f : 0.f);
     }
 
     float Session::GetXJoyStickState(AZ::u32 handIndex) const

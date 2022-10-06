@@ -24,7 +24,7 @@ namespace XR
         static void Reflect(AZ::ReflectContext* context);
 
         SystemComponent();
-        ~SystemComponent() = default;
+        ~SystemComponent() override = default;
 
         //////////////////////////////////////////////////////////////////////////
         // Component

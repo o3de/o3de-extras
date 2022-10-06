@@ -34,11 +34,11 @@ namespace OpenXRVk
     public:
         AZ_CLASS_ALLOCATOR(Space, AZ::SystemAllocator, 0);
         AZ_RTTI(Space, "{E99557D0-9061-4691-9524-CE0ACC3A14FA}", XR::Space);
-        
-        static XR::Ptr<Space> Create();           
+
+        static XR::Ptr<Space> Create();
         AZ::RHI::ResultCode InitInternal() override;
         void ShutdownInternal() override;
-    
+
         //!Initialize XrSpace per SpaceType we want to track
         void CreateVisualizedSpaces(XrSession xrSession);
 
@@ -49,7 +49,6 @@ namespace OpenXRVk
         XrSpace GetXrSpace(SpaceType spaceType) const;
 
     private:
-
         //! XrPose specific matrix translation, Rotation functions
         XrPosef Identity();
         XrPosef Translation(const XrVector3f& translation);

@@ -33,24 +33,25 @@ namespace OpenXRVk
 {
 
 #define RETURN_XR_RESULT_IF_UNSUCCESSFUL(result) \
-    if (result != XR_SUCCESS) {\
-        return result;\
+    if ((result) != XR_SUCCESS) {\
+        return (result);\
     }
 
 #define RETURN_IF_UNSUCCESSFUL(result) \
-    if (result != XR_SUCCESS) {\
+    if ((result) != XR_SUCCESS) {\
         return;\
     }
 
 #define WARN_IF_UNSUCCESSFUL(result) \
-    if (result != XR_SUCCESS) {\
+    if ((result) != XR_SUCCESS) {\
         AZ_Warning("OpenXRVk", false, "Warning error code: %s", to_string(result));\
     }
 
 #define ASSERT_IF_UNSUCCESSFUL(result) \
-    if (result != XR_SUCCESS) {\
+    if ((result) != XR_SUCCESS) {\
         AZ_Assert(false, "Assert error code: %s", to_string(result));\
     }
+
 
     AZ::RHI::ResultCode ConvertResult(XrResult xrResult);
     bool IsSuccess(XrResult result);

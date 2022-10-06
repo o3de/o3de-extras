@@ -24,10 +24,10 @@ namespace XR
         AZ_RTTI(Instance, "{1C457924-56A4-444F-BC72-4D31A097BA70}");
 
         Instance() = default;
-        virtual ~Instance() = default;
+        ~Instance() override = default;
 
-        //! Init the back-end instance. It is responsible for figuring out supported layers and extensions 
-        //! and based on that a xr instance is created. It also has logging support based on validation mode.  
+        //! Init the back-end instance. It is responsible for figuring out supported layers and extensions
+        //! and based on that a xr instance is created. It also has logging support based on validation mode.
         AZ::RHI::ResultCode Init(AZ::RHI::ValidationMode validationMode);
 
         //! API to init the native instance object and populate the XRInstanceDecriptor with it.
@@ -40,7 +40,6 @@ namespace XR
         virtual AZ::RHI::ResultCode GetXRPhysicalDevice(AZ::RHI::XRPhysicalDeviceDescriptor* physicalDeviceDescriptor, int32_t index) = 0;
 
     private:
-
         ///////////////////////////////////////////////////////////////////
         // XR::Object
         void Shutdown() override;
@@ -49,9 +48,9 @@ namespace XR
         //! Called when the XR instance is being shutdown.
         virtual void ShutdownInternal() = 0;
 
-        //! API to allow backend object to initialize native xr instance. 
+        //! API to allow backend object to initialize native xr instance.
         virtual AZ::RHI::ResultCode InitInstanceInternal(AZ::RHI::ValidationMode m_validationMode) = 0;
-       
+
         //Cache validation mode in case the backend object needs to use it.
         AZ::RHI::ValidationMode m_validationMode = AZ::RHI::ValidationMode::Disabled;
     };

@@ -10,4 +10,6 @@ set(FILES
     OpenXRVk_Traits_Linux.h
     OpenXRVk_Traits_Linux.cpp
     OpenXRVk_Traits_Platform.h
+    ../Common/Default/OculusTouch_Default.cpp
+    ../Common/Default/OculusTouch_Default.h
 )
