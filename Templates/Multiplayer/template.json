@@ -2,7 +2,7 @@
     "template_name": "Multiplayer",
     "origin": "Open 3D Engine - o3de.org",
     "origin_uri": "https://github.com/o3de/o3de-extras/releases/download/1.0/Template_Multiplayer-1.0.zip",
-    "sha256": "A492C32C1232B97403DA5670885F5DE0A72DFA3614C7D36E6E93F19220DB5EA0",
+    "sha256": "c1d1f6e260c6121f013b4d54e213e0c7f0f99281c66ebe48bb6403a1180ee444",
     "repo_uri": "https://raw.githubusercontent.com/o3de/o3de-extras/development",
     "license": "https://opensource.org/licenses/MIT",
     "display_name": "Multiplayer",
@@ -15,18 +15,6 @@
     "copyFiles": [
         {
             "file": "${NameLower}_asset_files.cmake",
-            "isTemplated": false
-        },
-        {
-            "file": ".gitattributes",
-            "isTemplated": false
-        },
-        {
-            "file": ".gitignore",
-            "isTemplated": false
-        },
-        {
-            "file": ".lfsconfig",
             "isTemplated": false
         },
         {
@@ -1088,10 +1076,6 @@
         {
             "file": "Registry/physxsystemconfiguration.setreg",
             "isTemplated": false
-        },
-        {
-            "file": "Scripts/build/Jenkins/Jenkinsfile",
-            "isTemplated": true
         },
         {
             "file": "ShaderLib/README.md",
