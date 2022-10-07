@@ -46,10 +46,6 @@
             "Component_[6982904761689756877]": {
                 "$type": "EditorVisibilityComponent",
                 "Id": 6982904761689756877
-            },
-            "Component_[8195205509917477088]": {
-                "$type": "SelectionComponent",
-                "Id": 8195205509917477088
             }
         }
     },
@@ -58,10 +54,6 @@
             "Id": "Entity_[1273969985848]",
             "Name": "Sensor",
             "Components": {
-                "Component_[10527242310063513328]": {
-                    "$type": "SelectionComponent",
-                    "Id": 10527242310063513328
-                },
                 "Component_[1058300359310703890]": {
                     "$type": "GenericComponentWrapper",
                     "Id": 1058300359310703890,
@@ -90,7 +82,7 @@
                                 }
                             }
                         },
-                        "selfCollisionEntityId": "Entity_[417184227077]"
+                        "LidarTransparentEntityId": ""
                     }
                 },
                 "Component_[13013301136498148727]": {
@@ -169,6 +161,13 @@
                         "CollisionGroupId": {
                             "GroupId": "{DED3A46E-3588-4BB8-BADF-E3114DBA95A6}"
                         },
+                        "MaterialSlots": {
+                            "Slots": [
+                                {
+                                    "Name": "DefaultMaterial"
+                                }
+                            ]
+                        },
                         "MaterialSelection": {
                             "MaterialIds": [
                                 {}
@@ -196,10 +195,6 @@
                             }
                         }
                     }
-                },
-                "Component_[1651548302861032559]": {
-                    "$type": "SelectionComponent",
-                    "Id": 1651548302861032559
                 },
                 "Component_[17075071070477116796]": {
                     "$type": "EditorDisabledCompositionComponent",
@@ -234,6 +229,29 @@
                             "SortIndex": 3
                         }
                     ]
+                },
+                "Component_[6216877561479815861]": {
+                    "$type": "EditorMaterialComponent",
+                    "Id": 6216877561479815861,
+                    "Controller": {
+                        "Configuration": {
+                            "materials": [
+                                {
+                                    "Key": {
+                                        "materialSlotStableId": 3498918361
+                                    },
+                                    "Value": {
+                                        "MaterialAsset": {
+                                            "assetId": {
+                                                "guid": "{305BAE93-C067-5CA7-8C6F-6D9737E15C1B}"
+                                            },
+                                            "assetHint": "models/sensors/lidaros2/lidaros2_os2material.azmaterial"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
                 },
                 "Component_[6868930103042649999]": {
                     "$type": "EditorLockComponent",
