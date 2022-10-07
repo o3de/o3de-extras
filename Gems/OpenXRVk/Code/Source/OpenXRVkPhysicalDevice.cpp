@@ -9,9 +9,9 @@
 #include <OpenXRVk/OpenXRVkPhysicalDevice.h>
 #include <OpenXRVk/OpenXRVkUtils.h>
 
-namespace OpenXRVk
+namespace OpenXRVk::PhysicalDevice
 {
-    AZStd::vector<VkPhysicalDevice> PhysicalDevice::EnumerateDeviceList(XrSystemId xrSystemId, XrInstance xrInstance, VkInstance vkInstance)
+    AZStd::vector<VkPhysicalDevice> EnumerateDeviceList(XrSystemId xrSystemId, XrInstance xrInstance, VkInstance vkInstance)
     {
         PFN_xrGetVulkanGraphicsDeviceKHR pfnGetVulkanGraphicsDeviceKHR = nullptr;
         XrResult result = xrGetInstanceProcAddr(

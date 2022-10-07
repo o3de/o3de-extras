@@ -14,6 +14,6 @@
 namespace OpenXRVk::PhysicalDevice
 {
     //! API to enumerate and return physical devices.
-    static AZStd::vector<VkPhysicalDevice> EnumerateDeviceList(XrSystemId xrSystemId, XrInstance xrInstance, VkInstance vkInstance); 
+    AZStd::vector<VkPhysicalDevice> EnumerateDeviceList(XrSystemId xrSystemId, XrInstance xrInstance, VkInstance vkInstance); 
 }
 
