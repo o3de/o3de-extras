@@ -49,7 +49,7 @@ namespace XR
         virtual void ShutdownInternal() = 0;
 
         //! API to allow backend object to initialize native xr instance.
-        virtual AZ::RHI::ResultCode InitInstanceInternal(AZ::RHI::ValidationMode m_validationMode) = 0;
+        virtual AZ::RHI::ResultCode InitInstanceInternal(AZ::RHI::ValidationMode validationMode) = 0;
 
         //Cache validation mode in case the backend object needs to use it.
         AZ::RHI::ValidationMode m_validationMode = AZ::RHI::ValidationMode::Disabled;

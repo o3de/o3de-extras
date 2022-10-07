@@ -30,7 +30,7 @@ namespace OpenXRVk
 
         //////////////////////////////////////////////////////////////////////////
         // XR::Instance overrides
-        AZ::RHI::ResultCode InitInstanceInternal(AZ::RHI::ValidationMode m_validationMode) override;
+        AZ::RHI::ResultCode InitInstanceInternal(AZ::RHI::ValidationMode validationMode) override;
         AZ::RHI::ResultCode InitNativeInstance(AZ::RHI::XRInstanceDescriptor* instanceDescriptor) override;
         AZ::u32 GetNumPhysicalDevices() const override;
         AZ::RHI::ResultCode GetXRPhysicalDevice(AZ::RHI::XRPhysicalDeviceDescriptor* physicalDeviceDescriptor, int32_t index) override;
