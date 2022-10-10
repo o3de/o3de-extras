@@ -33,4 +33,21 @@ namespace ROS2
         ros2Quaternion.w = azquaternion.GetW();
         return ros2Quaternion;
     }
+
+    geometry_msgs::msg::Point ROS2Conversions::ToROS2Point(const AZ::Vector3& azvector)
+    {
+        geometry_msgs::msg::Point ros2Point;
+        ros2Point.x = azvector.GetX();
+        ros2Point.y = azvector.GetY();
+        ros2Point.z = azvector.GetZ();
+        return ros2Point;
+    }
+
+    geometry_msgs::msg::Pose ROS2Conversions::ToROS2Pose(const AZ::Transform& aztransform)
+    {
+        geometry_msgs::msg::Pose ros2Pose;
+        ros2Pose.position = ROS2Conversions::ToROS2Point(aztransform.GetTranslation());
+        ros2Pose.orientation = ROS2Conversions::ToROS2Quaternion(aztransform.GetRotation());
+        return ros2Pose;
+    }
 } // namespace ROS2

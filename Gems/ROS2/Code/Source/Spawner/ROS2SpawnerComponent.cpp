@@ -209,14 +209,7 @@ namespace ROS2
         if (spawn_points.contains(key))
         {
             auto info = spawn_points.at(key);
-
-            geometry_msgs::msg::Pose pose;
-            pose.position.x = info.pose.GetTranslation().GetX();
-            pose.position.y = info.pose.GetTranslation().GetY();
-            pose.position.z = info.pose.GetTranslation().GetZ();
-            pose.orientation = ROS2Conversions::ToROS2Quaternion(info.pose.GetRotation());
-
-            response->pose = pose;
+            response->pose = ROS2Conversions::ToROS2Pose(info.pose);
             response->status_message = info.info.c_str();
         }
         else
