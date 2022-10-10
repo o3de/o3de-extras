@@ -6,10 +6,10 @@
  *
  */
 
-#include <AzCore/Android/AndroidEnv.h>
+#pragma once
 
+#include <AzCore/Android/AndroidEnv.h>
 #include <OpenXRVk/OpenXRVkUtils.h>
-#include <OpenXRVk_Traits_Android.h>
 
 namespace OpenXRVk::Platform
 {
@@ -47,11 +47,11 @@ namespace OpenXRVk::Platform
 
         return true;
     }
-    
+
     void OpenXRBeginFrameInternal()
     {
     }
-    
+
     void OpenXREndFrameInternal()
     {
         // OpenXR's xrEndFrame function internally uses the application's Java VM (passed in OpenXRInitializeLoader).
@@ -62,7 +62,7 @@ namespace OpenXRVk::Platform
         AZ_Assert(androidEnv != nullptr, "Invalid android environment");
         androidEnv->GetJniEnv();
     }
-    
+
     void OpenXRPostFrameInternal()
     {
         // Now that EndFrame has finished, calling GetJniEnv() again from the main thread

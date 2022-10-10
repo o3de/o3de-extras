@@ -14,7 +14,7 @@
 #include <OpenXRVk/OpenXRVkUtils.h>
 #include <AzCore/Casting/numeric_cast.h>
 
-#include <../Common/Default/OculusTouch_Default.h>
+#include <InputDeviceXRController_Platform.h>
 
 namespace OpenXRVk
 {

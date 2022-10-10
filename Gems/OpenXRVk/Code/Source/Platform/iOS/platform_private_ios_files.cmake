@@ -7,6 +7,9 @@
 #
 
 set(FILES
+    InputDeviceXRController_Platform.h
     OpenXRVk_Traits_iOS.h
     OpenXRVk_Traits_Platform.h
+    ../Common/Unimplemented/InputDeviceXRController_Unimplemented.h
+    ../Common/Unimplemented/OpenXRVkInstance_Unimplemented.h
 )

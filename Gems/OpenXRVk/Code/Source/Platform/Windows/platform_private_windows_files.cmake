@@ -7,9 +7,11 @@
 #
 
 set(FILES
+    InputDeviceXRController_Platform.h
     OpenXRVk_Traits_Windows.h
-    OpenXRVk_Traits_Windows.cpp
     OpenXRVk_Traits_Platform.h
+    ../Common/Default/InputDeviceXRController_Default.h
     ../Common/Default/OculusTouch_Default.cpp
     ../Common/Default/OculusTouch_Default.h
+    ../Common/Unimplemented/OpenXRVkInstance_Unimplemented.h
 )

@@ -9,20 +9,4 @@
 
 #define O3DE_TRAIT_DISABLE_FAILED_OPENXRVK_TESTS
 
-namespace OpenXRVk::Platform
-{
-    //! Initializes the XR loader for this platform.
-    bool OpenXRInitializeLoader();
-
-    //! Called when the device is beginning a frame for processing.
-    //! @note This function is called from the thread related to the presentation queue.
-    void OpenXRBeginFrameInternal();
-    
-    //! Called when the device is ending a frame for processing. 
-    //! @note This function is called from the thread related to the presentation queue.
-    void OpenXREndFrameInternal();
-    
-    //! Called after the EndFrame has been executed.
-    //! @note This function is called from the main thread.
-    void OpenXRPostFrameInternal();
-}
+#include <../Common/Unimplemented/OpenXRVkInstance_Unimplemented.h>
