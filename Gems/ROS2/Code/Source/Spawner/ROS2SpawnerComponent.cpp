@@ -13,6 +13,7 @@
 #include <AzCore/Serialization/EditContext.h>
 #include <AzFramework/Components/TransformComponent.h>
 #include <AzToolsFramework/Entity/EditorEntityHelpers.h>
+#include <ROS2/Utilities/ROS2Conversions.h>
 
 namespace ROS2
 {
@@ -35,28 +36,28 @@ namespace ROS2
             "get_available_spawnable_names",
             [this](const GetAvailableSpawnableNamesRequest request, GetAvailableSpawnableNamesResponse response)
             {
-                this->GetAvailableSpawnableNames(request, response);
+                GetAvailableSpawnableNames(request, response);
             });
 
         m_spawnService = ros2Node->create_service<gazebo_msgs::srv::SpawnEntity>(
             "spawn_entity",
             [this](const SpawnEntityRequest request, SpawnEntityResponse response)
             {
-                this->SpawnEntity(request, response);
+                SpawnEntity(request, response);
             });
 
         m_getSpawnPointInfoService = ros2Node->create_service<gazebo_msgs::srv::GetModelState>(
             "get_spawn_point_info",
             [this](const GetSpawnPointInfoRequest request, GetSpawnPointInfoResponse response)
             {
-                this->GetSpawnPointInfo(request, response);
+                GetSpawnPointInfo(request, response);
             });
 
         m_getSpawnPointsNamesService = ros2Node->create_service<gazebo_msgs::srv::GetWorldProperties>(
             "get_spawn_points_names",
             [this](const GetSpawnPointsNamesRequest request, GetSpawnPointsNamesResponse response)
             {
-                this->GetSpawnPointsNames(request, response);
+                GetSpawnPointsNames(request, response);
             });
     }
 
@@ -149,7 +150,7 @@ namespace ROS2
 
         optionalArgs.m_preInsertionCallback = [this, transform, spawnable_name](auto id, auto view)
         {
-            this->PreSpawn(id, view, transform, spawnable_name);
+            PreSpawn(id, view, transform, spawnable_name);
         };
 
         spawner->SpawnAllEntities(m_tickets.at(spawnable_name), optionalArgs);
@@ -213,10 +214,7 @@ namespace ROS2
             pose.position.x = info.pose.GetTranslation().GetX();
             pose.position.y = info.pose.GetTranslation().GetY();
             pose.position.z = info.pose.GetTranslation().GetZ();
-            pose.orientation.x = info.pose.GetRotation().GetX();
-            pose.orientation.y = info.pose.GetRotation().GetY();
-            pose.orientation.z = info.pose.GetRotation().GetZ();
-            pose.orientation.w = info.pose.GetRotation().GetW();
+            pose.orientation = ROS2Conversions::ToROS2Quaternion(info.pose.GetRotation());
 
             response->pose = pose;
             response->status_message = info.info.c_str();

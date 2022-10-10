@@ -24,7 +24,6 @@ namespace ROS2
     public:
         AZ_COMPONENT(ROS2SpawnPointComponent, "{2AE1CAAE-B300-49FD-8F6D-F7AAABED1EC3}", AZ::Component);
 
-        // AZ::Component interface implementation.
         ROS2SpawnPointComponent() = default;
 
         ~ROS2SpawnPointComponent() = default;
@@ -33,7 +32,6 @@ namespace ROS2
 
         void Deactivate() override;
 
-        // Required Reflect function.
         static void Reflect(AZ::ReflectContext* context);
 
         AZStd::pair<AZStd::string, SpawnPointInfo> GetInfo();
