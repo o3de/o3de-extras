@@ -15,7 +15,6 @@
 #include <Source/EditorHingeJointComponent.h>
 #include <Source/EditorPrismaticJointComponent.h>
 #include <Source/EditorRigidBodyComponent.h>
-
 namespace ROS2
 {
     void JointsMaker::AddJoint(
@@ -83,7 +82,7 @@ namespace ROS2
             }
             break;
         case urdf::Joint::CONTINUOUS:
-            { // Implemented as Hinge with limit set to -2*PI and 2*PI deg. Works fine in the Engine
+            { // Implemented as Hinge with angular limit disabled
                 jointComponent = followColliderEntity->CreateComponent<PhysX::EditorHingeJointComponent>();
                 followColliderEntity->Activate();
 
@@ -98,6 +97,12 @@ namespace ROS2
                     &PhysX::EditorJointRequests::SetLinearValuePair,
                     PhysX::JointsComponentModeCommon::ParamaterNames::TwistLimits,
                     PhysX::AngleLimitsFloatPair(AZ::RadToDeg(AZ::Constants::TwoPi), -AZ::RadToDeg(AZ::Constants::TwoPi)));
+
+                PhysX::EditorJointRequestBus::Event(
+                    AZ::EntityComponentIdPair(followColliderEntityId, jointComponent->GetId()),
+                    &PhysX::EditorJointRequests::SetBoolValue,
+                    PhysX::JointsComponentModeCommon::ParamaterNames::EnableLimits,
+                    false);
 
                 followColliderEntity->Deactivate();
             }
