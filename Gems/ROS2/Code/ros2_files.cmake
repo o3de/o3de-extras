@@ -18,6 +18,7 @@ set(FILES
         Source/Lidar/LidarTemplateUtils.h
         Source/Lidar/ROS2LidarSensorComponent.cpp
         Source/Lidar/ROS2LidarSensorComponent.h
+        Source/Manipulator/MotorizedJoint.cpp
         Source/QoS/QoS.cpp
         Source/QoS/QoS.h
         Source/ROS2GemUtilities.cpp
