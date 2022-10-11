@@ -6,7 +6,8 @@
  *
  */
 
-#include "../../Include/ROS2/Utilities/ROS2Conversions.h"
+#include "ROS2/Utilities/ROS2Conversions.h"
+#include <AzCore/Math/Transform.h>
 
 namespace ROS2
 {
@@ -24,6 +25,15 @@ namespace ROS2
         return ros2vector;
     }
 
+    geometry_msgs::msg::Point ROS2Conversions::ToROS2Point(const AZ::Vector3& azvector)
+    {
+        geometry_msgs::msg::Point ros2point;
+        ros2point.x = azvector.GetX();
+        ros2point.y = azvector.GetY();
+        ros2point.z = azvector.GetZ();
+        return ros2point;
+    }
+
     geometry_msgs::msg::Quaternion ROS2Conversions::ToROS2Quaternion(const AZ::Quaternion& azquaternion)
     {
         geometry_msgs::msg::Quaternion ros2Quaternion;
@@ -34,20 +44,11 @@ namespace ROS2
         return ros2Quaternion;
     }
 
-    geometry_msgs::msg::Point ROS2Conversions::ToROS2Point(const AZ::Vector3& azvector)
-    {
-        geometry_msgs::msg::Point ros2Point;
-        ros2Point.x = azvector.GetX();
-        ros2Point.y = azvector.GetY();
-        ros2Point.z = azvector.GetZ();
-        return ros2Point;
-    }
-
     geometry_msgs::msg::Pose ROS2Conversions::ToROS2Pose(const AZ::Transform& aztransform)
     {
-        geometry_msgs::msg::Pose ros2Pose;
-        ros2Pose.position = ROS2Conversions::ToROS2Point(aztransform.GetTranslation());
-        ros2Pose.orientation = ROS2Conversions::ToROS2Quaternion(aztransform.GetRotation());
-        return ros2Pose;
+        geometry_msgs::msg::Pose pose;
+        pose.position = ToROS2Point(aztransform.GetTranslation());
+        pose.orientation = ToROS2Quaternion(aztransform.GetRotation());
+        return pose;
     }
 } // namespace ROS2
