@@ -83,7 +83,7 @@ namespace OpenXRVk
         return layerNames;
     }
 
-    AZ::RHI::ResultCode Instance::InitInstanceInternal(AZ::RHI::ValidationMode validationMode)
+    AZ::RHI::ResultCode Instance::InitInstanceInternal()
     {
         if (!Platform::OpenXRInitializeLoader())
         {
@@ -102,12 +102,18 @@ namespace OpenXRVk
         XR::RawStringList supportedExtensions = FilterList(optionalExtensions, instanceExtensions);
         m_requiredExtensions.insert(m_requiredExtensions.end(), supportedExtensions.begin(), supportedExtensions.end());
 
-        if (validationMode == AZ::RHI::ValidationMode::Enabled)
+        if (m_validationMode == AZ::RHI::ValidationMode::Enabled)
         {
             AZ_Printf("OpenXRVk", "Available Extensions: (%i)\n", instanceExtensions.size());
             for (const AZStd::string& extension : instanceExtensions)
             {
                 AZ_Printf("OpenXRVk", "Name=%s\n", extension.c_str());
+            }
+
+            AZ_Printf("OpenXRVk", "Extensions to enable: (%i)\n", m_requiredExtensions.size());
+            for (const char* extension : m_requiredExtensions)
+            {
+                AZ_Printf("OpenXRVk", "Name=%s\n", extension);
             }
 
             AZ_Printf("OpenXRVk", "Available Layers: (%i)\n", instanceLayerNames.size());
@@ -120,8 +126,8 @@ namespace OpenXRVk
         AZ_Assert(m_xrInstance == XR_NULL_HANDLE, "XR Instance is already initialized");
         XrInstanceCreateInfo createInfo{ XR_TYPE_INSTANCE_CREATE_INFO };
         createInfo.next = nullptr;
-        createInfo.enabledExtensionCount = aznumeric_cast<AZ::u32>(supportedExtensions.size());
-        createInfo.enabledExtensionNames = supportedExtensions.data();
+        createInfo.enabledExtensionCount = aznumeric_cast<AZ::u32>(m_requiredExtensions.size());
+        createInfo.enabledExtensionNames = m_requiredExtensions.data();
         createInfo.enabledApiLayerCount = aznumeric_cast<AZ::u32>(supportedLayers.size());
         createInfo.enabledApiLayerNames = supportedLayers.data();
 
@@ -136,7 +142,7 @@ namespace OpenXRVk
             return AZ::RHI::ResultCode::Fail;
         }
 
-        if (validationMode == AZ::RHI::ValidationMode::Enabled)
+        if (m_validationMode == AZ::RHI::ValidationMode::Enabled)
         {
             XrInstanceProperties instanceProperties{ XR_TYPE_INSTANCE_PROPERTIES };
             result = xrGetInstanceProperties(m_xrInstance, &instanceProperties);
@@ -184,7 +190,7 @@ namespace OpenXRVk
         graphicsRequirements.maxApiVersionSupported = legacyRequirements.maxApiVersionSupported;
         graphicsRequirements.minApiVersionSupported = legacyRequirements.minApiVersionSupported;
 
-        if (validationMode == AZ::RHI::ValidationMode::Enabled)
+        if (m_validationMode == AZ::RHI::ValidationMode::Enabled)
         {
             AZ_Printf("OpenXRVk", "graphicsRequirements.maxApiVersionSupported %d.%d.%d\n",
             XR_VERSION_MAJOR(graphicsRequirements.maxApiVersionSupported),
@@ -316,6 +322,15 @@ namespace OpenXRVk
         for (uint32_t i = 0; i < createInfo.vulkanCreateInfo->enabledExtensionCount; ++i)
         {
             extensions.push_back(createInfo.vulkanCreateInfo->ppEnabledExtensionNames[i]);
+        }
+
+        if (m_validationMode == AZ::RHI::ValidationMode::Enabled)
+        {
+            AZ_Printf("OpenXRVk", "Vulkan instance extensions to enable: (%i)\n", extensions.size());
+            for (const AZStd::string& extension : extensions)
+            {
+                AZ_Printf("OpenXRVk", "Name=%s\n", extension.c_str());
+            }
         }
 
         VkInstanceCreateInfo instInfo{ VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO };

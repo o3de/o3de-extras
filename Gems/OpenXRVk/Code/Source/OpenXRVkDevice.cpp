@@ -54,6 +54,15 @@ namespace OpenXRVk
             extensions.push_back(xrDeviceCreateInfo.vulkanCreateInfo->ppEnabledExtensionNames[i]);
         }
 
+        if (GetDescriptor().m_validationMode == AZ::RHI::ValidationMode::Enabled)
+        {
+            AZ_Printf("OpenXRVk", "Vulkan device extensions to enable: (%i)\n", extensions.size());
+            for (const AZStd::string& extension : extensions)
+            {
+                AZ_Printf("OpenXRVk", "Name=%s\n", extension.c_str());
+            }
+        }
+
         VkPhysicalDeviceFeatures features{};
         memcpy(&features, xrDeviceCreateInfo.vulkanCreateInfo->pEnabledFeatures, sizeof(features));
 
@@ -82,8 +91,12 @@ namespace OpenXRVk
         }
 
         // Now that we have created the device, load the function pointers for it.
+        // NOTE: When passing a physical device to Vulkan glad loader it uses 'vkEnumerateDeviceExtensionProperties'
+        // to obtain device's extension, but that list doesn't match with the list returned by 'xrGetVulkanDeviceExtensionsKHR'
+        // which is used for OpenXR. This discrepancy results in the context indicating some extensions are available when they
+        // are really not supporte in OpenXR environment. To surpass this issue we're not passing the physical device.
         bool functionsLoaded = xrVkInstance->GetFunctionLoader().LoadProcAddresses(
-            &xrVkInstance->GetContext(), xrVkInstance->GetNativeInstance(), xrVkInstance->GetActivePhysicalDevice(), m_xrVkDevice);
+            &xrVkInstance->GetContext(), xrVkInstance->GetNativeInstance(), VK_NULL_HANDLE/*xrVkInstance->GetActivePhysicalDevice()*/, m_xrVkDevice);
         m_context = xrVkInstance->GetContext();
         if (!functionsLoaded)
         {
@@ -94,6 +107,7 @@ namespace OpenXRVk
 
         //Populate the output data of the descriptor
         xrDeviceDescriptor->m_outputData.m_xrVkDevice = m_xrVkDevice;
+        xrDeviceDescriptor->m_outputData.m_context = m_context;
 
         return AZ::RHI::ResultCode::Success;
     }
