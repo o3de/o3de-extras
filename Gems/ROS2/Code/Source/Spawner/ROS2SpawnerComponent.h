@@ -47,6 +47,7 @@ namespace ROS2
         const AZ::Transform& GetDefaultSpawnPose() const override;
 
     private:
+        int m_counter = 1;
         AZStd::unordered_map<AZStd::string, AZ::Data::Asset<AzFramework::Spawnable>> m_spawnables;
         AZStd::unordered_map<AZStd::string, AzFramework::EntitySpawnTicket> m_tickets;
 

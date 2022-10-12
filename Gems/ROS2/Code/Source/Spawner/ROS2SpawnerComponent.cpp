@@ -174,8 +174,7 @@ namespace ROS2
         auto* transformInterface = root->FindComponent<AzFramework::TransformComponent>();
         transformInterface->SetWorldTM(transform);
 
-        static int counter = 1;
-        AZStd::string instanceName = AZStd::string::format("%s_%d", spawnable_name.c_str(), counter++);
+        AZStd::string instanceName = AZStd::string::format("%s_%d", spawnable_name.c_str(), m_counter++);
         for (AZ::Entity* entity : view)
         { // Update name for the first entity with ROS2Frame in hierarchy (left to right)
             const auto* frameComponent = Utils::GetGameOrEditorComponent<ROS2FrameComponent>(entity);
