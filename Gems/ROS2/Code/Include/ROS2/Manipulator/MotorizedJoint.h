@@ -7,7 +7,7 @@
  */
 #pragma once
 
-#include "VehicleDynamics/DriveModels/PidConfiguration.h"
+#include "ROS2/VehicleDynamics/DriveModels/PidConfiguration.h"
 #include <AzCore/Component/Component.h>
 #include <AzCore/Component/TickBus.h>
 
@@ -48,6 +48,12 @@ namespace ROS2
         //! For steady state should be close to setpoint
         //! @returns current position  in meters for linear joints and radians for angular
         float GetCurrentPosition() const;
+
+        //! Get a degree of freedom direction.
+        AZ::Vector3 GetDir() const
+        {
+            return m_jointDir;
+        };
 
     private:
         float ComputeMeasurement(AZ::ScriptTimePoint time);

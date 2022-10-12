@@ -133,11 +133,12 @@ namespace ROS2
         {
             AZ_Printf(
                 "MotorizedJoint",
-                " %s | pos: %f | err: %f | cntrl : %f |",
+                " %s | pos: %f | err: %f | cntrl : %f | set : %f |",
                 GetEntity()->GetName().c_str(),
                 measurement,
                 control_position_error,
-                speed_control);
+                speed_control,
+                m_setpoint);
         }
         SetVelocity(speed_control, deltaTime);
     }
@@ -189,17 +190,18 @@ namespace ROS2
 
     void MotorizedJoint::ApplyLinVelRigidBodyImpulse(float velocity, float deltaTime)
     {
-        AZ::Transform transform;
-        AZ::TransformBus::EventResult(transform, this->GetEntityId(), &AZ::TransformBus::Events::GetLocalTM);
+        AZ::Quaternion transform;
+        AZ::TransformBus::EventResult(transform, this->GetEntityId(), &AZ::TransformBus::Events::GetWorldRotationQuaternion);
         auto force_impulse = transform.TransformVector(m_jointDir * velocity);
+        AZ_Printf("ApplyLinVelRigidBodyImpulse", "%f %f %f ", force_impulse.GetX(), force_impulse.GetY(), force_impulse.GetZ());
         Physics::RigidBodyRequestBus::Event(
             this->GetEntityId(), &Physics::RigidBodyRequests::ApplyLinearImpulse, force_impulse * deltaTime);
     }
 
     void MotorizedJoint::ApplyLinVelRigidBody(float velocity, float deltaTime)
     {
-        AZ::Transform transform;
-        AZ::TransformBus::EventResult(transform, this->GetEntityId(), &AZ::TransformBus::Events::GetLocalTM);
+        AZ::Quaternion transform;
+        AZ::TransformBus::EventResult(transform, this->GetEntityId(), &AZ::TransformBus::Events::GetWorldRotationQuaternion);
         AZ::Vector3 currentVelocity;
         auto transformed_velocity_increment = transform.TransformVector(m_jointDir * velocity);
         Physics::RigidBodyRequestBus::EventResult(currentVelocity, this->GetEntityId(), &Physics::RigidBodyRequests::GetLinearVelocity);

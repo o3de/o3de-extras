@@ -72,7 +72,6 @@ set(FILES
         Source/Converters/URDF/ToFBX/UrdfToFbxConverter.cpp
         Source/Converters/URDF/ToFBX/UrdfToFbxConverter.h
         Source/VehicleDynamics/DriveModels/PidConfiguration.cpp
-        Source/VehicleDynamics/DriveModels/PidConfiguration.h
         Source/VehicleDynamics/DriveModels/AckermannDriveModel.cpp
         Source/VehicleDynamics/DriveModels/AckermannDriveModel.h
         Source/VehicleDynamics/AxleConfiguration.cpp

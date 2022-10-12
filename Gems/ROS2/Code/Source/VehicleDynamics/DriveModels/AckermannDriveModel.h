@@ -7,8 +7,8 @@
  */
 #pragma once
 
+#include "ROS2/VehicleDynamics/DriveModels/PidConfiguration.h"
 #include "VehicleDynamics/DriveModel.h"
-#include "VehicleDynamics/DriveModels/PidConfiguration.h"
 #include "VehicleDynamics/VehicleConfiguration.h"
 #include "VehicleDynamics/VehicleInputsState.h"
 #include "VehicleDynamics/WheelDynamicsData.h"
