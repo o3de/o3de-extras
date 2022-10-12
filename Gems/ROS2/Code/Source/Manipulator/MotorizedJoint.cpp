@@ -7,7 +7,9 @@
  */
 
 #include "ROS2/Manipulator/MotorizedJoint.h"
-
+#include <AzCore/Component/Entity.h>
+#include <AzCore/Component/TransformBus.h>
+#include <AzCore/Serialization/EditContext.h>
 #include "AzFramework/Physics/Components/SimulatedBodyComponentBus.h"
 #include <AzFramework/Physics/RigidBodyBus.h>
 

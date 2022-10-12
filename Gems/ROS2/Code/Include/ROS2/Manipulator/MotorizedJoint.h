@@ -10,6 +10,8 @@
 #include "ROS2/VehicleDynamics/DriveModels/PidConfiguration.h"
 #include <AzCore/Component/Component.h>
 #include <AzCore/Component/TickBus.h>
+#include <AzCore/Math/Transform.h>
+#include <AzCore/Math/Vector2.h>
 
 namespace ROS2
 {
