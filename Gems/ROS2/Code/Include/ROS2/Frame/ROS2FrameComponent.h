@@ -57,8 +57,8 @@ namespace ROS2
         const AZ::Transform& GetFrameTransform() const;
 
         //! Global frame name in ros2 ecosystem.
-        //! @return The name of the global frame. It is typically "odom", "map", "world".
-        static const char* GetGlobalFrameName(); // TODO - allow to configure global frame in a specialized component
+        //! @return The name of the global frame with namespace attached. It is typically "odom", "map", "world".
+        AZStd::string GetGlobalFrameName() const; // TODO - allow to configure global frame in a specialized component
 
     private:
         void OnTick(float deltaTime, AZ::ScriptTimePoint time) override;

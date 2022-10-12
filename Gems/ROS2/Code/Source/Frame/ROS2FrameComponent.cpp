@@ -107,10 +107,10 @@ namespace ROS2
         m_ros2Transform->Publish(GetFrameTransform());
     }
 
-    const char* ROS2FrameComponent::GetGlobalFrameName()
+    AZStd::string ROS2FrameComponent::GetGlobalFrameName() const
     {
         // TODO - parametrize this (typically: "odom", "world" and sometimes "map")
-        return "odom";
+        return ROS2Names::GetNamespacedName(GetNamespace(), AZStd::string("odom"));
     }
 
     bool ROS2FrameComponent::IsTopLevel() const
