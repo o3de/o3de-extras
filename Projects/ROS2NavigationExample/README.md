@@ -17,9 +17,7 @@ Refer to the [O3DE System Requirements](https://www.o3de.org/docs/welcome-guide/
 This project has the following dependencies:
 
 - [O3DE](https://github.com/o3de/o3de)
-  -  Should work with `stabilization/2210` as well as `develop` branch and newest releases. The project was tested with Galactic with commit `#381a6e0f`.
 - [ROS2 Gem](https://github.com/RobotecAI/o3de-ros2-gem)
-  - `develop` branch (the default) should work. The project was tested with Galactic with version tag `0.3`.
   - ROS 2 (Galactic or Humble) itself is also required, see [Gem Requirements](https://github.com/RobotecAI/o3de-ros2-gem#requirements)  
 - [Loft Scene Sample](https://github.com/aws-lumberyard/loft-arch-vis-sample)
   - `development` branch (the default) should work.
@@ -32,10 +30,12 @@ The following steps will assume the following
 
 - The instructions will be based off of a common base folder: $DEMO_BASE. For the steps below, we will use DEMO_BASE of ~/ for simplicty. 
 - This current project has been fetched to $DEMO_BASE
-- You have [ROS2 Galactic](https://docs.ros.org/en/galactic/Installation/Ubuntu-Install-Debians.html) installed and sourced 
-  - for debian package Galactic installation, in your bash console, run `source /opt/ros/galactic/setup.bash`
+- You have [ROS2 Galactic](https://docs.ros.org/en/galactic/Installation/Ubuntu-Install-Debians.html) or [ROS2 Humble](https://docs.ros.org/en/humble/Installation/Ubuntu-Install-Debians.html) installed and sourced 
+  - for debian package Galactic installation, in your bash console, run:
+     - For ROS2 Galactic: `source /opt/ros/galactic/setup.bash` 
+     - For ROS2 Humble: `source /opt/ros/humble/setup.bash`
   - you could also add this line to your `.profile` or `.bashrc`
-  - check if ROS 2 is sourced in your current console with `echo $ROS_DISTRO`. You should see `galactic`.
+  - check if ROS 2 is sourced in your current console with `echo $ROS_DISTRO`. You should see `galactic` or `humble`.
 
 ### 1. Clone O3DE (or install) and register the engine
 
@@ -45,7 +45,6 @@ $ cd $DEMO_BASE
 ~$ cd o3de
 ~/o3de$ git lfs install
 ~/o3de$ git lfs pull
-~/o3de$ git checkout 381a6e0f
 ~/o3de$ python/get_python.sh
 ~/o3de$ scripts/o3de.sh register --this-engine
 ```
@@ -56,7 +55,6 @@ $ cd $DEMO_BASE
 ~$ cd $DEMO_BASE
 ~$ git clone https://github.com/RobotecAI/o3de-ros2-gem.git
 ~$ cd o3de-ros2-gem
-~/o3de-ros2-gem$ git checkout 0.3
 ~/o3de-ros2-gem$ $DEMO_BASE/o3de/scripts/o3de.sh register --gem-path $DEMO_BASE/o3de-ros2-gem
 ```
 
@@ -103,7 +101,7 @@ These packages are required to run ROS 2 navigation stack for our robot. For ROS
 
 ```
 source /opt/ros/galactic/setup.bash
-sudo apt install -y ros-$ROS_DISTRO-slam-toolbox ros-$ROS_DISTRO-navigation2 ros-$ROS_DISTRO-nav2-bringup ros-$ROS_DISTRO-pointcloud-to-laserscan
+sudo apt install -y ros-${ROS_DISTRO}-slam-toolbox ros-${ROS_DISTRO}-navigation2 ros-${ROS_DISTRO}-nav2-bringup ros-${ROS_DISTRO}-pointcloud-to-laserscan ros-${ROS_DISTRO}-ackermann-msgs ros-${ROS_DISTRO}-control-toolbox ros-${ROS_DISTRO}-gazebo-msgs
 ```
 
 ### 2. Run the simulation
