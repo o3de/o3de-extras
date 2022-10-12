@@ -68,7 +68,6 @@ namespace ROS2
         //! Whether transformation to parent frame can change during the simulation, or is fixed.
         bool IsDynamic() const;
 
-        AZ::TransformInterface* GetEntityTransformInterface() const;
         const ROS2FrameComponent* GetParentROS2FrameComponent() const;
 
         //! If parent entity does not exist or does not have a ROS2FrameComponent, return ROS2 default global frame.

@@ -18,6 +18,52 @@
 
 namespace ROS2
 {
+    namespace Internal
+    {
+        AZ::TransformInterface* GetEntityTransformInterface(const AZ::Entity* entity)
+        {
+            // TODO - instead, use EditorFrameComponent to handle Editor-context queries and here only use the "Game" version
+            if (!entity)
+            {
+                AZ_Error("GetEntityTransformInterface", false, "Invalid entity!");
+                return nullptr;
+            }
+
+            auto* interface = entity->FindComponent<AzFramework::TransformComponent>();
+            if (interface)
+            {
+                return interface;
+            }
+            return entity->FindComponent<AzToolsFramework::Components::TransformComponent>();
+        }
+
+        const ROS2FrameComponent* GetFirstROS2FrameAncestor(const AZ::Entity* entity)
+        {
+            AZ::TransformInterface* entityTransformInterface = GetEntityTransformInterface(entity);
+            if (!entityTransformInterface)
+            {
+                AZ_Error("GetFirstROS2FrameAncestor", false, "Invalid transform interface!");
+                return nullptr;
+            }
+
+            AZ::EntityId parentEntityId = entityTransformInterface->GetParentId();
+            if (!parentEntityId.IsValid())
+            { // We have reached the top level, there is no parent entity so there can be no parent ROS2Frame
+                return nullptr;
+            }
+
+            const AZ::Entity* parentEntity = AzToolsFramework::GetEntityById(parentEntityId);
+            auto* component = Utils::GetGameOrEditorComponent<ROS2FrameComponent>(parentEntity);
+            if (component == nullptr)
+            { // Parent entity has no ROS2Frame, but there can still be a ROS2Frame in its ancestors
+                return GetFirstROS2FrameAncestor(parentEntity);
+            }
+
+            // Found the component!
+            return component;
+        }
+    } // namespace Internal
+
     void ROS2FrameComponent::Activate()
     {
         m_namespaceConfiguration.PopulateNamespace(IsTopLevel(), GetEntity()->GetName());
@@ -79,41 +125,17 @@ namespace ROS2
 
     const ROS2FrameComponent* ROS2FrameComponent::GetParentROS2FrameComponent() const
     {
-        auto* transformInterface = GetEntityTransformInterface();
-        if (!transformInterface)
-        {
-            AZ_Error("GetParentROS2FrameComponent", false, "No transform interface, but it is required!");
-            return nullptr;
-        }
-
-        if (AZ::EntityId parentEntityId = GetEntityTransformInterface()->GetParentId(); parentEntityId.IsValid())
-        {
-            const AZ::Entity* parentEntity = AzToolsFramework::GetEntityById(parentEntityId);
-            auto* component = Utils::GetGameOrEditorComponent<ROS2FrameComponent>(parentEntity);
-            return component;
-        }
-        return nullptr;
+        return Internal::GetFirstROS2FrameAncestor(GetEntity());
     }
 
     const AZ::Transform& ROS2FrameComponent::GetFrameTransform() const
     {
-        auto transformInterface = GetEntityTransformInterface();
+        auto transformInterface = Internal::GetEntityTransformInterface(GetEntity());
         if (GetParentROS2FrameComponent() != nullptr)
         {
             return transformInterface->GetLocalTM();
         }
         return transformInterface->GetWorldTM();
-    }
-
-    AZ::TransformInterface* ROS2FrameComponent::GetEntityTransformInterface() const
-    {
-        // TODO - instead, use EditorFrameComponent to handle Editor-context queries and here only use the "Game" version
-        auto* interface = GetEntity()->FindComponent<AzFramework::TransformComponent>();
-        if (interface)
-        {
-            return interface;
-        }
-        return GetEntity()->FindComponent<AzToolsFramework::Components::TransformComponent>();
     }
 
     AZStd::string ROS2FrameComponent::GetParentFrameID() const
