@@ -22,9 +22,7 @@ def generate_launch_description():
             package='rviz2',
             executable='rviz2',
             name='slam',
-            output={
-                'stdout': 'log',
-            },
+            output='log',
             arguments=[
                 '-d', str(pathlib.Path(__file__).parent.absolute().joinpath('config', 'config.rviz')),
             ]
