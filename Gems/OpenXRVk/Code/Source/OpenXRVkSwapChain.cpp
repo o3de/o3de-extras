@@ -11,6 +11,8 @@
 #include <AzCore/Casting/numeric_cast.h>
 #include <AzCore/std/containers/set.h>
 #include <AzCore/std/containers/vector.h>
+#include <AzCore/Settings/SettingsRegistry.h>
+#include <AzCore/Settings/SettingsRegistryMergeUtils.h>
 #include <OpenXRVk/OpenXRVkDevice.h>
 #include <OpenXRVk/OpenXRVkInstance.h>
 #include <OpenXRVk/OpenXRVkSession.h>
@@ -158,10 +160,20 @@ namespace OpenXRVk
                 AZ_Printf("OpenXRVk", "Swapchain Formats: %s\n", swapchainFormatsString.c_str());
             }
 
+            double xrViewResolutionScale = 1.0;
+            if (AZ::SettingsRegistryInterface* settingsRegistry = AZ::SettingsRegistry::Get())
+            {
+                AZ::SettingsRegistryMergeUtils::PlatformGet(*settingsRegistry, xrViewResolutionScale,
+                    "/O3DE/Atom", "OpenXRViewResolutionScale");
+            }
+
             // Create a swapchain for each view.
             for (uint32_t i = 0; i < m_numViews; i++)
             {
-                const XrViewConfigurationView& configView = m_configViews[i];
+                XrViewConfigurationView& configView = m_configViews[i];
+
+                configView.recommendedImageRectWidth = static_cast<uint32_t>(static_cast<double>(configView.recommendedImageRectWidth) * xrViewResolutionScale);
+                configView.recommendedImageRectHeight = static_cast<uint32_t>(static_cast<double>(configView.recommendedImageRectHeight) * xrViewResolutionScale);
 
                 if (GetDescriptor().m_validationMode == AZ::RHI::ValidationMode::Enabled)
                 {
