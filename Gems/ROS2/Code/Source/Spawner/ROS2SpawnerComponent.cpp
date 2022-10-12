@@ -105,10 +105,10 @@ namespace ROS2
 
     void ROS2SpawnerComponent::SpawnEntity(const SpawnEntityRequest request, SpawnEntityResponse response)
     {
-        AZStd::string_view spawnable_name(request->name.c_str(), request->name.size());
+        AZStd::string spawnable_name(request->name.c_str());
         // xml parameter of the request is used here like a regular string and stores name of a spawn point
         // todo: use xml format in this parameter
-        AZStd::string_view spawn_point_name(request->xml.c_str(), request->xml.size());
+        AZStd::string spawn_point_name(request->xml.c_str());
 
         auto spawn_points = GetSpawnPoints();
 
