@@ -161,10 +161,11 @@ namespace OpenXRVk
             }
 
             double xrViewResolutionScale = 1.0;
-            if (AZ::SettingsRegistryInterface* settingsRegistry = AZ::SettingsRegistry::Get())
+            if (auto* settingsRegistry = AZ::SettingsRegistry::Get();
+                settingsRegistry != nullptr)
             {
                 AZ::SettingsRegistryMergeUtils::PlatformGet(*settingsRegistry, xrViewResolutionScale,
-                    "/O3DE/Atom", "OpenXRViewResolutionScale");
+                    "/O3DE/Atom/OpenXR", "ViewResolutionScale");
             }
 
             // Create a swapchain for each view.
