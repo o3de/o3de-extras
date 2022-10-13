@@ -165,7 +165,7 @@
                     "Controller": {
                         "Configuration": {
                             "Field of View": 80.0,
-                            "EditorEntityId": 6533622865231202314
+                            "EditorEntityId": 15257943457864212316
                         }
                     }
                 },
@@ -193,14 +193,14 @@
                     "Parent Entity": "Entity_[1176639161715]",
                     "Transform Data": {
                         "Translate": [
-                            -2.2044129371643066,
-                            -1.8803668022155762,
-                            2.2697277069091797
+                            -2.2034757137298584,
+                            -1.8803786039352417,
+                            2.269624948501587
                         ],
                         "Rotate": [
-                            -18.422677993774414,
-                            10.049921989440918,
-                            -27.649707794189453
+                            -18.42388153076172,
+                            10.038938522338867,
+                            -27.622568130493164
                         ]
                     }
                 },
@@ -210,7 +210,16 @@
                 },
                 "Component_[5265045084611556958]": {
                     "$type": "EditorDisabledCompositionComponent",
-                    "Id": 5265045084611556958
+                    "Id": 5265045084611556958,
+                    "DisabledComponents": [
+                        {
+                            "$type": "GenericComponentWrapper",
+                            "Id": 7255796294953281766,
+                            "m_template": {
+                                "$type": "FlyCameraInputComponent"
+                            }
+                        }
+                    ]
                 },
                 "Component_[7087500764311260607]": {
                     "$type": "AZ::Render::EditorSsaoComponent",
@@ -220,11 +229,11 @@
                     "$type": "EditorPendingCompositionComponent",
                     "Id": 7169798125182238623
                 },
-                "Component_[7255796294953281766]": {
+                "Component_[8829265314591669444]": {
                     "$type": "GenericComponentWrapper",
-                    "Id": 7255796294953281766,
+                    "Id": 8829265314591669444,
                     "m_template": {
-                        "$type": "FlyCameraInputComponent"
+                        "$type": "OpenXRVk::XRCameraMovementComponent"
                     }
                 },
                 "Component_[8866210352157164042]": {
@@ -2029,7 +2038,7 @@
                                 },
                                 "assetHint": "assets/textures/reflectionprobes/refprobmain__5671e21b-ba4c-48c7-8e30-8f8a0428ab82__iblspecularcm256.dds.streamingimage"
                             },
-                            "EntityId": 12192310272083875772,
+                            "EntityId": 5925876877174037986,
                             "ShowVisualization": false,
                             "RenderExposure": 1.0
                         }
