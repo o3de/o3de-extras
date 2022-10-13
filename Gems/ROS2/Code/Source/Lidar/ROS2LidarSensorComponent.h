@@ -52,7 +52,8 @@ namespace ROS2
 
         AZStd::vector<AZ::Vector3> m_lastScanResults;
 
-        // EntityId to ignore in lidar simulation (e.g. do not detect lidar own physical collider)
-        AZ::EntityId m_lidarTransparentEntityId;
+        // TODO - change to AzPhysics::CollisionLayer, use mask instead of single layer
+        unsigned int m_ignoredLayerIndex = 0;
+        bool m_ignoreLayer = false;
     };
 } // namespace ROS2

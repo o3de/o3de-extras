@@ -12,6 +12,7 @@
 #include <AzFramework/Physics/Common/PhysicsSceneQueries.h>
 #include <AzFramework/Physics/PhysicsScene.h>
 #include <AzFramework/Physics/PhysicsSystem.h>
+#include <AzFramework/Physics/Shape.h>
 
 namespace ROS2
 {
@@ -22,7 +23,11 @@ namespace ROS2
 
     // A simplified, non-optimized first version. TODO - generalize results (fields)
     AZStd::vector<AZ::Vector3> LidarRaycaster::PerformRaycast(
-        const AZ::Vector3& start, const AZStd::vector<AZ::Vector3>& directions, float distance)
+        const AZ::Vector3& start,
+        const AZStd::vector<AZ::Vector3>& directions,
+        float distance,
+        bool ignoreLayer,
+        unsigned int ignoredLayerIndex)
     {
         AZStd::vector<AZ::Vector3> results;
         if (m_sceneHandle == AzPhysics::InvalidSceneHandle)
@@ -41,9 +46,9 @@ namespace ROS2
             request->m_distance = distance;
             request->m_reportMultipleHits = false;
             request->m_filterCallback =
-                [transparentEntityId = m_lidarTransparentEntityId](const AzPhysics::SimulatedBody* simBody, const Physics::Shape*)
+                [ignoreLayer, ignoredLayerIndex](const AzPhysics::SimulatedBody* simBody, const Physics::Shape* shape)
             {
-                if (simBody->GetEntityId() == transparentEntityId)
+                if (ignoreLayer && (shape->GetCollisionLayer().GetIndex() == ignoredLayerIndex))
                 {
                     return AzPhysics::SceneQuery::QueryHitType::None;
                 }
@@ -65,10 +70,5 @@ namespace ROS2
             }
         }
         return results;
-    }
-
-    void LidarRaycaster::setLidarTransparentEntity(const AZ::EntityId& lidarTransparentEntityId)
-    {
-        m_lidarTransparentEntityId = lidarTransparentEntityId;
     }
 } // namespace ROS2

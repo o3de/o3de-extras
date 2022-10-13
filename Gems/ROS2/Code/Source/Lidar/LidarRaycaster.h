@@ -32,22 +32,20 @@ namespace ROS2
         //! in real sensors.
         //! @param directions Directions in which to shoot rays. These should be generated from Lidar configuration.
         //! @param distance Maximum distance for ray-casting.
+        //! @param ignoreLayer Should a specified collision layer be ignored
+        //! @param ignoredLayerIndex Index of collision layer to be ignored
         //! @return Hits of raycast. The returned vector size can be anything between zero and size of directions.
         //! No hits further than distance will be reported.
         // TODO - different starting points for rays, distance from reference point, noise models, rotating mirror sim, other
         // TODO - customized settings. Encapsulate in lidar definition and pass in constructor, update transform.
-        AZStd::vector<AZ::Vector3> PerformRaycast(const AZ::Vector3& start, const AZStd::vector<AZ::Vector3>& directions, float distance);
-
-        //! Set the lidar entity to use to filter out this lidar's collider(s) from ray-casting scene.
-        //! For example, if a lidar prefab contains a physical model with a collider, we would like ray-casts to
-        //! ignore it completely. This is a simplification due to lack of handling of transparency (e.g. lidar front glass).
-        //! @param lidarTransparentEntity entity to ignore in ray-casts. Note that all colliders within the entity will be ignored.
-        //! @note in robotics, self-detection (or ego-detection) is means detecting any part of the robot.
-        //! As such, it should be simulated to match the real data (which will also initially include self-detection).
-        void setLidarTransparentEntity(const AZ::EntityId& lidarTransparentEntityId);
+        AZStd::vector<AZ::Vector3> PerformRaycast(
+            const AZ::Vector3& start,
+            const AZStd::vector<AZ::Vector3>& directions,
+            float distance,
+            bool ignoreLayer,
+            unsigned int ignoredLayerIndex);
 
     private:
         AzPhysics::SceneHandle m_sceneHandle;
-        AZ::EntityId m_lidarTransparentEntityId;
     };
 } // namespace ROS2

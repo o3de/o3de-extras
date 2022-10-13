@@ -34,8 +34,9 @@ namespace ROS2
             serialize->Class<ROS2LidarSensorComponent, ROS2SensorComponent>()
                 ->Version(1)
                 ->Field("lidarModel", &ROS2LidarSensorComponent::m_lidarModel)
-                ->Field("LidarTransparentEntityId", &ROS2LidarSensorComponent::m_lidarTransparentEntityId)
-                ->Field("LidarParameters", &ROS2LidarSensorComponent::m_lidarParameters);
+                ->Field("LidarParameters", &ROS2LidarSensorComponent::m_lidarParameters)
+                ->Field("IgnoreLayer", &ROS2LidarSensorComponent::m_ignoreLayer)
+                ->Field("IgnoredLayerIndex", &ROS2LidarSensorComponent::m_ignoredLayerIndex);
 
             if (AZ::EditContext* ec = serialize->GetEditContext())
             {
@@ -49,15 +50,20 @@ namespace ROS2
                     // TODO - show lidar template field values (read only) - see Reflect for LidarTemplate
                     ->DataElement(
                         AZ::Edit::UIHandlers::EntityId,
-                        &ROS2LidarSensorComponent::m_lidarTransparentEntityId,
-                        "Lidar-transparent Entity",
-                        "Entity to be transparent for the lidar. If not set, use this component's entity")
-                    ->DataElement(
-                        AZ::Edit::UIHandlers::EntityId,
                         &ROS2LidarSensorComponent::m_lidarParameters,
                         "Lidar parameters",
                         "Configuration of Generic lidar")
-                    ->Attribute(AZ::Edit::Attributes::Visibility, &ROS2LidarSensorComponent::IsConfigurationVisible);
+                    ->Attribute(AZ::Edit::Attributes::Visibility, &ROS2LidarSensorComponent::IsConfigurationVisible)
+                    ->DataElement(
+                        AZ::Edit::UIHandlers::ComboBox,
+                        &ROS2LidarSensorComponent::m_ignoreLayer,
+                        "Ignore layer",
+                        "Should we ignore selected layer index")
+                    ->DataElement(
+                        AZ::Edit::UIHandlers::Default,
+                        &ROS2LidarSensorComponent::m_ignoredLayerIndex,
+                        "Ignored layer index",
+                        "Layer index to ignore");
             }
         }
     }
@@ -135,14 +141,6 @@ namespace ROS2
             m_drawQueue = AZ::RPI::AuxGeomFeatureProcessorInterface::GetDrawQueueForScene(entityScene);
         }
 
-        if (m_lidarTransparentEntityId.IsValid())
-        {
-            m_lidarRaycaster.setLidarTransparentEntity(m_lidarTransparentEntityId);
-        }
-        else
-        {
-            m_lidarRaycaster.setLidarTransparentEntity(GetEntityId());
-        }
         ROS2SensorComponent::Activate();
     }
 
@@ -161,7 +159,7 @@ namespace ROS2
         AZ::Vector3 start = entityTransform->GetWorldTM().GetTranslation();
         start.SetZ(start.GetZ());
 
-        m_lastScanResults = m_lidarRaycaster.PerformRaycast(start, directions, distance);
+        m_lastScanResults = m_lidarRaycaster.PerformRaycast(start, directions, distance, m_ignoreLayer, m_ignoredLayerIndex);
         if (m_lastScanResults.empty())
         {
             AZ_TracePrintf("Lidar Sensor Component", "No results from raycast\n");
