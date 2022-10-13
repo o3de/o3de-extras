@@ -8,6 +8,8 @@
 
 #pragma once
 
+#include <AzCore/Console/IConsole.h>
+
 #include <AzFramework/Input/Buses/Requests/InputHapticFeedbackRequestBus.h>
 #include <AzFramework/Input/Channels/InputChannelAnalog.h>
 #include <AzFramework/Input/Channels/InputChannelAxis1D.h>
@@ -17,7 +19,17 @@
 #include <AzFramework/Input/Channels/InputChannelQuaternion.h>
 #include <AzFramework/Input/Devices/InputDevice.h>
 
-////////////////////////////////////////////////////////////////////////////////////////////////////
+#if !defined(_RELEASE)
+    #include <AzFramework/Entity/EntityDebugDisplayBus.h>
+
+    namespace OpenXRVk
+    {
+        AZ_CVAR_EXTERNED(bool, xr_DebugDrawInput);
+
+    } // namespace OpenXRVk
+#endif // !_RELEASE
+
+
 namespace AzFramework
 {
     ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -28,6 +40,9 @@ namespace AzFramework
     class InputDeviceXRController
         : public InputDevice
         , public InputHapticFeedbackRequestBus::Handler
+#if !defined(_RELEASE)
+        , public AzFramework::DebugDisplayEventBus::Handler
+#endif // !_RELEASE
     {
     public:
         ////////////////////////////////////////////////////////////////////////////////////////////
@@ -236,6 +251,11 @@ namespace AzFramework
             virtual AZStd::string GetLeftHandSubPath() const = 0;
             virtual AZStd::string GetRightHandSubPath() const = 0;
 
+            ////////////////////////////////////////////////////////////////////////////////////////
+            //! Register a callback function for this implementation to call
+            //! This callback is called during tick updates and allows for platform code to run
+            //! updates to refresh state of the controller data.
+            //! @param callbackFn The callback function
             using TickCallbackFn = AZStd::function<void()>;
             virtual void RegisterTickCallback(TickCallbackFn callbackFn) = 0;
 
@@ -413,6 +433,12 @@ namespace AzFramework
         Implementation* GetImplementation() const;
 
     protected:
+        ////////////////////////////////////////////////////////////////////////////////////////////
+        // AzFramework::DebugDisplayEventBus interface
+#if !defined(_RELEASE)
+        void DrawGlobalDebugInfo() override;
+#endif // !_RELEASE
+
         static constexpr float s_thumbStickMaxValue{ 1.f };
         static constexpr float s_thumbStickMinValue{ -1.f };
         static constexpr float s_thumbStickCenterValue{ 0.f };

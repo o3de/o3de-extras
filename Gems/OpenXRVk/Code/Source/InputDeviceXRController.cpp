@@ -12,6 +12,18 @@
 #include <AzFramework/Input/Utils/AdjustAnalogInputForDeadZone.h>
 
 
+#if !defined(_RELEASE)
+    namespace OpenXRVk
+    {
+        // Bool cvar to enable/disable debug drawing of xr controller data on screen.
+        // No "on change" function defined here, just read the state of the bool.
+        AZ_CVAR(bool, xr_DebugDrawInput, 0,
+            nullptr, AZ::ConsoleFunctorFlags::Null,
+            "Turn off/on debug drawing of XR Input state");
+    } // namespace OpenXRVk
+#endif // !_RELEASE
+
+
 namespace AzFramework
 {
     ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -234,6 +246,17 @@ namespace AzFramework
     {
         return m_impl.get();
     }
+
+#if !defined(_RELEASE)
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    void InputDeviceXRController::DrawGlobalDebugInfo()
+    {
+        if (OpenXRVk::xr_DebugDrawInput)
+        {
+            // ... draw data to the screen ...
+        }
+    }
+#endif // !_RELEASE
 
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
