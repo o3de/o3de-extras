@@ -16,7 +16,7 @@
 #include <AzFramework/API/ApplicationAPI.h>
 #include <AzFramework/CommandLine/CommandLine.h>
 
-static constexpr char OpenXREnableSetting[] = "/O3DE/Atom/OpenXREnable";
+static constexpr char OpenXREnableSetting[] = "/O3DE/Atom/OpenXR/Enable";
 
 namespace XR
 {
