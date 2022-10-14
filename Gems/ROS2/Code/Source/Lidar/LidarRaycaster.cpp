@@ -75,7 +75,7 @@ namespace ROS2
             }
             else if (m_addPointsMaxRange)
             {
-                results.push_back(directions[i] * distance); // This is already in a local frame
+                results.push_back(globalToLidarTM.TransformPoint(start + directions[i] * distance));
             }
         }
         return results;
