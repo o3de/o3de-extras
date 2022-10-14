@@ -25,6 +25,7 @@ namespace ROS2
     AZStd::vector<AZ::Vector3> LidarRaycaster::PerformRaycast(
         const AZ::Vector3& start,
         const AZStd::vector<AZ::Vector3>& directions,
+        const AZ::Transform& globalToLidarTM,
         float distance,
         bool ignoreLayer,
         unsigned int ignoredLayerIndex)
@@ -69,17 +70,18 @@ namespace ROS2
             const auto& requestResult = requestResults[i];
             if (requestResult.m_hits.size() > 0)
             {
-                results.push_back(requestResult.m_hits[0].m_position);
+                auto globalHitPoint = requestResult.m_hits[0].m_position;
+                results.push_back(globalToLidarTM.TransformPoint(globalHitPoint)); // Transform back to local frame
             }
             else if (m_addPointsMaxRange)
             {
-                results.push_back(directions[i] * distance);
+                results.push_back(directions[i] * distance); // This is already in a local frame
             }
         }
         return results;
     }
 
-    void LidarRaycaster::setAddPointsMaxRange(bool addPointsMaxRange)
+    void LidarRaycaster::SetAddPointsMaxRange(bool addPointsMaxRange)
     {
         m_addPointsMaxRange = addPointsMaxRange;
     }

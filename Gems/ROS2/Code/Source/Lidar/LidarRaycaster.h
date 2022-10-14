@@ -8,6 +8,7 @@
 #pragma once
 
 #include <AzCore/Component/EntityId.h>
+#include <AzCore/Math/Transform.h>
 #include <AzCore/Math/Vector3.h>
 #include <AzCore/std/containers/vector.h>
 #include <AzFramework/Physics/PhysicsScene.h>
@@ -31,6 +32,7 @@ namespace ROS2
         //! @param start Starting point of rays. This is a simplification since there can be multiple starting points
         //! in real sensors.
         //! @param directions Directions in which to shoot rays. These should be generated from Lidar configuration.
+        //! @param globalToLidarTM Transform from global to lidar reference frame.
         //! @param distance Maximum distance for ray-casting.
         //! @param ignoreLayer Should a specified collision layer be ignored
         //! @param ignoredLayerIndex Index of collision layer to be ignored
@@ -41,12 +43,13 @@ namespace ROS2
         AZStd::vector<AZ::Vector3> PerformRaycast(
             const AZ::Vector3& start,
             const AZStd::vector<AZ::Vector3>& directions,
+            const AZ::Transform& globalToLidarTM,
             float distance,
             bool ignoreLayer,
             unsigned int ignoredLayerIndex);
 
-        //! If true the raycaster produces points at maximum range, if no obstacle was hit
-        void setAddPointsMaxRange(bool addPointsMaxRange);
+        //! If true the raycaster will also include points at maximum range when nothing was hit
+        void SetAddPointsMaxRange(bool addPointsMaxRange);
 
     private:
         AzPhysics::SceneHandle m_sceneHandle;
