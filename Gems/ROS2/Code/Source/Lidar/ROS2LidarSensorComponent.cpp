@@ -152,7 +152,7 @@ namespace ROS2
 
     void ROS2LidarSensorComponent::FrequencyTick()
     {
-        float distance = LidarTemplateUtils::GetTemplate(m_lidarModel).m_maxRange;
+        float distance = m_lidarParameters.m_maxRange;
         auto entityTransform = GetEntity()->FindComponent<AzFramework::TransformComponent>(); // TODO - go through ROS2Frame
         const auto directions =
             LidarTemplateUtils::PopulateRayDirections(m_lidarParameters, entityTransform->GetWorldTM().GetEulerRadians());
