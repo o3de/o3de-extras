@@ -25,7 +25,8 @@ namespace ROS2
                 ->Field("Max horizontal angle", &LidarTemplate::m_maxHAngle)
                 ->Field("Min vertical angle", &LidarTemplate::m_minVAngle)
                 ->Field("Max vertical angle", &LidarTemplate::m_maxVAngle)
-                ->Field("Max range", &LidarTemplate::m_maxRange);
+                ->Field("Max range", &LidarTemplate::m_maxRange)
+                ->Field("Max range add points", &LidarTemplate::m_addPointsAtMax);
 
             if (AZ::EditContext* ec = serializeContext->GetEditContext())
             {
@@ -52,7 +53,12 @@ namespace ROS2
                     ->Attribute(AZ::Edit::Attributes::Max, 180.0f)
                     ->DataElement(AZ::Edit::UIHandlers::Default, &LidarTemplate::m_maxRange, "Max range", "Maximum beam range [m]")
                     ->Attribute(AZ::Edit::Attributes::Min, 0.0f)
-                    ->Attribute(AZ::Edit::Attributes::Max, 1000.0f);
+                    ->Attribute(AZ::Edit::Attributes::Max, 1000.0f)
+                    ->DataElement(
+                        AZ::Edit::UIHandlers::Default,
+                        &LidarTemplate::m_addPointsAtMax,
+                        "Points at Max",
+                        "If set true LiDAR will produce points at max range for free space");
             }
         }
     }

@@ -45,7 +45,11 @@ namespace ROS2
             bool ignoreLayer,
             unsigned int ignoredLayerIndex);
 
+        //! If true the raycaster produces points at maximum range, if no obstacle was hit
+        void setAddPointsMaxRange(bool addPointsMaxRange);
+
     private:
         AzPhysics::SceneHandle m_sceneHandle;
+        bool m_addPointsMaxRange{ false };
     };
 } // namespace ROS2

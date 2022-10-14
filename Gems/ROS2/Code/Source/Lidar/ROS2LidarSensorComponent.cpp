@@ -140,7 +140,7 @@ namespace ROS2
             auto* entityScene = AZ::RPI::Scene::GetSceneForEntityId(GetEntityId());
             m_drawQueue = AZ::RPI::AuxGeomFeatureProcessorInterface::GetDrawQueueForScene(entityScene);
         }
-
+        m_lidarRaycaster.setAddPointsMaxRange(m_lidarParameters.m_addPointsAtMax);
         ROS2SensorComponent::Activate();
     }
 

@@ -38,5 +38,6 @@ namespace ROS2
         unsigned int m_layers = 0;
         unsigned int m_numberOfIncrements = 0;
         float m_maxRange = 0.0f;
+        bool m_addPointsAtMax = false;
     };
 } // namespace ROS2

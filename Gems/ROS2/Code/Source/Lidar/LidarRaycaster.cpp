@@ -38,6 +38,7 @@ namespace ROS2
 
         AzPhysics::SceneQueryRequests requests;
         requests.reserve(directions.size());
+        results.reserve(directions.size());
         for (const AZ::Vector3& direction : directions)
         { // NOTE - performance-wise, consider reusing requests
             AZStd::shared_ptr<AzPhysics::RayCastRequest> request = AZStd::make_shared<AzPhysics::RayCastRequest>();
@@ -62,13 +63,25 @@ namespace ROS2
 
         auto* sceneInterface = AZ::Interface<AzPhysics::SceneInterface>::Get();
         auto requestResults = sceneInterface->QuerySceneBatch(m_sceneHandle, requests);
-        for (const auto& requestResult : requestResults)
+        AZ_Assert(requestResults.size() == directions.size(), "request size should be equal to directions size");
+        for (int i = 0; i < requestResults.size(); i++)
         { // TODO - check flag for SceneQuery::ResultFlags::Position
+            const auto& requestResult = requestResults[i];
             if (requestResult.m_hits.size() > 0)
             {
                 results.push_back(requestResult.m_hits[0].m_position);
             }
+            else if (m_addPointsMaxRange)
+            {
+                results.push_back(directions[i] * distance);
+            }
         }
         return results;
     }
+
+    void LidarRaycaster::setAddPointsMaxRange(bool addPointsMaxRange)
+    {
+        m_addPointsMaxRange = addPointsMaxRange;
+    }
+
 } // namespace ROS2
