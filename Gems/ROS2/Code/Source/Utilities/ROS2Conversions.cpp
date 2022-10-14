@@ -51,4 +51,24 @@ namespace ROS2
         pose.orientation = ToROS2Quaternion(aztransform.GetRotation());
         return pose;
     }
+
+    AZ::Transform ROS2Conversions::FromROS2Pose(const geometry_msgs::msg::Pose& ros2pose)
+    {
+        return { FromROS2Point(ros2pose.position), FromROS2Quaternion(ros2pose.orientation), 1.0f };
+    }
+
+    AZ::Vector3 ROS2Conversions::FromROS2Point(const geometry_msgs::msg::Point& ros2point)
+    {
+        return AZ::Vector3(ros2point.x, ros2point.y, ros2point.z);
+    }
+
+    AZ::Quaternion ROS2Conversions::FromROS2Quaternion(const geometry_msgs::msg::Quaternion& ros2quaternion)
+    {
+        AZ::Quaternion azquaternion;
+        azquaternion.SetX(ros2quaternion.x);
+        azquaternion.SetY(ros2quaternion.y);
+        azquaternion.SetZ(ros2quaternion.z);
+        azquaternion.SetW(ros2quaternion.w);
+        return azquaternion;
+    }
 } // namespace ROS2

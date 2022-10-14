@@ -25,5 +25,8 @@ namespace ROS2
         static geometry_msgs::msg::Point ToROS2Point(const AZ::Vector3& azvector);
         static geometry_msgs::msg::Quaternion ToROS2Quaternion(const AZ::Quaternion& azquaternion);
         static geometry_msgs::msg::Pose ToROS2Pose(const AZ::Transform& aztransform);
+        static AZ::Transform FromROS2Pose(const geometry_msgs::msg::Pose& ros2pose);
+        static AZ::Vector3 FromROS2Point(const geometry_msgs::msg::Point& ros2point);
+        static AZ::Quaternion FromROS2Quaternion(const geometry_msgs::msg::Quaternion& ros2quaternion);
     };
 } // namespace ROS2
