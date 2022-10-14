@@ -7,10 +7,10 @@
  */
 
 #include "ROS2/Manipulator/MotorizedJoint.h"
+#include "AzFramework/Physics/Components/SimulatedBodyComponentBus.h"
 #include <AzCore/Component/Entity.h>
 #include <AzCore/Component/TransformBus.h>
 #include <AzCore/Serialization/EditContext.h>
-#include "AzFramework/Physics/Components/SimulatedBodyComponentBus.h"
 #include <AzFramework/Physics/RigidBodyBus.h>
 
 namespace ROS2
@@ -35,8 +35,9 @@ namespace ROS2
         if (AZ::SerializeContext* serialize = azrtti_cast<AZ::SerializeContext*>(context))
         {
             serialize->Class<MotorizedJoint, AZ::Component>()
-                ->Version(1)
+                ->Version(2)
                 ->Field("JointAxis", &MotorizedJoint::m_jointDir)
+                ->Field("EffortAxis", &MotorizedJoint::m_effortAxis)
                 ->Field("Limit", &MotorizedJoint::m_limits)
                 ->Field("Linear", &MotorizedJoint::m_linear)
                 ->Field("AnimationMode", &MotorizedJoint::m_animationMode)
@@ -46,7 +47,9 @@ namespace ROS2
                 ->Field("TestSinActive", &MotorizedJoint::m_testSinusoidal)
                 ->Field("TestSinAmplitude", &MotorizedJoint::m_sinAmplitude)
                 ->Field("TestSinFreq", &MotorizedJoint::m_sinFreq)
-                ->Field("DebugPrint", &MotorizedJoint::m_debugPrint);
+                ->Field("TestSinDC", &MotorizedJoint::m_sinDC)
+                ->Field("DebugPrint", &MotorizedJoint::m_debugPrint)
+                ->Field("OverrideParent", &MotorizedJoint::m_ParentOverride);
 
             if (AZ::EditContext* ec = serialize->GetEditContext())
             {
@@ -54,7 +57,9 @@ namespace ROS2
                     ->ClassElement(AZ::Edit::ClassElements::EditorData, "MotorizedJoint")
                     ->Attribute(AZ::Edit::Attributes::AppearsInAddComponentMenu, AZ_CRC("Game"))
                     ->Attribute(AZ::Edit::Attributes::Category, "MotorizedJoint")
-                    ->DataElement(AZ::Edit::UIHandlers::Default, &MotorizedJoint::m_jointDir, "Dir.", "Direction of joint.")
+                    ->DataElement(AZ::Edit::UIHandlers::Default, &MotorizedJoint::m_jointDir, "Joint Dir.", "Direction of joint.")
+                    ->DataElement(AZ::Edit::UIHandlers::Default, &MotorizedJoint::m_effortAxis, "Effort Dir.", "Direction of joint.")
+
                     ->DataElement(
                         AZ::Edit::UIHandlers::Default,
                         &MotorizedJoint::m_limits,
@@ -88,7 +93,13 @@ namespace ROS2
                         AZ::Edit::UIHandlers::Default, &MotorizedJoint::m_sinAmplitude, "Amplitude", "Amplitude of sinusoidal test signal.")
                     ->DataElement(
                         AZ::Edit::UIHandlers::Default, &MotorizedJoint::m_sinFreq, "Frequency", "Frequency of sinusoidal test signal.")
-                    ->DataElement(AZ::Edit::UIHandlers::Default, &MotorizedJoint::m_debugPrint, "Debug", "Print debug to console");
+                    ->DataElement(AZ::Edit::UIHandlers::Default, &MotorizedJoint::m_sinDC, "DC", "DC of sinusoidal test signal.")
+                    ->DataElement(AZ::Edit::UIHandlers::Default, &MotorizedJoint::m_debugPrint, "Debug", "Print debug to console")
+                    ->DataElement(
+                        AZ::Edit::UIHandlers::Default,
+                        &MotorizedJoint::m_ParentOverride,
+                        "Step Parent",
+                        "Allows to override a parent to get correct measurement");
             }
         }
     }
@@ -97,7 +108,7 @@ namespace ROS2
         const float measurement = ComputeMeasurement(time);
         if (m_testSinusoidal)
         {
-            m_setpoint = m_sinAmplitude * AZ::Sin(m_sinFreq * time.GetSeconds());
+            m_setpoint = m_sinDC + m_sinAmplitude * AZ::Sin(m_sinFreq * time.GetSeconds());
         }
         const float control_position_error = (m_setpoint + m_zeroOffset) - measurement;
         m_error = control_position_error; // TODO decide if we want to expose this control error.
@@ -148,7 +159,18 @@ namespace ROS2
     float MotorizedJoint::ComputeMeasurement(AZ::ScriptTimePoint time)
     {
         AZ::Transform transform;
-        AZ::TransformBus::EventResult(transform, this->GetEntityId(), &AZ::TransformBus::Events::GetLocalTM);
+        if (!m_ParentOverride.IsValid())
+        {
+            AZ::TransformBus::EventResult(transform, this->GetEntityId(), &AZ::TransformBus::Events::GetLocalTM);
+        }
+        else
+        {
+            AZ::Transform transformStepParent;
+            AZ::TransformBus::EventResult(transformStepParent, m_ParentOverride, &AZ::TransformBus::Events::GetWorldTM);
+            AZ::Transform transformStepChild;
+            AZ::TransformBus::EventResult(transformStepChild, GetEntityId(), &AZ::TransformBus::Events::GetWorldTM);
+            transform = transformStepParent.GetInverse() * transformStepChild;
+        }
         if (m_linear)
         {
             const float last_position = m_currentPosition;
@@ -173,6 +195,7 @@ namespace ROS2
         }
         else
         {
+            deltaTime = AZStd::min(deltaTime, 0.1f); // limit max force for small FPS
             if (m_linear)
             {
                 // TODO decide which approach is better here.
@@ -194,8 +217,7 @@ namespace ROS2
     {
         AZ::Quaternion transform;
         AZ::TransformBus::EventResult(transform, this->GetEntityId(), &AZ::TransformBus::Events::GetWorldRotationQuaternion);
-        auto force_impulse = transform.TransformVector(m_jointDir * velocity);
-        AZ_Printf("ApplyLinVelRigidBodyImpulse", "%f %f %f ", force_impulse.GetX(), force_impulse.GetY(), force_impulse.GetZ());
+        auto force_impulse = transform.TransformVector(m_effortAxis * velocity);
         Physics::RigidBodyRequestBus::Event(
             this->GetEntityId(), &Physics::RigidBodyRequests::ApplyLinearImpulse, force_impulse * deltaTime);
     }
@@ -205,7 +227,7 @@ namespace ROS2
         AZ::Quaternion transform;
         AZ::TransformBus::EventResult(transform, this->GetEntityId(), &AZ::TransformBus::Events::GetWorldRotationQuaternion);
         AZ::Vector3 currentVelocity;
-        auto transformed_velocity_increment = transform.TransformVector(m_jointDir * velocity);
+        auto transformed_velocity_increment = transform.TransformVector(m_effortAxis * velocity);
         Physics::RigidBodyRequestBus::EventResult(currentVelocity, this->GetEntityId(), &Physics::RigidBodyRequests::GetLinearVelocity);
         AZ::Vector3 new_velocity = currentVelocity + transformed_velocity_increment;
         Physics::RigidBodyRequestBus::Event(this->GetEntityId(), &Physics::RigidBodyRequests::SetLinearVelocity, new_velocity);

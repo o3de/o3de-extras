@@ -74,6 +74,9 @@ namespace ROS2
         ///! Direction of degree of freedom
         AZ::Vector3 m_jointDir{ 0.f, 0.f, 1.f };
 
+        ///! Direction of degree of freedom
+        AZ::Vector3 m_effortAxis{ 0.f, 0.f, 1.f };
+
         ///! Limits - on limit controller will apply force only in opposite direction
         AZStd::pair<float, float> m_limits{ -0.5f, 0.5f };
 
@@ -96,7 +99,10 @@ namespace ROS2
         bool m_debugPrint{ false };
 
         ///! Amplitude of test signal generator
-        float m_sinAmplitude{ 0.25 };
+        float m_sinAmplitude{ 0.5 };
+
+        ///! DC of test signal generator
+        float m_sinDC{ 0.25 };
 
         ///! Frequency of test signal generator
         float m_sinFreq{ 0.1 };
@@ -116,5 +122,8 @@ namespace ROS2
 
         ///! initial transform of m_debugDrawEntity. It will be modified by the desired setpoint value in the set direction.
         AZ::Transform m_debugDrawEntityInitialTransform;
+
+        ///! Overide parent entity
+        AZ::EntityId m_ParentOverride;
     };
 } // namespace ROS2
