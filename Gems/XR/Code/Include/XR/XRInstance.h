@@ -39,20 +39,21 @@ namespace XR
         //! API to retrieve the native physical device for a specific index.
         virtual AZ::RHI::ResultCode GetXRPhysicalDevice(AZ::RHI::XRPhysicalDeviceDescriptor* physicalDeviceDescriptor, int32_t index) = 0;
 
+    protected:
+        //! API to allow backend object to initialize native xr instance.
+        virtual AZ::RHI::ResultCode InitInstanceInternal() = 0;
+
+        //! Called when the XR instance is being shutdown.
+        virtual void ShutdownInternal() = 0;
+
+        //Cache validation mode in case the backend object needs to use it.
+        AZ::RHI::ValidationMode m_validationMode = AZ::RHI::ValidationMode::Disabled;
+
     private:
         ///////////////////////////////////////////////////////////////////
         // XR::Object
         void Shutdown() override;
         ///////////////////////////////////////////////////////////////////
-
-        //! Called when the XR instance is being shutdown.
-        virtual void ShutdownInternal() = 0;
-
-        //! API to allow backend object to initialize native xr instance.
-        virtual AZ::RHI::ResultCode InitInstanceInternal(AZ::RHI::ValidationMode validationMode) = 0;
-
-        //Cache validation mode in case the backend object needs to use it.
-        AZ::RHI::ValidationMode m_validationMode = AZ::RHI::ValidationMode::Disabled;
     };
 
 } // namespace XR
