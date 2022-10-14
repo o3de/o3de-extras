@@ -171,8 +171,15 @@ namespace ROS2
         }
 
         if (m_sensorConfiguration.m_visualise)
-        { // Store points for visualisation purposes, before transformations occur
+        { // Store points for visualisation purposes, in global frame
+            auto localToWorldTM = entityTransform->GetWorldTM();
+
+            // TODO - improve performance
             m_visualisationPoints = m_lastScanResults;
+            for (auto& point : m_visualisationPoints)
+            {
+                point = localToWorldTM.TransformPoint(point);
+            }
         }
 
         auto* ros2Frame = Utils::GetGameOrEditorComponent<ROS2FrameComponent>(GetEntity());
