@@ -344,10 +344,26 @@ namespace OpenXRVk
 
             result = xrGetActionStatePose(xrSession, &getInfo, &poseState);
             WARN_IF_UNSUCCESSFUL(result);
-            m_handActive[static_cast<uint32_t>(hand)] = poseState.isActive;
+            m_handActive[static_cast<AZ::u32>(hand)] = poseState.isActive;
 
             LocateControllerSpace(device->GetPredictedDisplayTime(), session->GetXrSpace(OpenXRVk::SpaceType::View), static_cast<AZ::u32>(hand));
         }
+
+        const auto convertVector3XrtoAz = [](const XrVector3f& xrVec3) -> AZ::Vector3
+        {
+            return AZ::Vector3{ xrVec3.x, xrVec3.y, xrVec3.z };
+        };
+
+        rawControllerData.m_leftPositionState = convertVector3XrtoAz(m_handSpaceLocation[static_cast<AZ::u32>(XR::Side::Left)].pose.position);
+        rawControllerData.m_rightPositionState = convertVector3XrtoAz(m_handSpaceLocation[static_cast<AZ::u32>(XR::Side::Right)].pose.position);
+
+        const auto convertQuatXrtoAz = [](const XrQuaternionf& xrQuat) -> AZ::Quaternion
+        {
+            return AZ::Quaternion{ xrQuat.x, xrQuat.y, xrQuat.z, xrQuat.w };
+        };
+
+        rawControllerData.m_leftOrientationState = convertQuatXrtoAz(m_handSpaceLocation[static_cast<AZ::u32>(XR::Side::Left)].pose.orientation);
+        rawControllerData.m_rightOrientationState = convertQuatXrtoAz(m_handSpaceLocation[static_cast<AZ::u32>(XR::Side::Right)].pose.orientation);
 
         // Cache 3d location information
         for (AZ::u32 i = 0; i < static_cast<AZ::u32>(SpaceType::Count); i++)
@@ -411,7 +427,7 @@ namespace OpenXRVk
 
     AZ::RHI::ResultCode Input::GetVisualizedSpacePose(OpenXRVk::SpaceType visualizedSpaceType, AZ::RPI::PoseData& outPoseData) const
     {
-        const auto spaceIndex = static_cast<uint32_t>(visualizedSpaceType);
+        const auto spaceIndex = static_cast<AZ::u32>(visualizedSpaceType);
         if (spaceIndex < AZStd::size(m_xrVisualizedSpaceLocations))
         {
             const XrQuaternionf& orientation = m_xrVisualizedSpaceLocations[spaceIndex].pose.orientation;
