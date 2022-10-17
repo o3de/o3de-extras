@@ -90,19 +90,27 @@ namespace OpenXRVk
             return AZ::RHI::ResultCode::Fail;
         }
 
-        // Now that we have created the device, load the function pointers for it.
-        // NOTE: When passing a physical device to Vulkan glad loader it uses 'vkEnumerateDeviceExtensionProperties'
-        // to obtain device's extension, but that list doesn't match with the list returned by 'xrGetVulkanDeviceExtensionsKHR'
-        // which is used for OpenXR. This discrepancy results in the context indicating some extensions are available when they
-        // are really not supported in an OpenXR environment. To surpass this issue we're not passing the physical device.
-        bool functionsLoaded = xrVkInstance->GetFunctionLoader().LoadProcAddresses(
-            &xrVkInstance->GetContext(), xrVkInstance->GetNativeInstance(), VK_NULL_HANDLE/*xrVkInstance->GetActivePhysicalDevice()*/, m_xrVkDevice);
-        m_context = xrVkInstance->GetContext();
-        if (!functionsLoaded)
         {
-            ShutdownInternal();
-            AZ_Error("OpenXRVk", false, "Failed to initialize function loader for the device.");
-            return AZ::RHI::ResultCode::Fail;
+#if AZ_TRAIT_OS_IS_HOST_OS_PLATFORM
+            VkPhysicalDevice xrVkPhysicalDevice = xrVkInstance->GetActivePhysicalDevice();
+#else
+            // NOTE: When passing a physical device to Vulkan glad loader it uses 'vkEnumerateDeviceExtensionProperties'
+            // to obtain device's extension, but that list doesn't match with the list returned by 'xrGetVulkanDeviceExtensionsKHR'
+            // which is used for OpenXR. This discrepancy results in the context indicating some extensions are available when they
+            // are really not supported in an OpenXR environment. To surpass this issue we're not passing the physical device.
+            VkPhysicalDevice xrVkPhysicalDevice = VK_NULL_HANDLE;
+#endif
+
+            // Now that we have created the device, load the function pointers for it.
+            const bool functionsLoaded = xrVkInstance->GetFunctionLoader().LoadProcAddresses(
+                &xrVkInstance->GetContext(), xrVkInstance->GetNativeInstance(), xrVkPhysicalDevice, m_xrVkDevice);
+            m_context = xrVkInstance->GetContext();
+            if (!functionsLoaded)
+            {
+                ShutdownInternal();
+                AZ_Error("OpenXRVk", false, "Failed to initialize function loader for the device.");
+                return AZ::RHI::ResultCode::Fail;
+            }
         }
 
         //Populate the output data of the descriptor
