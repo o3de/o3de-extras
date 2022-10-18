@@ -19,6 +19,10 @@
 #include <Atom/RPI.Public/View.h>
 #include <AzFramework/Components/CameraBus.h>
 
+#include <Atom/RPI.Public/ViewportContext.h>
+#include <Atom/RPI.Public/ViewportContextBus.h>
+
+
 namespace OpenXRVk
 {
     void XRCameraMovementComponent::Reflect(AZ::ReflectContext* context)
@@ -99,26 +103,33 @@ namespace OpenXRVk
 
     void XRCameraMovementComponent::OnTick([[maybe_unused]] float deltaTime, [[maybe_unused]] AZ::ScriptTimePoint timePoint)
     {
-        AZ::Transform worldTransform{};
-        AZ::TransformBus::EventResult(worldTransform, GetEntityId(), &AZ::TransformBus::Events::GetWorldTM);
+        const auto viewportContextMgr = AZ::Interface<AZ::RPI::ViewportContextRequestsInterface>::Get();
+        if (!viewportContextMgr)
+        {
+            return;
+        }
+        const AZ::RPI::ViewportContextPtr viewportContext = viewportContextMgr->GetDefaultViewportContext();
+        if (!viewportContext)
+        {
+            return;
+        }
+        const AZ::RPI::ViewPtr view = viewportContext->GetDefaultView();
+        if (!view)
+        {
+            return;
+        }
+
+        AZ::Transform cameraTransform = view->GetCameraTransform();
 
         // Update movement...
         const float moveSpeed = m_moveSpeed * deltaTime;
-        const AZ::Vector3 movementVec = (worldTransform.GetBasisY() * m_movement.GetY())
-            + (worldTransform.GetBasisX() * m_movement.GetX())
-            + (worldTransform.GetBasisZ() * m_movement.GetZ());
-        const AZ::Vector3 newPosition{ (worldTransform.GetTranslation() + (movementVec * moveSpeed)) };
-        worldTransform.SetTranslation(newPosition);
+        const AZ::Vector3 movementVec = (cameraTransform.GetBasisX() * m_movement.GetX())
+            + (cameraTransform.GetBasisY() * m_movement.GetY())
+            + (AZ::Vector3{0.f, 0.f, 1.f} * m_movement.GetZ()); // use a fixed UP for the Z direction
+        const AZ::Vector3 newPosition{ (cameraTransform.GetTranslation() + (movementVec * moveSpeed)) };
+        cameraTransform.SetTranslation(newPosition);
 
-        // Update rotation...
-        const float rotateSpeed = m_rotationSpeed * deltaTime;
-        const AZ::Quaternion orientation{ worldTransform.GetRotation() };
-        // First off, only perform a rotation about Z axis (based on right-thumbstick X-axis)
-        const AZ::Vector3 rotationDegrees{ 0.f, 0.f, (rotateSpeed * m_rotation.GetX()) };
-        const AZ::Quaternion newOrientation{ orientation * AZ::Quaternion::CreateFromEulerAnglesDegrees(rotationDegrees) };
-        worldTransform.SetRotation(newOrientation);
-
-        AZ::TransformBus::Event(GetEntityId(), &AZ::TransformBus::Events::SetWorldTM, worldTransform);
+        AZ::TransformBus::Event(GetEntityId(), &AZ::TransformBus::Events::SetWorldTM, cameraTransform);
     }
 
     bool XRCameraMovementComponent::OnInputChannelEventFiltered([[maybe_unused]] const AzFramework::InputChannel& inputChannel)
@@ -143,16 +154,6 @@ namespace OpenXRVk
         if (channelId == AzFramework::InputDeviceXRController::ThumbStickAxis1D::LY)
         {
             m_movement.SetY(inputChannel.GetValue() * m_movementSensitivity);
-        }
-
-        // Right thumb-stick X/Y rotates the camera
-        if (channelId == AzFramework::InputDeviceXRController::ThumbStickAxis1D::RX)
-        {
-            m_rotation.SetX(inputChannel.GetValue() * m_rotationSensitivity);
-        }
-        if (channelId == AzFramework::InputDeviceXRController::ThumbStickAxis1D::RY)
-        {
-            m_rotation.SetY(inputChannel.GetValue() * m_rotationSensitivity);
         }
 
         // A/B buttons update the height in Z of the camera
