@@ -15,12 +15,8 @@
 
     // Debug Draw
     #include <AzFramework/Entity/EntityDebugDisplayBus.h>
-    #include <AzFramework/Viewport/ViewportBus.h>
-    #include <AzFramework/Viewport/ViewportScreen.h>
-    #include <Atom/RPI.Public/View.h>
     #include <Atom/RPI.Public/ViewportContext.h>
     #include <Atom/RPI.Public/ViewportContextBus.h>
-    #include <Atom/RPI.Public/WindowContext.h>
 
     namespace OpenXRVk
     {
@@ -456,45 +452,39 @@ namespace AzFramework
 #if !defined(_RELEASE)
     ////////////////////////////////////////////////////////////////////////////////////////////////
     // Debug Draw Functions
-    bool ConvertObjectWorldPosToScreenCoords(AZ::Vector3& position)
+    static void DrawControllerAxes(DebugDisplayRequests& debugDisplay, const AZ::Vector3& position, const AZ::Quaternion& orientation)
     {
+        static const AZ::Color axisColorX(1.f, 0.f, 0.f, 0.9f);
+        static const AZ::Color axisColorY(0.f, 1.f, 0.f, 0.9f);
+        static const AZ::Color axisColorZ(0.f, 0.f, 1.f, 0.9f);
+
         const auto viewportContextMgr = AZ::Interface<AZ::RPI::ViewportContextRequestsInterface>::Get();
         if (!viewportContextMgr)
         {
-            return false;
+            return;
         }
         const AZ::RPI::ViewportContextPtr viewportContext = viewportContextMgr->GetDefaultViewportContext();
         if (!viewportContext)
         {
-            false;
+            return;
         }
         const AZ::RPI::ViewPtr view = viewportContext->GetDefaultView();
         if (!view)
         {
-            return false;
+            return;
         }
 
-        const AZ::RHI::Viewport& viewport = viewportContext->GetWindowContext()->GetViewport();
-        position = AzFramework::WorldToScreenNdc(position, view->GetWorldToViewMatrixAsMatrix3x4(), view->GetViewToClipMatrix());
-        position.SetX(position.GetX() * viewport.GetWidth());
-        position.SetY((1.f - position.GetY()) * viewport.GetHeight());
-        return true;
-    }
+        const auto cameraTransform = view->GetCameraTransform();
+        const auto cameraPosition = cameraTransform.GetTranslation();
+        AZ::Vector3 controllerPosition = cameraPosition + position;
 
-    static void DrawControllerAxes(DebugDisplayRequests& debugDisplay, const AZ::Vector3& position, const AZ::Quaternion& orientation)
-    {
-        static const AZ::Color xAxisColor(1.f, 0.f, 0.f, 0.9f);
-        static const AZ::Color yAxisColor(0.f, 1.f, 0.f, 0.9f);
-        static const AZ::Color zAxisColor(0.f, 0.f, 1.f, 0.9f);
-
-        const auto rotationMat = AZ::Matrix3x4::CreateFromQuaternion(orientation);
-
-        debugDisplay.SetColor(xAxisColor);
-        debugDisplay.DrawLine(position, position + rotationMat.GetBasisX());
-        debugDisplay.SetColor(yAxisColor);
-        debugDisplay.DrawLine(position, position + rotationMat.GetBasisY());
-        debugDisplay.SetColor(zAxisColor);
-        debugDisplay.DrawLine(position, position + rotationMat.GetBasisZ());
+        AZ::Transform controllerTransform = AZ::Transform::CreateFromQuaternionAndTranslation(orientation, controllerPosition);
+        debugDisplay.SetColor(axisColorX);
+        debugDisplay.DrawLine(controllerPosition, controllerPosition + controllerTransform.GetBasisX());
+        debugDisplay.SetColor(axisColorY);
+        debugDisplay.DrawLine(controllerPosition, controllerPosition + controllerTransform.GetBasisY());
+        debugDisplay.SetColor(axisColorZ);
+        debugDisplay.DrawLine(controllerPosition, controllerPosition + controllerTransform.GetBasisZ());
     }
 
     void InputDeviceXRController::DrawGlobalDebugInfo()
@@ -509,7 +499,7 @@ namespace AzFramework
                 return;
             }
 
-            // Save previous state
+            // Save previous draw state
             const AZ::u32 oldDrawState{ debugDisplay->GetState() };
 
             // ... draw data to the screen ...
@@ -517,8 +507,8 @@ namespace AzFramework
             DrawControllerAxes(*debugDisplay, rawControllerData.m_leftPositionState, rawControllerData.m_leftOrientationState);
             DrawControllerAxes(*debugDisplay, rawControllerData.m_rightPositionState, rawControllerData.m_rightOrientationState);
 
-            float drawX = 20.f;
-            float drawY = 20.f;
+            float drawX = 20.f;     // current draw X
+            float drawY = 20.f;     // current draw Y
             constexpr float textSize = 0.8f;
             constexpr float lineHeight = 15.f;
 
@@ -553,7 +543,7 @@ namespace AzFramework
 
                 drawY += lineHeight;
             };
-            
+
             auto printButtonState = [&](const InputChannelId& buttonChannel, const char* buttonText)
             {
                 AZStd::string text{ buttonText };
@@ -658,6 +648,35 @@ namespace AzFramework
                 drawY += lineHeight;
             };
 
+            auto printVector3 = [&](const AZ::Vector3& vec, const char* vectorText)
+            {
+                AZStd::string str{ AZStd::string::format("%s = (%.2f, %.2f, %.2f)", vectorText, vec.GetX(), vec.GetY(), vec.GetZ()) };
+                debugDisplay->SetColor(whiteColor);
+                debugDisplay->Draw2dTextLabel(drawX, drawY, textSize, str.c_str());
+
+                drawY += lineHeight;
+            };
+
+            auto printMatrix3x4 = [&](const AZ::Matrix3x4& matx, const char* matrixText)
+            {
+                debugDisplay->SetColor(whiteColor);
+                AZStd::string str{ AZStd::string::format("%s:", matrixText) };
+                debugDisplay->Draw2dTextLabel(drawX, drawY, textSize, str.c_str());
+                drawY += lineHeight;
+
+                AZ::Vector3 col0, col1, col2, col3;
+                matx.GetColumns(&col0, &col1, &col2, &col3);
+                str = AZStd::string::format("    | %.2f    %.2f    %.2f    %.2f |", col0.GetX(), col1.GetX(), col2.GetX(), col3.GetX());
+                debugDisplay->Draw2dTextLabel(drawX, drawY, textSize, str.c_str());
+                drawY += lineHeight;
+                str = AZStd::string::format("    | %.2f    %.2f    %.2f    %.2f |", col0.GetY(), col1.GetY(), col2.GetY(), col3.GetY());
+                debugDisplay->Draw2dTextLabel(drawX, drawY, textSize, str.c_str());
+                drawY += lineHeight;
+                str = AZStd::string::format("    | %.2f    %.2f    %.2f    %.2f |", col0.GetZ(), col1.GetZ(), col2.GetZ(), col3.GetZ());
+                debugDisplay->Draw2dTextLabel(drawX, drawY, textSize, str.c_str());
+                drawY += lineHeight;
+            };
+
 
             using xrc = InputDeviceXRController;
 
@@ -692,6 +711,14 @@ namespace AzFramework
             printAnalogState("R Grip", rawControllerData.m_rightGripState);
             print2DThumbStickWithTouchState(xrc::Button::TRStick, "R Thumb-Stick",
                 rawControllerData.m_rightThumbStickXState, rawControllerData.m_rightThumbStickYState);
+
+            drawY += (2.f * lineHeight);
+
+            // Positions and Orientation
+            printVector3(rawControllerData.m_leftPositionState, "Left Controller Position");
+            printMatrix3x4(AZ::Matrix3x4::CreateFromQuaternion(rawControllerData.m_leftOrientationState), "Left Controller Orientation");
+            printVector3(rawControllerData.m_rightPositionState, "Right Controller Position");
+            printMatrix3x4(AZ::Matrix3x4::CreateFromQuaternion(rawControllerData.m_rightOrientationState), "Right Controller Orientation");
 
             // Restore previous state
             debugDisplay->SetState(oldDrawState);

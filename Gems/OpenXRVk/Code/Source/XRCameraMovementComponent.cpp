@@ -157,12 +157,12 @@ namespace OpenXRVk
 
         // A/B buttons update the height in Z of the camera
         if (channelId == AzFramework::InputDeviceXRController::Button::A)
-        {
-            m_movement.SetZ(inputChannel.GetValue() * m_movementSensitivity);
+        {   // down
+            m_movement.SetZ(-inputChannel.GetValue() * m_movementSensitivity);
         }
         if (channelId == AzFramework::InputDeviceXRController::Button::B)
-        {
-            m_movement.SetZ(-inputChannel.GetValue() * m_movementSensitivity);
+        {   // up
+            m_movement.SetZ(inputChannel.GetValue() * m_movementSensitivity);
         }
     }
 
