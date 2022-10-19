@@ -102,17 +102,15 @@ namespace OpenXRVk
 
     private:
         void OnXRControllerEvent(const AzFramework::InputChannel& inputChannel);
+        static AZ::Transform GetCameraTransformFromCurrentView();
 
         // Transient data...
         AZ::Vector3 m_movement{ AZ::Vector3::CreateZero() };    // Only use the X/Y components of this vector
-        AZ::Vector3 m_rotation{ AZ::Vector3::CreateZero() };
         float m_heightZ{ 0.f };
 
         // Serialized data...
         float m_moveSpeed{ 20.f };
-        float m_rotationSpeed{ 5.f };
         float m_movementSensitivity{ 0.025f };
-        float m_rotationSensitivity{ 0.025f };
     };
 
 } // namespace OpenXRVk

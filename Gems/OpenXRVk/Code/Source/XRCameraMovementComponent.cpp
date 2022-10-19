@@ -32,9 +32,7 @@ namespace OpenXRVk
             serializeContext->Class<XRCameraMovementComponent, AZ::Component>()
                 ->Version(1)
                 ->Field("Move Speed", &XRCameraMovementComponent::m_moveSpeed)
-                ->Field("Rotation Speed", &XRCameraMovementComponent::m_rotationSpeed)
                 ->Field("Movement Sensitivity", &XRCameraMovementComponent::m_movementSensitivity)
-                ->Field("Rotation Sensitivity", &XRCameraMovementComponent::m_rotationSensitivity)
                 ;
 
             if (AZ::EditContext* editContext = serializeContext->GetEditContext())
@@ -47,13 +45,7 @@ namespace OpenXRVk
                     ->DataElement(AZ::Edit::UIHandlers::Default, &XRCameraMovementComponent::m_moveSpeed, "Move Speed", "Speed of camera movement")
                     ->Attribute(AZ::Edit::Attributes::Min, 1.f)
                     ->Attribute(AZ::Edit::Attributes::Max, 100.f)
-                    ->DataElement(AZ::Edit::UIHandlers::Default, &XRCameraMovementComponent::m_rotationSpeed, "Rotation Speed", "Speed of camera rotation")
-                    ->Attribute(AZ::Edit::Attributes::Min, 1.f)
-                    ->Attribute(AZ::Edit::Attributes::Max, 100.f)
                     ->DataElement(AZ::Edit::UIHandlers::Default, &XRCameraMovementComponent::m_movementSensitivity, "Move Sensitivity", "Fine movement sensitivity factor")
-                    ->Attribute(AZ::Edit::Attributes::Min, 0.f)
-                    ->Attribute(AZ::Edit::Attributes::Max, 1.f)
-                    ->DataElement(AZ::Edit::UIHandlers::Default, &XRCameraMovementComponent::m_rotationSensitivity, "Rotation Sensitivity", "Fine rotation sensitivity factor")
                     ->Attribute(AZ::Edit::Attributes::Min, 0.f)
                     ->Attribute(AZ::Edit::Attributes::Max, 1.f)
                     ;
@@ -103,23 +95,7 @@ namespace OpenXRVk
 
     void XRCameraMovementComponent::OnTick([[maybe_unused]] float deltaTime, [[maybe_unused]] AZ::ScriptTimePoint timePoint)
     {
-        const auto viewportContextMgr = AZ::Interface<AZ::RPI::ViewportContextRequestsInterface>::Get();
-        if (!viewportContextMgr)
-        {
-            return;
-        }
-        const AZ::RPI::ViewportContextPtr viewportContext = viewportContextMgr->GetDefaultViewportContext();
-        if (!viewportContext)
-        {
-            return;
-        }
-        const AZ::RPI::ViewPtr view = viewportContext->GetDefaultView();
-        if (!view)
-        {
-            return;
-        }
-
-        AZ::Transform cameraTransform = view->GetCameraTransform();
+        AZ::Transform cameraTransform = GetCameraTransformFromCurrentView();
 
         // Update movement...
         const float moveSpeed = m_moveSpeed * deltaTime;
@@ -165,6 +141,25 @@ namespace OpenXRVk
         {   // up
             m_movement.SetZ(inputChannel.GetValue() * m_movementSensitivity);
         }
+    }
+
+    // static
+    AZ::Transform XRCameraMovementComponent::GetCameraTransformFromCurrentView()
+    {
+        if (const auto viewportContextMgr = AZ::Interface<AZ::RPI::ViewportContextRequestsInterface>::Get();
+            viewportContextMgr != nullptr)
+        {
+            if (const AZ::RPI::ViewportContextPtr viewportContext = viewportContextMgr->GetDefaultViewportContext();
+                viewportContext != nullptr)
+            {
+                if (const AZ::RPI::ViewPtr view = viewportContext->GetDefaultView();
+                    view != nullptr)
+                {
+                    return view->GetCameraTransform();
+                }
+            }
+        }
+        return AZ::Transform::CreateIdentity();
     }
 
 } // namespace OpenXRVk
