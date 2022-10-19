@@ -27,6 +27,7 @@ namespace ROS2
         CameraSensorDescription(const AZStd::string& cameraName, float verticalFov, int width, int height);
 
         const float m_verticalFieldOfViewDeg; //!< camera vertical field of view
+        double m_verticalFieldOfViewRad;
         const int m_width; //!< camera image width in pixels
         const int m_height; //!< camera image height in pixels
         const AZStd::string m_cameraName; //!< camera name to differentiate cameras in a multi-camera setup
@@ -71,6 +72,8 @@ namespace ROS2
         AZ::RPI::RenderPipelinePtr m_pipeline;
         AZ::RPI::ViewPtr m_view;
         AZ::RPI::Scene* m_scene = nullptr;
+        const AZ::Transform kAtomToRos{ AZ::Transform::CreateFromQuaternion(
+            AZ::Quaternion::CreateFromMatrix3x3(AZ::Matrix3x3::CreateFromRows({ 1, 0, 0 }, { 0, -1, 0 }, { 0, 0, -1 }))) };
     };
 
 } // namespace ROS2

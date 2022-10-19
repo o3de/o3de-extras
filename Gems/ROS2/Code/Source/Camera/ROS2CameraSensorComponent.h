@@ -15,6 +15,9 @@
 
 #include <AzCore/Component/Component.h>
 
+#include <ROS2/Frame/NamespaceConfiguration.h>
+#include <ROS2/Frame/ROS2Transform.h>
+
 #include "CameraSensor.h"
 
 namespace ROS2

@@ -16,6 +16,9 @@
 #include <AzCore/Serialization/EditContext.h>
 #include <AzCore/Serialization/SerializeContext.h>
 
+#include <AzToolsFramework/Entity/EditorEntityHelpers.h>
+#include <AzToolsFramework/ToolsComponents/TransformComponent.h>
+
 #include <sensor_msgs/distortion_models.hpp>
 #include <sensor_msgs/image_encodings.hpp>
 
@@ -142,6 +145,9 @@ namespace ROS2
                 cameraInfo.height = descriptor.m_size.m_height;
                 cameraInfo.distortion_model = sensor_msgs::distortion_models::PLUMB_BOB;
                 cameraInfo.k = m_cameraSensor->GetCameraSensorDescription().m_cameraIntrinsics;
+                cameraInfo.p = { cameraInfo.k[0], cameraInfo.k[1], cameraInfo.k[2], 0, cameraInfo.k[3], cameraInfo.k[4], cameraInfo.k[5], 0,
+                                 cameraInfo.k[6], cameraInfo.k[7], cameraInfo.k[8], 0 };
+
                 m_cameraInfoPublisher->publish(cameraInfo);
             });
     }
