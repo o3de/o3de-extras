@@ -122,6 +122,10 @@ namespace OpenXRVk
     {
         const auto& channelId = inputChannel.GetInputChannelId();
 
+        // This currently uses specific xr controller channels to drive the movement.  Future iterations might
+        // use a higher-level concepts like InputMappings and InputContexts to generalize to additional
+        // input devices.
+
         // Left thumb-stick X/Y move the camera
         if (channelId == AzFramework::InputDeviceXRController::ThumbStickAxis1D::LX)
         {

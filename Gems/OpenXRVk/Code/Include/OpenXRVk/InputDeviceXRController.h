@@ -302,6 +302,10 @@ namespace AzFramework
                 void Reset();
 
                 ////////////////////////////////////////////////////////////////////////////////////
+                //! Gets a digital button's current state
+                bool GetDigitalButtonState(const InputChannelId& channelId) const;
+
+                ////////////////////////////////////////////////////////////////////////////////////
                 //! Get the left trigger value adjusted for the dead zone and normalized
                 //! @return The adjusted left trigger value
                 float GetLeftTriggerAdjustedForDeadZoneAndNormalized() const;
@@ -436,6 +440,7 @@ namespace AzFramework
         ////////////////////////////////////////////////////////////////////////////////////////////
         // AzFramework::DebugDisplayEventBus interface
 #if !defined(_RELEASE)
+        void CheckDebugDrawCheat();
         void DrawGlobalDebugInfo() override;
 #endif // !_RELEASE
 

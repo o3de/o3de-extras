@@ -474,8 +474,7 @@ namespace OpenXRVk
     bool Input::GetButtonState(const AzFramework::InputChannelId& channelId) const
     {
         const auto& state = m_xrControllerImpl->GetRawState();
-        const AZ::u32 mask = state.m_buttonIdsToBitMasks.at(channelId);
-        return (state.m_digitalButtonStates & mask) != 0;
+        return state.GetDigitalButtonState(channelId);
     }
 
     bool Input::GetXButtonState() const

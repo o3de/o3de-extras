@@ -321,6 +321,16 @@ namespace AzFramework
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
+    bool InputDeviceXRController::Implementation::RawXRControllerState::GetDigitalButtonState(const InputChannelId& channelId) const
+    {
+        if (auto it = m_buttonIdsToBitMasks.find(channelId); it != m_buttonIdsToBitMasks.end())
+        {
+            return (m_digitalButtonStates & it->second) != 0;
+        }
+        return false;
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////
     float InputDeviceXRController::Implementation::RawXRControllerState::GetLeftTriggerAdjustedForDeadZoneAndNormalized() const
     {
         return AdjustForDeadZoneAndNormalizeAnalogInput(m_leftTriggerState, m_triggerDeadZoneValue, m_triggerMaxValue);
@@ -450,31 +460,37 @@ namespace AzFramework
 
 
 #if !defined(_RELEASE)
+
     ////////////////////////////////////////////////////////////////////////////////////////////////
-    // Debug Draw Functions
+    static AZ::Transform GetCameraTransformFromCurrentView()
+    {
+        if (const auto viewportContextMgr = AZ::Interface<AZ::RPI::ViewportContextRequestsInterface>::Get();
+            viewportContextMgr != nullptr)
+        {
+            if (const AZ::RPI::ViewportContextPtr viewportContext = viewportContextMgr->GetDefaultViewportContext();
+                viewportContext != nullptr)
+            {
+                if (const AZ::RPI::ViewPtr view = viewportContext->GetDefaultView();
+                    view != nullptr)
+                {
+                    return view->GetCameraTransform();
+                }
+            }
+        }
+        return AZ::Transform::CreateIdentity();
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    // Debug Draw Related Functions
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+
     static void DrawControllerAxes(DebugDisplayRequests& debugDisplay, const AZ::Vector3& position, const AZ::Quaternion& orientation)
     {
         static const AZ::Color axisColorX(1.f, 0.f, 0.f, 0.9f);
         static const AZ::Color axisColorY(0.f, 1.f, 0.f, 0.9f);
         static const AZ::Color axisColorZ(0.f, 0.f, 1.f, 0.9f);
 
-        const auto viewportContextMgr = AZ::Interface<AZ::RPI::ViewportContextRequestsInterface>::Get();
-        if (!viewportContextMgr)
-        {
-            return;
-        }
-        const AZ::RPI::ViewportContextPtr viewportContext = viewportContextMgr->GetDefaultViewportContext();
-        if (!viewportContext)
-        {
-            return;
-        }
-        const AZ::RPI::ViewPtr view = viewportContext->GetDefaultView();
-        if (!view)
-        {
-            return;
-        }
-
-        const auto cameraTransform = view->GetCameraTransform();
+        const auto cameraTransform = GetCameraTransformFromCurrentView();
         const auto cameraPosition = cameraTransform.GetTranslation();
         AZ::Vector3 controllerPosition = cameraPosition + position;
 
@@ -487,8 +503,36 @@ namespace AzFramework
         debugDisplay.DrawLine(controllerPosition, controllerPosition + controllerTransform.GetBasisZ());
     }
 
+    void InputDeviceXRController::CheckDebugDrawCheat()
+    {
+        // This looks for specific controller input and will toggle the debug draw cvar.
+
+        const auto& rawControllerData = m_impl->GetRawState();
+        using xrc = InputDeviceXRController;
+        static bool cheatWasPressed = false;
+
+        // Menu button + Left Trigger pulled past 0.9 will toggle.
+        // To avoid button bounce, block re-toggle until the menu button is released.
+        const bool menuPressed = rawControllerData.GetDigitalButtonState(xrc::Button::Menu);
+        const float leftTrigger = rawControllerData.GetLeftTriggerAdjustedForDeadZoneAndNormalized();
+        if (menuPressed)
+        {
+            if (!cheatWasPressed && leftTrigger > 0.9f)
+            {
+                cheatWasPressed = true;
+                OpenXRVk::xr_DebugDrawInput = !OpenXRVk::xr_DebugDrawInput;
+            }
+        }
+        else
+        {
+            cheatWasPressed = false;
+        }
+    }
+
     void InputDeviceXRController::DrawGlobalDebugInfo()
     {
+        CheckDebugDrawCheat();
+
         if (OpenXRVk::xr_DebugDrawInput)
         {
             DebugDisplayRequestBus::BusPtr debugDisplayBus;
@@ -521,16 +565,12 @@ namespace AzFramework
                 const InputChannelId& touchedButtonChannel, const char* buttonText)
             {
                 AZStd::string text{ buttonText };
-                auto bitMask = rawControllerData.m_buttonIdsToBitMasks.at(buttonChannel);
-                const bool buttonPressed = (rawControllerData.m_digitalButtonStates & bitMask) != 0;
-                bitMask = rawControllerData.m_buttonIdsToBitMasks.at(touchedButtonChannel);
-                const bool buttonTouched = (rawControllerData.m_digitalButtonStates & bitMask) != 0;
-                if (buttonPressed)
+                if (rawControllerData.GetDigitalButtonState(buttonChannel))
                 {
                     text.append(" Pressed");
                     debugDisplay->SetColor(pressedColor);
                 }
-                else if (buttonTouched)
+                else if (rawControllerData.GetDigitalButtonState(touchedButtonChannel))
                 {
                     text.append(" Touched");
                     debugDisplay->SetColor(touchedColor);
@@ -547,9 +587,7 @@ namespace AzFramework
             auto printButtonState = [&](const InputChannelId& buttonChannel, const char* buttonText)
             {
                 AZStd::string text{ buttonText };
-                const auto bitMask = rawControllerData.m_buttonIdsToBitMasks.at(buttonChannel);
-                const bool buttonPressed = (rawControllerData.m_digitalButtonStates & bitMask) != 0;
-                if (buttonPressed)
+                if (rawControllerData.GetDigitalButtonState(buttonChannel))
                 {
                     text.append(" Pressed");
                     debugDisplay->SetColor(pressedColor);
@@ -566,9 +604,7 @@ namespace AzFramework
             auto printButtonTouchOnlyState = [&](const InputChannelId& touchChannel, const char* buttonText)
             {
                 AZStd::string text{ buttonText };
-                const auto bitMask = rawControllerData.m_buttonIdsToBitMasks.at(touchChannel);
-                const bool buttonTouched = (rawControllerData.m_digitalButtonStates & bitMask) != 0;
-                if (buttonTouched)
+                if (rawControllerData.GetDigitalButtonState(touchChannel))
                 {
                     text.append(" Touched");
                     debugDisplay->SetColor(touchedColor);
@@ -585,14 +621,12 @@ namespace AzFramework
             auto printAnalogWithTouchState = [&](const InputChannelId& touchedChannel, const char* analogText, float value)
             {
                 AZStd::string text{ analogText };
-                const auto bitMask = rawControllerData.m_buttonIdsToBitMasks.at(touchedChannel);
-                const bool buttonTouched = (rawControllerData.m_digitalButtonStates & bitMask) != 0;
-                if (value > 0.f)
+                if (!AZ::IsClose(value, 0.f))
                 {
                     text.append(AZStd::string::format(" Pressed: %.2f", value));
                     debugDisplay->SetColor(pressedColor);
                 }
-                else if (buttonTouched)
+                else if (rawControllerData.GetDigitalButtonState(touchedChannel))
                 {
                     text.append(" Touched");
                     debugDisplay->SetColor(touchedColor);
@@ -609,7 +643,7 @@ namespace AzFramework
             auto printAnalogState = [&](const char* analogText, float value)
             {
                 AZStd::string text{ analogText };
-                if (value > 0.f)
+                if (!AZ::IsClose(value, 0.f))
                 {
                     text.append(AZStd::string::format(" = %.2f", value));
                     debugDisplay->SetColor(pressedColor);
@@ -626,15 +660,12 @@ namespace AzFramework
             auto print2DThumbStickWithTouchState = [&](const InputChannelId& touchedChannel, const char* thumbStickText, float xvalue, float yvalue)
             {
                 AZStd::string text{ thumbStickText };
-                const auto bitMask = rawControllerData.m_buttonIdsToBitMasks.at(touchedChannel);
-                const bool buttonTouched = (rawControllerData.m_digitalButtonStates & bitMask) != 0;
-                // TODO: Do a bit of compensation for "nearly zero" values.
-                if (xvalue != 0.f || yvalue != 0.f)
+                if (!AZ::IsClose(xvalue, 0.f) || !AZ::IsClose(yvalue, 0.f))
                 {
                     text.append(AZStd::string::format(" Pressed: (%.2f, %.2f)", xvalue, yvalue));
                     debugDisplay->SetColor(pressedColor);
                 }
-                else if (buttonTouched)
+                else if (rawControllerData.GetDigitalButtonState(touchedChannel))
                 {
                     text.append(" Touched");
                     debugDisplay->SetColor(touchedColor);
