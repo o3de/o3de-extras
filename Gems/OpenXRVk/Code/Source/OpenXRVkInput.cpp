@@ -358,12 +358,14 @@ namespace OpenXRVk
         }
         
         // XR to AZ vector conversion...
+        // Goes from y-up to z-up configuration (keeping Right Handed system)
         const auto convertVector3 = [](const XrVector3f& xrVec3) -> AZ::Vector3
         {
             return AZ::Vector3{ xrVec3.x, -xrVec3.z, xrVec3.y };
         };
 
         // XR to AZ quaternion conversion...
+        // Goes from y-up to z-up configuration (keeping Right Handed system)
         const auto convertQuat = [](const XrQuaternionf& xrQuat) -> AZ::Quaternion
         {
             return AZ::Quaternion{ xrQuat.x, -xrQuat.z, xrQuat.y, xrQuat.w };

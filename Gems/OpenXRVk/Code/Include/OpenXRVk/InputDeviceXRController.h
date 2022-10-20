@@ -19,15 +19,13 @@
 #include <AzFramework/Input/Channels/InputChannelQuaternion.h>
 #include <AzFramework/Input/Devices/InputDevice.h>
 
-#if !defined(_RELEASE)
-    #include <AzFramework/Entity/EntityDebugDisplayBus.h>
+#include <AzFramework/Entity/EntityDebugDisplayBus.h>
 
-    namespace OpenXRVk
-    {
-        AZ_CVAR_EXTERNED(bool, xr_DebugDrawInput);
+namespace OpenXRVk
+{
+    AZ_CVAR_EXTERNED(bool, xr_DebugDrawInput);
 
-    } // namespace OpenXRVk
-#endif // !_RELEASE
+} // namespace OpenXRVk
 
 
 namespace AzFramework
@@ -40,9 +38,7 @@ namespace AzFramework
     class InputDeviceXRController
         : public InputDevice
         , public InputHapticFeedbackRequestBus::Handler
-#if !defined(_RELEASE)
         , public AzFramework::DebugDisplayEventBus::Handler
-#endif // !_RELEASE
     {
     public:
         ////////////////////////////////////////////////////////////////////////////////////////////
@@ -437,12 +433,18 @@ namespace AzFramework
         Implementation* GetImplementation() const;
 
     protected:
+
         ////////////////////////////////////////////////////////////////////////////////////////////
         // AzFramework::DebugDisplayEventBus interface
-#if !defined(_RELEASE)
-        void CheckDebugDrawCheat();
         void DrawGlobalDebugInfo() override;
-#endif // !_RELEASE
+
+        ////////////////////////////////////////////////////////////////////////////////////////////
+        //! Helper routine that checks for a specific controller input combo and will toggle the debug draw.
+        //! Allows users to quickly display/hide the debug information for the xr controllers without having
+        //! to type anything into a console.
+        //! Currently bound to: Button::Menu + Trigger::LTrigger
+        //! That is, hold the left controller's Menu button and squeeze the left trigger fully.
+        void CheckDebugDrawCheat() const;
 
         static constexpr float s_thumbStickMaxValue{ 1.f };
         static constexpr float s_thumbStickMinValue{ -1.f };

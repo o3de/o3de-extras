@@ -17,7 +17,6 @@ set(FILES
     Include/OpenXRVk/OpenXRVkSwapChain.h
     Include/OpenXRVk/OpenXRVkSystemComponent.h
     Include/OpenXRVk/OpenXRVkUtils.h
-    Include/OpenXRVk/XRCameraMovementInterface.h
     Source/InputDeviceXRController.cpp
     Source/OpenXRVkDevice.cpp
     Source/OpenXRVkInput.cpp

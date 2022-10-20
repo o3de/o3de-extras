@@ -83,17 +83,15 @@ namespace OpenXRVk
     {
         AzFramework::InputChannelEventListener::Connect();
         AZ::TickBus::Handler::BusConnect();
-        XRCameraMovementRequestBus::Handler::BusConnect(GetEntityId());
     }
 
     void XRCameraMovementComponent::Deactivate()
     {
-        XRCameraMovementRequestBus::Handler::BusDisconnect(GetEntityId());
         AZ::TickBus::Handler::BusDisconnect();
         AzFramework::InputChannelEventListener::Disconnect();
     }
 
-    void XRCameraMovementComponent::OnTick([[maybe_unused]] float deltaTime, [[maybe_unused]] AZ::ScriptTimePoint timePoint)
+    void XRCameraMovementComponent::OnTick(float deltaTime, [[maybe_unused]] AZ::ScriptTimePoint timePoint)
     {
         AZ::Transform cameraTransform = GetCameraTransformFromCurrentView();
 

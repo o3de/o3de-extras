@@ -11,25 +11,21 @@
 #include <AzCore/RTTI/BehaviorContext.h>
 #include <AzFramework/Input/Utils/AdjustAnalogInputForDeadZone.h>
 
-#if !defined(_RELEASE)
 
-    // Debug Draw
-    #include <AzFramework/Entity/EntityDebugDisplayBus.h>
-    #include <Atom/RPI.Public/ViewportContext.h>
-    #include <Atom/RPI.Public/ViewportContextBus.h>
+// Debug Draw
+#include <Atom/RPI.Public/ViewportContext.h>
+#include <Atom/RPI.Public/ViewportContextBus.h>
 
-    namespace OpenXRVk
-    {
-        // Cvar to enable/disable debug drawing of xr controller data on screen.
-        // No "on change" function defined here, just read the state of the bool
-        // elsewhere in the draw function.
-        AZ_CVAR(bool, xr_DebugDrawInput, 0,
-            nullptr, AZ::ConsoleFunctorFlags::Null,
-            "Turn off/on debug drawing of XR Input state");
+namespace OpenXRVk
+{
+    // Cvar to enable/disable debug drawing of xr controller data on screen.
+    // No "on change" function defined here, just read the state of the bool
+    // elsewhere in the draw function.
+    AZ_CVAR(bool, xr_DebugDrawInput, 0,
+        nullptr, AZ::ConsoleFunctorFlags::Null,
+        "Turn off/on debug drawing of XR Input state");
 
-    } // namespace OpenXRVk
-
-#endif // !_RELEASE
+} // namespace OpenXRVk
 
 
 namespace AzFramework
@@ -181,19 +177,15 @@ namespace AzFramework
         // Connect to haptic feedback request bus
         InputHapticFeedbackRequestBus::Handler::BusConnect(GetInputDeviceId());
 
-#if !defined(_RELEASE)
         // Debug Draw
         DebugDisplayEventBus::Handler::BusConnect();
-#endif // !_RELEASE
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
     InputDeviceXRController::~InputDeviceXRController()
     {
-#if !defined(_RELEASE)
         // Debug Draw
         DebugDisplayEventBus::Handler::BusDisconnect();
-#endif // !_RELEASE
 
         // Disconnect from haptic feedback request bus
         InputHapticFeedbackRequestBus::Handler::BusDisconnect(GetInputDeviceId());
@@ -459,9 +451,13 @@ namespace AzFramework
     }
 
 
-#if !defined(_RELEASE)
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
+    // Debug Draw Related Functions
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+
+#if !defined(_RELEASE)
+
     static AZ::Transform GetCameraTransformFromCurrentView()
     {
         if (const auto viewportContextMgr = AZ::Interface<AZ::RPI::ViewportContextRequestsInterface>::Get();
@@ -480,10 +476,6 @@ namespace AzFramework
         return AZ::Transform::CreateIdentity();
     }
 
-    ////////////////////////////////////////////////////////////////////////////////////////////////
-    // Debug Draw Related Functions
-    ////////////////////////////////////////////////////////////////////////////////////////////////
-
     static void DrawControllerAxes(DebugDisplayRequests& debugDisplay, const AZ::Vector3& position, const AZ::Quaternion& orientation)
     {
         static const AZ::Color axisColorX(1.f, 0.f, 0.f, 0.9f);
@@ -491,10 +483,10 @@ namespace AzFramework
         static const AZ::Color axisColorZ(0.f, 0.f, 1.f, 0.9f);
 
         const auto cameraTransform = GetCameraTransformFromCurrentView();
-        const auto cameraPosition = cameraTransform.GetTranslation();
-        AZ::Vector3 controllerPosition = cameraPosition + position;
+        const AZ::Vector3& cameraPosition = cameraTransform.GetTranslation();
+        const AZ::Vector3 controllerPosition = cameraPosition + position;
 
-        AZ::Transform controllerTransform = AZ::Transform::CreateFromQuaternionAndTranslation(orientation, controllerPosition);
+        const AZ::Transform controllerTransform = AZ::Transform::CreateFromQuaternionAndTranslation(orientation, controllerPosition);
         debugDisplay.SetColor(axisColorX);
         debugDisplay.DrawLine(controllerPosition, controllerPosition + controllerTransform.GetBasisX());
         debugDisplay.SetColor(axisColorY);
@@ -503,10 +495,12 @@ namespace AzFramework
         debugDisplay.DrawLine(controllerPosition, controllerPosition + controllerTransform.GetBasisZ());
     }
 
-    void InputDeviceXRController::CheckDebugDrawCheat()
+#endif // !_RELEASE
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    void InputDeviceXRController::CheckDebugDrawCheat() const
     {
         // This looks for specific controller input and will toggle the debug draw cvar.
-
         const auto& rawControllerData = m_impl->GetRawState();
         using xrc = InputDeviceXRController;
         static bool cheatWasPressed = false;
@@ -529,10 +523,12 @@ namespace AzFramework
         }
     }
 
+    ////////////////////////////////////////////////////////////////////////////////////////////////
     void InputDeviceXRController::DrawGlobalDebugInfo()
     {
         CheckDebugDrawCheat();
 
+#if !defined(_RELEASE)
         if (OpenXRVk::xr_DebugDrawInput)
         {
             DebugDisplayRequestBus::BusPtr debugDisplayBus;
@@ -754,7 +750,7 @@ namespace AzFramework
             // Restore previous state
             debugDisplay->SetState(oldDrawState);
         }
-    }
 #endif // !_RELEASE
+    }
 
 } // namespace AzFramework
