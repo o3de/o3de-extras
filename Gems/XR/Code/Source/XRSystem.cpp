@@ -8,12 +8,24 @@
 
 #include <AzCore/Interface/Interface.h>
 #include <AzCore/Debug/Profiler.h>
+#include <AzCore/Console/IConsole.h>
 #include <XR/XRFactory.h>
 #include <XR/XRSystem.h>
 #include <XR/XRUtils.h>
 
 namespace XR
 {
+#if AZ_TRAIT_OS_IS_HOST_OS_PLATFORM
+    AZ_CVAR(
+        bool,
+        r_EnableHostRenderPipelineOnXR,
+        true,
+        nullptr,
+        AZ::ConsoleFunctorFlags::Null,
+        "When an XR system is present in a host platform, this will enable the regular render pipeline on the host PC as well "
+        "(true by default).");
+#endif
+
     void System::Init(const System::Descriptor& descriptor)
     {
         m_validationMode = descriptor.m_validationMode;
@@ -334,5 +346,25 @@ namespace XR
         AZ::SystemTickBus::Handler::BusDisconnect();
         m_instance = nullptr;
         m_device = nullptr;
+    }
+
+    bool System::IsDefaultRenderPipelineNeeded() const
+    {
+        // While there is an XR system the default render pipeline is only needed on host platforms,
+        // in case we also render on PC as well as in the XR device.
+#if AZ_TRAIT_OS_IS_HOST_OS_PLATFORM
+        return true;
+#else
+        return false;
+#endif
+    }
+
+    bool System::IsDefaultRenderPipelineEnabledOnHost() const
+    {
+#if AZ_TRAIT_OS_IS_HOST_OS_PLATFORM
+        return r_EnableHostRenderPipelineOnXR;
+#else
+        return false;
+#endif
     }
 }

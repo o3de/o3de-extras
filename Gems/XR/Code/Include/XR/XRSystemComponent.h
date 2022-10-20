@@ -23,7 +23,7 @@ namespace XR
         static void GetProvidedServices(AZ::ComponentDescriptor::DependencyArrayType& provided);
         static void Reflect(AZ::ReflectContext* context);
 
-        SystemComponent();
+        SystemComponent() = default;
         ~SystemComponent() override = default;
 
         //////////////////////////////////////////////////////////////////////////
