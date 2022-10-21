@@ -11,8 +11,8 @@
 #include <AzCore/RTTI/BehaviorContext.h>
 #include <AzFramework/Input/Utils/AdjustAnalogInputForDeadZone.h>
 
-
 // Debug Draw
+#include <AzCore/Console/IConsole.h>
 #include <Atom/RPI.Public/ViewportContext.h>
 #include <Atom/RPI.Public/ViewportContextBus.h>
 
@@ -455,7 +455,7 @@ namespace AzFramework
     // Debug Draw Related Functions
     ////////////////////////////////////////////////////////////////////////////////////////////////
 
-#if !defined(_RELEASE)
+#if !defined(AZ_RELEASE_BUILD)
 
     static AZ::Transform GetCameraTransformFromCurrentView()
     {
@@ -494,12 +494,12 @@ namespace AzFramework
         debugDisplay.DrawLine(controllerPosition, controllerPosition + controllerTransform.GetBasisZ());
     }
 
-#endif // !_RELEASE
+#endif // !AZ_RELEASE_BUILD
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
     void InputDeviceXRController::CheckDebugDrawCheat() const
     {
-#if !defined(_RELEASE)
+#if !defined(AZ_RELEASE_BUILD)
         // This looks for specific controller input and will toggle the debug draw cvar.
         const auto& rawControllerData = m_impl->GetRawState();
         using xrc = InputDeviceXRController;
@@ -521,13 +521,13 @@ namespace AzFramework
         {
             cheatWasPressed = false;
         }
-#endif // !_RELEASE
+#endif // !AZ_RELEASE_BUILD
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
     void InputDeviceXRController::DrawGlobalDebugInfo()
     {
-#if !defined(_RELEASE)
+#if !defined(AZ_RELEASE_BUILD)
         CheckDebugDrawCheat();
 
         if (!OpenXRVk::xr_DebugDrawInput)
@@ -753,7 +753,7 @@ namespace AzFramework
 
         // Restore previous state
         debugDisplay->SetState(oldDrawState);
-#endif // !_RELEASE
+#endif // !AZ_RELEASE_BUILD
     }
 
 } // namespace AzFramework

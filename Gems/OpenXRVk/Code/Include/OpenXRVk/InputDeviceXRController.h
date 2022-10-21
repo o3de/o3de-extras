@@ -8,8 +8,6 @@
 
 #pragma once
 
-#include <AzCore/Console/IConsole.h>
-
 #include <AzFramework/Input/Buses/Requests/InputHapticFeedbackRequestBus.h>
 #include <AzFramework/Input/Channels/InputChannelAnalog.h>
 #include <AzFramework/Input/Channels/InputChannelAxis1D.h>
@@ -427,7 +425,6 @@ namespace AzFramework
         Implementation* GetImplementation() const;
 
     protected:
-
         ////////////////////////////////////////////////////////////////////////////////////////////
         // AzFramework::DebugDisplayEventBus interface
         void DrawGlobalDebugInfo() override;
