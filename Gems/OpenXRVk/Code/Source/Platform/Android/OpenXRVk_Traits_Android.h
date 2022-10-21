@@ -8,5 +8,3 @@
 #pragma once
 
 #define O3DE_TRAIT_DISABLE_FAILED_OPENXRVK_TESTS
-
-#include <OpenXRVkInstance_Android.h>

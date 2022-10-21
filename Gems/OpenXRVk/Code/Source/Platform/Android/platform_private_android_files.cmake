@@ -7,7 +7,7 @@
 #
 
 set(FILES
-    OpenXRVkInstance_Android.h
+    OpenXRVkCommon_Android.cpp
     OpenXRVk_Traits_Android.h
     OpenXRVk_Traits_Platform.h
     ../Common/Default/InputDeviceXRController_Default.cpp

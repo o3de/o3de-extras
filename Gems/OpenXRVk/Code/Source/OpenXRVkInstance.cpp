@@ -10,7 +10,7 @@
 #include <OpenXRVk/OpenXRVkUtils.h>
 #include <Atom/RHI.Reflect/Vulkan/XRVkDescriptors.h>
 #include <AzCore/Casting/numeric_cast.h>
-#include <OpenXRVk_Traits_Platform.h>
+#include <OpenXRVkCommon.h>
 
 namespace OpenXRVk
 {

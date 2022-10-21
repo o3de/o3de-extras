@@ -6,7 +6,7 @@
  *
  */
 
-#pragma once
+#include <OpenXRVkCommon.h>
 
 namespace OpenXRVk::Platform
 {

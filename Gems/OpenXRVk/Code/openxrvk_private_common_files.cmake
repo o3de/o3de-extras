@@ -18,6 +18,7 @@ set(FILES
     Include/OpenXRVk/OpenXRVkSystemComponent.h
     Include/OpenXRVk/OpenXRVkUtils.h
     Source/InputDeviceXRController.cpp
+    Source/OpenXRVkCommon.h
     Source/OpenXRVkDevice.cpp
     Source/OpenXRVkInput.cpp
     Source/OpenXRVkInstance.cpp

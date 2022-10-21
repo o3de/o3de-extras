@@ -10,5 +10,5 @@ set(FILES
     OpenXRVk_Traits_Mac.h
     OpenXRVk_Traits_Platform.h
     ../Common/Unimplemented/InputDeviceXRController_Unimplemented.cpp
-    ../Common/Unimplemented/OpenXRVkInstance_Unimplemented.h
+    ../Common/Unimplemented/OpenXRVkCommon_Unimplemented.cpp
 )

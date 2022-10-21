@@ -6,10 +6,10 @@
  *
  */
 
-#pragma once
-
+#include <OpenXRVkCommon.h>
 #include <AzCore/Android/AndroidEnv.h>
 #include <OpenXRVk/OpenXRVkUtils.h>
+
 
 namespace OpenXRVk::Platform
 {

@@ -12,5 +12,5 @@ set(FILES
     ../Common/Default/InputDeviceXRController_Default.cpp
     ../Common/Default/OculusTouch_Default.cpp
     ../Common/Default/OculusTouch_Default.h
-    ../Common/Unimplemented/OpenXRVkInstance_Unimplemented.h
+    ../Common/Unimplemented/OpenXRVkCommon_Unimplemented.cpp
 )
