@@ -31,7 +31,6 @@ namespace OpenXRVk
 namespace AzFramework
 {
     ////////////////////////////////////////////////////////////////////////////////////////////////
-    // static
     bool InputDeviceXRController::IsXRControllerDevice(const InputDeviceId& inputDeviceId)
     {
         // Only need to check the name (crc) to check the device is an xr controller type.
@@ -500,6 +499,7 @@ namespace AzFramework
     ////////////////////////////////////////////////////////////////////////////////////////////////
     void InputDeviceXRController::CheckDebugDrawCheat() const
     {
+#if !defined(_RELEASE)
         // This looks for specific controller input and will toggle the debug draw cvar.
         const auto& rawControllerData = m_impl->GetRawState();
         using xrc = InputDeviceXRController;
@@ -521,235 +521,238 @@ namespace AzFramework
         {
             cheatWasPressed = false;
         }
+#endif // !_RELEASE
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
     void InputDeviceXRController::DrawGlobalDebugInfo()
     {
+#if !defined(_RELEASE)
         CheckDebugDrawCheat();
 
-#if !defined(_RELEASE)
-        if (OpenXRVk::xr_DebugDrawInput)
+        if (!OpenXRVk::xr_DebugDrawInput)
         {
-            DebugDisplayRequestBus::BusPtr debugDisplayBus;
-            DebugDisplayRequestBus::Bind(debugDisplayBus, g_defaultSceneEntityDebugDisplayId);
-            DebugDisplayRequests* debugDisplay{ DebugDisplayRequestBus::FindFirstHandler(debugDisplayBus) };
-            if (!debugDisplay || !IsSupported())
-            {
-                return;
-            }
-
-            // Save previous draw state
-            const AZ::u32 oldDrawState{ debugDisplay->GetState() };
-
-            // ... draw data to the screen ...
-            const auto& rawControllerData = m_impl->GetRawState();
-            DrawControllerAxes(*debugDisplay, rawControllerData.m_leftPositionState, rawControllerData.m_leftOrientationState);
-            DrawControllerAxes(*debugDisplay, rawControllerData.m_rightPositionState, rawControllerData.m_rightOrientationState);
-
-            float drawX = 20.f;     // current draw X
-            float drawY = 20.f;     // current draw Y
-            constexpr float textSize = 0.8f;
-            constexpr float lineHeight = 15.f;
-
-            const AZ::Color whiteColor{ 1.f, 1.f, 1.f, 1.f };
-            const AZ::Color pressedColor{ 0.f, 1.f, 0.2f, 1.f };
-            const AZ::Color touchedColor{ 0.7f, 0.5f, 0.2f, 1.f };
-            const AZ::Color defaultColor{ 0.2f, 0.2f, 0.2f, 0.8f };
-
-            auto printButtonWithTouchState = [&](const InputChannelId& buttonChannel,
-                const InputChannelId& touchedButtonChannel, const char* buttonText)
-            {
-                AZStd::string text{ buttonText };
-                if (rawControllerData.GetDigitalButtonState(buttonChannel))
-                {
-                    text.append(" Pressed");
-                    debugDisplay->SetColor(pressedColor);
-                }
-                else if (rawControllerData.GetDigitalButtonState(touchedButtonChannel))
-                {
-                    text.append(" Touched");
-                    debugDisplay->SetColor(touchedColor);
-                }
-                else
-                {
-                    debugDisplay->SetColor(defaultColor);
-                }
-                debugDisplay->Draw2dTextLabel(drawX, drawY, textSize, text.c_str());
-
-                drawY += lineHeight;
-            };
-
-            auto printButtonState = [&](const InputChannelId& buttonChannel, const char* buttonText)
-            {
-                AZStd::string text{ buttonText };
-                if (rawControllerData.GetDigitalButtonState(buttonChannel))
-                {
-                    text.append(" Pressed");
-                    debugDisplay->SetColor(pressedColor);
-                }
-                else
-                {
-                    debugDisplay->SetColor(defaultColor);
-                }
-                debugDisplay->Draw2dTextLabel(drawX, drawY, textSize, text.c_str());
-
-                drawY += lineHeight;
-            };
-
-            auto printButtonTouchOnlyState = [&](const InputChannelId& touchChannel, const char* buttonText)
-            {
-                AZStd::string text{ buttonText };
-                if (rawControllerData.GetDigitalButtonState(touchChannel))
-                {
-                    text.append(" Touched");
-                    debugDisplay->SetColor(touchedColor);
-                }
-                else
-                {
-                    debugDisplay->SetColor(defaultColor);
-                }
-                debugDisplay->Draw2dTextLabel(drawX, drawY, textSize, text.c_str());
-
-                drawY += lineHeight;
-            };
-
-            auto printAnalogWithTouchState = [&](const InputChannelId& touchedChannel, const char* analogText, float value)
-            {
-                AZStd::string text{ analogText };
-                if (!AZ::IsClose(value, 0.f))
-                {
-                    text.append(AZStd::string::format(" Pressed: %.2f", value));
-                    debugDisplay->SetColor(pressedColor);
-                }
-                else if (rawControllerData.GetDigitalButtonState(touchedChannel))
-                {
-                    text.append(" Touched");
-                    debugDisplay->SetColor(touchedColor);
-                }
-                else
-                {
-                    debugDisplay->SetColor(defaultColor);
-                }
-                debugDisplay->Draw2dTextLabel(drawX, drawY, textSize, text.c_str());
-
-                drawY += lineHeight;
-            };
-
-            auto printAnalogState = [&](const char* analogText, float value)
-            {
-                AZStd::string text{ analogText };
-                if (!AZ::IsClose(value, 0.f))
-                {
-                    text.append(AZStd::string::format(" = %.2f", value));
-                    debugDisplay->SetColor(pressedColor);
-                }
-                else
-                {
-                    debugDisplay->SetColor(defaultColor);
-                }
-                debugDisplay->Draw2dTextLabel(drawX, drawY, textSize, text.c_str());
-
-                drawY += lineHeight;
-            };
-
-            auto print2DThumbStickWithTouchState = [&](const InputChannelId& touchedChannel, const char* thumbStickText, float xvalue, float yvalue)
-            {
-                AZStd::string text{ thumbStickText };
-                if (!AZ::IsClose(xvalue, 0.f) || !AZ::IsClose(yvalue, 0.f))
-                {
-                    text.append(AZStd::string::format(" Pressed: (%.2f, %.2f)", xvalue, yvalue));
-                    debugDisplay->SetColor(pressedColor);
-                }
-                else if (rawControllerData.GetDigitalButtonState(touchedChannel))
-                {
-                    text.append(" Touched");
-                    debugDisplay->SetColor(touchedColor);
-                }
-                else
-                {
-                    debugDisplay->SetColor(defaultColor);
-                }
-                debugDisplay->Draw2dTextLabel(drawX, drawY, textSize, text.c_str());
-
-                drawY += lineHeight;
-            };
-
-            auto printVector3 = [&](const AZ::Vector3& vec, const char* vectorText)
-            {
-                AZStd::string str{ AZStd::string::format("%s = (%.2f, %.2f, %.2f)", vectorText, vec.GetX(), vec.GetY(), vec.GetZ()) };
-                debugDisplay->SetColor(whiteColor);
-                debugDisplay->Draw2dTextLabel(drawX, drawY, textSize, str.c_str());
-
-                drawY += lineHeight;
-            };
-
-            auto printMatrix3x4 = [&](const AZ::Matrix3x4& matx, const char* matrixText)
-            {
-                debugDisplay->SetColor(whiteColor);
-                AZStd::string str{ AZStd::string::format("%s:", matrixText) };
-                debugDisplay->Draw2dTextLabel(drawX, drawY, textSize, str.c_str());
-                drawY += lineHeight;
-
-                AZ::Vector3 col0, col1, col2, col3;
-                matx.GetColumns(&col0, &col1, &col2, &col3);
-                str = AZStd::string::format("    | %.2f    %.2f    %.2f    %.2f |", col0.GetX(), col1.GetX(), col2.GetX(), col3.GetX());
-                debugDisplay->Draw2dTextLabel(drawX, drawY, textSize, str.c_str());
-                drawY += lineHeight;
-                str = AZStd::string::format("    | %.2f    %.2f    %.2f    %.2f |", col0.GetY(), col1.GetY(), col2.GetY(), col3.GetY());
-                debugDisplay->Draw2dTextLabel(drawX, drawY, textSize, str.c_str());
-                drawY += lineHeight;
-                str = AZStd::string::format("    | %.2f    %.2f    %.2f    %.2f |", col0.GetZ(), col1.GetZ(), col2.GetZ(), col3.GetZ());
-                debugDisplay->Draw2dTextLabel(drawX, drawY, textSize, str.c_str());
-                drawY += lineHeight;
-            };
-
-
-            using xrc = InputDeviceXRController;
-
-            // Left controller...
-            debugDisplay->SetColor(whiteColor);
-            debugDisplay->Draw2dTextLabel(drawX, drawY, textSize, "Left XR Controller");
-            drawY += lineHeight;
-
-            printButtonWithTouchState(xrc::Button::X, xrc::Button::TX, "X");
-            printButtonWithTouchState(xrc::Button::Y, xrc::Button::TY, "Y");
-            printButtonState(xrc::Button::L3, "L3");
-            printButtonState(xrc::Button::Menu, "Menu");
-            printButtonTouchOnlyState(xrc::Button::TLRest, "L ThumbRest");
-            printAnalogWithTouchState(xrc::Button::TLTrig, "L Trigger", rawControllerData.m_leftTriggerState);
-            printAnalogState("L Grip", rawControllerData.m_leftGripState);
-            print2DThumbStickWithTouchState(xrc::Button::TLStick, "L Thumb-Stick",
-                rawControllerData.m_leftThumbStickXState, rawControllerData.m_leftThumbStickYState);
-
-            drawY += (2.f * lineHeight);
-
-            // Right controller...
-            debugDisplay->SetColor(whiteColor);
-            debugDisplay->Draw2dTextLabel(drawX, drawY, textSize, "Right XR Controller");
-            drawY += lineHeight;
-
-            printButtonWithTouchState(xrc::Button::A, xrc::Button::TA, "A");
-            printButtonWithTouchState(xrc::Button::B, xrc::Button::TB, "B");
-            printButtonState(xrc::Button::R3, "R3");
-            printButtonState(xrc::Button::Home, "Home");
-            printButtonTouchOnlyState(xrc::Button::TRRest, "R ThumbRest");
-            printAnalogWithTouchState(xrc::Button::TLTrig, "R Trigger", rawControllerData.m_rightTriggerState);
-            printAnalogState("R Grip", rawControllerData.m_rightGripState);
-            print2DThumbStickWithTouchState(xrc::Button::TRStick, "R Thumb-Stick",
-                rawControllerData.m_rightThumbStickXState, rawControllerData.m_rightThumbStickYState);
-
-            drawY += (2.f * lineHeight);
-
-            // Positions and Orientation
-            printVector3(rawControllerData.m_leftPositionState, "Left Controller Position");
-            printMatrix3x4(AZ::Matrix3x4::CreateFromQuaternion(rawControllerData.m_leftOrientationState), "Left Controller Orientation");
-            printVector3(rawControllerData.m_rightPositionState, "Right Controller Position");
-            printMatrix3x4(AZ::Matrix3x4::CreateFromQuaternion(rawControllerData.m_rightOrientationState), "Right Controller Orientation");
-
-            // Restore previous state
-            debugDisplay->SetState(oldDrawState);
+            return;
         }
+
+        DebugDisplayRequestBus::BusPtr debugDisplayBus;
+        DebugDisplayRequestBus::Bind(debugDisplayBus, g_defaultSceneEntityDebugDisplayId);
+        DebugDisplayRequests* debugDisplay{ DebugDisplayRequestBus::FindFirstHandler(debugDisplayBus) };
+        if (!debugDisplay || !IsSupported())
+        {
+            return;
+        }
+
+        // Save previous draw state
+        const AZ::u32 oldDrawState{ debugDisplay->GetState() };
+
+        // ... draw data to the screen ...
+        const auto& rawControllerData = m_impl->GetRawState();
+        DrawControllerAxes(*debugDisplay, rawControllerData.m_leftPositionState, rawControllerData.m_leftOrientationState);
+        DrawControllerAxes(*debugDisplay, rawControllerData.m_rightPositionState, rawControllerData.m_rightOrientationState);
+
+        float drawX = 20.f;     // current draw X
+        float drawY = 20.f;     // current draw Y
+        constexpr float textSize = 0.8f;
+        constexpr float lineHeight = 15.f;
+
+        const AZ::Color whiteColor{ 1.f, 1.f, 1.f, 1.f };
+        const AZ::Color pressedColor{ 0.f, 1.f, 0.2f, 1.f };
+        const AZ::Color touchedColor{ 0.7f, 0.5f, 0.2f, 1.f };
+        const AZ::Color defaultColor{ 0.2f, 0.2f, 0.2f, 0.8f };
+
+        auto printButtonWithTouchState = [&](const InputChannelId& buttonChannel,
+            const InputChannelId& touchedButtonChannel, const char* buttonText)
+        {
+            AZStd::string text{ buttonText };
+            if (rawControllerData.GetDigitalButtonState(buttonChannel))
+            {
+                text.append(" Pressed");
+                debugDisplay->SetColor(pressedColor);
+            }
+            else if (rawControllerData.GetDigitalButtonState(touchedButtonChannel))
+            {
+                text.append(" Touched");
+                debugDisplay->SetColor(touchedColor);
+            }
+            else
+            {
+                debugDisplay->SetColor(defaultColor);
+            }
+            debugDisplay->Draw2dTextLabel(drawX, drawY, textSize, text.c_str());
+
+            drawY += lineHeight;
+        };
+
+        auto printButtonState = [&](const InputChannelId& buttonChannel, const char* buttonText)
+        {
+            AZStd::string text{ buttonText };
+            if (rawControllerData.GetDigitalButtonState(buttonChannel))
+            {
+                text.append(" Pressed");
+                debugDisplay->SetColor(pressedColor);
+            }
+            else
+            {
+                debugDisplay->SetColor(defaultColor);
+            }
+            debugDisplay->Draw2dTextLabel(drawX, drawY, textSize, text.c_str());
+
+            drawY += lineHeight;
+        };
+
+        auto printButtonTouchOnlyState = [&](const InputChannelId& touchChannel, const char* buttonText)
+        {
+            AZStd::string text{ buttonText };
+            if (rawControllerData.GetDigitalButtonState(touchChannel))
+            {
+                text.append(" Touched");
+                debugDisplay->SetColor(touchedColor);
+            }
+            else
+            {
+                debugDisplay->SetColor(defaultColor);
+            }
+            debugDisplay->Draw2dTextLabel(drawX, drawY, textSize, text.c_str());
+
+            drawY += lineHeight;
+        };
+
+        auto printAnalogWithTouchState = [&](const InputChannelId& touchedChannel, const char* analogText, float value)
+        {
+            AZStd::string text{ analogText };
+            if (!AZ::IsClose(value, 0.f))
+            {
+                text.append(AZStd::string::format(" Pressed: %.2f", value));
+                debugDisplay->SetColor(pressedColor);
+            }
+            else if (rawControllerData.GetDigitalButtonState(touchedChannel))
+            {
+                text.append(" Touched");
+                debugDisplay->SetColor(touchedColor);
+            }
+            else
+            {
+                debugDisplay->SetColor(defaultColor);
+            }
+            debugDisplay->Draw2dTextLabel(drawX, drawY, textSize, text.c_str());
+
+            drawY += lineHeight;
+        };
+
+        auto printAnalogState = [&](const char* analogText, float value)
+        {
+            AZStd::string text{ analogText };
+            if (!AZ::IsClose(value, 0.f))
+            {
+                text.append(AZStd::string::format(" = %.2f", value));
+                debugDisplay->SetColor(pressedColor);
+            }
+            else
+            {
+                debugDisplay->SetColor(defaultColor);
+            }
+            debugDisplay->Draw2dTextLabel(drawX, drawY, textSize, text.c_str());
+
+            drawY += lineHeight;
+        };
+
+        auto print2DThumbStickWithTouchState = [&](const InputChannelId& touchedChannel, const char* thumbStickText, float xvalue, float yvalue)
+        {
+            AZStd::string text{ thumbStickText };
+            if (!AZ::IsClose(xvalue, 0.f) || !AZ::IsClose(yvalue, 0.f))
+            {
+                text.append(AZStd::string::format(" Pressed: (%.2f, %.2f)", xvalue, yvalue));
+                debugDisplay->SetColor(pressedColor);
+            }
+            else if (rawControllerData.GetDigitalButtonState(touchedChannel))
+            {
+                text.append(" Touched");
+                debugDisplay->SetColor(touchedColor);
+            }
+            else
+            {
+                debugDisplay->SetColor(defaultColor);
+            }
+            debugDisplay->Draw2dTextLabel(drawX, drawY, textSize, text.c_str());
+
+            drawY += lineHeight;
+        };
+
+        auto printVector3 = [&](const AZ::Vector3& vec, const char* vectorText)
+        {
+            AZStd::string str{ AZStd::string::format("%s = (%.2f, %.2f, %.2f)", vectorText, vec.GetX(), vec.GetY(), vec.GetZ()) };
+            debugDisplay->SetColor(whiteColor);
+            debugDisplay->Draw2dTextLabel(drawX, drawY, textSize, str.c_str());
+
+            drawY += lineHeight;
+        };
+
+        auto printMatrix3x4 = [&](const AZ::Matrix3x4& matx, const char* matrixText)
+        {
+            debugDisplay->SetColor(whiteColor);
+            AZStd::string str{ AZStd::string::format("%s:", matrixText) };
+            debugDisplay->Draw2dTextLabel(drawX, drawY, textSize, str.c_str());
+            drawY += lineHeight;
+
+            AZ::Vector3 col0, col1, col2, col3;
+            matx.GetColumns(&col0, &col1, &col2, &col3);
+            str = AZStd::string::format("    | %.2f    %.2f    %.2f    %.2f |", col0.GetX(), col1.GetX(), col2.GetX(), col3.GetX());
+            debugDisplay->Draw2dTextLabel(drawX, drawY, textSize, str.c_str());
+            drawY += lineHeight;
+            str = AZStd::string::format("    | %.2f    %.2f    %.2f    %.2f |", col0.GetY(), col1.GetY(), col2.GetY(), col3.GetY());
+            debugDisplay->Draw2dTextLabel(drawX, drawY, textSize, str.c_str());
+            drawY += lineHeight;
+            str = AZStd::string::format("    | %.2f    %.2f    %.2f    %.2f |", col0.GetZ(), col1.GetZ(), col2.GetZ(), col3.GetZ());
+            debugDisplay->Draw2dTextLabel(drawX, drawY, textSize, str.c_str());
+            drawY += lineHeight;
+        };
+
+
+        using xrc = InputDeviceXRController;
+
+        // Left controller...
+        debugDisplay->SetColor(whiteColor);
+        debugDisplay->Draw2dTextLabel(drawX, drawY, textSize, "Left XR Controller");
+        drawY += lineHeight;
+
+        printButtonWithTouchState(xrc::Button::X, xrc::Button::TX, "X");
+        printButtonWithTouchState(xrc::Button::Y, xrc::Button::TY, "Y");
+        printButtonState(xrc::Button::L3, "L3");
+        printButtonState(xrc::Button::Menu, "Menu");
+        printButtonTouchOnlyState(xrc::Button::TLRest, "L ThumbRest");
+        printAnalogWithTouchState(xrc::Button::TLTrig, "L Trigger", rawControllerData.m_leftTriggerState);
+        printAnalogState("L Grip", rawControllerData.m_leftGripState);
+        print2DThumbStickWithTouchState(xrc::Button::TLStick, "L Thumb-Stick",
+            rawControllerData.m_leftThumbStickXState, rawControllerData.m_leftThumbStickYState);
+
+        drawY += (2.f * lineHeight);
+
+        // Right controller...
+        debugDisplay->SetColor(whiteColor);
+        debugDisplay->Draw2dTextLabel(drawX, drawY, textSize, "Right XR Controller");
+        drawY += lineHeight;
+
+        printButtonWithTouchState(xrc::Button::A, xrc::Button::TA, "A");
+        printButtonWithTouchState(xrc::Button::B, xrc::Button::TB, "B");
+        printButtonState(xrc::Button::R3, "R3");
+        printButtonState(xrc::Button::Home, "Home");
+        printButtonTouchOnlyState(xrc::Button::TRRest, "R ThumbRest");
+        printAnalogWithTouchState(xrc::Button::TLTrig, "R Trigger", rawControllerData.m_rightTriggerState);
+        printAnalogState("R Grip", rawControllerData.m_rightGripState);
+        print2DThumbStickWithTouchState(xrc::Button::TRStick, "R Thumb-Stick",
+            rawControllerData.m_rightThumbStickXState, rawControllerData.m_rightThumbStickYState);
+
+        drawY += (2.f * lineHeight);
+
+        // Positions and Orientation
+        printVector3(rawControllerData.m_leftPositionState, "Left Controller Position");
+        printMatrix3x4(AZ::Matrix3x4::CreateFromQuaternion(rawControllerData.m_leftOrientationState), "Left Controller Orientation");
+        printVector3(rawControllerData.m_rightPositionState, "Right Controller Position");
+        printMatrix3x4(AZ::Matrix3x4::CreateFromQuaternion(rawControllerData.m_rightOrientationState), "Right Controller Orientation");
+
+        // Restore previous state
+        debugDisplay->SetState(oldDrawState);
 #endif // !_RELEASE
     }
 

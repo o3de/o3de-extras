@@ -145,7 +145,6 @@ namespace OpenXRVk
         }
     }
 
-    // static
     AZ::Transform XRCameraMovementComponent::GetCameraTransformFromCurrentView()
     {
         if (const auto viewportContextMgr = AZ::Interface<AZ::RPI::ViewportContextRequestsInterface>::Get();

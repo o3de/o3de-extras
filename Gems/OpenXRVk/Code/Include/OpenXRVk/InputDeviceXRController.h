@@ -21,12 +21,6 @@
 
 #include <AzFramework/Entity/EntityDebugDisplayBus.h>
 
-namespace OpenXRVk
-{
-    AZ_CVAR_EXTERNED(bool, xr_DebugDrawInput);
-
-} // namespace OpenXRVk
-
 
 namespace AzFramework
 {

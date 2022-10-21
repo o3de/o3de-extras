@@ -8,4 +8,4 @@
 
 #pragma once
 
-#include <../Common/Unimplemented/InputDeviceXRController_Unimplemented.cpp>
+#include <../Common/Unimplemented/InputDeviceXRController_Unimplemented.h>
