@@ -46,7 +46,6 @@ namespace OpenXRVk
 
     private:
         void OnXRControllerEvent(const AzFramework::InputChannel& inputChannel);
-        static AZ::Transform GetCameraTransformFromCurrentView();
 
         // Transient data...
         AZ::Vector3 m_movement = AZ::Vector3::CreateZero();

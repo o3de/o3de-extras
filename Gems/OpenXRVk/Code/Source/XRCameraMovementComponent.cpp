@@ -25,6 +25,24 @@
 
 namespace OpenXRVk
 {
+    static AZ::Transform GetCameraTransformFromCurrentView()
+    {
+        if (const auto viewportContextMgr = AZ::Interface<AZ::RPI::ViewportContextRequestsInterface>::Get();
+            viewportContextMgr != nullptr)
+        {
+            if (const AZ::RPI::ViewportContextPtr viewportContext = viewportContextMgr->GetDefaultViewportContext();
+                viewportContext != nullptr)
+            {
+                if (const AZ::RPI::ViewPtr view = viewportContext->GetDefaultView();
+                    view != nullptr)
+                {
+                    return view->GetCameraTransform();
+                }
+            }
+        }
+        return AZ::Transform::CreateIdentity();
+    }
+
     void XRCameraMovementComponent::Reflect(AZ::ReflectContext* context)
     {
         if (auto serializeContext = azrtti_cast<AZ::SerializeContext*>(context))
@@ -143,24 +161,6 @@ namespace OpenXRVk
         {   // up
             m_movement.SetZ(inputChannel.GetValue() * m_movementSensitivity);
         }
-    }
-
-    AZ::Transform XRCameraMovementComponent::GetCameraTransformFromCurrentView()
-    {
-        if (const auto viewportContextMgr = AZ::Interface<AZ::RPI::ViewportContextRequestsInterface>::Get();
-            viewportContextMgr != nullptr)
-        {
-            if (const AZ::RPI::ViewportContextPtr viewportContext = viewportContextMgr->GetDefaultViewportContext();
-                viewportContext != nullptr)
-            {
-                if (const AZ::RPI::ViewPtr view = viewportContext->GetDefaultView();
-                    view != nullptr)
-                {
-                    return view->GetCameraTransform();
-                }
-            }
-        }
-        return AZ::Transform::CreateIdentity();
     }
 
 } // namespace OpenXRVk
