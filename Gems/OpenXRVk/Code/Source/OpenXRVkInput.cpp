@@ -14,8 +14,6 @@
 #include <OpenXRVk/OpenXRVkUtils.h>
 #include <AzCore/Casting/numeric_cast.h>
 
-#include <InputDeviceXRController_Platform.h>
-
 namespace OpenXRVk
 {
     XR::Ptr<Input> Input::Create()

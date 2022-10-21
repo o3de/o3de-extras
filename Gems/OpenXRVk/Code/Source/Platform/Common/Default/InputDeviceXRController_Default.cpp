@@ -6,15 +6,13 @@
  *
  */
 
-#pragma once
-
+#include <OpenXRVk/InputDeviceXRController.h>
 #include <../Common/Default/OculusTouch_Default.h>
 
 namespace AzFramework
 {
     ////////////////////////////////////////////////////////////////////////////////////////////////
-    // static
-    inline InputDeviceXRController::Implementation* InputDeviceXRController::Implementation::Create(
+    InputDeviceXRController::Implementation* InputDeviceXRController::Implementation::Create(
         InputDeviceXRController& inputDevice)
     {
         // Future versions of this function may be able to select from a variety of different device

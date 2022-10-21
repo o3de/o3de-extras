@@ -6,15 +6,12 @@
  *
  */
 
-#pragma once
-
 #include <OpenXRVk/InputDeviceXRController.h>
 
 namespace AzFramework
 {
     ////////////////////////////////////////////////////////////////////////////////////////////////
-    // static
-    inline InputDeviceXRController::Implementation* InputDeviceXRController::Implementation::Create(
+    InputDeviceXRController::Implementation* InputDeviceXRController::Implementation::Create(
         InputDeviceXRController& inputDevice)
     {
         return nullptr;
