@@ -241,7 +241,12 @@ namespace OpenXRVk
         syncInfo.activeActionSets = &activeActionSet;
 
         XrResult result = xrSyncActions(xrSession, &syncInfo);
-        WARN_IF_UNSUCCESSFUL(result);
+        if (result != XR_SUCCESS)
+        {
+            // This will hit when the device gets put down / goes idle.
+            // So to avoid spam, just return here.
+            return;
+        }
 
         using namespace AzFramework;
         using xrc = InputDeviceXRController;
@@ -356,7 +361,7 @@ namespace OpenXRVk
             LocateVisualizedSpace(device->GetPredictedDisplayTime(), session->GetXrSpace(spaceType),
                                   session->GetXrSpace(OpenXRVk::SpaceType::View), spaceType);
         }
-        
+
         // XR to AZ vector conversion...
         // Goes from y-up to z-up configuration (keeping Right Handed system)
         const auto convertVector3 = [](const XrVector3f& xrVec3) -> AZ::Vector3
