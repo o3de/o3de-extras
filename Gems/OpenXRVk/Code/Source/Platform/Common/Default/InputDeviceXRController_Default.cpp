@@ -7,7 +7,7 @@
  */
 
 #include <OpenXRVk/InputDeviceXRController.h>
-#include <../Common/Default/OculusTouch_Default.h>
+#include "OculusTouch_Default.h"
 
 namespace AzFramework
 {
