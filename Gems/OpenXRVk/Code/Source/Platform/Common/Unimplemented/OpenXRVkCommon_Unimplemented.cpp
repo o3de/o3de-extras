@@ -6,7 +6,7 @@
  *
  */
 
-#include <OpenXRVk_Traits_Windows.h>
+#include <OpenXRVkCommon.h>
 
 namespace OpenXRVk::Platform
 {
@@ -14,15 +14,15 @@ namespace OpenXRVk::Platform
     {
         return true;
     }
-    
+
     void OpenXRBeginFrameInternal()
     {
     }
-    
+
     void OpenXREndFrameInternal()
     {
     }
-    
+
     void OpenXRPostFrameInternal()
     {
     }

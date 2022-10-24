@@ -60,11 +60,3 @@ namespace OpenXRVk
     };
 
 } // namespace OpenXRVk
-
-////////////////////////////////////////////////////////////////////////////////////////////////
-// static
-inline AzFramework::InputDeviceXRController::Implementation* AzFramework::InputDeviceXRController::Implementation::Create(
-    InputDeviceXRController& inputDevice)
-{
-    return aznew OpenXRVk::InputDeviceOculusTouch(inputDevice);
-}

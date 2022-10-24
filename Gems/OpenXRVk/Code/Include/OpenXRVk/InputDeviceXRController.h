@@ -17,7 +17,9 @@
 #include <AzFramework/Input/Channels/InputChannelQuaternion.h>
 #include <AzFramework/Input/Devices/InputDevice.h>
 
-////////////////////////////////////////////////////////////////////////////////////////////////////
+#include <AzFramework/Entity/EntityDebugDisplayBus.h>
+
+
 namespace AzFramework
 {
     ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -28,6 +30,7 @@ namespace AzFramework
     class InputDeviceXRController
         : public InputDevice
         , public InputHapticFeedbackRequestBus::Handler
+        , public AzFramework::DebugDisplayEventBus::Handler
     {
     public:
         ////////////////////////////////////////////////////////////////////////////////////////////
@@ -236,6 +239,11 @@ namespace AzFramework
             virtual AZStd::string GetLeftHandSubPath() const = 0;
             virtual AZStd::string GetRightHandSubPath() const = 0;
 
+            ////////////////////////////////////////////////////////////////////////////////////////
+            //! Register a callback function for this implementation to call
+            //! This callback is called during tick updates and allows for platform code to run
+            //! updates to refresh state of the controller data.
+            //! @param callbackFn The callback function
             using TickCallbackFn = AZStd::function<void()>;
             virtual void RegisterTickCallback(TickCallbackFn callbackFn) = 0;
 
@@ -280,6 +288,10 @@ namespace AzFramework
                 ////////////////////////////////////////////////////////////////////////////////////
                 //! Reset the raw xr controller data
                 void Reset();
+
+                ////////////////////////////////////////////////////////////////////////////////////
+                //! Gets a digital button's current state
+                bool GetDigitalButtonState(const InputChannelId& channelId) const;
 
                 ////////////////////////////////////////////////////////////////////////////////////
                 //! Get the left trigger value adjusted for the dead zone and normalized
@@ -413,6 +425,18 @@ namespace AzFramework
         Implementation* GetImplementation() const;
 
     protected:
+        ////////////////////////////////////////////////////////////////////////////////////////////
+        // AzFramework::DebugDisplayEventBus interface
+        void DrawGlobalDebugInfo() override;
+
+        ////////////////////////////////////////////////////////////////////////////////////////////
+        //! Helper routine that checks for a specific controller input combo and will toggle the debug draw.
+        //! Allows users to quickly display/hide the debug information for the xr controllers without having
+        //! to type anything into a console.
+        //! Currently bound to: Button::Menu + Trigger::LTrigger
+        //! That is, hold the left controller's Menu button and squeeze the left trigger fully.
+        void CheckDebugDrawCheat() const;
+
         static constexpr float s_thumbStickMaxValue{ 1.f };
         static constexpr float s_thumbStickMinValue{ -1.f };
         static constexpr float s_thumbStickCenterValue{ 0.f };

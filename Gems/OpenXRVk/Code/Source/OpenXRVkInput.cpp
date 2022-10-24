@@ -14,8 +14,6 @@
 #include <OpenXRVk/OpenXRVkUtils.h>
 #include <AzCore/Casting/numeric_cast.h>
 
-#include <../Common/Default/OculusTouch_Default.h>
-
 namespace OpenXRVk
 {
     XR::Ptr<Input> Input::Create()
@@ -241,7 +239,12 @@ namespace OpenXRVk
         syncInfo.activeActionSets = &activeActionSet;
 
         XrResult result = xrSyncActions(xrSession, &syncInfo);
-        WARN_IF_UNSUCCESSFUL(result);
+        if (result != XR_SUCCESS)
+        {
+            // This will hit when the device gets put down / goes idle.
+            // So to avoid spam, just return here.
+            return;
+        }
 
         using namespace AzFramework;
         using xrc = InputDeviceXRController;
@@ -344,7 +347,7 @@ namespace OpenXRVk
 
             result = xrGetActionStatePose(xrSession, &getInfo, &poseState);
             WARN_IF_UNSUCCESSFUL(result);
-            m_handActive[static_cast<uint32_t>(hand)] = poseState.isActive;
+            m_handActive[static_cast<AZ::u32>(hand)] = poseState.isActive;
 
             LocateControllerSpace(device->GetPredictedDisplayTime(), session->GetXrSpace(OpenXRVk::SpaceType::View), static_cast<AZ::u32>(hand));
         }
@@ -357,6 +360,27 @@ namespace OpenXRVk
                                   session->GetXrSpace(OpenXRVk::SpaceType::View), spaceType);
         }
 
+        // XR to AZ vector conversion...
+        // Goes from y-up to z-up configuration (keeping Right Handed system)
+        const auto convertVector3 = [](const XrVector3f& xrVec3) -> AZ::Vector3
+        {
+            return AZ::Vector3{ xrVec3.x, -xrVec3.z, xrVec3.y };
+        };
+
+        // XR to AZ quaternion conversion...
+        // Goes from y-up to z-up configuration (keeping Right Handed system)
+        const auto convertQuat = [](const XrQuaternionf& xrQuat) -> AZ::Quaternion
+        {
+            return AZ::Quaternion{ xrQuat.x, -xrQuat.z, xrQuat.y, xrQuat.w };
+        };
+
+        rawControllerData.m_leftPositionState = convertVector3(m_handSpaceLocation[static_cast<AZ::u32>(XR::Side::Left)].pose.position);
+        rawControllerData.m_rightPositionState = convertVector3(m_handSpaceLocation[static_cast<AZ::u32>(XR::Side::Right)].pose.position);
+
+        rawControllerData.m_leftOrientationState = convertQuat(m_handSpaceLocation[static_cast<AZ::u32>(XR::Side::Left)].pose.orientation);
+        rawControllerData.m_rightOrientationState = convertQuat(m_handSpaceLocation[static_cast<AZ::u32>(XR::Side::Right)].pose.orientation);
+
+        // Check if the Quit (Home) button was pressed this sync...
         const bool quitPressed = GetButtonState(InputDeviceXRController::Button::Home);
         if (quitPressed && !m_wasQuitPressedLastSync)
         {
@@ -411,7 +435,7 @@ namespace OpenXRVk
 
     AZ::RHI::ResultCode Input::GetVisualizedSpacePose(OpenXRVk::SpaceType visualizedSpaceType, AZ::RPI::PoseData& outPoseData) const
     {
-        const auto spaceIndex = static_cast<uint32_t>(visualizedSpaceType);
+        const auto spaceIndex = static_cast<AZ::u32>(visualizedSpaceType);
         if (spaceIndex < AZStd::size(m_xrVisualizedSpaceLocations))
         {
             const XrQuaternionf& orientation = m_xrVisualizedSpaceLocations[spaceIndex].pose.orientation;
@@ -455,8 +479,7 @@ namespace OpenXRVk
     bool Input::GetButtonState(const AzFramework::InputChannelId& channelId) const
     {
         const auto& state = m_xrControllerImpl->GetRawState();
-        const AZ::u32 mask = state.m_buttonIdsToBitMasks.at(channelId);
-        return (state.m_digitalButtonStates & mask) != 0;
+        return state.GetDigitalButtonState(channelId);
     }
 
     bool Input::GetXButtonState() const
@@ -510,4 +533,5 @@ namespace OpenXRVk
             ? state.m_leftTriggerState
             : state.m_rightTriggerState;
     }
-}
+
+} // namespace OpenXRVk

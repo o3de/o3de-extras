@@ -12,7 +12,7 @@
 #include <OpenXRVk/OpenXRVkSwapChain.h>
 #include <OpenXRVk/OpenXRVkSpace.h>
 #include <OpenXRVk/OpenXRVkUtils.h>
-#include <OpenXRVk_Traits_Platform.h>
+#include <OpenXRVkCommon.h>
 #include <Atom/RHI.Reflect/Vulkan/XRVkDescriptors.h>
 #include <AzCore/Casting/numeric_cast.h>
 

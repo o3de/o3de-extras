@@ -5,6 +5,5 @@
  * SPDX-License-Identifier: Apache-2.0 OR MIT
  *
  */
-#pragma once
 
-#define O3DE_TRAIT_DISABLE_FAILED_OPENXRVK_TESTS
+#pragma once
