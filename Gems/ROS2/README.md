@@ -6,7 +6,7 @@ This Gem enables users to develop robotic simulations through ROS2 tools and com
 
 * Ubuntu 20.04 or 22.04. Other Ubuntu versions and Linux distros could also work as long as they can support ROS 2.
 * [O3DE](https://www.o3de.org/)
-* Modern version of ROS 2. We support and tested with:
+* Modern version of ROS 2. This instruction assumes that the `desktop` version is installed. Otherwise some packages might be missing. We support and tested with:
   * [ROS 2 Galactic](https://docs.ros.org/en/galactic/Installation.html) with Ubuntu 20.04.
   * [ROS 2 Humble](https://docs.ros.org/en/humble/Installation.html) with Ubuntu 22.04.
 
@@ -49,6 +49,14 @@ sudo apt install ros-${ROS_DISTRO}-ackermann-msgs ros-${ROS_DISTRO}-control-tool
   * Can be used with custom LUA scripting. 
 
 For a "feel" of these features, see an [example project](#example-project) which uses this Gem to run navigation stack.
+
+## Clone this repository
+
+Clone the gem repository from Github:
+
+```
+git clone https://github.com/RobotecAI/o3de-ros2-gem.git
+```
 
 ## Building
 
