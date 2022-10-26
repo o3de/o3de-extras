@@ -95,6 +95,8 @@ namespace XR
         void BeginFrame() override;
         void EndFrame() override;
         void PostFrame() override;
+        bool IsDefaultRenderPipelineNeeded() const override;
+        bool IsDefaultRenderPipelineEnabledOnHost() const override;
         ///////////////////////////////////////////////////////////////////
 
     private:
