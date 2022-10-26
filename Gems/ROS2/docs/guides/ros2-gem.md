@@ -44,7 +44,6 @@ It is intended to support any modern ROS 2 version, following these priorities:
 
 - The most recent LTS version (e.g. in June 2022, [ROS 2 Humble](https://docs.ros.org/en/humble/Installation.html)).
 - The most recent non-LTS version ([ROS 2 Galactic](https://docs.ros.org/en/galactic/Installation.html)).
-- The older LTS version ([ROS 2 Foxy](https://docs.ros.org/en/foxy/Installation.html)).
 - The always-fresh [ROS 2 Rolling](https://docs.ros.org/en/rolling/Installation.html).
 - Older versions.
 
