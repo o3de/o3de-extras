@@ -55,17 +55,17 @@ namespace OpenXRVk
 
             if (AZ::EditContext* editContext = serializeContext->GetEditContext())
             {
-                editContext->Class<XRCameraMovementComponent>("XRCameraMovementComponent", "[Description of functionality provided by this component]")
+                editContext->Class<XRCameraMovementComponent>("XR Camera Movement", "Provides XR controller input to control the camera")
                     ->ClassElement(AZ::Edit::ClassElements::EditorData, "")
-                    ->Attribute(AZ::Edit::Attributes::Category, "ComponentCategory")
+                    ->Attribute(AZ::Edit::Attributes::Category, "Gameplay")
                     ->Attribute(AZ::Edit::Attributes::Icon, "Icons/Components/Component_Placeholder.svg")
                     ->Attribute(AZ::Edit::Attributes::AppearsInAddComponentMenu, AZ_CRC_CE("Game"))
                     ->DataElement(AZ::Edit::UIHandlers::Default, &XRCameraMovementComponent::m_moveSpeed, "Move Speed", "Speed of camera movement")
-                    ->Attribute(AZ::Edit::Attributes::Min, 1.f)
-                    ->Attribute(AZ::Edit::Attributes::Max, 100.f)
+                        ->Attribute(AZ::Edit::Attributes::Min, 1.f)
+                        ->Attribute(AZ::Edit::Attributes::Max, 50.f)
                     ->DataElement(AZ::Edit::UIHandlers::Default, &XRCameraMovementComponent::m_movementSensitivity, "Move Sensitivity", "Fine movement sensitivity factor")
-                    ->Attribute(AZ::Edit::Attributes::Min, 0.f)
-                    ->Attribute(AZ::Edit::Attributes::Max, 1.f)
+                        ->Attribute(AZ::Edit::Attributes::Min, 0.f)
+                        ->Attribute(AZ::Edit::Attributes::Max, 1.f)
                     ;
             }
         }

@@ -165,7 +165,7 @@
                     "Controller": {
                         "Configuration": {
                             "Field of View": 80.0,
-                            "EditorEntityId": 16589391527782614938
+                            "EditorEntityId": 8220845441310131755
                         }
                     }
                 },
@@ -342,6 +342,20 @@
                                 "assetHint": "lightingpresets/lowcontrast/royal_esplanade_2k_iblskyboxcm_iblspecular.exr.streamingimage"
                             }
                         }
+                    },
+                    "diffuseImageAsset": {
+                        "assetId": {
+                            "guid": "{74988A00-9ED5-5F1C-8EBC-E2B8A2CE40AF}",
+                            "subId": 2000
+                        },
+                        "assetHint": "lightingpresets/lowcontrast/royal_esplanade_2k_iblskyboxcm_iblspecular.exr.streamingimage"
+                    },
+                    "specularImageAsset": {
+                        "assetId": {
+                            "guid": "{74988A00-9ED5-5F1C-8EBC-E2B8A2CE40AF}",
+                            "subId": 2000
+                        },
+                        "assetHint": "lightingpresets/lowcontrast/royal_esplanade_2k_iblskyboxcm_iblspecular.exr.streamingimage"
                     }
                 },
                 "Component_[14994774102579326069]": {
@@ -2038,7 +2052,7 @@
                                 },
                                 "assetHint": "assets/textures/reflectionprobes/refprobmain__5671e21b-ba4c-48c7-8e30-8f8a0428ab82__iblspecularcm256.dds.streamingimage"
                             },
-                            "EntityId": 6969507080663320545,
+                            "EntityId": 14136586257618404771,
                             "ShowVisualization": false,
                             "RenderExposure": 1.0
                         }
