@@ -32,6 +32,8 @@ namespace ROS2
         AzToolsFramework::Prefab::CreatePrefabResult CreatePrefabFromURDF();
         const AZStd::string& GetPrefabPath() const;
 
+        AZStd::string getStatus();
+
     private:
         AzToolsFramework::Prefab::PrefabEntityResult AddEntitiesForLink(urdf::LinkSharedPtr link, AZ::EntityId parentEntityId);
         void BuildAssetsForLink(urdf::LinkSharedPtr link);
@@ -46,5 +48,7 @@ namespace ROS2
         JointsMaker m_jointsMaker;
 
         BuildReadyCallback m_notifyBuildReadyCb;
+        AZStd::mutex m_statusLock;
+        AZStd::multimap<AZStd::string, AZStd::string> m_status;
     };
 } // namespace ROS2

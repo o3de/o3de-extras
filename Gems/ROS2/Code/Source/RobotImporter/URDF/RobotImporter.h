@@ -51,6 +51,15 @@ namespace ROS2
         //! @param importFinishedCb Function that is called when the import process is finished
         void CheckIfAssetsWereLoadedAndCreatePrefab(std::function<void()> importFinishedCb);
 
+        AZStd::string GetProgress()
+        {
+            if (m_prefabMaker)
+            {
+                return m_prefabMaker->getStatus();
+            }
+            return "";
+        }
+
     private:
         std::atomic_bool m_isProcessingAssets;
         std::atomic_bool m_loadingURDFFailed;

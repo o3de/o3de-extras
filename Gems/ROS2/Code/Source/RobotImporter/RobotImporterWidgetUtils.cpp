@@ -74,7 +74,7 @@ namespace ROS2::RobotImporterWidgetUtils
 
         if (!QFile::exists(path.value()))
         {
-            QMessageBox::critical(parent, QObject::tr("Does not exist"), QObject::tr("Provided path does not exist. Please try again"));
+            QMessageBox::critical(parent, QObject::tr("Does not exist"), QObject::tr("File does not exist. Please try again"));
             return QueryUserForURDFPath();
         }
 

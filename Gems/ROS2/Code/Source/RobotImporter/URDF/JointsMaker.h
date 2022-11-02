@@ -9,7 +9,9 @@
 #pragma once
 
 #include "UrdfParser.h"
+#include <AzCore/Component/ComponentBus.h>
 #include <AzCore/Component/EntityId.h>
+#include <AzCore/Outcome/Outcome.h>
 
 namespace ROS2
 {
@@ -18,15 +20,14 @@ namespace ROS2
     class JointsMaker
     {
     public:
-        //! Add zero or many joint elements to a given entity with a collider (depending on link content).
-        //! @param parentLink A parent link for the joint
-        //! @param childLink A child link for the joint.
-        //! @param childEntityId A non-active entity which will be populated with Joint components. Needs to have a collider.
-        //! @param parentEntityId An entity higher in hierarchy which is connected through the joint with the child entity. Needs to have a
-        //! rigid body and a collider.
-        void AddJoint(urdf::LinkSharedPtr parentLink, urdf::LinkSharedPtr childLink, AZ::EntityId linkChildId, AZ::EntityId linkParentId);
+        using JointsMakerResult = AZ::Outcome<AZ::ComponentId, AZStd::string>;
 
-    private:
-        void AddJointComponent(urdf::JointSharedPtr joint, AZ::EntityId followColliderEntityId, AZ::EntityId leadColliderEntityId);
+        //! Adds joint to entity and sets it accordingly to urdf::Joint
+        //! @param joint Joint data
+        //! @param followColliderEntityId A non-active entity which will be populated with Joint components.
+        //! @param leadColliderEntityId An entity higher in hierarchy which is connected through the joint with the child entity.
+        //! @returns created components Id or string with fail
+        JointsMakerResult AddJointComponent(
+            urdf::JointSharedPtr joint, AZ::EntityId followColliderEntityId, AZ::EntityId leadColliderEntityId);
     };
 } // namespace ROS2

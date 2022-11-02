@@ -19,8 +19,9 @@ namespace ROS2
 {
     RobotImporterWidget::RobotImporterWidget(QWidget* parent)
         : QWidget(parent)
-        , m_statusLabel("", this)
+        , m_statusText("", this)
         , m_selectFileButton(QObject::tr("Load"), this)
+        , m_statusLabel(QObject::tr("Created Entities:"), this)
         , m_importerUpdateTimer(this)
         , m_robotImporter(
               [this](RobotImporter::LogLevel level, const AZStd::string& message)
@@ -38,19 +39,20 @@ namespace ROS2
     {
         setWindowTitle(QObject::tr("Robot definition file importer"));
         QVBoxLayout* mainLayout = new QVBoxLayout(this);
-        mainLayout->setSpacing(20);
         QLabel* captionLabel = new QLabel(QObject::tr("Select a Unified Robot Description Format (URDF) file to import"), this);
         captionLabel->setWordWrap(true);
         mainLayout->addWidget(captionLabel);
         mainLayout->addWidget(&m_selectFileButton);
         mainLayout->addWidget(&m_statusLabel);
-        mainLayout->addStretch();
-
+        mainLayout->addWidget(&m_statusText);
+        m_statusText.setReadOnly(true);
         connect(
             &m_importerUpdateTimer,
             &QTimer::timeout,
             [this]
             {
+                AZStd::string progress = m_robotImporter.GetProgress();
+                m_statusText.setText(progress.c_str());
                 m_robotImporter.CheckIfAssetsWereLoadedAndCreatePrefab(
                     [this]()
                     {
@@ -88,19 +90,22 @@ namespace ROS2
                 // Check whether import is still in progress every 0.5 seconds
                 m_importerUpdateTimer.start(500);
             });
+
         setLayout(mainLayout);
     }
 
     void RobotImporterWidget::ReportError(const AZStd::string& errorMessage)
     {
         QMessageBox::critical(this, QObject::tr("Error"), QObject::tr(errorMessage.c_str()));
-        m_statusLabel.setText(errorMessage.c_str());
+        AZStd::string progress = m_robotImporter.GetProgress();
+        m_statusText.setText(QObject::tr((progress + errorMessage).c_str()));
         AZ_Error("RobotImporterWidget", false, errorMessage.c_str());
     }
 
     void RobotImporterWidget::ReportInfo(const AZStd::string& infoMessage)
     {
-        m_statusLabel.setText(QObject::tr(infoMessage.c_str()));
+        AZStd::string progress = m_robotImporter.GetProgress();
+        m_statusText.setText(QObject::tr((progress + infoMessage).c_str()));
         AZ::Debug::Trace::Instance().Output("RobotImporterWidget", infoMessage.c_str());
     }
 } // namespace ROS2

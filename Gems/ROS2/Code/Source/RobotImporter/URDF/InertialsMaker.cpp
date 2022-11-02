@@ -7,7 +7,7 @@
  */
 
 #include "RobotImporter/URDF/InertialsMaker.h"
-#include "RobotImporter/URDF/TypeConversions.h"
+#include "RobotImporter/Utils/TypeConversions.h"
 #include <AzCore/Component/EntityId.h>
 #include <AzToolsFramework/Entity/EditorEntityHelpers.h>
 #include <Source/EditorRigidBodyComponent.h>
@@ -25,7 +25,7 @@ namespace ROS2
         { // it is ok not to have inertia in a link
             return;
         }
-        AZ_TracePrintf("AddInertial", "Processing inertial for entity id:%s\n", entityId.ToString().c_str());
+        AZ_TracePrintf("AddInertial", "Processing inertial for entity id: %s\n", entityId.ToString().c_str());
 
         AZ::Entity* entity = AzToolsFramework::GetEntityById(entityId);
         PhysX::EditorRigidBodyConfiguration rigidBodyConfiguration;

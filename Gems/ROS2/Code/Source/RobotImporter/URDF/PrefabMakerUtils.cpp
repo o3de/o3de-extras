@@ -7,7 +7,7 @@
  */
 
 #include "RobotImporter/URDF/PrefabMakerUtils.h"
-#include "RobotImporter/URDF/TypeConversions.h"
+#include "RobotImporter/Utils/TypeConversions.h"
 #include <AzCore/Math/Quaternion.h>
 #include <AzCore/Utils/Utils.h>
 #include <AzCore/std/string/conversions.h>
@@ -43,7 +43,7 @@ namespace ROS2::PrefabMakerUtils
         return assetPath;
     }
 
-    void SetEntityTransform(const urdf::Pose& origin, AZ::EntityId entityId)
+    void SetEntityTransformLocal(const urdf::Pose& origin, AZ::EntityId entityId)
     {
         urdf::Vector3 urdfPosition = origin.position;
         urdf::Rotation urdfRotation = origin.rotation;
@@ -80,7 +80,7 @@ namespace ROS2::PrefabMakerUtils
             return AZ::Failure(AZStd::string("Invalid id for created entity"));
         }
 
-        AZ_TracePrintf("CreateEntity", "Processing entity id:%s with name:%s\n", entityId.ToString().c_str(), name.c_str());
+        AZ_TracePrintf("CreateEntity", "Processing entity id: %s with name: %s\n", entityId.ToString().c_str(), name.c_str());
         AZ::Entity* entity = AzToolsFramework::GetEntityById(entityId);
         entity->SetName(name);
         entity->Deactivate();
@@ -132,4 +132,5 @@ namespace ROS2::PrefabMakerUtils
         const AZStd::string suffix = index == 0 ? AZStd::string() : AZStd::string::format("_%zu", index);
         return AZStd::string::format("%s_%s%s", rootName.c_str(), type.c_str(), suffix.c_str());
     }
+
 } // namespace ROS2::PrefabMakerUtils

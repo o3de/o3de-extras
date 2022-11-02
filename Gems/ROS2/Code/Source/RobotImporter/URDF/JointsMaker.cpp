@@ -8,7 +8,7 @@
 
 #include "RobotImporter/URDF/JointsMaker.h"
 #include "RobotImporter/URDF/PrefabMakerUtils.h"
-#include "RobotImporter/URDF/TypeConversions.h"
+#include "RobotImporter/Utils/TypeConversions.h"
 #include <AzToolsFramework/Entity/EditorEntityHelpers.h>
 #include <Source/EditorColliderComponent.h>
 #include <Source/EditorFixedJointComponent.h>
@@ -17,20 +17,9 @@
 #include <Source/EditorRigidBodyComponent.h>
 namespace ROS2
 {
-    void JointsMaker::AddJoint(
-        urdf::LinkSharedPtr parentLink, urdf::LinkSharedPtr childLink, AZ::EntityId linkChildId, AZ::EntityId linkParentId)
-    { // Find if there is a joint between this child and its parent, add / change relevant components
-        for (auto joint : parentLink->child_joints)
-        {
-            if (joint->child_link_name == childLink->name)
-            { // Found a match!
-                PrefabMakerUtils::SetEntityTransform(joint->parent_to_joint_origin_transform, linkChildId);
-                return AddJointComponent(joint, linkChildId, linkParentId);
-            }
-        }
-    }
 
-    void JointsMaker::AddJointComponent(urdf::JointSharedPtr joint, AZ::EntityId followColliderEntityId, AZ::EntityId leadColliderEntityId)
+    JointsMaker::JointsMakerResult JointsMaker::AddJointComponent(
+        urdf::JointSharedPtr joint, AZ::EntityId followColliderEntityId, AZ::EntityId leadColliderEntityId)
     {
         AZ::Entity* followColliderEntity = AzToolsFramework::GetEntityById(followColliderEntityId);
         PhysX::EditorJointComponent* jointComponent = nullptr;
@@ -44,7 +33,9 @@ namespace ROS2
         // converting the unit quaternion to Euler vector.
         const AZ::Vector3 o3de_joint_dir{ 1.0, 0.0, 0.0 };
         const AZ::Vector3 joint_axis = URDF::TypeConversions::ConvertVector3(joint->axis);
-        const auto quaternion = AZ::Quaternion::CreateShortestArc(o3de_joint_dir, joint_axis);
+        const auto quaternion =
+            joint_axis.IsZero() ? AZ::Quaternion::CreateIdentity() : AZ::Quaternion::CreateShortestArc(o3de_joint_dir, joint_axis);
+
         AZ_Printf(
             "JointsMaker",
             "Quaternion from URDF to o3de %f, %f, %f, %f",
@@ -138,12 +129,7 @@ namespace ROS2
             break;
         default:
             AZ_Warning("AddJointComponent", false, "Unknown or unsupported joint type %d for joint %s", joint->type, joint->name.c_str());
-            break;
-        }
-
-        if (!jointComponent)
-        {
-            return;
+            return AZ::Failure(AZStd::string::format("unsupported joint type : %d", joint->type));
         }
 
         followColliderEntity->Activate();
@@ -153,5 +139,6 @@ namespace ROS2
             PhysX::JointsComponentModeCommon::ParamaterNames::LeadEntity,
             leadColliderEntityId);
         followColliderEntity->Deactivate();
+        return AZ::Success(jointComponent->GetId());
     }
 } // namespace ROS2

@@ -8,7 +8,8 @@
 
 #pragma once
 
-#include "UrdfParser.h"
+#include "AzCore/Math/Transform.h"
+#include "RobotImporter/URDF/UrdfParser.h"
 #include <AzCore/Math/Color.h>
 #include <AzCore/Math/Quaternion.h>
 #include <AzCore/Math/Vector3.h>
@@ -22,5 +23,6 @@ namespace ROS2::URDF
         static AZ::Vector3 ConvertVector3(const urdf::Vector3& urdfVector);
         static AZ::Quaternion ConvertQuaternion(const urdf::Rotation& urdfQuaternion);
         static AZ::Color ConvertColor(const urdf::Color& color);
+        static AZ::Transform ConvertPose(const urdf::Pose& pose);
     };
 } // namespace ROS2::URDF

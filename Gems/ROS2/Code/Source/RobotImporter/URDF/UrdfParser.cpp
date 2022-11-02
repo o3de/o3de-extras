@@ -22,12 +22,10 @@ namespace ROS2
         void checkIfCurrentLocaleHasDotAsADecimalSeparator()
         {
             // Due to the fact that URDF parser takes into account the locale information, incompatibility between URDF file locale and
-            // system locale might lead to incorrect URDF parsing. Mainly it affects floating point numbers, and its decimal separator. When
+            // system locale might lead to incorrect URDF parsing. Mainly it affects floating point numbers, and the decimal separator. When
             // locales are set to system with comma as decimal separator and URDF file is created with dot as decimal separator, URDF parser
             // will trim the floating point number after comma. For example, if parsing 0.1, URDF parser will parse it as 0.
-            // This might lead to incorrect URDF loading. Most widely used separator is a dot. If in current locale it is not the case a
-            // warning is presented to the user that his system's locale seem unusual, and he should double-check it
-
+            // This might lead to incorrect URDF loading. If the current locale is not a dot (as per standard ROS locale), we warn the user.
             std::locale currentLocale("");
             if (std::use_facet<std::numpunct<char>>(currentLocale).decimal_point() != '.')
             {

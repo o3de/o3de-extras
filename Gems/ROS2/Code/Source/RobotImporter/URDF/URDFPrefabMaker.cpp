@@ -56,22 +56,158 @@ namespace ROS2
     }
 
     AzToolsFramework::Prefab::CreatePrefabResult URDFPrefabMaker::CreatePrefabFromURDF()
-    { // TODO - this is PoC code, restructure when developing semantics of URDF->Prefab/Entities/Components mapping
-
-        // recursively add all entities
-        auto createEntityResult = AddEntitiesForLink(m_model->root_link_, AZ::EntityId());
-        if (!createEntityResult.IsSuccess())
+    {
         {
-            return AZ::Failure(AZStd::string(createEntityResult.GetError()));
+            AZStd::lock_guard<AZStd::mutex> lck(m_statusLock);
+            m_status.clear();
+        }
+        // TODO - this is PoC code, restructure when developing semantics of URDF->Prefab/Entities/Components mapping
+        AZStd::unordered_map<AZStd::string, AzToolsFramework::Prefab::PrefabEntityResult> created_links;
+        auto createEntityRoot = AddEntitiesForLink(m_model->root_link_, AZ::EntityId());
+        AZStd::string root_name(m_model->root_link_->name.c_str(), m_model->root_link_->name.size());
+        created_links[root_name] = createEntityRoot;
+        if (!createEntityRoot.IsSuccess())
+        {
+            return AZ::Failure(AZStd::string(createEntityRoot.GetError()));
         }
 
-        auto contentEntityId = createEntityResult.GetValue();
+        auto links = Utils::getAllLinks(m_model->root_link_->child_links);
+
+        // create links
+        for (const auto& [name, link_ptr] : links)
+        {
+            created_links[name] = AddEntitiesForLink(link_ptr, createEntityRoot.GetValue());
+        }
+
+        for (const auto& [name, result] : created_links)
+        {
+            AZ_TracePrintf(
+                "CreatePrefabFromURDF",
+                "Link with name %s was created as: %s",
+                name.c_str(),
+                result.IsSuccess() ? (result.GetValue().ToString().c_str()) : ("[Failed]"));
+            AZStd::lock_guard<AZStd::mutex> lck(m_statusLock);
+            if (result.IsSuccess())
+            {
+                m_status.emplace(name, AZStd::string::format("created as: %s", result.GetValue().ToString().c_str()));
+            }
+            else
+            {
+                m_status.emplace(name, AZStd::string::format("failed : %s", result.GetError().c_str()));
+            }
+        }
+
+        // set hierarchy
+        for (const auto& [name, link_ptr] : links)
+        {
+            const auto this_entry = created_links.at(name);
+            if (!this_entry.IsSuccess())
+            {
+                AZ_TracePrintf("CreatePrefabFromURDF", "Link %s creation failed", name.c_str());
+                continue;
+            }
+            auto parent_ptr = link_ptr->getParent();
+            if (!parent_ptr)
+            {
+                AZ_TracePrintf("CreatePrefabFromURDF", "Link %s has no parents", name.c_str());
+                continue;
+            }
+            AZStd::string parent_name(parent_ptr->name.c_str(), parent_ptr->name.size());
+            const auto parent_entry = created_links.find(parent_name);
+            if (parent_entry == created_links.end())
+            {
+                AZ_TracePrintf("CreatePrefabFromURDF", "Link %s has invalid parent name %s", name.c_str(), parent_name.c_str());
+                continue;
+            }
+            if (!parent_entry->second.IsSuccess())
+            {
+                AZ_TracePrintf(
+                    "CreatePrefabFromURDF", "Link %s has parent %s which has failed to create", name.c_str(), parent_name.c_str());
+                continue;
+            }
+            AZ::TransformBus::Event(this_entry.GetValue(), &AZ::TransformBus::Events::SetParent, parent_entry->second.GetValue());
+        }
+
+        // set transforms of links
+        for (const auto& [name, link_ptr] : links)
+        {
+            const auto this_entry = created_links.at(name);
+            if (this_entry.IsSuccess())
+            {
+                AZ::Transform tf = Utils::getWorldTransformURDF(link_ptr);
+                auto* entity = AzToolsFramework::GetEntityById(this_entry.GetValue());
+                if (entity)
+                {
+                    auto* transformInterface = entity->FindComponent<AzToolsFramework::Components::TransformComponent>();
+                    if (transformInterface)
+                    {
+                        AZ_TracePrintf(
+                            "CreatePrefabFromURDF",
+                            "Setting transform %s %s to [%f %f %f] [%f %f %f %f]",
+                            name.c_str(),
+                            this_entry.GetValue().ToString().c_str(),
+                            tf.GetTranslation().GetX(),
+                            tf.GetTranslation().GetY(),
+                            tf.GetTranslation().GetZ(),
+                            tf.GetRotation().GetX(),
+                            tf.GetRotation().GetY(),
+                            tf.GetRotation().GetZ(),
+                            tf.GetRotation().GetW());
+                        transformInterface->SetWorldTM(tf);
+                    }
+                    else
+                    {
+                        AZ_TracePrintf(
+                            "CreatePrefabFromURDF", "Setting transform failed: %s does not have transform interface", name.c_str());
+                    }
+                }
+            }
+        }
+
+        // create joint
+        auto joints = Utils::getAllJoints(m_model->root_link_->child_links);
+        for (const auto& [name, joint_ptr] : joints)
+        {
+            AZ_Assert(joint_ptr, "joint %s is null", name.c_str());
+            AZ_TracePrintf(
+                "CreatePrefabFromURDF",
+                "Creating joint %s : %s -> %s",
+                name.c_str(),
+                joint_ptr->parent_link_name.c_str(),
+                joint_ptr->child_link_name.c_str());
+
+            auto lead_entity = created_links.at(joint_ptr->parent_link_name.c_str());
+            auto child_entity = created_links.at(joint_ptr->child_link_name.c_str());
+            // check if both has RigidBody
+            if (lead_entity.IsSuccess() && child_entity.IsSuccess())
+            {
+                AZStd::lock_guard<AZStd::mutex> lck(m_statusLock);
+                auto result = m_jointsMaker.AddJointComponent(joint_ptr, child_entity.GetValue(), lead_entity.GetValue());
+                if (result.IsSuccess())
+                {
+                    m_status.emplace(name, AZStd::string::format("created as %llu", result.GetValue()));
+                }
+                else
+                {
+                    m_status.emplace(name, AZStd::string::format("Failed:  %s", result.GetError().c_str()));
+                }
+            }
+            else
+            {
+                AZ_Warning("CreatePrefabFromURDF", false, "cannot create joint %s", name.c_str());
+            }
+        }
+
+        // move to spawn point
+        MoveEntityToDefaultSpawnPoint(createEntityRoot.GetValue());
+
+        auto contentEntityId = createEntityRoot.GetValue();
         AddRobotControl(contentEntityId);
 
         // Create prefab, save it to disk immediately
         // Remove prefab, if it was already created.
 
-        AZ::EntityId entityId = createEntityResult.GetValue();
+        AZ::EntityId entityId = createEntityRoot.GetValue();
 
         auto prefabSystemComponent = AZ::Interface<AzToolsFramework::Prefab::PrefabSystemComponentInterface>::Get();
         auto prefabLoaderInterface = AZ::Interface<AzToolsFramework::Prefab::PrefabLoaderInterface>::Get();
@@ -84,7 +220,7 @@ namespace ROS2
 
         if (templateId != AzToolsFramework::Prefab::InvalidTemplateId)
         {
-            AZ_TracePrintf("CreatePrefabFromURDF", "Prefab was already loaded \n");
+            AZ_TracePrintf("CreatePrefabFromURDF", "Prefab was already loaded\n");
             prefabSystemComponent->RemoveTemplate(templateId);
         }
 
@@ -94,7 +230,7 @@ namespace ROS2
             AZ::EntityId prefabContainerEntityId = outcome.GetValue();
             PrefabMakerUtils::AddRequiredComponentsToEntity(prefabContainerEntityId);
         }
-        AZ_TracePrintf("CreatePrefabFromURDF", "Successfully created %s prefab\n", m_prefabPath.c_str());
+        AZ_TracePrintf("CreatePrefabFromURDF", "Successfully created prefab %s\n", m_prefabPath.c_str());
         return outcome;
     }
 
@@ -119,28 +255,12 @@ namespace ROS2
         if (frameCompontentId)
         {
             auto* component = Utils::GetGameOrEditorComponent<ROS2FrameComponent>(entity);
-            AZ_Assert(component, "Component not exists for %s", entityId.ToString().c_str());
+            AZ_Assert(component, "ROS2 Frame Component does not exist for %s", entityId.ToString().c_str());
             component->SetFrameID(AZStd::string(link->name.c_str(), link->name.size()));
         }
         m_visualsMaker.AddVisuals(link, entityId);
         m_collidersMaker.AddColliders(link, entityId);
         m_inertialsMaker.AddInertial(link->inertial, entityId);
-
-        for (auto childLink : link->child_links)
-        {
-            auto outcome = AddEntitiesForLink(childLink, entityId); // recursive call
-            if (!outcome.IsSuccess())
-            { // TODO - decide on behavior. Still proceed to load other children?
-                AZ_Warning("AddEntitiesForLink", false, "Unable to add entity due to an error: %s", outcome.GetError().c_str());
-                continue;
-            }
-
-            AZ::EntityId childEntityId = outcome.GetValue();
-            m_jointsMaker.AddJoint(link, childLink, childEntityId, entityId);
-        }
-
-        MoveEntityToDefaultSpawnPoint(entityId);
-
         return AZ::Success(entityId);
     }
 
@@ -184,5 +304,16 @@ namespace ROS2
         auto pose = spawner->GetDefaultSpawnPose();
 
         transformInterface_->SetWorldTM(pose);
+    }
+
+    AZStd::string URDFPrefabMaker::getStatus()
+    {
+        AZStd::string str;
+        AZStd::lock_guard<AZStd::mutex> lck(m_statusLock);
+        for (const auto& [entry, entry_status] : m_status)
+        {
+            str += entry + " " + entry_status + "\n";
+        }
+        return str;
     }
 } // namespace ROS2

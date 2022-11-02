@@ -8,7 +8,7 @@
 
 #include "RobotImporter/URDF/VisualsMaker.h"
 #include "RobotImporter/URDF/PrefabMakerUtils.h"
-#include "RobotImporter/URDF/TypeConversions.h"
+#include "RobotImporter/Utils/TypeConversions.h"
 
 #include <AtomLyIntegration/CommonFeatures/Material/MaterialComponentBus.h>
 #include <AtomLyIntegration/CommonFeatures/Material/MaterialComponentConstants.h>
@@ -86,7 +86,7 @@ namespace ROS2
     void VisualsMaker::AddVisualToEntity(urdf::VisualSharedPtr visual, AZ::EntityId entityId)
     {
         // Apply transform as per origin
-        PrefabMakerUtils::SetEntityTransform(visual->origin, entityId);
+        PrefabMakerUtils::SetEntityTransformLocal(visual->origin, entityId);
 
         AZ::Entity* entity = AzToolsFramework::GetEntityById(entityId);
         auto geometry = visual->geometry;

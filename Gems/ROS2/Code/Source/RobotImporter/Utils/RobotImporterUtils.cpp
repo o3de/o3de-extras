@@ -7,6 +7,7 @@
  */
 
 #include "RobotImporterUtils.h"
+#include "TypeConversions.h"
 #include <AzCore/std/string/regex.h>
 namespace ROS2
 {
@@ -38,6 +39,51 @@ namespace ROS2
             return true;
         }
         return false;
+    }
+
+    AZ::Transform Utils::getWorldTransformURDF(const urdf::LinkSharedPtr& link, AZ::Transform t)
+    {
+        if (link->getParent() != nullptr)
+        {
+            t = URDF::TypeConversions::ConvertPose(link->parent_joint->parent_to_joint_origin_transform) * t;
+            return getWorldTransformURDF(link->getParent(), t);
+        }
+        return t;
+    }
+
+    AZStd::unordered_map<AZStd::string, urdf::LinkSharedPtr> Utils::getAllLinks(const std::vector<urdf::LinkSharedPtr>& child_links)
+    {
+        AZStd::unordered_map<AZStd::string, urdf::LinkSharedPtr> pointers;
+        std::function<void(const std::vector<urdf::LinkSharedPtr>&)> link_visitor =
+            [&](const std::vector<urdf::LinkSharedPtr>& child_links) -> void
+        {
+            for (auto child_link : child_links)
+            {
+                AZStd::string link_name(child_link->name.c_str(), child_link->name.size());
+                pointers[link_name] = child_link;
+                link_visitor(child_link->child_links);
+            }
+        };
+        link_visitor(child_links);
+        return pointers;
+    }
+
+    AZStd::unordered_map<AZStd::string, urdf::JointSharedPtr> Utils::getAllJoints(const std::vector<urdf::LinkSharedPtr>& child_links)
+    {
+        AZStd::unordered_map<AZStd::string, urdf::JointSharedPtr> joints;
+        std::function<void(const std::vector<urdf::LinkSharedPtr>&)> link_visitor =
+            [&](const std::vector<urdf::LinkSharedPtr>& child_links) -> void
+        {
+            for (auto child_link : child_links)
+            {
+                const auto& joint = child_link->parent_joint;
+                AZStd::string joint_name(joint->name.c_str(), joint->name.size());
+                joints[joint_name] = joint;
+                link_visitor(child_link->child_links);
+            }
+        };
+        link_visitor(child_links);
+        return joints;
     }
 
 } // namespace ROS2

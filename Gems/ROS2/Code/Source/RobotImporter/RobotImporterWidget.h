@@ -11,9 +11,11 @@
 #if !defined(Q_MOC_RUN)
 #include "RobotImporter/URDF/RobotImporter.h"
 #include <AzToolsFramework/API/ToolsApplicationAPI.h>
+#include <QCheckBox>
 #include <QFileDialog>
 #include <QLabel>
 #include <QPushButton>
+#include <QTextEdit>
 #include <QTimer>
 #include <QWidget>
 #endif
@@ -38,8 +40,8 @@ namespace ROS2
         //! Populates the log and sets status information in the status label
         //! @param infoMessage info message to display to the user
         void ReportInfo(const AZStd::string& infoMessage);
-
         QLabel m_statusLabel;
+        QTextEdit m_statusText;
         QPushButton m_selectFileButton;
         QTimer m_importerUpdateTimer;
 

@@ -14,8 +14,6 @@ set(FILES
     Source/RobotImporter/RobotImporterWidget.h
     Source/RobotImporter/RobotImporterWidgetUtils.cpp
     Source/RobotImporter/RobotImporterWidgetUtils.h
-    Source/RobotImporter/URDF/TypeConversions.h
-    Source/RobotImporter/URDF/TypeConversions.cpp
     Source/RobotImporter/URDF/URDFPrefabMaker.cpp
     Source/RobotImporter/URDF/URDFPrefabMaker.h
     Source/RobotImporter/URDF/VisualsMaker.cpp
