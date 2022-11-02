@@ -1,0 +1,15 @@
+{
+    "O3DE": {
+        "Autoexec": {
+            "ConsoleCommands": {
+                "LoadLevel": "DefaultLevel"
+            }
+        },
+        "Atom": {
+            "OpenXR": {
+                "Enable": false,
+                "android_ViewResolutionScale": 0.5
+            }
+        }
+    }
+}
