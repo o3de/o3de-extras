@@ -3,10 +3,18 @@
 #
 # SPDX-License-Identifier: Apache-2.0 OR MIT
 
-# If no ROS2 is found, no targets are valid for this Gem
 
+# Only allow this gem to be configured on platforms that are currently supported
+include(${CMAKE_CURRENT_SOURCE_DIR}/Platform/${PAL_PLATFORM_NAME}/PAL_${PAL_PLATFORM_NAME_LOWERCASE}.cmake)
+if(NOT PAL_TRAIT_BUILD_ROS2_GEM_SUPPORTED)
+    message(FATAL_ERROR "The ROS2 Gem is not currently supported on ${PAL_PLATFORM_NAME}")
+    return()
+endif()
+
+# If no ROS2 is found, no targets are valid for this Gem
 find_package(ROS2 MODULE)
 if (NOT ROS2_FOUND)
+    message(FATAL_ERROR "Unable to detect a the ROS2 distribution on this system. Make sure it is installed and enabled.")
     return()
 endif()
 
