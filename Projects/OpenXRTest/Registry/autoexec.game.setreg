@@ -1,8 +1,8 @@
 {
-    "Amazon": {
-        "AzCore": {
-            "Bootstrap": {
-                "android_wait_for_connect": 1
+    "O3DE": {
+        "Autoexec": {
+            "ConsoleCommands": {
+                "LoadLevel": "DefaultLevel"
             }
         }
     }
