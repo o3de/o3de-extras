@@ -16,8 +16,8 @@ namespace ROS2
     {
         if (auto serializeContext = azrtti_cast<AZ::SerializeContext*>(context))
         {
-            serializeContext->RegisterGenericType<AZStd::shared_ptr<PublisherConfiguration>>();
-            serializeContext->RegisterGenericType<AZStd::map<AZStd::string, AZStd::shared_ptr<PublisherConfiguration>>>();
+            serializeContext->RegisterGenericType<AZStd::shared_ptr<TopicConfiguration>>();
+            serializeContext->RegisterGenericType<AZStd::map<AZStd::string, AZStd::shared_ptr<TopicConfiguration>>>();
             serializeContext->Class<SensorConfiguration>()
                 ->Version(2)
                 ->Field("Visualise", &SensorConfiguration::m_visualise)

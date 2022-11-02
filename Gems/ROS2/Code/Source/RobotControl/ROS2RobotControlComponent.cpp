@@ -35,7 +35,7 @@ namespace ROS2
 
         if (m_subscriptionHandler)
         {
-            m_subscriptionHandler->Activate(GetEntity(), m_controlConfiguration);
+            m_subscriptionHandler->Activate(GetEntity(), m_subscriberConfiguration);
         }
     }
 
@@ -54,8 +54,10 @@ namespace ROS2
 
         if (AZ::SerializeContext* serialize = azrtti_cast<AZ::SerializeContext*>(context))
         {
-            serialize->Class<ROS2RobotControlComponent, AZ::Component>()->Version(1)->Field(
-                "ControlConfiguration", &ROS2RobotControlComponent::m_controlConfiguration);
+            serialize->Class<ROS2RobotControlComponent, AZ::Component>()
+                ->Version(2)
+                ->Field("ControlConfiguration", &ROS2RobotControlComponent::m_controlConfiguration)
+                ->Field("SubscriberConfiguration", &ROS2RobotControlComponent::m_subscriberConfiguration);
 
             if (AZ::EditContext* ec = serialize->GetEditContext())
             {
@@ -67,7 +69,12 @@ namespace ROS2
                         AZ::Edit::UIHandlers::Default,
                         &ROS2RobotControlComponent::m_controlConfiguration,
                         "Control settings",
-                        "Control subscription setting and type of control");
+                        "Control subscription setting and type of control")
+                    ->DataElement(
+                        AZ::Edit::UIHandlers::Default,
+                        &ROS2RobotControlComponent::m_subscriberConfiguration,
+                        "Topic subscriber configuration",
+                        "Configuration of ROS2 topic Robot Control subscribes to");
             }
         }
     }
@@ -83,6 +90,11 @@ namespace ROS2
         return m_controlConfiguration;
     }
 
+    const TopicConfiguration& ROS2RobotControlComponent::GetSubscriberConfigration() const
+    {
+        return m_subscriberConfiguration;
+    }
+
     void ROS2RobotControlComponent::GetProvidedServices(AZ::ComponentDescriptor::DependencyArrayType& provided)
     {
         provided.push_back(AZ_CRC_CE("ROS2RobotControl"));
@@ -91,6 +103,11 @@ namespace ROS2
     void ROS2RobotControlComponent::SetControlConfiguration(const ControlConfiguration& controlConfiguration)
     {
         m_controlConfiguration = controlConfiguration;
+    }
+
+    void ROS2RobotControlComponent::SetSubscriberConfiguration(const TopicConfiguration& subscriberConfiguration)
+    {
+        m_subscriberConfiguration = subscriberConfiguration;
     }
 
 } // namespace ROS2

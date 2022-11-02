@@ -63,7 +63,7 @@ namespace ROS2
 
     ROS2GNSSSensorComponent::ROS2GNSSSensorComponent()
     {
-        PublisherConfiguration pc;
+        TopicConfiguration pc;
         pc.m_type = Internal::kGNSSMsgType;
         pc.m_topic = "gnss";
         m_sensorConfiguration.m_frequency = 10;

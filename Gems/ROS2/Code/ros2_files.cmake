@@ -19,8 +19,8 @@ set(FILES
         Source/Lidar/ROS2LidarSensorComponent.cpp
         Source/Lidar/ROS2LidarSensorComponent.h
         Source/Manipulator/MotorizedJoint.cpp
-        Source/QoS/QoS.cpp
-        Source/QoS/QoS.h
+        Source/Communication/QoS.cpp
+        Source/Communication/TopicConfiguration.cpp
         Source/ROS2GemUtilities.cpp
         Source/RobotControl/ControlConfiguration.cpp
         Source/RobotControl/ControlConfiguration.h
@@ -41,8 +41,6 @@ set(FILES
         Source/ROS2ModuleInterface.h
         Source/ROS2SystemComponent.cpp
         Source/ROS2SystemComponent.h
-        Source/Sensor/PublisherConfiguration.cpp
-        Source/Sensor/PublisherConfiguration.h
         Source/Sensor/ROS2SensorComponent.cpp
         Source/Sensor/ROS2SensorComponent.h
         Source/Sensor/SensorConfiguration.cpp

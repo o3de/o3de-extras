@@ -7,9 +7,7 @@
  */
 
 #include "RobotControl/ControlConfiguration.h"
-#include "ROS2/Utilities/ROS2Names.h"
 #include <AzCore/Serialization/EditContext.h>
-#include <AzCore/Serialization/EditContextConstants.inl>
 
 namespace ROS2
 {
@@ -17,19 +15,11 @@ namespace ROS2
     {
         if (auto serializeContext = azrtti_cast<AZ::SerializeContext*>(context))
         {
-            serializeContext->Class<ControlConfiguration>()
-                ->Version(1)
-                ->Field("Topic", &ControlConfiguration::m_topic)
-                ->Field("Qos", &ControlConfiguration::m_qos)
-                ->Field("Steering", &ControlConfiguration::m_steering);
+            serializeContext->Class<ControlConfiguration>()->Version(1)->Field("Steering", &ControlConfiguration::m_steering);
 
             if (AZ::EditContext* ec = serializeContext->GetEditContext())
             {
                 ec->Class<ControlConfiguration>("Robot control", "Handles robot control")
-                    ->DataElement(AZ::Edit::UIHandlers::Default, &ControlConfiguration::m_topic, "Topic", "ROS2 topic to subscribe to")
-                    ->Attribute(AZ::Edit::Attributes::ChangeValidate, &ROS2Names::ValidateTopicField)
-                    ->DataElement(
-                        AZ::Edit::UIHandlers::Default, &ControlConfiguration::m_qos, "QoS", "Quality of Service settings for subscriber")
                     ->DataElement(
                         AZ::Edit::UIHandlers::ComboBox,
                         &ControlConfiguration::m_steering,

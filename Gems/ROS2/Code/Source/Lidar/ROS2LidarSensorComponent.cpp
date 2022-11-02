@@ -81,7 +81,7 @@ namespace ROS2
 
     ROS2LidarSensorComponent::ROS2LidarSensorComponent()
     {
-        PublisherConfiguration pc;
+        TopicConfiguration pc;
         AZStd::string type = Internal::kPointCloudType;
         pc.m_type = type;
         pc.m_topic = "pc";
@@ -130,7 +130,7 @@ namespace ROS2
         auto ros2Node = ROS2Interface::Get()->GetNode();
         AZ_Assert(m_sensorConfiguration.m_publishersConfigurations.size() == 1, "Invalid configuration of publishers for lidar sensor");
 
-        const PublisherConfiguration& publisherConfig = m_sensorConfiguration.m_publishersConfigurations[Internal::kPointCloudType];
+        const TopicConfiguration& publisherConfig = m_sensorConfiguration.m_publishersConfigurations[Internal::kPointCloudType];
         AZStd::string fullTopic = ROS2Names::GetNamespacedName(GetNamespace(), publisherConfig.m_topic);
         m_pointCloudPublisher = ros2Node->create_publisher<sensor_msgs::msg::PointCloud2>(fullTopic.data(), publisherConfig.GetQoS());
 

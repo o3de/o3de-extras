@@ -7,8 +7,8 @@
  */
 #include <ROS2SystemComponent.h>
 
-#include "QoS/QoS.h"
-#include "Sensor/PublisherConfiguration.h"
+#include "ROS2/Communication/QoS.h"
+#include "ROS2/Communication/TopicConfiguration.h"
 
 #include <AzCore/Serialization/EditContext.h>
 #include <AzCore/Serialization/EditContextConstants.inl>
@@ -22,7 +22,7 @@ namespace ROS2
     {
         // Reflect structs not strictly owned by any single component
         QoS::Reflect(context);
-        PublisherConfiguration::Reflect(context);
+        TopicConfiguration::Reflect(context);
         if (AZ::SerializeContext* serialize = azrtti_cast<AZ::SerializeContext*>(context))
         {
             serialize->Class<ROS2SystemComponent, AZ::Component>()->Version(0);

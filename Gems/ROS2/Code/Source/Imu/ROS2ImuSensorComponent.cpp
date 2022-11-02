@@ -43,7 +43,7 @@ namespace ROS2
 
     ROS2ImuSensorComponent::ROS2ImuSensorComponent()
     {
-        PublisherConfiguration pc;
+        TopicConfiguration pc;
         const AZStd::string type = Internal::kImuMsgType;
         pc.m_type = type;
         pc.m_topic = "imu";

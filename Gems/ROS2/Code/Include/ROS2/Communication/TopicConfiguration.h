@@ -7,7 +7,7 @@
  */
 #pragma once
 
-#include "QoS/QoS.h"
+#include "QoS.h"
 #include <AzCore/RTTI/RTTI.h>
 #include <AzCore/Serialization/SerializeContext.h>
 #include <AzCore/std/string/string.h>
@@ -15,10 +15,10 @@
 namespace ROS2
 {
     //! A structure for a single ROS2 publisher configuration.
-    struct PublisherConfiguration
+    struct TopicConfiguration
     {
     public:
-        AZ_TYPE_INFO(PublisherConfiguration, "{7F875348-F2F9-404A-841E-D9A749EA4E79}");
+        AZ_TYPE_INFO(TopicConfiguration, "{7535D58F-5284-4657-A799-1F69D3F5AA42}");
         static void Reflect(AZ::ReflectContext* context);
 
         AZStd::string m_type = "std_msgs::msg::Empty"; //!< descriptive topic type for identification.

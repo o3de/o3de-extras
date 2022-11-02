@@ -7,7 +7,7 @@
  */
 #pragma once
 
-#include "PublisherConfiguration.h"
+#include "ROS2/Communication/TopicConfiguration.h"
 #include <AzCore/RTTI/RTTI.h>
 #include <AzCore/Serialization/SerializeContext.h>
 #include <AzCore/std/containers/map.h>
@@ -27,7 +27,7 @@ namespace ROS2
         //! ROS2 Publishers of this sensor.
         //! Some sensors can have more than one publisher (example: Camera).
         //! This map will typically hold 1-3 elements.
-        AZStd::map<AZStd::string, PublisherConfiguration> m_publishersConfigurations;
+        AZStd::map<AZStd::string, TopicConfiguration> m_publishersConfigurations;
 
         //! Frequency in Hz (1/s).
         //! Applies both to data acquisition and publishing.

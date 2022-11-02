@@ -7,11 +7,9 @@
  */
 #pragma once
 
-#include "QoS/QoS.h"
 #include <AzCore/Component/Entity.h>
 #include <AzCore/RTTI/RTTI.h>
 #include <AzCore/Serialization/SerializeContext.h>
-#include <AzCore/std/string/string.h>
 
 namespace ROS2
 {
@@ -33,8 +31,6 @@ namespace ROS2
 
         static void Reflect(AZ::ReflectContext* context);
 
-        QoS m_qos;
-        AZStd::string m_topic = "cmd_vel";
         Steering m_steering = Steering::Twist;
     };
 } // namespace ROS2

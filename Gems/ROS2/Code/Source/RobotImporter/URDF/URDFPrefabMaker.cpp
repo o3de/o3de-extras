@@ -150,10 +150,12 @@ namespace ROS2
         if (componentId)
         {
             ControlConfiguration controlConfiguration;
-            controlConfiguration.m_topic = "cmd_vel";
+            TopicConfiguration subscriberConfiguration;
+            subscriberConfiguration.m_topic = "cmd_vel";
             AZ::Entity* rootEntity = AzToolsFramework::GetEntityById(rootEntityId);
             auto* component = Utils::GetGameOrEditorComponent<ROS2RobotControlComponent>(rootEntity);
             component->SetControlConfiguration(controlConfiguration);
+            component->SetSubscriberConfiguration(subscriberConfiguration);
         }
     }
 

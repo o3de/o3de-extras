@@ -7,6 +7,7 @@
  */
 
 #include "Camera/ROS2CameraSensorComponent.h"
+#include "ROS2/Communication/TopicConfiguration.h"
 #include "ROS2/Frame/ROS2FrameComponent.h"
 #include "ROS2/ROS2Bus.h"
 #include "ROS2/Utilities/ROS2Names.h"
@@ -29,10 +30,10 @@ namespace ROS2
         const char* kImageMessageType = "sensor_msgs::msg::Image";
         const char* kCameraInfoMessageType = "sensor_msgs::msg::CameraInfo";
 
-        AZStd::pair<AZStd::string, PublisherConfiguration> MakePublisherConfigurationPair(
+        AZStd::pair<AZStd::string, TopicConfiguration> MakeTopicConfigurationPair(
             const AZStd::string& topic, const AZStd::string& messageType)
         {
-            PublisherConfiguration config;
+            TopicConfiguration config;
             config.m_topic = topic;
             config.m_type = messageType;
             return AZStd::make_pair(messageType, config);
@@ -51,9 +52,9 @@ namespace ROS2
     {
         m_sensorConfiguration.m_frequency = 10;
         m_sensorConfiguration.m_publishersConfigurations.insert(
-            Internal::MakePublisherConfigurationPair("camera_image", Internal::kImageMessageType));
+            Internal::MakeTopicConfigurationPair("camera_image", Internal::kImageMessageType));
         m_sensorConfiguration.m_publishersConfigurations.insert(
-            Internal::MakePublisherConfigurationPair("camera_info", Internal::kCameraInfoMessageType));
+            Internal::MakeTopicConfigurationPair("camera_info", Internal::kCameraInfoMessageType));
     }
 
     void ROS2CameraSensorComponent::Reflect(AZ::ReflectContext* context)
