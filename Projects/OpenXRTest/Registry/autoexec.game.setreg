@@ -1,0 +1,9 @@
+{
+    "Amazon": {
+        "AzCore": {
+            "Bootstrap": {
+                "android_wait_for_connect": 1
+            }
+        }
+    }
+}

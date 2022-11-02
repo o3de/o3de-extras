@@ -1,10 +1,5 @@
 {
     "O3DE": {
-        "Autoexec": {
-            "ConsoleCommands": {
-                "LoadLevel": "DefaultLevel"
-            }
-        },
         "Atom": {
             "OpenXR": {
                 "Enable": false,
