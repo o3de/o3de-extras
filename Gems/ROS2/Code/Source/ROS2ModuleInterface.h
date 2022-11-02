@@ -12,6 +12,7 @@
 #include "Imu/ROS2ImuSensorComponent.h"
 #include "Lidar/ROS2LidarSensorComponent.h"
 #include "ROS2/Frame/ROS2FrameComponent.h"
+#include "Odometry/ROS2OdometrySensorComponent.h"
 #include "ROS2/Manipulator/MotorizedJoint.h"
 #include "ROS2SystemComponent.h"
 #include "RobotControl/Controllers/AckermannController/AckermannControlComponent.h"
@@ -47,6 +48,7 @@ namespace ROS2
                   ROS2ImuSensorComponent::CreateDescriptor(),
                   ROS2GNSSSensorComponent::CreateDescriptor(),
                   ROS2LidarSensorComponent::CreateDescriptor(),
+                  ROS2OdometrySensorComponent::CreateDescriptor(),
                   ROS2FrameComponent::CreateDescriptor(),
                   ROS2RobotControlComponent::CreateDescriptor(),
                   ROS2CameraSensorComponent::CreateDescriptor(),

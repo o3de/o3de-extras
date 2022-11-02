@@ -56,6 +56,8 @@ set(FILES
         Source/GNSS/GNSSFormatConversions.h
         Source/Imu/ROS2ImuSensorComponent.cpp
         Source/Imu/ROS2ImuSensorComponent.h
+        Source/Odometry/ROS2OdometrySensorComponent.cpp
+        Source/Odometry/ROS2OdometrySensorComponent.h
         Source/RobotImporter/ROS2RobotImporterSystemComponent.cpp
         Source/RobotImporter/ROS2RobotImporterSystemComponent.h
         Source/RobotImporter/Utils/RobotImporterUtils.h

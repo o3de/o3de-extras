@@ -45,7 +45,7 @@ ly_add_target(
             Gem::StartingPointInput
 )
 
-target_depends_on_ros2_packages(ROS2.Static rclcpp builtin_interfaces std_msgs sensor_msgs urdfdom tf2_ros ackermann_msgs gazebo_msgs control_toolbox)
+target_depends_on_ros2_packages(ROS2.Static rclcpp builtin_interfaces std_msgs sensor_msgs nav_msgs urdfdom tf2_ros ackermann_msgs gazebo_msgs control_toolbox)
 
 ly_add_target(
     NAME ROS2.API HEADERONLY

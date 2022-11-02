@@ -16,10 +16,11 @@ You can browse Doxygen-generated documentation on [Gem's GitHub page](https://ro
   - ROS2FrameComponent
   - ROS2SensorComponent
 - __Sensors__
-  - ROS2CameraComponent
-  - ROS2GNSSComponent
-  - ROS2IMUComponent
-  - ROS2LidarComponent
+  - ROS2CameraSensorComponent
+  - ROS2GNSSSensorComponent
+  - ROS2IMUSensorComponent
+  - ROS2LidarSensorComponent
+  - ROS2OdometrySensorComponent
 - __Robot control__
   - ROS2RobotControlComponent
   - AckermannControlComponent
@@ -100,6 +101,10 @@ it to ROS 2 domain.
 
 If you intend to add your own sensor, it might be useful to look at how sensors already provided within the Gem are
 implemented.
+
+Sensors can be fall into one of two categories:
+- sensors which replicate real devices to some degree of realism.
+- ground truth "sensors", which can be useful for development and machine learning.
 
 ### Robot Control
 
