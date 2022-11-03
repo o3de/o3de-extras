@@ -4701,7 +4701,10 @@
                     "m_template": {
                         "$type": "ROS2RobotControlComponent",
                         "ControlConfiguration": {
-                            "Topic": "/cmd_vel"
+                        },
+                        "SubscriberConfiguration": {
+                            "Type": "ackermann_msgs::msg::AckermannDrive",
+                            "Topic": "cmd_vel"
                         }
                     }
                 },
