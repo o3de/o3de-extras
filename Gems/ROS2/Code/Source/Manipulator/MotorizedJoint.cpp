@@ -245,7 +245,7 @@ namespace ROS2
 
     float MotorizedJoint::GetCurrentPosition() const
     {
-        return m_currentPosition;
+        return m_currentPosition - m_zeroOffset;
     }
 
 } // namespace ROS2
