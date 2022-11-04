@@ -1,0 +1,137 @@
+# Copyright (c) Contributors to the Open 3D Engine Project.
+# For complete copyright and license terms please see the LICENSE at the root of this distribution.
+#
+# SPDX-License-Identifier: Apache-2.0 OR MIT
+#
+
+
+# Example usage:
+#
+# sudo DOCKER_BUILDKIT=1 docker build -t o3de_loft_demo:latest -f Dockerfile.ubuntu-20.04 .
+#
+
+FROM ros:galactic-ros-base-focal
+ARG minimal
+ENV WORKSPACE=/data/workspace
+ENV O3DE_REPO=https://github.com/o3de/o3de.git
+ENV ROS2_GEM_REPO=https://github.com/RobotecAI/o3de-ros2-gem.git
+ENV LOFT_GEM_REPO=https://github.com/o3de/loft-arch-vis-sample.git
+ENV O3DE_DEMO_REPO=https://github.com/RobotecAI/o3de-demo-project.git
+
+WORKDIR $WORKSPACE
+
+RUN apt-get update && apt-get upgrade -y
+
+# Add additional package repositories needed for packages
+RUN apt-get install -y --no-install-recommends gpg wget curl
+
+RUN wget -O - https://apt.kitware.com/keys/kitware-archive-latest.asc 2>/dev/null | gpg --dearmor - | tee /usr/share/keyrings/kitware-archive-keyring.gpg >/dev/null && \
+    echo 'deb [signed-by=/usr/share/keyrings/kitware-archive-keyring.gpg] https://apt.kitware.com/ubuntu/ focal main' | tee /etc/apt/sources.list.d/kitware.list >/dev/null
+
+RUN echo 'debconf debconf/frontend select Noninteractive' | debconf-set-selections && \
+    curl -sSL https://raw.githubusercontent.com/ros/rosdistro/master/ros.key -o /usr/share/keyrings/ros-archive-keyring.gpg && \
+    /bin/bash -c 'source /etc/os-release && echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/ros-archive-keyring.gpg] http://packages.ros.org/ros2/ubuntu $UBUNTU_CODENAME main" | tee /etc/apt/sources.list.d/ros2.list > /dev/null'
+
+RUN apt-get update
+
+#
+# Install packages needed for cloning and building from the source repos
+#
+
+# Install the git and build tools
+RUN apt-get install -y --no-install-recommends git \
+                       git-lfs \
+                       cmake=3.24.1-0kitware1ubuntu20.04.1 \
+                       clang-12 \
+                       ninja-build
+
+# Install the O3DE-specific required packages
+RUN apt-get install -y --no-install-recommends libglu1-mesa-dev \
+                       libxcb-xinerama0 \
+                       libxcb-xinput0 \
+                       libxcb-xinput-dev \
+                       libxcb-xfixes0-dev \
+                       libxcb-xkb-dev \
+                       libxkbcommon-dev \
+                       libxkbcommon-x11-dev \
+                       libfontconfig1-dev \
+                       libcurl4-openssl-dev \
+                       libsdl2-dev \
+                       zlib1g-dev \
+                       mesa-common-dev \
+                       libssl-dev libxcb-icccm4 \
+                       libxcb-image0 \
+                       libxcb-keysyms1 \
+                       libxcb-render-util0 \
+                       libxcb-randr0 \
+                       libnvidia-gl-470 \
+                       ufw
+
+# Clone O3DE repo and register the engine
+RUN cd $WORKSPACE && \
+    git clone --single-branch --recursive --branch development $O3DE_REPO && \
+    cd o3de && \
+    git lfs install && \
+    git lfs pull
+
+RUN cd $WORKSPACE/o3de && \
+    python/get_python.sh
+RUN cd $WORKSPACE/o3de && \
+    $WORKSPACE/o3de/scripts/o3de.sh register --this-engine
+
+
+# Clone the ROS2 Gem and register it
+RUN cd $WORKSPACE && \
+    git clone $ROS2_GEM_REPO --single-branch --branch development && \
+    $WORKSPACE/o3de/scripts/o3de.sh register -gp $WORKSPACE/o3de-ros2-gem
+
+# Add additional ROS2/Galactic packages
+RUN /bin/bash -c 'source /opt/ros/galactic/setup.bash && \
+                  apt install -y ros-${ROS_DISTRO}-desktop \
+                                 ros-${ROS_DISTRO}-slam-toolbox \
+                                 ros-${ROS_DISTRO}-navigation2 \
+                                 ros-${ROS_DISTRO}-nav2-bringup \
+                                 ros-${ROS_DISTRO}-pointcloud-to-laserscan \
+                                 ros-${ROS_DISTRO}-gazebo-msgs \
+                                 ros-${ROS_DISTRO}-ackermann-msgs \
+                                 ros-${ROS_DISTRO}-control-toolbox'
+
+# Clone the loft scene and register the ArchVis Gem
+RUN cd $WORKSPACE && \
+    git clone --single-branch --recursive $LOFT_GEM_REPO && \
+    cd loft-arch-vis-sample && \
+    git lfs install && \
+    git lfs pull && \
+    $WORKSPACE/o3de/scripts/o3de.sh register -gp $WORKSPACE/loft-arch-vis-sample/Gems/ArchVis/
+
+
+# Clone the demo project and register the project
+RUN cd $WORKSPACE && \
+    git clone --single-branch --branch main --recursive $O3DE_DEMO_REPO && \
+    cd o3de-demo-project && \
+    git lfs install && \
+    git lfs pull && \
+    $WORKSPACE/o3de/scripts/o3de.sh register -pp $WORKSPACE/o3de-demo-project/ 
+
+
+# Configure the project
+RUN cd $WORKSPACE/o3de-demo-project && \
+    /bin/bash -c 'source /opt/ros/galactic/setup.bash && \
+                  cmake -B build/linux -S . -G "Ninja Multi-Config" -DCMAKE_BUILD_TYPE=profile -DLY_STRIP_DEBUG_SYMBOLS=TRUE -DLY_DISABLE_TEST_MODULES=ON'
+
+# Build the project
+RUN cd $WORKSPACE/o3de-demo-project && \
+    /bin/bash -c 'source /opt/ros/galactic/setup.bash && \
+                  cmake --build build/linux --config profile --target AssetProcessorBatch ROS2-Gem-Demo.GameLauncher ROS2-Gem-Demo.Assets -j 12'
+
+
+COPY LaunchClient.bash.ubuntu-20.04 /data/workspace/LaunchClient.bash
+COPY LaunchRViz.bash.ubuntu-20.04 /data/workspace/LaunchRViz.bash
+COPY delete_source.bash /data/workspace/delete_source.bash
+
+RUN if [ "$minimal" -eq "1" ]; then /bin/bash -c 'source /data/workspace/delete_source.bash'; else echo "Skipping source delete"; fi
+ 
+ENV NVIDIA_VISIBLE_DEVICES all
+ENV NVIDIA_DRIVER_CAPABILITIES all
+ 
+ENTRYPOINT ["/bin/bash", "-c"]
