@@ -4,12 +4,6 @@
 # SPDX-License-Identifier: Apache-2.0 OR MIT
 #
 
-
-# Example usage:
-#
-# sudo DOCKER_BUILDKIT=1 docker build -t o3de_loft_demo:latest -f Dockerfile.ubuntu-20.04 .
-#
-
 FROM ros:galactic-ros-base-focal
 ARG minimal
 ENV WORKSPACE=/data/workspace
@@ -62,7 +56,7 @@ RUN apt-get install -y --no-install-recommends libglu1-mesa-dev \
 RUN cd $WORKSPACE && \
     git clone --single-branch --branch main --recursive $O3DE_DEMO_REPO 
 
-COPY LaunchRViz.bash.ubuntu-20.04 /data/workspace/LaunchRViz.bash
+COPY LaunchRViz.bash.ubuntu-galactic /data/workspace/LaunchRViz.bash
 
 ENV NVIDIA_VISIBLE_DEVICES all
 ENV NVIDIA_DRIVER_CAPABILITIES all

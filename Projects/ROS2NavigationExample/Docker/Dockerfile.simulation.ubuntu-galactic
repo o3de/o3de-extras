@@ -4,12 +4,6 @@
 # SPDX-License-Identifier: Apache-2.0 OR MIT
 #
 
-
-# Example usage:
-#
-# sudo DOCKER_BUILDKIT=1 docker build -t o3de_loft_demo:latest -f Dockerfile.ubuntu-20.04 .
-#
-
 FROM ros:galactic-ros-base-focal
 ARG minimal
 ENV WORKSPACE=/data/workspace
@@ -124,7 +118,7 @@ RUN cd $WORKSPACE/o3de-demo-project && \
                   cmake --build build/linux --config profile --target AssetProcessorBatch ROS2-Gem-Demo.GameLauncher ROS2-Gem-Demo.Assets -j 12'
 
 
-COPY LaunchClient.bash.ubuntu-20.04 /data/workspace/LaunchClient.bash
+COPY LaunchClient.bash.ubuntu-galactic /data/workspace/LaunchClient.bash
 COPY delete_source.bash /data/workspace/delete_source.bash
 
 RUN if [ "$minimal" -eq "1" ]; then /bin/bash -c 'source /data/workspace/delete_source.bash'; else echo "Skipping source delete"; fi

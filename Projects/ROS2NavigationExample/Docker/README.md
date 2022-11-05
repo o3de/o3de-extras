@@ -28,6 +28,7 @@ There are also two robot navigation stack Dockerfile scripts defined
 Select which docker image you would like to build and run the following commands to build the client and rviz docker images
 
 ```
+
 sudo docker build --build-arg minimal=1 -t o3de_loft_demo_simulation:latest -f Dockerfile.simulation.ubuntu-galactic .
 
 sudo docker build -t o3de_loft_demo_simulation:latest -f Dockerfile.robot.ubuntu-galactic .
@@ -35,9 +36,11 @@ sudo docker build -t o3de_loft_demo_simulation:latest -f Dockerfile.robot.ubuntu
 ```
 
 ```
+
 sudo docker build --build-arg minimal=1 -t o3de_loft_demo_simulation:latest -f Dockerfile.simulation.ubuntu-humble .
 
 sudo docker build -t o3de_loft_demo_simulation:latest -f Dockerfile.robot.ubuntu-humble .
+
 ```
 
 ## Running the Docker Image
@@ -53,6 +56,7 @@ xhost +local:root
 Then launch the built simulation docker image with the following command
 
 ```
+
 sudo docker run --rm --network="bridge" --gpus all -e DISPLAY=:1 -v /tmp/.X11-unix:/tmp/.X11-unix -it o3de_loft_demo_simulation:latest /data/workspace/LaunchClient.bash
 
 ```
@@ -61,6 +65,7 @@ Once the simulation is up and running, launch the robot application docker image
 
 
 ```
+
 sudo docker run --rm --network="bridge" --gpus all -e DISPLAY=:1 -v /tmp/.X11-unix:/tmp/.X11-unix -it o3de_loft_demo_robot:latest /data/workspace/LaunchRViz.bash
 
 ```
