@@ -87,8 +87,7 @@ RUN cd $WORKSPACE && \
 
 # Add additional ROS2/Galactic packages
 RUN /bin/bash -c 'source /opt/ros/galactic/setup.bash && \
-                  apt install -y ros-${ROS_DISTRO}-desktop \
-                                 ros-${ROS_DISTRO}-slam-toolbox \
+                  apt install -y ros-${ROS_DISTRO}-slam-toolbox \
                                  ros-${ROS_DISTRO}-navigation2 \
                                  ros-${ROS_DISTRO}-nav2-bringup \
                                  ros-${ROS_DISTRO}-pointcloud-to-laserscan \
@@ -126,7 +125,6 @@ RUN cd $WORKSPACE/o3de-demo-project && \
 
 
 COPY LaunchClient.bash.ubuntu-20.04 /data/workspace/LaunchClient.bash
-COPY LaunchRViz.bash.ubuntu-20.04 /data/workspace/LaunchRViz.bash
 COPY delete_source.bash /data/workspace/delete_source.bash
 
 RUN if [ "$minimal" -eq "1" ]; then /bin/bash -c 'source /data/workspace/delete_source.bash'; else echo "Skipping source delete"; fi
