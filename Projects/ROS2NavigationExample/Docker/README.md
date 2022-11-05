@@ -31,7 +31,7 @@ Select which docker image you would like to build and run the following commands
 
 sudo docker build --build-arg minimal=1 -t o3de_loft_demo_simulation:latest -f Dockerfile.simulation.ubuntu-galactic .
 
-sudo docker build -t o3de_loft_demo_simulation:latest -f Dockerfile.robot.ubuntu-galactic .
+sudo docker build -t o3de_loft_demo_robot:latest -f Dockerfile.robot.ubuntu-galactic .
 
 ```
 
@@ -39,7 +39,7 @@ sudo docker build -t o3de_loft_demo_simulation:latest -f Dockerfile.robot.ubuntu
 
 sudo docker build --build-arg minimal=1 -t o3de_loft_demo_simulation:latest -f Dockerfile.simulation.ubuntu-humble .
 
-sudo docker build -t o3de_loft_demo_simulation:latest -f Dockerfile.robot.ubuntu-humble .
+sudo docker build -t o3de_loft_demo_robot:latest -f Dockerfile.robot.ubuntu-humble .
 
 ```
 

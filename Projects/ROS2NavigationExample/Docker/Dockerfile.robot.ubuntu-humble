@@ -4,7 +4,7 @@
 # SPDX-License-Identifier: Apache-2.0 OR MIT
 #
 
-FROM ros:galactic-ros-base-focal
+FROM ros:humble-ros-base-jammy
 
 ENV WORKSPACE=/data/workspace
 
@@ -15,7 +15,7 @@ WORKDIR $WORKSPACE
 RUN apt-get update && apt-get upgrade -y
 
 # Add additional package repositories needed for packages
-RUN apt-get install -y --no-install-recommends gpg wget
+RUN apt-get install -y --no-install-recommends gpg wget curl
 
 #
 # Install packages needed for cloning and building from the source repos
@@ -25,7 +25,7 @@ RUN apt-get install -y --no-install-recommends gpg wget
 RUN apt-get install -y --no-install-recommends git 
 
 # Add additional ROS2/Galactic packages
-RUN /bin/bash -c 'source /opt/ros/galactic/setup.bash && \
+RUN /bin/bash -c 'source /opt/ros/humble/setup.bash && \
                   apt install -y ros-${ROS_DISTRO}-desktop \
                                  ros-${ROS_DISTRO}-slam-toolbox \
                                  ros-${ROS_DISTRO}-navigation2 \
@@ -45,7 +45,7 @@ RUN apt-get install -y --no-install-recommends libglu1-mesa-dev \
 RUN cd $WORKSPACE && \
     git clone --single-branch --branch main --recursive $O3DE_DEMO_REPO 
 
-COPY LaunchRViz.bash.ubuntu-galactic /data/workspace/LaunchRViz.bash
+COPY LaunchRViz.bash.ubuntu-humble /data/workspace/LaunchRViz.bash
 
 ENV NVIDIA_VISIBLE_DEVICES all
 ENV NVIDIA_DRIVER_CAPABILITIES all

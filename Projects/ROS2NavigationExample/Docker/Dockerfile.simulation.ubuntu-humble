@@ -4,8 +4,10 @@
 # SPDX-License-Identifier: Apache-2.0 OR MIT
 #
 
-FROM ros:galactic-ros-base-focal
+FROM ros:humble-ros-base-jammy
+
 ARG minimal
+
 ENV WORKSPACE=/data/workspace
 ENV O3DE_REPO=https://github.com/o3de/o3de.git
 ENV ROS2_GEM_REPO=https://github.com/RobotecAI/o3de-ros2-gem.git
@@ -17,13 +19,18 @@ WORKDIR $WORKSPACE
 RUN apt-get update && apt-get upgrade -y
 
 # Add additional package repositories needed for packages
-RUN apt-get install -y --no-install-recommends gpg wget curl
+RUN apt-get install -y --no-install-recommends gpg wget curl build-essential libssl-dev
 
-# Configure the installation of the minimal version of cmake (3.24) from kitware's apt repo since the default cmake version of ubuntu focal does not meet it
-RUN wget -O - https://apt.kitware.com/keys/kitware-archive-latest.asc 2>/dev/null | gpg --dearmor - | tee /usr/share/keyrings/kitware-archive-keyring.gpg >/dev/null && \
-    echo 'deb [signed-by=/usr/share/keyrings/kitware-archive-keyring.gpg] https://apt.kitware.com/ubuntu/ focal main' | tee /etc/apt/sources.list.d/kitware.list >/dev/null
-
-RUN apt-get update
+# Build and install cmake 3.24.3 from source since the default cmake version of ubuntu focal does not meet it
+RUN cd /data/workspace && \
+    wget -c https://github.com/Kitware/CMake/archive/refs/tags/v3.24.3.tar.gz && \
+    wget -c https://github.com/Kitware/CMake/releases/download/v3.24.3/cmake-3.24.3.tar.gz && \
+    tar -zxvf cmake-3.24.3.tar.gz && \
+    cd cmake-3.24.3 && \
+    ./bootstrap && \
+    make && \
+    make install && \
+    cmake --version
 
 #
 # Install packages needed for cloning and building from the source repos
@@ -32,7 +39,6 @@ RUN apt-get update
 # Install the git and build tools
 RUN apt-get install -y --no-install-recommends git \
                        git-lfs \
-                       cmake=3.24.1-0kitware1ubuntu20.04.1 \
                        clang-12 \
                        ninja-build
 
@@ -77,7 +83,7 @@ RUN cd $WORKSPACE && \
     $WORKSPACE/o3de/scripts/o3de.sh register -gp $WORKSPACE/o3de-ros2-gem
 
 # Add additional ROS2/Galactic packages
-RUN /bin/bash -c 'source /opt/ros/galactic/setup.bash && \
+RUN /bin/bash -c 'source /opt/ros/humble/setup.bash && \
                   apt install -y ros-${ROS_DISTRO}-slam-toolbox \
                                  ros-${ROS_DISTRO}-navigation2 \
                                  ros-${ROS_DISTRO}-nav2-bringup \
@@ -106,16 +112,16 @@ RUN cd $WORKSPACE && \
 
 # Configure the project
 RUN cd $WORKSPACE/o3de-demo-project && \
-    /bin/bash -c 'source /opt/ros/galactic/setup.bash && \
+    /bin/bash -c 'source /opt/ros/humble/setup.bash && \
                   cmake -B build/linux -S . -G "Ninja Multi-Config" -DCMAKE_BUILD_TYPE=profile -DLY_STRIP_DEBUG_SYMBOLS=TRUE -DLY_DISABLE_TEST_MODULES=ON'
 
 # Build the project
 RUN cd $WORKSPACE/o3de-demo-project && \
-    /bin/bash -c 'source /opt/ros/galactic/setup.bash && \
+    /bin/bash -c 'source /opt/ros/humble/setup.bash && \
                   cmake --build build/linux --config profile --target AssetProcessorBatch ROS2-Gem-Demo.GameLauncher ROS2-Gem-Demo.Assets -j 12'
 
 
-COPY LaunchClient.bash.ubuntu-galactic /data/workspace/LaunchClient.bash
+COPY LaunchClient.bash.ubuntu-humble /data/workspace/LaunchClient.bash
 COPY delete_source.bash /data/workspace/delete_source.bash
 
 RUN if [ "$minimal" -eq "1" ]; then /bin/bash -c 'source /data/workspace/delete_source.bash'; else echo "Skipping source delete"; fi
