@@ -10,6 +10,7 @@
 
 DELETE_LIST=(o3de-ros2-gem/ \
              loft-arch-vis-sample/ \
+             ~/.o3de/3rdParty/ \
              o3de/.git \
              o3de/AutomatedTesting \
              o3de/python/downloaded_packages \
@@ -31,8 +32,6 @@ DELETE_LIST=(o3de-ros2-gem/ \
              o3de-demo-project/build/linux/o3de/ \
              o3de-demo-project/build/linux/packages/ \
              o3de-demo-project/build/linux/runtime_dependencies/ \
-             ~/.o3de/3rdParty/ \
-             ~/.o3de/3rdParty/packages/ \
              o3de-demo-project/build/linux/bin/profile/*.Editor.so \
              o3de-demo-project/build/linux/bin/profile/EditorPlugins \
              o3de-demo-project/build/linux/bin/profile/Editor \
