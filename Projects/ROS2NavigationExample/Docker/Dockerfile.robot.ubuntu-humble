@@ -8,6 +8,8 @@ FROM ros:humble-ros-base-jammy
 
 ENV WORKSPACE=/data/workspace
 
+ENV DEBIAN_FRONTEND=noninteractive
+
 ENV O3DE_DEMO_REPO=https://github.com/RobotecAI/o3de-demo-project.git
 
 WORKDIR $WORKSPACE
