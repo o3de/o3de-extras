@@ -100,7 +100,7 @@ RUN cd $WORKSPACE && \
     cd $WORKSPACE/o3de-demo-project && \
     /bin/bash -c 'source /opt/ros/galactic/setup.bash && \
                   cmake -B build/linux -S . -G "Ninja Multi-Config" -DLY_STRIP_DEBUG_SYMBOLS=TRUE -DLY_DISABLE_TEST_MODULES=ON && \
-                  cmake --build build/linux --config profile --target AssetProcessorBatch ROS2-Gem-Demo.GameLauncher ROS2-Gem-Demo.Assets -j 12 && \
+                  cmake --build build/linux --config profile --target AssetProcessorBatch ROS2-Gem-Demo.GameLauncher ROS2-Gem-Demo.Assets && \
                   cd $WORKSPACE && \
                   ./cleanup.bash'
  
