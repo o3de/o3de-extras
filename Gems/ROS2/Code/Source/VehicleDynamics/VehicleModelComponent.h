@@ -8,9 +8,9 @@
 #pragma once
 
 #include "ManualControlEventHandler.h"
+#include "ROS2/VehicleDynamics/VehicleInputControlBus.h"
 #include "VehicleConfiguration.h"
 #include "VehicleDynamics/DriveModels/AckermannDriveModel.h"
-#include "VehicleInputControlBus.h"
 #include "VehicleInputsState.h"
 #include "VehicleModelLimits.h"
 #include <AzCore/Component/Component.h>
@@ -44,6 +44,7 @@ namespace VehicleDynamics
         void SetTargetAccelerationFraction(float accelerationFraction) override;
         void SetTargetSteeringFraction(float steeringFraction) override;
         void SetTargetLinearSpeedFraction(float speedFraction) override;
+        void SetDisableVehicleDynamics(bool is_disable) override;
 
         ManualControlEventHandler m_manualControlEventHandler;
         VehicleConfiguration m_vehicleConfiguration;

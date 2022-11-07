@@ -98,6 +98,11 @@ namespace VehicleDynamics
         AZ_Error("SetTargetAccelerationFraction", false, "Not implemented");
     }
 
+    void VehicleModelComponent::SetDisableVehicleDynamics(bool is_disable)
+    {
+        m_driveModel.SetDisabled(is_disable);
+    }
+
     void VehicleModelComponent::SetTargetSteering(float steering)
     {
         auto limitedSteering = VehicleModelLimits::LimitValue(steering, m_vehicleLimits.m_steeringLimit);

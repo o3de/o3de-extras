@@ -93,6 +93,10 @@ namespace VehicleDynamics
     // TODO - speed and steering handling is quite similar, possible to refactor?
     void AckermannDriveModel::ApplySteering(float steering, uint64_t deltaTimeNs)
     {
+        if (m_disabled)
+        {
+            return;
+        }
         if (m_steeringData.empty())
         {
             AZ_Warning("ApplySteering", false, "Cannot apply steering since no steering elements are defined in the model");
@@ -112,6 +116,10 @@ namespace VehicleDynamics
 
     void AckermannDriveModel::ApplySpeed(float speed, uint64_t deltaTimeNs)
     {
+        if (m_disabled)
+        {
+            return;
+        }
         if (m_driveWheelsData.empty())
         {
             AZ_Warning("ApplySpeed", false, "Cannot apply speed since no diving wheels are defined in the model");
@@ -151,4 +159,10 @@ namespace VehicleDynamics
             Physics::RigidBodyRequestBus::Event(wheelEntity, &Physics::RigidBodyRequests::ApplyAngularImpulse, transformedTorqueVector);
         }
     }
+
+    void AckermannDriveModel::SetDisabled(bool is_disabled)
+    {
+        m_disabled = is_disabled;
+    }
+
 } // namespace VehicleDynamics

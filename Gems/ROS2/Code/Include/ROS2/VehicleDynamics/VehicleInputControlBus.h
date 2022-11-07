@@ -46,6 +46,10 @@ namespace VehicleDynamics
         //! Speed input version which is relative to limits.
         //! @param speedMps is -1 to 1, which applies as a fraction of vehicle model speed limits.
         virtual void SetTargetLinearSpeedFraction(float speedFraction) = 0;
+
+        //! Disable vehicle dynamics
+        //! @param is_disable if set true no torque will be applied
+        virtual void SetDisableVehicleDynamics(bool is_disable) = 0;
     };
 
     using VehicleInputControlRequestBus = AZ::EBus<VehicleInputControlRequests>;

@@ -83,7 +83,6 @@ set(FILES
         Source/VehicleDynamics/DriveModel.cpp
         Source/VehicleDynamics/DriveModel.h
         Source/VehicleDynamics/ManualControlEventHandler.h
-        Source/VehicleDynamics/VehicleInputControlBus.h
         Source/VehicleDynamics/VehicleInputsState.h
         Source/VehicleDynamics/Utilities.cpp
         Source/VehicleDynamics/Utilities.h

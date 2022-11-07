@@ -7,7 +7,7 @@
  */
 #pragma once
 
-#include "VehicleDynamics/VehicleInputControlBus.h"
+#include "ROS2/VehicleDynamics/VehicleInputControlBus.h"
 #include <StartingPointInput/InputEventNotificationBus.h>
 
 // TODO - plenty of boilerplate code, seems somewhat redundant since it would be better to be able to map inputs directly

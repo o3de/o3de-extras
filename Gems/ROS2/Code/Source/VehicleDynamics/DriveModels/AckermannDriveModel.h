@@ -30,6 +30,8 @@ namespace VehicleDynamics
 
         static void Reflect(AZ::ReflectContext* context);
 
+        void SetDisabled(bool is_disabled);
+
     private:
         void ApplySteering(float steering, uint64_t deltaTimeNs);
         void ApplySpeed(float speed, uint64_t deltaTimeNs);
@@ -40,6 +42,7 @@ namespace VehicleDynamics
         AZStd::vector<SteeringDynamicsData> m_steeringData;
         PidConfiguration m_steeringPid;
         PidConfiguration m_speedPid;
+        bool m_disabled{ false };
         float m_steeringDeadZone = 0.01;
     };
 } // namespace VehicleDynamics
