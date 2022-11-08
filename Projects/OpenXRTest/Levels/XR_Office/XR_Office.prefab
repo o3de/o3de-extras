@@ -165,7 +165,7 @@
                     "Controller": {
                         "Configuration": {
                             "Field of View": 80.0,
-                            "EditorEntityId": 8220845441310131755
+                            "EditorEntityId": 4256339648212399418
                         }
                     }
                 },
@@ -193,14 +193,14 @@
                     "Parent Entity": "Entity_[1176639161715]",
                     "Transform Data": {
                         "Translate": [
-                            -2.2034757137298584,
-                            -1.8803786039352417,
-                            2.269624948501587
+                            -2.202821731567383,
+                            -1.8827884197235107,
+                            2.270138740539551
                         ],
                         "Rotate": [
-                            -18.42388153076172,
-                            10.038938522338867,
-                            -27.622568130493164
+                            -18.419769287109375,
+                            10.033321380615234,
+                            -27.61517333984375
                         ]
                     }
                 },
@@ -214,10 +214,7 @@
                     "DisabledComponents": [
                         {
                             "$type": "GenericComponentWrapper",
-                            "Id": 7255796294953281766,
-                            "m_template": {
-                                "$type": "FlyCameraInputComponent"
-                            }
+                            "Id": 7255796294953281766
                         }
                     ]
                 },
@@ -228,13 +225,6 @@
                 "Component_[7169798125182238623]": {
                     "$type": "EditorPendingCompositionComponent",
                     "Id": 7169798125182238623
-                },
-                "Component_[8829265314591669444]": {
-                    "$type": "GenericComponentWrapper",
-                    "Id": 8829265314591669444,
-                    "m_template": {
-                        "$type": "OpenXRVk::XRCameraMovementComponent"
-                    }
                 },
                 "Component_[8866210352157164042]": {
                     "$type": "EditorInspectorComponent",
@@ -342,20 +332,6 @@
                                 "assetHint": "lightingpresets/lowcontrast/royal_esplanade_2k_iblskyboxcm_iblspecular.exr.streamingimage"
                             }
                         }
-                    },
-                    "diffuseImageAsset": {
-                        "assetId": {
-                            "guid": "{74988A00-9ED5-5F1C-8EBC-E2B8A2CE40AF}",
-                            "subId": 2000
-                        },
-                        "assetHint": "lightingpresets/lowcontrast/royal_esplanade_2k_iblskyboxcm_iblspecular.exr.streamingimage"
-                    },
-                    "specularImageAsset": {
-                        "assetId": {
-                            "guid": "{74988A00-9ED5-5F1C-8EBC-E2B8A2CE40AF}",
-                            "subId": 2000
-                        },
-                        "assetHint": "lightingpresets/lowcontrast/royal_esplanade_2k_iblskyboxcm_iblspecular.exr.streamingimage"
                     }
                 },
                 "Component_[14994774102579326069]": {
@@ -429,43 +405,6 @@
                     "$type": "EditorOnlyEntityComponent",
                     "Id": 14587312879489017478
                 },
-                "Component_[15418082897436990197]": {
-                    "$type": "EditorColliderComponent",
-                    "Id": 15418082897436990197,
-                    "ColliderConfiguration": {
-                        "MaterialSlots": {
-                            "Slots": [
-                                {
-                                    "Name": "GameSteelMAT"
-                                },
-                                {
-                                    "Name": "GameBoardMAT"
-                                }
-                            ]
-                        }
-                    },
-                    "ShapeConfiguration": {
-                        "PhysicsAsset": {
-                            "Asset": {
-                                "assetId": {
-                                    "guid": "{2F7510AC-C8EC-5D95-AC3D-BF02D8E15D2D}",
-                                    "subId": 3279711373
-                                },
-                                "assetHint": "assets/gameboardtoy.pxmesh"
-                            },
-                            "Configuration": {
-                                "PhysicsAsset": {
-                                    "assetId": {
-                                        "guid": "{2F7510AC-C8EC-5D95-AC3D-BF02D8E15D2D}",
-                                        "subId": 3279711373
-                                    },
-                                    "loadBehavior": "QueueLoad",
-                                    "assetHint": "assets/gameboardtoy.pxmesh"
-                                }
-                            }
-                        }
-                    }
-                },
                 "Component_[15586344149527725025]": {
                     "$type": "EditorInspectorComponent",
                     "Id": 15586344149527725025
@@ -489,7 +428,8 @@
                                     "subId": 270707593
                                 },
                                 "assetHint": "assets/gameboardtoy.azmodel"
-                            }
+                            },
+                            "IsRayTracingEnabled": false
                         }
                     }
                 },
@@ -539,13 +479,6 @@
                     "$type": "EditorEntityIconComponent",
                     "Id": 11174876347343227264
                 },
-                "Component_[12129268854421618125]": {
-                    "$type": "EditorRigidBodyComponent",
-                    "Id": 12129268854421618125,
-                    "Configuration": {
-                        "entityId": ""
-                    }
-                },
                 "Component_[1510053607679893910]": {
                     "$type": "EditorOnlyEntityComponent",
                     "Id": 1510053607679893910
@@ -561,7 +494,8 @@
                                     "subId": 269990396
                                 },
                                 "assetHint": "assets/polytoy.azmodel"
-                            }
+                            },
+                            "IsRayTracingEnabled": false
                         }
                     }
                 },
@@ -572,40 +506,6 @@
                 "Component_[1662438399080223126]": {
                     "$type": "EditorLockComponent",
                     "Id": 1662438399080223126
-                },
-                "Component_[17650911223887602843]": {
-                    "$type": "EditorColliderComponent",
-                    "Id": 17650911223887602843,
-                    "ColliderConfiguration": {
-                        "MaterialSlots": {
-                            "Slots": [
-                                {
-                                    "Name": "BlueToy"
-                                }
-                            ]
-                        }
-                    },
-                    "ShapeConfiguration": {
-                        "PhysicsAsset": {
-                            "Asset": {
-                                "assetId": {
-                                    "guid": "{942AD6D0-1019-5585-B80A-A68624F7CF52}",
-                                    "subId": 2513127347
-                                },
-                                "assetHint": "assets/polytoy.pxmesh"
-                            },
-                            "Configuration": {
-                                "PhysicsAsset": {
-                                    "assetId": {
-                                        "guid": "{942AD6D0-1019-5585-B80A-A68624F7CF52}",
-                                        "subId": 2513127347
-                                    },
-                                    "loadBehavior": "QueueLoad",
-                                    "assetHint": "assets/polytoy.pxmesh"
-                                }
-                            }
-                        }
-                    }
                 },
                 "Component_[18018823625563056246]": {
                     "$type": "EditorPendingCompositionComponent",
@@ -675,7 +575,8 @@
                                     "subId": 279568466
                                 },
                                 "assetHint": "assets/blocktoy.azmodel"
-                            }
+                            },
+                            "IsRayTracingEnabled": false
                         }
                     }
                 },
@@ -755,43 +656,6 @@
                     "$type": "EditorEntityIconComponent",
                     "Id": 5792675485923399933
                 },
-                "Component_[584807102302901966]": {
-                    "$type": "EditorColliderComponent",
-                    "Id": 584807102302901966,
-                    "ColliderConfiguration": {
-                        "MaterialSlots": {
-                            "Slots": [
-                                {
-                                    "Name": "GreenToy"
-                                },
-                                {
-                                    "Name": "GameSteelMAT"
-                                }
-                            ]
-                        }
-                    },
-                    "ShapeConfiguration": {
-                        "PhysicsAsset": {
-                            "Asset": {
-                                "assetId": {
-                                    "guid": "{561A2DBC-B8D6-5D0D-A2AB-579E754D00D5}",
-                                    "subId": 1636732054
-                                },
-                                "assetHint": "assets/blocktoy.pxmesh"
-                            },
-                            "Configuration": {
-                                "PhysicsAsset": {
-                                    "assetId": {
-                                        "guid": "{561A2DBC-B8D6-5D0D-A2AB-579E754D00D5}",
-                                        "subId": 1636732054
-                                    },
-                                    "loadBehavior": "QueueLoad",
-                                    "assetHint": "assets/blocktoy.pxmesh"
-                                }
-                            }
-                        }
-                    }
-                },
                 "Component_[8271074279093262640]": {
                     "$type": "EditorVisibilityComponent",
                     "Id": 8271074279093262640
@@ -813,7 +677,8 @@
                                     "subId": 272908030
                                 },
                                 "assetHint": "assets/roundtoy.azmodel"
-                            }
+                            },
+                            "IsRayTracingEnabled": false
                         }
                     }
                 },
@@ -880,40 +745,6 @@
                     "$type": "EditorDisabledCompositionComponent",
                     "Id": 6212219363818452042
                 },
-                "Component_[7171744693237446363]": {
-                    "$type": "EditorColliderComponent",
-                    "Id": 7171744693237446363,
-                    "ColliderConfiguration": {
-                        "MaterialSlots": {
-                            "Slots": [
-                                {
-                                    "Name": "RedToy"
-                                }
-                            ]
-                        }
-                    },
-                    "ShapeConfiguration": {
-                        "PhysicsAsset": {
-                            "Asset": {
-                                "assetId": {
-                                    "guid": "{F3C6B10F-98C0-5FA9-AD77-6565B4C07EF5}",
-                                    "subId": 1466018956
-                                },
-                                "assetHint": "assets/roundtoy.pxmesh"
-                            },
-                            "Configuration": {
-                                "PhysicsAsset": {
-                                    "assetId": {
-                                        "guid": "{F3C6B10F-98C0-5FA9-AD77-6565B4C07EF5}",
-                                        "subId": 1466018956
-                                    },
-                                    "loadBehavior": "QueueLoad",
-                                    "assetHint": "assets/roundtoy.pxmesh"
-                                }
-                            }
-                        }
-                    }
-                },
                 "Component_[788678382876511868]": {
                     "$type": "EditorEntityIconComponent",
                     "Id": 788678382876511868
@@ -963,40 +794,6 @@
                     "$type": "EditorEntitySortComponent",
                     "Id": 13633518070377096711
                 },
-                "Component_[14825973933821663296]": {
-                    "$type": "EditorColliderComponent",
-                    "Id": 14825973933821663296,
-                    "ColliderConfiguration": {
-                        "MaterialSlots": {
-                            "Slots": [
-                                {
-                                    "Name": "YellowToy"
-                                }
-                            ]
-                        }
-                    },
-                    "ShapeConfiguration": {
-                        "PhysicsAsset": {
-                            "Asset": {
-                                "assetId": {
-                                    "guid": "{C3AACE97-7597-5C5E-9975-A313D15F46EC}",
-                                    "subId": 881522632
-                                },
-                                "assetHint": "assets/torustoy.pxmesh"
-                            },
-                            "Configuration": {
-                                "PhysicsAsset": {
-                                    "assetId": {
-                                        "guid": "{C3AACE97-7597-5C5E-9975-A313D15F46EC}",
-                                        "subId": 881522632
-                                    },
-                                    "loadBehavior": "QueueLoad",
-                                    "assetHint": "assets/torustoy.pxmesh"
-                                }
-                            }
-                        }
-                    }
-                },
                 "Component_[14921593131683774376]": {
                     "$type": "EditorLockComponent",
                     "Id": 14921593131683774376
@@ -1036,7 +833,8 @@
                                     "subId": 282119796
                                 },
                                 "assetHint": "assets/torustoy.azmodel"
-                            }
+                            },
+                            "IsRayTracingEnabled": false
                         }
                     }
                 }
@@ -1100,7 +898,8 @@
                                     "subId": 283835814
                                 },
                                 "assetHint": "assets/outside.azmodel"
-                            }
+                            },
+                            "IsRayTracingEnabled": false
                         }
                     }
                 },
@@ -1118,7 +917,8 @@
                             0.0,
                             0.0
                         ]
-                    }
+                    },
+                    "IsStatic": true
                 },
                 "Component_[8850850338972464395]": {
                     "$type": "EditorVisibilityComponent",
@@ -1493,7 +1293,8 @@
                 "Component_[10109595915524463625]": {
                     "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
                     "Id": 10109595915524463625,
-                    "Parent Entity": "Entity_[1146574390643]"
+                    "Parent Entity": "Entity_[1146574390643]",
+                    "IsStatic": true
                 },
                 "Component_[12012370400031057969]": {
                     "$type": "EditorEntityIconComponent",
@@ -1554,48 +1355,9 @@
                                     "subId": 275918022
                                 },
                                 "assetHint": "assets/office_table.azmodel"
-                            }
-                        }
-                    }
-                },
-                "Component_[15206584688454347950]": {
-                    "$type": "EditorColliderComponent",
-                    "Id": 15206584688454347950,
-                    "ColliderConfiguration": {
-                        "MaterialSlots": {
-                            "Slots": [
-                                {
-                                    "Name": "DeskWoodMAT"
-                                },
-                                {
-                                    "Name": "ChromeMAT"
-                                }
-                            ]
-                        }
-                    },
-                    "ShapeConfiguration": {
-                        "PhysicsAsset": {
-                            "Asset": {
-                                "assetId": {
-                                    "guid": "{A450DA9F-8805-55EA-BCEA-A9EBEBF06198}",
-                                    "subId": 2838058270
-                                },
-                                "assetHint": "assets/office_table.pxmesh"
                             },
-                            "Configuration": {
-                                "PhysicsAsset": {
-                                    "assetId": {
-                                        "guid": "{A450DA9F-8805-55EA-BCEA-A9EBEBF06198}",
-                                        "subId": 2838058270
-                                    },
-                                    "loadBehavior": "QueueLoad",
-                                    "assetHint": "assets/office_table.pxmesh"
-                                }
-                            }
+                            "IsRayTracingEnabled": false
                         }
-                    },
-                    "DebugDrawSettings": {
-                        "LocallyEnabled": false
                     }
                 },
                 "Component_[15353962950288154028]": {
@@ -2023,7 +1785,8 @@
                             0.7300987243652344,
                             1.5393023490905762
                         ]
-                    }
+                    },
+                    "IsStatic": true
                 },
                 "Component_[2643620418208046011]": {
                     "$type": "EditorDisabledCompositionComponent",
@@ -2052,7 +1815,7 @@
                                 },
                                 "assetHint": "assets/textures/reflectionprobes/refprobmain__5671e21b-ba4c-48c7-8e30-8f8a0428ab82__iblspecularcm256.dds.streamingimage"
                             },
-                            "EntityId": 14136586257618404771,
+                            "EntityId": 2617076348154976811,
                             "ShowVisualization": false,
                             "RenderExposure": 1.0
                         }
@@ -2769,7 +2532,8 @@
                 "Component_[3936724473644879584]": {
                     "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
                     "Id": 3936724473644879584,
-                    "Parent Entity": "Entity_[1146574390643]"
+                    "Parent Entity": "Entity_[1146574390643]",
+                    "IsStatic": true
                 },
                 "Component_[4822559088522048235]": {
                     "$type": "EditorInspectorComponent",
@@ -2790,7 +2554,8 @@
                                     "subId": 278876571
                                 },
                                 "assetHint": "assets/room.azmodel"
-                            }
+                            },
+                            "IsRayTracingEnabled": false
                         }
                     }
                 },

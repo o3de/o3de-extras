@@ -1,5 +1,5 @@
 {
-    "materialType": "Materials/Types/StandardPBR.materialtype",
+    "materialType": "Materials/Types/BasePBR.materialtype",
     "materialTypeVersion": 5,
     "propertyValues": {
         "baseColor.color": [
@@ -9,14 +9,7 @@
             1.0
         ],
         "baseColor.textureMap": "Assets/textures/Floor_BaseColor.png",
-        "emissive.color": [
-            0.0,
-            0.0,
-            0.0,
-            1.0
-        ],
         "normal.textureMap": "Assets/textures/Floor_Normal.png",
-        "opacity.factor": 1.0,
         "roughness.factor": 0.7400000095367432,
         "uv.tileU": 10.0,
         "uv.tileV": 10.0
