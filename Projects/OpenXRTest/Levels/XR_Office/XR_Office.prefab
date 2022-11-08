@@ -159,13 +159,20 @@
                         }
                     }
                 },
+                "Component_[12349365100961274852]": {
+                    "$type": "GenericComponentWrapper",
+                    "Id": 12349365100961274852,
+                    "m_template": {
+                        "$type": "OpenXRVk::XRCameraMovementComponent"
+                    }
+                },
                 "Component_[16880285896855930892]": {
                     "$type": "{CA11DA46-29FF-4083-B5F6-E02C3A8C3A3D} EditorCameraComponent",
                     "Id": 16880285896855930892,
                     "Controller": {
                         "Configuration": {
                             "Field of View": 80.0,
-                            "EditorEntityId": 4256339648212399418
+                            "EditorEntityId": 13623625560977361780
                         }
                     }
                 },
@@ -193,14 +200,14 @@
                     "Parent Entity": "Entity_[1176639161715]",
                     "Transform Data": {
                         "Translate": [
-                            -2.202821731567383,
-                            -1.8827884197235107,
-                            2.270138740539551
+                            -1.0622199773788452,
+                            -0.3377492129802704,
+                            2.137622594833374
                         ],
                         "Rotate": [
-                            -18.419769287109375,
-                            10.033321380615234,
-                            -27.61517333984375
+                            -14.795503616333008,
+                            2.954922914505005,
+                            -11.043655395507813
                         ]
                     }
                 },
@@ -214,7 +221,10 @@
                     "DisabledComponents": [
                         {
                             "$type": "GenericComponentWrapper",
-                            "Id": 7255796294953281766
+                            "Id": 12955670076297803848,
+                            "m_template": {
+                                "$type": "FlyCameraInputComponent"
+                            }
                         }
                     ]
                 },
@@ -332,6 +342,20 @@
                                 "assetHint": "lightingpresets/lowcontrast/royal_esplanade_2k_iblskyboxcm_iblspecular.exr.streamingimage"
                             }
                         }
+                    },
+                    "diffuseImageAsset": {
+                        "assetId": {
+                            "guid": "{74988A00-9ED5-5F1C-8EBC-E2B8A2CE40AF}",
+                            "subId": 2000
+                        },
+                        "assetHint": "lightingpresets/lowcontrast/royal_esplanade_2k_iblskyboxcm_iblspecular.exr.streamingimage"
+                    },
+                    "specularImageAsset": {
+                        "assetId": {
+                            "guid": "{74988A00-9ED5-5F1C-8EBC-E2B8A2CE40AF}",
+                            "subId": 2000
+                        },
+                        "assetHint": "lightingpresets/lowcontrast/royal_esplanade_2k_iblskyboxcm_iblspecular.exr.streamingimage"
                     }
                 },
                 "Component_[14994774102579326069]": {
@@ -1815,7 +1839,7 @@
                                 },
                                 "assetHint": "assets/textures/reflectionprobes/refprobmain__5671e21b-ba4c-48c7-8e30-8f8a0428ab82__iblspecularcm256.dds.streamingimage"
                             },
-                            "EntityId": 2617076348154976811,
+                            "EntityId": 4753779298488703029,
                             "ShowVisualization": false,
                             "RenderExposure": 1.0
                         }
