@@ -1,6 +1,6 @@
 {
     "materialType": "Materials/Types/BasePBR.materialtype",
-    "materialTypeVersion": 5,,
+    "materialTypeVersion": 5,
     "propertyValues": {
         "baseColor.color": [
             0.800000011920929,
