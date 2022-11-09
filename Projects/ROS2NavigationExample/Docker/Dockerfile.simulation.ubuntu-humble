@@ -16,7 +16,7 @@ ENV O3DE_DEMO_REPO=https://github.com/RobotecAI/o3de-demo-project.git
 
 WORKDIR $WORKSPACE
 
-COPY LaunchClient.bash.ubuntu-humble /data/workspace/LaunchClient.bash
+COPY LaunchSimulation.bash.ubuntu-humble /data/workspace/LaunchSimulation.bash
 COPY cleanup.bash /data/workspace/cleanup.bash
 
 RUN apt-get update && apt-get upgrade -y

@@ -17,7 +17,7 @@ ENV ROS2_DISTRO=galactic
 
 WORKDIR $WORKSPACE
 
-COPY LaunchClient.bash.ubuntu-galactic /data/workspace/LaunchClient.bash
+COPY LaunchSimulation.bash.ubuntu-galactic /data/workspace/LaunchSimulation.bash
 COPY cleanup.bash /data/workspace/cleanup.bash
 
 RUN apt-get update && apt-get upgrade -y

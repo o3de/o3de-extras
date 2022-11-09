@@ -4,7 +4,7 @@
 # SPDX-License-Identifier: Apache-2.0 OR MIT
 #
 
-FROM ros:humble-ros-base-jammy
+FROM ros:galactic-ros-base-focal
 
 ENV WORKSPACE=/data/workspace
 
@@ -17,26 +17,25 @@ WORKDIR $WORKSPACE
 RUN apt-get update && apt-get upgrade -y
 
 # Add additional package repositories needed for packages
-RUN apt-get install -y --no-install-recommends gpg wget curl
+RUN apt-get install -y --no-install-recommends gpg wget
 
 #
 # Install packages needed for cloning and building from the source repos
 #
 
-# Install the git and build tools
+# InLaunchNavStackstall the git and build tools
 RUN apt-get install -y --no-install-recommends git 
 
 # Add additional ROS2/Galactic packages
-RUN /bin/bash -c 'source /opt/ros/humble/setup.bash && \
-                  apt install -y ros-${ROS_DISTRO}-desktop \
-                                 ros-${ROS_DISTRO}-slam-toolbox \
-                                 ros-${ROS_DISTRO}-navigation2 \
-                                 ros-${ROS_DISTRO}-nav2-bringup \
-                                 ros-${ROS_DISTRO}-pointcloud-to-laserscan \
-                                 ros-${ROS_DISTRO}-gazebo-msgs \
-                                 ros-${ROS_DISTRO}-ackermann-msgs \
-                                 ros-${ROS_DISTRO}-control-toolbox'
-
+RUN /bin/bash -c 'source /opt/ros/galactic/setup.bash && \
+                  apt install --no-install-recommends -y ros-${ROS_DISTRO}-desktop \
+                                                         ros-${ROS_DISTRO}-slam-toolbox \
+                                                         ros-${ROS_DISTRO}-navigation2 \
+                                                         ros-${ROS_DISTRO}-nav2-bringup \
+                                                         ros-${ROS_DISTRO}-pointcloud-to-laserscan \
+                                                         ros-${ROS_DISTRO}-gazebo-msgs \
+                                                         ros-${ROS_DISTRO}-ackermann-msgs \
+                                                         ros-${ROS_DISTRO}-control-toolbox'
 
 # Install the O3DE-specific required packages
 RUN apt-get install -y --no-install-recommends libglu1-mesa-dev \
@@ -47,7 +46,7 @@ RUN apt-get install -y --no-install-recommends libglu1-mesa-dev \
 RUN cd $WORKSPACE && \
     git clone --single-branch --branch main --recursive $O3DE_DEMO_REPO 
 
-COPY LaunchRViz.bash.ubuntu-humble /data/workspace/LaunchRViz.bash
+COPY LaunchNavStack.bash.ubuntu-galactic /data/workspace/LaunchNavStack.bash
 
 ENV NVIDIA_VISIBLE_DEVICES all
 ENV NVIDIA_DRIVER_CAPABILITIES all
