@@ -6,8 +6,6 @@
 
 FROM ros:humble-ros-base-jammy
 
-ARG minimal
-
 ENV WORKSPACE=/data/workspace
 ENV O3DE_REPO=https://github.com/o3de/o3de.git
 ENV ROS2_GEM_REPO=https://github.com/RobotecAI/o3de-ros2-gem.git

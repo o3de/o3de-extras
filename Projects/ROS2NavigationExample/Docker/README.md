@@ -1,15 +1,16 @@
 # Docker scripts for running the O3DE Demo Project
 
-The following Dockerfiles defined in this path will prepare the appropiate
-ROS2 package (Ubuntu 20.04/Focal + Galactic or Ubuntu 22.04/Jammy + Humble)
-based environment and build the components necessary to run the O3DE demo
-project simulator through the O3DE engine.
+The following Dockerfiles defined in this path will prepare the appropiate ROS2 package <br>
+(Ubuntu 20.04/Focal + Galactic or Ubuntu 22.04/Jammy + Humble) based environment and build<br>
+the components necessary to run the O3DE demo project simulator through the O3DE engine.
 
 ## Prerequisites
 
 * [Hardware requirements of o3de](https://www.o3de.org/docs/welcome-guide/requirements/)
+* Ubuntu 20.04 (Focal) or 22.04 (Jammy)
 * At least 60 GB of free disk space
 * Docker installed and configured
+* [NVidia container toolkit](https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/install-guide.html#docker)
 * SUDO Access
 
 ## Building the Docker Image
@@ -45,9 +46,11 @@ sudo docker build -t o3de_loft_demo_navstack:latest -f Dockerfile.navstack.ubunt
 
 ## Running the Docker Image
 
+Launching O3DE applications in a Docker container requires GPU acceleration support. (Make sure that the [nvidia-docker 2](https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/install-guide.html#docker) is installed.)
 
+### Direct Access to the X Server
 The simulation docker image should be launched first before bringing up the robot application. To run the robot application, 
-first allow the root user to access the running X server
+first allow the container root user to access the running X server for display
 
 ```
 xhost +local:root
@@ -56,16 +59,34 @@ xhost +local:root
 Then launch the built simulation docker image with the following command
 
 ```
-
 sudo docker run --rm --network="bridge" --gpus all -e DISPLAY=:1 -v /tmp/.X11-unix:/tmp/.X11-unix -it o3de_loft_demo_simulation:latest /data/workspace/LaunchSimulation.bash
-
 ```
 
 Once the simulation is up and running, launch the robot application docker image, which will bring up RViz to control the robot.
 
+```
+sudo docker run --rm --network="bridge" --gpus all -e DISPLAY=:1 -v /tmp/.X11-unix:/tmp/.X11-unix -it o3de_loft_demo_navstack:latest /data/workspace/LaunchNavStack.bash
 
 ```
 
-sudo docker run --rm --network="bridge" --gpus all -e DISPLAY=:1 -v /tmp/.X11-unix:/tmp/.X11-unix -it o3de_loft_demo_navstack:latest /data/workspace/LaunchNavStack.bash
+Make sure to revoke access to the X server when the simulation ends.
 
+```
+xhost +local:root
+```
+
+### Running using Rocker
+
+Alternatively, you can use [Rocker](https://github.com/osrf/rocker) to run a GPU-accelerated docker image. 
+
+Launch the built simulation docker image with the following rocker command
+
+```
+rocker --x11 --nvidia o3de_loft_demo_simulation:latest /data/workspace/LaunchSimulation.bash
+```
+
+Once the simulation is up and running, launch the robot application docker image, which will bring up RViz to control the robot.
+
+```
+rocker --x11 --nvidia o3de_loft_demo_simulation:latest /data/workspace/LaunchNavStack.bash
 ```
