@@ -72,7 +72,7 @@ sudo docker run --rm --network="bridge" --gpus all -e DISPLAY=:1 -v /tmp/.X11-un
 Make sure to revoke access to the X server when the simulation ends.
 
 ```
-xhost +local:root
+xhost -local:root
 ```
 
 ### Running using Rocker

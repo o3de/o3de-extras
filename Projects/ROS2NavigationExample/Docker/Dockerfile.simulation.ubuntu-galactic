@@ -75,34 +75,25 @@ RUN /bin/bash -c 'source /opt/ros/galactic/setup.bash && \
 
 # Clone O3DE repos, register, build, and cleanup in the same layer to reduce the size
 RUN cd $WORKSPACE && \
-    git clone --single-branch --recursive --branch development $O3DE_REPO && \
-    cd o3de && \
-    git lfs install && \
-    git lfs pull && \
-    cd $WORKSPACE/o3de && \
-    python/get_python.sh && \
-    cd $WORKSPACE/o3de && \
-    $WORKSPACE/o3de/scripts/o3de.sh register --this-engine && \
-    cd $WORKSPACE && \
-    git clone $ROS2_GEM_REPO --single-branch --branch development && \
+    git clone --single-branch --branch development --recursive $O3DE_REPO && \
+    git -C $WORKSPACE/o3de lfs install && \
+    git -C $WORKSPACE/o3de lfs pull && \
+    $WORKSPACE/o3de/python/get_python.sh && \
+    $WORKSPACE/o3de/scripts/o3de.sh register -ep $WORKSPACE/o3de && \
+    git clone --single-branch --branch development $ROS2_GEM_REPO && \
     $WORKSPACE/o3de/scripts/o3de.sh register -gp $WORKSPACE/o3de-ros2-gem && \
     git clone --single-branch --recursive $LOFT_GEM_REPO && \
-    cd loft-arch-vis-sample && \
-    git lfs install && \
-    git lfs pull && \
+    git -C $WORKSPACE/loft-arch-vis-sample lfs install && \
+    git -C $WORKSPACE/loft-arch-vis-sample lfs pull && \
     $WORKSPACE/o3de/scripts/o3de.sh register -gp $WORKSPACE/loft-arch-vis-sample/Gems/ArchVis/ && \
-    cd $WORKSPACE && \
     git clone --single-branch --branch main --recursive $O3DE_DEMO_REPO && \
-    cd o3de-demo-project && \
-    git lfs install && \
-    git lfs pull && \
+    git -C $WORKSPACE/o3de-demo-project lfs install && \
+    git -C $WORKSPACE/o3de-demo-project lfs pull && \
     $WORKSPACE/o3de/scripts/o3de.sh register -pp $WORKSPACE/o3de-demo-project/  && \
-    cd $WORKSPACE/o3de-demo-project && \
     /bin/bash -c 'source /opt/ros/galactic/setup.bash && \
-                  cmake -B build/linux -S . -G "Ninja Multi-Config" -DLY_STRIP_DEBUG_SYMBOLS=TRUE -DLY_DISABLE_TEST_MODULES=ON && \
-                  cmake --build build/linux --config profile --target AssetProcessorBatch ROS2-Gem-Demo.GameLauncher ROS2-Gem-Demo.Assets && \
-                  cd $WORKSPACE && \
-                  ./cleanup.bash'
+                  cmake -B $WORKSPACE/o3de-demo-project/build/linux -S $WORKSPACE/o3de-demo-project -G "Ninja Multi-Config" -DLY_STRIP_DEBUG_SYMBOLS=TRUE -DLY_DISABLE_TEST_MODULES=ON && \
+                  cmake --build $WORKSPACE/o3de-demo-project/build/linux --config profile --target AssetProcessorBatch ROS2-Gem-Demo.GameLauncher ROS2-Gem-Demo.Assets && \
+                  $WORKSPACE/cleanup.bash'
  
 ENV NVIDIA_VISIBLE_DEVICES all
 ENV NVIDIA_DRIVER_CAPABILITIES all
