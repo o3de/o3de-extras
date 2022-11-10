@@ -35,6 +35,7 @@ RUN /bin/bash -c 'source /opt/ros/humble/setup.bash && \
                                                          ros-${ROS_DISTRO}-pointcloud-to-laserscan \
                                                          ros-${ROS_DISTRO}-gazebo-msgs \
                                                          ros-${ROS_DISTRO}-ackermann-msgs \
+                                                         ros-${ROS_DISTRO}-rmw-cyclonedds-cpp \
                                                          ros-${ROS_DISTRO}-control-toolbox'
 
 
@@ -48,6 +49,8 @@ RUN cd $WORKSPACE && \
     git clone --single-branch --branch main --recursive $O3DE_DEMO_REPO 
 
 COPY LaunchNavStack.bash.ubuntu-humble /data/workspace/LaunchNavStack.bash
+
+ENV RMW_IMPLEMENTATION=rmw_cyclonedds_cpp 
 
 ENV NVIDIA_VISIBLE_DEVICES all
 ENV NVIDIA_DRIVER_CAPABILITIES all

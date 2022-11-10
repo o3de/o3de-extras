@@ -62,6 +62,7 @@ RUN /bin/bash -c 'source /opt/ros/humble/setup.bash && \
                                  ros-${ROS_DISTRO}-pointcloud-to-laserscan \
                                  ros-${ROS_DISTRO}-gazebo-msgs \
                                  ros-${ROS_DISTRO}-ackermann-msgs \
+                                 ros-${ROS_DISTRO}-rmw-cyclonedds-cpp \
                                  ros-${ROS_DISTRO}-control-toolbox'
 
 # Clone O3DE repos, register, build, and cleanup in the same layer to reduce the size
@@ -95,7 +96,8 @@ RUN cd $WORKSPACE && \
                   cd $WORKSPACE && \
                   ./cleanup.bash'
 
- 
+ENV RMW_IMPLEMENTATION=rmw_cyclonedds_cpp 
+
 ENV NVIDIA_VISIBLE_DEVICES all
 ENV NVIDIA_DRIVER_CAPABILITIES all
  
