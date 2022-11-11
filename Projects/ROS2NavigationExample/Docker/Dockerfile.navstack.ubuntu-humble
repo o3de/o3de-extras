@@ -6,6 +6,8 @@
 
 FROM ros:humble-ros-base-jammy
 
+ARG o3de_demo_branch=main
+
 ENV WORKSPACE=/data/workspace
 
 ENV DEBIAN_FRONTEND=noninteractive
@@ -46,7 +48,8 @@ RUN apt-get install -y --no-install-recommends libglu1-mesa-dev \
 
 # Clone the demo project and register the project
 RUN cd $WORKSPACE && \
-    git clone --single-branch --branch main --recursive $O3DE_DEMO_REPO 
+    git clone --recursive $O3DE_DEMO_REPO && \
+    git -C $WORKSPACE/o3de-demo-project checkout $o3de_demo_branch
 
 COPY LaunchNavStack.bash.ubuntu-humble /data/workspace/LaunchNavStack.bash
 

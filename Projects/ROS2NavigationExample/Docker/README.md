@@ -90,3 +90,21 @@ Once the simulation is up and running, launch the robot application docker image
 ```
 rocker --x11 --nvidia o3de_loft_demo_simulation:latest /data/workspace/LaunchNavStack.bash
 ```
+
+### Advanced Options
+
+The Dockerscripts as written are designed to pull from the latest branches of the following github repos:
+
+[O3DE main repository](https://github.com/o3de/o3de.git)  (development)
+[O3DE ROS2 Gem repository](https://github.com/RobotecAI/o3de-ros2-gem.git) (development)
+[O3DE Loft ArchVis Sample Scene repository](https://github.com/o3de/loft-arch-vis-sample.git) (main)
+[Loft Scene Simulation repository](https://github.com/RobotecAI/o3de-demo-project.git) (main)
+
+The following build arguments are supported to pull from alternative branches, tags, or commits:
+
+| Argument         | Repository                       | Default     |
+|------------------|----------------------------------|-------------|
+| o3de_branch      | O3DE                             | development |
+| ros2_gem_branch  | O3DE ROS2 Gem                    | development |
+| loft_gem_branch  | Loft ArchVis Sample Scene        | main        |
+| o3de_demo_branch | Loft Scene Simulation repository | main        |

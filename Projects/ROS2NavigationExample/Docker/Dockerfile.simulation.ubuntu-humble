@@ -6,7 +6,13 @@
 
 FROM ros:humble-ros-base-jammy
 
+ARG o3de_branch=development
+ARG ros2_gem_branch=development
+ARG loft_gem_branch=main
+ARG o3de_demo_branch=main
+
 ENV WORKSPACE=/data/workspace
+
 ENV O3DE_REPO=https://github.com/o3de/o3de.git
 ENV ROS2_GEM_REPO=https://github.com/RobotecAI/o3de-ros2-gem.git
 ENV LOFT_GEM_REPO=https://github.com/o3de/loft-arch-vis-sample.git
@@ -65,18 +71,22 @@ RUN /bin/bash -c 'source /opt/ros/humble/setup.bash && \
 
 # Clone O3DE repos, register, build, and cleanup in the same layer to reduce the size
 RUN cd $WORKSPACE && \
-    git clone --single-branch --branch development --recursive $O3DE_REPO && \
+    git clone --recursive $O3DE_REPO && \
+    git -C $WORKSPACE/o3de checkout $o3de_branch &&\
     git -C $WORKSPACE/o3de lfs install && \
     git -C $WORKSPACE/o3de lfs pull && \
     $WORKSPACE/o3de/python/get_python.sh && \
     $WORKSPACE/o3de/scripts/o3de.sh register -ep $WORKSPACE/o3de && \
-    git clone --single-branch --branch development $ROS2_GEM_REPO && \
+    git clone $ROS2_GEM_REPO && \
+    git -C $WORKSPACE/o3de-ros2-gem checkout $ros2_gem_branch &&\
     $WORKSPACE/o3de/scripts/o3de.sh register -gp $WORKSPACE/o3de-ros2-gem && \
-    git clone --single-branch --recursive $LOFT_GEM_REPO && \
+    git clone --recursive $LOFT_GEM_REPO && \
+    git -C $WORKSPACE/loft-arch-vis-sample checkout $loft_gem_branch &&\
     git -C $WORKSPACE/loft-arch-vis-sample lfs install && \
     git -C $WORKSPACE/loft-arch-vis-sample lfs pull && \
     $WORKSPACE/o3de/scripts/o3de.sh register -gp $WORKSPACE/loft-arch-vis-sample/Gems/ArchVis/ && \
-    git clone --single-branch --branch main --recursive $O3DE_DEMO_REPO && \
+    git clone --recursive $O3DE_DEMO_REPO && \
+    git -C $WORKSPACE/o3de-demo-project checkout $o3de_demo_branch &&\
     git -C $WORKSPACE/o3de-demo-project lfs install && \
     git -C $WORKSPACE/o3de-demo-project lfs pull && \
     $WORKSPACE/o3de/scripts/o3de.sh register -pp $WORKSPACE/o3de-demo-project/  && \
