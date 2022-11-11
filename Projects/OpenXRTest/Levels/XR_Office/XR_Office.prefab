@@ -172,7 +172,7 @@
                     "Controller": {
                         "Configuration": {
                             "Field of View": 80.0,
-                            "EditorEntityId": 13623625560977361780
+                            "EditorEntityId": 8569118030471583375
                         }
                     }
                 },
@@ -983,7 +983,7 @@
                     "Id": 17259614531075895979,
                     "Controller": {
                         "Configuration": {
-                            "LightType": 2,
+                            "LightType": 7,
                             "Intensity": 25.0,
                             "AttenuationRadiusMode": 0,
                             "AttenuationRadius": 10.0,
@@ -994,21 +994,6 @@
                             "Shadow Bias": 0.0,
                             "Shadow Filter Method": 2,
                             "Esm Exponent": 84.0
-                        }
-                    }
-                },
-                "Component_[6846338249585826296]": {
-                    "$type": "EditorDiskShapeComponent",
-                    "Id": 6846338249585826296,
-                    "ShapeColor": [
-                        1.0,
-                        1.0,
-                        1.0,
-                        1.0
-                    ],
-                    "DiskShape": {
-                        "Configuration": {
-                            "Radius": 0.05000000074505806
                         }
                     }
                 },
@@ -1072,7 +1057,7 @@
                     "Id": 17259614531075895979,
                     "Controller": {
                         "Configuration": {
-                            "LightType": 2,
+                            "LightType": 7,
                             "Intensity": 25.0,
                             "AttenuationRadiusMode": 0,
                             "AttenuationRadius": 10.0,
@@ -1083,21 +1068,6 @@
                             "Shadow Bias": 0.0,
                             "Shadow Filter Method": 2,
                             "Esm Exponent": 84.0
-                        }
-                    }
-                },
-                "Component_[6846338249585826296]": {
-                    "$type": "EditorDiskShapeComponent",
-                    "Id": 6846338249585826296,
-                    "ShapeColor": [
-                        1.0,
-                        1.0,
-                        1.0,
-                        1.0
-                    ],
-                    "DiskShape": {
-                        "Configuration": {
-                            "Radius": 0.05000000074505806
                         }
                     }
                 },
@@ -1161,7 +1131,7 @@
                     "Id": 17259614531075895979,
                     "Controller": {
                         "Configuration": {
-                            "LightType": 2,
+                            "LightType": 7,
                             "Intensity": 25.0,
                             "AttenuationRadiusMode": 0,
                             "AttenuationRadius": 10.0,
@@ -1172,21 +1142,6 @@
                             "Shadow Bias": 0.0,
                             "Shadow Filter Method": 2,
                             "Esm Exponent": 84.0
-                        }
-                    }
-                },
-                "Component_[6846338249585826296]": {
-                    "$type": "EditorDiskShapeComponent",
-                    "Id": 6846338249585826296,
-                    "ShapeColor": [
-                        1.0,
-                        1.0,
-                        1.0,
-                        1.0
-                    ],
-                    "DiskShape": {
-                        "Configuration": {
-                            "Radius": 0.05000000074505806
                         }
                     }
                 },
@@ -1250,7 +1205,7 @@
                     "Id": 17259614531075895979,
                     "Controller": {
                         "Configuration": {
-                            "LightType": 2,
+                            "LightType": 7,
                             "Intensity": 25.0,
                             "AttenuationRadiusMode": 0,
                             "AttenuationRadius": 10.0,
@@ -1261,21 +1216,6 @@
                             "Shadow Bias": 0.0,
                             "Shadow Filter Method": 2,
                             "Esm Exponent": 84.0
-                        }
-                    }
-                },
-                "Component_[6846338249585826296]": {
-                    "$type": "EditorDiskShapeComponent",
-                    "Id": 6846338249585826296,
-                    "ShapeColor": [
-                        1.0,
-                        1.0,
-                        1.0,
-                        1.0
-                    ],
-                    "DiskShape": {
-                        "Configuration": {
-                            "Radius": 0.05000000074505806
                         }
                     }
                 },
@@ -1435,7 +1375,7 @@
                     "Id": 17259614531075895979,
                     "Controller": {
                         "Configuration": {
-                            "LightType": 2,
+                            "LightType": 7,
                             "Intensity": 25.0,
                             "AttenuationRadiusMode": 0,
                             "AttenuationRadius": 10.0,
@@ -1446,21 +1386,6 @@
                             "Shadow Bias": 0.0,
                             "Shadow Filter Method": 2,
                             "Esm Exponent": 84.0
-                        }
-                    }
-                },
-                "Component_[6846338249585826296]": {
-                    "$type": "EditorDiskShapeComponent",
-                    "Id": 6846338249585826296,
-                    "ShapeColor": [
-                        1.0,
-                        1.0,
-                        1.0,
-                        1.0
-                    ],
-                    "DiskShape": {
-                        "Configuration": {
-                            "Radius": 0.05000000074505806
                         }
                     }
                 },
@@ -1524,7 +1449,7 @@
                     "Id": 17259614531075895979,
                     "Controller": {
                         "Configuration": {
-                            "LightType": 2,
+                            "LightType": 7,
                             "Intensity": 25.0,
                             "AttenuationRadiusMode": 0,
                             "AttenuationRadius": 10.0,
@@ -1535,21 +1460,6 @@
                             "Shadow Bias": 0.0,
                             "Shadow Filter Method": 2,
                             "Esm Exponent": 84.0
-                        }
-                    }
-                },
-                "Component_[6846338249585826296]": {
-                    "$type": "EditorDiskShapeComponent",
-                    "Id": 6846338249585826296,
-                    "ShapeColor": [
-                        1.0,
-                        1.0,
-                        1.0,
-                        1.0
-                    ],
-                    "DiskShape": {
-                        "Configuration": {
-                            "Radius": 0.05000000074505806
                         }
                     }
                 },
@@ -1613,7 +1523,7 @@
                     "Id": 17259614531075895979,
                     "Controller": {
                         "Configuration": {
-                            "LightType": 2,
+                            "LightType": 7,
                             "Intensity": 25.0,
                             "AttenuationRadiusMode": 0,
                             "AttenuationRadius": 10.0,
@@ -1624,21 +1534,6 @@
                             "Shadow Bias": 0.0,
                             "Shadow Filter Method": 2,
                             "Esm Exponent": 84.0
-                        }
-                    }
-                },
-                "Component_[6846338249585826296]": {
-                    "$type": "EditorDiskShapeComponent",
-                    "Id": 6846338249585826296,
-                    "ShapeColor": [
-                        1.0,
-                        1.0,
-                        1.0,
-                        1.0
-                    ],
-                    "DiskShape": {
-                        "Configuration": {
-                            "Radius": 0.05000000074505806
                         }
                     }
                 },
@@ -1702,7 +1597,7 @@
                     "Id": 17259614531075895979,
                     "Controller": {
                         "Configuration": {
-                            "LightType": 2,
+                            "LightType": 7,
                             "Intensity": 25.0,
                             "AttenuationRadiusMode": 0,
                             "AttenuationRadius": 10.0,
@@ -1713,21 +1608,6 @@
                             "Shadow Bias": 0.0,
                             "Shadow Filter Method": 2,
                             "Esm Exponent": 84.0
-                        }
-                    }
-                },
-                "Component_[6846338249585826296]": {
-                    "$type": "EditorDiskShapeComponent",
-                    "Id": 6846338249585826296,
-                    "ShapeColor": [
-                        1.0,
-                        1.0,
-                        1.0,
-                        1.0
-                    ],
-                    "DiskShape": {
-                        "Configuration": {
-                            "Radius": 0.05000000074505806
                         }
                     }
                 },
@@ -1839,7 +1719,7 @@
                                 },
                                 "assetHint": "assets/textures/reflectionprobes/refprobmain__5671e21b-ba4c-48c7-8e30-8f8a0428ab82__iblspecularcm256.dds.streamingimage"
                             },
-                            "EntityId": 4753779298488703029,
+                            "EntityId": 12239824278503418025,
                             "ShowVisualization": false,
                             "RenderExposure": 1.0
                         }
@@ -1893,7 +1773,7 @@
                     "Id": 17259614531075895979,
                     "Controller": {
                         "Configuration": {
-                            "LightType": 2,
+                            "LightType": 7,
                             "Intensity": 25.0,
                             "AttenuationRadiusMode": 0,
                             "AttenuationRadius": 10.0,
@@ -1904,21 +1784,6 @@
                             "Shadow Bias": 0.0,
                             "Shadow Filter Method": 2,
                             "Esm Exponent": 84.0
-                        }
-                    }
-                },
-                "Component_[6846338249585826296]": {
-                    "$type": "EditorDiskShapeComponent",
-                    "Id": 6846338249585826296,
-                    "ShapeColor": [
-                        1.0,
-                        1.0,
-                        1.0,
-                        1.0
-                    ],
-                    "DiskShape": {
-                        "Configuration": {
-                            "Radius": 0.05000000074505806
                         }
                     }
                 },
@@ -1982,7 +1847,7 @@
                     "Id": 17259614531075895979,
                     "Controller": {
                         "Configuration": {
-                            "LightType": 2,
+                            "LightType": 7,
                             "Intensity": 25.0,
                             "AttenuationRadiusMode": 0,
                             "AttenuationRadius": 10.0,
@@ -1993,21 +1858,6 @@
                             "Shadow Bias": 0.0,
                             "Shadow Filter Method": 2,
                             "Esm Exponent": 84.0
-                        }
-                    }
-                },
-                "Component_[6846338249585826296]": {
-                    "$type": "EditorDiskShapeComponent",
-                    "Id": 6846338249585826296,
-                    "ShapeColor": [
-                        1.0,
-                        1.0,
-                        1.0,
-                        1.0
-                    ],
-                    "DiskShape": {
-                        "Configuration": {
-                            "Radius": 0.05000000074505806
                         }
                     }
                 },
@@ -2071,7 +1921,7 @@
                     "Id": 17259614531075895979,
                     "Controller": {
                         "Configuration": {
-                            "LightType": 2,
+                            "LightType": 7,
                             "Intensity": 25.0,
                             "AttenuationRadiusMode": 0,
                             "AttenuationRadius": 10.0,
@@ -2082,21 +1932,6 @@
                             "Shadow Bias": 0.0,
                             "Shadow Filter Method": 2,
                             "Esm Exponent": 84.0
-                        }
-                    }
-                },
-                "Component_[6846338249585826296]": {
-                    "$type": "EditorDiskShapeComponent",
-                    "Id": 6846338249585826296,
-                    "ShapeColor": [
-                        1.0,
-                        1.0,
-                        1.0,
-                        1.0
-                    ],
-                    "DiskShape": {
-                        "Configuration": {
-                            "Radius": 0.05000000074505806
                         }
                     }
                 },
@@ -2160,7 +1995,7 @@
                     "Id": 17259614531075895979,
                     "Controller": {
                         "Configuration": {
-                            "LightType": 2,
+                            "LightType": 7,
                             "Intensity": 25.0,
                             "AttenuationRadiusMode": 0,
                             "AttenuationRadius": 10.0,
@@ -2171,21 +2006,6 @@
                             "Shadow Bias": 0.0,
                             "Shadow Filter Method": 2,
                             "Esm Exponent": 84.0
-                        }
-                    }
-                },
-                "Component_[6846338249585826296]": {
-                    "$type": "EditorDiskShapeComponent",
-                    "Id": 6846338249585826296,
-                    "ShapeColor": [
-                        1.0,
-                        1.0,
-                        1.0,
-                        1.0
-                    ],
-                    "DiskShape": {
-                        "Configuration": {
-                            "Radius": 0.05000000074505806
                         }
                     }
                 },
