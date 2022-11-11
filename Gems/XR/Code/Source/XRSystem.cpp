@@ -146,7 +146,10 @@ namespace XR
 
     void System::OnSystemTick()
     {
-        m_session->PollEvents();
+        if (m_session)
+        {
+            m_session->PollEvents();
+        }
     }
     
     void System::BeginFrame()
