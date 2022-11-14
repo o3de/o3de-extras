@@ -176,7 +176,7 @@ namespace ROS2
 
             AZStd::shared_ptr<AZ::SceneAPI::Containers::Scene> scene;
             AZ::SceneAPI::Events::SceneSerializationBus::BroadcastResult(
-                scene, &AZ::SceneAPI::Events::SceneSerialization::LoadScene, azMeshPath.c_str(), AZ::Uuid::CreateNull());
+                scene, &AZ::SceneAPI::Events::SceneSerialization::LoadScene, azMeshPath.c_str(), AZ::Uuid::CreateNull(), "");
             if (!scene)
             {
                 AZ_Error(
