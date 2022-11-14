@@ -66,13 +66,6 @@ set(FILES
         Source/RobotImporter/Utils/TypeConversions.cpp
         Source/RobotImporter/URDF/UrdfParser.cpp
         Source/RobotImporter/URDF/UrdfParser.h
-        Source/Converters/URDF/ToFBX/FbxGenerator.cpp
-        Source/Converters/URDF/ToFBX/FbxGenerator.h
-        Source/Converters/URDF/ToFBX/FbxNode.cpp
-        Source/Converters/URDF/ToFBX/FbxNode.h
-        Source/Converters/URDF/ToFBX/UniqueIdGenerator.h
-        Source/Converters/URDF/ToFBX/UrdfToFbxConverter.cpp
-        Source/Converters/URDF/ToFBX/UrdfToFbxConverter.h
         Source/VehicleDynamics/DriveModels/PidConfiguration.cpp
         Source/VehicleDynamics/DriveModels/AckermannDriveModel.cpp
         Source/VehicleDynamics/DriveModels/AckermannDriveModel.h

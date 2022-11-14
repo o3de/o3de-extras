@@ -21,6 +21,9 @@ namespace UnitTest
         AZStd::string GetUrdfWithOneLink()
         {
             return "<robot name=\"test_one_link\">"
+                   "  <material name=\"black\">\n"
+                   "    <color rgba=\"0 0 0 1\"/>\n"
+                   "  </material>"
                    "  <link name=\"link1\">"
                    "    <inertial>"
                    "      <mass value=\"1.0\"/>"
@@ -43,7 +46,10 @@ namespace UnitTest
 
         AZStd::string GetUrdfWithTwoLinksAndJoint()
         {
-            return "<robot name=\"test_two_links_one_joint\">"
+            return "<robot name=\"test_two_links_one_joint\">  "
+                   "  <material name=\"black\">\n"
+                   "    <color rgba=\"0 0 0 1\"/>\n"
+                   "  </material>"
                    "  <link name=\"link1\">"
                    "    <inertial>"
                    "      <mass value=\"1.0\"/>"
