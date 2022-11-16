@@ -41,7 +41,7 @@ suction tools.
 Manipulation in robotics involves a set of actions that are each of them
 pretty complex and sometimes shared outside of the manipulation act with other
 fields in the robotics world. This document will focus on the simulation aspects
-that affect the manipulation task without going deeply into other that are
+that affect the manipulation task without going deeply into others that are
 also common in other robotics fields.
 
 ## Areas involved in manipulation
@@ -55,7 +55,7 @@ also common in other robotics fields.
      * ...
 
  * Motion planning:
-   * High level planing of actions
+   * High level planning of actions
    * Motion planning: planning to resolve kinematics and dynamics constraints
    * ...
 
@@ -69,12 +69,11 @@ focus on the interaction and interfaces designed to use external libraries,
 software and/or frameworks already dedicated to perception, motion planning
 or motion execution.
 
-#### How to handle in the simulation
+#### Considerations for implementation within the O3DE simulator
 
-The main focus of this design document is to provide the simulation
-capabilities that are necessary for the manipulation task to work when being
-done in simulation instead of doing it on real robots. How hardware interaction
-can be replaced by the O3DE simulator features.
+The main focus of this analysis is to provide an overview of the
+capabilities that a simulator needs to implement for the simulation of manipulation tasks in approximation of a real robot and the respective design considerations and trade-offs, e.g. how hardware interaction
+can be replaced by the O3DE simulator features, on which level of abstraction, and which interfaces can and should be provided.
 
  * Object detection (perception): as described in the introduction the sensor
    simulation is usually a basic part of manipulation workflow. This document
