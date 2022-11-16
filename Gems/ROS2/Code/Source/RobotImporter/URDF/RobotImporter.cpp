@@ -44,7 +44,7 @@ namespace ROS2
             });
     }
 
-    void RobotImporter::CheckIfAssetsWereLoadedAndCreatePrefab(std::function<void()> importFinishedCb)
+    void RobotImporter::CheckIfAssetsWereLoadedAndCreatePrefab(AZStd::function<void()> importFinishedCb)
     {
         if (m_loadingURDFFailed)
         {

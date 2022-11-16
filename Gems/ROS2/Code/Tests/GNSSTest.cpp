@@ -20,7 +20,7 @@ namespace UnitTest
 
     TEST_F(GNSSTest, WGS84ToECEF)
     {
-        const std::vector<std::pair<AZ::Vector3, AZ::Vector3>> input_gold_set = {
+        const AZStd::vector<AZStd::pair<AZ::Vector3, AZ::Vector3>> input_gold_set = {
             { { 10.0f, 20.0f, 300.0f }, { 5903307.167667380f, 2148628.092761247f, 1100300.642188661f } },
             { { -70.0f, 170.0f, 500.0f }, { -2154856.524084172f, 379959.3447517005f, -5971509.853428957f } },
             { { 50.0f, -120.0f, -100.0f }, { -2053899.906222906f, -3557458.991239029f, 4862712.433262121f } },
@@ -36,7 +36,7 @@ namespace UnitTest
 
     TEST_F(GNSSTest, ECEFToENU)
     {
-        const std::vector<std::tuple<AZ::Vector3, AZ::Vector3, AZ::Vector3>> input_gold_set = {
+        const AZStd::vector<AZStd::tuple<AZ::Vector3, AZ::Vector3, AZ::Vector3>> input_gold_set = {
             { { -2053900.0f, -3557459.0f, 4862712.0f }, { 50.0f, -120.0f, -100.0f }, { -0.076833f, -0.3202f, -0.2969f } },
             { { 5903307.167667380f, 2148628.092761247f, 1100300.642188661f },
               { 11.0f, 21.0f, 400.0f },
@@ -56,7 +56,7 @@ namespace UnitTest
 
     TEST_F(GNSSTest, ENUToECEF)
     {
-        const std::vector<std::tuple<AZ::Vector3, AZ::Vector3, AZ::Vector3>> input_gold_set = {
+        const AZStd::vector<AZStd::tuple<AZ::Vector3, AZ::Vector3, AZ::Vector3>> input_gold_set = {
             { { -0.076833f, -0.3202f, -0.2969f }, { 50.0f, -120.0f, -100.0f }, { -2053900.0f, -3557459.0f, 4862712.0f } },
             { { -109638.9539891188f, -110428.2398398574f, -2004.501240225796f },
               { 11.0f, 21.0f, 400.0f },
@@ -76,7 +76,7 @@ namespace UnitTest
 
     TEST_F(GNSSTest, ECEFToWSG84)
     {
-        const std::vector<std::pair<AZ::Vector3, AZ::Vector3>> input_gold_set = {
+        const AZStd::vector<AZStd::pair<AZ::Vector3, AZ::Vector3>> input_gold_set = {
             { { 5903307.167667380f, 2148628.092761247f, 1100300.642188661f }, { 10.0f, 20.0f, 300.0f } },
             { { -2154856.524084172f, 379959.3447517005f, -5971509.853428957f }, { -70.0f, 170.0f, 500.0f } },
             { { -2053899.906222906f, -3557458.991239029f, 4862712.433262121f }, { 50.0f, -120.0f, -100.0f } },

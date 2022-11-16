@@ -34,12 +34,12 @@ namespace ROS2
 
         const float m_aspectRatio; //!< camera image aspect ratio; equal to (width / height)
         const AZ::Matrix4x4 m_viewToClipMatrix; //!< camera view to clip space transform matrix; derived from other parameters
-        const std::array<double, 9> m_cameraIntrinsics; //!< camera intrinsics; derived from other parameters
+        const AZStd::array<double, 9> m_cameraIntrinsics; //!< camera intrinsics; derived from other parameters
 
     private:
         AZ::Matrix4x4 MakeViewToClipMatrix() const;
 
-        std::array<double, 9> MakeCameraIntrinsics() const;
+        AZStd::array<double, 9> MakeCameraIntrinsics() const;
 
         void validateParameters() const;
     };
@@ -61,7 +61,7 @@ namespace ROS2
         //! @param callback - callback function object that will be called when capture is ready
         //!                   it's argument is readback structure containing, among other thins, captured image
         void RequestFrame(
-            const AZ::Transform& cameraPose, std::function<void(const AZ::RPI::AttachmentReadback::ReadbackResult& result)> callback);
+            const AZ::Transform& cameraPose, AZStd::function<void(const AZ::RPI::AttachmentReadback::ReadbackResult& result)> callback);
 
         //! Function to get camera sensor description
         [[nodiscard]] const CameraSensorDescription& GetCameraSensorDescription() const;

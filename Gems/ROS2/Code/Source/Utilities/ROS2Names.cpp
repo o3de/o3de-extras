@@ -50,7 +50,7 @@ namespace ROS2
         const AZStd::regex ros2Disallowedlist("[^0-9|a-z|A-Z|_]");
         rosified = AZStd::regex_replace(rosified, ros2Disallowedlist, stringToReplaceViolations);
 
-        if (std::isdigit(rosified[0]) || (input[0] != underscore && rosified[0] == underscore))
+        if (AZStd::isdigit(rosified[0]) || (input[0] != underscore && rosified[0] == underscore))
         { // Prepend "o3de_" if it would otherwise start with a number (which would violate ros2 name requirements)
             // Also, starting with '_' is not desired unless explicit. Topics/namespaces/parameters starting with "_" are hidden by default.
             const AZStd::string prependToNumberStart = "o3de_";

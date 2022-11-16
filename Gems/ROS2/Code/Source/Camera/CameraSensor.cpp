@@ -51,7 +51,7 @@ namespace ROS2
         AZ_Assert(!m_cameraName.empty(), "Camera name cannot be empty");
     }
 
-    std::array<double, 9> CameraSensorDescription::MakeCameraIntrinsics() const
+    AZStd::array<double, 9> CameraSensorDescription::MakeCameraIntrinsics() const
     {
         //  Intrinsic camera matrix of the camera image is being created here
         //  It is based on other parameters available in the structure - they must be initialized before this function is called
@@ -126,7 +126,7 @@ namespace ROS2
     }
 
     void CameraSensor::RequestFrame(
-        const AZ::Transform& cameraPose, std::function<void(const AZ::RPI::AttachmentReadback::ReadbackResult& result)> callback)
+        const AZ::Transform& cameraPose, AZStd::function<void(const AZ::RPI::AttachmentReadback::ReadbackResult& result)> callback)
     {
         AZ::Transform inverse = (cameraPose * kAtomToRos).GetInverse();
         m_view->SetWorldToViewMatrix(AZ::Matrix4x4::CreateFromQuaternionAndTranslation(inverse.GetRotation(), inverse.GetTranslation()));

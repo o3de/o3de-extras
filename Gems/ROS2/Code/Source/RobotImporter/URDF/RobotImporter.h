@@ -49,7 +49,7 @@ namespace ROS2
         //! This function should be called from the main thread repeatedly after ParseURDFAndStartLoadingAssets
         //! It will poll the asset import process and if it is finished, it will proceed with prefab creation
         //! @param importFinishedCb Function that is called when the import process is finished
-        void CheckIfAssetsWereLoadedAndCreatePrefab(std::function<void()> importFinishedCb);
+        void CheckIfAssetsWereLoadedAndCreatePrefab(AZStd::function<void()> importFinishedCb);
 
         AZStd::string GetProgress()
         {
@@ -61,9 +61,9 @@ namespace ROS2
         }
 
     private:
-        std::atomic_bool m_isProcessingAssets;
-        std::atomic_bool m_loadingURDFFailed;
-        std::optional<URDFPrefabMaker> m_prefabMaker;
+        AZStd::atomic_bool m_isProcessingAssets;
+        AZStd::atomic_bool m_loadingURDFFailed;
+        AZStd::optional<URDFPrefabMaker> m_prefabMaker;
         LoggerFunction m_logger;
     };
 

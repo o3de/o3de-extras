@@ -20,7 +20,7 @@
 
 namespace ROS2
 {
-    using BuildReadyCallback = std::function<void()>;
+    using BuildReadyCallback = AZStd::function<void()>;
 
     //! Populates a given entity with all the contents of the <collider> tag in robot description.
     class CollidersMaker
