@@ -3,7 +3,7 @@
         "Atom": {
             "OpenXR": {
                 "Enable": true,
-                "android_ViewResolutionScale": 1.0
+                "android_ViewResolutionScale": 0.75
             }
         }
     }
