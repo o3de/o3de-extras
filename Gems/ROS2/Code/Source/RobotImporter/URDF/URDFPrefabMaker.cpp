@@ -97,37 +97,6 @@ namespace ROS2
             }
         }
 
-        // set hierarchy
-        for (const auto& [name, link_ptr] : links)
-        {
-            const auto this_entry = created_links.at(name);
-            if (!this_entry.IsSuccess())
-            {
-                AZ_TracePrintf("CreatePrefabFromURDF", "Link %s creation failed", name.c_str());
-                continue;
-            }
-            auto parent_ptr = link_ptr->getParent();
-            if (!parent_ptr)
-            {
-                AZ_TracePrintf("CreatePrefabFromURDF", "Link %s has no parents", name.c_str());
-                continue;
-            }
-            AZStd::string parent_name(parent_ptr->name.c_str(), parent_ptr->name.size());
-            const auto parent_entry = created_links.find(parent_name);
-            if (parent_entry == created_links.end())
-            {
-                AZ_TracePrintf("CreatePrefabFromURDF", "Link %s has invalid parent name %s", name.c_str(), parent_name.c_str());
-                continue;
-            }
-            if (!parent_entry->second.IsSuccess())
-            {
-                AZ_TracePrintf(
-                    "CreatePrefabFromURDF", "Link %s has parent %s which has failed to create", name.c_str(), parent_name.c_str());
-                continue;
-            }
-            AZ::TransformBus::Event(this_entry.GetValue(), &AZ::TransformBus::Events::SetParent, parent_entry->second.GetValue());
-        }
-
         // set transforms of links
         for (const auto& [name, link_ptr] : links)
         {
@@ -162,6 +131,46 @@ namespace ROS2
                     }
                 }
             }
+        }
+
+        // set hierarchy
+        for (const auto& [name, link_ptr] : links)
+        {
+            const auto this_entry = created_links.at(name);
+            if (!this_entry.IsSuccess())
+            {
+                AZ_TracePrintf("CreatePrefabFromURDF", "Link %s creation failed", name.c_str());
+                continue;
+            }
+            auto parent_ptr = link_ptr->getParent();
+            if (!parent_ptr)
+            {
+                AZ_TracePrintf("CreatePrefabFromURDF", "Link %s has no parents", name.c_str());
+                continue;
+            }
+            AZStd::string parent_name(parent_ptr->name.c_str(), parent_ptr->name.size());
+            const auto parent_entry = created_links.find(parent_name);
+            if (parent_entry == created_links.end())
+            {
+                AZ_TracePrintf("CreatePrefabFromURDF", "Link %s has invalid parent name %s", name.c_str(), parent_name.c_str());
+                continue;
+            }
+            if (!parent_entry->second.IsSuccess())
+            {
+                AZ_TracePrintf(
+                    "CreatePrefabFromURDF", "Link %s has parent %s which has failed to create", name.c_str(), parent_name.c_str());
+                continue;
+            }
+            AZ_TracePrintf(
+                "CreatePrefabFromURDF",
+                "Link %s setting parent to %s",
+                this_entry.GetValue().ToString().c_str(),
+                parent_entry->second.GetValue().ToString().c_str());
+            AZ_TracePrintf("CreatePrefabFromURDF", "Link %s setting parent to %s", name.c_str(), parent_name.c_str());
+            auto* entity = AzToolsFramework::GetEntityById(this_entry.GetValue());
+            entity->Activate();
+            AZ::TransformBus::Event(this_entry.GetValue(), &AZ::TransformBus::Events::SetParent, parent_entry->second.GetValue());
+            entity->Deactivate();
         }
 
         // create joint
