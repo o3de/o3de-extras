@@ -83,6 +83,12 @@ namespace ROS2
                     ReportError("User cancelled");
                     return;
                 }
+
+                if (CheckCyclicalDependency(prefabName.Filename()))
+                {
+                    return;
+                }
+
                 m_robotImporter.ParseURDFAndStartLoadingAssets({ urdfPath.value(), prefabPath->c_str() });
 
                 // Disable the button until the import is complete to prevent the user from clicking it again
@@ -92,6 +98,39 @@ namespace ROS2
             });
 
         setLayout(mainLayout);
+    }
+
+    bool RobotImporterWidget::CheckCyclicalDependency(const AZ::IO::PathView& importedPrefabFilename)
+    {
+        AzFramework::EntityContextId context_id;
+        EBUS_EVENT_RESULT(context_id, AzFramework::EntityIdContextQueryBus, GetOwningContextId);
+
+        auto focus_interface = AZ::Interface<AzToolsFramework::Prefab::PrefabFocusInterface>::Get();
+
+        if (!focus_interface)
+        {
+            ReportError("Imported prefab could not be validated.\nImport aborted.");
+            return true;
+        }
+
+        auto focus_prefab_instance = focus_interface->GetFocusedPrefabInstance(context_id);
+
+        if (!focus_prefab_instance)
+        {
+            ReportError("Imported prefab could not be validated.\nImport aborted.");
+            return true;
+        }
+
+        auto focus_prefab_filename = focus_prefab_instance.value().get().GetTemplateSourcePath().Filename();
+
+        if (focus_prefab_filename == importedPrefabFilename)
+        {
+            ReportError(
+                "Cyclical dependency detected.\nSelected URDF model is currently being edited. Exit prefab edit mode and try again.");
+            return true;
+        }
+
+        return false;
     }
 
     void RobotImporterWidget::ReportError(const AZStd::string& errorMessage)

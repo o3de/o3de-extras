@@ -11,6 +11,7 @@
 #if !defined(Q_MOC_RUN)
 #include "RobotImporter/URDF/RobotImporter.h"
 #include <AzToolsFramework/API/ToolsApplicationAPI.h>
+#include <AzToolsFramework/Prefab/PrefabFocusInterface.h>
 #include <QCheckBox>
 #include <QFileDialog>
 #include <QLabel>
@@ -40,6 +41,12 @@ namespace ROS2
         //! Populates the log and sets status information in the status label
         //! @param infoMessage info message to display to the user
         void ReportInfo(const AZStd::string& infoMessage);
+
+        //! Checks if the importedPrefabFilename is the same as focused prefab name.
+        //! @param importedPrefabFilename name of imported prefab
+        //! @return True if names of prefabs are identical or an erorr occured during validation
+        bool CheckCyclicalDependency(const AZ::IO::PathView& importedPrefabFilename);
+
         QLabel m_statusLabel;
         QTextEdit m_statusText;
         QPushButton m_selectFileButton;
