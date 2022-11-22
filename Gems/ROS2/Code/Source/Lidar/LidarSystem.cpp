@@ -6,6 +6,7 @@
  *
  */
 #include "LidarSystem.h"
+#include "ROS2/Lidar/LidarRegistrarBus.h"
 
 namespace ROS2
 {
@@ -24,14 +25,26 @@ namespace ROS2
         return lidarPhysicsSceneHandle;
     }
 
-    void LidarSystem::Activate(int handlerId)
+    void LidarSystem::Activate()
     {
-        ROS2::LidarSystemRequestBus::Handler::BusConnect(handlerId);
+        const char* name = "PhysX";
+        const char* description = "Collider-based lidar implementation that uses the PhysX engine's raycasting.";
+        const LidarSystemFeatures supportedFeatures = {
+            /* .m_noise =                   */ false,
+            /* .m_collisionLayers =         */ true,
+            /* .m_MaxRangeHitPointConfig =  */ true,
+        };
+
+        LidarSystemRequestBus::Handler::BusConnect(AZ_CRC(name));
+
+        auto* lidarSystemManagerInterface = ROS2::LidarRegistrarInterface::Get();
+        AZ_Assert(lidarSystemManagerInterface != nullptr, "The LidarSystem Manager interface was inaccessible.");
+        lidarSystemManagerInterface->RegisterLidarSystem(name, description, supportedFeatures);
     }
 
     void LidarSystem::Deactivate()
     {
-        ROS2::LidarSystemRequestBus::Handler::BusDisconnect();
+        LidarSystemRequestBus::Handler::BusDisconnect();
     }
 
     AZ::Uuid LidarSystem::CreateLidar(const AZ::EntityId& lidarEntityId)
@@ -40,16 +53,5 @@ namespace ROS2
         m_lidars.emplace_back(lidarUuid);
         m_lidars.back().SetRaycasterScene(GetPhysicsSceneFromEntityId(lidarEntityId));
         return lidarUuid;
-    }
-
-    LidarImplementationFeatures LidarSystem::GetSupportedFeatures()
-    {
-        static LidarImplementationFeatures supportedFeatures = {
-            /* .m_noise =                   */ false,
-            /* .m_collisionLayers =         */ true,
-            /* .m_MaxRangeHitPointConfig =  */ true,
-        };
-
-        return supportedFeatures;
     }
 } // namespace ROS2

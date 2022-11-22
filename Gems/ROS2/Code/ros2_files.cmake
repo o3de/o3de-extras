@@ -30,6 +30,8 @@ set(FILES
         Source/Lidar/LidarRaycaster.h
         Source/Lidar/LidarSystem.cpp
         Source/Lidar/LidarSystem.h
+        Source/Lidar/LidarRegistrarSystemComponent.cpp
+        Source/Lidar/LidarRegistrarSystemComponent.h
         Source/Lidar/LidarTemplate.cpp
         Source/Lidar/LidarTemplate.h
         Source/Lidar/LidarTemplateUtils.cpp

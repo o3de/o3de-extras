@@ -20,16 +20,15 @@ namespace ROS2
         LidarSystem(const LidarSystem& lidarSystem) = delete;
         ~LidarSystem() = default;
 
-        void Activate(int handlerId);
+        void Activate();
         void Deactivate();
 
-    protected:
+    private:
         ////////////////////////////////////////////////////////////////////////
         // LidarSystemRequestBus::Handler interface implementation
         AZ::Uuid CreateLidar(const AZ::EntityId& lidarEntityId) override;
-        LidarImplementationFeatures GetSupportedFeatures() override;
         ////////////////////////////////////////////////////////////////////////
-    private:
+
         AZStd::vector<LidarRaycaster> m_lidars;
     };
 } // namespace ROS2

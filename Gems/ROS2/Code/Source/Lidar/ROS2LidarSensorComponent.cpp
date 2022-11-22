@@ -7,7 +7,6 @@
  */
 
 #include <Atom/RPI.Public/AuxGeom/AuxGeomFeatureProcessorInterface.h>
-#include <Atom/RPI.Public/RPISystemInterface.h>
 #include <Atom/RPI.Public/Scene.h>
 #include <AzCore/Component/Entity.h>
 #include <AzCore/Serialization/EditContext.h>
@@ -16,6 +15,7 @@
 #include <Lidar/LidarTemplateUtils.h>
 #include <Lidar/ROS2LidarSensorComponent.h>
 #include <ROS2/Frame/ROS2FrameComponent.h>
+#include <ROS2/Lidar/LidarRegistrarBus.h>
 #include <ROS2/ROS2Bus.h>
 #include <ROS2/Utilities/ROS2Names.h>
 
@@ -34,7 +34,7 @@ namespace ROS2
             serialize->Class<ROS2LidarSensorComponent, ROS2SensorComponent>()
                 ->Version(1)
                 ->Field("lidarModel", &ROS2LidarSensorComponent::m_lidarModel)
-                ->Field("lidarImplementation", &ROS2LidarSensorComponent::m_lidarSystemId)
+                ->Field("lidarImplementation", &ROS2LidarSensorComponent::m_lidarSystem)
                 ->Field("LidarParameters", &ROS2LidarSensorComponent::m_lidarParameters)
                 ->Field("IgnoreLayer", &ROS2LidarSensorComponent::m_ignoreLayer)
                 ->Field("IgnoredLayerIndex", &ROS2LidarSensorComponent::m_ignoredLayerIndex)
@@ -56,16 +56,16 @@ namespace ROS2
                     ->EnumAttribute(LidarTemplate::LidarModel::Velodyne_HDL_32E, "Velodyne HDL-32E")
                     ->DataElement(
                         AZ::Edit::UIHandlers::ComboBox,
-                        &ROS2LidarSensorComponent::m_lidarSystemId,
+                        &ROS2LidarSensorComponent::m_lidarSystem,
                         "Lidar Implementation",
-                        "Lidar implementation")
+                        "Select a lidar implementation out of registered ones.")
                     ->Attribute(AZ::Edit::Attributes::ChangeNotify, &ROS2LidarSensorComponent::OnLidarImplementationSelected)
-                    ->Attribute(AZ::Edit::Attributes::GenericValueList, &ROS2LidarSensorComponent::GetRegisteredLidarSystems)
+                    ->Attribute(AZ::Edit::Attributes::StringList, &ROS2LidarSensorComponent::GetLidarSystemList)
                     ->DataElement(
                         AZ::Edit::UIHandlers::EntityId,
                         &ROS2LidarSensorComponent::m_lidarParameters,
                         "Lidar parameters",
-                        "Configuration of Generic lidar")
+                        "Configuration of Custom lidar")
                     ->Attribute(AZ::Edit::Attributes::Visibility, &ROS2LidarSensorComponent::IsConfigurationVisible)
                     ->DataElement(
                         AZ::Edit::UIHandlers::ComboBox,
@@ -91,8 +91,7 @@ namespace ROS2
 
     void ROS2LidarSensorComponent::FetchLidarImplementationFeatures()
     {
-        LidarSystemRequestBus::EventResult(
-            m_lidarImplementationFeatures, m_lidarSystemId, &LidarSystemRequestBus::Events::GetSupportedFeatures);
+        m_lidarSystemFeatures = LidarRegistrarInterface::Get()->GetLidarSystemMetaData(m_lidarSystem).m_features;
     }
 
     bool ROS2LidarSensorComponent::IsConfigurationVisible() const
@@ -102,18 +101,18 @@ namespace ROS2
 
     bool ROS2LidarSensorComponent::IsIgnoredLayerConfigurationVisible() const
     {
-        return m_lidarImplementationFeatures.m_collisionLayers;
+        return m_lidarSystemFeatures.m_collisionLayers;
     }
 
     bool ROS2LidarSensorComponent::IsMaxPointsConfigurationVisible() const
     {
-        return m_lidarImplementationFeatures.m_maxRangePoints;
+        return m_lidarSystemFeatures.m_maxRangePoints;
     }
 
-    AZStd::vector<AZStd::pair<int, AZStd::string>> ROS2LidarSensorComponent::GetRegisteredLidarSystems()
+    AZStd::vector<AZStd::string> ROS2LidarSensorComponent::GetLidarSystemList()
     {
         FetchLidarImplementationFeatures();
-        return ROS2Interface::Get()->GetRegisteredLidarSystems();
+        return LidarRegistrarInterface::Get()->GetRegisteredLidarSystems();
     }
 
     AZ::Crc32 ROS2LidarSensorComponent::OnLidarModelSelected()
@@ -130,18 +129,19 @@ namespace ROS2
 
     void ROS2LidarSensorComponent::ConnectToLidarRaycaster()
     {
-        auto raycasterId = m_lidarRaycasterIds.find(m_lidarSystemId);
-        if (raycasterId != m_lidarRaycasterIds.end())
+        auto raycasterId = m_implementationToRaycasterMap.find(m_lidarSystem);
+        if (raycasterId != m_implementationToRaycasterMap.end())
         {
             m_lidarRaycasterUuid = raycasterId->second;
+            return;
         }
 
         m_lidarRaycasterUuid = AZ::Uuid::CreateNull();
         LidarSystemRequestBus::EventResult(
-            m_lidarRaycasterUuid, m_lidarSystemId, &LidarSystemRequestBus::Events::CreateLidar, GetEntityId());
+            m_lidarRaycasterUuid, AZ_CRC(m_lidarSystem), &LidarSystemRequestBus::Events::CreateLidar, GetEntityId());
         AZ_Assert(!m_lidarRaycasterUuid.IsNull(), "Could not access selected Lidar System.");
 
-        m_lidarRaycasterIds.emplace(m_lidarSystemId, m_lidarRaycasterUuid);
+        m_implementationToRaycasterMap.emplace(m_lidarSystem, m_lidarRaycasterUuid);
     }
 
     void ROS2LidarSensorComponent::ConfigureLidarRaycaster()
@@ -151,7 +151,7 @@ namespace ROS2
         LidarRaycasterRequestBus::Event(
             m_lidarRaycasterUuid, &LidarRaycasterRequestBus::Events::ConfigureRayRange, m_lidarParameters.m_maxRange);
 
-        if (m_lidarImplementationFeatures.m_noise)
+        if (m_lidarSystemFeatures.m_noise)
         {
             LidarRaycasterRequestBus::Event(
                 m_lidarRaycasterUuid,
@@ -161,13 +161,13 @@ namespace ROS2
                 m_lidarParameters.m_noiseParameters.m_distanceNoiseStdDevRisePerMeter);
         }
 
-        if (m_lidarImplementationFeatures.m_collisionLayers)
+        if (m_lidarSystemFeatures.m_collisionLayers)
         {
             LidarRaycasterRequestBus::Event(
                 m_lidarRaycasterUuid, &LidarRaycasterRequestBus::Events::ConfigureLayerIgnoring, m_ignoreLayer, m_ignoredLayerIndex);
         }
 
-        if (m_lidarImplementationFeatures.m_maxRangePoints)
+        if (m_lidarSystemFeatures.m_maxRangePoints)
         {
             LidarRaycasterRequestBus::Event(
                 m_lidarRaycasterUuid, &LidarRaycasterRequestBus::Events::ConfigureMaxRangePointAddition, m_addPointsAtMax);
@@ -182,7 +182,6 @@ namespace ROS2
         pc.m_topic = "pc";
         m_sensorConfiguration.m_frequency = 10;
         m_sensorConfiguration.m_publishersConfigurations.insert(AZStd::make_pair(type, pc));
-        m_lidarSystemId = 0;
     }
 
     void ROS2LidarSensorComponent::Visualise()

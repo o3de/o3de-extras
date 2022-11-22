@@ -16,11 +16,10 @@
 
 namespace ROS2
 {
-    //! A simple implementation of Lidar operation in terms of raycasting.
     class LidarRaycaster : protected LidarRaycasterRequestBus::Handler
     {
     public:
-        explicit LidarRaycaster(const AZ::Uuid& uuid);
+        explicit LidarRaycaster(const LidarRaycasterRequestBus::BusIdType& busId);
         LidarRaycaster(LidarRaycaster&& lidarSystem) noexcept;
         LidarRaycaster(const LidarRaycaster& lidarSystem) = delete;
         ~LidarRaycaster() override;

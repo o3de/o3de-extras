@@ -7,7 +7,7 @@
  */
 #pragma once
 
-#include "Lidar/LidarSystem.h"
+#include <Lidar/LidarSystem.h>
 #include <Atom/RPI.Public/Pass/PassSystemInterface.h>
 #include <AzCore/Component/Component.h>
 #include <AzCore/Component/TickBus.h>
@@ -25,8 +25,8 @@ namespace ROS2
     //! Central singleton-like System Component for ROS2 Gem.
     class ROS2SystemComponent
         : public AZ::Component
-        , protected ROS2RequestBus::Handler
         , public AZ::TickBus::Handler
+        , protected ROS2RequestBus::Handler
     {
     public:
         AZ_COMPONENT(ROS2SystemComponent, "{cb28d486-afa4-4a9f-a237-ac5eb42e1c87}");
@@ -48,10 +48,6 @@ namespace ROS2
         void BroadcastTransform(const geometry_msgs::msg::TransformStamped& t, bool isDynamic) const override;
         //////////////////////////////////////////////////////////////////////////
 
-        int RegisterLidarSystem(const char* raycasterName) override;
-
-        AZStd::vector<AZStd::pair<int, AZStd::string>> GetRegisteredLidarSystems() override;
-
     protected:
         ////////////////////////////////////////////////////////////////////////
         // AZ::Component interface implementation
@@ -64,10 +60,7 @@ namespace ROS2
         // AZTickBus interface implementation
         void OnTick(float deltaTime, AZ::ScriptTimePoint time) override;
         ////////////////////////////////////////////////////////////////////////
-
     private:
-        LidarSystem m_lidarSystem;
-        AZStd::vector<AZStd::string> m_raycasters;
         std::shared_ptr<rclcpp::Node> m_ros2Node;
         AZStd::shared_ptr<rclcpp::executors::SingleThreadedExecutor> m_executor;
         AZStd::unique_ptr<tf2_ros::TransformBroadcaster> m_dynamicTFBroadcaster;

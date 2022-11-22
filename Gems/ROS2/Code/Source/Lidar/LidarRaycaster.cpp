@@ -17,10 +17,10 @@
 
 namespace ROS2
 {
-    LidarRaycaster::LidarRaycaster(const AZ::Uuid& uuid)
-        : m_uuid{ uuid }
+    LidarRaycaster::LidarRaycaster(const LidarRaycasterRequestBus::BusIdType& busId)
+        : m_uuid{ busId }
     {
-        ROS2::LidarRaycasterRequestBus::Handler::BusConnect(uuid);
+        ROS2::LidarRaycasterRequestBus::Handler::BusConnect(busId);
     }
 
     LidarRaycaster::LidarRaycaster(LidarRaycaster&& lidarRaycaster) noexcept

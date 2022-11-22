@@ -36,9 +36,16 @@ namespace ROS2
         virtual AZStd::vector<AZ::Vector3> PerformRaycast(const AZ::Transform& lidarTransform) = 0;
 
         //! Configures ray Gaussian Noise parameters.
-        //! @param angularNoiseStdDev Standard deviation of angular noise.
-        //! @param distanceNoiseStdDevBase Base value for standard deviation of distance noise
-        //! @param distanceNoiseStdDevRisePerMeter Value by which standard deviation of distance noise increases per meter distance from
+        //! Each call overrides the previous configuration.
+        //! This type of noise is especially useful when trying to simulate real-life lidars, since it noise mimics
+        //! the imperfections arising due to various physical factors e.g. fluctuations in rotary motion of the lidar (angular noise) or
+        //! distance accuracy (distance noise).
+        //! For the the details about Gaussian noise, please refer to https://en.wikipedia.org/wiki/Gaussian_noise.
+        //! You can also check-out the RobotecGPULidar (integrated in the RobotecGPULidar Gem) docs concerning these types of lidar noise at
+        //! https://github.com/RobotecAI/RobotecGPULidar/blob/v11/docs/GaussianNoise.md.
+        //! @param angularNoiseStdDev Angular noise standard deviation.
+        //! @param distanceNoiseStdDevBase Base value for Distance noise standard deviation.
+        //! @param distanceNoiseStdDevRisePerMeter Value by which the distance noise standard deviation increases per meter length from
         //! the lidar.
         // TODO - different starting points for rays, distance from reference point, noise models, rotating mirror sim, other
         // TODO - customized settings. Encapsulate in lidar definition and pass in constructor, update transform.

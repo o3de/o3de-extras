@@ -89,7 +89,7 @@ namespace ROS2
                     ->Attribute(AZ::Edit::Attributes::Min, -180.0f)
                     ->Attribute(AZ::Edit::Attributes::Max, 180.0f)
                     ->DataElement(AZ::Edit::UIHandlers::Default, &LidarTemplate::m_maxRange, "Max range", "Maximum beam range [m]")
-                    ->Attribute(AZ::Edit::Attributes::Min, 0.0f)
+                    ->Attribute(AZ::Edit::Attributes::Min, 0.001f)
                     ->Attribute(AZ::Edit::Attributes::Max, 1000.0f)
                     ->DataElement(
                         AZ::Edit::UIHandlers::Default,

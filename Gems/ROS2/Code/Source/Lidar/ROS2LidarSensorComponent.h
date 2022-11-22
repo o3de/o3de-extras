@@ -11,6 +11,8 @@
 #include "LidarTemplate.h"
 #include "LidarTemplateUtils.h"
 #include <ROS2/Lidar/LidarRaycasterBus.h>
+#include <ROS2/Lidar/LidarRegistrarBus.h>
+#include <ROS2/Lidar/LidarSystemBus.h>
 #include <Atom/RPI.Public/AuxGeom/AuxGeomDraw.h>
 #include <AzCore/Serialization/SerializeContext.h>
 #include <ROS2/Sensor/ROS2SensorComponent.h>
@@ -48,17 +50,18 @@ namespace ROS2
         bool IsConfigurationVisible() const;
         bool IsIgnoredLayerConfigurationVisible() const;
         bool IsMaxPointsConfigurationVisible() const;
-        AZStd::vector<AZStd::pair<int, AZStd::string>> GetRegisteredLidarSystems();
+        AZStd::vector<AZStd::string> GetLidarSystemList();
         void ConnectToLidarRaycaster();
         void ConfigureLidarRaycaster();
 
-        LidarImplementationFeatures m_lidarImplementationFeatures;
+        LidarSystemFeatures m_lidarSystemFeatures;
         LidarTemplate::LidarModel m_lidarModel = LidarTemplate::LidarModel::Custom3DLidar;
         LidarTemplate m_lidarParameters = LidarTemplateUtils::GetTemplate(LidarTemplate::LidarModel::Custom3DLidar);
         AZStd::vector<AZ::Vector3> m_lastRotations;
 
-        int m_lidarSystemId;
-        AZStd::unordered_map<int, AZ::Uuid> m_lidarRaycasterIds;
+        AZStd::string m_lidarSystem;
+        // A structure that maps each lidar implementation busId to the busId of a raycaster created by this LidarSensorComponent.
+        AZStd::unordered_map<AZStd::string, AZ::Uuid> m_implementationToRaycasterMap;
         AZ::Uuid m_lidarRaycasterUuid;
         std::shared_ptr<rclcpp::Publisher<sensor_msgs::msg::PointCloud2>> m_pointCloudPublisher;
 
