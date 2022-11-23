@@ -38,7 +38,6 @@ ly_add_target(
         PUBLIC
             AZ::AzCore
             AZ::AzFramework
-            AZ::AzToolsFramework
             Gem::Atom_RPI.Public
             Gem::Atom_Feature_Common.Static
             Gem::Atom_Component_DebugCamera.Static
@@ -95,6 +94,9 @@ if(PAL_TRAIT_BUILD_HOST_TOOLS)
                 Source
             PUBLIC
                 Include
+        COMPILE_DEFINITIONS
+            PRIVATE
+                ROS2_EDITOR
         BUILD_DEPENDENCIES
             PUBLIC
                 AZ::AzToolsFramework
@@ -113,6 +115,9 @@ if(PAL_TRAIT_BUILD_HOST_TOOLS)
             ros2_editor_shared_files.cmake
         PLATFORM_INCLUDE_FILES
             ${CMAKE_CURRENT_LIST_DIR}/Platform/Common/${PAL_TRAIT_COMPILER_ID}/ros2_static_${PAL_TRAIT_COMPILER_ID_LOWERCASE}.cmake
+        COMPILE_DEFINITIONS
+            PRIVATE
+                ROS2_EDITOR
         INCLUDE_DIRECTORIES
             PRIVATE
                 Source

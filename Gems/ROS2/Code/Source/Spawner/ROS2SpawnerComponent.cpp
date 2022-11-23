@@ -11,8 +11,9 @@
 #include "ROS2/ROS2Bus.h"
 #include "ROS2/ROS2GemUtilities.h"
 #include <AzCore/Serialization/EditContext.h>
-#include <AzFramework/Components/TransformComponent.h>
-#include <AzToolsFramework/Entity/EditorEntityHelpers.h>
+#include <AzCore/Serialization/SerializeContext.h>
+#include <AzFramework/Spawnable/Spawnable.h>
+
 #include <ROS2/Utilities/ROS2Conversions.h>
 
 namespace ROS2
@@ -226,8 +227,9 @@ namespace ROS2
 
         for (const auto child : children)
         {
-            auto child_entity = AzToolsFramework::GetEntityById(child);
-
+            AZ::Entity* child_entity = nullptr;
+            AZ::ComponentApplicationBus::BroadcastResult(child_entity, &AZ::ComponentApplicationRequests::FindEntity, child);
+            AZ_Assert(child_entity, "No child entity %s", child.ToString().c_str());
             auto spawn_point = child_entity->FindComponent<ROS2SpawnPointComponent>();
 
             if (spawn_point == nullptr)

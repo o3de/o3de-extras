@@ -8,14 +8,12 @@
 
 #include "ROS2/Frame/ROS2FrameComponent.h"
 #include "ROS2/ROS2Bus.h"
+#include "ROS2/ROS2GemUtilities.h"
 #include "ROS2/Utilities/ROS2Names.h"
 #include <AzCore/Component/Entity.h>
 #include <AzCore/Serialization/EditContext.h>
 #include <AzCore/Serialization/EditContextConstants.inl>
 #include <AzCore/Serialization/SerializeContext.h>
-#include <AzToolsFramework/Entity/EditorEntityHelpers.h>
-#include <AzToolsFramework/ToolsComponents/TransformComponent.h>
-
 namespace ROS2
 {
     namespace Internal
@@ -29,12 +27,9 @@ namespace ROS2
                 return nullptr;
             }
 
-            auto* interface = entity->FindComponent<AzFramework::TransformComponent>();
-            if (interface)
-            {
-                return interface;
-            }
-            return entity->FindComponent<AzToolsFramework::Components::TransformComponent>();
+            auto* interface = Utils::GetGameOrEditorComponent<AzFramework::TransformComponent>(entity);
+
+            return interface;
         }
 
         const ROS2FrameComponent* GetFirstROS2FrameAncestor(const AZ::Entity* entity)
@@ -51,8 +46,9 @@ namespace ROS2
             { // We have reached the top level, there is no parent entity so there can be no parent ROS2Frame
                 return nullptr;
             }
-
-            const AZ::Entity* parentEntity = AzToolsFramework::GetEntityById(parentEntityId);
+            AZ::Entity* parentEntity = nullptr;
+            AZ::ComponentApplicationBus::BroadcastResult(parentEntity, &AZ::ComponentApplicationRequests::FindEntity, parentEntityId);
+            AZ_Assert(parentEntity, "No parent entity id : %s", parentEntityId.ToString().c_str());
             auto* component = Utils::GetGameOrEditorComponent<ROS2FrameComponent>(parentEntity);
             if (component == nullptr)
             { // Parent entity has no ROS2Frame, but there can still be a ROS2Frame in its ancestors

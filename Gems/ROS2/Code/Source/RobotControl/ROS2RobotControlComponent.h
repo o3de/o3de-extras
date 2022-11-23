@@ -11,7 +11,6 @@
 #include "ControlSubscriptionHandler.h"
 #include <AzCore/Component/Component.h>
 #include <AzCore/std/smart_ptr/unique_ptr.h>
-#include <AzToolsFramework/ToolsComponents/GenericComponentWrapper.h>
 #include <ROS2/Communication/TopicConfiguration.h>
 
 namespace ROS2

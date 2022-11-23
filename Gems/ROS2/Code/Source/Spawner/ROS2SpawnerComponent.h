@@ -9,7 +9,10 @@
 
 #include "ROS2SpawnPointComponent.h"
 #include "SpawnerBus.h"
+#include <AzCore/Asset/AssetCommon.h>
+#include <AzCore/Asset/AssetSerializer.h>
 #include <AzCore/Component/Component.h>
+#include <AzCore/std/containers/unordered_map.h>
 #include <AzFramework/Spawnable/Spawnable.h>
 #include <AzFramework/Spawnable/SpawnableEntitiesInterface.h>
 #include <gazebo_msgs/srv/get_model_state.hpp>

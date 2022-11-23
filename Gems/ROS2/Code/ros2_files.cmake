@@ -21,7 +21,6 @@ set(FILES
         Source/Manipulator/MotorizedJoint.cpp
         Source/Communication/QoS.cpp
         Source/Communication/TopicConfiguration.cpp
-        Source/ROS2GemUtilities.cpp
         Source/RobotControl/ControlConfiguration.cpp
         Source/RobotControl/ControlConfiguration.h
         Source/RobotControl/ControlSubscriptionHandler.h

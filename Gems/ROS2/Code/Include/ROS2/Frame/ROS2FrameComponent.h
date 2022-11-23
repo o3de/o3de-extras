@@ -13,7 +13,6 @@
 #include <AzCore/Component/Component.h>
 #include <AzCore/std/smart_ptr/unique_ptr.h>
 #include <AzFramework/Components/TransformComponent.h>
-#include <AzToolsFramework/ToolsComponents/GenericComponentWrapper.h>
 
 namespace ROS2
 {

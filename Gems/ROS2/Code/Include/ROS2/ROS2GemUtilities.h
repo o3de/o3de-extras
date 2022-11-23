@@ -9,8 +9,9 @@
 
 #include "AzCore/Component/ComponentBus.h"
 #include "AzCore/Component/Entity.h"
+#ifdef ROS2_EDITOR
 #include "AzToolsFramework/ToolsComponents/GenericComponentWrapper.h"
-
+#endif
 namespace ROS2
 {
     namespace Utils
@@ -35,9 +36,10 @@ namespace ROS2
             {
                 return component;
             }
+#ifdef ROS2_EDITOR
             // failed to get game object, let us retry as editor
             component = AzToolsFramework::FindWrappedComponentForEntity<ComponentType>(entity);
-            AZ_Assert(entity, "Entity %s has no component of type", entity->GetId());
+#endif
             return component;
         }
 

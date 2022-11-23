@@ -8,9 +8,12 @@
 
 #include "ROS2SpawnPointComponent.h"
 #include <AzCore/Component/Entity.h>
+
 #include <AzCore/Serialization/EditContext.h>
+#include <AzCore/Serialization/EditContextConstants.inl>
+#include <AzCore/Serialization/SerializeContext.h>
+
 #include <AzFramework/Components/TransformComponent.h>
-#include <AzToolsFramework/UI/PropertyEditor/PropertyEditorAPI.h>
 
 namespace ROS2
 {
