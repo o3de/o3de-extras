@@ -15,34 +15,28 @@ the components necessary to run the O3DE demo project simulator through the O3DE
 
 ## Building the Docker Image
 
-There are two demo simulation Dockerfile scripts defined
-
-* Dockerfile.simulation.ubuntu-galactic (Focal / Galactic)
-* Dockerfile.simulation.ubuntu-humble (Jammy / Humble)
-
-There are also two robot navigation stack Dockerfile scripts defined
-
-* Dockerfile.navstack.ubuntu-galactic (Focal / Galactic)
-* Dockerfile.navstack.ubuntu-humble (Jammy / Humble)
-
-
-Select which docker image you would like to build and run the following commands to build the simulation and navigation stack docker images
+By default, the docker script provided in this project will build a docker image to run the Robot Vacuum sample project
+on Ubuntu 22.04 (jammy) with the ROS2 Humble distribution. For example, to build the docker image, run the following
+command:
 
 ```
-
-sudo docker build -t o3de_loft_demo_simulation:latest -f Dockerfile.simulation.ubuntu-galactic .
-
-sudo docker build -t o3de_loft_demo_navstack:latest -f Dockerfile.navstack.ubuntu-galactic .
-
+sudo docker build -t o3de_robot_vacuum_simulation:latest .
 ```
 
+This will create a docker image named 'o3de_robot_vacuum_simulation' with the tag 'latest' that contains both the simulation launcher and the 
+navigation stack. It will also contain helper scripts that will launch either the simulation (LaunchSimulation.bash) or 
+the Rviz2 (LaunchNavStack.bash).
+
+You can also create a separate docker image that only contains the navigation stack and Rviz2 by supplying the argument 
+```IMAGE_TYPE``` and setting it to 'navstack':
+
+```
+sudo docker build --build-arg IMAGE_TYPE=navstack -t o3de_robot_vacuum_navstack:latest .
 ```
 
-sudo docker build -t o3de_loft_demo_simulation:latest -f Dockerfile.simulation.ubuntu-humble .
+ROS2 allows for communication across multiple docker images running on the same host, provided that they specify the 'bridge' 
+network type when launching the docker image.
 
-sudo docker build -t o3de_loft_demo_navstack:latest -f Dockerfile.navstack.ubuntu-humble .
-
-```
 
 ## Running the Docker Image
 
@@ -59,13 +53,13 @@ xhost +local:root
 Then launch the built simulation docker image with the following command
 
 ```
-sudo docker run --rm --network="bridge" --gpus all -e DISPLAY=:1 -v /tmp/.X11-unix:/tmp/.X11-unix -it o3de_loft_demo_simulation:latest /data/workspace/LaunchSimulation.bash
+sudo docker run --rm --network="bridge" --gpus all -e DISPLAY=:1 -v /tmp/.X11-unix:/tmp/.X11-unix -it o3de_robot_vacuum_simulation:latest /data/workspace/LaunchSimulation.bash
 ```
 
 Once the simulation is up and running, launch the robot application docker image, which will bring up RViz to control the robot.
 
 ```
-sudo docker run --rm --network="bridge" --gpus all -e DISPLAY=:1 -v /tmp/.X11-unix:/tmp/.X11-unix -it o3de_loft_demo_navstack:latest /data/workspace/LaunchNavStack.bash
+sudo docker run --rm --network="bridge" --gpus all -e DISPLAY=:1 -v /tmp/.X11-unix:/tmp/.X11-unix -it o3de_robot_vacuum_navstack:latest /data/workspace/LaunchNavStack.bash
 
 ```
 
@@ -82,29 +76,44 @@ Alternatively, you can use [Rocker](https://github.com/osrf/rocker) to run a GPU
 Launch the built simulation docker image with the following rocker command
 
 ```
-rocker --x11 --nvidia o3de_loft_demo_simulation:latest /data/workspace/LaunchSimulation.bash
+rocker --x11 --nvidia o3de_robot_vacuum_simulation:latest /data/workspace/LaunchSimulation.bash
 ```
 
 Once the simulation is up and running, launch the robot application docker image, which will bring up RViz to control the robot.
 
 ```
-rocker --x11 --nvidia o3de_loft_demo_simulation:latest /data/workspace/LaunchNavStack.bash
+rocker --x11 --nvidia o3de_robot_vacuum_navstack:latest /data/workspace/LaunchNavStack.bash
 ```
 
-### Advanced Options
+## Advanced Options
 
-The Dockerscripts as written are designed to pull from the latest branches of the following github repos:
+### Target ROS2 Distribution
+The Docker script defaults to building an image based on Ubuntu 20.04 (bionic) and the ROS2 Humble distribution. This can be overridden 
+with a combination if the ```ROS_VERSION``` and ```UBUNTU_VERSION``` arguments.
 
-[O3DE main repository](https://github.com/o3de/o3de.git)  (development)
-[O3DE ROS2 Gem repository](https://github.com/RobotecAI/o3de-ros2-gem.git) (development)
-[O3DE Loft ArchVis Sample Scene repository](https://github.com/o3de/loft-arch-vis-sample.git) (main)
-[Loft Scene Simulation repository](https://github.com/RobotecAI/o3de-demo-project.git) (main)
+| ROS2 Distro   | Repository                                |
+|---------------|-------------------------------------------|
+| galactic      | ROS_VERSION=galactic UBUNTU_VERSION=focal |
+| humble        | ROS_VERSION=humble UBUNTU_VERSION=humble  |
 
-The following build arguments are supported to pull from alternative branches, tags, or commits:
 
-| Argument         | Repository                       | Default     |
-|------------------|----------------------------------|-------------|
-| o3de_branch      | O3DE                             | development |
-| ros2_gem_branch  | O3DE ROS2 Gem                    | development |
-| loft_gem_branch  | Loft ArchVis Sample Scene        | main        |
-| o3de_demo_branch | Loft Scene Simulation repository | main        |
+### Custom source repos and branches
+
+The Dockerscripts use the following arguments to determine the repository to pull the source from. 
+
+| Argument              | Repository                       | Default     |
+|-----------------------|----------------------------------|-------------|
+| O3DE_REPO             | O3DE                             | https://github.com/o3de/o3de.git                   |
+| ROS2_GEM_REPO         | O3DE ROS2 Gem                    | https://github.com/RobotecAI/o3de-ros2-gem.git     |
+| LOFT_GEM_REPO         | Loft ArchVis Sample Scene        | https://github.com/o3de/loft-arch-vis-sample.git   |
+| ROBOT_VAC_SAMPLE_REPO | Loft Scene Simulation repository | https://github.com/RobotecAI/o3de-demo-project.git |
+
+In addition the repositories, the following arguments target the branch, commit, or tag to pull from their corresponding repository
+
+| Argument                | Repository                       | Default     |
+|-------------------------|----------------------------------|-------------|
+| O3DE_BRANCH             | O3DE                             | development |
+| ROS2_GEM_BRANCH         | O3DE ROS2 Gem                    | development |
+| LOFT_GEM_BRANCH         | Loft ArchVis Sample Scene        | main        |
+| ROBOT_VAC_SAMPLE_BRANCH | Loft Scene Simulation repository | main        |
+

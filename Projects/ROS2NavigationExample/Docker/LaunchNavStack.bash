@@ -8,7 +8,7 @@
 
 unset LD_LIBRARY_PATH
 
-source /opt/ros/galactic/setup.bash
+source /opt/ros/$ROS_DISTRO/setup.bash
 
 cd /data/workspace/o3de-demo-project/launch
 

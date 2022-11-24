@@ -8,13 +8,15 @@
 
 unset LD_LIBRARY_PATH
 
-source /opt/ros/humble/setup.bash
+source /opt/ros/$ROS_DISTRO/setup.bash
 
 export LD_LIBRARY_PATH=/data/workspace/o3de-demo-project/build/linux/bin/profile:$LD_LIBRARY_PATH
 
-cd /data/workspace/o3de-demo-project/build/linux/bin/profile
-
-./ROS2-Gem-Demo.GameLauncher -bg_ConnectToAssetProcessor=0
-
-
+if [ -d /data/workspace/o3de-demo-project/build/linux/bin/profile ]
+then
+    cd /data/workspace/o3de-demo-project/build/linux/bin/profile
+    ./ROS2-Gem-Demo.GameLauncher -bg_ConnectToAssetProcessor=0 > /data/workspace/simulation_launch.log 2>&1
+else
+    echo "Simulation not installed on this image"
+fi
 
