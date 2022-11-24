@@ -12,14 +12,14 @@
 
 #include <ROS2-Gem-Demo/ROS2-Gem-DemoBus.h>
 
-namespace ROS2_Gem_Demo
+namespace RobotVacuumSample
 {
-    class ROS2_Gem_DemoSystemComponent
+    class RobotVacuumSampleSystemComponent
         : public AZ::Component
-        , protected ROS2_Gem_DemoRequestBus::Handler
+        , protected RobotVacuumSampleRequestBus::Handler
     {
     public:
-        AZ_COMPONENT(ROS2_Gem_DemoSystemComponent, "{c5c1e616-e0bd-4b49-afd0-053756e0f455}");
+        AZ_COMPONENT(RobotVacuumSampleSystemComponent, "{c5c1e616-e0bd-4b49-afd0-053756e0f455}");
 
         static void Reflect(AZ::ReflectContext* context);
 
@@ -28,12 +28,12 @@ namespace ROS2_Gem_Demo
         static void GetRequiredServices(AZ::ComponentDescriptor::DependencyArrayType& required);
         static void GetDependentServices(AZ::ComponentDescriptor::DependencyArrayType& dependent);
 
-        ROS2_Gem_DemoSystemComponent();
-        ~ROS2_Gem_DemoSystemComponent();
+        RobotVacuumSampleSystemComponent();
+        ~RobotVacuumSampleSystemComponent();
 
     protected:
         ////////////////////////////////////////////////////////////////////////
-        // ROS2_Gem_DemoRequestBus interface implementation
+        // RobotVacuumSampleRequestBus interface implementation
 
         ////////////////////////////////////////////////////////////////////////
 

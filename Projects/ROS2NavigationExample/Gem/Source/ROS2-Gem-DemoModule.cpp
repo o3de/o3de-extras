@@ -11,21 +11,21 @@
 
 #include "ROS2-Gem-DemoSystemComponent.h"
 
-namespace ROS2_Gem_Demo
+namespace RobotVacuumSample
 {
-    class ROS2_Gem_DemoModule
+    class RobotVacuumSampleModule
         : public AZ::Module
     {
     public:
-        AZ_RTTI(ROS2_Gem_DemoModule, "{0ea31247-8ee5-491d-93cb-296a6c91c995}", AZ::Module);
-        AZ_CLASS_ALLOCATOR(ROS2_Gem_DemoModule, AZ::SystemAllocator, 0);
+        AZ_RTTI(RobotVacuumSampleModule, "{0ea31247-8ee5-491d-93cb-296a6c91c995}", AZ::Module);
+        AZ_CLASS_ALLOCATOR(RobotVacuumSampleModule, AZ::SystemAllocator, 0);
 
-        ROS2_Gem_DemoModule()
+        RobotVacuumSampleModule()
             : AZ::Module()
         {
-            // Push results of [MyComponent]::CreateDescriptor() into m_descriptors here.
+            // Push results of RobotVacuumSampleSystemComponent::CreateDescriptor() into m_descriptors here.
             m_descriptors.insert(m_descriptors.end(), {
-                ROS2_Gem_DemoSystemComponent::CreateDescriptor(),
+                RobotVacuumSampleSystemComponent::CreateDescriptor(),
             });
         }
 
@@ -35,10 +35,10 @@ namespace ROS2_Gem_Demo
         AZ::ComponentTypeList GetRequiredSystemComponents() const override
         {
             return AZ::ComponentTypeList{
-                azrtti_typeid<ROS2_Gem_DemoSystemComponent>(),
+                azrtti_typeid<RobotVacuumSampleSystemComponent>(),
             };
         }
     };
-}// namespace ROS2_Gem_Demo
+}// namespace RobotVacuumSample
 
-AZ_DECLARE_MODULE_CLASS(Gem_ROS2_Gem_Demo, ROS2_Gem_Demo::ROS2_Gem_DemoModule)
+AZ_DECLARE_MODULE_CLASS(Gem_RobotVacuumSample, RobotVacuumSample::RobotVacuumSampleModule)

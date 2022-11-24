@@ -10,17 +10,16 @@
 #include <AzCore/EBus/EBus.h>
 #include <AzCore/Interface/Interface.h>
 
-namespace ROS2_Gem_Demo
+namespace RobotVacuumSample
 {
-    class ROS2_Gem_DemoRequests
+    class RobotVacuumSampleRequests
     {
     public:
-        AZ_RTTI(ROS2_Gem_DemoRequests, "{16673c77-215c-41c6-8bbf-6cd2412568e9}");
-        virtual ~ROS2_Gem_DemoRequests() = default;
-        // Put your public methods here
+        AZ_RTTI(RobotVacuumSampleRequests, "{16673c77-215c-41c6-8bbf-6cd2412568e9}");
+        virtual ~RobotVacuumSampleRequests() = default;
     };
 
-    class ROS2_Gem_DemoBusTraits
+    class RobotVacuumSampleBusTraits
         : public AZ::EBusTraits
     {
     public:
@@ -31,7 +30,7 @@ namespace ROS2_Gem_Demo
         //////////////////////////////////////////////////////////////////////////
     };
 
-    using ROS2_Gem_DemoRequestBus = AZ::EBus<ROS2_Gem_DemoRequests, ROS2_Gem_DemoBusTraits>;
-    using ROS2_Gem_DemoInterface = AZ::Interface<ROS2_Gem_DemoRequests>;
+    using RobotVacuumSampleRequestBus = AZ::EBus<RobotVacuumSampleRequests, RobotVacuumSampleBusTraits>;
+    using RobotVacuumSampleInterface = AZ::Interface<RobotVacuumSampleRequests>;
 
-} // namespace ROS2_Gem_Demo
+} // namespace RobotVacuumSample

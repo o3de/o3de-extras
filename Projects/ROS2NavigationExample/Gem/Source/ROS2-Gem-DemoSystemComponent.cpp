@@ -12,19 +12,19 @@
 
 #include "ROS2-Gem-DemoSystemComponent.h"
 
-namespace ROS2_Gem_Demo
+namespace RobotVacuumSample
 {
-    void ROS2_Gem_DemoSystemComponent::Reflect(AZ::ReflectContext* context)
+    void RobotVacuumSampleSystemComponent::Reflect(AZ::ReflectContext* context)
     {
         if (AZ::SerializeContext* serialize = azrtti_cast<AZ::SerializeContext*>(context))
         {
-            serialize->Class<ROS2_Gem_DemoSystemComponent, AZ::Component>()
+            serialize->Class<RobotVacuumSampleSystemComponent, AZ::Component>()
                 ->Version(0)
                 ;
 
             if (AZ::EditContext* ec = serialize->GetEditContext())
             {
-                ec->Class<ROS2_Gem_DemoSystemComponent>("ROS2_Gem_Demo", "[Description of functionality provided by this System Component]")
+                ec->Class<RobotVacuumSampleSystemComponent>("RobotVacuumSample", "The base Robot Vacuum Sample component.")
                     ->ClassElement(AZ::Edit::ClassElements::EditorData, "")
                         ->Attribute(AZ::Edit::Attributes::AppearsInAddComponentMenu, AZ_CRC("System"))
                         ->Attribute(AZ::Edit::Attributes::AutoExpand, true)
@@ -33,51 +33,51 @@ namespace ROS2_Gem_Demo
         }
     }
 
-    void ROS2_Gem_DemoSystemComponent::GetProvidedServices(AZ::ComponentDescriptor::DependencyArrayType& provided)
+    void RobotVacuumSampleSystemComponent::GetProvidedServices(AZ::ComponentDescriptor::DependencyArrayType& provided)
     {
-        provided.push_back(AZ_CRC("ROS2_Gem_DemoService"));
+        provided.push_back(AZ_CRC("RobotVacuumSampleService"));
     }
 
-    void ROS2_Gem_DemoSystemComponent::GetIncompatibleServices(AZ::ComponentDescriptor::DependencyArrayType& incompatible)
+    void RobotVacuumSampleSystemComponent::GetIncompatibleServices(AZ::ComponentDescriptor::DependencyArrayType& incompatible)
     {
-        incompatible.push_back(AZ_CRC("ROS2_Gem_DemoService"));
+        incompatible.push_back(AZ_CRC("RobotVacuumSampleService"));
     }
 
-    void ROS2_Gem_DemoSystemComponent::GetRequiredServices([[maybe_unused]] AZ::ComponentDescriptor::DependencyArrayType& required)
-    {
-    }
-
-    void ROS2_Gem_DemoSystemComponent::GetDependentServices([[maybe_unused]] AZ::ComponentDescriptor::DependencyArrayType& dependent)
+    void RobotVacuumSampleSystemComponent::GetRequiredServices([[maybe_unused]] AZ::ComponentDescriptor::DependencyArrayType& required)
     {
     }
 
-    ROS2_Gem_DemoSystemComponent::ROS2_Gem_DemoSystemComponent()
+    void RobotVacuumSampleSystemComponent::GetDependentServices([[maybe_unused]] AZ::ComponentDescriptor::DependencyArrayType& dependent)
     {
-        if (ROS2_Gem_DemoInterface::Get() == nullptr)
+    }
+
+    RobotVacuumSampleSystemComponent::RobotVacuumSampleSystemComponent()
+    {
+        if (RobotVacuumSampleInterface::Get() == nullptr)
         {
-            ROS2_Gem_DemoInterface::Register(this);
+            RobotVacuumSampleInterface::Register(this);
         }
     }
 
-    ROS2_Gem_DemoSystemComponent::~ROS2_Gem_DemoSystemComponent()
+    RobotVacuumSampleSystemComponent::~RobotVacuumSampleSystemComponent()
     {
-        if (ROS2_Gem_DemoInterface::Get() == this)
+        if (RobotVacuumSampleInterface::Get() == this)
         {
-            ROS2_Gem_DemoInterface::Unregister(this);
+            RobotVacuumSampleInterface::Unregister(this);
         }
     }
 
-    void ROS2_Gem_DemoSystemComponent::Init()
+    void RobotVacuumSampleSystemComponent::Init()
     {
     }
 
-    void ROS2_Gem_DemoSystemComponent::Activate()
+    void RobotVacuumSampleSystemComponent::Activate()
     {
-        ROS2_Gem_DemoRequestBus::Handler::BusConnect();
+        RobotVacuumSampleRequestBus::Handler::BusConnect();
     }
 
-    void ROS2_Gem_DemoSystemComponent::Deactivate()
+    void RobotVacuumSampleSystemComponent::Deactivate()
     {
-        ROS2_Gem_DemoRequestBus::Handler::BusDisconnect();
+        RobotVacuumSampleRequestBus::Handler::BusDisconnect();
     }
 }
