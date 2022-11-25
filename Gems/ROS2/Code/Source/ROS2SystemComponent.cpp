@@ -10,6 +10,8 @@
 #include "ROS2/Communication/QoS.h"
 #include "ROS2/Communication/TopicConfiguration.h"
 
+#include <Atom/RPI.Public/Pass/PassSystemInterface.h>
+
 #include <AzCore/Serialization/EditContext.h>
 #include <AzCore/Serialization/EditContextConstants.inl>
 #include <AzCore/Serialization/SerializeContext.h>
@@ -50,6 +52,8 @@ namespace ROS2
 
     void ROS2SystemComponent::GetRequiredServices([[maybe_unused]] AZ::ComponentDescriptor::DependencyArrayType& required)
     {
+        required.push_back(AZ_CRC("AssetDatabaseService", 0x3abf5601));
+        required.push_back(AZ_CRC("RPISystem", 0xf2add773));
     }
 
     void ROS2SystemComponent::GetDependentServices([[maybe_unused]] AZ::ComponentDescriptor::DependencyArrayType& dependent)
@@ -86,6 +90,16 @@ namespace ROS2
         m_staticTFBroadcaster = AZStd::make_unique<tf2_ros::StaticTransformBroadcaster>(m_ros2Node);
         m_dynamicTFBroadcaster = AZStd::make_unique<tf2_ros::TransformBroadcaster>(m_ros2Node);
 
+        auto* passSystem = AZ::RPI::PassSystemInterface::Get();
+        AZ_Assert(passSystem, "Cannot get the pass system.");
+
+        m_loadTemplatesHandler = AZ::RPI::PassSystemInterface::OnReadyLoadTemplatesEvent::Handler(
+            [this]()
+            {
+                this->LoadPassTemplateMappings();
+            });
+        passSystem->ConnectEvent(m_loadTemplatesHandler);
+
         ROS2RequestBus::Handler::BusConnect();
         AZ::TickBus::Handler::BusConnect();
     }
@@ -94,7 +108,7 @@ namespace ROS2
     {
         AZ::TickBus::Handler::BusDisconnect();
         ROS2RequestBus::Handler::BusDisconnect();
-
+        m_loadTemplatesHandler.Disconnect();
         m_dynamicTFBroadcaster.reset();
         m_staticTFBroadcaster.reset();
     }
@@ -132,4 +146,16 @@ namespace ROS2
             m_executor->spin_some();
         }
     }
+
+    void ROS2SystemComponent::LoadPassTemplateMappings()
+    {
+        AZ_Printf("ROS2CameraSensorComponent", "LoadPassTemplateMappings\n");
+        auto* passSystem = AZ::RPI::PassSystemInterface::Get();
+        AZ_Assert(passSystem, "PassSystemInterface is null");
+
+        const char* passTemplatesFile = "Passes/ROSPassTemplates.azasset";
+        [[maybe_unused]] bool isOk = passSystem->LoadPassTemplateMappings(passTemplatesFile);
+        AZ_Assert(isOk, "LoadPassTemplateMappings return false ");
+    }
+
 } // namespace ROS2

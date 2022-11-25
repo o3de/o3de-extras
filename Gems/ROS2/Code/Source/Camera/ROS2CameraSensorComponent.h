@@ -41,14 +41,28 @@ namespace ROS2
         void Deactivate() override;
 
     private:
+        //! Type aliases for pointer used in this component
+        using ImagePublisherPtrType = std::shared_ptr<rclcpp::Publisher<sensor_msgs::msg::Image>>;
+        using CameraInfoPublisherPtrType = std::shared_ptr<rclcpp::Publisher<sensor_msgs::msg::CameraInfo>>;
+        using PublisherSensorPtrPair = AZStd::pair<ImagePublisherPtrType, AZStd::shared_ptr<CameraSensor>>;
+
+        //! Helper to construct PublisherSensorPtrPair with give Sensor type
+        template<typename CameraType>
+        PublisherSensorPtrPair createPair(ImagePublisherPtrType publisher, const CameraSensorDescription& description)
+        {
+            return { publisher, AZStd::make_shared<CameraType>(description) };
+        }
+
         float m_VerticalFieldOfViewDeg = 90.0f;
         int m_width = 640;
         int m_height = 480;
+        bool m_colorCamera = true;
+        bool m_depthCamera = true;
 
         void FrequencyTick() override;
+        AZStd::vector<PublisherSensorPtrPair> m_cameraSensorsWithPublihsers;
+        CameraInfoPublisherPtrType m_cameraInfoPublisher;
 
-        std::shared_ptr<rclcpp::Publisher<sensor_msgs::msg::Image>> m_imagePublisher;
-        std::shared_ptr<rclcpp::Publisher<sensor_msgs::msg::CameraInfo>> m_cameraInfoPublisher;
-        std::optional<CameraSensor> m_cameraSensor;
+        AZStd::string m_frameName;
     };
 } // namespace ROS2
