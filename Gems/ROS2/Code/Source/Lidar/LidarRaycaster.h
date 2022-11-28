@@ -46,7 +46,7 @@ namespace ROS2
             const AZ::Transform& globalToLidarTM,
             float distance,
             bool ignoreLayer,
-            unsigned int ignoredLayerIndex);
+            unsigned int ignoredLayerIndex) const;
 
         //! If true the raycaster will also include points at maximum range when nothing was hit
         void SetAddPointsMaxRange(bool addPointsMaxRange);

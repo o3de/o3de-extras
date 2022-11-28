@@ -37,7 +37,7 @@ namespace ROS2
         AZ_Assert(!m_modelPath.empty(), "modelPath path is empty");
     }
 
-    void VisualsMaker::AddVisuals(urdf::LinkSharedPtr link, AZ::EntityId entityId)
+    void VisualsMaker::AddVisuals(urdf::LinkSharedPtr link, AZ::EntityId entityId) const
     {
         const AZStd::string typeString = "visual";
         if (link->visual_array.size() < 1)
@@ -54,7 +54,7 @@ namespace ROS2
         }
     }
 
-    void VisualsMaker::AddVisual(urdf::VisualSharedPtr visual, AZ::EntityId entityId, const AZStd::string& generatedName)
+    void VisualsMaker::AddVisual(urdf::VisualSharedPtr visual, AZ::EntityId entityId, const AZStd::string& generatedName) const
     {
         if (!visual)
         { // it is ok not to have a visual in a link
@@ -83,7 +83,7 @@ namespace ROS2
         AddMaterialForVisual(visual, visualEntityId);
     }
 
-    void VisualsMaker::AddVisualToEntity(urdf::VisualSharedPtr visual, AZ::EntityId entityId)
+    void VisualsMaker::AddVisualToEntity(urdf::VisualSharedPtr visual, AZ::EntityId entityId) const
     {
         // Apply transform as per origin
         PrefabMakerUtils::SetEntityTransformLocal(visual->origin, entityId);
@@ -174,7 +174,7 @@ namespace ROS2
         }
     }
 
-    void VisualsMaker::AddMaterialForVisual(urdf::VisualSharedPtr visual, AZ::EntityId entityId)
+    void VisualsMaker::AddMaterialForVisual(urdf::VisualSharedPtr visual, AZ::EntityId entityId) const
     {
         // URDF does not include information from <gazebo> tags with specific materials, diffuse, specular and emissive params
         if (!visual->material || !visual->geometry)
@@ -188,7 +188,7 @@ namespace ROS2
         const AZStd::string material_name{ visual->material->name.c_str() };
 
         // If present in map, take map color definition as priority, otherwise apply local node definition
-        const auto materialColorUrdf = m_materials.contains(material_name) ? m_materials[material_name]->color : visual->material->color;
+        const auto materialColorUrdf = m_materials.contains(material_name) ? m_materials.at(material_name)->color : visual->material->color;
 
         const AZ::Color materialColor = URDF::TypeConversions::ConvertColor(materialColorUrdf);
         bool isPrimitive = visual->geometry->type != urdf::Geometry::MESH;

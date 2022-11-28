@@ -18,7 +18,6 @@
 #include <AzCore/Serialization/SerializeContext.h>
 
 #include <sensor_msgs/distortion_models.hpp>
-#include <sensor_msgs/image_encodings.hpp>
 
 namespace ROS2
 {
@@ -138,7 +137,7 @@ namespace ROS2
 
     void ROS2CameraSensorComponent::FrequencyTick()
     {
-        AZ::Transform transform = GetEntity()->GetTransform()->GetWorldTM();
+        const AZ::Transform transform = GetEntity()->GetTransform()->GetWorldTM();
         const auto timestamp = ROS2Interface::Get()->GetROSTimestamp();
         std_msgs::msg::Header ros_header;
         if (!m_cameraSensorsWithPublihsers.empty())

@@ -15,8 +15,8 @@ namespace ROS2
 
     AZ::ComponentId Utils::CreateComponent(const AZ::EntityId entityId, const AZ::Uuid componentType)
     {
-        AZ::ComponentTypeList componentsToAdd{ componentType };
-        AZStd::vector<AZ::EntityId> entityIds{ entityId };
+        const AZ::ComponentTypeList componentsToAdd{ componentType };
+        const AZStd::vector<AZ::EntityId> entityIds{ entityId };
         AzToolsFramework::EntityCompositionRequests::AddComponentsOutcome addComponentsOutcome = AZ::Failure(AZStd::string());
         AzToolsFramework::EntityCompositionRequestBus::BroadcastResult(
             addComponentsOutcome, &AzToolsFramework::EntityCompositionRequests::AddComponentsToEntities, entityIds, componentsToAdd);

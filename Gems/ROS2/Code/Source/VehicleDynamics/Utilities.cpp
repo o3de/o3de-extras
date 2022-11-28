@@ -98,14 +98,14 @@ namespace VehicleDynamics::Utilities
     AZStd::vector<VehicleDynamics::WheelDynamicsData> GetAllDriveWheelsData(const VehicleConfiguration& vehicleConfig)
     {
         AZStd::vector<VehicleDynamics::WheelDynamicsData> driveWheelEntities;
-        for (const auto& axle : vehicleConfig.m_axles)
+        for (const AxleConfiguration& axle : vehicleConfig.m_axles)
         {
             if (!axle.m_isDrive)
             { // Get only drive wheels, which are attached to a drive axle
                 continue;
             }
 
-            for (const auto& wheel : axle.m_axleWheels)
+            for (const AZ::EntityId& wheel : axle.m_axleWheels)
             {
                 if (!wheel.IsValid())
                 {

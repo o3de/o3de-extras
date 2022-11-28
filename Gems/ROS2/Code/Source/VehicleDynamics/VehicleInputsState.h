@@ -22,7 +22,7 @@ namespace VehicleDynamics
     */
 
     //! Inputs with an expiration date - effectively is zero after a certain time since update
-    template<typename T, typename = typename std::enable_if<std::is_arithmetic<T>::value, T>::type>
+    template<typename T, typename = typename AZStd::enable_if<AZStd::is_arithmetic<T>::value, T>::type>
     class InputZeroedOnTimeout
     {
     public:

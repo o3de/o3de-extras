@@ -34,7 +34,7 @@ namespace ROS2
 
         static void Reflect(AZ::ReflectContext* context);
 
-        AZStd::pair<AZStd::string, SpawnPointInfo> GetInfo();
+        AZStd::pair<AZStd::string, SpawnPointInfo> GetInfo() const;
 
     private:
         AZStd::string m_name;

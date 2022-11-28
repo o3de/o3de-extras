@@ -19,7 +19,7 @@ namespace ROS2
 {
 
     JointsMaker::JointsMakerResult JointsMaker::AddJointComponent(
-        urdf::JointSharedPtr joint, AZ::EntityId followColliderEntityId, AZ::EntityId leadColliderEntityId)
+        urdf::JointSharedPtr joint, AZ::EntityId followColliderEntityId, AZ::EntityId leadColliderEntityId) const
     {
         AZ::Entity* followColliderEntity = AzToolsFramework::GetEntityById(followColliderEntityId);
         PhysX::EditorJointComponent* jointComponent = nullptr;

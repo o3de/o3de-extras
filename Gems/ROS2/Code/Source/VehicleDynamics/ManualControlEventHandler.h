@@ -8,6 +8,7 @@
 #pragma once
 
 #include "ROS2/VehicleDynamics/VehicleInputControlBus.h"
+#include <AzCore/std/function/function_template.h>
 #include <StartingPointInput/InputEventNotificationBus.h>
 
 // TODO - plenty of boilerplate code, seems somewhat redundant since it would be better to be able to map inputs directly
@@ -17,7 +18,7 @@ namespace VehicleDynamics
     class ManualControlSingleEventHandler : private StartingPointInput::InputEventNotificationBus::Handler
     {
     public:
-        using OnHeldHandlerFunction = std::function<void(float)>;
+        using OnHeldHandlerFunction = AZStd::function<void(float)>;
 
         //! Construct the event handler.
         //! @param eventName which event to handle (e.g. "steering", "accelerate")

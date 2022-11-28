@@ -45,11 +45,11 @@ namespace ROS2::GNSS
 
     AZ::Vector3 ECEFToENU(const AZ::Vector3& referenceLatitudeLongitudeAltitude, const AZ::Vector3& ECEFPoint)
     {
-        AZ::Vector3 referencePointInECEF = WGS84ToECEF(referenceLatitudeLongitudeAltitude);
-        AZ::Vector3 pointToReferencePointECEF = ECEFPoint - referencePointInECEF;
+        const AZ::Vector3 referencePointInECEF = WGS84ToECEF(referenceLatitudeLongitudeAltitude);
+        const AZ::Vector3 pointToReferencePointECEF = ECEFPoint - referencePointInECEF;
 
-        float referenceLatitudeRad = Deg2Rad(referenceLatitudeLongitudeAltitude.GetX());
-        float referenceLongitudeRad = Deg2Rad(referenceLatitudeLongitudeAltitude.GetY());
+        const float referenceLatitudeRad = Deg2Rad(referenceLatitudeLongitudeAltitude.GetX());
+        const float referenceLongitudeRad = Deg2Rad(referenceLatitudeLongitudeAltitude.GetY());
 
         return {
             -AZStd::sin(referenceLongitudeRad) * pointToReferencePointECEF.GetX() +
@@ -93,7 +93,7 @@ namespace ROS2::GNSS
         const double F = 54.0f * earthSemiminorAxis * earthSemiminorAxis * z * z;
         const double G = radiusSquared + (1.0f - firstEccentricitySquared) * z * z - firstEccentricitySquared * E2;
         const double c = (firstEccentricitySquared * firstEccentricitySquared * F * radiusSquared) / (G * G * G);
-        const double s = std::cbrt(1.0f + c + AZStd::sqrt(c * c + 2.0f * c));
+        const double s = AZStd::pow(1. + c + AZStd::sqrt(c * c + 2. * c), 1. / 3);
         const double P = F / (3.0f * (s + 1.0f / s + 1.0f) * (s + 1.0f / s + 1.0f) * G * G);
         const double Q = AZStd::sqrt(1.0f + 2.0f * firstEccentricitySquared * firstEccentricitySquared * P);
 

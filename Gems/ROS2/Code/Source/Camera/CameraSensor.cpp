@@ -7,8 +7,6 @@
  */
 #include "CameraSensor.h"
 
-#include <sensor_msgs/image_encodings.hpp>
-
 #include <AzCore/Math/MatrixUtils.h>
 
 #include <Atom/RPI.Public/Base.h>
@@ -30,15 +28,25 @@ namespace ROS2
     namespace Internal
     {
 
-        // maping from ATOM to ROS/OpenCV
+        /// @FormatMappings - contains the mapping from RHI to ROS image encodings. List of supported
+        /// ROS image encodings lives in `sensor_msgs/image_encodings.hpp'
+        /// We are not including `image_encodings.hpp` since it uses exceptions.
         AZStd::unordered_map<AZ::RHI::Format, const char*> FormatMappings{
-            { AZ::RHI::Format::R8G8B8A8_UNORM, sensor_msgs::image_encodings::RGBA8 },
-            { AZ::RHI::Format::R16G16B16A16_UNORM, sensor_msgs::image_encodings::RGBA16 },
-            { AZ::RHI::Format::R32G32B32A32_FLOAT, sensor_msgs::image_encodings::TYPE_32FC4 }, // Unsuported by RVIZ2
-            { AZ::RHI::Format::R8_UNORM, sensor_msgs::image_encodings::MONO8 },
-            { AZ::RHI::Format::R16_UNORM, sensor_msgs::image_encodings::MONO16 },
-            { AZ::RHI::Format::R32_FLOAT, sensor_msgs::image_encodings::TYPE_32FC1 },
+            { AZ::RHI::Format::R8G8B8A8_UNORM, "rgba8" },     { AZ::RHI::Format::R16G16B16A16_UNORM, "rgba16" },
+            { AZ::RHI::Format::R32G32B32A32_FLOAT, "32FC4" }, // Unsuported by RVIZ2
+            { AZ::RHI::Format::R8_UNORM, "mono8" },           { AZ::RHI::Format::R16_UNORM, "mono16" },
+            { AZ::RHI::Format::R32_FLOAT, "32FC1" },
+        };
 
+        /// @BitDepth - contains the mapping from RHI to size used in `step` size computation.
+        /// It is some equivalent to `bitDepth()` function from `sensor_msgs/image_encodings.hpp`
+        AZStd::unordered_map<AZ::RHI::Format, int> BitDepth{
+            { AZ::RHI::Format::R8G8B8A8_UNORM, 4 * sizeof(uint8_t) },
+            { AZ::RHI::Format::R16G16B16A16_UNORM, 4 * sizeof(uint16_t) },
+            { AZ::RHI::Format::R32G32B32A32_FLOAT, 4 * sizeof(float) }, // Unsuported by RVIZ2
+            { AZ::RHI::Format::R8_UNORM, sizeof(uint8_t) },
+            { AZ::RHI::Format::R16_UNORM, sizeof(uint16_t) },
+            { AZ::RHI::Format::R32_FLOAT, sizeof(float) },
         };
 
     } // namespace Internal
@@ -100,7 +108,7 @@ namespace ROS2
     {
         AZ_TracePrintf("CameraSensor", "Initializing pipeline for %s", m_cameraSensorDescription.m_cameraName.c_str());
 
-        AZ::Name viewName = AZ::Name("MainCamera");
+        const AZ::Name viewName = AZ::Name("MainCamera");
         m_view = AZ::RPI::View::CreateView(viewName, AZ::RPI::View::UsageCamera);
         m_view->SetViewToClipMatrix(m_cameraSensorDescription.m_viewToClipMatrix);
         m_scene = AZ::RPI::RPISystemInterface::Get()->GetSceneByName(AZ::Name("Main"));
@@ -128,7 +136,7 @@ namespace ROS2
         m_passHierarchy.push_back("CopyToSwapChain");
 
         m_pipeline->SetDefaultView(m_view);
-        AZ::RPI::ViewPtr targetView = m_scene->GetDefaultRenderPipeline()->GetDefaultView();
+        const AZ::RPI::ViewPtr targetView = m_scene->GetDefaultRenderPipeline()->GetDefaultView();
         if (auto* fp = m_scene->GetFeatureProcessor<AZ::Render::PostProcessFeatureProcessor>())
         {
             fp->SetViewAlias(m_view, targetView);
@@ -154,7 +162,7 @@ namespace ROS2
     void CameraSensor::RequestFrame(
         const AZ::Transform& cameraPose, AZStd::function<void(const AZ::RPI::AttachmentReadback::ReadbackResult& result)> callback)
     {
-        AZ::Transform inverse = (cameraPose * kAtomToRos).GetInverse();
+        const AZ::Transform inverse = (cameraPose * kAtomToRos).GetInverse();
         m_view->SetWorldToViewMatrix(AZ::Matrix4x4::CreateFromQuaternionAndTranslation(inverse.GetRotation(), inverse.GetTranslation()));
 
         AZ::Render::FrameCaptureId captureId = AZ::Render::InvalidFrameCaptureId;
@@ -190,8 +198,7 @@ namespace ROS2
                 message.encoding = Internal::FormatMappings.at(format);
                 message.width = descriptor.m_size.m_width;
                 message.height = descriptor.m_size.m_height;
-                message.step = message.width * sensor_msgs::image_encodings::bitDepth(message.encoding) / 8 *
-                    sensor_msgs::image_encodings::numChannels(message.encoding);
+                message.step = message.width * Internal::BitDepth.at(format);
                 message.data = std::vector<uint8_t>(result.m_dataBuffer->data(), result.m_dataBuffer->data() + result.m_dataBuffer->size());
                 message.header = header;
                 publisher->publish(message);

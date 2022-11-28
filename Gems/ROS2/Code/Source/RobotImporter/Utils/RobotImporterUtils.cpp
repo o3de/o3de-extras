@@ -57,7 +57,7 @@ namespace ROS2
         std::function<void(const std::vector<urdf::LinkSharedPtr>&)> link_visitor =
             [&](const std::vector<urdf::LinkSharedPtr>& child_links) -> void
         {
-            for (auto child_link : child_links)
+            for (const urdf::LinkSharedPtr& child_link : child_links)
             {
                 AZStd::string link_name(child_link->name.c_str(), child_link->name.size());
                 pointers[link_name] = child_link;

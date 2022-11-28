@@ -28,7 +28,7 @@ namespace ROS2
         const AZ::Transform& globalToLidarTM,
         float distance,
         bool ignoreLayer,
-        unsigned int ignoredLayerIndex)
+        unsigned int ignoredLayerIndex) const
     {
         AZStd::vector<AZ::Vector3> results;
         if (m_sceneHandle == AzPhysics::InvalidSceneHandle)

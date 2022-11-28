@@ -15,6 +15,17 @@ set(FILES
         Source/Camera/ROS2CameraSensorComponent.h
         Source/Clock/SimulationClock.cpp
         Source/Clock/SimulationClock.h
+        Source/Communication/QoS.cpp
+        Source/Communication/TopicConfiguration.cpp
+        Source/Frame/NamespaceConfiguration.cpp
+        Source/Frame/ROS2FrameComponent.cpp
+        Source/Frame/ROS2Transform.cpp
+        Source/GNSS/GNSSFormatConversions.cpp
+        Source/GNSS/GNSSFormatConversions.h
+        Source/GNSS/ROS2GNSSSensorComponent.cpp
+        Source/GNSS/ROS2GNSSSensorComponent.h
+        Source/Imu/ROS2ImuSensorComponent.cpp
+        Source/Imu/ROS2ImuSensorComponent.h
         Source/Lidar/LidarRaycaster.cpp
         Source/Lidar/LidarRaycaster.h
         Source/Lidar/LidarTemplate.cpp
@@ -24,24 +35,26 @@ set(FILES
         Source/Lidar/ROS2LidarSensorComponent.cpp
         Source/Lidar/ROS2LidarSensorComponent.h
         Source/Manipulator/MotorizedJoint.cpp
-        Source/Communication/QoS.cpp
-        Source/Communication/TopicConfiguration.cpp
-        Source/RobotControl/ControlConfiguration.cpp
-        Source/RobotControl/ControlConfiguration.h
-        Source/RobotControl/ControlSubscriptionHandler.h
-        Source/RobotControl/ROS2RobotControlComponent.cpp
-        Source/RobotControl/ROS2RobotControlComponent.h
+        Source/Odometry/ROS2OdometrySensorComponent.cpp
+        Source/Odometry/ROS2OdometrySensorComponent.h
         Source/RobotControl/Ackermann/AckermannBus.h
         Source/RobotControl/Ackermann/AckermannCommandStruct.h
         Source/RobotControl/Ackermann/AckermannSubscriptionHandler.cpp
         Source/RobotControl/Ackermann/AckermannSubscriptionHandler.h
+        Source/RobotControl/ControlConfiguration.cpp
+        Source/RobotControl/ControlConfiguration.h
         Source/RobotControl/Controllers/AckermannController/AckermannControlComponent.cpp
         Source/RobotControl/Controllers/AckermannController/AckermannControlComponent.h
         Source/RobotControl/Controllers/RigidBodyController/RigidBodyTwistControlComponent.cpp
         Source/RobotControl/Controllers/RigidBodyController/RigidBodyTwistControlComponent.h
+        Source/RobotControl/ControlSubscriptionHandler.h
+        Source/RobotControl/ROS2RobotControlComponent.cpp
+        Source/RobotControl/ROS2RobotControlComponent.h
         Source/RobotControl/Twist/TwistBus.h
         Source/RobotControl/Twist/TwistSubscriptionHandler.cpp
         Source/RobotControl/Twist/TwistSubscriptionHandler.h
+        Source/RobotImporter/ROS2RobotImporterSystemComponent.cpp
+        Source/RobotImporter/ROS2RobotImporterSystemComponent.h
         Source/ROS2ModuleInterface.h
         Source/ROS2SystemComponent.cpp
         Source/ROS2SystemComponent.h
@@ -49,40 +62,26 @@ set(FILES
         Source/Sensor/ROS2SensorComponent.h
         Source/Sensor/SensorConfiguration.cpp
         Source/Sensor/SensorConfiguration.h
-        Source/Frame/NamespaceConfiguration.cpp
-        Source/Frame/ROS2FrameComponent.cpp
-        Source/Frame/ROS2Transform.cpp
+        Source/Spawner/ROS2SpawnerComponent.cpp
+        Source/Spawner/ROS2SpawnerComponent.h
+        Source/Spawner/ROS2SpawnPointComponent.cpp
+        Source/Spawner/ROS2SpawnPointComponent.h
+        Source/Spawner/SpawnerBus.h
         Source/Utilities/ROS2Conversions.cpp
         Source/Utilities/ROS2Names.cpp
-        Source/GNSS/ROS2GNSSSensorComponent.cpp
-        Source/GNSS/ROS2GNSSSensorComponent.h
-        Source/GNSS/GNSSFormatConversions.cpp
-        Source/GNSS/GNSSFormatConversions.h
-        Source/Imu/ROS2ImuSensorComponent.cpp
-        Source/Imu/ROS2ImuSensorComponent.h
-        Source/Odometry/ROS2OdometrySensorComponent.cpp
-        Source/Odometry/ROS2OdometrySensorComponent.h
-        Source/RobotImporter/ROS2RobotImporterSystemComponent.cpp
-        Source/RobotImporter/ROS2RobotImporterSystemComponent.h
-        Source/RobotImporter/Utils/RobotImporterUtils.h
-        Source/RobotImporter/Utils/RobotImporterUtils.cpp
-        Source/RobotImporter/Utils/TypeConversions.h
-        Source/RobotImporter/Utils/TypeConversions.cpp
-        Source/RobotImporter/URDF/UrdfParser.cpp
-        Source/RobotImporter/URDF/UrdfParser.h
-        Source/VehicleDynamics/DriveModels/PidConfiguration.cpp
-        Source/VehicleDynamics/DriveModels/AckermannDriveModel.cpp
-        Source/VehicleDynamics/DriveModels/AckermannDriveModel.h
         Source/VehicleDynamics/AxleConfiguration.cpp
         Source/VehicleDynamics/AxleConfiguration.h
-        Source/VehicleDynamics/VehicleConfiguration.cpp
-        Source/VehicleDynamics/VehicleConfiguration.h
         Source/VehicleDynamics/DriveModel.cpp
         Source/VehicleDynamics/DriveModel.h
+        Source/VehicleDynamics/DriveModels/AckermannDriveModel.cpp
+        Source/VehicleDynamics/DriveModels/AckermannDriveModel.h
+        Source/VehicleDynamics/DriveModels/PidConfiguration.cpp
         Source/VehicleDynamics/ManualControlEventHandler.h
-        Source/VehicleDynamics/VehicleInputsState.h
         Source/VehicleDynamics/Utilities.cpp
         Source/VehicleDynamics/Utilities.h
+        Source/VehicleDynamics/VehicleConfiguration.cpp
+        Source/VehicleDynamics/VehicleConfiguration.h
+        Source/VehicleDynamics/VehicleInputsState.h
         Source/VehicleDynamics/VehicleModelComponent.cpp
         Source/VehicleDynamics/VehicleModelComponent.h
         Source/VehicleDynamics/VehicleModelLimits.cpp
@@ -90,9 +89,4 @@ set(FILES
         Source/VehicleDynamics/WheelControllerComponent.cpp
         Source/VehicleDynamics/WheelControllerComponent.h
         Source/VehicleDynamics/WheelDynamicsData.h
-        Source/Spawner/ROS2SpawnerComponent.h
-        Source/Spawner/ROS2SpawnerComponent.cpp
-        Source/Spawner/ROS2SpawnPointComponent.cpp
-        Source/Spawner/ROS2SpawnPointComponent.h
-        Source/Spawner/SpawnerBus.h
         )

@@ -343,7 +343,7 @@ namespace ROS2
     }
 
     void CollidersMaker::AddColliderToEntity(
-        urdf::CollisionSharedPtr collision, AZ::EntityId entityId, const AZ::Data::Asset<Physics::MaterialAsset>& materialAsset)
+        urdf::CollisionSharedPtr collision, AZ::EntityId entityId, const AZ::Data::Asset<Physics::MaterialAsset>& materialAsset) const
     {
         // TODO - we are unable to set collider origin. Sub-entities don't work since they would need to parent visuals etc.
         // TODO - solution: once Collider Component supports Cylinder Shape, switch to it from Shape Collider Component.

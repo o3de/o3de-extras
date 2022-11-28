@@ -25,12 +25,12 @@ namespace ROS2
         //! Note that a sub-entity will be added to hold each visual (since they can have different transforms).
         //! @param link A parsed URDF tree link node which could hold information about visuals.
         //! @param entityId A non-active entity which will be affected.
-        void AddVisuals(urdf::LinkSharedPtr link, AZ::EntityId entityId);
+        void AddVisuals(urdf::LinkSharedPtr link, AZ::EntityId entityId) const;
 
     private:
-        void AddVisual(urdf::VisualSharedPtr visual, AZ::EntityId entityId, const AZStd::string& generatedName);
-        void AddVisualToEntity(urdf::VisualSharedPtr visual, AZ::EntityId entityId);
-        void AddMaterialForVisual(urdf::VisualSharedPtr visual, AZ::EntityId entityId);
+        void AddVisual(urdf::VisualSharedPtr visual, AZ::EntityId entityId, const AZStd::string& generatedName) const;
+        void AddVisualToEntity(urdf::VisualSharedPtr visual, AZ::EntityId entityId) const;
+        void AddMaterialForVisual(urdf::VisualSharedPtr visual, AZ::EntityId entityId) const;
 
         AZ::IO::Path m_modelPath; // TODO - this should be handled on level of assets
         AZStd::unordered_map<AZStd::string, urdf::MaterialSharedPtr> m_materials;

@@ -27,8 +27,6 @@ ly_add_target(
     FILES_CMAKE
         ros2_header_files.cmake
         ros2_files.cmake
-    PLATFORM_INCLUDE_FILES
-        ${CMAKE_CURRENT_LIST_DIR}/Platform/Common/${PAL_TRAIT_COMPILER_ID}/ros2_static_${PAL_TRAIT_COMPILER_ID_LOWERCASE}.cmake
     INCLUDE_DIRECTORIES
         PUBLIC
             Include
@@ -88,7 +86,7 @@ if(PAL_TRAIT_BUILD_HOST_TOOLS)
         FILES_CMAKE
             ros2_editor_files.cmake
         PLATFORM_INCLUDE_FILES
-            ${CMAKE_CURRENT_LIST_DIR}/Platform/Common/${PAL_TRAIT_COMPILER_ID}/ros2_static_${PAL_TRAIT_COMPILER_ID_LOWERCASE}.cmake
+            ${CMAKE_CURRENT_LIST_DIR}/Platform/Common/${PAL_TRAIT_COMPILER_ID}/ros2_static_editor_${PAL_TRAIT_COMPILER_ID_LOWERCASE}.cmake
         INCLUDE_DIRECTORIES
             PRIVATE
                 Source
@@ -114,7 +112,7 @@ if(PAL_TRAIT_BUILD_HOST_TOOLS)
             ros2_editor_files.cmake
             ros2_editor_shared_files.cmake
         PLATFORM_INCLUDE_FILES
-            ${CMAKE_CURRENT_LIST_DIR}/Platform/Common/${PAL_TRAIT_COMPILER_ID}/ros2_static_${PAL_TRAIT_COMPILER_ID_LOWERCASE}.cmake
+            ${CMAKE_CURRENT_LIST_DIR}/Platform/Common/${PAL_TRAIT_COMPILER_ID}/ros2_static_editor_${PAL_TRAIT_COMPILER_ID_LOWERCASE}.cmake
         COMPILE_DEFINITIONS
             PRIVATE
                 ROS2_EDITOR
@@ -148,8 +146,6 @@ if(PAL_TRAIT_BUILD_TESTS_SUPPORTED)
             NAMESPACE Gem
             FILES_CMAKE
                 ros2_tests_files.cmake
-            PLATFORM_INCLUDE_FILES
-                ${CMAKE_CURRENT_LIST_DIR}/Platform/Common/${PAL_TRAIT_COMPILER_ID}/ros2_static_${PAL_TRAIT_COMPILER_ID_LOWERCASE}.cmake
             INCLUDE_DIRECTORIES
                 PRIVATE
                     Tests
@@ -176,7 +172,7 @@ if(PAL_TRAIT_BUILD_TESTS_SUPPORTED)
                 FILES_CMAKE
                     ros2_editor_tests_files.cmake
                 PLATFORM_INCLUDE_FILES
-                    ${CMAKE_CURRENT_LIST_DIR}/Platform/Common/${PAL_TRAIT_COMPILER_ID}/ros2_static_${PAL_TRAIT_COMPILER_ID_LOWERCASE}.cmake
+                    ${CMAKE_CURRENT_LIST_DIR}/Platform/Common/${PAL_TRAIT_COMPILER_ID}/ros2_static_editor_${PAL_TRAIT_COMPILER_ID_LOWERCASE}.cmake
                 INCLUDE_DIRECTORIES
                     PRIVATE
                         Tests

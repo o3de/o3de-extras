@@ -176,7 +176,7 @@ namespace ROS2
 
             // TODO - improve performance
             m_visualisationPoints = m_lastScanResults;
-            for (auto& point : m_visualisationPoints)
+            for (AZ::Vector3& point : m_visualisationPoints)
             {
                 point = localToWorldTM.TransformPoint(point);
             }

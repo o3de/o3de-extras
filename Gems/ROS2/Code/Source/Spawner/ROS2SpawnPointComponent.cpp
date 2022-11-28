@@ -47,7 +47,7 @@ namespace ROS2
         }
     }
 
-    AZStd::pair<AZStd::string, SpawnPointInfo> ROS2SpawnPointComponent::GetInfo()
+    AZStd::pair<AZStd::string, SpawnPointInfo> ROS2SpawnPointComponent::GetInfo() const
     {
         auto transform_component = GetEntity()->FindComponent<AzFramework::TransformComponent>();
 

@@ -34,7 +34,7 @@ namespace ROS2
 
         const ROS2FrameComponent* GetFirstROS2FrameAncestor(const AZ::Entity* entity)
         {
-            AZ::TransformInterface* entityTransformInterface = GetEntityTransformInterface(entity);
+            auto* entityTransformInterface = GetEntityTransformInterface(entity);
             if (!entityTransformInterface)
             {
                 AZ_Error("GetFirstROS2FrameAncestor", false, "Invalid transform interface!");
@@ -126,7 +126,7 @@ namespace ROS2
 
     const AZ::Transform& ROS2FrameComponent::GetFrameTransform() const
     {
-        auto transformInterface = Internal::GetEntityTransformInterface(GetEntity());
+        auto* transformInterface = Internal::GetEntityTransformInterface(GetEntity());
         if (GetParentROS2FrameComponent() != nullptr)
         {
             return transformInterface->GetLocalTM();

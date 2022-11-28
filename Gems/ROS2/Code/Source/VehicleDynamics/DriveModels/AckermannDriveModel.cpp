@@ -73,20 +73,20 @@ namespace VehicleDynamics
     {
         const double deltaTimeSec = double(deltaTimeNs) / 1e9;
 
-        auto steeringEntity = wheelData.m_steeringEntity;
+        const auto& steeringEntity = wheelData.m_steeringEntity;
         AZ::Vector3 currentSteeringElementRotation;
         AZ::TransformBus::EventResult(currentSteeringElementRotation, steeringEntity, &AZ::TransformBus::Events::GetLocalRotation);
-        auto currentSteeringAngle = currentSteeringElementRotation.Dot(wheelData.m_turnAxis);
-        double pidCommand = m_steeringPid.ComputeCommand(steering - currentSteeringAngle, deltaTimeNs);
+        const float currentSteeringAngle = currentSteeringElementRotation.Dot(wheelData.m_turnAxis);
+        const double pidCommand = m_steeringPid.ComputeCommand(steering - currentSteeringAngle, deltaTimeNs);
         if (AZ::IsClose(pidCommand, 0.0)) // TODO - use the third argument with some reasonable value which means "close enough"
         {
             return;
         }
 
-        auto torque = pidCommand * deltaTimeSec;
+        const float torque = pidCommand * deltaTimeSec;
         AZ::Transform steeringElementTransform;
         AZ::TransformBus::EventResult(steeringElementTransform, steeringEntity, &AZ::TransformBus::Events::GetWorldTM);
-        auto transformedTorqueVector = steeringElementTransform.TransformVector(wheelData.m_turnAxis * torque);
+        const auto transformedTorqueVector = steeringElementTransform.TransformVector(wheelData.m_turnAxis * torque);
         Physics::RigidBodyRequestBus::Event(steeringEntity, &Physics::RigidBodyRequests::ApplyAngularImpulse, transformedTorqueVector);
     }
 

@@ -63,7 +63,7 @@ namespace ROS2
         }
         // TODO - this is PoC code, restructure when developing semantics of URDF->Prefab/Entities/Components mapping
         AZStd::unordered_map<AZStd::string, AzToolsFramework::Prefab::PrefabEntityResult> created_links;
-        auto createEntityRoot = AddEntitiesForLink(m_model->root_link_, AZ::EntityId());
+        AzToolsFramework::Prefab::PrefabEntityResult createEntityRoot = AddEntitiesForLink(m_model->root_link_, AZ::EntityId());
         AZStd::string root_name(m_model->root_link_->name.c_str(), m_model->root_link_->name.size());
         created_links[root_name] = createEntityRoot;
         if (!createEntityRoot.IsSuccess())

@@ -15,7 +15,7 @@ namespace ROS2
 {
     builtin_interfaces::msg::Time SimulationClock::GetROSTimestamp() const
     {
-        auto elapsedTime = GetElapsedTimeMicroseconds();
+        const auto elapsedTime = GetElapsedTimeMicroseconds();
 
         builtin_interfaces::msg::Time timeStamp;
         timeStamp.sec = static_cast<int32_t>(elapsedTime / 1000000);

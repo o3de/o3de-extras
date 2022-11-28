@@ -67,7 +67,7 @@ namespace ROS2::PrefabMakerUtils
 
     AzToolsFramework::Prefab::PrefabEntityResult CreateEntity(AZ::EntityId parentEntityId, const AZStd::string& name)
     {
-        auto prefabInterface = AZ::Interface<AzToolsFramework::Prefab::PrefabPublicInterface>::Get();
+        auto* prefabInterface = AZ::Interface<AzToolsFramework::Prefab::PrefabPublicInterface>::Get();
         auto createEntityResult = prefabInterface->CreateEntity(parentEntityId, AZ::Vector3());
         if (!createEntityResult.IsSuccess())
         {

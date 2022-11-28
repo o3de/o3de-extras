@@ -116,7 +116,7 @@ namespace VehicleDynamics
 
     void VehicleModelComponent::OnTick(float deltaTime, [[maybe_unused]] AZ::ScriptTimePoint time)
     {
-        uint64_t deltaTimeNs = deltaTime * 1'000'000'000;
+        const uint64_t deltaTimeNs = deltaTime * 1'000'000'000;
         m_driveModel.ApplyInputState(m_inputsState, deltaTimeNs);
     }
 } // namespace VehicleDynamics

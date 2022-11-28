@@ -19,7 +19,7 @@ namespace ROS2
     constexpr AZ::u8 kMinimalNumPosSolv = 40;
     constexpr AZ::u8 kMinimalNumVelSolv = 10;
 
-    void InertialsMaker::AddInertial(urdf::InertialSharedPtr inertial, AZ::EntityId entityId)
+    void InertialsMaker::AddInertial(urdf::InertialSharedPtr inertial, AZ::EntityId entityId) const
     {
         if (!inertial)
         { // it is ok not to have inertia in a link

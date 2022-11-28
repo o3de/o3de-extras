@@ -48,7 +48,7 @@ namespace ROS2
 
         //! Helper to construct PublisherSensorPtrPair with give Sensor type
         template<typename CameraType>
-        PublisherSensorPtrPair createPair(ImagePublisherPtrType publisher, const CameraSensorDescription& description)
+        PublisherSensorPtrPair createPair(ImagePublisherPtrType publisher, const CameraSensorDescription& description) const
         {
             return { publisher, AZStd::make_shared<CameraType>(description) };
         }
