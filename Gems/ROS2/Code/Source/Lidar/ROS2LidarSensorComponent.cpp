@@ -38,6 +38,7 @@ namespace ROS2
                 ->Field("LidarParameters", &ROS2LidarSensorComponent::m_lidarParameters)
                 ->Field("IgnoreLayer", &ROS2LidarSensorComponent::m_ignoreLayer)
                 ->Field("IgnoredLayerIndex", &ROS2LidarSensorComponent::m_ignoredLayerIndex)
+                ->Field("ExcludedEntities", &ROS2LidarSensorComponent::m_excludedEntities)
                 ->Field("PointsAtMax", &ROS2LidarSensorComponent::m_addPointsAtMax);
 
             if (AZ::EditContext* ec = serialize->GetEditContext())
@@ -80,6 +81,11 @@ namespace ROS2
                         "Layer index to ignore")
                     ->Attribute(AZ::Edit::Attributes::Visibility, &ROS2LidarSensorComponent::IsIgnoredLayerConfigurationVisible)
                     ->DataElement(
+                        0, &ROS2LidarSensorComponent::m_excludedEntities, "Excluded Entities", "List of entities excluded from raycasting.")
+                    ->Attribute(AZ::Edit::Attributes::AutoExpand, true)
+                    ->Attribute(AZ::Edit::Attributes::ContainerCanBeModified, true)
+                    ->Attribute(AZ::Edit::Attributes::Visibility, &ROS2LidarSensorComponent::IsEntityExclusionVisible)
+                    ->DataElement(
                         AZ::Edit::UIHandlers::Default,
                         &ROS2LidarSensorComponent::m_addPointsAtMax,
                         "Points at Max",
@@ -102,6 +108,11 @@ namespace ROS2
     bool ROS2LidarSensorComponent::IsIgnoredLayerConfigurationVisible() const
     {
         return m_lidarSystemFeatures.m_collisionLayers;
+    }
+
+    bool ROS2LidarSensorComponent::IsEntityExclusionVisible() const
+    {
+        return m_lidarSystemFeatures.m_entityExclusion;
     }
 
     bool ROS2LidarSensorComponent::IsMaxPointsConfigurationVisible() const
@@ -167,6 +178,11 @@ namespace ROS2
                 m_lidarRaycasterUuid, &LidarRaycasterRequestBus::Events::ConfigureLayerIgnoring, m_ignoreLayer, m_ignoredLayerIndex);
         }
 
+        if (m_lidarSystemFeatures.m_entityExclusion)
+        {
+            LidarRaycasterRequestBus::Event(m_lidarRaycasterUuid, &LidarRaycasterRequestBus::Events::ExcludeEntities, m_excludedEntities);
+        }
+
         if (m_lidarSystemFeatures.m_maxRangePoints)
         {
             LidarRaycasterRequestBus::Event(
@@ -221,6 +237,15 @@ namespace ROS2
         }
 
         m_lastRotations = LidarTemplateUtils::PopulateRayRotations(m_lidarParameters);
+
+        if (m_lidarSystem == AZStd::string(""))
+        {
+            AZStd::vector<AZStd::string> lidarSystemList = GetLidarSystemList();
+            AZ_Assert(!lidarSystemList.empty(), "Unable to choose a lidarSystem for the lidar sensor.");
+
+            m_lidarSystem = lidarSystemList.at(0);
+        }
+
         ConnectToLidarRaycaster();
         ConfigureLidarRaycaster();
 

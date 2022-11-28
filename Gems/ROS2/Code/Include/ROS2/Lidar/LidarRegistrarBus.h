@@ -19,6 +19,7 @@ namespace ROS2
     public:
         bool m_noise{ false };
         bool m_collisionLayers{ false };
+        bool m_entityExclusion{ false };
         bool m_maxRangePoints{ false };
     };
 

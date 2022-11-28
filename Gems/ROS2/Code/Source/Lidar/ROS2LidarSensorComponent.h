@@ -49,6 +49,7 @@ namespace ROS2
         void FetchLidarImplementationFeatures();
         bool IsConfigurationVisible() const;
         bool IsIgnoredLayerConfigurationVisible() const;
+        bool IsEntityExclusionVisible() const;
         bool IsMaxPointsConfigurationVisible() const;
         AZStd::vector<AZStd::string> GetLidarSystemList();
         void ConnectToLidarRaycaster();
@@ -73,6 +74,8 @@ namespace ROS2
 
         unsigned int m_ignoredLayerIndex = 0;
         bool m_ignoreLayer = false;
+        AZStd::vector<AZ::EntityId> m_excludedEntities;
+
         bool m_addPointsAtMax = false;
     };
 } // namespace ROS2

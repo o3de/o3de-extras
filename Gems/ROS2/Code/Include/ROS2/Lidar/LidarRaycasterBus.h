@@ -63,6 +63,13 @@ namespace ROS2
             AZ_Assert(false, "This Lidar Implementation does not support collision layer configurations!");
         }
 
+        //! Excludes entities with given EntityIds from raycasting.
+        //! @param excludedEntities list of entities marked for exclusion.
+        virtual void ExcludeEntities(const AZStd::vector<AZ::EntityId>& excludedEntities)
+        {
+            AZ_Assert(false, "This Lidar Implementation does not support entity exclusion!");
+        }
+
         //! Configures max range point addition.
         //! @param includeMaxRange Should the raycaster add points at max range for rays that exceeded their range?
         virtual void ConfigureMaxRangePointAddition(bool addMaxRangePoints)

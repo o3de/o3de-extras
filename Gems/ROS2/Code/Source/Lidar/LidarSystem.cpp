@@ -32,6 +32,7 @@ namespace ROS2
         const LidarSystemFeatures supportedFeatures = {
             /* .m_noise =                   */ false,
             /* .m_collisionLayers =         */ true,
+            /* .m_entityExclusion =         */ false,
             /* .m_MaxRangeHitPointConfig =  */ true,
         };
 
