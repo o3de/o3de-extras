@@ -7,7 +7,7 @@
  */
 #pragma once
 
-#include "Sensor/ROS2SensorComponent.h"
+#include "ROS2/Sensor/ROS2SensorComponent.h"
 #include <AzCore/Math/Transform.h>
 #include <AzCore/Serialization/SerializeContext.h>
 #include <rclcpp/publisher.hpp>

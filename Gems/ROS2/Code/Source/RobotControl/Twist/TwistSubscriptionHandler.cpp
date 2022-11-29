@@ -7,8 +7,8 @@
  */
 
 #include "TwistSubscriptionHandler.h"
+#include "ROS2/RobotControl/Twist/TwistBus.h"
 #include "ROS2/Utilities/ROS2Conversions.h"
-#include "TwistBus.h"
 
 namespace ROS2
 {

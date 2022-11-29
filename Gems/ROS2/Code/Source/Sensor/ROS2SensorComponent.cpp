@@ -6,7 +6,7 @@
  *
  */
 
-#include "Sensor/ROS2SensorComponent.h"
+#include "ROS2/Sensor/ROS2SensorComponent.h"
 #include "ROS2/Frame/ROS2FrameComponent.h"
 #include "ROS2/ROS2Bus.h"
 #include "ROS2/ROS2GemUtilities.h"

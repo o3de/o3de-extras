@@ -14,7 +14,7 @@
 
 namespace ROS2
 {
-    //! A structure for a single ROS2 publisher configuration.
+    //! A structure for a single ROS2 topic, a part of publisher or subscriber configuration.
     struct TopicConfiguration
     {
     public:

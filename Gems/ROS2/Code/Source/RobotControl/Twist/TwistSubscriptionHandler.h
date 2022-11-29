@@ -7,7 +7,7 @@
  */
 #pragma once
 
-#include "RobotControl/ControlSubscriptionHandler.h"
+#include "ROS2/RobotControl/ControlSubscriptionHandler.h"
 #include <geometry_msgs/msg/twist.hpp>
 
 namespace ROS2

@@ -11,7 +11,7 @@
 #include <sensor_msgs/msg/camera_info.hpp>
 #include <sensor_msgs/msg/image.hpp>
 
-#include "Sensor/ROS2SensorComponent.h"
+#include "ROS2/Sensor/ROS2SensorComponent.h"
 
 #include <AzCore/Component/Component.h>
 

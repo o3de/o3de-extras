@@ -7,8 +7,8 @@
  */
 #pragma once
 
-#include "ControlConfiguration.h"
-#include "ControlSubscriptionHandler.h"
+#include "ROS2/RobotControl/ControlConfiguration.h"
+#include "ROS2/RobotControl/ControlSubscriptionHandler.h"
 #include <AzCore/Component/Component.h>
 #include <AzCore/std/smart_ptr/unique_ptr.h>
 #include <ROS2/Communication/TopicConfiguration.h>

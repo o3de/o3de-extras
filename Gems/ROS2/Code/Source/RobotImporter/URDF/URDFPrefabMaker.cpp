@@ -9,6 +9,7 @@
 #include "RobotImporter/URDF/URDFPrefabMaker.h"
 #include "ROS2/Frame/ROS2FrameComponent.h"
 #include "ROS2/ROS2GemUtilities.h"
+#include "ROS2/Spawner/SpawnerBus.h"
 #include "RobotControl/ROS2RobotControlComponent.h"
 #include "RobotImporter/URDF/CollidersMaker.h"
 #include "RobotImporter/URDF/PrefabMakerUtils.h"
@@ -20,8 +21,6 @@
 #include <AzToolsFramework/Prefab/PrefabSystemComponentInterface.h>
 #include <AzToolsFramework/ToolsComponents/GenericComponentWrapper.h>
 #include <AzToolsFramework/ToolsComponents/TransformComponent.h>
-
-#include <Spawner/SpawnerBus.h>
 
 namespace ROS2
 {

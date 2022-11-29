@@ -34,39 +34,30 @@ set(FILES
         Source/Lidar/LidarTemplateUtils.h
         Source/Lidar/ROS2LidarSensorComponent.cpp
         Source/Lidar/ROS2LidarSensorComponent.h
-        Source/Manipulator/MotorizedJoint.cpp
+        Source/Manipulator/MotorizedJointComponent.cpp
         Source/Odometry/ROS2OdometrySensorComponent.cpp
         Source/Odometry/ROS2OdometrySensorComponent.h
-        Source/RobotControl/Ackermann/AckermannBus.h
-        Source/RobotControl/Ackermann/AckermannCommandStruct.h
         Source/RobotControl/Ackermann/AckermannSubscriptionHandler.cpp
         Source/RobotControl/Ackermann/AckermannSubscriptionHandler.h
         Source/RobotControl/ControlConfiguration.cpp
-        Source/RobotControl/ControlConfiguration.h
         Source/RobotControl/Controllers/AckermannController/AckermannControlComponent.cpp
         Source/RobotControl/Controllers/AckermannController/AckermannControlComponent.h
         Source/RobotControl/Controllers/RigidBodyController/RigidBodyTwistControlComponent.cpp
         Source/RobotControl/Controllers/RigidBodyController/RigidBodyTwistControlComponent.h
-        Source/RobotControl/ControlSubscriptionHandler.h
         Source/RobotControl/ROS2RobotControlComponent.cpp
         Source/RobotControl/ROS2RobotControlComponent.h
-        Source/RobotControl/Twist/TwistBus.h
         Source/RobotControl/Twist/TwistSubscriptionHandler.cpp
-        Source/RobotControl/Twist/TwistSubscriptionHandler.h
         Source/RobotImporter/ROS2RobotImporterSystemComponent.cpp
         Source/RobotImporter/ROS2RobotImporterSystemComponent.h
         Source/ROS2ModuleInterface.h
         Source/ROS2SystemComponent.cpp
         Source/ROS2SystemComponent.h
         Source/Sensor/ROS2SensorComponent.cpp
-        Source/Sensor/ROS2SensorComponent.h
         Source/Sensor/SensorConfiguration.cpp
-        Source/Sensor/SensorConfiguration.h
         Source/Spawner/ROS2SpawnerComponent.cpp
         Source/Spawner/ROS2SpawnerComponent.h
         Source/Spawner/ROS2SpawnPointComponent.cpp
         Source/Spawner/ROS2SpawnPointComponent.h
-        Source/Spawner/SpawnerBus.h
         Source/Utilities/ROS2Conversions.cpp
         Source/Utilities/ROS2Names.cpp
         Source/VehicleDynamics/AxleConfiguration.cpp

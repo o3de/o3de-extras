@@ -6,7 +6,7 @@
  *
  */
 
-#include "RobotControl/ControlConfiguration.h"
+#include "ROS2/RobotControl/ControlConfiguration.h"
 #include <AzCore/Serialization/EditContext.h>
 
 namespace ROS2

@@ -13,7 +13,7 @@
 #include "Lidar/ROS2LidarSensorComponent.h"
 #include "Odometry/ROS2OdometrySensorComponent.h"
 #include "ROS2/Frame/ROS2FrameComponent.h"
-#include "ROS2/Manipulator/MotorizedJoint.h"
+#include "ROS2/Manipulator/MotorizedJointComponent.h"
 #include "ROS2SystemComponent.h"
 #include "RobotControl/Controllers/AckermannController/AckermannControlComponent.h"
 #include "RobotControl/Controllers/RigidBodyController/RigidBodyTwistControlComponent.h"
@@ -59,7 +59,7 @@ namespace ROS2
                   ROS2SpawnPointComponent::CreateDescriptor(),
                   VehicleDynamics::VehicleModelComponent::CreateDescriptor(),
                   VehicleDynamics::WheelControllerComponent::CreateDescriptor(),
-                  MotorizedJoint::CreateDescriptor() });
+                  MotorizedJointComponent::CreateDescriptor() });
         }
 
         //! Add required SystemComponents to the SystemEntity.

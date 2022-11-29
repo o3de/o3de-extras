@@ -7,7 +7,7 @@
  */
 #pragma once
 
-#include "RobotControl/Ackermann/AckermannBus.h"
+#include "ROS2/RobotControl/Ackermann/AckermannBus.h"
 #include <AzCore/Component/Component.h>
 
 namespace ROS2
