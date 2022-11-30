@@ -7,6 +7,7 @@ set(FILES
         Include/ROS2/Frame/NamespaceConfiguration.h
         Include/ROS2/Frame/ROS2FrameComponent.h
         Include/ROS2/Frame/ROS2Transform.h
+        Include/ROS2/Manipulator/MotorizedJointBus.h
         Include/ROS2/Manipulator/MotorizedJointComponent.h
         Include/ROS2/RobotControl/ControlConfiguration.h
         Include/ROS2/RobotControl/ControlSubscriptionHandler.h

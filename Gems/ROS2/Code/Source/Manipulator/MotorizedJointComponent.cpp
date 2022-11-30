@@ -23,11 +23,13 @@ namespace ROS2
         {
             AZ::TransformBus::EventResult(m_debugDrawEntityInitialTransform, this->GetEntityId(), &AZ::TransformBus::Events::GetLocalTM);
         }
+        MotorizedJointRequestBus::Handler::BusConnect(m_entity->GetId());
     }
 
     void MotorizedJointComponent::Deactivate()
     {
         AZ::TickBus::Handler::BusDisconnect();
+        MotorizedJointRequestBus::Handler::BusDisconnect();
     }
 
     void MotorizedJointComponent::Reflect(AZ::ReflectContext* context)
@@ -248,12 +250,17 @@ namespace ROS2
         m_setpoint = setpoint;
     }
 
-    float MotorizedJointComponent::GetError() const
+    float MotorizedJointComponent::GetSetpoint()
+    {
+        return m_setpoint;
+    }
+
+    float MotorizedJointComponent::GetError()
     {
         return m_error;
     }
 
-    float MotorizedJointComponent::GetCurrentPosition() const
+    float MotorizedJointComponent::GetCurrentMeasurement()
     {
         return m_currentPosition - m_zeroOffset;
     }

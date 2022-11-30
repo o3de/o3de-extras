@@ -7,6 +7,7 @@
  */
 #pragma once
 
+#include "MotorizedJointBus.h"
 #include "ROS2/VehicleDynamics/DriveModels/PidConfiguration.h"
 #include <AzCore/Component/Component.h>
 #include <AzCore/Component/TickBus.h>
@@ -24,6 +25,7 @@ namespace ROS2
     class MotorizedJointComponent
         : public AZ::Component
         , public AZ::TickBus::Handler
+        , public MotorizedJointRequestBus::Handler
     {
     public:
         AZ_COMPONENT(MotorizedJointComponent, "{AE9207DB-5B7E-4F70-A7DD-C4EAD8DD9403}", AZ::Component);
@@ -35,16 +37,19 @@ namespace ROS2
         static void Reflect(AZ::ReflectContext* context);
 
         //! Set a setpoint (e.g. desired local position). The controller will follow it.
-        void SetSetpoint(float setpoint);
+        void SetSetpoint(float setpoint) override;
+
+        //! Get a setpoint
+        float GetSetpoint() override;
 
         //! Get current control error. It is the difference between control value and measurement.
         //! When the setpoint is reached this should be close to zero.
         //! @returns control error, in meters for linear joints and in radians for angular joints.
-        float GetError() const;
+        float GetError() override;
 
         //! Get current position from measurement.
         //! @returns current position, in meters for linear joints and radians for angular joints.
-        float GetCurrentPosition() const;
+        float GetCurrentMeasurement() override;
 
         //! Get a degree of freedom direction.
         //! @returns direction of joint movement in global coordinates.
