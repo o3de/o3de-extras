@@ -59,9 +59,16 @@ namespace ROS2
                     ->ClassElement(AZ::Edit::ClassElements::EditorData, "MotorizedJointComponent")
                     ->Attribute(AZ::Edit::Attributes::AppearsInAddComponentMenu, AZ_CRC("Game"))
                     ->Attribute(AZ::Edit::Attributes::Category, "MotorizedJointComponent")
-                    ->DataElement(AZ::Edit::UIHandlers::Default, &MotorizedJointComponent::m_jointDir, "Joint Dir.", "Direction of joint in parent's reference frame.")
                     ->DataElement(
-                        AZ::Edit::UIHandlers::Default, &MotorizedJointComponent::m_effortAxis, "Effort Dir.", "Desired direction of force/torque vector that is applied to rigid body.")
+                        AZ::Edit::UIHandlers::Default,
+                        &MotorizedJointComponent::m_jointDir,
+                        "Joint Dir.",
+                        "Direction of joint in parent's reference frame.")
+                    ->DataElement(
+                        AZ::Edit::UIHandlers::Default,
+                        &MotorizedJointComponent::m_effortAxis,
+                        "Effort Dir.",
+                        "Desired direction of force/torque vector that is applied to rigid body.")
 
                     ->DataElement(
                         AZ::Edit::UIHandlers::Default,
