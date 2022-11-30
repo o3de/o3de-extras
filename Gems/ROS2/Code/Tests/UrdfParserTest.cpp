@@ -21,7 +21,7 @@ namespace UnitTest
         AZStd::string GetUrdfWithOneLink()
         {
             return "<robot name=\"test_one_link\">"
-                   "  <material name=\"black\">\n"
+                   "  <material name=\"some_material\">\n"
                    "    <color rgba=\"0 0 0 1\"/>\n"
                    "  </material>"
                    "  <link name=\"link1\">"
@@ -33,7 +33,7 @@ namespace UnitTest
                    "      <geometry>"
                    "        <box size=\"1.0 2.0 1.0\"/>"
                    "      </geometry>"
-                   "      <material name=\"black\"/>"
+                   "      <material name=\"some_material\"/>"
                    "    </visual>"
                    "    <collision>"
                    "      <geometry>"
@@ -47,7 +47,7 @@ namespace UnitTest
         AZStd::string GetUrdfWithTwoLinksAndJoint()
         {
             return "<robot name=\"test_two_links_one_joint\">  "
-                   "  <material name=\"black\">\n"
+                   "  <material name=\"some_material\">\n"
                    "    <color rgba=\"0 0 0 1\"/>\n"
                    "  </material>"
                    "  <link name=\"link1\">"
@@ -59,7 +59,7 @@ namespace UnitTest
                    "      <geometry>"
                    "        <box size=\"1.0 2.0 1.0\"/>"
                    "      </geometry>"
-                   "      <material name=\"black\"/>"
+                   "      <material name=\"some_material\"/>"
                    "    </visual>"
                    "  </link>"
                    "  <link name=\"link2\">"
@@ -71,7 +71,7 @@ namespace UnitTest
                    "      <geometry>"
                    "        <box size=\"1.0 1.0 1.0\"/>"
                    "      </geometry>"
-                   "      <material name=\"black\"/>"
+                   "      <material name=\"some_material\"/>"
                    "    </visual>"
                    "  </link>"
                    "  <joint name=\"joint12\" type=\"fixed\">"
@@ -86,7 +86,7 @@ namespace UnitTest
         AZStd::string GetURDFWithTranforms()
         {
             return "<?xml version=\"1.0\"?>\n"
-                   "<robot name=\"comlicated\">\n"
+                   "<robot name=\"complicated\">\n"
                    "    <link name=\"base_link\">\n"
                    "    </link>\n"
                    "    <link name=\"link1\">\n"
@@ -359,7 +359,7 @@ namespace UnitTest
         ROS2::UrdfParser parser;
         const auto xmlStr = GetURDFWithTranforms();
         const auto urdf = parser.Parse(xmlStr);
-        auto links = ROS2::Utils::getAllLinks(urdf->getRoot()->child_links);
+        auto links = ROS2::Utils::GetAllLinks(urdf->getRoot()->child_links);
         EXPECT_EQ(links.size(), 3);
         ASSERT_TRUE(links.contains("link1"));
         ASSERT_TRUE(links.contains("link2"));
@@ -374,7 +374,7 @@ namespace UnitTest
         ROS2::UrdfParser parser;
         const auto xmlStr = GetURDFWithTranforms();
         const auto urdf = parser.Parse(xmlStr);
-        auto joints = ROS2::Utils::getAllJoints(urdf->getRoot()->child_links);
+        auto joints = ROS2::Utils::GetAllJoints(urdf->getRoot()->child_links);
         EXPECT_EQ(joints.size(), 3);
     }
 
@@ -383,7 +383,7 @@ namespace UnitTest
         ROS2::UrdfParser parser;
         const auto xmlStr = GetURDFWithTranforms();
         const auto urdf = parser.Parse(xmlStr);
-        const auto links = ROS2::Utils::getAllLinks(urdf->getRoot()->child_links);
+        const auto links = ROS2::Utils::GetAllLinks(urdf->getRoot()->child_links);
         const auto link1_ptr = links.at("link1");
         const auto link2_ptr = links.at("link2");
         const auto link3_ptr = links.at("link3");
@@ -393,20 +393,61 @@ namespace UnitTest
         const AZ::Vector3 expected_translation_link2{ -1.2000000476837158, 2.0784599781036377, 0.0 };
         const AZ::Vector3 expected_translation_link3{ -2.4000000953674316, 0.0, 0.0 };
 
-        const AZ::Transform transform_from_urdf_link1 = ROS2::Utils::getWorldTransformURDF(link1_ptr);
+        const AZ::Transform transform_from_urdf_link1 = ROS2::Utils::GetWorldTransformURDF(link1_ptr);
         EXPECT_NEAR(expected_translation_link1.GetX(), transform_from_urdf_link1.GetTranslation().GetX(), 1e-5);
         EXPECT_NEAR(expected_translation_link1.GetY(), transform_from_urdf_link1.GetTranslation().GetY(), 1e-5);
         EXPECT_NEAR(expected_translation_link1.GetZ(), transform_from_urdf_link1.GetTranslation().GetZ(), 1e-5);
 
-        const AZ::Transform transform_from_urdf_link2 = ROS2::Utils::getWorldTransformURDF(link2_ptr);
+        const AZ::Transform transform_from_urdf_link2 = ROS2::Utils::GetWorldTransformURDF(link2_ptr);
         EXPECT_NEAR(expected_translation_link2.GetX(), transform_from_urdf_link2.GetTranslation().GetX(), 1e-5);
         EXPECT_NEAR(expected_translation_link2.GetY(), transform_from_urdf_link2.GetTranslation().GetY(), 1e-5);
         EXPECT_NEAR(expected_translation_link2.GetZ(), transform_from_urdf_link2.GetTranslation().GetZ(), 1e-5);
 
-        const AZ::Transform transform_from_urdf_link3 = ROS2::Utils::getWorldTransformURDF(link3_ptr);
+        const AZ::Transform transform_from_urdf_link3 = ROS2::Utils::GetWorldTransformURDF(link3_ptr);
         EXPECT_NEAR(expected_translation_link3.GetX(), transform_from_urdf_link3.GetTranslation().GetX(), 1e-5);
         EXPECT_NEAR(expected_translation_link3.GetY(), transform_from_urdf_link3.GetTranslation().GetY(), 1e-5);
         EXPECT_NEAR(expected_translation_link3.GetZ(), transform_from_urdf_link3.GetTranslation().GetZ(), 1e-5);
+    }
+
+    TEST_F(UrdfParserTest, TestPathResolvementGlobal)
+    {
+        AZStd::string dae = "file:///home/foo/ros_ws/install/foo_robot/meshes/bar.dae";
+        AZStd::string urdf = "/home/foo/ros_ws/install/foo_robot/foo_robot.urdf";
+        auto result = ROS2::Utils::ResolveURDFPath(
+            dae,
+            urdf,
+            [](const AZStd::string& p) -> bool
+            {
+                return false;
+            });
+        EXPECT_EQ(result, "/home/foo/ros_ws/install/foo_robot/meshes/bar.dae");
+    }
+
+    TEST_F(UrdfParserTest, TestPathResolvementRelative)
+    {
+        AZStd::string dae = "meshes/bar.dae";
+        AZStd::string urdf = "/home/foo/ros_ws/install/foo_robot/foo_robot.urdf";
+        auto result = ROS2::Utils::ResolveURDFPath(
+            dae,
+            urdf,
+            [](const AZStd::string& p) -> bool
+            {
+                return false;
+            });
+        EXPECT_EQ(result, "/home/foo/ros_ws/install/foo_robot/meshes/bar.dae");
+    }
+
+    TEST_F(UrdfParserTest, TestPathResolvementRelativePackage)
+    {
+        AZStd::string dae = "package://meshes/bar.dae";
+        AZStd::string urdf = "/home/foo/ros_ws/install/foo_robot/description/foo_robot.urdf";
+        AZStd::string xml = "/home/foo/ros_ws/install/foo_robot/package.xml";
+        auto mockFileSystem = [&](const AZStd::string& p) -> bool
+        {
+            return (p == xml);
+        };
+        auto result = ROS2::Utils::ResolveURDFPath(dae, urdf, mockFileSystem);
+        EXPECT_EQ(result, "/home/foo/ros_ws/install/foo_robot/meshes/bar.dae");
     }
 
 } // namespace UnitTest

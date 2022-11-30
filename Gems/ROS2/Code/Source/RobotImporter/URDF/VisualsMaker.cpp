@@ -25,8 +25,9 @@
 
 namespace ROS2
 {
-    VisualsMaker::VisualsMaker(const AZ::IO::Path& modelPath, const std::map<std::string, urdf::MaterialSharedPtr>& materials)
-        : m_modelPath(modelPath)
+    VisualsMaker::VisualsMaker(
+        const std::map<std::string, urdf::MaterialSharedPtr>& materials, const AZStd::shared_ptr<Utils::UrdfAssetMap>& urdfAssetsMapping)
+        : m_urdfAssetsMapping(urdfAssetsMapping)
     {
         AZStd::ranges::for_each(
             materials,
@@ -34,7 +35,6 @@ namespace ROS2
             {
                 m_materials[AZStd::string(p.first.c_str(), p.first.size())] = p.second;
             });
-        AZ_Assert(!m_modelPath.empty(), "modelPath path is empty");
     }
 
     void VisualsMaker::AddVisuals(urdf::LinkSharedPtr link, AZ::EntityId entityId) const
@@ -132,40 +132,40 @@ namespace ROS2
             {
                 auto meshGeometry = std::dynamic_pointer_cast<urdf::Mesh>(geometry);
                 AZ_Assert(meshGeometry, "geometry is not Mesh");
-                // TODO - a PoC solution for path, replace with something generic, robust, proper
-                AZ::IO::Path modelPath(m_modelPath);
-                modelPath.RemoveFilename();
-                AZ::IO::Path relativePathToMesh(AZStd::string_view(meshGeometry->filename.c_str(), meshGeometry->filename.size()));
-                AZ::StringFunc::Replace(relativePathToMesh.Native(), "package://", "", true, true);
-                modelPath /= relativePathToMesh;
 
-                // Get asset path for a given model path
-                auto assetPath = PrefabMakerUtils::GetAzModelAssetPathFromModelPath(modelPath);
+                const auto asset = PrefabMakerUtils::GetAssetFromPath(*m_urdfAssetsMapping, meshGeometry->filename);
 
-                entity->CreateComponent(AZ::Render::EditorMeshComponentTypeId);
-
-                // Prepare scale
-                AZ::Vector3 scaleVector = URDF::TypeConversions::ConvertVector3(meshGeometry->scale);
-                bool isUniformScale = AZ::IsClose(scaleVector.GetMaxElement(), scaleVector.GetMinElement(), AZ::Constants::FloatEpsilon);
-                if (!isUniformScale)
+                if (asset)
                 {
-                    entity->CreateComponent<AzToolsFramework::Components::EditorNonUniformScaleComponent>();
-                }
+                    entity->CreateComponent(AZ::Render::EditorMeshComponentTypeId);
 
-                entity->Activate();
-                // Set asset path
-                AZ::Render::MeshComponentRequestBus::Event(
-                    entityId, &AZ::Render::MeshComponentRequestBus::Events::SetModelAssetPath, assetPath.c_str());
-                // Set scale, uniform or non-uniform
-                if (isUniformScale)
-                {
-                    AZ::TransformBus::Event(entityId, &AZ::TransformBus::Events::SetLocalUniformScale, scaleVector.GetX());
+                    // Prepare scale
+                    AZ::Vector3 scaleVector = URDF::TypeConversions::ConvertVector3(meshGeometry->scale);
+                    bool isUniformScale =
+                        AZ::IsClose(scaleVector.GetMaxElement(), scaleVector.GetMinElement(), AZ::Constants::FloatEpsilon);
+                    if (!isUniformScale)
+                    {
+                        entity->CreateComponent<AzToolsFramework::Components::EditorNonUniformScaleComponent>();
+                    }
+
+                    entity->Activate();
+                    // Set asset path
+                    AZ::Render::MeshComponentRequestBus::Event(
+                        entityId,
+                        &AZ::Render::MeshComponentRequestBus::Events::SetModelAssetPath,
+                        asset->m_sourceAssetRelativePath.c_str());
+
+                    // Set scale, uniform or non-uniform
+                    if (isUniformScale)
+                    {
+                        AZ::TransformBus::Event(entityId, &AZ::TransformBus::Events::SetLocalUniformScale, scaleVector.GetX());
+                    }
+                    else
+                    {
+                        AZ::NonUniformScaleRequestBus::Event(entityId, &AZ::NonUniformScaleRequests::SetScale, scaleVector);
+                    }
+                    entity->Deactivate();
                 }
-                else
-                {
-                    AZ::NonUniformScaleRequestBus::Event(entityId, &AZ::NonUniformScaleRequests::SetScale, scaleVector);
-                }
-                entity->Deactivate();
             }
             break;
         default:

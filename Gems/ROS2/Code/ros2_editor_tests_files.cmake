@@ -5,4 +5,5 @@
 
 set(FILES
     Tests/ROS2EditorTest.cpp
+    Tests/UrdfParserTest.cpp
 )

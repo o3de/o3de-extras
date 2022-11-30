@@ -24,11 +24,16 @@
 
 namespace ROS2
 {
-    URDFPrefabMaker::URDFPrefabMaker(const AZStd::string& modelFilePath, urdf::ModelInterfaceSharedPtr model, AZStd::string prefabPath)
+    URDFPrefabMaker::URDFPrefabMaker(
+        const AZStd::string& modelFilePath,
+        urdf::ModelInterfaceSharedPtr model,
+        AZStd::string prefabPath,
+        const AZStd::shared_ptr<Utils::UrdfAssetMap> urdfAssetsMapping)
         : m_model(model)
-        , m_visualsMaker(modelFilePath, model->materials_)
-        , m_collidersMaker(modelFilePath)
+        , m_visualsMaker(model->materials_, urdfAssetsMapping)
+        , m_collidersMaker(urdfAssetsMapping)
         , m_prefabPath(std::move(prefabPath))
+        , m_urdfAssetsMapping(urdfAssetsMapping)
     {
         AZ_Assert(!m_prefabPath.empty(), "Prefab path is empty");
         AZ_Assert(m_model, "Model is nullptr");
@@ -70,7 +75,7 @@ namespace ROS2
             return AZ::Failure(AZStd::string(createEntityRoot.GetError()));
         }
 
-        auto links = Utils::getAllLinks(m_model->root_link_->child_links);
+        auto links = Utils::GetAllLinks(m_model->root_link_->child_links);
 
         // create links
         for (const auto& [name, link_ptr] : links)
@@ -102,7 +107,7 @@ namespace ROS2
             const auto this_entry = created_links.at(name);
             if (this_entry.IsSuccess())
             {
-                AZ::Transform tf = Utils::getWorldTransformURDF(link_ptr);
+                AZ::Transform tf = Utils::GetWorldTransformURDF(link_ptr);
                 auto* entity = AzToolsFramework::GetEntityById(this_entry.GetValue());
                 if (entity)
                 {
@@ -173,7 +178,7 @@ namespace ROS2
         }
 
         // create joint
-        auto joints = Utils::getAllJoints(m_model->root_link_->child_links);
+        auto joints = Utils::GetAllJoints(m_model->root_link_->child_links);
         for (const auto& [name, joint_ptr] : joints)
         {
             AZ_Assert(joint_ptr, "joint %s is null", name.c_str());

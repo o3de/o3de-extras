@@ -8,7 +8,12 @@
 
 #include "RobotImporterUtils.h"
 #include "TypeConversions.h"
+#include <AzCore/Asset/AssetManager.h>
+#include <AzCore/Asset/AssetManagerBus.h>
+#include <AzCore/StringFunc/StringFunc.h>
 #include <AzCore/std/string/regex.h>
+#include <AzToolsFramework/API/EditorAssetSystemAPI.h>
+
 namespace ROS2
 {
 
@@ -41,17 +46,17 @@ namespace ROS2
         return false;
     }
 
-    AZ::Transform Utils::getWorldTransformURDF(const urdf::LinkSharedPtr& link, AZ::Transform t)
+    AZ::Transform Utils::GetWorldTransformURDF(const urdf::LinkSharedPtr& link, AZ::Transform t)
     {
         if (link->getParent() != nullptr)
         {
             t = URDF::TypeConversions::ConvertPose(link->parent_joint->parent_to_joint_origin_transform) * t;
-            return getWorldTransformURDF(link->getParent(), t);
+            return GetWorldTransformURDF(link->getParent(), t);
         }
         return t;
     }
 
-    AZStd::unordered_map<AZStd::string, urdf::LinkSharedPtr> Utils::getAllLinks(const std::vector<urdf::LinkSharedPtr>& child_links)
+    AZStd::unordered_map<AZStd::string, urdf::LinkSharedPtr> Utils::GetAllLinks(const std::vector<urdf::LinkSharedPtr>& childLinks)
     {
         AZStd::unordered_map<AZStd::string, urdf::LinkSharedPtr> pointers;
         std::function<void(const std::vector<urdf::LinkSharedPtr>&)> link_visitor =
@@ -64,11 +69,11 @@ namespace ROS2
                 link_visitor(child_link->child_links);
             }
         };
-        link_visitor(child_links);
+        link_visitor(childLinks);
         return pointers;
     }
 
-    AZStd::unordered_map<AZStd::string, urdf::JointSharedPtr> Utils::getAllJoints(const std::vector<urdf::LinkSharedPtr>& child_links)
+    AZStd::unordered_map<AZStd::string, urdf::JointSharedPtr> Utils::GetAllJoints(const std::vector<urdf::LinkSharedPtr>& childLinks)
     {
         AZStd::unordered_map<AZStd::string, urdf::JointSharedPtr> joints;
         std::function<void(const std::vector<urdf::LinkSharedPtr>&)> link_visitor =
@@ -82,8 +87,98 @@ namespace ROS2
                 link_visitor(child_link->child_links);
             }
         };
-        link_visitor(child_links);
+        link_visitor(childLinks);
         return joints;
+    }
+
+    AZStd::unordered_set<AZStd::string> Utils::GetMeshesFilenames(const urdf::LinkConstSharedPtr& rootLink, bool visual, bool colliders)
+    {
+        AZStd::unordered_set<AZStd::string> filenames;
+        const auto addFilenameFromGeometry = [&filenames](const urdf::GeometrySharedPtr& geometry)
+        {
+            if (geometry->type == urdf::Geometry::MESH)
+            {
+                auto pMesh = std::dynamic_pointer_cast<urdf::Mesh>(geometry);
+                if (pMesh)
+                {
+                    filenames.insert(AZStd::string(pMesh->filename.c_str(), pMesh->filename.size()));
+                }
+            }
+        };
+
+        const auto processLink = [&addFilenameFromGeometry, visual, colliders](const urdf::Link& link)
+        {
+            if (visual)
+            {
+                for (auto& p : link.visual_array)
+                {
+                    addFilenameFromGeometry(p->geometry);
+                }
+            }
+            if (colliders)
+            {
+                for (auto& p : link.collision_array)
+                {
+                    addFilenameFromGeometry(p->geometry);
+                }
+            }
+        };
+
+        std::function<void(const std::vector<urdf::LinkConstSharedPtr>&)> linkVisitor =
+            [&](const std::vector<urdf::LinkConstSharedPtr>& child_links) -> void
+        {
+            for (auto link : child_links)
+            {
+                processLink(*link);
+                std::vector<urdf::LinkConstSharedPtr> childVector(link->child_links.size());
+                std::transform(
+                    link->child_links.begin(),
+                    link->child_links.end(),
+                    childVector.begin(),
+                    [](const urdf::LinkSharedPtr& p)
+                    {
+                        return urdf::const_pointer_cast<urdf::Link>(p);
+                    });
+                linkVisitor(childVector);
+            }
+        };
+        linkVisitor({ rootLink });
+        return filenames;
+    }
+
+    /// Finds global path from URDF path
+    AZStd::string Utils::ResolveURDFPath(
+        AZStd::string unresolvedPath, const AZStd::string& urdfFilePath, const AZStd::function<bool(const AZStd::string&)>& fileExists)
+    {
+        if (unresolvedPath.starts_with("package://"))
+        {
+            AZ::StringFunc::Replace(unresolvedPath, "package://", "", true, true);
+            AZ::IO::Path urdfProperPath(urdfFilePath);
+            AZ::IO::Path package_path;
+            for (auto it = urdfProperPath.begin(); it != urdfProperPath.end(); it++)
+            {
+                package_path /= *it;
+                AZStd::string package_xml_candite = (package_path / "package.xml").String();
+                if (fileExists(package_xml_candite))
+                {
+                    // package.xml has been found
+                    return (package_path / unresolvedPath).String();
+                }
+            }
+            // we have nothing
+            return "";
+        }
+        if (unresolvedPath.starts_with("file:///"))
+        {
+            // seems to be global path
+            AZ::StringFunc::Replace(unresolvedPath, "file://", "", true, true);
+            return unresolvedPath;
+        }
+        // seems to be relative path
+        AZ::IO::Path relative_path(unresolvedPath);
+        AZ::IO::Path urdf_proper_Path(urdfFilePath);
+        AZ::IO::Path urdf_parent_path = urdf_proper_Path.ParentPath();
+        return (urdf_parent_path / relative_path).String();
     }
 
 } // namespace ROS2

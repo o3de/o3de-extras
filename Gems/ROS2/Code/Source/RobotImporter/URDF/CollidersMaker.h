@@ -8,13 +8,17 @@
 
 #pragma once
 
+#include "RobotImporter/Utils/SourceAssetsStorage.h"
 #include "UrdfParser.h"
 #include <AzCore/Component/EntityId.h>
 #include <AzCore/IO/Path/Path.h>
+#include <AzCore/std/containers/unordered_map.h>
 #include <AzCore/std/containers/vector.h>
 #include <AzCore/std/parallel/atomic.h>
 #include <AzCore/std/parallel/mutex.h>
 #include <AzCore/std/parallel/thread.h>
+#include <AzCore/std/smart_ptr/make_shared.h>
+#include <AzCore/std/smart_ptr/shared_ptr.h>
 #include <AzFramework/Physics/Material/PhysicsMaterialId.h>
 #include <AzFramework/Physics/Material/PhysicsMaterialManager.h>
 
@@ -26,7 +30,7 @@ namespace ROS2
     class CollidersMaker
     {
     public:
-        CollidersMaker(AZStd::string modelPath);
+        CollidersMaker(const AZStd::shared_ptr<Utils::UrdfAssetMap>& urdfAssetsMapping);
         CollidersMaker(const CollidersMaker& other) = delete;
 
         ~CollidersMaker();
@@ -53,12 +57,11 @@ namespace ROS2
         void AddColliderToEntity(
             urdf::CollisionSharedPtr collision, AZ::EntityId entityId, const AZ::Data::Asset<Physics::MaterialAsset>& materialAsset) const;
 
-        AZStd::string m_modelPath;
-
         AZStd::thread m_buildThread;
         AZStd::mutex m_buildMutex;
         AZStd::vector<AZ::IO::Path> m_meshesToBuild;
         AZStd::atomic_bool m_stopBuildFlag;
         AZ::Data::Asset<Physics::MaterialAsset> m_wheelMaterial;
+        AZStd::shared_ptr<Utils::UrdfAssetMap> m_urdfAssetsMapping;
     };
 } // namespace ROS2

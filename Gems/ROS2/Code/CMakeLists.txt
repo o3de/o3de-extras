@@ -108,6 +108,7 @@ if(PAL_TRAIT_BUILD_HOST_TOOLS)
         NAME ROS2.Editor GEM_MODULE
         NAMESPACE Gem
         AUTOMOC
+        AUTORCC
         FILES_CMAKE
             ros2_editor_files.cmake
             ros2_editor_shared_files.cmake

@@ -37,8 +37,12 @@ namespace ROS2
 
     urdf::ModelInterfaceSharedPtr UrdfParser::Parse(const AZStd::string& xmlString)
     {
+        m_customConsoleHandler.console_ss = std::stringstream();
+        console_bridge::useOutputHandler(&m_customConsoleHandler);
         Internal::checkIfCurrentLocaleHasDotAsADecimalSeparator();
-        return urdf::parseURDF(xmlString.c_str());
+        const auto ret = urdf::parseURDF(xmlString.c_str());
+        console_bridge::restorePreviousOutputHandler();
+        return ret;
     }
 
     urdf::ModelInterfaceSharedPtr UrdfParser::ParseFromFile(const AZStd::string& filePath)
@@ -53,4 +57,18 @@ namespace ROS2
         std::string xmlStr((std::istreambuf_iterator<char>(istream)), std::istreambuf_iterator<char>());
         return Parse(xmlStr.c_str());
     }
+
+    AZStd::string UrdfParser::GetUrdfParsingLog()
+    {
+        return AZStd::string(
+            UrdfParser::m_customConsoleHandler.console_ss.str().c_str(), UrdfParser::m_customConsoleHandler.console_ss.str().size());
+    }
+
+    void UrdfParser::CustomConsoleHandler::log(const std::string& text, console_bridge::LogLevel level, const char* filename, int line)
+    {
+        AZ_Printf("UrdfParser", "%s", text.c_str());
+        console_ss << text << "\n";
+    }
+
+    UrdfParser::CustomConsoleHandler UrdfParser::m_customConsoleHandler;
 } // namespace ROS2

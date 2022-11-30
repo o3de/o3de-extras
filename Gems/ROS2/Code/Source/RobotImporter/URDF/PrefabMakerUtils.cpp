@@ -133,4 +133,20 @@ namespace ROS2::PrefabMakerUtils
         return AZStd::string::format("%s_%s%s", rootName.c_str(), type.c_str(), suffix.c_str());
     }
 
+    AZStd::optional<Utils::AvailableAsset> GetAssetFromPath(const Utils::UrdfAssetMap& urdfAssetsMapping, const AZStd::string& urdfMeshPath)
+    {
+        if (!urdfAssetsMapping.contains(urdfMeshPath))
+        {
+            AZ_Warning("GetAssetFromPath", false, "there is no asset for mesh %s ", urdfMeshPath.c_str());
+            return AZStd::optional<Utils::AvailableAsset>();
+        }
+
+        return urdfAssetsMapping.at(urdfMeshPath).m_availableAssetInfo;
+    }
+
+    AZStd::optional<Utils::AvailableAsset> GetAssetFromPath(const Utils::UrdfAssetMap& urdfAssetsMapping, const std::string& urdfMeshPath)
+    {
+        return GetAssetFromPath(urdfAssetsMapping, AZStd::string(urdfMeshPath.c_str(), urdfMeshPath.size()));
+    }
+
 } // namespace ROS2::PrefabMakerUtils

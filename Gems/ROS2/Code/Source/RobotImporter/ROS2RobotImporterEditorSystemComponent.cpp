@@ -10,6 +10,9 @@
 #include "RobotImporterWidget.h"
 #include <AzCore/Serialization/SerializeContext.h>
 #include <AzToolsFramework/API/ViewPaneOptions.h>
+#if !defined(Q_MOC_RUN)
+#include <QWindow>
+#endif
 
 namespace ROS2
 {
@@ -48,10 +51,14 @@ namespace ROS2
     void ROS2RobotImporterEditorSystemComponent::NotifyRegisterViews()
     {
         AzToolsFramework::ViewPaneOptions options;
-        options.paneRect = QRect(100, 100, 500, 500); // TODO - config/UX sensitive
         options.showOnToolsToolbar = true;
-        // options.toolbarIcon = ":/.svg"; // TODO - icon
+        options.isDockable = false;
+        options.detachedWindow = true;
+        options.canHaveMultipleInstances = false;
+        options.isDisabledInSimMode = true;
+        options.isDeletable = true;
 
+        options.toolbarIcon = ":/ROS2/ROS_import_icon.svg";
         AzToolsFramework::RegisterViewPane<RobotImporterWidget>("Robot Importer", "ROS2", options);
     }
 } // namespace ROS2

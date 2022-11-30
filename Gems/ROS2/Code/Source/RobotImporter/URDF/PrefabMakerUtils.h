@@ -8,8 +8,12 @@
 
 #pragma once
 
+#include "RobotImporter/Utils/SourceAssetsStorage.h"
 #include "UrdfParser.h"
 #include <AzCore/IO/Path/Path.h>
+#include <AzCore/std/optional.h>
+#include <AzCore/std/string/string.h>
+
 #include <AzToolsFramework/Prefab/PrefabPublicInterface.h>
 
 //! Common utils for Prefab Maker classes
@@ -23,4 +27,10 @@ namespace ROS2::PrefabMakerUtils
     AzToolsFramework::EntityIdList GetColliderChildren(AZ::EntityId parentEntityId);
     bool HasCollider(AZ::EntityId entityId);
     AZStd::string MakeEntityName(const AZStd::string& rootName, const AZStd::string& type, size_t index = 0);
+
+    AZStd::optional<Utils::AvailableAsset> GetAssetFromPath(
+        const Utils::UrdfAssetMap& urdfAssetsMapping, const AZStd::string& urdfMeshPath);
+
+    AZStd::optional<Utils::AvailableAsset> GetAssetFromPath(const Utils::UrdfAssetMap& urdfAssetsMapping, const std::string& urdfMeshPath);
+
 } // namespace ROS2::PrefabMakerUtils
