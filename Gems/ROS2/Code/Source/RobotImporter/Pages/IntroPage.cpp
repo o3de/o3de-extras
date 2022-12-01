@@ -7,6 +7,7 @@
  */
 
 #include "IntroPage.h"
+#include <QVBoxLayout>
 
 namespace ROS2
 {
