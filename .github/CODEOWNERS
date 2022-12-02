@@ -8,8 +8,8 @@
 
 # SIG-Graphics-Audio (@o3de/sig-graphics-audio-maintainers @o3de/sig-graphics-audio-reviewers)
 
-# SIG-Network (@o3de/sig-network-reviewers @o3de/sig-network-maintainers)
-Templates/Multiplayer/ @o3de/sig-network-reviewers @o3de/sig-network-maintainers
+# SIG-Network (@o3de/sig-network-maintainers)
+Templates/Multiplayer/ @o3de/sig-network-maintainers
 
 # SIG-Operations
 
