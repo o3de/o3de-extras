@@ -9,26 +9,20 @@
 #include <OpenXRVk/OpenXRVkPhysicalDevice.h>
 #include <OpenXRVk/OpenXRVkUtils.h>
 
-namespace OpenXRVk
+namespace OpenXRVk::PhysicalDevice
 {
-    AZStd::vector<VkPhysicalDevice> PhysicalDevice::EnumerateDeviceList(XrSystemId xrSystemId, XrInstance xrInstance, VkInstance vkInstance)
+    AZStd::vector<VkPhysicalDevice> EnumerateDeviceList(XrSystemId xrSystemId, XrInstance xrInstance, VkInstance vkInstance)
     {
-        AZStd::vector<VkPhysicalDevice> physicalDevices;
-		
-        XrVulkanGraphicsDeviceGetInfoKHR deviceGetInfo{ XR_TYPE_VULKAN_GRAPHICS_DEVICE_GET_INFO_KHR };
-        deviceGetInfo.systemId = xrSystemId;
-        deviceGetInfo.vulkanInstance = vkInstance;
-        VkPhysicalDevice vkPhysicalDevice = VK_NULL_HANDLE;
-
         PFN_xrGetVulkanGraphicsDeviceKHR pfnGetVulkanGraphicsDeviceKHR = nullptr;
         XrResult result = xrGetInstanceProcAddr(
-	        xrInstance, "xrGetVulkanGraphicsDeviceKHR", reinterpret_cast<PFN_xrVoidFunction*>(&pfnGetVulkanGraphicsDeviceKHR));
+            xrInstance, "xrGetVulkanGraphicsDeviceKHR", reinterpret_cast<PFN_xrVoidFunction*>(&pfnGetVulkanGraphicsDeviceKHR));
         ASSERT_IF_UNSUCCESSFUL(result);
 
-        //TODO::Look into api that can retreive multiple physicall devices if connected
+        //TODO::Look into api that can retreive multiple physical devices if connected
+        VkPhysicalDevice vkPhysicalDevice = VK_NULL_HANDLE;
         result = pfnGetVulkanGraphicsDeviceKHR(xrInstance, xrSystemId, vkInstance, &vkPhysicalDevice);
         ASSERT_IF_UNSUCCESSFUL(result);
-        physicalDevices.push_back(vkPhysicalDevice);
-        return physicalDevices;
+
+        return {vkPhysicalDevice};
     }
 }

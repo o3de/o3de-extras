@@ -1,0 +1,207 @@
+{
+    "ContainerEntity": {
+        "Id": "ContainerEntity",
+        "Name": "NetworkRigidBodyCube",
+        "Components": {
+            "Component_[11054605223025400484]": {
+                "$type": "EditorEntitySortComponent",
+                "Id": 11054605223025400484,
+                "Child Entity Order": [
+                    "Entity_[2298418194626]"
+                ]
+            },
+            "Component_[12779520764806915521]": {
+                "$type": "EditorPrefabComponent",
+                "Id": 12779520764806915521
+            },
+            "Component_[13079957547929990079]": {
+                "$type": "EditorLockComponent",
+                "Id": 13079957547929990079
+            },
+            "Component_[13775917735351572615]": {
+                "$type": "EditorDisabledCompositionComponent",
+                "Id": 13775917735351572615
+            },
+            "Component_[18066022765052180636]": {
+                "$type": "EditorOnlyEntityComponent",
+                "Id": 18066022765052180636
+            },
+            "Component_[18361840936652749561]": {
+                "$type": "EditorEntityIconComponent",
+                "Id": 18361840936652749561
+            },
+            "Component_[3792075797881235886]": {
+                "$type": "EditorInspectorComponent",
+                "Id": 3792075797881235886
+            },
+            "Component_[4284040893954323154]": {
+                "$type": "EditorVisibilityComponent",
+                "Id": 4284040893954323154
+            },
+            "Component_[5083034437084933249]": {
+                "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
+                "Id": 5083034437084933249,
+                "Parent Entity": ""
+            },
+            "Component_[7745661617021344295]": {
+                "$type": "EditorPendingCompositionComponent",
+                "Id": 7745661617021344295
+            }
+        }
+    },
+    "Entities": {
+        "Entity_[2298418194626]": {
+            "Id": "Entity_[2298418194626]",
+            "Name": "NetworkRigidBodyCube",
+            "Components": {
+                "Component_[10948745101919284683]": {
+                    "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
+                    "Id": 10948745101919284683,
+                    "Parent Entity": "ContainerEntity"
+                },
+                "Component_[11453082458142282470]": {
+                    "$type": "EditorOnlyEntityComponent",
+                    "Id": 11453082458142282470
+                },
+                "Component_[13642326419793150021]": {
+                    "$type": "EditorInspectorComponent",
+                    "Id": 13642326419793150021,
+                    "ComponentOrderEntryArray": [
+                        {
+                            "ComponentId": 10948745101919284683
+                        },
+                        {
+                            "ComponentId": 2188550998273431506,
+                            "SortIndex": 1
+                        },
+                        {
+                            "ComponentId": 3414118024801073938,
+                            "SortIndex": 2
+                        },
+                        {
+                            "ComponentId": 9898443550192641373,
+                            "SortIndex": 3
+                        },
+                        {
+                            "ComponentId": 5769624078902446536,
+                            "SortIndex": 4
+                        },
+                        {
+                            "ComponentId": 14583212340482399349,
+                            "SortIndex": 5
+                        },
+                        {
+                            "ComponentId": 7177530360965647978,
+                            "SortIndex": 6
+                        },
+                        {
+                            "ComponentId": 6872738566214773702,
+                            "SortIndex": 7
+                        }
+                    ]
+                },
+                "Component_[14583212340482399349]": {
+                    "$type": "AZ::Render::EditorMeshComponent",
+                    "Id": 14583212340482399349,
+                    "Controller": {
+                        "Configuration": {
+                            "ModelAsset": {
+                                "assetId": {
+                                    "guid": "{593006BE-FE73-5A4B-A0A6-06C02EFFE458}",
+                                    "subId": 285127096
+                                },
+                                "assetHint": "objects/cube.azmodel"
+                            }
+                        }
+                    }
+                },
+                "Component_[17179661005187468017]": {
+                    "$type": "EditorEntitySortComponent",
+                    "Id": 17179661005187468017
+                },
+                "Component_[2074681441875496259]": {
+                    "$type": "EditorEntityIconComponent",
+                    "Id": 2074681441875496259
+                },
+                "Component_[2188550998273431506]": {
+                    "$type": "GenericComponentWrapper",
+                    "Id": 2188550998273431506,
+                    "m_template": {
+                        "$type": "Multiplayer::NetworkRigidBodyComponent"
+                    }
+                },
+                "Component_[2704506220160917857]": {
+                    "$type": "EditorDisabledCompositionComponent",
+                    "Id": 2704506220160917857
+                },
+                "Component_[3414118024801073938]": {
+                    "$type": "GenericComponentWrapper",
+                    "Id": 3414118024801073938,
+                    "m_template": {
+                        "$type": "NetBindComponent"
+                    }
+                },
+                "Component_[4991330488390670824]": {
+                    "$type": "EditorLockComponent",
+                    "Id": 4991330488390670824
+                },
+                "Component_[5769624078902446536]": {
+                    "$type": "GenericComponentWrapper",
+                    "Id": 5769624078902446536,
+                    "m_template": {
+                        "$type": "Multiplayer::NetworkTransformComponent"
+                    }
+                },
+                "Component_[6147970207466596081]": {
+                    "$type": "EditorVisibilityComponent",
+                    "Id": 6147970207466596081
+                },
+                "Component_[6872738566214773702]": {
+                    "$type": "EditorBoxShapeComponent",
+                    "Id": 6872738566214773702
+                },
+                "Component_[7177530360965647978]": {
+                    "$type": "EditorShapeColliderComponent",
+                    "Id": 7177530360965647978,
+                    "ColliderConfiguration": {
+                        "MaterialSlots": {
+                            "Slots": [
+                                {
+                                    "Name": "Entire object"
+                                }
+                            ]
+                        }
+                    },
+                    "ShapeConfigs": [
+                        {
+                            "$type": "BoxShapeConfiguration"
+                        }
+                    ]
+                },
+                "Component_[9653584344754777623]": {
+                    "$type": "EditorPendingCompositionComponent",
+                    "Id": 9653584344754777623
+                },
+                "Component_[9898443550192641373]": {
+                    "$type": "EditorRigidBodyComponent",
+                    "Id": 9898443550192641373,
+                    "Configuration": {
+                        "entityId": "",
+                        "Mass": 999.9999389648438,
+                        "Inertia tensor": [
+                            166.6666717529297,
+                            0.0,
+                            0.0,
+                            0.0,
+                            166.6666717529297,
+                            0.0,
+                            0.0,
+                            0.0,
+                            166.6666717529297
+                        ]
+                    }
+                }
+            }
+        }
+    }
+}

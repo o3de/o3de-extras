@@ -30,9 +30,9 @@ namespace OpenXRVk
         // Create the xr specific native device object and populate the XRDeviceDescriptor with it.
         AZ::RHI::ResultCode InitDeviceInternal(AZ::RHI::XRDeviceDescriptor* instanceDescriptor) override;
         //! Get the Fov data  of the view specified by view index
-        AZ::RPI::FovData GetViewFov(AZ::u32 viewIndex) const override;
+        AZ::RHI::ResultCode GetViewFov(AZ::u32 viewIndex, AZ::RPI::FovData& outFovData) const override;
         //! Get the Pose data  of the view specified by view index
-        AZ::RPI::PoseData GetViewPose(AZ::u32 viewIndex) const override;
+        AZ::RHI::ResultCode GetViewPose(AZ::u32 viewIndex, AZ::RPI::PoseData& outPoseData) const override;
         //////////////////////////////////////////////////////////////////////////
 
         //! Returns true if rendering data is valid for the current frame.
@@ -60,6 +60,8 @@ namespace OpenXRVk
         bool BeginFrameInternal() override;
         //! Release the oldest swapchain image and inform the drivers that the frame is ending 
         void EndFrameInternal(XR::Ptr<XR::SwapChain>) override;
+        //! Called after EndFrame has been executed.
+        void PostFrameInternal() override;
         //! Locate views, acquire swapchain image and synchronize gpu with cpu
         bool AcquireSwapChainImageInternal(AZ::u32 viewIndex, XR::SwapChain* baseSwapChain) override;
         //////////////////////////////////////////////////////////////////////////

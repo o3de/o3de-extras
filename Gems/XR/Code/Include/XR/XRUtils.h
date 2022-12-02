@@ -12,6 +12,12 @@
 
 namespace XR
 {
-    //! Creates an off-center projection matrix suitable for VR
-    AZ::Matrix4x4 CreateProjectionOffset(float angleLeft, float angleRight, float angleBottom, float angleTop, float nearDist, float farDist);
+    //! Creates an off-center projection matrix suitable for VR.
+    //! It does the following in order to provide a stereoscopic projection:
+    //! Stretch more horizontally and vertically
+    //! Generate asymmetric or off-center projection matrix
+    //! Right-handed coord system as OpenXR provides data in that system
+    //! Provides support for reverse depth in case we want better depth precision
+    //! Handles the case where farDist is less than nearDist whereby it will place far plane at infinity.
+    AZ::Matrix4x4 CreateStereoscopicProjection(float angleLeft, float angleRight, float angleBottom, float angleTop, float nearDist, float farDist, bool reverseDepth);
 }

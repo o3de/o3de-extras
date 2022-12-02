@@ -21,6 +21,7 @@ set(ENABLED_GEMS
     StartingPointInput
     TextureAtlas
     WhiteBox
+    DiffuseProbeGrid
     XR
     OpenXRVk
 )

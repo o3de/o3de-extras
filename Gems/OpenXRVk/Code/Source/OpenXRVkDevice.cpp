@@ -12,6 +12,7 @@
 #include <OpenXRVk/OpenXRVkSwapChain.h>
 #include <OpenXRVk/OpenXRVkSpace.h>
 #include <OpenXRVk/OpenXRVkUtils.h>
+#include <OpenXRVkCommon.h>
 #include <Atom/RHI.Reflect/Vulkan/XRVkDescriptors.h>
 #include <AzCore/Casting/numeric_cast.h>
 
@@ -53,6 +54,15 @@ namespace OpenXRVk
             extensions.push_back(xrDeviceCreateInfo.vulkanCreateInfo->ppEnabledExtensionNames[i]);
         }
 
+        if (GetDescriptor().m_validationMode == AZ::RHI::ValidationMode::Enabled)
+        {
+            AZ_Printf("OpenXRVk", "Vulkan device extensions to enable: (%i)\n", extensions.size());
+            for (const AZStd::string& extension : extensions)
+            {
+                AZ_Printf("OpenXRVk", "Name=%s\n", extension.c_str());
+            }
+        }
+
         VkPhysicalDeviceFeatures features{};
         memcpy(&features, xrDeviceCreateInfo.vulkanCreateInfo->pEnabledFeatures, sizeof(features));
 
@@ -80,29 +90,40 @@ namespace OpenXRVk
             return AZ::RHI::ResultCode::Fail;
         }
 
-        // Now that we have created the device, load the function pointers for it.
-        // NOTE: Passing the xr physical device to LoadProcAddresses causes a crash in glad vulkan
-        //       inside 'glad_vk_find_core_vulkan' function when calling 'context->GetPhysicalDeviceProperties'.
-        //       It's OK to pass VK_NULL_HANDLE at the moment, which means glad vulkan will use only device and instance
-        //       to check for vulkan extensions.
-        if (!xrVkInstance->GetFunctionLoader().LoadProcAddresses(
-            &m_context, xrVkInstance->GetNativeInstance(), VK_NULL_HANDLE/*xrVkInstance->GetActivePhysicalDevice()*/, m_xrVkDevice))
         {
-            // Something went wrong loading function pointers, use the glad context from the instance to shut down the device.
+#if AZ_TRAIT_OS_IS_HOST_OS_PLATFORM
+            VkPhysicalDevice xrVkPhysicalDevice = xrVkInstance->GetActivePhysicalDevice();
+#else
+            // NOTE: When passing a physical device to Vulkan glad loader it uses 'vkEnumerateDeviceExtensionProperties'
+            // to obtain device's extension, but that list doesn't match with the list returned by 'xrGetVulkanDeviceExtensionsKHR'
+            // which is used for OpenXR. This discrepancy results in the context indicating some extensions are available when they
+            // are really not supported in an OpenXR environment. To surpass this issue we're not passing the physical device.
+            VkPhysicalDevice xrVkPhysicalDevice = VK_NULL_HANDLE;
+#endif
+
+            // Now that we have created the device, load the function pointers for it.
+            const bool functionsLoaded = xrVkInstance->GetFunctionLoader().LoadProcAddresses(
+                &xrVkInstance->GetContext(), xrVkInstance->GetNativeInstance(), xrVkPhysicalDevice, m_xrVkDevice);
             m_context = xrVkInstance->GetContext();
-            ShutdownInternal();
-            AZ_Error("OpenXRVk", false, "Failed to initialize function loader for the device.");
-            return AZ::RHI::ResultCode::Fail;
+            if (!functionsLoaded)
+            {
+                ShutdownInternal();
+                AZ_Error("OpenXRVk", false, "Failed to initialize function loader for the device.");
+                return AZ::RHI::ResultCode::Fail;
+            }
         }
 
         //Populate the output data of the descriptor
         xrDeviceDescriptor->m_outputData.m_xrVkDevice = m_xrVkDevice;
+        xrDeviceDescriptor->m_outputData.m_context = m_context;
 
         return AZ::RHI::ResultCode::Success;
     }
 
     bool Device::BeginFrameInternal()
     {
+        Platform::OpenXRBeginFrameInternal();
+
         Session* session = static_cast<Session*>(GetSession().get());
         XrSession xrSession = session->GetXrSession();
 
@@ -125,6 +146,8 @@ namespace OpenXRVk
 
     void Device::EndFrameInternal(XR::Ptr<XR::SwapChain> baseSwapChain)
     {
+        Platform::OpenXREndFrameInternal();
+
         Session* session = static_cast<Session*>(GetSession().get());
         Instance* instance = static_cast<Instance*>(GetDescriptor().m_instance.get());
         SwapChain* swapChain = static_cast<SwapChain*>(baseSwapChain.get());
@@ -168,9 +191,13 @@ namespace OpenXRVk
         }
     }
 
+    void Device::PostFrameInternal()
+    {
+        Platform::OpenXRPostFrameInternal();
+    }
+
     bool Device::AcquireSwapChainImageInternal(AZ::u32 viewIndex, XR::SwapChain* baseSwapChain)
     {
-        SwapChain* swapChain = static_cast<SwapChain*>(baseSwapChain);
         XR::SwapChain::View* baseSwapChainView = baseSwapChain->GetView(viewIndex);
         SwapChain::View* swapChainView = static_cast<SwapChain::View*>(baseSwapChainView);
         Space* xrSpace = static_cast<Space*>(GetSession()->GetSpace());
@@ -198,7 +225,7 @@ namespace OpenXRVk
         }
 
         AZ_Assert(m_viewCountOutput == viewCapacityInput, "Size mismatch between xrLocateViews %i and xrEnumerateViewConfigurationViews %i", m_viewCountOutput, viewCapacityInput);
-        AZ_Assert(m_viewCountOutput == swapChain->GetViewConfigs().size(), "Size mismatch between xrLocateViews %i and xrEnumerateViewConfigurationViews %i", m_viewCountOutput, swapChain->GetViewConfigs().size());
+        AZ_Assert(m_viewCountOutput == static_cast<SwapChain*>(baseSwapChain)->GetViewConfigs().size(), "Size mismatch between xrLocateViews %i and xrEnumerateViewConfigurationViews %i", m_viewCountOutput, static_cast<SwapChain*>(baseSwapChain)->GetViewConfigs().size());
 
         m_projectionLayerViews.resize(m_viewCountOutput);
         XrSwapchainImageAcquireInfo acquireInfo{ XR_TYPE_SWAPCHAIN_IMAGE_ACQUIRE_INFO };
@@ -243,35 +270,35 @@ namespace OpenXRVk
         return m_context;
     }
 
-    AZ::RPI::FovData Device::GetViewFov(AZ::u32 viewIndex) const
+    AZ::RHI::ResultCode Device::GetViewFov(AZ::u32 viewIndex, AZ::RPI::FovData& outFovData) const
     {
-        AZ::RPI::FovData viewFov;
         if(viewIndex < m_projectionLayerViews.size())
         { 
-            viewFov.m_angleLeft = m_projectionLayerViews[viewIndex].fov.angleLeft;
-            viewFov.m_angleRight = m_projectionLayerViews[viewIndex].fov.angleRight;
-            viewFov.m_angleUp = m_projectionLayerViews[viewIndex].fov.angleUp;
-            viewFov.m_angleDown = m_projectionLayerViews[viewIndex].fov.angleDown;     
+            outFovData.m_angleLeft = m_projectionLayerViews[viewIndex].fov.angleLeft;
+            outFovData.m_angleRight = m_projectionLayerViews[viewIndex].fov.angleRight;
+            outFovData.m_angleUp = m_projectionLayerViews[viewIndex].fov.angleUp;
+            outFovData.m_angleDown = m_projectionLayerViews[viewIndex].fov.angleDown;
+            return AZ::RHI::ResultCode::Success;
         }
-        return viewFov;
+        return AZ::RHI::ResultCode::Fail;
     }
 
-    AZ::RPI::PoseData Device::GetViewPose(AZ::u32 viewIndex) const
-    {
-        AZ::RPI::PoseData viewPose;
+    AZ::RHI::ResultCode Device::GetViewPose(AZ::u32 viewIndex, AZ::RPI::PoseData& outPoseData) const
+    { 
         if (viewIndex < m_projectionLayerViews.size())
         {
             const XrQuaternionf& orientation = m_projectionLayerViews[viewIndex].pose.orientation;
             const XrVector3f& position = m_projectionLayerViews[viewIndex].pose.position;
-            viewPose.orientation = AZ::Quaternion(orientation.x,
-                                                  orientation.y, 
-                                                  orientation.z, 
-                                                  orientation.w);
-            viewPose.position = AZ::Vector3(position.x, 
-                                            position.y, 
-                                            position.z);
-        }        
-        return viewPose;
+            outPoseData.m_orientation.Set(orientation.x,
+                                          orientation.y, 
+                                          orientation.z, 
+                                          orientation.w);
+            outPoseData.m_position.Set(position.x,
+                                       position.y, 
+                                       position.z);
+            return AZ::RHI::ResultCode::Success;
+        }
+        return AZ::RHI::ResultCode::Fail;
     }
 
     XrTime Device::GetPredictedDisplayTime() const

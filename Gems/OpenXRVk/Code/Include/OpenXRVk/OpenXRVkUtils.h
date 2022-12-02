@@ -8,7 +8,6 @@
 
 #pragma once
 
-#include <Atom/RHI.Reflect/Base.h>
 #include <OpenXRVk_Platform.h>
 #include <XR/XRBase.h>
 
@@ -34,24 +33,25 @@ namespace OpenXRVk
 {
 
 #define RETURN_XR_RESULT_IF_UNSUCCESSFUL(result) \
-    if (result != XR_SUCCESS) {\
-        return result;\
+    if ((result) != XR_SUCCESS) {\
+        return (result);\
     }
 
 #define RETURN_IF_UNSUCCESSFUL(result) \
-    if (result != XR_SUCCESS) {\
+    if ((result) != XR_SUCCESS) {\
         return;\
     }
-    
+
 #define WARN_IF_UNSUCCESSFUL(result) \
-    if (result != XR_SUCCESS) {\
+    if ((result) != XR_SUCCESS) {\
         AZ_Warning("OpenXRVk", false, "Warning error code: %s", to_string(result));\
     }
 
 #define ASSERT_IF_UNSUCCESSFUL(result) \
-    if (result != XR_SUCCESS) {\
+    if ((result) != XR_SUCCESS) {\
         AZ_Assert(false, "Assert error code: %s", to_string(result));\
     }
+
 
     AZ::RHI::ResultCode ConvertResult(XrResult xrResult);
     bool IsSuccess(XrResult result);
@@ -59,8 +59,8 @@ namespace OpenXRVk
     const char* GetResultString(const XrResult result);
     XR::RawStringList FilterList(const XR::RawStringList& source, const XR::StringList& filter);
 
-    //! Input is an array of chars with multiple ' ' char embedded in it, indicating the start of a new string. 
-    //! Iterate through the characters while caching the starting pointer to a string 
+    //! Input is an array of chars with multiple ' ' char embedded in it, indicating the start of a new string.
+    //! Iterate through the characters while caching the starting pointer to a string
     //! and every time ' ' is encountered replace it with '\0' to indicate the end of a string.
     AZStd::vector<const char*> ParseExtensionString(char* names);
 }
