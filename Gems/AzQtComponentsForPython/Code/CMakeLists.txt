@@ -27,6 +27,7 @@ if (PAL_TRAIT_AZQTCOMPONENTSFORPYTHON_SUPPORTED)
     add_shiboken_project(
         NAME AzQtComponentsForPython
         NAMESPACE Gem
+        MODULE_NAME azqtpyside
         WRAPPED_HEADER ${CMAKE_CURRENT_LIST_DIR}/bindings_azqtcomponents.h
         TYPESYSTEM_FILE ${CMAKE_CURRENT_LIST_DIR}/bindings_azqtcomponents.xml
         GENERATED_FILES ${CMAKE_CURRENT_LIST_DIR}/generated_files.cmake
