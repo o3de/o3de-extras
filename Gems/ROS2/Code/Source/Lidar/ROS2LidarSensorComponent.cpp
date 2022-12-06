@@ -6,11 +6,6 @@
  *
  */
 
-#include "Lidar/ROS2LidarSensorComponent.h"
-#include "Lidar/LidarTemplateUtils.h"
-#include "ROS2/Frame/ROS2FrameComponent.h"
-#include "ROS2/ROS2Bus.h"
-#include "ROS2/Utilities/ROS2Names.h"
 #include <Atom/RPI.Public/AuxGeom/AuxGeomFeatureProcessorInterface.h>
 #include <Atom/RPI.Public/RPISystemInterface.h>
 #include <Atom/RPI.Public/Scene.h>
@@ -18,6 +13,11 @@
 #include <AzCore/Serialization/EditContext.h>
 #include <AzCore/Serialization/EditContextConstants.inl>
 #include <AzFramework/Physics/PhysicsSystem.h>
+#include <Lidar/LidarTemplateUtils.h>
+#include <Lidar/ROS2LidarSensorComponent.h>
+#include <ROS2/Frame/ROS2FrameComponent.h>
+#include <ROS2/ROS2Bus.h>
+#include <ROS2/Utilities/ROS2Names.h>
 
 namespace ROS2
 {
@@ -43,11 +43,10 @@ namespace ROS2
                 ec->Class<ROS2LidarSensorComponent>("ROS2 Lidar Sensor", "Lidar sensor component")
                     ->ClassElement(AZ::Edit::ClassElements::EditorData, "")
                     ->Attribute(AZ::Edit::Attributes::Category, "ROS2")
-                    ->Attribute(AZ::Edit::Attributes::AppearsInAddComponentMenu, AZ_CRC("Game"))
+                    ->Attribute(AZ::Edit::Attributes::AppearsInAddComponentMenu, AZ_CRC_CE("Game"))
                     ->DataElement(AZ::Edit::UIHandlers::ComboBox, &ROS2LidarSensorComponent::m_lidarModel, "Lidar Model", "Lidar model")
                     ->Attribute(AZ::Edit::Attributes::ChangeNotify, &ROS2LidarSensorComponent::OnLidarModelSelected)
                     ->EnumAttribute(LidarTemplate::LidarModel::Generic3DLidar, "Generic Lidar")
-                    // TODO - show lidar template field values (read only) - see Reflect for LidarTemplate
                     ->DataElement(
                         AZ::Edit::UIHandlers::EntityId,
                         &ROS2LidarSensorComponent::m_lidarParameters,
@@ -70,7 +69,7 @@ namespace ROS2
 
     bool ROS2LidarSensorComponent::IsConfigurationVisible() const
     {
-        return m_lidarModel == LidarTemplate::Generic3DLidar;
+        return m_lidarModel == LidarTemplate::LidarModel::Generic3DLidar;
     }
 
     AZ::Crc32 ROS2LidarSensorComponent::OnLidarModelSelected()
@@ -85,7 +84,7 @@ namespace ROS2
         AZStd::string type = Internal::kPointCloudType;
         pc.m_type = type;
         pc.m_topic = "pc";
-        m_sensorConfiguration.m_frequency = 10; // TODO - dependent on lidar type
+        m_sensorConfiguration.m_frequency = 10;
         m_sensorConfiguration.m_publishersConfigurations.insert(AZStd::make_pair(type, pc));
     }
 
@@ -153,7 +152,7 @@ namespace ROS2
     void ROS2LidarSensorComponent::FrequencyTick()
     {
         float distance = m_lidarParameters.m_maxRange;
-        auto entityTransform = GetEntity()->FindComponent<AzFramework::TransformComponent>(); // TODO - go through ROS2Frame
+        auto entityTransform = GetEntity()->FindComponent<AzFramework::TransformComponent>();
         const auto directions =
             LidarTemplateUtils::PopulateRayDirections(m_lidarParameters, entityTransform->GetWorldTM().GetEulerRadians());
         AZ::Vector3 start = entityTransform->GetWorldTM().GetTranslation();
@@ -174,7 +173,6 @@ namespace ROS2
         { // Store points for visualisation purposes, in global frame
             auto localToWorldTM = entityTransform->GetWorldTM();
 
-            // TODO - improve performance
             m_visualisationPoints = m_lastScanResults;
             for (AZ::Vector3& point : m_visualisationPoints)
             {
@@ -188,13 +186,12 @@ namespace ROS2
         message.header.stamp = ROS2Interface::Get()->GetROSTimestamp();
         message.height = 1;
         message.width = m_lastScanResults.size();
-        message.point_step = sizeof(AZ::Vector3); // TODO - Point Fields can be custom
+        message.point_step = sizeof(AZ::Vector3);
         message.row_step = message.width * message.point_step;
 
-        // TODO - a list of supported fields should be returned by lidar implementation
-        std::vector<std::string> point_field_names = { "x", "y", "z" };
+        AZStd::array<const char*, 3> point_field_names = { "x", "y", "z" };
         for (int i = 0; i < point_field_names.size(); i++)
-        { // TODO - placeholder impl
+        {
             sensor_msgs::msg::PointField pf;
             pf.name = point_field_names[i];
             pf.offset = i * 4;

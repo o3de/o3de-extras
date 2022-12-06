@@ -6,21 +6,20 @@
  *
  */
 
-#include "ROS2/Frame/ROS2FrameComponent.h"
-#include "ROS2/ROS2Bus.h"
-#include "ROS2/ROS2GemUtilities.h"
-#include "ROS2/Utilities/ROS2Names.h"
 #include <AzCore/Component/Entity.h>
 #include <AzCore/Serialization/EditContext.h>
 #include <AzCore/Serialization/EditContextConstants.inl>
 #include <AzCore/Serialization/SerializeContext.h>
+#include <ROS2/Frame/ROS2FrameComponent.h>
+#include <ROS2/ROS2Bus.h>
+#include <ROS2/ROS2GemUtilities.h>
+#include <ROS2/Utilities/ROS2Names.h>
 namespace ROS2
 {
     namespace Internal
     {
         AZ::TransformInterface* GetEntityTransformInterface(const AZ::Entity* entity)
         {
-            // TODO - instead, use EditorFrameComponent to handle Editor-context queries and here only use the "Game" version
             if (!entity)
             {
                 AZ_Error("GetEntityTransformInterface", false, "Invalid entity!");
@@ -68,7 +67,7 @@ namespace ROS2
         {
             AZ_TracePrintf(
                 "ROS2FrameComponent",
-                "Setting up %s transfrom between parent %s and child %s to be published %s",
+                "Setting up %s transfrom between parent %s and child %s to be published %s\n",
                 IsDynamic() ? "dynamic" : "static",
                 GetParentFrameID().data(),
                 GetFrameID().data(),
@@ -105,7 +104,6 @@ namespace ROS2
 
     AZStd::string ROS2FrameComponent::GetGlobalFrameName() const
     {
-        // TODO - parametrize this (typically: "odom", "world" and sometimes "map")
         return ROS2Names::GetNamespacedName(GetNamespace(), AZStd::string("odom"));
     }
 
@@ -115,7 +113,7 @@ namespace ROS2
     }
 
     bool ROS2FrameComponent::IsDynamic() const
-    { // TODO - determine by joint type
+    {
         return IsTopLevel();
     }
 
@@ -156,7 +154,7 @@ namespace ROS2
     AZStd::string ROS2FrameComponent::GetNamespace() const
     {
         auto parentFrame = GetParentROS2FrameComponent();
-        AZStd::string parentNamespace("");
+        AZStd::string parentNamespace;
         if (parentFrame != nullptr)
         {
             parentNamespace = parentFrame->GetNamespace();
@@ -180,7 +178,7 @@ namespace ROS2
                 ec->Class<ROS2FrameComponent>("ROS2 Frame", "[ROS2 Frame component]")
                     ->ClassElement(AZ::Edit::ClassElements::EditorData, "")
                     ->Attribute(AZ::Edit::Attributes::Category, "ROS2")
-                    ->Attribute(AZ::Edit::Attributes::AppearsInAddComponentMenu, AZ_CRC("Game"))
+                    ->Attribute(AZ::Edit::Attributes::AppearsInAddComponentMenu, AZ_CRC_CE("Game"))
                     ->DataElement(
                         AZ::Edit::UIHandlers::Default,
                         &ROS2FrameComponent::m_namespaceConfiguration,
@@ -205,13 +203,13 @@ namespace ROS2
 
     void ROS2FrameComponent::GetRequiredServices(AZ::ComponentDescriptor::DependencyArrayType& required)
     {
-        required.push_back(AZ_CRC("TransformService"));
+        required.push_back(AZ_CRC_CE("TransformService"));
     }
 
     ROS2FrameComponent::ROS2FrameComponent() = default;
 
-    ROS2FrameComponent::ROS2FrameComponent(AZStd::string frameId)
-        : m_frameName(AZStd::move(frameId))
+    ROS2FrameComponent::ROS2FrameComponent(const AZStd::string& frameId)
+        : m_frameName(frameId)
     {
     }
 } // namespace ROS2

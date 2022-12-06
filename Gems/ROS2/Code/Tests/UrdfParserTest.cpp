@@ -6,11 +6,11 @@
  *
  */
 
-#include "RobotImporter/Utils/RobotImporterUtils.h"
 #include <AzCore/UnitTest/TestTypes.h>
 #include <AzCore/std/string/string.h>
 #include <AzTest/AzTest.h>
 #include <RobotImporter/URDF/UrdfParser.h>
+#include <RobotImporter/Utils/RobotImporterUtils.h>
 
 namespace UnitTest
 {

@@ -7,12 +7,12 @@
  */
 #pragma once
 
-#include "Lidar/LidarRaycaster.h"
-#include "Lidar/LidarTemplate.h"
-#include "Lidar/LidarTemplateUtils.h"
-#include "ROS2/Sensor/ROS2SensorComponent.h"
+#include "LidarRaycaster.h"
+#include "LidarTemplate.h"
+#include "LidarTemplateUtils.h"
 #include <Atom/RPI.Public/AuxGeom/AuxGeomDraw.h>
 #include <AzCore/Serialization/SerializeContext.h>
+#include <ROS2/Sensor/ROS2SensorComponent.h>
 #include <rclcpp/publisher.hpp>
 #include <sensor_msgs/msg/point_cloud2.hpp>
 
@@ -20,9 +20,8 @@ namespace ROS2
 {
     //! Lidar sensor Component.
     //! Lidars (Light Detection and Ranging) emit laser light and measure it after reflection.
-    //! Lidar Component allows customization of lidar type and behavior and encapsulates both simulation.
-    //! and data publishing. Lidar Component requires ROS2FrameComponent.
-    // TODO - Add selection of implementation choice (PhysX, GPU, other), noise
+    //! Lidar Component allows customization of lidar type and behavior and encapsulates both simulation
+    //! and data publishing. It requires ROS2FrameComponent.
     class ROS2LidarSensorComponent : public ROS2SensorComponent
     {
     public:
@@ -30,19 +29,25 @@ namespace ROS2
         ROS2LidarSensorComponent();
         ~ROS2LidarSensorComponent() = default;
         static void Reflect(AZ::ReflectContext* context);
+        //////////////////////////////////////////////////////////////////////////
+        // Component overrides
         void Activate() override;
         void Deactivate() override;
+        //////////////////////////////////////////////////////////////////////////
 
     private:
+        //////////////////////////////////////////////////////////////////////////
+        // ROS2SensorComponent overrides
         void FrequencyTick() override;
         void Visualise() override;
+        //////////////////////////////////////////////////////////////////////////
         void SetPhysicsScene();
 
         AZ::Crc32 OnLidarModelSelected();
         bool IsConfigurationVisible() const;
 
-        LidarTemplate::LidarModel m_lidarModel = LidarTemplate::Generic3DLidar;
-        LidarTemplate m_lidarParameters = LidarTemplateUtils::GetTemplate(LidarTemplate::Generic3DLidar);
+        LidarTemplate::LidarModel m_lidarModel = LidarTemplate::LidarModel::Generic3DLidar;
+        LidarTemplate m_lidarParameters = LidarTemplateUtils::GetTemplate(LidarTemplate::LidarModel::Generic3DLidar);
         LidarRaycaster m_lidarRaycaster;
         std::shared_ptr<rclcpp::Publisher<sensor_msgs::msg::PointCloud2>> m_pointCloudPublisher;
 
@@ -52,7 +57,6 @@ namespace ROS2
 
         AZStd::vector<AZ::Vector3> m_lastScanResults;
 
-        // TODO - change to AzPhysics::CollisionLayer, use mask instead of single layer
         unsigned int m_ignoredLayerIndex = 0;
         bool m_ignoreLayer = false;
     };

@@ -6,20 +6,20 @@
  *
  */
 
-#include "ROS2/Communication/QoS.h"
 #include <AzCore/Serialization/EditContext.h>
 #include <AzCore/Serialization/SerializeContext.h>
+#include <ROS2/Communication/QoS.h>
 
 namespace ROS2
 {
     QoS::QoS(const rclcpp::QoS& qos)
+        : m_reliabilityPolicy(qos.reliability())
+        , m_durabilityPolicy(qos.durability())
+        , m_depth(qos.depth())
     {
-        m_reliabilityPolicy = qos.reliability();
-        m_durabilityPolicy = qos.durability();
-        m_depth = qos.depth();
     }
 
-    AZ::Crc32 QoS::OnQoSSelected()
+    AZ::Crc32 QoS::OnQoSSelected() const
     {
         return AZ::Edit::PropertyRefreshLevels::AttributesAndValues;
     }

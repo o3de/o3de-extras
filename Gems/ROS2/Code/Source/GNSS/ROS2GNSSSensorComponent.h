@@ -7,9 +7,9 @@
  */
 #pragma once
 
-#include "ROS2/Sensor/ROS2SensorComponent.h"
 #include <AzCore/Math/Transform.h>
 #include <AzCore/Serialization/SerializeContext.h>
+#include <ROS2/Sensor/ROS2SensorComponent.h>
 #include <rclcpp/publisher.hpp>
 #include <sensor_msgs/msg/nav_sat_fix.hpp>
 
@@ -26,15 +26,21 @@ namespace ROS2
         ROS2GNSSSensorComponent();
         ~ROS2GNSSSensorComponent() = default;
         static void Reflect(AZ::ReflectContext* context);
+        //////////////////////////////////////////////////////////////////////////
+        // Component overrides
         void Activate() override;
         void Deactivate() override;
+        //////////////////////////////////////////////////////////////////////////
 
     private:
         float m_gnssOriginLatitudeDeg = 0.0f;
         float m_gnssOriginLongitudeDeg = 0.0f;
         float m_gnssOriginAltitude = 0.0f;
 
+        //////////////////////////////////////////////////////////////////////////
+        // ROS2SensorComponent overrides
         void FrequencyTick() override;
+        //////////////////////////////////////////////////////////////////////////
 
         AZ::Transform GetCurrentPose() const;
 

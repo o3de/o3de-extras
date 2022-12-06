@@ -7,11 +7,11 @@
  */
 #pragma once
 
-#include "ROS2/ROS2GemUtilities.h"
 #include "SensorConfiguration.h"
 #include <AzCore/Component/Component.h>
 #include <AzCore/Component/TickBus.h>
 #include <AzCore/std/smart_ptr/unique_ptr.h>
+#include <ROS2/ROS2GemUtilities.h>
 
 namespace ROS2
 {
@@ -20,15 +20,19 @@ namespace ROS2
     //! Derive this Component to implement a new ROS2 sensor. Each sensor Component requires ROS2FrameComponent.
     class ROS2SensorComponent
         : public AZ::Component
-        , public AZ::TickBus::Handler // TODO - high resolution tick source?
+        , public AZ::TickBus::Handler
     {
     public:
         ROS2SensorComponent() = default;
         virtual ~ROS2SensorComponent() = default;
         AZ_COMPONENT(ROS2SensorComponent, "{91BCC1E9-6D93-4466-9CDB-E73D497C6B5E}");
 
+        //////////////////////////////////////////////////////////////////////////
+        // Component overrides
         void Activate() override;
         void Deactivate() override;
+        //////////////////////////////////////////////////////////////////////////
+
         static void Reflect(AZ::ReflectContext* context);
         void OnTick(float deltaTime, AZ::ScriptTimePoint time) override;
         static void GetRequiredServices(AZ::ComponentDescriptor::DependencyArrayType& required);

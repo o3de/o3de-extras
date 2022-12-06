@@ -9,20 +9,11 @@
 
 #include <AzCore/Time/ITime.h>
 #include <type_traits>
-//#include <concepts> //C++20
 
 namespace VehicleDynamics
 {
-    /* C++ 20
-    template<typename T>
-    concept Zeroable = std::integral<T> or std::floating_point<T>; // arithmetic types
-
-    template<typename T>
-    requires Zeroable<T> class InputZeroedOnTimeout
-    */
-
     //! Inputs with an expiration date - effectively is zero after a certain time since update
-    template<typename T, typename = typename AZStd::enable_if<AZStd::is_arithmetic<T>::value, T>::type>
+    template<typename T, typename = AZStd::enable_if_t<AZStd::is_arithmetic_v<T>>>
     class InputZeroedOnTimeout
     {
     public:
@@ -57,10 +48,10 @@ namespace VehicleDynamics
         T m_input = 0;
     };
 
-    //! The most recent inputs
+    //! Structure defining the most recent vehicle inputs state
     struct VehicleInputsState
     {
-        InputZeroedOnTimeout<float> m_speed; //!< m/s
-        InputZeroedOnTimeout<float> m_steering; //!< Radians, right is -, left is +
+        InputZeroedOnTimeout<float> m_speed; //!< Speed measured in m/s
+        InputZeroedOnTimeout<float> m_steering; //!< Steering angle in radians. Negative is right, positive is left,
     };
 } // namespace VehicleDynamics

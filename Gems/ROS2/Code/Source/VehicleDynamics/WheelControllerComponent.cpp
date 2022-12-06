@@ -6,7 +6,7 @@
  *
  */
 
-#include "VehicleDynamics/WheelControllerComponent.h"
+#include "WheelControllerComponent.h"
 #include <AzCore/Debug/Trace.h>
 #include <AzCore/Serialization/EditContext.h>
 #include <AzCore/Serialization/EditContextConstants.inl>
@@ -29,13 +29,13 @@ namespace VehicleDynamics
 
     void WheelControllerComponent::GetProvidedServices(AZ::ComponentDescriptor::DependencyArrayType& provided)
     {
-        provided.push_back(AZ_CRC("WheelControllerService"));
+        provided.push_back(AZ_CRC_CE("WheelControllerService"));
     }
 
     void WheelControllerComponent::GetIncompatibleServices(AZ::ComponentDescriptor::DependencyArrayType& incompatible)
     {
         // Only one per entity
-        incompatible.push_back(AZ_CRC("WheelControllerService"));
+        incompatible.push_back(AZ_CRC_CE("WheelControllerService"));
     }
 
     void WheelControllerComponent::Reflect(AZ::ReflectContext* context)
@@ -52,7 +52,7 @@ namespace VehicleDynamics
             {
                 ec->Class<WheelControllerComponent>("Wheel controller", "Handle wheel physics")
                     ->ClassElement(AZ::Edit::ClassElements::EditorData, "")
-                    ->Attribute(AZ::Edit::Attributes::AppearsInAddComponentMenu, AZ_CRC("Game"))
+                    ->Attribute(AZ::Edit::Attributes::AppearsInAddComponentMenu, AZ_CRC_CE("Game"))
                     ->Attribute(AZ::Edit::Attributes::Category, "ROS2")
                     ->DataElement(
                         AZ::Edit::UIHandlers::Default,

@@ -6,17 +6,17 @@
  *
  */
 
-#include "ROS2/Frame/NamespaceConfiguration.h"
-#include "ROS2/Utilities/ROS2Names.h"
 #include <AzCore/Serialization/EditContext.h>
 #include <AzCore/Serialization/EditContextConstants.inl>
+#include <ROS2/Frame/NamespaceConfiguration.h>
+#include <ROS2/Utilities/ROS2Names.h>
 
 namespace ROS2
 {
-    void NamespaceConfiguration::PopulateNamespace(bool isRoot, AZStd::string entityName)
+    void NamespaceConfiguration::PopulateNamespace(bool isRoot, const AZStd::string& entityName)
     {
         m_isRoot = isRoot;
-        m_entityName = AZStd::move(entityName);
+        m_entityName = entityName;
         OnNamespaceStrategySelected();
     }
 
@@ -92,9 +92,7 @@ namespace ROS2
                     ->EnumAttribute(NamespaceConfiguration::NamespaceStrategy::Custom, "Custom")
                     ->DataElement(AZ::Edit::UIHandlers::Default, &NamespaceConfiguration::m_namespace, "Namespace", "Namespace")
                     ->Attribute(AZ::Edit::Attributes::Visibility, &NamespaceConfiguration::IsNamespaceCustom)
-                    ->Attribute(AZ::Edit::Attributes::ChangeValidate, &ROS2Names::ValidateNamespaceField)
-                    // TODO - hide for now, but desired Editor component behavior would be to show a read only value
-                    ;
+                    ->Attribute(AZ::Edit::Attributes::ChangeValidate, &ROS2Names::ValidateNamespaceField);
             }
         }
     }

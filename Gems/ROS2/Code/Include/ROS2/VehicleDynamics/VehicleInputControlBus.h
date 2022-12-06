@@ -30,26 +30,26 @@ namespace VehicleDynamics
 
         //! Steer in a direction given in relative coordinate system (current direction is 0).
         //! @param steering is angle in radians, positive to the right and negative to the left.
-        //! Note that the actual angle applied is subject to limits and implementation (e.g. smoothing).
+        //! @note The actual angle applied is subject to limits and implementation (eg smoothing).
         virtual void SetTargetSteering(float steering) = 0;
 
         //! Accelerate without target speed, relative to the limits.
-        //! @param acceleration is relative to limits of possible acceleration.
+        //! @param accelerationFraction is relative to limits of possible acceleration.
         //! 1 - accelerate as much as possible, -1 - brake as much as possible.
         virtual void SetTargetAccelerationFraction(float accelerationFraction) = 0;
 
         //! Steer input version which is relative to limits.
-        //! @param steering is -1 to 1, which applies as a fraction of vehicle model steering limits.
-        //! Note that the actual angle applied is subject to limits and implementation (e.g. smoothing).
+        //! @param steeringFraction is -1 to 1, which applies as a fraction of vehicle model steering limits.
+        //! @note The actual angle applied is subject to limits and implementation (eg smoothing).
         virtual void SetTargetSteeringFraction(float steeringFraction) = 0;
 
         //! Speed input version which is relative to limits.
-        //! @param speedMps is -1 to 1, which applies as a fraction of vehicle model speed limits.
+        //! @param speedFraction is -1 to 1, which applies as a fraction of vehicle model speed limits.
         virtual void SetTargetLinearSpeedFraction(float speedFraction) = 0;
 
-        //! Disable vehicle dynamics
-        //! @param is_disable if set true no torque will be applied
-        virtual void SetDisableVehicleDynamics(bool is_disable) = 0;
+        //! Disables (or enables) the vehicle dynamics
+        //! @param disable if set true no torque will be applied
+        virtual void SetDisableVehicleDynamics(bool disable) = 0;
     };
 
     using VehicleInputControlRequestBus = AZ::EBus<VehicleInputControlRequests>;

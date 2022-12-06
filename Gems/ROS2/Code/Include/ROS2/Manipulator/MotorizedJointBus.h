@@ -38,7 +38,7 @@ namespace ROS2
         virtual float GetSetpoint() = 0;
 
         //! Retrieve current measurement.
-        //! Measurement is the value of the movement - e.g. protrusion of an actuator.
+        //! Measurement is the value of the movement - eg protrusion of an actuator.
         //! For linear actuators, measurement is given in meters.
         //! For the rotational actuators, measurement is given in radians.
         //! When the setpoint is reached this should be close to setpoint.

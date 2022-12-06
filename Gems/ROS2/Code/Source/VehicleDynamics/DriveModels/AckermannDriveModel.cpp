@@ -7,12 +7,12 @@
  */
 
 #include "AckermannDriveModel.h"
-#include "VehicleDynamics/Utilities.h"
 #include <AzCore/Component/TransformBus.h>
 #include <AzCore/Serialization/EditContext.h>
 #include <AzCore/Serialization/EditContextConstants.inl>
 #include <AzCore/Serialization/SerializeContext.h>
 #include <AzFramework/Physics/RigidBodyBus.h>
+#include <VehicleDynamics/Utilities.h>
 
 namespace VehicleDynamics
 {
@@ -78,7 +78,7 @@ namespace VehicleDynamics
         AZ::TransformBus::EventResult(currentSteeringElementRotation, steeringEntity, &AZ::TransformBus::Events::GetLocalRotation);
         const float currentSteeringAngle = currentSteeringElementRotation.Dot(wheelData.m_turnAxis);
         const double pidCommand = m_steeringPid.ComputeCommand(steering - currentSteeringAngle, deltaTimeNs);
-        if (AZ::IsClose(pidCommand, 0.0)) // TODO - use the third argument with some reasonable value which means "close enough"
+        if (AZ::IsClose(pidCommand, 0.0))
         {
             return;
         }
@@ -90,7 +90,6 @@ namespace VehicleDynamics
         Physics::RigidBodyRequestBus::Event(steeringEntity, &Physics::RigidBodyRequests::ApplyAngularImpulse, transformedTorqueVector);
     }
 
-    // TODO - speed and steering handling is quite similar, possible to refactor?
     void AckermannDriveModel::ApplySteering(float steering, uint64_t deltaTimeNs)
     {
         if (m_disabled)
@@ -103,11 +102,11 @@ namespace VehicleDynamics
             return;
         }
 
-        auto innerSteering = atan(
-            (m_vehicleConfiguration.m_wheelbase * tan(steering)) /
+        auto innerSteering = AZ::Atan2(
+            (m_vehicleConfiguration.m_wheelbase * tan(steering)),
             (m_vehicleConfiguration.m_wheelbase - 0.5 * m_vehicleConfiguration.m_track * tan(steering)));
-        auto outerSteering = atan(
-            (m_vehicleConfiguration.m_wheelbase * tan(steering)) /
+        auto outerSteering = AZ::Atan2(
+            (m_vehicleConfiguration.m_wheelbase * tan(steering)),
             (m_vehicleConfiguration.m_wheelbase + 0.5 * m_vehicleConfiguration.m_track * tan(steering)));
 
         ApplyWheelSteering(m_steeringData.front(), innerSteering, deltaTimeNs);
@@ -148,7 +147,7 @@ namespace VehicleDynamics
 
             auto desiredAngularSpeedX = speed / wheelRadius;
             double pidCommand = m_speedPid.ComputeCommand(desiredAngularSpeedX - currentAngularSpeedX, deltaTimeNs);
-            if (AZ::IsClose(pidCommand, 0.0)) // TODO - use the third argument with some reasonable value which means "close enough"
+            if (AZ::IsClose(pidCommand, 0.0))
             {
                 continue;
             }
@@ -160,9 +159,9 @@ namespace VehicleDynamics
         }
     }
 
-    void AckermannDriveModel::SetDisabled(bool is_disabled)
+    void AckermannDriveModel::SetDisabled(bool isDisabled)
     {
-        m_disabled = is_disabled;
+        m_disabled = isDisabled;
     }
 
 } // namespace VehicleDynamics

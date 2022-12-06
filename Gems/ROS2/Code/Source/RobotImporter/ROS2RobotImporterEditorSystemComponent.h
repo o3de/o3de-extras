@@ -8,7 +8,7 @@
 
 #pragma once
 
-#include "RobotImporter/ROS2RobotImporterSystemComponent.h"
+#include "ROS2RobotImporterSystemComponent.h"
 #include <AzToolsFramework/Entity/EditorEntityContextBus.h>
 
 namespace ROS2
@@ -29,8 +29,15 @@ namespace ROS2
         ~ROS2RobotImporterEditorSystemComponent() = default;
 
     private:
+        //////////////////////////////////////////////////////////////////////////
+        // Component overrides
         void Activate() override;
         void Deactivate() override;
+        //////////////////////////////////////////////////////////////////////////
+
+        //////////////////////////////////////////////////////////////////////////
+        // AzToolsFramework::EditorEvents::Bus::Handler overrides
         void NotifyRegisterViews() override;
+        //////////////////////////////////////////////////////////////////////////
     };
 } // namespace ROS2

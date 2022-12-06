@@ -6,14 +6,15 @@
  *
  */
 
-#include "RobotControl/ROS2RobotControlComponent.h"
-#include "Ackermann/AckermannSubscriptionHandler.h"
-#include "Twist/TwistSubscriptionHandler.h"
+#include "ROS2RobotControlComponent.h"
 #include <AzCore/Component/Entity.h>
 #include <AzCore/Debug/Trace.h>
 #include <AzCore/Serialization/EditContext.h>
 #include <AzCore/Serialization/EditContextConstants.inl>
 #include <AzCore/Serialization/SerializeContext.h>
+#include <RobotControl/Ackermann/AckermannSubscriptionHandler.h>
+#include <RobotControl/ROS2RobotControlComponent.h>
+#include <RobotControl/Twist/TwistSubscriptionHandler.h>
 
 namespace ROS2
 {
@@ -21,11 +22,10 @@ namespace ROS2
     {
         switch (m_controlConfiguration.m_steering)
         {
-        case ControlConfiguration::Twist:
+        case ControlConfiguration::Steering::Twist:
             m_subscriptionHandler = AZStd::make_unique<TwistSubscriptionHandler>();
             break;
-        case ControlConfiguration::Ackermann:
-            // TODO add ackermann
+        case ControlConfiguration::Steering::Ackermann:
             m_subscriptionHandler = AZStd::make_unique<AckermannSubscriptionHandler>();
             break;
         default:
@@ -64,7 +64,7 @@ namespace ROS2
                 ec->Class<ROS2RobotControlComponent>("ROS2 Robot control", "Customizable robot control component")
                     ->ClassElement(AZ::Edit::ClassElements::EditorData, "")
                     ->Attribute(AZ::Edit::Attributes::Category, "ROS2")
-                    ->Attribute(AZ::Edit::Attributes::AppearsInAddComponentMenu, AZ_CRC("Game")) // TODO - "Simulation"?
+                    ->Attribute(AZ::Edit::Attributes::AppearsInAddComponentMenu, AZ_CRC_CE("Game"))
                     ->DataElement(
                         AZ::Edit::UIHandlers::Default,
                         &ROS2RobotControlComponent::m_controlConfiguration,
@@ -81,8 +81,7 @@ namespace ROS2
 
     void ROS2RobotControlComponent::GetRequiredServices(AZ::ComponentDescriptor::DependencyArrayType& required)
     {
-        // TODO - also, dependent on current/selected RobotControl implementation for what components are required
-        required.push_back(AZ_CRC("ROS2Frame"));
+        required.push_back(AZ_CRC_CE("ROS2Frame"));
     }
 
     const ControlConfiguration& ROS2RobotControlComponent::GetControlConfiguration() const

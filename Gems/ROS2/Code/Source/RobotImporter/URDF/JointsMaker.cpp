@@ -6,15 +6,16 @@
  *
  */
 
-#include "RobotImporter/URDF/JointsMaker.h"
-#include "RobotImporter/URDF/PrefabMakerUtils.h"
-#include "RobotImporter/Utils/TypeConversions.h"
+#include "JointsMaker.h"
+#include "PrefabMakerUtils.h"
 #include <AzToolsFramework/Entity/EditorEntityHelpers.h>
+#include <RobotImporter/Utils/TypeConversions.h>
 #include <Source/EditorColliderComponent.h>
 #include <Source/EditorFixedJointComponent.h>
 #include <Source/EditorHingeJointComponent.h>
 #include <Source/EditorPrismaticJointComponent.h>
 #include <Source/EditorRigidBodyComponent.h>
+
 namespace ROS2
 {
 
@@ -23,8 +24,6 @@ namespace ROS2
     {
         AZ::Entity* followColliderEntity = AzToolsFramework::GetEntityById(followColliderEntityId);
         PhysX::EditorJointComponent* jointComponent = nullptr;
-        // TODO - ATM, there is no support withing Joint Components for the following:
-        // TODO <calibration> <dynamics> <mimic>, friction, effort, velocity, joint safety and several joint types
 
         // URDF has a joint axis configurable by a normalized vector - that is given by the 'axis' sub-element in the joint element.
         // The o3de has a slightly different way of configuring the axis of the joint. The o3de has an axis around positive `X` and rotation
@@ -46,7 +45,7 @@ namespace ROS2
         const AZ::Vector3 rotation = quaternion.GetEulerDegrees();
 
         switch (joint->type)
-        { // TODO - replace with a generic member function
+        {
         case urdf::Joint::FIXED:
             {
                 jointComponent = followColliderEntity->CreateComponent<PhysX::EditorFixedJointComponent>();

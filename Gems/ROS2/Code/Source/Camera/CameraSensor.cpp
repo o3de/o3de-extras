@@ -29,7 +29,7 @@ namespace ROS2
     {
 
         /// @FormatMappings - contains the mapping from RHI to ROS image encodings. List of supported
-        /// ROS image encodings lives in `sensor_msgs/image_encodings.hpp'
+        /// ROS image encodings lives in `sensor_msgs/image_encodings.hpp`
         /// We are not including `image_encodings.hpp` since it uses exceptions.
         AZStd::unordered_map<AZ::RHI::Format, const char*> FormatMappings{
             { AZ::RHI::Format::R8G8B8A8_UNORM, "rgba8" },     { AZ::RHI::Format::R16G16B16A16_UNORM, "rgba16" },
@@ -52,7 +52,6 @@ namespace ROS2
     } // namespace Internal
     CameraSensorDescription::CameraSensorDescription(const AZStd::string& cameraName, float verticalFov, int width, int height)
         : m_verticalFieldOfViewDeg(verticalFov)
-        , m_verticalFieldOfViewRad(AZ::DegToRad(m_verticalFieldOfViewDeg))
         , m_width(width)
         , m_height(height)
         , m_cameraName(cameraName)
@@ -60,7 +59,7 @@ namespace ROS2
         , m_viewToClipMatrix(MakeViewToClipMatrix())
         , m_cameraIntrinsics(MakeCameraIntrinsics())
     {
-        validateParameters();
+        ValidateParameters();
     }
 
     AZ::Matrix4x4 CameraSensorDescription::MakeViewToClipMatrix() const
@@ -72,7 +71,7 @@ namespace ROS2
         return localViewToClipMatrix;
     }
 
-    void CameraSensorDescription::validateParameters() const
+    void CameraSensorDescription::ValidateParameters() const
     {
         AZ_Assert(
             m_verticalFieldOfViewDeg > 0.0f && m_verticalFieldOfViewDeg < 180.0f,
@@ -93,9 +92,10 @@ namespace ROS2
         // (cx, cy).
         const auto w = static_cast<double>(m_width);
         const auto h = static_cast<double>(m_height);
-        const double horizontalFoV = 2.0 * AZStd::atan(AZStd::tan(m_verticalFieldOfViewRad / 2.0) * m_aspectRatio);
+        const double verticalFieldOfView = AZ::DegToRad(m_verticalFieldOfViewDeg);
+        const double horizontalFoV = 2.0 * AZStd::atan(AZStd::tan(verticalFieldOfView / 2.0) * m_aspectRatio);
         const double focalLengthX = w / (2.0 * AZStd::tan(horizontalFoV / 2.0));
-        const double focalLengthY = h / (2.0 * AZStd::tan(m_verticalFieldOfViewRad / 2.0));
+        const double focalLengthY = h / (2.0 * AZStd::tan(verticalFieldOfView / 2.0));
         return { focalLengthX, 0.0, w / 2.0, 0.0, focalLengthY, h / 2.0, 0.0, 0.0, 1.0 };
     }
 
@@ -104,22 +104,22 @@ namespace ROS2
     {
     }
 
-    void CameraSensor::setupPasses()
+    void CameraSensor::SetupPasses()
     {
-        AZ_TracePrintf("CameraSensor", "Initializing pipeline for %s", m_cameraSensorDescription.m_cameraName.c_str());
+        AZ_TracePrintf("CameraSensor", "Initializing pipeline for %s\n", m_cameraSensorDescription.m_cameraName.c_str());
 
         const AZ::Name viewName = AZ::Name("MainCamera");
         m_view = AZ::RPI::View::CreateView(viewName, AZ::RPI::View::UsageCamera);
         m_view->SetViewToClipMatrix(m_cameraSensorDescription.m_viewToClipMatrix);
         m_scene = AZ::RPI::RPISystemInterface::Get()->GetSceneByName(AZ::Name("Main"));
 
-        const AZStd::string pipelineName = m_cameraSensorDescription.m_cameraName + "Pipeline" + getPipelineTypeName();
+        const AZStd::string pipelineName = m_cameraSensorDescription.m_cameraName + "Pipeline" + GetPipelineTypeName();
 
         AZ::RPI::RenderPipelineDescriptor pipelineDesc;
         pipelineDesc.m_mainViewTagName = "MainCamera";
         pipelineDesc.m_name = pipelineName;
 
-        pipelineDesc.m_rootPassTemplate = getPipelineTemplateName();
+        pipelineDesc.m_rootPassTemplate = GetPipelineTemplateName();
 
         pipelineDesc.m_renderSettings.m_multisampleState = AZ::RPI::RPISystemInterface::Get()->GetApplicationMultisampleState();
         m_pipeline = AZ::RPI::RenderPipeline::CreateRenderPipeline(pipelineDesc);
@@ -162,7 +162,7 @@ namespace ROS2
     void CameraSensor::RequestFrame(
         const AZ::Transform& cameraPose, AZStd::function<void(const AZ::RPI::AttachmentReadback::ReadbackResult& result)> callback)
     {
-        const AZ::Transform inverse = (cameraPose * kAtomToRos).GetInverse();
+        const AZ::Transform inverse = (cameraPose * AtomToRos).GetInverse();
         m_view->SetWorldToViewMatrix(AZ::Matrix4x4::CreateFromQuaternionAndTranslation(inverse.GetRotation(), inverse.GetTranslation()));
 
         AZ::Render::FrameCaptureId captureId = AZ::Render::InvalidFrameCaptureId;
@@ -182,7 +182,7 @@ namespace ROS2
         return m_cameraSensorDescription;
     }
 
-    void CameraSensor::publishMassage(
+    void CameraSensor::RequestMessagePublication(
         std::shared_ptr<rclcpp::Publisher<sensor_msgs::msg::Image>> publisher,
         const AZ::Transform& cameraPose,
         const std_msgs::msg::Header& header)
@@ -208,15 +208,15 @@ namespace ROS2
     CameraDepthSensor::CameraDepthSensor(const CameraSensorDescription& cameraSensorDescription)
         : CameraSensor(cameraSensorDescription)
     {
-        setupPasses();
+        SetupPasses();
     }
 
-    AZStd::string CameraDepthSensor::getPipelineTemplateName()
+    AZStd::string CameraDepthSensor::GetPipelineTemplateName() const
     {
         return "PipelineRenderToTextureROSDepth";
     };
 
-    AZStd::string CameraDepthSensor::getPipelineTypeName()
+    AZStd::string CameraDepthSensor::GetPipelineTypeName() const
     {
         return "Depth";
     };
@@ -224,15 +224,15 @@ namespace ROS2
     CameraColorSensor::CameraColorSensor(const CameraSensorDescription& cameraSensorDescription)
         : CameraSensor(cameraSensorDescription)
     {
-        setupPasses();
+        SetupPasses();
     }
 
-    AZStd::string CameraColorSensor::getPipelineTemplateName()
+    AZStd::string CameraColorSensor::GetPipelineTemplateName() const
     {
         return "PipelineRenderToTextureROSColor";
     };
 
-    AZStd::string CameraColorSensor::getPipelineTypeName()
+    AZStd::string CameraColorSensor::GetPipelineTypeName() const
     {
         return "Color";
     };

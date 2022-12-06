@@ -24,7 +24,7 @@ namespace ROS2
             {
                 ec->Class<RigidBodyTwistControlComponent>("Rigid Body Twist Control", "Simple control through RigidBody")
                     ->ClassElement(AZ::Edit::ClassElements::EditorData, "")
-                    ->Attribute(AZ::Edit::Attributes::AppearsInAddComponentMenu, AZ_CRC("Game"))
+                    ->Attribute(AZ::Edit::Attributes::AppearsInAddComponentMenu, AZ_CRC_CE("Game"))
                     ->Attribute(AZ::Edit::Attributes::Category, "ROS2");
             }
         }
@@ -42,7 +42,7 @@ namespace ROS2
 
     void RigidBodyTwistControlComponent::GetRequiredServices(AZ::ComponentDescriptor::DependencyArrayType& required)
     {
-        required.push_back(AZ_CRC("ROS2RobotControl"));
+        required.push_back(AZ_CRC_CE("ROS2RobotControl"));
         required.push_back(AZ_CRC_CE("PhysicsRigidBodyService"));
     }
 

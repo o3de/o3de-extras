@@ -23,7 +23,7 @@ namespace ROS2
 
         //! Handle Ackermann command
         //! @param ackermannCommand A structure with AckermannDrive message fields
-        virtual void AckermannReceived(const AckermannCommandStruct& angular) = 0;
+        virtual void AckermannReceived(const AckermannCommandStruct& ackermannCommand) = 0;
     };
 
     using AckermannNotificationBus = AZ::EBus<AckermannNotifications>;

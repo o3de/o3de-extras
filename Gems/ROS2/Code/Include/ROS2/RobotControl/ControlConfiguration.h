@@ -23,7 +23,7 @@ namespace ROS2
         //! Type of control for the robot.
         //! Different types of steering can fit different platforms,
         //! depending on the type their mobile base (four wheels, omniwheels, ..).
-        enum Steering
+        enum class Steering
         {
             Twist, //!< @see <a href="https://docs.ros2.org/latest/api/geometry_msgs/msg/Twist.html">Twist</a>.
             Ackermann //!< @see <a href="https://github.com/ros-drivers/ackermann_msgs/blob/ros2/msg/AckermannDrive.msg">AckermannDrive</a>.

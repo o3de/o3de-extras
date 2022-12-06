@@ -103,8 +103,7 @@ namespace ROS2::PrefabMakerUtils
     }
 
     bool HasCollider(AZ::EntityId entityId)
-    { // TODO - actually, we want EditorColliderComponent specifically, but the change can be applied only after moving to ECC
-        // TODO - which will happen when Cylinder shape is supported. Until then, we check for either ECC or ESCC.
+    {
         AZ::Entity* entity = AzToolsFramework::GetEntityById(entityId);
         AZ_Assert(entity, "Unknown entity %s", entityId.ToString().c_str());
         return entity->FindComponent<PhysX::EditorColliderComponent>() != nullptr ||

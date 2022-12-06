@@ -11,7 +11,7 @@
 #include <sensor_msgs/msg/camera_info.hpp>
 #include <sensor_msgs/msg/image.hpp>
 
-#include "ROS2/Sensor/ROS2SensorComponent.h"
+#include <ROS2/Sensor/ROS2SensorComponent.h>
 
 #include <AzCore/Component/Component.h>
 
@@ -41,14 +41,22 @@ namespace ROS2
         void Deactivate() override;
 
     private:
-        //! Type aliases for pointer used in this component
+        //! Pointer to ROS2 image publisher type
         using ImagePublisherPtrType = std::shared_ptr<rclcpp::Publisher<sensor_msgs::msg::Image>>;
+
+        //! Pointer to ROS2 camera sensor publisher type
         using CameraInfoPublisherPtrType = std::shared_ptr<rclcpp::Publisher<sensor_msgs::msg::CameraInfo>>;
+
+        //! Type that combines pointer to ROS2 publisher and CameraSensor
         using PublisherSensorPtrPair = AZStd::pair<ImagePublisherPtrType, AZStd::shared_ptr<CameraSensor>>;
 
-        //! Helper to construct PublisherSensorPtrPair with give Sensor type
+        //! Helper to construct a PublisherSensorPtrPair with a pointer to ROS2 publisher and intrinsic calibration
+        //! @tparam CameraType type of camera sensor (eg 'CameraColorSensor')
+        //! @param publisher pointer to ROS2 image publisher
+        //! @param description CameraSensorDescription with intrinsic calibration
+        //! @return PublisherSensorPtrPair with all provided parameters
         template<typename CameraType>
-        PublisherSensorPtrPair createPair(ImagePublisherPtrType publisher, const CameraSensorDescription& description) const
+        PublisherSensorPtrPair CreatePair(ImagePublisherPtrType publisher, const CameraSensorDescription& description) const
         {
             return { publisher, AZStd::make_shared<CameraType>(description) };
         }

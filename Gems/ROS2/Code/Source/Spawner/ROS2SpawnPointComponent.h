@@ -27,11 +27,11 @@ namespace ROS2
         ROS2SpawnPointComponent() = default;
 
         ~ROS2SpawnPointComponent() = default;
-
+        //////////////////////////////////////////////////////////////////////////
+        // Component overrides
         void Activate() override;
-
         void Deactivate() override;
-
+        //////////////////////////////////////////////////////////////////////////
         static void Reflect(AZ::ReflectContext* context);
 
         AZStd::pair<AZStd::string, SpawnPointInfo> GetInfo() const;

@@ -9,8 +9,6 @@ function(target_depends_on_ros2_packages TARGET_NAME)
         return()
     endif()
     message(DEBUG "Building ROS2 Gem with ros2 $ENV{ROS_DISTRO}")
-    #TODO - compare to previous env since we need to rerun cmake if we source a different ros2 env!
-    #TODO - can be done with a file that is in CONFIGURE_DEPENDS so that a change triggers build
     set(_ament_prefix_path "$ENV{AMENT_PREFIX_PATH}")
 
     # ros2 directories with libraries, e.g. /opt/ros/galactic/lib, locally built custom packages etc.

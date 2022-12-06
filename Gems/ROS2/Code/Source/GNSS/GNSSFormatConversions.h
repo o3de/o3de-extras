@@ -8,15 +8,10 @@
 
 #pragma once
 
-#include "AzCore/Math/Matrix4x4.h"
+#include <AzCore/Math/Matrix4x4.h>
 
 namespace ROS2::GNSS
 {
-    //! Converts radians to degrees
-    float Rad2Deg(float rad);
-
-    //! Converts degrees to radians
-    float Deg2Rad(float deg);
 
     //! Converts point in 1984 World Geodetic System (GS84) to Earth Centred Earth Fixed (ECEF)
     //! @param latitudeLongitudeAltitude - point's latitude, longitude and altitude as 3d vector.

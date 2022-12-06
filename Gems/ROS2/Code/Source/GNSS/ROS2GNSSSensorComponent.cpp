@@ -6,12 +6,12 @@
  *
  */
 
-#include "GNSS/ROS2GNSSSensorComponent.h"
-#include "ROS2/Frame/ROS2FrameComponent.h"
-#include "ROS2/ROS2Bus.h"
-#include "ROS2/ROS2GemUtilities.h"
-#include "ROS2/Utilities/ROS2Conversions.h"
-#include "ROS2/Utilities/ROS2Names.h"
+#include "ROS2GNSSSensorComponent.h"
+#include <ROS2/Frame/ROS2FrameComponent.h>
+#include <ROS2/ROS2Bus.h>
+#include <ROS2/ROS2GemUtilities.h>
+#include <ROS2/Utilities/ROS2Conversions.h>
+#include <ROS2/Utilities/ROS2Names.h>
 
 #include <AzCore/Math/Matrix4x4.h>
 #include <AzCore/Serialization/EditContext.h>
@@ -41,7 +41,7 @@ namespace ROS2
                 ec->Class<ROS2GNSSSensorComponent>("ROS2 GNSS Sensor", "GNSS sensor component")
                     ->ClassElement(AZ::Edit::ClassElements::EditorData, "")
                     ->Attribute(AZ::Edit::Attributes::Category, "ROS2")
-                    ->Attribute(AZ::Edit::Attributes::AppearsInAddComponentMenu, AZ_CRC("Game"))
+                    ->Attribute(AZ::Edit::Attributes::AppearsInAddComponentMenu, AZ_CRC_CE("Game"))
                     ->DataElement(
                         AZ::Edit::UIHandlers::Default,
                         &ROS2GNSSSensorComponent::m_gnssOriginLatitudeDeg,

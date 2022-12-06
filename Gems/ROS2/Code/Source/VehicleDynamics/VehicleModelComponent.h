@@ -7,15 +7,15 @@
  */
 #pragma once
 
+#include "DriveModels/AckermannDriveModel.h"
 #include "ManualControlEventHandler.h"
-#include "ROS2/VehicleDynamics/VehicleInputControlBus.h"
 #include "VehicleConfiguration.h"
-#include "VehicleDynamics/DriveModels/AckermannDriveModel.h"
 #include "VehicleInputsState.h"
 #include "VehicleModelLimits.h"
 #include <AzCore/Component/Component.h>
 #include <AzCore/Component/TickBus.h>
 #include <AzCore/std/smart_ptr/unique_ptr.h>
+#include <ROS2/VehicleDynamics/VehicleInputControlBus.h>
 
 namespace VehicleDynamics
 {
@@ -29,8 +29,12 @@ namespace VehicleDynamics
         AZ_COMPONENT(VehicleModelComponent, "{7093AE7A-9F64-4C77-8189-02C6B7802C1A}", AZ::Component);
         VehicleModelComponent() = default;
 
+        //////////////////////////////////////////////////////////////////////////
+        // Component overrides
         void Activate() override;
         void Deactivate() override;
+        //////////////////////////////////////////////////////////////////////////
+
         static void GetProvidedServices(AZ::ComponentDescriptor::DependencyArrayType& provided);
         static void GetIncompatibleServices(AZ::ComponentDescriptor::DependencyArrayType& incompatible);
         static void Reflect(AZ::ReflectContext* context);
@@ -38,19 +42,20 @@ namespace VehicleDynamics
     private:
         void OnTick(float deltaTime, AZ::ScriptTimePoint time) override;
 
-        //! @see VehicleInputControlRequests
+        //////////////////////////////////////////////////////////////////////////
+        //! VehicleInputControlRequestBus::Handler overrides
         void SetTargetLinearSpeed(float speedMps) override;
         void SetTargetSteering(float steering) override;
         void SetTargetAccelerationFraction(float accelerationFraction) override;
         void SetTargetSteeringFraction(float steeringFraction) override;
         void SetTargetLinearSpeedFraction(float speedFraction) override;
-        void SetDisableVehicleDynamics(bool is_disable) override;
+        void SetDisableVehicleDynamics(bool isDisable) override;
+        //////////////////////////////////////////////////////////////////////////
 
         ManualControlEventHandler m_manualControlEventHandler;
         VehicleConfiguration m_vehicleConfiguration;
         VehicleInputsState m_inputsState;
-        AckermannDriveModel m_driveModel; // TODO - use abstraction here (DriveModel)
+        AckermannDriveModel m_driveModel;
         VehicleModelLimits m_vehicleLimits;
-        // TODO - Engine, Transmission, Lights, etc.
     };
 } // namespace VehicleDynamics

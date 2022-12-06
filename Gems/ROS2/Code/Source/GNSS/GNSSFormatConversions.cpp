@@ -18,20 +18,11 @@ constexpr double secondEccentrictySquared =
 // Based on http://wiki.gis.com/wiki/index.php/Geodetic_system
 namespace ROS2::GNSS
 {
-    float Rad2Deg(float rad)
-    {
-        return rad * 180.0f / AZ::Constants::Pi;
-    }
-
-    float Deg2Rad(float deg)
-    {
-        return deg * AZ::Constants::Pi / 180.0f;
-    }
 
     AZ::Vector3 WGS84ToECEF(const AZ::Vector3& latitudeLongitudeAltitude)
     {
-        const double latitudeRad = Deg2Rad(latitudeLongitudeAltitude.GetX());
-        const double longitudeRad = Deg2Rad(latitudeLongitudeAltitude.GetY());
+        const double latitudeRad = AZ::DegToRad(latitudeLongitudeAltitude.GetX());
+        const double longitudeRad = AZ::DegToRad(latitudeLongitudeAltitude.GetY());
         const double altitude = latitudeLongitudeAltitude.GetZ();
 
         const double helper = AZStd::sqrt(1.0f - firstEccentricitySquared * AZStd::sin(latitudeRad) * AZStd::sin(latitudeRad));
@@ -48,8 +39,8 @@ namespace ROS2::GNSS
         const AZ::Vector3 referencePointInECEF = WGS84ToECEF(referenceLatitudeLongitudeAltitude);
         const AZ::Vector3 pointToReferencePointECEF = ECEFPoint - referencePointInECEF;
 
-        const float referenceLatitudeRad = Deg2Rad(referenceLatitudeLongitudeAltitude.GetX());
-        const float referenceLongitudeRad = Deg2Rad(referenceLatitudeLongitudeAltitude.GetY());
+        const float referenceLatitudeRad = AZ::DegToRad(referenceLatitudeLongitudeAltitude.GetX());
+        const float referenceLongitudeRad = AZ::DegToRad(referenceLatitudeLongitudeAltitude.GetY());
 
         return {
             -AZStd::sin(referenceLongitudeRad) * pointToReferencePointECEF.GetX() +
@@ -67,8 +58,8 @@ namespace ROS2::GNSS
     {
         AZ::Vector3 referenceECEF = WGS84ToECEF(referenceLatitudeLongitudeAltitude);
 
-        const float referenceLatitudeRad = Deg2Rad(referenceLatitudeLongitudeAltitude.GetX());
-        const float referenceLongitudeRad = Deg2Rad(referenceLatitudeLongitudeAltitude.GetY());
+        const float referenceLatitudeRad = AZ::DegToRad(referenceLatitudeLongitudeAltitude.GetX());
+        const float referenceLongitudeRad = AZ::DegToRad(referenceLatitudeLongitudeAltitude.GetY());
         const float e = ENUPoint.GetX();
         const float n = ENUPoint.GetY();
         const float u = ENUPoint.GetZ();
@@ -110,7 +101,7 @@ namespace ROS2::GNSS
         const double longitude = AZStd::atan2(y, x);
         const double altitude = U * (1.0f - earthSemiminorAxis * earthSemiminorAxis / (earthSemimajorAxis * V));
 
-        return { Rad2Deg(static_cast<float>(latitude)), Rad2Deg(static_cast<float>(longitude)), static_cast<float>(altitude) };
+        return { AZ::RadToDeg(static_cast<float>(latitude)), AZ::RadToDeg(static_cast<float>(longitude)), static_cast<float>(altitude) };
     }
 
 } // namespace ROS2::GNSS

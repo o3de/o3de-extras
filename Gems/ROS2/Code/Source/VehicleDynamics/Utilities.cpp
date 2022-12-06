@@ -6,7 +6,7 @@
  *
  */
 
-#include "VehicleDynamics/Utilities.h"
+#include "Utilities.h"
 #include "WheelControllerComponent.h"
 #include <AzCore/Component/ComponentApplicationBus.h>
 #include <AzCore/Component/Entity.h>

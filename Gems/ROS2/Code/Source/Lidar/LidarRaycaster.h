@@ -13,7 +13,6 @@
 #include <AzCore/std/containers/vector.h>
 #include <AzFramework/Physics/PhysicsScene.h>
 
-// TODO - switch to interface
 namespace ROS2
 {
     //! A simple implementation of Lidar operation in terms of raycasting.
@@ -25,7 +24,7 @@ namespace ROS2
         //! @code
         //! auto sceneHandle = AZ::RPI::Scene::GetSceneForEntityId(GetEntityId());
         //! @endcode
-        //! @param scene that will be subject to ray-casting.
+        //! @param handle Scene that will be subject to ray-casting.
         void SetRaycasterScene(const AzPhysics::SceneHandle& handle);
 
         //! Perform raycast against the current scene.
@@ -38,8 +37,6 @@ namespace ROS2
         //! @param ignoredLayerIndex Index of collision layer to be ignored
         //! @return Hits of raycast. The returned vector size can be anything between zero and size of directions.
         //! No hits further than distance will be reported.
-        // TODO - different starting points for rays, distance from reference point, noise models, rotating mirror sim, other
-        // TODO - customized settings. Encapsulate in lidar definition and pass in constructor, update transform.
         AZStd::vector<AZ::Vector3> PerformRaycast(
             const AZ::Vector3& start,
             const AZStd::vector<AZ::Vector3>& directions,

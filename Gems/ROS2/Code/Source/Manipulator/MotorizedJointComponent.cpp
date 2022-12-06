@@ -6,12 +6,12 @@
  *
  */
 
-#include "ROS2/Manipulator/MotorizedJointComponent.h"
-#include "AzFramework/Physics/Components/SimulatedBodyComponentBus.h"
 #include <AzCore/Component/Entity.h>
 #include <AzCore/Component/TransformBus.h>
 #include <AzCore/Serialization/EditContext.h>
+#include <AzFramework/Physics/Components/SimulatedBodyComponentBus.h>
 #include <AzFramework/Physics/RigidBodyBus.h>
+#include <ROS2/Manipulator/MotorizedJointComponent.h>
 
 namespace ROS2
 {
@@ -57,7 +57,7 @@ namespace ROS2
             {
                 ec->Class<MotorizedJointComponent>("MotorizedJointComponent", "MotorizedJointComponent")
                     ->ClassElement(AZ::Edit::ClassElements::EditorData, "MotorizedJointComponent")
-                    ->Attribute(AZ::Edit::Attributes::AppearsInAddComponentMenu, AZ_CRC("Game"))
+                    ->Attribute(AZ::Edit::Attributes::AppearsInAddComponentMenu, AZ_CRC_CE("Game"))
                     ->Attribute(AZ::Edit::Attributes::Category, "MotorizedJointComponent")
                     ->DataElement(
                         AZ::Edit::UIHandlers::Default,
@@ -130,7 +130,7 @@ namespace ROS2
             m_setpoint = m_sinDC + m_sinAmplitude * AZ::Sin(m_sinFreq * time.GetSeconds());
         }
         const float control_position_error = (m_setpoint + m_zeroOffset) - measurement;
-        m_error = control_position_error; // TODO decide if we want to expose this control error.
+        m_error = control_position_error;
 
         if (m_debugDrawEntity.IsValid())
         {
@@ -165,7 +165,7 @@ namespace ROS2
         {
             AZ_Printf(
                 "MotorizedJointComponent",
-                " %s | pos: %f | err: %f | cntrl : %f | set : %f |",
+                " %s | pos: %f | err: %f | cntrl : %f | set : %f |\n",
                 GetEntity()->GetName().c_str(),
                 measurement,
                 control_position_error,
@@ -217,9 +217,7 @@ namespace ROS2
             deltaTime = AZStd::min(deltaTime, 0.1f); // limit max force for small FPS
             if (m_linear)
             {
-                // TODO decide which approach is better here.
                 ApplyLinVelRigidBodyImpulse(velocity, deltaTime);
-                // ApplyLinVelRigidBody(velocity, deltaTime);
             }
         }
     }

@@ -6,10 +6,10 @@
  *
  */
 
-#include "RobotImporter/URDF/InertialsMaker.h"
-#include "RobotImporter/Utils/TypeConversions.h"
+#include "InertialsMaker.h"
 #include <AzCore/Component/EntityId.h>
 #include <AzToolsFramework/Entity/EditorEntityHelpers.h>
+#include <RobotImporter/Utils/TypeConversions.h>
 #include <Source/EditorRigidBodyComponent.h>
 
 namespace ROS2
@@ -38,13 +38,11 @@ namespace ROS2
         rigidBodyConfiguration.m_mass = inertial->mass;
         rigidBodyConfiguration.m_computeMass = false;
 
-        // TODO - Check whether this is a correct offset for every case (consider entity transform and collider origin)
         rigidBodyConfiguration.m_centerOfMassOffset = URDF::TypeConversions::ConvertVector3(inertial->origin.position);
         rigidBodyConfiguration.m_computeCenterOfMass = false;
 
         if (!URDF::TypeConversions::ConvertQuaternion(inertial->origin.rotation).IsIdentity())
         { // There is a rotation component in URDF that we are not able to apply
-            // TODO - determine a solution to also include rotation in import
             AZ_Warning("AddInertial", false, "Ignoring URDF inertial origin rotation (no such field in rigid body configuration)");
         }
 

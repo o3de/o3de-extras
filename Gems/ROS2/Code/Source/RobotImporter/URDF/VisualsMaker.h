@@ -8,7 +8,6 @@
 
 #pragma once
 
-#include "RobotImporter/Utils/SourceAssetsStorage.h"
 #include "UrdfParser.h"
 #include <AzCore/Component/EntityId.h>
 #include <AzCore/IO/Path/Path.h>

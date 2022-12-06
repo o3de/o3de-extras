@@ -27,8 +27,11 @@ namespace ROS2
         virtual ~ROS2RobotImporterSystemComponent() = default;
 
     protected:
+        //////////////////////////////////////////////////////////////////////////
+        // Component overrides
         void Init() override{};
         void Activate() override{};
         void Deactivate() override{};
+        //////////////////////////////////////////////////////////////////////////
     };
 } // namespace ROS2

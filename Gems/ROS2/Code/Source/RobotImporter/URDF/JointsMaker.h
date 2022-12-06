@@ -22,7 +22,7 @@ namespace ROS2
     public:
         using JointsMakerResult = AZ::Outcome<AZ::ComponentId, AZStd::string>;
 
-        //! Adds joint to entity and sets it accordingly to urdf::Joint
+        //! Add a joint to an entity and sets it accordingly to urdf::Joint
         //! @param joint Joint data
         //! @param followColliderEntityId A non-active entity which will be populated with Joint components.
         //! @param leadColliderEntityId An entity higher in hierarchy which is connected through the joint with the child entity.

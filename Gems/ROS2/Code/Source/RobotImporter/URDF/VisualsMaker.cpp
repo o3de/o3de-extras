@@ -201,8 +201,6 @@ namespace ROS2
             return;
         }
 
-        // Mesh visual - we can have either filename or default material with a given color
-        // TODO - handle texture_filename - file materials
         entity->CreateComponent(AZ::Render::EditorMaterialComponentTypeId);
         AZ_Printf("AddVisual", "Setting color for material %s\n", visual->material->name.c_str());
         entity->Activate();

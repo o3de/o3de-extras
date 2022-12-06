@@ -3,6 +3,16 @@
 #
 # SPDX-License-Identifier: Apache-2.0 OR MIT
 
+# Query the gem name from the gem.json file if possible
+# otherwise fallback to using ${Name}
+o3de_find_ancestor_gem_root(gempath gem_name "${CMAKE_CURRENT_SOURCE_DIR}")
+# Query the gem name from the gem.json file if possible
+# otherwise fallback to using ${Name}
+o3de_find_ancestor_gem_root(gempath gem_name "${CMAKE_CURRENT_SOURCE_DIR}")
+if (NOT gem_name)
+    set(gem_name "ROS2")
+endif()
+
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/Code")
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} PARENT_SCOPE)
 

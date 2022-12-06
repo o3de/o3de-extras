@@ -7,7 +7,6 @@
  */
 #pragma once
 
-#include "ROS2/Spawner/SpawnerBus.h"
 #include "ROS2SpawnPointComponent.h"
 #include <AzCore/Asset/AssetCommon.h>
 #include <AzCore/Asset/AssetSerializer.h>
@@ -15,6 +14,7 @@
 #include <AzCore/std/containers/unordered_map.h>
 #include <AzFramework/Spawnable/Spawnable.h>
 #include <AzFramework/Spawnable/SpawnableEntitiesInterface.h>
+#include <ROS2/Spawner/SpawnerBus.h>
 #include <gazebo_msgs/srv/get_model_state.hpp>
 #include <gazebo_msgs/srv/get_world_properties.hpp>
 #include <gazebo_msgs/srv/spawn_entity.hpp>
@@ -43,11 +43,17 @@ namespace ROS2
         // AZ::Component interface implementation.
         ROS2SpawnerComponent();
         ~ROS2SpawnerComponent();
+        //////////////////////////////////////////////////////////////////////////
+        // Component overrides
         void Activate() override;
         void Deactivate() override;
+        //////////////////////////////////////////////////////////////////////////
         static void Reflect(AZ::ReflectContext* context);
 
+        //////////////////////////////////////////////////////////////////////////
+        // SpawnerRequestsBus::Handler overrides
         const AZ::Transform& GetDefaultSpawnPose() const override;
+        //////////////////////////////////////////////////////////////////////////
 
     private:
         int m_counter = 1;
@@ -67,7 +73,7 @@ namespace ROS2
             AzFramework::EntitySpawnTicket::Id,
             AzFramework::SpawnableEntityContainerView,
             const AZ::Transform&,
-            const AZStd::string& spawnable_name);
+            const AZStd::string& spawnableName);
 
         void GetSpawnPointsNames(const GetSpawnPointsNamesRequest request, GetSpawnPointsNamesResponse response);
         void GetSpawnPointInfo(const GetSpawnPointInfoRequest request, GetSpawnPointInfoResponse response);

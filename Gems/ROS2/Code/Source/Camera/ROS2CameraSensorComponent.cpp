@@ -6,11 +6,11 @@
  *
  */
 
-#include "Camera/ROS2CameraSensorComponent.h"
-#include "ROS2/Communication/TopicConfiguration.h"
-#include "ROS2/Frame/ROS2FrameComponent.h"
-#include "ROS2/ROS2Bus.h"
-#include "ROS2/Utilities/ROS2Names.h"
+#include "ROS2CameraSensorComponent.h"
+#include <ROS2/Communication/TopicConfiguration.h>
+#include <ROS2/Frame/ROS2FrameComponent.h>
+#include <ROS2/ROS2Bus.h>
+#include <ROS2/Utilities/ROS2Names.h>
 
 #include <AzCore/Component/Entity.h>
 #include <AzCore/Component/TransformBus.h>
@@ -78,7 +78,7 @@ namespace ROS2
                 ec->Class<ROS2CameraSensorComponent>("ROS2 Camera Sensor", "[Camera component]")
                     ->ClassElement(AZ::Edit::ClassElements::EditorData, "")
                     ->Attribute(AZ::Edit::Attributes::Category, "ROS2")
-                    ->Attribute(AZ::Edit::Attributes::AppearsInAddComponentMenu, AZ_CRC("Game"))
+                    ->Attribute(AZ::Edit::Attributes::AppearsInAddComponentMenu, AZ_CRC_CE("Game"))
                     ->DataElement(
                         AZ::Edit::UIHandlers::Default,
                         &ROS2CameraSensorComponent::m_VerticalFieldOfViewDeg,
@@ -100,7 +100,7 @@ namespace ROS2
 
         const auto cameraInfoPublisherConfig = m_sensorConfiguration.m_publishersConfigurations[Internal::kInfoConfig];
         AZStd::string cameraInfoFullTopic = ROS2Names::GetNamespacedName(GetNamespace(), cameraInfoPublisherConfig.m_topic);
-        AZ_TracePrintf("ROS2", "Creating publisher for camera info on topic %s", cameraInfoFullTopic.data());
+        AZ_TracePrintf("ROS2", "Creating publisher for camera info on topic %s\n", cameraInfoFullTopic.data());
 
         m_cameraInfoPublisher =
             ros2Node->create_publisher<sensor_msgs::msg::CameraInfo>(cameraInfoFullTopic.data(), cameraInfoPublisherConfig.GetQoS());
@@ -114,7 +114,7 @@ namespace ROS2
             AZStd::string cameraImageFullTopic = ROS2Names::GetNamespacedName(GetNamespace(), cameraImagePublisherConfig.m_topic);
             auto publisher =
                 ros2Node->create_publisher<sensor_msgs::msg::Image>(cameraImageFullTopic.data(), cameraImagePublisherConfig.GetQoS());
-            m_cameraSensorsWithPublihsers.emplace_back(createPair<CameraColorSensor>(publisher, description));
+            m_cameraSensorsWithPublihsers.emplace_back(CreatePair<CameraColorSensor>(publisher, description));
         }
         if (m_depthCamera)
         {
@@ -122,7 +122,7 @@ namespace ROS2
             AZStd::string cameraImageFullTopic = ROS2Names::GetNamespacedName(GetNamespace(), cameraImagePublisherConfig.m_topic);
             auto publisher =
                 ros2Node->create_publisher<sensor_msgs::msg::Image>(cameraImageFullTopic.data(), cameraImagePublisherConfig.GetQoS());
-            m_cameraSensorsWithPublihsers.emplace_back(createPair<CameraDepthSensor>(publisher, description));
+            m_cameraSensorsWithPublihsers.emplace_back(CreatePair<CameraDepthSensor>(publisher, description));
         }
         const auto* component = Utils::GetGameOrEditorComponent<ROS2FrameComponent>(GetEntity());
         AZ_Assert(component, "Entity has no ROS2FrameComponent");
@@ -151,15 +151,16 @@ namespace ROS2
             cameraInfo.width = m_width;
             cameraInfo.height = m_height;
             cameraInfo.distortion_model = sensor_msgs::distortion_models::PLUMB_BOB;
-            AZ_Assert(cameraIntrinsics.size() == cameraInfo.k.size(), "should be 9");
-            std::copy_n(cameraIntrinsics.data(), cameraIntrinsics.size(), cameraInfo.k.begin());
+            AZ_Assert(cameraIntrinsics.size() == 9, "camera matrix should have 9 elements");
+            AZ_Assert(cameraInfo.k.size() == 9, "camera matrix should have 9 elements");
+            AZStd::copy(cameraIntrinsics.begin(), cameraIntrinsics.end(), cameraInfo.k.begin());
             cameraInfo.p = { cameraInfo.k[0], cameraInfo.k[1], cameraInfo.k[2], 0, cameraInfo.k[3], cameraInfo.k[4], cameraInfo.k[5], 0,
                              cameraInfo.k[6], cameraInfo.k[7], cameraInfo.k[8], 0 };
             m_cameraInfoPublisher->publish(cameraInfo);
         }
         for (auto& [publisher, sensor] : m_cameraSensorsWithPublihsers)
         {
-            sensor->publishMassage(publisher, transform, ros_header);
+            sensor->RequestMessagePublication(publisher, transform, ros_header);
         }
     }
 } // namespace ROS2

@@ -18,11 +18,11 @@ namespace ROS2
 {
     LidarTemplate LidarTemplateUtils::GetTemplate(LidarTemplate::LidarModel model)
     {
-        static std::unordered_map<LidarTemplate::LidarModel, LidarTemplate> templates;
+        static AZStd::unordered_map<LidarTemplate::LidarModel, LidarTemplate> templates;
 
         if (templates.empty())
         {
-            LidarTemplate generic3DLidar = { /*.m_model = */ LidarTemplate::Generic3DLidar,
+            LidarTemplate generic3DLidar = { /*.m_model = */ LidarTemplate::LidarModel::Generic3DLidar,
                                              /*.m_name = */ "GenericLidar",
                                              /*.m_minHAngle = */ -180.0f,
                                              /*.m_maxHAngle = */ 180.0f,
@@ -31,13 +31,13 @@ namespace ROS2
                                              /*.m_layers = */ 24,
                                              /*.m_numberOfIncrements = */ 924,
                                              /*.m_maxRange = */ 100.0f };
-            templates[LidarTemplate::Generic3DLidar] = generic3DLidar;
+            templates[LidarTemplate::LidarModel::Generic3DLidar] = generic3DLidar;
         }
 
         auto it = templates.find(model);
         if (it == templates.end())
         {
-            return LidarTemplate(); // TODO - handle it
+            return LidarTemplate();
         }
 
         return it->second;
@@ -48,7 +48,6 @@ namespace ROS2
         return t.m_layers * t.m_numberOfIncrements;
     }
 
-    // TODO - lidars in reality do not have uniform distributions - populating needs to be defined per model
     AZStd::vector<AZ::Vector3> LidarTemplateUtils::PopulateRayDirections(
         const LidarTemplate& lidarTemplate, const AZ::Vector3& rootRotation)
     {
@@ -66,7 +65,6 @@ namespace ROS2
         {
             for (int layer = 0; layer < lidarTemplate.m_layers; layer++)
             {
-                // TODO: also include roll. Move to quaternions to avoid abnormalities
                 const float pitch = minVertAngle + layer * verticalStep + rootRotation.GetY();
                 const float yaw = minHorAngle + incr * horizontalStep + rootRotation.GetZ();
 

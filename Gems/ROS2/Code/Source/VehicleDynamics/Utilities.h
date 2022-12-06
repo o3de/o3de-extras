@@ -16,21 +16,28 @@
 
 namespace VehicleDynamics::Utilities
 {
-    //! Helper function to create the most common two wheel axle out of existing wheel entities.
+    //! Create the most common two wheel axle out of existing wheel entities.
     //! @param leftWheel Left wheel entity. It needs a WheelControllerComponent if it is a drive or steering axis.
     //! @param rightWheel Right wheel entity. It needs a WheelControllerComponent if it is a drive or steering axis.
     //! @param tag Additional information for the user (and reflected in the configuration) about what this axle is.
     //! @param wheelRadius Radius for both wheels, in meters. Wheels with different radii are not supported.
-    //! @param steering Is this axle used for vehicle steering. If so, wheels need to have steering entities set in WheelControlComponents.
-    //! @param drive Is this axle used to drive vehicle.
+    //! @param steering Is this axle used for vehicle steering. If true, wheels need to have steering entities set in
+    //! WheelControlComponents.
+    //! @param drive Is this axle used to drive vehicle?
     //! @returns An axle configuration created according to call parameters.
     AxleConfiguration Create2WheelAxle(
         AZ::EntityId leftWheel, AZ::EntityId rightWheel, AZStd::string tag, float wheelRadius, bool steering, bool drive);
 
-    //! Helper function to create an axle for both steering and drive, named "Front". @see Create2WheelAxle.
+    //! Create an axle for both steering and drive, named "Front". @see Create2WheelAxle.
+    //! @param leftWheel left wheel entity's id (entity should has rigid body and collider component)
+    //! @param rightWheel right wheel entity's id (entity should has rigid body and collider component)
+    //! @param wheelRadius radius in meters
     AxleConfiguration CreateFrontSteerAndDriveAxle(AZ::EntityId leftWheel, AZ::EntityId rightWheel, float wheelRadius);
 
-    //! Helper function to create an axle for drive, named "Rear". @see Create2WheelAxle.
+    //! Create an axle for drive, named "Rear". @see Create2WheelAxle.
+    //! @param leftWheel left wheel entity's id (entity should has rigid body and collider component)
+    //! @param rightWheel right wheel entity's id (entity should has rigid body and collider component)
+    //! @param wheelRadius radius in meters
     AxleConfiguration CreateRearDriveAxle(AZ::EntityId leftWheel, AZ::EntityId rightWheel, float wheelRadius);
 
     //! Retrieve all steering entities for a given vehicle configuration.

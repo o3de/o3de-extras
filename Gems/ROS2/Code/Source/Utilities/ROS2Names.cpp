@@ -6,9 +6,9 @@
  *
  */
 
-#include "ROS2/Utilities/ROS2Names.h"
 #include <AzCore/RTTI/RTTI.h>
 #include <AzCore/std/string/regex.h>
+#include <ROS2/Utilities/ROS2Names.h>
 #include <rcl/validate_topic_name.h>
 #include <rmw/validate_namespace.h>
 
@@ -27,9 +27,6 @@ namespace ROS2
 
     AZStd::string ROS2Names::RosifyName(const AZStd::string& input)
     {
-        // TODO - add unit tests
-        // TODO - implement stricter guidelines and differentiate: https://design.ros2.org/articles/topic_and_service_names.html
-
         AZStd::string rosified = input;
         if (input.empty())
         {

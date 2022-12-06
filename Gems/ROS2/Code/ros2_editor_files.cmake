@@ -18,8 +18,6 @@ set(FILES
     Source/RobotImporter/Pages/IntroPage.h
     Source/RobotImporter/RobotImporterWidget.cpp
     Source/RobotImporter/RobotImporterWidget.h
-    Source/RobotImporter/RobotImporterWidgetUtils.cpp
-    Source/RobotImporter/RobotImporterWidgetUtils.h
     Source/RobotImporter/ROS2RobotImporterEditorSystemComponent.cpp
     Source/RobotImporter/ROS2RobotImporterEditorSystemComponent.h
     Source/RobotImporter/URDF/CollidersMaker.cpp

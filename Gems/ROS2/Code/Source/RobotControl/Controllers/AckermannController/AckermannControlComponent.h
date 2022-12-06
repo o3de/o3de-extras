@@ -7,8 +7,8 @@
  */
 #pragma once
 
-#include "ROS2/RobotControl/Ackermann/AckermannBus.h"
 #include <AzCore/Component/Component.h>
+#include <ROS2/RobotControl/Ackermann/AckermannBus.h>
 
 namespace ROS2
 {
@@ -21,13 +21,18 @@ namespace ROS2
         AZ_COMPONENT(AckermannControlComponent, "{16EC2F18-F579-414C-8B3B-DB47078729BC}", AZ::Component);
         AckermannControlComponent() = default;
 
+        //////////////////////////////////////////////////////////////////////////
+        // Component overrides
         void Activate() override;
         void Deactivate() override;
+        //////////////////////////////////////////////////////////////////////////
         static void GetRequiredServices(AZ::ComponentDescriptor::DependencyArrayType& required);
         static void Reflect(AZ::ReflectContext* context);
 
     private:
-        //! Simply relay received commands to vehicle dynamics input system
+        //////////////////////////////////////////////////////////////////////////
+        // AckermannNotificationBus::Handler overrides
         void AckermannReceived(const AckermannCommandStruct& angular) override;
+        //////////////////////////////////////////////////////////////////////////
     };
 } // namespace ROS2

@@ -13,9 +13,9 @@
 struct AckermannCommandStruct
 {
     AZ_TYPE_INFO(AckermannCommandStruct, "{6D03C30F-F06B-4CEE-8AD1-DDCCCB57C4B5}");
-    float m_steeringAngle = 0; //!< radians
-    float m_steeringAngleVelocity = 0; //!< radians/s
-    float m_speed = 0; //!< m/s
-    float m_acceleration = 0; //!< m/s^2
-    float m_jerk = 0; //!< m/s^3
+    float m_steeringAngle = 0; //!< desired virtual angle (radians)
+    float m_steeringAngleVelocity = 0; //!< desired rate of change (radians/s)
+    float m_speed = 0; //!< desired forward speed (m/s)
+    float m_acceleration = 0; //!< desired acceleration (m/s^2)
+    float m_jerk = 0; //!< desired jerk (m/s^3)
 };

@@ -5,16 +5,16 @@
  * SPDX-License-Identifier: Apache-2.0 OR MIT
  *
  */
-#include "RobotImporter/ROS2RobotImporterEditorSystemComponent.h"
 #include <ROS2EditorSystemComponent.h>
 #include <ROS2ModuleInterface.h>
+#include <RobotImporter/ROS2RobotImporterEditorSystemComponent.h>
 
 namespace ROS2
 {
     class ROS2EditorModule : public ROS2ModuleInterface
     {
     public:
-        AZ_RTTI(ROS2EditorModule, "{e23a1379-787c-481e-ad83-c0e04a3d06fe}", ROS2ModuleInterface);
+        AZ_RTTI(ROS2EditorModule, "{3DDFC98F-D1CC-4658-BAF8-2CC34A9D39F3}", ROS2ModuleInterface);
         AZ_CLASS_ALLOCATOR(ROS2EditorModule, AZ::SystemAllocator, 0);
 
         ROS2EditorModule()

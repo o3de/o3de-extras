@@ -6,8 +6,8 @@
  *
  */
 
-#include "VehicleDynamics/VehicleConfiguration.h"
-#include "VehicleDynamics/Utilities.h"
+#include "VehicleConfiguration.h"
+#include "Utilities.h"
 #include <AzCore/Debug/Trace.h>
 #include <AzCore/Serialization/EditContext.h>
 #include <AzCore/Serialization/EditContextConstants.inl>

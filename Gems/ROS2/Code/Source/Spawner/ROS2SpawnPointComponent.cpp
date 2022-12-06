@@ -38,7 +38,7 @@ namespace ROS2
             {
                 ec->Class<ROS2SpawnPointComponent>("ROS2 Spawn Point", "Spawn Point")
                     ->ClassElement(AZ::Edit::ClassElements::EditorData, "Stores information about available spawn point")
-                    ->Attribute(AZ::Edit::Attributes::AppearsInAddComponentMenu, AZ_CRC("Game"))
+                    ->Attribute(AZ::Edit::Attributes::AppearsInAddComponentMenu, AZ_CRC_CE("Game"))
                     ->Attribute(AZ::Edit::Attributes::Category, "ROS2")
                     ->DataElement(AZ::Edit::UIHandlers::EntityId, &ROS2SpawnPointComponent::m_name, "Name", "Name")
                     ->DataElement(
