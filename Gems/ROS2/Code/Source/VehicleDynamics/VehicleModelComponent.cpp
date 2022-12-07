@@ -16,7 +16,7 @@
 #include <AzCore/Serialization/SerializeContext.h>
 #include <AzFramework/Physics/RigidBodyBus.h>
 
-namespace VehicleDynamics
+namespace ROS2::VehicleDynamics
 {
     void VehicleModelComponent::Activate()
     {
@@ -119,4 +119,4 @@ namespace VehicleDynamics
         const uint64_t deltaTimeNs = deltaTime * 1'000'000'000;
         m_driveModel.ApplyInputState(m_inputsState, deltaTimeNs);
     }
-} // namespace VehicleDynamics
+} // namespace ROS2::VehicleDynamics

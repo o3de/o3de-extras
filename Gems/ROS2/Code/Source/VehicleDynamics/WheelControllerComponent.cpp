@@ -12,7 +12,7 @@
 #include <AzCore/Serialization/EditContextConstants.inl>
 #include <AzCore/Serialization/SerializeContext.h>
 
-namespace VehicleDynamics
+namespace ROS2::VehicleDynamics
 {
     void WheelControllerComponent::Activate()
     {
@@ -72,4 +72,4 @@ namespace VehicleDynamics
             }
         }
     }
-} // namespace VehicleDynamics
+} // namespace ROS2::VehicleDynamics

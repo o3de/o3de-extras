@@ -10,7 +10,7 @@
 #include <AzCore/RTTI/TypeInfo.h>
 #include <AzCore/Serialization/SerializeContext.h>
 
-namespace VehicleDynamics
+namespace ROS2::VehicleDynamics
 {
     //! A structure holding limits of vehicle, including speed and steering limits
     struct VehicleModelLimits
@@ -29,4 +29,4 @@ namespace VehicleDynamics
         float m_speedLimit = 10.0f; //!< [Mps] Applies to absolute value
         float m_steeringLimit = 0.7f; //!< [rad] Applies to absolute value
     };
-} // namespace VehicleDynamics
+} // namespace ROS2::VehicleDynamics

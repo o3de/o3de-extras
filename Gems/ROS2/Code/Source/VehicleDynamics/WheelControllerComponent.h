@@ -11,7 +11,7 @@
 #include <AzCore/Component/EntityId.h>
 #include <AzCore/Math/Vector3.h>
 
-namespace VehicleDynamics
+namespace ROS2::VehicleDynamics
 {
     //! A component responsible for control (steering, forward motion) of a single wheel
     class WheelControllerComponent : public AZ::Component
@@ -37,4 +37,4 @@ namespace VehicleDynamics
         AZ::Vector3 m_driveDir{ 0.0, 0.0, 1.0 }; //!< The direction of torque applied to wheel entity when speed is applied
         AZ::Vector3 m_steeringDir{ 0.0, 0.0, 1.0 }; //!< The direction of torque applied to steering entity when steering is applied
     };
-} // namespace VehicleDynamics
+} // namespace ROS2::VehicleDynamics

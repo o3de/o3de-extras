@@ -11,7 +11,7 @@
 #include "VehicleInputsState.h"
 #include <AzCore/Serialization/SerializeContext.h>
 
-namespace VehicleDynamics
+namespace ROS2::VehicleDynamics
 {
     //! Abstract class for turning vehicle inputs into behavior of wheels and steering elements
     class DriveModel
@@ -36,4 +36,4 @@ namespace VehicleDynamics
         //! @param deltaTimeNs nanoseconds passed since last call of this function.
         virtual void ApplyInputState(const VehicleInputsState& inputs, uint64_t deltaTimeNs) = 0;
     };
-} // namespace VehicleDynamics
+} // namespace ROS2::VehicleDynamics

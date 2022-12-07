@@ -11,7 +11,7 @@
 #include <AzCore/Serialization/SerializeContext.h>
 #include <ROS2/VehicleDynamics/DriveModels/PidConfiguration.h>
 
-namespace VehicleDynamics
+namespace ROS2::VehicleDynamics
 {
     void PidConfiguration::Reflect(AZ::ReflectContext* context)
     {
@@ -65,4 +65,4 @@ namespace VehicleDynamics
         }
         return output;
     }
-} // namespace VehicleDynamics
+} // namespace ROS2::VehicleDynamics

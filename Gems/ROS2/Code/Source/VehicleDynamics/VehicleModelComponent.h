@@ -17,7 +17,7 @@
 #include <AzCore/std/smart_ptr/unique_ptr.h>
 #include <ROS2/VehicleDynamics/VehicleInputControlBus.h>
 
-namespace VehicleDynamics
+namespace ROS2::VehicleDynamics
 {
     //! A central vehicle (and robot) dynamics component, which can be extended with additional modules.
     class VehicleModelComponent
@@ -58,4 +58,4 @@ namespace VehicleDynamics
         AckermannDriveModel m_driveModel;
         VehicleModelLimits m_vehicleLimits;
     };
-} // namespace VehicleDynamics
+} // namespace ROS2::VehicleDynamics

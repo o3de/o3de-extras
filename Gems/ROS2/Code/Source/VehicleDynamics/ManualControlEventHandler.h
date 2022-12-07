@@ -11,7 +11,7 @@
 #include <ROS2/VehicleDynamics/VehicleInputControlBus.h>
 #include <StartingPointInput/InputEventNotificationBus.h>
 
-namespace VehicleDynamics
+namespace ROS2::VehicleDynamics
 {
     //! A handler for a single input event.
     class ManualControlSingleEventHandler : private StartingPointInput::InputEventNotificationBus::Handler
@@ -88,4 +88,4 @@ namespace VehicleDynamics
     private:
         AZStd::vector<ManualControlSingleEventHandler> m_eventHandlers;
     };
-} // namespace VehicleDynamics
+} // namespace ROS2::VehicleDynamics

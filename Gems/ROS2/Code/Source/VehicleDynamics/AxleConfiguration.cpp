@@ -10,7 +10,7 @@
 #include <AzCore/Serialization/EditContext.h>
 #include <AzCore/Serialization/EditContextConstants.inl>
 
-namespace VehicleDynamics
+namespace ROS2::VehicleDynamics
 {
     void AxleConfiguration::Reflect(AZ::ReflectContext* context)
     {
@@ -75,4 +75,4 @@ namespace VehicleDynamics
         }
         return m_axleWheels.back();
     }
-} // namespace VehicleDynamics
+} // namespace ROS2::VehicleDynamics

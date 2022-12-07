@@ -7,7 +7,7 @@
  */
 #pragma once
 
-namespace VehicleDynamics
+namespace ROS2::VehicleDynamics
 {
     //! Data structure to pass wheel dynamics data for a single wheel entity.
     struct WheelDynamicsData
@@ -25,4 +25,4 @@ namespace VehicleDynamics
             AZ::Vector3::CreateAxisZ()
         }; //!< An axis of force application for the steering element to turn the attached wheel sideways.
     };
-} // namespace VehicleDynamics
+} // namespace ROS2::VehicleDynamics

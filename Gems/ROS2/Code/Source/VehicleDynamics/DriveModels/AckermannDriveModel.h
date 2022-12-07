@@ -14,7 +14,7 @@
 #include <VehicleDynamics/VehicleInputsState.h>
 #include <VehicleDynamics/WheelDynamicsData.h>
 
-namespace VehicleDynamics
+namespace ROS2::VehicleDynamics
 {
     //! A simple Ackermann system implementation converting speed and steering inputs into wheel impulse and steering element torque
     class AckermannDriveModel : public DriveModel
@@ -48,4 +48,4 @@ namespace VehicleDynamics
         bool m_disabled{ false };
         float m_steeringDeadZone = 0.01;
     };
-} // namespace VehicleDynamics
+} // namespace ROS2::VehicleDynamics

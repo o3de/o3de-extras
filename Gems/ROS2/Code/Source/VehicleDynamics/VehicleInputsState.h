@@ -10,7 +10,7 @@
 #include <AzCore/Time/ITime.h>
 #include <type_traits>
 
-namespace VehicleDynamics
+namespace ROS2::VehicleDynamics
 {
     //! Inputs with an expiration date - effectively is zero after a certain time since update
     template<typename T, typename = AZStd::enable_if_t<AZStd::is_arithmetic_v<T>>>
@@ -54,4 +54,4 @@ namespace VehicleDynamics
         InputZeroedOnTimeout<float> m_speed; //!< Speed measured in m/s
         InputZeroedOnTimeout<float> m_steering; //!< Steering angle in radians. Negative is right, positive is left,
     };
-} // namespace VehicleDynamics
+} // namespace ROS2::VehicleDynamics

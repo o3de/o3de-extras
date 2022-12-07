@@ -11,7 +11,7 @@
 #include <AzCore/Serialization/EditContextConstants.inl>
 #include <AzCore/Serialization/SerializeContext.h>
 
-namespace VehicleDynamics
+namespace ROS2::VehicleDynamics
 {
     void VehicleModelLimits::Reflect(AZ::ReflectContext* context)
     {
@@ -43,4 +43,4 @@ namespace VehicleDynamics
         absoluteLimit = AZStd::abs(absoluteLimit);
         return AZStd::clamp(value, -absoluteLimit, absoluteLimit);
     }
-} // namespace VehicleDynamics
+} // namespace ROS2::VehicleDynamics

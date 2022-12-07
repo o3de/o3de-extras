@@ -14,7 +14,7 @@
 #include <AzFramework/Physics/RigidBodyBus.h>
 #include <VehicleDynamics/Utilities.h>
 
-namespace VehicleDynamics
+namespace ROS2::VehicleDynamics
 {
     void AckermannDriveModel::Reflect(AZ::ReflectContext* context)
     {
@@ -164,4 +164,4 @@ namespace VehicleDynamics
         m_disabled = isDisabled;
     }
 
-} // namespace VehicleDynamics
+} // namespace ROS2::VehicleDynamics
