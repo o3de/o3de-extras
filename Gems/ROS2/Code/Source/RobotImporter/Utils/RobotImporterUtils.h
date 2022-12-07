@@ -27,6 +27,10 @@ namespace ROS2
 
     namespace Utils
     {
+        //! Determine whether a given link is likely a wheel link.
+        //! This can be useful to provide a good default behavior - for example, to add Vehicle Dynamics components to this link's entity.
+        //! @param link the link that will be subjected to the heuristic.
+        //! @return true if the link is likely a wheel link.
         bool IsWheelURDFHeuristics(const urdf::LinkConstSharedPtr& link);
 
         //! The recursive function for the given link goes through URDF and finds world-to-entity transformation for us.

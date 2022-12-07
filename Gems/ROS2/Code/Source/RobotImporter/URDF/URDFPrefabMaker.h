@@ -25,6 +25,11 @@ namespace ROS2
     class URDFPrefabMaker
     {
     public:
+        //! Construct URDFPrefabMaker from arguments.
+        //! @param modelFilePath path to the source URDF model.
+        //! @param model parsed model.
+        //! @param prefabPath path to the prefab which will be created as a result of import.
+        //! @param urdfAssetsMapping prepared mapping of URDF meshes to Assets.
         URDFPrefabMaker(
             const AZStd::string& modelFilePath,
             urdf::ModelInterfaceSharedPtr model,
@@ -36,10 +41,17 @@ namespace ROS2
         //! @param buildReadyCb Function to call when the build finishes.
         void LoadURDF(BuildReadyCallback buildReadyCb);
 
+        //! Create and return a prefab corresponding to the URDF model as set through the constructor.
+        //! @return result which is either a prefab containing the imported model based on URDF or an error.
         AzToolsFramework::Prefab::CreatePrefabResult CreatePrefabFromURDF();
+
+        //! Get path to the prefab resulting from the import.
+        //! @return path to the prefab.
         const AZStd::string& GetPrefabPath() const;
 
-        AZStd::string getStatus();
+        //! Get descriptive status of import.
+        //! A string with the status, which can be understood by the user.
+        AZStd::string GetStatus();
 
     private:
         AzToolsFramework::Prefab::PrefabEntityResult AddEntitiesForLink(urdf::LinkSharedPtr link, AZ::EntityId parentEntityId);

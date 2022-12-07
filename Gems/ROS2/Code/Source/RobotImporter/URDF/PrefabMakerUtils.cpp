@@ -88,42 +88,12 @@ namespace ROS2::PrefabMakerUtils
         return createEntityResult;
     }
 
-    AzToolsFramework::Prefab::PrefabOperationResult RemoveEntityWithDescendants(AZ::EntityId parentEntityId)
-    {
-        auto prefabInterface = AZ::Interface<AzToolsFramework::Prefab::PrefabPublicInterface>::Get();
-        return prefabInterface->DeleteEntitiesAndAllDescendantsInInstance({ parentEntityId });
-    }
-
     void AddRequiredComponentsToEntity(AZ::EntityId entityId)
     {
         AZ::Entity* entity = AzToolsFramework::GetEntityById(entityId);
         AZ_Assert(entity, "Unknown entity %s", entityId.ToString().c_str());
         AzToolsFramework::EditorEntityContextRequestBus::Broadcast(
             &AzToolsFramework::EditorEntityContextRequests::AddRequiredComponents, *entity);
-    }
-
-    bool HasCollider(AZ::EntityId entityId)
-    {
-        AZ::Entity* entity = AzToolsFramework::GetEntityById(entityId);
-        AZ_Assert(entity, "Unknown entity %s", entityId.ToString().c_str());
-        return entity->FindComponent<PhysX::EditorColliderComponent>() != nullptr ||
-            entity->FindComponent<PhysX::EditorShapeColliderComponent>() != nullptr;
-    }
-
-    AzToolsFramework::EntityIdList GetColliderChildren(AZ::EntityId parentEntityId)
-    {
-        AzToolsFramework::EntityIdList colliderChildren;
-        AzToolsFramework::EntityIdList allChildren = AzToolsFramework::GetEntityChildOrder(parentEntityId);
-        for (auto childId : allChildren)
-        {
-            AZ_TracePrintf("GetColliderChildren", "Considering child %s\n", childId.ToString().c_str());
-            if (HasCollider(childId))
-            {
-                AZ_TracePrintf("GetColliderChildren", "Child %s has a collider\n", childId.ToString().c_str());
-                colliderChildren.push_back(childId);
-            }
-        }
-        return colliderChildren;
     }
 
     AZStd::string MakeEntityName(const AZStd::string& rootName, const AZStd::string& type, size_t index)

@@ -256,7 +256,7 @@ namespace ROS2
         auto prefabOutcome = m_prefabMaker->CreatePrefabFromURDF();
         if (prefabOutcome.IsSuccess())
         {
-            AZStd::string status = m_prefabMaker->getStatus();
+            AZStd::string status = m_prefabMaker->GetStatus();
             m_prefabMakerPage->reportProgress(status);
             m_prefabMakerPage->setSuccess(true);
         }
@@ -264,7 +264,7 @@ namespace ROS2
         {
             AZStd::string status = "Failed to create prefab\n";
             status += prefabOutcome.GetError() + "\n";
-            status += m_prefabMaker->getStatus();
+            status += m_prefabMaker->GetStatus();
             m_prefabMakerPage->reportProgress(status);
             m_prefabMakerPage->setSuccess(false);
         }

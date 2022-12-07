@@ -18,6 +18,10 @@ namespace ROS2
     class ROS2Transform
     {
     public:
+        //! Create a transform between given frames.
+        //! @param parentFrame id of parent frame of transformation.
+        //! @param childFrame id of child frame of transformation.
+        //! @param isDynamic whether the transformation is dynamic (should be computed every frame) or static (only once).
         ROS2Transform(AZStd::string parentFrame, AZStd::string childFrame, bool isDynamic);
 
         //! Construct and delegate publishing of a transform according to members' values.

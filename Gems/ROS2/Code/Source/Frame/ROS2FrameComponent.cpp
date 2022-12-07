@@ -138,6 +138,7 @@ namespace ROS2
         {
             return parentFrame->GetFrameID();
         }
+        // If parent entity does not exist or does not have a ROS2FrameComponent, return ROS2 default global frame.
         return GetGlobalFrameName();
     }
 

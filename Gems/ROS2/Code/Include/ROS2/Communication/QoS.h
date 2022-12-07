@@ -30,7 +30,6 @@ namespace ROS2
     private:
         AZ::Crc32 OnQoSSelected() const;
 
-        //! If necessary, extend to also expose history and liveliness.
         rclcpp::ReliabilityPolicy m_reliabilityPolicy;
         rclcpp::DurabilityPolicy m_durabilityPolicy;
         uint32_t m_depth;

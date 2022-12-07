@@ -39,7 +39,7 @@ namespace ROS2
 
     protected:
         AZStd::string GetNamespace() const; //!< Get a complete namespace for this sensor topics and frame ids.
-        AZStd::string GetFrameID() const; //!< Already includes namespace.
+        AZStd::string GetFrameID() const; //!< Returns this sensor frame ID. The ID contains namespace.
 
         SensorConfiguration m_sensorConfiguration;
 

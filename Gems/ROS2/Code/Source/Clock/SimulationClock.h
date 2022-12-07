@@ -21,6 +21,8 @@ namespace ROS2
         //! @see ROS2Requests::GetROSTimestamp() for more details.
         builtin_interfaces::msg::Time GetROSTimestamp() const;
 
+        //! Update time in the ROS 2 ecosystem.
+        //! This will publish current time to the ROS 2 `/clock` topic.
         void Tick();
 
     private:

@@ -30,7 +30,11 @@ namespace ROS2
     class CollidersMaker
     {
     public:
+        //! Construct the class based on URDF asset mapping.
+        //! @param urdfAssetsMapping a prepared mapping of Assets used by the source URDF.
         CollidersMaker(const AZStd::shared_ptr<Utils::UrdfAssetMap>& urdfAssetsMapping);
+
+        //! Deleted copy constructor.
         CollidersMaker(const CollidersMaker& other) = delete;
 
         ~CollidersMaker();

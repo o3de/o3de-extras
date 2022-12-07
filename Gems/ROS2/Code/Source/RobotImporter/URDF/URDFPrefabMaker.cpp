@@ -316,7 +316,7 @@ namespace ROS2
         transformInterface_->SetWorldTM(pose);
     }
 
-    AZStd::string URDFPrefabMaker::getStatus()
+    AZStd::string URDFPrefabMaker::GetStatus()
     {
         AZStd::string str;
         AZStd::lock_guard<AZStd::mutex> lck(m_statusLock);

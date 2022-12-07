@@ -16,7 +16,14 @@ namespace ROS2
     //! Utility class for Lidar model computations.
     namespace LidarTemplateUtils
     {
+        //! Get the lidar template for a model.
+        //! @param model lidar model.
+        //! @return the matching template which describes parameters for the model.
         LidarTemplate GetTemplate(LidarTemplate::LidarModel model);
+
+        //! Get total point count for a given template.
+        //! @param t lidar template.
+        //! @return total count of points that the lidar specified by the template would produce on each scan.
         size_t TotalPointCount(const LidarTemplate& t);
 
         //! Compute ray directions based on lidar model and rotation.

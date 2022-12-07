@@ -76,7 +76,9 @@ namespace ROS2
 
         const ROS2FrameComponent* GetParentROS2FrameComponent() const;
 
-        //! If parent entity does not exist or does not have a ROS2FrameComponent, return ROS2 default global frame.
+        //! Return the frame id of this frame's parent. It can be useful to determine ROS 2 transformations.
+        //! @return Parent frame ID.
+        //! @note This also works with top-level frames, returning a global frame name.
         //! @see GetGlobalFrameName().
         AZStd::string GetParentFrameID() const;
 

@@ -20,25 +20,24 @@ namespace VehicleDynamics
         AZ_TYPE_INFO(PidConfiguration, "{814E0D1E-2C33-44A5-868E-C914640E2F7E}");
         static void Reflect(AZ::ReflectContext* context);
 
-        //! Return initialized control_toolbox Pid.
-        //! It will be initialized with member values.
+        //! Initialize PID using member fields as set by the user.
         void InitializePid();
 
-        //! Get PID controller.
-        //! @param error Value of difference between target and state since last call
-        //! @param deltaTimeNanoseconds change in time since last call (nanoseconds)
-        //! @returns Value of computed command
+        //! Compute the value of PID command.
+        //! @param error Value of difference between target and state since last call.
+        //! @param deltaTimeNanoseconds change in time since last call (nanoseconds).
+        //! @returns Value of computed command.
         double ComputeCommand(double error, uint64_t deltaTimeNanoseconds);
 
     private:
-        double m_p = 1.0; //!< proportional gain
-        double m_i = 0.0; //!< integral gain
-        double m_d = 0.0; //!< derivative gain
-        double m_iMax = 10.0; //!< maximal allowable integral term
-        double m_iMin = -10.0; //!< minimal allowable integral term
-        bool m_antiWindup = false; //!< prevents condition of integrator overflow in integral action
-        double m_outputLimit = 0.0; //!< limit PID output; set to 0.0 to disable
+        double m_p = 1.0; //!< proportional gain.
+        double m_i = 0.0; //!< integral gain.
+        double m_d = 0.0; //!< derivative gain.
+        double m_iMax = 10.0; //!< maximal allowable integral term.
+        double m_iMin = -10.0; //!< minimal allowable integral term.
+        bool m_antiWindup = false; //!< prevents condition of integrator overflow in integral action.
+        double m_outputLimit = 0.0; //!< limit PID output; set to 0.0 to disable.
 
-        control_toolbox::Pid m_pid;
+        control_toolbox::Pid m_pid; //!< PID implementation object from control_toolbox (of ros2_control).
     };
 } // namespace VehicleDynamics
