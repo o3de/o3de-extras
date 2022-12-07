@@ -23,7 +23,7 @@ namespace ROS2
         //! Any characters not fitting ROS2 naming specification are replaced with underscores.
         AZStd::string RosifyName(const AZStd::string& input);
 
-        //! Validates namespace adherence to ROS2 specification. Delegates validation to ROS2 layers.
+        //! Validate namespace adherence to ROS2 specification. Delegates validation to ROS2 layers.
         AZ::Outcome<void, AZStd::string> ValidateNamespace(const AZStd::string& ros2Namespace);
 
         //! Validate namespace field. Fits ChangeValidate for Editor fields.

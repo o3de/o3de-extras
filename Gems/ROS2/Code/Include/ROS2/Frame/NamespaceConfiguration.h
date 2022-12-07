@@ -49,7 +49,6 @@ namespace ROS2
 
         //! Determine if namespace is using the Custom namespace strategy
         bool IsNamespaceCustom() const;
-        //! Update the namespace based on the current attributes
 
         //! Update the namespace based on the current attributes
         void UpdateNamespace();

@@ -119,7 +119,7 @@ namespace ROS2
         m_imuMsg.orientation.z = 0.0;
         m_imuMsg.orientation.w = 1.0;
 
-        // Set covariances to 0
+        // Set all the covariances to 0
         for (auto& e : m_imuMsg.orientation_covariance)
         {
             e = 0.0;

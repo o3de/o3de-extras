@@ -40,7 +40,7 @@ namespace ROS2
         requests.reserve(directions.size());
         results.reserve(directions.size());
         for (const AZ::Vector3& direction : directions)
-        { // NOTE - performance-wise, consider reusing requests
+        {
             AZStd::shared_ptr<AzPhysics::RayCastRequest> request = AZStd::make_shared<AzPhysics::RayCastRequest>();
             request->m_start = start;
             request->m_direction = direction;

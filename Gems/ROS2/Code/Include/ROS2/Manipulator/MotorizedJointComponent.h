@@ -55,10 +55,10 @@ namespace ROS2
 
     private:
         float ComputeMeasurement(AZ::ScriptTimePoint time);
-        void SetVelocity(float velocity, float deltaTime);
-        void ApplyLinVelAnimation(float velocity, float deltaTime);
-        void ApplyLinVelRigidBodyImpulse(float velocity, float deltaTime);
-        void ApplyLinVelRigidBody(float velocity, float deltaTime);
+        void SetVelocity(float velocity /* m/s */, float deltaTime /* seconds */);
+        void ApplyLinVelAnimation(float velocity /* m/s */, float deltaTime /* seconds */);
+        void ApplyLinVelRigidBodyImpulse(float velocity /* m/s */, float deltaTime /* seconds */);
+        void ApplyLinVelRigidBody(float velocity /* m/s */, float deltaTime /* seconds */);
         //////////////////////////////////////////////////////////////////////////
         // AZ::TickBus::Handler overrides
         void OnTick(float deltaTime, AZ::ScriptTimePoint time) override;

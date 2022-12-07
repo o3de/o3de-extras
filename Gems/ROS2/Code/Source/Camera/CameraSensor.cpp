@@ -32,9 +32,11 @@ namespace ROS2
         /// ROS image encodings lives in `sensor_msgs/image_encodings.hpp`
         /// We are not including `image_encodings.hpp` since it uses exceptions.
         AZStd::unordered_map<AZ::RHI::Format, const char*> FormatMappings{
-            { AZ::RHI::Format::R8G8B8A8_UNORM, "rgba8" },     { AZ::RHI::Format::R16G16B16A16_UNORM, "rgba16" },
+            { AZ::RHI::Format::R8G8B8A8_UNORM, "rgba8" },     
+            { AZ::RHI::Format::R16G16B16A16_UNORM, "rgba16" },
             { AZ::RHI::Format::R32G32B32A32_FLOAT, "32FC4" }, // Unsuported by RVIZ2
-            { AZ::RHI::Format::R8_UNORM, "mono8" },           { AZ::RHI::Format::R16_UNORM, "mono16" },
+            { AZ::RHI::Format::R8_UNORM, "mono8" },           
+            { AZ::RHI::Format::R16_UNORM, "mono16" },
             { AZ::RHI::Format::R32_FLOAT, "32FC1" },
         };
 
@@ -81,15 +83,16 @@ namespace ROS2
 
     AZStd::array<double, 9> CameraSensorDescription::MakeCameraIntrinsics() const
     {
-        //  Intrinsic camera matrix of the camera image is being created here
-        //  It is based on other parameters available in the structure - they must be initialized before this function is called
-        //  Matrix is row-major and has the following form:
-        //  [fx  0 cx]
-        //  [ 0 fy cy]
-        //  [ 0  0  1]
-        // Projects 3D points in the camera coordinate frame to 2D pixel
-        // coordinates using the focal lengths (fx, fy) and principal point
-        // (cx, cy).
+        /* Intrinsic camera matrix of the camera image is being created here
+           It is based on other parameters available in the structure - they must be initialized before this function is called
+            Matrix is row-major and has the following form:
+            [fx  0 cx]
+            [ 0 fy cy]
+            [ 0  0  1]
+           Projects 3D points in the camera coordinate frame to 2D pixel
+           coordinates using the focal lengths (fx, fy) and principal point
+           (cx, cy).  
+       */
         const auto w = static_cast<double>(m_width);
         const auto h = static_cast<double>(m_height);
         const double verticalFieldOfView = AZ::DegToRad(m_verticalFieldOfViewDeg);
