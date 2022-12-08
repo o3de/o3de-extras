@@ -40,7 +40,7 @@ namespace ROS2::VehicleDynamics
 
     float VehicleModelLimits::LimitValue(float value, float absoluteLimit)
     {
-        absoluteLimit = AZStd::abs(absoluteLimit);
-        return AZStd::clamp(value, -absoluteLimit, absoluteLimit);
+        float absoluteLimitAbs = AZStd::abs(absoluteLimit);
+        return AZStd::clamp(value, -absoluteLimitAbs, absoluteLimitAbs);
     }
 } // namespace ROS2::VehicleDynamics

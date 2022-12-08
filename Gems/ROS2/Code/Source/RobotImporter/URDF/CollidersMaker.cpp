@@ -312,14 +312,14 @@ namespace ROS2
             isWheelEntity ? m_wheelMaterial : AZ::Data::Asset<Physics::MaterialAsset>();
         size_t nameSuffixIndex = 0; // For disambiguation when multiple unnamed colliders are present. The order does not matter here
         for (auto collider : link->collision_array)
-        { // one or more colliders - the array is used
+        { // Add colliders (if any) from the collision array
             AddCollider(
                 collider, entityId, PrefabMakerUtils::MakeEntityName(link->name.c_str(), typeString, nameSuffixIndex), materialAsset);
             nameSuffixIndex++;
         }
 
         if (nameSuffixIndex == 0)
-        { // no colliders in the array - zero or one in total, the element member is used instead
+        { // If there are no colliders in the array, the element member is used instead
             AddCollider(link->collision, entityId, PrefabMakerUtils::MakeEntityName(link->name.c_str(), typeString), materialAsset);
         }
     }

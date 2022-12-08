@@ -202,7 +202,7 @@ namespace ROS2
             m_lastMeasurementTime = time.GetSeconds();
             return m_currentPosition;
         }
-        AZ_Assert(false, "it is not implemented");
+        AZ_Assert(false, "Measurement computation for rotation is not implemented");
         return 0;
     }
 
@@ -214,7 +214,7 @@ namespace ROS2
         }
         else
         {
-            deltaTime = AZStd::min(deltaTime, 0.1f); // limit max force for small FPS
+            deltaTime = AZStd::min(deltaTime, 0.1f); // this affects applied force. Need to prevent value that is too large.
             if (m_linear)
             {
                 ApplyLinVelRigidBodyImpulse(velocity, deltaTime);

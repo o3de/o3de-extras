@@ -16,13 +16,13 @@ namespace ROS2
     {
         setTitle(QObject::tr("Introduction"));
 
-        m_label = new QLabel(QObject::tr("This wizard allows you to build robot prefab out of URDF description file."
+        m_label = new QLabel(QObject::tr("This wizard allows you to build a robot prefab out of URDF description file."
                                          " Before processing, please, make sure that all necessary assets that are"
                                          " used by URDF file are processed by Asset Processor."
                                          " Open 3D Engine can only use files in its internal"
                                          " <a href=\"https://www.o3de.org/docs/user-guide/assets/asset-types/\">format</a>."
-                                         " The tool, called Asset Processor allows processing source assets (e.g, meshes, textures)"
-                                         " to supported internal format. To learn more about asset processors click"
+                                         " The tool (Asset Processor) allows processing source assets (e.g, meshes, textures)"
+                                         " to its supported internal format. To learn more about asset processors click"
                                          " <a href=\"https://www.o3de.org/docs/user-guide/assets/asset-processor/\">here</a>."
                                          " URDF Importer will find correct meshes in product assets during import."));
         m_label->setTextFormat(Qt::RichText);

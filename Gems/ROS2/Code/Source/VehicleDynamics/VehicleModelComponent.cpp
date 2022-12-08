@@ -78,7 +78,7 @@ namespace ROS2::VehicleDynamics
     }
 
     void VehicleModelComponent::GetIncompatibleServices(AZ::ComponentDescriptor::DependencyArrayType& incompatible)
-    { // Only one per entity
+    {
         incompatible.push_back(AZ_CRC_CE("VehicleModelService"));
     }
 

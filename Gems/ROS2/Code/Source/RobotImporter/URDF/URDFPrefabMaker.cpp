@@ -46,7 +46,7 @@ namespace ROS2
         // Request the build of collider meshes by constructing .assetinfo files.
         BuildAssetsForLink(m_model->root_link_);
 
-        // Wait for all collider meshes to be ready
+        // Spins thread that waits for all collider meshes to be ready. 
         m_collidersMaker.ProcessMeshes(buildReadyCb);
     }
 
@@ -76,7 +76,6 @@ namespace ROS2
 
         auto links = Utils::GetAllLinks(m_model->root_link_->child_links);
 
-        // create links
         for (const auto& [name, linkPtr] : links)
         {
             createdLinks[name] = AddEntitiesForLink(linkPtr, createEntityRoot.GetValue());
@@ -100,7 +99,7 @@ namespace ROS2
             }
         }
 
-        // set transforms of links
+        // Set the transforms of links
         for (const auto& [name, linkPtr] : links)
         {
             const auto this_entry = createdLinks.at(name);
@@ -136,7 +135,7 @@ namespace ROS2
             }
         }
 
-        // set hierarchy
+        // Set the hierarchy
         for (const auto& [name, linkPtr] : links)
         {
             const auto thisEntry = createdLinks.at(name);
@@ -176,7 +175,7 @@ namespace ROS2
             entity->Deactivate();
         }
 
-        // create joint
+        // Create the joints
         auto joints = Utils::GetAllJoints(m_model->root_link_->child_links);
         for (const auto& [name, jointPtr] : joints)
         {
@@ -210,7 +209,6 @@ namespace ROS2
             }
         }
 
-        // move to spawn point
         MoveEntityToDefaultSpawnPoint(createEntityRoot.GetValue());
 
         auto contentEntityId = createEntityRoot.GetValue();

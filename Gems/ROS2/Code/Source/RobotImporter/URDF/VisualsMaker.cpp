@@ -41,14 +41,14 @@ namespace ROS2
     {
         const AZStd::string typeString = "visual";
         if (link->visual_array.size() < 1)
-        { // one or zero visuals - element is used
+        { // For zero visuals, element is used
             AddVisual(link->visual, entityId, PrefabMakerUtils::MakeEntityName(link->name.c_str(), typeString));
             return;
         }
         size_t nameSuffixIndex = 0; // For disambiguation when multiple unnamed visuals are present. The order does not matter here
 
         for (auto visual : link->visual_array)
-        { // one or more visuals - array is used
+        { // For one or more visuals, an array is used
             AddVisual(visual, entityId, PrefabMakerUtils::MakeEntityName(link->name.c_str(), typeString, nameSuffixIndex));
             nameSuffixIndex++;
         }
@@ -57,12 +57,12 @@ namespace ROS2
     void VisualsMaker::AddVisual(urdf::VisualSharedPtr visual, AZ::EntityId entityId, const AZStd::string& generatedName) const
     {
         if (!visual)
-        { // it is ok not to have a visual in a link
+        { // It is ok not to have a visual in a link
             return;
         }
 
         if (!visual->geometry)
-        { // non-empty visual should have a geometry
+        { // Non-empty visual should have a geometry. Warn if no geometry present
             AZ_Warning("AddVisual", false, "No Geometry for a visual");
             return;
         }

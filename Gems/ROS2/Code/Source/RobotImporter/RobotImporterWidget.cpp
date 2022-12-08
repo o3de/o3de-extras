@@ -88,9 +88,8 @@ namespace ROS2
             if (m_parsedUrdf)
             {
                 report += "# " + tr("The URDF was parsed and opened successfully") + "\n";
-                // get rid of old prefab maker
                 m_prefabMaker.reset();
-                // let us skip this page
+                // Report the status of skipping this page
                 AZ_Printf("Wizard", "Wizard skips m_checkUrdfPage since there is no errors in URDF");
                 m_meshNames = Utils::GetMeshesFilenames(m_parsedUrdf->getRoot(), true, true);
             }

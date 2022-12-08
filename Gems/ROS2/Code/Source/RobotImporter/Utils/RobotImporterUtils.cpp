@@ -23,22 +23,22 @@ namespace ROS2
         const AZStd::regex joint_regex("(?i)joint");
         const AZStd::string link_name(link->name.c_str(), link->name.size());
         AZStd::smatch match;
-        // check is name is catchy for wheel
+        // Check if name is catchy for wheel
         if (!AZStd::regex_search(link_name, match, wheel_regex))
         {
             return false;
         }
-        // but it should cointain joint word
+        // The name should contain a joint word
         if (AZStd::regex_search(link_name, match, joint_regex))
         {
             return false;
         }
-        // wheel need to have collision and visuals
+        // Wheels need to have collision and visuals
         if (!(link->collision && link->visual))
         {
             return false;
         }
-        // and finally parent joint needs to be CONTINOUS
+        // Parent joint needs to be CONTINOUS
         if (link->parent_joint && link->parent_joint->type == urdf::Joint::CONTINUOUS)
         {
             return true;
@@ -165,12 +165,12 @@ namespace ROS2
                     return (packagePath / unresolvedPath).String();
                 }
             }
-            // we have nothing
+            // No path available
             return "";
         }
         if (unresolvedPath.starts_with("file:///"))
         {
-            // seems to be global path
+            // Paths that start with 'file:///' are absolute paths
             AZ::StringFunc::Replace(unresolvedPath, "file://", "", true, true);
             return unresolvedPath;
         }

@@ -43,7 +43,7 @@ namespace ROS2::VehicleDynamics
         void OnTick(float deltaTime, AZ::ScriptTimePoint time) override;
 
         //////////////////////////////////////////////////////////////////////////
-        //! VehicleInputControlRequestBus::Handler overrides
+        // VehicleInputControlRequestBus::Handler overrides
         void SetTargetLinearSpeed(float speedMps) override;
         void SetTargetSteering(float steering) override;
         void SetTargetAccelerationFraction(float accelerationFraction) override;

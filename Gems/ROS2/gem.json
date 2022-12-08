@@ -4,7 +4,7 @@
     "license": "Apache-2.0",
     "license_url": "https://opensource.org/licenses/Apache-2.0",
     "origin": "RobotecAI",
-    "origin_url": "https://github.com/RobotecAI/o3de-ros2-gem",
+    "origin_url": "https://github.com/o3de/o3de-extras/development/Gems/ROS2",
     "type": "Code",
     "summary": "Tools and components to support creating simulations for ros2 systems such as robots",
     "canonical_tags": [

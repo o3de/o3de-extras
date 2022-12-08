@@ -34,7 +34,7 @@ namespace ROS2
         //! @param urdfAssetsMapping a prepared mapping of Assets used by the source URDF.
         CollidersMaker(const AZStd::shared_ptr<Utils::UrdfAssetMap>& urdfAssetsMapping);
 
-        //! Deleted copy constructor.
+        //! Prevent copying of existing CollidersMaker
         CollidersMaker(const CollidersMaker& other) = delete;
 
         ~CollidersMaker();

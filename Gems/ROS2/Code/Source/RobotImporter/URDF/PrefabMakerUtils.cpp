@@ -59,9 +59,6 @@ namespace ROS2::PrefabMakerUtils
             AZ_Error("SetEntityTransform", false, "Missing Transform component!");
             return;
         }
-        // Alternative - but requires an active component. We would activate/deactivate a lot. Or - do it in a second pass.
-        // AZ::TransformBus::Event(entityId, &AZ::TransformBus::Events::SetLocalTM, transformForChild);
-
         transformInterface->SetLocalTM(tf);
     }
 
@@ -74,9 +71,11 @@ namespace ROS2::PrefabMakerUtils
             return createEntityResult;
         }
 
+
+        // Verify that a valid entity is created.
         AZ::EntityId entityId = createEntityResult.GetValue();
         if (!entityId.IsValid())
-        { // Verify that a valid entity is created.
+        {
             return AZ::Failure(AZStd::string("Invalid id for created entity"));
         }
 

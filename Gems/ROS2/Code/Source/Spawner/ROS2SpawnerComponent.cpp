@@ -19,12 +19,10 @@ namespace ROS2
 {
     ROS2SpawnerComponent::ROS2SpawnerComponent()
     {
-        // SpawnerInterface::Register(this);
     }
 
     ROS2SpawnerComponent::~ROS2SpawnerComponent()
     {
-        // SpawnerInterface::Unregister(this);
     }
 
     void ROS2SpawnerComponent::Activate()

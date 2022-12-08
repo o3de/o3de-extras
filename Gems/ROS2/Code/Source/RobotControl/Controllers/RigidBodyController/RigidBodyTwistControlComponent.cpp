@@ -49,7 +49,6 @@ namespace ROS2
     void RigidBodyTwistControlComponent::TwistReceived(const AZ::Vector3& linear, const AZ::Vector3& angular)
     {
         auto thisEntityId = GetEntityId();
-        // Get current linear velocity
         AZ::Vector3 currentLinearVelocity;
         Physics::RigidBodyRequestBus::EventResult(currentLinearVelocity, thisEntityId, &Physics::RigidBodyRequests::GetLinearVelocity);
 

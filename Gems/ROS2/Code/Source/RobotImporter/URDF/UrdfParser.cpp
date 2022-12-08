@@ -45,7 +45,7 @@ namespace ROS2
             //! Clears accumulated log
             void Clear();
 
-            //! Read accumulated log to file
+            //! Read accumulated log to a string 
             AZStd::string GetLog();
         };
 

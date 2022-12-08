@@ -104,7 +104,7 @@ namespace ROS2
     AZ::Outcome<void, AZStd::string> ROS2Names::ValidateTopic(const AZStd::string& topic)
     {
         int validationResult = 0;
-        size_t invalidIndex; // Unused. We could choose to display it in information, but it is not necessary.
+        [[maybe_unused]] size_t invalidIndex;
         if (rcl_validate_topic_name(topic.c_str(), &validationResult, &invalidIndex) != RCL_RET_OK)
         {
             AZ_Error("ValidateTopic", false, "Call to rcl validation for topic failed");
