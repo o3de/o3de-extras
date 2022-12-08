@@ -124,6 +124,9 @@ To implement these set of actions, the O3DE simulator should have at least:
 
  * Provide data from the simulated sensors: not in the scope of this document
 
+For an initial implementation, a lighter version of the diagram can be an intermediate goal (simplified by danielemorra98):
+
+![Manipulation light](https://user-images.githubusercontent.com/48955695/201618734-d8998631-1472-4326-822e-c5ddd66db903.svg)
 
 ## Other simulators – review of selected implementations of manipulation
 
@@ -186,6 +189,9 @@ There should be the option of using native O3DE controllers if there is a good
 reason to do so like big performance improvements or much better integration in
 the UI.
 
+Regardless of whether the controllers are `ros2_control` or native O3DE
+controllers, an interface is needed to communicate between MoveIt 2 and
+the controllers.
 
 # References
 
