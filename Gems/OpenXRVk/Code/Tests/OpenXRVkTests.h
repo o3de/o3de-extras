@@ -9,6 +9,7 @@
 #pragma once
 
 #include <AzTest/AzTest.h>
+#include <OpenXRVk_Traits_Platform.h>
 
 class OpenXRVkTest
     : public ::testing::Test
