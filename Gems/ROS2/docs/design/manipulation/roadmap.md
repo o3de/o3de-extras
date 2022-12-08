@@ -1,7 +1,7 @@
 # Manipulation in O3DE - implementation roadmap
 
 This roadmap outlines the implementation steps for the light version of the
-manipulation diagram:
+manipulation diagram (simplified by danielemorra98):
 
 ![manipulation_light](https://user-images.githubusercontent.com/48955695/201618734-d8998631-1472-4326-822e-c5ddd66db903.svg)
 
@@ -36,8 +36,8 @@ manipulation diagram:
   simulation and publish a message of
   [`sensor_msgs/JointState`](https://docs.ros2.org/latest/api/sensor_msgs/msg/JointState.html)
   type on topic `/joint_states`, to be consumed by MoveIt and the controller.
-- Use MoveIt interface (`moveit::planning_interface::MoveGroupInterface`) to
-  set the goal pose and to plan a trajectory.
+- Use MoveIt interface ([`moveit::planning_interface::MoveGroupInterface`](https://moveit.picknik.ai/main/api/html/classmoveit_1_1planning__interface_1_1MoveGroupInterface.html))
+  to set the goal pose and to plan a trajectory.
 
 ## Motion execution and simulation
 
