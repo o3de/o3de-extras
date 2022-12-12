@@ -1,0 +1,47 @@
+{
+    "values": [
+        {
+            "$type": "{5B03C8E6-8CEE-4DA0-A7FA-CD88689DD45B} MeshGroup",
+            "id": "{64C0CE17-1B32-5AFA-8B1D-C56E382A36FB}",
+            "name": "Robot_Vacuum_base_link",
+            "NodeSelectionList": {
+                "selectedNodes": [
+                    "RootNode.base_link_001",
+                    "RootNode.base_link_001.custom_properties",
+                    "RootNode.base_link_001.Texture UVs",
+                    "RootNode.base_link_001.ABS (White)"
+                ],
+                "unselectedNodes": [
+                    "RootNode"
+                ]
+            },
+            "MaterialSlots": [
+                "ABS (White)"
+            ],
+            "PhysicsMaterials": [
+                "<Default Physics Material>"
+            ]
+        },
+        {
+            "$type": "{07B356B7-3635-40B5-878A-FAC4EFD5AD86} MeshGroup",
+            "name": "Robot_Vacuum_base_link",
+            "nodeSelectionList": {
+                "selectedNodes": [
+                    "RootNode",
+                    "RootNode.base_link_001",
+                    "RootNode.base_link_001.custom_properties",
+                    "RootNode.base_link_001.Texture UVs",
+                    "RootNode.base_link_001.ABS (White)"
+                ]
+            },
+            "rules": {
+                "rules": [
+                    {
+                        "$type": "MaterialRule"
+                    }
+                ]
+            },
+            "id": "{CF07CD9E-AF36-5868-9235-C8EAD3A0D2B0}"
+        }
+    ]
+}

@@ -1,0 +1,10 @@
+{
+    "Amazon": {
+        "AzCore": {
+            "Bootstrap": {
+		"project_path": ".."
+            }
+        }
+    }
+}
+

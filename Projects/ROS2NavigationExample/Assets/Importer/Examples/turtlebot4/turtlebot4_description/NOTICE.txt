@@ -1,0 +1,5 @@
+This URDF was generated with Xacro from the turtlebot4_description package, which can be found here: https://github.com/turtlebot/turtlebot4.
+It is otherwise unmodified. 
+
+This robot definition file has been developed by turtlebot4 contributors and shared under Apache-2.0 license (https://github.com/turtlebot/turtlebot4/blob/galactic/LICENSE).
+

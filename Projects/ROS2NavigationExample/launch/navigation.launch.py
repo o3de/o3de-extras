@@ -1,0 +1,36 @@
+"""
+Copyright (c) Contributors to the Open 3D Engine Project.
+For complete copyright and license terms please see the LICENSE at the root of this distribution.
+
+SPDX-License-Identifier: Apache-2.0 OR MIT
+"""
+import pathlib
+
+from ament_index_python.packages import get_package_share_directory
+
+from launch import LaunchDescription
+from launch.actions import IncludeLaunchDescription
+from launch.launch_description_sources import PythonLaunchDescriptionSource
+from launch_ros.actions import Node
+
+def generate_launch_description():
+    return LaunchDescription([
+        IncludeLaunchDescription(
+            PythonLaunchDescriptionSource([str(pathlib.Path(__file__).parent.absolute().joinpath('slam.launch.py'))])
+        ),
+        IncludeLaunchDescription(
+            PythonLaunchDescriptionSource([str(pathlib.Path(get_package_share_directory("nav2_bringup")).joinpath('launch', 'navigation_launch.py'))]),
+            launch_arguments = {
+                'params_file': str(pathlib.Path(__file__).parent.absolute().joinpath('config', 'navigation_params.yaml'))
+            }.items()
+        ),
+        Node(
+            package='rviz2',
+            executable='rviz2',
+            name='slam',
+            output='log',
+            arguments=[
+                '-d', str(pathlib.Path(__file__).parent.absolute().joinpath('config', 'config.rviz')),
+            ]
+        ),
+    ])

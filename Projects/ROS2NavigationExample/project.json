@@ -1,0 +1,24 @@
+{
+    "project_name": "ROS2-Gem-Demo",
+    "project_id": "{9ed699a2-4b64-468e-ad9c-9cff6c0dfd3f}",
+    "origin": "The primary repo for ROS2-Gem-Demo goes here: i.e. http://www.mydomain.com",
+    "license": "What license ROS2-Gem-Demo uses goes here: i.e. https://opensource.org/licenses/Apache-2.0 Or https://opensource.org/licenses/MIT etc.",
+    "display_name": "ROS2-Gem-Demo",
+    "summary": "A short description of ROS2-Gem-Demo.",
+    "canonical_tags": [
+        "Project"
+    ],
+    "user_tags": [
+        "ROS2-Gem-Demo"
+    ],
+    "icon_path": "preview.png",
+    "engine": "o3de",
+    "external_subdirectories": [
+        "Gem"
+    ],
+    "restricted": "ROS2-Gem-Demo",
+    "gem_names": [
+        "ROS2",
+        "ArchVis"
+    ]
+}
