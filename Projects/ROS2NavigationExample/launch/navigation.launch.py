@@ -13,15 +13,23 @@ from launch.actions import IncludeLaunchDescription
 from launch.launch_description_sources import PythonLaunchDescriptionSource
 from launch_ros.actions import Node
 
+
 def generate_launch_description():
     return LaunchDescription([
         IncludeLaunchDescription(
-            PythonLaunchDescriptionSource([str(pathlib.Path(__file__).parent.absolute().joinpath('slam.launch.py'))])
+            PythonLaunchDescriptionSource([str(
+                pathlib.Path(__file__).parent.resolve().absolute().joinpath(
+                    'slam.launch.py'
+                ))])
         ),
         IncludeLaunchDescription(
-            PythonLaunchDescriptionSource([str(pathlib.Path(get_package_share_directory("nav2_bringup")).joinpath('launch', 'navigation_launch.py'))]),
-            launch_arguments = {
-                'params_file': str(pathlib.Path(__file__).parent.absolute().joinpath('config', 'navigation_params.yaml'))
+            PythonLaunchDescriptionSource([str(pathlib.Path(
+                get_package_share_directory("nav2_bringup")
+            ).joinpath('launch', 'navigation_launch.py'))]),
+            launch_arguments={
+                'params_file': str(
+                    pathlib.Path(__file__).parent.absolute().joinpath(
+                        'config', 'navigation_params.yaml'))
             }.items()
         ),
         Node(
@@ -30,7 +38,9 @@ def generate_launch_description():
             name='slam',
             output='log',
             arguments=[
-                '-d', str(pathlib.Path(__file__).parent.absolute().joinpath('config', 'config.rviz')),
+                '-d', str(
+                    pathlib.Path(__file__).parent.absolute().joinpath(
+                        'config', 'config.rviz')),
             ]
         ),
     ])
