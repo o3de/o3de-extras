@@ -71,9 +71,6 @@ namespace OpenXRVk
         //! Ge the active VkPhysicalDevice.
         VkPhysicalDevice GetActivePhysicalDevice() const;
 
-        //! Disable certain extensions because function pointers didn't load correctly.
-        void FilterAvailableExtensions(GladVulkanContext& context) const;
-
     protected:
         // XR::Instance overrides...
         AZ::RHI::ResultCode InitInstanceInternal() override;
@@ -88,7 +85,7 @@ namespace OpenXRVk
         XrSystemId m_xrSystemId = XR_NULL_SYSTEM_ID;
         XR::RawStringList m_requiredLayers;
         XR::RawStringList m_requiredExtensions;
-        GladVulkanContext m_context;
+        GladVulkanContext m_context = {};
         AZStd::unique_ptr<AZ::Vulkan::FunctionLoader> m_functionLoader;
         AZStd::vector<VkPhysicalDevice> m_supportedXRDevices;
         AZ::u32 m_physicalDeviceActiveIndex = 0;

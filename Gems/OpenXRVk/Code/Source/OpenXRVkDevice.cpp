@@ -94,10 +94,9 @@ namespace OpenXRVk
             VkPhysicalDevice xrVkPhysicalDevice = xrVkInstance->GetActivePhysicalDevice();
             // Now that we have created the device, load the function pointers for it.
             const bool functionsLoaded = xrVkInstance->GetFunctionLoader().LoadProcAddresses(
-                &xrVkInstance->GetContext(), xrVkInstance->GetNativeInstance(), xrVkPhysicalDevice, m_xrVkDevice);
-            m_context = xrVkInstance->GetContext();
+                &m_context, xrVkInstance->GetNativeInstance(), xrVkPhysicalDevice, m_xrVkDevice);
 
-            xrVkInstance->FilterAvailableExtensions(m_context);
+            FilterAvailableExtensions(m_context);
 
             if (!functionsLoaded)
             {

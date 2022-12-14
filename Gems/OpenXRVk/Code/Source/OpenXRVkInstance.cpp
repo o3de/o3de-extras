@@ -415,16 +415,6 @@ namespace OpenXRVk
         return m_supportedXRDevices[m_physicalDeviceActiveIndex];
     }
 
-    void Instance::FilterAvailableExtensions(GladVulkanContext& context) const
-    {
-        // In some cases (like when running with the GPU profiler on Quest2) the extension is reported as available
-        // but the function pointers do not load. Disable the extension if that's the case.
-        if (context.EXT_debug_utils && !context.CmdBeginDebugUtilsLabelEXT)
-        {
-            context.EXT_debug_utils = 0;
-        }
-    }
-
     XrInstance Instance::GetXRInstance() const
     {
         return m_xrInstance;
