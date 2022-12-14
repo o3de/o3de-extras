@@ -96,12 +96,8 @@ namespace OpenXRVk
             const bool functionsLoaded = xrVkInstance->GetFunctionLoader().LoadProcAddresses(
                 &xrVkInstance->GetContext(), xrVkInstance->GetNativeInstance(), xrVkPhysicalDevice, m_xrVkDevice);
             m_context = xrVkInstance->GetContext();
-            // In some cases (like when running with the GPU profiler on Quest2) the extension is reported as available
-            // but the function pointers do not load. Disable the extension if that's the case.
-            if (m_context.EXT_debug_utils && !m_context.CmdBeginDebugUtilsLabelEXT)
-            {
-                m_context.EXT_debug_utils = 0;
-            }
+
+            xrVkInstance->FilterAvailableExtensions(m_context);
 
             if (!functionsLoaded)
             {

@@ -355,8 +355,11 @@ namespace OpenXRVk
             return AZ::RHI::ResultCode::Fail;
         }
 
+        FilterAvailableExtensions(m_context);
+
         //Populate the instance descriptor with the correct VkInstance
         xrInstanceDescriptor->m_outputData.m_xrVkInstance = m_xrVkInstance;
+        xrInstanceDescriptor->m_outputData.m_context = m_context;
 
         //Get the list of Physical devices
         m_supportedXRDevices = PhysicalDevice::EnumerateDeviceList(m_xrSystemId, m_xrInstance, m_xrVkInstance);
@@ -410,6 +413,16 @@ namespace OpenXRVk
     {
         AZ_Assert(m_physicalDeviceActiveIndex < m_supportedXRDevices.size(), "Index out of range");
         return m_supportedXRDevices[m_physicalDeviceActiveIndex];
+    }
+
+    void Instance::FilterAvailableExtensions(GladVulkanContext& context) const
+    {
+        // In some cases (like when running with the GPU profiler on Quest2) the extension is reported as available
+        // but the function pointers do not load. Disable the extension if that's the case.
+        if (context.EXT_debug_utils && !context.CmdBeginDebugUtilsLabelEXT)
+        {
+            context.EXT_debug_utils = 0;
+        }
     }
 
     XrInstance Instance::GetXRInstance() const

@@ -71,6 +71,9 @@ namespace OpenXRVk
         //! Ge the active VkPhysicalDevice.
         VkPhysicalDevice GetActivePhysicalDevice() const;
 
+        //! Disable certain extensions because function pointers didn't load correctly.
+        void FilterAvailableExtensions(GladVulkanContext& context) const;
+
     protected:
         // XR::Instance overrides...
         AZ::RHI::ResultCode InitInstanceInternal() override;
