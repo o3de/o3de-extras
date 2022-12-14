@@ -91,20 +91,18 @@ namespace OpenXRVk
         }
 
         {
-#if AZ_TRAIT_OS_IS_HOST_OS_PLATFORM
             VkPhysicalDevice xrVkPhysicalDevice = xrVkInstance->GetActivePhysicalDevice();
-#else
-            // NOTE: When passing a physical device to Vulkan glad loader it uses 'vkEnumerateDeviceExtensionProperties'
-            // to obtain device's extension, but that list doesn't match with the list returned by 'xrGetVulkanDeviceExtensionsKHR'
-            // which is used for OpenXR. This discrepancy results in the context indicating some extensions are available when they
-            // are really not supported in an OpenXR environment. To surpass this issue we're not passing the physical device.
-            VkPhysicalDevice xrVkPhysicalDevice = VK_NULL_HANDLE;
-#endif
-
             // Now that we have created the device, load the function pointers for it.
             const bool functionsLoaded = xrVkInstance->GetFunctionLoader().LoadProcAddresses(
                 &xrVkInstance->GetContext(), xrVkInstance->GetNativeInstance(), xrVkPhysicalDevice, m_xrVkDevice);
             m_context = xrVkInstance->GetContext();
+            // In some cases (like when running with the GPU profiler on Quest2) the extension is reported as available
+            // but the function pointers do not load. Disable the extension if that's the case.
+            if (m_context.EXT_debug_utils && !m_context.CmdBeginDebugUtilsLabelEXT)
+            {
+                m_context.EXT_debug_utils = 0;
+            }
+
             if (!functionsLoaded)
             {
                 ShutdownInternal();

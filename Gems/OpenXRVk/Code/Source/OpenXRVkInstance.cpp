@@ -156,7 +156,7 @@ namespace OpenXRVk
             }
         }
 
-        AZ_Assert(m_xrInstance != XR_NULL_HANDLE, "XR Isntance is Null");
+        AZ_Assert(m_xrInstance != XR_NULL_HANDLE, "XR Instance is Null");
         AZ_Assert(m_xrSystemId == XR_NULL_SYSTEM_ID, "XR System id already initialized");
 
         //TODO::Add support for handheld display
