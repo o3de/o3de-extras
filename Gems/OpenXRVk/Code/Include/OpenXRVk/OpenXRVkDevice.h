@@ -73,6 +73,6 @@ namespace OpenXRVk
         AZStd::vector<XrCompositionLayerProjectionView> m_projectionLayerViews;
         AZStd::vector<XrView> m_views;
         uint32_t m_viewCountOutput = 0;
-        GladVulkanContext m_context;
+        GladVulkanContext m_context = {};
     };
 }
