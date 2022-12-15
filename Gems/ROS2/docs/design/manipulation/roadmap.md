@@ -36,6 +36,12 @@ manipulation diagram (simplified by danielemorra98):
   simulation and publish a message of
   [`sensor_msgs/JointState`](https://docs.ros2.org/latest/api/sensor_msgs/msg/JointState.html)
   type on topic `/joint_states`, to be consumed by MoveIt and the controller.
+  - If using [`ros2_control`](https://github.com/ros-controls/ros2_control),
+    it can be modeled after
+    [`joint_state_broadcaster`](https://control.ros.org/master/doc/ros2_controllers/joint_state_broadcaster/doc/userdoc.html),
+    in `ros2_controllers`, which reads state interfaces and publishes `/joint_states`.
+  - For starters, it can be a minimal implementation of
+    [`JointStateBroadcaster`](https://github.com/ros-controls/ros2_controllers/blob/master/joint_state_broadcaster/src/joint_state_broadcaster.cpp)
 - Use MoveIt interface ([`moveit::planning_interface::MoveGroupInterface`](https://moveit.picknik.ai/main/api/html/classmoveit_1_1planning__interface_1_1MoveGroupInterface.html))
   to set the goal pose and to plan a trajectory.
 
