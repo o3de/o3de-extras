@@ -3,7 +3,7 @@
 This roadmap outlines the implementation steps for the light version of the
 manipulation diagram (simplified by danielemorra98):
 
-![manipulation_light](https://user-images.githubusercontent.com/48955695/201618734-d8998631-1472-4326-822e-c5ddd66db903.svg)
+![manipulation_light](https://user-images.githubusercontent.com/2098802/207460909-e3aac9a6-22be-4ce9-a6e8-27b970a16365.svg)
 
 ## Mesh models and configurations
 
