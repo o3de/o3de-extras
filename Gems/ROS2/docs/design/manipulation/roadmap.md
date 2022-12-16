@@ -3,7 +3,7 @@
 This roadmap outlines the implementation steps for the light version of the
 manipulation diagram (simplified by danielemorra98):
 
-![manipulation_light](manipulation_light.svg)
+![manipulation_light](manipulation_minimal.svg)
 
 ## Mesh models and configurations
 
