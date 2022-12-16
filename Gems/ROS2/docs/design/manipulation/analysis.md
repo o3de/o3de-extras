@@ -126,7 +126,7 @@ To implement these set of actions, the O3DE simulator should have at least:
 
 For an initial implementation, a lighter version of the diagram can be an intermediate goal (simplified by danielemorra98):
 
-![Manipulation light](https://user-images.githubusercontent.com/2098802/207460909-e3aac9a6-22be-4ce9-a6e8-27b970a16365.svg)
+![Manipulation light](manipulation_light.svg)
 
 ## Other simulators – review of selected implementations of manipulation
 
