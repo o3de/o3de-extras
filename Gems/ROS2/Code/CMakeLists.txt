@@ -83,6 +83,8 @@ if(PAL_TRAIT_BUILD_HOST_TOOLS)
     ly_add_target(
         NAME ${gem_name}.Editor.Static STATIC
         NAMESPACE Gem
+        AUTOMOC
+        AUTORCC
         FILES_CMAKE
             ros2_editor_files.cmake
         PLATFORM_INCLUDE_FILES
@@ -107,8 +109,6 @@ if(PAL_TRAIT_BUILD_HOST_TOOLS)
     ly_add_target(
         NAME ${gem_name}.Editor GEM_MODULE
         NAMESPACE Gem
-        AUTOMOC
-        AUTORCC
         FILES_CMAKE
             ros2_editor_files.cmake
             ros2_editor_shared_files.cmake

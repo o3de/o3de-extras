@@ -220,10 +220,9 @@ namespace UnitTest
 
     TEST_F(UrdfParserTest, ParseUrdfWithOneLink)
     {
-        ROS2::UrdfParser parser;
 
         const auto xmlStr = GetUrdfWithOneLink();
-        const auto urdf = parser.Parse(xmlStr);
+        const auto urdf = ROS2::UrdfParser::Parse(xmlStr);
 
         EXPECT_EQ(urdf->getName(), "test_one_link");
 
@@ -257,10 +256,9 @@ namespace UnitTest
 
     TEST_F(UrdfParserTest, ParseUrdfWithTwoLinksAndJoint)
     {
-        ROS2::UrdfParser parser;
 
         const auto xmlStr = GetUrdfWithTwoLinksAndJoint();
-        const auto urdf = parser.Parse(xmlStr);
+        const auto urdf = ROS2::UrdfParser::Parse(xmlStr);
 
         EXPECT_EQ(urdf->getName(), "test_two_links_one_joint");
 
@@ -301,10 +299,9 @@ namespace UnitTest
 
     TEST_F(UrdfParserTest, WheelHeuristicNameValid)
     {
-        ROS2::UrdfParser parser;
         const AZStd::string wheel_name("wheel_left_link");
         const auto xmlStr = GetURDFWithWheel(wheel_name, "continuous");
-        const auto urdf = parser.Parse(xmlStr);
+        const auto urdf = ROS2::UrdfParser::Parse(xmlStr);
         auto wheel_candidate = urdf->getLink(wheel_name.c_str());
         ASSERT_TRUE(wheel_candidate);
         EXPECT_EQ(ROS2::Utils::IsWheelURDFHeuristics(wheel_candidate), true);
@@ -312,10 +309,9 @@ namespace UnitTest
 
     TEST_F(UrdfParserTest, WheelHeuristicNameNotValid1)
     {
-        ROS2::UrdfParser parser;
         const AZStd::string wheel_name("wheel_left_joint");
         const auto xmlStr = GetURDFWithWheel(wheel_name, "continuous");
-        const auto urdf = parser.Parse(xmlStr);
+        const auto urdf = ROS2::UrdfParser::Parse(xmlStr);
         auto wheel_candidate = urdf->getLink(wheel_name.c_str());
         ASSERT_TRUE(wheel_candidate);
         EXPECT_EQ(ROS2::Utils::IsWheelURDFHeuristics(wheel_candidate), false);
@@ -323,10 +319,9 @@ namespace UnitTest
 
     TEST_F(UrdfParserTest, WheelHeuristicJointNotValid)
     {
-        ROS2::UrdfParser parser;
         const AZStd::string wheel_name("wheel_left_link");
         const auto xmlStr = GetURDFWithWheel(wheel_name, "fixed");
-        const auto urdf = parser.Parse(xmlStr);
+        const auto urdf = ROS2::UrdfParser::Parse(xmlStr);
         auto wheel_candidate = urdf->getLink(wheel_name.c_str());
         ASSERT_TRUE(wheel_candidate);
         EXPECT_EQ(ROS2::Utils::IsWheelURDFHeuristics(wheel_candidate), false);
@@ -334,10 +329,9 @@ namespace UnitTest
 
     TEST_F(UrdfParserTest, WheelHeuristicJointVisualNotValid)
     {
-        ROS2::UrdfParser parser;
         const AZStd::string wheel_name("wheel_left_link");
         const auto xmlStr = GetURDFWithWheel(wheel_name, "continuous", false, true);
-        const auto urdf = parser.Parse(xmlStr);
+        const auto urdf = ROS2::UrdfParser::Parse(xmlStr);
         auto wheel_candidate = urdf->getLink(wheel_name.c_str());
         ASSERT_TRUE(wheel_candidate);
         EXPECT_EQ(ROS2::Utils::IsWheelURDFHeuristics(wheel_candidate), false);
@@ -345,10 +339,9 @@ namespace UnitTest
 
     TEST_F(UrdfParserTest, WheelHeuristicJointColliderNotValid)
     {
-        ROS2::UrdfParser parser;
         const AZStd::string wheel_name("wheel_left_link");
         const auto xmlStr = GetURDFWithWheel(wheel_name, "continuous", true, false);
-        const auto urdf = parser.Parse(xmlStr);
+        const auto urdf = ROS2::UrdfParser::Parse(xmlStr);
         auto wheel_candidate = urdf->getLink(wheel_name.c_str());
         ASSERT_TRUE(wheel_candidate);
         EXPECT_EQ(ROS2::Utils::IsWheelURDFHeuristics(wheel_candidate), false);
@@ -356,9 +349,8 @@ namespace UnitTest
 
     TEST_F(UrdfParserTest, TestLinkListing)
     {
-        ROS2::UrdfParser parser;
         const auto xmlStr = GetURDFWithTranforms();
-        const auto urdf = parser.Parse(xmlStr);
+        const auto urdf = ROS2::UrdfParser::Parse(xmlStr);
         auto links = ROS2::Utils::GetAllLinks(urdf->getRoot()->child_links);
         EXPECT_EQ(links.size(), 3);
         ASSERT_TRUE(links.contains("link1"));
@@ -371,18 +363,16 @@ namespace UnitTest
 
     TEST_F(UrdfParserTest, TestJointLink)
     {
-        ROS2::UrdfParser parser;
         const auto xmlStr = GetURDFWithTranforms();
-        const auto urdf = parser.Parse(xmlStr);
+        const auto urdf = ROS2::UrdfParser::Parse(xmlStr);
         auto joints = ROS2::Utils::GetAllJoints(urdf->getRoot()->child_links);
         EXPECT_EQ(joints.size(), 3);
     }
 
     TEST_F(UrdfParserTest, TestTransforms)
     {
-        ROS2::UrdfParser parser;
         const auto xmlStr = GetURDFWithTranforms();
-        const auto urdf = parser.Parse(xmlStr);
+        const auto urdf = ROS2::UrdfParser::Parse(xmlStr);
         const auto links = ROS2::Utils::GetAllLinks(urdf->getRoot()->child_links);
         const auto link1_ptr = links.at("link1");
         const auto link2_ptr = links.at("link2");
