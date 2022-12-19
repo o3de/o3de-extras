@@ -19,7 +19,8 @@ namespace ROS2::Utils
         {
             return AZ::Crc32();
         }
-        AZStd::vector<char> buffer(fileSize + 1);
+        AZStd::vector<char> buffer;
+        buffer.resize_no_construct(fileSize + 1);
         buffer[fileSize] = '\0';
         if (!AZ::IO::SystemFile::Read(filename.c_str(), buffer.data(), fileSize))
         {

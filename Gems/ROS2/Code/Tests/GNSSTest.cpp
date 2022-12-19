@@ -14,7 +14,7 @@
 namespace UnitTest
 {
 
-    class GNSSTest : public AllocatorsTestFixture
+    class GNSSTest : public LeakDetectionFixture
     {
     };
 

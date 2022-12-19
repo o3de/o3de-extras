@@ -17,13 +17,6 @@
 
 namespace ROS2
 {
-    ROS2SpawnerComponent::ROS2SpawnerComponent()
-    {
-    }
-
-    ROS2SpawnerComponent::~ROS2SpawnerComponent()
-    {
-    }
 
     void ROS2SpawnerComponent::Activate()
     {

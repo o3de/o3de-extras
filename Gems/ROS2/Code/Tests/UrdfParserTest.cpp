@@ -15,7 +15,7 @@
 namespace UnitTest
 {
 
-    class UrdfParserTest : public AllocatorsTestFixture
+    class UrdfParserTest : public LeakDetectionFixture
     {
     public:
         AZStd::string GetUrdfWithOneLink()

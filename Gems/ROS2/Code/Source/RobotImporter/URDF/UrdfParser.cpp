@@ -12,7 +12,7 @@
 
 #include <AzCore/Debug/Trace.h>
 #include <AzCore/std/string/string.h>
-
+#include <console_bridge/console.h>
 #include <urdf_model/model.h>
 
 namespace ROS2

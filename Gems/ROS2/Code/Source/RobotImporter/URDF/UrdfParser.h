@@ -9,8 +9,6 @@
 #pragma once
 
 #include <AzCore/std/string/string.h>
-#include <console_bridge/console.h>
-#include <sstream>
 #include <urdf_parser/urdf_parser.h>
 
 namespace ROS2

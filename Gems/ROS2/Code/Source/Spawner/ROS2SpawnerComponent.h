@@ -41,8 +41,8 @@ namespace ROS2
         AZ_COMPONENT(ROS2SpawnerComponent, "{5950AC6B-75F3-4E0F-BA5C-17C877013710}", AZ::Component, SpawnerRequestsBus::Handler);
 
         // AZ::Component interface implementation.
-        ROS2SpawnerComponent();
-        ~ROS2SpawnerComponent();
+        ROS2SpawnerComponent() = default;
+        ~ROS2SpawnerComponent() = default;
         //////////////////////////////////////////////////////////////////////////
         // Component overrides
         void Activate() override;
