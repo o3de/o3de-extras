@@ -12,6 +12,9 @@
 #include <XR/XRFactory.h>
 #include <XR/XRSystem.h>
 #include <XR/XRUtils.h>
+#include <Atom/RHI/Image.h>
+#include <Atom/RHI/ImagePool.h>
+#include <Atom/RHI.Reflect/VariableRateShadingEnums.h>
 
 namespace XR
 {
@@ -369,5 +372,149 @@ namespace XR
 #else
         return false;
 #endif
+    }
+
+    AZ::RHI::ResultCode System::InitVariableRateShadingImageContent(AZ::RHI::Image* image, AZ::RHI::XRFoveatedLevel level)
+    {
+        AZ_Assert(image, "Null variable rate shading image");
+        const auto& imageDescriptor = image->GetDescriptor();
+        uint32_t width = imageDescriptor.m_size.m_width;
+        uint32_t height = imageDescriptor.m_size.m_height;
+        uint32_t formatSize = GetFormatSize(imageDescriptor.m_format);
+        uint32_t bufferSize = width * height * formatSize;
+
+        // Get a list of supported shading rates so we always write a valid one
+        const AZ::RHI::Device& device = image->GetDevice();
+        const auto& features = device.GetFeatures();
+        AZ::RHI::ShadingRate supportedRates[static_cast<int>(AZ::RHI::ShadingRate::Count)];
+        AZ::RHI::ShadingRate lastSupported = AZ::RHI::ShadingRate::Rate1x1;
+        for (int i = 0; i < AZ_ARRAY_SIZE(supportedRates); ++i)
+        {
+            if (AZ::RHI::CheckBitsAll(features.m_shadingRateMask, static_cast<AZ::RHI::ShadingRateFlags>(AZ_BIT(i))))
+            {
+                supportedRates[i] = static_cast<AZ::RHI::ShadingRate>(i);
+                lastSupported = supportedRates[i];
+            }
+            else
+            {
+                supportedRates[i] = lastSupported;
+            }
+        }
+
+        // Divide the image in a grid of "gridSize" and each cell will have a shading rate.
+        constexpr uint32_t gridSize = 8;
+        AZStd::vector<uint8_t> shadingRatePatternData(bufferSize);
+        AZ::RHI::ShadingRate rateGrid[gridSize][gridSize];
+        // Initialize the whole image with the normal rate
+        ::memset(rateGrid, static_cast<int>(AZ::RHI::ShadingRate::Rate1x1), sizeof(rateGrid));
+
+        // Helper function to fill up the grid
+        auto fillFunc = [&](AZ::RHI::ShadingRate rate, int col, int row, int colCount, int rowCount)
+        {
+            for (int i = col; i < col + colCount; ++i)
+            {
+                for (int ii = row; ii < row + rowCount; ++ii)
+                {
+                    rateGrid[i][ii] = supportedRates[static_cast<uint32_t>(rate)];
+                    // The image is symetric on the vertical axis
+                    rateGrid[gridSize - 1 - i][ii] = supportedRates[static_cast<uint32_t>(rate)];
+                }
+            }
+        };
+
+        // Each level has it's own shading rates and regions
+        switch (level)
+        {
+        case AZ::RHI::XRFoveatedLevel::Low:
+        {
+            //  _______________________________________________
+            // |____2x2____|__________2x1__________|____2x2____|
+            // |     |                                   |     |
+            // |     |                                   |     |
+            // |     |                                   |     |
+            // | 1x2 |                1x1                | 1x2 |
+            // |     |                                   |     |
+            // |_____|___________________________________|_____|
+            // |_2x2_|____2x1____|____1x1____|____2x1____|_2x2_|
+            //
+            fillFunc(AZ::RHI::ShadingRate::Rate2x2, 0, 0, 2, 1);
+            fillFunc(AZ::RHI::ShadingRate::Rate2x2, 0, gridSize - 1, 1, 1);
+            fillFunc(AZ::RHI::ShadingRate::Rate2x1, 2, 0, 2, 1);
+            fillFunc(AZ::RHI::ShadingRate::Rate2x1, 1, gridSize - 1, 2, 1);
+            fillFunc(AZ::RHI::ShadingRate::Rate1x2, 0, 1, 1, gridSize - 2);
+        }
+        break;
+        case AZ::RHI::XRFoveatedLevel::Medium:
+        {
+            //  _______________________________________________
+            // |_4x2_|________________2x2________________|_4x2_|
+            // |     | 1x2 |                       | 1x2 |     |
+            // |     |_____|                       |_____|     |
+            // |     |                                   |     |
+            // | 2x2 |                1x1                | 2x2 |
+            // |     |                                   |     |
+            // |     |___________________________________|     |
+            // |___________|__________2x1__________|___________|
+            //
+            fillFunc(AZ::RHI::ShadingRate::Rate4x2, 0, 0, 1, 1);
+            fillFunc(AZ::RHI::ShadingRate::Rate2x2, 1, 0, 3, 1);
+            fillFunc(AZ::RHI::ShadingRate::Rate2x2, 0, 1, 1, gridSize - 1);
+            fillFunc(AZ::RHI::ShadingRate::Rate2x2, 1, gridSize - 1, 1, 1);
+            fillFunc(AZ::RHI::ShadingRate::Rate1x2, 1, 1, 1, 2);
+            fillFunc(AZ::RHI::ShadingRate::Rate2x1, 2, gridSize - 1, 2, 1);
+        }
+        break;
+        case AZ::RHI::XRFoveatedLevel::High:
+        {
+            //  _______________________________________________
+            // |_4x4_|____4x2____|____2x2____|____4x2____|_4x4_|
+            // | 2x4 |_2x2_|                       |_2x2_| 2x4 |
+            // |_____|_____|                       |_____|_____|
+            // |     |     |                       |     |     |
+            // | 2x2 | 1x2 |          1x1          | 1x2 | 2x2 |
+            // |     |     |                       |     |     |
+            // |_____|_____|_______________________|_____|_____|
+            // |_2x4_|____2x2____|____2x1____|____2x2____|_2x4_|
+            //
+            fillFunc(AZ::RHI::ShadingRate::Rate4x4, 0, 0, 1, 1);
+            fillFunc(AZ::RHI::ShadingRate::Rate4x2, 1, 0, 2, 1);
+            fillFunc(AZ::RHI::ShadingRate::Rate2x4, 0, 1, 1, 2);
+            fillFunc(AZ::RHI::ShadingRate::Rate2x4, 0, gridSize - 1, 1, 1);
+            fillFunc(AZ::RHI::ShadingRate::Rate2x2, 3, 0, 1, 1);
+            fillFunc(AZ::RHI::ShadingRate::Rate2x2, 1, 1, 1, 2);
+            fillFunc(AZ::RHI::ShadingRate::Rate2x2, 0, 3, 1, 4);
+            fillFunc(AZ::RHI::ShadingRate::Rate2x2, 1, gridSize - 1, 2, 1);
+            fillFunc(AZ::RHI::ShadingRate::Rate1x2, 1, 3, 1, 4);
+            fillFunc(AZ::RHI::ShadingRate::Rate2x1, 3, gridSize - 1, 2, 1);
+        }
+        break;
+        case AZ::RHI::XRFoveatedLevel::None:
+            break;
+        default:
+            AZ_Assert(false, "Invalid AZ::RHI::XRFoveatedLevel value %d", level);
+            return AZ::RHI::ResultCode::InvalidArgument;
+        }
+
+        uint8_t* ptrData = shadingRatePatternData.data();
+        float widthRegion = width / static_cast<float>(gridSize);
+        float heightRegion = height / static_cast<float>(gridSize);
+        for (uint32_t y = 0; y < height; y++)
+        {
+            for (uint32_t x = 0; x < width; x++)
+            {
+                auto val = device.ConvertShadingRate(rateGrid[static_cast<uint32_t>(x / widthRegion)][static_cast<uint32_t>(y / heightRegion)]);
+                ::memcpy(ptrData, &val, formatSize);
+                ptrData += formatSize;
+            }
+        }
+
+        AZ::RHI::ImageUpdateRequest request;
+        request.m_image = image;
+        request.m_sourceData = shadingRatePatternData.data();
+        request.m_sourceSubresourceLayout =
+            AZ::RHI::ImageSubresourceLayout(AZ::RHI::Size(width, height, 1), height, width * formatSize, bufferSize, 1, 1);
+
+        AZ::RHI::ImagePool* imagePool = azrtti_cast<AZ::RHI::ImagePool*>(image->GetPool());
+        return imagePool->UpdateImageContents(request);
     }
 }

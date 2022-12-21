@@ -97,6 +97,7 @@ namespace XR
         void PostFrame() override;
         bool IsDefaultRenderPipelineNeeded() const override;
         bool IsDefaultRenderPipelineEnabledOnHost() const override;
+        AZ::RHI::ResultCode InitVariableRateShadingImageContent(AZ::RHI::Image* image, AZ::RHI::XRFoveatedLevel type) override;
         ///////////////////////////////////////////////////////////////////
 
     private:
