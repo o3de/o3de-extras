@@ -489,6 +489,7 @@ namespace XR
         }
         break;
         case AZ::RHI::XRFoveatedLevel::None:
+            // Intentionally leave the rate grid with default values
             break;
         default:
             AZ_Assert(false, "Invalid AZ::RHI::XRFoveatedLevel value %d", level);
