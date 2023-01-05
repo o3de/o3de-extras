@@ -1,0 +1,10 @@
+{
+    "O3DE": {
+        "Atom": {
+            "OpenXR": {
+                "Enable": true,
+                "android_ViewResolutionScale": 0.75
+            }
+        }
+    }
+}

@@ -8,12 +8,24 @@
 
 #include <AzCore/Interface/Interface.h>
 #include <AzCore/Debug/Profiler.h>
+#include <AzCore/Console/IConsole.h>
 #include <XR/XRFactory.h>
 #include <XR/XRSystem.h>
 #include <XR/XRUtils.h>
 
 namespace XR
 {
+#if AZ_TRAIT_OS_IS_HOST_OS_PLATFORM
+    AZ_CVAR(
+        bool,
+        r_EnableHostRenderPipelineOnXR,
+        true,
+        nullptr,
+        AZ::ConsoleFunctorFlags::Null,
+        "When an XR system is present in a host platform, this will enable the regular render pipeline on the host PC as well "
+        "(true by default).");
+#endif
+
     void System::Init(const System::Descriptor& descriptor)
     {
         m_validationMode = descriptor.m_validationMode;
@@ -122,12 +134,21 @@ namespace XR
         return 0;
     }
 
+    AZ::RHI::Format System::GetSwapChainFormat(AZ::u32 viewIndex) const
+    {
+        AZ_Assert(m_swapChain, "SwapChain is null");
+        if (m_swapChain)
+        {
+            return m_swapChain->GetSwapChainFormat(viewIndex);
+        }
+        return AZ::RHI::Format::Unknown;
+    }
+
     void System::OnSystemTick()
     {
-        m_session->PollEvents();
-        if (m_session->IsSessionRunning())
+        if (m_session)
         {
-            m_session->GetInput()->PollActions();
+            m_session->PollEvents();
         }
     }
     
@@ -145,6 +166,14 @@ namespace XR
         {
             m_device->EndFrame(m_swapChain);
             m_isInFrame = false;
+        }
+    }
+
+    void System::PostFrame()
+    {
+        if (m_device && m_session && m_session->IsSessionRunning())
+        {
+            m_device->PostFrame();
         }
     }
 
@@ -176,23 +205,50 @@ namespace XR
         return false;
     }
 
-    AZ::RPI::FovData System::GetViewFov(AZ::u32 viewIndex) const
+    AZ::RHI::ResultCode System::GetViewFov(AZ::u32 viewIndex, AZ::RPI::FovData& outFovData) const
     {
-        return m_device->GetViewFov(viewIndex);
+        return m_device->GetViewFov(viewIndex, outFovData);
     }
 
-    AZ::RPI::PoseData System::GetViewPose(AZ::u32 viewIndex) const
+    AZ::RHI::ResultCode System::GetViewPose(AZ::u32 viewIndex, AZ::RPI::PoseData& outPoseData) const
     {
-        return m_device->GetViewPose(viewIndex);
+        return m_device->GetViewPose(viewIndex, outPoseData);
     }
 
-    AZ::RPI::PoseData System::GetControllerPose(AZ::u32 handIndex) const
+    AZ::RHI::ResultCode System::GetControllerPose(AZ::u32 handIndex, AZ::RPI::PoseData& outPoseData) const
     {
         if (m_session->IsSessionRunning())
         {
-            return m_session->GetControllerPose(handIndex);
+            return m_session->GetControllerPose(handIndex, outPoseData);
         }
-        return AZ::RPI::PoseData();
+        return AZ::RHI::ResultCode::NotReady;
+    }
+
+    AZ::RHI::ResultCode System::GetControllerStagePose(AZ::u32 handIndex, AZ::RPI::PoseData& outPoseData) const
+    {
+        if (m_session->IsSessionRunning())
+        {
+            return m_session->GetControllerStagePose(handIndex, outPoseData);
+        }
+        return AZ::RHI::ResultCode::NotReady;
+    }
+
+    AZ::RHI::ResultCode System::GetViewFrontPose(AZ::RPI::PoseData& outPoseData) const
+    {
+        if (m_session->IsSessionRunning())
+        {
+            return m_session->GetViewFrontPose(outPoseData);
+        }
+        return AZ::RHI::ResultCode::NotReady;
+    }
+
+    AZ::RHI::ResultCode System::GetViewLocalPose(AZ::RPI::PoseData& outPoseData) const
+    {
+        if (m_session->IsSessionRunning())
+        {
+            return m_session->GetViewLocalPose(outPoseData);
+        }
+        return AZ::RHI::ResultCode::NotReady;
     }
 
     float System::GetControllerScale(AZ::u32 handIndex) const
@@ -204,20 +260,88 @@ namespace XR
         return 1.0f;
     }
 
-    AZ::RPI::PoseData System::GetViewFrontPose() const
+    float System::GetSqueezeState(AZ::u32 handIndex) const
     {
         if (m_session->IsSessionRunning())
         {
-            return m_session->GetViewFrontPose();
+            return m_session->GetSqueezeState(handIndex);
         }
-        return AZ::RPI::PoseData();
+        return 0.0f;
     }
 
-    AZ::Matrix4x4 System::CreateProjectionOffset(float angleLeft, float angleRight, 
-                                                 float angleBottom, float angleTop, 
-                                                 float nearDist, float farDist)
+    float System::GetTriggerState(AZ::u32 handIndex) const
     {
-        return XR::CreateProjectionOffset(angleLeft, angleRight, angleBottom, angleTop, nearDist, farDist);
+        if (m_session->IsSessionRunning())
+        {
+            return m_session->GetTriggerState(handIndex);
+        }
+        return 0.0f;
+    }
+
+    float System::GetXButtonState() const
+    {
+        if (m_session->IsSessionRunning())
+        {
+            return m_session->GetXButtonState();
+        }
+        return 0.0f;
+    }
+
+    float System::GetYButtonState() const
+    {
+        if (m_session->IsSessionRunning())
+        {
+            return m_session->GetYButtonState();
+        }
+        return 0.0f;
+    }
+
+    float System::GetAButtonState() const
+    {
+        if (m_session->IsSessionRunning())
+        {
+            return m_session->GetAButtonState();
+        }
+        return 0.0f;
+    }
+
+    float System::GetBButtonState() const
+    {
+        if (m_session->IsSessionRunning())
+        {
+            return m_session->GetBButtonState();
+        }
+        return 0.0f;
+    }
+
+    float System::GetXJoyStickState(AZ::u32 handIndex) const
+    {
+        if (m_session->IsSessionRunning())
+        {
+            return m_session->GetXJoyStickState(handIndex);
+        }
+        return 0.0f;
+    }
+
+    float System::GetYJoyStickState(AZ::u32 handIndex) const
+    {
+        if (m_session->IsSessionRunning())
+        {
+            return m_session->GetYJoyStickState(handIndex);
+        }
+        return 0.0f;
+    }
+
+    AZ::Matrix4x4 System::CreateStereoscopicProjection(float angleLeft, float angleRight,
+                                                 float angleBottom, float angleTop, 
+                                                 float nearDist, float farDist, bool reverseDepth)
+    {
+        return XR::CreateStereoscopicProjection(angleLeft, angleRight, angleBottom, angleTop, nearDist, farDist, reverseDepth);
+    }
+
+    AZ::RHI::XRRenderingInterface* System::GetRHIXRRenderingInterface()
+    {
+        return this;
     }
 
     void System::Shutdown()
@@ -225,5 +349,25 @@ namespace XR
         AZ::SystemTickBus::Handler::BusDisconnect();
         m_instance = nullptr;
         m_device = nullptr;
+    }
+
+    bool System::IsDefaultRenderPipelineNeeded() const
+    {
+        // While there is an XR system the default render pipeline is only needed on host platforms,
+        // in case we also render on PC as well as in the XR device.
+#if AZ_TRAIT_OS_IS_HOST_OS_PLATFORM
+        return true;
+#else
+        return false;
+#endif
+    }
+
+    bool System::IsDefaultRenderPipelineEnabledOnHost() const
+    {
+#if AZ_TRAIT_OS_IS_HOST_OS_PLATFORM
+        return r_EnableHostRenderPipelineOnXR;
+#else
+        return false;
+#endif
     }
 }

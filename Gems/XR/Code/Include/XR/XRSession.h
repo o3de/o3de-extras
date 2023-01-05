@@ -36,8 +36,8 @@ namespace XR
         };
 
         Session() = default;
-        virtual ~Session() = default;
-        
+        ~Session() override = default;
+
         //! Initialize the XrSession object which is responsible for creating
         //! XrInput and XrSpace
         AZ::RHI::ResultCode Init(const Descriptor& descriptor);
@@ -50,7 +50,7 @@ namespace XR
 
         //! Get the Xr Space object
         Space* GetSpace() const;
-        
+
         //! Return true if session is running
         virtual bool IsSessionRunning() const = 0;
 
@@ -59,7 +59,7 @@ namespace XR
 
         //! Return true if a restart is requested
         virtual bool IsRestartRequested() const = 0;
-    
+
         //! Return true if render loop skip is requested
         virtual bool IsExitRenderLoopRequested() const = 0;
 
@@ -73,16 +73,45 @@ namespace XR
         virtual void LocateControllerSpace(AZ::u32 handIndex) = 0;
 
         //! Api to retrieve the controller space data
-        virtual AZ::RPI::PoseData GetControllerPose(AZ::u32 handIndex) const = 0;
+        virtual AZ::RHI::ResultCode GetControllerPose(AZ::u32 handIndex, AZ::RPI::PoseData& outPoseData) const = 0;
+
+        //! Api to retrieve the controller space data associated with local view translated and rotated by 60 deg left or right based on handIndex
+        virtual AZ::RHI::ResultCode GetControllerStagePose(AZ::u32 handIndex, AZ::RPI::PoseData& outPoseData) const = 0;
 
         //! Api to retrieve the controller scale data
         virtual float GetControllerScale(AZ::u32 handIndex) const = 0;
 
         //! Api to retrieve the front view space data
-        virtual AZ::RPI::PoseData GetViewFrontPose() const = 0;
+        virtual AZ::RHI::ResultCode GetViewFrontPose(AZ::RPI::PoseData& outPoseData) const = 0;
+
+        //! Api to retrieve the local view space data
+        virtual AZ::RHI::ResultCode GetViewLocalPose(AZ::RPI::PoseData& outPoseData) const = 0;
+
+        //! Api to retrieve the controller X button state
+        virtual float GetXButtonState() const = 0;
+
+        //! Api to retrieve the controller Y button state
+        virtual float GetYButtonState() const = 0;
+
+        //! Api to retrieve the controller A button state
+        virtual float GetAButtonState() const = 0;
+
+        //! Api to retrieve the controller B button state
+        virtual float GetBButtonState() const = 0;
+
+        //! Api to retrieve the joystick controller state related to x-axis
+        virtual float GetXJoyStickState(AZ::u32 handIndex) const = 0;
+
+        //! Api to retrieve the joystick controller state related to y-axis
+        virtual float GetYJoyStickState(AZ::u32 handIndex) const = 0;
+
+        //! Api to retrieve the controller Y button state
+        virtual float GetSqueezeState(AZ::u32 handIndex) const = 0;
+
+        //! Api to retrieve the controller Y button state
+        virtual float GetTriggerState(AZ::u32 handIndex) const = 0;
 
     private:
-
         ///////////////////////////////////////////////////////////////////
         // XR::Object
         void Shutdown() override;

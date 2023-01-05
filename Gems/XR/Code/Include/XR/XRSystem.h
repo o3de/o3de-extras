@@ -21,9 +21,9 @@
 
 namespace XR
 {
-    //! This class is the window to everything XR related. It implements 
-    //! RPI::RenderingInterface and RHI::RenderingInterface but
-    //! can be extended to implement other non rendering interfaces if needed. 
+    //! This class is the window to everything XR related.
+    //! It implements RPI::RenderingInterface and RHI::RenderingInterface but
+    //! can be extended to implement other non rendering interfaces if needed.
     class System
         : public AZ::RPI::XRRenderingInterface
         , public AZ::RHI::XRRenderingInterface
@@ -34,10 +34,9 @@ namespace XR
         AZ_CLASS_ALLOCATOR(System, AZ::SystemAllocator, 0);
         AZ_RTTI(System, "{C3E0291D-FB30-4E27-AB0D-14606A8C3C1F}");
 
-        AZ_DISABLE_COPY_MOVE(System);
-
         System() = default;
-        ~System() = default;
+        ~System() override = default;
+        AZ_DISABLE_COPY_MOVE(System);
 
         struct Descriptor
         {
@@ -47,7 +46,7 @@ namespace XR
         //! Init the XRSystem.
         void Init(const Descriptor& descriptor);
 
-        //! Destroy any relevant objects held by this .class 
+        //! Destroy any relevant objects held by this .class
         void Shutdown();
 
         //! Handle XR events and actions
@@ -61,15 +60,27 @@ namespace XR
         AZ::RHI::ResultCode GetSwapChainImage(AZ::RHI::XRSwapChainDescriptor* swapchainDescriptor) const override;
         AZ::u32 GetSwapChainWidth(AZ::u32 viewIndex) const override;
         AZ::u32 GetSwapChainHeight(AZ::u32 viewIndex) const override;
-        AZ::RPI::FovData GetViewFov(AZ::u32 viewIndex) const override;
-        AZ::RPI::PoseData GetViewPose(AZ::u32 viewIndex) const override;
-        AZ::RPI::PoseData GetViewFrontPose() const override;
-        AZ::RPI::PoseData GetControllerPose(AZ::u32 handIndex) const override;
+        AZ::RHI::Format GetSwapChainFormat(AZ::u32 viewIndex) const override;
+        AZ::RHI::ResultCode GetViewFov(AZ::u32 viewIndex, AZ::RPI::FovData& outFovData) const override;
+        AZ::RHI::ResultCode GetViewPose(AZ::u32 viewIndex, AZ::RPI::PoseData& outPoseData) const override;
+        AZ::RHI::ResultCode GetViewFrontPose(AZ::RPI::PoseData& outPoseData) const override;
+        AZ::RHI::ResultCode GetViewLocalPose(AZ::RPI::PoseData& outPoseData) const override;
+        AZ::RHI::ResultCode GetControllerStagePose(AZ::u32 handIndex, AZ::RPI::PoseData& outPoseData) const override;
+        AZ::RHI::ResultCode GetControllerPose(AZ::u32 handIndex, AZ::RPI::PoseData& outPoseData) const override;
         float GetControllerScale(AZ::u32 handIndex) const override;
         bool ShouldRender() const override;
-        AZ::Matrix4x4 CreateProjectionOffset(float angleLeft, float angleRight, 
-                                             float angleBottom, float angleTop, 
-                                             float nearDist, float farDist) override;
+        AZ::Matrix4x4 CreateStereoscopicProjection(float angleLeft, float angleRight,
+                                                   float angleBottom, float angleTop,
+                                                   float nearDist, float farDist, bool reverseDepth) override;
+        AZ::RHI::XRRenderingInterface* GetRHIXRRenderingInterface() override;
+        float GetXButtonState() const override;
+        float GetYButtonState() const override;
+        float GetAButtonState() const override;
+        float GetBButtonState() const override;
+        float GetXJoyStickState(AZ::u32 handIndex) const override;
+        float GetYJoyStickState(AZ::u32 handIndex) const override;
+        float GetSqueezeState(AZ::u32 handIndex) const override;
+        float GetTriggerState(AZ::u32 handIndex) const override;
         ///////////////////////////////////////////////////////////////////
 
         ///////////////////////////////////////////////////////////////////
@@ -83,6 +94,9 @@ namespace XR
         AZ::u32 GetCurrentImageIndex(AZ::u32 viewIndex) const override;
         void BeginFrame() override;
         void EndFrame() override;
+        void PostFrame() override;
+        bool IsDefaultRenderPipelineNeeded() const override;
+        bool IsDefaultRenderPipelineEnabledOnHost() const override;
         ///////////////////////////////////////////////////////////////////
 
     private:

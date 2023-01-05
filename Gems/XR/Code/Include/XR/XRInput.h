@@ -13,9 +13,11 @@
 #include <XR/XRObject.h>
 
 namespace XR
-{ 
+{
     class Session;
     class Instance;
+    class Device;
+
     // This class will be responsible for creating XR::Input
     // which manage event queue or poll actions
     class Input
@@ -25,21 +27,16 @@ namespace XR
         AZ_CLASS_ALLOCATOR(Input, AZ::SystemAllocator, 0);
         AZ_RTTI(Input, "{DCDFC6A7-B457-414B-BC24-0831C2AC628B}");
 
-        Input() = default;
-        virtual ~Input() = default;
-        
         struct Descriptor
         {
             Ptr<Instance> m_instance;
             Ptr<Device> m_device;
             Ptr<Session> m_session;
         };
-        
+
         AZ::RHI::ResultCode Init(Descriptor descriptor);
         const Descriptor& GetDescriptor() const;
 
-        virtual void PollActions() = 0;
-       
     private:
         ///////////////////////////////////////////////////////////////////
         // XR::Object

@@ -1,0 +1,14 @@
+{
+    "materialType": "Materials/Types/BasePBR.materialtype",
+    "materialTypeVersion": 5,
+    "propertyValues": {
+        "baseColor.color": [
+            0.687067985534668,
+            0.5729914903640747,
+            0.5405051112174988,
+            1.0
+        ],
+        "general.doubleSided": true,
+        "roughness.factor": 0.6899999976158142
+    }
+}
