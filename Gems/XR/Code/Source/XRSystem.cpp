@@ -191,6 +191,7 @@ namespace XR
         {
             return m_swapChain->GetNumViews();
         }
+
         AZ_Warning("XRSystem", false, "SwapChain is null");
         return 0;
     }
