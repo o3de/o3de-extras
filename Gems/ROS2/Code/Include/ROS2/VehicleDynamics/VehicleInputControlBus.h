@@ -26,12 +26,21 @@ namespace ROS2::VehicleDynamics
 
         //! Set target for the vehicle linear speed. It should be realized over time according to drive model.
         //! @param speedMps is a linear speed in meters per second with the plus sign in the forward direction.
-        virtual void SetTargetLinearSpeed(float speedMps) = 0;
+        virtual void SetTargetLinearSpeedX(float speedMps) = 0;
+        virtual void SetTargetLinearSpeed(AZ::Vector3 speedMps) = 0;
 
         //! Steer in a direction given in relative coordinate system (current direction is 0).
         //! @param steering is angle in radians, positive to the right and negative to the left.
         //! @note The actual angle applied is subject to limits and implementation (eg smoothing).
         virtual void SetTargetSteering(float steering) = 0;
+
+        //! Set target for the angular speed. It should be realized over time according to drive model.
+        //! @param rate is an angular speed in radians per second in up direction .
+        virtual void SetTargetAngularSpeedZ(float rate) = 0;
+
+        //! Set target for the angular speed. It should be realized over time according to drive model.
+        //! @param rate is an angular speed in radians per second
+        virtual void SetTargetAngularSpeed(AZ::Vector3 rate) = 0;
 
         //! Accelerate without target speed, relative to the limits.
         //! @param accelerationFraction is relative to limits of possible acceleration.
@@ -45,7 +54,11 @@ namespace ROS2::VehicleDynamics
 
         //! Speed input version which is relative to limits.
         //! @param speedFraction is -1 to 1, which applies as a fraction of vehicle model speed limits.
-        virtual void SetTargetLinearSpeedFraction(float speedFraction) = 0;
+        virtual void SetTargetLinearSpeedXFraction(float speedFraction) = 0;
+
+        //! Set target for the angular speed. It should be realized over time according to drive model.
+        //! @param rateFraction is an angular speed in radians per second in up direction, fraction of maximum speed.
+        virtual void SetTargetAngularSpeedZFraction(float rateFraction) = 0;
 
         //! Disables (or enables) the vehicle dynamics
         //! @param disable if set true no torque will be applied

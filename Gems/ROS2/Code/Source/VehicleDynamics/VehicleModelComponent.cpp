@@ -10,12 +10,13 @@
 #include "DriveModels/AckermannDriveModel.h"
 #include "Utilities.h"
 #include "VehicleConfiguration.h"
+#include "VehicleModelLimits.h"
 #include <AzCore/Debug/Trace.h>
 #include <AzCore/Serialization/EditContext.h>
 #include <AzCore/Serialization/EditContextConstants.inl>
 #include <AzCore/Serialization/SerializeContext.h>
 #include <AzFramework/Physics/RigidBodyBus.h>
-
+#include <AzCore/std/smart_ptr/make_shared.h>
 namespace ROS2::VehicleDynamics
 {
     void VehicleModelComponent::Activate()
@@ -23,7 +24,6 @@ namespace ROS2::VehicleDynamics
         VehicleInputControlRequestBus::Handler::BusConnect(GetEntityId());
         m_manualControlEventHandler.Activate(GetEntityId());
         AZ::TickBus::Handler::BusConnect();
-        m_driveModel.Activate(m_vehicleConfiguration);
     }
 
     void VehicleModelComponent::Deactivate()
@@ -31,43 +31,29 @@ namespace ROS2::VehicleDynamics
         AZ::TickBus::Handler::BusDisconnect();
         m_manualControlEventHandler.Deactivate();
         VehicleInputControlRequestBus::Handler::BusDisconnect();
+
     }
 
     void VehicleModelComponent::Reflect(AZ::ReflectContext* context)
     {
         VehicleConfiguration::Reflect(context);
-        DriveModel::Reflect(context);
-        AckermannDriveModel::Reflect(context);
         VehicleModelLimits::Reflect(context);
+        DriveModel::Reflect(context);
+
         if (AZ::SerializeContext* serialize = azrtti_cast<AZ::SerializeContext*>(context))
         {
             serialize->Class<VehicleModelComponent, AZ::Component>()
-                ->Version(3)
-                ->Field("VehicleConfiguration", &VehicleModelComponent::m_vehicleConfiguration)
-                ->Field("DriveModel", &VehicleModelComponent::m_driveModel)
-                ->Field("VehicleModelLimits", &VehicleModelComponent::m_vehicleLimits);
+                ->Version(4)
+                ->Field("VehicleConfiguration", &VehicleModelComponent::m_vehicleConfiguration);
 
             if (AZ::EditContext* ec = serialize->GetEditContext())
             {
                 ec->Class<VehicleModelComponent>("Vehicle Model", "Customizable vehicle model component")
-                    ->ClassElement(AZ::Edit::ClassElements::EditorData, "")
-                    ->Attribute(AZ::Edit::Attributes::AppearsInAddComponentMenu, AZ_CRC_CE("Game"))
-                    ->Attribute(AZ::Edit::Attributes::Category, "ROS2")
                     ->DataElement(
                         AZ::Edit::UIHandlers::Default,
                         &VehicleModelComponent::m_vehicleConfiguration,
                         "Vehicle settings",
-                        "Vehicle settings including axles and common wheel parameters")
-                    ->DataElement(
-                        AZ::Edit::UIHandlers::Default,
-                        &VehicleModelComponent::m_driveModel,
-                        "Drive model",
-                        "Settings of the selected drive model")
-                    ->DataElement(
-                        AZ::Edit::UIHandlers::Default,
-                        &VehicleModelComponent::m_vehicleLimits,
-                        "Vehicle limits",
-                        "Limits for parameters such as speed and steering angle");
+                        "Vehicle settings including axles and common wheel parameters");
             }
         }
     }
@@ -82,15 +68,20 @@ namespace ROS2::VehicleDynamics
         incompatible.push_back(AZ_CRC_CE("VehicleModelService"));
     }
 
-    void VehicleModelComponent::SetTargetLinearSpeed(float speedMps)
+    void VehicleModelComponent::SetTargetLinearSpeedX(float speedMps)
     {
-        auto limitedSpeed = VehicleModelLimits::LimitValue(speedMps, m_vehicleLimits.m_speedLimit);
-        m_inputsState.m_speed.UpdateValue(limitedSpeed);
+        m_inputsState.m_speed.UpdateValue({speedMps,0,0});
     }
 
-    void VehicleModelComponent::SetTargetLinearSpeedFraction(float speedFraction)
+    void VehicleModelComponent::SetTargetLinearSpeed(AZ::Vector3 speedMps)
     {
-        m_inputsState.m_speed.UpdateValue(speedFraction * m_vehicleLimits.m_speedLimit);
+        m_inputsState.m_speed.UpdateValue(speedMps);
+    }
+
+    void VehicleModelComponent::SetTargetLinearSpeedXFraction(float speedFraction)
+    {
+        const auto& maxState = GetDriveModel()->GetVehicleLimits()->GetMaximumState();
+        m_inputsState.m_speed.UpdateValue(maxState.m_speed * speedFraction);
     }
 
     void VehicleModelComponent::SetTargetAccelerationFraction([[maybe_unused]] float accelerationFraction)
@@ -100,23 +91,39 @@ namespace ROS2::VehicleDynamics
 
     void VehicleModelComponent::SetDisableVehicleDynamics(bool isDisable)
     {
-        m_driveModel.SetDisabled(isDisable);
+        GetDriveModel()->SetDisabled(isDisable);
     }
 
     void VehicleModelComponent::SetTargetSteering(float steering)
     {
-        auto limitedSteering = VehicleModelLimits::LimitValue(steering, m_vehicleLimits.m_steeringLimit);
-        m_inputsState.m_steering.UpdateValue(limitedSteering);
+        m_inputsState.m_jointConfiguration.UpdateValue({steering});
     }
 
     void VehicleModelComponent::SetTargetSteeringFraction(float steeringFraction)
     {
-        m_inputsState.m_steering.UpdateValue(steeringFraction * m_vehicleLimits.m_steeringLimit);
+        const auto& maxState = GetDriveModel()->GetVehicleLimits()->GetMaximumState();
+        if(!maxState.m_jointConfiguration.empty()){
+            m_inputsState.m_jointConfiguration.UpdateValue({maxState.m_jointConfiguration.front() * steeringFraction});
+        }
     }
+
+    void VehicleModelComponent::SetTargetAngularSpeedZ(float rate){
+        m_inputsState.m_angularRates.UpdateValue({0,0,rate});
+    };
+
+    void VehicleModelComponent::SetTargetAngularSpeed(AZ::Vector3 rate)
+    {
+        m_inputsState.m_angularRates.UpdateValue(rate);
+    };
+
+    void VehicleModelComponent::SetTargetAngularSpeedZFraction(float rateFraction){
+        const auto& maxState = GetDriveModel()->GetVehicleLimits()->GetMaximumState();
+        m_inputsState.m_angularRates.UpdateValue(maxState.m_angularRates * rateFraction);
+    };
 
     void VehicleModelComponent::OnTick(float deltaTime, [[maybe_unused]] AZ::ScriptTimePoint time)
     {
         const uint64_t deltaTimeNs = deltaTime * 1'000'000'000;
-        m_driveModel.ApplyInputState(m_inputsState, deltaTimeNs);
+        GetDriveModel()->ApplyInputState(m_inputsState.GetTimeoutedValue(), deltaTimeNs);
     }
 } // namespace ROS2::VehicleDynamics

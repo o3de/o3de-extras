@@ -9,6 +9,7 @@
 
 #include "VehicleConfiguration.h"
 #include "VehicleInputsState.h"
+#include <VehicleDynamics/VehicleModelLimits.h>
 #include <AzCore/Serialization/SerializeContext.h>
 
 namespace ROS2::VehicleDynamics
@@ -34,6 +35,12 @@ namespace ROS2::VehicleDynamics
         //! Applies inputs to the drive. This model will calculate and apply physical forces.
         //! @param inputs captured state of inputs to use
         //! @param deltaTimeNs nanoseconds passed since last call of this function.
-        virtual void ApplyInputState(const VehicleInputsState& inputs, uint64_t deltaTimeNs) = 0;
+        void ApplyInputState(const VehicleInputsState& inputs, uint64_t deltaTimeNs);
+
+        virtual void SetDisabled(bool isDisable)= 0;
+        virtual VehicleDynamics::VehicleModelLimits* GetVehicleLimits(){ return nullptr ; }
+
+    protected:
+        virtual void ApplyState(const VehicleInputsState& inputs, uint64_t deltaTimeNs) = 0;
     };
 } // namespace ROS2::VehicleDynamics

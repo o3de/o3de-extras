@@ -6,22 +6,24 @@
  *
  */
 
-#include "AckermannControlComponent.h"
+#include "SkidSteeringControlComponent.h"
+#include <AzCore/Component/TransformBus.h>
+#include <AzCore/Math/MathUtils.h>
 #include <AzCore/Serialization/EditContext.h>
 #include <AzCore/Serialization/EditContextConstants.inl>
 #include <AzFramework/Physics/RigidBodyBus.h>
-#include <ROS2/VehicleDynamics/VehicleInputControlBus.h>
-
+#include <PhysX/Joint/PhysXJointRequestsBus.h>
+#include <VehicleDynamics/WheelControllerComponent.h>
 namespace ROS2
 {
-    void AckermannControlComponent::Reflect(AZ::ReflectContext* context)
+    void SkidSteeringControlComponent::Reflect(AZ::ReflectContext* context)
     {
         if (AZ::SerializeContext* serialize = azrtti_cast<AZ::SerializeContext*>(context))
         {
-            serialize->Class<AckermannControlComponent, AZ::Component>()->Version(1);
+            serialize->Class<SkidSteeringControlComponent, AZ::Component>()->Version(1);
             if (AZ::EditContext* ec = serialize->GetEditContext())
             {
-                ec->Class<AckermannControlComponent>("Ackermann Control", "Relays Ackermann commands to vehicle inputs")
+                ec->Class<SkidSteeringControlComponent>("Skid steering Twist Control", "")
                     ->ClassElement(AZ::Edit::ClassElements::EditorData, "")
                     ->Attribute(AZ::Edit::Attributes::AppearsInAddComponentMenu, AZ_CRC_CE("Game"))
                     ->Attribute(AZ::Edit::Attributes::Category, "ROS2");
@@ -29,27 +31,28 @@ namespace ROS2
         }
     }
 
-    void AckermannControlComponent::Activate()
+    void SkidSteeringControlComponent::Activate()
     {
-        AckermannNotificationBus::Handler::BusConnect(GetEntityId());
-    }
-    void AckermannControlComponent::Deactivate()
-    {
-        AckermannNotificationBus::Handler::BusDisconnect();
+        TwistNotificationBus::Handler::BusConnect(GetEntityId());
     }
 
-    void AckermannControlComponent::GetRequiredServices(AZ::ComponentDescriptor::DependencyArrayType& required)
+    void SkidSteeringControlComponent::Deactivate()
+    {
+        TwistNotificationBus::Handler::BusDisconnect();
+    }
+
+    void SkidSteeringControlComponent::GetRequiredServices(AZ::ComponentDescriptor::DependencyArrayType& required)
     {
         required.push_back(AZ_CRC_CE("ROS2RobotControl"));
         required.push_back(AZ_CRC_CE("VehicleModelService"));
     }
 
-    void AckermannControlComponent::AckermannReceived(const AckermannCommandStruct& acs)
+    void SkidSteeringControlComponent::TwistReceived(const AZ::Vector3& linear, const AZ::Vector3& angular)
     {
         // Notify input system for vehicle dynamics. Only speed and steering is currently supported.
         VehicleDynamics::VehicleInputControlRequestBus::Event(
-            GetEntityId(), &VehicleDynamics::VehicleInputControlRequests::SetTargetLinearSpeedX, acs.m_speed);
+            GetEntityId(), &VehicleDynamics::VehicleInputControlRequests::SetTargetLinearSpeed, linear);
         VehicleDynamics::VehicleInputControlRequestBus::Event(
-            GetEntityId(), &VehicleDynamics::VehicleInputControlRequests::SetTargetSteering, acs.m_steeringAngle);
+            GetEntityId(), &VehicleDynamics::VehicleInputControlRequests::SetTargetAngularSpeed, angular);
     }
 } // namespace ROS2

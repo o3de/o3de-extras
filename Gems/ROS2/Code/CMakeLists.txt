@@ -32,6 +32,7 @@ ly_add_target(
             Include
         PRIVATE
             Source
+            Source/VehicleDynamics
     BUILD_DEPENDENCIES
         PUBLIC
             AZ::AzCore
@@ -40,6 +41,7 @@ ly_add_target(
             Gem::Atom_Feature_Common.Static
             Gem::Atom_Component_DebugCamera.Static
             Gem::StartingPointInput
+            Gem::PhysX.Static
 )
 
 target_depends_on_ros2_packages(${gem_name}.Static rclcpp builtin_interfaces std_msgs sensor_msgs nav_msgs urdfdom tf2_ros ackermann_msgs gazebo_msgs control_toolbox)

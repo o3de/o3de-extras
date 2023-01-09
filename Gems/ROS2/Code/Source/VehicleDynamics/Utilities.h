@@ -51,4 +51,10 @@ namespace ROS2::VehicleDynamics::Utilities
     //! @returns This function will only return data for properly set up wheels and raise warnings if something is not right.
     //! Wheels need a WheelControllerComponent, and the axle must be a drive axle.
     AZStd::vector<VehicleDynamics::WheelDynamicsData> GetAllDriveWheelsData(const VehicleConfiguration& vehicleConfig);
+
+    //! Get Physx Hinge Joint Component AZ::EntityComponentIdPair from Entity
+    //! @param wheelEntityId id of entity that has Physx Hinge Joint Controller
+    //! @returns EntityComponentIdPair that contains id of Hinge component and @param wheelEntityId
+    AZ::EntityComponentIdPair GetWheelPhysxHinge(const AZ::EntityId wheelEntityId);
+
 } // namespace ROS2::VehicleDynamics::Utilities

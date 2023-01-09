@@ -25,4 +25,13 @@ namespace ROS2::VehicleDynamics
             }
         }
     }
+
+
+    void DriveModel::ApplyInputState(const VehicleInputsState& inputs, uint64_t deltaTimeNs){
+        const VehicleModelLimits * limits = GetVehicleLimits();
+        AZ_Assert(limits, "Implementation of DriveModel should return limits ");
+        const VehicleInputsState filteredInputs = limits->LimitState(inputs);
+        ApplyState(filteredInputs, deltaTimeNs);
+    }
+
 } // namespace ROS2::VehicleDynamics

@@ -11,7 +11,7 @@
 #include "ManualControlEventHandler.h"
 #include "VehicleConfiguration.h"
 #include "VehicleInputsState.h"
-#include "VehicleModelLimits.h"
+#include <VehicleDynamics/VehicleModelLimits.h>
 #include <AzCore/Component/Component.h>
 #include <AzCore/Component/TickBus.h>
 #include <AzCore/std/smart_ptr/unique_ptr.h>
@@ -26,7 +26,7 @@ namespace ROS2::VehicleDynamics
         , private AZ::TickBus::Handler
     {
     public:
-        AZ_COMPONENT(VehicleModelComponent, "{7093AE7A-9F64-4C77-8189-02C6B7802C1A}", AZ::Component);
+        AZ_RTTI(VehicleModelComponent, "{7093AE7A-9F64-4C77-8189-02C6B7802C1A}", AZ::Component);
         VehicleModelComponent() = default;
 
         //////////////////////////////////////////////////////////////////////////
@@ -44,18 +44,25 @@ namespace ROS2::VehicleDynamics
 
         //////////////////////////////////////////////////////////////////////////
         // VehicleInputControlRequestBus::Handler overrides
-        void SetTargetLinearSpeed(float speedMps) override;
+        void SetTargetLinearSpeedX(float speedMps) override;
+        void SetTargetLinearSpeed(AZ::Vector3 speedMps) override;
         void SetTargetSteering(float steering) override;
+        void SetTargetAngularSpeedZ(float rate) override;
+        void SetTargetAngularSpeed(AZ::Vector3 rate) override;
         void SetTargetAccelerationFraction(float accelerationFraction) override;
         void SetTargetSteeringFraction(float steeringFraction) override;
-        void SetTargetLinearSpeedFraction(float speedFraction) override;
+        void SetTargetLinearSpeedXFraction(float speedFraction) override;
+        void SetTargetAngularSpeedZFraction(float rateFraction) override;
         void SetDisableVehicleDynamics(bool isDisable) override;
         //////////////////////////////////////////////////////////////////////////
 
+
+    protected:
         ManualControlEventHandler m_manualControlEventHandler;
-        VehicleConfiguration m_vehicleConfiguration;
-        VehicleInputsState m_inputsState;
-        AckermannDriveModel m_driveModel;
-        VehicleModelLimits m_vehicleLimits;
+        VehicleInputsStateTimeouted m_inputsState;
+        VehicleDynamics::VehicleConfiguration m_vehicleConfiguration;
+        virtual DriveModel * GetDriveModel() =0;
+
+
     };
 } // namespace ROS2::VehicleDynamics
