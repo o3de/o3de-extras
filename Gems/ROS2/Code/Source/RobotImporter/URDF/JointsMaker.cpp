@@ -59,13 +59,13 @@ namespace ROS2
                 PhysX::EditorJointRequestBus::Event(
                     AZ::EntityComponentIdPair(followColliderEntityId, jointComponent->GetId()),
                     &PhysX::EditorJointRequests::SetVector3Value,
-                    PhysX::JointsComponentModeCommon::ParamaterNames::Rotation,
+                    PhysX::JointsComponentModeCommon::ParameterNames::Rotation,
                     rotation);
 
                 PhysX::EditorJointRequestBus::Event(
                     AZ::EntityComponentIdPair(followColliderEntityId, jointComponent->GetId()),
                     &PhysX::EditorJointRequests::SetLinearValuePair,
-                    PhysX::JointsComponentModeCommon::ParamaterNames::LinearLimits,
+                    PhysX::JointsComponentModeCommon::ParameterNames::LinearLimits,
                     PhysX::AngleLimitsFloatPair(joint->limits->upper, joint->limits->lower));
 
                 followColliderEntity->Deactivate();
@@ -80,11 +80,11 @@ namespace ROS2
                     AZ::EntityComponentIdPair(followColliderEntityId, jointComponent->GetId()),
                     [&rotation](PhysX::EditorJointRequests* editorJointRequest)
                     {
-                        editorJointRequest->SetVector3Value(PhysX::JointsComponentModeCommon::ParamaterNames::Rotation, rotation);
+                        editorJointRequest->SetVector3Value(PhysX::JointsComponentModeCommon::ParameterNames::Rotation, rotation);
                         editorJointRequest->SetLinearValuePair(
-                            PhysX::JointsComponentModeCommon::ParamaterNames::TwistLimits,
+                            PhysX::JointsComponentModeCommon::ParameterNames::TwistLimits,
                             PhysX::AngleLimitsFloatPair(AZ::RadToDeg(AZ::Constants::TwoPi), -AZ::RadToDeg(AZ::Constants::TwoPi)));
-                        editorJointRequest->SetBoolValue(PhysX::JointsComponentModeCommon::ParamaterNames::EnableLimits, false);
+                        editorJointRequest->SetBoolValue(PhysX::JointsComponentModeCommon::ParameterNames::EnableLimits, false);
                     });
                 followColliderEntity->Deactivate();
             }
@@ -107,9 +107,9 @@ namespace ROS2
                     AZ::EntityComponentIdPair(followColliderEntityId, jointComponent->GetId()),
                     [&rotation, &limitLower, &limitUpper](PhysX::EditorJointRequests* editorJointRequest)
                     {
-                        editorJointRequest->SetVector3Value(PhysX::JointsComponentModeCommon::ParamaterNames::Rotation, rotation);
+                        editorJointRequest->SetVector3Value(PhysX::JointsComponentModeCommon::ParameterNames::Rotation, rotation);
                         editorJointRequest->SetLinearValuePair(
-                            PhysX::JointsComponentModeCommon::ParamaterNames::TwistLimits,
+                            PhysX::JointsComponentModeCommon::ParameterNames::TwistLimits,
                             PhysX::AngleLimitsFloatPair(limitUpper, limitLower));
                     });
                 followColliderEntity->Deactivate();
@@ -124,7 +124,7 @@ namespace ROS2
         PhysX::EditorJointRequestBus::Event(
             AZ::EntityComponentIdPair(followColliderEntityId, jointComponent->GetId()),
             &PhysX::EditorJointRequests::SetEntityIdValue,
-            PhysX::JointsComponentModeCommon::ParamaterNames::LeadEntity,
+            PhysX::JointsComponentModeCommon::ParameterNames::LeadEntity,
             leadColliderEntityId);
         followColliderEntity->Deactivate();
         return AZ::Success(jointComponent->GetId());
