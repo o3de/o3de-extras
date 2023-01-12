@@ -29,7 +29,7 @@ Since the o3de-extras repo can be cloned anywhere on your local computer, we jus
 From the O3DE repo folder, you can register some or all extra objects using the `o3de register` command.
 Since these are all optional objects, we may not need or want all the objects. If we want to register a particular object such as a single gem we would issue the following command:
 ```
-scripts\o3de.bat register --gem-path <your path to o3de-extras>/Gems/<gem name>
+scripts\o3de.bat register --gem-path <o3de-extras>/Gems/<gem name>
 ```
 Or you may want to register all the Gems. Since this repo follows the standard O3DE repo format all the o3de-extras gems will be in the `<o3de-extras>/Gems` path. We can register all the gems in the extras gems path with one command:
 ```
