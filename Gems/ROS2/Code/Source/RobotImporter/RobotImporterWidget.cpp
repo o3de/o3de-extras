@@ -29,9 +29,11 @@ namespace ROS2
         m_checkUrdfPage = new CheckUrdfPage(this);
         m_assetPage = new CheckAssetPage(this);
         m_prefabMakerPage = new PrefabMakerPage(this);
+        m_xacroParamsPage = new XacroParamsPage(this);
 
         addPage(m_introPage);
         addPage(m_fileSelectPage);
+        addPage(m_xacroParamsPage);
         addPage(m_checkUrdfPage);
         addPage(m_assetPage);
         addPage(m_prefabMakerPage);
@@ -78,12 +80,35 @@ namespace ROS2
 
     void RobotImporterWidget::OpenUrdf()
     {
-        m_urdfPath = AZStd::string(m_fileSelectPage->getFileName().toUtf8().constData());
+        QString report;
         if (!m_urdfPath.empty())
         {
-            AZ_Printf("Wizard", "Loading URDF file : %s", m_urdfPath.c_str());
-            m_parsedUrdf = UrdfParser::ParseFromFile(m_urdfPath);
-            QString report;
+            if (m_urdfPath.ends_with("xacro"))
+            {
+                Utils::xacro::ExecutionOutcome outcome = Utils::xacro::ParseXacro(m_urdfPath, m_params);
+                if (outcome)
+                {
+                    m_parsedUrdf = outcome.m_urdfHandle;
+                    report += "# " + tr("XACRO execution succeed") + "\n";
+                }
+                else
+                {
+                    report += "# " + tr("XACRO parsing failed") + "\n";
+                    report += "\n\n" + tr("Command called : \n'") + QString::fromUtf8(outcome.m_called.data()) + "'";
+                    report += "\n\n" + tr("Process failed with code : ") + QString::number(outcome.m_returnCode);
+                    report += "\n\n" + tr("error output") + " :\n\n";
+                    report += QString::fromLocal8Bit(outcome.m_logErrorOutput.data(), static_cast<int>(outcome.m_logErrorOutput.size()));
+                    m_checkUrdfPage->ReportURDFResult(report, false);
+                    return;
+                }
+            }
+            else
+            {
+                // standard URDF
+                AZ_Printf("Wizard", "Loading urdf file : %s", m_urdfPath.c_str());
+                m_parsedUrdf = UrdfParser::ParseFromFile(m_urdfPath);
+            }
+
             const auto log = UrdfParser::GetUrdfParsingLog();
             if (m_parsedUrdf)
             {
@@ -191,6 +216,24 @@ namespace ROS2
     {
         if (currentPage() == m_fileSelectPage)
         {
+            m_params.clear();
+            m_urdfPath = AZStd::string(m_fileSelectPage->getFileName().toUtf8().constData());
+            if (IsFileXacro(m_urdfPath))
+            {
+                m_params = Utils::xacro::GetParameterFromXacroFile(m_urdfPath);
+                AZ_Printf("RobotImporterWidget", "Xacro has %d arguments\n", m_params.size()) m_xacroParamsPage->SetParameters(m_params);
+            }
+            // no need to wait for param page - parse urdf now, nextId will skip unnecessary pages
+            if (m_params.empty())
+            {
+                OpenUrdf();
+            }
+        }
+        if (currentPage() == m_xacroParamsPage)
+        {
+            AZ_Printf("RobotImporterWidget", "Validate m_xacroParamsPage\n");
+
+            m_params = m_xacroParamsPage->GetParams();
             OpenUrdf();
         }
         return currentPage()->validatePage();
@@ -198,7 +241,7 @@ namespace ROS2
 
     int RobotImporterWidget::nextId() const
     {
-        if (currentPage() == m_fileSelectPage)
+        if ((currentPage() == m_fileSelectPage && m_params.empty()) || currentPage() == m_xacroParamsPage)
         {
             if (m_parsedUrdf)
             {
@@ -312,4 +355,10 @@ namespace ROS2
         QMessageBox::critical(this, QObject::tr("Error"), errorMessage);
         AZ_Error("RobotImporterWidget", false, "%s", errorMessage.toUtf8().constData());
     }
+
+    bool RobotImporterWidget::IsFileXacro(const AZStd::string& filename) const
+    {
+        return filename.ends_with(".xacro");
+    }
+
 } // namespace ROS2

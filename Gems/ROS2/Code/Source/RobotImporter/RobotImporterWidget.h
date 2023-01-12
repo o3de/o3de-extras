@@ -14,12 +14,15 @@
 #include "Pages/FileSelectionPage.h"
 #include "Pages/IntroPage.h"
 #include "Pages/PrefabMakerPage.h"
+#include "Pages/XacroParamsPage.h"
+
 
 #include "URDF/URDFPrefabMaker.h"
 #include "URDF/UrdfParser.h"
 #include <AzCore/Asset/AssetCommon.h>
 #include <AzCore/std/containers/unordered_map.h>
 #include <RobotImporter/Utils/RobotImporterUtils.h>
+#include <RobotImporter/xacro/XacroUtils.h>
 
 #include <AzToolsFramework/API/ToolsApplicationAPI.h>
 #include <AzToolsFramework/Prefab/PrefabFocusInterface.h>
@@ -65,6 +68,7 @@ namespace ROS2
         CheckUrdfPage* m_checkUrdfPage;
         CheckAssetPage* m_assetPage;
         PrefabMakerPage* m_prefabMakerPage;
+        XacroParamsPage* m_xacroParamsPage;
         AZStd::string m_urdfPath;
         urdf::ModelInterfaceSharedPtr m_parsedUrdf;
 
@@ -72,6 +76,9 @@ namespace ROS2
         AZStd::shared_ptr<Utils::UrdfAssetMap> m_urdfAssetsMapping;
         AZStd::unique_ptr<URDFPrefabMaker> m_prefabMaker;
         AZStd::unordered_set<AZStd::string> m_meshNames;
+
+        /// Xacro params
+        Utils::xacro::Params m_params;
 
         void onCurrentIdChanged(int id);
         void FillAssetPage();
@@ -86,6 +93,10 @@ namespace ROS2
         //! Populates the log, sets status information in the status label and shows an error popup with the message
         //! @param errorMessage error message to display to the user
         void ReportError(const QString& errorMessage);
+
+        //! Returns if file is xacro.
+        //! @param filename filename to check
+        bool IsFileXacro(const AZStd::string& filename) const;
 
         static constexpr QWizard::WizardButton PrefabCreationButtonId{ QWizard::CustomButton1 };
         static constexpr QWizard::WizardOption HavePrefabCreationButton{ QWizard::HaveCustomButton1 };
