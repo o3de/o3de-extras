@@ -81,6 +81,7 @@ ly_add_target(
 
 # use the OpenXRVk module in all aliases:
 ly_create_alias(NAME OpenXRVk.Clients NAMESPACE Gem TARGETS Gem::OpenXRVk)
+ly_create_alias(NAME OpenXRVk.Unified NAMESPACE Gem TARGETS Gem::OpenXRVk)
 
 if(PAL_TRAIT_BUILD_HOST_TOOLS)
     ly_create_alias(NAME OpenXRVk.Tools NAMESPACE Gem TARGETS Gem::OpenXRVk)
