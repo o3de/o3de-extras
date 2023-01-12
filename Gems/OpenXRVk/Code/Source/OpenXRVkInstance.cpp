@@ -156,7 +156,7 @@ namespace OpenXRVk
             }
         }
 
-        AZ_Assert(m_xrInstance != XR_NULL_HANDLE, "XR Isntance is Null");
+        AZ_Assert(m_xrInstance != XR_NULL_HANDLE, "XR Instance is Null");
         AZ_Assert(m_xrSystemId == XR_NULL_SYSTEM_ID, "XR System id already initialized");
 
         //TODO::Add support for handheld display
@@ -355,8 +355,11 @@ namespace OpenXRVk
             return AZ::RHI::ResultCode::Fail;
         }
 
+        FilterAvailableExtensions(m_context);
+
         //Populate the instance descriptor with the correct VkInstance
         xrInstanceDescriptor->m_outputData.m_xrVkInstance = m_xrVkInstance;
+        xrInstanceDescriptor->m_outputData.m_context = m_context;
 
         //Get the list of Physical devices
         m_supportedXRDevices = PhysicalDevice::EnumerateDeviceList(m_xrSystemId, m_xrInstance, m_xrVkInstance);

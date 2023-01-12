@@ -9,8 +9,6 @@
 #include <AzTest/AzTest.h>
 #include "OpenXRVkTests.h"
 
-#if !O3DE_TRAIT_DISABLE_ALL_OPENXRVK_TESTS
-
 void OpenXRVkTest::SetUp()
 {
     SetupInternal();
@@ -21,12 +19,14 @@ void OpenXRVkTest::TearDown()
     TearDownInternal();
 }
 
+#ifndef O3DE_TRAIT_DISABLE_ALL_OPENXRVK_TESTS
+
 TEST_F(OpenXRVkTest, PassThisTest)
 {
     EXPECT_TRUE(true);
 }
 
-#if O3DE_TRAIT_DISABLE_FAILED_OPENXRVK_TESTS
+#ifdef O3DE_TRAIT_DISABLE_FAILED_OPENXRVK_TESTS
 TEST_F(OpenXRVkTest, DISABLED_ExpectTrue)
 #else
 TEST_F(OpenXRVkTest, ExpectTrue)
