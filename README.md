@@ -1,6 +1,14 @@
-# O3DE-Extras
+# o3de-extras
 
-o3de/o3de-extras repo is for extra O3DE objects that are considered "canonical" to O3DE but not "core" to the engine. i.e. The engine will build and run without the extras, however the o3de-extras contain "extra" features such as projects, gems, etc. in a standard O3DE compound repo format. All O3DE extras gems are tested with the engine and follow the same coding standards as the core engine and thus can be thought of as part of the engine. When testing is performed on the core engine, tests in the extras gems are included in the testing. Just like the core engine o3de/o3de, the main branch is the stable release branch and is tagged for release the same way the core engine o3de/o3de main branch is. Just like the core engine, the development branch is the cutting edge.
+As the name implies, o3de-extras repo is for "extra" O3DE objects that are considered "canonical" to O3DE but not "core" to the engine.
+i.e. The core engine will build and run without the extras, however the o3de-extras contain extra projects, gems, etc. in a standard O3DE compound repo format.
+
+## Testing
+All O3DE extras gems are tested with the engine and follow the same coding standards and thus should be thought of as part of the engine.
+When testing is performed on the core engine, any gem enabled for testing in the o3de-extras .automatedtesting.json will have its tests run.
+
+## Branches
+Just like the core engine, the main branch is the stable release branch and is tagged for release, while the development branch is the cutting edge.
 
 ## Contribute
 For information about contributing to Open 3D Engine, visit [https://o3de.org/docs/contributing/](https://o3de.org/docs/contributing/).
