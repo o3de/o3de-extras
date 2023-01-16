@@ -81,6 +81,7 @@ ly_add_target(
 
 # use the OpenXRVk module in all aliases:
 ly_create_alias(NAME OpenXRVk.Clients NAMESPACE Gem TARGETS Gem::OpenXRVk)
+ly_create_alias(NAME OpenXRVk.Unified NAMESPACE Gem TARGETS Gem::OpenXRVk)
 
 if(PAL_TRAIT_BUILD_HOST_TOOLS)
     ly_create_alias(NAME OpenXRVk.Tools NAMESPACE Gem TARGETS Gem::OpenXRVk)
@@ -93,9 +94,9 @@ endif()
 if(PAL_TRAIT_BUILD_TESTS_SUPPORTED)
 
     ly_add_target(
-        NAME OpenXRVk.Tests MODULE
+        NAME OpenXRVk.Tests ${PAL_TRAIT_TEST_TARGET_TYPE}
         NAMESPACE Gem
-        OUTPUT_NAME OpenXRVk.Tests.Gem
+        OUTPUT_NAME OpenXRVk.Tests
         FILES_CMAKE
             openxrvk_tests_files.cmake
             ${pal_source_dir}/platform_test_${PAL_PLATFORM_NAME_LOWERCASE}_files.cmake

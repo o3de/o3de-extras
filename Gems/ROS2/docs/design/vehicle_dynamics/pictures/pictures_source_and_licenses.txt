@@ -1,0 +1,5 @@
+Public Domain
+1. DifferentialDrive.png: https://en.wikipedia.org/wiki/Differential_wheeled_robot#/media/File:Tanklike.png
+
+CC BY-SA 3.0 (https://creativecommons.org/licenses/by-sa/3.0/)
+1. Ackermann.png: https://commons.wikimedia.org/wiki/File:Ackermann.svg. Author User:Bromskloss, more information under the link.

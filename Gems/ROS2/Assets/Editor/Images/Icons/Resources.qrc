@@ -1,0 +1,5 @@
+<RCC>
+    <qresource prefix="/ROS2">
+     <file>ROS_import_icon.svg</file>
+    </qresource>
+</RCC>
