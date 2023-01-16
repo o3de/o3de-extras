@@ -449,14 +449,11 @@ namespace UnitTest
 
     TEST_F(UrdfParserTest, XacroParseArgs)
     {
-        AZStd::string st = GetXacroParams();
-        AZStd::vector<char> data;
-        data.resize(st.size());
-        AZStd::copy(st.begin(), st.end(), data.begin());
-        ROS2::Utils::xacro::Params p = ROS2::Utils::xacro::GetParameterFromXacroData(data);
-        EXPECT_EQ(p.size(), 1);
-        ASSERT_TRUE(p.contains("laser_enabled"));
-        EXPECT_EQ(p["laser_enabled"], "false");
+        AZStd::string xacroParams = GetXacroParams();
+        ROS2::Utils::xacro::Params params = ROS2::Utils::xacro::GetParameterFromXacroData(xacroParams);
+        EXPECT_EQ(params.size(), 1);
+        ASSERT_TRUE(params.contains("laser_enabled"));
+        EXPECT_EQ(params["laser_enabled"], "false");
     }
 
 } // namespace UnitTest

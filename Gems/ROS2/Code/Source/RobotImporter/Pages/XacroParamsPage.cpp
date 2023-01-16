@@ -28,7 +28,7 @@ namespace ROS2
 
         QVBoxLayout* layout = new QVBoxLayout;
         layout->addWidget(m_table);
-        this->setLayout(layout);
+        setLayout(layout);
     }
 
     bool XacroParamsPage::isComplete() const
@@ -36,37 +36,36 @@ namespace ROS2
         return true;
     }
 
-    void XacroParamsPage::SetParameters(const Utils::xacro::Params& params)
+    void XacroParamsPage::SetXacroParameters(const Utils::xacro::Params& params)
     {
         m_defaultParams = params;
         m_table->setRowCount(0);
         for (const auto& [name, value] : params)
         {
-            int i = m_table->rowCount();
-            m_table->setRowCount(i + 1);
+            const int rowIndex = m_table->rowCount();
+            m_table->setRowCount(rowIndex + 1);
             QTableWidgetItem* p1 = new QTableWidgetItem(QString::fromUtf8(name.data()));
             QTableWidgetItem* p2 = new QTableWidgetItem(QString::fromUtf8(value.data()));
-            m_table->setItem(i, 0, p1);
-            m_table->setItem(i, 1, p2);
+            m_table->setItem(rowIndex, 0, p1);
+            m_table->setItem(rowIndex, 1, p2);
         }
     }
 
-    Utils::xacro::Params XacroParamsPage::GetParams() const
+    Utils::xacro::Params XacroParamsPage::GetXacroParameters() const
     {
         Utils::xacro::Params params;
         const int rowCount = m_table->rowCount();
         for (int i = 0; i < rowCount; i++)
         {
-            const auto p1 = m_table->item(i, 0);
-            const auto p2 = m_table->item(i, 1);
+            const auto* p1 = m_table->item(i, 0);
+            const auto* p2 = m_table->item(i, 1);
             AZ_Assert(p1, "cell should exist");
             AZ_Assert(p2, "cell should exist");
-            AZStd::string name(p1->text().toUtf8());
-            AZStd::string value(p2->text().toUtf8());
+            const AZStd::string name(p1->text().toUtf8().constData());
+            const AZStd::string value(p2->text().toUtf8().constData());
             auto it = m_defaultParams.find(name);
             if (it != m_defaultParams.end())
             {
-                AZ_Printf("XacroParamsPage", "name : %s value : %s (default %s)\n", name.c_str(), value.c_str(), it->second.c_str());
                 if (it->second != value)
                 {
                     params[name] = value;

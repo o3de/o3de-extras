@@ -8,44 +8,40 @@
 
 #pragma once
 
-#include "RobotImporter/URDF/UrdfParser.h"
+#include <RobotImporter/URDF/UrdfParser.h>
 #include <AzCore/std/containers/unordered_map.h>
 #include <AzCore/std/string/string.h>
 
 namespace ROS2::Utils::xacro
 {
 
-    static const char* kXacroExecutable = "xacro";
+    static const char* XacroExecutable = "xacro";
     using Params = AZStd::unordered_map<AZStd::string, AZStd::string>;
     //! Structure that keeps all artifacts of xacro execution
     struct ExecutionOutcome
     {
-        //! parsed URDF from successful xacro's output
+        //! Parsed URDF from successful xacro's output
         urdf::ModelInterfaceSharedPtr m_urdfHandle;
-        //! return code of 'xacro' program
-        int m_returnCode{ 255 };
-        //! called program name
+        //! Return code of 'xacro' program
+        bool m_succeed{ false };
+        //! Called program name
         AZStd::string m_called;
-        //! standard output of xacro execution
+        //! Standard output of xacro execution
         AZStd::string m_logStandardOutput;
-        //! standard error output of xacro process
+        //! Standard error output of xacro process
         AZStd::string m_logErrorOutput;
 
         //! Gets if execution was a success
-        operator bool()
+        explicit operator bool() const
         {
-            return m_returnCode == 0 && m_urdfHandle != nullptr;
+            return m_succeed && m_urdfHandle != nullptr;
         }
     };
 
-    AZStd::unordered_map<AZStd::string, AZStd::string> GetParameterFromXacroData(AZStd::vector<char> data);
-    AZStd::unordered_map<AZStd::string, AZStd::string> GetParameterFromXacroFile(AZStd::string filename);
+    AZStd::unordered_map<AZStd::string, AZStd::string> GetParameterFromXacroData(const AZStd::string& data);
+    AZStd::unordered_map<AZStd::string, AZStd::string> GetParameterFromXacroFile(const AZStd::string& filename);
 
     ExecutionOutcome ParseXacro(const AZStd::string& filename, const Params& params);
 
-    //! Finds absolute path of xacro executable.
-    //! It encapsulates `which`
-    //! @returns empty string is returned if no executable is found.
-    AZStd::string WhichXacro();
 
 } // namespace ROS2::Utils::xacro

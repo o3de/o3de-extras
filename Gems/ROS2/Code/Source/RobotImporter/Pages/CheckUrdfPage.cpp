@@ -21,7 +21,7 @@ namespace ROS2
         layout->addWidget(m_log);
         m_log->acceptRichText();
         m_log->setReadOnly(true);
-        this->setLayout(layout);
+        setLayout(layout);
     }
 
     void CheckUrdfPage::ReportURDFResult(const QString& status, bool isSuccess)

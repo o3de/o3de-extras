@@ -22,20 +22,21 @@
 namespace ROS2
 {
     class RobotImporterWidget;
+
+    //!  Wizard page that allows user to modify Xacro parameters
     class XacroParamsPage : public QWizardPage
     {
         Q_OBJECT
     public:
         explicit XacroParamsPage(RobotImporterWidget* parent);
 
-        void setSuccess(bool success);
         bool isComplete() const override;
 
-        void SetParameters(const Utils::xacro::Params& params);
-        Utils::xacro::Params GetParams() const;
+        void SetXacroParameters(const Utils::xacro::Params& params);
+        Utils::xacro::Params GetXacroParameters() const;
 
     private:
         Utils::xacro::Params m_defaultParams;
-        QTableWidget* m_table;
+        QTableWidget* m_table {};
     };
 } // namespace ROS2

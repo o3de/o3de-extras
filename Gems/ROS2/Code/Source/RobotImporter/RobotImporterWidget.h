@@ -69,7 +69,7 @@ namespace ROS2
         CheckAssetPage* m_assetPage;
         PrefabMakerPage* m_prefabMakerPage;
         XacroParamsPage* m_xacroParamsPage;
-        AZStd::string m_urdfPath;
+        AZ::IO::Path m_urdfPath;
         urdf::ModelInterfaceSharedPtr m_parsedUrdf;
 
         /// mapping from urdf path to asset source
@@ -95,8 +95,16 @@ namespace ROS2
         void ReportError(const QString& errorMessage);
 
         //! Returns if file is xacro.
-        //! @param filename filename to check
-        bool IsFileXacro(const AZStd::string& filename) const;
+        //! @param filename path to check
+        bool IsFileXacro(const AZ::IO::Path& filename) const;
+
+        //! Returns if file is urdf.
+        //! @param filename path to check
+        bool IsFileUrdf(const AZ::IO::Path& filename) const;
+
+        //! Returns capitalized extension.
+        //! @param filename path to check
+        AZStd::string GetCapitalizedExtension(const AZ::IO::Path& filename) const;
 
         static constexpr QWizard::WizardButton PrefabCreationButtonId{ QWizard::CustomButton1 };
         static constexpr QWizard::WizardOption HavePrefabCreationButton{ QWizard::HaveCustomButton1 };
