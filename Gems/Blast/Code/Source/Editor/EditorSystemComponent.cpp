@@ -10,15 +10,12 @@
 #include <AzCore/Serialization/SerializeContext.h>
 #include <Editor/EditorSystemComponent.h>
 #include <Editor/EditorWindow.h>
-#include <Editor/Material/LegacyBlastMaterialAssetConversion.h>
 
 namespace Blast
 {
     void EditorSystemComponent::Reflect(AZ::ReflectContext* context)
     {
         BlastChunksAsset::Reflect(context);
-
-        ReflectLegacyMaterialClasses(context);
 
         if (auto serializeContext = azrtti_cast<AZ::SerializeContext*>(context))
         {

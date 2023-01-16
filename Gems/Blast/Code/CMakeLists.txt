@@ -59,7 +59,7 @@ ly_add_target(
 # clients and servers use the above Gem module.
 ly_create_alias(NAME Blast.Servers NAMESPACE Gem TARGETS Gem::Blast)
 ly_create_alias(NAME Blast.Clients NAMESPACE Gem TARGETS Gem::Blast)
-
+ly_create_alias(NAME Blast.Unified NAMESPACE Gem TARGETS Gem::Blast)
 
 if(PAL_TRAIT_BUILD_HOST_TOOLS)
 
@@ -165,9 +165,9 @@ if(PAL_TRAIT_BUILD_TESTS_SUPPORTED)
                     AZ::AzToolsFrameworkTestCommon
                     Gem::Blast.Editor.Static
         )
-        # Commented out as currently there are no Blast Editor tests
-        # ly_add_googletest(
-            # NAME Gem::Blast.Editor.Tests
-        # )
+        ly_add_googletest(
+            NAME Gem::Blast.Editor.Tests
+            TEST_SUITE sandbox
+        )
     endif()
 endif()

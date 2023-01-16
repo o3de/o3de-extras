@@ -22,12 +22,10 @@ namespace Blast
         if (AZ::SerializeContext* serialize = azrtti_cast<AZ::SerializeContext*>(context))
         {
             serialize->Class<EditorBlastFamilyComponent, EditorComponentBase>()
-                ->Version(4)
+                ->Version(5)
                 ->Field("BlastAsset", &EditorBlastFamilyComponent::m_blastAsset)
                 ->Field("BlastMaterialAsset", &EditorBlastFamilyComponent::m_blastMaterialAsset)
-                ->Field("BlastMaterial", &EditorBlastFamilyComponent::m_legacyBlastMaterialId)
                 ->Field("PhysicsMaterialAsset", &EditorBlastFamilyComponent::m_physicsMaterialAsset)
-                ->Field("PhysicsMaterial", &EditorBlastFamilyComponent::m_legacyPhysicsMaterialId)
                 ->Field("ActorConfiguration", &EditorBlastFamilyComponent::m_actorConfiguration);
 
             if (AZ::EditContext* ec = serialize->GetEditContext())
