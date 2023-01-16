@@ -8,4 +8,9 @@
 
 #include <AzTest/AzTest.h>
 
+TEST(BlastEditor, Test)
+{
+    EXPECT_TRUE(true);
+}
+
 AZ_UNIT_TEST_HOOK(DEFAULT_UNIT_TEST_ENV);
