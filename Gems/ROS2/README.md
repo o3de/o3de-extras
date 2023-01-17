@@ -52,10 +52,10 @@ For a "feel" of these features, see an [example project](#example-project) which
 
 ## Clone this repository
 
-Clone the gem repository from Github:
+Clone the o3de-extras repository from Github:
 
 ```
-git clone https://github.com/RobotecAI/o3de-ros2-gem.git
+git clone https://github.com/o3de/o3de-extras.git
 ```
 
 ## Building
@@ -69,7 +69,7 @@ before building.
 To use this Gem in your project, you need to register the Gem with O3DE. First, clone this repository. Then,
 in o3de folder:
 ```
-scripts/o3de.sh register --gem-path <PATH_TO_CLONED_ROS2_GEM>
+scripts/o3de.sh register --gem-path <PATH_TO_CLONED_O3DE_EXTRAS>/Gems/ROS2
 scripts/o3de.sh enable-gem -gn ROS2 -pp <PATH_TO_YOUR_PROJECT>
 ```
 
