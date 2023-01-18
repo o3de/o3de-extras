@@ -97,7 +97,7 @@ If we want to register a particular object such as a single gem we would issue t
 scripts\o3de.bat register --gem-path <o3de-extras>/Gems/<gem name>
 ```
 Or you may want to register all the Gems.
-Since this repo follows the standard O3DE compound repo format all the o3de-extras gems will be in the `<o3de-extras>/Gems` path.
+Since this repo follows the [standard O3DE compound repo format](https://github.com/o3de/o3de/wiki/O3DE-Standard-repo-formats) all the o3de-extras gems will be in the `<o3de-extras>/Gems` path.
 We can therefore register all the gems in the extras gems path with one command:
 ```
 scripts\o3de.bat register --all-gems-path <o3de-extras>/Gems
