@@ -72,10 +72,11 @@ ly_add_target(
 )
 
 # By default, we will specify that the above target ROS2 would be used by
-# Client and Server type targets when this gem is enabled.  If you don't want it
-# active in Clients or Servers by default, delete one of both of the following lines:
+# Client, Server and Unified type targets when this gem is enabled.  If you don't want it
+# active in Clients, Servers or Unified by default, delete one or more of the following lines:
 ly_create_alias(NAME ${gem_name}.Clients NAMESPACE Gem TARGETS Gem::${gem_name})
 ly_create_alias(NAME ${gem_name}.Servers NAMESPACE Gem TARGETS Gem::${gem_name})
+ly_create_alias(NAME ${gem_name}.Unified NAMESPACE Gem TARGETS Gem::${gem_name})
 
 # If we are on a host platform, we want to add the host tools targets like the ${gem_name}.Editor target which
 # will also depend on ${gem_name}.Static
