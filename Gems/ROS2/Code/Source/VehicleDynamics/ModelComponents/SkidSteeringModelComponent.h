@@ -8,14 +8,13 @@
 
 #pragma once
 
-#include <VehicleDynamics/VehicleModelComponent.h>
-#include <VehicleDynamics/DriveModels/SkidSteeringDriveModel.h>
 #include <AzCore/Component/Component.h>
+#include <VehicleDynamics/DriveModels/SkidSteeringDriveModel.h>
+#include <VehicleDynamics/VehicleModelComponent.h>
 
 namespace ROS2::VehicleDynamics
 {
-    class SkidSteeringModelComponent
-        : public VehicleModelComponent
+    class SkidSteeringModelComponent : public VehicleModelComponent
     {
     public:
         AZ_COMPONENT(SkidSteeringModelComponent, "{57950C15-F7CF-422B-A452-E4487118F53E}", VehicleModelComponent);
@@ -25,16 +24,22 @@ namespace ROS2::VehicleDynamics
 
         //////////////////////////////////////////////////////////////////////////
         // Component overrides
+        static void GetProvidedServices(AZ::ComponentDescriptor::DependencyArrayType& provided);
+        static void GetIncompatibleServices(AZ::ComponentDescriptor::DependencyArrayType& incompatible);
+        //////////////////////////////////////////////////////////////////////////
+
+        //////////////////////////////////////////////////////////////////////////
+        // Component overrides
         void Activate() override;
         //////////////////////////////////////////////////////////////////////////
 
     private:
         VehicleDynamics::SkidSteeringDriveModel m_driveModel;
+
     protected:
         //////////////////////////////////////////////////////////////////////////
         // VehicleModelComponent overrides
-        VehicleDynamics::DriveModel * GetDriveModel() override;
+        VehicleDynamics::DriveModel* GetDriveModel() override;
         //////////////////////////////////////////////////////////////////////////
-
     };
 } // namespace ROS2::VehicleDynamics

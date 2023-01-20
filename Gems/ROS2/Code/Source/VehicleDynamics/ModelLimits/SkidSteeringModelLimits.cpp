@@ -45,9 +45,9 @@ namespace ROS2::VehicleDynamics
         }
     }
 
-    VehicleInputsState SkidSteeringModelLimits::LimitState(const VehicleInputsState& inputState) const
+    VehicleInputs SkidSteeringModelLimits::LimitState(const VehicleInputs& inputState) const
     {
-        VehicleInputsState ret = inputState;
+        VehicleInputs ret = inputState;
         const auto& v = ret.m_speed;
         ret.m_speed = AZ::Vector3{ LimitValue(v.GetX(), m_linearLimit), 0.f, 0.f };
         const auto& r = ret.m_angularRates;
@@ -55,9 +55,9 @@ namespace ROS2::VehicleDynamics
         return ret;
     }
 
-    VehicleInputsState SkidSteeringModelLimits::GetMaximumState() const
+    VehicleInputs SkidSteeringModelLimits::GetMaximumState() const
     {
-        VehicleInputsState ret;
+        VehicleInputs ret;
         ret.m_speed = { m_linearLimit, 0, 0 };
         ret.m_angularRates = { 0, 0, m_angularLimit };
         return ret;

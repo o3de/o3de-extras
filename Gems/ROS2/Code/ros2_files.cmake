@@ -76,7 +76,8 @@ set(FILES
         Source/VehicleDynamics/Utilities.h
         Source/VehicleDynamics/VehicleConfiguration.cpp
         Source/VehicleDynamics/VehicleConfiguration.h
-        Source/VehicleDynamics/VehicleInputsState.h
+        Source/VehicleDynamics/VehicleInputs.cpp
+        Source/VehicleDynamics/VehicleInputs.h
         Source/VehicleDynamics/VehicleModelComponent.cpp
         Source/VehicleDynamics/VehicleModelComponent.h
         Source/VehicleDynamics/ModelComponents/AckermannModelComponent.cpp

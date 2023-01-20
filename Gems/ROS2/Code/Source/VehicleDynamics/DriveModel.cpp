@@ -26,12 +26,21 @@ namespace ROS2::VehicleDynamics
         }
     }
 
+    void DriveModel::SetDisabled(bool isDisabled)
+    {
+        m_disabled = isDisabled;
+    }
 
-    void DriveModel::ApplyInputState(const VehicleInputsState& inputs, uint64_t deltaTimeNs){
-        const VehicleModelLimits * limits = GetVehicleLimits();
-        AZ_Assert(limits, "Implementation of DriveModel should return limits ");
-        const VehicleInputsState filteredInputs = limits->LimitState(inputs);
+    void DriveModel::ApplyInputState(const VehicleInputs& inputs, uint64_t deltaTimeNs)
+    {
+        const VehicleInputs filteredInputs = GetVehicleLimitPtr()->LimitState(inputs);
         ApplyState(filteredInputs, deltaTimeNs);
+    }
+
+    VehicleInputs DriveModel::GetMaximumPossibleInputs() const
+    {
+        AZ_Assert(GetVehicleLimitPtr(), "DriveModel should provide pointer to limits");
+        return GetVehicleLimitPtr()->GetMaximumState();
     }
 
 } // namespace ROS2::VehicleDynamics

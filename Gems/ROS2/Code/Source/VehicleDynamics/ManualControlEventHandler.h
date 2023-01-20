@@ -68,7 +68,7 @@ namespace ROS2::VehicleDynamics
                 [ownerEntity](float inputValue)
                 {
                     VehicleInputControlRequestBus::Event(
-                        ownerEntity, &VehicleInputControlRequests::SetTargetLinearSpeedXFraction, inputValue);
+                        ownerEntity, &VehicleInputControlRequests::SetTargetLinearSpeedFraction, inputValue);
                 }));
 
             m_eventHandlers.push_back(ManualControlSingleEventHandler(
@@ -76,7 +76,7 @@ namespace ROS2::VehicleDynamics
                 [ownerEntity](float inputValue)
                 {
                     VehicleInputControlRequestBus::Event(
-                        ownerEntity, &VehicleInputControlRequests::SetTargetAngularSpeedZFraction, inputValue);
+                        ownerEntity, &VehicleInputControlRequests::SetTargetAngularSpeedFraction, inputValue);
                 }));
 
             for (auto& handler : m_eventHandlers)

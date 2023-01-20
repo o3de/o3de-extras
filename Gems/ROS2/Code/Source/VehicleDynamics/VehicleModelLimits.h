@@ -7,9 +7,9 @@
  */
 #pragma once
 
+#include "VehicleInputs.h"
 #include <AzCore/RTTI/TypeInfo.h>
 #include <AzCore/Serialization/SerializeContext.h>
-#include "VehicleInputsState.h"
 
 namespace ROS2::VehicleDynamics
 {
@@ -25,12 +25,11 @@ namespace ROS2::VehicleDynamics
         //! Limit input state to values that are possible for model.
         //! @param inputState Input state to filter.
         //! @returns Filtered, pruned state.
-        virtual VehicleInputsState LimitState(const VehicleInputsState& inputState) const  = 0;
+        virtual VehicleInputs LimitState(const VehicleInputs& inputState) const = 0;
 
         //! Returns maximal permissible input states.
         //! @returns VehicleInputsState
-        virtual VehicleInputsState GetMaximumState() const = 0;
-
+        virtual VehicleInputs GetMaximumState() const = 0;
 
     protected:
         //! Limit value with a symmetrical range.

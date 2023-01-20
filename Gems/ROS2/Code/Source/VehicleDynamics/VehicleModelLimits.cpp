@@ -17,8 +17,7 @@ namespace ROS2::VehicleDynamics
     {
         if (AZ::SerializeContext* serialize = azrtti_cast<AZ::SerializeContext*>(context))
         {
-            serialize->Class<VehicleModelLimits>()
-                ->Version(2);
+            serialize->Class<VehicleModelLimits>()->Version(2);
 
             if (AZ::EditContext* ec = serialize->GetEditContext())
             {

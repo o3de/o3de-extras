@@ -1,10 +1,10 @@
 /*
-* Copyright (c) Contributors to the Open 3D Engine Project.
-* For complete copyright and license terms please see the LICENSE at the root of this distribution.
-*
-* SPDX-License-Identifier: Apache-2.0 OR MIT
-*
-*/
+ * Copyright (c) Contributors to the Open 3D Engine Project.
+ * For complete copyright and license terms please see the LICENSE at the root of this distribution.
+ *
+ * SPDX-License-Identifier: Apache-2.0 OR MIT
+ *
+ */
 
 #include "AckermannModelComponent.h"
 #include <AzCore/Serialization/EditContext.h>
@@ -35,6 +35,16 @@ namespace ROS2::VehicleDynamics
                         "Settings of the selected drive model");
             }
         }
+    }
+
+    void AckermannVehicleModelComponent::GetProvidedServices(AZ::ComponentDescriptor::DependencyArrayType& provided)
+    {
+        provided.push_back(AZ_CRC_CE("AckermannModelService"));
+    }
+
+    void AckermannVehicleModelComponent::GetIncompatibleServices(AZ::ComponentDescriptor::DependencyArrayType& incompatible)
+    {
+        incompatible.push_back(AZ_CRC_CE("AckermannModelService"));
     }
 
     VehicleDynamics::DriveModel* AckermannVehicleModelComponent::GetDriveModel()

@@ -13,7 +13,9 @@
 #include <AzCore/Serialization/EditContextConstants.inl>
 #include <AzFramework/Physics/RigidBodyBus.h>
 #include <PhysX/Joint/PhysXJointRequestsBus.h>
+#include <ROS2/VehicleDynamics/VehicleInputControlBus.h>
 #include <VehicleDynamics/WheelControllerComponent.h>
+
 namespace ROS2
 {
     void SkidSteeringControlComponent::Reflect(AZ::ReflectContext* context)
@@ -44,15 +46,15 @@ namespace ROS2
     void SkidSteeringControlComponent::GetRequiredServices(AZ::ComponentDescriptor::DependencyArrayType& required)
     {
         required.push_back(AZ_CRC_CE("ROS2RobotControl"));
-        required.push_back(AZ_CRC_CE("VehicleModelService"));
+        required.push_back(AZ_CRC_CE("SkidSteeringModelService"));
     }
 
     void SkidSteeringControlComponent::TwistReceived(const AZ::Vector3& linear, const AZ::Vector3& angular)
     {
         // Notify input system for vehicle dynamics. Only speed and steering is currently supported.
         VehicleDynamics::VehicleInputControlRequestBus::Event(
-            GetEntityId(), &VehicleDynamics::VehicleInputControlRequests::SetTargetLinearSpeed, linear);
+            GetEntityId(), &VehicleDynamics::VehicleInputControlRequests::SetTargetLinearSpeedV3, linear);
         VehicleDynamics::VehicleInputControlRequestBus::Event(
-            GetEntityId(), &VehicleDynamics::VehicleInputControlRequests::SetTargetAngularSpeed, angular);
+            GetEntityId(), &VehicleDynamics::VehicleInputControlRequests::SetTargetAngularSpeedV3, angular);
     }
 } // namespace ROS2

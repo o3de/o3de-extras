@@ -37,6 +37,16 @@ namespace ROS2::VehicleDynamics
         }
     }
 
+    void SkidSteeringModelComponent::GetProvidedServices(AZ::ComponentDescriptor::DependencyArrayType& provided)
+    {
+        provided.push_back(AZ_CRC_CE("SkidSteeringModelService"));
+    }
+
+    void SkidSteeringModelComponent::GetIncompatibleServices(AZ::ComponentDescriptor::DependencyArrayType& incompatible)
+    {
+        incompatible.push_back(AZ_CRC_CE("SkidSteeringModelService"));
+    }
+
     VehicleDynamics::DriveModel* SkidSteeringModelComponent::GetDriveModel()
     {
         return &m_driveModel;
@@ -47,5 +57,4 @@ namespace ROS2::VehicleDynamics
         VehicleModelComponent::Activate();
         m_driveModel.Activate(m_vehicleConfiguration);
     }
-
 } // namespace ROS2::VehicleDynamics

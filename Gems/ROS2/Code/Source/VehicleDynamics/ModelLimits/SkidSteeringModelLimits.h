@@ -1,10 +1,10 @@
 /*
-* Copyright (c) Contributors to the Open 3D Engine Project.
-* For complete copyright and license terms please see the LICENSE at the root of this distribution.
-*
-* SPDX-License-Identifier: Apache-2.0 OR MIT
-*
-*/
+ * Copyright (c) Contributors to the Open 3D Engine Project.
+ * For complete copyright and license terms please see the LICENSE at the root of this distribution.
+ *
+ * SPDX-License-Identifier: Apache-2.0 OR MIT
+ *
+ */
 
 #pragma once
 
@@ -24,13 +24,12 @@ namespace ROS2::VehicleDynamics
 
         //////////////////////////////////////////////////////////////////////////
         // VehicleModelLimits overrides
-        VehicleInputsState LimitState(const VehicleInputsState& inputState) const ;
-        VehicleInputsState GetMaximumState() const;
+        VehicleInputs LimitState(const VehicleInputs& inputState) const;
+        VehicleInputs GetMaximumState() const;
         //////////////////////////////////////////////////////////////////////////
 
-
     private:
-        float m_linearLimit = 1.0f;
-        float m_angularLimit = 1.0f;
+        float m_linearLimit = 2.0f; //!< [m/s] Maximum travel velocity.
+        float m_angularLimit = 3.5f; //!< [Rad/s] Maximum rotation speed.
     };
 } // namespace ROS2::VehicleDynamics

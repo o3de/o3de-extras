@@ -8,7 +8,8 @@
 #pragma once
 
 #include <AzCore/Time/ITime.h>
-#include <type_traits>
+#include <AzCore/Math/Vector3.h>
+#include <AzCore/std/containers/vector.h>
 
 namespace ROS2::VehicleDynamics
 {
@@ -28,24 +29,18 @@ namespace ROS2::VehicleDynamics
             m_input = updatedInput;
             m_lastUpdateUs = GetTimeSinceStartupUs();
         }
-        void Zero(){
-            m_input = T(0);
-        }
 
-        T& GetValue(){
-           return m_input;
-        }
-
-        T GetTimeoutedValue() const
+        T& GetValue()
         {
-
             if (auto timeSinceStartUs = GetTimeSinceStartupUs(); timeSinceStartUs - m_lastUpdateUs > m_timeoutUs)
             {
-                return T(0);
+                m_input = Zero(m_input);
             }
             return m_input;
         }
+
     private:
+        T& Zero(T& input);
         int64_t GetTimeSinceStartupUs() const
         {
             return static_cast<int64_t>(AZ::Interface<AZ::ITime>::Get()->GetElapsedTimeUs());
@@ -53,30 +48,24 @@ namespace ROS2::VehicleDynamics
 
         int64_t m_timeoutUs;
         int64_t m_lastUpdateUs = 0;
-        T m_input {0};
+        T m_input{ 0 };
     };
 
     //! Structure defining the most recent vehicle inputs state
-    struct VehicleInputsState
+    struct VehicleInputs
     {
         AZ::Vector3 m_speed; //!< Linear speed control measured in m/s
         AZ::Vector3 m_angularRates; //!< Angular speed control of vehicle
-        AZStd::vector<float> m_jointConfiguration; //!< Steering angle in radians. Negative is right, positive is left,
+        AZStd::vector<float> m_jointRequestedPosition; //!< Steering angle in radians. Negative is right, positive is left,
     };
 
-    struct VehicleInputsStateTimeouted
+    struct VehicleInputDeadline
     {
-        InputZeroedOnTimeout<AZ::Vector3>m_speed; //!< Linear speed control measured in m/s
-        InputZeroedOnTimeout<AZ::Vector3>m_angularRates; //!< Linear speed control measured in m/s
-        InputZeroedOnTimeout<AZStd::vector<float>> m_jointConfiguration; //!< Steering angle in radians. Negative is right, positive is left,
-
-        VehicleInputsState GetTimeoutedValue(){
-            return VehicleInputsState{
-                m_speed.GetTimeoutedValue(),
-                m_angularRates.GetTimeoutedValue(),
-                m_jointConfiguration.GetTimeoutedValue()
-            };
-        }
+        InputZeroedOnTimeout<AZ::Vector3> m_speed; //!< Linear speed control measured in m/s
+        InputZeroedOnTimeout<AZ::Vector3> m_angularRates; //!< Linear speed control measured in m/s
+        InputZeroedOnTimeout<AZStd::vector<float>>
+            m_jointRequestedPosition; //!< Steering angle in radians. Negative is right, positive is left,
+        VehicleInputs GetValueCheckingDeadline();
     };
 
 } // namespace ROS2::VehicleDynamics

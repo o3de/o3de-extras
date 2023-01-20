@@ -13,7 +13,7 @@
 
 #include <VehicleDynamics/ModelLimits/SkidSteeringModelLimits.h>
 #include <VehicleDynamics/VehicleConfiguration.h>
-#include <VehicleDynamics/VehicleInputsState.h>
+#include <VehicleDynamics/VehicleInputs.h>
 #include <VehicleDynamics/WheelDynamicsData.h>
 
 namespace ROS2::VehicleDynamics
@@ -23,15 +23,10 @@ namespace ROS2::VehicleDynamics
     {
     public:
         AZ_RTTI(SkidSteeringDriveModel, "{04AE1BF2-621A-46C3-B025-E0875856850D}", DriveModel);
-        SkidSteeringDriveModel::DriveModelType DriveType() const override
-        {
-            return SkidSteeringDriveModel::DriveModelType::SimplifiedDriveModelType;
-        }
+
         //////////////////////////////////////////////////////////////////////////
         // DriveModel overrides
         void Activate(const VehicleConfiguration& vehicleConfig) override;
-        void SetDisabled(bool isDisabled) override;
-        VehicleModelLimits* GetVehicleLimits() override;
         //////////////////////////////////////////////////////////////////////////
 
         static void Reflect(AZ::ReflectContext* context);
@@ -39,10 +34,10 @@ namespace ROS2::VehicleDynamics
     protected:
         //////////////////////////////////////////////////////////////////////////
         // DriveModel overrides
-        void ApplyState(const VehicleInputsState& inputs, uint64_t deltaTimeNs) override;
+        void ApplyState(const VehicleInputs& inputs, uint64_t deltaTimeNs) override;
+        VehicleModelLimits const* GetVehicleLimitPtr() const override;
         //////////////////////////////////////////////////////////////////////////
     private:
-        bool m_disabled{ false };
         SkidSteeringModelLimits m_limits;
         AZStd::unordered_map<AZ::EntityId, AZ::EntityComponentIdPair> m_wheelsData;
         VehicleConfiguration m_config;

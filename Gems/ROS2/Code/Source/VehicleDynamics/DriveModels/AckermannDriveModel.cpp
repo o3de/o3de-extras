@@ -12,8 +12,8 @@
 #include <AzCore/Serialization/EditContextConstants.inl>
 #include <AzCore/Serialization/SerializeContext.h>
 #include <AzFramework/Physics/RigidBodyBus.h>
-#include <PhysX/Joint/PhysXJointRequestsBus.h>
 #include <HingeJointComponent.h>
+#include <PhysX/Joint/PhysXJointRequestsBus.h>
 #include <VehicleDynamics/Utilities.h>
 
 namespace ROS2::VehicleDynamics
@@ -38,11 +38,7 @@ namespace ROS2::VehicleDynamics
                         &AckermannDriveModel::m_steeringPid,
                         "Steering PID",
                         "Configuration of steering PID controller")
-                    ->DataElement(
-                        AZ::Edit::UIHandlers::Default,
-                        &AckermannDriveModel::m_limits,
-                        "Vehicle Limits",
-                        "Limits");
+                    ->DataElement(AZ::Edit::UIHandlers::Default, &AckermannDriveModel::m_limits, "Vehicle Limits", "Limits");
             }
         }
     }
@@ -55,7 +51,7 @@ namespace ROS2::VehicleDynamics
         m_steeringPid.InitializePid();
     }
 
-    void AckermannDriveModel::ApplyState(const VehicleInputsState& inputs, uint64_t deltaTimeNs)
+    void AckermannDriveModel::ApplyState(const VehicleInputs& inputs, uint64_t deltaTimeNs)
     {
         if (m_driveWheelsData.empty())
         {
@@ -66,8 +62,8 @@ namespace ROS2::VehicleDynamics
         {
             m_steeringData = VehicleDynamics::Utilities::GetAllSteeringEntitiesData(m_vehicleConfiguration);
         }
-        const auto conf = inputs.m_jointConfiguration;
-        const float steering = conf.empty()?0:(conf.front());
+        const auto conf = inputs.m_jointRequestedPosition;
+        const float steering = conf.empty() ? 0 : (conf.front());
         ApplySteering(steering, deltaTimeNs);
         ApplySpeed(inputs.m_speed.GetX(), deltaTimeNs);
     }
@@ -135,14 +131,8 @@ namespace ROS2::VehicleDynamics
         }
     }
 
-    void AckermannDriveModel::SetDisabled(bool isDisabled)
+    VehicleModelLimits const* AckermannDriveModel::GetVehicleLimitPtr() const
     {
-        m_disabled = isDisabled;
-    }
-
-    VehicleModelLimits* AckermannDriveModel::GetVehicleLimits(){
         return &m_limits;
     }
-
-
 } // namespace ROS2::VehicleDynamics

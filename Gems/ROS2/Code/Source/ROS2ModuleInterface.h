@@ -19,14 +19,14 @@
 #include <ROS2/Manipulator/MotorizedJointComponent.h>
 #include <RobotControl/Controllers/AckermannController/AckermannControlComponent.h>
 #include <RobotControl/Controllers/RigidBodyController/RigidBodyTwistControlComponent.h>
+#include <RobotControl/Controllers/SkidSteeringController/SkidSteeringControlComponent.h>
 #include <RobotControl/ROS2RobotControlComponent.h>
 #include <RobotImporter/ROS2RobotImporterSystemComponent.h>
 #include <Spawner/ROS2SpawnPointComponent.h>
 #include <Spawner/ROS2SpawnerComponent.h>
-#include <VehicleDynamics/VehicleModelComponent.h>
 #include <VehicleDynamics/ModelComponents/AckermannModelComponent.h>
 #include <VehicleDynamics/ModelComponents/SkidSteeringModelComponent.h>
-#include <RobotControl/Controllers/SkidSteeringController/SkidSteeringControlComponent.h>
+#include <VehicleDynamics/VehicleModelComponent.h>
 
 #include <VehicleDynamics/WheelControllerComponent.h>
 

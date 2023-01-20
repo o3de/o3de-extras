@@ -41,14 +41,14 @@ namespace ROS2
     void AckermannControlComponent::GetRequiredServices(AZ::ComponentDescriptor::DependencyArrayType& required)
     {
         required.push_back(AZ_CRC_CE("ROS2RobotControl"));
-        required.push_back(AZ_CRC_CE("VehicleModelService"));
+        required.push_back(AZ_CRC_CE("AckermannModelService"));
     }
 
     void AckermannControlComponent::AckermannReceived(const AckermannCommandStruct& acs)
     {
         // Notify input system for vehicle dynamics. Only speed and steering is currently supported.
         VehicleDynamics::VehicleInputControlRequestBus::Event(
-            GetEntityId(), &VehicleDynamics::VehicleInputControlRequests::SetTargetLinearSpeedX, acs.m_speed);
+            GetEntityId(), &VehicleDynamics::VehicleInputControlRequests::SetTargetLinearSpeed, acs.m_speed);
         VehicleDynamics::VehicleInputControlRequestBus::Event(
             GetEntityId(), &VehicleDynamics::VehicleInputControlRequests::SetTargetSteering, acs.m_steeringAngle);
     }
