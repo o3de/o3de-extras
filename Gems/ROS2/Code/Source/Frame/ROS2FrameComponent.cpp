@@ -114,9 +114,16 @@ namespace ROS2
 
     bool ROS2FrameComponent::IsDynamic() const
     {
-        return IsTopLevel();
+        if(GetEntity()->FindComponent<PhysX::EditorFixedJointComponent>())
+        {
+            return false;
+        }
+        else // for every other joints (Hinge, Prismatic, D6...)
+        {
+            return true;
+        }
+        // return IsTopLevel();
     }
-
     const ROS2FrameComponent* ROS2FrameComponent::GetParentROS2FrameComponent() const
     {
         return Internal::GetFirstROS2FrameAncestor(GetEntity());
