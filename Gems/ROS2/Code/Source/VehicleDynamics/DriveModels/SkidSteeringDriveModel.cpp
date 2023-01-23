@@ -40,7 +40,7 @@ namespace ROS2::VehicleDynamics
         m_wheelsData.clear();
     }
 
-    void SkidSteeringDriveModel::ApplyState(const VehicleInputs& inputs, uint64_t deltaTimeNs)
+    void SkidSteeringDriveModel::ApplyState(const VehicleInputs& inputs, AZ::u64 deltaTimeNs)
     {
         float angular_speed = inputs.m_angularRates.GetZ();
         float linear_speed = inputs.m_speed.GetX();
@@ -59,15 +59,21 @@ namespace ROS2::VehicleDynamics
                     auto hinge = VehicleDynamics::Utilities::GetWheelPhysxHinge(wheel);
                     m_wheelsData[wheel] = hinge;
                 }
+                AZ_Warning(
+                    "SkidSteeringDriveModel",
+                    axle.m_axleWheels.size() > 1,
+                    "Axle %s has not enough wheels (%d)",
+                    axle.m_axleTag.c_str(),
+                    axle.m_axleWheels.size());
             }
-            AZ_Warning("SkidSteeringDriveModel", driveAxesCount == 0, "Skid steering model does not have any drive wheels.");
+            AZ_Warning("SkidSteeringDriveModel", driveAxesCount != 0, "Skid steering model does not have any drive wheels.");
         }
 
         for (size_t axleCount = 0; axleCount < m_config.m_axles.size(); axleCount++)
         {
             const auto& axle = m_config.m_axles[axleCount];
             const auto wheelCount = axle.m_axleWheels.size();
-            if (!axle.m_isDrive)
+            if (!axle.m_isDrive || wheelCount < 1)
             {
                 continue;
             }
@@ -79,24 +85,16 @@ namespace ROS2::VehicleDynamics
                 {
                     continue;
                 }
-                if (wheelCount > 1)
-                {
-                    float normalizedWheelId = -1.f + 2.f * wheelId / (wheelCount - 1);
-                    float wh = normalizedWheelId * m_config.m_wheelbase;
-                    AZ_Assert( axle.m_wheelRadius != 0, "axle.m_wheelRadius must be non-zero");
-                    float vh = (linear_speed + angular_speed * wh) / axle.m_wheelRadius;
-                    PhysX::JointRequestBus::Event(hingePtr->second, &PhysX::JointRequests::SetVelocity, vh);
-                }
-                else{
-                    AZ_Assert( axle.m_wheelRadius != 0, "axle.m_wheelRadius must be non-zero");
-                    float vh = (linear_speed) / axle.m_wheelRadius;
-                    PhysX::JointRequestBus::Event(hingePtr->second, &PhysX::JointRequests::SetVelocity, vh);
-                }
+                float normalizedWheelId = -1.f + 2.f * wheelId / (wheelCount - 1);
+                float wheelBase = normalizedWheelId * m_config.m_wheelbase;
+                AZ_Assert(axle.m_wheelRadius != 0, "axle.m_wheelRadius must be non-zero");
+                float vh = (linear_speed + angular_speed * wheelBase) / axle.m_wheelRadius;
+                PhysX::JointRequestBus::Event(hingePtr->second, &PhysX::JointRequests::SetVelocity, vh);
             }
         }
     }
 
-    VehicleModelLimits const* SkidSteeringDriveModel::GetVehicleLimitPtr() const
+    const VehicleModelLimits* SkidSteeringDriveModel::GetVehicleLimitPtr() const
     {
         return &m_limits;
     }

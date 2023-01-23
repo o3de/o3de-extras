@@ -32,23 +32,23 @@ namespace ROS2::VehicleDynamics
         virtual void Activate(const VehicleConfiguration& vehicleConfig) = 0;
 
         //! Applies inputs to the drive. This model will calculate and apply physical forces.
-        //! @param inputs captured state of inputs to use
+        //! @param inputs captured state of inputs to use.
         //! @param deltaTimeNs nanoseconds passed since last call of this function.
-        void ApplyInputState(const VehicleInputs& inputs, uint64_t deltaTimeNs);
+        void ApplyInputState(const VehicleInputs& inputs, AZ::u64 deltaTimeNs);
 
         //! Allows to disable vehicle dynamics.
-        //! @param isDisable true if drive model should be disabled
+        //! @param isDisable true if drive model should be disabled.
         void SetDisabled(bool isDisable);
 
-        //! Get vehicle maximum limits
+        //! Get vehicle maximum limits.
         VehicleInputs GetMaximumPossibleInputs() const;
 
     protected:
         //! Returns pointer to implementation specific Vehicle limits.
-        virtual VehicleDynamics::VehicleModelLimits const* GetVehicleLimitPtr() const = 0;
+        virtual const VehicleModelLimits* GetVehicleLimitPtr() const = 0;
 
         //! Apply input to implemented vehicle model.
-        virtual void ApplyState(const VehicleInputs& inputs, uint64_t deltaTimeNs) = 0;
+        virtual void ApplyState(const VehicleInputs& inputs, AZ::u64 deltaTimeNs) = 0;
 
         //! True if model is disabled.
         bool m_disabled{ false };

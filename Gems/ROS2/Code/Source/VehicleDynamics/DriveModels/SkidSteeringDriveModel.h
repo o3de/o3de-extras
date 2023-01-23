@@ -24,19 +24,16 @@ namespace ROS2::VehicleDynamics
     public:
         AZ_RTTI(SkidSteeringDriveModel, "{04AE1BF2-621A-46C3-B025-E0875856850D}", DriveModel);
 
-        //////////////////////////////////////////////////////////////////////////
         // DriveModel overrides
         void Activate(const VehicleConfiguration& vehicleConfig) override;
-        //////////////////////////////////////////////////////////////////////////
 
         static void Reflect(AZ::ReflectContext* context);
 
     protected:
-        //////////////////////////////////////////////////////////////////////////
         // DriveModel overrides
-        void ApplyState(const VehicleInputs& inputs, uint64_t deltaTimeNs) override;
-        VehicleModelLimits const* GetVehicleLimitPtr() const override;
-        //////////////////////////////////////////////////////////////////////////
+        void ApplyState(const VehicleInputs& inputs, AZ::u64 deltaTimeNs) override;
+        const VehicleModelLimits* GetVehicleLimitPtr() const override;
+
     private:
         SkidSteeringModelLimits m_limits;
         AZStd::unordered_map<AZ::EntityId, AZ::EntityComponentIdPair> m_wheelsData;

@@ -29,7 +29,7 @@ namespace ROS2::VehicleDynamics
         virtual void SetTargetLinearSpeedV3(const AZ::Vector3& speedMps) = 0;
 
         //! Set target for the vehicle linear speed. It should be realized over time according to drive model.
-        //! @param speedMps is a linear speed in meters per second with the plus sign in the forward direction.
+        //! @param speedMpsX is a linear speed in meters per second with the plus sign in the forward direction.
         virtual void SetTargetLinearSpeed(float speedMpsX) = 0;
 
         //! Steer in a direction given in relative coordinate system (current direction is 0).

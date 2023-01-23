@@ -31,7 +31,7 @@ namespace ROS2::VehicleDynamics
         m_disabled = isDisabled;
     }
 
-    void DriveModel::ApplyInputState(const VehicleInputs& inputs, uint64_t deltaTimeNs)
+    void DriveModel::ApplyInputState(const VehicleInputs& inputs, AZ::u64 deltaTimeNs)
     {
         const VehicleInputs filteredInputs = GetVehicleLimitPtr()->LimitState(inputs);
         ApplyState(filteredInputs, deltaTimeNs);
@@ -39,7 +39,7 @@ namespace ROS2::VehicleDynamics
 
     VehicleInputs DriveModel::GetMaximumPossibleInputs() const
     {
-        auto * vehicleLimitPtr = GetVehicleLimitPtr();
+        auto* vehicleLimitPtr = GetVehicleLimitPtr();
         AZ_Assert(vehicleLimitPtr, "DriveModel should provide pointer to limits");
         return vehicleLimitPtr->GetMaximumState();
     }

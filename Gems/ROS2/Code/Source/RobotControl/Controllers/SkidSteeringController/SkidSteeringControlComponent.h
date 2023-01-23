@@ -16,6 +16,7 @@
 namespace ROS2
 {
 
+    //! Component that contains skid steering model.
     class SkidSteeringControlComponent
         : public AZ::Component
         , private TwistNotificationBus::Handler
@@ -24,19 +25,15 @@ namespace ROS2
         AZ_COMPONENT(SkidSteeringControlComponent, "{7FEE7851-1284-4AE5-9C2C-763916BFE641}", AZ::Component);
         SkidSteeringControlComponent() = default;
 
-        //////////////////////////////////////////////////////////////////////////
         // Component overrides
         void Activate() override;
         void Deactivate() override;
-        //////////////////////////////////////////////////////////////////////////
 
         static void GetRequiredServices(AZ::ComponentDescriptor::DependencyArrayType& required);
         static void Reflect(AZ::ReflectContext* context);
 
     private:
-        //////////////////////////////////////////////////////////////////////////
         // TwistNotificationBus::Handler overrides
         void TwistReceived(const AZ::Vector3& linear, const AZ::Vector3& angular) override;
-        //////////////////////////////////////////////////////////////////////////
     };
 } // namespace ROS2

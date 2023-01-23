@@ -21,11 +21,9 @@ namespace ROS2::VehicleDynamics
         AckermannModelLimits() = default;
         static void Reflect(AZ::ReflectContext* context);
 
-        //////////////////////////////////////////////////////////////////////////
         // VehicleModelLimits overrides
         VehicleInputs LimitState(const VehicleInputs& inputState) const;
         VehicleInputs GetMaximumState() const;
-        //////////////////////////////////////////////////////////////////////////
 
     private:
         float m_speedLimit = 10.0f; //!< [Mps] Applies to absolute value

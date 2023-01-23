@@ -54,29 +54,30 @@ namespace ROS2::VehicleDynamics
     class ManualControlEventHandler
     {
     public:
-        void Activate(AZ::EntityId ownerEntity)
+        void Activate(AZ::EntityId ownerEntityId)
         {
             m_eventHandlers.push_back(ManualControlSingleEventHandler(
                 "steering",
-                [ownerEntity](float inputValue)
+                [ownerEntityId](float inputValue)
                 {
-                    VehicleInputControlRequestBus::Event(ownerEntity, &VehicleInputControlRequests::SetTargetSteeringFraction, inputValue);
+                    VehicleInputControlRequestBus::Event(
+                        ownerEntityId, &VehicleInputControlRequests::SetTargetSteeringFraction, inputValue);
                 }));
 
             m_eventHandlers.push_back(ManualControlSingleEventHandler(
                 "accelerate",
-                [ownerEntity](float inputValue)
+                [ownerEntityId](float inputValue)
                 {
                     VehicleInputControlRequestBus::Event(
-                        ownerEntity, &VehicleInputControlRequests::SetTargetLinearSpeedFraction, inputValue);
+                        ownerEntityId, &VehicleInputControlRequests::SetTargetLinearSpeedFraction, inputValue);
                 }));
 
             m_eventHandlers.push_back(ManualControlSingleEventHandler(
                 "rotate",
-                [ownerEntity](float inputValue)
+                [ownerEntityId](float inputValue)
                 {
                     VehicleInputControlRequestBus::Event(
-                        ownerEntity, &VehicleInputControlRequests::SetTargetAngularSpeedFraction, inputValue);
+                        ownerEntityId, &VehicleInputControlRequests::SetTargetAngularSpeedFraction, inputValue);
                 }));
 
             for (auto& handler : m_eventHandlers)

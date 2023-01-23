@@ -51,7 +51,7 @@ namespace ROS2::VehicleDynamics
         m_steeringPid.InitializePid();
     }
 
-    void AckermannDriveModel::ApplyState(const VehicleInputs& inputs, uint64_t deltaTimeNs)
+    void AckermannDriveModel::ApplyState(const VehicleInputs& inputs, AZ::u64 deltaTimeNs)
     {
         if (m_driveWheelsData.empty())
         {
@@ -62,8 +62,8 @@ namespace ROS2::VehicleDynamics
         {
             m_steeringData = VehicleDynamics::Utilities::GetAllSteeringEntitiesData(m_vehicleConfiguration);
         }
-        const auto conf = inputs.m_jointRequestedPosition;
-        const float steering = conf.empty() ? 0 : (conf.front());
+        const auto jointPositions = inputs.m_jointRequestedPosition;
+        const float steering = jointPositions.empty() ? 0 : jointPositions.front();
         ApplySteering(steering, deltaTimeNs);
         ApplySpeed(inputs.m_speed.GetX(), deltaTimeNs);
     }
@@ -85,7 +85,7 @@ namespace ROS2::VehicleDynamics
             });
     }
 
-    void AckermannDriveModel::ApplySteering(float steering, uint64_t deltaTimeNs)
+    void AckermannDriveModel::ApplySteering(float steering, AZ::u64 deltaTimeNs)
     {
         if (m_disabled)
         {
@@ -108,7 +108,7 @@ namespace ROS2::VehicleDynamics
         ApplyWheelSteering(m_steeringData.back(), outerSteering, deltaTimeNs);
     }
 
-    void AckermannDriveModel::ApplySpeed(float speed, uint64_t deltaTimeNs)
+    void AckermannDriveModel::ApplySpeed(float speed, AZ::u64 deltaTimeNs)
     {
         if (m_disabled)
         {
@@ -126,13 +126,13 @@ namespace ROS2::VehicleDynamics
             float wheelRadius = wheelData.m_wheelRadius;
             const auto hingeComponent = wheelData.m_hingeJoint;
             const auto id = AZ::EntityComponentIdPair(wheelEntity, hingeComponent);
-            AZ_Assert( wheelRadius != 0, "wheelRadius must be non-zero");
+            AZ_Assert(wheelRadius != 0, "wheelRadius must be non-zero");
             auto desiredAngularSpeedX = (speed / wheelRadius);
             PhysX::JointRequestBus::Event(id, &PhysX::JointRequests::SetVelocity, desiredAngularSpeedX);
         }
     }
 
-    VehicleModelLimits const* AckermannDriveModel::GetVehicleLimitPtr() const
+    const VehicleModelLimits* AckermannDriveModel::GetVehicleLimitPtr() const
     {
         return &m_limits;
     }

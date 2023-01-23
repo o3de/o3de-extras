@@ -22,24 +22,18 @@ namespace ROS2::VehicleDynamics
 
         static void Reflect(AZ::ReflectContext* context);
 
-        //////////////////////////////////////////////////////////////////////////
         // Component overrides
         static void GetProvidedServices(AZ::ComponentDescriptor::DependencyArrayType& provided);
         static void GetIncompatibleServices(AZ::ComponentDescriptor::DependencyArrayType& incompatible);
-        //////////////////////////////////////////////////////////////////////////
 
-        //////////////////////////////////////////////////////////////////////////
         // Component overrides
         void Activate() override;
-        //////////////////////////////////////////////////////////////////////////
 
     private:
         VehicleDynamics::SkidSteeringDriveModel m_driveModel;
 
     protected:
-        //////////////////////////////////////////////////////////////////////////
         // VehicleModelComponent overrides
         VehicleDynamics::DriveModel* GetDriveModel() override;
-        //////////////////////////////////////////////////////////////////////////
     };
 } // namespace ROS2::VehicleDynamics

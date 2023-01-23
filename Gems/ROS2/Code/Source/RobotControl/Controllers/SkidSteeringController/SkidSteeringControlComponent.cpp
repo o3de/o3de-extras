@@ -23,9 +23,9 @@ namespace ROS2
         if (AZ::SerializeContext* serialize = azrtti_cast<AZ::SerializeContext*>(context))
         {
             serialize->Class<SkidSteeringControlComponent, AZ::Component>()->Version(1);
-            if (AZ::EditContext* ec = serialize->GetEditContext())
+            if (AZ::EditContext* editorContext = serialize->GetEditContext())
             {
-                ec->Class<SkidSteeringControlComponent>("Skid steering Twist Control", "")
+                editorContext->Class<SkidSteeringControlComponent>("Skid steering Twist Control", "")
                     ->ClassElement(AZ::Edit::ClassElements::EditorData, "")
                     ->Attribute(AZ::Edit::Attributes::AppearsInAddComponentMenu, AZ_CRC_CE("Game"))
                     ->Attribute(AZ::Edit::Attributes::Category, "ROS2");

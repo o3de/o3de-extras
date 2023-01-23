@@ -23,23 +23,19 @@ namespace ROS2::VehicleDynamics
     public:
         AZ_RTTI(AckermannDriveModel, "{104AC31D-E30B-4454-BF42-4FB37B8CFD9B}", DriveModel);
 
-        //////////////////////////////////////////////////////////////////////////
         // DriveModel overrides
         void Activate(const VehicleConfiguration& vehicleConfig) override;
-        //////////////////////////////////////////////////////////////////////////
 
         static void Reflect(AZ::ReflectContext* context);
 
     protected:
-        //////////////////////////////////////////////////////////////////////////
         // DriveModel overrides
-        void ApplyState(const VehicleInputs& inputs, uint64_t deltaTimeNs) override;
-        VehicleModelLimits const* GetVehicleLimitPtr() const override;
-        //////////////////////////////////////////////////////////////////////////
+        void ApplyState(const VehicleInputs& inputs, AZ::u64 deltaTimeNs) override;
+        const VehicleModelLimits* GetVehicleLimitPtr() const override;
 
     private:
-        void ApplySteering(float steering, uint64_t deltaTimeNs);
-        void ApplySpeed(float speed, uint64_t deltaTimeNs);
+        void ApplySteering(float steering, AZ::u64 deltaTimeNs);
+        void ApplySpeed(float speed, AZ::u64 deltaTimeNs);
         void ApplyWheelSteering(SteeringDynamicsData& wheelData, float steering, double deltaTimeNs);
 
         VehicleConfiguration m_vehicleConfiguration;

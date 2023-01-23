@@ -29,17 +29,15 @@ namespace ROS2::VehicleDynamics
         AZ_RTTI(VehicleModelComponent, "{7093AE7A-9F64-4C77-8189-02C6B7802C1A}", AZ::Component);
         VehicleModelComponent() = default;
 
-        //////////////////////////////////////////////////////////////////////////
         // Component overrides
         void Activate() override;
         void Deactivate() override;
-        //////////////////////////////////////////////////////////////////////////
+
         static void Reflect(AZ::ReflectContext* context);
 
     private:
         void OnTick(float deltaTime, AZ::ScriptTimePoint time) override;
 
-        //////////////////////////////////////////////////////////////////////////
         // VehicleInputControlRequestBus::Handler overrides
         void SetTargetLinearSpeed(float speedMpsX) override;
         void SetTargetLinearSpeedV3(const AZ::Vector3& speedMps) override;
@@ -51,7 +49,7 @@ namespace ROS2::VehicleDynamics
         void SetTargetLinearSpeedFraction(float speedFractionX) override;
         void SetTargetAngularSpeedFraction(float rateFractionZ) override;
         void SetDisableVehicleDynamics(bool isDisable) override;
-        //////////////////////////////////////////////////////////////////////////
+
     protected:
         ManualControlEventHandler m_manualControlEventHandler;
         VehicleInputDeadline m_inputsState;

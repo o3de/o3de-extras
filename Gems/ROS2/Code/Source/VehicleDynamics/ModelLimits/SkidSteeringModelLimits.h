@@ -22,11 +22,9 @@ namespace ROS2::VehicleDynamics
         SkidSteeringModelLimits() = default;
         static void Reflect(AZ::ReflectContext* context);
 
-        //////////////////////////////////////////////////////////////////////////
         // VehicleModelLimits overrides
         VehicleInputs LimitState(const VehicleInputs& inputState) const;
         VehicleInputs GetMaximumState() const;
-        //////////////////////////////////////////////////////////////////////////
 
     private:
         float m_linearLimit = 2.0f; //!< [m/s] Maximum travel velocity.

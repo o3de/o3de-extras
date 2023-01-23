@@ -86,8 +86,7 @@ namespace ROS2::VehicleDynamics::Utilities
                     continue;
                 }
 
-                float steeringScale = controllerComponent->m_steeringScale;
-
+                const float steeringScale = controllerComponent->m_steeringScale;
                 PhysX::HingeJointComponent* hingeComponent{ nullptr };
                 AZ::Entity* steeringEntityptr{ nullptr };
                 AZ::ComponentApplicationBus::BroadcastResult(
