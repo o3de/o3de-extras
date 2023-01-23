@@ -42,10 +42,10 @@ namespace ROS2::VehicleDynamics
         //////////////////////////////////////////////////////////////////////////
         // VehicleInputControlRequestBus::Handler overrides
         void SetTargetLinearSpeed(float speedMpsX) override;
-        void SetTargetLinearSpeedV3(AZ::Vector3 speedMps) override;
+        void SetTargetLinearSpeedV3(const AZ::Vector3& speedMps) override;
         void SetTargetSteering(float steering) override;
         void SetTargetAngularSpeed(float rateZ) override;
-        void SetTargetAngularSpeedV3(AZ::Vector3 rate) override;
+        void SetTargetAngularSpeedV3(const AZ::Vector3& rate) override;
         void SetTargetAccelerationFraction(float accelerationFraction) override;
         void SetTargetSteeringFraction(float steeringFraction) override;
         void SetTargetLinearSpeedFraction(float speedFractionX) override;

@@ -126,6 +126,7 @@ namespace ROS2::VehicleDynamics
             float wheelRadius = wheelData.m_wheelRadius;
             const auto hingeComponent = wheelData.m_hingeJoint;
             const auto id = AZ::EntityComponentIdPair(wheelEntity, hingeComponent);
+            AZ_Assert( wheelRadius != 0, "wheelRadius must be non-zero");
             auto desiredAngularSpeedX = (speed / wheelRadius);
             PhysX::JointRequestBus::Event(id, &PhysX::JointRequests::SetVelocity, desiredAngularSpeedX);
         }

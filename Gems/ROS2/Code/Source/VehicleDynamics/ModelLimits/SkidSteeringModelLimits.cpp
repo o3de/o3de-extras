@@ -31,14 +31,14 @@ namespace ROS2::VehicleDynamics
                         AZ::Edit::UIHandlers::Default,
                         &SkidSteeringModelLimits::m_linearLimit,
                         "Linear speed Limit",
-                        "Max linear speed (mps)")
+                        "Max linear speed (meters/sec)")
                     ->Attribute(AZ::Edit::Attributes::Min, 0.0f)
                     ->Attribute(AZ::Edit::Attributes::Max, 100.0f)
                     ->DataElement(
                         AZ::Edit::UIHandlers::Default,
                         &SkidSteeringModelLimits::m_angularLimit,
                         "Angular speed Limit",
-                        "Max angular sped (rad/s)")
+                        "Max angular speed (rad/s)")
                     ->Attribute(AZ::Edit::Attributes::Min, 0.0f)
                     ->Attribute(AZ::Edit::Attributes::Max, 10.0f);
             }
@@ -48,10 +48,8 @@ namespace ROS2::VehicleDynamics
     VehicleInputs SkidSteeringModelLimits::LimitState(const VehicleInputs& inputState) const
     {
         VehicleInputs ret = inputState;
-        const auto& v = ret.m_speed;
-        ret.m_speed = AZ::Vector3{ LimitValue(v.GetX(), m_linearLimit), 0.f, 0.f };
-        const auto& r = ret.m_angularRates;
-        ret.m_angularRates = AZ::Vector3{ 0.f, 0.f, LimitValue(r.GetZ(), m_angularLimit) };
+        ret.m_speed = AZ::Vector3{ LimitValue(ret.m_speed.GetX(), m_linearLimit), 0.f, 0.f };
+        ret.m_angularRates = AZ::Vector3{ 0.f, 0.f, LimitValue(ret.m_angularRates.GetZ(), m_angularLimit) };
         return ret;
     }
 

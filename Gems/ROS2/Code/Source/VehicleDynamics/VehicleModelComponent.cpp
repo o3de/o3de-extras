@@ -61,7 +61,7 @@ namespace ROS2::VehicleDynamics
         m_inputsState.m_speed.UpdateValue({ speedMpsX, 0, 0 });
     }
 
-    void VehicleModelComponent::SetTargetLinearSpeedV3(AZ::Vector3 speedMps)
+    void VehicleModelComponent::SetTargetLinearSpeedV3(const AZ::Vector3& speedMps)
     {
         m_inputsState.m_speed.UpdateValue(speedMps);
     }
@@ -101,7 +101,7 @@ namespace ROS2::VehicleDynamics
         m_inputsState.m_angularRates.UpdateValue({ 0, 0, rateZ });
     };
 
-    void VehicleModelComponent::SetTargetAngularSpeedV3(AZ::Vector3 rate)
+    void VehicleModelComponent::SetTargetAngularSpeedV3(const AZ::Vector3& rate)
     {
         m_inputsState.m_angularRates.UpdateValue(rate);
     };

@@ -39,8 +39,9 @@ namespace ROS2::VehicleDynamics
 
     VehicleInputs DriveModel::GetMaximumPossibleInputs() const
     {
-        AZ_Assert(GetVehicleLimitPtr(), "DriveModel should provide pointer to limits");
-        return GetVehicleLimitPtr()->GetMaximumState();
+        auto * vehicleLimitPtr = GetVehicleLimitPtr();
+        AZ_Assert(vehicleLimitPtr, "DriveModel should provide pointer to limits");
+        return vehicleLimitPtr->GetMaximumState();
     }
 
 } // namespace ROS2::VehicleDynamics

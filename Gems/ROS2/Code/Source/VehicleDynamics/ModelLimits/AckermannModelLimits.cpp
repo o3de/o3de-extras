@@ -28,7 +28,7 @@ namespace ROS2::VehicleDynamics
                     ->ClassElement(AZ::Edit::ClassElements::EditorData, "")
                     ->Attribute(AZ::Edit::Attributes::Category, "ROS2")
                     ->DataElement(
-                        AZ::Edit::UIHandlers::Default, &AckermannModelLimits::m_speedLimit, "Speed Limit", "Max linear speed (mps)")
+                        AZ::Edit::UIHandlers::Default, &AckermannModelLimits::m_speedLimit, "Speed Limit", "Max linear speed (meters/sec)")
                     ->Attribute(AZ::Edit::Attributes::Min, 0.0f)
                     ->Attribute(AZ::Edit::Attributes::Max, 100.0f)
                     ->DataElement(

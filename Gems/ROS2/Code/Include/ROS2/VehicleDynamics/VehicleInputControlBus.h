@@ -25,8 +25,8 @@ namespace ROS2::VehicleDynamics
         virtual ~VehicleInputControlRequests() = default;
 
         //! Set target for the vehicle linear speed. It should be realized over time according to drive model.
-        //! @param speedMps is a linear speed in meters per second in evry direction.
-        virtual void SetTargetLinearSpeedV3(AZ::Vector3 speedMps) = 0;
+        //! @param speedMps is a linear speed vectors, unit is meters per second.
+        virtual void SetTargetLinearSpeedV3(const AZ::Vector3& speedMps) = 0;
 
         //! Set target for the vehicle linear speed. It should be realized over time according to drive model.
         //! @param speedMps is a linear speed in meters per second with the plus sign in the forward direction.
@@ -38,8 +38,8 @@ namespace ROS2::VehicleDynamics
         virtual void SetTargetSteering(float steering) = 0;
 
         //! Set target for the angular speed. It should be realized over time according to drive model.
-        //! @param rate is an angular speed in radians per second
-        virtual void SetTargetAngularSpeedV3(AZ::Vector3 rate) = 0;
+        //! @param rate is an angular speed vector, unit is radians per second.
+        virtual void SetTargetAngularSpeedV3(const AZ::Vector3& rate) = 0;
 
         //! Set target for the angular speed. It should be realized over time according to drive model.
         //! @param rateZ is an angular speed in radians per second in up direction .
