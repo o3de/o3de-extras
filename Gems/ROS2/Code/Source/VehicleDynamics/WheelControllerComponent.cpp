@@ -43,10 +43,9 @@ namespace ROS2::VehicleDynamics
         if (AZ::SerializeContext* serialize = azrtti_cast<AZ::SerializeContext*>(context))
         {
             serialize->Class<WheelControllerComponent, AZ::Component>()
-                ->Version(2)
+                ->Version(3)
                 ->Field("SteeringEntity", &WheelControllerComponent::m_steeringEntity)
-                ->Field("DriveDir", &WheelControllerComponent::m_driveDir)
-                ->Field("SteeringDir", &WheelControllerComponent::m_steeringDir);
+                ->Field("SteeringScale", &WheelControllerComponent::m_steeringScale);
 
             if (AZ::EditContext* ec = serialize->GetEditContext())
             {
@@ -61,13 +60,8 @@ namespace ROS2::VehicleDynamics
                         "Entity which steers the wheel - typically a parent entity")
                     ->DataElement(
                         AZ::Edit::UIHandlers::Default,
-                        &WheelControllerComponent::m_driveDir,
-                        "Direction of drive axis",
-                        "The direction of torque applied to the wheel entity")
-                    ->DataElement(
-                        AZ::Edit::UIHandlers::Default,
-                        &WheelControllerComponent::m_steeringDir,
-                        "Direction of steering axis",
+                        &WheelControllerComponent::m_steeringScale,
+                        "Scale of steering axis",
                         "The direction of torque applied to the steering entity");
             }
         }

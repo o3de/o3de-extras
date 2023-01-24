@@ -5,12 +5,13 @@
  * SPDX-License-Identifier: Apache-2.0 OR MIT
  *
  */
+
 #pragma once
 
 #include <AzCore/Serialization/SerializeContext.h>
-#include <ROS2/VehicleDynamics/DriveModels/PidConfiguration.h>
 #include <VehicleDynamics/DriveModel.h>
-#include <VehicleDynamics/ModelLimits/AckermannModelLimits.h>
+
+#include <VehicleDynamics/ModelLimits/SkidSteeringModelLimits.h>
 #include <VehicleDynamics/VehicleConfiguration.h>
 #include <VehicleDynamics/VehicleInputs.h>
 #include <VehicleDynamics/WheelDynamicsData.h>
@@ -18,10 +19,10 @@
 namespace ROS2::VehicleDynamics
 {
     //! A simple Ackermann system implementation converting speed and steering inputs into wheel impulse and steering element torque
-    class AckermannDriveModel : public DriveModel
+    class SkidSteeringDriveModel : public DriveModel
     {
     public:
-        AZ_RTTI(AckermannDriveModel, "{104AC31D-E30B-4454-BF42-4FB37B8CFD9B}", DriveModel);
+        AZ_RTTI(SkidSteeringDriveModel, "{04AE1BF2-621A-46C3-B025-E0875856850D}", DriveModel);
 
         // DriveModel overrides
         void Activate(const VehicleConfiguration& vehicleConfig) override;
@@ -34,15 +35,8 @@ namespace ROS2::VehicleDynamics
         const VehicleModelLimits* GetVehicleLimitPtr() const override;
 
     private:
-        void ApplySteering(float steering, AZ::u64 deltaTimeNs);
-        void ApplySpeed(float speed, AZ::u64 deltaTimeNs);
-        void ApplyWheelSteering(SteeringDynamicsData& wheelData, float steering, double deltaTimeNs);
-
-        VehicleConfiguration m_vehicleConfiguration;
-        AZStd::vector<WheelDynamicsData> m_driveWheelsData;
-        AZStd::vector<SteeringDynamicsData> m_steeringData;
-        PidConfiguration m_steeringPid;
-        float m_steeringDeadZone = 0.01;
-        AckermannModelLimits m_limits;
+        SkidSteeringModelLimits m_limits;
+        AZStd::unordered_map<AZ::EntityId, AZ::EntityComponentIdPair> m_wheelsData;
+        VehicleConfiguration m_config;
     };
 } // namespace ROS2::VehicleDynamics
