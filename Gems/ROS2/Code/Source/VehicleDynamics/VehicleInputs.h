@@ -7,13 +7,15 @@
  */
 #pragma once
 
+#include <AzCore/Math/Vector3.h>
 #include <AzCore/Time/ITime.h>
-#include <type_traits>
+#include <AzCore/std/containers/vector.h>
 
 namespace ROS2::VehicleDynamics
 {
     //! Inputs with an expiration date - effectively is zero after a certain time since update
-    template<typename T, typename = AZStd::enable_if_t<AZStd::is_arithmetic_v<T>>>
+
+    template<typename T>
     class InputZeroedOnTimeout
     {
     public:
@@ -28,16 +30,17 @@ namespace ROS2::VehicleDynamics
             m_lastUpdateUs = GetTimeSinceStartupUs();
         }
 
-        T GetValue() const
+        T& GetValue()
         {
             if (auto timeSinceStartUs = GetTimeSinceStartupUs(); timeSinceStartUs - m_lastUpdateUs > m_timeoutUs)
             {
-                return 0;
+                m_input = Zero(m_input);
             }
             return m_input;
         }
 
     private:
+        T& Zero(T& input);
         int64_t GetTimeSinceStartupUs() const
         {
             return static_cast<int64_t>(AZ::Interface<AZ::ITime>::Get()->GetElapsedTimeUs());
@@ -45,13 +48,24 @@ namespace ROS2::VehicleDynamics
 
         int64_t m_timeoutUs;
         int64_t m_lastUpdateUs = 0;
-        T m_input = 0;
+        T m_input{ 0 };
     };
 
     //! Structure defining the most recent vehicle inputs state
-    struct VehicleInputsState
+    struct VehicleInputs
     {
-        InputZeroedOnTimeout<float> m_speed; //!< Speed measured in m/s
-        InputZeroedOnTimeout<float> m_steering; //!< Steering angle in radians. Negative is right, positive is left,
+        AZ::Vector3 m_speed; //!< Linear speed control measured in m/s
+        AZ::Vector3 m_angularRates; //!< Angular speed control of vehicle
+        AZStd::vector<float> m_jointRequestedPosition; //!< Steering angle in radians. Negative is right, positive is left,
     };
+
+    struct VehicleInputDeadline
+    {
+        InputZeroedOnTimeout<AZ::Vector3> m_speed; //!< Linear speed control measured in m/s
+        InputZeroedOnTimeout<AZ::Vector3> m_angularRates; //!< Linear speed control measured in m/s
+        InputZeroedOnTimeout<AZStd::vector<float>>
+            m_jointRequestedPosition; //!< Steering angle in radians. Negative is right, positive is left,
+        VehicleInputs GetValueCheckingDeadline();
+    };
+
 } // namespace ROS2::VehicleDynamics

@@ -17,23 +17,13 @@ namespace ROS2::VehicleDynamics
     {
         if (AZ::SerializeContext* serialize = azrtti_cast<AZ::SerializeContext*>(context))
         {
-            serialize->Class<VehicleModelLimits>()
-                ->Version(2)
-                ->Field("SpeedLimit", &VehicleModelLimits::m_speedLimit)
-                ->Field("SteeringLimit", &VehicleModelLimits::m_steeringLimit);
+            serialize->Class<VehicleModelLimits>()->Version(2);
 
             if (AZ::EditContext* ec = serialize->GetEditContext())
             {
                 ec->Class<VehicleModelLimits>("Vehicle Model Limits", "Limitations of speed, steering angles and other values")
                     ->ClassElement(AZ::Edit::ClassElements::EditorData, "")
-                    ->Attribute(AZ::Edit::Attributes::Category, "ROS2")
-                    ->DataElement(AZ::Edit::UIHandlers::Default, &VehicleModelLimits::m_speedLimit, "Speed Limit", "Max linear speed (mps)")
-                    ->Attribute(AZ::Edit::Attributes::Min, 0.0f)
-                    ->Attribute(AZ::Edit::Attributes::Max, 100.0f)
-                    ->DataElement(
-                        AZ::Edit::UIHandlers::Default, &VehicleModelLimits::m_steeringLimit, "Steering Limit", "Max steering angle (rad)")
-                    ->Attribute(AZ::Edit::Attributes::Min, 0.0f)
-                    ->Attribute(AZ::Edit::Attributes::Max, 1.57f);
+                    ->Attribute(AZ::Edit::Attributes::Category, "ROS2");
             }
         }
     }
