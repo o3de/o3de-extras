@@ -6,16 +6,13 @@
  *
  */
 
-#include "LidarRegistrarSystemComponent.h"
-#include <AzCore/Serialization/EditContext.h>
-#include <AzCore/Serialization/EditContextConstants.inl>
-#include <AzCore/Serialization/SerializeContext.h>
+#include <Lidar/LidarRegistrarSystemComponent.h>
 
 namespace ROS2
 {
     LidarRegistrarSystemComponent::LidarRegistrarSystemComponent()
     {
-        if (LidarRegistrarInterface::Get() == nullptr)
+        if (!LidarRegistrarInterface::Get())
         {
             LidarRegistrarInterface::Register(this);
         }
@@ -40,6 +37,7 @@ namespace ROS2
 
     void LidarRegistrarSystemComponent::Deactivate()
     {
+        m_physxLidarSystem.Deactivate();
     }
 
     void LidarRegistrarSystemComponent::Reflect(AZ::ReflectContext* context)
@@ -48,10 +46,11 @@ namespace ROS2
         {
             serializeContext->Class<LidarRegistrarSystemComponent, AZ::Component>()->Version(0);
 
-            if (AZ::EditContext* ec = serializeContext->GetEditContext())
+            if (AZ::EditContext* editContext = serializeContext->GetEditContext())
             {
-                ec->Class<LidarRegistrarSystemComponent>(
-                      "Lidar Registrar", "Manages the LidarSystem registration and stores their metadata.")
+                editContext
+                    ->Class<LidarRegistrarSystemComponent>(
+                        "Lidar Registrar", "Manages the LidarSystem registration and stores their metadata.")
                     ->ClassElement(AZ::Edit::ClassElements::EditorData, "")
                     ->Attribute(AZ::Edit::Attributes::AppearsInAddComponentMenu, AZ_CRC("System"))
                     ->Attribute(AZ::Edit::Attributes::Category, "ROS2")
@@ -87,11 +86,11 @@ namespace ROS2
         m_registeredLidarSystems.emplace(AZ_CRC(name), LidarSystemMetaData{ name, description, features });
     }
 
-    const AZStd::vector<AZStd::string> LidarRegistrarSystemComponent::GetRegisteredLidarSystems()
+    AZStd::vector<AZStd::string> LidarRegistrarSystemComponent::GetRegisteredLidarSystems() const
     {
         AZStd::vector<AZStd::string> lidarSystemList;
         lidarSystemList.reserve(m_registeredLidarSystems.size());
-        for (auto lidarSystem : m_registeredLidarSystems)
+        for (const auto& lidarSystem : m_registeredLidarSystems)
         {
             lidarSystemList.push_back(lidarSystem.second.m_name);
         }
@@ -99,10 +98,13 @@ namespace ROS2
         return lidarSystemList;
     }
 
-    const LidarSystemMetaData& LidarRegistrarSystemComponent::GetLidarSystemMetaData(const AZStd::string& name)
+    const LidarSystemMetaData* LidarRegistrarSystemComponent::GetLidarSystemMetaData(const AZStd::string& name) const
     {
-        auto lidarSystem = m_registeredLidarSystems.find(AZ_CRC(name));
-        AZ_Assert(lidarSystem != m_registeredLidarSystems.end(), "No registered lidar system matches the provided name.");
-        return lidarSystem->second;
+        if (auto lidarSystem = m_registeredLidarSystems.find(AZ_CRC(name)); lidarSystem != m_registeredLidarSystems.end())
+        {
+            return &lidarSystem->second;
+        }
+
+        return nullptr;
     }
 } // namespace ROS2

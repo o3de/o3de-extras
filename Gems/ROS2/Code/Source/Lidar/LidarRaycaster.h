@@ -7,43 +7,35 @@
  */
 #pragma once
 
-#include "ROS2/Lidar/LidarRaycasterBus.h"
 #include <AzCore/Component/EntityId.h>
 #include <AzCore/Math/Transform.h>
 #include <AzCore/Math/Vector3.h>
 #include <AzCore/std/containers/vector.h>
 #include <AzFramework/Physics/PhysicsScene.h>
+#include <ROS2/Lidar/LidarRaycasterBus.h>
 
 namespace ROS2
 {
     class LidarRaycaster : protected LidarRaycasterRequestBus::Handler
     {
     public:
-        explicit LidarRaycaster(const LidarRaycasterRequestBus::BusIdType& busId);
-        LidarRaycaster(LidarRaycaster&& lidarSystem) noexcept;
-        LidarRaycaster(const LidarRaycaster& lidarSystem) = delete;
+        explicit LidarRaycaster(const LidarRaycasterRequestBus::BusIdType& busId, AZ::EntityId sceneEntityId);
+        LidarRaycaster(LidarRaycaster&& lidarSystem);
+        LidarRaycaster(const LidarRaycaster& lidarSystem) = default;
         ~LidarRaycaster() override;
 
-        //! Set the Scene for the ray-casting.
-        //! This should be the scene with the Entity that holds the sensor.
-        //! @code
-        //! auto sceneHandle = AZ::RPI::Scene::GetSceneForEntityId(GetEntityId());
-        //! @endcode
-        //! @param handle Scene that will be subject to ray-casting.
-        void SetRaycasterScene(const AzPhysics::SceneHandle& handle);
-
     protected:
-        ////////////////////////////////////////////////////////////////////////
-        // LidarRaycasterRequestBus::Handler interface implementation
+        // LidarRaycasterRequestBus overrides
         void ConfigureRayOrientations(const AZStd::vector<AZ::Vector3>& orientations) override;
         void ConfigureRayRange(float range) override;
         AZStd::vector<AZ::Vector3> PerformRaycast(const AZ::Transform& lidarTransform) override;
-        void ConfigureLayerIgnoring(bool ignoreLayer, unsigned int layerIndex) override;
+        void ConfigureLayerIgnoring(bool ignoreLayer, AZ::u32 layerIndex) override;
         void ConfigureMaxRangePointAddition(bool addMaxRangePoints) override;
-        ////////////////////////////////////////////////////////////////////////
 
     private:
-        AZ::Uuid m_uuid;
+        LidarRaycasterRequestBus::BusIdType m_lidarId;
+        //! EntityId that is used to acquire the physics scene handle.
+        AZ::EntityId m_sceneEntityId;
         AzPhysics::SceneHandle m_sceneHandle{ AzPhysics::InvalidSceneHandle };
 
         float m_range{ 1.0f };
@@ -51,6 +43,6 @@ namespace ROS2
         AZStd::vector<AZ::Vector3> m_rayRotations{ { AZ::Vector3::CreateZero() } };
 
         bool m_ignoreLayer{ false };
-        unsigned int m_ignoredLayerIndex{ 0 };
+        AZ::u32 m_ignoredLayerIndex{ 0 };
     };
 } // namespace ROS2

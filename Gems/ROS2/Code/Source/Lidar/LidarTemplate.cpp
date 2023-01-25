@@ -6,9 +6,7 @@
  *
  */
 
-#include "LidarTemplate.h"
-#include <AzCore/Serialization/EditContext.h>
-#include <AzCore/Serialization/EditContextConstants.inl>
+#include <Lidar/LidarTemplate.h>
 
 namespace ROS2
 {
@@ -22,9 +20,9 @@ namespace ROS2
                 ->Field("Distance noise standard deviation base", &NoiseParameters::m_distanceNoiseStdDevBase)
                 ->Field("Distance noise standard deviation slope", &NoiseParameters::m_distanceNoiseStdDevRisePerMeter);
 
-            if (AZ::EditContext* ec = serializeContext->GetEditContext())
+            if (AZ::EditContext* editContext = serializeContext->GetEditContext())
             {
-                ec->Class<NoiseParameters>("Noise Parameters", "Noise Parameters")
+                editContext->Class<NoiseParameters>("Noise Parameters", "Noise Parameters")
                     ->DataElement(
                         AZ::Edit::UIHandlers::Default,
                         &NoiseParameters::m_angularNoiseStdDev,

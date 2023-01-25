@@ -8,15 +8,13 @@
 
 #pragma once
 
-#include "Lidar/LidarRegistrarSystemComponent.h"
 #include <AzToolsFramework/Entity/EditorEntityContextBus.h>
+#include <Lidar/LidarRegistrarSystemComponent.h>
 
 namespace ROS2
 {
     class LidarRegistrarEditorSystemComponent : public LidarRegistrarSystemComponent
     {
-        using BaseSystemComponent = LidarRegistrarSystemComponent;
-
     public:
         AZ_COMPONENT(LidarRegistrarEditorSystemComponent, "{7f11b599-5ace-4498-a9a4-ad280c92bacc}", LidarRegistrarSystemComponent);
         static void Reflect(AZ::ReflectContext* context);

@@ -5,26 +5,40 @@
  * SPDX-License-Identifier: Apache-2.0 OR MIT
  *
  */
-#include "LidarRaycaster.h"
-#include "LidarTemplateUtils.h"
-#include <AzCore/Interface/Interface.h>
-#include <AzCore/std/smart_ptr/make_shared.h>
-#include <AzCore/std/smart_ptr/shared_ptr.h>
 #include <AzFramework/Physics/Common/PhysicsSceneQueries.h>
 #include <AzFramework/Physics/PhysicsScene.h>
 #include <AzFramework/Physics/PhysicsSystem.h>
 #include <AzFramework/Physics/Shape.h>
+#include <Lidar/LidarRaycaster.h>
+#include <Lidar/LidarTemplateUtils.h>
 
 namespace ROS2
 {
-    LidarRaycaster::LidarRaycaster(const LidarRaycasterRequestBus::BusIdType& busId)
-        : m_uuid{ busId }
+    static AzPhysics::SceneHandle GetPhysicsSceneFromEntityId(const AZ::EntityId& entityId)
+    {
+        auto* physicsSystem = AZ::Interface<AzPhysics::SystemInterface>::Get();
+        auto foundBody = physicsSystem->FindAttachedBodyHandleFromEntityId(entityId);
+        AzPhysics::SceneHandle lidarPhysicsSceneHandle = foundBody.first;
+        if (foundBody.first == AzPhysics::InvalidSceneHandle)
+        {
+            auto* sceneInterface = AZ::Interface<AzPhysics::SceneInterface>::Get();
+            lidarPhysicsSceneHandle = sceneInterface->GetSceneHandle(AzPhysics::DefaultPhysicsSceneName);
+        }
+
+        AZ_Assert(lidarPhysicsSceneHandle != AzPhysics::InvalidSceneHandle, "Invalid physics scene handle for entity");
+        return lidarPhysicsSceneHandle;
+    }
+
+    LidarRaycaster::LidarRaycaster(const LidarRaycasterRequestBus::BusIdType& busId, AZ::EntityId sceneEntityId)
+        : m_lidarId{ busId }
+        , m_sceneEntityId{ sceneEntityId }
     {
         ROS2::LidarRaycasterRequestBus::Handler::BusConnect(busId);
     }
 
-    LidarRaycaster::LidarRaycaster(LidarRaycaster&& lidarRaycaster) noexcept
-        : m_uuid{ lidarRaycaster.m_uuid }
+    LidarRaycaster::LidarRaycaster(LidarRaycaster&& lidarRaycaster)
+        : m_lidarId{ lidarRaycaster.m_lidarId }
+        , m_sceneEntityId{ lidarRaycaster.m_sceneEntityId }
         , m_sceneHandle{ lidarRaycaster.m_sceneHandle }
         , m_range{ lidarRaycaster.m_range }
         , m_addMaxRangePoints{ lidarRaycaster.m_addMaxRangePoints }
@@ -33,22 +47,14 @@ namespace ROS2
         , m_ignoredLayerIndex{ lidarRaycaster.m_ignoredLayerIndex }
     {
         lidarRaycaster.BusDisconnect();
-        lidarRaycaster.m_uuid = AZ::Uuid::CreateNull();
+        lidarRaycaster.m_lidarId = AZ::Uuid::CreateNull();
 
-        ROS2::LidarRaycasterRequestBus::Handler::BusConnect(m_uuid);
+        ROS2::LidarRaycasterRequestBus::Handler::BusConnect(m_lidarId);
     }
 
     LidarRaycaster::~LidarRaycaster()
     {
-        if (!m_uuid.IsNull())
-        {
-            ROS2::LidarRaycasterRequestBus::Handler::BusDisconnect();
-        }
-    }
-
-    void LidarRaycaster::SetRaycasterScene(const AzPhysics::SceneHandle& handle)
-    {
-        m_sceneHandle = handle;
+        ROS2::LidarRaycasterRequestBus::Handler::BusDisconnect();
     }
 
     void LidarRaycaster::ConfigureRayOrientations(const AZStd::vector<AZ::Vector3>& orientations)
@@ -63,24 +69,22 @@ namespace ROS2
         m_range = range;
     }
 
-    // A simplified, non-optimized first version. TODO - generalize results (fields)
     AZStd::vector<AZ::Vector3> LidarRaycaster::PerformRaycast(const AZ::Transform& lidarTransform)
     {
         AZ_Assert(!m_rayRotations.empty(), "Ray poses are not configured. Unable to Perform a raycast.");
         AZ_Assert(m_range > 0.0f, "Ray range is not configured. Unable to Perform a raycast.");
 
-        AZStd::vector<AZ::Vector3> results;
         if (m_sceneHandle == AzPhysics::InvalidSceneHandle)
         {
-            AZ_Warning("LidarRaycaster", false, "No valid scene handle");
-            return results;
+            m_sceneHandle = GetPhysicsSceneFromEntityId(m_sceneEntityId);
         }
 
-        AZStd::vector<AZ::Vector3> rayDirections =
+        const AZStd::vector<AZ::Vector3> rayDirections =
             LidarTemplateUtils::RotationsToDirections(m_rayRotations, lidarTransform.GetEulerRadians());
 
-        AZ::Vector3 lidarPosition = lidarTransform.GetTranslation();
+        const AZ::Vector3 lidarPosition = lidarTransform.GetTranslation();
 
+        AZStd::vector<AZ::Vector3> results;
         AzPhysics::SceneQueryRequests requests;
         requests.reserve(rayDirections.size());
         results.reserve(rayDirections.size());
@@ -91,9 +95,10 @@ namespace ROS2
             request->m_direction = direction;
             request->m_distance = m_range;
             request->m_reportMultipleHits = false;
-            request->m_filterCallback = [this](const AzPhysics::SimulatedBody* simBody, const Physics::Shape* shape)
+            request->m_filterCallback = [ignoredLayerIndex = this->m_ignoredLayerIndex, ignoreLayer = this->m_ignoreLayer](
+                                            const AzPhysics::SimulatedBody* simBody, const Physics::Shape* shape)
             {
-                if (m_ignoreLayer && (shape->GetCollisionLayer().GetIndex() == m_ignoredLayerIndex))
+                if (ignoreLayer && (shape->GetCollisionLayer().GetIndex() == ignoredLayerIndex))
                 {
                     return AzPhysics::SceneQuery::QueryHitType::None;
                 }
@@ -117,14 +122,14 @@ namespace ROS2
             }
             else if (m_addMaxRangePoints)
             {
-                AZ::Vector3 maxPoint = lidarTransform.TransformPoint(rayDirections[i] * m_range);
+                const AZ::Vector3 maxPoint = lidarTransform.TransformPoint(rayDirections[i] * m_range);
                 results.push_back(maxPoint);
             }
         }
         return results;
     }
 
-    void LidarRaycaster::ConfigureLayerIgnoring(bool ignoreLayer, unsigned int layerIndex)
+    void LidarRaycaster::ConfigureLayerIgnoring(bool ignoreLayer, AZ::u32 layerIndex)
     {
         m_ignoreLayer = ignoreLayer;
         m_ignoredLayerIndex = layerIndex;

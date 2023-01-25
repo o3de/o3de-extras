@@ -7,8 +7,8 @@
  */
 #pragma once
 
-#include "LidarRaycaster.h"
-#include "ROS2/Lidar/LidarSystemBus.h"
+#include <Lidar/LidarRaycaster.h>
+#include <ROS2/Lidar/LidarSystemBus.h>
 
 namespace ROS2
 {
@@ -16,18 +16,18 @@ namespace ROS2
     {
     public:
         LidarSystem() = default;
-        LidarSystem(LidarSystem&& lidarSystem) = delete;
-        LidarSystem(const LidarSystem& lidarSystem) = delete;
+        LidarSystem(LidarSystem&& lidarSystem);
+        LidarSystem(const LidarSystem& lidarSystem) = default;
         ~LidarSystem() = default;
 
         void Activate();
         void Deactivate();
 
     private:
-        ////////////////////////////////////////////////////////////////////////
-        // LidarSystemRequestBus::Handler interface implementation
-        AZ::Uuid CreateLidar(const AZ::EntityId& lidarEntityId) override;
-        ////////////////////////////////////////////////////////////////////////
+        static constexpr const char* SystemName = "PhysX";
+
+        // LidarSystemRequestBus overrides
+        LidarRaycasterRequests::LidarId CreateLidar(AZ::EntityId lidarEntityId) override;
 
         AZStd::vector<LidarRaycaster> m_lidars;
     };

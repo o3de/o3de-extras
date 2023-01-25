@@ -6,19 +6,13 @@
  *
  */
 
-#include "LidarTemplateUtils.h"
-#include <AzCore/Math/MathUtils.h>
-#include <AzCore/Math/Matrix4x4.h>
-#include <AzCore/Math/Quaternion.h>
-#include <AzCore/Math/Vector3.h>
-#include <AzCore/Utils/Utils.h>
-#include <AzCore/std/containers/unordered_map.h>
+#include <Lidar/LidarTemplateUtils.h>
 
 namespace ROS2
 {
     LidarTemplate LidarTemplateUtils::GetTemplate(LidarTemplate::LidarModel model)
     {
-        static std::unordered_map<LidarTemplate::LidarModel, LidarTemplate> templates = {
+        static const std::unordered_map<LidarTemplate::LidarModel, LidarTemplate> templates = {
             {
                 LidarTemplate::LidarModel::Custom3DLidar,
                 {
@@ -171,9 +165,9 @@ namespace ROS2
             for (int layer = 0; layer < lidarTemplate.m_layers; layer++)
             {
                 const float pitch = minVertAngle + layer * verticalStep;
-                const float yaw = minHorAngle + incr * horizontalStep + (AZ::Constants::Pi / 2.0f);
+                const float yaw = minHorAngle + incr * horizontalStep;
 
-                rotations.emplace_back(AZ::Vector3(0, pitch, yaw));
+                rotations.emplace_back(AZ::Vector3(0.0f, pitch, yaw));
             }
         }
 
@@ -187,14 +181,10 @@ namespace ROS2
         directions.reserve(rotations.size());
         for (auto angle : rotations)
         {
-            const float pitchTransformed = angle.GetY() + rootRotation.GetY();
-            const float yawTransformed = angle.GetZ() + rootRotation.GetZ();
+            const AZ::Quaternion rotation = AZ::Quaternion::CreateFromEulerRadiansZYX(
+                { 0.0f, -(angle.GetY() + rootRotation.GetY()), angle.GetZ() + rootRotation.GetZ() });
 
-            const float x = AZ::Cos(yawTransformed) * AZ::Cos(pitchTransformed);
-            const float y = AZ::Sin(yawTransformed) * AZ::Cos(pitchTransformed);
-            const float z = AZ::Sin(pitchTransformed);
-
-            directions.emplace_back(x, y, z);
+            directions.emplace_back(rotation.TransformVector(AZ::Vector3::CreateAxisX()));
         }
 
         return directions;

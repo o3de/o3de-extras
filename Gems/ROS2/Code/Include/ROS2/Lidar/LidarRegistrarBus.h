@@ -13,48 +13,52 @@
 
 namespace ROS2
 {
-    //! Structure used to describe LidarSystem's feature support.
-    struct LidarSystemFeatures
+    //! Enum bitwise flags used to describe LidarSystem's feature support.
+    enum LidarSystemFeatures : uint8_t
     {
-    public:
-        bool m_noise{ false };
-        bool m_collisionLayers{ false };
-        bool m_entityExclusion{ false };
-        bool m_maxRangePoints{ false };
+        None                = 0b00000000,
+        Noise               = 0b00000001,
+        CollisionLayers     = 0b00000010,
+        EntityExclusion     = 0b00000100,
+        MaxRangePoints      = 0b00001000,
+        All                 = 0b00001111
     };
 
     //! Structure used to hold LidarSystem's metadata.
     struct LidarSystemMetaData
     {
-    public:
         AZStd::string m_name;
         AZStd::string m_description;
         LidarSystemFeatures m_features;
     };
 
+    //! Interface class that allows for communication with the LidarRegistrarSystemComponent.
     class LidarRegistrarRequests
     {
     public:
         AZ_RTTI(LidarRegistrarRequests, "{22030dc7-a1db-43bd-b748-0fb9ec43ce2e}");
-        virtual ~LidarRegistrarRequests() = default;
 
         //! Registers a new lidar system under the provided name.
         //! To obtain the busId of a lidarSystem use the AZ_CRC macro as follows.
         //! @code
         //! AZ::Crc32 busId = AZ_CRC(<lidarSystemName>);
         //! @endcode
-        //! @param name name of the newly registered lidar system.
-        //! @param description further information about the lidar system.
+        //! @param name Name of the newly registered lidar system.
+        //! @param description Further information about the lidar system.
         virtual void RegisterLidarSystem(const char* name, const char* description, const LidarSystemFeatures& features) = 0;
 
-        //! Returns a list of all registered lidar systems.
-        //! @return a vector of registered lidar systems' names.
-        virtual const AZStd::vector<AZStd::string> GetRegisteredLidarSystems() = 0;
+        //! Returns A list of all registered lidar systems.
+        //! @return A vector of registered lidar systems' names.
+        virtual AZStd::vector<AZStd::string> GetRegisteredLidarSystems() const = 0;
 
         //! Returns metadata of a registered lidar system.
-        //! @param name name of a registered lidar system.
-        //! @return metadata of a lidar system with the provided name.
-        virtual const LidarSystemMetaData& GetLidarSystemMetaData(const AZStd::string& name) = 0;
+        //! If no lidar system with provided name was found returns nullptr.
+        //! @param name Name of a registered lidar system.
+        //! @return Pointer to the metadata of a lidar system with the provided name.
+        virtual const LidarSystemMetaData* GetLidarSystemMetaData(const AZStd::string& name) const = 0;
+
+    protected:
+        ~LidarRegistrarRequests() = default;
     };
 
     class LidarRegistrarBusTraits : public AZ::EBusTraits

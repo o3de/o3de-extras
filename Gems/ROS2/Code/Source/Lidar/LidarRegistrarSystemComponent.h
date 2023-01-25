@@ -8,9 +8,9 @@
 
 #pragma once
 
-#include "Lidar/LidarSystem.h"
-#include "ROS2/Lidar/LidarRegistrarBus.h"
 #include <AzCore/Component/Component.h>
+#include <Lidar/LidarSystem.h>
+#include <ROS2/Lidar/LidarRegistrarBus.h>
 
 namespace ROS2
 {
@@ -36,11 +36,10 @@ namespace ROS2
         void Activate() override;
         void Deactivate() override;
 
-        ////////////////////////////////////////////////////////////////////////
+        // LidarRegistrarRequestBus overrides
         void RegisterLidarSystem(const char* name, const char* description, const LidarSystemFeatures& features) override;
-        const AZStd::vector<AZStd::string> GetRegisteredLidarSystems() override;
-        const LidarSystemMetaData& GetLidarSystemMetaData(const AZStd::string& name) override;
-        ////////////////////////////////////////////////////////////////////////
+        AZStd::vector<AZStd::string> GetRegisteredLidarSystems() const override;
+        const LidarSystemMetaData* GetLidarSystemMetaData(const AZStd::string& name) const override;
 
     private:
         LidarSystem m_physxLidarSystem;

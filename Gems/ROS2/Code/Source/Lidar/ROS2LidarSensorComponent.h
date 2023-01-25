@@ -7,14 +7,13 @@
  */
 #pragma once
 
-#include "LidarRaycaster.h"
-#include "LidarTemplate.h"
-#include "LidarTemplateUtils.h"
-#include <ROS2/Lidar/LidarRaycasterBus.h>
-#include <ROS2/Lidar/LidarRegistrarBus.h>
-#include <ROS2/Lidar/LidarSystemBus.h>
 #include <Atom/RPI.Public/AuxGeom/AuxGeomDraw.h>
 #include <AzCore/Serialization/SerializeContext.h>
+#include <Lidar/LidarRaycaster.h>
+#include <Lidar/LidarTemplate.h>
+#include <Lidar/LidarTemplateUtils.h>
+#include <ROS2/Lidar/LidarRegistrarBus.h>
+#include <ROS2/Lidar/LidarSystemBus.h>
 #include <ROS2/Sensor/ROS2SensorComponent.h>
 #include <rclcpp/publisher.hpp>
 #include <sensor_msgs/msg/point_cloud2.hpp>
@@ -44,14 +43,15 @@ namespace ROS2
         void FrequencyTick() override;
         void Visualise() override;
 
-        AZ::Crc32 OnLidarModelSelected();
-        AZ::Crc32 OnLidarImplementationSelected();
-        void FetchLidarImplementationFeatures();
         bool IsConfigurationVisible() const;
         bool IsIgnoredLayerConfigurationVisible() const;
         bool IsEntityExclusionVisible() const;
         bool IsMaxPointsConfigurationVisible() const;
-        AZStd::vector<AZStd::string> GetLidarSystemList();
+
+        AZ::Crc32 OnLidarModelSelected();
+        AZ::Crc32 OnLidarImplementationSelected();
+        void FetchLidarImplementationFeatures();
+        AZStd::vector<AZStd::string> FetchLidarSystemList();
         void ConnectToLidarRaycaster();
         void ConfigureLidarRaycaster();
 
@@ -62,8 +62,8 @@ namespace ROS2
 
         AZStd::string m_lidarSystem;
         // A structure that maps each lidar implementation busId to the busId of a raycaster created by this LidarSensorComponent.
-        AZStd::unordered_map<AZStd::string, AZ::Uuid> m_implementationToRaycasterMap;
-        AZ::Uuid m_lidarRaycasterUuid;
+        AZStd::unordered_map<AZStd::string, LidarRaycasterRequests::LidarId> m_implementationToRaycasterMap;
+        LidarRaycasterRequests::LidarId m_lidarRaycasterId;
         std::shared_ptr<rclcpp::Publisher<sensor_msgs::msg::PointCloud2>> m_pointCloudPublisher;
 
         // Used only when visualisation is on - points differ since they are in global transform as opposed to local
@@ -72,7 +72,7 @@ namespace ROS2
 
         AZStd::vector<AZ::Vector3> m_lastScanResults;
 
-        unsigned int m_ignoredLayerIndex = 0;
+        AZ::u32 m_ignoredLayerIndex = 0;
         bool m_ignoreLayer = false;
         AZStd::vector<AZ::EntityId> m_excludedEntities;
 

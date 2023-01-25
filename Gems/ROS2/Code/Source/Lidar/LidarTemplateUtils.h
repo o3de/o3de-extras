@@ -7,9 +7,9 @@
  */
 #pragma once
 
-#include "LidarTemplate.h"
 #include <AzCore/Math/Vector3.h>
 #include <AzCore/std/containers/vector.h>
+#include <Lidar/LidarTemplate.h>
 
 namespace ROS2
 {
@@ -34,8 +34,7 @@ namespace ROS2
         //! Compute ray directions from rotations.
         //! @param rotations Rotations as Euler angles in radians to compute directions from.
         //! @param rootRotation Root rotation as Euler angles in radians.
-        //! @return Ray directions constructed using provided rotations.
-        AZStd::vector<AZ::Vector3> RotationsToDirections(
-            const AZStd::vector<AZ::Vector3>& rotations, const AZ::Vector3& rootRotation);
-    };
+        //! @return Ray directions constructed by transforming an X axis unit vector by the provided rotations.
+        AZStd::vector<AZ::Vector3> RotationsToDirections(const AZStd::vector<AZ::Vector3>& rotations, const AZ::Vector3& rootRotation);
+    }; // namespace LidarTemplateUtils
 } // namespace ROS2

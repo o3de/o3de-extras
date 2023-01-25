@@ -9,19 +9,23 @@
 
 #include <AzCore/Component/EntityId.h>
 #include <AzCore/EBus/EBus.h>
+#include <ROS2/Lidar/LidarRaycasterBus.h>
 
 namespace ROS2
 {
+    //! Interface class that allows for communication with a given Lidar System (implementation).
     class LidarSystemRequests
     {
     public:
         AZ_RTTI(LidarSystemRequests, "{007871d1-2783-4382-977b-558f436c54a5}");
-        virtual ~LidarSystemRequests() = default;
 
         //! Creates a new Lidar.
         //! @param lidarEntityId EntityId holding the ROS2LidarSensorComponent.
         //! @return A unique Id of the newly created Lidar.
-        virtual AZ::Uuid CreateLidar(const AZ::EntityId& lidarEntityId) = 0;
+        virtual LidarRaycasterRequests::LidarId CreateLidar(AZ::EntityId lidarEntityId) = 0;
+
+    protected:
+        ~LidarSystemRequests() = default;
     };
 
     class LidarSystemBusTraits : public AZ::EBusTraits

@@ -6,8 +6,8 @@
  *
  */
 
-#include "LidarRegistrarEditorSystemComponent.h"
 #include <AzCore/Serialization/SerializeContext.h>
+#include <Lidar/LidarRegistrarEditorSystemComponent.h>
 
 namespace ROS2
 {
@@ -21,24 +21,24 @@ namespace ROS2
 
     void LidarRegistrarEditorSystemComponent::GetProvidedServices(AZ::ComponentDescriptor::DependencyArrayType& provided)
     {
-        BaseSystemComponent::GetProvidedServices(provided);
+        LidarRegistrarSystemComponent::GetProvidedServices(provided);
         provided.push_back(AZ_CRC_CE("LidarRegistrarEditorService"));
     }
 
     void LidarRegistrarEditorSystemComponent::GetIncompatibleServices(AZ::ComponentDescriptor::DependencyArrayType& incompatible)
     {
-        BaseSystemComponent::GetIncompatibleServices(incompatible);
+        LidarRegistrarSystemComponent::GetIncompatibleServices(incompatible);
         incompatible.push_back(AZ_CRC_CE("LidarRegistrarEditorService"));
     }
 
     void LidarRegistrarEditorSystemComponent::GetRequiredServices([[maybe_unused]] AZ::ComponentDescriptor::DependencyArrayType& required)
     {
-        BaseSystemComponent::GetRequiredServices(required);
+        LidarRegistrarSystemComponent::GetRequiredServices(required);
     }
 
     void LidarRegistrarEditorSystemComponent::GetDependentServices([[maybe_unused]] AZ::ComponentDescriptor::DependencyArrayType& dependent)
     {
-        BaseSystemComponent::GetDependentServices(dependent);
+        LidarRegistrarSystemComponent::GetDependentServices(dependent);
     }
 
     void LidarRegistrarEditorSystemComponent::Activate()
