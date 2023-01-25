@@ -25,8 +25,12 @@ namespace ROS2::VehicleDynamics
         VehicleInputs LimitState(const VehicleInputs& inputState) const;
         VehicleInputs GetMaximumState() const;
 
+        float GetLinearAcceleration() const;
+        float GetLinearSpeedLimit() const;
+
     private:
         float m_speedLimit = 10.0f; //!< [Mps] Applies to absolute value
         float m_steeringLimit = 0.7f; //!< [rad] Applies to absolute value
+        float m_accelearation = 10.0f; //!< [m*s^(-2)] Linear acceleration limit
     };
 } // namespace ROS2::VehicleDynamics
