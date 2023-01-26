@@ -27,7 +27,7 @@ namespace ROS2
         layoutInner->addWidget(m_createButton);
         layout->addLayout(layoutInner);
         layout->addWidget(m_log);
-        this->setLayout(layout);
+        setLayout(layout);
         connect(m_createButton, &QPushButton::pressed, this, &PrefabMakerPage::onCreateButtonPressed);
     }
 

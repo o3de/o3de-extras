@@ -21,6 +21,7 @@ source /opt/ros/<distro>/setup.bash
 * gazebo_msgs: `sudo apt install ros-${ROS_DISTRO}-gazebo-msgs`
 * Ackermann messages: `sudo apt install ros-${ROS_DISTRO}-ackermann-msgs`
 * Control toolbox `sudo apt install ros-${ROS_DISTRO}-control-toolbox`
+* Xacro (XML Macros) `sudo apt install ros-${ROS_DISTRO}-xacro`
 
 If a `desktop` installation of ROS 2 distro was selected, everything else should be there.
 
