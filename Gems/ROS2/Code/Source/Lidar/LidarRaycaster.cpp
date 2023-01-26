@@ -29,15 +29,15 @@ namespace ROS2
         return lidarPhysicsSceneHandle;
     }
 
-    LidarRaycaster::LidarRaycaster(const LidarRaycasterRequestBus::BusIdType& busId, AZ::EntityId sceneEntityId)
-        : m_lidarId{ busId }
+    LidarRaycaster::LidarRaycaster(LidarId busId, AZ::EntityId sceneEntityId)
+        : m_busId{ busId }
         , m_sceneEntityId{ sceneEntityId }
     {
         ROS2::LidarRaycasterRequestBus::Handler::BusConnect(busId);
     }
 
     LidarRaycaster::LidarRaycaster(LidarRaycaster&& lidarRaycaster)
-        : m_lidarId{ lidarRaycaster.m_lidarId }
+        : m_busId{ lidarRaycaster.m_busId }
         , m_sceneEntityId{ lidarRaycaster.m_sceneEntityId }
         , m_sceneHandle{ lidarRaycaster.m_sceneHandle }
         , m_range{ lidarRaycaster.m_range }
@@ -47,9 +47,9 @@ namespace ROS2
         , m_ignoredLayerIndex{ lidarRaycaster.m_ignoredLayerIndex }
     {
         lidarRaycaster.BusDisconnect();
-        lidarRaycaster.m_lidarId = AZ::Uuid::CreateNull();
+        lidarRaycaster.m_busId = LidarId::CreateNull();
 
-        ROS2::LidarRaycasterRequestBus::Handler::BusConnect(m_lidarId);
+        ROS2::LidarRaycasterRequestBus::Handler::BusConnect(m_busId);
     }
 
     LidarRaycaster::~LidarRaycaster()

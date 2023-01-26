@@ -14,6 +14,75 @@
 
 namespace ROS2
 {
+    //! Class used for creating typesafe Uuid types.
+    //! It utilizes the phantom types technique.
+    template<typename Tag>
+    class StronglyTypedUuid
+    {
+    public:
+        StronglyTypedUuid() = default;
+        StronglyTypedUuid(AZ::Uuid value)
+            : m_uuid(value)
+        {
+        }
+
+        static StronglyTypedUuid CreateNull()
+        {
+            return StronglyTypedUuid(AZ::Uuid::CreateNull());
+        }
+
+        static StronglyTypedUuid CreateRandom()
+        {
+            return StronglyTypedUuid(AZ::Uuid::CreateRandom());
+        }
+
+        bool IsNull() const
+        {
+            return m_uuid.IsNull();
+        }
+
+        bool operator==(const StronglyTypedUuid& rhs) const
+        {
+            return m_uuid == rhs.m_uuid;
+        }
+
+        bool operator!=(const StronglyTypedUuid& rhs) const
+        {
+            return m_uuid != rhs.m_uuid;
+        }
+
+        bool operator<(const StronglyTypedUuid& rhs) const
+        {
+            return m_uuid < rhs.m_uuid;
+        }
+
+        bool operator>(const StronglyTypedUuid& rhs) const
+        {
+            return m_uuid > rhs.m_uuid;
+        }
+
+        bool operator<=(const StronglyTypedUuid& rhs) const
+        {
+            return m_uuid <= rhs.m_uuid;
+        }
+
+        bool operator>=(const StronglyTypedUuid& rhs) const
+        {
+            return m_uuid >= rhs.m_uuid;
+        }
+
+        size_t GetHash() const
+        {
+            return m_uuid.GetHash();
+        }
+
+    private:
+        AZ::Uuid m_uuid;
+    };
+
+    //! Unique id used by lidar raycasters.
+    using LidarId = StronglyTypedUuid<struct LidarIdTag>;
+
     //! Interface class that allows for communication with a single Lidar instance.
     class LidarRaycasterRequests
     {
@@ -77,8 +146,6 @@ namespace ROS2
             AZ_Assert(false, "This Lidar Implementation does not support Max range point addition configuration!");
         }
 
-        using LidarId = AZ::Uuid;
-
     protected:
         ~LidarRaycasterRequests() = default;
 
@@ -98,7 +165,7 @@ namespace ROS2
     public:
         //////////////////////////////////////////////////////////////////////////
         // EBusTraits overrides
-        using BusIdType = LidarRaycasterRequests::LidarId;
+        using BusIdType = LidarId;
         static constexpr AZ::EBusHandlerPolicy HandlerPolicy = AZ::EBusHandlerPolicy::Multiple;
         static constexpr AZ::EBusAddressPolicy AddressPolicy = AZ::EBusAddressPolicy::ById;
         //////////////////////////////////////////////////////////////////////////
@@ -106,3 +173,18 @@ namespace ROS2
 
     using LidarRaycasterRequestBus = AZ::EBus<LidarRaycasterRequests, LidarRaycasterBusTraits>;
 } // namespace ROS2
+
+// Since we want to use the LidarId type as a Bus Id type,
+// we need to create a specialization for the hash template operator.
+namespace AZStd
+{
+    // hash specialization
+    template <>
+    struct hash<ROS2::LidarId>
+    {
+        constexpr size_t operator()(const ROS2::LidarId& id) const
+        {
+            return id.GetHash();
+        }
+    };
+}

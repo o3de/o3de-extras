@@ -179,9 +179,9 @@ namespace ROS2
     {
         AZStd::vector<AZ::Vector3> directions;
         directions.reserve(rotations.size());
-        for (auto angle : rotations)
+        for (const auto& angle : rotations)
         {
-            const AZ::Quaternion rotation = AZ::Quaternion::CreateFromEulerRadiansZYX(
+            const auto rotation = AZ::Quaternion::CreateFromEulerRadiansZYX(
                 { 0.0f, -(angle.GetY() + rootRotation.GetY()), angle.GetZ() + rootRotation.GetZ() });
 
             directions.emplace_back(rotation.TransformVector(AZ::Vector3::CreateAxisX()));

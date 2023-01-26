@@ -19,7 +19,7 @@ namespace ROS2
     class LidarRaycaster : protected LidarRaycasterRequestBus::Handler
     {
     public:
-        explicit LidarRaycaster(const LidarRaycasterRequestBus::BusIdType& busId, AZ::EntityId sceneEntityId);
+        LidarRaycaster(LidarId busId, AZ::EntityId sceneEntityId);
         LidarRaycaster(LidarRaycaster&& lidarSystem);
         LidarRaycaster(const LidarRaycaster& lidarSystem) = default;
         ~LidarRaycaster() override;
@@ -33,7 +33,7 @@ namespace ROS2
         void ConfigureMaxRangePointAddition(bool addMaxRangePoints) override;
 
     private:
-        LidarRaycasterRequestBus::BusIdType m_lidarId;
+        LidarId m_busId;
         //! EntityId that is used to acquire the physics scene handle.
         AZ::EntityId m_sceneEntityId;
         AzPhysics::SceneHandle m_sceneHandle{ AzPhysics::InvalidSceneHandle };

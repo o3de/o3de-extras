@@ -14,14 +14,14 @@
 namespace ROS2
 {
     //! Enum bitwise flags used to describe LidarSystem's feature support.
-    enum LidarSystemFeatures : uint8_t
+    enum LidarSystemFeatures : uint16_t
     {
-        None                = 0b00000000,
-        Noise               = 0b00000001,
-        CollisionLayers     = 0b00000010,
-        EntityExclusion     = 0b00000100,
-        MaxRangePoints      = 0b00001000,
-        All                 = 0b00001111
+        None                = 0b0000000000000000,
+        Noise               = 0b0000000000000001,
+        CollisionLayers     = 0b0000000000000010,
+        EntityExclusion     = 0b0000000000000100,
+        MaxRangePoints      = 0b0000000000001000,
+        All                 = 0b1111111111111111
     };
 
     //! Structure used to hold LidarSystem's metadata.

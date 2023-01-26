@@ -22,7 +22,7 @@ namespace ROS2
         //! Creates a new Lidar.
         //! @param lidarEntityId EntityId holding the ROS2LidarSensorComponent.
         //! @return A unique Id of the newly created Lidar.
-        virtual LidarRaycasterRequests::LidarId CreateLidar(AZ::EntityId lidarEntityId) = 0;
+        virtual LidarId CreateLidar(AZ::EntityId lidarEntityId) = 0;
 
     protected:
         ~LidarSystemRequests() = default;

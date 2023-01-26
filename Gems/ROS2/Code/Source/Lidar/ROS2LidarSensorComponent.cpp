@@ -141,7 +141,7 @@ namespace ROS2
             return;
         }
 
-        m_lidarRaycasterId = LidarRaycasterRequests::LidarId::CreateNull();
+        m_lidarRaycasterId = LidarId::CreateNull();
         LidarSystemRequestBus::EventResult(
             m_lidarRaycasterId, AZ_CRC(m_lidarSystem), &LidarSystemRequestBus::Events::CreateLidar, GetEntityId());
         AZ_Assert(!m_lidarRaycasterId.IsNull(), "Could not access selected Lidar System.");

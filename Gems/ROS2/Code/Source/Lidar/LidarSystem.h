@@ -27,7 +27,7 @@ namespace ROS2
         static constexpr const char* SystemName = "PhysX";
 
         // LidarSystemRequestBus overrides
-        LidarRaycasterRequests::LidarId CreateLidar(AZ::EntityId lidarEntityId) override;
+        LidarId CreateLidar(AZ::EntityId lidarEntityId) override;
 
         AZStd::vector<LidarRaycaster> m_lidars;
     };

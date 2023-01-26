@@ -62,8 +62,8 @@ namespace ROS2
 
         AZStd::string m_lidarSystem;
         // A structure that maps each lidar implementation busId to the busId of a raycaster created by this LidarSensorComponent.
-        AZStd::unordered_map<AZStd::string, LidarRaycasterRequests::LidarId> m_implementationToRaycasterMap;
-        LidarRaycasterRequests::LidarId m_lidarRaycasterId;
+        AZStd::unordered_map<AZStd::string, LidarId> m_implementationToRaycasterMap;
+        LidarId m_lidarRaycasterId;
         std::shared_ptr<rclcpp::Publisher<sensor_msgs::msg::PointCloud2>> m_pointCloudPublisher;
 
         // Used only when visualisation is on - points differ since they are in global transform as opposed to local

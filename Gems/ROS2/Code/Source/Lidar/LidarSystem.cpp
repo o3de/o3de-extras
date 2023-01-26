@@ -41,9 +41,9 @@ namespace ROS2
         }
     }
 
-    LidarRaycasterRequests::LidarId LidarSystem::CreateLidar(AZ::EntityId lidarEntityId)
+    LidarId LidarSystem::CreateLidar(AZ::EntityId lidarEntityId)
     {
-        LidarRaycasterRequests::LidarId lidarId = LidarRaycasterRequests::LidarId::CreateRandom();
+        LidarId lidarId = LidarId::CreateRandom();
         m_lidars.emplace_back(lidarId, lidarEntityId);
         return lidarId;
     }
