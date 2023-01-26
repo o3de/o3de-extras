@@ -21,42 +21,20 @@
 
 namespace ROS2
 {
-    namespace Internal
+    ROS2CameraSensorComponent::ROS2CameraSensorComponent(
+        const SensorConfiguration& sensorConfiguration,
+        float verticalFieldOfViewDeg,
+        int width,
+        int height,
+        bool colorCamera,
+        bool depthCamera)
+        : m_VerticalFieldOfViewDeg(verticalFieldOfViewDeg)
+        , m_width(width)
+        , m_height(height)
+        , m_colorCamera(colorCamera)
+        , m_depthCamera(depthCamera)
     {
-        const char* kImageMessageType = "sensor_msgs::msg::Image";
-        const char* kDepthImageConfig = "Depth Image";
-        const char* kColorImageConfig = "Color Image";
-        const char* kInfoConfig = "Camera Info";
-        const char* kCameraInfoMessageType = "sensor_msgs::msg::CameraInfo";
-
-        AZStd::pair<AZStd::string, TopicConfiguration> MakeTopicConfigurationPair(
-            const AZStd::string& topic, const AZStd::string& messageType, const AZStd::string& configName)
-        {
-            TopicConfiguration config;
-            config.m_topic = topic;
-            config.m_type = messageType;
-            return AZStd::make_pair(configName, config);
-        }
-
-        AZStd::string GetCameraNameFromFrame(const AZ::Entity* entity)
-        {
-            const auto* component = Utils::GetGameOrEditorComponent<ROS2FrameComponent>(entity);
-            AZStd::string cameraName = component->GetFrameID();
-            AZStd::replace(cameraName.begin(), cameraName.end(), '/', '_');
-            return cameraName;
-        }
-
-    } // namespace Internal
-
-    ROS2CameraSensorComponent::ROS2CameraSensorComponent()
-    {
-        m_sensorConfiguration.m_frequency = 10;
-        m_sensorConfiguration.m_publishersConfigurations.insert(
-            Internal::MakeTopicConfigurationPair("camera_image_color", Internal::kImageMessageType, Internal::kColorImageConfig));
-        m_sensorConfiguration.m_publishersConfigurations.insert(
-            Internal::MakeTopicConfigurationPair("camera_image_depth", Internal::kImageMessageType, Internal::kDepthImageConfig));
-        m_sensorConfiguration.m_publishersConfigurations.insert(
-            Internal::MakeTopicConfigurationPair("camera_info", Internal::kCameraInfoMessageType, Internal::kInfoConfig));
+        m_sensorConfiguration = sensorConfiguration;
     }
 
     void ROS2CameraSensorComponent::Reflect(AZ::ReflectContext* context)
@@ -71,24 +49,6 @@ namespace ROS2
                 ->Field("Height", &ROS2CameraSensorComponent::m_height)
                 ->Field("Depth", &ROS2CameraSensorComponent::m_depthCamera)
                 ->Field("Color", &ROS2CameraSensorComponent::m_colorCamera);
-
-            AZ::EditContext* ec = serialize->GetEditContext();
-            if (ec)
-            {
-                ec->Class<ROS2CameraSensorComponent>("ROS2 Camera Sensor", "[Camera component]")
-                    ->ClassElement(AZ::Edit::ClassElements::EditorData, "")
-                    ->Attribute(AZ::Edit::Attributes::Category, "ROS2")
-                    ->Attribute(AZ::Edit::Attributes::AppearsInAddComponentMenu, AZ_CRC_CE("Game"))
-                    ->DataElement(
-                        AZ::Edit::UIHandlers::Default,
-                        &ROS2CameraSensorComponent::m_VerticalFieldOfViewDeg,
-                        "Vertical field of view",
-                        "Camera's vertical (y axis) field of view in degrees.")
-                    ->DataElement(AZ::Edit::UIHandlers::Default, &ROS2CameraSensorComponent::m_width, "Image width", "Image width")
-                    ->DataElement(AZ::Edit::UIHandlers::Default, &ROS2CameraSensorComponent::m_height, "Image height", "Image height")
-                    ->DataElement(AZ::Edit::UIHandlers::Default, &ROS2CameraSensorComponent::m_colorCamera, "Color Camera", "Color Camera")
-                    ->DataElement(AZ::Edit::UIHandlers::Default, &ROS2CameraSensorComponent::m_depthCamera, "Depth Camera", "Depth Camera");
-            }
         }
     }
 
@@ -98,7 +58,7 @@ namespace ROS2
 
         auto ros2Node = ROS2Interface::Get()->GetNode();
 
-        const auto cameraInfoPublisherConfig = m_sensorConfiguration.m_publishersConfigurations[Internal::kInfoConfig];
+        const auto cameraInfoPublisherConfig = m_sensorConfiguration.m_publishersConfigurations[CameraConstants::InfoConfig];
         AZStd::string cameraInfoFullTopic = ROS2Names::GetNamespacedName(GetNamespace(), cameraInfoPublisherConfig.m_topic);
         AZ_TracePrintf("ROS2", "Creating publisher for camera info on topic %s\n", cameraInfoFullTopic.data());
 
@@ -106,11 +66,11 @@ namespace ROS2
             ros2Node->create_publisher<sensor_msgs::msg::CameraInfo>(cameraInfoFullTopic.data(), cameraInfoPublisherConfig.GetQoS());
 
         const CameraSensorDescription description{
-            Internal::GetCameraNameFromFrame(GetEntity()), m_VerticalFieldOfViewDeg, m_width, m_height
+            GetCameraNameFromFrame(GetEntity()), m_VerticalFieldOfViewDeg, m_width, m_height
         };
         if (m_colorCamera)
         {
-            const auto cameraImagePublisherConfig = m_sensorConfiguration.m_publishersConfigurations[Internal::kColorImageConfig];
+            const auto cameraImagePublisherConfig = m_sensorConfiguration.m_publishersConfigurations[CameraConstants::ColorImageConfig];
             AZStd::string cameraImageFullTopic = ROS2Names::GetNamespacedName(GetNamespace(), cameraImagePublisherConfig.m_topic);
             auto publisher =
                 ros2Node->create_publisher<sensor_msgs::msg::Image>(cameraImageFullTopic.data(), cameraImagePublisherConfig.GetQoS());
@@ -118,7 +78,7 @@ namespace ROS2
         }
         if (m_depthCamera)
         {
-            const auto cameraImagePublisherConfig = m_sensorConfiguration.m_publishersConfigurations[Internal::kDepthImageConfig];
+            const auto cameraImagePublisherConfig = m_sensorConfiguration.m_publishersConfigurations[CameraConstants::DepthImageConfig];
             AZStd::string cameraImageFullTopic = ROS2Names::GetNamespacedName(GetNamespace(), cameraImagePublisherConfig.m_topic);
             auto publisher =
                 ros2Node->create_publisher<sensor_msgs::msg::Image>(cameraImageFullTopic.data(), cameraImagePublisherConfig.GetQoS());
@@ -162,5 +122,13 @@ namespace ROS2
         {
             sensor->RequestMessagePublication(publisher, transform, ros_header);
         }
+    }
+
+    AZStd::string ROS2CameraSensorComponent::GetCameraNameFromFrame(const AZ::Entity* entity) const
+    {
+        const auto* component = Utils::GetGameOrEditorComponent<ROS2FrameComponent>(entity);
+        AZStd::string cameraName = component->GetFrameID();
+        AZStd::replace(cameraName.begin(), cameraName.end(), '/', '_');
+        return cameraName;
     }
 } // namespace ROS2
