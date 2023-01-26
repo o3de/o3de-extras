@@ -11,6 +11,7 @@
 #include <AzTest/AzTest.h>
 #include <RobotImporter/URDF/UrdfParser.h>
 #include <RobotImporter/Utils/RobotImporterUtils.h>
+#include <RobotImporter/xacro/XacroUtils.h>
 
 namespace UnitTest
 {
@@ -18,6 +19,12 @@ namespace UnitTest
     class UrdfParserTest : public LeakDetectionFixture
     {
     public:
+        AZStd::string GetXacroParams()
+        {
+            return "<robot name=\"test\" xmlns:xacro=\"http://ros.org/wiki/xacro\">\n"
+                   "    <xacro:arg name=\"laser_enabled\" default=\"false\" />\n"
+                   "</robot>";
+        }
         AZStd::string GetUrdfWithOneLink()
         {
             return "<robot name=\"test_one_link\">"
@@ -438,6 +445,15 @@ namespace UnitTest
         };
         auto result = ROS2::Utils::ResolveURDFPath(dae, urdf, mockFileSystem);
         EXPECT_EQ(result, "/home/foo/ros_ws/install/foo_robot/meshes/bar.dae");
+    }
+
+    TEST_F(UrdfParserTest, XacroParseArgs)
+    {
+        AZStd::string xacroParams = GetXacroParams();
+        ROS2::Utils::xacro::Params params = ROS2::Utils::xacro::GetParameterFromXacroData(xacroParams);
+        EXPECT_EQ(params.size(), 1);
+        ASSERT_TRUE(params.contains("laser_enabled"));
+        EXPECT_EQ(params["laser_enabled"], "false");
     }
 
 } // namespace UnitTest

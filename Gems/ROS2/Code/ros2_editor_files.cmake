@@ -16,6 +16,8 @@ set(FILES
     Source/RobotImporter/Pages/PrefabMakerPage.h
     Source/RobotImporter/Pages/IntroPage.cpp
     Source/RobotImporter/Pages/IntroPage.h
+    Source/RobotImporter/Pages/XacroParamsPage.cpp
+    Source/RobotImporter/Pages/XacroParamsPage.h
     Source/RobotImporter/RobotImporterWidget.cpp
     Source/RobotImporter/RobotImporterWidget.h
     Source/RobotImporter/ROS2RobotImporterEditorSystemComponent.cpp
@@ -34,6 +36,8 @@ set(FILES
     Source/RobotImporter/URDF/URDFPrefabMaker.h
     Source/RobotImporter/URDF/VisualsMaker.cpp
     Source/RobotImporter/URDF/VisualsMaker.h
+    Source/RobotImporter/xacro/XacroUtils.cpp
+    Source/RobotImporter/xacro/XacroUtils.h
     Source/RobotImporter/Utils/RobotImporterUtils.cpp
     Source/RobotImporter/Utils/RobotImporterUtils.h
     Source/RobotImporter/Utils/SourceAssetsStorage.cpp
