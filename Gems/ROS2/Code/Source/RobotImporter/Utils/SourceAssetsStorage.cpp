@@ -33,7 +33,8 @@ namespace ROS2::Utils
 
     AZStd::unordered_map<AZ::Crc32, AvailableAsset> GetInterestingSourceAssetsCRC()
     {
-        const AZStd::unordered_set<AZStd::string> kInterestingExtensions{ ".dae", ".stl", ".obj" };
+        const AZStd::unordered_set<AZStd::string> kInterestingExtensions{ ".dae", ".stl", ".obj", ".fbx" };
+        constexpr char AzModelExtension[] {".azmodel"} ;
         AZStd::unordered_map<AZ::Crc32, AvailableAsset> availableAssets;
 
         // take all meshes in catalog
@@ -42,7 +43,7 @@ namespace ROS2::Utils
         {
             if (AZ::Data::AssetManager::Instance().GetHandler(info.m_assetType))
             {
-                if (!info.m_relativePath.ends_with(".azmodel"))
+                if (!info.m_relativePath.ends_with(AzModelExtension))
                 {
                     return;
                 }
@@ -73,12 +74,25 @@ namespace ROS2::Utils
                     fullSourcePath.c_str(),
                     crc);
 
-                AvailableAsset t;
-                t.m_sourceAssetRelativePath = info.m_relativePath;
-                t.m_assetId = info.m_assetId;
-                t.m_sourceAssetGlobalPath = fullSourcePathStr;
-                t.m_productAssetRelativePath = info.m_relativePath;
-                availableAssets[crc] = t;
+                AvailableAsset foundAsset;
+                foundAsset.m_sourceAssetRelativePath = info.m_relativePath;
+                foundAsset.m_assetId = info.m_assetId;
+                foundAsset.m_sourceAssetGlobalPath = fullSourcePathStr;
+                foundAsset.m_productAssetRelativePath = info.m_relativePath;
+                auto availableAssetIt = availableAssets.find(crc);
+                if (availableAssetIt != availableAssets.end())
+                {
+                    const AZStd::string stem(fullSourcePath.Stem().Native());
+                    // probably there is already submesh added. Replace only if there is exact name
+                    if (info.m_relativePath.contains(stem + AzModelExtension))
+                    {
+                        availableAssetIt->second = foundAsset;
+                    }
+                }
+                else
+                {
+                    availableAssets.insert({crc, foundAsset});
+                }
             }
         };
         AZ::Data::AssetCatalogRequestBus::Broadcast(
