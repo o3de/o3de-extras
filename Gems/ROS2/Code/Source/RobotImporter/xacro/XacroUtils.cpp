@@ -11,6 +11,8 @@
 #include <AzCore/XML/rapidxml.h>
 #include <AzFramework/Process/ProcessCommunicator.h>
 #include <AzFramework/Process/ProcessWatcher.h>
+#include <AzCore/Settings/SettingsRegistryMergeUtils.h>
+#include <QString>
 namespace ROS2::Utils::xacro
 {
 

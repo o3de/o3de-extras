@@ -18,14 +18,41 @@
 
 namespace ROS2
 {
+    template<typename T>
+    T ComputeMean(const AZStd::vector<T>& vec)
+    {
+        const size_t size = vec.size();
+        if (size == 0 )return 0;
+        return std::accumulate(vec.begin(), vec.end(), 0.0) / size;
+    }
+
+    template<typename T>
+    T ComputeVariance(const AZStd::vector<T>& vec, T mean)
+    {
+        const size_t size = vec.size();
+        if (size == 0 )return 0;
+        auto variance_computer = [&mean, &size](T acc, const T& val)
+        {
+            return acc + ((val - mean) * (val - mean) / (size - 1));
+        };
+
+        return std::accumulate(vec.begin(), vec.end(), 0.0, variance_computer);
+    }
+
+
     void ROS2SensorComponent::Activate()
     {
         AZ::TickBus::Handler::BusConnect();
+        AZStd::string s = AZStd::string::format("Sensor %s [%llu] onFrequencyTick FPS ", GetEntity()->GetName().c_str(), GetId());
+        m_deltaTimeHistogram.Init(s.c_str(), 250, ImGui::LYImGuiUtils::HistogramContainer::ViewType::Histogram, true, 0.0f, 80.0f);
+        ImGui::ImGuiUpdateListenerBus::Handler::BusConnect();
+
     }
 
     void ROS2SensorComponent::Deactivate()
     {
         AZ::TickBus::Handler::BusDisconnect();
+        ImGui::ImGuiUpdateListenerBus::Handler::BusDisconnect();
     }
 
     void ROS2SensorComponent::Reflect(AZ::ReflectContext* context)
@@ -68,6 +95,15 @@ namespace ROS2
 
     void ROS2SensorComponent::OnTick([[maybe_unused]] float deltaTime, [[maybe_unused]] AZ::ScriptTimePoint time)
     {
+        if (m_benchmarkGoing)
+        {
+            auto now = AZStd::chrono::system_clock::now();
+            AZStd::chrono::duration<float> elapsed = now - m_start;
+            m_benchmarkElapsedChrono = elapsed.count();
+            if (m_benchmarkElapsedChrono > 10.0f){
+                m_benchmarkGoing = false;
+            }
+        }
         Visualise(); // each frame
         if (!m_sensorConfiguration.m_publishingEnabled)
         {
@@ -87,8 +123,46 @@ namespace ROS2
         { // Frequency higher than possible, not catching up, just keep going with each frame.
             m_timeElapsedSinceLastTick = 0.0f;
         }
-
         // Note that sensor frequency can be limited by simulation tick rate (if higher sensor Hz is desired).
+        double currentTime =  TimeMsToSecondsDouble(AZ::Interface<AZ::ITime>::Get()->GetElapsedTimeMs());
+        const float deltaTimeOnFreqTick = 1.0f*(currentTime - m_timeElapsedSinceLastFrequencyTick);
+        m_effectiveFps  = 1.f / deltaTimeOnFreqTick;
+        m_deltaTimeHistogram.PushValue(1.0f/deltaTimeOnFreqTick);
+        m_timeElapsedSinceLastFrequencyTick = currentTime;
+        if (m_benchmarkGoing){
+            m_aggregateFps.push_back(m_effectiveFps);
+        }
         FrequencyTick();
+
     }
+
+    void ROS2SensorComponent::OnImGuiUpdate(){
+        AZStd::string s = AZStd::string::format("Benchmark##%s %llu ",GetEntity()->GetName().c_str(),GetId());
+        ImGui::Text("======== Sensor %s [%llu] ========================", GetEntity()->GetName().c_str(), GetId());
+        ImGui::BulletText("FrameRate : %f / %f", m_effectiveFps, m_sensorConfiguration.m_frequency);
+        if (m_benchmarkGoing){
+            ImGui::BulletText("Benchmarking %f", m_benchmarkElapsedChrono);
+        }else{
+            if (ImGui::Button(s.c_str()))
+            {
+                m_benchmarkGoing = true;
+                m_aggregateFps.clear();
+                m_start = AZStd::chrono::system_clock::now();
+            }
+            if(m_aggregateFps.size() > 2)
+            {
+                auto minmax = AZStd::minmax_element(m_aggregateFps.begin(),m_aggregateFps.end());
+                ImGui::BulletText("Benchmark result : ");
+                ImGui::BulletText("Max / Min : %f / %f", *minmax.first, *minmax.second);
+                float mean = ComputeMean(m_aggregateFps);
+                float var = ComputeVariance(m_aggregateFps, mean);
+                float stddev = AZStd::sqrt(var);
+                ImGui::BulletText("Mean (stddev) : %f ( %f )", mean, stddev);
+            }
+        }
+        m_deltaTimeHistogram.Draw(ImGui::GetColumnWidth(), 100.0f);
+        ImGui::End();
+
+    }
+
 } // namespace ROS2
