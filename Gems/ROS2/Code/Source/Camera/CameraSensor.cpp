@@ -112,11 +112,6 @@ namespace ROS2
     void CameraSensor::SetupPasses()
     {
         AZ_TracePrintf("CameraSensor", "Initializing pipeline for %s\n", m_cameraSensorDescription.m_cameraName.c_str());
-        const auto & m =m_cameraSensorDescription.m_cameraIntrinsics;
-        AZ_TracePrintf("CameraSensor", "Camera matrix\n");
-        AZ_TracePrintf("CameraSensor", "%f %f %f",m[0],m[1],m[2]);
-        AZ_TracePrintf("CameraSensor", "%f %f %f",m[3],m[4],m[5]);
-        AZ_TracePrintf("CameraSensor", "%f %f %f",m[6],m[7],m[8]);
 
         const AZ::Name viewName = AZ::Name("MainCamera");
         m_view = AZ::RPI::View::CreateView(viewName, AZ::RPI::View::UsageCamera);

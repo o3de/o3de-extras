@@ -22,7 +22,8 @@ namespace ROS2
     T ComputeMean(const AZStd::vector<T>& vec)
     {
         const size_t size = vec.size();
-        if (size == 0 )return 0;
+        if (size == 0)
+            return 0;
         return std::accumulate(vec.begin(), vec.end(), 0.0) / size;
     }
 
@@ -30,7 +31,8 @@ namespace ROS2
     T ComputeVariance(const AZStd::vector<T>& vec, T mean)
     {
         const size_t size = vec.size();
-        if (size == 0 )return 0;
+        if (size == 0)
+            return 0;
         auto variance_computer = [&mean, &size](T acc, const T& val)
         {
             return acc + ((val - mean) * (val - mean) / (size - 1));
@@ -39,14 +41,12 @@ namespace ROS2
         return std::accumulate(vec.begin(), vec.end(), 0.0, variance_computer);
     }
 
-
     void ROS2SensorComponent::Activate()
     {
         AZ::TickBus::Handler::BusConnect();
         AZStd::string s = AZStd::string::format("Sensor %s [%llu] onFrequencyTick FPS ", GetEntity()->GetName().c_str(), GetId());
         m_deltaTimeHistogram.Init(s.c_str(), 250, ImGui::LYImGuiUtils::HistogramContainer::ViewType::Histogram, true, 0.0f, 80.0f);
         ImGui::ImGuiUpdateListenerBus::Handler::BusConnect();
-
     }
 
     void ROS2SensorComponent::Deactivate()
@@ -133,25 +133,28 @@ namespace ROS2
             m_aggregateFps.push_back(m_effectiveFps);
         }
         FrequencyTick();
-
     }
 
-    void ROS2SensorComponent::OnImGuiUpdate(){
-        AZStd::string s = AZStd::string::format("Benchmark##%s %llu ",GetEntity()->GetName().c_str(),GetId());
+    void ROS2SensorComponent::OnImGuiUpdate()
+    {
+        AZStd::string s = AZStd::string::format("Benchmark##%s %llu ", GetEntity()->GetName().c_str(), GetId());
         ImGui::Text("======== Sensor %s [%llu] ========================", GetEntity()->GetName().c_str(), GetId());
         ImGui::BulletText("FrameRate : %f / %f", m_effectiveFps, m_sensorConfiguration.m_frequency);
-        if (m_benchmarkGoing){
+        if (m_benchmarkGoing)
+        {
             ImGui::BulletText("Benchmarking %f", m_benchmarkElapsedChrono);
-        }else{
+        }
+        else
+        {
             if (ImGui::Button(s.c_str()))
             {
                 m_benchmarkGoing = true;
                 m_aggregateFps.clear();
                 m_start = AZStd::chrono::system_clock::now();
             }
-            if(m_aggregateFps.size() > 2)
+            if (m_aggregateFps.size() > 2)
             {
-                auto minmax = AZStd::minmax_element(m_aggregateFps.begin(),m_aggregateFps.end());
+                auto minmax = AZStd::minmax_element(m_aggregateFps.begin(), m_aggregateFps.end());
                 ImGui::BulletText("Benchmark result : ");
                 ImGui::BulletText("Max / Min : %f / %f", *minmax.first, *minmax.second);
                 float mean = ComputeMean(m_aggregateFps);
@@ -162,7 +165,5 @@ namespace ROS2
         }
         m_deltaTimeHistogram.Draw(ImGui::GetColumnWidth(), 100.0f);
         ImGui::End();
-
     }
-
 } // namespace ROS2
