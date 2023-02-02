@@ -1,0 +1,18 @@
+{
+    "Amazon": {
+        "AssetProcessor": {
+            "Settings": {
+                "ScanFolder RosRobotSample/Assets": {
+                    "watch": "@GEMROOT:RosRobotSample@/Assets",
+                    "recursive": 1,
+                    "order": 101
+                },
+                "ScanFolder RosRobotSample/Registry": {
+                    "watch": "@GEMROOT:RosRobotSample@/Registry",
+                    "recursive": 1,
+                    "order": 102
+                }
+            }
+        }
+    }
+}

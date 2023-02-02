@@ -1,0 +1,26 @@
+{
+    "materialType": "@gemroot:Atom_Feature_Common@/Assets/Materials/Types/StandardPBR.materialtype",
+    "materialTypeVersion": 5,
+    "propertyValues": {
+        "baseColor.color": [
+            0.007217517588287592,
+            0.008361943997442722,
+            0.018005646765232086,
+            1.0
+        ],
+        "baseColor.factor": 0.10999999940395355,
+        "baseColor.textureBlendMode": "Lerp",
+        "baseColor.textureMap": "../Textures/Concrete_019_Basecolor.jpg",
+        "emissive.color": [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+        ],
+        "normal.textureMap": "../Textures/Concrete_019_Normal.jpg",
+        "opacity.factor": 1.0,
+        "roughness.textureMap": "../Textures/Concrete_019_Roughness.jpg",
+        "uv.tileU": 0.20000000298023224,
+        "uv.tileV": 0.20000000298023224
+    }
+}
