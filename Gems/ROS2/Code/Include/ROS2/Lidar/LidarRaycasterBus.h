@@ -21,57 +21,57 @@ namespace ROS2
     {
     public:
         StronglyTypedUuid() = default;
-        StronglyTypedUuid(AZ::Uuid value)
+        explicit constexpr StronglyTypedUuid(AZ::Uuid value)
             : m_uuid(value)
         {
         }
 
-        static StronglyTypedUuid CreateNull()
+        constexpr static StronglyTypedUuid CreateNull()
         {
             return StronglyTypedUuid(AZ::Uuid::CreateNull());
         }
 
-        static StronglyTypedUuid CreateRandom()
+        constexpr static StronglyTypedUuid CreateRandom()
         {
             return StronglyTypedUuid(AZ::Uuid::CreateRandom());
         }
 
-        bool IsNull() const
+        constexpr bool IsNull() const
         {
             return m_uuid.IsNull();
         }
 
-        bool operator==(const StronglyTypedUuid& rhs) const
+        constexpr bool operator==(const StronglyTypedUuid& rhs) const
         {
             return m_uuid == rhs.m_uuid;
         }
 
-        bool operator!=(const StronglyTypedUuid& rhs) const
+        constexpr bool operator!=(const StronglyTypedUuid& rhs) const
         {
             return m_uuid != rhs.m_uuid;
         }
 
-        bool operator<(const StronglyTypedUuid& rhs) const
+        constexpr bool operator<(const StronglyTypedUuid& rhs) const
         {
             return m_uuid < rhs.m_uuid;
         }
 
-        bool operator>(const StronglyTypedUuid& rhs) const
+        constexpr bool operator>(const StronglyTypedUuid& rhs) const
         {
             return m_uuid > rhs.m_uuid;
         }
 
-        bool operator<=(const StronglyTypedUuid& rhs) const
+        constexpr bool operator<=(const StronglyTypedUuid& rhs) const
         {
             return m_uuid <= rhs.m_uuid;
         }
 
-        bool operator>=(const StronglyTypedUuid& rhs) const
+        constexpr bool operator>=(const StronglyTypedUuid& rhs) const
         {
             return m_uuid >= rhs.m_uuid;
         }
 
-        size_t GetHash() const
+        constexpr size_t GetHash() const
         {
             return m_uuid.GetHash();
         }
