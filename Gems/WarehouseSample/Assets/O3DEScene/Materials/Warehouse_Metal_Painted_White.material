@@ -1,0 +1,21 @@
+{
+    "materialType": "@gemroot:Atom_Feature_Common@/Assets/Materials/Types/StandardPBR.materialtype",
+    "materialTypeVersion": 5,
+    "propertyValues": {
+        "baseColor.factor": 0.7200000286102295,
+        "baseColor.textureBlendMode": "Lerp",
+        "baseColor.textureMap": "../Textures/Metal_Painted_White_002_Basecolor.jpg",
+        "emissive.color": [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+        ],
+        "normal.factor": 0.23999999463558197,
+        "normal.flipY": true,
+        "normal.textureMap": "../Textures/Metal_Painted_002_Normal.jpg",
+        "opacity.factor": 1.0,
+        "roughness.textureMap": "../Textures/Metal_Painted_002_Roughness.jpg",
+        "specularF0.factor": 1.0
+    }
+}

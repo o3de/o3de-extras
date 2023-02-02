@@ -1,0 +1,24 @@
+{
+    "materialType": "@gemroot:Atom_Feature_Common@/Assets/Materials/Types/StandardPBR.materialtype",
+    "materialTypeVersion": 5,
+    "propertyValues": {
+        "baseColor.color": [
+            0.016807399690151215,
+            0.016807399690151215,
+            0.016807399690151215,
+            1.0
+        ],
+        "emissive.color": [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+        ],
+        "normal.factor": 0.05999999865889549,
+        "normal.textureMap": "../Textures/Paper_Recycled_001_Normal.jpg",
+        "opacity.factor": 1.0,
+        "roughness.textureMap": "../Textures/Metal_Painted_002_Roughness.jpg",
+        "uv.tileU": 2.0,
+        "uv.tileV": 2.0
+    }
+}

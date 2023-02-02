@@ -1,0 +1,27 @@
+{
+    "gem_name": "RosRobotSample",
+    "display_name": "RosRobotSample",
+    "license": "Apache-2.0 or MIT",
+    "license_url": "https://opensource.org/licenses/Apache-2.0",
+    "origin": "Ros2WarehouseDemo",
+    "origin_url": "https://github.com/o3de/o3de-extras/tree/main/Gems/RosRobotSample",
+    "type": "Asset",
+    "summary": "This project contains a sample robot asset",
+    "canonical_tags": [
+        "Gem"
+    ],
+    "user_tags": [
+        "RosRobotSample"
+    ],
+    "platforms": [
+        ""
+    ],
+    "icon_path": "preview.png",
+    "requirements": "",
+    "documentation_url": "",
+    "dependencies": [
+        "ROS2"
+    ],
+    "repo_uri": "",
+    "restricted": ""
+}

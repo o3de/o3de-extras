@@ -1,0 +1,27 @@
+{
+    "materialType": "@gemroot:Atom_Feature_Common@/Assets/Materials/Types/StandardPBR.materialtype",
+    "materialTypeVersion": 5,
+    "propertyValues": {
+        "baseColor.color": [
+            0.026352331042289734,
+            0.024887464940547943,
+            0.02212558127939701,
+            1.0
+        ],
+        "baseColor.factor": 0.25999999046325684,
+        "baseColor.textureBlendMode": "Lerp",
+        "baseColor.textureMap": "../Textures/Wood_026_Basecolor.jpg",
+        "emissive.color": [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+        ],
+        "normal.textureMap": "../Textures/Wood_026_Normal.jpg",
+        "opacity.factor": 1.0,
+        "roughness.textureMap": "../Textures/Wood_026_Roughness.jpg",
+        "uv.rotateDegrees": 90.0,
+        "uv.tileU": 2.0,
+        "uv.tileV": 2.0
+    }
+}
