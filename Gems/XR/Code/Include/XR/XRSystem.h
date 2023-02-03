@@ -81,6 +81,7 @@ namespace XR
         float GetYJoyStickState(AZ::u32 handIndex) const override;
         float GetSqueezeState(AZ::u32 handIndex) const override;
         float GetTriggerState(AZ::u32 handIndex) const override;
+        AZ::Data::Instance<AZ::RPI::AttachmentImage> InitPassFoveatedAttachment(const AZ::RPI::PassTemplate& passTemplate, const AZ::RHI::XRFoveatedLevel* level = nullptr) const override;
         ///////////////////////////////////////////////////////////////////
 
         ///////////////////////////////////////////////////////////////////
@@ -97,7 +98,7 @@ namespace XR
         void PostFrame() override;
         bool IsDefaultRenderPipelineNeeded() const override;
         bool IsDefaultRenderPipelineEnabledOnHost() const override;
-        AZ::RHI::ResultCode InitVariableRateShadingImageContent(AZ::RHI::Image* image, AZ::RHI::XRFoveatedLevel type) override;
+        AZ::RHI::ResultCode InitVariableRateShadingImageContent(AZ::RHI::Image* image, AZ::RHI::XRFoveatedLevel type) const override;
         ///////////////////////////////////////////////////////////////////
 
     private:

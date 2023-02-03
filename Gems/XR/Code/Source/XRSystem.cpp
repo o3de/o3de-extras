@@ -9,12 +9,21 @@
 #include <AzCore/Interface/Interface.h>
 #include <AzCore/Debug/Profiler.h>
 #include <AzCore/Console/IConsole.h>
+#include <AzCore/Settings/SettingsRegistry.h>
 #include <XR/XRFactory.h>
 #include <XR/XRSystem.h>
 #include <XR/XRUtils.h>
 #include <Atom/RHI/Image.h>
 #include <Atom/RHI/ImagePool.h>
+#include <Atom/RHI/RHISystemInterface.h>
 #include <Atom/RHI.Reflect/VariableRateShadingEnums.h>
+#include <Atom/RHI.Reflect/Viewport.h>
+#include <Atom/RPI.Public/Image/AttachmentImage.h>
+#include <Atom/RPI.Reflect/Asset/AssetUtils.h>
+#include <Atom/RPI.Reflect/Image/AttachmentImageAsset.h>
+#include <Atom/RPI.Reflect/Image/AttachmentImageAssetCreator.h>
+#include <Atom/RPI.Reflect/Pass/PassTemplate.h>
+
 
 namespace XR
 {
@@ -281,6 +290,82 @@ namespace XR
         return 0.0f;
     }
 
+    AZ::Data::Instance<AZ::RPI::AttachmentImage> System::InitPassFoveatedAttachment(const AZ::RPI::PassTemplate& passTemplate, const AZ::RHI::XRFoveatedLevel* level) const
+    {
+        // Need to fill the contents of the Variable shade rating image.
+        // Find the Shading Rate Attachment
+        AZ::Data::Asset<AZ::RPI::AttachmentImageAsset> vrsImageAsset;
+        for (const auto& imageAttachment : passTemplate.m_imageAttachments)
+        {
+            if (AZ::RHI::CheckBitsAll(imageAttachment.m_imageDescriptor.m_bindFlags, AZ::RHI::ImageBindFlags::ShadingRate))
+            {
+                vrsImageAsset = AZ::RPI::AssetUtils::LoadAssetById<AZ::RPI::AttachmentImageAsset>(imageAttachment.m_assetRef.m_assetId, AZ::RPI::AssetUtils::TraceLevel::Error);
+                break;
+            }
+        }
+
+        AZ::Data::Instance<AZ::RPI::AttachmentImage> textureAsset;
+        if (vrsImageAsset && vrsImageAsset.IsReady())
+        {
+            AZ::RHI::Device* device = AZ::RHI::RHISystemInterface::Get()->GetDevice();
+            // Resize the image to match the proper tile size
+            AZ::u32 outputWidth = GetSwapChainWidth(1);
+            AZ::u32 outputHeight = GetSwapChainHeight(1);
+
+            const auto& tileSize = device->GetLimits().m_shadingRateTileSize;
+            AZ::RHI::ImageDescriptor imageDescriptor = vrsImageAsset->GetImageDescriptor();
+            imageDescriptor.m_size.m_width = aznumeric_cast<uint32_t>(ceil(static_cast<float>(outputWidth) / tileSize.m_width));
+            imageDescriptor.m_size.m_height = aznumeric_cast<uint32_t>(ceil(static_cast<float>(outputHeight) / tileSize.m_height));
+
+            // Find the appropiate format for the image
+            for (uint32_t i = 0; i < static_cast<uint32_t>(AZ::RHI::Format::Count); ++i)
+            {
+                AZ::RHI::Format format = static_cast<AZ::RHI::Format>(i);
+                AZ::RHI::FormatCapabilities capabilities = device->GetFormatCapabilities(format);
+                if (AZ::RHI::CheckBitsAll(capabilities, AZ::RHI::FormatCapabilities::ShadingRate))
+                {
+                    imageDescriptor.m_format = format;
+                    break;
+                }
+            }
+
+            // Create the new asset with the proper size and format and register it in the AZ::RPI::AttachmentImage database
+            AZ::RPI::AttachmentImageAssetCreator imageAssetCreator;
+            imageAssetCreator.Begin(vrsImageAsset->GetId());
+            imageAssetCreator.SetImageDescriptor(imageDescriptor);
+            imageAssetCreator.SetName(vrsImageAsset->GetName(), vrsImageAsset->HasUniqueName());
+
+            AZ::Data::Asset<AZ::RPI::AttachmentImageAsset> asset;
+            if (imageAssetCreator.End(asset))
+            {
+                textureAsset = AZ::RPI::AttachmentImage::FindOrCreate(asset);
+                AZ::RHI::XRFoveatedLevel foveatedType = AZ::RHI::XRFoveatedLevel::None;
+                if (level)
+                {
+                    foveatedType = *level;
+                }
+                else
+                {
+                    // Check settings registry for the foveated level
+                    if (AZ::SettingsRegistryInterface* settingsRegistry = AZ::SettingsRegistry::Get())
+                    {
+                        if (AZ::u64 foveatedLevel; settingsRegistry->Get(foveatedLevel, AZ::RHI::XRFoveatedLevelKey))
+                        {
+                            AZ_Assert(
+                                foveatedLevel <= static_cast<AZ::u64>(AZ::RHI::XRFoveatedLevel::High),
+                                "Invalid foveated level %d", static_cast<int>(foveatedLevel));
+                            foveatedType = static_cast<AZ::RHI::XRFoveatedLevel>(foveatedLevel);
+                        }
+                    }
+                }
+                // Fill up the contents of the shading rate image
+                InitVariableRateShadingImageContent(textureAsset->GetRHIImage(), foveatedType);
+            }
+        }
+
+        return textureAsset;
+    }
+
     float System::GetXButtonState() const
     {
         if (m_session->IsSessionRunning())
@@ -374,7 +459,7 @@ namespace XR
 #endif
     }
 
-    AZ::RHI::ResultCode System::InitVariableRateShadingImageContent(AZ::RHI::Image* image, AZ::RHI::XRFoveatedLevel level)
+    AZ::RHI::ResultCode System::InitVariableRateShadingImageContent(AZ::RHI::Image* image, AZ::RHI::XRFoveatedLevel level) const
     {
         AZ_Assert(image, "Null variable rate shading image");
         const auto& imageDescriptor = image->GetDescriptor();
