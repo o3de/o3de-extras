@@ -52,7 +52,7 @@ namespace ROS2
         };
 
     } // namespace Internal
-    CameraSensorDescription::CameraSensorDescription(const AZStd::string& cameraName, float verticalFov, int width, int height)
+    CameraSensorDescription::CameraSensorDescription(const AZStd::string& cameraName, float verticalFov, int width, int height, AZ::EntityId entityId)
         : m_verticalFieldOfViewDeg(verticalFov)
         , m_width(width)
         , m_height(height)
@@ -60,6 +60,7 @@ namespace ROS2
         , m_aspectRatio(static_cast<float>(width) / static_cast<float>(height))
         , m_viewToClipMatrix(MakeViewToClipMatrix())
         , m_cameraIntrinsics(MakeCameraIntrinsics())
+        , m_entityId(entityId)
     {
         ValidateParameters();
     }
@@ -116,11 +117,12 @@ namespace ROS2
         m_view->SetViewToClipMatrix(m_cameraSensorDescription.m_viewToClipMatrix);
         m_scene = AZ::RPI::RPISystemInterface::Get()->GetSceneByName(AZ::Name("Main"));
 
-        const AZStd::string pipelineName = m_cameraSensorDescription.m_cameraName + "Pipeline" + GetPipelineTypeName();
+        m_pipelineName = m_cameraSensorDescription.m_cameraName + "Pipeline" + GetPipelineTypeName() +
+            m_cameraSensorDescription.m_entityId.ToString();
 
         AZ::RPI::RenderPipelineDescriptor pipelineDesc;
         pipelineDesc.m_mainViewTagName = "MainCamera";
-        pipelineDesc.m_name = pipelineName;
+        pipelineDesc.m_name = m_pipelineName;
 
         pipelineDesc.m_rootPassTemplate = GetPipelineTemplateName();
 
@@ -135,7 +137,7 @@ namespace ROS2
 
         m_scene->AddRenderPipeline(m_pipeline);
 
-        m_passHierarchy.push_back(pipelineName);
+        m_passHierarchy.push_back(m_pipelineName);
         m_passHierarchy.push_back("CopyToSwapChain");
 
         m_pipeline->SetDefaultView(m_view);
@@ -198,18 +200,31 @@ namespace ROS2
             cameraPose,
             [header, publisher](const AZ::RPI::AttachmentReadback::ReadbackResult& result)
             {
-                const AZ::RHI::ImageDescriptor& descriptor = result.m_imageDescriptor;
-                const auto format = descriptor.m_format;
-                AZ_Assert(Internal::FormatMappings.contains(format), "Unknown format in result %u", static_cast<uint32_t>(format));
-                sensor_msgs::msg::Image message;
-                message.encoding = Internal::FormatMappings.at(format);
-                message.width = descriptor.m_size.m_width;
-                message.height = descriptor.m_size.m_height;
-                message.step = message.width * Internal::BitDepth.at(format);
-                message.data = std::vector<uint8_t>(result.m_dataBuffer->data(), result.m_dataBuffer->data() + result.m_dataBuffer->size());
-                message.header = header;
-                publisher->publish(message);
+                if (result.m_state == AZ::RPI::AttachmentReadback::ReadbackState::Success)
+                {
+                    const AZ::RHI::ImageDescriptor& descriptor = result.m_imageDescriptor;
+                    const auto format = descriptor.m_format;
+                    AZ_Assert(Internal::FormatMappings.contains(format), "Unknown format in result %u", static_cast<uint32_t>(format));
+                    sensor_msgs::msg::Image message;
+                    message.encoding = Internal::FormatMappings.at(format);
+                    message.width = descriptor.m_size.m_width;
+                    message.height = descriptor.m_size.m_height;
+                    message.step = message.width * Internal::BitDepth.at(format);
+                    message.data = std::vector<uint8_t>(result.m_dataBuffer->data(), result.m_dataBuffer->data() + result.m_dataBuffer->size());
+                    message.header = header;
+                    publisher->publish(message);
+                }
             });
+    }
+
+    void CameraSensor::RequestMessagePublication(
+        AZStd::vector<std::shared_ptr<rclcpp::Publisher<sensor_msgs::msg::Image>>> publishers,
+        const AZ::Transform& cameraPose,
+        const std_msgs::msg::Header& header)
+    {
+        if(!publishers.empty()){
+            RequestMessagePublication(publishers.front(), cameraPose, header);
+        }
     }
 
     CameraDepthSensor::CameraDepthSensor(const CameraSensorDescription& cameraSensorDescription)
@@ -243,5 +258,52 @@ namespace ROS2
     {
         return "Color";
     };
+
+    CameraRGBDSensor::CameraRGBDSensor(const CameraSensorDescription& cameraSensorDescription)
+        : CameraColorSensor(cameraSensorDescription)
+    {
+    }
+
+    void CameraRGBDSensor::ReadBackDepth(
+        AZStd::function<void(const AZ::RPI::AttachmentReadback::ReadbackResult& result)> callback)
+    {
+            AZ::Render::FrameCaptureId captureId = AZ::Render::InvalidFrameCaptureId;
+            AZStd::vector<AZStd::string> passHierarchy{m_pipelineName,"DepthPrePass"};
+            AZ::Render::FrameCaptureRequestBus::BroadcastResult(
+                captureId,
+                &AZ::Render::FrameCaptureRequestBus::Events::CapturePassAttachmentWithCallback,
+                passHierarchy,
+                AZStd::string("DepthLinear"),
+                callback,
+                AZ::RPI::PassAttachmentReadbackOption::Output);
+    }
+
+    void CameraRGBDSensor::RequestMessagePublication(
+        AZStd::vector<std::shared_ptr<rclcpp::Publisher<sensor_msgs::msg::Image>>> publishers,
+        const AZ::Transform& cameraPose,
+        const std_msgs::msg::Header& header)
+    {
+        AZ_Assert(publishers.size()==2, "RequestMessagePublication for CameraRGBDSensor should be called with exactly two publishers");
+        const auto publisherDepth = publishers.back();
+        ReadBackDepth(
+            [header, publisherDepth](const AZ::RPI::AttachmentReadback::ReadbackResult& result)
+            {
+                if (result.m_state == AZ::RPI::AttachmentReadback::ReadbackState::Success)
+                {
+                    const AZ::RHI::ImageDescriptor& descriptor = result.m_imageDescriptor;
+                    const auto format = descriptor.m_format;
+                    AZ_Assert(Internal::FormatMappings.contains(format), "Unknown format in result %u", static_cast<uint32_t>(format));
+                    sensor_msgs::msg::Image message;
+                    message.encoding = Internal::FormatMappings.at(format);
+                    message.width = descriptor.m_size.m_width;
+                    message.height = descriptor.m_size.m_height;
+                    message.step = message.width * Internal::BitDepth.at(format);
+                    message.data = std::vector<uint8_t>(result.m_dataBuffer->data(), result.m_dataBuffer->data() + result.m_dataBuffer->size());
+                    message.header = header;
+                    publisherDepth->publish(message);
+                }
+            });
+        CameraSensor::RequestMessagePublication(publishers,cameraPose,header);
+    }
 
 } // namespace ROS2

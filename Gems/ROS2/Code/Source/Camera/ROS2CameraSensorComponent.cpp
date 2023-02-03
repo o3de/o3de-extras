@@ -66,7 +66,7 @@ namespace ROS2
             ros2Node->create_publisher<sensor_msgs::msg::CameraInfo>(cameraInfoFullTopic.data(), cameraInfoPublisherConfig.GetQoS());
 
         const CameraSensorDescription description{
-            GetCameraNameFromFrame(GetEntity()), m_verticalFieldOfViewDeg, m_width, m_height
+            GetCameraNameFromFrame(GetEntity()), m_verticalFieldOfViewDeg, m_width, m_height, GetEntityId()
         };
         if (m_colorCamera)
         {
@@ -74,7 +74,7 @@ namespace ROS2
             AZStd::string cameraImageFullTopic = ROS2Names::GetNamespacedName(GetNamespace(), cameraImagePublisherConfig.m_topic);
             auto publisher =
                 ros2Node->create_publisher<sensor_msgs::msg::Image>(cameraImageFullTopic.data(), cameraImagePublisherConfig.GetQoS());
-            m_cameraSensorsWithPublihsers.emplace_back(CreatePair<CameraColorSensor>(publisher, description));
+            m_imagePublishers.emplace_back(publisher);
         }
         if (m_depthCamera)
         {
@@ -82,8 +82,22 @@ namespace ROS2
             AZStd::string cameraImageFullTopic = ROS2Names::GetNamespacedName(GetNamespace(), cameraImagePublisherConfig.m_topic);
             auto publisher =
                 ros2Node->create_publisher<sensor_msgs::msg::Image>(cameraImageFullTopic.data(), cameraImagePublisherConfig.GetQoS());
-            m_cameraSensorsWithPublihsers.emplace_back(CreatePair<CameraDepthSensor>(publisher, description));
+            m_imagePublishers.emplace_back(publisher);
         }
+
+        if (m_colorCamera && m_depthCamera)
+        {
+            m_cameraSensor = AZStd::make_shared<CameraRGBDSensor>(description);
+        }
+        else if (m_colorCamera)
+        {
+            m_cameraSensor = AZStd::make_shared<CameraColorSensor>(description);
+        }
+        else if (m_depthCamera)
+        {
+            m_cameraSensor = AZStd::make_shared<CameraDepthSensor>(description);
+        }
+
         const auto* component = Utils::GetGameOrEditorComponent<ROS2FrameComponent>(GetEntity());
         AZ_Assert(component, "Entity has no ROS2FrameComponent");
         m_frameName = component->GetFrameID();
@@ -91,7 +105,8 @@ namespace ROS2
 
     void ROS2CameraSensorComponent::Deactivate()
     {
-        m_cameraSensorsWithPublihsers.clear();
+        m_cameraSensor.reset();
+        m_imagePublishers.clear();
         ROS2SensorComponent::Deactivate();
     }
 
@@ -100,9 +115,9 @@ namespace ROS2
         const AZ::Transform transform = GetEntity()->GetTransform()->GetWorldTM();
         const auto timestamp = ROS2Interface::Get()->GetROSTimestamp();
         std_msgs::msg::Header ros_header;
-        if (!m_cameraSensorsWithPublihsers.empty())
+        if (!m_imagePublishers.empty() && m_cameraSensor)
         {
-            const auto& camera_descritpion = m_cameraSensorsWithPublihsers.front().second->GetCameraSensorDescription();
+            const auto& camera_descritpion = m_cameraSensor->GetCameraSensorDescription();
             const auto& cameraIntrinsics = camera_descritpion.m_cameraIntrinsics;
             sensor_msgs::msg::CameraInfo cameraInfo;
             ros_header.stamp = timestamp;
@@ -117,10 +132,7 @@ namespace ROS2
             cameraInfo.p = { cameraInfo.k[0], cameraInfo.k[1], cameraInfo.k[2], 0, cameraInfo.k[3], cameraInfo.k[4], cameraInfo.k[5], 0,
                              cameraInfo.k[6], cameraInfo.k[7], cameraInfo.k[8], 0 };
             m_cameraInfoPublisher->publish(cameraInfo);
-        }
-        for (auto& [publisher, sensor] : m_cameraSensorsWithPublihsers)
-        {
-            sensor->RequestMessagePublication(publisher, transform, ros_header);
+            m_cameraSensor->RequestMessagePublication(m_imagePublishers, transform, ros_header );
         }
     }
 
