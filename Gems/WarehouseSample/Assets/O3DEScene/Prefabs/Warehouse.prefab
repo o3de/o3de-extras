@@ -1515,6 +1515,10 @@
                     "Id": 3579789965580572662,
                     "Parent Entity": "ContainerEntity"
                 },
+                "Component_[5398237697833321121]": {
+                    "$type": "EditorStaticRigidBodyComponent",
+                    "Id": 5398237697833321121
+                },
                 "Component_[6126526996710685532]": {
                     "$type": "EditorEntitySortComponent",
                     "Id": 6126526996710685532,
