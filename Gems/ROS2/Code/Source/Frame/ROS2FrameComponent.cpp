@@ -14,6 +14,7 @@
 #include <ROS2/ROS2Bus.h>
 #include <ROS2/ROS2GemUtilities.h>
 #include <ROS2/Utilities/ROS2Names.h>
+
 namespace ROS2
 {
     namespace Internal
@@ -57,6 +58,23 @@ namespace ROS2
             // Found the component!
             return component;
         }
+
+        //! Returns if entity has component of given type
+        //! @param entity pointer to entity
+        //! @param type tpye of the component
+        //! @returns true if entity has component with given type
+        bool CheckIfEntityHasComponentOfType(const AZ::Entity* entity, const AZ::Uuid type)
+        {
+            for (const auto& c : entity->GetComponents())
+            {
+                if (c->RTTI_IsTypeOf(type))
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
     } // namespace Internal
 
     void ROS2FrameComponent::Activate()
@@ -65,9 +83,27 @@ namespace ROS2
 
         if (m_publishTransform)
         {
+            AZ_TracePrintf("ROS2FrameComponent", "Setting up %s", GetFrameID().data());
+
+            // The frame is static when is not a top entity and one of the following is true:
+            //    - if the entity has at least one Fixed Joint
+            //    - if the entity has no joints at all.
+            if (IsTopLevel())
+            {
+                m_isDynamic = true;
+            }
+            else
+            {
+                bool hasJoints = Internal::CheckIfEntityHasComponentOfType(
+                    m_entity, AZ::Uuid("{B01FD1D2-1D91-438D-874A-BF5EB7E919A8}")); // Physx::JointComponent;
+                bool hasFixedJoints = Internal::CheckIfEntityHasComponentOfType(
+                    m_entity, AZ::Uuid("{02E6C633-8F44-4CEE-AE94-DCB06DE36422}")); // Physx::FixedJointComponent
+                m_isDynamic = hasJoints && !hasFixedJoints;
+            }
+
             AZ_TracePrintf(
                 "ROS2FrameComponent",
-                "Setting up %s transfrom between parent %s and child %s to be published %s\n",
+                "Setting up %s transform between parent %s and child %s to be published %s\n",
                 IsDynamic() ? "dynamic" : "static",
                 GetParentFrameID().data(),
                 GetFrameID().data(),
@@ -114,7 +150,7 @@ namespace ROS2
 
     bool ROS2FrameComponent::IsDynamic() const
     {
-        return IsTopLevel();
+        return m_isDynamic;
     }
 
     const ROS2FrameComponent* ROS2FrameComponent::GetParentROS2FrameComponent() const
