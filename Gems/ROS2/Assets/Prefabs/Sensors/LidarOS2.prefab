@@ -81,8 +81,7 @@
                                     "Topic": "pc"
                                 }
                             }
-                        },
-                        "LidarTransparentEntityId": ""
+                        }
                     }
                 },
                 "Component_[13013301136498148727]": {
@@ -167,11 +166,6 @@
                                     "Name": "DefaultMaterial"
                                 }
                             ]
-                        },
-                        "MaterialSelection": {
-                            "MaterialIds": [
-                                {}
-                            ]
                         }
                     },
                     "ShapeConfiguration": {
@@ -199,6 +193,10 @@
                 "Component_[17075071070477116796]": {
                     "$type": "EditorDisabledCompositionComponent",
                     "Id": 17075071070477116796
+                },
+                "Component_[226256536131696604]": {
+                    "$type": "EditorStaticRigidBodyComponent",
+                    "Id": 226256536131696604
                 },
                 "Component_[3201525403568523459]": {
                     "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
