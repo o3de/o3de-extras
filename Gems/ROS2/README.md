@@ -76,7 +76,7 @@ scripts/o3de.sh enable-gem -gn ROS2 -pp <PATH_TO_YOUR_PROJECT>
 
 ## Example project
 
-You can test O3DE ROS2 Gem with [this project](https://github.com/RobotecAI/Ros2WarehouseDemo).
+You can test O3DE ROS2 Gem with the [Robot Vacuum](https://github.com/o3de/RobotVacuumSample) project.
 It will allow you to run robot navigation. All necessary assets are included.
 
 ## User Guides
