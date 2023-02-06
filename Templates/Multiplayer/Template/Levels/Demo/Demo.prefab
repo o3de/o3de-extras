@@ -10726,6 +10726,10 @@
                 "Component_[3412423409421084023]": {
                     "$type": "EditorVisibilityComponent",
                     "Id": 3412423409421084023
+                },
+                "Component_[522094586563106095]": {
+                    "$type": "EditorStaticRigidBodyComponent",
+                    "Id": 522094586563106095
                 }
             }
         },
