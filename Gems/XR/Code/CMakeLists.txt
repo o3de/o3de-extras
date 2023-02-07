@@ -78,6 +78,7 @@ ly_add_target(
 
 # use the XR module in clients and tools:
 ly_create_alias(NAME XR.Clients NAMESPACE Gem TARGETS Gem::XR)
+ly_create_alias(NAME XR.Unified NAMESPACE Gem TARGETS Gem::XR)
 
 if(PAL_TRAIT_BUILD_HOST_TOOLS)
     ly_create_alias(NAME XR.Tools NAMESPACE Gem TARGETS Gem::XR)

@@ -60,6 +60,7 @@ ly_create_alias(NAME OpenXRTest.Builders NAMESPACE Gem TARGETS Gem::OpenXRTest)
 ly_create_alias(NAME OpenXRTest.Tools    NAMESPACE Gem TARGETS Gem::OpenXRTest)
 ly_create_alias(NAME OpenXRTest.Clients  NAMESPACE Gem TARGETS Gem::OpenXRTest)
 ly_create_alias(NAME OpenXRTest.Servers  NAMESPACE Gem TARGETS Gem::OpenXRTest)
+ly_create_alias(NAME OpenXRTest.Unified  NAMESPACE Gem TARGETS Gem::OpenXRTest)
 
 ################################################################################
 # Gem dependencies

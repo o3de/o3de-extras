@@ -199,7 +199,13 @@ namespace XR
 
     AZ::u32 System::GetNumViews() const
     {
-        return m_swapChain->GetNumViews();
+        if (m_swapChain)
+        {
+            return m_swapChain->GetNumViews();
+        }
+
+        AZ_Warning("XRSystem", false, "SwapChain is null");
+        return 0;
     }
 
     AZ::u32 System::GetCurrentImageIndex(AZ::u32 viewIndex) const
@@ -210,7 +216,7 @@ namespace XR
 
     bool System::ShouldRender() const
     {
-        if (m_session->IsSessionRunning())
+        if (m_session && m_session->IsSessionRunning())
         { 
             return m_device->ShouldRender();
         }
