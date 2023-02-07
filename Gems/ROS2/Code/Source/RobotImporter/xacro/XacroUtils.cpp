@@ -8,9 +8,12 @@
 
 #include "XacroUtils.h"
 #include <AzCore/IO/FileIO.h>
+#include <AzCore/Settings/SettingsRegistryMergeUtils.h>
 #include <AzCore/XML/rapidxml.h>
 #include <AzFramework/Process/ProcessCommunicator.h>
 #include <AzFramework/Process/ProcessWatcher.h>
+#include <QString>
+
 namespace ROS2::Utils::xacro
 {
 
