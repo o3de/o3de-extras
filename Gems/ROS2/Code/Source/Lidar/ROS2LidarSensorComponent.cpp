@@ -89,10 +89,29 @@ namespace ROS2
             }
         }
     }
+    AZStd::string GetDefaultLidarSystem()
+    {
+        const auto& lidarSystemList = LidarRegistrarInterface::Get()->GetRegisteredLidarSystems();
+        if (lidarSystemList.empty())
+        {
+            AZ_Warning("ROS2LidarSensorComponent", false, "No LIDAR system for the sensor to use.");
+            return AZStd::string();
+        }
+        return lidarSystemList.front();
+    }
 
     void ROS2LidarSensorComponent::FetchLidarImplementationFeatures()
     {
-        m_lidarSystemFeatures = LidarRegistrarInterface::Get()->GetLidarSystemMetaData(m_lidarSystem)->m_features;
+        if (m_lidarSystem.empty())
+        {
+            m_lidarSystem = GetDefaultLidarSystem();
+        }
+        const auto* lidarMetaData = LidarRegistrarInterface::Get()->GetLidarSystemMetaData(m_lidarSystem);
+        AZ_Warning("ROS2LidarSensorComponent", lidarMetaData, "No metadata for \"%s\"", m_lidarSystem.c_str());
+        if (lidarMetaData)
+        {
+            m_lidarSystemFeatures = LidarRegistrarInterface::Get()->GetLidarSystemMetaData(m_lidarSystem)->m_features;
+        }
     }
 
     bool ROS2LidarSensorComponent::IsConfigurationVisible() const
@@ -232,14 +251,7 @@ namespace ROS2
 
         m_lastRotations = LidarTemplateUtils::PopulateRayRotations(m_lidarParameters);
 
-        if (m_lidarSystem.empty())
-        {
-            const AZStd::vector<AZStd::string> lidarSystemList = FetchLidarSystemList();
-            AZ_Assert(!lidarSystemList.empty(), "Unable to choose a lidarSystem for the lidar sensor.");
-
-            m_lidarSystem = lidarSystemList[0];
-        }
-
+        FetchLidarImplementationFeatures();
         ConnectToLidarRaycaster();
         ConfigureLidarRaycaster();
 
