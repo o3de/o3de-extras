@@ -7,6 +7,7 @@
  */
 
 #include <AzCore/Component/Entity.h>
+#include <AzCore/Component/EntityUtils.h>
 #include <AzCore/Serialization/EditContext.h>
 #include <AzCore/Serialization/EditContextConstants.inl>
 #include <AzCore/Serialization/SerializeContext.h>
@@ -59,20 +60,14 @@ namespace ROS2
             return component;
         }
 
-        //! Returns if entity has component of given type
+        //! Checks whether the entity has a component of the given type
         //! @param entity pointer to entity
-        //! @param type tpye of the component
+        //! @param typeId type of the component
         //! @returns true if entity has component with given type
-        bool CheckIfEntityHasComponentOfType(const AZ::Entity* entity, const AZ::Uuid type)
+        static bool CheckIfEntityHasComponentOfType(const AZ::Entity* entity, const AZ::Uuid typeId)
         {
-            for (const auto& c : entity->GetComponents())
-            {
-                if (c->RTTI_IsTypeOf(type))
-                {
-                    return true;
-                }
-            }
-            return false;
+            auto components = AZ::EntityUtils::FindDerivedComponents(entity, typeId);
+            return !components.empty();
         }
 
     } // namespace Internal
@@ -85,18 +80,17 @@ namespace ROS2
         {
             AZ_TracePrintf("ROS2FrameComponent", "Setting up %s", GetFrameID().data());
 
-            // The frame is static when is not a top entity and one of the following is true:
-            //    - if the entity has at least one Fixed Joint
-            //    - if the entity has no joints at all.
+            // The frame will always be dynamic if it's a top entity.
             if (IsTopLevel())
             {
                 m_isDynamic = true;
             }
+            // Otherwise it'll be dynamic when it has joints and it's not a fixed joint.
             else
             {
-                bool hasJoints = Internal::CheckIfEntityHasComponentOfType(
+                const bool hasJoints = Internal::CheckIfEntityHasComponentOfType(
                     m_entity, AZ::Uuid("{B01FD1D2-1D91-438D-874A-BF5EB7E919A8}")); // Physx::JointComponent;
-                bool hasFixedJoints = Internal::CheckIfEntityHasComponentOfType(
+                const bool hasFixedJoints = Internal::CheckIfEntityHasComponentOfType(
                     m_entity, AZ::Uuid("{02E6C633-8F44-4CEE-AE94-DCB06DE36422}")); // Physx::FixedJointComponent
                 m_isDynamic = hasJoints && !hasFixedJoints;
             }
