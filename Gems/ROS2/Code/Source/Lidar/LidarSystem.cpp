@@ -16,6 +16,12 @@ namespace ROS2
         lidarSystem.BusDisconnect();
     }
 
+    LidarSystem& LidarSystem::operator=(LidarSystem&& lidarSystem)
+    {
+        lidarSystem.BusDisconnect();
+        return lidarSystem;
+    }
+
     void LidarSystem::Activate()
     {
         static constexpr const char* Description = "Collider-based lidar implementation that uses the PhysX engine's raycasting.";

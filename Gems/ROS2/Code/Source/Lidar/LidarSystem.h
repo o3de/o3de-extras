@@ -17,14 +17,18 @@ namespace ROS2
     public:
         LidarSystem() = default;
         LidarSystem(LidarSystem&& lidarSystem);
+        LidarSystem& operator=(LidarSystem&& lidarSystem);
         LidarSystem(const LidarSystem& lidarSystem) = default;
+        LidarSystem& operator=(const LidarSystem& lidarSystem) = default;
+
+
         ~LidarSystem() = default;
 
         void Activate();
         void Deactivate();
 
     private:
-        static constexpr const char* SystemName = "PhysX";
+        static constexpr const char* SystemName = "Scene Queries";
 
         // LidarSystemRequestBus overrides
         LidarId CreateLidar(AZ::EntityId lidarEntityId) override;
