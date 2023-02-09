@@ -7,6 +7,7 @@
  */
 
 #include <AzCore/Component/Entity.h>
+#include <AzCore/Component/EntityUtils.h>
 #include <AzCore/Serialization/EditContext.h>
 #include <AzCore/Serialization/EditContextConstants.inl>
 #include <AzCore/Serialization/SerializeContext.h>
@@ -14,6 +15,7 @@
 #include <ROS2/ROS2Bus.h>
 #include <ROS2/ROS2GemUtilities.h>
 #include <ROS2/Utilities/ROS2Names.h>
+
 namespace ROS2
 {
     namespace Internal
@@ -57,6 +59,17 @@ namespace ROS2
             // Found the component!
             return component;
         }
+
+        //! Checks whether the entity has a component of the given type
+        //! @param entity pointer to entity
+        //! @param typeId type of the component
+        //! @returns true if entity has component with given type
+        static bool CheckIfEntityHasComponentOfType(const AZ::Entity* entity, const AZ::Uuid typeId)
+        {
+            auto components = AZ::EntityUtils::FindDerivedComponents(entity, typeId);
+            return !components.empty();
+        }
+
     } // namespace Internal
 
     void ROS2FrameComponent::Activate()
@@ -65,9 +78,26 @@ namespace ROS2
 
         if (m_publishTransform)
         {
+            AZ_TracePrintf("ROS2FrameComponent", "Setting up %s", GetFrameID().data());
+
+            // The frame will always be dynamic if it's a top entity.
+            if (IsTopLevel())
+            {
+                m_isDynamic = true;
+            }
+            // Otherwise it'll be dynamic when it has joints and it's not a fixed joint.
+            else
+            {
+                const bool hasJoints = Internal::CheckIfEntityHasComponentOfType(
+                    m_entity, AZ::Uuid("{B01FD1D2-1D91-438D-874A-BF5EB7E919A8}")); // Physx::JointComponent;
+                const bool hasFixedJoints = Internal::CheckIfEntityHasComponentOfType(
+                    m_entity, AZ::Uuid("{02E6C633-8F44-4CEE-AE94-DCB06DE36422}")); // Physx::FixedJointComponent
+                m_isDynamic = hasJoints && !hasFixedJoints;
+            }
+
             AZ_TracePrintf(
                 "ROS2FrameComponent",
-                "Setting up %s transfrom between parent %s and child %s to be published %s\n",
+                "Setting up %s transform between parent %s and child %s to be published %s\n",
                 IsDynamic() ? "dynamic" : "static",
                 GetParentFrameID().data(),
                 GetFrameID().data(),
@@ -114,7 +144,7 @@ namespace ROS2
 
     bool ROS2FrameComponent::IsDynamic() const
     {
-        return IsTopLevel();
+        return m_isDynamic;
     }
 
     const ROS2FrameComponent* ROS2FrameComponent::GetParentROS2FrameComponent() const
