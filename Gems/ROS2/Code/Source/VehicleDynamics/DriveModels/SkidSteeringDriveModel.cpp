@@ -42,8 +42,21 @@ namespace ROS2::VehicleDynamics
 
     void SkidSteeringDriveModel::ApplyState(const VehicleInputs& inputs, AZ::u64 deltaTimeNs)
     {
-        float angular_speed = inputs.m_angularRates.GetZ();
-        float linear_speed = inputs.m_speed.GetX();
+        if (m_disabled)
+        {
+            return;
+        }
+        const float angularTargetSpeed = inputs.m_angularRates.GetZ();
+        const float linearTargetSpeed = inputs.m_speed.GetX();
+        const float angularAcceleration = m_limits.GetAngularAcceleration();
+        const float linearAcceleration = m_limits.GetLinearAcceleration();
+        const float maxLinearVelocity = m_limits.GetLinearSpeedLimit();
+        const float maxAngularVelocity = m_limits.GetAngularSpeedLimit();
+
+        m_currentAngularVelocity = Utilities::ComputeRampVelocity(
+            angularTargetSpeed, m_currentAngularVelocity, deltaTimeNs, angularAcceleration, maxAngularVelocity);
+        m_currentLinearVelocity =
+            Utilities::ComputeRampVelocity(linearTargetSpeed, m_currentLinearVelocity, deltaTimeNs, linearAcceleration, maxLinearVelocity);
         // cache PhysX Hinge component IDs
         if (m_wheelsData.empty())
         {
@@ -88,8 +101,8 @@ namespace ROS2::VehicleDynamics
                 float normalizedWheelId = -1.f + 2.f * wheelId / (wheelCount - 1);
                 float wheelBase = normalizedWheelId * m_config.m_wheelbase;
                 AZ_Assert(axle.m_wheelRadius != 0, "axle.m_wheelRadius must be non-zero");
-                float vh = (linear_speed + angular_speed * wheelBase) / axle.m_wheelRadius;
-                PhysX::JointRequestBus::Event(hingePtr->second, &PhysX::JointRequests::SetVelocity, vh);
+                float wheelRate = (m_currentLinearVelocity + m_currentAngularVelocity * wheelBase) / axle.m_wheelRadius;
+                PhysX::JointRequestBus::Event(hingePtr->second, &PhysX::JointRequests::SetVelocity, wheelRate);
             }
         }
     }
