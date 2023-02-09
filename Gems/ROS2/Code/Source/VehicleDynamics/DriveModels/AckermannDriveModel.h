@@ -10,8 +10,9 @@
 #include <AzCore/Serialization/SerializeContext.h>
 #include <ROS2/VehicleDynamics/DriveModels/PidConfiguration.h>
 #include <VehicleDynamics/DriveModel.h>
+#include <VehicleDynamics/ModelLimits/AckermannModelLimits.h>
 #include <VehicleDynamics/VehicleConfiguration.h>
-#include <VehicleDynamics/VehicleInputsState.h>
+#include <VehicleDynamics/VehicleInputs.h>
 #include <VehicleDynamics/WheelDynamicsData.h>
 
 namespace ROS2::VehicleDynamics
@@ -21,31 +22,26 @@ namespace ROS2::VehicleDynamics
     {
     public:
         AZ_RTTI(AckermannDriveModel, "{104AC31D-E30B-4454-BF42-4FB37B8CFD9B}", DriveModel);
-        DriveModel::DriveModelType DriveType() const override
-        {
-            return DriveModel::DriveModelType::SimplifiedDriveModelType;
-        }
-        //////////////////////////////////////////////////////////////////////////
+
         // DriveModel overrides
         void Activate(const VehicleConfiguration& vehicleConfig) override;
-        void ApplyInputState(const VehicleInputsState& inputs, uint64_t deltaTimeNs) override;
-        //////////////////////////////////////////////////////////////////////////
 
         static void Reflect(AZ::ReflectContext* context);
 
-        void SetDisabled(bool isDisabled);
+    protected:
+        // DriveModel overrides
+        void ApplyState(const VehicleInputs& inputs, AZ::u64 deltaTimeNs) override;
+        const VehicleModelLimits* GetVehicleLimitPtr() const override;
 
     private:
-        void ApplySteering(float steering, uint64_t deltaTimeNs);
-        void ApplySpeed(float speed, uint64_t deltaTimeNs);
+        void ApplySteering(float steering, AZ::u64 deltaTimeNs);
+        void ApplySpeed(float speed, AZ::u64 deltaTimeNs);
         void ApplyWheelSteering(SteeringDynamicsData& wheelData, float steering, double deltaTimeNs);
 
         VehicleConfiguration m_vehicleConfiguration;
         AZStd::vector<WheelDynamicsData> m_driveWheelsData;
         AZStd::vector<SteeringDynamicsData> m_steeringData;
         PidConfiguration m_steeringPid;
-        PidConfiguration m_speedPid;
-        bool m_disabled{ false };
-        float m_steeringDeadZone = 0.01;
+        AckermannModelLimits m_limits;
     };
 } // namespace ROS2::VehicleDynamics

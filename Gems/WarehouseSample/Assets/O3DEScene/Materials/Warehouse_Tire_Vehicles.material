@@ -1,0 +1,22 @@
+{
+    "materialType": "@gemroot:Atom_Feature_Common@/Assets/Materials/Types/StandardPBR.materialtype",
+    "materialTypeVersion": 5,
+    "propertyValues": {
+        "baseColor.color": [
+            0.019531548023223877,
+            0.019378958269953728,
+            0.019378958269953728,
+            1.0
+        ],
+        "emissive.color": [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+        ],
+        "normal.factor": 0.800000011920929,
+        "normal.flipY": true,
+        "normal.textureMap": "../Textures/Tire_Normal.png",
+        "opacity.factor": 1.0
+    }
+}

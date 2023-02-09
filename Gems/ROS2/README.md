@@ -5,7 +5,7 @@ This Gem enables users to develop robotic simulations through ROS2 tools and com
 ## Requirements
 
 * Ubuntu 20.04 or 22.04. Other Ubuntu versions and Linux distros could also work as long as they can support ROS 2.
-* [O3DE](https://www.o3de.org/)
+* [O3DE](https://www.o3de.org/) development branch. The Gem does not work with a release version of O3DE yet.
 * Modern version of ROS 2. This instruction assumes that the `desktop` version is installed. Otherwise some packages might be missing. We support and tested with:
   * [ROS 2 Galactic](https://docs.ros.org/en/galactic/Installation.html) with Ubuntu 20.04.
   * [ROS 2 Humble](https://docs.ros.org/en/humble/Installation.html) with Ubuntu 22.04.
@@ -21,6 +21,7 @@ source /opt/ros/<distro>/setup.bash
 * gazebo_msgs: `sudo apt install ros-${ROS_DISTRO}-gazebo-msgs`
 * Ackermann messages: `sudo apt install ros-${ROS_DISTRO}-ackermann-msgs`
 * Control toolbox `sudo apt install ros-${ROS_DISTRO}-control-toolbox`
+* Xacro (XML Macros) `sudo apt install ros-${ROS_DISTRO}-xacro`
 
 If a `desktop` installation of ROS 2 distro was selected, everything else should be there.
 
@@ -75,7 +76,7 @@ scripts/o3de.sh enable-gem -gn ROS2 -pp <PATH_TO_YOUR_PROJECT>
 
 ## Example project
 
-You can test O3DE ROS2 Gem with [this project](https://github.com/RobotecAI/Ros2WarehouseDemo).
+You can test O3DE ROS2 Gem with the [Robot Vacuum](https://github.com/o3de/RobotVacuumSample) project.
 It will allow you to run robot navigation. All necessary assets are included.
 
 ## User Guides

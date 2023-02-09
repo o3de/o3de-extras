@@ -33,7 +33,7 @@ namespace ROS2
 
     private:
         bool m_success;
-        QTableWidget* m_table;
+        QTableWidget* m_table {};
         QTableWidgetItem* createCell(bool isOk, const QString& text);
         unsigned int m_missingCount;
         void SetTitle();
