@@ -7,9 +7,9 @@
  */
 #pragma once
 
-#include "LidarTemplate.h"
 #include <AzCore/Math/Vector3.h>
 #include <AzCore/std/containers/vector.h>
+#include <Lidar/LidarTemplate.h>
 
 namespace ROS2
 {
@@ -26,10 +26,15 @@ namespace ROS2
         //! @return total count of points that the lidar specified by the template would produce on each scan.
         size_t TotalPointCount(const LidarTemplate& t);
 
-        //! Compute ray directions based on lidar model and rotation.
-        //! @param model Lidar model to use. Note that different models will produce different number of rays.
+        //! Compute ray Rotation angles based on lidar model.
+        //! @param lidarTemplate Lidar model to use. Note that different models will produce different number of rays.
+        //! @return Ray rotations angles as Euler angles in radians.
+        AZStd::vector<AZ::Vector3> PopulateRayRotations(const LidarTemplate& lidarTemplate);
+
+        //! Compute ray directions from rotations.
+        //! @param rotations Rotations as Euler angles in radians to compute directions from.
         //! @param rootRotation Root rotation as Euler angles in radians.
-        //! @return All ray directions which can be used to perform ray-casting simulation of lidar operation.
-        AZStd::vector<AZ::Vector3> PopulateRayDirections(const LidarTemplate& lidarTemplate, const AZ::Vector3& rootRotation);
+        //! @return Ray directions constructed by transforming an X axis unit vector by the provided rotations.
+        AZStd::vector<AZ::Vector3> RotationsToDirections(const AZStd::vector<AZ::Vector3>& rotations, const AZ::Vector3& rootRotation);
     }; // namespace LidarTemplateUtils
 } // namespace ROS2

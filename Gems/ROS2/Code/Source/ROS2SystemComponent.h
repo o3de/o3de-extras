@@ -12,6 +12,7 @@
 #include <AzCore/Component/TickBus.h>
 #include <AzCore/std/smart_ptr/unique_ptr.h>
 #include <Clock/SimulationClock.h>
+#include <Lidar/LidarSystem.h>
 #include <ROS2/ROS2Bus.h>
 #include <builtin_interfaces/msg/time.hpp>
 #include <memory>
@@ -24,8 +25,8 @@ namespace ROS2
     //! Central singleton-like System Component for ROS2 Gem.
     class ROS2SystemComponent
         : public AZ::Component
-        , protected ROS2RequestBus::Handler
         , public AZ::TickBus::Handler
+        , protected ROS2RequestBus::Handler
     {
     public:
         AZ_COMPONENT(ROS2SystemComponent, "{cb28d486-afa4-4a9f-a237-ac5eb42e1c87}");
@@ -38,7 +39,7 @@ namespace ROS2
         static void GetDependentServices(AZ::ComponentDescriptor::DependencyArrayType& dependent);
 
         ROS2SystemComponent();
-        ~ROS2SystemComponent();
+        ~ROS2SystemComponent() override;
 
         //////////////////////////////////////////////////////////////////////////
         // ROS2RequestBus::Handler overrides
@@ -59,7 +60,6 @@ namespace ROS2
         // AZTickBus interface implementation
         void OnTick(float deltaTime, AZ::ScriptTimePoint time) override;
         ////////////////////////////////////////////////////////////////////////
-
     private:
         std::shared_ptr<rclcpp::Node> m_ros2Node;
         AZStd::shared_ptr<rclcpp::executors::SingleThreadedExecutor> m_executor;
