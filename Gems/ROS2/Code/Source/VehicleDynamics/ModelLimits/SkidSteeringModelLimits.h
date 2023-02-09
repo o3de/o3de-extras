@@ -14,6 +14,7 @@
 
 namespace ROS2::VehicleDynamics
 {
+
     //! A structure holding limits of skid-steering robot.
     class SkidSteeringModelLimits : public VehicleModelLimits
     {
@@ -26,8 +27,15 @@ namespace ROS2::VehicleDynamics
         VehicleInputs LimitState(const VehicleInputs& inputState) const;
         VehicleInputs GetMaximumState() const;
 
+        float GetLinearAcceleration() const;
+        float GetAngularAcceleration() const;
+        float GetLinearSpeedLimit() const;
+        float GetAngularSpeedLimit() const;
+
     private:
         float m_linearLimit = 2.0f; //!< [m/s] Maximum travel velocity.
         float m_angularLimit = 3.5f; //!< [Rad/s] Maximum rotation speed.
+        float m_angularAccleration = 2.0f; //!< [rad*s^(-2)] Angular acceleration limit
+        float m_linearAcceleration = 3.5f; //!< [m*s^(-2)] Linear acceleration limit
     };
 } // namespace ROS2::VehicleDynamics
