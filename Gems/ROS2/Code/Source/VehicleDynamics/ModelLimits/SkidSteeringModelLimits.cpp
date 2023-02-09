@@ -20,7 +20,9 @@ namespace ROS2::VehicleDynamics
             serialize->Class<SkidSteeringModelLimits>()
                 ->Version(1)
                 ->Field("LinearLimit", &SkidSteeringModelLimits::m_linearLimit)
-                ->Field("AngularLimit", &SkidSteeringModelLimits::m_angularLimit);
+                ->Field("AngularLimit", &SkidSteeringModelLimits::m_angularLimit)
+                ->Field("LinearAcceleration", &SkidSteeringModelLimits::m_linearAcceleration)
+                ->Field("AngularAcceleration", &SkidSteeringModelLimits::m_angularAccleration);
 
             if (AZ::EditContext* ec = serialize->GetEditContext())
             {
@@ -40,7 +42,21 @@ namespace ROS2::VehicleDynamics
                         "Angular speed Limit",
                         "Max angular speed (rad/s)")
                     ->Attribute(AZ::Edit::Attributes::Min, 0.0f)
-                    ->Attribute(AZ::Edit::Attributes::Max, 10.0f);
+                    ->Attribute(AZ::Edit::Attributes::Max, 10.0f)
+                    ->DataElement(
+                        AZ::Edit::UIHandlers::Default,
+                        &SkidSteeringModelLimits::m_angularAccleration,
+                        "Angular acceleration",
+                        "Acceleration in rad/s²")
+                    ->Attribute(AZ::Edit::Attributes::Min, 0.0f)
+                    ->Attribute(AZ::Edit::Attributes::Max, 100.0f)
+                    ->DataElement(
+                        AZ::Edit::UIHandlers::Default,
+                        &SkidSteeringModelLimits::m_linearAcceleration,
+                        "Linear acceleration",
+                        "Acceleration in m/s²")
+                    ->Attribute(AZ::Edit::Attributes::Min, 0.0f)
+                    ->Attribute(AZ::Edit::Attributes::Max, 100.0f);
             }
         }
     }
@@ -60,5 +76,26 @@ namespace ROS2::VehicleDynamics
         ret.m_angularRates = { 0, 0, m_angularLimit };
         return ret;
     }
+
+    float SkidSteeringModelLimits::GetLinearAcceleration() const
+    {
+        return m_linearAcceleration;
+    }
+
+    float SkidSteeringModelLimits::GetAngularAcceleration() const
+    {
+        return m_angularAccleration;
+    }
+
+    float SkidSteeringModelLimits::GetLinearSpeedLimit() const
+    {
+        return m_linearLimit;
+    }
+
+    float SkidSteeringModelLimits::GetAngularSpeedLimit() const
+    {
+        return m_angularLimit;
+    }
+
 
 } // namespace ROS2::VehicleDynamics
