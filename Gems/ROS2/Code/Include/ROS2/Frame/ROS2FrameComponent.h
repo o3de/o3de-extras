@@ -86,6 +86,7 @@ namespace ROS2
         AZStd::string m_frameName = "sensor_frame";
 
         bool m_publishTransform = true;
+        bool m_isDynamic = false;
         AZStd::unique_ptr<ROS2Transform> m_ros2Transform;
     };
 } // namespace ROS2
