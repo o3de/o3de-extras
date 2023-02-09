@@ -13,6 +13,7 @@
 #include <Camera/ROS2CameraSensorComponent.h>
 #include <GNSS/ROS2GNSSSensorComponent.h>
 #include <Imu/ROS2ImuSensorComponent.h>
+#include <Lidar/LidarRegistrarSystemComponent.h>
 #include <Lidar/ROS2LidarSensorComponent.h>
 #include <Odometry/ROS2OdometrySensorComponent.h>
 #include <ROS2/Frame/ROS2FrameComponent.h>
@@ -47,6 +48,7 @@ namespace ROS2
             m_descriptors.insert(
                 m_descriptors.end(),
                 { ROS2SystemComponent::CreateDescriptor(),
+                  LidarRegistrarSystemComponent::CreateDescriptor(),
                   ROS2RobotImporterSystemComponent::CreateDescriptor(),
                   ROS2SensorComponent::CreateDescriptor(),
                   ROS2ImuSensorComponent::CreateDescriptor(),
@@ -71,7 +73,11 @@ namespace ROS2
         //! Add required SystemComponents to the SystemEntity.
         AZ::ComponentTypeList GetRequiredSystemComponents() const override
         {
-            return AZ::ComponentTypeList{ azrtti_typeid<ROS2SystemComponent>(), azrtti_typeid<ROS2RobotImporterSystemComponent>() };
+            return AZ::ComponentTypeList{
+                azrtti_typeid<ROS2SystemComponent>(),
+                azrtti_typeid<LidarRegistrarSystemComponent>(),
+                azrtti_typeid<ROS2RobotImporterSystemComponent>(),
+            };
         }
     };
 } // namespace ROS2

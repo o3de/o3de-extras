@@ -6,14 +6,49 @@
  *
  */
 
-#include "LidarTemplate.h"
-#include <AzCore/Serialization/EditContext.h>
-#include <AzCore/Serialization/EditContextConstants.inl>
+#include <Lidar/LidarTemplate.h>
 
 namespace ROS2
 {
+    void LidarTemplate::NoiseParameters::Reflect(AZ::ReflectContext* context)
+    {
+        if (auto serializeContext = azrtti_cast<AZ::SerializeContext*>(context))
+        {
+            serializeContext->Class<NoiseParameters>()
+                ->Version(1)
+                ->Field("Angular noise standard deviation", &NoiseParameters::m_angularNoiseStdDev)
+                ->Field("Distance noise standard deviation base", &NoiseParameters::m_distanceNoiseStdDevBase)
+                ->Field("Distance noise standard deviation slope", &NoiseParameters::m_distanceNoiseStdDevRisePerMeter);
+
+            if (AZ::EditContext* editContext = serializeContext->GetEditContext())
+            {
+                editContext->Class<NoiseParameters>("Noise Parameters", "Noise Parameters")
+                    ->DataElement(
+                        AZ::Edit::UIHandlers::Default,
+                        &NoiseParameters::m_angularNoiseStdDev,
+                        "Angular noise std dev [Deg]",
+                        "Angular noise standard deviation")
+                    ->Attribute(AZ::Edit::Attributes::Min, 0.0f)
+                    ->Attribute(AZ::Edit::Attributes::Max, 180.0f)
+                    ->DataElement(
+                        AZ::Edit::UIHandlers::Default,
+                        &NoiseParameters::m_distanceNoiseStdDevBase,
+                        "Distance noise std dev base [m]",
+                        "Distance noise standard deviation base")
+                    ->Attribute(AZ::Edit::Attributes::Min, 0.0f)
+                    ->DataElement(
+                        AZ::Edit::UIHandlers::Default,
+                        &NoiseParameters::m_distanceNoiseStdDevRisePerMeter,
+                        "Distance noise std dev slope [m]",
+                        "Distance noise standard deviation slope")
+                    ->Attribute(AZ::Edit::Attributes::Min, 0.0f);
+            }
+        }
+    }
+
     void LidarTemplate::Reflect(AZ::ReflectContext* context)
     {
+        NoiseParameters::Reflect(context);
         if (auto serializeContext = azrtti_cast<AZ::SerializeContext*>(context))
         {
             serializeContext->Class<LidarTemplate>()
@@ -26,7 +61,7 @@ namespace ROS2
                 ->Field("Min vertical angle", &LidarTemplate::m_minVAngle)
                 ->Field("Max vertical angle", &LidarTemplate::m_maxVAngle)
                 ->Field("Max range", &LidarTemplate::m_maxRange)
-                ->Field("Max range add points", &LidarTemplate::m_addPointsAtMax);
+                ->Field("Noise Parameters", &LidarTemplate::m_noiseParameters);
 
             if (AZ::EditContext* ec = serializeContext->GetEditContext())
             {
@@ -52,13 +87,14 @@ namespace ROS2
                     ->Attribute(AZ::Edit::Attributes::Min, -180.0f)
                     ->Attribute(AZ::Edit::Attributes::Max, 180.0f)
                     ->DataElement(AZ::Edit::UIHandlers::Default, &LidarTemplate::m_maxRange, "Max range", "Maximum beam range [m]")
-                    ->Attribute(AZ::Edit::Attributes::Min, 0.0f)
+                    ->Attribute(AZ::Edit::Attributes::Min, 0.001f)
                     ->Attribute(AZ::Edit::Attributes::Max, 1000.0f)
                     ->DataElement(
                         AZ::Edit::UIHandlers::Default,
-                        &LidarTemplate::m_addPointsAtMax,
-                        "Points at Max",
-                        "If set true LiDAR will produce points at max range for free space");
+                        &LidarTemplate::m_noiseParameters,
+                        "Noise parameters",
+                        "Parameters for Noise Configuration")
+                    ->Attribute(AZ::Edit::Attributes::Visibility, &LidarTemplate::m_showNoiseConfig);
             }
         }
     }
