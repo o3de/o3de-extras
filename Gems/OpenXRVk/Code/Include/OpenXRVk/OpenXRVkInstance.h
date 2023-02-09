@@ -23,7 +23,7 @@ namespace OpenXRVk
     : public XR::Instance
     {
     public:
-        AZ_CLASS_ALLOCATOR(Instance, AZ::SystemAllocator, 0);
+        AZ_CLASS_ALLOCATOR(Instance, AZ::SystemAllocator);
         AZ_RTTI(Instance, "{1A62DF32-2909-431C-A938-B1E841A50768}", XR::Instance);
 
         static XR::Ptr<Instance> Create();

@@ -17,7 +17,9 @@
 #include <Lidar/ROS2LidarSensorComponent.h>
 #include <Odometry/ROS2OdometrySensorComponent.h>
 #include <ROS2/Frame/ROS2FrameComponent.h>
-#include <ROS2/Manipulator/MotorizedJointComponent.h>
+#include <ROS2/Manipulation/JointPublisherComponent.h>
+#include <ROS2/Manipulation/ManipulatorControllerComponent.h>
+#include <ROS2/Manipulation/MotorizedJointComponent.h>
 #include <RobotControl/Controllers/AckermannController/AckermannControlComponent.h>
 #include <RobotControl/Controllers/RigidBodyController/RigidBodyTwistControlComponent.h>
 #include <RobotControl/Controllers/SkidSteeringController/SkidSteeringControlComponent.h>
@@ -37,7 +39,7 @@ namespace ROS2
     {
     public:
         AZ_RTTI(ROS2ModuleInterface, "{8b5567cb-1de9-49af-9cd4-9750d4abcd6b}", AZ::Module);
-        AZ_CLASS_ALLOCATOR(ROS2ModuleInterface, AZ::SystemAllocator, 0);
+        AZ_CLASS_ALLOCATOR(ROS2ModuleInterface, AZ::SystemAllocator);
 
         ROS2ModuleInterface()
         {
@@ -66,7 +68,9 @@ namespace ROS2
                   VehicleDynamics::AckermannVehicleModelComponent::CreateDescriptor(),
                   VehicleDynamics::WheelControllerComponent::CreateDescriptor(),
                   VehicleDynamics::SkidSteeringModelComponent::CreateDescriptor(),
-                  MotorizedJointComponent::CreateDescriptor() });
+                  MotorizedJointComponent::CreateDescriptor(),
+                  JointPublisherComponent::CreateDescriptor(),
+                  ManipulatorControllerComponent::CreateDescriptor() });
         }
 
         //! Add required SystemComponents to the SystemEntity.

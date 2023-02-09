@@ -127,6 +127,11 @@ namespace ROS2
         return m_ros2Node;
     }
 
+    const SimulationClock& ROS2SystemComponent::GetSimulationClock() const
+    {
+        return m_simulationClock;
+    }
+
     void ROS2SystemComponent::BroadcastTransform(const geometry_msgs::msg::TransformStamped& t, bool isDynamic) const
     {
         if (isDynamic)

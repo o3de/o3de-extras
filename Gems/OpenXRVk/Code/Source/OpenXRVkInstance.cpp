@@ -9,6 +9,7 @@
 #include <OpenXRVk/OpenXRVkInstance.h>
 #include <OpenXRVk/OpenXRVkUtils.h>
 #include <Atom/RHI.Reflect/Vulkan/XRVkDescriptors.h>
+#include <Atom/RHI.Reflect/VkAllocator.h>
 #include <AzCore/Casting/numeric_cast.h>
 #include <OpenXRVkCommon.h>
 
@@ -304,7 +305,7 @@ namespace OpenXRVk
         createInfo.systemId = m_xrSystemId;
         createInfo.pfnGetInstanceProcAddr = m_context.GetInstanceProcAddr;
         createInfo.vulkanCreateInfo = xrInstanceDescriptor->m_inputData.m_createInfo;
-        createInfo.vulkanAllocator = nullptr;
+        createInfo.vulkanAllocator = AZ::Vulkan::VkSystemAllocator::Get();
 
         PFN_xrGetVulkanInstanceExtensionsKHR pfnGetVulkanInstanceExtensionsKHR = nullptr;
         XrResult result = xrGetInstanceProcAddr(m_xrInstance, "xrGetVulkanInstanceExtensionsKHR", reinterpret_cast<PFN_xrVoidFunction*>(&pfnGetVulkanInstanceExtensionsKHR));
@@ -339,7 +340,7 @@ namespace OpenXRVk
         instInfo.ppEnabledExtensionNames = extensions.empty() ? nullptr : extensions.data();
 
         auto pfnCreateInstance = (PFN_vkCreateInstance)createInfo.pfnGetInstanceProcAddr(nullptr, "vkCreateInstance");
-        VkResult vkResult = pfnCreateInstance(&instInfo, nullptr, &m_xrVkInstance);
+        VkResult vkResult = pfnCreateInstance(&instInfo, AZ::Vulkan::VkSystemAllocator::Get(), &m_xrVkInstance);
         if (vkResult != VK_SUCCESS)
         {
             ShutdownInternal();
@@ -382,7 +383,7 @@ namespace OpenXRVk
         {
             m_supportedXRDevices.clear();
 
-            m_context.DestroyInstance(m_xrVkInstance, nullptr);
+            m_context.DestroyInstance(m_xrVkInstance, AZ::Vulkan::VkSystemAllocator::Get());
             m_xrVkInstance = VK_NULL_HANDLE;
         }
 

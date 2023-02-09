@@ -32,7 +32,7 @@ namespace OpenXRVk
         : public XR::Space
     {
     public:
-        AZ_CLASS_ALLOCATOR(Space, AZ::SystemAllocator, 0);
+        AZ_CLASS_ALLOCATOR(Space, AZ::SystemAllocator);
         AZ_RTTI(Space, "{E99557D0-9061-4691-9524-CE0ACC3A14FA}", XR::Space);
 
         static XR::Ptr<Space> Create();

@@ -11,8 +11,8 @@
 #include <AzCore/Component/Component.h>
 #include <AzCore/Component/TickBus.h>
 #include <AzCore/std/smart_ptr/unique_ptr.h>
-#include <Clock/SimulationClock.h>
 #include <Lidar/LidarSystem.h>
+#include <ROS2/Clock/SimulationClock.h>
 #include <ROS2/ROS2Bus.h>
 #include <builtin_interfaces/msg/time.hpp>
 #include <memory>
@@ -46,11 +46,12 @@ namespace ROS2
         std::shared_ptr<rclcpp::Node> GetNode() const override;
         builtin_interfaces::msg::Time GetROSTimestamp() const override;
         void BroadcastTransform(const geometry_msgs::msg::TransformStamped& t, bool isDynamic) const override;
+        const SimulationClock& GetSimulationClock() const override;
         //////////////////////////////////////////////////////////////////////////
 
     protected:
         ////////////////////////////////////////////////////////////////////////
-        // AZ::Component interface implementation
+        // AZ::Component override
         void Init() override;
         void Activate() override;
         void Deactivate() override;
