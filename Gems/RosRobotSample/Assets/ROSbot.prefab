@@ -51,83 +51,6 @@
         }
     },
     "Entities": {
-        "Entity_[454274520747]": {
-            "Id": "Entity_[454274520747]",
-            "Name": "Entity1",
-            "Components": {
-                "Component_[10139607700692707664]": {
-                    "$type": "EditorLockComponent",
-                    "Id": 10139607700692707664
-                },
-                "Component_[1383110072770318712]": {
-                    "$type": "EditorInspectorComponent",
-                    "Id": 1383110072770318712
-                },
-                "Component_[1459662396467092780]": {
-                    "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
-                    "Id": 1459662396467092780,
-                    "Parent Entity": "Entity_[7507839849146]",
-                    "Transform Data": {
-                        "Translate": [
-                            0.0,
-                            0.0,
-                            0.1079680398106575
-                        ]
-                    }
-                },
-                "Component_[14778984575904365834]": {
-                    "$type": "EditorOnlyEntityComponent",
-                    "Id": 14778984575904365834
-                },
-                "Component_[16777570562481809460]": {
-                    "$type": "EditorEntityIconComponent",
-                    "Id": 16777570562481809460
-                },
-                "Component_[2002554278096027045]": {
-                    "$type": "EditorDisabledCompositionComponent",
-                    "Id": 2002554278096027045
-                },
-                "Component_[5063108489464047545]": {
-                    "$type": "GenericComponentWrapper",
-                    "Id": 5063108489464047545,
-                    "m_template": {
-                        "$type": "ROS2FrameComponent"
-                    }
-                },
-                "Component_[525588079965327013]": {
-                    "$type": "EditorPendingCompositionComponent",
-                    "Id": 525588079965327013
-                },
-                "Component_[6441665647641943511]": {
-                    "$type": "ROS2CameraSensorEditorComponent",
-                    "Id": 6441665647641943511,
-                    "SensorConfig": {
-                        "Publishers": {
-                            "Camera Info": {
-                                "Type": "sensor_msgs::msg::CameraInfo",
-                                "Topic": "camera_info"
-                            },
-                            "Color Image": {
-                                "Type": "sensor_msgs::msg::Image",
-                                "Topic": "camera_image_color"
-                            },
-                            "Depth Image": {
-                                "Type": "sensor_msgs::msg::Image",
-                                "Topic": "camera_image_depth"
-                            }
-                        }
-                    }
-                },
-                "Component_[7827113227536758757]": {
-                    "$type": "EditorEntitySortComponent",
-                    "Id": 7827113227536758757
-                },
-                "Component_[9064086166682384563]": {
-                    "$type": "EditorVisibilityComponent",
-                    "Id": 9064086166682384563
-                }
-            }
-        },
         "Entity_[7477775078074]": {
             "Id": "Entity_[7477775078074]",
             "Name": "rl_wheel_link_visual",
@@ -687,7 +610,10 @@
                 },
                 "Component_[1770764664089996465]": {
                     "$type": "EditorEntitySortComponent",
-                    "Id": 1770764664089996465
+                    "Id": 1770764664089996465,
+                    "Child Entity Order": [
+                        "Entity_[764792335627]"
+                    ]
                 },
                 "Component_[17768210655719860684]": {
                     "$type": "EditorPendingCompositionComponent",
@@ -947,8 +873,7 @@
                         "Entity_[7486365012666]",
                         "Entity_[7482070045370]",
                         "Entity_[7512134816442]",
-                        "Entity_[8141757523394]",
-                        "Entity_[454274520747]"
+                        "Entity_[8141757523394]"
                     ]
                 },
                 "Component_[6615492099568417181]": {
@@ -1224,6 +1149,106 @@
                 }
             }
         },
+        "Entity_[751907433739]": {
+            "Id": "Entity_[751907433739]",
+            "Name": "velodyne",
+            "Components": {
+                "Component_[13671086913221813703]": {
+                    "$type": "EditorEntitySortComponent",
+                    "Id": 13671086913221813703
+                },
+                "Component_[14424030792977391283]": {
+                    "$type": "EditorOnlyEntityComponent",
+                    "Id": 14424030792977391283
+                },
+                "Component_[15716934943229365279]": {
+                    "$type": "EditorPendingCompositionComponent",
+                    "Id": 15716934943229365279
+                },
+                "Component_[17831972868296940874]": {
+                    "$type": "GenericComponentWrapper",
+                    "Id": 17831972868296940874,
+                    "m_template": {
+                        "$type": "ROS2LidarSensorComponent",
+                        "SensorConfiguration": {
+                            "Publishers": {
+                                "sensor_msgs::msg::PointCloud2": {
+                                    "Type": "sensor_msgs::msg::PointCloud2",
+                                    "Topic": "pc"
+                                }
+                            }
+                        },
+                        "lidarModel": 4,
+                        "lidarImplementation": "Scene Queries",
+                        "LidarParameters": {
+                            "Name": "Velodyne Puck (VLP-16)",
+                            "Layers": 16,
+                            "Points per layer": 1800,
+                            "Min vertical angle": 15.0,
+                            "Max vertical angle": -15.0,
+                            "Noise Parameters": {
+                                "Distance noise standard deviation base": 0.029999999329447746
+                            }
+                        },
+                        "IgnoreLayer": true,
+                        "IgnoredLayerIndex": 1
+                    }
+                },
+                "Component_[18101940248326674778]": {
+                    "$type": "EditorEntityIconComponent",
+                    "Id": 18101940248326674778
+                },
+                "Component_[418677382026973033]": {
+                    "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
+                    "Id": 418677382026973033,
+                    "Parent Entity": "Entity_[764792335627]",
+                    "Transform Data": {
+                        "Translate": [
+                            0.0,
+                            0.0,
+                            0.03779999911785126
+                        ]
+                    }
+                },
+                "Component_[5366260707178657913]": {
+                    "$type": "EditorLockComponent",
+                    "Id": 5366260707178657913
+                },
+                "Component_[5789431509371907581]": {
+                    "$type": "EditorVisibilityComponent",
+                    "Id": 5789431509371907581
+                },
+                "Component_[5995893469201719063]": {
+                    "$type": "GenericComponentWrapper",
+                    "Id": 5995893469201719063,
+                    "m_template": {
+                        "$type": "ROS2FrameComponent",
+                        "Frame Name": "velodyne"
+                    }
+                },
+                "Component_[6760090594561732374]": {
+                    "$type": "EditorDisabledCompositionComponent",
+                    "Id": 6760090594561732374
+                },
+                "Component_[8781663819888973206]": {
+                    "$type": "EditorInspectorComponent",
+                    "Id": 8781663819888973206,
+                    "ComponentOrderEntryArray": [
+                        {
+                            "ComponentId": 418677382026973033
+                        },
+                        {
+                            "ComponentId": 5995893469201719063,
+                            "SortIndex": 1
+                        },
+                        {
+                            "ComponentId": 10486827004445938083,
+                            "SortIndex": 2
+                        }
+                    ]
+                }
+            }
+        },
         "Entity_[7525019718330]": {
             "Id": "Entity_[7525019718330]",
             "Name": "fl_wheel_link",
@@ -1447,6 +1472,220 @@
                 "Component_[743160702698200184]": {
                     "$type": "EditorEntitySortComponent",
                     "Id": 743160702698200184
+                }
+            }
+        },
+        "Entity_[756202401035]": {
+            "Id": "Entity_[756202401035]",
+            "Name": "velodyne_puck_link_visual",
+            "Components": {
+                "Component_[10890014790738100392]": {
+                    "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
+                    "Id": 10890014790738100392,
+                    "Parent Entity": "Entity_[764792335627]"
+                },
+                "Component_[11991217896374896096]": {
+                    "$type": "AZ::Render::EditorMeshComponent",
+                    "Id": 11991217896374896096,
+                    "Controller": {
+                        "Configuration": {
+                            "ModelAsset": {
+                                "assetId": {
+                                    "guid": "{582CDA31-062E-5406-A8C5-A61834946B98}",
+                                    "subId": 274760714
+                                },
+                                "assetHint": "robot/ros_components_description/meshes/velodyne_puck.azmodel"
+                            }
+                        }
+                    }
+                },
+                "Component_[13476751567827877996]": {
+                    "$type": "EditorEntitySortComponent",
+                    "Id": 13476751567827877996
+                },
+                "Component_[14241871270156577912]": {
+                    "$type": "EditorLockComponent",
+                    "Id": 14241871270156577912
+                },
+                "Component_[14424030708733187189]": {
+                    "$type": "EditorOnlyEntityComponent",
+                    "Id": 14424030708733187189
+                },
+                "Component_[17091739038282825917]": {
+                    "$type": "EditorDisabledCompositionComponent",
+                    "Id": 17091739038282825917
+                },
+                "Component_[17711039257255867625]": {
+                    "$type": "EditorPendingCompositionComponent",
+                    "Id": 17711039257255867625
+                },
+                "Component_[5499875641221100949]": {
+                    "$type": "EditorEntityIconComponent",
+                    "Id": 5499875641221100949
+                },
+                "Component_[7199396390238348100]": {
+                    "$type": "EditorVisibilityComponent",
+                    "Id": 7199396390238348100
+                },
+                "Component_[8790590692552184176]": {
+                    "$type": "EditorInspectorComponent",
+                    "Id": 8790590692552184176,
+                    "ComponentOrderEntryArray": [
+                        {
+                            "ComponentId": 10890014790738100392
+                        },
+                        {
+                            "ComponentId": 11991217896374896096,
+                            "SortIndex": 1
+                        }
+                    ]
+                }
+            }
+        },
+        "Entity_[764792335627]": {
+            "Id": "Entity_[764792335627]",
+            "Name": "velodyne_puck_link",
+            "Components": {
+                "Component_[12370789403871183792]": {
+                    "$type": "EditorPendingCompositionComponent",
+                    "Id": 12370789403871183792
+                },
+                "Component_[13911910206931025724]": {
+                    "$type": "EditorRigidBodyComponent",
+                    "Id": 13911910206931025724,
+                    "Configuration": {
+                        "entityId": "",
+                        "Compute Mass": false,
+                        "Mass": 0.8299999833106995,
+                        "Compute COM": false,
+                        "Centre of mass offset": [
+                            0.0,
+                            0.0,
+                            0.035999998450279236
+                        ],
+                        "Compute inertia": false,
+                        "Inertia tensor": [
+                            0.0011109999613836408,
+                            0.0,
+                            0.0,
+                            0.0,
+                            0.001108999946154654,
+                            0.0,
+                            0.0,
+                            0.0,
+                            0.0014929999597370625
+                        ]
+                    },
+                    "PhysXSpecificConfiguration": {
+                        "SolverPositionIterations": 40,
+                        "SolverVelocityIterations": 10
+                    }
+                },
+                "Component_[1463793750016003726]": {
+                    "$type": "EditorLockComponent",
+                    "Id": 1463793750016003726
+                },
+                "Component_[14872109100060204990]": {
+                    "$type": "EditorOnlyEntityComponent",
+                    "Id": 14872109100060204990
+                },
+                "Component_[16006629798067355705]": {
+                    "$type": "EditorColliderComponent",
+                    "Id": 16006629798067355705,
+                    "ColliderConfiguration": {
+                        "CollisionLayer": {
+                            "Index": 1
+                        },
+                        "Position": [
+                            0.0,
+                            0.0,
+                            0.035999998450279236
+                        ],
+                        "MaterialSlots": {
+                            "Slots": [
+                                {
+                                    "Name": "Entire object"
+                                }
+                            ]
+                        }
+                    },
+                    "ShapeConfiguration": {
+                        "ShapeType": 3,
+                        "Cylinder": {
+                            "Configuration": {
+                                "CookedData": "TlhTAUNWWE0NAAAAAAAAAElDRQFDTEhMCQAAACAAAAAwAAAAEgAAAGAAAAAJ40K9GXOhvBovXT2q8VK9abKasRovXT2q8VK9abKasbx0kzwJ40K9GXOhvLx0kzzwKBW98ygVvbx0kzzwKBW98ygVvRovXT0ac6E8CeNCvbx0kzz0KBU98CgVvbx0kzz0KBU98CgVvRovXT0ac6E8CeNCvRovXT2fC+gxqvFSvRovXT2fC+gxqvFSvbx0kzwYc6G8CeNCPbx0kzzzKBW98CgVPbx0kzzzKBW98CgVPRovXT0Yc6G8CeNCPRovXT1pshqxqvFSPRovXT1pshqxqvFSPbx0kzwJ40I9FnOhPLx0kzzxKBU98SgVPbx0kzzxKBU98SgVPRovXT0J40I9FnOhPBovXT2q8VI9AAAAABovXT2q8VI9AAAAALx0kzwVc6E8CeNCPbx0kzwVc6E8CeNCPRovXT0J40K9FXOhPLx0kzwJ40K9FXOhPBovXT0Sc6G8CeNCvRovXT0Sc6G8CeNCvbx0kzwJ40I9EXOhvBovXT0J40I9EXOhvLx0kzwAAAAAAAAAAAAAgD8cL129AAAQAr8Ue7+3xUe+AAAAAArkTr0QAAQSLttUv985Dr8AAAAACuROvRQABBLdOQ4/LttUvwAAAAAK5E69GAAEDLjFRz7AFHu/AAAAAAzkTr0cAAQM3TkOvy7bVD8AAAAACeROvSAABAa3xUe+vxR7PwAAAAAL5E69JAAEBi/bVD/dOQ4/AAAAAAnkTr0oAAQAwBR7P7jFRz4AAAAAC+ROvSwABAC4xUc+wBR7PwAAAAAK5E69MAAECt05Dj8x21Q/AAAAAAvkTr00AAQEvxR7v7fFRz4AAAAACeROvTgABBYy21S/2TkOPwAAAAAK5E69PAAEB9c5Dr8z21S/AAAAAArkTr1AAAQYuMVHvsAUe78AAAAAC+ROvUQABBC/FHs/vsVHvgAAAAAJ5E69SAAEATXbVD/UOQ6/AAAAAArkTr1MAAQaAAAAAAAAAAAAAIC/vnSTPFAAEAAcCgkIHhYVFBkQDw4bAQAFAAECAwADBAUGBwgJBgkKCwwNDg8MDxAREhMUFRIVFhcYERAZGBkUExoCARsaGw4NHAUEHRwdCwofFxYeHx4IBx8HBgsdBAMCGg0MERgTEhcADgAEAAMAEAAPAAgABwAKAAkABgAFAAwACwABAAIADQELAREBAgIRAg0DEQMQAwQEDgQRBREFDAUGBgkGEQcRBwoHCAgPCBEJEQkKChELEQsMDBENEQ0ODhEPEQ8QEBEAAQIAAQsBCxEBAhECDREAAg0DBBEDEBEAAxAAAwQABA4EDhEFBhEFDBEABQwABQYABgkGCREHCBEHChEABwoABwgACA8IDxEJChEACQoLDBEACwwADQ4NDhEADxAPEBEAAAAAqvFSvarxUr28dJM8qvFSParxUj0aL109c0GZOTfgIDVvxucnCTfxp2/G5yc34CA1Kd0bKAk38acp3RsoUtXKNMTFAzAUAWKwvHQTPQAAgL+6dJM8FnpKPY9EKjyPRCo8",
+                                "Type": 1
+                            },
+                            "Height": 0.035999998450279236,
+                            "Radius": 0.051500000059604645
+                        }
+                    }
+                },
+                "Component_[17081514475955625962]": {
+                    "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
+                    "Id": 17081514475955625962,
+                    "Parent Entity": "Entity_[7499249914554]"
+                },
+                "Component_[2763697723931962513]": {
+                    "$type": "EditorFixedJointComponent",
+                    "Id": 2763697723931962513,
+                    "Configuration": {
+                        "Parent Entity": "",
+                        "Child Entity": "Entity_[764792335627]"
+                    }
+                },
+                "Component_[2859021797226709551]": {
+                    "$type": "GenericComponentWrapper",
+                    "Id": 2859021797226709551,
+                    "m_template": {
+                        "$type": "ROS2FrameComponent",
+                        "Frame Name": "velodyne_puck_link"
+                    }
+                },
+                "Component_[3318225753687521211]": {
+                    "$type": "EditorVisibilityComponent",
+                    "Id": 3318225753687521211
+                },
+                "Component_[4340256740411386622]": {
+                    "$type": "EditorEntitySortComponent",
+                    "Id": 4340256740411386622,
+                    "Child Entity Order": [
+                        "Entity_[756202401035]",
+                        "Entity_[751907433739]"
+                    ]
+                },
+                "Component_[8205358760306400340]": {
+                    "$type": "EditorInspectorComponent",
+                    "Id": 8205358760306400340,
+                    "ComponentOrderEntryArray": [
+                        {
+                            "ComponentId": 17081514475955625962
+                        },
+                        {
+                            "ComponentId": 2859021797226709551,
+                            "SortIndex": 1
+                        },
+                        {
+                            "ComponentId": 13911910206931025724,
+                            "SortIndex": 2
+                        },
+                        {
+                            "ComponentId": 2763697723931962513,
+                            "SortIndex": 3
+                        },
+                        {
+                            "ComponentId": 16006629798067355705,
+                            "SortIndex": 4
+                        }
+                    ]
+                },
+                "Component_[8377546422298976497]": {
+                    "$type": "EditorEntityIconComponent",
+                    "Id": 8377546422298976497
+                },
+                "Component_[9707791925197234423]": {
+                    "$type": "EditorDisabledCompositionComponent",
+                    "Id": 9707791925197234423
                 }
             }
         },
