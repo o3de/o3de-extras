@@ -1,0 +1,1526 @@
+{
+    "ContainerEntity": {
+        "Id": "ContainerEntity",
+        "Name": "Warehouse_Roof",
+        "Components": {
+            "Component_[11717146280804731117]": {
+                "$type": "EditorVisibilityComponent",
+                "Id": 11717146280804731117
+            },
+            "Component_[14702950922314264420]": {
+                "$type": "EditorPendingCompositionComponent",
+                "Id": 14702950922314264420
+            },
+            "Component_[3274981898203187592]": {
+                "$type": "EditorLockComponent",
+                "Id": 3274981898203187592
+            },
+            "Component_[3972712270344311677]": {
+                "$type": "EditorEntitySortComponent",
+                "Id": 3972712270344311677,
+                "Child Entity Order": [
+                    "Entity_[372350696983620]"
+                ]
+            },
+            "Component_[4581293085890052798]": {
+                "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
+                "Id": 4581293085890052798,
+                "Parent Entity": ""
+            },
+            "Component_[6309286408856347534]": {
+                "$type": "EditorOnlyEntityComponent",
+                "Id": 6309286408856347534
+            },
+            "Component_[7574275747264505285]": {
+                "$type": "EditorDisabledCompositionComponent",
+                "Id": 7574275747264505285
+            },
+            "Component_[8578370547218809002]": {
+                "$type": "EditorInspectorComponent",
+                "Id": 8578370547218809002
+            },
+            "Component_[9449821809272091050]": {
+                "$type": "EditorEntityIconComponent",
+                "Id": 9449821809272091050
+            },
+            "Component_[9872074181061435246]": {
+                "$type": "EditorPrefabComponent",
+                "Id": 9872074181061435246
+            }
+        }
+    },
+    "Entities": {
+        "Entity_[372102589840745]": {
+            "Id": "Entity_[372102589840745]",
+            "Name": "GI",
+            "Components": {
+                "Component_[12108912945022556939]": {
+                    "$type": "EditorPendingCompositionComponent",
+                    "Id": 12108912945022556939
+                },
+                "Component_[12396088050775600309]": {
+                    "$type": "EditorEntityIconComponent",
+                    "Id": 12396088050775600309
+                },
+                "Component_[13725020903289063450]": {
+                    "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
+                    "Id": 13725020903289063450,
+                    "Parent Entity": "Entity_[372333517114436]"
+                },
+                "Component_[14735622265906696355]": {
+                    "$type": "EditorEntitySortComponent",
+                    "Id": 14735622265906696355,
+                    "Child Entity Order": [
+                        "Entity_[71229578283278]",
+                        "Instance_[372106884808041]/ContainerEntity",
+                        "Instance_[379056141892969]/ContainerEntity",
+                        "Instance_[379043256991081]/ContainerEntity",
+                        "Instance_[379030372089193]/ContainerEntity",
+                        "Instance_[379090501631337]/ContainerEntity",
+                        "Instance_[383905159970153]/ContainerEntity",
+                        "Instance_[379069026794857]/ContainerEntity",
+                        "Instance_[379073321762153]/ContainerEntity",
+                        "Instance_[379017487187305]/ContainerEntity",
+                        "Instance_[379086206664041]/ContainerEntity",
+                        "Instance_[379077616729449]/ContainerEntity",
+                        "Instance_[379081911696745]/ContainerEntity",
+                        "Instance_[379004602285417]/ContainerEntity",
+                        "Instance_[383918044872041]/ContainerEntity"
+                    ]
+                },
+                "Component_[14845953584109227989]": {
+                    "$type": "EditorLockComponent",
+                    "Id": 14845953584109227989
+                },
+                "Component_[17050029216838975748]": {
+                    "$type": "EditorDisabledCompositionComponent",
+                    "Id": 17050029216838975748
+                },
+                "Component_[17900050837813429935]": {
+                    "$type": "EditorVisibilityComponent",
+                    "Id": 17900050837813429935
+                },
+                "Component_[6353241986572028436]": {
+                    "$type": "EditorOnlyEntityComponent",
+                    "Id": 6353241986572028436
+                },
+                "Component_[8336468672217053778]": {
+                    "$type": "EditorInspectorComponent",
+                    "Id": 8336468672217053778
+                }
+            }
+        },
+        "Entity_[372316337245252]": {
+            "Id": "Entity_[372316337245252]",
+            "Name": "row6",
+            "Components": {
+                "Component_[10311219420704440311]": {
+                    "$type": "EditorOnlyEntityComponent",
+                    "Id": 10311219420704440311
+                },
+                "Component_[10613465856665953947]": {
+                    "$type": "EditorDisabledCompositionComponent",
+                    "Id": 10613465856665953947
+                },
+                "Component_[1099445320312667240]": {
+                    "$type": "EditorLockComponent",
+                    "Id": 1099445320312667240
+                },
+                "Component_[11553853199545380956]": {
+                    "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
+                    "Id": 11553853199545380956,
+                    "Parent Entity": "Entity_[372333517114436]",
+                    "Transform Data": {
+                        "Translate": [
+                            -31.160919189453125,
+                            8.14289379119873,
+                            9.125040054321289
+                        ]
+                    }
+                },
+                "Component_[15291901364082073937]": {
+                    "$type": "EditorEntityIconComponent",
+                    "Id": 15291901364082073937
+                },
+                "Component_[17384941475010859956]": {
+                    "$type": "EditorVisibilityComponent",
+                    "Id": 17384941475010859956
+                },
+                "Component_[17889284555767441878]": {
+                    "$type": "EditorInspectorComponent",
+                    "Id": 17889284555767441878
+                },
+                "Component_[6748173508085193281]": {
+                    "$type": "EditorEntitySortComponent",
+                    "Id": 6748173508085193281,
+                    "Child Entity Order": [
+                        "Instance_[42121288032893]/ContainerEntity",
+                        "Instance_[42112698098301]/ContainerEntity",
+                        "Instance_[42116993065597]/ContainerEntity",
+                        "Instance_[42172827640445]/ContainerEntity",
+                        "Instance_[42164237705853]/ContainerEntity",
+                        "Instance_[42168532673149]/ContainerEntity",
+                        "Instance_[42224367247997]/ContainerEntity",
+                        "Instance_[42215777313405]/ContainerEntity",
+                        "Instance_[42220072280701]/ContainerEntity",
+                        "Instance_[42275906855549]/ContainerEntity",
+                        "Instance_[42267316920957]/ContainerEntity",
+                        "Instance_[42271611888253]/ContainerEntity",
+                        "Instance_[42327446463101]/ContainerEntity",
+                        "Instance_[42318856528509]/ContainerEntity",
+                        "Instance_[42323151495805]/ContainerEntity"
+                    ]
+                },
+                "Component_[7432015336954531022]": {
+                    "$type": "EditorPendingCompositionComponent",
+                    "Id": 7432015336954531022
+                }
+            }
+        },
+        "Entity_[372320632212548]": {
+            "Id": "Entity_[372320632212548]",
+            "Name": "row2",
+            "Components": {
+                "Component_[10311219420704440311]": {
+                    "$type": "EditorOnlyEntityComponent",
+                    "Id": 10311219420704440311
+                },
+                "Component_[10613465856665953947]": {
+                    "$type": "EditorDisabledCompositionComponent",
+                    "Id": 10613465856665953947
+                },
+                "Component_[1099445320312667240]": {
+                    "$type": "EditorLockComponent",
+                    "Id": 1099445320312667240
+                },
+                "Component_[11553853199545380956]": {
+                    "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
+                    "Id": 11553853199545380956,
+                    "Parent Entity": "Entity_[372333517114436]",
+                    "Transform Data": {
+                        "Translate": [
+                            8.827146530151367,
+                            8.14289379119873,
+                            9.125040054321289
+                        ]
+                    }
+                },
+                "Component_[15291901364082073937]": {
+                    "$type": "EditorEntityIconComponent",
+                    "Id": 15291901364082073937
+                },
+                "Component_[17384941475010859956]": {
+                    "$type": "EditorVisibilityComponent",
+                    "Id": 17384941475010859956
+                },
+                "Component_[17889284555767441878]": {
+                    "$type": "EditorInspectorComponent",
+                    "Id": 17889284555767441878
+                },
+                "Component_[6748173508085193281]": {
+                    "$type": "EditorEntitySortComponent",
+                    "Id": 6748173508085193281,
+                    "Child Entity Order": [
+                        "Instance_[42121288032893]/ContainerEntity",
+                        "Instance_[42112698098301]/ContainerEntity",
+                        "Instance_[42116993065597]/ContainerEntity"
+                    ]
+                },
+                "Component_[7432015336954531022]": {
+                    "$type": "EditorPendingCompositionComponent",
+                    "Id": 7432015336954531022
+                }
+            }
+        },
+        "Entity_[372324927179844]": {
+            "Id": "Entity_[372324927179844]",
+            "Name": "row1",
+            "Components": {
+                "Component_[10311219420704440311]": {
+                    "$type": "EditorOnlyEntityComponent",
+                    "Id": 10311219420704440311
+                },
+                "Component_[10613465856665953947]": {
+                    "$type": "EditorDisabledCompositionComponent",
+                    "Id": 10613465856665953947
+                },
+                "Component_[1099445320312667240]": {
+                    "$type": "EditorLockComponent",
+                    "Id": 1099445320312667240
+                },
+                "Component_[11553853199545380956]": {
+                    "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
+                    "Id": 11553853199545380956,
+                    "Parent Entity": "Entity_[372333517114436]",
+                    "Transform Data": {
+                        "Translate": [
+                            17.07560157775879,
+                            8.14289379119873,
+                            9.125040054321289
+                        ]
+                    }
+                },
+                "Component_[15291901364082073937]": {
+                    "$type": "EditorEntityIconComponent",
+                    "Id": 15291901364082073937
+                },
+                "Component_[17384941475010859956]": {
+                    "$type": "EditorVisibilityComponent",
+                    "Id": 17384941475010859956
+                },
+                "Component_[17889284555767441878]": {
+                    "$type": "EditorInspectorComponent",
+                    "Id": 17889284555767441878
+                },
+                "Component_[6748173508085193281]": {
+                    "$type": "EditorEntitySortComponent",
+                    "Id": 6748173508085193281,
+                    "Child Entity Order": [
+                        "Instance_[7684319373153]/ContainerEntity",
+                        "Instance_[7675729438561]/ContainerEntity",
+                        "Instance_[7680024405857]/ContainerEntity"
+                    ]
+                },
+                "Component_[7432015336954531022]": {
+                    "$type": "EditorPendingCompositionComponent",
+                    "Id": 7432015336954531022
+                }
+            }
+        },
+        "Entity_[372329222147140]": {
+            "Id": "Entity_[372329222147140]",
+            "Name": "row5",
+            "Components": {
+                "Component_[10311219420704440311]": {
+                    "$type": "EditorOnlyEntityComponent",
+                    "Id": 10311219420704440311
+                },
+                "Component_[10613465856665953947]": {
+                    "$type": "EditorDisabledCompositionComponent",
+                    "Id": 10613465856665953947
+                },
+                "Component_[1099445320312667240]": {
+                    "$type": "EditorLockComponent",
+                    "Id": 1099445320312667240
+                },
+                "Component_[11553853199545380956]": {
+                    "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
+                    "Id": 11553853199545380956,
+                    "Parent Entity": "Entity_[372333517114436]",
+                    "Transform Data": {
+                        "Translate": [
+                            -21.213319778442383,
+                            8.14289379119873,
+                            9.125040054321289
+                        ]
+                    }
+                },
+                "Component_[15291901364082073937]": {
+                    "$type": "EditorEntityIconComponent",
+                    "Id": 15291901364082073937
+                },
+                "Component_[17384941475010859956]": {
+                    "$type": "EditorVisibilityComponent",
+                    "Id": 17384941475010859956
+                },
+                "Component_[17889284555767441878]": {
+                    "$type": "EditorInspectorComponent",
+                    "Id": 17889284555767441878
+                },
+                "Component_[6748173508085193281]": {
+                    "$type": "EditorEntitySortComponent",
+                    "Id": 6748173508085193281,
+                    "Child Entity Order": [
+                        "Instance_[42121288032893]/ContainerEntity",
+                        "Instance_[42112698098301]/ContainerEntity",
+                        "Instance_[42116993065597]/ContainerEntity",
+                        "Instance_[42172827640445]/ContainerEntity",
+                        "Instance_[42164237705853]/ContainerEntity",
+                        "Instance_[42168532673149]/ContainerEntity",
+                        "Instance_[42224367247997]/ContainerEntity",
+                        "Instance_[42215777313405]/ContainerEntity",
+                        "Instance_[42220072280701]/ContainerEntity",
+                        "Instance_[42275906855549]/ContainerEntity",
+                        "Instance_[42267316920957]/ContainerEntity",
+                        "Instance_[42271611888253]/ContainerEntity"
+                    ]
+                },
+                "Component_[7432015336954531022]": {
+                    "$type": "EditorPendingCompositionComponent",
+                    "Id": 7432015336954531022
+                }
+            }
+        },
+        "Entity_[372333517114436]": {
+            "Id": "Entity_[372333517114436]",
+            "Name": "Lights",
+            "Components": {
+                "Component_[10986098954968295878]": {
+                    "$type": "EditorDisabledCompositionComponent",
+                    "Id": 10986098954968295878
+                },
+                "Component_[11901749182025327972]": {
+                    "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
+                    "Id": 11901749182025327972,
+                    "Parent Entity": "Entity_[372350696983620]",
+                    "Transform Data": {
+                        "Translate": [
+                            28.637195587158203,
+                            -7.540553092956543,
+                            -1.9806101322174072
+                        ]
+                    }
+                },
+                "Component_[1685220300737509820]": {
+                    "$type": "EditorEntityIconComponent",
+                    "Id": 1685220300737509820
+                },
+                "Component_[18212935934052258424]": {
+                    "$type": "EditorVisibilityComponent",
+                    "Id": 18212935934052258424
+                },
+                "Component_[3514887250984985573]": {
+                    "$type": "EditorEntitySortComponent",
+                    "Id": 3514887250984985573,
+                    "Child Entity Order": [
+                        "Entity_[372324927179844]",
+                        "Entity_[372320632212548]",
+                        "Entity_[372346402016324]",
+                        "Entity_[372337812081732]",
+                        "Entity_[372329222147140]",
+                        "Entity_[372316337245252]",
+                        "Entity_[372102589840745]"
+                    ]
+                },
+                "Component_[3801970221126031042]": {
+                    "$type": "EditorOnlyEntityComponent",
+                    "Id": 3801970221126031042
+                },
+                "Component_[4764108266284292865]": {
+                    "$type": "EditorLockComponent",
+                    "Id": 4764108266284292865
+                },
+                "Component_[9416731180903450407]": {
+                    "$type": "EditorPendingCompositionComponent",
+                    "Id": 9416731180903450407
+                },
+                "Component_[9949866120966122803]": {
+                    "$type": "EditorInspectorComponent",
+                    "Id": 9949866120966122803
+                }
+            }
+        },
+        "Entity_[372337812081732]": {
+            "Id": "Entity_[372337812081732]",
+            "Name": "row4",
+            "Components": {
+                "Component_[10311219420704440311]": {
+                    "$type": "EditorOnlyEntityComponent",
+                    "Id": 10311219420704440311
+                },
+                "Component_[10613465856665953947]": {
+                    "$type": "EditorDisabledCompositionComponent",
+                    "Id": 10613465856665953947
+                },
+                "Component_[1099445320312667240]": {
+                    "$type": "EditorLockComponent",
+                    "Id": 1099445320312667240
+                },
+                "Component_[11553853199545380956]": {
+                    "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
+                    "Id": 11553853199545380956,
+                    "Parent Entity": "Entity_[372333517114436]",
+                    "Transform Data": {
+                        "Translate": [
+                            -11.207353591918945,
+                            8.14289379119873,
+                            9.125040054321289
+                        ]
+                    }
+                },
+                "Component_[15291901364082073937]": {
+                    "$type": "EditorEntityIconComponent",
+                    "Id": 15291901364082073937
+                },
+                "Component_[17384941475010859956]": {
+                    "$type": "EditorVisibilityComponent",
+                    "Id": 17384941475010859956
+                },
+                "Component_[17889284555767441878]": {
+                    "$type": "EditorInspectorComponent",
+                    "Id": 17889284555767441878
+                },
+                "Component_[6748173508085193281]": {
+                    "$type": "EditorEntitySortComponent",
+                    "Id": 6748173508085193281,
+                    "Child Entity Order": [
+                        "Instance_[42121288032893]/ContainerEntity",
+                        "Instance_[42112698098301]/ContainerEntity",
+                        "Instance_[42116993065597]/ContainerEntity",
+                        "Instance_[42172827640445]/ContainerEntity",
+                        "Instance_[42164237705853]/ContainerEntity",
+                        "Instance_[42168532673149]/ContainerEntity",
+                        "Instance_[42224367247997]/ContainerEntity",
+                        "Instance_[42215777313405]/ContainerEntity",
+                        "Instance_[42220072280701]/ContainerEntity"
+                    ]
+                },
+                "Component_[7432015336954531022]": {
+                    "$type": "EditorPendingCompositionComponent",
+                    "Id": 7432015336954531022
+                }
+            }
+        },
+        "Entity_[372342107049028]": {
+            "Id": "Entity_[372342107049028]",
+            "Name": "Ceiling",
+            "Components": {
+                "Component_[10235758443571662435]": {
+                    "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
+                    "Id": 10235758443571662435,
+                    "Parent Entity": "Entity_[372350696983620]"
+                },
+                "Component_[11710239440016138198]": {
+                    "$type": "EditorOnlyEntityComponent",
+                    "Id": 11710239440016138198
+                },
+                "Component_[12380856149042228567]": {
+                    "$type": "EditorInspectorComponent",
+                    "Id": 12380856149042228567
+                },
+                "Component_[12907286452983293379]": {
+                    "$type": "EditorEntitySortComponent",
+                    "Id": 12907286452983293379
+                },
+                "Component_[15076177949597653857]": {
+                    "$type": "EditorPendingCompositionComponent",
+                    "Id": 15076177949597653857
+                },
+                "Component_[3499273447026786505]": {
+                    "$type": "EditorVisibilityComponent",
+                    "Id": 3499273447026786505
+                },
+                "Component_[3823168380999278223]": {
+                    "$type": "AZ::Render::EditorMeshComponent",
+                    "Id": 3823168380999278223,
+                    "Controller": {
+                        "Configuration": {
+                            "ModelAsset": {
+                                "assetId": {
+                                    "guid": "{C8DB7BC9-31FC-5548-9E7A-CE1A886BE5E4}",
+                                    "subId": 277880160
+                                },
+                                "assetHint": "assets/warehouse/models/warehouse_ceiling.azmodel"
+                            }
+                        }
+                    }
+                },
+                "Component_[5394089585515082464]": {
+                    "$type": "EditorEntityIconComponent",
+                    "Id": 5394089585515082464
+                },
+                "Component_[6818003535569614684]": {
+                    "$type": "EditorDisabledCompositionComponent",
+                    "Id": 6818003535569614684
+                },
+                "Component_[6833420480095665924]": {
+                    "$type": "EditorLockComponent",
+                    "Id": 6833420480095665924
+                },
+                "Component_[8213000083583143141]": {
+                    "$type": "EditorMaterialComponent",
+                    "Id": 8213000083583143141,
+                    "Controller": {
+                        "Configuration": {
+                            "materials": [
+                                {
+                                    "Key": {
+                                        "materialSlotStableId": 103484566
+                                    },
+                                    "Value": {
+                                        "MaterialAsset": {
+                                            "assetId": {
+                                                "guid": "{4D881031-88E9-5300-B525-6F6E35182D97}"
+                                            },
+                                            "assetHint": "assets/warehouse/materials/mwarehousemodules_roof.azmaterial"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        },
+        "Entity_[372346402016324]": {
+            "Id": "Entity_[372346402016324]",
+            "Name": "row3",
+            "Components": {
+                "Component_[10311219420704440311]": {
+                    "$type": "EditorOnlyEntityComponent",
+                    "Id": 10311219420704440311
+                },
+                "Component_[10613465856665953947]": {
+                    "$type": "EditorDisabledCompositionComponent",
+                    "Id": 10613465856665953947
+                },
+                "Component_[1099445320312667240]": {
+                    "$type": "EditorLockComponent",
+                    "Id": 1099445320312667240
+                },
+                "Component_[11553853199545380956]": {
+                    "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
+                    "Id": 11553853199545380956,
+                    "Parent Entity": "Entity_[372333517114436]",
+                    "Transform Data": {
+                        "Translate": [
+                            -1.1725715398788452,
+                            8.14289379119873,
+                            9.125040054321289
+                        ]
+                    }
+                },
+                "Component_[15291901364082073937]": {
+                    "$type": "EditorEntityIconComponent",
+                    "Id": 15291901364082073937
+                },
+                "Component_[17384941475010859956]": {
+                    "$type": "EditorVisibilityComponent",
+                    "Id": 17384941475010859956
+                },
+                "Component_[17889284555767441878]": {
+                    "$type": "EditorInspectorComponent",
+                    "Id": 17889284555767441878
+                },
+                "Component_[6748173508085193281]": {
+                    "$type": "EditorEntitySortComponent",
+                    "Id": 6748173508085193281,
+                    "Child Entity Order": [
+                        "Instance_[42121288032893]/ContainerEntity",
+                        "Instance_[42112698098301]/ContainerEntity",
+                        "Instance_[42116993065597]/ContainerEntity",
+                        "Instance_[42172827640445]/ContainerEntity",
+                        "Instance_[42164237705853]/ContainerEntity",
+                        "Instance_[42168532673149]/ContainerEntity"
+                    ]
+                },
+                "Component_[7432015336954531022]": {
+                    "$type": "EditorPendingCompositionComponent",
+                    "Id": 7432015336954531022
+                }
+            }
+        },
+        "Entity_[372350696983620]": {
+            "Id": "Entity_[372350696983620]",
+            "Name": "Roof",
+            "Components": {
+                "Component_[11897281651755581940]": {
+                    "$type": "EditorLockComponent",
+                    "Id": 11897281651755581940
+                },
+                "Component_[13929733457951358484]": {
+                    "$type": "EditorDisabledCompositionComponent",
+                    "Id": 13929733457951358484
+                },
+                "Component_[14449426647190231543]": {
+                    "$type": "EditorVisibilityComponent",
+                    "Id": 14449426647190231543
+                },
+                "Component_[15564134635072402401]": {
+                    "$type": "EditorPendingCompositionComponent",
+                    "Id": 15564134635072402401
+                },
+                "Component_[17106305311624608125]": {
+                    "$type": "EditorEntitySortComponent",
+                    "Id": 17106305311624608125,
+                    "Child Entity Order": [
+                        "Entity_[372333517114436]",
+                        "Entity_[372342107049028]"
+                    ]
+                },
+                "Component_[2185243914678739866]": {
+                    "$type": "EditorInspectorComponent",
+                    "Id": 2185243914678739866,
+                    "ComponentOrderEntryArray": [
+                        {
+                            "ComponentId": 4075839978245151462
+                        }
+                    ]
+                },
+                "Component_[4075839978245151462]": {
+                    "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
+                    "Id": 4075839978245151462,
+                    "Parent Entity": "ContainerEntity"
+                },
+                "Component_[8022660110480589526]": {
+                    "$type": "EditorOnlyEntityComponent",
+                    "Id": 8022660110480589526
+                },
+                "Component_[9956857898130168105]": {
+                    "$type": "EditorEntityIconComponent",
+                    "Id": 9956857898130168105
+                }
+            }
+        },
+        "Entity_[71229578283278]": {
+            "Id": "Entity_[71229578283278]",
+            "Name": "Diffuse_Probe_Grid",
+            "Components": {
+                "Component_[10308599564098416545]": {
+                    "$type": "EditorOnlyEntityComponent",
+                    "Id": 10308599564098416545
+                },
+                "Component_[10881479552903226344]": {
+                    "$type": "EditorLockComponent",
+                    "Id": 10881479552903226344
+                },
+                "Component_[11565677356361031789]": {
+                    "$type": "EditorBoxShapeComponent",
+                    "Id": 11565677356361031789,
+                    "Visible": false,
+                    "BoxShape": {
+                        "Configuration": {
+                            "Dimensions": [
+                                62.0,
+                                22.0,
+                                12.0
+                            ]
+                        }
+                    }
+                },
+                "Component_[12442620377381822784]": {
+                    "$type": "AZ::Render::EditorDiffuseProbeGridComponent",
+                    "Id": 12442620377381822784,
+                    "Controller": {
+                        "Configuration": {
+                            "Extents": [
+                                62.0,
+                                22.0,
+                                12.0
+                            ],
+                            "AmbientMultiplier": 0.20000000298023224,
+                            "ViewBias": 0.6299999952316284,
+                            "NormalBias": 0.09000000357627869,
+                            "NumRaysPerProbe": 6,
+                            "FrameUpdateCount": 10,
+                            "BakedIrradianceTextureRelativePath": "DiffuseProbeGrids/Diffuse_Probe_Grid_1EBFD2D8-93F3-4449-878A-C0291BA3C7E3_Irradiance_lutrgba16f.dds",
+                            "BakedDistanceTextureRelativePath": "DiffuseProbeGrids/Diffuse_Probe_Grid_3F63628F-3208-41F5-BD34-677A496381EE_Distance_lutrg32f.dds",
+                            "BakedProbeDataTextureRelativePath": "DiffuseProbeGrids/Diffuse_Probe_Grid_47352905-8103-47CF-9818-F19ED3597305_ProbeData_lutrgba16f.dds",
+                            "BakedIrradianceTextureAsset": {
+                                "assetId": {
+                                    "guid": "{156706A8-F151-5CBF-820A-4B56BB3C016D}",
+                                    "subId": 1000
+                                },
+                                "assetHint": "diffuseprobegrids/diffuse_probe_grid_1ebfd2d8-93f3-4449-878a-c0291ba3c7e3_irradiance_lutrgba16f.dds.streamingimage"
+                            },
+                            "BakedDistanceTextureAsset": {
+                                "assetId": {
+                                    "guid": "{006C1604-C8DA-5923-9C96-F082168388E4}",
+                                    "subId": 1000
+                                },
+                                "assetHint": "diffuseprobegrids/diffuse_probe_grid_3f63628f-3208-41f5-bd34-677a496381ee_distance_lutrg32f.dds.streamingimage"
+                            },
+                            "BakedProbeDataTextureAsset": {
+                                "assetId": {
+                                    "guid": "{3207C145-424A-5111-820A-A09B4D319DDB}",
+                                    "subId": 1000
+                                },
+                                "assetHint": "diffuseprobegrids/diffuse_probe_grid_47352905-8103-47cf-9818-f19ed3597305_probedata_lutrgba16f.dds.streamingimage"
+                            },
+                            "VisualizationShowInactiveProbes": true
+                        }
+                    },
+                    "ambientMultiplier": 0.20000000298023224,
+                    "viewBias": 0.6299999952316284,
+                    "normalBias": 0.09000000357627869,
+                    "numRaysPerProbe": 6,
+                    "frameUpdateCount": 10,
+                    "showInactiveProbes": true
+                },
+                "Component_[12475620659785731834]": {
+                    "$type": "EditorDisabledCompositionComponent",
+                    "Id": 12475620659785731834
+                },
+                "Component_[14858834917892295691]": {
+                    "$type": "EditorInspectorComponent",
+                    "Id": 14858834917892295691
+                },
+                "Component_[15618394151388159302]": {
+                    "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
+                    "Id": 15618394151388159302,
+                    "Parent Entity": "Entity_[372102589840745]",
+                    "Transform Data": {
+                        "Translate": [
+                            -8.78240966796875,
+                            8.074762344360352,
+                            6.547865867614746
+                        ]
+                    }
+                },
+                "Component_[16370221188325776121]": {
+                    "$type": "EditorPendingCompositionComponent",
+                    "Id": 16370221188325776121
+                },
+                "Component_[18349399000808978574]": {
+                    "$type": "EditorVisibilityComponent",
+                    "Id": 18349399000808978574
+                },
+                "Component_[18381635255069232652]": {
+                    "$type": "EditorEntityIconComponent",
+                    "Id": 18381635255069232652
+                },
+                "Component_[6608027017492800694]": {
+                    "$type": "EditorEntitySortComponent",
+                    "Id": 6608027017492800694
+                }
+            }
+        }
+    },
+    "Instances": {
+        "Instance_[372106884808041]": {
+            "Source": "Prefabs/Warehouse_structural/Components/Wall_GI.prefab",
+            "Patches": [
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/Component_[13192832100143011963]/Parent Entity",
+                    "value": "../Entity_[372102589840745]"
+                },
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/Component_[13192832100143011963]/Transform Data/Translate/0",
+                    "value": 18.672874450683594
+                },
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/Component_[13192832100143011963]/Transform Data/Translate/1",
+                    "value": -1.43389892578125
+                },
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/Component_[13192832100143011963]/Transform Data/Translate/2",
+                    "value": 7.073646545410156
+                },
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/Component_[13192832100143011963]/Transform Data/Rotate/0",
+                    "value": 17.34310531616211
+                }
+            ]
+        },
+        "Instance_[379004602285417]": {
+            "Source": "Prefabs/Warehouse_structural/Components/Wall_GI.prefab",
+            "Patches": [
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/Component_[13192832100143011963]/Parent Entity",
+                    "value": "../Entity_[372102589840745]"
+                },
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/Component_[13192832100143011963]/Transform Data/Translate/0",
+                    "value": 8.695465087890625
+                },
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/Component_[13192832100143011963]/Transform Data/Translate/1",
+                    "value": -1.43389892578125
+                },
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/Component_[13192832100143011963]/Transform Data/Translate/2",
+                    "value": 7.073646545410156
+                },
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/Component_[13192832100143011963]/Transform Data/Rotate/0",
+                    "value": 17.34310531616211
+                }
+            ]
+        },
+        "Instance_[379017487187305]": {
+            "Source": "Prefabs/Warehouse_structural/Components/Wall_GI.prefab",
+            "Patches": [
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/Component_[13192832100143011963]/Parent Entity",
+                    "value": "../Entity_[372102589840745]"
+                },
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/Component_[13192832100143011963]/Transform Data/Translate/0",
+                    "value": -0.9611320495605468
+                },
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/Component_[13192832100143011963]/Transform Data/Translate/1",
+                    "value": -1.43389892578125
+                },
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/Component_[13192832100143011963]/Transform Data/Translate/2",
+                    "value": 7.073646545410156
+                },
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/Component_[13192832100143011963]/Transform Data/Rotate/0",
+                    "value": 17.34310531616211
+                }
+            ]
+        },
+        "Instance_[379030372089193]": {
+            "Source": "Prefabs/Warehouse_structural/Components/Wall_GI.prefab",
+            "Patches": [
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/Component_[13192832100143011963]/Parent Entity",
+                    "value": "../Entity_[372102589840745]"
+                },
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/Component_[13192832100143011963]/Transform Data/Translate/0",
+                    "value": -11.14780616760254
+                },
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/Component_[13192832100143011963]/Transform Data/Translate/1",
+                    "value": -1.43389892578125
+                },
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/Component_[13192832100143011963]/Transform Data/Translate/2",
+                    "value": 7.073646545410156
+                },
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/Component_[13192832100143011963]/Transform Data/Rotate/0",
+                    "value": 17.34310531616211
+                }
+            ]
+        },
+        "Instance_[379043256991081]": {
+            "Source": "Prefabs/Warehouse_structural/Components/Wall_GI.prefab",
+            "Patches": [
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/Component_[13192832100143011963]/Parent Entity",
+                    "value": "../Entity_[372102589840745]"
+                },
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/Component_[13192832100143011963]/Transform Data/Translate/0",
+                    "value": -21.102249145507813
+                },
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/Component_[13192832100143011963]/Transform Data/Translate/1",
+                    "value": -1.43389892578125
+                },
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/Component_[13192832100143011963]/Transform Data/Translate/2",
+                    "value": 7.073646545410156
+                },
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/Component_[13192832100143011963]/Transform Data/Rotate/0",
+                    "value": 17.34310531616211
+                }
+            ]
+        },
+        "Instance_[379056141892969]": {
+            "Source": "Prefabs/Warehouse_structural/Components/Wall_GI.prefab",
+            "Patches": [
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/Component_[13192832100143011963]/Parent Entity",
+                    "value": "../Entity_[372102589840745]"
+                },
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/Component_[13192832100143011963]/Transform Data/Translate/0",
+                    "value": -31.242164611816406
+                },
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/Component_[13192832100143011963]/Transform Data/Translate/1",
+                    "value": -1.43389892578125
+                },
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/Component_[13192832100143011963]/Transform Data/Translate/2",
+                    "value": 7.073646545410156
+                },
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/Component_[13192832100143011963]/Transform Data/Rotate/0",
+                    "value": 17.34310531616211
+                }
+            ]
+        },
+        "Instance_[379069026794857]": {
+            "Source": "Prefabs/Warehouse_structural/Components/Wall_GI.prefab",
+            "Patches": [
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/Component_[13192832100143011963]/Parent Entity",
+                    "value": "../Entity_[372102589840745]"
+                },
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/Component_[13192832100143011963]/Transform Data/Translate/0",
+                    "value": 8.695465087890625
+                },
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/Component_[13192832100143011963]/Transform Data/Translate/1",
+                    "value": 18.035842895507813
+                },
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/Component_[13192832100143011963]/Transform Data/Translate/2",
+                    "value": 7.073646545410156
+                },
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/Component_[13192832100143011963]/Transform Data/Rotate/0",
+                    "value": -17.85944175720215
+                }
+            ]
+        },
+        "Instance_[379073321762153]": {
+            "Source": "Prefabs/Warehouse_structural/Components/Wall_GI.prefab",
+            "Patches": [
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/Component_[13192832100143011963]/Parent Entity",
+                    "value": "../Entity_[372102589840745]"
+                },
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/Component_[13192832100143011963]/Transform Data/Translate/0",
+                    "value": -0.9611339569091796
+                },
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/Component_[13192832100143011963]/Transform Data/Translate/1",
+                    "value": 18.035842895507813
+                },
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/Component_[13192832100143011963]/Transform Data/Translate/2",
+                    "value": 7.073646545410156
+                },
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/Component_[13192832100143011963]/Transform Data/Rotate/0",
+                    "value": -17.85944175720215
+                }
+            ]
+        },
+        "Instance_[379077616729449]": {
+            "Source": "Prefabs/Warehouse_structural/Components/Wall_GI.prefab",
+            "Patches": [
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/Component_[13192832100143011963]/Parent Entity",
+                    "value": "../Entity_[372102589840745]"
+                },
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/Component_[13192832100143011963]/Transform Data/Translate/0",
+                    "value": -11.14780616760254
+                },
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/Component_[13192832100143011963]/Transform Data/Translate/1",
+                    "value": 18.035842895507813
+                },
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/Component_[13192832100143011963]/Transform Data/Translate/2",
+                    "value": 7.073646545410156
+                },
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/Component_[13192832100143011963]/Transform Data/Rotate/0",
+                    "value": -17.85944175720215
+                }
+            ]
+        },
+        "Instance_[379081911696745]": {
+            "Source": "Prefabs/Warehouse_structural/Components/Wall_GI.prefab",
+            "Patches": [
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/Component_[13192832100143011963]/Parent Entity",
+                    "value": "../Entity_[372102589840745]"
+                },
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/Component_[13192832100143011963]/Transform Data/Translate/0",
+                    "value": 18.672870635986328
+                },
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/Component_[13192832100143011963]/Transform Data/Translate/1",
+                    "value": 18.035842895507813
+                },
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/Component_[13192832100143011963]/Transform Data/Translate/2",
+                    "value": 7.073646545410156
+                },
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/Component_[13192832100143011963]/Transform Data/Rotate/0",
+                    "value": -17.85944175720215
+                }
+            ]
+        },
+        "Instance_[379086206664041]": {
+            "Source": "Prefabs/Warehouse_structural/Components/Wall_GI.prefab",
+            "Patches": [
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/Component_[13192832100143011963]/Parent Entity",
+                    "value": "../Entity_[372102589840745]"
+                },
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/Component_[13192832100143011963]/Transform Data/Translate/0",
+                    "value": -31.24216079711914
+                },
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/Component_[13192832100143011963]/Transform Data/Translate/1",
+                    "value": 18.035842895507813
+                },
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/Component_[13192832100143011963]/Transform Data/Translate/2",
+                    "value": 7.073646545410156
+                },
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/Component_[13192832100143011963]/Transform Data/Rotate/0",
+                    "value": -17.85944175720215
+                }
+            ]
+        },
+        "Instance_[379090501631337]": {
+            "Source": "Prefabs/Warehouse_structural/Components/Wall_GI.prefab",
+            "Patches": [
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/Component_[13192832100143011963]/Parent Entity",
+                    "value": "../Entity_[372102589840745]"
+                },
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/Component_[13192832100143011963]/Transform Data/Translate/0",
+                    "value": -21.102249145507813
+                },
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/Component_[13192832100143011963]/Transform Data/Translate/1",
+                    "value": 18.035842895507813
+                },
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/Component_[13192832100143011963]/Transform Data/Translate/2",
+                    "value": 7.073646545410156
+                },
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/Component_[13192832100143011963]/Transform Data/Rotate/0",
+                    "value": -17.85944175720215
+                }
+            ]
+        },
+        "Instance_[383905159970153]": {
+            "Source": "Prefabs/Warehouse_structural/Components/Wall_GI.prefab",
+            "Patches": [
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/Component_[13192832100143011963]/Parent Entity",
+                    "value": "../Entity_[372102589840745]"
+                },
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/Component_[13192832100143011963]/Transform Data/Translate/0",
+                    "value": 19.8397216796875
+                },
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/Component_[13192832100143011963]/Transform Data/Translate/1",
+                    "value": 8.162531852722168
+                },
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/Component_[13192832100143011963]/Transform Data/Translate/2",
+                    "value": 8.231513023376465
+                },
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/Component_[13192832100143011963]/Transform Data/Rotate/0",
+                    "value": 0.00000822122638055589
+                },
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/Component_[13192832100143011963]/Transform Data/Rotate/1",
+                    "value": 20.828462600708008
+                },
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/Component_[13192832100143011963]/Transform Data/Rotate/2",
+                    "value": 89.99995422363281
+                },
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/Component_[13192832100143011963]/Transform Data/UniformScale",
+                    "value": 1.5
+                }
+            ]
+        },
+        "Instance_[383918044872041]": {
+            "Source": "Prefabs/Warehouse_structural/Components/Wall_GI.prefab",
+            "Patches": [
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/Component_[13192832100143011963]/Parent Entity",
+                    "value": "../Entity_[372102589840745]"
+                },
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/Component_[13192832100143011963]/Transform Data/Translate/0",
+                    "value": -37.103424072265625
+                },
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/Component_[13192832100143011963]/Transform Data/Translate/1",
+                    "value": 8.162531852722168
+                },
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/Component_[13192832100143011963]/Transform Data/Translate/2",
+                    "value": 8.231513023376465
+                },
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/Component_[13192832100143011963]/Transform Data/Rotate/0",
+                    "value": 0.000004550475750875194
+                },
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/Component_[13192832100143011963]/Transform Data/Rotate/1",
+                    "value": -20.26268768310547
+                },
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/Component_[13192832100143011963]/Transform Data/Rotate/2",
+                    "value": 89.99994659423828
+                },
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/Component_[13192832100143011963]/Transform Data/UniformScale",
+                    "value": 1.5
+                }
+            ]
+        },
+        "Instance_[42112698098301]": {
+            "Source": "Prefabs/Warehouse_structural/Components/Ceeling_Lamp.prefab",
+            "Patches": [
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/Component_[6945026850029702537]/Parent Entity",
+                    "value": "../Entity_[372320632212548]"
+                },
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/Component_[6945026850029702537]/Transform Data/Translate/1",
+                    "value": -7.477227210998535
+                }
+            ]
+        },
+        "Instance_[42116993065597]": {
+            "Source": "Prefabs/Warehouse_structural/Components/Ceeling_Lamp.prefab",
+            "Patches": [
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/Component_[6945026850029702537]/Parent Entity",
+                    "value": "../Entity_[372320632212548]"
+                },
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/Component_[6945026850029702537]/Transform Data/Translate/1",
+                    "value": 7.444989204406738
+                },
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/Component_[6945026850029702537]/Transform Data/Translate/2",
+                    "value": -0.0096588134765625
+                }
+            ]
+        },
+        "Instance_[42121288032893]": {
+            "Source": "Prefabs/Warehouse_structural/Components/Ceeling_Lamp.prefab",
+            "Patches": [
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/Component_[6945026850029702537]/Parent Entity",
+                    "value": "../Entity_[372320632212548]"
+                }
+            ]
+        },
+        "Instance_[42164237705853]": {
+            "Source": "Prefabs/Warehouse_structural/Components/Ceeling_Lamp.prefab",
+            "Patches": [
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/Component_[6945026850029702537]/Parent Entity",
+                    "value": "../Entity_[372346402016324]"
+                },
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/Component_[6945026850029702537]/Transform Data/Translate/1",
+                    "value": 7.426568031311035
+                }
+            ]
+        },
+        "Instance_[42168532673149]": {
+            "Source": "Prefabs/Warehouse_structural/Components/Ceeling_Lamp.prefab",
+            "Patches": [
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/Component_[6945026850029702537]/Parent Entity",
+                    "value": "../Entity_[372346402016324]"
+                }
+            ]
+        },
+        "Instance_[42172827640445]": {
+            "Source": "Prefabs/Warehouse_structural/Components/Ceeling_Lamp.prefab",
+            "Patches": [
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/Component_[6945026850029702537]/Parent Entity",
+                    "value": "../Entity_[372346402016324]"
+                },
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/Component_[6945026850029702537]/Transform Data/Translate/1",
+                    "value": -7.480495452880859
+                }
+            ]
+        },
+        "Instance_[42215777313405]": {
+            "Source": "Prefabs/Warehouse_structural/Components/Ceeling_Lamp.prefab",
+            "Patches": [
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/Component_[6945026850029702537]/Parent Entity",
+                    "value": "../Entity_[372337812081732]"
+                },
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/Component_[6945026850029702537]/Transform Data/Translate/1",
+                    "value": 7.418001174926758
+                }
+            ]
+        },
+        "Instance_[42220072280701]": {
+            "Source": "Prefabs/Warehouse_structural/Components/Ceeling_Lamp.prefab",
+            "Patches": [
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/Component_[6945026850029702537]/Parent Entity",
+                    "value": "../Entity_[372337812081732]"
+                },
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/Component_[6945026850029702537]/Transform Data/Translate/1",
+                    "value": -7.496318817138672
+                },
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/Component_[6945026850029702537]/Transform Data/Translate/2",
+                    "value": -0.004523277282714844
+                }
+            ]
+        },
+        "Instance_[42224367247997]": {
+            "Source": "Prefabs/Warehouse_structural/Components/Ceeling_Lamp.prefab",
+            "Patches": [
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/Component_[6945026850029702537]/Parent Entity",
+                    "value": "../Entity_[372337812081732]"
+                }
+            ]
+        },
+        "Instance_[42267316920957]": {
+            "Source": "Prefabs/Warehouse_structural/Components/Ceeling_Lamp.prefab",
+            "Patches": [
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/Component_[6945026850029702537]/Parent Entity",
+                    "value": "../Entity_[372329222147140]"
+                },
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/Component_[6945026850029702537]/Transform Data/Translate/0",
+                    "value": 0.004425048828125
+                },
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/Component_[6945026850029702537]/Transform Data/Translate/1",
+                    "value": -7.498147964477539
+                },
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/Component_[6945026850029702537]/Transform Data/Translate/2",
+                    "value": 0.007918357849121094
+                }
+            ]
+        },
+        "Instance_[42271611888253]": {
+            "Source": "Prefabs/Warehouse_structural/Components/Ceeling_Lamp.prefab",
+            "Patches": [
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/Component_[6945026850029702537]/Parent Entity",
+                    "value": "../Entity_[372329222147140]"
+                },
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/Component_[6945026850029702537]/Transform Data/Translate/0",
+                    "value": 0.02536773681640625
+                },
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/Component_[6945026850029702537]/Transform Data/Translate/1",
+                    "value": 7.447552680969238
+                }
+            ]
+        },
+        "Instance_[42275906855549]": {
+            "Source": "Prefabs/Warehouse_structural/Components/Ceeling_Lamp.prefab",
+            "Patches": [
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/Component_[6945026850029702537]/Parent Entity",
+                    "value": "../Entity_[372329222147140]"
+                }
+            ]
+        },
+        "Instance_[42318856528509]": {
+            "Source": "Prefabs/Warehouse_structural/Components/Ceeling_Lamp.prefab",
+            "Patches": [
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/Component_[6945026850029702537]/Parent Entity",
+                    "value": "../Entity_[372316337245252]"
+                },
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/Component_[6945026850029702537]/Transform Data/Translate/0",
+                    "value": -9.5367431640625e-7
+                }
+            ]
+        },
+        "Instance_[42323151495805]": {
+            "Source": "Prefabs/Warehouse_structural/Components/Ceeling_Lamp.prefab",
+            "Patches": [
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/Component_[6945026850029702537]/Parent Entity",
+                    "value": "../Entity_[372316337245252]"
+                },
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/Component_[6945026850029702537]/Transform Data/Translate/0",
+                    "value": -0.009557723999023438
+                },
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/Component_[6945026850029702537]/Transform Data/Translate/1",
+                    "value": 7.452919960021973
+                },
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/Component_[6945026850029702537]/Transform Data/Translate/2",
+                    "value": 0.006000518798828125
+                }
+            ]
+        },
+        "Instance_[42327446463101]": {
+            "Source": "Prefabs/Warehouse_structural/Components/Ceeling_Lamp.prefab",
+            "Patches": [
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/Component_[6945026850029702537]/Parent Entity",
+                    "value": "../Entity_[372316337245252]"
+                },
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/Component_[6945026850029702537]/Transform Data/Translate/0",
+                    "value": -9.5367431640625e-7
+                },
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/Component_[6945026850029702537]/Transform Data/Translate/1",
+                    "value": -7.520071983337402
+                }
+            ]
+        },
+        "Instance_[7675729438561]": {
+            "Source": "Prefabs/Warehouse_structural/Components/Ceeling_Lamp.prefab",
+            "Patches": [
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/Component_[6945026850029702537]/Parent Entity",
+                    "value": "../Entity_[372324927179844]"
+                },
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/Component_[6945026850029702537]/Transform Data/Translate/1",
+                    "value": -7.499316215515137
+                },
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/Component_[6945026850029702537]/Transform Data/Translate/2",
+                    "value": -0.002166748046875
+                }
+            ]
+        },
+        "Instance_[7680024405857]": {
+            "Source": "Prefabs/Warehouse_structural/Components/Ceeling_Lamp.prefab",
+            "Patches": [
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/Component_[6945026850029702537]/Parent Entity",
+                    "value": "../Entity_[372324927179844]"
+                }
+            ]
+        },
+        "Instance_[7684319373153]": {
+            "Source": "Prefabs/Warehouse_structural/Components/Ceeling_Lamp.prefab",
+            "Patches": [
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/Component_[6945026850029702537]/Parent Entity",
+                    "value": "../Entity_[372324927179844]"
+                },
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/Component_[6945026850029702537]/Transform Data/Translate/1",
+                    "value": 7.447383880615234
+                },
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/Component_[6945026850029702537]/Transform Data/Translate/2",
+                    "value": -0.0022640228271484375
+                }
+            ]
+        }
+    }
+}
