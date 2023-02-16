@@ -212,7 +212,7 @@
         },
         "Entity_[15629654211104]": {
             "Id": "Entity_[15629654211104]",
-            "Name": "fr_wheel_link",
+            "Name": "Right_wheel_link",
             "Components": {
                 "Component_[10222499577136139720]": {
                     "$type": "EditorDisabledCompositionComponent",
@@ -370,7 +370,32 @@
                 },
                 "Component_[10929675154631365285]": {
                     "$type": "EditorDisabledCompositionComponent",
-                    "Id": 10929675154631365285
+                    "Id": 10929675154631365285,
+                    "DisabledComponents": [
+                        {
+                            "$type": "GenericComponentWrapper",
+                            "Id": 8264120652960513662,
+                            "m_template": {
+                                "$type": "ROS2CameraSensorComponent",
+                                "SensorConfiguration": {
+                                    "Publishers": {
+                                        "Camera Info": {
+                                            "Type": "sensor_msgs::msg::CameraInfo",
+                                            "Topic": "camera_info"
+                                        },
+                                        "Color Image": {
+                                            "Type": "sensor_msgs::msg::Image",
+                                            "Topic": "camera_image_color"
+                                        },
+                                        "Depth Image": {
+                                            "Type": "sensor_msgs::msg::Image",
+                                            "Topic": "camera_image_depth"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    ]
                 },
                 "Component_[14019497545971552389]": {
                     "$type": "EditorPendingCompositionComponent",
@@ -398,9 +423,9 @@
                     "Parent Entity": "Entity_[15659718982176]",
                     "Transform Data": {
                         "Translate": [
-                            0.4795188903808594,
+                            0.5260543823242188,
                             0.0,
-                            0.03163504600524902
+                            0.031635284423828125
                         ],
                         "Rotate": [
                             -0.00008020881796255708,
@@ -412,12 +437,19 @@
                 "Component_[7311879232144269420]": {
                     "$type": "EditorLockComponent",
                     "Id": 7311879232144269420
+                },
+                "Component_[9031766191400117669]": {
+                    "$type": "GenericComponentWrapper",
+                    "Id": 9031766191400117669,
+                    "m_template": {
+                        "$type": "ROS2FrameComponent"
+                    }
                 }
             }
         },
         "Entity_[15638244145696]": {
             "Id": "Entity_[15638244145696]",
-            "Name": "vis",
+            "Name": "visual",
             "Components": {
                 "Component_[10311920987167308953]": {
                     "$type": "EditorOnlyEntityComponent",
@@ -618,7 +650,7 @@
         },
         "Entity_[15646834080288]": {
             "Id": "Entity_[15646834080288]",
-            "Name": "lift_effector",
+            "Name": "Lift_effector",
             "Components": {
                 "Component_[12188113980475712902]": {
                     "$type": "EditorOnlyEntityComponent",
@@ -771,7 +803,7 @@
         },
         "Entity_[15651129047584]": {
             "Id": "Entity_[15651129047584]",
-            "Name": "imu_link",
+            "Name": "IMU_link",
             "Components": {
                 "Component_[11483902887902604628]": {
                     "$type": "EditorInspectorComponent",
@@ -993,7 +1025,6 @@
                         "Entity_[15719848524320]",
                         "Entity_[15668308916768]",
                         "Entity_[15625359243808]",
-                        "Entity_[15724143491616]",
                         "Entity_[15672603884064]",
                         "Entity_[15629654211104]",
                         "Entity_[15651129047584]",
@@ -1226,7 +1257,7 @@
         },
         "Entity_[15672603884064]": {
             "Id": "Entity_[15672603884064]",
-            "Name": "fl_wheel_link",
+            "Name": "Left_wheel_link",
             "Components": {
                 "Component_[11532719563339504114]": {
                     "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
@@ -1470,7 +1501,7 @@
         },
         "Entity_[15681193818656]": {
             "Id": "Entity_[15681193818656]",
-            "Name": "light_side_R",
+            "Name": "light_side_L",
             "Components": {
                 "Component_[11897596323041651801]": {
                     "$type": "EditorOnlyEntityComponent",
@@ -1648,7 +1679,7 @@
         },
         "Entity_[15689783753248]": {
             "Id": "Entity_[15689783753248]",
-            "Name": "lights",
+            "Name": "Lights",
             "Components": {
                 "Component_[12419931558452825679]": {
                     "$type": "EditorLockComponent",
@@ -1804,7 +1835,7 @@
         },
         "Entity_[15698373687840]": {
             "Id": "Entity_[15698373687840]",
-            "Name": "light_hfront_green",
+            "Name": "Light_front_green",
             "Components": {
                 "Component_[10180472951405841434]": {
                     "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
@@ -1953,7 +1984,7 @@
         },
         "Entity_[15706963622432]": {
             "Id": "Entity_[15706963622432]",
-            "Name": "lift",
+            "Name": "Lift",
             "Components": {
                 "Component_[10099653013469338703]": {
                     "$type": "EditorInspectorComponent",
@@ -2105,7 +2136,7 @@
         },
         "Entity_[15711258589728]": {
             "Id": "Entity_[15711258589728]",
-            "Name": "fr_wheel_link_visual",
+            "Name": "R_wheel_link_visual",
             "Components": {
                 "Component_[10272901870725892912]": {
                     "$type": "EditorOnlyEntityComponent",
@@ -2193,7 +2224,7 @@
         },
         "Entity_[15715553557024]": {
             "Id": "Entity_[15715553557024]",
-            "Name": "fl_wheel_link_visual",
+            "Name": "L_wheel_link_visual",
             "Components": {
                 "Component_[10346297318647313753]": {
                     "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
@@ -2281,7 +2312,7 @@
         },
         "Entity_[15719848524320]": {
             "Id": "Entity_[15719848524320]",
-            "Name": "chassis_visual",
+            "Name": "Chassis_visual",
             "Components": {
                 "Component_[10777190793595124341]": {
                     "$type": "EditorDisabledCompositionComponent",
@@ -2410,7 +2441,10 @@
                 },
                 "Component_[4661506809947208287]": {
                     "$type": "EditorEntitySortComponent",
-                    "Id": 4661506809947208287
+                    "Id": 4661506809947208287,
+                    "Child Entity Order": [
+                        "Entity_[15724143491616]"
+                    ]
                 },
                 "Component_[4900351710492422465]": {
                     "$type": "EditorLockComponent",
@@ -2439,7 +2473,7 @@
         },
         "Entity_[15724143491616]": {
             "Id": "Entity_[15724143491616]",
-            "Name": "chassis_inside_lights",
+            "Name": "Chassis_inside_lights",
             "Components": {
                 "Component_[13161866500099870035]": {
                     "$type": "EditorDisabledCompositionComponent",
@@ -2465,17 +2499,17 @@
                 "Component_[14431861058031353286]": {
                     "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
                     "Id": 14431861058031353286,
-                    "Parent Entity": "Entity_[15659718982176]",
+                    "Parent Entity": "Entity_[15719848524320]",
                     "Transform Data": {
                         "Translate": [
-                            0.17840862274169922,
-                            -0.0005788803100585938,
-                            -0.06797623634338379
+                            -0.000578761100769043,
+                            -0.000545501708984375,
+                            -0.0010361671447753906
                         ],
                         "Rotate": [
-                            -85.8298110961914,
-                            89.97979736328125,
-                            175.907470703125
+                            89.99852752685547,
+                            0.020194290205836296,
+                            0.0776541605591774
                         ],
                         "UniformScale": 100.0
                     }
@@ -2606,7 +2640,7 @@
         },
         "Entity_[15728438458912]": {
             "Id": "Entity_[15728438458912]",
-            "Name": "lookat_target",
+            "Name": "Lookat_target",
             "Components": {
                 "Component_[10295412112257515152]": {
                     "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
