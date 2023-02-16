@@ -127,8 +127,14 @@ namespace ROS2
     AZStd::string ROS2CameraSensorComponent::GetCameraNameFromFrame(const AZ::Entity* entity) const
     {
         const auto* component = Utils::GetGameOrEditorComponent<ROS2FrameComponent>(entity);
-        AZStd::string cameraName = component->GetFrameID();
-        AZStd::replace(cameraName.begin(), cameraName.end(), '/', '_');
-        return cameraName;
+        AZ_Assert(component, "Entity %s has no ROS2CameraSensorComponent", entity->GetName().c_str());
+        if (component)
+        {
+            AZStd::string cameraName = component->GetFrameID();
+            AZStd::replace(cameraName.begin(), cameraName.end(), '/', '_');
+            return cameraName;
+        }
+        return AZStd::string{};
+
     }
 } // namespace ROS2

@@ -24,11 +24,11 @@ namespace ROS2
 {
     namespace CameraConstants
     {
-        const char* const ImageMessageType = "sensor_msgs::msg::Image";
-        const char* const DepthImageConfig = "Depth Image";
-        const char* const ColorImageConfig = "Color Image";
-        const char* const InfoConfig = "Camera Info";
-        const char* const CameraInfoMessageType = "sensor_msgs::msg::CameraInfo";
+        inline constexpr char ImageMessageType[] = "sensor_msgs::msg::Image";
+        inline constexpr char DepthImageConfig[] = "Depth Image";
+        inline constexpr char ColorImageConfig[] = "Color Image";
+        inline constexpr char InfoConfig[] = "Camera Info";
+        inline constexpr char CameraInfoMessageType[] = "sensor_msgs::msg::CameraInfo";
     } // namespace CameraConstants
 
     //! ROS2 Camera sensor component class
