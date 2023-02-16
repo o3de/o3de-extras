@@ -3661,7 +3661,7 @@
                         "Entity_[81950795116014]",
                         "Entity_[81353794661870]",
                         "Entity_[81572837993966]",
-                        "Entity_[81946500148718]"
+                        "Entity_[81418219171310]"
                     ]
                 },
                 "Component_[92805011640044331]": {
@@ -4764,7 +4764,7 @@
         },
         "Entity_[81353794661870]": {
             "Id": "Entity_[81353794661870]",
-            "Name": "movables",
+            "Name": "light_over_movables",
             "Components": {
                 "Component_[1193138643175768883]": {
                     "$type": "EditorVisibilityComponent",
@@ -5911,7 +5911,7 @@
                 "Component_[15533668683364229856]": {
                     "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
                     "Id": 15533668683364229856,
-                    "Parent Entity": "Entity_[81946500148718]",
+                    "Parent Entity": "Entity_[81285075185134]",
                     "Transform Data": {
                         "Translate": [
                             20.691036224365234,
@@ -8509,7 +8509,7 @@
         },
         "Entity_[81572837993966]": {
             "Id": "Entity_[81572837993966]",
-            "Name": "storage",
+            "Name": "light_over_storage",
             "Components": {
                 "Component_[10246961423769789808]": {
                     "$type": "EditorPendingCompositionComponent",
@@ -15071,60 +15071,9 @@
                 }
             }
         },
-        "Entity_[81946500148718]": {
-            "Id": "Entity_[81946500148718]",
-            "Name": "walls",
-            "Components": {
-                "Component_[10175776806090782030]": {
-                    "$type": "EditorVisibilityComponent",
-                    "Id": 10175776806090782030
-                },
-                "Component_[10629843994072401040]": {
-                    "$type": "EditorEntitySortComponent",
-                    "Id": 10629843994072401040,
-                    "Child Entity Order": [
-                        "Entity_[81418219171310]"
-                    ]
-                },
-                "Component_[11522997432416744676]": {
-                    "$type": "EditorDisabledCompositionComponent",
-                    "Id": 11522997432416744676
-                },
-                "Component_[12461592269643790466]": {
-                    "$type": "EditorEntityIconComponent",
-                    "Id": 12461592269643790466
-                },
-                "Component_[16628138840062963776]": {
-                    "$type": "EditorOnlyEntityComponent",
-                    "Id": 16628138840062963776
-                },
-                "Component_[4600583184341600804]": {
-                    "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
-                    "Id": 4600583184341600804,
-                    "Parent Entity": "Entity_[81285075185134]"
-                },
-                "Component_[4801568826666251851]": {
-                    "$type": "EditorInspectorComponent",
-                    "Id": 4801568826666251851,
-                    "ComponentOrderEntryArray": [
-                        {
-                            "ComponentId": 4600583184341600804
-                        }
-                    ]
-                },
-                "Component_[891565815989085296]": {
-                    "$type": "EditorLockComponent",
-                    "Id": 891565815989085296
-                },
-                "Component_[956407098376547693]": {
-                    "$type": "EditorPendingCompositionComponent",
-                    "Id": 956407098376547693
-                }
-            }
-        },
         "Entity_[81950795116014]": {
             "Id": "Entity_[81950795116014]",
-            "Name": "movables",
+            "Name": "light_over_movables",
             "Components": {
                 "Component_[1193138643175768883]": {
                     "$type": "EditorVisibilityComponent",
@@ -25556,7 +25505,7 @@
             ]
         },
         "Instance_[3710762603770]": {
-            "Source": "Prefabs/Movable_blue.prefab",
+            "Source": "Prefabs/Warehouse_storage/Misc/Movable_blue.prefab",
             "Patches": [
                 {
                     "op": "replace",
@@ -26306,7 +26255,7 @@
             ]
         },
         "Instance_[3792366982394]": {
-            "Source": "Prefabs/Movable_blue.prefab",
+            "Source": "Prefabs/Warehouse_storage/Misc/Movable_blue.prefab",
             "Patches": [
                 {
                     "op": "replace",
@@ -26341,7 +26290,7 @@
             ]
         },
         "Instance_[3805251884282]": {
-            "Source": "Prefabs/Movable_blue.prefab",
+            "Source": "Prefabs/Warehouse_storage/Misc/Movable_blue.prefab",
             "Patches": [
                 {
                     "op": "replace",
@@ -26376,7 +26325,7 @@
             ]
         },
         "Instance_[3809546851578]": {
-            "Source": "Prefabs/Movable_blue.prefab",
+            "Source": "Prefabs/Warehouse_storage/Misc/Movable_blue.prefab",
             "Patches": [
                 {
                     "op": "replace",
@@ -27346,7 +27295,7 @@
             ]
         },
         "Instance_[898623017485287]": {
-            "Source": "Prefabs/Movable_blue.prefab",
+            "Source": "Prefabs/Warehouse_storage/Misc/Movable_blue.prefab",
             "Patches": [
                 {
                     "op": "replace",
@@ -27381,7 +27330,7 @@
             ]
         },
         "Instance_[898627312452583]": {
-            "Source": "Prefabs/Movable_blue.prefab",
+            "Source": "Prefabs/Warehouse_storage/Misc/Movable_blue.prefab",
             "Patches": [
                 {
                     "op": "replace",
@@ -27416,7 +27365,7 @@
             ]
         },
         "Instance_[898631607419879]": {
-            "Source": "Prefabs/Movable_blue.prefab",
+            "Source": "Prefabs/Warehouse_storage/Misc/Movable_blue.prefab",
             "Patches": [
                 {
                     "op": "replace",
@@ -27451,7 +27400,7 @@
             ]
         },
         "Instance_[898635902387175]": {
-            "Source": "Prefabs/Movable_blue.prefab",
+            "Source": "Prefabs/Warehouse_storage/Misc/Movable_blue.prefab",
             "Patches": [
                 {
                     "op": "replace",
@@ -27486,7 +27435,7 @@
             ]
         },
         "Instance_[965551492858855]": {
-            "Source": "Prefabs/Movable_blue.prefab",
+            "Source": "Prefabs/Warehouse_storage/Misc/Movable_blue.prefab",
             "Patches": [
                 {
                     "op": "replace",
@@ -27521,7 +27470,7 @@
             ]
         },
         "Instance_[965555787826151]": {
-            "Source": "Prefabs/Movable_blue.prefab",
+            "Source": "Prefabs/Warehouse_storage/Misc/Movable_blue.prefab",
             "Patches": [
                 {
                     "op": "replace",
@@ -27556,7 +27505,7 @@
             ]
         },
         "Instance_[965560082793447]": {
-            "Source": "Prefabs/Movable_blue.prefab",
+            "Source": "Prefabs/Warehouse_storage/Misc/Movable_blue.prefab",
             "Patches": [
                 {
                     "op": "replace",
@@ -27591,7 +27540,7 @@
             ]
         },
         "Instance_[965564377760743]": {
-            "Source": "Prefabs/Movable_blue.prefab",
+            "Source": "Prefabs/Warehouse_storage/Misc/Movable_blue.prefab",
             "Patches": [
                 {
                     "op": "replace",
@@ -27626,7 +27575,7 @@
             ]
         },
         "Instance_[965568672728039]": {
-            "Source": "Prefabs/Movable_blue.prefab",
+            "Source": "Prefabs/Warehouse_storage/Misc/Movable_blue.prefab",
             "Patches": [
                 {
                     "op": "replace",
@@ -27661,7 +27610,7 @@
             ]
         },
         "Instance_[965572967695335]": {
-            "Source": "Prefabs/Movable_blue.prefab",
+            "Source": "Prefabs/Warehouse_storage/Misc/Movable_blue.prefab",
             "Patches": [
                 {
                     "op": "replace",
@@ -27696,7 +27645,7 @@
             ]
         },
         "Instance_[965577262662631]": {
-            "Source": "Prefabs/Movable_blue.prefab",
+            "Source": "Prefabs/Warehouse_storage/Misc/Movable_blue.prefab",
             "Patches": [
                 {
                     "op": "replace",
@@ -27731,7 +27680,7 @@
             ]
         },
         "Instance_[965581557629927]": {
-            "Source": "Prefabs/Movable_blue.prefab",
+            "Source": "Prefabs/Warehouse_storage/Misc/Movable_blue.prefab",
             "Patches": [
                 {
                     "op": "replace",
@@ -27766,7 +27715,7 @@
             ]
         },
         "Instance_[965684636845031]": {
-            "Source": "Prefabs/Movable_blue.prefab",
+            "Source": "Prefabs/Warehouse_storage/Misc/Movable_blue.prefab",
             "Patches": [
                 {
                     "op": "replace",
@@ -27801,7 +27750,7 @@
             ]
         },
         "Instance_[965688931812327]": {
-            "Source": "Prefabs/Movable_blue.prefab",
+            "Source": "Prefabs/Warehouse_storage/Misc/Movable_blue.prefab",
             "Patches": [
                 {
                     "op": "replace",
@@ -27836,7 +27785,7 @@
             ]
         },
         "Instance_[965693226779623]": {
-            "Source": "Prefabs/Movable_blue.prefab",
+            "Source": "Prefabs/Warehouse_storage/Misc/Movable_blue.prefab",
             "Patches": [
                 {
                     "op": "replace",
@@ -27871,7 +27820,7 @@
             ]
         },
         "Instance_[965697521746919]": {
-            "Source": "Prefabs/Movable_blue.prefab",
+            "Source": "Prefabs/Warehouse_storage/Misc/Movable_blue.prefab",
             "Patches": [
                 {
                     "op": "replace",
@@ -27906,7 +27855,7 @@
             ]
         },
         "Instance_[965701816714215]": {
-            "Source": "Prefabs/Movable_blue.prefab",
+            "Source": "Prefabs/Warehouse_storage/Misc/Movable_blue.prefab",
             "Patches": [
                 {
                     "op": "replace",
@@ -27941,7 +27890,7 @@
             ]
         },
         "Instance_[965706111681511]": {
-            "Source": "Prefabs/Movable_blue.prefab",
+            "Source": "Prefabs/Warehouse_storage/Misc/Movable_blue.prefab",
             "Patches": [
                 {
                     "op": "replace",
@@ -27976,7 +27925,7 @@
             ]
         },
         "Instance_[965710406648807]": {
-            "Source": "Prefabs/Movable_blue.prefab",
+            "Source": "Prefabs/Warehouse_storage/Misc/Movable_blue.prefab",
             "Patches": [
                 {
                     "op": "replace",
@@ -28011,7 +27960,7 @@
             ]
         },
         "Instance_[965714701616103]": {
-            "Source": "Prefabs/Movable_blue.prefab",
+            "Source": "Prefabs/Warehouse_storage/Misc/Movable_blue.prefab",
             "Patches": [
                 {
                     "op": "replace",

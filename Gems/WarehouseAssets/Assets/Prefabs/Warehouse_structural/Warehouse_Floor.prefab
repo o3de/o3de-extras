@@ -69,6 +69,15 @@
                         }
                     }
                 },
+                "Component_[11910542729220429952]": {
+                    "$type": "EditorNonUniformScaleComponent",
+                    "Id": 11910542729220429952,
+                    "NonUniformScale": [
+                        0.9850000143051147,
+                        0.8100000023841858,
+                        1.0
+                    ]
+                },
                 "Component_[12130024678701540467]": {
                     "$type": "EditorEntityIconComponent",
                     "Id": 12130024678701540467
@@ -124,6 +133,11 @@
                                 "assetHint": "assets/warehouse/models/warehouse_floor.pxmesh"
                             },
                             "Configuration": {
+                                "Scale": [
+                                    0.9850000143051147,
+                                    0.8100000023841858,
+                                    1.0
+                                ],
                                 "PhysicsAsset": {
                                     "assetId": {
                                         "guid": "{4687EDB6-F57B-592A-8451-4A41BD678D9A}",
@@ -133,8 +147,10 @@
                                     "assetHint": "assets/warehouse/models/warehouse_floor.pxmesh"
                                 }
                             }
-                        }
-                    }
+                        },
+                        "HasNonUniformScale": true
+                    },
+                    "HasNonUniformScale": true
                 },
                 "Component_[17647558825107464022]": {
                     "$type": "EditorVisibilityComponent",
@@ -147,7 +163,14 @@
                 "Component_[4070093678589085014]": {
                     "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
                     "Id": 4070093678589085014,
-                    "Parent Entity": "ContainerEntity"
+                    "Parent Entity": "ContainerEntity",
+                    "Transform Data": {
+                        "Translate": [
+                            0.8478307723999023,
+                            0.24125289916992188,
+                            0.0
+                        ]
+                    }
                 },
                 "Component_[5344339738119561654]": {
                     "$type": "EditorStaticRigidBodyComponent",
