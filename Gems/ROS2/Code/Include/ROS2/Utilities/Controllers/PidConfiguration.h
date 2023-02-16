@@ -10,7 +10,7 @@
 #include <AzCore/Serialization/SerializeContext.h>
 #include <control_toolbox/pid.hpp>
 
-namespace ROS2::VehicleDynamics
+namespace ROS2::Controllers
 {
     //! A wrapper for ROS 2 control_toolbox pid controller.
     //! @see <a href="https://github.com/ros-controls/control_toolbox">control_toolbox</a>.
@@ -40,4 +40,4 @@ namespace ROS2::VehicleDynamics
 
         control_toolbox::Pid m_pid; //!< PID implementation object from control_toolbox (of ros2_control).
     };
-} // namespace ROS2::VehicleDynamics
+} // namespace ROS2::Controllers
