@@ -50,6 +50,7 @@ namespace ROS2
             AZ::Entity* parentEntity = nullptr;
             AZ::ComponentApplicationBus::BroadcastResult(parentEntity, &AZ::ComponentApplicationRequests::FindEntity, parentEntityId);
             AZ_Assert(parentEntity, "No parent entity id : %s", parentEntityId.ToString().c_str());
+
             auto* component = Utils::GetGameOrEditorComponent<ROS2FrameComponent>(parentEntity);
             if (component == nullptr)
             { // Parent entity has no ROS2Frame, but there can still be a ROS2Frame in its ancestors
@@ -152,12 +153,18 @@ namespace ROS2
         return Internal::GetFirstROS2FrameAncestor(GetEntity());
     }
 
-    const AZ::Transform& ROS2FrameComponent::GetFrameTransform() const
+    AZ::Transform ROS2FrameComponent::GetFrameTransform() const
     {
         auto* transformInterface = Internal::GetEntityTransformInterface(GetEntity());
-        if (GetParentROS2FrameComponent() != nullptr)
+        if (const auto* parentFrame = GetParentROS2FrameComponent(); parentFrame != nullptr)
         {
-            return transformInterface->GetLocalTM();
+            auto* ancestorTransformInterface = Internal::GetEntityTransformInterface(parentFrame->GetEntity());
+            AZ_Assert(ancestorTransformInterface, "No transform interface for an entity with a ROS2Frame component, which requires it!");
+
+            const auto worldFromAncestor = ancestorTransformInterface->GetWorldTM();
+            const auto worldFromThis = transformInterface->GetWorldTM();
+            const auto ancestorFromWorld = worldFromAncestor.GetInverse();
+            return ancestorFromWorld * worldFromThis;
         }
         return transformInterface->GetWorldTM();
     }
