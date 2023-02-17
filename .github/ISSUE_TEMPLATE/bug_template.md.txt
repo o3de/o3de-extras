@@ -39,7 +39,8 @@ You can get the commit ID by running the `git rev-parse HEAD` command on your cu
 
 **Desktop/Device (please complete the following information):**
  - Device: [e.g. PC, Mac, iPhone, Samsung] 
- - OS: [e.g. Windows, macOS, iOS, Android]
+ - OS: [e.g. Windows, macOS, iOS, Android, Linux, including distribution and version (e. g. Ubuntu 22.04 / Windows 11 22H2)]
+
  - Version [e.g. 10, Monterey, Oreo]
  - CPU [e.g. Intel I9-9900k , Ryzen 5900x, ]
  - GPU [AMD 6800 XT, NVidia RTX 3090]
