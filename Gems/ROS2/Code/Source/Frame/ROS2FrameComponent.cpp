@@ -161,9 +161,10 @@ namespace ROS2
             auto* ancestorTransformInterface = Internal::GetEntityTransformInterface(parentFrame->GetEntity());
             AZ_Assert(ancestorTransformInterface, "No transform interface for an entity with a ROS2Frame component, which requires it!");
 
-            const auto ancestorWorldTm = ancestorTransformInterface->GetWorldTM();
-            const auto thisWorldTm = transformInterface->GetWorldTM();
-            return ancestorWorldTm.GetInverse() * thisWorldTm;
+            const auto worldFromAncestor = ancestorTransformInterface->GetWorldTM();
+            const auto worldFromThis = transformInterface->GetWorldTM();
+            const auto ancestorFromWorld = worldFromAncestor.GetInverse();
+            return ancestorFromWorld * worldFromThis;
         }
         return transformInterface->GetWorldTM();
     }
