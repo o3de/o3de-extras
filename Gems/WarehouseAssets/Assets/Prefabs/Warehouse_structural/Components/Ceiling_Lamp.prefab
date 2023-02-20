@@ -1,7 +1,7 @@
 {
     "ContainerEntity": {
         "Id": "ContainerEntity",
-        "Name": "Ceeling_Lamp",
+        "Name": "Ceiling_Lamp",
         "Components": {
             "Component_[10245596801852125595]": {
                 "$type": "EditorPrefabComponent",

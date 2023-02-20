@@ -5268,7 +5268,6 @@
                         "Instance_[71732539184989]/ContainerEntity",
                         "Instance_[71702474413917]/ContainerEntity",
                         "Instance_[71711064348509]/ContainerEntity",
-                        "Instance_[71715359315805]/ContainerEntity",
                         "Instance_[71745424086877]/ContainerEntity",
                         "Instance_[71758308988765]/ContainerEntity",
                         "Instance_[71706769381213]/ContainerEntity",
@@ -6462,7 +6461,7 @@
                         "Instance_[71732539184989]/ContainerEntity",
                         "Instance_[71702474413917]/ContainerEntity",
                         "Instance_[71711064348509]/ContainerEntity",
-                        "Instance_[71715359315805]/ContainerEntity",
+                        "",
                         "Instance_[71745424086877]/ContainerEntity",
                         "Instance_[71758308988765]/ContainerEntity",
                         "Instance_[71706769381213]/ContainerEntity",
@@ -6484,7 +6483,6 @@
                         "Instance_[72020301993821]/ContainerEntity",
                         "Instance_[378088261441373]/ContainerEntity",
                         "Instance_[378062491637597]/ContainerEntity",
-                        "Instance_[378041016801117]/ContainerEntity",
                         "Instance_[378101146343261]/ContainerEntity",
                         "Instance_[378028131899229]/ContainerEntity",
                         "Instance_[378114031245149]/ContainerEntity",
@@ -24815,17 +24813,17 @@
                 {
                     "op": "replace",
                     "path": "/ContainerEntity/Components/Component_[12545710239443216069]/Transform Data/Translate/0",
-                    "value": 3.2244062423706055
+                    "value": 0.5084190368652344
                 },
                 {
                     "op": "replace",
                     "path": "/ContainerEntity/Components/Component_[12545710239443216069]/Transform Data/Translate/1",
-                    "value": 17.172183990478516
+                    "value": 18.183218002319336
                 },
                 {
                     "op": "replace",
                     "path": "/ContainerEntity/Components/Component_[12545710239443216069]/Transform Data/Translate/2",
-                    "value": -0.5800871849060059
+                    "value": -0.6035747528076172
                 }
             ]
         },
@@ -25636,31 +25634,6 @@
                     "op": "replace",
                     "path": "/ContainerEntity/Components/Component_[8441000053586138474]/Transform Data/Translate/0",
                     "value": -35.964752197265625
-                },
-                {
-                    "op": "replace",
-                    "path": "/ContainerEntity/Components/Component_[8441000053586138474]/Transform Data/Translate/1",
-                    "value": 0.19962787628173828
-                },
-                {
-                    "op": "replace",
-                    "path": "/Entities/Entity_[1261736678621474]/Components/Component_[15579174905508719867]/ColliderConfiguration/MaterialSlots/Slots/0/Name",
-                    "value": "MWarehouseProps"
-                }
-            ]
-        },
-        "Instance_[378041016801117]": {
-            "Source": "Prefabs/Warehouse_storage/Rack_protectors/Rack_front_protector.prefab",
-            "Patches": [
-                {
-                    "op": "replace",
-                    "path": "/ContainerEntity/Components/Component_[8441000053586138474]/Parent Entity",
-                    "value": "../Entity_[81452578909678]"
-                },
-                {
-                    "op": "replace",
-                    "path": "/ContainerEntity/Components/Component_[8441000053586138474]/Transform Data/Translate/0",
-                    "value": -43.31779479980469
                 },
                 {
                     "op": "replace",
@@ -26611,31 +26584,6 @@
                     "op": "replace",
                     "path": "/ContainerEntity/Components/Component_[8441000053586138474]/Transform Data/Translate/0",
                     "value": -12.211301803588867
-                },
-                {
-                    "op": "replace",
-                    "path": "/ContainerEntity/Components/Component_[8441000053586138474]/Transform Data/Translate/1",
-                    "value": 0.19962787628173828
-                },
-                {
-                    "op": "replace",
-                    "path": "/Entities/Entity_[1261736678621474]/Components/Component_[15579174905508719867]/ColliderConfiguration/MaterialSlots/Slots/0/Name",
-                    "value": "MWarehouseProps"
-                }
-            ]
-        },
-        "Instance_[71715359315805]": {
-            "Source": "Prefabs/Warehouse_storage/Rack_protectors/Rack_front_protector.prefab",
-            "Patches": [
-                {
-                    "op": "replace",
-                    "path": "/ContainerEntity/Components/Component_[8441000053586138474]/Parent Entity",
-                    "value": "../Entity_[81379564465646]"
-                },
-                {
-                    "op": "replace",
-                    "path": "/ContainerEntity/Components/Component_[8441000053586138474]/Transform Data/Translate/0",
-                    "value": -43.31779479980469
                 },
                 {
                     "op": "replace",

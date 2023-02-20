@@ -1,22 +1,15 @@
 
 # Query the gem name from the gem.json file if possible
-# otherwise fallback to using WarehouseAssets
-o3de_find_ancestor_gem_root(gem_path gem_name "${CMAKE_CURRENT_SOURCE_DIR}")
+# otherwise fallback to using WarehouseSample
+o3de_find_ancestor_gem_root(gem_root_path gem_name "${CMAKE_CURRENT_SOURCE_DIR}")
 if (NOT gem_name)
     set(gem_name "WarehouseAssets")
 endif()
 
-# Fallback to using the current source CMakeLists.txt directory as the gem root path
-if (NOT gem_path)
-    set(gem_path ${CMAKE_CURRENT_SOURCE_DIR})
+# This will export the path to the directory containing the gem.json
+# to the "SourcePaths" entry within the "cmake_dependencies.<project>.assetbuilder.setreg"
+# which is generated when cmake is run
+# This path is the gem root directory
+if(PAL_TRAIT_BUILD_HOST_TOOLS)
+    ly_create_alias(NAME ${gem_name}.Builders NAMESPACE Gem)
 endif()
-
-set(gem_json ${gem_path}/gem.json)
-
-o3de_restricted_path(${gem_json} gem_restricted_path gem_parent_relative_path)
-
-o3de_pal_dir(pal_dir ${CMAKE_CURRENT_SOURCE_DIR}/Platform/${PAL_PLATFORM_NAME} "${gem_restricted_path}" "${gem_path}" "${gem_parent_relative_path}")
-
-ly_add_external_target_path(${CMAKE_CURRENT_SOURCE_DIR}/3rdParty)
-
-add_subdirectory(Code)
