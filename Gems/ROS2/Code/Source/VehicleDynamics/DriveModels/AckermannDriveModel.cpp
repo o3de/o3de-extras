@@ -21,7 +21,7 @@ namespace ROS2::VehicleDynamics
     void AckermannDriveModel::Reflect(AZ::ReflectContext* context)
     {
         AckermannModelLimits::Reflect(context);
-        PidConfiguration::Reflect(context);
+        ROS2::Controllers::PidConfiguration::Reflect(context);
         if (AZ::SerializeContext* serialize = azrtti_cast<AZ::SerializeContext*>(context))
         {
             serialize->Class<AckermannDriveModel, DriveModel>()

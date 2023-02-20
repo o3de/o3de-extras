@@ -8,7 +8,7 @@
 #pragma once
 
 #include <AzCore/Serialization/SerializeContext.h>
-#include <ROS2/VehicleDynamics/DriveModels/PidConfiguration.h>
+#include <ROS2/Utilities/Controllers/PidConfiguration.h>
 #include <VehicleDynamics/DriveModel.h>
 #include <VehicleDynamics/ModelLimits/AckermannModelLimits.h>
 #include <VehicleDynamics/VehicleConfiguration.h>
@@ -41,7 +41,7 @@ namespace ROS2::VehicleDynamics
         VehicleConfiguration m_vehicleConfiguration;
         AZStd::vector<WheelDynamicsData> m_driveWheelsData;
         AZStd::vector<SteeringDynamicsData> m_steeringData;
-        PidConfiguration m_steeringPid;
+        ROS2::Controllers::PidConfiguration m_steeringPid;
         float m_speedCommand = 0.0f;
         AckermannModelLimits m_limits;
     };

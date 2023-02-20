@@ -19,8 +19,8 @@ set(FILES
         Include/ROS2/Sensor/ROS2SensorComponent.h
         Include/ROS2/Sensor/SensorConfiguration.h
         Include/ROS2/Spawner/SpawnerBus.h
+        Include/ROS2/Utilities/Controllers/PidConfiguration.h
         Include/ROS2/Utilities/ROS2Conversions.h
         Include/ROS2/Utilities/ROS2Names.h
-        Include/ROS2/VehicleDynamics/DriveModels/PidConfiguration.h
         Include/ROS2/VehicleDynamics/VehicleInputControlBus.h
         )
