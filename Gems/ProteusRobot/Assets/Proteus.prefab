@@ -154,10 +154,10 @@
                         "Configuration": {
                             "ModelAsset": {
                                 "assetId": {
-                                    "guid": "{0042012D-310E-5380-8BFB-5B92949DA679}",
-                                    "subId": 278163077
+                                    "guid": "{D8E41FF6-BF62-5D4A-B4C3-B980586B3AB3}",
+                                    "subId": 283910451
                                 },
-                                "assetHint": "assets/proteusrobot/default_proteus_chassis_07c13738_36f4_5638_a16e_33582efa5ae2_.azmodel"
+                                "assetHint": "default_proteus_chassis_9a035ebc_98bb_5c21_b32c_f488b28ad1ff_.azmodel"
                             }
                         }
                     }
@@ -1011,9 +1011,6 @@
                     "Id": 639102350977932618,
                     "m_template": {
                         "$type": "ROS2FrameComponent",
-                        "Namespace Configuration": {
-                            "Namespace Strategy": 1
-                        },
                         "Frame Name": "base_link"
                     }
                 },
@@ -2761,11 +2758,10 @@
                     "m_template": {
                         "$type": "ROS2LidarSensorComponent",
                         "SensorConfiguration": {
-                            "Visualise": false,
                             "Publishers": {
                                 "sensor_msgs::msg::PointCloud2": {
                                     "Type": "sensor_msgs::msg::PointCloud2",
-                                    "Topic": "/pc"
+                                    "Topic": "pc"
                                 }
                             }
                         },
@@ -2792,7 +2788,8 @@
                     "$type": "GenericComponentWrapper",
                     "Id": 3344702525066984561,
                     "m_template": {
-                        "$type": "ROS2FrameComponent"
+                        "$type": "ROS2FrameComponent",
+                        "Frame Name": "lidar"
                     }
                 },
                 "Component_[415289785781429255]": {
