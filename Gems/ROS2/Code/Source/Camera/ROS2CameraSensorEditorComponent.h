@@ -19,7 +19,6 @@
 
 namespace ROS2
 {
-
     //! ROS2 Camera Editor sensor component class
     //! Allows turning an entity into a camera sensor in Editor
     //! Component draws camera frustrum in the Editor
@@ -44,7 +43,7 @@ namespace ROS2
         void BuildGameEntity(AZ::Entity* gameEntity) override;
 
     private:
-        //! EntityDebugDisplayEventBus::Handler override
+        // EntityDebugDisplayEventBus::Handler overrides
         void DisplayEntityViewport(const AzFramework::ViewportInfo& viewportInfo, AzFramework::DebugDisplayRequests& debugDisplay) override;
 
         AZStd::pair<AZStd::string, TopicConfiguration> MakeTopicConfigurationPair(

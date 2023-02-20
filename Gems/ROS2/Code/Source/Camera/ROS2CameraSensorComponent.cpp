@@ -28,7 +28,7 @@ namespace ROS2
         int height,
         bool colorCamera,
         bool depthCamera)
-        : m_VerticalFieldOfViewDeg(verticalFieldOfViewDeg)
+        : m_verticalFieldOfViewDeg(verticalFieldOfViewDeg)
         , m_width(width)
         , m_height(height)
         , m_colorCamera(colorCamera)
@@ -44,7 +44,7 @@ namespace ROS2
         {
             serialize->Class<ROS2CameraSensorComponent, ROS2SensorComponent>()
                 ->Version(3)
-                ->Field("VerticalFieldOfViewDeg", &ROS2CameraSensorComponent::m_VerticalFieldOfViewDeg)
+                ->Field("VerticalFieldOfViewDeg", &ROS2CameraSensorComponent::m_verticalFieldOfViewDeg)
                 ->Field("Width", &ROS2CameraSensorComponent::m_width)
                 ->Field("Height", &ROS2CameraSensorComponent::m_height)
                 ->Field("Depth", &ROS2CameraSensorComponent::m_depthCamera)
@@ -66,7 +66,7 @@ namespace ROS2
             ros2Node->create_publisher<sensor_msgs::msg::CameraInfo>(cameraInfoFullTopic.data(), cameraInfoPublisherConfig.GetQoS());
 
         const CameraSensorDescription description{
-            GetCameraNameFromFrame(GetEntity()), m_VerticalFieldOfViewDeg, m_width, m_height
+            GetCameraNameFromFrame(GetEntity()), m_verticalFieldOfViewDeg, m_width, m_height
         };
         if (m_colorCamera)
         {

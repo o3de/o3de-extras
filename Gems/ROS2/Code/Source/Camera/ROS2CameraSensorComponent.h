@@ -84,7 +84,7 @@ namespace ROS2
         //! @returns FrameID from ROS2FrameComponent
         AZStd::string GetCameraNameFromFrame(const AZ::Entity* entity) const;
 
-        float m_VerticalFieldOfViewDeg = 90.0f;
+        float m_verticalFieldOfViewDeg = 90.0f;
         int m_width = 640;
         int m_height = 480;
         bool m_colorCamera = true;

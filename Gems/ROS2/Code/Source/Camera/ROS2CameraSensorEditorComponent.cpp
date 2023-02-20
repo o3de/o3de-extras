@@ -10,6 +10,7 @@
 #include "ROS2CameraSensorComponent.h"
 #include <AzCore/Component/TransformBus.h>
 #include <ROS2/Frame/ROS2FrameComponent.h>
+
 namespace ROS2
 {
     ROS2CameraSensorEditorComponent::ROS2CameraSensorEditorComponent()
@@ -25,8 +26,7 @@ namespace ROS2
 
     void ROS2CameraSensorEditorComponent::Reflect(AZ::ReflectContext* context)
     {
-        auto* serialize = azrtti_cast<AZ::SerializeContext*>(context);
-        if (serialize)
+        if (auto* serialize = azrtti_cast<AZ::SerializeContext*>(context))
         {
             serialize->Class<ROS2CameraSensorEditorComponent, AzToolsFramework::Components::EditorComponentBase>()
                 ->Version(4)
@@ -37,10 +37,9 @@ namespace ROS2
                 ->Field("Color", &ROS2CameraSensorEditorComponent::m_colorCamera)
                 ->Field("SensorConfig", &ROS2CameraSensorEditorComponent::m_sensorConfiguration);
 
-            AZ::EditContext* ec = serialize->GetEditContext();
-            if (ec)
+            if (AZ::EditContext* editContext = serialize->GetEditContext())
             {
-                ec->Class<ROS2CameraSensorEditorComponent>("ROS2 Camera Sensor", "[Camera component]")
+                editContext->Class<ROS2CameraSensorEditorComponent>("ROS2 Camera Sensor", "[Camera component]")
                     ->ClassElement(AZ::Edit::ClassElements::EditorData, "")
                     ->Attribute(AZ::Edit::Attributes::Category, "ROS2")
                     ->Attribute(AZ::Edit::Attributes::AppearsInAddComponentMenu, AZ_CRC("Game"))
@@ -72,8 +71,8 @@ namespace ROS2
 
     void ROS2CameraSensorEditorComponent::Deactivate()
     {
-        AzFramework::EntityDebugDisplayEventBus::Handler::BusDisconnect();
         AzToolsFramework::Components::EditorComponentBase::Deactivate();
+        AzFramework::EntityDebugDisplayEventBus::Handler::BusDisconnect();
     }
 
     void ROS2CameraSensorEditorComponent::GetRequiredServices(AZ::ComponentDescriptor::DependencyArrayType& required)
@@ -98,13 +97,12 @@ namespace ROS2
     }
 
     void ROS2CameraSensorEditorComponent::DisplayEntityViewport(
-        const AzFramework::ViewportInfo& viewportInfo, AzFramework::DebugDisplayRequests& debugDisplay)
+        [[maybe_unused]] const AzFramework::ViewportInfo& viewportInfo, AzFramework::DebugDisplayRequests& debugDisplay)
     {
         if (!m_sensorConfiguration.m_visualise)
         {
             return;
         }
-        AZ_UNUSED(viewportInfo);
         const AZ::u32 stateBefore = debugDisplay.GetState();
         AZ::Transform transform = GetEntity()->GetTransform()->GetWorldTM();
 
