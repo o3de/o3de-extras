@@ -1,0 +1,604 @@
+{
+    "template_name": "FleetRobotTemplate",
+    "origin": "The primary repo for FleetRobotTemplate goes here: i.e. http://www.mydomain.com",
+    "license": "What license FleetRobotTemplate uses goes here: i.e. https://opensource.org/licenses/MIT",
+    "display_name": "FleetRobotTemplate",
+    "summary": "A short description of FleetRobotTemplate.",
+    "canonical_tags": [],
+    "user_tags": [
+        "FleetRobotTemplate"
+    ],
+    "icon_path": "preview.png",
+    "copyFiles": [
+        {
+            "file": ".gitignore",
+            "isTemplated": false
+        },
+        {
+            "file": "CMakeLists.txt",
+            "isTemplated": true
+        },
+        {
+            "file": "Config/default_aws_resource_mappings.json",
+            "isTemplated": false
+        },
+        {
+            "file": "Config/shader_global_build_options.json",
+            "isTemplated": false
+        },
+        {
+            "file": "Gem/${Name}_files.cmake",
+            "isTemplated": true
+        },
+        {
+            "file": "Gem/${Name}_shared_files.cmake",
+            "isTemplated": true
+        },
+        {
+            "file": "Gem/CMakeLists.txt",
+            "isTemplated": true
+        },
+        {
+            "file": "Gem/Include/${Name}/${Name}Bus.h",
+            "isTemplated": true
+        },
+        {
+            "file": "Gem/Platform/Android/${Name}_android_files.cmake",
+            "isTemplated": true
+        },
+        {
+            "file": "Gem/Platform/Android/${Name}_shared_android_files.cmake",
+            "isTemplated": true
+        },
+        {
+            "file": "Gem/Platform/Android/PAL_android.cmake",
+            "isTemplated": true
+        },
+        {
+            "file": "Gem/Platform/Linux/${Name}_linux_files.cmake",
+            "isTemplated": true
+        },
+        {
+            "file": "Gem/Platform/Linux/${Name}_shared_linux_files.cmake",
+            "isTemplated": true
+        },
+        {
+            "file": "Gem/Platform/Linux/PAL_linux.cmake",
+            "isTemplated": true
+        },
+        {
+            "file": "Gem/Platform/Mac/${Name}_mac_files.cmake",
+            "isTemplated": true
+        },
+        {
+            "file": "Gem/Platform/Mac/${Name}_shared_mac_files.cmake",
+            "isTemplated": true
+        },
+        {
+            "file": "Gem/Platform/Mac/PAL_mac.cmake",
+            "isTemplated": true
+        },
+        {
+            "file": "Gem/Platform/Windows/${Name}_shared_windows_files.cmake",
+            "isTemplated": true
+        },
+        {
+            "file": "Gem/Platform/Windows/${Name}_windows_files.cmake",
+            "isTemplated": true
+        },
+        {
+            "file": "Gem/Platform/Windows/PAL_windows.cmake",
+            "isTemplated": true
+        },
+        {
+            "file": "Gem/Platform/iOS/${Name}_ios_files.cmake",
+            "isTemplated": true
+        },
+        {
+            "file": "Gem/Platform/iOS/${Name}_shared_ios_files.cmake",
+            "isTemplated": true
+        },
+        {
+            "file": "Gem/Platform/iOS/PAL_ios.cmake",
+            "isTemplated": true
+        },
+        {
+            "file": "Gem/Registry/assetprocessor_settings.setreg",
+            "isTemplated": true
+        },
+        {
+            "file": "Gem/Source/${Name}Module.cpp",
+            "isTemplated": true
+        },
+        {
+            "file": "Gem/Source/${Name}SystemComponent.cpp",
+            "isTemplated": true
+        },
+        {
+            "file": "Gem/Source/${Name}SystemComponent.h",
+            "isTemplated": true
+        },
+        {
+            "file": "Gem/enabled_gems.cmake",
+            "isTemplated": true
+        },
+        {
+            "file": "Gem/gem.json",
+            "isTemplated": true
+        },
+        {
+            "file": "Levels/WarehouseScene/Warehouse.prefab",
+            "isTemplated": false
+        },
+        {
+            "file": "Levels/playground/playground.prefab",
+            "isTemplated": false
+        },
+        {
+            "file": "Platform/Android/android_project.cmake",
+            "isTemplated": true
+        },
+        {
+            "file": "Platform/Android/android_project.json",
+            "isTemplated": true
+        },
+        {
+            "file": "Platform/Linux/linux_project.cmake",
+            "isTemplated": true
+        },
+        {
+            "file": "Platform/Linux/linux_project.json",
+            "isTemplated": false
+        },
+        {
+            "file": "Platform/Mac/mac_project.cmake",
+            "isTemplated": true
+        },
+        {
+            "file": "Platform/Mac/mac_project.json",
+            "isTemplated": false
+        },
+        {
+            "file": "Platform/Windows/windows_project.cmake",
+            "isTemplated": true
+        },
+        {
+            "file": "Platform/Windows/windows_project.json",
+            "isTemplated": false
+        },
+        {
+            "file": "Platform/iOS/ios_project.cmake",
+            "isTemplated": true
+        },
+        {
+            "file": "Platform/iOS/ios_project.json",
+            "isTemplated": false
+        },
+        {
+            "file": "Registry/assetprocessor_settings.setreg",
+            "isTemplated": false
+        },
+        {
+            "file": "Registry/awscoreconfiguration.setreg",
+            "isTemplated": false
+        },
+        {
+            "file": "Registry/physxdebugconfiguration.setreg",
+            "isTemplated": false
+        },
+        {
+            "file": "Registry/physxdefaultsceneconfiguration.setreg",
+            "isTemplated": false
+        },
+        {
+            "file": "Registry/physxsystemconfiguration.setreg",
+            "isTemplated": false
+        },
+        {
+            "file": "Resources/GameSDK.ico",
+            "isTemplated": false
+        },
+        {
+            "file": "Resources/LegacyLogoLauncher.bmp",
+            "isTemplated": false
+        },
+        {
+            "file": "Resources/Platform/Mac/Images.xcassets/AppIcon.appiconset/Contents.json",
+            "isTemplated": false
+        },
+        {
+            "file": "Resources/Platform/Mac/Images.xcassets/AppIcon.appiconset/icon_128.png",
+            "isTemplated": false
+        },
+        {
+            "file": "Resources/Platform/Mac/Images.xcassets/AppIcon.appiconset/icon_128_2x.png",
+            "isTemplated": false
+        },
+        {
+            "file": "Resources/Platform/Mac/Images.xcassets/AppIcon.appiconset/icon_16.png",
+            "isTemplated": false
+        },
+        {
+            "file": "Resources/Platform/Mac/Images.xcassets/AppIcon.appiconset/icon_16_2x.png",
+            "isTemplated": false
+        },
+        {
+            "file": "Resources/Platform/Mac/Images.xcassets/AppIcon.appiconset/icon_256.png",
+            "isTemplated": false
+        },
+        {
+            "file": "Resources/Platform/Mac/Images.xcassets/AppIcon.appiconset/icon_256_2x.png",
+            "isTemplated": false
+        },
+        {
+            "file": "Resources/Platform/Mac/Images.xcassets/AppIcon.appiconset/icon_32.png",
+            "isTemplated": false
+        },
+        {
+            "file": "Resources/Platform/Mac/Images.xcassets/AppIcon.appiconset/icon_32_2x.png",
+            "isTemplated": false
+        },
+        {
+            "file": "Resources/Platform/Mac/Images.xcassets/AppIcon.appiconset/icon_512.png",
+            "isTemplated": false
+        },
+        {
+            "file": "Resources/Platform/Mac/Images.xcassets/AppIcon.appiconset/icon_512_2x.png",
+            "isTemplated": false
+        },
+        {
+            "file": "Resources/Platform/Mac/Images.xcassets/Contents.json",
+            "isTemplated": false
+        },
+        {
+            "file": "Resources/Platform/Mac/Info.plist",
+            "isTemplated": true
+        },
+        {
+            "file": "Resources/Platform/iOS/Images.xcassets/AppIcon.appiconset/Contents.json",
+            "isTemplated": false
+        },
+        {
+            "file": "Resources/Platform/iOS/Images.xcassets/AppIcon.appiconset/iPadAppIcon152x152.png",
+            "isTemplated": false
+        },
+        {
+            "file": "Resources/Platform/iOS/Images.xcassets/AppIcon.appiconset/iPadAppIcon76x76.png",
+            "isTemplated": false
+        },
+        {
+            "file": "Resources/Platform/iOS/Images.xcassets/AppIcon.appiconset/iPadProAppIcon167x167.png",
+            "isTemplated": false
+        },
+        {
+            "file": "Resources/Platform/iOS/Images.xcassets/AppIcon.appiconset/iPadSettingsIcon29x29.png",
+            "isTemplated": false
+        },
+        {
+            "file": "Resources/Platform/iOS/Images.xcassets/AppIcon.appiconset/iPadSettingsIcon58x58.png",
+            "isTemplated": false
+        },
+        {
+            "file": "Resources/Platform/iOS/Images.xcassets/AppIcon.appiconset/iPadSpotlightIcon40x40.png",
+            "isTemplated": false
+        },
+        {
+            "file": "Resources/Platform/iOS/Images.xcassets/AppIcon.appiconset/iPadSpotlightIcon80x80.png",
+            "isTemplated": false
+        },
+        {
+            "file": "Resources/Platform/iOS/Images.xcassets/AppIcon.appiconset/iPhoneAppIcon120x120.png",
+            "isTemplated": false
+        },
+        {
+            "file": "Resources/Platform/iOS/Images.xcassets/AppIcon.appiconset/iPhoneAppIcon180x180.png",
+            "isTemplated": false
+        },
+        {
+            "file": "Resources/Platform/iOS/Images.xcassets/AppIcon.appiconset/iPhoneSettingsIcon58x58.png",
+            "isTemplated": false
+        },
+        {
+            "file": "Resources/Platform/iOS/Images.xcassets/AppIcon.appiconset/iPhoneSettingsIcon87x87.png",
+            "isTemplated": false
+        },
+        {
+            "file": "Resources/Platform/iOS/Images.xcassets/AppIcon.appiconset/iPhoneSpotlightIcon120x120.png",
+            "isTemplated": false
+        },
+        {
+            "file": "Resources/Platform/iOS/Images.xcassets/AppIcon.appiconset/iPhoneSpotlightIcon80x80.png",
+            "isTemplated": false
+        },
+        {
+            "file": "Resources/Platform/iOS/Images.xcassets/Contents.json",
+            "isTemplated": false
+        },
+        {
+            "file": "Resources/Platform/iOS/Images.xcassets/LaunchImage.launchimage/Contents.json",
+            "isTemplated": false
+        },
+        {
+            "file": "Resources/Platform/iOS/Images.xcassets/LaunchImage.launchimage/iPadLaunchImage1024x768.png",
+            "isTemplated": false
+        },
+        {
+            "file": "Resources/Platform/iOS/Images.xcassets/LaunchImage.launchimage/iPadLaunchImage1536x2048.png",
+            "isTemplated": false
+        },
+        {
+            "file": "Resources/Platform/iOS/Images.xcassets/LaunchImage.launchimage/iPadLaunchImage2048x1536.png",
+            "isTemplated": false
+        },
+        {
+            "file": "Resources/Platform/iOS/Images.xcassets/LaunchImage.launchimage/iPadLaunchImage768x1024.png",
+            "isTemplated": false
+        },
+        {
+            "file": "Resources/Platform/iOS/Images.xcassets/LaunchImage.launchimage/iPhoneLaunchImage640x1136.png",
+            "isTemplated": false
+        },
+        {
+            "file": "Resources/Platform/iOS/Images.xcassets/LaunchImage.launchimage/iPhoneLaunchImage640x960.png",
+            "isTemplated": false
+        },
+        {
+            "file": "Resources/Platform/iOS/Info.plist",
+            "isTemplated": true
+        },
+        {
+            "file": "ShaderLib/README.md",
+            "isTemplated": false
+        },
+        {
+            "file": "ShaderLib/scenesrg.srgi",
+            "isTemplated": true
+        },
+        {
+            "file": "ShaderLib/viewsrg.srgi",
+            "isTemplated": true
+        },
+        {
+            "file": "autoexec.cfg",
+            "isTemplated": false
+        },
+        {
+            "file": "cmake/EngineFinder.cmake",
+            "isTemplated": false
+        },
+        {
+            "file": "game.cfg",
+            "isTemplated": false
+        },
+        {
+            "file": "preview.png",
+            "isTemplated": false
+        },
+        {
+            "file": "project.json",
+            "isTemplated": true
+        },
+        {
+            "file": "proteus_nav/README.md",
+            "isTemplated": false
+        },
+        {
+            "file": "proteus_nav/src/proteus_nav/launch/__pycache__/teleop.launch.cpython-310.pyc",
+            "isTemplated": false
+        },
+        {
+            "file": "proteus_nav/src/proteus_nav/launch/config/bt.xml",
+            "isTemplated": false
+        },
+        {
+            "file": "proteus_nav/src/proteus_nav/launch/config/config_multi.rviz",
+            "isTemplated": false
+        },
+        {
+            "file": "proteus_nav/src/proteus_nav/launch/config/navigation_multi_params.yaml",
+            "isTemplated": false
+        },
+        {
+            "file": "proteus_nav/src/proteus_nav/launch/config/slam_multi_params.yaml",
+            "isTemplated": false
+        },
+        {
+            "file": "proteus_nav/src/proteus_nav/launch/navigation_multi.launch.py",
+            "isTemplated": false
+        },
+        {
+            "file": "proteus_nav/src/proteus_nav/launch/teleop.launch.py",
+            "isTemplated": false
+        },
+        {
+            "file": "proteus_nav/src/proteus_nav/package.xml",
+            "isTemplated": false
+        },
+        {
+            "file": "proteus_nav/src/proteus_nav/proteus_nav/__init__.py",
+            "isTemplated": false
+        },
+        {
+            "file": "proteus_nav/src/proteus_nav/resource/proteus_nav",
+            "isTemplated": false
+        },
+        {
+            "file": "proteus_nav/src/proteus_nav/setup.cfg",
+            "isTemplated": false
+        },
+        {
+            "file": "proteus_nav/src/proteus_nav/setup.py",
+            "isTemplated": false
+        },
+        {
+            "file": "proteus_nav/src/proteus_nav/test/__pycache__/test_copyright.cpython-310-pytest-6.2.5.pyc",
+            "isTemplated": false
+        },
+        {
+            "file": "proteus_nav/src/proteus_nav/test/__pycache__/test_flake8.cpython-310-pytest-6.2.5.pyc",
+            "isTemplated": false
+        },
+        {
+            "file": "proteus_nav/src/proteus_nav/test/__pycache__/test_pep257.cpython-310-pytest-6.2.5.pyc",
+            "isTemplated": false
+        },
+        {
+            "file": "proteus_nav/src/proteus_nav/test/test_flake8.py",
+            "isTemplated": false
+        },
+        {
+            "file": "proteus_nav/src/proteus_nav/test/test_pep257.py",
+            "isTemplated": false
+        },
+        {
+            "file": "readme.md",
+            "isTemplated": false
+        }
+    ],
+    "createDirectories": [
+        {
+            "dir": "Assets"
+        },
+        {
+            "dir": "Config"
+        },
+        {
+            "dir": "Gem"
+        },
+        {
+            "dir": "Gem/Include"
+        },
+        {
+            "dir": "Gem/Include/${Name}"
+        },
+        {
+            "dir": "Gem/Platform"
+        },
+        {
+            "dir": "Gem/Platform/Android"
+        },
+        {
+            "dir": "Gem/Platform/Linux"
+        },
+        {
+            "dir": "Gem/Platform/Mac"
+        },
+        {
+            "dir": "Gem/Platform/Windows"
+        },
+        {
+            "dir": "Gem/Platform/iOS"
+        },
+        {
+            "dir": "Gem/Registry"
+        },
+        {
+            "dir": "Gem/Source"
+        },
+        {
+            "dir": "Levels"
+        },
+        {
+            "dir": "Levels/WarehouseScene"
+        },
+        {
+            "dir": "Levels/playground"
+        },
+        {
+            "dir": "Levels/playground/_savebackup"
+        },
+        {
+            "dir": "Levels/playground/_savebackup/2023-02-21 [13.25.33]"
+        },
+        {
+            "dir": "Platform"
+        },
+        {
+            "dir": "Platform/Android"
+        },
+        {
+            "dir": "Platform/Linux"
+        },
+        {
+            "dir": "Platform/Mac"
+        },
+        {
+            "dir": "Platform/Windows"
+        },
+        {
+            "dir": "Platform/iOS"
+        },
+        {
+            "dir": "Registry"
+        },
+        {
+            "dir": "Resources"
+        },
+        {
+            "dir": "Resources/Platform"
+        },
+        {
+            "dir": "Resources/Platform/Mac"
+        },
+        {
+            "dir": "Resources/Platform/Mac/Images.xcassets"
+        },
+        {
+            "dir": "Resources/Platform/Mac/Images.xcassets/AppIcon.appiconset"
+        },
+        {
+            "dir": "Resources/Platform/iOS"
+        },
+        {
+            "dir": "Resources/Platform/iOS/Images.xcassets"
+        },
+        {
+            "dir": "Resources/Platform/iOS/Images.xcassets/AppIcon.appiconset"
+        },
+        {
+            "dir": "Resources/Platform/iOS/Images.xcassets/LaunchImage.launchimage"
+        },
+        {
+            "dir": "ShaderLib"
+        },
+        {
+            "dir": "Shaders"
+        },
+        {
+            "dir": "Shaders/ShaderResourceGroups"
+        },
+        {
+            "dir": "cmake"
+        },
+        {
+            "dir": "proteus_nav"
+        },
+        {
+            "dir": "proteus_nav/src"
+        },
+        {
+            "dir": "proteus_nav/src/proteus_nav"
+        },
+        {
+            "dir": "proteus_nav/src/proteus_nav/launch"
+        },
+        {
+            "dir": "proteus_nav/src/proteus_nav/launch/__pycache__"
+        },
+        {
+            "dir": "proteus_nav/src/proteus_nav/launch/config"
+        },
+        {
+            "dir": "proteus_nav/src/proteus_nav/proteus_nav"
+        },
+        {
+            "dir": "proteus_nav/src/proteus_nav/resource"
+        },
+        {
+            "dir": "proteus_nav/src/proteus_nav/test"
+        },
+        {
+            "dir": "proteus_nav/src/proteus_nav/test/__pycache__"
+        }
+    ]
+}
