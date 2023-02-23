@@ -1,0 +1,17 @@
+{
+    "materialType": "@gemroot:Atom_Feature_Common@/Assets/Materials/Types/StandardPBR.materialtype",
+    "materialTypeVersion": 5,
+    "propertyValues": {
+        "baseColor.textureMap": "../Textures/WarehouseModules/WarehouseModulesBaseMap.png",
+        "emissive.enable": true,
+        "emissive.intensity": 10.720000267028809,
+        "emissive.textureMap": "../Textures/WarehouseModules/WarehouseModulesEmissive.png",
+        "metallic.textureMap": "../Textures/WarehouseModules/WarehouseModulesMaskMap_R.png",
+        "normal.textureMap": "../Textures/WarehouseModules/WarehouseModulesNormal.png",
+        "opacity.factor": 1.0,
+        "roughness.factor": 0.5,
+        "roughness.lowerBound": 0.9300000071525574,
+        "roughness.textureMap": "../Textures/WarehouseModules/WarehouseModulesMaskMap_A.png",
+        "roughness.upperBound": 0.14000000059604645
+    }
+}
