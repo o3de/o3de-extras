@@ -12,10 +12,9 @@
 #include <AzCore/std/containers/vector.h>
 
 #include <XR/XRBase.h>
-#include <XR/XRInstance.h>
 #include <XR/XRDevice.h>
-#include <XR/XRSession.h>
 #include <XR/XRInput.h>
+#include <XR/XRInstance.h>
 #include <XR/XRSpace.h>
 #include <XR/XRSwapChain.h>
 

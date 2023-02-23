@@ -11,14 +11,15 @@
 #include <AzCore/Memory/SystemAllocator.h>
 #include <AzCore/std/containers/vector.h>
 #include <AzCore/std/smart_ptr/intrusive_ptr.h>
+#include <Atom/RHI/ValidationLayer.h>
 #include <Atom/RHI.Reflect/Format.h>
+#include <XR/XRBase.h>
+#include <XR/XRDevice.h>
 #include <XR/XRObject.h>
+#include <XR/XRSession.h>
 
 namespace XR
 {
-    class Session;
-    class Device;
-
     //! This class will be responsible for creating multiple XR::SwapChain::ViewSwapchains
     //! (one per view). Each XR::SwapChain::ViewSwapchain will then be responsible
     //! for manging and synchronizing multiple swap chain images
@@ -75,7 +76,7 @@ namespace XR
         {
             AZ::RHI::ValidationMode m_validationMode = AZ::RHI::ValidationMode::Disabled;
             Ptr<Instance> m_instance;
-            Ptr<Session> m_session;
+            Ptr<XR::Session> m_session;
             Ptr<Device> m_device;
         };
 

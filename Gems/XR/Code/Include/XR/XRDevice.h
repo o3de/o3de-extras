@@ -13,12 +13,12 @@
 #include <Atom/RPI.Public/XR/XRRenderingInterface.h>
 #include <XR/XRBase.h>
 #include <XR/XRInstance.h>
-#include <XR/XRSwapChain.h>
 #include <XR/XRObject.h>
+#include <XR/XRSession.h>
 
 namespace XR
 {
-    class Session;
+    class SwapChain;
 
     //! Base XR device class which will provide access to the back-end concrete object
     class Device
@@ -68,7 +68,7 @@ namespace XR
         bool AcquireSwapChainImage(AZ::u32 viewIndex, SwapChain* swapChain);
 
         //! Register XR session with the device.
-        void RegisterSession(Ptr<Session> session);
+        void RegisterSession(Ptr<XR::Session> session);
 
         //! UnRegister XR session with the device.
         void UnRegisterSession();
