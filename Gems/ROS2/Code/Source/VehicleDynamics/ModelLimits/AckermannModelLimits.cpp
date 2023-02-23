@@ -20,7 +20,8 @@ namespace ROS2::VehicleDynamics
             serialize->Class<AckermannModelLimits>()
                 ->Version(1)
                 ->Field("SpeedLimit", &AckermannModelLimits::m_speedLimit)
-                ->Field("SteeringLimit", &AckermannModelLimits::m_steeringLimit);
+                ->Field("SteeringLimit", &AckermannModelLimits::m_steeringLimit)
+                ->Field("Acceleration", &AckermannModelLimits::m_accelearation);
 
             if (AZ::EditContext* ec = serialize->GetEditContext())
             {
@@ -34,7 +35,11 @@ namespace ROS2::VehicleDynamics
                     ->DataElement(
                         AZ::Edit::UIHandlers::Default, &AckermannModelLimits::m_steeringLimit, "Steering Limit", "Max steering angle (rad)")
                     ->Attribute(AZ::Edit::Attributes::Min, 0.0f)
-                    ->Attribute(AZ::Edit::Attributes::Max, 1.57f);
+                    ->Attribute(AZ::Edit::Attributes::Max, 1.57f)
+                    ->DataElement(
+                        AZ::Edit::UIHandlers::Default, &AckermannModelLimits::m_accelearation, "Acceleration", "Acceleration in m/s²")
+                    ->Attribute(AZ::Edit::Attributes::Min, 0.0f)
+                    ->Attribute(AZ::Edit::Attributes::Max, 100.0f);
             }
         }
     }
@@ -58,4 +63,15 @@ namespace ROS2::VehicleDynamics
         ret.m_jointRequestedPosition = { m_steeringLimit };
         return ret;
     }
+
+    float AckermannModelLimits::GetLinearSpeedLimit() const
+    {
+        return m_speedLimit;
+    }
+
+    float AckermannModelLimits::GetLinearAcceleration() const
+    {
+        return m_accelearation;
+    }
+
 } // namespace ROS2::VehicleDynamics

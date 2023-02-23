@@ -9,6 +9,7 @@
 
 #include <ROS2/Communication/QoS.h>
 #include <ROS2/Communication/TopicConfiguration.h>
+#include <ROS2/Utilities/Controllers/PidConfiguration.h>
 #include <VehicleDynamics/VehicleModelComponent.h>
 
 #include <Atom/RPI.Public/Pass/PassSystemInterface.h>
@@ -27,6 +28,7 @@ namespace ROS2
         QoS::Reflect(context);
         TopicConfiguration::Reflect(context);
         VehicleDynamics::VehicleModelComponent::Reflect(context);
+        ROS2::Controllers::PidConfiguration::Reflect(context);
         if (AZ::SerializeContext* serialize = azrtti_cast<AZ::SerializeContext*>(context))
         {
             serialize->Class<ROS2SystemComponent, AZ::Component>()->Version(0);

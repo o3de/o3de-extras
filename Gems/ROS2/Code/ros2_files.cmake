@@ -28,6 +28,10 @@ set(FILES
         Source/Imu/ROS2ImuSensorComponent.h
         Source/Lidar/LidarRaycaster.cpp
         Source/Lidar/LidarRaycaster.h
+        Source/Lidar/LidarRegistrarSystemComponent.cpp
+        Source/Lidar/LidarRegistrarSystemComponent.h
+        Source/Lidar/LidarSystem.cpp
+        Source/Lidar/LidarSystem.h
         Source/Lidar/LidarTemplate.cpp
         Source/Lidar/LidarTemplate.h
         Source/Lidar/LidarTemplateUtils.cpp
@@ -60,6 +64,7 @@ set(FILES
         Source/Spawner/ROS2SpawnerComponent.h
         Source/Spawner/ROS2SpawnPointComponent.cpp
         Source/Spawner/ROS2SpawnPointComponent.h
+        Source/Utilities/Controllers/PidConfiguration.cpp
         Source/Utilities/ROS2Conversions.cpp
         Source/Utilities/ROS2Names.cpp
         Source/VehicleDynamics/AxleConfiguration.cpp
@@ -70,7 +75,6 @@ set(FILES
         Source/VehicleDynamics/DriveModels/AckermannDriveModel.h
         Source/VehicleDynamics/DriveModels/SkidSteeringDriveModel.cpp
         Source/VehicleDynamics/DriveModels/SkidSteeringDriveModel.h
-        Source/VehicleDynamics/DriveModels/PidConfiguration.cpp
         Source/VehicleDynamics/ManualControlEventHandler.h
         Source/VehicleDynamics/Utilities.cpp
         Source/VehicleDynamics/Utilities.h

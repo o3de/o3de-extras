@@ -11,13 +11,16 @@ set(FILES
         Include/ROS2/Manipulator/MotorizedJointComponent.h
         Include/ROS2/RobotControl/ControlConfiguration.h
         Include/ROS2/RobotControl/ControlSubscriptionHandler.h
+        Include/ROS2/Lidar/LidarRaycasterBus.h
+        Include/ROS2/Lidar/LidarSystemBus.h
+        Include/ROS2/Lidar/LidarRegistrarBus.h
         Include/ROS2/ROS2Bus.h
         Include/ROS2/ROS2GemUtilities.h
         Include/ROS2/Sensor/ROS2SensorComponent.h
         Include/ROS2/Sensor/SensorConfiguration.h
         Include/ROS2/Spawner/SpawnerBus.h
+        Include/ROS2/Utilities/Controllers/PidConfiguration.h
         Include/ROS2/Utilities/ROS2Conversions.h
         Include/ROS2/Utilities/ROS2Names.h
-        Include/ROS2/VehicleDynamics/DriveModels/PidConfiguration.h
         Include/ROS2/VehicleDynamics/VehicleInputControlBus.h
         )

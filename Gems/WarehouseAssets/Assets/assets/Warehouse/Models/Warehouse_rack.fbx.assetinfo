@@ -1,0 +1,74 @@
+{
+    "values": [
+        {
+            "$type": "{5B03C8E6-8CEE-4DA0-A7FA-CD88689DD45B} MeshGroup",
+            "id": "{73712CEF-A87C-5903-A55E-F3D94F3D1BD8}",
+            "name": "Warehouse_rack",
+            "NodeSelectionList": {
+                "selectedNodes": [
+                    "RootNode",
+                    "RootNode.WarehouseRack"
+                ]
+            },
+            "export method": 2,
+            "PhysicsMaterialSlots": {
+                "Slots": [
+                    {
+                        "Name": "MWarehouseStorage"
+                    }
+                ]
+            }
+        },
+        {
+            "$type": "{07B356B7-3635-40B5-878A-FAC4EFD5AD86} MeshGroup",
+            "name": "Warehouse_rack",
+            "nodeSelectionList": {
+                "selectedNodes": [
+                    {},
+                    "RootNode",
+                    "RootNode.WarehouseRack"
+                ]
+            },
+            "rules": {
+                "rules": [
+                    {
+                        "$type": "MaterialRule"
+                    }
+                ]
+            },
+            "id": "{2B46BB6F-395D-552B-83BA-FEAB92D98A96}"
+        },
+        {
+            "$type": "{07B356B7-3635-40B5-878A-FAC4EFD5AD86} MeshGroup",
+            "name": "default_Warehouse_rack_A0169FBD_6AA8_55EE_A2E2_C07059EBEEB9_",
+            "nodeSelectionList": {
+                "selectedNodes": [
+                    "RootNode.WarehouseRack"
+                ]
+            },
+            "rules": {
+                "rules": [
+                    {
+                        "$type": "ProceduralMeshGroupRule"
+                    },
+                    {
+                        "$type": "UnmodifiableRule"
+                    },
+                    {
+                        "$type": "CoordinateSystemRule",
+                        "useAdvancedData": true
+                    },
+                    {
+                        "$type": "{6E796AC8-1484-4909-860A-6D3F22A7346F} LodRule"
+                    }
+                ]
+            },
+            "id": "{A0169FBD-6AA8-55EE-A2E2-C07059EBEEB9}"
+        },
+        {
+            "$type": "PrefabGroup",
+            "name": "Models/Warehouse_rack_fbx.procprefab",
+            "id": "{E8F1A024-112F-53B4-A807-ED44A7B6A011}"
+        }
+    ]
+}

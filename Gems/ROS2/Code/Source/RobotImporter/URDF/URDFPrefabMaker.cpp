@@ -267,8 +267,8 @@ namespace ROS2
             component->SetFrameID(AZStd::string(link->name.c_str(), link->name.size()));
         }
         m_visualsMaker.AddVisuals(link, entityId);
-        m_collidersMaker.AddColliders(link, entityId);
         m_inertialsMaker.AddInertial(link->inertial, entityId);
+        m_collidersMaker.AddColliders(link, entityId);
         return AZ::Success(entityId);
     }
 

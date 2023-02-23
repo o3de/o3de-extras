@@ -6,6 +6,8 @@
 set(FILES
     ../Assets/Editor/Images/Icons/Resources.qrc
     ../Assets/Editor/Images/Icons/ROS_import_icon.svg
+    Source/Lidar/LidarRegistrarEditorSystemComponent.cpp
+    Source/Lidar/LidarRegistrarEditorSystemComponent.h
     Source/RobotImporter/Pages/CheckAssetPage.cpp
     Source/RobotImporter/Pages/CheckAssetPage.h
     Source/RobotImporter/Pages/CheckUrdfPage.cpp

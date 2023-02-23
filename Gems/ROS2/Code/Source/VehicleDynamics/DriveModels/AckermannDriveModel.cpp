@@ -21,7 +21,6 @@ namespace ROS2::VehicleDynamics
     void AckermannDriveModel::Reflect(AZ::ReflectContext* context)
     {
         AckermannModelLimits::Reflect(context);
-        PidConfiguration::Reflect(context);
         if (AZ::SerializeContext* serialize = azrtti_cast<AZ::SerializeContext*>(context))
         {
             serialize->Class<AckermannDriveModel, DriveModel>()
@@ -114,6 +113,10 @@ namespace ROS2::VehicleDynamics
         {
             return;
         }
+        const float acceleration = m_limits.GetLinearAcceleration();
+        const float maxSpeed = m_limits.GetLinearSpeedLimit();
+        m_speedCommand = Utilities::ComputeRampVelocity(speed, m_speedCommand, deltaTimeNs, acceleration, maxSpeed);
+
         if (m_driveWheelsData.empty())
         {
             AZ_Warning("ApplySpeed", false, "Cannot apply speed since no diving wheels are defined in the model");
@@ -127,7 +130,7 @@ namespace ROS2::VehicleDynamics
             const auto hingeComponent = wheelData.m_hingeJoint;
             const auto id = AZ::EntityComponentIdPair(wheelEntity, hingeComponent);
             AZ_Assert(wheelRadius != 0, "wheelRadius must be non-zero");
-            auto desiredAngularSpeedX = (speed / wheelRadius);
+            auto desiredAngularSpeedX = (m_speedCommand / wheelRadius);
             PhysX::JointRequestBus::Event(id, &PhysX::JointRequests::SetVelocity, desiredAngularSpeedX);
         }
     }

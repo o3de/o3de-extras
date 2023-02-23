@@ -1,0 +1,207 @@
+{
+    "ContainerEntity": {
+        "Id": "ContainerEntity",
+        "Name": "Rack_front_protector",
+        "Components": {
+            "Component_[1207621543946667378]": {
+                "$type": "EditorOnlyEntityComponent",
+                "Id": 1207621543946667378
+            },
+            "Component_[13618215204021169972]": {
+                "$type": "EditorVisibilityComponent",
+                "Id": 13618215204021169972
+            },
+            "Component_[14285328782643770885]": {
+                "$type": "EditorDisabledCompositionComponent",
+                "Id": 14285328782643770885
+            },
+            "Component_[14813767717040944203]": {
+                "$type": "EditorEntitySortComponent",
+                "Id": 14813767717040944203,
+                "Child Entity Order": [
+                    "Entity_[1261736678621474]"
+                ]
+            },
+            "Component_[16685093080738798610]": {
+                "$type": "EditorPrefabComponent",
+                "Id": 16685093080738798610
+            },
+            "Component_[18243992050456731485]": {
+                "$type": "EditorInspectorComponent",
+                "Id": 18243992050456731485
+            },
+            "Component_[3194722159510356626]": {
+                "$type": "EditorPendingCompositionComponent",
+                "Id": 3194722159510356626
+            },
+            "Component_[4011958080163499683]": {
+                "$type": "EditorEntityIconComponent",
+                "Id": 4011958080163499683
+            },
+            "Component_[6980064346842070258]": {
+                "$type": "EditorLockComponent",
+                "Id": 6980064346842070258
+            },
+            "Component_[8441000053586138474]": {
+                "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
+                "Id": 8441000053586138474,
+                "Parent Entity": ""
+            }
+        }
+    },
+    "Entities": {
+        "Entity_[1261736678621474]": {
+            "Id": "Entity_[1261736678621474]",
+            "Name": "Rack_front_protector",
+            "Components": {
+                "Component_[11438438563397133372]": {
+                    "$type": "EditorVisibilityComponent",
+                    "Id": 11438438563397133372
+                },
+                "Component_[13395915873594579514]": {
+                    "$type": "EditorLockComponent",
+                    "Id": 13395915873594579514
+                },
+                "Component_[15579174905508719867]": {
+                    "$type": "EditorColliderComponent",
+                    "Id": 15579174905508719867,
+                    "ColliderConfiguration": {
+                        "MaterialSlots": {
+                            "Slots": [
+                                {
+                                    "Name": "MWarehouseProps"
+                                }
+                            ]
+                        }
+                    },
+                    "ShapeConfiguration": {
+                        "PhysicsAsset": {
+                            "Asset": {
+                                "assetId": {
+                                    "guid": "{9928FCBB-9AD8-5B3E-94FF-3516CC574ED1}",
+                                    "subId": 4102061829
+                                },
+                                "assetHint": "assets/warehouse/models/warehouse_frontrackprotector.pxmesh"
+                            },
+                            "Configuration": {
+                                "PhysicsAsset": {
+                                    "assetId": {
+                                        "guid": "{9928FCBB-9AD8-5B3E-94FF-3516CC574ED1}",
+                                        "subId": 4102061829
+                                    },
+                                    "loadBehavior": "QueueLoad",
+                                    "assetHint": "assets/warehouse/models/warehouse_frontrackprotector.pxmesh"
+                                }
+                            }
+                        }
+                    }
+                },
+                "Component_[15907735198669368676]": {
+                    "$type": "EditorDisabledCompositionComponent",
+                    "Id": 15907735198669368676
+                },
+                "Component_[16287884133496509621]": {
+                    "$type": "EditorInspectorComponent",
+                    "Id": 16287884133496509621,
+                    "ComponentOrderEntryArray": [
+                        {
+                            "ComponentId": 4862980616049057873
+                        },
+                        {
+                            "ComponentId": 9752009401792923326,
+                            "SortIndex": 1
+                        },
+                        {
+                            "ComponentId": 7141918419814582,
+                            "SortIndex": 2
+                        },
+                        {
+                            "ComponentId": 9808839583561817672,
+                            "SortIndex": 3
+                        },
+                        {
+                            "ComponentId": 15579174905508719867,
+                            "SortIndex": 4
+                        }
+                    ]
+                },
+                "Component_[17809918104138633146]": {
+                    "$type": "EditorEntitySortComponent",
+                    "Id": 17809918104138633146
+                },
+                "Component_[4734052438377392848]": {
+                    "$type": "EditorPendingCompositionComponent",
+                    "Id": 4734052438377392848
+                },
+                "Component_[4862980616049057873]": {
+                    "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
+                    "Id": 4862980616049057873,
+                    "Parent Entity": "ContainerEntity"
+                },
+                "Component_[7141918419814582]": {
+                    "$type": "EditorMaterialComponent",
+                    "Id": 7141918419814582,
+                    "Controller": {
+                        "Configuration": {
+                            "materials": [
+                                {
+                                    "Key": {
+                                        "materialSlotStableId": 312683670
+                                    },
+                                    "Value": {
+                                        "MaterialAsset": {
+                                            "assetId": {
+                                                "guid": "{DC927EEA-A70D-5383-96AA-665AC07DC591}"
+                                            },
+                                            "assetHint": "assets/warehouse/materials/mwarehouseprops.azmaterial"
+                                        }
+                                    }
+                                },
+                                {
+                                    "Key": {
+                                        "materialSlotStableId": 1518749458
+                                    },
+                                    "Value": {
+                                        "MaterialAsset": {
+                                            "assetId": {
+                                                "guid": "{DC927EEA-A70D-5383-96AA-665AC07DC591}"
+                                            },
+                                            "assetHint": "assets/warehouse/materials/mwarehouseprops.azmaterial"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                },
+                "Component_[8028669631718771573]": {
+                    "$type": "EditorOnlyEntityComponent",
+                    "Id": 8028669631718771573
+                },
+                "Component_[9477833565887114129]": {
+                    "$type": "EditorEntityIconComponent",
+                    "Id": 9477833565887114129
+                },
+                "Component_[9752009401792923326]": {
+                    "$type": "AZ::Render::EditorMeshComponent",
+                    "Id": 9752009401792923326,
+                    "Controller": {
+                        "Configuration": {
+                            "ModelAsset": {
+                                "assetId": {
+                                    "guid": "{9928FCBB-9AD8-5B3E-94FF-3516CC574ED1}",
+                                    "subId": 271948536
+                                },
+                                "assetHint": "assets/warehouse/models/warehouse_frontrackprotector.azmodel"
+                            }
+                        }
+                    }
+                },
+                "Component_[9808839583561817672]": {
+                    "$type": "EditorStaticRigidBodyComponent",
+                    "Id": 9808839583561817672
+                }
+            }
+        }
+    }
+}

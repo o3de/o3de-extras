@@ -191,4 +191,24 @@ namespace ROS2::VehicleDynamics::Utilities
         return AZ::EntityComponentIdPair(wheelEntityId, hingeComponent->GetId());
     }
 
+    float ComputeRampVelocity(float targetVelocty, float lastVelocity, AZ::u64 deltaTimeNs, float acceleration, float maxVelocity)
+    {
+        const float deltaTimeSec = 1e-9f * static_cast<float>(deltaTimeNs);
+        const float deltaAcceleration = deltaTimeSec * acceleration;
+        float commandVelocity = 0;
+        if (AZStd::abs(lastVelocity - targetVelocty) < deltaAcceleration)
+        {
+            commandVelocity = targetVelocty;
+        }
+        else if (targetVelocty > lastVelocity)
+        {
+            commandVelocity = lastVelocity + deltaAcceleration;
+        }
+        else if (targetVelocty < lastVelocity)
+        {
+            commandVelocity = lastVelocity - deltaAcceleration;
+        }
+        return AZStd::clamp(commandVelocity, -maxVelocity, maxVelocity);
+    }
+
 } // namespace ROS2::VehicleDynamics::Utilities
