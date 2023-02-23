@@ -1,0 +1,8 @@
+ROSbot XL ROS
+Part of the ROS2 package developed by Husarion sp. z o.o. for their robotic platform ROSBot XL.
+Available at: https://github.com/husarion/rosbot_xl_ros/tree/2ab1290469893dd18e6429e31427aae48dfb0bdb
+
+Our changes include:
+ - Adding UV maps in all Collada files
+ - Conversion `base.dae` to `base.fbx` with minor changes in model
+ 

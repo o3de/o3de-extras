@@ -1,0 +1,47 @@
+{
+    "values": [
+        {
+            "$type": "{5B03C8E6-8CEE-4DA0-A7FA-CD88689DD45B} MeshGroup",
+            "id": "{4EC8CA5C-ED77-539D-A0D5-FDE774D3AE48}",
+            "name": "CameraOrbbeck",
+            "NodeSelectionList": {
+                "selectedNodes": [
+                    "RootNode.Collider"
+                ],
+                "unselectedNodes": [
+                    {},
+                    "RootNode",
+                    "RootNode.Orbbeck"
+                ]
+            },
+            "MaterialSlots": [
+                "DefaultMaterial"
+            ],
+            "PhysicsMaterials": [
+                "<Default Physics Material>"
+            ]
+        },
+        {
+            "$type": "{07B356B7-3635-40B5-878A-FAC4EFD5AD86} MeshGroup",
+            "name": "CameraOrbbeck",
+            "nodeSelectionList": {
+                "selectedNodes": [
+                    {},
+                    "RootNode",
+                    "RootNode.Orbbeck"
+                ],
+                "unselectedNodes": [
+                    "RootNode.Collider"
+                ]
+            },
+            "rules": {
+                "rules": [
+                    {
+                        "$type": "MaterialRule"
+                    }
+                ]
+            },
+            "id": "{DD50FDF8-5780-543A-AA6E-E5D30DFE7E72}"
+        }
+    ]
+}

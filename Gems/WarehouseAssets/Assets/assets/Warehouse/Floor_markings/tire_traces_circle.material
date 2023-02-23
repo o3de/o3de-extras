@@ -1,0 +1,8 @@
+{
+    "materialType": "@gemroot:Atom_Feature_Common@/Assets/Materials/Types/StandardPBR.materialtype",
+    "materialTypeVersion": 5,
+    "propertyValues": {
+        "baseColor.textureMap": "tire_traces_circle.png",
+        "opacity.mode": "Cutout"
+    }
+}

@@ -9,6 +9,7 @@
 #pragma once
 
 #include <AzTest/AzTest.h>
+#include <XR_Traits_Platform.h>
 
 class XRTest
     : public ::testing::Test

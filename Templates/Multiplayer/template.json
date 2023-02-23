@@ -1062,6 +1062,10 @@
             "isTemplated": true
         },
         {
+            "file": "Prefabs/NetworkRigidBodyCube.prefab",
+            "isTemplated": true
+        },
+        {
             "file": "Prefabs/Player.prefab",
             "isTemplated": true
         },

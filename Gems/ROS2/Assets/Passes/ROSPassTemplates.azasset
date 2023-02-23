@@ -1,0 +1,25 @@
+{
+    "Type": "JsonSerialization",
+    "Version": 1,
+    "ClassName": "AssetAliasesSourceData",
+    "ClassData": {
+        "AssetPaths": [
+            {
+                "Name": "PipelineROSColor",
+                "Path": "Passes/PipelineROSColor.pass"
+            },
+            {
+                "Name": "PipelineROSDepth",
+                "Path": "Passes/PipelineROSDepth.pass"
+            },
+            {
+                "Name": "PipelineRenderToTextureROSColor",
+                "Path": "Passes/PipelineRenderToTextureROSColor.pass"
+            },
+            {
+                "Name": "PipelineRenderToTextureROSDepth",
+                "Path": "Passes/PipelineRenderToTextureROSDepth.pass"
+            }
+        ]
+    }
+}

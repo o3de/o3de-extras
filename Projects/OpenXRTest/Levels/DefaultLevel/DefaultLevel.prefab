@@ -142,6 +142,10 @@
                     "Id": 16578565737331764849,
                     "Parent Entity": "Entity_[1176639161715]"
                 },
+                "Component_[1677504652583565519]": {
+                    "$type": "EditorStaticRigidBodyComponent",
+                    "Id": 1677504652583565519
+                },
                 "Component_[16919232076966545697]": {
                     "$type": "EditorInspectorComponent",
                     "Id": 16919232076966545697

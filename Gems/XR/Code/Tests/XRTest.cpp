@@ -9,8 +9,6 @@
 #include <AzTest/AzTest.h>
 #include "XRTest.h"
 
-#if !O3DE_TRAIT_DISABLE_ALL_XR_TESTS
-
 void XRTest::SetUp()
 {
     SetupInternal();
@@ -21,16 +19,18 @@ void XRTest::TearDown()
     TearDownInternal();
 }
 
+#ifndef O3DE_TRAIT_DISABLE_ALL_XR_TESTS
+
 TEST_F(XRTest, PassThisTest)
 {
     EXPECT_TRUE(true);
 }
 
-#if O3DE_TRAIT_DISABLE_FAILED_XR_TESTS
+#ifdef O3DE_TRAIT_DISABLE_FAILED_XR_TESTS
 TEST_F(XRTest, DISABLED_ExpectTrue)
 #else
 TEST_F(XRTest, ExpectTrue)
-#endif // O3DE_TRAIT_DISABLE_FAILED_XR_TESTS
+#endif // defined O3DE_TRAIT_DISABLE_FAILED_XR_TESTS
 {
     EXPECT_TRUE(false);
 }

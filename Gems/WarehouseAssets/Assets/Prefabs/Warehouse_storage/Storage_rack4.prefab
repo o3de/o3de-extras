@@ -1,0 +1,807 @@
+{
+    "ContainerEntity": {
+        "Id": "ContainerEntity",
+        "Name": "Storage_rack4",
+        "Components": {
+            "Component_[15384064663362965641]": {
+                "$type": "EditorVisibilityComponent",
+                "Id": 15384064663362965641
+            },
+            "Component_[16159755617782685128]": {
+                "$type": "EditorEntitySortComponent",
+                "Id": 16159755617782685128,
+                "Child Entity Order": [
+                    "Entity_[147893677174521]"
+                ]
+            },
+            "Component_[17299876769157213025]": {
+                "$type": "EditorEntityIconComponent",
+                "Id": 17299876769157213025
+            },
+            "Component_[2171876772769474105]": {
+                "$type": "EditorInspectorComponent",
+                "Id": 2171876772769474105
+            },
+            "Component_[4189060589831601101]": {
+                "$type": "EditorLockComponent",
+                "Id": 4189060589831601101
+            },
+            "Component_[4386764056654702111]": {
+                "$type": "EditorPrefabComponent",
+                "Id": 4386764056654702111
+            },
+            "Component_[4566526041626947125]": {
+                "$type": "EditorOnlyEntityComponent",
+                "Id": 4566526041626947125
+            },
+            "Component_[5501672039605688800]": {
+                "$type": "EditorPendingCompositionComponent",
+                "Id": 5501672039605688800
+            },
+            "Component_[8299323846030470908]": {
+                "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
+                "Id": 8299323846030470908,
+                "Parent Entity": ""
+            },
+            "Component_[8895400833880089709]": {
+                "$type": "EditorDisabledCompositionComponent",
+                "Id": 8895400833880089709
+            }
+        }
+    },
+    "Entities": {
+        "Entity_[147876497305337]": {
+            "Id": "Entity_[147876497305337]",
+            "Name": "Lv1",
+            "Components": {
+                "Component_[10016336519656842847]": {
+                    "$type": "EditorPendingCompositionComponent",
+                    "Id": 10016336519656842847
+                },
+                "Component_[1102544566097613667]": {
+                    "$type": "EditorLockComponent",
+                    "Id": 1102544566097613667
+                },
+                "Component_[11574853205741771107]": {
+                    "$type": "EditorOnlyEntityComponent",
+                    "Id": 11574853205741771107
+                },
+                "Component_[12832175622062288348]": {
+                    "$type": "EditorVisibilityComponent",
+                    "Id": 12832175622062288348
+                },
+                "Component_[16177884641564719993]": {
+                    "$type": "EditorDisabledCompositionComponent",
+                    "Id": 16177884641564719993
+                },
+                "Component_[4058468385591425268]": {
+                    "$type": "EditorEntitySortComponent",
+                    "Id": 4058468385591425268,
+                    "Child Entity Order": [
+                        "",
+                        "",
+                        "",
+                        "",
+                        "",
+                        "",
+                        "",
+                        "",
+                        "",
+                        "",
+                        "",
+                        "",
+                        "",
+                        "",
+                        "",
+                        "Instance_[10201320632057]/ContainerEntity",
+                        "Instance_[10179845795577]/ContainerEntity",
+                        "Instance_[10111126318841]/ContainerEntity",
+                        "Instance_[10162665926393]/ContainerEntity",
+                        "Instance_[10115421286137]/ContainerEntity",
+                        "Instance_[10145486057209]/ContainerEntity",
+                        "Instance_[10205615599353]/ContainerEntity",
+                        "Instance_[10197025664761]/ContainerEntity",
+                        "Instance_[10214205533945]/ContainerEntity"
+                    ]
+                },
+                "Component_[5886852867952722045]": {
+                    "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
+                    "Id": 5886852867952722045,
+                    "Parent Entity": "Entity_[147889382207225]",
+                    "Transform Data": {
+                        "Translate": [
+                            0.0,
+                            0.0,
+                            1.5725772380828857
+                        ]
+                    }
+                },
+                "Component_[6203860872624939299]": {
+                    "$type": "EditorEntityIconComponent",
+                    "Id": 6203860872624939299
+                },
+                "Component_[757550152637528727]": {
+                    "$type": "EditorInspectorComponent",
+                    "Id": 757550152637528727
+                }
+            }
+        },
+        "Entity_[147880792272633]": {
+            "Id": "Entity_[147880792272633]",
+            "Name": "Lv2",
+            "Components": {
+                "Component_[10016336519656842847]": {
+                    "$type": "EditorPendingCompositionComponent",
+                    "Id": 10016336519656842847
+                },
+                "Component_[1102544566097613667]": {
+                    "$type": "EditorLockComponent",
+                    "Id": 1102544566097613667
+                },
+                "Component_[11574853205741771107]": {
+                    "$type": "EditorOnlyEntityComponent",
+                    "Id": 11574853205741771107
+                },
+                "Component_[12832175622062288348]": {
+                    "$type": "EditorVisibilityComponent",
+                    "Id": 12832175622062288348
+                },
+                "Component_[16177884641564719993]": {
+                    "$type": "EditorDisabledCompositionComponent",
+                    "Id": 16177884641564719993
+                },
+                "Component_[4058468385591425268]": {
+                    "$type": "EditorEntitySortComponent",
+                    "Id": 4058468385591425268,
+                    "Child Entity Order": [
+                        "Instance_[56011441811193]/ContainerEntity",
+                        "Instance_[56127405928185]/ContainerEntity",
+                        "Instance_[56105931091705]/ContainerEntity",
+                        "Instance_[56123110960889]/ContainerEntity",
+                        "Instance_[56093046189817]/ContainerEntity"
+                    ]
+                },
+                "Component_[5886852867952722045]": {
+                    "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
+                    "Id": 5886852867952722045,
+                    "Parent Entity": "Entity_[147889382207225]",
+                    "Transform Data": {
+                        "Translate": [
+                            0.0,
+                            0.0,
+                            3.1378490924835205
+                        ]
+                    }
+                },
+                "Component_[6203860872624939299]": {
+                    "$type": "EditorEntityIconComponent",
+                    "Id": 6203860872624939299
+                },
+                "Component_[757550152637528727]": {
+                    "$type": "EditorInspectorComponent",
+                    "Id": 757550152637528727
+                }
+            }
+        },
+        "Entity_[147885087239929]": {
+            "Id": "Entity_[147885087239929]",
+            "Name": "Lv0",
+            "Components": {
+                "Component_[10016336519656842847]": {
+                    "$type": "EditorPendingCompositionComponent",
+                    "Id": 10016336519656842847
+                },
+                "Component_[1102544566097613667]": {
+                    "$type": "EditorLockComponent",
+                    "Id": 1102544566097613667
+                },
+                "Component_[11574853205741771107]": {
+                    "$type": "EditorOnlyEntityComponent",
+                    "Id": 11574853205741771107
+                },
+                "Component_[12832175622062288348]": {
+                    "$type": "EditorVisibilityComponent",
+                    "Id": 12832175622062288348
+                },
+                "Component_[16177884641564719993]": {
+                    "$type": "EditorDisabledCompositionComponent",
+                    "Id": 16177884641564719993
+                },
+                "Component_[4058468385591425268]": {
+                    "$type": "EditorEntitySortComponent",
+                    "Id": 4058468385591425268,
+                    "Child Entity Order": [
+                        "Instance_[150943103954681]/ContainerEntity",
+                        "Instance_[10166960893689]/ContainerEntity",
+                        "Instance_[10149781024505]/ContainerEntity",
+                        "Instance_[10171255860985]/ContainerEntity",
+                        "Instance_[10188435730169]/ContainerEntity",
+                        "Instance_[10175550828281]/ContainerEntity",
+                        "Instance_[10192730697465]/ContainerEntity"
+                    ]
+                },
+                "Component_[5886852867952722045]": {
+                    "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
+                    "Id": 5886852867952722045,
+                    "Parent Entity": "Entity_[147889382207225]"
+                },
+                "Component_[6203860872624939299]": {
+                    "$type": "EditorEntityIconComponent",
+                    "Id": 6203860872624939299
+                },
+                "Component_[757550152637528727]": {
+                    "$type": "EditorInspectorComponent",
+                    "Id": 757550152637528727
+                }
+            }
+        },
+        "Entity_[147889382207225]": {
+            "Id": "Entity_[147889382207225]",
+            "Name": "Boxes",
+            "Components": {
+                "Component_[11581211804518533692]": {
+                    "$type": "EditorOnlyEntityComponent",
+                    "Id": 11581211804518533692
+                },
+                "Component_[13951741074857396852]": {
+                    "$type": "EditorEntitySortComponent",
+                    "Id": 13951741074857396852,
+                    "Child Entity Order": [
+                        "",
+                        "",
+                        "",
+                        "",
+                        "Entity_[147885087239929]",
+                        "Entity_[147876497305337]",
+                        "Entity_[147880792272633]"
+                    ]
+                },
+                "Component_[14035493606254485153]": {
+                    "$type": "EditorDisabledCompositionComponent",
+                    "Id": 14035493606254485153
+                },
+                "Component_[15423685381995060323]": {
+                    "$type": "EditorVisibilityComponent",
+                    "Id": 15423685381995060323
+                },
+                "Component_[16817155910950262073]": {
+                    "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
+                    "Id": 16817155910950262073,
+                    "Parent Entity": "Entity_[147893677174521]"
+                },
+                "Component_[296809170710090038]": {
+                    "$type": "EditorInspectorComponent",
+                    "Id": 296809170710090038
+                },
+                "Component_[7827427921402655047]": {
+                    "$type": "EditorEntityIconComponent",
+                    "Id": 7827427921402655047
+                },
+                "Component_[7995632386570655298]": {
+                    "$type": "EditorLockComponent",
+                    "Id": 7995632386570655298
+                },
+                "Component_[9103309579582316644]": {
+                    "$type": "EditorPendingCompositionComponent",
+                    "Id": 9103309579582316644
+                }
+            }
+        },
+        "Entity_[147893677174521]": {
+            "Id": "Entity_[147893677174521]",
+            "Name": "Storage_rack",
+            "Components": {
+                "Component_[12108075151772116549]": {
+                    "$type": "EditorDisabledCompositionComponent",
+                    "Id": 12108075151772116549
+                },
+                "Component_[13379506431855812565]": {
+                    "$type": "EditorLockComponent",
+                    "Id": 13379506431855812565
+                },
+                "Component_[15558719316268715668]": {
+                    "$type": "EditorEntityIconComponent",
+                    "Id": 15558719316268715668
+                },
+                "Component_[17052264737858425737]": {
+                    "$type": "EditorVisibilityComponent",
+                    "Id": 17052264737858425737
+                },
+                "Component_[2856660940094590609]": {
+                    "$type": "EditorPendingCompositionComponent",
+                    "Id": 2856660940094590609
+                },
+                "Component_[3260224946670902020]": {
+                    "$type": "EditorInspectorComponent",
+                    "Id": 3260224946670902020,
+                    "ComponentOrderEntryArray": [
+                        {
+                            "ComponentId": 6485857306406049964
+                        }
+                    ]
+                },
+                "Component_[3555020850812014007]": {
+                    "$type": "EditorOnlyEntityComponent",
+                    "Id": 3555020850812014007
+                },
+                "Component_[3937996073827386159]": {
+                    "$type": "EditorEntitySortComponent",
+                    "Id": 3937996073827386159,
+                    "Child Entity Order": [
+                        "Entity_[147889382207225]",
+                        "Instance_[10209910566649]/ContainerEntity",
+                        "",
+                        ""
+                    ]
+                },
+                "Component_[6485857306406049964]": {
+                    "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
+                    "Id": 6485857306406049964,
+                    "Parent Entity": "ContainerEntity"
+                }
+            }
+        }
+    },
+    "Instances": {
+        "Instance_[10111126318841]": {
+            "Source": "Prefabs/Warehouse_storage/Components/WarehouseBox1.prefab",
+            "Patches": [
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/Component_[11645621937081874484]/Parent Entity",
+                    "value": "../Entity_[147876497305337]"
+                },
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/Component_[11645621937081874484]/Transform Data/Translate/0",
+                    "value": 0.0010385513305664065
+                },
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/Component_[11645621937081874484]/Transform Data/Translate/1",
+                    "value": 0.4832963943481446
+                },
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/Component_[11645621937081874484]/Transform Data/Translate/2",
+                    "value": 0.7265267372131348
+                },
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/Component_[11645621937081874484]/Transform Data/Rotate/2",
+                    "value": 0.5438455939292908
+                }
+            ]
+        },
+        "Instance_[10115421286137]": {
+            "Source": "Prefabs/Warehouse_storage/Components/WarehouseBox1.prefab",
+            "Patches": [
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/Component_[11645621937081874484]/Parent Entity",
+                    "value": "../Entity_[147876497305337]"
+                },
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/Component_[11645621937081874484]/Transform Data/Translate/1",
+                    "value": 1.0520672798156738
+                }
+            ]
+        },
+        "Instance_[10145486057209]": {
+            "Source": "Prefabs/Warehouse_storage/Components/WarehouseBox1.prefab",
+            "Patches": [
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/Component_[11645621937081874484]/Parent Entity",
+                    "value": "../Entity_[147876497305337]"
+                },
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/Component_[11645621937081874484]/Transform Data/Translate/1",
+                    "value": -1.0564453601837158
+                }
+            ]
+        },
+        "Instance_[10149781024505]": {
+            "Source": "Prefabs/Warehouse_storage/Components/WarehouseBox1.prefab",
+            "Patches": [
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/Component_[11645621937081874484]/Parent Entity",
+                    "value": "../Entity_[147885087239929]"
+                },
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/Component_[11645621937081874484]/Transform Data/Translate/0",
+                    "value": 0.0000019073486328125
+                },
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/Component_[11645621937081874484]/Transform Data/Translate/1",
+                    "value": 1.1585893630981443
+                },
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/Component_[11645621937081874484]/Transform Data/Translate/2",
+                    "value": 0.7265243530273438
+                }
+            ]
+        },
+        "Instance_[10162665926393]": {
+            "Source": "Prefabs/Warehouse_storage/Components/WarehouseBox1.prefab",
+            "Patches": [
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/Component_[11645621937081874484]/Parent Entity",
+                    "value": "../Entity_[147876497305337]"
+                },
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/Component_[11645621937081874484]/Transform Data/Translate/0",
+                    "value": 0.002246856689453125
+                },
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/Component_[11645621937081874484]/Transform Data/Translate/1",
+                    "value": -0.5288867950439453
+                }
+            ]
+        },
+        "Instance_[10166960893689]": {
+            "Source": "Prefabs/Warehouse_storage/Components/WarehouseBox1.prefab",
+            "Patches": [
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/Component_[11645621937081874484]/Parent Entity",
+                    "value": "../Entity_[147885087239929]"
+                },
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/Component_[11645621937081874484]/Transform Data/Translate/0",
+                    "value": 9.5367431640625e-7
+                },
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/Component_[11645621937081874484]/Transform Data/Translate/1",
+                    "value": 0.10234928131103516
+                }
+            ]
+        },
+        "Instance_[10171255860985]": {
+            "Source": "Prefabs/Warehouse_storage/Components/WarehouseBox1.prefab",
+            "Patches": [
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/Component_[11645621937081874484]/Parent Entity",
+                    "value": "../Entity_[147885087239929]"
+                },
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/Component_[11645621937081874484]/Transform Data/Translate/0",
+                    "value": 9.5367431640625e-7
+                },
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/Component_[11645621937081874484]/Transform Data/Translate/1",
+                    "value": -0.42520999908447266
+                }
+            ]
+        },
+        "Instance_[10175550828281]": {
+            "Source": "Prefabs/Warehouse_storage/Components/WarehouseBox1.prefab",
+            "Patches": [
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/Component_[11645621937081874484]/Parent Entity",
+                    "value": "../Entity_[147885087239929]"
+                },
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/Component_[11645621937081874484]/Transform Data/Translate/1",
+                    "value": 1.1593475341796875
+                }
+            ]
+        },
+        "Instance_[10179845795577]": {
+            "Source": "Prefabs/Warehouse_storage/Components/WarehouseBox1.prefab",
+            "Patches": [
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/Component_[11645621937081874484]/Parent Entity",
+                    "value": "../Entity_[147876497305337]"
+                },
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/Component_[11645621937081874484]/Transform Data/Translate/1",
+                    "value": 0.5281124114990234
+                }
+            ]
+        },
+        "Instance_[10188435730169]": {
+            "Source": "Prefabs/Warehouse_storage/Components/WarehouseBox1.prefab",
+            "Patches": [
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/Component_[11645621937081874484]/Parent Entity",
+                    "value": "../Entity_[147885087239929]"
+                },
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/Component_[11645621937081874484]/Transform Data/Translate/0",
+                    "value": 9.5367431640625e-7
+                },
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/Component_[11645621937081874484]/Transform Data/Translate/1",
+                    "value": 0.6311883926391602
+                }
+            ]
+        },
+        "Instance_[10192730697465]": {
+            "Source": "Prefabs/Warehouse_storage/Components/WarehouseBox1.prefab",
+            "Patches": [
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/Component_[11645621937081874484]/Parent Entity",
+                    "value": "../Entity_[147885087239929]"
+                },
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/Component_[11645621937081874484]/Transform Data/Translate/0",
+                    "value": -0.0030546188354492188
+                },
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/Component_[11645621937081874484]/Transform Data/Translate/1",
+                    "value": 0.6128835678100586
+                },
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/Component_[11645621937081874484]/Transform Data/Translate/2",
+                    "value": 0.7265243530273438
+                }
+            ]
+        },
+        "Instance_[10197025664761]": {
+            "Source": "Prefabs/Warehouse_storage/Components/WarehouseBox1.prefab",
+            "Patches": [
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/Component_[11645621937081874484]/Parent Entity",
+                    "value": "../Entity_[147876497305337]"
+                },
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/Component_[11645621937081874484]/Transform Data/Translate/1",
+                    "value": 1.0520672798156738
+                },
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/Component_[11645621937081874484]/Transform Data/Translate/2",
+                    "value": 0.7265243530273438
+                }
+            ]
+        },
+        "Instance_[10201320632057]": {
+            "Source": "Prefabs/Warehouse_storage/Components/WarehouseBox1.prefab",
+            "Patches": [
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/Component_[11645621937081874484]/Parent Entity",
+                    "value": "../Entity_[147876497305337]"
+                },
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/Component_[11645621937081874484]/Transform Data/Translate/1",
+                    "value": -0.5310425758361816
+                },
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/Component_[11645621937081874484]/Transform Data/Translate/2",
+                    "value": 0.7265243530273438
+                }
+            ]
+        },
+        "Instance_[10205615599353]": {
+            "Source": "Prefabs/Warehouse_storage/Components/WarehouseBox1.prefab",
+            "Patches": [
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/Component_[11645621937081874484]/Parent Entity",
+                    "value": "../Entity_[147876497305337]"
+                },
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/Component_[11645621937081874484]/Transform Data/Translate/1",
+                    "value": -0.000047206878662109375
+                }
+            ]
+        },
+        "Instance_[10209910566649]": {
+            "Source": "Prefabs/Warehouse_storage/Components/WarehouseRack.prefab",
+            "Patches": [
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/Component_[15832779900574876777]/Parent Entity",
+                    "value": "../Entity_[147893677174521]"
+                }
+            ]
+        },
+        "Instance_[10214205533945]": {
+            "Source": "Prefabs/Warehouse_storage/Components/WarehouseBox1.prefab",
+            "Patches": [
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/Component_[11645621937081874484]/Parent Entity",
+                    "value": "../Entity_[147876497305337]"
+                },
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/Component_[11645621937081874484]/Transform Data/Translate/0",
+                    "value": -0.0030574798583984375
+                },
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/Component_[11645621937081874484]/Transform Data/Translate/1",
+                    "value": -1.0564453601837158
+                },
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/Component_[11645621937081874484]/Transform Data/Translate/2",
+                    "value": 0.7265243530273438
+                }
+            ]
+        },
+        "Instance_[150943103954681]": {
+            "Source": "Prefabs/Warehouse_storage/Components/WarehouseBox4.prefab",
+            "Patches": [
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/Component_[15689078751285645218]/Parent Entity",
+                    "value": "../Entity_[147885087239929]"
+                },
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/Component_[15689078751285645218]/Transform Data/Translate/0",
+                    "value": 0.009921073913574219
+                },
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/Component_[15689078751285645218]/Transform Data/Translate/1",
+                    "value": -1.078145980834961
+                },
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/Component_[15689078751285645218]/Transform Data/Rotate/2",
+                    "value": 89.99993133544922
+                }
+            ]
+        },
+        "Instance_[56011441811193]": {
+            "Source": "Prefabs/Warehouse_storage/Components/WarehouseBox4.prefab",
+            "Patches": [
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/Component_[15689078751285645218]/Parent Entity",
+                    "value": "../Entity_[147880792272633]"
+                },
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/Component_[15689078751285645218]/Transform Data/Translate/0",
+                    "value": 0.00992107391357422
+                },
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/Component_[15689078751285645218]/Transform Data/Translate/1",
+                    "value": 1.0564146041870115
+                },
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/Component_[15689078751285645218]/Transform Data/Rotate/2",
+                    "value": 89.99993133544922
+                }
+            ]
+        },
+        "Instance_[56093046189817]": {
+            "Source": "Prefabs/Warehouse_storage/Components/WarehouseBox4.prefab",
+            "Patches": [
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/Component_[15689078751285645218]/Parent Entity",
+                    "value": "../Entity_[147880792272633]"
+                },
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/Component_[15689078751285645218]/Transform Data/Translate/0",
+                    "value": 0.009922027587890623
+                },
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/Component_[15689078751285645218]/Transform Data/Translate/1",
+                    "value": 0.5237865447998047
+                },
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/Component_[15689078751285645218]/Transform Data/Rotate/2",
+                    "value": 89.99993133544922
+                }
+            ]
+        },
+        "Instance_[56105931091705]": {
+            "Source": "Prefabs/Warehouse_storage/Components/WarehouseBox4.prefab",
+            "Patches": [
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/Component_[15689078751285645218]/Parent Entity",
+                    "value": "../Entity_[147880792272633]"
+                },
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/Component_[15689078751285645218]/Transform Data/Translate/0",
+                    "value": -0.04245662689208984
+                },
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/Component_[15689078751285645218]/Transform Data/Translate/1",
+                    "value": 0.009952545166015623
+                },
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/Component_[15689078751285645218]/Transform Data/Rotate/2",
+                    "value": 89.99993133544922
+                }
+            ]
+        },
+        "Instance_[56123110960889]": {
+            "Source": "Prefabs/Warehouse_storage/Components/WarehouseBox4.prefab",
+            "Patches": [
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/Component_[15689078751285645218]/Parent Entity",
+                    "value": "../Entity_[147880792272633]"
+                },
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/Component_[15689078751285645218]/Transform Data/Translate/0",
+                    "value": 0.009922027587890623
+                },
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/Component_[15689078751285645218]/Transform Data/Translate/1",
+                    "value": -1.0285778045654297
+                },
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/Component_[15689078751285645218]/Transform Data/Rotate/2",
+                    "value": 89.99993133544922
+                }
+            ]
+        },
+        "Instance_[56127405928185]": {
+            "Source": "Prefabs/Warehouse_storage/Components/WarehouseBox4.prefab",
+            "Patches": [
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/Component_[15689078751285645218]/Parent Entity",
+                    "value": "../Entity_[147880792272633]"
+                },
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/Component_[15689078751285645218]/Transform Data/Translate/0",
+                    "value": 0.009922981262207031
+                },
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/Component_[15689078751285645218]/Transform Data/Translate/1",
+                    "value": -0.49595069885253906
+                },
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/Component_[15689078751285645218]/Transform Data/Rotate/2",
+                    "value": -90.0
+                }
+            ]
+        }
+    }
+}
