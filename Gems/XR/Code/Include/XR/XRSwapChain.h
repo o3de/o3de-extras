@@ -76,7 +76,7 @@ namespace XR
         {
             AZ::RHI::ValidationMode m_validationMode = AZ::RHI::ValidationMode::Disabled;
             Ptr<Instance> m_instance;
-            Ptr<XR::Session> m_session;
+            Ptr<Session> m_session;
             Ptr<Device> m_device;
         };
 

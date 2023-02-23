@@ -68,7 +68,7 @@ namespace XR
         bool AcquireSwapChainImage(AZ::u32 viewIndex, SwapChain* swapChain);
 
         //! Register XR session with the device.
-        void RegisterSession(Ptr<XR::Session> session);
+        void RegisterSession(Ptr<Session> session);
 
         //! UnRegister XR session with the device.
         void UnRegisterSession();
