@@ -14,6 +14,7 @@
 #include <OpenXRVk/OpenXRVkUtils.h>
 #include <OpenXRVkCommon.h>
 #include <Atom/RHI.Reflect/Vulkan/XRVkDescriptors.h>
+#include <Atom/RHI.Reflect/VkAllocator.h>
 #include <AzCore/Casting/numeric_cast.h>
 
 namespace OpenXRVk
@@ -32,7 +33,7 @@ namespace OpenXRVk
         xrDeviceCreateInfo.pfnGetInstanceProcAddr = xrVkInstance->GetContext().GetInstanceProcAddr;
         xrDeviceCreateInfo.vulkanCreateInfo = xrDeviceDescriptor->m_inputData.m_deviceCreateInfo;
         xrDeviceCreateInfo.vulkanPhysicalDevice = xrVkInstance->GetActivePhysicalDevice();
-        xrDeviceCreateInfo.vulkanAllocator = nullptr;
+        xrDeviceCreateInfo.vulkanAllocator = AZ::Vulkan::VkSystemAllocator::Get();
 
         PFN_xrGetVulkanDeviceExtensionsKHR pfnGetVulkanDeviceExtensionsKHR = nullptr;
         XrResult result = xrGetInstanceProcAddr(
@@ -306,7 +307,7 @@ namespace OpenXRVk
         m_xrLayers.clear();
         if (m_xrVkDevice != VK_NULL_HANDLE)
         {
-            m_context.DestroyDevice(m_xrVkDevice, nullptr);
+            m_context.DestroyDevice(m_xrVkDevice, AZ::Vulkan::VkSystemAllocator::Get());
             m_xrVkDevice = VK_NULL_HANDLE;
         }
     }
