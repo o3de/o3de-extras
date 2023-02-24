@@ -25,7 +25,7 @@ namespace XR
         : public XR::Object
     {
     public:
-        AZ_CLASS_ALLOCATOR(Device, AZ::SystemAllocator, 0);
+        AZ_CLASS_ALLOCATOR(Device, AZ::SystemAllocator);
         AZ_RTTI(Device, "{A31B0DC2-BD54-443E-9350-EB1B10670FF9}");
 
         Device() = default;

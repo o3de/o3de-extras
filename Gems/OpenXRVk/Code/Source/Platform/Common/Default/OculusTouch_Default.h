@@ -22,7 +22,7 @@ namespace OpenXRVk
     public:
         ////////////////////////////////////////////////////////////////////////////////////////////
         // Allocator
-        AZ_CLASS_ALLOCATOR(InputDeviceOculusTouch, AZ::SystemAllocator, 0);
+        AZ_CLASS_ALLOCATOR(InputDeviceOculusTouch, AZ::SystemAllocator);
 
         ////////////////////////////////////////////////////////////////////////////////////////////
         explicit InputDeviceOculusTouch(AzFramework::InputDeviceXRController& inputDevice);

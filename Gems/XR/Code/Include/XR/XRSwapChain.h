@@ -26,14 +26,14 @@ namespace XR
         : public XR::Object
     {
     public:
-        AZ_CLASS_ALLOCATOR(SwapChain, AZ::SystemAllocator, 0);
+        AZ_CLASS_ALLOCATOR(SwapChain, AZ::SystemAllocator);
         AZ_RTTI(SwapChain, "{0C666E76-E4B7-4097-8D14-713DC2C446EF}");
 
         class Image
             : public AZStd::intrusive_base
         {
         public:
-            AZ_CLASS_ALLOCATOR(Image, AZ::SystemAllocator, 0);
+            AZ_CLASS_ALLOCATOR(Image, AZ::SystemAllocator);
             AZ_RTTI(Image, "{4037835D-F1BB-4407-BC98-2299CC7BE0A3}");
 
             Image() = default;
@@ -44,7 +44,7 @@ namespace XR
             : public AZStd::intrusive_base
         {
         public:
-            AZ_CLASS_ALLOCATOR(View, AZ::SystemAllocator, 0);
+            AZ_CLASS_ALLOCATOR(View, AZ::SystemAllocator);
             AZ_RTTI(View, "{774EB724-8261-4684-AA78-EDF6BBECD48A}");
 
             View() = default;

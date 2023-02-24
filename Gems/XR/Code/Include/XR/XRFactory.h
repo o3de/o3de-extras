@@ -26,7 +26,7 @@ namespace XR
     class Factory
     {
     public:
-        AZ_CLASS_ALLOCATOR(Factory, AZ::SystemAllocator, 0);
+        AZ_CLASS_ALLOCATOR(Factory, AZ::SystemAllocator);
         AZ_RTTI(Factory, "{A3D7271A-64FD-442C-9116-DBC32224222F}");
 
         Factory() = default;

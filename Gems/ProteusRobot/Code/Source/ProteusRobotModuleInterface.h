@@ -10,7 +10,7 @@ namespace ProteusRobot
     {
     public:
         AZ_RTTI(ProteusRobotModuleInterface, "{C2853683-8867-42E4-BAF8-6BAE29CB53E1}", AZ::Module);
-        AZ_CLASS_ALLOCATOR(ProteusRobotModuleInterface, AZ::SystemAllocator, 0);
+        AZ_CLASS_ALLOCATOR(ProteusRobotModuleInterface, AZ::SystemAllocator);
 
         ProteusRobotModuleInterface()
         {

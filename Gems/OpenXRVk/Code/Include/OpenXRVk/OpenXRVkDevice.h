@@ -20,7 +20,7 @@ namespace OpenXRVk
         : public XR::Device
     {
     public:
-        AZ_CLASS_ALLOCATOR(Device, AZ::SystemAllocator, 0);
+        AZ_CLASS_ALLOCATOR(Device, AZ::SystemAllocator);
         AZ_RTTI(Device, "{81FD9B99-EDA5-4381-90EC-335073554379}", XR::Device);
 
         static XR::Ptr<Device> Create();
