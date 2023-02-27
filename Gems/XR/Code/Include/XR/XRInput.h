@@ -10,14 +10,11 @@
 
 #include <AzCore/Memory/SystemAllocator.h>
 #include <XR/XRBase.h>
+#include <XR/XRDevice.h>
 #include <XR/XRObject.h>
 
 namespace XR
 {
-    class Session;
-    class Instance;
-    class Device;
-
     // This class will be responsible for creating XR::Input
     // which manage event queue or poll actions
     class Input

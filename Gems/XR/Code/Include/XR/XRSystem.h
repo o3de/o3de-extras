@@ -11,12 +11,11 @@
 #include <AzCore/base.h>
 #include <AzCore/Component/TickBus.h>
 #include <AzCore/Memory/SystemAllocator.h>
-#include <Atom/RHI/XRRenderingInterface.h>
 #include <Atom/RHI/ValidationLayer.h>
+#include <Atom/RHI/XRRenderingInterface.h>
 #include <Atom/RPI.Public/XR/XRRenderingInterface.h>
-#include <XR/XRInstance.h>
 #include <XR/XRDevice.h>
-#include <XR/XRSession.h>
+#include <XR/XRInstance.h>
 #include <XR/XRSwapChain.h>
 
 namespace XR
