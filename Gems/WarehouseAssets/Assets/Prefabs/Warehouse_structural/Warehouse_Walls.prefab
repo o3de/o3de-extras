@@ -209,9 +209,9 @@
                     "$type": "EditorInspectorComponent",
                     "Id": 15167189095873685279
                 },
-                "Component_[16809483465388003559]": {
-                    "$type": "EditorColliderComponent",
-                    "Id": 16809483465388003559,
+                "Component_[15767425793673148970]": {
+                    "$type": "EditorMeshColliderComponent",
+                    "Id": 15767425793673148970,
                     "ColliderConfiguration": {
                         "MaterialSlots": {
                             "Slots": [
@@ -224,24 +224,22 @@
                             ]
                         }
                     },
-                    "ShapeConfiguration": {
-                        "PhysicsAsset": {
-                            "Asset": {
+                    "PhysicsAssetShapeConfiguration": {
+                        "Asset": {
+                            "assetId": {
+                                "guid": "{9F3790A0-9383-5BBA-BB91-2AD9F04086B3}",
+                                "subId": 675098786
+                            },
+                            "assetHint": "assets/warehouse/models/warehouse_gate_closed.pxmesh"
+                        },
+                        "Configuration": {
+                            "PhysicsAsset": {
                                 "assetId": {
                                     "guid": "{9F3790A0-9383-5BBA-BB91-2AD9F04086B3}",
                                     "subId": 675098786
                                 },
+                                "loadBehavior": "QueueLoad",
                                 "assetHint": "assets/warehouse/models/warehouse_gate_closed.pxmesh"
-                            },
-                            "Configuration": {
-                                "PhysicsAsset": {
-                                    "assetId": {
-                                        "guid": "{9F3790A0-9383-5BBA-BB91-2AD9F04086B3}",
-                                        "subId": 675098786
-                                    },
-                                    "loadBehavior": "QueueLoad",
-                                    "assetHint": "assets/warehouse/models/warehouse_gate_closed.pxmesh"
-                                }
                             }
                         }
                     }
@@ -332,40 +330,6 @@
                         }
                     }
                 },
-                "Component_[1554132197757752789]": {
-                    "$type": "EditorColliderComponent",
-                    "Id": 1554132197757752789,
-                    "ColliderConfiguration": {
-                        "MaterialSlots": {
-                            "Slots": [
-                                {
-                                    "Name": "MWarehouseModules"
-                                }
-                            ]
-                        }
-                    },
-                    "ShapeConfiguration": {
-                        "PhysicsAsset": {
-                            "Asset": {
-                                "assetId": {
-                                    "guid": "{34CA9168-D5C7-5554-BE7D-8485A3D67AB6}",
-                                    "subId": 3814177680
-                                },
-                                "assetHint": "assets/warehouse/models/warehouse_walls_front_gate.pxmesh"
-                            },
-                            "Configuration": {
-                                "PhysicsAsset": {
-                                    "assetId": {
-                                        "guid": "{34CA9168-D5C7-5554-BE7D-8485A3D67AB6}",
-                                        "subId": 3814177680
-                                    },
-                                    "loadBehavior": "QueueLoad",
-                                    "assetHint": "assets/warehouse/models/warehouse_walls_front_gate.pxmesh"
-                                }
-                            }
-                        }
-                    }
-                },
                 "Component_[18360744952719232820]": {
                     "$type": "EditorEntitySortComponent",
                     "Id": 18360744952719232820
@@ -381,6 +345,38 @@
                 "Component_[4932017064714589766]": {
                     "$type": "EditorEntityIconComponent",
                     "Id": 4932017064714589766
+                },
+                "Component_[6961914333579766230]": {
+                    "$type": "EditorMeshColliderComponent",
+                    "Id": 6961914333579766230,
+                    "ColliderConfiguration": {
+                        "MaterialSlots": {
+                            "Slots": [
+                                {
+                                    "Name": "MWarehouseModules"
+                                }
+                            ]
+                        }
+                    },
+                    "PhysicsAssetShapeConfiguration": {
+                        "Asset": {
+                            "assetId": {
+                                "guid": "{34CA9168-D5C7-5554-BE7D-8485A3D67AB6}",
+                                "subId": 3814177680
+                            },
+                            "assetHint": "assets/warehouse/models/warehouse_walls_front_gate.pxmesh"
+                        },
+                        "Configuration": {
+                            "PhysicsAsset": {
+                                "assetId": {
+                                    "guid": "{34CA9168-D5C7-5554-BE7D-8485A3D67AB6}",
+                                    "subId": 3814177680
+                                },
+                                "loadBehavior": "QueueLoad",
+                                "assetHint": "assets/warehouse/models/warehouse_walls_front_gate.pxmesh"
+                            }
+                        }
+                    }
                 },
                 "Component_[7017245480046407512]": {
                     "$type": "EditorDisabledCompositionComponent",
@@ -447,6 +443,38 @@
                         }
                     }
                 },
+                "Component_[1694265098081325918]": {
+                    "$type": "EditorMeshColliderComponent",
+                    "Id": 1694265098081325918,
+                    "ColliderConfiguration": {
+                        "MaterialSlots": {
+                            "Slots": [
+                                {
+                                    "Name": "MWarehouseModules"
+                                }
+                            ]
+                        }
+                    },
+                    "PhysicsAssetShapeConfiguration": {
+                        "Asset": {
+                            "assetId": {
+                                "guid": "{995CFC9D-3583-51BC-B46E-4554DEF0650E}",
+                                "subId": 2510506373
+                            },
+                            "assetHint": "assets/warehouse/models/warehouse_walls_front.pxmesh"
+                        },
+                        "Configuration": {
+                            "PhysicsAsset": {
+                                "assetId": {
+                                    "guid": "{995CFC9D-3583-51BC-B46E-4554DEF0650E}",
+                                    "subId": 2510506373
+                                },
+                                "loadBehavior": "QueueLoad",
+                                "assetHint": "assets/warehouse/models/warehouse_walls_front.pxmesh"
+                            }
+                        }
+                    }
+                },
                 "Component_[18360744952719232820]": {
                     "$type": "EditorEntitySortComponent",
                     "Id": 18360744952719232820
@@ -458,40 +486,6 @@
                 "Component_[3149718320647090514]": {
                     "$type": "EditorVisibilityComponent",
                     "Id": 3149718320647090514
-                },
-                "Component_[3790789121538053334]": {
-                    "$type": "EditorColliderComponent",
-                    "Id": 3790789121538053334,
-                    "ColliderConfiguration": {
-                        "MaterialSlots": {
-                            "Slots": [
-                                {
-                                    "Name": "MWarehouseModules"
-                                }
-                            ]
-                        }
-                    },
-                    "ShapeConfiguration": {
-                        "PhysicsAsset": {
-                            "Asset": {
-                                "assetId": {
-                                    "guid": "{995CFC9D-3583-51BC-B46E-4554DEF0650E}",
-                                    "subId": 2510506373
-                                },
-                                "assetHint": "assets/warehouse/models/warehouse_walls_front.pxmesh"
-                            },
-                            "Configuration": {
-                                "PhysicsAsset": {
-                                    "assetId": {
-                                        "guid": "{995CFC9D-3583-51BC-B46E-4554DEF0650E}",
-                                        "subId": 2510506373
-                                    },
-                                    "loadBehavior": "QueueLoad",
-                                    "assetHint": "assets/warehouse/models/warehouse_walls_front.pxmesh"
-                                }
-                            }
-                        }
-                    }
                 },
                 "Component_[4417542793349551988]": {
                     "$type": "EditorStaticRigidBodyComponent",
@@ -575,40 +569,6 @@
                         }
                     }
                 },
-                "Component_[3143867532230487626]": {
-                    "$type": "EditorColliderComponent",
-                    "Id": 3143867532230487626,
-                    "ColliderConfiguration": {
-                        "MaterialSlots": {
-                            "Slots": [
-                                {
-                                    "Name": "MWarehouseModules"
-                                }
-                            ]
-                        }
-                    },
-                    "ShapeConfiguration": {
-                        "PhysicsAsset": {
-                            "Asset": {
-                                "assetId": {
-                                    "guid": "{1DB458F4-42D7-5377-995B-415257F59549}",
-                                    "subId": 1364068586
-                                },
-                                "assetHint": "assets/warehouse/models/warehouse_walls_side.pxmesh"
-                            },
-                            "Configuration": {
-                                "PhysicsAsset": {
-                                    "assetId": {
-                                        "guid": "{1DB458F4-42D7-5377-995B-415257F59549}",
-                                        "subId": 1364068586
-                                    },
-                                    "loadBehavior": "QueueLoad",
-                                    "assetHint": "assets/warehouse/models/warehouse_walls_side.pxmesh"
-                                }
-                            }
-                        }
-                    }
-                },
                 "Component_[4521756557639722239]": {
                     "$type": "EditorStaticRigidBodyComponent",
                     "Id": 4521756557639722239
@@ -631,6 +591,38 @@
                 "Component_[551333522313100696]": {
                     "$type": "EditorEntityIconComponent",
                     "Id": 551333522313100696
+                },
+                "Component_[8947064000995272886]": {
+                    "$type": "EditorMeshColliderComponent",
+                    "Id": 8947064000995272886,
+                    "ColliderConfiguration": {
+                        "MaterialSlots": {
+                            "Slots": [
+                                {
+                                    "Name": "MWarehouseModules"
+                                }
+                            ]
+                        }
+                    },
+                    "PhysicsAssetShapeConfiguration": {
+                        "Asset": {
+                            "assetId": {
+                                "guid": "{1DB458F4-42D7-5377-995B-415257F59549}",
+                                "subId": 1364068586
+                            },
+                            "assetHint": "assets/warehouse/models/warehouse_walls_side.pxmesh"
+                        },
+                        "Configuration": {
+                            "PhysicsAsset": {
+                                "assetId": {
+                                    "guid": "{1DB458F4-42D7-5377-995B-415257F59549}",
+                                    "subId": 1364068586
+                                },
+                                "loadBehavior": "QueueLoad",
+                                "assetHint": "assets/warehouse/models/warehouse_walls_side.pxmesh"
+                            }
+                        }
+                    }
                 },
                 "Component_[921603062043779547]": {
                     "$type": "EditorDisabledCompositionComponent",

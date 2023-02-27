@@ -733,41 +733,6 @@
                     "$type": "EditorOnlyEntityComponent",
                     "Id": 10928326798115103880
                 },
-                "Component_[1153232506834696450]": {
-                    "$type": "EditorColliderComponent",
-                    "Id": 1153232506834696450,
-                    "ColliderConfiguration": {
-                        "MaterialSlots": {
-                            "Slots": [
-                                {
-                                    "Name": "DefaultMaterial"
-                                }
-                            ]
-                        }
-                    },
-                    "ShapeConfiguration": {
-                        "PhysicsAsset": {
-                            "Asset": {
-                                "assetId": {
-                                    "guid": "{7F445A99-8C11-5417-9D63-8BCC7DCA76C8}",
-                                    "subId": 1509562746
-                                },
-                                "assetHint": "robot/rosbot_xl_description/meshes/body_colision.pxmesh"
-                            },
-                            "Configuration": {
-                                "PhysicsAsset": {
-                                    "assetId": {
-                                        "guid": "{7F445A99-8C11-5417-9D63-8BCC7DCA76C8}",
-                                        "subId": 1509562746
-                                    },
-                                    "loadBehavior": "QueueLoad",
-                                    "assetHint": "robot/rosbot_xl_description/meshes/body_colision.pxmesh"
-                                },
-                                "UseMaterialsFromAsset": false
-                            }
-                        }
-                    }
-                },
                 "Component_[117912442323439654]": {
                     "$type": "GenericComponentWrapper",
                     "Id": 117912442323439654,
@@ -854,6 +819,39 @@
                 "Component_[3596110623068228821]": {
                     "$type": "EditorVisibilityComponent",
                     "Id": 3596110623068228821
+                },
+                "Component_[5440240886480353994]": {
+                    "$type": "EditorMeshColliderComponent",
+                    "Id": 5440240886480353994,
+                    "ColliderConfiguration": {
+                        "MaterialSlots": {
+                            "Slots": [
+                                {
+                                    "Name": "DefaultMaterial"
+                                }
+                            ]
+                        }
+                    },
+                    "PhysicsAssetShapeConfiguration": {
+                        "Asset": {
+                            "assetId": {
+                                "guid": "{7F445A99-8C11-5417-9D63-8BCC7DCA76C8}",
+                                "subId": 1509562746
+                            },
+                            "assetHint": "robot/rosbot_xl_description/meshes/body_colision.pxmesh"
+                        },
+                        "Configuration": {
+                            "PhysicsAsset": {
+                                "assetId": {
+                                    "guid": "{7F445A99-8C11-5417-9D63-8BCC7DCA76C8}",
+                                    "subId": 1509562746
+                                },
+                                "loadBehavior": "QueueLoad",
+                                "assetHint": "robot/rosbot_xl_description/meshes/body_colision.pxmesh"
+                            },
+                            "UseMaterialsFromAsset": false
+                        }
+                    }
                 },
                 "Component_[5852749630011233946]": {
                     "$type": "EditorEntityIconComponent",

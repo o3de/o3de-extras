@@ -1475,65 +1475,9 @@
                         }
                     ]
                 },
-                "Component_[12194365436668824793]": {
-                    "$type": "EditorOnlyEntityComponent",
-                    "Id": 12194365436668824793
-                },
-                "Component_[13823656493018592813]": {
-                    "$type": "EditorEntityIconComponent",
-                    "Id": 13823656493018592813
-                },
-                "Component_[1545542302497973797]": {
-                    "$type": "EditorPendingCompositionComponent",
-                    "Id": 1545542302497973797
-                },
-                "Component_[1836959596730672894]": {
-                    "$type": "EditorDisabledCompositionComponent",
-                    "Id": 1836959596730672894
-                },
-                "Component_[1976302571202485674]": {
-                    "$type": "EditorVisibilityComponent",
-                    "Id": 1976302571202485674
-                },
-                "Component_[3130608849925615607]": {
-                    "$type": "AZ::Render::EditorMeshComponent",
-                    "Id": 3130608849925615607,
-                    "Controller": {
-                        "Configuration": {
-                            "ModelAsset": {
-                                "assetId": {
-                                    "guid": "{2B484CB6-8011-5B56-B194-7B3110DA7629}",
-                                    "subId": 280202236
-                                },
-                                "assetHint": "o3descene/warehouse.azmodel"
-                            }
-                        }
-                    }
-                },
-                "Component_[3579789965580572662]": {
-                    "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
-                    "Id": 3579789965580572662,
-                    "Parent Entity": "ContainerEntity"
-                },
-                "Component_[5398237697833321121]": {
-                    "$type": "EditorStaticRigidBodyComponent",
-                    "Id": 5398237697833321121
-                },
-                "Component_[6126526996710685532]": {
-                    "$type": "EditorEntitySortComponent",
-                    "Id": 6126526996710685532,
-                    "Child Entity Order": [
-                        "Entity_[716185407570]",
-                        "Entity_[707595472978]"
-                    ]
-                },
-                "Component_[8421478587399964878]": {
-                    "$type": "EditorLockComponent",
-                    "Id": 8421478587399964878
-                },
-                "Component_[9485936813148123686]": {
-                    "$type": "EditorColliderComponent",
-                    "Id": 9485936813148123686,
+                "Component_[11628671484290353418]": {
+                    "$type": "EditorMeshColliderComponent",
+                    "Id": 11628671484290353418,
                     "ColliderConfiguration": {
                         "MaterialSlots": {
                             "Slots": [
@@ -1790,27 +1734,81 @@
                             ]
                         }
                     },
-                    "ShapeConfiguration": {
-                        "PhysicsAsset": {
-                            "Asset": {
+                    "PhysicsAssetShapeConfiguration": {
+                        "Asset": {
+                            "assetId": {
+                                "guid": "{2B484CB6-8011-5B56-B194-7B3110DA7629}",
+                                "subId": 2755884180
+                            },
+                            "assetHint": "o3descene/warehouse.pxmesh"
+                        },
+                        "Configuration": {
+                            "PhysicsAsset": {
                                 "assetId": {
                                     "guid": "{2B484CB6-8011-5B56-B194-7B3110DA7629}",
                                     "subId": 2755884180
                                 },
+                                "loadBehavior": "QueueLoad",
                                 "assetHint": "o3descene/warehouse.pxmesh"
-                            },
-                            "Configuration": {
-                                "PhysicsAsset": {
-                                    "assetId": {
-                                        "guid": "{2B484CB6-8011-5B56-B194-7B3110DA7629}",
-                                        "subId": 2755884180
-                                    },
-                                    "loadBehavior": "QueueLoad",
-                                    "assetHint": "o3descene/warehouse.pxmesh"
-                                }
                             }
                         }
                     }
+                },
+                "Component_[12194365436668824793]": {
+                    "$type": "EditorOnlyEntityComponent",
+                    "Id": 12194365436668824793
+                },
+                "Component_[13823656493018592813]": {
+                    "$type": "EditorEntityIconComponent",
+                    "Id": 13823656493018592813
+                },
+                "Component_[1545542302497973797]": {
+                    "$type": "EditorPendingCompositionComponent",
+                    "Id": 1545542302497973797
+                },
+                "Component_[1836959596730672894]": {
+                    "$type": "EditorDisabledCompositionComponent",
+                    "Id": 1836959596730672894
+                },
+                "Component_[1976302571202485674]": {
+                    "$type": "EditorVisibilityComponent",
+                    "Id": 1976302571202485674
+                },
+                "Component_[3130608849925615607]": {
+                    "$type": "AZ::Render::EditorMeshComponent",
+                    "Id": 3130608849925615607,
+                    "Controller": {
+                        "Configuration": {
+                            "ModelAsset": {
+                                "assetId": {
+                                    "guid": "{2B484CB6-8011-5B56-B194-7B3110DA7629}",
+                                    "subId": 280202236
+                                },
+                                "assetHint": "o3descene/warehouse.azmodel"
+                            }
+                        }
+                    }
+                },
+                "Component_[3579789965580572662]": {
+                    "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
+                    "Id": 3579789965580572662,
+                    "Parent Entity": "ContainerEntity"
+                },
+                "Component_[5398237697833321121]": {
+                    "$type": "EditorStaticRigidBodyComponent",
+                    "Id": 5398237697833321121
+                },
+                "Component_[6126526996710685532]": {
+                    "$type": "EditorEntitySortComponent",
+                    "Id": 6126526996710685532,
+                    "Child Entity Order": [
+                        "Entity_[716185407570]",
+                        "Entity_[707595472978]"
+                    ]
+                },
+                "Component_[8421478587399964878]": {
+                    "$type": "EditorLockComponent",
+                    "Id": 8421478587399964878
                 },
                 "Component_[9530788238563717018]": {
                     "$type": "EditorMaterialComponent",

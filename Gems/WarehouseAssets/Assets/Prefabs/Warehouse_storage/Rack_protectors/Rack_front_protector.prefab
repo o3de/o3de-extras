@@ -58,13 +58,9 @@
                     "$type": "EditorVisibilityComponent",
                     "Id": 11438438563397133372
                 },
-                "Component_[13395915873594579514]": {
-                    "$type": "EditorLockComponent",
-                    "Id": 13395915873594579514
-                },
-                "Component_[15579174905508719867]": {
-                    "$type": "EditorColliderComponent",
-                    "Id": 15579174905508719867,
+                "Component_[11639947535860909332]": {
+                    "$type": "EditorMeshColliderComponent",
+                    "Id": 11639947535860909332,
                     "ColliderConfiguration": {
                         "MaterialSlots": {
                             "Slots": [
@@ -74,27 +70,29 @@
                             ]
                         }
                     },
-                    "ShapeConfiguration": {
-                        "PhysicsAsset": {
-                            "Asset": {
+                    "PhysicsAssetShapeConfiguration": {
+                        "Asset": {
+                            "assetId": {
+                                "guid": "{9928FCBB-9AD8-5B3E-94FF-3516CC574ED1}",
+                                "subId": 4102061829
+                            },
+                            "assetHint": "assets/warehouse/models/warehouse_frontrackprotector.pxmesh"
+                        },
+                        "Configuration": {
+                            "PhysicsAsset": {
                                 "assetId": {
                                     "guid": "{9928FCBB-9AD8-5B3E-94FF-3516CC574ED1}",
                                     "subId": 4102061829
                                 },
+                                "loadBehavior": "QueueLoad",
                                 "assetHint": "assets/warehouse/models/warehouse_frontrackprotector.pxmesh"
-                            },
-                            "Configuration": {
-                                "PhysicsAsset": {
-                                    "assetId": {
-                                        "guid": "{9928FCBB-9AD8-5B3E-94FF-3516CC574ED1}",
-                                        "subId": 4102061829
-                                    },
-                                    "loadBehavior": "QueueLoad",
-                                    "assetHint": "assets/warehouse/models/warehouse_frontrackprotector.pxmesh"
-                                }
                             }
                         }
                     }
+                },
+                "Component_[13395915873594579514]": {
+                    "$type": "EditorLockComponent",
+                    "Id": 13395915873594579514
                 },
                 "Component_[15907735198669368676]": {
                     "$type": "EditorDisabledCompositionComponent",

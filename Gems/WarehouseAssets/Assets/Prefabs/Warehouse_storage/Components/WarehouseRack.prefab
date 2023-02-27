@@ -104,40 +104,6 @@
                     "$type": "EditorEntitySortComponent",
                     "Id": 16403983953216827994
                 },
-                "Component_[2276504649476859699]": {
-                    "$type": "EditorColliderComponent",
-                    "Id": 2276504649476859699,
-                    "ColliderConfiguration": {
-                        "MaterialSlots": {
-                            "Slots": [
-                                {
-                                    "Name": "MWarehouseStorage"
-                                }
-                            ]
-                        }
-                    },
-                    "ShapeConfiguration": {
-                        "PhysicsAsset": {
-                            "Asset": {
-                                "assetId": {
-                                    "guid": "{665AB396-251A-55E3-83E2-AAB98CB864FB}",
-                                    "subId": 1812650258
-                                },
-                                "assetHint": "assets/warehouse/models/warehouse_rack.pxmesh"
-                            },
-                            "Configuration": {
-                                "PhysicsAsset": {
-                                    "assetId": {
-                                        "guid": "{665AB396-251A-55E3-83E2-AAB98CB864FB}",
-                                        "subId": 1812650258
-                                    },
-                                    "loadBehavior": "QueueLoad",
-                                    "assetHint": "assets/warehouse/models/warehouse_rack.pxmesh"
-                                }
-                            }
-                        }
-                    }
-                },
                 "Component_[365858973221232949]": {
                     "$type": "EditorEntityIconComponent",
                     "Id": 365858973221232949
@@ -179,6 +145,38 @@
                     "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
                     "Id": 7951809217182138039,
                     "Parent Entity": "ContainerEntity"
+                },
+                "Component_[8857752593320328453]": {
+                    "$type": "EditorMeshColliderComponent",
+                    "Id": 8857752593320328453,
+                    "ColliderConfiguration": {
+                        "MaterialSlots": {
+                            "Slots": [
+                                {
+                                    "Name": "MWarehouseStorage"
+                                }
+                            ]
+                        }
+                    },
+                    "PhysicsAssetShapeConfiguration": {
+                        "Asset": {
+                            "assetId": {
+                                "guid": "{665AB396-251A-55E3-83E2-AAB98CB864FB}",
+                                "subId": 1812650258
+                            },
+                            "assetHint": "assets/warehouse/models/warehouse_rack.pxmesh"
+                        },
+                        "Configuration": {
+                            "PhysicsAsset": {
+                                "assetId": {
+                                    "guid": "{665AB396-251A-55E3-83E2-AAB98CB864FB}",
+                                    "subId": 1812650258
+                                },
+                                "loadBehavior": "QueueLoad",
+                                "assetHint": "assets/warehouse/models/warehouse_rack.pxmesh"
+                            }
+                        }
+                    }
                 }
             }
         }

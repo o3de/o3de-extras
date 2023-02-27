@@ -898,52 +898,6 @@
                     "$type": "EditorOnlyEntityComponent",
                     "Id": 10928326798115103880
                 },
-                "Component_[1153232506834696450]": {
-                    "$type": "EditorColliderComponent",
-                    "Id": 1153232506834696450,
-                    "ColliderConfiguration": {
-                        "Position": [
-                            0.1837027668952942,
-                            0.0,
-                            -0.06689203530550003
-                        ],
-                        "Rotation": [
-                            0.0,
-                            0.0,
-                            0.7071067690849304,
-                            0.7071067094802856
-                        ],
-                        "MaterialSlots": {
-                            "Slots": [
-                                {
-                                    "Name": "Proteus"
-                                }
-                            ]
-                        }
-                    },
-                    "ShapeConfiguration": {
-                        "PhysicsAsset": {
-                            "Asset": {
-                                "assetId": {
-                                    "guid": "{0042012D-310E-5380-8BFB-5B92949DA679}",
-                                    "subId": 1612379007
-                                },
-                                "assetHint": "assets/proteusrobot/proteus_chassis.pxmesh"
-                            },
-                            "Configuration": {
-                                "PhysicsAsset": {
-                                    "assetId": {
-                                        "guid": "{0042012D-310E-5380-8BFB-5B92949DA679}",
-                                        "subId": 1612379007
-                                    },
-                                    "loadBehavior": "QueueLoad",
-                                    "assetHint": "assets/proteusrobot/proteus_chassis.pxmesh"
-                                },
-                                "UseMaterialsFromAsset": false
-                            }
-                        }
-                    }
-                },
                 "Component_[12137189902681906851]": {
                     "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
                     "Id": 12137189902681906851,
@@ -1034,6 +988,50 @@
                 "Component_[6615492099568417181]": {
                     "$type": "EditorLockComponent",
                     "Id": 6615492099568417181
+                },
+                "Component_[7263698520419106338]": {
+                    "$type": "EditorMeshColliderComponent",
+                    "Id": 7263698520419106338,
+                    "ColliderConfiguration": {
+                        "Position": [
+                            0.1837027668952942,
+                            0.0,
+                            -0.06689203530550003
+                        ],
+                        "Rotation": [
+                            0.0,
+                            0.0,
+                            0.7071067690849304,
+                            0.7071067094802856
+                        ],
+                        "MaterialSlots": {
+                            "Slots": [
+                                {
+                                    "Name": "Proteus"
+                                }
+                            ]
+                        }
+                    },
+                    "PhysicsAssetShapeConfiguration": {
+                        "Asset": {
+                            "assetId": {
+                                "guid": "{0042012D-310E-5380-8BFB-5B92949DA679}",
+                                "subId": 1612379007
+                            },
+                            "assetHint": "assets/proteusrobot/proteus_chassis.pxmesh"
+                        },
+                        "Configuration": {
+                            "PhysicsAsset": {
+                                "assetId": {
+                                    "guid": "{0042012D-310E-5380-8BFB-5B92949DA679}",
+                                    "subId": 1612379007
+                                },
+                                "loadBehavior": "QueueLoad",
+                                "assetHint": "assets/proteusrobot/proteus_chassis.pxmesh"
+                            },
+                            "UseMaterialsFromAsset": false
+                        }
+                    }
                 },
                 "Component_[7613619815052417776]": {
                     "$type": "EditorRigidBodyComponent",

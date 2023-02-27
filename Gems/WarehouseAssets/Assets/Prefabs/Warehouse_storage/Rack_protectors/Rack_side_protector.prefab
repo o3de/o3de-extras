@@ -155,9 +155,17 @@
                         }
                     }
                 },
-                "Component_[15264405835034640312]": {
-                    "$type": "EditorColliderComponent",
-                    "Id": 15264405835034640312,
+                "Component_[16551911944901009126]": {
+                    "$type": "EditorLockComponent",
+                    "Id": 16551911944901009126
+                },
+                "Component_[18146145291811479353]": {
+                    "$type": "EditorVisibilityComponent",
+                    "Id": 18146145291811479353
+                },
+                "Component_[2600525514124264372]": {
+                    "$type": "EditorMeshColliderComponent",
+                    "Id": 2600525514124264372,
                     "ColliderConfiguration": {
                         "MaterialSlots": {
                             "Slots": [
@@ -167,35 +175,25 @@
                             ]
                         }
                     },
-                    "ShapeConfiguration": {
-                        "PhysicsAsset": {
-                            "Asset": {
+                    "PhysicsAssetShapeConfiguration": {
+                        "Asset": {
+                            "assetId": {
+                                "guid": "{663633B0-B67A-5957-BC3A-53FA65F40353}",
+                                "subId": 3163433385
+                            },
+                            "assetHint": "assets/warehouse/models/warehouse_siderackprotector.pxmesh"
+                        },
+                        "Configuration": {
+                            "PhysicsAsset": {
                                 "assetId": {
                                     "guid": "{663633B0-B67A-5957-BC3A-53FA65F40353}",
                                     "subId": 3163433385
                                 },
+                                "loadBehavior": "QueueLoad",
                                 "assetHint": "assets/warehouse/models/warehouse_siderackprotector.pxmesh"
-                            },
-                            "Configuration": {
-                                "PhysicsAsset": {
-                                    "assetId": {
-                                        "guid": "{663633B0-B67A-5957-BC3A-53FA65F40353}",
-                                        "subId": 3163433385
-                                    },
-                                    "loadBehavior": "QueueLoad",
-                                    "assetHint": "assets/warehouse/models/warehouse_siderackprotector.pxmesh"
-                                }
                             }
                         }
                     }
-                },
-                "Component_[16551911944901009126]": {
-                    "$type": "EditorLockComponent",
-                    "Id": 16551911944901009126
-                },
-                "Component_[18146145291811479353]": {
-                    "$type": "EditorVisibilityComponent",
-                    "Id": 18146145291811479353
                 },
                 "Component_[4216229295497526239]": {
                     "$type": "EditorEntityIconComponent",
