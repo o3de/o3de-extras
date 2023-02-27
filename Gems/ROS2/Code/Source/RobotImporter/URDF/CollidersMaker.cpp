@@ -23,6 +23,10 @@
 #include <SceneAPI/SceneCore/Events/SceneSerializationBus.h>
 #include <SceneAPI/SceneCore/Utilities/SceneGraphSelector.h>
 #include <Source/EditorColliderComponent.h>
+#include <Source/EditorMeshColliderComponent.h>
+#include <PhysX/MeshColliderComponentBus.h>
+#include <PhysX/EditorColliderComponentRequestBus.h>
+
 
 namespace ROS2
 {
@@ -361,11 +365,6 @@ namespace ROS2
         colliderConfig.m_rotation = URDF::TypeConversions::ConvertQuaternion(collision->origin.rotation);
         if (!isPrimitiveShape)
         {
-            Physics::PhysicsAssetShapeConfiguration shapeConfiguration;
-            shapeConfiguration.m_useMaterialsFromAsset = false;
-            entity->CreateComponent<PhysX::EditorColliderComponent>(colliderConfig, shapeConfiguration);
-            entity->Activate();
-
             AZ_Printf(Internal::CollidersMakerLoggingTag, "Adding mesh collider to %s\n", entityId.ToString().c_str());
             auto meshGeometry = std::dynamic_pointer_cast<urdf::Mesh>(geometry);
             AZ_Assert(meshGeometry, "geometry is not meshGeometry");
@@ -391,10 +390,18 @@ namespace ROS2
             AZ::Data::AssetType assetType = AZ::AzTypeInfo<PhysX::Pipeline::MeshAsset>::Uuid();
             AZ::Data::AssetCatalogRequestBus::BroadcastResult(
                 assetId, &AZ::Data::AssetCatalogRequests::GetAssetIdByPath, pxmodelPath->c_str(), assetType, false);
-            // Insert pxmesh into the collider component
-            PhysX::MeshColliderComponentRequestsBus::Event(entityId, &PhysX::MeshColliderComponentRequests::SetMeshAsset, assetId);
-            entity->Deactivate();
+            AZ_Printf(Internal::CollidersMakerLoggingTag, "Collider %s has assetId %s\n", entityId.ToString().c_str(), assetId.ToString<AZStd::string>().c_str());
 
+            Physics::PhysicsAssetShapeConfiguration shapeConfiguration;
+            shapeConfiguration.m_useMaterialsFromAsset = false;
+            if (assetId.IsValid())
+            {
+                entity->CreateComponent<PhysX::EditorMeshColliderComponent>(colliderConfig, shapeConfiguration);
+                entity->Activate();
+                // Insert pxmesh into the collider component
+                PhysX::MeshColliderComponentRequestsBus::Event(entityId, &PhysX::MeshColliderComponentRequests::SetMeshAsset, assetId);
+                entity->Deactivate();
+            }
             return;
         }
 
@@ -424,21 +431,21 @@ namespace ROS2
                 Physics::BoxShapeConfiguration cfg;
                 auto* component = entity->CreateComponent<PhysX::EditorColliderComponent>(colliderConfig, cfg);
                 entity->Activate();
-                PhysX::EditorColliderComponentRequestBus::Event(
+                PhysX::EditorPrimitiveColliderComponentRequestBus::Event(
                     AZ::EntityComponentIdPair(entityId, component->GetId()),
-                    &PhysX::EditorColliderComponentRequests::SetShapeType,
+                    &PhysX::EditorPrimitiveColliderComponentRequests::SetShapeType,
                     Physics::ShapeType::Cylinder);
-                PhysX::EditorColliderComponentRequestBus::Event(
+                PhysX::EditorPrimitiveColliderComponentRequestBus::Event(
                     AZ::EntityComponentIdPair(entityId, component->GetId()),
-                    &PhysX::EditorColliderComponentRequests::SetCylinderHeight,
+                    &PhysX::EditorPrimitiveColliderComponentRequests::SetCylinderHeight,
                     cylinderGeometry->length);
-                PhysX::EditorColliderComponentRequestBus::Event(
+                PhysX::EditorPrimitiveColliderComponentRequestBus::Event(
                     AZ::EntityComponentIdPair(entityId, component->GetId()),
-                    &PhysX::EditorColliderComponentRequests::SetCylinderRadius,
+                    &PhysX::EditorPrimitiveColliderComponentRequests::SetCylinderRadius,
                     cylinderGeometry->radius);
-                PhysX::EditorColliderComponentRequestBus::Event(
+                PhysX::EditorPrimitiveColliderComponentRequestBus::Event(
                     AZ::EntityComponentIdPair(entityId, component->GetId()),
-                    &PhysX::EditorColliderComponentRequests::SetCylinderSubdivisionCount,
+                    &PhysX::EditorPrimitiveColliderComponentRequests::SetCylinderSubdivisionCount,
                     32);
                 entity->Deactivate();
             }

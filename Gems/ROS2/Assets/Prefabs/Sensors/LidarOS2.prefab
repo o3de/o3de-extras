@@ -130,6 +130,41 @@
             "Id": "Entity_[417184227077]",
             "Name": "LidarOS2",
             "Components": {
+                "Component_[10290792692497724644]": {
+                    "$type": "EditorMeshColliderComponent",
+                    "Id": 10290792692497724644,
+                    "ColliderConfiguration": {
+                        "CollisionGroupId": {
+                            "GroupId": "{DED3A46E-3588-4BB8-BADF-E3114DBA95A6}"
+                        },
+                        "MaterialSlots": {
+                            "Slots": [
+                                {
+                                    "Name": "DefaultMaterial"
+                                }
+                            ]
+                        }
+                    },
+                    "PhysicsAssetShapeConfiguration": {
+                        "Asset": {
+                            "assetId": {
+                                "guid": "{99D850A3-8E59-5E78-93FE-AE8DB228684D}",
+                                "subId": 2574200790
+                            },
+                            "assetHint": "models/sensors/lidaros2/lidaros2.pxmesh"
+                        },
+                        "Configuration": {
+                            "PhysicsAsset": {
+                                "assetId": {
+                                    "guid": "{99D850A3-8E59-5E78-93FE-AE8DB228684D}",
+                                    "subId": 2574200790
+                                },
+                                "loadBehavior": "QueueLoad",
+                                "assetHint": "models/sensors/lidaros2/lidaros2.pxmesh"
+                            }
+                        }
+                    }
+                },
                 "Component_[10387713135725007135]": {
                     "$type": "AZ::Render::EditorMeshComponent",
                     "Id": 10387713135725007135,
@@ -152,43 +187,6 @@
                 "Component_[13177781661023720894]": {
                     "$type": "EditorOnlyEntityComponent",
                     "Id": 13177781661023720894
-                },
-                "Component_[14535670656735835043]": {
-                    "$type": "EditorColliderComponent",
-                    "Id": 14535670656735835043,
-                    "ColliderConfiguration": {
-                        "CollisionGroupId": {
-                            "GroupId": "{DED3A46E-3588-4BB8-BADF-E3114DBA95A6}"
-                        },
-                        "MaterialSlots": {
-                            "Slots": [
-                                {
-                                    "Name": "DefaultMaterial"
-                                }
-                            ]
-                        }
-                    },
-                    "ShapeConfiguration": {
-                        "PhysicsAsset": {
-                            "Asset": {
-                                "assetId": {
-                                    "guid": "{99D850A3-8E59-5E78-93FE-AE8DB228684D}",
-                                    "subId": 2574200790
-                                },
-                                "assetHint": "models/sensors/lidaros2/lidaros2.pxmesh"
-                            },
-                            "Configuration": {
-                                "PhysicsAsset": {
-                                    "assetId": {
-                                        "guid": "{99D850A3-8E59-5E78-93FE-AE8DB228684D}",
-                                        "subId": 2574200790
-                                    },
-                                    "loadBehavior": "QueueLoad",
-                                    "assetHint": "models/sensors/lidaros2/lidaros2.pxmesh"
-                                }
-                            }
-                        }
-                    }
                 },
                 "Component_[17075071070477116796]": {
                     "$type": "EditorDisabledCompositionComponent",

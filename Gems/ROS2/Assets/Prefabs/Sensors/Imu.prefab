@@ -58,13 +58,9 @@
                     "$type": "EditorVisibilityComponent",
                     "Id": 10340392978555572105
                 },
-                "Component_[11958193181460909696]": {
-                    "$type": "EditorOnlyEntityComponent",
-                    "Id": 11958193181460909696
-                },
-                "Component_[12053638524449760314]": {
-                    "$type": "EditorColliderComponent",
-                    "Id": 12053638524449760314,
+                "Component_[11750730641353427948]": {
+                    "$type": "EditorMeshColliderComponent",
+                    "Id": 11750730641353427948,
                     "ColliderConfiguration": {
                         "MaterialSlots": {
                             "Slots": [
@@ -74,27 +70,29 @@
                             ]
                         }
                     },
-                    "ShapeConfiguration": {
-                        "PhysicsAsset": {
-                            "Asset": {
+                    "PhysicsAssetShapeConfiguration": {
+                        "Asset": {
+                            "assetId": {
+                                "guid": "{50286487-658B-5B99-99D6-3AB4002EFF73}",
+                                "subId": 3726733934
+                            },
+                            "assetHint": "models/sensors/imu/imu_mti10.pxmesh"
+                        },
+                        "Configuration": {
+                            "PhysicsAsset": {
                                 "assetId": {
                                     "guid": "{50286487-658B-5B99-99D6-3AB4002EFF73}",
                                     "subId": 3726733934
                                 },
+                                "loadBehavior": "QueueLoad",
                                 "assetHint": "models/sensors/imu/imu_mti10.pxmesh"
-                            },
-                            "Configuration": {
-                                "PhysicsAsset": {
-                                    "assetId": {
-                                        "guid": "{50286487-658B-5B99-99D6-3AB4002EFF73}",
-                                        "subId": 3726733934
-                                    },
-                                    "loadBehavior": "QueueLoad",
-                                    "assetHint": "models/sensors/imu/imu_mti10.pxmesh"
-                                }
                             }
                         }
                     }
+                },
+                "Component_[11958193181460909696]": {
+                    "$type": "EditorOnlyEntityComponent",
+                    "Id": 11958193181460909696
                 },
                 "Component_[12417918822595867875]": {
                     "$type": "EditorEntitySortComponent",
