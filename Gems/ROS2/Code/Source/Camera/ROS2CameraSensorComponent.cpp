@@ -147,6 +147,5 @@ namespace ROS2
             return cameraName;
         }
         return AZStd::string{};
-
     }
 } // namespace ROS2

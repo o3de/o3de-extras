@@ -8,6 +8,7 @@
 #pragma once
 
 #include <Atom/Feature/Utils/FrameCaptureBus.h>
+#include <AzCore/std/containers/span.h>
 #include <ROS2/ROS2GemUtilities.h>
 #include <chrono>
 #include <rclcpp/publisher.hpp>
@@ -62,7 +63,7 @@ namespace ROS2
         //! @param header - header with filled message information (frame, timestamp, seq)
         //! @param cameraPose - current camera pose from which the rendering should take place
         virtual void RequestMessagePublication(
-            AZStd::vector<std::shared_ptr<rclcpp::Publisher<sensor_msgs::msg::Image>>> publishers,
+            AZStd::span<std::shared_ptr<rclcpp::Publisher<sensor_msgs::msg::Image>>> publishers,
             const AZ::Transform& cameraPose,
             const std_msgs::msg::Header& header);
 
@@ -144,7 +145,7 @@ namespace ROS2
 
         // CameraSensor overrides
         void RequestMessagePublication(
-            AZStd::vector<std::shared_ptr<rclcpp::Publisher<sensor_msgs::msg::Image>>> publishers,
+            AZStd::span<std::shared_ptr<rclcpp::Publisher<sensor_msgs::msg::Image>>> publishers,
             const AZ::Transform& cameraPose,
             const std_msgs::msg::Header& header) override;
 

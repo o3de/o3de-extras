@@ -117,9 +117,8 @@ namespace ROS2
         m_view->SetViewToClipMatrix(m_cameraSensorDescription.m_viewToClipMatrix);
         m_scene = AZ::RPI::RPISystemInterface::Get()->GetSceneByName(AZ::Name("Main"));
 
-        m_pipelineName = m_cameraSensorDescription.m_cameraName + "Pipeline" + GetPipelineTypeName() +
-            m_cameraSensorDescription.m_entityId.ToString();
-
+        m_pipelineName = AZStd::string::format("%sPipeline%s%s",m_cameraSensorDescription.m_cameraName.c_str(), GetPipelineTypeName().c_str(),
+                                               m_cameraSensorDescription.m_entityId.ToString().c_str() );
         AZ::RPI::RenderPipelineDescriptor pipelineDesc;
         pipelineDesc.m_mainViewTagName = "MainCamera";
         pipelineDesc.m_name = m_pipelineName;
@@ -218,11 +217,12 @@ namespace ROS2
     }
 
     void CameraSensor::RequestMessagePublication(
-        AZStd::vector<std::shared_ptr<rclcpp::Publisher<sensor_msgs::msg::Image>>> publishers,
+        AZStd::span<std::shared_ptr<rclcpp::Publisher<sensor_msgs::msg::Image>>> publishers,
         const AZ::Transform& cameraPose,
         const std_msgs::msg::Header& header)
     {
-        if(!publishers.empty()){
+        if (!publishers.empty())
+        {
             RequestMessagePublication(publishers.front(), cameraPose, header);
         }
     }
@@ -279,7 +279,7 @@ namespace ROS2
     }
 
     void CameraRGBDSensor::RequestMessagePublication(
-        AZStd::vector<std::shared_ptr<rclcpp::Publisher<sensor_msgs::msg::Image>>> publishers,
+        AZStd::span<std::shared_ptr<rclcpp::Publisher<sensor_msgs::msg::Image>>> publishers,
         const AZ::Transform& cameraPose,
         const std_msgs::msg::Header& header)
     {
