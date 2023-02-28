@@ -1,12 +1,13 @@
 {
-    "template_name": "FleetRobotTemplate",
-    "origin": "The primary repo for FleetRobotTemplate goes here: i.e. http://www.mydomain.com",
-    "license": "What license FleetRobotTemplate uses goes here: i.e. https://opensource.org/licenses/MIT",
-    "display_name": "FleetRobotTemplate",
-    "summary": "A short description of FleetRobotTemplate.",
+    "template_name": "Ros2FleetRobotTemplate",
+    "origin": "Open 3D Engine Extras",
+    "origin_url": "https://github.com/o3de/o3de-extras",
+    "license": "https://github.com/o3de/o3de-extras/tree/development/Templates/Ros2ProjectTemplate/Template/LICENSE.txt",
+    "display_name": "Ros2FleetRobotTemplate",
+    "summary": "Template for ROS2 multi-robot project.",
     "canonical_tags": [],
     "user_tags": [
-        "FleetRobotTemplate"
+        "Ros2FleetRobotTemplate", "ROS2", "ROS"
     ],
     "icon_path": "preview.png",
     "copyFiles": [
@@ -347,6 +348,10 @@
             "isTemplated": true
         },
         {
+            "file": "Resources/Platform/iOS/Info.plist",
+            "isTemplated": true
+        },
+        {
             "file": "ShaderLib/README.md",
             "isTemplated": false
         },
@@ -355,8 +360,24 @@
             "isTemplated": true
         },
         {
-            "file": "ShaderLib/viewsrg.srgi",
-            "isTemplated": true
+            "file": "Passes/ContrastAdaptiveSharpening.pass",
+            "isTemplated": false
+        },
+        {
+            "file": "Passes/MainRenderPipeline.azasset",
+            "isTemplated": false
+        },
+        {
+            "file": "Passes/PostProcessParent.pass",
+            "isTemplated": false
+        },
+        {
+            "file": "Passes/SMAAConfiguration.azasset",
+            "isTemplated": false
+        },
+        {
+            "file": "Passes/Taa.pass",
+            "isTemplated": false
         },
         {
             "file": "autoexec.cfg",
@@ -377,82 +398,6 @@
         {
             "file": "project.json",
             "isTemplated": true
-        },
-        {
-            "file": "proteus_nav/README.md",
-            "isTemplated": false
-        },
-        {
-            "file": "proteus_nav/src/proteus_nav/launch/__pycache__/teleop.launch.cpython-310.pyc",
-            "isTemplated": false
-        },
-        {
-            "file": "proteus_nav/src/proteus_nav/launch/config/bt.xml",
-            "isTemplated": false
-        },
-        {
-            "file": "proteus_nav/src/proteus_nav/launch/config/config_multi.rviz",
-            "isTemplated": false
-        },
-        {
-            "file": "proteus_nav/src/proteus_nav/launch/config/navigation_multi_params.yaml",
-            "isTemplated": false
-        },
-        {
-            "file": "proteus_nav/src/proteus_nav/launch/config/slam_multi_params.yaml",
-            "isTemplated": false
-        },
-        {
-            "file": "proteus_nav/src/proteus_nav/launch/navigation_multi.launch.py",
-            "isTemplated": false
-        },
-        {
-            "file": "proteus_nav/src/proteus_nav/launch/teleop.launch.py",
-            "isTemplated": false
-        },
-        {
-            "file": "proteus_nav/src/proteus_nav/package.xml",
-            "isTemplated": false
-        },
-        {
-            "file": "proteus_nav/src/proteus_nav/proteus_nav/__init__.py",
-            "isTemplated": false
-        },
-        {
-            "file": "proteus_nav/src/proteus_nav/resource/proteus_nav",
-            "isTemplated": false
-        },
-        {
-            "file": "proteus_nav/src/proteus_nav/setup.cfg",
-            "isTemplated": false
-        },
-        {
-            "file": "proteus_nav/src/proteus_nav/setup.py",
-            "isTemplated": false
-        },
-        {
-            "file": "proteus_nav/src/proteus_nav/test/__pycache__/test_copyright.cpython-310-pytest-6.2.5.pyc",
-            "isTemplated": false
-        },
-        {
-            "file": "proteus_nav/src/proteus_nav/test/__pycache__/test_flake8.cpython-310-pytest-6.2.5.pyc",
-            "isTemplated": false
-        },
-        {
-            "file": "proteus_nav/src/proteus_nav/test/__pycache__/test_pep257.cpython-310-pytest-6.2.5.pyc",
-            "isTemplated": false
-        },
-        {
-            "file": "proteus_nav/src/proteus_nav/test/test_flake8.py",
-            "isTemplated": false
-        },
-        {
-            "file": "proteus_nav/src/proteus_nav/test/test_pep257.py",
-            "isTemplated": false
-        },
-        {
-            "file": "readme.md",
-            "isTemplated": false
         }
     ],
     "createDirectories": [
@@ -509,6 +454,9 @@
         },
         {
             "dir": "Levels/playground/_savebackup/2023-02-21 [13.25.33]"
+        },
+        {
+            "dir": "Passes"
         },
         {
             "dir": "Platform"
