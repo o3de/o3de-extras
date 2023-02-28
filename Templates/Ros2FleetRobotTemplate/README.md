@@ -110,7 +110,7 @@ $PROJECT_PATH/build/linux/bin/profile/Editor
 ```
 
 
-## 6. Spawning robots
+## Spawning robots
 
 The level contains spawn points configured to spawn Proteus robots.
 To spawn all spawn points call the following services in ROS2:
