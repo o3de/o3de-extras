@@ -168,7 +168,7 @@ namespace ROS2
         const AZ::Transform inverse = (cameraPose * AtomToRos).GetInverse();
         m_view->SetWorldToViewMatrix(AZ::Matrix4x4::CreateFromQuaternionAndTranslation(inverse.GetRotation(), inverse.GetTranslation()));
 
-        AZ::Outcome<AZ::Render::FrameCaptureId, AZ::Render::FrameCaptureError> captureOutcome;
+        AZ::Render::FrameCaptureOutcome captureOutcome;
 
         m_pipeline->AddToRenderTickOnce();
         AZ::Render::FrameCaptureRequestBus::BroadcastResult(
