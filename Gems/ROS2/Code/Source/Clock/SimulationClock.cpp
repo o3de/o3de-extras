@@ -6,7 +6,7 @@
  *
  */
 
-#include "SimulationClock.h"
+#include <ROS2/Clock/SimulationClock.h>
 #include <AzCore/Time/ITime.h>
 #include <ROS2/ROS2Bus.h>
 #include <rclcpp/qos.hpp>
@@ -36,8 +36,14 @@ namespace ROS2
         }
     }
 
+    AZStd::chrono::duration<float, AZStd::chrono::seconds::period> SimulationClock::GetExpectedSimulationLoopTime() const
+    {
+        return AZStd::chrono::duration<AZ::s64 , AZStd::chrono::microseconds::period>(m_currentMedian);
+    }
+
     void SimulationClock::Tick()
     {
+        auto elapsed = GetElapsedTimeMicroseconds();
         if (!m_clockPublisher)
         { // Lazy construct
             auto ros2Node = ROS2Interface::Get()->GetNode();
@@ -49,5 +55,17 @@ namespace ROS2
         rosgraph_msgs::msg::Clock msg;
         msg.clock = GetROSTimestamp();
         m_clockPublisher->publish(msg);
+
+        AZ::s64 deltaTime = elapsed - m_lastExecutionTime;
+        m_lastExecutionTime = elapsed;
+
+        // statistics on execution time
+        m_frameTimes.push_back(deltaTime);
+        if (m_frameTimes.size()>FramesNumberForStats){
+            m_frameTimes.pop_front();
+        }
+        AZStd::vector<AZ::s64> frameTimeSorted{ m_frameTimes.begin(), m_frameTimes.end() };
+        AZStd::sort(frameTimeSorted.begin(),frameTimeSorted.end());
+        m_currentMedian = frameTimeSorted[frameTimeSorted.size() / 2] ;
     }
 } // namespace ROS2
