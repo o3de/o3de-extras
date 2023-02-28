@@ -899,7 +899,7 @@
                     "Id": 10928326798115103880
                 },
                 "Component_[1153232506834696450]": {
-                    "$type": "EditorColliderComponent",
+                    "$type": "EditorMeshColliderComponent",
                     "Id": 1153232506834696450,
                     "ColliderConfiguration": {
                         "Position": [
@@ -921,26 +921,24 @@
                             ]
                         }
                     },
-                    "ShapeConfiguration": {
-                        "PhysicsAsset": {
-                            "Asset": {
+                    "PhysicsAssetShapeConfiguration": {
+                        "Asset": {
+                            "assetId": {
+                                "guid": "{0042012D-310E-5380-8BFB-5B92949DA679}",
+                                "subId": 1612379007
+                            },
+                            "assetHint": "assets/proteusrobot/proteus_chassis.pxmesh"
+                        },
+                        "Configuration": {
+                            "PhysicsAsset": {
                                 "assetId": {
                                     "guid": "{0042012D-310E-5380-8BFB-5B92949DA679}",
                                     "subId": 1612379007
                                 },
+                                "loadBehavior": "QueueLoad",
                                 "assetHint": "assets/proteusrobot/proteus_chassis.pxmesh"
                             },
-                            "Configuration": {
-                                "PhysicsAsset": {
-                                    "assetId": {
-                                        "guid": "{0042012D-310E-5380-8BFB-5B92949DA679}",
-                                        "subId": 1612379007
-                                    },
-                                    "loadBehavior": "QueueLoad",
-                                    "assetHint": "assets/proteusrobot/proteus_chassis.pxmesh"
-                                },
-                                "UseMaterialsFromAsset": false
-                            }
+                            "UseMaterialsFromAsset": false
                         }
                     }
                 },

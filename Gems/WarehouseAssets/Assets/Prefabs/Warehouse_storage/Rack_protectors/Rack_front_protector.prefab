@@ -63,7 +63,7 @@
                     "Id": 13395915873594579514
                 },
                 "Component_[15579174905508719867]": {
-                    "$type": "EditorColliderComponent",
+                    "$type": "EditorMeshColliderComponent",
                     "Id": 15579174905508719867,
                     "ColliderConfiguration": {
                         "MaterialSlots": {
@@ -74,24 +74,22 @@
                             ]
                         }
                     },
-                    "ShapeConfiguration": {
-                        "PhysicsAsset": {
-                            "Asset": {
+                    "PhysicsAssetShapeConfiguration": {
+                        "Asset": {
+                            "assetId": {
+                                "guid": "{9928FCBB-9AD8-5B3E-94FF-3516CC574ED1}",
+                                "subId": 4102061829
+                            },
+                            "assetHint": "assets/warehouse/models/warehouse_frontrackprotector.pxmesh"
+                        },
+                        "Configuration": {
+                            "PhysicsAsset": {
                                 "assetId": {
                                     "guid": "{9928FCBB-9AD8-5B3E-94FF-3516CC574ED1}",
                                     "subId": 4102061829
                                 },
+                                "loadBehavior": "QueueLoad",
                                 "assetHint": "assets/warehouse/models/warehouse_frontrackprotector.pxmesh"
-                            },
-                            "Configuration": {
-                                "PhysicsAsset": {
-                                    "assetId": {
-                                        "guid": "{9928FCBB-9AD8-5B3E-94FF-3516CC574ED1}",
-                                        "subId": 4102061829
-                                    },
-                                    "loadBehavior": "QueueLoad",
-                                    "assetHint": "assets/warehouse/models/warehouse_frontrackprotector.pxmesh"
-                                }
                             }
                         }
                     }

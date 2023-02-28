@@ -156,7 +156,7 @@
                     }
                 },
                 "Component_[15264405835034640312]": {
-                    "$type": "EditorColliderComponent",
+                    "$type": "EditorMeshColliderComponent",
                     "Id": 15264405835034640312,
                     "ColliderConfiguration": {
                         "MaterialSlots": {
@@ -167,24 +167,22 @@
                             ]
                         }
                     },
-                    "ShapeConfiguration": {
-                        "PhysicsAsset": {
-                            "Asset": {
+                    "PhysicsAssetShapeConfiguration": {
+                        "Asset": {
+                            "assetId": {
+                                "guid": "{663633B0-B67A-5957-BC3A-53FA65F40353}",
+                                "subId": 3163433385
+                            },
+                            "assetHint": "assets/warehouse/models/warehouse_siderackprotector.pxmesh"
+                        },
+                        "Configuration": {
+                            "PhysicsAsset": {
                                 "assetId": {
                                     "guid": "{663633B0-B67A-5957-BC3A-53FA65F40353}",
                                     "subId": 3163433385
                                 },
+                                "loadBehavior": "QueueLoad",
                                 "assetHint": "assets/warehouse/models/warehouse_siderackprotector.pxmesh"
-                            },
-                            "Configuration": {
-                                "PhysicsAsset": {
-                                    "assetId": {
-                                        "guid": "{663633B0-B67A-5957-BC3A-53FA65F40353}",
-                                        "subId": 3163433385
-                                    },
-                                    "loadBehavior": "QueueLoad",
-                                    "assetHint": "assets/warehouse/models/warehouse_siderackprotector.pxmesh"
-                                }
                             }
                         }
                     }

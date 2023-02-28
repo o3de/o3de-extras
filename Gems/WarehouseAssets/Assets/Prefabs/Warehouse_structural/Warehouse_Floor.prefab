@@ -112,7 +112,7 @@
                     "Id": 13150841160273927131
                 },
                 "Component_[13299402086043239524]": {
-                    "$type": "EditorColliderComponent",
+                    "$type": "EditorMeshColliderComponent",
                     "Id": 13299402086043239524,
                     "ColliderConfiguration": {
                         "MaterialSlots": {
@@ -123,34 +123,31 @@
                             ]
                         }
                     },
-                    "ShapeConfiguration": {
-                        "PhysicsAsset": {
-                            "Asset": {
+                    "PhysicsAssetShapeConfiguration": {
+                        "Asset": {
+                            "assetId": {
+                                "guid": "{4687EDB6-F57B-592A-8451-4A41BD678D9A}",
+                                "subId": 2070809848
+                            },
+                            "assetHint": "assets/warehouse/models/warehouse_floor.pxmesh"
+                        },
+                        "Configuration": {
+                            "Scale": [
+                                0.9850000143051147,
+                                0.8100000023841858,
+                                1.0
+                            ],
+                            "PhysicsAsset": {
                                 "assetId": {
                                     "guid": "{4687EDB6-F57B-592A-8451-4A41BD678D9A}",
                                     "subId": 2070809848
                                 },
+                                "loadBehavior": "QueueLoad",
                                 "assetHint": "assets/warehouse/models/warehouse_floor.pxmesh"
-                            },
-                            "Configuration": {
-                                "Scale": [
-                                    0.9850000143051147,
-                                    0.8100000023841858,
-                                    1.0
-                                ],
-                                "PhysicsAsset": {
-                                    "assetId": {
-                                        "guid": "{4687EDB6-F57B-592A-8451-4A41BD678D9A}",
-                                        "subId": 2070809848
-                                    },
-                                    "loadBehavior": "QueueLoad",
-                                    "assetHint": "assets/warehouse/models/warehouse_floor.pxmesh"
-                                }
                             }
                         },
                         "HasNonUniformScale": true
-                    },
-                    "HasNonUniformScale": true
+                    }
                 },
                 "Component_[17647558825107464022]": {
                     "$type": "EditorVisibilityComponent",

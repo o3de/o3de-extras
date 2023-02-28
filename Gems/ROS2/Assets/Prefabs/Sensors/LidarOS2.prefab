@@ -154,7 +154,7 @@
                     "Id": 13177781661023720894
                 },
                 "Component_[14535670656735835043]": {
-                    "$type": "EditorColliderComponent",
+                    "$type": "EditorMeshColliderComponent",
                     "Id": 14535670656735835043,
                     "ColliderConfiguration": {
                         "CollisionGroupId": {
@@ -168,24 +168,22 @@
                             ]
                         }
                     },
-                    "ShapeConfiguration": {
-                        "PhysicsAsset": {
-                            "Asset": {
+                    "PhysicsAssetShapeConfiguration": {
+                        "Asset": {
+                            "assetId": {
+                                "guid": "{99D850A3-8E59-5E78-93FE-AE8DB228684D}",
+                                "subId": 2574200790
+                            },
+                            "assetHint": "models/sensors/lidaros2/lidaros2.pxmesh"
+                        },
+                        "Configuration": {
+                            "PhysicsAsset": {
                                 "assetId": {
                                     "guid": "{99D850A3-8E59-5E78-93FE-AE8DB228684D}",
                                     "subId": 2574200790
                                 },
+                                "loadBehavior": "QueueLoad",
                                 "assetHint": "models/sensors/lidaros2/lidaros2.pxmesh"
-                            },
-                            "Configuration": {
-                                "PhysicsAsset": {
-                                    "assetId": {
-                                        "guid": "{99D850A3-8E59-5E78-93FE-AE8DB228684D}",
-                                        "subId": 2574200790
-                                    },
-                                    "loadBehavior": "QueueLoad",
-                                    "assetHint": "models/sensors/lidaros2/lidaros2.pxmesh"
-                                }
                             }
                         }
                     }

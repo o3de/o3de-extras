@@ -71,7 +71,7 @@
                     "Id": 14616296837285217185
                 },
                 "Component_[14985514809153430690]": {
-                    "$type": "EditorColliderComponent",
+                    "$type": "EditorMeshColliderComponent",
                     "Id": 14985514809153430690,
                     "ColliderConfiguration": {
                         "MaterialSlots": {
@@ -82,24 +82,22 @@
                             ]
                         }
                     },
-                    "ShapeConfiguration": {
-                        "PhysicsAsset": {
-                            "Asset": {
+                    "PhysicsAssetShapeConfiguration": {
+                        "Asset": {
+                            "assetId": {
+                                "guid": "{0E27CF27-5752-5557-B77A-4B29A5870E0E}",
+                                "subId": 3865077323
+                            },
+                            "assetHint": "models/sensors/camera/cameraorbbeck.pxmesh"
+                        },
+                        "Configuration": {
+                            "PhysicsAsset": {
                                 "assetId": {
                                     "guid": "{0E27CF27-5752-5557-B77A-4B29A5870E0E}",
                                     "subId": 3865077323
                                 },
+                                "loadBehavior": "QueueLoad",
                                 "assetHint": "models/sensors/camera/cameraorbbeck.pxmesh"
-                            },
-                            "Configuration": {
-                                "PhysicsAsset": {
-                                    "assetId": {
-                                        "guid": "{0E27CF27-5752-5557-B77A-4B29A5870E0E}",
-                                        "subId": 3865077323
-                                    },
-                                    "loadBehavior": "QueueLoad",
-                                    "assetHint": "models/sensors/camera/cameraorbbeck.pxmesh"
-                                }
                             }
                         }
                     }

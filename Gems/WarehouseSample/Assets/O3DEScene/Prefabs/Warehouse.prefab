@@ -1532,7 +1532,7 @@
                     "Id": 8421478587399964878
                 },
                 "Component_[9485936813148123686]": {
-                    "$type": "EditorColliderComponent",
+                    "$type": "EditorMeshColliderComponent",
                     "Id": 9485936813148123686,
                     "ColliderConfiguration": {
                         "MaterialSlots": {
@@ -1790,24 +1790,22 @@
                             ]
                         }
                     },
-                    "ShapeConfiguration": {
-                        "PhysicsAsset": {
-                            "Asset": {
+                    "PhysicsAssetShapeConfiguration": {
+                        "Asset": {
+                            "assetId": {
+                                "guid": "{2B484CB6-8011-5B56-B194-7B3110DA7629}",
+                                "subId": 2755884180
+                            },
+                            "assetHint": "o3descene/warehouse.pxmesh"
+                        },
+                        "Configuration": {
+                            "PhysicsAsset": {
                                 "assetId": {
                                     "guid": "{2B484CB6-8011-5B56-B194-7B3110DA7629}",
                                     "subId": 2755884180
                                 },
+                                "loadBehavior": "QueueLoad",
                                 "assetHint": "o3descene/warehouse.pxmesh"
-                            },
-                            "Configuration": {
-                                "PhysicsAsset": {
-                                    "assetId": {
-                                        "guid": "{2B484CB6-8011-5B56-B194-7B3110DA7629}",
-                                        "subId": 2755884180
-                                    },
-                                    "loadBehavior": "QueueLoad",
-                                    "assetHint": "o3descene/warehouse.pxmesh"
-                                }
                             }
                         }
                     }

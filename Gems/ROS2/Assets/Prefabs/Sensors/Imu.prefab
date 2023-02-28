@@ -63,7 +63,7 @@
                     "Id": 11958193181460909696
                 },
                 "Component_[12053638524449760314]": {
-                    "$type": "EditorColliderComponent",
+                    "$type": "EditorMeshColliderComponent",
                     "Id": 12053638524449760314,
                     "ColliderConfiguration": {
                         "MaterialSlots": {
@@ -74,24 +74,22 @@
                             ]
                         }
                     },
-                    "ShapeConfiguration": {
-                        "PhysicsAsset": {
-                            "Asset": {
+                    "PhysicsAssetShapeConfiguration": {
+                        "Asset": {
+                            "assetId": {
+                                "guid": "{50286487-658B-5B99-99D6-3AB4002EFF73}",
+                                "subId": 3726733934
+                            },
+                            "assetHint": "models/sensors/imu/imu_mti10.pxmesh"
+                        },
+                        "Configuration": {
+                            "PhysicsAsset": {
                                 "assetId": {
                                     "guid": "{50286487-658B-5B99-99D6-3AB4002EFF73}",
                                     "subId": 3726733934
                                 },
+                                "loadBehavior": "QueueLoad",
                                 "assetHint": "models/sensors/imu/imu_mti10.pxmesh"
-                            },
-                            "Configuration": {
-                                "PhysicsAsset": {
-                                    "assetId": {
-                                        "guid": "{50286487-658B-5B99-99D6-3AB4002EFF73}",
-                                        "subId": 3726733934
-                                    },
-                                    "loadBehavior": "QueueLoad",
-                                    "assetHint": "models/sensors/imu/imu_mti10.pxmesh"
-                                }
                             }
                         }
                     }
