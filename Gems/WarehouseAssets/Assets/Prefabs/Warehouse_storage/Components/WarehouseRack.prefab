@@ -105,7 +105,7 @@
                     "Id": 16403983953216827994
                 },
                 "Component_[2276504649476859699]": {
-                    "$type": "EditorMeshColliderComponent",
+                    "$type": "EditorColliderComponent",
                     "Id": 2276504649476859699,
                     "ColliderConfiguration": {
                         "MaterialSlots": {
@@ -116,22 +116,24 @@
                             ]
                         }
                     },
-                    "PhysicsAssetShapeConfiguration": {
-                        "Asset": {
-                            "assetId": {
-                                "guid": "{665AB396-251A-55E3-83E2-AAB98CB864FB}",
-                                "subId": 1812650258
-                            },
-                            "assetHint": "assets/warehouse/models/warehouse_rack.pxmesh"
-                        },
-                        "Configuration": {
-                            "PhysicsAsset": {
+                    "ShapeConfiguration": {
+                        "PhysicsAsset": {
+                            "Asset": {
                                 "assetId": {
                                     "guid": "{665AB396-251A-55E3-83E2-AAB98CB864FB}",
                                     "subId": 1812650258
                                 },
-                                "loadBehavior": "QueueLoad",
                                 "assetHint": "assets/warehouse/models/warehouse_rack.pxmesh"
+                            },
+                            "Configuration": {
+                                "PhysicsAsset": {
+                                    "assetId": {
+                                        "guid": "{665AB396-251A-55E3-83E2-AAB98CB864FB}",
+                                        "subId": 1812650258
+                                    },
+                                    "loadBehavior": "QueueLoad",
+                                    "assetHint": "assets/warehouse/models/warehouse_rack.pxmesh"
+                                }
                             }
                         }
                     }

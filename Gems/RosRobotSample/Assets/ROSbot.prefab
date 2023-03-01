@@ -734,7 +734,7 @@
                     "Id": 10928326798115103880
                 },
                 "Component_[1153232506834696450]": {
-                    "$type": "EditorMeshColliderComponent",
+                    "$type": "EditorColliderComponent",
                     "Id": 1153232506834696450,
                     "ColliderConfiguration": {
                         "MaterialSlots": {
@@ -745,24 +745,26 @@
                             ]
                         }
                     },
-                    "PhysicsAssetShapeConfiguration": {
-                        "Asset": {
-                            "assetId": {
-                                "guid": "{7F445A99-8C11-5417-9D63-8BCC7DCA76C8}",
-                                "subId": 1509562746
-                            },
-                            "assetHint": "robot/rosbot_xl_description/meshes/body_colision.pxmesh"
-                        },
-                        "Configuration": {
-                            "PhysicsAsset": {
+                    "ShapeConfiguration": {
+                        "PhysicsAsset": {
+                            "Asset": {
                                 "assetId": {
                                     "guid": "{7F445A99-8C11-5417-9D63-8BCC7DCA76C8}",
                                     "subId": 1509562746
                                 },
-                                "loadBehavior": "QueueLoad",
                                 "assetHint": "robot/rosbot_xl_description/meshes/body_colision.pxmesh"
                             },
-                            "UseMaterialsFromAsset": false
+                            "Configuration": {
+                                "PhysicsAsset": {
+                                    "assetId": {
+                                        "guid": "{7F445A99-8C11-5417-9D63-8BCC7DCA76C8}",
+                                        "subId": 1509562746
+                                    },
+                                    "loadBehavior": "QueueLoad",
+                                    "assetHint": "robot/rosbot_xl_description/meshes/body_colision.pxmesh"
+                                },
+                                "UseMaterialsFromAsset": false
+                            }
                         }
                     }
                 },
