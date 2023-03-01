@@ -61,7 +61,6 @@ namespace ROS2
                   AckermannControlComponent::CreateDescriptor(),
                   RigidBodyTwistControlComponent::CreateDescriptor(),
                   SkidSteeringControlComponent::CreateDescriptor(),
-                  ROS2CameraSensorComponent::CreateDescriptor(),
                   ROS2SpawnerComponent::CreateDescriptor(),
                   ROS2SpawnPointComponent::CreateDescriptor(),
                   VehicleDynamics::AckermannVehicleModelComponent::CreateDescriptor(),
