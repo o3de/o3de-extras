@@ -899,7 +899,7 @@
                     "Id": 10928326798115103880
                 },
                 "Component_[1153232506834696450]": {
-                    "$type": "EditorColliderComponent",
+                    "$type": "EditorMeshColliderComponent",
                     "Id": 1153232506834696450,
                     "ColliderConfiguration": {
                         "Position": [
