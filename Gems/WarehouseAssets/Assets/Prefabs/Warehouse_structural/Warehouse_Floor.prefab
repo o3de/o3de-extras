@@ -112,7 +112,7 @@
                     "Id": 13150841160273927131
                 },
                 "Component_[13299402086043239524]": {
-                    "$type": "EditorColliderComponent",
+                    "$type": "EditorMeshColliderComponent",
                     "Id": 13299402086043239524,
                     "ColliderConfiguration": {
                         "MaterialSlots": {
@@ -149,8 +149,7 @@
                             }
                         },
                         "HasNonUniformScale": true
-                    },
-                    "HasNonUniformScale": true
+                    }
                 },
                 "Component_[17647558825107464022]": {
                     "$type": "EditorVisibilityComponent",

@@ -210,7 +210,7 @@
                     "Id": 15167189095873685279
                 },
                 "Component_[16809483465388003559]": {
-                    "$type": "EditorColliderComponent",
+                    "$type": "EditorMeshColliderComponent",
                     "Id": 16809483465388003559,
                     "ColliderConfiguration": {
                         "MaterialSlots": {
@@ -333,7 +333,7 @@
                     }
                 },
                 "Component_[1554132197757752789]": {
-                    "$type": "EditorColliderComponent",
+                    "$type": "EditorMeshColliderComponent",
                     "Id": 1554132197757752789,
                     "ColliderConfiguration": {
                         "MaterialSlots": {
@@ -460,7 +460,7 @@
                     "Id": 3149718320647090514
                 },
                 "Component_[3790789121538053334]": {
-                    "$type": "EditorColliderComponent",
+                    "$type": "EditorMeshColliderComponent",
                     "Id": 3790789121538053334,
                     "ColliderConfiguration": {
                         "MaterialSlots": {
@@ -576,7 +576,7 @@
                     }
                 },
                 "Component_[3143867532230487626]": {
-                    "$type": "EditorColliderComponent",
+                    "$type": "EditorMeshColliderComponent",
                     "Id": 3143867532230487626,
                     "ColliderConfiguration": {
                         "MaterialSlots": {
