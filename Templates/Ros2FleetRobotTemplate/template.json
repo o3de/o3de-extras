@@ -2,7 +2,7 @@
     "template_name": "Ros2FleetRobotTemplate",
     "origin": "Open 3D Engine Extras",
     "origin_url": "https://github.com/o3de/o3de-extras",
-    "license": "https://github.com/o3de/o3de-extras/tree/development/Templates/Ros2FleetRobotTemplate/Template/LICENSE.txt",
+    "license_url": "https://github.com/o3de/o3de-extras/tree/development/Templates/Ros2FleetRobotTemplate/Template/LICENSE.txt",
     "display_name": "Ros2FleetRobotTemplate",
     "summary": "Template for ROS2 multi-robot project.",
     "canonical_tags": [],
