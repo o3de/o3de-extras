@@ -12,6 +12,8 @@
 #include <ROS2/Sensor/ROS2SensorComponent.h>
 #include <nav_msgs/msg/odometry.hpp>
 #include <rclcpp/publisher.hpp>
+#include <AzFramework/Physics/PhysicsSystem.h>
+#include <AzFramework/Physics/Common/PhysicsEvents.h>
 
 namespace ROS2
 {
@@ -41,5 +43,7 @@ namespace ROS2
 
         std::shared_ptr<rclcpp::Publisher<nav_msgs::msg::Odometry>> m_odometryPublisher;
         nav_msgs::msg::Odometry m_odometryMsg;
+        AzPhysics::SceneEvents::OnSceneActiveSimulatedBodiesEvent::Handler m_onSceneActiveSimulatedBodiesEvent;
+        AzPhysics::SimulatedBodyHandle m_handle;
     };
 } // namespace ROS2

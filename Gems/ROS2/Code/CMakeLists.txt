@@ -46,6 +46,9 @@ ly_add_target(
 
 target_depends_on_ros2_packages(${gem_name}.Static rclcpp builtin_interfaces std_msgs sensor_msgs nav_msgs urdfdom tf2_ros ackermann_msgs gazebo_msgs control_toolbox)
 
+target_include_directories(${gem_name}.Static PUBLIC "/opt/ros/humble/include/control_toolbox/")
+target_link_libraries(${gem_name}.Static PUBLIC "/opt/ros/humble/lib/libcontrol_toolbox.so")
+
 ly_add_target(
     NAME ${gem_name}.API HEADERONLY
     NAMESPACE Gem
