@@ -360,6 +360,10 @@
             "isTemplated": true
         },
         {
+            "file": "ShaderLib/viewsrg.srgi",
+            "isTemplated": true
+        },
+        {
             "file": "Passes/ContrastAdaptiveSharpening.pass",
             "isTemplated": false
         },
