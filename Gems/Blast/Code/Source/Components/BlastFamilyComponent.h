@@ -22,7 +22,6 @@
 #include <Family/ActorRenderManager.h>
 #include <Family/BlastFamily.h>
 #include <Family/DamageManager.h>
-#include <LmbrCentral/Rendering/MeshAsset.h>
 #include <LmbrCentral/Scripting/SpawnerComponentBus.h>
 #include <NvBlastExtStressSolver.h>
 
