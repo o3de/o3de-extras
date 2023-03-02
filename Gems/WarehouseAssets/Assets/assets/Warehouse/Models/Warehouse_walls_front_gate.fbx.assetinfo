@@ -1,0 +1,73 @@
+{
+    "values": [
+        {
+            "$type": "{5B03C8E6-8CEE-4DA0-A7FA-CD88689DD45B} MeshGroup",
+            "id": "{E86424FD-2EF8-5D91-9C71-0E0B25BDD9B4}",
+            "name": "Warehouse_walls_front_gate",
+            "NodeSelectionList": {
+                "selectedNodes": [
+                    "RootNode",
+                    "RootNode.Wall_front_gate"
+                ]
+            },
+            "PhysicsMaterialSlots": {
+                "Slots": [
+                    {
+                        "Name": "MWarehouseModules"
+                    }
+                ]
+            }
+        },
+        {
+            "$type": "{07B356B7-3635-40B5-878A-FAC4EFD5AD86} MeshGroup",
+            "name": "Warehouse_walls_front_gate",
+            "nodeSelectionList": {
+                "selectedNodes": [
+                    {},
+                    "RootNode",
+                    "RootNode.Wall_front_gate"
+                ]
+            },
+            "rules": {
+                "rules": [
+                    {
+                        "$type": "MaterialRule"
+                    }
+                ]
+            },
+            "id": "{6FEC4C5D-E9C7-5184-8272-E34D4CB23AA8}"
+        },
+        {
+            "$type": "{07B356B7-3635-40B5-878A-FAC4EFD5AD86} MeshGroup",
+            "name": "default_Warehouse_walls_front_gate_574FE73F_1C93_54ED_AA3B_E78715C60C1F_",
+            "nodeSelectionList": {
+                "selectedNodes": [
+                    "RootNode.Wall_front_gate"
+                ]
+            },
+            "rules": {
+                "rules": [
+                    {
+                        "$type": "ProceduralMeshGroupRule"
+                    },
+                    {
+                        "$type": "UnmodifiableRule"
+                    },
+                    {
+                        "$type": "CoordinateSystemRule",
+                        "useAdvancedData": true
+                    },
+                    {
+                        "$type": "{6E796AC8-1484-4909-860A-6D3F22A7346F} LodRule"
+                    }
+                ]
+            },
+            "id": "{574FE73F-1C93-54ED-AA3B-E78715C60C1F}"
+        },
+        {
+            "$type": "PrefabGroup",
+            "name": "Models/Warehouse_walls_front_gate_fbx.procprefab",
+            "id": "{FF12172D-26C3-51D0-A1B0-398191D1E133}"
+        }
+    ]
+}

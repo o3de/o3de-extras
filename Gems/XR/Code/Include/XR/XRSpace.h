@@ -10,6 +10,8 @@
 
 #include <AzCore/Memory/SystemAllocator.h>
 #include <AzCore/std/smart_ptr/intrusive_base.h>
+#include <Atom/RHI/ValidationLayer.h>
+#include <XR/XRBase.h>
 #include <XR/XRObject.h>
 
 namespace XR

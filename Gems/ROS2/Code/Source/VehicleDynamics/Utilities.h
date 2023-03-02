@@ -51,4 +51,19 @@ namespace ROS2::VehicleDynamics::Utilities
     //! @returns This function will only return data for properly set up wheels and raise warnings if something is not right.
     //! Wheels need a WheelControllerComponent, and the axle must be a drive axle.
     AZStd::vector<VehicleDynamics::WheelDynamicsData> GetAllDriveWheelsData(const VehicleConfiguration& vehicleConfig);
+
+    //! Get Physx Hinge Joint Component AZ::EntityComponentIdPair from Entity
+    //! @param wheelEntityId id of entity that has Physx Hinge Joint Controller
+    //! @returns EntityComponentIdPair that contains id of Hinge component and @param wheelEntityId
+    AZ::EntityComponentIdPair GetWheelPhysxHinge(const AZ::EntityId wheelEntityId);
+
+    //! Computes ramped velocity.
+    //! @param targetVelocity Last commanded velocity to send to robot (in eg m/s or rad/s)
+    //! @param lastVelocity Last commanded Velocity (in eg m/s or rad/s)
+    //! @param deltaTimeNs Duration between subsequent calls to @fn ComputeRampVelocity in nanoseconds
+    //! @param acceleration Acceleration (in eg m/s² or rad/s²)
+    //! @param maxVelocity Limit for velocity to clamp to (in eg m/s or rad/s)
+    //! @returns ramped velocity according to time, acceleration and clamped to @param maxVelocity
+    float ComputeRampVelocity(float targetVelocity, float lastVelocity, AZ::u64 deltaTimeNs, float acceleration, float maxVelocity);
+
 } // namespace ROS2::VehicleDynamics::Utilities

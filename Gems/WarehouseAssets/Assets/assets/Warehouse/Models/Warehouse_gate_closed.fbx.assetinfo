@@ -1,0 +1,76 @@
+{
+    "values": [
+        {
+            "$type": "{5B03C8E6-8CEE-4DA0-A7FA-CD88689DD45B} MeshGroup",
+            "id": "{310BB700-3799-57C2-AF36-2249F3B83453}",
+            "name": "Warehouse_gate_closed",
+            "NodeSelectionList": {
+                "selectedNodes": [
+                    "RootNode",
+                    "RootNode.Gate_closed"
+                ]
+            },
+            "PhysicsMaterialSlots": {
+                "Slots": [
+                    {
+                        "Name": "MWarehouseGate"
+                    },
+                    {
+                        "Name": "MWarehouseModules"
+                    }
+                ]
+            }
+        },
+        {
+            "$type": "{07B356B7-3635-40B5-878A-FAC4EFD5AD86} MeshGroup",
+            "name": "Warehouse_gate_closed",
+            "nodeSelectionList": {
+                "selectedNodes": [
+                    {},
+                    "RootNode",
+                    "RootNode.Gate_closed"
+                ]
+            },
+            "rules": {
+                "rules": [
+                    {
+                        "$type": "MaterialRule"
+                    }
+                ]
+            },
+            "id": "{5053029E-0D1D-585D-A15E-12D99B1B7735}"
+        },
+        {
+            "$type": "{07B356B7-3635-40B5-878A-FAC4EFD5AD86} MeshGroup",
+            "name": "default_Warehouse_gate_closed_FDBD2611_2818_5D44_A47E_BCE1EC81616A_",
+            "nodeSelectionList": {
+                "selectedNodes": [
+                    "RootNode.Gate_closed"
+                ]
+            },
+            "rules": {
+                "rules": [
+                    {
+                        "$type": "ProceduralMeshGroupRule"
+                    },
+                    {
+                        "$type": "UnmodifiableRule"
+                    },
+                    {
+                        "$type": "CoordinateSystemRule",
+                        "useAdvancedData": true
+                    },
+                    {
+                        "$type": "{6E796AC8-1484-4909-860A-6D3F22A7346F} LodRule"
+                    }
+                ]
+            },
+            "id": "{FDBD2611-2818-5D44-A47E-BCE1EC81616A}"
+        },
+        {
+            "$type": "PrefabGroup",
+            "name": "Models/Warehouse_gate_closed_fbx.procprefab",
+            "id": "{E3D9C9DE-34ED-57B2-8B5D-6081A7F8166D}"
+        }
+    ]
+}

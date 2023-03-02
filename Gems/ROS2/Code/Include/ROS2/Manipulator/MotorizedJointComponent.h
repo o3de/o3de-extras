@@ -12,7 +12,7 @@
 #include <AzCore/Component/TickBus.h>
 #include <AzCore/Math/Transform.h>
 #include <AzCore/Math/Vector2.h>
-#include <ROS2/VehicleDynamics/DriveModels/PidConfiguration.h>
+#include <ROS2/Utilities/Controllers/PidConfiguration.h>
 
 namespace ROS2
 {
@@ -67,7 +67,7 @@ namespace ROS2
         AZ::Vector3 m_jointDir{ 0.f, 0.f, 1.f }; //!< Direction of joint movement in parent frame of reference, used to compute measurement.
         AZ::Vector3 m_effortAxis{ 0.f, 0.f, 1.f }; //!< Direction of force or torque application in owning entity frame of reference.
         AZStd::pair<float, float> m_limits{ -0.5f, 0.5f }; //!< limits of joint, the force is applied only when joint is within limits.
-        VehicleDynamics::PidConfiguration m_pidPos; //!< PID controller for position.
+        Controllers::PidConfiguration m_pidPos; //!< PID controller for position.
 
         bool m_linear{ true }; //!< Linear mode. The force is applied through RigidBodyBus.
         bool m_animationMode{ true }; //!< Use TransformBus (animation mode, no physics) instead of RigidBodyBus.

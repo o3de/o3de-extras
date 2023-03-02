@@ -8,8 +8,9 @@
 #pragma once
 
 #include "VehicleConfiguration.h"
-#include "VehicleInputsState.h"
+#include "VehicleInputs.h"
 #include <AzCore/Serialization/SerializeContext.h>
+#include <VehicleDynamics/VehicleModelLimits.h>
 
 namespace ROS2::VehicleDynamics
 {
@@ -25,15 +26,31 @@ namespace ROS2::VehicleDynamics
 
         static void Reflect(AZ::ReflectContext* context);
         virtual ~DriveModel() = default;
-        virtual DriveModel::DriveModelType DriveType() const = 0;
 
         //! Activate the model. Vehicle configuration is to remain the same until another Activate is called.
         //! @param vehicleConfig configuration containing axes and wheels information
         virtual void Activate(const VehicleConfiguration& vehicleConfig) = 0;
 
         //! Applies inputs to the drive. This model will calculate and apply physical forces.
-        //! @param inputs captured state of inputs to use
+        //! @param inputs captured state of inputs to use.
         //! @param deltaTimeNs nanoseconds passed since last call of this function.
-        virtual void ApplyInputState(const VehicleInputsState& inputs, uint64_t deltaTimeNs) = 0;
+        void ApplyInputState(const VehicleInputs& inputs, AZ::u64 deltaTimeNs);
+
+        //! Allows to disable vehicle dynamics.
+        //! @param isDisable true if drive model should be disabled.
+        void SetDisabled(bool isDisable);
+
+        //! Get vehicle maximum limits.
+        VehicleInputs GetMaximumPossibleInputs() const;
+
+    protected:
+        //! Returns pointer to implementation specific Vehicle limits.
+        virtual const VehicleModelLimits* GetVehicleLimitPtr() const = 0;
+
+        //! Apply input to implemented vehicle model.
+        virtual void ApplyState(const VehicleInputs& inputs, AZ::u64 deltaTimeNs) = 0;
+
+        //! True if model is disabled.
+        bool m_disabled{ false };
     };
 } // namespace ROS2::VehicleDynamics

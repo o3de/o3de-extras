@@ -7,10 +7,6 @@
                 "$type": "EditorDisabledCompositionComponent",
                 "Id": 11102275644839424768
             },
-            "Component_[11542908075789116644]": {
-                "$type": "SelectionComponent",
-                "Id": 11542908075789116644
-            },
             "Component_[13196476423961983989]": {
                 "$type": "EditorVisibilityComponent",
                 "Id": 13196476423961983989
@@ -58,9 +54,9 @@
             "Id": "Entity_[505721939488]",
             "Name": "shape",
             "Components": {
-                "Component_[10894288830090806011]": {
-                    "$type": "SelectionComponent",
-                    "Id": 10894288830090806011
+                "Component_[12057597801334645923]": {
+                    "$type": "EditorStaticRigidBodyComponent",
+                    "Id": 12057597801334645923
                 },
                 "Component_[12232650884412772636]": {
                     "$type": "EditorDisabledCompositionComponent",
@@ -75,12 +71,14 @@
                     "Id": 14616296837285217185
                 },
                 "Component_[14985514809153430690]": {
-                    "$type": "EditorColliderComponent",
+                    "$type": "EditorMeshColliderComponent",
                     "Id": 14985514809153430690,
                     "ColliderConfiguration": {
-                        "MaterialSelection": {
-                            "MaterialIds": [
-                                {}
+                        "MaterialSlots": {
+                            "Slots": [
+                                {
+                                    "Name": "Entire object"
+                                }
                             ]
                         }
                     },

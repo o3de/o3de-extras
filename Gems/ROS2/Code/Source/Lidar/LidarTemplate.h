@@ -25,7 +25,26 @@ namespace ROS2
 
         enum class LidarModel
         {
-            Generic3DLidar
+            Custom3DLidar,
+            Ouster_OS0_64,
+            Ouster_OS1_64,
+            Ouster_OS2_64,
+            Velodyne_Puck,
+            Velodyne_HDL_32E,
+        };
+
+        struct NoiseParameters
+        {
+        public:
+            AZ_TYPE_INFO(LidarNoiseParameters, "{58c007ad-320f-49df-bc20-6419159ee176}");
+            static void Reflect(AZ::ReflectContext* context);
+
+            //! Angular noise standard deviation, in degrees
+            float m_angularNoiseStdDev = 0.0f;
+            //! Distance noise standard deviation base value, in meters
+            float m_distanceNoiseStdDevBase = 0.0f;
+            //! Distance noise standard deviation increase per meter distance travelled, in meters
+            float m_distanceNoiseStdDevRisePerMeter = 0.0f;
         };
 
         LidarModel m_model;
@@ -45,7 +64,8 @@ namespace ROS2
         unsigned int m_numberOfIncrements = 0;
         //! Maximum range of simulated LiDAR
         float m_maxRange = 0.0f;
-        //! Adds point with maximum range when ray does not hit obstacle
-        bool m_addPointsAtMax = false;
+
+        NoiseParameters m_noiseParameters;
+        bool m_showNoiseConfig = false;
     };
 } // namespace ROS2

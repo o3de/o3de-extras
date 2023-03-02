@@ -9,6 +9,7 @@
 #include <XR/XRSession.h>
 #include <XR/XRFactory.h>
 #include <XR/XRDevice.h>
+#include <XR/XRInput.h>
 
 namespace XR
 {

@@ -12,44 +12,37 @@
 #include <AzCore/Math/Vector3.h>
 #include <AzCore/std/containers/vector.h>
 #include <AzFramework/Physics/PhysicsScene.h>
+#include <ROS2/Lidar/LidarRaycasterBus.h>
 
 namespace ROS2
 {
-    //! A simple implementation of Lidar operation in terms of raycasting.
-    class LidarRaycaster
+    class LidarRaycaster : protected LidarRaycasterRequestBus::Handler
     {
     public:
-        //! Set the Scene for the ray-casting.
-        //! This should be the scene with the Entity that holds the sensor.
-        //! @code
-        //! auto sceneHandle = AZ::RPI::Scene::GetSceneForEntityId(GetEntityId());
-        //! @endcode
-        //! @param handle Scene that will be subject to ray-casting.
-        void SetRaycasterScene(const AzPhysics::SceneHandle& handle);
+        LidarRaycaster(LidarId busId, AZ::EntityId sceneEntityId);
+        LidarRaycaster(LidarRaycaster&& lidarSystem);
+        LidarRaycaster(const LidarRaycaster& lidarSystem) = default;
+        ~LidarRaycaster() override;
 
-        //! Perform raycast against the current scene.
-        //! @param start Starting point of rays. This is a simplification since there can be multiple starting points
-        //! in real sensors.
-        //! @param directions Directions in which to shoot rays. These should be generated from Lidar configuration.
-        //! @param globalToLidarTM Transform from global to lidar reference frame.
-        //! @param distance Maximum distance for ray-casting.
-        //! @param ignoreLayer Should a specified collision layer be ignored
-        //! @param ignoredLayerIndex Index of collision layer to be ignored
-        //! @return Hits of raycast. The returned vector size can be anything between zero and size of directions.
-        //! No hits further than distance will be reported.
-        AZStd::vector<AZ::Vector3> PerformRaycast(
-            const AZ::Vector3& start,
-            const AZStd::vector<AZ::Vector3>& directions,
-            const AZ::Transform& globalToLidarTM,
-            float distance,
-            bool ignoreLayer,
-            unsigned int ignoredLayerIndex) const;
-
-        //! If true the raycaster will also include points at maximum range when nothing was hit
-        void SetAddPointsMaxRange(bool addPointsMaxRange);
+    protected:
+        // LidarRaycasterRequestBus overrides
+        void ConfigureRayOrientations(const AZStd::vector<AZ::Vector3>& orientations) override;
+        void ConfigureRayRange(float range) override;
+        AZStd::vector<AZ::Vector3> PerformRaycast(const AZ::Transform& lidarTransform) override;
+        void ConfigureLayerIgnoring(bool ignoreLayer, AZ::u32 layerIndex) override;
+        void ConfigureMaxRangePointAddition(bool addMaxRangePoints) override;
 
     private:
-        AzPhysics::SceneHandle m_sceneHandle;
-        bool m_addPointsMaxRange{ false };
+        LidarId m_busId;
+        //! EntityId that is used to acquire the physics scene handle.
+        AZ::EntityId m_sceneEntityId;
+        AzPhysics::SceneHandle m_sceneHandle{ AzPhysics::InvalidSceneHandle };
+
+        float m_range{ 1.0f };
+        bool m_addMaxRangePoints{ false };
+        AZStd::vector<AZ::Vector3> m_rayRotations{ { AZ::Vector3::CreateZero() } };
+
+        bool m_ignoreLayer{ false };
+        AZ::u32 m_ignoredLayerIndex{ 0 };
     };
 } // namespace ROS2
