@@ -139,77 +139,6 @@
                 }
             }
         },
-        "Entity_[15625359243808]": {
-            "Id": "Entity_[15625359243808]",
-            "Name": "WheelFront",
-            "Components": {
-                "Component_[16036024008587834060]": {
-                    "$type": "EditorPendingCompositionComponent",
-                    "Id": 16036024008587834060
-                },
-                "Component_[16794520084240827702]": {
-                    "$type": "AZ::Render::EditorMeshComponent",
-                    "Id": 16794520084240827702,
-                    "Controller": {
-                        "Configuration": {
-                            "ModelAsset": {
-                                "assetId": {
-                                    "guid": "{D8E41FF6-BF62-5D4A-B4C3-B980586B3AB3}",
-                                    "subId": 283910451
-                                },
-                                "assetHint": "default_proteus_chassis_9a035ebc_98bb_5c21_b32c_f488b28ad1ff_.azmodel"
-                            }
-                        }
-                    }
-                },
-                "Component_[173796323608634159]": {
-                    "$type": "EditorOnlyEntityComponent",
-                    "Id": 173796323608634159
-                },
-                "Component_[2424925446986988088]": {
-                    "$type": "EditorLockComponent",
-                    "Id": 2424925446986988088
-                },
-                "Component_[5156281625694410627]": {
-                    "$type": "EditorDisabledCompositionComponent",
-                    "Id": 5156281625694410627
-                },
-                "Component_[61900258209435784]": {
-                    "$type": "EditorInspectorComponent",
-                    "Id": 61900258209435784
-                },
-                "Component_[64417415019498943]": {
-                    "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
-                    "Id": 64417415019498943,
-                    "Parent Entity": "Entity_[15659718982176]",
-                    "Transform Data": {
-                        "Translate": [
-                            0.44830894470214844,
-                            -0.0005230903625488281,
-                            -0.03911399841308594
-                        ],
-                        "Rotate": [
-                            -85.83122253417969,
-                            89.97979736328125,
-                            175.9088592529297
-                        ],
-                        "UniformScale": 100.0
-                    }
-                },
-                "Component_[703428350547145921]": {
-                    "$type": "EditorVisibilityComponent",
-                    "Id": 703428350547145921
-                },
-                "Component_[8566368746178669373]": {
-                    "$type": "EditorEntityIconComponent",
-                    "Id": 8566368746178669373
-                },
-                "Component_[9895741610547747437]": {
-                    "$type": "EditorEntitySortComponent",
-                    "Id": 9895741610547747437
-                }
-            }
-        },
         "Entity_[15629654211104]": {
             "Id": "Entity_[15629654211104]",
             "Name": "Right_wheel_link",
@@ -516,9 +445,9 @@
                                     "Value": {
                                         "MaterialAsset": {
                                             "assetId": {
-                                                "guid": "{DB7059B3-54D7-5D88-A3CD-FAE11687A399}"
+                                                "guid": "{D0D27642-FF9C-5FCA-9B3A-C8897F2167BA}"
                                             },
-                                            "assetHint": "assets/proteusrobot/materials/proteus_headlamp.azmaterial"
+                                            "assetHint": "materials/proteus_headlamp.azmaterial"
                                         }
                                     }
                                 }
@@ -581,17 +510,17 @@
                     "Id": 7870882568847047734,
                     "Configuration": {
                         "entityId": "",
-                        "Mass": 0.5235987901687622,
+                        "Mass": 0.033510319888591766,
                         "Inertia tensor": [
-                            0.0005235988064669073,
+                            0.000005361651346902363,
                             0.0,
                             0.0,
                             0.0,
-                            0.0005235988064669073,
+                            0.000005361651346902363,
                             0.0,
                             0.0,
                             0.0,
-                            0.0005235988064669073
+                            0.000005361651346902363
                         ]
                     },
                     "PhysXSpecificConfiguration": {
@@ -621,7 +550,7 @@
                     "ShapeConfiguration": {
                         "ShapeType": 0,
                         "Sphere": {
-                            "Radius": 0.05000000074505806
+                            "Radius": 0.019999999552965164
                         }
                     }
                 },
@@ -631,9 +560,9 @@
                     "Parent Entity": "Entity_[15659718982176]",
                     "Transform Data": {
                         "Translate": [
-                            -0.2725381851196289,
-                            0.0,
-                            -0.033449649810791016
+                            -0.21210527420043945,
+                            -0.000030994415283203125,
+                            -0.06243150681257248
                         ],
                         "Rotate": [
                             -0.10286237299442291,
@@ -645,159 +574,6 @@
                 "Component_[9822914299135029218]": {
                     "$type": "EditorInspectorComponent",
                     "Id": 9822914299135029218
-                }
-            }
-        },
-        "Entity_[15646834080288]": {
-            "Id": "Entity_[15646834080288]",
-            "Name": "Lift_effector",
-            "Components": {
-                "Component_[12188113980475712902]": {
-                    "$type": "EditorOnlyEntityComponent",
-                    "Id": 12188113980475712902
-                },
-                "Component_[12478055560791548939]": {
-                    "$type": "EditorInspectorComponent",
-                    "Id": 12478055560791548939
-                },
-                "Component_[13429698119599703635]": {
-                    "$type": "EditorDisabledCompositionComponent",
-                    "Id": 13429698119599703635,
-                    "DisabledComponents": [
-                        {
-                            "$type": "EditorHingeJointComponent",
-                            "Id": 4292462061264698666,
-                            "Configuration": {
-                                "Local Position": [
-                                    0.0,
-                                    0.0,
-                                    0.018457263708114624
-                                ],
-                                "Local Rotation": [
-                                    0.0,
-                                    0.0,
-                                    90.0
-                                ],
-                                "Parent Entity": "Entity_[15659718982176]",
-                                "Child Entity": "Entity_[15646834080288]"
-                            },
-                            "Angular Limit": {
-                                "Positive Limit": 175.0,
-                                "Negative Limit": 0.0
-                            }
-                        },
-                        {
-                            "$type": "EditorRigidBodyComponent",
-                            "Id": 6506048384139893971,
-                            "Configuration": {
-                                "entityId": "",
-                                "Mass": 2.252655506134033,
-                                "Centre of mass offset": [
-                                    -7.713185645741305e-11,
-                                    -1.6493262311456647e-9,
-                                    2.4845125956574066e-11
-                                ],
-                                "Inertia tensor": [
-                                    0.009527919813990593,
-                                    0.0,
-                                    0.0,
-                                    0.0,
-                                    0.004038138315081596,
-                                    0.0,
-                                    0.0,
-                                    0.0,
-                                    0.009527919813990593
-                                ]
-                            },
-                            "PhysXSpecificConfiguration": {
-                                "SolverPositionIterations": 40,
-                                "SolverVelocityIterations": 10
-                            }
-                        },
-                        {
-                            "$type": "EditorColliderComponent",
-                            "Id": 7126598991716402773,
-                            "ColliderConfiguration": {
-                                "Rotation": [
-                                    0.7071067690849304,
-                                    0.0,
-                                    0.0,
-                                    0.7071067094802856
-                                ],
-                                "MaterialSlots": {
-                                    "Slots": [
-                                        {
-                                            "Name": "Entire object",
-                                            "MaterialAsset": {
-                                                "assetId": {
-                                                    "guid": "{49A20BC1-E60E-5FE7-888B-91A80B4B79C2}",
-                                                    "subId": 1
-                                                },
-                                                "assetHint": "assets/proteusrobot/no_friction.physicsmaterial"
-                                            }
-                                        }
-                                    ]
-                                }
-                            },
-                            "ShapeConfiguration": {
-                                "ShapeType": 3,
-                                "Cylinder": {
-                                    "Configuration": {
-                                        "CookedData": "TlhTAUNWWE0NAAAAAAAAAElDRQFDTEhMCQAAAFAAAAB4AAAAKgAAAPAAAAD00ka9zMzMvTx0ED1Pxy29zMzMvUrHLT1Pxy29zMzMPU7HLT300ka9zMzMPUB0ED1BdBC9zMzMPfLSRj1BdBC9zMzMve7SRj1Rxy09zMzMPUrHLb1Rxy09zMzMvU7HLb1BdBA9zMzMvfHSRr1BdBA9zMzMPe3SRr300kY9zMzMPTt0EL300kY9zMzMvT90EL1Pxy09zMzMPVDHLT1Pxy09zMzMvUzHLT3z0kY9zMzMvT10ED3z0kY9zMzMPUF0ED0/dBA9zMzMvfDSRj0/dBA9zMzMPfTSRj04Jd88zMzMPUn5Wj04Jd88zMzMvUX5Wj1H+Vq9zMzMvT4l37xMu2m9zMzMvVvjl7xMu2m9zMzMPVXjl7xH+Vq9zMzMPTgl37zx0ka9zMzMPT90EL3x0ka9zMzMvUN0EL01Jd+8zMzMPUX5Wr01Jd+8zMzMvUn5Wr0/dBC9zMzMvfXSRr0/dBC9zMzMPfHSRr1H+Vo9zMzMPTsl3zxH+Vo9zMzMvTUl3zxMu2k9zMzMvVLjlzxMu2k9zMzMPVfjlzxW45e8zMzMPUy7aT1W45e8zMzMvUm7aT0IyBm8zMzMvfa7cj0IyBm8zMzMPfq7cj38xxm8zMzMPfa7cr0MLAcyzMzMPYrCdb0MLAcyzMzMvY7Cdb38xxm8zMzMvfq7cr34u3I9zMzMvf/HGTyNwnU9zMzMvc3MzLGNwnU9zMzMPc3MzDH4u3I9zMzMPQvIGTxU45c8zMzMPUy7aT0ByBk8zMzMPfq7cj0ByBk8zMzMvfa7cj1U45c8zMzMvUm7aT26OjSxzMzMPY7CdT26OjSxzMzMvYrCdT1Q45e8zMzMvUy7ab1Q45e8zMzMPUm7ab34u3I9zMzMPfTHGbz4u3I9zMzMvQDIGbxMu2k9zMzMvVLjl7xMu2k9zMzMPUzjl7wOyBk8zMzMPfS7cr1a45c8zMzMPUm7ab1a45c8zMzMvUy7ab0OyBk8zMzMvfm7cr34u3K9zMzMvfnHGTxMu2m9zMzMvU/jlzxMu2m9zMzMPVXjlzz4u3K9zMzMPQXIGTyNwnW9zMzMPaCQRDCNwnW9zMzMvcKDQLL3u3K9zMzMPQTIGbz3u3K9zMzMvRDIGbw9Jd88zMzMPUP5Wr09Jd88zMzMvUb5Wr1H+Vq9zMzMPTgl3zxH+Vq9zMzMvTIl3zxH+Vo9zMzMPS8l37xH+Vo9zMzMvTYl37w6Jd+8zMzMvUP5Wj06Jd+8zMzMPUb5Wj1Mxy29zMzMvVDHLb1Mxy29zMzMPUzHLb0AAAAA//9/vwAAAADGzMy9AAAoAuqpQr/a0k+zR0ImP5oAdb0oAAQGRUImv2tUc7PvqUI/nAB1vSwABAY6QiY/dlRzM/epQr+bAHW9MAAEBPWpQj/O0k8zPkImv5wAdb00AAQD8alCP9HST7NAQiY/mwB1vTgABBl0wgU/JmyIs6NGWj+dAHW9PAAEHD5CJj9zVHOz9KlCP5wAdb1AAAQcX4NsvyiwtzIZ78O+ngB1vUQABCCfRlq/ocz6MnfCBb+cAHW9SAAEDmvCBb8qbIgzqEZav5wAdb1MAAQTXoNsPyewt7IY78M+nAB1vVAABBakRlo/DDMns2/CBT+aAHW9VAAEFGMMb75pXmmzO+14P5oAdb1YAAQ7766gvb2BnzP6NX+/mgB1vVwABC/6NX8/JK+gsSOvoD2bAHW9YAAEQj3teD96G2CyPQxvPpwAdb1kAAQVXgxvPkWUm7M77Xg/mgB1vWgABDUF78M+Lbtds2KDbD+aAHW9bAAEG++uoD29gZ+z+jV/P5oAdb1wAAQm7q6gvb2Bn7P6NX8/mgB1vXQABCdjDG++aV5pMzvteL+ZAHW9eAAELgLvw74e0pMzYoNsv5oAdb18AAQx+TV/Py+voDEtr6C9mgB1vYAABD497Xg/ehtgMj0Mb76bAHW9hAAEQDoMbz5sXmkzPu14v5sAdb2IAAQlO6+gPS1ixzP6NX+/mQB1vYwABCQ97Xi/eBtgsjsMbz6bAHW9kAAEN/k1f78xpJaxI6+gPZoAdb2UAAQrPu14v18bYDIgDG++mwB1vZgABC35NX+/Y6SWMVevoL2aAHW9nAAEKnjCBT8kbIgzoEZav5wAdb2gAAQEI+/DPia7XTNbg2y/mgB1vaQABCJfg2y/KLC3shnvwz6dAHW9qAAEOahGWr+FzPqyacIFP5sAdb2sAAQKXoNsPyewtzIY78O+nAB1vbAABD+qRlo/o0wSM2nCBb+cAHW9tAAESG/CBb87okyzpUZaP5sAdb24AARHIO/Dvia7XbNbg2w/mQB1vbwABDsAAAAAAACAPwAAAADHzMy9wAAoAExCJr9lVHMz6alCv5wAdb3oAAQM6alCv97STzNLQia/mwB1vewABAxMBQEAST8+Q0UVFBlOHBs0KSg9PEcIBwtLODcrKiAfDg0QEzEwMyQjAAECAwQCAQUGBwgJBgoLBwwNDg8QERITEA0MERQVFhcUFxgZGhscHR4fICEeDw4fIiMkJSYnKCkqKywtKi0hIC4vMDEuMRMSMjMwLzIlJDM0NSYpNBsaNTYsKzc2Nzg5Ojs8PTo9KCc+P0BBPkFCQ0QWFUVERUNCRgkIR0ZHPDtIQD9JSEkAA0o5OEtKSwsKTE0EBUwjIk1PGBcWREJBQEgDAgRNIiUyLy4SEQwPHiEtLDY5SgoGCUY7OicmNRodTx0cTk9OGRgAJQACAAEAIgAhABsAHAAeAB0ACAAJACkAKAAKABYAFQAOABoAGQAgAB8AAwAEACQAIwAYABcADwAQAAsADAAFAAcABgASABEAEwAUAA0AJgECAScBIgInAiUDBAMfAycEJwQkBQcFDAUnBgcGJwYSBycIHQgnCAkJJwkpChYKKAonCwwLEAsnDCcNJg0UDScOJw4aDhUPFw8nDxAQJxEnERMREhInExQTJxQnFRYVJxYnFycXGBgjGCcZJxkgGRoaJxshGycbHBwnHB4dJx0eHicfJx8gICchJyEiIicjJyMkJCclJiUnJicnKScoKCkAASIAAQIBAicBIicCJScAAiUDBCcAAwQAAx8DHycEJCcABCQFBycABQcABQwFDCcABgcGBycGEicABhIACAkACB0IHScICScJJykACSkKFicAChYACigKJygLDCcACwwACxALECcNJicADSYADRQNFCcOFScOGicADhoADhUADxAADxcPFycPECcREicREycAERMAERITFCcAExQAFRYVFicXGCcAFxgAGCMYIycZGicZICcAGSAAGRoAGxwAGyEbIScbHCccHicAHB4dHicAHR4fICcAHyAhIicAISIjJCcAIyQAJSYlJicAKCknKCkAAAAAjcJ1vczMzL2OwnW9jcJ1PczMzD2OwnU9SqETOxvaHzfl6wiok2J7qeXrCKhYf4c2Sj8Sq5Nie6lKPxKrG9ofN2Cdqa6CruKwQIraLQAAgD9JQ0UBU1VQTQAAAABJQ0UBR0FVUwAAAAAQAAAAAAYAAAcHC0tLODcrKyogHx8ODQ0HBwtL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",
-                                        "Type": 1
-                                    },
-                                    "Subdivision": 40,
-                                    "Height": 0.20000000298023224,
-                                    "Radius": 0.05999999865889549
-                                }
-                            }
-                        }
-                    ]
-                },
-                "Component_[14240939038475254800]": {
-                    "$type": "EditorPendingCompositionComponent",
-                    "Id": 14240939038475254800
-                },
-                "Component_[17525527602138463858]": {
-                    "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
-                    "Id": 17525527602138463858,
-                    "Parent Entity": "Entity_[15706963622432]",
-                    "Transform Data": {
-                        "Translate": [
-                            0.013635635375976563,
-                            0.0,
-                            -0.018795490264892578
-                        ]
-                    }
-                },
-                "Component_[18213605936110345144]": {
-                    "$type": "EditorVisibilityComponent",
-                    "Id": 18213605936110345144
-                },
-                "Component_[4456838957105228021]": {
-                    "$type": "EditorBoxShapeComponent",
-                    "Id": 4456838957105228021,
-                    "BoxShape": {
-                        "Configuration": {
-                            "Dimensions": [
-                                0.20000000298023224,
-                                0.05000000074505806,
-                                0.20000000298023224
-                            ]
-                        }
-                    }
-                },
-                "Component_[7198487201084058269]": {
-                    "$type": "EditorEntityIconComponent",
-                    "Id": 7198487201084058269
-                },
-                "Component_[9056863328271151512]": {
-                    "$type": "EditorEntitySortComponent",
-                    "Id": 9056863328271151512
-                },
-                "Component_[9833149320374707529]": {
-                    "$type": "EditorLockComponent",
-                    "Id": 9833149320374707529
                 }
             }
         },
@@ -862,37 +638,7 @@
             "Components": {
                 "Component_[10692234168189354968]": {
                     "$type": "EditorDisabledCompositionComponent",
-                    "Id": 10692234168189354968,
-                    "DisabledComponents": [
-                        {
-                            "$type": "EditorColliderComponent",
-                            "Id": 4143346238888540812,
-                            "ColliderConfiguration": {
-                                "Position": [
-                                    0.5,
-                                    0.0,
-                                    0.0
-                                ],
-                                "MaterialSlots": {
-                                    "Slots": [
-                                        {
-                                            "Name": "Entire object"
-                                        }
-                                    ]
-                                }
-                            },
-                            "ShapeConfiguration": {
-                                "ShapeType": 1,
-                                "Box": {
-                                    "Configuration": [
-                                        0.05000000074505806,
-                                        0.5,
-                                        0.20000000298023224
-                                    ]
-                                }
-                            }
-                        }
-                    ]
+                    "Id": 10692234168189354968
                 },
                 "Component_[10928326798115103880]": {
                     "$type": "EditorOnlyEntityComponent",
@@ -916,7 +662,14 @@
                         "MaterialSlots": {
                             "Slots": [
                                 {
-                                    "Name": "Proteus"
+                                    "Name": "Proteus",
+                                    "MaterialAsset": {
+                                        "assetId": {
+                                            "guid": "{92A5EC27-1AC1-523E-88BB-9A6278DBD853}",
+                                            "subId": 1
+                                        },
+                                        "assetHint": "physx/metal.physicsmaterial"
+                                    }
                                 }
                             ]
                         }
@@ -925,19 +678,19 @@
                         "PhysicsAsset": {
                             "Asset": {
                                 "assetId": {
-                                    "guid": "{0042012D-310E-5380-8BFB-5B92949DA679}",
+                                    "guid": "{D8E41FF6-BF62-5D4A-B4C3-B980586B3AB3}",
                                     "subId": 1612379007
                                 },
-                                "assetHint": "assets/proteusrobot/proteus_chassis.pxmesh"
+                                "assetHint": "proteus_chassis.pxmesh"
                             },
                             "Configuration": {
                                 "PhysicsAsset": {
                                     "assetId": {
-                                        "guid": "{0042012D-310E-5380-8BFB-5B92949DA679}",
+                                        "guid": "{D8E41FF6-BF62-5D4A-B4C3-B980586B3AB3}",
                                         "subId": 1612379007
                                     },
                                     "loadBehavior": "QueueLoad",
-                                    "assetHint": "assets/proteusrobot/proteus_chassis.pxmesh"
+                                    "assetHint": "proteus_chassis.pxmesh"
                                 },
                                 "UseMaterialsFromAsset": false
                             }
@@ -1018,12 +771,10 @@
                     "$type": "EditorEntitySortComponent",
                     "Id": 6563269519356188309,
                     "Child Entity Order": [
-                        "Entity_[15642539112992]",
                         "Entity_[15719848524320]",
-                        "Entity_[15668308916768]",
-                        "Entity_[15625359243808]",
                         "Entity_[15672603884064]",
                         "Entity_[15629654211104]",
+                        "Entity_[15642539112992]",
                         "Entity_[15651129047584]",
                         "Entity_[15741323360800]",
                         "Entity_[15633949178400]",
@@ -1178,77 +929,6 @@
                 "Component_[9809482087175845189]": {
                     "$type": "EditorVisibilityComponent",
                     "Id": 9809482087175845189
-                }
-            }
-        },
-        "Entity_[15668308916768]": {
-            "Id": "Entity_[15668308916768]",
-            "Name": "WheelBack",
-            "Components": {
-                "Component_[13583561873426454932]": {
-                    "$type": "EditorInspectorComponent",
-                    "Id": 13583561873426454932
-                },
-                "Component_[14075482336283088685]": {
-                    "$type": "EditorPendingCompositionComponent",
-                    "Id": 14075482336283088685
-                },
-                "Component_[16926808281943521431]": {
-                    "$type": "EditorVisibilityComponent",
-                    "Id": 16926808281943521431
-                },
-                "Component_[17880643931991830004]": {
-                    "$type": "EditorLockComponent",
-                    "Id": 17880643931991830004
-                },
-                "Component_[17883645160258258512]": {
-                    "$type": "AZ::Render::EditorMeshComponent",
-                    "Id": 17883645160258258512,
-                    "Controller": {
-                        "Configuration": {
-                            "ModelAsset": {
-                                "assetId": {
-                                    "guid": "{0042012D-310E-5380-8BFB-5B92949DA679}",
-                                    "subId": 270194697
-                                },
-                                "assetHint": "assets/proteusrobot/default_proteus_chassis_f2316b03_a973_5df0_9fac_01f13a4ef1bf_.azmodel"
-                            }
-                        }
-                    }
-                },
-                "Component_[578869891113246344]": {
-                    "$type": "EditorEntitySortComponent",
-                    "Id": 578869891113246344
-                },
-                "Component_[6180906745707271347]": {
-                    "$type": "EditorDisabledCompositionComponent",
-                    "Id": 6180906745707271347
-                },
-                "Component_[6695364355348955024]": {
-                    "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
-                    "Id": 6695364355348955024,
-                    "Parent Entity": "Entity_[15659718982176]",
-                    "Transform Data": {
-                        "Translate": [
-                            -0.13722991943359375,
-                            -0.0007290840148925781,
-                            -0.03912854194641113
-                        ],
-                        "Rotate": [
-                            -85.83122253417969,
-                            89.97979736328125,
-                            175.9088592529297
-                        ],
-                        "UniformScale": 100.0
-                    }
-                },
-                "Component_[8432699349397939544]": {
-                    "$type": "EditorEntityIconComponent",
-                    "Id": 8432699349397939544
-                },
-                "Component_[9806391037619932132]": {
-                    "$type": "EditorOnlyEntityComponent",
-                    "Id": 9806391037619932132
                 }
             }
         },
@@ -1777,9 +1457,9 @@
                                     "Value": {
                                         "MaterialAsset": {
                                             "assetId": {
-                                                "guid": "{66460BD5-DDD0-5722-B6F6-74681AA8CC09}"
+                                                "guid": "{38D3B77B-57B7-50FB-969D-0C2E7866E3F6}"
                                             },
-                                            "assetHint": "assets/proteusrobot/materials/proteus_chassis_proteus.azmaterial"
+                                            "assetHint": "materials/proteus_chassis_proteus.azmaterial"
                                         }
                                     }
                                 }
@@ -1995,42 +1675,6 @@
                     "$type": "EditorOnlyEntityComponent",
                     "Id": 16727775319021629115
                 },
-                "Component_[288381014315992651]": {
-                    "$type": "EditorColliderComponent",
-                    "Id": 288381014315992651,
-                    "ColliderConfiguration": {
-                        "Position": [
-                            0.0,
-                            0.0,
-                            0.03977731615304947
-                        ],
-                        "MaterialSlots": {
-                            "Slots": [
-                                {
-                                    "Name": "Entire object",
-                                    "MaterialAsset": {
-                                        "assetId": {
-                                            "guid": "{74448F35-B8C8-5CF3-984C-58CF92889961}",
-                                            "subId": 1
-                                        },
-                                        "assetHint": "assets/proteusrobot/robot_tire.physicsmaterial"
-                                    }
-                                }
-                            ]
-                        },
-                        "ContactOffset": 0.20000000298023224
-                    },
-                    "ShapeConfiguration": {
-                        "ShapeType": 1,
-                        "Box": {
-                            "Configuration": [
-                                0.5,
-                                0.4000000059604645,
-                                0.0020000000949949026
-                            ]
-                        }
-                    }
-                },
                 "Component_[3504755063289314608]": {
                     "$type": "EditorPendingCompositionComponent",
                     "Id": 3504755063289314608
@@ -2039,7 +1683,6 @@
                     "$type": "EditorEntitySortComponent",
                     "Id": 4029862250311118130,
                     "Child Entity Order": [
-                        "Entity_[15646834080288]",
                         "Entity_[15694078720544]"
                     ]
                 },
@@ -2063,24 +1706,7 @@
                     "$type": "EditorRigidBodyComponent",
                     "Id": 7667036443034995771,
                     "Configuration": {
-                        "entityId": "",
-                        "Mass": 0.4000000059604645,
-                        "Centre of mass offset": [
-                            0.0,
-                            0.0,
-                            0.03977731987833977
-                        ],
-                        "Inertia tensor": [
-                            0.005333467852324247,
-                            0.0,
-                            0.0,
-                            0.0,
-                            0.008333466947078705,
-                            0.0,
-                            0.0,
-                            0.0,
-                            0.013666669838130474
-                        ]
+                        "entityId": ""
                     }
                 },
                 "Component_[8410131596483981918]": {
@@ -2089,23 +1715,7 @@
                 },
                 "Component_[9379851989683144881]": {
                     "$type": "EditorDisabledCompositionComponent",
-                    "Id": 9379851989683144881,
-                    "DisabledComponents": [
-                        {
-                            "$type": "EditorBoxShapeComponent",
-                            "Id": 16236881944387294048,
-                            "GameView": true,
-                            "BoxShape": {
-                                "Configuration": {
-                                    "Dimensions": [
-                                        0.5,
-                                        0.5,
-                                        0.5
-                                    ]
-                                }
-                            }
-                        }
-                    ]
+                    "Id": 9379851989683144881
                 },
                 "Component_[992626787896178449]": {
                     "$type": "EditorPrismaticJointComponent",
@@ -2152,9 +1762,8 @@
                                     "Value": {
                                         "MaterialAsset": {
                                             "assetId": {
-                                                "guid": "{69A7BD9D-76C8-5C4F-8B9E-4DA8C98BAC7E}"
-                                            },
-                                            "assetHint": "assets/proteusrobot/materials/proteus_chassis_wheel.azmaterial"
+                                                "guid": "{38D3B77B-57B7-50FB-969D-0C2E7866E3F6}"
+                                            }
                                         }
                                     }
                                 }
@@ -2260,9 +1869,8 @@
                                     "Value": {
                                         "MaterialAsset": {
                                             "assetId": {
-                                                "guid": "{69A7BD9D-76C8-5C4F-8B9E-4DA8C98BAC7E}"
-                                            },
-                                            "assetHint": "assets/proteusrobot/materials/proteus_chassis_wheel.azmaterial"
+                                                "guid": "{38D3B77B-57B7-50FB-969D-0C2E7866E3F6}"
+                                            }
                                         }
                                     }
                                 }
@@ -2474,24 +2082,7 @@
             "Components": {
                 "Component_[13161866500099870035]": {
                     "$type": "EditorDisabledCompositionComponent",
-                    "Id": 13161866500099870035,
-                    "DisabledComponents": [
-                        {
-                            "$type": "AZ::Render::EditorMeshComponent",
-                            "Id": 15979617319821968707,
-                            "Controller": {
-                                "Configuration": {
-                                    "ModelAsset": {
-                                        "assetId": {
-                                            "guid": "{0042012D-310E-5380-8BFB-5B92949DA679}",
-                                            "subId": 270752891
-                                        },
-                                        "assetHint": "assets/proteusrobot/default_proteus_chassis_da9dbe87_1547_5f98_825b_bb5776fc2e64_.azmodel"
-                                    }
-                                }
-                            }
-                        }
-                    ]
+                    "Id": 13161866500099870035
                 },
                 "Component_[14431861058031353286]": {
                     "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
@@ -2541,97 +2132,7 @@
                 },
                 "Component_[5881629558827321802]": {
                     "$type": "EditorPendingCompositionComponent",
-                    "Id": 5881629558827321802,
-                    "PendingComponents": [
-                        {
-                            "$type": "EditorMaterialComponent",
-                            "Id": 6365176325044920244,
-                            "Controller": {
-                                "Configuration": {
-                                    "materials": [
-                                        {
-                                            "Key": {
-                                                "materialSlotStableId": 810733620
-                                            },
-                                            "Value": {
-                                                "MaterialAsset": {
-                                                    "assetId": {
-                                                        "guid": "{CC0AEE4A-F7FD-51EC-AB2B-8E939CA1E76C}"
-                                                    },
-                                                    "assetHint": "assets/proteusrobot/materials/proteus_chassis_side_lights.azmaterial"
-                                                }
-                                            }
-                                        },
-                                        {
-                                            "Key": {
-                                                "materialSlotStableId": 1319371964
-                                            },
-                                            "Value": {
-                                                "MaterialAsset": {
-                                                    "assetId": {
-                                                        "guid": "{C78BC1AA-BF54-5654-A7B5-B5D90C213883}"
-                                                    },
-                                                    "assetHint": "assets/proteusrobot/materials/proteus_chassis_front_light.azmaterial"
-                                                }
-                                            }
-                                        },
-                                        {
-                                            "Key": {
-                                                "materialSlotStableId": 2841759961
-                                            },
-                                            "Value": {
-                                                "MaterialAsset": {
-                                                    "assetId": {
-                                                        "guid": "{F3B81F31-AA71-549C-976C-8CF2DAC7C0A6}"
-                                                    },
-                                                    "assetHint": "assets/proteusrobot/materials/proteus_chassis_front_double_lights.azmaterial"
-                                                }
-                                            }
-                                        },
-                                        {
-                                            "Key": {
-                                                "materialSlotStableId": 3008400144
-                                            },
-                                            "Value": {
-                                                "MaterialAsset": {
-                                                    "assetId": {
-                                                        "guid": "{66460BD5-DDD0-5722-B6F6-74681AA8CC09}"
-                                                    },
-                                                    "assetHint": "assets/proteusrobot/materials/proteus_chassis_proteus.azmaterial"
-                                                }
-                                            }
-                                        },
-                                        {
-                                            "Key": {
-                                                "materialSlotStableId": 3083536379
-                                            },
-                                            "Value": {
-                                                "MaterialAsset": {
-                                                    "assetId": {
-                                                        "guid": "{8247B56F-8B9B-5E3B-A690-02BA1EDEFCA9}"
-                                                    },
-                                                    "assetHint": "assets/proteusrobot/materials/proteus_chassis_indicator.azmaterial"
-                                                }
-                                            }
-                                        },
-                                        {
-                                            "Key": {
-                                                "materialSlotStableId": 4231336350
-                                            },
-                                            "Value": {
-                                                "MaterialAsset": {
-                                                    "assetId": {
-                                                        "guid": "{CA07E1A2-E03F-5B99-91EA-7F9A9F13B28B}"
-                                                    },
-                                                    "assetHint": "assets/proteusrobot/materials/proteus_chassis_rear_lights.azmaterial"
-                                                }
-                                            }
-                                        }
-                                    ]
-                                }
-                            }
-                        }
-                    ]
+                    "Id": 5881629558827321802
                 }
             }
         },
