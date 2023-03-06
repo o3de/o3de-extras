@@ -44,7 +44,8 @@ ly_add_target(
             Gem::PhysX.Static
 )
 
-target_depends_on_ros2_packages(${gem_name}.Static rclcpp builtin_interfaces std_msgs sensor_msgs nav_msgs urdfdom tf2_ros ackermann_msgs gazebo_msgs control_toolbox)
+target_depends_on_ros2_packages(${gem_name}.Static rclcpp builtin_interfaces std_msgs sensor_msgs nav_msgs urdfdom tf2_ros ackermann_msgs gazebo_msgs)
+target_depends_on_ros2_package(${gem_name}.Static control_toolbox 2.2.0 REQUIRED)
 
 ly_add_target(
     NAME ${gem_name}.API HEADERONLY
