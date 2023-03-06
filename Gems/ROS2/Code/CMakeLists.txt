@@ -17,7 +17,7 @@ if (NOT ROS2_FOUND)
     message(FATAL_ERROR "Unable to detect a the ROS2 distribution on this system. Make sure it is installed and enabled.")
     return()
 endif()
-
+message(DEBUG "Building ${gem_name} Gem with ros2 $ENV{ROS_DISTRO}")
 # Add the ROS2.Static target
 # Note: We include the common files and the platform specific files which are set in ros2_common_files.cmake
 # and in ${pal_dir}/ros2_${PAL_PLATFORM_NAME_LOWERCASE}_files.cmake
