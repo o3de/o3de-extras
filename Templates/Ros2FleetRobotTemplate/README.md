@@ -43,8 +43,7 @@ sudo apt install ros-${ROS_DISTRO}-ackermann-msgs ros-${ROS_DISTRO}-gazebo-msgs 
 For convenienience, we'll define a shell variables with O3DE folders:
 
 ```shell
-export O3DE_HOME=/home/${USER}/O3DE
-export O3DE_ENGINE=${O3DE_HOME}/Engines/Development
+export O3DE_HOME=${HOME}/O3DE
 ```
 
 Clone the `o3de-extras` repository containing the template and asset gems
@@ -52,42 +51,39 @@ Clone the `o3de-extras` repository containing the template and asset gems
 ```shell
 mkdir -p ${O3DE_HOME}/Projects
 cd ${O3DE_HOME}/Projects
-git clone git@github.com:o3de/o3de-extras.git
+git clone https://github.com/o3de/o3de-extras.git 
+cd o3de-extras 
+git lfs install && git lfs pull
 ```
 
-Copy gems to the O3DE home.
+Copy gems and template to the O3DE home.
 
 ```shell
 mkdir -p ${O3DE_HOME}/Gems
-cp o3de-extras/Gems/ROS2 ${O3DE_HOME}/Gems
-cp o3de-extras/Gems/WarehouseAssets ${O3DE_HOME}/Gems
-cp o3de-extras/Gems/ProteusRobot ${O3DE_HOME}/Gems
+mkdir -p ${O3DE_HOME}/Templates
+cp -r ${O3DE_HOME}/Projects/o3de-extras/Gems/ROS2 ${O3DE_HOME}/Gems \
+cp -r ${O3DE_HOME}/Projects/o3de-extras/Gems/WarehouseAssets ${O3DE_HOME}/Gems \
+cp -r ${O3DE_HOME}/Projects/o3de-extras/Gems/ProteusRobot ${O3DE_HOME}/Gems \
+cp -r ${O3DE_HOME}/Projects/o3de-extras/Templates/Ros2FleetRobotTemplate ${O3DE_HOME}/Templates/
 ```
 
-Register these gems.
+Register these gems and project template.
 
 ```shell
-${O3DE_ENGINE}/scripts/o3de.sh register --gem-path ${O3DE_HOME}/Gems/ROS2
-${O3DE_ENGINE}/scripts/o3de.sh register --gem-path ${O3DE_HOME}/Gems/WarehouseAssets
-${O3DE_ENGINE}/scripts/o3de.sh register --gem-path ${O3DE_HOME}/Gems/ProteusRobot
+${O3DE_HOME}/scripts/o3de.sh register --gem-path ${O3DE_HOME}/Gems/ROS2
+${O3DE_HOME}/scripts/o3de.sh register --gem-path ${O3DE_HOME}/Gems/WarehouseAssets
+${O3DE_HOME}/scripts/o3de.sh register --gem-path ${O3DE_HOME}/Gems/ProteusRobot
+${O3DE_HOME}/scripts/o3de.sh register --template-path ${O3DE_HOME}/Templates/Ros2FleetRobotTemplate 
 ```
 
 ### 3. Create a ROS2 project from the template
 
-Assign a name for the new project. In this example, it is assumed that it will be: `Ros2FleetRobotTest`, and it will be located in `$DEMO_BASE/Ros2FleetRobotTest` folder. 
+Assign a name for the new project. In this example, it is assumed that it will be: `Ros2FleetRobotTest`, and it will be located in `${O3DE_HOME}/Projects/Ros2FleetRobotTest` folder. 
 
 ```shell
 export PROJECT_NAME=Ros2FleetRobotTest
 export PROJECT_PATH=${O3DE_HOME}/Projects/${PROJECT_NAME}
-${O3DE_ENGINE}/scripts/o3de.sh create-project --project-path $PROJECT_PATH --template-path ${O3DE_HOME}/Projects/o3de-extras/Templates/Ros2FleetRobotTemplate/ -f 
-```
-
-Enable gems.
-
-```shell
-${O3DE_ENGINE}/scripts/o3de.sh enable-gem --gem-name ROS2 --project-path $PROJECT_PATH
-${O3DE_ENGINE}/scripts/o3de.sh enable-gem --gem-name WarehouseAssets --project-path $PROJECT_PATH
-${O3DE_ENGINE}/scripts/o3de.sh enable-gem --gem-name ProteusRobot --project-path $PROJECT_PATH
+${O3DE_HOME}/scripts/o3de.sh create-project --project-path $PROJECT_PATH --template-name Ros2FleetRobotTemplate
 ```
 
 ### 4. Build the project
@@ -97,7 +93,7 @@ Next, let us build the project with necessary elements of the O3DE engine and RO
 ```shell
 cd $PROJECT_PATH
 source /opt/ros/humble/setup.bash
-cmake -B build/linux -G "Ninja Multi-Config" -DLY_UNITY_BUILD=OFF -DCMAKE_EXPORT_COMPILE_COMMANDS=ON -DLY_PARALLEL_LINK_JOBS=16 -DLY_STRIP_DEBUG_SYMBOLS=OFF
+cmake -B build/linux -G "Ninja Multi-Config" -DCMAKE_EXPORT_COMPILE_COMMANDS=ON -DLY_PARALLEL_LINK_JOBS=16 -DLY_STRIP_DEBUG_SYMBOLS=OFF
 cmake --build build/linux --config profile --target $PROJECT_NAME.GameLauncher Editor
 ```
 

@@ -14,7 +14,6 @@ set(ENABLED_GEMS
     ${Name}
     Atom
     AudioSystem
-    AWSCore
     CameraFramework
     DebugDraw
     EditorPythonBindings
