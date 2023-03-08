@@ -18,6 +18,7 @@ if (NOT ROS2_FOUND)
     return()
 endif()
 message(DEBUG "Building ${gem_name} Gem with ros2 $ENV{ROS_DISTRO}")
+
 # Add the ROS2.Static target
 # Note: We include the common files and the platform specific files which are set in ros2_common_files.cmake
 # and in ${pal_dir}/ros2_${PAL_PLATFORM_NAME_LOWERCASE}_files.cmake
@@ -44,7 +45,7 @@ ly_add_target(
             Gem::PhysX.Static
 )
 
-target_depends_on_ros2_packages(${gem_name}.Static rclcpp builtin_interfaces std_msgs sensor_msgs nav_msgs urdfdom tf2_ros ackermann_msgs gazebo_msgs)
+target_depends_on_ros2_packages(${gem_name}.Static rclcpp builtin_interfaces std_msgs sensor_msgs nav_msgs tf2_ros ackermann_msgs gazebo_msgs)
 target_depends_on_ros2_package(${gem_name}.Static control_toolbox 2.2.0 REQUIRED)
 
 ly_add_target(
@@ -109,6 +110,9 @@ if(PAL_TRAIT_BUILD_HOST_TOOLS)
                 Gem::PhysX.Editor.Static
                 Gem::${gem_name}.Static
     )
+
+    find_package(urdfdom)
+    target_link_libraries(${gem_name}.Editor.Static PUBLIC urdfdom::urdfdom_model)
 
     ly_add_target(
         NAME ${gem_name}.Editor GEM_MODULE
