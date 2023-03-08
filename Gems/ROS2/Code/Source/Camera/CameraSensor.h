@@ -95,15 +95,14 @@ namespace ROS2
 
         //! Request a frame from the rendering pipeline
         //! @param cameraPose - current camera pose from which the rendering should take place
-        //! @param callback - callback function object that will be called when capture is ready
-        //!                   it's argument is readback structure containing, among other thins, captured image
+        //! @param callback - callback function object that will be called when capture is ready.
+        //!                   It's argument is readback structure containing, among other things, a captured image
         void RequestFrame(
             const AZ::Transform& cameraPose, AZStd::function<void(const AZ::RPI::AttachmentReadback::ReadbackResult& result)> callback);
 
         //! Request an additional frame from the rendering pipeline
-        //! @param cameraPose - current camera pose from which the rendering should take place
-        //! @param callback - callback function object that will be called when capture is ready
-        //!                   it's argument is readback structure containing, among other thins, captured image
+        //! @param callback - callback function object that will be called when capture is ready.
+        //!                   It's argument is readback structure containing, among other things, a captured image
         //! @param passName - pass name in pipeline, eg `DepthToLinearDepthPass`
         //! @param slotName - slot name in selected pass, eg `Output`
         void RequestAdditionalFrame(

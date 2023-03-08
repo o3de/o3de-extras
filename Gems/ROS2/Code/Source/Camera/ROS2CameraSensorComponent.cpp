@@ -117,8 +117,8 @@ namespace ROS2
         std_msgs::msg::Header ros_header;
         if (!m_imagePublishers.empty() && m_cameraSensor)
         {
-            const auto& camera_descritpion = m_cameraSensor->GetCameraSensorDescription();
-            const auto& cameraIntrinsics = camera_descritpion.m_cameraIntrinsics;
+            const auto& cameraDescription = m_cameraSensor->GetCameraSensorDescription();
+            const auto& cameraIntrinsics = cameraDescription.m_cameraIntrinsics;
             sensor_msgs::msg::CameraInfo cameraInfo;
             ros_header.stamp = timestamp;
             ros_header.frame_id = m_frameName.c_str();

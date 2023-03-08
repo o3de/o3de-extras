@@ -267,14 +267,14 @@ namespace ROS2
     void CameraRGBDSensor::ReadBackDepth(
         AZStd::function<void(const AZ::RPI::AttachmentReadback::ReadbackResult& result)> callback)
     {
-            AZ::Render::FrameCaptureId captureId = AZ::Render::InvalidFrameCaptureId;
+            AZ::Render::FrameCaptureOutcome captureOutcome;
             AZStd::vector<AZStd::string> passHierarchy{m_pipelineName,"DepthPrePass"};
             AZ::Render::FrameCaptureRequestBus::BroadcastResult(
-                captureId,
+                captureOutcome,
                 &AZ::Render::FrameCaptureRequestBus::Events::CapturePassAttachmentWithCallback,
+                callback,
                 passHierarchy,
                 AZStd::string("DepthLinear"),
-                callback,
                 AZ::RPI::PassAttachmentReadbackOption::Output);
     }
 
