@@ -10,7 +10,7 @@ Refer to the [O3DE System Requirements](https://www.o3de.org/docs/welcome-guide/
 This project has the following dependencies:
 
 - [O3DE](https://github.com/o3de/o3de)
-- [ROS2 Humble](https://www.ros.org)
+- [ROS2 Humble](https://docs.ros.org/en/humble/index.html)
 - [ROS2 Gem](https://github.com/o3de/o3de-extras/tree/development/Gems/ROS2)
 - [Proteus robot](https://github.com/o3de/o3de-extras/tree/development/Gems/ProteusRobot)
 - [WarehouseAssets](https://github.com/o3de/o3de-extras/tree/development/Gems/WarehouseAssets)
@@ -22,7 +22,7 @@ Please make sure that `clang` was installed and configured. For details refer to
 The following steps will assume the following:
 
 - You have ROS2 humble [installed](https://docs.ros.org/en/humble/Installation.html) and environment is [sourced](https://docs.ros.org/en/humble/Tutorials/Beginner-CLI-Tools/Configuring-ROS2-Environment.html#source-the-setup-files).
-- The O3DE gems, projects and templates will be placed in the O3DE home folder: `/home/${USER}/O3DE`.
+- The O3DE gems, projects and templates will be placed in the O3DE home folder: `${HOME}/O3DE`.
 - You have the O3DE engine [downloaded and built](https://www.o3de.org/docs/welcome-guide/setup/setup-from-github) and it is located in `/home/${USER}/O3DE/Engines/Development`.
 
 In this tutorial, CLI tools will be used. It is also possible to use O3DE GUI to set up a project from template. See the [O3DE Project manager documentation](https://www.o3de.org/docs/user-guide/project-config/project-manager/) for more details. In such cases it is required to source your ROS2 distro before launching O3DE manager:
@@ -56,24 +56,14 @@ cd o3de-extras
 git lfs install && git lfs pull
 ```
 
-Copy gems and template to the O3DE home.
+
+Register gems and project template.
 
 ```shell
-mkdir -p ${O3DE_HOME}/Gems
-mkdir -p ${O3DE_HOME}/Templates
-cp -r ${O3DE_HOME}/Projects/o3de-extras/Gems/ROS2 ${O3DE_HOME}/Gems \
-cp -r ${O3DE_HOME}/Projects/o3de-extras/Gems/WarehouseAssets ${O3DE_HOME}/Gems \
-cp -r ${O3DE_HOME}/Projects/o3de-extras/Gems/ProteusRobot ${O3DE_HOME}/Gems \
-cp -r ${O3DE_HOME}/Projects/o3de-extras/Templates/Ros2FleetRobotTemplate ${O3DE_HOME}/Templates/
-```
-
-Register these gems and project template.
-
-```shell
-${O3DE_HOME}/scripts/o3de.sh register --gem-path ${O3DE_HOME}/Gems/ROS2
-${O3DE_HOME}/scripts/o3de.sh register --gem-path ${O3DE_HOME}/Gems/WarehouseAssets
-${O3DE_HOME}/scripts/o3de.sh register --gem-path ${O3DE_HOME}/Gems/ProteusRobot
-${O3DE_HOME}/scripts/o3de.sh register --template-path ${O3DE_HOME}/Templates/Ros2FleetRobotTemplate 
+${O3DE_HOME}/scripts/o3de.sh register --gem-path ${O3DE_HOME}/Projects/o3de-extras/Gems/ROS2
+${O3DE_HOME}/scripts/o3de.sh register --gem-path ${O3DE_HOME}/Projects/o3de-extras/Gems/WarehouseAssets
+${O3DE_HOME}/scripts/o3de.sh register --gem-path ${O3DE_HOME}/Projects/o3de-extras/Gems/ProteusRobot
+${O3DE_HOME}/scripts/o3de.sh register --template-path ${O3DE_HOME}/Projects/o3de-extras/Templates/Ros2FleetRobotTemplate
 ```
 
 ### 3. Create a ROS2 project from the template
@@ -93,7 +83,7 @@ Next, let us build the project with necessary elements of the O3DE engine and RO
 ```shell
 cd $PROJECT_PATH
 source /opt/ros/humble/setup.bash
-cmake -B build/linux -G "Ninja Multi-Config" -DCMAKE_EXPORT_COMPILE_COMMANDS=ON -DLY_PARALLEL_LINK_JOBS=16 -DLY_STRIP_DEBUG_SYMBOLS=OFF
+cmake -B build/linux -G "Ninja Multi-Config" -DLY_STRIP_DEBUG_SYMBOLS=TRUE -DLY_DISABLE_TEST_MODULES=ON
 cmake --build build/linux --config profile --target $PROJECT_NAME.GameLauncher Editor
 ```
 
