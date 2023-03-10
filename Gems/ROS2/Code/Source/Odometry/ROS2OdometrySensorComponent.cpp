@@ -51,6 +51,7 @@ namespace ROS2
     void ROS2OdometrySensorComponent::FrequencyTick()
     {
         auto* ros2Frame = Utils::GetGameOrEditorComponent<ROS2FrameComponent>(GetEntity());
+        AZ_Assert(ros2Frame, "ROS2Frame must be present for ROS2OdometrySensorComponent");
         auto transform = ros2Frame->GetFrameTransform();
 
         AZ::Vector3 linearVelocity;
@@ -74,6 +75,7 @@ namespace ROS2
     void ROS2OdometrySensorComponent::GetRequiredServices(AZ::ComponentDescriptor::DependencyArrayType& required)
     {
         required.push_back(AZ_CRC_CE("PhysicsRigidBodyService"));
+        required.push_back(AZ_CRC_CE("ROS2Frame"));
     }
 
     void ROS2OdometrySensorComponent::Activate()
