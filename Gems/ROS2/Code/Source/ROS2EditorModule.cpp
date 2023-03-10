@@ -8,6 +8,7 @@
 #include <Lidar/LidarRegistrarEditorSystemComponent.h>
 #include <ROS2EditorSystemComponent.h>
 #include <ROS2ModuleInterface.h>
+#include <Camera/ROS2CameraSensorEditorComponent.h>
 #include <RobotImporter/ROS2RobotImporterEditorSystemComponent.h>
 
 namespace ROS2
@@ -30,6 +31,7 @@ namespace ROS2
                     ROS2EditorSystemComponent::CreateDescriptor(),
                     LidarRegistrarEditorSystemComponent::CreateDescriptor(),
                     ROS2RobotImporterEditorSystemComponent::CreateDescriptor(),
+                    ROS2CameraSensorEditorComponent::CreateDescriptor(),
                 });
         }
 

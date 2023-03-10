@@ -36,7 +36,7 @@ namespace ROS2
         struct NoiseParameters
         {
         public:
-            AZ_TYPE_INFO(LidarNoiseParameters, "{58c007ad-320f-49df-bc20-6419159ee176}");
+            AZ_TYPE_INFO(NoiseParameters, "{58c007ad-320f-49df-bc20-6419159ee176}");
             static void Reflect(AZ::ReflectContext* context);
 
             //! Angular noise standard deviation, in degrees

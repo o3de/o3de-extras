@@ -168,16 +168,20 @@ namespace ROS2
         const AZ::Transform inverse = (cameraPose * AtomToRos).GetInverse();
         m_view->SetWorldToViewMatrix(AZ::Matrix4x4::CreateFromQuaternionAndTranslation(inverse.GetRotation(), inverse.GetTranslation()));
 
-        AZ::Render::FrameCaptureId captureId = AZ::Render::InvalidFrameCaptureId;
+        AZ::Render::FrameCaptureOutcome captureOutcome;
 
         m_pipeline->AddToRenderTickOnce();
         AZ::Render::FrameCaptureRequestBus::BroadcastResult(
-            captureId,
+            captureOutcome,
             &AZ::Render::FrameCaptureRequestBus::Events::CapturePassAttachmentWithCallback,
+            callback,
             m_passHierarchy,
             AZStd::string("Output"),
-            callback,
             AZ::RPI::PassAttachmentReadbackOption::Output);
+
+        AZ_Error("CameraSensor", captureOutcome.IsSuccess(),
+            "Frame capture initialization failed. %s",
+            captureOutcome.GetError().m_errorMessage.c_str());
     }
 
     const CameraSensorDescription& CameraSensor::GetCameraSensorDescription() const

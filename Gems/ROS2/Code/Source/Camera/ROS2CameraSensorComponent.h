@@ -22,6 +22,15 @@
 
 namespace ROS2
 {
+    namespace CameraConstants
+    {
+        inline constexpr char ImageMessageType[] = "sensor_msgs::msg::Image";
+        inline constexpr char DepthImageConfig[] = "Depth Image";
+        inline constexpr char ColorImageConfig[] = "Color Image";
+        inline constexpr char InfoConfig[] = "Camera Info";
+        inline constexpr char CameraInfoMessageType[] = "sensor_msgs::msg::CameraInfo";
+    } // namespace CameraConstants
+
     //! ROS2 Camera sensor component class
     //! Allows turning an entity into a camera sensor
     //! Can be parametrized with following values:
@@ -32,7 +41,16 @@ namespace ROS2
     class ROS2CameraSensorComponent : public ROS2SensorComponent
     {
     public:
-        ROS2CameraSensorComponent();
+        ROS2CameraSensorComponent() = default;
+
+        ROS2CameraSensorComponent(
+            const SensorConfiguration& sensorConfiguration,
+            float verticalFieldOfViewDeg,
+            int width,
+            int height,
+            bool colorCamera,
+            bool depthCamera);
+
         ~ROS2CameraSensorComponent() override = default;
         AZ_COMPONENT(ROS2CameraSensorComponent, "{3C6B8AE6-9721-4639-B8F9-D8D28FD7A071}", ROS2SensorComponent);
         static void Reflect(AZ::ReflectContext* context);
@@ -50,7 +68,7 @@ namespace ROS2
         //! Type that combines pointer to ROS2 publisher and CameraSensor
         using PublisherSensorPtrPair = AZStd::pair<ImagePublisherPtrType, AZStd::shared_ptr<CameraSensor>>;
 
-        //! Helper to construct a PublisherSensorPtrPair with a pointer to ROS2 publisher and intrinsic calibration
+        //! Helper to construct a PublisherSensorPtrPair with a pointer to ROS2 publisher and intrinsic calibration.
         //! @tparam CameraType type of camera sensor (eg 'CameraColorSensor')
         //! @param publisher pointer to ROS2 image publisher
         //! @param description CameraSensorDescription with intrinsic calibration
@@ -61,7 +79,12 @@ namespace ROS2
             return { publisher, AZStd::make_shared<CameraType>(description) };
         }
 
-        float m_VerticalFieldOfViewDeg = 90.0f;
+        //! Retrieve camera name from ROS2FrameComponent's FrameID.
+        //! @param entity pointer entity that has ROS2FrameComponent
+        //! @returns FrameID from ROS2FrameComponent
+        AZStd::string GetCameraNameFromFrame(const AZ::Entity* entity) const;
+
+        float m_verticalFieldOfViewDeg = 90.0f;
         int m_width = 640;
         int m_height = 480;
         bool m_colorCamera = true;
