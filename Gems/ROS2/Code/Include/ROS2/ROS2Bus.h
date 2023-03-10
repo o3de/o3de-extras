@@ -53,7 +53,7 @@ namespace ROS2
         virtual void BroadcastTransform(const geometry_msgs::msg::TransformStamped& t, bool isDynamic) const = 0;
 
         //! Obtains a simulation clock that is used across simulation.
-        //! returns constant reference to currently running clock.
+        //! @returns constant reference to currently running clock.
         virtual const SimulationClock& GetSimulationClock() const = 0;
 
     };

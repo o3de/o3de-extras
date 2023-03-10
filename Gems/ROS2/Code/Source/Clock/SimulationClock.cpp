@@ -6,8 +6,11 @@
  *
  */
 
-#include <ROS2/Clock/SimulationClock.h>
 #include <AzCore/Time/ITime.h>
+#include <AzCore/std/algorithm.h>
+#include <AzCore/std/containers/deque.h>
+#include <AzCore/std/containers/vector.h>
+#include <ROS2/Clock/SimulationClock.h>
 #include <ROS2/ROS2Bus.h>
 #include <rclcpp/qos.hpp>
 
@@ -38,7 +41,7 @@ namespace ROS2
 
     AZStd::chrono::duration<float, AZStd::chrono::seconds::period> SimulationClock::GetExpectedSimulationLoopTime() const
     {
-        return AZStd::chrono::duration<AZ::s64 , AZStd::chrono::microseconds::period>(m_currentMedian);
+        return AZStd::chrono::duration<AZ::s64, AZStd::chrono::microseconds::period>(m_currentMedian);
     }
 
     void SimulationClock::Tick()
@@ -61,11 +64,12 @@ namespace ROS2
 
         // statistics on execution time
         m_frameTimes.push_back(deltaTime);
-        if (m_frameTimes.size()>FramesNumberForStats){
+        if (m_frameTimes.size() > FramesNumberForStats)
+        {
             m_frameTimes.pop_front();
         }
         AZStd::vector<AZ::s64> frameTimeSorted{ m_frameTimes.begin(), m_frameTimes.end() };
-        AZStd::sort(frameTimeSorted.begin(),frameTimeSorted.end());
-        m_currentMedian = frameTimeSorted[frameTimeSorted.size() / 2] ;
+        AZStd::sort(frameTimeSorted.begin(), frameTimeSorted.end());
+        m_currentMedian = frameTimeSorted[frameTimeSorted.size() / 2];
     }
 } // namespace ROS2

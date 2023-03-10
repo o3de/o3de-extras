@@ -54,6 +54,6 @@ namespace ROS2
         virtual void Visualise(){};
 
         //! The number of ticks that are expected to pass to trigger next measurement.
-        AZ::s32 m_tickCountDown{0};
+        AZ::s32 m_tickCountDown{ 0 };
     };
 } // namespace ROS2

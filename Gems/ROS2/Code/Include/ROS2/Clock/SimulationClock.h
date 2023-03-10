@@ -7,12 +7,11 @@
  */
 #pragma once
 
+#include <AzCore/std/chrono/chrono.h>
+#include <AzCore/std/containers/deque.h>
 #include <builtin_interfaces/msg/time.hpp>
 #include <rclcpp/publisher.hpp>
 #include <rosgraph_msgs/msg/clock.hpp>
-#include <AzCore/std/containers/deque.h>
-#include <AzCore/std/containers/set.h>
-#include <AzCore/std/chrono/chrono.h>
 
 namespace ROS2
 {
@@ -20,6 +19,7 @@ namespace ROS2
     class SimulationClock
     {
         static constexpr size_t FramesNumberForStats = 60;
+
     public:
         //! Get simulation time as ROS2 message.
         //! @see ROS2Requests::GetROSTimestamp() for more details.
@@ -36,10 +36,10 @@ namespace ROS2
         //! Get the time since start of sim, scaled with t_simulationTickScale
         int64_t GetElapsedTimeMicroseconds() const;
 
-        AZ::s64 m_lastExecutionTime{0};
+        AZ::s64 m_lastExecutionTime{ 0 };
 
         rclcpp::Publisher<rosgraph_msgs::msg::Clock>::SharedPtr m_clockPublisher;
-        AZ::s64 m_currentMedian {0};
+        AZ::s64 m_currentMedian{ 0 };
         AZStd::deque<AZ::s64> m_frameTimes;
     };
 } // namespace ROS2
