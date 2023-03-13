@@ -20,10 +20,6 @@
             "isTemplated": true
         },
         {
-            "file": "Config/default_aws_resource_mappings.json",
-            "isTemplated": false
-        },
-        {
             "file": "Config/shader_global_build_options.json",
             "isTemplated": false
         },
@@ -41,18 +37,6 @@
         },
         {
             "file": "Gem/Include/${Name}/${Name}Bus.h",
-            "isTemplated": true
-        },
-        {
-            "file": "Gem/Platform/Android/${Name}_android_files.cmake",
-            "isTemplated": true
-        },
-        {
-            "file": "Gem/Platform/Android/${Name}_shared_android_files.cmake",
-            "isTemplated": true
-        },
-        {
-            "file": "Gem/Platform/Android/PAL_android.cmake",
             "isTemplated": true
         },
         {
@@ -92,18 +76,6 @@
             "isTemplated": true
         },
         {
-            "file": "Gem/Platform/iOS/${Name}_ios_files.cmake",
-            "isTemplated": true
-        },
-        {
-            "file": "Gem/Platform/iOS/${Name}_shared_ios_files.cmake",
-            "isTemplated": true
-        },
-        {
-            "file": "Gem/Platform/iOS/PAL_ios.cmake",
-            "isTemplated": true
-        },
-        {
             "file": "Gem/Registry/assetprocessor_settings.setreg",
             "isTemplated": true
         },
@@ -136,14 +108,6 @@
             "isTemplated": false
         },
         {
-            "file": "Platform/Android/android_project.cmake",
-            "isTemplated": true
-        },
-        {
-            "file": "Platform/Android/android_project.json",
-            "isTemplated": true
-        },
-        {
             "file": "Platform/Linux/linux_project.cmake",
             "isTemplated": true
         },
@@ -165,14 +129,6 @@
         },
         {
             "file": "Platform/Windows/windows_project.json",
-            "isTemplated": false
-        },
-        {
-            "file": "Platform/iOS/ios_project.cmake",
-            "isTemplated": true
-        },
-        {
-            "file": "Platform/iOS/ios_project.json",
             "isTemplated": false
         },
         {
@@ -256,102 +212,6 @@
             "isTemplated": true
         },
         {
-            "file": "Resources/Platform/iOS/Images.xcassets/AppIcon.appiconset/Contents.json",
-            "isTemplated": false
-        },
-        {
-            "file": "Resources/Platform/iOS/Images.xcassets/AppIcon.appiconset/iPadAppIcon152x152.png",
-            "isTemplated": false
-        },
-        {
-            "file": "Resources/Platform/iOS/Images.xcassets/AppIcon.appiconset/iPadAppIcon76x76.png",
-            "isTemplated": false
-        },
-        {
-            "file": "Resources/Platform/iOS/Images.xcassets/AppIcon.appiconset/iPadProAppIcon167x167.png",
-            "isTemplated": false
-        },
-        {
-            "file": "Resources/Platform/iOS/Images.xcassets/AppIcon.appiconset/iPadSettingsIcon29x29.png",
-            "isTemplated": false
-        },
-        {
-            "file": "Resources/Platform/iOS/Images.xcassets/AppIcon.appiconset/iPadSettingsIcon58x58.png",
-            "isTemplated": false
-        },
-        {
-            "file": "Resources/Platform/iOS/Images.xcassets/AppIcon.appiconset/iPadSpotlightIcon40x40.png",
-            "isTemplated": false
-        },
-        {
-            "file": "Resources/Platform/iOS/Images.xcassets/AppIcon.appiconset/iPadSpotlightIcon80x80.png",
-            "isTemplated": false
-        },
-        {
-            "file": "Resources/Platform/iOS/Images.xcassets/AppIcon.appiconset/iPhoneAppIcon120x120.png",
-            "isTemplated": false
-        },
-        {
-            "file": "Resources/Platform/iOS/Images.xcassets/AppIcon.appiconset/iPhoneAppIcon180x180.png",
-            "isTemplated": false
-        },
-        {
-            "file": "Resources/Platform/iOS/Images.xcassets/AppIcon.appiconset/iPhoneSettingsIcon58x58.png",
-            "isTemplated": false
-        },
-        {
-            "file": "Resources/Platform/iOS/Images.xcassets/AppIcon.appiconset/iPhoneSettingsIcon87x87.png",
-            "isTemplated": false
-        },
-        {
-            "file": "Resources/Platform/iOS/Images.xcassets/AppIcon.appiconset/iPhoneSpotlightIcon120x120.png",
-            "isTemplated": false
-        },
-        {
-            "file": "Resources/Platform/iOS/Images.xcassets/AppIcon.appiconset/iPhoneSpotlightIcon80x80.png",
-            "isTemplated": false
-        },
-        {
-            "file": "Resources/Platform/iOS/Images.xcassets/Contents.json",
-            "isTemplated": false
-        },
-        {
-            "file": "Resources/Platform/iOS/Images.xcassets/LaunchImage.launchimage/Contents.json",
-            "isTemplated": false
-        },
-        {
-            "file": "Resources/Platform/iOS/Images.xcassets/LaunchImage.launchimage/iPadLaunchImage1024x768.png",
-            "isTemplated": false
-        },
-        {
-            "file": "Resources/Platform/iOS/Images.xcassets/LaunchImage.launchimage/iPadLaunchImage1536x2048.png",
-            "isTemplated": false
-        },
-        {
-            "file": "Resources/Platform/iOS/Images.xcassets/LaunchImage.launchimage/iPadLaunchImage2048x1536.png",
-            "isTemplated": false
-        },
-        {
-            "file": "Resources/Platform/iOS/Images.xcassets/LaunchImage.launchimage/iPadLaunchImage768x1024.png",
-            "isTemplated": false
-        },
-        {
-            "file": "Resources/Platform/iOS/Images.xcassets/LaunchImage.launchimage/iPhoneLaunchImage640x1136.png",
-            "isTemplated": false
-        },
-        {
-            "file": "Resources/Platform/iOS/Images.xcassets/LaunchImage.launchimage/iPhoneLaunchImage640x960.png",
-            "isTemplated": false
-        },
-        {
-            "file": "Resources/Platform/iOS/Info.plist",
-            "isTemplated": true
-        },
-        {
-            "file": "Resources/Platform/iOS/Info.plist",
-            "isTemplated": true
-        },
-        {
             "file": "ShaderLib/README.md",
             "isTemplated": false
         },
@@ -424,9 +284,6 @@
             "dir": "Gem/Platform"
         },
         {
-            "dir": "Gem/Platform/Android"
-        },
-        {
             "dir": "Gem/Platform/Linux"
         },
         {
@@ -434,9 +291,6 @@
         },
         {
             "dir": "Gem/Platform/Windows"
-        },
-        {
-            "dir": "Gem/Platform/iOS"
         },
         {
             "dir": "Gem/Registry"
@@ -478,9 +332,6 @@
             "dir": "Platform/Windows"
         },
         {
-            "dir": "Platform/iOS"
-        },
-        {
             "dir": "Registry"
         },
         {
@@ -497,18 +348,6 @@
         },
         {
             "dir": "Resources/Platform/Mac/Images.xcassets/AppIcon.appiconset"
-        },
-        {
-            "dir": "Resources/Platform/iOS"
-        },
-        {
-            "dir": "Resources/Platform/iOS/Images.xcassets"
-        },
-        {
-            "dir": "Resources/Platform/iOS/Images.xcassets/AppIcon.appiconset"
-        },
-        {
-            "dir": "Resources/Platform/iOS/Images.xcassets/LaunchImage.launchimage"
         },
         {
             "dir": "ShaderLib"

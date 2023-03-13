@@ -13,7 +13,6 @@
 set(ENABLED_GEMS
     ${Name}
     Atom
-    AudioSystem
     CameraFramework
     DebugDraw
     EditorPythonBindings

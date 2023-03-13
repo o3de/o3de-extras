@@ -21,11 +21,11 @@ Please make sure that `clang` was installed and configured. For details refer to
 
 The following steps will assume the following:
 
-- You have ROS2 humble [installed](https://docs.ros.org/en/humble/Installation.html) and environment is [sourced](https://docs.ros.org/en/humble/Tutorials/Beginner-CLI-Tools/Configuring-ROS2-Environment.html#source-the-setup-files).
+- You have ROS2 Humble [installed](https://docs.ros.org/en/humble/Installation.html) and environment is [sourced](https://docs.ros.org/en/humble/Tutorials/Beginner-CLI-Tools/Configuring-ROS2-Environment.html#source-the-setup-files).
 - The O3DE gems, projects and templates will be placed in the O3DE home folder: `${HOME}/O3DE`.
 - You have the O3DE engine [downloaded and built](https://www.o3de.org/docs/welcome-guide/setup/setup-from-github) and it is located in `/home/${USER}/O3DE/Engines/Development`.
 
-In this tutorial, CLI tools will be used. It is also possible to use O3DE GUI to set up a project from template. See the [O3DE Project manager documentation](https://www.o3de.org/docs/user-guide/project-config/project-manager/) for more details. In such cases it is required to source your ROS2 distro before launching O3DE manager:
+In this tutorial, CLI tools will be used. It is also possible to use O3DE GUI to set up a project from template. See the [O3DE Project manager documentation](https://www.o3de.org/docs/user-guide/project-config/project-manager/) for more details. In such cases it is required to source your ROS2 distribution before launching O3DE manager:
 
 ```shell
 source /opt/ros/humble/setup.bash
