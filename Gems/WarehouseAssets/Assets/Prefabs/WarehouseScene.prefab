@@ -6461,7 +6461,6 @@
                         "Instance_[71732539184989]/ContainerEntity",
                         "Instance_[71702474413917]/ContainerEntity",
                         "Instance_[71711064348509]/ContainerEntity",
-                        "",
                         "Instance_[71745424086877]/ContainerEntity",
                         "Instance_[71758308988765]/ContainerEntity",
                         "Instance_[71706769381213]/ContainerEntity",
@@ -14320,7 +14319,14 @@
                 "Component_[9540645646712701992]": {
                     "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
                     "Id": 9540645646712701992,
-                    "Parent Entity": "ContainerEntity"
+                    "Parent Entity": "ContainerEntity",
+                    "Transform Data": {
+                        "Translate": [
+                            0.0,
+                            0.0,
+                            -4.187350273132324
+                        ]
+                    }
                 },
                 "Component_[9962529260716450718]": {
                     "$type": "EditorLockComponent",
@@ -25564,6 +25570,11 @@
                     "op": "replace",
                     "path": "/ContainerEntity/Components/Component_[13730770129766598217]/Parent Entity",
                     "value": "../Entity_[81903550475758]"
+                },
+                {
+                    "op": "replace",
+                    "path": "/Entities/Entity_[376147448073284]/Components/Component_[13299402086043239524]/HasNonUniformScale",
+                    "value": true
                 }
             ]
         },

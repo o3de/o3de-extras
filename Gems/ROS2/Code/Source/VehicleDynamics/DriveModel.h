@@ -36,6 +36,11 @@ namespace ROS2::VehicleDynamics
         //! @param deltaTimeNs nanoseconds passed since last call of this function.
         void ApplyInputState(const VehicleInputs& inputs, AZ::u64 deltaTimeNs);
 
+        //! Computes expected velocity from individual wheels velocity,
+        //! method queries all wheels for rotation speed, and computes vechicle's expected velocity in its cordinate frame
+        //! @returns pair of linear and angular velocities
+        virtual AZStd::pair<AZ::Vector3, AZ::Vector3> GetVelocityFromModel() = 0;
+
         //! Allows to disable vehicle dynamics.
         //! @param isDisable true if drive model should be disabled.
         void SetDisabled(bool isDisable);

@@ -40,6 +40,8 @@ set(FILES
         Source/Manipulator/MotorizedJointComponent.cpp
         Source/Odometry/ROS2OdometrySensorComponent.cpp
         Source/Odometry/ROS2OdometrySensorComponent.h
+        Source/Odometry/ROS2WheelOdometry.cpp
+        Source/Odometry/ROS2WheelOdometry.h
         Source/RobotControl/Ackermann/AckermannSubscriptionHandler.cpp
         Source/RobotControl/Ackermann/AckermannSubscriptionHandler.h
         Source/RobotControl/ControlConfiguration.cpp

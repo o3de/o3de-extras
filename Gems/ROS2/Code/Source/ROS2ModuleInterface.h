@@ -30,7 +30,7 @@
 #include <VehicleDynamics/VehicleModelComponent.h>
 
 #include <VehicleDynamics/WheelControllerComponent.h>
-
+#include <Odometry/ROS2WheelOdometry.h>
 namespace ROS2
 {
     class ROS2ModuleInterface : public AZ::Module
@@ -56,6 +56,7 @@ namespace ROS2
                   ROS2GNSSSensorComponent::CreateDescriptor(),
                   ROS2LidarSensorComponent::CreateDescriptor(),
                   ROS2OdometrySensorComponent::CreateDescriptor(),
+                  ROS2WheelOdometryComponent::CreateDescriptor(),
                   ROS2FrameComponent::CreateDescriptor(),
                   ROS2RobotControlComponent::CreateDescriptor(),
                   ROS2CameraSensorComponent::CreateDescriptor(),

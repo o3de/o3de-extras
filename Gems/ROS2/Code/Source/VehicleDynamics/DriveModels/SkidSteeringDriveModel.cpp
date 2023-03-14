@@ -15,6 +15,7 @@
 #include <HingeJointComponent.h>
 #include <PhysX/Joint/PhysXJointRequestsBus.h>
 #include <VehicleDynamics/Utilities.h>
+#include <ROS2/ROS2GemUtilities.h>
 
 namespace ROS2::VehicleDynamics
 {
@@ -38,6 +39,7 @@ namespace ROS2::VehicleDynamics
     {
         m_config = vehicleConfig;
         m_wheelsData.clear();
+        m_wheelColumns.clear();
     }
 
     void SkidSteeringDriveModel::ApplyState(const VehicleInputs& inputs, AZ::u64 deltaTimeNs)
@@ -99,12 +101,68 @@ namespace ROS2::VehicleDynamics
                     continue;
                 }
                 float normalizedWheelId = -1.f + 2.f * wheelId / (wheelCount - 1);
-                float wheelBase = normalizedWheelId * m_config.m_wheelbase;
+                float wheelBase = normalizedWheelId * m_config.m_wheelbase/2.f;
                 AZ_Assert(axle.m_wheelRadius != 0, "axle.m_wheelRadius must be non-zero");
                 float wheelRate = (m_currentLinearVelocity + m_currentAngularVelocity * wheelBase) / axle.m_wheelRadius;
                 PhysX::JointRequestBus::Event(hingePtr->second, &PhysX::JointRequests::SetVelocity, wheelRate);
             }
         }
+    }
+
+
+    AZStd::pair<AZ::Vector3, AZ::Vector3> SkidSteeringDriveModel::GetVelocityFromModel()
+    {
+
+        // compute every wheel contribution to vehicle velocity
+        if (m_wheelColumns.empty())
+        {
+            auto axisCount = m_config.m_axles.size();
+            for (size_t axleCount = 0; axleCount < m_config.m_axles.size(); axleCount++)
+            {
+                const auto& axle = m_config.m_axles[axleCount];
+                const auto wheelCount = axle.m_axleWheels.size();
+                if (!axle.m_isDrive || wheelCount < 1)
+                {
+                    continue;
+                }
+                for (size_t wheelId = 0; wheelId < wheelCount; wheelId++)
+                {
+                    const auto& wheel = axle.m_axleWheels[wheelId];
+
+                    AZ::Entity* wheelEntityPtr = nullptr;
+                    AZ::ComponentApplicationBus::BroadcastResult(wheelEntityPtr, &AZ::ComponentApplicationRequests::FindEntity, wheel);
+                    AZ_Assert(wheelEntityPtr, "The wheelEntity should not be null here");
+                    auto* wheelControllerComponentPtr = Utils::GetGameOrEditorComponent<WheelControllerComponent>(wheelEntityPtr);
+                    auto hingeId = VehicleDynamics::Utilities::GetWheelPhysxHinge(wheel);
+                    AZ::Transform hingeTransform{AZ::Transform::Identity()};
+                    PhysX::JointRequestBus::EventResult(hingeTransform, hingeId, &PhysX::JointRequests::GetTransform);
+                    if (wheelControllerComponentPtr)
+                    {
+                        const float normalizedWheelId = -1.f + 2.f * wheelId / (wheelCount - 1);
+                        AZ::Vector3 axis = hingeTransform.TransformVector({0.f,1.f,0.f});
+                        AZ_Printf("SkidSteeringDriveModel", "wheel %s has axis %f %f %f", wheelEntityPtr->GetName().c_str(), axis.GetX(),axis.GetY(),axis.GetZ());
+                        float wheelBase = normalizedWheelId * m_config.m_wheelbase;
+                        AZ_Assert(axle.m_wheelRadius != 0, "axle.m_wheelRadius must be non-zero");
+                        float dX = axle.m_wheelRadius / (wheelCount * axisCount);
+                        float dPhi = axle.m_wheelRadius /(wheelBase * axisCount);
+                        m_wheelColumns.emplace_back(wheelControllerComponentPtr, AZ::Vector2{ dX, dPhi }, axis);
+                    }
+                }
+            }
+        }
+
+        float d_x = 0;
+        float d_fi = 0;
+
+        // It is basically multiplication of matrix by a vector.
+        for (auto& [wheel, column, axis] : m_wheelColumns)
+        {
+            const float omega = axis.Dot(wheel->GetRotationVelocity());
+            d_x += omega * column.GetX();
+            d_fi += omega * column.GetY();
+        }
+
+        return AZStd::pair<AZ::Vector3, AZ::Vector3>{{d_x,0,0},{0,0,d_fi}};
     }
 
     const VehicleModelLimits* SkidSteeringDriveModel::GetVehicleLimitPtr() const

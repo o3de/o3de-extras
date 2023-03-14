@@ -66,6 +66,10 @@ namespace ROS2::VehicleDynamics
         //! Disables (or enables) the vehicle dynamics
         //! @param disable if set true no torque will be applied
         virtual void SetDisableVehicleDynamics(bool disable) = 0;
+
+        //! Returns vehicle's velocity in its local coordinate system
+        //! @returns pair of Vectors : Linear speed (in m/s) and angular speed (in rad/s)
+        virtual AZStd::pair<AZ::Vector3, AZ::Vector3> GetWheelsOdometry() = 0;
     };
 
     using VehicleInputControlRequestBus = AZ::EBus<VehicleInputControlRequests>;

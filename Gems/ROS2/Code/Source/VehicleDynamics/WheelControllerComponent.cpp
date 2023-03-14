@@ -12,14 +12,18 @@
 #include <AzCore/Serialization/EditContextConstants.inl>
 #include <AzCore/Serialization/SerializeContext.h>
 
+#include <Source/RigidBodyComponent.h>
+
 namespace ROS2::VehicleDynamics
 {
     void WheelControllerComponent::Activate()
     {
+        m_rigidBodyPtr = nullptr;
     }
 
     void WheelControllerComponent::Deactivate()
     {
+        m_rigidBodyPtr = nullptr;
     }
 
     void WheelControllerComponent::GetRequiredServices(AZ::ComponentDescriptor::DependencyArrayType& required)
@@ -37,6 +41,21 @@ namespace ROS2::VehicleDynamics
         // Only one per entity
         incompatible.push_back(AZ_CRC_CE("WheelControllerService"));
     }
+
+    AZ::Vector3 WheelControllerComponent::GetRotationVelocity()
+    {
+        if (m_rigidBodyPtr == nullptr)
+        {
+            Physics::RigidBodyRequestBus::EventResult(m_rigidBodyPtr, m_entity->GetId(), &Physics::RigidBodyRequests::GetRigidBody);
+            AZ_Assert(m_rigidBodyPtr, "NoRigdBody");
+        }
+
+        AZ_Assert(m_rigidBodyPtr, "NoRigdBody");
+        const auto transform = m_rigidBodyPtr->GetTransform().GetInverse();
+        const auto local = transform.TransformVector(m_rigidBodyPtr->GetAngularVelocity());
+        return local;
+    }
+
 
     void WheelControllerComponent::Reflect(AZ::ReflectContext* context)
     {
