@@ -15,7 +15,7 @@ namespace ROS2
     {
     public:
         AZ_RTTI(ROS2Module, "{e23a1379-787c-481e-ad83-c0e04a3d06fe}", ROS2ModuleInterface);
-        AZ_CLASS_ALLOCATOR(ROS2Module, AZ::SystemAllocator, 0);
+        AZ_CLASS_ALLOCATOR(ROS2Module, AZ::SystemAllocator);
     };
 } // namespace ROS2
 

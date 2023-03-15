@@ -21,7 +21,7 @@ namespace XR
         : public XR::Object
     {
     public:
-        AZ_CLASS_ALLOCATOR(Input, AZ::SystemAllocator, 0);
+        AZ_CLASS_ALLOCATOR(Input, AZ::SystemAllocator);
         AZ_RTTI(Input, "{DCDFC6A7-B457-414B-BC24-0831C2AC628B}");
 
         struct Descriptor

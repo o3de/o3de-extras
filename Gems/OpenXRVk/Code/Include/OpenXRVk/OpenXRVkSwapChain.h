@@ -18,7 +18,7 @@ namespace OpenXRVk
         : public XR::SwapChain
     {
     public:
-        AZ_CLASS_ALLOCATOR(SwapChain, AZ::SystemAllocator, 0);
+        AZ_CLASS_ALLOCATOR(SwapChain, AZ::SystemAllocator);
         AZ_RTTI(SwapChain, "{3DD88236-8C9F-4864-86F5-018C198BC07E}", XR::SwapChain);
 
         static XR::Ptr<SwapChain> Create();
@@ -28,7 +28,7 @@ namespace OpenXRVk
             : public XR::SwapChain::Image
         {
         public:
-            AZ_CLASS_ALLOCATOR(Image, AZ::SystemAllocator, 0);
+            AZ_CLASS_ALLOCATOR(Image, AZ::SystemAllocator);
             AZ_RTTI(Image, "{717ABDD4-C050-4FDF-8E93-3784F81FE315}", XR::SwapChain::Image);
 
             static XR::Ptr<Image> Create();
@@ -44,7 +44,7 @@ namespace OpenXRVk
             : public XR::SwapChain::View
         {
         public:
-            AZ_CLASS_ALLOCATOR(View, AZ::SystemAllocator, 0);
+            AZ_CLASS_ALLOCATOR(View, AZ::SystemAllocator);
             AZ_RTTI(View, "{F8312427-AC2D-4737-9A8F-A16ADA5319D0}", XR::SwapChain::View);
 
             static XR::Ptr<View> Create();
