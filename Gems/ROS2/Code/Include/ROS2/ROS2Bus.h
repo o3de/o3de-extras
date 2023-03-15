@@ -11,6 +11,7 @@
 #include <AzCore/Interface/Interface.h>
 #include <builtin_interfaces/msg/time.hpp>
 #include <geometry_msgs/msg/transform_stamped.hpp>
+#include <ROS2/Clock/SimulationClock.h>
 #include <rclcpp/node.hpp>
 
 namespace ROS2
@@ -50,6 +51,11 @@ namespace ROS2
         //! @note Transforms are already published by each ROS2FrameComponent.
         //! Use this function directly only when default behavior of ROS2FrameComponent is not sufficient.
         virtual void BroadcastTransform(const geometry_msgs::msg::TransformStamped& t, bool isDynamic) const = 0;
+
+        //! Obtains a simulation clock that is used across simulation.
+        //! @returns constant reference to currently running clock.
+        virtual const SimulationClock& GetSimulationClock() const = 0;
+
     };
 
     class ROS2BusTraits : public AZ::EBusTraits
