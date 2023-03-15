@@ -83,7 +83,7 @@ The project [OpenXRTest](https://github.com/o3de/o3de-extras/tree/development/Pr
 - Launch app from Meta Quest 2.
 
 ## Modify OpenXR rendering pipeline
-- When openxr is enabled (-openxr=enable) the app will automatically try to use the XR pipeline. There are three cvars defined in \o3de\Gems\Atom\Bootstrap\Code\Source\BootstrapSystemComponent.cpp which contain names of the XR related pipelines. These cvars can be overriden via a settings registry file. 
+- When openxr is enabled (-openxr=enable) the app will automatically try to use the XR pipeline. There are three cvars defined in \o3de\Gems\Atom\Bootstrap\Code\Source\BootstrapSystemComponent.cpp which contain names of the XR related pipelines. 
 
     - r_default_openxr_pipeline_name -> Pipeline name used by PC when using Link mode and want to render the scene on PC as well as the device.
     - r_default_openxr_left_pipeline_name -> Pipeline name for the left eye when running the app natively or via link mode on a stereoscopic device
