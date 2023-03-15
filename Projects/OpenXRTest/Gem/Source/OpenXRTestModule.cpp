@@ -11,7 +11,7 @@ namespace OpenXRTest
     {
     public:
         AZ_RTTI(OpenXRTestModule, "{5f1ec07d-a7bb-4816-aa3d-abc2104071ae}", AZ::Module);
-        AZ_CLASS_ALLOCATOR(OpenXRTestModule, AZ::SystemAllocator, 0);
+        AZ_CLASS_ALLOCATOR(OpenXRTestModule, AZ::SystemAllocator);
 
         OpenXRTestModule()
             : AZ::Module()

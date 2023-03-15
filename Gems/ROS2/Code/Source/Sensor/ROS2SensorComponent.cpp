@@ -73,22 +73,16 @@ namespace ROS2
         {
             return;
         }
-
-        auto frequency = m_sensorConfiguration.m_frequency;
-
-        auto frameTime = frequency == 0 ? 1 : 1 / frequency;
-
-        m_timeElapsedSinceLastTick += deltaTime;
-        if (m_timeElapsedSinceLastTick < frameTime)
-            return;
-
-        m_timeElapsedSinceLastTick -= frameTime;
-        if (deltaTime > frameTime)
-        { // Frequency higher than possible, not catching up, just keep going with each frame.
-            m_timeElapsedSinceLastTick = 0.0f;
+        m_tickCountDown--;
+        if (m_tickCountDown <= 0)
+        {
+            const AZStd::chrono::duration<float, AZStd::chrono::seconds::period> expectedLoopTime =
+                ROS2Interface::Get()->GetSimulationClock().GetExpectedSimulationLoopTime();
+            const auto frequency = m_sensorConfiguration.m_frequency;
+            const auto frameTime = frequency == 0.f ? 1.f : 1.f / frequency;
+            const float numberOfFrames = frameTime / expectedLoopTime.count();
+            m_tickCountDown = AZStd::round(numberOfFrames);
+            FrequencyTick();
         }
-
-        // Note that sensor frequency can be limited by simulation tick rate (if higher sensor Hz is desired).
-        FrequencyTick();
     }
 } // namespace ROS2

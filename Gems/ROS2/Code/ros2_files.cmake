@@ -14,7 +14,6 @@ set(FILES
         Source/Camera/ROS2CameraSensorComponent.cpp
         Source/Camera/ROS2CameraSensorComponent.h
         Source/Clock/SimulationClock.cpp
-        Source/Clock/SimulationClock.h
         Source/Communication/QoS.cpp
         Source/Communication/TopicConfiguration.cpp
         Source/Frame/NamespaceConfiguration.cpp

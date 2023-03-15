@@ -51,6 +51,88 @@
         }
     },
     "Entities": {
+        "Entity_[454274520747]": {
+            "Id": "Entity_[454274520747]",
+            "Name": "Camera",
+            "Components": {
+                "Component_[10139607700692707664]": {
+                    "$type": "EditorLockComponent",
+                    "Id": 10139607700692707664
+                },
+                "Component_[1383110072770318712]": {
+                    "$type": "EditorInspectorComponent",
+                    "Id": 1383110072770318712
+                },
+                "Component_[1459662396467092780]": {
+                    "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
+                    "Id": 1459662396467092780,
+                    "Parent Entity": "Entity_[7507839849146]",
+                    "Transform Data": {
+                        "Translate": [
+                            0.10000000149011612,
+                            0.0,
+                            0.10796809196472168
+                        ],
+                        "Rotate": [
+                            -89.99994659423828,
+                            89.99996948242188,
+                            0.0
+                        ]
+                    }
+                },
+                "Component_[14778984575904365834]": {
+                    "$type": "EditorOnlyEntityComponent",
+                    "Id": 14778984575904365834
+                },
+                "Component_[16777570562481809460]": {
+                    "$type": "EditorEntityIconComponent",
+                    "Id": 16777570562481809460
+                },
+                "Component_[2002554278096027045]": {
+                    "$type": "EditorDisabledCompositionComponent",
+                    "Id": 2002554278096027045
+                },
+                "Component_[5063108489464047545]": {
+                    "$type": "GenericComponentWrapper",
+                    "Id": 5063108489464047545,
+                    "m_template": {
+                        "$type": "ROS2FrameComponent"
+                    }
+                },
+                "Component_[525588079965327013]": {
+                    "$type": "EditorPendingCompositionComponent",
+                    "Id": 525588079965327013
+                },
+                "Component_[6441665647641943511]": {
+                    "$type": "ROS2CameraSensorEditorComponent",
+                    "Id": 6441665647641943511,
+                    "SensorConfig": {
+                        "Publishers": {
+                            "Camera Info": {
+                                "Type": "sensor_msgs::msg::CameraInfo",
+                                "Topic": "camera_info"
+                            },
+                            "Color Image": {
+                                "Type": "sensor_msgs::msg::Image",
+                                "Topic": "camera_image_color"
+                            },
+                            "Depth Image": {
+                                "Type": "sensor_msgs::msg::Image",
+                                "Topic": "camera_image_depth"
+                            }
+                        }
+                    }
+                },
+                "Component_[7827113227536758757]": {
+                    "$type": "EditorEntitySortComponent",
+                    "Id": 7827113227536758757
+                },
+                "Component_[9064086166682384563]": {
+                    "$type": "EditorVisibilityComponent",
+                    "Id": 9064086166682384563
+                }
+            }
+        },
         "Entity_[7477775078074]": {
             "Id": "Entity_[7477775078074]",
             "Name": "rl_wheel_link_visual",
@@ -1630,7 +1712,7 @@
                     "$type": "EditorFixedJointComponent",
                     "Id": 2763697723931962513,
                     "Configuration": {
-                        "Parent Entity": "",
+                        "Parent Entity": "Entity_[7507839849146]",
                         "Child Entity": "Entity_[764792335627]"
                     }
                 },

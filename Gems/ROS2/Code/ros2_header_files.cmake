@@ -4,6 +4,7 @@
 # SPDX-License-Identifier: Apache-2.0 OR MIT
 
 set(FILES
+        Include/ROS2/Clock/SimulationClock.h
         Include/ROS2/Frame/NamespaceConfiguration.h
         Include/ROS2/Frame/ROS2FrameComponent.h
         Include/ROS2/Frame/ROS2Transform.h
