@@ -12,23 +12,19 @@
 #include <ROS2/Sensor/ROS2SensorComponent.h>
 #include <rclcpp/publisher.hpp>
 #include <sensor_msgs/msg/imu.hpp>
-#include <AzFramework/Physics/PhysicsSystem.h>
-#include <AzFramework/Physics/Common/PhysicsEvents.h>
 
 namespace ROS2
 {
     //! An IMU (Inertial Measurement Unit) sensor Component.
     //! IMUs typically include gyroscopes, accelerometers and magnetometers. This component encapsulates data
     //! acquisition and its publishing to ROS2 ecosystem. IMU Component requires ROS2FrameComponent.
-    class ROS2ImuSensorComponent : public ROS2SensorComponent
+    class ROS2OldImuSensorComponent : public ROS2SensorComponent
     {
     public:
-        AZ_COMPONENT(ROS2ImuSensorComponent, "{502A955E-7742-4E23-AD77-5E4063739DCA}", ROS2SensorComponent);
-        ROS2ImuSensorComponent();
-        ~ROS2ImuSensorComponent() = default;
-        static void GetRequiredServices(AZ::ComponentDescriptor::DependencyArrayType& required);
+        AZ_COMPONENT(ROS2OldImuSensorComponent, "{6E0D7AC5-2556-4882-BB8B-7B442C5A470A}", ROS2SensorComponent);
+        ROS2OldImuSensorComponent();
+        ~ROS2OldImuSensorComponent() = default;
         static void Reflect(AZ::ReflectContext* context);
-
         //////////////////////////////////////////////////////////////////////////
         // Component overrides
         void Activate() override;
@@ -36,12 +32,20 @@ namespace ROS2
         //////////////////////////////////////////////////////////////////////////
 
     private:
+        //////////////////////////////////////////////////////////////////////////
+        // ROS2SensorComponent overrides
+        void FrequencyTick() override;
+        //////////////////////////////////////////////////////////////////////////
+
+        void InitializeImuMessage();
+        double GetCurrentTimeInSec() const;
+        AZ::Transform GetCurrentPose() const;
+
         std::shared_ptr<rclcpp::Publisher<sensor_msgs::msg::Imu>> m_imuPublisher;
+
         sensor_msgs::msg::Imu m_imuMsg;
-
+        double m_previousTime = 0.0;
+        AZ::Transform m_previousPose = AZ::Transform::CreateIdentity();
         AZ::Vector3 m_previousLinearVelocity = AZ::Vector3::CreateZero();
-
-        AzPhysics::SceneEvents::OnSceneActiveSimulatedBodiesEvent::Handler m_simulatedBodiesEventHandler;
-        AzPhysics::SimulatedBodyHandle m_bodyHandle = AzPhysics::InvalidSimulatedBodyHandle;
     };
 } // namespace ROS2
