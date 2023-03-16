@@ -111,13 +111,18 @@ namespace ROS2
         //! @returns FrameID from ROS2FrameComponent
         AZStd::string GetCameraNameFromFrame(const AZ::Entity* entity) const;
 
-        void FrequencyTick() override;
-
-        CameraSensorConfiguration m_cameraConfiguration;
+        float m_verticalFieldOfViewDeg = 90.0f;
+        int m_width = 640;
+        int m_height = 480;
+        bool m_colorCamera = true;
+        bool m_depthCamera = true;
         AZStd::string m_frameName;
+
+        void FrequencyTick() override;
 
         AZStd::vector<ImagePublisherPtrType> m_imagePublishers;
         AZStd::shared_ptr<CameraSensor> m_cameraSensor;
         CameraInfoPublisherPtrType m_cameraInfoPublisher;
+
     };
 } // namespace ROS2

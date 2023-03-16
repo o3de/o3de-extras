@@ -46,13 +46,21 @@ namespace ROS2
             { AZ::RHI::Format::R32_FLOAT, sizeof(float) },
         };
     } // namespace Internal
+<<<<<<< HEAD
 
     CameraSensorDescription::CameraSensorDescription(const AZStd::string& cameraName, const CameraConfiguration& configuration)
         : m_cameraConfiguration(configuration)
+=======
+    CameraSensorDescription::CameraSensorDescription(const AZStd::string& cameraName, float verticalFov, int width, int height, AZ::EntityId entityId)
+        : m_verticalFieldOfViewDeg(verticalFov)
+        , m_width(width)
+        , m_height(height)
+>>>>>>> 594a255 (Rework RGBD sensor. (#117))
         , m_cameraName(cameraName)
         , m_aspectRatio(static_cast<float>(configuration.m_width) / static_cast<float>(configuration.m_height))
         , m_viewToClipMatrix(MakeViewToClipMatrix())
         , m_cameraIntrinsics(MakeCameraIntrinsics())
+        , m_entityId(entityId)
     {
         ValidateParameters();
     }
@@ -110,8 +118,13 @@ namespace ROS2
         m_view->SetViewToClipMatrix(m_cameraSensorDescription.m_viewToClipMatrix);
         m_scene = AZ::RPI::RPISystemInterface::Get()->GetSceneByName(AZ::Name("Main"));
 
+<<<<<<< HEAD
         m_pipelineName = AZStd::string::format(
             "%sPipeline%s%s", m_cameraSensorDescription.m_cameraName.c_str(), GetPipelineTypeName().c_str(), m_entityId.ToString().c_str());
+=======
+        m_pipelineName = AZStd::string::format("%sPipeline%s%s",m_cameraSensorDescription.m_cameraName.c_str(), GetPipelineTypeName().c_str(),
+                                               m_cameraSensorDescription.m_entityId.ToString().c_str() );
+>>>>>>> 594a255 (Rework RGBD sensor. (#117))
         AZ::RPI::RenderPipelineDescriptor pipelineDesc;
         pipelineDesc.m_mainViewTagName = "MainCamera";
         pipelineDesc.m_name = m_pipelineName;
@@ -195,6 +208,7 @@ namespace ROS2
             cameraPose,
             [header, publisher, entityId = m_entityId](const AZ::RPI::AttachmentReadback::ReadbackResult& result)
             {
+<<<<<<< HEAD
                 if (result.m_state != AZ::RPI::AttachmentReadback::ReadbackState::Success)
                 {
                     return;
@@ -221,6 +235,22 @@ namespace ROS2
                     CameraPostProcessingRequestBus::Event(entityId, &CameraPostProcessingRequests::ApplyPostProcessing, message);
                 }
                 publisher->publish(message);
+=======
+                if (result.m_state == AZ::RPI::AttachmentReadback::ReadbackState::Success)
+                {
+                    const AZ::RHI::ImageDescriptor& descriptor = result.m_imageDescriptor;
+                    const auto format = descriptor.m_format;
+                    AZ_Assert(Internal::FormatMappings.contains(format), "Unknown format in result %u", static_cast<uint32_t>(format));
+                    sensor_msgs::msg::Image message;
+                    message.encoding = Internal::FormatMappings.at(format);
+                    message.width = descriptor.m_size.m_width;
+                    message.height = descriptor.m_size.m_height;
+                    message.step = message.width * Internal::BitDepth.at(format);
+                    message.data = std::vector<uint8_t>(result.m_dataBuffer->data(), result.m_dataBuffer->data() + result.m_dataBuffer->size());
+                    message.header = header;
+                    publisher->publish(message);
+                }
+>>>>>>> 594a255 (Rework RGBD sensor. (#117))
             });
     }
 
@@ -235,8 +265,13 @@ namespace ROS2
         }
     }
 
+<<<<<<< HEAD
     CameraDepthSensor::CameraDepthSensor(const CameraSensorDescription& cameraSensorDescription, const AZ::EntityId& entityId)
         : CameraSensor(cameraSensorDescription, entityId)
+=======
+    CameraDepthSensor::CameraDepthSensor(const CameraSensorDescription& cameraSensorDescription)
+        : CameraSensor(cameraSensorDescription)
+>>>>>>> 594a255 (Rework RGBD sensor. (#117))
     {
         SetupPasses();
     }
@@ -267,22 +302,23 @@ namespace ROS2
         return "Color";
     };
 
-    CameraRGBDSensor::CameraRGBDSensor(const CameraSensorDescription& cameraSensorDescription, const AZ::EntityId& entityId)
-        : CameraColorSensor(cameraSensorDescription, entityId)
+    CameraRGBDSensor::CameraRGBDSensor(const CameraSensorDescription& cameraSensorDescription)
+        : CameraColorSensor(cameraSensorDescription)
     {
     }
 
-    void CameraRGBDSensor::ReadBackDepth(AZStd::function<void(const AZ::RPI::AttachmentReadback::ReadbackResult& result)> callback)
+    void CameraRGBDSensor::ReadBackDepth(
+        AZStd::function<void(const AZ::RPI::AttachmentReadback::ReadbackResult& result)> callback)
     {
-        AZ::Render::FrameCaptureOutcome captureOutcome;
-        AZStd::vector<AZStd::string> passHierarchy{ m_pipelineName, "DepthPrePass" };
-        AZ::Render::FrameCaptureRequestBus::BroadcastResult(
-            captureOutcome,
-            &AZ::Render::FrameCaptureRequestBus::Events::CapturePassAttachmentWithCallback,
-            callback,
-            passHierarchy,
-            AZStd::string("DepthLinear"),
-            AZ::RPI::PassAttachmentReadbackOption::Output);
+            AZ::Render::FrameCaptureOutcome captureOutcome;
+            AZStd::vector<AZStd::string> passHierarchy{m_pipelineName,"DepthPrePass"};
+            AZ::Render::FrameCaptureRequestBus::BroadcastResult(
+                captureOutcome,
+                &AZ::Render::FrameCaptureRequestBus::Events::CapturePassAttachmentWithCallback,
+                callback,
+                passHierarchy,
+                AZStd::string("DepthLinear"),
+                AZ::RPI::PassAttachmentReadbackOption::Output);
     }
 
     void CameraRGBDSensor::RequestMessagePublication(
@@ -290,10 +326,10 @@ namespace ROS2
         const AZ::Transform& cameraPose,
         const std_msgs::msg::Header& header)
     {
-        AZ_Assert(publishers.size() == 2, "RequestMessagePublication for CameraRGBDSensor should be called with exactly two publishers");
+        AZ_Assert(publishers.size()==2, "RequestMessagePublication for CameraRGBDSensor should be called with exactly two publishers");
         const auto publisherDepth = publishers.back();
         ReadBackDepth(
-            [header, publisherDepth, entityId = m_entityId](const AZ::RPI::AttachmentReadback::ReadbackResult& result)
+            [header, publisherDepth](const AZ::RPI::AttachmentReadback::ReadbackResult& result)
             {
                 if (result.m_state == AZ::RPI::AttachmentReadback::ReadbackState::Success)
                 {
@@ -305,23 +341,12 @@ namespace ROS2
                     message.width = descriptor.m_size.m_width;
                     message.height = descriptor.m_size.m_height;
                     message.step = message.width * Internal::BitDepth.at(format);
-                    message.data =
-                        std::vector<uint8_t>(result.m_dataBuffer->data(), result.m_dataBuffer->data() + result.m_dataBuffer->size());
+                    message.data = std::vector<uint8_t>(result.m_dataBuffer->data(), result.m_dataBuffer->data() + result.m_dataBuffer->size());
                     message.header = header;
-                    bool registeredPostProcessingSupportsEncoding = false;
-                    CameraPostProcessingRequestBus::EventResult(
-                        registeredPostProcessingSupportsEncoding,
-                        entityId,
-                        &CameraPostProcessingRequests::SupportsFormat,
-                        AZStd::string(Internal::FormatMappings.at(format)));
-                    if (registeredPostProcessingSupportsEncoding)
-                    {
-                        CameraPostProcessingRequestBus::Event(entityId, &CameraPostProcessingRequests::ApplyPostProcessing, message);
-                    }
                     publisherDepth->publish(message);
                 }
             });
-        CameraSensor::RequestMessagePublication(publishers, cameraPose, header);
+        CameraSensor::RequestMessagePublication(publishers,cameraPose,header);
     }
 
 } // namespace ROS2

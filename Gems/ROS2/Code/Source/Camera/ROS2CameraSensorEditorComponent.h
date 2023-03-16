@@ -38,7 +38,7 @@ namespace ROS2
         void Activate() override;
         void Deactivate() override;
 
-        // AzToolsFramework::Components::EditorComponentBase overrides
+        // AzToolsFramework::Components::EditorComponentBase override
         void BuildGameEntity(AZ::Entity* gameEntity) override;
 
     private:

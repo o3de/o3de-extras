@@ -48,17 +48,51 @@ namespace ROS2
         m_cameraInfoPublisher =
             ros2Node->create_publisher<sensor_msgs::msg::CameraInfo>(cameraInfoFullTopic.data(), cameraInfoPublisherConfig.GetQoS());
 
+<<<<<<< HEAD
         if (m_cameraConfiguration.m_colorCamera && m_cameraConfiguration.m_depthCamera)
         {
             AddImageSource<CameraRGBDSensor>();
+=======
+        const CameraSensorDescription description{
+            GetCameraNameFromFrame(GetEntity()), m_verticalFieldOfViewDeg, m_width, m_height, GetEntityId()
+        };
+        if (m_colorCamera)
+        {
+            const auto cameraImagePublisherConfig = m_sensorConfiguration.m_publishersConfigurations[CameraConstants::ColorImageConfig];
+            AZStd::string cameraImageFullTopic = ROS2Names::GetNamespacedName(GetNamespace(), cameraImagePublisherConfig.m_topic);
+            auto publisher =
+                ros2Node->create_publisher<sensor_msgs::msg::Image>(cameraImageFullTopic.data(), cameraImagePublisherConfig.GetQoS());
+            m_imagePublishers.emplace_back(publisher);
+>>>>>>> 594a255 (Rework RGBD sensor. (#117))
         }
         else if (m_cameraConfiguration.m_colorCamera)
         {
+<<<<<<< HEAD
             AddImageSource<CameraColorSensor>();
         }
         else if (m_cameraConfiguration.m_depthCamera)
         {
             AddImageSource<CameraDepthSensor>();
+=======
+            const auto cameraImagePublisherConfig = m_sensorConfiguration.m_publishersConfigurations[CameraConstants::DepthImageConfig];
+            AZStd::string cameraImageFullTopic = ROS2Names::GetNamespacedName(GetNamespace(), cameraImagePublisherConfig.m_topic);
+            auto publisher =
+                ros2Node->create_publisher<sensor_msgs::msg::Image>(cameraImageFullTopic.data(), cameraImagePublisherConfig.GetQoS());
+            m_imagePublishers.emplace_back(publisher);
+        }
+
+        if (m_colorCamera && m_depthCamera)
+        {
+            m_cameraSensor = AZStd::make_shared<CameraRGBDSensor>(description);
+        }
+        else if (m_colorCamera)
+        {
+            m_cameraSensor = AZStd::make_shared<CameraColorSensor>(description);
+        }
+        else if (m_depthCamera)
+        {
+            m_cameraSensor = AZStd::make_shared<CameraDepthSensor>(description);
+>>>>>>> 594a255 (Rework RGBD sensor. (#117))
         }
 
         const auto* component = Utils::GetGameOrEditorComponent<ROS2FrameComponent>(GetEntity());
@@ -95,7 +129,7 @@ namespace ROS2
             cameraInfo.p = { cameraInfo.k[0], cameraInfo.k[1], cameraInfo.k[2], 0, cameraInfo.k[3], cameraInfo.k[4], cameraInfo.k[5], 0,
                              cameraInfo.k[6], cameraInfo.k[7], cameraInfo.k[8], 0 };
             m_cameraInfoPublisher->publish(cameraInfo);
-            m_cameraSensor->RequestMessagePublication(m_imagePublishers, transform, ros_header);
+            m_cameraSensor->RequestMessagePublication(m_imagePublishers, transform, ros_header );
         }
     }
 

@@ -28,17 +28,33 @@ namespace ROS2
     struct CameraSensorDescription
     {
         //! Constructor to create the description
+<<<<<<< HEAD
         //! @param cameraName - name of the camera; used to differentiate cameras in a multi-camera setup.
         //! @param configuration - configuration structure for the camera, defining its characteristics.
         CameraSensorDescription(const AZStd::string& cameraName, const CameraConfiguration& configuration);
+=======
+        //! @param cameraName - name of the camera; used to differentiate cameras in a multi-camera setup
+        //! @param verticalFov - vertical field of view of camera sensor
+        //! @param width - camera image width in pixels
+        //! @param height - camera image height in pixels
+        //! @param entityId - entityId of camera sensor
+        CameraSensorDescription(const AZStd::string& cameraName, float verticalFov, int width, int height, AZ::EntityId entityId);
+>>>>>>> 594a255 (Rework RGBD sensor. (#117))
 
         const CameraConfiguration m_cameraConfiguration; //!< Configuration of the camera.
         const AZStd::string m_cameraName; //!< Camera name to differentiate cameras in a multi-camera setup.
 
+<<<<<<< HEAD
         const float m_aspectRatio; //!< Camera image aspect ratio; equal to (width / height).
         const AZ::Matrix4x4 m_viewToClipMatrix; //!< Camera view to clip space transform matrix; derived from other parameters.
         const AZStd::array<double, 9> m_cameraIntrinsics; //!< Camera intrinsics; derived from other parameters.
 
+=======
+        const float m_aspectRatio; //!< camera image aspect ratio; equal to (width / height)
+        const AZ::Matrix4x4 m_viewToClipMatrix; //!< camera view to clip space transform matrix; derived from other parameters
+        const AZStd::array<double, 9> m_cameraIntrinsics; //!< camera intrinsics; derived from other parameters
+        const AZ::EntityId m_entityId; //! Entity Id that is owning this sensor.
+>>>>>>> 594a255 (Rework RGBD sensor. (#117))
     private:
         AZ::Matrix4x4 MakeViewToClipMatrix() const;
         AZStd::array<double, 9> MakeCameraIntrinsics() const;
@@ -90,7 +106,10 @@ namespace ROS2
         virtual AZStd::string GetPipelineTypeName() const = 0; //! Type of returned data eg Color, Depth, Optical flow
 
     protected:
+<<<<<<< HEAD
         AZ::EntityId m_entityId;
+=======
+>>>>>>> 594a255 (Rework RGBD sensor. (#117))
         AZ::RPI::RenderPipelinePtr m_pipeline;
         AZStd::string m_pipelineName;
 
@@ -141,7 +160,7 @@ namespace ROS2
     class CameraRGBDSensor : public CameraColorSensor
     {
     public:
-        CameraRGBDSensor(const CameraSensorDescription& cameraSensorDescription, const AZ::EntityId& entityId);
+        CameraRGBDSensor(const CameraSensorDescription& cameraSensorDescription);
 
         // CameraSensor overrides
         void RequestMessagePublication(
