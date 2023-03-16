@@ -89,11 +89,12 @@ namespace ROS2
         int m_height = 480;
         bool m_colorCamera = true;
         bool m_depthCamera = true;
+        AZStd::string m_frameName;
 
         void FrequencyTick() override;
-        AZStd::vector<PublisherSensorPtrPair> m_cameraSensorsWithPublishers;
-        CameraInfoPublisherPtrType m_cameraInfoPublisher;
 
-        AZStd::string m_frameName;
+        AZStd::vector<ImagePublisherPtrType> m_imagePublishers;
+        AZStd::shared_ptr<CameraSensor> m_cameraSensor;
+        CameraInfoPublisherPtrType m_cameraInfoPublisher;
     };
 } // namespace ROS2
