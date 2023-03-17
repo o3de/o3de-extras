@@ -13,10 +13,10 @@
 #include <Camera/ROS2CameraSensorComponent.h>
 #include <GNSS/ROS2GNSSSensorComponent.h>
 #include <Imu/ROS2ImuSensorComponent.h>
-#include <Imu/ROS2OldImuSensorComponent.h>
 #include <Lidar/LidarRegistrarSystemComponent.h>
 #include <Lidar/ROS2LidarSensorComponent.h>
 #include <Odometry/ROS2OdometrySensorComponent.h>
+#include <Odometry/ROS2WheelOdometry.h>
 #include <ROS2/Frame/ROS2FrameComponent.h>
 #include <ROS2/Manipulator/MotorizedJointComponent.h>
 #include <RobotControl/Controllers/AckermannController/AckermannControlComponent.h>
@@ -29,7 +29,6 @@
 #include <VehicleDynamics/ModelComponents/AckermannModelComponent.h>
 #include <VehicleDynamics/ModelComponents/SkidSteeringModelComponent.h>
 #include <VehicleDynamics/VehicleModelComponent.h>
-
 #include <VehicleDynamics/WheelControllerComponent.h>
 
 namespace ROS2
@@ -53,10 +52,10 @@ namespace ROS2
                   ROS2RobotImporterSystemComponent::CreateDescriptor(),
                   ROS2SensorComponent::CreateDescriptor(),
                   ROS2ImuSensorComponent::CreateDescriptor(),
-                  ROS2OldImuSensorComponent::CreateDescriptor(),
                   ROS2GNSSSensorComponent::CreateDescriptor(),
                   ROS2LidarSensorComponent::CreateDescriptor(),
                   ROS2OdometrySensorComponent::CreateDescriptor(),
+                  ROS2WheelOdometryComponent::CreateDescriptor(),
                   ROS2FrameComponent::CreateDescriptor(),
                   ROS2RobotControlComponent::CreateDescriptor(),
                   ROS2CameraSensorComponent::CreateDescriptor(),

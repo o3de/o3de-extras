@@ -10,6 +10,8 @@
 #include <AzCore/Component/Component.h>
 #include <AzCore/Component/EntityId.h>
 #include <AzCore/Math/Vector3.h>
+#include <AzFramework/Physics/SimulatedBodies/RigidBody.h>
+#include <AzCore/Math/Vector3.h>
 
 namespace ROS2::VehicleDynamics
 {
@@ -33,7 +35,11 @@ namespace ROS2::VehicleDynamics
 
         static void Reflect(AZ::ReflectContext* context);
 
+        AZ::Vector3 GetRotationVelocity();
+
         AZ::EntityId m_steeringEntity; //!< Rigid body to apply velocity to.
         float m_steeringScale{ 1.0f }; //!< The direction of torque applied to steering entity when steering is applied
+    private:
+        AzPhysics::RigidBody* m_rigidBodyPtr{ nullptr };
     };
 } // namespace ROS2::VehicleDynamics

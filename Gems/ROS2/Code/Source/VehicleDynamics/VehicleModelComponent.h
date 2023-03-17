@@ -16,6 +16,7 @@
 #include <AzCore/std/smart_ptr/unique_ptr.h>
 #include <ROS2/VehicleDynamics/VehicleInputControlBus.h>
 #include <VehicleDynamics/VehicleModelLimits.h>
+#include <AzCore/std/utils.h>
 
 namespace ROS2::VehicleDynamics
 {
@@ -49,7 +50,7 @@ namespace ROS2::VehicleDynamics
         void SetTargetLinearSpeedFraction(float speedFractionX) override;
         void SetTargetAngularSpeedFraction(float rateFractionZ) override;
         void SetDisableVehicleDynamics(bool isDisable) override;
-
+        AZStd::pair<AZ::Vector3, AZ::Vector3> GetWheelsOdometry() override;
     protected:
         ManualControlEventHandler m_manualControlEventHandler;
         VehicleInputDeadline m_inputsState;

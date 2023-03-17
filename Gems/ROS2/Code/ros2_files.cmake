@@ -16,6 +16,7 @@ set(FILES
         Source/Camera/ROS2CameraSensorComponent.cpp
         Source/Camera/ROS2CameraSensorComponent.h
         Source/Clock/SimulationClock.cpp
+        Source/Clock/PhysicallyStableClock.cpp
         Source/Communication/QoS.cpp
         Source/Communication/TopicConfiguration.cpp
         Source/Frame/NamespaceConfiguration.cpp
@@ -27,8 +28,6 @@ set(FILES
         Source/GNSS/ROS2GNSSSensorComponent.h
         Source/Imu/ROS2ImuSensorComponent.cpp
         Source/Imu/ROS2ImuSensorComponent.h
-        Source/Imu/ROS2OldImuSensorComponent.cpp
-        Source/Imu/ROS2OldImuSensorComponent.h
         Source/Lidar/LidarRaycaster.cpp
         Source/Lidar/LidarRaycaster.h
         Source/Lidar/LidarRegistrarSystemComponent.cpp
@@ -44,6 +43,8 @@ set(FILES
         Source/Manipulator/MotorizedJointComponent.cpp
         Source/Odometry/ROS2OdometrySensorComponent.cpp
         Source/Odometry/ROS2OdometrySensorComponent.h
+        Source/Odometry/ROS2WheelOdometry.cpp
+        Source/Odometry/ROS2WheelOdometry.h
         Source/RobotControl/Ackermann/AckermannSubscriptionHandler.cpp
         Source/RobotControl/Ackermann/AckermannSubscriptionHandler.h
         Source/RobotControl/ControlConfiguration.cpp

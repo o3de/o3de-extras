@@ -81,7 +81,7 @@ namespace ROS2
         AZStd::shared_ptr<rclcpp::executors::SingleThreadedExecutor> m_executor;
         AZStd::unique_ptr<tf2_ros::TransformBroadcaster> m_dynamicTFBroadcaster;
         AZStd::unique_ptr<tf2_ros::StaticTransformBroadcaster> m_staticTFBroadcaster;
-        SimulationClock m_simulationClock;
+        AZStd::unique_ptr<SimulationClock> m_simulationClock;
         //! Load the pass templates of the ROS2 gem.
         void LoadPassTemplateMappings();
         AZ::RPI::PassSystemInterface::OnReadyLoadTemplatesEvent::Handler m_loadTemplatesHandler;

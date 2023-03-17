@@ -15,6 +15,7 @@
 #include <VehicleDynamics/VehicleConfiguration.h>
 #include <VehicleDynamics/VehicleInputs.h>
 #include <VehicleDynamics/WheelDynamicsData.h>
+#include <VehicleDynamics/WheelControllerComponent.h>
 
 namespace ROS2::VehicleDynamics
 {
@@ -33,10 +34,12 @@ namespace ROS2::VehicleDynamics
         // DriveModel overrides
         void ApplyState(const VehicleInputs& inputs, AZ::u64 deltaTimeNs) override;
         const VehicleModelLimits* GetVehicleLimitPtr() const override;
+        AZStd::pair<AZ::Vector3, AZ::Vector3> GetVelocityFromModel() override;
 
     private:
         SkidSteeringModelLimits m_limits;
         AZStd::unordered_map<AZ::EntityId, AZ::EntityComponentIdPair> m_wheelsData;
+        AZStd::vector<AZStd::tuple<VehicleDynamics::WheelControllerComponent*, AZ::Vector2, AZ::Vector3>> m_wheelColumns;
         VehicleConfiguration m_config;
         float m_currentLinearVelocity = 0.0f;
         float m_currentAngularVelocity = 0.0f;

@@ -117,4 +117,9 @@ namespace ROS2::VehicleDynamics
         const uint64_t deltaTimeNs = deltaTime * 1'000'000'000;
         GetDriveModel()->ApplyInputState(m_inputsState.GetValueCheckingDeadline(), deltaTimeNs);
     }
+
+    AZStd::pair<AZ::Vector3, AZ::Vector3> VehicleModelComponent::GetWheelsOdometry()
+    {
+        return GetDriveModel()->GetVelocityFromModel();
+    }
 } // namespace ROS2::VehicleDynamics
