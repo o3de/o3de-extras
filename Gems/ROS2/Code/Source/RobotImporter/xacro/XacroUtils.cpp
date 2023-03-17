@@ -57,26 +57,52 @@ namespace ROS2::Utils::xacro
         outcome.m_called = processLaunchInfo.m_processExecutableString + " " + processLaunchInfo.GetCommandLineParametersAsString();
         AZ_Printf("ParseXacro", "calling file : %s \n", outcome.m_called.c_str());
 
-        AzFramework::ProcessOutput process_output;
-        const bool succeed = AzFramework::ProcessWatcher::LaunchProcessAndRetrieveOutput(
-            processLaunchInfo, AzFramework::ProcessCommunicationType::COMMUNICATOR_TYPE_STDINOUT, process_output);
+        AZStd::unique_ptr<AzFramework::ProcessWatcher> shellProcess(AzFramework::ProcessWatcher::LaunchProcess(
+            processLaunchInfo, AzFramework::ProcessCommunicationType::COMMUNICATOR_TYPE_STDINOUT));
+        // wait for process to end;
+        AZ::u32 exitCode = 0;
+        const bool succeed = shellProcess->WaitForProcessToExit(5, &exitCode);
+        AzFramework::ProcessCommunicator* processCommunicator = shellProcess->GetCommunicator();
 
-        if (succeed && process_output.HasOutput() && !process_output.HasError())
+        if (succeed)
         {
-            AZ_Printf("ParseXacro", "xacro finished with success \n");
-            const auto& output = process_output.outputResult;
-            outcome.m_urdfHandle = UrdfParser::Parse(output.data());
-            outcome.m_succeed = true;
-        }
-        else
-        {
-            AZ_Printf("ParseXacro", "xacro finished with error \n");
-            const auto& stdStream = process_output.outputResult;
-            const auto& cerrStream = process_output.errorResult;
-            outcome.m_logStandardOutput = AZStd::string(stdStream.data(), stdStream.size());
-            outcome.m_logErrorOutput = AZStd::string(cerrStream.data(), cerrStream.size());
-            outcome.m_succeed = false;
-        }
+            AZ_Printf("ParseXacro", "xacro finished with code %d \n", exitCode);
+            if (processCommunicator && processCommunicator->IsValid() && exitCode == 0)
+            {
+                AZ_Printf("ParseXacro", "xacro finished with success \n");
+                const AZ::u32 bytesInBuffer = processCommunicator->PeekOutput();
+                AZ_Printf("ParseXacro", "xacro prepared for %d bytes in std \n", bytesInBuffer);
+                AZStd::string output;
+                output.resize(bytesInBuffer+1);
+                const AZ::u32 redFromBuffer = processCommunicator->ReadOutput(output.data(), output.size());
+                AZ_Printf("ParseXacro", "read from xacro %d bytes std \n", redFromBuffer);
+                output.resize(redFromBuffer);
+                AZ_Printf("ParseXacro", "Parsed URDF :\n%s", output.c_str());
+                outcome.m_urdfHandle = UrdfParser::Parse(output.data());
+                outcome.m_succeed = true;
+            }
+            else
+            {
+                AZ_Printf("ParseXacro", "xacro finished with error \n");
+                if (processCommunicator && processCommunicator->IsValid())
+                {
+                    const AZ::u32 bytesInBufferOutput = processCommunicator->PeekOutput();
+                    const AZ::u32 bytesInBufferErr = processCommunicator->PeekError();
+                    AZ_Printf("ParseXacro", "xacro prepared for us %d bytes in output \n", bytesInBufferOutput);
+                    AZ_Printf("ParseXacro", "xacro prepared for us %d bytes in error \n", bytesInBufferErr);
+                    outcome.m_logStandardOutput.resize(bytesInBufferOutput+1);
+                    outcome.m_logErrorOutput.resize(bytesInBufferErr+1);
+                    const AZ::u32 readStd = processCommunicator->ReadOutput(outcome.m_logStandardOutput.data(), outcome.m_logStandardOutput.size());
+                    const AZ::u32 readErr =processCommunicator->ReadError(outcome.m_logErrorOutput.data(), outcome.m_logErrorOutput.size());
+                    AZ_Printf("ParseXacro", "read from xacro %d bytes in output \n", readStd);
+                    AZ_Printf("ParseXacro", "read from xacro %d bytes in readErr \n", readErr);
+                    outcome.m_logStandardOutput.resize(readStd);
+                    outcome.m_logErrorOutput.resize(readErr);
+                    AZ_Printf("m_logErrorOutput", "Error buffer : %s", outcome.m_logErrorOutput.c_str());
+                    outcome.m_succeed = false;
+                }
+            }
+        }   
         return outcome;
     }
 
