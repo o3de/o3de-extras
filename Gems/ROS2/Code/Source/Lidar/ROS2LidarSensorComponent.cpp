@@ -26,7 +26,7 @@ namespace ROS2
         LidarTemplate::Reflect(context);
         if (AZ::SerializeContext* serialize = azrtti_cast<AZ::SerializeContext*>(context))
         {
-            serialize->Class<ROS2LidarSensorComponent, ROS2SensorComponent>()
+            serialize->Class<ROS2LidarSensorComponent, ROS2SensorTickableComponent>()
                 ->Version(1)
                 ->Field("lidarModel", &ROS2LidarSensorComponent::m_lidarModel)
                 ->Field("lidarImplementation", &ROS2LidarSensorComponent::m_lidarSystem)

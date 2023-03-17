@@ -9,14 +9,15 @@
 
 #include <AzCore/Math/Transform.h>
 #include <AzCore/Serialization/SerializeContext.h>
+#include <AzFramework/Physics/Common/PhysicsEvents.h>
+#include <AzFramework/Physics/PhysicsSystem.h>
 #include <ROS2/Sensor/ROS2SensorComponent.h>
 #include <rclcpp/publisher.hpp>
 #include <sensor_msgs/msg/imu.hpp>
-#include <AzFramework/Physics/PhysicsSystem.h>
-#include <AzFramework/Physics/Common/PhysicsEvents.h>
 
 namespace ROS2
 {
+
     //! An IMU (Inertial Measurement Unit) sensor Component.
     //! IMUs typically include gyroscopes, accelerometers and magnetometers. This component encapsulates data
     //! acquisition and its publishing to ROS2 ecosystem. IMU Component requires ROS2FrameComponent.
@@ -36,12 +37,14 @@ namespace ROS2
         //////////////////////////////////////////////////////////////////////////
 
     private:
+        int m_filterSize{ 10 };
         std::shared_ptr<rclcpp::Publisher<sensor_msgs::msg::Imu>> m_imuPublisher;
         sensor_msgs::msg::Imu m_imuMsg;
-
         AZ::Vector3 m_previousLinearVelocity = AZ::Vector3::CreateZero();
-
         AzPhysics::SceneEvents::OnSceneActiveSimulatedBodiesEvent::Handler m_simulatedBodiesEventHandler;
         AzPhysics::SimulatedBodyHandle m_bodyHandle = AzPhysics::InvalidSimulatedBodyHandle;
+        AZ::Vector3 m_acceleration{ 0 };
+        AZStd::deque<AZ::Vector3> m_filter;
+        double m_time = 0;
     };
 } // namespace ROS2

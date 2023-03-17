@@ -26,7 +26,7 @@ namespace ROS2
     {
         if (AZ::SerializeContext* serialize = azrtti_cast<AZ::SerializeContext*>(context))
         {
-            serialize->Class<ROS2OdometrySensorComponent, ROS2SensorComponent>()->Version(1);
+            serialize->Class<ROS2OdometrySensorComponent, ROS2SensorTickableComponent>()->Version(1);
 
             if (AZ::EditContext* ec = serialize->GetEditContext())
             {

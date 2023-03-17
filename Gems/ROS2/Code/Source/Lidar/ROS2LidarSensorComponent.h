@@ -14,7 +14,7 @@
 #include <Lidar/LidarTemplateUtils.h>
 #include <ROS2/Lidar/LidarRegistrarBus.h>
 #include <ROS2/Lidar/LidarSystemBus.h>
-#include <ROS2/Sensor/ROS2SensorComponent.h>
+#include <ROS2/Sensor/ROS2SensorTickableComponent.h>
 #include <rclcpp/publisher.hpp>
 #include <sensor_msgs/msg/point_cloud2.hpp>
 
@@ -24,10 +24,10 @@ namespace ROS2
     //! Lidars (Light Detection and Ranging) emit laser light and measure it after reflection.
     //! Lidar Component allows customization of lidar type and behavior and encapsulates both simulation
     //! and data publishing. It requires ROS2FrameComponent.
-    class ROS2LidarSensorComponent : public ROS2SensorComponent
+    class ROS2LidarSensorComponent : public ROS2SensorTickableComponent
     {
     public:
-        AZ_COMPONENT(ROS2LidarSensorComponent, "{502A955F-7742-4E23-AD77-5E4063739DCA}", ROS2SensorComponent);
+        AZ_COMPONENT(ROS2LidarSensorComponent, "{502A955F-7742-4E23-AD77-5E4063739DCA}", ROS2SensorTickableComponent);
         ROS2LidarSensorComponent();
         ~ROS2LidarSensorComponent() = default;
         static void Reflect(AZ::ReflectContext* context);

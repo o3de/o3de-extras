@@ -9,7 +9,7 @@
 
 #include <AzCore/Math/Transform.h>
 #include <AzCore/Serialization/SerializeContext.h>
-#include <ROS2/Sensor/ROS2SensorComponent.h>
+#include <ROS2/Sensor/ROS2SensorTickableComponent.h>
 #include <rclcpp/publisher.hpp>
 #include <sensor_msgs/msg/nav_sat_fix.hpp>
 
@@ -19,10 +19,10 @@ namespace ROS2
     //! It provides NavSatFix data of sensor's position in GNSS frame which is defined by GNSS origin offset
     //! Offset is provided as latitude [deg], longitude [deg], altitude [m] of o3de global frame
     //! It is assumed that o3de global frame overlaps with ENU coordinate system
-    class ROS2GNSSSensorComponent : public ROS2SensorComponent
+    class ROS2GNSSSensorComponent : public ROS2SensorTickableComponent
     {
     public:
-        AZ_COMPONENT(ROS2GNSSSensorComponent, "{55B4A299-7FA3-496A-88F0-764C75B0E9A7}", ROS2SensorComponent);
+        AZ_COMPONENT(ROS2GNSSSensorComponent, "{55B4A299-7FA3-496A-88F0-764C75B0E9A7}", ROS2SensorTickableComponent);
         ROS2GNSSSensorComponent();
         ~ROS2GNSSSensorComponent() = default;
         static void Reflect(AZ::ReflectContext* context);
