@@ -698,7 +698,7 @@
                                 22.0,
                                 12.0
                             ],
-                            "AmbientMultiplier": 0.20000000298023224,
+                            "AmbientMultiplier": 0.10000000149011612,
                             "ViewBias": 0.6299999952316284,
                             "NormalBias": 0.09000000357627869,
                             "NumRaysPerProbe": 6,
@@ -730,7 +730,7 @@
                             "VisualizationShowInactiveProbes": true
                         }
                     },
-                    "ambientMultiplier": 0.20000000298023224,
+                    "ambientMultiplier": 0.10000000149011612,
                     "viewBias": 0.6299999952316284,
                     "normalBias": 0.09000000357627869,
                     "numRaysPerProbe": 6,

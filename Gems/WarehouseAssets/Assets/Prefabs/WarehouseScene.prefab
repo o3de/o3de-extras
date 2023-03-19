@@ -50,6 +50,100 @@
         }
     },
     "Entities": {
+        "Entity_[112319434901138]": {
+            "Id": "Entity_[112319434901138]",
+            "Name": "Reflection_Probe",
+            "Components": {
+                "Component_[1102690611132309235]": {
+                    "$type": "EditorVisibilityComponent",
+                    "Id": 1102690611132309235
+                },
+                "Component_[12628224071410676185]": {
+                    "$type": "EditorOnlyEntityComponent",
+                    "Id": 12628224071410676185
+                },
+                "Component_[14875219860957696588]": {
+                    "$type": "EditorEntityIconComponent",
+                    "Id": 14875219860957696588
+                },
+                "Component_[2294874903391250243]": {
+                    "$type": "EditorBoxShapeComponent",
+                    "Id": 2294874903391250243,
+                    "Visible": false,
+                    "BoxShape": {
+                        "Configuration": {
+                            "Dimensions": [
+                                62.0,
+                                22.0,
+                                12.0
+                            ]
+                        }
+                    }
+                },
+                "Component_[5580897943142597927]": {
+                    "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
+                    "Id": 5580897943142597927,
+                    "Parent Entity": "Entity_[81285075185134]",
+                    "Transform Data": {
+                        "Translate": [
+                            9.304862976074219,
+                            8.013765335083008,
+                            7.701567649841309
+                        ]
+                    }
+                },
+                "Component_[8315896363900534274]": {
+                    "$type": "EditorInspectorComponent",
+                    "Id": 8315896363900534274
+                },
+                "Component_[8617865278035896910]": {
+                    "$type": "EditorEntitySortComponent",
+                    "Id": 8617865278035896910
+                },
+                "Component_[9289626333756429172]": {
+                    "$type": "EditorPendingCompositionComponent",
+                    "Id": 9289626333756429172
+                },
+                "Component_[9684718173948616357]": {
+                    "$type": "EditorDisabledCompositionComponent",
+                    "Id": 9684718173948616357,
+                    "DisabledComponents": [
+                        {
+                            "$type": "AZ::Render::EditorReflectionProbeComponent",
+                            "Id": 13598102145882555500,
+                            "Controller": {
+                                "Configuration": {
+                                    "OuterHeight": 12.0,
+                                    "OuterLength": 22.0,
+                                    "OuterWidth": 62.0,
+                                    "InnerHeight": 12.0,
+                                    "InnerLength": 22.0,
+                                    "InnerWidth": 32.0,
+                                    "BakedCubemapQualityLevel": 3,
+                                    "BakedCubeMapRelativePath": "ReflectionProbes/Reflection_Probe__4625504B-5D1D-4AAA-B137-949A8FB738BE__iblspecularcm512.dds",
+                                    "BakedCubeMapAsset": {
+                                        "assetId": {
+                                            "guid": "{37F76FA8-9C6F-55FF-A6E6-9CDE0C939FBE}",
+                                            "subId": 2000
+                                        },
+                                        "assetHint": "reflectionprobes/diffuse_probe_grid__876843b6-d642-4227-b90c-4eaeffac654b__iblspecularcm256.dds.streamingimage"
+                                    },
+                                    "EntityId": 7699671987391280681,
+                                    "ShowVisualization": false,
+                                    "RenderExposure": -2.200000047683716
+                                }
+                            },
+                            "bakedCubeMapQualityLevel": 3,
+                            "bakedCubeMapRelativePath": "ReflectionProbes/Reflection_Probe__4625504B-5D1D-4AAA-B137-949A8FB738BE__iblspecularcm512.dds"
+                        }
+                    ]
+                },
+                "Component_[9732390927556349753]": {
+                    "$type": "EditorLockComponent",
+                    "Id": 9732390927556349753
+                }
+            }
+        },
         "Entity_[81078916754926]": {
             "Id": "Entity_[81078916754926]",
             "Name": "row",
@@ -3658,6 +3752,7 @@
                     "Id": 5693942250159058413,
                     "Child Entity Order": [
                         "Entity_[81697392045550]",
+                        "Entity_[112319434901138]",
                         "Entity_[81950795116014]",
                         "Entity_[81353794661870]",
                         "Entity_[81572837993966]",
@@ -6147,9 +6242,9 @@
                     "$type": "EditorLockComponent",
                     "Id": 184072808979487519
                 },
-                "Component_[6699738828310866771]": {
+                "Component_[6342602837223949950]": {
                     "$type": "AZ::Render::EditorDecalComponent",
-                    "Id": 6699738828310866771,
+                    "Id": 6342602837223949950,
                     "Controller": {
                         "Configuration": {
                             "Opacity": 0.3199999928474426,
@@ -10638,7 +10733,7 @@
         },
         "Entity_[81697392045550]": {
             "Id": "Entity_[81697392045550]",
-            "Name": "Diffuse_Probe_Grid",
+            "Name": "Reflection_Probe",
             "Components": {
                 "Component_[1102690611132309235]": {
                     "$type": "EditorVisibilityComponent",
@@ -10652,14 +10747,14 @@
                     "$type": "EditorEntityIconComponent",
                     "Id": 14875219860957696588
                 },
-                "Component_[3822011490380674942]": {
+                "Component_[2294874903391250243]": {
                     "$type": "EditorBoxShapeComponent",
-                    "Id": 3822011490380674942,
+                    "Id": 2294874903391250243,
                     "Visible": false,
                     "BoxShape": {
                         "Configuration": {
                             "Dimensions": [
-                                70.0,
+                                62.0,
                                 22.0,
                                 12.0
                             ]
@@ -10672,9 +10767,9 @@
                     "Parent Entity": "Entity_[81285075185134]",
                     "Transform Data": {
                         "Translate": [
-                            -8.554008483886719,
+                            -22.081554412841797,
                             8.013765335083008,
-                            7.677892684936523
+                            7.701567649841309
                         ]
                     }
                 },
@@ -10695,53 +10790,32 @@
                     "Id": 9684718173948616357,
                     "DisabledComponents": [
                         {
-                            "$type": "AZ::Render::EditorDiffuseProbeGridComponent",
-                            "Id": 3203472696775121593,
+                            "$type": "AZ::Render::EditorReflectionProbeComponent",
+                            "Id": 13598102145882555500,
                             "Controller": {
                                 "Configuration": {
-                                    "Extents": [
-                                        70.0,
-                                        22.0,
-                                        12.0
-                                    ],
-                                    "AmbientMultiplier": 0.30000001192092896,
-                                    "ViewBias": 0.6299999952316284,
-                                    "NormalBias": 0.09000000357627869,
-                                    "NumRaysPerProbe": 6,
-                                    "FrameUpdateCount": 10,
-                                    "BakedIrradianceTextureRelativePath": "DiffuseProbeGrids/Lightning_A1E1606B-3834-4E4D-B10A-39AE41323339_Irradiance_lutrgba16f.dds",
-                                    "BakedDistanceTextureRelativePath": "DiffuseProbeGrids/Lightning_BB10C463-870D-427A-A960-9D8444393C0E_Distance_lutrg32f.dds",
-                                    "BakedProbeDataTextureRelativePath": "DiffuseProbeGrids/Lightning_B91D2F72-DEC3-4EDB-B7C6-B60E35832FEE_ProbeData_lutrgba16f.dds",
-                                    "BakedIrradianceTextureAsset": {
+                                    "OuterHeight": 12.0,
+                                    "OuterLength": 22.0,
+                                    "OuterWidth": 62.0,
+                                    "InnerHeight": 12.0,
+                                    "InnerLength": 22.0,
+                                    "InnerWidth": 32.0,
+                                    "BakedCubemapQualityLevel": 3,
+                                    "BakedCubeMapRelativePath": "ReflectionProbes/Reflection_Probe__8C33F4D2-66B0-4672-B097-DBEC1017C682__iblspecularcm512.dds",
+                                    "BakedCubeMapAsset": {
                                         "assetId": {
-                                            "guid": "{34DD68E2-8CE8-545F-A380-34A1ABE3D5B0}",
-                                            "subId": 1000
+                                            "guid": "{3E61F9CD-B02D-581A-8383-6DC300DFD9C4}",
+                                            "subId": 2000
                                         },
-                                        "assetHint": "diffuseprobegrids/lightning_a1e1606b-3834-4e4d-b10a-39ae41323339_irradiance_lutrgba16f.dds.streamingimage"
+                                        "assetHint": "reflectionprobes/reflection_probe__689320b3-44e7-461f-9e77-a904c1524f9c__iblspecularcm512.dds.streamingimage"
                                     },
-                                    "BakedDistanceTextureAsset": {
-                                        "assetId": {
-                                            "guid": "{0A9F240D-8ED6-5DD2-8CCB-75F7081DA93A}",
-                                            "subId": 1000
-                                        },
-                                        "assetHint": "diffuseprobegrids/lightning_bb10c463-870d-427a-a960-9d8444393c0e_distance_lutrg32f.dds.streamingimage"
-                                    },
-                                    "BakedProbeDataTextureAsset": {
-                                        "assetId": {
-                                            "guid": "{7F00DEA1-7D59-568C-BFB4-324EEB007C83}",
-                                            "subId": 1000
-                                        },
-                                        "assetHint": "diffuseprobegrids/lightning_b91d2f72-dec3-4edb-b7c6-b60e35832fee_probedata_lutrgba16f.dds.streamingimage"
-                                    },
-                                    "VisualizationShowInactiveProbes": true
+                                    "EntityId": 12290764646438585264,
+                                    "ShowVisualization": false,
+                                    "RenderExposure": -2.200000047683716
                                 }
                             },
-                            "ambientMultiplier": 0.30000001192092896,
-                            "viewBias": 0.6299999952316284,
-                            "normalBias": 0.09000000357627869,
-                            "numRaysPerProbe": 6,
-                            "frameUpdateCount": 10,
-                            "showInactiveProbes": true
+                            "bakedCubeMapQualityLevel": 3,
+                            "bakedCubeMapRelativePath": "ReflectionProbes/Reflection_Probe__8C33F4D2-66B0-4672-B097-DBEC1017C682__iblspecularcm512.dds"
                         }
                     ]
                 },
@@ -24813,7 +24887,7 @@
                 {
                     "op": "replace",
                     "path": "/ContainerEntity/Components/Component_[12545710239443216069]/Transform Data/Translate/0",
-                    "value": 0.5084190368652344
+                    "value": 0.5084228515625
                 },
                 {
                     "op": "replace",
@@ -24823,7 +24897,7 @@
                 {
                     "op": "replace",
                     "path": "/ContainerEntity/Components/Component_[12545710239443216069]/Transform Data/Translate/2",
-                    "value": -0.6035747528076172
+                    "value": -0.5800871849060059
                 }
             ]
         },
@@ -25564,6 +25638,11 @@
                     "op": "replace",
                     "path": "/ContainerEntity/Components/Component_[13730770129766598217]/Parent Entity",
                     "value": "../Entity_[81903550475758]"
+                },
+                {
+                    "op": "replace",
+                    "path": "/Entities/Entity_[376147448073284]/Components/Component_[13299402086043239524]/HasNonUniformScale",
+                    "value": true
                 }
             ]
         },
