@@ -213,9 +213,9 @@
                             "Opacity": 0.10000000149011612,
                             "Material": {
                                 "assetId": {
-                                    "guid": "{FA4F605B-9ACF-5ADF-BC8D-6E04BBD13593}"
+                                    "guid": "{9155DEE2-04C0-5585-83E0-99F37228ABB5}"
                                 },
-                                "assetHint": "assets/tire_traces1.azmaterial"
+                                "assetHint": "assets/warehouse/floor_markings/tire_traces1.azmaterial"
                             }
                         }
                     }
@@ -294,9 +294,9 @@
                             "Opacity": 0.20000000298023224,
                             "Material": {
                                 "assetId": {
-                                    "guid": "{62F922D0-DA06-539E-AD15-A648F203C71A}"
+                                    "guid": "{1CB13800-517D-5CF8-B335-BE50BA250515}"
                                 },
-                                "assetHint": "assets/tire_traces_circle.azmaterial"
+                                "assetHint": "assets/warehouse/floor_markings/tire_traces_circle.azmaterial"
                             }
                         }
                     }
@@ -370,9 +370,9 @@
                             "Opacity": 0.10000000149011612,
                             "Material": {
                                 "assetId": {
-                                    "guid": "{62F922D0-DA06-539E-AD15-A648F203C71A}"
+                                    "guid": "{1CB13800-517D-5CF8-B335-BE50BA250515}"
                                 },
-                                "assetHint": "assets/tire_traces_circle.azmaterial"
+                                "assetHint": "assets/warehouse/floor_markings/tire_traces_circle.azmaterial"
                             }
                         }
                     }
@@ -478,6 +478,21 @@
                     "$type": "EditorNonUniformScaleComponent",
                     "Id": 15136090500032023536
                 },
+                "Component_[16245507229345556357]": {
+                    "$type": "AZ::Render::EditorDecalComponent",
+                    "Id": 16245507229345556357,
+                    "Controller": {
+                        "Configuration": {
+                            "Opacity": 0.3199999928474426,
+                            "Material": {
+                                "assetId": {
+                                    "guid": "{BF7DF511-C611-51C6-98E3-25D0A4DED8F2}"
+                                },
+                                "assetHint": "assets/warehouse/floor_markings/markings_mid2.azmaterial"
+                            }
+                        }
+                    }
+                },
                 "Component_[17622569680873604777]": {
                     "$type": "EditorPendingCompositionComponent",
                     "Id": 17622569680873604777
@@ -485,21 +500,6 @@
                 "Component_[184072808979487519]": {
                     "$type": "EditorLockComponent",
                     "Id": 184072808979487519
-                },
-                "Component_[6699738828310866771]": {
-                    "$type": "AZ::Render::EditorDecalComponent",
-                    "Id": 6699738828310866771,
-                    "Controller": {
-                        "Configuration": {
-                            "Opacity": 0.3199999928474426,
-                            "Material": {
-                                "assetId": {
-                                    "guid": "{77AF66CD-A883-5DC6-9893-990331BCDCA2}"
-                                },
-                                "assetHint": "assets/markings_mid2.azmaterial"
-                            }
-                        }
-                    }
                 },
                 "Component_[8716140543667152403]": {
                     "$type": "EditorEntityIconComponent",
@@ -552,24 +552,24 @@
                     "$type": "EditorPendingCompositionComponent",
                     "Id": 17622569680873604777
                 },
-                "Component_[184072808979487519]": {
-                    "$type": "EditorLockComponent",
-                    "Id": 184072808979487519
-                },
-                "Component_[6699738828310866771]": {
+                "Component_[17932005918525510279]": {
                     "$type": "AZ::Render::EditorDecalComponent",
-                    "Id": 6699738828310866771,
+                    "Id": 17932005918525510279,
                     "Controller": {
                         "Configuration": {
                             "Opacity": 0.3199999928474426,
                             "Material": {
                                 "assetId": {
-                                    "guid": "{095429C1-892E-56A2-90BE-885BCF348069}"
+                                    "guid": "{3F853EDA-6BB1-52CD-BF8E-9E8495880526}"
                                 },
-                                "assetHint": "assets/markings_mid1.azmaterial"
+                                "assetHint": "assets/warehouse/floor_markings/markings_mid1.azmaterial"
                             }
                         }
                     }
+                },
+                "Component_[184072808979487519]": {
+                    "$type": "EditorLockComponent",
+                    "Id": 184072808979487519
                 },
                 "Component_[8716140543667152403]": {
                     "$type": "EditorEntityIconComponent",
@@ -590,9 +590,9 @@
                             "Opacity": 0.20000000298023224,
                             "Material": {
                                 "assetId": {
-                                    "guid": "{FA4F605B-9ACF-5ADF-BC8D-6E04BBD13593}"
+                                    "guid": "{9155DEE2-04C0-5585-83E0-99F37228ABB5}"
                                 },
-                                "assetHint": "assets/tire_traces1.azmaterial"
+                                "assetHint": "assets/warehouse/floor_markings/tire_traces1.azmaterial"
                             }
                         }
                     }
@@ -671,9 +671,9 @@
                             "Opacity": 0.20000000298023224,
                             "Material": {
                                 "assetId": {
-                                    "guid": "{FA4F605B-9ACF-5ADF-BC8D-6E04BBD13593}"
+                                    "guid": "{9155DEE2-04C0-5585-83E0-99F37228ABB5}"
                                 },
-                                "assetHint": "assets/tire_traces1.azmaterial"
+                                "assetHint": "assets/warehouse/floor_markings/tire_traces1.azmaterial"
                             }
                         }
                     }
@@ -785,7 +785,7 @@
         },
         "Entity_[81117571460590]": {
             "Id": "Entity_[81117571460590]",
-            "Name": "end1",
+            "Name": "end2",
             "Components": {
                 "Component_[10500648739299668939]": {
                     "$type": "EditorDisabledCompositionComponent",
@@ -840,9 +840,9 @@
                             "Opacity": 0.3199999928474426,
                             "Material": {
                                 "assetId": {
-                                    "guid": "{2BEF9BBE-3433-5653-81F9-66BE1E228CC5}"
+                                    "guid": "{C36BF373-CBAF-52C0-8515-283579CBFBDE}"
                                 },
-                                "assetHint": "assets/markings_end2.azmaterial"
+                                "assetHint": "assets/warehouse/floor_markings/markings_end2.azmaterial"
                             }
                         }
                     }
@@ -866,9 +866,9 @@
                             "Opacity": 0.10000000149011612,
                             "Material": {
                                 "assetId": {
-                                    "guid": "{FA4F605B-9ACF-5ADF-BC8D-6E04BBD13593}"
+                                    "guid": "{9155DEE2-04C0-5585-83E0-99F37228ABB5}"
                                 },
-                                "assetHint": "assets/tire_traces1.azmaterial"
+                                "assetHint": "assets/warehouse/floor_markings/tire_traces1.azmaterial"
                             }
                         }
                     }
@@ -942,9 +942,9 @@
                             "Opacity": 0.20000000298023224,
                             "Material": {
                                 "assetId": {
-                                    "guid": "{FA4F605B-9ACF-5ADF-BC8D-6E04BBD13593}"
+                                    "guid": "{9155DEE2-04C0-5585-83E0-99F37228ABB5}"
                                 },
-                                "assetHint": "assets/tire_traces1.azmaterial"
+                                "assetHint": "assets/warehouse/floor_markings/tire_traces1.azmaterial"
                             }
                         }
                     }
@@ -1067,9 +1067,9 @@
                             "Opacity": 0.3199999928474426,
                             "Material": {
                                 "assetId": {
-                                    "guid": "{1CE6AEA5-3568-5EEF-A4D3-F1AE449D134A}"
+                                    "guid": "{F4C96494-A086-59D2-A605-06E760588573}"
                                 },
-                                "assetHint": "assets/markings_end1.azmaterial"
+                                "assetHint": "assets/warehouse/floor_markings/markings_end1.azmaterial"
                             }
                         }
                     }
@@ -1125,24 +1125,24 @@
                     "$type": "EditorPendingCompositionComponent",
                     "Id": 17622569680873604777
                 },
-                "Component_[184072808979487519]": {
-                    "$type": "EditorLockComponent",
-                    "Id": 184072808979487519
-                },
-                "Component_[6699738828310866771]": {
+                "Component_[18259465125987145806]": {
                     "$type": "AZ::Render::EditorDecalComponent",
-                    "Id": 6699738828310866771,
+                    "Id": 18259465125987145806,
                     "Controller": {
                         "Configuration": {
                             "Opacity": 0.3199999928474426,
                             "Material": {
                                 "assetId": {
-                                    "guid": "{095429C1-892E-56A2-90BE-885BCF348069}"
+                                    "guid": "{3F853EDA-6BB1-52CD-BF8E-9E8495880526}"
                                 },
-                                "assetHint": "assets/markings_mid1.azmaterial"
+                                "assetHint": "assets/warehouse/floor_markings/markings_mid1.azmaterial"
                             }
                         }
                     }
+                },
+                "Component_[184072808979487519]": {
+                    "$type": "EditorLockComponent",
+                    "Id": 184072808979487519
                 },
                 "Component_[8716140543667152403]": {
                     "$type": "EditorEntityIconComponent",
@@ -1163,9 +1163,9 @@
                             "Opacity": 0.20000000298023224,
                             "Material": {
                                 "assetId": {
-                                    "guid": "{62F922D0-DA06-539E-AD15-A648F203C71A}"
+                                    "guid": "{1CB13800-517D-5CF8-B335-BE50BA250515}"
                                 },
-                                "assetHint": "assets/tire_traces_circle.azmaterial"
+                                "assetHint": "assets/warehouse/floor_markings/tire_traces_circle.azmaterial"
                             }
                         }
                     }
@@ -1228,7 +1228,7 @@
         },
         "Entity_[81143341264366]": {
             "Id": "Entity_[81143341264366]",
-            "Name": "end1",
+            "Name": "end2",
             "Components": {
                 "Component_[10500648739299668939]": {
                     "$type": "EditorDisabledCompositionComponent",
@@ -1353,9 +1353,9 @@
                             "Opacity": 0.3199999928474426,
                             "Material": {
                                 "assetId": {
-                                    "guid": "{2E73826F-CFB1-591C-91C0-07E47D87A921}"
+                                    "guid": "{39CC958C-1BBB-512A-816D-919023CE3E90}"
                                 },
-                                "assetHint": "assets/markings_corner.azmaterial"
+                                "assetHint": "assets/warehouse/floor_markings/markings_corner.azmaterial"
                             }
                         }
                     }
@@ -1379,9 +1379,9 @@
                             "Opacity": 0.15000000596046448,
                             "Material": {
                                 "assetId": {
-                                    "guid": "{62F922D0-DA06-539E-AD15-A648F203C71A}"
+                                    "guid": "{1CB13800-517D-5CF8-B335-BE50BA250515}"
                                 },
-                                "assetHint": "assets/tire_traces_circle.azmaterial"
+                                "assetHint": "assets/warehouse/floor_markings/tire_traces_circle.azmaterial"
                             }
                         }
                     }
@@ -1455,9 +1455,9 @@
                             "Opacity": 0.20000000298023224,
                             "Material": {
                                 "assetId": {
-                                    "guid": "{62F922D0-DA06-539E-AD15-A648F203C71A}"
+                                    "guid": "{1CB13800-517D-5CF8-B335-BE50BA250515}"
                                 },
-                                "assetHint": "assets/tire_traces_circle.azmaterial"
+                                "assetHint": "assets/warehouse/floor_markings/tire_traces_circle.azmaterial"
                             }
                         }
                     }
@@ -1531,9 +1531,9 @@
                             "Opacity": 0.10000000149011612,
                             "Material": {
                                 "assetId": {
-                                    "guid": "{FA4F605B-9ACF-5ADF-BC8D-6E04BBD13593}"
+                                    "guid": "{9155DEE2-04C0-5585-83E0-99F37228ABB5}"
                                 },
-                                "assetHint": "assets/tire_traces1.azmaterial"
+                                "assetHint": "assets/warehouse/floor_markings/tire_traces1.azmaterial"
                             }
                         }
                     }
@@ -1677,9 +1677,9 @@
                             "Opacity": 0.15000000596046448,
                             "Material": {
                                 "assetId": {
-                                    "guid": "{62F922D0-DA06-539E-AD15-A648F203C71A}"
+                                    "guid": "{1CB13800-517D-5CF8-B335-BE50BA250515}"
                                 },
-                                "assetHint": "assets/tire_traces_circle.azmaterial"
+                                "assetHint": "assets/warehouse/floor_markings/tire_traces_circle.azmaterial"
                             }
                         }
                     }
@@ -1753,9 +1753,9 @@
                             "Opacity": 0.10000000149011612,
                             "Material": {
                                 "assetId": {
-                                    "guid": "{FA4F605B-9ACF-5ADF-BC8D-6E04BBD13593}"
+                                    "guid": "{9155DEE2-04C0-5585-83E0-99F37228ABB5}"
                                 },
-                                "assetHint": "assets/tire_traces1.azmaterial"
+                                "assetHint": "assets/warehouse/floor_markings/tire_traces1.azmaterial"
                             }
                         }
                     }
@@ -1834,9 +1834,9 @@
                             "Opacity": 0.10000000149011612,
                             "Material": {
                                 "assetId": {
-                                    "guid": "{62F922D0-DA06-539E-AD15-A648F203C71A}"
+                                    "guid": "{1CB13800-517D-5CF8-B335-BE50BA250515}"
                                 },
-                                "assetHint": "assets/tire_traces_circle.azmaterial"
+                                "assetHint": "assets/warehouse/floor_markings/tire_traces_circle.azmaterial"
                             }
                         }
                     }
@@ -1946,17 +1946,17 @@
                     "$type": "EditorLockComponent",
                     "Id": 184072808979487519
                 },
-                "Component_[6699738828310866771]": {
+                "Component_[3027674818488953819]": {
                     "$type": "AZ::Render::EditorDecalComponent",
-                    "Id": 6699738828310866771,
+                    "Id": 3027674818488953819,
                     "Controller": {
                         "Configuration": {
                             "Opacity": 0.3199999928474426,
                             "Material": {
                                 "assetId": {
-                                    "guid": "{095429C1-892E-56A2-90BE-885BCF348069}"
+                                    "guid": "{3F853EDA-6BB1-52CD-BF8E-9E8495880526}"
                                 },
-                                "assetHint": "assets/markings_mid1.azmaterial"
+                                "assetHint": "assets/warehouse/floor_markings/markings_mid1.azmaterial"
                             }
                         }
                     }
@@ -1980,9 +1980,9 @@
                             "Opacity": 0.10000000149011612,
                             "Material": {
                                 "assetId": {
-                                    "guid": "{62F922D0-DA06-539E-AD15-A648F203C71A}"
+                                    "guid": "{1CB13800-517D-5CF8-B335-BE50BA250515}"
                                 },
-                                "assetHint": "assets/tire_traces_circle.azmaterial"
+                                "assetHint": "assets/warehouse/floor_markings/tire_traces_circle.azmaterial"
                             }
                         }
                     }
@@ -2056,9 +2056,9 @@
                             "Opacity": 0.10000000149011612,
                             "Material": {
                                 "assetId": {
-                                    "guid": "{62F922D0-DA06-539E-AD15-A648F203C71A}"
+                                    "guid": "{1CB13800-517D-5CF8-B335-BE50BA250515}"
                                 },
-                                "assetHint": "assets/tire_traces_circle.azmaterial"
+                                "assetHint": "assets/warehouse/floor_markings/tire_traces_circle.azmaterial"
                             }
                         }
                     }
@@ -2180,9 +2180,9 @@
                             "Opacity": 0.3199999928474426,
                             "Material": {
                                 "assetId": {
-                                    "guid": "{77AF66CD-A883-5DC6-9893-990331BCDCA2}"
+                                    "guid": "{BF7DF511-C611-51C6-98E3-25D0A4DED8F2}"
                                 },
-                                "assetHint": "assets/markings_mid2.azmaterial"
+                                "assetHint": "assets/warehouse/floor_markings/markings_mid2.azmaterial"
                             }
                         }
                     }
@@ -2250,9 +2250,9 @@
                             "Opacity": 0.3199999928474426,
                             "Material": {
                                 "assetId": {
-                                    "guid": "{77AF66CD-A883-5DC6-9893-990331BCDCA2}"
+                                    "guid": "{BF7DF511-C611-51C6-98E3-25D0A4DED8F2}"
                                 },
-                                "assetHint": "assets/markings_mid2.azmaterial"
+                                "assetHint": "assets/warehouse/floor_markings/markings_mid2.azmaterial"
                             }
                         }
                     }
@@ -2320,9 +2320,9 @@
                             "Opacity": 0.3199999928474426,
                             "Material": {
                                 "assetId": {
-                                    "guid": "{095429C1-892E-56A2-90BE-885BCF348069}"
+                                    "guid": "{3F853EDA-6BB1-52CD-BF8E-9E8495880526}"
                                 },
-                                "assetHint": "assets/markings_mid1.azmaterial"
+                                "assetHint": "assets/warehouse/floor_markings/markings_mid1.azmaterial"
                             }
                         }
                     }
@@ -2346,9 +2346,9 @@
                             "Opacity": 0.10000000149011612,
                             "Material": {
                                 "assetId": {
-                                    "guid": "{FA4F605B-9ACF-5ADF-BC8D-6E04BBD13593}"
+                                    "guid": "{9155DEE2-04C0-5585-83E0-99F37228ABB5}"
                                 },
-                                "assetHint": "assets/tire_traces1.azmaterial"
+                                "assetHint": "assets/warehouse/floor_markings/tire_traces1.azmaterial"
                             }
                         }
                     }
@@ -2520,9 +2520,9 @@
                             "Opacity": 0.10000000149011612,
                             "Material": {
                                 "assetId": {
-                                    "guid": "{62F922D0-DA06-539E-AD15-A648F203C71A}"
+                                    "guid": "{1CB13800-517D-5CF8-B335-BE50BA250515}"
                                 },
-                                "assetHint": "assets/tire_traces_circle.azmaterial"
+                                "assetHint": "assets/warehouse/floor_markings/tire_traces_circle.azmaterial"
                             }
                         }
                     }
@@ -2596,9 +2596,9 @@
                             "Opacity": 0.25,
                             "Material": {
                                 "assetId": {
-                                    "guid": "{62F922D0-DA06-539E-AD15-A648F203C71A}"
+                                    "guid": "{1CB13800-517D-5CF8-B335-BE50BA250515}"
                                 },
-                                "assetHint": "assets/tire_traces_circle.azmaterial"
+                                "assetHint": "assets/warehouse/floor_markings/tire_traces_circle.azmaterial"
                             }
                         }
                     }
@@ -2672,9 +2672,9 @@
                             "Opacity": 0.10000000149011612,
                             "Material": {
                                 "assetId": {
-                                    "guid": "{62F922D0-DA06-539E-AD15-A648F203C71A}"
+                                    "guid": "{1CB13800-517D-5CF8-B335-BE50BA250515}"
                                 },
-                                "assetHint": "assets/tire_traces_circle.azmaterial"
+                                "assetHint": "assets/warehouse/floor_markings/tire_traces_circle.azmaterial"
                             }
                         }
                     }
@@ -2846,9 +2846,9 @@
                             "Opacity": 0.10000000149011612,
                             "Material": {
                                 "assetId": {
-                                    "guid": "{FA4F605B-9ACF-5ADF-BC8D-6E04BBD13593}"
+                                    "guid": "{9155DEE2-04C0-5585-83E0-99F37228ABB5}"
                                 },
-                                "assetHint": "assets/tire_traces1.azmaterial"
+                                "assetHint": "assets/warehouse/floor_markings/tire_traces1.azmaterial"
                             }
                         }
                     }
@@ -2922,9 +2922,9 @@
                             "Opacity": 0.15000000596046448,
                             "Material": {
                                 "assetId": {
-                                    "guid": "{62F922D0-DA06-539E-AD15-A648F203C71A}"
+                                    "guid": "{1CB13800-517D-5CF8-B335-BE50BA250515}"
                                 },
-                                "assetHint": "assets/tire_traces_circle.azmaterial"
+                                "assetHint": "assets/warehouse/floor_markings/tire_traces_circle.azmaterial"
                             }
                         }
                     }
@@ -3126,9 +3126,9 @@
                             "Opacity": 0.10000000149011612,
                             "Material": {
                                 "assetId": {
-                                    "guid": "{62F922D0-DA06-539E-AD15-A648F203C71A}"
+                                    "guid": "{1CB13800-517D-5CF8-B335-BE50BA250515}"
                                 },
-                                "assetHint": "assets/tire_traces_circle.azmaterial"
+                                "assetHint": "assets/warehouse/floor_markings/tire_traces_circle.azmaterial"
                             }
                         }
                     }
@@ -3308,17 +3308,17 @@
                     "$type": "EditorLockComponent",
                     "Id": 184072808979487519
                 },
-                "Component_[6699738828310866771]": {
+                "Component_[7836269715814736284]": {
                     "$type": "AZ::Render::EditorDecalComponent",
-                    "Id": 6699738828310866771,
+                    "Id": 7836269715814736284,
                     "Controller": {
                         "Configuration": {
                             "Opacity": 0.3199999928474426,
                             "Material": {
                                 "assetId": {
-                                    "guid": "{095429C1-892E-56A2-90BE-885BCF348069}"
+                                    "guid": "{3F853EDA-6BB1-52CD-BF8E-9E8495880526}"
                                 },
-                                "assetHint": "assets/markings_mid1.azmaterial"
+                                "assetHint": "assets/warehouse/floor_markings/markings_mid1.azmaterial"
                             }
                         }
                     }
@@ -3370,6 +3370,21 @@
                     "$type": "EditorVisibilityComponent",
                     "Id": 12903035105505580650
                 },
+                "Component_[15222639611894372230]": {
+                    "$type": "AZ::Render::EditorDecalComponent",
+                    "Id": 15222639611894372230,
+                    "Controller": {
+                        "Configuration": {
+                            "Opacity": 0.3199999928474426,
+                            "Material": {
+                                "assetId": {
+                                    "guid": "{BF7DF511-C611-51C6-98E3-25D0A4DED8F2}"
+                                },
+                                "assetHint": "assets/warehouse/floor_markings/markings_mid2.azmaterial"
+                            }
+                        }
+                    }
+                },
                 "Component_[17622569680873604777]": {
                     "$type": "EditorPendingCompositionComponent",
                     "Id": 17622569680873604777
@@ -3377,21 +3392,6 @@
                 "Component_[184072808979487519]": {
                     "$type": "EditorLockComponent",
                     "Id": 184072808979487519
-                },
-                "Component_[6699738828310866771]": {
-                    "$type": "AZ::Render::EditorDecalComponent",
-                    "Id": 6699738828310866771,
-                    "Controller": {
-                        "Configuration": {
-                            "Opacity": 0.3199999928474426,
-                            "Material": {
-                                "assetId": {
-                                    "guid": "{77AF66CD-A883-5DC6-9893-990331BCDCA2}"
-                                },
-                                "assetHint": "assets/markings_mid2.azmaterial"
-                            }
-                        }
-                    }
                 },
                 "Component_[8716140543667152403]": {
                     "$type": "EditorEntityIconComponent",
@@ -3412,9 +3412,9 @@
                             "Opacity": 0.10000000149011612,
                             "Material": {
                                 "assetId": {
-                                    "guid": "{FA4F605B-9ACF-5ADF-BC8D-6E04BBD13593}"
+                                    "guid": "{9155DEE2-04C0-5585-83E0-99F37228ABB5}"
                                 },
-                                "assetHint": "assets/tire_traces1.azmaterial"
+                                "assetHint": "assets/warehouse/floor_markings/tire_traces1.azmaterial"
                             }
                         }
                     }
@@ -3482,7 +3482,7 @@
         },
         "Entity_[81272190283246]": {
             "Id": "Entity_[81272190283246]",
-            "Name": "row_long",
+            "Name": "row_long123",
             "Components": {
                 "Component_[11358105557128824214]": {
                     "$type": "EditorLockComponent",
@@ -3592,6 +3592,21 @@
                     "$type": "EditorNonUniformScaleComponent",
                     "Id": 15136090500032023536
                 },
+                "Component_[15565581520585610004]": {
+                    "$type": "AZ::Render::EditorDecalComponent",
+                    "Id": 15565581520585610004,
+                    "Controller": {
+                        "Configuration": {
+                            "Opacity": 0.3199999928474426,
+                            "Material": {
+                                "assetId": {
+                                    "guid": "{BF7DF511-C611-51C6-98E3-25D0A4DED8F2}"
+                                },
+                                "assetHint": "assets/warehouse/floor_markings/markings_mid2.azmaterial"
+                            }
+                        }
+                    }
+                },
                 "Component_[17622569680873604777]": {
                     "$type": "EditorPendingCompositionComponent",
                     "Id": 17622569680873604777
@@ -3599,21 +3614,6 @@
                 "Component_[184072808979487519]": {
                     "$type": "EditorLockComponent",
                     "Id": 184072808979487519
-                },
-                "Component_[6699738828310866771]": {
-                    "$type": "AZ::Render::EditorDecalComponent",
-                    "Id": 6699738828310866771,
-                    "Controller": {
-                        "Configuration": {
-                            "Opacity": 0.3199999928474426,
-                            "Material": {
-                                "assetId": {
-                                    "guid": "{77AF66CD-A883-5DC6-9893-990331BCDCA2}"
-                                },
-                                "assetHint": "assets/markings_mid2.azmaterial"
-                            }
-                        }
-                    }
                 },
                 "Component_[8716140543667152403]": {
                     "$type": "EditorEntityIconComponent",
@@ -3634,9 +3634,9 @@
                             "Opacity": 0.10000000149011612,
                             "Material": {
                                 "assetId": {
-                                    "guid": "{FA4F605B-9ACF-5ADF-BC8D-6E04BBD13593}"
+                                    "guid": "{9155DEE2-04C0-5585-83E0-99F37228ABB5}"
                                 },
-                                "assetHint": "assets/tire_traces1.azmaterial"
+                                "assetHint": "assets/warehouse/floor_markings/tire_traces1.azmaterial"
                             }
                         }
                     }
@@ -3859,6 +3859,21 @@
                     "$type": "EditorVisibilityComponent",
                     "Id": 12903035105505580650
                 },
+                "Component_[14267448082087384660]": {
+                    "$type": "AZ::Render::EditorDecalComponent",
+                    "Id": 14267448082087384660,
+                    "Controller": {
+                        "Configuration": {
+                            "Opacity": 0.3199999928474426,
+                            "Material": {
+                                "assetId": {
+                                    "guid": "{3F853EDA-6BB1-52CD-BF8E-9E8495880526}"
+                                },
+                                "assetHint": "assets/warehouse/floor_markings/markings_mid1.azmaterial"
+                            }
+                        }
+                    }
+                },
                 "Component_[17622569680873604777]": {
                     "$type": "EditorPendingCompositionComponent",
                     "Id": 17622569680873604777
@@ -3866,21 +3881,6 @@
                 "Component_[184072808979487519]": {
                     "$type": "EditorLockComponent",
                     "Id": 184072808979487519
-                },
-                "Component_[6699738828310866771]": {
-                    "$type": "AZ::Render::EditorDecalComponent",
-                    "Id": 6699738828310866771,
-                    "Controller": {
-                        "Configuration": {
-                            "Opacity": 0.3199999928474426,
-                            "Material": {
-                                "assetId": {
-                                    "guid": "{095429C1-892E-56A2-90BE-885BCF348069}"
-                                },
-                                "assetHint": "assets/markings_mid1.azmaterial"
-                            }
-                        }
-                    }
                 },
                 "Component_[8716140543667152403]": {
                     "$type": "EditorEntityIconComponent",
@@ -3901,9 +3901,9 @@
                             "Opacity": 0.10000000149011612,
                             "Material": {
                                 "assetId": {
-                                    "guid": "{62F922D0-DA06-539E-AD15-A648F203C71A}"
+                                    "guid": "{1CB13800-517D-5CF8-B335-BE50BA250515}"
                                 },
-                                "assetHint": "assets/tire_traces_circle.azmaterial"
+                                "assetHint": "assets/warehouse/floor_markings/tire_traces_circle.azmaterial"
                             }
                         }
                     }
@@ -4103,6 +4103,21 @@
                     "$type": "EditorVisibilityComponent",
                     "Id": 12903035105505580650
                 },
+                "Component_[16197604831420367756]": {
+                    "$type": "AZ::Render::EditorDecalComponent",
+                    "Id": 16197604831420367756,
+                    "Controller": {
+                        "Configuration": {
+                            "Opacity": 0.3199999928474426,
+                            "Material": {
+                                "assetId": {
+                                    "guid": "{3F853EDA-6BB1-52CD-BF8E-9E8495880526}"
+                                },
+                                "assetHint": "assets/warehouse/floor_markings/markings_mid1.azmaterial"
+                            }
+                        }
+                    }
+                },
                 "Component_[17622569680873604777]": {
                     "$type": "EditorPendingCompositionComponent",
                     "Id": 17622569680873604777
@@ -4110,21 +4125,6 @@
                 "Component_[184072808979487519]": {
                     "$type": "EditorLockComponent",
                     "Id": 184072808979487519
-                },
-                "Component_[6699738828310866771]": {
-                    "$type": "AZ::Render::EditorDecalComponent",
-                    "Id": 6699738828310866771,
-                    "Controller": {
-                        "Configuration": {
-                            "Opacity": 0.3199999928474426,
-                            "Material": {
-                                "assetId": {
-                                    "guid": "{095429C1-892E-56A2-90BE-885BCF348069}"
-                                },
-                                "assetHint": "assets/markings_mid1.azmaterial"
-                            }
-                        }
-                    }
                 },
                 "Component_[8716140543667152403]": {
                     "$type": "EditorEntityIconComponent",
@@ -4215,9 +4215,9 @@
                             "Opacity": 0.20000000298023224,
                             "Material": {
                                 "assetId": {
-                                    "guid": "{FA4F605B-9ACF-5ADF-BC8D-6E04BBD13593}"
+                                    "guid": "{9155DEE2-04C0-5585-83E0-99F37228ABB5}"
                                 },
-                                "assetHint": "assets/tire_traces1.azmaterial"
+                                "assetHint": "assets/warehouse/floor_markings/tire_traces1.azmaterial"
                             }
                         }
                     }
@@ -4291,9 +4291,9 @@
                             "Opacity": 0.20000000298023224,
                             "Material": {
                                 "assetId": {
-                                    "guid": "{FA4F605B-9ACF-5ADF-BC8D-6E04BBD13593}"
+                                    "guid": "{9155DEE2-04C0-5585-83E0-99F37228ABB5}"
                                 },
-                                "assetHint": "assets/tire_traces1.azmaterial"
+                                "assetHint": "assets/warehouse/floor_markings/tire_traces1.azmaterial"
                             }
                         }
                     }
@@ -4475,9 +4475,9 @@
                             "Opacity": 0.3199999928474426,
                             "Material": {
                                 "assetId": {
-                                    "guid": "{095429C1-892E-56A2-90BE-885BCF348069}"
+                                    "guid": "{3F853EDA-6BB1-52CD-BF8E-9E8495880526}"
                                 },
-                                "assetHint": "assets/markings_mid1.azmaterial"
+                                "assetHint": "assets/warehouse/floor_markings/markings_mid1.azmaterial"
                             }
                         }
                     }
@@ -4554,9 +4554,9 @@
                             "Opacity": 0.3199999928474426,
                             "Material": {
                                 "assetId": {
-                                    "guid": "{095429C1-892E-56A2-90BE-885BCF348069}"
+                                    "guid": "{3F853EDA-6BB1-52CD-BF8E-9E8495880526}"
                                 },
-                                "assetHint": "assets/markings_mid1.azmaterial"
+                                "assetHint": "assets/warehouse/floor_markings/markings_mid1.azmaterial"
                             }
                         }
                     }
@@ -4580,9 +4580,9 @@
                             "Opacity": 0.10000000149011612,
                             "Material": {
                                 "assetId": {
-                                    "guid": "{FA4F605B-9ACF-5ADF-BC8D-6E04BBD13593}"
+                                    "guid": "{9155DEE2-04C0-5585-83E0-99F37228ABB5}"
                                 },
-                                "assetHint": "assets/tire_traces1.azmaterial"
+                                "assetHint": "assets/warehouse/floor_markings/tire_traces1.azmaterial"
                             }
                         }
                     }
@@ -4706,17 +4706,17 @@
                         1.0
                     ]
                 },
-                "Component_[6699738828310866771]": {
+                "Component_[6376327775892564807]": {
                     "$type": "AZ::Render::EditorDecalComponent",
-                    "Id": 6699738828310866771,
+                    "Id": 6376327775892564807,
                     "Controller": {
                         "Configuration": {
                             "Opacity": 0.3199999928474426,
                             "Material": {
                                 "assetId": {
-                                    "guid": "{095429C1-892E-56A2-90BE-885BCF348069}"
+                                    "guid": "{3F853EDA-6BB1-52CD-BF8E-9E8495880526}"
                                 },
-                                "assetHint": "assets/markings_mid1.azmaterial"
+                                "assetHint": "assets/warehouse/floor_markings/markings_mid1.azmaterial"
                             }
                         }
                     }
@@ -4729,7 +4729,7 @@
         },
         "Entity_[81345204727278]": {
             "Id": "Entity_[81345204727278]",
-            "Name": "robot_parking",
+            "Name": "gate",
             "Components": {
                 "Component_[11358105557128824214]": {
                     "$type": "EditorLockComponent",
@@ -4769,8 +4769,8 @@
                     "Parent Entity": "Entity_[81323729890798]",
                     "Transform Data": {
                         "Translate": [
-                            16.72157859802246,
-                            -0.651561975479126,
+                            15.755332946777344,
+                            3.377704620361328,
                             0.0
                         ]
                     }
@@ -4794,9 +4794,9 @@
                             "Opacity": 0.15000000596046448,
                             "Material": {
                                 "assetId": {
-                                    "guid": "{FA4F605B-9ACF-5ADF-BC8D-6E04BBD13593}"
+                                    "guid": "{9155DEE2-04C0-5585-83E0-99F37228ABB5}"
                                 },
-                                "assetHint": "assets/tire_traces1.azmaterial"
+                                "assetHint": "assets/warehouse/floor_markings/tire_traces1.azmaterial"
                             }
                         }
                     }
@@ -5011,9 +5011,9 @@
                             "Opacity": 0.3199999928474426,
                             "Material": {
                                 "assetId": {
-                                    "guid": "{1CE6AEA5-3568-5EEF-A4D3-F1AE449D134A}"
+                                    "guid": "{F4C96494-A086-59D2-A605-06E760588573}"
                                 },
-                                "assetHint": "assets/markings_end1.azmaterial"
+                                "assetHint": "assets/warehouse/floor_markings/markings_end1.azmaterial"
                             }
                         }
                     }
@@ -5184,9 +5184,9 @@
                             "Opacity": 0.15000000596046448,
                             "Material": {
                                 "assetId": {
-                                    "guid": "{FA4F605B-9ACF-5ADF-BC8D-6E04BBD13593}"
+                                    "guid": "{9155DEE2-04C0-5585-83E0-99F37228ABB5}"
                                 },
-                                "assetHint": "assets/tire_traces1.azmaterial"
+                                "assetHint": "assets/warehouse/floor_markings/tire_traces1.azmaterial"
                             }
                         }
                     }
@@ -5260,9 +5260,9 @@
                             "Opacity": 0.10000000149011612,
                             "Material": {
                                 "assetId": {
-                                    "guid": "{62F922D0-DA06-539E-AD15-A648F203C71A}"
+                                    "guid": "{1CB13800-517D-5CF8-B335-BE50BA250515}"
                                 },
-                                "assetHint": "assets/tire_traces_circle.azmaterial"
+                                "assetHint": "assets/warehouse/floor_markings/tire_traces_circle.azmaterial"
                             }
                         }
                     }
@@ -5574,9 +5574,9 @@
                             "Opacity": 0.10000000149011612,
                             "Material": {
                                 "assetId": {
-                                    "guid": "{62F922D0-DA06-539E-AD15-A648F203C71A}"
+                                    "guid": "{1CB13800-517D-5CF8-B335-BE50BA250515}"
                                 },
-                                "assetHint": "assets/tire_traces_circle.azmaterial"
+                                "assetHint": "assets/warehouse/floor_markings/tire_traces_circle.azmaterial"
                             }
                         }
                     }
@@ -5650,9 +5650,9 @@
                             "Opacity": 0.15000000596046448,
                             "Material": {
                                 "assetId": {
-                                    "guid": "{FA4F605B-9ACF-5ADF-BC8D-6E04BBD13593}"
+                                    "guid": "{9155DEE2-04C0-5585-83E0-99F37228ABB5}"
                                 },
-                                "assetHint": "assets/tire_traces1.azmaterial"
+                                "assetHint": "assets/warehouse/floor_markings/tire_traces1.azmaterial"
                             }
                         }
                     }
@@ -5880,17 +5880,17 @@
                     "$type": "EditorLockComponent",
                     "Id": 184072808979487519
                 },
-                "Component_[6699738828310866771]": {
+                "Component_[3760710367340249675]": {
                     "$type": "AZ::Render::EditorDecalComponent",
-                    "Id": 6699738828310866771,
+                    "Id": 3760710367340249675,
                     "Controller": {
                         "Configuration": {
                             "Opacity": 0.3199999928474426,
                             "Material": {
                                 "assetId": {
-                                    "guid": "{77AF66CD-A883-5DC6-9893-990331BCDCA2}"
+                                    "guid": "{BF7DF511-C611-51C6-98E3-25D0A4DED8F2}"
                                 },
-                                "assetHint": "assets/markings_mid2.azmaterial"
+                                "assetHint": "assets/warehouse/floor_markings/markings_mid2.azmaterial"
                             }
                         }
                     }
@@ -5914,9 +5914,9 @@
                             "Opacity": 0.10000000149011612,
                             "Material": {
                                 "assetId": {
-                                    "guid": "{62F922D0-DA06-539E-AD15-A648F203C71A}"
+                                    "guid": "{1CB13800-517D-5CF8-B335-BE50BA250515}"
                                 },
-                                "assetHint": "assets/tire_traces_circle.azmaterial"
+                                "assetHint": "assets/warehouse/floor_markings/tire_traces_circle.azmaterial"
                             }
                         }
                     }
@@ -6346,9 +6346,9 @@
                             "Opacity": 0.10000000149011612,
                             "Material": {
                                 "assetId": {
-                                    "guid": "{62F922D0-DA06-539E-AD15-A648F203C71A}"
+                                    "guid": "{1CB13800-517D-5CF8-B335-BE50BA250515}"
                                 },
-                                "assetHint": "assets/tire_traces_circle.azmaterial"
+                                "assetHint": "assets/warehouse/floor_markings/tire_traces_circle.azmaterial"
                             }
                         }
                     }
@@ -6685,24 +6685,24 @@
                     "$type": "EditorLockComponent",
                     "Id": 184072808979487519
                 },
-                "Component_[6699738828310866771]": {
+                "Component_[8716140543667152403]": {
+                    "$type": "EditorEntityIconComponent",
+                    "Id": 8716140543667152403
+                },
+                "Component_[9681598081969843461]": {
                     "$type": "AZ::Render::EditorDecalComponent",
-                    "Id": 6699738828310866771,
+                    "Id": 9681598081969843461,
                     "Controller": {
                         "Configuration": {
                             "Opacity": 0.3199999928474426,
                             "Material": {
                                 "assetId": {
-                                    "guid": "{77AF66CD-A883-5DC6-9893-990331BCDCA2}"
+                                    "guid": "{BF7DF511-C611-51C6-98E3-25D0A4DED8F2}"
                                 },
-                                "assetHint": "assets/markings_mid2.azmaterial"
+                                "assetHint": "assets/warehouse/floor_markings/markings_mid2.azmaterial"
                             }
                         }
                     }
-                },
-                "Component_[8716140543667152403]": {
-                    "$type": "EditorEntityIconComponent",
-                    "Id": 8716140543667152403
                 }
             }
         },
@@ -6755,24 +6755,24 @@
                     "$type": "EditorLockComponent",
                     "Id": 184072808979487519
                 },
-                "Component_[6699738828310866771]": {
+                "Component_[8716140543667152403]": {
+                    "$type": "EditorEntityIconComponent",
+                    "Id": 8716140543667152403
+                },
+                "Component_[9674067328213239035]": {
                     "$type": "AZ::Render::EditorDecalComponent",
-                    "Id": 6699738828310866771,
+                    "Id": 9674067328213239035,
                     "Controller": {
                         "Configuration": {
                             "Opacity": 0.3199999928474426,
                             "Material": {
                                 "assetId": {
-                                    "guid": "{77AF66CD-A883-5DC6-9893-990331BCDCA2}"
+                                    "guid": "{BF7DF511-C611-51C6-98E3-25D0A4DED8F2}"
                                 },
-                                "assetHint": "assets/markings_mid2.azmaterial"
+                                "assetHint": "assets/warehouse/floor_markings/markings_mid2.azmaterial"
                             }
                         }
                     }
-                },
-                "Component_[8716140543667152403]": {
-                    "$type": "EditorEntityIconComponent",
-                    "Id": 8716140543667152403
                 }
             }
         },
@@ -6887,9 +6887,9 @@
                             "Opacity": 0.10000000149011612,
                             "Material": {
                                 "assetId": {
-                                    "guid": "{FA4F605B-9ACF-5ADF-BC8D-6E04BBD13593}"
+                                    "guid": "{9155DEE2-04C0-5585-83E0-99F37228ABB5}"
                                 },
-                                "assetHint": "assets/tire_traces1.azmaterial"
+                                "assetHint": "assets/warehouse/floor_markings/tire_traces1.azmaterial"
                             }
                         }
                     }
@@ -6963,9 +6963,9 @@
                             "Opacity": 0.15000000596046448,
                             "Material": {
                                 "assetId": {
-                                    "guid": "{62F922D0-DA06-539E-AD15-A648F203C71A}"
+                                    "guid": "{1CB13800-517D-5CF8-B335-BE50BA250515}"
                                 },
-                                "assetHint": "assets/tire_traces_circle.azmaterial"
+                                "assetHint": "assets/warehouse/floor_markings/tire_traces_circle.azmaterial"
                             }
                         }
                     }
@@ -7039,9 +7039,9 @@
                             "Opacity": 0.20000000298023224,
                             "Material": {
                                 "assetId": {
-                                    "guid": "{FA4F605B-9ACF-5ADF-BC8D-6E04BBD13593}"
+                                    "guid": "{9155DEE2-04C0-5585-83E0-99F37228ABB5}"
                                 },
-                                "assetHint": "assets/tire_traces1.azmaterial"
+                                "assetHint": "assets/warehouse/floor_markings/tire_traces1.azmaterial"
                             }
                         }
                     }
@@ -7156,17 +7156,17 @@
                     "$type": "EditorLockComponent",
                     "Id": 184072808979487519
                 },
-                "Component_[6699738828310866771]": {
+                "Component_[1876784684196611333]": {
                     "$type": "AZ::Render::EditorDecalComponent",
-                    "Id": 6699738828310866771,
+                    "Id": 1876784684196611333,
                     "Controller": {
                         "Configuration": {
                             "Opacity": 0.3199999928474426,
                             "Material": {
                                 "assetId": {
-                                    "guid": "{095429C1-892E-56A2-90BE-885BCF348069}"
+                                    "guid": "{3F853EDA-6BB1-52CD-BF8E-9E8495880526}"
                                 },
-                                "assetHint": "assets/markings_mid1.azmaterial"
+                                "assetHint": "assets/warehouse/floor_markings/markings_mid1.azmaterial"
                             }
                         }
                     }
@@ -7398,9 +7398,9 @@
                             "Opacity": 0.15000000596046448,
                             "Material": {
                                 "assetId": {
-                                    "guid": "{FA4F605B-9ACF-5ADF-BC8D-6E04BBD13593}"
+                                    "guid": "{9155DEE2-04C0-5585-83E0-99F37228ABB5}"
                                 },
-                                "assetHint": "assets/tire_traces1.azmaterial"
+                                "assetHint": "assets/warehouse/floor_markings/tire_traces1.azmaterial"
                             }
                         }
                     }
@@ -7507,6 +7507,21 @@
                     "$type": "EditorVisibilityComponent",
                     "Id": 12903035105505580650
                 },
+                "Component_[16531891483390612962]": {
+                    "$type": "AZ::Render::EditorDecalComponent",
+                    "Id": 16531891483390612962,
+                    "Controller": {
+                        "Configuration": {
+                            "Opacity": 0.3199999928474426,
+                            "Material": {
+                                "assetId": {
+                                    "guid": "{3F853EDA-6BB1-52CD-BF8E-9E8495880526}"
+                                },
+                                "assetHint": "assets/warehouse/floor_markings/markings_mid1.azmaterial"
+                            }
+                        }
+                    }
+                },
                 "Component_[17622569680873604777]": {
                     "$type": "EditorPendingCompositionComponent",
                     "Id": 17622569680873604777
@@ -7514,21 +7529,6 @@
                 "Component_[184072808979487519]": {
                     "$type": "EditorLockComponent",
                     "Id": 184072808979487519
-                },
-                "Component_[6699738828310866771]": {
-                    "$type": "AZ::Render::EditorDecalComponent",
-                    "Id": 6699738828310866771,
-                    "Controller": {
-                        "Configuration": {
-                            "Opacity": 0.3199999928474426,
-                            "Material": {
-                                "assetId": {
-                                    "guid": "{095429C1-892E-56A2-90BE-885BCF348069}"
-                                },
-                                "assetHint": "assets/markings_mid1.azmaterial"
-                            }
-                        }
-                    }
                 },
                 "Component_[8716140543667152403]": {
                     "$type": "EditorEntityIconComponent",
@@ -7549,9 +7549,9 @@
                             "Opacity": 0.10000000149011612,
                             "Material": {
                                 "assetId": {
-                                    "guid": "{62F922D0-DA06-539E-AD15-A648F203C71A}"
+                                    "guid": "{1CB13800-517D-5CF8-B335-BE50BA250515}"
                                 },
-                                "assetHint": "assets/tire_traces_circle.azmaterial"
+                                "assetHint": "assets/warehouse/floor_markings/tire_traces_circle.azmaterial"
                             }
                         }
                     }
@@ -7716,9 +7716,9 @@
                             "Opacity": 0.3199999928474426,
                             "Material": {
                                 "assetId": {
-                                    "guid": "{095429C1-892E-56A2-90BE-885BCF348069}"
+                                    "guid": "{3F853EDA-6BB1-52CD-BF8E-9E8495880526}"
                                 },
-                                "assetHint": "assets/markings_mid1.azmaterial"
+                                "assetHint": "assets/warehouse/floor_markings/markings_mid1.azmaterial"
                             }
                         }
                     }
@@ -7786,9 +7786,9 @@
                             "Opacity": 0.3199999928474426,
                             "Material": {
                                 "assetId": {
-                                    "guid": "{77AF66CD-A883-5DC6-9893-990331BCDCA2}"
+                                    "guid": "{BF7DF511-C611-51C6-98E3-25D0A4DED8F2}"
                                 },
-                                "assetHint": "assets/markings_mid2.azmaterial"
+                                "assetHint": "assets/warehouse/floor_markings/markings_mid2.azmaterial"
                             }
                         }
                     }
@@ -7844,6 +7844,21 @@
                     "$type": "EditorPendingCompositionComponent",
                     "Id": 17622569680873604777
                 },
+                "Component_[17974497628582361492]": {
+                    "$type": "AZ::Render::EditorDecalComponent",
+                    "Id": 17974497628582361492,
+                    "Controller": {
+                        "Configuration": {
+                            "Opacity": 0.3199999928474426,
+                            "Material": {
+                                "assetId": {
+                                    "guid": "{3F853EDA-6BB1-52CD-BF8E-9E8495880526}"
+                                },
+                                "assetHint": "assets/warehouse/floor_markings/markings_mid1.azmaterial"
+                            }
+                        }
+                    }
+                },
                 "Component_[184072808979487519]": {
                     "$type": "EditorLockComponent",
                     "Id": 184072808979487519
@@ -7856,21 +7871,6 @@
                         0.871999979019165,
                         1.0
                     ]
-                },
-                "Component_[6699738828310866771]": {
-                    "$type": "AZ::Render::EditorDecalComponent",
-                    "Id": 6699738828310866771,
-                    "Controller": {
-                        "Configuration": {
-                            "Opacity": 0.3199999928474426,
-                            "Material": {
-                                "assetId": {
-                                    "guid": "{095429C1-892E-56A2-90BE-885BCF348069}"
-                                },
-                                "assetHint": "assets/markings_mid1.azmaterial"
-                            }
-                        }
-                    }
                 },
                 "Component_[8716140543667152403]": {
                     "$type": "EditorEntityIconComponent",
@@ -8177,9 +8177,9 @@
                             "Opacity": 0.15000000596046448,
                             "Material": {
                                 "assetId": {
-                                    "guid": "{62F922D0-DA06-539E-AD15-A648F203C71A}"
+                                    "guid": "{1CB13800-517D-5CF8-B335-BE50BA250515}"
                                 },
-                                "assetHint": "assets/tire_traces_circle.azmaterial"
+                                "assetHint": "assets/warehouse/floor_markings/tire_traces_circle.azmaterial"
                             }
                         }
                     }
@@ -8380,9 +8380,9 @@
                             "Opacity": 0.20000000298023224,
                             "Material": {
                                 "assetId": {
-                                    "guid": "{62F922D0-DA06-539E-AD15-A648F203C71A}"
+                                    "guid": "{1CB13800-517D-5CF8-B335-BE50BA250515}"
                                 },
-                                "assetHint": "assets/tire_traces_circle.azmaterial"
+                                "assetHint": "assets/warehouse/floor_markings/tire_traces_circle.azmaterial"
                             }
                         }
                     }
@@ -8456,9 +8456,9 @@
                             "Opacity": 0.20000000298023224,
                             "Material": {
                                 "assetId": {
-                                    "guid": "{FA4F605B-9ACF-5ADF-BC8D-6E04BBD13593}"
+                                    "guid": "{9155DEE2-04C0-5585-83E0-99F37228ABB5}"
                                 },
-                                "assetHint": "assets/tire_traces1.azmaterial"
+                                "assetHint": "assets/warehouse/floor_markings/tire_traces1.azmaterial"
                             }
                         }
                     }
@@ -8532,9 +8532,9 @@
                             "Opacity": 0.10000000149011612,
                             "Material": {
                                 "assetId": {
-                                    "guid": "{FA4F605B-9ACF-5ADF-BC8D-6E04BBD13593}"
+                                    "guid": "{9155DEE2-04C0-5585-83E0-99F37228ABB5}"
                                 },
-                                "assetHint": "assets/tire_traces1.azmaterial"
+                                "assetHint": "assets/warehouse/floor_markings/tire_traces1.azmaterial"
                             }
                         }
                     }
@@ -8676,9 +8676,9 @@
                             "Opacity": 0.15000000596046448,
                             "Material": {
                                 "assetId": {
-                                    "guid": "{62F922D0-DA06-539E-AD15-A648F203C71A}"
+                                    "guid": "{1CB13800-517D-5CF8-B335-BE50BA250515}"
                                 },
-                                "assetHint": "assets/tire_traces_circle.azmaterial"
+                                "assetHint": "assets/warehouse/floor_markings/tire_traces_circle.azmaterial"
                             }
                         }
                     }
@@ -8752,9 +8752,9 @@
                             "Opacity": 0.15000000596046448,
                             "Material": {
                                 "assetId": {
-                                    "guid": "{FA4F605B-9ACF-5ADF-BC8D-6E04BBD13593}"
+                                    "guid": "{9155DEE2-04C0-5585-83E0-99F37228ABB5}"
                                 },
-                                "assetHint": "assets/tire_traces1.azmaterial"
+                                "assetHint": "assets/warehouse/floor_markings/tire_traces1.azmaterial"
                             }
                         }
                     }
@@ -8828,9 +8828,9 @@
                             "Opacity": 0.10000000149011612,
                             "Material": {
                                 "assetId": {
-                                    "guid": "{62F922D0-DA06-539E-AD15-A648F203C71A}"
+                                    "guid": "{1CB13800-517D-5CF8-B335-BE50BA250515}"
                                 },
-                                "assetHint": "assets/tire_traces_circle.azmaterial"
+                                "assetHint": "assets/warehouse/floor_markings/tire_traces_circle.azmaterial"
                             }
                         }
                     }
@@ -8948,9 +8948,9 @@
                             "Opacity": 0.3199999928474426,
                             "Material": {
                                 "assetId": {
-                                    "guid": "{1CE6AEA5-3568-5EEF-A4D3-F1AE449D134A}"
+                                    "guid": "{F4C96494-A086-59D2-A605-06E760588573}"
                                 },
-                                "assetHint": "assets/markings_end1.azmaterial"
+                                "assetHint": "assets/warehouse/floor_markings/markings_end1.azmaterial"
                             }
                         }
                     }
@@ -9020,7 +9020,7 @@
         },
         "Entity_[81598607797742]": {
             "Id": "Entity_[81598607797742]",
-            "Name": "end1",
+            "Name": "end2",
             "Components": {
                 "Component_[10500648739299668939]": {
                     "$type": "EditorDisabledCompositionComponent",
@@ -9075,9 +9075,9 @@
                             "Opacity": 0.3199999928474426,
                             "Material": {
                                 "assetId": {
-                                    "guid": "{2BEF9BBE-3433-5653-81F9-66BE1E228CC5}"
+                                    "guid": "{C36BF373-CBAF-52C0-8515-283579CBFBDE}"
                                 },
-                                "assetHint": "assets/markings_end2.azmaterial"
+                                "assetHint": "assets/warehouse/floor_markings/markings_end2.azmaterial"
                             }
                         }
                     }
@@ -9101,9 +9101,9 @@
                             "Opacity": 0.20000000298023224,
                             "Material": {
                                 "assetId": {
-                                    "guid": "{62F922D0-DA06-539E-AD15-A648F203C71A}"
+                                    "guid": "{1CB13800-517D-5CF8-B335-BE50BA250515}"
                                 },
-                                "assetHint": "assets/tire_traces_circle.azmaterial"
+                                "assetHint": "assets/warehouse/floor_markings/tire_traces_circle.azmaterial"
                             }
                         }
                     }
@@ -9189,6 +9189,21 @@
                         ]
                     }
                 },
+                "Component_[11525446969161604231]": {
+                    "$type": "AZ::Render::EditorDecalComponent",
+                    "Id": 11525446969161604231,
+                    "Controller": {
+                        "Configuration": {
+                            "Opacity": 0.3199999928474426,
+                            "Material": {
+                                "assetId": {
+                                    "guid": "{3F853EDA-6BB1-52CD-BF8E-9E8495880526}"
+                                },
+                                "assetHint": "assets/warehouse/floor_markings/markings_mid1.azmaterial"
+                            }
+                        }
+                    }
+                },
                 "Component_[12045779898573478531]": {
                     "$type": "EditorInspectorComponent",
                     "Id": 12045779898573478531
@@ -9222,21 +9237,6 @@
                         1.0
                     ]
                 },
-                "Component_[6699738828310866771]": {
-                    "$type": "AZ::Render::EditorDecalComponent",
-                    "Id": 6699738828310866771,
-                    "Controller": {
-                        "Configuration": {
-                            "Opacity": 0.3199999928474426,
-                            "Material": {
-                                "assetId": {
-                                    "guid": "{095429C1-892E-56A2-90BE-885BCF348069}"
-                                },
-                                "assetHint": "assets/markings_mid1.azmaterial"
-                            }
-                        }
-                    }
-                },
                 "Component_[8716140543667152403]": {
                     "$type": "EditorEntityIconComponent",
                     "Id": 8716140543667152403
@@ -9245,7 +9245,7 @@
         },
         "Entity_[81611492699630]": {
             "Id": "Entity_[81611492699630]",
-            "Name": "end1",
+            "Name": "end2",
             "Components": {
                 "Component_[10500648739299668939]": {
                     "$type": "EditorDisabledCompositionComponent",
@@ -9383,9 +9383,9 @@
                             "Opacity": 0.10000000149011612,
                             "Material": {
                                 "assetId": {
-                                    "guid": "{62F922D0-DA06-539E-AD15-A648F203C71A}"
+                                    "guid": "{1CB13800-517D-5CF8-B335-BE50BA250515}"
                                 },
-                                "assetHint": "assets/tire_traces_circle.azmaterial"
+                                "assetHint": "assets/warehouse/floor_markings/tire_traces_circle.azmaterial"
                             }
                         }
                     }
@@ -9620,9 +9620,9 @@
                             "Opacity": 0.10000000149011612,
                             "Material": {
                                 "assetId": {
-                                    "guid": "{62F922D0-DA06-539E-AD15-A648F203C71A}"
+                                    "guid": "{1CB13800-517D-5CF8-B335-BE50BA250515}"
                                 },
-                                "assetHint": "assets/tire_traces_circle.azmaterial"
+                                "assetHint": "assets/warehouse/floor_markings/tire_traces_circle.azmaterial"
                             }
                         }
                     }
@@ -9696,9 +9696,9 @@
                             "Opacity": 0.15000000596046448,
                             "Material": {
                                 "assetId": {
-                                    "guid": "{FA4F605B-9ACF-5ADF-BC8D-6E04BBD13593}"
+                                    "guid": "{9155DEE2-04C0-5585-83E0-99F37228ABB5}"
                                 },
-                                "assetHint": "assets/tire_traces1.azmaterial"
+                                "assetHint": "assets/warehouse/floor_markings/tire_traces1.azmaterial"
                             }
                         }
                     }
@@ -10132,17 +10132,17 @@
                     "$type": "EditorLockComponent",
                     "Id": 184072808979487519
                 },
-                "Component_[6699738828310866771]": {
+                "Component_[5190345744616876246]": {
                     "$type": "AZ::Render::EditorDecalComponent",
-                    "Id": 6699738828310866771,
+                    "Id": 5190345744616876246,
                     "Controller": {
                         "Configuration": {
                             "Opacity": 0.3199999928474426,
                             "Material": {
                                 "assetId": {
-                                    "guid": "{095429C1-892E-56A2-90BE-885BCF348069}"
+                                    "guid": "{3F853EDA-6BB1-52CD-BF8E-9E8495880526}"
                                 },
-                                "assetHint": "assets/markings_mid1.azmaterial"
+                                "assetHint": "assets/warehouse/floor_markings/markings_mid1.azmaterial"
                             }
                         }
                     }
@@ -10529,6 +10529,21 @@
                         ]
                     }
                 },
+                "Component_[11836374392916574008]": {
+                    "$type": "AZ::Render::EditorDecalComponent",
+                    "Id": 11836374392916574008,
+                    "Controller": {
+                        "Configuration": {
+                            "Opacity": 0.3199999928474426,
+                            "Material": {
+                                "assetId": {
+                                    "guid": "{BF7DF511-C611-51C6-98E3-25D0A4DED8F2}"
+                                },
+                                "assetHint": "assets/warehouse/floor_markings/markings_mid2.azmaterial"
+                            }
+                        }
+                    }
+                },
                 "Component_[12045779898573478531]": {
                     "$type": "EditorInspectorComponent",
                     "Id": 12045779898573478531
@@ -10553,21 +10568,6 @@
                     "$type": "EditorLockComponent",
                     "Id": 184072808979487519
                 },
-                "Component_[6699738828310866771]": {
-                    "$type": "AZ::Render::EditorDecalComponent",
-                    "Id": 6699738828310866771,
-                    "Controller": {
-                        "Configuration": {
-                            "Opacity": 0.3199999928474426,
-                            "Material": {
-                                "assetId": {
-                                    "guid": "{77AF66CD-A883-5DC6-9893-990331BCDCA2}"
-                                },
-                                "assetHint": "assets/markings_mid2.azmaterial"
-                            }
-                        }
-                    }
-                },
                 "Component_[8716140543667152403]": {
                     "$type": "EditorEntityIconComponent",
                     "Id": 8716140543667152403
@@ -10587,9 +10587,9 @@
                             "Opacity": 0.10000000149011612,
                             "Material": {
                                 "assetId": {
-                                    "guid": "{62F922D0-DA06-539E-AD15-A648F203C71A}"
+                                    "guid": "{1CB13800-517D-5CF8-B335-BE50BA250515}"
                                 },
-                                "assetHint": "assets/tire_traces_circle.azmaterial"
+                                "assetHint": "assets/warehouse/floor_markings/tire_traces_circle.azmaterial"
                             }
                         }
                     }
@@ -10663,9 +10663,9 @@
                             "Opacity": 0.20000000298023224,
                             "Material": {
                                 "assetId": {
-                                    "guid": "{FA4F605B-9ACF-5ADF-BC8D-6E04BBD13593}"
+                                    "guid": "{9155DEE2-04C0-5585-83E0-99F37228ABB5}"
                                 },
-                                "assetHint": "assets/tire_traces1.azmaterial"
+                                "assetHint": "assets/warehouse/floor_markings/tire_traces1.azmaterial"
                             }
                         }
                     }
@@ -10930,7 +10930,7 @@
         },
         "Entity_[81705981980142]": {
             "Id": "Entity_[81705981980142]",
-            "Name": "end1",
+            "Name": "end2",
             "Components": {
                 "Component_[10500648739299668939]": {
                     "$type": "EditorDisabledCompositionComponent",
@@ -10985,9 +10985,9 @@
                             "Opacity": 0.3199999928474426,
                             "Material": {
                                 "assetId": {
-                                    "guid": "{2BEF9BBE-3433-5653-81F9-66BE1E228CC5}"
+                                    "guid": "{C36BF373-CBAF-52C0-8515-283579CBFBDE}"
                                 },
-                                "assetHint": "assets/markings_end2.azmaterial"
+                                "assetHint": "assets/warehouse/floor_markings/markings_end2.azmaterial"
                             }
                         }
                     }
@@ -11011,9 +11011,9 @@
                             "Opacity": 0.20000000298023224,
                             "Material": {
                                 "assetId": {
-                                    "guid": "{FA4F605B-9ACF-5ADF-BC8D-6E04BBD13593}"
+                                    "guid": "{9155DEE2-04C0-5585-83E0-99F37228ABB5}"
                                 },
-                                "assetHint": "assets/tire_traces1.azmaterial"
+                                "assetHint": "assets/warehouse/floor_markings/tire_traces1.azmaterial"
                             }
                         }
                     }
@@ -11087,9 +11087,9 @@
                             "Opacity": 0.10000000149011612,
                             "Material": {
                                 "assetId": {
-                                    "guid": "{FA4F605B-9ACF-5ADF-BC8D-6E04BBD13593}"
+                                    "guid": "{9155DEE2-04C0-5585-83E0-99F37228ABB5}"
                                 },
-                                "assetHint": "assets/tire_traces1.azmaterial"
+                                "assetHint": "assets/warehouse/floor_markings/tire_traces1.azmaterial"
                             }
                         }
                     }
@@ -11168,9 +11168,9 @@
                             "Opacity": 0.20000000298023224,
                             "Material": {
                                 "assetId": {
-                                    "guid": "{62F922D0-DA06-539E-AD15-A648F203C71A}"
+                                    "guid": "{1CB13800-517D-5CF8-B335-BE50BA250515}"
                                 },
-                                "assetHint": "assets/tire_traces_circle.azmaterial"
+                                "assetHint": "assets/warehouse/floor_markings/tire_traces_circle.azmaterial"
                             }
                         }
                     }
@@ -11244,9 +11244,9 @@
                             "Opacity": 0.10000000149011612,
                             "Material": {
                                 "assetId": {
-                                    "guid": "{62F922D0-DA06-539E-AD15-A648F203C71A}"
+                                    "guid": "{1CB13800-517D-5CF8-B335-BE50BA250515}"
                                 },
-                                "assetHint": "assets/tire_traces_circle.azmaterial"
+                                "assetHint": "assets/warehouse/floor_markings/tire_traces_circle.azmaterial"
                             }
                         }
                     }
@@ -11320,9 +11320,9 @@
                             "Opacity": 0.10000000149011612,
                             "Material": {
                                 "assetId": {
-                                    "guid": "{62F922D0-DA06-539E-AD15-A648F203C71A}"
+                                    "guid": "{1CB13800-517D-5CF8-B335-BE50BA250515}"
                                 },
-                                "assetHint": "assets/tire_traces_circle.azmaterial"
+                                "assetHint": "assets/warehouse/floor_markings/tire_traces_circle.azmaterial"
                             }
                         }
                     }
@@ -11396,9 +11396,9 @@
                             "Opacity": 0.15000000596046448,
                             "Material": {
                                 "assetId": {
-                                    "guid": "{FA4F605B-9ACF-5ADF-BC8D-6E04BBD13593}"
+                                    "guid": "{9155DEE2-04C0-5585-83E0-99F37228ABB5}"
                                 },
-                                "assetHint": "assets/tire_traces1.azmaterial"
+                                "assetHint": "assets/warehouse/floor_markings/tire_traces1.azmaterial"
                             }
                         }
                     }
@@ -11564,9 +11564,9 @@
                             "Opacity": 0.10000000149011612,
                             "Material": {
                                 "assetId": {
-                                    "guid": "{FA4F605B-9ACF-5ADF-BC8D-6E04BBD13593}"
+                                    "guid": "{9155DEE2-04C0-5585-83E0-99F37228ABB5}"
                                 },
-                                "assetHint": "assets/tire_traces1.azmaterial"
+                                "assetHint": "assets/warehouse/floor_markings/tire_traces1.azmaterial"
                             }
                         }
                     }
@@ -11645,9 +11645,9 @@
                             "Opacity": 0.10000000149011612,
                             "Material": {
                                 "assetId": {
-                                    "guid": "{FA4F605B-9ACF-5ADF-BC8D-6E04BBD13593}"
+                                    "guid": "{9155DEE2-04C0-5585-83E0-99F37228ABB5}"
                                 },
-                                "assetHint": "assets/tire_traces1.azmaterial"
+                                "assetHint": "assets/warehouse/floor_markings/tire_traces1.azmaterial"
                             }
                         }
                     }
@@ -11778,9 +11778,9 @@
                             "Opacity": 0.20000000298023224,
                             "Material": {
                                 "assetId": {
-                                    "guid": "{FA4F605B-9ACF-5ADF-BC8D-6E04BBD13593}"
+                                    "guid": "{9155DEE2-04C0-5585-83E0-99F37228ABB5}"
                                 },
-                                "assetHint": "assets/tire_traces1.azmaterial"
+                                "assetHint": "assets/warehouse/floor_markings/tire_traces1.azmaterial"
                             }
                         }
                     }
@@ -11954,9 +11954,9 @@
                             "Opacity": 0.3199999928474426,
                             "Material": {
                                 "assetId": {
-                                    "guid": "{1CE6AEA5-3568-5EEF-A4D3-F1AE449D134A}"
+                                    "guid": "{F4C96494-A086-59D2-A605-06E760588573}"
                                 },
-                                "assetHint": "assets/markings_end1.azmaterial"
+                                "assetHint": "assets/warehouse/floor_markings/markings_end1.azmaterial"
                             }
                         }
                     }
@@ -11969,7 +11969,7 @@
         },
         "Entity_[81766111522286]": {
             "Id": "Entity_[81766111522286]",
-            "Name": "end1",
+            "Name": "end2",
             "Components": {
                 "Component_[10500648739299668939]": {
                     "$type": "EditorDisabledCompositionComponent",
@@ -12024,9 +12024,9 @@
                             "Opacity": 0.3199999928474426,
                             "Material": {
                                 "assetId": {
-                                    "guid": "{2BEF9BBE-3433-5653-81F9-66BE1E228CC5}"
+                                    "guid": "{C36BF373-CBAF-52C0-8515-283579CBFBDE}"
                                 },
-                                "assetHint": "assets/markings_end2.azmaterial"
+                                "assetHint": "assets/warehouse/floor_markings/markings_end2.azmaterial"
                             }
                         }
                     }
@@ -12140,17 +12140,17 @@
                     "$type": "EditorLockComponent",
                     "Id": 184072808979487519
                 },
-                "Component_[6699738828310866771]": {
+                "Component_[8638646148012638843]": {
                     "$type": "AZ::Render::EditorDecalComponent",
-                    "Id": 6699738828310866771,
+                    "Id": 8638646148012638843,
                     "Controller": {
                         "Configuration": {
                             "Opacity": 0.3199999928474426,
                             "Material": {
                                 "assetId": {
-                                    "guid": "{77AF66CD-A883-5DC6-9893-990331BCDCA2}"
+                                    "guid": "{BF7DF511-C611-51C6-98E3-25D0A4DED8F2}"
                                 },
-                                "assetHint": "assets/markings_mid2.azmaterial"
+                                "assetHint": "assets/warehouse/floor_markings/markings_mid2.azmaterial"
                             }
                         }
                     }
@@ -12174,9 +12174,9 @@
                             "Opacity": 0.10000000149011612,
                             "Material": {
                                 "assetId": {
-                                    "guid": "{62F922D0-DA06-539E-AD15-A648F203C71A}"
+                                    "guid": "{1CB13800-517D-5CF8-B335-BE50BA250515}"
                                 },
-                                "assetHint": "assets/tire_traces_circle.azmaterial"
+                                "assetHint": "assets/warehouse/floor_markings/tire_traces_circle.azmaterial"
                             }
                         }
                     }
@@ -12286,17 +12286,17 @@
                     "$type": "EditorLockComponent",
                     "Id": 184072808979487519
                 },
-                "Component_[6699738828310866771]": {
+                "Component_[271025359302293091]": {
                     "$type": "AZ::Render::EditorDecalComponent",
-                    "Id": 6699738828310866771,
+                    "Id": 271025359302293091,
                     "Controller": {
                         "Configuration": {
                             "Opacity": 0.3199999928474426,
                             "Material": {
                                 "assetId": {
-                                    "guid": "{095429C1-892E-56A2-90BE-885BCF348069}"
+                                    "guid": "{3F853EDA-6BB1-52CD-BF8E-9E8495880526}"
                                 },
-                                "assetHint": "assets/markings_mid1.azmaterial"
+                                "assetHint": "assets/warehouse/floor_markings/markings_mid1.azmaterial"
                             }
                         }
                     }
@@ -12462,9 +12462,9 @@
                             "Opacity": 0.20000000298023224,
                             "Material": {
                                 "assetId": {
-                                    "guid": "{62F922D0-DA06-539E-AD15-A648F203C71A}"
+                                    "guid": "{1CB13800-517D-5CF8-B335-BE50BA250515}"
                                 },
-                                "assetHint": "assets/tire_traces_circle.azmaterial"
+                                "assetHint": "assets/warehouse/floor_markings/tire_traces_circle.azmaterial"
                             }
                         }
                     }
@@ -12739,9 +12739,9 @@
                             "Opacity": 0.3199999928474426,
                             "Material": {
                                 "assetId": {
-                                    "guid": "{095429C1-892E-56A2-90BE-885BCF348069}"
+                                    "guid": "{3F853EDA-6BB1-52CD-BF8E-9E8495880526}"
                                 },
-                                "assetHint": "assets/markings_mid1.azmaterial"
+                                "assetHint": "assets/warehouse/floor_markings/markings_mid1.azmaterial"
                             }
                         }
                     }
@@ -12765,9 +12765,9 @@
                             "Opacity": 0.20000000298023224,
                             "Material": {
                                 "assetId": {
-                                    "guid": "{FA4F605B-9ACF-5ADF-BC8D-6E04BBD13593}"
+                                    "guid": "{9155DEE2-04C0-5585-83E0-99F37228ABB5}"
                                 },
-                                "assetHint": "assets/tire_traces1.azmaterial"
+                                "assetHint": "assets/warehouse/floor_markings/tire_traces1.azmaterial"
                             }
                         }
                     }
@@ -13046,9 +13046,9 @@
                             "Opacity": 0.3199999928474426,
                             "Material": {
                                 "assetId": {
-                                    "guid": "{77AF66CD-A883-5DC6-9893-990331BCDCA2}"
+                                    "guid": "{BF7DF511-C611-51C6-98E3-25D0A4DED8F2}"
                                 },
-                                "assetHint": "assets/markings_mid2.azmaterial"
+                                "assetHint": "assets/warehouse/floor_markings/markings_mid2.azmaterial"
                             }
                         }
                     }
@@ -13269,9 +13269,9 @@
                             "Opacity": 0.3199999928474426,
                             "Material": {
                                 "assetId": {
-                                    "guid": "{2E73826F-CFB1-591C-91C0-07E47D87A921}"
+                                    "guid": "{39CC958C-1BBB-512A-816D-919023CE3E90}"
                                 },
-                                "assetHint": "assets/markings_corner.azmaterial"
+                                "assetHint": "assets/warehouse/floor_markings/markings_corner.azmaterial"
                             }
                         }
                     }
@@ -13295,9 +13295,9 @@
                             "Opacity": 0.20000000298023224,
                             "Material": {
                                 "assetId": {
-                                    "guid": "{62F922D0-DA06-539E-AD15-A648F203C71A}"
+                                    "guid": "{1CB13800-517D-5CF8-B335-BE50BA250515}"
                                 },
-                                "assetHint": "assets/tire_traces_circle.azmaterial"
+                                "assetHint": "assets/warehouse/floor_markings/tire_traces_circle.azmaterial"
                             }
                         }
                     }
@@ -13371,9 +13371,9 @@
                             "Opacity": 0.20000000298023224,
                             "Material": {
                                 "assetId": {
-                                    "guid": "{FA4F605B-9ACF-5ADF-BC8D-6E04BBD13593}"
+                                    "guid": "{9155DEE2-04C0-5585-83E0-99F37228ABB5}"
                                 },
-                                "assetHint": "assets/tire_traces1.azmaterial"
+                                "assetHint": "assets/warehouse/floor_markings/tire_traces1.azmaterial"
                             }
                         }
                     }
@@ -13496,9 +13496,9 @@
                             "Opacity": 0.3199999928474426,
                             "Material": {
                                 "assetId": {
-                                    "guid": "{77AF66CD-A883-5DC6-9893-990331BCDCA2}"
+                                    "guid": "{BF7DF511-C611-51C6-98E3-25D0A4DED8F2}"
                                 },
-                                "assetHint": "assets/markings_mid2.azmaterial"
+                                "assetHint": "assets/warehouse/floor_markings/markings_mid2.azmaterial"
                             }
                         }
                     }
@@ -13511,7 +13511,7 @@
         },
         "Entity_[81856305835502]": {
             "Id": "Entity_[81856305835502]",
-            "Name": "end1",
+            "Name": "end2",
             "Components": {
                 "Component_[10500648739299668939]": {
                     "$type": "EditorDisabledCompositionComponent",
@@ -13566,9 +13566,9 @@
                             "Opacity": 0.3199999928474426,
                             "Material": {
                                 "assetId": {
-                                    "guid": "{2BEF9BBE-3433-5653-81F9-66BE1E228CC5}"
+                                    "guid": "{C36BF373-CBAF-52C0-8515-283579CBFBDE}"
                                 },
-                                "assetHint": "assets/markings_end2.azmaterial"
+                                "assetHint": "assets/warehouse/floor_markings/markings_end2.azmaterial"
                             }
                         }
                     }
@@ -13636,9 +13636,9 @@
                             "Opacity": 0.3199999928474426,
                             "Material": {
                                 "assetId": {
-                                    "guid": "{1CE6AEA5-3568-5EEF-A4D3-F1AE449D134A}"
+                                    "guid": "{F4C96494-A086-59D2-A605-06E760588573}"
                                 },
-                                "assetHint": "assets/markings_end1.azmaterial"
+                                "assetHint": "assets/warehouse/floor_markings/markings_end1.azmaterial"
                             }
                         }
                     }
@@ -13715,9 +13715,9 @@
                             "Opacity": 0.3199999928474426,
                             "Material": {
                                 "assetId": {
-                                    "guid": "{095429C1-892E-56A2-90BE-885BCF348069}"
+                                    "guid": "{3F853EDA-6BB1-52CD-BF8E-9E8495880526}"
                                 },
-                                "assetHint": "assets/markings_mid1.azmaterial"
+                                "assetHint": "assets/warehouse/floor_markings/markings_mid1.azmaterial"
                             }
                         }
                     }
@@ -13777,17 +13777,17 @@
                     "$type": "EditorLockComponent",
                     "Id": 184072808979487519
                 },
-                "Component_[6699738828310866771]": {
+                "Component_[6754792070157175513]": {
                     "$type": "AZ::Render::EditorDecalComponent",
-                    "Id": 6699738828310866771,
+                    "Id": 6754792070157175513,
                     "Controller": {
                         "Configuration": {
                             "Opacity": 0.3199999928474426,
                             "Material": {
                                 "assetId": {
-                                    "guid": "{095429C1-892E-56A2-90BE-885BCF348069}"
+                                    "guid": "{3F853EDA-6BB1-52CD-BF8E-9E8495880526}"
                                 },
-                                "assetHint": "assets/markings_mid1.azmaterial"
+                                "assetHint": "assets/warehouse/floor_markings/markings_mid1.azmaterial"
                             }
                         }
                     }
@@ -13811,9 +13811,9 @@
                             "Opacity": 0.20000000298023224,
                             "Material": {
                                 "assetId": {
-                                    "guid": "{62F922D0-DA06-539E-AD15-A648F203C71A}"
+                                    "guid": "{1CB13800-517D-5CF8-B335-BE50BA250515}"
                                 },
-                                "assetHint": "assets/tire_traces_circle.azmaterial"
+                                "assetHint": "assets/warehouse/floor_markings/tire_traces_circle.azmaterial"
                             }
                         }
                     }
@@ -13997,17 +13997,17 @@
                     "$type": "EditorLockComponent",
                     "Id": 184072808979487519
                 },
-                "Component_[6699738828310866771]": {
+                "Component_[2304535693847669401]": {
                     "$type": "AZ::Render::EditorDecalComponent",
-                    "Id": 6699738828310866771,
+                    "Id": 2304535693847669401,
                     "Controller": {
                         "Configuration": {
                             "Opacity": 0.3199999928474426,
                             "Material": {
                                 "assetId": {
-                                    "guid": "{77AF66CD-A883-5DC6-9893-990331BCDCA2}"
+                                    "guid": "{BF7DF511-C611-51C6-98E3-25D0A4DED8F2}"
                                 },
-                                "assetHint": "assets/markings_mid2.azmaterial"
+                                "assetHint": "assets/warehouse/floor_markings/markings_mid2.azmaterial"
                             }
                         }
                     }
@@ -14031,9 +14031,9 @@
                             "Opacity": 0.25,
                             "Material": {
                                 "assetId": {
-                                    "guid": "{62F922D0-DA06-539E-AD15-A648F203C71A}"
+                                    "guid": "{1CB13800-517D-5CF8-B335-BE50BA250515}"
                                 },
-                                "assetHint": "assets/tire_traces_circle.azmaterial"
+                                "assetHint": "assets/warehouse/floor_markings/tire_traces_circle.azmaterial"
                             }
                         }
                     }
@@ -14107,9 +14107,9 @@
                             "Opacity": 0.15000000596046448,
                             "Material": {
                                 "assetId": {
-                                    "guid": "{62F922D0-DA06-539E-AD15-A648F203C71A}"
+                                    "guid": "{1CB13800-517D-5CF8-B335-BE50BA250515}"
                                 },
-                                "assetHint": "assets/tire_traces_circle.azmaterial"
+                                "assetHint": "assets/warehouse/floor_markings/tire_traces_circle.azmaterial"
                             }
                         }
                     }
@@ -14313,6 +14313,21 @@
                     "$type": "EditorNonUniformScaleComponent",
                     "Id": 15136090500032023536
                 },
+                "Component_[15581572017194186500]": {
+                    "$type": "AZ::Render::EditorDecalComponent",
+                    "Id": 15581572017194186500,
+                    "Controller": {
+                        "Configuration": {
+                            "Opacity": 0.3199999928474426,
+                            "Material": {
+                                "assetId": {
+                                    "guid": "{BF7DF511-C611-51C6-98E3-25D0A4DED8F2}"
+                                },
+                                "assetHint": "assets/warehouse/floor_markings/markings_mid2.azmaterial"
+                            }
+                        }
+                    }
+                },
                 "Component_[17622569680873604777]": {
                     "$type": "EditorPendingCompositionComponent",
                     "Id": 17622569680873604777
@@ -14320,21 +14335,6 @@
                 "Component_[184072808979487519]": {
                     "$type": "EditorLockComponent",
                     "Id": 184072808979487519
-                },
-                "Component_[6699738828310866771]": {
-                    "$type": "AZ::Render::EditorDecalComponent",
-                    "Id": 6699738828310866771,
-                    "Controller": {
-                        "Configuration": {
-                            "Opacity": 0.3199999928474426,
-                            "Material": {
-                                "assetId": {
-                                    "guid": "{77AF66CD-A883-5DC6-9893-990331BCDCA2}"
-                                },
-                                "assetHint": "assets/markings_mid2.azmaterial"
-                            }
-                        }
-                    }
                 },
                 "Component_[8716140543667152403]": {
                     "$type": "EditorEntityIconComponent",
@@ -14415,9 +14415,9 @@
                             "Opacity": 0.10000000149011612,
                             "Material": {
                                 "assetId": {
-                                    "guid": "{62F922D0-DA06-539E-AD15-A648F203C71A}"
+                                    "guid": "{1CB13800-517D-5CF8-B335-BE50BA250515}"
                                 },
-                                "assetHint": "assets/tire_traces_circle.azmaterial"
+                                "assetHint": "assets/warehouse/floor_markings/tire_traces_circle.azmaterial"
                             }
                         }
                     }
@@ -14630,17 +14630,17 @@
                     "$type": "EditorLockComponent",
                     "Id": 184072808979487519
                 },
-                "Component_[6699738828310866771]": {
+                "Component_[545957119636212508]": {
                     "$type": "AZ::Render::EditorDecalComponent",
-                    "Id": 6699738828310866771,
+                    "Id": 545957119636212508,
                     "Controller": {
                         "Configuration": {
                             "Opacity": 0.3199999928474426,
                             "Material": {
                                 "assetId": {
-                                    "guid": "{095429C1-892E-56A2-90BE-885BCF348069}"
+                                    "guid": "{3F853EDA-6BB1-52CD-BF8E-9E8495880526}"
                                 },
-                                "assetHint": "assets/markings_mid1.azmaterial"
+                                "assetHint": "assets/warehouse/floor_markings/markings_mid1.azmaterial"
                             }
                         }
                     }
@@ -14743,9 +14743,9 @@
                             "Opacity": 0.10000000149011612,
                             "Material": {
                                 "assetId": {
-                                    "guid": "{FA4F605B-9ACF-5ADF-BC8D-6E04BBD13593}"
+                                    "guid": "{9155DEE2-04C0-5585-83E0-99F37228ABB5}"
                                 },
-                                "assetHint": "assets/tire_traces1.azmaterial"
+                                "assetHint": "assets/warehouse/floor_markings/tire_traces1.azmaterial"
                             }
                         }
                     }
@@ -15080,9 +15080,9 @@
                             "Opacity": 0.10000000149011612,
                             "Material": {
                                 "assetId": {
-                                    "guid": "{62F922D0-DA06-539E-AD15-A648F203C71A}"
+                                    "guid": "{1CB13800-517D-5CF8-B335-BE50BA250515}"
                                 },
-                                "assetHint": "assets/tire_traces_circle.azmaterial"
+                                "assetHint": "assets/warehouse/floor_markings/tire_traces_circle.azmaterial"
                             }
                         }
                     }
@@ -15395,9 +15395,9 @@
                             "Opacity": 0.10000000149011612,
                             "Material": {
                                 "assetId": {
-                                    "guid": "{62F922D0-DA06-539E-AD15-A648F203C71A}"
+                                    "guid": "{1CB13800-517D-5CF8-B335-BE50BA250515}"
                                 },
-                                "assetHint": "assets/tire_traces_circle.azmaterial"
+                                "assetHint": "assets/warehouse/floor_markings/tire_traces_circle.azmaterial"
                             }
                         }
                     }
@@ -26598,6 +26598,293 @@
                     "op": "replace",
                     "path": "/ContainerEntity/Components/Component_[12545710239443216069]/Transform Data/Translate/2",
                     "value": -0.5800871849060059
+                },
+                {
+                    "op": "add",
+                    "path": "/Entities/Entity_[58382014962770]/Components/Component_[11084267631842512983]",
+                    "value": {
+                        "$type": "EditorColliderComponent",
+                        "Id": 11084267631842512983,
+                        "ColliderConfiguration": {
+                            "CollisionLayer": {
+                                "Index": 0
+                            },
+                            "CollisionGroupId": {
+                                "GroupId": "{00000000-0000-0000-0000-000000000000}"
+                            },
+                            "Visible": false,
+                            "Trigger": false,
+                            "Simulated": true,
+                            "DummySimulated": false,
+                            "InSceneQueries": true,
+                            "Exclusive": true,
+                            "Position": [
+                                0.0,
+                                0.5495275855064392,
+                                0.07400000095367432
+                            ],
+                            "Rotation": [
+                                0.0,
+                                0.0,
+                                0.0,
+                                1.0
+                            ],
+                            "MaterialSlots": {
+                                "Slots": [
+                                    {
+                                        "Name": "Entire object",
+                                        "MaterialAsset": {
+                                            "assetId": {
+                                                "guid": "{9E08AC7C-4AE8-5C65-AA41-2FCF93452D5A}",
+                                                "subId": 1
+                                            },
+                                            "loadBehavior": "QueueLoad",
+                                            "assetHint": "assets/materials/storageonwheels.physicsmaterial"
+                                        }
+                                    }
+                                ]
+                            },
+                            "propertyVisibilityFlags": 255,
+                            "ColliderTag": "",
+                            "RestOffset": 0.0,
+                            "ContactOffset": 0.019999999552965164
+                        },
+                        "ShapeConfiguration": {
+                            "ShapeType": 1,
+                            "Sphere": {
+                                "Scale": [
+                                    1.0,
+                                    1.0,
+                                    1.0
+                                ],
+                                "Radius": 0.5
+                            },
+                            "Box": {
+                                "Scale": [
+                                    1.0,
+                                    1.0,
+                                    1.0
+                                ],
+                                "Configuration": [
+                                    0.6499999761581421,
+                                    0.05000000074505806,
+                                    0.15000000596046448
+                                ]
+                            },
+                            "Capsule": {
+                                "Scale": [
+                                    1.0,
+                                    1.0,
+                                    1.0
+                                ],
+                                "Height": 1.0,
+                                "Radius": 0.25
+                            },
+                            "Cylinder": {
+                                "Configuration": {
+                                    "Scale": [
+                                        1.0,
+                                        1.0,
+                                        1.0
+                                    ],
+                                    "CookedData": "",
+                                    "Type": 0
+                                },
+                                "Subdivision": 16,
+                                "Height": 1.0,
+                                "Radius": 1.0
+                            },
+                            "PhysicsAsset": {
+                                "Asset": {
+                                    "assetId": {
+                                        "guid": "{00000000-0000-0000-0000-000000000000}",
+                                        "subId": 0
+                                    },
+                                    "loadBehavior": "QueueLoad",
+                                    "assetHint": ""
+                                },
+                                "Configuration": {
+                                    "Scale": [
+                                        1.0,
+                                        1.0,
+                                        1.0
+                                    ],
+                                    "PhysicsAsset": {
+                                        "assetId": {
+                                            "guid": "{00000000-0000-0000-0000-000000000000}",
+                                            "subId": 0
+                                        },
+                                        "loadBehavior": "PreLoad",
+                                        "assetHint": ""
+                                    },
+                                    "AssetScale": [
+                                        1.0,
+                                        1.0,
+                                        1.0
+                                    ],
+                                    "UseMaterialsFromAsset": true,
+                                    "SubdivisionLevel": 4
+                                }
+                            },
+                            "HasNonUniformScale": false,
+                            "SubdivisionLevel": 4
+                        },
+                        "DebugDrawSettings": {
+                            "LocallyEnabled": true
+                        },
+                        "ComponentMode": {},
+                        "HasNonUniformScale": false
+                    }
+                },
+                {
+                    "op": "add",
+                    "path": "/Entities/Entity_[58382014962770]/Components/Component_[16303203443318845134]",
+                    "value": {
+                        "$type": "EditorColliderComponent",
+                        "Id": 16303203443318845134,
+                        "ColliderConfiguration": {
+                            "CollisionLayer": {
+                                "Index": 0
+                            },
+                            "CollisionGroupId": {
+                                "GroupId": "{00000000-0000-0000-0000-000000000000}"
+                            },
+                            "Visible": false,
+                            "Trigger": false,
+                            "Simulated": true,
+                            "DummySimulated": false,
+                            "InSceneQueries": true,
+                            "Exclusive": true,
+                            "Position": [
+                                0.0,
+                                0.0,
+                                1.086646556854248
+                            ],
+                            "Rotation": [
+                                0.0,
+                                0.0,
+                                0.0,
+                                1.0
+                            ],
+                            "MaterialSlots": {
+                                "Slots": [
+                                    {
+                                        "Name": "Entire object",
+                                        "MaterialAsset": {
+                                            "assetId": {
+                                                "guid": "{9E08AC7C-4AE8-5C65-AA41-2FCF93452D5A}",
+                                                "subId": 1
+                                            },
+                                            "loadBehavior": "QueueLoad",
+                                            "assetHint": "assets/materials/storageonwheels.physicsmaterial"
+                                        }
+                                    }
+                                ]
+                            },
+                            "propertyVisibilityFlags": 255,
+                            "ColliderTag": "",
+                            "RestOffset": 0.0,
+                            "ContactOffset": 0.019999999552965164
+                        },
+                        "ShapeConfiguration": {
+                            "ShapeType": 1,
+                            "Sphere": {
+                                "Scale": [
+                                    1.0,
+                                    1.0,
+                                    1.0
+                                ],
+                                "Radius": 0.5
+                            },
+                            "Box": {
+                                "Scale": [
+                                    1.0,
+                                    1.0,
+                                    1.0
+                                ],
+                                "Configuration": [
+                                    0.6499999761581421,
+                                    1.149999976158142,
+                                    1.7999999523162842
+                                ]
+                            },
+                            "Capsule": {
+                                "Scale": [
+                                    1.0,
+                                    1.0,
+                                    1.0
+                                ],
+                                "Height": 1.0,
+                                "Radius": 0.25
+                            },
+                            "Cylinder": {
+                                "Configuration": {
+                                    "Scale": [
+                                        1.0,
+                                        1.0,
+                                        1.0
+                                    ],
+                                    "CookedData": "",
+                                    "Type": 0
+                                },
+                                "Subdivision": 16,
+                                "Height": 1.0,
+                                "Radius": 1.0
+                            },
+                            "PhysicsAsset": {
+                                "Asset": {
+                                    "assetId": {
+                                        "guid": "{00000000-0000-0000-0000-000000000000}",
+                                        "subId": 0
+                                    },
+                                    "loadBehavior": "QueueLoad",
+                                    "assetHint": ""
+                                },
+                                "Configuration": {
+                                    "Scale": [
+                                        1.0,
+                                        1.0,
+                                        1.0
+                                    ],
+                                    "PhysicsAsset": {
+                                        "assetId": {
+                                            "guid": "{00000000-0000-0000-0000-000000000000}",
+                                            "subId": 0
+                                        },
+                                        "loadBehavior": "PreLoad",
+                                        "assetHint": ""
+                                    },
+                                    "AssetScale": [
+                                        1.0,
+                                        1.0,
+                                        1.0
+                                    ],
+                                    "UseMaterialsFromAsset": true,
+                                    "SubdivisionLevel": 4
+                                }
+                            },
+                            "HasNonUniformScale": false,
+                            "SubdivisionLevel": 4
+                        },
+                        "DebugDrawSettings": {
+                            "LocallyEnabled": true
+                        },
+                        "ComponentMode": {},
+                        "HasNonUniformScale": false
+                    }
+                },
+                {
+                    "op": "replace",
+                    "path": "/Entities/Entity_[58382014962770]/Components/Component_[5143803638157116517]/ColliderConfiguration/Position/1",
+                    "value": -0.5515547394752502
+                },
+                {
+                    "op": "remove",
+                    "path": "/Entities/Entity_[58382014962770]/Components/Component_[1329524434344098663]"
+                },
+                {
+                    "op": "remove",
+                    "path": "/Entities/Entity_[58382014962770]/Components/Component_[8990768301169768524]"
                 }
             ]
         },

@@ -703,30 +703,6 @@
                             "NormalBias": 0.09000000357627869,
                             "NumRaysPerProbe": 6,
                             "FrameUpdateCount": 10,
-                            "BakedIrradianceTextureRelativePath": "DiffuseProbeGrids/Diffuse_Probe_Grid_1EBFD2D8-93F3-4449-878A-C0291BA3C7E3_Irradiance_lutrgba16f.dds",
-                            "BakedDistanceTextureRelativePath": "DiffuseProbeGrids/Diffuse_Probe_Grid_3F63628F-3208-41F5-BD34-677A496381EE_Distance_lutrg32f.dds",
-                            "BakedProbeDataTextureRelativePath": "DiffuseProbeGrids/Diffuse_Probe_Grid_47352905-8103-47CF-9818-F19ED3597305_ProbeData_lutrgba16f.dds",
-                            "BakedIrradianceTextureAsset": {
-                                "assetId": {
-                                    "guid": "{156706A8-F151-5CBF-820A-4B56BB3C016D}",
-                                    "subId": 1000
-                                },
-                                "assetHint": "diffuseprobegrids/diffuse_probe_grid_1ebfd2d8-93f3-4449-878a-c0291ba3c7e3_irradiance_lutrgba16f.dds.streamingimage"
-                            },
-                            "BakedDistanceTextureAsset": {
-                                "assetId": {
-                                    "guid": "{006C1604-C8DA-5923-9C96-F082168388E4}",
-                                    "subId": 1000
-                                },
-                                "assetHint": "diffuseprobegrids/diffuse_probe_grid_3f63628f-3208-41f5-bd34-677a496381ee_distance_lutrg32f.dds.streamingimage"
-                            },
-                            "BakedProbeDataTextureAsset": {
-                                "assetId": {
-                                    "guid": "{3207C145-424A-5111-820A-A09B4D319DDB}",
-                                    "subId": 1000
-                                },
-                                "assetHint": "diffuseprobegrids/diffuse_probe_grid_47352905-8103-47cf-9818-f19ed3597305_probedata_lutrgba16f.dds.streamingimage"
-                            },
                             "VisualizationShowInactiveProbes": true
                         }
                     },
