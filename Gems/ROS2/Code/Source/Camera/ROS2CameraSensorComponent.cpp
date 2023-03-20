@@ -42,7 +42,7 @@ namespace ROS2
         auto* serialize = azrtti_cast<AZ::SerializeContext*>(context);
         if (serialize)
         {
-            serialize->Class<ROS2CameraSensorComponent, ROS2SensorComponent>()
+            serialize->Class<ROS2CameraSensorComponent, ROS2SensorTickableComponent>()
                 ->Version(3)
                 ->Field("VerticalFieldOfViewDeg", &ROS2CameraSensorComponent::m_verticalFieldOfViewDeg)
                 ->Field("Width", &ROS2CameraSensorComponent::m_width)

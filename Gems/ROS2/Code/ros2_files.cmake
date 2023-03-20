@@ -25,8 +25,6 @@ set(FILES
         Source/GNSS/ROS2GNSSSensorComponent.h
         Source/Imu/ROS2ImuSensorComponent.cpp
         Source/Imu/ROS2ImuSensorComponent.h
-        Source/Imu/ROS2OldImuSensorComponent.cpp
-        Source/Imu/ROS2OldImuSensorComponent.h
         Source/Lidar/LidarRaycaster.cpp
         Source/Lidar/LidarRaycaster.h
         Source/Lidar/LidarRegistrarSystemComponent.cpp
@@ -60,6 +58,7 @@ set(FILES
         Source/ROS2SystemComponent.cpp
         Source/ROS2SystemComponent.h
         Source/Sensor/ROS2SensorComponent.cpp
+        Source/Sensor/ROS2SensorTickableComponent.cpp
         Source/Sensor/SensorConfiguration.cpp
         Source/Spawner/ROS2SpawnerComponent.cpp
         Source/Spawner/ROS2SpawnerComponent.h

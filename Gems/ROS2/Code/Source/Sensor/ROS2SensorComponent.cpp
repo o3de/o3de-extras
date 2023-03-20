@@ -69,20 +69,23 @@ namespace ROS2
     void ROS2SensorComponent::OnTick([[maybe_unused]] float deltaTime, [[maybe_unused]] AZ::ScriptTimePoint time)
     {
         Visualise(); // each frame
+    }
+
+    bool ROS2SensorComponent::IsPublicationDeadline(float deltaTime, float expectedLoopTime)
+    {
         if (!m_sensorConfiguration.m_publishingEnabled)
         {
-            return;
+            return false;
         }
         m_tickCountDown--;
         if (m_tickCountDown <= 0)
         {
-            const AZStd::chrono::duration<float, AZStd::chrono::seconds::period> expectedLoopTime =
-                ROS2Interface::Get()->GetSimulationClock().GetExpectedSimulationLoopTime();
             const auto frequency = m_sensorConfiguration.m_frequency;
             const auto frameTime = frequency == 0.f ? 1.f : 1.f / frequency;
-            const float numberOfFrames = frameTime / expectedLoopTime.count();
+            const float numberOfFrames = frameTime / expectedLoopTime;
             m_tickCountDown = AZStd::round(numberOfFrames);
-            FrequencyTick();
+            return true;
         }
+        return false;
     }
 } // namespace ROS2

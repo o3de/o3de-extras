@@ -38,16 +38,19 @@ namespace ROS2
         static void GetRequiredServices(AZ::ComponentDescriptor::DependencyArrayType& required);
 
     protected:
+        //! Check if execution deadline has arrived.
+        //! This function needs to be called every loop's iteration (eg TickBus::Handler::OnTick).
+        //! @param deltaTime time elapsed from the last call in seconds.
+        //! @param expectedLoopTime the expected time to loop call in seconds.
+        //! @returns if measurement should be done/published.
+        bool IsPublicationDeadline(float deltaTime,  float  expectedLoopTime);
+
         AZStd::string GetNamespace() const; //!< Get a complete namespace for this sensor topics and frame ids.
         AZStd::string GetFrameID() const; //!< Returns this sensor frame ID. The ID contains namespace.
 
         SensorConfiguration m_sensorConfiguration;
 
     private:
-        //! Executes the sensor action (acquire data -> publish) according to frequency.
-        //! Override to implement a specific sensor behavior.
-        virtual void FrequencyTick(){};
-
         //! Visualise sensor operation.
         //! For example, draw points or rays for a lidar, viewport for a camera, etc.
         //! Visualisation can be turned on or off in SensorConfiguration.
