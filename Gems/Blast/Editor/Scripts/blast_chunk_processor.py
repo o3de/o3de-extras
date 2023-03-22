@@ -149,9 +149,9 @@ def on_update_manifest(args):
 try:
     import azlmbr.scene as sceneApi
     sceneJobHandler = sceneApi.ScriptBuildingNotificationBusHandler()
+    sceneJobHandler.connect()
     sceneJobHandler.add_callback('OnUpdateManifest', on_update_manifest)
     sceneJobHandler.add_callback('OnPrepareForExport', on_prepare_for_export)
-    sceneJobHandler.connect()
         
 except:
     sceneJobHandler = None
