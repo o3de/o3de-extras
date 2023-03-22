@@ -412,7 +412,7 @@ namespace UnitTest
         AZStd::string urdf = "/home/foo/ros_ws/install/foo_robot/foo_robot.urdf";
         auto result = ROS2::Utils::ResolveURDFPath(
             dae,
-            urdf,
+            urdf, "",
             [](const AZStd::string& p) -> bool
             {
                 return false;
@@ -426,7 +426,7 @@ namespace UnitTest
         AZStd::string urdf = "/home/foo/ros_ws/install/foo_robot/foo_robot.urdf";
         auto result = ROS2::Utils::ResolveURDFPath(
             dae,
-            urdf,
+            urdf, "",
             [](const AZStd::string& p) -> bool
             {
                 return false;
@@ -443,8 +443,21 @@ namespace UnitTest
         {
             return (p == xml);
         };
-        auto result = ROS2::Utils::ResolveURDFPath(dae, urdf, mockFileSystem);
+        auto result = ROS2::Utils::ResolveURDFPath(dae, urdf, "", mockFileSystem);
         EXPECT_EQ(result, "/home/foo/ros_ws/install/foo_robot/meshes/bar.dae");
+    }
+
+    TEST_F(UrdfParserTest, TestPathResolvementExplicitPackageName)
+    {
+        AZStd::string dae = "package://foo_robot/meshes/bar.dae";
+        AZStd::string urdf = "/home/foo/ros_ws/install/foo_robot/share/foo_robot/description/foo_robot.urdf";
+        AZStd::string xml = "/home/foo/ros_ws/install/foo_robot/share/foo_robot/package.xml";
+        auto mockFileSystem = [&](const AZStd::string& p) -> bool
+        {
+            return (p == xml);
+        };
+        auto result = ROS2::Utils::ResolveURDFPath(dae, urdf, "/home/foo/ros_ws/install/foo_robot", mockFileSystem);
+        EXPECT_EQ(result, "/home/foo/ros_ws/install/foo_robot/share/foo_robot/meshes/bar.dae");
     }
 
     TEST_F(UrdfParserTest, XacroParseArgs)
