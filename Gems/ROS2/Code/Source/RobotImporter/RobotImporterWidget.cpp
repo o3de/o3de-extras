@@ -89,16 +89,35 @@ namespace ROS2
                 if (outcome)
                 {
                     m_parsedUrdf = outcome.m_urdfHandle;
-                    report += "# " + tr("XACRO execution succeed") + "\n";
+                    report += "# " + tr("XACRO execution succeeded") + "\n";
                 }
                 else
                 {
                     report += "# " + tr("XACRO parsing failed") + "\n";
-                    report += "\n\n" + tr("Command called : \n'") + QString::fromUtf8(outcome.m_called.data()) + "'";
+                    report += "\n\n## " + tr("Command called") +  "\n\n`" + QString::fromUtf8(outcome.m_called.data()) + "`";
                     report += "\n\n" + tr("Process failed");
-                    report += "\n\n" + tr("error output") + " :\n\n";
-                    report +=
-                        QString::fromLocal8Bit(outcome.m_logErrorOutput.data(), static_cast<int>(outcome.m_logErrorOutput.size())) + "\n";
+                    report += "\n\n## " + tr("Error output") + "\n\n";
+                    report += "```\n";
+                    if (outcome.m_logErrorOutput.size())
+                    {
+                        report += QString::fromLocal8Bit(outcome.m_logErrorOutput.data(), static_cast<int>(outcome.m_logErrorOutput.size()));
+                    }
+                    else
+                    {
+                        report += tr("(EMPTY)");
+                    }
+                    report += "\n```";
+                    report += "\n\n## " + tr("Standard output") + "\n\n";
+                    report += "```\n";
+                    if (outcome.m_logStandardOutput.size())
+                    {
+                        report += QString::fromLocal8Bit(outcome.m_logStandardOutput.data(), static_cast<int>(outcome.m_logStandardOutput.size()));
+                    }
+                    else
+                    {
+                        report += tr("(EMPTY)");
+                    }
+                    report += "\n```";
                     m_checkUrdfPage->ReportURDFResult(report, false);
                     m_parsedUrdf = nullptr;
                     return;
