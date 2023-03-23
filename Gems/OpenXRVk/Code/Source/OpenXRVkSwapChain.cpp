@@ -241,7 +241,7 @@ namespace OpenXRVk
     VkFormat SwapChain::SelectColorSwapChainFormat(const AZStd::vector<int64_t>& runtimeFormats) const
     {
         // List of supported color swapchain formats.
-        constexpr int64_t SupportedColorSwapchainFormats[] = { VK_FORMAT_B8G8R8A8_UNORM, VK_FORMAT_R8G8B8A8_UNORM };
+        constexpr int64_t SupportedColorSwapchainFormats[] = { VK_FORMAT_B8G8R8A8_UNORM, VK_FORMAT_R8G8B8A8_UNORM, VK_FORMAT_R8G8B8A8_SRGB };
 
         auto swapchainFormatIt =
             AZStd::find_first_of(runtimeFormats.begin(), runtimeFormats.end(), AZStd::begin(SupportedColorSwapchainFormats),
