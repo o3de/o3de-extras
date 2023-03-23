@@ -99,7 +99,7 @@ namespace ROS2::VehicleDynamics
                     continue;
                 }
                 float normalizedWheelId = -1.f + 2.f * wheelId / (wheelCount - 1);
-                float wheelBase = normalizedWheelId * m_config.m_wheelbase;
+                float wheelBase = normalizedWheelId * m_config.m_wheelbase / 2.f;
                 AZ_Assert(axle.m_wheelRadius != 0, "axle.m_wheelRadius must be non-zero");
                 float wheelRate = (m_currentLinearVelocity + m_currentAngularVelocity * wheelBase) / axle.m_wheelRadius;
                 PhysX::JointRequestBus::Event(hingePtr->second, &PhysX::JointRequests::SetVelocity, wheelRate);
