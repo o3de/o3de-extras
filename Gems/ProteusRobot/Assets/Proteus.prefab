@@ -291,40 +291,11 @@
         },
         "Entity_[15633949178400]": {
             "Id": "Entity_[15633949178400]",
-            "Name": "Camera sensor",
+            "Name": "Camera sensor mount",
             "Components": {
                 "Component_[10184098142535992885]": {
                     "$type": "EditorVisibilityComponent",
                     "Id": 10184098142535992885
-                },
-                "Component_[10929675154631365285]": {
-                    "$type": "EditorDisabledCompositionComponent",
-                    "Id": 10929675154631365285,
-                    "DisabledComponents": [
-                        {
-                            "$type": "GenericComponentWrapper",
-                            "Id": 8264120652960513662,
-                            "m_template": {
-                                "$type": "ROS2CameraSensorComponent",
-                                "SensorConfiguration": {
-                                    "Publishers": {
-                                        "Camera Info": {
-                                            "Type": "sensor_msgs::msg::CameraInfo",
-                                            "Topic": "camera_info"
-                                        },
-                                        "Color Image": {
-                                            "Type": "sensor_msgs::msg::Image",
-                                            "Topic": "camera_image_color"
-                                        },
-                                        "Depth Image": {
-                                            "Type": "sensor_msgs::msg::Image",
-                                            "Topic": "camera_image_depth"
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    ]
                 },
                 "Component_[14019497545971552389]": {
                     "$type": "EditorPendingCompositionComponent",
