@@ -10,12 +10,12 @@
 #include "DriveModels/AckermannDriveModel.h"
 #include "ManualControlEventHandler.h"
 #include "VehicleConfiguration.h"
-#include "VehicleInputsState.h"
-#include "VehicleModelLimits.h"
+#include "VehicleInputs.h"
 #include <AzCore/Component/Component.h>
 #include <AzCore/Component/TickBus.h>
 #include <AzCore/std/smart_ptr/unique_ptr.h>
 #include <ROS2/VehicleDynamics/VehicleInputControlBus.h>
+#include <VehicleDynamics/VehicleModelLimits.h>
 
 namespace ROS2::VehicleDynamics
 {
@@ -26,36 +26,34 @@ namespace ROS2::VehicleDynamics
         , private AZ::TickBus::Handler
     {
     public:
-        AZ_COMPONENT(VehicleModelComponent, "{7093AE7A-9F64-4C77-8189-02C6B7802C1A}", AZ::Component);
+        AZ_RTTI(VehicleModelComponent, "{7093AE7A-9F64-4C77-8189-02C6B7802C1A}", AZ::Component);
         VehicleModelComponent() = default;
 
-        //////////////////////////////////////////////////////////////////////////
         // Component overrides
         void Activate() override;
         void Deactivate() override;
-        //////////////////////////////////////////////////////////////////////////
 
-        static void GetProvidedServices(AZ::ComponentDescriptor::DependencyArrayType& provided);
-        static void GetIncompatibleServices(AZ::ComponentDescriptor::DependencyArrayType& incompatible);
         static void Reflect(AZ::ReflectContext* context);
 
     private:
         void OnTick(float deltaTime, AZ::ScriptTimePoint time) override;
 
-        //////////////////////////////////////////////////////////////////////////
         // VehicleInputControlRequestBus::Handler overrides
-        void SetTargetLinearSpeed(float speedMps) override;
+        void SetTargetLinearSpeed(float speedMpsX) override;
+        void SetTargetLinearSpeedV3(const AZ::Vector3& speedMps) override;
         void SetTargetSteering(float steering) override;
+        void SetTargetAngularSpeed(float rateZ) override;
+        void SetTargetAngularSpeedV3(const AZ::Vector3& rate) override;
         void SetTargetAccelerationFraction(float accelerationFraction) override;
         void SetTargetSteeringFraction(float steeringFraction) override;
-        void SetTargetLinearSpeedFraction(float speedFraction) override;
+        void SetTargetLinearSpeedFraction(float speedFractionX) override;
+        void SetTargetAngularSpeedFraction(float rateFractionZ) override;
         void SetDisableVehicleDynamics(bool isDisable) override;
-        //////////////////////////////////////////////////////////////////////////
 
+    protected:
         ManualControlEventHandler m_manualControlEventHandler;
-        VehicleConfiguration m_vehicleConfiguration;
-        VehicleInputsState m_inputsState;
-        AckermannDriveModel m_driveModel;
-        VehicleModelLimits m_vehicleLimits;
+        VehicleInputDeadline m_inputsState;
+        VehicleDynamics::VehicleConfiguration m_vehicleConfiguration;
+        virtual DriveModel* GetDriveModel() = 0;
     };
 } // namespace ROS2::VehicleDynamics

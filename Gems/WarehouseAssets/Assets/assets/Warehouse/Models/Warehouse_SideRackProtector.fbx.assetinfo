@@ -1,0 +1,74 @@
+{
+    "values": [
+        {
+            "$type": "{5B03C8E6-8CEE-4DA0-A7FA-CD88689DD45B} MeshGroup",
+            "id": "{8E73EF21-A8D8-5938-9AF0-0C65D5B13BE3}",
+            "name": "Warehouse_SideRackProtector",
+            "NodeSelectionList": {
+                "selectedNodes": [
+                    "RootNode",
+                    "RootNode.SideRackProtector"
+                ]
+            },
+            "export method": 1,
+            "PhysicsMaterialSlots": {
+                "Slots": [
+                    {
+                        "Name": "MWarehouseProps"
+                    }
+                ]
+            }
+        },
+        {
+            "$type": "{07B356B7-3635-40B5-878A-FAC4EFD5AD86} MeshGroup",
+            "name": "Warehouse_SideRackProtector",
+            "nodeSelectionList": {
+                "selectedNodes": [
+                    {},
+                    "RootNode",
+                    "RootNode.SideRackProtector"
+                ]
+            },
+            "rules": {
+                "rules": [
+                    {
+                        "$type": "MaterialRule"
+                    }
+                ]
+            },
+            "id": "{FA33C4EC-7A39-5D81-8041-B44E90A6F50B}"
+        },
+        {
+            "$type": "{07B356B7-3635-40B5-878A-FAC4EFD5AD86} MeshGroup",
+            "name": "default_Warehouse_SideRackProtector_371F9D31_92DD_5D01_B811_99A0E7439200_",
+            "nodeSelectionList": {
+                "selectedNodes": [
+                    "RootNode.SideRackProtector"
+                ]
+            },
+            "rules": {
+                "rules": [
+                    {
+                        "$type": "ProceduralMeshGroupRule"
+                    },
+                    {
+                        "$type": "UnmodifiableRule"
+                    },
+                    {
+                        "$type": "CoordinateSystemRule",
+                        "useAdvancedData": true
+                    },
+                    {
+                        "$type": "{6E796AC8-1484-4909-860A-6D3F22A7346F} LodRule"
+                    }
+                ]
+            },
+            "id": "{371F9D31-92DD-5D01-B811-99A0E7439200}"
+        },
+        {
+            "$type": "PrefabGroup",
+            "name": "Models/Warehouse_SideRackProtector_fbx.procprefab",
+            "id": "{A9A6E769-163B-50E9-9D50-12C5B26B79EF}"
+        }
+    ]
+}

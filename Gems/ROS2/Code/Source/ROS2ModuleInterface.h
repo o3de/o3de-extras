@@ -13,17 +13,22 @@
 #include <Camera/ROS2CameraSensorComponent.h>
 #include <GNSS/ROS2GNSSSensorComponent.h>
 #include <Imu/ROS2ImuSensorComponent.h>
+#include <Lidar/LidarRegistrarSystemComponent.h>
 #include <Lidar/ROS2LidarSensorComponent.h>
 #include <Odometry/ROS2OdometrySensorComponent.h>
 #include <ROS2/Frame/ROS2FrameComponent.h>
 #include <ROS2/Manipulator/MotorizedJointComponent.h>
 #include <RobotControl/Controllers/AckermannController/AckermannControlComponent.h>
 #include <RobotControl/Controllers/RigidBodyController/RigidBodyTwistControlComponent.h>
+#include <RobotControl/Controllers/SkidSteeringController/SkidSteeringControlComponent.h>
 #include <RobotControl/ROS2RobotControlComponent.h>
 #include <RobotImporter/ROS2RobotImporterSystemComponent.h>
 #include <Spawner/ROS2SpawnPointComponent.h>
 #include <Spawner/ROS2SpawnerComponent.h>
+#include <VehicleDynamics/ModelComponents/AckermannModelComponent.h>
+#include <VehicleDynamics/ModelComponents/SkidSteeringModelComponent.h>
 #include <VehicleDynamics/VehicleModelComponent.h>
+
 #include <VehicleDynamics/WheelControllerComponent.h>
 
 namespace ROS2
@@ -32,7 +37,7 @@ namespace ROS2
     {
     public:
         AZ_RTTI(ROS2ModuleInterface, "{8b5567cb-1de9-49af-9cd4-9750d4abcd6b}", AZ::Module);
-        AZ_CLASS_ALLOCATOR(ROS2ModuleInterface, AZ::SystemAllocator, 0);
+        AZ_CLASS_ALLOCATOR(ROS2ModuleInterface, AZ::SystemAllocator);
 
         ROS2ModuleInterface()
         {
@@ -43,6 +48,7 @@ namespace ROS2
             m_descriptors.insert(
                 m_descriptors.end(),
                 { ROS2SystemComponent::CreateDescriptor(),
+                  LidarRegistrarSystemComponent::CreateDescriptor(),
                   ROS2RobotImporterSystemComponent::CreateDescriptor(),
                   ROS2SensorComponent::CreateDescriptor(),
                   ROS2ImuSensorComponent::CreateDescriptor(),
@@ -54,18 +60,23 @@ namespace ROS2
                   ROS2CameraSensorComponent::CreateDescriptor(),
                   AckermannControlComponent::CreateDescriptor(),
                   RigidBodyTwistControlComponent::CreateDescriptor(),
-                  ROS2CameraSensorComponent::CreateDescriptor(),
+                  SkidSteeringControlComponent::CreateDescriptor(),
                   ROS2SpawnerComponent::CreateDescriptor(),
                   ROS2SpawnPointComponent::CreateDescriptor(),
-                  VehicleDynamics::VehicleModelComponent::CreateDescriptor(),
+                  VehicleDynamics::AckermannVehicleModelComponent::CreateDescriptor(),
                   VehicleDynamics::WheelControllerComponent::CreateDescriptor(),
+                  VehicleDynamics::SkidSteeringModelComponent::CreateDescriptor(),
                   MotorizedJointComponent::CreateDescriptor() });
         }
 
         //! Add required SystemComponents to the SystemEntity.
         AZ::ComponentTypeList GetRequiredSystemComponents() const override
         {
-            return AZ::ComponentTypeList{ azrtti_typeid<ROS2SystemComponent>(), azrtti_typeid<ROS2RobotImporterSystemComponent>() };
+            return AZ::ComponentTypeList{
+                azrtti_typeid<ROS2SystemComponent>(),
+                azrtti_typeid<LidarRegistrarSystemComponent>(),
+                azrtti_typeid<ROS2RobotImporterSystemComponent>(),
+            };
         }
     };
 } // namespace ROS2

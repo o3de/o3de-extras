@@ -1,0 +1,25 @@
+{
+    "project_name": "${Name}",
+    "project_id": "${ProjectId}",
+    "origin": "Open 3D Engine Extras: ${Name}",
+    "license": "https://github.com/o3de/o3de-extras/tree/development/Templates/Ros2ProjectTemplate/Template/LICENSE.txt",
+    "display_name": "${Name}",
+    "summary": "Template for ROS2 projects.",
+    "canonical_tags": [
+        "Project"
+    ],
+    "user_tags": [
+        "${Name}", "ROS2", "ROS"
+    ],
+    "icon_path": "preview.png",
+    "engine": "o3de",
+    "external_subdirectories": [
+        "Gem"
+    ],
+    "restricted": "${Name}",
+    "gem_names": [
+        "ROS2",
+        "WarehouseSample",
+        "RosRobotSample"
+    ]    
+}

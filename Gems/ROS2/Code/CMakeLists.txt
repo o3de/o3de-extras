@@ -17,6 +17,7 @@ if (NOT ROS2_FOUND)
     message(FATAL_ERROR "Unable to detect a the ROS2 distribution on this system. Make sure it is installed and enabled.")
     return()
 endif()
+message(DEBUG "Building ${gem_name} Gem with ros2 $ENV{ROS_DISTRO}")
 
 # Add the ROS2.Static target
 # Note: We include the common files and the platform specific files which are set in ros2_common_files.cmake
@@ -32,6 +33,7 @@ ly_add_target(
             Include
         PRIVATE
             Source
+            Source/VehicleDynamics
     BUILD_DEPENDENCIES
         PUBLIC
             AZ::AzCore
@@ -40,9 +42,11 @@ ly_add_target(
             Gem::Atom_Feature_Common.Static
             Gem::Atom_Component_DebugCamera.Static
             Gem::StartingPointInput
+            Gem::PhysX.Static
 )
 
-target_depends_on_ros2_packages(${gem_name}.Static rclcpp builtin_interfaces std_msgs sensor_msgs nav_msgs urdfdom tf2_ros ackermann_msgs gazebo_msgs control_toolbox)
+target_depends_on_ros2_packages(${gem_name}.Static rclcpp builtin_interfaces std_msgs sensor_msgs nav_msgs tf2_ros ackermann_msgs gazebo_msgs)
+target_depends_on_ros2_package(${gem_name}.Static control_toolbox 2.2.0 REQUIRED)
 
 ly_add_target(
     NAME ${gem_name}.API HEADERONLY
@@ -107,11 +111,13 @@ if(PAL_TRAIT_BUILD_HOST_TOOLS)
                 Gem::${gem_name}.Static
     )
 
+    find_package(urdfdom)
+    target_link_libraries(${gem_name}.Editor.Static PUBLIC urdfdom::urdfdom_model)
+
     ly_add_target(
         NAME ${gem_name}.Editor GEM_MODULE
         NAMESPACE Gem
         FILES_CMAKE
-            ros2_editor_files.cmake
             ros2_editor_shared_files.cmake
         PLATFORM_INCLUDE_FILES
             ${CMAKE_CURRENT_LIST_DIR}/Platform/Common/${PAL_TRAIT_COMPILER_ID}/ros2_static_editor_${PAL_TRAIT_COMPILER_ID_LOWERCASE}.cmake

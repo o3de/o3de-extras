@@ -1,0 +1,26 @@
+{
+    "materialType": "@gemroot:Atom_Feature_Common@/Assets/Materials/Types/StandardPBR.materialtype",
+    "materialTypeVersion": 5,
+    "propertyValues": {
+        "baseColor.color": [
+            0.11300831288099289,
+            0.125764861702919,
+            0.1290913224220276,
+            1.0
+        ],
+        "baseColor.factor": 0.17000000178813934,
+        "baseColor.textureBlendMode": "Lerp",
+        "baseColor.textureMap": "../Textures/Metal_Rusted_001_Basecolor.jpg",
+        "emissive.color": [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+        ],
+        "normal.textureMap": "../Textures/Metal_Rusted_001_Normal.jpg",
+        "opacity.factor": 1.0,
+        "specularF0.textureMap": "../Textures/Metal_Rusted_001_Specular.jpg",
+        "uv.tileU": 5.0,
+        "uv.tileV": 5.0
+    }
+}

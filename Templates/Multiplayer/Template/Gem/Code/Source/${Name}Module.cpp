@@ -20,7 +20,7 @@ namespace ${SanitizedCppName}
     {
     public:
         AZ_RTTI(${SanitizedCppName}Module, "${ModuleClassId}", AZ::Module);
-        AZ_CLASS_ALLOCATOR(${SanitizedCppName}Module, AZ::SystemAllocator, 0);
+        AZ_CLASS_ALLOCATOR(${SanitizedCppName}Module, AZ::SystemAllocator);
 
         ${SanitizedCppName}Module()
             : AZ::Module()
@@ -50,4 +50,8 @@ namespace ${SanitizedCppName}
 // DO NOT MODIFY THIS LINE UNLESS YOU RENAME THE GEM
 // The first parameter should be GemName_GemIdLower
 // The second should be the fully qualified name of the class above
+#if defined(AZ_MONOLITHIC_BUILD)
+AZ_DECLARE_MODULE_CLASS(Gem_${SanitizedCppName}_Client, ${SanitizedCppName}::${SanitizedCppName}Module);
+AZ_DECLARE_MODULE_CLASS(Gem_${SanitizedCppName}_Server, ${SanitizedCppName}::${SanitizedCppName}Module);
+#endif
 AZ_DECLARE_MODULE_CLASS(Gem_${SanitizedCppName}, ${SanitizedCppName}::${SanitizedCppName}Module)

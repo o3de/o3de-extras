@@ -11,12 +11,11 @@
 #include <AzCore/base.h>
 #include <AzCore/Component/TickBus.h>
 #include <AzCore/Memory/SystemAllocator.h>
-#include <Atom/RHI/XRRenderingInterface.h>
 #include <Atom/RHI/ValidationLayer.h>
+#include <Atom/RHI/XRRenderingInterface.h>
 #include <Atom/RPI.Public/XR/XRRenderingInterface.h>
-#include <XR/XRInstance.h>
 #include <XR/XRDevice.h>
-#include <XR/XRSession.h>
+#include <XR/XRInstance.h>
 #include <XR/XRSwapChain.h>
 
 namespace XR
@@ -31,7 +30,7 @@ namespace XR
         , public AZStd::intrusive_base
     {
     public:
-        AZ_CLASS_ALLOCATOR(System, AZ::SystemAllocator, 0);
+        AZ_CLASS_ALLOCATOR(System, AZ::SystemAllocator);
         AZ_RTTI(System, "{C3E0291D-FB30-4E27-AB0D-14606A8C3C1F}");
 
         System() = default;
@@ -81,6 +80,7 @@ namespace XR
         float GetYJoyStickState(AZ::u32 handIndex) const override;
         float GetSqueezeState(AZ::u32 handIndex) const override;
         float GetTriggerState(AZ::u32 handIndex) const override;
+        AZ::Data::Instance<AZ::RPI::AttachmentImage> InitPassFoveatedAttachment(const AZ::RPI::PassTemplate& passTemplate, const AZ::RHI::XRFoveatedLevel* level = nullptr) const override;
         ///////////////////////////////////////////////////////////////////
 
         ///////////////////////////////////////////////////////////////////
@@ -97,6 +97,7 @@ namespace XR
         void PostFrame() override;
         bool IsDefaultRenderPipelineNeeded() const override;
         bool IsDefaultRenderPipelineEnabledOnHost() const override;
+        AZ::RHI::ResultCode InitVariableRateShadingImageContent(AZ::RHI::Image* image, AZ::RHI::XRFoveatedLevel type) const override;
         ///////////////////////////////////////////////////////////////////
 
     private:

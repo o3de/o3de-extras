@@ -1,0 +1,216 @@
+{
+    "ContainerEntity": {
+        "Id": "ContainerEntity",
+        "Name": "Warehouse_Floor",
+        "Components": {
+            "Component_[12785761987451143973]": {
+                "$type": "EditorEntityIconComponent",
+                "Id": 12785761987451143973
+            },
+            "Component_[13730770129766598217]": {
+                "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
+                "Id": 13730770129766598217,
+                "Parent Entity": ""
+            },
+            "Component_[16295705080434710865]": {
+                "$type": "EditorPendingCompositionComponent",
+                "Id": 16295705080434710865
+            },
+            "Component_[16901671577944154159]": {
+                "$type": "EditorDisabledCompositionComponent",
+                "Id": 16901671577944154159
+            },
+            "Component_[17249279548863263022]": {
+                "$type": "EditorPrefabComponent",
+                "Id": 17249279548863263022
+            },
+            "Component_[1791439467711754379]": {
+                "$type": "EditorOnlyEntityComponent",
+                "Id": 1791439467711754379
+            },
+            "Component_[3609019499553012973]": {
+                "$type": "EditorEntitySortComponent",
+                "Id": 3609019499553012973,
+                "Child Entity Order": [
+                    "Entity_[376147448073284]"
+                ]
+            },
+            "Component_[4741442095697366075]": {
+                "$type": "EditorLockComponent",
+                "Id": 4741442095697366075
+            },
+            "Component_[614235125227961100]": {
+                "$type": "EditorInspectorComponent",
+                "Id": 614235125227961100
+            },
+            "Component_[8981860411036476398]": {
+                "$type": "EditorVisibilityComponent",
+                "Id": 8981860411036476398
+            }
+        }
+    },
+    "Entities": {
+        "Entity_[376147448073284]": {
+            "Id": "Entity_[376147448073284]",
+            "Name": "Floor",
+            "Components": {
+                "Component_[1135257540279470878]": {
+                    "$type": "AZ::Render::EditorMeshComponent",
+                    "Id": 1135257540279470878,
+                    "Controller": {
+                        "Configuration": {
+                            "ModelAsset": {
+                                "assetId": {
+                                    "guid": "{4687EDB6-F57B-592A-8451-4A41BD678D9A}",
+                                    "subId": 270838499
+                                },
+                                "assetHint": "assets/warehouse/models/warehouse_floor.azmodel"
+                            }
+                        }
+                    }
+                },
+                "Component_[11910542729220429952]": {
+                    "$type": "EditorNonUniformScaleComponent",
+                    "Id": 11910542729220429952,
+                    "NonUniformScale": [
+                        0.9850000143051147,
+                        0.8100000023841858,
+                        1.0
+                    ]
+                },
+                "Component_[12130024678701540467]": {
+                    "$type": "EditorEntityIconComponent",
+                    "Id": 12130024678701540467
+                },
+                "Component_[12796548754776393819]": {
+                    "$type": "EditorInspectorComponent",
+                    "Id": 12796548754776393819,
+                    "ComponentOrderEntryArray": [
+                        {
+                            "ComponentId": 4070093678589085014
+                        },
+                        {
+                            "ComponentId": 5344339738119561654,
+                            "SortIndex": 1
+                        },
+                        {
+                            "ComponentId": 1135257540279470878,
+                            "SortIndex": 2
+                        },
+                        {
+                            "ComponentId": 7914861898027098419,
+                            "SortIndex": 3
+                        },
+                        {
+                            "ComponentId": 13299402086043239524,
+                            "SortIndex": 4
+                        }
+                    ]
+                },
+                "Component_[13150841160273927131]": {
+                    "$type": "EditorDisabledCompositionComponent",
+                    "Id": 13150841160273927131
+                },
+                "Component_[13299402086043239524]": {
+                    "$type": "EditorMeshColliderComponent",
+                    "Id": 13299402086043239524,
+                    "ColliderConfiguration": {
+                        "MaterialSlots": {
+                            "Slots": [
+                                {
+                                    "Name": "MWarehouseFloor"
+                                }
+                            ]
+                        }
+                    },
+                    "ShapeConfiguration": {
+                        "PhysicsAsset": {
+                            "Asset": {
+                                "assetId": {
+                                    "guid": "{4687EDB6-F57B-592A-8451-4A41BD678D9A}",
+                                    "subId": 2070809848
+                                },
+                                "assetHint": "assets/warehouse/models/warehouse_floor.pxmesh"
+                            },
+                            "Configuration": {
+                                "Scale": [
+                                    0.9850000143051147,
+                                    0.8100000023841858,
+                                    1.0
+                                ],
+                                "PhysicsAsset": {
+                                    "assetId": {
+                                        "guid": "{4687EDB6-F57B-592A-8451-4A41BD678D9A}",
+                                        "subId": 2070809848
+                                    },
+                                    "loadBehavior": "QueueLoad",
+                                    "assetHint": "assets/warehouse/models/warehouse_floor.pxmesh"
+                                }
+                            }
+                        },
+                        "HasNonUniformScale": true
+                    }
+                },
+                "Component_[17647558825107464022]": {
+                    "$type": "EditorVisibilityComponent",
+                    "Id": 17647558825107464022
+                },
+                "Component_[3487459217529988418]": {
+                    "$type": "EditorPendingCompositionComponent",
+                    "Id": 3487459217529988418
+                },
+                "Component_[4070093678589085014]": {
+                    "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
+                    "Id": 4070093678589085014,
+                    "Parent Entity": "ContainerEntity",
+                    "Transform Data": {
+                        "Translate": [
+                            0.8478307723999023,
+                            0.24125289916992188,
+                            0.0
+                        ]
+                    }
+                },
+                "Component_[5344339738119561654]": {
+                    "$type": "EditorStaticRigidBodyComponent",
+                    "Id": 5344339738119561654
+                },
+                "Component_[6101940779767884655]": {
+                    "$type": "EditorLockComponent",
+                    "Id": 6101940779767884655
+                },
+                "Component_[6406039108223992368]": {
+                    "$type": "EditorEntitySortComponent",
+                    "Id": 6406039108223992368
+                },
+                "Component_[7914861898027098419]": {
+                    "$type": "EditorMaterialComponent",
+                    "Id": 7914861898027098419,
+                    "Controller": {
+                        "Configuration": {
+                            "materials": [
+                                {
+                                    "Key": {
+                                        "materialSlotStableId": 2584905556
+                                    },
+                                    "Value": {
+                                        "MaterialAsset": {
+                                            "assetId": {
+                                                "guid": "{67470786-4A32-5D05-9EE2-73060764DC1D}"
+                                            },
+                                            "assetHint": "assets/warehouse/materials/mwarehousefloor.azmaterial"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                },
+                "Component_[836181072854470107]": {
+                    "$type": "EditorOnlyEntityComponent",
+                    "Id": 836181072854470107
+                }
+            }
+        }
+    }
+}

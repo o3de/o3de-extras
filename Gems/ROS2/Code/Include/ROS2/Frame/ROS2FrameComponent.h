@@ -54,10 +54,11 @@ namespace ROS2
         //! @return A complete namespace (including parent namespaces)
         AZStd::string GetNamespace() const;
 
-        //! Get AZ Transform for this frame.
-        //! @return If parent ROS2Frame is found, return its Transform.
+        //! Get a transform between this frame and the next frame up in hierarchy.
+        //! @return If the parent frame is found, return a Transform between this frame and the parent.
         //! Otherwise, return a global Transform.
-        const AZ::Transform& GetFrameTransform() const;
+        //! @note Parent frame is not the same as parent Transform: there could be many Transforms in between without ROS2Frame components.
+        AZ::Transform GetFrameTransform() const;
 
         //! Global frame name in ros2 ecosystem.
         //! @return The name of the global frame with namespace attached. It is typically "odom", "map", "world".
@@ -86,6 +87,7 @@ namespace ROS2
         AZStd::string m_frameName = "sensor_frame";
 
         bool m_publishTransform = true;
+        bool m_isDynamic = false;
         AZStd::unique_ptr<ROS2Transform> m_ros2Transform;
     };
 } // namespace ROS2

@@ -4,7 +4,7 @@
     "ClassName": "PassAsset",
     "ClassData": {
         "PassTemplate": {
-            "Name": "PipelineRenderToTextureROSDepth",
+            "Name": "PipelineRenderToTextureROSColor",
             "PassClass": "RenderToTexturePass",
             "PassData": {
                 "$type": "RenderToTexturePassData",

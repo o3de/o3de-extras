@@ -18,7 +18,7 @@ namespace ROS2
     {
         m_fileDialog = new QFileDialog(this);
         m_fileDialog->setDirectory(QString::fromUtf8(AZ::Utils::GetProjectPath().data()));
-        m_fileDialog->setNameFilter("URDF (*.urdf)");
+        m_fileDialog->setNameFilter("URDF, XACRO (*.urdf *.xacro)");
         m_button = new QPushButton("...", this);
         m_textEdit = new QLineEdit("", this);
         setTitle(tr("Load URDF file"));

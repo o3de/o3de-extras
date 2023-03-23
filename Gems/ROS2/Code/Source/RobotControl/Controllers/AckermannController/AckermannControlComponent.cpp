@@ -41,7 +41,7 @@ namespace ROS2
     void AckermannControlComponent::GetRequiredServices(AZ::ComponentDescriptor::DependencyArrayType& required)
     {
         required.push_back(AZ_CRC_CE("ROS2RobotControl"));
-        required.push_back(AZ_CRC_CE("VehicleModelService"));
+        required.push_back(AZ_CRC_CE("AckermannModelService"));
     }
 
     void AckermannControlComponent::AckermannReceived(const AckermannCommandStruct& acs)

@@ -10,6 +10,8 @@
 
 #include <AzCore/Memory/SystemAllocator.h>
 #include <AzCore/std/smart_ptr/intrusive_base.h>
+#include <Atom/RHI/ValidationLayer.h>
+#include <XR/XRBase.h>
 #include <XR/XRObject.h>
 
 namespace XR
@@ -19,7 +21,7 @@ namespace XR
         : public ::XR::Object
     {
     public:
-        AZ_CLASS_ALLOCATOR(Space, AZ::SystemAllocator, 0);
+        AZ_CLASS_ALLOCATOR(Space, AZ::SystemAllocator);
         AZ_RTTI(Space, "{A78A37F1-8861-4EB4-8FC6-0E9C11394EF1}");
 
         struct Descriptor

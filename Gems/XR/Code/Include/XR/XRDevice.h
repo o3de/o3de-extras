@@ -13,19 +13,19 @@
 #include <Atom/RPI.Public/XR/XRRenderingInterface.h>
 #include <XR/XRBase.h>
 #include <XR/XRInstance.h>
-#include <XR/XRSwapChain.h>
 #include <XR/XRObject.h>
+#include <XR/XRSession.h>
 
 namespace XR
 {
-    class Session;
+    class SwapChain;
 
     //! Base XR device class which will provide access to the back-end concrete object
     class Device
         : public XR::Object
     {
     public:
-        AZ_CLASS_ALLOCATOR(Device, AZ::SystemAllocator, 0);
+        AZ_CLASS_ALLOCATOR(Device, AZ::SystemAllocator);
         AZ_RTTI(Device, "{A31B0DC2-BD54-443E-9350-EB1B10670FF9}");
 
         Device() = default;

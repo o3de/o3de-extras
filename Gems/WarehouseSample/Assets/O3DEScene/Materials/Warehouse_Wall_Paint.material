@@ -1,0 +1,26 @@
+{
+    "materialType": "@gemroot:Atom_Feature_Common@/Assets/Materials/Types/StandardPBR.materialtype",
+    "materialTypeVersion": 5,
+    "propertyValues": {
+        "baseColor.color": [
+            0.1753719449043274,
+            0.1753719449043274,
+            0.1753719449043274,
+            1.0
+        ],
+        "baseColor.factor": 0.20000000298023224,
+        "baseColor.textureBlendMode": "Lerp",
+        "baseColor.textureMap": "../Textures/1K_Wall_Paint_Basecolor.jpg",
+        "emissive.color": [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+        ],
+        "normal.textureMap": "../Textures/1K_Wall_Paint_Normal.jpg",
+        "opacity.factor": 1.0,
+        "specularF0.textureMap": "../Textures/1K_Wall_Paint_Specular.jpg",
+        "uv.tileU": 2.0,
+        "uv.tileV": 2.0
+    }
+}

@@ -9,15 +9,16 @@
 #pragma once
 
 #include <AzCore/Memory/SystemAllocator.h>
-
+#include <Atom/RPI.Public/XR/XRRenderingInterface.h>
 #include <XR/XRBase.h>
-#include <XR/XRInput.h>
+#include <XR/XRInstance.h>
 #include <XR/XRObject.h>
 #include <XR/XRSpace.h>
 
 namespace XR
 {
     class Device;
+    class Input;
 
     // This class will be responsible for creating XR::Session and
     // all the code around managing the session state
@@ -25,7 +26,7 @@ namespace XR
         : public XR::Object
     {
     public:
-        AZ_CLASS_ALLOCATOR(Session, AZ::SystemAllocator, 0);
+        AZ_CLASS_ALLOCATOR(Session, AZ::SystemAllocator);
         AZ_RTTI(Session, "{E7276FE1-94B8-423A-9C1D-1BCF1A0066BC}");
 
         struct Descriptor

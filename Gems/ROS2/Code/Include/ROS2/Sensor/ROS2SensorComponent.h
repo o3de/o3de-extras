@@ -53,6 +53,7 @@ namespace ROS2
         //! Visualisation can be turned on or off in SensorConfiguration.
         virtual void Visualise(){};
 
-        float m_timeElapsedSinceLastTick = 0.0f;
+        //! The number of ticks that are expected to pass to trigger next measurement.
+        AZ::s32 m_tickCountDown{ 0 };
     };
 } // namespace ROS2

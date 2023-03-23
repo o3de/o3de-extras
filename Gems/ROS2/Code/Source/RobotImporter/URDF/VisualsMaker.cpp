@@ -100,6 +100,8 @@ namespace ROS2
                 entity->Activate();
                 LmbrCentral::SphereShapeComponentRequestsBus::Event(
                     entityId, &LmbrCentral::SphereShapeComponentRequests::SetRadius, sphereGeometry->radius);
+                LmbrCentral::EditorShapeComponentRequestsBus::Event(
+                    entityId, &LmbrCentral::EditorShapeComponentRequests::SetVisibleInGame, true);
                 entity->Deactivate();
             }
             break;
@@ -113,6 +115,8 @@ namespace ROS2
                     entityId, &LmbrCentral::CylinderShapeComponentRequests::SetRadius, cylinderGeometry->radius);
                 LmbrCentral::CylinderShapeComponentRequestsBus::Event(
                     entityId, &LmbrCentral::CylinderShapeComponentRequests::SetHeight, cylinderGeometry->length);
+                LmbrCentral::EditorShapeComponentRequestsBus::Event(
+                    entityId, &LmbrCentral::EditorShapeComponentRequests::SetVisibleInGame, true);
                 entity->Deactivate();
             }
             break;
@@ -125,6 +129,8 @@ namespace ROS2
                 entity->Activate();
                 LmbrCentral::BoxShapeComponentRequestsBus::Event(
                     entityId, &LmbrCentral::BoxShapeComponentRequests::SetBoxDimensions, boxDimensions);
+                LmbrCentral::EditorShapeComponentRequestsBus::Event(
+                    entityId, &LmbrCentral::EditorShapeComponentRequests::SetVisibleInGame, true);
                 entity->Deactivate();
             }
             break;
