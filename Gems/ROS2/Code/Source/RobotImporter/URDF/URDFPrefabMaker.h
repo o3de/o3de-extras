@@ -43,10 +43,6 @@ namespace ROS2
 
         ~URDFPrefabMaker() = default;
 
-        //! Loads URDF file and builds all required meshes and colliders.
-        //! @param buildReadyCb Function to call when the build finishes.
-        void LoadURDF(BuildReadyCallback buildReadyCb);
-
         //! Create and return a prefab corresponding to the URDF model as set through the constructor.
         //! @return result which is either a prefab containing the imported model based on URDF or an error.
         AzToolsFramework::Prefab::CreatePrefabResult CreatePrefabFromURDF();
@@ -72,7 +68,7 @@ namespace ROS2
         InertialsMaker m_inertialsMaker;
         JointsMaker m_jointsMaker;
         ArticulationsMaker m_articulationsMaker;
-        BuildReadyCallback m_notifyBuildReadyCb;
+
         AZStd::mutex m_statusLock;
         AZStd::multimap<AZStd::string, AZStd::string> m_status;
 

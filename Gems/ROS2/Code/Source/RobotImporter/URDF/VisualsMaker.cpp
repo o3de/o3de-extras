@@ -155,11 +155,16 @@ namespace ROS2
                     }
 
                     entity->Activate();
+
+                    const auto productAssetPath = Utils::GetModelProductAsset(asset->m_sourceGuid);
+                    AZ_Warning(
+                        "AddVisual",
+                        productAssetPath.size(),
+                        "There is no product asset for %s.",
+                        asset->m_sourceAssetRelativePath.c_str());
                     // Set asset path
                     AZ::Render::MeshComponentRequestBus::Event(
-                        entityId,
-                        &AZ::Render::MeshComponentRequestBus::Events::SetModelAssetPath,
-                        asset->m_sourceAssetRelativePath.c_str());
+                        entityId, &AZ::Render::MeshComponentRequestBus::Events::SetModelAssetPath, productAssetPath);
 
                     // Set scale, uniform or non-uniform
                     if (isUniformScale)
