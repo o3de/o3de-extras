@@ -1,12 +1,12 @@
-## Warehouse Assets Gem ##
+## Warehouse Assets Gem
 
 ![](docs/images/WarehouseGem.png)
 
-### General description ###
+### General description
 
-This gem contains a set of models and prefabs which can be used to create a Warehouse project suitable for robotic simulations.
+This gem contains a set of models and prefabs which can be used to create a warehouse project suitable for robotic simulations.
 
-### Contents ###
+### Contents
 
 All of the contents of this gem reside in the folder `Assets`. It comprises 2 sub-folders:
 
@@ -17,13 +17,13 @@ The `Prefabs` folder has the following structure:
 
 ![](docs/images/PrefabsFolder.png)
 
-All the prefabs have appropriate physics parameters including collision shape.
+All the prefabs have appropriate physics parameters including collision shapes.
 
-#### Basic Components ####
+#### Basic Components
 
 ![](docs/images/Components.png)
 
-A set of basic items to be used in the warehouse is located in the `Components` folder. The prefabs (on the image, left to right): 
+A set of basic items to be used in the warehouse is located in the `Components` folder. The prefabs (in the image, left to right): 
 
 - `WarehouseRack.prefab` 
 - `WarehouseBox1.prefab` 
@@ -31,11 +31,11 @@ A set of basic items to be used in the warehouse is located in the `Components` 
 - `WarehouseBox3.prefab`
 - `WarehouseBox4.prefab`
 
-#### Storage Racks ####
+#### Storage Racks
 
 ![](docs/images/StorageRacks.png)
 
-Storage racks are created from basic components, combined in 5 different permutations. The prefabs (on the image, left to right): 
+Storage racks are created from basic components, combined in 5 different permutations. The prefabs (in the image, left to right): 
 
 - `Storage_rack1.prefab`
 - `Storage_rack2.prefab`
@@ -43,36 +43,36 @@ Storage racks are created from basic components, combined in 5 different permuta
 - `Storage_rack4.prefab`
 - `Storage_rack5.prefab`
 
-#### Storage Rack Packs ####
+#### Storage Rack Packs
 
 ![](docs/images/StorageRackPacks.png)
 
-The rack packs were created by stacking 4 storage rack prefabs in different combinations. These prefabs may simplify creating larger warehouses. The prefabs (on the image, left to right): 
+The rack packs were created by stacking 4 storage rack prefabs in different combinations. These prefabs may simplify creating larger warehouses. The prefabs (in the image, left to right): 
 
 - `Storage_2x2_Pack1.prefab`
 - `Storage_2x2_Pack2.prefab`
 - `Storage_2x2_Pack3.prefab`
 
-#### Storage on Wheels ####
+#### Storage on Wheels
 
 ![](docs/images/StorageOnWheels.png)
 
 `Storage_on_wheels.prefab` is a storage cage on wheels. As opposed to other prefabs it can be moved around the scene. The collision shape was designed in a way, that allows the Proteus robot to ride below it.
 
-#### Rack protection ####
+#### Rack protection
 
 ![](docs/images/RackProtection.png)
 
-There are 2 elements, located in the `Rack_protectors` folder, that can be placed next to the racks. These are (on the image, left to right):
+There are 2 elements, located in the `Rack_protectors` folder, that can be placed next to the racks. These are (in the image, left to right):
 
 - `Rack_front_protection.prefab`
 - `Rack_side_protection.prefab`
 
-#### Misc ####
+#### Misc
 
 The `Misc` folder contains prefabs with floor lines.
 
-#### Warehouse structural ####
+#### Warehouse structural
 
 The `Warehouse_structural` folder contains prefabs comprising the warehouse building. These are:
 
@@ -82,15 +82,15 @@ The `Warehouse_structural` folder contains prefabs comprising the warehouse buil
 
 The folder contains also a `Components` subfolder, containing assets used in these 3 prefabs.
 
-#### Warehouse scene ####
+#### Warehouse scene
 
 ![](docs/images/WarehouseScene.png)
 
 The `WarehouseScene.prefab` contains a sample, read-to-use warehouse scene, built from prefabs listed in this document.
 
-### Tips on using Warehouse Assets Gem ###
+### Tips on using Warehouse Assets Gem
 
-#### Creating Warehouse scene ####
+#### Creating Warehouse scene
 
 ***Tip 1***
 
@@ -114,7 +114,7 @@ Each of them can be activated or deactivated by enabling or disabling PhysX Coll
 
 Warehouses with open gates may be connected by placing them one after another.
 
-#### Visual quality ####
+#### Visual quality
 
 ***Tip 4***
 
