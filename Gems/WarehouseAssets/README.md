@@ -86,7 +86,7 @@ The folder contains also a `Components` subfolder, containing assets used in the
 
 ![](docs/images/WarehouseScene.png)
 
-The `WarehouseScene.prefab` contains a sample, read-to-use warehouse scene, built from prefabs listed in this document.
+The `WarehouseScene.prefab` contains a sample, ready-to-use warehouse scene, built from prefabs listed in this document.
 
 ### Tips on using Warehouse Assets Gem
 
@@ -94,7 +94,7 @@ The `WarehouseScene.prefab` contains a sample, read-to-use warehouse scene, buil
 
 ***Tip 1***
 
-To achieve alignment, all 3 "structural" prefabs should be instantiated in the same coordinates.
+To achieve alignment, all 3 "structural" prefabs (floor, walls and roof) should be instantiated in the same coordinates.
 
 ***Tip 2***
 
@@ -104,7 +104,7 @@ Each of the frontal walls in the `Warehouse_Walls.prefab` contains optional gate
 - `Front_gate` - wall with gate opening
 - `Gate` - gate matching the opening
 
-Each of them can be activated or deactivated by enabling or disabling PhysX Collider and Mesh components. It is possible to obtain one of the following variants:
+Each of them can be activated or deactivated by enabling or disabling `PhysX Collider` and `Mesh` components. It is possible to obtain one of the following variants:
 
 1. Solid wall - enable `Front_no_gates`, disable the other 2
 2. Open gate - enable `Front_gate`, disable the other 2
