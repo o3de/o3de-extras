@@ -104,7 +104,7 @@ namespace ROS2::Utils
     UrdfAssetMap FindAssetsForUrdf(const AZStd::unordered_set<AZStd::string>& meshesFilenames, const AZStd::string& urdFilename)
     {
         auto enviromentalVariable = std::getenv("AMENT_PREFIX_PATH");
-        AZ_Warning("UrdfAssetMap", enviromentalVariable, "AMENT_PREFIX_PATH is not found.");
+        AZ_Error("UrdfAssetMap", enviromentalVariable, "AMENT_PREFIX_PATH is not found.");
         AZStd::string amentPrefixPath {enviromentalVariable};
 
         UrdfAssetMap urdfToAsset;
