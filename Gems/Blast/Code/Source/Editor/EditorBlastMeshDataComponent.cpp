@@ -183,7 +183,9 @@ namespace Blast
                 materials, GetEntityId(), &AZ::Render::MaterialComponentRequests::GetMaterialMap);
 
             m_meshFeatureProcessor->ReleaseMesh(m_meshHandle);
-            m_meshHandle = m_meshFeatureProcessor->AcquireMesh(AZ::Render::MeshHandleDescriptor{ m_meshAssets[0] }, materials);
+            m_meshHandle = m_meshFeatureProcessor->AcquireMesh(
+                AZ::Render::MeshHandleDescriptor{ m_meshAssets[0] }, 
+                AZ::Render::ConvertToCustomMaterialMap(materials));
             m_meshFeatureProcessor->ConnectModelChangeEventHandler(m_meshHandle, m_changeEventHandler);
 
             HandleModelChange(m_meshFeatureProcessor->GetModel(m_meshHandle));
