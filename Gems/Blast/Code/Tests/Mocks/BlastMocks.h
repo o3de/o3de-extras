@@ -32,20 +32,6 @@
 
 namespace Blast
 {
-    class FastScopedAllocatorsBase
-    {
-    public:
-        FastScopedAllocatorsBase()
-        {
-            AZ::AllocatorInstance<AZ::SystemAllocator>::Create();
-        }
-
-        ~FastScopedAllocatorsBase()
-        {
-            AZ::AllocatorInstance<AZ::SystemAllocator>::Destroy();
-        }
-    };
-
     class BlastFamily;
 
     class FakeExtPxAsset : public Nv::Blast::ExtPxAsset
@@ -281,6 +267,8 @@ namespace Blast
     class FakeBlastActor : public BlastActor
     {
     public:
+        AZ_CLASS_ALLOCATOR(FakeBlastActor, AZ::SystemAllocator);
+
         FakeBlastActor(bool isStatic, AzPhysics::SimulatedBody* worldBody, MockTkActor* tkActor)
             : m_isStatic(isStatic)
             , m_transform(worldBody->GetTransform())
@@ -340,6 +328,7 @@ namespace Blast
     public:
         MOCK_METHOD1(SetMaterial, void(const AZStd::shared_ptr<Physics::Material>&));
         MOCK_CONST_METHOD0(GetMaterial, AZStd::shared_ptr<Physics::Material>());
+        MOCK_CONST_METHOD0(GetMaterialId, Physics::MaterialId());
         MOCK_METHOD1(SetCollisionLayer, void (const AzPhysics::CollisionLayer&));
         MOCK_CONST_METHOD0(GetCollisionLayer, AzPhysics::CollisionLayer ());
         MOCK_METHOD1(SetCollisionGroup, void (const AzPhysics::CollisionGroup&));
@@ -368,6 +357,8 @@ namespace Blast
     class FakeRigidBody : public AzPhysics::RigidBody
     {
     public:
+        AZ_CLASS_ALLOCATOR(FakeRigidBody, AZ::SystemAllocator);
+
         FakeRigidBody(
             AZ::EntityId entityId = AZ::EntityId(0), AZ::Transform transform = AZ::Transform::CreateIdentity())
             : m_entityId(entityId)
@@ -541,7 +532,7 @@ namespace Blast
 
         AzPhysics::SceneQueryHit RayCast([[maybe_unused]] const AzPhysics::RayCastRequest& request) override
         {
-            return {};
+            return AzPhysics::SceneQueryHit();
         }
 
         AZ::Crc32 GetNativeType() const override
@@ -747,6 +738,8 @@ namespace Blast
     class FakeBlastFamily : public BlastFamily
     {
     public:
+        AZ_CLASS_ALLOCATOR(FakeBlastFamily, AZ::SystemAllocator);
+
         FakeBlastFamily()
             : m_pxAsset(NvBlastActorDesc{1, nullptr, 1, nullptr})
         {

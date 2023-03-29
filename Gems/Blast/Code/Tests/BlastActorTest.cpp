@@ -40,7 +40,6 @@ namespace Blast
 
     class BlastActorTest
         : public testing::Test
-        , public FastScopedAllocatorsBase
     {
     protected:
         void SetUp() override

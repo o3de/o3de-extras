@@ -34,7 +34,6 @@ namespace Blast
 
     class DamageManagerTest
         : public testing::Test
-        , public FastScopedAllocatorsBase
     {
     public:
     protected:

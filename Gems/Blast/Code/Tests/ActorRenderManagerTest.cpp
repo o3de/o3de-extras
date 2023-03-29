@@ -44,7 +44,6 @@ namespace Blast
 
     class ActorRenderManagerTest
         : public testing::Test
-        , public FastScopedAllocatorsBase
     {
     protected:
         void SetUp() override
@@ -92,7 +91,7 @@ namespace Blast
         // ActorRenderManager::OnActorCreated
         {
             EXPECT_CALL(
-                *m_mockMeshFeatureProcessor, AcquireMesh(_, testing::A<const AZ::Render::MaterialAssignmentMap&>()))
+                *m_mockMeshFeatureProcessor, AcquireMesh(_, testing::A<const AZ::Render::CustomMaterialMap&>()))
                 .Times(aznumeric_cast<int>(m_actorFactory->m_mockActors[0]->GetChunkIndices().size()))
                 .WillOnce(Return(testing::ByMove(AZ::Render::MeshFeatureProcessorInterface::MeshHandle())))
                 .WillOnce(Return(testing::ByMove(AZ::Render::MeshFeatureProcessorInterface::MeshHandle())));
