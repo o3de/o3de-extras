@@ -25,10 +25,10 @@ namespace XR
         provided.push_back(AZ_CRC_CE("XRSystemService"));
     }
 
-	void SystemComponent::GetDependentServices(AZ::ComponentDescriptor::DependencyArrayType& required)
-	{
+    void SystemComponent::GetDependentServices(AZ::ComponentDescriptor::DependencyArrayType& required)
+    {
         required.push_back(AZ_CRC_CE("RHIService"));
-	}
+    }
 
     void SystemComponent::Reflect(AZ::ReflectContext* context)
     {
