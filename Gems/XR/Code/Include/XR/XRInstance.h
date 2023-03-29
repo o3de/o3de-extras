@@ -20,7 +20,7 @@ namespace XR
         : public XR::Object
     {
     public:
-        AZ_CLASS_ALLOCATOR(Instance, AZ::SystemAllocator, 0);
+        AZ_CLASS_ALLOCATOR(Instance, AZ::SystemAllocator);
         AZ_RTTI(Instance, "{1C457924-56A4-444F-BC72-4D31A097BA70}");
 
         Instance() = default;

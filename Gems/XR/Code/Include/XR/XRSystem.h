@@ -30,7 +30,7 @@ namespace XR
         , public AZStd::intrusive_base
     {
     public:
-        AZ_CLASS_ALLOCATOR(System, AZ::SystemAllocator, 0);
+        AZ_CLASS_ALLOCATOR(System, AZ::SystemAllocator);
         AZ_RTTI(System, "{C3E0291D-FB30-4E27-AB0D-14606A8C3C1F}");
 
         System() = default;

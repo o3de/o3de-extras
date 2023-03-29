@@ -10,9 +10,9 @@
         "normal.textureMap": "../Textures/Proteus_Normal.png",
         "opacity.factor": 1.0,
         "roughness.factor": 0.5,
-        "roughness.lowerBound": 0.20000000298023224,
+        "roughness.lowerBound": 0.49000000953674316,
         "roughness.textureMap": "../Textures/Proteus_MaskMap_A.png",
-        "roughness.upperBound": 0.9399999976158142,
+        "roughness.upperBound": 0.15000000596046448,
         "specularF0.factor": 0.5099999904632568
     }
 }

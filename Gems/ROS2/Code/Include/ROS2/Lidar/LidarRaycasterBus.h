@@ -110,8 +110,6 @@ namespace ROS2
         //! the imperfections arising due to various physical factors e.g. fluctuations in rotary motion of the lidar (angular noise) or
         //! distance accuracy (distance noise).
         //! For the the details about Gaussian noise, please refer to https://en.wikipedia.org/wiki/Gaussian_noise.
-        //! You can also check-out the RobotecGPULidar (integrated in the RobotecGPULidar Gem) docs concerning these types of lidar noise at
-        //! https://github.com/RobotecAI/RobotecGPULidar/blob/v11/docs/GaussianNoise.md.
         //! @param angularNoiseStdDev Angular noise standard deviation.
         //! @param distanceNoiseStdDevBase Base value for Distance noise standard deviation.
         //! @param distanceNoiseStdDevRisePerMeter Value by which the distance noise standard deviation increases per meter length from

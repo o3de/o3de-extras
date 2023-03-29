@@ -21,7 +21,7 @@ namespace OpenXRVk
         : public XR::Input
     {
     public:
-        AZ_CLASS_ALLOCATOR(Input, AZ::SystemAllocator, 0);
+        AZ_CLASS_ALLOCATOR(Input, AZ::SystemAllocator);
         AZ_RTTI(Input, "{97ADD1FE-27DF-4F36-9F61-683F881F9477}", XR::Input);
 
         static XR::Ptr<Input> Create();

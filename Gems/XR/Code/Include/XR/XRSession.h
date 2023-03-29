@@ -26,7 +26,7 @@ namespace XR
         : public XR::Object
     {
     public:
-        AZ_CLASS_ALLOCATOR(Session, AZ::SystemAllocator, 0);
+        AZ_CLASS_ALLOCATOR(Session, AZ::SystemAllocator);
         AZ_RTTI(Session, "{E7276FE1-94B8-423A-9C1D-1BCF1A0066BC}");
 
         struct Descriptor

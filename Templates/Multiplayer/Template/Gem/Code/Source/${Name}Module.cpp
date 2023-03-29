@@ -20,7 +20,7 @@ namespace ${SanitizedCppName}
     {
     public:
         AZ_RTTI(${SanitizedCppName}Module, "${ModuleClassId}", AZ::Module);
-        AZ_CLASS_ALLOCATOR(${SanitizedCppName}Module, AZ::SystemAllocator, 0);
+        AZ_CLASS_ALLOCATOR(${SanitizedCppName}Module, AZ::SystemAllocator);
 
         ${SanitizedCppName}Module()
             : AZ::Module()
