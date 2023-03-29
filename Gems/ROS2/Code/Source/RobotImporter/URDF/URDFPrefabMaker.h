@@ -68,7 +68,7 @@ namespace ROS2
 
         BuildReadyCallback m_notifyBuildReadyCb;
         AZStd::mutex m_statusLock;
-        AZStd::multimap<AZStd::string, AZStd::string> m_status;
+        AZStd::unordered_multimap<AZStd::string, AZStd::string> m_status;
 
         AZStd::shared_ptr<Utils::UrdfAssetMap> m_urdfAssetsMapping;
     };
