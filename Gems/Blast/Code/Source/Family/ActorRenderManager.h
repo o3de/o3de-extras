@@ -8,6 +8,7 @@
 #pragma once
 
 #include <Atom/Feature/Mesh/MeshFeatureProcessorInterface.h>
+#include <AtomLyIntegration/CommonFeatures/Material/MaterialAssignment.h>
 #include <AzCore/std/containers/vector.h>
 #include <AzCore/Math/Vector3.h>
 

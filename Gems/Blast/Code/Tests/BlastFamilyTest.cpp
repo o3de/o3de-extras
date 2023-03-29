@@ -29,7 +29,6 @@ namespace Blast
 {
     class BlastFamilyTest
         : public testing::Test
-        , public FastScopedAllocatorsBase
     {
     protected:
         void SetUp() override

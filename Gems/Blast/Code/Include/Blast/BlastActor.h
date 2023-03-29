@@ -37,7 +37,7 @@ namespace Blast
     class BlastActor
     {
     public:
-        AZ_CLASS_ALLOCATOR(BlastActor, AZ::SystemAllocator, 0);
+        AZ_CLASS_ALLOCATOR(BlastActor, AZ::SystemAllocator);
 
         virtual ~BlastActor() = default;
 

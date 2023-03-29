@@ -51,13 +51,13 @@ namespace Blast
     class BlastFamily
     {
     public:
+        //! Class allocator to use aznew
+        AZ_CLASS_ALLOCATOR(BlastFamily, AZ::SystemAllocator);
+
         //! Constructor for the BlastFamily
         //! @param desc Creation descriptor
         static AZStd::unique_ptr<BlastFamily> Create(const BlastFamilyDesc& desc);
         virtual ~BlastFamily() = default;
-
-        //! Class allocator to use aznew
-        AZ_CLASS_ALLOCATOR(BlastFamily, AZ::SystemAllocator, 0);
 
         //! Spawns this BlastFamily, creating the initial actors.
         //! @param transform Initial transform of the destructible object.
