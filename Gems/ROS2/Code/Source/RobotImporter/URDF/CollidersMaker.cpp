@@ -387,20 +387,18 @@ namespace ROS2
 
             // Get asset product id (pxmesh)
             AZ::Data::AssetId assetId;
-            AZ::Data::AssetType assetType = AZ::AzTypeInfo<PhysX::Pipeline::MeshAsset>::Uuid();
+            const AZ::Data::AssetType physxMeshAssetType = azrtti_typeid<PhysX::Pipeline::MeshAsset>();
             AZ::Data::AssetCatalogRequestBus::BroadcastResult(
-                assetId, &AZ::Data::AssetCatalogRequests::GetAssetIdByPath, pxmodelPath->c_str(), assetType, false);
+                assetId, &AZ::Data::AssetCatalogRequests::GetAssetIdByPath, pxmodelPath->c_str(), physxMeshAssetType, false);
             AZ_Printf(Internal::CollidersMakerLoggingTag, "Collider %s has assetId %s\n", entityId.ToString().c_str(), assetId.ToString<AZStd::string>().c_str());
 
             Physics::PhysicsAssetShapeConfiguration shapeConfiguration;
             shapeConfiguration.m_useMaterialsFromAsset = false;
             if (assetId.IsValid())
             {
+                auto mesh = AZ::Data::Asset<PhysX::Pipeline::MeshAsset>(assetId, physxMeshAssetType);
+                shapeConfiguration.m_asset = mesh;
                 entity->CreateComponent<PhysX::EditorMeshColliderComponent>(colliderConfig, shapeConfiguration);
-                entity->Activate();
-                // Insert pxmesh into the collider component
-                PhysX::MeshColliderComponentRequestsBus::Event(entityId, &PhysX::MeshColliderComponentRequests::SetMeshAsset, assetId);
-                entity->Deactivate();
             }
             return;
         }
