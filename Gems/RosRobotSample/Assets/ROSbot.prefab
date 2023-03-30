@@ -51,6 +51,122 @@
         }
     },
     "Entities": {
+        "Entity_[1655118118701]": {
+            "Id": "Entity_[1655118118701]",
+            "Name": "antenna_connector_link",
+            "Components": {
+                "Component_[11307820398090643546]": {
+                    "$type": "EditorOnlyEntityComponent",
+                    "Id": 11307820398090643546
+                },
+                "Component_[12125105024372695689]": {
+                    "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
+                    "Id": 12125105024372695689,
+                    "Parent Entity": "Entity_[7507839849146]",
+                    "Transform Data": {
+                        "Translate": [
+                            -0.1550000011920929,
+                            -0.054999999701976776,
+                            0.06499999761581421
+                        ]
+                    }
+                },
+                "Component_[12415003016323710343]": {
+                    "$type": "EditorEntitySortComponent",
+                    "Id": 12415003016323710343
+                },
+                "Component_[12803793234116133644]": {
+                    "$type": "EditorPendingCompositionComponent",
+                    "Id": 12803793234116133644
+                },
+                "Component_[16853136281682418047]": {
+                    "$type": "EditorEntityIconComponent",
+                    "Id": 16853136281682418047
+                },
+                "Component_[17775261544913516787]": {
+                    "$type": "EditorInspectorComponent",
+                    "Id": 17775261544913516787
+                },
+                "Component_[2754561882447765624]": {
+                    "$type": "EditorVisibilityComponent",
+                    "Id": 2754561882447765624
+                },
+                "Component_[3444637002120578242]": {
+                    "$type": "EditorDisabledCompositionComponent",
+                    "Id": 3444637002120578242
+                },
+                "Component_[3851762681488325524]": {
+                    "$type": "EditorLockComponent",
+                    "Id": 3851762681488325524
+                },
+                "Component_[8878329651331184965]": {
+                    "$type": "GenericComponentWrapper",
+                    "Id": 8878329651331184965,
+                    "m_template": {
+                        "$type": "ROS2FrameComponent",
+                        "Frame Name": "antenna_connector_link"
+                    }
+                }
+            }
+        },
+        "Entity_[2276249823909]": {
+            "Id": "Entity_[2276249823909]",
+            "Name": "base_link",
+            "Components": {
+                "Component_[11767283645917512755]": {
+                    "$type": "EditorDisabledCompositionComponent",
+                    "Id": 11767283645917512755
+                },
+                "Component_[13061269686340300068]": {
+                    "$type": "EditorEntitySortComponent",
+                    "Id": 13061269686340300068
+                },
+                "Component_[14765431024610875806]": {
+                    "$type": "EditorInspectorComponent",
+                    "Id": 14765431024610875806
+                },
+                "Component_[15669003932322128819]": {
+                    "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
+                    "Id": 15669003932322128819,
+                    "Parent Entity": "Entity_[7507839849146]",
+                    "Transform Data": {
+                        "Translate": [
+                            0.0,
+                            0.0,
+                            -0.04800000041723251
+                        ]
+                    }
+                },
+                "Component_[16813726449267049556]": {
+                    "$type": "GenericComponentWrapper",
+                    "Id": 16813726449267049556,
+                    "m_template": {
+                        "$type": "ROS2FrameComponent",
+                        "Frame Name": "base_link"
+                    }
+                },
+                "Component_[3027740315216830895]": {
+                    "$type": "EditorOnlyEntityComponent",
+                    "Id": 3027740315216830895
+                },
+                "Component_[3556049982080988749]": {
+                    "$type": "EditorPendingCompositionComponent",
+                    "Id": 3556049982080988749
+                },
+                "Component_[5340153798518564374]": {
+                    "$type": "EditorLockComponent",
+                    "Id": 5340153798518564374
+                },
+                "Component_[5449962755548309722]": {
+                    "$type": "EditorVisibilityComponent",
+                    "Id": 5449962755548309722
+                },
+                "Component_[7646384559760828741]": {
+                    "$type": "EditorEntityIconComponent",
+                    "Id": 7646384559760828741
+                }
+            }
+        },
         "Entity_[454274520747]": {
             "Id": "Entity_[454274520747]",
             "Name": "Camera",
@@ -808,7 +924,7 @@
         },
         "Entity_[7507839849146]": {
             "Id": "Entity_[7507839849146]",
-            "Name": "base_link",
+            "Name": "body_link",
             "Components": {
                 "Component_[10692234168189354968]": {
                     "$type": "EditorDisabledCompositionComponent",
@@ -886,7 +1002,7 @@
                         "Namespace Configuration": {
                             "Namespace Strategy": 1
                         },
-                        "Frame Name": "base_link"
+                        "Frame Name": "body_link"
                     }
                 },
                 "Component_[15835975987756009148]": {
@@ -955,7 +1071,10 @@
                         "Entity_[7486365012666]",
                         "Entity_[7482070045370]",
                         "Entity_[7512134816442]",
-                        "Entity_[8141757523394]"
+                        "Entity_[8141757523394]",
+                        "Entity_[454274520747]",
+                        "Entity_[2276249823909]",
+                        "Entity_[1655118118701]"
                     ]
                 },
                 "Component_[6615492099568417181]": {
