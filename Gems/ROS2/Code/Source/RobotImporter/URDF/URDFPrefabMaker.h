@@ -14,10 +14,10 @@
 #include "UrdfParser.h"
 #include "VisualsMaker.h"
 #include <AzCore/Component/EntityId.h>
-#include <AzCore/std/string/string.h>
 #include <AzCore/std/containers/map.h>
 #include <AzCore/std/smart_ptr/make_shared.h>
 #include <AzCore/std/smart_ptr/shared_ptr.h>
+#include <AzCore/std/string/string.h>
 #include <AzToolsFramework/Prefab/PrefabPublicInterface.h>
 #include <RobotImporter/Utils/SourceAssetsStorage.h>
 
