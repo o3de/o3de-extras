@@ -323,7 +323,7 @@ namespace XR
             imageDescriptor.m_size.m_width = aznumeric_cast<uint32_t>(ceil(static_cast<float>(outputWidth) / tileSize.m_width));
             imageDescriptor.m_size.m_height = aznumeric_cast<uint32_t>(ceil(static_cast<float>(outputHeight) / tileSize.m_height));
 
-            // Find the appropiate format for the image
+            // Find the appropriate format for the image
             for (uint32_t i = 0; i < static_cast<uint32_t>(AZ::RHI::Format::Count); ++i)
             {
                 AZ::RHI::Format format = static_cast<AZ::RHI::Format>(i);
