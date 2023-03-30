@@ -17,32 +17,31 @@
 
 namespace ROS2
 {
+    struct CameraConfiguration
+    {
+        float m_verticalFieldOfViewDeg = 90.0f; //!< Vertical field of view of camera sensor.
+        int m_width = 640; //!< Camera image width in pixels.
+        int m_height = 480; //!< Camera image height in pixels.
+    };
 
-    //! Structure containing all information required to create the camera sensor
+    //! Structure containing all information required to create the camera sensor.
     struct CameraSensorDescription
     {
         //! Constructor to create the description
-        //! @param cameraName - name of the camera; used to differentiate cameras in a multi-camera setup
-        //! @param verticalFov - vertical field of view of camera sensor
-        //! @param width - camera image width in pixels
-        //! @param height - camera image height in pixels
-        //! @param entityId - entityId of camera sensor
-        CameraSensorDescription(const AZStd::string& cameraName, float verticalFov, int width, int height, AZ::EntityId entityId);
+        //! @param cameraName - name of the camera; used to differentiate cameras in a multi-camera setup.
+        //! @param configuration - configuration structure for the camera, defining its characteristics.
+        CameraSensorDescription(const AZStd::string& cameraName, const CameraConfiguration& configuration);
 
-        const float m_verticalFieldOfViewDeg; //!< camera vertical field of view
-        const int m_width; //!< camera image width in pixels
-        const int m_height; //!< camera image height in pixels
-        const AZStd::string m_cameraName; //!< camera name to differentiate cameras in a multi-camera setup
+        const CameraConfiguration m_cameraConfiguration; //!< Configuration of the camera.
+        const AZStd::string m_cameraName; //!< Camera name to differentiate cameras in a multi-camera setup.
 
-        const float m_aspectRatio; //!< camera image aspect ratio; equal to (width / height)
-        const AZ::Matrix4x4 m_viewToClipMatrix; //!< camera view to clip space transform matrix; derived from other parameters
-        const AZStd::array<double, 9> m_cameraIntrinsics; //!< camera intrinsics; derived from other parameters
-        const AZ::EntityId m_entityId; //! Entity Id that is owning this sensor.
+        const float m_aspectRatio; //!< Camera image aspect ratio; equal to (width / height).
+        const AZ::Matrix4x4 m_viewToClipMatrix; //!< Camera view to clip space transform matrix; derived from other parameters.
+        const AZStd::array<double, 9> m_cameraIntrinsics; //!< Camera intrinsics; derived from other parameters.
+
     private:
         AZ::Matrix4x4 MakeViewToClipMatrix() const;
-
         AZStd::array<double, 9> MakeCameraIntrinsics() const;
-
         void ValidateParameters() const;
     };
 
@@ -51,9 +50,10 @@ namespace ROS2
     class CameraSensor
     {
     public:
-        //! Initializes rendering pipeline for the camera sensor
-        //! @param cameraSensorDescription - camera sensor description used to create camera pipeline
-        CameraSensor(const CameraSensorDescription& cameraSensorDescription);
+        //! Initializes rendering pipeline for the camera sensor.
+        //! @param cameraSensorDescription - camera sensor description used to create camera pipeline.
+        //! @param entityId - entityId for the owning sensor component.
+        CameraSensor(const CameraSensorDescription& cameraSensorDescription, const AZ::EntityId& entityId);
 
         //! Deinitializes rendering pipeline for the camera sensor
         virtual ~CameraSensor();
@@ -89,6 +89,8 @@ namespace ROS2
         virtual AZStd::string GetPipelineTemplateName() const = 0; //! Returns name of pass template to use in pipeline
         virtual AZStd::string GetPipelineTypeName() const = 0; //! Type of returned data eg Color, Depth, Optical flow
 
+        AZ::EntityId m_entityId;
+
     protected:
         AZ::RPI::RenderPipelinePtr m_pipeline;
         AZStd::string m_pipelineName;
@@ -118,7 +120,7 @@ namespace ROS2
     class CameraDepthSensor : public CameraSensor
     {
     public:
-        CameraDepthSensor(const CameraSensorDescription& cameraSensorDescription);
+        CameraDepthSensor(const CameraSensorDescription& cameraSensorDescription, const AZ::EntityId& entityId);
 
     private:
         AZStd::string GetPipelineTemplateName() const override;
@@ -129,7 +131,7 @@ namespace ROS2
     class CameraColorSensor : public CameraSensor
     {
     public:
-        CameraColorSensor(const CameraSensorDescription& cameraSensorDescription);
+        CameraColorSensor(const CameraSensorDescription& cameraSensorDescription, const AZ::EntityId& entityId);
 
     private:
         AZStd::string GetPipelineTemplateName() const override;
@@ -140,7 +142,7 @@ namespace ROS2
     class CameraRGBDSensor : public CameraColorSensor
     {
     public:
-        CameraRGBDSensor(const CameraSensorDescription& cameraSensorDescription);
+        CameraRGBDSensor(const CameraSensorDescription& cameraSensorDescription, const AZ::EntityId& entityId);
 
         // CameraSensor overrides
         void RequestMessagePublication(
