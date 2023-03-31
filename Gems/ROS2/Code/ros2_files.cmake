@@ -16,6 +16,8 @@ set(FILES
         Source/Clock/SimulationClock.cpp
         Source/Communication/QoS.cpp
         Source/Communication/TopicConfiguration.cpp
+        Source/EffortSensor/ROS2EffortSensorComponent.cpp
+        Source/EffortSensor/ROS2EffortSensorComponent.h
         Source/Frame/NamespaceConfiguration.cpp
         Source/Frame/ROS2FrameComponent.cpp
         Source/Frame/ROS2Transform.cpp

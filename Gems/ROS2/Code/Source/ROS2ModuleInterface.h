@@ -16,6 +16,7 @@
 #include <Lidar/LidarRegistrarSystemComponent.h>
 #include <Lidar/ROS2LidarSensorComponent.h>
 #include <Odometry/ROS2OdometrySensorComponent.h>
+#include <EffortSensor/ROS2EffortSensorComponent.h>
 #include <ROS2/Frame/ROS2FrameComponent.h>
 #include <ROS2/Manipulator/MotorizedJointComponent.h>
 #include <RobotControl/Controllers/AckermannController/AckermannControlComponent.h>
@@ -66,7 +67,8 @@ namespace ROS2
                   VehicleDynamics::AckermannVehicleModelComponent::CreateDescriptor(),
                   VehicleDynamics::WheelControllerComponent::CreateDescriptor(),
                   VehicleDynamics::SkidSteeringModelComponent::CreateDescriptor(),
-                  MotorizedJointComponent::CreateDescriptor() });
+                  MotorizedJointComponent::CreateDescriptor(),
+                  ROS2EffortSensorComponent::CreateDescriptor()});
         }
 
         //! Add required SystemComponents to the SystemEntity.

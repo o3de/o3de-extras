@@ -64,6 +64,12 @@ namespace ROS2
         //! @return The name of the global frame with namespace attached. It is typically "odom", "map", "world".
         AZStd::string GetGlobalFrameName() const;
 
+        //! Return the frame id of this frame's parent. It can be useful to determine ROS 2 transformations.
+        //! @return Parent frame ID.
+        //! @note This also works with top-level frames, returning a global frame name.
+        //! @see GetGlobalFrameName().
+        AZStd::string GetParentFrameID() const;
+
     private:
         //////////////////////////////////////////////////////////////////////////
         // AZ::TickBus::Handler overrides
@@ -77,11 +83,7 @@ namespace ROS2
 
         const ROS2FrameComponent* GetParentROS2FrameComponent() const;
 
-        //! Return the frame id of this frame's parent. It can be useful to determine ROS 2 transformations.
-        //! @return Parent frame ID.
-        //! @note This also works with top-level frames, returning a global frame name.
-        //! @see GetGlobalFrameName().
-        AZStd::string GetParentFrameID() const;
+
 
         NamespaceConfiguration m_namespaceConfiguration;
         AZStd::string m_frameName = "sensor_frame";
