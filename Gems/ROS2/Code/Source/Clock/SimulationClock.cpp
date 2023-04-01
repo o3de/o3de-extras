@@ -10,6 +10,7 @@
 #include <AzCore/std/algorithm.h>
 #include <AzCore/std/containers/deque.h>
 #include <AzCore/std/containers/vector.h>
+#include <AzCore/std/sort.h>
 #include <ROS2/Clock/SimulationClock.h>
 #include <ROS2/ROS2Bus.h>
 #include <rclcpp/qos.hpp>
