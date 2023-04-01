@@ -5,6 +5,8 @@
  * SPDX-License-Identifier: Apache-2.0 OR MIT
  *
  */
+
+#include <AzCore/IO/Path/Path.h>
 #include "SourceAssetsStorage.h"
 #include "RobotImporterUtils.h"
 

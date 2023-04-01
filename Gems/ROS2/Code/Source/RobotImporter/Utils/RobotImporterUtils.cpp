@@ -10,6 +10,7 @@
 #include "TypeConversions.h"
 #include <AzCore/Asset/AssetManager.h>
 #include <AzCore/Asset/AssetManagerBus.h>
+#include <AzCore/IO/Path/Path.h>
 #include <AzCore/StringFunc/StringFunc.h>
 #include <AzCore/std/string/regex.h>
 #include <AzToolsFramework/API/EditorAssetSystemAPI.h>
