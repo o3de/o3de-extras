@@ -29,7 +29,8 @@ namespace ROS2
         // The o3de has a slightly different way of configuring the axis of the joint. The o3de has an axis around positive `X` and rotation
         // with Euler angles can be applied to configure the desirable direction of the joint. A quaternion that transforms a unit vector X
         // {1,0,0} to a vector given by the URDF joint need to be found. Heavily suboptimal element in this conversion is needed of
-        // converting the unit quaternion to Euler vector.
+        // converting the unit quaternion to Euler vector.articulationLinkConfiguration
+        
         const AZ::Vector3 o3de_joint_dir{ 1.0, 0.0, 0.0 };
         const AZ::Vector3 joint_axis = URDF::TypeConversions::ConvertVector3(joint->axis);
         const auto quaternion =

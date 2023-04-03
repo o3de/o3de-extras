@@ -20,12 +20,14 @@ namespace ROS2
         m_prefabName = new QLineEdit(this);
         m_createButton = new QPushButton(tr("Create Prefab"), this);
         m_log = new QTextEdit(this);
+        m_useArticulation = new QCheckBox(tr("Use articulation for joints and rigid bodies"),this);
         setTitle(tr("Prefab creation"));
         QVBoxLayout* layout = new QVBoxLayout;
         QHBoxLayout* layoutInner = new QHBoxLayout;
         layoutInner->addWidget(m_prefabName);
         layoutInner->addWidget(m_createButton);
         layout->addLayout(layoutInner);
+        layout->addWidget(m_useArticulation);
         layout->addWidget(m_log);
         setLayout(layout);
         connect(m_createButton, &QPushButton::pressed, this, &PrefabMakerPage::onCreateButtonPressed);
@@ -54,5 +56,10 @@ namespace ROS2
     {
         return m_success;
     }
+    bool PrefabMakerPage::isUseArticulations() const
+    {
+        return m_useArticulation->isChecked();
+    }
+
 
 } // namespace ROS2

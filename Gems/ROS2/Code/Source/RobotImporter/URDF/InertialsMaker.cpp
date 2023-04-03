@@ -25,7 +25,7 @@ namespace ROS2
         { // it is ok not to have inertia in a link
             return;
         }
-        AZ_TracePrintf("AddInertial", "Processing inertial for entity id: %s\n", entityId.ToString().c_str());
+        AZ_TracePrintf("AddArticulationLink", "Processing inertial for entity id: %s\n", entityId.ToString().c_str());
 
         AZ::Entity* entity = AzToolsFramework::GetEntityById(entityId);
         PhysX::EditorRigidBodyConfiguration rigidBodyConfiguration;
@@ -43,7 +43,7 @@ namespace ROS2
 
         if (!URDF::TypeConversions::ConvertQuaternion(inertial->origin.rotation).IsIdentity())
         { // There is a rotation component in URDF that we are not able to apply
-            AZ_Warning("AddInertial", false, "Ignoring URDF inertial origin rotation (no such field in rigid body configuration)");
+            AZ_Warning("AddArticulationLink", false, "Ignoring URDF inertial origin rotation (no such field in rigid body configuration)");
         }
 
         // Inertia tensor is symmetrical

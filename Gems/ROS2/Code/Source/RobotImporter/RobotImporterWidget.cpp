@@ -307,7 +307,9 @@ namespace ROS2
                 return;
             }
         }
-        m_prefabMaker = AZStd::make_unique<URDFPrefabMaker>(m_urdfPath.String(), m_parsedUrdf, prefabPath.String(), m_urdfAssetsMapping);
+        const bool useArticulation = m_prefabMakerPage->isUseArticulations();
+        m_prefabMaker = AZStd::make_unique<URDFPrefabMaker>(
+            m_urdfPath.String(), m_parsedUrdf, prefabPath.String(), m_urdfAssetsMapping, useArticulation);
 
         auto callback = [&]()
         {

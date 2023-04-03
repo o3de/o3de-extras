@@ -17,6 +17,7 @@
 #include <QString>
 #include <QTextEdit>
 #include <QWizardPage>
+#include <QCheckBox>
 #endif
 
 namespace ROS2
@@ -32,6 +33,7 @@ namespace ROS2
         void reportProgress(const AZStd::string& progressForUser);
         void setSuccess(bool success);
         bool isComplete() const override;
+        bool isUseArticulations() const;
     Q_SIGNALS:
         void onCreateButtonPressed();
 
@@ -40,6 +42,7 @@ namespace ROS2
         QLineEdit* m_prefabName;
         QPushButton* m_createButton;
         QTextEdit* m_log;
+        QCheckBox* m_useArticulation;
         RobotImporterWidget* m_parentImporterWidget;
     };
 } // namespace ROS2
