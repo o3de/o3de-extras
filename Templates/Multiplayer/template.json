@@ -1,8 +1,8 @@
 {
     "template_name": "Multiplayer",
     "origin": "Open 3D Engine - o3de.org",
-    "origin_uri": "https://github.com/o3de/o3de-extras/releases/download/1.0/Template_Multiplayer-1.0.zip",
-    "sha256": "5219FF39EB581E9C7F534A20D4A872DDD14AC0009B2EAEAFA36F504FB3B696E6",
+    "origin_uri": "https://github.com/o3de/o3de-extras/releases/download/2.0/Template_Multiplayer-2.0.zip",
+    "sha256": "3F30E363735C5608BD6942D030B77825F9243F79499ED893681273E883ECC025",
     "repo_uri": "https://raw.githubusercontent.com/o3de/o3de-extras/development",
     "license": "https://opensource.org/licenses/MIT",
     "display_name": "Multiplayer",
