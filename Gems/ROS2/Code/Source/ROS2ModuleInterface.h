@@ -17,9 +17,11 @@
 #include <Lidar/ROS2LidarSensorComponent.h>
 #include <Odometry/ROS2OdometrySensorComponent.h>
 #include <ROS2/Frame/ROS2FrameComponent.h>
+#include <ROS2/Manipulation/JointMotorControllerComponent.h>
 #include <ROS2/Manipulation/JointPublisherComponent.h>
 #include <ROS2/Manipulation/ManipulatorControllerComponent.h>
-#include <ROS2/Manipulation/MotorizedJointComponent.h>
+#include <ROS2/Manipulation/ManualMotorControllerComponent.h>
+#include <ROS2/Manipulation/PidMotorControllerComponent.h>
 #include <RobotControl/Controllers/AckermannController/AckermannControlComponent.h>
 #include <RobotControl/Controllers/RigidBodyController/RigidBodyTwistControlComponent.h>
 #include <RobotControl/Controllers/SkidSteeringController/SkidSteeringControlComponent.h>
@@ -30,7 +32,6 @@
 #include <VehicleDynamics/ModelComponents/AckermannModelComponent.h>
 #include <VehicleDynamics/ModelComponents/SkidSteeringModelComponent.h>
 #include <VehicleDynamics/VehicleModelComponent.h>
-
 #include <VehicleDynamics/WheelControllerComponent.h>
 
 namespace ROS2
@@ -49,28 +50,33 @@ namespace ROS2
             // This happens through the [MyComponent]::Reflect() function.
             m_descriptors.insert(
                 m_descriptors.end(),
-                { ROS2SystemComponent::CreateDescriptor(),
-                  LidarRegistrarSystemComponent::CreateDescriptor(),
-                  ROS2RobotImporterSystemComponent::CreateDescriptor(),
-                  ROS2SensorComponent::CreateDescriptor(),
-                  ROS2ImuSensorComponent::CreateDescriptor(),
-                  ROS2GNSSSensorComponent::CreateDescriptor(),
-                  ROS2LidarSensorComponent::CreateDescriptor(),
-                  ROS2OdometrySensorComponent::CreateDescriptor(),
-                  ROS2FrameComponent::CreateDescriptor(),
-                  ROS2RobotControlComponent::CreateDescriptor(),
-                  ROS2CameraSensorComponent::CreateDescriptor(),
-                  AckermannControlComponent::CreateDescriptor(),
-                  RigidBodyTwistControlComponent::CreateDescriptor(),
-                  SkidSteeringControlComponent::CreateDescriptor(),
-                  ROS2SpawnerComponent::CreateDescriptor(),
-                  ROS2SpawnPointComponent::CreateDescriptor(),
-                  VehicleDynamics::AckermannVehicleModelComponent::CreateDescriptor(),
-                  VehicleDynamics::WheelControllerComponent::CreateDescriptor(),
-                  VehicleDynamics::SkidSteeringModelComponent::CreateDescriptor(),
-                  MotorizedJointComponent::CreateDescriptor(),
-                  JointPublisherComponent::CreateDescriptor(),
-                  ManipulatorControllerComponent::CreateDescriptor() });
+                {
+                    ROS2SystemComponent::CreateDescriptor(),
+                    LidarRegistrarSystemComponent::CreateDescriptor(),
+                    ROS2RobotImporterSystemComponent::CreateDescriptor(),
+                    ROS2SensorComponent::CreateDescriptor(),
+                    ROS2ImuSensorComponent::CreateDescriptor(),
+                    ROS2GNSSSensorComponent::CreateDescriptor(),
+                    ROS2LidarSensorComponent::CreateDescriptor(),
+                    ROS2OdometrySensorComponent::CreateDescriptor(),
+                    ROS2FrameComponent::CreateDescriptor(),
+                    ROS2RobotControlComponent::CreateDescriptor(),
+                    ROS2CameraSensorComponent::CreateDescriptor(),
+                    AckermannControlComponent::CreateDescriptor(),
+                    RigidBodyTwistControlComponent::CreateDescriptor(),
+                    SkidSteeringControlComponent::CreateDescriptor(),
+                    ROS2CameraSensorComponent::CreateDescriptor(),
+                    ROS2SpawnerComponent::CreateDescriptor(),
+                    ROS2SpawnPointComponent::CreateDescriptor(),
+                    VehicleDynamics::AckermannVehicleModelComponent::CreateDescriptor(),
+                    VehicleDynamics::WheelControllerComponent::CreateDescriptor(),
+                    VehicleDynamics::SkidSteeringModelComponent::CreateDescriptor(),
+                    JointMotorControllerComponent::CreateDescriptor(),
+                    ManualMotorControllerComponent::CreateDescriptor(),
+                    JointPublisherComponent::CreateDescriptor(),
+                    ManipulatorControllerComponent::CreateDescriptor(),
+                    PidMotorControllerComponent::CreateDescriptor(),
+                });
         }
 
         //! Add required SystemComponents to the SystemEntity.
