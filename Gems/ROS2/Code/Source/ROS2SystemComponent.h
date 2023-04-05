@@ -66,7 +66,7 @@ namespace ROS2
 
     protected:
         ////////////////////////////////////////////////////////////////////////
-        // AZ::Component interface implementation
+        // AZ::Component override
         void Init() override;
         void Activate() override;
         void Deactivate() override;

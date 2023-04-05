@@ -15,7 +15,6 @@
 #include <ROS2/ROS2Bus.h>
 #include <ROS2/ROS2GemUtilities.h>
 #include <ROS2/Utilities/ROS2Names.h>
-
 namespace ROS2
 {
     namespace Internal
@@ -147,6 +146,7 @@ namespace ROS2
     {
         return m_isDynamic;
     }
+
     const ROS2FrameComponent* ROS2FrameComponent::GetParentROS2FrameComponent() const
     {
         return Internal::GetFirstROS2FrameAncestor(GetEntity());
@@ -199,6 +199,16 @@ namespace ROS2
         return m_namespaceConfiguration.GetNamespace(parentNamespace);
     }
 
+    AZ::Name ROS2FrameComponent::GetJointName() const
+    {
+        return AZ::Name(ROS2Names::GetNamespacedName(GetNamespace(), m_jointNameString).c_str());
+    }
+
+    void ROS2FrameComponent::SetJointName(const AZStd::string& jointNameString)
+    {
+        m_jointNameString = jointNameString;
+    }
+
     void ROS2FrameComponent::Reflect(AZ::ReflectContext* context)
     {
         NamespaceConfiguration::Reflect(context);
@@ -208,6 +218,7 @@ namespace ROS2
                 ->Version(1)
                 ->Field("Namespace Configuration", &ROS2FrameComponent::m_namespaceConfiguration)
                 ->Field("Frame Name", &ROS2FrameComponent::m_frameName)
+                ->Field("Joint Name", &ROS2FrameComponent::m_jointNameString)
                 ->Field("Publish Transform", &ROS2FrameComponent::m_publishTransform);
 
             if (AZ::EditContext* ec = serialize->GetEditContext())
@@ -222,6 +233,7 @@ namespace ROS2
                         "Namespace Configuration",
                         "Namespace Configuration")
                     ->DataElement(AZ::Edit::UIHandlers::Default, &ROS2FrameComponent::m_frameName, "Frame Name", "Frame Name")
+                    ->DataElement(AZ::Edit::UIHandlers::Default, &ROS2FrameComponent::m_jointNameString, "Joint Name", "Joint Name")
                     ->DataElement(
                         AZ::Edit::UIHandlers::Default, &ROS2FrameComponent::m_publishTransform, "Publish Transform", "Publish Transform");
             }

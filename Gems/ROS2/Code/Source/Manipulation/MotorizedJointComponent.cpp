@@ -11,7 +11,7 @@
 #include <AzCore/Serialization/EditContext.h>
 #include <AzFramework/Physics/Components/SimulatedBodyComponentBus.h>
 #include <AzFramework/Physics/RigidBodyBus.h>
-#include <ROS2/Manipulator/MotorizedJointComponent.h>
+#include <ROS2/Manipulation/MotorizedJointComponent.h>
 
 namespace ROS2
 {

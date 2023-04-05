@@ -9,8 +9,10 @@ set(FILES
         Include/ROS2/Frame/NamespaceConfiguration.h
         Include/ROS2/Frame/ROS2FrameComponent.h
         Include/ROS2/Frame/ROS2Transform.h
-        Include/ROS2/Manipulator/MotorizedJointBus.h
-        Include/ROS2/Manipulator/MotorizedJointComponent.h
+        Include/ROS2/Manipulation/MotorizedJointBus.h
+        Include/ROS2/Manipulation/MotorizedJointComponent.h
+        Include/ROS2/Manipulation/JointPublisherComponent.h
+        Include/ROS2/Manipulation/ManipulatorControllerComponent.h
         Include/ROS2/RobotControl/ControlConfiguration.h
         Include/ROS2/RobotControl/ControlSubscriptionHandler.h
         Include/ROS2/Lidar/LidarRaycasterBus.h
