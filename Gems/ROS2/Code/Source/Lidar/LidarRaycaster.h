@@ -28,16 +28,22 @@ namespace ROS2
         // LidarRaycasterRequestBus overrides
         void ConfigureRayOrientations(const AZStd::vector<AZ::Vector3>& orientations) override;
         void ConfigureRayRange(float range) override;
+        void ConfigureMinimumRayRange(float range) override;
         AZStd::vector<AZ::Vector3> PerformRaycast(const AZ::Transform& lidarTransform) override;
+        RaycastResult PerformRaycastWithFlags(const AZ::Transform& lidarTransform, RaycastResultFlags flags) override;
+
         void ConfigureLayerIgnoring(bool ignoreLayer, AZ::u32 layerIndex) override;
         void ConfigureMaxRangePointAddition(bool addMaxRangePoints) override;
 
     private:
+        AzPhysics::SceneQueryRequests prepareRequests(
+            const AZ::Transform& lidarTransform, const AZStd::vector<AZ::Vector3>& rayDirections) const;
         LidarId m_busId;
         //! EntityId that is used to acquire the physics scene handle.
         AZ::EntityId m_sceneEntityId;
         AzPhysics::SceneHandle m_sceneHandle{ AzPhysics::InvalidSceneHandle };
 
+        float m_minRange{ 0.0f };
         float m_range{ 1.0f };
         bool m_addMaxRangePoints{ false };
         AZStd::vector<AZ::Vector3> m_rayRotations{ { AZ::Vector3::CreateZero() } };
