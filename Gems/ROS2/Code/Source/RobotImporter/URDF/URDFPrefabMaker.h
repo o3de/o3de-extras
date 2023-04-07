@@ -15,10 +15,10 @@
 #include "UrdfParser.h"
 #include "VisualsMaker.h"
 #include <AzCore/Component/EntityId.h>
-#include <AzCore/std/string/string.h>
 #include <AzCore/std/containers/map.h>
 #include <AzCore/std/smart_ptr/make_shared.h>
 #include <AzCore/std/smart_ptr/shared_ptr.h>
+#include <AzCore/std/string/string.h>
 #include <AzToolsFramework/Prefab/PrefabPublicInterface.h>
 #include <RobotImporter/Utils/SourceAssetsStorage.h>
 
@@ -33,7 +33,7 @@ namespace ROS2
         //! @param model parsed model.
         //! @param prefabPath path to the prefab which will be created as a result of import.
         //! @param urdfAssetsMapping prepared mapping of URDF meshes to Assets.
-        //! @param useArticulations allows urdfImporter to create PhysXArtiuculations instead of multiple rigid bodies and joints
+        //! @param useArticulations allows urdfImporter to create PhysXArticulations instead of multiple rigid bodies and joints.
         URDFPrefabMaker(
             const AZStd::string& modelFilePath,
             urdf::ModelInterfaceSharedPtr model,
@@ -77,6 +77,6 @@ namespace ROS2
         AZStd::multimap<AZStd::string, AZStd::string> m_status;
 
         AZStd::shared_ptr<Utils::UrdfAssetMap> m_urdfAssetsMapping;
-        bool m_useArticulations{false};
+        bool m_useArticulations{ false };
     };
 } // namespace ROS2

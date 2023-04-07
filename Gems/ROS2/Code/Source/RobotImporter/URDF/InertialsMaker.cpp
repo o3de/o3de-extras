@@ -7,6 +7,7 @@
  */
 
 #include "InertialsMaker.h"
+#include "RobotImporter/Utils/DefaultSolverConfiguration.h"
 #include <AzCore/Component/EntityId.h>
 #include <AzToolsFramework/Entity/EditorEntityHelpers.h>
 #include <RobotImporter/Utils/TypeConversions.h>
@@ -14,26 +15,21 @@
 
 namespace ROS2
 {
-    // Here is the recommended, minimal number of iterations for position and velocity solver.
-    // It is needed since currently o3de default values are optimized for the gaming experience, not a simulation.
-    constexpr AZ::u8 kMinimalNumPosSolv = 40;
-    constexpr AZ::u8 kMinimalNumVelSolv = 10;
-
     void InertialsMaker::AddInertial(urdf::InertialSharedPtr inertial, AZ::EntityId entityId) const
     {
         if (!inertial)
         { // it is ok not to have inertia in a link
             return;
         }
-        AZ_TracePrintf("AddArticulationLink", "Processing inertial for entity id: %s\n", entityId.ToString().c_str());
+        AZ_TracePrintf("AddInertial", "Processing inertial for entity id: %s\n", entityId.ToString().c_str());
 
         AZ::Entity* entity = AzToolsFramework::GetEntityById(entityId);
         PhysX::EditorRigidBodyConfiguration rigidBodyConfiguration;
         PhysX::RigidBodyConfiguration physxSpecificConfiguration;
         physxSpecificConfiguration.m_solverPositionIterations =
-            AZStd::max(physxSpecificConfiguration.m_solverPositionIterations, kMinimalNumPosSolv);
+            AZStd::max(physxSpecificConfiguration.m_solverPositionIterations, URDF::DefaultNumberPosSolver);
         physxSpecificConfiguration.m_solverVelocityIterations =
-            AZStd::max(physxSpecificConfiguration.m_solverVelocityIterations, kMinimalNumVelSolv);
+            AZStd::max(physxSpecificConfiguration.m_solverVelocityIterations, URDF::DefaultNumberVelSolver);
 
         rigidBodyConfiguration.m_mass = inertial->mass;
         rigidBodyConfiguration.m_computeMass = false;
@@ -43,7 +39,7 @@ namespace ROS2
 
         if (!URDF::TypeConversions::ConvertQuaternion(inertial->origin.rotation).IsIdentity())
         { // There is a rotation component in URDF that we are not able to apply
-            AZ_Warning("AddArticulationLink", false, "Ignoring URDF inertial origin rotation (no such field in rigid body configuration)");
+            AZ_Warning("AddInertial", false, "Ignoring URDF inertial origin rotation (no such field in rigid body configuration)");
         }
 
         // Inertia tensor is symmetrical

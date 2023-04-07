@@ -94,13 +94,14 @@ namespace ROS2
                 else
                 {
                     report += "# " + tr("XACRO parsing failed") + "\n";
-                    report += "\n\n## " + tr("Command called") +  "\n\n`" + QString::fromUtf8(outcome.m_called.data()) + "`";
+                    report += "\n\n## " + tr("Command called") + "\n\n`" + QString::fromUtf8(outcome.m_called.data()) + "`";
                     report += "\n\n" + tr("Process failed");
                     report += "\n\n## " + tr("Error output") + "\n\n";
                     report += "```\n";
                     if (outcome.m_logErrorOutput.size())
                     {
-                        report += QString::fromLocal8Bit(outcome.m_logErrorOutput.data(), static_cast<int>(outcome.m_logErrorOutput.size()));
+                        report +=
+                            QString::fromLocal8Bit(outcome.m_logErrorOutput.data(), static_cast<int>(outcome.m_logErrorOutput.size()));
                     }
                     else
                     {
@@ -111,7 +112,8 @@ namespace ROS2
                     report += "```\n";
                     if (outcome.m_logStandardOutput.size())
                     {
-                        report += QString::fromLocal8Bit(outcome.m_logStandardOutput.data(), static_cast<int>(outcome.m_logStandardOutput.size()));
+                        report += QString::fromLocal8Bit(
+                            outcome.m_logStandardOutput.data(), static_cast<int>(outcome.m_logStandardOutput.size()));
                     }
                     else
                     {
@@ -245,7 +247,7 @@ namespace ROS2
             {
                 m_params = Utils::xacro::GetParameterFromXacroFile(m_urdfPath.String());
                 AZ_Printf("RobotImporterWidget", "Xacro has %d arguments\n", m_params.size())
-                m_xacroParamsPage->SetXacroParameters(m_params);
+                    m_xacroParamsPage->SetXacroParameters(m_params);
             }
             // no need to wait for param page - parse urdf now, nextId will skip unnecessary pages
             if (m_params.empty())
@@ -307,7 +309,7 @@ namespace ROS2
                 return;
             }
         }
-        const bool useArticulation = m_prefabMakerPage->isUseArticulations();
+        const bool useArticulation = m_prefabMakerPage->IsUseArticulations();
         m_prefabMaker = AZStd::make_unique<URDFPrefabMaker>(
             m_urdfPath.String(), m_parsedUrdf, prefabPath.String(), m_urdfAssetsMapping, useArticulation);
 

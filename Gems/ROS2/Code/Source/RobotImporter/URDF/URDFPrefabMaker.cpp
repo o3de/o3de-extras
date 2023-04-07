@@ -48,7 +48,7 @@ namespace ROS2
         // Request the build of collider meshes by constructing .assetinfo files.
         BuildAssetsForLink(m_model->root_link_);
 
-        // Spins thread that waits for all collider meshes to be ready. 
+        // Spins thread that waits for all collider meshes to be ready.
         m_collidersMaker.ProcessMeshes(buildReadyCb);
     }
 
@@ -197,14 +197,7 @@ namespace ROS2
                 {
                     AZStd::lock_guard<AZStd::mutex> lck(m_statusLock);
                     auto result = m_jointsMaker.AddJointComponent(jointPtr, childEntity.GetValue(), leadEntity.GetValue());
-                    if (result.IsSuccess())
-                    {
-                        m_status.emplace(name, AZStd::string::format("created as %llu", result.GetValue()));
-                    }
-                    else
-                    {
-                        m_status.emplace(name, AZStd::string::format("Failed:  %s", result.GetError().c_str()));
-                    }
+                    m_status.emplace(name, AZStd::string::format(" %s %llu", result.IsSuccess()?"created as":"Failed", result.GetValue()));
                 }
                 else
                 {
