@@ -44,6 +44,7 @@ set(FILES
     Source/RobotImporter/URDF/VisualsMaker.h
     Source/RobotImporter/xacro/XacroUtils.cpp
     Source/RobotImporter/xacro/XacroUtils.h
+    Source/RobotImporter/Utils/DefaultSolverConfiguration.h
     Source/RobotImporter/Utils/RobotImporterUtils.cpp
     Source/RobotImporter/Utils/RobotImporterUtils.h
     Source/RobotImporter/Utils/SourceAssetsStorage.cpp
