@@ -65,17 +65,17 @@ Copy gems to the O3DE home.
 
 ```shell
 mkdir -p ${O3DE_HOME}/Gems
-cp o3de-extras/Gems/ROS2 ${O3DE_HOME}/Gems
-cp o3de-extras/Gems/WarehouseSample ${O3DE_HOME}/Gems
-cp o3de-extras/Gems/RosRobotSample ${O3DE_HOME}/Gems
+cp -r o3de-extras/Gems/ROS2 ${O3DE_HOME}/Gems
+cp -r o3de-extras/Gems/WarehouseSample ${O3DE_HOME}/Gems
+cp -r o3de-extras/Gems/RosRobotSample ${O3DE_HOME}/Gems
 ```
 
 Register these gems.
 
 ```shell
-${O3DE_ENGINE}/scripts/o3de.sh register --gem-path ${O3DE_HOME}/Gems/ROS2
-${O3DE_ENGINE}/scripts/o3de.sh register --gem-path ${O3DE_HOME}/Gems/WarehouseSample
-${O3DE_ENGINE}/scripts/o3de.sh register --gem-path ${O3DE_HOME}/Gems/RosRobotSample
+${O3DE_HOME}/scripts/o3de.sh register --gem-path ${O3DE_HOME}/Gems/ROS2
+${O3DE_HOME}/scripts/o3de.sh register --gem-path ${O3DE_HOME}/Gems/WarehouseSample
+${O3DE_HOME}/scripts/o3de.sh register --gem-path ${O3DE_HOME}/Gems/RosRobotSample
 ```
 
 ### 3. Create a ROS2 project from the template
@@ -85,15 +85,15 @@ Assign a name for the new project. In this example, it is assumed that it will b
 ```shell
 export PROJECT_NAME=WarehouseTest
 export PROJECT_PATH=${O3DE_HOME}/Projects/${PROJECT_NAME}
-${O3DE_ENGINE}/scripts/o3de.sh create-project --project-path $PROJECT_PATH --template-path ${O3DE_HOME}/Projects/o3de-extras/Templates/Ros2ProjectTemplate/ -f 
+${O3DE_HOME}/scripts/o3de.sh create-project --project-path $PROJECT_PATH --template-path ${O3DE_HOME}/Projects/o3de-extras/Templates/Ros2ProjectTemplate/ -f 
 ```
 
 Enable gems.
 
 ```shell
-${O3DE_ENGINE}/scripts/o3de.sh enable-gem --gem-name ROS2 --project-path $PROJECT_PATH
-${O3DE_ENGINE}/scripts/o3de.sh enable-gem --gem-name WarehouseSample --project-path $PROJECT_PATH
-${O3DE_ENGINE}/scripts/o3de.sh enable-gem --gem-name RosRobotSample --project-path $PROJECT_PATH
+${O3DE_HOME}/scripts/o3de.sh enable-gem --gem-name ROS2 --project-path $PROJECT_PATH
+${O3DE_HOME}/scripts/o3de.sh enable-gem --gem-name WarehouseSample --project-path $PROJECT_PATH
+${O3DE_HOME}/scripts/o3de.sh enable-gem --gem-name RosRobotSample --project-path $PROJECT_PATH
 ```
 
 ### 4. Build the project
