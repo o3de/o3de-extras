@@ -54,7 +54,7 @@ namespace ROS2
             return 0.0f;
         };
 
-        virtual void ControllerSpecificImGuiUpdate(){};
+        virtual void DisplayControllerParameters(){};
 
         // AZ::TickBus overrides
         void OnTick(float deltaTime, AZ::ScriptTimePoint time) override;

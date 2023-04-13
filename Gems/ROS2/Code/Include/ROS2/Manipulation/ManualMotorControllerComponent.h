@@ -12,7 +12,6 @@
 
 namespace ROS2
 {
-
     class ManualMotorControllerComponent : public JointMotorControllerComponent
     {
     public:
@@ -26,7 +25,6 @@ namespace ROS2
         float m_setSpeed{ 0.0f };
 
         float CalculateMotorSpeed([[maybe_unused]] float deltaTime) override;
-        void ControllerSpecificImGuiUpdate() override;
+        void DisplayControllerParameters() override;
     };
-
 } // namespace ROS2

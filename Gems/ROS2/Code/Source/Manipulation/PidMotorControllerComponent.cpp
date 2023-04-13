@@ -28,7 +28,7 @@ namespace ROS2
                     ->DataElement(
                         AZ::Edit::UIHandlers::Default,
                         &PidMotorControllerComponent::m_zeroOffset,
-                        "Zero Off.",
+                        "Zero Offset",
                         "Allows to change offset of zero to set point")
                     ->DataElement(AZ::Edit::UIHandlers::Default, &PidMotorControllerComponent::m_pidPos, "Pid Position", "Pid Position");
             }
@@ -77,7 +77,7 @@ namespace ROS2
         return aznumeric_cast<float>(m_pidPos.ComputeCommand(controlPositionError, deltaTimeNs));
     }
 
-    void PidMotorControllerComponent::ControllerSpecificImGuiUpdate()
+    void PidMotorControllerComponent::DisplayControllerParameters()
     {
         AZStd::pair<float, float> limits{ 0.0f, 0.0f };
         PhysX::JointRequestBus::EventResult(limits, m_jointComponentIdPair, &PhysX::JointRequests::GetLimits);

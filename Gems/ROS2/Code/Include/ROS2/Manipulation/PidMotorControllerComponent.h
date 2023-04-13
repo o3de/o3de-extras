@@ -15,7 +15,6 @@
 
 namespace ROS2
 {
-
     class PidMotorControllerComponent
         : public JointMotorControllerComponent
         , public PidMotorControllerRequestBus::Handler
@@ -45,7 +44,6 @@ namespace ROS2
 
         // JointMotorControllerComponent overrides
         float CalculateMotorSpeed([[maybe_unused]] float deltaTime) override;
-        void ControllerSpecificImGuiUpdate() override;
+        void DisplayControllerParameters() override;
     };
-
 } // namespace ROS2

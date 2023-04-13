@@ -69,7 +69,7 @@ namespace ROS2
         ImGui::SliderFloat("Speed", &m_currentSpeed, -5.0f, 5.0f);
         ImGui::PopItemWidth();
 
-        ControllerSpecificImGuiUpdate();
+        DisplayControllerParameters();
 
         ImGui::End();
     }

@@ -36,7 +36,7 @@ namespace ROS2
         return m_setSpeed;
     }
 
-    void ManualMotorControllerComponent::ControllerSpecificImGuiUpdate()
+    void ManualMotorControllerComponent::DisplayControllerParameters()
     {
         ImGui::PushItemWidth(200.0f);
         ImGui::SliderFloat(

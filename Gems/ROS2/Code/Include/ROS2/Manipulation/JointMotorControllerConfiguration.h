@@ -19,7 +19,7 @@ namespace ROS2
 
         bool IsDebugModeVisible() const;
 
-        bool m_isDebugController{ false }; //!< Is a debug controller.
+        bool m_isDebugController{ false }; //!< Is it a debug controller.
 
         bool m_debugMode{ false }; //!< Is debug mode activated.
     };
