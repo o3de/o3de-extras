@@ -68,7 +68,7 @@
                     "Controller": {
                         "Configuration": {
                             "LightType": 4,
-                            "Intensity": 20.0,
+                            "Intensity": 30.0,
                             "AttenuationRadiusMode": 0,
                             "AttenuationRadius": 8.0,
                             "Affects GI Factor": 2.0
