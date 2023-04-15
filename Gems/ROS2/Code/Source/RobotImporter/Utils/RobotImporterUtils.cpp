@@ -147,23 +147,91 @@ namespace ROS2
         return filenames;
     }
 
+    AZStd::optional<AZ::IO::Path> GetResolvedPath(const AZ::IO::Path &packagePath,
+                                                 const AZ::IO::Path &unresolvedPath,
+                                                 const AZStd::function<bool(const AZStd::string&)>& fileExists)
+    {
+        AZ::IO::Path packageXmlCandite = packagePath / "package.xml";
+        if (fileExists(packageXmlCandite.String()))
+        {
+            AZ::IO::Path resolvedPath = packagePath / unresolvedPath;
+            if (fileExists(resolvedPath.String()))
+            {
+                return AZStd::optional<AZ::IO::Path>{resolvedPath};
+            }
+        }
+        return AZStd::optional<AZ::IO::Path>{};
+    }
+
+    AZ::IO::Path GetPathFromSubPath(const AZ::IO::Path::const_iterator& begin, const AZ::IO::Path::const_iterator& end)
+    {
+        AZ::IO::Path subpath;
+        if (begin == end)
+        {
+            return subpath;
+        }
+        for (AZ::IO::Path::iterator pathIt = begin;pathIt!=end;pathIt++)
+        {
+            subpath /= *pathIt;
+        }
+        return subpath;
+    }
+
     /// Finds global path from URDF path
     AZStd::string Utils::ResolveURDFPath(
-        AZStd::string unresolvedPath, const AZStd::string& urdfFilePath, const AZStd::function<bool(const AZStd::string&)>& fileExists)
+        AZStd::string unresolvedPath,
+        const AZStd::string& urdfFilePath,
+        const AZStd::string& amentPrefixPath,
+        const AZStd::function<bool(const AZStd::string&)>& fileExists)
     {
+        AZ_Printf("ResolveURDFPath", "ResolveURDFPath with %s\n", unresolvedPath.c_str());
         if (unresolvedPath.starts_with("package://"))
         {
             AZ::StringFunc::Replace(unresolvedPath, "package://", "", true, true);
-            AZ::IO::Path urdfProperPath(urdfFilePath);
-            AZ::IO::Path packagePath;
-            for (auto it = urdfProperPath.begin(); it != urdfProperPath.end(); it++)
+
+            const AZ::IO::Path unresolvedProperPath(unresolvedPath);
+            if (!unresolvedProperPath.empty())
             {
-                packagePath /= *it;
-                AZStd::string packageXmlCandite = (packagePath / "package.xml").String();
-                if (fileExists(packageXmlCandite))
+                const AZStd::string packageNameCandidate = unresolvedProperPath.begin()->String();
+                AZStd::vector<AZStd::string> amentPathTokenized;
+                AZ::StringFunc::Tokenize(amentPrefixPath, amentPathTokenized, ':');
+                for (const auto& package : amentPathTokenized)
                 {
-                    // package.xml has been found
-                    return (packagePath / unresolvedPath).String();
+                    if (package.ends_with(packageNameCandidate))
+                    {
+                        auto pathIt = unresolvedProperPath.begin();
+                        AZStd::advance(pathIt,1);
+                        if (pathIt != unresolvedProperPath.end())
+                        {
+                            AZ::IO::Path unresolvedPathStripped = GetPathFromSubPath(pathIt, unresolvedProperPath.end());
+
+                            const AZ::IO::Path packagePath = AZ::IO::Path{ package } / "share";
+                            auto resolvedPath =
+                                GetResolvedPath(packagePath / AZ::IO::Path{ packageNameCandidate }, unresolvedPathStripped, fileExists);
+                            if (resolvedPath.has_value())
+                            {
+                                AZ_Printf("ResolveURDFPath", "Resolved to using Ament to : %s\n", resolvedPath->String().c_str());
+                                return resolvedPath->String();
+                            }
+                        }
+                    }
+                }
+            }
+
+            const AZ::IO::Path urdfProperPath(urdfFilePath);
+            if (!urdfProperPath.empty())
+            {
+                auto it = --urdfProperPath.end();
+                for (; it != urdfProperPath.begin(); it--)
+                {
+                    const auto packagePath = GetPathFromSubPath(urdfProperPath.begin(),it);
+                    std::cout << "packagePath : " << packagePath.String().c_str() << std::endl;
+                    const auto resolvedPath = GetResolvedPath(packagePath, unresolvedPath, fileExists);
+                    if (resolvedPath.has_value())
+                    {
+                        AZ_Printf("ResolveURDFPath", "ResolveURDFPath with relative path to : %s\n", resolvedPath->String().c_str());
+                        return resolvedPath->String();
+                    }
                 }
             }
             // No path available
@@ -173,13 +241,16 @@ namespace ROS2
         {
             // Paths that start with 'file:///' are absolute paths
             AZ::StringFunc::Replace(unresolvedPath, "file://", "", true, true);
+            AZ_Printf("ResolveURDFPath", "ResolveURDFPath with absolute path to : %s\n", unresolvedPath.c_str());
             return unresolvedPath;
         }
         // seems to be relative path
         AZ::IO::Path relativePath(unresolvedPath);
         AZ::IO::Path urdfProperPath(urdfFilePath);
         AZ::IO::Path urdfParentPath = urdfProperPath.ParentPath();
-        return (urdfParentPath / relativePath).String();
+        const AZ::IO::Path resolvedPath = urdfParentPath / relativePath;
+        AZ_Printf("ResolveURDFPath", "ResolveURDFPath with relative path to : %s\n", unresolvedPath.c_str());
+        return resolvedPath.String();
     }
 
 } // namespace ROS2
