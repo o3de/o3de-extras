@@ -24,7 +24,8 @@ namespace ROS2
                                          " The tool (Asset Processor) allows processing source assets (e.g, meshes, textures)"
                                          " to its supported internal format. To learn more about asset processors click"
                                          " <a href=\"https://www.o3de.org/docs/user-guide/assets/asset-processor/\">here</a>."
-                                         " URDF Importer will find correct meshes in product assets during import."));
+                                         " URDF Importer will find correct meshes in product assets during import."
+                                         " A level must be opened before using URDF Importer."));
         m_label->setTextFormat(Qt::RichText);
         m_label->setOpenExternalLinks(true);
         m_label->setWordWrap(true);
