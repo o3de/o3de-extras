@@ -89,9 +89,8 @@ namespace ROS2
         virtual AZStd::string GetPipelineTemplateName() const = 0; //! Returns name of pass template to use in pipeline
         virtual AZStd::string GetPipelineTypeName() const = 0; //! Type of returned data eg Color, Depth, Optical flow
 
-        AZ::EntityId m_entityId;
-
     protected:
+        AZ::EntityId m_entityId;
         AZ::RPI::RenderPipelinePtr m_pipeline;
         AZStd::string m_pipelineName;
 
