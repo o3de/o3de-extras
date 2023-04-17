@@ -26,6 +26,8 @@ set(FILES
     Source/RobotImporter/RobotImporterWidget.h
     Source/RobotImporter/ROS2RobotImporterEditorSystemComponent.cpp
     Source/RobotImporter/ROS2RobotImporterEditorSystemComponent.h
+    Source/RobotImporter/URDF/ArticulationsMaker.cpp
+    Source/RobotImporter/URDF/ArticulationsMaker.h
     Source/RobotImporter/URDF/CollidersMaker.cpp
     Source/RobotImporter/URDF/CollidersMaker.h
     Source/RobotImporter/URDF/InertialsMaker.cpp
@@ -42,6 +44,7 @@ set(FILES
     Source/RobotImporter/URDF/VisualsMaker.h
     Source/RobotImporter/xacro/XacroUtils.cpp
     Source/RobotImporter/xacro/XacroUtils.h
+    Source/RobotImporter/Utils/DefaultSolverConfiguration.h
     Source/RobotImporter/Utils/RobotImporterUtils.cpp
     Source/RobotImporter/Utils/RobotImporterUtils.h
     Source/RobotImporter/Utils/SourceAssetsStorage.cpp
