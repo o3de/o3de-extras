@@ -126,11 +126,7 @@ To implement these set of actions, the O3DE simulator should have at least:
 
 For an initial implementation, a lighter version of the diagram can be an intermediate goal (simplified by danielemorra98):
 
-<<<<<<< HEAD
 ![Manipulation light](manipulation_minimal.svg)
-=======
-![Manipulation light](manipulation_light.svg)
->>>>>>> refs/rewritten/mabelzhang-manip-roadmap-2
 
 ## Other simulators – review of selected implementations of manipulation
 
@@ -200,5 +196,5 @@ the controllers.
 # References
 
 https://robotics.leeds.ac.uk/research/ai-for-robotics/robotic-manipulation/
-https://manipulation.csail.mit.edu/intro.html
-https://medium.com/toyotaresearch/drake-model-based-design-in-the-age-of-robotics-and-machine-learning-59938c985515
+https://manipulation.csail.mit.edu/intro.html 
+https://medium.com/toyotaresearch/drake-model-based-design-in-the-age-of-robotics-and-machine-learning-59938c985515 
