@@ -8,6 +8,7 @@
 
 #include <Lidar/LidarTemplateUtils.h>
 #include <AzCore/Math/Quaternion.h>
+#include <AzCore/Math/Transform.h>
 
 namespace ROS2
 {
