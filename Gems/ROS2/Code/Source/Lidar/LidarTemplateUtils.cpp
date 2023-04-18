@@ -8,6 +8,7 @@
 
 #include <Lidar/LidarTemplateUtils.h>
 #include <AzCore/Math/Quaternion.h>
+#include <AzCore/Math/Transform.h>
 
 namespace ROS2
 {
@@ -176,15 +177,13 @@ namespace ROS2
     }
 
     AZStd::vector<AZ::Vector3> LidarTemplateUtils::RotationsToDirections(
-        const AZStd::vector<AZ::Vector3>& rotations, const AZ::Vector3& rootRotation)
+        const AZStd::vector<AZ::Vector3>& rotations, const AZ::Transform& rootTransform)
     {
         AZStd::vector<AZ::Vector3> directions;
         directions.reserve(rotations.size());
         for (const auto& angle : rotations)
         {
-            const auto rotation = AZ::Quaternion::CreateFromEulerRadiansZYX(
-                { 0.0f, -(angle.GetY() + rootRotation.GetY()), angle.GetZ() + rootRotation.GetZ() });
-
+            const AZ::Quaternion rotation = rootTransform.GetRotation() * AZ::Quaternion::CreateFromEulerRadiansZYX({ 0.0f, -angle.GetY(), angle.GetZ() });
             directions.emplace_back(rotation.TransformVector(AZ::Vector3::CreateAxisX()));
         }
 

@@ -83,7 +83,7 @@ namespace ROS2
         }
 
         const AZStd::vector<AZ::Vector3> rayDirections =
-            LidarTemplateUtils::RotationsToDirections(m_rayRotations, lidarTransform.GetEulerRadians());
+            LidarTemplateUtils::RotationsToDirections(m_rayRotations, lidarTransform);
 
         const AZ::Vector3 lidarPosition = lidarTransform.GetTranslation();
 
