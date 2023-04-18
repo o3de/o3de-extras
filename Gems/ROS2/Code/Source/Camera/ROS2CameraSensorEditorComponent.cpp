@@ -26,15 +26,13 @@ namespace ROS2
 
     void ROS2CameraSensorEditorComponent::Reflect(AZ::ReflectContext* context)
     {
+        CameraSensorConfiguration::Reflect(context);
+
         if (auto* serialize = azrtti_cast<AZ::SerializeContext*>(context))
         {
             serialize->Class<ROS2CameraSensorEditorComponent, AzToolsFramework::Components::EditorComponentBase>()
                 ->Version(4)
-                ->Field("VerticalFieldOfViewDeg", &ROS2CameraSensorEditorComponent::m_VerticalFieldOfViewDeg)
-                ->Field("Width", &ROS2CameraSensorEditorComponent::m_width)
-                ->Field("Height", &ROS2CameraSensorEditorComponent::m_height)
-                ->Field("Depth", &ROS2CameraSensorEditorComponent::m_depthCamera)
-                ->Field("Color", &ROS2CameraSensorEditorComponent::m_colorCamera)
+                ->Field("CameraSensorConfig", &ROS2CameraSensorEditorComponent::m_cameraSensorConfiguration)
                 ->Field("SensorConfig", &ROS2CameraSensorEditorComponent::m_sensorConfiguration);
 
             if (AZ::EditContext* editContext = serialize->GetEditContext())
@@ -50,15 +48,9 @@ namespace ROS2
                         "Sensor configuration")
                     ->DataElement(
                         AZ::Edit::UIHandlers::Default,
-                        &ROS2CameraSensorEditorComponent::m_VerticalFieldOfViewDeg,
-                        "Vertical field of view",
-                        "Camera's vertical (y axis) field of view in degrees.")
-                    ->DataElement(AZ::Edit::UIHandlers::Default, &ROS2CameraSensorEditorComponent::m_width, "Image width", "Image width")
-                    ->DataElement(AZ::Edit::UIHandlers::Default, &ROS2CameraSensorEditorComponent::m_height, "Image height", "Image height")
-                    ->DataElement(
-                        AZ::Edit::UIHandlers::Default, &ROS2CameraSensorEditorComponent::m_colorCamera, "Color Camera", "Color Camera")
-                    ->DataElement(
-                        AZ::Edit::UIHandlers::Default, &ROS2CameraSensorEditorComponent::m_depthCamera, "Depth Camera", "Depth Camera");
+                        &ROS2CameraSensorEditorComponent::m_cameraSensorConfiguration,
+                        "Camera configuration",
+                        "Camera configuration.");
             }
         }
     }
@@ -82,18 +74,17 @@ namespace ROS2
 
     void ROS2CameraSensorEditorComponent::GetIncompatibleServices(AZ::ComponentDescriptor::DependencyArrayType& incompatible)
     {
-        incompatible.push_back(AZ_CRC_CE("ROS2SensorCamera"));
+        incompatible.push_back(AZ_CRC_CE("ROS2CameraSensor"));
     }
 
     void ROS2CameraSensorEditorComponent::GetProvidedServices(AZ::ComponentDescriptor::DependencyArrayType& required)
     {
-        required.push_back(AZ_CRC_CE("ROS2SensorCamera"));
+        required.push_back(AZ_CRC_CE("ROS2CameraSensor"));
     }
 
     void ROS2CameraSensorEditorComponent::BuildGameEntity(AZ::Entity* gameEntity)
     {
-        gameEntity->CreateComponent<ROS2::ROS2CameraSensorComponent>(
-            m_sensorConfiguration, m_VerticalFieldOfViewDeg, m_width, m_height, m_colorCamera, m_depthCamera);
+        gameEntity->CreateComponent<ROS2::ROS2CameraSensorComponent>(m_sensorConfiguration, m_cameraSensorConfiguration);
     }
 
     void ROS2CameraSensorEditorComponent::DisplayEntityViewport(
@@ -113,14 +104,14 @@ namespace ROS2
 
         transform.SetUniformScale(frustumScale);
         debugDisplay.DepthTestOff();
-        const float ver = 0.5f * AZStd::tan((AZ::DegToRad(m_VerticalFieldOfViewDeg * 0.5f)));
-        const float hor = m_height * ver / m_width;
+        const float vertical = 0.5f * AZStd::tan((AZ::DegToRad(m_cameraSensorConfiguration.m_verticalFieldOfViewDeg * 0.5f)));
+        const float horizontal = m_cameraSensorConfiguration.m_height * vertical / m_cameraSensorConfiguration.m_width;
 
         // frustum drawing
-        const AZ::Vector3 p1(-ver, -hor, 1.f);
-        const AZ::Vector3 p2(ver, -hor, 1.f);
-        const AZ::Vector3 p3(ver, hor, 1.f);
-        const AZ::Vector3 p4(-ver, hor, 1.f);
+        const AZ::Vector3 p1(-vertical, -horizontal, 1.f);
+        const AZ::Vector3 p2(vertical, -horizontal, 1.f);
+        const AZ::Vector3 p3(vertical, horizontal, 1.f);
+        const AZ::Vector3 p4(-vertical, horizontal, 1.f);
         const AZ::Vector3 p0(0, 0, 0);
         const AZ::Vector3 py(0.1, 0, 0);
 
@@ -145,9 +136,9 @@ namespace ROS2
         debugDisplay.DrawLine(pt4, pt0);
 
         // up-arrow drawing
-        const AZ::Vector3 pa1(-arrowSize * ver, -arrowRise * hor, 1.f);
-        const AZ::Vector3 pa2(arrowSize * ver, -arrowRise * hor, 1.f);
-        const AZ::Vector3 pa3(0, (-arrowRise - arrowSize) * hor, 1.f);
+        const AZ::Vector3 pa1(-arrowSize * vertical, -arrowRise * horizontal, 1.f);
+        const AZ::Vector3 pa2(arrowSize * vertical, -arrowRise * horizontal, 1.f);
+        const AZ::Vector3 pa3(0, (-arrowRise - arrowSize) * horizontal, 1.f);
         const auto pat1 = transform.TransformPoint(pa1);
         const auto pat2 = transform.TransformPoint(pa2);
         const auto pat3 = transform.TransformPoint(pa3);

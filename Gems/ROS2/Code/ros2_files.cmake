@@ -11,6 +11,8 @@ set(FILES
         ../Assets/Passes/ROSPassTemplates.azasset
         Source/Camera/CameraSensor.cpp
         Source/Camera/CameraSensor.h
+        Source/Camera/CameraSensorConfiguration.cpp
+        Source/Camera/CameraSensorConfiguration.h
         Source/Camera/ROS2CameraSensorComponent.cpp
         Source/Camera/ROS2CameraSensorComponent.h
         Source/Clock/SimulationClock.cpp
