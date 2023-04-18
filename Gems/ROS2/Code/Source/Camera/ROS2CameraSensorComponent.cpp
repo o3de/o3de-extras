@@ -40,14 +40,6 @@ namespace ROS2
     {
         ROS2SensorComponent::Activate();
 
-        const auto cameraInfoPublisherConfig = m_sensorConfiguration.m_publishersConfigurations[CameraConstants::InfoConfig];
-        AZStd::string cameraInfoFullTopic = ROS2Names::GetNamespacedName(GetNamespace(), cameraInfoPublisherConfig.m_topic);
-        AZ_TracePrintf("ROS2", "Creating publisher for camera info on topic %s\n", cameraInfoFullTopic.data());
-
-        auto ros2Node = ROS2Interface::Get()->GetNode();
-        m_cameraInfoPublisher =
-            ros2Node->create_publisher<sensor_msgs::msg::CameraInfo>(cameraInfoFullTopic.data(), cameraInfoPublisherConfig.GetQoS());
-
         if (m_cameraConfiguration.m_colorCamera && m_cameraConfiguration.m_depthCamera)
         {
             AddImageSource<CameraRGBDSensor>();
@@ -70,6 +62,7 @@ namespace ROS2
     {
         m_cameraSensor.reset();
         m_imagePublishers.clear();
+        m_cameraInfoPublishers.clear();
         ROS2SensorComponent::Deactivate();
     }
 
@@ -94,7 +87,10 @@ namespace ROS2
             AZStd::copy(cameraIntrinsics.begin(), cameraIntrinsics.end(), cameraInfo.k.begin());
             cameraInfo.p = { cameraInfo.k[0], cameraInfo.k[1], cameraInfo.k[2], 0, cameraInfo.k[3], cameraInfo.k[4], cameraInfo.k[5], 0,
                              cameraInfo.k[6], cameraInfo.k[7], cameraInfo.k[8], 0 };
-            m_cameraInfoPublisher->publish(cameraInfo);
+            for (CameraInfoPublisherPtrType& cameraInfoPublisher : m_cameraInfoPublishers)
+            {
+                cameraInfoPublisher->publish(cameraInfo);
+            }
             m_cameraSensor->RequestMessagePublication(m_imagePublishers, transform, ros_header);
         }
     }
@@ -112,4 +108,3 @@ namespace ROS2
         return AZStd::string{};
     }
 } // namespace ROS2
-

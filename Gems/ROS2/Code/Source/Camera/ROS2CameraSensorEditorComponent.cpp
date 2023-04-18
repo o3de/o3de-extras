@@ -21,7 +21,9 @@ namespace ROS2
         m_sensorConfiguration.m_publishersConfigurations.insert(
             MakeTopicConfigurationPair("camera_image_depth", CameraConstants::ImageMessageType, CameraConstants::DepthImageConfig));
         m_sensorConfiguration.m_publishersConfigurations.insert(
-            MakeTopicConfigurationPair("camera_info", CameraConstants::CameraInfoMessageType, CameraConstants::InfoConfig));
+            MakeTopicConfigurationPair("color_camera_info", CameraConstants::CameraInfoMessageType, CameraConstants::ColorInfoConfig));
+        m_sensorConfiguration.m_publishersConfigurations.insert(
+            MakeTopicConfigurationPair("depth_camera_info", CameraConstants::CameraInfoMessageType, CameraConstants::DepthInfoConfig));
     }
 
     void ROS2CameraSensorEditorComponent::Reflect(AZ::ReflectContext* context)

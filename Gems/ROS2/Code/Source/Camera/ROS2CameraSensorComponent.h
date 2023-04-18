@@ -15,6 +15,8 @@
 
 #include "CameraSensor.h"
 #include "CameraSensorConfiguration.h"
+#include "ROS2/Communication/TopicConfiguration.h"
+#include <AzCore/std/containers/vector.h>
 #include <ROS2/Frame/NamespaceConfiguration.h>
 #include <ROS2/Frame/ROS2Transform.h>
 #include <ROS2/ROS2Bus.h>
@@ -28,7 +30,8 @@ namespace ROS2
         inline constexpr char ImageMessageType[] = "sensor_msgs::msg::Image";
         inline constexpr char DepthImageConfig[] = "Depth Image";
         inline constexpr char ColorImageConfig[] = "Color Image";
-        inline constexpr char InfoConfig[] = "Camera Info";
+        inline constexpr char DepthInfoConfig[] = "Depth Camera Info";
+        inline constexpr char ColorInfoConfig[] = "Color Camera Info";
         inline constexpr char CameraInfoMessageType[] = "sensor_msgs::msg::CameraInfo";
     } // namespace CameraConstants
 
@@ -66,10 +69,23 @@ namespace ROS2
             return { defaultConfig };
         }
 
+        template<typename CameraType>
+        AZStd::vector<TopicConfiguration> GetCameraInfoTopicConfiguration()
+        {
+            TopicConfiguration defaultConfig;
+            return { defaultConfig };
+        }
+
         template<>
         AZStd::vector<TopicConfiguration> GetCameraTopicConfiguration<CameraColorSensor>()
         {
             return { m_sensorConfiguration.m_publishersConfigurations[CameraConstants::ColorImageConfig] };
+        }
+
+        template<>
+        AZStd::vector<TopicConfiguration> GetCameraInfoTopicConfiguration<CameraColorSensor>()
+        {
+            return { m_sensorConfiguration.m_publishersConfigurations[CameraConstants::ColorInfoConfig] };
         }
 
         template<>
@@ -79,11 +95,40 @@ namespace ROS2
         }
 
         template<>
+        AZStd::vector<TopicConfiguration> GetCameraInfoTopicConfiguration<CameraDepthSensor>()
+        {
+            return { m_sensorConfiguration.m_publishersConfigurations[CameraConstants::DepthInfoConfig] };
+        }
+
+        template<>
         AZStd::vector<TopicConfiguration> GetCameraTopicConfiguration<CameraRGBDSensor>()
         {
             // Note: the order matters.
             return { m_sensorConfiguration.m_publishersConfigurations[CameraConstants::ColorImageConfig],
                      m_sensorConfiguration.m_publishersConfigurations[CameraConstants::DepthImageConfig] };
+        }
+
+        template<>
+        AZStd::vector<TopicConfiguration> GetCameraInfoTopicConfiguration<CameraRGBDSensor>()
+        {
+            // Note: the order matters.
+            return { m_sensorConfiguration.m_publishersConfigurations[CameraConstants::ColorInfoConfig],
+                     m_sensorConfiguration.m_publishersConfigurations[CameraConstants::DepthInfoConfig] };
+        }
+
+        //! Helper that adds publishers based on predefined configuration.
+        template<typename PublishedData>
+        void AddPublishersFromConfiguration(
+            const AZStd::vector<TopicConfiguration> configurations,
+            AZStd::vector<std::shared_ptr<rclcpp::Publisher<PublishedData>>>& publishers)
+        {
+            for (const auto& configuration : configurations)
+            {
+                AZStd::string fullTopic = ROS2Names::GetNamespacedName(GetNamespace(), configuration.m_topic);
+                auto ros2Node = ROS2Interface::Get()->GetNode();
+                auto publisher = ros2Node->create_publisher<PublishedData>(fullTopic.data(), configuration.GetQoS());
+                publishers.emplace_back(publisher);
+            }
         }
 
         //! Helper that adds an image source.
@@ -96,13 +141,9 @@ namespace ROS2
                                                         m_cameraConfiguration.m_height };
             const CameraSensorDescription description{ GetCameraNameFromFrame(GetEntity()), cameraConfiguration };
             const auto cameraImagePublisherConfigs = GetCameraTopicConfiguration<CameraType>();
-            for (const auto& cameraImagePublisherConfig : cameraImagePublisherConfigs)
-            {
-                AZStd::string fullTopic = ROS2Names::GetNamespacedName(GetNamespace(), cameraImagePublisherConfig.m_topic);
-                auto ros2Node = ROS2Interface::Get()->GetNode();
-                auto publisher = ros2Node->create_publisher<sensor_msgs::msg::Image>(fullTopic.data(), cameraImagePublisherConfig.GetQoS());
-                m_imagePublishers.emplace_back(publisher);
-            }
+            AddPublishersFromConfiguration(cameraImagePublisherConfigs, m_imagePublishers);
+            const auto cameraInfoPublisherConfigs = GetCameraInfoTopicConfiguration<CameraType>();
+            AddPublishersFromConfiguration(cameraInfoPublisherConfigs, m_cameraInfoPublishers);
             m_cameraSensor = AZStd::make_shared<CameraType>(description, GetEntityId());
         }
 
@@ -118,6 +159,6 @@ namespace ROS2
 
         AZStd::vector<ImagePublisherPtrType> m_imagePublishers;
         AZStd::shared_ptr<CameraSensor> m_cameraSensor;
-        CameraInfoPublisherPtrType m_cameraInfoPublisher;
+        AZStd::vector<CameraInfoPublisherPtrType> m_cameraInfoPublishers;
     };
 } // namespace ROS2
