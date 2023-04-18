@@ -496,7 +496,7 @@ namespace XR
         constexpr uint32_t gridSize = 8;
         AZStd::vector<uint8_t> shadingRatePatternData(bufferSize);
         AZ::RHI::ShadingRate rateGrid[gridSize][gridSize];
-        // Initialize the whole image with the normal rate
+        // Initialize the whole image with the normal rate. FYI - memset only works with 0 (i.e Rate1x1).
         ::memset(rateGrid, static_cast<int>(AZ::RHI::ShadingRate::Rate1x1), sizeof(rateGrid));
 
         // Helper function to fill up the grid
@@ -507,7 +507,7 @@ namespace XR
                 for (int ii = row; ii < row + rowCount; ++ii)
                 {
                     rateGrid[i][ii] = supportedRates[static_cast<uint32_t>(rate)];
-                    // The image is symetric on the vertical axis
+                    // The image is symmetric on the vertical axis
                     rateGrid[gridSize - 1 - i][ii] = supportedRates[static_cast<uint32_t>(rate)];
                 }
             }
@@ -518,65 +518,61 @@ namespace XR
         {
         case AZ::RHI::XRFoveatedLevel::Low:
         {
-            //  _______________________________________________
-            // |____2x2____|__________2x1__________|____2x2____|
-            // |     |                                   |     |
-            // |     |                                   |     |
-            // |     |                                   |     |
-            // | 1x2 |                1x1                | 1x2 |
-            // |     |                                   |     |
-            // |_____|___________________________________|_____|
-            // |_2x2_|____2x1____|____1x1____|____2x1____|_2x2_|
-            //
-            fillFunc(AZ::RHI::ShadingRate::Rate2x2, 0, 0, 2, 1);
-            fillFunc(AZ::RHI::ShadingRate::Rate2x2, 0, gridSize - 1, 1, 1);
-            fillFunc(AZ::RHI::ShadingRate::Rate2x1, 2, 0, 2, 1);
-            fillFunc(AZ::RHI::ShadingRate::Rate2x1, 1, gridSize - 1, 2, 1);
-            fillFunc(AZ::RHI::ShadingRate::Rate1x2, 0, 1, 1, gridSize - 2);
+			//  _______________________________________________
+			// |_4x4_|________________2x2________________|_4x4_|
+			// |     | 1x2 |                       | 1x2 |     |
+			// |     |_____|                       |_____|     |
+			// |     |                                   |     |
+			// | 2x2 |                1x1                | 2x2 |
+			// |     |                                   |     |
+			// |     |___________________________________|     |
+			// |______________________2x2______________________|
+			//
+			fillFunc(AZ::RHI::ShadingRate::Rate4x4, 0, 0, 1, 1);
+			fillFunc(AZ::RHI::ShadingRate::Rate2x2, 1, 0, 3, 1);
+			fillFunc(AZ::RHI::ShadingRate::Rate2x2, 0, 1, 1, gridSize - 1);
+			fillFunc(AZ::RHI::ShadingRate::Rate1x2, 1, 1, 1, 2);
+			fillFunc(AZ::RHI::ShadingRate::Rate2x2, 1, gridSize - 1, 3, 1);
         }
         break;
         case AZ::RHI::XRFoveatedLevel::Medium:
         {
+		    //    1    2     3    4      5    6      7     8
             //  _______________________________________________
-            // |_4x2_|________________2x2________________|_4x2_|
-            // |     | 1x2 |                       | 1x2 |     |
-            // |     |_____|                       |_____|     |
-            // |     |                                   |     |
-            // | 2x2 |                1x1                | 2x2 |
-            // |     |                                   |     |
-            // |     |___________________________________|     |
-            // |___________|__________2x1__________|___________|
-            //
-            fillFunc(AZ::RHI::ShadingRate::Rate4x2, 0, 0, 1, 1);
-            fillFunc(AZ::RHI::ShadingRate::Rate2x2, 1, 0, 3, 1);
-            fillFunc(AZ::RHI::ShadingRate::Rate2x2, 0, 1, 1, gridSize - 1);
-            fillFunc(AZ::RHI::ShadingRate::Rate2x2, 1, gridSize - 1, 1, 1);
-            fillFunc(AZ::RHI::ShadingRate::Rate1x2, 1, 1, 1, 2);
-            fillFunc(AZ::RHI::ShadingRate::Rate2x1, 2, gridSize - 1, 2, 1);
+		    // |______4x4_______|____2x2____|____4x4___________|    1
+		    // |     |     |                       |     |     |    2
+		    // |     |     |                       |     |     |    3
+		    // | 4x4 | 2x2 |                       | 2x2 | 4x4 |    4
+		    // |     |     |          1x1          |     |     |    5
+		    // |     |     |                       |     |     |    6
+		    // |_____|_____|_______________________|_____|_____|    7
+		    // |_______4x4______|____2x2____|____4x4___________|    8
+		    //
+			fillFunc(AZ::RHI::ShadingRate::Rate4x4, 0, 0, 3, 1);
+			fillFunc(AZ::RHI::ShadingRate::Rate4x4, 0, 1, 1, 6);
+			fillFunc(AZ::RHI::ShadingRate::Rate4x4, 0, gridSize - 1, 3, 1);
+			fillFunc(AZ::RHI::ShadingRate::Rate2x2, 1, 1, 1, 6);
+            fillFunc(AZ::RHI::ShadingRate::Rate2x2, 3, 0, 1, 1);
+            fillFunc(AZ::RHI::ShadingRate::Rate2x2, 3, gridSize - 1, 1, 1);
         }
         break;
         case AZ::RHI::XRFoveatedLevel::High:
         {
-            //  _______________________________________________
-            // |_4x4_|____4x2____|____2x2____|____4x2____|_4x4_|
-            // | 2x4 |_2x2_|                       |_2x2_| 2x4 |
-            // |_____|_____|                       |_____|_____|
-            // |     |     |                       |     |     |
-            // | 2x2 | 1x2 |          1x1          | 1x2 | 2x2 |
-            // |     |     |                       |     |     |
-            // |_____|_____|_______________________|_____|_____|
-            // |_2x4_|____2x2____|____2x1____|____2x2____|_2x4_|
-            //
-            fillFunc(AZ::RHI::ShadingRate::Rate4x4, 0, 0, 1, 1);
-            fillFunc(AZ::RHI::ShadingRate::Rate4x2, 1, 0, 2, 1);
-            fillFunc(AZ::RHI::ShadingRate::Rate2x4, 0, 1, 1, 2);
-            fillFunc(AZ::RHI::ShadingRate::Rate2x4, 0, gridSize - 1, 1, 1);
-            fillFunc(AZ::RHI::ShadingRate::Rate2x2, 3, 0, 1, 1);
-            fillFunc(AZ::RHI::ShadingRate::Rate2x2, 1, 1, 1, 2);
-            fillFunc(AZ::RHI::ShadingRate::Rate2x2, 0, 3, 1, 4);
-            fillFunc(AZ::RHI::ShadingRate::Rate2x2, 1, gridSize - 1, 2, 1);
-            fillFunc(AZ::RHI::ShadingRate::Rate1x2, 1, 3, 1, 4);
-            fillFunc(AZ::RHI::ShadingRate::Rate2x1, 3, gridSize - 1, 2, 1);
+			//    1    2     3    4      5    6      7     8
+			//  _______________________________________________
+			// |______________________4x4 _____________________|    1
+			// |     |     |     |           |     |     |     |    2
+			// |     |     |     |           |     |     |     |    3
+			// | 4x4 | 4x2 | 2x2 |           | 2x2 | 4x2 | 4x4 |    4
+			// |     |     |     |    1x1    |     |     |     |    5
+			// |     |     |     |           |     |     |     |    6
+			// |_____|_____|_____|___________|_____|_____|_____|    7
+			// |______________________4x4______________________|    8
+            fillFunc(AZ::RHI::ShadingRate::Rate4x4, 0, 0, 4, 1);
+            fillFunc(AZ::RHI::ShadingRate::Rate4x4, 0, 1, 1, 6);
+            fillFunc(AZ::RHI::ShadingRate::Rate4x4, 0, gridSize - 1, 4, 1);
+            fillFunc(AZ::RHI::ShadingRate::Rate4x2, 1, 1, 1, 6);
+            fillFunc(AZ::RHI::ShadingRate::Rate2x2, 2, 1, 1, 6);
         }
         break;
         case AZ::RHI::XRFoveatedLevel::None:
