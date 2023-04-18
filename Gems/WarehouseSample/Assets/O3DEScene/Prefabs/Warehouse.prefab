@@ -68,9 +68,11 @@
                             "Shadow Bias": 0.20000000298023224,
                             "Normal Shadow Bias": 0.20000000298023224,
                             "Shadowmap Max Size": "Size1024",
-                            "Shadow Filter Method": 3,
-                            "Filtering Sample Count": 4,
-                            "Esm Exponent": 50.0
+                            "Shadow Filter Method": 1,
+                            "Filtering Sample Count": 64,
+                            "Esm Exponent": 50.0,
+                            "Shadow Caching Mode": 1,
+                            "Shadow Caching Enabled": true
                         }
                     }
                 },
@@ -158,9 +160,11 @@
                             "Shadow Bias": 0.20000000298023224,
                             "Normal Shadow Bias": 0.20000000298023224,
                             "Shadowmap Max Size": "Size1024",
-                            "Shadow Filter Method": 3,
-                            "Filtering Sample Count": 4,
-                            "Esm Exponent": 50.0
+                            "Shadow Filter Method": 1,
+                            "Filtering Sample Count": 64,
+                            "Esm Exponent": 50.0,
+                            "Shadow Caching Mode": 1,
+                            "Shadow Caching Enabled": true
                         }
                     }
                 },
@@ -248,9 +252,11 @@
                             "Shadow Bias": 0.20000000298023224,
                             "Normal Shadow Bias": 0.20000000298023224,
                             "Shadowmap Max Size": "Size1024",
-                            "Shadow Filter Method": 3,
-                            "Filtering Sample Count": 4,
-                            "Esm Exponent": 50.0
+                            "Shadow Filter Method": 1,
+                            "Filtering Sample Count": 64,
+                            "Esm Exponent": 50.0,
+                            "Shadow Caching Mode": 1,
+                            "Shadow Caching Enabled": true
                         }
                     }
                 },
@@ -338,9 +344,11 @@
                             "Shadow Bias": 0.20000000298023224,
                             "Normal Shadow Bias": 0.20000000298023224,
                             "Shadowmap Max Size": "Size1024",
-                            "Shadow Filter Method": 3,
-                            "Filtering Sample Count": 4,
-                            "Esm Exponent": 50.0
+                            "Shadow Filter Method": 1,
+                            "Filtering Sample Count": 64,
+                            "Esm Exponent": 50.0,
+                            "Shadow Caching Mode": 1,
+                            "Shadow Caching Enabled": true
                         }
                     }
                 },
@@ -428,9 +436,11 @@
                             "Shadow Bias": 0.20000000298023224,
                             "Normal Shadow Bias": 0.20000000298023224,
                             "Shadowmap Max Size": "Size1024",
-                            "Shadow Filter Method": 3,
-                            "Filtering Sample Count": 4,
-                            "Esm Exponent": 50.0
+                            "Shadow Filter Method": 1,
+                            "Filtering Sample Count": 64,
+                            "Esm Exponent": 50.0,
+                            "Shadow Caching Mode": 1,
+                            "Shadow Caching Enabled": true
                         }
                     }
                 },
@@ -518,9 +528,11 @@
                             "Shadow Bias": 0.20000000298023224,
                             "Normal Shadow Bias": 0.20000000298023224,
                             "Shadowmap Max Size": "Size1024",
-                            "Shadow Filter Method": 3,
-                            "Filtering Sample Count": 4,
-                            "Esm Exponent": 50.0
+                            "Shadow Filter Method": 1,
+                            "Filtering Sample Count": 64,
+                            "Esm Exponent": 50.0,
+                            "Shadow Caching Mode": 1,
+                            "Shadow Caching Enabled": true
                         }
                     }
                 },
@@ -608,9 +620,11 @@
                             "Shadow Bias": 0.20000000298023224,
                             "Normal Shadow Bias": 0.20000000298023224,
                             "Shadowmap Max Size": "Size1024",
-                            "Shadow Filter Method": 3,
-                            "Filtering Sample Count": 4,
-                            "Esm Exponent": 50.0
+                            "Shadow Filter Method": 1,
+                            "Filtering Sample Count": 64,
+                            "Esm Exponent": 50.0,
+                            "Shadow Caching Mode": 1,
+                            "Shadow Caching Enabled": true
                         }
                     }
                 },
@@ -698,9 +712,11 @@
                             "Shadow Bias": 0.20000000298023224,
                             "Normal Shadow Bias": 0.20000000298023224,
                             "Shadowmap Max Size": "Size1024",
-                            "Shadow Filter Method": 3,
-                            "Filtering Sample Count": 4,
-                            "Esm Exponent": 50.0
+                            "Shadow Filter Method": 1,
+                            "Filtering Sample Count": 64,
+                            "Esm Exponent": 50.0,
+                            "Shadow Caching Mode": 1,
+                            "Shadow Caching Enabled": true
                         }
                     }
                 },
@@ -788,9 +804,11 @@
                             "Shadow Bias": 0.20000000298023224,
                             "Normal Shadow Bias": 0.20000000298023224,
                             "Shadowmap Max Size": "Size1024",
-                            "Shadow Filter Method": 3,
-                            "Filtering Sample Count": 4,
-                            "Esm Exponent": 50.0
+                            "Shadow Filter Method": 1,
+                            "Filtering Sample Count": 64,
+                            "Esm Exponent": 50.0,
+                            "Shadow Caching Mode": 1,
+                            "Shadow Caching Enabled": true
                         }
                     }
                 },
@@ -878,9 +896,11 @@
                             "Shadow Bias": 0.20000000298023224,
                             "Normal Shadow Bias": 0.20000000298023224,
                             "Shadowmap Max Size": "Size1024",
-                            "Shadow Filter Method": 3,
-                            "Filtering Sample Count": 4,
-                            "Esm Exponent": 50.0
+                            "Shadow Filter Method": 1,
+                            "Filtering Sample Count": 64,
+                            "Esm Exponent": 50.0,
+                            "Shadow Caching Mode": 1,
+                            "Shadow Caching Enabled": true
                         }
                     }
                 },
@@ -1127,9 +1147,11 @@
                             "Shadow Bias": 0.20000000298023224,
                             "Normal Shadow Bias": 0.20000000298023224,
                             "Shadowmap Max Size": "Size1024",
-                            "Shadow Filter Method": 3,
-                            "Filtering Sample Count": 4,
-                            "Esm Exponent": 50.0
+                            "Shadow Filter Method": 1,
+                            "Filtering Sample Count": 64,
+                            "Esm Exponent": 50.0,
+                            "Shadow Caching Mode": 1,
+                            "Shadow Caching Enabled": true
                         }
                     }
                 },
@@ -1288,9 +1310,11 @@
                             "Shadow Bias": 0.20000000298023224,
                             "Normal Shadow Bias": 0.20000000298023224,
                             "Shadowmap Max Size": "Size1024",
-                            "Shadow Filter Method": 3,
-                            "Filtering Sample Count": 4,
-                            "Esm Exponent": 50.0
+                            "Shadow Filter Method": 1,
+                            "Filtering Sample Count": 64,
+                            "Esm Exponent": 50.0,
+                            "Shadow Caching Mode": 1,
+                            "Shadow Caching Enabled": true
                         }
                     }
                 },
@@ -1378,9 +1402,11 @@
                             "Shadow Bias": 0.20000000298023224,
                             "Normal Shadow Bias": 0.20000000298023224,
                             "Shadowmap Max Size": "Size1024",
-                            "Shadow Filter Method": 3,
-                            "Filtering Sample Count": 4,
-                            "Esm Exponent": 50.0
+                            "Shadow Filter Method": 1,
+                            "Filtering Sample Count": 64,
+                            "Esm Exponent": 50.0,
+                            "Shadow Caching Mode": 1,
+                            "Shadow Caching Enabled": true
                         }
                     }
                 },
@@ -1541,90 +1567,76 @@
                                     "Name": "Plastick_Black",
                                     "MaterialAsset": {
                                         "assetId": {
-                                            "guid": "{EF76347C-319F-584E-9DDE-A06D328F4304}",
+                                            "guid": "{07918D02-A9A8-5954-8E5D-C2FE080F8010}",
                                             "subId": 1
                                         },
-                                        "assetHint": "physx/glass.physicsmaterial"
+                                        "assetHint": "physx/plastic.physicsmaterial"
                                     }
                                 },
                                 {
-                                    "Name": "Steering_Panel",
-                                    "MaterialAsset": {
-                                        "assetId": {
-                                            "guid": "{EF76347C-319F-584E-9DDE-A06D328F4304}",
-                                            "subId": 1
-                                        },
-                                        "assetHint": "physx/glass.physicsmaterial"
-                                    }
+                                    "Name": "Steering_Panel"
                                 },
                                 {
-                                    "Name": "Paper",
-                                    "MaterialAsset": {
-                                        "assetId": {
-                                            "guid": "{EF76347C-319F-584E-9DDE-A06D328F4304}",
-                                            "subId": 1
-                                        },
-                                        "assetHint": "physx/glass.physicsmaterial"
-                                    }
+                                    "Name": "Paper"
                                 },
                                 {
                                     "Name": "Wood",
                                     "MaterialAsset": {
                                         "assetId": {
-                                            "guid": "{EF76347C-319F-584E-9DDE-A06D328F4304}",
+                                            "guid": "{0C799856-9E0E-568D-A282-597D13A8556C}",
                                             "subId": 1
                                         },
-                                        "assetHint": "physx/glass.physicsmaterial"
+                                        "assetHint": "physx/wood.physicsmaterial"
                                     }
                                 },
                                 {
                                     "Name": "Metal_Painted_Yellow",
                                     "MaterialAsset": {
                                         "assetId": {
-                                            "guid": "{EF76347C-319F-584E-9DDE-A06D328F4304}",
+                                            "guid": "{92A5EC27-1AC1-523E-88BB-9A6278DBD853}",
                                             "subId": 1
                                         },
-                                        "assetHint": "physx/glass.physicsmaterial"
+                                        "assetHint": "physx/metal.physicsmaterial"
                                     }
                                 },
                                 {
                                     "Name": "Concrete",
                                     "MaterialAsset": {
                                         "assetId": {
-                                            "guid": "{EF76347C-319F-584E-9DDE-A06D328F4304}",
+                                            "guid": "{6D044767-4E3B-5116-A1A7-9C65BCF586A0}",
                                             "subId": 1
                                         },
-                                        "assetHint": "physx/glass.physicsmaterial"
+                                        "assetHint": "physx/terrain_dirt.physicsmaterial"
                                     }
                                 },
                                 {
                                     "Name": "Metal_Galvanized",
                                     "MaterialAsset": {
                                         "assetId": {
-                                            "guid": "{EF76347C-319F-584E-9DDE-A06D328F4304}",
+                                            "guid": "{92A5EC27-1AC1-523E-88BB-9A6278DBD853}",
                                             "subId": 1
                                         },
-                                        "assetHint": "physx/glass.physicsmaterial"
+                                        "assetHint": "physx/metal.physicsmaterial"
                                     }
                                 },
                                 {
                                     "Name": "White",
                                     "MaterialAsset": {
                                         "assetId": {
-                                            "guid": "{EF76347C-319F-584E-9DDE-A06D328F4304}",
+                                            "guid": "{AEFC12E4-B92E-5473-9B09-C6CDEC23EC7E}",
                                             "subId": 1
                                         },
-                                        "assetHint": "physx/glass.physicsmaterial"
+                                        "assetHint": "physx/concrete.physicsmaterial"
                                     }
                                 },
                                 {
                                     "Name": "Wall_Concrete",
                                     "MaterialAsset": {
                                         "assetId": {
-                                            "guid": "{EF76347C-319F-584E-9DDE-A06D328F4304}",
+                                            "guid": "{AEFC12E4-B92E-5473-9B09-C6CDEC23EC7E}",
                                             "subId": 1
                                         },
-                                        "assetHint": "physx/glass.physicsmaterial"
+                                        "assetHint": "physx/concrete.physicsmaterial"
                                     }
                                 },
                                 {
@@ -1641,151 +1653,88 @@
                                     "Name": "Metal_Painted_White",
                                     "MaterialAsset": {
                                         "assetId": {
-                                            "guid": "{EF76347C-319F-584E-9DDE-A06D328F4304}",
+                                            "guid": "{92A5EC27-1AC1-523E-88BB-9A6278DBD853}",
                                             "subId": 1
                                         },
-                                        "assetHint": "physx/glass.physicsmaterial"
+                                        "assetHint": "physx/metal.physicsmaterial"
                                     }
                                 },
                                 {
                                     "Name": "Metal_Scratched",
                                     "MaterialAsset": {
                                         "assetId": {
-                                            "guid": "{EF76347C-319F-584E-9DDE-A06D328F4304}",
+                                            "guid": "{92A5EC27-1AC1-523E-88BB-9A6278DBD853}",
                                             "subId": 1
                                         },
-                                        "assetHint": "physx/glass.physicsmaterial"
+                                        "assetHint": "physx/metal.physicsmaterial"
                                     }
                                 },
                                 {
                                     "Name": "Metal_Painted_Red",
                                     "MaterialAsset": {
                                         "assetId": {
-                                            "guid": "{EF76347C-319F-584E-9DDE-A06D328F4304}",
+                                            "guid": "{92A5EC27-1AC1-523E-88BB-9A6278DBD853}",
                                             "subId": 1
                                         },
-                                        "assetHint": "physx/glass.physicsmaterial"
+                                        "assetHint": "physx/metal.physicsmaterial"
                                     }
                                 },
                                 {
                                     "Name": "Wall_Paint",
                                     "MaterialAsset": {
                                         "assetId": {
-                                            "guid": "{EF76347C-319F-584E-9DDE-A06D328F4304}",
+                                            "guid": "{AEFC12E4-B92E-5473-9B09-C6CDEC23EC7E}",
                                             "subId": 1
                                         },
-                                        "assetHint": "physx/glass.physicsmaterial"
+                                        "assetHint": "physx/concrete.physicsmaterial"
                                     }
                                 },
                                 {
                                     "Name": "Metal_Rusted",
                                     "MaterialAsset": {
                                         "assetId": {
-                                            "guid": "{EF76347C-319F-584E-9DDE-A06D328F4304}",
+                                            "guid": "{0A945400-0986-5053-9811-D4F349E73B9C}",
                                             "subId": 1
                                         },
-                                        "assetHint": "physx/glass.physicsmaterial"
+                                        "assetHint": "physx/character.physicsmaterial"
                                     }
                                 },
                                 {
-                                    "Name": "Extinguisher",
-                                    "MaterialAsset": {
-                                        "assetId": {
-                                            "guid": "{EF76347C-319F-584E-9DDE-A06D328F4304}",
-                                            "subId": 1
-                                        },
-                                        "assetHint": "physx/glass.physicsmaterial"
-                                    }
+                                    "Name": "Extinguisher"
                                 },
                                 {
-                                    "Name": "Yellow",
-                                    "MaterialAsset": {
-                                        "assetId": {
-                                            "guid": "{EF76347C-319F-584E-9DDE-A06D328F4304}",
-                                            "subId": 1
-                                        },
-                                        "assetHint": "physx/glass.physicsmaterial"
-                                    }
+                                    "Name": "Yellow"
                                 },
                                 {
-                                    "Name": "Blue_Vehicles",
-                                    "MaterialAsset": {
-                                        "assetId": {
-                                            "guid": "{EF76347C-319F-584E-9DDE-A06D328F4304}",
-                                            "subId": 1
-                                        },
-                                        "assetHint": "physx/glass.physicsmaterial"
-                                    }
+                                    "Name": "Blue_Vehicles"
                                 },
                                 {
-                                    "Name": "White_Vehicles",
-                                    "MaterialAsset": {
-                                        "assetId": {
-                                            "guid": "{EF76347C-319F-584E-9DDE-A06D328F4304}",
-                                            "subId": 1
-                                        },
-                                        "assetHint": "physx/glass.physicsmaterial"
-                                    }
+                                    "Name": "White_Vehicles"
                                 },
                                 {
-                                    "Name": "Black_Vehicles",
-                                    "MaterialAsset": {
-                                        "assetId": {
-                                            "guid": "{EF76347C-319F-584E-9DDE-A06D328F4304}",
-                                            "subId": 1
-                                        },
-                                        "assetHint": "physx/glass.physicsmaterial"
-                                    }
+                                    "Name": "Black_Vehicles"
                                 },
                                 {
                                     "Name": "Tire_Vehicles",
                                     "MaterialAsset": {
                                         "assetId": {
-                                            "guid": "{EF76347C-319F-584E-9DDE-A06D328F4304}",
+                                            "guid": "{6D9F8E0A-466E-5774-8974-FC7F0872FD00}",
                                             "subId": 1
                                         },
-                                        "assetHint": "physx/glass.physicsmaterial"
+                                        "assetHint": "physx/rubber.physicsmaterial"
                                     }
                                 },
                                 {
-                                    "Name": "Silver_Vehicles",
-                                    "MaterialAsset": {
-                                        "assetId": {
-                                            "guid": "{EF76347C-319F-584E-9DDE-A06D328F4304}",
-                                            "subId": 1
-                                        },
-                                        "assetHint": "physx/glass.physicsmaterial"
-                                    }
+                                    "Name": "Silver_Vehicles"
                                 },
                                 {
-                                    "Name": "Yellow_Vehicles",
-                                    "MaterialAsset": {
-                                        "assetId": {
-                                            "guid": "{EF76347C-319F-584E-9DDE-A06D328F4304}",
-                                            "subId": 1
-                                        },
-                                        "assetHint": "physx/glass.physicsmaterial"
-                                    }
+                                    "Name": "Yellow_Vehicles"
                                 },
                                 {
-                                    "Name": "Black_Plastic_Vehicles",
-                                    "MaterialAsset": {
-                                        "assetId": {
-                                            "guid": "{EF76347C-319F-584E-9DDE-A06D328F4304}",
-                                            "subId": 1
-                                        },
-                                        "assetHint": "physx/glass.physicsmaterial"
-                                    }
+                                    "Name": "Black_Plastic_Vehicles"
                                 },
                                 {
-                                    "Name": "Gray_Vehicles",
-                                    "MaterialAsset": {
-                                        "assetId": {
-                                            "guid": "{EF76347C-319F-584E-9DDE-A06D328F4304}",
-                                            "subId": 1
-                                        },
-                                        "assetHint": "physx/glass.physicsmaterial"
-                                    }
+                                    "Name": "Gray_Vehicles"
                                 }
                             ]
                         }
@@ -2167,9 +2116,11 @@
                             "Shadow Bias": 0.20000000298023224,
                             "Normal Shadow Bias": 0.20000000298023224,
                             "Shadowmap Max Size": "Size1024",
-                            "Shadow Filter Method": 3,
-                            "Filtering Sample Count": 4,
-                            "Esm Exponent": 50.0
+                            "Shadow Filter Method": 1,
+                            "Filtering Sample Count": 64,
+                            "Esm Exponent": 50.0,
+                            "Shadow Caching Mode": 1,
+                            "Shadow Caching Enabled": true
                         }
                     }
                 },

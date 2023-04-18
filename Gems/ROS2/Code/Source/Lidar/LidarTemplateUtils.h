@@ -35,6 +35,6 @@ namespace ROS2
         //! @param rotations Rotations as Euler angles in radians to compute directions from.
         //! @param rootRotation Root rotation as Euler angles in radians.
         //! @return Ray directions constructed by transforming an X axis unit vector by the provided rotations.
-        AZStd::vector<AZ::Vector3> RotationsToDirections(const AZStd::vector<AZ::Vector3>& rotations, const AZ::Vector3& rootRotation);
+        AZStd::vector<AZ::Vector3> RotationsToDirections(const AZStd::vector<AZ::Vector3>& rotations, const AZ::Transform& rootTransform);
     }; // namespace LidarTemplateUtils
 } // namespace ROS2

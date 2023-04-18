@@ -200,5 +200,5 @@ the controllers.
 # References
 
 https://robotics.leeds.ac.uk/research/ai-for-robotics/robotic-manipulation/
-https://manipulation.csail.mit.edu/intro.html
-https://medium.com/toyotaresearch/drake-model-based-design-in-the-age-of-robotics-and-machine-learning-59938c985515
+https://manipulation.csail.mit.edu/intro.html 
+https://medium.com/toyotaresearch/drake-model-based-design-in-the-age-of-robotics-and-machine-learning-59938c985515 
