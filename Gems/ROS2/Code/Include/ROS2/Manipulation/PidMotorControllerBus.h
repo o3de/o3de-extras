@@ -13,15 +13,15 @@
 
 namespace ROS2
 {
-    //! Interface to communicate with motorized joints.
-    //! It allows to apply setpoint and tracking performance of the PID controller.
-    class MotorizedJointRequest : public AZ::EBusTraits
+    //! Interface to communicate with a PID motor controller.
+    //! It allows to apply a setpoint and track performance of the controller.
+    class PidMotorControllerRequests : public AZ::EBusTraits
     {
     public:
         static constexpr AZ::EBusAddressPolicy AddressPolicy = AZ::EBusAddressPolicy::ById;
         using BusIdType = AZ::EntityId;
 
-        virtual ~MotorizedJointRequest() = default;
+        virtual ~PidMotorControllerRequests() = default;
 
         //! Set current setpoint value for position controller.
         //! The setpoint is the desired position for a simulated actuator.
@@ -53,5 +53,5 @@ namespace ROS2
         virtual float GetError() = 0;
     };
 
-    using MotorizedJointRequestBus = AZ::EBus<MotorizedJointRequest>;
+    using PidMotorControllerRequestBus = AZ::EBus<PidMotorControllerRequests>;
 } // namespace ROS2
