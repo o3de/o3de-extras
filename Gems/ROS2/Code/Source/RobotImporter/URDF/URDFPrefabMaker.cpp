@@ -67,6 +67,11 @@ namespace ROS2
             AZStd::lock_guard<AZStd::mutex> lck(m_statusLock);
             m_status.clear();
         }
+
+         // Begin an undo batch for prefab creation process
+        AzToolsFramework::UndoSystem::URSequencePoint* currentUndoBatch;
+        AzToolsFramework::ToolsApplicationRequests::Bus::BroadcastResult(currentUndoBatch, &AzToolsFramework::ToolsApplicationRequests::BeginUndoBatch, "Robot Importer prefab creation");
+
         AZStd::unordered_map<AZStd::string, AzToolsFramework::Prefab::PrefabEntityResult> createdLinks;
         AzToolsFramework::Prefab::PrefabEntityResult createEntityRoot = AddEntitiesForLink(m_model->root_link_, AZ::EntityId());
         AZStd::string rootName(m_model->root_link_->name.c_str(), m_model->root_link_->name.size());
@@ -238,6 +243,10 @@ namespace ROS2
             PrefabMakerUtils::AddRequiredComponentsToEntity(prefabContainerEntityId);
         }
         AZ_TracePrintf("CreatePrefabFromURDF", "Successfully created prefab %s\n", m_prefabPath.c_str());
+
+        // End undo batch labeled "Robot Importer prefab creation"
+        AzToolsFramework::ToolsApplicationRequests::Bus::Broadcast(&AzToolsFramework::ToolsApplicationRequests::Bus::Events::EndUndoBatch);
+
         return outcome;
     }
 
