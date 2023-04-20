@@ -1,6 +1,11 @@
-# ROS2 Fleet Robot Template
+# ROS2 and O3DE - Fleet Robot Template (Warehouse)
 
+### Summary 
 A project template that allows building a multi-robot ROS2-enabled simulation. The template contains a level with a large warehouse scene called `Warehouse.prefab`. 
+
+### Demo video
+https://user-images.githubusercontent.com/82551958/229633488-21d6bfa4-3326-43df-8655-2d1b551af9ae.mp4
+
 
 ## Requirements
 
