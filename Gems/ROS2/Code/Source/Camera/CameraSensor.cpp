@@ -53,7 +53,6 @@ namespace ROS2
         , m_aspectRatio(static_cast<float>(configuration.m_width) / static_cast<float>(configuration.m_height))
         , m_viewToClipMatrix(MakeViewToClipMatrix())
         , m_cameraIntrinsics(MakeCameraIntrinsics())
-        , m_entityId(entityId)
     {
         ValidateParameters();
     }
