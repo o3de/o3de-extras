@@ -22,7 +22,6 @@ namespace ROS2::VehicleDynamics
 
     void WheelControllerComponent::Deactivate()
     {
-        m_rigidBodyPtr = nullptr;
     }
 
     void WheelControllerComponent::GetRequiredServices(AZ::ComponentDescriptor::DependencyArrayType& required)
@@ -46,15 +45,16 @@ namespace ROS2::VehicleDynamics
         if (m_rigidBodyPtr == nullptr)
         {
             Physics::RigidBodyRequestBus::EventResult(m_rigidBodyPtr, m_entity->GetId(), &Physics::RigidBodyRequests::GetRigidBody);
-            AZ_Assert(m_rigidBodyPtr, "NoRigdBody");
         }
-
-        AZ_Assert(m_rigidBodyPtr, "NoRigdBody");
-        const auto transform = m_rigidBodyPtr->GetTransform().GetInverse();
-        const auto local = transform.TransformVector(m_rigidBodyPtr->GetAngularVelocity());
-        return local;
+        AZ_Assert(m_rigidBodyPtr, "No Rigid Body in the WheelController entity!");
+        if (m_rigidBodyPtr)
+        {
+            const auto transform = m_rigidBodyPtr->GetTransform().GetInverse();
+            const auto local = transform.TransformVector(m_rigidBodyPtr->GetAngularVelocity());
+            return local;
+        }
+        return AZ::Vector3::CreateZero();
     }
-
 
     void WheelControllerComponent::Reflect(AZ::ReflectContext* context)
     {

@@ -10,8 +10,8 @@
 #include "VehicleConfiguration.h"
 #include "VehicleInputs.h"
 #include <AzCore/Serialization/SerializeContext.h>
-#include <VehicleDynamics/VehicleModelLimits.h>
 #include <AzCore/std/utils.h>
+#include <VehicleDynamics/VehicleModelLimits.h>
 
 namespace ROS2::VehicleDynamics
 {
@@ -37,8 +37,8 @@ namespace ROS2::VehicleDynamics
         //! @param deltaTimeNs nanoseconds passed since last call of this function.
         void ApplyInputState(const VehicleInputs& inputs, AZ::u64 deltaTimeNs);
 
-        //! Computes expected velocity from individual wheels velocity,
-        //! method queries all wheels for rotation speed, and computes vechicle's expected velocity in its cordinate frame
+        //! Computes expected velocity from individual wheels velocity.
+        //! The method queries all wheels for rotation speed, and computes vehicle's expected velocity in its coordinate frame.
         //! @returns pair of linear and angular velocities
         virtual AZStd::pair<AZ::Vector3, AZ::Vector3> GetVelocityFromModel() = 0;
 

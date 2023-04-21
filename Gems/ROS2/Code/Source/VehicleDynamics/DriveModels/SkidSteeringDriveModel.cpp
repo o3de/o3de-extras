@@ -14,8 +14,8 @@
 #include <AzFramework/Physics/RigidBodyBus.h>
 #include <HingeJointComponent.h>
 #include <PhysX/Joint/PhysXJointRequestsBus.h>
-#include <VehicleDynamics/Utilities.h>
 #include <ROS2/ROS2GemUtilities.h>
+#include <VehicleDynamics/Utilities.h>
 
 namespace ROS2::VehicleDynamics
 {
@@ -42,16 +42,38 @@ namespace ROS2::VehicleDynamics
         m_wheelColumns.clear();
     }
 
+    AZStd::tuple<VehicleDynamics::WheelControllerComponent*, AZ::Vector2, AZ::Vector3> SkidSteeringDriveModel::ProduceWheelColumn(
+        int wheelNumber, const AxleConfiguration& axle, const int axisCount) const
+    {
+        const auto wheelCount = axle.m_axleWheels.size();
+        const auto wheelEntityId = axle.m_axleWheels[wheelNumber];
+        AZ::Entity* wheelEntityPtr = nullptr;
+        AZ::ComponentApplicationBus::BroadcastResult(wheelEntityPtr, &AZ::ComponentApplicationRequests::FindEntity, wheelEntityId);
+        AZ_Assert(wheelEntityPtr, "The wheelEntity should not be null here");
+        auto* wheelControllerComponentPtr = Utils::GetGameOrEditorComponent<WheelControllerComponent>(wheelEntityPtr);
+        auto hingeId = VehicleDynamics::Utilities::GetWheelPhysxHinge(wheelEntityId);
+        AZ::Transform hingeTransform{ AZ::Transform::Identity() };
+        PhysX::JointRequestBus::EventResult(hingeTransform, hingeId, &PhysX::JointRequests::GetTransform);
+        if (wheelControllerComponentPtr)
+        {
+            const float normalizedWheelId = -1.f + 2.f * wheelNumber / (wheelCount - 1);
+            AZ::Vector3 axis = hingeTransform.TransformVector({ 0.f, 1.f, 0.f });
+            float wheelBase = normalizedWheelId * m_config.m_wheelbase;
+            AZ_Assert(axle.m_wheelRadius != 0, "axle.m_wheelRadius must be non-zero");
+            float dX = axle.m_wheelRadius / (wheelCount * axisCount);
+            float dPhi = axle.m_wheelRadius / (wheelBase * axisCount);
+            return { wheelControllerComponentPtr, AZ::Vector2{ dX, dPhi }, axis };
+        }
+        return { nullptr, AZ::Vector2::CreateZero(), AZ::Vector3::CreateZero() };
+    }
+
     AZStd::pair<AZ::Vector3, AZ::Vector3> SkidSteeringDriveModel::GetVelocityFromModel()
     {
-
         // compute every wheel contribution to vehicle velocity
         if (m_wheelColumns.empty())
         {
-            auto axisCount = m_config.m_axles.size();
-            for (size_t axleCount = 0; axleCount < m_config.m_axles.size(); axleCount++)
+            for (const auto& axle : m_config.m_axles)
             {
-                const auto& axle = m_config.m_axles[axleCount];
                 const auto wheelCount = axle.m_axleWheels.size();
                 if (!axle.m_isDrive || wheelCount < 1)
                 {
@@ -59,30 +81,19 @@ namespace ROS2::VehicleDynamics
                 }
                 for (size_t wheelId = 0; wheelId < wheelCount; wheelId++)
                 {
-                    const auto& wheel = axle.m_axleWheels[wheelId];
-
-                    AZ::Entity* wheelEntityPtr = nullptr;
-                    AZ::ComponentApplicationBus::BroadcastResult(wheelEntityPtr, &AZ::ComponentApplicationRequests::FindEntity, wheel);
-                    AZ_Assert(wheelEntityPtr, "The wheelEntity should not be null here");
-                    auto* wheelControllerComponentPtr = Utils::GetGameOrEditorComponent<WheelControllerComponent>(wheelEntityPtr);
-                    auto hingeId = VehicleDynamics::Utilities::GetWheelPhysxHinge(wheel);
-                    AZ::Transform hingeTransform{AZ::Transform::Identity()};
-                    PhysX::JointRequestBus::EventResult(hingeTransform, hingeId, &PhysX::JointRequests::GetTransform);
-                    if (wheelControllerComponentPtr)
+                    const auto column = ProduceWheelColumn(wheelId, axle, m_config.m_axles.size());
+                    if (AZStd::get<0>(column))
                     {
-                        const float normalizedWheelId = -1.f + 2.f * wheelId / (wheelCount - 1);
-                        AZ::Vector3 axis = hingeTransform.TransformVector({0.f,1.f,0.f});
-                        float wheelBase = normalizedWheelId * m_config.m_wheelbase;
-                        AZ_Assert(axle.m_wheelRadius != 0, "axle.m_wheelRadius must be non-zero");
-                        float dX = axle.m_wheelRadius / (wheelCount * axisCount);
-                        float dPhi = axle.m_wheelRadius /(wheelBase * axisCount);
-                        m_wheelColumns.emplace_back(wheelControllerComponentPtr, AZ::Vector2{ dX, dPhi }, axis);
+                        m_wheelColumns.emplace_back(column);
                     }
                 }
             }
         }
 
+        //! accumulated contribution to vehicle's linear movements of every wheel
         float d_x = 0;
+
+        //! accumulated contribution to vehicle's rotational movements of every wheel
         float d_fi = 0;
 
         // It is basically multiplication of matrix by a vector.
@@ -93,7 +104,7 @@ namespace ROS2::VehicleDynamics
             d_fi += omega * column.GetY();
         }
 
-        return AZStd::pair<AZ::Vector3, AZ::Vector3>{{d_x,0,0},{0,0,d_fi}};
+        return AZStd::pair<AZ::Vector3, AZ::Vector3>{ { d_x, 0, 0 }, { 0, 0, d_fi } };
     }
 
     void SkidSteeringDriveModel::ApplyState(const VehicleInputs& inputs, AZ::u64 deltaTimeNs)
@@ -138,9 +149,8 @@ namespace ROS2::VehicleDynamics
             AZ_Warning("SkidSteeringDriveModel", driveAxesCount != 0, "Skid steering model does not have any drive wheels.");
         }
 
-        for (size_t axleCount = 0; axleCount < m_config.m_axles.size(); axleCount++)
+        for (const auto& axle : m_config.m_axles)
         {
-            const auto& axle = m_config.m_axles[axleCount];
             const auto wheelCount = axle.m_axleWheels.size();
             if (!axle.m_isDrive || wheelCount < 1)
             {

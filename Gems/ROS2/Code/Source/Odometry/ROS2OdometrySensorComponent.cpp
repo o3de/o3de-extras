@@ -10,11 +10,11 @@
 #include <AzCore/Serialization/EditContext.h>
 #include <AzCore/Serialization/EditContextConstants.inl>
 #include <AzFramework/Physics/RigidBodyBus.h>
+#include <AzFramework/Physics/SimulatedBodies/RigidBody.h>
 #include <ROS2/Frame/ROS2FrameComponent.h>
 #include <ROS2/ROS2Bus.h>
 #include <ROS2/Utilities/ROS2Conversions.h>
 #include <ROS2/Utilities/ROS2Names.h>
-#include <AzFramework/Physics/SimulatedBodies/RigidBody.h>
 
 namespace ROS2
 {
@@ -58,48 +58,46 @@ namespace ROS2
     // ROS2SensorComponent overrides ...
     void ROS2OdometrySensorComponent::SetupRefreshLoop()
     {
-        m_onSceneSimulationEvent = AzPhysics::SceneEvents::OnSceneSimulationFinishHandler(
-            [this]([[maybe_unused]]AzPhysics::SceneHandle sceneHandle, float deltaTime)
-            {
-                if (m_rigidBodyPtr == nullptr)
-                {
-                    Physics::RigidBodyRequestBus::EventResult(m_rigidBodyPtr, m_entity->GetId(), &Physics::RigidBodyRequests::GetRigidBody);
-                    m_initialTransform = m_rigidBodyPtr->GetTransform();
-                    AZ_Assert(m_rigidBodyPtr, "NoRigdBody");
-                }
-                AZ_Assert(m_rigidBodyPtr, "NoRigdBody");
-
-                const auto transform = m_rigidBodyPtr->GetTransform().GetInverse();
-                const auto localAngular = transform.TransformVector(m_rigidBodyPtr->GetAngularVelocity());
-                const auto localLinear = transform.TransformVector(m_rigidBodyPtr->GetLinearVelocity());
-
-                m_odometryMsg.header.stamp = ROS2Interface::Get()->GetROSTimestamp();
-                m_odometryMsg.twist.twist.linear = ROS2Conversions::ToROS2Vector3(localLinear);
-                m_odometryMsg.twist.twist.angular = ROS2Conversions::ToROS2Vector3(localAngular);
-
-                if (m_sensorConfiguration.m_frequency>0)
-                {
-                    const auto odometry = m_initialTransform.GetInverse() * m_rigidBodyPtr->GetTransform();
-                    m_robotPose = odometry.GetTranslation();
-                    m_robotRotation = odometry.GetRotation();
-                }
-                if (IsPublicationDeadline(deltaTime))
-                {
-                    m_odometryMsg.pose.pose.position = ROS2Conversions::ToROS2Point(m_robotPose);
-                    m_odometryMsg.pose.pose.orientation = ROS2Conversions::ToROS2Quaternion(m_robotRotation);
-                    m_odometryPublisher->publish(m_odometryMsg);
-                }
-            });
-
-        auto* sceneInterface = AZ::Interface<AzPhysics::SceneInterface>::Get();
-        AzPhysics::SceneHandle sceneHandle = sceneInterface->GetSceneHandle(AzPhysics::DefaultPhysicsSceneName);
-        sceneInterface->RegisterSceneSimulationFinishHandler(sceneHandle, m_onSceneSimulationEvent);
+        InstallPhysicalCallback(m_entity->GetId());
     }
 
+    void ROS2OdometrySensorComponent::OnPhysicsInitialization(AzPhysics::SceneHandle sceneHandle)
+    {
+        auto* sceneInterface = AZ::Interface<AzPhysics::SceneInterface>::Get();
+        auto* simulatedBodyPtr = sceneInterface->GetSimulatedBodyFromHandle(sceneHandle, m_bodyHandle);
+        auto rigidbodyPtr = azrtti_cast<AzPhysics::RigidBody*>(simulatedBodyPtr);
+        AZ_Assert(rigidbodyPtr, "Requested simulated body is not a rigid body");
+        m_initialTransform = rigidbodyPtr->GetTransform();
+    }
+
+    void ROS2OdometrySensorComponent::OnPhysicsSimulationFinished(AzPhysics::SceneHandle sceneHandle, float deltaTime)
+    {
+        auto* sceneInterface = AZ::Interface<AzPhysics::SceneInterface>::Get();
+        auto* simulatedBodyPtr = sceneInterface->GetSimulatedBodyFromHandle(sceneHandle, m_bodyHandle);
+        auto rigidbodyPtr = azrtti_cast<AzPhysics::RigidBody*>(simulatedBodyPtr);
+        AZ_Assert(rigidbodyPtr, "Requested simulated body is not a rigid body");
+
+        const auto transform = rigidbodyPtr->GetTransform().GetInverse();
+        const auto localAngular = transform.TransformVector(rigidbodyPtr->GetAngularVelocity());
+        const auto localLinear = transform.TransformVector(rigidbodyPtr->GetLinearVelocity());
+
+        m_odometryMsg.header.stamp = ROS2Interface::Get()->GetROSTimestamp();
+        m_odometryMsg.twist.twist.linear = ROS2Conversions::ToROS2Vector3(localLinear);
+        m_odometryMsg.twist.twist.angular = ROS2Conversions::ToROS2Vector3(localAngular);
+
+        const auto odometry = m_initialTransform.GetInverse() * rigidbodyPtr->GetTransform();
+        m_robotPose = odometry.GetTranslation();
+        m_robotRotation = odometry.GetRotation();
+
+        if (IsPublicationDeadline(deltaTime))
+        {
+            m_odometryMsg.pose.pose.position = ROS2Conversions::ToROS2Point(m_robotPose);
+            m_odometryMsg.pose.pose.orientation = ROS2Conversions::ToROS2Quaternion(m_robotRotation);
+            m_odometryPublisher->publish(m_odometryMsg);
+        }
+    }
     void ROS2OdometrySensorComponent::Activate()
     {
-
-        m_rigidBodyPtr = nullptr;
         // "odom" is globally fixed frame for all robots, no matter the namespace
         m_odometryMsg.header.frame_id = ROS2Names::GetNamespacedName(GetNamespace(), "odom").c_str();
         m_odometryMsg.child_frame_id = GetFrameID().c_str();
@@ -110,15 +108,13 @@ namespace ROS2
         const auto fullTopic = ROS2Names::GetNamespacedName(GetNamespace(), publisherConfig.m_topic);
         m_odometryPublisher = ros2Node->create_publisher<nav_msgs::msg::Odometry>(fullTopic.data(), publisherConfig.GetQoS());
 
-        m_robotPose = AZ::Vector3 {0};
-        m_robotRotation = AZ::Quaternion {0,0,0,1};
+        m_robotPose = AZ::Vector3::CreateZero();
+        m_robotRotation = AZ::Quaternion{ 0, 0, 0, 1 };
         ROS2SensorComponent::Activate();
-
     }
 
     void ROS2OdometrySensorComponent::Deactivate()
     {
-        m_onSceneSimulationEvent.Disconnect();
         ROS2SensorComponent::Deactivate();
         m_odometryPublisher.reset();
     }

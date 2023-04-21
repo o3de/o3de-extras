@@ -5,8 +5,8 @@
 
 set(FILES
         Include/ROS2/Camera/CameraPostProcessingRequestBus.h
-        Include/ROS2/Clock/SimulationClock.h
         Include/ROS2/Clock/PhysicallyStableClock.h
+        Include/ROS2/Clock/SimulationClock.h
         Include/ROS2/Frame/NamespaceConfiguration.h
         Include/ROS2/Frame/ROS2FrameComponent.h
         Include/ROS2/Frame/ROS2Transform.h

@@ -15,8 +15,8 @@ set(FILES
         Source/Camera/CameraSensorConfiguration.h
         Source/Camera/ROS2CameraSensorComponent.cpp
         Source/Camera/ROS2CameraSensorComponent.h
-        Source/Clock/SimulationClock.cpp
         Source/Clock/PhysicallyStableClock.cpp
+        Source/Clock/SimulationClock.cpp
         Source/Communication/QoS.cpp
         Source/Communication/TopicConfiguration.cpp
         Source/Frame/NamespaceConfiguration.cpp
@@ -69,6 +69,8 @@ set(FILES
         Source/Spawner/ROS2SpawnPointComponent.cpp
         Source/Spawner/ROS2SpawnPointComponent.h
         Source/Utilities/Controllers/PidConfiguration.cpp
+        Source/Utilities/PhysicsCallbackHandler.cpp
+        Source/Utilities/PhysicsCallbackHandler.h
         Source/Utilities/ROS2Conversions.cpp
         Source/Utilities/ROS2Names.cpp
         Source/VehicleDynamics/AxleConfiguration.cpp

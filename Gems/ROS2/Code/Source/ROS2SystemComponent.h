@@ -26,10 +26,12 @@
  * Welcome to the **Open 3D Engine (O3DE)** API Reference for the **ROS 2 Gem**!
  *
  * The Components and Classes of this Gem support direct interaction with the ROS 2 ecosystem.
- * The Robot Operating System (ROS) middleware documentation links in this API Reference point to the most recent ROS distribution. If you are using an
- * older version, you might need to navigate to the corresponding documentation pages for the distribution which you have installed.
+ * The Robot Operating System (ROS) middleware documentation links in this API Reference point to the most recent ROS distribution. If you
+ * are using an older version, you might need to navigate to the corresponding documentation pages for the distribution which you have
+ * installed.
  *
- * For the overview, features and usage of this Gem, please refer to [ROS 2 Gem Documentation](https://development--o3deorg.netlify.app/docs/user-guide/gems/reference/robotics/ros2/).
+ * For the overview, features and usage of this Gem, please refer to [ROS 2 Gem
+ * Documentation](https://development--o3deorg.netlify.app/docs/user-guide/gems/reference/robotics/ros2/).
  *
  * o3de-doxygen-insert-table
  *

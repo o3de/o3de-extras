@@ -11,7 +11,6 @@
 #include <AzCore/Component/EntityId.h>
 #include <AzCore/Math/Vector3.h>
 #include <AzFramework/Physics/SimulatedBodies/RigidBody.h>
-#include <AzCore/Math/Vector3.h>
 
 namespace ROS2::VehicleDynamics
 {

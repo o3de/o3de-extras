@@ -14,8 +14,8 @@
 #include <VehicleDynamics/ModelLimits/SkidSteeringModelLimits.h>
 #include <VehicleDynamics/VehicleConfiguration.h>
 #include <VehicleDynamics/VehicleInputs.h>
-#include <VehicleDynamics/WheelDynamicsData.h>
 #include <VehicleDynamics/WheelControllerComponent.h>
+#include <VehicleDynamics/WheelDynamicsData.h>
 
 namespace ROS2::VehicleDynamics
 {
@@ -37,6 +37,20 @@ namespace ROS2::VehicleDynamics
         AZStd::pair<AZ::Vector3, AZ::Vector3> GetVelocityFromModel() override;
 
     private:
+        //! Collect all necessary data to compute the impact of the wheel on the vehicle's velocity.
+        //! It can be thought of as a column of the Jacobian matrix of the mechanical system. Jacobian matrix for this model is a matrix of
+        //! size 2 x number of wheels. This function returns elements of column that corresponds to the given wheel and cache necessary data
+        //! to find the wheel's rotation as a scalar.
+        //! @param wheelNumber - number of wheel in axis
+        //! @param axle - the wheel's axle configuration
+        //! @param axisCount - number of axes in the vehicle
+        //! @returns A tuple containing of :
+        //!  - pointer to WheelControllerComponent (API to query for wheel's ration speed),
+        //!  - a contribution to vehicle linear and angular velocity (elements of Jacobian matrix)
+        //!  - the axis of wheel (to convert 3D rotation speed to given scalar
+        AZStd::tuple<VehicleDynamics::WheelControllerComponent*, AZ::Vector2, AZ::Vector3> ProduceWheelColumn(
+            int wheelNumber, const AxleConfiguration& axle, const int axisCount) const;
+
         SkidSteeringModelLimits m_limits;
         AZStd::unordered_map<AZ::EntityId, AZ::EntityComponentIdPair> m_wheelsData;
         AZStd::vector<AZStd::tuple<VehicleDynamics::WheelControllerComponent*, AZ::Vector2, AZ::Vector3>> m_wheelColumns;

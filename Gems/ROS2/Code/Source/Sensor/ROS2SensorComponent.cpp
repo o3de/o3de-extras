@@ -20,12 +20,13 @@ namespace ROS2
 {
     void ROS2SensorComponent::Activate()
     {
-        AZ::TickBus::Handler::BusConnect();
         SetupRefreshLoop();
+        AZ::TickBus::Handler::BusConnect();
     }
 
     void ROS2SensorComponent::Deactivate()
     {
+        m_onTickCall.clear();
         AZ::TickBus::Handler::BusDisconnect();
     }
 
@@ -94,10 +95,10 @@ namespace ROS2
         return false;
     }
 
-
     void ROS2SensorComponent::SetupRefreshLoop()
     {
-        m_onTickCall = [this](){
+        m_onTickCall = [this]()
+        {
             const AZStd::chrono::duration<float, AZStd::chrono::seconds::period> expectedLoopTime =
                 ROS2Interface::Get()->GetSimulationClock().GetExpectedSimulationLoopTime();
             if (IsPublicationDeadline(expectedLoopTime.count()))

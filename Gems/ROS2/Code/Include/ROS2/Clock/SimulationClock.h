@@ -19,6 +19,7 @@ namespace ROS2
     class SimulationClock
     {
         static constexpr size_t FramesNumberForStats = 60;
+
     public:
         virtual void Activate(){};
         virtual void Deactivate(){};

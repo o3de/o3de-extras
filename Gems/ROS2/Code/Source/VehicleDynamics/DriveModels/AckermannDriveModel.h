@@ -33,6 +33,7 @@ namespace ROS2::VehicleDynamics
         void ApplyState(const VehicleInputs& inputs, AZ::u64 deltaTimeNs) override;
         const VehicleModelLimits* GetVehicleLimitPtr() const override;
         AZStd::pair<AZ::Vector3, AZ::Vector3> GetVelocityFromModel() override;
+
     private:
         void ApplySteering(float steering, AZ::u64 deltaTimeNs);
         void ApplySpeed(float speed, AZ::u64 deltaTimeNs);

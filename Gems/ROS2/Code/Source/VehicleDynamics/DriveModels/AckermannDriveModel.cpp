@@ -143,7 +143,7 @@ namespace ROS2::VehicleDynamics
     AZStd::pair<AZ::Vector3, AZ::Vector3> AckermannDriveModel::GetVelocityFromModel()
     {
         AZ_Warning("ApplySpeed", false, "GetVelocityFromModel is not implemented for AckermannDriveModel");
-        return AZStd::pair<AZ::Vector3, AZ::Vector3>{0,0};
+        return AZStd::pair<AZ::Vector3, AZ::Vector3>{ AZ::Vector3::CreateZero(), AZ::Vector3::CreateZero() };
     }
 
 } // namespace ROS2::VehicleDynamics

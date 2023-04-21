@@ -1,10 +1,10 @@
 /*
-* Copyright (c) Contributors to the Open 3D Engine Project.
-* For complete copyright and license terms please see the LICENSE at the root of this distribution.
-*
-* SPDX-License-Identifier: Apache-2.0 OR MIT
-*
-*/
+ * Copyright (c) Contributors to the Open 3D Engine Project.
+ * For complete copyright and license terms please see the LICENSE at the root of this distribution.
+ *
+ * SPDX-License-Identifier: Apache-2.0 OR MIT
+ *
+ */
 
 #include <AzCore/Time/ITime.h>
 #include <ROS2/Clock/PhysicallyStableClock.h>
@@ -21,7 +21,7 @@ namespace ROS2
         m_onSceneSimulationEvent = AzPhysics::SceneEvents::OnSceneSimulationFinishHandler(
             [this](AzPhysics::SceneHandle sceneHandle, float deltaTime)
             {
-                m_elapsed += deltaTime;
+                m_elapsed += static_cast<double>(deltaTime);
             });
 
         m_onSceneAdded = AzPhysics::SystemEvents::OnSceneAddedEvent::Handler(
@@ -32,7 +32,7 @@ namespace ROS2
                 if (sceneHandle == defaultSceneHandle)
                 {
                     AZ_Printf("SimulationPhysicalClock", "Registering clock to default scene");
-                    m_elapsed = 0;
+                    m_elapsed = 0.0;
                     sceneInterface->RegisterSceneSimulationFinishHandler(sceneHandle, m_onSceneSimulationEvent);
                 }
             });

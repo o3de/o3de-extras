@@ -12,6 +12,7 @@
 #include <AzFramework/Physics/Common/PhysicsEvents.h>
 #include <AzFramework/Physics/PhysicsSystem.h>
 #include <ROS2/Sensor/ROS2SensorComponent.h>
+#include <Utilities/PhysicsCallbackHandler.h>
 #include <rclcpp/publisher.hpp>
 #include <sensor_msgs/msg/imu.hpp>
 
@@ -21,7 +22,9 @@ namespace ROS2
     //! An IMU (Inertial Measurement Unit) sensor Component.
     //! IMUs typically include gyroscopes, accelerometers and magnetometers. This component encapsulates data
     //! acquisition and its publishing to ROS2 ecosystem. IMU Component requires ROS2FrameComponent.
-    class ROS2ImuSensorComponent : public ROS2SensorComponent
+    class ROS2ImuSensorComponent
+        : public ROS2SensorComponent
+        , public ROS2::Utils::PhysicsCallbackHandler
     {
     public:
         AZ_COMPONENT(ROS2ImuSensorComponent, "{502A955E-7742-4E23-AD77-5E4063739DCA}", ROS2SensorComponent);
@@ -40,22 +43,24 @@ namespace ROS2
         int m_filterSize{ 10 };
 
         //! Include gravity acceleration
-        bool m_includeGravity {true};
+        bool m_includeGravity{ true };
 
         //! Measure also absolute rotation
-        bool m_absoluteRotation {true};
+        bool m_absoluteRotation{ true };
 
         std::shared_ptr<rclcpp::Publisher<sensor_msgs::msg::Imu>> m_imuPublisher;
         sensor_msgs::msg::Imu m_imuMsg;
         AZ::Vector3 m_previousLinearVelocity = AZ::Vector3::CreateZero();
 
-        AzPhysics::SceneEvents::OnSceneSimulationFinishHandler m_onSceneSimulationEvent;
-        AzPhysics::SimulatedBodyHandle m_bodyHandle = AzPhysics::InvalidSimulatedBodyHandle;
         AZ::Vector3 m_acceleration{ 0 };
         AZStd::deque<AZ::Vector3> m_filterAcceleration;
         AZStd::deque<AZ::Vector3> m_filterAngularVelocity;
+
     protected:
         // ROS2SensorComponent overrides ...
         void SetupRefreshLoop() override;
+
+        // ROS2::Utils::PhysicsCallbackHandler overrides ...
+        void OnPhysicsSimulationFinished(AzPhysics::SceneHandle sceneHandle, float deltaTime) override;
     };
 } // namespace ROS2
