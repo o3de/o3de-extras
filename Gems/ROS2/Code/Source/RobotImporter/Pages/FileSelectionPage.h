@@ -46,7 +46,7 @@ namespace ROS2
 
         void onFileSelected(const QString& file);
 
-        void onTextChanged(const QString& text);
+        void onEditingFinished();
 
         bool m_fileExists{ false };
     };
