@@ -78,6 +78,9 @@ namespace ROS2
         createdLinks[rootName] = createEntityRoot;
         if (!createEntityRoot.IsSuccess())
         {
+            // End undo batch labeled "Robot Importer prefab creation" preemptively if an error occurs
+            AzToolsFramework::ToolsApplicationRequests::Bus::Broadcast(&AzToolsFramework::ToolsApplicationRequests::Bus::Events::EndUndoBatch);
+
             return AZ::Failure(AZStd::string(createEntityRoot.GetError()));
         }
 
