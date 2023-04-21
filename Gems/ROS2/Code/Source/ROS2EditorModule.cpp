@@ -11,6 +11,8 @@
 #include <Camera/ROS2CameraSensorEditorComponent.h>
 #include <RobotImporter/ROS2RobotImporterEditorSystemComponent.h>
 
+#include <QtCore/qglobal.h>
+
 void InitROS2Resources()
 {
     // Registration of Qt (ROS2.qrc) resources
