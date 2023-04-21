@@ -84,7 +84,8 @@
                                         "MaterialAsset": {
                                             "assetId": {
                                                 "guid": "{B59DB34C-8CCC-5B6A-8F32-749689632151}"
-                                            }
+                                            },
+                                            "assetHint": "assets/warehouse/materials/mwarehousestorageonwheels.azmaterial"
                                         }
                                     }
                                 }
@@ -185,10 +186,10 @@
                                     "Name": "Entire object",
                                     "MaterialAsset": {
                                         "assetId": {
-                                            "guid": "{A9587A71-FA52-5881-AF45-83A4C3D5660A}",
+                                            "guid": "{9E08AC7C-4AE8-5C65-AA41-2FCF93452D5A}",
                                             "subId": 1
                                         },
-                                        "assetHint": "assets/warehouse/storageonwheels.physicsmaterial"
+                                        "assetHint": "assets/materials/storageonwheels.physicsmaterial"
                                     }
                                 }
                             ]
@@ -215,55 +216,7 @@
                 },
                 "Component_[4588174646852359714]": {
                     "$type": "EditorDisabledCompositionComponent",
-                    "Id": 4588174646852359714,
-                    "DisabledComponents": [
-                        {
-                            "$type": "EditorColliderComponent",
-                            "Id": 13201342092318588972,
-                            "ColliderConfiguration": {
-                                "MaterialSlots": {
-                                    "Slots": [
-                                        {
-                                            "Name": "MStorageOnWheels",
-                                            "MaterialAsset": {
-                                                "assetId": {
-                                                    "guid": "{A9587A71-FA52-5881-AF45-83A4C3D5660A}",
-                                                    "subId": 1
-                                                },
-                                                "assetHint": "assets/warehouse/storageonwheels.physicsmaterial"
-                                            }
-                                        }
-                                    ]
-                                }
-                            },
-                            "ShapeConfiguration": {
-                                "PhysicsAsset": {
-                                    "Asset": {
-                                        "assetId": {
-                                            "guid": "{06D57D9C-F2B1-52CD-AB7B-21EF570C380A}",
-                                            "subId": 1274233299
-                                        },
-                                        "assetHint": "assets/warehouse/warehouse_storageonwheels.pxmesh"
-                                    },
-                                    "Configuration": {
-                                        "PhysicsAsset": {
-                                            "assetId": {
-                                                "guid": "{06D57D9C-F2B1-52CD-AB7B-21EF570C380A}",
-                                                "subId": 1274233299
-                                            },
-                                            "loadBehavior": "QueueLoad",
-                                            "assetHint": "assets/warehouse/warehouse_storageonwheels.pxmesh"
-                                        },
-                                        "AssetScale": [
-                                            1.0,
-                                            1.0,
-                                            1.0449999570846558
-                                        ]
-                                    }
-                                }
-                            }
-                        }
-                    ]
+                    "Id": 4588174646852359714
                 },
                 "Component_[5143803638157116517]": {
                     "$type": "EditorColliderComponent",
@@ -280,10 +233,10 @@
                                     "Name": "Entire object",
                                     "MaterialAsset": {
                                         "assetId": {
-                                            "guid": "{A9587A71-FA52-5881-AF45-83A4C3D5660A}",
+                                            "guid": "{9E08AC7C-4AE8-5C65-AA41-2FCF93452D5A}",
                                             "subId": 1
                                         },
-                                        "assetHint": "assets/warehouse/storageonwheels.physicsmaterial"
+                                        "assetHint": "assets/materials/storageonwheels.physicsmaterial"
                                     }
                                 }
                             ]
@@ -342,10 +295,10 @@
                                     "Name": "Entire object",
                                     "MaterialAsset": {
                                         "assetId": {
-                                            "guid": "{A9587A71-FA52-5881-AF45-83A4C3D5660A}",
+                                            "guid": "{9E08AC7C-4AE8-5C65-AA41-2FCF93452D5A}",
                                             "subId": 1
                                         },
-                                        "assetHint": "assets/warehouse/storageonwheels.physicsmaterial"
+                                        "assetHint": "assets/materials/storageonwheels.physicsmaterial"
                                     }
                                 }
                             ]

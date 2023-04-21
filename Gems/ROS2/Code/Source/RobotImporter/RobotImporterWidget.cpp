@@ -244,7 +244,7 @@ namespace ROS2
             if (IsFileXacro(m_urdfPath))
             {
                 m_params = Utils::xacro::GetParameterFromXacroFile(m_urdfPath.String());
-                AZ_Printf("RobotImporterWidget", "Xacro has %d arguments\n", m_params.size())
+                AZ_Printf("RobotImporterWidget", "Xacro has %d arguments\n", m_params.size());
                 m_xacroParamsPage->SetXacroParameters(m_params);
             }
             // no need to wait for param page - parse urdf now, nextId will skip unnecessary pages
@@ -307,7 +307,9 @@ namespace ROS2
                 return;
             }
         }
-        m_prefabMaker = AZStd::make_unique<URDFPrefabMaker>(m_urdfPath.String(), m_parsedUrdf, prefabPath.String(), m_urdfAssetsMapping);
+        const bool useArticulation = m_prefabMakerPage->IsUseArticulations();
+        m_prefabMaker = AZStd::make_unique<URDFPrefabMaker>(
+            m_urdfPath.String(), m_parsedUrdf, prefabPath.String(), m_urdfAssetsMapping, useArticulation);
 
         auto callback = [&]()
         {

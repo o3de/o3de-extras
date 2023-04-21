@@ -8,14 +8,14 @@
 #pragma once
 
 #include <AzCore/Component/Component.h>
-#include <ROS2/Frame/NamespaceConfiguration.h>
-#include <ROS2/Frame/ROS2Transform.h>
-#include <ROS2/Sensor/SensorConfiguration.h>
-
+#include <AzFramework/Entity/EntityDebugDisplayBus.h>
 #include <AzToolsFramework/API/ComponentEntitySelectionBus.h>
 #include <AzToolsFramework/ToolsComponents/EditorComponentBase.h>
 
-#include "CameraSensor.h"
+#include "CameraSensorConfiguration.h"
+#include <ROS2/Frame/NamespaceConfiguration.h>
+#include <ROS2/Frame/ROS2Transform.h>
+#include <ROS2/Sensor/SensorConfiguration.h>
 
 namespace ROS2
 {
@@ -35,11 +35,10 @@ namespace ROS2
         static void GetIncompatibleServices(AZ::ComponentDescriptor::DependencyArrayType& incompatible);
         static void GetProvidedServices(AZ::ComponentDescriptor::DependencyArrayType& required);
 
-        static void GetPr(AZ::ComponentDescriptor::DependencyArrayType& required);
         void Activate() override;
         void Deactivate() override;
 
-        // AzToolsFramework::Components::EditorComponentBase override
+        // AzToolsFramework::Components::EditorComponentBase overrides
         void BuildGameEntity(AZ::Entity* gameEntity) override;
 
     private:
@@ -49,10 +48,6 @@ namespace ROS2
         AZStd::pair<AZStd::string, TopicConfiguration> MakeTopicConfigurationPair(
             const AZStd::string& topic, const AZStd::string& messageType, const AZStd::string& configName) const;
         SensorConfiguration m_sensorConfiguration;
-        float m_VerticalFieldOfViewDeg = 90.0f;
-        int m_width = 640;
-        int m_height = 480;
-        bool m_colorCamera = true;
-        bool m_depthCamera = true;
+        CameraSensorConfiguration m_cameraSensorConfiguration;
     };
 } // namespace ROS2

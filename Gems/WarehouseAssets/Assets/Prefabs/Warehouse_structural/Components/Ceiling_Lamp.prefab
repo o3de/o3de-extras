@@ -263,7 +263,7 @@
                     "Controller": {
                         "Configuration": {
                             "LightType": 1,
-                            "Intensity": 1800.0,
+                            "Intensity": 2200.0,
                             "AttenuationRadiusMode": 0,
                             "AttenuationRadius": 40.0,
                             "Enable Shadow": true,
@@ -272,6 +272,8 @@
                             "Shadow Filter Method": 1,
                             "Filtering Sample Count": 64,
                             "Esm Exponent": 5000.0,
+                            "Shadow Caching Mode": 1,
+                            "Shadow Caching Enabled": true,
                             "Affects GI Factor": 0.5
                         }
                     }
