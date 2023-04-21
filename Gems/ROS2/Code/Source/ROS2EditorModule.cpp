@@ -11,6 +11,14 @@
 #include <Camera/ROS2CameraSensorEditorComponent.h>
 #include <RobotImporter/ROS2RobotImporterEditorSystemComponent.h>
 
+#include <QtCore/qglobal.h>
+
+void InitROS2Resources()
+{
+    // Registration of Qt (ROS2.qrc) resources
+    Q_INIT_RESOURCE(ROS2);
+}
+
 namespace ROS2
 {
     class ROS2EditorModule : public ROS2ModuleInterface
@@ -21,6 +29,8 @@ namespace ROS2
 
         ROS2EditorModule()
         {
+            InitROS2Resources();
+            
             // Push results of [MyComponent]::CreateDescriptor() into m_descriptors here.
             // Add ALL components descriptors associated with this gem to m_descriptors.
             // This will associate the AzTypeInfo information for the components with the SerializeContext, BehaviorContext and

@@ -4,7 +4,7 @@
 # SPDX-License-Identifier: Apache-2.0 OR MIT
 
 set(FILES
-    ../Assets/Editor/Images/Icons/Resources.qrc
+    ../Assets/Editor/Images/Icons/ROS2.qrc
     ../Assets/Editor/Images/Icons/ROS_import_icon.svg
     Source/Camera/ROS2CameraSensorEditorComponent.cpp
     Source/Camera/ROS2CameraSensorEditorComponent.h
