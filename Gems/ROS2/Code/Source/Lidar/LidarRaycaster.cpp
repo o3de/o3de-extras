@@ -125,16 +125,17 @@ namespace ROS2
             m_sceneHandle = GetPhysicsSceneFromEntityId(m_sceneEntityId);
         }
 
-        const AZStd::vector<AZ::Vector3> rayDirections =
-            LidarTemplateUtils::RotationsToDirections(m_rayRotations, lidarTransform);
+        const AZStd::vector<AZ::Vector3> rayDirections = LidarTemplateUtils::RotationsToDirections(m_rayRotations, lidarTransform);
 
         AzPhysics::SceneQueryRequests requests = prepareRequests(lidarTransform, rayDirections);
 
         RaycastResult results;
-        if ((flags & RaycastResultFlags::Points) == RaycastResultFlags::Points) {
+        if ((flags & RaycastResultFlags::Points) == RaycastResultFlags::Points)
+        {
             results.m_points.reserve(rayDirections.size());
         }
-        if ((flags & RaycastResultFlags::Ranges) == RaycastResultFlags::Ranges) {
+        if ((flags & RaycastResultFlags::Ranges) == RaycastResultFlags::Ranges)
+        {
             results.m_ranges.reserve(rayDirections.size());
         }
 
@@ -154,10 +155,12 @@ namespace ROS2
             {
                 hitRange = -AZStd::numeric_limits<float>::infinity();
             }
-            if (handleRanges) {
+            if (handleRanges)
+            {
                 results.m_ranges.push_back(hitRange);
             }
-            if (handlePoints) {
+            if (handlePoints)
+            {
                 if (hitRange == maxRange)
                 {
                     // to properly visualize max points they need to be transformed to local coordinate system before applying maxRange

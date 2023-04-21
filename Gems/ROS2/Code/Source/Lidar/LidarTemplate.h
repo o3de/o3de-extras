@@ -31,7 +31,7 @@ namespace ROS2
             Ouster_OS2_64,
             Velodyne_Puck,
             Velodyne_HDL_32E,
-
+            // 2D Lidars
             Custom2DLidar,
             Slamtec_RPLIDAR_S1
         };

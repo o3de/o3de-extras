@@ -7,8 +7,8 @@
  */
 
 #include <AzCore/Math/Quaternion.h>
-#include <Lidar/LidarTemplateUtils.h>
 #include <AzCore/Math/Transform.h>
+#include <Lidar/LidarTemplateUtils.h>
 
 namespace ROS2
 {
@@ -148,17 +148,17 @@ namespace ROS2
                 {
                     /*.m_model = */ Model::Custom2DLidar,
                     /*.m_name = */ "CustomLidar2D",
-                    /*.m_minHAngle = */ -180.0f,
-                    /*.m_maxHAngle = */ 180.0f,
-                    /*.m_minVAngle = */ 0.f,
-                    /*.m_maxVAngle = */ 0.f,
-                    /*.m_layers = */ 1,
-                    /*.m_numberOfIncrements = */ 924,
-                    /*.m_minRange = */ 0.0f,
-                    /*.m_maxRange = */ 100.0f,
-                    /*.m_noiseParameters = */
-                    {
-                        /*.m_angularNoiseStdDev = */ 0.0f,
+                  /*.m_minHAngle = */ -180.0f,
+                  /*.m_maxHAngle = */ 180.0f,
+                  /*.m_minVAngle = */ 0.f,
+                  /*.m_maxVAngle = */ 0.f,
+                  /*.m_layers = */ 1,
+                  /*.m_numberOfIncrements = */ 924,
+                  /*.m_minRange = */ 0.0f,
+                  /*.m_maxRange = */ 100.0f,
+                  /*.m_noiseParameters = */
+                  {
+                      /*.m_angularNoiseStdDev = */ 0.0f,
                         /*.m_distanceNoiseStdDevBase = */ 0.02f,
                         /*.m_distanceNoiseStdDevRisePerMeter = */ 0.001f,
                     },
@@ -169,17 +169,17 @@ namespace ROS2
                 {
                     /*.m_model = */ Model::Slamtec_RPLIDAR_S1,
                     /*.m_name = */ "Slamtec RPLIDAR S1",
-                    /*.m_minHAngle = */ -180.0f,
-                    /*.m_maxHAngle = */ 180.0f,
-                    /*.m_minVAngle = */ 0.f,
-                    /*.m_maxVAngle = */ 0.f,
-                    /*.m_layers = */ 1,
-                    /*.m_numberOfIncrements = */ 921,
-                    /*.m_minRange = */ 0.1f,
-                    /*.m_maxRange = */ 40.0f,
-                    /*.m_noiseParameters = */
-                    {
-                        /*.m_angularNoiseStdDev = */ 0.0f,
+                  /*.m_minHAngle = */ -180.0f,
+                  /*.m_maxHAngle = */ 180.0f,
+                  /*.m_minVAngle = */ 0.f,
+                  /*.m_maxVAngle = */ 0.f,
+                  /*.m_layers = */ 1,
+                  /*.m_numberOfIncrements = */ 921,
+                  /*.m_minRange = */ 0.1f,
+                  /*.m_maxRange = */ 40.0f,
+                  /*.m_noiseParameters = */
+                  {
+                      /*.m_angularNoiseStdDev = */ 0.0f,
                         /*.m_distanceNoiseStdDevBase = */ 0.02f,
                         /*.m_distanceNoiseStdDevRisePerMeter = */ 0.001f,
                     },
@@ -233,7 +233,8 @@ namespace ROS2
         directions.reserve(rotations.size());
         for (const auto& angle : rotations)
         {
-            const AZ::Quaternion rotation = rootTransform.GetRotation() * AZ::Quaternion::CreateFromEulerRadiansZYX({ 0.0f, -angle.GetY(), angle.GetZ() });
+            const AZ::Quaternion rotation =
+                rootTransform.GetRotation() * AZ::Quaternion::CreateFromEulerRadiansZYX({ 0.0f, -angle.GetY(), angle.GetZ() });
             directions.emplace_back(rotation.TransformVector(AZ::Vector3::CreateAxisX()));
         }
 

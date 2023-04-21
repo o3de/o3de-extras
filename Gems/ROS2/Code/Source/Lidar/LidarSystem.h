@@ -21,7 +21,6 @@ namespace ROS2
         LidarSystem(const LidarSystem& lidarSystem) = default;
         LidarSystem& operator=(const LidarSystem& lidarSystem) = default;
 
-
         ~LidarSystem() = default;
 
         void Activate();

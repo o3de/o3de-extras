@@ -6,9 +6,9 @@
  *
  */
 
-#include <Lidar/LidarRegistrarSystemComponent.h>
 #include <AzCore/Serialization/EditContext.h>
 #include <AzCore/Serialization/SerializeContext.h>
+#include <Lidar/LidarRegistrarSystemComponent.h>
 
 namespace ROS2
 {

@@ -259,14 +259,16 @@ namespace ROS2
         auto entityTransform = GetEntity()->FindComponent<AzFramework::TransformComponent>();
 
         RaycastResultFlags requestedFlags = RaycastResultFlags::Ranges;
-        if (m_sensorConfiguration.m_visualise) {
+        if (m_sensorConfiguration.m_visualise)
+        {
             requestedFlags |= RaycastResultFlags::Points;
         }
         LidarRaycasterRequestBus::EventResult(
             m_lastScanResults,
             m_lidarRaycasterId,
             &LidarRaycasterRequestBus::Events::PerformRaycastWithFlags,
-            entityTransform->GetWorldTM(), requestedFlags);
+            entityTransform->GetWorldTM(),
+            requestedFlags);
         if (m_lastScanResults.m_ranges.empty())
         {
             AZ_TracePrintf("Lidar Sensor Component", "No results from raycast\n");
