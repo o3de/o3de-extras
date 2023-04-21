@@ -21,6 +21,8 @@ namespace ROS2
         m_fileDialog->setNameFilter("URDF, XACRO (*.urdf *.xacro)");
         m_button = new QPushButton("...", this);
         m_textEdit = new QLineEdit("", this);
+        m_copyFiles = new QCheckBox(tr("Import meshes during URDF load"), this);
+        m_copyFiles->setCheckState(Qt::CheckState::Checked);
         setTitle(tr("Load URDF file"));
         QVBoxLayout* layout = new QVBoxLayout;
         layout->addStretch();
@@ -29,6 +31,7 @@ namespace ROS2
         layout_in->addWidget(m_button);
         layout_in->addWidget(m_textEdit);
         layout->addLayout(layout_in);
+        layout->addWidget(m_copyFiles);
         layout->addStretch();
         this->setLayout(layout);
         connect(m_button, &QPushButton::pressed, this, &FileSelectionPage::onLoadButtonPressed);
@@ -56,5 +59,10 @@ namespace ROS2
     bool FileSelectionPage::isComplete() const
     {
         return m_fileExists;
-    };
+    }
+
+    bool FileSelectionPage::getIfCopyAssetsDuringUrdfImport() const
+    {
+        return m_copyFiles->isChecked();
+    }
 } // namespace ROS2
