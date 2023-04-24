@@ -7,7 +7,7 @@
     "origin": "The name of the originator or creator",
     "origin_url": "The website for this Gem",
     "type": "Code",
-    "summary": "A short description of this Gem",
+    "summary": "Proteus: Warehouse robot with Lidar sensor",
     "canonical_tags": [
         "Gem"
     ],
