@@ -41,9 +41,9 @@ namespace ROS2::VehicleDynamics
         //! It can be thought of as a column of the Jacobian matrix of the mechanical system. Jacobian matrix for this model is a matrix of
         //! size 2 x number of wheels. This function returns elements of column that corresponds to the given wheel and cache necessary data
         //! to find the wheel's rotation as a scalar.
-        //! @param wheelNumber - number of wheel in axis
+        //! @param wheelNumber - number of wheels in axis
         //! @param axle - the wheel's axle configuration
-        //! @param axisCount - number of axes in the vehicle
+        //! @param axisCount - number of axles in the vehicle
         //! @returns A tuple containing of :
         //!  - pointer to WheelControllerComponent (API to query for wheel's ration speed),
         //!  - a contribution to vehicle linear and angular velocity (elements of Jacobian matrix)

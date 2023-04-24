@@ -44,11 +44,9 @@ namespace ROS2
     private:
         std::shared_ptr<rclcpp::Publisher<nav_msgs::msg::Odometry>> m_odometryPublisher;
         nav_msgs::msg::Odometry m_odometryMsg;
-        AZ::Vector3 m_robotPose{ AZ::Vector3::CreateZero() };
-        AZ::Quaternion m_robotRotation{ 0.f, 0.f, 0.f, 1.f };
         AZ::Transform m_initialTransform;
 
-    protected:
+    private:
         // ROS2SensorComponent overrides ...
         void SetupRefreshLoop() override;
 

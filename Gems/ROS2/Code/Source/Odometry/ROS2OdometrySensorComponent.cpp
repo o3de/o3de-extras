@@ -86,13 +86,10 @@ namespace ROS2
         m_odometryMsg.twist.twist.angular = ROS2Conversions::ToROS2Vector3(localAngular);
 
         const auto odometry = m_initialTransform.GetInverse() * rigidbodyPtr->GetTransform();
-        m_robotPose = odometry.GetTranslation();
-        m_robotRotation = odometry.GetRotation();
 
         if (IsPublicationDeadline(deltaTime))
         {
-            m_odometryMsg.pose.pose.position = ROS2Conversions::ToROS2Point(m_robotPose);
-            m_odometryMsg.pose.pose.orientation = ROS2Conversions::ToROS2Quaternion(m_robotRotation);
+            m_odometryMsg.pose.pose = ROS2Conversions::ToROS2Pose(odometry);
             m_odometryPublisher->publish(m_odometryMsg);
         }
     }
@@ -108,8 +105,6 @@ namespace ROS2
         const auto fullTopic = ROS2Names::GetNamespacedName(GetNamespace(), publisherConfig.m_topic);
         m_odometryPublisher = ros2Node->create_publisher<nav_msgs::msg::Odometry>(fullTopic.data(), publisherConfig.GetQoS());
 
-        m_robotPose = AZ::Vector3::CreateZero();
-        m_robotRotation = AZ::Quaternion{ 0, 0, 0, 1 };
         ROS2SensorComponent::Activate();
     }
 

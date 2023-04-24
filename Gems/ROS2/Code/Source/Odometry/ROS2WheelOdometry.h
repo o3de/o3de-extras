@@ -18,7 +18,10 @@
 
 namespace ROS2
 {
-
+    //! Wheel odometry sensor component.
+    //! It constructs and publishes an odometry message, which contains information about the vehicle's velocity and position in space.
+    //! This is a physical sensor that takes a vehicle's configuration and computes updates from the wheels' rotations.
+    //! @see <a href="https://index.ros.org/p/nav_msgs/">nav_msgs package</a>.
     class ROS2WheelOdometryComponent
         : public ROS2SensorComponent
         , public ROS2::Utils::PhysicsCallbackHandler
@@ -41,7 +44,6 @@ namespace ROS2
         AZ::Vector3 m_robotPose{ 0 };
         AZ::Quaternion m_robotRotation{ 0, 0, 0, 1 };
 
-    protected:
         // ROS2SensorComponent overrides ...
         void SetupRefreshLoop() override;
         // ROS2::Utils::PhysicsCallbackHandler overrides ...

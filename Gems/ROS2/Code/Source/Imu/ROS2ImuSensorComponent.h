@@ -18,7 +18,6 @@
 
 namespace ROS2
 {
-
     //! An IMU (Inertial Measurement Unit) sensor Component.
     //! IMUs typically include gyroscopes, accelerometers and magnetometers. This component encapsulates data
     //! acquisition and its publishing to ROS2 ecosystem. IMU Component requires ROS2FrameComponent.
@@ -56,7 +55,7 @@ namespace ROS2
         AZStd::deque<AZ::Vector3> m_filterAcceleration;
         AZStd::deque<AZ::Vector3> m_filterAngularVelocity;
 
-    protected:
+    private:
         // ROS2SensorComponent overrides ...
         void SetupRefreshLoop() override;
 
