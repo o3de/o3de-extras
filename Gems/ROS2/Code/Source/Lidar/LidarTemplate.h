@@ -31,6 +31,9 @@ namespace ROS2
             Ouster_OS2_64,
             Velodyne_Puck,
             Velodyne_HDL_32E,
+            // 2D Lidars
+            Custom2DLidar,
+            Slamtec_RPLIDAR_S1
         };
 
         struct NoiseParameters
@@ -48,6 +51,7 @@ namespace ROS2
         };
 
         LidarModel m_model;
+
         //! Name of lidar template
         AZStd::string m_name;
         //! Minimum horizontal angle (altitude of the ray), in degrees
@@ -62,10 +66,15 @@ namespace ROS2
         unsigned int m_layers = 0;
         //! Resolution in vertical direction
         unsigned int m_numberOfIncrements = 0;
+        //! Minimum range of simulated LiDAR
+        float m_minRange = 0.0f;
         //! Maximum range of simulated LiDAR
         float m_maxRange = 0.0f;
 
         NoiseParameters m_noiseParameters;
         bool m_showNoiseConfig = false;
+
+    private:
+        bool IsLayersVisible() const;
     };
 } // namespace ROS2

@@ -83,6 +83,21 @@ namespace ROS2
     //! Unique id used by lidar raycasters.
     using LidarId = StronglyTypedUuid<struct LidarIdTag>;
 
+    enum class RaycastResultFlags : AZ::u8
+    {
+        Points = (1 << 0), //!< return 3D point coordinates
+        Ranges = (1 << 1), //!< return array of distances
+    };
+
+    //! Bitwise operators for RaycastResultFlags
+    AZ_DEFINE_ENUM_BITWISE_OPERATORS(RaycastResultFlags)
+
+    struct RaycastResult
+    {
+        AZStd::vector<AZ::Vector3> m_points;
+        AZStd::vector<float> m_ranges;
+    };
+
     //! Interface class that allows for communication with a single Lidar instance.
     class LidarRaycasterRequests
     {
@@ -98,11 +113,25 @@ namespace ROS2
         //! @param range Ray range in meters.
         virtual void ConfigureRayRange(float range) = 0;
 
+        //! Configures ray minimum travel distance.
+        //! @param range Ray range in meters.
+        virtual void ConfigureMinimumRayRange(float range)
+        {
+            AZ_Assert(false, "This Lidar Implementation does not support minimum ray range configurations!");
+        }
+
+        //! Configures result flags.
+        //! @param flags Raycast result flags define set of data types returned by lidar.
+        virtual void ConfigureRaycastResultFlags(RaycastResultFlags flags)
+        {
+            AZ_Assert(false, "This Lidar Implementation does not support configurable result flags!");
+        }
+
         //! Schedules a raycast that originates from the point described by the lidarTransform.
         //! @param lidarTransform Current transform from global to lidar reference frame.
-        //! @return Results of the raycast in form of coordinates in 3D space.
-        //! The returned vector size can be anything between zero and size of directions. No hits further than distance will be reported.
-        virtual AZStd::vector<AZ::Vector3> PerformRaycast(const AZ::Transform& lidarTransform) = 0;
+        //! @param flags Used to request different kinds of data returned by raycast query
+        //! @return Results of the raycast in the requested form including 3D space coordinates and/or ranges.
+        virtual RaycastResult PerformRaycast(const AZ::Transform& lidarTransform) = 0;
 
         //! Configures ray Gaussian Noise parameters.
         //! Each call overrides the previous configuration.
@@ -177,7 +206,7 @@ namespace ROS2
 namespace AZStd
 {
     // hash specialization
-    template <>
+    template<>
     struct hash<ROS2::LidarId>
     {
         constexpr size_t operator()(const ROS2::LidarId& id) const
@@ -185,4 +214,4 @@ namespace AZStd
             return id.GetHash();
         }
     };
-}
+} // namespace AZStd

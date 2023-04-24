@@ -6,9 +6,9 @@
  *
  */
 
-#include <Lidar/LidarRegistrarSystemComponent.h>
 #include <AzCore/Serialization/EditContext.h>
 #include <AzCore/Serialization/SerializeContext.h>
+#include <Lidar/LidarRegistrarSystemComponent.h>
 
 namespace ROS2
 {
@@ -44,6 +44,7 @@ namespace ROS2
 
     void LidarRegistrarSystemComponent::Reflect(AZ::ReflectContext* context)
     {
+        LidarTemplate::Reflect(context);
         if (auto serializeContext = azrtti_cast<AZ::SerializeContext*>(context))
         {
             serializeContext->Class<LidarRegistrarSystemComponent, AZ::Component>()->Version(0);
