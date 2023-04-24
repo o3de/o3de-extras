@@ -10,7 +10,7 @@
 #include <AzCore/Utils/Utils.h>
 #include <QHBoxLayout>
 #include <QVBoxLayout>
-#include <qfileinfo.h>
+#include <QFileInfo>
 
 namespace ROS2
 {
