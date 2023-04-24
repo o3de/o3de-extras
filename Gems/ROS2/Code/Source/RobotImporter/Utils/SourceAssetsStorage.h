@@ -93,7 +93,12 @@ namespace ROS2::Utils
 
     //! Creates side-car file (.assetinfo) that configures scene to generate physx Mesh.
     //! @param sourceAssetPath - global path to source asset
-    bool createSceneManifest(const AZStd::string sourceAssetPath, bool collider, bool visual);
+    bool createSceneManifest(const AZStd::string& sourceAssetPath, bool collider, bool visual);
+
+    //! Creates side-car file (.assetinfo) that configures scene to generate physx Mesh.
+    //! @param sourceAssetPath - global path to source asset
+    //! @param assetInfoFile - assetInfo file to create
+    bool createSceneManifest(const AZStd::string& sourceAssetPath, const AZStd::string& assetInfoFile, bool collider, bool visual);
 
     //! A function that copies and prepares meshes that are referenced in URDF.
     //! It resolves every mesh, creates a directory in Project's Asset directory, copies files, and prepares assets info.

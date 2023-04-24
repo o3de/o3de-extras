@@ -188,18 +188,17 @@ namespace ROS2
             else
             {
                 m_urdfAssetsMapping = AZStd::make_shared<Utils::UrdfAssetMap>(Utils::FindAssetsForUrdf(m_meshNames, m_urdfPath.String()));
-            };
-
-            for (const AZStd::string& meshPath : m_meshNames)
-            {
-                if (m_urdfAssetsMapping->contains(meshPath))
+                for (const AZStd::string& meshPath : m_meshNames)
                 {
-                    const auto& asset = m_urdfAssetsMapping->at(meshPath);
-                    bool visual = visualNames.contains(meshPath);
-                    bool collider = collidersNames.contains(meshPath);
-                    Utils::createSceneManifest(asset.m_availableAssetInfo.m_sourceAssetGlobalPath, collider, visual);
+                    if (m_urdfAssetsMapping->contains(meshPath))
+                    {
+                        const auto& asset = m_urdfAssetsMapping->at(meshPath);
+                        bool visual = visualNames.contains(meshPath);
+                        bool collider = collidersNames.contains(meshPath);
+                        Utils::createSceneManifest(asset.m_availableAssetInfo.m_sourceAssetGlobalPath, collider, visual);
+                    }
                 }
-            }
+            };
 
             for (const AZStd::string& meshPath : m_meshNames)
             {

@@ -182,38 +182,41 @@ namespace ROS2
                 AZ::Outcome<AssetSystem::JobInfoContainer> result = AZ::Failure();
                 AssetSystemJobRequestBus::BroadcastResult(
                     result, &AssetSystemJobRequestBus::Events::GetAssetJobsInfo, sourceAssetFullPath, true);
-                bool allFinished = true;
-                bool failed = false;
-                JobInfoContainer& allJobs = result.GetValue();
-                for (const JobInfo& job : allJobs)
+                if (result)
                 {
-                    if (job.m_status == JobStatus::Queued || job.m_status == JobStatus::InProgress)
+                    bool allFinished = true;
+                    bool failed = false;
+                    JobInfoContainer& allJobs = result.GetValue();
+                    for (const JobInfo& job : allJobs)
                     {
-                        allFinished = false;
+                        if (job.m_status == JobStatus::Queued || job.m_status == JobStatus::InProgress)
+                        {
+                            allFinished = false;
+                        }
+                        if (job.m_status == JobStatus::Failed)
+                        {
+                            failed = true;
+                            m_failedCount++;
+                        }
                     }
-                    if (job.m_status == JobStatus::Failed)
+                    if (allFinished)
                     {
-                        failed = true;
-                        m_failedCount++;
+                        if (!failed)
+                        {
+                            const AZStd::string productRelPathVisual = Utils::GetModelProductAsset(assetUuid);
+                            const AZStd::string productRelPathCollider = Utils::GetPhysXMeshProductAsset(assetUuid);
+                            QString text = QString::fromUtf8(productRelPathVisual.data(), productRelPathVisual.size()) + " " +
+                                QString::fromUtf8(productRelPathCollider.data(), productRelPathCollider.size());
+                            m_table->setItem(i, 4, createCell(true, text));
+                            m_table->item(i, 4)->setIcon(m_okIcon);
+                        }
+                        else
+                        {
+                            m_table->setItem(i, 4, createCell(false, tr("Failed")));
+                            m_table->item(i, 4)->setIcon(m_failureIcon);
+                        }
+                        m_assetsUuidsFinished.insert(assetUuid);
                     }
-                }
-                if (allFinished)
-                {
-                    if (!failed)
-                    {
-                        const AZStd::string productRelPathVisual = Utils::GetModelProductAsset(assetUuid);
-                        const AZStd::string productRelPathCollider = Utils::GetPhysXMeshProductAsset(assetUuid);
-                        QString text = QString::fromUtf8(productRelPathVisual.data(), productRelPathVisual.size()) + " " +
-                            QString::fromUtf8(productRelPathCollider.data(), productRelPathCollider.size());
-                        m_table->setItem(i, 4, createCell(true, text));
-                        m_table->item(i, 4)->setIcon(m_okIcon);
-                    }
-                    else
-                    {
-                        m_table->setItem(i, 4, createCell(false, tr("Failed")));
-                        m_table->item(i, 4)->setIcon(m_failureIcon);
-                    }
-                    m_assetsUuidsFinished.insert(assetUuid);
                 }
             }
         }
