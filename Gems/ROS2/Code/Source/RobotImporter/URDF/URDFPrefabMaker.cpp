@@ -10,6 +10,7 @@
 #include "CollidersMaker.h"
 #include "PrefabMakerUtils.h"
 #include <API/EditorAssetSystemAPI.h>
+#include <AzCore/Debug/Trace.h>
 #include <AzCore/IO/FileIO.h>
 #include <AzToolsFramework/Entity/EditorEntityHelpers.h>
 #include <AzToolsFramework/Prefab/PrefabLoaderInterface.h>
@@ -68,9 +69,14 @@ namespace ROS2
             m_status.clear();
         }
 
-         // Begin an undo batch for prefab creation process
-        AzToolsFramework::UndoSystem::URSequencePoint* currentUndoBatch;
-        AzToolsFramework::ToolsApplicationRequests::Bus::BroadcastResult(currentUndoBatch, &AzToolsFramework::ToolsApplicationRequests::BeginUndoBatch, "Robot Importer prefab creation");
+        // Begin an undo batch for prefab creation process
+        AzToolsFramework::UndoSystem::URSequencePoint* currentUndoBatch = nullptr;
+        AzToolsFramework::ToolsApplicationRequests::Bus::BroadcastResult(
+            currentUndoBatch, &AzToolsFramework::ToolsApplicationRequests::BeginUndoBatch, "Robot Importer prefab creation");
+        if (currentUndoBatch == nullptr)
+        {
+            AZ_Warning("URDF Prefab Maker", false, "Unable to start undobatch, EBus might not be listening");
+        }
 
         AZStd::unordered_map<AZStd::string, AzToolsFramework::Prefab::PrefabEntityResult> createdLinks;
         AzToolsFramework::Prefab::PrefabEntityResult createEntityRoot = AddEntitiesForLink(m_model->root_link_, AZ::EntityId());
@@ -79,7 +85,11 @@ namespace ROS2
         if (!createEntityRoot.IsSuccess())
         {
             // End undo batch labeled "Robot Importer prefab creation" preemptively if an error occurs
-            AzToolsFramework::ToolsApplicationRequests::Bus::Broadcast(&AzToolsFramework::ToolsApplicationRequests::Bus::Events::EndUndoBatch);
+            if (currentUndoBatch != nullptr)
+            {
+                AzToolsFramework::ToolsApplicationRequests::Bus::Broadcast(
+                    &AzToolsFramework::ToolsApplicationRequests::Bus::Events::EndUndoBatch);
+            }
 
             return AZ::Failure(AZStd::string(createEntityRoot.GetError()));
         }
@@ -205,7 +215,8 @@ namespace ROS2
                 {
                     AZStd::lock_guard<AZStd::mutex> lck(m_statusLock);
                     auto result = m_jointsMaker.AddJointComponent(jointPtr, childEntity.GetValue(), leadEntity.GetValue());
-                    m_status.emplace(name, AZStd::string::format(" %s %llu", result.IsSuccess()?"created as":"Failed", result.GetValue()));
+                    m_status.emplace(
+                        name, AZStd::string::format(" %s %llu", result.IsSuccess() ? "created as" : "Failed", result.GetValue()));
                 }
                 else
                 {
@@ -248,7 +259,11 @@ namespace ROS2
         AZ_TracePrintf("CreatePrefabFromURDF", "Successfully created prefab %s\n", m_prefabPath.c_str());
 
         // End undo batch labeled "Robot Importer prefab creation"
-        AzToolsFramework::ToolsApplicationRequests::Bus::Broadcast(&AzToolsFramework::ToolsApplicationRequests::Bus::Events::EndUndoBatch);
+        if (currentUndoBatch != nullptr)
+        {
+            AzToolsFramework::ToolsApplicationRequests::Bus::Broadcast(
+                &AzToolsFramework::ToolsApplicationRequests::Bus::Events::EndUndoBatch);
+        }
 
         return outcome;
     }
