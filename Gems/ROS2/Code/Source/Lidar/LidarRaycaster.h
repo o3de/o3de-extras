@@ -29,8 +29,9 @@ namespace ROS2
         void ConfigureRayOrientations(const AZStd::vector<AZ::Vector3>& orientations) override;
         void ConfigureRayRange(float range) override;
         void ConfigureMinimumRayRange(float range) override;
-        AZStd::vector<AZ::Vector3> PerformRaycast(const AZ::Transform& lidarTransform) override;
-        RaycastResult PerformRaycastWithFlags(const AZ::Transform& lidarTransform, RaycastResultFlags flags) override;
+        void ConfigureRaycastResultFlags(RaycastResultFlags flags) override;
+
+        RaycastResult PerformRaycast(const AZ::Transform& lidarTransform) override;
 
         void ConfigureLayerIgnoring(bool ignoreLayer, AZ::u32 layerIndex) override;
         void ConfigureMaxRangePointAddition(bool addMaxRangePoints) override;
@@ -43,6 +44,7 @@ namespace ROS2
         AZ::EntityId m_sceneEntityId;
         AzPhysics::SceneHandle m_sceneHandle{ AzPhysics::InvalidSceneHandle };
 
+        RaycastResultFlags m_resultFlags{ RaycastResultFlags::Points };
         float m_minRange{ 0.0f };
         float m_range{ 1.0f };
         bool m_addMaxRangePoints{ false };

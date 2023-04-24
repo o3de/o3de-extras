@@ -175,6 +175,13 @@ namespace ROS2
         LidarRaycasterRequestBus::Event(
             m_lidarRaycasterId, &LidarRaycasterRequestBus::Events::ConfigureMinimumRayRange, m_lidarParameters.m_minRange);
 
+        RaycastResultFlags requestedFlags = RaycastResultFlags::Ranges;
+        if (m_sensorConfiguration.m_visualise)
+        {
+            requestedFlags |= RaycastResultFlags::Points;
+        }
+        LidarRaycasterRequestBus::Event(m_lidarRaycasterId, &LidarRaycasterRequestBus::Events::ConfigureRaycastResultFlags, requestedFlags);
+
         if (m_lidarSystemFeatures & LidarSystemFeatures::CollisionLayers)
         {
             LidarRaycasterRequestBus::Event(
@@ -264,11 +271,7 @@ namespace ROS2
             requestedFlags |= RaycastResultFlags::Points;
         }
         LidarRaycasterRequestBus::EventResult(
-            m_lastScanResults,
-            m_lidarRaycasterId,
-            &LidarRaycasterRequestBus::Events::PerformRaycastWithFlags,
-            entityTransform->GetWorldTM(),
-            requestedFlags);
+            m_lastScanResults, m_lidarRaycasterId, &LidarRaycasterRequestBus::Events::PerformRaycast, entityTransform->GetWorldTM());
         if (m_lastScanResults.m_ranges.empty())
         {
             AZ_TracePrintf("Lidar Sensor Component", "No results from raycast\n");

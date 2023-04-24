@@ -77,6 +77,11 @@ namespace ROS2
         m_minRange = range;
     }
 
+    void LidarRaycaster::ConfigureRaycastResultFlags(RaycastResultFlags flags)
+    {
+        m_resultFlags = flags;
+    }
+
     AzPhysics::SceneQueryRequests LidarRaycaster::prepareRequests(
         const AZ::Transform& lidarTransform, const AZStd::vector<AZ::Vector3>& rayDirections) const
     {
@@ -109,13 +114,7 @@ namespace ROS2
         return requests;
     }
 
-    AZStd::vector<AZ::Vector3> LidarRaycaster::PerformRaycast(const AZ::Transform& lidarTransform)
-    {
-        auto result = PerformRaycastWithFlags(lidarTransform, RaycastResultFlags::Points);
-        return result.m_points;
-    }
-
-    RaycastResult LidarRaycaster::PerformRaycastWithFlags(const AZ::Transform& lidarTransform, RaycastResultFlags flags)
+    RaycastResult LidarRaycaster::PerformRaycast(const AZ::Transform& lidarTransform)
     {
         AZ_Assert(!m_rayRotations.empty(), "Ray poses are not configured. Unable to Perform a raycast.");
         AZ_Assert(m_range > 0.0f, "Ray range is not configured. Unable to Perform a raycast.");
@@ -130,11 +129,13 @@ namespace ROS2
         AzPhysics::SceneQueryRequests requests = prepareRequests(lidarTransform, rayDirections);
 
         RaycastResult results;
-        if ((flags & RaycastResultFlags::Points) == RaycastResultFlags::Points)
+        const bool handlePoints = (m_resultFlags & RaycastResultFlags::Points) == RaycastResultFlags::Points;
+        const bool handleRanges = (m_resultFlags & RaycastResultFlags::Ranges) == RaycastResultFlags::Ranges;
+        if (handlePoints)
         {
             results.m_points.reserve(rayDirections.size());
         }
-        if ((flags & RaycastResultFlags::Ranges) == RaycastResultFlags::Ranges)
+        if (handleRanges)
         {
             results.m_ranges.reserve(rayDirections.size());
         }
@@ -143,8 +144,6 @@ namespace ROS2
         auto requestResults = sceneInterface->QuerySceneBatch(m_sceneHandle, requests);
         AZ_Assert(requestResults.size() == rayDirections.size(), "Request size should be equal to directions size");
         const auto localTransform = lidarTransform.GetInverse();
-        const bool handlePoints = (flags & RaycastResultFlags::Points) == RaycastResultFlags::Points;
-        const bool handleRanges = (flags & RaycastResultFlags::Ranges) == RaycastResultFlags::Ranges;
         const float maxRange = m_addMaxRangePoints ? m_range : AZStd::numeric_limits<float>::infinity();
 
         for (int i = 0; i < requestResults.size(); i++)
