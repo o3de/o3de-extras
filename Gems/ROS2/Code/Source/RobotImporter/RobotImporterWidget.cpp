@@ -258,6 +258,24 @@ namespace ROS2
             m_params = m_xacroParamsPage->GetXacroParameters();
             OpenUrdf();
         }
+        if (currentPage() == m_introPage)
+        {
+            AZ::EntityId levelEntityId;
+            AzToolsFramework::ToolsApplicationRequestBus::BroadcastResult(
+                levelEntityId, &AzToolsFramework::ToolsApplicationRequests::GetCurrentLevelEntityId);
+
+            AZ::Entity* levelEntity{ nullptr };
+            AZ::ComponentApplicationBus::BroadcastResult(levelEntity, &AZ::ComponentApplicationRequests::FindEntity, levelEntityId);
+
+            if (!levelEntityId.IsValid() || levelEntity == nullptr)
+            {
+                QMessageBox noLevelLoadedMessage;
+                noLevelLoadedMessage.critical(0, "No level opened", "A level must be opened before using URDF Importer");
+                noLevelLoadedMessage.setFixedSize(500, 200);
+
+                return false;
+            }
+        }
         return currentPage()->validatePage();
     }
 
