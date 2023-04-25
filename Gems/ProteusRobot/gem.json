@@ -5,9 +5,9 @@
     "license": "License used i.e. Apache-2.0 or MIT",
     "license_url": "Link to the license web site i.e. https://opensource.org/licenses/Apache-2.0",
     "origin": "The name of the originator or creator",
-    "origin_url": "The website for this Gem",
+    "origin_url": "https://github.com/o3de/o3de-extras/tree/development/Gems/ProteusRobot",
     "type": "Code",
-    "summary": "A short description of this Gem",
+    "summary": "Proteus: Warehouse robot with Lidar sensor",
     "canonical_tags": [
         "Gem"
     ],
