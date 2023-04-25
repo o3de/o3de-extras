@@ -69,7 +69,7 @@ namespace ROS2
     void RobotImporterWidget::OnUrdfCreated()
     {
         // hide cancel and back buttons when last page succeed
-        if (currentPage() == m_prefabMakerPage)
+        if (currentPage() == m_prefabMakerPage && m_prefabMakerPage->isComplete())
         {
             QWizard::button(QWizard::CancelButton)->hide();
             QWizard::button(QWizard::BackButton)->hide();
