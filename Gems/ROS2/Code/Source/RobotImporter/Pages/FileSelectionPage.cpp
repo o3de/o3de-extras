@@ -10,6 +10,7 @@
 #include <AzCore/Utils/Utils.h>
 #include <QHBoxLayout>
 #include <QVBoxLayout>
+#include <QFileInfo>
 
 namespace ROS2
 {
@@ -36,8 +37,8 @@ namespace ROS2
         this->setLayout(layout);
         connect(m_button, &QPushButton::pressed, this, &FileSelectionPage::onLoadButtonPressed);
         connect(m_fileDialog, &QFileDialog::fileSelected, this, &FileSelectionPage::onFileSelected);
-        connect(m_textEdit, &QLineEdit::textChanged, this, &FileSelectionPage::onTextChanged);
-        FileSelectionPage::onTextChanged(m_textEdit->text());
+        connect(m_textEdit, &QLineEdit::editingFinished, this, &FileSelectionPage::onEditingFinished);
+        FileSelectionPage::onEditingFinished();
     }
 
     void FileSelectionPage::onLoadButtonPressed()
@@ -47,12 +48,16 @@ namespace ROS2
 
     void FileSelectionPage::onFileSelected(const QString& file)
     {
+        QFileInfo urdfFile(file);
         m_textEdit->setText(file);
+        m_fileExists = urdfFile.exists() && urdfFile.isFile();
+        emit completeChanged();
     }
 
-    void FileSelectionPage::onTextChanged(const QString& text)
+    void FileSelectionPage::onEditingFinished() 
     {
-        m_fileExists = QFileInfo::exists(text);
+        QFileInfo urdfFile(m_textEdit->text());
+        m_fileExists = urdfFile.exists() && urdfFile.isFile();
         emit completeChanged();
     }
 
