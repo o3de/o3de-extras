@@ -20,11 +20,13 @@ namespace ROS2
 {
     void ROS2SensorComponent::Activate()
     {
+        SetupRefreshLoop();
         AZ::TickBus::Handler::BusConnect();
     }
 
     void ROS2SensorComponent::Deactivate()
     {
+        m_onTickCall.clear();
         AZ::TickBus::Handler::BusDisconnect();
     }
 
@@ -69,20 +71,41 @@ namespace ROS2
     void ROS2SensorComponent::OnTick([[maybe_unused]] float deltaTime, [[maybe_unused]] AZ::ScriptTimePoint time)
     {
         Visualise(); // each frame
+        if (m_onTickCall)
+        {
+            m_onTickCall();
+        }
+    }
+
+    bool ROS2SensorComponent::IsPublicationDeadline(float expectedLoopTime)
+    {
         if (!m_sensorConfiguration.m_publishingEnabled)
         {
-            return;
+            return false;
         }
         m_tickCountDown--;
         if (m_tickCountDown <= 0)
         {
-            const AZStd::chrono::duration<float, AZStd::chrono::seconds::period> expectedLoopTime =
-                ROS2Interface::Get()->GetSimulationClock().GetExpectedSimulationLoopTime();
             const auto frequency = m_sensorConfiguration.m_frequency;
             const auto frameTime = frequency == 0.f ? 1.f : 1.f / frequency;
-            const float numberOfFrames = frameTime / expectedLoopTime.count();
+            const float numberOfFrames = frameTime / expectedLoopTime;
             m_tickCountDown = AZStd::round(numberOfFrames);
-            FrequencyTick();
+            return true;
         }
+        return false;
     }
+
+    void ROS2SensorComponent::SetupRefreshLoop()
+    {
+        m_onTickCall = [this]()
+        {
+            const AZStd::chrono::duration<float, AZStd::chrono::seconds::period> expectedLoopTime =
+                ROS2Interface::Get()->GetSimulationClock().GetExpectedSimulationLoopTime();
+            if (IsPublicationDeadline(expectedLoopTime.count()))
+            {
+                FrequencyTick();
+            }
+        };
+    }
+
 } // namespace ROS2

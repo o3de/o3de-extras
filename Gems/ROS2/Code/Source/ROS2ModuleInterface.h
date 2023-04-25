@@ -17,6 +17,7 @@
 #include <Lidar/ROS2LidarSensorComponent.h>
 #include <Lidar/ROS2Lidar2DSensorComponent.h>
 #include <Odometry/ROS2OdometrySensorComponent.h>
+#include <Odometry/ROS2WheelOdometry.h>
 #include <ROS2/Frame/ROS2FrameComponent.h>
 #include <ROS2/Manipulator/MotorizedJointComponent.h>
 #include <RobotControl/Controllers/AckermannController/AckermannControlComponent.h>
@@ -29,7 +30,6 @@
 #include <VehicleDynamics/ModelComponents/AckermannModelComponent.h>
 #include <VehicleDynamics/ModelComponents/SkidSteeringModelComponent.h>
 #include <VehicleDynamics/VehicleModelComponent.h>
-
 #include <VehicleDynamics/WheelControllerComponent.h>
 
 namespace ROS2
@@ -57,6 +57,7 @@ namespace ROS2
                   ROS2LidarSensorComponent::CreateDescriptor(),
                   ROS2Lidar2DSensorComponent::CreateDescriptor(),
                   ROS2OdometrySensorComponent::CreateDescriptor(),
+                  ROS2WheelOdometryComponent::CreateDescriptor(),
                   ROS2FrameComponent::CreateDescriptor(),
                   ROS2RobotControlComponent::CreateDescriptor(),
                   ROS2CameraSensorComponent::CreateDescriptor(),
