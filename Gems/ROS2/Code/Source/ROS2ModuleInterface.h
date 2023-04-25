@@ -17,6 +17,7 @@
 #include <Lidar/ROS2LidarSensorComponent.h>
 #include <Lidar/ROS2Lidar2DSensorComponent.h>
 #include <Odometry/ROS2OdometrySensorComponent.h>
+#include <Odometry/ROS2WheelOdometry.h>
 #include <ROS2/Frame/ROS2FrameComponent.h>
 #include <ROS2/Manipulation/JointMotorControllerComponent.h>
 #include <ROS2/Manipulation/JointPublisherComponent.h>

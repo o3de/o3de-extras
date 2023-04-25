@@ -5,11 +5,11 @@
  * SPDX-License-Identifier: Apache-2.0 OR MIT
  *
  */
-#include <ROS2SystemComponent.h>
-
+#include <ROS2/Clock/PhysicallyStableClock.h>
 #include <ROS2/Communication/QoS.h>
 #include <ROS2/Communication/TopicConfiguration.h>
 #include <ROS2/Utilities/Controllers/PidConfiguration.h>
+#include <ROS2SystemComponent.h>
 #include <VehicleDynamics/VehicleModelComponent.h>
 
 #include <Atom/RPI.Public/Pass/PassSystemInterface.h>
@@ -17,11 +17,15 @@
 #include <AzCore/Serialization/EditContext.h>
 #include <AzCore/Serialization/EditContextConstants.inl>
 #include <AzCore/Serialization/SerializeContext.h>
+#include <AzCore/Settings/SettingsRegistry.h>
 #include <AzCore/Time/ITime.h>
 #include <AzCore/std/smart_ptr/make_shared.h>
+#include <AzCore/std/string/string_view.h>
 
 namespace ROS2
 {
+    constexpr AZStd::string_view EnablePhysicsSteadyClockConfigurationKey = "/O3DE/ROS2/SteadyClock";
+
     void ROS2SystemComponent::Reflect(AZ::ReflectContext* context)
     {
         // Reflect structs not strictly owned by any single component
@@ -70,6 +74,23 @@ namespace ROS2
         {
             ROS2Interface::Register(this);
         }
+
+        bool useSteadyTime = false;
+        auto* registry = AZ::SettingsRegistry::Get();
+        AZ_Assert(registry, "No Registry available");
+        if (registry)
+        {
+            registry->Get(useSteadyTime, EnablePhysicsSteadyClockConfigurationKey);
+            if (useSteadyTime)
+            {
+                AZ_Printf("ROS2SystemComponent", "Enabling Physical steady clock");
+                m_simulationClock = AZStd::make_unique<PhysicallyStableClock>();
+                return;
+            }
+        }
+        AZ_Printf("ROS2SystemComponent", "Enabling realtime clock");
+        m_simulationClock = AZStd::make_unique<SimulationClock>();
+        return;
     }
 
     ROS2SystemComponent::~ROS2SystemComponent()
@@ -84,6 +105,7 @@ namespace ROS2
     void ROS2SystemComponent::Init()
     {
         rclcpp::init(0, 0);
+        m_simulationClock->Activate();
         m_ros2Node = std::make_shared<rclcpp::Node>("o3de_ros2_node");
         m_executor = AZStd::make_shared<rclcpp::executors::SingleThreadedExecutor>();
         m_executor->add_node(m_ros2Node);
@@ -112,6 +134,7 @@ namespace ROS2
     {
         AZ::TickBus::Handler::BusDisconnect();
         ROS2RequestBus::Handler::BusDisconnect();
+        m_simulationClock->Deactivate();
         m_loadTemplatesHandler.Disconnect();
         m_dynamicTFBroadcaster.reset();
         m_staticTFBroadcaster.reset();
@@ -119,7 +142,7 @@ namespace ROS2
 
     builtin_interfaces::msg::Time ROS2SystemComponent::GetROSTimestamp() const
     {
-        return m_simulationClock.GetROSTimestamp();
+        return m_simulationClock->GetROSTimestamp();
     }
 
     std::shared_ptr<rclcpp::Node> ROS2SystemComponent::GetNode() const
@@ -129,7 +152,7 @@ namespace ROS2
 
     const SimulationClock& ROS2SystemComponent::GetSimulationClock() const
     {
-        return m_simulationClock;
+        return *m_simulationClock;
     }
 
     void ROS2SystemComponent::BroadcastTransform(const geometry_msgs::msg::TransformStamped& t, bool isDynamic) const
@@ -148,7 +171,7 @@ namespace ROS2
     {
         if (rclcpp::ok())
         {
-            m_simulationClock.Tick();
+            m_simulationClock->Tick();
             m_executor->spin_some();
         }
     }
