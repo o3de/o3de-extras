@@ -15,6 +15,14 @@
 #include <QVBoxLayout>
 namespace ROS2
 {
+    namespace Columns
+    {
+        constexpr int UrdfMeshPath{ 0 };
+        constexpr int ResolvedMeshPath{ 1 };
+        constexpr int SourceAsset{ 3 };
+        constexpr int ProductAsset{ 2 };
+        constexpr int Type{ 4 };
+    } // namespace Columns
 
     CheckAssetPage::CheckAssetPage(QWizard* parent)
         : QWizardPage(parent)
@@ -29,8 +37,8 @@ namespace ROS2
         layout->addWidget(m_table);
         m_table->setEnabled(true);
         m_table->setAlternatingRowColors(true);
-        m_table->setMinimumHeight(500);
-        m_table->setMinimumWidth(1000);
+        m_table->setMinimumHeight(800);
+        m_table->setMinimumWidth(1250);
         m_table->horizontalHeader()->setStretchLastSection(true);
         m_table->setCornerButtonEnabled(false);
         m_table->setSortingEnabled(false);
@@ -42,24 +50,24 @@ namespace ROS2
         // Set the header items.
         QTableWidgetItem* headerItem = new QTableWidgetItem(tr("URDF mesh path"));
         headerItem->setTextAlignment(Qt::AlignVCenter | Qt::AlignLeft);
-        m_table->setHorizontalHeaderItem(0, headerItem);
+        m_table->setHorizontalHeaderItem(Columns::UrdfMeshPath, headerItem);
         headerItem = new QTableWidgetItem(tr("Resolved mesh from URDF"));
         headerItem->setTextAlignment(Qt::AlignVCenter | Qt::AlignLeft);
-        m_table->setHorizontalHeaderItem(1, headerItem);
+        m_table->setHorizontalHeaderItem(Columns::ResolvedMeshPath, headerItem);
         headerItem = new QTableWidgetItem(tr("Type"));
         headerItem->setTextAlignment(Qt::AlignVCenter | Qt::AlignLeft);
-        m_table->setHorizontalHeaderItem(2, headerItem);
+        m_table->setHorizontalHeaderItem(Columns::Type, headerItem);
         headerItem = new QTableWidgetItem(tr("Source asset"));
         headerItem->setTextAlignment(Qt::AlignVCenter | Qt::AlignLeft);
-        m_table->setHorizontalHeaderItem(3, headerItem);
+        m_table->setHorizontalHeaderItem(Columns::SourceAsset, headerItem);
         headerItem = new QTableWidgetItem(tr("Product asset"));
         headerItem->setTextAlignment(Qt::AlignVCenter | Qt::AlignLeft);
-        m_table->setHorizontalHeaderItem(4, headerItem);
-        m_table->horizontalHeader()->resizeSection(0, 200);
-        m_table->horizontalHeader()->resizeSection(1, 350);
-        m_table->horizontalHeader()->resizeSection(2, 50);
-        m_table->horizontalHeader()->resizeSection(3, 400);
-        m_table->horizontalHeader()->resizeSection(4, 400);
+        m_table->setHorizontalHeaderItem(Columns::ProductAsset, headerItem);
+        m_table->horizontalHeader()->resizeSection(Columns::UrdfMeshPath, 200);
+        m_table->horizontalHeader()->resizeSection(Columns::ResolvedMeshPath, 350);
+        m_table->horizontalHeader()->resizeSection(Columns::Type, 50);
+        m_table->horizontalHeader()->resizeSection(Columns::SourceAsset, 400);
+        m_table->horizontalHeader()->resizeSection(Columns::ProductAsset, 400);
         m_table->verticalHeader()->hide();
         connect(m_table, &QTableWidget::cellDoubleClicked, this, &CheckAssetPage::DoubleClickRow);
         this->setLayout(layout);
@@ -105,18 +113,22 @@ namespace ROS2
         SetTitle();
         AZStd::string crcStr = AZStd::to_string(crc32);
         QTableWidgetItem* p = createCell(isOk, QString::fromUtf8(urdfPath.data(), urdfPath.size()));
-        p->setToolTip(tr("CRC for file : ") + QString::fromUtf8(crcStr.data(), crcStr.size()));
-        m_table->setItem(i, 0, p);
-        m_table->setItem(i, 1, createCell(isOk, QString::fromUtf8(resolvedUrdfPath.data(), resolvedUrdfPath.size())));
-        m_table->setItem(i, 2, createCell(isOk, type));
-        m_table->setItem(i, 3, createCell(isOk, QString::fromUtf8(assetSourcePath.data(), assetSourcePath.size())));
+        if (crc32 != AZ::Crc32())
+        {
+            p->setToolTip(tr("CRC for file : ") + QString::fromUtf8(crcStr.data(), crcStr.size()));
+        }
+        m_table->setItem(i, Columns::UrdfMeshPath, p);
+        m_table->setItem(
+            i, Columns::ResolvedMeshPath, createCell(isOk, QString::fromUtf8(resolvedUrdfPath.data(), resolvedUrdfPath.size())));
+        m_table->setItem(i, Columns::Type, createCell(isOk, type));
+        m_table->setItem(i, Columns::SourceAsset, createCell(isOk, QString::fromUtf8(assetSourcePath.data(), assetSourcePath.size())));
         if (isOk)
         {
-            m_table->item(i, 1)->setIcon(m_okIcon);
+            m_table->item(i, Columns::ResolvedMeshPath)->setIcon(m_okIcon);
         }
         else
         {
-            m_table->item(i, 1)->setIcon(m_failureIcon);
+            m_table->item(i, Columns::ResolvedMeshPath)->setIcon(m_failureIcon);
         }
         if (!assetSourcePath.empty())
         {
@@ -182,38 +194,41 @@ namespace ROS2
                 AZ::Outcome<AssetSystem::JobInfoContainer> result = AZ::Failure();
                 AssetSystemJobRequestBus::BroadcastResult(
                     result, &AssetSystemJobRequestBus::Events::GetAssetJobsInfo, sourceAssetFullPath, true);
-                bool allFinished = true;
-                bool failed = false;
-                JobInfoContainer& allJobs = result.GetValue();
-                for (const JobInfo& job : allJobs)
+                if (result)
                 {
-                    if (job.m_status == JobStatus::Queued || job.m_status == JobStatus::InProgress)
+                    bool allFinished = true;
+                    bool failed = false;
+                    JobInfoContainer& allJobs = result.GetValue();
+                    for (const JobInfo& job : allJobs)
                     {
-                        allFinished = false;
+                        if (job.m_status == JobStatus::Queued || job.m_status == JobStatus::InProgress)
+                        {
+                            allFinished = false;
+                        }
+                        if (job.m_status == JobStatus::Failed)
+                        {
+                            failed = true;
+                            m_failedCount++;
+                        }
                     }
-                    if (job.m_status == JobStatus::Failed)
+                    if (allFinished)
                     {
-                        failed = true;
-                        m_failedCount++;
+                        if (!failed)
+                        {
+                            const AZStd::string productRelPathVisual = Utils::GetModelProductAsset(assetUuid);
+                            const AZStd::string productRelPathCollider = Utils::GetPhysXMeshProductAsset(assetUuid);
+                            QString text = QString::fromUtf8(productRelPathVisual.data(), productRelPathVisual.size()) + " " +
+                                QString::fromUtf8(productRelPathCollider.data(), productRelPathCollider.size());
+                            m_table->setItem(i, Columns::ProductAsset, createCell(true, text));
+                            m_table->item(i, Columns::ProductAsset)->setIcon(m_okIcon);
+                        }
+                        else
+                        {
+                            m_table->setItem(i, Columns::ProductAsset, createCell(false, tr("Failed")));
+                            m_table->item(i, Columns::ProductAsset)->setIcon(m_failureIcon);
+                        }
+                        m_assetsUuidsFinished.insert(assetUuid);
                     }
-                }
-                if (allFinished)
-                {
-                    if (!failed)
-                    {
-                        const AZStd::string productRelPathVisual = Utils::GetModelProductAsset(assetUuid);
-                        const AZStd::string productRelPathCollider = Utils::GetPhysXMeshProductAsset(assetUuid);
-                        QString text = QString::fromUtf8(productRelPathVisual.data(), productRelPathVisual.size()) + " " +
-                            QString::fromUtf8(productRelPathCollider.data(), productRelPathCollider.size());
-                        m_table->setItem(i, 4, createCell(true, text));
-                        m_table->item(i, 4)->setIcon(m_okIcon);
-                    }
-                    else
-                    {
-                        m_table->setItem(i, 4, createCell(false, tr("Failed")));
-                        m_table->item(i, 4)->setIcon(m_failureIcon);
-                    }
-                    m_assetsUuidsFinished.insert(assetUuid);
                 }
             }
         }
