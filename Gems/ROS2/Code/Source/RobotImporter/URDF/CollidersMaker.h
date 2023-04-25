@@ -37,8 +37,6 @@ namespace ROS2
         //! Prevent copying of existing CollidersMaker
         CollidersMaker(const CollidersMaker& other) = delete;
 
-        ~CollidersMaker();
-
         //! Builds .pxmeshes for every collider in link collider mesh.
         //! @param link A parsed URDF tree link node which could hold information about colliders.
         void BuildColliders(urdf::LinkSharedPtr link);
@@ -61,10 +59,6 @@ namespace ROS2
         void AddColliderToEntity(
             urdf::CollisionSharedPtr collision, AZ::EntityId entityId, const AZ::Data::Asset<Physics::MaterialAsset>& materialAsset) const;
 
-        AZStd::thread m_buildThread;
-        AZStd::mutex m_buildMutex;
-        AZStd::vector<AZ::IO::Path> m_meshesToBuild;
-        AZStd::atomic_bool m_stopBuildFlag;
         AZ::Data::Asset<Physics::MaterialAsset> m_wheelMaterial;
         AZStd::shared_ptr<Utils::UrdfAssetMap> m_urdfAssetsMapping;
     };
