@@ -322,7 +322,7 @@ namespace ROS2::Utils
                 {
                     // create asset info at destination
                     const bool assetInfoOk =
-                        createSceneManifest(targetPathAssetTmp.String(), targetPathAssetInfo.String(), needsCollider, needsVisual);
+                        CreateSceneManifest(targetPathAssetTmp.String(), targetPathAssetInfo.String(), needsCollider, needsVisual);
 
                     if (assetInfoOk)
                     {
@@ -402,16 +402,16 @@ namespace ROS2::Utils
         return urdfToAsset;
     }
 
-    bool createSceneManifest(const AZStd::string& sourceAssetPath, const AZStd::string& assetInfoFile, bool collider, bool visual)
+    bool CreateSceneManifest(const AZStd::string& sourceAssetPath, const AZStd::string& assetInfoFile, bool collider, bool visual)
     {
         const AZStd::string azMeshPath = sourceAssetPath;
-        AZ_Printf("createSceneManifest", "Creating manifest for asset %s at : %s ", sourceAssetPath.c_str(), assetInfoFile.c_str());
+        AZ_Printf("CreateSceneManifest", "Creating manifest for asset %s at : %s ", sourceAssetPath.c_str(), assetInfoFile.c_str());
         AZStd::shared_ptr<AZ::SceneAPI::Containers::Scene> scene;
         AZ::SceneAPI::Events::SceneSerializationBus::BroadcastResult(
             scene, &AZ::SceneAPI::Events::SceneSerialization::LoadScene, azMeshPath.c_str(), AZ::Uuid::CreateNull(), "");
         if (!scene)
         {
-            AZ_Error("createSceneManifest", false, "Error loading collider. Invalid scene: %s", azMeshPath.c_str());
+            AZ_Error("CreateSceneManifest", false, "Error loading collider. Invalid scene: %s", azMeshPath.c_str());
             return false;
         }
 
@@ -419,7 +419,7 @@ namespace ROS2::Utils
         auto valueStorage = manifest.GetValueStorage();
         if (valueStorage.empty())
         {
-            AZ_Error("createSceneManifest", false, "Error loading collider. Invalid value storage: %s", azMeshPath.c_str());
+            AZ_Error("CreateSceneManifest", false, "Error loading collider. Invalid value storage: %s", azMeshPath.c_str());
             return false;
         }
 
@@ -433,7 +433,7 @@ namespace ROS2::Utils
 
         for (auto obj : toDelete)
         {
-            AZ_Printf("createSceneManifest", "Deleting %s", obj->RTTI_GetType().ToString<AZStd::string>().c_str());
+            AZ_Printf("CreateSceneManifest", "Deleting %s", obj->RTTI_GetType().ToString<AZStd::string>().c_str());
             manifest.RemoveEntry(obj);
         }
 
@@ -474,20 +474,20 @@ namespace ROS2::Utils
 
         if (result.GetResult() != AZ::SceneAPI::Events::ProcessingResult::Success)
         {
-            AZ_TracePrintf("createSceneManifest", "Scene updated\n");
+            AZ_TracePrintf("CreateSceneManifest", "Scene updated\n");
             return false;
         }
 
         scene->GetManifest().SaveToFile(assetInfoFile.c_str());
-        AZ_Printf("createSceneManifest", "Saving scene manifest to %s\n", assetInfoFile.c_str());
+        AZ_Printf("CreateSceneManifest", "Saving scene manifest to %s\n", assetInfoFile.c_str());
 
         return true;
     }
 
-    bool createSceneManifest(const AZStd::string& sourceAssetPath, bool collider, bool visual)
+    bool CreateSceneManifest(const AZStd::string& sourceAssetPath, bool collider, bool visual)
     {
         auto assetInfoFilePath = AZ::IO::Path{ sourceAssetPath };
         assetInfoFilePath.Native() += ".assetinfo";
-        return createSceneManifest(sourceAssetPath, assetInfoFilePath.String(), collider, visual);
+        return CreateSceneManifest(sourceAssetPath, assetInfoFilePath.String(), collider, visual);
     }
 } // namespace ROS2::Utils

@@ -195,7 +195,7 @@ namespace ROS2
                         const auto& asset = m_urdfAssetsMapping->at(meshPath);
                         bool visual = visualNames.contains(meshPath);
                         bool collider = collidersNames.contains(meshPath);
-                        Utils::createSceneManifest(asset.m_availableAssetInfo.m_sourceAssetGlobalPath, collider, visual);
+                        Utils::CreateSceneManifest(asset.m_availableAssetInfo.m_sourceAssetGlobalPath, collider, visual);
                     }
                 }
             };

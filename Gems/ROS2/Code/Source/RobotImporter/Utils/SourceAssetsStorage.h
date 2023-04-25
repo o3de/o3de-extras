@@ -91,14 +91,21 @@ namespace ROS2::Utils
     //! @returns relative path to product, empty string if product is not found
     AZStd::string GetPhysXMeshProductAsset(const AZ::Uuid& sourceAssetUUID);
 
-    //! Creates side-car file (.assetinfo) that configures scene to generate physx Mesh.
+    //! Creates side-car file (.assetinfo) that configures the imported scene (eg DAE file).
+    //! The .assetinfo will be create next to scene's file.
     //! @param sourceAssetPath - global path to source asset
-    bool createSceneManifest(const AZStd::string& sourceAssetPath, bool collider, bool visual);
+    //! @param collider - create assetinfo section for collider product asset
+    //! @param visual - create assetinfo section for visual mesh
+    //! @returns true if succeed
+    bool CreateSceneManifest(const AZStd::string& sourceAssetPath, bool collider, bool visual);
 
-    //! Creates side-car file (.assetinfo) that configures scene to generate physx Mesh.
+    //! Creates side-car file (.assetinfo) that configures the imported scene (eg DAE file).
     //! @param sourceAssetPath - global path to source asset
-    //! @param assetInfoFile - assetInfo file to create
-    bool createSceneManifest(const AZStd::string& sourceAssetPath, const AZStd::string& assetInfoFile, bool collider, bool visual);
+    //! @param assetInfoFile - global path to assetInfo file to create
+    //! @param collider - create assetinfo section for collider product asset
+    //! @param visual - create assetinfo section for visual mesh
+    //! @returns true if succeed
+    bool CreateSceneManifest(const AZStd::string& sourceAssetPath, const AZStd::string& assetInfoFile, bool collider, bool visual);
 
     //! A function that copies and prepares meshes that are referenced in URDF.
     //! It resolves every mesh, creates a directory in Project's Asset directory, copies files, and prepares assets info.
