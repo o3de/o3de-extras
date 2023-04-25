@@ -37,6 +37,8 @@ set(FILES
         Source/Lidar/LidarTemplate.h
         Source/Lidar/LidarTemplateUtils.cpp
         Source/Lidar/LidarTemplateUtils.h
+        Source/Lidar/ROS2Lidar2DSensorComponent.cpp
+        Source/Lidar/ROS2Lidar2DSensorComponent.h
         Source/Lidar/ROS2LidarSensorComponent.cpp
         Source/Lidar/ROS2LidarSensorComponent.h
         Source/Manipulation/JointMotorControllerComponent.cpp
