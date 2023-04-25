@@ -30,18 +30,5 @@ def generate_launch_description():
             launch_arguments = {
                 'slam_params_file': str(pathlib.Path(__file__).parent.absolute().joinpath('config', 'slam_params.yaml'))
             }.items()
-        ),
-        Node(
-            package='pointcloud_to_laserscan',
-            executable='pointcloud_to_laserscan_node',
-            name='pc_to_laserscan',
-            parameters=[{
-                'min_height': 0.0,
-                'max_height': 0.4,
-                'range_min': 0.05
-            }],
-            remappings=[
-                ('/cloud_in', '/pc'),
-            ]
         )
     ])
