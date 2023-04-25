@@ -4,5 +4,6 @@ Available at: https://github.com/husarion/rosbot_xl_ros/tree/2ab1290469893dd18e6
 
 Our changes include:
  - Adding UV maps in all Collada files
+ - Updates in model shading
  - Conversion `base.dae` to `base.fbx` with minor changes in model
  

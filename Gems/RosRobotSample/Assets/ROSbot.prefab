@@ -311,6 +311,42 @@
             "Id": "Entity_[7477775078074]",
             "Name": "rl_wheel_link_visual",
             "Components": {
+                "Component_[11073940817256276781]": {
+                    "$type": "EditorMaterialComponent",
+                    "Id": 11073940817256276781,
+                    "Controller": {
+                        "Configuration": {
+                            "materials": [
+                                {
+                                    "Key": {
+                                        "materialSlotStableId": 7747105
+                                    },
+                                    "Value": {
+                                        "MaterialAsset": {
+                                            "assetId": {
+                                                "guid": "{3E2B36B5-0D79-575C-A01B-5DD9852B0805}"
+                                            },
+                                            "assetHint": "robot/rosbot_xl_description/meshes/wheel_blackgum.azmaterial"
+                                        }
+                                    }
+                                },
+                                {
+                                    "Key": {
+                                        "materialSlotStableId": 1994703137
+                                    },
+                                    "Value": {
+                                        "MaterialAsset": {
+                                            "assetId": {
+                                                "guid": "{F4A951F1-9880-56A7-A443-B2D685E6E734}"
+                                            },
+                                            "assetHint": "robot/rosbot_xl_description/meshes/wheel_metal.azmaterial"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                },
                 "Component_[11506265673100958252]": {
                     "$type": "EditorVisibilityComponent",
                     "Id": 11506265673100958252
@@ -621,6 +657,41 @@
                 "Component_[14351191412296632155]": {
                     "$type": "EditorEntitySortComponent",
                     "Id": 14351191412296632155
+                },
+                "Component_[14697863037436533541]": {
+                    "$type": "EditorMaterialComponent",
+                    "Id": 14697863037436533541,
+                    "Controller": {
+                        "Configuration": {
+                            "materials": [
+                                {
+                                    "Key": {
+                                        "materialSlotStableId": 7747105
+                                    },
+                                    "Value": {
+                                        "MaterialAsset": {
+                                            "assetId": {
+                                                "guid": "{3E2B36B5-0D79-575C-A01B-5DD9852B0805}"
+                                            },
+                                            "assetHint": "robot/rosbot_xl_description/meshes/wheel_blackgum.azmaterial"
+                                        }
+                                    }
+                                },
+                                {
+                                    "Key": {
+                                        "materialSlotStableId": 1994703137
+                                    },
+                                    "Value": {
+                                        "MaterialAsset": {
+                                            "assetId": {
+                                                "guid": "{F4A951F1-9880-56A7-A443-B2D685E6E734}"
+                                            }
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
                 },
                 "Component_[17474847153749349956]": {
                     "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
@@ -1405,6 +1476,41 @@
                 "Component_[5540957922305543890]": {
                     "$type": "EditorOnlyEntityComponent",
                     "Id": 5540957922305543890
+                },
+                "Component_[8658870105405176743]": {
+                    "$type": "EditorMaterialComponent",
+                    "Id": 8658870105405176743,
+                    "Controller": {
+                        "Configuration": {
+                            "materials": [
+                                {
+                                    "Key": {
+                                        "materialSlotStableId": 7747105
+                                    },
+                                    "Value": {
+                                        "MaterialAsset": {
+                                            "assetId": {
+                                                "guid": "{3E2B36B5-0D79-575C-A01B-5DD9852B0805}"
+                                            },
+                                            "assetHint": "robot/rosbot_xl_description/meshes/wheel_blackgum.azmaterial"
+                                        }
+                                    }
+                                },
+                                {
+                                    "Key": {
+                                        "materialSlotStableId": 1994703137
+                                    },
+                                    "Value": {
+                                        "MaterialAsset": {
+                                            "assetId": {
+                                                "guid": "{F4A951F1-9880-56A7-A443-B2D685E6E734}"
+                                            }
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
                 }
             }
         },
@@ -1723,6 +1829,41 @@
                 "Component_[743160702698200184]": {
                     "$type": "EditorEntitySortComponent",
                     "Id": 743160702698200184
+                },
+                "Component_[8127202770225735501]": {
+                    "$type": "EditorMaterialComponent",
+                    "Id": 8127202770225735501,
+                    "Controller": {
+                        "Configuration": {
+                            "materials": [
+                                {
+                                    "Key": {
+                                        "materialSlotStableId": 7747105
+                                    },
+                                    "Value": {
+                                        "MaterialAsset": {
+                                            "assetId": {
+                                                "guid": "{3E2B36B5-0D79-575C-A01B-5DD9852B0805}"
+                                            },
+                                            "assetHint": "robot/rosbot_xl_description/meshes/wheel_blackgum.azmaterial"
+                                        }
+                                    }
+                                },
+                                {
+                                    "Key": {
+                                        "materialSlotStableId": 1994703137
+                                    },
+                                    "Value": {
+                                        "MaterialAsset": {
+                                            "assetId": {
+                                                "guid": "{F4A951F1-9880-56A7-A443-B2D685E6E734}"
+                                            }
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
                 }
             }
         },
@@ -1777,6 +1918,52 @@
                 "Component_[7199396390238348100]": {
                     "$type": "EditorVisibilityComponent",
                     "Id": 7199396390238348100
+                },
+                "Component_[7988918991206693375]": {
+                    "$type": "EditorMaterialComponent",
+                    "Id": 7988918991206693375,
+                    "Controller": {
+                        "Configuration": {
+                            "materials": [
+                                {
+                                    "Key": {
+                                        "materialSlotStableId": 1166427667
+                                    },
+                                    "Value": {
+                                        "MaterialAsset": {
+                                            "assetId": {
+                                                "guid": "{40B23D76-FC36-554E-B365-0922E07AF038}"
+                                            }
+                                        }
+                                    }
+                                },
+                                {
+                                    "Key": {
+                                        "materialSlotStableId": 1786081827
+                                    },
+                                    "Value": {
+                                        "MaterialAsset": {
+                                            "assetId": {
+                                                "guid": "{194AE663-22DE-5E89-A55B-91A8D6AB740E}"
+                                            }
+                                        }
+                                    }
+                                },
+                                {
+                                    "Key": {
+                                        "materialSlotStableId": 3117550393
+                                    },
+                                    "Value": {
+                                        "MaterialAsset": {
+                                            "assetId": {
+                                                "guid": "{341D271B-B66E-574A-869D-DD9BDD87942B}"
+                                            }
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
                 },
                 "Component_[8790590692552184176]": {
                     "$type": "EditorInspectorComponent",
