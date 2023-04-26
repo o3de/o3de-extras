@@ -129,12 +129,10 @@ namespace ROS2
         else
         {
             m_table->item(i, Columns::ResolvedMeshPath)->setIcon(m_failureIcon);
+            m_table->setItem(i, Columns::ProductAsset, createCell(false, QString()));
         }
-        if (!assetSourcePath.empty())
-        {
-            m_assetsPaths.push_back(assetSourcePath);
-            m_assetsUuids.push_back(assetUuid);
-        }
+        m_assetsPaths.push_back(assetSourcePath);
+        m_assetsUuids.push_back(assetUuid);
     }
 
     void CheckAssetPage::StartWatchAsset()
