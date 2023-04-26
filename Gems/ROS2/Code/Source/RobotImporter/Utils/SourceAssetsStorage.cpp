@@ -11,6 +11,8 @@
 #include <AzCore/IO/FileIO.h>
 #include <AzCore/Serialization/Json/JsonUtils.h>
 #include <AzCore/Utils/Utils.h>
+#include <AzCore/std/smart_ptr/shared_ptr.h>
+#include <AzCore/std/smart_ptr/make_shared.h>
 #include <AzToolsFramework/Asset/AssetUtils.h>
 #include <SceneAPI/SceneCore/Containers/Scene.h>
 #include <SceneAPI/SceneCore/Containers/Utilities/Filters.h>
