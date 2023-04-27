@@ -5,6 +5,7 @@
  * SPDX-License-Identifier: Apache-2.0 OR MIT
  *
  */
+#include <AzCore/Serialization/EditContext.h>
 #include <ROS2/Manipulation/ManualMotorControllerComponent.h>
 #include <imgui/imgui.h>
 
