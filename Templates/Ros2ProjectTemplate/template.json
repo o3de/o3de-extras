@@ -191,7 +191,7 @@
             "isTemplated": false
         },
         {
-            "file": "Registry/awscoreconfiguration.setreg",
+            "file": "Registry/editorpreferences.setreg",
             "isTemplated": false
         },
         {
