@@ -9,6 +9,7 @@
 #pragma once
 
 #if !defined(Q_MOC_RUN)
+#include <QCheckBox>
 #include <QFileDialog>
 #include <QLabel>
 #include <QLineEdit>
@@ -36,17 +37,18 @@ namespace ROS2
             }
             return "";
         }
+        bool getIfCopyAssetsDuringUrdfImport() const;
 
     private:
         QFileDialog* m_fileDialog;
         QPushButton* m_button;
         QLineEdit* m_textEdit;
-
+        QCheckBox* m_copyFiles;
         void onLoadButtonPressed();
 
         void onFileSelected(const QString& file);
 
-        void onTextChanged(const QString& text);
+        void onEditingFinished();
 
         bool m_fileExists{ false };
     };

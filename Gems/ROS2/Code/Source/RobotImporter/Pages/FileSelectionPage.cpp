@@ -10,6 +10,7 @@
 #include <AzCore/Utils/Utils.h>
 #include <QHBoxLayout>
 #include <QVBoxLayout>
+#include <QFileInfo>
 
 namespace ROS2
 {
@@ -21,6 +22,8 @@ namespace ROS2
         m_fileDialog->setNameFilter("URDF, XACRO (*.urdf *.xacro)");
         m_button = new QPushButton("...", this);
         m_textEdit = new QLineEdit("", this);
+        m_copyFiles = new QCheckBox(tr("Import meshes during URDF load"), this);
+        m_copyFiles->setCheckState(Qt::CheckState::Checked);
         setTitle(tr("Load URDF file"));
         QVBoxLayout* layout = new QVBoxLayout;
         layout->addStretch();
@@ -29,12 +32,13 @@ namespace ROS2
         layout_in->addWidget(m_button);
         layout_in->addWidget(m_textEdit);
         layout->addLayout(layout_in);
+        layout->addWidget(m_copyFiles);
         layout->addStretch();
         this->setLayout(layout);
         connect(m_button, &QPushButton::pressed, this, &FileSelectionPage::onLoadButtonPressed);
         connect(m_fileDialog, &QFileDialog::fileSelected, this, &FileSelectionPage::onFileSelected);
-        connect(m_textEdit, &QLineEdit::textChanged, this, &FileSelectionPage::onTextChanged);
-        FileSelectionPage::onTextChanged(m_textEdit->text());
+        connect(m_textEdit, &QLineEdit::editingFinished, this, &FileSelectionPage::onEditingFinished);
+        FileSelectionPage::onEditingFinished();
     }
 
     void FileSelectionPage::onLoadButtonPressed()
@@ -44,17 +48,26 @@ namespace ROS2
 
     void FileSelectionPage::onFileSelected(const QString& file)
     {
+        QFileInfo urdfFile(file);
         m_textEdit->setText(file);
+        m_fileExists = urdfFile.exists() && urdfFile.isFile();
+        emit completeChanged();
     }
 
-    void FileSelectionPage::onTextChanged(const QString& text)
+    void FileSelectionPage::onEditingFinished() 
     {
-        m_fileExists = QFileInfo::exists(text);
+        QFileInfo urdfFile(m_textEdit->text());
+        m_fileExists = urdfFile.exists() && urdfFile.isFile();
         emit completeChanged();
     }
 
     bool FileSelectionPage::isComplete() const
     {
         return m_fileExists;
-    };
+    }
+
+    bool FileSelectionPage::getIfCopyAssetsDuringUrdfImport() const
+    {
+        return m_copyFiles->isChecked();
+    }
 } // namespace ROS2

@@ -43,11 +43,22 @@ namespace ROS2
 
         SensorConfiguration m_sensorConfiguration;
 
-    private:
+        //! Check if execution deadline has arrived.
+        //! This function needs to be called every loop's iteration (eg TickBus::Handler::OnTick).
+        //! @param expectedLoopTime the expected time to loop call in seconds.
+        //! @returns if measurement should be done/published.
+        bool IsPublicationDeadline(float expectedLoopTime);
+
+        //! Virtual function that setup refresh loop for the sensor.
+        //! Default implementation is calling \ref FrequencyTick periodically in  AZ::TickBus::Handler::OnTick.
+        //! This function can be overridden to subscribe to higher frequency loops or to spawn sensor threads.
+        virtual void SetupRefreshLoop();
+
         //! Executes the sensor action (acquire data -> publish) according to frequency.
         //! Override to implement a specific sensor behavior.
         virtual void FrequencyTick(){};
 
+    private:
         //! Visualise sensor operation.
         //! For example, draw points or rays for a lidar, viewport for a camera, etc.
         //! Visualisation can be turned on or off in SensorConfiguration.
@@ -55,5 +66,9 @@ namespace ROS2
 
         //! The number of ticks that are expected to pass to trigger next measurement.
         AZ::s32 m_tickCountDown{ 0 };
+
+        //! Optional callback that will be called in overridden onTick method.
+        //! Used in default implementation of \ref SetupRefreshLoop
+        AZStd::function<void()> m_onTickCall;
     };
 } // namespace ROS2

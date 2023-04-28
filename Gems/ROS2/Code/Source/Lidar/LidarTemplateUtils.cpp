@@ -6,19 +6,21 @@
  *
  */
 
-#include <Lidar/LidarTemplateUtils.h>
 #include <AzCore/Math/Quaternion.h>
 #include <AzCore/Math/Transform.h>
+#include <Lidar/LidarTemplateUtils.h>
 
 namespace ROS2
 {
     LidarTemplate LidarTemplateUtils::GetTemplate(LidarTemplate::LidarModel model)
     {
-        static const std::unordered_map<LidarTemplate::LidarModel, LidarTemplate> templates = {
+        using Model = LidarTemplate::LidarModel;
+
+        static const std::unordered_map<Model, LidarTemplate> templates = {
             {
-                LidarTemplate::LidarModel::Custom3DLidar,
+                Model::Custom3DLidar,
                 {
-                    /*.m_model = */ LidarTemplate::LidarModel::Custom3DLidar,
+                    /*.m_model = */ Model::Custom3DLidar,
                     /*.m_name = */ "CustomLidar",
                     /*.m_minHAngle = */ -180.0f,
                     /*.m_maxHAngle = */ 180.0f,
@@ -26,6 +28,7 @@ namespace ROS2
                     /*.m_maxVAngle = */ 35.0f,
                     /*.m_layers = */ 24,
                     /*.m_numberOfIncrements = */ 924,
+                    /*.m_minRange = */ 0.0f,
                     /*.m_maxRange = */ 100.0f,
                     /*.m_noiseParameters = */
                     {
@@ -36,9 +39,9 @@ namespace ROS2
                 },
             },
             {
-                LidarTemplate::LidarModel::Ouster_OS0_64,
+                Model::Ouster_OS0_64,
                 {
-                    /*.m_model = */ LidarTemplate::LidarModel::Ouster_OS0_64,
+                    /*.m_model = */ Model::Ouster_OS0_64,
                     /*.m_name = */ "Ouster OS0-64",
                     /*.m_minHAngle = */ -180.0f,
                     /*.m_maxHAngle = */ 180.0f,
@@ -46,6 +49,7 @@ namespace ROS2
                     /*.m_maxVAngle = */ 45.0f,
                     /*.m_layers = */ 64,
                     /*.m_numberOfIncrements = */ 2048,
+                    /*.m_minRange = */ 0.0f,
                     /*.m_maxRange = */ 47.5f,
                     /*.m_noiseParameters = */
                     {
@@ -56,9 +60,9 @@ namespace ROS2
                 },
             },
             {
-                LidarTemplate::LidarModel::Ouster_OS1_64,
+                Model::Ouster_OS1_64,
                 {
-                    /*.m_model = */ LidarTemplate::LidarModel::Ouster_OS1_64,
+                    /*.m_model = */ Model::Ouster_OS1_64,
                     /*.m_name = */ "Ouster OS1-64",
                     /*.m_minHAngle = */ -180.0f,
                     /*.m_maxHAngle = */ 180.0f,
@@ -66,6 +70,7 @@ namespace ROS2
                     /*.m_maxVAngle = */ -22.5f,
                     /*.m_layers = */ 64,
                     /*.m_numberOfIncrements = */ 2048,
+                    /*.m_minRange = */ 0.0f,
                     /*.m_maxRange = */ 120.0f,
                     /*.m_noiseParameters = */
                     {
@@ -76,9 +81,9 @@ namespace ROS2
                 },
             },
             {
-                LidarTemplate::LidarModel::Ouster_OS2_64,
+                Model::Ouster_OS2_64,
                 {
-                    /*.m_model = */ LidarTemplate::LidarModel::Ouster_OS1_64,
+                    /*.m_model = */ Model::Ouster_OS1_64,
                     /*.m_name = */ "Ouster OS1-64",
                     /*.m_minHAngle = */ -180.0f,
                     /*.m_maxHAngle = */ 180.0f,
@@ -86,6 +91,7 @@ namespace ROS2
                     /*.m_maxVAngle = */ -11.25f,
                     /*.m_layers = */ 64,
                     /*.m_numberOfIncrements = */ 2048,
+                    /*.m_minRange = */ 0.0f,
                     /*.m_maxRange = */ 225.0f,
                     /*.m_noiseParameters = */
                     {
@@ -96,9 +102,9 @@ namespace ROS2
                 },
             },
             {
-                LidarTemplate::LidarModel::Velodyne_Puck,
+                Model::Velodyne_Puck,
                 {
-                    /*.m_model = */ LidarTemplate::LidarModel::Velodyne_Puck,
+                    /*.m_model = */ Model::Velodyne_Puck,
                     /*.m_name = */ "Velodyne Puck (VLP-16)",
                     /*.m_minHAngle = */ -180.0f,
                     /*.m_maxHAngle = */ 180.0f,
@@ -106,6 +112,7 @@ namespace ROS2
                     /*.m_maxVAngle = */ -15.0f,
                     /*.m_layers = */ 16,
                     /*.m_numberOfIncrements = */ 1800, // For 0.2 angular resolution
+                    /*.m_minRange = */ 0.0f,
                     /*.m_maxRange = */ 100.0f,
                     /*.m_noiseParameters = */
                     {
@@ -116,9 +123,9 @@ namespace ROS2
                 },
             },
             {
-                LidarTemplate::LidarModel::Velodyne_HDL_32E,
+                Model::Velodyne_HDL_32E,
                 {
-                    /*.m_model = */ LidarTemplate::LidarModel::Velodyne_HDL_32E,
+                    /*.m_model = */ Model::Velodyne_HDL_32E,
                     /*.m_name = */ "Velodyne HDL-32E",
                     /*.m_minHAngle = */ -180.0f,
                     /*.m_maxHAngle = */ 180.0f,
@@ -126,6 +133,7 @@ namespace ROS2
                     /*.m_maxVAngle = */ -30.67f,
                     /*.m_layers = */ 32,
                     /*.m_numberOfIncrements = */ 1800, // For 0.2 angular resolution
+                    /*.m_minRange = */ 0.0f,
                     /*.m_maxRange = */ 100.0f,
                     /*.m_noiseParameters = */
                     {
@@ -135,12 +143,54 @@ namespace ROS2
                     },
                 },
             },
+            {
+                Model::Custom2DLidar,
+                {
+                    /*.m_model = */ Model::Custom2DLidar,
+                    /*.m_name = */ "CustomLidar2D",
+                  /*.m_minHAngle = */ -180.0f,
+                  /*.m_maxHAngle = */ 180.0f,
+                  /*.m_minVAngle = */ 0.f,
+                  /*.m_maxVAngle = */ 0.f,
+                  /*.m_layers = */ 1,
+                  /*.m_numberOfIncrements = */ 924,
+                  /*.m_minRange = */ 0.0f,
+                  /*.m_maxRange = */ 100.0f,
+                  /*.m_noiseParameters = */
+                  {
+                      /*.m_angularNoiseStdDev = */ 0.0f,
+                        /*.m_distanceNoiseStdDevBase = */ 0.02f,
+                        /*.m_distanceNoiseStdDevRisePerMeter = */ 0.001f,
+                    },
+                }
+            },
+            {
+                Model::Slamtec_RPLIDAR_S1,
+                {
+                    /*.m_model = */ Model::Slamtec_RPLIDAR_S1,
+                    /*.m_name = */ "Slamtec RPLIDAR S1",
+                  /*.m_minHAngle = */ -180.0f,
+                  /*.m_maxHAngle = */ 180.0f,
+                  /*.m_minVAngle = */ 0.f,
+                  /*.m_maxVAngle = */ 0.f,
+                  /*.m_layers = */ 1,
+                  /*.m_numberOfIncrements = */ 921,
+                  /*.m_minRange = */ 0.1f,
+                  /*.m_maxRange = */ 40.0f,
+                  /*.m_noiseParameters = */
+                  {
+                      /*.m_angularNoiseStdDev = */ 0.0f,
+                        /*.m_distanceNoiseStdDevBase = */ 0.02f,
+                        /*.m_distanceNoiseStdDevRisePerMeter = */ 0.001f,
+                    },
+                }
+            },
         };
 
         auto it = templates.find(model);
         if (it == templates.end())
         {
-            return LidarTemplate();
+            return {};
         }
 
         return it->second;
@@ -164,12 +214,12 @@ namespace ROS2
         AZStd::vector<AZ::Vector3> rotations;
         for (int incr = 0; incr < lidarTemplate.m_numberOfIncrements; incr++)
         {
+            const float yaw = minHorAngle + incr * horizontalStep;
             for (int layer = 0; layer < lidarTemplate.m_layers; layer++)
             {
                 const float pitch = minVertAngle + layer * verticalStep;
-                const float yaw = minHorAngle + incr * horizontalStep;
 
-                rotations.emplace_back(AZ::Vector3(0.0f, pitch, yaw));
+                rotations.emplace_back(0.0f, pitch, yaw);
             }
         }
 
@@ -183,7 +233,8 @@ namespace ROS2
         directions.reserve(rotations.size());
         for (const auto& angle : rotations)
         {
-            const AZ::Quaternion rotation = rootTransform.GetRotation() * AZ::Quaternion::CreateFromEulerRadiansZYX({ 0.0f, -angle.GetY(), angle.GetZ() });
+            const AZ::Quaternion rotation =
+                rootTransform.GetRotation() * AZ::Quaternion::CreateFromEulerRadiansZYX({ 0.0f, -angle.GetY(), angle.GetZ() });
             directions.emplace_back(rotation.TransformVector(AZ::Vector3::CreateAxisX()));
         }
 

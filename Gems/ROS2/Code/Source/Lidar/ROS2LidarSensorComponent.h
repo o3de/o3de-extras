@@ -70,7 +70,7 @@ namespace ROS2
         AZStd::vector<AZ::Vector3> m_visualisationPoints;
         AZ::RPI::AuxGeomDrawPtr m_drawQueue;
 
-        AZStd::vector<AZ::Vector3> m_lastScanResults;
+        RaycastResult m_lastScanResults;
 
         AZ::u32 m_ignoredLayerIndex = 0;
         bool m_ignoreLayer = false;

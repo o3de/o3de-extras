@@ -26,6 +26,10 @@ namespace ROS2
         static constexpr AZ::EBusHandlerPolicy HandlerPolicy = AZ::EBusHandlerPolicy::Multiple;
         using MutexType = AZStd::recursive_mutex;
 
+        //! Set to true to allow multiple threads to call ApplyPostProcessing at the same time.
+        //! Otherwise, the bus will be locked to a single thread for each entity.
+        static constexpr bool LocklessDispatch = true; 
+
         //! Apply post-processing function, if any implementations to the bus are in the entity.
         //! @param image standard image message passed as a reference. It will be changed through post-processing.
         //! @note you should check whether the encoding format is supported first with SupportsFormat.

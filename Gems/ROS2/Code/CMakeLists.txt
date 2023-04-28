@@ -97,6 +97,7 @@ if(PAL_TRAIT_BUILD_HOST_TOOLS)
         INCLUDE_DIRECTORIES
             PRIVATE
                 Source
+                Source/RobotImporter
             PUBLIC
                 Include
         COMPILE_DEFINITIONS

@@ -20,6 +20,7 @@ You can browse Doxygen-generated documentation on [Gem's GitHub page](https://ro
   - ROS2GNSSSensorComponent
   - ROS2IMUSensorComponent
   - ROS2LidarSensorComponent
+  - ROS2Lidar2DSensorComponent
   - ROS2OdometrySensorComponent
 - __Robot control__
   - ROS2RobotControlComponent

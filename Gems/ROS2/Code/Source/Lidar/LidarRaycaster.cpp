@@ -6,8 +6,8 @@
  *
  */
 
-#include <AzCore/std/smart_ptr/make_shared.h>
 #include <AzCore/Component/Component.h>
+#include <AzCore/std/smart_ptr/make_shared.h>
 #include <AzFramework/Physics/Common/PhysicsSceneQueries.h>
 #include <AzFramework/Physics/PhysicsScene.h>
 #include <AzFramework/Physics/PhysicsSystem.h>
@@ -72,25 +72,24 @@ namespace ROS2
         m_range = range;
     }
 
-    AZStd::vector<AZ::Vector3> LidarRaycaster::PerformRaycast(const AZ::Transform& lidarTransform)
+    void LidarRaycaster::ConfigureMinimumRayRange(float range)
     {
-        AZ_Assert(!m_rayRotations.empty(), "Ray poses are not configured. Unable to Perform a raycast.");
-        AZ_Assert(m_range > 0.0f, "Ray range is not configured. Unable to Perform a raycast.");
+        m_minRange = range;
+    }
 
-        if (m_sceneHandle == AzPhysics::InvalidSceneHandle)
-        {
-            m_sceneHandle = GetPhysicsSceneFromEntityId(m_sceneEntityId);
-        }
+    void LidarRaycaster::ConfigureRaycastResultFlags(RaycastResultFlags flags)
+    {
+        m_resultFlags = flags;
+    }
 
-        const AZStd::vector<AZ::Vector3> rayDirections =
-            LidarTemplateUtils::RotationsToDirections(m_rayRotations, lidarTransform);
+    AzPhysics::SceneQueryRequests LidarRaycaster::prepareRequests(
+        const AZ::Transform& lidarTransform, const AZStd::vector<AZ::Vector3>& rayDirections) const
+    {
+        using AzPhysics::SceneQuery::HitFlags;
+        const AZ::Vector3& lidarPosition = lidarTransform.GetTranslation();
 
-        const AZ::Vector3 lidarPosition = lidarTransform.GetTranslation();
-
-        AZStd::vector<AZ::Vector3> results;
         AzPhysics::SceneQueryRequests requests;
         requests.reserve(rayDirections.size());
-        results.reserve(rayDirections.size());
         for (const AZ::Vector3& direction : rayDirections)
         {
             AZStd::shared_ptr<AzPhysics::RayCastRequest> request = AZStd::make_shared<AzPhysics::RayCastRequest>();
@@ -112,23 +111,69 @@ namespace ROS2
             };
             requests.emplace_back(AZStd::move(request));
         }
+        return requests;
+    }
+
+    RaycastResult LidarRaycaster::PerformRaycast(const AZ::Transform& lidarTransform)
+    {
+        AZ_Assert(!m_rayRotations.empty(), "Ray poses are not configured. Unable to Perform a raycast.");
+        AZ_Assert(m_range > 0.0f, "Ray range is not configured. Unable to Perform a raycast.");
+
+        if (m_sceneHandle == AzPhysics::InvalidSceneHandle)
+        {
+            m_sceneHandle = GetPhysicsSceneFromEntityId(m_sceneEntityId);
+        }
+
+        const AZStd::vector<AZ::Vector3> rayDirections = LidarTemplateUtils::RotationsToDirections(m_rayRotations, lidarTransform);
+
+        AzPhysics::SceneQueryRequests requests = prepareRequests(lidarTransform, rayDirections);
+
+        RaycastResult results;
+        const bool handlePoints = (m_resultFlags & RaycastResultFlags::Points) == RaycastResultFlags::Points;
+        const bool handleRanges = (m_resultFlags & RaycastResultFlags::Ranges) == RaycastResultFlags::Ranges;
+        if (handlePoints)
+        {
+            results.m_points.reserve(rayDirections.size());
+        }
+        if (handleRanges)
+        {
+            results.m_ranges.reserve(rayDirections.size());
+        }
 
         auto* sceneInterface = AZ::Interface<AzPhysics::SceneInterface>::Get();
         auto requestResults = sceneInterface->QuerySceneBatch(m_sceneHandle, requests);
         AZ_Assert(requestResults.size() == rayDirections.size(), "Request size should be equal to directions size");
+        const auto localTransform = lidarTransform.GetInverse();
+        const float maxRange = m_addMaxRangePoints ? m_range : AZStd::numeric_limits<float>::infinity();
+
         for (int i = 0; i < requestResults.size(); i++)
         {
             const auto& requestResult = requestResults[i];
-            if (!requestResult.m_hits.empty())
+            float hitRange = requestResult ? requestResult.m_hits[0].m_distance : maxRange;
+            if (hitRange < m_minRange)
             {
-                results.push_back(requestResult.m_hits[0].m_position);
+                hitRange = -AZStd::numeric_limits<float>::infinity();
             }
-            else if (m_addMaxRangePoints)
+            if (handleRanges)
             {
-                const AZ::Vector3 maxPoint = lidarTransform.TransformPoint(rayDirections[i] * m_range);
-                results.push_back(maxPoint);
+                results.m_ranges.push_back(hitRange);
+            }
+            if (handlePoints)
+            {
+                if (hitRange == maxRange)
+                {
+                    // to properly visualize max points they need to be transformed to local coordinate system before applying maxRange
+                    const AZ::Vector3 maxPoint = lidarTransform.TransformPoint(localTransform.TransformVector(rayDirections[i]) * hitRange);
+                    results.m_points.push_back(maxPoint);
+                }
+                else if (!AZStd::isinf(hitRange))
+                {
+                    // otherwise they are already calculated by PhysX
+                    results.m_points.push_back(requestResult.m_hits[0].m_position);
+                }
             }
         }
+
         return results;
     }
 

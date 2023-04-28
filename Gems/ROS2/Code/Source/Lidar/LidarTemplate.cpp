@@ -6,8 +6,8 @@
  *
  */
 
-#include <Lidar/LidarTemplate.h>
 #include <AzCore/Serialization/EditContext.h>
+#include <Lidar/LidarTemplate.h>
 
 namespace ROS2
 {
@@ -47,13 +47,18 @@ namespace ROS2
         }
     }
 
+    bool LidarTemplate::IsLayersVisible() const
+    {
+        return m_model != LidarTemplate::LidarModel::Custom2DLidar;
+    }
+
     void LidarTemplate::Reflect(AZ::ReflectContext* context)
     {
         NoiseParameters::Reflect(context);
         if (auto serializeContext = azrtti_cast<AZ::SerializeContext*>(context))
         {
             serializeContext->Class<LidarTemplate>()
-                ->Version(1)
+                ->Version(2)
                 ->Field("Name", &LidarTemplate::m_name)
                 ->Field("Layers", &LidarTemplate::m_layers)
                 ->Field("Points per layer", &LidarTemplate::m_numberOfIncrements)
@@ -61,6 +66,7 @@ namespace ROS2
                 ->Field("Max horizontal angle", &LidarTemplate::m_maxHAngle)
                 ->Field("Min vertical angle", &LidarTemplate::m_minVAngle)
                 ->Field("Max vertical angle", &LidarTemplate::m_maxVAngle)
+                ->Field("Min range", &LidarTemplate::m_minRange)
                 ->Field("Max range", &LidarTemplate::m_maxRange)
                 ->Field("Noise Parameters", &LidarTemplate::m_noiseParameters);
 
@@ -69,6 +75,7 @@ namespace ROS2
                 ec->Class<LidarTemplate>("Lidar Template", "Lidar Template")
                     ->DataElement(AZ::Edit::UIHandlers::Default, &LidarTemplate::m_name, "Name", "Custom lidar name")
                     ->DataElement(AZ::Edit::UIHandlers::Default, &LidarTemplate::m_layers, "Layers", "Vertical dimension")
+                    ->Attribute(AZ::Edit::Attributes::Visibility, &LidarTemplate::IsLayersVisible)
                     ->DataElement(
                         AZ::Edit::UIHandlers::Default, &LidarTemplate::m_numberOfIncrements, "Points per layer", "Horizontal dimension")
                     ->DataElement(
@@ -87,6 +94,9 @@ namespace ROS2
                         AZ::Edit::UIHandlers::Default, &LidarTemplate::m_maxVAngle, "Max vertical angle [Deg]", "Upwards reach of fov")
                     ->Attribute(AZ::Edit::Attributes::Min, -180.0f)
                     ->Attribute(AZ::Edit::Attributes::Max, 180.0f)
+                    ->DataElement(AZ::Edit::UIHandlers::Default, &LidarTemplate::m_minRange, "Min range", "Minimum beam range [m]")
+                    ->Attribute(AZ::Edit::Attributes::Min, 0.0f)
+                    ->Attribute(AZ::Edit::Attributes::Max, 1000.0f)
                     ->DataElement(AZ::Edit::UIHandlers::Default, &LidarTemplate::m_maxRange, "Max range", "Maximum beam range [m]")
                     ->Attribute(AZ::Edit::Attributes::Min, 0.001f)
                     ->Attribute(AZ::Edit::Attributes::Max, 1000.0f)

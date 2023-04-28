@@ -41,7 +41,6 @@ namespace ROS2
         connect(this, &QWizard::currentIdChanged, this, &RobotImporterWidget::onCurrentIdChanged);
         connect(m_prefabMakerPage, &QWizardPage::completeChanged, this, &RobotImporterWidget::OnUrdfCreated);
         connect(m_prefabMakerPage, &PrefabMakerPage::onCreateButtonPressed, this, &RobotImporterWidget::onCreateButtonPressed);
-        connect(this, &RobotImporterWidget::SignalFinalizeURDFCreation, this, &RobotImporterWidget::FinalizeURDFCreation);
         connect(
             this,
             &QWizard::customButtonClicked,
@@ -70,7 +69,7 @@ namespace ROS2
     void RobotImporterWidget::OnUrdfCreated()
     {
         // hide cancel and back buttons when last page succeed
-        if (currentPage() == m_prefabMakerPage)
+        if (currentPage() == m_prefabMakerPage && m_prefabMakerPage->isComplete())
         {
             QWizard::button(QWizard::CancelButton)->hide();
             QWizard::button(QWizard::BackButton)->hide();
@@ -90,17 +89,19 @@ namespace ROS2
                 {
                     m_parsedUrdf = outcome.m_urdfHandle;
                     report += "# " + tr("XACRO execution succeeded") + "\n";
+                    m_assetPage->ClearAssetsList();
                 }
                 else
                 {
                     report += "# " + tr("XACRO parsing failed") + "\n";
-                    report += "\n\n## " + tr("Command called") +  "\n\n`" + QString::fromUtf8(outcome.m_called.data()) + "`";
+                    report += "\n\n## " + tr("Command called") + "\n\n`" + QString::fromUtf8(outcome.m_called.data()) + "`";
                     report += "\n\n" + tr("Process failed");
                     report += "\n\n## " + tr("Error output") + "\n\n";
                     report += "```\n";
                     if (outcome.m_logErrorOutput.size())
                     {
-                        report += QString::fromLocal8Bit(outcome.m_logErrorOutput.data(), static_cast<int>(outcome.m_logErrorOutput.size()));
+                        report +=
+                            QString::fromLocal8Bit(outcome.m_logErrorOutput.data(), static_cast<int>(outcome.m_logErrorOutput.size()));
                     }
                     else
                     {
@@ -111,7 +112,8 @@ namespace ROS2
                     report += "```\n";
                     if (outcome.m_logStandardOutput.size())
                     {
-                        report += QString::fromLocal8Bit(outcome.m_logStandardOutput.data(), static_cast<int>(outcome.m_logStandardOutput.size()));
+                        report += QString::fromLocal8Bit(
+                            outcome.m_logStandardOutput.data(), static_cast<int>(outcome.m_logStandardOutput.size()));
                     }
                     else
                     {
@@ -140,6 +142,7 @@ namespace ROS2
                 // Report the status of skipping this page
                 AZ_Printf("Wizard", "Wizard skips m_checkUrdfPage since there is no errors in URDF\n");
                 m_meshNames = Utils::GetMeshesFilenames(m_parsedUrdf->getRoot(), true, true);
+                m_assetPage->ClearAssetsList();
             }
             else
             {
@@ -172,21 +175,42 @@ namespace ROS2
 
     void RobotImporterWidget::FillAssetPage()
     {
-        m_assetPage->ClearAssetsList();
-        if (m_parsedUrdf)
+        if (m_parsedUrdf && m_assetPage->IsEmpty())
         {
-            m_urdfAssetsMapping = AZStd::make_shared<Utils::UrdfAssetMap>(Utils::FindAssetsForUrdf(m_meshNames, m_urdfPath.String()));
             auto collidersNames = Utils::GetMeshesFilenames(m_parsedUrdf->getRoot(), false, true);
             auto visualNames = Utils::GetMeshesFilenames(m_parsedUrdf->getRoot(), true, false);
+
+            if (m_importAssetWithUrdf)
+            {
+                m_urdfAssetsMapping = AZStd::make_shared<Utils::UrdfAssetMap>(
+                    Utils::CopyAssetForURDFAndCreateAssetMap(m_meshNames, m_urdfPath.String(), collidersNames, visualNames));
+            }
+            else
+            {
+                m_urdfAssetsMapping = AZStd::make_shared<Utils::UrdfAssetMap>(Utils::FindAssetsForUrdf(m_meshNames, m_urdfPath.String()));
+                for (const AZStd::string& meshPath : m_meshNames)
+                {
+                    if (m_urdfAssetsMapping->contains(meshPath))
+                    {
+                        const auto& asset = m_urdfAssetsMapping->at(meshPath);
+                        bool visual = visualNames.contains(meshPath);
+                        bool collider = collidersNames.contains(meshPath);
+                        Utils::CreateSceneManifest(asset.m_availableAssetInfo.m_sourceAssetGlobalPath, collider, visual);
+                    }
+                }
+            };
+
             for (const AZStd::string& meshPath : m_meshNames)
             {
-                const QString meshPathqs = QString::fromUtf8(meshPath.data(), meshPath.size());
                 const QString kNotFound = tr("not found");
-
+                const AZStd::string kNotFoundAz(kNotFound.toUtf8());
+                AZ::Uuid sourceAssetUuid;
                 if (m_urdfAssetsMapping->contains(meshPath))
                 {
                     QString type = kNotFound;
-                    QString sourcePath = kNotFound;
+                    AZStd::string sourcePath(kNotFoundAz);
+                    AZStd::string resolvedPath(kNotFoundAz);
+                    QString productAssetText;
                     auto crc = AZ::Crc32();
                     QString tooltip = kNotFound;
                     bool visual = visualNames.contains(meshPath);
@@ -207,20 +231,20 @@ namespace ROS2
                     if (m_urdfAssetsMapping->contains(meshPath))
                     {
                         const auto& asset = m_urdfAssetsMapping->at(meshPath);
-                        const AZStd::string& productPath = asset.m_availableAssetInfo.m_productAssetRelativePath;
-                        const AZStd::string& resolvedPath = asset.m_resolvedUrdfPath.data();
-
-                        sourcePath = QString::fromUtf8(productPath.data(), productPath.size());
+                        sourceAssetUuid = asset.m_availableAssetInfo.m_sourceGuid;
+                        sourcePath = asset.m_availableAssetInfo.m_sourceAssetRelativePath;
+                        resolvedPath = asset.m_resolvedUrdfPath.data();
                         crc = asset.m_urdfFileCRC;
                         tooltip = QString::fromUtf8(resolvedPath.data(), resolvedPath.size());
                     }
-                    m_assetPage->ReportAsset(meshPathqs, type, sourcePath, crc, tooltip);
+                    m_assetPage->ReportAsset(sourceAssetUuid, meshPath, type, sourcePath, crc, resolvedPath);
                 }
                 else
                 {
-                    m_assetPage->ReportAsset(meshPathqs, kNotFound, kNotFound, AZ::Crc32(), kNotFound);
+                    m_assetPage->ReportAsset(sourceAssetUuid, meshPath, kNotFound, kNotFoundAz, AZ::Crc32(), kNotFoundAz);
                 };
             }
+            m_assetPage->StartWatchAsset();
         }
     }
 
@@ -252,11 +276,30 @@ namespace ROS2
             {
                 OpenUrdf();
             }
+            m_importAssetWithUrdf = m_fileSelectPage->getIfCopyAssetsDuringUrdfImport();
         }
         if (currentPage() == m_xacroParamsPage)
         {
             m_params = m_xacroParamsPage->GetXacroParameters();
             OpenUrdf();
+        }
+        if (currentPage() == m_introPage)
+        {
+            AZ::EntityId levelEntityId;
+            AzToolsFramework::ToolsApplicationRequestBus::BroadcastResult(
+                levelEntityId, &AzToolsFramework::ToolsApplicationRequests::GetCurrentLevelEntityId);
+
+            AZ::Entity* levelEntity{ nullptr };
+            AZ::ComponentApplicationBus::BroadcastResult(levelEntity, &AZ::ComponentApplicationRequests::FindEntity, levelEntityId);
+
+            if (!levelEntityId.IsValid() || levelEntity == nullptr)
+            {
+                QMessageBox noLevelLoadedMessage;
+                noLevelLoadedMessage.critical(0, "No level opened", "A level must be opened before using URDF Importer");
+                noLevelLoadedMessage.setFixedSize(500, 200);
+
+                return false;
+            }
         }
         return currentPage()->validatePage();
     }
@@ -311,14 +354,6 @@ namespace ROS2
         m_prefabMaker = AZStd::make_unique<URDFPrefabMaker>(
             m_urdfPath.String(), m_parsedUrdf, prefabPath.String(), m_urdfAssetsMapping, useArticulation);
 
-        auto callback = [&]()
-        {
-            emit SignalFinalizeURDFCreation();
-        };
-        m_prefabMaker->LoadURDF(callback);
-    }
-    void RobotImporterWidget::FinalizeURDFCreation()
-    {
         auto prefabOutcome = m_prefabMaker->CreatePrefabFromURDF();
         if (prefabOutcome.IsSuccess())
         {
@@ -335,6 +370,7 @@ namespace ROS2
             m_prefabMakerPage->setSuccess(false);
         }
     }
+
     void RobotImporterWidget::onCreateButtonPressed()
     {
         CreatePrefab(m_prefabMakerPage->getPrefabName());
