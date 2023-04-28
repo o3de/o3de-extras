@@ -15,6 +15,7 @@
 #include <ROS2/Sensor/ROS2SensorComponent.h>
 #include <nav_msgs/msg/odometry.hpp>
 #include <rclcpp/publisher.hpp>
+#include <Utilities/PhysicsCallbackHandler.h>
 
 namespace ROS2
 {

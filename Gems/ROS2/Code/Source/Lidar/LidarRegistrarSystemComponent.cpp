@@ -9,6 +9,7 @@
 #include <AzCore/Serialization/EditContext.h>
 #include <AzCore/Serialization/SerializeContext.h>
 #include <Lidar/LidarRegistrarSystemComponent.h>
+#include <Lidar/LidarTemplate.h>
 
 namespace ROS2
 {
@@ -110,4 +111,16 @@ namespace ROS2
 
         return nullptr;
     }
+
+    AZStd::string Details::GetDefaultLidarSystem()
+        {
+            const auto& lidarSystemList = LidarRegistrarInterface::Get()->GetRegisteredLidarSystems();
+            if (lidarSystemList.empty())
+            {
+                AZ_Warning("ROS2LidarSensorComponent", false, "No LIDAR system for the sensor to use.");
+                return {};
+            }
+            return lidarSystemList.front();
+        }
+
 } // namespace ROS2
