@@ -16,16 +16,16 @@ namespace ROS2
     {
         setTitle(QObject::tr("Introduction"));
 
-        m_label = new QLabel(QObject::tr("This wizard allows you to build a robot prefab out of URDF description file."
-                                         " Before processing, please, make sure that all necessary assets that are"
-                                         " used by URDF file are processed by Asset Processor."
-                                         " Open 3D Engine can only use files in its internal"
-                                         " <a href=\"https://www.o3de.org/docs/user-guide/assets/asset-types/\">format</a>."
-                                         " The tool (Asset Processor) allows processing source assets (e.g, meshes, textures)"
-                                         " to its supported internal format. To learn more about asset processors click"
-                                         " <a href=\"https://www.o3de.org/docs/user-guide/assets/asset-processor/\">here</a>."
-                                         " URDF Importer will find correct meshes in product assets during import."
-                                         " A level must be opened before using URDF Importer."));
+        m_label = new QLabel(
+            QObject::tr("This wizard allows you to build a robot prefab using a URDF description file."
+                        " Before processing, please make sure that all of the robot's description packages have been built and sourced."
+                        " Details can be found <a "
+                        "href=\"https://www.o3de.org/docs/user-guide/interactivity/robotics/importing-robot/"
+                        "#loading-the-robot-definition-file-with-robot-importer\">here</a>."
+                        " The Open 3D Engine can only use files in its internal <a "
+                        "href=\"https://www.o3de.org/docs/user-guide/assets/asset-types/\">format</a>."
+                        "During the import process, the assets will be imported and processed."
+                        "A level must be opened before using the URDF Importer."));
         m_label->setTextFormat(Qt::RichText);
         m_label->setOpenExternalLinks(true);
         m_label->setWordWrap(true);
