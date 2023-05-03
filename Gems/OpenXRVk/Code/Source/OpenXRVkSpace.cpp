@@ -25,7 +25,7 @@ namespace OpenXRVk
     void Space::CreateVisualizedSpaces(XrSession xrSession)
     {
         AZ_Assert(xrSession != XR_NULL_HANDLE, "XR session is null");
-  
+
         for (uint32_t i = 0; i < static_cast<uint32_t>(SpaceType::Count); i++)
         {
             XrReferenceSpaceCreateInfo referenceSpaceCreateInfo = GetXrReferenceSpaceCreateInfo(static_cast<SpaceType>(i));
@@ -50,7 +50,7 @@ namespace OpenXRVk
         {
             case SpaceType::View:
             {
-                //Track the view origin used to generate view transforms for the primary viewer (or centroid of 
+                //Track the view origin used to generate view transforms for the primary viewer (or centroid of
                 //view origins if stereo), with +Y up, +X to the right, and -Z forward.
                 referenceSpaceCreateInfo.referenceSpaceType = XR_REFERENCE_SPACE_TYPE_VIEW;
                 break;
@@ -64,7 +64,7 @@ namespace OpenXRVk
             }
             case SpaceType::Local:
             {
-                //Track center Local space which is world-locked origin, gravity-aligned to exclude 
+                //Track center Local space which is world-locked origin, gravity-aligned to exclude
                 //pitch and roll, with +Y up, +X to the right, and -Z forward.
                 referenceSpaceCreateInfo.referenceSpaceType = XR_REFERENCE_SPACE_TYPE_LOCAL;
                 break;
@@ -77,14 +77,14 @@ namespace OpenXRVk
             }
             case SpaceType::StageLeft:
             {
-                //Track Left Stage space which is basically the center stage translated to the left and down by 5m. 
+                //Track Left Stage space which is basically the center stage translated to the left and down by 5m.
                 referenceSpaceCreateInfo.poseInReferenceSpace = RotateCCWAboutYAxis(0.f, { -5.f, 0.f, -5.f });
                 referenceSpaceCreateInfo.referenceSpaceType = XR_REFERENCE_SPACE_TYPE_STAGE;
                 break;
             }
             case SpaceType::StageRight:
             {
-                //Track Right Stage space which is basically the center stage translated to the right and down by 5m. 
+                //Track Right Stage space which is basically the center stage translated to the right and down by 5m.
                 referenceSpaceCreateInfo.poseInReferenceSpace = RotateCCWAboutYAxis(0.f, { 5.f, 0.f, -5.f });
                 referenceSpaceCreateInfo.referenceSpaceType = XR_REFERENCE_SPACE_TYPE_STAGE;
                 break;

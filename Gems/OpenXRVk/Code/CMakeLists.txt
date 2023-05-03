@@ -55,7 +55,7 @@ ly_add_target(
         PUBLIC
             AZ::AzCore
             AZ::AzFramework
-            3rdParty::OpenXR
+            ${openxr_dependency}
             AZ::AtomCore
             Gem::Atom_RHI_Vulkan.Reflect
             Gem::Atom_RHI_Vulkan.Glad.Static
@@ -79,6 +79,41 @@ ly_add_target(
             Gem::OpenXRVk.Static
 )
 
-# use the OpenXRVk module in clients and tools:
+# use the OpenXRVk module in all aliases:
 ly_create_alias(NAME OpenXRVk.Clients NAMESPACE Gem TARGETS Gem::OpenXRVk)
-ly_create_alias(NAME OpenXRVk.Tools NAMESPACE Gem TARGETS Gem::OpenXRVk)
+ly_create_alias(NAME OpenXRVk.Unified NAMESPACE Gem TARGETS Gem::OpenXRVk)
+
+if(PAL_TRAIT_BUILD_HOST_TOOLS)
+    ly_create_alias(NAME OpenXRVk.Tools NAMESPACE Gem TARGETS Gem::OpenXRVk)
+    ly_create_alias(NAME OpenXRVk.Builders NAMESPACE Gem TARGETS Gem::OpenXRVk)
+endif()
+
+################################################################################
+# Tests
+################################################################################
+if(PAL_TRAIT_BUILD_TESTS_SUPPORTED)
+
+    ly_add_target(
+        NAME OpenXRVk.Tests ${PAL_TRAIT_TEST_TARGET_TYPE}
+        NAMESPACE Gem
+        OUTPUT_NAME OpenXRVk.Tests
+        FILES_CMAKE
+            openxrvk_tests_files.cmake
+            ${pal_source_dir}/platform_test_${PAL_PLATFORM_NAME_LOWERCASE}_files.cmake
+        INCLUDE_DIRECTORIES
+            PRIVATE
+                Tests
+                .
+                Source
+                ${pal_source_dir}
+        BUILD_DEPENDENCIES
+            PRIVATE
+                AZ::AzTestShared
+                AZ::AzTest
+                Gem::OpenXRVk.Static
+    )
+    ly_add_googletest(
+        NAME Gem::OpenXRVk.Tests
+    )
+
+endif()

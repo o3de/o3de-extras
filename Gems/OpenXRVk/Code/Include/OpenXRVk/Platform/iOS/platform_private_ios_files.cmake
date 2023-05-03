@@ -7,4 +7,5 @@
 #
 
 set(FILES
+    OpenXRVk_Platform.h
 )

@@ -9,6 +9,7 @@
 #include <XR/XRSession.h>
 #include <XR/XRFactory.h>
 #include <XR/XRDevice.h>
+#include <XR/XRInput.h>
 
 namespace XR
 {
@@ -25,7 +26,7 @@ namespace XR
             AZ_Error("XR", result == AZ::RHI::ResultCode::Success, "XR Space was not initialized");
             RETURN_RESULTCODE_IF_UNSUCCESSFUL(result);
         }
-        
+
         m_input = Factory::Get().CreateInput();
         AZ_Error("XR", m_input, "XR Input was not created");
         if (m_input)
@@ -48,7 +49,7 @@ namespace XR
         m_descriptor.m_device->UnRegisterSession();
         ShutdownInternal();
     }
-    
+
     Input* Session::GetInput() const
     {
         return m_input.get();
@@ -57,5 +58,5 @@ namespace XR
     Space* Session::GetSpace() const
     {
         return m_space.get();
-    } 
+    }
 } // namespace XR

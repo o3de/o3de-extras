@@ -11,6 +11,7 @@
 #include <AzCore/std/smart_ptr/intrusive_ptr.h>
 #include <AzCore/std/string/string.h>
 #include <AzCore/std/containers/vector.h>
+#include <Atom/RHI.Reflect/Base.h>      // For AZ::RHI::ResultCode
 
 namespace XR
 {
@@ -22,17 +23,17 @@ namespace XR
 
     using StringList = AZStd::vector<AZStd::string>;
     using RawStringList = AZStd::vector<const char*>;
-    
+
     enum class  Side : uint32_t
     {
         Left = 0,
         Right,
         Count
-    }; 
+    };
 
 #define RETURN_RESULTCODE_IF_UNSUCCESSFUL(result) \
-    if (result != AZ::RHI::ResultCode::Success) {\
-        return result;\
+    if ((result) != AZ::RHI::ResultCode::Success) {\
+        return (result);\
     }
 }
 

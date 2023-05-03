@@ -22,7 +22,7 @@ namespace OpenXRTest
         static void GetDependentServices(AZ::ComponentDescriptor::DependencyArrayType& dependent);
 
         OpenXRTestSystemComponent();
-        ~OpenXRTestSystemComponent();
+        ~OpenXRTestSystemComponent() override;
 
     protected:
         ////////////////////////////////////////////////////////////////////////

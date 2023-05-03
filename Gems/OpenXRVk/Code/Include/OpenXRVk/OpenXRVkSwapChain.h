@@ -18,7 +18,7 @@ namespace OpenXRVk
         : public XR::SwapChain
     {
     public:
-        AZ_CLASS_ALLOCATOR(SwapChain, AZ::SystemAllocator, 0);
+        AZ_CLASS_ALLOCATOR(SwapChain, AZ::SystemAllocator);
         AZ_RTTI(SwapChain, "{3DD88236-8C9F-4864-86F5-018C198BC07E}", XR::SwapChain);
 
         static XR::Ptr<SwapChain> Create();
@@ -28,7 +28,7 @@ namespace OpenXRVk
             : public XR::SwapChain::Image
         {
         public:
-            AZ_CLASS_ALLOCATOR(Image, AZ::SystemAllocator, 0);
+            AZ_CLASS_ALLOCATOR(Image, AZ::SystemAllocator);
             AZ_RTTI(Image, "{717ABDD4-C050-4FDF-8E93-3784F81FE315}", XR::SwapChain::Image);
 
             static XR::Ptr<Image> Create();
@@ -44,7 +44,7 @@ namespace OpenXRVk
             : public XR::SwapChain::View
         {
         public:
-            AZ_CLASS_ALLOCATOR(View, AZ::SystemAllocator, 0);
+            AZ_CLASS_ALLOCATOR(View, AZ::SystemAllocator);
             AZ_RTTI(View, "{F8312427-AC2D-4737-9A8F-A16ADA5319D0}", XR::SwapChain::View);
 
             static XR::Ptr<View> Create();
@@ -66,14 +66,11 @@ namespace OpenXRVk
             XrSwapchain m_handle = XR_NULL_HANDLE;
         };
 
-        //! Assign the correct native Swapchain image based on the swapchain index and swapchain image index
+        // XR::SwapChain overrides...
         AZ::RHI::ResultCode GetSwapChainImage(AZ::RHI::XRSwapChainDescriptor* swapchainDescriptor) const override;
-
-        //! Return the recommended swapchain width
         AZ::u32 GetSwapChainWidth(AZ::u32 viewIndex) const override;
-
-        //! Return the recommended swapchain height
         AZ::u32 GetSwapChainHeight(AZ::u32 viewIndex) const override;
+        AZ::RHI::Format GetSwapChainFormat(AZ::u32 viewIndex) const override;
 
         //! Get the view configurations supported by the drivers
         AZStd::vector<XrViewConfigurationView> GetViewConfigs() const;
@@ -87,10 +84,10 @@ namespace OpenXRVk
         void ShutdownInternal() override;
 
         //! Return supported swapchain image format
-        AZ::s64 SelectColorSwapChainFormat(const AZStd::vector<int64_t>& runtimeFormats) const;
+        VkFormat SelectColorSwapChainFormat(const AZStd::vector<int64_t>& runtimeFormats) const;
         
         AZStd::vector<XrViewConfigurationView> m_configViews;
-        AZ::s64 m_colorSwapChainFormat{ -1 };
+        VkFormat m_colorSwapChainFormat{ VK_FORMAT_UNDEFINED };
         AZ::u32 m_mipCount = 1;
         AZ::u32 m_faceCount = 1;
         AZ::u32 m_arraySize = 1;

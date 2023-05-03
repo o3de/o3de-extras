@@ -1,0 +1,27 @@
+{
+    "gem_name": "WarehouseAssets",
+    "display_name": "WarehouseAssets",
+    "license": "Apache-2.0 or MIT",
+    "license_url": "https://opensource.org/licenses/Apache-2.0",
+    "origin": "The name of the originator or creator",
+    "origin_url": "https://github.com/o3de/o3de-extras/tree/main/Gems/WarehouseAssets",
+    "type": "Asset",
+    "summary": "A set of prefabs and assets to build large warehouse scenes.",
+    "canonical_tags": [
+        "Gem"
+    ],
+    "user_tags": [
+        "WarehouseAssets"
+    ],
+    "platforms": [
+        ""
+    ],
+    "icon_path": "preview.png",
+    "requirements": "",
+    "documentation_url": "",
+    "dependencies": [],
+    "repo_uri": "",
+    "compatible_engines": [],
+    "engine_api_dependencies": [],
+    "restricted": ""
+}

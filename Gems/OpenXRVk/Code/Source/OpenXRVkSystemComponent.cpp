@@ -6,7 +6,9 @@
  *
  */
 
+
 #include <AzCore/Serialization/SerializeContext.h>
+
 #include <OpenXRVk/OpenXRVkDevice.h>
 #include <OpenXRVk/OpenXRVkInput.h>
 #include <OpenXRVk/OpenXRVkInstance.h>
@@ -24,11 +26,13 @@ namespace OpenXRVk
 
     void SystemComponent::Reflect(AZ::ReflectContext* context)
     {
-        if (AZ::SerializeContext* serializeContext = azrtti_cast<AZ::SerializeContext*>(context))
+        if (auto serializeContext = azrtti_cast<AZ::SerializeContext*>(context))
         {
             serializeContext->Class<SystemComponent, AZ::Component>()
                 ->Version(1);
         }
+
+        AzFramework::InputDeviceXRController::Reflect(context);
     }
 
     SystemComponent::SystemComponent()

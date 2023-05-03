@@ -31,7 +31,7 @@ namespace XR
     {
     public:
         AZ_RTTI(Object, "{74FCA8BF-CBDA-43EB-A378-89F752ED2FCA}");
-        virtual ~Object() = default;
+        ~Object() override = default;
 
         //! Sets the name of the object.
         void SetName(const AZ::Name& name)

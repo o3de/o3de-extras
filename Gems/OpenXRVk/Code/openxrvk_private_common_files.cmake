@@ -7,6 +7,7 @@
 #
 
 set(FILES
+    Include/OpenXRVk/InputDeviceXRController.h
     Include/OpenXRVk/OpenXRVkDevice.h
     Include/OpenXRVk/OpenXRVkInput.h
     Include/OpenXRVk/OpenXRVkInstance.h
@@ -16,6 +17,8 @@ set(FILES
     Include/OpenXRVk/OpenXRVkSwapChain.h
     Include/OpenXRVk/OpenXRVkSystemComponent.h
     Include/OpenXRVk/OpenXRVkUtils.h
+    Source/InputDeviceXRController.cpp
+    Source/OpenXRVkCommon.h
     Source/OpenXRVkDevice.cpp
     Source/OpenXRVkInput.cpp
     Source/OpenXRVkInstance.cpp
@@ -25,4 +28,6 @@ set(FILES
     Source/OpenXRVkSwapChain.cpp
     Source/OpenXRVkSystemComponent.cpp
     Source/OpenXRVkUtils.cpp
+    Source/XRCameraMovementComponent.cpp
+    Source/XRCameraMovementComponent.h
 )

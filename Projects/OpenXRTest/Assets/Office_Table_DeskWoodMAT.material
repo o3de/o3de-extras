@@ -1,0 +1,19 @@
+{
+    "materialType": "@gemroot:Atom_Feature_Common@/Assets/Materials/Types/BasePBR.materialtype",
+    "materialTypeVersion": 1,
+    "propertyValues": {
+        "baseColor.color": [
+            0.8707407712936401,
+            0.8707407712936401,
+            0.8707407712936401,
+            1.0
+        ],
+        "baseColor.textureMap": "textures/DeskWood_BaseColor.png",
+        "irradiance.irradianceColorSource": "BaseColor",
+        "metallic.textureMap": "textures/DeskWood_Metallic.png",
+        "normal.textureMap": "textures/DeskWood_Normal.png",
+        "roughness.lowerBound": 0.3799999952316284,
+        "roughness.textureMap": "textures/DeskWood_Roughness.png",
+        "specularF0.factor": 0.07999999821186066
+    }
+}

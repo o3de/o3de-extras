@@ -1,0 +1,28 @@
+{
+    "gem_name": "ProteusRobot",
+    "version": "1.0.0",
+    "display_name": "ProteusRobot",
+    "license": "License used i.e. Apache-2.0 or MIT",
+    "license_url": "Link to the license web site i.e. https://opensource.org/licenses/Apache-2.0",
+    "origin": "The name of the originator or creator",
+    "origin_url": "https://github.com/o3de/o3de-extras/tree/development/Gems/ProteusRobot",
+    "type": "Code",
+    "summary": "Proteus: Warehouse robot with Lidar sensor",
+    "canonical_tags": [
+        "Gem"
+    ],
+    "user_tags": [
+        "ProteusRobot"
+    ],
+    "platforms": [
+        ""
+    ],
+    "icon_path": "preview.png",
+    "requirements": "Notice of any requirements for this Gem i.e. This requires X other gem",
+    "documentation_url": "Link to any documentation of your Gem",
+    "dependencies": [],
+    "repo_uri": "",
+    "compatible_engines": [],
+    "engine_api_dependencies": [],
+    "restricted": "ProteusRobot"
+}

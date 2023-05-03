@@ -1,0 +1,74 @@
+{
+    "values": [
+        {
+            "$type": "{5B03C8E6-8CEE-4DA0-A7FA-CD88689DD45B} MeshGroup",
+            "id": "{44916C1F-1044-5A46-9277-52632BDECE5B}",
+            "name": "Warehouse_FrontRackProtector",
+            "NodeSelectionList": {
+                "selectedNodes": [
+                    "RootNode",
+                    "RootNode.FrontRackProtector"
+                ]
+            },
+            "export method": 1,
+            "PhysicsMaterialSlots": {
+                "Slots": [
+                    {
+                        "Name": "MWarehouseProps"
+                    }
+                ]
+            }
+        },
+        {
+            "$type": "{07B356B7-3635-40B5-878A-FAC4EFD5AD86} MeshGroup",
+            "name": "Warehouse_FrontRackProtector",
+            "nodeSelectionList": {
+                "selectedNodes": [
+                    {},
+                    "RootNode",
+                    "RootNode.FrontRackProtector"
+                ]
+            },
+            "rules": {
+                "rules": [
+                    {
+                        "$type": "MaterialRule"
+                    }
+                ]
+            },
+            "id": "{4A564183-173B-5AD6-9C71-4404A5BD58D2}"
+        },
+        {
+            "$type": "{07B356B7-3635-40B5-878A-FAC4EFD5AD86} MeshGroup",
+            "name": "default_Warehouse_FrontRackProtector_AE4DDC59_6915_5765_8EEE_BF843C5DE265_",
+            "nodeSelectionList": {
+                "selectedNodes": [
+                    "RootNode.FrontRackProtector"
+                ]
+            },
+            "rules": {
+                "rules": [
+                    {
+                        "$type": "ProceduralMeshGroupRule"
+                    },
+                    {
+                        "$type": "UnmodifiableRule"
+                    },
+                    {
+                        "$type": "CoordinateSystemRule",
+                        "useAdvancedData": true
+                    },
+                    {
+                        "$type": "{6E796AC8-1484-4909-860A-6D3F22A7346F} LodRule"
+                    }
+                ]
+            },
+            "id": "{AE4DDC59-6915-5765-8EEE-BF843C5DE265}"
+        },
+        {
+            "$type": "PrefabGroup",
+            "name": "Models/Warehouse_FrontRackProtector_fbx.procprefab",
+            "id": "{90D85585-D8C3-528B-92A6-E69C0C5D4924}"
+        }
+    ]
+}

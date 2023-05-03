@@ -16,7 +16,7 @@
 #include <AzFramework/API/ApplicationAPI.h>
 #include <AzFramework/CommandLine/CommandLine.h>
 
-static constexpr char OpenXREnableSetting[] = "/O3DE/Atom/OpenXREnable";
+static constexpr char OpenXREnableSetting[] = "/O3DE/Atom/OpenXR/Enable";
 
 namespace XR
 {
@@ -33,11 +33,6 @@ namespace XR
         }
     }
 
-    SystemComponent::SystemComponent()
-    {
-        m_xrSystem = aznew System();
-    }
-
     void SystemComponent::Activate()
     {
         // Register XR system interface if openxr is enabled via command line or settings registry
@@ -50,6 +45,7 @@ namespace XR
             //Init the XRSystem
             System::Descriptor descriptor;
             descriptor.m_validationMode = validationMode;
+            m_xrSystem = aznew System();
             m_xrSystem->Init(descriptor);
 
             //Register xr system with RPI
@@ -59,7 +55,11 @@ namespace XR
 
     void SystemComponent::Deactivate()
     {
-        m_xrSystem->Shutdown();
+        if (m_xrSystem)
+        {
+            m_xrSystem->Shutdown();
+            m_xrSystem.reset();
+        }
     }
 
     bool SystemComponent::IsOpenXREnabled()

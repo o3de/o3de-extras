@@ -1,0 +1,27 @@
+{
+    "materialType": "@gemroot:Atom_Feature_Common@/Assets/Materials/Types/StandardPBR.materialtype",
+    "materialTypeVersion": 5,
+    "propertyValues": {
+        "baseColor.color": [
+            0.26449987292289734,
+            0.34123751521110535,
+            0.2704814076423645,
+            1.0
+        ],
+        "baseColor.factor": 0.5099999904632568,
+        "baseColor.textureBlendMode": "Lerp",
+        "baseColor.textureMap": "../Textures/Paper_Recycled_001_Basecolor.jpg",
+        "emissive.color": [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+        ],
+        "normal.factor": 0.41999998688697815,
+        "normal.textureMap": "../Textures/Paper_Recycled_001_Normal.jpg",
+        "opacity.factor": 1.0,
+        "roughness.lowerBound": 0.6700000166893005,
+        "roughness.textureMap": "../Textures/Paper_Recycled_001_Roughness.jpg",
+        "specularF0.factor": 0.49000000953674316
+    }
+}

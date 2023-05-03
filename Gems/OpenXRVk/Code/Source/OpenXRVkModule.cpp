@@ -9,6 +9,7 @@
 #include <AzCore/Memory/SystemAllocator.h>
 #include <AzCore/Module/Module.h>
 #include <OpenXRVk/OpenXRVkSystemComponent.h>
+#include <XRCameraMovementComponent.h>
 
 namespace OpenXRVk
 {   
@@ -18,13 +19,14 @@ namespace OpenXRVk
     {
     public:
         AZ_RTTI(Module, "{C34AA64E-0983-4D30-A33C-0D7C7676A20E}", AZ::Module);
-        AZ_CLASS_ALLOCATOR(Module, AZ::SystemAllocator, 0);
+        AZ_CLASS_ALLOCATOR(Module, AZ::SystemAllocator);
 
         Module()
             : AZ::Module()
         {
             m_descriptors.insert(m_descriptors.end(), {
-                    SystemComponent::CreateDescriptor(),
+                SystemComponent::CreateDescriptor(),
+                XRCameraMovementComponent::CreateDescriptor(),
             });
         }
 

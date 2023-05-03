@@ -10,7 +10,7 @@
 
 namespace XR
 {
-    AZ::Matrix4x4 CreateProjectionOffset(float angleLeft, float angleRight, float angleBottom, float angleTop, float nearDist, float farDist)
+    AZ::Matrix4x4 CreateStereoscopicProjection(float angleLeft, float angleRight, float angleBottom, float angleTop, float nearDist, float farDist, bool reverseDepth)
     {
         AZ::Matrix4x4 result;
         AZ_MATH_ASSERT(nearDist > 0.0f, "Near plane distance must be greater than 0");
@@ -32,16 +32,32 @@ namespace XR
         { 
             result.SetRow(0, 2.0f / tanAngleWidth, 0.0f, (left + right) / tanAngleWidth, 0.0f);
             result.SetRow(1, 0.0f, 2.0f / tanAngleHeight, (top + bottom) / tanAngleHeight, 0.0f);
-            result.SetRow(2, 0.0f, 0.0f, -1 * (farDist + nearDist) * invfn, -2.0f * farDist * nearDist * invfn);
+            if(reverseDepth)
+            { 
+                result.SetRow(2, 0.0f, 0.0f, 2.0f * nearDist * invfn, 2.0f * farDist * nearDist * invfn);
+            }
+            else
+            {
+                result.SetRow(2, 0.0f, 0.0f, -1.0f * (farDist + nearDist) * invfn, -2.0f * farDist * nearDist * invfn);
+            }
             result.SetRow(3, 0.0f, 0.0f, -1.0f, 0.0f);
         }
         else
         {
+            // place the far plane at infinity
             result.SetRow(0, 2.0f / tanAngleWidth, 0.0f, (left + right) / tanAngleWidth, 0.0f);
             result.SetRow(1, 0.0f, 2.0f / tanAngleHeight, (top + bottom) / tanAngleHeight, 0.0f);
-            result.SetRow(2, 0.0f, 0.0f, -1.0f, -2.0f * nearDist);
+            if (reverseDepth)
+            {
+                result.SetRow(2, 0.0f, 0.0f, 0.0f, 2.0f * nearDist);
+            }
+            else
+            {
+                result.SetRow(2, 0.0f, 0.0f, -1.0f, -2.0f * nearDist);
+            }
             result.SetRow(3, 0.0f, 0.0f, -1.0f, 0.0f);
         }
+
         return result;
     }
 }

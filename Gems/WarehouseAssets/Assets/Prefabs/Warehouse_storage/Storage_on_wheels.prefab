@@ -1,0 +1,352 @@
+{
+    "ContainerEntity": {
+        "Id": "ContainerEntity",
+        "Name": "Storage_on_wheels",
+        "Components": {
+            "Component_[12545710239443216069]": {
+                "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
+                "Id": 12545710239443216069,
+                "Parent Entity": ""
+            },
+            "Component_[15537914432342589519]": {
+                "$type": "EditorEntitySortComponent",
+                "Id": 15537914432342589519,
+                "Child Entity Order": [
+                    "Entity_[58382014962770]"
+                ]
+            },
+            "Component_[16036331983420714344]": {
+                "$type": "EditorLockComponent",
+                "Id": 16036331983420714344
+            },
+            "Component_[17464224248125525141]": {
+                "$type": "EditorInspectorComponent",
+                "Id": 17464224248125525141
+            },
+            "Component_[4136196840153041238]": {
+                "$type": "EditorPendingCompositionComponent",
+                "Id": 4136196840153041238
+            },
+            "Component_[5151523271068036080]": {
+                "$type": "EditorEntityIconComponent",
+                "Id": 5151523271068036080
+            },
+            "Component_[5481154311174695366]": {
+                "$type": "EditorOnlyEntityComponent",
+                "Id": 5481154311174695366
+            },
+            "Component_[5919478892378402056]": {
+                "$type": "EditorVisibilityComponent",
+                "Id": 5919478892378402056
+            },
+            "Component_[7078029424176984336]": {
+                "$type": "EditorDisabledCompositionComponent",
+                "Id": 7078029424176984336
+            },
+            "Component_[8598853110025557033]": {
+                "$type": "EditorPrefabComponent",
+                "Id": 8598853110025557033
+            }
+        }
+    },
+    "Entities": {
+        "Entity_[41557998601191]": {
+            "Id": "Entity_[41557998601191]",
+            "Name": "vis",
+            "Components": {
+                "Component_[10149347903867422771]": {
+                    "$type": "EditorDisabledCompositionComponent",
+                    "Id": 10149347903867422771
+                },
+                "Component_[14446917646583163764]": {
+                    "$type": "EditorLockComponent",
+                    "Id": 14446917646583163764
+                },
+                "Component_[15126868734693172672]": {
+                    "$type": "EditorPendingCompositionComponent",
+                    "Id": 15126868734693172672
+                },
+                "Component_[15567055273907323940]": {
+                    "$type": "EditorOnlyEntityComponent",
+                    "Id": 15567055273907323940
+                },
+                "Component_[16911120774673039211]": {
+                    "$type": "EditorMaterialComponent",
+                    "Id": 16911120774673039211,
+                    "Controller": {
+                        "Configuration": {
+                            "materials": [
+                                {
+                                    "Key": {
+                                        "materialSlotStableId": 3528137216
+                                    },
+                                    "Value": {
+                                        "MaterialAsset": {
+                                            "assetId": {
+                                                "guid": "{B59DB34C-8CCC-5B6A-8F32-749689632151}"
+                                            },
+                                            "assetHint": "assets/warehouse/materials/mwarehousestorageonwheels.azmaterial"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                },
+                "Component_[1731600682015667982]": {
+                    "$type": "EditorVisibilityComponent",
+                    "Id": 1731600682015667982
+                },
+                "Component_[1853050224292330302]": {
+                    "$type": "EditorInspectorComponent",
+                    "Id": 1853050224292330302
+                },
+                "Component_[6134047356732219327]": {
+                    "$type": "AZ::Render::EditorMeshComponent",
+                    "Id": 6134047356732219327,
+                    "Controller": {
+                        "Configuration": {
+                            "ModelAsset": {
+                                "assetId": {
+                                    "guid": "{FD1A02B5-A597-52A4-88EF-33D00822FDD6}",
+                                    "subId": 281610153
+                                },
+                                "assetHint": "assets/warehouse/models/warehouse_storage_on_wheels.azmodel"
+                            }
+                        }
+                    }
+                },
+                "Component_[6569773868835930504]": {
+                    "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
+                    "Id": 6569773868835930504,
+                    "Parent Entity": "Entity_[58382014962770]",
+                    "Transform Data": {
+                        "Translate": [
+                            0.0,
+                            0.0,
+                            0.0011060237884521484
+                        ]
+                    }
+                },
+                "Component_[7062391819639875573]": {
+                    "$type": "EditorEntityIconComponent",
+                    "Id": 7062391819639875573
+                },
+                "Component_[894213568764928829]": {
+                    "$type": "EditorEntitySortComponent",
+                    "Id": 894213568764928829
+                }
+            }
+        },
+        "Entity_[58382014962770]": {
+            "Id": "Entity_[58382014962770]",
+            "Name": "StorageOnWheels",
+            "Components": {
+                "Component_[10125249807132554809]": {
+                    "$type": "EditorInspectorComponent",
+                    "Id": 10125249807132554809,
+                    "ComponentOrderEntryArray": [
+                        {
+                            "ComponentId": 7562106464527649334
+                        },
+                        {
+                            "ComponentId": 2195363291273355971,
+                            "SortIndex": 1
+                        },
+                        {
+                            "ComponentId": 18429466845483581173,
+                            "SortIndex": 2
+                        },
+                        {
+                            "ComponentId": 13201342092318588972,
+                            "SortIndex": 3
+                        },
+                        {
+                            "ComponentId": 9509677040110797884,
+                            "SortIndex": 4
+                        }
+                    ]
+                },
+                "Component_[10867460426661892159]": {
+                    "$type": "EditorLockComponent",
+                    "Id": 10867460426661892159
+                },
+                "Component_[1329524434344098663]": {
+                    "$type": "EditorColliderComponent",
+                    "Id": 1329524434344098663,
+                    "ColliderConfiguration": {
+                        "Position": [
+                            0.0,
+                            0.0,
+                            0.9333269596099854
+                        ],
+                        "MaterialSlots": {
+                            "Slots": [
+                                {
+                                    "Name": "Entire object",
+                                    "MaterialAsset": {
+                                        "assetId": {
+                                            "guid": "{9E08AC7C-4AE8-5C65-AA41-2FCF93452D5A}",
+                                            "subId": 1
+                                        },
+                                        "assetHint": "assets/materials/storageonwheels.physicsmaterial"
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "ShapeConfiguration": {
+                        "ShapeType": 1,
+                        "Box": {
+                            "Configuration": [
+                                0.6499999761581421,
+                                1.149999976158142,
+                                1.5
+                            ]
+                        }
+                    }
+                },
+                "Component_[13446196332041057509]": {
+                    "$type": "EditorPendingCompositionComponent",
+                    "Id": 13446196332041057509
+                },
+                "Component_[4137486570050063712]": {
+                    "$type": "EditorVisibilityComponent",
+                    "Id": 4137486570050063712
+                },
+                "Component_[4588174646852359714]": {
+                    "$type": "EditorDisabledCompositionComponent",
+                    "Id": 4588174646852359714
+                },
+                "Component_[5143803638157116517]": {
+                    "$type": "EditorColliderComponent",
+                    "Id": 5143803638157116517,
+                    "ColliderConfiguration": {
+                        "Position": [
+                            0.0,
+                            0.5495275855064392,
+                            0.07400000095367432
+                        ],
+                        "MaterialSlots": {
+                            "Slots": [
+                                {
+                                    "Name": "Entire object",
+                                    "MaterialAsset": {
+                                        "assetId": {
+                                            "guid": "{9E08AC7C-4AE8-5C65-AA41-2FCF93452D5A}",
+                                            "subId": 1
+                                        },
+                                        "assetHint": "assets/materials/storageonwheels.physicsmaterial"
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "ShapeConfiguration": {
+                        "ShapeType": 1,
+                        "Box": {
+                            "Configuration": [
+                                0.6499999761581421,
+                                0.05000000074505806,
+                                0.15000000596046448
+                            ]
+                        }
+                    }
+                },
+                "Component_[5146712439650349843]": {
+                    "$type": "EditorOnlyEntityComponent",
+                    "Id": 5146712439650349843
+                },
+                "Component_[5269735565457263604]": {
+                    "$type": "EditorEntitySortComponent",
+                    "Id": 5269735565457263604,
+                    "Child Entity Order": [
+                        "Entity_[41557998601191]"
+                    ]
+                },
+                "Component_[5324226478596329467]": {
+                    "$type": "EditorEntityIconComponent",
+                    "Id": 5324226478596329467
+                },
+                "Component_[7562106464527649334]": {
+                    "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
+                    "Id": 7562106464527649334,
+                    "Parent Entity": "ContainerEntity",
+                    "Transform Data": {
+                        "Translate": [
+                            0.0,
+                            0.0,
+                            -0.0017781257629394531
+                        ]
+                    }
+                },
+                "Component_[8990768301169768524]": {
+                    "$type": "EditorColliderComponent",
+                    "Id": 8990768301169768524,
+                    "ColliderConfiguration": {
+                        "Position": [
+                            0.0,
+                            -0.5529183149337769,
+                            0.07400000095367432
+                        ],
+                        "MaterialSlots": {
+                            "Slots": [
+                                {
+                                    "Name": "Entire object",
+                                    "MaterialAsset": {
+                                        "assetId": {
+                                            "guid": "{9E08AC7C-4AE8-5C65-AA41-2FCF93452D5A}",
+                                            "subId": 1
+                                        },
+                                        "assetHint": "assets/materials/storageonwheels.physicsmaterial"
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "ShapeConfiguration": {
+                        "ShapeType": 1,
+                        "Box": {
+                            "Configuration": [
+                                0.6499999761581421,
+                                0.05000000074505806,
+                                0.15000000596046448
+                            ]
+                        }
+                    }
+                },
+                "Component_[9509677040110797884]": {
+                    "$type": "EditorRigidBodyComponent",
+                    "Id": 9509677040110797884,
+                    "Configuration": {
+                        "entityId": "",
+                        "Compute Mass": false,
+                        "Compute COM": false,
+                        "Centre of mass offset": [
+                            -0.0000011392756960049155,
+                            -2.1213740808434522e-7,
+                            0.20000000298023224
+                        ],
+                        "Compute inertia": false,
+                        "Inertia tensor": [
+                            0.10000000149011612,
+                            0.0,
+                            0.0,
+                            0.0,
+                            0.10000000149011612,
+                            0.0,
+                            0.0,
+                            0.0,
+                            0.10000000149011612
+                        ],
+                        "Debug Draw Center of Mass": true
+                    },
+                    "PhysXSpecificConfiguration": {
+                        "SolverPositionIterations": 40,
+                        "SolverVelocityIterations": 10
+                    }
+                }
+            }
+        }
+    }
+}

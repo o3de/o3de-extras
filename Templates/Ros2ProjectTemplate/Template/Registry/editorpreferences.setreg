@@ -1,0 +1,24 @@
+{
+    "Amazon": {
+        "Preferences": {
+            "Editor": {
+                "IconsVisible": false,
+                "HelpersVisible": false,
+                "Camera": {
+                    "DefaultStartingPosition": {
+                        "x": 0.055202629417181015,
+                        "y": -12.046481132507324,
+                        "z": 1.7089390754699707
+                    },
+                    "DefaultOrbitDistance": 20.0,
+                    "DefaultStartingPitch": -48.0,
+                    "DefaultStartingYaw": -149.0,
+                    "GoToPositionInstantly": false,
+                    "GoToPositionDuration": 1.0,
+                    "FovDegrees": 60.0,
+                    "SpeedScale": 1.0
+                },
+            }
+        }
+    }
+}

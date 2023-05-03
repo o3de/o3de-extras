@@ -1,0 +1,17 @@
+{
+    "materialType": "Materials/Types/BasePBR.materialtype",
+    "materialTypeVersion": 5,
+    "propertyValues": {
+        "baseColor.color": [
+            0.5986419320106506,
+            0.5986419320106506,
+            0.5986419320106506,
+            1.0
+        ],
+        "baseColor.textureMap": "Assets/textures/Floor_BaseColor.png",
+        "normal.textureMap": "Assets/textures/Floor_Normal.png",
+        "roughness.factor": 0.7400000095367432,
+        "uv.tileU": 10.0,
+        "uv.tileV": 10.0
+    }
+}

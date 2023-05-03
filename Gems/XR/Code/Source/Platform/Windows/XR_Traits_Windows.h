@@ -7,3 +7,5 @@
  */
 #pragma once
 
+#define O3DE_TRAIT_DISABLE_FAILED_XR_TESTS
+

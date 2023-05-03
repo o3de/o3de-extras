@@ -1,0 +1,163 @@
+{
+    "ContainerEntity": {
+        "Id": "ContainerEntity",
+        "Name": "CameraOrbbeck",
+        "Components": {
+            "Component_[11102275644839424768]": {
+                "$type": "EditorDisabledCompositionComponent",
+                "Id": 11102275644839424768
+            },
+            "Component_[13196476423961983989]": {
+                "$type": "EditorVisibilityComponent",
+                "Id": 13196476423961983989
+            },
+            "Component_[13762686544738860494]": {
+                "$type": "EditorPendingCompositionComponent",
+                "Id": 13762686544738860494
+            },
+            "Component_[14647808383678281689]": {
+                "$type": "EditorPrefabComponent",
+                "Id": 14647808383678281689
+            },
+            "Component_[16541569782343084053]": {
+                "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
+                "Id": 16541569782343084053,
+                "Parent Entity": ""
+            },
+            "Component_[362243497987326595]": {
+                "$type": "EditorEntitySortComponent",
+                "Id": 362243497987326595,
+                "Child Entity Order": [
+                    "Entity_[505721939488]"
+                ]
+            },
+            "Component_[6195463370225568393]": {
+                "$type": "EditorLockComponent",
+                "Id": 6195463370225568393
+            },
+            "Component_[7051867183047048361]": {
+                "$type": "EditorEntityIconComponent",
+                "Id": 7051867183047048361
+            },
+            "Component_[8693333803190442857]": {
+                "$type": "EditorOnlyEntityComponent",
+                "Id": 8693333803190442857
+            },
+            "Component_[921489768285039708]": {
+                "$type": "EditorInspectorComponent",
+                "Id": 921489768285039708
+            }
+        }
+    },
+    "Entities": {
+        "Entity_[505721939488]": {
+            "Id": "Entity_[505721939488]",
+            "Name": "shape",
+            "Components": {
+                "Component_[12057597801334645923]": {
+                    "$type": "EditorStaticRigidBodyComponent",
+                    "Id": 12057597801334645923
+                },
+                "Component_[12232650884412772636]": {
+                    "$type": "EditorDisabledCompositionComponent",
+                    "Id": 12232650884412772636
+                },
+                "Component_[13423704711553959863]": {
+                    "$type": "EditorLockComponent",
+                    "Id": 13423704711553959863
+                },
+                "Component_[14616296837285217185]": {
+                    "$type": "EditorVisibilityComponent",
+                    "Id": 14616296837285217185
+                },
+                "Component_[14985514809153430690]": {
+                    "$type": "EditorMeshColliderComponent",
+                    "Id": 14985514809153430690,
+                    "ColliderConfiguration": {
+                        "MaterialSlots": {
+                            "Slots": [
+                                {
+                                    "Name": "Entire object"
+                                }
+                            ]
+                        }
+                    },
+                    "ShapeConfiguration": {
+                        "PhysicsAsset": {
+                            "Asset": {
+                                "assetId": {
+                                    "guid": "{0E27CF27-5752-5557-B77A-4B29A5870E0E}",
+                                    "subId": 3865077323
+                                },
+                                "assetHint": "models/sensors/camera/cameraorbbeck.pxmesh"
+                            },
+                            "Configuration": {
+                                "PhysicsAsset": {
+                                    "assetId": {
+                                        "guid": "{0E27CF27-5752-5557-B77A-4B29A5870E0E}",
+                                        "subId": 3865077323
+                                    },
+                                    "loadBehavior": "QueueLoad",
+                                    "assetHint": "models/sensors/camera/cameraorbbeck.pxmesh"
+                                }
+                            }
+                        }
+                    }
+                },
+                "Component_[15329441649387498950]": {
+                    "$type": "AZ::Render::EditorMeshComponent",
+                    "Id": 15329441649387498950,
+                    "Controller": {
+                        "Configuration": {
+                            "ModelAsset": {
+                                "assetId": {
+                                    "guid": "{0E27CF27-5752-5557-B77A-4B29A5870E0E}",
+                                    "subId": 272993556
+                                },
+                                "assetHint": "models/sensors/camera/cameraorbbeck.azmodel"
+                            }
+                        }
+                    }
+                },
+                "Component_[16525421850445080131]": {
+                    "$type": "EditorPendingCompositionComponent",
+                    "Id": 16525421850445080131
+                },
+                "Component_[1664914396196781949]": {
+                    "$type": "EditorEntityIconComponent",
+                    "Id": 1664914396196781949
+                },
+                "Component_[18099860883597356778]": {
+                    "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
+                    "Id": 18099860883597356778,
+                    "Parent Entity": "ContainerEntity"
+                },
+                "Component_[18322469032445804849]": {
+                    "$type": "EditorOnlyEntityComponent",
+                    "Id": 18322469032445804849
+                },
+                "Component_[2491808840491479985]": {
+                    "$type": "EditorInspectorComponent",
+                    "Id": 2491808840491479985,
+                    "ComponentOrderEntryArray": [
+                        {
+                            "ComponentId": 18099860883597356778
+                        },
+                        {
+                            "ComponentId": 15329441649387498950,
+                            "SortIndex": 1
+                        },
+                        {
+                            "ComponentId": 14985514809153430690,
+                            "SortIndex": 2
+                        }
+                    ]
+                },
+                "Component_[6578496273892635118]": {
+                    "$type": "EditorEntitySortComponent",
+                    "Id": 6578496273892635118
+                }
+            }
+        }
+    }
+}

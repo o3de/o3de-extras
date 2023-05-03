@@ -16,7 +16,7 @@ namespace XR
     {
     public:
         AZ_RTTI(Module, "{71A99524-7D31-42D3-955E-3F4774F310AC}", AZ::Module);
-        AZ_CLASS_ALLOCATOR(Module, AZ::SystemAllocator, 0);
+        AZ_CLASS_ALLOCATOR(Module, AZ::SystemAllocator);
 
         Module()
             : AZ::Module()
