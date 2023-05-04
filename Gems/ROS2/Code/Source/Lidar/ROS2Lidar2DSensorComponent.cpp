@@ -13,6 +13,7 @@
 #include <ROS2/Frame/ROS2FrameComponent.h>
 #include <ROS2/ROS2Bus.h>
 #include <ROS2/Utilities/ROS2Names.h>
+#include <Lidar/LidarRegistrarSystemComponent.h>
 
 namespace ROS2
 {
@@ -87,22 +88,12 @@ namespace ROS2
             }
         }
     }
-    static AZStd::string GetDefaultLidarSystem()
-    {
-        const auto& lidarSystemList = LidarRegistrarInterface::Get()->GetRegisteredLidarSystems();
-        if (lidarSystemList.empty())
-        {
-            AZ_Warning("ROS2LidarSensorComponent", false, "No LIDAR system for the sensor to use.");
-            return {};
-        }
-        return lidarSystemList.front();
-    }
 
     void ROS2Lidar2DSensorComponent::FetchLidarImplementationFeatures()
     {
         if (m_lidarSystem.empty())
         {
-            m_lidarSystem = GetDefaultLidarSystem();
+            m_lidarSystem = Details::GetDefaultLidarSystem();
         }
         const auto* lidarMetaData = LidarRegistrarInterface::Get()->GetLidarSystemMetaData(m_lidarSystem);
         AZ_Warning("ROS2Lidar2DSensorComponent", lidarMetaData, "No metadata for \"%s\"", m_lidarSystem.c_str());

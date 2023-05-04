@@ -191,6 +191,10 @@
             "isTemplated": false
         },
         {
+            "file": "Registry/editorpreferences.setreg",
+            "isTemplated": false
+        },
+        {
             "file": "Registry/physxsystemconfiguration.setreg",
             "isTemplated": false
         },
