@@ -18,8 +18,8 @@
         "ROS2"
     ],
     "compatible_engines": [
-        “o3de-sdk==1.2.0”,
-        “o3de>=2.0.0”
+        "o3de-sdk==1.2.0",
+        "o3de>=2.0.0"
     ],
     "icon_path": "preview.png",
     "requirements": "Requires ros2 installation (supported distributions: humble). Source your workspace before building the Gem",
