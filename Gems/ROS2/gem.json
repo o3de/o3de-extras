@@ -1,7 +1,7 @@
 {
     "gem_name": "ROS2",
     "version": "1.0.0",
-    "platform": [
+    "platforms": [
         "Linux"
     ],
     "display_name": "ROS2",
