@@ -1,8 +1,8 @@
 # O3DE ROS2 Gem
 
-This Gem enables users to develop robotic simulations through ROS2 tools and components.
+This Gem enables users to develop robotic simulations through [ROS2 (Robot Operating System)](https://www.ros.org/) tools and components.
 
-Documentation about configuring and using this gem can be found [here](https://www.o3de.org/docs/user-guide/interactivity/robotics/).
+Access the the whole ROS2 Gem documentation by clicking [here](https://www.o3de.org/docs/user-guide/interactivity/robotics/). Other sections in this README link to specific parts of the provided documentation.
 
 ## Features
 
@@ -24,6 +24,30 @@ Documentation about configuring and using this gem can be found [here](https://w
 
 For a "feel" of these features, see an [example project](#example-project) which uses this Gem to run navigation stack.
 
+## Example project
+
+You can test O3DE ROS2 Gem with the [Robot Vacuum](https://github.com/o3de/RobotVacuumSample) project. It will allow you to run robot navigation. All necessary assets are included.
+
+## Installation
+
+Refer to [this part of the documentation](https://www.o3de.org/docs/user-guide/interactivity/robotics/project-configuration/) to configure your project with the ROS2 Gem.
+
+
+## Learn about ROS2 Gem
+
+Visit [this part of the documentation](https://www.o3de.org/docs/user-guide/interactivity/robotics/concepts-and-components-overview/) to learn about ROS2 Gems Concepts and Structure. Additionally you can learn about ROS2 Concepts [here](https://docs.ros.org/en/humble/Concepts.html).
+
+## How to create your own robotic simulation
+
+Refer [here](https://www.o3de.org/docs/user-guide/interactivity/robotics/creating-robotic-simulation/) to access a list of steps guiding you through the creation of your own simulation.
+
+## Importing robots
+
+Access [this part](https://www.o3de.org/docs/user-guide/interactivity/robotics/importing-robot/) of the documentation to learn about importing robots from common formats such as the [Unified Robot Description Format (URDF)](http://wiki.ros.org/urdf). 
+
+## Troubleshooting
+
+If you are having some problems with the ROS2 Gem visit [here](https://www.o3de.org/docs/user-guide/interactivity/robotics/troubleshooting/), to troubleshoot your issue.
 
 ## User Guides
 
