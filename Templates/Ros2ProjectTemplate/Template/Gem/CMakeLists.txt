@@ -60,6 +60,7 @@ ly_add_target(
         PRIVATE
             AZ::AzGameFramework
             Gem::Atom_AtomBridge.Static
+            Gem::ROS2.Static
 )
 
 ly_add_target(
@@ -77,9 +78,51 @@ ly_add_target(
             AZ::AzCore
 )
 
+
+ly_add_target(
+    NAME ${gem_name}.Editor.Static STATIC
+    NAMESPACE Gem
+    AUTOMOC
+    AUTORCC
+    FILES_CMAKE
+        ${NameLower}_editor_files.cmake
+    INCLUDE_DIRECTORIES
+        PRIVATE
+            Source
+            Source/RobotImporter
+        PUBLIC
+            Include
+    BUILD_DEPENDENCIES
+        PUBLIC
+            AZ::AzToolsFramework
+            Gem::AtomLyIntegration_CommonFeatures.Editor.Static
+            Gem::LmbrCentral.API
+            ${gem_name}.Private.Object
+)
+
+find_package(urdfdom)
+target_link_libraries(${gem_name}.Editor.Static PUBLIC urdfdom::urdfdom_model)
+
+ly_add_target(
+    NAME ${gem_name}.Editor GEM_MODULE
+    NAMESPACE Gem
+    FILES_CMAKE
+        ${NameLower}_editor_shared_files.cmake
+    INCLUDE_DIRECTORIES
+        PRIVATE
+            Source
+        PUBLIC
+            Include
+    BUILD_DEPENDENCIES
+        PUBLIC
+            ${gem_name}.Editor.Static
+            Gem::Atom_Feature_Common.Static
+)
+
+
 # if enabled, ${gem_name} is used by all kinds of applications
-ly_create_alias(NAME ${gem_name}.Builders NAMESPACE Gem TARGETS Gem::${gem_name})
-ly_create_alias(NAME ${gem_name}.Tools    NAMESPACE Gem TARGETS Gem::${gem_name})
+ly_create_alias(NAME ${gem_name}.Builders NAMESPACE Gem TARGETS Gem::${gem_name}.Editor)
+ly_create_alias(NAME ${gem_name}.Tools    NAMESPACE Gem TARGETS Gem::${gem_name}.Editor)
 ly_create_alias(NAME ${gem_name}.Clients  NAMESPACE Gem TARGETS Gem::${gem_name})
 ly_create_alias(NAME ${gem_name}.Servers  NAMESPACE Gem TARGETS Gem::${gem_name})
 
