@@ -6,6 +6,7 @@
  *
  */
 #include <AzFramework/Entity/EntityDebugDisplayBus.h>
+#include <AzCore/Serialization/EditContext.h>
 #include <HingeJointComponent.h>
 #include <PhysX/Joint/PhysXJointRequestsBus.h>
 #include <PrismaticJointComponent.h>
