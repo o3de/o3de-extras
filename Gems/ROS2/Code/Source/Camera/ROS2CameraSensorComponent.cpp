@@ -61,8 +61,6 @@ namespace ROS2
     void ROS2CameraSensorComponent::Deactivate()
     {
         m_cameraSensor.reset();
-        m_imagePublishers.clear();
-        m_cameraInfoPublishers.clear();
         ROS2SensorComponent::Deactivate();
     }
 
@@ -70,28 +68,12 @@ namespace ROS2
     {
         const AZ::Transform transform = GetEntity()->GetTransform()->GetWorldTM();
         const auto timestamp = ROS2Interface::Get()->GetROSTimestamp();
-        std_msgs::msg::Header ros_header;
         if (!m_imagePublishers.empty() && m_cameraSensor)
         {
-            const auto& cameraDescription = m_cameraSensor->GetCameraSensorDescription();
-            const auto& cameraIntrinsics = cameraDescription.m_cameraIntrinsics;
-            sensor_msgs::msg::CameraInfo cameraInfo;
-            ros_header.stamp = timestamp;
-            ros_header.frame_id = m_frameName.c_str();
-            cameraInfo.header = ros_header;
-            cameraInfo.width = m_cameraConfiguration.m_width;
-            cameraInfo.height = m_cameraConfiguration.m_height;
-            cameraInfo.distortion_model = sensor_msgs::distortion_models::PLUMB_BOB;
-            AZ_Assert(cameraIntrinsics.size() == 9, "camera matrix should have 9 elements");
-            AZ_Assert(cameraInfo.k.size() == 9, "camera matrix should have 9 elements");
-            AZStd::copy(cameraIntrinsics.begin(), cameraIntrinsics.end(), cameraInfo.k.begin());
-            cameraInfo.p = { cameraInfo.k[0], cameraInfo.k[1], cameraInfo.k[2], 0, cameraInfo.k[3], cameraInfo.k[4], cameraInfo.k[5], 0,
-                             cameraInfo.k[6], cameraInfo.k[7], cameraInfo.k[8], 0 };
-            for (CameraInfoPublisherPtrType& cameraInfoPublisher : m_cameraInfoPublishers)
-            {
-                cameraInfoPublisher->publish(cameraInfo);
-            }
-            m_cameraSensor->RequestMessagePublication(m_imagePublishers, transform, ros_header);
+            std_msgs::msg::Header messageHeader;
+            messageHeader.stamp = timestamp;
+            messageHeader.frame_id = m_frameName.c_str();
+            m_cameraSensor->RequestMessagePublication(transform, messageHeader);
         }
     }
 
