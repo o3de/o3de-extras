@@ -160,6 +160,14 @@
             "isTemplated": true
         },
         {
+            "file": "Gem/Source/${Name}SampleComponent.cpp",
+            "isTemplated": true
+        },
+        {
+            "file": "Gem/Source/${Name}SampleComponent.h",
+            "isTemplated": true
+        },
+        {
             "file": "Gem/enabled_gems.cmake",
             "isTemplated": true
         },
@@ -169,7 +177,7 @@
         },
         {
             "file": "Levels/DemoLevel/DemoLevel.prefab",
-            "isTemplated": false
+            "isTemplated": true
         },
         {
             "file": "Platform/Android/android_project.cmake",

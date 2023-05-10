@@ -57,11 +57,17 @@ ly_add_target(
         PUBLIC
             Include
     BUILD_DEPENDENCIES
+        PUBLIC
+            Gem::ImGui.Static
+            Gem::ROS2.Static
         PRIVATE
             AZ::AzGameFramework
             Gem::Atom_AtomBridge.Static
-            Gem::ROS2.Static
+            Gem::ImGui.Static
 )
+
+# Request ROS2 packages to be included 
+target_depends_on_ros2_packages(${gem_name}.Private.Object geometry_msgs)
 
 ly_add_target(
     NAME ${gem_name} ${PAL_TRAIT_MONOLITHIC_DRIVEN_MODULE_TYPE}
@@ -73,6 +79,8 @@ ly_add_target(
         PUBLIC
             Include
     BUILD_DEPENDENCIES
+        PUBLIC
+            Gem::ImGui.Static
         PRIVATE
             Gem::${gem_name}.Private.Object
             AZ::AzCore
@@ -94,14 +102,15 @@ ly_add_target(
             Include
     BUILD_DEPENDENCIES
         PUBLIC
+            Gem::ImGui.Static
+            Gem::ROS2.Static
             AZ::AzToolsFramework
             Gem::AtomLyIntegration_CommonFeatures.Editor.Static
             Gem::LmbrCentral.API
+        PRIVATE
             ${gem_name}.Private.Object
 )
 
-find_package(urdfdom)
-target_link_libraries(${gem_name}.Editor.Static PUBLIC urdfdom::urdfdom_model)
 
 ly_add_target(
     NAME ${gem_name}.Editor GEM_MODULE

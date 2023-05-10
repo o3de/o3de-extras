@@ -11,6 +11,7 @@
 #include <${Name}ModuleInterface.h>
 #include "${Name}EditorSystemComponent.h"
 
+#include "${SanitizedCppName}SampleComponent.h"
 namespace ${SanitizedCppName}
 {
     class ${SanitizedCppName}EditorModule
@@ -28,6 +29,7 @@ namespace ${SanitizedCppName}
             // This happens through the [MyComponent]::Reflect() function.
             m_descriptors.insert(m_descriptors.end(), {
                 ${SanitizedCppName}EditorSystemComponent::CreateDescriptor(),
+                ${SanitizedCppName}SampleComponent::CreateDescriptor(),
             });
         }
 

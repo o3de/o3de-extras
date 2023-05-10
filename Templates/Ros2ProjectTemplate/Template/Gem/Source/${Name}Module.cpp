@@ -1,3 +1,4 @@
+// {BEGIN_LICENSE}
 /*
  * Copyright (c) Contributors to the Open 3D Engine Project.
  * For complete copyright and license terms please see the LICENSE at the root of this distribution.
@@ -5,11 +6,13 @@
  * SPDX-License-Identifier: Apache-2.0 OR MIT
  *
  */
+// {END_LICENSE}
 
 #include <AzCore/Memory/SystemAllocator.h>
 #include <AzCore/Module/Module.h>
 
 #include "${Name}SystemComponent.h"
+#include "${SanitizedCppName}SampleComponent.h"
 
 namespace ${SanitizedCppName}
 {
@@ -26,6 +29,7 @@ namespace ${SanitizedCppName}
             // Push results of [MyComponent]::CreateDescriptor() into m_descriptors here.
             m_descriptors.insert(m_descriptors.end(), {
                 ${SanitizedCppName}SystemComponent::CreateDescriptor(),
+                ${SanitizedCppName}SampleComponent::CreateDescriptor(),
             });
         }
 
