@@ -100,7 +100,7 @@
             "isTemplated": true
         },
         {
-            "file": "Levels/WarehouseScene/Warehouse.prefab",
+            "file": "Levels/Warehouse/Warehouse.prefab",
             "isTemplated": false
         },
         {
@@ -302,7 +302,7 @@
             "dir": "Levels"
         },
         {
-            "dir": "Levels/WarehouseScene"
+            "dir": "Levels/Warehouse"
         },
         {
             "dir": "Levels/playground"
