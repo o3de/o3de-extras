@@ -1,12 +1,12 @@
-## Warehouse Assets Gem
+# Warehouse Assets Gem
 
 ![](docs/images/WarehouseGem.png)
 
-### General description
+## General description
 
 This gem contains a set of models and prefabs which can be used to create a warehouse project suitable for robotic simulations.
 
-### Contents
+## Contents
 
 All of the contents of this gem reside in the folder `Assets`. It comprises 2 sub-folders:
 
@@ -19,7 +19,7 @@ The `Prefabs` folder has the following structure:
 
 All the prefabs have appropriate physics parameters including collision shapes.
 
-#### Basic Components
+### Basic Components
 
 ![](docs/images/Components.png)
 
@@ -31,7 +31,7 @@ A set of basic items to be used in the warehouse is located in the `Components` 
 - `WarehouseBox3.prefab`
 - `WarehouseBox4.prefab`
 
-#### Storage Racks
+### Storage Racks
 
 ![](docs/images/StorageRacks.png)
 
@@ -43,7 +43,7 @@ Storage racks are created from basic components, combined in 5 different permuta
 - `Storage_rack4.prefab`
 - `Storage_rack5.prefab`
 
-#### Storage Rack Packs
+### Storage Rack Packs
 
 ![](docs/images/StorageRackPacks.png)
 
@@ -53,13 +53,13 @@ The rack packs were created by stacking 4 storage rack prefabs in different comb
 - `Storage_2x2_Pack2.prefab`
 - `Storage_2x2_Pack3.prefab`
 
-#### Storage on Wheels
+### Storage on Wheels
 
 ![](docs/images/StorageOnWheels.png)
 
 `Storage_on_wheels.prefab` is a storage cage on wheels. As opposed to other prefabs it can be moved around the scene. The collision shape was designed in a way, that allows the Proteus robot to ride below it.
 
-#### Rack protection
+### Rack protection
 
 ![](docs/images/RackProtection.png)
 
@@ -68,11 +68,11 @@ There are 2 elements, located in the `Rack_protectors` folder, that can be place
 - `Rack_front_protection.prefab`
 - `Rack_side_protection.prefab`
 
-#### Misc
+### Misc
 
 The `Misc` folder contains prefabs with floor lines.
 
-#### Warehouse structural
+### Warehouse structural
 
 The `Warehouse_structural` folder contains prefabs comprising the warehouse building. These are:
 
@@ -82,15 +82,37 @@ The `Warehouse_structural` folder contains prefabs comprising the warehouse buil
 
 The folder contains also a `Components` subfolder, containing assets used in these 3 prefabs.
 
-#### Warehouse scene
+### Warehouse scene
 
 ![](docs/images/WarehouseScene.png)
 
-The `WarehouseScene.prefab` contains a sample, ready-to-use warehouse scene, built from prefabs listed in this document.
+The `WarehouseScene.prefab` contains a sample, ready-to-use warehouse scene, built from prefabs listed in this document. It is built as a tree of assets and prefabs defining each element of the warehouse. The top-level objects are shown on the following image:
 
-### Tips on using Warehouse Assets Gem
+![](docs/images/WarehouseSceneStructure.png)
 
-#### Creating Warehouse scene
+- `Global_illumination` contains lights imitating global illumination and `Reflection Probe` objects.
+- `Storage_markings` contains number boards on storage racks.
+- `Floor_markings` contains decal objects with floor lines.
+- `Movables` contains `Storage_on_wheels` prefabs.
+- `Floor_tire_traces` contains decal objects with tire traces.
+- `Storage_racks` contains storage racks arranged in 2 groups:
+  - `Unpacked` with `Storage_rack` prefabs
+  - `Packs` with `Storage_2x2_Pack` prefabs
+- `Rack_protectors` contains rack protection prefabs
+
+These objects are followed by instances warehouse structural assets:
+
+- `Warehouse_Floor.prefab`
+- `Warehouse_Walls.prefab`
+- `Warehouse_Roof.prefab`
+
+The structure of prefabs in the warehouse scene is highly nested. For example, location of one of boxes in the structure looks like this:
+
+![](docs/images/WarehouseSceneSampleTree.png)
+
+## Tips on using Warehouse Assets Gem
+
+### Creating Warehouse scene
 
 ***Tip 1***
 
@@ -114,7 +136,7 @@ Each of them can be activated or deactivated by enabling or disabling `PhysX Col
 
 Warehouses with open gates may be connected by placing them one after another.
 
-#### Visual quality
+### Visual quality
 
 ***Tip 4***
 

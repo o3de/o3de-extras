@@ -126,4 +126,5 @@ Gems/AtomLyIntegration/CommonFeatures/Assets/Objects/Lucy/.wip/marmoset_bake.tbs
 Gems/AtomLyIntegration/CommonFeatures/Assets/Objects/Lucy/.wip/Brass/brass_bake.spp filter=lfs diff=lfs merge=lfs -text
 Gems/AtomLyIntegration/CommonFeatures/Assets/Objects/Lucy/.wip/stone/stone_bake.spp filter=lfs diff=lfs merge=lfs -text
 Gems/WarehouseAssets/docs/images/*.png filter= diff= merge= -text
+Templates/Ros2FleetRobotTemplate/docs/images/*.png filter= diff= merge= -text
 Gems/ROS2/docs/**/*.png -filter -diff -merge
