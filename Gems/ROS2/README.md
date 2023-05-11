@@ -1,6 +1,6 @@
 # O3DE ROS2 Gem
 
-This Gem enables users to develop robotic simulations through [ROS2 (Robot Operating System)](https://www.ros.org/) tools and components.
+With ROS 2 Gem you can develop robotic simulations with [ROS (Robot Operating System) 2](https://www.ros.org/) in Open 3D Engine (O3DE).
 
 Access the the whole ROS2 Gem documentation by clicking [here](https://www.o3de.org/docs/user-guide/interactivity/robotics/). Other sections in this README link to specific parts of the provided documentation.
 
