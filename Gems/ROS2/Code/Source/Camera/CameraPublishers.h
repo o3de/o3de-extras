@@ -37,5 +37,5 @@ namespace ROS2
     private:
         AZStd::unordered_map<CameraSensorDescription::CameraChannelType, ImagePublisherPtrType> m_imagePublishers;
         AZStd::unordered_map<CameraSensorDescription::CameraChannelType, CameraInfoPublisherPtrType> m_infoPublishers;
-    }
+    };
 } // namespace ROS2

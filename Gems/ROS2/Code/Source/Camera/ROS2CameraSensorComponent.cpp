@@ -68,7 +68,7 @@ namespace ROS2
     {
         const AZ::Transform transform = GetEntity()->GetTransform()->GetWorldTM();
         const auto timestamp = ROS2Interface::Get()->GetROSTimestamp();
-        if (!m_imagePublishers.empty() && m_cameraSensor)
+        if (m_cameraSensor)
         {
             std_msgs::msg::Header messageHeader;
             messageHeader.stamp = timestamp;

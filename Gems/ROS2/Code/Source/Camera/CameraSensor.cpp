@@ -21,6 +21,8 @@
 #include <AzFramework/Scene/SceneSystemInterface.h>
 #include <PostProcess/PostProcessFeatureProcessor.h>
 
+#include <sensor_msgs/distortion_models.hpp>
+
 namespace ROS2
 {
     namespace Internal
@@ -48,18 +50,19 @@ namespace ROS2
 
         //! Create a CameraImage message from the read-back result and a header.
         sensor_msgs::msg::Image CreateImageMessageFromReadBackResult(
-            const AZ::EntityID& entityId, const AZ::RPI::AttachmentReadback::ReadbackResult& result, const std_msgs::msg::Header& header)
+            const AZ::EntityId& entityId, const AZ::RPI::AttachmentReadback::ReadbackResult& result, const std_msgs::msg::Header& header)
         {
             const AZ::RHI::ImageDescriptor& descriptor = result.m_imageDescriptor;
             const auto format = descriptor.m_format;
             AZ_Assert(Internal::FormatMappings.contains(format), "Unknown format in result %u", static_cast<uint32_t>(format));
-            sensor_msgs::msg::Image message;
-            message.encoding = Internal::FormatMappings.at(format);
-            message.width = descriptor.m_size.m_width;
-            message.height = descriptor.m_size.m_height;
-            message.step = message.width * Internal::BitDepth.at(format);
-            message.data = std::vector<uint8_t>(result.m_dataBuffer->data(), result.m_dataBuffer->data() + result.m_dataBuffer->size());
-            message.header = header;
+            sensor_msgs::msg::Image imageMessage;
+            imageMessage.encoding = Internal::FormatMappings.at(format);
+            imageMessage.width = descriptor.m_size.m_width;
+            imageMessage.height = descriptor.m_size.m_height;
+            imageMessage.step = imageMessage.width * Internal::BitDepth.at(format);
+            imageMessage.data =
+                std::vector<uint8_t>(result.m_dataBuffer->data(), result.m_dataBuffer->data() + result.m_dataBuffer->size());
+            imageMessage.header = header;
             bool registeredPostProcessingSupportsEncoding = false;
             CameraPostProcessingRequestBus::EventResult(
                 registeredPostProcessingSupportsEncoding,
@@ -68,9 +71,9 @@ namespace ROS2
                 AZStd::string(Internal::FormatMappings.at(format)));
             if (registeredPostProcessingSupportsEncoding)
             {
-                CameraPostProcessingRequestBus::Event(entityId, &CameraPostProcessingRequests::ApplyPostProcessing, message);
+                CameraPostProcessingRequestBus::Event(entityId, &CameraPostProcessingRequests::ApplyPostProcessing, imageMessage);
             }
-            return message;
+            return imageMessage;
         }
 
         //! Prepare a CameraInfo message from sensor description and a header.
@@ -91,22 +94,21 @@ namespace ROS2
             cameraInfo.p = { cameraInfo.k[0], cameraInfo.k[1], cameraInfo.k[2], 0, cameraInfo.k[3], cameraInfo.k[4], cameraInfo.k[5], 0,
                              cameraInfo.k[6], cameraInfo.k[7], cameraInfo.k[8], 0 };
             cameraInfo.header = header;
-            return message;
+            return cameraInfo;
         }
 
         AZStd::string PipelineNameFromChannelType(CameraSensorDescription::CameraChannelType channel)
         {
             static const AZStd::unordered_map<CameraSensorDescription::CameraChannelType, AZStd::string> channelNameMap = {
-                { CameraSensorDescription::RGB, "Color" },
-                { CameraSensorDescription::DEPTH, "Depth" }
+                { CameraSensorDescription::CameraChannelType::RGB, "Color" }, { CameraSensorDescription::CameraChannelType::DEPTH, "Depth" }
             };
             AZ_Assert(channelNameMap.count(channel) == 1, "Channel type not found in the dictionary!");
-            return channelNameMap[channel];
+            return channelNameMap.at(channel);
         }
     } // namespace Internal
 
     CameraSensor::CameraSensor(const CameraSensorDescription& cameraSensorDescription, const AZ::EntityId& entityId)
-        : m_cameraPublishers(cameraSensorDescription.m_sensorConfiguration)
+        : m_cameraPublishers(cameraSensorDescription)
         , m_cameraSensorDescription(cameraSensorDescription)
         , m_entityId(entityId)
     {
@@ -206,15 +208,17 @@ namespace ROS2
     {
         auto imagePublisher = m_cameraPublishers.GetImagePublisher(GetChannelType());
         auto infoPublisher = m_cameraPublishers.GetInfoPublisher(GetChannelType());
-        if (!publisher || !infoPublisher)
+        if (!imagePublisher || !infoPublisher)
         {
             AZ_Error("CameraSensor::RequestMessagePublication", false, "Missing publisher for the Camera sensor");
             return;
         }
 
+        auto infoMessage = Internal::CreateCameraInfoMessage(m_cameraSensorDescription, header);
         RequestFrame(
             cameraPose,
-            [header, imagePublisher, infoPublisher, entityId = m_entityId](const AZ::RPI::AttachmentReadback::ReadbackResult& result)
+            [header, imagePublisher, infoPublisher, infoMessage, entityId = m_entityId](
+                const AZ::RPI::AttachmentReadback::ReadbackResult& result)
             {
                 if (result.m_state != AZ::RPI::AttachmentReadback::ReadbackState::Success)
                 {
@@ -222,8 +226,7 @@ namespace ROS2
                 }
 
                 auto imageMessage = Internal::CreateImageMessageFromReadBackResult(entityId, result, header);
-                depthPublisher->publish(imageMessage);
-                auto infoMessage = Internal::CreateCameraInfoMessage(m_cameraSensorDescription, header);
+                imagePublisher->publish(imageMessage);
                 infoPublisher->publish(infoMessage);
             });
     }
@@ -241,7 +244,7 @@ namespace ROS2
 
     CameraSensorDescription::CameraChannelType CameraDepthSensor::GetChannelType() const
     {
-        return CameraSensorDescription::Depth;
+        return CameraSensorDescription::CameraChannelType::DEPTH;
     };
 
     CameraColorSensor::CameraColorSensor(const CameraSensorDescription& cameraSensorDescription, const AZ::EntityId& entityId)
@@ -257,7 +260,7 @@ namespace ROS2
 
     CameraSensorDescription::CameraChannelType CameraColorSensor::GetChannelType() const
     {
-        return CameraSensorDescription::RGB;
+        return CameraSensorDescription::CameraChannelType::RGB;
     };
 
     CameraRGBDSensor::CameraRGBDSensor(const CameraSensorDescription& cameraSensorDescription, const AZ::EntityId& entityId)
@@ -280,25 +283,26 @@ namespace ROS2
 
     void CameraRGBDSensor::RequestMessagePublication(const AZ::Transform& cameraPose, const std_msgs::msg::Header& header)
     {
-        auto imagePublisher = m_cameraPublishers.GetImagePublisher(CameraPublishers::DEPTH);
-        auto infoPublisher = m_cameraPublishers.GetInfoPublisher(CameraPublishers::DEPTH);
-        if (!depthPublisher || !infoPublisher)
+        auto imagePublisher = m_cameraPublishers.GetImagePublisher(CameraSensorDescription::CameraChannelType::DEPTH);
+        auto infoPublisher = m_cameraPublishers.GetInfoPublisher(CameraSensorDescription::CameraChannelType::DEPTH);
+        if (!imagePublisher || !infoPublisher)
         {
             AZ_Error("CameraRGBDSensor::RequestMessagePublication", false, "Missing publisher for the Camera sensor");
             return;
         }
 
+        auto infoMessage = Internal::CreateCameraInfoMessage(m_cameraSensorDescription, header);
         // Process the Depth part.
         ReadBackDepth(
-            [header, imagePublisher, infoPublisher, entityId = m_entityId](const AZ::RPI::AttachmentReadback::ReadbackResult& result)
+            [header, imagePublisher, infoPublisher, infoMessage, entityId = m_entityId](
+                const AZ::RPI::AttachmentReadback::ReadbackResult& result)
             {
                 if (result.m_state != AZ::RPI::AttachmentReadback::ReadbackState::Success)
                 {
                     return;
                 }
-                auto imagePublisher = Internal::CreateImageMessageFromReadBackResult(entityId, result, header);
+                auto imageMessage = Internal::CreateImageMessageFromReadBackResult(entityId, result, header);
                 imagePublisher->publish(imageMessage);
-                auto infoMessage = Internal::CreateCameraInfoMessage(m_cameraSensorDescription, header);
                 infoPublisher->publish(infoMessage);
             });
 

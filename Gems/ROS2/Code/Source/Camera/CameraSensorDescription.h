@@ -7,6 +7,7 @@
  */
 #pragma once
 
+#include "CameraSensorConfiguration.h"
 #include <ROS2/Sensor/SensorConfiguration.h>
 
 #include <AzCore/Math/Matrix4x4.h>
@@ -15,14 +16,6 @@
 
 namespace ROS2
 {
-    //! Data structure containing camera parameters for fov and resolution.
-    struct CameraConfiguration
-    {
-        float m_verticalFieldOfViewDeg = 90.0f; //!< Vertical field of view of camera sensor.
-        int m_width = 640; //!< Camera image width in pixels.
-        int m_height = 480; //!< Camera image height in pixels.
-    };
-
     //! Structure containing all information required to create the camera sensor.
     struct CameraSensorDescription
     {
@@ -35,16 +28,25 @@ namespace ROS2
 
         //! Constructor to create the description
         //! @param cameraName - name of the camera; used to differentiate cameras in a multi-camera setup.
+        //! @param effectiveNamespace - namespace for camera frames and topics.
         //! @param configuration - configuration structure for the camera, defining its characteristics.
         //! @param sensorConfiguration - generic configuration for this sensor.
         CameraSensorDescription(
-            const AZStd::string& cameraName, const CameraConfiguration& configuration, const SensorConfiguration& sensorConfiguration);
+            const AZStd::string& cameraName,
+            const AZStd::string& effectiveNamespace,
+            const CameraSensorConfiguration& configuration,
+            const SensorConfiguration& sensorConfiguration);
 
-        const CameraConfiguration m_cameraConfiguration; //!< Configuration of the camera.
+        //! Camera image aspect ratio.
+        //! @returns aspect ration, equal to (width / height).
+        float GetAspectRatio() const;
+
+        const CameraSensorConfiguration m_cameraConfiguration; //!< Configuration of the camera.
         const SensorConfiguration m_sensorConfiguration; //!< Generic sensor configuration.
         const AZStd::string m_cameraName; //!< Camera name to differentiate cameras in a multi-camera setup.
+        const AZStd::string m_cameraNamespace; //!< Effective camera namespace for frames and topics.
 
-        const float m_aspectRatio; //!< Camera image aspect ratio; equal to (width / height).
+
         const AZ::Matrix4x4 m_viewToClipMatrix; //!< Camera view to clip space transform matrix; derived from other parameters.
         const AZStd::array<double, 9> m_cameraIntrinsics; //!< Camera intrinsics; derived from other parameters.
 

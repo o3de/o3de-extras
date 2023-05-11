@@ -43,7 +43,6 @@ namespace ROS2
         [[nodiscard]] const CameraSensorDescription& GetCameraSensorDescription() const;
 
     private:
-        CameraSensorDescription m_cameraSensorDescription;
         AZStd::vector<AZStd::string> m_passHierarchy;
         AZ::RPI::ViewPtr m_view;
         AZ::RPI::Scene* m_scene = nullptr;
@@ -54,6 +53,7 @@ namespace ROS2
             const = 0; //! Type of returned data eg Color, Depth, Optical flow
 
     protected:
+        CameraSensorDescription m_cameraSensorDescription;
         CameraPublishers m_cameraPublishers;
         AZ::EntityId m_entityId;
         AZ::RPI::RenderPipelinePtr m_pipeline;

@@ -12,15 +12,23 @@
 namespace ROS2
 {
     CameraSensorDescription::CameraSensorDescription(
-        const AZStd::string& cameraName, const CameraConfiguration& configuration, const SensorConfiguration& sensorConfiguration)
+        const AZStd::string& cameraName,
+        const AZStd::string& effectiveNamespace,
+        const CameraSensorConfiguration& configuration,
+        const SensorConfiguration& sensorConfiguration)
         : m_cameraConfiguration(configuration)
         , m_sensorConfiguration(sensorConfiguration)
         , m_cameraName(cameraName)
+        , m_cameraNamespace(effectiveNamespace)
         , m_viewToClipMatrix(MakeViewToClipMatrix())
         , m_cameraIntrinsics(MakeCameraIntrinsics())
     {
         ValidateParameters();
-        m_aspectRatio = static_cast<float>(m_cameraConfiguration.m_width) / static_cast<float>(m_cameraConfiguration.m_height);
+    }
+
+    float CameraSensorDescription::GetAspectRatio() const
+    {
+        return static_cast<float>(m_cameraConfiguration.m_width) / static_cast<float>(m_cameraConfiguration.m_height);
     }
 
     AZ::Matrix4x4 CameraSensorDescription::MakeViewToClipMatrix() const
@@ -28,7 +36,7 @@ namespace ROS2
         const float nearDist = 0.1f, farDist = 100.0f;
         AZ::Matrix4x4 localViewToClipMatrix;
         AZ::MakePerspectiveFovMatrixRH(
-            localViewToClipMatrix, AZ::DegToRad(m_cameraConfiguration.m_verticalFieldOfViewDeg), m_aspectRatio, nearDist, farDist, true);
+            localViewToClipMatrix, AZ::DegToRad(m_cameraConfiguration.m_verticalFieldOfViewDeg), GetAspectRatio(), nearDist, farDist, true);
         return localViewToClipMatrix;
     }
 
@@ -57,7 +65,7 @@ namespace ROS2
         const auto w = static_cast<double>(m_cameraConfiguration.m_width);
         const auto h = static_cast<double>(m_cameraConfiguration.m_height);
         const double verticalFieldOfView = AZ::DegToRad(m_cameraConfiguration.m_verticalFieldOfViewDeg);
-        const double horizontalFoV = 2.0 * AZStd::atan(AZStd::tan(verticalFieldOfView / 2.0) * m_aspectRatio);
+        const double horizontalFoV = 2.0 * AZStd::atan(AZStd::tan(verticalFieldOfView / 2.0) * GetAspectRatio());
         const double focalLengthX = w / (2.0 * AZStd::tan(horizontalFoV / 2.0));
         const double focalLengthY = h / (2.0 * AZStd::tan(verticalFieldOfView / 2.0));
         return { focalLengthX, 0.0, w / 2.0, 0.0, focalLengthY, h / 2.0, 0.0, 0.0, 1.0 };
