@@ -462,6 +462,13 @@ namespace UnitTest
         EXPECT_EQ(result, resolvedDae);
     }
 
+    TEST_F(UrdfParserTest, XacroParseArgsInvalid)
+    {
+        AZStd::string xacroParams = GetXacroParams();
+        ROS2::Utils::xacro::Params params = ROS2::Utils::xacro::GetParameterFromXacroData("");
+        EXPECT_EQ(params.size(), 0);
+    }
+
     TEST_F(UrdfParserTest, XacroParseArgs)
     {
         AZStd::string xacroParams = GetXacroParams();

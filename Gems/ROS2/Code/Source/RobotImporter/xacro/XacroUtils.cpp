@@ -94,7 +94,15 @@ namespace ROS2::Utils::xacro
         AZStd::unordered_map<AZStd::string, AZStd::string> params;
         AZ::rapidxml::xml_document<char> doc;
         doc.parse<AZ::rapidxml::parse_full>(dataArray.data());
+        if (doc.first_node() == nullptr)
+        {
+            return params;
+        }
         AZ::rapidxml::xml_node<char>* xmlRootNode = doc.first_node("robot");
+        if (xmlRootNode == nullptr)
+        {
+            return params;
+        }
         for (AZ::rapidxml::xml_node<>* child_node = xmlRootNode->first_node(); child_node; child_node = child_node->next_sibling())
         {
             if (strcmp(argNameTag, child_node->name()) == 0)

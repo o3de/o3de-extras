@@ -321,6 +321,10 @@ namespace ROS2
                     return m_checkUrdfPage->nextId();
                 }
             }
+            if (m_params.empty())
+            {
+                return m_xacroParamsPage->nextId();
+            }
         }
         return currentPage()->nextId();
     }
