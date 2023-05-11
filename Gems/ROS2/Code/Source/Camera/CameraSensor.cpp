@@ -46,7 +46,7 @@ namespace ROS2
             { AZ::RHI::Format::R32_FLOAT, sizeof(float) },
         };
 
-        //! Create a header-less CameraImage message.
+        //! Create a CameraImage message from the read-back result and a header.
         sensor_msgs::msg::Image CreateImageMessageFromReadBackResult(
             const AZ::EntityID& entityId, const AZ::RPI::AttachmentReadback::ReadbackResult& result, const std_msgs::msg::Header& header)
         {
@@ -73,7 +73,7 @@ namespace ROS2
             return message;
         }
 
-        //! Prepare a header-less CameraInfo message.
+        //! Prepare a CameraInfo message from sensor description and a header.
         sensor_msgs::msg::CameraInfo CreateCameraInfoMessage(
             const CameraSensorDescription& cameraDescription, const std_msgs::msg::Header& header)
         {
@@ -82,8 +82,11 @@ namespace ROS2
             cameraInfo.width = cameraDescription.m_cameraConfiguration.m_width;
             cameraInfo.height = cameraDescription.m_cameraConfiguration.m_height;
             cameraInfo.distortion_model = sensor_msgs::distortion_models::PLUMB_BOB;
-            AZ_Assert(cameraIntrinsics.size() == 9, "camera matrix should have 9 elements");
-            AZ_Assert(cameraInfo.k.size() == 9, "camera matrix should have 9 elements");
+
+            [[maybe_unused]] constexpr size_t expectedMatrixSize = 9;
+            AZ_Assert(cameraIntrinsics.size() == expectedMatrixSize, "camera matrix should have %d elements", expectedMatrixSize);
+            AZ_Assert(cameraInfo.k.size() == expectedMatrixSize, "camera matrix should have %d elements", expectedMatrixSize);
+
             AZStd::copy(cameraIntrinsics.begin(), cameraIntrinsics.end(), cameraInfo.k.begin());
             cameraInfo.p = { cameraInfo.k[0], cameraInfo.k[1], cameraInfo.k[2], 0, cameraInfo.k[3], cameraInfo.k[4], cameraInfo.k[5], 0,
                              cameraInfo.k[6], cameraInfo.k[7], cameraInfo.k[8], 0 };
@@ -96,7 +99,8 @@ namespace ROS2
             static const AZStd::unordered_map<CameraSensorDescription::CameraChannelType, AZStd::string> channelNameMap = {
                 { CameraSensorDescription::RGB, "Color" },
                 { CameraSensorDescription::DEPTH, "Depth" }
-            } AZ_ASSERT(channelNameMap.count(channel) == 1);
+            };
+            AZ_Assert(channelNameMap.count(channel) == 1, "Channel type not found in the dictionary!");
             return channelNameMap[channel];
         }
     } // namespace Internal

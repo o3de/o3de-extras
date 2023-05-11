@@ -35,8 +35,8 @@ namespace ROS2
         virtual ~CameraSensor();
 
         //! Publish Image Message frame from rendering pipeline
-        //! @param header - header with filled message information (frame, timestamp, seq)
         //! @param cameraPose - current camera pose from which the rendering should take place
+        //! @param header - header with filled message information (frame, timestamp, seq)
         virtual void RequestMessagePublication(const AZ::Transform& cameraPose, const std_msgs::msg::Header& header);
 
         //! Get the camera sensor description

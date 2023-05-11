@@ -16,11 +16,11 @@ namespace ROS2
         : m_cameraConfiguration(configuration)
         , m_sensorConfiguration(sensorConfiguration)
         , m_cameraName(cameraName)
-        , m_aspectRatio(static_cast<float>(configuration.m_width) / static_cast<float>(configuration.m_height))
         , m_viewToClipMatrix(MakeViewToClipMatrix())
         , m_cameraIntrinsics(MakeCameraIntrinsics())
     {
         ValidateParameters();
+        m_aspectRatio = static_cast<float>(m_cameraConfiguration.m_width) / static_cast<float>(m_cameraConfiguration.m_height);
     }
 
     AZ::Matrix4x4 CameraSensorDescription::MakeViewToClipMatrix() const
@@ -37,6 +37,8 @@ namespace ROS2
         AZ_Assert(
             m_cameraConfiguration.m_verticalFieldOfViewDeg > 0.0f && m_cameraConfiguration.m_verticalFieldOfViewDeg < 180.0f,
             "Vertical fov should be in range 0.0 < FoV < 180.0 degrees");
+        AZ_Assert(
+            m_cameraConfiguration.m_width > 0 && m_cameraConfiguration.m_height > 0, "Camera resolution dimensions should be above zero");
         AZ_Assert(!m_cameraName.empty(), "Camera name cannot be empty");
     }
 

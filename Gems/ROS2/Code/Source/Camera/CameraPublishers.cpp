@@ -23,16 +23,14 @@ namespace ROS2
         TopicConfigurations GetCameraTopicConfiguration([[maybe_unused]] const SensorConfiguration& sensorConfiguration)
         {
             AZ_Error("GetCameraTopicConfiguration", false, "Invalid camera template type!");
-            TopicConfigurations tc;
-            return tc;
+            return TopicConfigurations();
         }
 
         template<typename CameraType>
         TopicConfigurations GetCameraInfoTopicConfiguration([[maybe_unused]] const SensorConfiguration& sensorConfiguration)
         {
             AZ_Error("GetCameraInfoTopicConfiguration", false, "Invalid camera template type!");
-            TopicConfigurations tc;
-            return tc;
+            return TopicConfigurations();
         }
 
         template<>
@@ -104,19 +102,13 @@ namespace ROS2
 
     ImagePublisherPtrType CameraPublishers::GetImagePublisher(ChannelType type)
     {
-        if (m_imagePublishers.count(type) != 1)
-        {
-            AZ_Error("GetImagePublisher", false, "No publisher of this type, logic error!");
-        }
+        AZ_Error("GetImagePublisher", m_imagePublishers.count(type) != 1, "No publisher of this type, logic error!");
         return m_imagePublishers.at(type);
     }
 
     CameraInfoPublisherPtrType CameraPublishers::GetInfoPublisher(ChannelType type)
     {
-        if (m_infoPublishers.count(type) != 1)
-        {
-            AZ_Error("GetInfoPublisher", false, "No publisher of this type, logic error!");
-        }
+        AZ_Error("GetInfoPublisher", m_imagePublishers.count(type) != 1, "No publisher of this type, logic error!");
         return m_infoPublishers.at(type);
     }
 } // namespace ROS2

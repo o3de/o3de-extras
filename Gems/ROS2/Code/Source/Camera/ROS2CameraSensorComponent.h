@@ -56,7 +56,6 @@ namespace ROS2
 
         //! Retrieve camera name from ROS2FrameComponent's FrameID.
         //! @param entity pointer entity that has ROS2FrameComponent.
-        //! @returns FrameID from ROS2FrameComponent.
         AZStd::string GetCameraNameFromFrame(const AZ::Entity* entity) const;
 
         void FrequencyTick() override;
