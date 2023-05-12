@@ -1533,7 +1533,14 @@
                 "Component_[5480932395561979584]": {
                     "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
                     "Id": 5480932395561979584,
-                    "Parent Entity": "Entity_[7494954947258]"
+                    "Parent Entity": "Entity_[7494954947258]",
+                    "Transform Data": {
+                        "Translate": [
+                            0.0,
+                            -0.004,
+                            0.0
+                        ]
+                    }
                 },
                 "Component_[5510461653561526274]": {
                     "$type": "EditorEntitySortComponent",
@@ -1715,6 +1722,11 @@
                     "Id": 10346297318647313753,
                     "Parent Entity": "Entity_[7525019718330]",
                     "Transform Data": {
+                        "Translate": [
+                            0.0,
+                            0.004,
+                            0.0
+                        ],
                         "Rotate": [
                             0.0,
                             0.0,
