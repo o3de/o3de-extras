@@ -65,7 +65,7 @@
                     "Parent Entity": "Entity_[7507839849146]",
                     "Transform Data": {
                         "Translate": [
-                            -0.1550000011920929,
+                            -0.15399999916553497,
                             -0.054999999701976776,
                             0.06499999761581421
                         ]
@@ -201,9 +201,9 @@
                     "Parent Entity": "Entity_[7507839849146]",
                     "Transform Data": {
                         "Translate": [
-                            -0.1679999977350235,
+                            -0.17729999125003815,
                             -0.054999999701976776,
-                            0.0729999989271164
+                            0.07729999721050262
                         ]
                     }
                 },
@@ -222,6 +222,122 @@
                 "Component_[8688905423920807041]": {
                     "$type": "EditorVisibilityComponent",
                     "Id": 8688905423920807041
+                }
+            }
+        },
+        "Entity_[460172273345]": {
+            "Id": "Entity_[460172273345]",
+            "Name": "antenna_link_visual",
+            "Components": {
+                "Component_[10468191716726705250]": {
+                    "$type": "AZ::Render::EditorMeshComponent",
+                    "Id": 10468191716726705250,
+                    "Controller": {
+                        "Configuration": {
+                            "ModelAsset": {
+                                "assetId": {
+                                    "guid": "{393BE69E-6BF1-55D1-A079-3B34EA11055A}",
+                                    "subId": 276514550
+                                },
+                                "assetHint": "robot/rosbot_xl_description/meshes/components/antenna.azmodel"
+                            }
+                        }
+                    }
+                },
+                "Component_[12311355802259657364]": {
+                    "$type": "EditorPendingCompositionComponent",
+                    "Id": 12311355802259657364
+                },
+                "Component_[15366376648063644718]": {
+                    "$type": "EditorEntityIconComponent",
+                    "Id": 15366376648063644718
+                },
+                "Component_[17545258268704876103]": {
+                    "$type": "EditorOnlyEntityComponent",
+                    "Id": 17545258268704876103
+                },
+                "Component_[18284090908771094036]": {
+                    "$type": "EditorInspectorComponent",
+                    "Id": 18284090908771094036
+                },
+                "Component_[2446945717645942542]": {
+                    "$type": "EditorEntitySortComponent",
+                    "Id": 2446945717645942542
+                },
+                "Component_[2639585472100882010]": {
+                    "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
+                    "Id": 2639585472100882010,
+                    "Parent Entity": "Entity_[2840956269491]"
+                },
+                "Component_[2800143263731114396]": {
+                    "$type": "EditorLockComponent",
+                    "Id": 2800143263731114396
+                },
+                "Component_[5737436170439652420]": {
+                    "$type": "EditorVisibilityComponent",
+                    "Id": 5737436170439652420
+                },
+                "Component_[7826737103373402220]": {
+                    "$type": "EditorDisabledCompositionComponent",
+                    "Id": 7826737103373402220
+                }
+            }
+        },
+        "Entity_[636265932481]": {
+            "Id": "Entity_[636265932481]",
+            "Name": "antenna_connector_link_visual",
+            "Components": {
+                "Component_[12879837392965145457]": {
+                    "$type": "EditorDisabledCompositionComponent",
+                    "Id": 12879837392965145457
+                },
+                "Component_[14411228070330556044]": {
+                    "$type": "EditorEntityIconComponent",
+                    "Id": 14411228070330556044
+                },
+                "Component_[15024577071450740303]": {
+                    "$type": "EditorVisibilityComponent",
+                    "Id": 15024577071450740303
+                },
+                "Component_[3688516838091446552]": {
+                    "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
+                    "Id": 3688516838091446552,
+                    "Parent Entity": "Entity_[1655118118701]"
+                },
+                "Component_[4301045900714688705]": {
+                    "$type": "EditorEntitySortComponent",
+                    "Id": 4301045900714688705
+                },
+                "Component_[5724723885453509795]": {
+                    "$type": "EditorInspectorComponent",
+                    "Id": 5724723885453509795
+                },
+                "Component_[6324485849162496589]": {
+                    "$type": "EditorOnlyEntityComponent",
+                    "Id": 6324485849162496589
+                },
+                "Component_[7242693290076648834]": {
+                    "$type": "EditorLockComponent",
+                    "Id": 7242693290076648834
+                },
+                "Component_[7318739390624779462]": {
+                    "$type": "AZ::Render::EditorMeshComponent",
+                    "Id": 7318739390624779462,
+                    "Controller": {
+                        "Configuration": {
+                            "ModelAsset": {
+                                "assetId": {
+                                    "guid": "{4333BFC6-0436-5BBE-8EFD-06B0627732FA}",
+                                    "subId": 277341266
+                                },
+                                "assetHint": "robot/rosbot_xl_description/meshes/components/antenna_connector.azmodel"
+                            }
+                        }
+                    }
+                },
+                "Component_[7934151776997983158]": {
+                    "$type": "EditorPendingCompositionComponent",
+                    "Id": 7934151776997983158
                 }
             }
         },
