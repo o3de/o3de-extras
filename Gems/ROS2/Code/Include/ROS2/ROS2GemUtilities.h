@@ -9,9 +9,12 @@
 
 #include <AzCore/Component/ComponentBus.h>
 #include <AzCore/Component/Entity.h>
+#include <AzFramework/Components/TransformComponent.h>
 #ifdef ROS2_EDITOR
 #include <AzToolsFramework/ToolsComponents/GenericComponentWrapper.h>
 #endif
+#include <Multiplayer/Components/NetBindComponent.h>
+
 namespace ROS2
 {
     namespace Utils
@@ -42,6 +45,14 @@ namespace ROS2
 #endif
             return component;
         }
+
+        /// Checks if the entity or an ancestor is a multiplayer entity (i.e. has the NetBindComponent).
+        /// If yes, 
+        /// @param entity 
+        /// @return 
+        Multiplayer::NetBindComponent* GetEntityOrAncestorNetBind(const AZ::Entity* entity);
+
+        bool IsAutonomousOrNonMultiplayer(const AZ::Entity* entity);
 
     } // namespace Utils
 } // namespace ROS2

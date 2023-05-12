@@ -38,11 +38,15 @@ ly_add_target(
         PUBLIC
             AZ::AzCore
             AZ::AzFramework
+            # AZ::AzNetworking
             Gem::Atom_RPI.Public
             Gem::Atom_Feature_Common.Static
             Gem::Atom_Component_DebugCamera.Static
             Gem::StartingPointInput
+            Gem::Multiplayer
             Gem::PhysX.Static
+        PRIVATE
+            Gem::Multiplayer.Unified.Static
 )
 
 target_depends_on_ros2_packages(${gem_name}.Static rclcpp builtin_interfaces std_msgs sensor_msgs nav_msgs tf2_ros ackermann_msgs gazebo_msgs)
@@ -71,6 +75,7 @@ ly_add_target(
             Source
     BUILD_DEPENDENCIES
         PRIVATE
+            Gem::Multiplayer.Unified.Static
             Gem::${gem_name}.Static
             Gem::Atom_Feature_Common.Static
 )
