@@ -9,8 +9,13 @@ set(FILES
         ../Assets/Passes/PipelineROSColor.pass
         ../Assets/Passes/PipelineROSDepth.pass
         ../Assets/Passes/ROSPassTemplates.azasset
+        Source/Camera/CameraConstants.h
+        Source/Camera/CameraPublishers.cpp
+        Source/Camera/CameraPublishers.h
         Source/Camera/CameraSensor.cpp
         Source/Camera/CameraSensor.h
+        Source/Camera/CameraSensorDescription.cpp
+        Source/Camera/CameraSensorDescription.h
         Source/Camera/CameraSensorConfiguration.cpp
         Source/Camera/CameraSensorConfiguration.h
         Source/Camera/ROS2CameraSensorComponent.cpp
