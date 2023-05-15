@@ -1,6 +1,6 @@
 # O3DE ROS2 Gem
 
-With ROS 2 Gem you can develop robotic simulations with [ROS (Robot Operating System) 2](https://www.ros.org/) in Open 3D Engine (O3DE).
+With the ROS2 Gem you can develop robotic simulations with [ROS (Robot Operating System) 2](https://www.ros.org/) in Open 3D Engine (O3DE).
 
 Access the the whole ROS2 Gem documentation by clicking [here](https://www.o3de.org/docs/user-guide/interactivity/robotics/). Other sections in this README link to specific parts of the provided documentation.
 
@@ -26,7 +26,7 @@ For a "feel" of these features, see an [example project](#example-project) which
 
 ## Example project
 
-You can test O3DE ROS2 Gem with the [Robot Vacuum](https://github.com/o3de/RobotVacuumSample) project. It will allow you to run robot navigation. All necessary assets are included.
+You can test the O3DE ROS2 Gem with the [Robot Vacuum](https://github.com/o3de/RobotVacuumSample) project. It will allow you to run a robot navigation simulation. All necessary assets are included.
 
 ## Installation
 
@@ -35,7 +35,7 @@ Refer to [this part of the documentation](https://www.o3de.org/docs/user-guide/i
 
 ## Learn about ROS2 Gem
 
-Visit [this part of the documentation](https://www.o3de.org/docs/user-guide/interactivity/robotics/concepts-and-components-overview/) to learn about ROS2 Gems Concepts and Structure. Additionally you can learn about ROS2 Concepts [here](https://docs.ros.org/en/humble/Concepts.html).
+Visit [this part of the documentation](https://www.o3de.org/docs/user-guide/interactivity/robotics/concepts-and-components-overview/) to learn about the ROS2 Gems Concepts and Structure. Additionally you can learn about ROS 2 Concepts [here](https://docs.ros.org/en/humble/Concepts.html).
 
 ## How to create your own robotic simulation
 
@@ -47,7 +47,7 @@ Access [this part](https://www.o3de.org/docs/user-guide/interactivity/robotics/i
 
 ## Troubleshooting
 
-If you are having some problems with the ROS2 Gem visit [here](https://www.o3de.org/docs/user-guide/interactivity/robotics/troubleshooting/), to troubleshoot your issue.
+If you have any problems with the ROS2 Gem, visit [here](https://www.o3de.org/docs/user-guide/interactivity/robotics/troubleshooting/) for troubleshooting guides and suggestions.
 
 ## User Guides
 
