@@ -18,7 +18,6 @@
 #include <AzToolsFramework/ToolsComponents/GenericComponentWrapper.h>
 #include <AzToolsFramework/ToolsComponents/TransformComponent.h>
 #include <ROS2/Frame/ROS2FrameComponent.h>
-#include <ROS2/ROS2GemUtilities.h>
 #include <ROS2/Spawner/SpawnerBus.h>
 #include <RobotControl/ROS2RobotControlComponent.h>
 #include <RobotImporter/Utils/RobotImporterUtils.h>

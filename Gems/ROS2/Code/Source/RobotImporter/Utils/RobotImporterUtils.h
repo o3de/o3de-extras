@@ -69,6 +69,11 @@ namespace ROS2
             const AZStd::string& urdfFilePath,
             const AZStd::string& amentPrefixPath,
             const AZStd::function<bool(const AZStd::string&)>& fileExists = FileExistsCall);
-
+            
+        /// Create component for a given entity in safe way.
+        /// @param entityId entity that will own component
+        /// @param componentType Uuid of component to create
+        /// @return The created componentId if successful, otherwise returns an invalid id
+        AZ::ComponentId CreateComponent(const AZ::EntityId entityId, const AZ::Uuid componentType);
     } // namespace Utils
 } // namespace ROS2
