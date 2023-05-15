@@ -24,7 +24,7 @@ namespace ROS2
         {
             auto ipos = sensorConfiguration.m_publishersConfigurations.find(key);
             AZ_Assert(ipos != sensorConfiguration.m_publishersConfigurations.end(), "Missing key in topic configuration!");
-            return ipos->second;
+            return ipos != sensorConfiguration.m_publishersConfigurations.end() ? ipos->second : TopicConfiguration{};
         }
 
         template<typename CameraType>
@@ -118,13 +118,13 @@ namespace ROS2
 
     CameraPublishers::ImagePublisherPtrType CameraPublishers::GetImagePublisher(CameraSensorDescription::CameraChannelType type)
     {
-        AZ_Error("GetImagePublisher", m_imagePublishers.count(type) != 1, "No publisher of this type, logic error!");
+        AZ_Error("GetImagePublisher", m_imagePublishers.count(type) == 1, "No publisher of this type, logic error!");
         return m_imagePublishers.at(type);
     }
 
     CameraPublishers::CameraInfoPublisherPtrType CameraPublishers::GetInfoPublisher(CameraSensorDescription::CameraChannelType type)
     {
-        AZ_Error("GetInfoPublisher", m_imagePublishers.count(type) != 1, "No publisher of this type, logic error!");
+        AZ_Error("GetInfoPublisher", m_infoPublishers.count(type) == 1, "No publisher of this type, logic error!");
         return m_infoPublishers.at(type);
     }
 } // namespace ROS2
