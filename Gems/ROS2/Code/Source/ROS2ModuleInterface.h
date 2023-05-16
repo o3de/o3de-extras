@@ -14,8 +14,8 @@
 #include <GNSS/ROS2GNSSSensorComponent.h>
 #include <Imu/ROS2ImuSensorComponent.h>
 #include <Lidar/LidarRegistrarSystemComponent.h>
-#include <Lidar/ROS2LidarSensorComponent.h>
 #include <Lidar/ROS2Lidar2DSensorComponent.h>
+#include <Lidar/ROS2LidarSensorComponent.h>
 #include <Odometry/ROS2OdometrySensorComponent.h>
 #include <Odometry/ROS2WheelOdometry.h>
 #include <ROS2/Frame/ROS2FrameComponent.h>
@@ -29,6 +29,7 @@
 #include <RobotControl/Controllers/SkidSteeringController/SkidSteeringControlComponent.h>
 #include <RobotControl/ROS2RobotControlComponent.h>
 #include <RobotImporter/ROS2RobotImporterSystemComponent.h>
+#include <SimulationUtils/FollowingCameraComponent.h>
 #include <Spawner/ROS2SpawnPointComponent.h>
 #include <Spawner/ROS2SpawnerComponent.h>
 #include <VehicleDynamics/ModelComponents/AckermannModelComponent.h>
@@ -80,6 +81,7 @@ namespace ROS2
                     JointPublisherComponent::CreateDescriptor(),
                     ManipulatorControllerComponent::CreateDescriptor(),
                     PidMotorControllerComponent::CreateDescriptor(),
+                    FollowingCameraComponent::CreateDescriptor(),
                 });
         }
 
