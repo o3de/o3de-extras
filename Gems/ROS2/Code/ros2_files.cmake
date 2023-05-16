@@ -116,6 +116,8 @@ set(FILES
         Source/ROS2SystemComponent.h
         Source/Sensor/ROS2SensorComponent.cpp
         Source/Sensor/SensorConfiguration.cpp
+        Source/SimulationUtils/FollowingCameraComponent.cpp
+        Source/SimulationUtils/FollowingCameraComponent.h
         Source/Spawner/ROS2SpawnerComponent.cpp
         Source/Spawner/ROS2SpawnerComponent.h
         Source/Spawner/ROS2SpawnPointComponent.cpp
