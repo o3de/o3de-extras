@@ -236,7 +236,7 @@
                         "Configuration": {
                             "ModelAsset": {
                                 "assetId": {
-                                    "guid": "{393BE69E-6BF1-55D1-A079-3B34EA11055A}",
+                                    "guid": "{A671DA35-5744-5F40-BDE6-998B8470337D}",
                                     "subId": 276514550
                                 },
                                 "assetHint": "robot/rosbot_xl_description/meshes/components/antenna.azmodel"
@@ -327,7 +327,7 @@
                         "Configuration": {
                             "ModelAsset": {
                                 "assetId": {
-                                    "guid": "{4333BFC6-0436-5BBE-8EFD-06B0627732FA}",
+                                    "guid": "{C50539EC-486B-52D3-9799-010A98F7032B}",
                                     "subId": 277341266
                                 },
                                 "assetHint": "robot/rosbot_xl_description/meshes/components/antenna_connector.azmodel"
