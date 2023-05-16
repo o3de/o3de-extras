@@ -10,7 +10,7 @@
 #include <Atom/Feature/Utils/FrameCaptureBus.h>
 #include <AzCore/std/containers/span.h>
 
-#include "CameraPublishers.h"
+#include "../Source/Camera/CameraPublishers.h"
 #include <ROS2/ROS2GemUtilities.h>
 
 #include <chrono>
@@ -74,6 +74,7 @@ namespace ROS2
     class CameraDepthSensor : public CameraSensor
     {
     public:
+        AZ_TYPE_INFO(CameraDepthSensor, "{ADD4F0E4-F0ED-4770-9FF3-12AA4050953B}");
         CameraDepthSensor(const CameraSensorDescription& cameraSensorDescription, const AZ::EntityId& entityId);
 
     private:
@@ -85,6 +86,7 @@ namespace ROS2
     class CameraColorSensor : public CameraSensor
     {
     public:
+        AZ_TYPE_INFO(CameraColorSensor, "{8AA28B00-635D-4801-B1D8-37B66B535BA2}");
         CameraColorSensor(const CameraSensorDescription& cameraSensorDescription, const AZ::EntityId& entityId);
 
     private:
@@ -96,6 +98,7 @@ namespace ROS2
     class CameraRGBDSensor : public CameraColorSensor
     {
     public:
+        AZ_TYPE_INFO(CameraRGBDSensor, "{724D6C9F-EC61-4644-9EC9-C162AE5F26AF}");
         CameraRGBDSensor(const CameraSensorDescription& cameraSensorDescription, const AZ::EntityId& entityId);
 
         // CameraSensor overrides

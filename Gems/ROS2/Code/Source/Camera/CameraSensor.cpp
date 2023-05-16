@@ -5,7 +5,7 @@
  * SPDX-License-Identifier: Apache-2.0 OR MIT
  *
  */
-#include "CameraSensor.h"
+#include "ROS2/Camera/CameraSensor.h"
 #include <ROS2/Camera/CameraPostProcessingRequestBus.h>
 
 #include <Atom/RPI.Public/Base.h>

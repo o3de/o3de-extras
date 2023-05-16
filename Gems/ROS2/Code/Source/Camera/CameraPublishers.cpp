@@ -8,7 +8,7 @@
 
 #include "CameraPublishers.h"
 #include "CameraConstants.h"
-#include "CameraSensor.h"
+#include "ROS2/Camera/CameraSensor.h"
 #include <ROS2/Communication/TopicConfiguration.h>
 #include <ROS2/ROS2Bus.h>
 #include <ROS2/Sensor/SensorConfiguration.h>

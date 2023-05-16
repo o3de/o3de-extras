@@ -64,6 +64,21 @@ namespace ROS2
         ROS2SensorComponent::Deactivate();
     }
 
+    void ROS2CameraSensorComponent::GetRequiredServices(AZ::ComponentDescriptor::DependencyArrayType& required)
+    {
+        required.push_back(AZ_CRC("ROS2Frame"));
+    }
+
+    void ROS2CameraSensorComponent::GetIncompatibleServices(AZ::ComponentDescriptor::DependencyArrayType& incompatible)
+    {
+        incompatible.push_back(AZ_CRC_CE("ROS2CameraSensor"));
+    }
+
+    void ROS2CameraSensorComponent::GetProvidedServices(AZ::ComponentDescriptor::DependencyArrayType& provided)
+    {
+        provided.push_back(AZ_CRC_CE("ROS2CameraSensor"));
+    }
+
     void ROS2CameraSensorComponent::FrequencyTick()
     {
         const AZ::Transform transform = GetEntity()->GetTransform()->GetWorldTM();

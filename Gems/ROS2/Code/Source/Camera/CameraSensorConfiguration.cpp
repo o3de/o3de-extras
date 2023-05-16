@@ -32,6 +32,8 @@ namespace ROS2
                         &CameraSensorConfiguration::m_verticalFieldOfViewDeg,
                         "Vertical field of view",
                         "Camera's vertical (y axis) field of view in degrees.")
+                    ->Attribute(AZ::Edit::Attributes::Min, 0.0f)
+                    ->Attribute(AZ::Edit::Attributes::Max, 179.99f) // asserted to be less than 180 ([see the link](https://github.com/o3de/o3de-extras/blob/stabilization/2305/Gems/ROS2/Code/Source/Camera/CameraSensor.cpp#L72))
                     ->DataElement(AZ::Edit::UIHandlers::Default, &CameraSensorConfiguration::m_width, "Image width", "Image width")
                     ->DataElement(AZ::Edit::UIHandlers::Default, &CameraSensorConfiguration::m_height, "Image height", "Image height")
                     ->DataElement(AZ::Edit::UIHandlers::Default, &CameraSensorConfiguration::m_colorCamera, "Color Camera", "Color Camera")
