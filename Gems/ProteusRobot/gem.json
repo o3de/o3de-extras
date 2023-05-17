@@ -21,8 +21,9 @@
     "requirements": "Notice of any requirements for this Gem i.e. This requires X other gem",
     "documentation_url": "Link to any documentation of your Gem",
     "dependencies": [],
-    "repo_uri": "",
+    "repo_uri": "https://raw.githubusercontent.com/o3de/o3de-extras/development",
     "compatible_engines": [],
     "engine_api_dependencies": [],
-    "restricted": "ProteusRobot"
+    "restricted": "ProteusRobot",
+    "download_source_uri": "https://github.com/o3de/o3de-extras/releases/download/2.0/proteusrobot-1.0.0-gem.zip"
 }

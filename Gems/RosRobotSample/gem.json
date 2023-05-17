@@ -22,6 +22,8 @@
     "dependencies": [
         "ROS2"
     ],
-    "repo_uri": "",
-    "restricted": ""
+    "repo_uri": "https://raw.githubusercontent.com/o3de/o3de-extras/development",
+    "restricted": "",
+    "download_source_uri": "https://github.com/o3de/o3de-extras/releases/download/2.0/rosrobotsample-1.0.0-gem.zip",
+    "version": "1.0.0"
 }

@@ -32,5 +32,7 @@
         "PhysX",
         "StartingPointInput"
     ],
-    "restricted": "ROS2"
+    "restricted": "ROS2",
+    "repo_uri": "https://raw.githubusercontent.com/o3de/o3de-extras/development",
+    "download_source_uri": "https://github.com/o3de/o3de-extras/releases/download/2.0/ros2-1.0.0-gem.zip"
 }
