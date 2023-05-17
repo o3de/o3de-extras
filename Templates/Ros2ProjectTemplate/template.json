@@ -1,16 +1,16 @@
 {
     "template_name": "Ros2ProjectTemplate",
+    "version": "1.0.0",
     "origin": "Open 3D Engine Extras",
     "origin_url": "https://github.com/o3de/o3de-extras",
     "license": "https://github.com/o3de/o3de-extras/tree/development/Templates/Ros2ProjectTemplate/Template/LICENSE.txt",
-    "origin_uri": "https://github.com/o3de/o3de-extras/releases/download/1.0/Ros2ProjectTemplate-1.0.zip",
-    "sha256": "b627fd0af300de1eb78d8f6bccb465eac8d331eb9e6cb94a7c8e231379839c3e",
-    "repo_uri": "https://raw.githubusercontent.com/o3de/o3de-extras/development",
-    "display_name": "Ros2ProjectTemplate",
+    "display_name": "ROS2 Project",
     "summary": "Template for ROS2 projects.",
     "canonical_tags": [],
     "user_tags": [
-        "Ros2ProjectTemplate", "ROS2", "ROS"
+        "Ros2ProjectTemplate",
+        "ROS2",
+        "ROS"
     ],
     "icon_path": "preview.png",
     "copyFiles": [
@@ -519,5 +519,7 @@
         {
             "dir": "Examples/slam_navigation/launch/config"
         }
-    ]
+    ],
+    "repo_uri": "https://raw.githubusercontent.com/o3de/o3de-extras/development",
+    "download_source_uri": "https://github.com/o3de/o3de-extras/releases/download/2.0/ros2projecttemplate-1.0.0-template.zip"
 }
