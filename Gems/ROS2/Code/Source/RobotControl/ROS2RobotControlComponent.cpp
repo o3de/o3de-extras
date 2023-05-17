@@ -15,27 +15,31 @@
 #include <RobotControl/Ackermann/AckermannSubscriptionHandler.h>
 #include <RobotControl/ROS2RobotControlComponent.h>
 #include <RobotControl/Twist/TwistSubscriptionHandler.h>
+#include <ROS2/ROS2GemUtilities.h>
 
 namespace ROS2
 {
     void ROS2RobotControlComponent::Activate()
     {
-        switch (m_controlConfiguration.m_steering)
+        if (ROS2::Utils::IsAutonomousOrNonMultiplayer(GetEntity()))
         {
-        case ControlConfiguration::Steering::Twist:
-            m_subscriptionHandler = AZStd::make_unique<TwistSubscriptionHandler>();
-            break;
-        case ControlConfiguration::Steering::Ackermann:
-            m_subscriptionHandler = AZStd::make_unique<AckermannSubscriptionHandler>();
-            break;
-        default:
-            AZ_Error("ROS2RobotControlComponent", false, "Control type %d not implemented", m_controlConfiguration.m_steering);
-            break;
-        }
+            switch (m_controlConfiguration.m_steering)
+            {
+            case ControlConfiguration::Steering::Twist:
+                m_subscriptionHandler = AZStd::make_unique<TwistSubscriptionHandler>();
+                break;
+            case ControlConfiguration::Steering::Ackermann:
+                m_subscriptionHandler = AZStd::make_unique<AckermannSubscriptionHandler>();
+                break;
+            default:
+                AZ_Error("ROS2RobotControlComponent", false, "Control type %d not implemented", m_controlConfiguration.m_steering);
+                break;
+            }
 
-        if (m_subscriptionHandler)
-        {
-            m_subscriptionHandler->Activate(GetEntity(), m_subscriberConfiguration);
+            if (m_subscriptionHandler)
+            {
+                m_subscriptionHandler->Activate(GetEntity(), m_subscriberConfiguration);
+            }
         }
     }
 

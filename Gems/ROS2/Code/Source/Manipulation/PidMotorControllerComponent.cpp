@@ -8,6 +8,7 @@
 #include <AzCore/Serialization/EditContext.h>
 #include <PhysX/Joint/PhysXJointRequestsBus.h>
 #include <ROS2/Manipulation/PidMotorControllerComponent.h>
+#include <ROS2/ROS2GemUtilities.h>
 #include <imgui/imgui.h>
 
 namespace ROS2
@@ -39,9 +40,12 @@ namespace ROS2
 
     void PidMotorControllerComponent::Activate()
     {
-        m_pidPos.InitializePid();
-        PidMotorControllerRequestBus::Handler::BusConnect(GetEntityId());
-        JointMotorControllerComponent::Activate();
+        if (ROS2::Utils::IsAutonomousOrNonMultiplayer(GetEntity()))
+        {
+            m_pidPos.InitializePid();
+            PidMotorControllerRequestBus::Handler::BusConnect(GetEntityId());
+            JointMotorControllerComponent::Activate();
+        }
     }
 
     void PidMotorControllerComponent::Deactivate()

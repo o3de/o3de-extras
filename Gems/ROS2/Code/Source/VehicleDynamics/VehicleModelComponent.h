@@ -51,6 +51,7 @@ namespace ROS2::VehicleDynamics
         void SetTargetAngularSpeedFraction(float rateFractionZ) override;
         void SetDisableVehicleDynamics(bool isDisable) override;
         AZStd::pair<AZ::Vector3, AZ::Vector3> GetWheelsOdometry() override;
+        bool m_isActive = false;
 
     protected:
         ManualControlEventHandler m_manualControlEventHandler;

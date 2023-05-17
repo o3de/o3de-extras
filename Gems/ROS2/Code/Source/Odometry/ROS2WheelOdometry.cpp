@@ -15,6 +15,7 @@
 #include <ROS2/ROS2Bus.h>
 #include <ROS2/Utilities/ROS2Conversions.h>
 #include <ROS2/Utilities/ROS2Names.h>
+#include <ROS2/ROS2GemUtilities.h>
 
 namespace ROS2
 {
@@ -63,52 +64,61 @@ namespace ROS2
 
     void ROS2WheelOdometryComponent::OnPhysicsSimulationFinished(AzPhysics::SceneHandle sceneHandle, float deltaTime)
     {
-        AZStd::pair<AZ::Vector3, AZ::Vector3> vt;
-
-        VehicleDynamics::VehicleInputControlRequestBus::EventResult(
-            vt, GetEntityId(), &VehicleDynamics::VehicleInputControlRequests::GetWheelsOdometry);
-
-        m_odometryMsg.header.stamp = ROS2Interface::Get()->GetROSTimestamp();
-        m_odometryMsg.twist.twist.linear = ROS2Conversions::ToROS2Vector3(vt.first);
-        m_odometryMsg.twist.twist.angular = ROS2Conversions::ToROS2Vector3(vt.second);
-        if (m_sensorConfiguration.m_frequency > 0)
+        if (m_odometryPublisher)
         {
-            auto updatePos = deltaTime * vt.first; // in meters
-            auto updateRot = deltaTime * vt.second; // in radians
-            m_robotPose += m_robotRotation.TransformVector(updatePos);
-            m_robotRotation *= AZ::Quaternion::CreateFromScaledAxisAngle(updateRot);
-        }
-        if (IsPublicationDeadline(deltaTime))
-        {
-            m_odometryMsg.pose.pose.position = ROS2Conversions::ToROS2Point(m_robotPose);
-            m_odometryMsg.pose.pose.orientation = ROS2Conversions::ToROS2Quaternion(m_robotRotation);
+            AZStd::pair<AZ::Vector3, AZ::Vector3> vt;
 
-            m_odometryPublisher->publish(m_odometryMsg);
+            VehicleDynamics::VehicleInputControlRequestBus::EventResult(
+                vt, GetEntityId(), &VehicleDynamics::VehicleInputControlRequests::GetWheelsOdometry);
+
+            m_odometryMsg.header.stamp = ROS2Interface::Get()->GetROSTimestamp();
+            m_odometryMsg.twist.twist.linear = ROS2Conversions::ToROS2Vector3(vt.first);
+            m_odometryMsg.twist.twist.angular = ROS2Conversions::ToROS2Vector3(vt.second);
+            if (m_sensorConfiguration.m_frequency > 0)
+            {
+                auto updatePos = deltaTime * vt.first; // in meters
+                auto updateRot = deltaTime * vt.second; // in radians
+                m_robotPose += m_robotRotation.TransformVector(updatePos);
+                m_robotRotation *= AZ::Quaternion::CreateFromScaledAxisAngle(updateRot);
+            }
+            if (IsPublicationDeadline(deltaTime))
+            {
+                m_odometryMsg.pose.pose.position = ROS2Conversions::ToROS2Point(m_robotPose);
+                m_odometryMsg.pose.pose.orientation = ROS2Conversions::ToROS2Quaternion(m_robotRotation);
+
+                m_odometryPublisher->publish(m_odometryMsg);
+            }
         }
     }
 
     void ROS2WheelOdometryComponent::Activate()
     {
-        m_robotPose = AZ::Vector3{ 0 };
-        m_robotRotation = AZ::Quaternion{ 0, 0, 0, 1 };
+        if (ROS2::Utils::IsAutonomousOrNonMultiplayer(GetEntity()))
+        {
+            m_robotPose = AZ::Vector3{ 0 };
+            m_robotRotation = AZ::Quaternion{ 0, 0, 0, 1 };
 
-        // "odom" is globally fixed frame for all robots, no matter the namespace
-        m_odometryMsg.header.frame_id = ROS2Names::GetNamespacedName(GetNamespace(), "odom").c_str();
-        m_odometryMsg.child_frame_id = GetFrameID().c_str();
+            // "odom" is globally fixed frame for all robots, no matter the namespace
+            m_odometryMsg.header.frame_id = ROS2Names::GetNamespacedName(GetNamespace(), "odom").c_str();
+            m_odometryMsg.child_frame_id = GetFrameID().c_str();
 
-        auto ros2Node = ROS2Interface::Get()->GetNode();
-        AZ_Assert(m_sensorConfiguration.m_publishersConfigurations.size() == 1, "Invalid configuration of publishers for Odometry sensor");
+            auto ros2Node = ROS2Interface::Get()->GetNode();
+            AZ_Assert(m_sensorConfiguration.m_publishersConfigurations.size() == 1, "Invalid configuration of publishers for Odometry sensor");
 
-        const auto publisherConfig = m_sensorConfiguration.m_publishersConfigurations[Internal::kWheelOdometryMsgType];
-        const auto fullTopic = ROS2Names::GetNamespacedName(GetNamespace(), publisherConfig.m_topic);
-        m_odometryPublisher = ros2Node->create_publisher<nav_msgs::msg::Odometry>(fullTopic.data(), publisherConfig.GetQoS());
-        ROS2SensorComponent::Activate();
+            const auto publisherConfig = m_sensorConfiguration.m_publishersConfigurations[Internal::kWheelOdometryMsgType];
+            const auto fullTopic = ROS2Names::GetNamespacedName(GetNamespace(), publisherConfig.m_topic);
+            m_odometryPublisher = ros2Node->create_publisher<nav_msgs::msg::Odometry>(fullTopic.data(), publisherConfig.GetQoS());
+            ROS2SensorComponent::Activate();
+        }
     }
 
     void ROS2WheelOdometryComponent::Deactivate()
     {
-        RemovePhysicalCallback();
-        ROS2SensorComponent::Deactivate();
-        m_odometryPublisher.reset();
+        if (m_odometryPublisher)
+        {
+            RemovePhysicalCallback();
+            ROS2SensorComponent::Deactivate();
+            m_odometryPublisher.reset();
+        }
     }
 } // namespace ROS2

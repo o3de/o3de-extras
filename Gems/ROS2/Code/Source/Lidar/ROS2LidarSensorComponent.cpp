@@ -13,6 +13,7 @@
 #include <ROS2/Frame/ROS2FrameComponent.h>
 #include <ROS2/ROS2Bus.h>
 #include <ROS2/Utilities/ROS2Names.h>
+#include <ROS2/ROS2GemUtilities.h>
 #include <Lidar/LidarRegistrarSystemComponent.h>
 
 namespace ROS2
@@ -233,32 +234,38 @@ namespace ROS2
 
     void ROS2LidarSensorComponent::Activate()
     {
-        auto ros2Node = ROS2Interface::Get()->GetNode();
-        AZ_Assert(m_sensorConfiguration.m_publishersConfigurations.size() == 1, "Invalid configuration of publishers for lidar sensor");
-
-        const TopicConfiguration& publisherConfig = m_sensorConfiguration.m_publishersConfigurations[Internal::kPointCloudType];
-        AZStd::string fullTopic = ROS2Names::GetNamespacedName(GetNamespace(), publisherConfig.m_topic);
-        m_pointCloudPublisher = ros2Node->create_publisher<sensor_msgs::msg::PointCloud2>(fullTopic.data(), publisherConfig.GetQoS());
-
-        if (m_sensorConfiguration.m_visualise)
+        if (ROS2::Utils::IsAutonomousOrNonMultiplayer(GetEntity()))
         {
-            auto* entityScene = AZ::RPI::Scene::GetSceneForEntityId(GetEntityId());
-            m_drawQueue = AZ::RPI::AuxGeomFeatureProcessorInterface::GetDrawQueueForScene(entityScene);
+            auto ros2Node = ROS2Interface::Get()->GetNode();
+            AZ_Assert(m_sensorConfiguration.m_publishersConfigurations.size() == 1, "Invalid configuration of publishers for lidar sensor");
+
+            const TopicConfiguration& publisherConfig = m_sensorConfiguration.m_publishersConfigurations[Internal::kPointCloudType];
+            AZStd::string fullTopic = ROS2Names::GetNamespacedName(GetNamespace(), publisherConfig.m_topic);
+            m_pointCloudPublisher = ros2Node->create_publisher<sensor_msgs::msg::PointCloud2>(fullTopic.data(), publisherConfig.GetQoS());
+
+            if (m_sensorConfiguration.m_visualise)
+            {
+                auto* entityScene = AZ::RPI::Scene::GetSceneForEntityId(GetEntityId());
+                m_drawQueue = AZ::RPI::AuxGeomFeatureProcessorInterface::GetDrawQueueForScene(entityScene);
+            }
+
+            m_lastRotations = LidarTemplateUtils::PopulateRayRotations(m_lidarParameters);
+
+            FetchLidarImplementationFeatures();
+            ConnectToLidarRaycaster();
+            ConfigureLidarRaycaster();
+
+            ROS2SensorComponent::Activate();
         }
-
-        m_lastRotations = LidarTemplateUtils::PopulateRayRotations(m_lidarParameters);
-
-        FetchLidarImplementationFeatures();
-        ConnectToLidarRaycaster();
-        ConfigureLidarRaycaster();
-
-        ROS2SensorComponent::Activate();
     }
 
     void ROS2LidarSensorComponent::Deactivate()
     {
-        ROS2SensorComponent::Deactivate();
-        m_pointCloudPublisher.reset();
+        if (m_pointCloudPublisher)
+        {
+            ROS2SensorComponent::Deactivate();
+            m_pointCloudPublisher.reset();
+        }
     }
 
     void ROS2LidarSensorComponent::FrequencyTick()

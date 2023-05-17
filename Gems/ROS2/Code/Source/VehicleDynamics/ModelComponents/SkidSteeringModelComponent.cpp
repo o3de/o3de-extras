@@ -10,6 +10,7 @@
 #include <AzCore/Serialization/EditContext.h>
 #include <AzCore/Serialization/EditContextConstants.inl>
 #include <AzCore/Serialization/SerializeContext.h>
+#include <ROS2/ROS2GemUtilities.h>
 
 namespace ROS2::VehicleDynamics
 {
@@ -54,7 +55,10 @@ namespace ROS2::VehicleDynamics
 
     void SkidSteeringModelComponent::Activate()
     {
-        VehicleModelComponent::Activate();
-        m_driveModel.Activate(m_vehicleConfiguration);
+        if (ROS2::Utils::IsAutonomousOrNonMultiplayer(GetEntity()))
+        {
+            VehicleModelComponent::Activate();
+            m_driveModel.Activate(m_vehicleConfiguration);
+        }
     }
 } // namespace ROS2::VehicleDynamics

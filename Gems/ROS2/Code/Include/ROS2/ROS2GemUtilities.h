@@ -40,12 +40,19 @@ namespace ROS2
             return component;
         }
 
-        /// Checks if the entity or an ancestor is a multiplayer entity (i.e. has the NetBindComponent).
-        /// If yes, 
+        /// Get the first found NetBindComponent* in the entity's transform hierarchy (or nullptr)
         /// @param entity 
-        /// @return 
+        /// @return The first found NetBindComponent* or nullptr if none was found up the the scene root
         Multiplayer::NetBindComponent* GetEntityOrAncestorNetBind(const AZ::Entity* entity);
 
+        /// Checks if the simulation of the provided entity is controlled by the current process.
+        /// Used by ROS2 components in multiplayer mode to determine if they should activate themselves or not.
+        /// Thus, ensuring they are only simulated on a single client.
+        /// @param entity 
+        /// @return `False` iff `entity` is a multiplayer entity (has a `NetBindComponent` in its transform ancestry) 
+        ///         and does NOT have `Autonomous` role. 
+        ///         `True` otherwise.
+        /// @note   Always returns `true` for Editor builds to ensure components can be configured reliably.
         bool IsAutonomousOrNonMultiplayer(const AZ::Entity* entity);
 
     } // namespace Utils
