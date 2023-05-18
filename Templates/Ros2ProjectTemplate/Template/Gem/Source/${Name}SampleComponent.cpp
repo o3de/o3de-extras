@@ -1,12 +1,20 @@
 
+// {BEGIN_LICENSE}
+/*
+ * Copyright (c) Contributors to the Open 3D Engine Project.
+ * For complete copyright and license terms please see the LICENSE at the root of this distribution.
+ *
+ * SPDX-License-Identifier: Apache-2.0 OR MIT
+ *
+ */
+// {END_LICENSE}
 
 #include "${SanitizedCppName}SampleComponent.h"
 #include <AzCore/Component/ComponentApplicationBus.h>
-#include <AzCore/Serialization/EditContext.h>
-#include <AzCore/Serialization/SerializeContext.h>
-
 #include <AzCore/Component/TransformBus.h>
 #include <AzCore/Math/Transform.h>
+#include <AzCore/Serialization/EditContext.h>
+#include <AzCore/Serialization/SerializeContext.h>
 
 #include <imgui/imgui.h>
 
@@ -23,6 +31,7 @@ namespace ${SanitizedCppName}
         m_goalTopicConfiguration.m_topic = "/goal_pose";
         m_goalTopicConfiguration.m_type = "geometry_msgs::msg::PoseStamped";
     }
+
     void ${SanitizedCppName}SampleComponent::Activate()
     {
         auto ros2Node = ROS2::ROS2Interface::Get()->GetNode();
@@ -57,7 +66,7 @@ namespace ${SanitizedCppName}
                         AZ::Edit::UIHandlers::Default,
                         &${SanitizedCppName}SampleComponent::m_goalTopicConfiguration,
                         "Topic for goal message",
-                        "Configuration for ros2 topic to send goal message to");
+                        "Configuration for ROS2 topic to send goal message to");
             }
         }
     }
