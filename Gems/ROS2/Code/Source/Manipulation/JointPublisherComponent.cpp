@@ -6,15 +6,17 @@
 *
 */
 
-#include <ROS2/Manipulation/JointPublisherComponent.h>
-#include <AzCore/Component/TransformBus.h>
+
 #include <AzCore/Component/ComponentApplicationBus.h>
+#include <AzCore/Component/TransformBus.h>
 #include <AzCore/Serialization/EditContext.h>
-#include <rclcpp/qos.hpp>
 #include <PhysX/Joint/PhysXJointRequestsBus.h>
 #include <ROS2/Frame/ROS2FrameComponent.h>
+#include <ROS2/Manipulation/JointPublisherComponent.h>
 #include <ROS2/ROS2Bus.h>
 #include <ROS2/Utilities/ROS2Names.h>
+#include <Source/ArticulationLinkComponent.h>
+#include <rclcpp/qos.hpp>
 
 namespace ROS2
 {
@@ -24,7 +26,8 @@ namespace ROS2
         auto ros2Node = ROS2::ROS2Interface::Get()->GetNode();
         auto ros2Frame = GetEntity()->FindComponent<ROS2FrameComponent>();
         AZStd::string namespacedTopic = ROS2Names::GetNamespacedName(ros2Frame->GetNamespace(), "joint_states");
-        m_jointstatePublisher = ros2Node->create_publisher<sensor_msgs::msg::JointState>(namespacedTopic.data(), rclcpp::SystemDefaultsQoS());        // TODO: add QoS instead of "1"
+        m_jointstatePublisher = ros2Node->create_publisher<sensor_msgs::msg::JointState>(
+            namespacedTopic.data(), rclcpp::SystemDefaultsQoS()); // TODO: add QoS instead of "1"
     }
 
     void JointPublisherComponent::Deactivate()
@@ -47,9 +50,8 @@ namespace ROS2
     {
         if (AZ::SerializeContext* serialize = azrtti_cast<AZ::SerializeContext*>(context))
         {
-            serialize->Class<JointPublisherComponent, AZ::Component>()
-                ->Version(0)
-                ->Field("Frequency (HZ)", &JointPublisherComponent::m_frequency);
+            serialize->Class<JointPublisherComponent, AZ::Component>()->Version(0)->Field(
+                "Frequency (HZ)", &JointPublisherComponent::m_frequency);
 
             if (AZ::EditContext* ec = serialize->GetEditContext())
             {
@@ -65,6 +67,21 @@ namespace ROS2
         }
     }
 
+    PhysX::ArticulationJointAxis JointPublisherComponent::GetArticulationFreeAxis(const AZ::Name& name) const
+    {
+        if (m_jointAxisMap.contains(name))
+        {
+            return m_jointAxisMap.at(name);
+        }
+        return PhysX::ArticulationJointAxis::X;
+    }
+
+    PhysX::ArticulationJointAxis JointPublisherComponent::GetArticulationFreeAxis(const AZStd::string& namestr) const
+    {
+        AZ::Name name(namestr);
+        return GetArticulationFreeAxis(name);
+    }
+
     void JointPublisherComponent::Initialize()
     {
         AZStd::vector<AZ::EntityId> descendants;
@@ -77,17 +94,107 @@ namespace ROS2
             AZ_Assert(entity, "Unknown entity %s", descendantID.ToString().c_str());
             auto* frameComponent = entity->FindComponent<ROS2FrameComponent>();
             auto* hingeComponent = entity->FindComponent<PhysX::HingeJointComponent>();
+            auto* articulationComponent = entity->FindComponent<PhysX::ArticulationLinkComponent>();
             if (frameComponent && hingeComponent)
             {
-                AZ::Name jointName = frameComponent->GetJointName();
-                m_hierarchyMap[jointName] = *hingeComponent;
+                const AZ::Name jointName = frameComponent->GetJointName();
+
+                AZ_Printf(
+                    "JointPublisherComponent",
+                    "Adding entity %s %s to the hierarchy map with joint name %s\n",
+                    entity->GetName().c_str(),
+                    descendantID.ToString().c_str(),
+                    jointName.GetCStr());
+                m_hierarchyMap[jointName] = AZ::EntityComponentIdPair(entity->GetId(), hingeComponent->GetId());
                 m_jointstateMsg.name.push_back(jointName.GetCStr());
                 m_jointstateMsg.position.push_back(0.0f);
+                m_useJoints = true;
+                AZ_Assert(!m_useArticulation, "JointPublisherComponent: Cannot have both joints and articulations in the same tree");
+            }
+            if (frameComponent && articulationComponent)
+            {
+                const AZ::Name jointName = frameComponent->GetJointName();
+                // get free articulation's axis
+                bool isArticulationFixed = true;
+                for (AZ::u8 axis = 0; axis <= static_cast<AZ::u8>(PhysX::ArticulationJointAxis::Z); axis++)
+                {
+                    PhysX::ArticulationJointMotionType type = PhysX::ArticulationJointMotionType::Locked;
+
+                    // talk to bus, to prevent compilation error without PhysX Articulation support.
+                    PhysX::ArticulationJointRequestBus::EventResult(
+                        type,
+                        articulationComponent->GetEntityId(),
+                        &PhysX::ArticulationJointRequests::GetMotion,
+                        static_cast<PhysX::ArticulationJointAxis>(axis));
+
+                    if (type != PhysX::ArticulationJointMotionType::Locked)
+                    {
+                        isArticulationFixed = false;
+                        m_jointAxisMap[jointName] = static_cast<PhysX::ArticulationJointAxis>(axis);
+                        break;
+                    }
+                }
+                if (!isArticulationFixed)
+                {
+                    AZ::Name jointName = frameComponent->GetJointName();
+                    AZ_Printf(
+                        "JointPublisherComponent",
+                        "Adding entity %s %s to the hierarchy map with joint name %s\n",
+                        entity->GetName().c_str(),
+                        descendantID.ToString().c_str(),
+                        jointName.GetCStr());
+                    m_hierarchyMap[jointName] = AZ::EntityComponentIdPair(entity->GetId(), articulationComponent->GetId());
+                    m_jointstateMsg.name.push_back(jointName.GetCStr());
+                    m_jointstateMsg.position.push_back(0.0f);
+                    m_useArticulation = true;
+                    AZ_Assert(!m_useJoints, "JointPublisherComponent: Cannot have both joints and articulations in the same tree");
+                }
+                else
+                {
+                    AZ_Printf(
+                        "JointPublisherComponent",
+                        "Articulation joint from entity %s to entity %s is fixed, skipping\n",
+                        entity->GetName().c_str(),
+                        descendantID.ToString().c_str());
+                }
             }
         }
     }
 
-    AZStd::unordered_map<AZ::Name, PhysX::HingeJointComponent>  &JointPublisherComponent::GetHierarchyMap()
+    float JointPublisherComponent::GetJointPosition(const AZ::Name& name) const
+    {
+        if (m_hierarchyMap.contains(name))
+        {
+            const AZ::EntityComponentIdPair& idPair = m_hierarchyMap.at(name);
+            float position{ 0 };
+            if (m_useArticulation && m_jointAxisMap.contains(name))
+            {
+                const auto axis = m_jointAxisMap.at(name);
+                PhysX::ArticulationJointRequestBus::EventResult(
+                    position, idPair.GetEntityId(), &PhysX::ArticulationJointRequests::GetJointPosition, axis);
+                return position;
+            }
+            if (m_useJoints)
+            {
+                PhysX::JointRequestBus::EventResult(position, idPair, &PhysX::JointRequests::GetPosition);
+                return position;
+            }
+            AZ_Assert(false, "JointPublisherComponent: No joints or articulations found in the tree");
+            return position;
+        }
+        else
+        {
+            AZ_Warning("JointPublisherComponent", false, "Joint %s not found in the hierarchy map", name.GetCStr());
+            return 0.0f;
+        }
+    }
+
+    float JointPublisherComponent::GetJointPosition(const AZStd::string& namestr) const
+    {
+        return GetJointPosition(AZ::Name(namestr));
+    }
+
+    const AZStd::unordered_map<AZ::Name, AZ::EntityComponentIdPair>& JointPublisherComponent::GetHierarchyMap() const
     {
         return m_hierarchyMap;
     }
@@ -99,22 +206,14 @@ namespace ROS2
         ros_header.frame_id = GetFrameID().data();
         ros_header.stamp = ROS2::ROS2Interface::Get()->GetROSTimestamp();
         m_jointstateMsg.header = ros_header;
-        for ([[maybe_unused]] auto& [name, hingeComponent] : m_hierarchyMap)
+        m_jointstateMsg.position.resize(m_hierarchyMap.size());
+        m_jointstateMsg.name.resize(m_hierarchyMap.size());
+        for (auto& [name, hingeComponent] : m_hierarchyMap)
         {
-            m_jointstateMsg.position[i] = GetJointPosition(hingeComponent);
+            m_jointstateMsg.position[i] = GetJointPosition(name);
             m_jointstateMsg.name[i] = name.GetCStr();
             i++;
         }
-    }
-
-    float JointPublisherComponent::GetJointPosition(const AZ::Component& hingeComponent) const
-    {
-        float position{0};
-        auto componentId = hingeComponent.GetId();
-        auto entityId = hingeComponent.GetEntityId();
-        const AZ::EntityComponentIdPair id(entityId,componentId);
-        PhysX::JointRequestBus::EventResult(position, id, &PhysX::JointRequests::GetPosition);
-        return position;
     }
 
     void JointPublisherComponent::PublishMessage()
@@ -153,4 +252,5 @@ namespace ROS2
         // Note that the publisher frequency can be limited by simulation tick rate (if higher frequency is desired).
         PublishMessage();
     }
+
 } // namespace ROS2
