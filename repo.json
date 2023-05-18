@@ -97,7 +97,7 @@
             "sha256": "ae3f973f061d1b8d52e3ced34dd9862ee48b64be4eebaebb4a585674a97e8b91",
             "versions_data": [
                 {
-                    "sha256": "bbf8d8bf706016b5a04e11a0d3c95a9b4865a4b8a4adf7d95d0b8ea42442067b",
+                    "sha256": "45c906788ed9a83b8ff74fd1b893a54f79e4d3e0674139839afb807260efa0e6",
                     "version": "1.0.0",
                     "download_source_uri": "https://github.com/o3de/o3de-extras/releases/download/2.0/proteusrobot-1.0.0-gem.zip"
                 }
