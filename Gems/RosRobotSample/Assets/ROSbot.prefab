@@ -439,9 +439,25 @@
             "Id": "Entity_[7482070045370]",
             "Name": "imu_link",
             "Components": {
+                "Component_[11310786217061747012]": {
+                    "$type": "EditorFixedJointComponent",
+                    "Id": 11310786217061747012,
+                    "Configuration": {
+                        "Parent Entity": "",
+                        "Child Entity": "Entity_[7482070045370]"
+                    }
+                },
                 "Component_[11483902887902604628]": {
                     "$type": "EditorInspectorComponent",
                     "Id": 11483902887902604628
+                },
+                "Component_[12432694652345033923]": {
+                    "$type": "EditorRigidBodyComponent",
+                    "Id": 12432694652345033923,
+                    "Configuration": {
+                        "entityId": "",
+                        "Kinematic": true
+                    }
                 },
                 "Component_[12817635789820242289]": {
                     "$type": "EditorEntitySortComponent",
@@ -460,17 +476,7 @@
                 },
                 "Component_[17191079459924416406]": {
                     "$type": "EditorPendingCompositionComponent",
-                    "Id": 17191079459924416406,
-                    "PendingComponents": [
-                        {
-                            "$type": "EditorFixedJointComponent",
-                            "Id": 11310786217061747012,
-                            "Configuration": {
-                                "Parent Entity": "",
-                                "Child Entity": ""
-                            }
-                        }
-                    ]
+                    "Id": 17191079459924416406
                 },
                 "Component_[17775749381982911317]": {
                     "$type": "EditorDisabledCompositionComponent",
@@ -746,7 +752,8 @@
                                         "MaterialAsset": {
                                             "assetId": {
                                                 "guid": "{F4A951F1-9880-56A7-A443-B2D685E6E734}"
-                                            }
+                                            },
+                                            "assetHint": "robot/rosbot_xl_description/meshes/wheel_metal.azmaterial"
                                         }
                                     }
                                 }
@@ -975,21 +982,19 @@
                 },
                 "Component_[17768210655719860684]": {
                     "$type": "EditorPendingCompositionComponent",
-                    "Id": 17768210655719860684,
-                    "PendingComponents": [
-                        {
-                            "$type": "EditorFixedJointComponent",
-                            "Id": 9934662879286617893,
-                            "Configuration": {
-                                "Parent Entity": "",
-                                "Child Entity": ""
-                            }
-                        }
-                    ]
+                    "Id": 17768210655719860684
                 },
                 "Component_[17859749258720088518]": {
                     "$type": "EditorDisabledCompositionComponent",
                     "Id": 17859749258720088518
+                },
+                "Component_[3303670314104435058]": {
+                    "$type": "EditorRigidBodyComponent",
+                    "Id": 3303670314104435058,
+                    "Configuration": {
+                        "entityId": "",
+                        "Kinematic": true
+                    }
                 },
                 "Component_[5503518763347768805]": {
                     "$type": "EditorInspectorComponent",
@@ -998,6 +1003,14 @@
                 "Component_[8747820045819434329]": {
                     "$type": "EditorLockComponent",
                     "Id": 8747820045819434329
+                },
+                "Component_[9934662879286617893]": {
+                    "$type": "EditorFixedJointComponent",
+                    "Id": 9934662879286617893,
+                    "Configuration": {
+                        "Parent Entity": "",
+                        "Child Entity": "Entity_[7499249914554]"
+                    }
                 }
             }
         },
@@ -1537,7 +1550,7 @@
                     "Transform Data": {
                         "Translate": [
                             0.0,
-                            -0.004,
+                            -0.004000000189989805,
                             0.0
                         ]
                     }
@@ -1724,7 +1737,7 @@
                     "Transform Data": {
                         "Translate": [
                             0.0,
-                            0.004,
+                            0.004000000189989805,
                             0.0
                         ],
                         "Rotate": [
