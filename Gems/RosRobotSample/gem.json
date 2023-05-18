@@ -1,6 +1,6 @@
 {
     "gem_name": "RosRobotSample",
-    "display_name": "RosRobotSample",
+    "display_name": "ROS Robot Sample",
     "license": "Apache-2.0 or MIT",
     "license_url": "https://opensource.org/licenses/Apache-2.0",
     "origin": "Ros2WarehouseDemo",
@@ -14,7 +14,7 @@
         "RosRobotSample"
     ],
     "platforms": [
-        ""
+        "Linux"
     ],
     "icon_path": "preview.png",
     "requirements": "",
