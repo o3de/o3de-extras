@@ -34,7 +34,7 @@
             "versions_data": [
                 {
                     "download_source_uri": "https://github.com/o3de/o3de-extras/releases/download/2.0/azqtcomponentsforpython-1.0.0-gem.zip",
-                    "sha256": "1fe1cc008324e206ebecc03c8b8b31c04dad8e2e8bbb3ca110ec60f1d812879b",
+                    "sha256": "ef75e9811b11e081bd4d16d62b638208fe9f0bd8966cfaff937e64b59343f5f7",
                     "version": "1.0.0"
                 }
             ]
@@ -56,13 +56,12 @@
             "documentation_url": "",
             "dependencies": [],
             "repo_uri": "https://raw.githubusercontent.com/o3de/o3de-extras/development",
-            "download_source_uri": "http://localhost:8889/OpenXRVk-release-0.0.0.zip",
             "version": "1.0.0",
             "sha256": "dd58e9e95f7c4d4f107067a6d3a803da4eecd477610e9d67795777b49d5c892c",
             "versions_data": [
                 {
                     "download_source_uri": "https://github.com/o3de/o3de-extras/releases/download/2.0/openxrvk-1.0.0-gem.zip",
-                    "sha256": "80b6b6bfc0662d577f1c0566406b841382f11d999bbedf1c127ab9ca68d4e145",
+                    "sha256": "cced7bcde96fb29f527542c72d7838319d199e272f2cac9d69dd171521883b0a",
                     "version": "1.0.0"
                 }
             ]
@@ -70,13 +69,13 @@
         {
             "gem_name": "ProteusRobot",
             "version": "1.0.0",
-            "display_name": "ProteusRobot",
-            "license": "License used i.e. Apache-2.0 or MIT",
-            "license_url": "Link to the license web site i.e. https://opensource.org/licenses/Apache-2.0",
-            "origin": "The name of the originator or creator",
+            "display_name": "Proteus Robot",
+            "license": "Apache-2.0",
+            "license_url": "https://opensource.org/licenses/Apache-2.0",
+            "origin": "RobotecAI",
             "origin_url": "https://github.com/o3de/o3de-extras/tree/development/Gems/ProteusRobot",
-            "type": "Code",
-            "summary": "Proteus: Warehouse robot with Lidar sensor",
+            "type": "Asset",
+            "summary": "Proteus warehouse robot with Lidar sensor",
             "canonical_tags": [
                 "Gem"
             ],
@@ -87,20 +86,20 @@
                 ""
             ],
             "icon_path": "preview.png",
-            "requirements": "Notice of any requirements for this Gem i.e. This requires X other gem",
-            "documentation_url": "Link to any documentation of your Gem",
+            "requirements": "Requires ROS 2 Gem for the Lidar to function",
+            "documentation_url": "https://www.o3de.org/docs/user-guide/interactivity/robotics/project-configuration/#ros-2-project-templates",
             "dependencies": [],
             "repo_uri": "https://raw.githubusercontent.com/o3de/o3de-extras/development",
             "compatible_engines": [],
             "engine_api_dependencies": [],
             "restricted": "ProteusRobot",
-            "download_source_uri": "http://localhost:8889/ProteusRobot-release-1.0.0.zip",
-            "sha256": "742d57199ec376e96e25af9bb75cca8ad9aee812fde6509380443b7325bb01f0",
+            "download_source_uri": "https://github.com/o3de/o3de-extras/releases/download/2.0/proteusrobot-1.0.0-gem.zip",
+            "sha256": "ae3f973f061d1b8d52e3ced34dd9862ee48b64be4eebaebb4a585674a97e8b91",
             "versions_data": [
                 {
-                    "download_source_uri": "https://github.com/o3de/o3de-extras/releases/download/2.0/proteusrobot-1.0.0-gem.zip",
-                    "sha256": "bc11a93f437a2e9675ae86cd00a78b7c371ab7280be9f84b24fa85e6a80eb5f1",
-                    "version": "1.0.0"
+                    "sha256": "bbf8d8bf706016b5a04e11a0d3c95a9b4865a4b8a4adf7d95d0b8ea42442067b",
+                    "version": "1.0.0",
+                    "download_source_uri": "https://github.com/o3de/o3de-extras/releases/download/2.0/proteusrobot-1.0.0-gem.zip"
                 }
             ]
         },
@@ -116,7 +115,7 @@
             "origin": "RobotecAI",
             "origin_url": "https://github.com/o3de/o3de-extras/development/Gems/ROS2",
             "type": "Code",
-            "summary": "Tools and components to support creating simulations for ros2 systems such as robots",
+            "summary": "Tools and components to support creating simulations for ROS 2 systems such as robots",
             "canonical_tags": [
                 "Gem"
             ],
@@ -128,7 +127,7 @@
                 "o3de>=1.2.0"
             ],
             "icon_path": "preview.png",
-            "requirements": "Requires ros2 installation (supported distributions: humble). Source your workspace before building the Gem",
+            "requirements": "Requires ROS 2 installation (supported distributions: Humble). Source your workspace before building the Gem",
             "documentation_url": "https://o3de.org/docs/user-guide/gems/reference/design/ros2/",
             "dependencies": [
                 "Atom_RPI",
@@ -140,19 +139,19 @@
             ],
             "restricted": "ROS2",
             "repo_uri": "https://raw.githubusercontent.com/o3de/o3de-extras/development",
-            "download_source_uri": "http://localhost:8889/ROS2-release-1.0.0.zip",
-            "sha256": "c31342e4987923682adf27c7554e325dd0b177d833129bfe1ce4f56ecb99953a",
+            "download_source_uri": "https://github.com/o3de/o3de-extras/releases/download/2.0/ros2-1.0.0-gem.zip",
+            "sha256": "fb17868ab3f10d4fb1fae66667281978f68c6f36ea4dd1d814dafdb4fbecc23d",
             "versions_data": [
                 {
-                    "download_source_uri": "https://github.com/o3de/o3de-extras/releases/download/2.0/ros2-1.0.0-gem.zip",
-                    "sha256": "de106ef4aee56afb5a6efd2cac0db323cd8cb48a9c10aca104a75c9087b9dc1d",
-                    "version": "1.0.0"
+                    "sha256": "62db01423611893c366c7905b91b165ebfc5da4a09a08ddebddf188e98acdce4",
+                    "version": "1.0.0",
+                    "download_source_uri": "https://github.com/o3de/o3de-extras/releases/download/2.0/ros2-1.0.0-gem.zip"
                 }
             ]
         },
         {
             "gem_name": "RosRobotSample",
-            "display_name": "RosRobotSample",
+            "display_name": "ROS Robot Sample",
             "license": "Apache-2.0 or MIT",
             "license_url": "https://opensource.org/licenses/Apache-2.0",
             "origin": "Ros2WarehouseDemo",
@@ -166,7 +165,7 @@
                 "RosRobotSample"
             ],
             "platforms": [
-                ""
+                "Linux"
             ],
             "icon_path": "preview.png",
             "requirements": "",
@@ -176,14 +175,14 @@
             ],
             "repo_uri": "https://raw.githubusercontent.com/o3de/o3de-extras/development",
             "restricted": "",
-            "download_source_uri": "http://localhost:8889/RosRobotSample-release-0.0.0.zip",
+            "download_source_uri": "https://github.com/o3de/o3de-extras/releases/download/2.0/rosrobotsample-1.0.0-gem.zip",
             "version": "1.0.0",
-            "sha256": "437814cb3db461a1397c3a269e2d5f90fb1bdf705511f994ee7420cabeea77ed",
+            "sha256": "6df46fcd9fff1eaff025fce708a5ca89c178ea001056bae82cc30bb2f3a09a53",
             "versions_data": [
                 {
-                    "download_source_uri": "https://github.com/o3de/o3de-extras/releases/download/2.0/rosrobotsample-1.0.0-gem.zip",
-                    "sha256": "41a6d2dc375812107ff3700ea9301e48b76f665e0d0dff448cbfbe8586f768bd",
-                    "version": "1.0.0"
+                    "sha256": "be8973571f51d61bd3e56f40ab2d757bd7013c6bb466fe9f04ebb11c13eb7312",
+                    "version": "1.0.0",
+                    "download_source_uri": "https://github.com/o3de/o3de-extras/releases/download/2.0/rosrobotsample-1.0.0-gem.zip"
                 }
             ]
         },
@@ -213,13 +212,12 @@
             "compatible_engines": [],
             "engine_api_dependencies": [],
             "restricted": "",
-            "download_source_uri": "http://localhost:8889/WarehouseAssets-release-0.0.0.zip",
             "version": "1.0.0",
             "sha256": "c7844c1a97141d3b6a183a744b0a123a5802b400c2cac75c746b5ccd664538bb",
             "versions_data": [
                 {
                     "download_source_uri": "https://github.com/o3de/o3de-extras/releases/download/2.0/warehouseassets-1.0.0-gem.zip",
-                    "sha256": "e68cad5ce85d434d36c9b67309b75336d47ab1544dd9994a7594960a9f3815ba",
+                    "sha256": "5e69416d9c25bbcdd205bdaddcae689716044347942631d6b3e56d31b95cf094",
                     "version": "1.0.0"
                 }
             ]
@@ -248,13 +246,12 @@
             "dependencies": [],
             "repo_uri": "https://raw.githubusercontent.com/o3de/o3de-extras/development",
             "restricted": "",
-            "download_source_uri": "http://localhost:8889/WarehouseSample-release-0.0.0.zip",
             "sha256": "8653a144cd19906ed096f0056263e0f8adce17aec13cd254c8227386ac54ae24",
             "versions_data": [
                 {
                     "download_source_uri": "https://github.com/o3de/o3de-extras/releases/download/2.0/warehousesample-1.0.0-gem.zip",
                     "version": "1.0.0",
-                    "sha256": "8493f1fbb87e181872cf3b184528b028d4fbee6ab58f1ff2438c7607f7826312"
+                    "sha256": "2d7860a3b65e655834a06e66dd6e4b79892c62f11095d2a5ccec149fdaf77d49"
                 }
             ]
         },
@@ -275,13 +272,12 @@
             "documentation_url": "",
             "dependencies": [],
             "repo_uri": "https://raw.githubusercontent.com/o3de/o3de-extras/development",
-            "download_source_uri": "http://localhost:8889/XR-release-0.0.0.zip",
             "version": "1.0.0",
             "sha256": "65f1f53a42a362db329f16cc1edbc5043f7f2b36c6055311c592e680c1cde20c",
             "versions_data": [
                 {
                     "download_source_uri": "https://github.com/o3de/o3de-extras/releases/download/2.0/xr-1.0.0-gem.zip",
-                    "sha256": "902334329f901e01cdb958c7009a1d5f4ec2d48c12ed805bec8249da784a6b70",
+                    "sha256": "a7098465bd953864ab996c7eb515e4f46b9b3b601309a024a8aae6182243f3e1",
                     "version": "1.0.0"
                 }
             ]
