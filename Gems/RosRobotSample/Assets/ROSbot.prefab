@@ -273,6 +273,28 @@
                     "$type": "EditorLockComponent",
                     "Id": 2800143263731114396
                 },
+                "Component_[521234537851643377]": {
+                    "$type": "EditorMaterialComponent",
+                    "Id": 521234537851643377,
+                    "Controller": {
+                        "Configuration": {
+                            "materials": [
+                                {
+                                    "Key": {
+                                        "materialSlotStableId": 2322179940
+                                    },
+                                    "Value": {
+                                        "MaterialAsset": {
+                                            "assetId": {
+                                                "guid": "{D5BE771A-53A9-534E-8DCC-A91D6127540D}"
+                                            }
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                },
                 "Component_[5737436170439652420]": {
                     "$type": "EditorVisibilityComponent",
                     "Id": 5737436170439652420
@@ -298,6 +320,28 @@
                 "Component_[15024577071450740303]": {
                     "$type": "EditorVisibilityComponent",
                     "Id": 15024577071450740303
+                },
+                "Component_[3439030910326885807]": {
+                    "$type": "EditorMaterialComponent",
+                    "Id": 3439030910326885807,
+                    "Controller": {
+                        "Configuration": {
+                            "materials": [
+                                {
+                                    "Key": {
+                                        "materialSlotStableId": 3521207417
+                                    },
+                                    "Value": {
+                                        "MaterialAsset": {
+                                            "assetId": {
+                                                "guid": "{D5BE771A-53A9-534E-8DCC-A91D6127540D}"
+                                            }
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
                 },
                 "Component_[3688516838091446552]": {
                     "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
@@ -1030,32 +1074,175 @@
                     "$type": "EditorDisabledCompositionComponent",
                     "Id": 14526978337792614620
                 },
-                "Component_[16571991202305947722]": {
-                    "$type": "EditorVisibilityComponent",
-                    "Id": 16571991202305947722
-                },
-                "Component_[1903472310047731371]": {
+                "Component_[16224560699560920318]": {
                     "$type": "EditorMaterialComponent",
-                    "Id": 1903472310047731371,
+                    "Id": 16224560699560920318,
                     "Controller": {
                         "Configuration": {
                             "materials": [
                                 {
                                     "Key": {
-                                        "materialSlotStableId": 164162197
+                                        "materialSlotStableId": 642792236
                                     },
                                     "Value": {
                                         "MaterialAsset": {
                                             "assetId": {
-                                                "guid": "{988CEB57-770F-54E3-9E70-D1C628F3DA3C}"
+                                                "guid": "{3105668F-9F30-5984-8505-536E27A438C9}"
                                             },
-                                            "assetHint": "robot/rosbot_mat.azmaterial"
+                                            "assetHint": "robot/rosbot_xl_description/meshes/materials/body_steel_-_satin.azmaterial"
+                                        }
+                                    }
+                                },
+                                {
+                                    "Key": {
+                                        "materialSlotStableId": 786448836
+                                    },
+                                    "Value": {
+                                        "MaterialAsset": {
+                                            "assetId": {
+                                                "guid": "{B5536685-D115-5710-8B6C-BC3847D52F2A}"
+                                            },
+                                            "assetHint": "robot/rosbot_xl_description/meshes/materials/body_trunk.azmaterial"
+                                        }
+                                    }
+                                },
+                                {
+                                    "Key": {
+                                        "materialSlotStableId": 815259011
+                                    },
+                                    "Value": {
+                                        "MaterialAsset": {
+                                            "assetId": {
+                                                "guid": "{8805EC5F-0807-58E4-A06D-091C915890F3}"
+                                            },
+                                            "assetHint": "robot/rosbot_xl_description/meshes/materials/body_brass_-_polished.azmaterial"
+                                        }
+                                    }
+                                },
+                                {
+                                    "Key": {
+                                        "materialSlotStableId": 1383263231
+                                    },
+                                    "Value": {
+                                        "MaterialAsset": {
+                                            "assetId": {
+                                                "guid": "{31DA447B-9530-5E91-BB16-FD5267E44376}"
+                                            },
+                                            "assetHint": "robot/rosbot_xl_description/meshes/materials/body_roof.azmaterial"
+                                        }
+                                    }
+                                },
+                                {
+                                    "Key": {
+                                        "materialSlotStableId": 1841710152
+                                    },
+                                    "Value": {
+                                        "MaterialAsset": {
+                                            "assetId": {
+                                                "guid": "{F7A7BEF7-CEDE-5264-936F-38F562C50204}"
+                                            },
+                                            "assetHint": "robot/rosbot_xl_description/meshes/materials/body_powder_coat_-_rough_black_.azmaterial"
+                                        }
+                                    }
+                                },
+                                {
+                                    "Key": {
+                                        "materialSlotStableId": 2214454258
+                                    },
+                                    "Value": {
+                                        "MaterialAsset": {
+                                            "assetId": {
+                                                "guid": "{84044D82-3345-5D96-9660-6804FAD63D96}"
+                                            },
+                                            "assetHint": "robot/rosbot_xl_description/meshes/materials/body_nickel_-_polished.azmaterial"
+                                        }
+                                    }
+                                },
+                                {
+                                    "Key": {
+                                        "materialSlotStableId": 2454090141
+                                    },
+                                    "Value": {
+                                        "MaterialAsset": {
+                                            "assetId": {
+                                                "guid": "{130408E5-F370-5167-AD30-8CC776DB98F2}"
+                                            },
+                                            "assetHint": "robot/rosbot_xl_description/meshes/materials/body_fender_l.azmaterial"
+                                        }
+                                    }
+                                },
+                                {
+                                    "Key": {
+                                        "materialSlotStableId": 2595386789
+                                    },
+                                    "Value": {
+                                        "MaterialAsset": {
+                                            "assetId": {
+                                                "guid": "{79312637-9007-5FBB-9B0B-DA8C03E8EDE1}"
+                                            },
+                                            "assetHint": "robot/rosbot_xl_description/meshes/materials/body_powder_coat_-_rough_white_.azmaterial"
+                                        }
+                                    }
+                                },
+                                {
+                                    "Key": {
+                                        "materialSlotStableId": 2901342142
+                                    },
+                                    "Value": {
+                                        "MaterialAsset": {
+                                            "assetId": {
+                                                "guid": "{C97280A9-EB48-5C2E-B37D-B3BD2EF8DF00}"
+                                            },
+                                            "assetHint": "robot/rosbot_xl_description/meshes/materials/body_led_red_.azmaterial"
+                                        }
+                                    }
+                                },
+                                {
+                                    "Key": {
+                                        "materialSlotStableId": 2950365042
+                                    },
+                                    "Value": {
+                                        "MaterialAsset": {
+                                            "assetId": {
+                                                "guid": "{C46C0CED-041C-593C-B127-2EAA5B9ECA2B}"
+                                            },
+                                            "assetHint": "robot/rosbot_xl_description/meshes/materials/body_led_-_smd_3528_-_8lm_white_.azmaterial"
+                                        }
+                                    }
+                                },
+                                {
+                                    "Key": {
+                                        "materialSlotStableId": 3521207417
+                                    },
+                                    "Value": {
+                                        "MaterialAsset": {
+                                            "assetId": {
+                                                "guid": "{1EDD06F5-C72F-5F43-938A-D7913BBD0F25}"
+                                            },
+                                            "assetHint": "robot/rosbot_xl_description/meshes/materials/body_plastic_-_matte_black_.azmaterial"
+                                        }
+                                    }
+                                },
+                                {
+                                    "Key": {
+                                        "materialSlotStableId": 4106326220
+                                    },
+                                    "Value": {
+                                        "MaterialAsset": {
+                                            "assetId": {
+                                                "guid": "{64867D02-952D-509F-B279-6E349F2DBCEC}"
+                                            },
+                                            "assetHint": "robot/rosbot_xl_description/meshes/materials/body_led_green_.azmaterial"
                                         }
                                     }
                                 }
                             ]
                         }
                     }
+                },
+                "Component_[16571991202305947722]": {
+                    "$type": "EditorVisibilityComponent",
+                    "Id": 16571991202305947722
                 },
                 "Component_[4509141370554846912]": {
                     "$type": "EditorLockComponent",
