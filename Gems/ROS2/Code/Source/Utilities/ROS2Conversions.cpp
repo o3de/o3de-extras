@@ -82,5 +82,4 @@ namespace ROS2
         return ros2Covariance;
     }
 
-
 } // namespace ROS2
