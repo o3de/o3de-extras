@@ -175,7 +175,7 @@ namespace ROS2
         m_imuPublisher.reset();
     }
 
-    AZ::Matrix3x3 ROS2ImuSensorComponent::toCovarianceMatrix(const AZ::Vector3& Variance)
+    AZ::Matrix3x3 ROS2ImuSensorComponent::ToDiagonalCovarianceMatrix(const AZ::Vector3& variance)
     {
         AZ::Matrix3x3 covarianceMatrix;
         covarianceMatrix.SetElement(0, 0, Variance.GetX());
