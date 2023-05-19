@@ -53,5 +53,4 @@ set(FILES
     Source/RobotImporter/Utils/TypeConversions.h
     Source/ROS2EditorSystemComponent.cpp
     Source/ROS2EditorSystemComponent.h
-    Source/ROS2GemUtilities.cpp
 )

@@ -9,6 +9,7 @@
 #include <ROS2/Communication/QoS.h>
 #include <ROS2/Communication/TopicConfiguration.h>
 #include <ROS2/Utilities/Controllers/PidConfiguration.h>
+#include <ROS2/ROS2GemUtilities.h>
 #include <ROS2SystemComponent.h>
 #include <VehicleDynamics/VehicleModelComponent.h>
 
@@ -106,8 +107,10 @@ namespace ROS2
     {
         rclcpp::init(0, 0);
         m_simulationClock->Activate();
-        m_ros2Node = std::make_shared<rclcpp::Node>("o3de_ros2_node");
-        m_executor = AZStd::make_shared<rclcpp::executors::SingleThreadedExecutor>();
+        AZStd::string randomSuffix = AZ::Uuid::CreateRandom().ToString<AZStd::string>(false, false).substr(0,6);
+        AZStd::string_view nodeName = AZStd::string("o3de_ros2_node_") + randomSuffix;
+        m_ros2Node = std::make_shared<rclcpp::Node>(nodeName.data());
+            m_executor = AZStd::make_shared<rclcpp::executors::SingleThreadedExecutor>();
         m_executor->add_node(m_ros2Node);
     }
 

@@ -19,11 +19,11 @@ if (NOT ROS2_FOUND)
 endif()
 message(DEBUG "Building ${gem_name} Gem with ros2 $ENV{ROS_DISTRO}")
 
-# Add the ROS2.Static target
+# Add the ROS2 Static targets
 # Note: We include the common files and the platform specific files which are set in ros2_common_files.cmake
 # and in ${pal_dir}/ros2_${PAL_PLATFORM_NAME_LOWERCASE}_files.cmake
 ly_add_target(
-    NAME ${gem_name}.Static STATIC
+    NAME ${gem_name}.Client.Static STATIC
     NAMESPACE Gem
     FILES_CMAKE
         ros2_header_files.cmake
@@ -39,14 +39,75 @@ ly_add_target(
             AZ::AzCore
             AZ::AzFramework
             Gem::Atom_RPI.Public
-            Gem::Atom_Feature_Common.Static
-            Gem::Atom_Component_DebugCamera.Static
-            Gem::StartingPointInput
+            Gem::Multiplayer.Client
             Gem::PhysX.Static
+            Gem::StartingPointInput
+        PRIVATE
+            Gem::Atom_Component_DebugCamera.Static
+            Gem::Atom_Feature_Common.Static
+            Gem::Multiplayer.Client.Static
 )
 
-target_depends_on_ros2_packages(${gem_name}.Static rclcpp builtin_interfaces std_msgs sensor_msgs nav_msgs tf2_ros ackermann_msgs gazebo_msgs)
-target_depends_on_ros2_package(${gem_name}.Static control_toolbox 2.2.0 REQUIRED)
+target_depends_on_ros2_packages(${gem_name}.Client.Static rclcpp builtin_interfaces std_msgs sensor_msgs nav_msgs tf2_ros ackermann_msgs gazebo_msgs)
+target_depends_on_ros2_package(${gem_name}.Client.Static control_toolbox 2.2.0 REQUIRED)
+
+ly_add_target(
+    NAME ${gem_name}.Server.Static STATIC
+    NAMESPACE Gem
+    FILES_CMAKE
+        ros2_header_files.cmake
+        ros2_files.cmake
+    INCLUDE_DIRECTORIES
+        PUBLIC
+            Include
+        PRIVATE
+            Source
+            Source/VehicleDynamics
+            BUILD_DEPENDENCIES
+            PUBLIC
+                AZ::AzCore
+                AZ::AzFramework
+                Gem::Atom_RPI.Public
+                Gem::Multiplayer.Server
+                Gem::PhysX.Static
+                Gem::StartingPointInput
+            PRIVATE
+                Gem::Atom_Component_DebugCamera.Static
+                Gem::Atom_Feature_Common.Static
+                Gem::Multiplayer.Server.Static
+)
+
+target_depends_on_ros2_packages(${gem_name}.Server.Static rclcpp builtin_interfaces std_msgs sensor_msgs nav_msgs tf2_ros ackermann_msgs gazebo_msgs)
+target_depends_on_ros2_package(${gem_name}.Server.Static control_toolbox 2.2.0 REQUIRED)
+
+ly_add_target(
+    NAME ${gem_name}.Unified.Static STATIC
+    NAMESPACE Gem
+    FILES_CMAKE
+        ros2_header_files.cmake
+        ros2_files.cmake
+    INCLUDE_DIRECTORIES
+        PUBLIC
+            Include
+        PRIVATE
+            Source
+            Source/VehicleDynamics
+    BUILD_DEPENDENCIES
+        PUBLIC
+            AZ::AzCore
+            AZ::AzFramework
+            Gem::Atom_RPI.Public
+            Gem::Multiplayer
+            Gem::PhysX.Static
+            Gem::StartingPointInput
+        PRIVATE
+            Gem::Atom_Component_DebugCamera.Static
+            Gem::Atom_Feature_Common.Static
+            Gem::Multiplayer.Unified.Static
+)
+
+target_depends_on_ros2_packages(${gem_name}.Unified.Static rclcpp builtin_interfaces std_msgs sensor_msgs nav_msgs tf2_ros ackermann_msgs gazebo_msgs)
+target_depends_on_ros2_package(${gem_name}.Unified.Static control_toolbox 2.2.0 REQUIRED)
 
 ly_add_target(
     NAME ${gem_name}.API HEADERONLY
@@ -71,19 +132,54 @@ ly_add_target(
             Source
     BUILD_DEPENDENCIES
         PRIVATE
-            Gem::${gem_name}.Static
+            Gem::Multiplayer.Unified.Static
+            Gem::${gem_name}.Unified.Static
+            Gem::Atom_Feature_Common.Static
+)
+
+ly_add_target(
+    NAME ${gem_name}.Client ${PAL_TRAIT_MONOLITHIC_DRIVEN_MODULE_TYPE}
+    NAMESPACE Gem
+    FILES_CMAKE
+        ros2_shared_files.cmake
+    INCLUDE_DIRECTORIES
+        PUBLIC
+            Include
+        PRIVATE
+            Source
+    BUILD_DEPENDENCIES
+        PRIVATE
+            Gem::Multiplayer.Client.Static
+            Gem::${gem_name}.Client.Static
+            Gem::Atom_Feature_Common.Static
+)
+
+ly_add_target(
+    NAME ${gem_name}.Server ${PAL_TRAIT_MONOLITHIC_DRIVEN_MODULE_TYPE}
+    NAMESPACE Gem
+    FILES_CMAKE
+        ros2_shared_files.cmake
+    INCLUDE_DIRECTORIES
+        PUBLIC
+            Include
+        PRIVATE
+            Source
+    BUILD_DEPENDENCIES
+        PRIVATE
+            Gem::Multiplayer.Server.Static
+            Gem::${gem_name}.Server.Static
             Gem::Atom_Feature_Common.Static
 )
 
 # By default, we will specify that the above target ROS2 would be used by
 # Client, Server and Unified type targets when this gem is enabled.  If you don't want it
 # active in Clients, Servers or Unified by default, delete one or more of the following lines:
-ly_create_alias(NAME ${gem_name}.Clients NAMESPACE Gem TARGETS Gem::${gem_name})
-ly_create_alias(NAME ${gem_name}.Servers NAMESPACE Gem TARGETS Gem::${gem_name})
+ly_create_alias(NAME ${gem_name}.Clients NAMESPACE Gem TARGETS Gem::${gem_name}.Client)
+ly_create_alias(NAME ${gem_name}.Servers NAMESPACE Gem TARGETS Gem::${gem_name}.Server)
 ly_create_alias(NAME ${gem_name}.Unified NAMESPACE Gem TARGETS Gem::${gem_name})
 
 # If we are on a host platform, we want to add the host tools targets like the ${gem_name}.Editor target which
-# will also depend on ${gem_name}.Static
+# will also depend on ${gem_name}.Unified.Static
 if(PAL_TRAIT_BUILD_HOST_TOOLS)
     ly_add_target(
         NAME ${gem_name}.Editor.Static STATIC
@@ -109,7 +205,7 @@ if(PAL_TRAIT_BUILD_HOST_TOOLS)
                 Gem::AtomLyIntegration_CommonFeatures.Editor.Static
                 Gem::LmbrCentral.API
                 Gem::PhysX.Editor.Static
-                Gem::${gem_name}.Static
+                Gem::${gem_name}.Unified.Static
     )
 
     find_package(urdfdom)
@@ -162,7 +258,7 @@ if(PAL_TRAIT_BUILD_TESTS_SUPPORTED)
             BUILD_DEPENDENCIES
                 PRIVATE
                     AZ::AzTest
-                    Gem::${gem_name}.Static
+                    Gem::${gem_name}.Unified.Static
         )
 
         # Add ROS2.Tests to googletest

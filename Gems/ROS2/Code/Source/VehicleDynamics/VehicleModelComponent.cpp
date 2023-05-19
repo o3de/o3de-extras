@@ -17,20 +17,30 @@
 #include <AzCore/Serialization/SerializeContext.h>
 #include <AzCore/std/smart_ptr/make_shared.h>
 #include <AzFramework/Physics/RigidBodyBus.h>
+#include <ROS2/ROS2GemUtilities.h>
+
 namespace ROS2::VehicleDynamics
 {
     void VehicleModelComponent::Activate()
     {
-        VehicleInputControlRequestBus::Handler::BusConnect(GetEntityId());
-        m_manualControlEventHandler.Activate(GetEntityId());
-        AZ::TickBus::Handler::BusConnect();
+        if (ROS2::Utils::IsAutonomousOrNonMultiplayer(GetEntity()))
+        {
+            VehicleInputControlRequestBus::Handler::BusConnect(GetEntityId());
+            m_manualControlEventHandler.Activate(GetEntityId());
+            AZ::TickBus::Handler::BusConnect();
+            m_isActive = true;
+        }
     }
 
     void VehicleModelComponent::Deactivate()
     {
-        AZ::TickBus::Handler::BusDisconnect();
-        m_manualControlEventHandler.Deactivate();
-        VehicleInputControlRequestBus::Handler::BusDisconnect();
+        if (m_isActive)
+        {
+            AZ::TickBus::Handler::BusDisconnect();
+            m_manualControlEventHandler.Deactivate();
+            VehicleInputControlRequestBus::Handler::BusDisconnect();
+            m_isActive = false;
+        }
     }
 
     void VehicleModelComponent::Reflect(AZ::ReflectContext* context)
@@ -114,12 +124,16 @@ namespace ROS2::VehicleDynamics
 
     void VehicleModelComponent::OnTick(float deltaTime, [[maybe_unused]] AZ::ScriptTimePoint time)
     {
-        const uint64_t deltaTimeNs = deltaTime * 1'000'000'000;
-        GetDriveModel()->ApplyInputState(m_inputsState.GetValueCheckingDeadline(), deltaTimeNs);
+        if (m_isActive)
+        {
+            const uint64_t deltaTimeNs = deltaTime * 1'000'000'000;
+            GetDriveModel()->ApplyInputState(m_inputsState.GetValueCheckingDeadline(), deltaTimeNs);
+        }
     }
 
     AZStd::pair<AZ::Vector3, AZ::Vector3> VehicleModelComponent::GetWheelsOdometry()
     {
+        AZ_Assert(m_isActive, "Tried to GetWheelsOdometry() on inactive component!");
         return GetDriveModel()->GetVelocityFromModel();
     }
 } // namespace ROS2::VehicleDynamics

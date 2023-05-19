@@ -15,19 +15,26 @@
 #include <ROS2/ROS2GemUtilities.h>
 #include <ROS2/Sensor/ROS2SensorComponent.h>
 #include <ROS2/Utilities/ROS2Names.h>
+#include <ROS2/ROS2GemUtilities.h>
 
 namespace ROS2
 {
     void ROS2SensorComponent::Activate()
     {
-        SetupRefreshLoop();
-        AZ::TickBus::Handler::BusConnect();
+        if (ROS2::Utils::IsAutonomousOrNonMultiplayer(GetEntity()))
+        {
+            SetupRefreshLoop();
+            AZ::TickBus::Handler::BusConnect();
+        }
     }
 
     void ROS2SensorComponent::Deactivate()
     {
-        m_onTickCall.clear();
-        AZ::TickBus::Handler::BusDisconnect();
+        if (m_onTickCall)
+        {
+            m_onTickCall.clear();
+            AZ::TickBus::Handler::BusDisconnect();
+        }
     }
 
     void ROS2SensorComponent::Reflect(AZ::ReflectContext* context)
@@ -70,10 +77,13 @@ namespace ROS2
 
     void ROS2SensorComponent::OnTick([[maybe_unused]] float deltaTime, [[maybe_unused]] AZ::ScriptTimePoint time)
     {
-        Visualise(); // each frame
         if (m_onTickCall)
         {
-            m_onTickCall();
+            Visualise(); // each frame
+            if (m_onTickCall)
+            {
+                m_onTickCall();
+            }
         }
     }
 

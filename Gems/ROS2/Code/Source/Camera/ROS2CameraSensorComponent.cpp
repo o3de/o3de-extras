@@ -9,6 +9,7 @@
 #include "ROS2CameraSensorComponent.h"
 #include <ROS2/Communication/TopicConfiguration.h>
 #include <ROS2/Frame/ROS2FrameComponent.h>
+#include <ROS2/ROS2GemUtilities.h>
 
 #include <AzCore/Component/Entity.h>
 #include <AzCore/Component/TransformBus.h>
@@ -38,24 +39,27 @@ namespace ROS2
 
     void ROS2CameraSensorComponent::Activate()
     {
-        ROS2SensorComponent::Activate();
+        if (ROS2::Utils::IsAutonomousOrNonMultiplayer(GetEntity()))
+        {
+            ROS2SensorComponent::Activate();
 
-        if (m_cameraConfiguration.m_colorCamera && m_cameraConfiguration.m_depthCamera)
-        {
-            AddImageSource<CameraRGBDSensor>();
-        }
-        else if (m_cameraConfiguration.m_colorCamera)
-        {
-            AddImageSource<CameraColorSensor>();
-        }
-        else if (m_cameraConfiguration.m_depthCamera)
-        {
-            AddImageSource<CameraDepthSensor>();
-        }
+            if (m_cameraConfiguration.m_colorCamera && m_cameraConfiguration.m_depthCamera)
+            {
+                AddImageSource<CameraRGBDSensor>();
+            }
+            else if (m_cameraConfiguration.m_colorCamera)
+            {
+                AddImageSource<CameraColorSensor>();
+            }
+            else if (m_cameraConfiguration.m_depthCamera)
+            {
+                AddImageSource<CameraDepthSensor>();
+            }
 
-        const auto* component = Utils::GetGameOrEditorComponent<ROS2FrameComponent>(GetEntity());
-        AZ_Assert(component, "Entity has no ROS2FrameComponent");
-        m_frameName = component->GetFrameID();
+            const auto* component = Utils::GetGameOrEditorComponent<ROS2FrameComponent>(GetEntity());
+            AZ_Assert(component, "Entity has no ROS2FrameComponent");
+            m_frameName = component->GetFrameID();
+        }
     }
 
     void ROS2CameraSensorComponent::Deactivate()

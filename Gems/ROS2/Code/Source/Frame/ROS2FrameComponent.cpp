@@ -15,6 +15,8 @@
 #include <ROS2/ROS2Bus.h>
 #include <ROS2/ROS2GemUtilities.h>
 #include <ROS2/Utilities/ROS2Names.h>
+#include <ROS2/ROS2GemUtilities.h>
+
 namespace ROS2
 {
     namespace Internal
@@ -75,6 +77,11 @@ namespace ROS2
     void ROS2FrameComponent::Activate()
     {
         m_namespaceConfiguration.PopulateNamespace(IsTopLevel(), GetEntity()->GetName());
+
+        if (!ROS2::Utils::IsAutonomousOrNonMultiplayer(GetEntity()))
+        { // Do not publish when not responsible for entity's simulation
+            m_publishTransform = false;
+        }
 
         if (m_publishTransform)
         {

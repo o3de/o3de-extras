@@ -12,14 +12,18 @@
 #include <PrismaticJointComponent.h>
 #include <ROS2/Manipulation/JointMotorControllerComponent.h>
 #include <imgui/imgui.h>
+#include <ROS2/ROS2GemUtilities.h>
 
 namespace ROS2
 {
     void JointMotorControllerComponent::Activate()
     {
-        AZ::TickBus::Handler::BusConnect();
-        ImGui::ImGuiUpdateListenerBus::Handler::BusConnect();
-        AZ::EntityBus::Handler::BusConnect(GetEntityId());
+        if (ROS2::Utils::IsAutonomousOrNonMultiplayer(GetEntity()))
+        {
+            AZ::TickBus::Handler::BusConnect();
+            ImGui::ImGuiUpdateListenerBus::Handler::BusConnect();
+            AZ::EntityBus::Handler::BusConnect(GetEntityId());
+        }
     }
 
     void JointMotorControllerComponent::Deactivate()
@@ -77,36 +81,37 @@ namespace ROS2
 
     void JointMotorControllerComponent::OnTick([[maybe_unused]] float deltaTime, [[maybe_unused]] AZ::ScriptTimePoint time)
     {
-        if (!m_jointComponentIdPair.GetEntityId().IsValid())
+        if (m_jointComponentIdPair.GetEntityId().IsValid())
         {
-            return;
+            PhysX::JointRequestBus::EventResult(m_currentPosition, m_jointComponentIdPair, &PhysX::JointRequests::GetPosition);
+            float setSpeed = CalculateMotorSpeed(deltaTime);
+            PhysX::JointRequestBus::Event(m_jointComponentIdPair, &PhysX::JointRequests::SetVelocity, setSpeed);
         }
-
-        PhysX::JointRequestBus::EventResult(m_currentPosition, m_jointComponentIdPair, &PhysX::JointRequests::GetPosition);
-        float setSpeed = CalculateMotorSpeed(deltaTime);
-        PhysX::JointRequestBus::Event(m_jointComponentIdPair, &PhysX::JointRequests::SetVelocity, setSpeed);
     }
 
     void JointMotorControllerComponent::OnEntityActivated(const AZ::EntityId& entityId)
     {
-        AZ::ComponentId componentId;
-        if (auto* prismaticJointComponent = GetEntity()->FindComponent<PhysX::PrismaticJointComponent>(); prismaticJointComponent)
+        if (ROS2::Utils::IsAutonomousOrNonMultiplayer(GetEntity()))
         {
-            componentId = prismaticJointComponent->GetId();
-        }
-        else if (auto* hingeJointComponent = GetEntity()->FindComponent<PhysX::HingeJointComponent>(); hingeJointComponent)
-        {
-            componentId = hingeJointComponent->GetId();
-        }
-        else
-        {
-            AZ_Warning(
-                "MotorizedJointComponent",
-                false,
-                "Entity with ID %s either has no PhysX::Joint component or the joint is neither a Prismatic nor a Hinge Joint",
-                GetEntityId().ToString().c_str());
-        }
+            AZ::ComponentId componentId;
+            if (auto* prismaticJointComponent = GetEntity()->FindComponent<PhysX::PrismaticJointComponent>(); prismaticJointComponent)
+            {
+                componentId = prismaticJointComponent->GetId();
+            }
+            else if (auto* hingeJointComponent = GetEntity()->FindComponent<PhysX::HingeJointComponent>(); hingeJointComponent)
+            {
+                componentId = hingeJointComponent->GetId();
+            }
+            else
+            {
+                AZ_Warning(
+                    "MotorizedJointComponent",
+                    false,
+                    "Entity with ID %s either has no PhysX::Joint component or the joint is neither a Prismatic nor a Hinge Joint",
+                    GetEntityId().ToString().c_str());
+            }
 
-        m_jointComponentIdPair = { GetEntityId(), componentId };
+            m_jointComponentIdPair = { GetEntityId(), componentId };
+        }
     }
 } // namespace ROS2

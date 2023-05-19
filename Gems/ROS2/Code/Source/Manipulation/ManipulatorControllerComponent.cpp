@@ -8,6 +8,7 @@
 #include <PhysX/Joint/PhysXJointRequestsBus.h>
 #include <Source/HingeJointComponent.h>
 #include <ROS2/Frame/ROS2FrameComponent.h>
+#include <ROS2/ROS2GemUtilities.h>
 
 namespace ROS2
 {
@@ -18,16 +19,22 @@ namespace ROS2
 
     void ManipulatorControllerComponent::Activate()
     {
-        AZ::TickBus::Handler::BusConnect();
-        m_actionServerClass = AZStd::make_unique<FollowJointTrajectoryActionServer>();
-        m_actionServerClass->CreateServer(m_ROS2ControllerName);
-        InitializePid();        
+        if (ROS2::Utils::IsAutonomousOrNonMultiplayer(GetEntity()))
+        {
+            AZ::TickBus::Handler::BusConnect();
+            m_actionServerClass = AZStd::make_unique<FollowJointTrajectoryActionServer>();
+            m_actionServerClass->CreateServer(m_ROS2ControllerName);
+            InitializePid();  
+        }      
     }
 
     void ManipulatorControllerComponent::Deactivate()
     {
         AZ::TickBus::Handler::BusDisconnect();
-        m_actionServerClass->m_actionServer.reset();
+        if (m_actionServerClass)
+        {
+            m_actionServerClass->m_actionServer.reset();
+        }
     }
 
 
@@ -237,30 +244,33 @@ namespace ROS2
 
     void ManipulatorControllerComponent::OnTick([[maybe_unused]] float deltaTime, [[maybe_unused]] AZ::ScriptTimePoint time)
     {
-        const uint64_t deltaTimeNs = deltaTime * 1'000'000'000;
-
-        if (m_actionServerClass->m_goalStatus == GoalStatus::Active)
+        if (m_actionServerClass)
         {
-            if (!m_initializedTrajectory)
-            {
-                m_trajectory = m_actionServerClass->m_goalHandle->get_goal()->trajectory;
-                m_timeStartingExecutionTraj = rclcpp::Time(ROS2::ROS2Interface::Get()->GetROSTimestamp());
-                m_initializedTrajectory = true;
-            }
+            const uint64_t deltaTimeNs = deltaTime * 1'000'000'000;
 
-            ExecuteTrajectory(deltaTimeNs);
-
-            if (m_actionServerClass->m_goalStatus == GoalStatus::Concluded)
+            if (m_actionServerClass->m_goalStatus == GoalStatus::Active)
             {
-                m_actionServerClass->m_goalStatus = GoalStatus::Pending;
-                auto result = std::make_shared<FollowJointTrajectory::Result>();
-                m_actionServerClass->m_goalHandle->succeed(result);
-                m_keepStillPositionInitialize = false;
+                if (!m_initializedTrajectory)
+                {
+                    m_trajectory = m_actionServerClass->m_goalHandle->get_goal()->trajectory;
+                    m_timeStartingExecutionTraj = rclcpp::Time(ROS2::ROS2Interface::Get()->GetROSTimestamp());
+                    m_initializedTrajectory = true;
+                }
+
+                ExecuteTrajectory(deltaTimeNs);
+
+                if (m_actionServerClass->m_goalStatus == GoalStatus::Concluded)
+                {
+                    m_actionServerClass->m_goalStatus = GoalStatus::Pending;
+                    auto result = std::make_shared<FollowJointTrajectory::Result>();
+                    m_actionServerClass->m_goalHandle->succeed(result);
+                    m_keepStillPositionInitialize = false;
+                }
             }
-        }
-        else
-        {
-            KeepStillPosition(deltaTimeNs);
+            else
+            {
+                KeepStillPosition(deltaTimeNs);
+            }
         }
     }
 

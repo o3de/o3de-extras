@@ -11,6 +11,7 @@
 #include <ROS2/ROS2Bus.h>
 #include <ROS2/Utilities/ROS2Conversions.h>
 #include <ROS2/Utilities/ROS2Names.h>
+#include <ROS2/ROS2GemUtilities.h>
 
 #include <AzFramework/Physics/SimulatedBodies/RigidBody.h>
 #include <Source/RigidBodyComponent.h>
@@ -87,65 +88,74 @@ namespace ROS2
 
     void ROS2ImuSensorComponent::OnPhysicsSimulationFinished(AzPhysics::SceneHandle sceneHandle, float deltaTime)
     {
-        auto* sceneInterface = AZ::Interface<AzPhysics::SceneInterface>::Get();
-        const auto gravity = sceneInterface->GetGravity(sceneHandle);
-        auto* body = sceneInterface->GetSimulatedBodyFromHandle(sceneHandle, m_bodyHandle);
-        auto rigidbody = azrtti_cast<AzPhysics::RigidBody*>(body);
-        AZ_Assert(rigidbody, "Requested simulated body is not a rigid body");
-        auto inv = rigidbody->GetTransform().GetInverse();
-        const auto linearVelocity = inv.TransformVector(rigidbody->GetLinearVelocity());
-        m_filterAcceleration.push_back(linearVelocity);
-        const auto angularVelocity = inv.TransformVector(rigidbody->GetAngularVelocity());
-        m_filterAngularVelocity.push_back(angularVelocity);
-        if (m_filterAcceleration.size() > m_filterSize)
+        if (m_imuPublisher)
         {
-            m_filterAcceleration.pop_front();
-            m_filterAngularVelocity.pop_front();
-        }
-        if (IsPublicationDeadline(deltaTime))
-        {
-            const AZ::Vector3 linearVelocityFilter =
-                AZStd::accumulate(m_filterAcceleration.begin(), m_filterAcceleration.end(), AZ::Vector3{ 0 }) / m_filterAcceleration.size();
-
-            const AZ::Vector3 angularRateFiltered =
-                AZStd::accumulate(m_filterAngularVelocity.begin(), m_filterAngularVelocity.end(), AZ::Vector3{ 0 }) /
-                m_filterAngularVelocity.size();
-
-            auto acc = (linearVelocityFilter - m_previousLinearVelocity) / deltaTime;
-
-            m_previousLinearVelocity = linearVelocityFilter;
-            m_acceleration = -acc + angularRateFiltered.Cross(linearVelocityFilter);
-            if (m_includeGravity)
+            auto* sceneInterface = AZ::Interface<AzPhysics::SceneInterface>::Get();
+            const auto gravity = sceneInterface->GetGravity(sceneHandle);
+            auto* body = sceneInterface->GetSimulatedBodyFromHandle(sceneHandle, m_bodyHandle);
+            auto rigidbody = azrtti_cast<AzPhysics::RigidBody*>(body);
+            AZ_Assert(rigidbody, "Requested simulated body is not a rigid body");
+            auto inv = rigidbody->GetTransform().GetInverse();
+            const auto linearVelocity = inv.TransformVector(rigidbody->GetLinearVelocity());
+            m_filterAcceleration.push_back(linearVelocity);
+            const auto angularVelocity = inv.TransformVector(rigidbody->GetAngularVelocity());
+            m_filterAngularVelocity.push_back(angularVelocity);
+            if (m_filterAcceleration.size() > m_filterSize)
             {
-                m_acceleration += inv.TransformVector(gravity);
+                m_filterAcceleration.pop_front();
+                m_filterAngularVelocity.pop_front();
             }
-            m_imuMsg.linear_acceleration = ROS2Conversions::ToROS2Vector3(m_acceleration);
-            m_imuMsg.angular_velocity = ROS2Conversions::ToROS2Vector3(angularRateFiltered);
-            if (m_absoluteRotation)
+            if (IsPublicationDeadline(deltaTime))
             {
-                m_imuMsg.orientation = ROS2Conversions::ToROS2Quaternion(rigidbody->GetTransform().GetRotation());
+                const AZ::Vector3 linearVelocityFilter =
+                    AZStd::accumulate(m_filterAcceleration.begin(), m_filterAcceleration.end(), AZ::Vector3{ 0 }) / m_filterAcceleration.size();
+
+                const AZ::Vector3 angularRateFiltered =
+                    AZStd::accumulate(m_filterAngularVelocity.begin(), m_filterAngularVelocity.end(), AZ::Vector3{ 0 }) /
+                    m_filterAngularVelocity.size();
+
+                auto acc = (linearVelocityFilter - m_previousLinearVelocity) / deltaTime;
+
+                m_previousLinearVelocity = linearVelocityFilter;
+                m_acceleration = -acc + angularRateFiltered.Cross(linearVelocityFilter);
+                if (m_includeGravity)
+                {
+                    m_acceleration += inv.TransformVector(gravity);
+                }
+                m_imuMsg.linear_acceleration = ROS2Conversions::ToROS2Vector3(m_acceleration);
+                m_imuMsg.angular_velocity = ROS2Conversions::ToROS2Vector3(angularRateFiltered);
+                if (m_absoluteRotation)
+                {
+                    m_imuMsg.orientation = ROS2Conversions::ToROS2Quaternion(rigidbody->GetTransform().GetRotation());
+                }
+                m_imuMsg.header.stamp = ROS2Interface::Get()->GetROSTimestamp();
+                this->m_imuPublisher->publish(m_imuMsg);
             }
-            m_imuMsg.header.stamp = ROS2Interface::Get()->GetROSTimestamp();
-            this->m_imuPublisher->publish(m_imuMsg);
         }
     };
 
     void ROS2ImuSensorComponent::Activate()
     {
-        auto ros2Node = ROS2Interface::Get()->GetNode();
-        AZ_Assert(m_sensorConfiguration.m_publishersConfigurations.size() == 1, "Invalid configuration of publishers for IMU sensor");
-        m_imuMsg.header.frame_id = GetFrameID().c_str();
-        const auto publisherConfig = m_sensorConfiguration.m_publishersConfigurations[Internal::kImuMsgType];
-        const auto fullTopic = ROS2Names::GetNamespacedName(GetNamespace(), publisherConfig.m_topic);
-        m_imuPublisher = ros2Node->create_publisher<sensor_msgs::msg::Imu>(fullTopic.data(), publisherConfig.GetQoS());
-        ROS2SensorComponent::Activate();
+        if (ROS2::Utils::IsAutonomousOrNonMultiplayer(GetEntity()))
+        {
+            auto ros2Node = ROS2Interface::Get()->GetNode();
+            AZ_Assert(m_sensorConfiguration.m_publishersConfigurations.size() == 1, "Invalid configuration of publishers for IMU sensor");
+            m_imuMsg.header.frame_id = GetFrameID().c_str();
+            const auto publisherConfig = m_sensorConfiguration.m_publishersConfigurations[Internal::kImuMsgType];
+            const auto fullTopic = ROS2Names::GetNamespacedName(GetNamespace(), publisherConfig.m_topic);
+            m_imuPublisher = ros2Node->create_publisher<sensor_msgs::msg::Imu>(fullTopic.data(), publisherConfig.GetQoS());
+            ROS2SensorComponent::Activate();
+        }
     }
 
     void ROS2ImuSensorComponent::Deactivate()
     {
-        RemovePhysicalCallback();
-        m_bodyHandle = AzPhysics::InvalidSimulatedBodyHandle;
-        m_imuPublisher.reset();
+        if (m_imuPublisher)
+        {
+            RemovePhysicalCallback();
+            m_bodyHandle = AzPhysics::InvalidSimulatedBodyHandle;
+            m_imuPublisher.reset();
+        }
     }
 
 } // namespace ROS2

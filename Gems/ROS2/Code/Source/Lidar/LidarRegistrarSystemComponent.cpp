@@ -10,6 +10,7 @@
 #include <AzCore/Serialization/SerializeContext.h>
 #include <Lidar/LidarRegistrarSystemComponent.h>
 #include <Lidar/LidarTemplate.h>
+#include <ROS2/ROS2GemUtilities.h>
 
 namespace ROS2
 {
@@ -35,7 +36,10 @@ namespace ROS2
 
     void LidarRegistrarSystemComponent::Activate()
     {
-        m_physxLidarSystem.Activate();
+        if (ROS2::Utils::IsAutonomousOrNonMultiplayer(GetEntity()))
+        {
+            m_physxLidarSystem.Activate();
+        }
     }
 
     void LidarRegistrarSystemComponent::Deactivate()
