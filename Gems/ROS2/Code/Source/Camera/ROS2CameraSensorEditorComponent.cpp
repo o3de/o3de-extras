@@ -80,9 +80,9 @@ namespace ROS2
         incompatible.push_back(AZ_CRC_CE("ROS2CameraSensor"));
     }
 
-    void ROS2CameraSensorEditorComponent::GetProvidedServices(AZ::ComponentDescriptor::DependencyArrayType& required)
+    void ROS2CameraSensorEditorComponent::GetProvidedServices(AZ::ComponentDescriptor::DependencyArrayType& provided)
     {
-        required.push_back(AZ_CRC_CE("ROS2CameraSensor"));
+        provided.push_back(AZ_CRC_CE("ROS2CameraSensor"));
     }
 
     void ROS2CameraSensorEditorComponent::BuildGameEntity(AZ::Entity* gameEntity)
