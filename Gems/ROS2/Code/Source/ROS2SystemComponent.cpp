@@ -90,6 +90,9 @@ namespace ROS2
         }
         AZ_Printf("ROS2SystemComponent", "Enabling realtime clock");
         m_simulationClock = AZStd::make_unique<SimulationClock>();
+
+        m_spawnerInterface = ROS2SpawnerInterface();
+
         return;
     }
 

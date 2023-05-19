@@ -9,9 +9,12 @@
 #include "URDFPrefabMaker.h"
 #include "CollidersMaker.h"
 #include "PrefabMakerUtils.h"
+#include "Spawner/ROS2SpawnerInterface.h"
 #include <API/EditorAssetSystemAPI.h>
 #include <AzCore/Debug/Trace.h>
 #include <AzCore/IO/FileIO.h>
+#include <AzCore/Math/Transform.h>
+#include <AzCore/std/smart_ptr/make_shared.h>
 #include <AzToolsFramework/Entity/EditorEntityHelpers.h>
 #include <AzToolsFramework/Prefab/PrefabLoaderInterface.h>
 #include <AzToolsFramework/Prefab/PrefabSystemComponentInterface.h>
@@ -19,7 +22,7 @@
 #include <AzToolsFramework/ToolsComponents/TransformComponent.h>
 #include <ROS2/Frame/ROS2FrameComponent.h>
 #include <ROS2/ROS2GemUtilities.h>
-#include <ROS2/Spawner/SpawnerBus.h>
+#include <ROS2/Spawner/SpawnerInterface.h>
 #include <RobotControl/ROS2RobotControlComponent.h>
 #include <RobotImporter/Utils/RobotImporterUtils.h>
 
@@ -30,12 +33,14 @@ namespace ROS2
         urdf::ModelInterfaceSharedPtr model,
         AZStd::string prefabPath,
         const AZStd::shared_ptr<Utils::UrdfAssetMap> urdfAssetsMapping,
+        const AZStd::shared_ptr<AZ::Transform> spawnPosition,
         bool useArticulations)
         : m_model(model)
         , m_visualsMaker(model->materials_, urdfAssetsMapping)
         , m_collidersMaker(urdfAssetsMapping)
         , m_prefabPath(std::move(prefabPath))
         , m_urdfAssetsMapping(urdfAssetsMapping)
+        , m_spawnPosition(spawnPosition)
         , m_useArticulations(useArticulations)
     {
         AZ_Assert(!m_prefabPath.empty(), "Prefab path is empty");
@@ -214,7 +219,7 @@ namespace ROS2
             }
         }
 
-        MoveEntityToDefaultSpawnPoint(createEntityRoot.GetValue());
+        MoveEntityToDefaultSpawnPoint(createEntityRoot.GetValue(), m_spawnPosition);
 
         auto contentEntityId = createEntityRoot.GetValue();
         AddRobotControl(contentEntityId);
@@ -313,13 +318,18 @@ namespace ROS2
         return m_prefabPath;
     }
 
-    void URDFPrefabMaker::MoveEntityToDefaultSpawnPoint(const AZ::EntityId& rootEntityId)
+    void URDFPrefabMaker::MoveEntityToDefaultSpawnPoint(
+        const AZ::EntityId& rootEntityId, AZStd::shared_ptr<AZ::Transform> spawnPosition = nullptr)
     {
-        auto spawner = ROS2::SpawnerInterface::Get();
-
-        if (spawner == nullptr)
+        if (spawnPosition == nullptr)
         {
-            AZ_TracePrintf("URDF Importer", "Spawner not found - creating entity in (0,0,0)\n") return;
+            auto spawnerInterface = ROS2::SpawnerInterface::Get();
+            if (spawnerInterface == nullptr)
+            {
+                AZ_TracePrintf("URDF Importer", "Spawner interface is null - creating entity in (0,0,0)\n") return;
+            }
+            spawnPosition = AZStd::make_shared<AZ::Transform>(spawnerInterface->GetDefaultSpawnPose());
+            AZ_TracePrintf("URDF Importer", "SpawnPosition is null - creating entity in default position\n");
         }
 
         auto entity_ = AzToolsFramework::GetEntityById(rootEntityId);
@@ -330,9 +340,8 @@ namespace ROS2
             AZ_TracePrintf("URDF Importer", "TransformComponent not found in created entity\n") return;
         }
 
-        auto pose = spawner->GetDefaultSpawnPose();
-
-        transformInterface_->SetWorldTM(pose);
+        transformInterface_->SetWorldTM(*spawnPosition);
+        AZ_TracePrintf("URDF Importer", "Successfully set spawn position\n")
     }
 
     AZStd::string URDFPrefabMaker::GetStatus()

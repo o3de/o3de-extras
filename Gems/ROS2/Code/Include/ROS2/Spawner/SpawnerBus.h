@@ -31,5 +31,4 @@ namespace ROS2
     };
 
     using SpawnerRequestsBus = AZ::EBus<SpawnerRequests>;
-    using SpawnerInterface = AZ::Interface<SpawnerRequests>;
 } // namespace ROS2

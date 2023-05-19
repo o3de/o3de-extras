@@ -11,6 +11,7 @@
 #include <AzCore/Utils/Utils.h>
 
 #include "RobotImporterWidget.h"
+#include "Spawner/ROS2SpawnerInterface.h"
 #include "URDF/URDFPrefabMaker.h"
 #include "URDF/UrdfParser.h"
 #include "Utils/RobotImporterUtils.h"
@@ -356,7 +357,12 @@ namespace ROS2
         }
         const bool useArticulation = m_prefabMakerPage->IsUseArticulations();
         m_prefabMaker = AZStd::make_unique<URDFPrefabMaker>(
-            m_urdfPath.String(), m_parsedUrdf, prefabPath.String(), m_urdfAssetsMapping, useArticulation);
+            m_urdfPath.String(),
+            m_parsedUrdf,
+            prefabPath.String(),
+            m_urdfAssetsMapping,
+            m_prefabMakerPage->getSelectedSpawnPoint(),
+            useArticulation);
 
         auto prefabOutcome = m_prefabMaker->CreatePrefabFromURDF();
         if (prefabOutcome.IsSuccess())

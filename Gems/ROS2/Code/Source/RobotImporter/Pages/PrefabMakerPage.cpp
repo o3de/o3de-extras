@@ -7,7 +7,13 @@
  */
 
 #include "PrefabMakerPage.h"
+#include "Spawner/ROS2SpawnerInterface.h"
+#include <AzCore/Component/Entity.h>
+#include <AzCore/Debug/Trace.h>
 #include <RobotImporter/RobotImporterWidget.h>
+#include <cstdint>
+#include <qcombobox.h>
+#include <qlabel.h>
 
 namespace ROS2
 {
@@ -17,6 +23,21 @@ namespace ROS2
         , m_parentImporterWidget(parent)
         , m_success(false)
     {
+        auto spawnerInterface = ROS2::SpawnerInterface::Get();
+        if (spawnerInterface != nullptr)
+        {
+            m_spawnPointsInfos = spawnerInterface->GetAllSpawnPoints();
+        }
+        else
+        {
+            AZ_TracePrintf("PrefabMakerPage", "Spawner interface not found");
+        }
+        m_spawnPointsList = new QComboBox(this);
+        for (uint32_t i = 0; i < m_spawnPointsInfos.size(); i++)
+        {
+            m_spawnPointsList->addItem(m_spawnPointsInfos[i].first.c_str(), QVariant(i + 1));
+        }
+
         m_prefabName = new QLineEdit(this);
         m_createButton = new QPushButton(tr("Create Prefab"), this);
         m_log = new QTextEdit(this);
@@ -28,6 +49,9 @@ namespace ROS2
         layoutInner->addWidget(m_createButton);
         layout->addLayout(layoutInner);
         layout->addWidget(m_useArticulation);
+        auto spawnPointListLabel = new QLabel("Select spawn position", this);
+        layout->addWidget(spawnPointListLabel);
+        layout->addWidget(m_spawnPointsList);
         layout->addWidget(m_log);
         setLayout(layout);
         connect(m_createButton, &QPushButton::pressed, this, &PrefabMakerPage::onCreateButtonPressed);
@@ -59,6 +83,10 @@ namespace ROS2
     bool PrefabMakerPage::IsUseArticulations() const
     {
         return m_useArticulation->isChecked();
+    }
+    AZStd::shared_ptr<AZ::Transform> PrefabMakerPage::getSelectedSpawnPoint() const
+    {
+        return m_spawnPointsInfos[m_spawnPointsList->currentIndex()].second;
     }
 
 } // namespace ROS2

@@ -7,6 +7,7 @@
  */
 #pragma once
 
+#include "Spawner/ROS2SpawnerInterface.h"
 #include <Atom/RPI.Public/Pass/PassSystemInterface.h>
 #include <AzCore/Component/Component.h>
 #include <AzCore/Component/TickBus.h>
@@ -87,5 +88,7 @@ namespace ROS2
         //! Load the pass templates of the ROS2 gem.
         void LoadPassTemplateMappings();
         AZ::RPI::PassSystemInterface::OnReadyLoadTemplatesEvent::Handler m_loadTemplatesHandler;
+        // Interface for spawning robots
+        ROS2SpawnerInterface m_spawnerInterface;
     };
 } // namespace ROS2
