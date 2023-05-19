@@ -56,20 +56,20 @@ namespace ROS2
         const auto* component = Utils::GetGameOrEditorComponent<ROS2FrameComponent>(GetEntity());
         AZ_Assert(component, "Entity has no ROS2FrameComponent");
         m_frameName = component->GetFrameID();
+        ROS2::CameraCalibrationRequestBus::Handler::BusConnect(GetEntityId());
     }
 
     void ROS2CameraSensorComponent::Deactivate()
     {
         m_cameraSensor.reset();
         ROS2SensorComponent::Deactivate();
+        ROS2::CameraCalibrationRequestBus::Handler::BusDisconnect(GetEntityId());
     }
 
     AZ::Matrix3x3 ROS2CameraSensorComponent::GetCameraMatrix() const
     {
         return CameraUtils::MakeCameraIntrinsics(
-            m_cameraConfiguration.m_width,
-            m_cameraConfiguration.m_height,
-            m_cameraConfiguration.m_verticalFieldOfViewDeg);
+            m_cameraConfiguration.m_width, m_cameraConfiguration.m_height, m_cameraConfiguration.m_verticalFieldOfViewDeg);
     };
 
     int ROS2CameraSensorComponent::GetWidth() const
@@ -86,7 +86,6 @@ namespace ROS2
     {
         return m_cameraConfiguration.m_verticalFieldOfViewDeg;
     };
-
 
     void ROS2CameraSensorComponent::GetRequiredServices(AZ::ComponentDescriptor::DependencyArrayType& required)
     {

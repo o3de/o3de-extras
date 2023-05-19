@@ -13,10 +13,10 @@
 #include <AzToolsFramework/ToolsComponents/EditorComponentBase.h>
 
 #include "CameraSensorConfiguration.h"
+#include <ROS2/Camera/CameraCalibrationRequestBus.h>
 #include <ROS2/Frame/NamespaceConfiguration.h>
 #include <ROS2/Frame/ROS2Transform.h>
 #include <ROS2/Sensor/SensorConfiguration.h>
-#include <ROS2/Camera/CameraCalibrationRequestBus.h>
 
 namespace ROS2
 {
@@ -48,6 +48,7 @@ namespace ROS2
         int GetWidth() const override;
         int GetHeight() const override;
         float GetVerticalFOV() const override;
+
     private:
         // EntityDebugDisplayEventBus::Handler overrides
         void DisplayEntityViewport(const AzFramework::ViewportInfo& viewportInfo, AzFramework::DebugDisplayRequests& debugDisplay) override;

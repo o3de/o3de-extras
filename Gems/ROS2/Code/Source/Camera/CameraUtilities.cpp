@@ -25,7 +25,7 @@ namespace ROS2::CameraUtils
         const float horizontalFoV = 2.0 * AZStd::atan(AZStd::tan(verticalFieldOfView / 2.0) * GetAspectRatio(width, height));
         const float focalLengthX = w / (2.0 * AZStd::tan(horizontalFoV / 2.0));
         const float focalLengthY = h / (2.0 * AZStd::tan(verticalFieldOfView / 2.0));
-        return AZ::Matrix3x3::CreateFromRows({ focalLengthX, 0.f, w / 2.f}, {0.f, focalLengthY, h / 2.f}, {0.f, 0.f, 1.f});
+        return AZ::Matrix3x3::CreateFromRows({ focalLengthX, 0.f, w / 2.f }, { 0.f, focalLengthY, h / 2.f }, { 0.f, 0.f, 1.f });
     }
 
     AZ::Matrix4x4 MakeClipMatrix(int width, int height, float verticalFieldOfViewDeg, float nearDist, float farDist)

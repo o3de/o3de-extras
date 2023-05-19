@@ -6,9 +6,9 @@
  *
  */
 
+#include "ROS2CameraSensorEditorComponent.h"
 #include "CameraConstants.h"
 #include "CameraUtilities.h"
-#include "ROS2CameraSensorEditorComponent.h"
 #include "ROS2CameraSensorComponent.h"
 #include <AzCore/Component/TransformBus.h>
 #include <ROS2/Frame/ROS2FrameComponent.h>
@@ -63,12 +63,14 @@ namespace ROS2
     {
         AzFramework::EntityDebugDisplayEventBus::Handler::BusConnect(this->GetEntityId());
         AzToolsFramework::Components::EditorComponentBase::Activate();
+        ROS2::CameraCalibrationRequestBus::Handler::BusConnect(GetEntityId());
     }
 
     void ROS2CameraSensorEditorComponent::Deactivate()
     {
         AzToolsFramework::Components::EditorComponentBase::Deactivate();
         AzFramework::EntityDebugDisplayEventBus::Handler::BusDisconnect();
+        ROS2::CameraCalibrationRequestBus::Handler::BusDisconnect(GetEntityId());
     }
 
     void ROS2CameraSensorEditorComponent::GetRequiredServices(AZ::ComponentDescriptor::DependencyArrayType& required)

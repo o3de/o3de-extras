@@ -16,9 +16,9 @@
 
 #include "CameraSensor.h"
 #include "CameraSensorConfiguration.h"
+#include <ROS2/Camera/CameraCalibrationRequestBus.h>
 #include <ROS2/ROS2Bus.h>
 #include <ROS2/Sensor/ROS2SensorComponent.h>
-#include <ROS2/Camera/CameraCalibrationRequestBus.h>
 
 namespace ROS2
 {
@@ -29,8 +29,9 @@ namespace ROS2
     //!   - camera image width and height in pixels
     //!   - camera vertical field of view in degrees
     //! Camera frustum is facing negative Z axis; image plane is parallel to X,Y plane: X - right, Y - up
-    class ROS2CameraSensorComponent : public ROS2SensorComponent,
-                                      public CameraCalibrationRequestBus::Handler
+    class ROS2CameraSensorComponent
+        : public ROS2SensorComponent
+        , public CameraCalibrationRequestBus::Handler
     {
     public:
         ROS2CameraSensorComponent() = default;
@@ -51,6 +52,7 @@ namespace ROS2
         int GetWidth() const override;
         int GetHeight() const override;
         float GetVerticalFOV() const override;
+
     private:
         //! Helper that adds an image source.
         //! @tparam CameraType type of camera sensor (eg 'CameraColorSensor')

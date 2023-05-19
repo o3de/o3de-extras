@@ -88,13 +88,17 @@ namespace ROS2
 
             [[maybe_unused]] constexpr size_t expectedMatrixSize = 9;
             AZ_Assert(cameraInfo.k.size() == expectedMatrixSize, "camera matrix should have %d elements", expectedMatrixSize);
-            // CLANG-FORMAT-OFF
-            cameraInfo.k = { cameraIntrinsics.GetElement(0,0), 0, cameraIntrinsics.GetElement(0,2),
-                             0, cameraIntrinsics.GetElement(1,1), cameraIntrinsics.GetElement(1,2),
-                             0, 0, 1};
+            cameraInfo.k = { cameraIntrinsics.GetElement(0, 0),
+                             0,
+                             cameraIntrinsics.GetElement(0, 2),
+                             0,
+                             cameraIntrinsics.GetElement(1, 1),
+                             cameraIntrinsics.GetElement(1, 2),
+                             0,
+                             0,
+                             1 };
             cameraInfo.p = { cameraInfo.k[0], cameraInfo.k[1], cameraInfo.k[2], 0, cameraInfo.k[3], cameraInfo.k[4], cameraInfo.k[5], 0,
                              cameraInfo.k[6], cameraInfo.k[7], cameraInfo.k[8], 0 };
-            // CLANG-FORMAT-ON
             cameraInfo.header = header;
             return cameraInfo;
         }

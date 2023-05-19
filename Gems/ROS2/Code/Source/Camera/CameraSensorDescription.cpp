@@ -7,8 +7,8 @@
  */
 
 #include "CameraSensorDescription.h"
-#include <AzCore/Math/MatrixUtils.h>
 #include "CameraUtilities.h"
+#include <AzCore/Math/MatrixUtils.h>
 
 namespace ROS2
 {
@@ -21,9 +21,9 @@ namespace ROS2
         , m_sensorConfiguration(sensorConfiguration)
         , m_cameraName(cameraName)
         , m_cameraNamespace(effectiveNamespace)
-        , m_viewToClipMatrix( CameraUtils::MakeClipMatrix(
+        , m_viewToClipMatrix(CameraUtils::MakeClipMatrix(
               m_cameraConfiguration.m_width, m_cameraConfiguration.m_height, m_cameraConfiguration.m_verticalFieldOfViewDeg))
-        , m_cameraIntrinsics( CameraUtils::MakeCameraIntrinsics(
+        , m_cameraIntrinsics(CameraUtils::MakeCameraIntrinsics(
               m_cameraConfiguration.m_width, m_cameraConfiguration.m_height, m_cameraConfiguration.m_verticalFieldOfViewDeg))
     {
         ValidateParameters();
