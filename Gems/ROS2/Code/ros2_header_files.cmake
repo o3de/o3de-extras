@@ -4,6 +4,7 @@
 # SPDX-License-Identifier: Apache-2.0 OR MIT
 
 set(FILES
+        Include/ROS2/Camera/CameraCalibrationRequestBus.h
         Include/ROS2/Camera/CameraPostProcessingRequestBus.h
         Include/ROS2/Clock/PhysicallyStableClock.h
         Include/ROS2/Clock/SimulationClock.h

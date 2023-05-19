@@ -7,6 +7,7 @@
  */
 
 #include "CameraConstants.h"
+#include "CameraUtilities.h"
 #include "ROS2CameraSensorEditorComponent.h"
 #include "ROS2CameraSensorComponent.h"
 #include <AzCore/Component/TransformBus.h>
@@ -89,6 +90,29 @@ namespace ROS2
     {
         gameEntity->CreateComponent<ROS2::ROS2CameraSensorComponent>(m_sensorConfiguration, m_cameraSensorConfiguration);
     }
+
+    AZ::Matrix3x3 ROS2CameraSensorEditorComponent::GetCameraMatrix() const
+    {
+        return CameraUtils::MakeCameraIntrinsics(
+            m_cameraSensorConfiguration.m_width,
+            m_cameraSensorConfiguration.m_height,
+            m_cameraSensorConfiguration.m_verticalFieldOfViewDeg);
+    };
+
+    int ROS2CameraSensorEditorComponent::GetWidth() const
+    {
+        return m_cameraSensorConfiguration.m_width;
+    };
+
+    int ROS2CameraSensorEditorComponent::GetHeight() const
+    {
+        return m_cameraSensorConfiguration.m_height;
+    };
+
+    float ROS2CameraSensorEditorComponent::GetVerticalFOV() const
+    {
+        return m_cameraSensorConfiguration.m_verticalFieldOfViewDeg;
+    };
 
     void ROS2CameraSensorEditorComponent::DisplayEntityViewport(
         [[maybe_unused]] const AzFramework::ViewportInfo& viewportInfo, AzFramework::DebugDisplayRequests& debugDisplay)

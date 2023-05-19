@@ -16,6 +16,7 @@
 #include <ROS2/Frame/NamespaceConfiguration.h>
 #include <ROS2/Frame/ROS2Transform.h>
 #include <ROS2/Sensor/SensorConfiguration.h>
+#include <ROS2/Camera/CameraCalibrationRequestBus.h>
 
 namespace ROS2
 {
@@ -24,6 +25,7 @@ namespace ROS2
     //! Component draws camera frustrum in the Editor
     class ROS2CameraSensorEditorComponent
         : public AzToolsFramework::Components::EditorComponentBase
+        , public CameraCalibrationRequestBus::Handler
         , protected AzFramework::EntityDebugDisplayEventBus::Handler
     {
     public:
@@ -41,6 +43,11 @@ namespace ROS2
         // AzToolsFramework::Components::EditorComponentBase overrides
         void BuildGameEntity(AZ::Entity* gameEntity) override;
 
+        // CameraCalibrationRequestBus::Handler overrides
+        AZ::Matrix3x3 GetCameraMatrix() const override;
+        int GetWidth() const override;
+        int GetHeight() const override;
+        float GetVerticalFOV() const override;
     private:
         // EntityDebugDisplayEventBus::Handler overrides
         void DisplayEntityViewport(const AzFramework::ViewportInfo& viewportInfo, AzFramework::DebugDisplayRequests& debugDisplay) override;

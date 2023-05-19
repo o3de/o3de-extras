@@ -18,6 +18,7 @@
 #include "CameraSensorConfiguration.h"
 #include <ROS2/ROS2Bus.h>
 #include <ROS2/Sensor/ROS2SensorComponent.h>
+#include <ROS2/Camera/CameraCalibrationRequestBus.h>
 
 namespace ROS2
 {
@@ -28,7 +29,8 @@ namespace ROS2
     //!   - camera image width and height in pixels
     //!   - camera vertical field of view in degrees
     //! Camera frustum is facing negative Z axis; image plane is parallel to X,Y plane: X - right, Y - up
-    class ROS2CameraSensorComponent : public ROS2SensorComponent
+    class ROS2CameraSensorComponent : public ROS2SensorComponent,
+                                      public CameraCalibrationRequestBus::Handler
     {
     public:
         ROS2CameraSensorComponent() = default;
@@ -40,9 +42,15 @@ namespace ROS2
         AZ_COMPONENT(ROS2CameraSensorComponent, "{3C6B8AE6-9721-4639-B8F9-D8D28FD7A071}", ROS2SensorComponent);
         static void Reflect(AZ::ReflectContext* context);
 
+        // AzToolsFramework::Components::EditorComponentBase overrides ..
         void Activate() override;
         void Deactivate() override;
 
+        // CameraCalibrationRequestBus::Handler overrides ...
+        AZ::Matrix3x3 GetCameraMatrix() const override;
+        int GetWidth() const override;
+        int GetHeight() const override;
+        float GetVerticalFOV() const override;
     private:
         //! Helper that adds an image source.
         //! @tparam CameraType type of camera sensor (eg 'CameraColorSensor')

@@ -37,9 +37,6 @@ namespace ROS2
             const CameraSensorConfiguration& configuration,
             const SensorConfiguration& sensorConfiguration);
 
-        //! Camera image aspect ratio.
-        //! @returns aspect ration, equal to (width / height).
-        float GetAspectRatio() const;
 
         const CameraSensorConfiguration m_cameraConfiguration; //!< Configuration of the camera.
         const SensorConfiguration m_sensorConfiguration; //!< Generic sensor configuration.
@@ -48,11 +45,9 @@ namespace ROS2
 
 
         const AZ::Matrix4x4 m_viewToClipMatrix; //!< Camera view to clip space transform matrix; derived from other parameters.
-        const AZStd::array<double, 9> m_cameraIntrinsics; //!< Camera intrinsics; derived from other parameters.
+        const AZ::Matrix3x3 m_cameraIntrinsics; //!< Camera intrinsics; derived from other parameters.
 
     private:
-        AZ::Matrix4x4 MakeViewToClipMatrix() const;
-        AZStd::array<double, 9> MakeCameraIntrinsics() const;
         void ValidateParameters() const;
     };
 } // namespace ROS2

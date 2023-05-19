@@ -20,6 +20,8 @@ set(FILES
         Source/Camera/CameraSensorConfiguration.h
         Source/Camera/ROS2CameraSensorComponent.cpp
         Source/Camera/ROS2CameraSensorComponent.h
+        Source/Camera/CameraUtilities.cpp
+        Source/Camera/CameraUtilities.h
         Source/Clock/PhysicallyStableClock.cpp
         Source/Clock/SimulationClock.cpp
         Source/Communication/QoS.cpp

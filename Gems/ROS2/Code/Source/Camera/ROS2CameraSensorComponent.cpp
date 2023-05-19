@@ -64,6 +64,30 @@ namespace ROS2
         ROS2SensorComponent::Deactivate();
     }
 
+    AZ::Matrix3x3 ROS2CameraSensorComponent::GetCameraMatrix() const
+    {
+        return CameraUtils::MakeCameraIntrinsics(
+            m_cameraConfiguration.m_width,
+            m_cameraConfiguration.m_height,
+            m_cameraConfiguration.m_verticalFieldOfViewDeg);
+    };
+
+    int ROS2CameraSensorComponent::GetWidth() const
+    {
+        return m_cameraConfiguration.m_width;
+    };
+
+    int ROS2CameraSensorComponent::GetHeight() const
+    {
+        return m_cameraConfiguration.m_height;
+    };
+
+    float ROS2CameraSensorComponent::GetVerticalFOV() const
+    {
+        return m_cameraConfiguration.m_verticalFieldOfViewDeg;
+    };
+
+
     void ROS2CameraSensorComponent::GetRequiredServices(AZ::ComponentDescriptor::DependencyArrayType& required)
     {
         required.push_back(AZ_CRC("ROS2Frame"));
