@@ -20,8 +20,12 @@ namespace ROS2
         static void Reflect(AZ::ReflectContext* context);
 
         float m_verticalFieldOfViewDeg = 90.0f; //!< Vertical field of view of camera sensor.
+        float m_minVerticalFieldOfViewDeg = 0.0f;
+        float m_maxVerticalFieldOfViewDeg = 360.0f;
         int m_width = 640; //!< Camera image width in pixels.
+        int m_minWidth = 1;
         int m_height = 480; //!< Camera image height in pixels.
+        int m_minHeight = 1;
         bool m_colorCamera = true; //!< Use color camera?
         bool m_depthCamera = true; //!< Use depth camera?
     };

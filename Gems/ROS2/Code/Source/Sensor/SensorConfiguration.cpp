@@ -9,6 +9,7 @@
 #include <AzCore/Serialization/EditContext.h>
 #include <AzCore/Serialization/EditContextConstants.inl>
 #include <ROS2/Sensor/SensorConfiguration.h>
+#include <limits>
 
 namespace ROS2
 {
@@ -37,6 +38,7 @@ namespace ROS2
                         "Toggle publishing for topic")
                     ->DataElement(
                         AZ::Edit::UIHandlers::Default, &SensorConfiguration::m_frequency, "Frequency", "Frequency of publishing [Hz]")
+                    ->Attribute(AZ::Edit::Attributes::Min, AZStd::numeric_limits<float>::epsilon())
                     ->DataElement(
                         AZ::Edit::UIHandlers::Default, &SensorConfiguration::m_publishersConfigurations, "Publishers", "Publishers")
                     ->Attribute(AZ::Edit::Attributes::AutoExpand, true)
