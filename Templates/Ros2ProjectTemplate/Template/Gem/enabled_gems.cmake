@@ -33,6 +33,5 @@ set(ENABLED_GEMS
     WarehouseSample
     RosRobotSample
     ROS2
-    PhysXDebug
     ImGui
 )
