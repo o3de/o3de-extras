@@ -1,12 +1,2583 @@
 {
-    "repo_name": "O3DE Extras - Extras gems, projects, and templates for O3DE",
+    "repo_name": "O3DE Extras",
     "origin": "o3de-extras",
     "repo_uri": "https://raw.githubusercontent.com/o3de/o3de-extras/development",
     "summary": "A repository to hold various gems, projects, and templates for the O3DE engine.",
-    "additional_info": "See the README.md at the root of this repository for more information",
+    "additional_info": "Extras gems, projects, and templates for O3DE. See the README.md at the root of this repository for more information",
     "last_updated": "2022-09-27",
+    "$schemaVersion": "1.0.0",
+    "gems_data": [
+        {
+            "gem_name": "AzQtComponentsForPython",
+            "display_name": "AzQtComponents For Python",
+            "license": "Apache-2.0 Or MIT",
+            "license_url": "https://github.com/o3de/o3de/blob/development/LICENSE.txt",
+            "origin": "Open 3D Engine - o3de.org",
+            "origin_url": "https://github.com/o3de/o3de",
+            "type": "Code",
+            "summary": "This gem provides a library to use the AzQtComponents library from Python.",
+            "canonical_tags": [
+                "Gem"
+            ],
+            "user_tags": [
+                "Scripting",
+                "UI"
+            ],
+            "icon_path": "preview.png",
+            "requirements": "",
+            "documentation_url": "",
+            "dependencies": [
+                "EditorPythonBindings"
+            ],
+            "repo_uri": "https://raw.githubusercontent.com/o3de/o3de-extras/development",
+            "version": "1.0.0",
+            "versions_data": [
+                {
+                    "download_source_uri": "https://github.com/o3de/o3de-extras/releases/download/2.0/azqtcomponentsforpython-1.0.0-gem.zip",
+                    "sha256": "ef75e9811b11e081bd4d16d62b638208fe9f0bd8966cfaff937e64b59343f5f7",
+                    "version": "1.0.0"
+                }
+            ]
+        },
+        {
+            "gem_name": "OpenXRVk",
+            "display_name": "OpenXR Vulkan",
+            "license": "Apache-2.0 Or MIT",
+            "license_url": "https://github.com/o3de/o3de/blob/development/LICENSE.txt",
+            "origin": "Open 3D Engine - o3de.org",
+            "origin_url": "https://github.com/o3de/o3de",
+            "type": "Code",
+            "summary": "OpenXR Vulcan for Atom",
+            "canonical_tags": [
+                "Gem"
+            ],
+            "user_tags": [],
+            "requirements": "",
+            "documentation_url": "",
+            "dependencies": [],
+            "repo_uri": "https://raw.githubusercontent.com/o3de/o3de-extras/development",
+            "version": "1.0.0",
+            "sha256": "dd58e9e95f7c4d4f107067a6d3a803da4eecd477610e9d67795777b49d5c892c",
+            "versions_data": [
+                {
+                    "download_source_uri": "https://github.com/o3de/o3de-extras/releases/download/2.0/openxrvk-1.0.0-gem.zip",
+                    "sha256": "cced7bcde96fb29f527542c72d7838319d199e272f2cac9d69dd171521883b0a",
+                    "version": "1.0.0"
+                }
+            ]
+        },
+        {
+            "gem_name": "ProteusRobot",
+            "version": "1.0.0",
+            "display_name": "Proteus Robot",
+            "license": "Apache-2.0",
+            "license_url": "https://opensource.org/licenses/Apache-2.0",
+            "origin": "RobotecAI",
+            "origin_url": "https://github.com/o3de/o3de-extras/tree/development/Gems/ProteusRobot",
+            "type": "Asset",
+            "summary": "Proteus warehouse robot with Lidar sensor",
+            "canonical_tags": [
+                "Gem"
+            ],
+            "user_tags": [
+                "ProteusRobot"
+            ],
+            "platforms": [
+                ""
+            ],
+            "icon_path": "preview.png",
+            "requirements": "Requires ROS 2 Gem for the Lidar to function",
+            "documentation_url": "https://www.o3de.org/docs/user-guide/interactivity/robotics/project-configuration/#ros-2-project-templates",
+            "dependencies": [],
+            "repo_uri": "https://raw.githubusercontent.com/o3de/o3de-extras/development",
+            "compatible_engines": [],
+            "engine_api_dependencies": [],
+            "restricted": "ProteusRobot",
+            "download_source_uri": "https://github.com/o3de/o3de-extras/releases/download/2.0/proteusrobot-1.0.0-gem.zip",
+            "sha256": "ae3f973f061d1b8d52e3ced34dd9862ee48b64be4eebaebb4a585674a97e8b91",
+            "versions_data": [
+                {
+                    "sha256": "45c906788ed9a83b8ff74fd1b893a54f79e4d3e0674139839afb807260efa0e6",
+                    "version": "1.0.0",
+                    "download_source_uri": "https://github.com/o3de/o3de-extras/releases/download/2.0/proteusrobot-1.0.0-gem.zip"
+                }
+            ]
+        },
+        {
+            "gem_name": "ROS2",
+            "version": "1.0.0",
+            "platforms": [
+                "Linux"
+            ],
+            "display_name": "ROS2",
+            "license": "Apache-2.0",
+            "license_url": "https://opensource.org/licenses/Apache-2.0",
+            "origin": "RobotecAI",
+            "origin_url": "https://github.com/o3de/o3de-extras/development/Gems/ROS2",
+            "type": "Code",
+            "summary": "Tools and components to support creating simulations for ROS 2 systems such as robots",
+            "canonical_tags": [
+                "Gem"
+            ],
+            "user_tags": [
+                "ROS2"
+            ],
+            "compatible_engines": [
+                "o3de-sdk==1.2.0",
+                "o3de>=1.2.0"
+            ],
+            "icon_path": "preview.png",
+            "requirements": "Requires ROS 2 installation (supported distributions: Humble). Source your workspace before building the Gem",
+            "documentation_url": "https://o3de.org/docs/user-guide/gems/reference/design/ros2/",
+            "dependencies": [
+                "Atom_RPI",
+                "Atom_Feature_Common",
+                "Atom_Component_DebugCamera",
+                "CommonFeaturesAtom",
+                "PhysX",
+                "StartingPointInput"
+            ],
+            "restricted": "ROS2",
+            "repo_uri": "https://raw.githubusercontent.com/o3de/o3de-extras/development",
+            "download_source_uri": "https://github.com/o3de/o3de-extras/releases/download/2.0/ros2-1.0.0-gem.zip",
+            "sha256": "fb17868ab3f10d4fb1fae66667281978f68c6f36ea4dd1d814dafdb4fbecc23d",
+            "versions_data": [
+                {
+                    "sha256": "62db01423611893c366c7905b91b165ebfc5da4a09a08ddebddf188e98acdce4",
+                    "version": "1.0.0",
+                    "download_source_uri": "https://github.com/o3de/o3de-extras/releases/download/2.0/ros2-1.0.0-gem.zip"
+                }
+            ]
+        },
+        {
+            "gem_name": "RosRobotSample",
+            "display_name": "ROS Robot Sample",
+            "license": "Apache-2.0 or MIT",
+            "license_url": "https://opensource.org/licenses/Apache-2.0",
+            "origin": "Ros2WarehouseDemo",
+            "origin_url": "https://github.com/o3de/o3de-extras/tree/main/Gems/RosRobotSample",
+            "type": "Asset",
+            "summary": "This project contains a sample robot asset",
+            "canonical_tags": [
+                "Gem"
+            ],
+            "user_tags": [
+                "RosRobotSample"
+            ],
+            "platforms": [
+                "Linux"
+            ],
+            "icon_path": "preview.png",
+            "requirements": "",
+            "documentation_url": "",
+            "dependencies": [
+                "ROS2"
+            ],
+            "repo_uri": "https://raw.githubusercontent.com/o3de/o3de-extras/development",
+            "restricted": "",
+            "download_source_uri": "https://github.com/o3de/o3de-extras/releases/download/2.0/rosrobotsample-1.0.0-gem.zip",
+            "version": "1.0.0",
+            "sha256": "6df46fcd9fff1eaff025fce708a5ca89c178ea001056bae82cc30bb2f3a09a53",
+            "versions_data": [
+                {
+                    "sha256": "be8973571f51d61bd3e56f40ab2d757bd7013c6bb466fe9f04ebb11c13eb7312",
+                    "version": "1.0.0",
+                    "download_source_uri": "https://github.com/o3de/o3de-extras/releases/download/2.0/rosrobotsample-1.0.0-gem.zip"
+                }
+            ]
+        },
+        {
+            "gem_name": "WarehouseAssets",
+            "display_name": "WarehouseAssets",
+            "license": "Apache-2.0 or MIT",
+            "license_url": "https://opensource.org/licenses/Apache-2.0",
+            "origin": "The name of the originator or creator",
+            "origin_url": "https://github.com/o3de/o3de-extras/tree/main/Gems/WarehouseAssets",
+            "type": "Asset",
+            "summary": "A set of prefabs and assets to build large warehouse scenes.",
+            "canonical_tags": [
+                "Gem"
+            ],
+            "user_tags": [
+                "WarehouseAssets"
+            ],
+            "platforms": [
+                ""
+            ],
+            "icon_path": "preview.png",
+            "requirements": "",
+            "documentation_url": "",
+            "dependencies": [],
+            "repo_uri": "https://raw.githubusercontent.com/o3de/o3de-extras/development",
+            "compatible_engines": [],
+            "engine_api_dependencies": [],
+            "restricted": "",
+            "version": "1.0.0",
+            "sha256": "c7844c1a97141d3b6a183a744b0a123a5802b400c2cac75c746b5ccd664538bb",
+            "versions_data": [
+                {
+                    "download_source_uri": "https://github.com/o3de/o3de-extras/releases/download/2.0/warehouseassets-1.0.0-gem.zip",
+                    "sha256": "5e69416d9c25bbcdd205bdaddcae689716044347942631d6b3e56d31b95cf094",
+                    "version": "1.0.0"
+                }
+            ]
+        },
+        {
+            "gem_name": "WarehouseSample",
+            "display_name": "WarehouseSample",
+            "license": "Apache-2.0 or MIT",
+            "license_url": "https://opensource.org/licenses/Apache-2.0",
+            "origin": "WarehouseSample",
+            "origin_url": "https://github.com/o3de/o3de-extras/tree/main/Gems/WarehouseSample",
+            "type": "Asset",
+            "summary": "This project contains a Warehouse sample scene",
+            "canonical_tags": [
+                "Gem"
+            ],
+            "user_tags": [
+                "WarehouseSample"
+            ],
+            "platforms": [
+                ""
+            ],
+            "icon_path": "preview.png",
+            "requirements": "",
+            "documentation_url": "",
+            "dependencies": [],
+            "repo_uri": "https://raw.githubusercontent.com/o3de/o3de-extras/development",
+            "restricted": "",
+            "sha256": "8653a144cd19906ed096f0056263e0f8adce17aec13cd254c8227386ac54ae24",
+            "versions_data": [
+                {
+                    "download_source_uri": "https://github.com/o3de/o3de-extras/releases/download/2.0/warehousesample-1.0.0-gem.zip",
+                    "version": "1.0.0",
+                    "sha256": "2d7860a3b65e655834a06e66dd6e4b79892c62f11095d2a5ccec149fdaf77d49"
+                }
+            ]
+        },
+        {
+            "gem_name": "XR",
+            "display_name": "XR",
+            "license": "Apache-2.0 Or MIT",
+            "license_url": "https://github.com/o3de/o3de/blob/development/LICENSE.txt",
+            "origin": "Open 3D Engine - o3de.org",
+            "origin_url": "https://github.com/o3de/o3de",
+            "type": "Code",
+            "summary": "XR",
+            "canonical_tags": [
+                "Gem"
+            ],
+            "user_tags": [],
+            "requirements": "",
+            "documentation_url": "",
+            "dependencies": [],
+            "repo_uri": "https://raw.githubusercontent.com/o3de/o3de-extras/development",
+            "version": "1.0.0",
+            "sha256": "65f1f53a42a362db329f16cc1edbc5043f7f2b36c6055311c592e680c1cde20c",
+            "versions_data": [
+                {
+                    "download_source_uri": "https://github.com/o3de/o3de-extras/releases/download/2.0/xr-1.0.0-gem.zip",
+                    "sha256": "a7098465bd953864ab996c7eb515e4f46b9b3b601309a024a8aae6182243f3e1",
+                    "version": "1.0.0"
+                }
+            ]
+        }
+    ],
     "templates": [
         "https://github.com/o3de/o3de-extras.git/Templates/Multiplayer",
         "https://github.com/o3de/o3de-extras.git/Templates/Ros2ProjectTemplate"
+    ],
+    "templates_data": [
+        {
+            "template_name": "Multiplayer",
+            "version": "2.0.0",
+            "origin": "Open 3D Engine - o3de.org",
+            "repo_uri": "https://raw.githubusercontent.com/o3de/o3de-extras/development",
+            "license": "https://opensource.org/licenses/MIT",
+            "display_name": "Multiplayer",
+            "summary": "A multiplayer project template. Includes a built in network 3rd person player, player spawner, and network filtering example.",
+            "canonical_tags": [
+                "Template",
+                "Networking"
+            ],
+            "user_tags": [
+                "Multiplayer"
+            ],
+            "icon_path": "preview.png",
+            "copyFiles": [
+                {
+                    "file": "${NameLower}_asset_files.cmake",
+                    "isTemplated": false
+                },
+                {
+                    "file": "BURT/BURT.motionset",
+                    "isTemplated": false
+                },
+                {
+                    "file": "BURT/BURTActor.fbx",
+                    "isTemplated": false
+                },
+                {
+                    "file": "BURT/BURTActor.fbx.assetinfo",
+                    "isTemplated": false
+                },
+                {
+                    "file": "BURT/HumanoidCharacter.animgraph",
+                    "isTemplated": false
+                },
+                {
+                    "file": "BURT/Motions/AimStrafe_Backwards.fbx",
+                    "isTemplated": false
+                },
+                {
+                    "file": "BURT/Motions/AimStrafe_Draw.fbx",
+                    "isTemplated": false
+                },
+                {
+                    "file": "BURT/Motions/AimStrafe_Forwards.fbx",
+                    "isTemplated": false
+                },
+                {
+                    "file": "BURT/Motions/AimStrafe_Holster.fbx",
+                    "isTemplated": false
+                },
+                {
+                    "file": "BURT/Motions/AimStrafe_Idle.fbx",
+                    "isTemplated": false
+                },
+                {
+                    "file": "BURT/Motions/AimStrafe_Left_Backwards.fbx",
+                    "isTemplated": false
+                },
+                {
+                    "file": "BURT/Motions/AimStrafe_Left_Forwards.fbx",
+                    "isTemplated": false
+                },
+                {
+                    "file": "BURT/Motions/AimStrafe_Right_Backwards.fbx",
+                    "isTemplated": false
+                },
+                {
+                    "file": "BURT/Motions/AimStrafe_Right_Forwards.fbx",
+                    "isTemplated": false
+                },
+                {
+                    "file": "BURT/Motions/AimStrafe_Run_Backwards.fbx",
+                    "isTemplated": false
+                },
+                {
+                    "file": "BURT/Motions/AimStrafe_Run_Forwards.fbx",
+                    "isTemplated": false
+                },
+                {
+                    "file": "BURT/Motions/AimStrafe_Run_Left_Forwards.fbx",
+                    "isTemplated": false
+                },
+                {
+                    "file": "BURT/Motions/AimStrafe_Run_Right_Forwards.fbx",
+                    "isTemplated": false
+                },
+                {
+                    "file": "BURT/Motions/AimStrafe_Shoot.fbx",
+                    "isTemplated": false
+                },
+                {
+                    "file": "BURT/Motions/AimStrafe_Shoot.fbx.assetinfo",
+                    "isTemplated": false
+                },
+                {
+                    "file": "BURT/Motions/Aim_1D_Level.fbx",
+                    "isTemplated": false
+                },
+                {
+                    "file": "BURT/Motions/Crouch_Idle.fbx",
+                    "isTemplated": false
+                },
+                {
+                    "file": "BURT/Motions/Crouch_Walk.fbx",
+                    "isTemplated": false
+                },
+                {
+                    "file": "BURT/Motions/Crouch_Walk_Backwards.fbx",
+                    "isTemplated": false
+                },
+                {
+                    "file": "BURT/Motions/Crouch_Walk_Down.fbx",
+                    "isTemplated": false
+                },
+                {
+                    "file": "BURT/Motions/Crouch_Walk_Down.fbx.assetinfo",
+                    "isTemplated": false
+                },
+                {
+                    "file": "BURT/Motions/Crouch_Walk_Up.fbx",
+                    "isTemplated": false
+                },
+                {
+                    "file": "BURT/Motions/Death_Fall_Back.fbx",
+                    "isTemplated": false
+                },
+                {
+                    "file": "BURT/Motions/Death_Fall_Forward.fbx",
+                    "isTemplated": false
+                },
+                {
+                    "file": "BURT/Motions/Idle.fbx",
+                    "isTemplated": false
+                },
+                {
+                    "file": "BURT/Motions/Idle_Alt_A.fbx",
+                    "isTemplated": false
+                },
+                {
+                    "file": "BURT/Motions/Idle_To_Run.fbx",
+                    "isTemplated": false
+                },
+                {
+                    "file": "BURT/Motions/Idle_To_Run_Down.fbx",
+                    "isTemplated": false
+                },
+                {
+                    "file": "BURT/Motions/Idle_To_Run_Left.fbx",
+                    "isTemplated": false
+                },
+                {
+                    "file": "BURT/Motions/Idle_To_Run_Right.fbx",
+                    "isTemplated": false
+                },
+                {
+                    "file": "BURT/Motions/Idle_To_Run_Up.fbx",
+                    "isTemplated": false
+                },
+                {
+                    "file": "BURT/Motions/Idle_To_Walk.fbx",
+                    "isTemplated": false
+                },
+                {
+                    "file": "BURT/Motions/Idle_To_Walk_Down.fbx",
+                    "isTemplated": false
+                },
+                {
+                    "file": "BURT/Motions/Idle_To_Walk_Left.fbx",
+                    "isTemplated": false
+                },
+                {
+                    "file": "BURT/Motions/Idle_To_Walk_Right.fbx",
+                    "isTemplated": false
+                },
+                {
+                    "file": "BURT/Motions/Idle_To_Walk_Up.fbx",
+                    "isTemplated": false
+                },
+                {
+                    "file": "BURT/Motions/Interact.fbx",
+                    "isTemplated": false
+                },
+                {
+                    "file": "BURT/Motions/Interact_In.fbx",
+                    "isTemplated": false
+                },
+                {
+                    "file": "BURT/Motions/Interact_Out.fbx",
+                    "isTemplated": false
+                },
+                {
+                    "file": "BURT/Motions/Jump_DoubleJump_Float.fbx",
+                    "isTemplated": false
+                },
+                {
+                    "file": "BURT/Motions/Jump_DoubleJump_Land_To_Idle.fbx",
+                    "isTemplated": false
+                },
+                {
+                    "file": "BURT/Motions/Jump_DoubleJump_Launch.fbx",
+                    "isTemplated": false
+                },
+                {
+                    "file": "BURT/Motions/Jump_Fall.fbx",
+                    "isTemplated": false
+                },
+                {
+                    "file": "BURT/Motions/Jump_Land_Hard.fbx",
+                    "isTemplated": false
+                },
+                {
+                    "file": "BURT/Motions/Jump_Land_Medium.fbx",
+                    "isTemplated": false
+                },
+                {
+                    "file": "BURT/Motions/Jump_Land_Soft.fbx",
+                    "isTemplated": false
+                },
+                {
+                    "file": "BURT/Motions/Jump_Running_Land_To_Idle.fbx",
+                    "isTemplated": false
+                },
+                {
+                    "file": "BURT/Motions/Jump_Running_Launch.fbx",
+                    "isTemplated": false
+                },
+                {
+                    "file": "BURT/Motions/Jump_Up.fbx",
+                    "isTemplated": false
+                },
+                {
+                    "file": "BURT/Motions/MotionTurn_Run_Left_180.fbx",
+                    "isTemplated": false
+                },
+                {
+                    "file": "BURT/Motions/MotionTurn_Run_Left_180_Aim.fbx",
+                    "isTemplated": false
+                },
+                {
+                    "file": "BURT/Motions/MotionTurn_Run_Left_90.fbx",
+                    "isTemplated": false
+                },
+                {
+                    "file": "BURT/Motions/MotionTurn_Run_Left_90_Aim.fbx",
+                    "isTemplated": false
+                },
+                {
+                    "file": "BURT/Motions/MotionTurn_Run_Right_180.fbx",
+                    "isTemplated": false
+                },
+                {
+                    "file": "BURT/Motions/MotionTurn_Run_Right_180_Aim.fbx",
+                    "isTemplated": false
+                },
+                {
+                    "file": "BURT/Motions/MotionTurn_Run_Right_90.fbx",
+                    "isTemplated": false
+                },
+                {
+                    "file": "BURT/Motions/MotionTurn_Run_Right_90_Aim.fbx",
+                    "isTemplated": false
+                },
+                {
+                    "file": "BURT/Motions/MotionTurn_Walk_Left_180.fbx",
+                    "isTemplated": false
+                },
+                {
+                    "file": "BURT/Motions/MotionTurn_Walk_Left_180_Aim.fbx",
+                    "isTemplated": false
+                },
+                {
+                    "file": "BURT/Motions/MotionTurn_Walk_Left_90.fbx",
+                    "isTemplated": false
+                },
+                {
+                    "file": "BURT/Motions/MotionTurn_Walk_Left_90_Aim.fbx",
+                    "isTemplated": false
+                },
+                {
+                    "file": "BURT/Motions/MotionTurn_Walk_Right_180.fbx",
+                    "isTemplated": false
+                },
+                {
+                    "file": "BURT/Motions/MotionTurn_Walk_Right_180_Aim.fbx",
+                    "isTemplated": false
+                },
+                {
+                    "file": "BURT/Motions/MotionTurn_Walk_Right_90.fbx",
+                    "isTemplated": false
+                },
+                {
+                    "file": "BURT/Motions/MotionTurn_Walk_Right_90_Aim.fbx",
+                    "isTemplated": false
+                },
+                {
+                    "file": "BURT/Motions/Run_To_Idle.fbx",
+                    "isTemplated": false
+                },
+                {
+                    "file": "BURT/Motions/Run_To_Idle_Down.fbx",
+                    "isTemplated": false
+                },
+                {
+                    "file": "BURT/Motions/Run_To_Idle_Up.fbx",
+                    "isTemplated": false
+                },
+                {
+                    "file": "BURT/Motions/Shoot.fbx",
+                    "isTemplated": false
+                },
+                {
+                    "file": "BURT/Motions/Shoot.fbx.assetinfo",
+                    "isTemplated": false
+                },
+                {
+                    "file": "BURT/Motions/Strafe_Left.fbx",
+                    "isTemplated": false
+                },
+                {
+                    "file": "BURT/Motions/Strafe_Right.fbx",
+                    "isTemplated": false
+                },
+                {
+                    "file": "BURT/Motions/Strafe_Run_Forwards 001.fbx",
+                    "isTemplated": false
+                },
+                {
+                    "file": "BURT/Motions/Strafe_Run_Forwards.fbx",
+                    "isTemplated": false
+                },
+                {
+                    "file": "BURT/Motions/Strafe_Run_Forwards.fbx.assetinfo",
+                    "isTemplated": false
+                },
+                {
+                    "file": "BURT/Motions/Strafe_Run_Forwards_Down.fbx",
+                    "isTemplated": false
+                },
+                {
+                    "file": "BURT/Motions/Strafe_Run_Forwards_Down.fbx.assetinfo",
+                    "isTemplated": false
+                },
+                {
+                    "file": "BURT/Motions/Strafe_Run_Forwards_DupA.fbx",
+                    "isTemplated": false
+                },
+                {
+                    "file": "BURT/Motions/Strafe_Run_Forwards_DupB.fbx",
+                    "isTemplated": false
+                },
+                {
+                    "file": "BURT/Motions/Strafe_Run_Forwards_Left_45.fbx",
+                    "isTemplated": false
+                },
+                {
+                    "file": "BURT/Motions/Strafe_Run_Forwards_Right_45.fbx",
+                    "isTemplated": false
+                },
+                {
+                    "file": "BURT/Motions/Strafe_Run_Forwards_Up.fbx",
+                    "isTemplated": false
+                },
+                {
+                    "file": "BURT/Motions/Strafe_Run_Forwards_Up.fbx.assetinfo",
+                    "isTemplated": false
+                },
+                {
+                    "file": "BURT/Motions/Strafe_Run_Left45.fbx",
+                    "isTemplated": false
+                },
+                {
+                    "file": "BURT/Motions/Strafe_Run_Right45.fbx",
+                    "isTemplated": false
+                },
+                {
+                    "file": "BURT/Motions/Strafe_Walk_Backwards.fbx",
+                    "isTemplated": false
+                },
+                {
+                    "file": "BURT/Motions/Strafe_Walk_Forwards.fbx",
+                    "isTemplated": false
+                },
+                {
+                    "file": "BURT/Motions/Strafe_Walk_Forwards.fbx.assetinfo",
+                    "isTemplated": false
+                },
+                {
+                    "file": "BURT/Motions/Strafe_Walk_Forwards_Down.fbx",
+                    "isTemplated": false
+                },
+                {
+                    "file": "BURT/Motions/Strafe_Walk_Forwards_Down.fbx.assetinfo",
+                    "isTemplated": false
+                },
+                {
+                    "file": "BURT/Motions/Strafe_Walk_Forwards_DupA.fbx",
+                    "isTemplated": false
+                },
+                {
+                    "file": "BURT/Motions/Strafe_Walk_Forwards_DupB.fbx",
+                    "isTemplated": false
+                },
+                {
+                    "file": "BURT/Motions/Strafe_Walk_Forwards_Left_45.fbx",
+                    "isTemplated": false
+                },
+                {
+                    "file": "BURT/Motions/Strafe_Walk_Forwards_Right_45.fbx",
+                    "isTemplated": false
+                },
+                {
+                    "file": "BURT/Motions/Strafe_Walk_Forwards_Up.fbx",
+                    "isTemplated": false
+                },
+                {
+                    "file": "BURT/Motions/Strafe_Walk_Forwards_Up.fbx.assetinfo",
+                    "isTemplated": false
+                },
+                {
+                    "file": "BURT/Motions/Strafe_Walk_InPlace.fbx",
+                    "isTemplated": false
+                },
+                {
+                    "file": "BURT/Motions/Strafe_Walk_InPlace_LeftTransition.fbx",
+                    "isTemplated": false
+                },
+                {
+                    "file": "BURT/Motions/Strafe_Walk_InPlace_RightTransition.fbx",
+                    "isTemplated": false
+                },
+                {
+                    "file": "BURT/Motions/Take_Damage_Front.fbx",
+                    "isTemplated": false
+                },
+                {
+                    "file": "BURT/Motions/Take_Damage_Front_Additive.fbx",
+                    "isTemplated": false
+                },
+                {
+                    "file": "BURT/Motions/Take_Damage_Left.fbx",
+                    "isTemplated": false
+                },
+                {
+                    "file": "BURT/Motions/Take_Damage_Left_Additive.fbx",
+                    "isTemplated": false
+                },
+                {
+                    "file": "BURT/Motions/Take_Damage_Rear.fbx",
+                    "isTemplated": false
+                },
+                {
+                    "file": "BURT/Motions/Take_Damage_Rear_Additive.fbx",
+                    "isTemplated": false
+                },
+                {
+                    "file": "BURT/Motions/Take_Damage_Right.fbx",
+                    "isTemplated": false
+                },
+                {
+                    "file": "BURT/Motions/Take_Damage_Right_Additive.fbx",
+                    "isTemplated": false
+                },
+                {
+                    "file": "BURT/Motions/Turn_OnSpot_180_Left.fbx",
+                    "isTemplated": false
+                },
+                {
+                    "file": "BURT/Motions/Turn_OnSpot_180_Right.fbx",
+                    "isTemplated": false
+                },
+                {
+                    "file": "BURT/Motions/Turn_OnSpot_90_Left.fbx",
+                    "isTemplated": false
+                },
+                {
+                    "file": "BURT/Motions/Turn_OnSpot_90_Right.fbx",
+                    "isTemplated": false
+                },
+                {
+                    "file": "BURT/Motions/Turn_OnSpot_Crouch_180_Left.fbx",
+                    "isTemplated": false
+                },
+                {
+                    "file": "BURT/Motions/Turn_OnSpot_Crouch_180_Right.fbx",
+                    "isTemplated": false
+                },
+                {
+                    "file": "BURT/Motions/Turn_OnSpot_Crouch_90_Left.fbx",
+                    "isTemplated": false
+                },
+                {
+                    "file": "BURT/Motions/Turn_OnSpot_Crouch_90_Right.fbx",
+                    "isTemplated": false
+                },
+                {
+                    "file": "BURT/Motions/Turn_Tight_Crouch_Left.fbx",
+                    "isTemplated": false
+                },
+                {
+                    "file": "BURT/Motions/Turn_Tight_Crouch_Right.fbx",
+                    "isTemplated": false
+                },
+                {
+                    "file": "BURT/Motions/Turn_Tight_Run_Left.fbx",
+                    "isTemplated": false
+                },
+                {
+                    "file": "BURT/Motions/Turn_Tight_Run_Right.fbx",
+                    "isTemplated": false
+                },
+                {
+                    "file": "BURT/Motions/Turn_Tight_Walk_Left.fbx",
+                    "isTemplated": false
+                },
+                {
+                    "file": "BURT/Motions/Turn_Tight_Walk_Left_Backwards.fbx",
+                    "isTemplated": false
+                },
+                {
+                    "file": "BURT/Motions/Turn_Tight_Walk_Right.fbx",
+                    "isTemplated": false
+                },
+                {
+                    "file": "BURT/Motions/Turn_Tight_Walk_Right_Backwards.fbx",
+                    "isTemplated": false
+                },
+                {
+                    "file": "BURT/Motions/Victory.fbx",
+                    "isTemplated": false
+                },
+                {
+                    "file": "BURT/Textures/BURT_ddn.tif",
+                    "isTemplated": false
+                },
+                {
+                    "file": "BURT/Textures/BURT_diff.tif",
+                    "isTemplated": false
+                },
+                {
+                    "file": "BURT/Textures/BURT_emis.tif",
+                    "isTemplated": false
+                },
+                {
+                    "file": "BURT/Textures/BURT_spec_02_spec.tif",
+                    "isTemplated": false
+                },
+                {
+                    "file": "BURT/burtactor.material",
+                    "isTemplated": false
+                },
+                {
+                    "file": "CMakeLists.txt",
+                    "isTemplated": true
+                },
+                {
+                    "file": "Config/AtomImageBuilder/Test_Linear_to_Auto.preset",
+                    "isTemplated": false
+                },
+                {
+                    "file": "Config/AtomImageBuilder/Test_Linear_to_Linear.preset",
+                    "isTemplated": false
+                },
+                {
+                    "file": "Config/AtomImageBuilder/Test_Linear_to_sRGB.preset",
+                    "isTemplated": false
+                },
+                {
+                    "file": "Config/AtomImageBuilder/Test_sRGB_to_Auto.preset",
+                    "isTemplated": false
+                },
+                {
+                    "file": "Config/AtomImageBuilder/Test_sRGB_to_Linear.preset",
+                    "isTemplated": false
+                },
+                {
+                    "file": "Config/AtomImageBuilder/Test_sRGB_to_sRGB.preset",
+                    "isTemplated": false
+                },
+                {
+                    "file": "Config/shader_global_build_options.json",
+                    "isTemplated": false
+                },
+                {
+                    "file": "Gem/CMakeLists.txt",
+                    "isTemplated": false
+                },
+                {
+                    "file": "Gem/Code/${NameLower}_autogen_files.cmake",
+                    "isTemplated": false
+                },
+                {
+                    "file": "Gem/Code/${NameLower}_files.cmake",
+                    "isTemplated": true
+                },
+                {
+                    "file": "Gem/Code/${NameLower}_shared_files.cmake",
+                    "isTemplated": true
+                },
+                {
+                    "file": "Gem/Code/CMakeLists.txt",
+                    "isTemplated": true
+                },
+                {
+                    "file": "Gem/Code/Include/NetworkPrefabSpawnerInterface.h",
+                    "isTemplated": true
+                },
+                {
+                    "file": "Gem/Code/Platform/Android/${NameLower}_android_files.cmake",
+                    "isTemplated": false
+                },
+                {
+                    "file": "Gem/Code/Platform/Linux/${NameLower}_linux_files.cmake",
+                    "isTemplated": false
+                },
+                {
+                    "file": "Gem/Code/Platform/Mac/${NameLower}_mac_files.cmake",
+                    "isTemplated": false
+                },
+                {
+                    "file": "Gem/Code/Platform/Windows/${NameLower}_windows_files.cmake",
+                    "isTemplated": false
+                },
+                {
+                    "file": "Gem/Code/Platform/iOS/${NameLower}_ios_files.cmake",
+                    "isTemplated": false
+                },
+                {
+                    "file": "Gem/Code/Source/${Name}Module.cpp",
+                    "isTemplated": true
+                },
+                {
+                    "file": "Gem/Code/Source/${Name}SystemComponent.cpp",
+                    "isTemplated": true
+                },
+                {
+                    "file": "Gem/Code/Source/${Name}SystemComponent.h",
+                    "isTemplated": true
+                },
+                {
+                    "file": "Gem/Code/Source/${Name}Types.h",
+                    "isTemplated": true
+                },
+                {
+                    "file": "Gem/Code/Source/AutoGen/AnimatedHitVolumesComponent.AutoComponent.xml",
+                    "isTemplated": true
+                },
+                {
+                    "file": "Gem/Code/Source/AutoGen/MultiplayerAutoComponentSchema.xsd",
+                    "isTemplated": false
+                },
+                {
+                    "file": "Gem/Code/Source/AutoGen/NetworkAiComponent.AutoComponent.xml",
+                    "isTemplated": true
+                },
+                {
+                    "file": "Gem/Code/Source/AutoGen/NetworkAnimationComponent.AutoComponent.xml",
+                    "isTemplated": true
+                },
+                {
+                    "file": "Gem/Code/Source/AutoGen/NetworkHealthComponent.AutoComponent.xml",
+                    "isTemplated": true
+                },
+                {
+                    "file": "Gem/Code/Source/AutoGen/NetworkPlayerMovementComponent.AutoComponent.xml",
+                    "isTemplated": true
+                },
+                {
+                    "file": "Gem/Code/Source/AutoGen/NetworkPlayerSpawnerComponent.AutoComponent.xml",
+                    "isTemplated": true
+                },
+                {
+                    "file": "Gem/Code/Source/AutoGen/NetworkRandomComponent.AutoComponent.xml",
+                    "isTemplated": true
+                },
+                {
+                    "file": "Gem/Code/Source/AutoGen/NetworkSimplePlayerCameraComponent.AutoComponent.xml",
+                    "isTemplated": true
+                },
+                {
+                    "file": "Gem/Code/Source/AutoGen/NetworkWeaponsComponent.AutoComponent.xml",
+                    "isTemplated": true
+                },
+                {
+                    "file": "Gem/Code/Source/Components/ExampleFilteredEntityComponent.cpp",
+                    "isTemplated": true
+                },
+                {
+                    "file": "Gem/Code/Source/Components/ExampleFilteredEntityComponent.h",
+                    "isTemplated": true
+                },
+                {
+                    "file": "Gem/Code/Source/Components/NetworkAiComponent.cpp",
+                    "isTemplated": true
+                },
+                {
+                    "file": "Gem/Code/Source/Components/NetworkAiComponent.h",
+                    "isTemplated": true
+                },
+                {
+                    "file": "Gem/Code/Source/Components/NetworkAnimationComponent.cpp",
+                    "isTemplated": true
+                },
+                {
+                    "file": "Gem/Code/Source/Components/NetworkAnimationComponent.h",
+                    "isTemplated": true
+                },
+                {
+                    "file": "Gem/Code/Source/Components/NetworkHealthComponent.cpp",
+                    "isTemplated": true
+                },
+                {
+                    "file": "Gem/Code/Source/Components/NetworkHealthComponent.h",
+                    "isTemplated": true
+                },
+                {
+                    "file": "Gem/Code/Source/Components/NetworkPlayerMovementComponent.cpp",
+                    "isTemplated": true
+                },
+                {
+                    "file": "Gem/Code/Source/Components/NetworkPlayerMovementComponent.h",
+                    "isTemplated": true
+                },
+                {
+                    "file": "Gem/Code/Source/Components/NetworkPlayerSpawnerComponent.cpp",
+                    "isTemplated": true
+                },
+                {
+                    "file": "Gem/Code/Source/Components/NetworkPlayerSpawnerComponent.h",
+                    "isTemplated": true
+                },
+                {
+                    "file": "Gem/Code/Source/Components/NetworkRandomComponent.cpp",
+                    "isTemplated": true
+                },
+                {
+                    "file": "Gem/Code/Source/Components/NetworkRandomComponent.h",
+                    "isTemplated": true
+                },
+                {
+                    "file": "Gem/Code/Source/Components/NetworkSimplePlayerCameraComponent.cpp",
+                    "isTemplated": true
+                },
+                {
+                    "file": "Gem/Code/Source/Components/NetworkSimplePlayerCameraComponent.h",
+                    "isTemplated": true
+                },
+                {
+                    "file": "Gem/Code/Source/Components/NetworkWeaponsComponent.cpp",
+                    "isTemplated": true
+                },
+                {
+                    "file": "Gem/Code/Source/Components/NetworkWeaponsComponent.h",
+                    "isTemplated": true
+                },
+                {
+                    "file": "Gem/Code/Source/Components/NetworkPrefabSpawnerComponent.cpp",
+                    "isTemplated": true
+                },
+                {
+                    "file": "Gem/Code/Source/Components/NetworkPrefabSpawnerComponent.h",
+                    "isTemplated": true
+                },
+                {
+                    "file": "Gem/Code/Source/Spawners/IPlayerSpawner.h",
+                    "isTemplated": true
+                },
+                {
+                    "file": "Gem/Code/Source/Spawners/RoundRobinSpawner.cpp",
+                    "isTemplated": true
+                },
+                {
+                    "file": "Gem/Code/Source/Spawners/RoundRobinSpawner.h",
+                    "isTemplated": true
+                },
+                {
+                    "file": "Gem/Code/Source/Weapons/BaseWeapon.cpp",
+                    "isTemplated": true
+                },
+                {
+                    "file": "Gem/Code/Source/Weapons/BaseWeapon.h",
+                    "isTemplated": true
+                },
+                {
+                    "file": "Gem/Code/Source/Weapons/IWeapon.h",
+                    "isTemplated": true
+                },
+                {
+                    "file": "Gem/Code/Source/Weapons/ProjectileWeapon.cpp",
+                    "isTemplated": true
+                },
+                {
+                    "file": "Gem/Code/Source/Weapons/ProjectileWeapon.h",
+                    "isTemplated": true
+                },
+                {
+                    "file": "Gem/Code/Source/Weapons/SceneQuery.cpp",
+                    "isTemplated": true
+                },
+                {
+                    "file": "Gem/Code/Source/Weapons/SceneQuery.h",
+                    "isTemplated": true
+                },
+                {
+                    "file": "Gem/Code/Source/Weapons/TraceWeapon.cpp",
+                    "isTemplated": true
+                },
+                {
+                    "file": "Gem/Code/Source/Weapons/TraceWeapon.h",
+                    "isTemplated": true
+                },
+                {
+                    "file": "Gem/Code/Source/Weapons/WeaponGathers.cpp",
+                    "isTemplated": true
+                },
+                {
+                    "file": "Gem/Code/Source/Weapons/WeaponGathers.h",
+                    "isTemplated": true
+                },
+                {
+                    "file": "Gem/Code/Source/Weapons/WeaponTypes.cpp",
+                    "isTemplated": true
+                },
+                {
+                    "file": "Gem/Code/Source/Weapons/WeaponTypes.h",
+                    "isTemplated": true
+                },
+                {
+                    "file": "Gem/Code/enabled_gems.cmake",
+                    "isTemplated": true
+                },
+                {
+                    "file": "Gem/Resources/GameSDK.ico",
+                    "isTemplated": false
+                },
+                {
+                    "file": "Gem/Resources/IOSLauncher/Images.xcassets/${Name}AppIcon.appiconset/Contents.json",
+                    "isTemplated": false
+                },
+                {
+                    "file": "Gem/Resources/IOSLauncher/Images.xcassets/${Name}AppIcon.appiconset/iPadAppIcon152x152.png",
+                    "isTemplated": false
+                },
+                {
+                    "file": "Gem/Resources/IOSLauncher/Images.xcassets/${Name}AppIcon.appiconset/iPadAppIcon76x76.png",
+                    "isTemplated": false
+                },
+                {
+                    "file": "Gem/Resources/IOSLauncher/Images.xcassets/${Name}AppIcon.appiconset/iPadProAppIcon167x167.png",
+                    "isTemplated": false
+                },
+                {
+                    "file": "Gem/Resources/IOSLauncher/Images.xcassets/${Name}AppIcon.appiconset/iPadSettingsIcon29x29.png",
+                    "isTemplated": false
+                },
+                {
+                    "file": "Gem/Resources/IOSLauncher/Images.xcassets/${Name}AppIcon.appiconset/iPadSettingsIcon58x58.png",
+                    "isTemplated": false
+                },
+                {
+                    "file": "Gem/Resources/IOSLauncher/Images.xcassets/${Name}AppIcon.appiconset/iPadSpotlightIcon40x40.png",
+                    "isTemplated": false
+                },
+                {
+                    "file": "Gem/Resources/IOSLauncher/Images.xcassets/${Name}AppIcon.appiconset/iPadSpotlightIcon80x80.png",
+                    "isTemplated": false
+                },
+                {
+                    "file": "Gem/Resources/IOSLauncher/Images.xcassets/${Name}AppIcon.appiconset/iPhoneAppIcon120x120.png",
+                    "isTemplated": false
+                },
+                {
+                    "file": "Gem/Resources/IOSLauncher/Images.xcassets/${Name}AppIcon.appiconset/iPhoneAppIcon180x180.png",
+                    "isTemplated": false
+                },
+                {
+                    "file": "Gem/Resources/IOSLauncher/Images.xcassets/${Name}AppIcon.appiconset/iPhoneSettingsIcon58x58.png",
+                    "isTemplated": false
+                },
+                {
+                    "file": "Gem/Resources/IOSLauncher/Images.xcassets/${Name}AppIcon.appiconset/iPhoneSettingsIcon87x87.png",
+                    "isTemplated": false
+                },
+                {
+                    "file": "Gem/Resources/IOSLauncher/Images.xcassets/${Name}AppIcon.appiconset/iPhoneSpotlightIcon120x120.png",
+                    "isTemplated": false
+                },
+                {
+                    "file": "Gem/Resources/IOSLauncher/Images.xcassets/${Name}AppIcon.appiconset/iPhoneSpotlightIcon80x80.png",
+                    "isTemplated": false
+                },
+                {
+                    "file": "Gem/Resources/IOSLauncher/Images.xcassets/Contents.json",
+                    "isTemplated": false
+                },
+                {
+                    "file": "Gem/Resources/IOSLauncher/Images.xcassets/LaunchImage.launchimage/Contents.json",
+                    "isTemplated": false
+                },
+                {
+                    "file": "Gem/Resources/IOSLauncher/Images.xcassets/LaunchImage.launchimage/iPadLaunchImage1024x768.png",
+                    "isTemplated": false
+                },
+                {
+                    "file": "Gem/Resources/IOSLauncher/Images.xcassets/LaunchImage.launchimage/iPadLaunchImage1536x2048.png",
+                    "isTemplated": false
+                },
+                {
+                    "file": "Gem/Resources/IOSLauncher/Images.xcassets/LaunchImage.launchimage/iPadLaunchImage2048x1536.png",
+                    "isTemplated": false
+                },
+                {
+                    "file": "Gem/Resources/IOSLauncher/Images.xcassets/LaunchImage.launchimage/iPadLaunchImage768x1024.png",
+                    "isTemplated": false
+                },
+                {
+                    "file": "Gem/Resources/IOSLauncher/Images.xcassets/LaunchImage.launchimage/iPhoneLaunchImage640x1136.png",
+                    "isTemplated": false
+                },
+                {
+                    "file": "Gem/Resources/IOSLauncher/Images.xcassets/LaunchImage.launchimage/iPhoneLaunchImage640x960.png",
+                    "isTemplated": false
+                },
+                {
+                    "file": "Gem/Resources/IOSLauncher/Info.plist",
+                    "isTemplated": true
+                },
+                {
+                    "file": "Gem/Resources/MacLauncher/Images.xcassets/CMakeTestbedAppIcon.appiconset/Contents.json",
+                    "isTemplated": false
+                },
+                {
+                    "file": "Gem/Resources/MacLauncher/Images.xcassets/CMakeTestbedAppIcon.appiconset/icon_128 _2x.png",
+                    "isTemplated": false
+                },
+                {
+                    "file": "Gem/Resources/MacLauncher/Images.xcassets/CMakeTestbedAppIcon.appiconset/icon_128.png",
+                    "isTemplated": false
+                },
+                {
+                    "file": "Gem/Resources/MacLauncher/Images.xcassets/CMakeTestbedAppIcon.appiconset/icon_16.png",
+                    "isTemplated": false
+                },
+                {
+                    "file": "Gem/Resources/MacLauncher/Images.xcassets/CMakeTestbedAppIcon.appiconset/icon_16_2x.png",
+                    "isTemplated": false
+                },
+                {
+                    "file": "Gem/Resources/MacLauncher/Images.xcassets/CMakeTestbedAppIcon.appiconset/icon_256 _2x.png",
+                    "isTemplated": false
+                },
+                {
+                    "file": "Gem/Resources/MacLauncher/Images.xcassets/CMakeTestbedAppIcon.appiconset/icon_256.png",
+                    "isTemplated": false
+                },
+                {
+                    "file": "Gem/Resources/MacLauncher/Images.xcassets/CMakeTestbedAppIcon.appiconset/icon_32.png",
+                    "isTemplated": false
+                },
+                {
+                    "file": "Gem/Resources/MacLauncher/Images.xcassets/CMakeTestbedAppIcon.appiconset/icon_32_2x.png",
+                    "isTemplated": false
+                },
+                {
+                    "file": "Gem/Resources/MacLauncher/Images.xcassets/CMakeTestbedAppIcon.appiconset/icon_512.png",
+                    "isTemplated": false
+                },
+                {
+                    "file": "Gem/Resources/MacLauncher/Images.xcassets/CMakeTestbedAppIcon.appiconset/icon_512_2x.png",
+                    "isTemplated": false
+                },
+                {
+                    "file": "Gem/Resources/MacLauncher/Images.xcassets/Contents.json",
+                    "isTemplated": false
+                },
+                {
+                    "file": "Gem/Resources/MacLauncher/Info.plist",
+                    "isTemplated": true
+                },
+                {
+                    "file": "Gem/gem.json",
+                    "isTemplated": true
+                },
+                {
+                    "file": "Gem/preview.png",
+                    "isTemplated": false
+                },
+                {
+                    "file": "InputBindings/player.inputbindings",
+                    "isTemplated": false
+                },
+                {
+                    "file": "LICENSE.txt",
+                    "isTemplated": false
+                },
+                {
+                    "file": "LICENSE_APACHE2.TXT",
+                    "isTemplated": false
+                },
+                {
+                    "file": "LICENSE_MIT.TXT",
+                    "isTemplated": false
+                },
+                {
+                    "file": "Levels/Demo/Demo.prefab",
+                    "isTemplated": true
+                },
+                {
+                    "file": "Levels/Demo/tags.txt",
+                    "isTemplated": false
+                },
+                {
+                    "file": "LightingPresets/greenwich_park_02.lightingconfig.json",
+                    "isTemplated": false
+                },
+                {
+                    "file": "LightingPresets/greenwich_park_02_4k_iblskyboxcm.exr",
+                    "isTemplated": false
+                },
+                {
+                    "file": "Materials/Default/AM_UV_v1_1K_source.png",
+                    "isTemplated": false
+                },
+                {
+                    "file": "Materials/Default/UVchart_1_basecolor.png",
+                    "isTemplated": false
+                },
+                {
+                    "file": "Materials/Default/UVchart_2_basecolor.png",
+                    "isTemplated": false
+                },
+                {
+                    "file": "Materials/Default/UVchart_3_basecolor.png",
+                    "isTemplated": false
+                },
+                {
+                    "file": "Materials/DefaultPBR.material",
+                    "isTemplated": false
+                },
+                {
+                    "file": "Materials/UVs.azsl",
+                    "isTemplated": false
+                },
+                {
+                    "file": "Materials/UVs.material",
+                    "isTemplated": false
+                },
+                {
+                    "file": "Materials/UVs.materialtype",
+                    "isTemplated": false
+                },
+                {
+                    "file": "Materials/UVs.shader",
+                    "isTemplated": false
+                },
+                {
+                    "file": "Objects/cube.fbx",
+                    "isTemplated": false
+                },
+                {
+                    "file": "Platform/Android/android_project.json",
+                    "isTemplated": true
+                },
+                {
+                    "file": "Prefabs/NetworkRigidBodyCube.prefab",
+                    "isTemplated": true
+                },
+                {
+                    "file": "Prefabs/Player.prefab",
+                    "isTemplated": true
+                },
+                {
+                    "file": "Prefabs/PlayerSpawner.prefab",
+                    "isTemplated": true
+                },
+                {
+                    "file": "Registry/editorpreferences.setreg",
+                    "isTemplated": false
+                },
+                {
+                    "file": "Registry/physxsystemconfiguration.setreg",
+                    "isTemplated": false
+                },
+                {
+                    "file": "ShaderLib/README.md",
+                    "isTemplated": false
+                },
+                {
+                    "file": "ShaderLib/scenesrg.srgi",
+                    "isTemplated": false
+                },
+                {
+                    "file": "ShaderLib/viewsrg.srgi",
+                    "isTemplated": false
+                },
+                {
+                    "file": "Shaders/CommonVS.azsli",
+                    "isTemplated": false
+                },
+                {
+                    "file": "cmake/CompilerSettings.cmake",
+                    "isTemplated": false
+                },
+                {
+                    "file": "cmake/EngineFinder.cmake",
+                    "isTemplated": false
+                },
+                {
+                    "file": "cmake/Platform/Linux/CompilerSettings_linux.cmake",
+                    "isTemplated": false
+                },
+                {
+                    "file": "default.blastconfiguration",
+                    "isTemplated": false
+                },
+                {
+                    "file": "editor.cfg",
+                    "isTemplated": false
+                },
+                {
+                    "file": "game.cfg",
+                    "isTemplated": true
+                },
+                {
+                    "file": "generate_asset_cmake.bat",
+                    "isTemplated": true
+                },
+                {
+                    "file": "launch_client.cfg",
+                    "isTemplated": false
+                },
+                {
+                    "file": "launch_client.cmd",
+                    "isTemplated": true
+                },
+                {
+                    "file": "launch_client.sh",
+                    "isTemplated": true
+                },
+                {
+                    "file": "launch_server.cfg",
+                    "isTemplated": false
+                },
+                {
+                    "file": "launch_server.cmd",
+                    "isTemplated": true
+                },
+                {
+                    "file": "launch_server.sh",
+                    "isTemplated": true
+                },
+                {
+                    "file": "preview.png",
+                    "isTemplated": false
+                },
+                {
+                    "file": "project.json",
+                    "isTemplated": true
+                }
+            ],
+            "createDirectories": [
+                {
+                    "dir": "BURT"
+                },
+                {
+                    "dir": "BURT/Motions"
+                },
+                {
+                    "dir": "BURT/Textures"
+                },
+                {
+                    "dir": "Config"
+                },
+                {
+                    "dir": "Config/AtomImageBuilder"
+                },
+                {
+                    "dir": "Gem"
+                },
+                {
+                    "dir": "Gem/Code"
+                },
+                {
+                    "dir": "Gem/Code/Include"
+                },
+                {
+                    "dir": "Gem/Code/Platform"
+                },
+                {
+                    "dir": "Gem/Code/Platform/Android"
+                },
+                {
+                    "dir": "Gem/Code/Platform/Linux"
+                },
+                {
+                    "dir": "Gem/Code/Platform/Mac"
+                },
+                {
+                    "dir": "Gem/Code/Platform/Windows"
+                },
+                {
+                    "dir": "Gem/Code/Platform/iOS"
+                },
+                {
+                    "dir": "Gem/Code/Source"
+                },
+                {
+                    "dir": "Gem/Code/Source/AutoGen"
+                },
+                {
+                    "dir": "Gem/Code/Source/Components"
+                },
+                {
+                    "dir": "Gem/Code/Source/Spawners"
+                },
+                {
+                    "dir": "Gem/Code/Source/Weapons"
+                },
+                {
+                    "dir": "Gem/Resources"
+                },
+                {
+                    "dir": "Gem/Resources/IOSLauncher"
+                },
+                {
+                    "dir": "Gem/Resources/IOSLauncher/Images.xcassets"
+                },
+                {
+                    "dir": "Gem/Resources/IOSLauncher/Images.xcassets/${Name}AppIcon.appiconset"
+                },
+                {
+                    "dir": "Gem/Resources/IOSLauncher/Images.xcassets/LaunchImage.launchimage"
+                },
+                {
+                    "dir": "Gem/Resources/MacLauncher"
+                },
+                {
+                    "dir": "Gem/Resources/MacLauncher/Images.xcassets"
+                },
+                {
+                    "dir": "Gem/Resources/MacLauncher/Images.xcassets/CMakeTestbedAppIcon.appiconset"
+                },
+                {
+                    "dir": "InputBindings"
+                },
+                {
+                    "dir": "Levels"
+                },
+                {
+                    "dir": "Levels/Demo"
+                },
+                {
+                    "dir": "LightingPresets"
+                },
+                {
+                    "dir": "Materials"
+                },
+                {
+                    "dir": "Materials/Default"
+                },
+                {
+                    "dir": "Materials/decal"
+                },
+                {
+                    "dir": "Objects"
+                },
+                {
+                    "dir": "Platform"
+                },
+                {
+                    "dir": "Platform/Android"
+                },
+                {
+                    "dir": "Prefabs"
+                },
+                {
+                    "dir": "Registry"
+                },
+                {
+                    "dir": "Scripts"
+                },
+                {
+                    "dir": "Scripts/build"
+                },
+                {
+                    "dir": "Scripts/build/Jenkins"
+                },
+                {
+                    "dir": "ShaderLib"
+                },
+                {
+                    "dir": "Shaders"
+                },
+                {
+                    "dir": "cmake"
+                },
+                {
+                    "dir": "cmake/Platform"
+                },
+                {
+                    "dir": "cmake/Platform/Linux"
+                }
+            ],
+            "download_source_uri": "https://github.com/o3de/o3de-extras/releases/download/2.0/multiplayer-2.0.0-template.zip",
+            "sha256": "4df1e7039ab64e0c531114a969d943635c248e5affc471faf4a710913be3bdf9",
+            "versions_data": [
+                {
+                    "sha256": "5450e61577c310972436f0bc84d89765e176569898713a884ce4620a94f2c23c",
+                    "version": "2.0.0",
+                    "download_source_uri": "https://github.com/o3de/o3de-extras/releases/download/2.0/multiplayer-2.0.0-template.zip"
+                }
+            ]
+        },
+        {
+            "template_name": "Ros2FleetRobotTemplate",
+            "version": "1.0.0",
+            "origin": "Open 3D Engine Extras",
+            "origin_url": "https://github.com/o3de/o3de-extras",
+            "repo_uri": "https://raw.githubusercontent.com/o3de/o3de-extras/development",
+            "license_url": "https://github.com/o3de/o3de-extras/tree/development/Templates/Ros2FleetRobotTemplate/Template/LICENSE.txt",
+            "display_name": "ROS2 Fleet Robot",
+            "summary": "Template for ROS2 multi-robot project.",
+            "canonical_tags": [],
+            "user_tags": [
+                "Ros2FleetRobotTemplate",
+                "ROS2",
+                "ROS"
+            ],
+            "icon_path": "preview.png",
+            "copyFiles": [
+                {
+                    "file": ".gitignore",
+                    "isTemplated": false
+                },
+                {
+                    "file": "CMakeLists.txt",
+                    "isTemplated": true
+                },
+                {
+                    "file": "Config/shader_global_build_options.json",
+                    "isTemplated": false
+                },
+                {
+                    "file": "Gem/${Name}_files.cmake",
+                    "isTemplated": true
+                },
+                {
+                    "file": "Gem/${Name}_shared_files.cmake",
+                    "isTemplated": true
+                },
+                {
+                    "file": "Gem/CMakeLists.txt",
+                    "isTemplated": true
+                },
+                {
+                    "file": "Gem/Include/${Name}/${Name}Bus.h",
+                    "isTemplated": true
+                },
+                {
+                    "file": "Gem/Platform/Linux/${Name}_linux_files.cmake",
+                    "isTemplated": true
+                },
+                {
+                    "file": "Gem/Platform/Linux/${Name}_shared_linux_files.cmake",
+                    "isTemplated": true
+                },
+                {
+                    "file": "Gem/Platform/Linux/PAL_linux.cmake",
+                    "isTemplated": true
+                },
+                {
+                    "file": "Gem/Platform/Mac/${Name}_mac_files.cmake",
+                    "isTemplated": true
+                },
+                {
+                    "file": "Gem/Platform/Mac/${Name}_shared_mac_files.cmake",
+                    "isTemplated": true
+                },
+                {
+                    "file": "Gem/Platform/Mac/PAL_mac.cmake",
+                    "isTemplated": true
+                },
+                {
+                    "file": "Gem/Platform/Windows/${Name}_shared_windows_files.cmake",
+                    "isTemplated": true
+                },
+                {
+                    "file": "Gem/Platform/Windows/${Name}_windows_files.cmake",
+                    "isTemplated": true
+                },
+                {
+                    "file": "Gem/Platform/Windows/PAL_windows.cmake",
+                    "isTemplated": true
+                },
+                {
+                    "file": "Gem/Registry/assetprocessor_settings.setreg",
+                    "isTemplated": true
+                },
+                {
+                    "file": "Gem/Source/${Name}Module.cpp",
+                    "isTemplated": true
+                },
+                {
+                    "file": "Gem/Source/${Name}SystemComponent.cpp",
+                    "isTemplated": true
+                },
+                {
+                    "file": "Gem/Source/${Name}SystemComponent.h",
+                    "isTemplated": true
+                },
+                {
+                    "file": "Gem/enabled_gems.cmake",
+                    "isTemplated": true
+                },
+                {
+                    "file": "Gem/gem.json",
+                    "isTemplated": true
+                },
+                {
+                    "file": "Levels/Warehouse/Warehouse.prefab",
+                    "isTemplated": false
+                },
+                {
+                    "file": "Levels/playground/playground.prefab",
+                    "isTemplated": false
+                },
+                {
+                    "file": "Platform/Linux/linux_project.cmake",
+                    "isTemplated": true
+                },
+                {
+                    "file": "Platform/Linux/linux_project.json",
+                    "isTemplated": false
+                },
+                {
+                    "file": "Platform/Mac/mac_project.cmake",
+                    "isTemplated": true
+                },
+                {
+                    "file": "Platform/Mac/mac_project.json",
+                    "isTemplated": false
+                },
+                {
+                    "file": "Platform/Windows/windows_project.cmake",
+                    "isTemplated": true
+                },
+                {
+                    "file": "Platform/Windows/windows_project.json",
+                    "isTemplated": false
+                },
+                {
+                    "file": "Registry/assetprocessor_settings.setreg",
+                    "isTemplated": false
+                },
+                {
+                    "file": "Registry/awscoreconfiguration.setreg",
+                    "isTemplated": false
+                },
+                {
+                    "file": "Registry/physxdebugconfiguration.setreg",
+                    "isTemplated": false
+                },
+                {
+                    "file": "Registry/physxdefaultsceneconfiguration.setreg",
+                    "isTemplated": false
+                },
+                {
+                    "file": "Registry/physxsystemconfiguration.setreg",
+                    "isTemplated": false
+                },
+                {
+                    "file": "Resources/GameSDK.ico",
+                    "isTemplated": false
+                },
+                {
+                    "file": "Resources/LegacyLogoLauncher.bmp",
+                    "isTemplated": false
+                },
+                {
+                    "file": "Resources/Platform/Mac/Images.xcassets/AppIcon.appiconset/Contents.json",
+                    "isTemplated": false
+                },
+                {
+                    "file": "Resources/Platform/Mac/Images.xcassets/AppIcon.appiconset/icon_128.png",
+                    "isTemplated": false
+                },
+                {
+                    "file": "Resources/Platform/Mac/Images.xcassets/AppIcon.appiconset/icon_128_2x.png",
+                    "isTemplated": false
+                },
+                {
+                    "file": "Resources/Platform/Mac/Images.xcassets/AppIcon.appiconset/icon_16.png",
+                    "isTemplated": false
+                },
+                {
+                    "file": "Resources/Platform/Mac/Images.xcassets/AppIcon.appiconset/icon_16_2x.png",
+                    "isTemplated": false
+                },
+                {
+                    "file": "Resources/Platform/Mac/Images.xcassets/AppIcon.appiconset/icon_256.png",
+                    "isTemplated": false
+                },
+                {
+                    "file": "Resources/Platform/Mac/Images.xcassets/AppIcon.appiconset/icon_256_2x.png",
+                    "isTemplated": false
+                },
+                {
+                    "file": "Resources/Platform/Mac/Images.xcassets/AppIcon.appiconset/icon_32.png",
+                    "isTemplated": false
+                },
+                {
+                    "file": "Resources/Platform/Mac/Images.xcassets/AppIcon.appiconset/icon_32_2x.png",
+                    "isTemplated": false
+                },
+                {
+                    "file": "Resources/Platform/Mac/Images.xcassets/AppIcon.appiconset/icon_512.png",
+                    "isTemplated": false
+                },
+                {
+                    "file": "Resources/Platform/Mac/Images.xcassets/AppIcon.appiconset/icon_512_2x.png",
+                    "isTemplated": false
+                },
+                {
+                    "file": "Resources/Platform/Mac/Images.xcassets/Contents.json",
+                    "isTemplated": false
+                },
+                {
+                    "file": "Resources/Platform/Mac/Info.plist",
+                    "isTemplated": true
+                },
+                {
+                    "file": "ShaderLib/README.md",
+                    "isTemplated": false
+                },
+                {
+                    "file": "ShaderLib/scenesrg.srgi",
+                    "isTemplated": true
+                },
+                {
+                    "file": "ShaderLib/viewsrg.srgi",
+                    "isTemplated": true
+                },
+                {
+                    "file": "Passes/ContrastAdaptiveSharpening.pass",
+                    "isTemplated": false
+                },
+                {
+                    "file": "Passes/MainRenderPipeline.azasset",
+                    "isTemplated": false
+                },
+                {
+                    "file": "Passes/PostProcessParent.pass",
+                    "isTemplated": false
+                },
+                {
+                    "file": "Passes/SMAAConfiguration.azasset",
+                    "isTemplated": false
+                },
+                {
+                    "file": "Passes/Taa.pass",
+                    "isTemplated": false
+                },
+                {
+                    "file": "autoexec.cfg",
+                    "isTemplated": false
+                },
+                {
+                    "file": "cmake/EngineFinder.cmake",
+                    "isTemplated": false
+                },
+                {
+                    "file": "game.cfg",
+                    "isTemplated": false
+                },
+                {
+                    "file": "preview.png",
+                    "isTemplated": false
+                },
+                {
+                    "file": "project.json",
+                    "isTemplated": true
+                }
+            ],
+            "createDirectories": [
+                {
+                    "dir": "Assets"
+                },
+                {
+                    "dir": "Config"
+                },
+                {
+                    "dir": "Gem"
+                },
+                {
+                    "dir": "Gem/Include"
+                },
+                {
+                    "dir": "Gem/Include/${Name}"
+                },
+                {
+                    "dir": "Gem/Platform"
+                },
+                {
+                    "dir": "Gem/Platform/Linux"
+                },
+                {
+                    "dir": "Gem/Platform/Mac"
+                },
+                {
+                    "dir": "Gem/Platform/Windows"
+                },
+                {
+                    "dir": "Gem/Registry"
+                },
+                {
+                    "dir": "Gem/Source"
+                },
+                {
+                    "dir": "Levels"
+                },
+                {
+                    "dir": "Levels/Warehouse"
+                },
+                {
+                    "dir": "Levels/playground"
+                },
+                {
+                    "dir": "Levels/playground/_savebackup"
+                },
+                {
+                    "dir": "Levels/playground/_savebackup/2023-02-21 [13.25.33]"
+                },
+                {
+                    "dir": "Passes"
+                },
+                {
+                    "dir": "Platform"
+                },
+                {
+                    "dir": "Platform/Android"
+                },
+                {
+                    "dir": "Platform/Linux"
+                },
+                {
+                    "dir": "Platform/Mac"
+                },
+                {
+                    "dir": "Platform/Windows"
+                },
+                {
+                    "dir": "Registry"
+                },
+                {
+                    "dir": "Resources"
+                },
+                {
+                    "dir": "Resources/Platform"
+                },
+                {
+                    "dir": "Resources/Platform/Mac"
+                },
+                {
+                    "dir": "Resources/Platform/Mac/Images.xcassets"
+                },
+                {
+                    "dir": "Resources/Platform/Mac/Images.xcassets/AppIcon.appiconset"
+                },
+                {
+                    "dir": "ShaderLib"
+                },
+                {
+                    "dir": "Shaders"
+                },
+                {
+                    "dir": "Shaders/ShaderResourceGroups"
+                },
+                {
+                    "dir": "cmake"
+                },
+                {
+                    "dir": "proteus_nav"
+                },
+                {
+                    "dir": "proteus_nav/src"
+                },
+                {
+                    "dir": "proteus_nav/src/proteus_nav"
+                },
+                {
+                    "dir": "proteus_nav/src/proteus_nav/launch"
+                },
+                {
+                    "dir": "proteus_nav/src/proteus_nav/launch/__pycache__"
+                },
+                {
+                    "dir": "proteus_nav/src/proteus_nav/launch/config"
+                },
+                {
+                    "dir": "proteus_nav/src/proteus_nav/proteus_nav"
+                },
+                {
+                    "dir": "proteus_nav/src/proteus_nav/resource"
+                },
+                {
+                    "dir": "proteus_nav/src/proteus_nav/test"
+                },
+                {
+                    "dir": "proteus_nav/src/proteus_nav/test/__pycache__"
+                }
+            ],
+            "download_source_uri": "https://github.com/o3de/o3de-extras/releases/download/2.0/ros2fleetrobottemplate-1.0.0-template.zip",
+            "sha256": "1c9d48b064881c41a98315839fe079eb58bd414445dfaa0b695a00109d5bab02",
+            "versions_data": [
+                {
+                    "sha256": "5617f52c2da6c8f869c2073d3b10b8941d71af8696d3593e90431b8df7be2497",
+                    "version": "1.0.0",
+                    "download_source_uri": "https://github.com/o3de/o3de-extras/releases/download/2.0/ros2fleetrobottemplate-1.0.0-template.zip"
+                }
+            ]
+        },
+        {
+            "template_name": "Ros2ProjectTemplate",
+            "version": "1.0.0",
+            "origin": "Open 3D Engine Extras",
+            "origin_url": "https://github.com/o3de/o3de-extras",
+            "license": "https://github.com/o3de/o3de-extras/tree/development/Templates/Ros2ProjectTemplate/Template/LICENSE.txt",
+            "display_name": "ROS2 Project",
+            "summary": "Template for ROS2 projects.",
+            "canonical_tags": [],
+            "user_tags": [
+                "Ros2ProjectTemplate",
+                "ROS2",
+                "ROS"
+            ],
+            "icon_path": "preview.png",
+            "copyFiles": [
+                {
+                    "file": ".gitattributes",
+                    "isTemplated": false
+                },
+                {
+                    "file": ".gitignore",
+                    "isTemplated": false
+                },
+                {
+                    "file": "CMakeLists.txt",
+                    "isTemplated": true
+                },
+                {
+                    "file": "cmake/EngineFinder.cmake",
+                    "isTemplated": true
+                },
+                {
+                    "file": "Config/default_aws_resource_mappings.json",
+                    "isTemplated": false
+                },
+                {
+                    "file": "Config/shader_global_build_options.json",
+                    "isTemplated": false
+                },
+                {
+                    "file": "Gem/${NameLower}_files.cmake",
+                    "isTemplated": true
+                },
+                {
+                    "file": "Gem/${NameLower}_shared_files.cmake",
+                    "isTemplated": true
+                },
+                {
+                    "file": "Gem/CMakeLists.txt",
+                    "isTemplated": true
+                },
+                {
+                    "file": "Gem/Include/${Name}/${Name}Bus.h",
+                    "isTemplated": true
+                },
+                {
+                    "file": "Gem/Platform/Android/${NameLower}_android_files.cmake",
+                    "isTemplated": false
+                },
+                {
+                    "file": "Gem/Platform/Android/${NameLower}_shared_android_files.cmake",
+                    "isTemplated": false
+                },
+                {
+                    "file": "Gem/Platform/Android/PAL_android.cmake",
+                    "isTemplated": true
+                },
+                {
+                    "file": "Gem/Platform/Linux/${NameLower}_linux_files.cmake",
+                    "isTemplated": false
+                },
+                {
+                    "file": "Gem/Platform/Linux/${NameLower}_shared_linux_files.cmake",
+                    "isTemplated": false
+                },
+                {
+                    "file": "Gem/Platform/Linux/PAL_linux.cmake",
+                    "isTemplated": true
+                },
+                {
+                    "file": "Gem/Platform/Mac/${NameLower}_mac_files.cmake",
+                    "isTemplated": false
+                },
+                {
+                    "file": "Gem/Platform/Mac/${NameLower}_shared_mac_files.cmake",
+                    "isTemplated": false
+                },
+                {
+                    "file": "Gem/Platform/Mac/PAL_mac.cmake",
+                    "isTemplated": true
+                },
+                {
+                    "file": "Gem/Platform/Windows/${NameLower}_shared_windows_files.cmake",
+                    "isTemplated": false
+                },
+                {
+                    "file": "Gem/Platform/Windows/${NameLower}_windows_files.cmake",
+                    "isTemplated": false
+                },
+                {
+                    "file": "Gem/Platform/Windows/PAL_windows.cmake",
+                    "isTemplated": true
+                },
+                {
+                    "file": "Gem/Platform/iOS/${NameLower}_ios_files.cmake",
+                    "isTemplated": false
+                },
+                {
+                    "file": "Gem/Platform/iOS/${NameLower}_shared_ios_files.cmake",
+                    "isTemplated": false
+                },
+                {
+                    "file": "Gem/Platform/iOS/PAL_ios.cmake",
+                    "isTemplated": true
+                },
+                {
+                    "file": "Gem/Registry/assetprocessor_settings.setreg",
+                    "isTemplated": true
+                },
+                {
+                    "file": "Gem/Source/${Name}Module.cpp",
+                    "isTemplated": true
+                },
+                {
+                    "file": "Gem/Source/${Name}SystemComponent.cpp",
+                    "isTemplated": true
+                },
+                {
+                    "file": "Gem/Source/${Name}SystemComponent.h",
+                    "isTemplated": true
+                },
+                {
+                    "file": "Gem/enabled_gems.cmake",
+                    "isTemplated": true
+                },
+                {
+                    "file": "Gem/gem.json",
+                    "isTemplated": true
+                },
+                {
+                    "file": "Levels/DemoLevel/DemoLevel.prefab",
+                    "isTemplated": false
+                },
+                {
+                    "file": "Platform/Android/android_project.cmake",
+                    "isTemplated": false
+                },
+                {
+                    "file": "Platform/Android/android_project.json",
+                    "isTemplated": true
+                },
+                {
+                    "file": "Platform/Linux/linux_project.cmake",
+                    "isTemplated": false
+                },
+                {
+                    "file": "Platform/Linux/linux_project.json",
+                    "isTemplated": false
+                },
+                {
+                    "file": "Platform/Mac/mac_project.cmake",
+                    "isTemplated": false
+                },
+                {
+                    "file": "Platform/Mac/mac_project.json",
+                    "isTemplated": false
+                },
+                {
+                    "file": "Platform/Windows/windows_project.cmake",
+                    "isTemplated": false
+                },
+                {
+                    "file": "Platform/Windows/windows_project.json",
+                    "isTemplated": false
+                },
+                {
+                    "file": "Platform/iOS/ios_project.cmake",
+                    "isTemplated": false
+                },
+                {
+                    "file": "Platform/iOS/ios_project.json",
+                    "isTemplated": false
+                },
+                {
+                    "file": "Registry/assetprocessor_settings.setreg",
+                    "isTemplated": true
+                },
+                {
+                    "file": "Registry/awscoreconfiguration.setreg",
+                    "isTemplated": false
+                },
+                {
+                    "file": "Registry/editorpreferences.setreg",
+                    "isTemplated": false
+                },
+                {
+                    "file": "Registry/physxsystemconfiguration.setreg",
+                    "isTemplated": false
+                },
+                {
+                    "file": "Registry/sceneassetimporter.setreg",
+                    "isTemplated": false
+                },
+                {
+                    "file": "Resources/GameSDK.ico",
+                    "isTemplated": false
+                },
+                {
+                    "file": "Resources/LegacyLogoLauncher.bmp",
+                    "isTemplated": false
+                },
+                {
+                    "file": "Resources/Platform/Mac/Images.xcassets/Contents.json",
+                    "isTemplated": false
+                },
+                {
+                    "file": "Resources/Platform/Mac/Images.xcassets/AppIcon.appiconset/Contents.json",
+                    "isTemplated": false
+                },
+                {
+                    "file": "Resources/Platform/Mac/Images.xcassets/AppIcon.appiconset/icon_128.png",
+                    "isTemplated": false
+                },
+                {
+                    "file": "Resources/Platform/Mac/Images.xcassets/AppIcon.appiconset/icon_128_2x.png",
+                    "isTemplated": false
+                },
+                {
+                    "file": "Resources/Platform/Mac/Images.xcassets/AppIcon.appiconset/icon_16.png",
+                    "isTemplated": false
+                },
+                {
+                    "file": "Resources/Platform/Mac/Images.xcassets/AppIcon.appiconset/icon_16_2x.png",
+                    "isTemplated": false
+                },
+                {
+                    "file": "Resources/Platform/Mac/Images.xcassets/AppIcon.appiconset/icon_256.png",
+                    "isTemplated": false
+                },
+                {
+                    "file": "Resources/Platform/Mac/Images.xcassets/AppIcon.appiconset/icon_256_2x.png",
+                    "isTemplated": false
+                },
+                {
+                    "file": "Resources/Platform/Mac/Images.xcassets/AppIcon.appiconset/icon_32.png",
+                    "isTemplated": false
+                },
+                {
+                    "file": "Resources/Platform/Mac/Images.xcassets/AppIcon.appiconset/icon_32_2x.png",
+                    "isTemplated": false
+                },
+                {
+                    "file": "Resources/Platform/Mac/Images.xcassets/AppIcon.appiconset/icon_512.png",
+                    "isTemplated": false
+                },
+                {
+                    "file": "Resources/Platform/Mac/Images.xcassets/AppIcon.appiconset/icon_512_2x.png",
+                    "isTemplated": false
+                },
+                {
+                    "file": "Resources/Platform/Mac/Info.plist",
+                    "isTemplated": true
+                },
+                {
+                    "file": "Resources/Platform/iOS/Images.xcassets/Contents.json",
+                    "isTemplated": false
+                },
+                {
+                    "file": "Resources/Platform/iOS/Images.xcassets/LaunchImage.launchimage/Contents.json",
+                    "isTemplated": false
+                },
+                {
+                    "file": "Resources/Platform/iOS/Images.xcassets/LaunchImage.launchimage/iPadLaunchImage1024x768.png",
+                    "isTemplated": false
+                },
+                {
+                    "file": "Resources/Platform/iOS/Images.xcassets/LaunchImage.launchimage/iPadLaunchImage1536x2048.png",
+                    "isTemplated": false
+                },
+                {
+                    "file": "Resources/Platform/iOS/Images.xcassets/LaunchImage.launchimage/iPadLaunchImage2048x1536.png",
+                    "isTemplated": false
+                },
+                {
+                    "file": "Resources/Platform/iOS/Images.xcassets/LaunchImage.launchimage/iPadLaunchImage768x1024.png",
+                    "isTemplated": false
+                },
+                {
+                    "file": "Resources/Platform/iOS/Images.xcassets/LaunchImage.launchimage/iPhoneLaunchImage640x1136.png",
+                    "isTemplated": false
+                },
+                {
+                    "file": "Resources/Platform/iOS/Images.xcassets/LaunchImage.launchimage/iPhoneLaunchImage640x960.png",
+                    "isTemplated": false
+                },
+                {
+                    "file": "Resources/Platform/iOS/Images.xcassets/AppIcon.appiconset/Contents.json",
+                    "isTemplated": false
+                },
+                {
+                    "file": "Resources/Platform/iOS/Images.xcassets/AppIcon.appiconset/iPadAppIcon152x152.png",
+                    "isTemplated": false
+                },
+                {
+                    "file": "Resources/Platform/iOS/Images.xcassets/AppIcon.appiconset/iPadAppIcon76x76.png",
+                    "isTemplated": false
+                },
+                {
+                    "file": "Resources/Platform/iOS/Images.xcassets/AppIcon.appiconset/iPadProAppIcon167x167.png",
+                    "isTemplated": false
+                },
+                {
+                    "file": "Resources/Platform/iOS/Images.xcassets/AppIcon.appiconset/iPadSettingsIcon29x29.png",
+                    "isTemplated": false
+                },
+                {
+                    "file": "Resources/Platform/iOS/Images.xcassets/AppIcon.appiconset/iPadSettingsIcon58x58.png",
+                    "isTemplated": false
+                },
+                {
+                    "file": "Resources/Platform/iOS/Images.xcassets/AppIcon.appiconset/iPadSpotlightIcon40x40.png",
+                    "isTemplated": false
+                },
+                {
+                    "file": "Resources/Platform/iOS/Images.xcassets/AppIcon.appiconset/iPadSpotlightIcon80x80.png",
+                    "isTemplated": false
+                },
+                {
+                    "file": "Resources/Platform/iOS/Images.xcassets/AppIcon.appiconset/iPhoneAppIcon120x120.png",
+                    "isTemplated": false
+                },
+                {
+                    "file": "Resources/Platform/iOS/Images.xcassets/AppIcon.appiconset/iPhoneAppIcon180x180.png",
+                    "isTemplated": false
+                },
+                {
+                    "file": "Resources/Platform/iOS/Images.xcassets/AppIcon.appiconset/iPhoneSettingsIcon58x58.png",
+                    "isTemplated": false
+                },
+                {
+                    "file": "Resources/Platform/iOS/Images.xcassets/AppIcon.appiconset/iPhoneSettingsIcon87x87.png",
+                    "isTemplated": false
+                },
+                {
+                    "file": "Resources/Platform/iOS/Images.xcassets/AppIcon.appiconset/iPhoneSpotlightIcon120x120.png",
+                    "isTemplated": false
+                },
+                {
+                    "file": "Resources/Platform/iOS/Images.xcassets/AppIcon.appiconset/iPhoneSpotlightIcon80x80.png",
+                    "isTemplated": false
+                },
+                {
+                    "file": "Resources/Platform/iOS/Info.plist",
+                    "isTemplated": true
+                },
+                {
+                    "file": "ShaderLib/README.md",
+                    "isTemplated": false
+                },
+                {
+                    "file": "ShaderLib/scenesrg.srgi",
+                    "isTemplated": true
+                },
+                {
+                    "file": "ShaderLib/viewsrg.srgi",
+                    "isTemplated": true
+                },
+                {
+                    "file": "autoexec.cfg",
+                    "isTemplated": false
+                },
+                {
+                    "file": "game.cfg",
+                    "isTemplated": false
+                },
+                {
+                    "file": "preview.png",
+                    "isTemplated": false
+                },
+                {
+                    "file": "project.json",
+                    "isTemplated": true
+                },
+                {
+                    "file": "Examples/slam_navigation/launch/config/config.rviz",
+                    "isTemplated": false
+                },
+                {
+                    "file": "Examples/slam_navigation/README.md",
+                    "isTemplated": false
+                },
+                {
+                    "file": "Examples/slam_navigation/launch/config/navigation_params.yaml",
+                    "isTemplated": false
+                },
+                {
+                    "file": "Examples/slam_navigation/launch/config/slam_params.yaml",
+                    "isTemplated": false
+                },
+                {
+                    "file": "Examples/slam_navigation/launch/navigation.launch.py",
+                    "isTemplated": false
+                },
+                {
+                    "file": "Examples/slam_navigation/launch/slam.launch.py",
+                    "isTemplated": false
+                }
+            ],
+            "createDirectories": [
+                {
+                    "dir": "Assets"
+                },
+                {
+                    "dir": "Config"
+                },
+                {
+                    "dir": "Gem"
+                },
+                {
+                    "dir": "Gem/Include"
+                },
+                {
+                    "dir": "Gem/Include/${Name}"
+                },
+                {
+                    "dir": "Gem/Platform"
+                },
+                {
+                    "dir": "Gem/Platform/Android"
+                },
+                {
+                    "dir": "Gem/Platform/Linux"
+                },
+                {
+                    "dir": "Gem/Platform/Mac"
+                },
+                {
+                    "dir": "Gem/Platform/Windows"
+                },
+                {
+                    "dir": "Gem/Platform/iOS"
+                },
+                {
+                    "dir": "Gem/Registry"
+                },
+                {
+                    "dir": "Gem/Source"
+                },
+                {
+                    "dir": "Levels"
+                },
+                {
+                    "dir": "Levels/DemoLevel"
+                },
+                {
+                    "dir": "Platform"
+                },
+                {
+                    "dir": "Platform/Android"
+                },
+                {
+                    "dir": "Platform/Linux"
+                },
+                {
+                    "dir": "Platform/Mac"
+                },
+                {
+                    "dir": "Platform/Windows"
+                },
+                {
+                    "dir": "Platform/iOS"
+                },
+                {
+                    "dir": "Registry"
+                },
+                {
+                    "dir": "Resources"
+                },
+                {
+                    "dir": "Resources/Platform"
+                },
+                {
+                    "dir": "Resources/Platform/Mac"
+                },
+                {
+                    "dir": "Resources/Platform/Mac/Images.xcassets"
+                },
+                {
+                    "dir": "Resources/Platform/Mac/Images.xcassets/AppIcon.appiconset"
+                },
+                {
+                    "dir": "Resources/Platform/iOS"
+                },
+                {
+                    "dir": "Resources/Platform/iOS/Images.xcassets"
+                },
+                {
+                    "dir": "Resources/Platform/iOS/Images.xcassets/AppIcon.appiconset"
+                },
+                {
+                    "dir": "Resources/Platform/iOS/Images.xcassets/LaunchImage.launchimage"
+                },
+                {
+                    "dir": "ShaderLib"
+                },
+                {
+                    "dir": "cmake"
+                },
+                {
+                    "dir": "Examples"
+                },
+                {
+                    "dir": "Examples/slam_navigation"
+                },
+                {
+                    "dir": "Examples/slam_navigation/launch"
+                },
+                {
+                    "dir": "Examples/slam_navigation/launch/config"
+                }
+            ],
+            "repo_uri": "https://raw.githubusercontent.com/o3de/o3de-extras/development",
+            "download_source_uri": "https://github.com/o3de/o3de-extras/releases/download/2.0/ros2projecttemplate-1.0.0-template.zip",
+            "sha256": "c7da8b04237c224e5377ae91625cf9a11e7b27479d9f6344c103905791a9b60f",
+            "versions_data": [
+                {
+                    "sha256": "62405080293d0be734398b3a338b2a9fce4dd50cba35d993f95d1d30e8e93e1b",
+                    "version": "1.0.0",
+                    "download_source_uri": "https://github.com/o3de/o3de-extras/releases/download/2.0/ros2projecttemplate-1.0.0-template.zip"
+                }
+            ]
+        }
+    ],
+    "projects_data": [
+        {
+            "project_name": "OpenXRTest",
+            "version": "1.0.0",
+            "project_id": "{947211d5-689a-437f-8ad7-7f558edcd40a}",
+            "repo_uri": "https://raw.githubusercontent.com/o3de/o3de-extras/development",
+            "origin": "https://github.com/o3de/o3de-extras",
+            "license": "For terms please see the LICENSE*.TXT files at the root of this distribution.",
+            "display_name": "OpenXRTest",
+            "summary": "A sample project that uses OpenXR.",
+            "canonical_tags": [
+                "Project"
+            ],
+            "user_tags": [
+                "OpenXRTest"
+            ],
+            "icon_path": "preview.png",
+            "engine": "o3de",
+            "external_subdirectories": [
+                "Gem"
+            ],
+            "restricted": "OpenXRTest",
+            "gem_names": [
+                "XR",
+                "OpenXRVk"
+            ],
+            "versions_data": [
+                {
+                    "sha256": "36e7ad0359f4e91ec287f409732e35c223bfeed47ab6f84109f80a56bf34e1fd",
+                    "version": "1.0.0",
+                    "download_source_uri": "https://github.com/o3de/o3de-extras/releases/download/2.0/openxrtest-1.0.0-project.zip"
+                }
+            ]
+        }
     ]
 }

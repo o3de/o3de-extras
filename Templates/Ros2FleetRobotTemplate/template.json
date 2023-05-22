@@ -1,13 +1,17 @@
 {
     "template_name": "Ros2FleetRobotTemplate",
+    "version": "1.0.0",
     "origin": "Open 3D Engine Extras",
     "origin_url": "https://github.com/o3de/o3de-extras",
+    "repo_uri": "https://raw.githubusercontent.com/o3de/o3de-extras/development",
     "license_url": "https://github.com/o3de/o3de-extras/tree/development/Templates/Ros2FleetRobotTemplate/Template/LICENSE.txt",
-    "display_name": "Ros2FleetRobotTemplate",
+    "display_name": "ROS2 Fleet Robot",
     "summary": "Template for ROS2 multi-robot project.",
     "canonical_tags": [],
     "user_tags": [
-        "Ros2FleetRobotTemplate", "ROS2", "ROS"
+        "Ros2FleetRobotTemplate",
+        "ROS2",
+        "ROS"
     ],
     "icon_path": "preview.png",
     "copyFiles": [
@@ -391,5 +395,6 @@
         {
             "dir": "proteus_nav/src/proteus_nav/test/__pycache__"
         }
-    ]
+    ],
+    "download_source_uri": "https://github.com/o3de/o3de-extras/releases/download/2.0/ros2fleetrobottemplate-1.0.0-template.zip"
 }

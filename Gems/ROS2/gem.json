@@ -10,7 +10,7 @@
     "origin": "RobotecAI",
     "origin_url": "https://github.com/o3de/o3de-extras/development/Gems/ROS2",
     "type": "Code",
-    "summary": "Tools and components to support creating simulations for ros2 systems such as robots",
+    "summary": "Tools and components to support creating simulations for ROS 2 systems such as robots",
     "canonical_tags": [
         "Gem"
     ],
@@ -22,7 +22,7 @@
         "o3de>=1.2.0"
     ],
     "icon_path": "preview.png",
-    "requirements": "Requires ros2 installation (supported distributions: humble). Source your workspace before building the Gem",
+    "requirements": "Requires ROS 2 installation (supported distributions: Humble). Source your workspace before building the Gem",
     "documentation_url": "https://o3de.org/docs/user-guide/gems/reference/design/ros2/",
     "dependencies": [
         "Atom_RPI",
@@ -32,5 +32,7 @@
         "PhysX",
         "StartingPointInput"
     ],
-    "restricted": "ROS2"
+    "restricted": "ROS2",
+    "repo_uri": "https://raw.githubusercontent.com/o3de/o3de-extras/development",
+    "download_source_uri": "https://github.com/o3de/o3de-extras/releases/download/2.0/ros2-1.0.0-gem.zip"
 }
