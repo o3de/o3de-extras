@@ -6,8 +6,9 @@
  *
  */
 
-#include "CameraConstants.h"
 #include "ROS2CameraSensorEditorComponent.h"
+#include "CameraConstants.h"
+#include "CameraUtilities.h"
 #include "ROS2CameraSensorComponent.h"
 #include <AzCore/Component/TransformBus.h>
 #include <ROS2/Frame/ROS2FrameComponent.h>
@@ -62,12 +63,14 @@ namespace ROS2
     {
         AzFramework::EntityDebugDisplayEventBus::Handler::BusConnect(this->GetEntityId());
         AzToolsFramework::Components::EditorComponentBase::Activate();
+        ROS2::CameraCalibrationRequestBus::Handler::BusConnect(GetEntityId());
     }
 
     void ROS2CameraSensorEditorComponent::Deactivate()
     {
         AzToolsFramework::Components::EditorComponentBase::Deactivate();
         AzFramework::EntityDebugDisplayEventBus::Handler::BusDisconnect();
+        ROS2::CameraCalibrationRequestBus::Handler::BusDisconnect(GetEntityId());
     }
 
     void ROS2CameraSensorEditorComponent::GetRequiredServices(AZ::ComponentDescriptor::DependencyArrayType& required)
@@ -80,15 +83,38 @@ namespace ROS2
         incompatible.push_back(AZ_CRC_CE("ROS2CameraSensor"));
     }
 
-    void ROS2CameraSensorEditorComponent::GetProvidedServices(AZ::ComponentDescriptor::DependencyArrayType& required)
+    void ROS2CameraSensorEditorComponent::GetProvidedServices(AZ::ComponentDescriptor::DependencyArrayType& provided)
     {
-        required.push_back(AZ_CRC_CE("ROS2CameraSensor"));
+        provided.push_back(AZ_CRC_CE("ROS2CameraSensor"));
     }
 
     void ROS2CameraSensorEditorComponent::BuildGameEntity(AZ::Entity* gameEntity)
     {
         gameEntity->CreateComponent<ROS2::ROS2CameraSensorComponent>(m_sensorConfiguration, m_cameraSensorConfiguration);
     }
+
+    AZ::Matrix3x3 ROS2CameraSensorEditorComponent::GetCameraMatrix() const
+    {
+        return CameraUtils::MakeCameraIntrinsics(
+            m_cameraSensorConfiguration.m_width,
+            m_cameraSensorConfiguration.m_height,
+            m_cameraSensorConfiguration.m_verticalFieldOfViewDeg);
+    };
+
+    int ROS2CameraSensorEditorComponent::GetWidth() const
+    {
+        return m_cameraSensorConfiguration.m_width;
+    };
+
+    int ROS2CameraSensorEditorComponent::GetHeight() const
+    {
+        return m_cameraSensorConfiguration.m_height;
+    };
+
+    float ROS2CameraSensorEditorComponent::GetVerticalFOV() const
+    {
+        return m_cameraSensorConfiguration.m_verticalFieldOfViewDeg;
+    };
 
     void ROS2CameraSensorEditorComponent::DisplayEntityViewport(
         [[maybe_unused]] const AzFramework::ViewportInfo& viewportInfo, AzFramework::DebugDisplayRequests& debugDisplay)

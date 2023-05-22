@@ -7,6 +7,7 @@
  */
 
 #include "CameraSensorDescription.h"
+#include "CameraUtilities.h"
 #include <AzCore/Math/MatrixUtils.h>
 
 namespace ROS2
@@ -20,24 +21,12 @@ namespace ROS2
         , m_sensorConfiguration(sensorConfiguration)
         , m_cameraName(cameraName)
         , m_cameraNamespace(effectiveNamespace)
-        , m_viewToClipMatrix(MakeViewToClipMatrix())
-        , m_cameraIntrinsics(MakeCameraIntrinsics())
+        , m_viewToClipMatrix(CameraUtils::MakeClipMatrix(
+              m_cameraConfiguration.m_width, m_cameraConfiguration.m_height, m_cameraConfiguration.m_verticalFieldOfViewDeg))
+        , m_cameraIntrinsics(CameraUtils::MakeCameraIntrinsics(
+              m_cameraConfiguration.m_width, m_cameraConfiguration.m_height, m_cameraConfiguration.m_verticalFieldOfViewDeg))
     {
         ValidateParameters();
-    }
-
-    float CameraSensorDescription::GetAspectRatio() const
-    {
-        return static_cast<float>(m_cameraConfiguration.m_width) / static_cast<float>(m_cameraConfiguration.m_height);
-    }
-
-    AZ::Matrix4x4 CameraSensorDescription::MakeViewToClipMatrix() const
-    {
-        const float nearDist = 0.1f, farDist = 100.0f;
-        AZ::Matrix4x4 localViewToClipMatrix;
-        AZ::MakePerspectiveFovMatrixRH(
-            localViewToClipMatrix, AZ::DegToRad(m_cameraConfiguration.m_verticalFieldOfViewDeg), GetAspectRatio(), nearDist, farDist, true);
-        return localViewToClipMatrix;
     }
 
     void CameraSensorDescription::ValidateParameters() const
@@ -50,24 +39,4 @@ namespace ROS2
         AZ_Assert(!m_cameraName.empty(), "Camera name cannot be empty");
     }
 
-    AZStd::array<double, 9> CameraSensorDescription::MakeCameraIntrinsics() const
-    {
-        /* Intrinsic camera matrix of the camera image is being created here
-           It is based on other parameters available in the structure - they must be initialized before this function is called
-            Matrix is row-major and has the following form:
-            [fx  0 cx]
-            [ 0 fy cy]
-            [ 0  0  1]
-           Projects 3D points in the camera coordinate frame to 2D pixel
-           coordinates using the focal lengths (fx, fy) and principal point
-           (cx, cy).
-       */
-        const auto w = static_cast<double>(m_cameraConfiguration.m_width);
-        const auto h = static_cast<double>(m_cameraConfiguration.m_height);
-        const double verticalFieldOfView = AZ::DegToRad(m_cameraConfiguration.m_verticalFieldOfViewDeg);
-        const double horizontalFoV = 2.0 * AZStd::atan(AZStd::tan(verticalFieldOfView / 2.0) * GetAspectRatio());
-        const double focalLengthX = w / (2.0 * AZStd::tan(horizontalFoV / 2.0));
-        const double focalLengthY = h / (2.0 * AZStd::tan(verticalFieldOfView / 2.0));
-        return { focalLengthX, 0.0, w / 2.0, 0.0, focalLengthY, h / 2.0, 0.0, 0.0, 1.0 };
-    }
 } // namespace ROS2

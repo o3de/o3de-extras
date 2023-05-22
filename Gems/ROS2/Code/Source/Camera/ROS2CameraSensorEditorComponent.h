@@ -13,6 +13,7 @@
 #include <AzToolsFramework/ToolsComponents/EditorComponentBase.h>
 
 #include "CameraSensorConfiguration.h"
+#include <ROS2/Camera/CameraCalibrationRequestBus.h>
 #include <ROS2/Frame/NamespaceConfiguration.h>
 #include <ROS2/Frame/ROS2Transform.h>
 #include <ROS2/Sensor/SensorConfiguration.h>
@@ -24,6 +25,7 @@ namespace ROS2
     //! Component draws camera frustrum in the Editor
     class ROS2CameraSensorEditorComponent
         : public AzToolsFramework::Components::EditorComponentBase
+        , public CameraCalibrationRequestBus::Handler
         , protected AzFramework::EntityDebugDisplayEventBus::Handler
     {
     public:
@@ -33,13 +35,19 @@ namespace ROS2
         static void Reflect(AZ::ReflectContext* context);
         static void GetRequiredServices(AZ::ComponentDescriptor::DependencyArrayType& required);
         static void GetIncompatibleServices(AZ::ComponentDescriptor::DependencyArrayType& incompatible);
-        static void GetProvidedServices(AZ::ComponentDescriptor::DependencyArrayType& required);
+        static void GetProvidedServices(AZ::ComponentDescriptor::DependencyArrayType& provided);
 
         void Activate() override;
         void Deactivate() override;
 
         // AzToolsFramework::Components::EditorComponentBase overrides
         void BuildGameEntity(AZ::Entity* gameEntity) override;
+
+        // CameraCalibrationRequestBus::Handler overrides
+        AZ::Matrix3x3 GetCameraMatrix() const override;
+        int GetWidth() const override;
+        int GetHeight() const override;
+        float GetVerticalFOV() const override;
 
     private:
         // EntityDebugDisplayEventBus::Handler overrides
