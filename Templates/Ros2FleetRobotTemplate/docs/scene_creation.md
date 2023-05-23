@@ -1,6 +1,6 @@
 # Warehouse Scene Creation Guidelines
 
-This document describes the process of creating and modifying the warehouse scene which is the bases of the ROS2 Fleet Template. All the prefabs and assets used in this scene can be found in the [Warehouse Assets Gem](../../../Gems/WarehouseAssets). Before proceeding please take a look at [README](../../../Gems/WarehouseAssets/README.md) of this gem. You'll find there a list of all included objects and some useful tips.
+This document describes the process of creating and modifying the warehouse scene which is the basis of the ROS2 Fleet Template. All the prefabs and assets used in this scene can be found in the [Warehouse Assets Gem](../../../Gems/WarehouseAssets). Before proceeding please take a look at [README](../../../Gems/WarehouseAssets/README.md) of this Gem. You'll find a list of all included objects and some useful tips there.
 
 ## Importing the ready-to-use warehouse scene
 

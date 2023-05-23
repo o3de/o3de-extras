@@ -98,9 +98,9 @@ The `WarehouseScene.prefab` contains a sample, ready-to-use warehouse scene, bui
 - `Storage_racks` contains storage racks arranged in 2 groups:
   - `Unpacked` with `Storage_rack` prefabs
   - `Packs` with `Storage_2x2_Pack` prefabs
-- `Rack_protectors` contains rack protection prefabs
+- `Rack_protectors` contains rack protection prefabs.
 
-These objects are followed by instances warehouse structural assets:
+These objects are followed by instances of warehouse structural assets:
 
 - `Warehouse_Floor.prefab`
 - `Warehouse_Walls.prefab`
