@@ -40,15 +40,15 @@ Another type of modification concerns the warehouse structure. As described in t
 
 ![](images/stacked_warehouses2.png)
 
-> Note: in O3DE there are 2 ways you can alter instantiated prefab: by changing prefab instance or prefab definition (source). If you modify prefab source, all instances will be altered. Thus unless you really know what you are doing, you should edit instances only. Simple hint: do not double-click on the prefab in the Entuty Outliner. When double-clicking the editor enters focused mode, prefab is highlighted in blue, changes will be saved in the prefab source. Please refer to [this document](https://www.o3de.org/docs/learning-guide/tutorials/entities-and-prefabs/entity-and-prefab-basics/) learn about working with prefabs.
+> Note: in O3DE there are 2 ways you can alter instantiated prefab: by changing prefab instance or prefab definition (source). If you modify prefab source, all instances will be altered. Thus unless you really know what you are doing, you should edit instances only. Simple hint: do not double-click on the prefab in the Entity Outliner. When double-clicking the editor enters focused mode, prefab is highlighted in blue, changes will be saved in the prefab source. Please refer to [this document](https://www.o3de.org/docs/learning-guide/tutorials/entities-and-prefabs/entity-and-prefab-basics/) to learn about working with prefabs.
 
 ## Creating the warehouse scene
 
 According to your needs, you may also create a custom warehouse using selected assets from the Warehouse Assets Gem. As described in the [Warehouse Assets Gem README](../../../Gems/WarehouseAssets/README.md), the gem contains structural assets defining the building and various objects to be placed inside. Structural assets include 3 prefabs:
 
-- Floor
-- Walls with gates
-- Roof with lights
+- Floor,
+- Walls with gates,
+- Roof with lights.
 
 If you intend to use them together, be sure to place them with the same transform, to ensure alignment. Besides the building structure, the gem provides a set of different objects to be used in the warehouse. These are arranged into prefabs with different levels of nesting. You can import the empty rack and place boxes on it, but you can also instantiate ready-to-use prefab with racks and boxes or pack of 4 racks. Of course, nothing prevents you from modifying such prefabs after instantiating.
 
