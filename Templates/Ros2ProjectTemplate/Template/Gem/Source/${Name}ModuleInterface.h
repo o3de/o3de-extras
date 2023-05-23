@@ -10,27 +10,26 @@
 
 #include <AzCore/Memory/SystemAllocator.h>
 #include <AzCore/Module/Module.h>
-
-#include "${Name}SystemComponent.h"
-#include "${SanitizedCppName}SampleComponent.h"
+#include <${Name}SystemComponent.h>
 
 namespace ${SanitizedCppName}
 {
-    class ${SanitizedCppName}Module
+    class ${SanitizedCppName}ModuleInterface
         : public AZ::Module
     {
     public:
-        AZ_RTTI(${SanitizedCppName}Module, "${ModuleClassId}", AZ::Module);
-        AZ_CLASS_ALLOCATOR(${SanitizedCppName}Module, AZ::SystemAllocator);
+        AZ_RTTI(${SanitizedCppName}ModuleInterface, "{${Random_Uuid}}", AZ::Module);
+        AZ_CLASS_ALLOCATOR(${SanitizedCppName}ModuleInterface, AZ::SystemAllocator, 0);
 
-        ${SanitizedCppName}Module()
-            : AZ::Module()
+        ${SanitizedCppName}ModuleInterface()
         {
             // Push results of [MyComponent]::CreateDescriptor() into m_descriptors here.
+            // Add ALL components descriptors associated with this gem to m_descriptors.
+            // This will associate the AzTypeInfo information for the components with the the SerializeContext, BehaviorContext and EditContext.
+            // This happens through the [MyComponent]::Reflect() function.
             m_descriptors.insert(m_descriptors.end(), {
                 ${SanitizedCppName}SystemComponent::CreateDescriptor(),
-                ${SanitizedCppName}SampleComponent::CreateDescriptor(),
-            });
+                });
         }
 
         /**
@@ -44,5 +43,3 @@ namespace ${SanitizedCppName}
         }
     };
 }// namespace ${SanitizedCppName}
-
-AZ_DECLARE_MODULE_CLASS(Gem_${SanitizedCppName}, ${SanitizedCppName}::${SanitizedCppName}Module)

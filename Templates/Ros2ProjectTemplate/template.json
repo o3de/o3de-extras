@@ -15,6 +15,10 @@
     "icon_path": "preview.png",
     "copyFiles": [
         {
+            "file": ".clang-format",
+            "isTemplated": false
+        },
+        {
             "file": ".gitattributes",
             "isTemplated": false
         },
@@ -43,9 +47,18 @@
             "isTemplated": true
         },
         {
+            "file": "Gem/${NameLower}_editor_files.cmake",
+            "isTemplated": true
+        },
+        {
             "file": "Gem/${NameLower}_shared_files.cmake",
             "isTemplated": true
         },
+        {
+            "file": "Gem/${NameLower}_editor_shared_files.cmake",
+            "isTemplated": true
+        },
+        
         {
             "file": "Gem/CMakeLists.txt",
             "isTemplated": true
@@ -123,11 +136,35 @@
             "isTemplated": true
         },
         {
+            "file": "Gem/Source/${Name}EditorModule.cpp",
+            "isTemplated": true
+        },
+        {
+            "file": "Gem/Source/${Name}ModuleInterface.h",
+            "isTemplated": true
+        },
+        {
             "file": "Gem/Source/${Name}SystemComponent.cpp",
             "isTemplated": true
         },
         {
             "file": "Gem/Source/${Name}SystemComponent.h",
+            "isTemplated": true
+        },
+        {
+            "file": "Gem/Source/${Name}EditorSystemComponent.cpp",
+            "isTemplated": true
+        },
+        {
+            "file": "Gem/Source/${Name}EditorSystemComponent.h",
+            "isTemplated": true
+        },
+        {
+            "file": "Gem/Source/${Name}SampleComponent.cpp",
+            "isTemplated": true
+        },
+        {
+            "file": "Gem/Source/${Name}SampleComponent.h",
             "isTemplated": true
         },
         {
@@ -140,7 +177,7 @@
         },
         {
             "file": "Levels/DemoLevel/DemoLevel.prefab",
-            "isTemplated": false
+            "isTemplated": true
         },
         {
             "file": "Platform/Android/android_project.cmake",

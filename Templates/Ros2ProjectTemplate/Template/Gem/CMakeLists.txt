@@ -57,10 +57,17 @@ ly_add_target(
         PUBLIC
             Include
     BUILD_DEPENDENCIES
+        PUBLIC
+            Gem::ImGui.Static
+            Gem::ROS2.Static
         PRIVATE
             AZ::AzGameFramework
             Gem::Atom_AtomBridge.Static
+            Gem::ImGui.Static
 )
+
+# Request ROS2 packages to be included 
+target_depends_on_ros2_packages(${gem_name}.Private.Object geometry_msgs)
 
 ly_add_target(
     NAME ${gem_name} ${PAL_TRAIT_MONOLITHIC_DRIVEN_MODULE_TYPE}
@@ -72,14 +79,59 @@ ly_add_target(
         PUBLIC
             Include
     BUILD_DEPENDENCIES
+        PUBLIC
+            Gem::ImGui.Static
         PRIVATE
             Gem::${gem_name}.Private.Object
             AZ::AzCore
 )
 
+
+ly_add_target(
+    NAME ${gem_name}.Editor.Static STATIC
+    NAMESPACE Gem
+    AUTOMOC
+    AUTORCC
+    FILES_CMAKE
+        ${NameLower}_editor_files.cmake
+    INCLUDE_DIRECTORIES
+        PRIVATE
+            Source
+            Source/RobotImporter
+        PUBLIC
+            Include
+    BUILD_DEPENDENCIES
+        PUBLIC
+            Gem::ImGui.Static
+            Gem::ROS2.Static
+            AZ::AzToolsFramework
+            Gem::AtomLyIntegration_CommonFeatures.Editor.Static
+            Gem::LmbrCentral.API
+        PRIVATE
+            ${gem_name}.Private.Object
+)
+
+
+ly_add_target(
+    NAME ${gem_name}.Editor GEM_MODULE
+    NAMESPACE Gem
+    FILES_CMAKE
+        ${NameLower}_editor_shared_files.cmake
+    INCLUDE_DIRECTORIES
+        PRIVATE
+            Source
+        PUBLIC
+            Include
+    BUILD_DEPENDENCIES
+        PUBLIC
+            ${gem_name}.Editor.Static
+            Gem::Atom_Feature_Common.Static
+)
+
+
 # if enabled, ${gem_name} is used by all kinds of applications
-ly_create_alias(NAME ${gem_name}.Builders NAMESPACE Gem TARGETS Gem::${gem_name})
-ly_create_alias(NAME ${gem_name}.Tools    NAMESPACE Gem TARGETS Gem::${gem_name})
+ly_create_alias(NAME ${gem_name}.Builders NAMESPACE Gem TARGETS Gem::${gem_name}.Editor)
+ly_create_alias(NAME ${gem_name}.Tools    NAMESPACE Gem TARGETS Gem::${gem_name}.Editor)
 ly_create_alias(NAME ${gem_name}.Clients  NAMESPACE Gem TARGETS Gem::${gem_name})
 ly_create_alias(NAME ${gem_name}.Servers  NAMESPACE Gem TARGETS Gem::${gem_name})
 
