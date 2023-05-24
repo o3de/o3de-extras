@@ -1,6 +1,6 @@
 # Warehouse Scene Creation Guidelines
 
-This document describes the process of creating and modifying the warehouse scene which is the basis of the ROS2 Fleet Template. All the prefabs and assets used in this scene can be found in the [Warehouse Assets Gem](../../../Gems/WarehouseAssets). Before proceeding please take a look at [README](../../../Gems/WarehouseAssets/README.md) of this Gem. You'll find a list of all included objects and some useful tips there.
+This document describes the process of creating and modifying the warehouse scene which is the basis of the ROS 2 Fleet Template. All the prefabs and assets used in this scene can be found in the [Warehouse Assets Gem](../../../Gems/WarehouseAssets). Before proceeding please take a look at [README](../../../Gems/WarehouseAssets/README.md) of this Gem. You'll find a list of all included objects and some useful tips there.
 
 ## Importing the ready-to-use warehouse scene
 
@@ -16,10 +16,10 @@ You can also type WarehouseScene in the search field of the `Pick Prefab` dialog
 
 For best visual results it is advised to do following things:
 
-- The `WarehouseScene` prefab is equipped with all the necessary lights. Any global or environmental lightning may interfere with internal lights. In particular, if you are creating the scene from scratch using the default O3DE template, you should consider removing all child entities of the `Atom Default Environment/` except for the camera.
+- The `WarehouseScene` prefab is equipped with all the necessary lights. Any global or environmental lighting may interfere with internal lights. In particular, if you are creating the scene from scratch using the default O3DE template, you should consider removing all child entities of the `Atom Default Environment/` except for the camera.
 - In the Tips section of the [Warehouse Assets Gem documentation](../../../Gems/WarehouseAssets/README.md) you'll find a description of the camera configuration which will help achieve better visual results.
 
-> Note: the ROS2 Fleet Template already contains a scene with the `WarehouseScene.prefab` and fully configured camera.
+> Note: the ROS 2 Fleet Template already contains a scene with the `WarehouseScene.prefab` and fully configured camera.
 
 ## Modifying the warehouse scene
 
@@ -29,10 +29,10 @@ If you have the `WarehouseScene` prefab on your scene you can easily apply modif
 
 You can alter objects on each level by removing, scaling or moving any objects. For example, you can:
 
-- Re-arrange boxes on shelves by translating and rotating existing ones, or adding new ones,
-- Remove boxes from a shelf to make places for different objects,
-- Remove the whole storage rack,
-- Translate racks to different locations.
+- re-arrange boxes on shelves by translating and rotating existing ones, or adding new ones,
+- remove boxes from a shelf to make places for different objects,
+- remove the whole storage rack,
+- translate racks to different locations.
 
 Another type of modification concerns the warehouse structure. As described in the [Warehouse Assets Gem README Tips](../../../Gems/WarehouseAssets/README.md), you can easily change frontal walls by replacing the solid wall with open gates. This way you can stack two or more warehouses, one after the other.
 
@@ -46,9 +46,9 @@ Another type of modification concerns the warehouse structure. As described in t
 
 According to your needs, you may also create a custom warehouse using selected assets from the Warehouse Assets Gem. As described in the [Warehouse Assets Gem README](../../../Gems/WarehouseAssets/README.md), the gem contains structural assets defining the building and various objects to be placed inside. Structural assets include 3 prefabs:
 
-- Floor,
-- Walls with gates,
-- Roof with lights.
+- floor,
+- walls with gates,
+- roof with lights.
 
 If you intend to use them together, be sure to place them with the same transform, to ensure alignment. Besides the building structure, the gem provides a set of different objects to be used in the warehouse. These are arranged into prefabs with different levels of nesting. You can import the empty rack and place boxes on it, but you can also instantiate ready-to-use prefab with racks and boxes or pack of 4 racks. Of course, nothing prevents you from modifying such prefabs after instantiating.
 
