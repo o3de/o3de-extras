@@ -50,7 +50,7 @@ According to your needs, you may also create a custom warehouse using selected a
 - walls with gates,
 - roof with lights.
 
-If you intend to use them together, be sure to place them with the same transform, to ensure alignment. Besides the building structure, the gem provides a set of different objects to be used in the warehouse. These are arranged into prefabs with different levels of nesting. You can import the empty rack and place boxes on it, but you can also instantiate ready-to-use prefab with racks and boxes or pack of 4 racks. Of course, nothing prevents you from modifying such prefabs after instantiating.
+To achieve alignment, all these prefabs should be instantiated with the same transform (position, rotation and scale). Besides the building structure, the gem provides a set of different objects to be used in the warehouse. These are arranged into prefabs with different levels of nesting. You can import the empty rack and place boxes on it, but you can also instantiate ready-to-use prefab with racks and boxes or pack of 4 racks. Of course, nothing prevents you from modifying such prefabs after instantiating.
 
 ![](images/warehouse_assets.png)
 
