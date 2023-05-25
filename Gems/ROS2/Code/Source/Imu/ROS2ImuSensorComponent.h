@@ -39,10 +39,15 @@ namespace ROS2
         //////////////////////////////////////////////////////////////////////////
 
     private:
+        static constexpr int m_minFilterSize = 1;
+
         //! Length of filter that removes numerical noise
         int m_filterSize{ 10 };
+<<<<<<< HEAD
         int m_minFilterSize{ 0 };
         int m_maxFilterSize{ 200 };
+=======
+>>>>>>> 4559cef (Add private limits struct)
 
         //! Include gravity acceleration
         bool m_includeGravity{ true };
