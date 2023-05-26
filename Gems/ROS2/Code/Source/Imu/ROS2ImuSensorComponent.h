@@ -71,6 +71,6 @@ namespace ROS2
         // ROS2::Utils::PhysicsCallbackHandler overrides ...
         void OnPhysicsSimulationFinished(AzPhysics::SceneHandle sceneHandle, float deltaTime) override;
 
-        AZ::Matrix3x3 toCovarianceMatrix(const AZ::Vector3& Variance);
+        AZ::Matrix3x3 ToDiagonalCovarianceMatrix(const AZ::Vector3& variance);
     };
 } // namespace ROS2
