@@ -11,9 +11,7 @@
 #include <AzCore/Component/Entity.h>
 #include <AzCore/Debug/Trace.h>
 #include <RobotImporter/RobotImporterWidget.h>
-#include <cstdint>
 #include <qcombobox.h>
-#include <qlabel.h>
 
 namespace ROS2
 {
@@ -30,7 +28,7 @@ namespace ROS2
         }
         else
         {
-            AZ_TracePrintf("PrefabMakerPage", "Spawner interface not found");
+            AZ_Warning("PrefabMakerPage", false, "Spawner interface not found");
         }
         m_spawnPointsList = new QComboBox(this);
         for (uint32_t i = 0; i < m_spawnPointsInfos.size(); i++)

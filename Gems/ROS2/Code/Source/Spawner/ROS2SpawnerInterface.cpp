@@ -9,6 +9,7 @@
 #include "ROS2SpawnerInterface.h"
 #include "ROS2SpawnPointComponent.h"
 #include "ROS2SpawnerComponent.h"
+#include <ROS2/Spawner/SpawnerInterface.h>
 #include <AzCore/Component/Component.h>
 #include <AzCore/Component/ComponentApplicationBus.h>
 #include <AzCore/Component/Entity.h>
@@ -25,14 +26,15 @@
 
 namespace ROS2
 {
-    const AZ::Transform& ROS2SpawnerInterface::GetDefaultSpawnPose() const
+
+    const AZ::Transform ROS2SpawnerInterface::GetDefaultSpawnPose() const
     {
         return m_defaultSpawnPose;
     };
 
-    const AZStd::vector<AZStd::pair<AZStd::string, AZStd::shared_ptr<AZ::Transform>>> ROS2SpawnerInterface::GetAllSpawnPoints() const
+    const SpawnPointsNameAndPoseVector ROS2SpawnerInterface::GetAllSpawnPoints() const
     {
-        AZStd::vector<AZStd::pair<AZStd::string, AZStd::shared_ptr<AZ::Transform>>> allSpawnPoints;
+        SpawnPointsNameAndPoseVector allSpawnPoints;
 
         AZ::EntityId levelEntityId;
         AzToolsFramework::ToolsApplicationRequestBus::BroadcastResult(
@@ -48,7 +50,7 @@ namespace ROS2
         }
         else
         {
-            AZ_TracePrintf("ROS2SpawnerInterface", "Level entity found");
+            AZ_Warning("ROS2SpawnerInterface", false, "Level entity found");
         }
 
         AzToolsFramework::EntityIdList allLevelEntities;
@@ -65,6 +67,7 @@ namespace ROS2
             AZ_Assert(entity, "No child entity %s", entityId.ToString().c_str());
 
             const auto allComponents = entity->GetComponents();
+            std::cout << "Found " << entity->FindComponents<ROS2SpawnPointComponent>().size() << std::endl;
 
             for (const AZ::Component* component : allComponents)
             {

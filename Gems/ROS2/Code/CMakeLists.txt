@@ -61,7 +61,6 @@ ly_add_target(
         PUBLIC
             AZ::AzCore
             AZ::AzFramework
-            AZ::AzToolsFramework
             Gem::Atom_RPI.Public
             Gem::Atom_Feature_Common.Static
             Gem::Atom_Component_DebugCamera.Static

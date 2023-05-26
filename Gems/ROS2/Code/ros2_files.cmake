@@ -84,8 +84,6 @@ set(FILES
         Source/Spawner/ROS2SpawnerComponent.h
         Source/Spawner/ROS2SpawnPointComponent.cpp
         Source/Spawner/ROS2SpawnPointComponent.h
-        Source/Spawner/ROS2SpawnerInterface.cpp
-        Source/Spawner/ROS2SpawnerInterface.h
         Source/Utilities/Controllers/PidConfiguration.cpp
         Source/Utilities/PhysicsCallbackHandler.cpp
         Source/Utilities/PhysicsCallbackHandler.h

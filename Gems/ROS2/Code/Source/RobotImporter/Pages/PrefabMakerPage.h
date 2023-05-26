@@ -9,9 +9,7 @@
 #pragma once
 
 #include <AzCore/Component/Entity.h>
-#include <AzCore/Math/Transform.h>
-#include <AzCore/std/containers/vector.h>
-#include <AzCore/std/smart_ptr/shared_ptr.h>
+#include <ROS2/Spawner/SpawnerInterface.h>
 #include <qcombobox.h>
 #if !defined(Q_MOC_RUN)
 #include <AzCore/Math/Crc.h>
@@ -50,7 +48,7 @@ namespace ROS2
         QTextEdit* m_log;
         QCheckBox* m_useArticulation;
         QComboBox* m_spawnPointsList;
-        AZStd::vector<AZStd::pair<AZStd::string, AZStd::shared_ptr<AZ::Transform>>> m_spawnPointsInfos;
+        SpawnPointsNameAndPoseVector m_spawnPointsInfos;
         RobotImporterWidget* m_parentImporterWidget;
     };
 } // namespace ROS2

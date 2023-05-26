@@ -7,9 +7,9 @@
  */
 #pragma once
 
-#include <ROS2SystemComponent.h>
-
+#include "Spawner/ROS2SpawnerInterface.h"
 #include <AzToolsFramework/Entity/EditorEntityContextBus.h>
+#include <ROS2SystemComponent.h>
 
 namespace ROS2
 {
@@ -36,5 +36,8 @@ namespace ROS2
         void Activate() override;
         void Deactivate() override;
         //////////////////////////////////////////////////////////////////////////
+
+        // Interface for spawning robots
+        ROS2SpawnerInterface m_spawnerInterface;
     };
 } // namespace ROS2

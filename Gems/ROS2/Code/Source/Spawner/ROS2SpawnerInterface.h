@@ -16,15 +16,13 @@
 
 namespace ROS2
 {
-    class ROS2SpawnerInterface : public ROS2::SpawnerInterface::Registrar
+    class ROS2SpawnerInterface : public SpawnerInterface::Registrar
     {
     public:
-        const AZ::Transform& GetDefaultSpawnPose() const override;
+        ROS2SpawnerInterface() = default;
+        const AZ::Transform GetDefaultSpawnPose() const override;
 
-        // void registerNewSpawnPointComponent(const AZ::EntityId& entityId) override;
-
-        // void removeSpawnPointComponent(const AZ::EntityId& entityId) override;
-        const AZStd::vector<AZStd::pair<AZStd::string, AZStd::shared_ptr<AZ::Transform>>> GetAllSpawnPoints() const;
+        const SpawnPointsNameAndPoseVector GetAllSpawnPoints() const override;
 
     private:
         void GetAllEntityDescendants(AZ::EntityId entityId, AZStd::vector<AZ::EntityId>& entityList) const;
