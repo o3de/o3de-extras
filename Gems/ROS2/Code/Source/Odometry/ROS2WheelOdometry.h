@@ -7,15 +7,16 @@
  */
 #pragma once
 
+#include "ROS2OdometryCovariance.h"
 #include <AzCore/Math/Transform.h>
 #include <AzCore/Serialization/SerializeContext.h>
 #include <AzFramework/Physics/Common/PhysicsEvents.h>
 #include <AzFramework/Physics/PhysicsSystem.h>
 #include <AzFramework/Physics/SimulatedBodies/RigidBody.h>
 #include <ROS2/Sensor/ROS2SensorComponent.h>
+#include <Utilities/PhysicsCallbackHandler.h>
 #include <nav_msgs/msg/odometry.hpp>
 #include <rclcpp/publisher.hpp>
-#include <Utilities/PhysicsCallbackHandler.h>
 
 namespace ROS2
 {
@@ -44,6 +45,8 @@ namespace ROS2
         nav_msgs::msg::Odometry m_odometryMsg;
         AZ::Vector3 m_robotPose{ 0 };
         AZ::Quaternion m_robotRotation{ 0, 0, 0, 1 };
+        ROS2OdometryCovariance m_poseCovariance;
+        ROS2OdometryCovariance m_twistCovariance;
 
         // ROS2SensorComponent overrides ...
         void SetupRefreshLoop() override;
