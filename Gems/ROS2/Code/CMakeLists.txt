@@ -19,6 +19,29 @@ if (NOT ROS2_FOUND)
 endif()
 message(DEBUG "Building ${gem_name} Gem with ros2 $ENV{ROS_DISTRO}")
 
+# Check if ROS 2 distribution is cached
+get_property(ROS_DISTRO_TYPE CACHE ROS_DISTRO PROPERTY TYPE)
+
+# Perform checks with cached ROS 2 distribution and sourced distribution. Save the distribution into cache if it was not cached before or if they do not match end with error.
+if (NOT ROS_DISTRO_TYPE)
+    set(ROS_DISTRO $ENV{ROS_DISTRO} CACHE STRING "ROS 2 distribution of current configuration" FORCE)
+elseif(NOT "$ENV{ROS_DISTRO}" STREQUAL "${ROS_DISTRO}")
+    get_cmake_property(CACHED_VARIABLES CACHE_VARIABLES)
+    set(ROS_DISTRO_COPY ${ROS_DISTRO})
+    # Iterate over cached variables and unset them
+    foreach(CACHED_VARIABLE ${CACHED_VARIABLES})
+        unset(${CACHED_VARIABLE} CACHE)
+    endforeach()
+    message(FATAL_ERROR "ROS 2 distribution does not match. Configuration created for: ${ROS_DISTRO_COPY}, sourced distribution: $ENV{ROS_DISTRO}.  Removed invalid configuration, please reconfigure project.")
+endif()
+
+# Add a custom target to always check during build if sourced and cached distributions match.
+add_custom_target(
+    ROS2DistributionCheck ALL 
+    COMMENT "Checking if sourced ROS 2 distribution matches with the configuration"
+    COMMAND ${CMAKE_COMMAND} -DROS_DISTRO=${ROS_DISTRO} -P ${CMAKE_CURRENT_SOURCE_DIR}/checkROS2Distribution.cmake
+)
+
 # Add the ROS2.Static target
 # Note: We include the common files and the platform specific files which are set in ros2_common_files.cmake
 # and in ${pal_dir}/ros2_${PAL_PLATFORM_NAME_LOWERCASE}_files.cmake
