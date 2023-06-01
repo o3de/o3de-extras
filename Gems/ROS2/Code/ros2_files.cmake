@@ -59,6 +59,8 @@ set(FILES
         Source/Odometry/ROS2OdometrySensorComponent.h
         Source/Odometry/ROS2WheelOdometry.cpp
         Source/Odometry/ROS2WheelOdometry.h
+        Source/Odometry/ROS2OdometryCovariance.cpp
+        Source/Odometry/ROS2OdometryCovariance.h
         Source/RobotControl/Ackermann/AckermannSubscriptionHandler.cpp
         Source/RobotControl/Ackermann/AckermannSubscriptionHandler.h
         Source/RobotControl/ControlConfiguration.cpp
@@ -119,4 +121,4 @@ set(FILES
         Source/VehicleDynamics/WheelControllerComponent.cpp
         Source/VehicleDynamics/WheelControllerComponent.h
         Source/VehicleDynamics/WheelDynamicsData.h
-        )
+)
