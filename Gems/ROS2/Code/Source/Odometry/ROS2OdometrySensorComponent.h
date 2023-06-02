@@ -15,7 +15,7 @@
 #include <AzFramework/Physics/PhysicsScene.h>
 #include <AzFramework/Physics/SimulatedBodies/RigidBody.h>
 #include <ROS2/Sensor/ROS2SensorComponent.h>
-#include <Utilities/PhysicsCallbackHandler.h>
+#include <ROS2/Utilities/PhysicsCallbackHandler.h>
 #include <nav_msgs/msg/odometry.hpp>
 #include <rclcpp/publisher.hpp>
 

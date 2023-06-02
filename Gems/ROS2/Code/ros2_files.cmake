@@ -59,8 +59,7 @@ set(FILES
         Source/Odometry/ROS2OdometrySensorComponent.h
         Source/Odometry/ROS2WheelOdometry.cpp
         Source/Odometry/ROS2WheelOdometry.h
-        Source/Odometry/ROS2OdometryCovariance.cpp
-        Source/Odometry/ROS2OdometryCovariance.h
+        Source/Utilities/ROS2OdometryCovariance.cpp
         Source/RobotControl/Ackermann/AckermannSubscriptionHandler.cpp
         Source/RobotControl/Ackermann/AckermannSubscriptionHandler.h
         Source/RobotControl/ControlConfiguration.cpp
@@ -88,7 +87,6 @@ set(FILES
         Source/Spawner/ROS2SpawnPointComponent.h
         Source/Utilities/Controllers/PidConfiguration.cpp
         Source/Utilities/PhysicsCallbackHandler.cpp
-        Source/Utilities/PhysicsCallbackHandler.h
         Source/Utilities/ROS2Conversions.cpp
         Source/Utilities/ROS2Names.cpp
         Source/VehicleDynamics/AxleConfiguration.cpp

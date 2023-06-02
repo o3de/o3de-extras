@@ -12,7 +12,7 @@
 #include <AzFramework/Physics/Common/PhysicsEvents.h>
 #include <AzFramework/Physics/PhysicsSystem.h>
 #include <ROS2/Sensor/ROS2SensorComponent.h>
-#include <Utilities/PhysicsCallbackHandler.h>
+#include <ROS2/Utilities/PhysicsCallbackHandler.h>
 #include <rclcpp/publisher.hpp>
 #include <sensor_msgs/msg/imu.hpp>
 

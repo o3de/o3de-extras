@@ -6,7 +6,7 @@
  *
  */
 
-#include "ROS2OdometryCovariance.h"
+#include <ROS2/Utilities/ROS2OdometryCovariance.h>
 #include <AzCore/RTTI/RTTIMacros.h>
 #include <AzCore/Serialization/EditContext.h>
 #include <AzCore/Serialization/EditContextConstants.inl>
@@ -57,5 +57,4 @@ namespace ROS2
         };
         // clang-format on
     }
-
 } // namespace ROS2

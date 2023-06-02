@@ -5,7 +5,7 @@
  * SPDX-License-Identifier: Apache-2.0 OR MIT
  *
  */
-#include "PhysicsCallbackHandler.h"
+#include <ROS2/Utilities/PhysicsCallbackHandler.h>
 #include "AzFramework/Physics/RigidBodyBus.h"
 #include "AzFramework/Physics/SimulatedBodies/RigidBody.h"
 
