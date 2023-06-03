@@ -161,9 +161,9 @@ namespace ROS2
         const auto fullTopic = ROS2Names::GetNamespacedName(GetNamespace(), publisherConfig.m_topic);
         m_imuPublisher = ros2Node->create_publisher<sensor_msgs::msg::Imu>(fullTopic.data(), publisherConfig.GetQoS());
         
-        m_linearAccelerationCovariance = toCovarianceMatrix(m_linearAccelerationVariance);
-        m_angularVelocityCovariance = toCovarianceMatrix(m_angularVelocityVariance);
-        m_orientationCovariance = toCovarianceMatrix(m_orientationVariance);
+        m_linearAccelerationCovariance = ToDiagonalCovarianceMatrix(m_linearAccelerationVariance);
+        m_angularVelocityCovariance = ToDiagonalCovarianceMatrix(m_angularVelocityVariance);
+        m_orientationCovariance = ToDiagonalCovarianceMatrix(m_orientationVariance);
         
         ROS2SensorComponent::Activate();
     }
@@ -178,9 +178,9 @@ namespace ROS2
     AZ::Matrix3x3 ROS2ImuSensorComponent::ToDiagonalCovarianceMatrix(const AZ::Vector3& variance)
     {
         AZ::Matrix3x3 covarianceMatrix;
-        covarianceMatrix.SetElement(0, 0, Variance.GetX());
-        covarianceMatrix.SetElement(1, 1, Variance.GetY());
-        covarianceMatrix.SetElement(2, 2, Variance.GetZ());
+        covarianceMatrix.SetElement(0, 0, variance.GetX());
+        covarianceMatrix.SetElement(1, 1, variance.GetY());
+        covarianceMatrix.SetElement(2, 2, variance.GetZ());
         return covarianceMatrix;
     }
 
