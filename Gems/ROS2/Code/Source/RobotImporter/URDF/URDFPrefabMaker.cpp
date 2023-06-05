@@ -9,7 +9,6 @@
 #include "URDFPrefabMaker.h"
 #include "CollidersMaker.h"
 #include "PrefabMakerUtils.h"
-#include "Spawner/ROS2SpawnerInterface.h"
 #include <API/EditorAssetSystemAPI.h>
 #include <AzCore/Debug/Trace.h>
 #include <AzCore/IO/FileIO.h>
@@ -21,7 +20,6 @@
 #include <AzToolsFramework/ToolsComponents/TransformComponent.h>
 #include <ROS2/Frame/ROS2FrameComponent.h>
 #include <ROS2/ROS2GemUtilities.h>
-#include <ROS2/Spawner/SpawnerInterface.h>
 #include <RobotControl/ROS2RobotControlComponent.h>
 #include <RobotImporter/Utils/RobotImporterUtils.h>
 
@@ -322,13 +320,8 @@ namespace ROS2
     {
         if (spawnPosition == nullptr)
         {
-            auto spawnerInterface = ROS2::SpawnerInterface::Get();
-            if (spawnerInterface == nullptr)
-            {
-                AZ_TracePrintf("URDF Importer", "Spawner interface is null - creating entity in (0,0,0)\n") return;
-            }
-            spawnPosition = AZStd::make_shared<AZ::Transform>(spawnerInterface->GetDefaultSpawnPose());
-            AZ_TracePrintf("URDF Importer", "SpawnPosition is null - creating entity in default position\n");
+            AZ_TracePrintf("URDF Importer", "SpawnPosition is null - spawning in Editors default position\n");
+            return;
         }
 
         auto entity_ = AzToolsFramework::GetEntityById(rootEntityId);

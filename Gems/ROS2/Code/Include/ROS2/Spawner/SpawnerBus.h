@@ -11,6 +11,7 @@
 #include <AzCore/EBus/EBus.h>
 #include <AzCore/Math/Transform.h>
 #include <AzCore/RTTI/BehaviorContext.h>
+#include <ROS2/Spawner/SpawnerInfo.h>
 
 namespace ROS2
 {
@@ -28,6 +29,8 @@ namespace ROS2
         //! @return default spawn point coordinates set by user in Editor (by default: translation: {0, 0, 0}, rotation: {0, 0, 0, 1},
         //! scale: 1.0)
         virtual const AZ::Transform& GetDefaultSpawnPose() const = 0;
+
+        virtual AZStd::unordered_map<AZStd::string, SpawnPointInfo> GetAllSpawnPointInfos() const = 0;
     };
 
     using SpawnerRequestsBus = AZ::EBus<SpawnerRequests>;

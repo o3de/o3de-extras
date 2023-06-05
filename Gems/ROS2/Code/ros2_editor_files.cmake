@@ -54,6 +54,8 @@ set(FILES
     Source/ROS2EditorSystemComponent.cpp
     Source/ROS2EditorSystemComponent.h
     Source/ROS2GemUtilities.cpp
-    Source/Spawner/ROS2SpawnerInterface.cpp
-    Source/Spawner/ROS2SpawnerInterface.h
+    Source/Spawner/ROS2SpawnerEditorComponent.cpp
+    Source/Spawner/ROS2SpawnerEditorComponent.h
+    Source/Spawner/ROS2SpawnPointEditorComponent.cpp
+    Source/Spawner/ROS2SpawnPointEditorComponent.h
 )

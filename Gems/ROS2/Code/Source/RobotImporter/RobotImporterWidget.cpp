@@ -11,7 +11,6 @@
 #include <AzCore/Utils/Utils.h>
 
 #include "RobotImporterWidget.h"
-#include "Spawner/ROS2SpawnerInterface.h"
 #include "URDF/URDFPrefabMaker.h"
 #include "URDF/UrdfParser.h"
 #include "Utils/RobotImporterUtils.h"

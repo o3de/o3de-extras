@@ -8,8 +8,8 @@
 
 #pragma once
 
+#include "ROS2/Spawner/SpawnerInfo.h"
 #include <AzCore/Component/Entity.h>
-#include <ROS2/Spawner/SpawnerInterface.h>
 #include <qcombobox.h>
 #if !defined(Q_MOC_RUN)
 #include <AzCore/Math/Crc.h>
@@ -47,8 +47,8 @@ namespace ROS2
         QPushButton* m_createButton;
         QTextEdit* m_log;
         QCheckBox* m_useArticulation;
-        QComboBox* m_spawnPointsList;
-        SpawnPointsNameAndPoseVector m_spawnPointsInfos;
+        QComboBox* m_spawnPointsComboBox;
+        AZStd::vector<SpawnPointInfoMap> m_spawnPointsInfos;
         RobotImporterWidget* m_parentImporterWidget;
     };
 } // namespace ROS2

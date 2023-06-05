@@ -7,11 +7,17 @@
  */
 
 #include "PrefabMakerPage.h"
-#include "Spawner/ROS2SpawnerInterface.h"
 #include <AzCore/Component/Entity.h>
 #include <AzCore/Debug/Trace.h>
+#include <AzCore/EBus/Results.h>
+#include <AzCore/Math/Transform.h>
+#include <AzCore/std/smart_ptr/make_shared.h>
+#include <AzCore/std/string/string.h>
+#include <ROS2/Spawner/SpawnerBus.h>
+#include <ROS2/Spawner/SpawnerInfo.h>
 #include <RobotImporter/RobotImporterWidget.h>
 #include <qcombobox.h>
+#include <qvariant.h>
 
 namespace ROS2
 {
@@ -21,19 +27,18 @@ namespace ROS2
         , m_parentImporterWidget(parent)
         , m_success(false)
     {
-        auto spawnerInterface = ROS2::SpawnerInterface::Get();
-        if (spawnerInterface != nullptr)
+        AZ::EBusAggregateResults<AZStd::unordered_map<AZStd::string, SpawnPointInfo>> allActiveSpawnPoints;
+        SpawnerRequestsBus::BroadcastResult(allActiveSpawnPoints, &SpawnerRequestsBus::Events::GetAllSpawnPointInfos);
+
+        m_spawnPointsComboBox = new QComboBox(this);
+        m_spawnPointsInfos = allActiveSpawnPoints.values;
+
+        for (auto i = 0; i < allActiveSpawnPoints.values.size(); i++)
         {
-            m_spawnPointsInfos = spawnerInterface->GetAllSpawnPoints();
-        }
-        else
-        {
-            AZ_Warning("PrefabMakerPage", false, "Spawner interface not found");
-        }
-        m_spawnPointsList = new QComboBox(this);
-        for (uint32_t i = 0; i < m_spawnPointsInfos.size(); i++)
-        {
-            m_spawnPointsList->addItem(m_spawnPointsInfos[i].first.c_str(), QVariant(i + 1));
+            for (const auto& element : allActiveSpawnPoints.values[i])
+            {
+                m_spawnPointsComboBox->addItem(element.first.c_str(), QVariant(i));
+            }
         }
 
         m_prefabName = new QLineEdit(this);
@@ -47,9 +52,17 @@ namespace ROS2
         layoutInner->addWidget(m_createButton);
         layout->addLayout(layoutInner);
         layout->addWidget(m_useArticulation);
-        auto spawnPointListLabel = new QLabel("Select spawn position", this);
+        QLabel* spawnPointListLabel;
+        if (allActiveSpawnPoints.values.size() == 0)
+        {
+            spawnPointListLabel = new QLabel("Select spawn position (No spawn position were detected)", this);
+        }
+        else
+        {
+            spawnPointListLabel = new QLabel("Select spawn position", this);
+        }
         layout->addWidget(spawnPointListLabel);
-        layout->addWidget(m_spawnPointsList);
+        layout->addWidget(m_spawnPointsComboBox);
         layout->addWidget(m_log);
         setLayout(layout);
         connect(m_createButton, &QPushButton::pressed, this, &PrefabMakerPage::onCreateButtonPressed);
@@ -84,7 +97,22 @@ namespace ROS2
     }
     AZStd::shared_ptr<AZ::Transform> PrefabMakerPage::getSelectedSpawnPoint() const
     {
-        return m_spawnPointsInfos[m_spawnPointsList->currentIndex()].second;
+        if (!m_spawnPointsInfos.empty())
+        {
+            int vectorIndex = m_spawnPointsComboBox->currentData().toInt();
+            AZStd::string mapKey = AZStd::string(m_spawnPointsComboBox->currentText().toStdString().c_str());
+            auto& map = m_spawnPointsInfos[vectorIndex];
+            auto spawnInfo = map.find(mapKey);
+            if (spawnInfo == m_spawnPointsInfos[vectorIndex].end())
+            {
+                return nullptr;
+            }
+            return AZStd::make_shared<AZ::Transform>(spawnInfo->second.pose);
+        }
+        else
+        {
+            return nullptr;
+        }
     }
 
 } // namespace ROS2

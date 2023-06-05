@@ -5,10 +5,12 @@
  * SPDX-License-Identifier: Apache-2.0 OR MIT
  *
  */
+#include "Spawner/ROS2SpawnPointEditorComponent.h"
+#include "Spawner/ROS2SpawnerEditorComponent.h"
+#include <Camera/ROS2CameraSensorEditorComponent.h>
 #include <Lidar/LidarRegistrarEditorSystemComponent.h>
 #include <ROS2EditorSystemComponent.h>
 #include <ROS2ModuleInterface.h>
-#include <Camera/ROS2CameraSensorEditorComponent.h>
 #include <RobotImporter/ROS2RobotImporterEditorSystemComponent.h>
 
 #include <QtCore/qglobal.h>
@@ -42,6 +44,8 @@ namespace ROS2
                     LidarRegistrarEditorSystemComponent::CreateDescriptor(),
                     ROS2RobotImporterEditorSystemComponent::CreateDescriptor(),
                     ROS2CameraSensorEditorComponent::CreateDescriptor(),
+                    ROS2SpawnerEditorComponent::CreateDescriptor(),
+                    ROS2SpawnPointEditorComponent::CreateDescriptor(),
                 });
         }
 
