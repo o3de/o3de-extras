@@ -103,27 +103,8 @@ namespace ROS2
     {
         // update the smoothing buffer
         m_lastTranslationsBuffer.push_back(AZStd::make_pair(transform.GetTranslation(), deltaTime));
+        m_lastRotationsBuffer.push_back(AZStd::make_pair(transform.GetRotation(), deltaTime));
 
-        if (m_lastRotationsBuffer.empty())
-        {
-            m_lastRotationsBuffer.push_back(AZStd::make_pair(transform.GetRotation().ConvertToScaledAxisAngle(), deltaTime));
-        }
-        else
-        {
-            // Note that the tangent needs to be non-normalized (eg. it has to grow into infinity with constant rotation in one direction),
-            // so the camera won't wind-back when robot is rotating.
-            // Get incremental rotation
-            AZ::Quaternion update = transform.GetRotation() * m_lastRotation.GetInverseFull();
-
-            // compute tangent to incremental rotation
-            AZ::Vector3 updateTangent = update.ConvertToScaledAxisAngle();
-
-            // add tangent to the last tangent
-            const AZ::Vector3& lastAddedTangent = m_lastRotationsBuffer.back().first;
-            m_lastRotationsBuffer.push_back(AZStd::make_pair(lastAddedTangent + updateTangent, deltaTime));
-        }
-
-        m_lastRotation = transform.GetRotation();
         if (m_lastTranslationsBuffer.size() > m_smoothingBuffer)
         {
             m_lastTranslationsBuffer.pop_front();
@@ -183,8 +164,13 @@ namespace ROS2
 
     AZ::Quaternion FollowingCameraComponent::SmoothRotation() const
     {
-        AZ::Vector3 averagedTangent = AverageVector(m_lastRotationsBuffer);
-        return AZ::Quaternion::CreateFromScaledAxisAngle(averagedTangent);
+        AZ::Quaternion q = m_lastRotationsBuffer.front().first;
+        for (int i = 1; i < m_lastRotationsBuffer.size(); i++)
+        {
+            q = q.Slerp(m_lastRotationsBuffer[i].first, m_lastRotationsBuffer[i].second);
+
+        }
+        return q;
     }
 
     bool FollowingCameraComponent::OnInputChannelEventFiltered(const AzFramework::InputChannel& inputChannel)
