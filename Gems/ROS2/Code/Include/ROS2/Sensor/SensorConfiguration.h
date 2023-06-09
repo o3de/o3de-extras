@@ -37,6 +37,6 @@ namespace ROS2
         bool m_visualise = true; //!< Determines whether the sensor is visualised in O3DE (for example, point cloud is drawn for LIDAR).
     private:
         // Frequency limit is once per day.
-        static constexpr float m_minFrequency = 1. / (24. * 3600.);
+        static constexpr float m_minFrequency = AZStd::numeric_limits<float>::epsilon();
     };
 } // namespace ROS2
