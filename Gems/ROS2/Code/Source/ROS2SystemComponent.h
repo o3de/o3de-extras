@@ -62,7 +62,8 @@ namespace ROS2
         // ROS2RequestBus::Handler overrides
         std::shared_ptr<rclcpp::Node> GetNode() const override;
         builtin_interfaces::msg::Time GetROSTimestamp() const override;
-        void BroadcastTransform(const geometry_msgs::msg::TransformStamped& t, bool isDynamic) const override;
+        void BroadcastTransform(const geometry_msgs::msg::TransformStamped& t, bool isDynamic) override;
+        void ResetNode() override;
         const SimulationClock& GetSimulationClock() const override;
         //////////////////////////////////////////////////////////////////////////
 
@@ -87,5 +88,7 @@ namespace ROS2
         //! Load the pass templates of the ROS2 gem.
         void LoadPassTemplateMappings();
         AZ::RPI::PassSystemInterface::OnReadyLoadTemplatesEvent::Handler m_loadTemplatesHandler;
+        // Flag for checking if the m_ros2Node was reset and noting was broadcasted yet
+        bool m_wasNodeReset = false;
     };
 } // namespace ROS2

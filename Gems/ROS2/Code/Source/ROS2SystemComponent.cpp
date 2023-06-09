@@ -21,6 +21,7 @@
 #include <AzCore/Time/ITime.h>
 #include <AzCore/std/smart_ptr/make_shared.h>
 #include <AzCore/std/string/string_view.h>
+#include <tf2_ros/static_transform_broadcaster.h>
 
 namespace ROS2
 {
@@ -138,6 +139,7 @@ namespace ROS2
         m_loadTemplatesHandler.Disconnect();
         m_dynamicTFBroadcaster.reset();
         m_staticTFBroadcaster.reset();
+        m_wasNodeReset = false;
     }
 
     builtin_interfaces::msg::Time ROS2SystemComponent::GetROSTimestamp() const
@@ -155,8 +157,9 @@ namespace ROS2
         return *m_simulationClock;
     }
 
-    void ROS2SystemComponent::BroadcastTransform(const geometry_msgs::msg::TransformStamped& t, bool isDynamic) const
+    void ROS2SystemComponent::BroadcastTransform(const geometry_msgs::msg::TransformStamped& t, bool isDynamic)
     {
+        m_wasNodeReset = false;
         if (isDynamic)
         {
             m_dynamicTFBroadcaster->sendTransform(t);
@@ -164,6 +167,32 @@ namespace ROS2
         else
         {
             m_staticTFBroadcaster->sendTransform(t);
+        }
+    }
+
+    void ROS2SystemComponent::ResetNode()
+    {
+        if (!m_wasNodeReset)
+        {
+            m_ros2Node.reset();
+            m_executor.reset();
+            m_staticTFBroadcaster.reset();
+            m_dynamicTFBroadcaster.reset();
+
+            auto newNode = new rclcpp::Node("o3de_ros2_node");
+            m_ros2Node.reset(newNode);
+
+            auto newExecutor = new rclcpp::executors::SingleThreadedExecutor();
+            m_executor.reset(newExecutor);
+            m_executor->add_node(m_ros2Node);
+
+            auto newStaticTFBroadcaster = new tf2_ros::StaticTransformBroadcaster(m_ros2Node);
+            m_staticTFBroadcaster.reset(newStaticTFBroadcaster);
+
+            auto newDynamicTFBroadcaster = new tf2_ros::TransformBroadcaster(m_ros2Node);
+            m_dynamicTFBroadcaster.reset(newDynamicTFBroadcaster);
+
+            m_wasNodeReset = false;
         }
     }
 
