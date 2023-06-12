@@ -55,11 +55,22 @@ namespace ROS2
         AZStd::deque<AZ::Vector3> m_filterAcceleration;
         AZStd::deque<AZ::Vector3> m_filterAngularVelocity;
 
+        AZ::Vector3 m_orientationVariance = AZ::Vector3::CreateZero();
+        AZ::Vector3 m_angularVelocityVariance = AZ::Vector3::CreateZero();
+        AZ::Vector3 m_linearAccelerationVariance = AZ::Vector3::CreateZero();
+
+
+        AZ::Matrix3x3 m_orientationCovariance = AZ::Matrix3x3::CreateZero();
+        AZ::Matrix3x3 m_angularVelocityCovariance = AZ::Matrix3x3::CreateZero();
+        AZ::Matrix3x3 m_linearAccelerationCovariance = AZ::Matrix3x3::CreateZero();
+
     private:
         // ROS2SensorComponent overrides ...
         void SetupRefreshLoop() override;
 
         // ROS2::Utils::PhysicsCallbackHandler overrides ...
         void OnPhysicsSimulationFinished(AzPhysics::SceneHandle sceneHandle, float deltaTime) override;
+
+        AZ::Matrix3x3 ToDiagonalCovarianceMatrix(const AZ::Vector3& variance);
     };
 } // namespace ROS2

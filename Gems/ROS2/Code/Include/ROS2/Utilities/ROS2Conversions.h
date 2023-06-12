@@ -10,6 +10,7 @@
 #include <AzCore/Math/Quaternion.h>
 #include <AzCore/Math/Transform.h>
 #include <AzCore/Math/Vector3.h>
+#include <AzCore/Math/Matrix3x3.h>
 #include <geometry_msgs/msg/point.hpp>
 #include <geometry_msgs/msg/pose.hpp>
 #include <geometry_msgs/msg/vector3.hpp>
@@ -27,5 +28,6 @@ namespace ROS2
         AZ::Transform FromROS2Pose(const geometry_msgs::msg::Pose& ros2pose);
         AZ::Vector3 FromROS2Point(const geometry_msgs::msg::Point& ros2point);
         AZ::Quaternion FromROS2Quaternion(const geometry_msgs::msg::Quaternion& ros2quaternion);
+        std::array<double, 9> ToROS2Covariance(const AZ::Matrix3x3& covariance);
     }; // namespace ROS2Conversions
 } // namespace ROS2

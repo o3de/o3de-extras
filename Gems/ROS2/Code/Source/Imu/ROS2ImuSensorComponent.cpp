@@ -37,7 +37,10 @@ namespace ROS2
                 ->Version(1)
                 ->Field("FilterSize", &ROS2ImuSensorComponent::m_filterSize)
                 ->Field("IncludeGravity", &ROS2ImuSensorComponent::m_includeGravity)
-                ->Field("AbsoluteRotation", &ROS2ImuSensorComponent::m_absoluteRotation);
+                ->Field("AbsoluteRotation", &ROS2ImuSensorComponent::m_absoluteRotation)
+                ->Field("AccelerationVariance", &ROS2ImuSensorComponent::m_linearAccelerationVariance)
+                ->Field("AngularVelocityVariance", &ROS2ImuSensorComponent::m_angularVelocityVariance)
+                ->Field("OrientationVariance", &ROS2ImuSensorComponent::m_orientationVariance);
 
             if (AZ::EditContext* ec = serialize->GetEditContext())
             {
@@ -59,7 +62,22 @@ namespace ROS2
                         AZ::Edit::UIHandlers::Default,
                         &ROS2ImuSensorComponent::m_absoluteRotation,
                         "Absolute Rotation",
-                        "Include Absolute rotation in message.");
+                        "Include Absolute rotation in message.")
+                    ->DataElement(
+                        AZ::Edit::UIHandlers::Default,
+                        &ROS2ImuSensorComponent::m_linearAccelerationVariance,
+                        "Linear Acceleration Variance",
+                        "Variance of linear acceleration.")
+                    ->DataElement(
+                        AZ::Edit::UIHandlers::Default,
+                        &ROS2ImuSensorComponent::m_angularVelocityVariance,
+                        "Angular Velocity Variance",
+                        "Variance of angular velocity.")
+                    ->DataElement(
+                        AZ::Edit::UIHandlers::Default,
+                        &ROS2ImuSensorComponent::m_orientationVariance,
+                        "Orientation Variance",
+                        "Variance of orientation.");
             }
         }
     }
@@ -120,10 +138,14 @@ namespace ROS2
                 m_acceleration += inv.TransformVector(gravity);
             }
             m_imuMsg.linear_acceleration = ROS2Conversions::ToROS2Vector3(m_acceleration);
+            m_imuMsg.linear_acceleration_covariance =  ROS2Conversions::ToROS2Covariance(m_linearAccelerationCovariance);
             m_imuMsg.angular_velocity = ROS2Conversions::ToROS2Vector3(angularRateFiltered);
+            m_imuMsg.angular_velocity_covariance = ROS2Conversions::ToROS2Covariance(m_angularVelocityCovariance);
+
             if (m_absoluteRotation)
             {
                 m_imuMsg.orientation = ROS2Conversions::ToROS2Quaternion(rigidbody->GetTransform().GetRotation());
+                m_imuMsg.orientation_covariance = ROS2Conversions::ToROS2Covariance(m_orientationCovariance);
             }
             m_imuMsg.header.stamp = ROS2Interface::Get()->GetROSTimestamp();
             this->m_imuPublisher->publish(m_imuMsg);
@@ -138,6 +160,11 @@ namespace ROS2
         const auto publisherConfig = m_sensorConfiguration.m_publishersConfigurations[Internal::kImuMsgType];
         const auto fullTopic = ROS2Names::GetNamespacedName(GetNamespace(), publisherConfig.m_topic);
         m_imuPublisher = ros2Node->create_publisher<sensor_msgs::msg::Imu>(fullTopic.data(), publisherConfig.GetQoS());
+        
+        m_linearAccelerationCovariance = ToDiagonalCovarianceMatrix(m_linearAccelerationVariance);
+        m_angularVelocityCovariance = ToDiagonalCovarianceMatrix(m_angularVelocityVariance);
+        m_orientationCovariance = ToDiagonalCovarianceMatrix(m_orientationVariance);
+        
         ROS2SensorComponent::Activate();
     }
 
@@ -146,6 +173,15 @@ namespace ROS2
         RemovePhysicalCallback();
         m_bodyHandle = AzPhysics::InvalidSimulatedBodyHandle;
         m_imuPublisher.reset();
+    }
+
+    AZ::Matrix3x3 ROS2ImuSensorComponent::ToDiagonalCovarianceMatrix(const AZ::Vector3& variance)
+    {
+        AZ::Matrix3x3 covarianceMatrix;
+        covarianceMatrix.SetElement(0, 0, variance.GetX());
+        covarianceMatrix.SetElement(1, 1, variance.GetY());
+        covarianceMatrix.SetElement(2, 2, variance.GetZ());
+        return covarianceMatrix;
     }
 
 } // namespace ROS2
