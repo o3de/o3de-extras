@@ -6,7 +6,7 @@
  *
  */
 
-#include "ROS2ImuSensorComponent.h"
+#include <ROS2/Imu/ROS2ImuSensorComponent.h>
 #include <ROS2/Frame/ROS2FrameComponent.h>
 #include <ROS2/ROS2Bus.h>
 #include <ROS2/Utilities/ROS2Conversions.h>
@@ -103,10 +103,9 @@ namespace ROS2
         InstallPhysicalCallback(m_entity->GetId());
     }
 
-    void ROS2ImuSensorComponent::OnPhysicsSimulationFinished(AzPhysics::SceneHandle sceneHandle, float deltaTime)
+    void ROS2ImuSensorComponent::UpdateSensorData(AzPhysics::SceneHandle sceneHandle, float deltaTime)
     {
         auto* sceneInterface = AZ::Interface<AzPhysics::SceneInterface>::Get();
-        const auto gravity = sceneInterface->GetGravity(sceneHandle);
         auto* body = sceneInterface->GetSimulatedBodyFromHandle(sceneHandle, m_bodyHandle);
         auto rigidbody = azrtti_cast<AzPhysics::RigidBody*>(body);
         AZ_Assert(rigidbody, "Requested simulated body is not a rigid body");
@@ -120,37 +119,52 @@ namespace ROS2
             m_filterAcceleration.pop_front();
             m_filterAngularVelocity.pop_front();
         }
-        if (IsPublicationDeadline(deltaTime))
+    }
+    void ROS2ImuSensorComponent::FinalizeMessage(AzPhysics::SceneHandle sceneHandle, float deltaTime) {
+        auto* sceneInterface = AZ::Interface<AzPhysics::SceneInterface>::Get();
+        auto* body = sceneInterface->GetSimulatedBodyFromHandle(sceneHandle, m_bodyHandle);
+        auto rigidbody = azrtti_cast<AzPhysics::RigidBody*>(body);
+        AZ_Assert(rigidbody, "Requested simulated body is not a rigid body");
+
+        const AZ::Vector3 linearVelocityFilter =
+            AZStd::accumulate(m_filterAcceleration.begin(), m_filterAcceleration.end(), AZ::Vector3{ 0 }) / m_filterAcceleration.size();
+
+        const AZ::Vector3 angularRateFiltered =
+            AZStd::accumulate(m_filterAngularVelocity.begin(), m_filterAngularVelocity.end(), AZ::Vector3{ 0 }) /
+            m_filterAngularVelocity.size();
+
+        auto acc = (linearVelocityFilter - m_previousLinearVelocity) / deltaTime;
+
+        m_previousLinearVelocity = linearVelocityFilter;
+        m_acceleration = -acc + angularRateFiltered.Cross(linearVelocityFilter);
+        if (m_includeGravity)
         {
-            const AZ::Vector3 linearVelocityFilter =
-                AZStd::accumulate(m_filterAcceleration.begin(), m_filterAcceleration.end(), AZ::Vector3{ 0 }) / m_filterAcceleration.size();
+            auto inv = rigidbody->GetTransform().GetInverse();
+            const auto gravity = sceneInterface->GetGravity(sceneHandle);
+            m_acceleration += inv.TransformVector(gravity);
+        }
+        m_imuMsg.linear_acceleration = ROS2Conversions::ToROS2Vector3(m_acceleration);
+        m_imuMsg.linear_acceleration_covariance = ROS2Conversions::ToROS2Covariance(m_linearAccelerationCovariance);
+        m_imuMsg.angular_velocity = ROS2Conversions::ToROS2Vector3(angularRateFiltered);
+        m_imuMsg.angular_velocity_covariance = ROS2Conversions::ToROS2Covariance(m_angularVelocityCovariance);
 
-            const AZ::Vector3 angularRateFiltered =
-                AZStd::accumulate(m_filterAngularVelocity.begin(), m_filterAngularVelocity.end(), AZ::Vector3{ 0 }) /
-                m_filterAngularVelocity.size();
+        if (m_absoluteRotation)
+        {
+            m_imuMsg.orientation = ROS2Conversions::ToROS2Quaternion(rigidbody->GetTransform().GetRotation());
+            m_imuMsg.orientation_covariance = ROS2Conversions::ToROS2Covariance(m_orientationCovariance);
+        }
+        m_imuMsg.header.stamp = ROS2Interface::Get()->GetROSTimestamp();
+    }
 
-            auto acc = (linearVelocityFilter - m_previousLinearVelocity) / deltaTime;
+    void ROS2ImuSensorComponent::OnPhysicsSimulationFinished(AzPhysics::SceneHandle sceneHandle, float deltaTime)
+    {
+        UpdateSensorData(sceneHandle, deltaTime);
 
-            m_previousLinearVelocity = linearVelocityFilter;
-            m_acceleration = -acc + angularRateFiltered.Cross(linearVelocityFilter);
-            if (m_includeGravity)
-            {
-                m_acceleration += inv.TransformVector(gravity);
-            }
-            m_imuMsg.linear_acceleration = ROS2Conversions::ToROS2Vector3(m_acceleration);
-            m_imuMsg.linear_acceleration_covariance =  ROS2Conversions::ToROS2Covariance(m_linearAccelerationCovariance);
-            m_imuMsg.angular_velocity = ROS2Conversions::ToROS2Vector3(angularRateFiltered);
-            m_imuMsg.angular_velocity_covariance = ROS2Conversions::ToROS2Covariance(m_angularVelocityCovariance);
-
-            if (m_absoluteRotation)
-            {
-                m_imuMsg.orientation = ROS2Conversions::ToROS2Quaternion(rigidbody->GetTransform().GetRotation());
-                m_imuMsg.orientation_covariance = ROS2Conversions::ToROS2Covariance(m_orientationCovariance);
-            }
-            m_imuMsg.header.stamp = ROS2Interface::Get()->GetROSTimestamp();
+        if (IsPublicationDeadline(deltaTime)) {
+            FinalizeMessage(sceneHandle, deltaTime);
             this->m_imuPublisher->publish(m_imuMsg);
         }
-    };
+    }
 
     void ROS2ImuSensorComponent::Activate()
     {

@@ -8,6 +8,7 @@
 #pragma once
 
 #include <AzCore/Math/Transform.h>
+#include <AzCore/Math/Matrix3x3.h>
 #include <AzCore/Serialization/SerializeContext.h>
 #include <AzFramework/Physics/Common/PhysicsEvents.h>
 #include <AzFramework/Physics/PhysicsSystem.h>
@@ -36,7 +37,18 @@ namespace ROS2
         void Activate() override;
         void Deactivate() override;
         //////////////////////////////////////////////////////////////////////////
+    protected:
+        virtual void UpdateSensorData(AzPhysics::SceneHandle sceneHandle, float deltaTime);
+        virtual void FinalizeMessage(AzPhysics::SceneHandle sceneHandle, float deltaTime);
 
+        sensor_msgs::msg::Imu m_imuMsg;
+
+        //! Measure also absolute rotation
+        bool m_absoluteRotation{ true };
+
+        AZ::Vector3 m_orientationVariance = AZ::Vector3::CreateZero();
+        AZ::Vector3 m_angularVelocityVariance = AZ::Vector3::CreateZero();
+        AZ::Vector3 m_linearAccelerationVariance = AZ::Vector3::CreateZero();
     private:
         //! Length of filter that removes numerical noise
         int m_filterSize{ 10 };
@@ -44,21 +56,12 @@ namespace ROS2
         //! Include gravity acceleration
         bool m_includeGravity{ true };
 
-        //! Measure also absolute rotation
-        bool m_absoluteRotation{ true };
-
         std::shared_ptr<rclcpp::Publisher<sensor_msgs::msg::Imu>> m_imuPublisher;
-        sensor_msgs::msg::Imu m_imuMsg;
         AZ::Vector3 m_previousLinearVelocity = AZ::Vector3::CreateZero();
 
         AZ::Vector3 m_acceleration{ 0 };
         AZStd::deque<AZ::Vector3> m_filterAcceleration;
         AZStd::deque<AZ::Vector3> m_filterAngularVelocity;
-
-        AZ::Vector3 m_orientationVariance = AZ::Vector3::CreateZero();
-        AZ::Vector3 m_angularVelocityVariance = AZ::Vector3::CreateZero();
-        AZ::Vector3 m_linearAccelerationVariance = AZ::Vector3::CreateZero();
-
 
         AZ::Matrix3x3 m_orientationCovariance = AZ::Matrix3x3::CreateZero();
         AZ::Matrix3x3 m_angularVelocityCovariance = AZ::Matrix3x3::CreateZero();
