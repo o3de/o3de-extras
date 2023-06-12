@@ -5,6 +5,8 @@
  * SPDX-License-Identifier: Apache-2.0 OR MIT
  *
  */
+
+#include <AzCore/Component/ComponentBus.h>
 #include <AzCore/Serialization/EditContext.h>
 #include <PhysX/Joint/PhysXJointRequestsBus.h>
 #include <ROS2/Manipulation/PidMotorControllerComponent.h>

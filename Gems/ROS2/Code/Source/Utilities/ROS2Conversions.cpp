@@ -6,6 +6,7 @@
  *
  */
 
+#include <AzCore/Math/Matrix3x3.h>
 #include <AzCore/Math/Transform.h>
 #include <ROS2/Utilities/ROS2Conversions.h>
 
