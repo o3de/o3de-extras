@@ -5,6 +5,7 @@
  * SPDX-License-Identifier: Apache-2.0 OR MIT
  *
  */
+
 #include <AzFramework/Entity/EntityDebugDisplayBus.h>
 #include <AzCore/Serialization/EditContext.h>
 #include <HingeJointComponent.h>
