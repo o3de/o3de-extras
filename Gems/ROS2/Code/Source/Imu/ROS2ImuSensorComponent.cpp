@@ -99,8 +99,8 @@ namespace ROS2
         required.push_back(AZ_CRC_CE("ROS2Frame"));
     }
 
-    void ROS2ImuSensorComponent::GetProvidedServices(AZ::ComponentDescriptor::DependencyArrayType& provided) {
-        provided.push_back(AZ_CRC_CE("ROS2ImuSensor"));
+    void ROS2ImuSensorComponent::GetDependentServices(AZ::ComponentDescriptor::DependencyArrayType& dependent) {
+        dependent.push_back(AZ_CRC_CE("ImuNoiseService"));
     }
 
     void ROS2ImuSensorComponent::SetupRefreshLoop()

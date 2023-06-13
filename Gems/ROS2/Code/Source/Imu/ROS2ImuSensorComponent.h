@@ -30,7 +30,7 @@ namespace ROS2
         ROS2ImuSensorComponent();
         ~ROS2ImuSensorComponent() = default;
         static void GetRequiredServices(AZ::ComponentDescriptor::DependencyArrayType& required);
-        static void GetProvidedServices(AZ::ComponentDescriptor::DependencyArrayType& provided);
+        static void GetDependentServices(AZ::ComponentDescriptor::DependencyArrayType& dependent);
         static void Reflect(AZ::ReflectContext* context);
         //////////////////////////////////////////////////////////////////////////
         // Component overrides
