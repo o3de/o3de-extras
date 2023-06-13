@@ -1,22 +1,22 @@
 /*
-* Copyright (c) Contributors to the Open 3D Engine Project.
-* For complete copyright and license terms please see the LICENSE at the root of this distribution.
-*
-* SPDX-License-Identifier: Apache-2.0 OR MIT
-*
-*/
+ * Copyright (c) Contributors to the Open 3D Engine Project.
+ * For complete copyright and license terms please see the LICENSE at the root of this distribution.
+ *
+ * SPDX-License-Identifier: Apache-2.0 OR MIT
+ *
+ */
 
 #include "FollowJointTrajectoryActionServer.h"
-#include <ROS2/Manipulation/ManipulatorControllerComponent.h>
-#include <ROS2/Manipulation/JointPublisherComponent.h>
 #include <AzCore/Component/ComponentApplicationBus.h>
 #include <AzCore/Component/TransformBus.h>
 #include <AzCore/Serialization/EditContext.h>
 #include <AzCore/std/functional.h>
 #include <PhysX/Joint/PhysXJointRequestsBus.h>
-#include <Source/HingeJointComponent.h>
 #include <ROS2/Frame/ROS2FrameComponent.h>
+#include <ROS2/Manipulation/JointPublisherComponent.h>
+#include <ROS2/Manipulation/ManipulatorControllerComponent.h>
 #include <Source/ArticulationLinkComponent.h>
+#include <Source/HingeJointComponent.h>
 namespace ROS2
 {
     // ManipulatorControllerComponent class
@@ -39,12 +39,10 @@ namespace ROS2
         m_actionServerClass->m_actionServer.reset();
     }
 
-
     void ManipulatorControllerComponent::GetRequiredServices(AZ::ComponentDescriptor::DependencyArrayType& required)
     {
         required.push_back(AZ_CRC_CE("JointPublisherService"));
     }
-
 
     void ManipulatorControllerComponent::Reflect(AZ::ReflectContext* context)
     {
@@ -59,7 +57,8 @@ namespace ROS2
 
             if (AZ::EditContext* ec = serialize->GetEditContext())
             {
-                ec->Class<ManipulatorControllerComponent>("ManipulatorControllerComponent", "[Controller for a robotic arm (only hinge joints)]")
+                ec->Class<ManipulatorControllerComponent>(
+                      "ManipulatorControllerComponent", "[Controller for a robotic arm (only hinge joints)]")
                     ->ClassElement(AZ::Edit::ClassElements::EditorData, "")
                     ->Attribute(AZ::Edit::Attributes::AppearsInAddComponentMenu, AZ_CRC("Game"))
                     ->Attribute(AZ::Edit::Attributes::Category, "ROS2")
@@ -103,11 +102,10 @@ namespace ROS2
         auto* jointPublisherComponent = GetEntity()->FindComponent<JointPublisherComponent>();
         if (!jointPublisherComponent)
         {
-            for (auto & [jointName , hingeComponent] : jointPublisherComponent->GetHierarchyMap())
+            for (auto& [jointName, hingeComponent] : jointPublisherComponent->GetHierarchyMap())
             {
                 m_jointKeepStillPosition[jointName] = jointPublisherComponent->GetJointPosition(jointName);
             }
-
         }
     }
 
@@ -119,7 +117,7 @@ namespace ROS2
             return;
         }
 
-        for (auto & [jointName , hingeComponent] : jointPublisherComponent->GetHierarchyMap())
+        for (auto& [jointName, hingeComponent] : jointPublisherComponent->GetHierarchyMap())
         {
             float initialJointPosition = jointPublisherComponent->GetJointPosition(jointName);
             const AZStd::string_view jointNameStr(jointName.GetCStr());
@@ -128,36 +126,40 @@ namespace ROS2
             {
                 initialJointPosition = m_initialPositions[jointNameStr];
 
-                AZ_Printf("ManipulatorControllerComponent", "Joint name: %s initialJointPosition : %f \n", jointNameStr.data(),initialJointPosition);
+                AZ_Printf(
+                    "ManipulatorControllerComponent",
+                    "Joint name: %s initialJointPosition : %f \n",
+                    jointNameStr.data(),
+                    initialJointPosition);
             }
             if (m_controllerType == Controller::PhysXArticulation)
             {
                 const auto articulatedAxis = jointPublisherComponent->GetArticulationFreeAxis(jointName);
                 PhysX::ArticulationJointRequestBus::Event(
-                    hingeComponent.GetEntityId(),
-                    &PhysX::ArticulationJointRequests::SetDriveTarget,
-                    articulatedAxis,
-                    initialJointPosition);
-            }else{
+                    hingeComponent.GetEntityId(), &PhysX::ArticulationJointRequests::SetDriveTarget, articulatedAxis, initialJointPosition);
+            }
+            else
+            {
                 m_jointKeepStillPosition[jointName] = initialJointPosition;
             }
-
         }
     }
 
-    float ManipulatorControllerComponent::ComputeFFJointVelocity(const float currentPosition, const float desiredPosition, const rclcpp::Duration & duration) const
+    float ManipulatorControllerComponent::ComputeFFJointVelocity(
+        const float currentPosition, const float desiredPosition, const rclcpp::Duration& duration) const
     {
         // FeedForward (dummy) method
         float desiredVelocity = (desiredPosition - currentPosition) / duration.seconds();
         return desiredVelocity;
     }
 
-    float ManipulatorControllerComponent::ComputePIDJointVelocity(const float currentPosition, const float desiredPosition, const uint64_t & deltaTimeNs, int & jointIndex)
+    float ManipulatorControllerComponent::ComputePIDJointVelocity(
+        const float currentPosition, const float desiredPosition, const uint64_t& deltaTimeNs, int& jointIndex)
     {
         // PID method
         float error = desiredPosition - currentPosition;
         AZ_Warning("ManipulatorControllerComponent", jointIndex < m_pidConfigurationVector.size(), "Joint index out of range");
-        if(jointIndex < m_pidConfigurationVector.size())
+        if (jointIndex < m_pidConfigurationVector.size())
         {
             float command = m_pidConfigurationVector.at(jointIndex).ComputeCommand(error, deltaTimeNs);
             return command;
@@ -179,7 +181,7 @@ namespace ROS2
         }
 
         int jointIndex = 0;
-        for (auto & [jointName , desiredPosition] : m_jointKeepStillPosition)
+        for (auto& [jointName, desiredPosition] : m_jointKeepStillPosition)
         {
             if (jointIndex >= m_pidConfigurationVector.size())
             {
@@ -188,24 +190,22 @@ namespace ROS2
             auto* jointPublisherComponent = GetEntity()->FindComponent<JointPublisherComponent>();
             if (jointPublisherComponent)
             {
-                AZ_Assert(jointPublisherComponent->GetHierarchyMap().contains(jointName),
-                          "Joint name %s not found in the hierarchy map", AZStd::string(jointName.GetStringView()).c_str());
+                AZ_Assert(
+                    jointPublisherComponent->GetHierarchyMap().contains(jointName),
+                    "Joint name %s not found in the hierarchy map",
+                    AZStd::string(jointName.GetStringView()).c_str());
                 float currentPosition = jointPublisherComponent->GetJointPosition(jointName);
                 float desiredVelocity = 0.0f;
                 if (m_controllerType == Controller::FeedForward)
                 {
                     desiredVelocity = ComputeFFJointVelocity(
-                            currentPosition,
-                            desiredPosition,
-                            rclcpp::Duration::from_nanoseconds(5e8)); // Dummy forward time reference
+                        currentPosition,
+                        desiredPosition,
+                        rclcpp::Duration::from_nanoseconds(5e8)); // Dummy forward time reference
                 }
-                else if(m_controllerType == Controller::PID)
+                else if (m_controllerType == Controller::PID)
                 {
-                    desiredVelocity = ComputePIDJointVelocity(
-                            currentPosition,
-                            desiredPosition,
-                            deltaTimeNs,
-                            jointIndex);
+                    desiredVelocity = ComputePIDJointVelocity(currentPosition, desiredPosition, deltaTimeNs, jointIndex);
                 }
                 SetJointVelocity(jointPublisherComponent->GetHierarchyMap().at(jointName), desiredVelocity);
                 jointIndex++;
@@ -226,19 +226,20 @@ namespace ROS2
 
         auto desiredGoal = m_trajectory.points.front();
 
-        rclcpp::Duration timeFromStart = rclcpp::Duration(desiredGoal.time_from_start); // arrival time of the current desired trajectory point
+        rclcpp::Duration timeFromStart =
+            rclcpp::Duration(desiredGoal.time_from_start); // arrival time of the current desired trajectory point
         rclcpp::Duration threshold = rclcpp::Duration::from_nanoseconds(1e7);
         rclcpp::Time timeNow = rclcpp::Time(ROS2::ROS2Interface::Get()->GetROSTimestamp()); // current simulation time
 
         // Jump to the next point if current simulation time is ahead of timeFromStart
-        if(m_timeStartingExecutionTraj + timeFromStart  <= timeNow + threshold)
+        if (m_timeStartingExecutionTraj + timeFromStart <= timeNow + threshold)
         {
             m_trajectory.points.erase(m_trajectory.points.begin());
             ExecuteTrajectory(deltaTimeNs);
             return;
         }
 
-        for (int jointIndex =0; jointIndex <m_trajectory.joint_names.size(); jointIndex++)
+        for (int jointIndex = 0; jointIndex < m_trajectory.joint_names.size(); jointIndex++)
         {
             const auto& jointNameStr = m_trajectory.joint_names[jointIndex];
             const auto* jointPublisherComponent = GetEntity()->FindComponent<JointPublisherComponent>();
@@ -270,21 +271,17 @@ namespace ROS2
                 {
                     const auto articulatedAxis = jointPublisherComponent->GetArticulationFreeAxis(jointName);
                     PhysX::ArticulationJointRequestBus::Event(
-                        componentId.GetEntityId(),
-                        &PhysX::ArticulationJointRequests::SetDriveTarget,
-                        articulatedAxis,
-                        desiredPosition);
+                        componentId.GetEntityId(), &PhysX::ArticulationJointRequests::SetDriveTarget, articulatedAxis, desiredPosition);
                 }
             }
             else
             {
-                AZ_Warning(
-                    "ManipulatorControllerComponent", false, "Joint name %s not found in the hierarchy map", jointName.GetCStr());
+                AZ_Warning("ManipulatorControllerComponent", false, "Joint name %s not found in the hierarchy map", jointName.GetCStr());
             }
         }
     }
 
-void ManipulatorControllerComponent::OnTick([[maybe_unused]] float deltaTime, [[maybe_unused]] AZ::ScriptTimePoint time)
+    void ManipulatorControllerComponent::OnTick([[maybe_unused]] float deltaTime, [[maybe_unused]] AZ::ScriptTimePoint time)
     {
         if (!m_setInitalPose)
         {
