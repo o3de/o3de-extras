@@ -49,10 +49,12 @@ namespace ROS2
                     ->Attribute(AZ::Edit::Attributes::Category, "ROS2")
                     ->Attribute(AZ::Edit::Attributes::AppearsInAddComponentMenu, AZ_CRC_CE("Game"))
                     ->DataElement(
-                        AZ::Edit::UIHandlers::Default,
+                        AZ::Edit::UIHandlers::Slider,
                         &ROS2ImuSensorComponent::m_filterSize,
                         "Filter Length",
-                        "Filter Length, large value allows to reduce numeric noise")
+                        "Filter Length, Large value reduce numeric noise but increase lag")
+                    ->Attribute(AZ::Edit::Attributes::Min, 1)
+                    ->Attribute(AZ::Edit::Attributes::Max, 200)
                     ->DataElement(
                         AZ::Edit::UIHandlers::Default,
                         &ROS2ImuSensorComponent::m_includeGravity,
