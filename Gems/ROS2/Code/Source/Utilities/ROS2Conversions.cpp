@@ -6,7 +6,10 @@
  *
  */
 
+#include <AzCore/Math/Matrix3x3.h>
+#include <AzCore/Math/Quaternion.h>
 #include <AzCore/Math/Transform.h>
+#include <AzCore/Math/Vector3.h>
 #include <ROS2/Utilities/ROS2Conversions.h>
 
 namespace ROS2

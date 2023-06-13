@@ -7,13 +7,17 @@
  */
 #pragma once
 
-#include <AzCore/Math/Quaternion.h>
-#include <AzCore/Math/Transform.h>
-#include <AzCore/Math/Vector3.h>
-#include <AzCore/Math/Matrix3x3.h>
 #include <geometry_msgs/msg/point.hpp>
 #include <geometry_msgs/msg/pose.hpp>
 #include <geometry_msgs/msg/vector3.hpp>
+
+namespace AZ
+{
+    class Vector3;
+    class Matrix3x3;
+    class Transform;
+    class Quaternion;
+} // namespace AZ
 
 namespace ROS2
 {
