@@ -7,8 +7,8 @@
  */
 
 #include "ROS2ImuSensorComponent.h"
-#include <ROS2/Imu/ImuNoiseRequestBus.h>
 #include <ROS2/Frame/ROS2FrameComponent.h>
+#include <ROS2/Imu/ImuNoiseRequestBus.h>
 #include <ROS2/ROS2Bus.h>
 #include <ROS2/Utilities/ROS2Conversions.h>
 #include <ROS2/Utilities/ROS2Names.h>
@@ -99,7 +99,8 @@ namespace ROS2
         required.push_back(AZ_CRC_CE("ROS2Frame"));
     }
 
-    void ROS2ImuSensorComponent::GetDependentServices(AZ::ComponentDescriptor::DependencyArrayType& dependent) {
+    void ROS2ImuSensorComponent::GetDependentServices(AZ::ComponentDescriptor::DependencyArrayType& dependent)
+    {
         dependent.push_back(AZ_CRC_CE("ImuNoiseService"));
     }
 
@@ -148,7 +149,7 @@ namespace ROS2
             auto currentAcceleration = m_acceleration;
             ImuNoiseRequestBus::Event(entityId, &ImuNoiseRequestBus::Events::ApplyAccelerationNoise, currentAcceleration);
             m_imuMsg.linear_acceleration = ROS2Conversions::ToROS2Vector3(currentAcceleration);
-            m_imuMsg.linear_acceleration_covariance =  ROS2Conversions::ToROS2Covariance(m_linearAccelerationCovariance);
+            m_imuMsg.linear_acceleration_covariance = ROS2Conversions::ToROS2Covariance(m_linearAccelerationCovariance);
 
             auto currentAngularVelocity = angularRateFiltered;
             ImuNoiseRequestBus::Event(entityId, &ImuNoiseRequestBus::Events::ApplyAngularVelocityNoise, currentAngularVelocity);
@@ -158,7 +159,7 @@ namespace ROS2
             if (m_absoluteRotation)
             {
                 auto orientationEstimate = rigidbody->GetTransform().GetRotation();
-                ImuNoiseRequestBus::Event(entityId, &ImuNoiseRequestBus::Events::ApplyOrientationNoise,orientationEstimate);
+                ImuNoiseRequestBus::Event(entityId, &ImuNoiseRequestBus::Events::ApplyOrientationNoise, orientationEstimate);
                 m_imuMsg.orientation = ROS2Conversions::ToROS2Quaternion(orientationEstimate);
                 m_imuMsg.orientation_covariance = ROS2Conversions::ToROS2Covariance(m_orientationCovariance);
             }
@@ -175,12 +176,17 @@ namespace ROS2
         const auto publisherConfig = m_sensorConfiguration.m_publishersConfigurations[Internal::kImuMsgType];
         const auto fullTopic = ROS2Names::GetNamespacedName(GetNamespace(), publisherConfig.m_topic);
         m_imuPublisher = ros2Node->create_publisher<sensor_msgs::msg::Imu>(fullTopic.data(), publisherConfig.GetQoS());
-        
+
         m_linearAccelerationCovariance = ToDiagonalCovarianceMatrix(m_linearAccelerationVariance);
         m_angularVelocityCovariance = ToDiagonalCovarianceMatrix(m_angularVelocityVariance);
         m_orientationCovariance = ToDiagonalCovarianceMatrix(m_orientationVariance);
 
-        ImuNoiseRequestBus::Event(GetEntityId(), &ImuNoiseRequestBus::Events::ConfigureVariance, m_linearAccelerationVariance, m_angularVelocityVariance, m_orientationVariance);
+        ImuNoiseRequestBus::Event(
+            GetEntityId(),
+            &ImuNoiseRequestBus::Events::ConfigureVariance,
+            m_linearAccelerationVariance,
+            m_angularVelocityVariance,
+            m_orientationVariance);
         ROS2SensorComponent::Activate();
     }
 

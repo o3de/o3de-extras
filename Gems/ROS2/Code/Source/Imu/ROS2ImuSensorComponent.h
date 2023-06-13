@@ -60,7 +60,6 @@ namespace ROS2
         AZ::Vector3 m_angularVelocityVariance = AZ::Vector3::CreateZero();
         AZ::Vector3 m_linearAccelerationVariance = AZ::Vector3::CreateZero();
 
-
         AZ::Matrix3x3 m_orientationCovariance = AZ::Matrix3x3::CreateZero();
         AZ::Matrix3x3 m_angularVelocityCovariance = AZ::Matrix3x3::CreateZero();
         AZ::Matrix3x3 m_linearAccelerationCovariance = AZ::Matrix3x3::CreateZero();
