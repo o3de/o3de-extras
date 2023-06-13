@@ -40,11 +40,7 @@ namespace ROS2
     void ManualMotorControllerComponent::DisplayControllerParameters()
     {
         ImGui::PushItemWidth(200.0f);
-        ImGui::SliderFloat(
-            "SetSpeed",
-            &m_setSpeed,
-            -5.0f,
-            5.0f);
+        ImGui::SliderFloat("SetSpeed", &m_setSpeed, -5.0f, 5.0f);
 
         ImGui::PopItemWidth();
 
