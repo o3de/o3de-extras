@@ -1,15 +1,28 @@
-# Test Case Title : Check that entering into gamemode works
+#
+# Copyright (c) Contributors to the Open 3D Engine Project.
+# For complete copyright and license terms please see the LICENSE at the root of this distribution.
+#
+# SPDX-License-Identifier: Apache-2.0 OR MIT
+#
+
+# Test Case Title : Check that entering into game mode works
 
 # List of results that we want to check, this is not 100% necessary but its a good
 # practice to make it easier to debug tests.
 # Here we define a tuple of tests
 
-# fmt: off
+# Paths to ROS rclpy are added directly as pytest is not accessing PYTHONPATH environment variable
+import sys
+
+sys.path.append('/opt/ros/humble/lib/python3.10/site-packages')
+sys.path.append('/opt/ros/humble/local/lib/python3.10/dist-packages')
+
+
 class Tests:
-    enter_game_mode                           = ("Entered game mode",                      "Failed to enter game mode")
-    topics_published                          = ("Topics were published during game mode", "Failed to publish topics during game mode")
-    topics_not_published_outside_of_game_mode = ("All simulation topics closed",           "Failed to close publishers after simulation")
-# fmt: on
+    enter_game_mode = ("Entered game mode", "Failed to enter game mode")
+    topics_published = ("Topics were published during game mode", "Failed to publish topics during game mode")
+    topics_not_published_outside_of_game_mode = (
+        "All simulation topics closed", "Failed to close publishers after simulation")
 
 
 def check_result(result, msg):
@@ -20,21 +33,14 @@ def check_result(result, msg):
 
 
 def check_topics():
-    # TODO: Currently this is a workaround
-    #       In the final solution environment shall be successfully sourced, investigate why paths are not there
-    #       Edit: Looks like PYTHONPATH is not read correctly
-    import sys
-    sys.path.append('/opt/ros/humble/lib/python3.10/site-packages')
-    sys.path.append('/opt/ros/humble/local/lib/python3.10/dist-packages')
-
     import rclpy
     from rclpy.node import Node
 
     def get_topic_list():
         node_dummy = Node("_ros2cli_dummy_to_show_topic_list")
-        topic_list = node_dummy.get_topic_names_and_types()
+        result = node_dummy.get_topic_names_and_types()
         node_dummy.destroy_node()
-        return topic_list
+        return result
 
     topics = []
     rclpy.init()
@@ -44,6 +50,8 @@ def check_topics():
         topics.append(info[0])
     rclpy.shutdown()
     return topics
+
+
 def SmokeTest_EnterGameModeWorks():
     # Description: This test checks that entering into game mode works by opening an empty level
     # and entering into the game mode. The is in game mode state should be changed after doing it
@@ -61,7 +69,6 @@ def SmokeTest_EnterGameModeWorks():
     # Open the level called "Warehouse".
     # We use a warehouse level for a smoke test - it already has a robot prefab present
     helper.open_level(level="Warehouse", directory='')
-
 
     topics_before_game_mode = check_topics()
 
@@ -92,10 +99,12 @@ def SmokeTest_EnterGameModeWorks():
     general.idle_wait_frames(1)
 
     topics_after_game_mode = check_topics()
-    Report.result(Tests.topics_not_published_outside_of_game_mode, len(topics_after_game_mode) == len(topics_before_game_mode))
+    Report.result(Tests.topics_not_published_outside_of_game_mode,
+                  len(topics_after_game_mode) == len(topics_before_game_mode))
 
 
 if __name__ == "__main__":
     # This utility starts up the test and sets up the state for knowing what test is currently being run
     from editor_python_test_tools.utils import Report
+
     Report.start_test(SmokeTest_EnterGameModeWorks)
