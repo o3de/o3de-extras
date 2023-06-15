@@ -9,9 +9,6 @@ ARG UBUNTU_VERSION=jammy
 
 FROM ros:${ROS_VERSION}-ros-base-${UBUNTU_VERSION}
 
-ARG ROS_VERSION
-ARG UBUNTU_VERSION
-
 # Argument to determining the image type ('simulation' or 'navstack')
 ARG IMAGE_TYPE=simulation  # Default to 'simulation'
 
@@ -33,45 +30,55 @@ WORKDIR $WORKSPACE
 
 RUN apt-get update && apt-get upgrade -y
 
-# Add additional package repositories needed for packages
-# RUN apt-get install -y --no-install-recommends gpg wget curl
+# For ubuntu 20.04 (focal) the default version of cmake is not supported. Update and get version 3.24.1 from kitware
+RUN if [ "${UBUNTU_VERSION}" = "focal" ]; then \
+        apt-get install -y --no-install-recommends gpg wget curl && \
+        wget -O - https://apt.kitware.com/keys/kitware-archive-latest.asc 2>/dev/null | \
+            gpg --dearmor - | \
+            tee /usr/share/keyrings/kitware-archive-keyring.gpg >/dev/null && \
+        echo 'deb [signed-by=/usr/share/keyrings/kitware-archive-keyring.gpg] https://apt.kitware.com/ubuntu/ focal main' | \
+            tee /etc/apt/sources.list.d/kitware.list >/dev/null && \
+        apt-get update; \
+    fi
 
 # Install packages needed for cloning and building from the source repos
-RUN apt-get install -y --no-install-recommends git \
-                       git-lfs \
-                       clang-12 \
-                       ninja-build \
-                       cmake \
-                       libglu1-mesa-dev \
-                       libxcb-xinerama0 \
-                       libxcb-xinput0 \
-                       libxcb-xinput-dev \
-                       libxcb-xfixes0-dev \
-                       libxcb-xkb-dev \
-                       libxkbcommon-dev \
-                       libxkbcommon-x11-dev \
-                       libfontconfig1-dev \
-                       libcurl4-openssl-dev \
-                       libsdl2-dev \
-                       zlib1g-dev \
-                       mesa-common-dev \
-                       libssl-dev libxcb-icccm4 \
-                       libxcb-image0 \
-                       libxcb-keysyms1 \
-                       libxcb-render-util0 \
-                       libxcb-randr0 \
-                       libnvidia-gl-470 \
-                       ufw \
-                       ros-${ROS_DISTRO}-slam-toolbox \
-                       ros-${ROS_DISTRO}-navigation2 \
-                       ros-${ROS_DISTRO}-nav2-bringup \
-                       ros-${ROS_DISTRO}-pointcloud-to-laserscan \
-                       ros-${ROS_DISTRO}-gazebo-msgs \
-                       ros-${ROS_DISTRO}-ackermann-msgs \
-                       ros-${ROS_DISTRO}-rmw-cyclonedds-cpp \
-                       ros-${ROS_DISTRO}-control-toolbox \
-                       ros-${ROS_DISTRO}-nav-msgs \
-                       ros-${ROS_DISTRO}-desktop
+RUN apt-get install -y --no-install-recommends \
+    git \
+    git-lfs \
+    clang-12 \
+    ninja-build \
+    cmake \
+    libglu1-mesa-dev \
+    libxcb-xinerama0 \
+    libxcb-xinput0 \
+    libxcb-xinput-dev \
+    libxcb-xfixes0-dev \
+    libxcb-xkb-dev \
+    libxkbcommon-dev \
+    libxkbcommon-x11-dev \
+    libfontconfig1-dev \
+    libcurl4-openssl-dev \
+    libsdl2-dev \
+    zlib1g-dev \
+    mesa-common-dev \
+    libssl-dev libxcb-icccm4 \
+    libxcb-image0 \
+    libxcb-keysyms1 \
+    libxcb-render-util0 \
+    libxcb-randr0 \
+    libnvidia-gl-470 \
+    ufw \
+    ros-${ROS_DISTRO}-slam-toolbox \
+    ros-${ROS_DISTRO}-navigation2 \
+    ros-${ROS_DISTRO}-nav2-bringup \
+    ros-${ROS_DISTRO}-pointcloud-to-laserscan \
+    ros-${ROS_DISTRO}-gazebo-msgs \
+    ros-${ROS_DISTRO}-ackermann-msgs \
+    ros-${ROS_DISTRO}-rmw-cyclonedds-cpp \
+    ros-${ROS_DISTRO}-control-toolbox \
+    ros-${ROS_DISTRO}-nav-msgs \
+    ros-${ROS_DISTRO}-desktop
+
 
 # Copy script used to remove build artifacts
 #TODO COPY cleanup.bash /data/workspace/cleanup.bash
@@ -98,7 +105,7 @@ RUN if [ "${IMAGE_TYPE}" = "simulation" ]; then \
     else \
         echo "Unsupported IMAGE_TYPE: ${IMAGE_TYPE}" && exit 1; \
     fi
-    
+
 # Build and cleanup in the same layer to reduce the size
 RUN if [ "${IMAGE_TYPE}" = "simulation" ]; then \
         . /opt/ros/${ROS_DISTRO}/setup.sh && \
@@ -107,13 +114,12 @@ RUN if [ "${IMAGE_TYPE}" = "simulation" ]; then \
         cmake --build $PROJECT_PATH/build/linux --config profile --target Ros2Project Editor Ros2Project.Assets -j $CMAKE_JOBS; \
     fi
 
-#TODO prepare and add cleanup script
-
-#TODO prepare and copy launcher scripts
+COPY LaunchSimulation.bash /data/workspace/LaunchSimulation.bash
+COPY LaunchNavStack.bash /data/workspace/LaunchNavStack.bash
 
 ENV RMW_IMPLEMENTATION=rmw_cyclonedds_cpp 
 ENV LAUNCH_FULLSCREEN_OPT=0
 ENV NVIDIA_VISIBLE_DEVICES all
 ENV NVIDIA_DRIVER_CAPABILITIES all
- 
+
 ENTRYPOINT ["/bin/bash", "-c"]
