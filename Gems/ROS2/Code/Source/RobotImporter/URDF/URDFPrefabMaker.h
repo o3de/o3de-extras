@@ -22,6 +22,7 @@
 #include <AzCore/std/string/string.h>
 #include <AzToolsFramework/Prefab/PrefabPublicInterface.h>
 #include <RobotImporter/Utils/SourceAssetsStorage.h>
+#include <optional>
 
 namespace ROS2
 {
@@ -40,7 +41,7 @@ namespace ROS2
             urdf::ModelInterfaceSharedPtr model,
             AZStd::string prefabPath,
             const AZStd::shared_ptr<Utils::UrdfAssetMap> urdfAssetsMapping,
-            AZStd::shared_ptr<AZ::Transform> spawnPosition = nullptr,
+            AZStd::optional<AZ::Transform> spawnPosition = AZStd::nullopt,
             bool useArticulations = false);
 
         ~URDFPrefabMaker() = default;
@@ -61,7 +62,7 @@ namespace ROS2
         AzToolsFramework::Prefab::PrefabEntityResult AddEntitiesForLink(urdf::LinkSharedPtr link, AZ::EntityId parentEntityId);
         void BuildAssetsForLink(urdf::LinkSharedPtr link);
         void AddRobotControl(AZ::EntityId rootEntityId);
-        static void MoveEntityToDefaultSpawnPoint(const AZ::EntityId& rootEntityId, AZStd::shared_ptr<AZ::Transform> spawnPosition);
+        static void MoveEntityToDefaultSpawnPoint(const AZ::EntityId& rootEntityId, AZStd::optional<AZ::Transform> spawnPosition);
 
         urdf::ModelInterfaceSharedPtr m_model;
         AZStd::string m_prefabPath;
@@ -77,6 +78,6 @@ namespace ROS2
         AZStd::shared_ptr<Utils::UrdfAssetMap> m_urdfAssetsMapping;
         bool m_useArticulations{ false };
 
-        const AZStd::shared_ptr<AZ::Transform> m_spawnPosition;
+        const AZStd::optional<AZ::Transform> m_spawnPosition;
     };
 } // namespace ROS2

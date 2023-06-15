@@ -37,7 +37,7 @@ namespace ROS2
         void setSuccess(bool success);
         bool isComplete() const override;
         bool IsUseArticulations() const;
-        AZStd::shared_ptr<AZ::Transform> getSelectedSpawnPoint() const;
+        AZStd::optional<AZ::Transform> getSelectedSpawnPoint() const;
     Q_SIGNALS:
         void onCreateButtonPressed();
 

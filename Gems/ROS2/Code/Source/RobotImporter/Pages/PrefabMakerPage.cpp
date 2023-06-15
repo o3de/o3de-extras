@@ -16,6 +16,7 @@
 #include <ROS2/Spawner/SpawnerBus.h>
 #include <ROS2/Spawner/SpawnerInfo.h>
 #include <RobotImporter/RobotImporterWidget.h>
+#include <optional>
 #include <qcombobox.h>
 #include <qvariant.h>
 
@@ -95,7 +96,7 @@ namespace ROS2
     {
         return m_useArticulation->isChecked();
     }
-    AZStd::shared_ptr<AZ::Transform> PrefabMakerPage::getSelectedSpawnPoint() const
+    AZStd::optional<AZ::Transform> PrefabMakerPage::getSelectedSpawnPoint() const
     {
         if (!m_spawnPointsInfos.empty())
         {
@@ -105,13 +106,13 @@ namespace ROS2
             auto spawnInfo = map.find(mapKey);
             if (spawnInfo == m_spawnPointsInfos[vectorIndex].end())
             {
-                return nullptr;
+                return AZStd::nullopt;
             }
-            return AZStd::make_shared<AZ::Transform>(spawnInfo->second.pose);
+            return spawnInfo->second.pose;
         }
         else
         {
-            return nullptr;
+            return AZStd::nullopt;
         }
     }
 

@@ -22,6 +22,7 @@
 #include <ROS2/ROS2GemUtilities.h>
 #include <RobotControl/ROS2RobotControlComponent.h>
 #include <RobotImporter/Utils/RobotImporterUtils.h>
+#include <optional>
 
 namespace ROS2
 {
@@ -30,7 +31,7 @@ namespace ROS2
         urdf::ModelInterfaceSharedPtr model,
         AZStd::string prefabPath,
         const AZStd::shared_ptr<Utils::UrdfAssetMap> urdfAssetsMapping,
-        const AZStd::shared_ptr<AZ::Transform> spawnPosition,
+        const AZStd::optional<AZ::Transform> spawnPosition,
         bool useArticulations)
         : m_model(model)
         , m_visualsMaker(model->materials_, urdfAssetsMapping)
@@ -316,9 +317,9 @@ namespace ROS2
     }
 
     void URDFPrefabMaker::MoveEntityToDefaultSpawnPoint(
-        const AZ::EntityId& rootEntityId, AZStd::shared_ptr<AZ::Transform> spawnPosition = nullptr)
+        const AZ::EntityId& rootEntityId, AZStd::optional<AZ::Transform> spawnPosition = AZStd::nullopt)
     {
-        if (spawnPosition == nullptr)
+        if (!spawnPosition.has_value())
         {
             AZ_TracePrintf("URDF Importer", "SpawnPosition is null - spawning in Editors default position\n");
             return;
