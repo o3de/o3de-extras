@@ -27,8 +27,7 @@ This will create a docker image named 'o3de_ros2project' with the tag 'latest' t
 It will also contain helper scripts that will launch either the simulation (LaunchSimulation.bash) or 
 the RViz2 (LaunchNavStack.bash).
 
-You can also create a separate docker image that only contains the navigation stack and RViz2 by supplying the argument 
-```IMAGE_TYPE``` and setting it to 'navstack':
+You can also create a separate docker image that only contains the navigation stack and RViz2 by supplying the argument `IMAGE_TYPE` and setting it to 'navstack':
 
 ```
 docker build --build-arg IMAGE_TYPE=navstack -t o3de_ros2project_nav:latest .
@@ -90,7 +89,7 @@ rocker --x11 --nvidia o3de_ros2project:latest /data/workspace/LaunchNavStack.bas
 ## Advanced Options
 
 ### Target ROS2 Distribution
-The Docker script defaults to building an image based on Ubuntu 22.04 (jammy) and the ROS2 Iron distribution. This can be overridden with a combination if the ```ROS_VERSION``` and ```UBUNTU_VERSION``` arguments.
+The Docker script defaults to building an image based on Ubuntu 22.04 (jammy) and the ROS2 Iron distribution. This can be overridden with a combination if the `ROS_VERSION` and `UBUNTU_VERSION` arguments.
 
 | ROS2 Distro   | Repository                                |
 |---------------|-------------------------------------------|

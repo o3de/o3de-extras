@@ -12,7 +12,7 @@ FROM ros:${ROS_VERSION}-ros-base-${UBUNTU_VERSION}
 # Argument to determining the image type ('simulation' or 'navstack')
 ARG IMAGE_TYPE=simulation  # Default to 'simulation'
 
-# Arguments for the source repos needed for the robot vacuum sample docker
+# Arguments for the source repos needed for the Ros2Template sample docker
 ARG O3DE_REPO=https://github.com/o3de/o3de.git
 ARG O3DE_BRANCH=2305.0
 
@@ -111,8 +111,7 @@ RUN if [ "${IMAGE_TYPE}" = "simulation" ]; then \
         . /opt/ros/${ROS_DISTRO}/setup.sh && \
         $WORKSPACE/o3de/scripts/o3de.sh create-project --project-path $PROJECT_PATH --template-path $WORKSPACE/o3de-extras/Templates/Ros2ProjectTemplate && \
         cmake -B $PROJECT_PATH/build/linux -S $PROJECT_PATH -G "Ninja Multi-Config" -DLY_STRIP_DEBUG_SYMBOLS=TRUE -DLY_DISABLE_TEST_MODULES=ON && \
-        cmake --build $PROJECT_PATH/build/linux --config profile --target Ros2Project Editor Ros2Project.Assets Ros2Project.GameLauncher -j $CMAKE_JOBS && \
-        $WORKSPACE/cleanup.bash; \
+        cmake --build $PROJECT_PATH/build/linux --config profile --target Ros2Project Editor Ros2Project.Assets Ros2Project.GameLauncher -j $CMAKE_JOBS ; \
     fi
 
 COPY LaunchSimulation.bash /data/workspace/LaunchSimulation.bash
