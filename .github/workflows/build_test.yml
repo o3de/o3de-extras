@@ -1,0 +1,23 @@
+name: TEST - Build with O3DE Extras
+
+on:
+  push:
+    branches:
+      - main development
+  pull_request:
+    branches:
+      - '*'
+
+jobs:
+  build:
+    runs-on: self-hosted
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Set up O3DE Extras
+        uses: RobotecAI/setup-o3de-extras@0.2
+        with:
+          script-path: Test/test_build.sh # path to the test script inside tested repository
+          container: robotecai/o3de-dev-extras-dev:latest # container image to use
