@@ -81,7 +81,7 @@ RUN apt-get install -y --no-install-recommends \
 
 
 # Copy script used to remove build artifacts
-#TODO COPY cleanup.bash /data/workspace/cleanup.bash
+COPY cleanup.bash /data/workspace/cleanup.bash
 
 # Clone and register O3DE repos 
 RUN if [ "${IMAGE_TYPE}" = "simulation" ]; then \
@@ -111,7 +111,8 @@ RUN if [ "${IMAGE_TYPE}" = "simulation" ]; then \
         . /opt/ros/${ROS_DISTRO}/setup.sh && \
         $WORKSPACE/o3de/scripts/o3de.sh create-project --project-path $PROJECT_PATH --template-path $WORKSPACE/o3de-extras/Templates/Ros2ProjectTemplate && \
         cmake -B $PROJECT_PATH/build/linux -S $PROJECT_PATH -G "Ninja Multi-Config" -DLY_STRIP_DEBUG_SYMBOLS=TRUE -DLY_DISABLE_TEST_MODULES=ON && \
-        cmake --build $PROJECT_PATH/build/linux --config profile --target Ros2Project Editor Ros2Project.Assets -j $CMAKE_JOBS; \
+        cmake --build $PROJECT_PATH/build/linux --config profile --target Ros2Project Editor Ros2Project.Assets Ros2Project.GameLauncher -j $CMAKE_JOBS && \
+        $WORKSPACE/cleanup.bash; \
     fi
 
 COPY LaunchSimulation.bash /data/workspace/LaunchSimulation.bash
@@ -122,4 +123,4 @@ ENV LAUNCH_FULLSCREEN_OPT=0
 ENV NVIDIA_VISIBLE_DEVICES all
 ENV NVIDIA_DRIVER_CAPABILITIES all
 
-ENTRYPOINT ["/bin/bash", "-c"]
+ENTRYPOINT ["/bin/bash"]
