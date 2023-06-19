@@ -73,4 +73,10 @@ namespace ROS2
         AZStd::sort(frameTimeSorted.begin(), frameTimeSorted.end());
         m_currentMedian = frameTimeSorted[frameTimeSorted.size() / 2];
     }
+
+    void SimulationClock::ResetPublisher()
+    {
+        m_clockPublisher.reset();
+    }
+
 } // namespace ROS2

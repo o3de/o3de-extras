@@ -126,13 +126,6 @@ namespace ROS2
                 AZ::TickBus::Handler::BusDisconnect();
             }
             m_ros2Transform.reset();
-
-            // After component deactivation the ROS 2 Node needs to be reset to remove all old tf_static messages
-            auto ROS2Interface = ROS2Interface::Get();
-            if (ROS2Interface)
-            {
-                ROS2Interface->ResetNode();
-            }
         }
     }
 

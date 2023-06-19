@@ -50,11 +50,7 @@ namespace ROS2
         //! only once and are to be used when the spatial relationship between two frames does not change.
         //! @note Transforms are already published by each ROS2FrameComponent.
         //! Use this function directly only when default behavior of ROS2FrameComponent is not sufficient.
-        virtual void BroadcastTransform(const geometry_msgs::msg::TransformStamped& t, bool isDynamic) = 0;
-
-        //! Reset the ROS 2 Node
-        //! @note Resets node to remove all tf_static messages in case of changes in the Frame configuration
-        virtual void ResetNode() = 0;
+        virtual void BroadcastTransform(const geometry_msgs::msg::TransformStamped& t, bool isDynamic) const = 0;
 
         //! Obtains a simulation clock that is used across simulation.
         //! @returns constant reference to currently running clock.

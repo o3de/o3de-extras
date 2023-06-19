@@ -21,7 +21,6 @@
 #include <AzCore/Time/ITime.h>
 #include <AzCore/std/smart_ptr/make_shared.h>
 #include <AzCore/std/string/string_view.h>
-#include <tf2_ros/static_transform_broadcaster.h>
 
 namespace ROS2
 {
@@ -106,14 +105,15 @@ namespace ROS2
     void ROS2SystemComponent::Init()
     {
         rclcpp::init(0, 0);
-        m_simulationClock->Activate();
-        m_ros2Node = std::make_shared<rclcpp::Node>("o3de_ros2_node");
-        m_executor = AZStd::make_shared<rclcpp::executors::SingleThreadedExecutor>();
-        m_executor->add_node(m_ros2Node);
     }
 
     void ROS2SystemComponent::Activate()
     {
+        m_simulationClock->Activate();
+        m_ros2Node = std::make_shared<rclcpp::Node>("o3de_ros2_node");
+        m_executor = AZStd::make_shared<rclcpp::executors::SingleThreadedExecutor>();
+        m_executor->add_node(m_ros2Node);
+
         m_staticTFBroadcaster = AZStd::make_unique<tf2_ros::StaticTransformBroadcaster>(m_ros2Node);
         m_dynamicTFBroadcaster = AZStd::make_unique<tf2_ros::TransformBroadcaster>(m_ros2Node);
 
@@ -139,7 +139,10 @@ namespace ROS2
         m_loadTemplatesHandler.Disconnect();
         m_dynamicTFBroadcaster.reset();
         m_staticTFBroadcaster.reset();
-        m_wasNodeReset = false;
+        m_executor->remove_node(m_ros2Node);
+        m_executor.reset();
+        m_simulationClock->ResetPublisher();
+        m_ros2Node.reset();
     }
 
     builtin_interfaces::msg::Time ROS2SystemComponent::GetROSTimestamp() const
@@ -157,9 +160,8 @@ namespace ROS2
         return *m_simulationClock;
     }
 
-    void ROS2SystemComponent::BroadcastTransform(const geometry_msgs::msg::TransformStamped& t, bool isDynamic)
+    void ROS2SystemComponent::BroadcastTransform(const geometry_msgs::msg::TransformStamped& t, bool isDynamic) const
     {
-        m_wasNodeReset = false;
         if (isDynamic)
         {
             m_dynamicTFBroadcaster->sendTransform(t);
@@ -167,32 +169,6 @@ namespace ROS2
         else
         {
             m_staticTFBroadcaster->sendTransform(t);
-        }
-    }
-
-    void ROS2SystemComponent::ResetNode()
-    {
-        if (!m_wasNodeReset)
-        {
-            m_ros2Node.reset();
-            m_executor.reset();
-            m_staticTFBroadcaster.reset();
-            m_dynamicTFBroadcaster.reset();
-
-            auto newNode = new rclcpp::Node("o3de_ros2_node");
-            m_ros2Node.reset(newNode);
-
-            auto newExecutor = new rclcpp::executors::SingleThreadedExecutor();
-            m_executor.reset(newExecutor);
-            m_executor->add_node(m_ros2Node);
-
-            auto newStaticTFBroadcaster = new tf2_ros::StaticTransformBroadcaster(m_ros2Node);
-            m_staticTFBroadcaster.reset(newStaticTFBroadcaster);
-
-            auto newDynamicTFBroadcaster = new tf2_ros::TransformBroadcaster(m_ros2Node);
-            m_dynamicTFBroadcaster.reset(newDynamicTFBroadcaster);
-
-            m_wasNodeReset = false;
         }
     }
 
