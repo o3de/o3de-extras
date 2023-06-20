@@ -30,6 +30,10 @@ set(FILES
         Source/Frame/NamespaceConfiguration.cpp
         Source/Frame/ROS2FrameComponent.cpp
         Source/Frame/ROS2Transform.cpp
+        Source/Gripper/GripperActionServer.cpp
+        Source/Gripper/GripperActionServer.h
+        Source/Gripper/VacuumGripper.h
+        Source/Gripper/VacuumGripper.cpp
         Source/GNSS/GNSSFormatConversions.cpp
         Source/GNSS/GNSSFormatConversions.h
         Source/GNSS/ROS2GNSSSensorComponent.cpp
