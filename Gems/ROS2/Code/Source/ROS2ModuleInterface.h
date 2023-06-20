@@ -21,7 +21,7 @@
 #include <ROS2/Frame/ROS2FrameComponent.h>
 #include <ROS2/Manipulation/JointMotorControllerComponent.h>
 #include <ROS2/Manipulation/JointPublisherComponent.h>
-#include <ROS2/Manipulation/ManipulatorControllerComponent.h>
+#include <ROS2/Manipulation/ManipulatorComponent.h>
 #include <ROS2/Manipulation/ManualMotorControllerComponent.h>
 #include <ROS2/Manipulation/PidMotorControllerComponent.h>
 #include <RobotControl/Controllers/AckermannController/AckermannControlComponent.h>
@@ -78,7 +78,7 @@ namespace ROS2
                     JointMotorControllerComponent::CreateDescriptor(),
                     ManualMotorControllerComponent::CreateDescriptor(),
                     JointPublisherComponent::CreateDescriptor(),
-                    ManipulatorControllerComponent::CreateDescriptor(),
+                    ManipulatorComponent::CreateDescriptor(),
                     PidMotorControllerComponent::CreateDescriptor(),
                 });
         }

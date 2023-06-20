@@ -52,7 +52,7 @@ set(FILES
         Source/Manipulation/JointMotorControllerComponent.cpp
         Source/Manipulation/JointMotorControllerConfiguration.cpp
         Source/Manipulation/JointPublisherComponent.cpp
-        Source/Manipulation/ManipulatorControllerComponent.cpp
+        Source/Manipulation/ManipulatorComponent.cpp
         Source/Manipulation/ManualMotorControllerComponent.cpp
         Source/Manipulation/PidMotorControllerComponent.cpp
         Source/Odometry/ROS2OdometrySensorComponent.cpp
