@@ -24,7 +24,7 @@ namespace ROS2
         for (int jointIndex = 0; jointIndex < m_trajectory.joint_names.size(); jointIndex++)
         {
             const auto& jointNameStr = m_trajectory.joint_names[jointIndex];
-            const auto* jointPublisherComponent = GetEntity()->FindComponent<JointPublisherComponent>();
+            const auto* jointPublisherComponent = GetEntity()->FindComponent<JointStatePublisher>();
 
             if (!jointPublisherComponent)
             {
@@ -66,7 +66,7 @@ namespace ROS2
 
     void ManipulatorComponent::InitializePosition()
     {
-        auto* jointPublisherComponent = GetEntity()->FindComponent<JointPublisherComponent>();
+        auto* jointPublisherComponent = GetEntity()->FindComponent<JointStatePublisher>();
         if (!jointPublisherComponent)
         {
             return;

@@ -20,7 +20,7 @@
 #include <Odometry/ROS2WheelOdometry.h>
 #include <ROS2/Frame/ROS2FrameComponent.h>
 #include <ROS2/Manipulation/JointMotorControllerComponent.h>
-#include <ROS2/Manipulation/JointPublisherComponent.h>
+#include <ROS2/Manipulation/JointStatePublisher.h>
 #include <ROS2/Manipulation/ManipulatorComponent.h>
 #include <ROS2/Manipulation/ManualMotorControllerComponent.h>
 #include <ROS2/Manipulation/PidMotorControllerComponent.h>
@@ -77,7 +77,7 @@ namespace ROS2
                     VehicleDynamics::SkidSteeringModelComponent::CreateDescriptor(),
                     JointMotorControllerComponent::CreateDescriptor(),
                     ManualMotorControllerComponent::CreateDescriptor(),
-                    JointPublisherComponent::CreateDescriptor(),
+                    JointStatePublisher::CreateDescriptor(),
                     ManipulatorComponent::CreateDescriptor(),
                     PidMotorControllerComponent::CreateDescriptor(),
                 });
