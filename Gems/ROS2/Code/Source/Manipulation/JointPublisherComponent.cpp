@@ -26,7 +26,7 @@ namespace ROS2
         auto ros2Frame = GetEntity()->FindComponent<ROS2FrameComponent>();
         AZStd::string namespacedTopic = ROS2Names::GetNamespacedName(ros2Frame->GetNamespace(), "joint_states");
         m_jointstatePublisher = ros2Node->create_publisher<sensor_msgs::msg::JointState>(
-            namespacedTopic.data(), rclcpp::SystemDefaultsQoS()); // TODO: add QoS instead of "1"
+            namespacedTopic.data(), rclcpp::SystemDefaultsQoS());
     }
 
     void JointPublisherComponent::Deactivate()
