@@ -13,7 +13,7 @@ set(FILES
         Include/ROS2/Frame/ROS2Transform.h
         Include/ROS2/Manipulation/JointMotorControllerComponent.h
         Include/ROS2/Manipulation/JointMotorControllerConfiguration.h
-        Include/ROS2/Manipulation/JointPublisherComponent.h
+        Include/ROS2/Manipulation/JointStatePublisher.h
         Include/ROS2/Manipulation/ManipulatorComponent.h
         Include/ROS2/Manipulation/ManualMotorControllerComponent.h
         Include/ROS2/Manipulation/PidMotorControllerBus.h

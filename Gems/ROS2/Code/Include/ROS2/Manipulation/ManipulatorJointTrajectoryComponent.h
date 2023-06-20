@@ -16,15 +16,20 @@
 
 namespace ROS2
 {
-    //! Base class responsible for execution of command to move robotic arm (manipulator) based on set trajectory goal.
-    //! Can be derived to support different implementations.
+    //! Component responsible for execution of commands to move robotic arm (manipulator) based on set trajectory goal.
     class ManipulatorJointTrajectoryComponent
         : public AZ::Component
         , public AZ::TickBus::Handler
         , public ManipulatorTrajectoryRequestBus::Handler
     {
     public:
-        ManipulatorJointTrajectoryComponent();
+        ManipulatorJointTrajectoryComponent() = default;
+        ~ManipulatorJointTrajectoryComponent() = default;
+        AZ_COMPONENT(ManipulatorJointTrajectoryComponent, "{429DE04C-6B6D-4B2D-9D6C-3681F23CBF90}", AZ::Component);
+
+        static void GetRequiredServices(AZ::ComponentDescriptor::DependencyArrayType& required);
+        static void GetProvidedServices(AZ::ComponentDescriptor::DependencyArrayType& provided);
+        static void Reflect(AZ::ReflectContext* context);
 
         // ManipulatorTrajectoryRequestBus::Handler overrides ...
         //! @see ROS2::ManipulatorTrajectoryRequestBus::StartTrajectoryGoal
@@ -35,20 +40,26 @@ namespace ROS2
         ManipulatorActionStatus GetGoalStatus() override;
 
     private:
+        // Component overrides ...
+        void Activate() override;
+        void Deactivate() override;
+
+        // AZ::TickBus::Handler overrides
+        void OnTick(float deltaTime, AZ::ScriptTimePoint time) override;
+
         //! Follow set trajectory.
         //! @param deltaTimeNs frame time step, to advance trajectory by.
         void FollowTrajectory(const uint64_t deltaTimeNs);
-
-        vvoid MoveToNextPoint(const trajectory_msgs::msg::JointTrajectoryPoint currentTrajectoryPoint) = 0;
+        AZ::Outcome<void, AZStd::string> ValidateGoal(TrajectoryGoalPtr trajectoryGoal);
+        void MoveToNextPoint(const trajectory_msgs::msg::JointTrajectoryPoint currentTrajectoryPoint);
+        void UpdateFeedback();
 
         AZStd::string m_followTrajectoryActionName{ "arm_controller/follow_joint_trajectory" };
         AZStd::unique_ptr<FollowJointTrajectoryActionServer> m_followTrajectoryServer;
         ManipulatorTrajectoryRequestBus::TrajectoryGoal m_trajectoryGoal;
         ManipulatorJoints m_manipulatorJoints;
         rclcpp::Time m_trajectoryExecutionStartTime;
-        AZ::EntityId m_entityId;
 
-        bool m_initialized{ false };
         bool m_trajectoryInProgress{ false };
     };
 } // namespace ROS2

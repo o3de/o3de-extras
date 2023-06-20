@@ -51,7 +51,7 @@ set(FILES
         Source/Lidar/ROS2LidarSensorComponent.h
         Source/Manipulation/JointMotorControllerComponent.cpp
         Source/Manipulation/JointMotorControllerConfiguration.cpp
-        Source/Manipulation/JointPublisherComponent.cpp
+        Source/Manipulation/JointStatePublisher.cpp
         Source/Manipulation/ManipulatorComponent.cpp
         Source/Manipulation/ManualMotorControllerComponent.cpp
         Source/Manipulation/PidMotorControllerComponent.cpp

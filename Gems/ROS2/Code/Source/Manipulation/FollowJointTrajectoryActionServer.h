@@ -21,6 +21,8 @@ namespace ROS2
     class FollowJointTrajectoryActionServer
     {
     public:
+        using FollowJointTrajectory = control_msgs::action::FollowJointTrajectory;
+
         //! Create an action server for FollowJointTrajectory action and bind Goal callbacks.
         //! @param actionName Name of the action, similar to topic or service name.
         //! @param entityId entity which will execute callbacks through ManipulatorTrajectoryRequestBus.
@@ -35,19 +37,19 @@ namespace ROS2
         void PublishFeedback(std::shared_ptr<FollowJointTrajectory::Feedback> feedback);
 
     private:
-        using GoalHandle = rclcpp_action::ServerGoalHandle<control_msgs::action::FollowJointTrajectory>;
+        using GoalHandle = rclcpp_action::ServerGoalHandle<FollowJointTrajectory>;
         using ManipulatorActionStatus = ManipulatorTrajectoryRequestBus::ManipulatorActionStatus;
 
         AZ::EntityId m_entityId;
         ManipulatorActionStatus m_goalStatus = ManipulatorActionStatus::Idle;
-        rclcpp_action::Server<control_msgs::action::FollowJointTrajectory>::SharedPtr m_actionServer;
+        rclcpp_action::Server<FollowJointTrajectory>::SharedPtr m_actionServer;
         std::shared_ptr<GoalHandle> m_goalHandle;
 
         bool IsReadyForExecution() const;
         bool IsExecuting() const;
 
         rclcpp_action::GoalResponse GoalReceivedCallback(
-            const rclcpp_action::GoalUUID& uuid, std::shared_ptr<const control_msgs::action::FollowJointTrajectory::Goal> goal);
+            const rclcpp_action::GoalUUID& uuid, std::shared_ptr<const FollowJointTrajectory::Goal> goal);
 
         rclcpp_action::CancelResponse GoalCancelledCallback(const std::shared_ptr<GoalHandle> goalHandle);
 

@@ -77,11 +77,11 @@ namespace ROS2
     }
 
     rclcpp_action::GoalResponse FollowJointTrajectoryActionServer::GoalReceivedCallback(
-        [[maybe_unused]] const rclcpp_action::GoalUUID& uuid, std::shared_ptr<const control_msgs::action::FollowJointTrajectory::Goal> goal)
+        [[maybe_unused]] const rclcpp_action::GoalUUID& uuid, std::shared_ptr<const FollowJointTrajectory::Goal> goal)
     { // Accept each received goal unless other goal is active (no deferring/queuing)
         if (!IsReadyForExecution())
         {
-            AZ_TracePrintf("FollowJointTrajectoryActionServer", "Goal rejected because ");
+            AZ_TracePrintf("FollowJointTrajectoryActionServer", "Goal rejected: server is not ready for execution!");
             return rclcpp_action::GoalResponse::REJECT;
         }
 
@@ -92,6 +92,7 @@ namespace ROS2
         if (!executionOrderOutcome)
         {
             AZ_TracePrintf("FollowJointTrajectoryActionServer", "Execution not be accepted: %s", executionOrderOutcome.GetError().c_str());
+            // TODO - for mismatched joints and other cases, the correct way: accept the goal and then cancel / abort with the Result.
             return rclcpp_action::GoalResponse::REJECT;
         }
 
@@ -103,15 +104,16 @@ namespace ROS2
     { // Accept each cancel attempt
         auto result = std::make_shared<FollowJointTrajectory::Result>();
         result->error_string = "User Cancelled";
-        result->error_code = control_msgs::action::FollowJointTrajectory::SUCCESSFUL;
+        result->error_code = FollowJointTrajectory::SUCCESSFUL;
 
         AZ::Outcome<void, AZ::String> cancelOutcome;
         ManipulatorTrajectoryRequestBus::EventResult(
             cancelOutcome, m_entityId, &ManipulatorTrajectoryRequests::CancelTrajectoryGoal, result);
 
         if (!cancelOutcome)
-        {   // This will not happen in simulation unless intentionally done for behavior validation
-            AZ_TracePrintf("FollowJointTrajectoryActionServer", "Cancelling could not be accepted: %s", executionOrderOutcome.GetError().c_str());
+        { // This will not happen in simulation unless intentionally done for behavior validation
+            AZ_TracePrintf(
+                "FollowJointTrajectoryActionServer", "Cancelling could not be accepted: %s", executionOrderOutcome.GetError().c_str());
             return rclcpp_action::CancelResonse::REJECT;
         }
 
