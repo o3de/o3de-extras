@@ -6,11 +6,11 @@
  *
  */
 
+#include "JointManipulationComponent.h"
 #include <AzCore/Component/ComponentApplicationBus.h>
 #include <AzCore/Component/TransformBus.h>
 #include <AzCore/Serialization/EditContext.h>
 #include <ROS2/Frame/ROS2FrameComponent.h>
-#include <ROS2/Manipulation/JointManipulationComponent.h>
 #include <ROS2/Manipulation/JointStatePublisher.h>
 #include <ROS2/Utilities/ROS2Names.h>
 #include <Source/ArticulationLinkComponent.h>
