@@ -6,9 +6,9 @@
  *
  */
 
+#include "JointsPIDControllerComponent.h"
 #include <AzCore/Serialization/EditContext.h>
 #include <PhysX/Joint/PhysXJointRequestsBus.h>
-#include <ROS2/Manipulation/Controllers/JointsPIDControllerComponent.h>
 
 namespace ROS2
 {
