@@ -26,8 +26,8 @@ namespace ROS2
         rosHeader.stamp = ROS2::ROS2Interface::Get()->GetROSTimestamp();
         m_jointStateMsg.header = rosHeader;
 
-        ManipulatorRequestBus::ManipulatorJoints manipulatorJoints;
-        ManipulatorBus::EventResult(manipulatorJoints, m_entityId, &ManipulatorRequests::GetManipulatorJoints);
+        JointsManipulationRequestBus::ManipulationJoints manipulatorJoints;
+        ManipulatorBus::EventResult(manipulatorJoints, m_entityId, &JointsManipulationRequests::GetJoints);
 
         m_jointStateMsg.name.resize(manipulatorJoints.size());
         m_jointStateMsg.position.resize(manipulatorJoints.size());
@@ -37,12 +37,14 @@ namespace ROS2
         for (const auto& [jointName, jointInfo] : manipulatorJoints)
         {
             AZ::Outcome<float, AZStd::string> result;
-            ManipulatorBus::EventResult(result, m_entityID, &ManipulatorRequests::GetSingleDOFJointPosition, jointName);
+            ManipulatorBus::EventResult(result, m_entityID, &JointsManipulationRequests::GetJointPosition, jointName);
             auto currentJointPosition = result.value();
 
+            m_jointStateMsg.name[i] = jointName.GetCStr();
             m_jointStateMsg.position[i] = currentJointPosition;
             // TODO - fill in velocity and effort
-            m_jointStateMsg.name[i] = jointName.GetCStr();
+            m_jointStateMsg.velocity[i] = 0.0;
+            m_jointStateMsg.effort[i] = 0.0;
             i++;
         }
         m_jointStatePublisher->publish(m_jointStateMsg);
@@ -55,7 +57,9 @@ namespace ROS2
 
         m_timeElapsedSinceLastTick += deltaTime;
         if (m_timeElapsedSinceLastTick < frameTime)
+        {
             return;
+        }
 
         m_timeElapsedSinceLastTick -= frameTime;
         if (deltaTime > frameTime)

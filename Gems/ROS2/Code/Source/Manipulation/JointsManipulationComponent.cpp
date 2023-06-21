@@ -6,15 +6,12 @@
  *
  */
 
-#include "FollowJointTrajectoryActionServer.h"
 #include <AzCore/Component/ComponentApplicationBus.h>
 #include <AzCore/Component/TransformBus.h>
 #include <AzCore/Serialization/EditContext.h>
-#include <AzCore/std/functional.h>
-#include <PhysX/Joint/PhysXJointRequestsBus.h>
 #include <ROS2/Frame/ROS2FrameComponent.h>
+#include <ROS2/Manipulation/JointManipulationComponent.h>
 #include <ROS2/Manipulation/JointStatePublisher.h>
-#include <ROS2/Manipulation/ManipulatorComponent.h>
 #include <ROS2/Utilities/ROS2Names.h>
 #include <Source/ArticulationLinkComponent.h>
 #include <Source/HingeJointComponent.h>
@@ -26,7 +23,7 @@ namespace ROS2
         void AddHingeJointInfo(const PhysX::HingeJointComponent* hingeJointComponent, const AZ::Name& name, ManipulatorJoint& joints)
         {
             AZ_Assert(joints.find(name) == joints.end(), "Joint names in hierarchy need to be unique (%s is not)!", jointName.GetCStr());
-            AZ_Printf("ManipulatorComponent", "Adding joint info for hinge joint %s\n", jointName.GetCStr());
+            AZ_Printf("JointManipulationComponent", "Adding joint info for hinge joint %s\n", jointName.GetCStr());
             JointInfo jointInfo;
             jointInfo.m_isArticulation = false;
             jointInfo.m_axis = 0;
@@ -50,19 +47,20 @@ namespace ROS2
             return false;
         }
 
-        void AddArticulationJointInfo(const PhysX::ArticulationLinkComponent* articulation, const AZ::Name& name, ManipulatorJoints& joints)
+        void AddArticulationJointInfo(
+            const PhysX::ArticulationLinkComponent* articulation, const AZ::Name& name, ManipulationJoints& joints)
         {
             auto entityId = articulationComponent->GetEntityId();
             hysX::ArticulationJointAxis freeAxis;
             bool hasFreeAxis = TryGetFreeArticulationAxis(entityId, freeAxis);
             if (!hasFreeAxis)
             { // Do not add a joint since it is a fixed one
-                AZ_Printf("ManipulatorComponent", "Articulation joint %s is fixed, skipping\n", jointName.GetCStr());
+                AZ_Printf("JointManipulationComponent", "Articulation joint %s is fixed, skipping\n", jointName.GetCStr());
                 return;
             }
 
             AZ_Assert(joints.find(name) == joints.end(), "Joint names in hierarchy need to be unique (%s is not)!", jointName.GetCStr());
-            AZ_Printf("ManipulatorComponent", "Adding joint info for articulation link %s\n", jointName.GetCStr());
+            AZ_Printf("JointManipulationComponent", "Adding joint info for articulation link %s\n", jointName.GetCStr());
             JointInfo jointInfo;
             jointInfo.m_isArticulation = true;
             jointInfo.m_axis = freeAxis;
@@ -71,7 +69,7 @@ namespace ROS2
         }
     } // namespace Internal
 
-    void ManipulatorComponent::Activate()
+    void JointManipulationComponent::Activate()
     {
         auto* ros2Frame = Utils::GetGameOrEditorComponent<ROS2FrameComponent>(GetEntity());
 
@@ -85,24 +83,24 @@ namespace ROS2
 
         AZ::EntityBus::Handler::BusConnect(GetEntityId());
         AZ::TickBus::Handler::BusConnect();
-        ManipulatorRequestBus::Handler::BusConnect(GetEntityId());
+        JointsManipulationRequestBus::Handler::BusConnect(GetEntityId());
     }
 
-    void ManipulatorComponent::Deactivate()
+    void JointManipulationComponent::Deactivate()
     {
-        ManipulatorRequestBus::Handler::BusDisconnect();
+        JointsManipulationRequestBus::Handler::BusDisconnect();
         AZ::TickBus::Handler::BusDisconnect();
         AZ::EntityBus::Handler::BusDisconnect();
         m_followTrajectoryServer->reset();
     }
 
-    void ManipulatorComponent::OnEntityActivated([[maybe_unused]] const AZ::EntityId& entityId)
+    void JointManipulationComponent::OnEntityActivated([[maybe_unused]] const AZ::EntityId& entityId)
     {
         AZ::EntityBus::Handler::BusDisconnect(); // This event is the only one needed.
-        InitializeManipulatorJoints();
+        InitializeJoints();
     }
 
-    void ManipulatorComponent::InitializeManipulatorJoints()
+    void JointManipulationComponent::InitializeJoints()
     { // Look for either Articulation Links or Hinge joints in entity hierarchy and collect them into a map.
         bool foundArticulation = false;
         bool foundClassicJoint = false;
@@ -129,7 +127,7 @@ namespace ROS2
             if (hingeComponent)
             {
                 foundClassicJoint = true;
-                jointAdded = Internal::AddHingeJointInfo(hingeComponent, jointName, m_manipulatorJoints);
+                jointAdded = Internal::AddHingeJointInfo(hingeComponent, jointName, m_manipulationJoints);
             }
 
             // See if there is an Articulation Link in the entity, add it to map.
@@ -137,17 +135,17 @@ namespace ROS2
             if (articulationComponent)
             {
                 foundArticulation = true;
-                jointAdded = Internal::AddArticulationJointInfo(hingeComponent, jointName, m_manipulatorJoints);
+                jointAdded = Internal::AddArticulationJointInfo(hingeComponent, jointName, m_manipulationJoints);
             }
 
             if (jointAdded)
             { // Set the initial / resting position to move to and keep.
                 AZ_Warning(
-                    "ManipulatorComponent",
+                    "JointManipulationComponent",
                     m_initialPositions.find(jointName) != m_initialPositions.end(),
                     "No set initial position for joint %s",
                     jointName.GetCStr());
-                m_manipulatorJoints[jointName].m_restPosition = m_initialPositions[jointName];
+                m_manipulationJoints[jointName].m_restPosition = m_initialPositions[jointName];
             }
 
             bool foundAtMostOneKind = !(foundArticulation && foundClassicJoint);
@@ -155,19 +153,19 @@ namespace ROS2
         }
     }
 
-    ManipulatorJoints& ManipulatorComponent::GetManipulatorJoints()
+    ManipulationJoints& JointManipulationComponent::GetJoints()
     {
-        return m_manipulatorJoints;
+        return m_manipulationJoints;
     }
 
-    float ManipulatorComponent::GetSingleDOFJointPosition(const AZ::Name& jointName)
+    float JointManipulationComponent::GetJointPosition(const AZ::Name& jointName)
     {
-        if (!m_manipulatorJoints.contains(jointName))
+        if (!m_manipulationJoints.contains(jointName))
         {
             return AZ::Failure("Joint %s does not exist", jointName.GetCStr()));
         }
 
-        auto jointInfo = m_manipulatorJoints.at(jointName);
+        auto jointInfo = m_manipulationJoints.at(jointName);
         float position{ 0 };
         if (jointInfo.m_isArticulation)
         {
@@ -184,56 +182,59 @@ namespace ROS2
         return position;
     }
 
-    void ManipulatorComponent::GetRequiredServices(AZ::ComponentDescriptor::DependencyArrayType& required)
+    void JointManipulationComponent::GetRequiredServices(AZ::ComponentDescriptor::DependencyArrayType& required)
     {
         required.push_back(AZ_CRC_CE("ROS2Frame"));
     }
 
-    void ManipulatorComponent::GetProvidedServices(AZ::ComponentDescriptor::DependencyArrayType& provided)
+    void JointManipulationComponent::GetProvidedServices(AZ::ComponentDescriptor::DependencyArrayType& provided)
     {
         provided.push_back(AZ_CRC_CE("ManipulatorService"));
     }
 
-    void ManipulatorComponent::Reflect(AZ::ReflectContext* context)
+    void JointManipulationComponent::Reflect(AZ::ReflectContext* context)
     {
         if (AZ::SerializeContext* serialize = azrtti_cast<AZ::SerializeContext*>(context))
         {
-            serialize->Class<ManipulatorComponent, AZ::Component>()
+            serialize->Class<JointManipulationComponent, AZ::Component>()
                 ->Version(0)
-                ->Field("PublishJointStates", &ManipulatorComponent::m_publishJointState)
-                ->Field("JointStatesTopicConfiguration", &ManipulatorComponent::m_jointStateTopic)
-                ->Field("PublishFrequency", &ManipulatorComponent::m_frequency)
-                ->Field("Initial positions", &ManipulatorComponent::m_initialPositions);
+                ->Field("PublishJointStates", &JointManipulationComponent::m_publishJointState)
+                ->Field("JointStatesTopicConfiguration", &JointManipulationComponent::m_jointStateTopic)
+                ->Field("PublishFrequency", &JointManipulationComponent::m_frequency)
+                ->Field("Initial positions", &JointManipulationComponent::m_initialPositions);
 
             if (AZ::EditContext* ec = serialize->GetEditContext())
             {
-                ec->Class<ManipulatorComponent>("ManipulatorComponent", "Component for a robotic arm (manipulator)")
+                ec->Class<JointManipulationComponent>("JointManipulationComponent", "Component for a robotic arm (manipulator)")
                     ->ClassElement(AZ::Edit::ClassElements::EditorData, "")
                     ->Attribute(AZ::Edit::Attributes::AppearsInAddComponentMenu, AZ_CRC("Game"))
                     ->Attribute(AZ::Edit::Attributes::Category, "ROS2")
                     ->DataElement(
                         AZ::Edit::UIHandlers::Default,
-                        &ManipulatorComponent::m_publishJointState,
+                        &JointManipulationComponent::m_publishJointState,
                         "Publish Joint States",
                         "Publish JointState messages")
                     ->DataElement(
-                        AZ::Edit::UIHandlers::Default, &ManipulatorComponent::m_frequency, "Frequency", "Frequency for JointState messages")
-                    ->DataElement(AZ::Edit::UIHandlers::Default, &ManipulatorComponent::m_jointStateTopic, "Topic", "Topic configuration")
+                        AZ::Edit::UIHandlers::Default,
+                        &JointManipulationComponent::m_frequency,
+                        "Frequency",
+                        "Frequency for JointState messages")
+                    ->DataElement(
+                        AZ::Edit::UIHandlers::Default, &JointManipulationComponent::m_jointStateTopic, "Topic", "Topic configuration")
                     ->DataElement(
                         AZ::Edit::UIHandlers::Default,
-                        &ManipulatorComponent::m_initialPositions,
+                        &JointManipulationComponent::m_initialPositions,
                         "Initial positions",
                         "Initial positions of the manipulator (for all the joints)");
             }
         }
     }
 
-    void ManipulatorComponent::MoveToSetPositions(float deltaTime)
+    void JointManipulationComponent::MoveToSetPositions(float deltaTime)
     {
-        uint64_t deltaTimeNs = deltaTime * 1'000'000'000;
         for (const auto& [jointName, jointInfo] : m_manipulationJoints)
         {
-            float currentPosition = GetSingleDOFJointPosition(jointName).value();
+            float currentPosition = GetJointPosition(jointName).value();
             float desiredPosition = jointInfo.m_restPosition;
 
             /*
@@ -253,17 +254,17 @@ namespace ROS2
         }
     }
 
-    void ManipulatorComponent::Stop()
+    void JointManipulationComponent::Stop()
     {
         for (auto& [jointName, jointInfo] : m_manipulationJoints)
         { // Set all target joint positions to their current positions.
-            jointInfo.m_restPosition = GetSingleDOFJointPosition(jointName).value();
+            jointInfo.m_restPosition = GetJointPosition(jointName).value();
         }
     }
 
-    void ManipulatorComponent::OnTick(float deltaTime, [[maybe_unused]] AZ::ScriptTimePoint time)
+    void JointManipulationComponent::OnTick(float deltaTime, [[maybe_unused]] AZ::ScriptTimePoint time)
     {
-        if (m_manipulatorJoints.empty())
+        if (m_manipulationJoints.empty())
         {
             return;
         }

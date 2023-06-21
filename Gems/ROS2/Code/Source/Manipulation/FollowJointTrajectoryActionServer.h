@@ -25,12 +25,12 @@ namespace ROS2
 
         //! Create an action server for FollowJointTrajectory action and bind Goal callbacks.
         //! @param actionName Name of the action, similar to topic or service name.
-        //! @param entityId entity which will execute callbacks through ManipulatorTrajectoryRequestBus.
+        //! @param entityId entity which will execute callbacks through JointsTrajectoryRequestBus.
         //! @see <a href="https://docs.ros.org/en/humble/p/rclcpp_action/generated/classrclcpp__action_1_1Server.html"> ROS 2 action
         //! server documentation </a>
         FollowJointTrajectoryActionServer(const AZStd::string& actionName, const AZ::EntityId entityId);
 
-        ManipulatorTrajectoryRequestBus::ManipulatorActionStatus GeGoalStatus() const;
+        JointsTrajectoryRequestBus::TrajectoryActionStatus GeGoalStatus() const;
 
         void CancelGoal(std::shared_ptr<FollowJointTrajectory::Result> result);
         void GoalSuccess(std::shared_ptr<FollowJointTrajectory::Result> result);
@@ -38,10 +38,10 @@ namespace ROS2
 
     private:
         using GoalHandle = rclcpp_action::ServerGoalHandle<FollowJointTrajectory>;
-        using ManipulatorActionStatus = ManipulatorTrajectoryRequestBus::ManipulatorActionStatus;
+        using TrajectoryActionStatus = JointsTrajectoryRequestBus::TrajectoryActionStatus;
 
         AZ::EntityId m_entityId;
-        ManipulatorActionStatus m_goalStatus = ManipulatorActionStatus::Idle;
+        TrajectoryActionStatus m_goalStatus = TrajectoryActionStatus::Idle;
         rclcpp_action::Server<FollowJointTrajectory>::SharedPtr m_actionServer;
         std::shared_ptr<GoalHandle> m_goalHandle;
 

@@ -7,12 +7,12 @@
  */
 
 #include <ROS2/Frame/ROS2FrameComponent.h>
-#include <ROS2/Manipulation/ManipulatorJointTrajectoryComponent.h>
+#include <ROS2/Manipulation/JointsTrajectoryComponent.h>
 #include <ROS2/ROS2Bus.h>
 
 namespace ROS2
 {
-    void ManipulatorJointTrajectoryComponent::Activate()
+    void JointsTrajectoryComponent::Activate()
     {
         auto ros2Node = ROS2::ROS2Interface::Get()->GetNode();
         auto ros2Frame = GetEntityId()->FindComponent<ROS2FrameComponent>();
@@ -21,51 +21,51 @@ namespace ROS2
         m_followTrajectoryServer = AZStd::make_unique<FollowJointTrajectoryActionServer>(namespacedAction);
 
         AZ::TickBus::Handler::BusConnect();
-        ManipulatorTrajectoryRequestBus::Handler::BusConnect(GetEntityId());
+        JointsTrajectoryRequestBus::Handler::BusConnect(GetEntityId());
     }
 
-    void ManipulatorJointTrajectoryComponent::Deactivate()
+    void JointsTrajectoryComponent::Deactivate()
     {
-        ManipulatorTrajectoryRequestBus::Handler::BusDisconnect();
+        JointsTrajectoryRequestBus::Handler::BusDisconnect();
         AZ::TickBus::Handler::BusDisconnect();
         m_followTrajectoryServer->reset();
     }
 
-    void ManipulatorJointTrajectoryComponent::Reflect(AZ::ReflectContext* context)
+    void JointsTrajectoryComponent::Reflect(AZ::ReflectContext* context)
     {
         if (AZ::SerializeContext* serialize = azrtti_cast<AZ::SerializeContext*>(context))
         {
-            serialize->Class<ManipulatorJointTrajectoryComponent, AZ::Component>()->Version(0)->Field(
-                "Action name", &ManipulatorComponent::m_followTrajectoryActionName);
+            serialize->Class<JointsTrajectoryComponent, AZ::Component>()->Version(0)->Field(
+                "Action name", &JointManipulationComponent::m_followTrajectoryActionName);
 
             if (AZ::EditContext* ec = serialize->GetEditContext())
             {
-                ec->Class<ManipulatorComponent>(
-                      "ManipulatorJointTrajectoryComponent", "Component to control a robotic arm using trajectories")
+                ec->Class<JointManipulationComponent>(
+                      "JointsTrajectoryComponent", "Component to control a robotic arm using trajectories")
                     ->ClassElement(AZ::Edit::ClassElements::EditorData, "")
                     ->Attribute(AZ::Edit::Attributes::AppearsInAddComponentMenu, AZ_CRC("Game"))
                     ->Attribute(AZ::Edit::Attributes::Category, "ROS2")
                     ->DataElement(
                         AZ::Edit::UIHandlers::Default,
-                        &ManipulatorComponent::m_followTrajectoryActionName,
+                        &JointManipulationComponent::m_followTrajectoryActionName,
                         "Action Name",
                         "Name the follow trajectory action server to accept movement commands")
             }
         }
     }
 
-    void ManipulatorJointTrajectoryComponent::GetRequiredServices(AZ::ComponentDescriptor::DependencyArrayType& required)
+    void JointsTrajectoryComponent::GetRequiredServices(AZ::ComponentDescriptor::DependencyArrayType& required)
     {
         required.push_back(AZ_CRC_CE("ROS2Frame"));
         required.push_back(AZ_CRC_CE("ManipulatorService"));
     }
 
-    void ManipulatorJointTrajectoryComponent::GetProvidedServices(AZ::ComponentDescriptor::DependencyArrayType& provided)
+    void JointsTrajectoryComponent::GetProvidedServices(AZ::ComponentDescriptor::DependencyArrayType& provided)
     {
         provided.push_back(AZ_CRC_CE("ManipulatorJointTrajectoryService"));
     }
 
-    AZ::Outcome<void, AZStd::string> ManipulatorJointTrajectoryComponent::StartTrajectoryGoal(TrajectoryGoalPtr trajectoryGoal)
+    AZ::Outcome<void, AZStd::string> JointsTrajectoryComponent::StartTrajectoryGoal(TrajectoryGoalPtr trajectoryGoal)
     {
         if (m_trajectoryGoalInProgress)
         {
@@ -83,11 +83,11 @@ namespace ROS2
         return AZ::Success();
     }
 
-    AZ::Outcome<void, AZStd::string> ManipulatorJointTrajectoryComponent::ValidateGoal(TrajectoryGoalPtr trajectoryGoal)
+    AZ::Outcome<void, AZStd::string> JointsTrajectoryComponent::ValidateGoal(TrajectoryGoalPtr trajectoryGoal)
     {
         // Check joint names validity
-        ManipulatorRequestBus::ManipulatorJoints manipulatorJoints;
-        ManipulatorBus::EventResult(manipulatorJoints, GetEntityId(), &ManipulatorRequests::GetManipulatorJoints);
+        JointsManipulationRequestBus::ManipulationJoints manipulatorJoints;
+        ManipulatorBus::EventResult(manipulatorJoints, GetEntityId(), &JointsManipulationRequests::GetJoints);
         for (const auto& jointName : trajectoryGoal->trajectory.joint_names)
         {
             auto azJointName = AZ::Name(jointName.c_str());
@@ -101,10 +101,10 @@ namespace ROS2
         return AZ::Success();
     }
 
-    void ManipulatorJointTrajectoryComponent::UpdateFeedback()
+    void JointsTrajectoryComponent::UpdateFeedback()
     {
-        ManipulatorRequestBus::ManipulatorJoints manipulatorJoints;
-        ManipulatorBus::EventResult(manipulatorJoints, GetEntityId(), &ManipulatorRequests::GetManipulatorJoints);
+        JointsManipulationRequestBus::ManipulationJoints manipulatorJoints;
+        ManipulatorBus::EventResult(manipulatorJoints, GetEntityId(), &JointsManipulationRequests::GetJoints);
         auto feedback = std::make_shared(control_msgs::action::FollowJointTrajectory::Feedback);
         trajectory_msgs::msg::JointTrajectoryPoint desiredPoint;
         for (const auto& [jointName, hingeComponent] : manipulatorJoints)
@@ -113,7 +113,7 @@ namespace ROS2
             feedback->joint_names.push_back(jointNameStdString);
 
             AZ::Outcome<float, AZStd::string> result;
-            ManipulatorBus::EventResult(result, GetEntityId(), &ManipulatorRequests::GetSingleDOFJointPosition, jointName);
+            ManipulatorBus::EventResult(result, GetEntityId(), &JointsManipulationRequests::GetJointPosition, jointName);
             auto currentJointPosition = result.value();
 
             desiredPoint.positions.push_back(static_cast<double>(currentJointPosition));
@@ -161,7 +161,7 @@ namespace ROS2
         m_followTrajectoryServer->PublishFeedback(feedback);
     }
 
-    AZ::Outcome<void, AZStd::string> ManipulatorJointTrajectoryComponent::CancelTrajectoryGoal(TrajectoryResultPtr result)
+    AZ::Outcome<void, AZStd::string> JointsTrajectoryComponent::CancelTrajectoryGoal(TrajectoryResultPtr result)
     {
         m_trajectory.trajectory.points.clear() // TODO - empty the trajectory
         m_followTrajectoryServer->CancelGoal(result);
@@ -169,17 +169,17 @@ namespace ROS2
         return AZ::Success();
     }
 
-    GoalStatus ManipulatorComponent::GetGoalStatus()
+    GoalStatus JointManipulationComponent::GetGoalStatus()
     {
         return m_followTrajectoryServer->GetGoalStatus();
     }
 
-    void ManipulatorJointTrajectoryComponent::FollowTrajectory(const uint64_t deltaTimeNs)
+    void JointsTrajectoryComponent::FollowTrajectory(const uint64_t deltaTimeNs)
     {
         auto goalStatus = GetGoalStatus();
         if (goalStatus == GoalStatus::Cancelled)
         {
-            ManipulatorRequestBus::Event(GetEntityId(), &ManipulatorRequests::Stop);
+            JointsManipulationRequestBus::Event(GetEntityId(), &JointsManipulationRequests::Stop);
             return;
         }
 
@@ -190,7 +190,7 @@ namespace ROS2
 
         if (m_trajectoryGoal.trajectory.points.size() == 0)
         { // The manipulator has reached the goal.
-            AZ_TracePrintf("ManipulatorComponent", "Goal Concluded: all points reached");
+            AZ_TracePrintf("JointManipulationComponent", "Goal Concluded: all points reached");
             auto successResult = std::make_shared<control_msgs::action::FollowJointTrajectory::Result>(); //!< Empty defaults to success.
             m_followTrajectoryServer->GoalSuccess(successResult);
             m_trajectoryInProgress = false;
@@ -212,10 +212,10 @@ namespace ROS2
         MoveToNextPoint(desiredGoal);
     }
 
-    void ManipulatorJointTrajectoryComponent::MoveToNextPoint(const trajectory_msgs::msg::JointTrajectoryPoint currentTrajectoryPoint)
+    void JointsTrajectoryComponent::MoveToNextPoint(const trajectory_msgs::msg::JointTrajectoryPoint currentTrajectoryPoint)
     {
-        ManipulatorRequestBus::ManipulatorJoints manipulatorJoints;
-        ManipulatorBus::EventResult(manipulatorJoints, GetEntityId(), &ManipulatorRequests::GetManipulatorJoints);
+        JointsManipulationRequestBus::ManipulationJoints manipulatorJoints;
+        ManipulatorBus::EventResult(manipulatorJoints, GetEntityId(), &JointsManipulationRequests::GetJoints);
         for (int jointIndex = 0; jointIndex < m_trajectory.joint_names.size(); jointIndex++)
         { // Order each joint to be moved
             const auto& jointName = AZ::Name(m_trajectory.joint_names[jointIndex].c_str());
@@ -223,7 +223,7 @@ namespace ROS2
 
             float targetPos = nextTrajectoryPoint.positions[jointIndex];
             AZ::Outcome<void, AZStd::string> result;
-            ManipulatorBus::EventResult(result, GetEntityId(), &ManipulatorRequests::MoveSingleDOFJointToPosition, jointName, targetPos);
+            ManipulatorBus::EventResult(result, GetEntityId(), &JointsManipulationRequests::MoveJointToPosition, jointName, targetPos);
             AZ_Assert(result, "Joint move cannot be realized: %s", result.error())
         }
     }

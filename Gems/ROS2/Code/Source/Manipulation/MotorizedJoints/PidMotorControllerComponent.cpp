@@ -9,7 +9,7 @@
 #include <AzCore/Component/ComponentBus.h>
 #include <AzCore/Serialization/EditContext.h>
 #include <PhysX/Joint/PhysXJointRequestsBus.h>
-#include <ROS2/Manipulation/PidMotorControllerComponent.h>
+#include <ROS2/Manipulation/MotorizedJoints/PidMotorControllerComponent.h>
 #include <imgui/imgui.h>
 
 namespace ROS2

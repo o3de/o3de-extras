@@ -11,13 +11,13 @@ set(FILES
         Include/ROS2/Frame/NamespaceConfiguration.h
         Include/ROS2/Frame/ROS2FrameComponent.h
         Include/ROS2/Frame/ROS2Transform.h
-        Include/ROS2/Manipulation/JointMotorControllerComponent.h
-        Include/ROS2/Manipulation/JointMotorControllerConfiguration.h
+        Include/ROS2/Manipulation/MotorizedJoints/JointMotorControllerComponent.h
+        Include/ROS2/Manipulation/MotorizedJoints/JointMotorControllerConfiguration.h
         Include/ROS2/Manipulation/JointStatePublisher.h
-        Include/ROS2/Manipulation/ManipulatorComponent.h
-        Include/ROS2/Manipulation/ManualMotorControllerComponent.h
-        Include/ROS2/Manipulation/PidMotorControllerBus.h
-        Include/ROS2/Manipulation/PidMotorControllerComponent.h
+        Include/ROS2/Manipulation/JointManipulationComponent.h
+        Include/ROS2/Manipulation/MotorizedJoints/ManualMotorControllerComponent.h
+        Include/ROS2/Manipulation/MotorizedJoints/PidMotorControllerBus.h
+        Include/ROS2/Manipulation/MotorizedJoints/PidMotorControllerComponent.h
         Include/ROS2/RobotControl/ControlConfiguration.h
         Include/ROS2/RobotControl/ControlSubscriptionHandler.h
         Include/ROS2/Lidar/LidarRaycasterBus.h
