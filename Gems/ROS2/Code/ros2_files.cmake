@@ -27,6 +27,10 @@ set(FILES
         Source/Communication/QoS.cpp
         Source/Communication/PublisherConfiguration.cpp
         Source/Communication/TopicConfiguration.cpp
+        Source/FactorySimulation/ConveyorBeltComponent.cpp
+        Source/FactorySimulation/ConveyorBeltComponent.h
+        Source/FactorySimulation/ConveyorBeltComponentConfiguration.cpp
+        Source/FactorySimulation/ConveyorBeltComponentConfiguration.h
         Source/Frame/NamespaceConfiguration.cpp
         Source/Frame/ROS2FrameComponent.cpp
         Source/Frame/ROS2Transform.cpp
