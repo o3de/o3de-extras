@@ -49,12 +49,12 @@ set(FILES
         Source/Lidar/ROS2Lidar2DSensorComponent.h
         Source/Lidar/ROS2LidarSensorComponent.cpp
         Source/Lidar/ROS2LidarSensorComponent.h
-        Source/Manipulation/JointMotorControllerComponent.cpp
-        Source/Manipulation/JointMotorControllerConfiguration.cpp
+        Source/Manipulation/MotorizedJoints/JointMotorControllerComponent.cpp
+        Source/Manipulation/MotorizedJoints/JointMotorControllerConfiguration.cpp
         Source/Manipulation/JointStatePublisher.cpp
-        Source/Manipulation/ManipulatorComponent.cpp
-        Source/Manipulation/ManualMotorControllerComponent.cpp
-        Source/Manipulation/PidMotorControllerComponent.cpp
+        Source/Manipulation/JointManipulationComponent.cpp
+        Source/Manipulation/MotorizedJoints/ManualMotorControllerComponent.cpp
+        Source/Manipulation/MotorizedJoints/PidMotorControllerComponent.cpp
         Source/Odometry/ROS2OdometrySensorComponent.cpp
         Source/Odometry/ROS2OdometrySensorComponent.h
         Source/Odometry/ROS2WheelOdometry.cpp

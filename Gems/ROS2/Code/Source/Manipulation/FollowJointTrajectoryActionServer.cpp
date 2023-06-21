@@ -8,7 +8,7 @@
 
 #include "FollowJointTrajectoryActionServer.h"
 #include <AzCore/std/functional.h>
-#include <ROS2/Manipulation/ManipulatorTrajectoryRequestBus.h>
+#include <ROS2/Manipulation/JointsTrajectoryRequestBus.h>
 #include <ROS2/ROS2Bus.h>
 
 namespace ROS2
@@ -24,7 +24,7 @@ namespace ROS2
             AZStd::bind(&FollowJointTrajectoryActionServer::GoalAcceptedCallback, this, AZStd::placeholders::_1));
     }
 
-    ManipulatorActionStatus FollowJointTrajectoryActionServer::GeGoalStatus() const
+    TrajectoryActionStatus FollowJointTrajectoryActionServer::GeGoalStatus() const
     {
         return m_goalStatus;
     }
@@ -46,7 +46,7 @@ namespace ROS2
         {
             AZ_TracePrintf("FollowJointTrajectoryActionServer", "Goal succeeded");
             m_goalHandle->succeed(result);
-            m_goalStatus = ManipulatorActionStatus::Succeeded;
+            m_goalStatus = TrajectoryActionStatus::Succeeded;
         }
     }
 
@@ -86,8 +86,8 @@ namespace ROS2
         }
 
         AZ::Outcome<void, AZ::String> executionOrderOutcome;
-        ManipulatorTrajectoryRequestBus::EventResult(
-            executionOrderOutcome, m_entityId, &ManipulatorTrajectoryRequests::StartTrajectoryGoal, goal);
+        JointsTrajectoryRequestBus::EventResult(
+            executionOrderOutcome, m_entityId, &JointsTrajectoryRequests::StartTrajectoryGoal, goal);
 
         if (!executionOrderOutcome)
         {
@@ -107,8 +107,8 @@ namespace ROS2
         result->error_code = FollowJointTrajectory::SUCCESSFUL;
 
         AZ::Outcome<void, AZ::String> cancelOutcome;
-        ManipulatorTrajectoryRequestBus::EventResult(
-            cancelOutcome, m_entityId, &ManipulatorTrajectoryRequests::CancelTrajectoryGoal, result);
+        JointsTrajectoryRequestBus::EventResult(
+            cancelOutcome, m_entityId, &JointsTrajectoryRequests::CancelTrajectoryGoal, result);
 
         if (!cancelOutcome)
         { // This will not happen in simulation unless intentionally done for behavior validation
@@ -117,7 +117,7 @@ namespace ROS2
             return rclcpp_action::CancelResonse::REJECT;
         }
 
-        m_goalStatus = ManipulatorActionStatus::Cancelled;
+        m_goalStatus = TrajectoryActionStatus::Cancelled;
         return rclcpp_action::CancelResponse::ACCEPT;
     }
 
@@ -126,6 +126,6 @@ namespace ROS2
         AZ_TracePrintf("FollowJointTrajectoryActionServer", "Goal accepted");
         m_goalHandle = goalHandle;
         m_goalHandle->execute();
-        m_goalStatus = ManipulatorActionStatus::Executing;
+        m_goalStatus = TrajectoryActionStatus::Executing;
     }
 } // namespace ROS2

@@ -8,7 +8,7 @@
 #pragma once
 
 #include <AzCore/Serialization/SerializeContext.h>
-#include <ROS2/Manipulation/JointMotorControllerComponent.h>
+#include <ROS2/Manipulation/MotorizedJoints/JointMotorControllerComponent.h>
 
 namespace ROS2
 {

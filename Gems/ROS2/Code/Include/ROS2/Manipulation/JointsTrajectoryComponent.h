@@ -11,33 +11,33 @@
 #include <AzCore/Component/Component.h>
 #include <AzCore/Component/TickBus.h>
 #include <AzCore/Entity/EntityBus.h>
-#include <ROS2/Manipulation/ManipulatorTrajectoryRequestBus.h>
+#include <ROS2/Manipulation/JointsTrajectoryRequestBus.h>
 #include <control_msgs/action/follow_joint_trajectory.hpp>
 
 namespace ROS2
 {
     //! Component responsible for execution of commands to move robotic arm (manipulator) based on set trajectory goal.
-    class ManipulatorJointTrajectoryComponent
+    class JointsTrajectoryComponent
         : public AZ::Component
         , public AZ::TickBus::Handler
-        , public ManipulatorTrajectoryRequestBus::Handler
+        , public JointsTrajectoryRequestBus::Handler
     {
     public:
-        ManipulatorJointTrajectoryComponent() = default;
-        ~ManipulatorJointTrajectoryComponent() = default;
-        AZ_COMPONENT(ManipulatorJointTrajectoryComponent, "{429DE04C-6B6D-4B2D-9D6C-3681F23CBF90}", AZ::Component);
+        JointsTrajectoryComponent() = default;
+        ~JointsTrajectoryComponent() = default;
+        AZ_COMPONENT(JointsTrajectoryComponent, "{429DE04C-6B6D-4B2D-9D6C-3681F23CBF90}", AZ::Component);
 
         static void GetRequiredServices(AZ::ComponentDescriptor::DependencyArrayType& required);
         static void GetProvidedServices(AZ::ComponentDescriptor::DependencyArrayType& provided);
         static void Reflect(AZ::ReflectContext* context);
 
-        // ManipulatorTrajectoryRequestBus::Handler overrides ...
-        //! @see ROS2::ManipulatorTrajectoryRequestBus::StartTrajectoryGoal
+        // JointsTrajectoryRequestBus::Handler overrides ...
+        //! @see ROS2::JointsTrajectoryRequestBus::StartTrajectoryGoal
         AZ::Outcome<void, AZStd::string> StartTrajectoryGoal(TrajectoryGoalPtr trajectoryGoal) override;
-        //! @see ROS2::ManipulatorTrajectoryRequestBus::CancelTrajectoryGoal
+        //! @see ROS2::JointsTrajectoryRequestBus::CancelTrajectoryGoal
         AZ::Outcome<void, AZStd::string> CancelTrajectoryGoal(TrajectoryResultPtr trajectoryResult) override;
-        //! @see ROS2::ManipulatorTrajectoryRequestBus::GetGoalStatus
-        ManipulatorActionStatus GetGoalStatus() override;
+        //! @see ROS2::JointsTrajectoryRequestBus::GetGoalStatus
+        TrajectoryActionStatus GetGoalStatus() override;
 
     private:
         // Component overrides ...
@@ -56,8 +56,8 @@ namespace ROS2
 
         AZStd::string m_followTrajectoryActionName{ "arm_controller/follow_joint_trajectory" };
         AZStd::unique_ptr<FollowJointTrajectoryActionServer> m_followTrajectoryServer;
-        ManipulatorTrajectoryRequestBus::TrajectoryGoal m_trajectoryGoal;
-        ManipulatorJoints m_manipulatorJoints;
+        JointsTrajectoryRequestBus::TrajectoryGoal m_trajectoryGoal;
+        ManipulationJoints m_manipulationJoints;
         rclcpp::Time m_trajectoryExecutionStartTime;
 
         bool m_trajectoryInProgress{ false };

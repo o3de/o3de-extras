@@ -6,7 +6,7 @@
  *
  */
 #include <AzCore/Serialization/EditContext.h>
-#include <ROS2/Manipulation/ManualMotorControllerComponent.h>
+#include <ROS2/Manipulation/MotorizedJoints/ManualMotorControllerComponent.h>
 #include <imgui/imgui.h>
 
 namespace ROS2
