@@ -16,12 +16,16 @@
 #include <Lidar/LidarRegistrarSystemComponent.h>
 #include <Lidar/ROS2Lidar2DSensorComponent.h>
 #include <Lidar/ROS2LidarSensorComponent.h>
+<<<<<<< HEAD
 #include <Manipulation/Controllers/JointsArticulationControllerComponent.h>
 #include <Manipulation/Controllers/JointsPIDControllerComponent.h>
 #include <Manipulation/JointsManipulationComponent.h>
 #include <Manipulation/JointsTrajectoryComponent.h>
+=======
+>>>>>>> 3969cbc (Add proximity sensor)
 #include <Odometry/ROS2OdometrySensorComponent.h>
 #include <Odometry/ROS2WheelOdometry.h>
+#include <ProximitySensor/ROS2ProximitySensor.h>
 #include <ROS2/Frame/ROS2FrameComponent.h>
 #include <ROS2/Manipulation/MotorizedJoints/JointMotorControllerComponent.h>
 #include <ROS2/Manipulation/MotorizedJoints/ManualMotorControllerComponent.h>
@@ -84,6 +88,7 @@ namespace ROS2
                     JointsPIDControllerComponent::CreateDescriptor(),
                     JointsTrajectoryComponent::CreateDescriptor(),
                     PidMotorControllerComponent::CreateDescriptor(),
+                    ROS2ProximitySensor::CreateDescriptor(),
                 });
         }
 
