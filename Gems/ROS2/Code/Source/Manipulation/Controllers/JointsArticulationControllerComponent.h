@@ -16,26 +16,25 @@
 namespace ROS2
 {
     //! Handles position control commands for joints using Articulations.
-    class JointArticulationControllerComponent
+    class JointsArticulationControllerComponent
         : public AZ::Component
         , public JointsPositionControllerRequestBus::Handler
     {
     public:
-        JointArticulationControllerComponent() = default;
-        ~JointArticulationControllerComponent() = default;
-        AZ_COMPONENT(JointArticulationControllerComponent, "{243E9F07-5F84-4F83-9E6D-D1DA04D7CEF9}", AZ::Component);
+        JointsArticulationControllerComponent() = default;
+        ~JointsArticulationControllerComponent() = default;
+        AZ_COMPONENT(JointsArticulationControllerComponent, "{243E9F07-5F84-4F83-9E6D-D1DA04D7CEF9}", AZ::Component);
 
-        static void GetRequiredServices(AZ::ComponentDescriptor::DependencyArrayType& required);
         static void GetProvidedServices(AZ::ComponentDescriptor::DependencyArrayType& provided);
         static void Reflect(AZ::ReflectContext* context);
 
         // JointsPositionControllerRequestBus::Handler overrides ...
         //! @see ROS2::JointsPositionControllerRequestBus::PositionControl
-        void PositionControl(
+        AZ::Outcome<void, AZStd::string> PositionControl(
             const AZ::Name& jointName,
-            JointManipulationRequests::JointInfo joint,
-            JointManipulationRequests::JointPosition currentPosition,
-            JointManipulationRequests::JointPosition targetPosition,
+            JointsManipulationRequests::JointInfo joint,
+            JointsManipulationRequests::JointPosition currentPosition,
+            JointsManipulationRequests::JointPosition targetPosition,
             float deltaTime) override;
 
     private:

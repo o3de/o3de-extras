@@ -12,18 +12,19 @@
 #include <AzCore/Component/TickBus.h>
 #include <AzCore/Name/Name.h>
 #include <ROS2/Manipulation/Controllers/JointsPositionControllerRequests.h>
+#include <ROS2/Utilities/Controllers/PidConfiguration.h>
 
 namespace ROS2
 {
    //! Handles position control commands for joints.
-   class JointPIDControllerComponent
+   class JointsPIDControllerComponent
        : public AZ::Component
        , public JointsPositionControllerRequestBus::Handler
    {
    public:
-       JointPIDControllerComponent() = default;
-       ~JointPIDControllerComponent() = default;
-       AZ_COMPONENT(JointPIDControllerComponent, "{41A31EDB-90B0-412E-BBFA-D35D45546A8E}", AZ::Component);
+       JointsPIDControllerComponent() = default;
+       ~JointsPIDControllerComponent() = default;
+       AZ_COMPONENT(JointsPIDControllerComponent, "{41A31EDB-90B0-412E-BBFA-D35D45546A8E}", AZ::Component);
 
        static void GetProvidedServices(AZ::ComponentDescriptor::DependencyArrayType& provided);
        static void Reflect(AZ::ReflectContext* context);
@@ -31,9 +32,10 @@ namespace ROS2
        // JointsPositionControllerRequestBus::Handler overrides ...
        //! @see ROS2::JointsPositionControllerRequestBus::PositionControl
        AZ::Outcome<void, AZStd::string> PositionControl(
-           JointManipulationRequests::JointInfo joint,
-           JointManipulationRequests::JointPosition currentPosition,
-           JointManipulationRequests::JointPosition targetPosition,
+           const AZ::Name& jointName,
+           JointsManipulationRequests::JointInfo joint,
+           JointsManipulationRequests::JointPosition currentPosition,
+           JointsManipulationRequests::JointPosition targetPosition,
            float deltaTime) override;
 
    private:
@@ -43,6 +45,6 @@ namespace ROS2
        void InitializePIDs();
 
        // TODO - temporary solution. Use Editor Component and check against named joints. (populate names / update initially, watch bus).
-       AZStd::unordered_map<AZ::Name, Controllers::PidConfiguration> m_pidConfigurationVector;
+       AZStd::unordered_map<AZ::Name, Controllers::PidConfiguration> m_pidConfiguration;
    };
 } // namespace ROS2

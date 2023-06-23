@@ -1,6 +1,7 @@
 #pragma once
 
-#include <AzCore/Entity/EntityId.h>
+#include <AzCore/Component/EntityId.h>
+#include <ROS2/Communication/TopicConfiguration.h>
 #include <rclcpp/publisher.hpp>
 #include <sensor_msgs/msg/joint_state.hpp>
 
@@ -19,10 +20,10 @@ namespace ROS2
     class JointStatePublisher
     {
     public:
-        JointStatePublisher(const JointStatePublisherConfiguration& configuration, const AZ::EntityId& entityId) = default;
+        JointStatePublisher(const JointStatePublisherConfiguration& configuration, const AZ::EntityId& entityId);
 
         //! Update time tick. This will result in state publishing if timing matches frequency.
-        void OnTick(float deltaTime)
+        void OnTick(float deltaTime);
 
     private:
         void PublishMessage();

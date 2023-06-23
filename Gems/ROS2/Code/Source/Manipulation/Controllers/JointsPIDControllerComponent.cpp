@@ -25,7 +25,7 @@ namespace ROS2
 
     void JointsPIDControllerComponent::InitializePIDs()
     {
-        for (auto& [jointName, pid] : m_pidConfigurationVector)
+        for (auto& [jointName, pid] : m_pidConfiguration)
         {
             pid.InitializePid();
         }
@@ -33,27 +33,27 @@ namespace ROS2
 
     AZ::Outcome<void, AZStd::string> JointsPIDControllerComponent::PositionControl(
         const AZ::Name& jointName,
-        JointManipulationRequests::JointInfo joint,
-        JointManipulationRequests::JointPosition currentPosition,
-        JointManipulationRequests::JointPosition targetPosition,
+        JointsManipulationRequests::JointInfo joint,
+        JointsManipulationRequests::JointPosition currentPosition,
+        JointsManipulationRequests::JointPosition targetPosition,
         float deltaTime)
     {
         if (joint.m_isArticulation)
         { // TODO - this situation should be resolved through RequiredServices instead or otherwise through validation.
-            return AZ::Failure("Joint %s is articulation link, JointsPIDControllerComponent only handles classic Hinge joints. Use "
-                               "JointsArticulationControllerComponent instead");
+            return AZ::Failure(AZStd::string::format("Joint %s is articulation link, JointsPIDControllerComponent only handles classic Hinge joints. Use "
+                               "JointsArticulationControllerComponent instead", jointName.GetCStr()));
         }
 
-        bool jointPIDdefined = m_pidConfigurationVector.find(jointName) != m_pidConfiguratioNVector.end();
+        bool jointPIDdefined = m_pidConfiguration.find(jointName) != m_pidConfiguration.end();
         AZ_Warning(
             "JointsPIDControllerComponent",
             jointPIDdefined,
             "PID not defined for joint %s, using a default, the behavior is likely to be wrong for this joint",
             jointName.GetCStr());
 
-        Controllers::PidConfiguration defaultPIDConfiguration;
+        Controllers::PidConfiguration defaultConfiguration;
         defaultConfiguration.InitializePid();
-        auto applicablePidConfiguration = jointPIDdefined ? m_pidConfigurationVector.at(jointName) : defaultPIDConfiguration;
+        auto applicablePidConfiguration = jointPIDdefined ? m_pidConfiguration.at(jointName) : defaultConfiguration;
 
         uint64_t deltaTimeNs = deltaTime * 1'000'000'000;
         auto positionError = targetPosition - currentPosition;
@@ -72,7 +72,7 @@ namespace ROS2
         if (AZ::SerializeContext* serialize = azrtti_cast<AZ::SerializeContext*>(context))
         {
             serialize->Class<JointsPIDControllerComponent, AZ::Component>()->Version(0)->Field(
-                "JointsPIDs", &JointManipulationComponent::m_initialPositions);
+                "JointsPIDs", &JointsPIDControllerComponent::m_pidConfiguration);
 
             if (AZ::EditContext* ec = serialize->GetEditContext())
             {
@@ -82,7 +82,7 @@ namespace ROS2
                     ->Attribute(AZ::Edit::Attributes::Category, "ROS2")
                     ->DataElement(
                         AZ::Edit::UIHandlers::Default,
-                        &JointManipulationComponent::m_pidConfigurationVector,
+                        &JointsPIDControllerComponent::m_pidConfiguration,
                         "Joint PIDs",
                         "PID configuration for each free joint in this entity hierarchy");
             }

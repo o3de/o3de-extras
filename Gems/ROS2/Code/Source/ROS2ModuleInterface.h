@@ -14,16 +14,18 @@
 #include <GNSS/ROS2GNSSSensorComponent.h>
 #include <Imu/ROS2ImuSensorComponent.h>
 #include <Lidar/LidarRegistrarSystemComponent.h>
-#include <Lidar/ROS2LidarSensorComponent.h>
 #include <Lidar/ROS2Lidar2DSensorComponent.h>
+#include <Lidar/ROS2LidarSensorComponent.h>
+#include <Manipulation/Controllers/JointsArticulationControllerComponent.h>
+#include <Manipulation/Controllers/JointsPIDControllerComponent.h>
+#include <Manipulation/JointsManipulationComponent.h>
+#include <Manipulation/JointsTrajectoryComponent.h>
 #include <Odometry/ROS2OdometrySensorComponent.h>
 #include <Odometry/ROS2WheelOdometry.h>
 #include <ROS2/Frame/ROS2FrameComponent.h>
-#include <ROS2/Manipulation/JointMotorControllerComponent.h>
-#include <ROS2/Manipulation/JointStatePublisher.h>
-#include <ROS2/Manipulation/JointManipulationComponent.h>
-#include <ROS2/Manipulation/ManualMotorControllerComponent.h>
-#include <ROS2/Manipulation/PidMotorControllerComponent.h>
+#include <ROS2/Manipulation/MotorizedJoints/JointMotorControllerComponent.h>
+#include <ROS2/Manipulation/MotorizedJoints/ManualMotorControllerComponent.h>
+#include <ROS2/Manipulation/MotorizedJoints/PidMotorControllerComponent.h>
 #include <RobotControl/Controllers/AckermannController/AckermannControlComponent.h>
 #include <RobotControl/Controllers/RigidBodyController/RigidBodyTwistControlComponent.h>
 #include <RobotControl/Controllers/SkidSteeringController/SkidSteeringControlComponent.h>
@@ -77,8 +79,10 @@ namespace ROS2
                     VehicleDynamics::SkidSteeringModelComponent::CreateDescriptor(),
                     JointMotorControllerComponent::CreateDescriptor(),
                     ManualMotorControllerComponent::CreateDescriptor(),
-                    JointStatePublisher::CreateDescriptor(),
-                    JointManipulationComponent::CreateDescriptor(),
+                    JointsManipulationComponent::CreateDescriptor(),
+                    JointsArticulationControllerComponent::CreateDescriptor(),
+                    JointsPIDControllerComponent::CreateDescriptor(),
+                    JointsTrajectoryComponent::CreateDescriptor(),
                     PidMotorControllerComponent::CreateDescriptor(),
                 });
         }

@@ -8,7 +8,7 @@
 
 #include "JointsArticulationControllerComponent.h"
 #include <AzCore/Serialization/EditContext.h>
-#include <PhysX/Joint/PhysXJointRequestsBus.h>
+#include <PhysX/ArticulationJointBus.h>
 
 namespace ROS2
 {
@@ -23,36 +23,38 @@ namespace ROS2
     }
 
     AZ::Outcome<void, AZStd::string> JointsArticulationControllerComponent::PositionControl(
-        [[maybe_unused]] const AZ::Name& jointName,
-        JointManipulationRequests::JointInfo joint,
-        [[maybe_unused]] JointManipulationRequests::JointPosition currentPosition,
-        JointManipulationRequests::JointPosition targetPosition,
+        const AZ::Name& jointName,
+        JointsManipulationRequests::JointInfo joint,
+        [[maybe_unused]] JointsManipulationRequests::JointPosition currentPosition,
+        JointsManipulationRequests::JointPosition targetPosition,
         [[maybe_unused]] float deltaTime)
     {
         if (!joint.m_isArticulation)
         { // TODO - this situation should be resolved through RequiredServices instead or otherwise through validation.
-            return AZ::Failure("Joint %s is not an articulation link, use JointsPIDControllerComponent instead");
+            return AZ::Failure(AZStd::string::format(
+                "Joint %s is not an articulation link, use JointsPIDControllerComponent instead", jointName.GetCStr()));
         }
 
         PhysX::ArticulationJointRequestBus::Event(
-            joint.m_componentIdPair.GetEntityId(), &PhysX::ArticulationJointRequests::SetDriveTarget, joint.m_axis, targetPosition);
+            joint.m_entityComponentIdPair.GetEntityId(), &PhysX::ArticulationJointRequests::SetDriveTarget, joint.m_axis, targetPosition);
         return AZ::Success();
     }
 
-    void JointsPIDControllerComponent::GetProvidedServices(AZ::ComponentDescriptor::DependencyArrayType& provided)
+    void JointsArticulationControllerComponent::GetProvidedServices(AZ::ComponentDescriptor::DependencyArrayType& provided)
     {
         provided.push_back(AZ_CRC_CE("JointsControllerService"));
     }
 
-    void JointsPIDControllerComponent::Reflect(AZ::ReflectContext* context)
+    void JointsArticulationControllerComponent::Reflect(AZ::ReflectContext* context)
     {
         if (AZ::SerializeContext* serialize = azrtti_cast<AZ::SerializeContext*>(context))
         {
-            serialize->Class<JointsPIDControllerComponent, AZ::Component>()->Version(0);
+            serialize->Class<JointsArticulationControllerComponent, AZ::Component>()->Version(0);
 
             if (AZ::EditContext* ec = serialize->GetEditContext())
             {
-                ec->Class<JointsPIDControllerComponent>("JointsPIDControllerComponent", "Component to move joints")
+                ec->Class<JointsArticulationControllerComponent>(
+                      "JointsArticulationControllerComponent", "Component to move articulation joints")
                     ->ClassElement(AZ::Edit::ClassElements::EditorData, "")
                     ->Attribute(AZ::Edit::Attributes::AppearsInAddComponentMenu, AZ_CRC("Game"))
                     ->Attribute(AZ::Edit::Attributes::Category, "ROS2");
