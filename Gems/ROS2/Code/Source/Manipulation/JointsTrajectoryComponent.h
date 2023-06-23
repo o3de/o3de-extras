@@ -1,17 +1,19 @@
 /*
-* Copyright (c) Contributors to the Open 3D Engine Project.
-* For complete copyright and license terms please see the LICENSE at the root of this distribution.
-*
-* SPDX-License-Identifier: Apache-2.0 OR MIT
-*
+ * Copyright (c) Contributors to the Open 3D Engine Project.
+ * For complete copyright and license terms please see the LICENSE at the root of this distribution.
+ *
+ * SPDX-License-Identifier: Apache-2.0 OR MIT
+ *
  */
 
 #pragma once
 
+#include "FollowJointTrajectoryActionServer.h"
 #include <AzCore/Component/Component.h>
+#include <AzCore/Component/EntityBus.h>
 #include <AzCore/Component/TickBus.h>
-#include <AzCore/Entity/EntityBus.h>
-#include <ROS2/Manipulation/JointsTrajectoryRequestBus.h>
+#include <ROS2/Manipulation/JointsManipulationRequests.h>
+#include <ROS2/Manipulation/JointsTrajectoryRequests.h>
 #include <control_msgs/action/follow_joint_trajectory.hpp>
 
 namespace ROS2
@@ -56,9 +58,10 @@ namespace ROS2
 
         AZStd::string m_followTrajectoryActionName{ "arm_controller/follow_joint_trajectory" };
         AZStd::unique_ptr<FollowJointTrajectoryActionServer> m_followTrajectoryServer;
-        JointsTrajectoryRequestBus::TrajectoryGoal m_trajectoryGoal;
-        ManipulationJoints m_manipulationJoints;
+        TrajectoryGoal m_trajectoryGoal;
         rclcpp::Time m_trajectoryExecutionStartTime;
+
+        JointsManipulationRequests::ManipulationJoints m_manipulationJoints; //!< Joints: assumes they don't change dynamically.
 
         bool m_trajectoryInProgress{ false };
     };

@@ -8,23 +8,22 @@
 
 #include "FollowJointTrajectoryActionServer.h"
 #include <AzCore/std/functional.h>
-#include <ROS2/Manipulation/JointsTrajectoryRequestBus.h>
 #include <ROS2/ROS2Bus.h>
 
 namespace ROS2
 {
-    void FollowJointTrajectoryActionServer::FollowJointTrajectoryActionServer(const AZStd::string& actionName, const AZ::EntityId& entityId)
+    FollowJointTrajectoryActionServer::FollowJointTrajectoryActionServer(const AZStd::string& actionName, const AZ::EntityId& entityId)
         : m_entityId(entityId)
     {
         m_actionServer = rclcpp_action::create_server<FollowJointTrajectory>(
             ROS2Interface::Get()->GetNode(),
-            actionName,
+            actionName.c_str(),
             AZStd::bind(&FollowJointTrajectoryActionServer::GoalReceivedCallback, this, AZStd::placeholders::_1, AZStd::placeholders::_2),
             AZStd::bind(&FollowJointTrajectoryActionServer::GoalCancelledCallback, this, AZStd::placeholders::_1),
             AZStd::bind(&FollowJointTrajectoryActionServer::GoalAcceptedCallback, this, AZStd::placeholders::_1));
     }
 
-    TrajectoryActionStatus FollowJointTrajectoryActionServer::GeGoalStatus() const
+    JointsTrajectoryRequests::TrajectoryActionStatus FollowJointTrajectoryActionServer::GetGoalStatus() const
     {
         return m_goalStatus;
     }
@@ -34,8 +33,8 @@ namespace ROS2
         AZ_Assert(m_goalHandle, "Invalid goal handle!");
         if (m_goalHandle && m_goalHandle->is_executing())
         {
-            AZ_TracePrintf("FollowJointTrajectoryActionServe`r", "Cancelling goal);
-            m_goalHandle->cancelled(result);
+            AZ_TracePrintf("FollowJointTrajectoryActionServer", "Cancelling goal\n");
+            m_goalHandle->canceled(result);
         }
     }
 
@@ -44,9 +43,9 @@ namespace ROS2
         AZ_Assert(m_goalHandle, "Invalid goal handle!");
         if (m_goalHandle && m_goalHandle->is_executing())
         {
-            AZ_TracePrintf("FollowJointTrajectoryActionServer", "Goal succeeded");
+            AZ_TracePrintf("FollowJointTrajectoryActionServer", "Goal succeeded\n");
             m_goalHandle->succeed(result);
-            m_goalStatus = TrajectoryActionStatus::Succeeded;
+            m_goalStatus = JointsTrajectoryRequests::TrajectoryActionStatus::Succeeded;
         }
     }
 
@@ -59,7 +58,7 @@ namespace ROS2
         }
     }
 
-    bool FollowJointTrajectoryActionServer::IsReadyForExecution() const;
+    bool FollowJointTrajectoryActionServer::IsReadyForExecution() const
     {
         // Has a goal handle yet - can be accepted.
         if (!m_goalHandle)
@@ -68,7 +67,7 @@ namespace ROS2
         }
 
         // Status is pending (active but not_executing).
-        return m_goalHandle->is_active && !m_goalHandle->is_executing();
+        return m_goalHandle->is_active() && !m_goalHandle->is_executing();
     }
 
     bool FollowJointTrajectoryActionServer::IsExecuting() const
@@ -85,7 +84,7 @@ namespace ROS2
             return rclcpp_action::GoalResponse::REJECT;
         }
 
-        AZ::Outcome<void, AZ::String> executionOrderOutcome;
+        AZ::Outcome<void, AZStd::string> executionOrderOutcome;
         JointsTrajectoryRequestBus::EventResult(
             executionOrderOutcome, m_entityId, &JointsTrajectoryRequests::StartTrajectoryGoal, goal);
 
@@ -104,28 +103,28 @@ namespace ROS2
     { // Accept each cancel attempt
         auto result = std::make_shared<FollowJointTrajectory::Result>();
         result->error_string = "User Cancelled";
-        result->error_code = FollowJointTrajectory::SUCCESSFUL;
+        result->error_code = FollowJointTrajectory::Result::SUCCESSFUL;
 
-        AZ::Outcome<void, AZ::String> cancelOutcome;
+        AZ::Outcome<void, AZStd::string> cancelOutcome;
         JointsTrajectoryRequestBus::EventResult(
             cancelOutcome, m_entityId, &JointsTrajectoryRequests::CancelTrajectoryGoal, result);
 
         if (!cancelOutcome)
         { // This will not happen in simulation unless intentionally done for behavior validation
             AZ_TracePrintf(
-                "FollowJointTrajectoryActionServer", "Cancelling could not be accepted: %s", executionOrderOutcome.GetError().c_str());
-            return rclcpp_action::CancelResonse::REJECT;
+                "FollowJointTrajectoryActionServer", "Cancelling could not be accepted: %s\n", cancelOutcome.GetError().c_str());
+            return rclcpp_action::CancelResponse::REJECT;
         }
 
-        m_goalStatus = TrajectoryActionStatus::Cancelled;
+        m_goalStatus = JointsTrajectoryRequests::TrajectoryActionStatus::Cancelled;
         return rclcpp_action::CancelResponse::ACCEPT;
     }
 
     void FollowJointTrajectoryActionServer::GoalAcceptedCallback(const std::shared_ptr<GoalHandle> goalHandle)
     {
-        AZ_TracePrintf("FollowJointTrajectoryActionServer", "Goal accepted");
+        AZ_TracePrintf("FollowJointTrajectoryActionServer", "Goal accepted\n");
         m_goalHandle = goalHandle;
         m_goalHandle->execute();
-        m_goalStatus = TrajectoryActionStatus::Executing;
+        m_goalStatus = JointsTrajectoryRequests::TrajectoryActionStatus::Executing;
     }
 } // namespace ROS2

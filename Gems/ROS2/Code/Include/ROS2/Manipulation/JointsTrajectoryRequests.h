@@ -11,7 +11,7 @@
 #include <AzCore/EBus/EBus.h>
 #include <AzCore/Interface/Interface.h>
 #include <AzCore/Outcome/Outcome.h>
-#include <control_msgs/msg/joint_trajectory.hpp>
+#include <control_msgs/action/follow_joint_trajectory.hpp>
 
 namespace ROS2
 {
@@ -23,8 +23,9 @@ namespace ROS2
         using BusIdType = AZ::EntityId;
         static constexpr AZ::EBusAddressPolicy AddressPolicy = AZ::EBusAddressPolicy::ById;
 
-        using TrajectoryGoalPtr = std::shared_ptr<const control_msgs::action::FollowJointTrajectory::Goal>;
-        using TrajectoryResultPtr = std::shared_ptr<const control_msgs::action::FollowJointTrajectory::Result>;
+        using TrajectoryGoal = control_msgs::action::FollowJointTrajectory::Goal;
+        using TrajectoryGoalPtr = std::shared_ptr<const TrajectoryGoal>;
+        using TrajectoryResultPtr = std::shared_ptr<control_msgs::action::FollowJointTrajectory::Result>;
 
         //! Status of trajectory action.
         enum class TrajectoryActionStatus
@@ -39,16 +40,16 @@ namespace ROS2
         //! @param trajectoryGoal Specified trajectory including points with timing and tolerances.
         //! @return Nothing on success, error message if failed.
         //! @note The call will return an error if the goal trajectory mismatches joints system.
-        virtual AZ::Outcome<void, AZStd::string> StartTrajectoryGoal(TrajectoryGoalPtr trajectoryGoal);
+        virtual AZ::Outcome<void, AZStd::string> StartTrajectoryGoal(TrajectoryGoalPtr trajectoryGoal) = 0;
 
         //! Cancel current trajectory goal.
         //! @param result Result of trajectory goal with explanation on why it was cancelled.
         //! @return nothing on success, error if the goal could not be cancelled.
-        virtual AZ::Outcome<void, AZStd::string> CancelTrajectoryGoal(TrajectoryResultPtr result);
+        virtual AZ::Outcome<void, AZStd::string> CancelTrajectoryGoal(TrajectoryResultPtr result) = 0;
 
         //! Retrieve current trajectory goal status.
         //! @return Status of trajectory goal.
-        virtual TrajectoryActionStatus GetGoalStatus();
+        virtual TrajectoryActionStatus GetGoalStatus() = 0;
     };
 
     using JointsTrajectoryRequestBus = AZ::EBus<JointsTrajectoryRequests>;

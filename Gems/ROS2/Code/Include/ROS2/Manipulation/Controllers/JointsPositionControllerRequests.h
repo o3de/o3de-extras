@@ -7,12 +7,11 @@
  */
 #pragma once
 
-#include <ROS2/Manipulation/JointManipulationRequests.h>
-
 #include <AzCore/Component/EntityId.h>
 #include <AzCore/EBus/EBus.h>
 #include <AzCore/Interface/Interface.h>
 #include <AzCore/Name/Name.h>
+#include <ROS2/Manipulation/JointsManipulationRequests.h>
 
 namespace ROS2
 {
@@ -31,11 +30,11 @@ namespace ROS2
         //! @param deltaTime how much time elapsed in simulation the movement should represent.
         //! @return nothing on success, error message if the command cannot be realize due to controller or entity configuration.
         virtual AZ::Outcome<void, AZStd::string> PositionControl(
-            const AZ::Name &jointName,
-            JointManipulationRequests::JointInfo joint,
-            JointManipulationRequests::JointPosition currentPosition,
-            JointManipulationRequests::JointPosition targetPosition,
-            float deltaTime);
+            const AZ::Name& jointName,
+            JointsManipulationRequests::JointInfo joint,
+            JointsManipulationRequests::JointPosition currentPosition,
+            JointsManipulationRequests::JointPosition targetPosition,
+            float deltaTime) = 0;
     };
     using JointsPositionControllerRequestBus = AZ::EBus<JointsPositionControllerRequests>;
 } // namespace ROS2

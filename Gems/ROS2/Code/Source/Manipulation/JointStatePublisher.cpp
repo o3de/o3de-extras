@@ -6,17 +6,21 @@
  *
  */
 
-#include "JointPublisher.h"
+#include "JointStatePublisher.h"
+#include <ROS2/Manipulation/JointsManipulationRequests.h>
+#include <ROS2/ROS2Bus.h>
+#include <ROS2/Utilities/ROS2Names.h>
 
 namespace ROS2
 {
-    void JointStatePublisher::JointStatePublisher(const JointStatePublisherConfiguration& configuration, const AZ::EntityId& m_entityId)
-        : mConfiguration(configuration)
+    JointStatePublisher::JointStatePublisher(const JointStatePublisherConfiguration& configuration, const AZ::EntityId& entityId)
+        : m_configuration(configuration)
         , m_entityId(entityId)
     {
         auto topicConfiguration = m_configuration.m_topicConfiguration;
         AZStd::string topic = ROS2Names::GetNamespacedName(configuration.m_publisherNamespace, topicConfiguration.m_topic);
-        m_jointstatePublisher = ros2Node->create_publisher<sensor_msgs::msg::JointState>(topic.data(), topicConfiguration.GetQoS().GetQoS);
+        auto ros2Node = ROS2Interface::Get()->GetNode();
+        m_jointStatePublisher = ros2Node->create_publisher<sensor_msgs::msg::JointState>(topic.data(), topicConfiguration.GetQoS());
     }
 
     void JointStatePublisher::PublishMessage()
@@ -26,8 +30,8 @@ namespace ROS2
         rosHeader.stamp = ROS2::ROS2Interface::Get()->GetROSTimestamp();
         m_jointStateMsg.header = rosHeader;
 
-        JointsManipulationRequestBus::ManipulationJoints manipulatorJoints;
-        ManipulatorBus::EventResult(manipulatorJoints, m_entityId, &JointsManipulationRequests::GetJoints);
+        JointsManipulationRequests::ManipulationJoints manipulatorJoints;
+        JointsManipulationRequestBus::EventResult(manipulatorJoints, m_entityId, &JointsManipulationRequests::GetJoints);
 
         m_jointStateMsg.name.resize(manipulatorJoints.size());
         m_jointStateMsg.position.resize(manipulatorJoints.size());
@@ -37,8 +41,8 @@ namespace ROS2
         for (const auto& [jointName, jointInfo] : manipulatorJoints)
         {
             AZ::Outcome<float, AZStd::string> result;
-            ManipulatorBus::EventResult(result, m_entityID, &JointsManipulationRequests::GetJointPosition, jointName);
-            auto currentJointPosition = result.value();
+            JointsManipulationRequestBus::EventResult(result, m_entityId, &JointsManipulationRequests::GetJointPosition, jointName);
+            auto currentJointPosition = result.GetValue();
 
             m_jointStateMsg.name[i] = jointName.GetCStr();
             m_jointStateMsg.position[i] = currentJointPosition;

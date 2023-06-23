@@ -8,7 +8,9 @@
 
 #pragma once
 
+#include <AzCore/Component/EntityId.h>
 #include <AzCore/std/string/string.h>
+#include <ROS2/Manipulation/JointsTrajectoryRequests.h>
 #include <control_msgs/action/follow_joint_trajectory.hpp>
 #include <rclcpp_action/rclcpp_action.hpp>
 #include <rclcpp_action/server.hpp>
@@ -28,17 +30,27 @@ namespace ROS2
         //! @param entityId entity which will execute callbacks through JointsTrajectoryRequestBus.
         //! @see <a href="https://docs.ros.org/en/humble/p/rclcpp_action/generated/classrclcpp__action_1_1Server.html"> ROS 2 action
         //! server documentation </a>
-        FollowJointTrajectoryActionServer(const AZStd::string& actionName, const AZ::EntityId entityId);
+        FollowJointTrajectoryActionServer(const AZStd::string& actionName, const AZ::EntityId& entityId);
 
-        JointsTrajectoryRequestBus::TrajectoryActionStatus GeGoalStatus() const;
+        //! Return trajectory action status.
+        //! @return Status of the trajectory execution.
+        JointsTrajectoryRequests::TrajectoryActionStatus GetGoalStatus() const;
 
+        //! Cancel the current goal.
+        //! @param result Result to be passed to through action server to the client.
         void CancelGoal(std::shared_ptr<FollowJointTrajectory::Result> result);
+
+        //! Report goal success to the action server.
+        //! @param result Result which contains success code.
         void GoalSuccess(std::shared_ptr<FollowJointTrajectory::Result> result);
+
+        //! Publish feedback during an active action.
+        //! @param feedback An action feedback message informing about the progress.
         void PublishFeedback(std::shared_ptr<FollowJointTrajectory::Feedback> feedback);
 
     private:
         using GoalHandle = rclcpp_action::ServerGoalHandle<FollowJointTrajectory>;
-        using TrajectoryActionStatus = JointsTrajectoryRequestBus::TrajectoryActionStatus;
+        using TrajectoryActionStatus = JointsTrajectoryRequests::TrajectoryActionStatus;
 
         AZ::EntityId m_entityId;
         TrajectoryActionStatus m_goalStatus = TrajectoryActionStatus::Idle;

@@ -49,10 +49,20 @@ set(FILES
         Source/Lidar/ROS2Lidar2DSensorComponent.h
         Source/Lidar/ROS2LidarSensorComponent.cpp
         Source/Lidar/ROS2LidarSensorComponent.h
+        Source/Manipulation/Controllers/JointsArticulationControllerComponent.cpp
+        Source/Manipulation/Controllers/JointsArticulationControllerComponent.h
+        Source/Manipulation/Controllers/JointsPIDControllerComponent.cpp
+        Source/Manipulation/Controllers/JointsPIDControllerComponent.h
+        Source/Manipulation/JointStatePublisher.cpp
+        Source/Manipulation/JointStatePublisher.h
+        Source/Manipulation/JointsManipulationComponent.cpp
+        Source/Manipulation/JointsManipulationComponent.h
+        Source/Manipulation/JointsTrajectoryComponent.cpp
+        Source/Manipulation/JointsTrajectoryComponent.h
+        Source/Manipulation/FollowJointTrajectoryActionServer.cpp
+        Source/Manipulation/FollowJointTrajectoryActionServer.h
         Source/Manipulation/MotorizedJoints/JointMotorControllerComponent.cpp
         Source/Manipulation/MotorizedJoints/JointMotorControllerConfiguration.cpp
-        Source/Manipulation/JointStatePublisher.cpp
-        Source/Manipulation/JointManipulationComponent.cpp
         Source/Manipulation/MotorizedJoints/ManualMotorControllerComponent.cpp
         Source/Manipulation/MotorizedJoints/PidMotorControllerComponent.cpp
         Source/Odometry/ROS2OdometrySensorComponent.cpp
@@ -119,4 +129,4 @@ set(FILES
         Source/VehicleDynamics/WheelControllerComponent.cpp
         Source/VehicleDynamics/WheelControllerComponent.h
         Source/VehicleDynamics/WheelDynamicsData.h
-)
+        )

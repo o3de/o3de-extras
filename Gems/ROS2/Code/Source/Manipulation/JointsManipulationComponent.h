@@ -10,7 +10,7 @@
 
 #include <AzCore/Component/Component.h>
 #include <AzCore/Component/TickBus.h>
-#include <AzCore/Entity/EntityBus.h>
+#include <AzCore/Component/EntityBus.h>
 #include <AzCore/Name/Name.h>
 
 #include "JointStatePublisher.h"
@@ -20,16 +20,16 @@ namespace ROS2
 {
     //! Component responsible for controlling a hierarchical system of joints such as robotic arm with Articulations or Hinge Joints.
     //! This manipulator component uses simple joint position interface. For trajectory control, see JointsTrajectoryComponent.
-    class JointManipulationComponent
+    class JointsManipulationComponent
         : public AZ::Component
         , public AZ::TickBus::Handler
         , public AZ::EntityBus::Handler
         , public JointsManipulationRequestBus::Handler
     {
     public:
-        JointManipulationComponent() = default;
-        ~JointManipulationComponent() = default;
-        AZ_COMPONENT(JointManipulationComponent, "{3da9abfc-0028-4e3e-8d04-4e4440d2e319}", AZ::Component);
+        JointsManipulationComponent() = default;
+        ~JointsManipulationComponent() = default;
+        AZ_COMPONENT(JointsManipulationComponent, "{3da9abfc-0028-4e3e-8d04-4e4440d2e319}", AZ::Component);
 
         static void GetRequiredServices(AZ::ComponentDescriptor::DependencyArrayType& required);
         static void GetProvidedServices(AZ::ComponentDescriptor::DependencyArrayType& provided);
@@ -41,12 +41,12 @@ namespace ROS2
         //! @see ROS2::JointsManipulationRequestBus::GetJointPosition
         AZ::Outcome<JointPosition, AZStd::string> GetJointPosition(const AZ::Name& jointName) override;
         //! @see ROS2::JointsManipulationRequestBus::GetAllJointsPositions
-        AZ::Outcome<AZStd::vector<JointPosition>, AZStd::string> GetAllJointsPositions() override;
+        AZStd::vector<JointPosition> GetAllJointsPositions() override;
         //! @see ROS2::JointsManipulationRequestBus::MoveJointsToPosition
-        AZ::Outcome<JointPosition, AZStd::string> MoveJointsToPosition(
+        AZ::Outcome<void, AZStd::string> MoveJointsToPositions(
             const AZStd::unordered_map<AZ::Name, JointPosition> positions) override;
         //! @see ROS2::JointsManipulationRequestBus::MoveJointToPosition
-        AZ::Outcome<JointPosition, AZStd::string> MoveJointToPosition(const AZ::Name& jointName, JointPosition position) override;
+        AZ::Outcome<void, AZStd::string> MoveJointToPosition(const AZ::Name& jointName, JointPosition position) override;
         //! @see ROS2::JointsManipulationRequestBus::Stop
         void Stop() override;
 
