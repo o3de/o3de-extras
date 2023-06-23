@@ -11,8 +11,8 @@
 #include <AzCore/IO/FileIO.h>
 #include <AzCore/Serialization/Json/JsonUtils.h>
 #include <AzCore/Utils/Utils.h>
-#include <AzCore/std/smart_ptr/shared_ptr.h>
 #include <AzCore/std/smart_ptr/make_shared.h>
+#include <AzCore/std/smart_ptr/shared_ptr.h>
 #include <AzToolsFramework/Asset/AssetUtils.h>
 #include <SceneAPI/SceneCore/Containers/Scene.h>
 #include <SceneAPI/SceneCore/Containers/Utilities/Filters.h>
@@ -302,13 +302,15 @@ namespace ROS2::Utils
             }
 
             AZ::IO::Path resolvedPath(resolved);
-            AZ::IO::Path targetPathAssetDst(importDirectoryDst / resolvedPath.Filename());
-            AZ::IO::Path targetPathAssetTmp(importDirectoryTmp / resolvedPath.Filename());
-
-            AZ::IO::Path targetPathAssetInfo(targetPathAssetDst.Native() + ".assetinfo");
-
             const bool needsVisual = visuals.contains(unresolvedUrfFileName);
             const bool needsCollider = colliders.contains(unresolvedUrfFileName);
+
+            const AZStd::string pathSuffix = needsCollider ? "_collider" : "";
+            const AZStd::string newFilename = resolvedPath.Stem().String() + pathSuffix + resolvedPath.Extension().String();
+            AZ::IO::Path targetPathAssetDst(importDirectoryDst / newFilename);
+            AZ::IO::Path targetPathAssetTmp(importDirectoryTmp / newFilename);
+
+            AZ::IO::Path targetPathAssetInfo(targetPathAssetDst.Native() + ".assetinfo");
 
             if (!fileIO->Exists(targetPathAssetDst.c_str()))
             {
