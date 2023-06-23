@@ -36,8 +36,8 @@ namespace ROS2
         void Visualise() override;
         //////////////////////////////////////////////////////////////////////////
 
-        AZ::Vector3 m_detectionDirection;
-        float m_detectionDistance;
+        AZ::Vector3 m_detectionDirection = AZ::Vector3::CreateAxisX();
+        float m_detectionDistance = 0.f;
         bool m_wasObjectDetected = false;
 
         std::shared_ptr<rclcpp::Publisher<std_msgs::msg::Bool>> m_detectionPublisher;

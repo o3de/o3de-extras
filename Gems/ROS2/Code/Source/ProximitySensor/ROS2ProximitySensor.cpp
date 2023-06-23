@@ -26,8 +26,6 @@
 #include <AzFramework/Physics/Common/PhysicsTypes.h>
 #include <AzFramework/Physics/PhysicsScene.h>
 
-#include <std_msgs/msg/detail/bool__struct.hpp>
-
 namespace ROS2
 {
     void ROS2ProximitySensor::Reflect(AZ::ReflectContext* context)
@@ -81,8 +79,7 @@ namespace ROS2
         AZ::Transform entityTransform;
         AZ::TransformBus::EventResult(entityTransform, GetEntityId(), &AZ::TransformBus::Events::GetWorldTM);
 
-        m_detectionDirection = AZ::Vector3::CreateAxisX();
-        m_detectionDirection = entityTransform.TransformVector(m_detectionDirection);
+        m_detectionDirection = entityTransform.TransformVector(AZ::Vector3::CreateAxisX());
         m_detectionDirection.Normalize();
 
         ROS2SensorComponent::Activate();
