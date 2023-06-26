@@ -23,11 +23,10 @@ namespace ROS2
     class JointsManipulationComponent
         : public AZ::Component
         , public AZ::TickBus::Handler
-        , public AZ::EntityBus::Handler
         , public JointsManipulationRequestBus::Handler
     {
     public:
-        JointsManipulationComponent() = default;
+        JointsManipulationComponent();
         ~JointsManipulationComponent() = default;
         AZ_COMPONENT(JointsManipulationComponent, "{3da9abfc-0028-4e3e-8d04-4e4440d2e319}", AZ::Component);
 
@@ -55,16 +54,13 @@ namespace ROS2
         void Activate() override;
         void Deactivate() override;
 
-        // AZ::EntityBus::Handler overrides
-        void OnEntityActivated(const AZ::EntityId& entityId) override;
-
         // AZ::TickBus::Handler overrides
         void OnTick(float deltaTime, AZ::ScriptTimePoint time) override;
 
         void InitializeJoints();
         void MoveToSetPositions(float deltaTime);
 
-        AZStd::unordered_map<AZ::Name, float> m_initialPositions; // TODO - this should be realized by an Editor Component;
+        AZStd::unordered_map<AZStd::string , float> m_initialPositions; // TODO - this should be realized by an Editor Component;
         AZStd::unique_ptr<JointStatePublisher> m_jointStatePublisher;
 
         bool m_publishJointState{ true };

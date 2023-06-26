@@ -57,6 +57,7 @@ namespace ROS2
         rclcpp_action::Server<FollowJointTrajectory>::SharedPtr m_actionServer;
         std::shared_ptr<GoalHandle> m_goalHandle;
 
+        bool IsGoalActiveState() const;
         bool IsReadyForExecution() const;
         bool IsExecuting() const;
 
