@@ -22,9 +22,6 @@ namespace ROS2
         AZ_Assert(ros2Frame, "Missing Frame Component!");
         AZStd::string namespacedAction = ROS2Names::GetNamespacedName(ros2Frame->GetNamespace(), m_followTrajectoryActionName);
         m_followTrajectoryServer = AZStd::make_unique<FollowJointTrajectoryActionServer>(namespacedAction, GetEntityId());
-
-        JointsManipulationRequestBus::EventResult(m_manipulationJoints, GetEntityId(), &JointsManipulationRequests::GetJoints);
-
         AZ::TickBus::Handler::BusConnect();
         JointsTrajectoryRequestBus::Handler::BusConnect(GetEntityId());
     }
@@ -92,9 +89,16 @@ namespace ROS2
         // Check joint names validity
         for (const auto& jointName : trajectoryGoal->trajectory.joint_names)
         {
+            JointsManipulationComponent::ManipulationJoints availableJoints;
+            JointsManipulationRequestBus::EventResult(availableJoints, GetEntityId(), &JointsManipulationRequests::GetJoints);
+
             auto azJointName = AZ::Name(jointName.c_str());
-            if (m_manipulationJoints.find(azJointName) == m_manipulationJoints.end())
+            if (availableJoints.find(azJointName) == availableJoints.end())
             {
+                AZ_Printf(
+                    "JointsTrajectoryComponent",
+                    "Trajectory goal is invalid: no joint %s in manipulator",
+                    azJointName.GetCStr());
                 // TODO - pass as a result, use FollowTrajectoryAction::Result enum
                 return AZ::Failure(AZStd::string::format("Trajectory goal is invalid: no joint %s in manipulator", azJointName.GetCStr()));
             }
@@ -105,9 +109,12 @@ namespace ROS2
 
     void JointsTrajectoryComponent::UpdateFeedback()
     {
+        JointsManipulationComponent::ManipulationJoints availableJoints;
+        JointsManipulationRequestBus::EventResult(availableJoints, GetEntityId(), &JointsManipulationRequests::GetJoints);
+
         auto feedback = std::make_shared<control_msgs::action::FollowJointTrajectory::Feedback>();
         trajectory_msgs::msg::JointTrajectoryPoint desiredPoint;
-        for (const auto& [jointName, hingeComponent] : m_manipulationJoints)
+        for (const auto& [jointName, hingeComponent] : availableJoints)
         {
             std::string jointNameStdString(jointName.GetCStr());
             feedback->joint_names.push_back(jointNameStdString);
@@ -213,10 +220,12 @@ namespace ROS2
 
     void JointsTrajectoryComponent::MoveToNextPoint(const trajectory_msgs::msg::JointTrajectoryPoint currentTrajectoryPoint)
     {
+        JointsManipulationComponent::ManipulationJoints availableJoints;
+        JointsManipulationRequestBus::EventResult(availableJoints, GetEntityId(), &JointsManipulationRequests::GetJoints);
         for (int jointIndex = 0; jointIndex < m_trajectoryGoal.trajectory.joint_names.size(); jointIndex++)
         { // Order each joint to be moved
             const auto& jointName = AZ::Name(m_trajectoryGoal.trajectory.joint_names[jointIndex].c_str());
-            AZ_Assert(m_manipulationJoints.find(jointName) != m_manipulationJoints.end(), "Invalid trajectory executing");
+            AZ_Assert(availableJoints.find(jointName) != availableJoints.end(), "Invalid trajectory executing");
 
             float targetPos = currentTrajectoryPoint.positions[jointIndex];
             AZ::Outcome<void, AZStd::string> result;
@@ -228,7 +237,9 @@ namespace ROS2
 
     void JointsTrajectoryComponent::OnTick(float deltaTime, [[maybe_unused]] AZ::ScriptTimePoint time)
     {
-        if (m_manipulationJoints.empty())
+        JointsManipulationComponent::ManipulationJoints availableJoints;
+        JointsManipulationRequestBus::EventResult(availableJoints, GetEntityId(), &JointsManipulationRequests::GetJoints);
+        if (availableJoints.empty())
         {
             return;
         }

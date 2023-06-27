@@ -61,8 +61,6 @@ namespace ROS2
         TrajectoryGoal m_trajectoryGoal;
         rclcpp::Time m_trajectoryExecutionStartTime;
 
-        JointsManipulationRequests::ManipulationJoints m_manipulationJoints; //!< Joints: assumes they don't change dynamically.
-
         bool m_trajectoryInProgress{ false };
     };
 } // namespace ROS2
