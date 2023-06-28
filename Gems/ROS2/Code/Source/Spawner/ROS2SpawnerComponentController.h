@@ -22,7 +22,6 @@ namespace ROS2
     class ROS2SpawnerComponentConfig final : public AZ::ComponentConfig
     {
     public:
-        // AZ_CLASS_ALLOCATOR(ROS2SpawnerComponentConfig, AZ::SystemAllocator);
         AZ_RTTI(ROS2SpawnerComponentConfig, "{ee71f892-006a-11ee-be56-0242ac120002}");
 
         ROS2SpawnerComponentConfig() = default;

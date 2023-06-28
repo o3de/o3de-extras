@@ -105,11 +105,13 @@ namespace ROS2
     void ROS2SpawnerComponentController::Init()
     {
     }
+
     void ROS2SpawnerComponentController::Activate(AZ::EntityId entityId)
     {
         m_config.m_editorEntityId = entityId;
         SpawnerRequestsBus::Handler::BusConnect(entityId);
     }
+
     void ROS2SpawnerComponentController::Deactivate()
     {
         SpawnerRequestsBus::Handler::BusDisconnect();
