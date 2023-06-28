@@ -25,6 +25,7 @@ set(FILES
         Source/Clock/PhysicallyStableClock.cpp
         Source/Clock/SimulationClock.cpp
         Source/Communication/QoS.cpp
+        Source/Communication/PublisherConfiguration.cpp
         Source/Communication/TopicConfiguration.cpp
         Source/Frame/NamespaceConfiguration.cpp
         Source/Frame/ROS2FrameComponent.cpp
@@ -53,6 +54,7 @@ set(FILES
         Source/Manipulation/Controllers/JointsArticulationControllerComponent.h
         Source/Manipulation/Controllers/JointsPIDControllerComponent.cpp
         Source/Manipulation/Controllers/JointsPIDControllerComponent.h
+        Source/Manipulation/JointInfo.cpp
         Source/Manipulation/JointStatePublisher.cpp
         Source/Manipulation/JointStatePublisher.h
         Source/Manipulation/JointsManipulationComponent.cpp

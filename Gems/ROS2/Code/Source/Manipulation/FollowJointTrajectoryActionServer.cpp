@@ -33,7 +33,7 @@ namespace ROS2
         AZ_Assert(m_goalHandle, "Invalid goal handle!");
         if (m_goalHandle && m_goalHandle->is_executing())
         {
-            AZ_TracePrintf("FollowJointTrajectoryActionServer", "Cancelling goal\n");
+            AZ_Trace("FollowJointTrajectoryActionServer", "Cancelling goal\n");
             m_goalHandle->canceled(result);
         }
     }
@@ -43,7 +43,7 @@ namespace ROS2
         AZ_Assert(m_goalHandle, "Invalid goal handle!");
         if (m_goalHandle && m_goalHandle->is_executing())
         {
-            AZ_TracePrintf("FollowJointTrajectoryActionServer", "Goal succeeded\n");
+            AZ_Trace("FollowJointTrajectoryActionServer", "Goal succeeded\n");
             m_goalHandle->succeed(result);
             m_goalStatus = JointsTrajectoryRequests::TrajectoryActionStatus::Succeeded;
         }
@@ -84,10 +84,10 @@ namespace ROS2
     { // Accept each received goal unless other goal is active (no deferring/queuing)
         if (!IsReadyForExecution())
         {
-            AZ_TracePrintf("FollowJointTrajectoryActionServer", "Goal rejected: server is not ready for execution!");
+            AZ_Trace("FollowJointTrajectoryActionServer", "Goal rejected: server is not ready for execution!");
             if (m_goalHandle)
             {
-                AZ_TracePrintf(
+                AZ_Trace(
                     "FollowJointTrajectoryActionServer",
                     " is_active: %d,  is_executing %d, is_canceling : %d",
                     m_goalHandle->is_active(),
@@ -102,7 +102,7 @@ namespace ROS2
 
         if (!executionOrderOutcome)
         {
-            AZ_TracePrintf("FollowJointTrajectoryActionServer", "Execution not be accepted: %s", executionOrderOutcome.GetError().c_str());
+            AZ_Trace("FollowJointTrajectoryActionServer", "Execution not be accepted: %s", executionOrderOutcome.GetError().c_str());
             // TODO - for mismatched joints and other cases, the correct way: accept the goal and then cancel / abort with the Result.
             return rclcpp_action::GoalResponse::REJECT;
         }
@@ -122,7 +122,7 @@ namespace ROS2
 
         if (!cancelOutcome)
         { // This will not happen in simulation unless intentionally done for behavior validation
-            AZ_TracePrintf("FollowJointTrajectoryActionServer", "Cancelling could not be accepted: %s\n", cancelOutcome.GetError().c_str());
+            AZ_Trace("FollowJointTrajectoryActionServer", "Cancelling could not be accepted: %s\n", cancelOutcome.GetError().c_str());
             return rclcpp_action::CancelResponse::REJECT;
         }
 
@@ -132,7 +132,7 @@ namespace ROS2
 
     void FollowJointTrajectoryActionServer::GoalAcceptedCallback(const std::shared_ptr<GoalHandle> goalHandle)
     {
-        AZ_TracePrintf("FollowJointTrajectoryActionServer", "Goal accepted\n");
+        AZ_Trace("FollowJointTrajectoryActionServer", "Goal accepted\n");
         m_goalHandle = goalHandle;
         // m_goalHandle->execute(); // No need to call this, as we are already executing the goal due to ACCEPT_AND_EXECUTE
         m_goalStatus = JointsTrajectoryRequests::TrajectoryActionStatus::Executing;

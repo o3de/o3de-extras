@@ -31,6 +31,7 @@ namespace ROS2
 
         static void GetRequiredServices(AZ::ComponentDescriptor::DependencyArrayType& required);
         static void GetProvidedServices(AZ::ComponentDescriptor::DependencyArrayType& provided);
+        static void GetIncompatibleServices(AZ::ComponentDescriptor::DependencyArrayType& incompatible);
         static void Reflect(AZ::ReflectContext* context);
 
         // JointsTrajectoryRequestBus::Handler overrides ...
@@ -60,7 +61,7 @@ namespace ROS2
         AZStd::unique_ptr<FollowJointTrajectoryActionServer> m_followTrajectoryServer;
         TrajectoryGoal m_trajectoryGoal;
         rclcpp::Time m_trajectoryExecutionStartTime;
-
+        ManipulationJoints m_manipulationJoints;
         bool m_trajectoryInProgress{ false };
     };
 } // namespace ROS2

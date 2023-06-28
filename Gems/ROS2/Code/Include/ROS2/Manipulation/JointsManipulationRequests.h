@@ -11,11 +11,10 @@
 #include <AzCore/Component/EntityId.h>
 #include <AzCore/EBus/EBus.h>
 #include <AzCore/Interface/Interface.h>
-#include <AzCore/Name/Name.h>
-#include <AzCore/std/containers/unordered_map.h>
 #include <AzCore/std/containers/vector.h>
+#include <AzCore/std/string/string.h>
 #include <AzCore/std/utils.h>
-#include <PhysX/ArticulationTypes.h>
+#include <ROS2/Manipulation/JointInfo.h>
 
 namespace ROS2
 {
@@ -27,19 +26,6 @@ namespace ROS2
         using BusIdType = AZ::EntityId;
         static constexpr AZ::EBusAddressPolicy AddressPolicy = AZ::EBusAddressPolicy::ById;
 
-        using JointPosition = float;
-
-        //! Structure that holds joint info for either articulation link or classical joint.
-        struct JointInfo
-        {
-            bool m_isArticulation = false;
-            PhysX::ArticulationJointAxis m_axis = PhysX::ArticulationJointAxis::Twist;
-            AZ::EntityComponentIdPair m_entityComponentIdPair;
-            JointPosition m_restPosition = 0.0f; //!< Keeps this position if no commands are given (for example, opposing gravity).
-        };
-
-        using ManipulationJoints = AZStd::unordered_map<AZ::Name, JointInfo>;
-
         //! Get all entity tree joints, including joint or articulation component hierarchy.
         //! @return A map of joint names to joint info structure.
         //! @note Only free joints are returned (no fixed ones).
@@ -50,7 +36,7 @@ namespace ROS2
         //! @param jointName name of the joint. Use names acquired from GetJoints() query.
         //! @return outcome with relative position in degree of motion range if joint exists.
         //! If it does not exist or some other error happened, error message is returned.
-        virtual AZ::Outcome<JointPosition, AZStd::string> GetJointPosition(const AZ::Name& jointName) = 0;
+        virtual AZ::Outcome<JointPosition, AZStd::string> GetJointPosition(const AZStd::string& jointName) = 0;
 
         //! Return positions of all single DOF joints.
         //! @return a vector of all joints relative positions in degree of motion range or error message.
@@ -60,14 +46,15 @@ namespace ROS2
         //! @param new positions for each named joint. Use names queried through GetJoints().
         //! @return nothing on success, error message on failure.
         //! @note the movement is realized by a specific controller and not instant. The joints will then keep these positions.
-        virtual AZ::Outcome<void, AZStd::string> MoveJointsToPositions(const AZStd::unordered_map<AZ::Name, JointPosition> positions) = 0;
+        virtual AZ::Outcome<void, AZStd::string> MoveJointsToPositions(
+            const AZStd::unordered_map<AZStd::string, JointPosition> positions) = 0;
 
         //! Move a single joint into desired relative position.
         //! @param jointName name of the joint. Use names acquired from GetJoints() query.
         //! @param position relative position in degree of motion range to achieve.
         //! @return nothing on success, error message on failure.
         //! @note the movement is realized by a specific controller and not instant. The joints will then keep this position.
-        virtual AZ::Outcome<void, AZStd::string> MoveJointToPosition(const AZ::Name& jointName, JointPosition position) = 0;
+        virtual AZ::Outcome<void, AZStd::string> MoveJointToPosition(const AZStd::string& jointName, JointPosition position) = 0;
 
         //! Stop the joints movement in progress. It will keep the position in which it stopped.
         virtual void Stop() = 0;

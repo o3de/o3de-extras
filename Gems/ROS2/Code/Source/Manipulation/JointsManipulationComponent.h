@@ -9,8 +9,8 @@
 #pragma once
 
 #include <AzCore/Component/Component.h>
-#include <AzCore/Component/TickBus.h>
 #include <AzCore/Component/EntityBus.h>
+#include <AzCore/Component/TickBus.h>
 #include <AzCore/Name/Name.h>
 
 #include "JointStatePublisher.h"
@@ -27,25 +27,26 @@ namespace ROS2
     {
     public:
         JointsManipulationComponent();
+        JointsManipulationComponent(const PublisherConfiguration& configuration, const ManipulationJoints& manipulationJoints);
         ~JointsManipulationComponent() = default;
         AZ_COMPONENT(JointsManipulationComponent, "{3da9abfc-0028-4e3e-8d04-4e4440d2e319}", AZ::Component);
 
         static void GetRequiredServices(AZ::ComponentDescriptor::DependencyArrayType& required);
         static void GetProvidedServices(AZ::ComponentDescriptor::DependencyArrayType& provided);
+        static void GetIncompatibleServices(AZ::ComponentDescriptor::DependencyArrayType& incompatible);
         static void Reflect(AZ::ReflectContext* context);
 
         // JointsManipulationRequestBus::Handler overrides ...
         //! @see ROS2::JointsManipulationRequestBus::GetJoints
         ManipulationJoints GetJoints() override;
         //! @see ROS2::JointsManipulationRequestBus::GetJointPosition
-        AZ::Outcome<JointPosition, AZStd::string> GetJointPosition(const AZ::Name& jointName) override;
+        AZ::Outcome<JointPosition, AZStd::string> GetJointPosition(const AZStd::string& jointName) override;
         //! @see ROS2::JointsManipulationRequestBus::GetAllJointsPositions
         AZStd::vector<JointPosition> GetAllJointsPositions() override;
         //! @see ROS2::JointsManipulationRequestBus::MoveJointsToPosition
-        AZ::Outcome<void, AZStd::string> MoveJointsToPositions(
-            const AZStd::unordered_map<AZ::Name, JointPosition> positions) override;
+        AZ::Outcome<void, AZStd::string> MoveJointsToPositions(const AZStd::unordered_map<AZStd::string, JointPosition> positions) override;
         //! @see ROS2::JointsManipulationRequestBus::MoveJointToPosition
-        AZ::Outcome<void, AZStd::string> MoveJointToPosition(const AZ::Name& jointName, JointPosition position) override;
+        AZ::Outcome<void, AZStd::string> MoveJointToPosition(const AZStd::string& jointName, JointPosition position) override;
         //! @see ROS2::JointsManipulationRequestBus::Stop
         void Stop() override;
 
@@ -57,16 +58,10 @@ namespace ROS2
         // AZ::TickBus::Handler overrides
         void OnTick(float deltaTime, AZ::ScriptTimePoint time) override;
 
-        void InitializeJoints();
         void MoveToSetPositions(float deltaTime);
 
-        AZStd::unordered_map<AZStd::string , float> m_initialPositions; // TODO - this should be realized by an Editor Component;
         AZStd::unique_ptr<JointStatePublisher> m_jointStatePublisher;
-
-        bool m_publishJointState{ true };
-        TopicConfiguration m_jointStateTopic;
-        float m_frequency{ 25.0f };
-
+        PublisherConfiguration m_jointStatePublisherConfiguration;
         ManipulationJoints m_manipulationJoints;
     };
 } // namespace ROS2

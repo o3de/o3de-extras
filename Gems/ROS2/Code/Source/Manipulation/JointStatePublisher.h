@@ -1,18 +1,25 @@
+/*
+ * Copyright (c) Contributors to the Open 3D Engine Project.
+ * For complete copyright and license terms please see the LICENSE at the root of this distribution.
+ *
+ * SPDX-License-Identifier: Apache-2.0 OR MIT
+ *
+ */
+
 #pragma once
 
 #include <AzCore/Component/EntityId.h>
-#include <ROS2/Communication/TopicConfiguration.h>
+#include <ROS2/Communication/PublisherConfiguration.h>
 #include <rclcpp/publisher.hpp>
 #include <sensor_msgs/msg/joint_state.hpp>
 
 namespace ROS2
 {
-    struct JointStatePublisherConfiguration
+    struct JointStatePublisherContext
     {
-        AZStd::string m_publisherNamespace;
-        TopicConfiguration m_topicConfiguration;
+        AZ::EntityId m_entityId;
         AZStd::string m_frameId;
-        float m_frequency = 10;
+        AZStd::string m_publisherNamespace;
     };
 
     //! A class responsible for publishing the joint positions on ROS2 /joint_states topic.
@@ -20,7 +27,7 @@ namespace ROS2
     class JointStatePublisher
     {
     public:
-        JointStatePublisher(const JointStatePublisherConfiguration& configuration, const AZ::EntityId& entityId);
+        JointStatePublisher(const PublisherConfiguration& configuration, const JointStatePublisherContext& context);
 
         //! Update time tick. This will result in state publishing if timing matches frequency.
         void OnTick(float deltaTime);
@@ -28,8 +35,9 @@ namespace ROS2
     private:
         void PublishMessage();
 
-        JointStatePublisherConfiguration m_configuration;
-        AZ::EntityId m_entityId;
+        PublisherConfiguration m_configuration;
+        JointStatePublisherContext m_context;
+
         std::shared_ptr<rclcpp::Publisher<sensor_msgs::msg::JointState>> m_jointStatePublisher;
         sensor_msgs::msg::JointState m_jointStateMsg;
         float m_timeElapsedSinceLastTick = 0.0f;

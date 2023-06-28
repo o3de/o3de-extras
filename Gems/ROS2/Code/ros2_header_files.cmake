@@ -8,10 +8,14 @@ set(FILES
         Include/ROS2/Camera/CameraPostProcessingRequestBus.h
         Include/ROS2/Clock/PhysicallyStableClock.h
         Include/ROS2/Clock/SimulationClock.h
+        Include/ROS2/Communication/PublisherConfiguration.h
+        Include/ROS2/Communication/TopicConfiguration.h
+        Include/ROS2/Communication/QoS.h
         Include/ROS2/Frame/NamespaceConfiguration.h
         Include/ROS2/Frame/ROS2FrameComponent.h
         Include/ROS2/Frame/ROS2Transform.h
         Include/ROS2/Manipulation/Controllers/JointsPositionControllerRequests.h
+        Include/ROS2/Manipulation/JointInfo.h
         Include/ROS2/Manipulation/JointsManipulationRequests.h
         Include/ROS2/Manipulation/JointsTrajectoryRequests.h
         Include/ROS2/Manipulation/MotorizedJoints/JointMotorControllerComponent.h

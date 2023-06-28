@@ -26,15 +26,28 @@ namespace ROS2
         AZ_COMPONENT(JointsArticulationControllerComponent, "{243E9F07-5F84-4F83-9E6D-D1DA04D7CEF9}", AZ::Component);
 
         static void GetProvidedServices(AZ::ComponentDescriptor::DependencyArrayType& provided);
+        static void GetIncompatibleServices(AZ::ComponentDescriptor::DependencyArrayType& incompatible);
         static void Reflect(AZ::ReflectContext* context);
 
         // JointsPositionControllerRequestBus::Handler overrides ...
+        //! @see ROS2::JointsPositionControllerRequestBus::SupportsArticulation
+        bool SupportsArticulation() override
+        {
+            return true;
+        }
+
+        //! @see ROS2::JointsPositionControllerRequestBus::SupportsClassicJoints
+        bool SupportsClassicJoints() override
+        {
+            return false;
+        }
+
         //! @see ROS2::JointsPositionControllerRequestBus::PositionControl
         AZ::Outcome<void, AZStd::string> PositionControl(
-            const AZ::Name& jointName,
-            JointsManipulationRequests::JointInfo joint,
-            JointsManipulationRequests::JointPosition currentPosition,
-            JointsManipulationRequests::JointPosition targetPosition,
+            const AZStd::string& jointName,
+            JointInfo joint,
+            JointPosition currentPosition,
+            JointPosition targetPosition,
             float deltaTime) override;
 
     private:

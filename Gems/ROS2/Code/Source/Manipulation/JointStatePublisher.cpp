@@ -13,12 +13,12 @@
 
 namespace ROS2
 {
-    JointStatePublisher::JointStatePublisher(const JointStatePublisherConfiguration& configuration, const AZ::EntityId& entityId)
+    JointStatePublisher::JointStatePublisher(const PublisherConfiguration& configuration, const JointStatePublisherContext& context)
         : m_configuration(configuration)
-        , m_entityId(entityId)
+        , m_context(context)
     {
         auto topicConfiguration = m_configuration.m_topicConfiguration;
-        AZStd::string topic = ROS2Names::GetNamespacedName(configuration.m_publisherNamespace, topicConfiguration.m_topic);
+        AZStd::string topic = ROS2Names::GetNamespacedName(context.m_publisherNamespace, topicConfiguration.m_topic);
         auto ros2Node = ROS2Interface::Get()->GetNode();
         m_jointStatePublisher = ros2Node->create_publisher<sensor_msgs::msg::JointState>(topic.data(), topicConfiguration.GetQoS());
     }
@@ -26,12 +26,12 @@ namespace ROS2
     void JointStatePublisher::PublishMessage()
     {
         std_msgs::msg::Header rosHeader;
-        rosHeader.frame_id = ROS2Names::GetNamespacedName(m_configuration.m_publisherNamespace, m_configuration.m_frameId).data();
+        rosHeader.frame_id = ROS2Names::GetNamespacedName(m_context.m_publisherNamespace, m_context.m_frameId).data();
         rosHeader.stamp = ROS2::ROS2Interface::Get()->GetROSTimestamp();
         m_jointStateMsg.header = rosHeader;
 
-        JointsManipulationRequests::ManipulationJoints manipulatorJoints;
-        JointsManipulationRequestBus::EventResult(manipulatorJoints, m_entityId, &JointsManipulationRequests::GetJoints);
+        ManipulationJoints manipulatorJoints;
+        JointsManipulationRequestBus::EventResult(manipulatorJoints, m_context.m_entityId, &JointsManipulationRequests::GetJoints);
 
         m_jointStateMsg.name.resize(manipulatorJoints.size());
         m_jointStateMsg.position.resize(manipulatorJoints.size());
@@ -41,10 +41,10 @@ namespace ROS2
         for (const auto& [jointName, jointInfo] : manipulatorJoints)
         {
             AZ::Outcome<float, AZStd::string> result;
-            JointsManipulationRequestBus::EventResult(result, m_entityId, &JointsManipulationRequests::GetJointPosition, jointName);
+            JointsManipulationRequestBus::EventResult(result, m_context.m_entityId, &JointsManipulationRequests::GetJointPosition, jointName);
             auto currentJointPosition = result.GetValue();
 
-            m_jointStateMsg.name[i] = jointName.GetCStr();
+            m_jointStateMsg.name[i] = jointName.c_str();
             m_jointStateMsg.position[i] = currentJointPosition;
             // TODO - fill in velocity and effort
             m_jointStateMsg.velocity[i] = 0.0;

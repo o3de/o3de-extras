@@ -23,16 +23,16 @@ namespace ROS2
     }
 
     AZ::Outcome<void, AZStd::string> JointsArticulationControllerComponent::PositionControl(
-        const AZ::Name& jointName,
-        JointsManipulationRequests::JointInfo joint,
-        [[maybe_unused]] JointsManipulationRequests::JointPosition currentPosition,
-        JointsManipulationRequests::JointPosition targetPosition,
+        const AZStd::string& jointName,
+        JointInfo joint,
+        [[maybe_unused]] JointPosition currentPosition,
+        JointPosition targetPosition,
         [[maybe_unused]] float deltaTime)
     {
         if (!joint.m_isArticulation)
         { // TODO - this situation should be resolved through RequiredServices instead or otherwise through validation.
             return AZ::Failure(AZStd::string::format(
-                "Joint %s is not an articulation link, use JointsPIDControllerComponent instead", jointName.GetCStr()));
+                "Joint %s is not an articulation link, use JointsPIDControllerComponent instead", jointName.c_str()));
         }
 
         PhysX::ArticulationJointRequestBus::Event(
@@ -43,6 +43,11 @@ namespace ROS2
     void JointsArticulationControllerComponent::GetProvidedServices(AZ::ComponentDescriptor::DependencyArrayType& provided)
     {
         provided.push_back(AZ_CRC_CE("JointsControllerService"));
+    }
+
+    void JointsArticulationControllerComponent::GetIncompatibleServices(AZ::ComponentDescriptor::DependencyArrayType& incompatible)
+    {
+        incompatible.push_back(AZ_CRC_CE("JointsControllerService"));
     }
 
     void JointsArticulationControllerComponent::Reflect(AZ::ReflectContext* context)

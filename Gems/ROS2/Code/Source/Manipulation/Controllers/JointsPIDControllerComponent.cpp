@@ -32,16 +32,16 @@ namespace ROS2
     }
 
     AZ::Outcome<void, AZStd::string> JointsPIDControllerComponent::PositionControl(
-        const AZ::Name& jointName,
-        JointsManipulationRequests::JointInfo joint,
-        JointsManipulationRequests::JointPosition currentPosition,
-        JointsManipulationRequests::JointPosition targetPosition,
+        const AZStd::string& jointName,
+        JointInfo joint,
+        JointPosition currentPosition,
+        JointPosition targetPosition,
         float deltaTime)
     {
         if (joint.m_isArticulation)
         { // TODO - this situation should be resolved through RequiredServices instead or otherwise through validation.
             return AZ::Failure(AZStd::string::format("Joint %s is articulation link, JointsPIDControllerComponent only handles classic Hinge joints. Use "
-                               "JointsArticulationControllerComponent instead", jointName.GetCStr()));
+                               "JointsArticulationControllerComponent instead", jointName.c_str()));
         }
 
         bool jointPIDdefined = m_pidConfiguration.find(jointName) != m_pidConfiguration.end();
@@ -49,7 +49,7 @@ namespace ROS2
             "JointsPIDControllerComponent",
             jointPIDdefined,
             "PID not defined for joint %s, using a default, the behavior is likely to be wrong for this joint",
-            jointName.GetCStr());
+            jointName.c_str());
 
         Controllers::PidConfiguration defaultConfiguration;
         defaultConfiguration.InitializePid();
@@ -65,6 +65,11 @@ namespace ROS2
     void JointsPIDControllerComponent::GetProvidedServices(AZ::ComponentDescriptor::DependencyArrayType& provided)
     {
         provided.push_back(AZ_CRC_CE("JointsControllerService"));
+    }
+
+    void JointsPIDControllerComponent::GetIncompatibleServices(AZ::ComponentDescriptor::DependencyArrayType& incompatible)
+    {
+        incompatible.push_back(AZ_CRC_CE("JointsControllerService"));
     }
 
     void JointsPIDControllerComponent::Reflect(AZ::ReflectContext* context)
