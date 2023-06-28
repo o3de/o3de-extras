@@ -123,11 +123,11 @@ namespace ROS2
                 auto* articulationComponent = Utils::GetGameOrEditorComponent<PhysX::ArticulationLinkComponent>(entity);
                 AZ_Warning(
                     "JointsManipulationEditorComponent",
-                    hingeComponent && !supportsClassicJoints,
+                    (hingeComponent && supportsClassicJoints) || hingeComponent,
                     "Found classic joints but the controller does not support them!");
                 AZ_Warning(
                     "JointsManipulationEditorComponent",
-                    articulationComponent && !supportsArticulation,
+                    (articulationComponent && supportsArticulation) || !articulationComponent,
                     "Found articulations but the controller does not support them!");
 
                 // See if there is a Hinge Joint in the entity, add it to map.
@@ -152,12 +152,14 @@ namespace ROS2
             // Set the initial / resting position to move to and keep.
             for (const auto& [jointName, jointInfo] : manipulationJoints)
             {
-                AZ_Warning(
-                    "JointsManipulationEditorComponent",
-                    initialPositions.find(jointName.c_str()) != initialPositions.end(),
-                    "No set initial position for joint %s",
-                    jointName.c_str());
-                manipulationJoints[jointName].m_restPosition = initialPositions.at(jointName);
+                if (manipulationJoints.contains(jointName))
+                {
+                    manipulationJoints[jointName].m_restPosition = initialPositions.at(jointName);
+                }
+                else
+                {
+                    AZ_Warning("JointsManipulationEditorComponent", false, "No set initial position for joint %s", jointName.c_str());
+                }
             }
         }
     } // namespace Internal
@@ -167,9 +169,9 @@ namespace ROS2
     }
 
     JointsManipulationComponent::JointsManipulationComponent(
-        const PublisherConfiguration& configuration, const ManipulationJoints& manipulationJoints)
+        const PublisherConfiguration& configuration, const AZStd::unordered_map<AZStd::string, JointPosition>& initialPositions)
         : m_jointStatePublisherConfiguration(configuration)
-        , m_manipulationJoints(manipulationJoints)
+        , m_initialPositions(initialPositions)
     {
     }
 
@@ -280,7 +282,7 @@ namespace ROS2
             serialize->Class<JointsManipulationComponent, AZ::Component>()
                 ->Version(1)
                 ->Field("JointStatesPublisherConfiguration", &JointsManipulationComponent::m_jointStatePublisherConfiguration)
-                ->Field("ManipulationJoints", &JointsManipulationComponent::m_manipulationJoints);
+                ->Field("InitialJointPosition", &JointsManipulationComponent::m_initialPositions);
         }
     }
 

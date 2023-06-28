@@ -22,9 +22,18 @@ namespace ROS2
         AZ_Assert(ros2Frame, "Missing Frame Component!");
         AZStd::string namespacedAction = ROS2Names::GetNamespacedName(ros2Frame->GetNamespace(), m_followTrajectoryActionName);
         m_followTrajectoryServer = AZStd::make_unique<FollowJointTrajectoryActionServer>(namespacedAction, GetEntityId());
-        JointsManipulationRequestBus::EventResult(m_manipulationJoints, GetEntityId(), &JointsManipulationRequests::GetJoints);
         AZ::TickBus::Handler::BusConnect();
         JointsTrajectoryRequestBus::Handler::BusConnect(GetEntityId());
+    }
+
+    ManipulationJoints& JointsTrajectoryComponent::GetManipulationJoints()
+    {
+        // Todo (michalpelka) add here notification bus.
+        if (m_manipulationJoints.empty())
+        {
+            JointsManipulationRequestBus::EventResult(m_manipulationJoints, GetEntityId(), &JointsManipulationRequests::GetJoints);
+        }
+        return m_manipulationJoints;
     }
 
     void JointsTrajectoryComponent::Deactivate()
@@ -237,6 +246,7 @@ namespace ROS2
     {
         if (m_manipulationJoints.empty())
         {
+            GetManipulationJoints();
             return;
         }
         uint64_t deltaTimeNs = deltaTime * 1'000'000'000;

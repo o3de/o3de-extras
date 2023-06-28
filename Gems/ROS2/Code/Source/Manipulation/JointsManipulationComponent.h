@@ -27,7 +27,8 @@ namespace ROS2
     {
     public:
         JointsManipulationComponent();
-        JointsManipulationComponent(const PublisherConfiguration& configuration, const ManipulationJoints& manipulationJoints);
+        JointsManipulationComponent(
+            const PublisherConfiguration& configuration, const AZStd::unordered_map<AZStd::string, JointPosition>& initialPositions);
         ~JointsManipulationComponent() = default;
         AZ_COMPONENT(JointsManipulationComponent, "{3da9abfc-0028-4e3e-8d04-4e4440d2e319}", AZ::Component);
 
@@ -63,5 +64,6 @@ namespace ROS2
         AZStd::unique_ptr<JointStatePublisher> m_jointStatePublisher;
         PublisherConfiguration m_jointStatePublisherConfiguration;
         ManipulationJoints m_manipulationJoints;
+        AZStd::unordered_map<AZStd::string, JointPosition> m_initialPositions;
     };
 } // namespace ROS2

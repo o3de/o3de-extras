@@ -57,6 +57,9 @@ namespace ROS2
         void MoveToNextPoint(const trajectory_msgs::msg::JointTrajectoryPoint currentTrajectoryPoint);
         void UpdateFeedback();
 
+        //! Lazy initialize Manipulation joints on the start of simulation.
+        ManipulationJoints& GetManipulationJoints();
+
         AZStd::string m_followTrajectoryActionName{ "arm_controller/follow_joint_trajectory" };
         AZStd::unique_ptr<FollowJointTrajectoryActionServer> m_followTrajectoryServer;
         TrajectoryGoal m_trajectoryGoal;

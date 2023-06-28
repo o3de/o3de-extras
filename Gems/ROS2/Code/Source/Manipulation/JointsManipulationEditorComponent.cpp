@@ -30,7 +30,7 @@ namespace ROS2
 
     void JointsManipulationEditorComponent::BuildGameEntity(AZ::Entity* gameEntity)
     {
-        gameEntity->CreateComponent<JointsManipulationComponent>(m_jointStatePublisherConfiguration);
+        gameEntity->CreateComponent<JointsManipulationComponent>(m_jointStatePublisherConfiguration, m_initialPositions);
     }
 
     void JointsManipulationEditorComponent::GetRequiredServices(AZ::ComponentDescriptor::DependencyArrayType& required)

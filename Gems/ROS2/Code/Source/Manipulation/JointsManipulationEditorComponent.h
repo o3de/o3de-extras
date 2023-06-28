@@ -22,7 +22,7 @@ namespace ROS2
     public:
         JointsManipulationEditorComponent();
         ~JointsManipulationEditorComponent() = default;
-        AZ_COMPONENT(JointsManipulationEditorComponent, "{BF2F77FD-92FB-4730-92C7-DDEE54F508BF}", AZ::Component);
+        AZ_EDITOR_COMPONENT(JointsManipulationEditorComponent, "{BF2F77FD-92FB-4730-92C7-DDEE54F508BF}");
 
         static void GetRequiredServices(AZ::ComponentDescriptor::DependencyArrayType& required);
         static void GetProvidedServices(AZ::ComponentDescriptor::DependencyArrayType& provided);
