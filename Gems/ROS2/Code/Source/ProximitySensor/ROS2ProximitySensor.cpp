@@ -99,15 +99,24 @@ namespace ROS2
 
             AZ::Vector3 entityTranslation;
             AZ::TransformBus::EventResult(entityTranslation, GetEntityId(), &AZ::TransformBus::Events::GetWorldTranslation);
+            AZ::RPI::AuxGeomDraw::AuxGeomDynamicDrawArguments drawArgs;
 
             linePoints.push_back(entityTranslation);
-            linePoints.push_back(entityTranslation + m_detectionDirection * m_detectionDistance);
+            if (m_position)
+            {
+                drawArgs.m_colors = &AZ::Colors::Green;
+                linePoints.push_back(m_position.value());
+            }
+            else
+            {
+                drawArgs.m_colors = &AZ::Colors::Red;
+                linePoints.push_back(entityTranslation + m_detectionDirection * m_detectionDistance);
+            }
 
             const uint8_t pixelSize = 5;
-            AZ::RPI::AuxGeomDraw::AuxGeomDynamicDrawArguments drawArgs;
             drawArgs.m_verts = linePoints.data();
             drawArgs.m_vertCount = linePoints.size();
-            drawArgs.m_colors = m_wasObjectDetected ? &AZ::Colors::Green : &AZ::Colors::Red;
+
             drawArgs.m_colorCount = 1;
             drawArgs.m_opacityType = AZ::RPI::AuxGeomDraw::OpacityType::Opaque;
             drawArgs.m_size = pixelSize;
@@ -133,8 +142,8 @@ namespace ROS2
             AzPhysics::SceneQueryHits result = sceneInterface->QueryScene(sceneHandle, &request);
 
             std_msgs::msg::Bool msg;
-            m_wasObjectDetected = !result.m_hits.empty();
-            msg.set__data(m_wasObjectDetected);
+            m_position = !result.m_hits.empty() ? std::make_optional(result.m_hits.front().m_position) : std::nullopt;
+            msg.set__data(m_position ? true : false);
             m_detectionPublisher->publish(msg);
         }
     }
