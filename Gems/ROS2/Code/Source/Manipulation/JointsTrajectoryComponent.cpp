@@ -28,7 +28,6 @@ namespace ROS2
 
     ManipulationJoints& JointsTrajectoryComponent::GetManipulationJoints()
     {
-        // Todo (michalpelka) add here notification bus.
         if (m_manipulationJoints.empty())
         {
             JointsManipulationRequestBus::EventResult(m_manipulationJoints, GetEntityId(), &JointsManipulationRequests::GetJoints);
@@ -111,11 +110,9 @@ namespace ROS2
                     "JointsTrajectoryComponent",
                     "Trajectory goal is invalid: no joint %s in manipulator",
                     azJointName.c_str());
-                // TODO - pass as a result, use FollowTrajectoryAction::Result enum
                 return AZ::Failure(AZStd::string::format("Trajectory goal is invalid: no joint %s in manipulator", azJointName.c_str()));
             }
         }
-        // TODO - other checks?
         return AZ::Success();
     }
 
@@ -138,7 +135,6 @@ namespace ROS2
             desiredPoint.effort.push_back(0.0f); // Effort not supported yet!
         }
 
-        // TODO - construct proper feedback
         trajectory_msgs::msg::JointTrajectoryPoint actualPoint = desiredPoint;
         trajectory_msgs::msg::JointTrajectoryPoint currentError;
 
@@ -178,7 +174,7 @@ namespace ROS2
 
     AZ::Outcome<void, AZStd::string> JointsTrajectoryComponent::CancelTrajectoryGoal(TrajectoryResultPtr result)
     {
-        m_trajectoryGoal.trajectory.points.clear(); // TODO - empty the trajectory
+        m_trajectoryGoal.trajectory.points.clear();
         m_followTrajectoryServer->CancelGoal(result);
         m_trajectoryInProgress = false;
         return AZ::Success();

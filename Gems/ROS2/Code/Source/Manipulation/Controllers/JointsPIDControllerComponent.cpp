@@ -39,7 +39,7 @@ namespace ROS2
         float deltaTime)
     {
         if (joint.m_isArticulation)
-        { // TODO - this situation should be resolved through RequiredServices instead or otherwise through validation.
+        {
             return AZ::Failure(AZStd::string::format("Joint %s is articulation link, JointsPIDControllerComponent only handles classic Hinge joints. Use "
                                "JointsArticulationControllerComponent instead", jointName.c_str()));
         }

@@ -46,7 +46,6 @@ namespace ROS2
 
             m_jointStateMsg.name[i] = jointName.c_str();
             m_jointStateMsg.position[i] = currentJointPosition;
-            // TODO - fill in velocity and effort
             m_jointStateMsg.velocity[i] = 0.0;
             m_jointStateMsg.effort[i] = 0.0;
             i++;
@@ -55,7 +54,7 @@ namespace ROS2
     }
 
     void JointStatePublisher::OnTick(float deltaTime)
-    { // TODO - refactor common publishing schemes for state publishers (consistent with sensors)
+    {
         AZ_Assert(m_configuration.m_frequency > 0, "JointPublisher frequency must be greater than zero");
         auto frameTime = 1 / m_configuration.m_frequency;
 

@@ -103,7 +103,6 @@ namespace ROS2
         if (!executionOrderOutcome)
         {
             AZ_Trace("FollowJointTrajectoryActionServer", "Execution not be accepted: %s", executionOrderOutcome.GetError().c_str());
-            // TODO - for mismatched joints and other cases, the correct way: accept the goal and then cancel / abort with the Result.
             return rclcpp_action::GoalResponse::REJECT;
         }
 

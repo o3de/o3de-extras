@@ -57,7 +57,6 @@ namespace ROS2
         void Deactivate() override;
         void InitializePIDs();
 
-        // TODO - temporary solution. Use Editor Component and check against named joints. (populate names / update initially, watch bus).
         AZStd::unordered_map<AZStd::string, Controllers::PidConfiguration> m_pidConfiguration;
     };
 } // namespace ROS2
