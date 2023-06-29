@@ -64,6 +64,12 @@ namespace ROS2
         //! effector/ The collider must be a trigger collider.
         AZ::EntityId m_gripperEffectorCollider;
 
+        //! The entity that contains articulation link that will be used as the gripper
+        AZ::EntityId m_gripperEffectorArticulationLink;
+
+        //! The physics body handle to m_gripperEffectorArticulationLink.
+        AzPhysics::SimulatedBodyHandle m_gripperEffectorBodyHandle;
+
         //! EntityId of the object that is currently gripped by the gripper effector.
         AZ::EntityId m_grippedObjectInEffector;
 
@@ -83,5 +89,8 @@ namespace ROS2
 
         //! releases object from gripper effector.
         void ReleaseGrippedObject();
+
+        AZ::EntityId GetRootOfArticulation(AZ::EntityId entityId);
+
     };
 } // namespace ROS2
