@@ -30,7 +30,7 @@ namespace ROS2
                 AZ_Assert(false, "Joint names in hierarchy need to be unique (%s is not)!", jointName.c_str());
                 return;
             }
-            AZ_Printf("JointsManipulationEditorComponent", "Adding joint info for hinge joint %s\n", jointName.c_str());
+            AZ_Printf("JointsManipulationComponent", "Adding joint info for hinge joint %s\n", jointName.c_str());
             JointInfo jointInfo;
             jointInfo.m_isArticulation = false;
             jointInfo.m_axis = static_cast<PhysX::ArticulationJointAxis>(0);
@@ -60,7 +60,7 @@ namespace ROS2
             bool hasFreeAxis = TryGetFreeArticulationAxis(idPair.GetEntityId(), freeAxis);
             if (!hasFreeAxis)
             { // Do not add a joint since it is a fixed one
-                AZ_Printf("JointsManipulationEditorComponent", "Articulation joint %s is fixed, skipping\n", jointName.c_str());
+                AZ_Printf("JointsManipulationComponent", "Articulation joint %s is fixed, skipping\n", jointName.c_str());
                 return;
             }
 
@@ -70,7 +70,7 @@ namespace ROS2
                 return;
             }
 
-            AZ_Printf("JointsManipulationEditorComponent", "Adding joint info for articulation link %s\n", jointName.c_str());
+            AZ_Printf("JointsManipulationComponent", "Adding joint info for articulation link %s\n", jointName.c_str());
             JointInfo jointInfo;
             jointInfo.m_isArticulation = true;
             jointInfo.m_axis = freeAxis;
@@ -90,13 +90,13 @@ namespace ROS2
             ManipulationJoints manipulationJoints;
             if (!supportsArticulation && !supportsClassicJoints)
             {
-                AZ_Warning("JointsManipulationEditorComponent", false, "No suitable Position Controller Component in entity!");
+                AZ_Warning("JointsManipulationComponent", false, "No suitable Position Controller Component in entity!");
                 return manipulationJoints;
             }
             if (supportsArticulation && supportsClassicJoints)
             {
                 AZ_Warning(
-                    "JointsManipulationEditorComponent", false, "Cannot support both classic joint and articulations in one hierarchy");
+                    "JointsManipulationComponent", false, "Cannot support both classic joint and articulations in one hierarchy");
                 return manipulationJoints;
             }
 
@@ -104,7 +104,7 @@ namespace ROS2
             AZStd::vector<AZ::EntityId> descendants;
             AZ::TransformBus::EventResult(descendants, entityId, &AZ::TransformInterface::GetEntityAndAllDescendants);
             AZ_Warning(
-                "JointsManipulationEditorComponent", descendants.size() > 0, "Entity %s has no descendants!", entityId.ToString().c_str());
+                "JointsManipulationComponent", descendants.size() > 0, "Entity %s has no descendants!", entityId.ToString().c_str());
             for (const AZ::EntityId& descendantID : descendants)
             {
                 AZ::Entity* entity = nullptr;
@@ -122,11 +122,11 @@ namespace ROS2
                 auto* hingeComponent = Utils::GetGameOrEditorComponent<PhysX::HingeJointComponent>(entity);
                 auto* articulationComponent = Utils::GetGameOrEditorComponent<PhysX::ArticulationLinkComponent>(entity);
                 AZ_Warning(
-                    "JointsManipulationEditorComponent",
-                    (hingeComponent && supportsClassicJoints) || hingeComponent,
+                    "JointsManipulationComponent",
+                    (hingeComponent && supportsClassicJoints) || !hingeComponent,
                     "Found classic joints but the controller does not support them!");
                 AZ_Warning(
-                    "JointsManipulationEditorComponent",
+                    "JointsManipulationComponent",
                     (articulationComponent && supportsArticulation) || !articulationComponent,
                     "Found articulations but the controller does not support them!");
 
@@ -152,13 +152,13 @@ namespace ROS2
             // Set the initial / resting position to move to and keep.
             for (const auto& [jointName, jointInfo] : manipulationJoints)
             {
-                if (manipulationJoints.contains(jointName))
+                if (initialPositions.contains(jointName))
                 {
                     manipulationJoints[jointName].m_restPosition = initialPositions.at(jointName);
                 }
                 else
                 {
-                    AZ_Warning("JointsManipulationEditorComponent", false, "No set initial position for joint %s", jointName.c_str());
+                    AZ_Warning("JointsManipulationComponent", false, "No set initial position for joint %s", jointName.c_str());
                 }
             }
         }
