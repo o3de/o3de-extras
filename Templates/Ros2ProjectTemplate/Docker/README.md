@@ -8,24 +8,25 @@ The following Dockerfiles defined in this path will prepare the appropriate ROS2
 * Ubuntu 20.04 (Focal) or 22.04 (Jammy)
 * At least 60 GB of free disk space
 * Docker installed and configured
-  * **Note** It is recommended to have Docker installed correctly and in a secure manner so that the docker commands in this guide do not require elevated priviledges (sudo) in order to run them. See [Docker Engine post-installation steps](https://docs.docker.com/engine/install/linux-postinstall/) for more details.
+  * **Note** It is recommended to have Docker installed correctly and in a secure manner so that the docker commands in this guide do not require elevated privileges (sudo) to run them. See [Docker Engine post-installation steps](https://docs.docker.com/engine/install/linux-postinstall/) for more details.
 * [NVidia container toolkit](https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/install-guide.html#docker)
 
 ## Building the Docker Image
 
-By default, the docker script provided in this template will build a docker image to run the Ros2Project sample using Ubuntu 22.04 (jammy) with the ROS2 Iron distribution. Run the following command to build the docker image with a default configuration:
+By default, the docker script provided in this template will build a docker image to run the Ros2Project sample using Ubuntu 22.04 (jammy) with the ROS2 Iron distribution. All obsolete source code, git artifacts, and build artifacts will be removed by the 'cleanup.bash' script when completed. 
+
+Run the following command to build the docker image with a default configuration:
 
 ```
 docker build -t o3de_ros2project:latest -f Dockerfile .
 ```
 
 **Note** 
-The above command example tags specific commits for O3DE, and the ROS2 gem repos and based on known working commits. See the Advanced Options section below for more information.
+The above command example tags specific commits for O3DE, and the ROS2 gem repos based on known working commits. See the Advanced Options section below for more information.
 
 This will create a docker image named 'o3de_ros2project' with the tag 'latest' that contains both the simulation launcher and the navigation stack. 
 
-It will also contain helper scripts that will launch either the simulation (LaunchSimulation.bash) or 
-the RViz2 (LaunchNavStack.bash).
+It will also contain helper scripts that will launch either the simulation (LaunchSimulation.bash) or the RViz2 (LaunchNavStack.bash).
 
 You can also create a separate docker image that only contains the navigation stack and RViz2 by supplying the argument `IMAGE_TYPE` and setting it to 'navstack':
 
@@ -40,7 +41,7 @@ ROS2 allows for communication across multiple docker images running on the same 
 Launching O3DE applications in a Docker container requires GPU acceleration support. (Make sure that the [nvidia-docker 2](https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/install-guide.html#docker) is installed.)
 
 ### Direct Access to the X Server
-The simulation docker image should be launched before bringing up the robot application. To run the robot application, first allow the container root user to access the running X server for display
+The simulation docker image should be launched before bringing up the robot application. To run the robot application, first, allow the container root user to access the running X server for display
 
 ```
 xhost +local:root
@@ -99,14 +100,14 @@ The Docker script defaults to building an image based on Ubuntu 22.04 (jammy) an
 
 ### Custom source repos and branches
 
-The Dockerscripts use the following arguments to determine the repository to pull the source from. 
+The Dockerscripts use the following arguments to determine the repository to pull the source: 
 
 | Argument              | Repository                 | Default                                      |
 |-----------------------|----------------------------|----------------------------------------------|
 | O3DE_REPO             | O3DE                       | https://github.com/o3de/o3de.git             |
 | O3DE_EXTRAS_REPO      | O3DE Extras                | https://github.com/o3de/o3de-extras.git      |
 
-In addition the repositories, the following arguments target the branch, commit, or tag to pull from their corresponding repository
+In addition to repositories, the following arguments target the branch, commit, or tag to pull from their corresponding repository:
 
 | Argument                | Repository                       | Default     |
 |-------------------------|----------------------------------|-------------|
