@@ -93,6 +93,11 @@ namespace ROS2
         }
     }
 
+    void ROS2LidarSensorComponent::UpdateShowNoise()
+    {
+        m_lidarParameters.m_showNoiseConfig = m_lidarSystemFeatures & LidarSystemFeatures::Noise;
+    }
+
     void ROS2LidarSensorComponent::FetchLidarImplementationFeatures()
     {
         if (m_lidarSystem.empty())
@@ -130,18 +135,21 @@ namespace ROS2
     AZStd::vector<AZStd::string> ROS2LidarSensorComponent::FetchLidarSystemList()
     {
         FetchLidarImplementationFeatures();
+        UpdateShowNoise();
         return LidarRegistrarInterface::Get()->GetRegisteredLidarSystems();
     }
 
     AZ::Crc32 ROS2LidarSensorComponent::OnLidarModelSelected()
     {
         m_lidarParameters = LidarTemplateUtils::GetTemplate(m_lidarModel);
+        UpdateShowNoise();
         return AZ::Edit::PropertyRefreshLevels::EntireTree;
     }
 
     AZ::Crc32 ROS2LidarSensorComponent::OnLidarImplementationSelected()
     {
         FetchLidarImplementationFeatures();
+        UpdateShowNoise();
         return AZ::Edit::PropertyRefreshLevels::EntireTree;
     }
 
@@ -172,7 +180,7 @@ namespace ROS2
         LidarRaycasterRequestBus::Event(
             m_lidarRaycasterId, &LidarRaycasterRequestBus::Events::ConfigureRaycastResultFlags, RaycastResultFlags::Points);
 
-        if (m_lidarSystemFeatures & LidarSystemFeatures::Noise)
+        if ((m_lidarSystemFeatures & LidarSystemFeatures::Noise) && m_lidarParameters.m_isNoiseEnabled)
         {
             LidarRaycasterRequestBus::Event(
                 m_lidarRaycasterId,
@@ -197,6 +205,19 @@ namespace ROS2
         {
             LidarRaycasterRequestBus::Event(
                 m_lidarRaycasterId, &LidarRaycasterRequestBus::Events::ConfigureMaxRangePointAddition, m_addPointsAtMax);
+        }
+
+        if (m_lidarSystemFeatures & LidarSystemFeatures::PointcloudPublishing)
+        {
+            const TopicConfiguration& publisherConfig = m_sensorConfiguration.m_publishersConfigurations[Internal::kPointCloudType];
+            auto* ros2Frame = Utils::GetGameOrEditorComponent<ROS2FrameComponent>(GetEntity());
+
+            LidarRaycasterRequestBus::Event(
+                m_lidarRaycasterId,
+                &LidarRaycasterRequestBus::Events::ConfigurePointCloudPublisher,
+                ROS2Names::GetNamespacedName(GetNamespace(), publisherConfig.m_topic),
+                ros2Frame->GetFrameID().data(),
+                publisherConfig.GetQoS());
         }
     }
 
@@ -233,13 +254,6 @@ namespace ROS2
 
     void ROS2LidarSensorComponent::Activate()
     {
-        auto ros2Node = ROS2Interface::Get()->GetNode();
-        AZ_Assert(m_sensorConfiguration.m_publishersConfigurations.size() == 1, "Invalid configuration of publishers for lidar sensor");
-
-        const TopicConfiguration& publisherConfig = m_sensorConfiguration.m_publishersConfigurations[Internal::kPointCloudType];
-        AZStd::string fullTopic = ROS2Names::GetNamespacedName(GetNamespace(), publisherConfig.m_topic);
-        m_pointCloudPublisher = ros2Node->create_publisher<sensor_msgs::msg::PointCloud2>(fullTopic.data(), publisherConfig.GetQoS());
-
         if (m_sensorConfiguration.m_visualise)
         {
             auto* entityScene = AZ::RPI::Scene::GetSceneForEntityId(GetEntityId());
@@ -252,6 +266,23 @@ namespace ROS2
         ConnectToLidarRaycaster();
         ConfigureLidarRaycaster();
 
+        m_canRaycasterPublish = false;
+        if (m_lidarSystemFeatures & LidarSystemFeatures::PointcloudPublishing)
+        {
+            LidarRaycasterRequestBus::EventResult(
+                m_canRaycasterPublish, m_lidarRaycasterId, &LidarRaycasterRequestBus::Events::CanHandlePublishing);
+        }
+
+        if (!m_canRaycasterPublish)
+        {
+            auto ros2Node = ROS2Interface::Get()->GetNode();
+            AZ_Assert(m_sensorConfiguration.m_publishersConfigurations.size() == 1, "Invalid configuration of publishers for lidar sensor");
+
+            const TopicConfiguration& publisherConfig = m_sensorConfiguration.m_publishersConfigurations[Internal::kPointCloudType];
+            AZStd::string fullTopic = ROS2Names::GetNamespacedName(GetNamespace(), publisherConfig.m_topic);
+            m_pointCloudPublisher = ros2Node->create_publisher<sensor_msgs::msg::PointCloud2>(fullTopic.data(), publisherConfig.GetQoS());
+        }
+
         ROS2SensorComponent::Activate();
     }
 
@@ -259,11 +290,28 @@ namespace ROS2
     {
         ROS2SensorComponent::Deactivate();
         m_pointCloudPublisher.reset();
+
+        for (auto& [implementation, raycasterId] : m_implementationToRaycasterMap)
+        {
+            LidarSystemRequestBus::Event(AZ_CRC(implementation), &LidarSystemRequestBus::Events::DestroyLidar, raycasterId);
+        }
+
+        m_implementationToRaycasterMap.clear();
     }
 
     void ROS2LidarSensorComponent::FrequencyTick()
     {
         auto entityTransform = GetEntity()->FindComponent<AzFramework::TransformComponent>();
+
+        if (m_canRaycasterPublish)
+        {
+            const builtin_interfaces::msg::Time timestamp = ROS2Interface::Get()->GetROSTimestamp();
+            LidarRaycasterRequestBus::Event(
+                m_lidarRaycasterId,
+                &LidarRaycasterRequestBus::Events::UpdatePublisherTimestamp,
+                aznumeric_cast<AZ::u64>(timestamp.sec) * aznumeric_cast<AZ::u64>(1.0e9f) + timestamp.nanosec
+                );
+        }
 
         LidarRaycasterRequestBus::EventResult(
             m_lastScanResults, m_lidarRaycasterId, &LidarRaycasterRequestBus::Events::PerformRaycast, entityTransform->GetWorldTM());
@@ -276,6 +324,11 @@ namespace ROS2
         if (m_sensorConfiguration.m_visualise)
         { // Store points for visualisation purposes, in global frame
             m_visualisationPoints = m_lastScanResults.m_points;
+        }
+
+        if (m_canRaycasterPublish)
+        { // Skip publishing when it can be handled by the raycaster.
+            return;
         }
 
         const auto inverseLidarTM = entityTransform->GetWorldTM().GetInverse();
