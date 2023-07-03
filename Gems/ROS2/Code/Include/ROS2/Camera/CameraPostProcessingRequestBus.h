@@ -7,28 +7,26 @@
  */
 #pragma once
 
+#include "AzCore/EBus/EBusSharedDispatchTraits.h"
 #include <AzCore/Component/EntityId.h>
-#include <AzCore/EBus/EBus.h>
 #include <AzCore/Interface/Interface.h>
-#include <AzCore/std/parallel/mutex.h>
 #include <AzCore/std/string/string.h>
-
 #include <sensor_msgs/msg/image.hpp>
 
 namespace ROS2
 {
     //! Interface class that allows to add post-processing to the pipeline
-    class CameraPostProcessingRequests : public AZ::EBusTraits
+    //!
+    //! Each function call can be processed without blocking Bus for other dispatches.
+    //! Bus connects / disconnects cannot happen within event dispatch.
+    //! Those constraints allow for processing multiple camera frames in the same time.
+    //! Bus implementations should allow for asynchronous execution of provided functions.
+    class CameraPostProcessingRequests : public AZ::EBusSharedDispatchTraits<CameraPostProcessingRequests>
     {
     public:
         using BusIdType = AZ::EntityId;
         static constexpr AZ::EBusAddressPolicy AddressPolicy = AZ::EBusAddressPolicy::ById;
         static constexpr AZ::EBusHandlerPolicy HandlerPolicy = AZ::EBusHandlerPolicy::Multiple;
-        using MutexType = AZStd::recursive_mutex;
-
-        //! Set to true to allow multiple threads to call ApplyPostProcessing at the same time.
-        //! Otherwise, the bus will be locked to a single thread for each entity.
-        static constexpr bool LocklessDispatch = true; 
 
         //! Apply post-processing function, if any implementations to the bus are in the entity.
         //! @param image standard image message passed as a reference. It will be changed through post-processing.
