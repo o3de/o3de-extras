@@ -15,6 +15,8 @@
 
 namespace ROS2
 {
+    //! Simple proximity sensor based on raycasting
+    //! This component publishes a bool topic depending on the object presence
     class ROS2ProximitySensor : public ROS2SensorComponent
     {
     public:
