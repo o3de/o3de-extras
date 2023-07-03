@@ -9,9 +9,8 @@
 
 #include <AzCore/Component/EntityId.h>
 #include <AzCore/EBus/EBus.h>
-#include <AzCore/Interface/Interface.h>
 #include <AzCore/std/string/string.h>
-#include <ROS2/Manipulation/JointsManipulationRequests.h>
+#include <ROS2/Manipulation/JointInfo.h>
 
 namespace ROS2
 {

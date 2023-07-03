@@ -9,8 +9,6 @@
 #pragma once
 
 #include <AzCore/Component/Component.h>
-#include <AzCore/Component/TickBus.h>
-#include <AzCore/Name/Name.h>
 #include <ROS2/Manipulation/Controllers/JointsPositionControllerRequests.h>
 #include <ROS2/Utilities/Controllers/PidConfiguration.h>
 

@@ -55,8 +55,8 @@ namespace ROS2
 
     void JointStatePublisher::OnTick(float deltaTime)
     {
-        AZ_Assert(m_configuration.m_frequency > 0, "JointPublisher frequency must be greater than zero");
-        auto frameTime = 1 / m_configuration.m_frequency;
+        AZ_Assert(m_configuration.m_frequency > 0.f, "JointPublisher frequency must be greater than zero");
+        auto frameTime = 1.f / m_configuration.m_frequency;
 
         m_timeElapsedSinceLastTick += deltaTime;
         if (m_timeElapsedSinceLastTick < frameTime)

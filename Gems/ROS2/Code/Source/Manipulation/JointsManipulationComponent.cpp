@@ -95,16 +95,14 @@ namespace ROS2
             }
             if (supportsArticulation && supportsClassicJoints)
             {
-                AZ_Warning(
-                    "JointsManipulationComponent", false, "Cannot support both classic joint and articulations in one hierarchy");
+                AZ_Warning("JointsManipulationComponent", false, "Cannot support both classic joint and articulations in one hierarchy");
                 return manipulationJoints;
             }
 
             // Get all descendants and iterate over joints
             AZStd::vector<AZ::EntityId> descendants;
             AZ::TransformBus::EventResult(descendants, entityId, &AZ::TransformInterface::GetEntityAndAllDescendants);
-            AZ_Warning(
-                "JointsManipulationComponent", descendants.size() > 0, "Entity %s has no descendants!", entityId.ToString().c_str());
+            AZ_Warning("JointsManipulationComponent", descendants.size() > 0, "Entity %s has no descendants!", entityId.ToString().c_str());
             for (const AZ::EntityId& descendantID : descendants)
             {
                 AZ::Entity* entity = nullptr;
@@ -224,12 +222,12 @@ namespace ROS2
         return AZ::Success(position);
     }
 
-    AZStd::vector<JointPosition> JointsManipulationComponent::GetAllJointsPositions()
+    JointsManipulationRequests::JointsPositionsMap JointsManipulationComponent::GetAllJointsPositions()
     {
-        AZStd::vector<JointPosition> positions;
+        JointsManipulationRequests::JointsPositionsMap positions;
         for (const auto& [jointName, jointInfo] : m_manipulationJoints)
         {
-            positions.push_back(GetJointPosition(jointName).GetValue());
+            positions[jointName] = GetJointPosition(jointName).GetValue();
         }
         return positions;
     }
@@ -246,7 +244,7 @@ namespace ROS2
     }
 
     AZ::Outcome<void, AZStd::string> JointsManipulationComponent::MoveJointsToPositions(
-        const AZStd::unordered_map<AZStd::string, JointPosition> positions)
+        const JointsManipulationRequests::JointsPositionsMap& positions)
     {
         for (const auto& [jointName, position] : positions)
         {

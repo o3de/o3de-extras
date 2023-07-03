@@ -9,7 +9,6 @@
 
 #include <AzCore/Component/EntityId.h>
 #include <AzCore/EBus/EBus.h>
-#include <AzCore/Interface/Interface.h>
 #include <AzCore/Outcome/Outcome.h>
 #include <control_msgs/action/follow_joint_trajectory.hpp>
 

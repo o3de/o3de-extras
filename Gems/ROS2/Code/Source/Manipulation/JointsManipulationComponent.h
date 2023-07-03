@@ -43,9 +43,9 @@ namespace ROS2
         //! @see ROS2::JointsManipulationRequestBus::GetJointPosition
         AZ::Outcome<JointPosition, AZStd::string> GetJointPosition(const AZStd::string& jointName) override;
         //! @see ROS2::JointsManipulationRequestBus::GetAllJointsPositions
-        AZStd::vector<JointPosition> GetAllJointsPositions() override;
-        //! @see ROS2::JointsManipulationRequestBus::MoveJointsToPosition
-        AZ::Outcome<void, AZStd::string> MoveJointsToPositions(const AZStd::unordered_map<AZStd::string, JointPosition> positions) override;
+        JointsPositionsMap GetAllJointsPositions() override;
+        //! @see ROS2::JointsManipulationRequestBus::MoveJointsToPositions
+        AZ::Outcome<void, AZStd::string> MoveJointsToPositions(const JointsPositionsMap& positions) override;
         //! @see ROS2::JointsManipulationRequestBus::MoveJointToPosition
         AZ::Outcome<void, AZStd::string> MoveJointToPosition(const AZStd::string& jointName, JointPosition position) override;
         //! @see ROS2::JointsManipulationRequestBus::Stop

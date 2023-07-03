@@ -8,9 +8,8 @@
 
 #pragma once
 
-#include <AzCore/Component/Component.h>
-#include <AzCore/std/string/string.h>
 #include <AzCore/std/containers/unordered_map.h>
+#include <AzCore/std/string/string.h>
 #include <AzToolsFramework/ToolsComponents/EditorComponentBase.h>
 #include <ROS2/Communication/PublisherConfiguration.h>
 
