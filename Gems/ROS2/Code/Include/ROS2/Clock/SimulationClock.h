@@ -32,9 +32,6 @@ namespace ROS2
         //! This will publish current time to the ROS 2 `/clock` topic.
         virtual void Tick();
 
-        //! Resets the publisher of the clock
-        virtual void ResetPublisher();
-
         //! Returns an expected loop time of simulation. It is an estimation from past frames.
         AZStd::chrono::duration<float, AZStd::chrono::seconds::period> GetExpectedSimulationLoopTime() const;
         virtual ~SimulationClock() = default;

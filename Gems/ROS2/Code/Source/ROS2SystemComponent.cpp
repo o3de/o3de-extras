@@ -74,22 +74,6 @@ namespace ROS2
         {
             ROS2Interface::Register(this);
         }
-
-        bool useSteadyTime = false;
-        auto* registry = AZ::SettingsRegistry::Get();
-        AZ_Assert(registry, "No Registry available");
-        if (registry)
-        {
-            registry->Get(useSteadyTime, EnablePhysicsSteadyClockConfigurationKey);
-            if (useSteadyTime)
-            {
-                AZ_Printf("ROS2SystemComponent", "Enabling Physical steady clock");
-                m_simulationClock = AZStd::make_unique<PhysicallyStableClock>();
-                return;
-            }
-        }
-        AZ_Printf("ROS2SystemComponent", "Enabling realtime clock");
-        m_simulationClock = AZStd::make_unique<SimulationClock>();
         return;
     }
 
@@ -107,8 +91,28 @@ namespace ROS2
         rclcpp::init(0, 0);
     }
 
+    void ROS2SystemComponent::InitClock()
+    {
+        bool useSteadyTime = false;
+        auto* registry = AZ::SettingsRegistry::Get();
+        AZ_Assert(registry, "No Registry available");
+        if (registry)
+        {
+            registry->Get(useSteadyTime, EnablePhysicsSteadyClockConfigurationKey);
+            if (useSteadyTime)
+            {
+                AZ_Printf("ROS2SystemComponent", "Enabling Physical steady clock");
+                m_simulationClock = AZStd::make_unique<PhysicallyStableClock>();
+                return;
+            }
+        }
+        AZ_Printf("ROS2SystemComponent", "Enabling realtime clock");
+        m_simulationClock = AZStd::make_unique<SimulationClock>();
+    }
+
     void ROS2SystemComponent::Activate()
     {
+        InitClock();
         m_simulationClock->Activate();
         m_ros2Node = std::make_shared<rclcpp::Node>("o3de_ros2_node");
         m_executor = AZStd::make_shared<rclcpp::executors::SingleThreadedExecutor>();
@@ -141,7 +145,7 @@ namespace ROS2
         m_staticTFBroadcaster.reset();
         m_executor->remove_node(m_ros2Node);
         m_executor.reset();
-        m_simulationClock->ResetPublisher();
+        m_simulationClock.reset();
         m_ros2Node.reset();
     }
 
