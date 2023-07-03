@@ -18,7 +18,7 @@ namespace ROS2
     //! Interface class that allows to add post-processing to the pipeline
     //!
     //! Each function call can be processed without blocking Bus for other dispatches.
-    //! Bus connects / disconnects cannot happen within event dispatch.
+    //! Do not use connects / disconnects to this bus during event dispatch, as they are not allowed for this concurrency model.
     //! Those constraints allow for processing multiple camera frames in the same time.
     //! Bus implementations should allow for asynchronous execution of provided functions.
     class CameraPostProcessingRequests : public AZ::EBusSharedDispatchTraits<CameraPostProcessingRequests>
