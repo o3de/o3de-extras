@@ -143,7 +143,7 @@ namespace ROS2
 
             std_msgs::msg::Bool msg;
             m_position = !result.m_hits.empty() ? std::make_optional(result.m_hits.front().m_position) : std::nullopt;
-            msg.set__data(m_position ? true : false);
+            msg.data = m_position ? true : false;;
             m_detectionPublisher->publish(msg);
         }
     }
