@@ -174,7 +174,12 @@ namespace ROS2
     AZ::Outcome<void, AZStd::string> JointsTrajectoryComponent::CancelTrajectoryGoal(TrajectoryResultPtr result)
     {
         m_trajectoryGoal.trajectory.points.clear();
-        m_followTrajectoryServer->CancelGoal(result);
+        AZStd::thread cancelJob(
+            [&]()
+            {
+                m_followTrajectoryServer->CancelGoal(result);
+            });
+        cancelJob.detach();
         m_trajectoryInProgress = false;
         return AZ::Success();
     }
@@ -190,6 +195,7 @@ namespace ROS2
         if (goalStatus == JointsTrajectoryRequests::TrajectoryActionStatus::Cancelled)
         {
             JointsManipulationRequestBus::Event(GetEntityId(), &JointsManipulationRequests::Stop);
+            m_followTrajectoryServer->SetGoalSuccess();
             return;
         }
 

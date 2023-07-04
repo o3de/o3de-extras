@@ -7,7 +7,9 @@
  */
 
 #include "FollowJointTrajectoryActionServer.h"
+#include <AzCore/Debug/Trace.h>
 #include <AzCore/std/functional.h>
+#include <AzCore/std/time.h>
 #include <ROS2/ROS2Bus.h>
 
 namespace ROS2
@@ -28,11 +30,25 @@ namespace ROS2
         return m_goalStatus;
     }
 
+    void FollowJointTrajectoryActionServer::SetGoalSuccess()
+    {
+        m_goalStatus = JointsTrajectoryRequests::TrajectoryActionStatus::Succeeded;
+    }
+
     void FollowJointTrajectoryActionServer::CancelGoal(std::shared_ptr<FollowJointTrajectory::Result> result)
     {
         AZ_Assert(m_goalHandle, "Invalid goal handle!");
-        if (m_goalHandle && m_goalHandle->is_executing())
+        if (m_goalHandle)
         {
+            auto loopStart = AZStd::GetTimeNowSecond();
+            while (!m_goalHandle->is_canceling())
+            {
+                if (AZStd::GetTimeNowSecond() - loopStart > cancelGoalTimeout)
+                {
+                    AZ_Warning("FollowJointTrajectoryActionServer", false, "Waiting for goal handle to change timeout");
+                    return;
+                }
+            }
             AZ_Trace("FollowJointTrajectoryActionServer", "Cancelling goal\n");
             m_goalHandle->canceled(result);
         }

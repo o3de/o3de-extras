@@ -40,6 +40,9 @@ namespace ROS2
         //! @param result Result to be passed to through action server to the client.
         void CancelGoal(std::shared_ptr<FollowJointTrajectory::Result> result);
 
+        //! Sets the goal status to success
+        void SetGoalSuccess();
+
         //! Report goal success to the action server.
         //! @param result Result which contains success code.
         void GoalSuccess(std::shared_ptr<FollowJointTrajectory::Result> result);
@@ -67,5 +70,7 @@ namespace ROS2
         rclcpp_action::CancelResponse GoalCancelledCallback(const std::shared_ptr<GoalHandle> goalHandle);
 
         void GoalAcceptedCallback(const std::shared_ptr<GoalHandle> goalHandle);
+
+        static constexpr int cancelGoalTimeout = 5;
     };
 } // namespace ROS2

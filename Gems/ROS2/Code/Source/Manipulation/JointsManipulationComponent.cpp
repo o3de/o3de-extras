@@ -12,6 +12,7 @@
 #include "JointStatePublisher.h"
 #include <AzCore/Component/ComponentApplicationBus.h>
 #include <AzCore/Component/TransformBus.h>
+#include <AzCore/Debug/Trace.h>
 #include <AzCore/Serialization/EditContext.h>
 #include <ROS2/Frame/ROS2FrameComponent.h>
 #include <ROS2/Manipulation/Controllers/JointsPositionControllerRequests.h>
@@ -316,7 +317,15 @@ namespace ROS2
     {
         for (auto& [jointName, jointInfo] : m_manipulationJoints)
         { // Set all target joint positions to their current positions.
-            jointInfo.m_restPosition = GetJointPosition(jointName).GetValue();
+            auto joint = GetJointPosition(jointName);
+            if (joint.IsSuccess())
+            {
+                jointInfo.m_restPosition = joint.GetValue();
+            }
+            else
+            {
+                AZ_Warning("JointsManipulationComponent", false, "Unable to get joint position for %s", jointName.c_str());
+            }
         }
     }
 
