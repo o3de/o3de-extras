@@ -10,6 +10,8 @@ set(FILES
     Source/Camera/ROS2CameraSensorEditorComponent.h
     Source/Lidar/LidarRegistrarEditorSystemComponent.cpp
     Source/Lidar/LidarRegistrarEditorSystemComponent.h
+    Source/Manipulation/JointsManipulationEditorComponent.cpp
+    Source/Manipulation/JointsManipulationEditorComponent.h
     Source/RobotImporter/Pages/CheckAssetPage.cpp
     Source/RobotImporter/Pages/CheckAssetPage.h
     Source/RobotImporter/Pages/CheckUrdfPage.cpp

@@ -6,6 +6,7 @@
  *
  */
 #include <ROS2/Clock/PhysicallyStableClock.h>
+#include <ROS2/Communication/PublisherConfiguration.h>
 #include <ROS2/Communication/QoS.h>
 #include <ROS2/Communication/TopicConfiguration.h>
 #include <ROS2/Utilities/Controllers/PidConfiguration.h>
@@ -31,6 +32,7 @@ namespace ROS2
         // Reflect structs not strictly owned by any single component
         QoS::Reflect(context);
         TopicConfiguration::Reflect(context);
+        PublisherConfiguration::Reflect(context);
         VehicleDynamics::VehicleModelComponent::Reflect(context);
         ROS2::Controllers::PidConfiguration::Reflect(context);
         if (AZ::SerializeContext* serialize = azrtti_cast<AZ::SerializeContext*>(context))

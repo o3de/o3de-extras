@@ -6,7 +6,7 @@
  *
  */
 #include <AzCore/Serialization/EditContext.h>
-#include <ROS2/Manipulation/ManualMotorControllerComponent.h>
+#include <ROS2/Manipulation/MotorizedJoints/ManualMotorControllerComponent.h>
 #include <imgui/imgui.h>
 
 namespace ROS2
@@ -40,11 +40,7 @@ namespace ROS2
     void ManualMotorControllerComponent::DisplayControllerParameters()
     {
         ImGui::PushItemWidth(200.0f);
-        ImGui::SliderFloat(
-            "SetSpeed",
-            &m_setSpeed,
-            -5.0f,
-            5.0f);
+        ImGui::SliderFloat("SetSpeed", &m_setSpeed, -5.0f, 5.0f);
 
         ImGui::PopItemWidth();
 
