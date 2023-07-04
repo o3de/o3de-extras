@@ -317,10 +317,10 @@ namespace ROS2
     {
         for (auto& [jointName, jointInfo] : m_manipulationJoints)
         { // Set all target joint positions to their current positions.
-            auto joint = GetJointPosition(jointName);
-            if (joint.IsSuccess())
+            auto jointPosition = GetJointPosition(jointName);
+            if (jointPosition.IsSuccess())
             {
-                jointInfo.m_restPosition = joint.GetValue();
+                jointInfo.m_restPosition = jointPosition.GetValue();
             }
             else
             {

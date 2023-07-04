@@ -70,7 +70,5 @@ namespace ROS2
         rclcpp_action::CancelResponse GoalCancelledCallback(const std::shared_ptr<GoalHandle> goalHandle);
 
         void GoalAcceptedCallback(const std::shared_ptr<GoalHandle> goalHandle);
-
-        static constexpr int cancelGoalTimeout = 5;
     };
 } // namespace ROS2

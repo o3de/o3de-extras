@@ -44,7 +44,7 @@ namespace ROS2
         //! Cancel current trajectory goal.
         //! @param result Result of trajectory goal with explanation on why it was cancelled.
         //! @return nothing on success, error if the goal could not be cancelled.
-        virtual AZ::Outcome<void, AZStd::string> CancelTrajectoryGoal(TrajectoryResultPtr result) = 0;
+        virtual AZ::Outcome<void, AZStd::string> CancelTrajectoryGoal() = 0;
 
         //! Retrieve current trajectory goal status.
         //! @return Status of trajectory goal.

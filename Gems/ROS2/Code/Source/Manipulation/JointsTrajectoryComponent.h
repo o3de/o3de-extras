@@ -38,7 +38,7 @@ namespace ROS2
         //! @see ROS2::JointsTrajectoryRequestBus::StartTrajectoryGoal
         AZ::Outcome<void, AZStd::string> StartTrajectoryGoal(TrajectoryGoalPtr trajectoryGoal) override;
         //! @see ROS2::JointsTrajectoryRequestBus::CancelTrajectoryGoal
-        AZ::Outcome<void, AZStd::string> CancelTrajectoryGoal(TrajectoryResultPtr trajectoryResult) override;
+        AZ::Outcome<void, AZStd::string> CancelTrajectoryGoal() override;
         //! @see ROS2::JointsTrajectoryRequestBus::GetGoalStatus
         TrajectoryActionStatus GetGoalStatus() override;
 

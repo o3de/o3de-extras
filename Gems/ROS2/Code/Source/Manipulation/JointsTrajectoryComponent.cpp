@@ -171,15 +171,9 @@ namespace ROS2
         m_followTrajectoryServer->PublishFeedback(feedback);
     }
 
-    AZ::Outcome<void, AZStd::string> JointsTrajectoryComponent::CancelTrajectoryGoal(TrajectoryResultPtr result)
+    AZ::Outcome<void, AZStd::string> JointsTrajectoryComponent::CancelTrajectoryGoal()
     {
         m_trajectoryGoal.trajectory.points.clear();
-        AZStd::thread cancelJob(
-            [&]()
-            {
-                m_followTrajectoryServer->CancelGoal(result);
-            });
-        cancelJob.detach();
         m_trajectoryInProgress = false;
         return AZ::Success();
     }
@@ -195,6 +189,10 @@ namespace ROS2
         if (goalStatus == JointsTrajectoryRequests::TrajectoryActionStatus::Cancelled)
         {
             JointsManipulationRequestBus::Event(GetEntityId(), &JointsManipulationRequests::Stop);
+            auto result = std::make_shared<FollowJointTrajectoryActionServer::FollowJointTrajectory::Result>();
+            result->error_string = "User Cancelled";
+            result->error_code = FollowJointTrajectoryActionServer::FollowJointTrajectory::Result::SUCCESSFUL;
+            m_followTrajectoryServer->CancelGoal(result);
             m_followTrajectoryServer->SetGoalSuccess();
             return;
         }

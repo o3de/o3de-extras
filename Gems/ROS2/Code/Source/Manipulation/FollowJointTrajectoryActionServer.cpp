@@ -7,9 +7,7 @@
  */
 
 #include "FollowJointTrajectoryActionServer.h"
-#include <AzCore/Debug/Trace.h>
 #include <AzCore/std/functional.h>
-#include <AzCore/std/time.h>
 #include <ROS2/ROS2Bus.h>
 
 namespace ROS2
@@ -38,17 +36,8 @@ namespace ROS2
     void FollowJointTrajectoryActionServer::CancelGoal(std::shared_ptr<FollowJointTrajectory::Result> result)
     {
         AZ_Assert(m_goalHandle, "Invalid goal handle!");
-        if (m_goalHandle)
+        if (m_goalHandle && m_goalHandle->is_canceling())
         {
-            auto loopStart = AZStd::GetTimeNowSecond();
-            while (!m_goalHandle->is_canceling())
-            {
-                if (AZStd::GetTimeNowSecond() - loopStart > cancelGoalTimeout)
-                {
-                    AZ_Warning("FollowJointTrajectoryActionServer", false, "Waiting for goal handle to change timeout");
-                    return;
-                }
-            }
             AZ_Trace("FollowJointTrajectoryActionServer", "Cancelling goal\n");
             m_goalHandle->canceled(result);
         }
@@ -128,12 +117,8 @@ namespace ROS2
     rclcpp_action::CancelResponse FollowJointTrajectoryActionServer::GoalCancelledCallback(
         [[maybe_unused]] const std::shared_ptr<GoalHandle> goalHandle)
     { // Accept each cancel attempt
-        auto result = std::make_shared<FollowJointTrajectory::Result>();
-        result->error_string = "User Cancelled";
-        result->error_code = FollowJointTrajectory::Result::SUCCESSFUL;
-
         AZ::Outcome<void, AZStd::string> cancelOutcome;
-        JointsTrajectoryRequestBus::EventResult(cancelOutcome, m_entityId, &JointsTrajectoryRequests::CancelTrajectoryGoal, result);
+        JointsTrajectoryRequestBus::EventResult(cancelOutcome, m_entityId, &JointsTrajectoryRequests::CancelTrajectoryGoal);
 
         if (!cancelOutcome)
         { // This will not happen in simulation unless intentionally done for behavior validation
