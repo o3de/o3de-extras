@@ -187,33 +187,42 @@ namespace ROS2
             entity->Deactivate();
         }
 
-        if (!m_useArticulations)
-        {
-            auto joints = Utils::GetAllJoints(m_model->root_link_->child_links);
-            for (const auto& [name, jointPtr] : joints)
-            {
-                AZ_Assert(jointPtr, "joint %s is null", name.c_str());
-                AZ_TracePrintf(
-                    "CreatePrefabFromURDF",
-                    "Creating joint %s : %s -> %s\n",
-                    name.c_str(),
-                    jointPtr->parent_link_name.c_str(),
-                    jointPtr->child_link_name.c_str());
 
-                auto leadEntity = createdLinks.at(jointPtr->parent_link_name.c_str());
-                auto childEntity = createdLinks.at(jointPtr->child_link_name.c_str());
-                // check if both has RigidBody
-                if (leadEntity.IsSuccess() && childEntity.IsSuccess())
+        auto joints = Utils::GetAllJoints(m_model->root_link_->child_links);
+        for (const auto& [name, jointPtr] : joints)
+        {
+            AZ_Assert(jointPtr, "joint %s is null", name.c_str());
+            AZ_TracePrintf(
+                "CreatePrefabFromURDF",
+                "Creating joint %s : %s -> %s\n",
+                name.c_str(),
+                jointPtr->parent_link_name.c_str(),
+                jointPtr->child_link_name.c_str());
+
+            auto leadEntity = createdLinks.at(jointPtr->parent_link_name.c_str());
+            auto childEntity = createdLinks.at(jointPtr->child_link_name.c_str());
+
+
+            AZ::Entity* childEntityPtr = AzToolsFramework::GetEntityById(childEntity.GetValue());
+            if (childEntityPtr)
+            {
+                auto* component = Utils::GetGameOrEditorComponent<ROS2FrameComponent>(childEntityPtr);
+                if (component)
                 {
-                    AZStd::lock_guard<AZStd::mutex> lck(m_statusLock);
-                    auto result = m_jointsMaker.AddJointComponent(jointPtr, childEntity.GetValue(), leadEntity.GetValue());
-                    m_status.emplace(
-                        name, AZStd::string::format(" %s %llu", result.IsSuccess() ? "created as" : "Failed", result.GetValue()));
+                    component->SetJointName(AZStd::string(name.c_str(), name.length()));
                 }
-                else
-                {
-                    AZ_Warning("CreatePrefabFromURDF", false, "cannot create joint %s", name.c_str());
-                }
+            }
+            // check if both has RigidBody and we are not creating articulation
+            if (!m_useArticulations && leadEntity.IsSuccess() && childEntity.IsSuccess())
+            {
+                AZStd::lock_guard<AZStd::mutex> lck(m_statusLock);
+                auto result = m_jointsMaker.AddJointComponent(jointPtr, childEntity.GetValue(), leadEntity.GetValue());
+                m_status.emplace(
+                    name, AZStd::string::format(" %s %llu", result.IsSuccess() ? "created as" : "Failed", result.GetValue()));
+            }
+            else
+            {
+                AZ_Warning("CreatePrefabFromURDF", false, "cannot create joint %s", name.c_str());
             }
         }
 

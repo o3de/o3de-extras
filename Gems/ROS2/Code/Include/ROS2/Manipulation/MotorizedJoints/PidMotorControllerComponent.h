@@ -9,8 +9,8 @@
 
 #include <AzCore/Serialization/SerializeContext.h>
 #include <AzFramework/Entity/EntityDebugDisplayBus.h>
-#include <ROS2/Manipulation/JointMotorControllerComponent.h>
-#include <ROS2/Manipulation/PidMotorControllerBus.h>
+#include <ROS2/Manipulation/MotorizedJoints/JointMotorControllerComponent.h>
+#include <ROS2/Manipulation/MotorizedJoints/PidMotorControllerBus.h>
 #include <ROS2/Utilities/Controllers/PidConfiguration.h>
 
 namespace ROS2
