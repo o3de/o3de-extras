@@ -13,7 +13,6 @@
 #include <AzCore/Debug/Trace.h>
 #include <AzCore/std/string/string.h>
 #include <console_bridge/console.h>
-#include <urdf_model/model.h>
 
 namespace ROS2
 {
@@ -68,16 +67,18 @@ namespace ROS2
         CustomConsoleHandler customConsoleHandler;
     } // namespace UrdfParser::Internal
 
-    urdf::ModelInterfaceSharedPtr UrdfParser::Parse(const AZStd::string& xmlString)
+    sdf::Root* UrdfParser::Parse(const AZStd::string& xmlString)
     {
-        console_bridge::useOutputHandler(&Internal::customConsoleHandler);
+        // TODO: Figure out how to route the output handler
+        //console_bridge::useOutputHandler(&Internal::customConsoleHandler);
         Internal::CheckIfCurrentLocaleHasDotAsADecimalSeparator();
-        const auto ret = urdf::parseURDF(xmlString.c_str());
-        console_bridge::restorePreviousOutputHandler();
-        return ret;
+        sdf::Root* root = new sdf::Root();
+        [[maybe_unused]] auto ret = root->LoadSdfString(xmlString.c_str());
+        //console_bridge::restorePreviousOutputHandler();
+        return root;
     }
 
-    urdf::ModelInterfaceSharedPtr UrdfParser::ParseFromFile(const AZStd::string& filePath)
+    sdf::Root* UrdfParser::ParseFromFile(const AZStd::string& filePath)
     {
         std::ifstream istream(filePath.c_str());
         if (!istream)

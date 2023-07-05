@@ -143,7 +143,7 @@ namespace ROS2
                 m_prefabMaker.reset();
                 // Report the status of skipping this page
                 AZ_Printf("Wizard", "Wizard skips m_checkUrdfPage since there is no errors in URDF\n");
-                m_meshNames = Utils::GetMeshesFilenames(m_parsedUrdf->getRoot(), true, true);
+                m_meshNames = Utils::GetMeshesFilenames(m_parsedUrdf, true, true);
                 m_assetPage->ClearAssetsList();
             }
             else
@@ -179,8 +179,8 @@ namespace ROS2
     {
         if (m_parsedUrdf && m_assetPage->IsEmpty())
         {
-            auto collidersNames = Utils::GetMeshesFilenames(m_parsedUrdf->getRoot(), false, true);
-            auto visualNames = Utils::GetMeshesFilenames(m_parsedUrdf->getRoot(), true, false);
+            auto collidersNames = Utils::GetMeshesFilenames(m_parsedUrdf, false, true);
+            auto visualNames = Utils::GetMeshesFilenames(m_parsedUrdf, true, false);
 
             AZ::Uuid::FixedString dirSuffix;
             if (!m_params.empty())
@@ -267,7 +267,7 @@ namespace ROS2
     {
         if (m_parsedUrdf)
         {
-            AZStd::string robotName = AZStd::string(m_parsedUrdf->getName().c_str(), m_parsedUrdf->getName().size()) + ".prefab";
+            AZStd::string robotName = AZStd::string(m_parsedUrdf->Model()->Name().c_str(), m_parsedUrdf->Model()->Name().size()) + ".prefab";
             m_prefabMakerPage->setProposedPrefabName(robotName);
             QWizard::button(PrefabCreationButtonId)->setText(tr("Create Prefab"));
             QWizard::setOption(HavePrefabCreationButton, true);
@@ -372,7 +372,7 @@ namespace ROS2
         const bool useArticulation = m_prefabMakerPage->IsUseArticulations();
         m_prefabMaker = AZStd::make_unique<URDFPrefabMaker>(
             m_urdfPath.String(),
-            m_parsedUrdf,
+            &m_parsedUrdf,
             prefabPath.String(),
             m_urdfAssetsMapping,
             useArticulation,

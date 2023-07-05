@@ -19,7 +19,7 @@ namespace ROS2
     {
         m_fileDialog = new QFileDialog(this);
         m_fileDialog->setDirectory(QString::fromUtf8(AZ::Utils::GetProjectPath().data()));
-        m_fileDialog->setNameFilter("URDF, XACRO (*.urdf *.xacro)");
+        m_fileDialog->setNameFilter("URDF, XACRO, SDF (*.urdf *.xacro *.sdf)");
         m_button = new QPushButton("...", this);
         m_textEdit = new QLineEdit("", this);
         m_copyFiles = new QCheckBox(tr("Import meshes during URDF load"), this);

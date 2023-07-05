@@ -22,7 +22,7 @@ namespace ROS2
     {
     public:
         VisualsMaker(
-            const std::map<std::string, urdf::MaterialSharedPtr>& materials,
+            const std::map<std::string, const sdf::Material*>& materials,
             const AZStd::shared_ptr<Utils::UrdfAssetMap>& urdfAssetsMapping);
 
         //! Add zero, one or many visual elements to a given entity (depending on link content).
@@ -30,14 +30,14 @@ namespace ROS2
         //! @param link A parsed URDF tree link node which could hold information about visuals.
         //! @param entityId A non-active entity which will be affected.
         //! @return List containing any entities created.
-        AZStd::vector<AZ::EntityId> AddVisuals(urdf::LinkSharedPtr link, AZ::EntityId entityId) const;
+        AZStd::vector<AZ::EntityId> AddVisuals(const sdf::Link* link, AZ::EntityId entityId) const;
 
     private:
-        AZ::EntityId AddVisual(urdf::VisualSharedPtr visual, AZ::EntityId entityId, const AZStd::string& generatedName) const;
-        void AddVisualToEntity(urdf::VisualSharedPtr visual, AZ::EntityId entityId) const;
-        void AddMaterialForVisual(urdf::VisualSharedPtr visual, AZ::EntityId entityId) const;
+        AZ::EntityId AddVisual(const sdf::Visual* visual, AZ::EntityId entityId, const AZStd::string& generatedName) const;
+        void AddVisualToEntity(const sdf::Visual* visual, AZ::EntityId entityId) const;
+        void AddMaterialForVisual(const sdf::Visual* visual, AZ::EntityId entityId) const;
 
-        AZStd::unordered_map<AZStd::string, urdf::MaterialSharedPtr> m_materials;
+        AZStd::unordered_map<AZStd::string, const sdf::Material*> m_materials;
         AZStd::shared_ptr<Utils::UrdfAssetMap> m_urdfAssetsMapping;
     };
 } // namespace ROS2

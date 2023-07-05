@@ -22,6 +22,6 @@ namespace ROS2
         //! Add zero or one inertial and joints elements to a given entity (depending on link content).
         //! @param link A pointer to a parsed URDF link.
         //! @param entityId A non-active entity which will be populated according to inertial content.
-        void AddArticulationLink(urdf::LinkSharedPtr link, AZ::EntityId entityId) const;
+        void AddArticulationLink(const sdf::Link* link, AZ::EntityId entityId) const;
     };
 } // namespace ROS2

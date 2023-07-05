@@ -39,25 +39,25 @@ namespace ROS2
 
         //! Builds .pxmeshes for every collider in link collider mesh.
         //! @param link A parsed URDF tree link node which could hold information about colliders.
-        void BuildColliders(urdf::LinkSharedPtr link);
+        void BuildColliders(const sdf::Link* link);
         //! Add zero, one or many collider elements (depending on link content).
         //! @param link A parsed URDF tree link node which could hold information about colliders.
         //! @param entityId A non-active entity which will be affected.
-        void AddColliders(urdf::LinkSharedPtr link, AZ::EntityId entityId);
+        void AddColliders(const sdf::Link* link, AZ::EntityId entityId);
         //! Sends meshes required for colliders to asset processor.
         //! @param buildReadyCb Function to call when the processing finishes.
         void ProcessMeshes(BuildReadyCallback notifyBuildReadyCb);
 
     private:
         void FindWheelMaterial();
-        void BuildCollider(urdf::CollisionSharedPtr collision);
+        void BuildCollider(const sdf::Collision* collision);
         void AddCollider(
-            urdf::CollisionSharedPtr collision,
+            const sdf::Collision* collision,
             AZ::EntityId entityId,
             const AZStd::string& generatedName,
             const AZ::Data::Asset<Physics::MaterialAsset>& materialAsset);
         void AddColliderToEntity(
-            urdf::CollisionSharedPtr collision, AZ::EntityId entityId, const AZ::Data::Asset<Physics::MaterialAsset>& materialAsset) const;
+            const sdf::Collision* collision, AZ::EntityId entityId, const AZ::Data::Asset<Physics::MaterialAsset>& materialAsset) const;
 
         AZ::Data::Asset<Physics::MaterialAsset> m_wheelMaterial;
         AZStd::shared_ptr<Utils::UrdfAssetMap> m_urdfAssetsMapping;

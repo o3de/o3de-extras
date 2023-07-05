@@ -21,7 +21,7 @@ namespace ROS2::Utils::xacro
     struct ExecutionOutcome
     {
         //! Parsed URDF from successful xacro's output
-        urdf::ModelInterfaceSharedPtr m_urdfHandle;
+        sdf::Root* m_urdfHandle;
         //! Return code of 'xacro' program
         bool m_succeed{ false };
         //! Called program name

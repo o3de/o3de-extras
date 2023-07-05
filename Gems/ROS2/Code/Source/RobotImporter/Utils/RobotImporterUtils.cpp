@@ -90,11 +90,11 @@ namespace ROS2
         return false;
     }
 
-    bool Utils::IsWheelURDFHeuristics(const urdf::LinkConstSharedPtr& link)
+    bool Utils::IsWheelURDFHeuristics(const sdf::Link* link)
     {
         const AZStd::regex wheel_regex("wheel[_]||[_]wheel");
         const AZStd::regex joint_regex("(?i)joint");
-        const AZStd::string link_name(link->name.c_str(), link->name.size());
+        const AZStd::string link_name(link->Name().c_str(), link->Name().size());
         AZStd::smatch match;
         // Check if name is catchy for wheel
         if (!AZStd::regex_search(link_name, match, wheel_regex))
@@ -107,115 +107,131 @@ namespace ROS2
             return false;
         }
         // Wheels need to have collision and visuals
-        if (!(link->collision && link->visual))
+        if ((link->CollisionCount() == 0) || (link->VisualCount() == 0))
         {
             return false;
         }
         // Parent joint needs to be CONTINOUS
+        // TODO: Figure out parent/child joints
+        /*
         if (link->parent_joint && link->parent_joint->type == urdf::Joint::CONTINUOUS)
         {
             return true;
         }
+        */
         return false;
     }
 
-    AZ::Transform Utils::GetWorldTransformURDF(const urdf::LinkSharedPtr& link, AZ::Transform t)
+    AZ::Transform Utils::GetWorldTransformURDF(const sdf::Link* link, AZ::Transform t)
     {
+        // TODO: Figure out parent/child links
+        /*
         if (link->getParent() != nullptr)
         {
             t = URDF::TypeConversions::ConvertPose(link->parent_joint->parent_to_joint_origin_transform) * t;
             return GetWorldTransformURDF(link->getParent(), t);
         }
+        */
         return t;
     }
 
-    AZStd::unordered_map<AZStd::string, urdf::LinkSharedPtr> Utils::GetAllLinks(const std::vector<urdf::LinkSharedPtr>& childLinks)
+    AZStd::unordered_map<AZStd::string, const sdf::Link*> Utils::GetAllLinks(const std::vector<const sdf::Link*>& childLinks)
     {
-        AZStd::unordered_map<AZStd::string, urdf::LinkSharedPtr> pointers;
-        AZStd::function<void(const std::vector<urdf::LinkSharedPtr>&)> link_visitor =
-            [&](const std::vector<urdf::LinkSharedPtr>& child_links) -> void
+        AZStd::unordered_map<AZStd::string, const sdf::Link*> pointers;
+        AZStd::function<void(const std::vector<const sdf::Link*>&)> link_visitor =
+            [&](const std::vector<const sdf::Link*>& child_links) -> void
         {
-            for (const urdf::LinkSharedPtr& child_link : child_links)
+            for (const sdf::Link* child_link : child_links)
             {
-                AZStd::string link_name(child_link->name.c_str(), child_link->name.size());
+                AZStd::string link_name(child_link->Name().c_str(), child_link->Name().size());
                 pointers[link_name] = child_link;
-                link_visitor(child_link->child_links);
+                // TODO: Figure out parent/child links
+                //link_visitor(child_link->child_links);
             }
         };
         link_visitor(childLinks);
         return pointers;
     }
 
-    AZStd::unordered_map<AZStd::string, urdf::JointSharedPtr> Utils::GetAllJoints(const std::vector<urdf::LinkSharedPtr>& childLinks)
+    AZStd::unordered_map<AZStd::string, const sdf::Joint*> Utils::GetAllJoints(const std::vector<const sdf::Link*>& childLinks)
     {
-        AZStd::unordered_map<AZStd::string, urdf::JointSharedPtr> joints;
-        AZStd::function<void(const std::vector<urdf::LinkSharedPtr>&)> link_visitor =
-            [&](const std::vector<urdf::LinkSharedPtr>& child_links) -> void
+        AZStd::unordered_map<AZStd::string, const sdf::Joint*> joints;
+        AZStd::function<void(const std::vector<const sdf::Link*>&)> link_visitor =
+            [&](const std::vector<const sdf::Link*>& child_links) -> void
         {
+            // TODO: Figure out parent/child links
+            /*
             for (auto child_link : child_links)
             {
                 const auto& joint = child_link->parent_joint;
-                AZStd::string joint_name(joint->name.c_str(), joint->name.size());
+                AZStd::string joint_name(joint->Name().c_str(), joint->N()ame.size());
                 joints[joint_name] = joint;
-                link_visitor(child_link->child_links);
+                //link_visitor(child_link->child_links);
             }
+            */
         };
         link_visitor(childLinks);
         return joints;
     }
 
-    AZStd::unordered_set<AZStd::string> Utils::GetMeshesFilenames(const urdf::LinkConstSharedPtr& rootLink, bool visual, bool colliders)
+    AZStd::unordered_set<AZStd::string> Utils::GetMeshesFilenames(const sdf::Root* rootLink, bool visual, bool colliders)
     {
         AZStd::unordered_set<AZStd::string> filenames;
-        const auto addFilenameFromGeometry = [&filenames](const urdf::GeometrySharedPtr& geometry)
+        const auto addFilenameFromGeometry = [&filenames](const sdf::Geometry* geometry)
         {
-            if (geometry->type == urdf::Geometry::MESH)
+            if (geometry->Type() == sdf::GeometryType::MESH)
             {
-                auto pMesh = std::dynamic_pointer_cast<urdf::Mesh>(geometry);
+                auto pMesh = geometry->MeshShape();
                 if (pMesh)
                 {
-                    filenames.insert(AZStd::string(pMesh->filename.c_str(), pMesh->filename.size()));
+                    filenames.insert(AZStd::string(pMesh->Uri().c_str(), pMesh->Uri().size()));
                 }
             }
         };
 
-        const auto processLink = [&addFilenameFromGeometry, visual, colliders](const urdf::Link& link)
+        const auto processLink = [&addFilenameFromGeometry, visual, colliders](const sdf::Link* link)
         {
             if (visual)
             {
-                for (auto& p : link.visual_array)
+                for (uint64_t index = 0; index < link->VisualCount(); index++)
                 {
-                    addFilenameFromGeometry(p->geometry);
+                    addFilenameFromGeometry(link->VisualByIndex(index)->Geom());
                 }
             }
             if (colliders)
             {
-                for (auto& p : link.collision_array)
+                for (uint64_t index = 0; index < link->CollisionCount(); index++)
                 {
-                    addFilenameFromGeometry(p->geometry);
+                    addFilenameFromGeometry(link->CollisionByIndex(index)->Geom());
                 }
             }
         };
 
-        AZStd::function<void(const std::vector<urdf::LinkConstSharedPtr>&)> linkVisitor =
-            [&](const std::vector<urdf::LinkConstSharedPtr>& child_links) -> void
+        AZStd::function<void(const std::vector<const sdf::Link*>&)> linkVisitor =
+            [&](const std::vector<const sdf::Link*>& child_links) -> void
         {
             for (auto link : child_links)
             {
-                processLink(*link);
-                std::vector<urdf::LinkConstSharedPtr> childVector(link->child_links.size());
+                processLink(link);
+                // TODO: Figure out parent/child
+                /*
+                std::vector<const sdf::Link*> childVector(link->child_links.size());
                 std::transform(
                     link->child_links.begin(),
                     link->child_links.end(),
                     childVector.begin(),
-                    [](const urdf::LinkSharedPtr& p)
+                    [](const sdf::Link* p)
                     {
-                        return urdf::const_pointer_cast<urdf::Link>(p);
+                        return p;
                     });
                 linkVisitor(childVector);
+                */
             }
         };
-        linkVisitor({ rootLink });
+        for (uint64_t index = 0; index < rootLink->Model()->LinkCount(); index++)
+        {
+            linkVisitor({ rootLink->Model()->LinkByIndex(index) });
+        }
         return filenames;
     }
 

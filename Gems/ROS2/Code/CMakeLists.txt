@@ -140,8 +140,10 @@ if(PAL_TRAIT_BUILD_HOST_TOOLS)
                 3rdParty::sdformat
     )
 
-    find_package(urdfdom)
-    target_link_libraries(${gem_name}.Editor.Static PUBLIC urdfdom::urdfdom_model)
+    #find_package(urdfdom REQUIRED)
+    find_package(sdformat13 REQUIRED)
+    #target_link_libraries(${gem_name}.Editor.Static PUBLIC urdfdom::urdfdom_model ${sdformat13_LIBRARIES})
+    target_link_libraries(${gem_name}.Editor.Static PUBLIC ${sdformat13_LIBRARIES})
 
     ly_add_target(
         NAME ${gem_name}.Editor GEM_MODULE

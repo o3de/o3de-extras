@@ -20,7 +20,7 @@ namespace ROS2
 {
 
     JointsMaker::JointsMakerResult JointsMaker::AddJointComponent(
-        urdf::JointSharedPtr joint, AZ::EntityId followColliderEntityId, AZ::EntityId leadColliderEntityId) const
+        const sdf::Joint* joint, AZ::EntityId followColliderEntityId, AZ::EntityId leadColliderEntityId) const
     {
         AZ::Entity* followColliderEntity = AzToolsFramework::GetEntityById(followColliderEntityId);
         PhysX::EditorJointComponent* jointComponent = nullptr;
@@ -31,7 +31,7 @@ namespace ROS2
         // {1,0,0} to a vector given by the URDF joint need to be found. Heavily suboptimal element in this conversion is needed of
         // converting the unit quaternion to Euler vector.
         const AZ::Vector3 o3de_joint_dir{ 1.0, 0.0, 0.0 };
-        const AZ::Vector3 joint_axis = URDF::TypeConversions::ConvertVector3(joint->axis);
+        const AZ::Vector3 joint_axis = URDF::TypeConversions::ConvertVector3(joint->Axis()->Xyz());
         const auto quaternion =
             joint_axis.IsZero() ? AZ::Quaternion::CreateIdentity() : AZ::Quaternion::CreateShortestArc(o3de_joint_dir, joint_axis);
 
@@ -44,14 +44,14 @@ namespace ROS2
             quaternion.GetW());
         const AZ::Vector3 rotation = quaternion.GetEulerDegrees();
 
-        switch (joint->type)
+        switch (joint->Type())
         {
-        case urdf::Joint::FIXED:
+        case sdf::JointType::FIXED:
             {
                 jointComponent = followColliderEntity->CreateComponent<PhysX::EditorFixedJointComponent>();
             }
             break;
-        case urdf::Joint::PRISMATIC:
+        case sdf::JointType::PRISMATIC:
             {
                 jointComponent = followColliderEntity->CreateComponent<PhysX::EditorPrismaticJointComponent>();
                 followColliderEntity->Activate();
@@ -66,12 +66,12 @@ namespace ROS2
                     AZ::EntityComponentIdPair(followColliderEntityId, jointComponent->GetId()),
                     &PhysX::EditorJointRequests::SetLinearValuePair,
                     PhysX::JointsComponentModeCommon::ParameterNames::LinearLimits,
-                    PhysX::AngleLimitsFloatPair(joint->limits->upper, joint->limits->lower));
+                    PhysX::AngleLimitsFloatPair(joint->Axis()->Upper(), joint->Axis()->Lower()));
 
                 followColliderEntity->Deactivate();
             }
             break;
-        case urdf::Joint::CONTINUOUS:
+        case sdf::JointType::CONTINUOUS:
             { // Implemented as Hinge with angular limit disabled
                 jointComponent = followColliderEntity->CreateComponent<PhysX::EditorHingeJointComponent>();
                 followColliderEntity->Activate();
@@ -89,20 +89,20 @@ namespace ROS2
                 followColliderEntity->Deactivate();
             }
             break;
-        case urdf::Joint::REVOLUTE:
+        case sdf::JointType::REVOLUTE:
             { // Hinge
                 jointComponent = followColliderEntity->CreateComponent<PhysX::EditorHingeJointComponent>();
                 followColliderEntity->Activate();
 
-                const double limitUpper = AZ::RadToDeg(joint->limits->upper);
-                const double limitLower = AZ::RadToDeg(joint->limits->lower);
+                const double limitUpper = AZ::RadToDeg(joint->Axis()->Upper());
+                const double limitLower = AZ::RadToDeg(joint->Axis()->Lower());
                 AZ_Printf(
                     "JointsMaker",
                     "Setting limits : upper: %.1f lower: %.1f (URDF:%f,%f)",
                     limitUpper,
                     limitLower,
-                    joint->limits->upper,
-                    joint->limits->lower);
+                    joint->Axis()->Upper(),
+                    joint->Axis()->Lower());
                 PhysX::EditorJointRequestBus::Event(
                     AZ::EntityComponentIdPair(followColliderEntityId, jointComponent->GetId()),
                     [&rotation, &limitLower, &limitUpper](PhysX::EditorJointRequests* editorJointRequest)
@@ -116,8 +116,8 @@ namespace ROS2
             }
             break;
         default:
-            AZ_Warning("AddJointComponent", false, "Unknown or unsupported joint type %d for joint %s", joint->type, joint->name.c_str());
-            return AZ::Failure(AZStd::string::format("unsupported joint type : %d", joint->type));
+            AZ_Warning("AddJointComponent", false, "Unknown or unsupported joint type %d for joint %s", (int)joint->Type(), joint->Name().c_str());
+            return AZ::Failure(AZStd::string::format("unsupported joint type : %d", (int)joint->Type()));
         }
 
         followColliderEntity->Activate();
