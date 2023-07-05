@@ -8,9 +8,9 @@
 
 #include "FileSelectionPage.h"
 #include <AzCore/Utils/Utils.h>
+#include <QFileInfo>
 #include <QHBoxLayout>
 #include <QVBoxLayout>
-#include <QFileInfo>
 
 namespace ROS2
 {
@@ -54,7 +54,7 @@ namespace ROS2
         emit completeChanged();
     }
 
-    void FileSelectionPage::onEditingFinished() 
+    void FileSelectionPage::onEditingFinished()
     {
         QFileInfo urdfFile(m_textEdit->text());
         m_fileExists = urdfFile.exists() && urdfFile.isFile();

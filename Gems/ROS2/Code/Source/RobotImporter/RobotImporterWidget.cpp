@@ -13,6 +13,7 @@
 #include "RobotImporterWidget.h"
 #include "URDF/URDFPrefabMaker.h"
 #include "URDF/UrdfParser.h"
+#include "Utils/FilePath.h"
 #include "Utils/RobotImporterUtils.h"
 #include <QApplication>
 #include <QScreen>
@@ -82,7 +83,7 @@ namespace ROS2
         QString report;
         if (!m_urdfPath.empty())
         {
-            if (IsFileXacro(m_urdfPath))
+            if (Utils::IsFileXacro(m_urdfPath))
             {
                 Utils::xacro::ExecutionOutcome outcome = Utils::xacro::ParseXacro(m_urdfPath.String(), m_params);
                 if (outcome)
@@ -125,7 +126,7 @@ namespace ROS2
                     return;
                 }
             }
-            else if (IsFileUrdf(m_urdfPath))
+            else if (Utils::IsFileUrdf(m_urdfPath))
             {
                 // standard URDF
                 m_parsedUrdf = UrdfParser::ParseFromFile(m_urdfPath.Native());
@@ -265,7 +266,7 @@ namespace ROS2
         {
             m_params.clear();
             m_urdfPath = AZStd::string(m_fileSelectPage->getFileName().toUtf8().constData());
-            if (IsFileXacro(m_urdfPath))
+            if (Utils::IsFileXacro(m_urdfPath))
             {
                 m_params = Utils::xacro::GetParameterFromXacroFile(m_urdfPath.String());
                 AZ_Printf("RobotImporterWidget", "Xacro has %d arguments\n", m_params.size());
@@ -418,23 +419,6 @@ namespace ROS2
     {
         QMessageBox::critical(this, QObject::tr("Error"), errorMessage);
         AZ_Error("RobotImporterWidget", false, "%s", errorMessage.toUtf8().constData());
-    }
-
-    AZStd::string RobotImporterWidget::GetCapitalizedExtension(const AZ::IO::Path& filename) const
-    {
-        AZStd::string extension{ filename.Extension().Native() };
-        AZStd::to_upper(extension.begin(), extension.end());
-        return extension;
-    }
-
-    bool RobotImporterWidget::IsFileXacro(const AZ::IO::Path& filename) const
-    {
-        return filename.HasExtension() && GetCapitalizedExtension(filename) == ".XACRO";
-    }
-
-    bool RobotImporterWidget::IsFileUrdf(const AZ::IO::Path& filename) const
-    {
-        return filename.HasExtension() && GetCapitalizedExtension(filename) == ".URDF";
     }
 
 } // namespace ROS2
