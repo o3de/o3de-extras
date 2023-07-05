@@ -37,6 +37,13 @@ namespace ROS2
         //! If it does not exist or some other error happened, error message is returned.
         virtual AZ::Outcome<JointPosition, AZStd::string> GetJointPosition(const AZStd::string& jointName) = 0;
 
+        //! Get velocity of a joint by name.
+        //! Works with hinge joints and articulation links (I hope, lol, maybe it doesn't).
+        //! @param jointName name of the joint. Use names acquired from GetJoints() query.
+        //! @return outcome with velocity if joint exists.
+        //! If it does not exist or some other error happened, error message is returned.
+        virtual AZ::Outcome<JointVelocity, AZStd::string> GetJointVelocity(const AZStd::string& jointName) = 0;
+
         //! Return positions of all single DOF joints.
         //! @return a vector of all joints relative positions in degree of motion range or error message.
         virtual JointsPositionsMap GetAllJointsPositions() = 0;

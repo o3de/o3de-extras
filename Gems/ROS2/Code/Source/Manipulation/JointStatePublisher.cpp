@@ -43,10 +43,12 @@ namespace ROS2
             AZ::Outcome<float, AZStd::string> result;
             JointsManipulationRequestBus::EventResult(result, m_context.m_entityId, &JointsManipulationRequests::GetJointPosition, jointName);
             auto currentJointPosition = result.GetValue();
+            JointsManipulationRequestBus::EventResult(result, m_context.m_entityId, &JointsManipulationRequests::GetJointVelocity, jointName);
+            auto currentJointVelocity = result.GetValue();
 
             m_jointStateMsg.name[i] = jointName.c_str();
             m_jointStateMsg.position[i] = currentJointPosition;
-            m_jointStateMsg.velocity[i] = 0.0;
+            m_jointStateMsg.velocity[i] = currentJointVelocity;
             m_jointStateMsg.effort[i] = 0.0;
             i++;
         }

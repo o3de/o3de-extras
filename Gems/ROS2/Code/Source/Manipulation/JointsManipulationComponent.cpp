@@ -222,6 +222,30 @@ namespace ROS2
         return AZ::Success(position);
     }
 
+    AZ::Outcome<JointVelocity, AZStd::string> JointsManipulationComponent::GetJointVelocity(const AZStd::string& jointName)
+    {
+        if (!m_manipulationJoints.contains(jointName))
+        {
+            return AZ::Failure(AZStd::string::format("Joint %s does not exist", jointName.c_str()));
+        }
+
+        auto jointInfo = m_manipulationJoints.at(jointName);
+        float velocity{ 0 };
+        if (jointInfo.m_isArticulation)
+        {
+            PhysX::ArticulationJointRequestBus::EventResult(
+                    velocity,
+                    jointInfo.m_entityComponentIdPair.GetEntityId(),
+                    &PhysX::ArticulationJointRequests::GetJointVelocity,
+                    jointInfo.m_axis);
+        }
+        else
+        {
+            PhysX::JointRequestBus::EventResult(velocity, jointInfo.m_entityComponentIdPair, &PhysX::JointRequests::GetVelocity);
+        }
+        return AZ::Success(velocity);
+    }
+
     JointsManipulationRequests::JointsPositionsMap JointsManipulationComponent::GetAllJointsPositions()
     {
         JointsManipulationRequests::JointsPositionsMap positions;
