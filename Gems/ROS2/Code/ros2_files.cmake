@@ -61,6 +61,8 @@ set(FILES
         Source/Odometry/ROS2WheelOdometry.h
         Source/Odometry/ROS2OdometryCovariance.cpp
         Source/Odometry/ROS2OdometryCovariance.h
+        Source/NPC/VelocitySplinePublisher.cpp
+        Source/NPC/VelocitySplinePublisher.h
         Source/RobotControl/Ackermann/AckermannSubscriptionHandler.cpp
         Source/RobotControl/Ackermann/AckermannSubscriptionHandler.h
         Source/RobotControl/ControlConfiguration.cpp

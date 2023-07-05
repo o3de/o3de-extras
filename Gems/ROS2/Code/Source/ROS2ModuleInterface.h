@@ -16,6 +16,7 @@
 #include <Lidar/LidarRegistrarSystemComponent.h>
 #include <Lidar/ROS2LidarSensorComponent.h>
 #include <Lidar/ROS2Lidar2DSensorComponent.h>
+#include <NPC/VelocitySplinePublisher.h>
 #include <Odometry/ROS2OdometrySensorComponent.h>
 #include <Odometry/ROS2WheelOdometry.h>
 #include <ROS2/Frame/ROS2FrameComponent.h>
@@ -80,6 +81,11 @@ namespace ROS2
                     JointPublisherComponent::CreateDescriptor(),
                     ManipulatorControllerComponent::CreateDescriptor(),
                     PidMotorControllerComponent::CreateDescriptor(),
+<<<<<<< HEAD
+=======
+                    FollowingCameraComponent::CreateDescriptor(),
+                    VelocitySplinePublisher::CreateDescriptor(),
+>>>>>>> 1e903f7 (Controller that publish cmd_vel twist message w.r.t the spline.)
                 });
         }
 
