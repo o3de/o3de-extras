@@ -16,6 +16,7 @@
 #include <Lidar/LidarRegistrarSystemComponent.h>
 #include <Lidar/ROS2Lidar2DSensorComponent.h>
 #include <Lidar/ROS2LidarSensorComponent.h>
+#include <NPC/VelocitySplinePublisher.h>
 #include <Odometry/ROS2OdometrySensorComponent.h>
 #include <Odometry/ROS2WheelOdometry.h>
 #include <ROS2/Frame/ROS2FrameComponent.h>
@@ -82,6 +83,7 @@ namespace ROS2
                     ManipulatorControllerComponent::CreateDescriptor(),
                     PidMotorControllerComponent::CreateDescriptor(),
                     FollowingCameraComponent::CreateDescriptor(),
+                    VelocitySplinePublisher::CreateDescriptor(),
                 });
         }
 
