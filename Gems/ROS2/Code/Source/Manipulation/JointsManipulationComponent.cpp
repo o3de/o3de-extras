@@ -316,16 +316,9 @@ namespace ROS2
     void JointsManipulationComponent::Stop()
     {
         for (auto& [jointName, jointInfo] : m_manipulationJoints)
-        { // Set all target joint positions to their current positions.
-            auto jointPosition = GetJointPosition(jointName);
-            if (jointPosition.IsSuccess())
-            {
-                jointInfo.m_restPosition = jointPosition.GetValue();
-            }
-            else
-            {
-                AZ_Warning("JointsManipulationComponent", false, "Unable to get joint position for %s", jointName.c_str());
-            }
+        { // Set all target joint positions to their current positions. There is no need to check if the outcome is successful, because
+          // jointName is always valid.
+            jointInfo.m_restPosition = GetJointPosition(jointName).GetValue();
         }
     }
 
