@@ -222,6 +222,30 @@ namespace ROS2
         return AZ::Success(position);
     }
 
+    AZ::Outcome<JointVelocity, AZStd::string> JointsManipulationComponent::GetJointVelocity(const AZStd::string& jointName)
+    {
+        if (!m_manipulationJoints.contains(jointName))
+        {
+            return AZ::Failure(AZStd::string::format("Joint %s does not exist", jointName.c_str()));
+        }
+
+        auto jointInfo = m_manipulationJoints.at(jointName);
+        float velocity{ 0 };
+        if (jointInfo.m_isArticulation)
+        {
+            PhysX::ArticulationJointRequestBus::EventResult(
+                    velocity,
+                    jointInfo.m_entityComponentIdPair.GetEntityId(),
+                    &PhysX::ArticulationJointRequests::GetJointVelocity,
+                    jointInfo.m_axis);
+        }
+        else
+        {
+            PhysX::JointRequestBus::EventResult(velocity, jointInfo.m_entityComponentIdPair, &PhysX::JointRequests::GetVelocity);
+        }
+        return AZ::Success(velocity);
+    }
+
     JointsManipulationRequests::JointsPositionsMap JointsManipulationComponent::GetAllJointsPositions()
     {
         JointsManipulationRequests::JointsPositionsMap positions;
@@ -230,6 +254,92 @@ namespace ROS2
             positions[jointName] = GetJointPosition(jointName).GetValue();
         }
         return positions;
+    }
+
+    JointsManipulationRequests::JointsVelocitiesMap JointsManipulationComponent::GetAllJointsVelocities()
+    {
+        JointsManipulationRequests::JointsVelocitiesMap velocities;
+        for (const auto& [jointName, jointInfo] : m_manipulationJoints)
+        {
+            velocities[jointName] = GetJointVelocity(jointName).GetValue();
+        }
+        return velocities;
+    }
+
+    AZ::Outcome<JointEffort, AZStd::string> JointsManipulationComponent::GetJointEffort(const AZStd::string& jointName)
+    {
+        if (!m_manipulationJoints.contains(jointName))
+        {
+            return AZ::Failure(AZStd::string::format("Joint %s does not exist", jointName.c_str()));
+        }
+
+        auto jointInfo = m_manipulationJoints.at(jointName);
+        float effort {0};
+
+        if (jointInfo.m_isArticulation) {
+            bool is_acceleration_driven{false};
+            PhysX::ArticulationJointRequestBus::EventResult(
+                    is_acceleration_driven,
+                    jointInfo.m_entityComponentIdPair.GetEntityId(),
+                    &PhysX::ArticulationJointRequests::IsAccelerationDrive,
+                    jointInfo.m_axis);
+
+            if (!is_acceleration_driven) {
+
+                float stiffness{0};
+                float damping{0};
+                PhysX::ArticulationJointRequestBus::EventResult(
+                        stiffness,
+                        jointInfo.m_entityComponentIdPair.GetEntityId(),
+                        &PhysX::ArticulationJointRequests::GetDriveStiffness,
+                        jointInfo.m_axis);
+                PhysX::ArticulationJointRequestBus::EventResult(
+                        damping,
+                        jointInfo.m_entityComponentIdPair.GetEntityId(),
+                        &PhysX::ArticulationJointRequests::GetDriveDamping,
+                        jointInfo.m_axis);
+
+                float target_pos{0};
+                float position{0};
+                PhysX::ArticulationJointRequestBus::EventResult(
+                        target_pos,
+                        jointInfo.m_entityComponentIdPair.GetEntityId(),
+                        &PhysX::ArticulationJointRequests::GetDriveTarget,
+                        jointInfo.m_axis);
+                PhysX::ArticulationJointRequestBus::EventResult(
+                        position,
+                        jointInfo.m_entityComponentIdPair.GetEntityId(),
+                        &PhysX::ArticulationJointRequests::GetJointPosition,
+                        jointInfo.m_axis);
+
+                float target_vel{0};
+                float velocity{0};
+                PhysX::ArticulationJointRequestBus::EventResult(
+                        target_vel,
+                        jointInfo.m_entityComponentIdPair.GetEntityId(),
+                        &PhysX::ArticulationJointRequests::GetDriveTargetVelocity,
+                        jointInfo.m_axis);
+                PhysX::ArticulationJointRequestBus::EventResult(
+                        velocity,
+                        jointInfo.m_entityComponentIdPair.GetEntityId(),
+                        &PhysX::ArticulationJointRequests::GetJointVelocity,
+                        jointInfo.m_axis);
+
+                effort = stiffness * -(position - target_pos) + damping * (target_vel - velocity);
+            }
+        }
+
+        return AZ::Success(effort);
+    }
+
+    JointsManipulationRequests::JointsEffortsMap JointsManipulationComponent::GetAllJointsEfforts()
+    {
+        JointsManipulationRequests::JointsEffortsMap efforts;
+        for (const auto& [jointName, jointInfo] : m_manipulationJoints)
+        {
+            efforts[jointName] = GetJointEffort(jointName).GetValue();
+        }
+        return efforts;
     }
 
     AZ::Outcome<void, AZStd::string> JointsManipulationComponent::MoveJointToPosition(
