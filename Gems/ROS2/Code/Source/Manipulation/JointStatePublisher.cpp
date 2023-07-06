@@ -45,11 +45,13 @@ namespace ROS2
             auto currentJointPosition = result.GetValue();
             JointsManipulationRequestBus::EventResult(result, m_context.m_entityId, &JointsManipulationRequests::GetJointVelocity, jointName);
             auto currentJointVelocity = result.GetValue();
+            JointsManipulationRequestBus::EventResult(result, m_context.m_entityId, &JointsManipulationRequests::GetJointEffort, jointName);
+            auto currentJointEffort = result.GetValue();
 
             m_jointStateMsg.name[i] = jointName.c_str();
             m_jointStateMsg.position[i] = currentJointPosition;
             m_jointStateMsg.velocity[i] = currentJointVelocity;
-            m_jointStateMsg.effort[i] = 0.0;
+            m_jointStateMsg.effort[i] = currentJointEffort;
             i++;
         }
         m_jointStatePublisher->publish(m_jointStateMsg);

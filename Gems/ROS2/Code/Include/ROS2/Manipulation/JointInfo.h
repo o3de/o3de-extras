@@ -18,6 +18,7 @@ namespace ROS2
 {
     using JointPosition = float;
     using JointVelocity = float;
+    using JointEffort = float;
     struct JointInfo
     {
         AZ_TYPE_INFO(JointInfo, "{2E33E4D0-78DD-436D-B3AB-F752E744F421}");
