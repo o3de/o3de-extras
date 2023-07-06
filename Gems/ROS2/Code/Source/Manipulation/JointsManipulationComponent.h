@@ -50,6 +50,8 @@ namespace ROS2
         JointsVelocitiesMap GetAllJointsVelocities() override;
         //! @see ROS2::JointsManipulationRequestBus::GetJointEffort
         AZ::Outcome<JointEffort, AZStd::string> GetJointEffort(const AZStd::string& jointName) override;
+        //! @see ROS2::JointsManipulationRequestBus::GetAllJointsEfforts
+        JointsEffortsMap GetAllJointsEfforts() override;
         //! @see ROS2::JointsManipulationRequestBus::MoveJointsToPositions
         AZ::Outcome<void, AZStd::string> MoveJointsToPositions(const JointsPositionsMap& positions) override;
         //! @see ROS2::JointsManipulationRequestBus::MoveJointToPosition
