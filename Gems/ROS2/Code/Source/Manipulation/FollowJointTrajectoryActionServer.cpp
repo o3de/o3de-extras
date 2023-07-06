@@ -81,31 +81,7 @@ namespace ROS2
 
     rclcpp_action::GoalResponse FollowJointTrajectoryActionServer::GoalReceivedCallback(
         [[maybe_unused]] const rclcpp_action::GoalUUID& uuid, std::shared_ptr<const FollowJointTrajectory::Goal> goal)
-    { // Accept each received goal unless other goal is active (no deferring/queuing)
-        if (!IsReadyForExecution())
-        {
-            AZ_Trace("FollowJointTrajectoryActionServer", "Goal rejected: server is not ready for execution!");
-            if (m_goalHandle)
-            {
-                AZ_Trace(
-                    "FollowJointTrajectoryActionServer",
-                    " is_active: %d,  is_executing %d, is_canceling : %d",
-                    m_goalHandle->is_active(),
-                    m_goalHandle->is_executing(),
-                    m_goalHandle->is_canceling());
-            }
-            return rclcpp_action::GoalResponse::REJECT;
-        }
-
-        AZ::Outcome<void, AZStd::string> executionOrderOutcome;
-        JointsTrajectoryRequestBus::EventResult(executionOrderOutcome, m_entityId, &JointsTrajectoryRequests::StartTrajectoryGoal, goal);
-
-        if (!executionOrderOutcome)
-        {
-            AZ_Trace("FollowJointTrajectoryActionServer", "Execution not be accepted: %s", executionOrderOutcome.GetError().c_str());
-            return rclcpp_action::GoalResponse::REJECT;
-        }
-
+    { // Accept each received goal. It will be aborted if other goal is active (no deferring/queuing).
         return rclcpp_action::GoalResponse::ACCEPT_AND_EXECUTE;
     }
 
@@ -132,6 +108,42 @@ namespace ROS2
     void FollowJointTrajectoryActionServer::GoalAcceptedCallback(const std::shared_ptr<GoalHandle> goalHandle)
     {
         AZ_Trace("FollowJointTrajectoryActionServer", "Goal accepted\n");
+
+        if (!IsReadyForExecution())
+        {
+            AZ_Trace("FollowJointTrajectoryActionServer", "Goal aborted: server is not ready for execution!");
+            if (m_goalHandle)
+            {
+                AZ_Trace(
+                    "FollowJointTrajectoryActionServer",
+                    " is_active: %d,  is_executing %d, is_canceling : %d",
+                    m_goalHandle->is_active(),
+                    m_goalHandle->is_executing(),
+                    m_goalHandle->is_canceling());
+            }
+
+            auto result = std::make_shared<FollowJointTrajectory::Result>();
+            result->error_string = "Goal aborted: server is not ready for execution!";
+            result->error_code = FollowJointTrajectory::Result::INVALID_GOAL;
+            goalHandle->abort(result);
+            return;
+        }
+
+        AZ::Outcome<void, AZStd::string> executionOrderOutcome;
+        JointsTrajectoryRequestBus::EventResult(
+            executionOrderOutcome, m_entityId, &JointsTrajectoryRequests::StartTrajectoryGoal, goalHandle->get_goal());
+
+        if (!executionOrderOutcome)
+        {
+            AZ_Trace("FollowJointTrajectoryActionServer", "Execution not be accepted: %s", executionOrderOutcome.GetError().c_str());
+
+            auto result = std::make_shared<FollowJointTrajectory::Result>();
+            result->error_string = "Execution not accepted: " + std::string(executionOrderOutcome.GetError().c_str());
+            result->error_code = FollowJointTrajectory::Result::INVALID_GOAL;
+            goalHandle->abort(result);
+            return;
+        }
+
         m_goalHandle = goalHandle;
         // m_goalHandle->execute(); // No need to call this, as we are already executing the goal due to ACCEPT_AND_EXECUTE
         m_goalStatus = JointsTrajectoryRequests::TrajectoryActionStatus::Executing;
