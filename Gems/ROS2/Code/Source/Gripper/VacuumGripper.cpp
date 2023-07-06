@@ -104,11 +104,11 @@ namespace ROS2
         AZ_Assert(sceneInterface, "No scene intreface.");
 
         AzPhysics::SceneHandle defaultSceneHandle = sceneInterface->GetSceneHandle(AzPhysics::DefaultPhysicsSceneName);
-        AZ_Assert(defaultSceneHandle != AzPhysics::InvalidSceneHandle, "Invalid default physics scene handle.")
+        AZ_Assert(defaultSceneHandle != AzPhysics::InvalidSceneHandle, "Invalid default physics scene handle.");
 
-            // Connect the trigger handlers if not already connected, it is circle navigation around issue GH-16188, the
-            // RigidbodyNotificationBus should be used instead.
-            if (!m_onTriggerEnterHandler.IsConnected() || !m_onTriggerExitHandler.IsConnected())
+        // Connect the trigger handlers if not already connected, it is circle navigation around issue GH-16188, the
+        // RigidbodyNotificationBus should be used instead.
+        if (!m_onTriggerEnterHandler.IsConnected() || !m_onTriggerExitHandler.IsConnected())
         {
             if (auto* physicsSystem = AZ::Interface<AzPhysics::SystemInterface>::Get())
             {
@@ -132,7 +132,7 @@ namespace ROS2
             AZ_Printf("VacuumGripper", "Root articulation entity name: %s", rootEntity->GetName().c_str());
 
             PhysX::ArticulationLinkComponent* component = rootEntity->FindComponent<PhysX::ArticulationLinkComponent>();
-            AZStd::vector<AzPhysics::SimulatedBodyHandle> articulationHandles = component->GetSimualatedBodyHandles();
+            AZStd::vector<AzPhysics::SimulatedBodyHandle> articulationHandles = component->GetSimulatedBodyHandles();
 
             AZ_Assert(articulationHandles.size() > 1, "Expected more than one body handles in articulations");
             for (AzPhysics::SimulatedBodyHandle handle : articulationHandles)
@@ -180,7 +180,10 @@ namespace ROS2
 
     bool VacuumGripper::TryToGripObject()
     {
-        AZ_Warning("VacuumGripper", m_gripperEffectorBodyHandle != AzPhysics::InvalidSimulatedBodyHandle, "Invalid body handle for gripperEffectorBody");
+        AZ_Warning(
+            "VacuumGripper",
+            m_gripperEffectorBodyHandle != AzPhysics::InvalidSimulatedBodyHandle,
+            "Invalid body handle for gripperEffectorBody");
         if (m_gripperEffectorBodyHandle == AzPhysics::InvalidSimulatedBodyHandle)
         {
             // No articulation link found
@@ -246,6 +249,13 @@ namespace ROS2
         auto* sceneInterface = AZ::Interface<AzPhysics::SceneInterface>::Get();
         AzPhysics::SceneHandle defaultSceneHandle = sceneInterface->GetSceneHandle(AzPhysics::DefaultPhysicsSceneName);
         AZ_Assert(defaultSceneHandle != AzPhysics::InvalidSceneHandle, "Invalid default physics scene handle");
+        // Wake up the body to prevent it from not moving after release
+        AzPhysics::RigidBody* grippedRigidBody = nullptr;
+        Physics::RigidBodyRequestBus::EventResult(grippedRigidBody, m_grippedObjectInEffector, &Physics::RigidBodyRequests::GetRigidBody);
+        if (grippedRigidBody)
+        {
+            grippedRigidBody->ForceAwake();
+        }
         sceneInterface->RemoveJoint(defaultSceneHandle, m_vaccumJoint);
         m_vaccumJoint = AzPhysics::InvalidJointHandle;
     }
@@ -309,7 +319,7 @@ namespace ROS2
         return true;
     }
 
-    bool VacuumGripper::IsGripperReachedGoal() const
+    bool VacuumGripper::HasGripperReachedGoal() const
     {
         const bool isJoint = (m_vaccumJoint != AzPhysics::InvalidJointHandle);
         if (m_gripping && isJoint)

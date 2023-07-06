@@ -44,7 +44,7 @@ namespace ROS2
 
        //! Get if the gripper reached the set with GripperCommand position.
        //! @note that for vacuum grippers it vacuum was created and object is attached to the gripper.
-       virtual bool IsGripperReachedGoal() const = 0;
+       virtual bool HasGripperReachedGoal() const = 0;
 
    };
 

@@ -51,7 +51,7 @@ namespace ROS2
         float GetGripperPosition() const override;
         float GetGripperEffort() const override;
         bool IsGripperNotMoving() const override;
-        bool IsGripperReachedGoal() const override;
+        bool HasGripperReachedGoal() const override;
 
 
         // AZ::TickBus::Handler overrides...

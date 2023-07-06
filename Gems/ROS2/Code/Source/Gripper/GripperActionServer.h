@@ -36,16 +36,24 @@ namespace ROS2
 
     private:
         // action server callbacks
-        rclcpp_action::GoalResponse handleGoal(const rclcpp_action::GoalUUID & uuid,
+        rclcpp_action::GoalResponse GoalReceivedCallback(const rclcpp_action::GoalUUID & uuid,
                                                std::shared_ptr<const GripperCommand::Goal> goal);
-        rclcpp_action::CancelResponse handleCancel(const std::shared_ptr<GoalHandleGripperCommand> goal_handle);
-        void handleAccepted(const std::shared_ptr<GoalHandleGripperCommand> goal_handle);
+
+        rclcpp_action::CancelResponse GoalCancelledCallback(const std::shared_ptr<GoalHandleGripperCommand> goal_handle);
+
+        void GoalAcceptedCallback(const std::shared_ptr<GoalHandleGripperCommand> goal_handle);
 
         // AZ::TickBus::Handler overrides ...
         void OnTick(float delta, AZ::ScriptTimePoint timePoint) override;
 
         //! Check if the goal is in an active state
         bool IsGoalActiveState() const;
+
+        bool IsReadyForExecution() const;
+
+        std::shared_ptr<GripperActionServer::GripperCommand::Feedback> ProduceFeedback() const;
+        std::shared_ptr<GripperActionServer::GripperCommand::Result> ProduceResult() const;
+
 
         rclcpp_action::Server<GripperCommand>::SharedPtr actionServer;
         AZStd::string m_gripperActionServerName;
