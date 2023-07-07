@@ -1,0 +1,54 @@
+{
+    "entries": [
+        {
+            "base": "{0FA8FC88-6C4B-9260-6CC3-F2154691B279}",
+            "context": "ScriptCanvas::Node",
+            "variant": "",
+            "details": {
+                "name": "Compute cost gradient",
+                "category": "MachineLearning",
+                "tooltip": "Calculates the cost gradient for a machine learning model against a set of activations and a set of expected outputs."
+            },
+            "slots": [
+                {
+                    "base": "Input_In_0",
+                    "details": {
+                        "name": "In",
+                        "tooltip": "Parameters controlling cost gradient calculation"
+                    }
+                },
+                {
+                    "base": "DataInput_Model_0",
+                    "details": {
+                        "name": "Model"
+                    }
+                },
+                {
+                    "base": "DataInput_Activations_1",
+                    "details": {
+                        "name": "Activations"
+                    }
+                },
+                {
+                    "base": "DataInput_ExpectedOutput_2",
+                    "details": {
+                        "name": "ExpectedOutput"
+                    }
+                },
+                {
+                    "base": "Output_On In_0",
+                    "details": {
+                        "name": "On In",
+                        "tooltip": "Parameters controlling cost gradient calculation"
+                    }
+                },
+                {
+                    "base": "DataOutput_Cost_0",
+                    "details": {
+                        "name": "Cost"
+                    }
+                }
+            ]
+        }
+    ]
+}

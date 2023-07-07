@@ -1,0 +1,54 @@
+{
+    "entries": [
+        {
+            "base": "{8B5BA564-BEAF-B290-6224-F82B7618735C}",
+            "context": "ScriptCanvas::Node",
+            "variant": "",
+            "details": {
+                "name": "Create new model",
+                "category": "MachineLearning",
+                "tooltip": "Creates a new untrained machine learning model. All parameters will be initialized to random values."
+            },
+            "slots": [
+                {
+                    "base": "Input_In_0",
+                    "details": {
+                        "name": "In",
+                        "tooltip": "Parameters controlling the new model"
+                    }
+                },
+                {
+                    "base": "DataInput_Input neurons_0",
+                    "details": {
+                        "name": "Input neurons"
+                    }
+                },
+                {
+                    "base": "DataInput_Output neurons_1",
+                    "details": {
+                        "name": "Output neurons"
+                    }
+                },
+                {
+                    "base": "DataInput_Hidden layers_2",
+                    "details": {
+                        "name": "Hidden layers"
+                    }
+                },
+                {
+                    "base": "Output_On In_0",
+                    "details": {
+                        "name": "On In",
+                        "tooltip": "Parameters controlling the new model"
+                    }
+                },
+                {
+                    "base": "DataOutput_Model_0",
+                    "details": {
+                        "name": "Model"
+                    }
+                }
+            ]
+        }
+    ]
+}

@@ -1,0 +1,48 @@
+{
+    "entries": [
+        {
+            "base": "{CE7FD101-9866-AD89-0D38-90165BD10B2C}",
+            "context": "ScriptCanvas::Node",
+            "variant": "",
+            "details": {
+                "name": "Feed forward",
+                "category": "MachineLearning",
+                "tooltip": "Performs a feed-forward operation on the model to obtain a set of outputs given an input."
+            },
+            "slots": [
+                {
+                    "base": "Input_In_0",
+                    "details": {
+                        "name": "In",
+                        "tooltip": "Parameters controlling the feed forward operation"
+                    }
+                },
+                {
+                    "base": "DataInput_Model_0",
+                    "details": {
+                        "name": "Model"
+                    }
+                },
+                {
+                    "base": "DataInput_Activations_1",
+                    "details": {
+                        "name": "Activations"
+                    }
+                },
+                {
+                    "base": "Output_On In_0",
+                    "details": {
+                        "name": "On In",
+                        "tooltip": "Parameters controlling the feed forward operation"
+                    }
+                },
+                {
+                    "base": "DataOutput_Output_0",
+                    "details": {
+                        "name": "Output"
+                    }
+                }
+            ]
+        }
+    ]
+}
