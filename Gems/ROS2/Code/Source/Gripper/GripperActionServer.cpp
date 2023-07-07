@@ -114,6 +114,10 @@ namespace ROS2
                 auto result = ProduceResult();
                 m_goalHandle->succeed(result);
             }
+            else if (m_goalHandle->is_canceling())
+            {
+                m_goalHandle->canceled(ProduceResult());
+            }
             else
             {
                 auto feedback = ProduceFeedback();
@@ -162,8 +166,6 @@ namespace ROS2
             AZ_Trace("GripperActionServer", "Cancelling could not be accepted: %s\n", cancelOutcome.GetError().c_str());
             return rclcpp_action::CancelResponse::REJECT;
         }
-        auto result = ProduceResult();
-        m_goalHandle->canceled(result);
         return rclcpp_action::CancelResponse::ACCEPT;
     }
 
