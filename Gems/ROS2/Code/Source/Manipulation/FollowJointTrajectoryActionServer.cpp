@@ -80,7 +80,7 @@ namespace ROS2
     }
 
     rclcpp_action::GoalResponse FollowJointTrajectoryActionServer::GoalReceivedCallback(
-        [[maybe_unused]] const rclcpp_action::GoalUUID& uuid, std::shared_ptr<const FollowJointTrajectory::Goal> goal)
+        [[maybe_unused]] const rclcpp_action::GoalUUID& uuid, [[maybe_unused]] std::shared_ptr<const FollowJointTrajectory::Goal> goal)
     { // Accept each received goal. It will be aborted if other goal is active (no deferring/queuing).
         return rclcpp_action::GoalResponse::ACCEPT_AND_EXECUTE;
     }
