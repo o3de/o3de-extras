@@ -137,7 +137,7 @@ namespace ROS2
         {
             AZ_Trace(
                 "FollowJointTrajectoryActionServer",
-                "Execution not be accepted: %s",
+                "Execution was not accepted: %s",
                 executionOrderOutcome.GetError().error_string.c_str());
 
             auto result = std::make_shared<FollowJointTrajectory::Result>(executionOrderOutcome.GetError());
