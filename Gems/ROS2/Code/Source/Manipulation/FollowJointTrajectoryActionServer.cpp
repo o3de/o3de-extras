@@ -129,17 +129,19 @@ namespace ROS2
             return;
         }
 
-        AZ::Outcome<void, AZStd::string> executionOrderOutcome;
+        AZ::Outcome<void, FollowJointTrajectory::Result> executionOrderOutcome;
         JointsTrajectoryRequestBus::EventResult(
             executionOrderOutcome, m_entityId, &JointsTrajectoryRequests::StartTrajectoryGoal, goalHandle->get_goal());
 
         if (!executionOrderOutcome)
         {
-            AZ_Trace("FollowJointTrajectoryActionServer", "Execution not be accepted: %s", executionOrderOutcome.GetError().c_str());
+            AZ_Trace(
+                "FollowJointTrajectoryActionServer",
+                "Execution not be accepted: %s",
+                executionOrderOutcome.GetError().error_string.c_str());
 
-            auto result = std::make_shared<FollowJointTrajectory::Result>();
-            result->error_string = "Execution not accepted: " + std::string(executionOrderOutcome.GetError().c_str());
-            result->error_code = FollowJointTrajectory::Result::INVALID_GOAL;
+            auto result = std::make_shared<FollowJointTrajectory::Result>(executionOrderOutcome.GetError());
+
             goalHandle->abort(result);
             return;
         }
