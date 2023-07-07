@@ -41,9 +41,11 @@ namespace ROS2
         for (const auto& [jointName, jointInfo] : manipulatorJoints)
         {
             AZ::Outcome<float, AZStd::string> result;
-            JointsManipulationRequestBus::EventResult(result, m_context.m_entityId, &JointsManipulationRequests::GetJointPosition, jointName);
+            JointsManipulationRequestBus::EventResult(
+                result, m_context.m_entityId, &JointsManipulationRequests::GetJointPosition, jointName);
             auto currentJointPosition = result.GetValue();
-            JointsManipulationRequestBus::EventResult(result, m_context.m_entityId, &JointsManipulationRequests::GetJointVelocity, jointName);
+            JointsManipulationRequestBus::EventResult(
+                result, m_context.m_entityId, &JointsManipulationRequests::GetJointVelocity, jointName);
             auto currentJointVelocity = result.GetValue();
             JointsManipulationRequestBus::EventResult(result, m_context.m_entityId, &JointsManipulationRequests::GetJointEffort, jointName);
             auto currentJointEffort = result.GetValue();

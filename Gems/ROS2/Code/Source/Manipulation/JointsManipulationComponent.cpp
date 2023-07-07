@@ -234,10 +234,10 @@ namespace ROS2
         if (jointInfo.m_isArticulation)
         {
             PhysX::ArticulationJointRequestBus::EventResult(
-                    velocity,
-                    jointInfo.m_entityComponentIdPair.GetEntityId(),
-                    &PhysX::ArticulationJointRequests::GetJointVelocity,
-                    jointInfo.m_axis);
+                velocity,
+                jointInfo.m_entityComponentIdPair.GetEntityId(),
+                &PhysX::ArticulationJointRequests::GetJointVelocity,
+                jointInfo.m_axis);
         }
         else
         {
@@ -276,16 +276,17 @@ namespace ROS2
         auto jointInfo = m_manipulationJoints.at(jointName);
         float effort{ 0 };
 
-        if (jointInfo.m_isArticulation) {
+        if (jointInfo.m_isArticulation)
+        {
             bool is_acceleration_driven{ false };
             PhysX::ArticulationJointRequestBus::EventResult(
-                    is_acceleration_driven,
-                    jointInfo.m_entityComponentIdPair.GetEntityId(),
-                    &PhysX::ArticulationJointRequests::IsAccelerationDrive,
-                    jointInfo.m_axis);
+                is_acceleration_driven,
+                jointInfo.m_entityComponentIdPair.GetEntityId(),
+                &PhysX::ArticulationJointRequests::IsAccelerationDrive,
+                jointInfo.m_axis);
 
-            if (!is_acceleration_driven) {
-
+            if (!is_acceleration_driven)
+            {
                 float stiffness{ 0 }, damping{ 0 }, target_pos{ 0 }, position{ 0 }, target_vel{ 0 }, velocity{ 0 }, max_force{ 0 };
                 PhysX::ArticulationJointRequestBus::Event(
                     jointInfo.m_entityComponentIdPair.GetEntityId(),
@@ -301,7 +302,8 @@ namespace ROS2
                     });
                 effort = stiffness * -(position - target_pos) + damping * (target_vel - velocity);
 
-                if (max_force < abs(effort)) {
+                if (max_force < abs(effort))
+                {
                     effort = max_force * ((effort > 0) - (effort < 0));
                 }
             }
