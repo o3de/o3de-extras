@@ -105,7 +105,10 @@ namespace ROS2
             AZStd::string azJointName(jointName.c_str());
             if (m_manipulationJoints.find(azJointName) == m_manipulationJoints.end())
             {
-                AZ_Printf("JointsTrajectoryComponent", "Trajectory goal is invalid: no joint %s in manipulator", azJointName.c_str());
+                AZ_Printf(
+                    "JointsTrajectoryComponent",
+                    "Trajectory goal is invalid: no joint %s in manipulator",
+                    azJointName.c_str());
                 return AZ::Failure(AZStd::string::format("Trajectory goal is invalid: no joint %s in manipulator", azJointName.c_str()));
             }
         }

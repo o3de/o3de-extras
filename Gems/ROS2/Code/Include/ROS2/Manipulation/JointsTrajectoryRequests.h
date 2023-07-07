@@ -15,8 +15,7 @@
 namespace ROS2
 {
     //! Interface for commanding a system of joints such as robotic arm (manipulator) through FollowJointTrajectory actions.
-    //@see <a
-    //href="https://github.com/ros-controls/control_msgs/blob/humble/control_msgs/action/FollowJointTrajectory.action">FollowJointTrajectory</a>
+    //@see <a href="https://github.com/ros-controls/control_msgs/blob/humble/control_msgs/action/FollowJointTrajectory.action">FollowJointTrajectory</a>
     class JointsTrajectoryRequests : public AZ::EBusTraits
     {
     public:
