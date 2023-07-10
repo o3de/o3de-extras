@@ -74,7 +74,7 @@ namespace ROS2
         AZ::EntityId m_grippedObjectInEffector;
 
         //! Handle to joint created by vacuum gripper.
-        AzPhysics::JointHandle m_vaccumJoint;
+        AzPhysics::JointHandle m_vacuumJoint;
 
         bool m_gripping {false};
 

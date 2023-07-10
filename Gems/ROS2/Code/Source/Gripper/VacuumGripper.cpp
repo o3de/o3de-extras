@@ -48,7 +48,7 @@ namespace ROS2
                     m_grippedObjectInEffector = AZ::EntityId(AZ::EntityId::InvalidEntityId);
                 }
             });
-        m_vaccumJoint = AzPhysics::InvalidJointHandle;
+        m_vacuumJoint = AzPhysics::InvalidJointHandle;
         m_grippedObjectInEffector = AZ::EntityId(AZ::EntityId::InvalidEntityId);
         m_gripping = false;
 
@@ -123,13 +123,12 @@ namespace ROS2
                     AzPhysics::SimulatedBodyEvents::RegisterOnTriggerExitHandler(foundBody.first, foundBody.second, m_onTriggerExitHandler);
                 }
             }
-            AZ_Printf("VacuumGripper", "Registered trigger handlers.");
 
             AZ::EntityId rootArticulationEntity = GetRootOfArticulation(m_gripperEffectorArticulationLink);
             AZ::Entity* rootEntity = nullptr;
             AZ::ComponentApplicationBus::BroadcastResult(rootEntity, &AZ::ComponentApplicationRequests::FindEntity, rootArticulationEntity);
 
-            AZ_Printf("VacuumGripper", "Root articulation entity name: %s", rootEntity->GetName().c_str());
+            AZ_Trace("VacuumGripper", "Root articulation entity name: %s\n", rootEntity->GetName().c_str());
 
             PhysX::ArticulationLinkComponent* component = rootEntity->FindComponent<PhysX::ArticulationLinkComponent>();
             AZStd::vector<AzPhysics::SimulatedBodyHandle> articulationHandles = component->GetSimulatedBodyHandles();
@@ -189,7 +188,7 @@ namespace ROS2
             // No articulation link found
             return true;
         }
-        if (m_vaccumJoint != AzPhysics::InvalidJointHandle)
+        if (m_vacuumJoint != AzPhysics::InvalidJointHandle)
         {
             // Object is already gripped
             return true;
@@ -233,7 +232,7 @@ namespace ROS2
         jointConfig.m_startSimulationEnabled = true;
 
         // create new joint
-        m_vaccumJoint =
+        m_vacuumJoint =
             sceneInterface->AddJoint(defaultSceneHandle, &jointConfig, m_gripperEffectorBodyHandle, grippedRigidBody->m_bodyHandle);
 
         return true;
@@ -242,7 +241,7 @@ namespace ROS2
     void VacuumGripper::ReleaseGrippedObject()
     {
         m_gripping = false;
-        if (m_vaccumJoint == AzPhysics::InvalidJointHandle)
+        if (m_vacuumJoint == AzPhysics::InvalidJointHandle)
         {
             return;
         }
@@ -256,8 +255,8 @@ namespace ROS2
         {
             grippedRigidBody->ForceAwake();
         }
-        sceneInterface->RemoveJoint(defaultSceneHandle, m_vaccumJoint);
-        m_vaccumJoint = AzPhysics::InvalidJointHandle;
+        sceneInterface->RemoveJoint(defaultSceneHandle, m_vacuumJoint);
+        m_vacuumJoint = AzPhysics::InvalidJointHandle;
     }
 
     void VacuumGripper::OnImGuiUpdate()
@@ -269,7 +268,7 @@ namespace ROS2
             grippedObjectInEffectorName, &AZ::ComponentApplicationRequests::GetEntityName, m_grippedObjectInEffector);
 
         ImGui::Text("Grippable object : %s", grippedObjectInEffectorName.c_str());
-        ImGui::Text("Vacuum joint created : %d ", m_vaccumJoint != AzPhysics::InvalidJointHandle);
+        ImGui::Text("Vacuum joint created : %d ", m_vacuumJoint != AzPhysics::InvalidJointHandle);
 
         ImGui::Checkbox("Gripping", &m_gripping);
 
@@ -287,7 +286,7 @@ namespace ROS2
 
     AZ::Outcome<void, AZStd::string> VacuumGripper::GripperCommand(float position, float maxEffort)
     {
-        AZ_Printf("VacuumGripper", "GripperCommand %f", position);
+        AZ_Trace("VacuumGripper", "GripperCommand %f\n", position);
         if (position > 0)
         {
             m_gripping = true;
@@ -307,12 +306,12 @@ namespace ROS2
 
     float VacuumGripper::GetGripperPosition() const
     {
-        return m_vaccumJoint == AzPhysics::InvalidJointHandle ? 0.0f : 1.0f;
+        return m_vacuumJoint == AzPhysics::InvalidJointHandle ? 0.0f : 1.0f;
     }
 
     float VacuumGripper::GetGripperEffort() const
     {
-        return m_vaccumJoint == AzPhysics::InvalidJointHandle ? 0.0f : 1.0f;
+        return m_vacuumJoint == AzPhysics::InvalidJointHandle ? 0.0f : 1.0f;
     }
     bool VacuumGripper::IsGripperNotMoving() const
     {
@@ -321,7 +320,7 @@ namespace ROS2
 
     bool VacuumGripper::HasGripperReachedGoal() const
     {
-        const bool isJoint = (m_vaccumJoint != AzPhysics::InvalidJointHandle);
+        const bool isJoint = (m_vacuumJoint != AzPhysics::InvalidJointHandle);
         if (m_gripping && isJoint)
         {
             return true;
