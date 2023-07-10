@@ -185,7 +185,8 @@ namespace ROS2
             AZ::Crc32 params_crc;
             for (auto& [key, value] : m_params)
             {
-                params_crc.Add(key + "_" + value);
+                params_crc.Add(key);
+                params_crc.Add(value);
             }
 
             auto dir_suffix = AZStd::string::format("%d", AZ::u32(params_crc));
