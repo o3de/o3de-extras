@@ -114,14 +114,15 @@ namespace ROS2::Utils
     //! @param urdFilename - path to URDF file (as a global path)
     //! @param colliders - files to create collider assetinfo (as unresolved urdf paths)
     //! @param visuals - files to create visual assetinfo (as unresolved urdf paths)
+    //! @param outputDirSuffix - suffix to make output directory unique, if xacro file was used
     //! @param fileIO - instance to fileIO class
     //! @returns mapping from unresolved urdf paths to source asset info
     UrdfAssetMap CopyAssetForURDFAndCreateAssetMap(
         const AZStd::unordered_set<AZStd::string>& meshesFilenames,
         const AZStd::string& urdfFilename,
-        AZ::Crc32 params_crc,
         const AZStd::unordered_set<AZStd::string>& colliders,
         const AZStd::unordered_set<AZStd::string>& visual,
+        const AZStd::string& outputDirSuffix = "",
         AZ::IO::FileIOBase* fileIO = AZ::IO::FileIOBase::GetInstance());
 
 } // namespace ROS2::Utils

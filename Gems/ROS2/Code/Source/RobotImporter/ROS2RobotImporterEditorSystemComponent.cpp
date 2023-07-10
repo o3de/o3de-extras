@@ -108,7 +108,7 @@ namespace ROS2
         if (importAssetWithUrdf)
         {
             urdfAssetsMapping = AZStd::make_shared<Utils::UrdfAssetMap>(
-                Utils::CopyAssetForURDFAndCreateAssetMap(meshNames, filePath, AZ::Crc32(), collidersNames, visualNames));
+                Utils::CopyAssetForURDFAndCreateAssetMap(meshNames, filePath, collidersNames, visualNames));
         }
         bool allAssetProcessed = false;
         bool assetProcessorFailed = false;

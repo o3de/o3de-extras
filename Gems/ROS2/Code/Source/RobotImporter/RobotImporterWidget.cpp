@@ -188,10 +188,12 @@ namespace ROS2
                 params_crc.Add(key + "_" + value);
             }
 
+            auto dir_suffix = AZStd::string::format("%d", AZ::u32(params_crc));
+
             if (m_importAssetWithUrdf)
             {
                 m_urdfAssetsMapping = AZStd::make_shared<Utils::UrdfAssetMap>(
-                    Utils::CopyAssetForURDFAndCreateAssetMap(m_meshNames, m_urdfPath.String(), params_crc, collidersNames, visualNames));
+                    Utils::CopyAssetForURDFAndCreateAssetMap(m_meshNames, m_urdfPath.String(), collidersNames, visualNames, dir_suffix));
             }
             else
             {
