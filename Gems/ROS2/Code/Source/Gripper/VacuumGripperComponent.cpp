@@ -10,6 +10,7 @@
 #include "VacuumGripperComponent.h"
 #include "Source/ArticulationLinkComponent.h"
 #include "Utils.h"
+#include <Utilities/ArticulationsUtilities.h>
 
 #include <AzCore/Serialization/EditContext.h>
 #include <AzCore/Serialization/SerializeContext.h>
@@ -130,7 +131,7 @@ namespace ROS2
                 }
             }
 
-            AZ::EntityId rootArticulationEntity = GetRootOfArticulation(m_gripperEffectorArticulationLink);
+            AZ::EntityId rootArticulationEntity = Utils::GetRootOfArticulation(m_gripperEffectorArticulationLink);
             AZ::Entity* rootEntity = nullptr;
             AZ::ComponentApplicationBus::BroadcastResult(rootEntity, &AZ::ComponentApplicationRequests::FindEntity, rootArticulationEntity);
 
@@ -154,26 +155,6 @@ namespace ROS2
         {
             TryToGripObject();
         }
-    }
-    AZ::EntityId VacuumGripperComponent::GetRootOfArticulation(AZ::EntityId entityId)
-    {
-        AZ::EntityId parentEntityId{ AZ::EntityId::InvalidEntityId };
-        AZ::Entity* parentEntity = nullptr;
-        AZ::TransformBus::EventResult(parentEntityId, entityId, &AZ::TransformBus::Events::GetParentId);
-        AZ::ComponentApplicationBus::BroadcastResult(parentEntity, &AZ::ComponentApplicationRequests::FindEntity, parentEntityId);
-
-        if (parentEntity == nullptr)
-        {
-            return AZ::EntityId(AZ::EntityId::InvalidEntityId);
-        }
-
-        // Get articulation link component, if not found for parent, return current entity
-        PhysX::ArticulationLinkComponent* component = parentEntity->FindComponent<PhysX::ArticulationLinkComponent>();
-        if (component == nullptr)
-        {
-            return entityId;
-        }
-        return GetRootOfArticulation(parentEntity->GetId());
     }
 
     bool VacuumGripperComponent::isObjectGrippable(const AZ::EntityId entityId)

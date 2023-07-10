@@ -339,6 +339,27 @@ namespace ROS2
         return efforts;
     }
 
+    AZ::Outcome<void, AZStd::string> JointsManipulationComponent::SetMaxJointEffort(const AZStd::string& jointName, JointEffort maxEffort)
+    {
+        if (!m_manipulationJoints.contains(jointName))
+        {
+            return AZ::Failure(AZStd::string::format("Joint %s does not exist", jointName.c_str()));
+        }
+
+        auto jointInfo = m_manipulationJoints.at(jointName);
+
+        if (jointInfo.m_isArticulation)
+        {
+            PhysX::ArticulationJointRequestBus::Event(
+                jointInfo.m_entityComponentIdPair.GetEntityId(),
+                &PhysX::ArticulationJointRequests::SetMaxForce,
+                jointInfo.m_axis,
+                maxEffort);
+        }
+
+        return AZ::Success();
+    }
+
     AZ::Outcome<void, AZStd::string> JointsManipulationComponent::MoveJointToPosition(
         const AZStd::string& jointName, JointPosition position)
     {
