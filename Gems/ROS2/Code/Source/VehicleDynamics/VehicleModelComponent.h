@@ -54,6 +54,7 @@ namespace ROS2::VehicleDynamics
 
     protected:
         ManualControlEventHandler m_manualControlEventHandler;
+        bool m_manuallyControled = true;
         VehicleInputDeadline m_inputsState;
         VehicleDynamics::VehicleConfiguration m_vehicleConfiguration;
         virtual DriveModel* GetDriveModel() = 0;
