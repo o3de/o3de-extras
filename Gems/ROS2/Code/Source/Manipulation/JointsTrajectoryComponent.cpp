@@ -145,6 +145,7 @@ namespace ROS2
 
             float currentJointPosition;
             float currentJointVelocity;
+            auto &jointInfo = m_manipulationJoints[jointName];
             PhysX::ArticulationJointRequestBus::Event(
                 jointInfo.m_entityComponentIdPair.GetEntityId(),
                 [&](PhysX::ArticulationJointRequests* articulationJointRequests)
