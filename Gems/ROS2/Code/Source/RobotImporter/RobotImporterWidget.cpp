@@ -10,6 +10,7 @@
 #include <AzCore/IO/Path/Path.h>
 #include <AzCore/Utils/Utils.h>
 
+#include "AzCore/Math/Crc.h"
 #include "RobotImporterWidget.h"
 #include "URDF/URDFPrefabMaker.h"
 #include "URDF/UrdfParser.h"
@@ -181,10 +182,16 @@ namespace ROS2
             auto collidersNames = Utils::GetMeshesFilenames(m_parsedUrdf->getRoot(), false, true);
             auto visualNames = Utils::GetMeshesFilenames(m_parsedUrdf->getRoot(), true, false);
 
+            AZ::Crc32 params_crc;
+            for (auto& [key, value] : m_params)
+            {
+                params_crc.Add(key + "_" + value);
+            }
+
             if (m_importAssetWithUrdf)
             {
                 m_urdfAssetsMapping = AZStd::make_shared<Utils::UrdfAssetMap>(
-                    Utils::CopyAssetForURDFAndCreateAssetMap(m_meshNames, m_urdfPath.String(), collidersNames, visualNames));
+                    Utils::CopyAssetForURDFAndCreateAssetMap(m_meshNames, m_urdfPath.String(), params_crc, collidersNames, visualNames));
             }
             else
             {

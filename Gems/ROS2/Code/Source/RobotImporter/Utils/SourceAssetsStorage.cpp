@@ -7,6 +7,7 @@
  */
 
 #include "SourceAssetsStorage.h"
+#include "AzCore/Math/Crc.h"
 #include "RobotImporterUtils.h"
 #include <AzCore/IO/FileIO.h>
 #include <AzCore/Serialization/Json/JsonUtils.h>
@@ -253,6 +254,7 @@ namespace ROS2::Utils
     UrdfAssetMap CopyAssetForURDFAndCreateAssetMap(
         const AZStd::unordered_set<AZStd::string>& meshesFilenames,
         const AZStd::string& urdfFilename,
+        AZ::Crc32 params_crc,
         const AZStd::unordered_set<AZStd::string>& colliders,
         const AZStd::unordered_set<AZStd::string>& visuals,
         AZ::IO::FileIOBase* fileIO)
@@ -270,7 +272,7 @@ namespace ROS2::Utils
         AZStd::unordered_map<AZStd::string, AZ::IO::Path> copiedFiles;
 
         AZ_Assert(fileIO, "No FileIO instance");
-        AZ::Crc32 urdfFileCrc;
+        AZ::Crc32 urdfFileCrc = params_crc;
         urdfFileCrc.Add(urdfFilename);
         const AZ::IO::Path urdfPath(urdfFilename);
         const AZStd::string directoryNameTmp = AZStd::string::format("$tmp_%u.tmp", AZ::u32(urdfFileCrc));

@@ -119,6 +119,7 @@ namespace ROS2::Utils
     UrdfAssetMap CopyAssetForURDFAndCreateAssetMap(
         const AZStd::unordered_set<AZStd::string>& meshesFilenames,
         const AZStd::string& urdfFilename,
+        AZ::Crc32 params_crc,
         const AZStd::unordered_set<AZStd::string>& colliders,
         const AZStd::unordered_set<AZStd::string>& visual,
         AZ::IO::FileIOBase* fileIO = AZ::IO::FileIOBase::GetInstance());
