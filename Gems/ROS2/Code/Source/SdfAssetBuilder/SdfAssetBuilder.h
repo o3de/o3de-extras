@@ -24,10 +24,8 @@ namespace ROS2
     public:
         AZ_RTTI(ROS2::SdfAssetBuilder, "{F5A45C1B-1D9F-4898-8E31-499C3787DA76}");
 
-        SdfAssetBuilder() = default;
-        ~SdfAssetBuilder() = default;
-
-        void RegisterBuilder();
+        SdfAssetBuilder();
+        ~SdfAssetBuilder();
 
         // AssetBuilderSDK::AssetBuilderCommandBus overrides...
         void CreateJobs(const AssetBuilderSDK::CreateJobsRequest& request, AssetBuilderSDK::CreateJobsResponse& response) const;

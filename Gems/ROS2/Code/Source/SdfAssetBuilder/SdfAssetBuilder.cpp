@@ -36,7 +36,7 @@ namespace ROS2
             };
         }
 
-    void SdfAssetBuilder::RegisterBuilder()
+    SdfAssetBuilder::SdfAssetBuilder()
     {
         AssetBuilderSDK::AssetBuilderDesc sdfAssetBuilderDescriptor;
 
@@ -60,6 +60,14 @@ namespace ROS2
         // Register this builder with the AssetBuilderSDK.
         AssetBuilderSDK::AssetBuilderBus::Broadcast(
             &AssetBuilderSDK::AssetBuilderBus::Handler::RegisterBuilderInformation, sdfAssetBuilderDescriptor);
+    }
+
+    SdfAssetBuilder::~SdfAssetBuilder()
+    {
+        // Stop listening for asset builder notifications.
+        BusDisconnect();
+
+        // The AssetBuilderSDK doesn't support deregistration, so there's nothing more to do here.
     }
 
     void SdfAssetBuilder::CreateJobs(

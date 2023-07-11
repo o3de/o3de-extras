@@ -59,7 +59,6 @@ ly_add_target(
             Source/VehicleDynamics
     BUILD_DEPENDENCIES
         PUBLIC
-            AZ::AssetBuilderSDK
             AZ::AzCore
             AZ::AzFramework
             Gem::Atom_RPI.Public
@@ -67,6 +66,8 @@ ly_add_target(
             Gem::Atom_Component_DebugCamera.Static
             Gem::StartingPointInput
             Gem::PhysX.Static
+        PRIVATE
+            AZ::AssetBuilderSDK
 )
 
 target_depends_on_ros2_packages(${gem_name}.Static rclcpp builtin_interfaces std_msgs sensor_msgs nav_msgs tf2_ros ackermann_msgs gazebo_msgs)

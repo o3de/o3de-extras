@@ -7,10 +7,12 @@
  */
 #pragma once
 
-#include <SdfAssetBuilder/SdfAssetBuilder.h>
+#include <AzCore/Serialization/SerializeContext.h>
 
 namespace ROS2
 {
+    class SdfAssetBuilder;
+
     /// System component for registering and managing the SdfAssetBuilder.
     class SdfAssetBuilderSystemComponent : public AZ::Component
     {
@@ -18,8 +20,8 @@ namespace ROS2
         AZ_COMPONENT(SdfAssetBuilderSystemComponent, "{0171F119-993A-4949-B62D-430291B01A41}");
         static void Reflect(AZ::ReflectContext* context);
 
-        SdfAssetBuilderSystemComponent() = default;
-        ~SdfAssetBuilderSystemComponent() = default;
+        SdfAssetBuilderSystemComponent();
+        ~SdfAssetBuilderSystemComponent();
 
     private:
         static void GetProvidedServices(AZ::ComponentDescriptor::DependencyArrayType& provided);
@@ -32,6 +34,6 @@ namespace ROS2
         void Deactivate() override;
 
         // Asset builder for Sdf assets
-        SdfAssetBuilder m_sdfAssetBuilder;
+        AZStd::unique_ptr<SdfAssetBuilder> m_sdfAssetBuilder;
     };
 } // namespace ROS2

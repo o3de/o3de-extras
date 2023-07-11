@@ -11,6 +11,13 @@
 
 namespace ROS2
 {
+    // These are defined here instead of in the class declaration in the header because we're
+    // keeping SdfAssetBuilder.h private to the implementation and out of the header.
+    // The default constructor/destructor would cause compile errors with unique_ptr if they
+    // are defined in the header.
+    SdfAssetBuilderSystemComponent::SdfAssetBuilderSystemComponent() = default;
+    SdfAssetBuilderSystemComponent::~SdfAssetBuilderSystemComponent() = default;
+
     void SdfAssetBuilderSystemComponent::Reflect(AZ::ReflectContext* context)
     {
         if (auto serializeContext = azrtti_cast<AZ::SerializeContext*>(context))
@@ -46,11 +53,12 @@ namespace ROS2
 
     void SdfAssetBuilderSystemComponent::Activate()
     {
-        m_sdfAssetBuilder.RegisterBuilder();
+        m_sdfAssetBuilder = AZStd::make_unique<SdfAssetBuilder>();
     }
 
     void SdfAssetBuilderSystemComponent::Deactivate()
     {
+        m_sdfAssetBuilder.reset();
     }
 
 } // namespace ROS2
