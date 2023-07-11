@@ -16,7 +16,7 @@ namespace ROS2
     //! * sdf (Simulation Description Format: http://sdformat.org/ )
     //! * urdf (Unified Robotics Description Format: http://wiki.ros.org/urdf )
     //! * world (Gazebo sdf files typically containing a full simulation world description: https://classic.gazebosim.org/tutorials?tut=components )
-    //! * Xacro (XML macro used for sdf/urdf file generation: http://wiki.ros.org/xacro )
+    //! * xacro (XML macro used for sdf/urdf file generation: http://wiki.ros.org/xacro )
     //! source folders into procprefab assets in the cache folder.
     class SdfAssetBuilder
         : public AssetBuilderSDK::AssetBuilderCommandBus::Handler

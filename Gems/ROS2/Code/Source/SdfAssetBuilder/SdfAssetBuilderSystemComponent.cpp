@@ -39,7 +39,7 @@ namespace ROS2
 
     void SdfAssetBuilderSystemComponent::GetDependentServices(AZ::ComponentDescriptor::DependencyArrayType& dependent)
     {
-        // If these services exist, they should be started first so that the Sdf builder can register with them correctly.
+        // If the asset services exist at all, they should be started first so that the Sdf builder can register with them correctly.
         dependent.push_back(AZ_CRC_CE("AssetDatabaseService"));
         dependent.push_back(AZ_CRC_CE("AssetCatalogService"));
     }
