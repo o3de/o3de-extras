@@ -92,10 +92,6 @@ set(FILES
         Source/ROS2ModuleInterface.h
         Source/ROS2SystemComponent.cpp
         Source/ROS2SystemComponent.h
-        Source/SdfAssetBuilder/SdfAssetBuilder.cpp
-        Source/SdfAssetBuilder/SdfAssetBuilder.h
-        Source/SdfAssetBuilder/SdfAssetBuilderSystemComponent.cpp
-        Source/SdfAssetBuilder/SdfAssetBuilderSystemComponent.h
         Source/Sensor/ROS2SensorComponent.cpp
         Source/Sensor/SensorConfiguration.cpp
         Source/Spawner/ROS2SpawnerComponent.cpp
