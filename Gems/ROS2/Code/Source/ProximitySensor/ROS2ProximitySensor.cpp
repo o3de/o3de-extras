@@ -156,11 +156,11 @@ namespace ROS2
 
             if (m_position)
             {
-                ProximitySensorNotificationBus::Event(GetEntityId(), &ProximitySensorNotifications::OnObjectDetected);
+                ProximitySensorNotificationBus::Event(GetEntityId(), &ProximitySensorNotifications::OnObjectInRange);
             }
             else
             {
-                ProximitySensorNotificationBus::Event(GetEntityId(), &ProximitySensorNotifications::OnObjectUnseen);
+                ProximitySensorNotificationBus::Event(GetEntityId(), &ProximitySensorNotifications::OnObjectOutOfRange);
             }
         }
     }

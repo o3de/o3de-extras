@@ -23,19 +23,19 @@ namespace ROS2
             ProximitySensorNotificationBusHandler,
             "{cc9c2e5a-318d-4212-abeb-95bd0575452d}",
             AZ::SystemAllocator,
-            OnObjectDetected,
-            OnObjectUnseen);
+            OnObjectInRange,
+            OnObjectOutOfRange);
 
         // Sent when the object is detected.
-        void OnObjectDetected() override
+        void OnObjectInRange() override
         {
-            Call(FN_OnObjectDetected);
+            Call(FN_OnObjectInRange);
         }
 
         // Sent when there are no objects detected.
-        void OnObjectUnseen() override
+        void OnObjectOutOfRange() override
         {
-            Call(FN_OnObjectUnseen);
+            Call(FN_OnObjectOutOfRange);
         }
     };
 } // namespace ROS2

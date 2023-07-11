@@ -20,11 +20,11 @@ namespace ROS2
         static constexpr AZ::EBusAddressPolicy AddressPolicy = AZ::EBusAddressPolicy::ById;
         static constexpr AZ::EBusHandlerPolicy HandlerPolicy = AZ::EBusHandlerPolicy::Single;
 
-        //! Notify that a particular sensor detected an object.
-        virtual void OnObjectDetected() = 0;
+        //! Notify that a particular sensor is detecting an object (notification published for each frequency tick).
+        virtual void OnObjectInRange() = 0;
 
-        //! Notify that a particular sensor did not detect an object.
-        virtual void OnObjectUnseen() = 0;
+        //! Notify that a particular sensor is not detecting an object (notification published for each frequency tick).
+        virtual void OnObjectOutOfRange() = 0;
 
     protected:
         ~ProximitySensorNotifications() = default;
