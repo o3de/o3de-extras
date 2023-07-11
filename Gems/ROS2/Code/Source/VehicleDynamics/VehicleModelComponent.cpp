@@ -24,7 +24,9 @@ namespace ROS2::VehicleDynamics
         VehicleInputControlRequestBus::Handler::BusConnect(GetEntityId());
 
         if (m_manuallyControled)
+        {
             m_manualControlEventHandler.Activate(GetEntityId());
+        }
         AZ::TickBus::Handler::BusConnect();
     }
 
