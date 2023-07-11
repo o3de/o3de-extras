@@ -1,0 +1,15 @@
+{
+    "ROS":
+    {
+        "SdfAssetBuilder":
+        {
+            "SupportedFileTypeExtensions":
+            [
+                "sdf",
+                "urdf",
+                "world",
+                "xacro"
+            ]
+        }
+    }
+}

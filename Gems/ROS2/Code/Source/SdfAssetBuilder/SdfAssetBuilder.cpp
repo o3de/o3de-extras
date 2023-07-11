@@ -11,6 +11,7 @@
 #include <AzCore/IO/FileIO.h>
 #include <AzCore/IO/IOUtils.h>
 #include <AzCore/Serialization/Json/JsonUtils.h>
+#include <AzCore/Settings/SettingsRegistryVisitorUtils.h>
 #include <AzFramework/StringFunc/StringFunc.h>
 #include <AzToolsFramework/Entity/EntityUtilityComponent.h>
 #include <AzToolsFramework/Prefab/PrefabLoaderScriptingBus.h>
@@ -27,13 +28,7 @@ namespace ROS2
         {
             [[maybe_unused]] constexpr const char* SdfAssetBuilderName = "SdfAssetBuilder";
             constexpr const char* SdfAssetBuilderJobKey = "Sdf Asset Builder";
-            constexpr AZStd::array<const char*,4> SdfAssetSourceExtensions =
-            {
-                "*.sdf",
-                "*.urdf",
-                "*.world",
-                "*.xacro"
-            };
+            constexpr const char* SdfAssetBuilderSupportedFileExtensionsRegistryKey = "/ROS/SdfAssetBuilder/SupportedFileTypeExtensions";
         }
 
     SdfAssetBuilder::SdfAssetBuilder()
@@ -43,11 +38,7 @@ namespace ROS2
         sdfAssetBuilderDescriptor.m_name = SdfAssetBuilderJobKey;
         sdfAssetBuilderDescriptor.m_version = 1; // bump this to rebuild all sdf files
         sdfAssetBuilderDescriptor.m_busId = azrtti_typeid<SdfAssetBuilder>();
-
-        for(const auto& extension : SdfAssetSourceExtensions)
-        {
-            sdfAssetBuilderDescriptor.m_patterns.push_back(AssetBuilderSDK::AssetBuilderPattern(extension, AssetBuilderSDK::AssetBuilderPattern::PatternType::Wildcard));
-        }
+        sdfAssetBuilderDescriptor.m_patterns = GetSupportedBuilderPatterns();
 
         sdfAssetBuilderDescriptor.m_createJobFunction = [this](auto && request, auto && response) 
             { 
@@ -73,6 +64,41 @@ namespace ROS2
         BusDisconnect();
 
         // The AssetBuilderSDK doesn't support deregistration, so there's nothing more to do here.
+    }
+
+    AZStd::vector<AssetBuilderSDK::AssetBuilderPattern> SdfAssetBuilder::GetSupportedBuilderPatterns()
+    {
+        AZStd::vector<AssetBuilderSDK::AssetBuilderPattern> patterns;
+
+        auto settingsRegistry = AZ::SettingsRegistry::Get();
+        if (settingsRegistry == nullptr)
+        {
+            AZ_Error(SdfAssetBuilderName, false, "Settings Registry not found, no sdf file type extensions enabled.");
+            return {};
+        }
+
+        // Visit each supported file type extension and create an asset builder wildcard pattern for it.
+        auto VisitFileTypeExtensions = [&settingsRegistry, &patterns]
+            (const AZ::SettingsRegistryInterface::VisitArgs& visitArgs)
+            {
+                if (AZ::SettingsRegistryInterface::FixedValueString value;
+                    settingsRegistry->Get(value, visitArgs.m_jsonKeyPath))
+                {
+                    // Support both '.sdf' and 'sdf' style entries in the setreg file for robustness.
+                    AZStd::string wildcardPattern = (value[0] == '.')
+                        ? AZStd::string::format("*%s", value.c_str())
+                        : AZStd::string::format("*.%s", value.c_str());
+
+                    patterns.push_back(
+                            AssetBuilderSDK::AssetBuilderPattern(
+                                wildcardPattern, AssetBuilderSDK::AssetBuilderPattern::PatternType::Wildcard));
+                }
+                return AZ::SettingsRegistryInterface::VisitResponse::Continue;
+            };
+        AZ::SettingsRegistryVisitorUtils::VisitArray(*settingsRegistry, VisitFileTypeExtensions, SdfAssetBuilderSupportedFileExtensionsRegistryKey);
+
+        AZ_Warning(SdfAssetBuilderName, !patterns.empty(), "SdfAssetBuilder disabled, no supported file type extensions found.");
+        return patterns;
     }
 
     void SdfAssetBuilder::CreateJobs(
@@ -176,7 +202,7 @@ namespace ROS2
 
         if (prefabTemplateId == AzToolsFramework::Prefab::InvalidTemplateId)
         {
-            AZ_Error("prefab", false, "Could not create a prefab template for entities.");
+            AZ_Error(SdfAssetBuilderName, false, "Could not create a prefab template for entities.");
             return {};
         }
 
@@ -189,7 +215,7 @@ namespace ROS2
 
         if (outcome.IsSuccess() == false)
         {
-            AZ_Error("prefab", false, "Could not create JSON string for template; maybe NaN values in the template?");
+            AZ_Error(SdfAssetBuilderName, false, "Could not create JSON string for template; maybe NaN values in the template?");
             return {};
         }
 

@@ -9,6 +9,7 @@
 #pragma once
 
 #include <AssetBuilderSDK/AssetBuilderBusses.h>
+#include <AssetBuilderSDK/AssetBuilderSDK.h>
 
 namespace ROS2
 {
@@ -32,6 +33,8 @@ namespace ROS2
         void ProcessJob(const AssetBuilderSDK::ProcessJobRequest& request, AssetBuilderSDK::ProcessJobResponse& response) const;
         void ShutDown() override { }
     private:
+        AZStd::vector<AssetBuilderSDK::AssetBuilderPattern> GetSupportedBuilderPatterns();
+
         AZStd::string CreateDefaultProcPrefab(
             const AssetBuilderSDK::ProcessJobRequest& request,
             AssetBuilderSDK::ProcessJobResponse& response) const;
