@@ -7,7 +7,6 @@
  */
 
 #include "SourceAssetsStorage.h"
-#include "AzCore/Math/Crc.h"
 #include "RobotImporterUtils.h"
 #include <AzCore/IO/FileIO.h>
 #include <AzCore/Serialization/Json/JsonUtils.h>

@@ -7,7 +7,6 @@
  */
 
 #include "ROS2RobotImporterEditorSystemComponent.h"
-#include "AzCore/Math/Crc.h"
 #include "RobotImporter/URDF/UrdfParser.h"
 #include "RobotImporter/Utils/FilePath.h"
 #include "RobotImporterWidget.h"
