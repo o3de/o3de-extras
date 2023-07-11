@@ -276,35 +276,39 @@ namespace ROS2
         auto jointInfo = m_manipulationJoints.at(jointName);
         float effort{ 0 };
 
-        if (jointInfo.m_isArticulation)
+        if (!jointInfo.m_isArticulation)
         {
-            bool is_acceleration_driven{ false };
-            PhysX::ArticulationJointRequestBus::EventResult(
-                is_acceleration_driven,
-                jointInfo.m_entityComponentIdPair.GetEntityId(),
-                &PhysX::ArticulationJointRequests::IsAccelerationDrive,
-                jointInfo.m_axis);
-
-            if (!is_acceleration_driven)
-            {
-                float stiffness{ 0 }, damping{ 0 }, target_pos{ 0 }, position{ 0 }, target_vel{ 0 }, velocity{ 0 }, max_force{ 0 };
-                PhysX::ArticulationJointRequestBus::Event(
-                    jointInfo.m_entityComponentIdPair.GetEntityId(),
-                    [&](PhysX::ArticulationJointRequests* articulationJointRequests)
-                    {
-                        stiffness = articulationJointRequests->GetDriveStiffness(jointInfo.m_axis);
-                        damping = articulationJointRequests->GetDriveDamping(jointInfo.m_axis);
-                        target_pos = articulationJointRequests->GetDriveTarget(jointInfo.m_axis);
-                        position = articulationJointRequests->GetJointPosition(jointInfo.m_axis);
-                        target_vel = articulationJointRequests->GetDriveTargetVelocity(jointInfo.m_axis);
-                        velocity = articulationJointRequests->GetJointVelocity(jointInfo.m_axis);
-                        max_force = articulationJointRequests->GetMaxForce(jointInfo.m_axis);
-                    });
-                effort = stiffness * -(position - target_pos) + damping * (target_vel - velocity);
-
-                effort = AZ::GetClamp(effort, -max_force, max_force);
-            }
+            return AZ::Success(effort);
         }
+
+        bool is_acceleration_driven{ false };
+        PhysX::ArticulationJointRequestBus::EventResult(
+            is_acceleration_driven,
+            jointInfo.m_entityComponentIdPair.GetEntityId(),
+            &PhysX::ArticulationJointRequests::IsAccelerationDrive,
+            jointInfo.m_axis);
+
+        if (is_acceleration_driven)
+        {
+            return AZ::Success(effort);
+        }
+
+        float stiffness{ 0 }, damping{ 0 }, target_pos{ 0 }, position{ 0 }, target_vel{ 0 }, velocity{ 0 }, max_force{ 0 };
+        PhysX::ArticulationJointRequestBus::Event(
+            jointInfo.m_entityComponentIdPair.GetEntityId(),
+            [&](PhysX::ArticulationJointRequests* articulationJointRequests)
+            {
+                stiffness = articulationJointRequests->GetDriveStiffness(jointInfo.m_axis);
+                damping = articulationJointRequests->GetDriveDamping(jointInfo.m_axis);
+                target_pos = articulationJointRequests->GetDriveTarget(jointInfo.m_axis);
+                position = articulationJointRequests->GetJointPosition(jointInfo.m_axis);
+                target_vel = articulationJointRequests->GetDriveTargetVelocity(jointInfo.m_axis);
+                velocity = articulationJointRequests->GetJointVelocity(jointInfo.m_axis);
+                max_force = articulationJointRequests->GetMaxForce(jointInfo.m_axis);
+            });
+        effort = stiffness * -(position - target_pos) + damping * (target_vel - velocity);
+
+        effort = AZ::GetClamp(effort, -max_force, max_force);
 
         return AZ::Success(effort);
     }
