@@ -32,6 +32,7 @@
 #include <RobotControl/Controllers/SkidSteeringController/SkidSteeringControlComponent.h>
 #include <RobotControl/ROS2RobotControlComponent.h>
 #include <RobotImporter/ROS2RobotImporterSystemComponent.h>
+#include <SdfAssetBuilder/SdfAssetBuilderSystemComponent.h>
 #include <Spawner/ROS2SpawnPointComponent.h>
 #include <Spawner/ROS2SpawnerComponent.h>
 #include <VehicleDynamics/ModelComponents/AckermannModelComponent.h>
@@ -86,6 +87,7 @@ namespace ROS2
                     JointsTrajectoryComponent::CreateDescriptor(),
                     PidMotorControllerComponent::CreateDescriptor(),
                     ROS2ProximitySensor::CreateDescriptor(),
+                    SdfAssetBuilderSystemComponent::CreateDescriptor(),
                 });
         }
 
@@ -96,6 +98,7 @@ namespace ROS2
                 azrtti_typeid<ROS2SystemComponent>(),
                 azrtti_typeid<LidarRegistrarSystemComponent>(),
                 azrtti_typeid<ROS2RobotImporterSystemComponent>(),
+                azrtti_typeid<SdfAssetBuilderSystemComponent>(),
             };
         }
     };

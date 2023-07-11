@@ -59,6 +59,7 @@ ly_add_target(
             Source/VehicleDynamics
     BUILD_DEPENDENCIES
         PUBLIC
+            AZ::AssetBuilderSDK
             AZ::AzCore
             AZ::AzFramework
             Gem::Atom_RPI.Public
