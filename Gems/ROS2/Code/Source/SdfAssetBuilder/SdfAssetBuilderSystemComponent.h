@@ -27,11 +27,9 @@ namespace ROS2
         static void GetRequiredServices(AZ::ComponentDescriptor::DependencyArrayType& required);
         static void GetDependentServices(AZ::ComponentDescriptor::DependencyArrayType& dependent);
 
-        //////////////////////////////////////////////////////////////////////////
-        // Component overrides
+        // Component overrides ...
         void Activate() override;
         void Deactivate() override;
-        //////////////////////////////////////////////////////////////////////////
 
         // Asset builder for Sdf assets
         SdfAssetBuilder m_sdfAssetBuilder;
