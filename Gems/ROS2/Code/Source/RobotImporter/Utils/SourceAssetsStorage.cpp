@@ -275,8 +275,8 @@ namespace ROS2::Utils
         urdfFileCrc.Add(urdfFilename);
         const AZ::IO::Path urdfPath(urdfFilename);
         const AZStd::string directoryNameTmp = AZStd::string::format("$tmp_%u.tmp", AZ::u32(urdfFileCrc));
-        const AZStd::string directoryNameDst =
-            AZStd::string::format("%u_%s%s", AZ::u32(urdfFileCrc), urdfPath.Stem().String().c_str(), outputDirSuffix.c_str());
+        const auto directoryNameDst =
+            AZ::IO::FixedMaxPathString::format("%u_%.*s%.*s", AZ::u32(urdfFileCrc), AZ_PATH_ARG(urdfPath.Stem()), AZ_STRING_ARG(outputDirSuffix));
 
         const AZ::IO::Path importDirectoryTmp = AZ::IO::Path(AZ::Utils::GetProjectPath()) / "Assets" / "UrdfImporter" / directoryNameTmp;
         const AZ::IO::Path importDirectoryDst = AZ::IO::Path(AZ::Utils::GetProjectPath()) / "Assets" / "UrdfImporter" / directoryNameDst;
