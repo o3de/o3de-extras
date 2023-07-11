@@ -122,7 +122,7 @@ namespace ROS2::Utils
         const AZStd::string& urdfFilename,
         const AZStd::unordered_set<AZStd::string>& colliders,
         const AZStd::unordered_set<AZStd::string>& visual,
-        const AZStd::string& outputDirSuffix = "",
+        AZStd::string_view outputDirSuffix = "",
         AZ::IO::FileIOBase* fileIO = AZ::IO::FileIOBase::GetInstance());
 
 } // namespace ROS2::Utils
