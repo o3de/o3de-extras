@@ -11,15 +11,15 @@
 
 namespace ROS2
 {
-    /// System component for ROS2 editor
+    /// System component for registering and managing the SdfAssetBuilder.
     class SdfAssetBuilderSystemComponent : public AZ::Component
     {
     public:
         AZ_COMPONENT(SdfAssetBuilderSystemComponent, "{0171F119-993A-4949-B62D-430291B01A41}");
         static void Reflect(AZ::ReflectContext* context);
 
-        SdfAssetBuilderSystemComponent();
-        ~SdfAssetBuilderSystemComponent();
+        SdfAssetBuilderSystemComponent() = default;
+        ~SdfAssetBuilderSystemComponent() = default;
 
     private:
         static void GetProvidedServices(AZ::ComponentDescriptor::DependencyArrayType& provided);

@@ -22,10 +22,6 @@ namespace ROS2
         }
     }
 
-    SdfAssetBuilderSystemComponent::SdfAssetBuilderSystemComponent() = default;
-
-    SdfAssetBuilderSystemComponent::~SdfAssetBuilderSystemComponent() = default;
-
     void SdfAssetBuilderSystemComponent::GetProvidedServices(AZ::ComponentDescriptor::DependencyArrayType& provided)
     {
         provided.push_back(AZ_CRC_CE("SdfAssetBuilderService"));
@@ -38,10 +34,12 @@ namespace ROS2
 
     void SdfAssetBuilderSystemComponent::GetRequiredServices([[maybe_unused]] AZ::ComponentDescriptor::DependencyArrayType& required)
     {
+        // This doesn't require any services to exist before startup.
     }
 
-    void SdfAssetBuilderSystemComponent::GetDependentServices([[maybe_unused]] AZ::ComponentDescriptor::DependencyArrayType& dependent)
+    void SdfAssetBuilderSystemComponent::GetDependentServices(AZ::ComponentDescriptor::DependencyArrayType& dependent)
     {
+        // If these services exist, they should be started first so that the Sdf builder can register with them correctly.
         dependent.push_back(AZ_CRC_CE("AssetDatabaseService"));
         dependent.push_back(AZ_CRC_CE("AssetCatalogService"));
     }

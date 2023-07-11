@@ -9,11 +9,14 @@
 #pragma once
 
 #include <AssetBuilderSDK/AssetBuilderBusses.h>
-#include <AssetBuilderSDK/AssetBuilderSDK.h>
 
 namespace ROS2
 {
-    //! Builder to convert Sdf, Urdf, World, and XAcro assets in the
+    //! Builder to convert the following file types into procedural prefab assets:
+    //! * sdf (Simulation Description Format: http://sdformat.org/ )
+    //! * urdf (Unified Robotics Description Format: http://wiki.ros.org/urdf )
+    //! * world (Gazebo sdf files typically containing a full simulation world description: https://classic.gazebosim.org/tutorials?tut=components )
+    //! * Xacro (XML macro used for sdf/urdf file generation: http://wiki.ros.org/xacro )
     //! source folders into procprefab assets in the cache folder.
     class SdfAssetBuilder
         : public AssetBuilderSDK::AssetBuilderCommandBus::Handler
@@ -22,15 +25,17 @@ namespace ROS2
         AZ_RTTI(ROS2::SdfAssetBuilder, "{F5A45C1B-1D9F-4898-8E31-499C3787DA76}");
 
         SdfAssetBuilder() = default;
+        ~SdfAssetBuilder() = default;
 
         void RegisterBuilder();
 
-        // Asset Builder Callback Functions...
+        // AssetBuilderSDK::AssetBuilderCommandBus overrides...
         void CreateJobs(const AssetBuilderSDK::CreateJobsRequest& request, AssetBuilderSDK::CreateJobsResponse& response) const;
         void ProcessJob(const AssetBuilderSDK::ProcessJobRequest& request, AssetBuilderSDK::ProcessJobResponse& response) const;
-
-        // AssetBuilderSDK::AssetBuilderCommandBus overrides...
         void ShutDown() override { }
-
+    private:
+        AZStd::string CreateDefaultProcPrefab(
+            const AssetBuilderSDK::ProcessJobRequest& request,
+            AssetBuilderSDK::ProcessJobResponse& response) const;
     };
 } // ROS2
