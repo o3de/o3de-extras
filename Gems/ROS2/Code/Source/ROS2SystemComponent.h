@@ -60,9 +60,9 @@ namespace ROS2
 
         //////////////////////////////////////////////////////////////////////////
         // ROS2RequestBus::Handler overrides
-        std::shared_ptr<rclcpp::Node> GetNode() const override;
+        std::shared_ptr<rclcpp::Node> GetNode(std::string ns) const override;
         builtin_interfaces::msg::Time GetROSTimestamp() const override;
-        void BroadcastTransform(const geometry_msgs::msg::TransformStamped& t, bool isDynamic) const override;
+        void BroadcastTransform(const geometry_msgs::msg::TransformStamped& t, bool isDynamic, std::string ns) const override;
         const SimulationClock& GetSimulationClock() const override;
         //////////////////////////////////////////////////////////////////////////
 
@@ -79,10 +79,12 @@ namespace ROS2
         void OnTick(float deltaTime, AZ::ScriptTimePoint time) override;
         ////////////////////////////////////////////////////////////////////////
     private:
-        std::shared_ptr<rclcpp::Node> m_ros2Node;
+        std::map<std::string, std::shared_ptr<rclcpp::Node>> m_ros2Nodes;
         AZStd::shared_ptr<rclcpp::executors::SingleThreadedExecutor> m_executor;
-        AZStd::unique_ptr<tf2_ros::TransformBroadcaster> m_dynamicTFBroadcaster;
-        AZStd::unique_ptr<tf2_ros::StaticTransformBroadcaster> m_staticTFBroadcaster;
+
+        std::map<std::string, AZStd::unique_ptr<tf2_ros::TransformBroadcaster>> m_dynamicTFBroadcasters;
+        std::map<std::string, AZStd::unique_ptr<tf2_ros::StaticTransformBroadcaster>> m_staticTFBroadcasters;
+
         AZStd::unique_ptr<SimulationClock> m_simulationClock;
         //! Load the pass templates of the ROS2 gem.
         void LoadPassTemplateMappings();

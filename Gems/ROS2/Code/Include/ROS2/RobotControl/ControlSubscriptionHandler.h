@@ -42,9 +42,9 @@ namespace ROS2
             if (!m_controlSubscription)
             {
                 auto ros2Frame = entity->FindComponent<ROS2FrameComponent>();
-                AZStd::string namespacedTopic = ROS2Names::GetNamespacedName(ros2Frame->GetNamespace(), subscriberConfiguration.m_topic);
+                AZStd::string namespacedTopic = ROS2Names::GetNamespacedName("", subscriberConfiguration.m_topic);
 
-                auto ros2Node = ROS2Interface::Get()->GetNode();
+                auto ros2Node = ROS2Interface::Get()->GetNode(ros2Frame->GetNamespace().data());
                 m_controlSubscription = ros2Node->create_subscription<T>(
                     namespacedTopic.data(),
                     subscriberConfiguration.GetQoS(),

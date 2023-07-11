@@ -108,15 +108,47 @@ namespace ROS2
     {
         rclcpp::init(0, 0);
         m_simulationClock->Activate();
-        m_ros2Node = std::make_shared<rclcpp::Node>("o3de_ros2_node");
+
+        rclcpp::NodeOptions node_options;
+        std::vector<std::string> args = {"--ros--args", "-", "/tf:=tf", "-r", "/tf_static:=tf_static"};
+        node_options.arguments(args);
+
+        auto ros2Node = std::make_shared<rclcpp::Node>("o3de_ros2_node", "", node_options);
+        m_ros2Nodes.emplace(std::make_pair(std::string(""), std::shared_ptr<rclcpp::Node>(ros2Node)));
+
         m_executor = AZStd::make_shared<rclcpp::executors::SingleThreadedExecutor>();
-        m_executor->add_node(m_ros2Node);
+        m_executor->add_node(ros2Node);
+
+        /////////////////////////////////////////////////////////////////
+        // TODO: create interface for adding nodes
+        auto robot1Node = std::make_shared<rclcpp::Node>("ros2_node", "robot1", node_options);
+        m_ros2Nodes.emplace(std::make_pair(std::string("robot1"), robot1Node));
+        m_executor->add_node(robot1Node);
+        m_staticTFBroadcasters.emplace(std::make_pair(std::string("robot1"),
+                                                      AZStd::make_unique<tf2_ros::StaticTransformBroadcaster>(m_ros2Nodes["robot1"])));
+        m_dynamicTFBroadcasters.emplace(std::make_pair(std::string("robot1"),
+                                                       AZStd::make_unique<tf2_ros::TransformBroadcaster>(m_ros2Nodes["robot1"])));
+
+        auto robot2Node = std::make_shared<rclcpp::Node>("ros2_node", "robot2", node_options);
+        m_ros2Nodes.emplace(std::make_pair(std::string("robot2"), robot2Node));
+        m_executor->add_node(robot2Node);
+        m_staticTFBroadcasters.emplace(std::make_pair(std::string("robot2"),
+                                                      AZStd::make_unique<tf2_ros::StaticTransformBroadcaster>(m_ros2Nodes["robot2"])));
+        m_dynamicTFBroadcasters.emplace(std::make_pair(std::string("robot2"),
+                                                       AZStd::make_unique<tf2_ros::TransformBroadcaster>(m_ros2Nodes["robot2"])));
+        /////////////////////////////////////////////////////////////////
+
+        for (const auto& [key, value] : m_ros2Nodes) {
+            AZ_Printf("ROS2SystemComponent", ">>>>>>>>>> Ros2node key %s, name: %s, namespace: %s", key.c_str(), value.get()->get_name(), value.get()->get_namespace());
+        }
     }
 
     void ROS2SystemComponent::Activate()
     {
-        m_staticTFBroadcaster = AZStd::make_unique<tf2_ros::StaticTransformBroadcaster>(m_ros2Node);
-        m_dynamicTFBroadcaster = AZStd::make_unique<tf2_ros::TransformBroadcaster>(m_ros2Node);
+        m_staticTFBroadcasters.emplace(std::make_pair(std::string(""),
+                                                        AZStd::make_unique<tf2_ros::StaticTransformBroadcaster>(m_ros2Nodes[""])));
+        m_dynamicTFBroadcasters.emplace(std::make_pair(std::string(""),
+                                                        AZStd::make_unique<tf2_ros::TransformBroadcaster>(m_ros2Nodes[""])));
 
         auto* passSystem = AZ::RPI::PassSystemInterface::Get();
         AZ_Assert(passSystem, "Cannot get the pass system.");
@@ -138,8 +170,9 @@ namespace ROS2
         ROS2RequestBus::Handler::BusDisconnect();
         m_simulationClock->Deactivate();
         m_loadTemplatesHandler.Disconnect();
-        m_dynamicTFBroadcaster.reset();
-        m_staticTFBroadcaster.reset();
+        //TODO handle clearing
+        m_dynamicTFBroadcasters.clear();
+        m_staticTFBroadcasters.clear();
     }
 
     builtin_interfaces::msg::Time ROS2SystemComponent::GetROSTimestamp() const
@@ -147,9 +180,11 @@ namespace ROS2
         return m_simulationClock->GetROSTimestamp();
     }
 
-    std::shared_ptr<rclcpp::Node> ROS2SystemComponent::GetNode() const
+    std::shared_ptr<rclcpp::Node> ROS2SystemComponent::GetNode(std::string ns = "") const
     {
-        return m_ros2Node;
+        AZ_Printf("ROS2SystemComponent", "Node namespace access: %s", ns.c_str());
+        //TODO: handle invalid ns
+        return m_ros2Nodes.at(ns);
     }
 
     const SimulationClock& ROS2SystemComponent::GetSimulationClock() const
@@ -157,15 +192,16 @@ namespace ROS2
         return *m_simulationClock;
     }
 
-    void ROS2SystemComponent::BroadcastTransform(const geometry_msgs::msg::TransformStamped& t, bool isDynamic) const
+    void ROS2SystemComponent::BroadcastTransform(const geometry_msgs::msg::TransformStamped& t, bool isDynamic, std::string ns = "") const
     {
+//        AZ_Printf("ROS2SystemComponent", "Broadcast namespace: %s", ns.c_str());
         if (isDynamic)
         {
-            m_dynamicTFBroadcaster->sendTransform(t);
+            m_dynamicTFBroadcasters.at(ns)->sendTransform(t);
         }
         else
         {
-            m_staticTFBroadcaster->sendTransform(t);
+            m_staticTFBroadcasters.at(ns)->sendTransform(t);
         }
     }
 

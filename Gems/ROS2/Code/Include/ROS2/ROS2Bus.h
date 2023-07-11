@@ -31,7 +31,7 @@ namespace ROS2
         //! You can use this node to create publishers and subscribers.
         //! @return The central ROS2 node which holds default publishers for core topics such as /clock and /tf.
         //! @note Alternatively, you can use your own node along with an executor.
-        virtual std::shared_ptr<rclcpp::Node> GetNode() const = 0;
+        virtual std::shared_ptr<rclcpp::Node> GetNode(std::string ns = "") const = 0;
 
         //! Acquire current time as ROS2 timestamp.
         //! Timestamps provide temporal context for messages such as sensor data.
@@ -50,7 +50,7 @@ namespace ROS2
         //! only once and are to be used when the spatial relationship between two frames does not change.
         //! @note Transforms are already published by each ROS2FrameComponent.
         //! Use this function directly only when default behavior of ROS2FrameComponent is not sufficient.
-        virtual void BroadcastTransform(const geometry_msgs::msg::TransformStamped& t, bool isDynamic) const = 0;
+        virtual void BroadcastTransform(const geometry_msgs::msg::TransformStamped& t, bool isDynamic, std::string ns = "") const = 0;
 
         //! Obtains a simulation clock that is used across simulation.
         //! @returns constant reference to currently running clock.

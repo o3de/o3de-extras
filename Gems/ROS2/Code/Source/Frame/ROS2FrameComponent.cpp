@@ -112,7 +112,7 @@ namespace ROS2
             }
             else
             {
-                m_ros2Transform->Publish(GetFrameTransform());
+                m_ros2Transform->Publish(GetFrameTransform(), GetNamespace().data());
             }
         }
     }
@@ -131,12 +131,12 @@ namespace ROS2
 
     void ROS2FrameComponent::OnTick([[maybe_unused]] float deltaTime, [[maybe_unused]] AZ::ScriptTimePoint time)
     {
-        m_ros2Transform->Publish(GetFrameTransform());
+        m_ros2Transform->Publish(GetFrameTransform(), GetNamespace().data());
     }
 
     AZStd::string ROS2FrameComponent::GetGlobalFrameName() const
     {
-        return ROS2Names::GetNamespacedName(GetNamespace(), AZStd::string("odom"));
+        return ROS2Names::GetNamespacedName("", AZStd::string("odom"));
     }
 
     bool ROS2FrameComponent::IsTopLevel() const
@@ -182,7 +182,7 @@ namespace ROS2
 
     AZStd::string ROS2FrameComponent::GetFrameID() const
     {
-        return ROS2Names::GetNamespacedName(GetNamespace(), m_frameName);
+        return ROS2Names::GetNamespacedName("", m_frameName);
     }
 
     void ROS2FrameComponent::SetFrameID(const AZStd::string& frameId)

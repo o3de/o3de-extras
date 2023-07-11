@@ -287,7 +287,8 @@
                                         "MaterialAsset": {
                                             "assetId": {
                                                 "guid": "{D5BE771A-53A9-534E-8DCC-A91D6127540D}"
-                                            }
+                                            },
+                                            "assetHint": "robot/rosbot_xl_description/meshes/materials/antenna_plastic_-_matte_black_.azmaterial"
                                         }
                                     }
                                 }
@@ -335,7 +336,8 @@
                                         "MaterialAsset": {
                                             "assetId": {
                                                 "guid": "{D5BE771A-53A9-534E-8DCC-A91D6127540D}"
-                                            }
+                                            },
+                                            "assetHint": "robot/rosbot_xl_description/meshes/materials/antenna_plastic_-_matte_black_.azmaterial"
                                         }
                                     }
                                 }
@@ -1360,7 +1362,8 @@
                     "m_template": {
                         "$type": "ROS2FrameComponent",
                         "Namespace Configuration": {
-                            "Namespace Strategy": 1
+                            "Namespace Strategy": 3,
+                            "Namespace": "robot1"
                         },
                         "Frame Name": "body_link"
                     }
@@ -2042,8 +2045,7 @@
                     "Id": 16056351394850261418,
                     "Controller": {
                         "Configuration": {
-                            "Field of View": 60.0,
-                            "EditorEntityId": 15598184734561212878
+                            "Field of View": 60.0
                         }
                     }
                 },

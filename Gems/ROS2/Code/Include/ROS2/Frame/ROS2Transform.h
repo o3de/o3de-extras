@@ -27,7 +27,7 @@ namespace ROS2
         //! Construct and delegate publishing of a transform according to members' values.
         //! @param transform AZ::Transform with current transformation between m_parentFrame and m_childFrame.
         //! @note The actual publishing is done by singleton tf broadcasters.
-        void Publish(const AZ::Transform& transform);
+        void Publish(const AZ::Transform& transform, std::string ns = "");
 
     private:
         geometry_msgs::msg::TransformStamped CreateTransformMessage(const AZ::Transform& transform);

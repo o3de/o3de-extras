@@ -32,13 +32,13 @@ namespace ROS2
         return t;
     }
 
-    void ROS2Transform::Publish(const AZ::Transform& transform)
+    void ROS2Transform::Publish(const AZ::Transform& transform, std::string ns)
     {
         if (m_isPublished && !m_isDynamic)
         { // Only publish static transforms once
             return;
         }
-        ROS2Interface::Get()->BroadcastTransform(CreateTransformMessage(transform), m_isDynamic);
+        ROS2Interface::Get()->BroadcastTransform(CreateTransformMessage(transform), m_isDynamic, ns);
         m_isPublished = true;
     }
 } // namespace ROS2
