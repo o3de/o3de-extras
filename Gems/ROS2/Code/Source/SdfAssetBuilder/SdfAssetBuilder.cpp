@@ -49,10 +49,15 @@ namespace ROS2
             sdfAssetBuilderDescriptor.m_patterns.push_back(AssetBuilderSDK::AssetBuilderPattern(extension, AssetBuilderSDK::AssetBuilderPattern::PatternType::Wildcard));
         }
 
-        sdfAssetBuilderDescriptor.m_createJobFunction = AZStd::bind(&SdfAssetBuilder::CreateJobs, this,
-            AZStd::placeholders::_1, AZStd::placeholders::_2);
-        sdfAssetBuilderDescriptor.m_processJobFunction = AZStd::bind(&SdfAssetBuilder::ProcessJob, this,
-            AZStd::placeholders::_1, AZStd::placeholders::_2);
+        sdfAssetBuilderDescriptor.m_createJobFunction = [this](auto && request, auto && response) 
+            { 
+                return CreateJobs(request, response); 
+            };
+
+        sdfAssetBuilderDescriptor.m_processJobFunction = [this](auto && request, auto && response) 
+            { 
+                return ProcessJob(request, response); 
+            };
 
         // Listen for asset builder notifications requesting jobs for any of the sdf source file types.
         BusConnect(sdfAssetBuilderDescriptor.m_busId);
