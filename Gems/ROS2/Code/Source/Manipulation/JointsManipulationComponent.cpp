@@ -302,10 +302,7 @@ namespace ROS2
                     });
                 effort = stiffness * -(position - target_pos) + damping * (target_vel - velocity);
 
-                if (max_force < abs(effort))
-                {
-                    effort = max_force * ((effort > 0) - (effort < 0));
-                }
+                effort = AZ::GetClamp(effort, -max_force, max_force);
             }
         }
 
