@@ -222,3 +222,5 @@ if(PAL_TRAIT_BUILD_TESTS_SUPPORTED)
         endif()
     endif()
 endif()
+
+add_subdirectory(PythonTests)
