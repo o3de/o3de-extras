@@ -12,7 +12,6 @@
 #include <AzCore/IO/IOUtils.h>
 #include <AzCore/Serialization/Json/JsonUtils.h>
 #include <AzCore/Settings/SettingsRegistryVisitorUtils.h>
-#include <AzFramework/StringFunc/StringFunc.h>
 #include <AzToolsFramework/Entity/EntityUtilityComponent.h>
 #include <AzToolsFramework/Prefab/PrefabLoaderScriptingBus.h>
 #include <AzToolsFramework/Prefab/PrefabSystemComponentInterface.h>
@@ -84,8 +83,17 @@ namespace ROS2
                 if (AZ::SettingsRegistryInterface::FixedValueString value;
                     settingsRegistry->Get(value, visitArgs.m_jsonKeyPath))
                 {
-                    // Support both '.sdf' and 'sdf' style entries in the setreg file for robustness.
-                    AZStd::string wildcardPattern = (value[0] == '.')
+                    // Ignore any entries that are either completely empty or *only* contain a '.'.
+                    // These will produce excessive (and presumably incorrect) wildcard matches.
+                    if (value.empty() ||
+                        ((value.size() == 1) && value.starts_with('.')))
+                    {
+                        return AZ::SettingsRegistryInterface::VisitResponse::Continue;
+                    }
+
+                    // Support both 'sdf' and '.sdf' style entries in the setreg file for robustness.
+                    // Either one will get turned into a '*.sdf' pattern.
+                    AZStd::string wildcardPattern = value.starts_with('.')
                         ? AZStd::string::format("*%s", value.c_str())
                         : AZStd::string::format("*.%s", value.c_str());
 
@@ -142,11 +150,18 @@ namespace ROS2
         // Save the prefab to our output directory.
         rapidjson::Document doc;
         doc.Parse(prefabJson.c_str());
-        AZ::JsonSerializationUtils::WriteJsonFile(doc, tempAssetOutputPath.c_str());
+        auto outcome = AZ::JsonSerializationUtils::WriteJsonFile(doc, tempAssetOutputPath.c_str());
+        if (!outcome.IsSuccess())
+        {
+            AZ_Error(SdfAssetBuilderName, false, "Failed to write out temp asset file '%s'. Error message: %s", 
+                tempAssetOutputPath.c_str(), outcome.GetError().c_str());
+            response.m_resultCode = AssetBuilderSDK::ProcessJobResult_Failed;
+            return;
+        }
 
         // Mark the resulting prefab as a product asset with the "procedural prefab" asset type.
         AssetBuilderSDK::JobProduct sdfJobProduct;
-        sdfJobProduct.m_productFileName = tempAssetOutputPath;
+        sdfJobProduct.m_productFileName = tempAssetOutputPath.String();
         sdfJobProduct.m_productSubID = 0;
         sdfJobProduct.m_productAssetType = azrtti_typeid<AZ::Prefab::ProceduralPrefabAsset>();
 
@@ -194,7 +209,7 @@ namespace ROS2
             prefabTemplateId,
             &AzToolsFramework::Prefab::PrefabSystemScriptingBus::Events::CreatePrefabTemplate,
             entities,
-            prefabTemplateName);
+            prefabTemplateName.String());
 
         if (prefabTemplateId == AzToolsFramework::Prefab::InvalidTemplateId)
         {
@@ -211,7 +226,7 @@ namespace ROS2
 
         if (outcome.IsSuccess() == false)
         {
-            AZ_Error(SdfAssetBuilderName, false, "Could not create JSON string for template; maybe NaN values in the template?");
+            AZ_Error(SdfAssetBuilderName, false, "Could not serialize prefab template as a JSON string");
             return {};
         }
 
