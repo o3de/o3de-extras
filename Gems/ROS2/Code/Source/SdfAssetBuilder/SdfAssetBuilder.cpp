@@ -169,9 +169,8 @@ namespace ROS2
         // is likely to change pretty drastically still.
 
         // Create a prefab name based on the source file name.
-        AZStd::string prefabTemplateName{ request.m_sourceFile };
-        AzFramework::StringFunc::Path::ReplaceExtension(prefabTemplateName, "procprefab");
-        AZ::StringFunc::Replace(prefabTemplateName, "\\", "/"); // the source folder uses forward slash
+        AZ::IO::FixedMaxPath prefabTemplateName{ AZ::IO::PathView(request.m_sourceFile).FixedMaxPathStringAsPosix() };
+        prefabTemplateName.ReplaceExtension("procprefab");
 
         // clear out any previously created prefab template for this path
         auto* prefabSystemComponentInterface = AZ::Interface<AzToolsFramework::Prefab::PrefabSystemComponentInterface>::Get();
