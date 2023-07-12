@@ -28,7 +28,7 @@ namespace ROS2
         {
             [[maybe_unused]] constexpr const char* SdfAssetBuilderName = "SdfAssetBuilder";
             constexpr const char* SdfAssetBuilderJobKey = "Sdf Asset Builder";
-            constexpr const char* SdfAssetBuilderSupportedFileExtensionsRegistryKey = "/ROS/SdfAssetBuilder/SupportedFileTypeExtensions";
+            constexpr const char* SdfAssetBuilderSupportedFileExtensionsRegistryKey = "/O3DE/ROS2/SdfAssetBuilder/SupportedFileTypeExtensions";
         }
 
     SdfAssetBuilder::SdfAssetBuilder()
