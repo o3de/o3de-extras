@@ -9,10 +9,10 @@
 #pragma once
 
 #include <AzCore/Component/Component.h>
-#include <AzFramework/Physics/Common/PhysicsEvents.h>
-
 #include <AzCore/Component/TickBus.h>
+#include <AzFramework/Physics/Common/PhysicsEvents.h>
 #include <AzFramework/Physics/Common/PhysicsSimulatedBodyEvents.h>
+#include <AzFramework/Physics/PhysicsSystem.h>
 #include <AzFramework/Physics/RigidBodyBus.h>
 #include <ImGuiBus.h>
 #include <LmbrCentral/Scripting/TagComponentBus.h>
@@ -26,7 +26,7 @@ namespace ROS2
     //!  - Attach component to root of robot articulation.
     //!  - Assign to m_gripperEffectorCollider EntityId of the collider that will be used as the gripper effector.
     //!  - Add tag "Grippable" to objects that can be gripped.
-    class VacuumGripper
+    class VacuumGripperComponent
         : public AZ::Component
         , public GripperRequestBus::Handler
         , public ImGui::ImGuiUpdateListenerBus::Handler
@@ -34,9 +34,9 @@ namespace ROS2
     {
     public:
         static constexpr AZ::Crc32 GrippableTag = AZ_CRC_CE("Grippable");
-        AZ_COMPONENT(VacuumGripper, "{a29eb4fa-0f6f-11ee-be56-0242ac120002}", AZ::Component);
-        VacuumGripper() = default;
-        ~VacuumGripper() = default;
+        AZ_COMPONENT(VacuumGripperComponent, "{a29eb4fa-0f6f-11ee-be56-0242ac120002}", AZ::Component);
+        VacuumGripperComponent() = default;
+        ~VacuumGripperComponent() = default;
 
         // AZ::Component overrides...
         void Activate() override;
@@ -52,19 +52,18 @@ namespace ROS2
         float GetGripperEffort() const override;
         bool IsGripperNotMoving() const override;
         bool HasGripperReachedGoal() const override;
-
-
+        bool HasGripperCommandBeenCancelled() const override;
         // AZ::TickBus::Handler overrides...
         void OnTick(float delta, AZ::ScriptTimePoint timePoint) override;
 
         // ImGui::ImGuiUpdateListenerBus::Handler overrides...
         void OnImGuiUpdate() override;
 
-        //! The entity that contains collider that will be used as the gripper
+        //! Entity that contains the collider that will be used as the gripper
         //! effector/ The collider must be a trigger collider.
         AZ::EntityId m_gripperEffectorCollider;
 
-        //! The entity that contains articulation link that will be used as the gripper
+        //! Entity that contains the articulation link that will be used as the gripper
         AZ::EntityId m_gripperEffectorArticulationLink;
 
         //! The physics body handle to m_gripperEffectorArticulationLink.
@@ -76,21 +75,25 @@ namespace ROS2
         //! Handle to joint created by vacuum gripper.
         AzPhysics::JointHandle m_vacuumJoint;
 
-        bool m_gripping {false};
+        bool m_tryingToGrip{ false };
+
+        bool m_cancelGripperCommand{ false };
 
         AzPhysics::SimulatedBodyEvents::OnTriggerEnter::Handler m_onTriggerEnterHandler;
         AzPhysics::SimulatedBodyEvents::OnTriggerExit::Handler m_onTriggerExitHandler;
 
-        //! check if object is grippable (has Tag).
+        //! Checks if object is grippable (has Tag).
         bool isObjectGrippable(const AZ::EntityId entityId);
 
-        //! check if oject is in the gripper effector collider and creates joint between gripper effector and object.
+        //! Checks if an object is in the gripper effector collider and creates a joint between gripper effector and object.
         bool TryToGripObject();
 
-        //! releases object from gripper effector.
+        //! Releases object from gripper effector.
         void ReleaseGrippedObject();
 
         AZ::EntityId GetRootOfArticulation(AZ::EntityId entityId);
 
+        void AttachToGripper(
+            AzPhysics::SimulatedBody* gripperBody, AzPhysics::RigidBody* grippedRigidBody, AzPhysics::SceneInterface* sceneInterface);
     };
 } // namespace ROS2

@@ -7,14 +7,13 @@
  *
  */
 
-#include "VacuumGripper.h"
+#include "VacuumGripperComponent.h"
+#include "Source/ArticulationLinkComponent.h"
 #include "Utils.h"
 
 #include <AzCore/Serialization/EditContext.h>
 #include <AzCore/Serialization/SerializeContext.h>
 #include <AzFramework/Components/TransformComponent.h>
-
-#include "Source/ArticulationLinkComponent.h"
 #include <AzFramework/Physics/PhysicsSystem.h>
 #include <AzFramework/Physics/RigidBodyBus.h>
 #include <AzFramework/Physics/SimulatedBodies/RigidBody.h>
@@ -22,42 +21,40 @@
 
 namespace ROS2
 {
-    void VacuumGripper::Activate()
+    void VacuumGripperComponent::Activate()
     {
         m_gripperEffectorBodyHandle = AzPhysics::InvalidSimulatedBodyHandle;
         m_onTriggerEnterHandler = AzPhysics::SimulatedBodyEvents::OnTriggerEnter::Handler(
             [&]([[maybe_unused]] AzPhysics::SimulatedBodyHandle bodyHandle, [[maybe_unused]] const AzPhysics::TriggerEvent& event)
             {
-                AZ_Printf("ROS2", "VacuumGripper::Activate() - OnTriggerEnter\n");
-                const auto boxId = event.m_otherBody->GetEntityId();
-                const bool isGrippable = isObjectGrippable(boxId);
+                const auto grippedEntityCandidateId = event.m_otherBody->GetEntityId();
+                const bool isGrippable = isObjectGrippable(grippedEntityCandidateId);
                 if (isGrippable)
                 {
-                    m_grippedObjectInEffector = boxId;
+                    m_grippedObjectInEffector = grippedEntityCandidateId;
                 }
             });
 
         m_onTriggerExitHandler = AzPhysics::SimulatedBodyEvents::OnTriggerExit::Handler(
             [&]([[maybe_unused]] AzPhysics::SimulatedBodyHandle bodyHandle, [[maybe_unused]] const AzPhysics::TriggerEvent& event)
             {
-                AZ_Printf("ROS2", "VacuumGripper::Activate() - OnTriggerExit\n");
-                const auto boxId = event.m_otherBody->GetEntityId();
-                const bool isGrippable = isObjectGrippable(boxId);
-                if (isGrippable)
+                const auto grippedEntityCandidateId = event.m_otherBody->GetEntityId();
+                if (m_grippedObjectInEffector == grippedEntityCandidateId)
                 {
                     m_grippedObjectInEffector = AZ::EntityId(AZ::EntityId::InvalidEntityId);
                 }
             });
+
         m_vacuumJoint = AzPhysics::InvalidJointHandle;
         m_grippedObjectInEffector = AZ::EntityId(AZ::EntityId::InvalidEntityId);
-        m_gripping = false;
-
+        m_tryingToGrip = false;
+        m_cancelGripperCommand = false;
         AZ::TickBus::Handler::BusConnect();
         ImGui::ImGuiUpdateListenerBus::Handler::BusConnect();
         GripperRequestBus::Handler::BusConnect(GetEntityId());
     }
 
-    void VacuumGripper::Deactivate()
+    void VacuumGripperComponent::Deactivate()
     {
         m_onTriggerEnterHandler.Disconnect();
         m_onTriggerExitHandler.Disconnect();
@@ -66,36 +63,36 @@ namespace ROS2
         ImGui::ImGuiUpdateListenerBus::Handler::BusDisconnect();
     }
 
-    void VacuumGripper::Reflect(AZ::ReflectContext* context)
+    void VacuumGripperComponent::Reflect(AZ::ReflectContext* context)
     {
         if (AZ::SerializeContext* serialize = azrtti_cast<AZ::SerializeContext*>(context))
         {
-            serialize->Class<VacuumGripper, AZ::Component>()
-                ->Field("EffectorCollider", &VacuumGripper::m_gripperEffectorCollider)
-                ->Field("EffectorArticulation", &VacuumGripper::m_gripperEffectorArticulationLink)
+            serialize->Class<VacuumGripperComponent, AZ::Component>()
+                ->Field("EffectorCollider", &VacuumGripperComponent::m_gripperEffectorCollider)
+                ->Field("EffectorArticulation", &VacuumGripperComponent::m_gripperEffectorArticulationLink)
                 ->Version(1);
 
             if (AZ::EditContext* ec = serialize->GetEditContext())
             {
-                ec->Class<VacuumGripper>("VacuumGripper", "VacuumGripper")
+                ec->Class<VacuumGripperComponent>("VacuumGripper", "VacuumGripper")
                     ->ClassElement(AZ::Edit::ClassElements::EditorData, "VacuumGripper")
                     ->Attribute(AZ::Edit::Attributes::AppearsInAddComponentMenu, AZ_CRC("Game"))
                     ->Attribute(AZ::Edit::Attributes::Category, "ROS2")
                     ->DataElement(
                         AZ::Edit::UIHandlers::EntityId,
-                        &VacuumGripper::m_gripperEffectorCollider,
+                        &VacuumGripperComponent::m_gripperEffectorCollider,
                         "Effector Trigger Collider",
                         "The entity with trigger collider that will detect objects that can be successfully gripped.")
                     ->DataElement(
                         AZ::Edit::UIHandlers::EntityId,
-                        &VacuumGripper::m_gripperEffectorArticulationLink,
+                        &VacuumGripperComponent::m_gripperEffectorArticulationLink,
                         "Effector Articulation Link",
                         "The entity that is the articulation link of the effector.");
             }
         }
     }
 
-    void VacuumGripper::OnTick(float delta, AZ::ScriptTimePoint timePoint)
+    void VacuumGripperComponent::OnTick(float delta, AZ::ScriptTimePoint timePoint)
     {
         AzPhysics::SystemInterface* physicsSystem = AZ::Interface<AzPhysics::SystemInterface>::Get();
         AZ_Assert(physicsSystem, "No physics system.");
@@ -106,7 +103,7 @@ namespace ROS2
         AzPhysics::SceneHandle defaultSceneHandle = sceneInterface->GetSceneHandle(AzPhysics::DefaultPhysicsSceneName);
         AZ_Assert(defaultSceneHandle != AzPhysics::InvalidSceneHandle, "Invalid default physics scene handle.");
 
-        // Connect the trigger handlers if not already connected, it is circle navigation around issue GH-16188, the
+        // Connect the trigger handlers if not already connected, it is circumventing the issue GH-16188, the
         // RigidbodyNotificationBus should be used instead.
         if (!m_onTriggerEnterHandler.IsConnected() || !m_onTriggerExitHandler.IsConnected())
         {
@@ -144,12 +141,12 @@ namespace ROS2
                 }
             }
         }
-        if (m_gripping)
+        if (m_tryingToGrip)
         {
             TryToGripObject();
         }
     }
-    AZ::EntityId VacuumGripper::GetRootOfArticulation(AZ::EntityId entityId)
+    AZ::EntityId VacuumGripperComponent::GetRootOfArticulation(AZ::EntityId entityId)
     {
         AZ::EntityId parentEntityId{ AZ::EntityId::InvalidEntityId };
         AZ::Entity* parentEntity = nullptr;
@@ -161,7 +158,7 @@ namespace ROS2
             return AZ::EntityId(AZ::EntityId::InvalidEntityId);
         }
 
-        // get articulation link component, if not found for parent, return current entity
+        // Get articulation link component, if not found for parent, return current entity
         PhysX::ArticulationLinkComponent* component = parentEntity->FindComponent<PhysX::ArticulationLinkComponent>();
         if (component == nullptr)
         {
@@ -170,14 +167,14 @@ namespace ROS2
         return GetRootOfArticulation(parentEntity->GetId());
     }
 
-    bool VacuumGripper::isObjectGrippable(const AZ::EntityId entityId)
+    bool VacuumGripperComponent::isObjectGrippable(const AZ::EntityId entityId)
     {
         bool isGrippable = false;
         LmbrCentral::TagComponentRequestBus::EventResult(isGrippable, entityId, &LmbrCentral::TagComponentRequests::HasTag, GrippableTag);
         return isGrippable;
     }
 
-    bool VacuumGripper::TryToGripObject()
+    bool VacuumGripperComponent::TryToGripObject()
     {
         AZ_Warning(
             "VacuumGripper",
@@ -211,10 +208,21 @@ namespace ROS2
         Physics::RigidBodyRequestBus::EventResult(grippedRigidBody, m_grippedObjectInEffector, &Physics::RigidBodyRequests::GetRigidBody);
         AZ_Assert(grippedRigidBody, "No RigidBody found on entity grippedRigidBody");
 
-        // Gripper is end of articulation chain
+        // Gripper is the end of the articulation chain
         AzPhysics::SimulatedBody* gripperBody = nullptr;
         gripperBody = sceneInterface->GetSimulatedBodyFromHandle(defaultSceneHandle, m_gripperEffectorBodyHandle);
         AZ_Assert(gripperBody, "No gripper body found");
+
+        AttachToGripper(gripperBody, grippedRigidBody, sceneInterface);
+
+        return true;
+    }
+
+    void VacuumGripperComponent::AttachToGripper(
+        AzPhysics::SimulatedBody* gripperBody, AzPhysics::RigidBody* grippedRigidBody, AzPhysics::SceneInterface* sceneInterface)
+    {
+        AzPhysics::SceneHandle defaultSceneHandle = sceneInterface->GetSceneHandle(AzPhysics::DefaultPhysicsSceneName);
+        AZ_Assert(defaultSceneHandle != AzPhysics::InvalidSceneHandle, "Invalid default physics scene handle");
 
         // Find Transform of the child in parent's frame
         AZ::Transform childTransformWorld = grippedRigidBody->GetTransform();
@@ -231,16 +239,14 @@ namespace ROS2
         jointConfig.m_childLocalPosition = childTransformParent.GetTranslation();
         jointConfig.m_startSimulationEnabled = true;
 
-        // create new joint
+        // Create new joint
         m_vacuumJoint =
             sceneInterface->AddJoint(defaultSceneHandle, &jointConfig, m_gripperEffectorBodyHandle, grippedRigidBody->m_bodyHandle);
-
-        return true;
     }
 
-    void VacuumGripper::ReleaseGrippedObject()
+    void VacuumGripperComponent::ReleaseGrippedObject()
     {
-        m_gripping = false;
+        m_tryingToGrip = false;
         if (m_vacuumJoint == AzPhysics::InvalidJointHandle)
         {
             return;
@@ -259,7 +265,7 @@ namespace ROS2
         m_vacuumJoint = AzPhysics::InvalidJointHandle;
     }
 
-    void VacuumGripper::OnImGuiUpdate()
+    void VacuumGripperComponent::OnImGuiUpdate()
     {
         ImGui::Begin("VacuumGripperDebugger");
 
@@ -270,11 +276,11 @@ namespace ROS2
         ImGui::Text("Grippable object : %s", grippedObjectInEffectorName.c_str());
         ImGui::Text("Vacuum joint created : %d ", m_vacuumJoint != AzPhysics::InvalidJointHandle);
 
-        ImGui::Checkbox("Gripping", &m_gripping);
+        ImGui::Checkbox("Gripping", &m_tryingToGrip);
 
         if (ImGui::Button("Grip Command "))
         {
-            m_gripping = true;
+            m_tryingToGrip = true;
         }
 
         if (ImGui::Button("Release Command"))
@@ -284,12 +290,13 @@ namespace ROS2
         ImGui::End();
     }
 
-    AZ::Outcome<void, AZStd::string> VacuumGripper::GripperCommand(float position, float maxEffort)
+    AZ::Outcome<void, AZStd::string> VacuumGripperComponent::GripperCommand(float position, float maxEffort)
     {
         AZ_Trace("VacuumGripper", "GripperCommand %f\n", position);
-        if (position > 0)
+        m_cancelGripperCommand = false;
+        if (position == 0.0f)
         {
-            m_gripping = true;
+            m_tryingToGrip = true;
         }
         else
         {
@@ -298,34 +305,44 @@ namespace ROS2
         return AZ::Success();
     }
 
-    AZ::Outcome<void, AZStd::string> VacuumGripper::CancelGripperCommand()
+    AZ::Outcome<void, AZStd::string> VacuumGripperComponent::CancelGripperCommand()
     {
         ReleaseGrippedObject();
+        m_cancelGripperCommand = true;
         return AZ::Success();
     }
 
-    float VacuumGripper::GetGripperPosition() const
+    bool VacuumGripperComponent::HasGripperCommandBeenCancelled() const
+    {
+        if (m_cancelGripperCommand && m_vacuumJoint == AzPhysics::InvalidJointHandle)
+        {
+            return true;
+        }
+        return false;
+    }
+
+    float VacuumGripperComponent::GetGripperPosition() const
     {
         return m_vacuumJoint == AzPhysics::InvalidJointHandle ? 0.0f : 1.0f;
     }
 
-    float VacuumGripper::GetGripperEffort() const
+    float VacuumGripperComponent::GetGripperEffort() const
     {
         return m_vacuumJoint == AzPhysics::InvalidJointHandle ? 0.0f : 1.0f;
     }
-    bool VacuumGripper::IsGripperNotMoving() const
+    bool VacuumGripperComponent::IsGripperNotMoving() const
     {
         return true;
     }
 
-    bool VacuumGripper::HasGripperReachedGoal() const
+    bool VacuumGripperComponent::HasGripperReachedGoal() const
     {
-        const bool isJoint = (m_vacuumJoint != AzPhysics::InvalidJointHandle);
-        if (m_gripping && isJoint)
+        const bool isObjectAttached = (m_vacuumJoint != AzPhysics::InvalidJointHandle);
+        if (m_tryingToGrip && isObjectAttached)
         {
             return true;
         }
-        if (!m_gripping && !isJoint)
+        if (!m_tryingToGrip && !isObjectAttached)
         {
             return true;
         }

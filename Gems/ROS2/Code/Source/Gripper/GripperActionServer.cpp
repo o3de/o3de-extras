@@ -16,114 +16,36 @@
 
 namespace ROS2
 {
-    void GripperActionServer::Activate()
+    GripperActionServer::GripperActionServer(const AZStd::string& actionName, const AZ::EntityId& entityId)
+        : m_entityId(entityId)
     {
         auto ros2Node = ROS2Interface::Get()->GetNode();
-
         actionServer = rclcpp_action::create_server<GripperCommand>(
             ros2Node,
-            m_gripperActionServerName.data(),
+            actionName.data(),
             AZStd::bind(&GripperActionServer::GoalReceivedCallback, this, AZStd::placeholders::_1, AZStd::placeholders::_2),
             AZStd::bind(&GripperActionServer::GoalCancelledCallback, this, AZStd::placeholders::_1),
             AZStd::bind(&GripperActionServer::GoalAcceptedCallback, this, AZStd::placeholders::_1));
-        AZ::TickBus::Handler::BusConnect();
-    }
-
-    void GripperActionServer::Deactivate()
-    {
-        actionServer.reset();
-        AZ::TickBus::Handler::BusDisconnect();
-    }
-
-    void GripperActionServer::Reflect(AZ::ReflectContext* context)
-    {
-        if (AZ::SerializeContext* serialize = azrtti_cast<AZ::SerializeContext*>(context))
-        {
-            serialize->Class<GripperActionServer, AZ::Component>()
-                ->Field("ActionServerName", &GripperActionServer::m_gripperActionServerName)
-                ->Version(1);
-
-            if (AZ::EditContext* ec = serialize->GetEditContext())
-            {
-                ec->Class<GripperActionServer>("GripperActionServer", "GripperActionServer")
-                    ->ClassElement(AZ::Edit::ClassElements::EditorData, "GripperActionServer")
-                    ->Attribute(AZ::Edit::Attributes::AppearsInAddComponentMenu, AZ_CRC("Game"))
-                    ->Attribute(AZ::Edit::Attributes::Category, "ROS2")
-                    ->DataElement(
-                        AZ::Edit::UIHandlers::EntityId,
-                        &GripperActionServer::m_gripperActionServerName,
-                        "Gripper Action Server",
-                        "Gripper Action Server.");
-            }
-        }
     }
 
     bool GripperActionServer::IsGoalActiveState() const
     {
+        if (!m_goalHandle)
+        {
+            return false;
+        }
         return m_goalHandle->is_active() || m_goalHandle->is_executing() || m_goalHandle->is_canceling();
     }
 
     bool GripperActionServer::IsReadyForExecution() const
     {
-        // Has a goal handle yet - can be accepted.
+        // Has no goal handle yet - can be accepted.
         if (!m_goalHandle)
         {
             return true;
         }
-        // accept goal if previous is terminal state
+        // Accept if the previous one is in a terminal state.
         return IsGoalActiveState() == false;
-    }
-
-    std::shared_ptr<GripperActionServer::GripperCommand::Feedback> GripperActionServer::ProduceFeedback() const
-    {
-        auto feedback = std::make_shared<GripperCommand::Feedback>();
-        float position = 0.0;
-        float effort = 0.0;
-        GripperRequestBus::EventResult(position, GetEntityId(), &GripperRequestBus::Events::GetGripperPosition);
-        GripperRequestBus::EventResult(effort, GetEntityId(), &GripperRequestBus::Events::GetGripperEffort);
-        feedback->position = position;
-        feedback->position = effort;
-        feedback->reached_goal = false;
-        return feedback;
-    }
-
-    std::shared_ptr<GripperActionServer::GripperCommand::Result> GripperActionServer::ProduceResult() const
-    {
-        auto result = std::make_shared<GripperCommand::Result >();
-        float position = 0.0;
-        float effort = 0.0;
-        GripperRequestBus::EventResult(position, GetEntityId(), &GripperRequestBus::Events::GetGripperPosition);
-        GripperRequestBus::EventResult(effort, GetEntityId(), &GripperRequestBus::Events::GetGripperEffort);
-        result->position = position;
-        result->position = effort;
-        result->reached_goal = true;
-        return result;
-    }
-
-
-    void GripperActionServer::OnTick(float delta, AZ::ScriptTimePoint timePoint)
-    {
-        if (m_goalHandle && IsGoalActiveState())
-        {
-            bool isDone = false;
-            GripperRequestBus::EventResult(isDone, GetEntityId(), &GripperRequestBus::Events::HasGripperReachedGoal);
-
-            if (isDone)
-            {
-                AZ_Printf("GripperActionServer::OnTick", "GripperActionServer::OnTick: Gripper reached goal!");
-                auto result = ProduceResult();
-                m_goalHandle->succeed(result);
-            }
-            else if (m_goalHandle->is_canceling())
-            {
-                m_goalHandle->canceled(ProduceResult());
-            }
-            else
-            {
-                auto feedback = ProduceFeedback();
-                m_goalHandle->publish_feedback(feedback);
-            }
-        }
     }
 
     rclcpp_action::GoalResponse GripperActionServer::GoalReceivedCallback(
@@ -131,12 +53,12 @@ namespace ROS2
     {
         if (!IsReadyForExecution())
         {
-            AZ_Trace("GripperActionServer", "GripperActionServer::handleGoal: Rejected goal, already executing\n");
+            AZ_Printf("GripperActionServer", "GripperActionServer::handleGoal: Rejected goal, already executing\n");
             if (m_goalHandle)
             {
                 AZ_Trace(
                     "GripperActionServer",
-                    " is_active: %d,  is_executing %d, is_canceling : %d",
+                    " is_active: %d,  is_executing %d, is_canceling : %d\n",
                     m_goalHandle->is_active(),
                     m_goalHandle->is_executing(),
                     m_goalHandle->is_canceling());
@@ -146,7 +68,7 @@ namespace ROS2
 
         AZ::Outcome<void, AZStd::string> commandOutcome = AZ::Failure(AZStd::string("No gripper component found!"));
         GripperRequestBus::EventResult(
-            commandOutcome, GetEntityId(), &GripperRequestBus::Events::GripperCommand, goal->command.position, goal->command.max_effort);
+            commandOutcome, m_entityId, &GripperRequestBus::Events::GripperCommand, goal->command.position, goal->command.max_effort);
         if (!commandOutcome.IsSuccess())
         {
             AZ_Trace("GripperActionServer", "GripperCommand could not be accepted: %s\n", commandOutcome.GetError().c_str());
@@ -159,10 +81,10 @@ namespace ROS2
     rclcpp_action::CancelResponse GripperActionServer::GoalCancelledCallback(const std::shared_ptr<GoalHandleGripperCommand> goal_handle)
     {
         AZ::Outcome<void, AZStd::string> cancelOutcome = AZ::Failure(AZStd::string("No gripper component found!"));
-        GripperRequestBus::EventResult(cancelOutcome, GetEntityId(), &GripperRequestBus::Events::CancelGripperCommand);
+        GripperRequestBus::EventResult(cancelOutcome, m_entityId, &GripperRequestBus::Events::CancelGripperCommand);
 
         if (!cancelOutcome)
-        { // This will not happen in simulation unless intentionally done for behavior validation
+        { // This will not happen in a simulation unless intentionally done for behavior validation
             AZ_Trace("GripperActionServer", "Cancelling could not be accepted: %s\n", cancelOutcome.GetError().c_str());
             return rclcpp_action::CancelResponse::REJECT;
         }
@@ -171,8 +93,37 @@ namespace ROS2
 
     void GripperActionServer::GoalAcceptedCallback(const std::shared_ptr<GoalHandleGripperCommand> goal_handle)
     {
-        AZ_Trace("GripperActionServer", "Goal Accepted accepted!\n");
+        AZ_Trace("GripperActionServer", "Goal accepted!\n");
         m_goalHandle = goal_handle;
+    }
+
+    void GripperActionServer::CancelGoal(std::shared_ptr<GripperCommand::Result> result)
+    {
+        AZ_Assert(m_goalHandle, "Invalid goal handle!");
+        if (m_goalHandle && m_goalHandle->is_canceling())
+        {
+            AZ_Trace("FollowJointTrajectoryActionServer", "Cancelling goal\n");
+            m_goalHandle->canceled(result);
+        }
+    }
+
+    void GripperActionServer::GoalSuccess(std::shared_ptr<GripperCommand::Result> result)
+    {
+        AZ_Assert(m_goalHandle, "Invalid goal handle!");
+        if (m_goalHandle && m_goalHandle->is_executing())
+        {
+            AZ_Trace("FollowJointTrajectoryActionServer", "Goal succeeded\n");
+            m_goalHandle->succeed(result);
+        }
+    }
+
+    void GripperActionServer::PublishFeedback(std::shared_ptr<GripperCommand::Feedback> feedback)
+    {
+        AZ_Assert(m_goalHandle, "Invalid goal handle!");
+        if (m_goalHandle && m_goalHandle->is_executing())
+        {
+            m_goalHandle->publish_feedback(feedback);
+        }
     }
 
 } // namespace ROS2

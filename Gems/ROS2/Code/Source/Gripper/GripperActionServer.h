@@ -11,53 +11,51 @@
 #include <AzCore/Component/Component.h>
 #include <AzCore/Component/TickBus.h>
 #include <ROS2/Gripper/GripperRequestBus.h>
+#include <control_msgs/action/gripper_command.hpp>
 #include <rclcpp/rclcpp.hpp>
 #include <rclcpp_action/rclcpp_action.hpp>
-#include <control_msgs/action/gripper_command.hpp>
 
 namespace ROS2
 {
     class GripperActionServer
-        : public AZ::Component
-        , private AZ::TickBus::Handler
     {
     public:
         using GripperCommand = control_msgs::action::GripperCommand;
         using GoalHandleGripperCommand = rclcpp_action::ServerGoalHandle<control_msgs::action::GripperCommand>;
-        AZ_COMPONENT(GripperActionServer, "{6A4417AC-1D85-4AB0-A116-1E77D40FC816}", AZ::Component);
-        GripperActionServer() = default;
-        ~GripperActionServer() = default;
 
-        // AZ::Component overrides...
-        void Activate() override;
-        void Deactivate() override;
+        //! Create an action server for GripperAction action and bind Goal callbacks.
+        //! @param actionName Name of the action, similar to topic or service name.
+        //! @param entityId entity which will execute callbacks through GripperRequestBus.
+        //! @see <a href="https://docs.ros.org/en/humble/p/rclcpp_action/generated/classrclcpp__action_1_1Server.html"> ROS 2 action
+        //! server documentation </a>
+        GripperActionServer(const AZStd::string& actionName, const AZ::EntityId& entityId);
 
-        static void Reflect(AZ::ReflectContext* context);
+        //! Cancel the current goal.
+        //! @param result Result to be passed to through action server to the client.
+        void CancelGoal(std::shared_ptr<GripperCommand::Result> result);
 
-    private:
-        // action server callbacks
-        rclcpp_action::GoalResponse GoalReceivedCallback(const rclcpp_action::GoalUUID & uuid,
-                                               std::shared_ptr<const GripperCommand::Goal> goal);
+        //! Report goal success to the action server.
+        //! @param result Result which contains success code.
+        void GoalSuccess(std::shared_ptr<GripperCommand::Result> result);
 
-        rclcpp_action::CancelResponse GoalCancelledCallback(const std::shared_ptr<GoalHandleGripperCommand> goal_handle);
-
-        void GoalAcceptedCallback(const std::shared_ptr<GoalHandleGripperCommand> goal_handle);
-
-        // AZ::TickBus::Handler overrides ...
-        void OnTick(float delta, AZ::ScriptTimePoint timePoint) override;
+        //! Publish feedback during an active action.
+        //! @param feedback An action feedback message informing about the progress.
+        void PublishFeedback(std::shared_ptr<GripperCommand::Feedback> feedback);
 
         //! Check if the goal is in an active state
         bool IsGoalActiveState() const;
 
+        //! Check if the goal is in a pending state
         bool IsReadyForExecution() const;
 
-        std::shared_ptr<GripperActionServer::GripperCommand::Feedback> ProduceFeedback() const;
-        std::shared_ptr<GripperActionServer::GripperCommand::Result> ProduceResult() const;
-
+    private:
+        rclcpp_action::GoalResponse GoalReceivedCallback(
+            const rclcpp_action::GoalUUID& uuid, std::shared_ptr<const GripperCommand::Goal> goal);
+        rclcpp_action::CancelResponse GoalCancelledCallback(const std::shared_ptr<GoalHandleGripperCommand> goal_handle);
+        void GoalAcceptedCallback(const std::shared_ptr<GoalHandleGripperCommand> goal_handle);
 
         rclcpp_action::Server<GripperCommand>::SharedPtr actionServer;
-        AZStd::string m_gripperActionServerName;
-
         std::shared_ptr<GoalHandleGripperCommand> m_goalHandle;
+        AZ::EntityId m_entityId; //! Entity that has target gripper component
     };
 } // namespace ROS2
