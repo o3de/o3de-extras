@@ -7,7 +7,12 @@
  */
 #pragma once
 
-#include <AzCore/Serialization/SerializeContext.h>
+#include <AzCore/Component/Component.h>
+
+namespace AZ
+{
+    class ReflectContext;
+}
 
 namespace ROS2
 {
