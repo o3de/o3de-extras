@@ -43,6 +43,7 @@ namespace ROS2
         : m_busId{ lidarRaycaster.m_busId }
         , m_sceneEntityId{ lidarRaycaster.m_sceneEntityId }
         , m_sceneHandle{ lidarRaycaster.m_sceneHandle }
+        , m_resultFlags{ lidarRaycaster.m_resultFlags }
         , m_range{ lidarRaycaster.m_range }
         , m_addMaxRangePoints{ lidarRaycaster.m_addMaxRangePoints }
         , m_rayRotations{ AZStd::move(lidarRaycaster.m_rayRotations) }
