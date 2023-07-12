@@ -255,6 +255,7 @@ namespace ROS2::Utils
         const AZStd::string& urdfFilename,
         const AZStd::unordered_set<AZStd::string>& colliders,
         const AZStd::unordered_set<AZStd::string>& visuals,
+        AZStd::string_view outputDirSuffix,
         AZ::IO::FileIOBase* fileIO)
     {
         auto enviromentalVariable = std::getenv("AMENT_PREFIX_PATH");
@@ -274,7 +275,8 @@ namespace ROS2::Utils
         urdfFileCrc.Add(urdfFilename);
         const AZ::IO::Path urdfPath(urdfFilename);
         const AZStd::string directoryNameTmp = AZStd::string::format("$tmp_%u.tmp", AZ::u32(urdfFileCrc));
-        const AZStd::string directoryNameDst = AZStd::string::format("%u_%s", AZ::u32(urdfFileCrc), urdfPath.Stem().String().c_str());
+        const auto directoryNameDst = AZ::IO::FixedMaxPathString::format(
+            "%u_%.*s%.*s", AZ::u32(urdfFileCrc), AZ_PATH_ARG(urdfPath.Stem()), AZ_STRING_ARG(outputDirSuffix));
 
         const AZ::IO::Path importDirectoryTmp = AZ::IO::Path(AZ::Utils::GetProjectPath()) / "Assets" / "UrdfImporter" / directoryNameTmp;
         const AZ::IO::Path importDirectoryDst = AZ::IO::Path(AZ::Utils::GetProjectPath()) / "Assets" / "UrdfImporter" / directoryNameDst;
