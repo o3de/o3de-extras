@@ -127,11 +127,8 @@ namespace ROS2
         // Right now, it just generates an empty default procedural prefab. It still needs to be modified
         // to create a procedural prefab that contains the correct information in it.
 
-        AZStd::string outputFilename = request.m_sourceFile;
-        AzFramework::StringFunc::Path::ReplaceExtension(outputFilename, "procprefab");
-
-        AZStd::string tempAssetOutputPath;
-        AzFramework::StringFunc::Path::ConstructFull(request.m_tempDirPath.c_str(), outputFilename.c_str(), tempAssetOutputPath, true);
+        auto tempAssetOutputPath = AZ::IO::Path(request.m_tempDirPath) / request.m_sourceFile;
+        tempAssetOutputPath.ReplaceExtension("procprefab");
 
         AZStd::string prefabJson = CreateDefaultProcPrefab(request, response);
 
