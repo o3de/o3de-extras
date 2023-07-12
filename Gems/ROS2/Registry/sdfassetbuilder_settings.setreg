@@ -1,15 +1,18 @@
 {
-    "ROS":
+    "O3DE":
     {
-        "SdfAssetBuilder":
+        "ROS2":
         {
-            "SupportedFileTypeExtensions":
-            [
-                "sdf",
-                "urdf",
-                "world",
-                "xacro"
-            ]
+            "SdfAssetBuilder":
+            {
+                "SupportedFileTypeExtensions":
+                [
+                    "sdf",
+                    "urdf",
+                    "world",
+                    "xacro"
+                ]
+            }
         }
     }
 }
