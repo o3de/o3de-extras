@@ -20,7 +20,6 @@
 #include <Source/HingeJointComponent.h>
 #include <Source/PrismaticJointComponent.h>
 
-
 namespace ROS2
 {
     namespace Internal
