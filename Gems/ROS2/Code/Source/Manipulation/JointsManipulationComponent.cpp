@@ -18,12 +18,14 @@
 #include <ROS2/Utilities/ROS2Names.h>
 #include <Source/ArticulationLinkComponent.h>
 #include <Source/HingeJointComponent.h>
+#include <Source/PrismaticJointComponent.h>
+
 
 namespace ROS2
 {
     namespace Internal
     {
-        void AddHingeJointInfo(const AZ::EntityComponentIdPair& idPair, const AZStd::string& jointName, ManipulationJoints& joints)
+        void Add1DOFJointInfo(const AZ::EntityComponentIdPair& idPair, const AZStd::string& jointName, ManipulationJoints& joints)
         {
             if (joints.find(jointName) != joints.end())
             {
@@ -118,10 +120,12 @@ namespace ROS2
                 const AZStd::string jointName(frameComponent->GetJointName().GetCStr());
 
                 auto* hingeComponent = Utils::GetGameOrEditorComponent<PhysX::HingeJointComponent>(entity);
+                auto* prismaticComponent = Utils::GetGameOrEditorComponent<PhysX::PrismaticJointComponent>(entity);
                 auto* articulationComponent = Utils::GetGameOrEditorComponent<PhysX::ArticulationLinkComponent>(entity);
+                bool classicJoint = hingeComponent && prismaticComponent;
                 AZ_Warning(
                     "JointsManipulationComponent",
-                    (hingeComponent && supportsClassicJoints) || !hingeComponent,
+                    (classicJoint && supportsClassicJoints) || !classicJoint,
                     "Found classic joints but the controller does not support them!");
                 AZ_Warning(
                     "JointsManipulationComponent",
@@ -132,7 +136,14 @@ namespace ROS2
                 if (supportsClassicJoints && hingeComponent)
                 {
                     auto idPair = AZ::EntityComponentIdPair(hingeComponent->GetEntityId(), hingeComponent->GetId());
-                    Internal::AddHingeJointInfo(idPair, jointName, manipulationJoints);
+                    Internal::Add1DOFJointInfo(idPair, jointName, manipulationJoints);
+                }
+
+                // See if there is a Prismatic Joint in the entity, add it to map.
+                if (supportsClassicJoints && prismaticComponent)
+                {
+                    auto idPair = AZ::EntityComponentIdPair(prismaticComponent->GetEntityId(), prismaticComponent->GetId());
+                    Internal::Add1DOFJointInfo(idPair, jointName, manipulationJoints);
                 }
 
                 // See if there is an Articulation Link in the entity, add it to map.
