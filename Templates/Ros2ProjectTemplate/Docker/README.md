@@ -7,7 +7,7 @@ The following Dockerfiles defined in this path will prepare the appropriate ROS2
 * [Hardware requirements of o3de](https://www.o3de.org/docs/welcome-guide/requirements/)
 * Ubuntu 20.04 (Focal) or 22.04 (Jammy)
 * At least 60 GB of free disk space
-* Docker installed and configured
+* Docker 24.0 installed and configured
   * **Note** It is recommended to have Docker installed correctly and in a secure manner so that the docker commands in this guide do not require elevated privileges (sudo) to run them. See [Docker Engine post-installation steps](https://docs.docker.com/engine/install/linux-postinstall/) for more details.
 * [NVidia container toolkit](https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/install-guide.html#docker)
 
