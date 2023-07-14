@@ -58,4 +58,8 @@ set(FILES
     Source/ROS2EditorSystemComponent.cpp
     Source/ROS2EditorSystemComponent.h
     Source/ROS2GemUtilities.cpp
+    Source/SdfAssetBuilder/SdfAssetBuilder.cpp
+    Source/SdfAssetBuilder/SdfAssetBuilder.h
+    Source/SdfAssetBuilder/SdfAssetBuilderSystemComponent.cpp
+    Source/SdfAssetBuilder/SdfAssetBuilderSystemComponent.h
 )
