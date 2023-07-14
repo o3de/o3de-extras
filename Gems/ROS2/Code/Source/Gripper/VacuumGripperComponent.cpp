@@ -74,7 +74,7 @@ namespace ROS2
 
             if (AZ::EditContext* ec = serialize->GetEditContext())
             {
-                ec->Class<VacuumGripperComponent>("VacuumGripper", "VacuumGripper")
+                ec->Class<VacuumGripperComponent>("VacuumGripperComponent", "Component for control of a vacuum gripper.")
                     ->ClassElement(AZ::Edit::ClassElements::EditorData, "VacuumGripper")
                     ->Attribute(AZ::Edit::Attributes::AppearsInAddComponentMenu, AZ_CRC("Game"))
                     ->Attribute(AZ::Edit::Attributes::Category, "ROS2")
@@ -323,7 +323,7 @@ namespace ROS2
 
     float VacuumGripperComponent::GetGripperPosition() const
     {
-        return m_vacuumJoint == AzPhysics::InvalidJointHandle ? 0.0f : 1.0f;
+        return m_tryingToGrip ? 0.0f : 1.0f;
     }
 
     float VacuumGripperComponent::GetGripperEffort() const

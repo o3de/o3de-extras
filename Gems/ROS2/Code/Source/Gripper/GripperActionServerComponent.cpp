@@ -42,7 +42,7 @@ namespace ROS2
 
             if (AZ::EditContext* ec = serialize->GetEditContext())
             {
-                ec->Class<GripperActionServerComponent>("GripperActionServer", "Component for the gripper action server")
+                ec->Class<GripperActionServerComponent>("GripperActionServerComponent", "Component for the gripper action server")
                     ->ClassElement(AZ::Edit::ClassElements::EditorData, "GripperActionServer")
                     ->Attribute(AZ::Edit::Attributes::AppearsInAddComponentMenu, AZ_CRC("Game"))
                     ->Attribute(AZ::Edit::Attributes::Category, "ROS2")
