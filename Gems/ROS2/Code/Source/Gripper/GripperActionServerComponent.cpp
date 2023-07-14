@@ -65,14 +65,12 @@ namespace ROS2
         auto feedback = std::make_shared<GripperCommand::Feedback>();
         float position = 0.0f;
         float effort = 0.0f;
-        bool stalled = false;
         GripperRequestBus::EventResult(position, GetEntityId(), &GripperRequestBus::Events::GetGripperPosition);
         GripperRequestBus::EventResult(effort, GetEntityId(), &GripperRequestBus::Events::GetGripperEffort);
-        GripperRequestBus::EventResult(stalled, GetEntityId(), &GripperRequestBus::Events::IsGripperNotMoving);
         feedback->position = position;
         feedback->position = effort;
         feedback->reached_goal = false;
-        feedback->stalled = stalled;
+        feedback->stalled = false;
         return feedback;
     }
 
@@ -82,12 +80,14 @@ namespace ROS2
         float position = 0.0f;
         float effort = 0.0f;
         bool stalled = false;
+        bool reachedGoal = false;
         GripperRequestBus::EventResult(position, GetEntityId(), &GripperRequestBus::Events::GetGripperPosition);
         GripperRequestBus::EventResult(effort, GetEntityId(), &GripperRequestBus::Events::GetGripperEffort);
         GripperRequestBus::EventResult(stalled, GetEntityId(), &GripperRequestBus::Events::IsGripperNotMoving);
+        GripperRequestBus::EventResult(reachedGoal, GetEntityId(), &GripperRequestBus::Events::HasGripperReachedGoal);
         result->position = position;
         result->position = effort;
-        result->reached_goal = true;
+        result->reached_goal = reachedGoal;
         result->stalled = stalled;
         return result;
     }
@@ -100,15 +100,17 @@ namespace ROS2
             return;
         }
         bool isDone = false;
+        bool isStalled;
         bool isCancelled = false;
         GripperRequestBus::EventResult(isDone, GetEntityId(), &GripperRequestBus::Events::HasGripperReachedGoal);
+        GripperRequestBus::EventResult(isStalled, GetEntityId(), &GripperRequestBus::Events::IsGripperNotMoving);
         GripperRequestBus::EventResult(isCancelled, GetEntityId(), &GripperRequestBus::Events::HasGripperCommandBeenCancelled);
         if (isCancelled)
         {
             m_gripperActionServer->CancelGoal(ProduceResult());
             return;
         }
-        if (isDone)
+        if (isDone || isStalled)
         {
             AZ_Printf("GripperActionServer::OnTick", "GripperActionServer::OnTick: Gripper reached goal!");
             m_gripperActionServer->GoalSuccess(ProduceResult());
