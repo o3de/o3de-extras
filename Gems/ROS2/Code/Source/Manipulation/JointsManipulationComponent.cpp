@@ -118,10 +118,12 @@ namespace ROS2
                 }
                 const AZStd::string jointName(frameComponent->GetJointName().GetCStr());
 
-                auto* hingeComponent = Utils::GetGameOrEditorComponent<PhysX::HingeJointComponent>(entity);
-                auto* prismaticComponent = Utils::GetGameOrEditorComponent<PhysX::PrismaticJointComponent>(entity);
+                auto* hingeComponent =
+                    azrtti_cast<PhysX::JointComponent*>(Utils::GetGameOrEditorComponent<PhysX::HingeJointComponent>(entity));
+                auto* prismaticComponent =
+                    azrtti_cast<PhysX::JointComponent*>(Utils::GetGameOrEditorComponent<PhysX::PrismaticJointComponent>(entity));
                 auto* articulationComponent = Utils::GetGameOrEditorComponent<PhysX::ArticulationLinkComponent>(entity);
-                bool classicJoint = hingeComponent && prismaticComponent;
+                bool classicJoint = hingeComponent || prismaticComponent;
                 AZ_Warning(
                     "JointsManipulationComponent",
                     (classicJoint && supportsClassicJoints) || !classicJoint,
