@@ -58,6 +58,15 @@ namespace ROS2
     void GripperActionServerComponent::GetRequiredServices(AZ::ComponentDescriptor::DependencyArrayType& required)
     {
         required.push_back(AZ_CRC_CE("ROS2Frame"));
+        required.push_back(AZ_CRC_CE("GripperService"));
+    }
+    void GripperActionServerComponent::GetProvidedServices(AZ::ComponentDescriptor::DependencyArrayType& provided)
+    {
+        provided.push_back(AZ_CRC_CE("GripperServerService"));
+    }
+    void GripperActionServerComponent::GetIncompatibleServices(AZ::ComponentDescriptor::DependencyArrayType& incompatible)
+    {
+        incompatible.push_back(AZ_CRC_CE("GripperServerService"));
     }
 
     std::shared_ptr<GripperActionServer::GripperCommand::Feedback> GripperActionServerComponent::ProduceFeedback() const

@@ -63,6 +63,15 @@ namespace ROS2
         ImGui::ImGuiUpdateListenerBus::Handler::BusDisconnect();
     }
 
+    void VacuumGripperComponent::GetProvidedServices(AZ::ComponentDescriptor::DependencyArrayType& provided)
+    {
+        provided.push_back(AZ_CRC_CE("GripperService"));
+    }
+    void VacuumGripperComponent::GetIncompatibleServices(AZ::ComponentDescriptor::DependencyArrayType& incompatible)
+    {
+        incompatible.push_back(AZ_CRC_CE("GripperService"));
+    }
+
     void VacuumGripperComponent::Reflect(AZ::ReflectContext* context)
     {
         if (AZ::SerializeContext* serialize = azrtti_cast<AZ::SerializeContext*>(context))

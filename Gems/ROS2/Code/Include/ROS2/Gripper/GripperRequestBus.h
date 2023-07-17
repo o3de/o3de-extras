@@ -22,7 +22,7 @@ namespace ROS2
     public:
         using BusIdType = AZ::EntityId;
         static constexpr AZ::EBusAddressPolicy AddressPolicy = AZ::EBusAddressPolicy::ById;
-        static constexpr AZ::EBusHandlerPolicy HandlerPolicy = AZ::EBusHandlerPolicy::Multiple;
+        static constexpr AZ::EBusHandlerPolicy HandlerPolicy = AZ::EBusHandlerPolicy::Single;
 
         //! Send new command to the gripper.
         //! @param position position of the gripper (as a gap size in meters) to be set, for vacuum/electromagnetic gripper it is 0 or 1.
