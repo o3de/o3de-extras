@@ -102,7 +102,7 @@ namespace ROS2
         AZ_Assert(m_goalHandle, "Invalid goal handle!");
         if (m_goalHandle && m_goalHandle->is_canceling())
         {
-            AZ_Trace("FollowJointTrajectoryActionServer", "Cancelling goal\n");
+            AZ_Trace("GripperActionServer", "Cancelling goal\n");
             m_goalHandle->canceled(result);
         }
     }
@@ -112,7 +112,7 @@ namespace ROS2
         AZ_Assert(m_goalHandle, "Invalid goal handle!");
         if (m_goalHandle && m_goalHandle->is_executing())
         {
-            AZ_Trace("FollowJointTrajectoryActionServer", "Goal succeeded\n");
+            AZ_Trace("GripperActionServer", "Goal succeeded\n");
             m_goalHandle->succeed(result);
         }
     }
