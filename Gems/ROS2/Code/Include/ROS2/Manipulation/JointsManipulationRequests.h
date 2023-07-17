@@ -24,6 +24,8 @@ namespace ROS2
         static constexpr AZ::EBusAddressPolicy AddressPolicy = AZ::EBusAddressPolicy::ById;
 
         using JointsPositionsMap = AZStd::unordered_map<AZStd::string, JointPosition>;
+        using JointsVelocitiesMap = AZStd::unordered_map<AZStd::string, JointVelocity>;
+        using JointsEffortsMap = AZStd::unordered_map<AZStd::string, JointEffort>;
 
         //! Get all entity tree joints, including joint or articulation component hierarchy.
         //! @return An unordered map of joint names to joint info structure.
@@ -37,9 +39,31 @@ namespace ROS2
         //! If it does not exist or some other error happened, error message is returned.
         virtual AZ::Outcome<JointPosition, AZStd::string> GetJointPosition(const AZStd::string& jointName) = 0;
 
+        //! Get velocity of a joint by name.
+        //! Works with hinge joints and articulation links.
+        //! @param jointName name of the joint. Use names acquired from GetJoints() query.
+        //! @return outcome with velocity if joint exists.
+        //! If it does not exist or some other error happened, error message is returned.
+        virtual AZ::Outcome<JointVelocity, AZStd::string> GetJointVelocity(const AZStd::string& jointName) = 0;
+
         //! Return positions of all single DOF joints.
         //! @return a vector of all joints relative positions in degree of motion range or error message.
         virtual JointsPositionsMap GetAllJointsPositions() = 0;
+
+        //! Return velocities of all single DOF joints.
+        //! @return a vector of all joints velocities or error message.
+        virtual JointsVelocitiesMap GetAllJointsVelocities() = 0;
+
+        //! Get effort of a force-driven articulation link by name.
+        //! If the joint is not an articulation link, or it's acceleration-driven, returns 0.
+        //! @param jointName name of the joint. Use names acquired from GetJoints() query.
+        //! @return outcome with effort if joint exists.
+        //! If it does not exist or some other error happened, error message is returned.
+        virtual AZ::Outcome<JointEffort, AZStd::string> GetJointEffort(const AZStd::string& jointName) = 0;
+
+        //! Return efforts of all single DOF joints.
+        //! @return a vector of all joints efforts or error message.
+        virtual JointsEffortsMap GetAllJointsEfforts() = 0;
 
         //! Move specified joints into positions.
         //! @param new positions for each named joint. Use names queried through GetJoints().
