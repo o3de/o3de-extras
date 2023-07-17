@@ -41,8 +41,8 @@ namespace ROS2
             urdf::ModelInterfaceSharedPtr model,
             AZStd::string prefabPath,
             const AZStd::shared_ptr<Utils::UrdfAssetMap> urdfAssetsMapping,
-            AZStd::optional<AZ::Transform> spawnPosition = AZStd::nullopt,
-            bool useArticulations = false);
+            bool useArticulations = false,
+            AZStd::optional<AZ::Transform> spawnPosition = AZStd::nullopt);
 
         ~URDFPrefabMaker() = default;
 

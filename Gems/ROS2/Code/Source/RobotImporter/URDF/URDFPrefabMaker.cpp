@@ -31,8 +31,8 @@ namespace ROS2
         urdf::ModelInterfaceSharedPtr model,
         AZStd::string prefabPath,
         const AZStd::shared_ptr<Utils::UrdfAssetMap> urdfAssetsMapping,
-        const AZStd::optional<AZ::Transform> spawnPosition,
-        bool useArticulations)
+        bool useArticulations,
+        const AZStd::optional<AZ::Transform> spawnPosition)
         : m_model(model)
         , m_visualsMaker(model->materials_, urdfAssetsMapping)
         , m_collidersMaker(urdfAssetsMapping)

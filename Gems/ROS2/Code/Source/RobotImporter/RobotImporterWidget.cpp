@@ -375,8 +375,8 @@ namespace ROS2
             m_parsedUrdf,
             prefabPath.String(),
             m_urdfAssetsMapping,
-            m_prefabMakerPage->getSelectedSpawnPoint(),
-            useArticulation);
+            useArticulation,
+            m_prefabMakerPage->getSelectedSpawnPoint());
 
         auto prefabOutcome = m_prefabMaker->CreatePrefabFromURDF();
         if (prefabOutcome.IsSuccess())
