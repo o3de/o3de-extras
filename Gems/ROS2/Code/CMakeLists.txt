@@ -133,7 +133,9 @@ if(PAL_TRAIT_BUILD_HOST_TOOLS)
                 Gem::LmbrCentral.API
                 Gem::PhysX.Editor.Static
                 Gem::${gem_name}.Static
-    )
+            PRIVATE
+                AZ::AssetBuilderSDK
+        )
 
     find_package(urdfdom)
     target_link_libraries(${gem_name}.Editor.Static PUBLIC urdfdom::urdfdom_model)
@@ -222,3 +224,5 @@ if(PAL_TRAIT_BUILD_TESTS_SUPPORTED)
         endif()
     endif()
 endif()
+
+add_subdirectory(PythonTests)

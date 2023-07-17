@@ -53,8 +53,8 @@ namespace ROS2
                         &ROS2ImuSensorComponent::m_filterSize,
                         "Filter Length",
                         "Filter Length, Large value reduce numeric noise but increase lag")
-                    ->Attribute(AZ::Edit::Attributes::Min, 1)
-                    ->Attribute(AZ::Edit::Attributes::Max, 200)
+                    ->Attribute(AZ::Edit::Attributes::Max, &ROS2ImuSensorComponent::m_maxFilterSize)
+                    ->Attribute(AZ::Edit::Attributes::Min, &ROS2ImuSensorComponent::m_minFilterSize)
                     ->DataElement(
                         AZ::Edit::UIHandlers::Default,
                         &ROS2ImuSensorComponent::m_includeGravity,

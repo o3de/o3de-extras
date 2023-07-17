@@ -8,11 +8,13 @@
 
 #include <AzCore/IO/FileIO.h>
 #include <AzCore/IO/Path/Path.h>
+#include <AzCore/Math/Uuid.h>
 #include <AzCore/Utils/Utils.h>
 
 #include "RobotImporterWidget.h"
 #include "URDF/URDFPrefabMaker.h"
 #include "URDF/UrdfParser.h"
+#include "Utils/FilePath.h"
 #include "Utils/RobotImporterUtils.h"
 #include <QApplication>
 #include <QScreen>
@@ -82,7 +84,7 @@ namespace ROS2
         QString report;
         if (!m_urdfPath.empty())
         {
-            if (IsFileXacro(m_urdfPath))
+            if (Utils::IsFileXacro(m_urdfPath))
             {
                 Utils::xacro::ExecutionOutcome outcome = Utils::xacro::ParseXacro(m_urdfPath.String(), m_params);
                 if (outcome)
@@ -125,7 +127,7 @@ namespace ROS2
                     return;
                 }
             }
-            else if (IsFileUrdf(m_urdfPath))
+            else if (Utils::IsFileUrdf(m_urdfPath))
             {
                 // standard URDF
                 m_parsedUrdf = UrdfParser::ParseFromFile(m_urdfPath.Native());
@@ -180,10 +182,23 @@ namespace ROS2
             auto collidersNames = Utils::GetMeshesFilenames(m_parsedUrdf->getRoot(), false, true);
             auto visualNames = Utils::GetMeshesFilenames(m_parsedUrdf->getRoot(), true, false);
 
+            AZStd::string_view dirSuffix = "";
+            if (!m_params.empty())
+            {
+                auto paramsUuid = AZ::Uuid::CreateNull();
+                for (auto& [key, value] : m_params)
+                {
+                    paramsUuid += AZ::Uuid::CreateName(key);
+                    paramsUuid += AZ::Uuid::CreateName(value);
+                }
+
+                dirSuffix = paramsUuid.ToString<AZStd::string_view>();
+            }
+
             if (m_importAssetWithUrdf)
             {
                 m_urdfAssetsMapping = AZStd::make_shared<Utils::UrdfAssetMap>(
-                    Utils::CopyAssetForURDFAndCreateAssetMap(m_meshNames, m_urdfPath.String(), collidersNames, visualNames));
+                    Utils::CopyAssetForURDFAndCreateAssetMap(m_meshNames, m_urdfPath.String(), collidersNames, visualNames, dirSuffix));
             }
             else
             {
@@ -265,7 +280,7 @@ namespace ROS2
         {
             m_params.clear();
             m_urdfPath = AZStd::string(m_fileSelectPage->getFileName().toUtf8().constData());
-            if (IsFileXacro(m_urdfPath))
+            if (Utils::IsFileXacro(m_urdfPath))
             {
                 m_params = Utils::xacro::GetParameterFromXacroFile(m_urdfPath.String());
                 AZ_Printf("RobotImporterWidget", "Xacro has %d arguments\n", m_params.size());
@@ -423,23 +438,6 @@ namespace ROS2
     {
         QMessageBox::critical(this, QObject::tr("Error"), errorMessage);
         AZ_Error("RobotImporterWidget", false, "%s", errorMessage.toUtf8().constData());
-    }
-
-    AZStd::string RobotImporterWidget::GetCapitalizedExtension(const AZ::IO::Path& filename) const
-    {
-        AZStd::string extension{ filename.Extension().Native() };
-        AZStd::to_upper(extension.begin(), extension.end());
-        return extension;
-    }
-
-    bool RobotImporterWidget::IsFileXacro(const AZ::IO::Path& filename) const
-    {
-        return filename.HasExtension() && GetCapitalizedExtension(filename) == ".XACRO";
-    }
-
-    bool RobotImporterWidget::IsFileUrdf(const AZ::IO::Path& filename) const
-    {
-        return filename.HasExtension() && GetCapitalizedExtension(filename) == ".URDF";
     }
 
 } // namespace ROS2

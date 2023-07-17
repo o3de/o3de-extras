@@ -96,18 +96,6 @@ namespace ROS2
         //! @param errorMessage error message to display to the user
         void ReportError(const QString& errorMessage);
 
-        //! Returns if file is xacro.
-        //! @param filename path to check
-        bool IsFileXacro(const AZ::IO::Path& filename) const;
-
-        //! Returns if file is urdf.
-        //! @param filename path to check
-        bool IsFileUrdf(const AZ::IO::Path& filename) const;
-
-        //! Returns capitalized extension.
-        //! @param filename path to check
-        AZStd::string GetCapitalizedExtension(const AZ::IO::Path& filename) const;
-
         static constexpr QWizard::WizardButton PrefabCreationButtonId{ QWizard::CustomButton1 };
         static constexpr QWizard::WizardOption HavePrefabCreationButton{ QWizard::HaveCustomButton1 };
     };

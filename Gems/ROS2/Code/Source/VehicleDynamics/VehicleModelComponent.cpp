@@ -22,7 +22,11 @@ namespace ROS2::VehicleDynamics
     void VehicleModelComponent::Activate()
     {
         VehicleInputControlRequestBus::Handler::BusConnect(GetEntityId());
-        m_manualControlEventHandler.Activate(GetEntityId());
+
+        if (m_enableManualControl)
+        {
+            m_manualControlEventHandler.Activate(GetEntityId());
+        }
         AZ::TickBus::Handler::BusConnect();
     }
 
@@ -41,8 +45,10 @@ namespace ROS2::VehicleDynamics
 
         if (AZ::SerializeContext* serialize = azrtti_cast<AZ::SerializeContext*>(context))
         {
-            serialize->Class<VehicleModelComponent, AZ::Component>()->Version(4)->Field(
-                "VehicleConfiguration", &VehicleModelComponent::m_vehicleConfiguration);
+            serialize->Class<VehicleModelComponent, AZ::Component>()
+                ->Version(4)
+                ->Field("VehicleConfiguration", &VehicleModelComponent::m_vehicleConfiguration)
+                ->Field("ManualControl", &VehicleModelComponent::m_enableManualControl);
 
             if (AZ::EditContext* ec = serialize->GetEditContext())
             {
@@ -51,7 +57,12 @@ namespace ROS2::VehicleDynamics
                         AZ::Edit::UIHandlers::Default,
                         &VehicleModelComponent::m_vehicleConfiguration,
                         "Vehicle settings",
-                        "Vehicle settings including axles and common wheel parameters");
+                        "Vehicle settings including axles and common wheel parameters")
+                    ->DataElement(
+                        AZ::Edit::UIHandlers::Default,
+                        &VehicleModelComponent::m_enableManualControl,
+                        "Enable Manual Control",
+                        "Enable manual control of the vehicle");
             }
         }
     }

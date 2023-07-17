@@ -22,7 +22,10 @@
     "documentation_url": "https://www.o3de.org/docs/user-guide/interactivity/robotics/project-configuration/#ros-2-project-templates",
     "dependencies": [],
     "repo_uri": "https://raw.githubusercontent.com/o3de/o3de-extras/development",
-    "compatible_engines": [],
+     "compatible_engines": [
+        "o3de-sdk>=1.2.0",
+        "o3de>=1.2.0"
+    ],
     "engine_api_dependencies": [],
     "restricted": "ProteusRobot",
     "download_source_uri": "https://github.com/o3de/o3de-extras/releases/download/2.0/proteusrobot-1.0.0-gem.zip"

@@ -36,7 +36,7 @@ namespace ROS2
 
         // JointsTrajectoryRequestBus::Handler overrides ...
         //! @see ROS2::JointsTrajectoryRequestBus::StartTrajectoryGoal
-        AZ::Outcome<void, AZStd::string> StartTrajectoryGoal(TrajectoryGoalPtr trajectoryGoal) override;
+        AZ::Outcome<void, TrajectoryResult> StartTrajectoryGoal(TrajectoryGoalPtr trajectoryGoal) override;
         //! @see ROS2::JointsTrajectoryRequestBus::CancelTrajectoryGoal
         AZ::Outcome<void, AZStd::string> CancelTrajectoryGoal(TrajectoryResultPtr trajectoryResult) override;
         //! @see ROS2::JointsTrajectoryRequestBus::GetGoalStatus
@@ -53,7 +53,7 @@ namespace ROS2
         //! Follow set trajectory.
         //! @param deltaTimeNs frame time step, to advance trajectory by.
         void FollowTrajectory(const uint64_t deltaTimeNs);
-        AZ::Outcome<void, AZStd::string> ValidateGoal(TrajectoryGoalPtr trajectoryGoal);
+        AZ::Outcome<void, TrajectoryResult> ValidateGoal(TrajectoryGoalPtr trajectoryGoal);
         void MoveToNextPoint(const trajectory_msgs::msg::JointTrajectoryPoint currentTrajectoryPoint);
         void UpdateFeedback();
 

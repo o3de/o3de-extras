@@ -14,7 +14,9 @@
 namespace ROS2
 {
     /// System component for ROS2 editor
-    class ROS2EditorSystemComponent : public ROS2SystemComponent
+    class ROS2EditorSystemComponent
+        : public ROS2SystemComponent
+        , private AzToolsFramework::EditorEntityContextNotificationBus::Handler
     {
         using BaseSystemComponent = ROS2SystemComponent;
 
@@ -35,6 +37,12 @@ namespace ROS2
         // Component overrides
         void Activate() override;
         void Deactivate() override;
+        //////////////////////////////////////////////////////////////////////////
+
+        //////////////////////////////////////////////////////////////////////////
+        // EditorEntityContextNotificationBus overrides
+        void OnStartPlayInEditorBegin() override;
+        void OnStopPlayInEditor() override;
         //////////////////////////////////////////////////////////////////////////
     };
 } // namespace ROS2

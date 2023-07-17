@@ -41,6 +41,8 @@ namespace ROS2
     private:
         //! Length of filter that removes numerical noise
         int m_filterSize{ 10 };
+        int m_minFilterSize{ 1 };
+        int m_maxFilterSize{ 200 };
 
         //! Include gravity acceleration
         bool m_includeGravity{ true };
