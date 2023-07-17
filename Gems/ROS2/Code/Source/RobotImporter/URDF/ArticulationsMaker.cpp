@@ -100,7 +100,7 @@ namespace ROS2
         AZ::Entity* entity = AzToolsFramework::GetEntityById(entityId);
         AZ_Assert(entity, "No entity for id %s", entityId.ToString().c_str());
 
-        AZ_TracePrintf("ArticulationsMaker", "Processing inertial for entity id: %s\n", entityId.ToString().c_str());
+        AZ_Trace("ArticulationsMaker", "Processing inertial for entity id: %s\n", entityId.ToString().c_str());
         PhysX::EditorArticulationLinkConfiguration articulationLinkConfiguration;
 
         articulationLinkConfiguration = AddToArticulationConfig(articulationLinkConfiguration, link->inertial);

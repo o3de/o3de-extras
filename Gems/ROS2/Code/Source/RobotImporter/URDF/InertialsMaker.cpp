@@ -21,7 +21,7 @@ namespace ROS2
         { // it is ok not to have inertia in a link
             return;
         }
-        AZ_TracePrintf("AddInertial", "Processing inertial for entity id: %s\n", entityId.ToString().c_str());
+        AZ_Trace("AddInertial", "Processing inertial for entity id: %s\n", entityId.ToString().c_str());
 
         AZ::Entity* entity = AzToolsFramework::GetEntityById(entityId);
         PhysX::EditorRigidBodyConfiguration rigidBodyConfiguration;

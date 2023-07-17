@@ -43,6 +43,16 @@ namespace ROS2
         }
     }
 
+    AZ::EntityId ROS2SpawnerComponentController::GetEditorEntityId() const
+    {
+        return m_config.m_editorEntityId;
+    }
+
+    AZStd::unordered_map<AZStd::string, AZ::Data::Asset<AzFramework::Spawnable>> ROS2SpawnerComponentController::GetSpawnables() const
+    {
+        return m_config.m_spawnables;
+    }
+
     const AZ::Transform& ROS2SpawnerComponentController::GetDefaultSpawnPose() const
     {
         return m_config.m_defaultSpawnPose;
@@ -84,16 +94,12 @@ namespace ROS2
         {
             AZ::Entity* childEntity = nullptr;
             AZ::ComponentApplicationBus::BroadcastResult(childEntity, &AZ::ComponentApplicationRequests::FindEntity, child);
-            AZ_Assert(childEntity, "No child entity %s", child.ToString().c_str());
+            AZ_Assert(childEntity, "No child entity found for entity %s", child.ToString().c_str());
 
-            const auto* spawnPoint = childEntity->FindComponent<ROS2SpawnPointComponent>();
-
-            if (spawnPoint == nullptr)
+            if (const auto* spawnPoint = childEntity->FindComponent<ROS2SpawnPointComponent>(); spawnPoint != nullptr)
             {
-                continue;
+                result.insert(spawnPoint->GetInfo());
             }
-
-            result.insert(spawnPoint->GetInfo());
         }
 
         // setting name of spawn point component "default" in a child entity will have no effect since it is overwritten here with the

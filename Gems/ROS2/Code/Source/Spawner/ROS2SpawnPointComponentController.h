@@ -53,6 +53,7 @@ namespace ROS2
 
         AZStd::pair<AZStd::string, SpawnPointInfo> GetInfo() const;
 
+    private:
         ROS2SpawnPointComponentConfig m_config;
     };
 } // namespace ROS2

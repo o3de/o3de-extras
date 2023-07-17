@@ -56,10 +56,14 @@ namespace ROS2
         //////////////////////////////////////////////////////////////////////////
         // SpawnerRequestsBus::Handler overrides
         const AZ::Transform& GetDefaultSpawnPose() const override;
-        AZStd::unordered_map<AZStd::string, SpawnPointInfo> GetAllSpawnPointInfos() const override;
+        SpawnPointInfoMap GetAllSpawnPointInfos() const override;
         //////////////////////////////////////////////////////////////////////////
 
-        AZStd::unordered_map<AZStd::string, SpawnPointInfo> GetSpawnPoints() const;
+        SpawnPointInfoMap GetSpawnPoints() const;
+        AZ::EntityId GetEditorEntityId() const;
+        AZStd::unordered_map<AZStd::string, AZ::Data::Asset<AzFramework::Spawnable>> GetSpawnables() const;
+
+    private:
         ROS2SpawnerComponentConfig m_config;
     };
 } // namespace ROS2

@@ -34,7 +34,7 @@ namespace ROS2
         m_spawnPointsComboBox = new QComboBox(this);
         m_spawnPointsInfos = allActiveSpawnPoints.values;
 
-        for (auto i = 0; i < allActiveSpawnPoints.values.size(); i++)
+        for (int i = 0; i < allActiveSpawnPoints.values.size(); i++)
         {
             for (const auto& element : allActiveSpawnPoints.values[i])
             {
@@ -56,7 +56,7 @@ namespace ROS2
         QLabel* spawnPointListLabel;
         if (allActiveSpawnPoints.values.size() == 0)
         {
-            spawnPointListLabel = new QLabel("Select spawn position (No spawn position were detected)", this);
+            spawnPointListLabel = new QLabel("Select spawn position (No spawn positions were detected)", this);
         }
         else
         {
@@ -101,19 +101,15 @@ namespace ROS2
         if (!m_spawnPointsInfos.empty())
         {
             int vectorIndex = m_spawnPointsComboBox->currentData().toInt();
-            AZStd::string mapKey = AZStd::string(m_spawnPointsComboBox->currentText().toStdString().c_str());
+            AZStd::string mapKey(m_spawnPointsComboBox->currentText().toStdString().c_str());
             auto& map = m_spawnPointsInfos[vectorIndex];
-            auto spawnInfo = map.find(mapKey);
-            if (spawnInfo == m_spawnPointsInfos[vectorIndex].end())
+            if (auto spawnInfo = map.find(mapKey);
+                spawnInfo != map.end())
             {
-                return AZStd::nullopt;
+                return spawnInfo->second.pose;
             }
-            return spawnInfo->second.pose;
         }
-        else
-        {
-            return AZStd::nullopt;
-        }
+        return AZStd::nullopt;
     }
 
 } // namespace ROS2

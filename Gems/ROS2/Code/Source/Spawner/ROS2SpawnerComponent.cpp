@@ -82,7 +82,7 @@ namespace ROS2
     void ROS2SpawnerComponent::GetAvailableSpawnableNames(
         const GetAvailableSpawnableNamesRequest request, GetAvailableSpawnableNamesResponse response)
     {
-        for (const auto& spawnable : m_controller.m_config.m_spawnables)
+        for (const auto& spawnable : m_controller.GetSpawnables())
         {
             response->model_names.emplace_back(spawnable.first.c_str());
         }
@@ -95,7 +95,7 @@ namespace ROS2
 
         auto spawnPoints = GetSpawnPoints();
 
-        if (!m_controller.m_config.m_spawnables.contains(spawnableName))
+        if (!m_controller.GetSpawnables().contains(spawnableName))
         {
             response->success = false;
             response->status_message = "Could not find spawnable with given name: " + request->name;
@@ -106,7 +106,7 @@ namespace ROS2
         {
             // if a ticket for this spawnable was not created but the spawnable name is correct, create the ticket and then use it to
             // spawn an entity
-            auto spawnable = m_controller.m_config.m_spawnables.find(spawnableName);
+            auto spawnable = m_controller.GetSpawnables().find(spawnableName);
             m_tickets.emplace(spawnable->first, AzFramework::EntitySpawnTicket(spawnable->second));
         }
 

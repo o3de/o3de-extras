@@ -7,6 +7,7 @@
  */
 
 #include "ROS2SpawnerEditorComponent.h"
+#include "AzCore/Debug/Trace.h"
 #include "ROS2SpawnPointEditorComponent.h"
 #include "Spawner/ROS2SpawnerComponentController.h"
 #include <AzCore/Component/TransformBus.h>
@@ -45,7 +46,7 @@ namespace ROS2
     AZStd::unordered_map<AZStd::string, SpawnPointInfo> ROS2SpawnerEditorComponent::GetSpawnPoints() const
     {
         AZStd::vector<AZ::EntityId> children;
-        AZ::TransformBus::EventResult(children, m_controller.m_config.m_editorEntityId, &AZ::TransformBus::Events::GetChildren);
+        AZ::TransformBus::EventResult(children, m_controller.GetEditorEntityId(), &AZ::TransformBus::Events::GetChildren);
 
         AZStd::unordered_map<AZStd::string, SpawnPointInfo> result;
 
@@ -53,7 +54,7 @@ namespace ROS2
         {
             AZ::Entity* childEntity = nullptr;
             AZ::ComponentApplicationBus::BroadcastResult(childEntity, &AZ::ComponentApplicationRequests::FindEntity, child);
-            AZ_Assert(childEntity, "No child entity %s", child.ToString().c_str());
+            AZ_Assert(childEntity, "No child entity found for entity %s", child.ToString().c_str());
 
             const auto* editorSpawnPoint = childEntity->FindComponent<ROS2SpawnPointEditorComponent>();
 
@@ -65,13 +66,13 @@ namespace ROS2
 
         // setting name of spawn point component "default" in a child entity will have no effect since it is overwritten here with the
         // default spawn pose of spawner
-        result["default"] = SpawnPointInfo{ "Default spawn pose defined in the Editor", m_controller.m_config.m_defaultSpawnPose };
+        result["default"] = SpawnPointInfo{ "Default spawn pose defined in the Editor", m_controller.GetDefaultSpawnPose() };
         return result;
     }
 
     const AZ::Transform& ROS2SpawnerEditorComponent::GetDefaultSpawnPose() const
     {
-        return m_controller.m_config.m_defaultSpawnPose;
+        return m_controller.GetDefaultSpawnPose();
     }
 
     AZStd::unordered_map<AZStd::string, SpawnPointInfo> ROS2SpawnerEditorComponent::GetAllSpawnPointInfos() const
@@ -89,14 +90,15 @@ namespace ROS2
         ROS2SpawnerEditorComponentBase::Activate();
         ROS2SpawnerComponentConfig config = m_controller.GetConfiguration();
         config.m_editorEntityId = GetEntityId();
+        AZ_Assert(config.m_editorEntityId.IsValid(), "Spawner component got an invalid entity id");
         m_controller.SetConfiguration(config);
-        SpawnerRequestsBus::Handler::BusConnect(GetEntityId());
+        SpawnerRequestsBus::Handler::BusConnect(config.m_editorEntityId);
     }
 
     void ROS2SpawnerEditorComponent::Deactivate()
     {
-        ROS2SpawnerEditorComponentBase::Deactivate();
         SpawnerRequestsBus::Handler::BusDisconnect();
+        ROS2SpawnerEditorComponentBase::Deactivate();
     }
 
 } // namespace ROS2
