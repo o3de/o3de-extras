@@ -278,6 +278,8 @@ namespace ROS2
 
         if (!jointInfo.m_isArticulation)
         {
+            // The joint isn't controlled by JointsArticulationControllerComponent.
+            // There is no easy way to calculate the effort.
             return AZ::Success(effort);
         }
 
@@ -290,6 +292,8 @@ namespace ROS2
 
         if (is_acceleration_driven)
         {
+            // The formula below in this case will calculate acceleration, not effort.
+            // In this case we can't calculate the effort without PhysX engine support.
             return AZ::Success(effort);
         }
 
