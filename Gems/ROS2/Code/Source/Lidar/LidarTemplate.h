@@ -72,9 +72,11 @@ namespace ROS2
         float m_maxRange = 0.0f;
 
         NoiseParameters m_noiseParameters;
+        bool m_isNoiseEnabled = true;
         bool m_showNoiseConfig = false;
 
     private:
         bool IsLayersVisible() const;
+        [[nodiscard]] bool IsNoiseConfigVisible() const;
     };
 } // namespace ROS2

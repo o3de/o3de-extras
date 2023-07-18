@@ -21,6 +21,10 @@
     "documentation_url": "",
     "dependencies": [],
     "repo_uri": "https://raw.githubusercontent.com/o3de/o3de-extras/development",
+    "compatible_engines": [
+        "o3de-sdk>=1.2.0",
+        "o3de>=1.2.0"
+    ],
     "restricted": "",
     "download_source_uri": "https://github.com/o3de/o3de-extras/releases/download/2.0/warehousesample-1.0.0-gem.zip",
     "version": "1.0.0"

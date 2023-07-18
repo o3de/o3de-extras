@@ -15,6 +15,8 @@
 #include <AzCore/std/string/string.h>
 
 #include <ROS2/Communication/TopicConfiguration.h>
+#include <ROS2/ProximitySensor/ProximitySensorNotificationBus.h>
+#include <ROS2/ProximitySensor/ProximitySensorNotificationBusHandler.h>
 #include <ROS2/ROS2Bus.h>
 #include <ROS2/Sensor/ROS2SensorComponent.h>
 #include <ROS2/Utilities/ROS2Names.h>
@@ -48,6 +50,12 @@ namespace ROS2
                         "The maximum distance from where object is detected")
                     ->Attribute(AZ::Edit::Attributes::Min, 0.);
             }
+        }
+        if (AZ::BehaviorContext* behaviorContext = azrtti_cast<AZ::BehaviorContext*>(context))
+        {
+            behaviorContext->EBus<ProximitySensorNotificationBus>("ROS2ProximitySensor", "ProximitySensorNotificationBus")
+                ->Attribute(AZ::Edit::Attributes::Category, "ROS2/ProximitySensor")
+                ->Handler<ProximitySensorNotificationBusHandler>();
         }
     }
 
@@ -143,8 +151,17 @@ namespace ROS2
 
             std_msgs::msg::Bool msg;
             m_position = !result.m_hits.empty() ? std::make_optional(result.m_hits.front().m_position) : std::nullopt;
-            msg.data = m_position ? true : false;;
+            msg.data = m_position ? true : false;
             m_detectionPublisher->publish(msg);
+
+            if (m_position)
+            {
+                ProximitySensorNotificationBus::Event(GetEntityId(), &ProximitySensorNotifications::OnObjectInRange);
+            }
+            else
+            {
+                ProximitySensorNotificationBus::Event(GetEntityId(), &ProximitySensorNotifications::OnObjectOutOfRange);
+            }
         }
     }
 } // namespace ROS2

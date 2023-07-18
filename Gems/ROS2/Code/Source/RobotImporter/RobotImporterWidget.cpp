@@ -8,6 +8,7 @@
 
 #include <AzCore/IO/FileIO.h>
 #include <AzCore/IO/Path/Path.h>
+#include <AzCore/Math/Uuid.h>
 #include <AzCore/Utils/Utils.h>
 
 #include "RobotImporterWidget.h"
@@ -181,10 +182,23 @@ namespace ROS2
             auto collidersNames = Utils::GetMeshesFilenames(m_parsedUrdf->getRoot(), false, true);
             auto visualNames = Utils::GetMeshesFilenames(m_parsedUrdf->getRoot(), true, false);
 
+            AZStd::string_view dirSuffix = "";
+            if (!m_params.empty())
+            {
+                auto paramsUuid = AZ::Uuid::CreateNull();
+                for (auto& [key, value] : m_params)
+                {
+                    paramsUuid += AZ::Uuid::CreateName(key);
+                    paramsUuid += AZ::Uuid::CreateName(value);
+                }
+
+                dirSuffix = paramsUuid.ToString<AZStd::string_view>();
+            }
+
             if (m_importAssetWithUrdf)
             {
                 m_urdfAssetsMapping = AZStd::make_shared<Utils::UrdfAssetMap>(
-                    Utils::CopyAssetForURDFAndCreateAssetMap(m_meshNames, m_urdfPath.String(), collidersNames, visualNames));
+                    Utils::CopyAssetForURDFAndCreateAssetMap(m_meshNames, m_urdfPath.String(), collidersNames, visualNames, dirSuffix));
             }
             else
             {

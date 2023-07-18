@@ -79,11 +79,15 @@ namespace ROS2
         incompatible.push_back(AZ_CRC_CE("ManipulatorJointTrajectoryService"));
     }
 
-    AZ::Outcome<void, AZStd::string> JointsTrajectoryComponent::StartTrajectoryGoal(TrajectoryGoalPtr trajectoryGoal)
+    AZ::Outcome<void, JointsTrajectoryComponent::TrajectoryResult> JointsTrajectoryComponent::StartTrajectoryGoal(
+        TrajectoryGoalPtr trajectoryGoal)
     {
         if (m_trajectoryInProgress)
         {
-            return AZ::Failure("Another trajectory goal is executing. Wait for completion or cancel it");
+            auto result = JointsTrajectoryComponent::TrajectoryResult();
+            result.error_code = JointsTrajectoryComponent::TrajectoryResult::INVALID_GOAL;
+            result.error_string = "Another trajectory goal is executing. Wait for completion or cancel it";
+            return AZ::Failure(result);
         }
 
         auto validationResult = ValidateGoal(trajectoryGoal);
@@ -97,7 +101,7 @@ namespace ROS2
         return AZ::Success();
     }
 
-    AZ::Outcome<void, AZStd::string> JointsTrajectoryComponent::ValidateGoal(TrajectoryGoalPtr trajectoryGoal)
+    AZ::Outcome<void, JointsTrajectoryComponent::TrajectoryResult> JointsTrajectoryComponent::ValidateGoal(TrajectoryGoalPtr trajectoryGoal)
     {
         // Check joint names validity
         for (const auto& jointName : trajectoryGoal->trajectory.joint_names)
@@ -105,11 +109,14 @@ namespace ROS2
             AZStd::string azJointName(jointName.c_str());
             if (m_manipulationJoints.find(azJointName) == m_manipulationJoints.end())
             {
-                AZ_Printf(
-                    "JointsTrajectoryComponent",
-                    "Trajectory goal is invalid: no joint %s in manipulator",
-                    azJointName.c_str());
-                return AZ::Failure(AZStd::string::format("Trajectory goal is invalid: no joint %s in manipulator", azJointName.c_str()));
+                AZ_Printf("JointsTrajectoryComponent", "Trajectory goal is invalid: no joint %s in manipulator", azJointName.c_str());
+
+                auto result = JointsTrajectoryComponent::TrajectoryResult();
+                result.error_code = JointsTrajectoryComponent::TrajectoryResult::INVALID_JOINTS;
+                result.error_string = std::string(
+                    AZStd::string::format("Trajectory goal is invalid: no joint %s in manipulator", azJointName.c_str()).c_str());
+
+                return AZ::Failure(result);
             }
         }
         return AZ::Success();
