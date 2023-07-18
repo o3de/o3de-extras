@@ -22,6 +22,7 @@
 #include <AzCore/Time/ITime.h>
 #include <AzCore/std/smart_ptr/make_shared.h>
 #include <AzCore/std/string/string_view.h>
+#include <AzFramework/API/ApplicationAPI.h>
 
 namespace ROS2
 {
@@ -112,6 +113,19 @@ namespace ROS2
         m_simulationClock = AZStd::make_unique<SimulationClock>();
     }
 
+    void ROS2SystemComponent::InitPassTemplateMappingsHandler()
+    {
+        auto* passSystem = AZ::RPI::PassSystemInterface::Get();
+        AZ_Assert(passSystem, "Cannot get the pass system.");
+
+        m_loadTemplatesHandler = AZ::RPI::PassSystemInterface::OnReadyLoadTemplatesEvent::Handler(
+            [this]()
+            {
+                this->LoadPassTemplateMappings();
+            });
+        passSystem->ConnectEvent(m_loadTemplatesHandler);
+    }
+
     void ROS2SystemComponent::Activate()
     {
         InitClock();
@@ -123,15 +137,12 @@ namespace ROS2
         m_staticTFBroadcaster = AZStd::make_unique<tf2_ros::StaticTransformBroadcaster>(m_ros2Node);
         m_dynamicTFBroadcaster = AZStd::make_unique<tf2_ros::TransformBroadcaster>(m_ros2Node);
 
-        auto* passSystem = AZ::RPI::PassSystemInterface::Get();
-        AZ_Assert(passSystem, "Cannot get the pass system.");
-
-        m_loadTemplatesHandler = AZ::RPI::PassSystemInterface::OnReadyLoadTemplatesEvent::Handler(
-            [this]()
-            {
-                this->LoadPassTemplateMappings();
-            });
-        passSystem->ConnectEvent(m_loadTemplatesHandler);
+        AZ::ApplicationTypeQuery appType;
+        AZ::ComponentApplicationBus::Broadcast(&AZ::ComponentApplicationBus::Events::QueryApplicationType, appType);
+        if (appType.IsGame())
+        {
+            InitPassTemplateMappingsHandler();
+        }
 
         ROS2RequestBus::Handler::BusConnect();
         AZ::TickBus::Handler::BusConnect();

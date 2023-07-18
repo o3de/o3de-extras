@@ -49,6 +49,7 @@ namespace ROS2
     void ROS2EditorSystemComponent::Activate()
     {
         AzToolsFramework::EditorEntityContextNotificationBus::Handler::BusConnect();
+        ROS2SystemComponent::InitPassTemplateMappingsHandler();
     }
 
     void ROS2EditorSystemComponent::Deactivate()
