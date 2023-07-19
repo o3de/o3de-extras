@@ -17,6 +17,10 @@
 
 namespace ROS2
 {
+    //! GripperActionServer is a class responsible for managing an action server controlling a gripper
+    //! @see <a href="https://docs.ros.org/en/humble/p/rclcpp_action/generated/classrclcpp__action_1_1Server.html"> ROS 2 action
+    //! server documentation </a>
+    //! @see <a href="https://docs.ros.org/en/api/control_msgs/html/msg/GripperCommand.html"> GripperCommand documentation </a>
     class GripperActionServer
     {
     public:
@@ -26,8 +30,6 @@ namespace ROS2
         //! Create an action server for GripperAction action and bind Goal callbacks.
         //! @param actionName Name of the action, similar to topic or service name.
         //! @param entityId entity which will execute callbacks through GripperRequestBus.
-        //! @see <a href="https://docs.ros.org/en/humble/p/rclcpp_action/generated/classrclcpp__action_1_1Server.html"> ROS 2 action
-        //! server documentation </a>
         GripperActionServer(const AZStd::string& actionName, const AZ::EntityId& entityId);
 
         //! Cancel the current goal.

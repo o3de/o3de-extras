@@ -110,7 +110,7 @@ namespace ROS2
     void GripperActionServer::GoalSuccess(std::shared_ptr<GripperCommand::Result> result)
     {
         AZ_Assert(m_goalHandle, "Invalid goal handle!");
-        if (m_goalHandle && m_goalHandle->is_executing())
+        if (m_goalHandle && (m_goalHandle->is_executing() || m_goalHandle->is_canceling()))
         {
             AZ_Trace("GripperActionServer", "Goal succeeded\n");
             m_goalHandle->succeed(result);

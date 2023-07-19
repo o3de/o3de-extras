@@ -18,7 +18,7 @@
 namespace ROS2
 {
     //! GripperActionServerComponent is a component that encapsulates gripper action server.
-    //! It is responsible for creating and managing the action server, it is responsible for producing feedback and result.
+    //! It is responsible for creating and managing the action server, producing feedback and result.
     class GripperActionServerComponent
         : public AZ::Component
         , private AZ::TickBus::Handler
