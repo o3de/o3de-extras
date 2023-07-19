@@ -66,6 +66,8 @@ namespace ROS2
         const SimulationClock& GetSimulationClock() const override;
         //////////////////////////////////////////////////////////////////////////
 
+        void InitPassTemplateMappingsHandler();
+
     protected:
         ////////////////////////////////////////////////////////////////////////
         // AZ::Component override
