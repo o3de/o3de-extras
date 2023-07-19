@@ -17,12 +17,14 @@ namespace ROS2
         if (auto serializeContext = azrtti_cast<AZ::SerializeContext*>(context))
         {
             serializeContext->Class<CameraSensorConfiguration>()
-                ->Version(1)
+                ->Version(2)
                 ->Field("VerticalFieldOfViewDeg", &CameraSensorConfiguration::m_verticalFieldOfViewDeg)
                 ->Field("Width", &CameraSensorConfiguration::m_width)
                 ->Field("Height", &CameraSensorConfiguration::m_height)
                 ->Field("Depth", &CameraSensorConfiguration::m_depthCamera)
-                ->Field("Color", &CameraSensorConfiguration::m_colorCamera);
+                ->Field("Color", &CameraSensorConfiguration::m_colorCamera)
+                ->Field("ClipNear", &CameraSensorConfiguration::m_nearClipDistance)
+                ->Field("ClipFar", &CameraSensorConfiguration::m_farClipDistance);
 
             if (AZ::EditContext* ec = serializeContext->GetEditContext())
             {
@@ -39,7 +41,17 @@ namespace ROS2
                     ->DataElement(AZ::Edit::UIHandlers::Default, &CameraSensorConfiguration::m_height, "Image height", "Image height")
                     ->Attribute(AZ::Edit::Attributes::Min, CameraSensorConfiguration::m_minHeight)
                     ->DataElement(AZ::Edit::UIHandlers::Default, &CameraSensorConfiguration::m_colorCamera, "Color Camera", "Color Camera")
-                    ->DataElement(AZ::Edit::UIHandlers::Default, &CameraSensorConfiguration::m_depthCamera, "Depth Camera", "Depth Camera");
+                    ->DataElement(AZ::Edit::UIHandlers::Default, &CameraSensorConfiguration::m_depthCamera, "Depth Camera", "Depth Camera")
+                    ->DataElement(
+                        AZ::Edit::UIHandlers::Default,
+                        &CameraSensorConfiguration::m_nearClipDistance,
+                        "Near clip distance",
+                        "Minimum distance to detect objects")
+                    ->DataElement(
+                        AZ::Edit::UIHandlers::Default,
+                        &CameraSensorConfiguration::m_farClipDistance,
+                        "Far clip distance",
+                        "Maximum distance to detect objects");
             }
         }
     }
