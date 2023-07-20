@@ -70,5 +70,12 @@ namespace ROS2
             const AZStd::string& amentPrefixPath,
             const AZStd::function<bool(const AZStd::string&)>& fileExists = FileExistsCall);
 
+        //! Waits for asset processor to process provided assets.
+        //! This function will timeout after the time specified in /O3DE/ROS2/RobotImporter/AssetProcessorTimeoutInSeconds
+        //! settings registry.
+        //! @param sourceAssetsPaths - set of all non relative paths to assets for which we want to wait for processing
+        //! @returns false if a timeout or error occurs, otherwise true
+        bool WaitForAssetsToProcess(const AZStd::unordered_map<AZStd::string, AZ::IO::Path>& sourceAssetsPaths);
+
     } // namespace Utils
 } // namespace ROS2
