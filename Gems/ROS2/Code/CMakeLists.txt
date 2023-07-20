@@ -160,6 +160,8 @@ if(PAL_TRAIT_BUILD_HOST_TOOLS)
             PUBLIC
                 Gem::${gem_name}.Editor.Static
                 Gem::Atom_Feature_Common.Static
+            PRIVATE
+                AZ::AzToolsFramework
     )
 
     # By default, we will specify that the above target ROS2 would be used by
