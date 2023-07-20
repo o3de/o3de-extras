@@ -34,9 +34,6 @@ namespace XR
         //////////////////////////////////////////////////////////////////////////
 
     private:
-        //! Check is OpenXR is enable via command line option or settings registry.
-        bool IsOpenXREnabled();
-
         Ptr<XR::System> m_xrSystem;
     };
 }

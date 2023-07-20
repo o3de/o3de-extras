@@ -7,16 +7,11 @@
  */
 
 #include <XR/XRSystemComponent.h>
+#include <XR/XRUtils.h>
 #include <AzCore/Serialization/SerializeContext.h>
-#include <AzCore/Settings/SettingsRegistry.h>
 #include <Atom/RPI.Public/XR/XRRenderingInterface.h>
 #include <Atom/RHI/ValidationLayer.h>
 #include <Atom/RHI/FactoryManagerBus.h>
-#include <AzFramework/StringFunc/StringFunc.h>
-#include <AzFramework/API/ApplicationAPI.h>
-#include <AzFramework/CommandLine/CommandLine.h>
-
-static constexpr char OpenXREnableSetting[] = "/O3DE/Atom/OpenXR/Enable";
 
 namespace XR
 {
@@ -65,31 +60,5 @@ namespace XR
             m_xrSystem->Shutdown();
             m_xrSystem.reset();
         }
-    }
-
-    bool SystemComponent::IsOpenXREnabled()
-    {
-        const AzFramework::CommandLine* commandLine = nullptr;
-        AZStd::string commandLineValue;
-
-        //Check command line option(-openxr=enable)
-        AzFramework::ApplicationRequests::Bus::BroadcastResult(commandLine, &AzFramework::ApplicationRequests::GetApplicationCommandLine);
-        if (commandLine)
-        {
-            if (size_t switchCount = commandLine->GetNumSwitchValues("openxr"); switchCount > 0)
-            {
-                commandLineValue = commandLine->GetSwitchValue("openxr", switchCount - 1);
-            }
-        }
-        bool isOpenXREnabledViaCL = AzFramework::StringFunc::Equal(commandLineValue.c_str(), "enable");
-
-        //Check settings registry
-        AZ::SettingsRegistryInterface* settingsRegistry = AZ::SettingsRegistry::Get();
-        bool isOpenXREnabledViaSR = false;
-        if (settingsRegistry)
-        {
-            settingsRegistry->Get(isOpenXREnabledViaSR, OpenXREnableSetting);
-        }
-        return isOpenXREnabledViaSR || isOpenXREnabledViaCL;
     }
 }

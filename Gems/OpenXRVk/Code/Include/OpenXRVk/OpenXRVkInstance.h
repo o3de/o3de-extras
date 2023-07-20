@@ -10,7 +10,7 @@
 
 #include <AzCore/std/containers/vector.h>
 #include <Atom/RHI/ValidationLayer.h>
-#include <Atom/RHI.Loader/FunctionLoader.h>
+#include <Atom/RHI.Reflect/Vulkan/VulkanBus.h>
 #include <OpenXRVk_Platform.h>
 #include <OpenXRVk/OpenXRVkPhysicalDevice.h>
 #include <XR/XRInstance.h>
@@ -20,7 +20,10 @@ namespace OpenXRVk
     //! Vulkan specific XR instance back-end class that will help manage
     //! XR specific vulkan native objects
     class Instance final
-    : public XR::Instance
+        : public XR::Instance
+        , public AZ::Vulkan::InstanceRequirementBus::Handler
+        , public AZ::Vulkan::DeviceRequirementBus::Handler
+        , public AZ::Vulkan::InstanceNotificationBus::Handler
     {
     public:
         AZ_CLASS_ALLOCATOR(Instance, AZ::SystemAllocator);
@@ -30,7 +33,6 @@ namespace OpenXRVk
 
         //////////////////////////////////////////////////////////////////////////
         // XR::Instance overrides
-        AZ::RHI::ResultCode InitNativeInstance(AZ::RHI::XRInstanceDescriptor* instanceDescriptor) override;
         AZ::u32 GetNumPhysicalDevices() const override;
         AZ::RHI::ResultCode GetXRPhysicalDevice(AZ::RHI::XRPhysicalDeviceDescriptor* physicalDeviceDescriptor, int32_t index) override;
         //////////////////////////////////////////////////////////////////////////
@@ -56,25 +58,28 @@ namespace OpenXRVk
         //! Get native VkInstance.
         VkInstance GetNativeInstance() const;
 
-        //! Get glad vulkan context.
-        GladVulkanContext& GetContext();
-
-        //! Get function loader.
-        AZ::Vulkan::FunctionLoader& GetFunctionLoader();
-
         //! Get XR environment blend mode.
         XrEnvironmentBlendMode GetEnvironmentBlendMode() const;
 
         //! Get XR configuration type.
         XrViewConfigurationType GetViewConfigType() const;
 
-        //! Ge the active VkPhysicalDevice.
-        VkPhysicalDevice GetActivePhysicalDevice() const;
-
     protected:
         // XR::Instance overrides...
         AZ::RHI::ResultCode InitInstanceInternal() override;
         void ShutdownInternal() override;
+
+        // AZ::Vulkan::InstanceRequirementBus::Handler overrides..
+        void CollectAditionalRequiredInstanceExtensions(AZStd::vector<AZStd::string>& extensions) override;
+        void CollectMinMaxVulkanAPIVersions(AZStd::vector<uint32_t>& min, AZStd::vector<uint32_t>& max) override;
+
+        // AZ::Vulkan::DeviceRequirementBus::Handler overrides...
+        void CollectAditionalRequiredDeviceExtensions(AZStd::vector<AZStd::string>& extensions) override;
+        void FilterSupportedDevices(AZStd::vector<VkPhysicalDevice>& supportedDevices) override;
+
+        // AZ::Vulkan::InstanceNotificationBus::Handler overrides...
+        virtual void OnInstanceCreated([[maybe_unused]] VkInstance instance);
+        virtual void OnInstanceDestroyed();
 
     private:
         XrInstance m_xrInstance = XR_NULL_HANDLE;
@@ -85,9 +90,10 @@ namespace OpenXRVk
         XrSystemId m_xrSystemId = XR_NULL_SYSTEM_ID;
         XR::RawStringList m_requiredLayers;
         XR::RawStringList m_requiredExtensions;
-        GladVulkanContext m_context = {};
-        AZStd::unique_ptr<AZ::Vulkan::FunctionLoader> m_functionLoader;
+        XR::StringList m_requireVulkanInstanceExtensions;
+        XR::StringList m_requireVulkanDeviceExtensions;
         AZStd::vector<VkPhysicalDevice> m_supportedXRDevices;
-        AZ::u32 m_physicalDeviceActiveIndex = 0;
+        uint32_t m_minVulkanAPIVersion = 0;
+        uint32_t m_maxVulkanAPIVersion = 0;
     };
 }
