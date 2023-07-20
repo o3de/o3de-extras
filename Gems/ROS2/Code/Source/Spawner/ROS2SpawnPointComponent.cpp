@@ -52,7 +52,7 @@ namespace ROS2
         auto transform_component = GetEntity()->FindComponent<AzFramework::TransformComponent>();
 
         // if SpawnPointComponent entity for some reason does not include TransformComponent - this default pose will be returned
-        AZ::Transform transform = { AZ::Vector3{ 0, 0, 0 }, AZ::Quaternion{ 0, 0, 0, 1.0 }, 1.0 };
+        AZ::Transform transform = AZ::Transform::CreateIdentity();
 
         if (transform_component != nullptr)
         {
