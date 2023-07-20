@@ -363,16 +363,19 @@ namespace ROS2::Utils
             urdfToAsset.emplace(t, AZStd::move(asset));
         }
 
-        AZStd::unordered_map<AZ::Crc32, AvailableAsset> availableAssets = Utils::GetInterestingSourceAssetsCRC();
-
-        // Search for suitable mappings by comparing checksum
-        for (auto it = urdfToAsset.begin(); it != urdfToAsset.end(); it++)
+        if (!urdfToAsset.empty())
         {
-            Utils::UrdfAsset& asset = it->second;
-            auto found_source_asset = availableAssets.find(asset.m_urdfFileCRC);
-            if (found_source_asset != availableAssets.end())
+            AZStd::unordered_map<AZ::Crc32, AvailableAsset> availableAssets = Utils::GetInterestingSourceAssetsCRC();
+
+            // Search for suitable mappings by comparing checksum
+            for (auto it = urdfToAsset.begin(); it != urdfToAsset.end(); it++)
             {
-                asset.m_availableAssetInfo = found_source_asset->second;
+                Utils::UrdfAsset& asset = it->second;
+                auto found_source_asset = availableAssets.find(asset.m_urdfFileCRC);
+                if (found_source_asset != availableAssets.end())
+                {
+                    asset.m_availableAssetInfo = found_source_asset->second;
+                }
             }
         }
 

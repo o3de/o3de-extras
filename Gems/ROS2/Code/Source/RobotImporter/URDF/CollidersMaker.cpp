@@ -37,7 +37,6 @@ namespace ROS2
     CollidersMaker::CollidersMaker(const AZStd::shared_ptr<Utils::UrdfAssetMap>& urdfAssetsMapping)
         : m_urdfAssetsMapping(urdfAssetsMapping)
     {
-        FindWheelMaterial();
     }
 
     void CollidersMaker::FindWheelMaterial()
@@ -215,6 +214,10 @@ namespace ROS2
         if (isWheelEntity)
         {
             AZ_Printf(Internal::CollidersMakerLoggingTag, "Due to its name, %s is considered a wheel entity\n", link->name.c_str());
+            if (!m_wheelMaterial.GetId().IsValid())
+            {
+                FindWheelMaterial();
+            }
         }
         const AZ::Data::Asset<Physics::MaterialAsset> materialAsset =
             isWheelEntity ? m_wheelMaterial : AZ::Data::Asset<Physics::MaterialAsset>();
