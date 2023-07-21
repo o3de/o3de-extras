@@ -3,6 +3,7 @@
 #
 # SPDX-License-Identifier: Apache-2.0 OR MIT
 
+find_package(sdformat13 REQUIRED)
 
 # Only allow this gem to be configured on platforms that are currently supported
 include(${CMAKE_CURRENT_SOURCE_DIR}/Platform/${PAL_PLATFORM_NAME}/PAL_${PAL_PLATFORM_NAME_LOWERCASE}.cmake)
@@ -140,7 +141,7 @@ if(PAL_TRAIT_BUILD_HOST_TOOLS)
         )
 
     find_package(urdfdom)
-    target_link_libraries(${gem_name}.Editor.Static PUBLIC urdfdom::urdfdom_model)
+    target_link_libraries(${gem_name}.Editor.Static PUBLIC urdfdom::urdfdom_model ${sdformat13_LIBRARIES})
 
     ly_add_target(
         NAME ${gem_name}.Editor GEM_MODULE
