@@ -8,6 +8,7 @@
 
 #include "JointsTrajectoryComponent.h"
 #include <AzCore/Serialization/EditContext.h>
+#include <PhysX/ArticulationJointBus.h>
 #include <ROS2/Frame/ROS2FrameComponent.h>
 #include <ROS2/Manipulation/JointsManipulationRequests.h>
 #include <ROS2/ROS2Bus.h>
@@ -145,7 +146,7 @@ namespace ROS2
 
             float currentJointPosition;
             float currentJointVelocity;
-            auto &jointInfo = m_manipulationJoints[jointName];
+            auto& jointInfo = m_manipulationJoints[jointName];
             PhysX::ArticulationJointRequestBus::Event(
                 jointInfo.m_entityComponentIdPair.GetEntityId(),
                 [&](PhysX::ArticulationJointRequests* articulationJointRequests)
