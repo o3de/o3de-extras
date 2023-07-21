@@ -143,4 +143,14 @@ namespace UnitTest
         EXPECT_NEAR(cameraSensor->FarClip(), 1000, 1e-5);
     }
 
+    TEST_F(SdfParserTest, CheckSensorCount)
+    {
+        const auto xmlStr = GetSdfWithOneLlinkOneSensor();
+        const auto sdfRoot = ROS2::SDFormatParser::Parse(xmlStr);
+
+        const auto& allSensors = ROS2::Utils::SDFormat::GetAllSensors(sdfRoot);
+        EXPECT_EQ(allSensors.size(), 1U);
+        ASSERT_TRUE(allSensors.contains("camera"));
+        EXPECT_EQ(allSensors.at("camera")->Name(), "camera");
+    }
 } // namespace UnitTest
