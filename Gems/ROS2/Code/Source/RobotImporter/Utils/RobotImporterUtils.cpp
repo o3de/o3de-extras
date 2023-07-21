@@ -218,9 +218,8 @@ namespace ROS2
         return filenames;
     }
 
-    AZStd::optional<AZ::IO::Path> GetResolvedPath(const AZ::IO::Path &packagePath,
-                                                 const AZ::IO::Path &unresolvedPath,
-                                                 const AZStd::function<bool(const AZStd::string&)>& fileExists)
+    AZStd::optional<AZ::IO::Path> GetResolvedPath(
+        const AZ::IO::Path& packagePath, const AZ::IO::Path& unresolvedPath, const AZStd::function<bool(const AZStd::string&)>& fileExists)
     {
         AZ::IO::Path packageXmlCandite = packagePath / "package.xml";
         if (fileExists(packageXmlCandite.String()))
@@ -228,7 +227,7 @@ namespace ROS2
             AZ::IO::Path resolvedPath = packagePath / unresolvedPath;
             if (fileExists(resolvedPath.String()))
             {
-                return AZStd::optional<AZ::IO::Path>{resolvedPath};
+                return AZStd::optional<AZ::IO::Path>{ resolvedPath };
             }
         }
         return AZStd::optional<AZ::IO::Path>{};
@@ -241,7 +240,7 @@ namespace ROS2
         {
             return subpath;
         }
-        for (AZ::IO::Path::iterator pathIt = begin;pathIt!=end;pathIt++)
+        for (AZ::IO::Path::iterator pathIt = begin; pathIt != end; pathIt++)
         {
             subpath /= *pathIt;
         }
@@ -271,7 +270,7 @@ namespace ROS2
                     if (package.ends_with(packageNameCandidate))
                     {
                         auto pathIt = unresolvedProperPath.begin();
-                        AZStd::advance(pathIt,1);
+                        AZStd::advance(pathIt, 1);
                         if (pathIt != unresolvedProperPath.end())
                         {
                             AZ::IO::Path unresolvedPathStripped = GetPathFromSubPath(pathIt, unresolvedProperPath.end());
@@ -295,7 +294,7 @@ namespace ROS2
                 auto it = --urdfProperPath.end();
                 for (; it != urdfProperPath.begin(); it--)
                 {
-                    const auto packagePath = GetPathFromSubPath(urdfProperPath.begin(),it);
+                    const auto packagePath = GetPathFromSubPath(urdfProperPath.begin(), it);
                     std::cout << "packagePath : " << packagePath.String().c_str() << std::endl;
                     const auto resolvedPath = GetResolvedPath(packagePath, unresolvedPath, fileExists);
                     if (resolvedPath.has_value())
@@ -323,5 +322,41 @@ namespace ROS2
         AZ_Printf("ResolveURDFPath", "ResolveURDFPath with relative path to : %s\n", unresolvedPath.c_str());
         return resolvedPath.String();
     }
+
+    namespace Utils::SDFormat
+    {
+        AZStd::unordered_map<AZStd::string, const sdf::Sensor*> GetAllSensors(const AZStd::shared_ptr<sdf::Root>& root)
+        {
+            const auto* model = root->Model();
+            if (!model)
+            {
+                return AZStd::unordered_map<AZStd::string, const sdf::Sensor*>();
+            }
+
+            AZStd::unordered_map<AZStd::string, const sdf::Sensor*> allSensors;
+            // sensor can be a part of a link or a joint
+            for (size_t ji = 0; ji < model->JointCount(); ++ji)
+            {
+                const auto* joint = model->JointByIndex(ji);
+                for (size_t si = 0; si < joint->SensorCount(); ++si)
+                {
+                    const auto* sensor = joint->SensorByIndex(si);
+                    allSensors[AZStd::string(sensor->Name().c_str(), sensor->Name().size())] = sensor;
+                }
+            }
+
+            for (size_t li = 0; li < model->LinkCount(); ++li)
+            {
+                const auto* link = model->LinkByIndex(li);
+                for (size_t si = 0; si < link->SensorCount(); ++si)
+                {
+                    const auto* sensor = link->SensorByIndex(si);
+                    allSensors[AZStd::string(sensor->Name().c_str(), sensor->Name().size())] = sensor;
+                }
+            }
+
+            return allSensors;
+        }
+    } // namespace Utils::SDFormat
 
 } // namespace ROS2

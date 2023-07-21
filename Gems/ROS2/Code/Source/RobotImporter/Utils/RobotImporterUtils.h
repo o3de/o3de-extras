@@ -14,6 +14,7 @@
 #include <AzCore/std/function/function_template.h>
 #include <AzCore/std/string/string.h>
 #include <RobotImporter/URDF/UrdfParser.h>
+#include <sdf/sdf.hh>
 
 namespace ROS2
 {
@@ -76,6 +77,21 @@ namespace ROS2
         //! @param sourceAssetsPaths - set of all non relative paths to assets for which we want to wait for processing
         //! @returns false if a timeout or error occurs, otherwise true
         bool WaitForAssetsToProcess(const AZStd::unordered_map<AZStd::string, AZ::IO::Path>& sourceAssetsPaths);
+
+        namespace SDFormat
+        {
+            // //! Retrieve all sensors in parsed SDFormat data as a map, where a key is sensor's name and a value is a pointer to sensor.
+            // //! Allows to retrieve a pointer to a sensor given it name.
+            // //! @param modelRoot root of  parsed SDFormat data
+            // //! @returns mapping from sensor's name to sensor's pointer
+            // AZStd::unordered_map<AZStd::string, const sdf::Sensor*> GetAllSensors(AZStd::shared_ptr<sdf::Root>& root);
+
+            //! Retrieve all sensors in  parsed SDFormat data as a map, where a key is sensor's name and a value is a pointer to sensor.
+            //! Allows to retrieve a pointer to a sensor given it name.
+            //! @param modelRoot root of parsed SDFormat data
+            //! @returns mapping from sensor's name to sensor's pointer
+            AZStd::unordered_map<AZStd::string, const sdf::Sensor*> GetAllSensors(const AZStd::shared_ptr<sdf::Root>& root);
+        } // namespace SDFormat
 
     } // namespace Utils
 } // namespace ROS2
