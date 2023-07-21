@@ -1,11 +1,11 @@
 /*
-* Copyright (c) Contributors to the Open 3D Engine Project.
-* For complete copyright and license terms please see the LICENSE at the root
-* of this distribution.
-*
-* SPDX-License-Identifier: Apache-2.0 OR MIT
-*
-*/
+ * Copyright (c) Contributors to the Open 3D Engine Project.
+ * For complete copyright and license terms please see the LICENSE at the root
+ * of this distribution.
+ *
+ * SPDX-License-Identifier: Apache-2.0 OR MIT
+ *
+ */
 
 #include "FingerGripperComponent.h"
 #include "Utils.h"
@@ -14,9 +14,9 @@
 #include <AzCore/Serialization/SerializeContext.h>
 
 #include <AzFramework/Physics/PhysicsSystem.h>
+#include <ROS2/Frame/ROS2FrameComponent.h>
 #include <ROS2/Manipulation/JointsManipulationRequests.h>
 #include <imgui/imgui.h>
-#include <ROS2/Frame/ROS2FrameComponent.h>
 
 namespace ROS2
 {
@@ -52,9 +52,9 @@ namespace ROS2
     {
         if (AZ::SerializeContext* serialize = azrtti_cast<AZ::SerializeContext*>(context))
         {
-
             serialize->Class<FingerGripperComponent, AZ::Component>()
-                ->Field("Epsilon", &FingerGripperComponent::m_epsilon)
+                ->Field("VelocityEpsilon", &FingerGripperComponent::m_velocityEpsilon)
+                ->Field("DistanceEpsilon", &FingerGripperComponent::m_distanceEpsilon)
                 ->Field("StallTime", &FingerGripperComponent::m_stallTime)
                 ->Version(1);
 
@@ -66,9 +66,14 @@ namespace ROS2
                     ->Attribute(AZ::Edit::Attributes::Category, "ROS2")
                     ->DataElement(
                         AZ::Edit::UIHandlers::Default,
-                        &FingerGripperComponent::m_epsilon,
-                        "Epsilon",
+                        &FingerGripperComponent::m_velocityEpsilon,
+                        "Velocity Epsilon",
                         "The maximum velocity to consider the gripper as stalled.")
+                    ->DataElement(
+                        AZ::Edit::UIHandlers::Default,
+                        &FingerGripperComponent::m_distanceEpsilon,
+                        "Distance Epsilon",
+                        "The maximum distance to gripper can be from the goal to have reached it.")
                     ->DataElement(
                         AZ::Edit::UIHandlers::Default,
                         &FingerGripperComponent::m_stallTime,
@@ -80,7 +85,7 @@ namespace ROS2
 
     AZStd::string GetJointName(AZ::EntityId entityId)
     {
-        AZ::Entity* entity { nullptr };
+        AZ::Entity* entity{ nullptr };
         AZ::ComponentApplicationBus::BroadcastResult(entity, &AZ::ComponentApplicationRequests::FindEntity, entityId);
         AZ_Assert(entity, "Entity %s not found.", entityId.ToString().c_str());
         if (entity)
@@ -98,7 +103,11 @@ namespace ROS2
     {
         m_fingerJoints.clear();
         m_rootOfArticulation = Utils::GetRootOfArticulation(GetEntityId());
-        AZ_Warning("FingerGripperComponent", m_rootOfArticulation.IsValid(), "Entity %s is not part of an articulation.", GetEntity()->GetName().c_str());
+        AZ_Warning(
+            "FingerGripperComponent",
+            m_rootOfArticulation.IsValid(),
+            "Entity %s is not part of an articulation.",
+            GetEntity()->GetName().c_str());
         ManipulationJoints allJoints;
         if (m_rootOfArticulation.IsValid())
         {
@@ -136,7 +145,12 @@ namespace ROS2
                 result, m_rootOfArticulation, &JointsManipulationRequests::MoveJointToPosition, jointName, targetPosition);
             if (!result.IsSuccess())
             {
-                AZ_Warning("FingerGripperComponent", result, "Joint move cannot be realized: %s for %s ", result.GetError().c_str(), jointName.c_str());
+                AZ_Warning(
+                    "FingerGripperComponent",
+                    result,
+                    "Joint move cannot be realized: %s for %s ",
+                    result.GetError().c_str(),
+                    jointName.c_str());
             }
         }
 
@@ -148,7 +162,12 @@ namespace ROS2
                 result, m_rootOfArticulation, &JointsManipulationRequests::SetMaxJointEffort, jointName, oneMaxEffort);
             if (!result.IsSuccess())
             {
-                AZ_Warning("FingerGripperComponent", result, "Setting a max force for a joint cannot be realized: %s for %s ", result.GetError().c_str(), jointName.c_str());
+                AZ_Warning(
+                    "FingerGripperComponent",
+                    result,
+                    "Setting a max force for a joint cannot be realized: %s for %s ",
+                    result.GetError().c_str(),
+                    jointName.c_str());
             }
         }
     }
@@ -174,7 +193,8 @@ namespace ROS2
         return AZ::Success();
     }
 
-    bool FingerGripperComponent::HasGripperCommandBeenCancelled() const {
+    bool FingerGripperComponent::HasGripperCommandBeenCancelled() const
+    {
         return m_cancelled;
     }
 
@@ -184,7 +204,8 @@ namespace ROS2
         for (const auto& [jointName, _] : m_fingerJoints)
         {
             AZ::Outcome<JointPosition, AZStd::string> result;
-            JointsManipulationRequestBus::EventResult(result, m_rootOfArticulation, &JointsManipulationRequests::GetJointPosition, jointName);
+            JointsManipulationRequestBus::EventResult(
+                result, m_rootOfArticulation, &JointsManipulationRequests::GetJointPosition, jointName);
             gripperPosition += result.GetValueOr(0.f);
         }
 
@@ -208,29 +229,28 @@ namespace ROS2
 
     bool FingerGripperComponent::IsGripperVelocity0() const
     {
-
-        float gripperEffort = 0.0f;
         for (const auto& [jointName, _] : m_fingerJoints)
         {
             AZ::Outcome<JointEffort, AZStd::string> velocityResult;
-            JointsManipulationRequestBus::EventResult(velocityResult, m_rootOfArticulation, &JointsManipulationRequests::GetJointVelocity, jointName);
-            if (velocityResult && AZStd::abs(velocityResult.GetValue()) > m_epsilon) {
+            JointsManipulationRequestBus::EventResult(
+                velocityResult, m_rootOfArticulation, &JointsManipulationRequests::GetJointVelocity, jointName);
+            if (velocityResult && AZStd::abs(velocityResult.GetValue()) > m_velocityEpsilon)
+            {
                 return false;
             }
         }
-        return gripperEffort;
 
         return true;
     }
 
     bool FingerGripperComponent::IsGripperNotMoving() const
     {
-        return m_stallingFor > 1.0f;
+        return m_stallingFor > m_stallTime;
     }
 
     bool FingerGripperComponent::HasGripperReachedGoal() const
     {
-        return !m_grippingInProgress || abs(GetGripperPosition() - m_desiredPosition) < m_epsilon;
+        return !m_grippingInProgress || abs(GetGripperPosition() - m_desiredPosition) < m_distanceEpsilon;
     }
 
     void FingerGripperComponent::OnImGuiUpdate()
@@ -249,16 +269,19 @@ namespace ROS2
 
     void FingerGripperComponent::OnTick([[maybe_unused]] float delta, [[maybe_unused]] AZ::ScriptTimePoint timePoint)
     {
-        if (!m_initialised) {
+        if (!m_initialised)
+        {
             m_initialised = true;
             GetFingerJoints();
             SetPosition(0.0f, 0.0f);
         }
 
-        if (IsGripperVelocity0()) {
+        if (IsGripperVelocity0())
+        {
             m_stallingFor += delta;
         }
-        else {
+        else
+        {
             m_stallingFor = 0.0f;
         }
     }

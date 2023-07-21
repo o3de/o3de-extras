@@ -78,8 +78,8 @@ namespace ROS2
         float m_stallingFor{ 0.f };
         float m_ImGuiPosition{ 0.1f };
 
-        float m_epsilon{ 0.1f }; //!< The epsilon value used to determine if the gripper is moving or not
-        float m_stallTime{ 0.1f }; //!< The time in seconds to wait before determining if the gripper is stalled
-
+        float m_velocityEpsilon{ 0.01f }; //!< The epsilon value used to determine whether the gripper is moving
+        float m_distanceEpsilon{ 0.001f }; //!< The epsilon value used to determine whether the gripper reached it's goal
+        float m_stallTime{ 0.1f }; //!< The time in seconds to wait before determining the gripper is stalled
     };
 } // namespace ROS2
