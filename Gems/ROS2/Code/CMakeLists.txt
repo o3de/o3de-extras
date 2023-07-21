@@ -37,7 +37,7 @@ endif()
 
 # Add a custom target to always check during build if sourced and cached distributions match.
 add_custom_target(
-    ROS2DistributionCheck ALL 
+    ROS2DistributionCheck ALL
     COMMENT "Checking if sourced ROS 2 distribution matches with the configuration"
     COMMAND ${CMAKE_COMMAND} -DROS_DISTRO=${ROS_DISTRO} -P ${CMAKE_CURRENT_SOURCE_DIR}/checkROS2Distribution.cmake
 )
@@ -136,7 +136,8 @@ if(PAL_TRAIT_BUILD_HOST_TOOLS)
                 Gem::${gem_name}.Static
             PRIVATE
                 AZ::AssetBuilderSDK
-        )
+                3rdParty::sdformat
+    )
 
     find_package(urdfdom)
     target_link_libraries(${gem_name}.Editor.Static PUBLIC urdfdom::urdfdom_model)
