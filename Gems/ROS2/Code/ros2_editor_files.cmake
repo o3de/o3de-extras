@@ -28,6 +28,8 @@ set(FILES
     Source/RobotImporter/RobotImporterWidget.h
     Source/RobotImporter/ROS2RobotImporterEditorSystemComponent.cpp
     Source/RobotImporter/ROS2RobotImporterEditorSystemComponent.h
+    Source/RobotImporter/SDFormat/SDFormatParser.cpp
+    Source/RobotImporter/SDFormat/SDFormatParser.h
     Source/RobotImporter/URDF/ArticulationsMaker.cpp
     Source/RobotImporter/URDF/ArticulationsMaker.h
     Source/RobotImporter/URDF/CollidersMaker.cpp
