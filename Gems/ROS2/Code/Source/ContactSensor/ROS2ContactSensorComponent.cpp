@@ -24,6 +24,7 @@
 #include "ROS2/Frame/ROS2FrameComponent.h"
 #include "ROS2/ROS2Bus.h"
 #include "ROS2/Sensor/ROS2SensorComponent.h"
+#include "ROS2/Utilities/ROS2Conversions.h"
 #include "ROS2/Utilities/ROS2Names.h"
 #include <cstddef>
 #include <geometry_msgs/msg/vector3.hpp>
@@ -112,37 +113,31 @@ namespace ROS2
     {
         // Connects the collision handlers if not already connected
         AzPhysics::SystemInterface* physicsSystem = AZ::Interface<AzPhysics::SystemInterface>::Get();
-        AZ_Assert(physicsSystem, "No physics system.");
-
-        AzPhysics::SceneInterface* sceneInterface = AZ::Interface<AzPhysics::SceneInterface>::Get();
-        AZ_Assert(sceneInterface, "No scene interface.");
-
-        AzPhysics::SceneHandle defaultSceneHandle = sceneInterface->GetSceneHandle(AzPhysics::DefaultPhysicsSceneName);
-        AZ_Assert(defaultSceneHandle != AzPhysics::InvalidSceneHandle, "Invalid default physics scene handle.");
+        if (!physicsSystem)
+        {
+            return;
+        }
 
         if (!m_onCollisionBeginHandler.IsConnected() || !m_onCollisionPersistHandler.IsConnected() ||
             !m_onCollisionEndHandler.IsConnected())
         {
-            if (auto* physicsSystem = AZ::Interface<AzPhysics::SystemInterface>::Get())
+            AZStd::pair<AzPhysics::SceneHandle, AzPhysics::SimulatedBodyHandle> foundBody =
+                physicsSystem->FindAttachedBodyHandleFromEntityId(GetEntityId());
+            AZ_Warning("Contact Sensor", foundBody.first != AzPhysics::InvalidSceneHandle, "Invalid scene handle");
+            if (foundBody.first != AzPhysics::InvalidSceneHandle)
             {
-                AZStd::pair<AzPhysics::SceneHandle, AzPhysics::SimulatedBodyHandle> foundBody =
-                    physicsSystem->FindAttachedBodyHandleFromEntityId(GetEntityId());
-                AZ_Warning("Contact Sensor", foundBody.first != AzPhysics::InvalidSceneHandle, "Invalid scene handle");
-                if (foundBody.first != AzPhysics::InvalidSceneHandle)
-                {
-                    AzPhysics::SimulatedBodyEvents::RegisterOnCollisionBeginHandler(
-                        foundBody.first, foundBody.second, m_onCollisionBeginHandler);
-                    AzPhysics::SimulatedBodyEvents::RegisterOnCollisionPersistHandler(
-                        foundBody.first, foundBody.second, m_onCollisionPersistHandler);
-                    AzPhysics::SimulatedBodyEvents::RegisterOnCollisionEndHandler(
-                        foundBody.first, foundBody.second, m_onCollisionEndHandler);
-                }
+                AzPhysics::SimulatedBodyEvents::RegisterOnCollisionBeginHandler(
+                    foundBody.first, foundBody.second, m_onCollisionBeginHandler);
+                AzPhysics::SimulatedBodyEvents::RegisterOnCollisionPersistHandler(
+                    foundBody.first, foundBody.second, m_onCollisionPersistHandler);
+                AzPhysics::SimulatedBodyEvents::RegisterOnCollisionEndHandler(foundBody.first, foundBody.second, m_onCollisionEndHandler);
             }
         }
 
         // Publishes all contacts
         gazebo_msgs::msg::ContactsState msg;
-        auto* ros2Frame = Utils::GetGameOrEditorComponent<ROS2FrameComponent>(GetEntity());
+        const auto* ros2Frame = Utils::GetGameOrEditorComponent<ROS2FrameComponent>(GetEntity());
+        AZ_Assert(ros2Frame, "Invalid component pointer value");
         msg.header.frame_id = ros2Frame->GetFrameID().data();
         msg.header.stamp = ROS2Interface::Get()->GetROSTimestamp();
 
@@ -163,29 +158,18 @@ namespace ROS2
         AZ::ComponentApplicationBus::BroadcastResult(
             contactedEntity, &AZ::ComponentApplicationRequests::FindEntity, event.m_body2->GetEntityId());
         gazebo_msgs::msg::ContactState state;
-        AZ_Assert(contactedEntity != nullptr, "Invalid entity pointer value") state.collision1_name =
-            ("ID: " + m_entityId.ToString() + " Name:" + m_entityName).c_str();
+        AZ_Assert(contactedEntity, "Invalid entity pointer value");
+        state.collision1_name = ("ID: " + m_entityId.ToString() + " Name:" + m_entityName).c_str();
         state.collision2_name = ("ID: " + event.m_body2->GetEntityId().ToString() + " Name:" + contactedEntity->GetName()).c_str();
 
         geometry_msgs::msg::Wrench totalWrench;
         for (auto& contact : event.m_contacts)
         {
-            geometry_msgs::msg::Vector3 contactPosition;
-            contactPosition.x = contact.m_position.GetX();
-            contactPosition.y = contact.m_position.GetY();
-            contactPosition.z = contact.m_position.GetZ();
-            state.contact_positions.push_back(AZStd::move(contactPosition));
-
-            geometry_msgs::msg::Vector3 contactNormal;
-            contactNormal.x = contact.m_normal.GetX();
-            contactNormal.y = contact.m_normal.GetY();
-            contactNormal.z = contact.m_normal.GetZ();
-            state.contact_normals.push_back(AZStd::move(contactNormal));
+            state.contact_positions.emplace_back(ROS2Conversions::ToROS2Vector3(contact.m_position));
+            state.contact_normals.emplace_back(ROS2Conversions::ToROS2Vector3(contact.m_normal));
 
             geometry_msgs::msg::Wrench contactWrench;
-            contactWrench.force.x = contact.m_impulse.GetX();
-            contactWrench.force.y = contact.m_impulse.GetY();
-            contactWrench.force.z = contact.m_impulse.GetZ();
+            contactWrench.force = ROS2Conversions::ToROS2Vector3(contact.m_impulse);
             state.wrenches.push_back(AZStd::move(contactWrench));
 
             totalWrench.force.x += contact.m_impulse.GetX();
