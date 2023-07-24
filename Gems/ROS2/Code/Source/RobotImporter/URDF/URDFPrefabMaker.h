@@ -44,8 +44,13 @@ namespace ROS2
         ~URDFPrefabMaker() = default;
 
         //! Create and return a prefab corresponding to the URDF model as set through the constructor.
-        //! @return result which is either a prefab containing the imported model based on URDF or an error.
+        //! @return result which is either the root prefab entity containing the imported model based on URDF or an error.
         AzToolsFramework::Prefab::CreatePrefabResult CreatePrefabFromURDF();
+
+        //! Create and return a prefab JSON string corresponding to the URDF model set in the constructor.
+        //! @param outputPrefab The string to put the output prefab into.
+        //! @return result which is either the root prefab entity containing the imported model based on URDF or an error.
+        AzToolsFramework::Prefab::CreatePrefabResult CreatePrefabStringFromURDF(AZStd::string& outputPrefab);
 
         //! Get path to the prefab resulting from the import.
         //! @return path to the prefab.
@@ -56,7 +61,7 @@ namespace ROS2
         AZStd::string GetStatus();
 
     private:
-        AzToolsFramework::Prefab::PrefabEntityResult AddEntitiesForLink(urdf::LinkSharedPtr link, AZ::EntityId parentEntityId);
+        AzToolsFramework::Prefab::PrefabEntityResult AddEntitiesForLink(urdf::LinkSharedPtr link, AZ::EntityId parentEntityId, AZStd::vector<AZ::EntityId>& createdEntities);
         void BuildAssetsForLink(urdf::LinkSharedPtr link);
         void AddRobotControl(AZ::EntityId rootEntityId);
         static void MoveEntityToDefaultSpawnPoint(const AZ::EntityId& rootEntityId);

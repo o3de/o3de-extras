@@ -37,34 +37,49 @@ namespace ROS2
             });
     }
 
-    void VisualsMaker::AddVisuals(urdf::LinkSharedPtr link, AZ::EntityId entityId) const
+    AZStd::vector<AZ::EntityId> VisualsMaker::AddVisuals(urdf::LinkSharedPtr link, AZ::EntityId entityId) const
     {
+        AZStd::vector<AZ::EntityId> createdEntities;
+
         const AZStd::string typeString = "visual";
         if (link->visual_array.size() < 1)
-        { // For zero visuals, element is used
-            AddVisual(link->visual, entityId, PrefabMakerUtils::MakeEntityName(link->name.c_str(), typeString));
-            return;
+        { 
+            // For zero visuals, element is used
+            auto createdEntity = AddVisual(link->visual, entityId, PrefabMakerUtils::MakeEntityName(link->name.c_str(), typeString));
+            if (createdEntity.IsValid())
+            {
+                createdEntities.emplace_back(createdEntity);
+            }
         }
-        size_t nameSuffixIndex = 0; // For disambiguation when multiple unnamed visuals are present. The order does not matter here
+        else
+        { 
+            // For one or more visuals, an array is used
+            size_t nameSuffixIndex = 0; // For disambiguation when multiple unnamed visuals are present. The order does not matter here
 
-        for (auto visual : link->visual_array)
-        { // For one or more visuals, an array is used
-            AddVisual(visual, entityId, PrefabMakerUtils::MakeEntityName(link->name.c_str(), typeString, nameSuffixIndex));
-            nameSuffixIndex++;
+            for (auto visual : link->visual_array)
+            {
+                auto createdEntity = AddVisual(visual, entityId, PrefabMakerUtils::MakeEntityName(link->name.c_str(), typeString, nameSuffixIndex));
+                if (createdEntity.IsValid())
+                {
+                    createdEntities.emplace_back(createdEntity);
+                }
+                nameSuffixIndex++;
+            }
         }
+        return createdEntities;
     }
 
-    void VisualsMaker::AddVisual(urdf::VisualSharedPtr visual, AZ::EntityId entityId, const AZStd::string& generatedName) const
+    AZ::EntityId VisualsMaker::AddVisual(urdf::VisualSharedPtr visual, AZ::EntityId entityId, const AZStd::string& generatedName) const
     {
         if (!visual)
         { // It is ok not to have a visual in a link
-            return;
+            return AZ::EntityId();
         }
 
         if (!visual->geometry)
         { // Non-empty visual should have a geometry. Warn if no geometry present
             AZ_Warning("AddVisual", false, "No Geometry for a visual");
-            return;
+            return AZ::EntityId();
         }
 
         AZ_TracePrintf("AddVisual", "Processing visual for entity id:%s\n", entityId.ToString().c_str());
@@ -76,11 +91,12 @@ namespace ROS2
         if (!createEntityResult.IsSuccess())
         {
             AZ_Error("AddVisual", false, "Unable to create a sub-entity for visual element %s\n", subEntityName);
-            return;
+            return AZ::EntityId();
         }
         auto visualEntityId = createEntityResult.GetValue();
         AddVisualToEntity(visual, visualEntityId);
         AddMaterialForVisual(visual, visualEntityId);
+        return visualEntityId;
     }
 
     void VisualsMaker::AddVisualToEntity(urdf::VisualSharedPtr visual, AZ::EntityId entityId) const
