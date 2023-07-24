@@ -13,8 +13,8 @@
 #include <Camera/ROS2CameraSensorComponent.h>
 #include <FactorySimulation/ConveyorBeltComponent.h>
 #include <GNSS/ROS2GNSSSensorComponent.h>
-#include <Gripper/GripperActionServerComponent.h>
 #include <Gripper/FingerGripperComponent.h>
+#include <Gripper/GripperActionServerComponent.h>
 #include <Gripper/VacuumGripperComponent.h>
 #include <Imu/ROS2ImuSensorComponent.h>
 #include <Lidar/LidarRegistrarSystemComponent.h>
