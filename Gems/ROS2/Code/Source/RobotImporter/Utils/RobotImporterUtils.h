@@ -11,6 +11,8 @@
 #include <AzCore/IO/SystemFile.h>
 #include <AzCore/Math/Transform.h>
 #include <AzCore/std/containers/unordered_map.h>
+#include <AzCore/std/containers/unordered_set.h>
+#include <AzCore/std/containers/vector.h>
 #include <AzCore/std/function/function_template.h>
 #include <AzCore/std/string/string.h>
 #include <RobotImporter/URDF/UrdfParser.h>
@@ -80,10 +82,10 @@ namespace ROS2
 
         namespace SDFormat
         {
-            // //! Retrieve all plugins in parsed SDFormat data as a map, where a key is plugin's name and a value is a pointer to a plugin.
-            // //! Allows to retrieve a pointer to a plugin given it name.
-            // //! @param modelRoot root of the parsed SDFormat data
-            // //! @returns mapping from plugins's name to plugin's pointer
+            //! Retrieve all plugins in parsed SDFormat data as a map, where a key is plugin's name and a value is a pointer to a plugin.
+            //! Allows to retrieve a pointer to a plugin given it name.
+            //! @param modelRoot root of the parsed SDFormat data
+            //! @returns mapping from plugins's name to plugin's pointer
             AZStd::unordered_map<AZStd::string, const sdf::Plugin*> GetAllPlugins(const AZStd::shared_ptr<sdf::Root>& root);
 
             //! Retrieve all sensors in  parsed SDFormat data as a map, where a key is sensor's name and a value is a pointer to a sensor.
@@ -91,6 +93,14 @@ namespace ROS2
             //! @param modelRoot root of the parsed SDFormat data
             //! @returns mapping from sensor's name to sensor's pointer
             AZStd::unordered_map<AZStd::string, const sdf::Sensor*> GetAllSensors(const AZStd::shared_ptr<sdf::Root>& root);
+
+            //! Retrieve all options that were defined for model in XML data that are not supported in O3DE.
+            //! Allows to store the list of unsupported options in metadata and logs. It is typically used with sensors and plugins.
+            //! @param rootElement pointer to a root Element in parsed XML data that will be a subject to heuristics
+            //! @param supportedOptions set of predefined sensor's options that are supported
+            //! @returns list of unsupported sensor's options defined for model
+            AZStd::vector<AZStd::string> GetUnsupportedOptions(
+                const sdf::ElementPtr& rootElement, const AZStd::unordered_set<AZStd::string>& supportedOptions);
         } // namespace SDFormat
 
     } // namespace Utils

@@ -15,6 +15,7 @@
 #include <AzCore/StringFunc/StringFunc.h>
 #include <AzCore/std/string/regex.h>
 #include <AzToolsFramework/API/EditorAssetSystemAPI.h>
+#include <string.h>
 
 namespace ROS2
 {
@@ -393,6 +394,42 @@ namespace ROS2
             }
 
             return allSensors;
+        }
+
+        AZStd::vector<AZStd::string> GetUnsupportedOptions(
+            const sdf::ElementPtr& rootElement, const AZStd::unordered_set<AZStd::string>& supportedOptions)
+        {
+            AZStd::vector<AZStd::string> unsupportedOptions;
+
+            AZStd::function<void(const sdf::ElementPtr& elementPtr, const std::string& prefix)> elementVisitor =
+                [&](const sdf::ElementPtr& elementPtr, const std::string& prefix) -> void
+            {
+                auto childPtr = elementPtr->GetFirstElement();
+                while (childPtr)
+                {
+                    if (childPtr->GetName() == "plugin")
+                    {
+                        break;
+                    }
+
+                    std::string currentName = prefix;
+                    currentName.append(">");
+                    currentName.append(childPtr->GetName());
+
+                    AZStd::string currentNameAz(currentName.c_str(), currentName.size());
+                    if (!supportedOptions.contains(currentNameAz))
+                    {
+                        unsupportedOptions.push_back(currentNameAz);
+                    }
+
+                    elementVisitor(childPtr, currentName);
+                    childPtr = childPtr->GetNextElement();
+                }
+            };
+
+            elementVisitor(rootElement, "");
+
+            return unsupportedOptions;
         }
     } // namespace Utils::SDFormat
 

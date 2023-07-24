@@ -344,4 +344,48 @@ namespace UnitTest
         EXPECT_EQ(allPlugins2.at("laser_plug")->Filename(), "librayplugin.so");
         EXPECT_EQ(allPlugins2.at("joint_state")->Filename(), "libgazebo_ros_joint_state_publisher.so");
     }
+
+    TEST_F(SdfParserTest, SupportedOptionsCheck)
+    {
+        const auto xmlStr = GetSdfWithTwoLinksAndJoint();
+        const auto sdfRoot = ROS2::SDFormatParser::Parse(xmlStr);
+
+        const auto& allSensors = ROS2::Utils::SDFormat::GetAllSensors(sdfRoot);
+        EXPECT_EQ(allSensors.size(), 2U);
+        ASSERT_TRUE(allSensors.contains("camera"));
+        ASSERT_TRUE(allSensors.contains("laser"));
+
+        const AZStd::unordered_set<AZStd::string> cameraSupportedOptions{ ">pose",
+                                                                          ">update_rate",
+                                                                          ">camera",
+                                                                          ">camera>horizontal_fov",
+                                                                          ">camera>image",
+                                                                          ">camera>image>width",
+                                                                          ">camera>image>height",
+                                                                          ">camera>clip",
+                                                                          ">camera>clip>near",
+                                                                          ">camera>clip>far" };
+        const auto& cameraElement = allSensors.at("camera")->Element();
+        const auto& unsupportedCameraOptions = ROS2::Utils::SDFormat::GetUnsupportedOptions(cameraElement, cameraSupportedOptions);
+        EXPECT_EQ(unsupportedCameraOptions.size(), 0U);
+
+        const AZStd::unordered_set<AZStd::string> laserSupportedOptions{ ">pose",
+                                                                         ">update_rate",
+                                                                         ">ray",
+                                                                         ">ray>scan",
+                                                                         ">ray>scan>horizontal",
+                                                                         ">ray>scan>horizontal>samples",
+                                                                         ">ray>scan>horizontal>resolution",
+                                                                         ">ray>scan>horizontal>min_angle",
+                                                                         ">ray>scan>horizontal>max_angle",
+                                                                         ">ray>range",
+                                                                         ">ray>range>min",
+                                                                         ">ray>range>max",
+                                                                         ">ray>range>resolution" };
+        const auto& laserElement = allSensors.at("laser")->Element();
+        const auto& unsupportedLaserOptions = ROS2::Utils::SDFormat::GetUnsupportedOptions(laserElement, laserSupportedOptions);
+        EXPECT_EQ(unsupportedLaserOptions.size(), 2U);
+        EXPECT_EQ(unsupportedLaserOptions[0U], ">always_on");
+        EXPECT_EQ(unsupportedLaserOptions[1U], ">visualize");
+    }
 } // namespace UnitTest
