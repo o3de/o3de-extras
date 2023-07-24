@@ -73,7 +73,7 @@ namespace ROS2
                         AZ::Edit::UIHandlers::Default,
                         &FingerGripperComponent::m_distanceEpsilon,
                         "Goal tolerance",
-                        "The maximum distance to gripper can be from the goal to have reached it.")
+                        "Goal is considered reached if the gripper is at this distance or closer")
                     ->DataElement(
                         AZ::Edit::UIHandlers::Default,
                         &FingerGripperComponent::m_stallTime,
