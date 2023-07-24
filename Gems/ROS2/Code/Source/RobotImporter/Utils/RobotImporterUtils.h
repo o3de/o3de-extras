@@ -80,15 +80,15 @@ namespace ROS2
 
         namespace SDFormat
         {
-            // //! Retrieve all sensors in parsed SDFormat data as a map, where a key is sensor's name and a value is a pointer to sensor.
-            // //! Allows to retrieve a pointer to a sensor given it name.
-            // //! @param modelRoot root of  parsed SDFormat data
-            // //! @returns mapping from sensor's name to sensor's pointer
-            // AZStd::unordered_map<AZStd::string, const sdf::Sensor*> GetAllSensors(AZStd::shared_ptr<sdf::Root>& root);
+            // //! Retrieve all plugins in parsed SDFormat data as a map, where a key is plugin's name and a value is a pointer to a plugin.
+            // //! Allows to retrieve a pointer to a plugin given it name.
+            // //! @param modelRoot root of the parsed SDFormat data
+            // //! @returns mapping from plugins's name to plugin's pointer
+            AZStd::unordered_map<AZStd::string, const sdf::Plugin*> GetAllPlugins(const AZStd::shared_ptr<sdf::Root>& root);
 
-            //! Retrieve all sensors in  parsed SDFormat data as a map, where a key is sensor's name and a value is a pointer to sensor.
+            //! Retrieve all sensors in  parsed SDFormat data as a map, where a key is sensor's name and a value is a pointer to a sensor.
             //! Allows to retrieve a pointer to a sensor given it name.
-            //! @param modelRoot root of parsed SDFormat data
+            //! @param modelRoot root of the parsed SDFormat data
             //! @returns mapping from sensor's name to sensor's pointer
             AZStd::unordered_map<AZStd::string, const sdf::Sensor*> GetAllSensors(const AZStd::shared_ptr<sdf::Root>& root);
         } // namespace SDFormat

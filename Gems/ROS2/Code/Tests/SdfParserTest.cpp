@@ -148,7 +148,7 @@ namespace UnitTest
                    "            <resolution>0.01</resolution>\n"
                    "          </range>\n"
                    "        </ray>\n"
-                   "        <plugin name=\"laser\" filename=\"librayplugin.so\"/>\n"
+                   "        <plugin name=\"laser_plug\" filename=\"librayplugin.so\"/>\n"
                    "      </sensor>\n"
                    "    </link>\n"
                    "    <joint name=\"joint\" type=\"revolute\">\n"
@@ -284,7 +284,7 @@ namespace UnitTest
         EXPECT_NEAR(lidarSensor->RangeMin(), 0.02, 1e-5);
         EXPECT_NEAR(lidarSensor->RangeMax(), 10.0, 1e-5);
         EXPECT_EQ(sensor->Plugins().size(), 1U);
-        EXPECT_EQ(sensor->Plugins().at(0).Name(), "laser");
+        EXPECT_EQ(sensor->Plugins().at(0).Name(), "laser_plug");
         EXPECT_EQ(sensor->Plugins().at(0).Filename(), "librayplugin.so");
 
         EXPECT_EQ(sdfModel->JointCount(), 1U);
@@ -324,5 +324,24 @@ namespace UnitTest
         ASSERT_TRUE(allSensors2.contains("laser"));
         EXPECT_EQ(allSensors2.at("camera")->Name(), "camera");
         EXPECT_EQ(allSensors2.at("laser")->Name(), "laser");
+    }
+
+    TEST_F(SdfParserTest, CheckPluginCount)
+    {
+        const auto xmlStr1 = GetSdfWithOneLink();
+        const auto sdfRoot1 = ROS2::SDFormatParser::Parse(xmlStr1);
+
+        const auto& allPlugins1 = ROS2::Utils::SDFormat::GetAllPlugins(sdfRoot1);
+        ASSERT_TRUE(allPlugins1.empty());
+
+        const auto xmlStr2 = GetSdfWithTwoLinksAndJoint();
+        const auto sdfRoot2 = ROS2::SDFormatParser::Parse(xmlStr2);
+
+        const auto& allPlugins2 = ROS2::Utils::SDFormat::GetAllPlugins(sdfRoot2);
+        EXPECT_EQ(allPlugins2.size(), 2U);
+        ASSERT_TRUE(allPlugins2.contains("laser_plug"));
+        ASSERT_TRUE(allPlugins2.contains("joint_state"));
+        EXPECT_EQ(allPlugins2.at("laser_plug")->Filename(), "librayplugin.so");
+        EXPECT_EQ(allPlugins2.at("joint_state")->Filename(), "libgazebo_ros_joint_state_publisher.so");
     }
 } // namespace UnitTest

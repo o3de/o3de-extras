@@ -325,8 +325,46 @@ namespace ROS2
 
     namespace Utils::SDFormat
     {
+        AZStd::unordered_map<AZStd::string, const sdf::Plugin*> GetAllPlugins(const AZStd::shared_ptr<sdf::Root>& root)
+        {
+            // plugin can be a part of world, model or sensor
+            AZStd::unordered_map<AZStd::string, const sdf::Plugin*> allPlugins;
+            for (size_t wi = 0; wi < root->WorldCount(); ++wi)
+            {
+                const auto* world = root->WorldByIndex(wi);
+                const auto& plugins = world->Plugins();
+                for (const auto& plugin : plugins)
+                {
+                    allPlugins[AZStd::string(plugin.Name().c_str(), plugin.Name().size())] = &plugin;
+                }
+            }
+
+            const auto* model = root->Model();
+            if (model)
+            {
+                const auto& plugins = model->Plugins();
+                for (const auto& plugin : plugins)
+                {
+                    allPlugins[AZStd::string(plugin.Name().c_str(), plugin.Name().size())] = &plugin;
+                }
+            }
+
+            const auto& sensors = GetAllSensors(root);
+            for (const auto& sensor : sensors)
+            {
+                const auto& plugins = sensor.second->Plugins();
+                for (const auto& plugin : plugins)
+                {
+                    allPlugins[AZStd::string(plugin.Name().c_str(), plugin.Name().size())] = &plugin;
+                }
+            }
+
+            return allPlugins;
+        }
+
         AZStd::unordered_map<AZStd::string, const sdf::Sensor*> GetAllSensors(const AZStd::shared_ptr<sdf::Root>& root)
         {
+            // sensor can be a part of a link or a joint; both are part of model
             const auto* model = root->Model();
             if (!model)
             {
@@ -334,7 +372,6 @@ namespace ROS2
             }
 
             AZStd::unordered_map<AZStd::string, const sdf::Sensor*> allSensors;
-            // sensor can be a part of a link or a joint
             for (size_t ji = 0; ji < model->JointCount(); ++ji)
             {
                 const auto* joint = model->JointByIndex(ji);
