@@ -355,16 +355,15 @@ namespace UnitTest
 
         ASSERT_TRUE(allSensors.contains("camera"));
         const auto& cameraElement = allSensors.at("camera")->Element();
+        // clang-format off
         const AZStd::unordered_set<AZStd::string> cameraSupportedOptions{ ">pose",
                                                                           ">update_rate",
-                                                                          ">camera",
                                                                           ">camera>horizontal_fov",
-                                                                          ">camera>image",
                                                                           ">camera>image>width",
                                                                           ">camera>image>height",
-                                                                          ">camera>clip",
                                                                           ">camera>clip>near",
                                                                           ">camera>clip>far" };
+        // clang-format on
         const auto& unsupportedCameraOptions = ROS2::Utils::SDFormat::GetUnsupportedOptions(cameraElement, cameraSupportedOptions);
         EXPECT_EQ(unsupportedCameraOptions.size(), 0U);
 
@@ -372,14 +371,10 @@ namespace UnitTest
         const auto& laserElement = allSensors.at("laser")->Element();
         const AZStd::unordered_set<AZStd::string> laserSupportedOptions{ ">pose",
                                                                          ">update_rate",
-                                                                         ">ray",
-                                                                         ">ray>scan",
-                                                                         ">ray>scan>horizontal",
                                                                          ">ray>scan>horizontal>samples",
                                                                          ">ray>scan>horizontal>resolution",
                                                                          ">ray>scan>horizontal>min_angle",
                                                                          ">ray>scan>horizontal>max_angle",
-                                                                         ">ray>range",
                                                                          ">ray>range>min",
                                                                          ">ray>range>max",
                                                                          ">ray>range>resolution" };
@@ -401,8 +396,7 @@ namespace UnitTest
         const auto& jointPluginElement = allPlugins.at("joint_state")->Element();
         const AZStd::unordered_set<AZStd::string> jointSupportedOptions{ ">update_rate", ">joint_name" };
         const auto& unsupportedJointPluginOptions = ROS2::Utils::SDFormat::GetUnsupportedOptions(jointPluginElement, jointSupportedOptions);
-        EXPECT_EQ(unsupportedJointPluginOptions.size(), 2U);
-        EXPECT_EQ(unsupportedJointPluginOptions[0U], ">ros");
-        EXPECT_EQ(unsupportedJointPluginOptions[1U], ">ros>argument");
+        EXPECT_EQ(unsupportedJointPluginOptions.size(), 1U);
+        EXPECT_EQ(unsupportedJointPluginOptions[0U], ">ros>argument");
     }
 } // namespace UnitTest
