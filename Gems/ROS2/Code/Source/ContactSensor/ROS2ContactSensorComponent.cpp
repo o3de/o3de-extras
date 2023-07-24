@@ -7,27 +7,20 @@
  */
 
 #include "ROS2ContactSensorComponent.h"
-#include "ArticulationLinkComponent.h"
 #include "AzCore/Component/ComponentApplicationBus.h"
-#include "AzCore/Component/TickBus.h"
 #include "AzCore/Debug/Trace.h"
-#include "AzCore/Math/Vector3.h"
 #include "AzCore/Serialization/EditContextConstants.inl"
 #include "AzCore/std/parallel/lock.h"
 #include "AzCore/std/parallel/mutex.h"
 #include "AzCore/std/utility/move.h"
 #include "AzFramework/Physics/Collision/CollisionEvents.h"
 #include "AzFramework/Physics/Common/PhysicsSimulatedBody.h"
-#include "AzFramework/Physics/Common/PhysicsSimulatedBodyEvents.h"
 #include "AzFramework/Physics/Common/PhysicsTypes.h"
 #include "AzFramework/Physics/PhysicsSystem.h"
 #include "ROS2/Frame/ROS2FrameComponent.h"
 #include "ROS2/ROS2Bus.h"
-#include "ROS2/Sensor/ROS2SensorComponent.h"
 #include "ROS2/Utilities/ROS2Conversions.h"
 #include "ROS2/Utilities/ROS2Names.h"
-#include <cstddef>
-#include <geometry_msgs/msg/vector3.hpp>
 #include <geometry_msgs/msg/wrench.hpp>
 
 namespace ROS2

@@ -9,7 +9,6 @@
 #pragma once
 
 #include "AzCore/Component/EntityId.h"
-#include "AzCore/Math/Vector3.h"
 #include "AzCore/RTTI/ReflectContext.h"
 #include "AzCore/std/containers/unordered_map.h"
 #include "AzCore/std/parallel/mutex.h"
@@ -18,16 +17,14 @@
 #include "ROS2/Sensor/ROS2SensorComponent.h"
 #include <gazebo_msgs/msg/contact_state.hpp>
 #include <gazebo_msgs/msg/contacts_state.hpp>
-#include <memory>
 #include <rclcpp/publisher.hpp>
-#include <unordered_map>
 
 namespace ROS2
 {
     //! Contact sensor detects collisions between two objects.
     //! It reports the location of the contact associated forces.
     //! This component publishes a contact_sensor topic.
-    //! Doesn't measure torque
+    //! It doesn't measure torque.
     class ROS2ContactSensorComponent : public ROS2SensorComponent
     {
     public:
