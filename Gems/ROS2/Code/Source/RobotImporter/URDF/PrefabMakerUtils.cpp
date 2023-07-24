@@ -13,6 +13,8 @@
 #include <AzCore/std/string/conversions.h>
 #include <AzToolsFramework/API/EditorAssetSystemAPI.h>
 #include <AzToolsFramework/Entity/EditorEntityHelpers.h>
+#include <AzToolsFramework/Entity/EntityUtilityComponent.h>
+#include <AzToolsFramework/Prefab/PrefabFocusPublicInterface.h>
 #include <AzToolsFramework/ToolsComponents/TransformComponent.h>
 #include <Source/EditorColliderComponent.h>
 #include <Source/EditorShapeColliderComponent.h>
@@ -64,27 +66,45 @@ namespace ROS2::PrefabMakerUtils
 
     AzToolsFramework::Prefab::PrefabEntityResult CreateEntity(AZ::EntityId parentEntityId, const AZStd::string& name)
     {
-        auto* prefabInterface = AZ::Interface<AzToolsFramework::Prefab::PrefabPublicInterface>::Get();
-        auto createEntityResult = prefabInterface->CreateEntity(parentEntityId, AZ::Vector3());
-        if (!createEntityResult.IsSuccess())
-        {
-            return createEntityResult;
-        }
+        // Create an entity with the appropriate Editor components, but in a not-yet-activated state.
+        AZ::EntityId entityId;
+        AzToolsFramework::EntityUtilityBus::BroadcastResult(
+            entityId, &AzToolsFramework::EntityUtilityBus::Events::CreateEditorReadyEntity, name);
 
-
-        // Verify that a valid entity is created.
-        AZ::EntityId entityId = createEntityResult.GetValue();
-        if (!entityId.IsValid())
+        if (entityId.IsValid() == false)
         {
             return AZ::Failure(AZStd::string("Invalid id for created entity"));
         }
 
-        AZ_TracePrintf("CreateEntity", "Processing entity id: %s with name: %s\n", entityId.ToString().c_str(), name.c_str());
-        AZ::Entity* entity = AzToolsFramework::GetEntityById(entityId);
-        entity->SetName(name);
-        entity->Deactivate();
-        AddRequiredComponentsToEntity(entityId);
-        return createEntityResult;
+        // If the parent is invalid, parent to the container of the currently focused prefab if one exists.
+        if (!parentEntityId.IsValid())
+        {
+            AzFramework::EntityContextId editorEntityContextId = AzToolsFramework::GetEntityContextId();
+
+            auto prefabFocusPublicInterface = AZ::Interface<AzToolsFramework::Prefab::PrefabFocusPublicInterface>::Get();
+            if (prefabFocusPublicInterface)
+            {
+                parentEntityId = prefabFocusPublicInterface->GetFocusedPrefabContainerEntityId(editorEntityContextId);
+            }
+        }
+
+        SetEntityParent(entityId, parentEntityId);
+
+        return entityId;
+    }
+
+    void SetEntityParent(AZ::EntityId entityId, AZ::EntityId parentEntityId)
+    {
+        auto* entity = AzToolsFramework::GetEntityById(entityId);
+        AZ_Assert(entity, "Unknown entity %s", entityId.ToString().c_str());
+        AZ_Assert(
+            (entity->GetState() == AZ::Entity::State::Constructed) || (entity->GetState() == AZ::Entity::State::Init),
+            "Entity must be inactive when getting reparented.");
+
+        if (auto* transformComponent = entity->FindComponent<AzToolsFramework::Components::TransformComponent>(); transformComponent)
+        {
+            transformComponent->SetParent(parentEntityId);
+        }
     }
 
     void AddRequiredComponentsToEntity(AZ::EntityId entityId)
