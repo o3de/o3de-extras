@@ -352,9 +352,9 @@ namespace UnitTest
 
         const auto& allSensors = ROS2::Utils::SDFormat::GetAllSensors(sdfRoot);
         EXPECT_EQ(allSensors.size(), 2U);
-        ASSERT_TRUE(allSensors.contains("camera"));
-        ASSERT_TRUE(allSensors.contains("laser"));
 
+        ASSERT_TRUE(allSensors.contains("camera"));
+        const auto& cameraElement = allSensors.at("camera")->Element();
         const AZStd::unordered_set<AZStd::string> cameraSupportedOptions{ ">pose",
                                                                           ">update_rate",
                                                                           ">camera",
@@ -365,10 +365,11 @@ namespace UnitTest
                                                                           ">camera>clip",
                                                                           ">camera>clip>near",
                                                                           ">camera>clip>far" };
-        const auto& cameraElement = allSensors.at("camera")->Element();
         const auto& unsupportedCameraOptions = ROS2::Utils::SDFormat::GetUnsupportedOptions(cameraElement, cameraSupportedOptions);
         EXPECT_EQ(unsupportedCameraOptions.size(), 0U);
 
+        ASSERT_TRUE(allSensors.contains("laser"));
+        const auto& laserElement = allSensors.at("laser")->Element();
         const AZStd::unordered_set<AZStd::string> laserSupportedOptions{ ">pose",
                                                                          ">update_rate",
                                                                          ">ray",
@@ -382,10 +383,26 @@ namespace UnitTest
                                                                          ">ray>range>min",
                                                                          ">ray>range>max",
                                                                          ">ray>range>resolution" };
-        const auto& laserElement = allSensors.at("laser")->Element();
         const auto& unsupportedLaserOptions = ROS2::Utils::SDFormat::GetUnsupportedOptions(laserElement, laserSupportedOptions);
         EXPECT_EQ(unsupportedLaserOptions.size(), 2U);
         EXPECT_EQ(unsupportedLaserOptions[0U], ">always_on");
         EXPECT_EQ(unsupportedLaserOptions[1U], ">visualize");
+
+        const auto& allPlugins = ROS2::Utils::SDFormat::GetAllPlugins(sdfRoot);
+        EXPECT_EQ(allPlugins.size(), 2U);
+
+        ASSERT_TRUE(allPlugins.contains("laser_plug"));
+        const auto& laserPluginElement = allPlugins.at("laser_plug")->Element();
+        const AZStd::unordered_set<AZStd::string> noSupportedOptions{};
+        const auto& unsupportedLaserPluginOptions = ROS2::Utils::SDFormat::GetUnsupportedOptions(laserPluginElement, noSupportedOptions);
+        EXPECT_EQ(unsupportedLaserPluginOptions.size(), 0U);
+
+        ASSERT_TRUE(allPlugins.contains("joint_state"));
+        const auto& jointPluginElement = allPlugins.at("joint_state")->Element();
+        const AZStd::unordered_set<AZStd::string> jointSupportedOptions{ ">update_rate", ">joint_name" };
+        const auto& unsupportedJointPluginOptions = ROS2::Utils::SDFormat::GetUnsupportedOptions(jointPluginElement, jointSupportedOptions);
+        EXPECT_EQ(unsupportedJointPluginOptions.size(), 2U);
+        EXPECT_EQ(unsupportedJointPluginOptions[0U], ">ros");
+        EXPECT_EQ(unsupportedJointPluginOptions[1U], ">ros>argument");
     }
 } // namespace UnitTest
