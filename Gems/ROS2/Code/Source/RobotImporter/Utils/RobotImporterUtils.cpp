@@ -405,6 +405,13 @@ namespace ROS2
                 [&](const sdf::ElementPtr& elementPtr, const std::string& prefix) -> void
             {
                 auto childPtr = elementPtr->GetFirstElement();
+
+                AZStd::string prefixAz(prefix.c_str(), prefix.size());
+                if (!childPtr && !prefixAz.empty() && !supportedOptions.contains(prefixAz))
+                {
+                    unsupportedOptions.push_back(prefixAz);
+                }
+
                 while (childPtr)
                 {
                     if (childPtr->GetName() == "plugin")
@@ -415,12 +422,6 @@ namespace ROS2
                     std::string currentName = prefix;
                     currentName.append(">");
                     currentName.append(childPtr->GetName());
-
-                    AZStd::string currentNameAz(currentName.c_str(), currentName.size());
-                    if (!supportedOptions.contains(currentNameAz))
-                    {
-                        unsupportedOptions.push_back(currentNameAz);
-                    }
 
                     elementVisitor(childPtr, currentName);
                     childPtr = childPtr->GetNextElement();
