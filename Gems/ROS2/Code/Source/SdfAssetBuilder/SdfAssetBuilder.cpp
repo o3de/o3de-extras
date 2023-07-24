@@ -21,6 +21,10 @@
 #include <AssetBuilderSDK/AssetBuilderSDK.h>
 #include <AssetBuilderSDK/SerializationDependencies.h>
 
+#include <RobotImporter/URDF/URDFPrefabMaker.h>
+#include <RobotImporter/URDF/UrdfParser.h>
+#include <Utils/RobotImporterUtils.h>
+
 namespace ROS2
 {
         namespace
@@ -131,17 +135,44 @@ namespace ROS2
         const AssetBuilderSDK::ProcessJobRequest& request,
         AssetBuilderSDK::ProcessJobResponse& response) const
     {
-        // The following code is just a stub while building the SdfAssetBuilder. 
-        // Right now, it just generates an empty default procedural prefab. It still needs to be modified
-        // to create a procedural prefab that contains the correct information in it.
-
         auto tempAssetOutputPath = AZ::IO::Path(request.m_tempDirPath) / request.m_sourceFile;
         tempAssetOutputPath.ReplaceExtension("procprefab");
 
-        AZStd::string prefabJson = CreateDefaultProcPrefab(request, response);
+        AZ_Info(SdfAssetBuilderName, "Parsing source file: %s", request.m_fullPath.c_str());
+        auto parsedUrdf = UrdfParser::ParseFromFile(request.m_fullPath);
+        if (!parsedUrdf)
+        {
+            AZ_Error(SdfAssetBuilderName, false, "Failed to parse source file '%s'.", request.m_fullPath.c_str());
+            response.m_resultCode = AssetBuilderSDK::ProcessJobResult_Failed;
+            return;
+        }
+
+        AZ_Info(SdfAssetBuilderName, "Parsing mesh and collider names");
+        auto meshNames = Utils::GetMeshesFilenames(parsedUrdf->getRoot(), true, true);
+
+        AZ_Info(SdfAssetBuilderName, "Finding asset IDs for all mesh and collider assets.");
+        auto urdfAssetsMapping = AZStd::make_shared<Utils::UrdfAssetMap>(Utils::FindAssetsForUrdf(meshNames, request.m_fullPath));
+
+        AZ_Info(SdfAssetBuilderName, "Creating prefab from source file.");
+        const bool useArticulation = true;
+        auto prefabMaker = AZStd::make_unique<URDFPrefabMaker>(
+            request.m_fullPath, parsedUrdf, tempAssetOutputPath.String(), urdfAssetsMapping, useArticulation);
+        AZStd::string outputPrefab;
+        auto prefabResult = prefabMaker->CreatePrefabStringFromURDF(outputPrefab);
+        if (!prefabResult.IsSuccess())
+        {
+            AZ_Error(
+                SdfAssetBuilderName,
+                false,
+                "Failed to create proc prefab file '%s'. Error message: %s",
+                tempAssetOutputPath.c_str(),
+                prefabResult.GetError().c_str());
+            response.m_resultCode = AssetBuilderSDK::ProcessJobResult_Failed;
+            return;
+        }
 
         // If no prefab string was generated, then return a failure.
-        if (prefabJson.empty())
+        if (outputPrefab.empty())
         {
             response.m_resultCode = AssetBuilderSDK::ProcessJobResult_Failed;
             return;
@@ -149,7 +180,7 @@ namespace ROS2
 
         // Save the prefab to our output directory.
         rapidjson::Document doc;
-        doc.Parse(prefabJson.c_str());
+        doc.Parse(outputPrefab.c_str());
         auto outcome = AZ::JsonSerializationUtils::WriteJsonFile(doc, tempAssetOutputPath.c_str());
         if (!outcome.IsSuccess())
         {
@@ -159,6 +190,8 @@ namespace ROS2
             return;
         }
 
+        AZ_Info(SdfAssetBuilderName, "Prefab creation completed successfully.");
+        
         // Mark the resulting prefab as a product asset with the "procedural prefab" asset type.
         AssetBuilderSDK::JobProduct sdfJobProduct;
         sdfJobProduct.m_productFileName = tempAssetOutputPath.String();
