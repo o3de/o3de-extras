@@ -95,7 +95,8 @@ namespace ROS2
                     VacuumGripperComponent::CreateDescriptor(),
                     ConveyorBeltComponent::CreateDescriptor(),
                     FingerGripperComponent::CreateDescriptor(),
-                    ROS2ContactSensorComponent::CreateDescriptor() FollowingCameraComponent::CreateDescriptor(),
+                    ROS2ContactSensorComponent::CreateDescriptor(),
+                    FollowingCameraComponent::CreateDescriptor(),
                 });
         }
 

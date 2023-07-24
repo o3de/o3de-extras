@@ -79,12 +79,13 @@ namespace ROS2
         required.push_back(AZ_CRC("CameraService"));
     }
 
-    void FollowingCameraComponent::Init()
-    {
-    }
-
     void FollowingCameraComponent::Activate()
     {
+        if (m_predefinedViews.size() == 0)
+        {
+                AZ_Warning("FollowingCameraComponent", false, "No predefined views");
+                return;
+        }
         if (m_defaultView < m_predefinedViews.size())
         {
             m_currentView = m_predefinedViews[m_defaultView];
@@ -116,6 +117,11 @@ namespace ROS2
     }
     void FollowingCameraComponent::OnTick(float deltaTime, AZ::ScriptTimePoint /*time*/)
     {
+        AZ_Warning("FollowingCameraComponent", m_currentView.IsValid(), "View is not valid");
+        if (!m_currentView.IsValid())
+        {
+            return;
+        }
         // obtain the current view transform
         AZ::Transform target_local_transform;
         AZ::Transform target_world_transform;

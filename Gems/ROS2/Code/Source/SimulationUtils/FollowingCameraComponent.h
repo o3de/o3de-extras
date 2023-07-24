@@ -15,8 +15,8 @@
 
 namespace ROS2
 {
-    //! The component used for camera following robots.
-    //! It allows to switch between different camera that can be attached to entities, and to control the camera with the keyboard.git
+    //! The component used for cameras that follow robots.
+    //! It allows to switch between different cameras attached to entities, and to control the active camera using keyboard.
     class FollowingCameraComponent
         : public AZ::Component
         , public AZ::TickBus::Handler
@@ -30,17 +30,16 @@ namespace ROS2
         AZ_COMPONENT(FollowingCameraComponent, "{6a21768a-f327-11ed-a05b-0242ac120003}", AZ::Component);
 
         // AZ::Component
-        void Init() override;
         void Activate() override;
         void Deactivate() override;
 
+    private:
         // AZ::TickBus overrides
         void OnTick(float deltaTime, AZ::ScriptTimePoint time) override;
 
         // AzFramework::InputChannelEventListener overrides
         bool OnInputChannelEventFiltered(const AzFramework::InputChannel& inputChannel) override;
 
-    private:
         void OnKeyboardEvent(const AzFramework::InputChannel& inputChannel);
 
         //! Compute weighted average of the vectors in the buffer.
