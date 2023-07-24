@@ -170,6 +170,7 @@ namespace ROS2::Utils
         if (!assetDatabaseConnection.OpenDatabase())
         {
             AZ_Warning("GetInterestingSourceAssetsCRC", false, "Cannot open database");
+            return {};
         }
         auto callback = [&availableAssets](AzToolsFramework::AssetDatabase::SourceDatabaseEntry& entry)
         {
