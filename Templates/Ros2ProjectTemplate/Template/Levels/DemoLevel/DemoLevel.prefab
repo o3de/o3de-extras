@@ -766,11 +766,6 @@
                 },
                 {
                     "op": "replace",
-                    "path": "/Instances/Instance_[3732164110801]/Entities/Entity_[969892482106]/Components/Component_[16056351394850261418]/Controller/Configuration/EditorEntityId",
-                    "value": 17940232079668421964
-                },
-                {
-                    "op": "replace",
                     "path": "/Instances/Instance_[3732164110801]/Entities/Entity_[969892482106]/Components/Component_[6043040033160946649]/Transform Data/Translate/0",
                     "value": 1.8933937549591064
                 },
