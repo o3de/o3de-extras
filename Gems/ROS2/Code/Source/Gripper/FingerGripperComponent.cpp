@@ -72,7 +72,7 @@ namespace ROS2
                     ->DataElement(
                         AZ::Edit::UIHandlers::Default,
                         &FingerGripperComponent::m_distanceEpsilon,
-                        "Distance Epsilon",
+                        "Goal tolerance",
                         "The maximum distance to gripper can be from the goal to have reached it.")
                     ->DataElement(
                         AZ::Edit::UIHandlers::Default,
