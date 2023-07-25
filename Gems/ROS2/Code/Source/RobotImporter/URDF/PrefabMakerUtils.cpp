@@ -76,6 +76,8 @@ namespace ROS2::PrefabMakerUtils
             return AZ::Failure(AZStd::string("Invalid id for created entity"));
         }
 
+        AZ_Info("CreateEntity", "Processing entity id: %s with name: %s\n", entityId.ToString().c_str(), name.c_str());
+        
         // If the parent is invalid, parent to the container of the currently focused prefab if one exists.
         if (!parentEntityId.IsValid())
         {

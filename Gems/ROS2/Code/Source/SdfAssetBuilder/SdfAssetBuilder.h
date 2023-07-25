@@ -38,9 +38,5 @@ namespace ROS2
     private:
         AZStd::vector<AssetBuilderSDK::AssetBuilderPattern> GetSupportedBuilderPatterns();
         Utils::UrdfAssetMap FindAssets(const urdf::LinkConstSharedPtr& rootLink, const AZStd::string& sourceFilename) const;
-
-        AZStd::string CreateDefaultProcPrefab(
-            const AssetBuilderSDK::ProcessJobRequest& request,
-            AssetBuilderSDK::ProcessJobResponse& response) const;
     };
 } // ROS2

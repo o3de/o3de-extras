@@ -19,6 +19,7 @@
 #include <AzCore/std/smart_ptr/make_shared.h>
 #include <AzCore/std/smart_ptr/shared_ptr.h>
 #include <AzCore/std/string/string.h>
+#include <AzToolsFramework/Prefab/PrefabIdTypes.h>
 #include <AzToolsFramework/Prefab/PrefabPublicInterface.h>
 #include <RobotImporter/Utils/SourceAssetsStorage.h>
 
@@ -45,12 +46,11 @@ namespace ROS2
 
         //! Create and return a prefab corresponding to the URDF model as set through the constructor.
         //! @return result which is either the root prefab entity containing the imported model based on URDF or an error.
-        AzToolsFramework::Prefab::CreatePrefabResult CreatePrefabFromURDF();
+        AZ::Outcome<AzToolsFramework::Prefab::TemplateId, AZStd::string> CreatePrefabFromURDF();
 
-        //! Create and return a prefab JSON string corresponding to the URDF model set in the constructor.
-        //! @param outputPrefab The string to put the output prefab into.
-        //! @return result which is either the root prefab entity containing the imported model based on URDF or an error.
-        AzToolsFramework::Prefab::CreatePrefabResult CreatePrefabStringFromURDF(AZStd::string& outputPrefab);
+        //! Create and return a prefab template ID corresponding to the URDF model set in the constructor.
+        //! @return result which is either the prefab template id or an error message.
+        AZ::Outcome<AzToolsFramework::Prefab::TemplateId, AZStd::string> CreatePrefabTemplateFromURDF();
 
         //! Get path to the prefab resulting from the import.
         //! @return path to the prefab.
