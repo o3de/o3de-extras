@@ -111,7 +111,7 @@ namespace ROS2
         {
             return false;
         }
-        // Parent joint needs to be CONTINOUS
+        // Parent joint needs to be CONTINUOUS
         if (link->parent_joint && link->parent_joint->type == urdf::Joint::CONTINUOUS)
         {
             return true;
