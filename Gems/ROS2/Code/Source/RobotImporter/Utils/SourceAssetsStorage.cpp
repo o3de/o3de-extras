@@ -123,6 +123,35 @@ namespace ROS2::Utils
         return GetProductAsset(sourceAssetUUID, AZ::TypeId("{7A2871B9-5EAB-4DE0-A901-B0D2C6920DDB}")); // PhysX::Pipeline::MeshAsset
     }
 
+    AZ::Data::AssetId GetProductAssetId(const AZ::Uuid& sourceAssetUUID, const AZ::TypeId typeId)
+    {
+        AZStd::vector<AZ::Data::AssetInfo> productsAssetInfo;
+        using AssetSysReqBus = AzToolsFramework::AssetSystemRequestBus;
+        bool ok{ false };
+        AssetSysReqBus::BroadcastResult(ok, &AssetSysReqBus::Events::GetAssetsProducedBySourceUUID, sourceAssetUUID, productsAssetInfo);
+        if (ok)
+        {
+            for (auto& product : productsAssetInfo)
+            {
+                if (product.m_assetType == typeId)
+                {
+                    return product.m_assetId;
+                }
+            }
+        }
+        return {};
+    }
+
+    AZ::Data::AssetId GetModelProductAssetId(const AZ::Uuid& sourceAssetUUID)
+    {
+        return GetProductAssetId(sourceAssetUUID, AZ::TypeId("{2C7477B6-69C5-45BE-8163-BCD6A275B6D8}")); // AZ::RPI::ModelAsset;
+    }
+
+    AZ::Data::AssetId GetPhysXMeshProductAssetId(const AZ::Uuid& sourceAssetUUID)
+    {
+        return GetProductAssetId(sourceAssetUUID, AZ::TypeId("{7A2871B9-5EAB-4DE0-A901-B0D2C6920DDB}")); // PhysX::Pipeline::MeshAsset
+    }
+
     AvailableAsset GetAvailableAssetInfo(const AZStd::string& globalSourceAssetPath)
     {
         using AssetSysReqBus = AzToolsFramework::AssetSystemRequestBus;

@@ -159,7 +159,7 @@ namespace ROS2
 
                 if (asset)
                 {
-                    entity->CreateComponent(AZ::Render::EditorMeshComponentTypeId);
+                    auto editorMeshComponent = entity->CreateComponent(AZ::Render::EditorMeshComponentTypeId);
 
                     // Prepare scale
                     AZ::Vector3 scaleVector = URDF::TypeConversions::ConvertVector3(meshGeometry->scale);
@@ -170,17 +170,21 @@ namespace ROS2
                         entity->CreateComponent<AzToolsFramework::Components::EditorNonUniformScaleComponent>();
                     }
 
-                    entity->Activate();
+                    if (editorMeshComponent)
+                    {
+                        auto editorBaseComponent = azrtti_cast<AzToolsFramework::Components::EditorComponentBase*>(editorMeshComponent);
+                        AZ_Assert(editorBaseComponent, "EditorMeshComponent didn't derive from EditorComponentBase.");
 
-                    const auto productAssetPath = Utils::GetModelProductAsset(asset->m_sourceGuid);
-                    AZ_Warning(
-                        "AddVisual",
-                        productAssetPath.size(),
-                        "There is no product asset for %s.",
-                        asset->m_sourceAssetRelativePath.c_str());
-                    // Set asset path
-                    AZ::Render::MeshComponentRequestBus::Event(
-                        entityId, &AZ::Render::MeshComponentRequestBus::Events::SetModelAssetPath, productAssetPath);
+                        AZ::Data::AssetId modelId = Utils::GetModelProductAssetId(asset->m_sourceGuid);
+                        AZ_Warning(
+                            "AddVisual",
+                            modelId.IsValid(),
+                            "There is no product asset for %s.",
+                            asset->m_sourceAssetRelativePath.c_str());
+                        editorBaseComponent->SetPrimaryAsset(modelId);
+                    }
+
+                    entity->Activate();
 
                     // Set scale, uniform or non-uniform
                     if (isUniformScale)
