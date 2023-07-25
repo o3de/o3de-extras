@@ -30,8 +30,8 @@ set(FILES
     Source/RobotImporter/ROS2RobotImporterEditorSystemComponent.h
     Source/RobotImporter/SDFormat/SDFormatParser.cpp
     Source/RobotImporter/SDFormat/SDFormatParser.h
-    Source/RobotImporter/SDFormat/SensorMaker.cpp
-    Source/RobotImporter/SDFormat/SensorMaker.h
+    Source/RobotImporter/SDFormat/SensorsMaker.cpp
+    Source/RobotImporter/SDFormat/SensorsMaker.h
     Source/RobotImporter/URDF/ArticulationsMaker.cpp
     Source/RobotImporter/URDF/ArticulationsMaker.h
     Source/RobotImporter/URDF/CollidersMaker.cpp

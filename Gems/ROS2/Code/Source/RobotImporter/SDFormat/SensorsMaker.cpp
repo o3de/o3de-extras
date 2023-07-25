@@ -6,11 +6,13 @@
  *
  */
 
-#include "SensorMaker.h"
+#include "SensorsMaker.h"
 
+#include <AzCore/Component/Component.h>
 #include <AzToolsFramework/Entity/EditorEntityHelpers.h>
 
 #include <Camera/ROS2CameraSensorEditorComponent.h>
+#include <ROS2/Frame/ROS2FrameComponent.h>
 
 #include <sdf/Camera.hh>
 #include <sdf/Imu.hh>
@@ -25,6 +27,8 @@ namespace ROS2::SDFormat
         switch (sensor->Type())
         {
         case sdf::SensorType::CAMERA:
+        case sdf::SensorType::DEPTH_CAMERA:
+        case sdf::SensorType::RGBD_CAMERA:
             {
                 auto* cameraSensor = sensor->CameraSensor();
                 AZ_Assert(cameraSensor, "sensor is not sdf::SensorType::CAMERA");
@@ -34,14 +38,19 @@ namespace ROS2::SDFormat
 
                 sensorConfiguration.m_frequency = sensor->UpdateRate();
                 cameraConfiguration.m_depthCamera = cameraSensor->HasDepthCamera();
+                cameraConfiguration.m_colorCamera = (sensor->Type() != sdf::SensorType::DEPTH_CAMERA) ? true : false;
                 cameraConfiguration.m_width = cameraSensor->ImageWidth();
                 cameraConfiguration.m_height = cameraSensor->ImageHeight();
                 cameraConfiguration.m_verticalFieldOfViewDeg =
                     cameraSensor->HorizontalFov().Degree() * (cameraConfiguration.m_height / cameraConfiguration.m_width);
 
                 // TODO: add distortion parameters, far/near clip, ROS2 topic, format, and more
+                // TODO: read required services instead of hardcoding ones
 
-                entity->CreateComponent<ROS2CameraSensorEditorComponent>(sensorConfiguration, cameraConfiguration);
+                auto* frameComponent = entity->CreateComponent<ROS2FrameComponent>();
+                AZ_Assert(frameComponent, "failed to create ROS2FrameComponent");
+                auto* cameraComponent = entity->CreateComponent<ROS2CameraSensorEditorComponent>(sensorConfiguration, cameraConfiguration);
+                AZ_Assert(cameraComponent, "failed to create ROS2CameraSensorEditorComponent");
             }
             break;
         default:

@@ -224,6 +224,34 @@ if(PAL_TRAIT_BUILD_TESTS_SUPPORTED)
             ly_add_googletest(
                 NAME Gem::${gem_name}.Editor.Tests
             )
+
+            # Add integration test for SDFormat importer
+            ly_add_target(
+                NAME ROS2.SDFormat.importer.Tests ${PAL_TRAIT_TEST_TARGET_TYPE}
+                    NAMESPACE Gem
+                FILES_CMAKE
+                    ros2_importer_tests_files.cmake
+                INCLUDE_DIRECTORIES
+                    PRIVATE
+                        Source
+                        Tests
+                BUILD_DEPENDENCIES
+                    PRIVATE
+                        AZ::AzTestShared
+                        AZ::AzToolsFramework
+                        Legacy::CryCommon
+                        Legacy::EditorCommon
+                        Legacy::Editor.Headers
+                        AZ::AzManipulatorTestFramework.Static
+                        Gem::ROS2.Editor.Static
+                    RUNTIME_DEPENDENCIES
+                        Gem::PhysX.Editor
+            )
+
+            # Add ROS2.SDFormat.importer.Tests to googletest
+            ly_add_googletest(
+                    NAME Gem::ROS2.SDFormat.importer.Tests
+            )
         endif()
     endif()
 endif()
