@@ -46,6 +46,7 @@ namespace ROS2::Utils
     {
         struct Visitor : AZ::SettingsRegistryInterface::Visitor
         {
+            using AZ::SettingsRegistryInterface::Visitor::Visit;
             void Visit(const AZ::SettingsRegistryInterface::VisitArgs&, AZStd::string_view value) override
             {
                 m_supportedFileExtensions.emplace_back(value);
