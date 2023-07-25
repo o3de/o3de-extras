@@ -74,12 +74,11 @@ namespace ROS2
         bool m_cancelled{ false };
         bool m_initialised{ false };
         float m_desiredPosition{ false };
-        float m_maxEffort{ 0.f };
         float m_stallingFor{ 0.f };
         float m_ImGuiPosition{ 0.1f };
 
         float m_velocityEpsilon{ 0.01f }; //!< The epsilon value used to determine whether the gripper is moving
-        float m_distanceEpsilon{ 0.001f }; //!< The epsilon value used to determine whether the gripper reached it's goal
+        float m_goalTolerance{ 0.001f }; //!< The epsilon value used to determine whether the gripper reached it's goal
         float m_stallTime{ 0.1f }; //!< The time in seconds to wait before determining the gripper is stalled
     };
 } // namespace ROS2

@@ -16,6 +16,7 @@
 #include <AzFramework/Physics/PhysicsSystem.h>
 #include <ROS2/Frame/ROS2FrameComponent.h>
 #include <ROS2/Manipulation/JointsManipulationRequests.h>
+#include <Utilities/JointUtilities.h>
 #include <imgui/imgui.h>
 
 namespace ROS2
@@ -54,7 +55,7 @@ namespace ROS2
         {
             serialize->Class<FingerGripperComponent, AZ::Component>()
                 ->Field("VelocityEpsilon", &FingerGripperComponent::m_velocityEpsilon)
-                ->Field("DistanceEpsilon", &FingerGripperComponent::m_distanceEpsilon)
+                ->Field("DistanceEpsilon", &FingerGripperComponent::m_goalTolerance)
                 ->Field("StallTime", &FingerGripperComponent::m_stallTime)
                 ->Version(1);
 
@@ -71,7 +72,7 @@ namespace ROS2
                         "The maximum velocity to consider the gripper as stalled.")
                     ->DataElement(
                         AZ::Edit::UIHandlers::Default,
-                        &FingerGripperComponent::m_distanceEpsilon,
+                        &FingerGripperComponent::m_goalTolerance,
                         "Goal tolerance",
                         "Goal is considered reached if the gripper is at this distance or closer")
                     ->DataElement(
@@ -81,22 +82,6 @@ namespace ROS2
                         "The time to wait before considering the gripper as stalled.");
             }
         }
-    }
-
-    AZStd::string GetJointName(AZ::EntityId entityId)
-    {
-        AZ::Entity* entity{ nullptr };
-        AZ::ComponentApplicationBus::BroadcastResult(entity, &AZ::ComponentApplicationRequests::FindEntity, entityId);
-        AZ_Assert(entity, "Entity %s not found.", entityId.ToString().c_str());
-        if (entity)
-        {
-            ROS2FrameComponent* component = entity->FindComponent<ROS2FrameComponent>();
-            if (component)
-            {
-                return component->GetJointName().GetStringView();
-            }
-        }
-        return AZStd::string();
     }
 
     ManipulationJoints& FingerGripperComponent::GetFingerJoints()
@@ -118,7 +103,7 @@ namespace ROS2
 
         for (AZ::EntityId descendant : descendantIds)
         {
-            AZStd::string jointName = GetJointName(descendant);
+            AZStd::string jointName = ROS2::Utils::GetJointName(descendant);
             if (!jointName.empty())
             {
                 AZ_Printf("FingerGripperComponent", "Adding finger joint %s", jointName.c_str());
@@ -131,10 +116,9 @@ namespace ROS2
 
     void FingerGripperComponent::SetPosition(float position, float maxEffort)
     {
-        // A check to make this work with moveit
-        if (maxEffort == 0.0f)
+        if (m_fingerJoints.empty())
         {
-            maxEffort = AZStd::numeric_limits<float>::infinity();
+            return;
         }
 
         float targetPosition = position;
@@ -174,9 +158,13 @@ namespace ROS2
 
     AZ::Outcome<void, AZStd::string> FingerGripperComponent::GripperCommand(float position, float maxEffort)
     {
+        if (maxEffort == 0.0f)
+        { // The moveit panda demo fills the max effort fields with 0s, but we want to exert effort
+            maxEffort = AZStd::numeric_limits<float>::infinity();
+        }
+
         m_grippingInProgress = true;
         m_desiredPosition = position;
-        m_maxEffort = maxEffort;
         m_stallingFor = 0.0f;
         m_cancelled = false;
 
@@ -189,7 +177,7 @@ namespace ROS2
     {
         m_grippingInProgress = false;
         m_cancelled = true;
-        SetPosition(0.0f, 0.0f);
+        SetPosition(0.0f, AZStd::numeric_limits<float>::infinity());
         return AZ::Success();
     }
 
@@ -201,6 +189,11 @@ namespace ROS2
     float FingerGripperComponent::GetGripperPosition() const
     {
         float gripperPosition = 0.0f;
+        if (m_fingerJoints.empty())
+        {
+            return gripperPosition;
+        }
+
         for (const auto& [jointName, _] : m_fingerJoints)
         {
             AZ::Outcome<JointPosition, AZStd::string> result;
@@ -250,7 +243,7 @@ namespace ROS2
 
     bool FingerGripperComponent::HasGripperReachedGoal() const
     {
-        return !m_grippingInProgress || abs(GetGripperPosition() - m_desiredPosition) < m_distanceEpsilon;
+        return !m_grippingInProgress || AZStd::abs(GetGripperPosition() - m_desiredPosition) < m_goalTolerance;
     }
 
     void FingerGripperComponent::OnImGuiUpdate()
@@ -273,7 +266,7 @@ namespace ROS2
         {
             m_initialised = true;
             GetFingerJoints();
-            SetPosition(0.0f, 0.0f);
+            SetPosition(0.0f, AZStd::numeric_limits<float>::infinity());
         }
 
         if (IsGripperVelocity0())
