@@ -6,13 +6,6 @@
  *
  */
 
-//#include "Components/EditorWhiteBoxColliderComponent.h"
-//#include "Components/WhiteBoxColliderComponent.h"
-//#include "WhiteBox/EditorWhiteBoxComponentBus.h"
-//#include "WhiteBox/WhiteBoxToolApi.h"
-//#include "WhiteBoxTestFixtures.h"
-//#include "WhiteBoxTestUtil.h"
-
 #include <AzCore/UserSettings/UserSettingsComponent.h>
 #include <AzToolsFramework/UnitTest/ToolsTestApplication.h>
 
@@ -31,7 +24,7 @@
 
 #include <Camera/ROS2CameraSensorEditorComponent.h>
 #include <ROS2/Frame/ROS2FrameComponent.h>
-#include <RobotImporter/SDFormat/SDFormatParser.h>
+#include <RobotImporter/SDFormat/Parser.h>
 #include <RobotImporter/SDFormat/SensorsMaker.h>
 
 #include "SdfModel.h"
@@ -104,7 +97,7 @@ namespace UnitTest
         entity.Init();
 
         const auto xmlStr = SdfModel::GetSdfWithOneLink();
-        const auto sdfRoot = ROS2::SDFormatParser::Parse(xmlStr);
+        const auto sdfRoot = ROS2::SDFormat::Parser::Parse(xmlStr);
         const auto* sdfModel = sdfRoot->Model();
         ASSERT_TRUE(sdfModel);
 
@@ -128,7 +121,7 @@ namespace UnitTest
         entity.Init();
 
         const auto xmlStr = SdfModel::GetSdfWithTwoLinksAndJoint();
-        const auto sdfRoot = ROS2::SDFormatParser::Parse(xmlStr);
+        const auto sdfRoot = ROS2::SDFormat::Parser::Parse(xmlStr);
         const auto* sdfModel = sdfRoot->Model();
         ASSERT_TRUE(sdfModel);
 

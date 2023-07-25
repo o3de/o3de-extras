@@ -9,7 +9,7 @@
 #include <AzCore/UnitTest/TestTypes.h>
 #include <AzCore/std/string/string.h>
 #include <AzTest/AzTest.h>
-#include <RobotImporter/SDFormat/SDFormatParser.h>
+#include <RobotImporter/SDFormat/Parser.h>
 #include <RobotImporter/Utils/RobotImporterUtils.h>
 
 #include "SdfModel.h"
@@ -26,7 +26,7 @@ namespace UnitTest
     TEST_F(SdfModelTest, CheckModelCorrectnessOneLink)
     {
         const auto xmlStr = SdfModel::GetSdfWithOneLink();
-        const auto sdfRoot = ROS2::SDFormatParser::Parse(xmlStr);
+        const auto sdfRoot = ROS2::SDFormat::Parser::Parse(xmlStr);
         const auto* sdfModel = sdfRoot->Model();
 
         EXPECT_EQ(sdfModel->Name(), "test_one_link");
@@ -90,7 +90,7 @@ namespace UnitTest
     TEST_F(SdfModelTest, CheckModelCorrectnessTwoLinks)
     {
         const auto xmlStr = SdfModel::GetSdfWithTwoLinksAndJoint();
-        const auto sdfRoot = ROS2::SDFormatParser::Parse(xmlStr);
+        const auto sdfRoot = ROS2::SDFormat::Parser::Parse(xmlStr);
         const auto* sdfModel = sdfRoot->Model();
 
         EXPECT_EQ(sdfModel->Name(), "test_two_links");
