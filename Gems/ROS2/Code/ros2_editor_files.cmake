@@ -32,6 +32,8 @@ set(FILES
     Source/RobotImporter/SDFormat/Parser.h
     Source/RobotImporter/SDFormat/SensorsMaker.cpp
     Source/RobotImporter/SDFormat/SensorsMaker.h
+    Source/RobotImporter/SDFormat/SupportedTags.cpp
+    Source/RobotImporter/SDFormat/SupportedTags.h
     Source/RobotImporter/URDF/ArticulationsMaker.cpp
     Source/RobotImporter/URDF/ArticulationsMaker.h
     Source/RobotImporter/URDF/CollidersMaker.cpp

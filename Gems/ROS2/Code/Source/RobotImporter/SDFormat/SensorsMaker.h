@@ -9,6 +9,8 @@
 #pragma once
 
 #include <AzCore/Component/EntityId.h>
+
+#include <sdf/Sensor.hh>
 #include <sdf/sdf.hh>
 
 namespace ROS2::SDFormat
@@ -21,13 +23,22 @@ namespace ROS2::SDFormat
         //! Add a sensor to a link entity and set it accordingly.
         //! @param entityId A non-active entity which will be affected.
         //! @param link A link in parsed SDF model which could hold information about sensor to be made.
-        //! @returns created components Id or string with fail
-        void AddSensors(AZ::EntityId entityId, const sdf::Link* link) const;
+        void AddSensors(const AZ::EntityId entityId, const sdf::Link* link);
 
         //! Add a sensor to a joint entity and set it accordingly.
         //! @param entityId A non-active entity which will be affected.
         //! @param joint A joint in parsed SDF model which could hold information about sensor to be made.
-        //! @returns created components Id or string with fail
-        void AddSensors(AZ::EntityId entityId, const sdf::Joint* joint) const;
+        void AddSensors(const AZ::EntityId entityId, const sdf::Joint* joint);
+
+        //! Get log data created while adding sensors
+        const AZStd::string& GetLog() const;
+
+        //! Clean log data created while adding sensors
+        void ResetLog();
+
+    private:
+        void AddSensor(const AZ::EntityId entityId, const sdf::Sensor* sensor);
+
+        AZStd::string m_log;
     };
 } // namespace ROS2::SDFormat

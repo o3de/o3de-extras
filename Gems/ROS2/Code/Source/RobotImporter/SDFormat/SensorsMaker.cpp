@@ -7,22 +7,24 @@
  */
 
 #include "SensorsMaker.h"
+#include "SupportedTags.h"
 
 #include <AzCore/Component/Component.h>
 #include <AzToolsFramework/Entity/EditorEntityHelpers.h>
 
 #include <Camera/ROS2CameraSensorEditorComponent.h>
 #include <ROS2/Frame/ROS2FrameComponent.h>
+#include <RobotImporter/Utils/RobotImporterUtils.h>
 
 #include <sdf/Camera.hh>
 #include <sdf/Imu.hh>
-#include <sdf/Sensor.hh>
 
 namespace ROS2::SDFormat
 {
-    void AddSensor(AZ::EntityId entityId, const sdf::Sensor* sensor)
+    void SensorsMaker::AddSensor(const AZ::EntityId entityId, const sdf::Sensor* sensor)
     {
         AZ::Entity* entity = AzToolsFramework::GetEntityById(entityId);
+        sdf::ElementPtr element = nullptr;
 
         switch (sensor->Type())
         {
@@ -32,6 +34,7 @@ namespace ROS2::SDFormat
             {
                 auto* cameraSensor = sensor->CameraSensor();
                 AZ_Assert(cameraSensor, "sensor is not sdf::SensorType::CAMERA");
+                element = cameraSensor->Element();
 
                 CameraSensorConfiguration cameraConfiguration;
                 SensorConfiguration sensorConfiguration;
@@ -45,7 +48,7 @@ namespace ROS2::SDFormat
                     cameraSensor->HorizontalFov().Degree() * (cameraConfiguration.m_height / cameraConfiguration.m_width);
 
                 // TODO: add distortion parameters, far/near clip, ROS2 topic, format, and more
-                // TODO: read required services instead of hardcoding ones
+                // TODO: read required services instead of hardcoding ones (ROS2FrameComponent)
 
                 auto* frameComponent = entity->CreateComponent<ROS2FrameComponent>();
                 AZ_Assert(frameComponent, "failed to create ROS2FrameComponent");
@@ -57,9 +60,22 @@ namespace ROS2::SDFormat
             AZ_Warning("AddSensor", false, "Unsupported sensor type, %d", sensor->Type());
             break;
         }
+
+        const auto& supportedOptions = SupportedTags::GetSupportedTags(sensor->Type());
+        const auto& unsupportedOptions = Utils::SDFormat::GetUnsupportedOptions(element, supportedOptions);
+        if (!unsupportedOptions.empty())
+        {
+            m_log.append("Unsupported tags in SDFormat model found:\n");
+            for (const auto& opt : unsupportedOptions)
+            {
+                m_log.append("\t");
+                m_log.append(opt);
+                m_log.append("\n");
+            }
+        }
     }
 
-    void SensorsMaker::AddSensors(AZ::EntityId entityId, const sdf::Link* link) const
+    void SensorsMaker::AddSensors(const AZ::EntityId entityId, const sdf::Link* link)
     {
         for (size_t si = 0; si < link->SensorCount(); ++si)
         {
@@ -68,12 +84,22 @@ namespace ROS2::SDFormat
         }
     }
 
-    void SensorsMaker::AddSensors(AZ::EntityId entityId, const sdf::Joint* joint) const
+    void SensorsMaker::AddSensors(const AZ::EntityId entityId, const sdf::Joint* joint)
     {
         for (size_t si = 0; si < joint->SensorCount(); ++si)
         {
             const auto* sensor = joint->SensorByIndex(si);
             AddSensor(entityId, sensor);
         }
+    }
+
+    const AZStd::string& SensorsMaker::GetLog() const
+    {
+        return m_log;
+    }
+
+    void SensorsMaker::ResetLog()
+    {
+        m_log.clear();
     }
 } // namespace ROS2::SDFormat

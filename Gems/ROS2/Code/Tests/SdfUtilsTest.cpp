@@ -10,6 +10,7 @@
 #include <AzCore/std/string/string.h>
 #include <AzTest/AzTest.h>
 #include <RobotImporter/SDFormat/Parser.h>
+#include <RobotImporter/SDFormat/SupportedTags.h>
 #include <RobotImporter/Utils/RobotImporterUtils.h>
 
 #include "SdfModel.h"
@@ -116,5 +117,32 @@ namespace UnitTest
         const auto& unsupportedJointPluginOptions = ROS2::Utils::SDFormat::GetUnsupportedOptions(jointPluginElement, jointSupportedOptions);
         EXPECT_EQ(unsupportedJointPluginOptions.size(), 1U);
         EXPECT_EQ(unsupportedJointPluginOptions[0U], ">ros>argument");
+    }
+
+    TEST_F(SdfUtilsTest, GetSupportedOptionsCheck)
+    {
+        const auto& emptySupportedOptions = ROS2::SDFormat::SupportedTags::GetSupportedTags(sdf::SensorType::NONE);
+        EXPECT_EQ(emptySupportedOptions.size(), 0U);
+
+        const auto xmlStr = SdfModel::GetSdfWithTwoLinksAndJoint();
+        const auto sdfRoot = ROS2::SDFormat::Parser::Parse(xmlStr);
+
+        const auto& allSensors = ROS2::Utils::SDFormat::GetAllSensors(sdfRoot);
+        EXPECT_EQ(allSensors.size(), 2U);
+
+        ASSERT_TRUE(allSensors.contains("camera"));
+        const auto& cameraElement = allSensors.at("camera")->Element();
+        auto cameraSupportedOptions = ROS2::SDFormat::SupportedTags::GetSupportedTags(allSensors.at("camera")->Type());
+        auto cameraUnsupportedOptions = ROS2::Utils::SDFormat::GetUnsupportedOptions(cameraElement, cameraSupportedOptions);
+        EXPECT_EQ(cameraUnsupportedOptions.size(), 3U);
+
+        cameraSupportedOptions.emplace(">pose");
+        cameraUnsupportedOptions = ROS2::Utils::SDFormat::GetUnsupportedOptions(cameraElement, cameraSupportedOptions);
+        EXPECT_EQ(cameraUnsupportedOptions.size(), 2U);
+
+        cameraSupportedOptions.emplace(">camera>clip>near");
+        cameraSupportedOptions.emplace(">camera>clip>far");
+        cameraUnsupportedOptions = ROS2::Utils::SDFormat::GetUnsupportedOptions(cameraElement, cameraSupportedOptions);
+        EXPECT_EQ(cameraUnsupportedOptions.size(), 0U);
     }
 } // namespace UnitTest
