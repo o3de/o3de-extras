@@ -131,6 +131,69 @@ namespace ROS2
         response.m_result = AssetBuilderSDK::CreateJobsResultCode::Success;
     }
 
+    Utils::UrdfAssetMap SdfAssetBuilder::FindAssets(const AZStd::unordered_set<AZStd::string>& meshesFilenames, [[maybe_unused]] const AZStd::string& urdfFilename) const
+    {
+        Utils::UrdfAssetMap assetMap;
+
+        using AssetSysReqBus = AzToolsFramework::AssetSystemRequestBus;
+
+        auto enviromentalVariable = std::getenv("AMENT_PREFIX_PATH");
+        AZ_Warning(SdfAssetBuilderName, enviromentalVariable, "AMENT_PREFIX_PATH is not found.");
+        AZStd::string amentPrefixPath{ enviromentalVariable };
+
+        for (const auto& uri : meshesFilenames)
+        {
+            const AZ::IO::PathView uriPath(uri);
+
+            Utils::UrdfAsset asset;
+            asset.m_urdfPath = uri;
+            //asset.m_resolvedUrdfPath = uriPath.RelativePath().String();
+            asset.m_resolvedUrdfPath = Utils::ResolveURDFPath(asset.m_urdfPath, urdfFilename, amentPrefixPath);
+
+            if (asset.m_resolvedUrdfPath.empty())
+            {
+                AZ_Warning(SdfAssetBuilderName, false, "Failed to resolve file reference '%s' to an absolute path, skipping.", uri.c_str());
+                continue;
+            }
+
+            asset.m_urdfFileCRC = Utils::GetFileCRC(asset.m_resolvedUrdfPath);
+
+            bool sourceAssetFound{ false };
+            AZ::Data::AssetInfo assetInfo;
+            AZStd::string watchFolder;
+            AssetSysReqBus::BroadcastResult(
+                sourceAssetFound, &AssetSysReqBus::Events::GetSourceInfoBySourcePath, 
+                asset.m_resolvedUrdfPath.c_str(), assetInfo, watchFolder);
+
+            if (!sourceAssetFound)
+            {
+                AZ_Warning(SdfAssetBuilderName, false, "Cannot find source asset info for '%s', skipping.", asset.m_resolvedUrdfPath.c_str());
+                continue;
+            }
+
+            const auto fullSourcePath = AZ::IO::Path(watchFolder) / AZ::IO::Path(assetInfo.m_relativePath);
+
+            asset.m_availableAssetInfo.m_sourceAssetRelativePath = assetInfo.m_relativePath;
+            asset.m_availableAssetInfo.m_sourceAssetGlobalPath = fullSourcePath.String();
+            asset.m_availableAssetInfo.m_sourceGuid = assetInfo.m_assetId.m_guid;
+
+            AZ::Crc32 crc = Utils::GetFileCRC(asset.m_availableAssetInfo.m_sourceAssetGlobalPath);
+
+            if (crc == asset.m_urdfFileCRC)
+            {
+                AZ_Info(SdfAssetBuilderName, "Resolved uri '%s' to source asset '%s'.", uri.c_str(), assetInfo.m_relativePath.c_str());
+                assetMap.emplace(uri, AZStd::move(asset));
+            }
+            else
+            {
+                AZ_Warning(SdfAssetBuilderName, false, "Resolved to source asset '%s' which has incorrect CRC, skipping.", assetInfo.m_relativePath.c_str());
+            }
+        }
+
+        return assetMap;
+    }
+
+
     void SdfAssetBuilder::ProcessJob(
         const AssetBuilderSDK::ProcessJobRequest& request,
         AssetBuilderSDK::ProcessJobResponse& response) const
@@ -151,7 +214,8 @@ namespace ROS2
         auto meshNames = Utils::GetMeshesFilenames(parsedUrdf->getRoot(), true, true);
 
         AZ_Info(SdfAssetBuilderName, "Finding asset IDs for all mesh and collider assets.");
-        auto urdfAssetsMapping = AZStd::make_shared<Utils::UrdfAssetMap>(Utils::FindAssetsForUrdf(meshNames, request.m_fullPath));
+        //auto urdfAssetsMapping = AZStd::make_shared<Utils::UrdfAssetMap>(Utils::FindAssetsForUrdf(meshNames, request.m_fullPath));
+        auto urdfAssetsMapping = AZStd::make_shared<Utils::UrdfAssetMap>(FindAssets(meshNames, request.m_fullPath));
 
         AZ_Info(SdfAssetBuilderName, "Creating prefab from source file.");
         const bool useArticulation = true;
