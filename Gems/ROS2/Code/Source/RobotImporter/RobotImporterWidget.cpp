@@ -371,7 +371,12 @@ namespace ROS2
         }
         const bool useArticulation = m_prefabMakerPage->IsUseArticulations();
         m_prefabMaker = AZStd::make_unique<URDFPrefabMaker>(
-            m_urdfPath.String(), m_parsedUrdf, prefabPath.String(), m_urdfAssetsMapping, useArticulation);
+            m_urdfPath.String(),
+            m_parsedUrdf,
+            prefabPath.String(),
+            m_urdfAssetsMapping,
+            useArticulation,
+            m_prefabMakerPage->getSelectedSpawnPoint());
 
         auto prefabOutcome = m_prefabMaker->CreatePrefabFromURDF();
         if (prefabOutcome.IsSuccess())
