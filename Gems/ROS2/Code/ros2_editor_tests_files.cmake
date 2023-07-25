@@ -5,6 +5,7 @@
 
 set(FILES
     Tests/ROS2EditorTest.cpp
-    Tests/SdfParserTest.cpp
+    Tests/SdfModelTest.cpp
+    Tests/SdfUtilsTest.cpp
     Tests/UrdfParserTest.cpp
 )
