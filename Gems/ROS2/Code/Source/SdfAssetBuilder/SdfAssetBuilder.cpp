@@ -261,7 +261,7 @@ namespace ROS2
         AZ_Info(SdfAssetBuilderName, "Finding asset IDs for all mesh and collider assets.");
         auto assetMap = AZStd::make_shared<Utils::UrdfAssetMap>(FindAssets(parsedSourceFile->getRoot(), request.m_fullPath));
 
-        // Given the prased SDF
+        // Given the parsed source file and asset mappings, generate an in-memory prefab.
         AZ_Info(SdfAssetBuilderName, "Creating prefab from source file.");
         auto prefabMaker = AZStd::make_unique<URDFPrefabMaker>(
             request.m_fullPath, parsedSourceFile, tempAssetOutputPath.String(), assetMap, useArticulation);
