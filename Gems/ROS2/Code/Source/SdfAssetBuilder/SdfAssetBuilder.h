@@ -11,6 +11,7 @@
 #include <AssetBuilderSDK/AssetBuilderBusses.h>
 #include <AssetBuilderSDK/AssetBuilderSDK.h>
 
+#include <URDF/UrdfParser.h>
 #include <Utils/SourceAssetsStorage.h>
 
 namespace ROS2
@@ -36,7 +37,7 @@ namespace ROS2
         void ShutDown() override { }
     private:
         AZStd::vector<AssetBuilderSDK::AssetBuilderPattern> GetSupportedBuilderPatterns();
-        Utils::UrdfAssetMap FindAssets([[maybe_unused]] const AZStd::unordered_set<AZStd::string>& meshesFilenames, [[maybe_unused]] const AZStd::string& urdfFilename) const;
+        Utils::UrdfAssetMap FindAssets(const urdf::LinkConstSharedPtr& rootLink, const AZStd::string& sourceFilename) const;
 
         AZStd::string CreateDefaultProcPrefab(
             const AssetBuilderSDK::ProcessJobRequest& request,

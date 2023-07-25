@@ -117,7 +117,30 @@ namespace ROS2
         const AssetBuilderSDK::CreateJobsRequest& request,
         AssetBuilderSDK::CreateJobsResponse& response) const
     {
-        // For each input file, create an output job.
+        // To be able to successfully process the SDF job, we need job dependencies on every asset
+        // referenced by the SDF file. Otherwise we won't be able to connect the references to the 
+        // correct product assets. Unfortunately, this means that we need to redundantly parse the
+        // source file once here to set up the job dependencies, and then we'll parse it a second
+        // time when actually running ProcessJob().
+
+        // Eventually, we may need to extend the logic here even further to create more asset
+        // generation jobs for exporting any embedded model / material / collider assets that only
+        // exist inside the SDF file and not as an external reference.
+
+        const auto fullSourcePath = AZ::IO::Path(request.m_watchFolder) / AZ::IO::Path(request.m_sourceFile);
+
+        AZ_Info(SdfAssetBuilderName, "Parsing source file: %s", fullSourcePath.c_str());
+        auto parsedSourceFile = UrdfParser::ParseFromFile(fullSourcePath.String());
+        if (!parsedSourceFile)
+        {
+            AZ_Error(SdfAssetBuilderName, false, "Failed to parse source file '%s'.", fullSourcePath.c_str());
+            return;
+        }
+
+        AZ_Info(SdfAssetBuilderName, "Finding asset IDs for all mesh and collider assets.");
+        auto sourceAssetMap = AZStd::make_shared<Utils::UrdfAssetMap>(FindAssets(parsedSourceFile->getRoot(), fullSourcePath.String()));
+
+        // Create an output job for each platform
         for (const AssetBuilderSDK::PlatformInfo& platformInfo : request.m_enabledPlatforms)
         {
             AssetBuilderSDK::JobDescriptor jobDescriptor;
@@ -125,39 +148,56 @@ namespace ROS2
             jobDescriptor.m_jobKey = "SDF (Simulation Description Format) Asset";
             jobDescriptor.SetPlatformIdentifier(platformInfo.m_identifier.c_str());
 
+            // Add in all of the job dependencies for this file.
+            // The SDF file won't get processed until every asset it relies on has been processed first.
+            for (const auto& asset : *sourceAssetMap)
+            {
+                AssetBuilderSDK::JobDependency jobDependency;
+                jobDependency.m_sourceFile.m_sourceFileDependencyUUID = asset.second.m_availableAssetInfo.m_sourceGuid;
+                jobDependency.m_platformIdentifier = platformInfo.m_identifier;
+                jobDependency.m_type = AssetBuilderSDK::JobDependencyType::Order;
+                jobDescriptor.m_jobDependencyList.push_back(AZStd::move(jobDependency));
+            }
+
             response.m_createJobOutputs.push_back(jobDescriptor);
         }
 
         response.m_result = AssetBuilderSDK::CreateJobsResultCode::Success;
     }
 
-    Utils::UrdfAssetMap SdfAssetBuilder::FindAssets(const AZStd::unordered_set<AZStd::string>& meshesFilenames, [[maybe_unused]] const AZStd::string& urdfFilename) const
+    Utils::UrdfAssetMap SdfAssetBuilder::FindAssets(const urdf::LinkConstSharedPtr& rootLink, const AZStd::string& sourceFilename) const
     {
+        AZ_Info(SdfAssetBuilderName, "Parsing mesh and collider names");
+        auto assetNames = Utils::GetMeshesFilenames(rootLink, true, true);
+
         Utils::UrdfAssetMap assetMap;
 
         using AssetSysReqBus = AzToolsFramework::AssetSystemRequestBus;
 
-        auto enviromentalVariable = std::getenv("AMENT_PREFIX_PATH");
-        AZ_Warning(SdfAssetBuilderName, enviromentalVariable, "AMENT_PREFIX_PATH is not found.");
-        AZStd::string amentPrefixPath{ enviromentalVariable };
+        // Unlike the RobotImporter, the SDF Asset Builder does not use the AMENT_PREFIX_PATH
+        // to resolve file locations. There wouldn't be a way to guarantee identical results across
+        // machines or to detect the need to rebuild assets if the environment variable changes.
+        const AZStd::string emptyAmentPrefixPath;
 
-        for (const auto& uri : meshesFilenames)
+        for (const auto& uri : assetNames)
         {
-            const AZ::IO::PathView uriPath(uri);
-
             Utils::UrdfAsset asset;
             asset.m_urdfPath = uri;
-            //asset.m_resolvedUrdfPath = uriPath.RelativePath().String();
-            asset.m_resolvedUrdfPath = Utils::ResolveURDFPath(asset.m_urdfPath, urdfFilename, amentPrefixPath);
 
+            // Attempt to find the absolute path for the raw uri reference, which might look something like "model://meshes/model.dae"
+            asset.m_resolvedUrdfPath = Utils::ResolveURDFPath(asset.m_urdfPath, sourceFilename, emptyAmentPrefixPath);
             if (asset.m_resolvedUrdfPath.empty())
             {
                 AZ_Warning(SdfAssetBuilderName, false, "Failed to resolve file reference '%s' to an absolute path, skipping.", uri.c_str());
                 continue;
             }
 
+            // Get a checksum on the resolved file that we'll use to ensure we've matched with the correct relative
+            // source asset. Ideally we'll be able to remove this check since it's not a very robust safety check and
+            // adds some amount of overhead to the processing.
             asset.m_urdfFileCRC = Utils::GetFileCRC(asset.m_resolvedUrdfPath);
 
+            // Given the absolute path to the asset, try to get the source asset info from the AssetProcessor.
             bool sourceAssetFound{ false };
             AZ::Data::AssetInfo assetInfo;
             AZStd::string watchFolder;
@@ -171,14 +211,16 @@ namespace ROS2
                 continue;
             }
 
+            // If the source asset has been found by the Asset Processor, save the mapping between raw uri
+            // reference and Asset Processor source asset information.
             const auto fullSourcePath = AZ::IO::Path(watchFolder) / AZ::IO::Path(assetInfo.m_relativePath);
-
             asset.m_availableAssetInfo.m_sourceAssetRelativePath = assetInfo.m_relativePath;
             asset.m_availableAssetInfo.m_sourceAssetGlobalPath = fullSourcePath.String();
             asset.m_availableAssetInfo.m_sourceGuid = assetInfo.m_assetId.m_guid;
 
+            // We should determine if this CRC check is actually necessary for resolving URI references.
+            // Ideally, the additional overhead should be removed and the asset reference result should be trusted.
             AZ::Crc32 crc = Utils::GetFileCRC(asset.m_availableAssetInfo.m_sourceAssetGlobalPath);
-
             if (crc == asset.m_urdfFileCRC)
             {
                 AZ_Info(SdfAssetBuilderName, "Resolved uri '%s' to source asset '%s'.", uri.c_str(), assetInfo.m_relativePath.c_str());
@@ -198,29 +240,31 @@ namespace ROS2
         const AssetBuilderSDK::ProcessJobRequest& request,
         AssetBuilderSDK::ProcessJobResponse& response) const
     {
+        // Set whether or not the outputs should use PhysX articulation components for joints.
+        // This should eventually get moved into a global and/or per-file asset builder setting.
+        const bool useArticulation = true;
+
         auto tempAssetOutputPath = AZ::IO::Path(request.m_tempDirPath) / request.m_sourceFile;
         tempAssetOutputPath.ReplaceExtension("procprefab");
 
+        // Read in and parse the source SDF file.
         AZ_Info(SdfAssetBuilderName, "Parsing source file: %s", request.m_fullPath.c_str());
-        auto parsedUrdf = UrdfParser::ParseFromFile(request.m_fullPath);
-        if (!parsedUrdf)
+        auto parsedSourceFile = UrdfParser::ParseFromFile(request.m_fullPath);
+        if (!parsedSourceFile)
         {
             AZ_Error(SdfAssetBuilderName, false, "Failed to parse source file '%s'.", request.m_fullPath.c_str());
             response.m_resultCode = AssetBuilderSDK::ProcessJobResult_Failed;
             return;
         }
 
-        AZ_Info(SdfAssetBuilderName, "Parsing mesh and collider names");
-        auto meshNames = Utils::GetMeshesFilenames(parsedUrdf->getRoot(), true, true);
-
+        // Resolve all the URI references into source asset GUIDs.
         AZ_Info(SdfAssetBuilderName, "Finding asset IDs for all mesh and collider assets.");
-        //auto urdfAssetsMapping = AZStd::make_shared<Utils::UrdfAssetMap>(Utils::FindAssetsForUrdf(meshNames, request.m_fullPath));
-        auto urdfAssetsMapping = AZStd::make_shared<Utils::UrdfAssetMap>(FindAssets(meshNames, request.m_fullPath));
+        auto assetMap = AZStd::make_shared<Utils::UrdfAssetMap>(FindAssets(parsedSourceFile->getRoot(), request.m_fullPath));
 
+        // Given the prased SDF
         AZ_Info(SdfAssetBuilderName, "Creating prefab from source file.");
-        const bool useArticulation = true;
         auto prefabMaker = AZStd::make_unique<URDFPrefabMaker>(
-            request.m_fullPath, parsedUrdf, tempAssetOutputPath.String(), urdfAssetsMapping, useArticulation);
+            request.m_fullPath, parsedSourceFile, tempAssetOutputPath.String(), assetMap, useArticulation);
         AZStd::string outputPrefab;
         auto prefabResult = prefabMaker->CreatePrefabStringFromURDF(outputPrefab);
         if (!prefabResult.IsSuccess())
@@ -263,8 +307,8 @@ namespace ROS2
         sdfJobProduct.m_productAssetType = azrtti_typeid<AZ::Prefab::ProceduralPrefabAsset>();
 
         // Right now, just mark that dependencies are handled because there aren't any to handle.
-        // Once the prefab becomes filled with information, we'll need to do more work here to ensure
-        // that the prefab dependencies are parsed out and hooked up correctly.
+        // It seems that procedural prefabs don't declare product asset dependencies, presumably because
+        // they're still a source asset themselves and not a product asset.
         sdfJobProduct.m_dependenciesHandled = true;
 
         response.m_outputProducts.push_back(AZStd::move(sdfJobProduct));
