@@ -21,8 +21,7 @@ namespace ROS2
                 ->Field("lidarModel", &Lidar2DSensorConfiguration::m_lidarModel)
                 ->Field("lidarImplementation", &Lidar2DSensorConfiguration::m_lidarSystem)
                 ->Field("LidarParameters", &Lidar2DSensorConfiguration::m_lidarParameters)
-                ->Field("IgnoreLayer", &Lidar2DSensorConfiguration::m_ignoreLayer)
-                ->Field("IgnoredLayerIndex", &Lidar2DSensorConfiguration::m_ignoredLayerIndex)
+                ->Field("IgnoredLayerIndices", &Lidar2DSensorConfiguration::m_ignoredLayerIndices)
                 ->Field("ExcludedEntities", &Lidar2DSensorConfiguration::m_excludedEntities)
                 ->Field("PointsAtMax", &Lidar2DSensorConfiguration::m_addPointsAtMax);
 
@@ -47,16 +46,10 @@ namespace ROS2
                         "Configuration of Custom lidar")
                     ->Attribute(AZ::Edit::Attributes::Visibility, &Lidar2DSensorConfiguration::IsConfigurationVisible)
                     ->DataElement(
-                        AZ::Edit::UIHandlers::ComboBox,
-                        &Lidar2DSensorConfiguration::m_ignoreLayer,
-                        "Ignore layer",
-                        "Should we ignore selected layer index")
-                    ->Attribute(AZ::Edit::Attributes::Visibility, &Lidar2DSensorConfiguration::IsIgnoredLayerConfigurationVisible)
-                    ->DataElement(
                         AZ::Edit::UIHandlers::Default,
-                        &Lidar2DSensorConfiguration::m_ignoredLayerIndex,
-                        "Ignored layer index",
-                        "Layer index to ignore")
+                        &Lidar2DSensorConfiguration::m_ignoredLayerIndices,
+                        "Ignored layer indices",
+                        "Layer indices to ignore")
                     ->Attribute(AZ::Edit::Attributes::Visibility, &Lidar2DSensorConfiguration::IsIgnoredLayerConfigurationVisible)
                     ->DataElement(
                         AZ::Edit::UIHandlers::Default,
