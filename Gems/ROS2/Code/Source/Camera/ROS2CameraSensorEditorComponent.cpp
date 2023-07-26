@@ -18,14 +18,15 @@ namespace ROS2
     ROS2CameraSensorEditorComponent::ROS2CameraSensorEditorComponent()
     {
         m_sensorConfiguration.m_frequency = 10;
-        m_sensorConfiguration.m_publishersConfigurations.insert(
-            MakeTopicConfigurationPair("camera_image_color", CameraConstants::ImageMessageType, CameraConstants::ColorImageConfig));
-        m_sensorConfiguration.m_publishersConfigurations.insert(
-            MakeTopicConfigurationPair("camera_image_depth", CameraConstants::ImageMessageType, CameraConstants::DepthImageConfig));
-        m_sensorConfiguration.m_publishersConfigurations.insert(
-            MakeTopicConfigurationPair("color_camera_info", CameraConstants::CameraInfoMessageType, CameraConstants::ColorInfoConfig));
-        m_sensorConfiguration.m_publishersConfigurations.insert(
-            MakeTopicConfigurationPair("depth_camera_info", CameraConstants::CameraInfoMessageType, CameraConstants::DepthInfoConfig));
+        InitializeSensorTopics();
+    }
+
+    ROS2CameraSensorEditorComponent::ROS2CameraSensorEditorComponent(
+        const SensorConfiguration& sensorConfiguration, const CameraSensorConfiguration& cameraConfiguration)
+        : m_sensorConfiguration(sensorConfiguration)
+        , m_cameraSensorConfiguration(cameraConfiguration)
+    {
+        InitializeSensorTopics();
     }
 
     void ROS2CameraSensorEditorComponent::Reflect(AZ::ReflectContext* context)
@@ -201,6 +202,18 @@ namespace ROS2
         config.m_topic = topic;
         config.m_type = messageType;
         return AZStd::make_pair(configName, config);
+    }
+
+    void ROS2CameraSensorEditorComponent::InitializeSensorTopics()
+    {
+        m_sensorConfiguration.m_publishersConfigurations.insert(
+            MakeTopicConfigurationPair("camera_image_color", CameraConstants::ImageMessageType, CameraConstants::ColorImageConfig));
+        m_sensorConfiguration.m_publishersConfigurations.insert(
+            MakeTopicConfigurationPair("camera_image_depth", CameraConstants::ImageMessageType, CameraConstants::DepthImageConfig));
+        m_sensorConfiguration.m_publishersConfigurations.insert(
+            MakeTopicConfigurationPair("color_camera_info", CameraConstants::CameraInfoMessageType, CameraConstants::ColorInfoConfig));
+        m_sensorConfiguration.m_publishersConfigurations.insert(
+            MakeTopicConfigurationPair("depth_camera_info", CameraConstants::CameraInfoMessageType, CameraConstants::DepthInfoConfig));
     }
 
 } // namespace ROS2
