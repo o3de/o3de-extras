@@ -131,7 +131,7 @@ namespace ROS2::Utils
         AssetSysReqBus::BroadcastResult(ok, &AssetSysReqBus::Events::GetAssetsProducedBySourceUUID, sourceAssetUUID, productsAssetInfo);
         if (ok)
         {
-            for (auto& product : productsAssetInfo)
+            for (const auto& product : productsAssetInfo)
             {
                 if (product.m_assetType == typeId)
                 {
