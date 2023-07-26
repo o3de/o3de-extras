@@ -58,7 +58,7 @@ namespace ROS2
         }
     }
 
-    AZ::Outcome<AzToolsFramework::Prefab::TemplateId, AZStd::string> URDFPrefabMaker::CreatePrefabTemplateFromURDF()
+    URDFPrefabMaker::CreatePrefabResult URDFPrefabMaker::CreatePrefabTemplateFromURDF()
     {
         {
             AZStd::lock_guard<AZStd::mutex> lck(m_statusLock);
@@ -257,7 +257,7 @@ namespace ROS2
         return AZ::Success(prefabTemplateId);
     }
 
-    AZ::Outcome<AzToolsFramework::Prefab::TemplateId, AZStd::string> URDFPrefabMaker::CreatePrefabFromURDF()
+    URDFPrefabMaker::CreatePrefabResult URDFPrefabMaker::CreatePrefabFromURDF()
     {
         // Begin an undo batch for prefab creation process
         AzToolsFramework::UndoSystem::URSequencePoint* currentUndoBatch = nullptr;
