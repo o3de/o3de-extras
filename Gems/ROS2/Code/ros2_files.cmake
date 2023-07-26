@@ -30,6 +30,7 @@ set(FILES
         Source/ContactSensor/ROS2ContactSensorComponent.cpp
         Source/ContactSensor/ROS2ContactSensorComponent.h
         Source/Frame/NamespaceConfiguration.cpp
+        Source/Frame/ROS2FrameController.cpp
         Source/Frame/ROS2FrameComponent.cpp
         Source/Frame/ROS2Transform.cpp
         Source/Georeference/GeoreferenceStructures.cpp

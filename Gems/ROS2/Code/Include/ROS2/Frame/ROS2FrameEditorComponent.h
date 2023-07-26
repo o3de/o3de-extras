@@ -10,7 +10,10 @@
 #include <AzCore/Component/Component.h>
 #include <AzCore/std/smart_ptr/unique_ptr.h>
 #include <AzFramework/Components/TransformComponent.h>
+#include <AzToolsFramework/ToolsComponents/EditorComponentAdapter.h>
+#include <AzToolsFramework/ToolsComponents/EditorComponentBase.h>
 #include <ROS2/Frame/NamespaceConfiguration.h>
+#include <ROS2/Frame/ROS2FrameComponent.h>
 #include <ROS2/Frame/ROS2FrameController.h>
 #include <ROS2/Frame/ROS2Transform.h>
 #include <ROS2/ROS2GemUtilities.h>
@@ -18,24 +21,23 @@
 namespace ROS2
 {
 
-    using ROS2FrameComponentBase = AzFramework::Components::ComponentAdapter<ROS2FrameComponentController, ROS2FrameConfiguration>;
+    using ROS2FrameEditorComponentBase =
+        AzToolsFramework::Components::EditorComponentAdapter<ROS2FrameComponentController, ROS2FrameComponent, ROS2FrameConfiguration>;
 
     //! This component marks an interesting reference frame for ROS2 ecosystem.
     //! It serves as sensor data frame of reference and is responsible, through ROS2Transform, for publishing
     //! ros2 static and dynamic transforms (/tf_static, /tf). It also facilitates namespace handling.
     //! An entity can only have a single ROS2Frame on each level. Many ROS2 Components require this component.
     //! @note A robot should have this component on every level of entity hierarchy (for each joint, fixed or dynamic)
-    class ROS2FrameComponent
-        : public ROS2FrameComponentBase
-        , public AZ::TickBus::Handler
+    class ROS2FrameEditorComponent : public ROS2FrameEditorComponentBase
     {
     public:
-        AZ_COMPONENT(ROS2FrameComponent, "{EE743472-3E25-41EA-961B-14096AC1D66F}", AZ::Component);
+        AZ_COMPONENT(ROS2FrameEditorComponent, "{ed8cf823-1813-4423-a874-5de13e9124d2}", AzToolsFramework::Components::EditorComponentBase);
 
-        ROS2FrameComponent();
+        ROS2FrameEditorComponent();
         //! Initialize to a specific frame id
-        ROS2FrameComponent(const AZStd::string& frameId);
-        ROS2FrameComponent(const ROS2FrameConfiguration& config);
+        ROS2FrameEditorComponent(const AZStd::string& frameId);
+        ROS2FrameEditorComponent(const ROS2FrameConfiguration& config);
 
         //////////////////////////////////////////////////////////////////////////
         // Component overrides
@@ -61,7 +63,7 @@ namespace ROS2
         AZ::Name GetJointName() const;
 
         //! Set the joint name
-        //! @note May be populated during URDF import or set by the user in the Editor view 
+        //! @note May be populated during URDF import or set by the user in the Editor view
         //! @param jointNameString does not include the namespace. The namespace prefix is added automatically.
         void SetJointName(const AZStd::string& jointNameString);
 
@@ -79,23 +81,13 @@ namespace ROS2
         //! @return The name of the global frame with namespace attached. It is typically "odom", "map", "world".
         AZStd::string GetGlobalFrameName() const;
 
-        //! Updates the namespace and namespace strategy of the underlying namespace configuration
-        //! @param ns Namespace to set.
-        //! @param strategy Namespace strategy to use.
-        void UpdateNamespaceConfiguration(const AZStd::string& ns, NamespaceConfiguration::NamespaceStrategy strategy);
-
     private:
-        //////////////////////////////////////////////////////////////////////////
-        // AZ::TickBus::Handler overrides
-        void OnTick(float deltaTime, AZ::ScriptTimePoint time) override;
-        //////////////////////////////////////////////////////////////////////////
-
         bool IsTopLevel() const; //!< True if this entity does not have a parent entity with ROS2.
 
         //! Whether transformation to parent frame can change during the simulation, or is fixed.
         bool IsDynamic() const;
 
-        const ROS2FrameComponent* GetParentROS2FrameComponent() const;
+        const ROS2FrameEditorComponent* GetParentROS2FrameComponent() const;
 
         //! Return the frame id of this frame's parent. It can be useful to determine ROS 2 transformations.
         //! @return Parent frame ID.
