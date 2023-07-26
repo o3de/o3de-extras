@@ -42,6 +42,8 @@ set(FILES
         Source/Gripper/VacuumGripperComponent.cpp
         Source/GNSS/GNSSFormatConversions.cpp
         Source/GNSS/GNSSFormatConversions.h
+        Source/GNSS/GNSSSensorConfiguration.cpp
+        Source/GNSS/GNSSSensorConfiguration.h
         Source/GNSS/ROS2GNSSSensorComponent.cpp
         Source/GNSS/ROS2GNSSSensorComponent.h
         Source/Imu/ROS2ImuSensorComponent.cpp

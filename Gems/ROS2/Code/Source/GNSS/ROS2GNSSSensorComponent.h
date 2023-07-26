@@ -13,6 +13,8 @@
 #include <rclcpp/publisher.hpp>
 #include <sensor_msgs/msg/nav_sat_fix.hpp>
 
+#include "GNSSSensorConfiguration.h"
+
 namespace ROS2
 {
     //! Global Navigation Satellite Systems (GNSS) sensor component class
@@ -24,6 +26,7 @@ namespace ROS2
     public:
         AZ_COMPONENT(ROS2GNSSSensorComponent, "{55B4A299-7FA3-496A-88F0-764C75B0E9A7}", ROS2SensorComponent);
         ROS2GNSSSensorComponent();
+        ROS2GNSSSensorComponent(const SensorConfiguration& sensorConfiguration, const GNSSSensorConfiguration& gnssConfiguration);
         ~ROS2GNSSSensorComponent() = default;
         static void Reflect(AZ::ReflectContext* context);
         //////////////////////////////////////////////////////////////////////////
@@ -33,9 +36,7 @@ namespace ROS2
         //////////////////////////////////////////////////////////////////////////
 
     private:
-        float m_gnssOriginLatitudeDeg = 0.0f;
-        float m_gnssOriginLongitudeDeg = 0.0f;
-        float m_gnssOriginAltitude = 0.0f;
+        GNSSSensorConfiguration m_gnssConfiguration;
 
         //////////////////////////////////////////////////////////////////////////
         // ROS2SensorComponent overrides
