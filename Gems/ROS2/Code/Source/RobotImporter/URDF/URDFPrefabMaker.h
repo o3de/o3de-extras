@@ -49,15 +49,16 @@ namespace ROS2
 
         //! On prefab creation this will contain a prefab template id when successful,
         //! and an error string on failure.
-        using CreatePrefabResult = AZ::Outcome<AzToolsFramework::Prefab::TemplateId, AZStd::string>;
+        using CreatePrefabTemplateResult = AZ::Outcome<AzToolsFramework::Prefab::TemplateId, AZStd::string>;
 
-        //! Create and return a prefab corresponding to the URDF model as set through the constructor.
-        //! @return result which is either the root prefab entity containing the imported model based on URDF or an error.
-        CreatePrefabResult CreatePrefabFromURDF();
+        //! Create and return a prefab template corresponding to the URDF model as set through the constructor.
+        //! This will also instantiate the prefab template into the level.
+        //! @return result which is either the prefab template id containing the imported model or an error message.
+        CreatePrefabTemplateResult CreatePrefabFromURDF();
 
-        //! Create and return a prefab template ID corresponding to the URDF model set in the constructor.
+        //! Create and return a prefab template id corresponding to the URDF model set in the constructor.
         //! @return result which is either the prefab template id or an error message.
-        CreatePrefabResult CreatePrefabTemplateFromURDF();
+        CreatePrefabTemplateResult CreatePrefabTemplateFromURDF();
 
         //! Get path to the prefab resulting from the import.
         //! @return path to the prefab.
