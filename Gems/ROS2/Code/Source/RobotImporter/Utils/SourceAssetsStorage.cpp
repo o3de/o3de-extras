@@ -485,7 +485,7 @@ namespace ROS2::Utils
 
         if (result.GetResult() != AZ::SceneAPI::Events::ProcessingResult::Success)
         {
-            AZ_TracePrintf("CreateSceneManifest", "Scene updated\n");
+            AZ_Trace("CreateSceneManifest", "Scene updated\n");
             return false;
         }
 

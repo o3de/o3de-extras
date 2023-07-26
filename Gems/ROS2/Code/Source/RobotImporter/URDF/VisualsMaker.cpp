@@ -82,7 +82,7 @@ namespace ROS2
             return AZ::EntityId();
         }
 
-        AZ_TracePrintf("AddVisual", "Processing visual for entity id:%s\n", entityId.ToString().c_str());
+        AZ_Trace("AddVisual", "Processing visual for entity id:%s\n", entityId.ToString().c_str());
 
         // Use a name generated from the link unless specific name is defined for this visual
         const char* subEntityName = visual->name.empty() ? generatedName.c_str() : visual->name.c_str();

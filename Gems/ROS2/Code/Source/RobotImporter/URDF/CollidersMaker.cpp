@@ -147,7 +147,7 @@ namespace ROS2
 
             if (result.GetResult() != AZ::SceneAPI::Events::ProcessingResult::Success)
             {
-                AZ_TracePrintf(Internal::CollidersMakerLoggingTag, "Scene updated\n");
+                AZ_Trace(Internal::CollidersMakerLoggingTag, "Scene updated\n");
                 return;
             }
 
@@ -243,7 +243,7 @@ namespace ROS2
         { // it is ok not to have collision in a link
             return;
         }
-        AZ_TracePrintf(Internal::CollidersMakerLoggingTag, "Processing collisions for entity id:%s\n", entityId.ToString().c_str());
+        AZ_Trace(Internal::CollidersMakerLoggingTag, "Processing collisions for entity id:%s\n", entityId.ToString().c_str());
 
         auto geometry = collision->geometry;
         if (!geometry)
