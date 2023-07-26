@@ -13,6 +13,8 @@ set(FILES
         Include/ROS2/Communication/QoS.h
         Include/ROS2/Frame/NamespaceConfiguration.h
         Include/ROS2/Frame/ROS2FrameComponent.h
+        Include/ROS2/Frame/ROS2FrameController.h
+        Include/ROS2/Frame/ROS2FrameEditorComponent.h
         Include/ROS2/Frame/ROS2Transform.h
         Include/ROS2/Gripper/GripperRequestBus.h
         Include/ROS2/Manipulation/Controllers/JointsPositionControllerRequests.h

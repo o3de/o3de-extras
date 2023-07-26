@@ -12,6 +12,7 @@
 #include <AzCore/Serialization/EditContextConstants.inl>
 #include <AzCore/Serialization/SerializeContext.h>
 #include <ROS2/Frame/ROS2FrameComponent.h>
+#include <ROS2/Frame/ROS2FrameController.h>
 #include <ROS2/ROS2Bus.h>
 #include <ROS2/ROS2GemUtilities.h>
 #include <ROS2/Utilities/ROS2Names.h>
@@ -19,47 +20,6 @@ namespace ROS2
 {
     namespace Internal
     {
-        AZ::TransformInterface* GetEntityTransformInterface(const AZ::Entity* entity)
-        {
-            if (!entity)
-            {
-                AZ_Error("GetEntityTransformInterface", false, "Invalid entity!");
-                return nullptr;
-            }
-
-            auto* interface = Utils::GetGameOrEditorComponent<AzFramework::TransformComponent>(entity);
-
-            return interface;
-        }
-
-        const ROS2FrameComponent* GetFirstROS2FrameAncestor(const AZ::Entity* entity)
-        {
-            auto* entityTransformInterface = GetEntityTransformInterface(entity);
-            if (!entityTransformInterface)
-            {
-                AZ_Error("GetFirstROS2FrameAncestor", false, "Invalid transform interface!");
-                return nullptr;
-            }
-
-            AZ::EntityId parentEntityId = entityTransformInterface->GetParentId();
-            if (!parentEntityId.IsValid())
-            { // We have reached the top level, there is no parent entity so there can be no parent ROS2Frame
-                return nullptr;
-            }
-            AZ::Entity* parentEntity = nullptr;
-            AZ::ComponentApplicationBus::BroadcastResult(parentEntity, &AZ::ComponentApplicationRequests::FindEntity, parentEntityId);
-            AZ_Assert(parentEntity, "No parent entity id : %s", parentEntityId.ToString().c_str());
-
-            auto* component = Utils::GetGameOrEditorComponent<ROS2FrameComponent>(parentEntity);
-            if (component == nullptr)
-            { // Parent entity has no ROS2Frame, but there can still be a ROS2Frame in its ancestors
-                return GetFirstROS2FrameAncestor(parentEntity);
-            }
-
-            // Found the component!
-            return component;
-        }
-
         //! Checks whether the entity has a component of the given type
         //! @param entity pointer to entity
         //! @param typeId type of the component
@@ -74,16 +34,17 @@ namespace ROS2
 
     void ROS2FrameComponent::Activate()
     {
-        m_namespaceConfiguration.PopulateNamespace(IsTopLevel(), GetEntity()->GetName());
+        ROS2FrameComponentBase::Activate();
+        m_controller.PopulateNamespace(IsTopLevel(), GetEntity()->GetName());
 
-        if (m_publishTransform)
+        if (m_controller.GetPublishTransform())
         {
             AZ_TracePrintf("ROS2FrameComponent", "Setting up %s", GetFrameID().data());
 
             // The frame will always be dynamic if it's a top entity.
             if (IsTopLevel())
             {
-                m_isDynamic = true;
+                m_controller.SetIsDynamic(true);
             }
             // Otherwise it'll be dynamic when it has joints and it's not a fixed joint.
             else
@@ -94,7 +55,7 @@ namespace ROS2
                     m_entity, AZ::Uuid("{02E6C633-8F44-4CEE-AE94-DCB06DE36422}")); // Physx::FixedJointComponent
                 const bool hasArticulations = Internal::CheckIfEntityHasComponentOfType(
                     m_entity, AZ::Uuid("{48751E98-B35F-4A2F-A908-D9CDD5230264}")); // Physx::ArticulationComponent
-                m_isDynamic = (hasJoints && !hasFixedJoints) || hasArticulations;
+                m_controller.SetIsDynamic((hasJoints && !hasFixedJoints) || hasArticulations);
             }
 
             AZ_TracePrintf(
@@ -112,14 +73,15 @@ namespace ROS2
             }
             else
             {
-                m_ros2Transform->Publish(GetFrameTransform());
+                m_ros2Transform->Publish(m_controller.GetFrameTransform<ROS2FrameComponent>());
             }
         }
     }
 
     void ROS2FrameComponent::Deactivate()
     {
-        if (m_publishTransform)
+        ROS2FrameComponentBase::Deactivate();
+        if (m_controller.GetPublishTransform())
         {
             if (IsDynamic())
             {
@@ -131,12 +93,12 @@ namespace ROS2
 
     void ROS2FrameComponent::OnTick([[maybe_unused]] float deltaTime, [[maybe_unused]] AZ::ScriptTimePoint time)
     {
-        m_ros2Transform->Publish(GetFrameTransform());
+        m_ros2Transform->Publish(m_controller.GetFrameTransform<ROS2FrameComponent>());
     }
 
     AZStd::string ROS2FrameComponent::GetGlobalFrameName() const
     {
-        return ROS2Names::GetNamespacedName(GetNamespace(), AZStd::string("odom"));
+        return m_controller.GetGlobalFrameName<ROS2FrameComponent>();
     }
 
     void ROS2FrameComponent::UpdateNamespaceConfiguration(const AZStd::string& ns, NamespaceConfiguration::NamespaceStrategy strategy)
@@ -146,87 +108,60 @@ namespace ROS2
 
     bool ROS2FrameComponent::IsTopLevel() const
     {
-        return GetGlobalFrameName() == GetParentFrameID();
+        return m_controller.IsTopLevel<ROS2FrameComponent>();
     }
 
     bool ROS2FrameComponent::IsDynamic() const
     {
-        return m_isDynamic;
+        return m_controller.IsDynamic();
     }
 
     const ROS2FrameComponent* ROS2FrameComponent::GetParentROS2FrameComponent() const
     {
-        return Internal::GetFirstROS2FrameAncestor(GetEntity());
+        return m_controller.GetParentROS2FrameComponent<ROS2FrameComponent>();
     }
 
     AZ::Transform ROS2FrameComponent::GetFrameTransform() const
     {
-        auto* transformInterface = Internal::GetEntityTransformInterface(GetEntity());
-        if (const auto* parentFrame = GetParentROS2FrameComponent(); parentFrame != nullptr)
-        {
-            auto* ancestorTransformInterface = Internal::GetEntityTransformInterface(parentFrame->GetEntity());
-            AZ_Assert(ancestorTransformInterface, "No transform interface for an entity with a ROS2Frame component, which requires it!");
-
-            const auto worldFromAncestor = ancestorTransformInterface->GetWorldTM();
-            const auto worldFromThis = transformInterface->GetWorldTM();
-            const auto ancestorFromWorld = worldFromAncestor.GetInverse();
-            return ancestorFromWorld * worldFromThis;
-        }
-        return transformInterface->GetWorldTM();
+        return m_controller.GetFrameTransform<ROS2FrameComponent>();
     }
 
     AZStd::string ROS2FrameComponent::GetParentFrameID() const
     {
-        if (auto parentFrame = GetParentROS2FrameComponent(); parentFrame != nullptr)
-        {
-            return parentFrame->GetFrameID();
-        }
-        // If parent entity does not exist or does not have a ROS2FrameComponent, return ROS2 default global frame.
-        return GetGlobalFrameName();
+        return m_controller.GetParentFrameID<ROS2FrameComponent>();
     }
 
     AZStd::string ROS2FrameComponent::GetFrameID() const
     {
-        return ROS2Names::GetNamespacedName(GetNamespace(), m_frameName);
+        return m_controller.GetFrameID<ROS2FrameComponent>();
     }
 
     void ROS2FrameComponent::SetFrameID(const AZStd::string& frameId)
     {
-        m_frameName = frameId;
+        m_controller.SetFrameID(frameId);
     }
 
     AZStd::string ROS2FrameComponent::GetNamespace() const
     {
-        auto parentFrame = GetParentROS2FrameComponent();
-        AZStd::string parentNamespace;
-        if (parentFrame != nullptr)
-        {
-            parentNamespace = parentFrame->GetNamespace();
-        }
-        return m_namespaceConfiguration.GetNamespace(parentNamespace);
+        return m_controller.GetNamespace<ROS2FrameComponent>();
     }
 
     AZ::Name ROS2FrameComponent::GetJointName() const
     {
-        return AZ::Name(ROS2Names::GetNamespacedName(GetNamespace(), m_jointNameString).c_str());
+        return m_controller.GetJointName<ROS2FrameComponent>();
     }
 
     void ROS2FrameComponent::SetJointName(const AZStd::string& jointNameString)
     {
-        m_jointNameString = jointNameString;
+        m_controller.SetJointName(jointNameString);
     }
 
     void ROS2FrameComponent::Reflect(AZ::ReflectContext* context)
     {
-        NamespaceConfiguration::Reflect(context);
+        ROS2FrameComponentBase::Reflect(context);
         if (AZ::SerializeContext* serialize = azrtti_cast<AZ::SerializeContext*>(context))
         {
-            serialize->Class<ROS2FrameComponent, AZ::Component>()
-                ->Version(1)
-                ->Field("Namespace Configuration", &ROS2FrameComponent::m_namespaceConfiguration)
-                ->Field("Frame Name", &ROS2FrameComponent::m_frameName)
-                ->Field("Joint Name", &ROS2FrameComponent::m_jointNameString)
-                ->Field("Publish Transform", &ROS2FrameComponent::m_publishTransform);
+            serialize->Class<ROS2FrameComponent, ROS2FrameComponentBase>()->Version(1);
 
             if (AZ::EditContext* ec = serialize->GetEditContext())
             {
@@ -234,15 +169,7 @@ namespace ROS2
                     ->ClassElement(AZ::Edit::ClassElements::EditorData, "")
                     ->Attribute(AZ::Edit::Attributes::Category, "ROS2")
                     ->Attribute(AZ::Edit::Attributes::AppearsInAddComponentMenu, AZ_CRC_CE("Game"))
-                    ->DataElement(
-                        AZ::Edit::UIHandlers::Default,
-                        &ROS2FrameComponent::m_namespaceConfiguration,
-                        "Namespace Configuration",
-                        "Namespace Configuration")
-                    ->DataElement(AZ::Edit::UIHandlers::Default, &ROS2FrameComponent::m_frameName, "Frame Name", "Frame Name")
-                    ->DataElement(AZ::Edit::UIHandlers::Default, &ROS2FrameComponent::m_jointNameString, "Joint Name", "Joint Name")
-                    ->DataElement(
-                        AZ::Edit::UIHandlers::Default, &ROS2FrameComponent::m_publishTransform, "Publish Transform", "Publish Transform");
+                    ->Attribute(AZ::Edit::Attributes::Visibility, AZ::Edit::PropertyVisibility::ShowChildrenOnly);
             }
         }
     }
@@ -265,7 +192,12 @@ namespace ROS2
     ROS2FrameComponent::ROS2FrameComponent() = default;
 
     ROS2FrameComponent::ROS2FrameComponent(const AZStd::string& frameId)
-        : m_frameName(frameId)
     {
+        SetFrameID(frameId);
+    }
+
+    ROS2FrameComponent::ROS2FrameComponent(const ROS2FrameConfiguration& config)
+    {
+        SetConfiguration(config);
     }
 } // namespace ROS2
