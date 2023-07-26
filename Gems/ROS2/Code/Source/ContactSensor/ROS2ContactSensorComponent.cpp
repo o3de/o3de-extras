@@ -7,24 +7,31 @@
  */
 
 #include "ROS2ContactSensorComponent.h"
-#include "AzCore/Component/ComponentApplicationBus.h"
-#include "AzCore/Debug/Trace.h"
-#include "AzCore/Serialization/EditContextConstants.inl"
-#include "AzCore/std/parallel/lock.h"
-#include "AzCore/std/parallel/mutex.h"
-#include "AzCore/std/utility/move.h"
-#include "AzFramework/Physics/Collision/CollisionEvents.h"
-#include "AzFramework/Physics/Common/PhysicsSimulatedBody.h"
-#include "AzFramework/Physics/Common/PhysicsTypes.h"
-#include "AzFramework/Physics/PhysicsSystem.h"
-#include "ROS2/Frame/ROS2FrameComponent.h"
-#include "ROS2/ROS2Bus.h"
-#include "ROS2/Utilities/ROS2Conversions.h"
-#include "ROS2/Utilities/ROS2Names.h"
+#include <AzCore/Component/ComponentApplicationBus.h>
+#include <AzCore/Debug/Trace.h>
+#include <AzCore/Serialization/EditContextConstants.inl>
+#include <AzCore/std/parallel/lock.h>
+#include <AzCore/std/parallel/mutex.h>
+#include <AzCore/std/utility/move.h>
+#include <AzFramework/Physics/Collision/CollisionEvents.h>
+#include <AzFramework/Physics/Common/PhysicsSimulatedBody.h>
+#include <AzFramework/Physics/Common/PhysicsSimulatedBodyEvents.h>
+#include <AzFramework/Physics/Common/PhysicsTypes.h>
+#include <AzFramework/Physics/PhysicsSystem.h>
+#include <ROS2/Frame/ROS2FrameComponent.h>
+#include <ROS2/ROS2Bus.h>
+#include <ROS2/ROS2GemUtilities.h>
+#include <ROS2/Utilities/ROS2Conversions.h>
+#include <ROS2/Utilities/ROS2Names.h>
 #include <geometry_msgs/msg/wrench.hpp>
 
 namespace ROS2
 {
+    namespace Internal
+    {
+        constexpr float ContactMaximumSeparation = 0.0001f;
+    }
+
     ROS2ContactSensorComponent::ROS2ContactSensorComponent()
     {
         TopicConfiguration tc;
@@ -135,14 +142,18 @@ namespace ROS2
         msg.header.stamp = ROS2Interface::Get()->GetROSTimestamp();
 
         {
+            // If there are no active collisions, then there is nothing to send
             AZStd::lock_guard<AZStd::mutex> lock(m_activeContactsMutex);
-            for (auto& [id, contact] : m_activeContacts)
+            if (!m_activeContacts.empty())
             {
-                msg.states.push_back(contact);
+                for (auto& [id, contact] : m_activeContacts)
+                {
+                    msg.states.push_back(AZStd::move(contact));
+                }
+                m_contactsPublisher->publish(AZStd::move(msg));
+                m_activeContacts.clear();
             }
         }
-
-        m_contactsPublisher->publish(AZStd::move(msg));
     }
 
     void ROS2ContactSensorComponent::AddNewContact(const AzPhysics::CollisionEvent& event)
@@ -154,24 +165,27 @@ namespace ROS2
         AZ_Assert(contactedEntity, "Invalid entity pointer value");
         state.collision1_name = ("ID: " + m_entityId.ToString() + " Name:" + m_entityName).c_str();
         state.collision2_name = ("ID: " + event.m_body2->GetEntityId().ToString() + " Name:" + contactedEntity->GetName()).c_str();
-
         geometry_msgs::msg::Wrench totalWrench;
         for (auto& contact : event.m_contacts)
         {
-            state.contact_positions.emplace_back(ROS2Conversions::ToROS2Vector3(contact.m_position));
-            state.contact_normals.emplace_back(ROS2Conversions::ToROS2Vector3(contact.m_normal));
+            if (contact.m_separation < Internal::ContactMaximumSeparation)
+            {
+                state.contact_positions.emplace_back(ROS2Conversions::ToROS2Vector3(contact.m_position));
+                state.contact_normals.emplace_back(ROS2Conversions::ToROS2Vector3(contact.m_normal));
 
-            geometry_msgs::msg::Wrench contactWrench;
-            contactWrench.force = ROS2Conversions::ToROS2Vector3(contact.m_impulse);
-            state.wrenches.push_back(AZStd::move(contactWrench));
+                geometry_msgs::msg::Wrench contactWrench;
+                contactWrench.force = ROS2Conversions::ToROS2Vector3(contact.m_impulse);
+                state.wrenches.push_back(AZStd::move(contactWrench));
 
-            totalWrench.force.x += contact.m_impulse.GetX();
-            totalWrench.force.y += contact.m_impulse.GetY();
-            totalWrench.force.z += contact.m_impulse.GetZ();
+                totalWrench.force.x += contact.m_impulse.GetX();
+                totalWrench.force.y += contact.m_impulse.GetY();
+                totalWrench.force.z += contact.m_impulse.GetZ();
+            }
         }
 
         state.total_wrench = AZStd::move(totalWrench);
 
+        if (!state.contact_positions.empty())
         {
             AZStd::lock_guard<AZStd::mutex> lock(m_activeContactsMutex);
             m_activeContacts[event.m_body2->GetEntityId()] = AZStd::move(state);
