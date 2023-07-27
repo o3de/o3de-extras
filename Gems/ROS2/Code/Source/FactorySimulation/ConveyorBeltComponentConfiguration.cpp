@@ -7,11 +7,31 @@
  */
 
 #include "ConveyorBeltComponentConfiguration.h"
+#include <AzCore/Asset/AssetSerializer.h>
 #include <AzCore/Serialization/EditContext.h>
 #include <AzCore/Serialization/EditContextConstants.inl>
+#include <AzFramework/Physics/Material/PhysicsMaterialManager.h>
 
 namespace ROS2
 {
+    namespace Internal
+    {
+        AZ::Data::AssetId GetDefaultPhysicsMaterialAssetId()
+        {
+            // Used for Edit Context.
+            // When the physics material asset property doesn't have an asset assigned it
+            // will show "(default)" to indicate that the default material will be used.
+            if (auto* materialManager = AZ::Interface<Physics::MaterialManager>::Get())
+            {
+                if (AZStd::shared_ptr<Physics::Material> defaultMaterial = materialManager->GetDefaultMaterial())
+                {
+                    return defaultMaterial->GetMaterialAsset().GetId();
+                }
+            }
+            return {};
+        }
+    } // namespace Internal
+
     void ConveyorBeltComponentConfiguration::Reflect(AZ::ReflectContext* context)
     {
         if (auto serializeContext = azrtti_cast<AZ::SerializeContext*>(context))
@@ -61,7 +81,7 @@ namespace ROS2
                         &ConveyorBeltComponentConfiguration::m_graphicalMaterialSlot,
                         "Graphical Material slot",
                         "The graphical material slot name to have its UV coordinates animated.")
-                    ->Attribute(AZ::Edit::Attributes::DefaultAsset, &GetDefaultPhysicsMaterialAssetId)
+                    ->Attribute(AZ::Edit::Attributes::DefaultAsset, &Internal::GetDefaultPhysicsMaterialAssetId)
                     ->Attribute(AZ_CRC_CE("EditButton"), "")
                     ->Attribute(AZ_CRC_CE("EditDescription"), "Open in Asset Editor")
                     ->Attribute(AZ_CRC_CE("DisableEditButtonWhenNoAssetSelected"), true);

@@ -14,29 +14,14 @@
 #include <AzCore/Serialization/EditContext.h>
 #include <AzFramework/Physics/Common/PhysicsSimulatedBody.h>
 #include <AzFramework/Physics/Components/SimulatedBodyComponentBus.h>
-#include <AzFramework/Physics/Material/PhysicsMaterialManager.h>
 #include <AzFramework/Physics/Material/PhysicsMaterialSlots.h>
 #include <AzFramework/Physics/PhysicsSystem.h>
 #include <AzFramework/Physics/RigidBodyBus.h>
 #include <LmbrCentral/Shape/SplineComponentBus.h>
 #include <Source/RigidBodyComponent.h>
+
 namespace ROS2
 {
-    static AZ::Data::AssetId GetDefaultPhysicsMaterialAssetId()
-    {
-        // Used for Edit Context.
-        // When the physics material asset property doesn't have an asset assigned it
-        // will show "(default)" to indicate that the default material will be used.
-        if (auto* materialManager = AZ::Interface<Physics::MaterialManager>::Get())
-        {
-            if (AZStd::shared_ptr<Physics::Material> defaultMaterial = materialManager->GetDefaultMaterial())
-            {
-                return defaultMaterial->GetMaterialAsset().GetId();
-            }
-        }
-        return {};
-    }
-
     void ConveyorBeltComponent::Reflect(AZ::ReflectContext* context)
     {
         ConveyorBeltComponentConfiguration::Reflect(context);
