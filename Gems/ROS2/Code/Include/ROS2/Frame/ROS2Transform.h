@@ -10,6 +10,7 @@
 #include <AzCore/Math/Transform.h>
 #include <AzCore/std/string/string.h>
 #include <geometry_msgs/msg/transform_stamped.hpp>
+#include <rclcpp/publisher.hpp>
 
 namespace ROS2
 {
@@ -30,6 +31,8 @@ namespace ROS2
         void Publish(const AZ::Transform& transform);
 
     private:
+        //!< Static or dynamic, publishes to namespaced topic. Only used if frame is namespaced.
+        std::shared_ptr<rclcpp::Publisher<geometry_msgs::msg::TransformStamped>> m_transformPublisher;
         geometry_msgs::msg::TransformStamped CreateTransformMessage(const AZ::Transform& transform);
 
         const AZStd::string m_parentFrame;

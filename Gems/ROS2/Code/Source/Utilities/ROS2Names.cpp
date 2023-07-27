@@ -22,7 +22,22 @@ namespace ROS2
         }
 
         return AZStd::string::format("%s/%s", ns.c_str(), name.c_str());
-        ;
+    }
+
+    void ROS2Names::StripNamespace(AZStd::string& namespacedName)
+    {
+        namespacedName = ROS2Names::SplitIntoNamespaceAndName(namespacedName).second;
+    }
+
+    AZStd::pair<AZStd::string, AZStd::string> ROS2Names::SplitIntoNamespaceAndName(const AZStd::string& namespacedName)
+    {
+        size_t lastSlashPosition = namespacedName.find_last_of('/');
+        if (lastSlashPosition == AZStd::string::npos)
+        {
+            return AZStd::pair<AZStd::string, AZStd::string>("", namespacedName);
+        }
+        return AZStd::pair<AZStd::string, AZStd::string>(
+            namespacedName.substr(0, lastSlashPosition), namespacedName.substr(lastSlashPosition + 1));
     }
 
     AZStd::string ROS2Names::RosifyName(const AZStd::string& input)

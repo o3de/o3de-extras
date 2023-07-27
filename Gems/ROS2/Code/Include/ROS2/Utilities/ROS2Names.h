@@ -19,6 +19,12 @@ namespace ROS2
         //! Joins namespace and the given name.
         AZStd::string GetNamespacedName(const AZStd::string& ns, const AZStd::string& name);
 
+        //! Gets namespace (may be empty) and name from a given topic or frame name.
+        AZStd::pair<AZStd::string, AZStd::string> SplitIntoNamespaceAndName(const AZStd::string& namespacedName);
+
+        //! Gets non-namespaced name from a given topic or frame name.
+        void StripNamespace(AZStd::string& namespacedName);
+
         //! Converts input to a ROS2-acceptable name for topics and namespaces.
         //! Any characters not fitting ROS2 naming specification are replaced with underscores.
         AZStd::string RosifyName(const AZStd::string& input);
