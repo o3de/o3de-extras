@@ -33,7 +33,7 @@ namespace ROS2
         if (AZ::SerializeContext* serialize = azrtti_cast<AZ::SerializeContext*>(context))
         {
             serialize->Class<ROS2GNSSSensorComponent, ROS2SensorComponent>()->Version(2)->Field(
-                "gnssOriginLatitude", &ROS2GNSSSensorComponent::m_gnssConfiguration);
+                "gnssSensorConfiguration", &ROS2GNSSSensorComponent::m_gnssConfiguration);
 
             if (AZ::EditContext* ec = serialize->GetEditContext())
             {

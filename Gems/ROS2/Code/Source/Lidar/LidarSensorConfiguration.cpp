@@ -28,7 +28,7 @@ namespace ROS2
 
             if (AZ::EditContext* ec = serializeContext->GetEditContext())
             {
-                ec->Class<LidarSensorConfiguration>("Lidar Sensor configuration", "ROS2 Lidar sensor configuration")
+                ec->Class<LidarSensorConfiguration>("ROS2 Lidar Sensor configuration", "Lidar sensor configuration")
                     ->DataElement(AZ::Edit::UIHandlers::ComboBox, &LidarSensorConfiguration::m_lidarModel, "Lidar Model", "Lidar model")
                     ->Attribute(AZ::Edit::Attributes::ChangeNotify, &LidarSensorConfiguration::OnLidarModelSelected)
                     ->EnumAttribute(LidarTemplate::LidarModel::Custom3DLidar, "Custom Lidar")
