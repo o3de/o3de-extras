@@ -20,6 +20,7 @@
 #include <AzCore/std/smart_ptr/make_shared.h>
 #include <AzCore/std/smart_ptr/shared_ptr.h>
 #include <AzCore/std/string/string.h>
+#include <AzToolsFramework/Prefab/PrefabIdTypes.h>
 #include <AzToolsFramework/Prefab/PrefabPublicInterface.h>
 #include <RobotImporter/Utils/SourceAssetsStorage.h>
 #include <optional>
@@ -46,9 +47,18 @@ namespace ROS2
 
         ~URDFPrefabMaker() = default;
 
-        //! Create and return a prefab corresponding to the URDF model as set through the constructor.
-        //! @return result which is either a prefab containing the imported model based on URDF or an error.
-        AzToolsFramework::Prefab::CreatePrefabResult CreatePrefabFromURDF();
+        //! On prefab creation this will contain a prefab template id when successful,
+        //! and an error string on failure.
+        using CreatePrefabTemplateResult = AZ::Outcome<AzToolsFramework::Prefab::TemplateId, AZStd::string>;
+
+        //! Create and return a prefab template corresponding to the URDF model as set through the constructor.
+        //! This will also instantiate the prefab template into the level.
+        //! @return result which is either the prefab template id containing the imported model or an error message.
+        CreatePrefabTemplateResult CreatePrefabFromURDF();
+
+        //! Create and return a prefab template id corresponding to the URDF model set in the constructor.
+        //! @return result which is either the prefab template id or an error message.
+        CreatePrefabTemplateResult CreatePrefabTemplateFromURDF();
 
         //! Get path to the prefab resulting from the import.
         //! @return path to the prefab.
@@ -59,7 +69,7 @@ namespace ROS2
         AZStd::string GetStatus();
 
     private:
-        AzToolsFramework::Prefab::PrefabEntityResult AddEntitiesForLink(urdf::LinkSharedPtr link, AZ::EntityId parentEntityId);
+        AzToolsFramework::Prefab::PrefabEntityResult AddEntitiesForLink(urdf::LinkSharedPtr link, AZ::EntityId parentEntityId, AZStd::vector<AZ::EntityId>& createdEntities);
         void BuildAssetsForLink(urdf::LinkSharedPtr link);
         void AddRobotControl(AZ::EntityId rootEntityId);
         static void MoveEntityToDefaultSpawnPoint(const AZ::EntityId& rootEntityId, AZStd::optional<AZ::Transform> spawnPosition);

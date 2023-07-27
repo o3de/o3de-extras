@@ -11,6 +11,9 @@
 #include <AssetBuilderSDK/AssetBuilderBusses.h>
 #include <AssetBuilderSDK/AssetBuilderSDK.h>
 
+#include <URDF/UrdfParser.h>
+#include <Utils/SourceAssetsStorage.h>
+
 namespace ROS2
 {
     //! Builder to convert the following file types into procedural prefab assets:
@@ -34,9 +37,6 @@ namespace ROS2
         void ShutDown() override { }
     private:
         AZStd::vector<AssetBuilderSDK::AssetBuilderPattern> GetSupportedBuilderPatterns();
-
-        AZStd::string CreateDefaultProcPrefab(
-            const AssetBuilderSDK::ProcessJobRequest& request,
-            AssetBuilderSDK::ProcessJobResponse& response) const;
+        Utils::UrdfAssetMap FindAssets(const urdf::LinkConstSharedPtr& rootLink, const AZStd::string& sourceFilename) const;
     };
 } // ROS2
