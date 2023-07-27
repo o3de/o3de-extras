@@ -101,6 +101,12 @@ namespace ROS2
             //! @returns list of unsupported sensor's options defined for model
             AZStd::vector<AZStd::string> GetUnsupportedOptions(
                 const sdf::ElementPtr& rootElement, const AZStd::unordered_set<AZStd::string>& supportedOptions);
+
+            //! Check if plugin is supported by using it's filename. The filepath is converted into the filename if necessary.
+            //! @param plugin plugin in the parsed SDFormat data
+            //! @param supportedPlugins set of predefined plugins that are supported
+            //! @returns true if plugin is supported
+            bool IsPluginSupported(const sdf::Plugin& plugin, const AZStd::unordered_set<AZStd::string>& supportedPlugins);
         } // namespace SDFormat
 
     } // namespace Utils

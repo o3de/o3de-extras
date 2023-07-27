@@ -10,6 +10,7 @@
 #include <AzCore/std/string/string.h>
 #include <AzTest/AzTest.h>
 #include <RobotImporter/SDFormat/Parser.h>
+#include <RobotImporter/SDFormat/SensorPluginImporterHook.h>
 #include <RobotImporter/Utils/RobotImporterUtils.h>
 
 #include <sdf/Box.hh>
@@ -398,5 +399,37 @@ namespace UnitTest
         const auto& unsupportedJointPluginOptions = ROS2::Utils::SDFormat::GetUnsupportedOptions(jointPluginElement, jointSupportedOptions);
         EXPECT_EQ(unsupportedJointPluginOptions.size(), 1U);
         EXPECT_EQ(unsupportedJointPluginOptions[0U], ">ros>argument");
+    }
+
+    TEST_F(SdfParserTest, SensorPluginImporterHookCheck)
+    {
+        const auto xmlStr = GetSdfWithTwoLinksAndJoint();
+        const auto sdfRoot = ROS2::SDFormat::Parser::Parse(xmlStr);
+        const auto& allSensors = ROS2::Utils::SDFormat::GetAllSensors(sdfRoot);
+        const auto& cameraElement = allSensors.at("camera")->Element();
+        const auto& importerHook = ROS2::SDFormat::GetHook::ROS2CameraSensorComponent();
+
+        const auto& unsupportedCameraOptions = ROS2::Utils::SDFormat::GetUnsupportedOptions(cameraElement, importerHook.m_sensorOptions);
+        EXPECT_EQ(unsupportedCameraOptions.size(), 3U);
+        EXPECT_EQ(unsupportedCameraOptions[0U], ">pose");
+        EXPECT_EQ(unsupportedCameraOptions[1U], ">camera>clip>near");
+        EXPECT_EQ(unsupportedCameraOptions[2U], ">camera>clip>far");
+
+        sdf::Plugin plug;
+        plug.SetName("test_camera");
+        plug.SetFilename("libgazebo_ros_camera.so");
+        EXPECT_TRUE(ROS2::Utils::SDFormat::IsPluginSupported(plug, importerHook.m_pluginNames));
+        plug.SetFilename("/usr/lib/libgazebo_ros_camera.so");
+        EXPECT_TRUE(ROS2::Utils::SDFormat::IsPluginSupported(plug, importerHook.m_pluginNames));
+        plug.SetFilename("~/dev/libgazebo_ros_camera.so");
+        EXPECT_TRUE(ROS2::Utils::SDFormat::IsPluginSupported(plug, importerHook.m_pluginNames));
+        plug.SetFilename("fun.so");
+        EXPECT_FALSE(ROS2::Utils::SDFormat::IsPluginSupported(plug, importerHook.m_pluginNames));
+        plug.SetFilename("fun");
+        EXPECT_FALSE(ROS2::Utils::SDFormat::IsPluginSupported(plug, importerHook.m_pluginNames));
+
+        EXPECT_TRUE(importerHook.m_sensorTypes.contains(sdf::SensorType::CAMERA));
+        EXPECT_TRUE(importerHook.m_sensorTypes.contains(sdf::SensorType::DEPTH_CAMERA));
+        EXPECT_FALSE(importerHook.m_sensorTypes.contains(sdf::SensorType::GPS));
     }
 } // namespace UnitTest

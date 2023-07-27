@@ -15,6 +15,7 @@
 #include <AzCore/StringFunc/StringFunc.h>
 #include <AzCore/std/string/regex.h>
 #include <AzToolsFramework/API/EditorAssetSystemAPI.h>
+#include <filesystem>
 #include <string.h>
 
 namespace ROS2
@@ -431,6 +432,13 @@ namespace ROS2
             elementVisitor(rootElement, "");
 
             return unsupportedOptions;
+        }
+
+        bool IsPluginSupported(const sdf::Plugin& plugin, const AZStd::unordered_set<AZStd::string>& supportedPlugins)
+        {
+            const std::filesystem::path path = plugin.Filename();
+            AZStd::string pluginFilename(path.filename().u8string().c_str(), path.filename().u8string().size());
+            return supportedPlugins.contains(pluginFilename);
         }
     } // namespace Utils::SDFormat
 
