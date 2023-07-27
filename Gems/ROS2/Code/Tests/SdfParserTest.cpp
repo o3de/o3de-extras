@@ -9,7 +9,7 @@
 #include <AzCore/UnitTest/TestTypes.h>
 #include <AzCore/std/string/string.h>
 #include <AzTest/AzTest.h>
-#include <RobotImporter/SDFormat/SDFormatParser.h>
+#include <RobotImporter/SDFormat/Parser.h>
 #include <RobotImporter/Utils/RobotImporterUtils.h>
 
 #include <sdf/Box.hh>
@@ -174,7 +174,7 @@ namespace UnitTest
     TEST_F(SdfParserTest, CheckModelCorrectnessOneLink)
     {
         const auto xmlStr = GetSdfWithOneLink();
-        const auto sdfRoot = ROS2::SDFormatParser::Parse(xmlStr);
+        const auto sdfRoot = ROS2::SDFormat::Parser::Parse(xmlStr);
         const auto* sdfModel = sdfRoot->Model();
 
         EXPECT_EQ(sdfModel->Name(), "test_one_link");
@@ -238,7 +238,7 @@ namespace UnitTest
     TEST_F(SdfParserTest, CheckModelCorrectnessTwoLinks)
     {
         const auto xmlStr = GetSdfWithTwoLinksAndJoint();
-        const auto sdfRoot = ROS2::SDFormatParser::Parse(xmlStr);
+        const auto sdfRoot = ROS2::SDFormat::Parser::Parse(xmlStr);
         const auto* sdfModel = sdfRoot->Model();
 
         EXPECT_EQ(sdfModel->Name(), "test_two_links");
@@ -308,7 +308,7 @@ namespace UnitTest
     TEST_F(SdfParserTest, CheckSensorCount)
     {
         const auto xmlStr1 = GetSdfWithOneLink();
-        const auto sdfRoot1 = ROS2::SDFormatParser::Parse(xmlStr1);
+        const auto sdfRoot1 = ROS2::SDFormat::Parser::Parse(xmlStr1);
 
         const auto& allSensors1 = ROS2::Utils::SDFormat::GetAllSensors(sdfRoot1);
         EXPECT_EQ(allSensors1.size(), 1U);
@@ -316,7 +316,7 @@ namespace UnitTest
         EXPECT_EQ(allSensors1.at("camera")->Name(), "camera");
 
         const auto xmlStr2 = GetSdfWithTwoLinksAndJoint();
-        const auto sdfRoot2 = ROS2::SDFormatParser::Parse(xmlStr2);
+        const auto sdfRoot2 = ROS2::SDFormat::Parser::Parse(xmlStr2);
 
         const auto& allSensors2 = ROS2::Utils::SDFormat::GetAllSensors(sdfRoot2);
         EXPECT_EQ(allSensors2.size(), 2U);
@@ -329,13 +329,13 @@ namespace UnitTest
     TEST_F(SdfParserTest, CheckPluginCount)
     {
         const auto xmlStr1 = GetSdfWithOneLink();
-        const auto sdfRoot1 = ROS2::SDFormatParser::Parse(xmlStr1);
+        const auto sdfRoot1 = ROS2::SDFormat::Parser::Parse(xmlStr1);
 
         const auto& allPlugins1 = ROS2::Utils::SDFormat::GetAllPlugins(sdfRoot1);
         ASSERT_TRUE(allPlugins1.empty());
 
         const auto xmlStr2 = GetSdfWithTwoLinksAndJoint();
-        const auto sdfRoot2 = ROS2::SDFormatParser::Parse(xmlStr2);
+        const auto sdfRoot2 = ROS2::SDFormat::Parser::Parse(xmlStr2);
 
         const auto& allPlugins2 = ROS2::Utils::SDFormat::GetAllPlugins(sdfRoot2);
         EXPECT_EQ(allPlugins2.size(), 2U);
@@ -348,7 +348,7 @@ namespace UnitTest
     TEST_F(SdfParserTest, SupportedOptionsCheck)
     {
         const auto xmlStr = GetSdfWithTwoLinksAndJoint();
-        const auto sdfRoot = ROS2::SDFormatParser::Parse(xmlStr);
+        const auto sdfRoot = ROS2::SDFormat::Parser::Parse(xmlStr);
 
         const auto& allSensors = ROS2::Utils::SDFormat::GetAllSensors(sdfRoot);
         EXPECT_EQ(allSensors.size(), 2U);

@@ -6,16 +6,16 @@
  *
  */
 
-#include "SDFormatParser.h"
+#include "Parser.h"
 
 #include <AzCore/Debug/Trace.h>
 #include <AzCore/std/string/string.h>
 
 #include <string.h>
 
-namespace ROS2
+namespace ROS2::SDFormat
 {
-    AZStd::shared_ptr<sdf::Root> SDFormatParser::Parse(const AZStd::string& xmlString, AZStd::string& parsingLog)
+    AZStd::shared_ptr<sdf::Root> Parser::Parse(const AZStd::string& xmlString, AZStd::string& parsingLog)
     {
         sdf::SDFPtr sdfElement(new sdf::SDF());
         sdf::init(sdfElement);
@@ -28,7 +28,7 @@ namespace ROS2
         }
         if (!success)
         {
-            AZ_Error("SDFormatParser", false, "Cannot parse the string %s.", xmlString.c_str());
+            AZ_Error("SDFormat::Parser", false, "Cannot parse the string %s.", xmlString.c_str());
             return nullptr;
         }
 
@@ -42,18 +42,18 @@ namespace ROS2
         return sdfDom;
     }
 
-    AZStd::shared_ptr<sdf::Root> SDFormatParser::Parse(const AZStd::string& xmlString)
+    AZStd::shared_ptr<sdf::Root> Parser::Parse(const AZStd::string& xmlString)
     {
         AZStd::string parsingLog = ""; // dummy buffer
         return Parse(xmlString, parsingLog);
     }
 
-    AZStd::shared_ptr<sdf::Root> SDFormatParser::ParseFromFile(const AZStd::string& filePath, AZStd::string& parsingLog)
+    AZStd::shared_ptr<sdf::Root> Parser::ParseFromFile(const AZStd::string& filePath, AZStd::string& parsingLog)
     {
         std::ifstream istream(filePath.c_str());
         if (!istream)
         {
-            AZ_Error("SDFormatParser", false, "File %s does not exist", filePath.c_str());
+            AZ_Error("SDFormat::Parser", false, "File %s does not exist", filePath.c_str());
             return nullptr;
         }
 
@@ -61,9 +61,9 @@ namespace ROS2
         return Parse(xmlStr.c_str(), parsingLog);
     }
 
-    AZStd::shared_ptr<sdf::Root> SDFormatParser::ParseFromFile(const AZStd::string& filePath)
+    AZStd::shared_ptr<sdf::Root> Parser::ParseFromFile(const AZStd::string& filePath)
     {
         AZStd::string parsingLog = ""; // dummy buffer
         return ParseFromFile(filePath, parsingLog);
     }
-} // namespace ROS2
+} // namespace ROS2::SDFormat

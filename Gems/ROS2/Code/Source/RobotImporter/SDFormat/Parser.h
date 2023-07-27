@@ -15,10 +15,10 @@
 #include <sdf/Root.hh>
 #include <sdf/Types.hh>
 
-namespace ROS2
+namespace ROS2::SDFormat
 {
     //! Class for parsing SDFormat data.
-    namespace SDFormatParser
+    namespace Parser
     {
         //! Parse string with SDFormat data and generate model. If the file is a URDF
         //! file it is converted to SDF first.
@@ -45,5 +45,5 @@ namespace ROS2
         //! @param filePath is a path to file with SDFormat data that will be loaded and parsed.
         //! @return model represented as a tree of parsed links.
         AZStd::shared_ptr<sdf::Root> ParseFromFile(const AZStd::string& filePath);
-    }; // namespace SDFormatParser
-} // namespace ROS2
+    }; // namespace Parser
+} // namespace ROS2::SDFormat
