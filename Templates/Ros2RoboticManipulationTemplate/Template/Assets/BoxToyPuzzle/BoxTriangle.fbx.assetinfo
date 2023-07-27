@@ -1,0 +1,79 @@
+{
+    "values": [
+        {
+            "$type": "{5B03C8E6-8CEE-4DA0-A7FA-CD88689DD45B} MeshGroup",
+            "id": "{533FE430-CA8F-5913-A339-A37ECAC6DFF1}",
+            "name": "BoxTriangle",
+            "NodeSelectionList": {
+                "selectedNodes": [
+                    "RootNode",
+                    "RootNode.Traingle"
+                ]
+            },
+            "export method": 1,
+            "PhysicsMaterialSlots": {
+                "Slots": [
+                    {
+                        "Name": "MCube_pazzle"
+                    }
+                ]
+            }
+        },
+        {
+            "$type": "{07B356B7-3635-40B5-878A-FAC4EFD5AD86} MeshGroup",
+            "name": "BoxTriangle",
+            "nodeSelectionList": {
+                "selectedNodes": [
+                    "RootNode.Traingle.transform",
+                    "RootNode.Traingle.custom_properties",
+                    "RootNode.Traingle.UVMap",
+                    "RootNode.Traingle.MCube_pazzle",
+                    "RootNode.Traingle"
+                ],
+                "unselectedNodes": [
+                    "RootNode"
+                ]
+            },
+            "rules": {
+                "rules": [
+                    {
+                        "$type": "MaterialRule"
+                    }
+                ]
+            },
+            "id": "{D3B6909C-1B8D-5A04-8944-72E3E66B5246}"
+        },
+        {
+            "$type": "{07B356B7-3635-40B5-878A-FAC4EFD5AD86} MeshGroup",
+            "name": "default_BoxTriangle_FA43DBC5_E8BE_5C78_BDAC_2DF2816BF0A8_",
+            "nodeSelectionList": {
+                "selectedNodes": [
+                    "RootNode.Traingle"
+                ]
+            },
+            "rules": {
+                "rules": [
+                    {
+                        "$type": "ProceduralMeshGroupRule"
+                    },
+                    {
+                        "$type": "UnmodifiableRule"
+                    },
+                    {
+                        "$type": "CoordinateSystemRule",
+                        "useAdvancedData": true
+                    },
+                    {
+                        "$type": "{6E796AC8-1484-4909-860A-6D3F22A7346F} LodRule"
+                    }
+                ]
+            },
+            "id": "{FA43DBC5-E8BE-5C78-BDAC-2DF2816BF0A8}"
+        },
+        {
+            "$type": "PrefabGroup",
+            "name": "Assets/BoxToyPuzzle/BoxTriangle_fbx.procprefab",
+            "id": "{C0B72446-41BA-55A8-A9AD-0C2735C215F4}"
+        }
+    ]
+}

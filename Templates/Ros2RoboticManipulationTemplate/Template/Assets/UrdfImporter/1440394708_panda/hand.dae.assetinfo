@@ -1,0 +1,36 @@
+{
+    "values": [
+        {
+            "$type": "{07B356B7-3635-40B5-878A-FAC4EFD5AD86} MeshGroup",
+            "name": "hand",
+            "nodeSelectionList": {
+                "selectedNodes": [
+                    "Scene",
+                    "Scene.node2",
+                    "Scene.node5",
+                    "Scene.node0",
+                    "Scene.node1",
+                    "Scene.node5_001",
+                    "Scene.node2.transform",
+                    "Scene.node2.Part__Feature002_005_005",
+                    "Scene.node5.transform",
+                    "Scene.node5.Part__Feature005_001_005",
+                    "Scene.node0.transform",
+                    "Scene.node0.Part__Feature_009_005",
+                    "Scene.node1.transform",
+                    "Scene.node1.Part__Feature001_008_005",
+                    "Scene.node5_001.transform",
+                    "Scene.node5_001.Part__Feature005_001_005_001"
+                ]
+            },
+            "rules": {
+                "rules": [
+                    {
+                        "$type": "UVsRule"
+                    }
+                ]
+            },
+            "id": "{D2F2EEBC-CF76-411A-8C22-A17668827C30}"
+        }
+    ]
+}
