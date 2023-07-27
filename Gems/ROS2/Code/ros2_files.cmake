@@ -116,6 +116,8 @@ set(FILES
         Source/Spawner/ROS2SpawnPointComponentController.h
         Source/Utilities/ArticulationsUtilities.cpp
         Source/Utilities/ArticulationsUtilities.h
+        Source/Utilities/JointUtilities.cpp
+        Source/Utilities/JointUtilities.h
         Source/Utilities/Controllers/PidConfiguration.cpp
         Source/Utilities/PhysicsCallbackHandler.cpp
         Source/Utilities/PhysicsCallbackHandler.h
