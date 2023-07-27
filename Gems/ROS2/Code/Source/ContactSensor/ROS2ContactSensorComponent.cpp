@@ -180,6 +180,8 @@ namespace ROS2
                 totalWrench.force.x += contact.m_impulse.GetX();
                 totalWrench.force.y += contact.m_impulse.GetY();
                 totalWrench.force.z += contact.m_impulse.GetZ();
+
+                state.depths.emplace_back(contact.m_separation);
             }
         }
 
