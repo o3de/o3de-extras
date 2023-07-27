@@ -52,6 +52,10 @@ set(FILES
         Source/Lidar/LidarRaycaster.h
         Source/Lidar/LidarRegistrarSystemComponent.cpp
         Source/Lidar/LidarRegistrarSystemComponent.h
+        Source/Lidar/Lidar2DSensorConfiguration.cpp
+        Source/Lidar/Lidar2DSensorConfiguration.h
+        Source/Lidar/LidarSensorConfiguration.cpp
+        Source/Lidar/LidarSensorConfiguration.h
         Source/Lidar/LidarSystem.cpp
         Source/Lidar/LidarSystem.h
         Source/Lidar/LidarTemplate.cpp

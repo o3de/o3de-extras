@@ -46,7 +46,7 @@ namespace ROS2
             float m_angularNoiseStdDev = 0.0f;
             //! Distance noise standard deviation base value, in meters
             float m_distanceNoiseStdDevBase = 0.0f;
-            //! Distance noise standard deviation increase per meter distance travelled, in meters
+            //! Distance noise standard deviation increase per meter distance traveled, in meters
             float m_distanceNoiseStdDevRisePerMeter = 0.0f;
         };
 

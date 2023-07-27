@@ -57,7 +57,6 @@ namespace ROS2
 
         AZStd::pair<AZStd::string, TopicConfiguration> MakeTopicConfigurationPair(
             const AZStd::string& topic, const AZStd::string& messageType, const AZStd::string& configName) const;
-        void InitializeSensorTopics();
 
         SensorConfiguration m_sensorConfiguration;
         CameraSensorConfiguration m_cameraSensorConfiguration;
