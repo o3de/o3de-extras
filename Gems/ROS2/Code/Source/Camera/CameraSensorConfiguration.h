@@ -29,5 +29,7 @@ namespace ROS2
         int m_height = 480; //!< Camera image height in pixels.
         bool m_colorCamera = true; //!< Use color camera?
         bool m_depthCamera = true; //!< Use depth camera?
+        float m_nearClipDistance = 0.1f; //!< Near clip distance of the camera.
+        float m_farClipDistance = 100.0f; //!< Far clip distance of the camera.
     };
 } // namespace ROS2
