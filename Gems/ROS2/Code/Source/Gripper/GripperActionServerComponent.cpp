@@ -80,7 +80,7 @@ namespace ROS2
         GripperRequestBus::EventResult(position, GetEntityId(), &GripperRequestBus::Events::GetGripperPosition);
         GripperRequestBus::EventResult(effort, GetEntityId(), &GripperRequestBus::Events::GetGripperEffort);
         feedback->position = position;
-        feedback->position = effort;
+        feedback->effort = effort;
         feedback->reached_goal = false;
         feedback->stalled = false;
         return feedback;

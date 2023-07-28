@@ -93,8 +93,6 @@ namespace ROS2
         //! Releases object from gripper effector.
         void ReleaseGrippedObject();
 
-        AZ::EntityId GetRootOfArticulation(AZ::EntityId entityId);
-
         void AttachToGripper(
             AzPhysics::SimulatedBody* gripperBody, AzPhysics::RigidBody* grippedRigidBody, AzPhysics::SceneInterface* sceneInterface);
     };

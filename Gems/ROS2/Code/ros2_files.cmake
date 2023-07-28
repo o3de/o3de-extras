@@ -42,6 +42,8 @@ set(FILES
         Source/Gripper/GripperActionServerComponent.h
         Source/Gripper/VacuumGripperComponent.h
         Source/Gripper/VacuumGripperComponent.cpp
+        Source/Gripper/FingerGripperComponent.h
+        Source/Gripper/FingerGripperComponent.cpp
         Source/GNSS/GNSSFormatConversions.cpp
         Source/GNSS/GNSSFormatConversions.h
         Source/GNSS/ROS2GNSSSensorComponent.cpp
@@ -114,6 +116,10 @@ set(FILES
         Source/Spawner/ROS2SpawnerComponentController.h
         Source/Spawner/ROS2SpawnPointComponentController.cpp
         Source/Spawner/ROS2SpawnPointComponentController.h
+        Source/Utilities/ArticulationsUtilities.cpp
+        Source/Utilities/ArticulationsUtilities.h
+        Source/Utilities/JointUtilities.cpp
+        Source/Utilities/JointUtilities.h
         Source/Utilities/Controllers/PidConfiguration.cpp
         Source/Utilities/PhysicsCallbackHandler.cpp
         Source/Utilities/PhysicsCallbackHandler.h

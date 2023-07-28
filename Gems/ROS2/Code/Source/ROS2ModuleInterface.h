@@ -14,6 +14,7 @@
 #include <ContactSensor/ROS2ContactSensorComponent.h>
 #include <FactorySimulation/ConveyorBeltComponent.h>
 #include <GNSS/ROS2GNSSSensorComponent.h>
+#include <Gripper/FingerGripperComponent.h>
 #include <Gripper/GripperActionServerComponent.h>
 #include <Gripper/VacuumGripperComponent.h>
 #include <Imu/ROS2ImuSensorComponent.h>
@@ -93,7 +94,8 @@ namespace ROS2
                     GripperActionServerComponent::CreateDescriptor(),
                     VacuumGripperComponent::CreateDescriptor(),
                     ConveyorBeltComponent::CreateDescriptor(),
-                    ROS2ContactSensorComponent::CreateDescriptor(),
+                    FingerGripperComponent::CreateDescriptor(),
+                    ROS2ContactSensorComponent::CreateDescriptor()
                 });
         }
 

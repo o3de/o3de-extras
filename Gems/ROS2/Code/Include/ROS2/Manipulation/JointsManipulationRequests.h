@@ -78,6 +78,13 @@ namespace ROS2
         //! @note the movement is realized by a specific controller and not instant. The joints will then keep this position.
         virtual AZ::Outcome<void, AZStd::string> MoveJointToPosition(const AZStd::string& jointName, JointPosition position) = 0;
 
+        //! Set max effort of an articulation link by name.
+        //! If the joint is not an articulation link, doesn't do anything
+        //! @param jointName name of the joint. Use names acquired from GetJoints() query.
+        //! @return outcome with effort if joint exists.
+        //! If it does not exist or some other error happened, error message is returned.
+        virtual AZ::Outcome<void, AZStd::string> SetMaxJointEffort(const AZStd::string& jointName, JointEffort maxEffort) = 0;
+
         //! Stop the joints movement in progress. It will keep the position in which it stopped.
         virtual void Stop() = 0;
     };
