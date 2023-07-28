@@ -34,12 +34,17 @@ namespace ROS2::PrefabMakerUtils
     //! @param entityId entity which will be modified.
     void SetEntityTransformLocal(const urdf::Pose& origin, AZ::EntityId entityId);
 
-    //! Create a prefab entity in hierarchy.
+    //! Create a prefab entity in a hierarchy. The new entity will not yet be active.
     //! @param parentEntityId id of parent entity for this new entity.
     //! Passing an invalid id would get the entity in the current context (for example, an entity which is currently open in the Editor).
     //! @param name name for the new entity.
     //! @return a result which is either a created prefab entity or an error.
     AzToolsFramework::Prefab::PrefabEntityResult CreateEntity(AZ::EntityId parentEntityId, const AZStd::string& name);
+
+    //! Set the parent entity for an entity. The entity getting parent is expected to be inactive.
+    //! @param entityId the id for entity that needs a parent.
+    //! @param parentEntityId the id for the parent entity.
+    void SetEntityParent(AZ::EntityId entityId, AZ::EntityId parentEntityId);
 
     //! Create an entity name from arguments.
     //! @param rootName root of entity's name.

@@ -168,7 +168,7 @@ namespace ROS2
         return m_assetsUuids.empty();
     }
 
-    void CheckAssetPage::DoubleClickRow(int row, int col)
+    void CheckAssetPage::DoubleClickRow(int row, [[maybe_unused]] int col)
     {
         AZ_Printf("CheckAssetPage", "Clicked on row", row);
         if (row < m_assetsPaths.size())

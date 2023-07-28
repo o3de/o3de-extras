@@ -46,6 +46,7 @@ namespace ROS2::Utils
     {
         struct Visitor : AZ::SettingsRegistryInterface::Visitor
         {
+            using AZ::SettingsRegistryInterface::Visitor::Visit;
             void Visit(const AZ::SettingsRegistryInterface::VisitArgs&, AZStd::string_view value) override
             {
                 m_supportedFileExtensions.emplace_back(value);
@@ -122,6 +123,35 @@ namespace ROS2::Utils
         return GetProductAsset(sourceAssetUUID, AZ::TypeId("{7A2871B9-5EAB-4DE0-A901-B0D2C6920DDB}")); // PhysX::Pipeline::MeshAsset
     }
 
+    AZ::Data::AssetId GetProductAssetId(const AZ::Uuid& sourceAssetUUID, const AZ::TypeId typeId)
+    {
+        AZStd::vector<AZ::Data::AssetInfo> productsAssetInfo;
+        using AssetSysReqBus = AzToolsFramework::AssetSystemRequestBus;
+        bool ok{ false };
+        AssetSysReqBus::BroadcastResult(ok, &AssetSysReqBus::Events::GetAssetsProducedBySourceUUID, sourceAssetUUID, productsAssetInfo);
+        if (ok)
+        {
+            for (const auto& product : productsAssetInfo)
+            {
+                if (product.m_assetType == typeId)
+                {
+                    return product.m_assetId;
+                }
+            }
+        }
+        return {};
+    }
+
+    AZ::Data::AssetId GetModelProductAssetId(const AZ::Uuid& sourceAssetUUID)
+    {
+        return GetProductAssetId(sourceAssetUUID, AZ::TypeId("{2C7477B6-69C5-45BE-8163-BCD6A275B6D8}")); // AZ::RPI::ModelAsset;
+    }
+
+    AZ::Data::AssetId GetPhysXMeshProductAssetId(const AZ::Uuid& sourceAssetUUID)
+    {
+        return GetProductAssetId(sourceAssetUUID, AZ::TypeId("{7A2871B9-5EAB-4DE0-A901-B0D2C6920DDB}")); // PhysX::Pipeline::MeshAsset
+    }
+
     AvailableAsset GetAvailableAssetInfo(const AZStd::string& globalSourceAssetPath)
     {
         using AssetSysReqBus = AzToolsFramework::AssetSystemRequestBus;
@@ -170,6 +200,7 @@ namespace ROS2::Utils
         if (!assetDatabaseConnection.OpenDatabase())
         {
             AZ_Warning("GetInterestingSourceAssetsCRC", false, "Cannot open database");
+            return {};
         }
         auto callback = [&availableAssets](AzToolsFramework::AssetDatabase::SourceDatabaseEntry& entry)
         {
@@ -363,16 +394,19 @@ namespace ROS2::Utils
             urdfToAsset.emplace(t, AZStd::move(asset));
         }
 
-        AZStd::unordered_map<AZ::Crc32, AvailableAsset> availableAssets = Utils::GetInterestingSourceAssetsCRC();
-
-        // Search for suitable mappings by comparing checksum
-        for (auto it = urdfToAsset.begin(); it != urdfToAsset.end(); it++)
+        if (!urdfToAsset.empty())
         {
-            Utils::UrdfAsset& asset = it->second;
-            auto found_source_asset = availableAssets.find(asset.m_urdfFileCRC);
-            if (found_source_asset != availableAssets.end())
+            AZStd::unordered_map<AZ::Crc32, AvailableAsset> availableAssets = Utils::GetInterestingSourceAssetsCRC();
+
+            // Search for suitable mappings by comparing checksum
+            for (auto it = urdfToAsset.begin(); it != urdfToAsset.end(); it++)
             {
-                asset.m_availableAssetInfo = found_source_asset->second;
+                Utils::UrdfAsset& asset = it->second;
+                auto found_source_asset = availableAssets.find(asset.m_urdfFileCRC);
+                if (found_source_asset != availableAssets.end())
+                {
+                    asset.m_availableAssetInfo = found_source_asset->second;
+                }
             }
         }
 
