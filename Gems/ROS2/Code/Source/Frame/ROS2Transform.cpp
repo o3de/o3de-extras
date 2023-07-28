@@ -20,7 +20,7 @@ namespace ROS2
         , m_childFrame(AZStd::move(childFrame))
         , m_isDynamic(isDynamic)
     {
-        auto splitName = ROS2Names::SplitIntoNamespaceAndName(childFrame);
+        auto splitName = ROS2Names::SplitIntoNamespaceAndName(m_childFrame);
         if (splitName.first.empty())
         {   // No namespace in child frame, no need for a publisher.
             return;
@@ -32,7 +32,7 @@ namespace ROS2
         {
             qos = tf2_ros::DynamicBroadcasterQoS();
         }
-        AZStd::string fullTopic = ROS2Names::GetNamespacedName(splitName.first, splitName.second);
+        AZStd::string fullTopic = ROS2Names::GetNamespacedName(splitName.first, m_isDynamic ? "tf" : "tf_static");
         m_transformPublisher = ros2Node->create_publisher<geometry_msgs::msg::TransformStamped>(fullTopic.data(), qos);
     }
 
