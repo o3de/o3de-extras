@@ -27,6 +27,7 @@ namespace ROS2
                 ec->Class<TopicConfiguration>("Publisher configuration", "")
                     ->ClassElement(AZ::Edit::ClassElements::EditorData, "")
                     ->DataElement(AZ::Edit::UIHandlers::Default, &TopicConfiguration::m_type, "Type", "Type of topic messages")
+                    ->Attribute(AZ::Edit::Attributes::ReadOnly, true)
                     ->DataElement(AZ::Edit::UIHandlers::Default, &TopicConfiguration::m_topic, "Topic", "Topic with no namespace")
                     ->Attribute(AZ::Edit::Attributes::ChangeValidate, &ROS2Names::ValidateTopicField)
                     ->DataElement(AZ::Edit::UIHandlers::Default, &TopicConfiguration::m_qos, "QoS", "Quality of Service");
