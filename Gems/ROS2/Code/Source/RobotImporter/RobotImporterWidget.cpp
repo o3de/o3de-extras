@@ -182,7 +182,7 @@ namespace ROS2
             auto collidersNames = Utils::GetMeshesFilenames(m_parsedUrdf->getRoot(), false, true);
             auto visualNames = Utils::GetMeshesFilenames(m_parsedUrdf->getRoot(), true, false);
 
-            AZStd::string_view dirSuffix = "";
+            AZ::Uuid::FixedString dirSuffix;
             if (!m_params.empty())
             {
                 auto paramsUuid = AZ::Uuid::CreateNull();
@@ -192,7 +192,7 @@ namespace ROS2
                     paramsUuid += AZ::Uuid::CreateName(value);
                 }
 
-                dirSuffix = paramsUuid.ToString<AZStd::string_view>();
+                dirSuffix = paramsUuid.ToFixedString();
             }
 
             if (m_importAssetWithUrdf)
