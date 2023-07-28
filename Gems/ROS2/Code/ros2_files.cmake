@@ -31,6 +31,8 @@ set(FILES
         Source/FactorySimulation/ConveyorBeltComponent.h
         Source/FactorySimulation/ConveyorBeltComponentConfiguration.cpp
         Source/FactorySimulation/ConveyorBeltComponentConfiguration.h
+        Source/ContactSensor/ROS2ContactSensorComponent.cpp
+        Source/ContactSensor/ROS2ContactSensorComponent.h
         Source/Frame/NamespaceConfiguration.cpp
         Source/Frame/ROS2FrameComponent.cpp
         Source/Frame/ROS2Transform.cpp
