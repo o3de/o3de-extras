@@ -64,8 +64,10 @@ ly_add_target(
             Gem::Atom_RPI.Public
             Gem::Atom_Feature_Common.Static
             Gem::Atom_Component_DebugCamera.Static
+            Gem::AtomLyIntegration_CommonFeatures.Static
             Gem::StartingPointInput
             Gem::PhysX.Static
+            Gem::LmbrCentral.API
 )
 
 target_depends_on_ros2_packages(${gem_name}.Static rclcpp builtin_interfaces std_msgs sensor_msgs nav_msgs tf2_ros ackermann_msgs gazebo_msgs)
@@ -133,7 +135,9 @@ if(PAL_TRAIT_BUILD_HOST_TOOLS)
                 Gem::LmbrCentral.API
                 Gem::PhysX.Editor.Static
                 Gem::${gem_name}.Static
-    )
+            PRIVATE
+                AZ::AssetBuilderSDK
+        )
 
     find_package(urdfdom)
     target_link_libraries(${gem_name}.Editor.Static PUBLIC urdfdom::urdfdom_model)
@@ -222,3 +226,5 @@ if(PAL_TRAIT_BUILD_TESTS_SUPPORTED)
         endif()
     endif()
 endif()
+
+add_subdirectory(PythonTests)

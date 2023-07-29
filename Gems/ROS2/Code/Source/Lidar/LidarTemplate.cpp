@@ -68,6 +68,7 @@ namespace ROS2
                 ->Field("Max vertical angle", &LidarTemplate::m_maxVAngle)
                 ->Field("Min range", &LidarTemplate::m_minRange)
                 ->Field("Max range", &LidarTemplate::m_maxRange)
+                ->Field("Enable Noise", &LidarTemplate::m_isNoiseEnabled)
                 ->Field("Noise Parameters", &LidarTemplate::m_noiseParameters);
 
             if (AZ::EditContext* ec = serializeContext->GetEditContext())
@@ -102,11 +103,23 @@ namespace ROS2
                     ->Attribute(AZ::Edit::Attributes::Max, 1000.0f)
                     ->DataElement(
                         AZ::Edit::UIHandlers::Default,
+                        &LidarTemplate::m_isNoiseEnabled,
+                        "Enable noise",
+                        "Enable the use of noise and it's configuration")
+                    ->Attribute(AZ::Edit::Attributes::Visibility, &LidarTemplate::m_showNoiseConfig)
+                    ->Attribute(AZ::Edit::Attributes::ChangeNotify, AZ::Edit::PropertyRefreshLevels::EntireTree)
+                    ->DataElement(
+                        AZ::Edit::UIHandlers::Default,
                         &LidarTemplate::m_noiseParameters,
                         "Noise parameters",
                         "Parameters for Noise Configuration")
-                    ->Attribute(AZ::Edit::Attributes::Visibility, &LidarTemplate::m_showNoiseConfig);
+                    ->Attribute(AZ::Edit::Attributes::Visibility, &LidarTemplate::IsNoiseConfigVisible);
             }
         }
+    }
+
+    bool LidarTemplate::IsNoiseConfigVisible() const
+    {
+        return m_showNoiseConfig && m_isNoiseEnabled;
     }
 } // namespace ROS2

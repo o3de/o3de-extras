@@ -8,6 +8,9 @@
 
 #pragma once
 
+#include "ROS2/Spawner/SpawnerInfo.h"
+#include <AzCore/Component/Entity.h>
+#include <qcombobox.h>
 #if !defined(Q_MOC_RUN)
 #include <AzCore/Math/Crc.h>
 #include <AzCore/std/string/string.h>
@@ -34,6 +37,7 @@ namespace ROS2
         void setSuccess(bool success);
         bool isComplete() const override;
         bool IsUseArticulations() const;
+        AZStd::optional<AZ::Transform> getSelectedSpawnPoint() const;
     Q_SIGNALS:
         void onCreateButtonPressed();
 
@@ -43,6 +47,8 @@ namespace ROS2
         QPushButton* m_createButton;
         QTextEdit* m_log;
         QCheckBox* m_useArticulation;
+        QComboBox* m_spawnPointsComboBox;
+        AZStd::vector<SpawnPointInfoMap> m_spawnPointsInfos;
         RobotImporterWidget* m_parentImporterWidget;
     };
 } // namespace ROS2

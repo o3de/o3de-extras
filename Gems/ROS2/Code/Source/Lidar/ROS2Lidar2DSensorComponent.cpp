@@ -89,6 +89,11 @@ namespace ROS2
         }
     }
 
+    void ROS2Lidar2DSensorComponent::UpdateShowNoise()
+    {
+        m_lidarParameters.m_showNoiseConfig = m_lidarSystemFeatures & LidarSystemFeatures::Noise;
+    }
+
     void ROS2Lidar2DSensorComponent::FetchLidarImplementationFeatures()
     {
         if (m_lidarSystem.empty())
@@ -126,18 +131,21 @@ namespace ROS2
     AZStd::vector<AZStd::string> ROS2Lidar2DSensorComponent::FetchLidarSystemList()
     {
         FetchLidarImplementationFeatures();
+        UpdateShowNoise();
         return LidarRegistrarInterface::Get()->GetRegisteredLidarSystems();
     }
 
     AZ::Crc32 ROS2Lidar2DSensorComponent::OnLidarModelSelected()
     {
         m_lidarParameters = LidarTemplateUtils::GetTemplate(m_lidarModel);
+        UpdateShowNoise();
         return AZ::Edit::PropertyRefreshLevels::EntireTree;
     }
 
     AZ::Crc32 ROS2Lidar2DSensorComponent::OnLidarImplementationSelected()
     {
         FetchLidarImplementationFeatures();
+        UpdateShowNoise();
         return AZ::Edit::PropertyRefreshLevels::EntireTree;
     }
 
@@ -165,6 +173,16 @@ namespace ROS2
             m_lidarRaycasterId, &LidarRaycasterRequestBus::Events::ConfigureRayRange, m_lidarParameters.m_maxRange);
         LidarRaycasterRequestBus::Event(
             m_lidarRaycasterId, &LidarRaycasterRequestBus::Events::ConfigureMinimumRayRange, m_lidarParameters.m_minRange);
+
+        if (m_lidarSystemFeatures & LidarSystemFeatures::Noise && m_lidarParameters.m_isNoiseEnabled)
+        {
+            LidarRaycasterRequestBus::Event(
+                m_lidarRaycasterId,
+                &LidarRaycasterRequestBus::Events::ConfigureNoiseParameters,
+                m_lidarParameters.m_noiseParameters.m_angularNoiseStdDev,
+                m_lidarParameters.m_noiseParameters.m_distanceNoiseStdDevBase,
+                m_lidarParameters.m_noiseParameters.m_distanceNoiseStdDevRisePerMeter);
+        }
 
         RaycastResultFlags requestedFlags = RaycastResultFlags::Ranges;
         if (m_sensorConfiguration.m_visualise)
@@ -272,13 +290,6 @@ namespace ROS2
         if (m_sensorConfiguration.m_visualise)
         { // Store points for visualisation purposes, in global frame
             m_visualisationPoints = m_lastScanResults.m_points;
-        }
-
-        // TODO(mzak): possibly unneccessary post-proc?
-        const auto inverseLidarTM = entityTransform->GetWorldTM().GetInverse();
-        for (auto& point : m_lastScanResults.m_points)
-        {
-            point = inverseLidarTM.TransformPoint(point);
         }
 
         auto* ros2Frame = Utils::GetGameOrEditorComponent<ROS2FrameComponent>(GetEntity());

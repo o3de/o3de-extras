@@ -40,6 +40,11 @@ namespace ROS2
         return AZ::Success();
     }
 
+    void JointsArticulationControllerComponent::GetRequiredServices(AZ::ComponentDescriptor::DependencyArrayType& required)
+    {
+        required.push_back(AZ_CRC_CE("ArticulationLinkService"));
+    }
+
     void JointsArticulationControllerComponent::GetProvidedServices(AZ::ComponentDescriptor::DependencyArrayType& provided)
     {
         provided.push_back(AZ_CRC_CE("JointsControllerService"));

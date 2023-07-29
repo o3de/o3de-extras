@@ -8,6 +8,7 @@
 
 #include "JointsTrajectoryComponent.h"
 #include <AzCore/Serialization/EditContext.h>
+#include <PhysX/ArticulationJointBus.h>
 #include <ROS2/Frame/ROS2FrameComponent.h>
 #include <ROS2/Manipulation/JointsManipulationRequests.h>
 #include <ROS2/ROS2Bus.h>
@@ -79,11 +80,15 @@ namespace ROS2
         incompatible.push_back(AZ_CRC_CE("ManipulatorJointTrajectoryService"));
     }
 
-    AZ::Outcome<void, AZStd::string> JointsTrajectoryComponent::StartTrajectoryGoal(TrajectoryGoalPtr trajectoryGoal)
+    AZ::Outcome<void, JointsTrajectoryComponent::TrajectoryResult> JointsTrajectoryComponent::StartTrajectoryGoal(
+        TrajectoryGoalPtr trajectoryGoal)
     {
         if (m_trajectoryInProgress)
         {
-            return AZ::Failure("Another trajectory goal is executing. Wait for completion or cancel it");
+            auto result = JointsTrajectoryComponent::TrajectoryResult();
+            result.error_code = JointsTrajectoryComponent::TrajectoryResult::INVALID_GOAL;
+            result.error_string = "Another trajectory goal is executing. Wait for completion or cancel it";
+            return AZ::Failure(result);
         }
 
         auto validationResult = ValidateGoal(trajectoryGoal);
@@ -97,7 +102,7 @@ namespace ROS2
         return AZ::Success();
     }
 
-    AZ::Outcome<void, AZStd::string> JointsTrajectoryComponent::ValidateGoal(TrajectoryGoalPtr trajectoryGoal)
+    AZ::Outcome<void, JointsTrajectoryComponent::TrajectoryResult> JointsTrajectoryComponent::ValidateGoal(TrajectoryGoalPtr trajectoryGoal)
     {
         // Check joint names validity
         for (const auto& jointName : trajectoryGoal->trajectory.joint_names)
@@ -105,11 +110,14 @@ namespace ROS2
             AZStd::string azJointName(jointName.c_str());
             if (m_manipulationJoints.find(azJointName) == m_manipulationJoints.end())
             {
-                AZ_Printf(
-                    "JointsTrajectoryComponent",
-                    "Trajectory goal is invalid: no joint %s in manipulator",
-                    azJointName.c_str());
-                return AZ::Failure(AZStd::string::format("Trajectory goal is invalid: no joint %s in manipulator", azJointName.c_str()));
+                AZ_Printf("JointsTrajectoryComponent", "Trajectory goal is invalid: no joint %s in manipulator", azJointName.c_str());
+
+                auto result = JointsTrajectoryComponent::TrajectoryResult();
+                result.error_code = JointsTrajectoryComponent::TrajectoryResult::INVALID_JOINTS;
+                result.error_string = std::string(
+                    AZStd::string::format("Trajectory goal is invalid: no joint %s in manipulator", azJointName.c_str()).c_str());
+
+                return AZ::Failure(result);
             }
         }
         return AZ::Success();
@@ -117,57 +125,52 @@ namespace ROS2
 
     void JointsTrajectoryComponent::UpdateFeedback()
     {
-        auto feedback = std::make_shared<control_msgs::action::FollowJointTrajectory::Feedback>();
-        trajectory_msgs::msg::JointTrajectoryPoint desiredPoint;
-        for (const auto& [jointName, hingeComponent] : m_manipulationJoints)
+        auto goalStatus = GetGoalStatus();
+        if (goalStatus != JointsTrajectoryRequests::TrajectoryActionStatus::Executing)
         {
+            return;
+        }
+
+        auto feedback = std::make_shared<control_msgs::action::FollowJointTrajectory::Feedback>();
+
+        trajectory_msgs::msg::JointTrajectoryPoint desiredPoint = m_trajectoryGoal.trajectory.points.front();
+
+        trajectory_msgs::msg::JointTrajectoryPoint actualPoint;
+
+        size_t jointCount = m_trajectoryGoal.trajectory.joint_names.size();
+        for (size_t jointIndex = 0; jointIndex < jointCount; jointIndex++)
+        {
+            AZStd::string jointName(m_trajectoryGoal.trajectory.joint_names[jointIndex].c_str());
             std::string jointNameStdString(jointName.c_str());
             feedback->joint_names.push_back(jointNameStdString);
 
-            AZ::Outcome<float, AZStd::string> result;
-            JointsManipulationRequestBus::EventResult(result, GetEntityId(), &JointsManipulationRequests::GetJointPosition, jointName);
-            auto currentJointPosition = result.GetValue();
+            float currentJointPosition;
+            float currentJointVelocity;
+            auto& jointInfo = m_manipulationJoints[jointName];
+            PhysX::ArticulationJointRequestBus::Event(
+                jointInfo.m_entityComponentIdPair.GetEntityId(),
+                [&](PhysX::ArticulationJointRequests* articulationJointRequests)
+                {
+                    currentJointPosition = articulationJointRequests->GetJointPosition(jointInfo.m_axis);
+                    currentJointVelocity = articulationJointRequests->GetJointVelocity(jointInfo.m_axis);
+                });
 
-            desiredPoint.positions.push_back(static_cast<double>(currentJointPosition));
-            desiredPoint.velocities.push_back(0.0f); // Velocities not supported yet!
-            desiredPoint.accelerations.push_back(0.0f); // Accelerations not supported yet!
-            desiredPoint.effort.push_back(0.0f); // Effort not supported yet!
+            actualPoint.positions.push_back(static_cast<double>(currentJointPosition));
+            actualPoint.velocities.push_back(static_cast<double>(currentJointVelocity));
+            // Acceleration should also be filled in somehow, or removed from the trajectory altogether.
         }
 
-        trajectory_msgs::msg::JointTrajectoryPoint actualPoint = desiredPoint;
         trajectory_msgs::msg::JointTrajectoryPoint currentError;
-
-        std::transform(
-            desiredPoint.positions.begin(),
-            desiredPoint.positions.end(),
-            actualPoint.positions.begin(),
-            currentError.positions.begin(),
-            std::minus<double>());
-
-        std::transform(
-            desiredPoint.velocities.begin(),
-            desiredPoint.velocities.end(),
-            actualPoint.velocities.begin(),
-            currentError.velocities.begin(),
-            std::minus<double>());
-
-        std::transform(
-            desiredPoint.accelerations.begin(),
-            desiredPoint.accelerations.end(),
-            actualPoint.accelerations.begin(),
-            currentError.accelerations.begin(),
-            std::minus<double>());
-
-        std::transform(
-            desiredPoint.effort.begin(),
-            desiredPoint.effort.end(),
-            actualPoint.effort.begin(),
-            currentError.effort.begin(),
-            std::minus<double>());
+        for (size_t jointIndex = 0; jointIndex < jointCount; jointIndex++)
+        {
+            currentError.positions.push_back(actualPoint.positions[jointIndex] - desiredPoint.positions[jointIndex]);
+            currentError.velocities.push_back(actualPoint.velocities[jointIndex] - desiredPoint.velocities[jointIndex]);
+        }
 
         feedback->desired = desiredPoint;
         feedback->actual = actualPoint;
         feedback->error = currentError;
+
         m_followTrajectoryServer->PublishFeedback(feedback);
     }
 
@@ -246,5 +249,6 @@ namespace ROS2
         }
         uint64_t deltaTimeNs = deltaTime * 1'000'000'000;
         FollowTrajectory(deltaTimeNs);
+        UpdateFeedback();
     }
 } // namespace ROS2

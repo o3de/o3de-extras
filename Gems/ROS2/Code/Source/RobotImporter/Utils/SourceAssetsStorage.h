@@ -91,6 +91,22 @@ namespace ROS2::Utils
     //! @returns relative path to product, empty string if product is not found
     AZStd::string GetPhysXMeshProductAsset(const AZ::Uuid& sourceAssetUUID);
 
+    //! Helper function that gives the desired product asset ID from source asset GUID
+    //! @param sourceAssetUUID is source asset GUID
+    //! @param typeId type of product asset
+    //! @returns product asset id (invalid id if not found)
+    AZ::Data::AssetId GetProductAssetId(const AZ::Uuid& sourceAssetUUID, const AZ::TypeId typeId);
+
+    //! Helper function that gives AZ::RPI::ModelAsset product asset from source asset GUID
+    //! @param sourceAssetUUID is source asset GUID
+    //! @returns product asset id (invalid id if not found)
+    AZ::Data::AssetId GetModelProductAssetId(const AZ::Uuid& sourceAssetUUID);
+
+    //! Helper function that gives PhysX::Pipeline::MeshAsset product asset from source asset GUID
+    //! @param sourceAssetUUID is source asset GUID
+    //! @returns product asset id (invalid id if not found)
+    AZ::Data::AssetId GetPhysXMeshProductAssetId(const AZ::Uuid& sourceAssetUUID);
+
     //! Creates side-car file (.assetinfo) that configures the imported scene (eg DAE file).
     //! The .assetinfo will be create next to scene's file.
     //! @param sourceAssetPath - global path to source asset
@@ -114,6 +130,7 @@ namespace ROS2::Utils
     //! @param urdFilename - path to URDF file (as a global path)
     //! @param colliders - files to create collider assetinfo (as unresolved urdf paths)
     //! @param visuals - files to create visual assetinfo (as unresolved urdf paths)
+    //! @param outputDirSuffix - suffix to make output directory unique, if xacro file was used
     //! @param fileIO - instance to fileIO class
     //! @returns mapping from unresolved urdf paths to source asset info
     UrdfAssetMap CopyAssetForURDFAndCreateAssetMap(
@@ -121,6 +138,7 @@ namespace ROS2::Utils
         const AZStd::string& urdfFilename,
         const AZStd::unordered_set<AZStd::string>& colliders,
         const AZStd::unordered_set<AZStd::string>& visual,
+        AZStd::string_view outputDirSuffix = "",
         AZ::IO::FileIOBase* fileIO = AZ::IO::FileIOBase::GetInstance());
 
 } // namespace ROS2::Utils

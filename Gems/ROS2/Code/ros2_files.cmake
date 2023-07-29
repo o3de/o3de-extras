@@ -27,9 +27,23 @@ set(FILES
         Source/Communication/QoS.cpp
         Source/Communication/PublisherConfiguration.cpp
         Source/Communication/TopicConfiguration.cpp
+        Source/FactorySimulation/ConveyorBeltComponent.cpp
+        Source/FactorySimulation/ConveyorBeltComponent.h
+        Source/FactorySimulation/ConveyorBeltComponentConfiguration.cpp
+        Source/FactorySimulation/ConveyorBeltComponentConfiguration.h
+        Source/ContactSensor/ROS2ContactSensorComponent.cpp
+        Source/ContactSensor/ROS2ContactSensorComponent.h
         Source/Frame/NamespaceConfiguration.cpp
         Source/Frame/ROS2FrameComponent.cpp
         Source/Frame/ROS2Transform.cpp
+        Source/Gripper/GripperActionServer.cpp
+        Source/Gripper/GripperActionServer.h
+        Source/Gripper/GripperActionServerComponent.cpp
+        Source/Gripper/GripperActionServerComponent.h
+        Source/Gripper/VacuumGripperComponent.h
+        Source/Gripper/VacuumGripperComponent.cpp
+        Source/Gripper/FingerGripperComponent.h
+        Source/Gripper/FingerGripperComponent.cpp
         Source/GNSS/GNSSFormatConversions.cpp
         Source/GNSS/GNSSFormatConversions.h
         Source/GNSS/ROS2GNSSSensorComponent.cpp
@@ -73,6 +87,8 @@ set(FILES
         Source/Odometry/ROS2WheelOdometry.h
         Source/Odometry/ROS2OdometryCovariance.cpp
         Source/Odometry/ROS2OdometryCovariance.h
+        Source/ProximitySensor/ROS2ProximitySensor.cpp
+        Source/ProximitySensor/ROS2ProximitySensor.h
         Source/RobotControl/Ackermann/AckermannSubscriptionHandler.cpp
         Source/RobotControl/Ackermann/AckermannSubscriptionHandler.h
         Source/RobotControl/ControlConfiguration.cpp
@@ -96,6 +112,14 @@ set(FILES
         Source/Spawner/ROS2SpawnerComponent.h
         Source/Spawner/ROS2SpawnPointComponent.cpp
         Source/Spawner/ROS2SpawnPointComponent.h
+        Source/Spawner/ROS2SpawnerComponentController.cpp
+        Source/Spawner/ROS2SpawnerComponentController.h
+        Source/Spawner/ROS2SpawnPointComponentController.cpp
+        Source/Spawner/ROS2SpawnPointComponentController.h
+        Source/Utilities/ArticulationsUtilities.cpp
+        Source/Utilities/ArticulationsUtilities.h
+        Source/Utilities/JointUtilities.cpp
+        Source/Utilities/JointUtilities.h
         Source/Utilities/Controllers/PidConfiguration.cpp
         Source/Utilities/PhysicsCallbackHandler.cpp
         Source/Utilities/PhysicsCallbackHandler.h

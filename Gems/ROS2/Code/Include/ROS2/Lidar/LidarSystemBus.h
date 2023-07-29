@@ -24,6 +24,10 @@ namespace ROS2
         //! @return A unique Id of the newly created Lidar.
         virtual LidarId CreateLidar(AZ::EntityId lidarEntityId) = 0;
 
+        //! Destroys a no longer used Lidar.
+        //! @param lidarId Id of the lidar to be destroyed.
+        virtual void DestroyLidar(LidarId lidarId) = 0;
+
     protected:
         ~LidarSystemRequests() = default;
     };

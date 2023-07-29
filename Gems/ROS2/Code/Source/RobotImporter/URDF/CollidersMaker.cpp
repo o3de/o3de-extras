@@ -37,7 +37,6 @@ namespace ROS2
     CollidersMaker::CollidersMaker(const AZStd::shared_ptr<Utils::UrdfAssetMap>& urdfAssetsMapping)
         : m_urdfAssetsMapping(urdfAssetsMapping)
     {
-        FindWheelMaterial();
     }
 
     void CollidersMaker::FindWheelMaterial()
@@ -58,12 +57,10 @@ namespace ROS2
         {
             m_wheelMaterial =
                 AZ::Data::Asset<Physics::MaterialAsset>(assetId, Physics::MaterialAsset::TYPEINFO_Uuid(), physicsMaterialAssetRelPath);
-            AZ_TracePrintf(Internal::CollidersMakerLoggingTag, "Waiting for asset load\n");
-            m_wheelMaterial.BlockUntilLoadComplete();
         }
         else
         {
-            AZ_Warning(Internal::CollidersMakerLoggingTag, false, "Cannot load wheel material");
+            AZ_Warning(Internal::CollidersMakerLoggingTag, false, "Cannot locate wheel material asset");
         }
     }
 
@@ -150,7 +147,7 @@ namespace ROS2
 
             if (result.GetResult() != AZ::SceneAPI::Events::ProcessingResult::Success)
             {
-                AZ_TracePrintf(Internal::CollidersMakerLoggingTag, "Scene updated\n");
+                AZ_Trace(Internal::CollidersMakerLoggingTag, "Scene updated\n");
                 return;
             }
 
@@ -215,6 +212,10 @@ namespace ROS2
         if (isWheelEntity)
         {
             AZ_Printf(Internal::CollidersMakerLoggingTag, "Due to its name, %s is considered a wheel entity\n", link->name.c_str());
+            if (!m_wheelMaterial.GetId().IsValid())
+            {
+                FindWheelMaterial();
+            }
         }
         const AZ::Data::Asset<Physics::MaterialAsset> materialAsset =
             isWheelEntity ? m_wheelMaterial : AZ::Data::Asset<Physics::MaterialAsset>();
@@ -242,7 +243,7 @@ namespace ROS2
         { // it is ok not to have collision in a link
             return;
         }
-        AZ_TracePrintf(Internal::CollidersMakerLoggingTag, "Processing collisions for entity id:%s\n", entityId.ToString().c_str());
+        AZ_Trace(Internal::CollidersMakerLoggingTag, "Processing collisions for entity id:%s\n", entityId.ToString().c_str());
 
         auto geometry = collision->geometry;
         if (!geometry)
@@ -284,7 +285,6 @@ namespace ROS2
             {
                 AZ_Error(
                     Internal::CollidersMakerLoggingTag, false, "Could not find pxmodel for %s", asset->m_sourceAssetGlobalPath.c_str());
-                entity->Deactivate();
                 return;
             }
             AZ_Printf(Internal::CollidersMakerLoggingTag, "pxmodelPath  %s\n", pxmodelPath.c_str());
@@ -358,7 +358,7 @@ namespace ROS2
                 }
                 else
                 {
-                    AZ_Warning(Internal::CollidersMakerLoggingTag, false, "The entity was no activated %s", entity->GetName().c_str());
+                    AZ_Warning(Internal::CollidersMakerLoggingTag, false, "The entity was not activated %s", entity->GetName().c_str());
                 }
             }
             break;

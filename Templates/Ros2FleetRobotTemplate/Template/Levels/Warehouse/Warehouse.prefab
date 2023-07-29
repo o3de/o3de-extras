@@ -88,17 +88,19 @@
                     "Id": 4373493893052679413
                 },
                 "Component_[4933737581982406853]": {
-                    "$type": "GenericComponentWrapper",
-                    "Id": 4933737581982406853,
-                    "m_template": {
-                        "$type": "ROS2SpawnerComponent",
-                        "Spawnables": {
-                            "proteus": {
-                                "assetId": {
-                                    "guid": "{80419AAD-14CF-528D-A477-8B202D4C9B6D}",
-                                    "subId": 1966583575
-                                },
-                                "assetHint": "proteus.spawnable"
+                    "$type": "ROS2SpawnerEditorComponent",
+                    "Id": 11259578117255245776,
+                    "Controller": {
+                        "Configuration": {
+                            "Editor entity id": "",
+                            "Spawnables": {
+                                "proteus": {
+                                    "assetId": {
+                                        "guid": "{80419AAD-14CF-528D-A477-8B202D4C9B6D}",
+                                        "subId": 1966583575
+                                    },
+                                    "assetHint": "proteus.spawnable"
+                                }
                             }
                         }
                     }
@@ -156,12 +158,13 @@
                     }
                 },
                 "Component_[2115342656585992410]": {
-                    "$type": "GenericComponentWrapper",
-                    "Id": 2115342656585992410,
-                    "m_template": {
-                        "$type": "ROS2SpawnPointComponent",
-                        "Name": "spawnPoint2",
-                        "Info": "spawnPoint2"
+                    "$type": "ROS2SpawnPointEditorComponent",
+                    "Id": 11018288690574626473,
+                    "Controller": {
+                        "Configuration": {
+                            "Name": "spawnPoint2",
+                            "Info": "spawnPoint2"
+                        }
                     }
                 },
                 "Component_[4848442694260332496]": {
@@ -220,12 +223,13 @@
                     }
                 },
                 "Component_[2115342656585992410]": {
-                    "$type": "GenericComponentWrapper",
-                    "Id": 2115342656585992410,
-                    "m_template": {
-                        "$type": "ROS2SpawnPointComponent",
-                        "Name": "spawnPoint3",
-                        "Info": "spawnPoint3"
+                    "$type": "ROS2SpawnPointEditorComponent",
+                    "Id": 11018288690574626473,
+                    "Controller": {
+                        "Configuration": {
+                            "Name": "spawnPoint3",
+                            "Info": "spawnPoint3"
+                        }
                     }
                 },
                 "Component_[4848442694260332496]": {
@@ -284,12 +288,13 @@
                     }
                 },
                 "Component_[2115342656585992410]": {
-                    "$type": "GenericComponentWrapper",
-                    "Id": 2115342656585992410,
-                    "m_template": {
-                        "$type": "ROS2SpawnPointComponent",
-                        "Name": "spawnPoint1",
-                        "Info": "spawnPoint1"
+                    "$type": "ROS2SpawnPointEditorComponent",
+                    "Id": 11018288690574626473,
+                    "Controller": {
+                        "Configuration": {
+                            "Name": "spawnPoint1",
+                            "Info": "spawnPoint1"
+                        }
                     }
                 },
                 "Component_[4848442694260332496]": {
@@ -348,12 +353,13 @@
                     }
                 },
                 "Component_[2115342656585992410]": {
-                    "$type": "GenericComponentWrapper",
-                    "Id": 2115342656585992410,
-                    "m_template": {
-                        "$type": "ROS2SpawnPointComponent",
-                        "Name": "spawnPoint4",
-                        "Info": "spawnPoint4"
+                    "$type": "ROS2SpawnPointEditorComponent",
+                    "Id": 11018288690574626473,
+                    "Controller": {
+                        "Configuration": {
+                            "Name": "spawnPoint4",
+                            "Info": "spawnPoint4"
+                        }
                     }
                 },
                 "Component_[4848442694260332496]": {

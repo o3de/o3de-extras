@@ -37,6 +37,7 @@ namespace ROS2
                         "Toggle publishing for topic")
                     ->DataElement(
                         AZ::Edit::UIHandlers::Default, &SensorConfiguration::m_frequency, "Frequency", "Frequency of publishing [Hz]")
+                    ->Attribute(AZ::Edit::Attributes::Min, SensorConfiguration::m_minFrequency)
                     ->DataElement(
                         AZ::Edit::UIHandlers::Default, &SensorConfiguration::m_publishersConfigurations, "Publishers", "Publishers")
                     ->Attribute(AZ::Edit::Attributes::AutoExpand, true)

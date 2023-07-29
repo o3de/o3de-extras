@@ -50,6 +50,7 @@ namespace ROS2
 
         AZ::Crc32 OnLidarModelSelected();
         AZ::Crc32 OnLidarImplementationSelected();
+        void UpdateShowNoise();
         void FetchLidarImplementationFeatures();
         AZStd::vector<AZStd::string> FetchLidarSystemList();
         void ConnectToLidarRaycaster();

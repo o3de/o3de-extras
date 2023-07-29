@@ -14,6 +14,7 @@ set(FILES
         Include/ROS2/Frame/NamespaceConfiguration.h
         Include/ROS2/Frame/ROS2FrameComponent.h
         Include/ROS2/Frame/ROS2Transform.h
+        Include/ROS2/Gripper/GripperRequestBus.h
         Include/ROS2/Manipulation/Controllers/JointsPositionControllerRequests.h
         Include/ROS2/Manipulation/JointInfo.h
         Include/ROS2/Manipulation/JointsManipulationRequests.h
@@ -23,6 +24,8 @@ set(FILES
         Include/ROS2/Manipulation/MotorizedJoints/ManualMotorControllerComponent.h
         Include/ROS2/Manipulation/MotorizedJoints/PidMotorControllerBus.h
         Include/ROS2/Manipulation/MotorizedJoints/PidMotorControllerComponent.h
+        Include/ROS2/ProximitySensor/ProximitySensorNotificationBus.h
+        Include/ROS2/ProximitySensor/ProximitySensorNotificationBusHandler.h
         Include/ROS2/RobotControl/ControlConfiguration.h
         Include/ROS2/RobotControl/ControlSubscriptionHandler.h
         Include/ROS2/Lidar/LidarRaycasterBus.h

@@ -18,12 +18,13 @@
 #include <ROS2/Utilities/ROS2Names.h>
 #include <Source/ArticulationLinkComponent.h>
 #include <Source/HingeJointComponent.h>
+#include <Source/PrismaticJointComponent.h>
 
 namespace ROS2
 {
     namespace Internal
     {
-        void AddHingeJointInfo(const AZ::EntityComponentIdPair& idPair, const AZStd::string& jointName, ManipulationJoints& joints)
+        void Add1DOFJointInfo(const AZ::EntityComponentIdPair& idPair, const AZStd::string& jointName, ManipulationJoints& joints)
         {
             if (joints.find(jointName) != joints.end())
             {
@@ -117,11 +118,15 @@ namespace ROS2
                 }
                 const AZStd::string jointName(frameComponent->GetJointName().GetCStr());
 
-                auto* hingeComponent = Utils::GetGameOrEditorComponent<PhysX::HingeJointComponent>(entity);
+                auto* hingeComponent =
+                    azrtti_cast<PhysX::JointComponent*>(Utils::GetGameOrEditorComponent<PhysX::HingeJointComponent>(entity));
+                auto* prismaticComponent =
+                    azrtti_cast<PhysX::JointComponent*>(Utils::GetGameOrEditorComponent<PhysX::PrismaticJointComponent>(entity));
                 auto* articulationComponent = Utils::GetGameOrEditorComponent<PhysX::ArticulationLinkComponent>(entity);
+                bool classicJoint = hingeComponent || prismaticComponent;
                 AZ_Warning(
                     "JointsManipulationComponent",
-                    (hingeComponent && supportsClassicJoints) || !hingeComponent,
+                    (classicJoint && supportsClassicJoints) || !classicJoint,
                     "Found classic joints but the controller does not support them!");
                 AZ_Warning(
                     "JointsManipulationComponent",
@@ -132,7 +137,14 @@ namespace ROS2
                 if (supportsClassicJoints && hingeComponent)
                 {
                     auto idPair = AZ::EntityComponentIdPair(hingeComponent->GetEntityId(), hingeComponent->GetId());
-                    Internal::AddHingeJointInfo(idPair, jointName, manipulationJoints);
+                    Internal::Add1DOFJointInfo(idPair, jointName, manipulationJoints);
+                }
+
+                // See if there is a Prismatic Joint in the entity, add it to map.
+                if (supportsClassicJoints && prismaticComponent)
+                {
+                    auto idPair = AZ::EntityComponentIdPair(prismaticComponent->GetEntityId(), prismaticComponent->GetId());
+                    Internal::Add1DOFJointInfo(idPair, jointName, manipulationJoints);
                 }
 
                 // See if there is an Articulation Link in the entity, add it to map.
@@ -222,6 +234,30 @@ namespace ROS2
         return AZ::Success(position);
     }
 
+    AZ::Outcome<JointVelocity, AZStd::string> JointsManipulationComponent::GetJointVelocity(const AZStd::string& jointName)
+    {
+        if (!m_manipulationJoints.contains(jointName))
+        {
+            return AZ::Failure(AZStd::string::format("Joint %s does not exist", jointName.c_str()));
+        }
+
+        auto jointInfo = m_manipulationJoints.at(jointName);
+        float velocity{ 0 };
+        if (jointInfo.m_isArticulation)
+        {
+            PhysX::ArticulationJointRequestBus::EventResult(
+                velocity,
+                jointInfo.m_entityComponentIdPair.GetEntityId(),
+                &PhysX::ArticulationJointRequests::GetJointVelocity,
+                jointInfo.m_axis);
+        }
+        else
+        {
+            PhysX::JointRequestBus::EventResult(velocity, jointInfo.m_entityComponentIdPair, &PhysX::JointRequests::GetVelocity);
+        }
+        return AZ::Success(velocity);
+    }
+
     JointsManipulationRequests::JointsPositionsMap JointsManipulationComponent::GetAllJointsPositions()
     {
         JointsManipulationRequests::JointsPositionsMap positions;
@@ -230,6 +266,98 @@ namespace ROS2
             positions[jointName] = GetJointPosition(jointName).GetValue();
         }
         return positions;
+    }
+
+    JointsManipulationRequests::JointsVelocitiesMap JointsManipulationComponent::GetAllJointsVelocities()
+    {
+        JointsManipulationRequests::JointsVelocitiesMap velocities;
+        for (const auto& [jointName, jointInfo] : m_manipulationJoints)
+        {
+            velocities[jointName] = GetJointVelocity(jointName).GetValue();
+        }
+        return velocities;
+    }
+
+    AZ::Outcome<JointEffort, AZStd::string> JointsManipulationComponent::GetJointEffort(const AZStd::string& jointName)
+    {
+        if (!m_manipulationJoints.contains(jointName))
+        {
+            return AZ::Failure(AZStd::string::format("Joint %s does not exist", jointName.c_str()));
+        }
+
+        auto jointInfo = m_manipulationJoints.at(jointName);
+        float effort{ 0 };
+
+        if (!jointInfo.m_isArticulation)
+        {
+            // The joint isn't controlled by JointsArticulationControllerComponent.
+            // There is no easy way to calculate the effort.
+            return AZ::Success(effort);
+        }
+
+        bool is_acceleration_driven{ false };
+        PhysX::ArticulationJointRequestBus::EventResult(
+            is_acceleration_driven,
+            jointInfo.m_entityComponentIdPair.GetEntityId(),
+            &PhysX::ArticulationJointRequests::IsAccelerationDrive,
+            jointInfo.m_axis);
+
+        if (is_acceleration_driven)
+        {
+            // The formula below in this case will calculate acceleration, not effort.
+            // In this case we can't calculate the effort without PhysX engine support.
+            return AZ::Success(effort);
+        }
+
+        float stiffness{ 0 }, damping{ 0 }, target_pos{ 0 }, position{ 0 }, target_vel{ 0 }, velocity{ 0 }, max_force{ 0 };
+        PhysX::ArticulationJointRequestBus::Event(
+            jointInfo.m_entityComponentIdPair.GetEntityId(),
+            [&](PhysX::ArticulationJointRequests* articulationJointRequests)
+            {
+                stiffness = articulationJointRequests->GetDriveStiffness(jointInfo.m_axis);
+                damping = articulationJointRequests->GetDriveDamping(jointInfo.m_axis);
+                target_pos = articulationJointRequests->GetDriveTarget(jointInfo.m_axis);
+                position = articulationJointRequests->GetJointPosition(jointInfo.m_axis);
+                target_vel = articulationJointRequests->GetDriveTargetVelocity(jointInfo.m_axis);
+                velocity = articulationJointRequests->GetJointVelocity(jointInfo.m_axis);
+                max_force = articulationJointRequests->GetMaxForce(jointInfo.m_axis);
+            });
+        effort = stiffness * -(position - target_pos) + damping * (target_vel - velocity);
+
+        effort = AZ::GetClamp(effort, -max_force, max_force);
+
+        return AZ::Success(effort);
+    }
+
+    JointsManipulationRequests::JointsEffortsMap JointsManipulationComponent::GetAllJointsEfforts()
+    {
+        JointsManipulationRequests::JointsEffortsMap efforts;
+        for (const auto& [jointName, jointInfo] : m_manipulationJoints)
+        {
+            efforts[jointName] = GetJointEffort(jointName).GetValue();
+        }
+        return efforts;
+    }
+
+    AZ::Outcome<void, AZStd::string> JointsManipulationComponent::SetMaxJointEffort(const AZStd::string& jointName, JointEffort maxEffort)
+    {
+        if (!m_manipulationJoints.contains(jointName))
+        {
+            return AZ::Failure(AZStd::string::format("Joint %s does not exist", jointName.c_str()));
+        }
+
+        auto jointInfo = m_manipulationJoints.at(jointName);
+
+        if (jointInfo.m_isArticulation)
+        {
+            PhysX::ArticulationJointRequestBus::Event(
+                jointInfo.m_entityComponentIdPair.GetEntityId(),
+                &PhysX::ArticulationJointRequests::SetMaxForce,
+                jointInfo.m_axis,
+                maxEffort);
+        }
+
+        return AZ::Success();
     }
 
     AZ::Outcome<void, AZStd::string> JointsManipulationComponent::MoveJointToPosition(

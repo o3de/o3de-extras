@@ -8,6 +8,7 @@
 
 #include <AzCore/IO/FileIO.h>
 #include <AzCore/IO/Path/Path.h>
+#include <AzCore/Math/Uuid.h>
 #include <AzCore/Utils/Utils.h>
 
 #include "RobotImporterWidget.h"
@@ -181,10 +182,23 @@ namespace ROS2
             auto collidersNames = Utils::GetMeshesFilenames(m_parsedUrdf->getRoot(), false, true);
             auto visualNames = Utils::GetMeshesFilenames(m_parsedUrdf->getRoot(), true, false);
 
+            AZ::Uuid::FixedString dirSuffix;
+            if (!m_params.empty())
+            {
+                auto paramsUuid = AZ::Uuid::CreateNull();
+                for (auto& [key, value] : m_params)
+                {
+                    paramsUuid += AZ::Uuid::CreateName(key);
+                    paramsUuid += AZ::Uuid::CreateName(value);
+                }
+
+                dirSuffix = paramsUuid.ToFixedString();
+            }
+
             if (m_importAssetWithUrdf)
             {
                 m_urdfAssetsMapping = AZStd::make_shared<Utils::UrdfAssetMap>(
-                    Utils::CopyAssetForURDFAndCreateAssetMap(m_meshNames, m_urdfPath.String(), collidersNames, visualNames));
+                    Utils::CopyAssetForURDFAndCreateAssetMap(m_meshNames, m_urdfPath.String(), collidersNames, visualNames, dirSuffix));
             }
             else
             {
@@ -357,7 +371,12 @@ namespace ROS2
         }
         const bool useArticulation = m_prefabMakerPage->IsUseArticulations();
         m_prefabMaker = AZStd::make_unique<URDFPrefabMaker>(
-            m_urdfPath.String(), m_parsedUrdf, prefabPath.String(), m_urdfAssetsMapping, useArticulation);
+            m_urdfPath.String(),
+            m_parsedUrdf,
+            prefabPath.String(),
+            m_urdfAssetsMapping,
+            useArticulation,
+            m_prefabMakerPage->getSelectedSpawnPoint());
 
         auto prefabOutcome = m_prefabMaker->CreatePrefabFromURDF();
         if (prefabOutcome.IsSuccess())

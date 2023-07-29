@@ -50,6 +50,7 @@ namespace ROS2
 
         AZ::Crc32 OnLidarModelSelected();
         AZ::Crc32 OnLidarImplementationSelected();
+        void UpdateShowNoise();
         void FetchLidarImplementationFeatures();
         AZStd::vector<AZStd::string> FetchLidarSystemList();
         void ConnectToLidarRaycaster();
@@ -63,6 +64,7 @@ namespace ROS2
         AZStd::string m_lidarSystem;
         // A structure that maps each lidar implementation busId to the busId of a raycaster created by this LidarSensorComponent.
         AZStd::unordered_map<AZStd::string, LidarId> m_implementationToRaycasterMap;
+        bool m_canRaycasterPublish = false;
         LidarId m_lidarRaycasterId;
         std::shared_ptr<rclcpp::Publisher<sensor_msgs::msg::PointCloud2>> m_pointCloudPublisher;
 
