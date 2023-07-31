@@ -366,7 +366,7 @@ namespace OpenXRVk
         m_xrVkInstance = VK_NULL_HANDLE;
     }
 
-    void Instance::CollectAditionalRequiredInstanceExtensions(AZStd::vector<AZStd::string>& extensions)
+    void Instance::CollectAdditionalRequiredInstanceExtensions(AZStd::vector<AZStd::string>& extensions)
     {
         extensions.insert(extensions.end(), m_requireVulkanInstanceExtensions.begin(), m_requireVulkanInstanceExtensions.end());
     }
@@ -377,7 +377,7 @@ namespace OpenXRVk
         max.push_back(m_maxVulkanAPIVersion);
     }
 
-    void Instance::CollectAditionalRequiredDeviceExtensions(AZStd::vector<AZStd::string>& extensions)
+    void Instance::CollectAdditionalRequiredDeviceExtensions(AZStd::vector<AZStd::string>& extensions)
     {
         extensions.insert(extensions.end(), m_requireVulkanDeviceExtensions.begin(), m_requireVulkanDeviceExtensions.end());
     }

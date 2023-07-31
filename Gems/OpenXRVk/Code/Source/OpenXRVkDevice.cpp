@@ -14,6 +14,7 @@
 #include <OpenXRVk/OpenXRVkUtils.h>
 #include <OpenXRVkCommon.h>
 #include <Atom/RHI.Reflect/VkAllocator.h>
+#include <Atom/RHI.Reflect/Vulkan/XRVkDescriptors.h>
 #include <AzCore/Casting/numeric_cast.h>
 
 namespace OpenXRVk

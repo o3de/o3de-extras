@@ -8,6 +8,7 @@
 
 #include <XR/XRSystemComponent.h>
 #include <XR/XRUtils.h>
+#include <XR/XRFactory.h>
 #include <AzCore/Serialization/SerializeContext.h>
 #include <Atom/RPI.Public/XR/XRRenderingInterface.h>
 #include <Atom/RHI/ValidationLayer.h>
@@ -38,6 +39,12 @@ namespace XR
         // Register XR system interface if openxr is enabled via command line or settings registry
         if (IsOpenXREnabled())
         {
+            if (!Factory::IsReady())
+            {
+                AZ_Error("OpenXR", false, "OpenXR is enabled but no XR implementations are available. Unable to initialize XR system.");
+                return;
+            }
+
             //Get the validation mode
             AZ::RHI::ValidationMode validationMode = AZ::RHI::ValidationMode::Disabled;
             AZ::RHI::FactoryManagerBus::BroadcastResult(validationMode, &AZ::RHI::FactoryManagerRequest::DetermineValidationMode);

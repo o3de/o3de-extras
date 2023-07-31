@@ -70,11 +70,11 @@ namespace OpenXRVk
         void ShutdownInternal() override;
 
         // AZ::Vulkan::InstanceRequirementBus::Handler overrides..
-        void CollectAditionalRequiredInstanceExtensions(AZStd::vector<AZStd::string>& extensions) override;
+        void CollectAdditionalRequiredInstanceExtensions(AZStd::vector<AZStd::string>& extensions) override;
         void CollectMinMaxVulkanAPIVersions(AZStd::vector<uint32_t>& min, AZStd::vector<uint32_t>& max) override;
 
         // AZ::Vulkan::DeviceRequirementBus::Handler overrides...
-        void CollectAditionalRequiredDeviceExtensions(AZStd::vector<AZStd::string>& extensions) override;
+        void CollectAdditionalRequiredDeviceExtensions(AZStd::vector<AZStd::string>& extensions) override;
         void FilterSupportedDevices(AZStd::vector<VkPhysicalDevice>& supportedDevices) override;
 
         // AZ::Vulkan::InstanceNotificationBus::Handler overrides...
