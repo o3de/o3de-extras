@@ -11,7 +11,7 @@
             <Parameter Name="Model" Type="MachineLearning::INeuralNetworkPtr" Description="The model to compute the cost gradient for."/>
             <Parameter Name="Activations" Type="AZ::VectorN" Description="The set of activation values to apply to the model (must match the models input count)."/>
             <Parameter Name="ExpectedOutput" Type="AZ::VectorN" Description="The expected outputs given the provided inputs (must match the models output count)."/>
-            <Return Name="Cost" Type="float" Shared="true"/>
+            <Return Name="Cost" Type="AZ::VectorN" Shared="true"/>
         </Input>
     </Class>
 </ScriptCanvas>

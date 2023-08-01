@@ -11,7 +11,7 @@
 
 namespace MachineLearning
 {
-    float ComputeCost::In(MachineLearning::INeuralNetworkPtr Model, AZ::VectorN Activations, AZ::VectorN ExpectedOutput)
+    AZ::VectorN ComputeCost::In(MachineLearning::INeuralNetworkPtr Model, AZ::VectorN Activations, AZ::VectorN ExpectedOutput)
     {
         return Model->ComputeCost(Activations, ExpectedOutput, CostFunctions::Quadratic);
     }

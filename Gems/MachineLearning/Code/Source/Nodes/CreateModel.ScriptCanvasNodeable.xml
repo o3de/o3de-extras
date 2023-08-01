@@ -9,7 +9,7 @@
 
         <Input Name="In" DisplayGroup="In" Description="Parameters controlling the new model">
             <Parameter Name="Input neurons" Type="AZStd::size_t" Description="The number of input neurons for the model to have."/>
-            <Parameter Name="Output neurons" Type="AZStd::size_t" Description="The number of output neurons for the model to have."/>
+            <Parameter Name="Output params" Type="AZStd::size_t" Description="The output layer parameters."/>
             <Parameter Name="Hidden layers" Type="MachineLearning::HiddenLayerParams" Description="The array of hidden layers to generate."/>
             <Return Name="Model" Type="MachineLearning::INeuralNetworkPtr" Shared="true"/>
         </Input>

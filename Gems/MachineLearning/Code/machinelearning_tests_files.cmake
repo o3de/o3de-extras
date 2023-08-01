@@ -7,6 +7,8 @@
 #
 
 set(FILES
+    Tests/Algorithms/ActivationTests.cpp
+    Tests/Algorithms/LossFunctionTests.cpp
     Tests/Models/LayerTests.cpp
     Tests/Models/MultilayerPerceptronTests.cpp
     Tests/MachineLearningTests.cpp

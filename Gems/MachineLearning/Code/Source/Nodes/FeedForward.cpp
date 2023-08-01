@@ -13,7 +13,7 @@ namespace MachineLearning
 {
     AZ::VectorN FeedForward::In(MachineLearning::INeuralNetworkPtr Model, AZ::VectorN Activations)
     {
-        AZ::VectorN results = Model->FeedForward(Activations);
+        AZ::VectorN results = Model->Forward(Activations);
         return results;
     }
 }

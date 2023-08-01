@@ -11,15 +11,15 @@
 
 namespace MachineLearning
 {
-    INeuralNetworkPtr CreateModel::In(AZStd::size_t Inputneurons, AZStd::size_t Outputneurons, MachineLearning::HiddenLayerParams Hiddenlayers)
+    INeuralNetworkPtr CreateModel::In(AZStd::size_t Inputneurons, AZStd::size_t Outputparams, HiddenLayerParams Hiddenlayers)
     {
         INeuralNetworkPtr result = AZStd::make_unique<MultilayerPerceptron>(Inputneurons);
         MultilayerPerceptron* modelPtr = static_cast<MultilayerPerceptron*>(result.get());
-        for (AZStd::size_t layerSize : Hiddenlayers)
+        for (auto layerParams : Hiddenlayers)
         {
-            modelPtr->AddLayer(layerSize);
+            modelPtr->AddLayer(layerParams); //.m_layerSize, layerParams.m_activationFunction);
         }
-        modelPtr->AddLayer(Outputneurons);
+        modelPtr->AddLayer(Outputparams); //.m_layerSize, Outputparams.m_activationFunction);
         return result;
     }
 }

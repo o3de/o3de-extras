@@ -12,6 +12,7 @@
 #include <ScriptCanvas/Core/Nodeable.h>
 #include <ScriptCanvas/Core/NodeableNode.h>
 #include <MachineLearning/INeuralNetwork.h>
+#include <Models/Layer.h>
 #include <Source/Nodes/CreateModel.generated.h>
 
 namespace MachineLearning

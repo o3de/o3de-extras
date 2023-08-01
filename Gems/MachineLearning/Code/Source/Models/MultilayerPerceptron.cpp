@@ -48,8 +48,8 @@ namespace MachineLearning
                 Method("AddLayer", &MultilayerPerceptron::AddLayer)->
                 Method("GetLayerCount", &MultilayerPerceptron::GetLayerCount)->
                 Method("GetLayer", &MultilayerPerceptron::GetLayer)->
-                Method("FeedForward", &MultilayerPerceptron::FeedForward)->
-                Method("ComputeCost", &MultilayerPerceptron::ComputeCost)
+                Method("Forward", &MultilayerPerceptron::Forward)->
+                Method("Reverse", &MultilayerPerceptron::Reverse)
                 ;
         }
     }
@@ -59,14 +59,14 @@ namespace MachineLearning
     {
     }
 
-    void MultilayerPerceptron::AddLayer(AZStd::size_t layerDimensionality)
+    void MultilayerPerceptron::AddLayer(AZStd::size_t layerDimensionality, ActivationFunctions activationFunction)
     {
         AZStd::size_t lastLayerDimensionality = m_activationCount;
         if (!m_layers.empty())
         {
             lastLayerDimensionality = m_layers.back().m_biases.GetDimensionality();
         }
-        m_layers.push_back(AZStd::move(Layer(lastLayerDimensionality, layerDimensionality)));
+        m_layers.push_back(AZStd::move(Layer(activationFunction, lastLayerDimensionality, layerDimensionality)));
     }
 
     AZStd::size_t MultilayerPerceptron::GetLayerCount() const
@@ -89,37 +89,39 @@ namespace MachineLearning
         return parameterCount;
     }
 
-    const AZ::VectorN& MultilayerPerceptron::FeedForward(const AZ::VectorN& activations)
+    const AZ::VectorN& MultilayerPerceptron::Forward(const AZ::VectorN& activations)
     {
         const AZ::VectorN* lastLayerOutput = &activations;
         for (Layer& layer : m_layers)
         {
-            layer.ActivateLayer(*lastLayerOutput);
+            layer.Forward(*lastLayerOutput);
             lastLayerOutput = &layer.m_output;
         }
         return *lastLayerOutput;
     }
 
-    float MultilayerPerceptron::ComputeCost(const AZ::VectorN& activations, const AZ::VectorN& expectedOutput, CostFunctions costFunction)
+    void MultilayerPerceptron::Reverse(LossFunctions lossFunction, const AZ::VectorN& activations, const AZ::VectorN& expected)
     {
-        switch (costFunction)
+        // First feed-forward the activations to get our current model predictions
+        const AZ::VectorN& output = Forward(activations);
+
+        // Compute the partial derivatives of the loss function with respect to the final layer output
+        AZ::VectorN costGradients;
+        ComputeLoss_Derivative(lossFunction, output, expected, costGradients);
+
+        for (auto iter = m_layers.rbegin(); iter != m_layers.rend(); ++iter)
         {
-        case CostFunctions::Quadratic:
-            return ComputeCost_Quadratic(activations, expectedOutput);
+            iter->AccumulateGradients(costGradients);
+            costGradients = iter->m_backpropagationGradients;
         }
-        return 0.0f;
     }
 
-    float MultilayerPerceptron::ComputeCost_Quadratic(const AZ::VectorN& activations, const AZ::VectorN& expectedOutput)
+    void MultilayerPerceptron::GradientDescent(float learningRate)
     {
-        const AZ::VectorN& output = FeedForward(activations);
-        const AZ::VectorN squareDifference = (output - expectedOutput).GetSquare();
-        float summedCost = 0;
-        for (AZStd::size_t iter = 0; iter < squareDifference.GetDimensionality(); ++iter)
+        for (auto iter = m_layers.rbegin(); iter != m_layers.rend(); ++iter)
         {
-            summedCost += squareDifference.GetElement(iter);
+            iter->ApplyGradients(learningRate);
         }
-        return summedCost;
     }
 
     void MultilayerPerceptron::OnActivationCountChanged()

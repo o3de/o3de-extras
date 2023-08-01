@@ -20,7 +20,7 @@ namespace MachineLearning
     {
     public:
 
-        AZ_TYPE_INFO(MultilayerPerceptron, "{E12EF761-41A5-48C3-BF55-7179B280D45F}");
+        AZ_RTTI(MultilayerPerceptron, "{E12EF761-41A5-48C3-BF55-7179B280D45F}", INeuralNetwork);
 
         //! AzCore Reflection.
         //! @param context reflection context
@@ -30,18 +30,20 @@ namespace MachineLearning
         MultilayerPerceptron(AZStd::size_t activationCount);
         virtual ~MultilayerPerceptron() = default;
 
-        void AddLayer(AZStd::size_t layerDimensionality);
-        AZStd::size_t GetLayerCount() const;
-        Layer& GetLayer(AZStd::size_t layerIndex);
-
+        //! INeuralNetwork interface
+        //! @{
+        void AddLayer(AZStd::size_t layerDimensionality, ActivationFunctions activationFunction = ActivationFunctions::Linear) override;
+        AZStd::size_t GetLayerCount() const override;
+        Layer& GetLayer(AZStd::size_t layerIndex) override;
         AZStd::size_t GetParameterCount() const override;
-        const AZ::VectorN& FeedForward(const AZ::VectorN& activations) override;
-        float ComputeCost(const AZ::VectorN& activations, const AZ::VectorN& expectedOutput, CostFunctions costFunction) override;
+        const AZ::VectorN& Forward(const AZ::VectorN& activations) override;
+        void Reverse(LossFunctions lossFunction, const AZ::VectorN& activations, const AZ::VectorN& expected) override;
+        void GradientDescent(float learningRate) override;
+        //! @}
 
     private:
 
         void OnActivationCountChanged();
-        float ComputeCost_Quadratic(const AZ::VectorN& activations, const AZ::VectorN& expectedOutput);
 
         //! The number of neurons in the activation layer.
         AZStd::size_t m_activationCount = 0;

@@ -12,10 +12,20 @@
 
 namespace MachineLearning
 {
-    enum class CostFunctions
+    enum class LossFunctions
     {
-        Quadratic
+        MeanSquaredError, 
+        CrossEntropyLoss
     };
+
+    enum class ActivationFunctions
+    {
+        ReLU,
+        Sigmoid,
+        Linear
+    };
+
+    class Layer;
 
     class INeuralNetwork
     {
@@ -25,16 +35,48 @@ namespace MachineLearning
 
         virtual ~INeuralNetwork() = default;
 
+        //! Adds a new layer to the network.
+        virtual void AddLayer(AZStd::size_t layerDimensionality, ActivationFunctions activationFunction = ActivationFunctions::Linear) = 0;
+
+        //! Returns the total number of layers in the network.
+        virtual AZStd::size_t GetLayerCount() const = 0;
+
+        //! Retrieves a specific layer from the network indexed by the layerIndex.
+        virtual Layer& GetLayer(AZStd::size_t layerIndex) = 0;
+
         //! Returns the total number of parameters in the neural network.
         virtual AZStd::size_t GetParameterCount() const = 0;
 
         //! Performs a basic feed-forward operation to compute the output from a set of activation values.
-        virtual const AZ::VectorN& FeedForward(const AZ::VectorN& activations) = 0;
+        virtual const AZ::VectorN& Forward(const AZ::VectorN& activations) = 0;
 
-        //! Given a set of activations and an expected output, computes the cost of the 
-        virtual float ComputeCost(const AZ::VectorN& activations, const AZ::VectorN& expectedOutput, CostFunctions costFunction) = 0;
+        //! Accumulates the loss gradients given a loss function, an activation vector and a corresponding label vector.
+        virtual void Reverse(LossFunctions lossFunction, const AZ::VectorN& activations, const AZ::VectorN& expected) = 0;
+
+        //! Performs a gradient descent step and resets all gradient accumulators to zero.
+        virtual void GradientDescent(float learningRate) = 0;
+    };
+
+    struct LayerParams
+    {
+        AZ_TYPE_INFO(LayerParams, "{DD9A7E7C-8D11-4805-83CF-6A5262B4580C}");
+
+        //! AzCore Reflection.
+        //! @param context reflection context
+        static void Reflect(class AZ::ReflectContext* context);
+
+        LayerParams() = default;
+        inline LayerParams(AZStd::size_t size, ActivationFunctions activationFunction)
+            : m_layerSize(size)
+            , m_activationFunction(activationFunction)
+        {
+        }
+
+        AZStd::size_t m_layerSize = 0;
+        ActivationFunctions m_activationFunction = ActivationFunctions::ReLU;
     };
 
     using INeuralNetworkPtr = AZStd::shared_ptr<INeuralNetwork>;
+    //using HiddenLayerParams = AZStd::vector<LayerParams>;
     using HiddenLayerParams = AZStd::vector<AZStd::size_t>;
 }

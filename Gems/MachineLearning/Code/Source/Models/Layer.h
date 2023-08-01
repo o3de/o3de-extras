@@ -25,16 +25,34 @@ namespace MachineLearning
         static void Reflect(AZ::ReflectContext* context);
 
         Layer() = default;
-        Layer(AZStd::size_t activationDimensionality, AZStd::size_t layerDimensionality);
+        Layer(ActivationFunctions activationFunction, AZStd::size_t activationDimensionality, AZStd::size_t layerDimensionality);
 
-        const AZ::VectorN& ActivateLayer(const AZ::VectorN& activations);
+        //! Performs a basic forward pass on this layer, outputs are stored in m_output.
+        const AZ::VectorN& Forward(const AZ::VectorN& activations);
 
+        //! Performs a gradient computation against the provided expected output using the provided gradients from the previous layer.
+        //! This method presumes that we've completed a forward pass immediately prior to fill all the relevant vectors
+        void AccumulateGradients(const AZ::VectorN& expected);
+
+        //! Applies the current gradient values to the layers weights and biases and resets the gradient values for a new accumulation pass.
+        void ApplyGradients(float learningRate);
+
+        //! Updates layer internals for it's requested dimensionalities.
         void OnSizesChanged();
 
+        // These are intentionally left public so that unit testing can exhaustively examine all layer state
         AZStd::size_t m_inputSize = 0;
         AZStd::size_t m_outputSize = 0;
         AZ::MatrixMxN m_weights;
         AZ::VectorN m_biases;
         AZ::VectorN m_output;
+        ActivationFunctions m_activationFunction = ActivationFunctions::ReLU;
+
+        // These values will only be populated if backward propagation is performed
+        AZ::VectorN m_lastInput;
+        AZ::VectorN m_activationGradients;
+        AZ::VectorN m_biasGradients;
+        AZ::MatrixMxN m_weightGradients;
+        AZ::VectorN m_backpropagationGradients;
     };
 }
