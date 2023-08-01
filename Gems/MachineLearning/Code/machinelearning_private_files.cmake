@@ -11,14 +11,14 @@ set(FILES
     Source/MachineLearningModuleInterface.h
     Source/MachineLearningSystemComponent.cpp
     Source/MachineLearningSystemComponent.h
-	Source/Algorithms/Activations.h
-	Source/Algorithms/Activations.inl
-	Source/Algorithms/LossFunctions.h
-	Source/Algorithms/LossFunctions.inl
-	Source/Models/Layer.cpp
-	Source/Models/Layer.h
-	Source/Models/MultilayerPerceptron.cpp
-	Source/Models/MultilayerPerceptron.h
+    Source/Algorithms/Activations.h
+    Source/Algorithms/Activations.inl
+    Source/Algorithms/LossFunctions.h
+    Source/Algorithms/LossFunctions.inl
+    Source/Models/Layer.cpp
+    Source/Models/Layer.h
+    Source/Models/MultilayerPerceptron.cpp
+    Source/Models/MultilayerPerceptron.h
     Source/Nodes/CreateModel.ScriptCanvasNodeable.xml
     Source/Nodes/CreateModel.cpp
     Source/Nodes/CreateModel.h
