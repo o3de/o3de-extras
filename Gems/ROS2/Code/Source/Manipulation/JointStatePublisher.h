@@ -14,6 +14,7 @@
 #include <ROS2/Utilities/PhysicsCallbackHandler.h>
 #include <rclcpp/publisher.hpp>
 #include <sensor_msgs/msg/joint_state.hpp>
+#include <ROS2/Communication/FlexiblePublisher.h>
 
 namespace ROS2
 {
@@ -40,7 +41,7 @@ namespace ROS2
         PublisherConfiguration m_configuration;
         JointStatePublisherContext m_context;
 
-        std::shared_ptr<rclcpp::Publisher<sensor_msgs::msg::JointState>> m_jointStatePublisher;
+        std::shared_ptr<FlexiblePublisher<sensor_msgs::msg::JointState>> m_jointStatePublisher;
         sensor_msgs::msg::JointState m_jointStateMsg;
         float m_timeElapsedSinceLastTick = 0.0f;
 
