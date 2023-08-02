@@ -11,9 +11,13 @@
 #include <AzCore/IO/SystemFile.h>
 #include <AzCore/Math/Transform.h>
 #include <AzCore/std/containers/unordered_map.h>
+#include <AzCore/std/containers/unordered_set.h>
+#include <AzCore/std/containers/vector.h>
 #include <AzCore/std/function/function_template.h>
 #include <AzCore/std/string/string.h>
 #include <RobotImporter/URDF/UrdfParser.h>
+
+#include <sdf/sdf.hh>
 
 namespace ROS2
 {
@@ -76,6 +80,28 @@ namespace ROS2
         //! @param sourceAssetsPaths - set of all non relative paths to assets for which we want to wait for processing
         //! @returns false if a timeout or error occurs, otherwise true
         bool WaitForAssetsToProcess(const AZStd::unordered_map<AZStd::string, AZ::IO::Path>& sourceAssetsPaths);
+
+        namespace SDFormat
+        {
+            //! Retrieve plugin's filename. The filepath is converted into the filename if necessary.
+            //! @param plugin plugin in the parsed SDFormat data
+            //! @returns filename (including extension) without path
+            AZStd::string GetPluginFilename(const sdf::Plugin& plugin);
+
+            //! Retrieve all options that were defined for an element in XML data that are not supported in O3DE.
+            //! Allows to store the list of unsupported options in metadata and logs. It is typically used with sensors and plugins.
+            //! @param rootElement pointer to a root Element in parsed XML data that will be a subject to heuristics
+            //! @param supportedOptions set of predefined sensor's options that are supported
+            //! @returns list of unsupported options defined for given element
+            AZStd::vector<AZStd::string> GetUnsupportedOptions(
+                const sdf::ElementPtr& rootElement, const AZStd::unordered_set<AZStd::string>& supportedOptions);
+
+            //! Check if plugin is supported by using it's filename. The filepath is converted into the filename if necessary.
+            //! @param plugin plugin in the parsed SDFormat data
+            //! @param supportedPlugins set of predefined plugins that are supported
+            //! @returns true if plugin is supported
+            bool IsPluginSupported(const sdf::Plugin& plugin, const AZStd::unordered_set<AZStd::string>& supportedPlugins);
+        } // namespace SDFormat
 
     } // namespace Utils
 } // namespace ROS2
