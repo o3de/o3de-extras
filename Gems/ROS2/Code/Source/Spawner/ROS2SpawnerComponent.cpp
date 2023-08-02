@@ -91,6 +91,7 @@ namespace ROS2
     void ROS2SpawnerComponent::SpawnEntity(const SpawnEntityRequest request, SpawnEntityResponse response)
     {
         AZStd::string spawnableName(request->name.c_str());
+        AZStd::string spawnableNamespace(request->robot_namespace.c_str());
         AZStd::string spawnPointName(request->xml.c_str(), request->xml.size());
 
         auto spawnPoints = GetSpawnPoints();
@@ -131,9 +132,9 @@ namespace ROS2
                           1.0f };
         }
 
-        optionalArgs.m_preInsertionCallback = [this, transform, spawnableName](auto id, auto view)
+        optionalArgs.m_preInsertionCallback = [this, transform, spawnableName, spawnableNamespace](auto id, auto view)
         {
-            PreSpawn(id, view, transform, spawnableName);
+            PreSpawn(id, view, transform, spawnableName, spawnableNamespace);
         };
 
         spawner->SpawnAllEntities(m_tickets.at(spawnableName), optionalArgs);
@@ -145,7 +146,8 @@ namespace ROS2
         AzFramework::EntitySpawnTicket::Id id [[maybe_unused]],
         AzFramework::SpawnableEntityContainerView view,
         const AZ::Transform& transform,
-        const AZStd::string& spawnableName)
+        const AZStd::string& spawnableName,
+        const AZStd::string& spawnableNamespace)
     {
         if (view.empty())
         {
@@ -159,10 +161,11 @@ namespace ROS2
         AZStd::string instanceName = AZStd::string::format("%s_%d", spawnableName.c_str(), m_counter++);
         for (AZ::Entity* entity : view)
         { // Update name for the first entity with ROS2Frame in hierarchy (left to right)
-            const auto* frameComponent = Utils::GetGameOrEditorComponent<ROS2FrameComponent>(entity);
+            auto* frameComponent = Utils::GetGameOrEditorComponent<ROS2FrameComponent>(entity);
             if (frameComponent)
             {
                 entity->SetName(instanceName);
+                frameComponent->UpdateNamespaceConfiguration(spawnableNamespace, NamespaceConfiguration::NamespaceStrategy::Custom);
                 break;
             }
         }

@@ -41,6 +41,11 @@ namespace ROS2
         void PopulateNamespace(bool isRoot, const AZStd::string& entityName);
         AZStd::string GetNamespace(const AZStd::string& parentNamespace) const;
 
+        //! Update namespace and strategy.
+        //! @param ns Desired namespace.
+        //! @param strategy Namespace strategy.
+        void SetNamespace(const AZStd::string& ns, NamespaceStrategy strategy);
+
     private:
         AZStd::string m_namespace;
         NamespaceStrategy m_namespaceStrategy = NamespaceStrategy::Default;
