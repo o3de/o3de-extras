@@ -13,7 +13,14 @@
 #include <AzCore/std/function/function_template.h>
 #include <AzCore/std/string/string.h>
 
-#include <sdf/Sensor.hh>
+namespace sdf
+{
+    inline namespace v13
+    {
+        enum class SensorType;
+        class Sensor;
+    } // namespace v13
+} // namespace sdf
 
 namespace ROS2::SDFormat
 {

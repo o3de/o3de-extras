@@ -111,20 +111,6 @@ ly_create_alias(NAME ${gem_name}.Unified NAMESPACE Gem TARGETS Gem::${gem_name})
 # will also depend on ${gem_name}.Static
 if(PAL_TRAIT_BUILD_HOST_TOOLS)
     ly_add_target(
-        NAME ${gem_name}.Editor.API INTERFACE
-        NAMESPACE Gem
-        FILES_CMAKE
-            ros2_editor_api_files.cmake
-        INCLUDE_DIRECTORIES
-            INTERFACE
-                Include
-        BUILD_DEPENDENCIES
-            INTERFACE
-                AZ::AzToolsFramework
-                3rdParty::sdformat
-    )
-
-    ly_add_target(
         NAME ${gem_name}.Editor.Static STATIC
         NAMESPACE Gem
         AUTOMOC
