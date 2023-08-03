@@ -15,7 +15,6 @@
 #include <AzCore/StringFunc/StringFunc.h>
 #include <AzCore/std/string/regex.h>
 #include <AzToolsFramework/API/EditorAssetSystemAPI.h>
-#include <filesystem>
 #include <string.h>
 
 namespace ROS2
@@ -329,8 +328,8 @@ namespace ROS2
     {
         AZStd::string GetPluginFilename(const sdf::Plugin& plugin)
         {
-            const std::filesystem::path path = plugin.Filename();
-            return AZStd::string(path.filename().u8string().c_str(), path.filename().u8string().size());
+            const AZ::IO::Path path{ plugin.Filename().c_str() };
+            return path.Filename().String();
         }
 
         AZStd::vector<AZStd::string> GetUnsupportedOptions(
