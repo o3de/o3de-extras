@@ -9,6 +9,7 @@
 #include "ROS2ContactSensorComponent.h"
 #include <AzCore/Component/ComponentApplicationBus.h>
 #include <AzCore/Debug/Trace.h>
+#include <AzCore/Serialization/EditContext.h>
 #include <AzCore/Serialization/EditContextConstants.inl>
 #include <AzCore/std/parallel/lock.h>
 #include <AzCore/std/parallel/mutex.h>
