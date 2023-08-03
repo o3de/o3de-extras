@@ -48,7 +48,8 @@ namespace ROS2
                         AZ::Edit::UIHandlers::Default,
                         &ROS2ImuSensorComponent::m_imuConfiguration,
                         "Imu sensor configuration",
-                        "Imu sensor configuration");
+                        "Imu sensor configuration")
+                    ->Attribute(AZ::Edit::Attributes::Visibility, AZ::Edit::PropertyVisibility::ShowChildrenOnly);
             }
         }
     }

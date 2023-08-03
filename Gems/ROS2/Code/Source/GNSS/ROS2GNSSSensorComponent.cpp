@@ -45,7 +45,8 @@ namespace ROS2
                         AZ::Edit::UIHandlers::Default,
                         &ROS2GNSSSensorComponent::m_gnssConfiguration,
                         "GNSS sensor configuration",
-                        "GNSS sensor configuration");
+                        "GNSS sensor configuration")
+                    ->Attribute(AZ::Edit::Attributes::Visibility, AZ::Edit::PropertyVisibility::ShowChildrenOnly);
             }
         }
     }

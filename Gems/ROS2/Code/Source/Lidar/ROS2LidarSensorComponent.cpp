@@ -41,7 +41,8 @@ namespace ROS2
                         AZ::Edit::UIHandlers::ComboBox,
                         &ROS2LidarSensorComponent::m_lidarConfiguration,
                         "Lidar configuration",
-                        "Lidar configuration");
+                        "Lidar configuration")
+                    ->Attribute(AZ::Edit::Attributes::Visibility, AZ::Edit::PropertyVisibility::ShowChildrenOnly);
             }
         }
     }
