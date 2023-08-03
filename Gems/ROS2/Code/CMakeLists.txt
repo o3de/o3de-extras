@@ -68,7 +68,6 @@ ly_add_target(
             Gem::StartingPointInput
             Gem::PhysX.Static
             Gem::LmbrCentral.API
-            3rdParty::sdformat
 )
 
 target_depends_on_ros2_packages(${gem_name}.Static rclcpp builtin_interfaces std_msgs sensor_msgs nav_msgs tf2_ros ackermann_msgs gazebo_msgs)
@@ -111,6 +110,20 @@ ly_create_alias(NAME ${gem_name}.Unified NAMESPACE Gem TARGETS Gem::${gem_name})
 # If we are on a host platform, we want to add the host tools targets like the ${gem_name}.Editor target which
 # will also depend on ${gem_name}.Static
 if(PAL_TRAIT_BUILD_HOST_TOOLS)
+    ly_add_target(
+        NAME ${gem_name}.Editor.API INTERFACE
+        NAMESPACE Gem
+        FILES_CMAKE
+            ros2_editor_api_files.cmake
+        INCLUDE_DIRECTORIES
+            INTERFACE
+                Include
+        BUILD_DEPENDENCIES
+            INTERFACE
+                AZ::AzToolsFramework
+                3rdParty::sdformat
+    )
+
     ly_add_target(
         NAME ${gem_name}.Editor.Static STATIC
         NAMESPACE Gem
@@ -219,6 +232,7 @@ if(PAL_TRAIT_BUILD_TESTS_SUPPORTED)
                     PRIVATE
                         AZ::AzTest
                         Gem::${gem_name}.Editor
+                        3rdParty::sdformat
             )
 
             # Add ROS2.Editor.Tests to googletest

@@ -9,7 +9,6 @@
 #include <AzCore/UnitTest/TestTypes.h>
 #include <AzCore/std/smart_ptr/make_shared.h>
 #include <AzTest/AzTest.h>
-#include <ROS2/RobotImporter/SDFormatSensorImporterHook.h>
 #include <RobotImporter/SDFormat/ROS2SensorHooks.h>
 #include <RobotImporter/Utils/RobotImporterUtils.h>
 
@@ -39,55 +38,55 @@ namespace UnitTest
 
         std::string GetSdfWithTwoSensors()
         {
-            return "<?xml version=\"1.0\" ?>\n"
-                   "<sdf version=\"1.6\">\n"
-                   "  <model name=\"test_two_sensors\">\n"
-                   "    <link name=\"link1\">\n"
-                   "      <sensor name=\"camera\" type=\"camera\">\n"
-                   "        <pose>0 0 0 0 0 0</pose>\n"
-                   "        <camera>\n"
-                   "          <horizontal_fov>2.0</horizontal_fov>\n"
-                   "          <image>\n"
-                   "            <width>640</width>\n"
-                   "            <height>480</height>\n"
-                   "          </image>\n"
-                   "          <clip>\n"
-                   "            <near>0.01</near>\n"
-                   "            <far>1000</far>\n"
-                   "          </clip>\n"
-                   "        </camera>\n"
-                   "        <update_rate>10</update_rate>\n"
-                   "        <plugin name=\"camera_plug\" filename=\"libgazebo_ros_camera.so\">\n"
-                   "          <camera_name>custom_camera</camera_name>\n"
-                   "        </plugin>\n"
-                   "      </sensor>\n"
-                   "    </link>\n"
-                   "    <link name=\"link2\">\n"
-                   "      <sensor name=\"laser\" type=\"ray\">\n"
-                   "        <always_on>1</always_on>\n"
-                   "        <visualize>1</visualize>\n"
-                   "        <update_rate>20.0</update_rate>\n"
-                   "        <pose>0 0 0 0 0 0</pose>\n"
-                   "        <ray>\n"
-                   "          <scan>\n"
-                   "            <horizontal>\n"
-                   "              <samples>640</samples>\n"
-                   "              <resolution>1.0</resolution>\n"
-                   "              <min_angle>-2.0</min_angle>\n"
-                   "              <max_angle>2.5</max_angle>\n"
-                   "            </horizontal>\n"
-                   "          </scan>\n"
-                   "          <range>\n"
-                   "            <min>0.02</min>\n"
-                   "            <max>10</max>\n"
-                   "            <resolution>0.01</resolution>\n"
-                   "          </range>\n"
-                   "        </ray>\n"
-                   "        <plugin name=\"laser_plug\" filename=\"librayplugin.so\"/>\n"
-                   "      </sensor>\n"
-                   "    </link>\n"
-                   "  </model>\n"
-                   "</sdf>\n";
+            return R"(<?xml version="1.0"?>
+                      <sdf version="1.6">
+                        <model name="test_two_sensors">
+                          <link name="link1">
+                            <sensor name="camera" type="camera">
+                              <pose>0 0 0 0 0 0</pose>
+                              <camera>
+                                <horizontal_fov>2.0</horizontal_fov>
+                                <image>
+                                  <width>640</width>
+                                  <height>480</height>
+                                </image>
+                                <clip>
+                                  <near>0.01</near>
+                                  <far>1000</far>
+                                </clip>
+                              </camera>
+                              <update_rate>10</update_rate>
+                              <plugin name="camera_plug" filename="libgazebo_ros_camera.so">
+                                <camera_name>custom_camera</camera_name>
+                              </plugin>
+                            </sensor>
+                          </link>
+                          <link name="link2">
+                            <sensor name="laser" type="ray">
+                              <always_on>1</always_on>
+                              <visualize>1</visualize>
+                              <update_rate>20.0</update_rate>
+                              <pose>0 0 0 0 0 0</pose>
+                              <ray>
+                                <scan>
+                                  <horizontal>
+                                    <samples>640</samples>
+                                    <resolution>1.0</resolution>
+                                    <min_angle>-2.0</min_angle>
+                                    <max_angle>2.5</max_angle>
+                                  </horizontal>
+                                </scan>
+                                <range>
+                                  <min>0.02</min>
+                                  <max>10</max>
+                                  <resolution>0.01</resolution>
+                                </range>
+                              </ray>
+                              <plugin name="laser_plug" filename="librayplugin.so"/>
+                            </sensor>
+                          </link>
+                        </model>
+                      </sdf>)";
         }
     };
 
