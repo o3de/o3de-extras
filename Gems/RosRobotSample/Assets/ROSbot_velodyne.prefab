@@ -478,27 +478,29 @@
                                             }
                                         }
                                     },
-                                    "lidarModel": 4,
-                                    "lidarImplementation": "Scene Queries",
-                                    "LidarParameters": {
-                                        "Name": "Velodyne Puck (VLP-16)",
-                                        "Layers": 16,
-                                        "Points per layer": 1800,
-                                        "Min horizontal angle": -180.0,
-                                        "Max horizontal angle": 180.0,
-                                        "Min vertical angle": 15.0,
-                                        "Max vertical angle": -15.0,
-                                        "Max range": 100.0,
-                                        "Noise Parameters": {
-                                            "Angular noise standard deviation": 0.0,
-                                            "Distance noise standard deviation base": 0.029999999329447743,
-                                            "Distance noise standard deviation slope": 0.0010000000474974513
-                                        }
-                                    },
-                                    "IgnoreLayer": true,
-                                    "IgnoredLayerIndex": 1,
-                                    "ExcludedEntities": [],
-                                    "PointsAtMax": false
+                                    "lidarConfiguration": {
+                                        "lidarModel": 4,
+                                        "lidarImplementation": "Scene Queries",
+                                        "LidarParameters": {
+                                            "Name": "Velodyne Puck (VLP-16)",
+                                            "Layers": 16,
+                                            "Points per layer": 1800,
+                                            "Min horizontal angle": -180.0,
+                                            "Max horizontal angle": 180.0,
+                                            "Min vertical angle": 15.0,
+                                            "Max vertical angle": -15.0,
+                                            "Max range": 100.0,
+                                            "Noise Parameters": {
+                                                "Angular noise standard deviation": 0.0,
+                                                "Distance noise standard deviation base": 0.029999999329447743,
+                                                "Distance noise standard deviation slope": 0.0010000000474974513
+                                            }
+                                        },
+                                        "IgnoreLayer": true,
+                                        "IgnoredLayerIndex": 1,
+                                        "ExcludedEntities": [],
+                                        "PointsAtMax": false
+                                    }
                                 }
                             },
                             "TransformComponent": {
