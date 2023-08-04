@@ -32,20 +32,12 @@ namespace MachineLearning
         case LossFunctions::MeanSquaredError:
             MeanSquaredError(expected, actual, output);
             break;
-        case LossFunctions::CrossEntropyLoss:
-            CrossEntropyLoss(expected, actual, output);
-            break;
         }
     }
 
     inline void MeanSquaredError(const AZ::VectorN& expected, const AZ::VectorN& actual, AZ::VectorN& output)
     {
         output = 0.5f * (actual - expected).GetSquare();
-    }
-
-    inline void CrossEntropyLoss(const AZ::VectorN& expected, const AZ::VectorN& actual, AZ::VectorN& output)
-    {
-        output = -(expected / actual) + (1.0f - expected) / (1.0f - actual);
     }
 
     inline void ComputeLoss_Derivative(LossFunctions costFunction, const AZ::VectorN& expected, const AZ::VectorN& actual, AZ::VectorN& output)
@@ -57,19 +49,11 @@ namespace MachineLearning
         case LossFunctions::MeanSquaredError:
             MeanSquaredError_Derivative(expected, actual, output);
             break;
-        case LossFunctions::CrossEntropyLoss:
-            CrossEntropyLoss_Derivative(expected, actual, output);
-            break;
         }
     }
 
     inline void MeanSquaredError_Derivative(const AZ::VectorN& expected, const AZ::VectorN& actual, AZ::VectorN& output)
     {
         output = (expected - actual);
-    }
-
-    inline void CrossEntropyLoss_Derivative(const AZ::VectorN& expected, const AZ::VectorN& actual, AZ::VectorN& output)
-    {
-        output = -(expected / actual) + (1.0f - expected) / (1.0f - actual);
     }
 }

@@ -7,8 +7,8 @@
            Category="MachineLearning"
            Description="Performs a feed-forward operation on the model to obtain a set of outputs given an input.">
 
-        <Input Name="In" DisplayGroup="In" Description="Parameters controlling the feed forward operation">
-            <Parameter Name="Model" Type="MachineLearning::INeuralNetworkPtr" Description="The model to compute the cost gradient for."/>
+        <Input Name="In" DisplayGroup="In" Description="Parameters controlling the feed forward operation" Hidden="True">
+            <Parameter Name="Model" Type="MachineLearning::INeuralNetworkPtr" Description="The model to run a feed forward operation on."/>
             <Parameter Name="Activations" Type="AZ::VectorN" Description="The set of activation values to apply to the model (must match the models input count)."/>
             <Return Name="Output" Type="AZ::VectorN" Shared="true"/>
         </Input>

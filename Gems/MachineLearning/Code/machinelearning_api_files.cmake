@@ -8,6 +8,8 @@
 
 set(FILES
     Include/MachineLearning/INeuralNetwork.h
+    Include/MachineLearning/LabeledTrainingData.h
     Include/MachineLearning/MachineLearningBus.h
     Include/MachineLearning/MachineLearningTypeIds.h
+    Include/MachineLearning/Types.h
 )

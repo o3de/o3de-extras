@@ -22,17 +22,11 @@ namespace MachineLearning
     //! Computes the derivative of the rectified linear unit function (ReLU) applied to all elements of the source vector.
     void MeanSquaredError(const AZ::VectorN& expected, const AZ::VectorN& actual, AZ::VectorN& output);
 
-    //! Computes the derivative of the rectified linear unit function (ReLU) applied to all elements of the source vector.
-    void CrossEntropyLoss(const AZ::VectorN& expected, const AZ::VectorN& actual, AZ::VectorN& output);
-
     //! Computes the gradient of the loss using across all elements of the source vectors using the requested cost function.
     void ComputeLoss_Derivative(LossFunctions lossFunction, const AZ::VectorN& expected, const AZ::VectorN& actual, AZ::VectorN& output);
 
     //! Computes the derivative of the rectified linear unit function (ReLU) applied to all elements of the source vector.
     void MeanSquaredError_Derivative(const AZ::VectorN& expected, const AZ::VectorN& actual, AZ::VectorN& output);
-
-    //! Computes the derivative of the rectified linear unit function (ReLU) applied to all elements of the source vector.
-    void CrossEntropyLoss_Derivative(const AZ::VectorN& expected, const AZ::VectorN& actual, AZ::VectorN& output);
 }
 
 #include <Algorithms/LossFunctions.inl>

@@ -11,16 +11,19 @@
 #include <AzCore/Math/MatrixMxN.h>
 #include <MachineLearning/INeuralNetwork.h>
 #include <Models/Layer.h>
+#include <AzCore/Asset/AssetCommon.h>
 
 namespace MachineLearning
 {
     //! This is a basic multilayer perceptron neural network capable of basic training and feed forward operations.
     class MultilayerPerceptron
         : public INeuralNetwork
+        , public AZ::Data::AssetData
     {
     public:
 
-        AZ_RTTI(MultilayerPerceptron, "{E12EF761-41A5-48C3-BF55-7179B280D45F}", INeuralNetwork);
+        AZ_CLASS_ALLOCATOR(MultilayerPerceptron, AZ::SystemAllocator);
+        AZ_RTTI(MultilayerPerceptron, "{E12EF761-41A5-48C3-BF55-7179B280D45F}", AZ::Data::AssetData, INeuralNetwork);
 
         //! AzCore Reflection.
         //! @param context reflection context

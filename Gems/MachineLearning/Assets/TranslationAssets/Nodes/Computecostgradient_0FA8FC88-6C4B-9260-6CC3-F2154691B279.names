@@ -5,16 +5,16 @@
             "context": "ScriptCanvas::Node",
             "variant": "",
             "details": {
-                "name": "Compute cost gradient",
+                "name": "Compute cost",
                 "category": "MachineLearning",
-                "tooltip": "Calculates the cost gradient for a machine learning model against a set of activations and a set of expected outputs."
+                "tooltip": "Calculates the total cost for a machine learning model against a set of activations and a set of expected outputs."
             },
             "slots": [
                 {
                     "base": "Input_In_0",
                     "details": {
                         "name": "In",
-                        "tooltip": "Parameters controlling cost gradient calculation"
+                        "tooltip": "Parameters controlling cost calculation"
                     }
                 },
                 {
@@ -39,7 +39,7 @@
                     "base": "Output_On In_0",
                     "details": {
                         "name": "On In",
-                        "tooltip": "Parameters controlling cost gradient calculation"
+                        "tooltip": "Parameters controlling cost calculation"
                     }
                 },
                 {

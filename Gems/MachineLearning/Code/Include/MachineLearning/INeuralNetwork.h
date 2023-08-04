@@ -9,24 +9,10 @@
 #pragma once
 
 #include <AzCore/Math/VectorN.h>
+#include <MachineLearning/Types.h>
 
 namespace MachineLearning
 {
-    enum class LossFunctions
-    {
-        MeanSquaredError, 
-        CrossEntropyLoss
-    };
-
-    enum class ActivationFunctions
-    {
-        ReLU,
-        Sigmoid,
-        Linear
-    };
-
-    class Layer;
-
     class INeuralNetwork
     {
     public:
@@ -57,26 +43,5 @@ namespace MachineLearning
         virtual void GradientDescent(float learningRate) = 0;
     };
 
-    struct LayerParams
-    {
-        AZ_TYPE_INFO(LayerParams, "{DD9A7E7C-8D11-4805-83CF-6A5262B4580C}");
-
-        //! AzCore Reflection.
-        //! @param context reflection context
-        static void Reflect(class AZ::ReflectContext* context);
-
-        LayerParams() = default;
-        inline LayerParams(AZStd::size_t size, ActivationFunctions activationFunction)
-            : m_layerSize(size)
-            , m_activationFunction(activationFunction)
-        {
-        }
-
-        AZStd::size_t m_layerSize = 0;
-        ActivationFunctions m_activationFunction = ActivationFunctions::ReLU;
-    };
-
     using INeuralNetworkPtr = AZStd::shared_ptr<INeuralNetwork>;
-    //using HiddenLayerParams = AZStd::vector<LayerParams>;
-    using HiddenLayerParams = AZStd::vector<AZStd::size_t>;
 }

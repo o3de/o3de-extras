@@ -8,11 +8,13 @@
 
 #include <Nodes/ComputeCost.h>
 #include <Models/MultilayerPerceptron.h>
+#include <Algorithms/LossFunctions.h>
 
 namespace MachineLearning
 {
-    AZ::VectorN ComputeCost::In(MachineLearning::INeuralNetworkPtr Model, AZ::VectorN Activations, AZ::VectorN ExpectedOutput)
+    float ComputeCost::In(MachineLearning::INeuralNetworkPtr Model, MachineLearning::LossFunctions LossFunction, AZ::VectorN Activations, AZ::VectorN ExpectedOutput)
     {
-        return Model->ComputeCost(Activations, ExpectedOutput, CostFunctions::Quadratic);
+        const AZ::VectorN& modelOutput = Model->Forward(Activations);
+        return ComputeTotalCost(LossFunction, ExpectedOutput, modelOutput);
     }
 }

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<ScriptCanvas Include="Nodes/AccumulateTrainingGradients.h" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <Class Name="AccumulateTrainingGradients"
+           QualifiedName="MachineLearning::AccumulateTrainingGradients"
+           PreferredClassName="Accumulate training gradient"
+           Category="MachineLearning"
+           Description="Accumulates the cost gradients for a machine learning model against a set of activations and a set of expected outputs.">
+
+        <Input Name="In" DisplayGroup="In" Description="Parameters controlling cost gradient calculation">
+            <Parameter Name="Model" Type="MachineLearning::INeuralNetworkPtr" Description="The model to accumulate a cost gradient for."/>
+            <Parameter Name="CostFunction" Type="MachineLearning::LossFunctions" Description="The loss function to use to compute the cost."/>
+            <Parameter Name="Activations" Type="AZ::VectorN" Description="The set of activation values to apply to the model (must match the models input count)."/>
+            <Parameter Name="ExpectedOutput" Type="AZ::VectorN" Description="The expected outputs given the provided inputs (must match the models output count)."/>
+            <Return Name="Model" Type="MachineLearning::INeuralNetworkPtr" Shared="true"/>
+        </Input>
+    </Class>
+</ScriptCanvas>

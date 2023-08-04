@@ -8,6 +8,8 @@
 
 #include "MachineLearningSystemComponent.h"
 #include <MachineLearning/MachineLearningTypeIds.h>
+#include <MachineLearning/Types.h>
+#include <MachineLearning/LabeledTrainingData.h>
 #include <AzCore/Serialization/SerializeContext.h>
 #include <AzCore/Serialization/EditContext.h>
 #include <AzCore/RTTI/BehaviorContext.h>
@@ -55,7 +57,44 @@ namespace MachineLearning
                 Attribute(AZ::Script::Attributes::Module, "machineLearning")->
                 Attribute(AZ::Script::Attributes::ExcludeFrom, AZ::Script::Attributes::ExcludeFlags::ListOnly)->
                 Constructor<AZStd::size_t, ActivationFunctions>()->
-                Attribute(AZ::Script::Attributes::Storage, AZ::Script::Attributes::StorageType::Value)
+                Attribute(AZ::Script::Attributes::Storage, AZ::Script::Attributes::StorageType::Value)->
+                Property("Size", BehaviorValueProperty(&LayerParams::m_layerSize))->
+                Property("ActivationFunction", BehaviorValueProperty(&LayerParams::m_activationFunction))
+                ;
+        }
+    }
+
+    void LabeledTrainingData::Reflect(AZ::ReflectContext* context)
+    {
+        if (auto serializeContext = azrtti_cast<AZ::SerializeContext*>(context))
+        {
+            serializeContext->Class<LabeledTrainingData>()
+                ->Version(1)
+                ->Field("Activations", &LabeledTrainingData::m_activations)
+                ->Field("Label", &LabeledTrainingData::m_label)
+                ;
+
+            if (AZ::EditContext* editContext = serializeContext->GetEditContext())
+            {
+                editContext->Class<LabeledTrainingData>("Parameters defining a single training data instance", "")
+                    ->ClassElement(AZ::Edit::ClassElements::EditorData, "")
+                    ->DataElement(AZ::Edit::UIHandlers::Default, &LabeledTrainingData::m_activations, "Activations", "The inputs to be fed into the model to generate a prediction")
+                    ->DataElement(AZ::Edit::UIHandlers::Default, &LabeledTrainingData::m_label, "Label", "The expected output that should be generated given the input")
+                    ;
+            }
+        }
+
+        auto behaviorContext = azrtti_cast<AZ::BehaviorContext*>(context);
+        if (behaviorContext)
+        {
+            behaviorContext->Class<LabeledTrainingData>()->
+                Attribute(AZ::Script::Attributes::Scope, AZ::Script::Attributes::ScopeFlags::Common)->
+                Attribute(AZ::Script::Attributes::Module, "machineLearning")->
+                Attribute(AZ::Script::Attributes::ExcludeFrom, AZ::Script::Attributes::ExcludeFlags::ListOnly)->
+                Constructor<>()->
+                Attribute(AZ::Script::Attributes::Storage, AZ::Script::Attributes::StorageType::Value)->
+                Property("Activations", BehaviorValueProperty(&LabeledTrainingData::m_activations))->
+                Property("Label", BehaviorValueProperty(&LabeledTrainingData::m_label))
                 ;
         }
     }
@@ -68,25 +107,28 @@ namespace MachineLearning
             serializeContext->Class<Layer>()->Version(0);
             serializeContext->Class<MultilayerPerceptron>()->Version(0);
             serializeContext->Class<INeuralNetwork>()->Version(0);
+            serializeContext->Class<LabeledTrainingData>()->Version(0);
             serializeContext->Class<LayerParams>();
             serializeContext->RegisterGenericType<INeuralNetworkPtr>();
             serializeContext->RegisterGenericType<HiddenLayerParams>();
+            serializeContext->RegisterGenericType<LabeledTrainingDataSet>();
         }
 
         if (auto behaviorContext = azrtti_cast<AZ::BehaviorContext*>(context))
         {
             behaviorContext->Class<MachineLearningSystemComponent>();
+            behaviorContext->Class<LabeledTrainingData>();
             behaviorContext->Class<LayerParams>();
             behaviorContext->Class<Layer>();
             behaviorContext->Class<MultilayerPerceptron>();
 
             behaviorContext
-                ->Enum<static_cast<int>(ActivationFunctions::Linear)>("Linear activation function")
-                ->Enum<static_cast<int>(ActivationFunctions::ReLU)>("ReLU activation function");
-
+                ->Enum<static_cast<int>(ActivationFunctions::ReLU)>("ReLU activation function")
+                ->Enum<static_cast<int>(ActivationFunctions::Sigmoid)>("Sigmoid activation function")
+                ->Enum<static_cast<int>(ActivationFunctions::Linear)>("Linear activation function");
+            
             behaviorContext
-                ->Enum<static_cast<int>(LossFunctions::MeanSquaredError)>("Quadratic cost function")
-                ->Enum<static_cast<int>(LossFunctions::CrossEntropyLoss)>("Cross entropy loss function");
+                ->Enum<static_cast<int>(LossFunctions::MeanSquaredError)>("Mean Squared Error");
         }
     }
 
