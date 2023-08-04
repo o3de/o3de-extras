@@ -17,7 +17,7 @@ namespace ROS2
 {
     //! General configuration for sensors.
     //! All sensors can be set to a certain frequency, have their data published or not,
-    //! and visualised or not.
+    //! and visualized or not.
     struct SensorConfiguration
     {
     public:
@@ -34,7 +34,7 @@ namespace ROS2
         float m_frequency = 10;
 
         bool m_publishingEnabled = true; //!< Determines whether the sensor is publishing (sending data to ROS 2 ecosystem).
-        bool m_visualise = true; //!< Determines whether the sensor is visualised in O3DE (for example, point cloud is drawn for LIDAR).
+        bool m_visualize = true; //!< Determines whether the sensor is visualized in O3DE (for example, point cloud is drawn for LIDAR).
     private:
         // Frequency limit is once per day.
         static constexpr float m_minFrequency = AZStd::numeric_limits<float>::epsilon();

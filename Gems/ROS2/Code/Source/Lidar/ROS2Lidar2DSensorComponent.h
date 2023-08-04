@@ -42,7 +42,7 @@ namespace ROS2
         //////////////////////////////////////////////////////////////////////////
         // ROS2SensorComponent overrides
         void FrequencyTick() override;
-        void Visualise() override;
+        void Visualize() override;
 
         void ConnectToLidarRaycaster();
         void ConfigureLidarRaycaster();

@@ -78,7 +78,7 @@ namespace ROS2
         AZStd::string fullTopic = ROS2Names::GetNamespacedName(GetNamespace(), publisherConfig.m_topic);
         m_detectionPublisher = ros2Node->create_publisher<std_msgs::msg::Bool>(fullTopic.data(), publisherConfig.GetQoS());
 
-        if (m_sensorConfiguration.m_visualise)
+        if (m_sensorConfiguration.m_visualize)
         {
             auto* entityScene = AZ::RPI::Scene::GetSceneForEntityId(GetEntityId());
             m_drawQueue = AZ::RPI::AuxGeomFeatureProcessorInterface::GetDrawQueueForScene(entityScene);
@@ -99,7 +99,7 @@ namespace ROS2
         ROS2SensorComponent::Deactivate();
     }
 
-    void ROS2ProximitySensor::Visualise()
+    void ROS2ProximitySensor::Visualize()
     {
         if (m_drawQueue)
         {

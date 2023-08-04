@@ -463,7 +463,7 @@
                                     "$type": "ROS2LidarSensorComponent",
                                     "Id": 0,
                                     "SensorConfiguration": {
-                                        "Visualise": true,
+                                        "Visualize": true,
                                         "Publishing Enabled": true,
                                         "Frequency (HZ)": 10.0,
                                         "Publishers": {

@@ -59,10 +59,10 @@ namespace ROS2
         virtual void FrequencyTick(){};
 
     private:
-        //! Visualise sensor operation.
+        //! Visualize sensor operation.
         //! For example, draw points or rays for a lidar, viewport for a camera, etc.
-        //! Visualisation can be turned on or off in SensorConfiguration.
-        virtual void Visualise(){};
+        //! Visualization can be turned on or off in SensorConfiguration.
+        virtual void Visualize(){};
 
         //! The number of ticks that are expected to pass to trigger next measurement.
         AZ::s32 m_tickCountDown{ 0 };

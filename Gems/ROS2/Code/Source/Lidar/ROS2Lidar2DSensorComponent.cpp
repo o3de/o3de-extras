@@ -87,7 +87,7 @@ namespace ROS2
         }
 
         RaycastResultFlags requestedFlags = RaycastResultFlags::Ranges;
-        if (m_sensorConfiguration.m_visualise)
+        if (m_sensorConfiguration.m_visualize)
         {
             requestedFlags |= RaycastResultFlags::Points;
         }
@@ -134,7 +134,7 @@ namespace ROS2
         m_sensorConfiguration = sensorConfiguration;
     }
 
-    void ROS2Lidar2DSensorComponent::Visualise()
+    void ROS2Lidar2DSensorComponent::Visualize()
     {
         if (m_visualizationPoints.empty())
         {
@@ -164,7 +164,7 @@ namespace ROS2
         AZStd::string fullTopic = ROS2Names::GetNamespacedName(GetNamespace(), publisherConfig.m_topic);
         m_laserScanPublisher = ros2Node->create_publisher<sensor_msgs::msg::LaserScan>(fullTopic.data(), publisherConfig.GetQoS());
 
-        if (m_sensorConfiguration.m_visualise)
+        if (m_sensorConfiguration.m_visualize)
         {
             auto* entityScene = AZ::RPI::Scene::GetSceneForEntityId(GetEntityId());
             m_drawQueue = AZ::RPI::AuxGeomFeatureProcessorInterface::GetDrawQueueForScene(entityScene);
@@ -190,7 +190,7 @@ namespace ROS2
         auto entityTransform = GetEntity()->FindComponent<AzFramework::TransformComponent>();
 
         RaycastResultFlags requestedFlags = RaycastResultFlags::Ranges;
-        if (m_sensorConfiguration.m_visualise)
+        if (m_sensorConfiguration.m_visualize)
         {
             requestedFlags |= RaycastResultFlags::Points;
         }
@@ -202,7 +202,7 @@ namespace ROS2
             return;
         }
 
-        if (m_sensorConfiguration.m_visualise)
+        if (m_sensorConfiguration.m_visualize)
         { // Store points for visualization purposes, in global frame
             m_visualizationPoints = m_lastScanResults.m_points;
         }
