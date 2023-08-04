@@ -13,11 +13,11 @@
 
 namespace ROS2
 {
-        namespace
-        {
-            constexpr const char* SdfAssetBuilderSupportedFileExtensionsRegistryKey = "/O3DE/ROS2/SdfAssetBuilder/SupportedFileTypeExtensions";
-            constexpr const char* SdfAssetBuilderUseArticulationsRegistryKey = "/O3DE/ROS2/SdfAssetBuilder/UseArticulations";
-        }
+    namespace
+    {
+        constexpr const char* SdfAssetBuilderSupportedFileExtensionsRegistryKey = "/O3DE/ROS2/SdfAssetBuilder/SupportedFileTypeExtensions";
+        constexpr const char* SdfAssetBuilderUseArticulationsRegistryKey = "/O3DE/ROS2/SdfAssetBuilder/UseArticulations";
+    }
 
     void SdfAssetBuilderSettings::Reflect(AZ::ReflectContext* context)
     {
@@ -30,7 +30,7 @@ namespace ROS2
                 // m_builderPatterns aren't serialized because we only use the serialization
                 // to detect when global settings changes cause us to rebuild our assets.
                 // A change to the builder patterns will cause the Asset Processor to add or
-                // remove the affected product assets, so we don't need to trigger any 
+                // remove the affected product assets, so we don't need to trigger any
                 // additional rebuilds beyond that.
              ;
         }

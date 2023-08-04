@@ -41,7 +41,7 @@ namespace ROS2
         AZStd::string GetFingerprint() const;
 
         //! Create a mapping of all the asset references in the source file.
-        Utils::UrdfAssetMap FindAssets(const urdf::LinkConstSharedPtr& rootLink, const AZStd::string& sourceFilename) const;
+        Utils::UrdfAssetMap FindAssets(const sdf::Root& root, const AZStd::string& sourceFilename) const;
 
         SdfAssetBuilderSettings m_globalSettings;
         AZStd::string m_fingerprint;

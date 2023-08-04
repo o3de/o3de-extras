@@ -18,7 +18,6 @@
 
 namespace ROS2
 {
-
     JointsMaker::JointsMakerResult JointsMaker::AddJointComponent(
         const sdf::Joint* joint, AZ::EntityId followColliderEntityId, AZ::EntityId leadColliderEntityId) const
     {

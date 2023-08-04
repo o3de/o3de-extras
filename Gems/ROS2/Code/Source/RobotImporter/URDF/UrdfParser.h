@@ -8,7 +8,8 @@
 
 #pragma once
 
-#include <AzCore/std/string/string.h>
+#include <AzCore/IO/Path/Path.h>
+#include <AzCore/std/utility/expected.h>
 #include <sdf/Root.hh>
 #include <sdf/Link.hh>
 #include <sdf/Mesh.hh>
@@ -25,15 +26,20 @@ namespace ROS2
     //! Class for parsing URDF data.
     namespace UrdfParser
     {
+        //! Stores the result of parsing URDF data
+        //! On success the sdf::Root object is returned
+        //! On failure the sdf::Errors vector is returned
+        using RootObjectOutcome = AZStd::expected<sdf::Root, sdf::Errors>;
+
         //! Parse string with URDF data and generate model.
         //! @param xmlString a string that contains URDF data (XML format).
         //! @return model represented as a tree of parsed links.
-        sdf::Root* Parse(const AZStd::string& xmlString);
+        RootObjectOutcome Parse(const std::string& xmlString);
 
         //! Parse file with URDF data and generate model.
         //! @param filePath is a path to file with URDF data that will be loaded and parsed.
         //! @return model represented as a tree of parsed links.
-        sdf::Root* ParseFromFile(const AZStd::string& filePath);
+        RootObjectOutcome ParseFromFile(AZ::IO::PathView filePath);
 
         //! Retrieve console log from URDF parsing
         //! @return a log with output from urdf_parser

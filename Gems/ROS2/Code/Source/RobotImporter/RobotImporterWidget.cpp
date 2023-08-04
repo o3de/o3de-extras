@@ -81,6 +81,7 @@ namespace ROS2
 
     void RobotImporterWidget::OpenUrdf()
     {
+        UrdfParser::RootObjectOutcome parsedUrdfOutcome(AZStd::unexpect);
         QString report;
         if (!m_urdfPath.empty())
         {
@@ -89,7 +90,7 @@ namespace ROS2
                 Utils::xacro::ExecutionOutcome outcome = Utils::xacro::ParseXacro(m_urdfPath.String(), m_params);
                 if (outcome)
                 {
-                    m_parsedUrdf = outcome.m_urdfHandle;
+                    parsedUrdfOutcome = outcome.m_urdfHandle;
                     report += "# " + tr("XACRO execution succeeded") + "\n";
                     m_assetPage->ClearAssetsList();
                 }
@@ -123,27 +124,28 @@ namespace ROS2
                     }
                     report += "\n```";
                     m_checkUrdfPage->ReportURDFResult(report, false);
-                    m_parsedUrdf = nullptr;
                     return;
                 }
             }
             else if (Utils::IsFileUrdf(m_urdfPath))
             {
                 // standard URDF
-                m_parsedUrdf = UrdfParser::ParseFromFile(m_urdfPath.Native());
+                parsedUrdfOutcome = UrdfParser::ParseFromFile(m_urdfPath);
             }
             else
             {
                 AZ_Assert(false, "Unknown file extension : %s \n", m_urdfPath.c_str());
             }
             const auto log = UrdfParser::GetUrdfParsingLog();
-            if (m_parsedUrdf)
+            bool urdfParsedSuccess = parsedUrdfOutcome.has_value();
+            if (urdfParsedSuccess)
             {
+                m_parsedUrdf = AZStd::move(parsedUrdfOutcome.value());
                 report += "# " + tr("The URDF was parsed and opened successfully") + "\n";
                 m_prefabMaker.reset();
                 // Report the status of skipping this page
                 AZ_Printf("Wizard", "Wizard skips m_checkUrdfPage since there is no errors in URDF\n");
-                m_meshNames = Utils::GetMeshesFilenames(m_parsedUrdf, true, true);
+                m_meshNames = Utils::GetMeshesFilenames(&m_parsedUrdf, true, true);
                 m_assetPage->ClearAssetsList();
             }
             else
@@ -157,7 +159,7 @@ namespace ROS2
                 report += QString::fromUtf8(log.data(), int(log.size()));
                 report += "`";
             }
-            m_checkUrdfPage->ReportURDFResult(report, m_parsedUrdf != nullptr);
+            m_checkUrdfPage->ReportURDFResult(report, urdfParsedSuccess);
         }
     }
 
@@ -177,10 +179,10 @@ namespace ROS2
 
     void RobotImporterWidget::FillAssetPage()
     {
-        if (m_parsedUrdf && m_assetPage->IsEmpty())
+        if (m_parsedUrdf.Model() != nullptr && m_assetPage->IsEmpty())
         {
-            auto collidersNames = Utils::GetMeshesFilenames(m_parsedUrdf, false, true);
-            auto visualNames = Utils::GetMeshesFilenames(m_parsedUrdf, true, false);
+            auto collidersNames = Utils::GetMeshesFilenames(&m_parsedUrdf, false, true);
+            auto visualNames = Utils::GetMeshesFilenames(&m_parsedUrdf, true, false);
 
             AZ::Uuid::FixedString dirSuffix;
             if (!m_params.empty())
@@ -265,9 +267,9 @@ namespace ROS2
 
     void RobotImporterWidget::FillPrefabMakerPage()
     {
-        if (m_parsedUrdf)
+        if (m_parsedUrdf.Model() != nullptr)
         {
-            AZStd::string robotName = AZStd::string(m_parsedUrdf->Model()->Name().c_str(), m_parsedUrdf->Model()->Name().size()) + ".prefab";
+            AZStd::string robotName = AZStd::string(m_parsedUrdf.Model()->Name().c_str(), m_parsedUrdf.Model()->Name().size()) + ".prefab";
             m_prefabMakerPage->setProposedPrefabName(robotName);
             QWizard::button(PrefabCreationButtonId)->setText(tr("Create Prefab"));
             QWizard::setOption(HavePrefabCreationButton, true);
@@ -323,7 +325,7 @@ namespace ROS2
     {
         if ((currentPage() == m_fileSelectPage && m_params.empty()) || currentPage() == m_xacroParamsPage)
         {
-            if (m_parsedUrdf)
+            if (m_parsedUrdf.Model() != nullptr)
             {
                 if (m_meshNames.size() == 0)
                 {

@@ -14,7 +14,13 @@
 #include <AzCore/Utils/Utils.h>
 #include <AzCore/std/chrono/chrono.h>
 #include <AzCore/std/string/string.h>
+#include <AzCore/StringFunc/StringFunc.h>
 #include <AzToolsFramework/API/ViewPaneOptions.h>
+
+#include <RobotImporter/URDF/UrdfParser.h>
+
+#include <sdf/World.hh>
+
 #if !defined(Q_MOC_RUN)
 #include <QWindow>
 #endif
@@ -92,17 +98,32 @@ namespace ROS2
             return false;
         }
 
-        urdf::ModelInterfaceSharedPtr parsedUrdf = UrdfParser::ParseFromFile(filePath);
-        if (!parsedUrdf)
+        auto parsedUrdfOutcome = UrdfParser::ParseFromFile(filePath);
+        if (!parsedUrdfOutcome)
         {
             const auto log = UrdfParser::GetUrdfParsingLog();
-            AZ_Warning("ROS2EditorSystemComponent", false, "URDF parsing failed. Refer to %s", log.c_str());
+            AZStd::string aggregateErrorMessages;
+            for (const sdf::Error& sdfError : parsedUrdfOutcome.error())
+            {
+                AZStd::string errorMessage = AZStd::string::format("ErrorCode=%d", static_cast<int32_t>(sdfError.Code()));
+                errorMessage += AZStd::string::format(", Message=%s", sdfError.Message().c_str());
+                if (sdfError.LineNumber().has_value())
+                {
+                    errorMessage += AZStd::string::format(", Line=%d", sdfError.LineNumber().value());
+                }
+                aggregateErrorMessages += errorMessage;
+            }
+            AZ_Warning("ROS2EditorSystemComponent", false, "URDF parsing failed with errors: %s\nRefer to %s",
+                aggregateErrorMessages.c_str(), log.c_str());
             return false;
         }
 
-        auto collidersNames = Utils::GetMeshesFilenames(parsedUrdf->getRoot(), false, true);
-        auto visualNames = Utils::GetMeshesFilenames(parsedUrdf->getRoot(), true, false);
-        auto meshNames = Utils::GetMeshesFilenames(parsedUrdf->getRoot(), true, true);
+        // Urdf Root has been parsed successfully retrieve it from the Outcome
+        const sdf::Root& parsedUrdfRoot = parsedUrdfOutcome.value();
+
+        auto collidersNames = Utils::GetMeshesFilenames(&parsedUrdfRoot, false, true);
+        auto visualNames = Utils::GetMeshesFilenames(&parsedUrdfRoot, true, false);
+        auto meshNames = Utils::GetMeshesFilenames(&parsedUrdfRoot, true, true);
         AZStd::shared_ptr<Utils::UrdfAssetMap> urdfAssetsMapping = AZStd::make_shared<Utils::UrdfAssetMap>();
         if (importAssetWithUrdf)
         {
@@ -173,12 +194,22 @@ namespace ROS2
             }
         };
 
-        AZStd::string prefabName = AZStd::string(parsedUrdf->getName().c_str(), parsedUrdf->getName().size()) + ".prefab";
+        uint64_t urdfWorldCount = parsedUrdfRoot.WorldCount();
+        if (urdfWorldCount == 0)
+        {
+            AZ_Error("ROS2EditorSystemComponent", false, "URDF file converted to SDF %s contains no worlds."
+                " O3DE Prefab cannot be created", filePath.data());
+            return false;
+        }
+
+        //! NOTE: Only support a single world case as no other tools support MultiWorld SDFs at the moment.
+        //! The first <world> tag is the only that will be processed
+        const sdf::World* parsedUrdfWorld = parsedUrdfRoot.WorldByIndex(0);
+        AZStd::string prefabName = AZStd::string(parsedUrdfWorld->Name().c_str(), parsedUrdfWorld->Name().size()) + ".prefab";
 
         const AZ::IO::Path prefabPathRelative(AZ::IO::Path("Assets") / "Importer" / prefabName);
         const AZ::IO::Path prefabPath(AZ::IO::Path(AZ::Utils::GetProjectPath()) / prefabPathRelative);
-        AZStd::unique_ptr<URDFPrefabMaker> prefabMaker;
-        prefabMaker = AZStd::make_unique<URDFPrefabMaker>(filePath, parsedUrdf, prefabPath.String(), urdfAssetsMapping, useArticulation);
+        AZStd::unique_ptr<URDFPrefabMaker> prefabMaker = AZStd::make_unique<URDFPrefabMaker>(filePath, &parsedUrdfRoot, prefabPath.String(), urdfAssetsMapping, useArticulation);
 
         auto prefabOutcome = prefabMaker->CreatePrefabFromURDF();
 

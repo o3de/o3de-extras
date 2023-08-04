@@ -33,13 +33,11 @@ namespace ROS2
     URDFPrefabMaker::URDFPrefabMaker(
         const AZStd::string& modelFilePath,
         const sdf::Root* root,
-        const sdf::Model* model,
         AZStd::string prefabPath,
         const AZStd::shared_ptr<Utils::UrdfAssetMap> urdfAssetsMapping,
         bool useArticulations,
         const AZStd::optional<AZ::Transform> spawnPosition)
-        : m_model(model)
-        , m_root(root)
+        : m_root(root)
         // TODO: list of all the materials - model->materials_
         , m_visualsMaker({}, urdfAssetsMapping)
         , m_collidersMaker(urdfAssetsMapping)
@@ -49,7 +47,11 @@ namespace ROS2
         , m_useArticulations(useArticulations)
     {
         AZ_Assert(!m_prefabPath.empty(), "Prefab path is empty");
-        AZ_Assert(m_model, "Model is nullptr");
+        AZ_Assert(m_root, "SDF Root is nullptr");
+        if (m_root != nullptr)
+        {
+            AZ_Assert(m_root->Model(), "SDF Model is nullptr");
+        }
     }
 
     void URDFPrefabMaker::BuildAssetsForLink(const sdf::Link* link)
@@ -71,7 +73,7 @@ namespace ROS2
             m_status.clear();
         }
 
-        if (!m_model)
+        if (m_root->Model() == nullptr)
         {
             return AZ::Failure(AZStd::string("Null model."));
         }
@@ -90,9 +92,9 @@ namespace ROS2
         }
 
         std::vector<const sdf::Link*> modelLinks;
-        for (uint64_t index = 0; index < m_model->LinkCount(); index++)
+        for (uint64_t index = 0; index < m_root->Model()->LinkCount(); index++)
         {
-            modelLinks.push_back(m_model->LinkByIndex(index));
+            modelLinks.push_back(m_root->Model()->LinkByIndex(index));
         }
 
         auto links = Utils::GetAllLinks(modelLinks);
@@ -194,25 +196,26 @@ namespace ROS2
         }
         */
 
-        std::vector<const sdf::Link*> links;
-        for (uint64_t index = 0; index < m_model->LinkCount(); index++)
+        for (uint64_t jointIndex{}; jointIndex < m_root->Model()->JointCount(); ++jointIndex)
         {
-            links.push_back(m_model->LinkByIndex(index));
-        }
+            auto jointPtr = m_root->Model()->JointByIndex(jointIndex);
+            AZ_Assert(jointPtr, "joint at index %" PRIu64 " is null", jointIndex);
+            if (jointPtr == nullptr)
+            {
+                continue;
+            }
 
-        auto joints = Utils::GetAllJoints(m_model->root_link_->child_links);
-        for (const auto& [name, jointPtr] : joints)
-        {
-            AZ_Assert(jointPtr, "joint %s is null", name.c_str());
+            const std::string& jointName = jointPtr->Name();
+            AZStd::string azJointName(jointName.c_str(), jointName.size());
             AZ_Trace(
                 "CreatePrefabFromURDF",
                 "Creating joint %s : %s -> %s\n",
-                name.c_str(),
-                jointPtr->parent_link_name.c_str(),
-                jointPtr->child_link_name.c_str());
+                azJointName.c_str(),
+                jointPtr->ParentName().c_str(),
+                jointPtr->ChildName().c_str());
 
-            auto leadEntity = createdLinks.at(jointPtr->parent_link_name.c_str());
-            auto childEntity = createdLinks.at(jointPtr->child_link_name.c_str());
+            auto leadEntity = createdLinks.at(jointPtr->ParentName().c_str());
+            auto childEntity = createdLinks.at(jointPtr->ChildName().c_str());
 
 
             AZ::Entity* childEntityPtr = AzToolsFramework::GetEntityById(childEntity.GetValue());
@@ -221,9 +224,8 @@ namespace ROS2
                 auto* component = Utils::GetGameOrEditorComponent<ROS2FrameComponent>(childEntityPtr);
                 if (component)
                 {
-                    component->SetJointName(AZStd::string(name.c_str(), name.length()));
+                    component->SetJointName(azJointName);
                 }
-                */
             }
             // check if both has RigidBody and we are not creating articulation
             if (!m_useArticulations && leadEntity.IsSuccess() && childEntity.IsSuccess())
@@ -231,11 +233,11 @@ namespace ROS2
                 AZStd::lock_guard<AZStd::mutex> lck(m_statusLock);
                 auto result = m_jointsMaker.AddJointComponent(jointPtr, childEntity.GetValue(), leadEntity.GetValue());
                 m_status.emplace(
-                    name, AZStd::string::format(" %s %llu", result.IsSuccess() ? "created as" : "Failed", result.GetValue()));
+                    azJointName, AZStd::string::format(" %s %llu", result.IsSuccess() ? "created as" : "Failed", result.GetValue()));
             }
             else
             {
-                AZ_Warning("CreatePrefabFromURDF", false, "cannot create joint %s", name.c_str());
+                AZ_Warning("CreatePrefabFromURDF", false, "cannot create joint %s", azJointName.c_str());
             }
         }
 
@@ -267,7 +269,7 @@ namespace ROS2
         AzToolsFramework::Prefab::PrefabSystemScriptingBus::BroadcastResult(
             prefabTemplateId,
             &AzToolsFramework::Prefab::PrefabSystemScriptingBus::Events::CreatePrefabTemplate,
-            createdEntities, relativePath.String());        
+            createdEntities, relativePath.String());
 
         if (prefabTemplateId == AzToolsFramework::Prefab::InvalidTemplateId)
         {
@@ -313,7 +315,7 @@ namespace ROS2
         {
             // If the template saved successfully, also instantiate it into the level.
             auto prefabInterface = AZ::Interface<AzToolsFramework::Prefab::PrefabPublicInterface>::Get();
-            [[maybe_unused]] auto createPrefabOutcome = 
+            [[maybe_unused]] auto createPrefabOutcome =
                 prefabInterface->InstantiatePrefab(relativePath.String(), AZ::EntityId(), AZ::Vector3::CreateZero());
         }
         else
@@ -331,7 +333,6 @@ namespace ROS2
 
         return result;
     }
-
 
     AzToolsFramework::Prefab::PrefabEntityResult URDFPrefabMaker::AddEntitiesForLink(const sdf::Link* link, AZ::EntityId parentEntityId, AZStd::vector<AZ::EntityId>& createdEntities)
     {

@@ -33,14 +33,13 @@ namespace ROS2
     public:
         //! Construct URDFPrefabMaker from arguments.
         //! @param modelFilePath path to the source URDF model.
-        //! @param model parsed model.
+        //! @param root parsed SDF root object.
         //! @param prefabPath path to the prefab which will be created as a result of import.
         //! @param urdfAssetsMapping prepared mapping of URDF meshes to Assets.
         //! @param useArticulations allows urdfImporter to create PhysXArticulations instead of multiple rigid bodies and joints.
         URDFPrefabMaker(
             const AZStd::string& modelFilePath,
             const sdf::Root* root,
-            const sdf::Model* model,
             AZStd::string prefabPath,
             const AZStd::shared_ptr<Utils::UrdfAssetMap> urdfAssetsMapping,
             bool useArticulations = false,
@@ -71,15 +70,16 @@ namespace ROS2
 
     private:
         AzToolsFramework::Prefab::PrefabEntityResult AddEntitiesForLink(const sdf::Link* link, AZ::EntityId parentEntityId, AZStd::vector<AZ::EntityId>& createdEntities);
+        void BuildAssetsForLink(const sdf::Link* link);
+        void AddRobotControl(AZ::EntityId rootEntityId);
         static void MoveEntityToDefaultSpawnPoint(const AZ::EntityId& rootEntityId, AZStd::optional<AZ::Transform> spawnPosition);
 
         const sdf::Root* m_root;
-        const sdf::Model* m_model;
         AZStd::string m_prefabPath;
         VisualsMaker m_visualsMaker;
         CollidersMaker m_collidersMaker;
         InertialsMaker m_inertialsMaker;
-        //JointsMaker m_jointsMaker;
+        JointsMaker m_jointsMaker;
         ArticulationsMaker m_articulationsMaker;
 
         AZStd::mutex m_statusLock;

@@ -17,10 +17,6 @@ namespace ROS2
 {
     void InertialsMaker::AddInertial(const gz::math::Inertiald& inertial, AZ::EntityId entityId) const
     {
-        if (!inertial)
-        { // it is ok not to have inertia in a link
-            return;
-        }
         AZ_Trace("AddInertial", "Processing inertial for entity id: %s\n", entityId.ToString().c_str());
 
         AZ::Entity* entity = AzToolsFramework::GetEntityById(entityId);

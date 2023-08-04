@@ -45,7 +45,7 @@ namespace ROS2
         if (link->VisualCount() < 1)
         { 
             // For zero visuals, element is used
-            auto createdEntity = AddVisual(nullptr, entityId, PrefabMakerUtils::MakeEntityName(link->name.c_str(), typeString));
+            auto createdEntity = AddVisual(nullptr, entityId, PrefabMakerUtils::MakeEntityName(link->Name().c_str(), typeString));
             if (createdEntity.IsValid())
             {
                 createdEntities.emplace_back(createdEntity);
