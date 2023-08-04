@@ -9,6 +9,7 @@
 #pragma once
 
 #include <AzCore/Component/Entity.h>
+#include <AzCore/Outcome/Outcome.h>
 #include <AzCore/std/containers/unordered_set.h>
 #include <AzCore/std/function/function_template.h>
 #include <AzCore/std/string/string.h>
@@ -50,7 +51,9 @@ namespace ROS2::SDFormat
         //! Registered function that is invoked when a sensor of the specified type is processed by the SDFormat Importer.
         //! @param AZ::Entity& a reference to the Entity in which one or more O3DE component is created by the importer
         //! @param sdf::Sensor& a reference to the sensor data in SDFormat, which is used to configure O3DE component
-        using ConvertSDFSensorCallback = AZStd::function<void(AZ::Entity&, const sdf::Sensor&)>;
+        using ErrorString = AZStd::string;
+        using ConvertSensorOutcome = AZ::Outcome<void, AZStd::string>;
+        using ConvertSDFSensorCallback = AZStd::function<ConvertSensorOutcome(AZ::Entity&, const sdf::Sensor&)>;
         ConvertSDFSensorCallback m_sdfSensorToComponentCallback;
     };
 } // namespace ROS2::SDFormat

@@ -45,7 +45,8 @@ namespace ROS2::SDFormat
                                                                           "libgazebo_ros_depth_camera.so",
                                                                           "libgazebo_ros_openni_kinect.so" };
         importerHook.m_supportedPluginParams = AZStd::unordered_set<AZStd::string>{};
-        importerHook.m_sdfSensorToComponentCallback = [](AZ::Entity& entity, const sdf::Sensor& sdfSensor)
+        importerHook.m_sdfSensorToComponentCallback = [](AZ::Entity& entity,
+                                                         const sdf::Sensor& sdfSensor) -> SensorImporterHook::ConvertSensorOutcome
         {
             auto* cameraSensor = sdfSensor.CameraSensor();
 
@@ -84,7 +85,14 @@ namespace ROS2::SDFormat
                     sensorConfiguration, "depth_camera_info", CameraConstants::CameraInfoMessageType, CameraConstants::DepthInfoConfig);
             }
 
-            entity.CreateComponent<ROS2CameraSensorEditorComponent>(sensorConfiguration, cameraConfiguration);
+            if (entity.CreateComponent<ROS2CameraSensorEditorComponent>(sensorConfiguration, cameraConfiguration))
+            {
+                return AZ::Success();
+            }
+            else
+            {
+                return AZ::Failure(AZStd::string("Failed to create ROS2 Camera Sensor component"));
+            }
         };
 
         return importerHook;
