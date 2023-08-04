@@ -332,10 +332,10 @@ namespace ROS2
             return path.Filename().String();
         }
 
-        AZStd::vector<AZStd::string> GetUnsupportedOptions(
-            const sdf::ElementPtr& rootElement, const AZStd::unordered_set<AZStd::string>& supportedOptions)
+        AZStd::vector<AZStd::string> GetUnsupportedParams(
+            const sdf::ElementPtr& rootElement, const AZStd::unordered_set<AZStd::string>& supportedParams)
         {
-            AZStd::vector<AZStd::string> unsupportedOptions;
+            AZStd::vector<AZStd::string> unsupportedParams;
 
             AZStd::function<void(const sdf::ElementPtr& elementPtr, const std::string& prefix)> elementVisitor =
                 [&](const sdf::ElementPtr& elementPtr, const std::string& prefix) -> void
@@ -343,9 +343,9 @@ namespace ROS2
                 auto childPtr = elementPtr->GetFirstElement();
 
                 AZStd::string prefixAz(prefix.c_str(), prefix.size());
-                if (!childPtr && !prefixAz.empty() && !supportedOptions.contains(prefixAz))
+                if (!childPtr && !prefixAz.empty() && !supportedParams.contains(prefixAz))
                 {
-                    unsupportedOptions.push_back(prefixAz);
+                    unsupportedParams.push_back(prefixAz);
                 }
 
                 while (childPtr)
@@ -366,7 +366,7 @@ namespace ROS2
 
             elementVisitor(rootElement, "");
 
-            return unsupportedOptions;
+            return unsupportedParams;
         }
 
         bool IsPluginSupported(const sdf::Plugin& plugin, const AZStd::unordered_set<AZStd::string>& supportedPlugins)

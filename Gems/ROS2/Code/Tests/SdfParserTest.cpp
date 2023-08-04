@@ -162,7 +162,7 @@ namespace UnitTest
         EXPECT_EQ("fun", ROS2::Utils::SDFormat::GetPluginFilename(plug));
         EXPECT_FALSE(ROS2::Utils::SDFormat::IsPluginSupported(plug, supportedPlugins));
 
-        AZStd::unordered_set<AZStd::string> cameraSupportedOptions{
+        AZStd::unordered_set<AZStd::string> cameraSupportedParams{
             ">update_rate", ">camera>horizontal_fov", ">camera>image>width", ">camera>image>height"
         };
 
@@ -173,41 +173,41 @@ namespace UnitTest
         const sdf::ElementPtr laserElement = sdfModel->LinkByName("link2")->SensorByIndex(0U)->Element();
 
         {
-            const auto& unsupportedCameraOptions = ROS2::Utils::SDFormat::GetUnsupportedOptions(cameraElement, cameraSupportedOptions);
-            EXPECT_EQ(unsupportedCameraOptions.size(), 3U);
-            EXPECT_EQ(unsupportedCameraOptions[0U], ">pose");
-            EXPECT_EQ(unsupportedCameraOptions[1U], ">camera>clip>near");
-            EXPECT_EQ(unsupportedCameraOptions[2U], ">camera>clip>far");
+            const auto& unsupportedCameraParams = ROS2::Utils::SDFormat::GetUnsupportedParams(cameraElement, cameraSupportedParams);
+            EXPECT_EQ(unsupportedCameraParams.size(), 3U);
+            EXPECT_EQ(unsupportedCameraParams[0U], ">pose");
+            EXPECT_EQ(unsupportedCameraParams[1U], ">camera>clip>near");
+            EXPECT_EQ(unsupportedCameraParams[2U], ">camera>clip>far");
         }
 
-        cameraSupportedOptions.emplace(">pose");
+        cameraSupportedParams.emplace(">pose");
         {
-            const auto& unsupportedCameraOptions = ROS2::Utils::SDFormat::GetUnsupportedOptions(cameraElement, cameraSupportedOptions);
-            EXPECT_EQ(unsupportedCameraOptions.size(), 2U);
-            EXPECT_EQ(unsupportedCameraOptions[0U], ">camera>clip>near");
-            EXPECT_EQ(unsupportedCameraOptions[1U], ">camera>clip>far");
+            const auto& unsupportedCameraParams = ROS2::Utils::SDFormat::GetUnsupportedParams(cameraElement, cameraSupportedParams);
+            EXPECT_EQ(unsupportedCameraParams.size(), 2U);
+            EXPECT_EQ(unsupportedCameraParams[0U], ">camera>clip>near");
+            EXPECT_EQ(unsupportedCameraParams[1U], ">camera>clip>far");
         }
 
-        cameraSupportedOptions.emplace(">camera>clip>near");
-        cameraSupportedOptions.emplace(">camera>clip>far");
+        cameraSupportedParams.emplace(">camera>clip>near");
+        cameraSupportedParams.emplace(">camera>clip>far");
         {
-            const auto& unsupportedCameraOptions = ROS2::Utils::SDFormat::GetUnsupportedOptions(cameraElement, cameraSupportedOptions);
-            EXPECT_EQ(unsupportedCameraOptions.size(), 0U);
+            const auto& unsupportedCameraParams = ROS2::Utils::SDFormat::GetUnsupportedParams(cameraElement, cameraSupportedParams);
+            EXPECT_EQ(unsupportedCameraParams.size(), 0U);
         }
 
-        const AZStd::unordered_set<AZStd::string> laserSupportedOptions{ ">pose",
-                                                                         ">update_rate",
-                                                                         ">ray>scan>horizontal>samples",
-                                                                         ">ray>scan>horizontal>resolution",
-                                                                         ">ray>scan>horizontal>min_angle",
-                                                                         ">ray>scan>horizontal>max_angle",
-                                                                         ">ray>range>min",
-                                                                         ">ray>range>max",
-                                                                         ">ray>range>resolution",
-                                                                         ">always_on",
-                                                                         ">visualize" };
-        const auto& unsupportedLaserOptions = ROS2::Utils::SDFormat::GetUnsupportedOptions(laserElement, laserSupportedOptions);
-        EXPECT_EQ(unsupportedLaserOptions.size(), 0U);
+        const AZStd::unordered_set<AZStd::string> laserSupportedParams{ ">pose",
+                                                                        ">update_rate",
+                                                                        ">ray>scan>horizontal>samples",
+                                                                        ">ray>scan>horizontal>resolution",
+                                                                        ">ray>scan>horizontal>min_angle",
+                                                                        ">ray>scan>horizontal>max_angle",
+                                                                        ">ray>range>min",
+                                                                        ">ray>range>max",
+                                                                        ">ray>range>resolution",
+                                                                        ">always_on",
+                                                                        ">visualize" };
+        const auto& unsupportedLaserParams = ROS2::Utils::SDFormat::GetUnsupportedParams(laserElement, laserSupportedParams);
+        EXPECT_EQ(unsupportedLaserParams.size(), 0U);
     }
 
     TEST_F(SdfParserTest, SensorPluginImporterHookCheck)
@@ -218,9 +218,10 @@ namespace UnitTest
         const sdf::ElementPtr cameraElement = sdfModel->LinkByName("link1")->SensorByIndex(0U)->Element();
         const auto& importerHook = ROS2::SDFormat::ROS2SensorHooks::ROS2CameraSensor();
 
-        const auto& unsupportedCameraOptions = ROS2::Utils::SDFormat::GetUnsupportedOptions(cameraElement, importerHook.m_sensorOptions);
-        EXPECT_EQ(unsupportedCameraOptions.size(), 1U);
-        EXPECT_EQ(unsupportedCameraOptions[0U], ">pose");
+        const auto& unsupportedCameraParams =
+            ROS2::Utils::SDFormat::GetUnsupportedParams(cameraElement, importerHook.m_supportedSensorParams);
+        EXPECT_EQ(unsupportedCameraParams.size(), 1U);
+        EXPECT_EQ(unsupportedCameraParams[0U], ">pose");
 
         sdf::Plugin plug;
         plug.SetName("test_camera");

@@ -88,13 +88,13 @@ namespace ROS2
             //! @returns filename (including extension) without path
             AZStd::string GetPluginFilename(const sdf::Plugin& plugin);
 
-            //! Retrieve all options that were defined for an element in XML data that are not supported in O3DE.
-            //! Allows to store the list of unsupported options in metadata and logs. It is typically used with sensors and plugins.
+            //! Retrieve all parameters that were defined for an element in XML data that are not supported in O3DE.
+            //! Allows to store the list of unsupported parameters in metadata and logs. It is typically used with sensors and plugins.
             //! @param rootElement pointer to a root Element in parsed XML data that will be a subject to heuristics
-            //! @param supportedOptions set of predefined sensor's options that are supported
-            //! @returns list of unsupported options defined for given element
-            AZStd::vector<AZStd::string> GetUnsupportedOptions(
-                const sdf::ElementPtr& rootElement, const AZStd::unordered_set<AZStd::string>& supportedOptions);
+            //! @param supportedParams set of predefined parameters that are supported
+            //! @returns list of unsupported parameters defined for given element
+            AZStd::vector<AZStd::string> GetUnsupportedParams(
+                const sdf::ElementPtr& rootElement, const AZStd::unordered_set<AZStd::string>& supportedParams);
 
             //! Check if plugin is supported by using it's filename. The filepath is converted into the filename if necessary.
             //! @param plugin plugin in the parsed SDFormat data

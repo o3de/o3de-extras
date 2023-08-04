@@ -38,13 +38,13 @@ namespace ROS2::SDFormat
         SensorImporterHook importerHook;
         importerHook.m_sensorTypes =
             AZStd::unordered_set<sdf::SensorType>{ sdf::SensorType::CAMERA, sdf::SensorType::DEPTH_CAMERA, sdf::SensorType::RGBD_CAMERA };
-        importerHook.m_sensorOptions =
+        importerHook.m_supportedSensorParams =
             AZStd::unordered_set<AZStd::string>{ ">update_rate",         ">camera>horizontal_fov", ">camera>image>width",
                                                  ">camera>image>height", ">camera>clip>near",      ">camera>clip>far" };
         importerHook.m_pluginNames = AZStd::unordered_set<AZStd::string>{ "libgazebo_ros_camera.so",
                                                                           "libgazebo_ros_depth_camera.so",
                                                                           "libgazebo_ros_openni_kinect.so" };
-        importerHook.m_pluginOptions = AZStd::unordered_set<AZStd::string>{};
+        importerHook.m_supportedPluginParams = AZStd::unordered_set<AZStd::string>{};
         importerHook.m_sdfSensorToComponentCallback = [](AZ::Entity& entity, const sdf::Sensor& sdfSensor)
         {
             auto* cameraSensor = sdfSensor.CameraSensor();

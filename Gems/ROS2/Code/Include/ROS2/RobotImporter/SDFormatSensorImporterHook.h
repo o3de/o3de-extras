@@ -24,30 +24,32 @@ namespace sdf
 
 namespace ROS2::SDFormat
 {
-    //! Hook used in ROS2 Gem Robot Importer to create ROS2 sensor components based on SDF model description file.
-    //! See the <sensor> element at http://sdformat.org/spec?ver=1.10&elem=sensor for more details.
+    //! Hook used in ROS2 Gem Robot Importer to create ROS2 sensor components based on SDFormat model description.
+    //! It implements the parameters mapping between the SDFormat sensor and the particular O3DE component.
+    //! It should be registered as a serialization attribute in the component's reflection to make the it visible in the SDFormat model
+    //! parser. See the sensor element at http://sdformat.org/spec?ver=1.10&elem=sensor for more details on SDFormat.
     struct SensorImporterHook
     {
         AZ_TYPE_INFO(SensorImporterHook, "{23f189e3-8da4-4498-9b89-1ef6c900940a}");
 
-        //! Types of the sensor in the SDF file that can be reused in O3DE.
-        //! Multiple SDF sensors can map to one O3DE component.
+        //! Types of sensors in SDFormat description that can be mapped to the particular O3DE component.
+        //! Multiple SDFormat sensors can map to one O3DE component.
         AZStd::unordered_set<sdf::SensorType> m_sensorTypes;
 
-        //! Names of the options of the sensor in the SDF file that can be reused in O3DE.
-        AZStd::unordered_set<AZStd::string> m_sensorOptions;
+        //! Names of the sensor's parameters in SDFormat description that are supported by the particular O3DE component.
+        AZStd::unordered_set<AZStd::string> m_supportedSensorParams;
 
-        //! Names of the plugins associated with the sensor in the SDF file that can be reused in O3DE.
-        //! Multiple SDF plugins can map to one O3DE component.
+        //! Names of plugins associated with the sensor in SDFormat description that are supported by the particular O3DE component.
+        //! Multiple SDFormat plugins can map to one O3DE component.
         AZStd::unordered_set<AZStd::string> m_pluginNames;
 
-        //! Names of the options of the plugin associated with the sensor in the SDF file that can be reused in O3DE.
-        AZStd::unordered_set<AZStd::string> m_pluginOptions;
+        //! Names of the plugin's parameters associated with the sensor in SDFormat description that are supported
+        //! by the particular O3DE component.
+        AZStd::unordered_set<AZStd::string> m_supportedPluginParams;
 
-        //! Registered function, that is invoked when an plugin with the specified name
-        //! is processed by the SDF Importer.
-        //! A reference to an Entity is supplied which can be populated with one or more O3DE Components
-        //! that were converted using the SDF Plugin data.
+        //! Registered function that is invoked when a sensor of the specified type is processed by the SDFormat Importer.
+        //! @param AZ::Entity& a reference to the Entity in which one or more O3DE component is created by the importer
+        //! @param sdf::Sensor& a reference to the sensor data in SDFormat, which is used to configure O3DE component
         using ConvertSDFSensorCallback = AZStd::function<void(AZ::Entity&, const sdf::Sensor&)>;
         ConvertSDFSensorCallback m_sdfSensorToComponentCallback;
     };
