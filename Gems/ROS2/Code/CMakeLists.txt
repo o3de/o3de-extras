@@ -165,8 +165,8 @@ if(PAL_TRAIT_BUILD_HOST_TOOLS)
     )
 
     # By default, we will specify that the above target ROS2 would be used by
-    # Tool and Builder type targets when this gem is enabled.  If you don't want it
-    # active in Tools or Builders by default, delete one of both of the following lines:
+    # Tool and Builder type targets when this gem is enabled. If you don't want it
+    # active in Tools or Builders by default, delete one or both of the following lines:
     ly_create_alias(NAME ${gem_name}.Tools    NAMESPACE Gem TARGETS Gem::${gem_name}.Editor)
     ly_create_alias(NAME ${gem_name}.Builders NAMESPACE Gem TARGETS Gem::${gem_name}.Editor)
 endif()
@@ -218,6 +218,7 @@ if(PAL_TRAIT_BUILD_TESTS_SUPPORTED)
                     PRIVATE
                         AZ::AzTest
                         Gem::${gem_name}.Editor
+                        3rdParty::sdformat
             )
 
             # Add ROS2.Editor.Tests to googletest
