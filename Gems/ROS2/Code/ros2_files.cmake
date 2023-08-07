@@ -85,6 +85,8 @@ set(FILES
         Source/Manipulation/JointsTrajectoryComponent.h
         Source/Manipulation/FollowJointTrajectoryActionServer.cpp
         Source/Manipulation/FollowJointTrajectoryActionServer.h
+        Source/Manipulation/ManipulationUtils.h
+        Source/Manipulation/ManipulationUtils.cpp
         Source/Manipulation/MotorizedJoints/JointMotorControllerComponent.cpp
         Source/Manipulation/MotorizedJoints/JointMotorControllerConfiguration.cpp
         Source/Manipulation/MotorizedJoints/ManualMotorControllerComponent.cpp
