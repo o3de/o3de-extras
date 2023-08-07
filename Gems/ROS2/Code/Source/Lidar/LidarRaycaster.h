@@ -50,6 +50,6 @@ namespace ROS2
         bool m_addMaxRangePoints{ false };
         AZStd::vector<AZ::Vector3> m_rayRotations{ { AZ::Vector3::CreateZero() } };
 
-        AZStd::vector<AZ::u32> m_ignoredLayerIndices{};
+        AZStd::vector<AZ::u32> m_ignoredCollisionLayers;
     };
 } // namespace ROS2

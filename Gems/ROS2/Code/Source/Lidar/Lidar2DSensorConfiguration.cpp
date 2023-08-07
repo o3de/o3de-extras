@@ -21,7 +21,7 @@ namespace ROS2
                 ->Field("lidarModel", &Lidar2DSensorConfiguration::m_lidarModel)
                 ->Field("lidarImplementation", &Lidar2DSensorConfiguration::m_lidarSystem)
                 ->Field("LidarParameters", &Lidar2DSensorConfiguration::m_lidarParameters)
-                ->Field("IgnoredLayerIndices", &Lidar2DSensorConfiguration::m_ignoredLayerIndices)
+                ->Field("IgnoredLayerIndices", &Lidar2DSensorConfiguration::m_ignoredCollisionLayers)
                 ->Field("ExcludedEntities", &Lidar2DSensorConfiguration::m_excludedEntities)
                 ->Field("PointsAtMax", &Lidar2DSensorConfiguration::m_addPointsAtMax);
 
@@ -47,9 +47,9 @@ namespace ROS2
                     ->Attribute(AZ::Edit::Attributes::Visibility, &Lidar2DSensorConfiguration::IsConfigurationVisible)
                     ->DataElement(
                         AZ::Edit::UIHandlers::Default,
-                        &Lidar2DSensorConfiguration::m_ignoredLayerIndices,
-                        "Ignored layer indices",
-                        "Layer indices to ignore")
+                        &Lidar2DSensorConfiguration::m_ignoredCollisionLayers,
+                        "Ignored collision layers",
+                        "Indices of collision layers to ignore")
                     ->Attribute(AZ::Edit::Attributes::Visibility, &Lidar2DSensorConfiguration::IsIgnoredLayerConfigurationVisible)
                     ->DataElement(
                         AZ::Edit::UIHandlers::Default,
