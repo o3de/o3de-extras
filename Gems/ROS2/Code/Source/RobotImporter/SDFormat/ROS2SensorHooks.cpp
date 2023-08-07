@@ -11,6 +11,7 @@
 #include <Camera/CameraConstants.h>
 #include <Camera/ROS2CameraSensorEditorComponent.h>
 #include <GNSS/ROS2GNSSSensorComponent.h>
+#include <ROS2/Frame/ROS2FrameComponent.h>
 #include <RobotImporter/Utils/RobotImporterUtils.h>
 
 #include <sdf/Camera.hh>
@@ -85,7 +86,35 @@ namespace ROS2::SDFormat
                     sensorConfiguration, "depth_camera_info", CameraConstants::CameraInfoMessageType, CameraConstants::DepthInfoConfig);
             }
 
-            if (entity.CreateComponent<ROS2CameraSensorEditorComponent>(sensorConfiguration, cameraConfiguration))
+            if (entity.CreateComponent<ROS2FrameComponent>() &&
+                entity.CreateComponent<ROS2CameraSensorEditorComponent>(sensorConfiguration, cameraConfiguration))
+            {
+                return AZ::Success();
+            }
+            else
+            {
+                return AZ::Failure(AZStd::string("Failed to create ROS2 Camera Sensor component"));
+            }
+        };
+
+        return importerHook;
+    }
+
+    SensorImporterHook ROS2SensorHooks::ROS2GNSSSensor()
+    {
+        SensorImporterHook importerHook;
+        importerHook.m_sensorTypes = AZStd::unordered_set<sdf::SensorType>{ sdf::SensorType::NAVSAT };
+        importerHook.m_supportedSensorParams = AZStd::unordered_set<AZStd::string>{ ">update_rate" };
+        importerHook.m_pluginNames = AZStd::unordered_set<AZStd::string>{ "libgazebo_ros_gps_sensor.so" };
+        importerHook.m_supportedPluginParams = AZStd::unordered_set<AZStd::string>{};
+        importerHook.m_sdfSensorToComponentCallback = [](AZ::Entity& entity,
+                                                         const sdf::Sensor& sdfSensor) -> SensorImporterHook::ConvertSensorOutcome
+        {
+            SensorConfiguration sensorConfiguration;
+            sensorConfiguration.m_frequency = sdfSensor.UpdateRate();
+            Internal::AddTopicConfiguration(sensorConfiguration, "gnss", GNSSConstants::GNSSMessageType, GNSSConstants::GNSSDataConfig);
+
+            if (entity.CreateComponent<ROS2GNSSSensorComponent>(sensorConfiguration, GNSSSensorConfiguration()))
             {
                 return AZ::Success();
             }

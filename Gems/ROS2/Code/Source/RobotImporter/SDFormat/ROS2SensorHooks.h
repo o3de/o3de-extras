@@ -15,5 +15,6 @@ namespace ROS2::SDFormat
     namespace ROS2SensorHooks
     {
         SensorImporterHook ROS2CameraSensor();
+        SensorImporterHook ROS2GNSSSensor();
     } // namespace ROS2SensorHooks
 } // namespace ROS2::SDFormat

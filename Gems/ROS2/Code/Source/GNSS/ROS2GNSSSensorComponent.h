@@ -17,6 +17,12 @@
 
 namespace ROS2
 {
+    namespace GNSSConstants
+    {
+        inline constexpr char GNSSMessageType[] = "sensor_msgs::msg::NavSatFix";
+        inline constexpr char GNSSDataConfig[] = "GNSS Data";
+    } // namespace GNSSConstants
+
     //! Global Navigation Satellite Systems (GNSS) sensor component class
     //! It provides NavSatFix data of sensor's position in GNSS frame which is defined by GNSS origin offset
     //! Offset is provided as latitude [deg], longitude [deg], altitude [m] of o3de global frame
