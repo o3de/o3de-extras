@@ -73,7 +73,7 @@ namespace ROS2
             }
             else
             {
-                m_ros2Transform->Publish(m_controller.GetFrameTransform<ROS2FrameComponent>());
+                m_ros2Transform->Publish(m_controller.GetFrameTransform());
             }
         }
     }
@@ -93,12 +93,12 @@ namespace ROS2
 
     void ROS2FrameComponent::OnTick([[maybe_unused]] float deltaTime, [[maybe_unused]] AZ::ScriptTimePoint time)
     {
-        m_ros2Transform->Publish(m_controller.GetFrameTransform<ROS2FrameComponent>());
+        m_ros2Transform->Publish(m_controller.GetFrameTransform());
     }
 
     AZStd::string ROS2FrameComponent::GetGlobalFrameName() const
     {
-        return m_controller.GetGlobalFrameName<ROS2FrameComponent>();
+        return m_controller.GetGlobalFrameName();
     }
 
     void ROS2FrameComponent::UpdateNamespaceConfiguration(const AZStd::string& ns, NamespaceConfiguration::NamespaceStrategy strategy)
@@ -108,7 +108,7 @@ namespace ROS2
 
     bool ROS2FrameComponent::IsTopLevel() const
     {
-        return m_controller.IsTopLevel<ROS2FrameComponent>();
+        return m_controller.IsTopLevel();
     }
 
     bool ROS2FrameComponent::IsDynamic() const
@@ -116,24 +116,19 @@ namespace ROS2
         return m_controller.IsDynamic();
     }
 
-    const ROS2FrameComponent* ROS2FrameComponent::GetParentROS2FrameComponent() const
-    {
-        return m_controller.GetParentROS2FrameComponent<ROS2FrameComponent>();
-    }
-
     AZ::Transform ROS2FrameComponent::GetFrameTransform() const
     {
-        return m_controller.GetFrameTransform<ROS2FrameComponent>();
+        return m_controller.GetFrameTransform();
     }
 
     AZStd::string ROS2FrameComponent::GetParentFrameID() const
     {
-        return m_controller.GetParentFrameID<ROS2FrameComponent>();
+        return m_controller.GetParentFrameID();
     }
 
     AZStd::string ROS2FrameComponent::GetFrameID() const
     {
-        return m_controller.GetFrameID<ROS2FrameComponent>();
+        return m_controller.GetFrameID();
     }
 
     void ROS2FrameComponent::SetFrameID(const AZStd::string& frameId)
@@ -143,12 +138,12 @@ namespace ROS2
 
     AZStd::string ROS2FrameComponent::GetNamespace() const
     {
-        return m_controller.GetNamespace<ROS2FrameComponent>();
+        return m_controller.GetNamespace();
     }
 
     AZ::Name ROS2FrameComponent::GetJointName() const
     {
-        return m_controller.GetJointName<ROS2FrameComponent>();
+        return m_controller.GetJointName();
     }
 
     void ROS2FrameComponent::SetJointName(const AZStd::string& jointNameString)
@@ -163,14 +158,14 @@ namespace ROS2
         {
             serialize->Class<ROS2FrameComponent, ROS2FrameComponentBase>()->Version(1);
 
-            if (AZ::EditContext* ec = serialize->GetEditContext())
-            {
-                ec->Class<ROS2FrameComponent>("ROS2 Frame", "[ROS2 Frame component]")
-                    ->ClassElement(AZ::Edit::ClassElements::EditorData, "")
-                    ->Attribute(AZ::Edit::Attributes::Category, "ROS2")
-                    ->Attribute(AZ::Edit::Attributes::AppearsInAddComponentMenu, AZ_CRC_CE("Game"))
-                    ->Attribute(AZ::Edit::Attributes::Visibility, AZ::Edit::PropertyVisibility::ShowChildrenOnly);
-            }
+            // if (AZ::EditContext* ec = serialize->GetEditContext())
+            // {
+            //     ec->Class<ROS2FrameComponent>("ROS2 Frame", "[ROS2 Frame component]")
+            //         ->ClassElement(AZ::Edit::ClassElements::EditorData, "")
+            //         ->Attribute(AZ::Edit::Attributes::Category, "ROS2")
+            //         ->Attribute(AZ::Edit::Attributes::AppearsInAddComponentMenu, AZ_CRC_CE("Game"))
+            //         ->Attribute(AZ::Edit::Attributes::Visibility, AZ::Edit::PropertyVisibility::ShowChildrenOnly);
+            // }
         }
     }
 

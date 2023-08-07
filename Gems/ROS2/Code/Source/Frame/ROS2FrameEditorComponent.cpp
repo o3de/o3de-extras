@@ -33,12 +33,12 @@ namespace ROS2
 
     AZStd::string ROS2FrameEditorComponent::GetGlobalFrameName() const
     {
-        return m_controller.GetGlobalFrameName<ROS2FrameEditorComponent>();
+        return m_controller.GetGlobalFrameName();
     }
 
     bool ROS2FrameEditorComponent::IsTopLevel() const
     {
-        return m_controller.IsTopLevel<ROS2FrameEditorComponent>();
+        return m_controller.IsTopLevel();
     }
 
     bool ROS2FrameEditorComponent::IsDynamic() const
@@ -46,24 +46,19 @@ namespace ROS2
         return m_controller.IsDynamic();
     }
 
-    const ROS2FrameEditorComponent* ROS2FrameEditorComponent::GetParentROS2FrameComponent() const
-    {
-        return m_controller.GetParentROS2FrameComponent<ROS2FrameEditorComponent>();
-    }
-
     AZ::Transform ROS2FrameEditorComponent::GetFrameTransform() const
     {
-        return m_controller.GetFrameTransform<ROS2FrameEditorComponent>();
+        return m_controller.GetFrameTransform();
     }
 
     AZStd::string ROS2FrameEditorComponent::GetParentFrameID() const
     {
-        return m_controller.GetParentFrameID<ROS2FrameEditorComponent>();
+        return m_controller.GetParentFrameID();
     }
 
     AZStd::string ROS2FrameEditorComponent::GetFrameID() const
     {
-        return m_controller.GetFrameID<ROS2FrameEditorComponent>();
+        return m_controller.GetFrameID();
     }
 
     void ROS2FrameEditorComponent::SetFrameID(const AZStd::string& frameId)
@@ -73,12 +68,12 @@ namespace ROS2
 
     AZStd::string ROS2FrameEditorComponent::GetNamespace() const
     {
-        return m_controller.GetNamespace<ROS2FrameEditorComponent>();
+        return m_controller.GetNamespace();
     }
 
     AZ::Name ROS2FrameEditorComponent::GetJointName() const
     {
-        return m_controller.GetJointName<ROS2FrameEditorComponent>();
+        return m_controller.GetJointName();
     }
 
     void ROS2FrameEditorComponent::SetJointName(const AZStd::string& jointNameString)
@@ -97,8 +92,8 @@ namespace ROS2
             {
                 ec->Class<ROS2FrameEditorComponent>("ROS2 Frame", "[ROS2 Frame component]")
                     ->ClassElement(AZ::Edit::ClassElements::EditorData, "")
-                    ->Attribute(AZ::Edit::Attributes::Category, "ROS2")
                     ->Attribute(AZ::Edit::Attributes::AppearsInAddComponentMenu, AZ_CRC_CE("Game"))
+                    ->Attribute(AZ::Edit::Attributes::Category, "ROS2")
                     ->Attribute(AZ::Edit::Attributes::Visibility, AZ::Edit::PropertyVisibility::ShowChildrenOnly);
             }
         }
@@ -129,5 +124,10 @@ namespace ROS2
     ROS2FrameEditorComponent::ROS2FrameEditorComponent(const ROS2FrameConfiguration& config)
     {
         SetConfiguration(config);
+    }
+
+    bool ROS2FrameEditorComponent::ShouldActivateController() const
+    {
+        return true;
     }
 } // namespace ROS2

@@ -32,7 +32,7 @@ namespace ROS2
     class ROS2FrameEditorComponent : public ROS2FrameEditorComponentBase
     {
     public:
-        AZ_COMPONENT(ROS2FrameEditorComponent, "{ed8cf823-1813-4423-a874-5de13e9124d2}", AzToolsFramework::Components::EditorComponentBase);
+        AZ_COMPONENT(ROS2FrameEditorComponent, "{EE743472-3E25-41EA-961B-14096AC1D66F}", AzToolsFramework::Components::EditorComponentBase);
 
         ROS2FrameEditorComponent();
         //! Initialize to a specific frame id
@@ -80,6 +80,8 @@ namespace ROS2
         //! Global frame name in ros2 ecosystem.
         //! @return The name of the global frame with namespace attached. It is typically "odom", "map", "world".
         AZStd::string GetGlobalFrameName() const;
+
+        bool ShouldActivateController() const override;
 
     private:
         bool IsTopLevel() const; //!< True if this entity does not have a parent entity with ROS2.
