@@ -13,9 +13,9 @@ namespace ROS2::Utils
 {
     struct JointStateData
     {
-        float position;
-        float velocity;
-        float effort;
+        float position{ 0.f };
+        float velocity{ 0.f };
+        float effort{ 0.f };
     };
 
     //! Get the current joint state

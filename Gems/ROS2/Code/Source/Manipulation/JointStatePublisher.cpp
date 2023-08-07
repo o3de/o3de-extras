@@ -31,13 +31,15 @@ namespace ROS2
         rosHeader.stamp = ROS2::ROS2Interface::Get()->GetROSTimestamp();
         m_jointStateMsg.header = rosHeader;
 
-        for (size_t i = 0; i < m_jointNames.size(); i++)
+        AZ_Assert(m_jointNames.size() == m_jointStateMsg.name.size(), "The expected message size doesn't match with the joint list size");
+
+        for (size_t i = 0; i < m_jointStateMsg.name.size(); i++)
         {
             m_jointStateMsg.name[i] = m_jointNames[i].c_str();
             JointInfo& jointInfo = m_jointInfos[i];
 
             auto jointStateData = Utils::GetJointState(jointInfo);
-            
+
             m_jointStateMsg.position[i] = jointStateData.position;
             m_jointStateMsg.velocity[i] = jointStateData.velocity;
             m_jointStateMsg.effort[i] = jointStateData.effort;
