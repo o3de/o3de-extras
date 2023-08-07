@@ -11,6 +11,7 @@
 #include <Camera/ROS2CameraSensorEditorComponent.h>
 #include <Lidar/LidarRegistrarEditorSystemComponent.h>
 #include <Manipulation/JointsManipulationEditorComponent.h>
+#include <ROS2/Frame/ROS2FrameEditorComponent.h>
 #include <ROS2EditorSystemComponent.h>
 #include <ROS2ModuleInterface.h>
 #include <RobotImporter/ROS2RobotImporterEditorSystemComponent.h>
@@ -46,7 +47,8 @@ namespace ROS2
                   ROS2SpawnPointEditorComponent::CreateDescriptor(),
                   SdfAssetBuilderSystemComponent::CreateDescriptor(),
                   JointsManipulationEditorComponent::CreateDescriptor(),
-                  GeoReferenceLevelEditorComponent::CreateDescriptor() });
+                  GeoReferenceLevelEditorComponent::CreateDescriptor(),
+                  ROS2FrameEditorComponent::CreateDescriptor() });
         }
 
         AZ::ComponentTypeList GetRequiredSystemComponents() const override

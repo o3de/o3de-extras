@@ -30,7 +30,7 @@ namespace ROS2
         , public AZ::TickBus::Handler
     {
     public:
-        AZ_COMPONENT(ROS2FrameComponent, "{EE743472-3E25-41EA-961B-14096AC1D66F}", AZ::Component);
+        AZ_COMPONENT(ROS2FrameComponent, "{ed8cf823-1813-4423-a874-5de13e9124d2}", AZ::Component);
 
         ROS2FrameComponent();
         //! Initialize to a specific frame id
