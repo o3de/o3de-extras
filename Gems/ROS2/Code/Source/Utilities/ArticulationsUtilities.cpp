@@ -6,6 +6,7 @@
  *
  */
 
+#include <AzFramework/Physics/PhysicsScene.h>
 #include "ArticulationsUtilities.h"
 #include "Source/ArticulationLinkComponent.h"
 
@@ -51,5 +52,25 @@ namespace ROS2::Utils
             return AZ::EntityId(AZ::EntityId::InvalidEntityId);
         }
         return GetRootOfArticulation(parentEntity->GetId());
+    }
+
+    AZStd::unordered_map<AZ::EntityId, AzPhysics::SimulatedBodyHandle> GetSimulatedBodyHandles(AzPhysics::SceneHandle sceneHandle, AZ::EntityId entityId)
+    {
+        AZ::EntityId rootArticulationEntity = GetRootOfArticulation(entityId);
+        AZ::Entity* rootEntity = nullptr;
+        AZ::ComponentApplicationBus::BroadcastResult(rootEntity, &AZ::ComponentApplicationRequests::FindEntity, rootArticulationEntity);
+
+        PhysX::ArticulationLinkComponent* component = rootEntity->FindComponent<PhysX::ArticulationLinkComponent>();
+        AZStd::vector<AzPhysics::SimulatedBodyHandle> articulationHandles = component->GetSimulatedBodyHandles();
+
+        AZStd::unordered_map<AZ::EntityId, AzPhysics::SimulatedBodyHandle> result;
+        for (auto& articulationHandle : articulationHandles)
+        {
+            auto* sceneInterface = AZ::Interface<AzPhysics::SceneInterface>::Get();
+            auto* body = sceneInterface->GetSimulatedBodyFromHandle(sceneHandle, articulationHandle);
+            result.insert({body->GetEntityId(), articulationHandle});
+        }
+
+        return result;
     }
 } // namespace ROS2::Utils

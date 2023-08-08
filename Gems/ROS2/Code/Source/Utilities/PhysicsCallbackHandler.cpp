@@ -5,9 +5,7 @@
  * SPDX-License-Identifier: Apache-2.0 OR MIT
  *
  */
-#include "PhysicsCallbackHandler.h"
-#include "AzFramework/Physics/RigidBodyBus.h"
-#include "AzFramework/Physics/SimulatedBodies/RigidBody.h"
+#include <ROS2/Utilities/PhysicsCallbackHandler.h>
 
 namespace ROS2::Utils
 {
@@ -23,39 +21,6 @@ namespace ROS2::Utils
         m_onSceneSimulationEvent = AzPhysics::SceneEvents::OnSceneSimulationFinishHandler(
             [this](AzPhysics::SceneHandle sceneHandle, float deltaTime)
             {
-                OnPhysicsSimulationFinished(sceneHandle, deltaTime);
-            });
-
-        auto* sceneInterface = AZ::Interface<AzPhysics::SceneInterface>::Get();
-        AzPhysics::SceneHandle sceneHandle = sceneInterface->GetSceneHandle(AzPhysics::DefaultPhysicsSceneName);
-        sceneInterface->RegisterSceneSimulationFinishHandler(sceneHandle, m_onSceneSimulationEvent);
-        sceneInterface->RegisterSceneSimulationStartHandler(sceneHandle, m_onSceneSimulationStart);
-    }
-
-    void PhysicsCallbackHandler::InstallPhysicalCallback(AZ::EntityId entityId)
-    {
-        m_bodyHandle = AzPhysics::InvalidSimulatedBodyHandle;
-        m_onSceneSimulationStart = AzPhysics::SceneEvents::OnSceneSimulationStartHandler(
-            [this, entityId](AzPhysics::SceneHandle sceneHandle, float deltaTime)
-            {
-                AzPhysics::RigidBody* rigidBody = nullptr;
-                Physics::RigidBodyRequestBus::EventResult(rigidBody, entityId, &Physics::RigidBodyRequests::GetRigidBody);
-                AZ_Assert(rigidBody, "Entity %s does not have rigid body.", entityId.ToString().c_str());
-                if (rigidBody)
-                {
-                    m_bodyHandle = rigidBody->m_bodyHandle;
-                    OnPhysicsInitialization(sceneHandle);
-                    m_onSceneSimulationStart.Disconnect();
-                }
-            });
-
-        m_onSceneSimulationEvent = AzPhysics::SceneEvents::OnSceneSimulationFinishHandler(
-            [this](AzPhysics::SceneHandle sceneHandle, float deltaTime)
-            {
-                if (m_bodyHandle == AzPhysics::InvalidSimulatedBodyHandle)
-                {
-                    return;
-                }
                 OnPhysicsSimulationFinished(sceneHandle, deltaTime);
             });
 

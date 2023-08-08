@@ -11,7 +11,7 @@
 #include <AzCore/Component/EntityId.h>
 #include <ROS2/Communication/PublisherConfiguration.h>
 #include <ROS2/Manipulation/JointInfo.h>
-#include <Utilities/PhysicsCallbackHandler.h>
+#include <ROS2/Utilities/PhysicsCallbackHandler.h>
 #include <rclcpp/publisher.hpp>
 #include <sensor_msgs/msg/joint_state.hpp>
 

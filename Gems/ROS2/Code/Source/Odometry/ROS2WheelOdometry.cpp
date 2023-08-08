@@ -74,7 +74,7 @@ namespace ROS2
 
     void ROS2WheelOdometryComponent::SetupRefreshLoop()
     {
-        InstallPhysicalCallback(m_entity->GetId());
+        InstallPhysicalCallback();
     }
 
     void ROS2WheelOdometryComponent::OnPhysicsSimulationFinished(AzPhysics::SceneHandle sceneHandle, float deltaTime)

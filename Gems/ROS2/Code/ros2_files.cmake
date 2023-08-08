@@ -132,7 +132,6 @@ set(FILES
         Source/Utilities/JointUtilities.h
         Source/Utilities/Controllers/PidConfiguration.cpp
         Source/Utilities/PhysicsCallbackHandler.cpp
-        Source/Utilities/PhysicsCallbackHandler.h
         Source/Utilities/ROS2Conversions.cpp
         Source/Utilities/ROS2Names.cpp
         Source/VehicleDynamics/AxleConfiguration.cpp

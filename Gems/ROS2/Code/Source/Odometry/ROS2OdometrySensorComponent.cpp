@@ -58,11 +58,18 @@ namespace ROS2
     // ROS2SensorComponent overrides ...
     void ROS2OdometrySensorComponent::SetupRefreshLoop()
     {
-        InstallPhysicalCallback(m_entity->GetId());
+        InstallPhysicalCallback();
     }
 
     void ROS2OdometrySensorComponent::OnPhysicsInitialization(AzPhysics::SceneHandle sceneHandle)
     {
+        AzPhysics::RigidBody* rigidBody = nullptr;
+        AZ::EntityId entityId = GetEntityId();
+        Physics::RigidBodyRequestBus::EventResult(rigidBody, entityId, &Physics::RigidBodyRequests::GetRigidBody);
+        AZ_Assert(rigidBody, "Entity %s does not have rigid body.", entityId.ToString().c_str());
+
+        m_bodyHandle = rigidBody->m_bodyHandle;
+
         auto* sceneInterface = AZ::Interface<AzPhysics::SceneInterface>::Get();
         auto* simulatedBodyPtr = sceneInterface->GetSimulatedBodyFromHandle(sceneHandle, m_bodyHandle);
         auto rigidbodyPtr = azrtti_cast<AzPhysics::RigidBody*>(simulatedBodyPtr);
