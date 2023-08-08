@@ -126,7 +126,7 @@ namespace ROS2
     void ROS2CameraSensorEditorComponent::DisplayEntityViewport(
         [[maybe_unused]] const AzFramework::ViewportInfo& viewportInfo, AzFramework::DebugDisplayRequests& debugDisplay)
     {
-        if (!m_sensorConfiguration.m_visualise)
+        if (!m_sensorConfiguration.m_visualize)
         {
             return;
         }

@@ -601,7 +601,7 @@
                                     "$type": "ROS2Lidar2DSensorComponent",
                                     "Id": 0,
                                     "SensorConfiguration": {
-                                        "Visualise": true,
+                                        "Visualize": true,
                                         "Publishing Enabled": true,
                                         "Frequency (HZ)": 10.0,
                                         "Publishers": {
@@ -616,20 +616,22 @@
                                             }
                                         }
                                     },
-                                    "lidarModel": 1,
-                                    "lidarImplementation": "Scene Queries",
-                                    "LidarParameters": {
-                                        "Name": "CustomLidar2D",
-                                        "Points per layer": 921,
-                                        "Min horizontal angle": -180.0,
-                                        "Max horizontal angle": 180.0,
-                                        "Min range": 0.10000000149011612,
-                                        "Max range": 40.0
-                                    },
-                                    "IgnoreLayer": true,
-                                    "IgnoredLayerIndex": 1,
-                                    "ExcludedEntities": [],
-                                    "PointsAtMax": false
+                                    "lidarConfiguration": {
+                                        "lidarModel": 7,
+                                        "lidarImplementation": "Scene Queries",
+                                        "LidarParameters": {
+                                            "Name": "Slamtec RPLIDAR S1",
+                                            "Points per layer": 921,
+                                            "Min horizontal angle": -180.0,
+                                            "Max horizontal angle": 180.0,
+                                            "Min range": 0.10000000149011612,
+                                            "Max range": 40.0
+                                        },
+                                        "IgnoreLayer": true,
+                                        "IgnoredLayerIndex": 1,
+                                        "ExcludedEntities": [],
+                                        "PointsAtMax": false
+                                    }
                                 }
                             },
                             "TransformComponent": {

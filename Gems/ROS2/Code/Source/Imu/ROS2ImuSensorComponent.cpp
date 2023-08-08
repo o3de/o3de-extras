@@ -31,16 +31,12 @@ namespace ROS2
 
     void ROS2ImuSensorComponent::Reflect(AZ::ReflectContext* context)
     {
+        ImuSensorConfiguration::Reflect(context);
+
         if (AZ::SerializeContext* serialize = azrtti_cast<AZ::SerializeContext*>(context))
         {
-            serialize->Class<ROS2ImuSensorComponent, ROS2SensorComponent>()
-                ->Version(1)
-                ->Field("FilterSize", &ROS2ImuSensorComponent::m_filterSize)
-                ->Field("IncludeGravity", &ROS2ImuSensorComponent::m_includeGravity)
-                ->Field("AbsoluteRotation", &ROS2ImuSensorComponent::m_absoluteRotation)
-                ->Field("AccelerationVariance", &ROS2ImuSensorComponent::m_linearAccelerationVariance)
-                ->Field("AngularVelocityVariance", &ROS2ImuSensorComponent::m_angularVelocityVariance)
-                ->Field("OrientationVariance", &ROS2ImuSensorComponent::m_orientationVariance);
+            serialize->Class<ROS2ImuSensorComponent, ROS2SensorComponent>()->Version(2)->Field(
+                "imuSensorConfiguration", &ROS2ImuSensorComponent::m_imuConfiguration);
 
             if (AZ::EditContext* ec = serialize->GetEditContext())
             {
@@ -49,37 +45,11 @@ namespace ROS2
                     ->Attribute(AZ::Edit::Attributes::Category, "ROS2")
                     ->Attribute(AZ::Edit::Attributes::AppearsInAddComponentMenu, AZ_CRC_CE("Game"))
                     ->DataElement(
-                        AZ::Edit::UIHandlers::Slider,
-                        &ROS2ImuSensorComponent::m_filterSize,
-                        "Filter Length",
-                        "Filter Length, Large value reduce numeric noise but increase lag")
-                    ->Attribute(AZ::Edit::Attributes::Max, &ROS2ImuSensorComponent::m_maxFilterSize)
-                    ->Attribute(AZ::Edit::Attributes::Min, &ROS2ImuSensorComponent::m_minFilterSize)
-                    ->DataElement(
                         AZ::Edit::UIHandlers::Default,
-                        &ROS2ImuSensorComponent::m_includeGravity,
-                        "Include Gravitation",
-                        "Enable accelerometer to observe gravity force.")
-                    ->DataElement(
-                        AZ::Edit::UIHandlers::Default,
-                        &ROS2ImuSensorComponent::m_absoluteRotation,
-                        "Absolute Rotation",
-                        "Include Absolute rotation in message.")
-                    ->DataElement(
-                        AZ::Edit::UIHandlers::Default,
-                        &ROS2ImuSensorComponent::m_linearAccelerationVariance,
-                        "Linear Acceleration Variance",
-                        "Variance of linear acceleration.")
-                    ->DataElement(
-                        AZ::Edit::UIHandlers::Default,
-                        &ROS2ImuSensorComponent::m_angularVelocityVariance,
-                        "Angular Velocity Variance",
-                        "Variance of angular velocity.")
-                    ->DataElement(
-                        AZ::Edit::UIHandlers::Default,
-                        &ROS2ImuSensorComponent::m_orientationVariance,
-                        "Orientation Variance",
-                        "Variance of orientation.");
+                        &ROS2ImuSensorComponent::m_imuConfiguration,
+                        "Imu sensor configuration",
+                        "Imu sensor configuration")
+                    ->Attribute(AZ::Edit::Attributes::Visibility, AZ::Edit::PropertyVisibility::ShowChildrenOnly);
             }
         }
     }
@@ -92,6 +62,13 @@ namespace ROS2
         pc.m_topic = "imu";
         m_sensorConfiguration.m_frequency = 50;
         m_sensorConfiguration.m_publishersConfigurations.insert(AZStd::make_pair(type, pc));
+    }
+
+    ROS2ImuSensorComponent::ROS2ImuSensorComponent(
+        const SensorConfiguration& sensorConfiguration, const ImuSensorConfiguration& imuConfiguration)
+        : m_imuConfiguration(imuConfiguration)
+    {
+        m_sensorConfiguration = sensorConfiguration;
     }
 
     void ROS2ImuSensorComponent::GetRequiredServices(AZ::ComponentDescriptor::DependencyArrayType& required)
@@ -117,7 +94,7 @@ namespace ROS2
         m_filterAcceleration.push_back(linearVelocity);
         const auto angularVelocity = inv.TransformVector(rigidbody->GetAngularVelocity());
         m_filterAngularVelocity.push_back(angularVelocity);
-        if (m_filterAcceleration.size() > m_filterSize)
+        if (m_filterAcceleration.size() > m_imuConfiguration.m_filterSize)
         {
             m_filterAcceleration.pop_front();
             m_filterAngularVelocity.pop_front();
@@ -135,16 +112,16 @@ namespace ROS2
 
             m_previousLinearVelocity = linearVelocityFilter;
             m_acceleration = -acc + angularRateFiltered.Cross(linearVelocityFilter);
-            if (m_includeGravity)
+            if (m_imuConfiguration.m_includeGravity)
             {
                 m_acceleration += inv.TransformVector(gravity);
             }
             m_imuMsg.linear_acceleration = ROS2Conversions::ToROS2Vector3(m_acceleration);
-            m_imuMsg.linear_acceleration_covariance =  ROS2Conversions::ToROS2Covariance(m_linearAccelerationCovariance);
+            m_imuMsg.linear_acceleration_covariance = ROS2Conversions::ToROS2Covariance(m_linearAccelerationCovariance);
             m_imuMsg.angular_velocity = ROS2Conversions::ToROS2Vector3(angularRateFiltered);
             m_imuMsg.angular_velocity_covariance = ROS2Conversions::ToROS2Covariance(m_angularVelocityCovariance);
 
-            if (m_absoluteRotation)
+            if (m_imuConfiguration.m_absoluteRotation)
             {
                 m_imuMsg.orientation = ROS2Conversions::ToROS2Quaternion(rigidbody->GetTransform().GetRotation());
                 m_imuMsg.orientation_covariance = ROS2Conversions::ToROS2Covariance(m_orientationCovariance);
@@ -162,11 +139,11 @@ namespace ROS2
         const auto publisherConfig = m_sensorConfiguration.m_publishersConfigurations[Internal::kImuMsgType];
         const auto fullTopic = ROS2Names::GetNamespacedName(GetNamespace(), publisherConfig.m_topic);
         m_imuPublisher = ros2Node->create_publisher<sensor_msgs::msg::Imu>(fullTopic.data(), publisherConfig.GetQoS());
-        
-        m_linearAccelerationCovariance = ToDiagonalCovarianceMatrix(m_linearAccelerationVariance);
-        m_angularVelocityCovariance = ToDiagonalCovarianceMatrix(m_angularVelocityVariance);
-        m_orientationCovariance = ToDiagonalCovarianceMatrix(m_orientationVariance);
-        
+
+        m_linearAccelerationCovariance = ToDiagonalCovarianceMatrix(m_imuConfiguration.m_linearAccelerationVariance);
+        m_angularVelocityCovariance = ToDiagonalCovarianceMatrix(m_imuConfiguration.m_angularVelocityVariance);
+        m_orientationCovariance = ToDiagonalCovarianceMatrix(m_imuConfiguration.m_orientationVariance);
+
         ROS2SensorComponent::Activate();
     }
 

@@ -35,7 +35,7 @@ namespace ROS2
         //////////////////////////////////////////////////////////////////////////
         // ROS2SensorComponent overrides
         void FrequencyTick() override;
-        void Visualise() override;
+        void Visualize() override;
         //////////////////////////////////////////////////////////////////////////
 
         AZ::Vector3 m_detectionDirection = AZ::Vector3::CreateAxisX();
