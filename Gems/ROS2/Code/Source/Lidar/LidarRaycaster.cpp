@@ -102,12 +102,9 @@ namespace ROS2
             request->m_filterCallback =
                 [ignoredCollisionLayers = this->m_ignoredCollisionLayers](const AzPhysics::SimulatedBody* simBody, const Physics::Shape* shape)
             {
-                for (auto ignoredLayerIndex : ignoredCollisionLayers)
+                if (ignoredCollisionLayers.contains(shape->GetCollisionLayer().GetIndex()))
                 {
-                    if (shape->GetCollisionLayer().GetIndex() == ignoredLayerIndex)
-                    {
-                        return AzPhysics::SceneQuery::QueryHitType::None;
-                    }
+                    return AzPhysics::SceneQuery::QueryHitType::None;
                 }
                 return AzPhysics::SceneQuery::QueryHitType::Block;
             };
@@ -179,7 +176,7 @@ namespace ROS2
         return results;
     }
 
-    void LidarRaycaster::ConfigureLayerIgnoring(const AZStd::vector<AZ::u32>& layerIndices)
+    void LidarRaycaster::ConfigureIgnoredCollisionLayers(const AZStd::unordered_set<AZ::u32>& layerIndices)
     {
         m_ignoredCollisionLayers = layerIndices;
     }

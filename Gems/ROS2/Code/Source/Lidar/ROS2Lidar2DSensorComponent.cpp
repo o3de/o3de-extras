@@ -96,7 +96,7 @@ namespace ROS2
         if (m_lidarConfiguration.m_lidarSystemFeatures & LidarSystemFeatures::CollisionLayers)
         {
             LidarRaycasterRequestBus::Event(
-                m_lidarRaycasterId, &LidarRaycasterRequestBus::Events::ConfigureLayerIgnoring, m_lidarConfiguration.m_ignoredCollisionLayers);
+                m_lidarRaycasterId, &LidarRaycasterRequestBus::Events::ConfigureIgnoredCollisionLayers, m_lidarConfiguration.m_ignoredCollisionLayers);
         }
 
         if (m_lidarConfiguration.m_lidarSystemFeatures & LidarSystemFeatures::EntityExclusion)
