@@ -21,6 +21,11 @@
 
 namespace ROS2
 {
+    namespace Internal
+    {
+        const char* kGNSSMsgType = "sensor_msgs::msg::NavSatFix";
+    }
+
     void ROS2GNSSSensorComponent::Reflect(AZ::ReflectContext* context)
     {
         GNSSSensorConfiguration::Reflect(context);
@@ -49,10 +54,10 @@ namespace ROS2
     ROS2GNSSSensorComponent::ROS2GNSSSensorComponent()
     {
         TopicConfiguration pc;
-        pc.m_type = GNSSConstants::GNSSMessageType;
+        pc.m_type = Internal::kGNSSMsgType;
         pc.m_topic = "gnss";
         m_sensorConfiguration.m_frequency = 10;
-        m_sensorConfiguration.m_publishersConfigurations.insert(AZStd::make_pair(AZStd::string(GNSSConstants::GNSSDataConfig), pc));
+        m_sensorConfiguration.m_publishersConfigurations.insert(AZStd::make_pair(Internal::kGNSSMsgType, pc));
     }
 
     ROS2GNSSSensorComponent::ROS2GNSSSensorComponent(
@@ -68,7 +73,7 @@ namespace ROS2
         auto ros2Node = ROS2Interface::Get()->GetNode();
         AZ_Assert(m_sensorConfiguration.m_publishersConfigurations.size() == 1, "Invalid configuration of publishers for GNSS sensor");
 
-        const auto publisherConfig = m_sensorConfiguration.m_publishersConfigurations[GNSSConstants::GNSSDataConfig];
+        const auto publisherConfig = m_sensorConfiguration.m_publishersConfigurations[Internal::kGNSSMsgType];
         const auto fullTopic = ROS2Names::GetNamespacedName(GetNamespace(), publisherConfig.m_topic);
         m_gnssPublisher = ros2Node->create_publisher<sensor_msgs::msg::NavSatFix>(fullTopic.data(), publisherConfig.GetQoS());
 

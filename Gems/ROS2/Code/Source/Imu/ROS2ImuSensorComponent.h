@@ -21,12 +21,6 @@
 
 namespace ROS2
 {
-    namespace ImuConstants
-    {
-        inline constexpr char ImuMessageType[] = "sensor_msgs::msg::Imu";
-        inline constexpr char ImuDataConfig[] = "Imu Data";
-    } // namespace ImuConstants
-
     //! An IMU (Inertial Measurement Unit) sensor Component.
     //! IMUs typically include gyroscopes, accelerometers and magnetometers. This component encapsulates data
     //! acquisition and its publishing to ROS2 ecosystem. IMU Component requires ROS2FrameComponent.

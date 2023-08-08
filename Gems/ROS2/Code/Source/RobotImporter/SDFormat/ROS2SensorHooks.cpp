@@ -124,7 +124,8 @@ namespace ROS2::SDFormat
 
             SensorConfiguration sensorConfiguration;
             sensorConfiguration.m_frequency = sdfSensor.UpdateRate();
-            Internal::AddTopicConfiguration(sensorConfiguration, "gnss", GNSSConstants::GNSSMessageType, GNSSConstants::GNSSDataConfig);
+            const AZStd::string messageType = "sensor_msgs::msg::NavSatFix";
+            Internal::AddTopicConfiguration(sensorConfiguration, "gnss", messageType, messageType);
 
             if (entity.CreateComponent<ROS2GNSSSensorComponent>(sensorConfiguration, GNSSSensorConfiguration()))
             {
@@ -200,7 +201,8 @@ namespace ROS2::SDFormat
 
             SensorConfiguration sensorConfiguration;
             sensorConfiguration.m_frequency = sdfSensor.UpdateRate();
-            Internal::AddTopicConfiguration(sensorConfiguration, "imu", ImuConstants::ImuMessageType, ImuConstants::ImuDataConfig);
+            const AZStd::string messageType = "sensor_msgs::msg::Imu";
+            Internal::AddTopicConfiguration(sensorConfiguration, "imu", messageType, messageType);
 
             if (entity.CreateComponent<PhysX::EditorStaticRigidBodyComponent>() && entity.CreateComponent<ROS2FrameComponent>() &&
                 entity.CreateComponent<ROS2ImuSensorComponent>(sensorConfiguration, imuConfiguration))

@@ -24,6 +24,11 @@
 
 namespace ROS2
 {
+    namespace Internal
+    {
+        const char* kImuMsgType = "sensor_msgs::msg::Imu";
+    }
+
     void ROS2ImuSensorComponent::Reflect(AZ::ReflectContext* context)
     {
         ImuSensorConfiguration::Reflect(context);
@@ -51,7 +56,7 @@ namespace ROS2
 
     ROS2ImuSensorComponent::ROS2ImuSensorComponent()
     {
-        const AZStd::string type = ImuConstants::ImuMessageType;
+        const AZStd::string type = Internal::kImuMsgType;
         TopicConfiguration pc;
         pc.m_type = type;
         pc.m_topic = "imu";
@@ -141,7 +146,7 @@ namespace ROS2
         auto ros2Node = ROS2Interface::Get()->GetNode();
         AZ_Assert(m_sensorConfiguration.m_publishersConfigurations.size() == 1, "Invalid configuration of publishers for IMU sensor");
         m_imuMsg.header.frame_id = GetFrameID().c_str();
-        const auto publisherConfig = m_sensorConfiguration.m_publishersConfigurations[ImuConstants::ImuMessageType];
+        const auto publisherConfig = m_sensorConfiguration.m_publishersConfigurations[Internal::kImuMsgType];
         const auto fullTopic = ROS2Names::GetNamespacedName(GetNamespace(), publisherConfig.m_topic);
         m_imuPublisher = ros2Node->create_publisher<sensor_msgs::msg::Imu>(fullTopic.data(), publisherConfig.GetQoS());
 
