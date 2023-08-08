@@ -46,18 +46,11 @@ namespace XR
 
     AZ::RHI::ResultCode System::InitInstance()
     {
-        m_instance = Factory::Get().CreateInstance();
-
-        if (m_instance)
+        if (GetInstance())
         {
-            return m_instance->Init(m_validationMode);
+            return GetInstance()->Init(m_validationMode);
         }
         return AZ::RHI::ResultCode::Fail;
-    }
-
-    AZ::RHI::ResultCode System::InitNativeInstance(AZ::RHI::XRInstanceDescriptor* instanceDescriptor)
-    {
-        return m_instance->InitNativeInstance(instanceDescriptor);
     }
 
     AZ::u32 System::GetNumPhysicalDevices() const
@@ -70,7 +63,7 @@ namespace XR
         AZ_Error("XR", physicalDeviceDescriptor, "The descriptor is null");
         if (physicalDeviceDescriptor)
         {
-            return m_instance->GetXRPhysicalDevice(physicalDeviceDescriptor, index);
+            return GetInstance()->GetXRPhysicalDevice(physicalDeviceDescriptor, index);
         }
 
         return AZ::RHI::ResultCode::Fail;
@@ -82,7 +75,7 @@ namespace XR
         {
             m_device = Factory::Get().CreateDevice();
             AZ_Assert(m_device, "XR Device not created");
-            if (m_device->Init(Device::Descriptor{ m_validationMode, m_instance}) == AZ::RHI::ResultCode::Success)
+            if (m_device->Init(Device::Descriptor{ m_validationMode, GetInstance()}) == AZ::RHI::ResultCode::Success)
             {
                 return m_device->InitDeviceInternal(instanceDescriptor);
             }
@@ -96,7 +89,7 @@ namespace XR
         {
             m_session = Factory::Get().CreateSession();
             AZ_Assert(m_session, "Session not created");
-            AZ::RHI::ResultCode result = m_session->Init(Session::Descriptor{ m_validationMode, m_device, m_instance });
+            AZ::RHI::ResultCode result = m_session->Init(Session::Descriptor{ m_validationMode, m_device, GetInstance() });
             if (result == AZ::RHI::ResultCode::Success)
             {
                 return m_session->InitInternal(sessionDescriptor);
@@ -111,7 +104,7 @@ namespace XR
         {
             m_swapChain = Factory::Get().CreateSwapChain();
             AZ_Assert(m_swapChain, "XR SwapChain not created");
-            return m_swapChain->Init(SwapChain::Descriptor{ m_validationMode, m_instance, m_session, m_device });
+            return m_swapChain->Init(SwapChain::Descriptor{ m_validationMode, GetInstance(), m_session, m_device });
         }
         return AZ::RHI::ResultCode::Fail;
     }
@@ -604,5 +597,14 @@ namespace XR
 
         AZ::RHI::ImagePool* imagePool = azrtti_cast<AZ::RHI::ImagePool*>(image->GetPool());
         return imagePool->UpdateImageContents(request);
+    }
+
+    Instance* System::GetInstance()
+    {
+        if (!m_instance)
+        {
+            m_instance = AZ::Interface<Instance>::Get();
+        }
+        return m_instance.get();
     }
 }

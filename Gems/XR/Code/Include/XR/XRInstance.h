@@ -30,9 +30,6 @@ namespace XR
         //! and based on that a xr instance is created. It also has logging support based on validation mode.
         AZ::RHI::ResultCode Init(AZ::RHI::ValidationMode validationMode);
 
-        //! API to init the native instance object and populate the XRInstanceDecriptor with it.
-        virtual AZ::RHI::ResultCode InitNativeInstance(AZ::RHI::XRInstanceDescriptor* instanceDescriptor) = 0;
-
         //! Get number of physical devices for XR.
         virtual AZ::u32 GetNumPhysicalDevices() const = 0;
 
