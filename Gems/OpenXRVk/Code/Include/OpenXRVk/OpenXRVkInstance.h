@@ -8,11 +8,12 @@
 
 #pragma once
 
+
 #include <AzCore/std/containers/vector.h>
-#include <Atom/RHI/ValidationLayer.h>
-#include <Atom/RHI.Reflect/Vulkan/VulkanBus.h>
 #include <OpenXRVk_Platform.h>
 #include <OpenXRVk/OpenXRVkPhysicalDevice.h>
+#include <Atom/RHI/ValidationLayer.h>
+#include <Atom/RHI.Reflect/Vulkan/VulkanBus.h>
 #include <XR/XRInstance.h>
 
 namespace OpenXRVk
