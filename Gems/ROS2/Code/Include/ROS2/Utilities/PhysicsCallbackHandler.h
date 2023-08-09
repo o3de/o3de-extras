@@ -13,18 +13,18 @@
 
 namespace ROS2::Utils
 {
-    //! Helper class that register OnSceneSimulationFinishHandler and retrieve handle to Simulated Body from the Default Scene.
+    //! A class that registers physics tick callbacks from the Default Scene.
     class PhysicsCallbackHandler
     {
     protected:
-        //! Install to default physics scene callbacks, doesn't require a RigidBody
+        //! Install default physics scene callbacks
         void InstallPhysicalCallback();
 
         //! Removes all attached callbacks
         void RemovePhysicalCallback();
 
         //! Called multiple times per frame after every inner loop of physics engine.
-        //! It virtual version of  callback AzPhysics::SceneEvents::OnSceneSimulationFinishHandler.
+        //! It's a virtual version of callback AzPhysics::SceneEvents::OnSceneSimulationFinishHandler.
         //! @param sceneHandle - scene handle, only handle to Default Scene is expected
         //! @param deltaTime - update of simulated time in seconds.
         virtual void OnPhysicsSimulationFinished(AzPhysics::SceneHandle sceneHandle, float deltaTime){};
