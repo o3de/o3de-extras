@@ -17,6 +17,8 @@
 #include <rclcpp/publisher.hpp>
 #include <sensor_msgs/msg/imu.hpp>
 
+#include "ImuSensorConfiguration.h"
+
 namespace ROS2
 {
     //! An IMU (Inertial Measurement Unit) sensor Component.
@@ -29,6 +31,7 @@ namespace ROS2
     public:
         AZ_COMPONENT(ROS2ImuSensorComponent, "{502A955E-7742-4E23-AD77-5E4063739DCA}", ROS2SensorComponent);
         ROS2ImuSensorComponent();
+        ROS2ImuSensorComponent(const SensorConfiguration& sensorConfiguration, const ImuSensorConfiguration& imuConfiguration);
         ~ROS2ImuSensorComponent() = default;
         static void GetRequiredServices(AZ::ComponentDescriptor::DependencyArrayType& required);
         static void Reflect(AZ::ReflectContext* context);
@@ -39,15 +42,6 @@ namespace ROS2
         //////////////////////////////////////////////////////////////////////////
 
     private:
-        //! Length of filter that removes numerical noise
-        int m_filterSize{ 10 };
-
-        //! Include gravity acceleration
-        bool m_includeGravity{ true };
-
-        //! Measure also absolute rotation
-        bool m_absoluteRotation{ true };
-
         std::shared_ptr<rclcpp::Publisher<sensor_msgs::msg::Imu>> m_imuPublisher;
         sensor_msgs::msg::Imu m_imuMsg;
         AZ::Vector3 m_previousLinearVelocity = AZ::Vector3::CreateZero();
@@ -56,10 +50,7 @@ namespace ROS2
         AZStd::deque<AZ::Vector3> m_filterAcceleration;
         AZStd::deque<AZ::Vector3> m_filterAngularVelocity;
 
-        AZ::Vector3 m_orientationVariance = AZ::Vector3::CreateZero();
-        AZ::Vector3 m_angularVelocityVariance = AZ::Vector3::CreateZero();
-        AZ::Vector3 m_linearAccelerationVariance = AZ::Vector3::CreateZero();
-
+        ImuSensorConfiguration m_imuConfiguration;
 
         AZ::Matrix3x3 m_orientationCovariance = AZ::Matrix3x3::CreateZero();
         AZ::Matrix3x3 m_angularVelocityCovariance = AZ::Matrix3x3::CreateZero();

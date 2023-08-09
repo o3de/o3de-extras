@@ -10,6 +10,8 @@ set(FILES
     Source/Camera/ROS2CameraSensorEditorComponent.h
     Source/Lidar/LidarRegistrarEditorSystemComponent.cpp
     Source/Lidar/LidarRegistrarEditorSystemComponent.h
+    Source/Manipulation/JointsManipulationEditorComponent.cpp
+    Source/Manipulation/JointsManipulationEditorComponent.h
     Source/RobotImporter/Pages/CheckAssetPage.cpp
     Source/RobotImporter/Pages/CheckAssetPage.h
     Source/RobotImporter/Pages/CheckUrdfPage.cpp
@@ -26,6 +28,8 @@ set(FILES
     Source/RobotImporter/RobotImporterWidget.h
     Source/RobotImporter/ROS2RobotImporterEditorSystemComponent.cpp
     Source/RobotImporter/ROS2RobotImporterEditorSystemComponent.h
+    Source/RobotImporter/SDFormat/ROS2SensorHooks.cpp
+    Source/RobotImporter/SDFormat/ROS2SensorHooks.h
     Source/RobotImporter/URDF/ArticulationsMaker.cpp
     Source/RobotImporter/URDF/ArticulationsMaker.h
     Source/RobotImporter/URDF/CollidersMaker.cpp
@@ -45,6 +49,8 @@ set(FILES
     Source/RobotImporter/xacro/XacroUtils.cpp
     Source/RobotImporter/xacro/XacroUtils.h
     Source/RobotImporter/Utils/DefaultSolverConfiguration.h
+    Source/RobotImporter/Utils/FilePath.cpp
+    Source/RobotImporter/Utils/FilePath.h
     Source/RobotImporter/Utils/RobotImporterUtils.cpp
     Source/RobotImporter/Utils/RobotImporterUtils.h
     Source/RobotImporter/Utils/SourceAssetsStorage.cpp
@@ -54,4 +60,12 @@ set(FILES
     Source/ROS2EditorSystemComponent.cpp
     Source/ROS2EditorSystemComponent.h
     Source/ROS2GemUtilities.cpp
+    Source/Spawner/ROS2SpawnerEditorComponent.cpp
+    Source/Spawner/ROS2SpawnerEditorComponent.h
+    Source/Spawner/ROS2SpawnPointEditorComponent.cpp
+    Source/Spawner/ROS2SpawnPointEditorComponent.h
+    Source/SdfAssetBuilder/SdfAssetBuilder.cpp
+    Source/SdfAssetBuilder/SdfAssetBuilder.h
+    Source/SdfAssetBuilder/SdfAssetBuilderSystemComponent.cpp
+    Source/SdfAssetBuilder/SdfAssetBuilderSystemComponent.h
 )

@@ -8,13 +8,14 @@
 #pragma once
 
 #include "ROS2SpawnPointComponent.h"
+#include "Spawner/ROS2SpawnerComponentController.h"
 #include <AzCore/Asset/AssetCommon.h>
 #include <AzCore/Asset/AssetSerializer.h>
 #include <AzCore/Component/Component.h>
 #include <AzCore/std/containers/unordered_map.h>
+#include <AzFramework/Components/ComponentAdapter.h>
 #include <AzFramework/Spawnable/Spawnable.h>
 #include <AzFramework/Spawnable/SpawnableEntitiesInterface.h>
-#include <ROS2/Spawner/SpawnerBus.h>
 #include <gazebo_msgs/srv/get_model_state.hpp>
 #include <gazebo_msgs/srv/get_world_properties.hpp>
 #include <gazebo_msgs/srv/spawn_entity.hpp>
@@ -31,17 +32,17 @@ namespace ROS2
     using GetSpawnPointsNamesRequest = std::shared_ptr<gazebo_msgs::srv::GetWorldProperties::Request>;
     using GetSpawnPointsNamesResponse = std::shared_ptr<gazebo_msgs::srv::GetWorldProperties::Response>;
 
+    using ROS2SpawnerComponentBase = AzFramework::Components::ComponentAdapter<ROS2SpawnerComponentController, ROS2SpawnerComponentConfig>;
     //! Manages robots spawning.
     //! Allows user to set spawnable prefabs in the Editor and spawn them using ROS2 service during the simulation.
-    class ROS2SpawnerComponent
-        : public AZ::Component
-        , public SpawnerRequestsBus::Handler
+    class ROS2SpawnerComponent : public ROS2SpawnerComponentBase
     {
     public:
-        AZ_COMPONENT(ROS2SpawnerComponent, "{5950AC6B-75F3-4E0F-BA5C-17C877013710}", AZ::Component, SpawnerRequestsBus::Handler);
+        AZ_COMPONENT(ROS2SpawnerComponent, "{8ea91880-0067-11ee-be56-0242ac120002}", AZ::Component);
 
-        // AZ::Component interface implementation.
+        // ROS2SpawnerComponentBase interface implementation.
         ROS2SpawnerComponent() = default;
+        ROS2SpawnerComponent(const ROS2SpawnerComponentConfig& properties);
         ~ROS2SpawnerComponent() = default;
         //////////////////////////////////////////////////////////////////////////
         // Component overrides
@@ -50,22 +51,14 @@ namespace ROS2
         //////////////////////////////////////////////////////////////////////////
         static void Reflect(AZ::ReflectContext* context);
 
-        //////////////////////////////////////////////////////////////////////////
-        // SpawnerRequestsBus::Handler overrides
-        const AZ::Transform& GetDefaultSpawnPose() const override;
-        //////////////////////////////////////////////////////////////////////////
-
     private:
         int m_counter = 1;
-        AZStd::unordered_map<AZStd::string, AZ::Data::Asset<AzFramework::Spawnable>> m_spawnables;
         AZStd::unordered_map<AZStd::string, AzFramework::EntitySpawnTicket> m_tickets;
 
         rclcpp::Service<gazebo_msgs::srv::GetWorldProperties>::SharedPtr m_getSpawnablesNamesService;
         rclcpp::Service<gazebo_msgs::srv::GetWorldProperties>::SharedPtr m_getSpawnPointsNamesService;
         rclcpp::Service<gazebo_msgs::srv::SpawnEntity>::SharedPtr m_spawnService;
         rclcpp::Service<gazebo_msgs::srv::GetModelState>::SharedPtr m_getSpawnPointInfoService;
-
-        AZ::Transform m_defaultSpawnPose = { AZ::Vector3{ 0, 0, 0 }, AZ::Quaternion{ 0, 0, 0, 1 }, 1.0 };
 
         void GetAvailableSpawnableNames(const GetAvailableSpawnableNamesRequest request, GetAvailableSpawnableNamesResponse response);
         void SpawnEntity(const SpawnEntityRequest request, SpawnEntityResponse response);

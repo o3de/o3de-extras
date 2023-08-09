@@ -25,20 +25,43 @@ set(FILES
         Source/Clock/PhysicallyStableClock.cpp
         Source/Clock/SimulationClock.cpp
         Source/Communication/QoS.cpp
+        Source/Communication/PublisherConfiguration.cpp
         Source/Communication/TopicConfiguration.cpp
+        Source/FactorySimulation/ConveyorBeltComponent.cpp
+        Source/FactorySimulation/ConveyorBeltComponent.h
+        Source/FactorySimulation/ConveyorBeltComponentConfiguration.cpp
+        Source/FactorySimulation/ConveyorBeltComponentConfiguration.h
+        Source/ContactSensor/ROS2ContactSensorComponent.cpp
+        Source/ContactSensor/ROS2ContactSensorComponent.h
         Source/Frame/NamespaceConfiguration.cpp
         Source/Frame/ROS2FrameComponent.cpp
         Source/Frame/ROS2Transform.cpp
+        Source/Gripper/GripperActionServer.cpp
+        Source/Gripper/GripperActionServer.h
+        Source/Gripper/GripperActionServerComponent.cpp
+        Source/Gripper/GripperActionServerComponent.h
+        Source/Gripper/VacuumGripperComponent.h
+        Source/Gripper/VacuumGripperComponent.cpp
+        Source/Gripper/FingerGripperComponent.h
+        Source/Gripper/FingerGripperComponent.cpp
         Source/GNSS/GNSSFormatConversions.cpp
         Source/GNSS/GNSSFormatConversions.h
+        Source/GNSS/GNSSSensorConfiguration.cpp
+        Source/GNSS/GNSSSensorConfiguration.h
         Source/GNSS/ROS2GNSSSensorComponent.cpp
         Source/GNSS/ROS2GNSSSensorComponent.h
+        Source/Imu/ImuSensorConfiguration.cpp
+        Source/Imu/ImuSensorConfiguration.h
         Source/Imu/ROS2ImuSensorComponent.cpp
         Source/Imu/ROS2ImuSensorComponent.h
         Source/Lidar/LidarRaycaster.cpp
         Source/Lidar/LidarRaycaster.h
         Source/Lidar/LidarRegistrarSystemComponent.cpp
         Source/Lidar/LidarRegistrarSystemComponent.h
+        Source/Lidar/Lidar2DSensorConfiguration.cpp
+        Source/Lidar/Lidar2DSensorConfiguration.h
+        Source/Lidar/LidarSensorConfiguration.cpp
+        Source/Lidar/LidarSensorConfiguration.h
         Source/Lidar/LidarSystem.cpp
         Source/Lidar/LidarSystem.h
         Source/Lidar/LidarTemplate.cpp
@@ -49,18 +72,31 @@ set(FILES
         Source/Lidar/ROS2Lidar2DSensorComponent.h
         Source/Lidar/ROS2LidarSensorComponent.cpp
         Source/Lidar/ROS2LidarSensorComponent.h
-        Source/Manipulation/JointMotorControllerComponent.cpp
-        Source/Manipulation/JointMotorControllerConfiguration.cpp
-        Source/Manipulation/JointPublisherComponent.cpp
-        Source/Manipulation/ManipulatorControllerComponent.cpp
-        Source/Manipulation/ManualMotorControllerComponent.cpp
-        Source/Manipulation/PidMotorControllerComponent.cpp
+        Source/Manipulation/Controllers/JointsArticulationControllerComponent.cpp
+        Source/Manipulation/Controllers/JointsArticulationControllerComponent.h
+        Source/Manipulation/Controllers/JointsPIDControllerComponent.cpp
+        Source/Manipulation/Controllers/JointsPIDControllerComponent.h
+        Source/Manipulation/JointInfo.cpp
+        Source/Manipulation/JointStatePublisher.cpp
+        Source/Manipulation/JointStatePublisher.h
+        Source/Manipulation/JointsManipulationComponent.cpp
+        Source/Manipulation/JointsManipulationComponent.h
+        Source/Manipulation/JointsTrajectoryComponent.cpp
+        Source/Manipulation/JointsTrajectoryComponent.h
+        Source/Manipulation/FollowJointTrajectoryActionServer.cpp
+        Source/Manipulation/FollowJointTrajectoryActionServer.h
+        Source/Manipulation/MotorizedJoints/JointMotorControllerComponent.cpp
+        Source/Manipulation/MotorizedJoints/JointMotorControllerConfiguration.cpp
+        Source/Manipulation/MotorizedJoints/ManualMotorControllerComponent.cpp
+        Source/Manipulation/MotorizedJoints/PidMotorControllerComponent.cpp
         Source/Odometry/ROS2OdometrySensorComponent.cpp
         Source/Odometry/ROS2OdometrySensorComponent.h
         Source/Odometry/ROS2WheelOdometry.cpp
         Source/Odometry/ROS2WheelOdometry.h
         Source/Odometry/ROS2OdometryCovariance.cpp
         Source/Odometry/ROS2OdometryCovariance.h
+        Source/ProximitySensor/ROS2ProximitySensor.cpp
+        Source/ProximitySensor/ROS2ProximitySensor.h
         Source/RobotControl/Ackermann/AckermannSubscriptionHandler.cpp
         Source/RobotControl/Ackermann/AckermannSubscriptionHandler.h
         Source/RobotControl/ControlConfiguration.cpp
@@ -84,6 +120,14 @@ set(FILES
         Source/Spawner/ROS2SpawnerComponent.h
         Source/Spawner/ROS2SpawnPointComponent.cpp
         Source/Spawner/ROS2SpawnPointComponent.h
+        Source/Spawner/ROS2SpawnerComponentController.cpp
+        Source/Spawner/ROS2SpawnerComponentController.h
+        Source/Spawner/ROS2SpawnPointComponentController.cpp
+        Source/Spawner/ROS2SpawnPointComponentController.h
+        Source/Utilities/ArticulationsUtilities.cpp
+        Source/Utilities/ArticulationsUtilities.h
+        Source/Utilities/JointUtilities.cpp
+        Source/Utilities/JointUtilities.h
         Source/Utilities/Controllers/PidConfiguration.cpp
         Source/Utilities/PhysicsCallbackHandler.cpp
         Source/Utilities/PhysicsCallbackHandler.h
@@ -119,4 +163,4 @@ set(FILES
         Source/VehicleDynamics/WheelControllerComponent.cpp
         Source/VehicleDynamics/WheelControllerComponent.h
         Source/VehicleDynamics/WheelDynamicsData.h
-)
+        )

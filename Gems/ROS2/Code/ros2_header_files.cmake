@@ -8,18 +8,27 @@ set(FILES
         Include/ROS2/Camera/CameraPostProcessingRequestBus.h
         Include/ROS2/Clock/PhysicallyStableClock.h
         Include/ROS2/Clock/SimulationClock.h
+        Include/ROS2/Communication/PublisherConfiguration.h
+        Include/ROS2/Communication/TopicConfiguration.h
+        Include/ROS2/Communication/QoS.h
         Include/ROS2/Frame/NamespaceConfiguration.h
         Include/ROS2/Frame/ROS2FrameComponent.h
         Include/ROS2/Frame/ROS2Transform.h
-        Include/ROS2/Manipulation/JointMotorControllerComponent.h
-        Include/ROS2/Manipulation/JointMotorControllerConfiguration.h
-        Include/ROS2/Manipulation/JointPublisherComponent.h
-        Include/ROS2/Manipulation/ManipulatorControllerComponent.h
-        Include/ROS2/Manipulation/ManualMotorControllerComponent.h
-        Include/ROS2/Manipulation/PidMotorControllerBus.h
-        Include/ROS2/Manipulation/PidMotorControllerComponent.h
+        Include/ROS2/Gripper/GripperRequestBus.h
+        Include/ROS2/Manipulation/Controllers/JointsPositionControllerRequests.h
+        Include/ROS2/Manipulation/JointInfo.h
+        Include/ROS2/Manipulation/JointsManipulationRequests.h
+        Include/ROS2/Manipulation/JointsTrajectoryRequests.h
+        Include/ROS2/Manipulation/MotorizedJoints/JointMotorControllerComponent.h
+        Include/ROS2/Manipulation/MotorizedJoints/JointMotorControllerConfiguration.h
+        Include/ROS2/Manipulation/MotorizedJoints/ManualMotorControllerComponent.h
+        Include/ROS2/Manipulation/MotorizedJoints/PidMotorControllerBus.h
+        Include/ROS2/Manipulation/MotorizedJoints/PidMotorControllerComponent.h
+        Include/ROS2/ProximitySensor/ProximitySensorNotificationBus.h
+        Include/ROS2/ProximitySensor/ProximitySensorNotificationBusHandler.h
         Include/ROS2/RobotControl/ControlConfiguration.h
         Include/ROS2/RobotControl/ControlSubscriptionHandler.h
+        Include/ROS2/RobotImporter/SDFormatSensorImporterHook.h
         Include/ROS2/Lidar/LidarRaycasterBus.h
         Include/ROS2/Lidar/LidarSystemBus.h
         Include/ROS2/Lidar/LidarRegistrarBus.h

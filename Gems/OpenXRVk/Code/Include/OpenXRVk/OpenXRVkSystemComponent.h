@@ -24,8 +24,8 @@ namespace OpenXRVk
         static void GetProvidedServices(AZ::ComponentDescriptor::DependencyArrayType& provided);
         static void Reflect(AZ::ReflectContext* context);
 
-        SystemComponent();
-        ~SystemComponent();
+        SystemComponent() = default;
+        ~SystemComponent() = default;
 
         //////////////////////////////////////////////////////////////////////////
         // Component
@@ -59,5 +59,8 @@ namespace OpenXRVk
         //! Create XR::Swapchain::Image object.
         XR::Ptr<XR::SwapChain::Image> CreateSwapChainImage() override;
         ///////////////////////////////////////////////////////////////////
+
+    private:
+        XR::Ptr<XR::Instance> m_instance;
     };
 }

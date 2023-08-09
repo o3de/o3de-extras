@@ -20,4 +20,7 @@ namespace XR
     //! Provides support for reverse depth in case we want better depth precision
     //! Handles the case where farDist is less than nearDist whereby it will place far plane at infinity.
     AZ::Matrix4x4 CreateStereoscopicProjection(float angleLeft, float angleRight, float angleBottom, float angleTop, float nearDist, float farDist, bool reverseDepth);
+
+    //! Check is OpenXR is enable via command line option or settings registry.
+    bool IsOpenXREnabled();
 }

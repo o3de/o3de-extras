@@ -50,7 +50,12 @@ namespace ROS2
     LidarId LidarSystem::CreateLidar(AZ::EntityId lidarEntityId)
     {
         LidarId lidarId = LidarId::CreateRandom();
-        m_lidars.emplace_back(lidarId, lidarEntityId);
+        m_lidars.emplace(lidarId, LidarRaycaster(lidarId, lidarEntityId));
         return lidarId;
+    }
+
+    void LidarSystem::DestroyLidar(LidarId lidarId)
+    {
+        m_lidars.erase(lidarId);
     }
 } // namespace ROS2

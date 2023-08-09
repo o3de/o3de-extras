@@ -12,16 +12,21 @@
 #include <API/EditorAssetSystemAPI.h>
 #include <AzCore/Debug/Trace.h>
 #include <AzCore/IO/FileIO.h>
+#include <AzCore/Math/Transform.h>
+#include <AzCore/Serialization/Json/JsonUtils.h>
 #include <AzToolsFramework/Entity/EditorEntityHelpers.h>
 #include <AzToolsFramework/Prefab/PrefabLoaderInterface.h>
 #include <AzToolsFramework/Prefab/PrefabSystemComponentInterface.h>
+#include <AzToolsFramework/Prefab/PrefabLoaderScriptingBus.h>
+#include <AzToolsFramework/Prefab/PrefabSystemScriptingBus.h>
+#include <AzToolsFramework/Prefab/Procedural/ProceduralPrefabAsset.h>
 #include <AzToolsFramework/ToolsComponents/GenericComponentWrapper.h>
 #include <AzToolsFramework/ToolsComponents/TransformComponent.h>
 #include <ROS2/Frame/ROS2FrameComponent.h>
 #include <ROS2/ROS2GemUtilities.h>
-#include <ROS2/Spawner/SpawnerBus.h>
 #include <RobotControl/ROS2RobotControlComponent.h>
 #include <RobotImporter/Utils/RobotImporterUtils.h>
+#include <optional>
 
 namespace ROS2
 {
@@ -30,12 +35,14 @@ namespace ROS2
         urdf::ModelInterfaceSharedPtr model,
         AZStd::string prefabPath,
         const AZStd::shared_ptr<Utils::UrdfAssetMap> urdfAssetsMapping,
-        bool useArticulations)
+        bool useArticulations,
+        const AZStd::optional<AZ::Transform> spawnPosition)
         : m_model(model)
         , m_visualsMaker(model->materials_, urdfAssetsMapping)
         , m_collidersMaker(urdfAssetsMapping)
         , m_prefabPath(std::move(prefabPath))
         , m_urdfAssetsMapping(urdfAssetsMapping)
+        , m_spawnPosition(spawnPosition)
         , m_useArticulations(useArticulations)
     {
         AZ_Assert(!m_prefabPath.empty(), "Prefab path is empty");
@@ -51,35 +58,27 @@ namespace ROS2
         }
     }
 
-    AzToolsFramework::Prefab::CreatePrefabResult URDFPrefabMaker::CreatePrefabFromURDF()
+    URDFPrefabMaker::CreatePrefabTemplateResult URDFPrefabMaker::CreatePrefabTemplateFromURDF()
     {
         {
             AZStd::lock_guard<AZStd::mutex> lck(m_statusLock);
             m_status.clear();
         }
 
-        // Begin an undo batch for prefab creation process
-        AzToolsFramework::UndoSystem::URSequencePoint* currentUndoBatch = nullptr;
-        AzToolsFramework::ToolsApplicationRequests::Bus::BroadcastResult(
-            currentUndoBatch, &AzToolsFramework::ToolsApplicationRequests::BeginUndoBatch, "Robot Importer prefab creation");
-        if (currentUndoBatch == nullptr)
+        if (!m_model)
         {
-            AZ_Warning("URDF Prefab Maker", false, "Unable to start undobatch, EBus might not be listening");
+            return AZ::Failure(AZStd::string("Null model."));
         }
 
+        // Build up a list of all entities created as a part of processing the file.
+        AZStd::vector<AZ::EntityId> createdEntities;
+
         AZStd::unordered_map<AZStd::string, AzToolsFramework::Prefab::PrefabEntityResult> createdLinks;
-        AzToolsFramework::Prefab::PrefabEntityResult createEntityRoot = AddEntitiesForLink(m_model->root_link_, AZ::EntityId());
+        AzToolsFramework::Prefab::PrefabEntityResult createEntityRoot = AddEntitiesForLink(m_model->root_link_, AZ::EntityId(), createdEntities);
         AZStd::string rootName(m_model->root_link_->name.c_str(), m_model->root_link_->name.size());
         createdLinks[rootName] = createEntityRoot;
         if (!createEntityRoot.IsSuccess())
         {
-            // End undo batch labeled "Robot Importer prefab creation" preemptively if an error occurs
-            if (currentUndoBatch != nullptr)
-            {
-                AzToolsFramework::ToolsApplicationRequests::Bus::Broadcast(
-                    &AzToolsFramework::ToolsApplicationRequests::Bus::Events::EndUndoBatch);
-            }
-
             return AZ::Failure(AZStd::string(createEntityRoot.GetError()));
         }
 
@@ -87,12 +86,12 @@ namespace ROS2
 
         for (const auto& [name, linkPtr] : links)
         {
-            createdLinks[name] = AddEntitiesForLink(linkPtr, createEntityRoot.GetValue());
+            createdLinks[name] = AddEntitiesForLink(linkPtr, createEntityRoot.GetValue(), createdEntities);
         }
 
         for (const auto& [name, result] : createdLinks)
         {
-            AZ_TracePrintf(
+            AZ_Trace(
                 "CreatePrefabFromURDF",
                 "Link with name %s was created as: %s\n",
                 name.c_str(),
@@ -121,7 +120,7 @@ namespace ROS2
                     auto* transformInterface = entity->FindComponent<AzToolsFramework::Components::TransformComponent>();
                     if (transformInterface)
                     {
-                        AZ_TracePrintf(
+                        AZ_Trace(
                             "CreatePrefabFromURDF",
                             "Setting transform %s %s to [%f %f %f] [%f %f %f %f]\n",
                             name.c_str(),
@@ -137,8 +136,7 @@ namespace ROS2
                     }
                     else
                     {
-                        AZ_TracePrintf(
-                            "CreatePrefabFromURDF", "Setting transform failed: %s does not have transform interface\n", name.c_str());
+                        AZ_Trace("CreatePrefabFromURDF", "Setting transform failed: %s does not have transform interface\n", name.c_str());
                     }
                 }
             }
@@ -150,71 +148,75 @@ namespace ROS2
             const auto thisEntry = createdLinks.at(name);
             if (!thisEntry.IsSuccess())
             {
-                AZ_TracePrintf("CreatePrefabFromURDF", "Link %s creation failed\n", name.c_str());
+                AZ_Trace("CreatePrefabFromURDF", "Link %s creation failed\n", name.c_str());
                 continue;
             }
             auto parentPtr = linkPtr->getParent();
             if (!parentPtr)
             {
-                AZ_TracePrintf("CreatePrefabFromURDF", "Link %s has no parents\n", name.c_str());
+                AZ_Trace("CreatePrefabFromURDF", "Link %s has no parents\n", name.c_str());
                 continue;
             }
             AZStd::string parentName(parentPtr->name.c_str(), parentPtr->name.size());
             const auto parentEntry = createdLinks.find(parentName);
             if (parentEntry == createdLinks.end())
             {
-                AZ_TracePrintf("CreatePrefabFromURDF", "Link %s has invalid parent name %s\n", name.c_str(), parentName.c_str());
+                AZ_Trace("CreatePrefabFromURDF", "Link %s has invalid parent name %s\n", name.c_str(), parentName.c_str());
                 continue;
             }
             if (!parentEntry->second.IsSuccess())
             {
-                AZ_TracePrintf(
-                    "CreatePrefabFromURDF", "Link %s has parent %s which has failed to create\n", name.c_str(), parentName.c_str());
+                AZ_Trace("CreatePrefabFromURDF", "Link %s has parent %s which has failed to create\n", name.c_str(), parentName.c_str());
                 continue;
             }
-            AZ_TracePrintf(
+            AZ_Trace(
                 "CreatePrefabFromURDF",
                 "Link %s setting parent to %s\n",
                 thisEntry.GetValue().ToString().c_str(),
                 parentEntry->second.GetValue().ToString().c_str());
-            AZ_TracePrintf("CreatePrefabFromURDF", "Link %s setting parent to %s\n", name.c_str(), parentName.c_str());
-            auto* entity = AzToolsFramework::GetEntityById(thisEntry.GetValue());
-            entity->Activate();
-            AZ::TransformBus::Event(thisEntry.GetValue(), &AZ::TransformBus::Events::SetParent, parentEntry->second.GetValue());
-            entity->Deactivate();
+            AZ_Trace("CreatePrefabFromURDF", "Link %s setting parent to %s\n", name.c_str(), parentName.c_str());
+            PrefabMakerUtils::SetEntityParent(thisEntry.GetValue(), parentEntry->second.GetValue());
         }
 
-        if (!m_useArticulations)
+        auto joints = Utils::GetAllJoints(m_model->root_link_->child_links);
+        for (const auto& [name, jointPtr] : joints)
         {
-            auto joints = Utils::GetAllJoints(m_model->root_link_->child_links);
-            for (const auto& [name, jointPtr] : joints)
-            {
-                AZ_Assert(jointPtr, "joint %s is null", name.c_str());
-                AZ_TracePrintf(
-                    "CreatePrefabFromURDF",
-                    "Creating joint %s : %s -> %s\n",
-                    name.c_str(),
-                    jointPtr->parent_link_name.c_str(),
-                    jointPtr->child_link_name.c_str());
+            AZ_Assert(jointPtr, "joint %s is null", name.c_str());
+            AZ_Trace(
+                "CreatePrefabFromURDF",
+                "Creating joint %s : %s -> %s\n",
+                name.c_str(),
+                jointPtr->parent_link_name.c_str(),
+                jointPtr->child_link_name.c_str());
 
-                auto leadEntity = createdLinks.at(jointPtr->parent_link_name.c_str());
-                auto childEntity = createdLinks.at(jointPtr->child_link_name.c_str());
-                // check if both has RigidBody
-                if (leadEntity.IsSuccess() && childEntity.IsSuccess())
+            auto leadEntity = createdLinks.at(jointPtr->parent_link_name.c_str());
+            auto childEntity = createdLinks.at(jointPtr->child_link_name.c_str());
+
+
+            AZ::Entity* childEntityPtr = AzToolsFramework::GetEntityById(childEntity.GetValue());
+            if (childEntityPtr)
+            {
+                auto* component = Utils::GetGameOrEditorComponent<ROS2FrameComponent>(childEntityPtr);
+                if (component)
                 {
-                    AZStd::lock_guard<AZStd::mutex> lck(m_statusLock);
-                    auto result = m_jointsMaker.AddJointComponent(jointPtr, childEntity.GetValue(), leadEntity.GetValue());
-                    m_status.emplace(
-                        name, AZStd::string::format(" %s %llu", result.IsSuccess() ? "created as" : "Failed", result.GetValue()));
+                    component->SetJointName(AZStd::string(name.c_str(), name.length()));
                 }
-                else
-                {
-                    AZ_Warning("CreatePrefabFromURDF", false, "cannot create joint %s", name.c_str());
-                }
+            }
+            // check if both has RigidBody and we are not creating articulation
+            if (!m_useArticulations && leadEntity.IsSuccess() && childEntity.IsSuccess())
+            {
+                AZStd::lock_guard<AZStd::mutex> lck(m_statusLock);
+                auto result = m_jointsMaker.AddJointComponent(jointPtr, childEntity.GetValue(), leadEntity.GetValue());
+                m_status.emplace(
+                    name, AZStd::string::format(" %s %llu", result.IsSuccess() ? "created as" : "Failed", result.GetValue()));
+            }
+            else
+            {
+                AZ_Warning("CreatePrefabFromURDF", false, "cannot create joint %s", name.c_str());
             }
         }
 
-        MoveEntityToDefaultSpawnPoint(createEntityRoot.GetValue());
+        MoveEntityToDefaultSpawnPoint(createEntityRoot.GetValue(), m_spawnPosition);
 
         auto contentEntityId = createEntityRoot.GetValue();
         AddRobotControl(contentEntityId);
@@ -222,30 +224,80 @@ namespace ROS2
         // Create prefab, save it to disk immediately
         // Remove prefab, if it was already created.
 
-        AZ::EntityId entityId = createEntityRoot.GetValue();
+        AZ::IO::FixedMaxPath prefabTemplateName{ AZ::IO::PathView(m_prefabPath).FixedMaxPathStringAsPosix() };
 
-        auto prefabSystemComponent = AZ::Interface<AzToolsFramework::Prefab::PrefabSystemComponentInterface>::Get();
+        // clear out any previously created prefab template for this path
+        auto* prefabSystemComponentInterface = AZ::Interface<AzToolsFramework::Prefab::PrefabSystemComponentInterface>::Get();
         auto prefabLoaderInterface = AZ::Interface<AzToolsFramework::Prefab::PrefabLoaderInterface>::Get();
-        auto prefabInterface = AZ::Interface<AzToolsFramework::Prefab::PrefabPublicInterface>::Get();
-
-        AZ::IO::Path relativeFilePath = prefabLoaderInterface->GenerateRelativePath(m_prefabPath.c_str());
-
-        const auto templateId = prefabSystemComponent->GetTemplateIdFromFilePath(relativeFilePath);
-        AZ_TracePrintf("CreatePrefabFromURDF", "GetTemplateIdFromFilePath  %s -> %d \n", m_prefabPath.c_str(), templateId);
-
-        if (templateId != AzToolsFramework::Prefab::InvalidTemplateId)
+        auto relativePath = prefabLoaderInterface->GenerateRelativePath(m_prefabPath.c_str());
+        AzToolsFramework::Prefab::TemplateId prefabTemplateId =
+            prefabSystemComponentInterface->GetTemplateIdFromFilePath({ relativePath.c_str() });
+        if (prefabTemplateId != AzToolsFramework::Prefab::InvalidTemplateId)
         {
-            AZ_TracePrintf("CreatePrefabFromURDF", "Prefab was already loaded\n");
-            prefabSystemComponent->RemoveTemplate(templateId);
+            prefabSystemComponentInterface->RemoveTemplate(prefabTemplateId);
+            prefabTemplateId = AzToolsFramework::Prefab::InvalidTemplateId;
         }
 
-        auto outcome = prefabInterface->CreatePrefabInDisk(AzToolsFramework::EntityIdList{ entityId }, m_prefabPath.c_str());
-        if (outcome.IsSuccess())
+        prefabTemplateId = AzToolsFramework::Prefab::InvalidTemplateId;
+
+        // create prefab from the "set" of entities (currently just the single default entity)
+        AzToolsFramework::Prefab::PrefabSystemScriptingBus::BroadcastResult(
+            prefabTemplateId,
+            &AzToolsFramework::Prefab::PrefabSystemScriptingBus::Events::CreatePrefabTemplate,
+            createdEntities, relativePath.String());        
+
+        if (prefabTemplateId == AzToolsFramework::Prefab::InvalidTemplateId)
         {
-            AZ::EntityId prefabContainerEntityId = outcome.GetValue();
-            PrefabMakerUtils::AddRequiredComponentsToEntity(prefabContainerEntityId);
+            AZ_Error("CreatePrefabFromURDF", false, "Could not create a prefab template for entities.");
+            return AZ::Failure("Could not create a prefab template for entities.");
         }
-        AZ_TracePrintf("CreatePrefabFromURDF", "Successfully created prefab %s\n", m_prefabPath.c_str());
+
+        AZ_Info("CreatePrefabFromURDF", "Successfully created prefab %s\n", m_prefabPath.c_str());
+
+        return AZ::Success(prefabTemplateId);
+    }
+
+    URDFPrefabMaker::CreatePrefabTemplateResult URDFPrefabMaker::CreatePrefabFromURDF()
+    {
+        // Begin an undo batch for prefab creation process
+        AzToolsFramework::UndoSystem::URSequencePoint* currentUndoBatch = nullptr;
+        AzToolsFramework::ToolsApplicationRequests::Bus::BroadcastResult(
+            currentUndoBatch, &AzToolsFramework::ToolsApplicationRequests::BeginUndoBatch, "Robot Importer prefab creation");
+        if (currentUndoBatch == nullptr)
+        {
+            AZ_Warning("URDF Prefab Maker", false, "Unable to start undobatch, EBus might not be listening");
+        }
+
+        auto result = CreatePrefabTemplateFromURDF();
+        if (!result.IsSuccess())
+        {
+            // End undo batch labeled "Robot Importer prefab creation" preemptively if an error occurs
+            if (currentUndoBatch != nullptr)
+            {
+                AzToolsFramework::ToolsApplicationRequests::Bus::Broadcast(
+                    &AzToolsFramework::ToolsApplicationRequests::Bus::Events::EndUndoBatch);
+            }
+
+            return result;
+        }
+
+        auto prefabLoaderInterface = AZ::Interface<AzToolsFramework::Prefab::PrefabLoaderInterface>::Get();
+
+        // Save Template to file
+        auto relativePath = prefabLoaderInterface->GenerateRelativePath(m_prefabPath.c_str());
+        bool saveResult = prefabLoaderInterface->SaveTemplateToFile(result.GetValue(), m_prefabPath.c_str());
+        if (saveResult)
+        {
+            // If the template saved successfully, also instantiate it into the level.
+            auto prefabInterface = AZ::Interface<AzToolsFramework::Prefab::PrefabPublicInterface>::Get();
+            [[maybe_unused]] auto createPrefabOutcome = 
+                prefabInterface->InstantiatePrefab(relativePath.String(), AZ::EntityId(), AZ::Vector3::CreateZero());
+        }
+        else
+        {
+            result = AZ::Failure(AZStd::string::format("Could not save the newly created prefab to '%s'",
+                m_prefabPath.c_str()));
+        }
 
         // End undo batch labeled "Robot Importer prefab creation"
         if (currentUndoBatch != nullptr)
@@ -254,10 +306,11 @@ namespace ROS2
                 &AzToolsFramework::ToolsApplicationRequests::Bus::Events::EndUndoBatch);
         }
 
-        return outcome;
+        return result;
     }
 
-    AzToolsFramework::Prefab::PrefabEntityResult URDFPrefabMaker::AddEntitiesForLink(urdf::LinkSharedPtr link, AZ::EntityId parentEntityId)
+
+    AzToolsFramework::Prefab::PrefabEntityResult URDFPrefabMaker::AddEntitiesForLink(urdf::LinkSharedPtr link, AZ::EntityId parentEntityId, AZStd::vector<AZ::EntityId>& createdEntities)
     {
         if (!link)
         {
@@ -272,14 +325,18 @@ namespace ROS2
         AZ::EntityId entityId = createEntityResult.GetValue();
         AZ::Entity* entity = AzToolsFramework::GetEntityById(entityId);
 
-        const auto frameCompontentId = Utils::CreateComponent(entityId, ROS2FrameComponent::TYPEINFO_Uuid());
-        if (frameCompontentId)
+        createdEntities.emplace_back(entityId);
+
+        const auto frameComponentId = Utils::CreateComponent(entityId, ROS2FrameComponent::TYPEINFO_Uuid());
+        if (frameComponentId)
         {
             auto* component = Utils::GetGameOrEditorComponent<ROS2FrameComponent>(entity);
             AZ_Assert(component, "ROS2 Frame Component does not exist for %s", entityId.ToString().c_str());
             component->SetFrameID(AZStd::string(link->name.c_str(), link->name.size()));
         }
-        m_visualsMaker.AddVisuals(link, entityId);
+        auto createdVisualEntities = m_visualsMaker.AddVisuals(link, entityId);
+        createdEntities.insert(createdEntities.end(), createdVisualEntities.begin(), createdVisualEntities.end());
+
         if (!m_useArticulations)
         {
             m_inertialsMaker.AddInertial(link->inertial, entityId);
@@ -313,13 +370,13 @@ namespace ROS2
         return m_prefabPath;
     }
 
-    void URDFPrefabMaker::MoveEntityToDefaultSpawnPoint(const AZ::EntityId& rootEntityId)
+    void URDFPrefabMaker::MoveEntityToDefaultSpawnPoint(
+        const AZ::EntityId& rootEntityId, AZStd::optional<AZ::Transform> spawnPosition = AZStd::nullopt)
     {
-        auto spawner = ROS2::SpawnerInterface::Get();
-
-        if (spawner == nullptr)
+        if (!spawnPosition.has_value())
         {
-            AZ_TracePrintf("URDF Importer", "Spawner not found - creating entity in (0,0,0)\n") return;
+            AZ_Trace("URDF Importer", "SpawnPosition is null - spawning in Editors default position\n");
+            return;
         }
 
         auto entity_ = AzToolsFramework::GetEntityById(rootEntityId);
@@ -327,12 +384,11 @@ namespace ROS2
 
         if (transformInterface_ == nullptr)
         {
-            AZ_TracePrintf("URDF Importer", "TransformComponent not found in created entity\n") return;
+            AZ_Trace("URDF Importer", "TransformComponent not found in created entity\n") return;
         }
 
-        auto pose = spawner->GetDefaultSpawnPose();
-
-        transformInterface_->SetWorldTM(pose);
+        transformInterface_->SetWorldTM(*spawnPosition);
+        AZ_Trace("URDF Importer", "Successfully set spawn position\n")
     }
 
     AZStd::string URDFPrefabMaker::GetStatus()
