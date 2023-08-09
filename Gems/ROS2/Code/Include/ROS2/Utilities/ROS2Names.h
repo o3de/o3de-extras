@@ -34,5 +34,11 @@ namespace ROS2
 
         //! Validate topic field. Fits ChangeValidate for Editor fields.
         AZ::Outcome<void, AZStd::string> ValidateTopicField(void* newValue, const AZ::Uuid& valueType);
+
+        //! Validate full topic adherence to ROS2 specification.
+        AZ::Outcome<void, AZStd::string> ValidateFullTopic(const AZStd::string& topic);
+
+        //! Validate full topic field. Fits ChangeValidate for Editor fields.
+        AZ::Outcome<void, AZStd::string> ValidateFullTopicField(void* newValue, const AZ::Uuid& valueType);
     }; // namespace ROS2Names
 } // namespace ROS2

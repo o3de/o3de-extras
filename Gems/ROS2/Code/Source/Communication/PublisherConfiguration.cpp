@@ -6,6 +6,7 @@
  *
  */
 
+#include "AzCore/Serialization/EditContextConstants.inl"
 #include <AzCore/Serialization/EditContext.h>
 #include <ROS2/Communication/PublisherConfiguration.h>
 #include <ROS2/Utilities/ROS2Names.h>
@@ -30,6 +31,7 @@ namespace ROS2
                         AZ::Edit::UIHandlers::Default, &PublisherConfiguration::m_publish, "Publish", "Whether the publisher is on")
                     ->DataElement(
                         AZ::Edit::UIHandlers::Default, &PublisherConfiguration::m_topicConfiguration, "Topic", "Topic configuration")
+                    ->Attribute(AZ::Edit::Attributes::ChangeValidate, &ROS2Names::ValidateFullTopicField)
                     ->DataElement(
                         AZ::Edit::UIHandlers::Default, &PublisherConfiguration::m_frequency, "Frequency (Hz)", "Publishing frequency");
             }
