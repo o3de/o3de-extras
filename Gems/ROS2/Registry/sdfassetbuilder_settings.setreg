@@ -11,7 +11,8 @@
                     "urdf",
                     "world",
                     "xacro"
-                ]
+                ],
+                "UseArticulations": true
             }
         }
     }

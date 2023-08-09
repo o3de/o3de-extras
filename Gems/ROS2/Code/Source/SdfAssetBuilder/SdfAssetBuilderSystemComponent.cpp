@@ -8,6 +8,7 @@
 #include <AzCore/Serialization/SerializeContext.h>
 #include <SdfAssetBuilder/SdfAssetBuilderSystemComponent.h>
 #include <SdfAssetBuilder/SdfAssetBuilder.h>
+#include <SdfAssetBuilder/SdfAssetBuilderSettings.h>
 
 namespace ROS2
 {
@@ -20,6 +21,8 @@ namespace ROS2
 
     void SdfAssetBuilderSystemComponent::Reflect(AZ::ReflectContext* context)
     {
+        SdfAssetBuilderSettings::Reflect(context);
+
         if (auto serializeContext = azrtti_cast<AZ::SerializeContext*>(context))
         {
             serializeContext->Class<SdfAssetBuilderSystemComponent, AZ::Component>()

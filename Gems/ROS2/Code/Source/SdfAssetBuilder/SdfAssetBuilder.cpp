@@ -32,17 +32,24 @@ namespace ROS2
         {
             [[maybe_unused]] constexpr const char* SdfAssetBuilderName = "SdfAssetBuilder";
             constexpr const char* SdfAssetBuilderJobKey = "Sdf Asset Builder";
-            constexpr const char* SdfAssetBuilderSupportedFileExtensionsRegistryKey = "/O3DE/ROS2/SdfAssetBuilder/SupportedFileTypeExtensions";
         }
 
     SdfAssetBuilder::SdfAssetBuilder()
     {
+        // Read in all of the global settings from the settings registry.
+        m_globalSettings.LoadGlobalSettings();
+
+        // Turn our global settings into a cached fingerprint that we'll use on every job
+        // so that we can detect when to rebuild assets on global setting changes.
+        m_fingerprint = GetFingerprint();
+
         AssetBuilderSDK::AssetBuilderDesc sdfAssetBuilderDescriptor;
 
         sdfAssetBuilderDescriptor.m_name = SdfAssetBuilderJobKey;
         sdfAssetBuilderDescriptor.m_version = 1; // bump this to rebuild all sdf files
         sdfAssetBuilderDescriptor.m_busId = azrtti_typeid<SdfAssetBuilder>();
-        sdfAssetBuilderDescriptor.m_patterns = GetSupportedBuilderPatterns();
+        sdfAssetBuilderDescriptor.m_patterns = m_globalSettings.m_builderPatterns;
+        sdfAssetBuilderDescriptor.m_analysisFingerprint = m_fingerprint; // set the fingerprint to the global settings
 
         sdfAssetBuilderDescriptor.m_createJobFunction = [this](auto && request, auto && response) 
             { 
@@ -68,50 +75,6 @@ namespace ROS2
         BusDisconnect();
 
         // The AssetBuilderSDK doesn't support deregistration, so there's nothing more to do here.
-    }
-
-    AZStd::vector<AssetBuilderSDK::AssetBuilderPattern> SdfAssetBuilder::GetSupportedBuilderPatterns()
-    {
-        AZStd::vector<AssetBuilderSDK::AssetBuilderPattern> patterns;
-
-        auto settingsRegistry = AZ::SettingsRegistry::Get();
-        if (settingsRegistry == nullptr)
-        {
-            AZ_Error(SdfAssetBuilderName, false, "Settings Registry not found, no sdf file type extensions enabled.");
-            return {};
-        }
-
-        // Visit each supported file type extension and create an asset builder wildcard pattern for it.
-        auto VisitFileTypeExtensions = [&settingsRegistry, &patterns]
-            (const AZ::SettingsRegistryInterface::VisitArgs& visitArgs)
-            {
-                if (AZ::SettingsRegistryInterface::FixedValueString value;
-                    settingsRegistry->Get(value, visitArgs.m_jsonKeyPath))
-                {
-                    // Ignore any entries that are either completely empty or *only* contain a '.'.
-                    // These will produce excessive (and presumably incorrect) wildcard matches.
-                    if (value.empty() ||
-                        ((value.size() == 1) && value.starts_with('.')))
-                    {
-                        return AZ::SettingsRegistryInterface::VisitResponse::Continue;
-                    }
-
-                    // Support both 'sdf' and '.sdf' style entries in the setreg file for robustness.
-                    // Either one will get turned into a '*.sdf' pattern.
-                    AZStd::string wildcardPattern = value.starts_with('.')
-                        ? AZStd::string::format("*%s", value.c_str())
-                        : AZStd::string::format("*.%s", value.c_str());
-
-                    patterns.push_back(
-                            AssetBuilderSDK::AssetBuilderPattern(
-                                wildcardPattern, AssetBuilderSDK::AssetBuilderPattern::PatternType::Wildcard));
-                }
-                return AZ::SettingsRegistryInterface::VisitResponse::Continue;
-            };
-        AZ::SettingsRegistryVisitorUtils::VisitArray(*settingsRegistry, VisitFileTypeExtensions, SdfAssetBuilderSupportedFileExtensionsRegistryKey);
-
-        AZ_Warning(SdfAssetBuilderName, !patterns.empty(), "SdfAssetBuilder disabled, no supported file type extensions found.");
-        return patterns;
     }
 
     Utils::UrdfAssetMap SdfAssetBuilder::FindAssets(const urdf::LinkConstSharedPtr& rootLink, const AZStd::string& sourceFilename) const
@@ -184,6 +147,25 @@ namespace ROS2
         return assetMap;
     }
 
+    AZStd::string SdfAssetBuilder::GetFingerprint() const
+    {
+        AZStd::string settingsString;
+        AZ::IO::ByteContainerStream<AZStd::string> stream { &settingsString };
+
+        // Always write all of the settings, even when they match the defaults.
+        // This isn't strictly necessary, but this way if the default values ever get changed
+        // we'll still be able to detect that the settings don't match what they used to be.
+        AZ::JsonSerializerSettings jsonSettings;
+        jsonSettings.m_keepDefaults = true;
+
+        [[maybe_unused]] AZ::Outcome<void, AZStd::string> saveObjectResult =
+            AZ::JsonSerializationUtils::SaveObjectToStream(&m_globalSettings, stream, {}, &jsonSettings);
+        AZ_Assert(saveObjectResult.IsSuccess(), "Failed to save settings to fingerprint string: %s", 
+            saveObjectResult.GetError().c_str());
+
+        return settingsString;
+    }
+
     void SdfAssetBuilder::CreateJobs(
         const AssetBuilderSDK::CreateJobsRequest& request,
         AssetBuilderSDK::CreateJobsResponse& response) const
@@ -218,6 +200,7 @@ namespace ROS2
             jobDescriptor.m_critical = false;
             jobDescriptor.m_jobKey = "SDF (Simulation Description Format) Asset";
             jobDescriptor.SetPlatformIdentifier(platformInfo.m_identifier.c_str());
+            jobDescriptor.m_additionalFingerprintInfo = m_fingerprint;
 
             // Add in all of the job dependencies for this file.
             // The SDF file won't get processed until every asset it relies on has been processed first.
@@ -244,8 +227,7 @@ namespace ROS2
         AssetBuilderSDK::ProcessJobResponse& response) const
     {
         // Set whether or not the outputs should use PhysX articulation components for joints.
-        // This should eventually get moved into a global and/or per-file asset builder setting.
-        const bool useArticulation = true;
+        const bool useArticulation = m_globalSettings.m_useArticulations;
 
         auto tempAssetOutputPath = AZ::IO::Path(request.m_tempDirPath) / request.m_sourceFile;
         tempAssetOutputPath.ReplaceExtension("procprefab");
