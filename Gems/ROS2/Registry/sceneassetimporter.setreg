@@ -1,0 +1,21 @@
+{
+	"O3DE":
+	{
+		"SceneAPI":
+		{
+			"AssetImporter":
+			{
+				"SupportedFileTypeExtensions":
+				[
+					".dae",
+					".fbx",
+					".stl",
+					".gltf",
+					".glb",
+					".obj"
+				]
+			}
+		}
+	}
+}
+
