@@ -15,6 +15,7 @@
 #include <ROS2/ROS2Bus.h>
 #include <ROS2/ROS2GemUtilities.h>
 #include <ROS2/Utilities/ROS2Conversions.h>
+#include <ROS2/Utilities/ROS2Names.h>
 
 namespace ROS2
 {
@@ -94,6 +95,14 @@ namespace ROS2
         AZStd::string spawnableNamespace(request->robot_namespace.c_str());
         AZStd::string spawnPointName(request->xml.c_str(), request->xml.size());
 
+        auto namespaceValidation = ROS2Names::ValidateNamespace(spawnableNamespace);
+        if (!namespaceValidation.IsSuccess())
+        {
+            response->success = false;
+            response->status_message = namespaceValidation.GetError().data();
+            return;
+        }
+
         auto spawnPoints = GetSpawnPoints();
 
         if (!m_controller.GetSpawnables().contains(spawnableName))
@@ -165,7 +174,10 @@ namespace ROS2
             if (frameComponent)
             {
                 entity->SetName(instanceName);
-                frameComponent->UpdateNamespaceConfiguration(spawnableNamespace, NamespaceConfiguration::NamespaceStrategy::Custom);
+                if (!spawnableNamespace.empty())
+                {
+                    frameComponent->UpdateNamespaceConfiguration(spawnableNamespace, NamespaceConfiguration::NamespaceStrategy::Custom);
+                }
                 break;
             }
         }
