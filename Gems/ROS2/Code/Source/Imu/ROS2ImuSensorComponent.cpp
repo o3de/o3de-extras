@@ -73,7 +73,7 @@ namespace ROS2
 
     void ROS2ImuSensorComponent::GetRequiredServices(AZ::ComponentDescriptor::DependencyArrayType& required)
     {
-        required.push_back(AZ_CRC_CE("PhysicsRigidBodyService"));
+        required.push_back(AZ_CRC_CE("PhysicsDynamicRigidBodyService"));
         required.push_back(AZ_CRC_CE("ROS2Frame"));
     }
 
