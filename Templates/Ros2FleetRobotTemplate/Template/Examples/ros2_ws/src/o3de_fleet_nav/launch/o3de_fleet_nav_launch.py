@@ -56,6 +56,8 @@ def generate_launch_description():
     use_rviz = LaunchConfiguration('use_rviz')
     log_settings = LaunchConfiguration('log_settings', default='true')
 
+    distro = os.getenv('ROS_DISTRO')
+
     # Declare the launch arguments
     declare_map_yaml_cmd = DeclareLaunchArgument(
         'map',
@@ -64,7 +66,7 @@ def generate_launch_description():
 
     declare_robot_params_file_cmd = DeclareLaunchArgument(
         'robot_params_file',
-        default_value=os.path.join(o3de_fleet_nav_dir, 'params', 'nav2_multirobot_params.yaml'),
+        default_value=os.path.join(o3de_fleet_nav_dir, 'params', distro, 'nav2_multirobot_params.yaml'),
         description='Full path to the ROS2 parameters file to use for all robot launched nodes')
 
     declare_autostart_cmd = DeclareLaunchArgument(

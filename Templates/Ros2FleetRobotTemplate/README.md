@@ -15,6 +15,20 @@ If your simulation does not match this and you would like to start with a simple
 Please follow the instructions in [ROS 2 Gem documentation](https://development--o3deorg.netlify.app/docs/user-guide/interactivity/robotics/project-configuration/)
 to install all required dependencies and create your project with a template (make sure to use chose this template during the process).
 
+## Spawning robots
+
+The level contains spawn points configured to easily add more Proteus robots through ROS 2 calls.
+
+This is done with the [Spawner Component](https://development--o3deorg.netlify.app/docs/user-guide/interactivity/robotics/concepts-and-components-overview/#spawner).
+There are 4 spawn points already added in the level. You can use them all with the following service calls:
+
+```shell
+ros2 service call /spawn_entity gazebo_msgs/srv/SpawnEntity '{name: 'proteus', xml: 'spawnPoint1'}'& \
+ros2 service call /spawn_entity gazebo_msgs/srv/SpawnEntity '{name: 'proteus', xml: 'spawnPoint2'}'& \
+ros2 service call /spawn_entity gazebo_msgs/srv/SpawnEntity '{name: 'proteus', xml: 'spawnPoint3'}'& \
+ros2 service call /spawn_entity gazebo_msgs/srv/SpawnEntity '{name: 'proteus', xml: 'spawnPoint4'}'
+```
+
 ## Fleet navigation
 
 This template comes with the example fleet navigation ROS 2 package called `o3de_fleet_nav`. You can find a prepared ROS 2 workspace in the `Examples` directory.
@@ -22,6 +36,8 @@ This template comes with the example fleet navigation ROS 2 package called `o3de
 This package contains a modified code from `nav2_bringup` package (https://github.com/ros-planning/navigation2).
 
 In this example, a fleet of robots is automatically spawned and each individual robot can be controlled via the Rviz2. An AMCL localization is used for robot localization.
+
+> Notice: Before running an automated fleet example, please make sure your level doesn't contain any robots in it (they will be spawned).
 
 ### Fleet configuration
 
@@ -60,6 +76,14 @@ You can modify contents of this file to add/remove robots or change their initia
 
 > Notice: You have to rebuild the ROS 2 workspace for changes to update.
 
+### Navigation configuration
+
+You can configure navigation parameters by modifying `Example/ros2_ws/src/o3de_fleet_nav/params/<ROS_DISTRO>/nav2_*.yaml` files.
+
+Please visit the [nav2 configuration guide](https://navigation.ros.org/configuration/index.html) for a detailed description of the navigation parameters.
+
+> Notice: You have to rebuild the ROS 2 workspace for changes to update.
+
 ### Topics and frames
 
 Every spawned robot will have its own namespace for all topics. For the first robot ('robot1' namespace), these will be:
@@ -74,6 +98,22 @@ The first spawned robot also provides the following transformations:
 - `/robot1/lidar`
 
 To understand more about transformations, see ROS 2 navigation [documentation](https://navigation.ros.org/setup_guides/transformation/setup_transforms.html).
+
+## Using your robots in the simulation
+
+You can also use your robots in the simulation. To do so, you need to:
+- [import robot](https://docs.o3de.org/docs/user-guide/interactivity/robotics/importing-robot/) from existing URDF file,
+  - or create a robot from scratch in a O3DE editor using ROS 2 gem components (see [Frames](https://docs.o3de.org/docs/user-guide/interactivity/robotics/concepts-and-components-overview/#frames)),
+- make sure that your robot has a 2D scanner attached 
+  - and publishes scans on `scan` topic (see [Sensors](https://docs.o3de.org/docs/user-guide/interactivity/robotics/concepts-and-components-overview/#robot-control)),
+- is controlled via the `cmd_vel` topic (see [Robot Control](https://docs.o3de.org/docs/user-guide/interactivity/robotics/concepts-and-components-overview/#robot-control)).
+
+When you have your robot set up:
+- create a prefab out of it (skip if URDF importer did that for you),
+- load the `Warehouse` level,
+- assign the prefab to the `RobotSpawner` entity inside `ROS2 Spawner Component` with a preferred name.
+
+Then you can alter `fleet_config.yaml` file to change the robot name to the assigned one, and start the fleet simulation with your robot!
 
 ### Building
 
