@@ -59,7 +59,7 @@ namespace ROS2
                     // Ignore any entries that are either completely empty or *only* contain a '.'.
                     // These will produce excessive (and presumably incorrect) wildcard matches.
                     if (value.empty() ||
-                        ((value.size() == 1) && value.starts_with('.')))
+                        value == ".")
                     {
                         return AZ::SettingsRegistryInterface::VisitResponse::Continue;
                     }
