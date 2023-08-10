@@ -10,6 +10,11 @@
 
 #include <AssetBuilderSDK/AssetBuilderSDK.h>
 
+namespace AZ
+{
+    class SettingsRegistryInterface;
+}
+
 namespace ROS2
 {
     struct SdfAssetBuilderSettings
@@ -22,12 +27,12 @@ namespace ROS2
 
         static void Reflect(AZ::ReflectContext* context);
 
-        //! Read in the global settings from the settings registry.
+        //! Read in the builder settings from the settings registry.
         //! This is done as a separate step from the constructor so that serialization has
         //! the ability to create a default set of values by using the default constructor.
         //! If we read these in the constructor, serialization would see all of the current values
         //! as default values and would try to prune them from the output by default.
-        void LoadGlobalSettings();
+        void LoadSettings(AZ::SettingsRegistryInterface* settingsRegistry);
 
         AZStd::vector<AssetBuilderSDK::AssetBuilderPattern> m_builderPatterns;
         bool m_useArticulations = true;

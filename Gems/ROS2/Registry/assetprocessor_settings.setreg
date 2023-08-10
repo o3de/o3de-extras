@@ -11,19 +11,7 @@
                     "watch": "@GEMROOT:ROS2@/Registry",
                     "recursive": 1,
                     "order": 102
-                },
-                "MetaDataTypes": {
-                    "animsettings": "i_caf",
-                    "Animations/SkeletonList.xml": "i_caf",
-                    "cbc": "abc",
-                    "fbx.assetinfo": "fbx",
-                    "stl.assetinfo": "stl",
-                    "gltf.assetinfo": "gltf",
-                    "glb.assetinfo": "glb",
-                    "dae.assetinfo": "dae",
-                    "obj.assetinfo": "obj"
                 }
-                
             }
         }
     }

@@ -37,10 +37,16 @@ namespace ROS2
     SdfAssetBuilder::SdfAssetBuilder()
     {
         // Read in all of the global settings from the settings registry.
-        m_globalSettings.LoadGlobalSettings();
+        auto settingsRegistry = AZ::SettingsRegistry::Get();
+        m_globalSettings.LoadSettings(settingsRegistry);
 
         // Turn our global settings into a cached fingerprint that we'll use on every job
         // so that we can detect when to rebuild assets on global setting changes.
+        // The fingerprint should only use the global builder settings, not the per-file settings.
+        // The analysis fingerprint is set at the builder level, outside of any individual files,
+        // so it should only include data that's invariant across files.
+        // Per-file settings changes will cause rebuilds of individual files through a separate 
+        // mechanism in the Asset Processor that detects when an associated metadata settings file changes.
         m_fingerprint = GetFingerprint();
 
         AssetBuilderSDK::AssetBuilderDesc sdfAssetBuilderDescriptor;
@@ -200,6 +206,10 @@ namespace ROS2
             jobDescriptor.m_critical = false;
             jobDescriptor.m_jobKey = "SDF (Simulation Description Format) Asset";
             jobDescriptor.SetPlatformIdentifier(platformInfo.m_identifier.c_str());
+
+            // This fingerprint should only include the global builder settings, not the individual file settings.
+            // The Asset Processor will detect when the per-file settings change and will trigger a rebuild without
+            // requiring the settings to be in the fingerprint.
             jobDescriptor.m_additionalFingerprintInfo = m_fingerprint;
 
             // Add in all of the job dependencies for this file.

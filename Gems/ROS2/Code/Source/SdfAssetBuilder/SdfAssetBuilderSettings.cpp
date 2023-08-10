@@ -40,7 +40,7 @@ namespace ROS2
     {
         if (settingsRegistry == nullptr)
         {
-            AZ_Error(SdfAssetBuilderName, false, "Settings Registry not found, Sdf Asset Builder settings will use defaults.");
+            AZ_Assert(settingsRegistry, "No settings registry provided, Sdf Asset Builder settings will use the defaults.");
             return;
         }
 
