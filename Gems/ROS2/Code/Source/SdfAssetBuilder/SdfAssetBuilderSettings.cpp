@@ -36,9 +36,8 @@ namespace ROS2
         }
     }
 
-    void SdfAssetBuilderSettings::LoadGlobalSettings()
+    void SdfAssetBuilderSettings::LoadSettings(AZ::SettingsRegistryInterface* settingsRegistry)
     {
-        auto settingsRegistry = AZ::SettingsRegistry::Get();
         if (settingsRegistry == nullptr)
         {
             AZ_Error(SdfAssetBuilderName, false, "Settings Registry not found, Sdf Asset Builder settings will use defaults.");
