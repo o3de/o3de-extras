@@ -15,7 +15,7 @@ namespace ROS2
     struct SdfAssetBuilderSettings
     {
     public:
-        AZ_RTTI(ROS2::SdfAssetBuilderSettings, "{7FE3FA92-E274-4624-8905-61E1587DDD30}");
+        AZ_RTTI(SdfAssetBuilderSettings, "{7FE3FA92-E274-4624-8905-61E1587DDD30}");
 
         SdfAssetBuilderSettings() = default;
         virtual ~SdfAssetBuilderSettings() = default;
