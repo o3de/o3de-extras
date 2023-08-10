@@ -9,11 +9,7 @@
 #pragma once
 
 #include <AssetBuilderSDK/AssetBuilderSDK.h>
-
-namespace AZ
-{
-    class SettingsRegistryInterface;
-}
+#include <AzCore/Settings/SettingsRegistry.h>
 
 namespace ROS2
 {

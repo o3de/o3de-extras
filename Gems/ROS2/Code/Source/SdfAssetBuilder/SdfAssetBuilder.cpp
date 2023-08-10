@@ -37,8 +37,7 @@ namespace ROS2
     SdfAssetBuilder::SdfAssetBuilder()
     {
         // Read in all of the global settings from the settings registry.
-        auto settingsRegistry = AZ::SettingsRegistry::Get();
-        m_globalSettings.LoadSettings(settingsRegistry);
+        m_globalSettings.LoadSettings();
 
         // Turn our global settings into a cached fingerprint that we'll use on every job
         // so that we can detect when to rebuild assets on global setting changes.
