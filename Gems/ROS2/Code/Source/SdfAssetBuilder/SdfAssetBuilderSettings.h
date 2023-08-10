@@ -32,7 +32,7 @@ namespace ROS2
         //! the ability to create a default set of values by using the default constructor.
         //! If we read these in the constructor, serialization would see all of the current values
         //! as default values and would try to prune them from the output by default.
-        void LoadSettings(AZ::SettingsRegistryInterface* settingsRegistry);
+        void LoadSettings(AZ::SettingsRegistryInterface* settingsRegistry = AZ::SettingsRegistry::Get());
 
         AZStd::vector<AssetBuilderSDK::AssetBuilderPattern> m_builderPatterns;
         bool m_useArticulations = true;
