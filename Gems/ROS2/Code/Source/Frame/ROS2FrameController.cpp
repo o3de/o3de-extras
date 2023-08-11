@@ -24,6 +24,7 @@
 #include <ROS2/Frame/NamespaceConfiguration.h>
 #include <ROS2/Frame/ROS2FrameController.h>
 #include <ROS2/Utilities/ROS2Names.h>
+#include <iostream>
 
 namespace ROS2
 {
@@ -55,7 +56,7 @@ namespace ROS2
             bool hasFrame = false;
             ROS2FrameComponentBus::EventResult(hasFrame, parentEntityId, &ROS2FrameComponentBus::Events::IsFrame);
 
-            if (hasFrame)
+            if (!hasFrame)
             { // Parent entity has no ROS2Frame, but there can still be a ROS2Frame in its ancestors
                 return GetFirstROS2FrameAncestorEntityId(parentEntityId);
             }
@@ -64,15 +65,6 @@ namespace ROS2
             return parentEntityId;
         }
 
-        // //! Checks whether the entity has a component of the given type
-        // //! @param entity pointer to entity
-        // //! @param typeId type of the component
-        // //! @returns true if entity has component with given type
-        // static bool CheckIfEntityHasComponentOfType(const AZ::Entity* entity, const AZ::Uuid typeId)
-        // {
-        //     auto components = AZ::EntityUtils::FindDerivedComponents(entity, typeId);
-        //     return !components.empty();
-        // }
     } // namespace Internal
 
     void ROS2FrameConfiguration::Reflect(AZ::ReflectContext* context)
@@ -110,7 +102,7 @@ namespace ROS2
     AZ::Entity* ROS2FrameConfiguration::GetEntity() const
     {
         AZ::Entity* entity = nullptr;
-        AZ::ComponentApplicationBus::BroadcastResult(entity, &AZ::ComponentApplicationBus::Events::FindEntity, m_editorEntityId);
+        AZ::ComponentApplicationBus::BroadcastResult(entity, &AZ::ComponentApplicationBus::Events::FindEntity, m_activeEntityId);
 
         return entity;
     }
@@ -152,18 +144,11 @@ namespace ROS2
 
     void ROS2FrameComponentController::Activate(AZ::EntityId entityId)
     {
-        m_configuration.m_editorEntityId = entityId;
-        ROS2FrameComponentBus::Handler::BusConnect(m_configuration.m_editorEntityId);
+        m_configuration.m_activeEntityId = entityId;
     }
 
     void ROS2FrameComponentController::Deactivate()
     {
-        ROS2FrameComponentBus::Handler::BusDisconnect();
-    }
-
-    bool ROS2FrameComponentController::IsFrame() const
-    {
-        return true;
     }
 
     AZStd::string ROS2FrameComponentController::GetGlobalFrameName() const
@@ -183,19 +168,18 @@ namespace ROS2
 
     const AZ::EntityId ROS2FrameComponentController::GetParentROS2FrameComponentId() const
     {
-        return Internal::GetFirstROS2FrameAncestorEntityId(m_configuration.m_editorEntityId);
+        return Internal::GetFirstROS2FrameAncestorEntityId(m_configuration.m_activeEntityId);
     }
 
     AZ::Transform ROS2FrameComponentController::GetFrameTransform() const
     {
         AZ::Transform worldFromThis{};
-        AZ::TransformBus::EventResult(worldFromThis, m_configuration.m_editorEntityId, &AZ::TransformBus::Events::GetWorldTM);
+        AZ::TransformBus::EventResult(worldFromThis, m_configuration.m_activeEntityId, &AZ::TransformBus::Events::GetWorldTM);
         const auto parentFrameId = GetParentROS2FrameComponentId();
         if (parentFrameId.IsValid())
         {
             AZ::Transform worldFromAncestor{};
             AZ::TransformBus::EventResult(worldFromAncestor, parentFrameId, &AZ::TransformBus::Events::GetWorldTM);
-            // AZ_Assert(worldFromAncestor, "No transform interface for an entity with a ROS2Frame component, which requires it!");
             const auto ancestorFromWorld = worldFromAncestor.GetInverse();
             return ancestorFromWorld * worldFromThis;
         }
@@ -259,6 +243,11 @@ namespace ROS2
     bool ROS2FrameComponentController::GetPublishTransform()
     {
         return m_configuration.m_publishTransform;
+    }
+
+    void ROS2FrameComponentController::SetActiveEntityId(AZ::EntityId entityId)
+    {
+        m_configuration.m_activeEntityId = entityId;
     }
 
 } // namespace ROS2

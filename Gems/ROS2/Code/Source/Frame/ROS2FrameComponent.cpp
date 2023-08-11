@@ -6,6 +6,7 @@
  *
  */
 
+#include "ROS2/Frame/ROS2FrameBus.h"
 #include <AzCore/Component/Entity.h>
 #include <AzCore/Component/EntityUtils.h>
 #include <AzCore/Serialization/EditContext.h>
@@ -35,6 +36,8 @@ namespace ROS2
     void ROS2FrameComponent::Activate()
     {
         ROS2FrameComponentBase::Activate();
+        m_controller.SetActiveEntityId(GetEntityId());
+
         m_controller.PopulateNamespace(IsTopLevel(), GetEntity()->GetName());
 
         if (m_controller.GetPublishTransform())
@@ -76,11 +79,14 @@ namespace ROS2
                 m_ros2Transform->Publish(m_controller.GetFrameTransform());
             }
         }
+        AZ::TickBus::Handler::BusConnect();
+        ROS2FrameComponentBus::Handler::BusConnect(GetEntityId());
     }
 
     void ROS2FrameComponent::Deactivate()
     {
         ROS2FrameComponentBase::Deactivate();
+        ROS2FrameComponentBus::Handler::BusDisconnect();
         if (m_controller.GetPublishTransform())
         {
             if (IsDynamic())
@@ -192,7 +198,12 @@ namespace ROS2
     }
 
     ROS2FrameComponent::ROS2FrameComponent(const ROS2FrameConfiguration& config)
+        : ROS2FrameComponentBase(config)
     {
-        SetConfiguration(config);
+    }
+
+    bool ROS2FrameComponent::IsFrame() const
+    {
+        return true;
     }
 } // namespace ROS2
