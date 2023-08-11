@@ -46,14 +46,22 @@ set(FILES
         Source/Gripper/FingerGripperComponent.cpp
         Source/GNSS/GNSSFormatConversions.cpp
         Source/GNSS/GNSSFormatConversions.h
+        Source/GNSS/GNSSSensorConfiguration.cpp
+        Source/GNSS/GNSSSensorConfiguration.h
         Source/GNSS/ROS2GNSSSensorComponent.cpp
         Source/GNSS/ROS2GNSSSensorComponent.h
+        Source/Imu/ImuSensorConfiguration.cpp
+        Source/Imu/ImuSensorConfiguration.h
         Source/Imu/ROS2ImuSensorComponent.cpp
         Source/Imu/ROS2ImuSensorComponent.h
         Source/Lidar/LidarRaycaster.cpp
         Source/Lidar/LidarRaycaster.h
         Source/Lidar/LidarRegistrarSystemComponent.cpp
         Source/Lidar/LidarRegistrarSystemComponent.h
+        Source/Lidar/Lidar2DSensorConfiguration.cpp
+        Source/Lidar/Lidar2DSensorConfiguration.h
+        Source/Lidar/LidarSensorConfiguration.cpp
+        Source/Lidar/LidarSensorConfiguration.h
         Source/Lidar/LidarSystem.cpp
         Source/Lidar/LidarSystem.h
         Source/Lidar/LidarTemplate.cpp

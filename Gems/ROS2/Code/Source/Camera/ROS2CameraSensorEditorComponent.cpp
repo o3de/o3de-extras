@@ -28,6 +28,13 @@ namespace ROS2
             MakeTopicConfigurationPair("depth_camera_info", CameraConstants::CameraInfoMessageType, CameraConstants::DepthInfoConfig));
     }
 
+    ROS2CameraSensorEditorComponent::ROS2CameraSensorEditorComponent(
+        const SensorConfiguration& sensorConfiguration, const CameraSensorConfiguration& cameraConfiguration)
+        : m_sensorConfiguration(sensorConfiguration)
+        , m_cameraSensorConfiguration(cameraConfiguration)
+    {
+    }
+
     void ROS2CameraSensorEditorComponent::Reflect(AZ::ReflectContext* context)
     {
         CameraSensorConfiguration::Reflect(context);
@@ -119,7 +126,7 @@ namespace ROS2
     void ROS2CameraSensorEditorComponent::DisplayEntityViewport(
         [[maybe_unused]] const AzFramework::ViewportInfo& viewportInfo, AzFramework::DebugDisplayRequests& debugDisplay)
     {
-        if (!m_sensorConfiguration.m_visualise)
+        if (!m_sensorConfiguration.m_visualize)
         {
             return;
         }

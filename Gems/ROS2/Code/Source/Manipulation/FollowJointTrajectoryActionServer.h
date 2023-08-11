@@ -40,6 +40,9 @@ namespace ROS2
         //! @param result Result to be passed to through action server to the client.
         void CancelGoal(std::shared_ptr<FollowJointTrajectory::Result> result);
 
+        //! Sets the goal status to success
+        void SetGoalSuccess();
+
         //! Report goal success to the action server.
         //! @param result Result which contains success code.
         void GoalSuccess(std::shared_ptr<FollowJointTrajectory::Result> result);

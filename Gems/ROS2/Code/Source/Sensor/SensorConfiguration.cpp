@@ -20,7 +20,7 @@ namespace ROS2
             serializeContext->RegisterGenericType<AZStd::map<AZStd::string, AZStd::shared_ptr<TopicConfiguration>>>();
             serializeContext->Class<SensorConfiguration>()
                 ->Version(2)
-                ->Field("Visualise", &SensorConfiguration::m_visualise)
+                ->Field("Visualize", &SensorConfiguration::m_visualize)
                 ->Field("Publishing Enabled", &SensorConfiguration::m_publishingEnabled)
                 ->Field("Frequency (HZ)", &SensorConfiguration::m_frequency)
                 ->Field("Publishers", &SensorConfiguration::m_publishersConfigurations);
@@ -29,7 +29,7 @@ namespace ROS2
             {
                 ec->Class<SensorConfiguration>("ROS2 Sensor Configuration", "Sensor configuration")
                     ->ClassElement(AZ::Edit::ClassElements::EditorData, "")
-                    ->DataElement(AZ::Edit::UIHandlers::Default, &SensorConfiguration::m_visualise, "Visualise", "Visualise")
+                    ->DataElement(AZ::Edit::UIHandlers::Default, &SensorConfiguration::m_visualize, "Visualize", "Visualize")
                     ->DataElement(
                         AZ::Edit::UIHandlers::Default,
                         &SensorConfiguration::m_publishingEnabled,

@@ -15,6 +15,7 @@
 #include <AzCore/StringFunc/StringFunc.h>
 #include <AzCore/std/string/regex.h>
 #include <AzToolsFramework/API/EditorAssetSystemAPI.h>
+#include <string.h>
 
 namespace ROS2
 {
@@ -218,9 +219,8 @@ namespace ROS2
         return filenames;
     }
 
-    AZStd::optional<AZ::IO::Path> GetResolvedPath(const AZ::IO::Path &packagePath,
-                                                 const AZ::IO::Path &unresolvedPath,
-                                                 const AZStd::function<bool(const AZStd::string&)>& fileExists)
+    AZStd::optional<AZ::IO::Path> GetResolvedPath(
+        const AZ::IO::Path& packagePath, const AZ::IO::Path& unresolvedPath, const AZStd::function<bool(const AZStd::string&)>& fileExists)
     {
         AZ::IO::Path packageXmlCandite = packagePath / "package.xml";
         if (fileExists(packageXmlCandite.String()))
@@ -228,7 +228,7 @@ namespace ROS2
             AZ::IO::Path resolvedPath = packagePath / unresolvedPath;
             if (fileExists(resolvedPath.String()))
             {
-                return AZStd::optional<AZ::IO::Path>{resolvedPath};
+                return AZStd::optional<AZ::IO::Path>{ resolvedPath };
             }
         }
         return AZStd::optional<AZ::IO::Path>{};
@@ -241,7 +241,7 @@ namespace ROS2
         {
             return subpath;
         }
-        for (AZ::IO::Path::iterator pathIt = begin;pathIt!=end;pathIt++)
+        for (AZ::IO::Path::iterator pathIt = begin; pathIt != end; pathIt++)
         {
             subpath /= *pathIt;
         }
@@ -271,7 +271,7 @@ namespace ROS2
                     if (package.ends_with(packageNameCandidate))
                     {
                         auto pathIt = unresolvedProperPath.begin();
-                        AZStd::advance(pathIt,1);
+                        AZStd::advance(pathIt, 1);
                         if (pathIt != unresolvedProperPath.end())
                         {
                             AZ::IO::Path unresolvedPathStripped = GetPathFromSubPath(pathIt, unresolvedProperPath.end());
@@ -295,7 +295,7 @@ namespace ROS2
                 auto it = --urdfProperPath.end();
                 for (; it != urdfProperPath.begin(); it--)
                 {
-                    const auto packagePath = GetPathFromSubPath(urdfProperPath.begin(),it);
+                    const auto packagePath = GetPathFromSubPath(urdfProperPath.begin(), it);
                     std::cout << "packagePath : " << packagePath.String().c_str() << std::endl;
                     const auto resolvedPath = GetResolvedPath(packagePath, unresolvedPath, fileExists);
                     if (resolvedPath.has_value())
@@ -323,5 +323,56 @@ namespace ROS2
         AZ_Printf("ResolveURDFPath", "ResolveURDFPath with relative path to : %s\n", unresolvedPath.c_str());
         return resolvedPath.String();
     }
+
+    namespace Utils::SDFormat
+    {
+        AZStd::string GetPluginFilename(const sdf::Plugin& plugin)
+        {
+            const AZ::IO::Path path{ plugin.Filename().c_str() };
+            return path.Filename().String();
+        }
+
+        AZStd::vector<AZStd::string> GetUnsupportedParams(
+            const sdf::ElementPtr& rootElement, const AZStd::unordered_set<AZStd::string>& supportedParams)
+        {
+            AZStd::vector<AZStd::string> unsupportedParams;
+
+            AZStd::function<void(const sdf::ElementPtr& elementPtr, const std::string& prefix)> elementVisitor =
+                [&](const sdf::ElementPtr& elementPtr, const std::string& prefix) -> void
+            {
+                auto childPtr = elementPtr->GetFirstElement();
+
+                AZStd::string prefixAz(prefix.c_str(), prefix.size());
+                if (!childPtr && !prefixAz.empty() && !supportedParams.contains(prefixAz))
+                {
+                    unsupportedParams.push_back(prefixAz);
+                }
+
+                while (childPtr)
+                {
+                    if (childPtr->GetName() == "plugin")
+                    {
+                        break;
+                    }
+
+                    std::string currentName = prefix;
+                    currentName.append(">");
+                    currentName.append(childPtr->GetName());
+
+                    elementVisitor(childPtr, currentName);
+                    childPtr = childPtr->GetNextElement();
+                }
+            };
+
+            elementVisitor(rootElement, "");
+
+            return unsupportedParams;
+        }
+
+        bool IsPluginSupported(const sdf::Plugin& plugin, const AZStd::unordered_set<AZStd::string>& supportedPlugins)
+        {
+            return supportedPlugins.contains(GetPluginFilename(plugin));
+        }
+    } // namespace Utils::SDFormat
 
 } // namespace ROS2
