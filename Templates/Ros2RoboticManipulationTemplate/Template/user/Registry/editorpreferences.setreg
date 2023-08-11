@@ -1,0 +1,29 @@
+{
+    "O3DE": {
+        "Preferences": {
+            "Prefabs": {
+                "EnableOutlinerOverrideManagement": true,
+                "IgnoreActors": true
+            },
+            "SceneAPI": {
+                "UseSkeletonBoneContainer": false
+            }
+        }
+    },
+    "Amazon": {
+        "Preferences": {
+            "Editor": {
+                "Camera": {
+                    "FovDegrees": 60.0,
+                    "SpeedScale": 1.0
+                },
+                "GridSize": 0.10000000149011612,
+                "AngleSize": 5.0,
+                "PrefabEditModeEffectEnabled": false,
+                "IconsVisible": false,
+                "OnlyShowHelpersForSelectedEntities": true,
+                "HelpersVisible": false
+            }
+        }
+    }
+}

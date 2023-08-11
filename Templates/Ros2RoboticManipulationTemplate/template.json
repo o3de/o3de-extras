@@ -1006,6 +1006,18 @@
             "isTemplated": false
         },
         {
+            "file": "DiffuseProbeGrids/Diffuse_Probe_Grid_1C06FE02-367E-4D6E-B8AE-9A48F2AF5F75_Irradiance_lutrgba16f.dds",
+            "isTemplated": false
+        },
+        {
+            "file": "DiffuseProbeGrids/Diffuse_Probe_Grid_4F50E1BF-2C8C-44EB-8183-34101107473C_Distance_lutrg32f.dds",
+            "isTemplated": false
+        },
+        {
+            "file": "DiffuseProbeGrids/Diffuse_Probe_Grid_ABC8A956-D89D-4CDB-829B-EF1DD8DE5404_ProbeData_lutrgba16f.dds",
+            "isTemplated": false
+        },
+        {
             "file": "Examples/panda_moveit_config_demo.launch.py",
             "isTemplated": false
         },
@@ -1258,6 +1270,18 @@
             "isTemplated": false
         },
         {
+            "file": "user/Registry/editorpreferences.setreg",
+            "isTemplated": false
+        },
+        {
+            "file": "user/Registry/ViewBookmarks/robotic-arm_1671539006337141059.setreg",
+            "isTemplated": false
+        },
+        {
+            "file": "user/Registry/ViewBookmarks/RoboticPaletization_1691268770764352914.setreg",
+            "isTemplated": false
+        },
+        {
             "file": "game.cfg",
             "isTemplated": false
         },
@@ -1363,6 +1387,15 @@
         },
         {
             "dir": "Shaders"
+        },
+        {
+            "dir": "user"
+        },
+        {
+            "dir": "user/Registry"
+        },
+        {
+            "dir": "user/Registry/ViewBookmarks"
         },
         {
             "dir": "Shaders/ShaderResourceGroups"
