@@ -29,7 +29,9 @@ namespace ROS2
     //! ros2 static and dynamic transforms (/tf_static, /tf). It also facilitates namespace handling.
     //! An entity can only have a single ROS2Frame on each level. Many ROS2 Components require this component.
     //! @note A robot should have this component on every level of entity hierarchy (for each joint, fixed or dynamic)
-    class ROS2FrameEditorComponent : public ROS2FrameEditorComponentBase
+    class ROS2FrameEditorComponent
+        : public ROS2FrameEditorComponentBase
+        , public ROS2FrameComponentBus::Handler
     {
     public:
         AZ_COMPONENT(ROS2FrameEditorComponent, "{EE743472-3E25-41EA-961B-14096AC1D66F}", AzToolsFramework::Components::EditorComponentBase);
@@ -52,7 +54,7 @@ namespace ROS2
 
         //! Get a frame id, which is needed for any ROS2 message with a Header
         //! @return Frame id which includes the namespace, ready to send in a ROS2 message
-        AZStd::string GetFrameID() const;
+        AZStd::string GetFrameID() const override;
 
         //! Set a above-mentioned frame id
         void SetFrameID(const AZStd::string& frameId);
@@ -60,7 +62,7 @@ namespace ROS2
         //! Get the joint name including the namespace
         //! @note Supplementary metadata for Joint components, necessary in some cases for joints addressed by name in ROS 2
         //! @return The namespaced joint name, ready to send in a ROS2 message
-        AZ::Name GetJointName() const;
+        AZ::Name GetJointName() const override;
 
         //! Set the joint name
         //! @note May be populated during URDF import or set by the user in the Editor view
@@ -69,27 +71,27 @@ namespace ROS2
 
         //! Get a namespace, which should be used for any publisher or subscriber in the same entity.
         //! @return A complete namespace (including parent namespaces)
-        AZStd::string GetNamespace() const;
+        AZStd::string GetNamespace() const override;
 
         //! Get a transform between this frame and the next frame up in hierarchy.
         //! @return If the parent frame is found, return a Transform between this frame and the parent.
         //! Otherwise, return a global Transform.
         //! @note Parent frame is not the same as parent Transform: there could be many Transforms in between without ROS2Frame components.
-        AZ::Transform GetFrameTransform() const;
+        AZ::Transform GetFrameTransform() const override;
 
         //! Global frame name in ros2 ecosystem.
         //! @return The name of the global frame with namespace attached. It is typically "odom", "map", "world".
-        AZStd::string GetGlobalFrameName() const;
+        AZStd::string GetGlobalFrameName() const override;
 
         bool ShouldActivateController() const override;
+
+        bool IsFrame() const override;
 
     private:
         bool IsTopLevel() const; //!< True if this entity does not have a parent entity with ROS2.
 
         //! Whether transformation to parent frame can change during the simulation, or is fixed.
         bool IsDynamic() const;
-
-        const ROS2FrameEditorComponent* GetParentROS2FrameComponent() const;
 
         //! Return the frame id of this frame's parent. It can be useful to determine ROS 2 transformations.
         //! @return Parent frame ID.

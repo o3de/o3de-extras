@@ -23,11 +23,13 @@ namespace ROS2
 
     void ROS2FrameEditorComponent::Activate()
     {
+        ROS2FrameComponentBus::Handler::BusConnect(GetEntityId());
         ROS2FrameEditorComponentBase::Activate();
     }
 
     void ROS2FrameEditorComponent::Deactivate()
     {
+        ROS2FrameComponentBus::Handler::BusDisconnect();
         ROS2FrameEditorComponentBase::Deactivate();
     }
 
@@ -127,6 +129,11 @@ namespace ROS2
     }
 
     bool ROS2FrameEditorComponent::ShouldActivateController() const
+    {
+        return true;
+    }
+
+    bool ROS2FrameEditorComponent::IsFrame() const
     {
         return true;
     }
