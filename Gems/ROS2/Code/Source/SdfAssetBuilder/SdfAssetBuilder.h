@@ -11,6 +11,7 @@
 #include <AssetBuilderSDK/AssetBuilderBusses.h>
 #include <AssetBuilderSDK/AssetBuilderSDK.h>
 
+#include <SdfAssetBuilder/SdfAssetBuilderSettings.h>
 #include <URDF/UrdfParser.h>
 #include <Utils/SourceAssetsStorage.h>
 
@@ -21,7 +22,6 @@ namespace ROS2
     //! * urdf (Unified Robotics Description Format: http://wiki.ros.org/urdf )
     //! * world (Gazebo sdf files typically containing a full simulation world description: https://classic.gazebosim.org/tutorials?tut=components )
     //! * xacro (XML macro used for sdf/urdf file generation: http://wiki.ros.org/xacro )
-    //! source folders into procprefab assets in the cache folder.
     class SdfAssetBuilder
         : public AssetBuilderSDK::AssetBuilderCommandBus::Handler
     {
@@ -36,7 +36,15 @@ namespace ROS2
         void ProcessJob(const AssetBuilderSDK::ProcessJobRequest& request, AssetBuilderSDK::ProcessJobResponse& response) const;
         void ShutDown() override { }
     private:
-        AZStd::vector<AssetBuilderSDK::AssetBuilderPattern> GetSupportedBuilderPatterns();
+        //! Get a fingerprint string that contains the global builder settings.
+        //! If any global settings get changed, the builder will rebuild all its assets.
+        AZStd::string GetFingerprint() const;
+
+        //! Create a mapping of all the asset references in the source file.
         Utils::UrdfAssetMap FindAssets(const urdf::LinkConstSharedPtr& rootLink, const AZStd::string& sourceFilename) const;
+
+        SdfAssetBuilderSettings m_globalSettings;
+        AZStd::string m_fingerprint;
     };
+
 } // ROS2

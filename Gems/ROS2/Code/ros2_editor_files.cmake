@@ -66,6 +66,8 @@ set(FILES
     Source/Spawner/ROS2SpawnPointEditorComponent.h
     Source/SdfAssetBuilder/SdfAssetBuilder.cpp
     Source/SdfAssetBuilder/SdfAssetBuilder.h
+    Source/SdfAssetBuilder/SdfAssetBuilderSettings.cpp
+    Source/SdfAssetBuilder/SdfAssetBuilderSettings.h
     Source/SdfAssetBuilder/SdfAssetBuilderSystemComponent.cpp
     Source/SdfAssetBuilder/SdfAssetBuilderSystemComponent.h
 )
