@@ -21,6 +21,7 @@
 #include <AzCore/Serialization/EditContextConstants.inl>
 #include <AzCore/std/numeric.h>
 #include <AzCore/std/smart_ptr/make_shared.h>
+#include <exception>
 
 namespace ROS2
 {
@@ -94,6 +95,11 @@ namespace ROS2
 
     void ROS2ImuSensorComponent::OnPhysicsSimulationFinished(AzPhysics::SceneHandle sceneHandle, float deltaTime)
     {
+        if (!IsComponentValid())
+        {
+            return;
+        }
+
         auto* sceneInterface = AZ::Interface<AzPhysics::SceneInterface>::Get();
         const auto gravity = sceneInterface->GetGravity(sceneHandle);
         auto* body = sceneInterface->GetSimulatedBodyFromHandle(sceneHandle, m_bodyHandle);
@@ -137,7 +143,13 @@ namespace ROS2
                 m_imuMsg.orientation_covariance = ROS2Conversions::ToROS2Covariance(m_orientationCovariance);
             }
             m_imuMsg.header.stamp = ROS2Interface::Get()->GetROSTimestamp();
-            this->m_imuPublisher->publish(m_imuMsg);
+            ExecuteROS2Context(
+                [this]()
+                {
+                    this->m_imuPublisher->publish(m_imuMsg);
+                },
+                "ROS2ImuSensorComponent",
+                "Publishing failed.");
         }
     };
 
@@ -148,12 +160,18 @@ namespace ROS2
         m_imuMsg.header.frame_id = GetFrameID().c_str();
         const auto publisherConfig = m_sensorConfiguration.m_publishersConfigurations[Internal::kImuMsgType];
         const auto fullTopic = ROS2Names::GetNamespacedName(GetNamespace(), publisherConfig.m_topic);
-        m_imuPublisher = ros2Node->create_publisher<sensor_msgs::msg::Imu>(fullTopic.data(), publisherConfig.GetQoS());
-
         m_linearAccelerationCovariance = ToDiagonalCovarianceMatrix(m_imuConfiguration.m_linearAccelerationVariance);
         m_angularVelocityCovariance = ToDiagonalCovarianceMatrix(m_imuConfiguration.m_angularVelocityVariance);
         m_orientationCovariance = ToDiagonalCovarianceMatrix(m_imuConfiguration.m_orientationVariance);
 
+        ExecuteROS2Context(
+            [this, &ros2Node, &fullTopic, &publisherConfig]()
+            {
+                m_imuPublisher = ros2Node->create_publisher<sensor_msgs::msg::Imu>(fullTopic.data(), publisherConfig.GetQoS());
+            },
+            "ROS2ImuSensorComponent",
+            "The Activate failed.");
+            
         ROS2SensorComponent::Activate();
     }
 

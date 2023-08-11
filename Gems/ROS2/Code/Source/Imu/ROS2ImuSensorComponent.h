@@ -27,6 +27,7 @@ namespace ROS2
     class ROS2ImuSensorComponent
         : public ROS2SensorComponent
         , public ROS2::Utils::PhysicsCallbackHandler
+        , public ROS2ErrorHandler
     {
     public:
         AZ_COMPONENT(ROS2ImuSensorComponent, "{502A955E-7742-4E23-AD77-5E4063739DCA}", ROS2SensorComponent);

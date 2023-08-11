@@ -14,6 +14,7 @@
 #include <AzCore/Serialization/EditContextConstants.inl>
 #include <AzCore/std/string/string.h>
 
+#include <AzCore/Debug/Trace.h>
 #include <ROS2/Communication/TopicConfiguration.h>
 #include <ROS2/ProximitySensor/ProximitySensorNotificationBus.h>
 #include <ROS2/ProximitySensor/ProximitySensorNotificationBusHandler.h>
@@ -27,6 +28,7 @@
 #include <AzFramework/Physics/Common/PhysicsSceneQueries.h>
 #include <AzFramework/Physics/Common/PhysicsTypes.h>
 #include <AzFramework/Physics/PhysicsScene.h>
+#include <exception>
 
 namespace ROS2
 {
@@ -76,7 +78,13 @@ namespace ROS2
 
         const TopicConfiguration& publisherConfig = m_sensorConfiguration.m_publishersConfigurations["std_msgs::msg::bool"];
         AZStd::string fullTopic = ROS2Names::GetNamespacedName(GetNamespace(), publisherConfig.m_topic);
-        m_detectionPublisher = ros2Node->create_publisher<std_msgs::msg::Bool>(fullTopic.data(), publisherConfig.GetQoS());
+        ExecuteROS2Context(
+            [this, &ros2Node, &fullTopic, &publisherConfig]()
+            {
+                m_detectionPublisher = ros2Node->create_publisher<std_msgs::msg::Bool>(fullTopic.data(), publisherConfig.GetQoS());
+            },
+            "ROS2ProximitySensor",
+            "The Activate failed.");
 
         if (m_sensorConfiguration.m_visualize)
         {
@@ -101,6 +109,11 @@ namespace ROS2
 
     void ROS2ProximitySensor::Visualize()
     {
+        if (!IsComponentValid())
+        {
+            return;
+        }
+
         if (m_drawQueue)
         {
             AZStd::vector<AZ::Vector3> linePoints;
@@ -134,8 +147,12 @@ namespace ROS2
 
     void ROS2ProximitySensor::FrequencyTick()
     {
-        auto* sceneInterface = AZ::Interface<AzPhysics::SceneInterface>::Get();
+        if (!IsComponentValid())
+        {
+            return;
+        }
 
+        auto* sceneInterface = AZ::Interface<AzPhysics::SceneInterface>::Get();
         AZ::Vector3 entityTranslation;
         AZ::TransformBus::EventResult(entityTranslation, GetEntityId(), &AZ::TransformBus::Events::GetWorldTranslation);
 
@@ -152,7 +169,13 @@ namespace ROS2
             std_msgs::msg::Bool msg;
             m_position = !result.m_hits.empty() ? std::make_optional(result.m_hits.front().m_position) : std::nullopt;
             msg.data = m_position ? true : false;
-            m_detectionPublisher->publish(msg);
+            ExecuteROS2Context(
+                [this, &msg]()
+                {
+                    m_detectionPublisher->publish(msg);
+                },
+                "ROS2ProximitySensor",
+                "Publishing failed.");
 
             if (m_position)
             {

@@ -29,6 +29,7 @@ namespace ROS2
     class ROS2OdometrySensorComponent
         : public ROS2SensorComponent
         , public ROS2::Utils::PhysicsCallbackHandler
+        , public ROS2ErrorHandler
     {
     public:
         AZ_COMPONENT(ROS2OdometrySensorComponent, "{61387448-63AA-4563-AF87-60C72B05B863}", ROS2SensorComponent);

@@ -24,6 +24,7 @@
 #include <ROS2/ROS2GemUtilities.h>
 #include <ROS2/Utilities/ROS2Conversions.h>
 #include <ROS2/Utilities/ROS2Names.h>
+#include <exception>
 #include <geometry_msgs/msg/wrench.hpp>
 
 namespace ROS2
@@ -71,12 +72,18 @@ namespace ROS2
         AZ::Entity* entity = nullptr;
         AZ::ComponentApplicationBus::BroadcastResult(entity, &AZ::ComponentApplicationRequests::FindEntity, m_entityId);
         m_entityName = entity->GetName();
-
         auto ros2Node = ROS2Interface::Get()->GetNode();
         AZ_Assert(m_sensorConfiguration.m_publishersConfigurations.size() == 1, "Invalid configuration of publishers for Contact sensor");
         const auto publisherConfig = m_sensorConfiguration.m_publishersConfigurations["gazebo_msgs::msg::ContactsState"];
         const auto fullTopic = ROS2Names::GetNamespacedName(GetNamespace(), publisherConfig.m_topic);
-        m_contactsPublisher = ros2Node->create_publisher<gazebo_msgs::msg::ContactsState>(fullTopic.data(), publisherConfig.GetQoS());
+        ExecuteROS2Context(
+            [this, &ros2Node, &fullTopic, &publisherConfig]()
+            {
+                m_contactsPublisher =
+                    ros2Node->create_publisher<gazebo_msgs::msg::ContactsState>(fullTopic.data(), publisherConfig.GetQoS());
+            },
+            "ROS2ContactSensorComponent",
+            "The Activate failed.");
 
         m_onCollisionBeginHandler = AzPhysics::SimulatedBodyEvents::OnCollisionBegin::Handler(
             [this]([[maybe_unused]] AzPhysics::SimulatedBodyHandle bodyHandle, const AzPhysics::CollisionEvent& event)
@@ -112,6 +119,11 @@ namespace ROS2
 
     void ROS2ContactSensorComponent::FrequencyTick()
     {
+        if (!IsComponentValid())
+        {
+            return;
+        }
+
         // Connects the collision handlers if not already connected
         AzPhysics::SystemInterface* physicsSystem = AZ::Interface<AzPhysics::SystemInterface>::Get();
         if (!physicsSystem)
@@ -151,7 +163,14 @@ namespace ROS2
                 {
                     msg.states.push_back(AZStd::move(contact));
                 }
-                m_contactsPublisher->publish(AZStd::move(msg));
+
+                ExecuteROS2Context(
+                    [this, &msg]()
+                    {
+                        m_contactsPublisher->publish(AZStd::move(msg));
+                    },
+                    "ROS2ContactSensorComponent",
+                    "Publishing failed.");
                 m_activeContacts.clear();
             }
         }
@@ -159,6 +178,11 @@ namespace ROS2
 
     void ROS2ContactSensorComponent::AddNewContact(const AzPhysics::CollisionEvent& event)
     {
+        if (!IsComponentValid())
+        {
+            return;
+        }
+
         AZ::Entity* contactedEntity = nullptr;
         AZ::ComponentApplicationBus::BroadcastResult(
             contactedEntity, &AZ::ComponentApplicationRequests::FindEntity, event.m_body2->GetEntityId());

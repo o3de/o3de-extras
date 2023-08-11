@@ -6,8 +6,8 @@
  *
  */
 
-#include "AzCore/Serialization/EditContextConstants.inl"
 #include <AzCore/Serialization/EditContext.h>
+#include <AzCore/Serialization/EditContextConstants.inl>
 #include <ROS2/Communication/PublisherConfiguration.h>
 #include <ROS2/Utilities/ROS2Names.h>
 

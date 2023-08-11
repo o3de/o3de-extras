@@ -7,8 +7,8 @@
  */
 
 #include "JointsTrajectoryComponent.h"
-#include "AzCore/Serialization/EditContextConstants.inl"
 #include <AzCore/Serialization/EditContext.h>
+#include <AzCore/Serialization/EditContextConstants.inl>
 #include <PhysX/ArticulationJointBus.h>
 #include <ROS2/Frame/ROS2FrameComponent.h>
 #include <ROS2/Manipulation/JointsManipulationRequests.h>

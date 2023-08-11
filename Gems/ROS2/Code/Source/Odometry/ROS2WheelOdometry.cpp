@@ -9,6 +9,7 @@
 #include "ROS2WheelOdometry.h"
 #include "Odometry/ROS2OdometryCovariance.h"
 #include "VehicleModelComponent.h"
+#include <AzCore/Debug/Trace.h>
 #include <AzCore/Serialization/EditContext.h>
 #include <AzCore/Serialization/EditContextConstants.inl>
 #include <AzFramework/Physics/RigidBodyBus.h>
@@ -16,6 +17,7 @@
 #include <ROS2/ROS2Bus.h>
 #include <ROS2/Utilities/ROS2Conversions.h>
 #include <ROS2/Utilities/ROS2Names.h>
+#include <exception>
 
 namespace ROS2
 {
@@ -78,6 +80,11 @@ namespace ROS2
 
     void ROS2WheelOdometryComponent::OnPhysicsSimulationFinished(AzPhysics::SceneHandle sceneHandle, float deltaTime)
     {
+        if (!IsComponentValid())
+        {
+            return;
+        }
+
         AZStd::pair<AZ::Vector3, AZ::Vector3> vt;
 
         VehicleDynamics::VehicleInputControlRequestBus::EventResult(
@@ -99,8 +106,13 @@ namespace ROS2
             m_odometryMsg.pose.pose.position = ROS2Conversions::ToROS2Point(m_robotPose);
             m_odometryMsg.pose.pose.orientation = ROS2Conversions::ToROS2Quaternion(m_robotRotation);
             m_odometryMsg.pose.covariance = m_poseCovariance.GetRosCovariance();
-
-            m_odometryPublisher->publish(m_odometryMsg);
+            ExecuteROS2Context(
+                [this]()
+                {
+                    m_odometryPublisher->publish(m_odometryMsg);
+                },
+                "ROS2WheelOdometryComponent",
+                "Publishing failed.");
         }
     }
 
@@ -118,7 +130,14 @@ namespace ROS2
 
         const auto publisherConfig = m_sensorConfiguration.m_publishersConfigurations[Internal::kWheelOdometryMsgType];
         const auto fullTopic = ROS2Names::GetNamespacedName(GetNamespace(), publisherConfig.m_topic);
-        m_odometryPublisher = ros2Node->create_publisher<nav_msgs::msg::Odometry>(fullTopic.data(), publisherConfig.GetQoS());
+        ExecuteROS2Context(
+            [this, &ros2Node, &fullTopic, &publisherConfig]()
+            {
+                m_odometryPublisher = ros2Node->create_publisher<nav_msgs::msg::Odometry>(fullTopic.data(), publisherConfig.GetQoS());
+            },
+            "ROS2WheelOdometryComponent",
+            "The Activate failed.");
+
         ROS2SensorComponent::Activate();
     }
 

@@ -8,12 +8,14 @@
 
 #include <Atom/RPI.Public/AuxGeom/AuxGeomFeatureProcessorInterface.h>
 #include <Atom/RPI.Public/Scene.h>
+#include <AzCore/Debug/Trace.h>
 #include <AzFramework/Physics/PhysicsSystem.h>
 #include <Lidar/LidarRegistrarSystemComponent.h>
 #include <Lidar/ROS2LidarSensorComponent.h>
 #include <ROS2/Frame/ROS2FrameComponent.h>
 #include <ROS2/ROS2Bus.h>
 #include <ROS2/Utilities/ROS2Names.h>
+#include <exception>
 
 namespace ROS2
 {
@@ -49,6 +51,11 @@ namespace ROS2
 
     void ROS2LidarSensorComponent::ConnectToLidarRaycaster()
     {
+        if (!IsComponentValid())
+        {
+            return;
+        }
+
         if (auto raycasterId = m_implementationToRaycasterMap.find(m_lidarConfiguration.m_lidarSystem);
             raycasterId != m_implementationToRaycasterMap.end())
         {
@@ -66,6 +73,11 @@ namespace ROS2
 
     void ROS2LidarSensorComponent::ConfigureLidarRaycaster()
     {
+        if (!IsComponentValid())
+        {
+            return;
+        }
+
         m_lidarConfiguration.FetchLidarImplementationFeatures();
         LidarRaycasterRequestBus::Event(m_lidarRaycasterId, &LidarRaycasterRequestBus::Events::ConfigureRayOrientations, m_lastRotations);
         LidarRaycasterRequestBus::Event(
@@ -141,7 +153,7 @@ namespace ROS2
 
     void ROS2LidarSensorComponent::Visualize()
     {
-        if (m_visualizationPoints.empty())
+        if (m_visualizationPoints.empty() || !IsComponentValid())
         {
             return;
         }
@@ -188,7 +200,14 @@ namespace ROS2
 
             const TopicConfiguration& publisherConfig = m_sensorConfiguration.m_publishersConfigurations[Internal::kPointCloudType];
             AZStd::string fullTopic = ROS2Names::GetNamespacedName(GetNamespace(), publisherConfig.m_topic);
-            m_pointCloudPublisher = ros2Node->create_publisher<sensor_msgs::msg::PointCloud2>(fullTopic.data(), publisherConfig.GetQoS());
+            ExecuteROS2Context(
+                [this, &ros2Node, &fullTopic, &publisherConfig]()
+                {
+                    m_pointCloudPublisher =
+                        ros2Node->create_publisher<sensor_msgs::msg::PointCloud2>(fullTopic.data(), publisherConfig.GetQoS());
+                },
+                "ROS2LidarSensorComponent",
+                "The Activate failed.");
         }
 
         ROS2SensorComponent::Activate();
@@ -209,6 +228,11 @@ namespace ROS2
 
     void ROS2LidarSensorComponent::FrequencyTick()
     {
+        if (!IsComponentValid())
+        {
+            return;
+        }
+
         auto entityTransform = GetEntity()->FindComponent<AzFramework::TransformComponent>();
 
         if (m_canRaycasterPublish)
@@ -268,6 +292,13 @@ namespace ROS2
         message.data.resize(sizeInBytes);
         AZ_Assert(message.row_step * message.height == sizeInBytes, "Inconsistency in the size of point cloud data");
         memcpy(message.data.data(), m_lastScanResults.m_points.data(), sizeInBytes);
-        m_pointCloudPublisher->publish(message);
+
+        ExecuteROS2Context(
+            [this, &message]()
+            {
+                m_pointCloudPublisher->publish(message);
+            },
+            "ROS2LidarSensorComponent",
+            "Publishing failed.");
     }
 } // namespace ROS2

@@ -15,6 +15,7 @@
 #include <AzCore/std/string/string.h>
 #include <AzFramework/Physics/Common/PhysicsSimulatedBodyEvents.h>
 #include <ROS2/Sensor/ROS2SensorComponent.h>
+#include <ROS2/Utilities/ROS2ErrorHandler.h>
 #include <gazebo_msgs/msg/contact_state.hpp>
 #include <gazebo_msgs/msg/contacts_state.hpp>
 #include <rclcpp/publisher.hpp>
@@ -25,7 +26,9 @@ namespace ROS2
     //! It reports the location of the contact associated forces.
     //! This component publishes a contact_sensor topic.
     //! It doesn't measure torque.
-    class ROS2ContactSensorComponent : public ROS2SensorComponent
+    class ROS2ContactSensorComponent
+        : public ROS2SensorComponent
+        , public ROS2ErrorHandler
     {
     public:
         AZ_COMPONENT(ROS2ContactSensorComponent, "{91272e66-c9f1-4aa2-a9d5-98eaa4ef4e9a}", ROS2SensorComponent);

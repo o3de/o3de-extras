@@ -7,6 +7,7 @@
  */
 
 #include "ROS2OdometrySensorComponent.h"
+#include <AzCore/Debug/Trace.h>
 #include <AzCore/Serialization/EditContext.h>
 #include <AzCore/Serialization/EditContextConstants.inl>
 #include <AzFramework/Physics/RigidBodyBus.h>
@@ -55,7 +56,6 @@ namespace ROS2
         required.push_back(AZ_CRC_CE("ROS2Frame"));
     }
 
-    // ROS2SensorComponent overrides ...
     void ROS2OdometrySensorComponent::SetupRefreshLoop()
     {
         InstallPhysicalCallback();
@@ -79,6 +79,11 @@ namespace ROS2
 
     void ROS2OdometrySensorComponent::OnPhysicsSimulationFinished(AzPhysics::SceneHandle sceneHandle, float deltaTime)
     {
+        if (!IsComponentValid())
+        {
+            return;
+        }
+
         auto* sceneInterface = AZ::Interface<AzPhysics::SceneInterface>::Get();
         auto* simulatedBodyPtr = sceneInterface->GetSimulatedBodyFromHandle(sceneHandle, m_bodyHandle);
         auto rigidbodyPtr = azrtti_cast<AzPhysics::RigidBody*>(simulatedBodyPtr);
@@ -97,7 +102,13 @@ namespace ROS2
         if (IsPublicationDeadline(deltaTime))
         {
             m_odometryMsg.pose.pose = ROS2Conversions::ToROS2Pose(odometry);
-            m_odometryPublisher->publish(m_odometryMsg);
+            ExecuteROS2Context(
+                [this]()
+                {
+                    m_odometryPublisher->publish(m_odometryMsg);
+                },
+                "ROS2OdometrySensorComponent",
+                "Publishing failed.");
         }
     }
     void ROS2OdometrySensorComponent::Activate()
@@ -110,7 +121,13 @@ namespace ROS2
 
         const auto publisherConfig = m_sensorConfiguration.m_publishersConfigurations[Internal::kOdometryMsgType];
         const auto fullTopic = ROS2Names::GetNamespacedName(GetNamespace(), publisherConfig.m_topic);
-        m_odometryPublisher = ros2Node->create_publisher<nav_msgs::msg::Odometry>(fullTopic.data(), publisherConfig.GetQoS());
+        ExecuteROS2Context(
+            [this, &ros2Node, &fullTopic, &publisherConfig]()
+            {
+                m_odometryPublisher = ros2Node->create_publisher<nav_msgs::msg::Odometry>(fullTopic.data(), publisherConfig.GetQoS());
+            },
+            "ROS2OdometrySensorComponent",
+            "The Activate failed.");
 
         ROS2SensorComponent::Activate();
     }
