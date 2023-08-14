@@ -7,6 +7,7 @@
  */
 
 #include "ManipulationUtils.h"
+#include <PhysX/ArticulationJointBus.h>
 #include <PhysX/Joint/PhysXJointRequestsBus.h>
 
 namespace ROS2::Utils
