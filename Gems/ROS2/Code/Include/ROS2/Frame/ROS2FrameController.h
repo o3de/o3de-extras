@@ -7,15 +7,15 @@
  */
 #pragma once
 
-#include "AzCore/Component/Entity.h"
-#include "AzCore/Component/EntityId.h"
-#include "ROS2/Frame/ROS2FrameBus.h"
 #include <AzCore/Component/Component.h>
+#include <AzCore/Component/Entity.h>
+#include <AzCore/Component/EntityId.h>
 #include <AzCore/RTTI/RTTI.h>
 #include <AzCore/Serialization/SerializeContext.h>
 #include <AzCore/std/string/string.h>
 #include <AzFramework/Components/ComponentAdapter.h>
 #include <ROS2/Frame/NamespaceConfiguration.h>
+#include <ROS2/Frame/ROS2FrameBus.h>
 #include <ROS2/Utilities/ROS2Names.h>
 
 namespace ROS2

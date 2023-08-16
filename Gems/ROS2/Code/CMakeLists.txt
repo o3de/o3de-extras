@@ -197,6 +197,35 @@ if(PAL_TRAIT_BUILD_TESTS_SUPPORTED)
         ly_add_googletest(
             NAME Gem::${gem_name}.Tests
         )
+
+        
+        # integration test for URDF importer
+        ly_add_target(
+            NAME ROS2.Frame.Tests ${PAL_TRAIT_TEST_TARGET_TYPE}
+                NAMESPACE Gem
+            FILES_CMAKE
+                frame_test_files.cmake
+            INCLUDE_DIRECTORIES
+                PRIVATE
+                    Source
+                    Tests
+            BUILD_DEPENDENCIES
+                PRIVATE
+                    AZ::AzTestShared
+                    AZ::AzToolsFramework
+                    Legacy::CryCommon
+                    Legacy::EditorCommon
+                    Legacy::Editor.Headers
+                    AZ::AzManipulatorTestFramework.Static
+                    Gem::ROS2.Static
+                RUNTIME_DEPENDENCIES
+                    Gem::PhysX.Editor
+        )
+
+        ly_add_googletest(
+                NAME Gem::ROS2.Frame.Tests
+        )
+
     endif()
 
     # If we are a host platform we want to add tools test like editor tests here
@@ -217,6 +246,8 @@ if(PAL_TRAIT_BUILD_TESTS_SUPPORTED)
                 BUILD_DEPENDENCIES
                     PRIVATE
                         AZ::AzTest
+                        AZ::AzTestShared
+                        AZ::AzToolsFramework
                         Gem::${gem_name}.Editor
                         3rdParty::sdformat
             )

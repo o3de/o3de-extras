@@ -6,12 +6,12 @@
  *
  */
 
-#include "ROS2/Frame/ROS2FrameBus.h"
 #include <AzCore/Component/Entity.h>
 #include <AzCore/Component/EntityUtils.h>
 #include <AzCore/Serialization/EditContext.h>
 #include <AzCore/Serialization/EditContextConstants.inl>
 #include <AzCore/Serialization/SerializeContext.h>
+#include <ROS2/Frame/ROS2FrameBus.h>
 #include <ROS2/Frame/ROS2FrameComponent.h>
 #include <ROS2/Frame/ROS2FrameController.h>
 #include <ROS2/ROS2Bus.h>
@@ -79,7 +79,6 @@ namespace ROS2
                 m_ros2Transform->Publish(m_controller.GetFrameTransform());
             }
         }
-        AZ::TickBus::Handler::BusConnect();
         ROS2FrameComponentBus::Handler::BusConnect(GetEntityId());
     }
 
@@ -163,15 +162,6 @@ namespace ROS2
         if (AZ::SerializeContext* serialize = azrtti_cast<AZ::SerializeContext*>(context))
         {
             serialize->Class<ROS2FrameComponent, ROS2FrameComponentBase>()->Version(1);
-
-            // if (AZ::EditContext* ec = serialize->GetEditContext())
-            // {
-            //     ec->Class<ROS2FrameComponent>("ROS2 Frame", "[ROS2 Frame component]")
-            //         ->ClassElement(AZ::Edit::ClassElements::EditorData, "")
-            //         ->Attribute(AZ::Edit::Attributes::Category, "ROS2")
-            //         ->Attribute(AZ::Edit::Attributes::AppearsInAddComponentMenu, AZ_CRC_CE("Game"))
-            //         ->Attribute(AZ::Edit::Attributes::Visibility, AZ::Edit::PropertyVisibility::ShowChildrenOnly);
-            // }
         }
     }
 
