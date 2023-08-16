@@ -57,13 +57,19 @@ namespace ROS2
     void URDFPrefabMaker::BuildAssetsForLink(const sdf::Link* link)
     {
         m_collidersMaker.BuildColliders(link);
-        // TODO: Figure out what child links are now
-        /*
-        for (auto childLink : link->child_links)
+        // Find the links which are childs in a joint where the this link
+        // is a parent
+        auto BuildAssetsFromJointChildLinks = [this](const sdf::Joint& joint)
         {
-            BuildAssetsForLink(childLink);
-        }
-        */
+            const sdf::Model& model = *m_root->Model();
+            if (const sdf::Link* childLink = model.LinkByName(joint.ChildName());
+                childLink != nullptr)
+            {
+                BuildAssetsForLink(childLink);
+            }
+        };
+        constexpr bool visitNestedModelLinks = true;
+        Utils::VisitJoints(*m_root->Model(), BuildAssetsFromJointChildLinks, visitNestedModelLinks);
     }
 
     URDFPrefabMaker::CreatePrefabTemplateResult URDFPrefabMaker::CreatePrefabTemplateFromURDF()
@@ -91,13 +97,7 @@ namespace ROS2
             return AZ::Failure(AZStd::string(createEntityRoot.GetError()));
         }
 
-        std::vector<const sdf::Link*> modelLinks;
-        for (uint64_t index = 0; index < m_root->Model()->LinkCount(); index++)
-        {
-            modelLinks.push_back(m_root->Model()->LinkByIndex(index));
-        }
-
-        auto links = Utils::GetAllLinks(modelLinks);
+        auto links = Utils::GetAllLinks(*m_root->Model(), true);
 
         for (const auto& [name, linkPtr] : links)
         {
@@ -125,11 +125,11 @@ namespace ROS2
         // Set the transforms of links
         for (const auto& [name, linkPtr] : links)
         {
-            const auto this_entry = createdLinks.at(name);
-            if (this_entry.IsSuccess())
+            if (const auto thisEntry = createdLinks.at(name);
+                thisEntry.IsSuccess())
             {
                 AZ::Transform tf = Utils::GetWorldTransformURDF(linkPtr);
-                auto* entity = AzToolsFramework::GetEntityById(this_entry.GetValue());
+                auto* entity = AzToolsFramework::GetEntityById(thisEntry.GetValue());
                 if (entity)
                 {
                     auto* transformInterface = entity->FindComponent<AzToolsFramework::Components::TransformComponent>();
@@ -139,7 +139,7 @@ namespace ROS2
                             "CreatePrefabFromURDF",
                             "Setting transform %s %s to [%f %f %f] [%f %f %f %f]\n",
                             name.c_str(),
-                            this_entry.GetValue().ToString().c_str(),
+                            thisEntry.GetValue().ToString().c_str(),
                             tf.GetTranslation().GetX(),
                             tf.GetTranslation().GetY(),
                             tf.GetTranslation().GetZ(),
@@ -158,32 +158,43 @@ namespace ROS2
         }
 
         // Set the hierarchy
-        /*
-        for (const auto& [name, linkPtr] : links)
+        for (const auto& [linkName, linkPtr] : links)
         {
-            const auto thisEntry = createdLinks.at(name);
+            const auto thisEntry = createdLinks.at(linkName);
             if (!thisEntry.IsSuccess())
             {
-                AZ_Trace("CreatePrefabFromURDF", "Link %s creation failed\n", name.c_str());
+                AZ_Trace("CreatePrefabFromURDF", "Link %s creation failed\n", linkName.c_str());
                 continue;
             }
 
-            auto parentPtr = linkPtr->getParent();
-            if (!parentPtr)
+            AZStd::vector<const sdf::Joint*> jointsWhereLinkIsChild = Utils::GetJointsForChildLink(*m_root->Model(),
+                linkName, true);
+            if (jointsWhereLinkIsChild.empty())
             {
-                AZ_Trace("CreatePrefabFromURDF", "Link %s has no parents\n", name.c_str());
+                AZ_Trace("CreatePrefabFromURDF", "Link %s has no parents\n", linkName.c_str());
                 continue;
             }
-            AZStd::string parentName(parentPtr->name.c_str(), parentPtr->name.size());
+
+            // For URDF there is only a link can only be child with a single joint
+            /*
+                Here is a snippet from the Pose Frame Semantics documentation for SDFormat that explains the differences
+                between URDF and SDF coordinate frame
+                http://sdformat.org/tutorials?tut=pose_frame_semantics&ver=1.5#parent-frames-in-urdf
+                > The most significant difference between URDF and SDFormat coordinate frames is related to links and joints. While SDFormat allows kinematic loops with the topology of a directed graph, URDF kinematics must have the topology of a directed tree, with each link being the child of at most one joint. URDF coordinate frames are defined recursively based on this tree structure, with each joint's <origin/> tag defining the coordinate transformation from the parent link frame to the child link frame.
+            */
+
+            jointsWhereLinkIsChild.front()->ParentName();
+            AZStd::string parentName(jointsWhereLinkIsChild.front()->ParentName().c_str(),
+                jointsWhereLinkIsChild.front()->ParentName().size());
             const auto parentEntry = createdLinks.find(parentName);
             if (parentEntry == createdLinks.end())
             {
-                AZ_Trace("CreatePrefabFromURDF", "Link %s has invalid parent name %s\n", name.c_str(), parentName.c_str());
+                AZ_Trace("CreatePrefabFromURDF", "Link %s has invalid parent name %s\n", linkName.c_str(), parentName.c_str());
                 continue;
             }
             if (!parentEntry->second.IsSuccess())
             {
-                AZ_Trace("CreatePrefabFromURDF", "Link %s has parent %s which has failed to create\n", name.c_str(), parentName.c_str());
+                AZ_Trace("CreatePrefabFromURDF", "Link %s has parent %s which has failed to create\n", linkName.c_str(), parentName.c_str());
                 continue;
             }
             AZ_Trace(
@@ -191,10 +202,9 @@ namespace ROS2
                 "Link %s setting parent to %s\n",
                 thisEntry.GetValue().ToString().c_str(),
                 parentEntry->second.GetValue().ToString().c_str());
-            AZ_Trace("CreatePrefabFromURDF", "Link %s setting parent to %s\n", name.c_str(), parentName.c_str());
+            AZ_Trace("CreatePrefabFromURDF", "Link %s setting parent to %s\n", linkName.c_str(), parentName.c_str());
             PrefabMakerUtils::SetEntityParent(thisEntry.GetValue(), parentEntry->second.GetValue());
         }
-        */
 
         for (uint64_t jointIndex{}; jointIndex < m_root->Model()->JointCount(); ++jointIndex)
         {
@@ -367,10 +377,10 @@ namespace ROS2
         }
         else
         {
-            m_articulationsMaker.AddArticulationLink(link, entityId);
+            m_articulationsMaker.AddArticulationLink(*m_root->Model(), link, entityId);
         }
 
-        m_collidersMaker.AddColliders(link, entityId);
+        m_collidersMaker.AddColliders(*m_root->Model(), link, entityId);
         return AZ::Success(entityId);
     }
 

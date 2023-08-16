@@ -34,6 +34,7 @@ namespace ROS2
         //! Parse string with URDF data and generate model.
         //! @param xmlString a string that contains URDF data (XML format).
         //! @return model represented as a tree of parsed links.
+        RootObjectOutcome Parse(AZStd::string_view xmlString);
         RootObjectOutcome Parse(const std::string& xmlString);
 
         //! Parse file with URDF data and generate model.

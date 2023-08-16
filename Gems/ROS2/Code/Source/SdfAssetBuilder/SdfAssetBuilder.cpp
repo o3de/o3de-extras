@@ -44,7 +44,7 @@ namespace ROS2
         // The fingerprint should only use the global builder settings, not the per-file settings.
         // The analysis fingerprint is set at the builder level, outside of any individual files,
         // so it should only include data that's invariant across files.
-        // Per-file settings changes will cause rebuilds of individual files through a separate 
+        // Per-file settings changes will cause rebuilds of individual files through a separate
         // mechanism in the Asset Processor that detects when an associated metadata settings file changes.
         m_fingerprint = GetFingerprint();
 
@@ -80,50 +80,6 @@ namespace ROS2
         BusDisconnect();
 
         // The AssetBuilderSDK doesn't support deregistration, so there's nothing more to do here.
-    }
-
-    AZStd::vector<AssetBuilderSDK::AssetBuilderPattern> SdfAssetBuilder::GetSupportedBuilderPatterns()
-    {
-        AZStd::vector<AssetBuilderSDK::AssetBuilderPattern> patterns;
-
-        auto settingsRegistry = AZ::SettingsRegistry::Get();
-        if (settingsRegistry == nullptr)
-        {
-            AZ_Error(SdfAssetBuilderName, false, "Settings Registry not found, no sdf file type extensions enabled.");
-            return {};
-        }
-
-        // Visit each supported file type extension and create an asset builder wildcard pattern for it.
-        auto VisitFileTypeExtensions = [&settingsRegistry, &patterns]
-            (const AZ::SettingsRegistryInterface::VisitArgs& visitArgs)
-            {
-                if (AZ::SettingsRegistryInterface::FixedValueString value;
-                    settingsRegistry->Get(value, visitArgs.m_jsonKeyPath))
-                {
-                    // Ignore any entries that are either completely empty or *only* contain a '.'.
-                    // These will produce excessive (and presumably incorrect) wildcard matches.
-                    if (value.empty() ||
-                        ((value.size() == 1) && value.starts_with('.')))
-                    {
-                        return AZ::SettingsRegistryInterface::VisitResponse::Continue;
-                    }
-
-                    // Support both 'sdf' and '.sdf' style entries in the setreg file for robustness.
-                    // Either one will get turned into a '*.sdf' pattern.
-                    AZStd::string wildcardPattern = value.starts_with('.')
-                        ? AZStd::string::format("*%s", value.c_str())
-                        : AZStd::string::format("*.%s", value.c_str());
-
-                    patterns.push_back(
-                            AssetBuilderSDK::AssetBuilderPattern(
-                                wildcardPattern, AssetBuilderSDK::AssetBuilderPattern::PatternType::Wildcard));
-                }
-                return AZ::SettingsRegistryInterface::VisitResponse::Continue;
-            };
-        AZ::SettingsRegistryVisitorUtils::VisitArray(*settingsRegistry, VisitFileTypeExtensions, SdfAssetBuilderSupportedFileExtensionsRegistryKey);
-
-        AZ_Warning(SdfAssetBuilderName, !patterns.empty(), "SdfAssetBuilder disabled, no supported file type extensions found.");
-        return patterns;
     }
 
     Utils::UrdfAssetMap SdfAssetBuilder::FindAssets(const sdf::Root& root, const AZStd::string& sourceFilename) const
@@ -209,7 +165,7 @@ namespace ROS2
 
         [[maybe_unused]] AZ::Outcome<void, AZStd::string> saveObjectResult =
             AZ::JsonSerializationUtils::SaveObjectToStream(&m_globalSettings, stream, {}, &jsonSettings);
-        AZ_Assert(saveObjectResult.IsSuccess(), "Failed to save settings to fingerprint string: %s", 
+        AZ_Assert(saveObjectResult.IsSuccess(), "Failed to save settings to fingerprint string: %s",
             saveObjectResult.GetError().c_str());
 
         return settingsString;
@@ -245,6 +201,7 @@ namespace ROS2
                     errorMessage += AZStd::string::format(", Line=%d", sdfError.LineNumber().value());
                 }
                 sdfImportErrors += errorMessage;
+                sdfImportErrors += '\n';
             }
 
             AZ_Error(SdfAssetBuilderName, false, R"(Failed to parse source file "%s". Errors: "%s")",
@@ -315,6 +272,7 @@ namespace ROS2
                     errorMessage += AZStd::string::format(", Line=%d", sdfError.LineNumber().value());
                 }
                 sdfParseErrors += errorMessage;
+                sdfParseErrors += '\n';
             }
             AZ_Error(SdfAssetBuilderName, false, R"(Failed to parse source file "%s". Errors: "%s")",
                 request.m_fullPath.c_str(), sdfParseErrors.c_str());

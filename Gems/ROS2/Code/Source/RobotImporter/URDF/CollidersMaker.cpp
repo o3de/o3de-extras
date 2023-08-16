@@ -205,10 +205,10 @@ namespace ROS2
         }
     }
 
-    void CollidersMaker::AddColliders(const sdf::Link* link, AZ::EntityId entityId)
+    void CollidersMaker::AddColliders(const sdf::Model& model, const sdf::Link* link, AZ::EntityId entityId)
     {
         AZStd::string typeString = "collider";
-        const bool isWheelEntity = Utils::IsWheelURDFHeuristics(link);
+        const bool isWheelEntity = Utils::IsWheelURDFHeuristics(model, link);
         if (isWheelEntity)
         {
             AZ_Printf(Internal::CollidersMakerLoggingTag, "Due to its name, %s is considered a wheel entity\n", link->Name().c_str());

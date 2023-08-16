@@ -41,9 +41,10 @@ namespace ROS2
         //! @param link A parsed URDF tree link node which could hold information about colliders.
         void BuildColliders(const sdf::Link* link);
         //! Add zero, one or many collider elements (depending on link content).
+        //! @param model An SDF model object provided by libsdformat from a parsed URDF
         //! @param link A parsed URDF tree link node which could hold information about colliders.
         //! @param entityId A non-active entity which will be affected.
-        void AddColliders(const sdf::Link* link, AZ::EntityId entityId);
+        void AddColliders(const sdf::Model& model, const sdf::Link* link, AZ::EntityId entityId);
         //! Sends meshes required for colliders to asset processor.
         //! @param buildReadyCb Function to call when the processing finishes.
         void ProcessMeshes(BuildReadyCallback notifyBuildReadyCb);

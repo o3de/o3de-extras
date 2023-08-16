@@ -17,10 +17,9 @@
 #include <AzToolsFramework/API/EditorAssetSystemAPI.h>
 #include <string.h>
 
-namespace ROS2
+namespace ROS2::Utils
 {
-
-    bool Utils::WaitForAssetsToProcess(const AZStd::unordered_map<AZStd::string, AZ::IO::Path>& sourceAssetsPaths)
+    bool WaitForAssetsToProcess(const AZStd::unordered_map<AZStd::string, AZ::IO::Path>& sourceAssetsPaths)
     {
         bool allAssetProcessed = false;
         bool assetProcessorFailed = false;
@@ -90,19 +89,19 @@ namespace ROS2
         return false;
     }
 
-    bool Utils::IsWheelURDFHeuristics(const sdf::Link* link)
+    bool IsWheelURDFHeuristics(const sdf::Model& model, const sdf::Link* link)
     {
-        const AZStd::regex wheel_regex("wheel[_]||[_]wheel");
-        const AZStd::regex joint_regex("(?i)joint");
-        const AZStd::string link_name(link->Name().c_str(), link->Name().size());
+        const AZStd::regex wheelRegex("wheel[_]||[_]wheel");
+        const AZStd::regex jointRegex("(?i)joint");
+        const AZStd::string linkName(link->Name().c_str(), link->Name().size());
         AZStd::smatch match;
         // Check if name is catchy for wheel
-        if (!AZStd::regex_search(link_name, match, wheel_regex))
+        if (!AZStd::regex_search(linkName, match, wheelRegex))
         {
             return false;
         }
         // The name should contain a joint word
-        if (AZStd::regex_search(link_name, match, joint_regex))
+        if (AZStd::regex_search(linkName, match, jointRegex))
         {
             return false;
         }
@@ -111,71 +110,237 @@ namespace ROS2
         {
             return false;
         }
-        // Parent joint needs to be CONTINOUS
-        // TODO: Figure out parent/child joints
-        /*
-        if (link->parent_joint && link->parent_joint->type == urdf::Joint::CONTINUOUS)
+
+        // When this link is a child, the parent link joint needs to be CONTINUOUS
+        AZStd::vector<const sdf::Joint*> joints = GetJointsForChildLink(model,
+            linkName, true);
+
+        // URDFs only have a single parent
+        // This is explained in the Pose frame semantics tutorial for sdformat
+        // http://sdformat.org/tutorials?tut=pose_frame_semantics&ver=1.5#parent-frames-in-urdf
+
+        // The SDF URDF parser converts continuous joints to revolute joints with a limit
+        // of -infinity to +infinity
+        // https://github.com/gazebosim/sdformat/blob/sdf13/src/parser_urdf.cc#L3009-L3039
+        bool isWheel{};
+        if (!joints.empty())
         {
-            return true;
+            const sdf::Joint* potentialWheelJoint = joints.front();
+            using LimitType = decltype(potentialWheelJoint->Axis()->Lower());
+            // There should only be 1 element for URDF, however that will not be verified
+            // in case this function is called on link from an SDF file
+            isWheel = potentialWheelJoint->Type() == sdf::JointType::CONTINUOUS;
+            isWheel = isWheel || (potentialWheelJoint->Type() == sdf::JointType::REVOLUTE
+                && potentialWheelJoint->Axis()->Lower() == -AZStd::numeric_limits<LimitType>::infinity()
+                && potentialWheelJoint->Axis()->Upper() == AZStd::numeric_limits<LimitType>::infinity());
         }
-        */
-        return false;
+
+        return isWheel;
     }
 
-    AZ::Transform Utils::GetWorldTransformURDF(const sdf::Link* link, AZ::Transform t)
+    AZ::Transform GetWorldTransformURDF(const sdf::Link* link, AZ::Transform t)
     {
-        // TODO: Figure out parent/child links
-        /*
-        if (link->getParent() != nullptr)
+        // Determine if the pose is relative to another link
+        // See doxygen at http://osrf-distributions.s3.amazonaws.com/sdformat/api/13.2.0/classsdf_1_1SDF__VERSION__NAMESPACE_1_1Link.html#a011d84b31f584938d89ac6b8c8a09eb3
+
+        sdf::SemanticPose linkSemanticPos = link->SemanticPose();
+        gz::math::Pose3d resolvedPose;
+
+        if (sdf::Errors poseResolveErrors = linkSemanticPos.Resolve(resolvedPose);
+            !poseResolveErrors.empty())
         {
-            t = URDF::TypeConversions::ConvertPose(link->parent_joint->parent_to_joint_origin_transform) * t;
-            return GetWorldTransformURDF(link->getParent(), t);
+            AZStd::string poseErrorMessages;
+            for (const sdf::Error& error : poseResolveErrors)
+            {
+                AZStd::string errorMessage = AZStd::string::format("ErrorCode=%d", static_cast<int32_t>(error.Code()));
+                errorMessage += AZStd::string::format(", Message=%s", error.Message().c_str());
+                if (error.LineNumber().has_value())
+                {
+                    errorMessage += AZStd::string::format(", Line=%d", error.LineNumber().value());
+                }
+
+                poseErrorMessages += errorMessage;
+                poseErrorMessages += '\n';
+            }
+
+            AZ_Error("RobotImporter", false, R"(Failed to get world transform for link %s. Errors: "%s")",
+                link->Name().c_str(), poseErrorMessages.c_str());
+            return {};
         }
-        */
-        return t;
+
+        const AZ::Transform linkTransform = URDF::TypeConversions::ConvertPose(resolvedPose);
+        const AZ::Transform resolvedTransform = linkTransform * t;
+        return resolvedTransform;
     }
 
-    AZStd::unordered_map<AZStd::string, const sdf::Link*> Utils::GetAllLinks(const std::vector<const sdf::Link*>& childLinks)
+    void VisitLinks(const sdf::Model& sdfModel, const LinkVisitorCallback& linkVisitorCB,
+        bool visitNestedModelLinks)
     {
-        AZStd::unordered_map<AZStd::string, const sdf::Link*> pointers;
-        AZStd::function<void(const std::vector<const sdf::Link*>&)> link_visitor =
-            [&](const std::vector<const sdf::Link*>& child_links) -> void
+        // Function object which can visit all links of a model
+        // Optionally it supports recursing nested models to visit their links as well
+        struct VisitLinksForNestedModels_fn
         {
-            for (const sdf::Link* child_link : child_links)
+            void operator()(const sdf::Model& model)
             {
-                AZStd::string link_name(child_link->Name().c_str(), child_link->Name().size());
-                pointers[link_name] = child_link;
-                // TODO: Figure out parent/child links
-                //link_visitor(child_link->child_links);
+                VisitLinksForModel(model);
+                if (m_recurseModels)
+                {
+                    for (uint64_t modelIndex{}; modelIndex < model.ModelCount(); ++modelIndex)
+                    {
+                        const sdf::Model* nestedModel =  model.ModelByIndex(modelIndex);
+                        if (nestedModel != nullptr)
+                        {
+                            VisitLinksForModel(*nestedModel);
+                        }
+                    }
+                }
             }
+
+        private:
+            void VisitLinksForModel(const sdf::Model& currentModel)
+            {
+                for (uint64_t linkIndex{}; linkIndex < currentModel.LinkCount(); ++linkIndex)
+                {
+                    const sdf::Link* link = currentModel.LinkByIndex(linkIndex);
+                    if (link != nullptr)
+                    {
+                        m_linkVisitorCB(*link);
+                    }
+                }
+            }
+
+        public:
+            LinkVisitorCallback m_linkVisitorCB;
+            bool m_recurseModels{};
         };
-        link_visitor(childLinks);
-        return pointers;
+
+        VisitLinksForNestedModels_fn VisitLinksForNestedModels{};
+        VisitLinksForNestedModels.m_linkVisitorCB = linkVisitorCB;
+        VisitLinksForNestedModels.m_recurseModels = visitNestedModelLinks;
+        VisitLinksForNestedModels(sdfModel);
     }
 
-    AZStd::unordered_map<AZStd::string, const sdf::Joint*> Utils::GetAllJoints(const std::vector<const sdf::Link*>& childLinks)
+    void VisitJoints(const sdf::Model& sdfModel, const JointVisitorCallback& jointVisitorCB,
+        bool visitNestedModelJoints)
     {
-        AZStd::unordered_map<AZStd::string, const sdf::Joint*> joints;
-        AZStd::function<void(const std::vector<const sdf::Link*>&)> link_visitor =
-            [&](const std::vector<const sdf::Link*>& child_links) -> void
+        // Function object which can visit all joints of a model
+        // Optionally it supports recursing nested models to visit their joints as well
+        struct VisitJointsForNestedModels_fn
         {
-            // TODO: Figure out parent/child links
-            /*
-            for (auto child_link : child_links)
+            void operator()(const sdf::Model& model)
             {
-                const auto& joint = child_link->parent_joint;
-                AZStd::string joint_name(joint->Name().c_str(), joint->N()ame.size());
-                joints[joint_name] = joint;
-                //link_visitor(child_link->child_links);
+                VisitJointsForModel(model);
+                if (m_recurseModels)
+                {
+                    for (uint64_t modelIndex{}; modelIndex < model.ModelCount(); ++modelIndex)
+                    {
+                        const sdf::Model* nestedModel =  model.ModelByIndex(modelIndex);
+                        if (nestedModel != nullptr)
+                        {
+                            VisitJointsForModel(*nestedModel);
+                        }
+                    }
+                }
             }
-            */
+
+        private:
+            void VisitJointsForModel(const sdf::Model& currentModel)
+            {
+                for (uint64_t jointIndex{}; jointIndex < currentModel.JointCount(); ++jointIndex)
+                {
+                    const sdf::Joint* joint = currentModel.JointByIndex(jointIndex);
+                    if (joint != nullptr)
+                    {
+                        m_jointVisitorCB(*joint);
+                    }
+                }
+            }
+
+        public:
+            JointVisitorCallback m_jointVisitorCB;
+            bool m_recurseModels{};
         };
-        link_visitor(childLinks);
+
+        VisitJointsForNestedModels_fn VisitJointsForNestedModels{};
+        VisitJointsForNestedModels.m_jointVisitorCB = jointVisitorCB;
+        VisitJointsForNestedModels.m_recurseModels = visitNestedModelJoints;
+        VisitJointsForNestedModels(sdfModel);
+    }
+
+    AZStd::unordered_map<AZStd::string, const sdf::Link*> GetAllLinks(const sdf::Model& sdfModel,
+        bool gatherNestedModelLinks)
+    {
+        using LinkMap = AZStd::unordered_map<AZStd::string, const sdf::Link*>;
+        LinkMap links;
+        auto GatherLinks = [&links](const sdf::Link& link)
+        {
+            AZStd::string_view linkName(link.Name().c_str(), link.Name().size());
+            links.insert_or_assign(linkName, &link);
+        };
+
+        VisitLinks(sdfModel, GatherLinks, gatherNestedModelLinks);
+        return links;
+    }
+
+    AZStd::unordered_map<AZStd::string, const sdf::Joint*> GetAllJoints(const sdf::Model& sdfModel,
+        bool gatherNestedModelJoints)
+    {
+        using JointMap = AZStd::unordered_map<AZStd::string, const sdf::Joint*>;
+        JointMap joints;
+        auto GatherJoints = [&joints](const sdf::Joint& joint)
+        {
+            AZStd::string_view jointName(joint.Name().c_str(), joint.Name().size());
+            joints.insert_or_assign(jointName, &joint);
+        };
+
+        VisitJoints(sdfModel, GatherJoints, gatherNestedModelJoints);
         return joints;
     }
 
-    AZStd::unordered_set<AZStd::string> Utils::GetMeshesFilenames(const sdf::Root* rootLink, bool visual, bool colliders)
+    AZStd::vector<const sdf::Joint*> GetJointsForChildLink(const sdf::Model& sdfModel, AZStd::string_view linkName,
+        bool gatherNestedModelJoints)
     {
+        using JointVector = AZStd::vector<const sdf::Joint*>;
+        JointVector joints;
+        auto GatherJointsWhereLinkIsChild = [&joints, linkName](const sdf::Joint& joint)
+        {
+            AZStd::string_view jointChildName{ joint.ChildName().c_str(), joint.ChildName().size() };
+            if (jointChildName == linkName)
+            {
+                joints.emplace_back(&joint);
+            }
+        };
+
+        VisitJoints(sdfModel, GatherJointsWhereLinkIsChild, gatherNestedModelJoints);
+        return joints;
+    }
+
+    AZStd::vector<const sdf::Joint*> GetJointsForParentLink(const sdf::Model& sdfModel, AZStd::string_view linkName,
+        bool gatherNestedModelJoints)
+    {
+        using JointVector = AZStd::vector<const sdf::Joint*>;
+        JointVector joints;
+        auto GatherJointsWhereLinkIsParent = [&joints, linkName](const sdf::Joint& joint)
+        {
+            AZStd::string_view jointParentName{ joint.ParentName().c_str(), joint.ParentName().size() };
+            if (jointParentName == linkName)
+            {
+                joints.emplace_back(&joint);
+            }
+        };
+
+        VisitJoints(sdfModel, GatherJointsWhereLinkIsParent, gatherNestedModelJoints);
+        return joints;
+    }
+
+    AZStd::unordered_set<AZStd::string> GetMeshesFilenames(const sdf::Root* root, bool visual, bool colliders)
+    {
+        const sdf::Model* model = root != nullptr ? root->Model() : nullptr;
+        if (model == nullptr)
+        {
+            return {};
+        }
+
         AZStd::unordered_set<AZStd::string> filenames;
         const auto addFilenameFromGeometry = [&filenames](const sdf::Geometry* geometry)
         {
@@ -207,31 +372,11 @@ namespace ROS2
             }
         };
 
-        AZStd::function<void(const std::vector<const sdf::Link*>&)> linkVisitor =
-            [&](const std::vector<const sdf::Link*>& child_links) -> void
+        for (uint64_t index = 0; index < model->LinkCount(); index++)
         {
-            for (auto link : child_links)
-            {
-                processLink(link);
-                // TODO: Figure out parent/child
-                /*
-                std::vector<const sdf::Link*> childVector(link->child_links.size());
-                std::transform(
-                    link->child_links.begin(),
-                    link->child_links.end(),
-                    childVector.begin(),
-                    [](const sdf::Link* p)
-                    {
-                        return p;
-                    });
-                linkVisitor(childVector);
-                */
-            }
-        };
-        for (uint64_t index = 0; index < rootLink->Model()->LinkCount(); index++)
-        {
-            linkVisitor({ rootLink->Model()->LinkByIndex(index) });
+            processLink(model->LinkByIndex(index));
         }
+
         return filenames;
     }
 
@@ -265,7 +410,7 @@ namespace ROS2
     }
 
     /// Finds global path from URDF path
-    AZStd::string Utils::ResolveURDFPath(
+    AZStd::string ResolveURDFPath(
         AZStd::string unresolvedPath,
         const AZStd::string& urdfFilePath,
         const AZStd::string& amentPrefixPath,
@@ -340,55 +485,55 @@ namespace ROS2
         return resolvedPath.String();
     }
 
-    namespace Utils::SDFormat
+} // namespace ROS2::Utils
+
+namespace ROS2::Utils::SDFormat
+{
+    AZStd::string GetPluginFilename(const sdf::Plugin& plugin)
     {
-        AZStd::string GetPluginFilename(const sdf::Plugin& plugin)
-        {
-            const AZ::IO::Path path{ plugin.Filename().c_str() };
-            return path.Filename().String();
-        }
+        const AZ::IO::Path path{ plugin.Filename().c_str() };
+        return path.Filename().String();
+    }
 
-        AZStd::vector<AZStd::string> GetUnsupportedParams(
-            const sdf::ElementPtr& rootElement, const AZStd::unordered_set<AZStd::string>& supportedParams)
-        {
-            AZStd::vector<AZStd::string> unsupportedParams;
+    AZStd::vector<AZStd::string> GetUnsupportedParams(
+        const sdf::ElementPtr& rootElement, const AZStd::unordered_set<AZStd::string>& supportedParams)
+    {
+        AZStd::vector<AZStd::string> unsupportedParams;
 
-            AZStd::function<void(const sdf::ElementPtr& elementPtr, const std::string& prefix)> elementVisitor =
-                [&](const sdf::ElementPtr& elementPtr, const std::string& prefix) -> void
+        AZStd::function<void(const sdf::ElementPtr& elementPtr, const std::string& prefix)> elementVisitor =
+            [&](const sdf::ElementPtr& elementPtr, const std::string& prefix) -> void
+        {
+            auto childPtr = elementPtr->GetFirstElement();
+
+            AZStd::string prefixAz(prefix.c_str(), prefix.size());
+            if (!childPtr && !prefixAz.empty() && !supportedParams.contains(prefixAz))
             {
-                auto childPtr = elementPtr->GetFirstElement();
+                unsupportedParams.push_back(prefixAz);
+            }
 
-                AZStd::string prefixAz(prefix.c_str(), prefix.size());
-                if (!childPtr && !prefixAz.empty() && !supportedParams.contains(prefixAz))
+            while (childPtr)
+            {
+                if (childPtr->GetName() == "plugin")
                 {
-                    unsupportedParams.push_back(prefixAz);
+                    break;
                 }
 
-                while (childPtr)
-                {
-                    if (childPtr->GetName() == "plugin")
-                    {
-                        break;
-                    }
+                std::string currentName = prefix;
+                currentName.append(">");
+                currentName.append(childPtr->GetName());
 
-                    std::string currentName = prefix;
-                    currentName.append(">");
-                    currentName.append(childPtr->GetName());
+                elementVisitor(childPtr, currentName);
+                childPtr = childPtr->GetNextElement();
+            }
+        };
 
-                    elementVisitor(childPtr, currentName);
-                    childPtr = childPtr->GetNextElement();
-                }
-            };
+        elementVisitor(rootElement, "");
 
-            elementVisitor(rootElement, "");
+        return unsupportedParams;
+    }
 
-            return unsupportedParams;
-        }
-
-        bool IsPluginSupported(const sdf::Plugin& plugin, const AZStd::unordered_set<AZStd::string>& supportedPlugins)
-        {
-            return supportedPlugins.contains(GetPluginFilename(plugin));
-        }
-    } // namespace Utils::SDFormat
-
-} // namespace ROS2
+    bool IsPluginSupported(const sdf::Plugin& plugin, const AZStd::unordered_set<AZStd::string>& supportedPlugins)
+    {
+        return supportedPlugins.contains(GetPluginFilename(plugin));
+    }
+} // namespace ROS2::Utils::SDFormat

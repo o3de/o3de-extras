@@ -7,9 +7,10 @@
  */
 
 #include "ArticulationsMaker.h"
-#include "RobotImporter/Utils/DefaultSolverConfiguration.h"
 #include <AzCore/Component/EntityId.h>
 #include <AzToolsFramework/Entity/EditorEntityHelpers.h>
+#include <RobotImporter/Utils/DefaultSolverConfiguration.h>
+#include <RobotImporter/Utils/RobotImporterUtils.h>
 #include <RobotImporter/Utils/TypeConversions.h>
 #include <Source/EditorArticulationLinkComponent.h>
 
@@ -38,7 +39,7 @@ namespace ROS2
             "ArticulationsMaker",
             supportedArticulationType != SupportedJointTypes.end(),
             "Articulations do not support type %d for URDF joint %s.",
-            (int)joint->Type(),
+            static_cast<int>(joint->Type()),
             joint->Name().c_str());
         if (supportedArticulationType != SupportedJointTypes.end())
         {
@@ -91,7 +92,7 @@ namespace ROS2
         return articulationLinkConfiguration;
     }
 
-    void ArticulationsMaker::AddArticulationLink(const sdf::Link* link, AZ::EntityId entityId) const
+    void ArticulationsMaker::AddArticulationLink(const sdf::Model& model, const sdf::Link* link, AZ::EntityId entityId) const
     {
         AZ::Entity* entity = AzToolsFramework::GetEntityById(entityId);
         AZ_Assert(entity, "No entity for id %s", entityId.ToString().c_str());
@@ -102,7 +103,12 @@ namespace ROS2
         articulationLinkConfiguration = AddToArticulationConfig(articulationLinkConfiguration, link->Inertial());
 
         // TODO: Figure out parent/child relationships
-        //articulationLinkConfiguration = AddToArticulationConfig(articulationLinkConfiguration, link->parent_joint);
+        constexpr bool getNestedModelJoints = true;
+        AZStd::string_view linkName(link->Name().c_str(), link->Name().size());
+        for (const sdf::Joint* joint : Utils::GetJointsForChildLink(model, linkName, getNestedModelJoints))
+        {
+            articulationLinkConfiguration = AddToArticulationConfig(articulationLinkConfiguration, joint);
+        }
 
         entity->CreateComponent<PhysX::EditorArticulationLinkComponent>(articulationLinkConfiguration);
     }

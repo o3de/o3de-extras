@@ -65,7 +65,7 @@ namespace ROS2::Utils::xacro
         {
             AZ_Printf("ParseXacro", "xacro finished with success \n");
             const auto& output = process_output.outputResult;
-            outcome.m_urdfHandle = UrdfParser::Parse({ output.c_str(), output.size() });
+            outcome.m_urdfHandle = UrdfParser::Parse(output);
             outcome.m_succeed = true;
         }
         else

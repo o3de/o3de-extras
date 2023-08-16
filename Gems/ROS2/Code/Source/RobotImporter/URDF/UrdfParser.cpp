@@ -67,6 +67,10 @@ namespace ROS2::UrdfParser::Internal
 
 namespace ROS2::UrdfParser
 {
+    RootObjectOutcome Parse(AZStd::string_view xmlString)
+    {
+        return Parse(std::string(xmlString.data(), xmlString.size()));
+    }
     RootObjectOutcome Parse(const std::string& xmlString)
     {
         // TODO: Figure out how to route the output handler

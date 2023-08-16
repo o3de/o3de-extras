@@ -93,8 +93,13 @@ namespace ROS2
                 jointComponent = followColliderEntity->CreateComponent<PhysX::EditorHingeJointComponent>();
                 followColliderEntity->Activate();
 
-                const double limitUpper = AZ::RadToDeg(joint->Axis()->Upper());
-                const double limitLower = AZ::RadToDeg(joint->Axis()->Lower());
+                using LimitType = decltype(joint->Axis()->Upper());
+                const double limitUpper = joint->Axis()->Upper() != AZStd::numeric_limits<LimitType>::infinity()
+                    ? AZ::RadToDeg(joint->Axis()->Upper())
+                    : AZ::RadToDeg(AZ::Constants::TwoPi);
+                const double limitLower = joint->Axis()->Lower() != -AZStd::numeric_limits<LimitType>::infinity()
+                    ? AZ::RadToDeg(joint->Axis()->Lower())
+                    : -AZ::RadToDeg(AZ::Constants::TwoPi);
                 AZ_Printf(
                     "JointsMaker",
                     "Setting limits : upper: %.1f lower: %.1f (URDF:%f,%f)",

@@ -112,6 +112,7 @@ namespace ROS2
                     errorMessage += AZStd::string::format(", Line=%d", sdfError.LineNumber().value());
                 }
                 aggregateErrorMessages += errorMessage;
+                aggregateErrorMessages += '\n';
             }
             AZ_Warning("ROS2EditorSystemComponent", false, "URDF parsing failed with errors: %s\nRefer to %s",
                 aggregateErrorMessages.c_str(), log.c_str());
