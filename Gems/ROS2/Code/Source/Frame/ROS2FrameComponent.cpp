@@ -79,7 +79,6 @@ namespace ROS2
                 m_ros2Transform->Publish(m_controller.GetFrameTransform());
             }
         }
-        AZ::TickBus::Handler::BusConnect();
         ROS2FrameComponentBus::Handler::BusConnect(GetEntityId());
     }
 
