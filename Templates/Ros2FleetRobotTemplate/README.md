@@ -78,7 +78,7 @@ You can modify contents of this file to add/remove robots or change their initia
 
 ### Navigation configuration
 
-You can configure navigation parameters by modifying `Example/ros2_ws/src/o3de_fleet_nav/params/<ROS_DISTRO>/nav2_*.yaml` files.
+You can configure navigation parameters by modifying `Examples/ros2_ws/src/o3de_fleet_nav/params/<ROS_DISTRO>/nav2_*.yaml` files.
 
 Please visit the [nav2 configuration guide](https://navigation.ros.org/configuration/index.html) for a detailed description of the navigation parameters.
 
@@ -124,7 +124,7 @@ Then you can alter `fleet_config.yaml` file to change the robot name to the assi
 
 - Go to the ROS 2 workspace:
 ```
-cd Example/ros2_ws
+cd Examples/ros2_ws
 ```
 
 - Install ROS 2 dependencies:
@@ -149,7 +149,7 @@ colcon build --symlink-install
 
 - Source the `o3de_fleet_nav` workspace:
 ```
-cd Example/ros2_ws
+cd Examples/ros2_ws
 . ./install/setup.bash
 ```
 

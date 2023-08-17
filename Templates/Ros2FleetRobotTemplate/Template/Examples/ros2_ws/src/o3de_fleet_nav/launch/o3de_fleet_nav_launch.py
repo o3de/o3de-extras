@@ -32,8 +32,8 @@ def generate_launch_description():
     o3de_fleet_nav_dir = get_package_share_directory('o3de_fleet_nav')
     o3de_launch_dir = os.path.join(o3de_fleet_nav_dir, 'launch')
 
+    # Load fleet configuration
     fleet_config_file = os.path.join(o3de_fleet_nav_dir, 'config', 'fleet_config.yaml')
-
     robots = []
     with open(fleet_config_file, 'r') as f:
         configuration = yaml.safe_load(f)
@@ -48,9 +48,7 @@ def generate_launch_description():
                 }
             )
 
-    # On this example all robots are launched with the same settings
     map_yaml_file = LaunchConfiguration('map')
-
     autostart = LaunchConfiguration('autostart')
     rviz_config_file = LaunchConfiguration('rviz_config')
     use_rviz = LaunchConfiguration('use_rviz')
@@ -83,7 +81,7 @@ def generate_launch_description():
         default_value='True',
         description='Whether to start RVIZ')
 
-    # Define commands for launching the navigation instances
+    # Launch navigation for each robot in fleet configuration
     nav_instances_cmds = []
     for robot in robots:
         params_file = LaunchConfiguration("robot_params_file")
@@ -117,8 +115,7 @@ def generate_launch_description():
                                   'map': map_yaml_file,
                                   'use_sim_time': 'True',
                                   'params_file': configured_params,
-                                  'autostart': autostart,
-                                  'use_rviz': 'False', }.items()),
+                                  'autostart': autostart}.items()),
 
             LogInfo(
                 condition=IfCondition(log_settings),
@@ -149,6 +146,7 @@ def generate_launch_description():
     ld.add_action(declare_autostart_cmd)
     ld.add_action(declare_rviz_config_file_cmd)
 
+    # Launch robots
     for simulation_instance_cmd in nav_instances_cmds:
         ld.add_action(simulation_instance_cmd)
 

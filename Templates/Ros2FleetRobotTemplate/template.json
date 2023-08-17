@@ -284,11 +284,19 @@
             "isTemplated": false
         },
         {
-            "file": "Examples/ros2_ws/src/o3de_fleet_nav/params/nav2_multirobot_params.yaml",
+            "file": "Examples/ros2_ws/src/o3de_fleet_nav/params/humble/nav2_multirobot_params.yaml",
             "isTemplated": false
         },
         {
-            "file": "Examples/ros2_ws/src/o3de_fleet_nav/params/nav2_params.yaml",
+            "file": "Examples/ros2_ws/src/o3de_fleet_nav/params/humble/nav2_params.yaml",
+            "isTemplated": false
+        },
+        {
+            "file": "Examples/ros2_ws/src/o3de_fleet_nav/params/iron/nav2_multirobot_params.yaml",
+            "isTemplated": false
+        },
+        {
+            "file": "Examples/ros2_ws/src/o3de_fleet_nav/params/iron/nav2_params.yaml",
             "isTemplated": false
         },
         {
@@ -312,27 +320,11 @@
             "isTemplated": false
         },
         {
-            "file": "Examples/ros2_ws/src/o3de_fleet_nav/launch/o3de_slam_launch.py",
-            "isTemplated": false
-        },
-        {
             "file": "Examples/ros2_ws/src/o3de_fleet_nav/launch/o3de_nav_launch.py",
             "isTemplated": false
         },
         {
-            "file": "Examples/ros2_ws/src/o3de_fleet_nav/launch/o3de_navigation_launch.py",
-            "isTemplated": false
-        },
-        {
-            "file": "Examples/ros2_ws/src/o3de_fleet_nav/launch/o3de_bringup_launch.py",
-            "isTemplated": false
-        },
-        {
             "file": "Examples/ros2_ws/src/o3de_fleet_nav/launch/o3de_fleet_nav_launch.py",
-            "isTemplated": false
-        },
-        {
-            "file": "Examples/ros2_ws/src/o3de_fleet_nav/launch/o3de_localization_launch.py",
             "isTemplated": false
         },
         {
