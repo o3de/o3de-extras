@@ -27,7 +27,7 @@ namespace ROS2
         ConveyorBeltComponentConfiguration::Reflect(context);
         if (AZ::SerializeContext* serialize = azrtti_cast<AZ::SerializeContext*>(context))
         {
-            serialize->Class<ConveyorBeltComponent>()->Version(1)->Field("Configuration", &ConveyorBeltComponent::m_configuration);
+            serialize->Class<ConveyorBeltComponent, AZ::Component>()->Version(1)->Field("Configuration", &ConveyorBeltComponent::m_configuration);
 
             if (AZ::EditContext* ec = serialize->GetEditContext())
             {
