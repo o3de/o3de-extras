@@ -25,16 +25,12 @@
 
 namespace ROS2
 {
+    VisualsMaker::VisualsMaker() = default;
     VisualsMaker::VisualsMaker(
-        const std::map<std::string, const sdf::Material*>& materials, const AZStd::shared_ptr<Utils::UrdfAssetMap>& urdfAssetsMapping)
-        : m_urdfAssetsMapping(urdfAssetsMapping)
+        AZStd::unordered_map<AZStd::string, const sdf::Material*> materials, const AZStd::shared_ptr<Utils::UrdfAssetMap>& urdfAssetsMapping)
+        : m_materials(AZStd::move(materials))
+        , m_urdfAssetsMapping(urdfAssetsMapping)
     {
-        AZStd::ranges::for_each(
-            materials,
-            [&](const auto& p)
-            {
-                m_materials[AZStd::string(p.first.c_str(), p.first.size())] = p.second;
-            });
     }
 
     AZStd::vector<AZ::EntityId> VisualsMaker::AddVisuals(const sdf::Link* link, AZ::EntityId entityId) const
@@ -43,7 +39,7 @@ namespace ROS2
 
         const AZStd::string typeString = "visual";
         if (link->VisualCount() < 1)
-        { 
+        {
             // For zero visuals, element is used
             auto createdEntity = AddVisual(nullptr, entityId, PrefabMakerUtils::MakeEntityName(link->Name().c_str(), typeString));
             if (createdEntity.IsValid())
@@ -52,7 +48,7 @@ namespace ROS2
             }
         }
         else
-        { 
+        {
             // For one or more visuals, an array is used
             size_t nameSuffixIndex = 0; // For disambiguation when multiple unnamed visuals are present. The order does not matter here
 
@@ -216,12 +212,13 @@ namespace ROS2
 
         AZ::Entity* entity = AzToolsFramework::GetEntityById(entityId);
 
-        // TODO: Figure out material name
-        //const AZStd::string material_name{ visual->Material()->Name().c_str() };
-        const AZStd::string material_name{  };
+        // As a Material doesn't have a name and there can only be 1 material per <visual> tag,
+        // the Visual Name is used for the material
+        const std::string materialName{ visual->Name() };
+        const AZStd::string azMaterialName{ materialName.c_str(), materialName.size() };
 
         // If present in map, take map color definition as priority, otherwise apply local node definition
-        const auto materialColorUrdf = m_materials.contains(material_name) ? m_materials.at(material_name)->Diffuse() : visual->Material()->Diffuse();
+        const auto materialColorUrdf = m_materials.contains(azMaterialName) ? m_materials.at(azMaterialName)->Diffuse() : visual->Material()->Diffuse();
 
         const AZ::Color materialColor = URDF::TypeConversions::ConvertColor(materialColorUrdf);
         bool isPrimitive = visual->Geom()->Type() != sdf::GeometryType::MESH;
@@ -235,7 +232,7 @@ namespace ROS2
         }
 
         entity->CreateComponent(AZ::Render::EditorMaterialComponentTypeId);
-        AZ_Printf("AddVisual", "Setting color for material %s\n", ""); // TODO: material name - visual->Material()->Name().c_str());
+        AZ_Printf("AddVisual", "Setting color for material %s\n", azMaterialName.c_str());
         entity->Activate();
         AZ::Render::MaterialComponentRequestBus::Event(
             entityId,

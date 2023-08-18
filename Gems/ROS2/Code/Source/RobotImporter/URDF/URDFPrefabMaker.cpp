@@ -38,8 +38,7 @@ namespace ROS2
         bool useArticulations,
         const AZStd::optional<AZ::Transform> spawnPosition)
         : m_root(root)
-        // TODO: list of all the materials - model->materials_
-        , m_visualsMaker({}, urdfAssetsMapping)
+        , m_visualsMaker{}
         , m_collidersMaker(urdfAssetsMapping)
         , m_prefabPath(std::move(prefabPath))
         , m_urdfAssetsMapping(urdfAssetsMapping)
@@ -51,6 +50,49 @@ namespace ROS2
         if (m_root != nullptr)
         {
             AZ_Assert(GetFirstModel(), "SDF Model is nullptr");
+
+            AZStd::unordered_map<AZStd::string, const sdf::Material*> materialMap;
+            auto GetVisualsFromModel = [&materialMap](const sdf::Model& model)
+            {
+                for (uint64_t linkIndex{}; linkIndex < model.LinkCount(); ++linkIndex)
+                {
+                    if (const sdf::Link* link = model.LinkByIndex(linkIndex); link != nullptr)
+                    {
+                        for (uint64_t visualIndex{}; visualIndex < link->VisualCount(); ++visualIndex)
+                        {
+                            if (const sdf::Visual* visual = link->VisualByIndex(visualIndex); visual != nullptr)
+                            {
+                                if (const sdf::Material* material = visual->Material(); material != nullptr)
+                                {
+                                    const std::string visualName = visual->Name();
+                                    materialMap.emplace(AZStd::string{ visualName.c_str(), visualName.size() }, material);
+                                }
+                            }
+                        }
+                    }
+                }
+            };
+
+            // Iterate over all visuals to get their materials
+            for (uint64_t worldIndex{}; worldIndex < m_root->WorldCount(); ++worldIndex)
+            {
+                if (const sdf::World* world = m_root->WorldByIndex(worldIndex); world != nullptr)
+                {
+                    for (uint64_t modelIndex{}; modelIndex < world->ModelCount(); ++modelIndex)
+                    {
+                        if (const sdf::Model* model = world->ModelByIndex(modelIndex); model != nullptr)
+                        {
+                            GetVisualsFromModel(*model);
+                        }
+                    }
+                }
+            }
+            // If there is a model tag at the root, iterate over it now
+            if (const sdf::Model* model = m_root->Model(); model != nullptr)
+            {
+                GetVisualsFromModel(*model);
+            }
+            m_visualsMaker = VisualsMaker(AZStd::move(materialMap), urdfAssetsMapping);
         }
     }
 
