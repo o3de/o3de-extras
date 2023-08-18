@@ -9,42 +9,18 @@
 #pragma once
 
 #include <AzCore/Math/VectorN.h>
+#include <AzCore/std/smart_ptr/shared_ptr.h>
 
 namespace MachineLearning
 {
-    enum class LossFunctions
-    {
+    AZ_ENUM_CLASS(LossFunctions,
         MeanSquaredError
-    };
+    );
 
-    enum class ActivationFunctions
-    {
+    AZ_ENUM_CLASS(ActivationFunctions,
         ReLU,
         Sigmoid,
+        Softmax,
         Linear
-    };
-
-    class Layer;
-
-    struct LayerParams
-    {
-        AZ_TYPE_INFO(LayerParams, "{DD9A7E7C-8D11-4805-83CF-6A5262B4580C}");
-
-        //! AzCore Reflection.
-        //! @param context reflection context
-        static void Reflect(class AZ::ReflectContext* context);
-
-        LayerParams() = default;
-        inline LayerParams(AZStd::size_t size, ActivationFunctions activationFunction)
-            : m_layerSize(size)
-            , m_activationFunction(activationFunction)
-        {
-        }
-
-        AZStd::size_t m_layerSize = 0;
-        ActivationFunctions m_activationFunction = ActivationFunctions::ReLU;
-    };
-
-    //using HiddenLayerParams = AZStd::vector<LayerParams>;
-    using HiddenLayerParams = AZStd::vector<AZStd::size_t>;
+    );
 }

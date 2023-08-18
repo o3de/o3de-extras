@@ -1,45 +1,39 @@
 {
     "entries": [
         {
-            "base": "{8B5BA564-BEAF-B290-6224-F82B7618735C}",
+            "base": "{716A4682-81F5-11EF-B2F0-938CED78825E}",
             "context": "ScriptCanvas::Node",
             "variant": "",
             "details": {
-                "name": "Create new model",
+                "name": "Gradient descent",
                 "category": "MachineLearning",
-                "tooltip": "Creates a new untrained machine learning model. All parameters will be initialized to random values."
+                "tooltip": "Performs a gradient descent step on a model, and zeroes all gradient vectors."
             },
             "slots": [
                 {
                     "base": "Input_In_0",
                     "details": {
                         "name": "In",
-                        "tooltip": "Parameters controlling the new model"
+                        "tooltip": "Parameters controlling gradient descent"
                     }
                 },
                 {
-                    "base": "DataInput_Input neurons_0",
+                    "base": "DataInput_Model_0",
                     "details": {
-                        "name": "Input neurons"
+                        "name": "Model"
                     }
                 },
                 {
-                    "base": "DataInput_Output neurons_1",
+                    "base": "DataInput_LearningRate_1",
                     "details": {
-                        "name": "Output neurons"
-                    }
-                },
-                {
-                    "base": "DataInput_Hidden layers_2",
-                    "details": {
-                        "name": "Hidden layers"
+                        "name": "LearningRate"
                     }
                 },
                 {
                     "base": "Output_On In_0",
                     "details": {
                         "name": "On In",
-                        "tooltip": "Parameters controlling the new model"
+                        "tooltip": "Parameters controlling gradient descent"
                     }
                 },
                 {

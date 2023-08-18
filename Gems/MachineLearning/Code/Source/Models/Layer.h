@@ -25,7 +25,13 @@ namespace MachineLearning
         static void Reflect(AZ::ReflectContext* context);
 
         Layer() = default;
+        Layer(Layer&&) = default;
+        Layer(const Layer&) = default;
         Layer(ActivationFunctions activationFunction, AZStd::size_t activationDimensionality, AZStd::size_t layerDimensionality);
+        ~Layer() = default;
+
+        Layer& operator=(Layer&&) = default;
+        Layer& operator=(const Layer&) = default;
 
         //! Performs a basic forward pass on this layer, outputs are stored in m_output.
         const AZ::VectorN& Forward(const AZ::VectorN& activations);

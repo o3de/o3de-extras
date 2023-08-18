@@ -13,13 +13,13 @@
 #include <ScriptCanvas/Core/NodeableNode.h>
 #include <MachineLearning/INeuralNetwork.h>
 #include <MachineLearning/ILabeledTrainingData.h>
-#include <Source/Nodes/LoadTrainingData.generated.h>
+#include <Source/Nodes/SupervisedLearning.generated.h>
 
 namespace MachineLearning
 {
-    class LoadTrainingData
+    class SupervisedLearning
         : public ScriptCanvas::Nodeable
     {
-        SCRIPTCANVAS_NODE_LoadTrainingData;
+        SCRIPTCANVAS_NODE_SupervisedLearning;
     };
 }

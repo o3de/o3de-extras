@@ -33,11 +33,10 @@ namespace MachineLearning
             {
                 editContext->Class<Layer>("A single layer of a neural network", "")
                     ->ClassElement(AZ::Edit::ClassElements::EditorData, "")
-                    ->DataElement(AZ::Edit::UIHandlers::Default, &Layer::m_inputSize, "Input Size", "This value must match the output size of the previous layer, or the number of neurons in the activation layer if this is the first layer")
+                    ->DataElement(AZ::Edit::UIHandlers::Default, &Layer::m_outputSize, "Layer Size", "The number of neurons the layer should have")
                     ->Attribute(AZ::Edit::Attributes::ChangeNotify, &Layer::OnSizesChanged)
-                    ->DataElement(AZ::Edit::UIHandlers::Default, &Layer::m_outputSize, "Output Size", "This value must match the input size of the next layer, if one exists")
-                    ->Attribute(AZ::Edit::Attributes::ChangeNotify, &Layer::OnSizesChanged)
-                    ->DataElement(AZ::Edit::UIHandlers::Default, &Layer::m_activationFunction, "Activation Function", "The activation function applied to this layer")
+                    ->DataElement(AZ::Edit::UIHandlers::ComboBox, &Layer::m_activationFunction, "Activation Function", "The activation function applied to this layer")
+                        ->Attribute(AZ::Edit::Attributes::EnumValues, &GetActivationEnumValues)
                     ;
             }
         }
@@ -50,7 +49,10 @@ namespace MachineLearning
                 Attribute(AZ::Script::Attributes::Module, "machineLearning")->
                 Attribute(AZ::Script::Attributes::ExcludeFrom, AZ::Script::Attributes::ExcludeFlags::ListOnly)->
                 Constructor<ActivationFunctions, AZStd::size_t, AZStd::size_t>()->
-                Attribute(AZ::Script::Attributes::Storage, AZ::Script::Attributes::StorageType::Value)
+                Attribute(AZ::Script::Attributes::Storage, AZ::Script::Attributes::StorageType::Value)->
+                Property("InputSize", BehaviorValueProperty(&Layer::m_inputSize))->
+                Property("OutputSize", BehaviorValueProperty(&Layer::m_outputSize))->
+                Property("ActivationFunction", BehaviorValueProperty(&Layer::m_activationFunction))
                 ;
         }
     }
@@ -93,8 +95,7 @@ namespace MachineLearning
         }
 
         // Compute the partial derivatives of the output with respect to the activation function
-        Activate_Derivative(m_activationFunction, m_output, m_activationGradients);
-        m_activationGradients *= previousLayerGradients;
+        Activate_Derivative(m_activationFunction, m_output, previousLayerGradients, m_activationGradients);
 
         // Accumulate the partial derivatives of the weight matrix with respect to the loss function
         AZ::OuterProduct(m_activationGradients, m_lastInput, m_weightGradients);
@@ -119,7 +120,9 @@ namespace MachineLearning
     void Layer::OnSizesChanged()
     {
         m_weights = AZ::MatrixMxN::CreateRandom(m_outputSize, m_inputSize);
-        m_biases = AZ::VectorN::CreateRandom(m_outputSize);
+        m_weights -= 0.5f; // It's preferable for efficient training to keep initial weights centered around zero
+
+        m_biases = AZ::VectorN(m_outputSize, 0.01f);
         m_output = AZ::VectorN::CreateZero(m_outputSize);
     }
 }

@@ -11,7 +11,7 @@
 
 namespace MachineLearning
 {
-    MachineLearning::INeuralNetworkPtr AccumulateTrainingGradients::In(MachineLearning::INeuralNetworkPtr Model, MachineLearning::LossFunctions LossFunction, AZ::VectorN Activations, AZ::VectorN ExpectedOutput)
+    INeuralNetworkPtr AccumulateTrainingGradients::In(INeuralNetworkPtr Model, LossFunctions LossFunction, AZ::VectorN Activations, AZ::VectorN ExpectedOutput)
     {
         Model->Reverse(LossFunction, Activations, ExpectedOutput);
         return Model;

@@ -28,5 +28,3 @@ namespace MachineLearning
     //! Computes the derivative of the rectified linear unit function (ReLU) applied to all elements of the source vector.
     void MeanSquaredError_Derivative(const AZ::VectorN& expected, const AZ::VectorN& actual, AZ::VectorN& output);
 }
-
-#include <Algorithms/LossFunctions.inl>

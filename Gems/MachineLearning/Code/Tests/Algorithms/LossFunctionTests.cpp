@@ -17,4 +17,12 @@ namespace UnitTest
     {
     };
 
+    TEST_F(MachineLearning_LossFunctions, TestMeanSquaredError)
+    {
+        AZ::VectorN expected = AZ::VectorN::CreateZero(1024);
+        AZ::VectorN actual = AZ::VectorN::CreateOne(1024);
+
+        const float totalLoss1 = MachineLearning::ComputeTotalCost(MachineLearning::LossFunctions::MeanSquaredError, expected, actual);
+        EXPECT_EQ(totalLoss1, 1024.0f);
+    }
 }

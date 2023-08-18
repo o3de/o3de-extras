@@ -6,14 +6,15 @@
  *
  */
 
-#include <Nodes/GradientDescent.h>
-#include <Models/MultilayerPerceptron.h>
+#include <Nodes/OneHot.h>
+#include <Algorithms/Activations.h>
 
 namespace MachineLearning
 {
-    INeuralNetworkPtr GradientDescent::In(INeuralNetworkPtr Model, float LearningRate)
+    AZ::VectorN OneHot::In(AZStd::size_t Value, AZStd::size_t MaxValue)
     {
-        Model->GradientDescent(LearningRate);
-        return Model;
+        AZ::VectorN result;
+        OneHotEncode(Value, MaxValue, result);
+        return result;
     }
 }

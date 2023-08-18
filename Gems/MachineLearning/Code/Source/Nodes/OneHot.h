@@ -12,14 +12,13 @@
 #include <ScriptCanvas/Core/Nodeable.h>
 #include <ScriptCanvas/Core/NodeableNode.h>
 #include <MachineLearning/INeuralNetwork.h>
-#include <Models/Layer.h>
-#include <Source/Nodes/CreateModel.generated.h>
+#include <Source/Nodes/OneHot.generated.h>
 
 namespace MachineLearning
 {
-    class CreateModel
+    class OneHot
         : public ScriptCanvas::Nodeable
     {
-        SCRIPTCANVAS_NODE_CreateModel;
+        SCRIPTCANVAS_NODE_OneHot;
     };
 }

@@ -10,38 +10,53 @@
 
 #include <AzCore/Math/VectorN.h>
 #include <MachineLearning/Types.h>
+#include <AzCore/EBus/EBus.h>
 
 namespace MachineLearning
 {
+    class Layer;
+
     class INeuralNetwork
     {
     public:
 
-        AZ_TYPE_INFO(INeuralNetwork, "{64E5B5B1-4A7D-489D-9A29-D9510BB7E17A}");
+        AZ_RTTI(INeuralNetwork, "{64E5B5B1-4A7D-489D-9A29-D9510BB7E17A}");
 
+        INeuralNetwork() = default;
+        INeuralNetwork(INeuralNetwork&&) = default;
+        INeuralNetwork(const INeuralNetwork&) = default;
         virtual ~INeuralNetwork() = default;
 
+        INeuralNetwork& operator=(INeuralNetwork&&) = default;
+        INeuralNetwork& operator=(const INeuralNetwork&) = default;
+
         //! Adds a new layer to the network.
-        virtual void AddLayer(AZStd::size_t layerDimensionality, ActivationFunctions activationFunction = ActivationFunctions::Linear) = 0;
+        virtual void AddLayer([[maybe_unused]] AZStd::size_t layerDimensionality, [[maybe_unused]] ActivationFunctions activationFunction = ActivationFunctions::ReLU) {}
 
         //! Returns the total number of layers in the network.
-        virtual AZStd::size_t GetLayerCount() const = 0;
+        virtual AZStd::size_t GetLayerCount() const { return 0; }
 
         //! Retrieves a specific layer from the network indexed by the layerIndex.
-        virtual Layer& GetLayer(AZStd::size_t layerIndex) = 0;
+        virtual Layer* GetLayer([[maybe_unused]] AZStd::size_t layerIndex) { return nullptr; }
 
         //! Returns the total number of parameters in the neural network.
-        virtual AZStd::size_t GetParameterCount() const = 0;
+        virtual AZStd::size_t GetParameterCount() const { return 0; }
 
         //! Performs a basic feed-forward operation to compute the output from a set of activation values.
-        virtual const AZ::VectorN& Forward(const AZ::VectorN& activations) = 0;
+        virtual const AZ::VectorN* Forward([[maybe_unused]] const AZ::VectorN& activations) { return nullptr; }
 
         //! Accumulates the loss gradients given a loss function, an activation vector and a corresponding label vector.
-        virtual void Reverse(LossFunctions lossFunction, const AZ::VectorN& activations, const AZ::VectorN& expected) = 0;
+        virtual void Reverse([[maybe_unused]] LossFunctions lossFunction, [[maybe_unused]] const AZ::VectorN& activations, [[maybe_unused]] const AZ::VectorN& expected) {}
 
         //! Performs a gradient descent step and resets all gradient accumulators to zero.
-        virtual void GradientDescent(float learningRate) = 0;
+        virtual void GradientDescent([[maybe_unused]] float learningRate) {}
+
+        //! For intrusive_ptr support
+        //! @{
+        void add_ref() {}
+        void release() {}
+        //! @}
     };
 
-    using INeuralNetworkPtr = AZStd::shared_ptr<INeuralNetwork>;
+    using INeuralNetworkPtr = AZStd::intrusive_ptr<INeuralNetwork>;
 }

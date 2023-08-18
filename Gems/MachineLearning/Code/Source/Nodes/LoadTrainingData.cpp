@@ -7,11 +7,14 @@
  */
 
 #include <Nodes/LoadTrainingData.h>
+#include <Assets/MnistDataLoader.h>
 
 namespace MachineLearning
 {
-    LabeledTrainingDataSet LoadTrainingData::In()
+    ILabeledTrainingDataPtr LoadTrainingData::In(AZStd::string ImageFile, AZStd::string LabelFile)
     {
-        return LabeledTrainingDataSet();
+        ILabeledTrainingDataPtr result = AZStd::make_shared<MnistDataLoader>();
+        result->LoadArchive(ImageFile, LabelFile);
+        return result;
     }
 }

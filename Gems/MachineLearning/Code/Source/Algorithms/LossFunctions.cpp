@@ -11,7 +11,7 @@
 
 namespace MachineLearning
 {
-    inline float ComputeTotalCost(LossFunctions lossFunction, const AZ::VectorN& expected, const AZ::VectorN& actual)
+    float ComputeTotalCost(LossFunctions lossFunction, const AZ::VectorN& expected, const AZ::VectorN& actual)
     {
         AZ::VectorN costs;
         ComputeLoss(lossFunction, expected, actual, costs);
@@ -23,7 +23,7 @@ namespace MachineLearning
         return accumulator.Dot(AZ::Vector4::CreateOne());
     }
 
-    inline void ComputeLoss(LossFunctions costFunction, const AZ::VectorN& expected, const AZ::VectorN& actual, AZ::VectorN& output)
+    void ComputeLoss(LossFunctions costFunction, const AZ::VectorN& expected, const AZ::VectorN& actual, AZ::VectorN& output)
     {
         AZ_Assert(expected.GetDimensionality() == actual.GetDimensionality(), "The dimensionality of expected and actual must match");
         output.Resize(actual.GetDimensionality());
@@ -35,12 +35,12 @@ namespace MachineLearning
         }
     }
 
-    inline void MeanSquaredError(const AZ::VectorN& expected, const AZ::VectorN& actual, AZ::VectorN& output)
+    void MeanSquaredError(const AZ::VectorN& expected, const AZ::VectorN& actual, AZ::VectorN& output)
     {
-        output = 0.5f * (actual - expected).GetSquare();
+        output = (actual - expected).GetSquare();
     }
 
-    inline void ComputeLoss_Derivative(LossFunctions costFunction, const AZ::VectorN& expected, const AZ::VectorN& actual, AZ::VectorN& output)
+    void ComputeLoss_Derivative(LossFunctions costFunction, const AZ::VectorN& expected, const AZ::VectorN& actual, AZ::VectorN& output)
     {
         AZ_Assert(expected.GetDimensionality() == actual.GetDimensionality(), "The dimensionality of expected and actual must match");
         output.Resize(actual.GetDimensionality());
@@ -52,7 +52,7 @@ namespace MachineLearning
         }
     }
 
-    inline void MeanSquaredError_Derivative(const AZ::VectorN& expected, const AZ::VectorN& actual, AZ::VectorN& output)
+    void MeanSquaredError_Derivative(const AZ::VectorN& expected, const AZ::VectorN& actual, AZ::VectorN& output)
     {
         output = (expected - actual);
     }

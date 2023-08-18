@@ -9,10 +9,12 @@
 #include "MachineLearningSystemComponent.h"
 #include <MachineLearning/MachineLearningTypeIds.h>
 #include <MachineLearning/Types.h>
-#include <MachineLearning/LabeledTrainingData.h>
 #include <AzCore/Serialization/SerializeContext.h>
 #include <AzCore/Serialization/EditContext.h>
 #include <AzCore/RTTI/BehaviorContext.h>
+#include <AzCore/Preprocessor/EnumReflectUtils.h>
+#include <Algorithms/Activations.h>
+#include <Assets/MnistDataLoader.h>
 #include <Models/Layer.h>
 #include <Models/MultilayerPerceptron.h>
 #include <AutoGenNodeableRegistry.generated.h>
@@ -27,109 +29,42 @@ namespace AZ
 
 namespace MachineLearning
 {
+    AZ_ENUM_DEFINE_REFLECT_UTILITIES(ActivationFunctions);
+    AZ_ENUM_DEFINE_REFLECT_UTILITIES(LossFunctions);
+
     AZ_COMPONENT_IMPL(MachineLearningSystemComponent, "MachineLearningSystemComponent", MachineLearningSystemComponentTypeId);
-
-    void LayerParams::Reflect(AZ::ReflectContext* context)
-    {
-        if (auto serializeContext = azrtti_cast<AZ::SerializeContext*>(context))
-        {
-            serializeContext->Class<LayerParams>()
-                ->Version(1)
-                ->Field("Size", &LayerParams::m_layerSize)
-                ->Field("ActivationFunction", &LayerParams::m_activationFunction)
-                ;
-
-            if (AZ::EditContext* editContext = serializeContext->GetEditContext())
-            {
-                editContext->Class<LayerParams>("Parameters defining a single layer of a neural network", "")
-                    ->ClassElement(AZ::Edit::ClassElements::EditorData, "")
-                    ->DataElement(AZ::Edit::UIHandlers::Default, &LayerParams::m_layerSize, "Layer Size", "The number of neurons this layer should have")
-                    ->DataElement(AZ::Edit::UIHandlers::ComboBox, &LayerParams::m_activationFunction, "Activation Function", "The activation function applied to this layer")
-                    ;
-            }
-        }
-
-        auto behaviorContext = azrtti_cast<AZ::BehaviorContext*>(context);
-        if (behaviorContext)
-        {
-            behaviorContext->Class<LayerParams>()->
-                Attribute(AZ::Script::Attributes::Scope, AZ::Script::Attributes::ScopeFlags::Common)->
-                Attribute(AZ::Script::Attributes::Module, "machineLearning")->
-                Attribute(AZ::Script::Attributes::ExcludeFrom, AZ::Script::Attributes::ExcludeFlags::ListOnly)->
-                Constructor<AZStd::size_t, ActivationFunctions>()->
-                Attribute(AZ::Script::Attributes::Storage, AZ::Script::Attributes::StorageType::Value)->
-                Property("Size", BehaviorValueProperty(&LayerParams::m_layerSize))->
-                Property("ActivationFunction", BehaviorValueProperty(&LayerParams::m_activationFunction))
-                ;
-        }
-    }
-
-    void LabeledTrainingData::Reflect(AZ::ReflectContext* context)
-    {
-        if (auto serializeContext = azrtti_cast<AZ::SerializeContext*>(context))
-        {
-            serializeContext->Class<LabeledTrainingData>()
-                ->Version(1)
-                ->Field("Activations", &LabeledTrainingData::m_activations)
-                ->Field("Label", &LabeledTrainingData::m_label)
-                ;
-
-            if (AZ::EditContext* editContext = serializeContext->GetEditContext())
-            {
-                editContext->Class<LabeledTrainingData>("Parameters defining a single training data instance", "")
-                    ->ClassElement(AZ::Edit::ClassElements::EditorData, "")
-                    ->DataElement(AZ::Edit::UIHandlers::Default, &LabeledTrainingData::m_activations, "Activations", "The inputs to be fed into the model to generate a prediction")
-                    ->DataElement(AZ::Edit::UIHandlers::Default, &LabeledTrainingData::m_label, "Label", "The expected output that should be generated given the input")
-                    ;
-            }
-        }
-
-        auto behaviorContext = azrtti_cast<AZ::BehaviorContext*>(context);
-        if (behaviorContext)
-        {
-            behaviorContext->Class<LabeledTrainingData>()->
-                Attribute(AZ::Script::Attributes::Scope, AZ::Script::Attributes::ScopeFlags::Common)->
-                Attribute(AZ::Script::Attributes::Module, "machineLearning")->
-                Attribute(AZ::Script::Attributes::ExcludeFrom, AZ::Script::Attributes::ExcludeFlags::ListOnly)->
-                Constructor<>()->
-                Attribute(AZ::Script::Attributes::Storage, AZ::Script::Attributes::StorageType::Value)->
-                Property("Activations", BehaviorValueProperty(&LabeledTrainingData::m_activations))->
-                Property("Label", BehaviorValueProperty(&LabeledTrainingData::m_label))
-                ;
-        }
-    }
 
     void MachineLearningSystemComponent::Reflect(AZ::ReflectContext* context)
     {
         if (auto serializeContext = azrtti_cast<AZ::SerializeContext*>(context))
         {
             serializeContext->Class<MachineLearningSystemComponent, AZ::Component>()->Version(0);
-            serializeContext->Class<Layer>()->Version(0);
-            serializeContext->Class<MultilayerPerceptron>()->Version(0);
+            serializeContext->Class<ILabeledTrainingData>()->Version(0);
             serializeContext->Class<INeuralNetwork>()->Version(0);
-            serializeContext->Class<LabeledTrainingData>()->Version(0);
-            serializeContext->Class<LayerParams>();
             serializeContext->RegisterGenericType<INeuralNetworkPtr>();
-            serializeContext->RegisterGenericType<HiddenLayerParams>();
-            serializeContext->RegisterGenericType<LabeledTrainingDataSet>();
+            serializeContext->RegisterGenericType<ILabeledTrainingDataPtr>();
         }
 
         if (auto behaviorContext = azrtti_cast<AZ::BehaviorContext*>(context))
         {
             behaviorContext->Class<MachineLearningSystemComponent>();
-            behaviorContext->Class<LabeledTrainingData>();
-            behaviorContext->Class<LayerParams>();
-            behaviorContext->Class<Layer>();
-            behaviorContext->Class<MultilayerPerceptron>();
-
-            behaviorContext
-                ->Enum<static_cast<int>(ActivationFunctions::ReLU)>("ReLU activation function")
-                ->Enum<static_cast<int>(ActivationFunctions::Sigmoid)>("Sigmoid activation function")
-                ->Enum<static_cast<int>(ActivationFunctions::Linear)>("Linear activation function");
-            
-            behaviorContext
-                ->Enum<static_cast<int>(LossFunctions::MeanSquaredError)>("Mean Squared Error");
+            behaviorContext->Class<INeuralNetwork>("INeuralNetwork")->
+                Attribute(AZ::Script::Attributes::Scope, AZ::Script::Attributes::ScopeFlags::Common)->
+                Attribute(AZ::Script::Attributes::Module, "machineLearning")->
+                Attribute(AZ::Script::Attributes::ExcludeFrom, AZ::Script::Attributes::ExcludeFlags::ListOnly)->
+                Constructor<>()->
+                Attribute(AZ::Script::Attributes::Storage, AZ::Script::Attributes::StorageType::Value)->
+                Method("AddLayer", &INeuralNetwork::AddLayer)->
+                Method("GetLayerCount", &INeuralNetwork::GetLayerCount)->
+                Method("GetLayer", &INeuralNetwork::GetLayer)->
+                Method("Forward", &INeuralNetwork::Forward)->
+                Method("Reverse", &INeuralNetwork::Reverse)
+                ;
         }
+
+        Layer::Reflect(context);
+        MnistDataLoader::Reflect(context);
+        MultilayerPerceptron::Reflect(context);
     }
 
     void MachineLearningSystemComponent::GetProvidedServices(AZ::ComponentDescriptor::DependencyArrayType& provided)

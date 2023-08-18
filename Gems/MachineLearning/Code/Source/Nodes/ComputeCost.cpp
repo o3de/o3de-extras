@@ -12,9 +12,9 @@
 
 namespace MachineLearning
 {
-    float ComputeCost::In(MachineLearning::INeuralNetworkPtr Model, MachineLearning::LossFunctions LossFunction, AZ::VectorN Activations, AZ::VectorN ExpectedOutput)
+    float ComputeCost::In(INeuralNetworkPtr Model, LossFunctions LossFunction, AZ::VectorN Activations, AZ::VectorN ExpectedOutput)
     {
-        const AZ::VectorN& modelOutput = Model->Forward(Activations);
-        return ComputeTotalCost(LossFunction, ExpectedOutput, modelOutput);
+        const AZ::VectorN* modelOutput = Model->Forward(Activations);
+        return ComputeTotalCost(LossFunction, ExpectedOutput, *modelOutput);
     }
 }

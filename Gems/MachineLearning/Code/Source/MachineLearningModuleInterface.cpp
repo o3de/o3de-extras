@@ -8,15 +8,13 @@
 
 #include "MachineLearningModuleInterface.h"
 #include <AzCore/Memory/Memory.h>
-
 #include <MachineLearning/MachineLearningTypeIds.h>
-
 #include <MachineLearningSystemComponent.h>
+#include <Components/MultilayerPerceptronComponent.h>
 
 namespace MachineLearning
 {
-    AZ_TYPE_INFO_WITH_NAME_IMPL(MachineLearningModuleInterface,
-        "MachineLearningModuleInterface", MachineLearningModuleInterfaceTypeId);
+    AZ_TYPE_INFO_WITH_NAME_IMPL(MachineLearningModuleInterface, "MachineLearningModuleInterface", MachineLearningModuleInterfaceTypeId);
     AZ_RTTI_NO_TYPE_INFO_IMPL(MachineLearningModuleInterface, AZ::Module);
     AZ_CLASS_ALLOCATOR_IMPL(MachineLearningModuleInterface, AZ::SystemAllocator);
 
@@ -28,7 +26,8 @@ namespace MachineLearning
         // This happens through the [MyComponent]::Reflect() function.
         m_descriptors.insert(m_descriptors.end(), {
             MachineLearningSystemComponent::CreateDescriptor(),
-            });
+            MultilayerPerceptronComponent::CreateDescriptor()
+        });
     }
 
     AZ::ComponentTypeList MachineLearningModuleInterface::GetRequiredSystemComponents() const

@@ -64,7 +64,7 @@ namespace UnitTest
         EXPECT_TRUE(AZ::IsCloseMag(actualOutput.GetElement(1), 0.77f, 0.01f));
 
         float cost = MachineLearning::ComputeTotalCost(MachineLearning::LossFunctions::MeanSquaredError, trainingOutput, actualOutput);
-        EXPECT_TRUE(AZ::IsCloseMag(cost, 0.30f, 0.01f));
+        EXPECT_TRUE(AZ::IsCloseMag(cost, 0.60f, 0.01f));
 
         mlp.Reverse(MachineLearning::LossFunctions::MeanSquaredError, trainingInput, trainingOutput);
 
@@ -106,6 +106,6 @@ namespace UnitTest
         // We expect the total cost of the network on the training sample to be much lower after training
         const AZ::VectorN& trainedOutput = mlp.Forward(trainingInput);
         float trainedCost = MachineLearning::ComputeTotalCost(MachineLearning::LossFunctions::MeanSquaredError, trainingOutput, trainedOutput);
-        EXPECT_LT(trainedCost, 3.5e-6f);
+        EXPECT_LT(trainedCost, 5.0e-6f);
     }
 }

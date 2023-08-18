@@ -8,7 +8,9 @@
            Description="Loads a set of labeled training data.">
 
         <Input Name="In" DisplayGroup="In" Description="Parameters controlling what data to load">
-            <Return Name="Data" Type="MachineLearning::LabeledTrainingDataSet" Shared="true"/>
+            <Parameter Name="ImageFile" Type="AZStd::string" Description="The archive file to load images from"/>
+            <Parameter Name="LabelFile" Type="AZStd::string" Description="The archive file to load labels from"/>
+            <Return Name="Data" Type="MachineLearning::ILabeledTrainingDataPtr" Shared="true"/>
         </Input>
     </Class>
 </ScriptCanvas>

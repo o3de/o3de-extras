@@ -1,0 +1,48 @@
+{
+    "entries": [
+        {
+            "base": "{F5A5E296-F8C1-8316-87D7-80FB5DED6BF7}",
+            "context": "ScriptCanvas::Node",
+            "variant": "",
+            "details": {
+                "name": "One hot encoder",
+                "category": "MachineLearning",
+                "tooltip": "One-hot encodes a value."
+            },
+            "slots": [
+                {
+                    "base": "Input_In_0",
+                    "details": {
+                        "name": "In",
+                        "tooltip": "Parameters controlling the one-hot encoding"
+                    }
+                },
+                {
+                    "base": "DataInput_value_0",
+                    "details": {
+                        "name": "value"
+                    }
+                },
+                {
+                    "base": "DataInput_maxValue_1",
+                    "details": {
+                        "name": "maxValue"
+                    }
+                },
+                {
+                    "base": "Output_On In_0",
+                    "details": {
+                        "name": "On In",
+                        "tooltip": "Parameters controlling the one-hot encoding"
+                    }
+                },
+                {
+                    "base": "DataOutput_oneHot_0",
+                    "details": {
+                        "name": "oneHot"
+                    }
+                }
+            ]
+        }
+    ]
+}

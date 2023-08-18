@@ -7,6 +7,7 @@
  */
 
 #include <Models/MultilayerPerceptron.h>
+#include <Algorithms/LossFunctions.h>
 #include <AzCore/RTTI/RTTI.h>
 #include <AzCore/RTTI/BehaviorContext.h>
 #include <AzCore/Serialization/EditContext.h>
@@ -39,7 +40,7 @@ namespace MachineLearning
         auto behaviorContext = azrtti_cast<AZ::BehaviorContext*>(context);
         if (behaviorContext)
         {
-            behaviorContext->Class<MultilayerPerceptron>()->
+            behaviorContext->Class<MultilayerPerceptron>("Multilayer perceptron")->
                 Attribute(AZ::Script::Attributes::Scope, AZ::Script::Attributes::ScopeFlags::Common)->
                 Attribute(AZ::Script::Attributes::Module, "machineLearning")->
                 Attribute(AZ::Script::Attributes::ExcludeFrom, AZ::Script::Attributes::ExcludeFlags::ListOnly)->
@@ -49,7 +50,9 @@ namespace MachineLearning
                 Method("GetLayerCount", &MultilayerPerceptron::GetLayerCount)->
                 Method("GetLayer", &MultilayerPerceptron::GetLayer)->
                 Method("Forward", &MultilayerPerceptron::Forward)->
-                Method("Reverse", &MultilayerPerceptron::Reverse)
+                Method("Reverse", &MultilayerPerceptron::Reverse)->
+                Property("ActivationCount", BehaviorValueProperty(&MultilayerPerceptron::m_activationCount))->
+                Property("Layers", BehaviorValueProperty(&MultilayerPerceptron::m_layers))
                 ;
         }
     }
@@ -74,9 +77,9 @@ namespace MachineLearning
         return m_layers.size();
     }
 
-    Layer& MultilayerPerceptron::GetLayer(AZStd::size_t layerIndex)
+    Layer* MultilayerPerceptron::GetLayer(AZStd::size_t layerIndex)
     {
-        return m_layers[layerIndex];
+        return &m_layers[layerIndex];
     }
 
     AZStd::size_t MultilayerPerceptron::GetParameterCount() const
@@ -89,7 +92,7 @@ namespace MachineLearning
         return parameterCount;
     }
 
-    const AZ::VectorN& MultilayerPerceptron::Forward(const AZ::VectorN& activations)
+    const AZ::VectorN* MultilayerPerceptron::Forward(const AZ::VectorN& activations)
     {
         const AZ::VectorN* lastLayerOutput = &activations;
         for (Layer& layer : m_layers)
@@ -97,17 +100,19 @@ namespace MachineLearning
             layer.Forward(*lastLayerOutput);
             lastLayerOutput = &layer.m_output;
         }
-        return *lastLayerOutput;
+        return lastLayerOutput;
     }
 
     void MultilayerPerceptron::Reverse(LossFunctions lossFunction, const AZ::VectorN& activations, const AZ::VectorN& expected)
     {
+        ++m_trainingSampleSize;
+
         // First feed-forward the activations to get our current model predictions
-        const AZ::VectorN& output = Forward(activations);
+        const AZ::VectorN* output = Forward(activations);
 
         // Compute the partial derivatives of the loss function with respect to the final layer output
         AZ::VectorN costGradients;
-        ComputeLoss_Derivative(lossFunction, output, expected, costGradients);
+        ComputeLoss_Derivative(lossFunction, *output, expected, costGradients);
 
         for (auto iter = m_layers.rbegin(); iter != m_layers.rend(); ++iter)
         {
@@ -118,10 +123,15 @@ namespace MachineLearning
 
     void MultilayerPerceptron::GradientDescent(float learningRate)
     {
-        for (auto iter = m_layers.rbegin(); iter != m_layers.rend(); ++iter)
+        if (m_trainingSampleSize > 0)
         {
-            iter->ApplyGradients(learningRate);
+            const float adjustedLearningRate = learningRate / static_cast<float>(m_trainingSampleSize);
+            for (auto iter = m_layers.rbegin(); iter != m_layers.rend(); ++iter)
+            {
+                iter->ApplyGradients(adjustedLearningRate);
+            }
         }
+        m_trainingSampleSize = 0;
     }
 
     void MultilayerPerceptron::OnActivationCountChanged()

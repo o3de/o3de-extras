@@ -11,10 +11,16 @@ set(FILES
     Source/MachineLearningModuleInterface.h
     Source/MachineLearningSystemComponent.cpp
     Source/MachineLearningSystemComponent.h
+    Source/Algorithms/Activations.cpp
     Source/Algorithms/Activations.h
-    Source/Algorithms/Activations.inl
+    Source/Algorithms/LossFunctions.cpp
     Source/Algorithms/LossFunctions.h
-    Source/Algorithms/LossFunctions.inl
+    Source/Algorithms/Training.cpp
+    Source/Algorithms/Training.h
+    Source/Assets/MnistDataLoader.cpp
+    Source/Assets/MnistDataLoader.h
+    Source/Components/MultilayerPerceptronComponent.cpp
+    Source/Components/MultilayerPerceptronComponent.h
     Source/Models/Layer.cpp
     Source/Models/Layer.h
     Source/Models/MultilayerPerceptron.cpp
@@ -25,9 +31,6 @@ set(FILES
     Source/Nodes/ComputeCost.ScriptCanvasNodeable.xml
     Source/Nodes/ComputeCost.cpp
     Source/Nodes/ComputeCost.h
-    Source/Nodes/CreateModel.ScriptCanvasNodeable.xml
-    Source/Nodes/CreateModel.cpp
-    Source/Nodes/CreateModel.h
     Source/Nodes/FeedForward.ScriptCanvasNodeable.xml
     Source/Nodes/FeedForward.cpp
     Source/Nodes/FeedForward.h
@@ -37,4 +40,10 @@ set(FILES
     Source/Nodes/LoadTrainingData.ScriptCanvasNodeable.xml
     Source/Nodes/LoadTrainingData.cpp
     Source/Nodes/LoadTrainingData.h
+    Source/Nodes/OneHot.ScriptCanvasNodeable.xml
+    Source/Nodes/OneHot.cpp
+    Source/Nodes/OneHot.h
+    Source/Nodes/SupervisedLearning.ScriptCanvasNodeable.xml
+    Source/Nodes/SupervisedLearning.cpp
+    Source/Nodes/SupervisedLearning.h
 )
