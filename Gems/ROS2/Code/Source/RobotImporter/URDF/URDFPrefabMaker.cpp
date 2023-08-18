@@ -130,22 +130,12 @@ namespace ROS2
 
         // Build up a list of all entities created as a part of processing the file.
         AZStd::vector<AZ::EntityId> createdEntities;
-
         AZStd::unordered_map<AZStd::string, AzToolsFramework::Prefab::PrefabEntityResult> createdLinks;
-        const sdf::Link* rootLink = GetFirstModel()->LinkByIndex(0);
-        AzToolsFramework::Prefab::PrefabEntityResult createEntityRoot = AddEntitiesForLink(rootLink, AZ::EntityId(), createdEntities);
-        AZStd::string rootName(GetFirstModel()->Name().c_str(), GetFirstModel()->Name().size());
-        createdLinks[rootName] = createEntityRoot;
-        if (!createEntityRoot.IsSuccess())
-        {
-            return AZ::Failure(AZStd::string(createEntityRoot.GetError()));
-        }
-
         auto links = Utils::GetAllLinks(*GetFirstModel(), true);
 
         for (const auto& [name, linkPtr] : links)
         {
-            createdLinks[name] = AddEntitiesForLink(linkPtr, createEntityRoot.GetValue(), createdEntities);
+            createdLinks[name] = AddEntitiesForLink(linkPtr, AZ::EntityId{}, createdEntities);
         }
 
         for (const auto& [name, result] : createdLinks)
@@ -202,10 +192,11 @@ namespace ROS2
         }
 
         // Set the hierarchy
+        AZStd::vector<AZ::EntityId> linkEntityIdsWithoutParent;
         for (const auto& [linkName, linkPtr] : links)
         {
-            const auto thisEntry = createdLinks.at(linkName);
-            if (!thisEntry.IsSuccess())
+            const auto linkPrefabResult = createdLinks.at(linkName);
+            if (!linkPrefabResult.IsSuccess())
             {
                 AZ_Trace("CreatePrefabFromURDF", "Link %s creation failed\n", linkName.c_str());
                 continue;
@@ -215,6 +206,13 @@ namespace ROS2
                 linkName, true);
             if (jointsWhereLinkIsChild.empty())
             {
+                // emplace unique entry to the container of links that don't have a parent link associated with it
+                if (auto existingLinkIt =
+                        AZStd::find(linkEntityIdsWithoutParent.begin(), linkEntityIdsWithoutParent.end(), linkPrefabResult.GetValue());
+                    existingLinkIt == linkEntityIdsWithoutParent.end())
+                {
+                    linkEntityIdsWithoutParent.emplace_back(linkPrefabResult.GetValue());
+                }
                 AZ_Trace("CreatePrefabFromURDF", "Link %s has no parents\n", linkName.c_str());
                 continue;
             }
@@ -249,10 +247,10 @@ namespace ROS2
             AZ_Trace(
                 "CreatePrefabFromURDF",
                 "Link %s setting parent to %s\n",
-                thisEntry.GetValue().ToString().c_str(),
+                linkPrefabResult.GetValue().ToString().c_str(),
                 parentEntry->second.GetValue().ToString().c_str());
             AZ_Trace("CreatePrefabFromURDF", "Link %s setting parent to %s\n", linkName.c_str(), parentName.c_str());
-            PrefabMakerUtils::SetEntityParent(thisEntry.GetValue(), parentEntry->second.GetValue());
+            PrefabMakerUtils::SetEntityParent(linkPrefabResult.GetValue(), parentEntry->second.GetValue());
         }
 
         for (uint64_t jointIndex{}; jointIndex < GetFirstModel()->JointCount(); ++jointIndex)
@@ -300,9 +298,9 @@ namespace ROS2
             }
         }
 
-        MoveEntityToDefaultSpawnPoint(createEntityRoot.GetValue(), m_spawnPosition);
-
-        auto contentEntityId = createEntityRoot.GetValue();
+        // Use the first entity based on a link that is not parented to any other link
+        AZ::EntityId contentEntityId = !linkEntityIdsWithoutParent.empty() ? linkEntityIdsWithoutParent.front() : AZ::EntityId{};
+        MoveEntityToDefaultSpawnPoint(contentEntityId, m_spawnPosition);
         AddRobotControl(contentEntityId);
 
         // Create prefab, save it to disk immediately
@@ -462,16 +460,19 @@ namespace ROS2
             return;
         }
 
-        auto entity_ = AzToolsFramework::GetEntityById(rootEntityId);
-        auto* transformInterface_ = entity_->FindComponent<AzToolsFramework::Components::TransformComponent>();
-
-        if (transformInterface_ == nullptr)
+        if (auto entity_ = AzToolsFramework::GetEntityById(rootEntityId);
+            entity_ != nullptr)
         {
-            AZ_Trace("URDF Importer", "TransformComponent not found in created entity\n") return;
-        }
+            auto* transformInterface_ = entity_->FindComponent<AzToolsFramework::Components::TransformComponent>();
 
-        transformInterface_->SetWorldTM(*spawnPosition);
-        AZ_Trace("URDF Importer", "Successfully set spawn position\n")
+            if (transformInterface_ == nullptr)
+            {
+                AZ_Trace("URDF Importer", "TransformComponent not found in created entity\n") return;
+            }
+
+            transformInterface_->SetWorldTM(*spawnPosition);
+            AZ_Trace("URDF Importer", "Successfully set spawn position\n")
+        }
     }
 
     AZStd::string URDFPrefabMaker::GetStatus()
