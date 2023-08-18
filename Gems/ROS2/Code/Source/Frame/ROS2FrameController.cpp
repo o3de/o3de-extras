@@ -145,10 +145,12 @@ namespace ROS2
     void ROS2FrameComponentController::Activate(AZ::EntityId entityId)
     {
         m_configuration.m_activeEntityId = entityId;
+        ROS2FrameComponentBus::Handler::BusConnect(entityId);
     }
 
     void ROS2FrameComponentController::Deactivate()
     {
+        ROS2FrameComponentBus::Handler::BusDisconnect();
     }
 
     AZStd::string ROS2FrameComponentController::GetGlobalFrameName() const
@@ -248,6 +250,11 @@ namespace ROS2
     void ROS2FrameComponentController::SetActiveEntityId(AZ::EntityId entityId)
     {
         m_configuration.m_activeEntityId = entityId;
+    }
+
+    bool ROS2FrameComponentController::IsFrame() const
+    {
+        return true;
     }
 
 } // namespace ROS2

@@ -23,13 +23,12 @@ namespace ROS2
 
     void ROS2FrameEditorComponent::Activate()
     {
-        ROS2FrameComponentBus::Handler::BusConnect(GetEntityId());
         ROS2FrameEditorComponentBase::Activate();
+        m_controller.PopulateNamespace(m_controller.IsTopLevel(), GetEntity()->GetName());
     }
 
     void ROS2FrameEditorComponent::Deactivate()
     {
-        ROS2FrameComponentBus::Handler::BusDisconnect();
         ROS2FrameEditorComponentBase::Deactivate();
     }
 
@@ -120,7 +119,7 @@ namespace ROS2
 
     ROS2FrameEditorComponent::ROS2FrameEditorComponent(const AZStd::string& frameId)
     {
-        SetFrameID(frameId);
+        m_controller.SetFrameID(frameId);
     }
 
     ROS2FrameEditorComponent::ROS2FrameEditorComponent(const ROS2FrameConfiguration& config)
@@ -133,8 +132,4 @@ namespace ROS2
         return true;
     }
 
-    bool ROS2FrameEditorComponent::IsFrame() const
-    {
-        return true;
-    }
 } // namespace ROS2

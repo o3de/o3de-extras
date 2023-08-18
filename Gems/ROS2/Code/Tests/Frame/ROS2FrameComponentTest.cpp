@@ -7,6 +7,9 @@
  *
  */
 
+#include "AzCore/std/string/string.h"
+#include "ROS2/Frame/ROS2FrameBus.h"
+#include "ROS2/Frame/ROS2FrameEditorComponent.h"
 #include <AzCore/Asset/AssetManagerComponent.h>
 #include <AzCore/Component/ComponentApplication.h>
 #include <AzCore/Component/ComponentApplicationBus.h>
@@ -26,6 +29,7 @@
 #include <AzToolsFramework/UnitTest/AzToolsFrameworkTestHelpers.h>
 #include <AzToolsFramework/UnitTest/ToolsTestApplication.h>
 #include <ROS2/Frame/ROS2FrameComponent.h>
+#include <ROS2/Frame/ROS2FrameEditorComponent.h>
 #include <ROS2/ROS2Bus.h>
 #include <ROS2/Sensor/ROS2SensorComponent.h>
 #include <ROS2SystemComponent.h>
@@ -56,6 +60,7 @@ namespace UnitTest
         AddActiveGems(AZStd::to_array<AZStd::string_view>({ "ROS2" }));
         AddDynamicModulePaths({});
         AddComponentDescriptors(AZStd::initializer_list<AZ::ComponentDescriptor*>{ ROS2::ROS2FrameComponent::CreateDescriptor(),
+                                                                                   ROS2::ROS2FrameEditorComponent::CreateDescriptor(),
                                                                                    ROS2::ROS2SystemComponent::CreateDescriptor() });
         AddRequiredComponents(AZStd::to_array<AZ::TypeId const>({ ROS2::ROS2SystemComponent::TYPEINFO_Uuid() }));
     }
@@ -131,6 +136,77 @@ namespace UnitTest
         {
             const std::string jointName(frames[i]->GetJointName().GetCStr());
             const std::string frameId(frames[i]->GetFrameID().c_str());
+
+            EXPECT_EQ(entities[i]->GetState(), AZ::Entity::State::Active);
+            EXPECT_STRCASEEQ(jointName.c_str(), (entities[0]->GetName() + "/").c_str());
+            EXPECT_STRCASEEQ(frameId.c_str(), (entities[0]->GetName() + "/sensor_frame").c_str());
+        }
+    }
+
+    TEST_F(ROS2FrameComponentFixture, SingleFrameDefaultEditor)
+    {
+        ROS2::ROS2FrameConfiguration config;
+
+        AZ::Entity entity;
+        const std::string entityName = entity.GetName().c_str();
+        entity.CreateComponent<AzToolsFramework::Components::TransformComponent>();
+        auto frame = entity.CreateComponent<ROS2::ROS2FrameEditorComponent>(config);
+
+        entity.Init();
+        entity.Activate();
+        AZ::Name jointNameAZ;
+        ROS2::ROS2FrameComponentBus::EventResult(jointNameAZ, frame->GetEntityId(), &ROS2::ROS2FrameComponentBus::Events::GetJointName);
+        const std::string jointName(jointNameAZ.GetCStr());
+        AZStd::string frameIdAZ;
+        ROS2::ROS2FrameComponentBus::EventResult(frameIdAZ, frame->GetEntityId(), &ROS2::ROS2FrameComponentBus::Events::GetFrameID);
+        const std::string frameId(frameIdAZ.c_str());
+
+        EXPECT_EQ(entity.GetState(), AZ::Entity::State::Active);
+        EXPECT_STRCASEEQ(jointName.c_str(), ("o3de_" + entityName + "/").c_str());
+        EXPECT_STRCASEEQ(frameId.c_str(), ("o3de_" + entityName + "/sensor_frame").c_str());
+    }
+
+    TEST_F(ROS2FrameComponentFixture, ThreeFramesDefaultEditor)
+    {
+        ROS2::ROS2FrameConfiguration config;
+
+        std::vector<AZStd::unique_ptr<AZ::Entity>> entities;
+        std::vector<const ROS2::ROS2FrameEditorComponent*> frames;
+
+        constexpr int numOfEntities = 3;
+
+        for (int i = 0; i < numOfEntities; i++)
+        {
+            entities.push_back(AZStd::make_unique<AZ::Entity>());
+        }
+
+        for (int i = 0; i < numOfEntities; i++)
+        {
+            entities[i]->CreateComponent<AzToolsFramework::Components::TransformComponent>();
+            entities[i]->SetName(("entity" + std::to_string(i)).c_str());
+            entities[i]->Init();
+            entities[i]->Activate();
+            if (i != 0)
+            {
+                AZ::TransformBus::Event(entities[i]->GetId(), &AZ::TransformBus::Events::SetParent, entities[i - 1]->GetId());
+            }
+            entities[i]->Deactivate();
+
+            auto frame = entities[i]->CreateComponent<ROS2::ROS2FrameEditorComponent>(config);
+            frames.push_back(frame);
+
+            entities[i]->Activate();
+        }
+
+        for (int i = 0; i < numOfEntities; i++)
+        {
+            AZ::Name jointNameAZ;
+            ROS2::ROS2FrameComponentBus::EventResult(
+                jointNameAZ, frames[i]->GetEntityId(), &ROS2::ROS2FrameComponentBus::Events::GetJointName);
+            const std::string jointName(jointNameAZ.GetCStr());
+            AZStd::string frameIdAZ;
+            ROS2::ROS2FrameComponentBus::EventResult(frameIdAZ, frames[i]->GetEntityId(), &ROS2::ROS2FrameComponentBus::Events::GetFrameID);
+            const std::string frameId(frameIdAZ.c_str());
 
             EXPECT_EQ(entities[i]->GetState(), AZ::Entity::State::Active);
             EXPECT_STRCASEEQ(jointName.c_str(), (entities[0]->GetName() + "/").c_str());

@@ -38,14 +38,14 @@ namespace ROS2
         ROS2FrameComponentBase::Activate();
         m_controller.SetActiveEntityId(GetEntityId());
 
-        m_controller.PopulateNamespace(IsTopLevel(), GetEntity()->GetName());
+        m_controller.PopulateNamespace(m_controller.IsTopLevel(), GetEntity()->GetName());
 
         if (m_controller.GetPublishTransform())
         {
-            AZ_TracePrintf("ROS2FrameComponent", "Setting up %s", GetFrameID().data());
+            AZ_TracePrintf("ROS2FrameComponent", "Setting up %s", m_controller.GetFrameID().data());
 
             // The frame will always be dynamic if it's a top entity.
-            if (IsTopLevel())
+            if (m_controller.IsTopLevel())
             {
                 m_controller.SetIsDynamic(true);
             }
@@ -64,13 +64,14 @@ namespace ROS2
             AZ_TracePrintf(
                 "ROS2FrameComponent",
                 "Setting up %s transform between parent %s and child %s to be published %s\n",
-                IsDynamic() ? "dynamic" : "static",
-                GetParentFrameID().data(),
-                GetFrameID().data(),
-                IsDynamic() ? "continuously to /tf" : "once to /tf_static");
+                m_controller.IsDynamic() ? "dynamic" : "static",
+                m_controller.GetParentFrameID().data(),
+                m_controller.GetFrameID().data(),
+                m_controller.IsDynamic() ? "continuously to /tf" : "once to /tf_static");
 
-            m_ros2Transform = AZStd::make_unique<ROS2Transform>(GetParentFrameID(), GetFrameID(), IsDynamic());
-            if (IsDynamic())
+            m_ros2Transform =
+                AZStd::make_unique<ROS2Transform>(m_controller.GetParentFrameID(), m_controller.GetFrameID(), m_controller.IsDynamic());
+            if (m_controller.IsDynamic())
             {
                 AZ::TickBus::Handler::BusConnect();
             }
@@ -79,16 +80,15 @@ namespace ROS2
                 m_ros2Transform->Publish(m_controller.GetFrameTransform());
             }
         }
-        ROS2FrameComponentBus::Handler::BusConnect(GetEntityId());
     }
 
     void ROS2FrameComponent::Deactivate()
     {
         ROS2FrameComponentBase::Deactivate();
-        ROS2FrameComponentBus::Handler::BusDisconnect();
+
         if (m_controller.GetPublishTransform())
         {
-            if (IsDynamic())
+            if (m_controller.IsDynamic())
             {
                 AZ::TickBus::Handler::BusDisconnect();
             }
@@ -184,7 +184,7 @@ namespace ROS2
 
     ROS2FrameComponent::ROS2FrameComponent(const AZStd::string& frameId)
     {
-        SetFrameID(frameId);
+        m_controller.SetFrameID(frameId);
     }
 
     ROS2FrameComponent::ROS2FrameComponent(const ROS2FrameConfiguration& config)
@@ -192,8 +192,4 @@ namespace ROS2
     {
     }
 
-    bool ROS2FrameComponent::IsFrame() const
-    {
-        return true;
-    }
 } // namespace ROS2

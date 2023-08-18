@@ -29,10 +29,18 @@ namespace ROS2
         //! @return Frame id which includes the namespace, ready to send in a ROS2 message
         virtual AZStd::string GetFrameID() const = 0;
 
+        //! Set a above-mentioned frame id
+        virtual void SetFrameID(const AZStd::string& frameId) = 0;
+
         //! Get the joint name including the namespace
         //! @note Supplementary metadata for Joint components, necessary in some cases for joints addressed by name in ROS 2
         //! @return The namespaced joint name, ready to send in a ROS2 message
         virtual AZ::Name GetJointName() const = 0;
+
+        //! Set the joint name
+        //! @note May be populated during URDF import or set by the user in the Editor view
+        //! @param jointNameString does not include the namespace. The namespace prefix is added automatically.
+        virtual void SetJointName(const AZStd::string& jointNameString) = 0;
 
         //! Get a namespace, which should be used for any publisher or subscriber in the same entity.
         //! @return A complete namespace (including parent namespaces)
@@ -48,6 +56,8 @@ namespace ROS2
         //! @return The name of the global frame with namespace attached. It is typically "odom", "map", "world".
         virtual AZStd::string GetGlobalFrameName() const = 0;
 
+        //! Bus function to check if there is a handler connected.
+        //! @return True it handler is connected.
         virtual bool IsFrame() const = 0;
     };
 

@@ -218,6 +218,7 @@ if(PAL_TRAIT_BUILD_TESTS_SUPPORTED)
                     Legacy::Editor.Headers
                     AZ::AzManipulatorTestFramework.Static
                     Gem::ROS2.Static
+                    Gem::ROS2.Editor.Static
                 RUNTIME_DEPENDENCIES
                     Gem::PhysX.Editor
         )
