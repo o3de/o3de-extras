@@ -46,25 +46,33 @@ namespace ROS2
             const auto type = supportedArticulationType->second;
             articulationLinkConfiguration.m_articulationJointType = type;
             const AZ::Vector3 o3deJointDir{ 1.0, 0.0, 0.0 };
-            const AZ::Vector3 jointAxis = URDF::TypeConversions::ConvertVector3(joint->Axis()->Xyz());
-            const auto quaternion =
-                jointAxis.IsZero() ? AZ::Quaternion::CreateIdentity() : AZ::Quaternion::CreateShortestArc(o3deJointDir, jointAxis);
+            AZ::Vector3 jointCoorAxis = AZ::Vector3::CreateZero();
+            auto quaternion = AZ::Quaternion::CreateIdentity();
+
+            const sdf::JointAxis* jointAxis = joint->Axis();
+            if (jointAxis != nullptr)
+            {
+                jointCoorAxis = URDF::TypeConversions::ConvertVector3(jointAxis->Xyz());
+                quaternion =
+                    jointCoorAxis.IsZero() ? AZ::Quaternion::CreateIdentity() : AZ::Quaternion::CreateShortestArc(o3deJointDir, jointCoorAxis);
+            }
+
             const AZ::Vector3 rotation = quaternion.GetEulerDegrees();
             articulationLinkConfiguration.m_localRotation = rotation;
 
-            if (joint->Axis())
+            if (jointAxis)
             {
                 if (type == PhysX::ArticulationJointType::Hinge)
                 {
-                    const double limitUpper = AZ::RadToDeg(joint->Axis()->Upper());
-                    const double limitLower = AZ::RadToDeg(joint->Axis()->Lower());
+                    const double limitUpper = AZ::RadToDeg(jointAxis->Upper());
+                    const double limitLower = AZ::RadToDeg(jointAxis->Lower());
                     articulationLinkConfiguration.m_angularLimitNegative = limitLower;
                     articulationLinkConfiguration.m_angularLimitPositive = limitUpper;
                 }
                 else if (type == PhysX::ArticulationJointType::Prismatic)
                 {
-                    articulationLinkConfiguration.m_linearLimitLower = joint->Axis()->Upper();
-                    articulationLinkConfiguration.m_linearLimitUpper = joint->Axis()->Lower();
+                    articulationLinkConfiguration.m_linearLimitLower = jointAxis->Upper();
+                    articulationLinkConfiguration.m_linearLimitUpper = jointAxis->Lower();
                 }
             }
             else

@@ -136,13 +136,16 @@ namespace ROS2::Utils
         if (!joints.empty())
         {
             const sdf::Joint* potentialWheelJoint = joints.front();
-            using LimitType = decltype(potentialWheelJoint->Axis()->Lower());
-            // There should only be 1 element for URDF, however that will not be verified
-            // in case this function is called on link from an SDF file
-            isWheel = potentialWheelJoint->Type() == sdf::JointType::CONTINUOUS;
-            isWheel = isWheel || (potentialWheelJoint->Type() == sdf::JointType::REVOLUTE
-                && potentialWheelJoint->Axis()->Lower() == -AZStd::numeric_limits<LimitType>::infinity()
-                && potentialWheelJoint->Axis()->Upper() == AZStd::numeric_limits<LimitType>::infinity());
+            if (const sdf::JointAxis* jointAxis = potentialWheelJoint->Axis(); jointAxis != nullptr)
+            {
+                using LimitType = decltype(jointAxis->Lower());
+                // There should only be 1 element for URDF, however that will not be verified
+                // in case this function is called on link from an SDF file
+                isWheel = potentialWheelJoint->Type() == sdf::JointType::CONTINUOUS;
+                isWheel = isWheel || (potentialWheelJoint->Type() == sdf::JointType::REVOLUTE
+                    && jointAxis->Lower() == -AZStd::numeric_limits<LimitType>::infinity()
+                    && jointAxis->Upper() == AZStd::numeric_limits<LimitType>::infinity());
+            }
         }
 
         return isWheel;

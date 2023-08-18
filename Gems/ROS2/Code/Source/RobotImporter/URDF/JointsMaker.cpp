@@ -29,10 +29,16 @@ namespace ROS2
         // with Euler angles can be applied to configure the desirable direction of the joint. A quaternion that transforms a unit vector X
         // {1,0,0} to a vector given by the URDF joint need to be found. Heavily suboptimal element in this conversion is needed of
         // converting the unit quaternion to Euler vector.
-        const AZ::Vector3 o3de_joint_dir{ 1.0, 0.0, 0.0 };
-        const AZ::Vector3 joint_axis = URDF::TypeConversions::ConvertVector3(joint->Axis()->Xyz());
-        const auto quaternion =
-            joint_axis.IsZero() ? AZ::Quaternion::CreateIdentity() : AZ::Quaternion::CreateShortestArc(o3de_joint_dir, joint_axis);
+        const AZ::Vector3 o3deJointDir{ 1.0, 0.0, 0.0 };
+        const sdf::JointAxis* jointAxis = joint->Axis();
+        AZ::Vector3 jointCoorAxis = AZ::Vector3::CreateZero();
+        auto quaternion = AZ::Quaternion::CreateIdentity();
+        if (jointAxis != nullptr)
+        {
+            jointCoorAxis = URDF::TypeConversions::ConvertVector3(jointAxis->Xyz());
+            quaternion =
+                jointCoorAxis.IsZero() ? AZ::Quaternion::CreateIdentity() : AZ::Quaternion::CreateShortestArc(o3deJointDir, jointCoorAxis);
+        }
 
         AZ_Printf(
             "JointsMaker",
@@ -61,12 +67,14 @@ namespace ROS2
                     PhysX::JointsComponentModeCommon::ParameterNames::Rotation,
                     rotation);
 
-                PhysX::EditorJointRequestBus::Event(
-                    AZ::EntityComponentIdPair(followColliderEntityId, jointComponent->GetId()),
-                    &PhysX::EditorJointRequests::SetLinearValuePair,
-                    PhysX::JointsComponentModeCommon::ParameterNames::LinearLimits,
-                    PhysX::AngleLimitsFloatPair(joint->Axis()->Upper(), joint->Axis()->Lower()));
-
+                if (jointAxis != nullptr)
+                {
+                    PhysX::EditorJointRequestBus::Event(
+                        AZ::EntityComponentIdPair(followColliderEntityId, jointComponent->GetId()),
+                        &PhysX::EditorJointRequests::SetLinearValuePair,
+                        PhysX::JointsComponentModeCommon::ParameterNames::LinearLimits,
+                        PhysX::AngleLimitsFloatPair(jointAxis->Upper(), jointAxis->Lower()));
+                }
                 followColliderEntity->Deactivate();
             }
             break;
@@ -93,29 +101,32 @@ namespace ROS2
                 jointComponent = followColliderEntity->CreateComponent<PhysX::EditorHingeJointComponent>();
                 followColliderEntity->Activate();
 
-                using LimitType = decltype(joint->Axis()->Upper());
-                const double limitUpper = joint->Axis()->Upper() != AZStd::numeric_limits<LimitType>::infinity()
-                    ? AZ::RadToDeg(joint->Axis()->Upper())
-                    : AZ::RadToDeg(AZ::Constants::TwoPi);
-                const double limitLower = joint->Axis()->Lower() != -AZStd::numeric_limits<LimitType>::infinity()
-                    ? AZ::RadToDeg(joint->Axis()->Lower())
-                    : -AZ::RadToDeg(AZ::Constants::TwoPi);
-                AZ_Printf(
-                    "JointsMaker",
-                    "Setting limits : upper: %.1f lower: %.1f (URDF:%f,%f)",
-                    limitUpper,
-                    limitLower,
-                    joint->Axis()->Upper(),
-                    joint->Axis()->Lower());
-                PhysX::EditorJointRequestBus::Event(
-                    AZ::EntityComponentIdPair(followColliderEntityId, jointComponent->GetId()),
-                    [&rotation, &limitLower, &limitUpper](PhysX::EditorJointRequests* editorJointRequest)
-                    {
-                        editorJointRequest->SetVector3Value(PhysX::JointsComponentModeCommon::ParameterNames::Rotation, rotation);
-                        editorJointRequest->SetLinearValuePair(
-                            PhysX::JointsComponentModeCommon::ParameterNames::TwistLimits,
-                            PhysX::AngleLimitsFloatPair(limitUpper, limitLower));
-                    });
+                if (jointAxis != nullptr)
+                {
+                    using LimitType = decltype(jointAxis->Upper());
+                    const double limitUpper = jointAxis->Upper() != AZStd::numeric_limits<LimitType>::infinity()
+                        ? AZ::RadToDeg(jointAxis->Upper())
+                        : AZ::RadToDeg(AZ::Constants::TwoPi);
+                    const double limitLower = jointAxis->Lower() != -AZStd::numeric_limits<LimitType>::infinity()
+                        ? AZ::RadToDeg(jointAxis->Lower())
+                        : -AZ::RadToDeg(AZ::Constants::TwoPi);
+                    AZ_Printf(
+                        "JointsMaker",
+                        "Setting limits : upper: %.1f lower: %.1f (URDF:%f,%f)",
+                        limitUpper,
+                        limitLower,
+                        jointAxis->Upper(),
+                        jointAxis->Lower());
+                    PhysX::EditorJointRequestBus::Event(
+                        AZ::EntityComponentIdPair(followColliderEntityId, jointComponent->GetId()),
+                        [&rotation, &limitLower, &limitUpper](PhysX::EditorJointRequests* editorJointRequest)
+                        {
+                            editorJointRequest->SetVector3Value(PhysX::JointsComponentModeCommon::ParameterNames::Rotation, rotation);
+                            editorJointRequest->SetLinearValuePair(
+                                PhysX::JointsComponentModeCommon::ParameterNames::TwistLimits,
+                                PhysX::AngleLimitsFloatPair(limitUpper, limitLower));
+                        });
+                }
                 followColliderEntity->Deactivate();
             }
             break;
