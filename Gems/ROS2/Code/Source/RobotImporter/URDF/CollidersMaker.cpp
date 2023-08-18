@@ -98,7 +98,7 @@ namespace ROS2
             {
                 return;
             }
-            const AZStd::string& azMeshPath = asset->m_sourceAssetGlobalPath;
+            const auto& azMeshPath = asset->m_sourceAssetGlobalPath;
 
             AZStd::shared_ptr<AZ::SceneAPI::Containers::Scene> scene;
             AZ::SceneAPI::Events::SceneSerializationBus::BroadcastResult(

@@ -120,8 +120,9 @@ namespace ROS2
             }
             break;
         default:
-            AZ_Warning("AddJointComponent", false, "Unknown or unsupported joint type %d for joint %s", (int)joint->Type(), joint->Name().c_str());
-            return AZ::Failure(AZStd::string::format("unsupported joint type : %d", (int)joint->Type()));
+            AZ_Warning("AddJointComponent", false, "Unknown or unsupported joint type %d for joint %s",
+                static_cast<int>(joint->Type()), joint->Name().c_str());
+            return AZ::Failure(AZStd::string::format("unsupported joint type : %d", static_cast<int>(joint->Type())));
         }
 
         followColliderEntity->Activate();

@@ -7,6 +7,7 @@
  */
 
 #include "RobotImporterUtils.h"
+#include <RobotImporter/Utils/ErrorUtils.h>
 #include "TypeConversions.h"
 #include <AzCore/Asset/AssetManager.h>
 #include <AzCore/Asset/AssetManagerBus.h>
@@ -19,6 +20,15 @@
 
 namespace ROS2::Utils
 {
+    inline namespace Internal
+    {
+        bool FileExistsCall(const AZ::IO::PathView& filePath)
+        {
+            AZ::IO::FixedMaxPath pathStorage(filePath);
+            return AZ::IO::SystemFile::Exists(pathStorage.c_str());
+        };
+    }
+
     bool WaitForAssetsToProcess(const AZStd::unordered_map<AZStd::string, AZ::IO::Path>& sourceAssetsPaths)
     {
         bool allAssetProcessed = false;
@@ -91,20 +101,20 @@ namespace ROS2::Utils
 
     bool IsWheelURDFHeuristics(const sdf::Model& model, const sdf::Link* link)
     {
-        const AZStd::regex wheelRegex("wheel[_]||[_]wheel");
-        const AZStd::regex jointRegex("(?i)joint");
+        auto wheelMatcher = [](AZStd::string_view name)
+        {
+            // StringFunc matches are case-insensitive by default
+            return AZ::StringFunc::StartsWith(name, "wheel_") ||
+                AZ::StringFunc::EndsWith(name, "_wheel");
+        };
+
         const AZStd::string linkName(link->Name().c_str(), link->Name().size());
-        AZStd::smatch match;
-        // Check if name is catchy for wheel
-        if (!AZStd::regex_search(linkName, match, wheelRegex))
+        // Check if link name is catchy for wheel
+        if (!wheelMatcher(linkName))
         {
             return false;
         }
-        // The name should contain a joint word
-        if (AZStd::regex_search(linkName, match, jointRegex))
-        {
-            return false;
-        }
+
         // Wheels need to have collision and visuals
         if ((link->CollisionCount() == 0) || (link->VisualCount() == 0))
         {
@@ -149,19 +159,7 @@ namespace ROS2::Utils
         if (sdf::Errors poseResolveErrors = linkSemanticPos.Resolve(resolvedPose);
             !poseResolveErrors.empty())
         {
-            AZStd::string poseErrorMessages;
-            for (const sdf::Error& error : poseResolveErrors)
-            {
-                AZStd::string errorMessage = AZStd::string::format("ErrorCode=%d", static_cast<int32_t>(error.Code()));
-                errorMessage += AZStd::string::format(", Message=%s", error.Message().c_str());
-                if (error.LineNumber().has_value())
-                {
-                    errorMessage += AZStd::string::format(", Line=%d", error.LineNumber().value());
-                }
-
-                poseErrorMessages += errorMessage;
-                poseErrorMessages += '\n';
-            }
+            AZStd::string poseErrorMessages = Utils::JoinSdfErrorsToString(poseResolveErrors);
 
             AZ_Error("RobotImporter", false, R"(Failed to get world transform for link %s. Errors: "%s")",
                 link->Name().c_str(), poseErrorMessages.c_str());
@@ -182,31 +180,43 @@ namespace ROS2::Utils
         {
             void operator()(const sdf::Model& model)
             {
-                VisitLinksForModel(model);
-                if (m_recurseModels)
+                if (VisitLinksForModel(model) && m_recurseModels)
                 {
+                    // Nested model link are only visited if the joint visitor returns true
                     for (uint64_t modelIndex{}; modelIndex < model.ModelCount(); ++modelIndex)
                     {
-                        const sdf::Model* nestedModel =  model.ModelByIndex(modelIndex);
+                        const sdf::Model* nestedModel = model.ModelByIndex(modelIndex);
                         if (nestedModel != nullptr)
                         {
-                            VisitLinksForModel(*nestedModel);
+                            if (!VisitLinksForModel(*nestedModel))
+                            {
+                                // Sibling nested model links are only visited
+                                // if the joint visitor returns true
+                                break;
+                            }
                         }
                     }
                 }
             }
 
         private:
-            void VisitLinksForModel(const sdf::Model& currentModel)
+            //! Returns success by default
+            //! But an invoked visitor can return false to halt further iteration
+            bool VisitLinksForModel(const sdf::Model& currentModel)
             {
                 for (uint64_t linkIndex{}; linkIndex < currentModel.LinkCount(); ++linkIndex)
                 {
                     const sdf::Link* link = currentModel.LinkByIndex(linkIndex);
                     if (link != nullptr)
                     {
-                        m_linkVisitorCB(*link);
+                        if (!m_linkVisitorCB(*link))
+                        {
+                            return false;
+                        }
                     }
                 }
+
+                return true;
             }
 
         public:
@@ -229,31 +239,41 @@ namespace ROS2::Utils
         {
             void operator()(const sdf::Model& model)
             {
-                VisitJointsForModel(model);
-                if (m_recurseModels)
+                if (VisitJointsForModel(model) && m_recurseModels)
                 {
+                    // Nested model joints are only visited if the joint visitor returns true
                     for (uint64_t modelIndex{}; modelIndex < model.ModelCount(); ++modelIndex)
                     {
                         const sdf::Model* nestedModel =  model.ModelByIndex(modelIndex);
                         if (nestedModel != nullptr)
                         {
-                            VisitJointsForModel(*nestedModel);
+                            if (!VisitJointsForModel(*nestedModel))
+                            {
+                                // Sibling nested model joints are only visited
+                                // if the joint visitor returns true
+                                break;
+                            }
                         }
                     }
                 }
             }
 
         private:
-            void VisitJointsForModel(const sdf::Model& currentModel)
+            bool VisitJointsForModel(const sdf::Model& currentModel)
             {
                 for (uint64_t jointIndex{}; jointIndex < currentModel.JointCount(); ++jointIndex)
                 {
                     const sdf::Joint* joint = currentModel.JointByIndex(jointIndex);
                     if (joint != nullptr)
                     {
-                        m_jointVisitorCB(*joint);
+                        if (!m_jointVisitorCB(*joint))
+                        {
+                            return false;
+                        }
                     }
                 }
+
+                return true;
             }
 
         public:
@@ -274,8 +294,9 @@ namespace ROS2::Utils
         LinkMap links;
         auto GatherLinks = [&links](const sdf::Link& link)
         {
-            AZStd::string_view linkName(link.Name().c_str(), link.Name().size());
-            links.insert_or_assign(linkName, &link);
+            AZStd::string linkName(link.Name().c_str(), link.Name().size());
+            links.insert_or_assign(AZStd::move(linkName), &link);
+            return true;
         };
 
         VisitLinks(sdfModel, GatherLinks, gatherNestedModelLinks);
@@ -289,8 +310,9 @@ namespace ROS2::Utils
         JointMap joints;
         auto GatherJoints = [&joints](const sdf::Joint& joint)
         {
-            AZStd::string_view jointName(joint.Name().c_str(), joint.Name().size());
-            joints.insert_or_assign(jointName, &joint);
+            AZStd::string jointName(joint.Name().c_str(), joint.Name().size());
+            joints.insert_or_assign(AZStd::move(jointName), &joint);
+            return true;
         };
 
         VisitJoints(sdfModel, GatherJoints, gatherNestedModelJoints);
@@ -304,11 +326,13 @@ namespace ROS2::Utils
         JointVector joints;
         auto GatherJointsWhereLinkIsChild = [&joints, linkName](const sdf::Joint& joint)
         {
-            AZStd::string_view jointChildName{ joint.ChildName().c_str(), joint.ChildName().size() };
-            if (jointChildName == linkName)
+            if (AZStd::string_view jointChildName{ joint.ChildName().c_str(), joint.ChildName().size() };
+                jointChildName == linkName)
             {
                 joints.emplace_back(&joint);
             }
+
+            return true;
         };
 
         VisitJoints(sdfModel, GatherJointsWhereLinkIsChild, gatherNestedModelJoints);
@@ -322,11 +346,13 @@ namespace ROS2::Utils
         JointVector joints;
         auto GatherJointsWhereLinkIsParent = [&joints, linkName](const sdf::Joint& joint)
         {
-            AZStd::string_view jointParentName{ joint.ParentName().c_str(), joint.ParentName().size() };
-            if (jointParentName == linkName)
+            if (AZStd::string_view jointParentName{ joint.ParentName().c_str(), joint.ParentName().size() };
+                jointParentName == linkName)
             {
                 joints.emplace_back(&joint);
             }
+
+            return true;
         };
 
         VisitJoints(sdfModel, GatherJointsWhereLinkIsParent, gatherNestedModelJoints);
@@ -380,109 +406,161 @@ namespace ROS2::Utils
         return filenames;
     }
 
-    AZStd::optional<AZ::IO::Path> GetResolvedPath(
-        const AZ::IO::Path& packagePath, const AZ::IO::Path& unresolvedPath, const AZStd::function<bool(const AZStd::string&)>& fileExists)
-    {
-        AZ::IO::Path packageXmlCandite = packagePath / "package.xml";
-        if (fileExists(packageXmlCandite.String()))
-        {
-            AZ::IO::Path resolvedPath = packagePath / unresolvedPath;
-            if (fileExists(resolvedPath.String()))
-            {
-                return AZStd::optional<AZ::IO::Path>{ resolvedPath };
-            }
-        }
-        return AZStd::optional<AZ::IO::Path>{};
-    }
-
-    AZ::IO::Path GetPathFromSubPath(const AZ::IO::Path::const_iterator& begin, const AZ::IO::Path::const_iterator& end)
-    {
-        AZ::IO::Path subpath;
-        if (begin == end)
-        {
-            return subpath;
-        }
-        for (AZ::IO::Path::iterator pathIt = begin; pathIt != end; pathIt++)
-        {
-            subpath /= *pathIt;
-        }
-        return subpath;
-    }
-
     /// Finds global path from URDF path
-    AZStd::string ResolveURDFPath(
-        AZStd::string unresolvedPath,
-        const AZStd::string& urdfFilePath,
-        const AZStd::string& amentPrefixPath,
-        const AZStd::function<bool(const AZStd::string&)>& fileExists)
+    AZ::IO::Path ResolveURDFPath(
+        AZ::IO::Path unresolvedPath,
+        const AZ::IO::PathView& urdfFilePath,
+        const AZ::IO::PathView& amentPrefixPath,
+        const FileExistsCB& fileExists)
     {
         AZ_Printf("ResolveURDFPath", "ResolveURDFPath with %s\n", unresolvedPath.c_str());
-        if (unresolvedPath.starts_with("package://"))
+
+        // TODO: Query URDF prefix map from Settings Registry
+        AZStd::vector<AZ::IO::Path> amentPrefixPaths;
+
+        // Split the AMENT_PREFIX_PATH into multiple paths
+        auto AmentPrefixPathVisitor = [&amentPrefixPaths](
+            AZStd::string_view prefixPath)
         {
-            AZ::StringFunc::Replace(unresolvedPath, "package://", "", true, true);
+            amentPrefixPaths.push_back(prefixPath);
+        };
+        // Note this code only works on Unix platforms
+        // For Windows this will not work as the drive letter has a colon in it (C:\)
+        AZ::StringFunc::TokenizeVisitor(amentPrefixPath.Native(), AmentPrefixPathVisitor, ':');
 
-            const AZ::IO::Path unresolvedProperPath(unresolvedPath);
-            if (!unresolvedProperPath.empty())
+        // Append the urdf file ancestor directories to the candidate replacement paths
+        AZStd::vector<AZ::IO::Path> urdfAncestorPaths;
+        if (!urdfFilePath.empty())
+        {
+            AZ::IO::Path urdfFileAncestorPath = urdfFilePath;
+            bool rootPathVisited = false;
+            do
             {
-                const AZStd::string packageNameCandidate = unresolvedProperPath.begin()->String();
-                AZStd::vector<AZStd::string> amentPathTokenized;
-                AZ::StringFunc::Tokenize(amentPrefixPath, amentPathTokenized, ':');
-                for (const auto& package : amentPathTokenized)
-                {
-                    if (package.ends_with(packageNameCandidate))
-                    {
-                        auto pathIt = unresolvedProperPath.begin();
-                        AZStd::advance(pathIt, 1);
-                        if (pathIt != unresolvedProperPath.end())
-                        {
-                            AZ::IO::Path unresolvedPathStripped = GetPathFromSubPath(pathIt, unresolvedProperPath.end());
+                AZ::IO::PathView parentPath = urdfFileAncestorPath.ParentPath();
+                rootPathVisited = (urdfFileAncestorPath == parentPath);
+                urdfAncestorPaths.emplace_back(parentPath);
+                urdfFileAncestorPath = parentPath;
+            } while (!rootPathVisited);
+        }
 
-                            const AZ::IO::Path packagePath = AZ::IO::Path{ package } / "share";
-                            auto resolvedPath =
-                                GetResolvedPath(packagePath / AZ::IO::Path{ packageNameCandidate }, unresolvedPathStripped, fileExists);
-                            if (resolvedPath.has_value())
-                            {
-                                AZ_Printf("ResolveURDFPath", "Resolved to using Ament to : %s\n", resolvedPath->String().c_str());
-                                return resolvedPath->String();
-                            }
+        // Structure which accepts a callback that can convert an unresolved URI path(package://, model://, file://, etc...)
+        // to a filesystem path
+        struct UriPrefix
+        {
+            using SchemeResolver = AZStd::function<AZStd::optional<AZ::IO::Path>(AZ::IO::PathView)>;
+            SchemeResolver m_schemeResolver;
+        };
+
+        auto GetReplacementSchemeResolver = [](
+            AZStd::string_view schemePrefix, AZStd::span<const AZ::IO::Path> amentPrefixPaths,
+            AZStd::span<const AZ::IO::Path> urdfAncestorPaths, const FileExistsCB& fileExistsCB)
+        {
+            return [schemePrefix, amentPrefixPaths, urdfAncestorPaths, &fileExistsCB](
+                AZ::IO::PathView uriPath) -> AZStd::optional<AZ::IO::Path>
+            {
+                // Note this is a case-sensitive check to match the exact URI scheme
+                // If that is not desired, then this code should be updated to read
+                // a value from the Setting Registry indicating whether the uriPrefix matching
+                // should be case sensitive
+                bool uriPrefixMatchCaseSensitive = true;
+                // Check if the path starts with the URI scheme prefix
+                if (AZ::StringFunc::StartsWith(uriPath.Native(), schemePrefix, uriPrefixMatchCaseSensitive))
+                {
+                    // Strip the number of characters from the Uri scheme from beginning of the path
+                    AZ::IO::PathView strippedUriPath = uriPath.Native().substr(schemePrefix.size());
+                    if (strippedUriPath.empty())
+                    {
+                        // The stripped URI path is empty, so there is nothing to resolve
+                        return AZStd::nullopt;
+                    }
+
+                    // Check to see if the relative part of the URI path refers to a location
+                    // within each <ament prefix path>/share directory
+                    for (const AZ::IO::Path& amentPrefixPath : amentPrefixPaths)
+                    {
+                        auto pathIter = strippedUriPath.begin();
+                        AZ::IO::PathView packageName = *pathIter;
+                        const AZ::IO::Path amentSharePath = amentPrefixPath / "share";
+                        const AZ::IO::Path packageManifestPath = amentSharePath / packageName / "package.xml";
+
+                        if (const AZ::IO::Path candidateResolvedPath = amentSharePath / strippedUriPath;
+                            fileExistsCB(packageManifestPath) && fileExistsCB(candidateResolvedPath))
+                        {
+                            return candidateResolvedPath;
+                        }
+                    }
+
+                    // The URI path cannot be resolved within the any ament prefix path,
+                    // so try the directory containing the URDF file as well as any of its parent directories
+                    for (const AZ::IO::Path& urdfAncestorPath : urdfAncestorPaths)
+                    {
+                        if (const AZ::IO::Path candidateResolvedPath = urdfAncestorPath / strippedUriPath;
+                            fileExistsCB(candidateResolvedPath))
+                        {
+                            return candidateResolvedPath;
                         }
                     }
                 }
+
+                return AZStd::nullopt;
+            };
+        };
+
+        constexpr AZStd::string_view PackageSchemePrefix = "package://";
+        UriPrefix packageUriPrefix;
+        packageUriPrefix.m_schemeResolver = GetReplacementSchemeResolver(PackageSchemePrefix,
+            amentPrefixPaths, urdfAncestorPaths, fileExists);
+
+        constexpr AZStd::string_view ModelSchemePrefix = "model://";
+        UriPrefix modelUriPrefix;
+        modelUriPrefix.m_schemeResolver = GetReplacementSchemeResolver(ModelSchemePrefix,
+            amentPrefixPaths, urdfAncestorPaths, fileExists);
+
+        // For a local file path convert the file URI to a local path
+        UriPrefix fileUriPrefix;
+        fileUriPrefix.m_schemeResolver = [](AZ::IO::PathView uriPath) -> AZStd::optional<AZ::IO::Path>
+        {
+            constexpr AZStd::string_view FileSchemePrefix = "file://";
+            // Paths that start with 'file:///' are absolute paths, so only 'file://' needs to be stripped
+            bool uriPrefixMatchCaseSensitive = true;
+            if (AZ::StringFunc::StartsWith(uriPath.Native(), FileSchemePrefix, uriPrefixMatchCaseSensitive))
+            {
+                AZStd::string_view strippedUriPath = uriPath.Native().substr(FileSchemePrefix.size());
+                return AZ::IO::Path(strippedUriPath);
             }
 
-            const AZ::IO::Path urdfProperPath(urdfFilePath);
-            if (!urdfProperPath.empty())
-            {
-                auto it = --urdfProperPath.end();
-                for (; it != urdfProperPath.begin(); it--)
-                {
-                    const auto packagePath = GetPathFromSubPath(urdfProperPath.begin(), it);
-                    std::cout << "packagePath : " << packagePath.String().c_str() << std::endl;
-                    const auto resolvedPath = GetResolvedPath(packagePath, unresolvedPath, fileExists);
-                    if (resolvedPath.has_value())
-                    {
-                        AZ_Printf("ResolveURDFPath", "ResolveURDFPath with relative path to : %s\n", resolvedPath->String().c_str());
-                        return resolvedPath->String();
-                    }
-                }
-            }
-            // No path available
-            return "";
-        }
-        if (unresolvedPath.starts_with("file:///"))
+            return AZStd::nullopt;
+        };
+
+        // Step 1: Attempt to resolved URI scheme paths
+        // libsdformat seems to convert package:// references to model:// references
+        // So the model:// URI prefix resolver is run first
+        const auto uriPrefixes = AZStd::to_array<UriPrefix>({
+            AZStd::move(modelUriPrefix),
+            AZStd::move(fileUriPrefix),
+            AZStd::move(packageUriPrefix)});
+        for (const UriPrefix& uriPrefix : uriPrefixes)
         {
-            // Paths that start with 'file:///' are absolute paths
-            AZ::StringFunc::Replace(unresolvedPath, "file://", "", true, true);
-            AZ_Printf("ResolveURDFPath", "ResolveURDFPath with absolute path to : %s\n", unresolvedPath.c_str());
+            if (auto resolvedPath = uriPrefix.m_schemeResolver(unresolvedPath);
+                resolvedPath.has_value())
+            {
+                AZ_Printf("ResolveURDFPath", R"(Resolved Path using URI Prefix "%.*s" -> "%.*s")" "\n", AZ_PATH_ARG(unresolvedPath),
+                    AZ_PATH_ARG(resolvedPath.value()));
+                return resolvedPath.value();
+            }
+        }
+
+        // At this point, the path has no URI scheme
+        if (unresolvedPath.IsAbsolute())
+        {
+            AZ_Printf("ResolveURDFPath", "Input Path is an absolute local filesystem path to : %s\n", unresolvedPath.c_str());
             return unresolvedPath;
         }
-        // seems to be relative path
-        AZ::IO::Path relativePath(unresolvedPath);
-        AZ::IO::Path urdfProperPath(urdfFilePath);
-        AZ::IO::Path urdfParentPath = urdfProperPath.ParentPath();
-        const AZ::IO::Path resolvedPath = urdfParentPath / relativePath;
-        AZ_Printf("ResolveURDFPath", "ResolveURDFPath with relative path to : %s\n", unresolvedPath.c_str());
-        return resolvedPath.String();
+
+        // The path is relative path, so append to the directory containing the .urdf file
+        const AZ::IO::Path resolvedPath = AZ::IO::Path(urdfFilePath.ParentPath()) / unresolvedPath;
+        AZ_Printf("ResolveURDFPath", "Input Path %s is being returned as is\n", unresolvedPath.c_str());
+        return resolvedPath;
     }
 
 } // namespace ROS2::Utils

@@ -102,9 +102,8 @@ namespace ROS2
 
         articulationLinkConfiguration = AddToArticulationConfig(articulationLinkConfiguration, link->Inertial());
 
-        // TODO: Figure out parent/child relationships
         constexpr bool getNestedModelJoints = true;
-        AZStd::string_view linkName(link->Name().c_str(), link->Name().size());
+        AZStd::string linkName(link->Name().c_str(), link->Name().size());
         for (const sdf::Joint* joint : Utils::GetJointsForChildLink(model, linkName, getNestedModelJoints))
         {
             articulationLinkConfiguration = AddToArticulationConfig(articulationLinkConfiguration, joint);

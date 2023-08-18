@@ -228,7 +228,8 @@ namespace UnitTest
     TEST_F(UrdfParserTest, ParseUrdfWithOneLink)
     {
         const auto xmlStr = GetUrdfWithOneLink();
-        const auto sdfRootOutcome = ROS2::UrdfParser::Parse(xmlStr);
+        sdf::ParserConfig parserConfig;
+        const auto sdfRootOutcome = ROS2::UrdfParser::Parse(xmlStr, parserConfig);
         ASSERT_TRUE(sdfRootOutcome);
         const sdf::Root& sdfRoot = sdfRootOutcome.value();
 
@@ -274,10 +275,11 @@ namespace UnitTest
         EXPECT_EQ(1.0, collisionBox->Size().Z());
     }
 
-    TEST_F(UrdfParserTest, ParseUrdfWithTwoLinksAndFixedJoint)
+    TEST_F(UrdfParserTest, ParseUrdfWithTwoLinksAndFixedJoint_WithPreserveFixedJoint_False)
     {
         const auto xmlStr = GetUrdfWithTwoLinksAndJoint();
-        const auto sdfRootOutcome = ROS2::UrdfParser::Parse(xmlStr);
+        sdf::ParserConfig parserConfig;
+        const auto sdfRootOutcome = ROS2::UrdfParser::Parse(xmlStr, parserConfig);
         ASSERT_TRUE(sdfRootOutcome);
         const sdf::Root& sdfRoot = sdfRootOutcome.value();
 
@@ -303,10 +305,62 @@ namespace UnitTest
         ASSERT_NE(nullptr, link1);
     }
 
+    TEST_F(UrdfParserTest, ParseUrdfWithTwoLinksAndFixedJoint_WithPreserveFixedJoint_True)
+    {
+        const auto xmlStr = GetUrdfWithTwoLinksAndJoint();
+        sdf::ParserConfig parserConfig;
+        parserConfig.URDFSetPreserveFixedJoint(true);
+        const auto sdfRootOutcome = ROS2::UrdfParser::Parse(xmlStr, parserConfig);
+        ASSERT_TRUE(sdfRootOutcome);
+        const sdf::Root& sdfRoot = sdfRootOutcome.value();
+
+        const sdf::Model* model = sdfRoot.Model();
+        EXPECT_EQ("test_two_links_one_joint", model->Name());
+        ASSERT_NE(nullptr, model);
+
+        // As the <preserveFixedJoint> option has been set
+        // in this case the child link and the joint in the SDF should be remain
+        ASSERT_EQ(2, model->LinkCount());
+        ASSERT_EQ(1, model->JointCount());
+
+        // No Frames are made for perserved joints
+        EXPECT_FALSE(model->FrameNameExists("link2"));
+        EXPECT_FALSE(model->FrameNameExists("joint12"));
+
+        const sdf::Link* link1 = model->LinkByName("link1");
+        ASSERT_NE(nullptr, link1);
+
+        const sdf::Link* link2 = model->LinkByName("link2");
+        ASSERT_NE(nullptr, link2);
+
+        const sdf::Joint* joint12 = model->JointByName("joint12");
+        ASSERT_NE(nullptr, joint12);
+
+        EXPECT_EQ("link1", joint12->ParentName());
+        EXPECT_EQ("link2", joint12->ChildName());
+
+        gz::math::Pose3d jointPose = joint12->RawPose();
+        EXPECT_DOUBLE_EQ(1.0, jointPose.X());
+        EXPECT_DOUBLE_EQ(0.5, jointPose.Y());
+        EXPECT_DOUBLE_EQ(0.0, jointPose.Z());
+
+        double roll, pitch, yaw;
+        const gz::math::Quaternion rot = jointPose.Rot();
+        roll = rot.Roll();
+        pitch = rot.Pitch();
+        yaw = rot.Yaw();
+        EXPECT_DOUBLE_EQ(roll, 0.0);
+        EXPECT_DOUBLE_EQ(pitch, 0.0);
+        EXPECT_DOUBLE_EQ(yaw, 0.0);
+
+        EXPECT_EQ(sdf::JointType::FIXED, joint12->Type());
+    }
+
     TEST_F(UrdfParserTest, ParseUrdfWithTwoLinksAndNonFixedJoint)
     {
         const auto xmlStr = GetUrdfWithTwoLinksAndJoint("continuous");
-        const auto sdfRootOutcome = ROS2::UrdfParser::Parse(xmlStr);
+        sdf::ParserConfig parserConfig;
+        const auto sdfRootOutcome = ROS2::UrdfParser::Parse(xmlStr, parserConfig);
         ASSERT_TRUE(sdfRootOutcome);
         const sdf::Root& sdfRoot = sdfRootOutcome.value();
 
@@ -328,12 +382,10 @@ namespace UnitTest
         EXPECT_EQ("link1", joint12->ParentName());
         EXPECT_EQ("link2", joint12->ChildName());
 
-        gz::math::Pose3d jointPose;
-        sdf::Errors poseResolveErrors = joint12->SemanticPose().Resolve(jointPose);
-        EXPECT_TRUE(poseResolveErrors.empty());
-        EXPECT_EQ(0.0, jointPose.X());
-        EXPECT_EQ(0.0, jointPose.Y());
-        EXPECT_EQ(0.0, jointPose.Z());
+        gz::math::Pose3d jointPose = joint12->RawPose();
+        EXPECT_DOUBLE_EQ(1.0, jointPose.X());
+        EXPECT_DOUBLE_EQ(0.5, jointPose.Y());
+        EXPECT_DOUBLE_EQ(0.0, jointPose.Z());
 
         double roll, pitch, yaw;
         const gz::math::Quaternion rot = jointPose.Rot();
@@ -347,20 +399,21 @@ namespace UnitTest
         const sdf::JointAxis* joint12Axis = joint12->Axis();
         ASSERT_NE(nullptr, joint12Axis);
 
-        EXPECT_EQ(10.0, joint12Axis->Damping());
-        EXPECT_EQ(5.0, joint12Axis->Friction());
+        EXPECT_DOUBLE_EQ(10.0, joint12Axis->Damping());
+        EXPECT_DOUBLE_EQ(5.0, joint12Axis->Friction());
 
-        EXPECT_EQ(-AZStd::numeric_limits<double>::infinity(), joint12Axis->Lower());
-        EXPECT_EQ(AZStd::numeric_limits<double>::infinity(), joint12Axis->Upper());
-        EXPECT_EQ(90.0, joint12Axis->Effort());
-        EXPECT_EQ(10.0, joint12Axis->MaxVelocity());
+        EXPECT_DOUBLE_EQ(-AZStd::numeric_limits<double>::infinity(), joint12Axis->Lower());
+        EXPECT_DOUBLE_EQ(AZStd::numeric_limits<double>::infinity(), joint12Axis->Upper());
+        EXPECT_DOUBLE_EQ(90.0, joint12Axis->Effort());
+        EXPECT_DOUBLE_EQ(10.0, joint12Axis->MaxVelocity());
     }
 
     TEST_F(UrdfParserTest, WheelHeuristicNameValid)
     {
+        sdf::ParserConfig parserConfig;
         const AZStd::string_view wheelName("wheel_left_link");
         const auto xmlStr = GetURDFWithWheel(wheelName, "continuous");
-        const auto sdfRootOutcome = ROS2::UrdfParser::Parse(xmlStr);
+        const auto sdfRootOutcome = ROS2::UrdfParser::Parse(xmlStr, parserConfig);
         ASSERT_TRUE(sdfRootOutcome);
         const sdf::Root& sdfRoot = sdfRootOutcome.value();
         const sdf::Model* model = sdfRoot.Model();
@@ -368,13 +421,25 @@ namespace UnitTest
         auto wheelCandidate = model->LinkByName(std::string(wheelName.data(), wheelName.size()));
         ASSERT_NE(nullptr, wheelCandidate);
         EXPECT_TRUE(ROS2::Utils::IsWheelURDFHeuristics(*model, wheelCandidate));
+
+        const AZStd::string_view wheelNameSuffix("left_link_wheel");
+        const auto xmlStr2 = GetURDFWithWheel(wheelNameSuffix, "continuous");
+        const auto sdfRootOutcome2 = ROS2::UrdfParser::Parse(xmlStr2, parserConfig);
+        ASSERT_TRUE(sdfRootOutcome2);
+        const sdf::Root& sdfRoot2 = sdfRootOutcome2.value();
+        const sdf::Model* model2 = sdfRoot2.Model();
+        ASSERT_NE(nullptr, model2);
+        auto wheelCandidate2 = model2->LinkByName(std::string(wheelNameSuffix.data(), wheelNameSuffix.size()));
+        ASSERT_NE(nullptr, wheelCandidate2);
+        EXPECT_TRUE(ROS2::Utils::IsWheelURDFHeuristics(*model2, wheelCandidate2));
     }
 
     TEST_F(UrdfParserTest, WheelHeuristicNameNotValid1)
     {
-        const AZStd::string wheelName("wheel_left_joint");
+        const AZStd::string wheelName("whe3l_left_link");
         const auto xmlStr = GetURDFWithWheel(wheelName, "continuous");
-        const auto sdfRootOutcome = ROS2::UrdfParser::Parse(xmlStr);
+        sdf::ParserConfig parserConfig;
+        const auto sdfRootOutcome = ROS2::UrdfParser::Parse(xmlStr, parserConfig);
         ASSERT_TRUE(sdfRootOutcome);
         const sdf::Root& sdfRoot = sdfRootOutcome.value();
         const sdf::Model* model = sdfRoot.Model();
@@ -388,7 +453,8 @@ namespace UnitTest
     {
         const AZStd::string wheelName("wheel_left_link");
         const auto xmlStr = GetURDFWithWheel(wheelName, "fixed");
-        const auto sdfRootOutcome = ROS2::UrdfParser::Parse(xmlStr);
+        sdf::ParserConfig parserConfig;
+        const auto sdfRootOutcome = ROS2::UrdfParser::Parse(xmlStr, parserConfig);
         ASSERT_TRUE(sdfRootOutcome);
         const sdf::Root& sdfRoot = sdfRootOutcome.value();
         const sdf::Model* model = sdfRoot.Model();
@@ -410,7 +476,8 @@ namespace UnitTest
     {
         const AZStd::string wheelName("wheel_left_link");
         const auto xmlStr = GetURDFWithWheel(wheelName, "continuous", false, true);
-        const auto sdfRootOutcome = ROS2::UrdfParser::Parse(xmlStr);
+        sdf::ParserConfig parserConfig;
+        const auto sdfRootOutcome = ROS2::UrdfParser::Parse(xmlStr, parserConfig);
         ASSERT_TRUE(sdfRootOutcome);
         const sdf::Root& sdfRoot = sdfRootOutcome.value();
         const sdf::Model* model = sdfRoot.Model();
@@ -424,7 +491,8 @@ namespace UnitTest
     {
         const AZStd::string wheelName("wheel_left_link");
         const auto xmlStr = GetURDFWithWheel(wheelName, "continuous", true, false);
-        const auto sdfRootOutcome = ROS2::UrdfParser::Parse(xmlStr);
+        sdf::ParserConfig parserConfig;
+        const auto sdfRootOutcome = ROS2::UrdfParser::Parse(xmlStr, parserConfig);
         ASSERT_TRUE(sdfRootOutcome);
         const sdf::Root& sdfRoot = sdfRootOutcome.value();
         const sdf::Model* model = sdfRoot.Model();
@@ -437,7 +505,8 @@ namespace UnitTest
     TEST_F(UrdfParserTest, TestLinkListing)
     {
         const auto xmlStr = GetURDFWithTranforms();
-        const auto sdfRootOutcome = ROS2::UrdfParser::Parse(xmlStr);
+        sdf::ParserConfig parserConfig;
+        const auto sdfRootOutcome = ROS2::UrdfParser::Parse(xmlStr, parserConfig);
         ASSERT_TRUE(sdfRootOutcome);
         const sdf::Root& sdfRoot = sdfRootOutcome.value();
         const sdf::Model* model = sdfRoot.Model();
@@ -463,7 +532,8 @@ namespace UnitTest
     TEST_F(UrdfParserTest, TestJointLink)
     {
         const auto xmlStr = GetURDFWithTranforms();
-        const auto sdfRootOutcome = ROS2::UrdfParser::Parse(xmlStr);
+        sdf::ParserConfig parserConfig;
+        const auto sdfRootOutcome = ROS2::UrdfParser::Parse(xmlStr, parserConfig);
         ASSERT_TRUE(sdfRootOutcome);
         const sdf::Root& sdfRoot = sdfRootOutcome.value();
         const sdf::Model* model = sdfRoot.Model();
@@ -477,7 +547,8 @@ namespace UnitTest
     TEST_F(UrdfParserTest, TestTransforms)
     {
         const auto xmlStr = GetURDFWithTranforms();
-        const auto sdfRootOutcome = ROS2::UrdfParser::Parse(xmlStr);
+        sdf::ParserConfig parserConfig;
+        const auto sdfRootOutcome = ROS2::UrdfParser::Parse(xmlStr, parserConfig);
         ASSERT_TRUE(sdfRootOutcome);
         const sdf::Root& sdfRoot = sdfRootOutcome.value();
         const sdf::Model* model = sdfRoot.Model();
@@ -517,7 +588,8 @@ namespace UnitTest
     TEST_F(UrdfParserTest, TestQueryJointsForParentLink_Succeeds)
     {
         const auto xmlStr = GetURDFWithTranforms();
-        const auto sdfRootOutcome = ROS2::UrdfParser::Parse(xmlStr);
+        sdf::ParserConfig parserConfig;
+        const auto sdfRootOutcome = ROS2::UrdfParser::Parse(xmlStr, parserConfig);
         ASSERT_TRUE(sdfRootOutcome);
         const sdf::Root& sdfRoot = sdfRootOutcome.value();
         const sdf::Model* model = sdfRoot.Model();
@@ -541,7 +613,8 @@ namespace UnitTest
     TEST_F(UrdfParserTest, TestQueryJointsForChildLink_Succeeds)
     {
         const auto xmlStr = GetURDFWithTranforms();
-        const auto sdfRootOutcome = ROS2::UrdfParser::Parse(xmlStr);
+        sdf::ParserConfig parserConfig;
+        const auto sdfRootOutcome = ROS2::UrdfParser::Parse(xmlStr, parserConfig);
         ASSERT_TRUE(sdfRootOutcome);
         const sdf::Root& sdfRoot = sdfRootOutcome.value();
         const sdf::Model* model = sdfRoot.Model();
@@ -564,12 +637,12 @@ namespace UnitTest
 
     TEST_F(UrdfParserTest, TestPathResolvementGlobal)
     {
-        AZStd::string dae = "file:///home/foo/ros_ws/install/foo_robot/meshes/bar.dae";
-        AZStd::string urdf = "/home/foo/ros_ws/install/foo_robot/foo_robot.urdf";
+        constexpr AZ::IO::PathView dae = "file:///home/foo/ros_ws/install/foo_robot/meshes/bar.dae";
+        constexpr AZ::IO::PathView urdf = "/home/foo/ros_ws/install/foo_robot/foo_robot.urdf";
         auto result = ROS2::Utils::ResolveURDFPath(
             dae,
             urdf, "",
-            [](const AZStd::string& p) -> bool
+            [](const AZ::IO::PathView&) -> bool
             {
                 return false;
             });
@@ -578,12 +651,12 @@ namespace UnitTest
 
     TEST_F(UrdfParserTest, TestPathResolvementRelative)
     {
-        AZStd::string dae = "meshes/bar.dae";
-        AZStd::string urdf = "/home/foo/ros_ws/install/foo_robot/foo_robot.urdf";
+        constexpr AZ::IO::PathView dae = "meshes/bar.dae";
+        constexpr AZ::IO::PathView urdf = "/home/foo/ros_ws/install/foo_robot/foo_robot.urdf";
         auto result = ROS2::Utils::ResolveURDFPath(
             dae,
             urdf, "",
-            [](const AZStd::string& p) -> bool
+            [](const AZ::IO::PathView&) -> bool
             {
                 return false;
             });
@@ -592,11 +665,11 @@ namespace UnitTest
 
     TEST_F(UrdfParserTest, TestPathResolvementRelativePackage)
     {
-        AZStd::string dae = "package://meshes/bar.dae";
-        AZStd::string urdf = "/home/foo/ros_ws/install/foo_robot/description/foo_robot.urdf";
-        AZStd::string xml = "/home/foo/ros_ws/install/foo_robot/package.xml";
-        AZStd::string resolvedDae = "/home/foo/ros_ws/install/foo_robot/meshes/bar.dae";
-        auto mockFileSystem = [&](const AZStd::string& p) -> bool
+        constexpr AZ::IO::PathView dae = "package://meshes/bar.dae";
+        constexpr AZ::IO::PathView urdf = "/home/foo/ros_ws/install/foo_robot/description/foo_robot.urdf";
+        constexpr AZ::IO::PathView xml = "/home/foo/ros_ws/install/foo_robot/package.xml";
+        constexpr AZStd::string_view resolvedDae = "/home/foo/ros_ws/install/foo_robot/meshes/bar.dae";
+        auto mockFileSystem = [&](const AZ::IO::PathView& p) -> bool
         {
             return (p == xml || p == resolvedDae);
         };
@@ -606,11 +679,25 @@ namespace UnitTest
 
     TEST_F(UrdfParserTest, TestPathResolvementExplicitPackageName)
     {
-        AZStd::string dae = "package://foo_robot/meshes/bar.dae";
-        AZStd::string urdf = "/home/foo/ros_ws/install/foo_robot/share/foo_robot/description/foo_robot.urdf";
-        AZStd::string xml = "/home/foo/ros_ws/install/foo_robot/share/foo_robot/package.xml";
-        AZStd::string resolvedDae = "/home/foo/ros_ws/install/foo_robot/share/foo_robot/meshes/bar.dae";
-        auto mockFileSystem = [&](const AZStd::string& p) -> bool
+        constexpr AZ::IO::PathView dae = "package://foo_robot/meshes/bar.dae";
+        constexpr AZ::IO::PathView urdf = "/home/foo/ros_ws/install/foo_robot/share/foo_robot/description/foo_robot.urdf";
+        constexpr AZ::IO::PathView xml = "/home/foo/ros_ws/install/foo_robot/share/foo_robot/package.xml";
+        constexpr AZStd::string_view resolvedDae = "/home/foo/ros_ws/install/foo_robot/share/foo_robot/meshes/bar.dae";
+        auto mockFileSystem = [&](const AZ::IO::PathView& p) -> bool
+        {
+            return (p == xml || p == resolvedDae);
+        };
+        auto result = ROS2::Utils::ResolveURDFPath(dae, urdf, "/home/foo/ros_ws/install/foo_robot", mockFileSystem);
+        EXPECT_EQ(result, resolvedDae);
+    }
+
+    TEST_F(UrdfParserTest, ResolvePath_UsingModelUriScheme_Succeeds)
+    {
+        constexpr AZ::IO::PathView dae = "model://foo_robot/meshes/bar.dae";
+        constexpr AZ::IO::PathView urdf = "/home/foo/ros_ws/install/foo_robot/share/foo_robot/description/foo_robot.urdf";
+        constexpr AZ::IO::PathView xml = "/home/foo/ros_ws/install/foo_robot/share/foo_robot/package.xml";
+        constexpr AZStd::string_view resolvedDae = "/home/foo/ros_ws/install/foo_robot/share/foo_robot/meshes/bar.dae";
+        auto mockFileSystem = [&](const AZ::IO::PathView& p) -> bool
         {
             return (p == xml || p == resolvedDae);
         };

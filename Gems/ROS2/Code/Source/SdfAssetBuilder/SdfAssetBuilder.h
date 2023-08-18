@@ -17,6 +17,8 @@
 
 namespace ROS2
 {
+    [[maybe_unused]] constexpr const char* SdfAssetBuilderName = "SdfAssetBuilder";
+
     //! Builder to convert the following file types into procedural prefab assets:
     //! * sdf (Simulation Description Format: http://sdformat.org/ )
     //! * urdf (Unified Robotics Description Format: http://wiki.ros.org/urdf )

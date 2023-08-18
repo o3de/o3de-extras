@@ -24,15 +24,16 @@
 
 #include <RobotImporter/URDF/URDFPrefabMaker.h>
 #include <RobotImporter/URDF/UrdfParser.h>
+#include <SdfAssetBuilder/SdfAssetBuilderSettings.h>
+#include <RobotImporter/Utils/ErrorUtils.h>
 #include <Utils/RobotImporterUtils.h>
 
 namespace ROS2
 {
-        namespace
-        {
-            [[maybe_unused]] constexpr const char* SdfAssetBuilderName = "SdfAssetBuilder";
-            constexpr const char* SdfAssetBuilderJobKey = "Sdf Asset Builder";
-        }
+    inline namespace SDFAssetBuilderInternal
+    {
+        constexpr const char* SdfAssetBuilderJobKey = "Sdf Asset Builder";
+    }
 
     SdfAssetBuilder::SdfAssetBuilder()
     {
@@ -94,7 +95,7 @@ namespace ROS2
         // Unlike the RobotImporter, the SDF Asset Builder does not use the AMENT_PREFIX_PATH
         // to resolve file locations. There wouldn't be a way to guarantee identical results across
         // machines or to detect the need to rebuild assets if the environment variable changes.
-        const AZStd::string emptyAmentPrefixPath;
+        constexpr AZ::IO::PathView emptyAmentPrefixPath;
 
         for (const auto& uri : assetNames)
         {
@@ -102,7 +103,8 @@ namespace ROS2
             asset.m_urdfPath = uri;
 
             // Attempt to find the absolute path for the raw uri reference, which might look something like "model://meshes/model.dae"
-            asset.m_resolvedUrdfPath = Utils::ResolveURDFPath(asset.m_urdfPath, sourceFilename, emptyAmentPrefixPath);
+            asset.m_resolvedUrdfPath = Utils::ResolveURDFPath(asset.m_urdfPath, AZ::IO::PathView(sourceFilename),
+                emptyAmentPrefixPath);
             if (asset.m_resolvedUrdfPath.empty())
             {
                 AZ_Warning(SdfAssetBuilderName, false, "Failed to resolve file reference '%s' to an absolute path, skipping.", uri.c_str());
@@ -187,25 +189,17 @@ namespace ROS2
 
         const auto fullSourcePath = AZ::IO::Path(request.m_watchFolder) / AZ::IO::Path(request.m_sourceFile);
 
+        // Set the parser config settings for parsing URDF content through the libsdformat parser
+        sdf::ParserConfig parserConfig;
+        parserConfig.URDFSetPreserveFixedJoint(m_globalSettings.m_urdfPreserveFixedJoints);
+
         AZ_Info(SdfAssetBuilderName, "Parsing source file: %s", fullSourcePath.c_str());
-        auto parsedSdfRootOutcome = UrdfParser::ParseFromFile(fullSourcePath);
+        auto parsedSdfRootOutcome = UrdfParser::ParseFromFile(fullSourcePath, parserConfig);
         if (!parsedSdfRootOutcome)
         {
-            AZStd::string sdfImportErrors;
-            for (const sdf::Error& sdfError : parsedSdfRootOutcome.error())
-            {
-                AZStd::string errorMessage = AZStd::string::format("ErrorCode=%d", static_cast<int32_t>(sdfError.Code()));
-                errorMessage += AZStd::string::format(", Message=%s", sdfError.Message().c_str());
-                if (sdfError.LineNumber().has_value())
-                {
-                    errorMessage += AZStd::string::format(", Line=%d", sdfError.LineNumber().value());
-                }
-                sdfImportErrors += errorMessage;
-                sdfImportErrors += '\n';
-            }
-
+            const AZStd::string sdfParseErrors = Utils::JoinSdfErrorsToString(parsedSdfRootOutcome.error());
             AZ_Error(SdfAssetBuilderName, false, R"(Failed to parse source file "%s". Errors: "%s")",
-                fullSourcePath.c_str(), sdfImportErrors.c_str());
+                fullSourcePath.c_str(), sdfParseErrors.c_str());
             return;
         }
 
@@ -257,23 +251,16 @@ namespace ROS2
         auto tempAssetOutputPath = AZ::IO::Path(request.m_tempDirPath) / request.m_sourceFile;
         tempAssetOutputPath.ReplaceExtension("procprefab");
 
+        // Set the parser config settings for parsing URDF content through the libsdformat parser
+        sdf::ParserConfig parserConfig;
+        parserConfig.URDFSetPreserveFixedJoint(m_globalSettings.m_urdfPreserveFixedJoints);
+
         // Read in and parse the source SDF file.
         AZ_Info(SdfAssetBuilderName, "Parsing source file: %s", request.m_fullPath.c_str());
-        auto parsedSdfRootOutcome = UrdfParser::ParseFromFile(AZ::IO::PathView(request.m_fullPath));
+        auto parsedSdfRootOutcome = UrdfParser::ParseFromFile(AZ::IO::PathView(request.m_fullPath), parserConfig);
         if (!parsedSdfRootOutcome)
         {
-            AZStd::string sdfParseErrors;
-            for (const sdf::Error& sdfError : parsedSdfRootOutcome.error())
-            {
-                AZStd::string errorMessage = AZStd::string::format("ErrorCode=%d", static_cast<int32_t>(sdfError.Code()));
-                errorMessage += AZStd::string::format(", Message=%s", sdfError.Message().c_str());
-                if (sdfError.LineNumber().has_value())
-                {
-                    errorMessage += AZStd::string::format(", Line=%d", sdfError.LineNumber().value());
-                }
-                sdfParseErrors += errorMessage;
-                sdfParseErrors += '\n';
-            }
+            const AZStd::string sdfParseErrors = Utils::JoinSdfErrorsToString(parsedSdfRootOutcome.error());
             AZ_Error(SdfAssetBuilderName, false, R"(Failed to parse source file "%s". Errors: "%s")",
                 request.m_fullPath.c_str(), sdfParseErrors.c_str());
             response.m_resultCode = AssetBuilderSDK::ProcessJobResult_Failed;

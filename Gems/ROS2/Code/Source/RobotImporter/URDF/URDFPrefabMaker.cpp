@@ -50,26 +50,28 @@ namespace ROS2
         AZ_Assert(m_root, "SDF Root is nullptr");
         if (m_root != nullptr)
         {
-            AZ_Assert(m_root->Model(), "SDF Model is nullptr");
+            AZ_Assert(GetFirstModel(), "SDF Model is nullptr");
         }
     }
 
     void URDFPrefabMaker::BuildAssetsForLink(const sdf::Link* link)
     {
         m_collidersMaker.BuildColliders(link);
-        // Find the links which are childs in a joint where the this link
+        // Find the links which are childen in a joint where this link
         // is a parent
         auto BuildAssetsFromJointChildLinks = [this](const sdf::Joint& joint)
         {
-            const sdf::Model& model = *m_root->Model();
+            const sdf::Model& model = *GetFirstModel();
             if (const sdf::Link* childLink = model.LinkByName(joint.ChildName());
                 childLink != nullptr)
             {
                 BuildAssetsForLink(childLink);
             }
+
+            return true;
         };
         constexpr bool visitNestedModelLinks = true;
-        Utils::VisitJoints(*m_root->Model(), BuildAssetsFromJointChildLinks, visitNestedModelLinks);
+        Utils::VisitJoints(*GetFirstModel(), BuildAssetsFromJointChildLinks, visitNestedModelLinks);
     }
 
     URDFPrefabMaker::CreatePrefabTemplateResult URDFPrefabMaker::CreatePrefabTemplateFromURDF()
@@ -79,7 +81,7 @@ namespace ROS2
             m_status.clear();
         }
 
-        if (m_root->Model() == nullptr)
+        if (GetFirstModel() == nullptr)
         {
             return AZ::Failure(AZStd::string("Null model."));
         }
@@ -88,16 +90,16 @@ namespace ROS2
         AZStd::vector<AZ::EntityId> createdEntities;
 
         AZStd::unordered_map<AZStd::string, AzToolsFramework::Prefab::PrefabEntityResult> createdLinks;
-        const sdf::Link* rootLink = m_root->Model()->LinkByIndex(0);
+        const sdf::Link* rootLink = GetFirstModel()->LinkByIndex(0);
         AzToolsFramework::Prefab::PrefabEntityResult createEntityRoot = AddEntitiesForLink(rootLink, AZ::EntityId(), createdEntities);
-        AZStd::string rootName(m_root->Model()->Name().c_str(), m_root->Model()->Name().size());
+        AZStd::string rootName(GetFirstModel()->Name().c_str(), GetFirstModel()->Name().size());
         createdLinks[rootName] = createEntityRoot;
         if (!createEntityRoot.IsSuccess())
         {
             return AZ::Failure(AZStd::string(createEntityRoot.GetError()));
         }
 
-        auto links = Utils::GetAllLinks(*m_root->Model(), true);
+        auto links = Utils::GetAllLinks(*GetFirstModel(), true);
 
         for (const auto& [name, linkPtr] : links)
         {
@@ -167,7 +169,7 @@ namespace ROS2
                 continue;
             }
 
-            AZStd::vector<const sdf::Joint*> jointsWhereLinkIsChild = Utils::GetJointsForChildLink(*m_root->Model(),
+            AZStd::vector<const sdf::Joint*> jointsWhereLinkIsChild = Utils::GetJointsForChildLink(*GetFirstModel(),
                 linkName, true);
             if (jointsWhereLinkIsChild.empty())
             {
@@ -175,12 +177,17 @@ namespace ROS2
                 continue;
             }
 
-            // For URDF there is only a link can only be child with a single joint
+            // For URDF, a link can only be child in a single joint
+            // a link can't be a child of two other links as URDF models a tree structure and not a graph
             /*
                 Here is a snippet from the Pose Frame Semantics documentation for SDFormat that explains the differences
                 between URDF and SDF coordinate frame
                 http://sdformat.org/tutorials?tut=pose_frame_semantics&ver=1.5#parent-frames-in-urdf
-                > The most significant difference between URDF and SDFormat coordinate frames is related to links and joints. While SDFormat allows kinematic loops with the topology of a directed graph, URDF kinematics must have the topology of a directed tree, with each link being the child of at most one joint. URDF coordinate frames are defined recursively based on this tree structure, with each joint's <origin/> tag defining the coordinate transformation from the parent link frame to the child link frame.
+                > The most significant difference between URDF and SDFormat coordinate frames is related to links and joints.
+                > While SDFormat allows kinematic loops with the topology of a directed graph,
+                > URDF kinematics must have the topology of a directed tree, with each link being the child of at most one joint.
+                > URDF coordinate frames are defined recursively based on this tree structure, with each joint's <origin/> tag
+                > defining the coordinate transformation from the parent link frame to the child link frame.
             */
 
             jointsWhereLinkIsChild.front()->ParentName();
@@ -206,9 +213,9 @@ namespace ROS2
             PrefabMakerUtils::SetEntityParent(thisEntry.GetValue(), parentEntry->second.GetValue());
         }
 
-        for (uint64_t jointIndex{}; jointIndex < m_root->Model()->JointCount(); ++jointIndex)
+        for (uint64_t jointIndex{}; jointIndex < GetFirstModel()->JointCount(); ++jointIndex)
         {
-            auto jointPtr = m_root->Model()->JointByIndex(jointIndex);
+            auto jointPtr = GetFirstModel()->JointByIndex(jointIndex);
             AZ_Assert(jointPtr, "joint at index %" PRIu64 " is null", jointIndex);
             if (jointPtr == nullptr)
             {
@@ -377,10 +384,10 @@ namespace ROS2
         }
         else
         {
-            m_articulationsMaker.AddArticulationLink(*m_root->Model(), link, entityId);
+            m_articulationsMaker.AddArticulationLink(*GetFirstModel(), link, entityId);
         }
 
-        m_collidersMaker.AddColliders(*m_root->Model(), link, entityId);
+        m_collidersMaker.AddColliders(*GetFirstModel(), link, entityId);
         return AZ::Success(entityId);
     }
 
@@ -434,5 +441,27 @@ namespace ROS2
             str += entry + " " + entryStatus + "\n";
         }
         return str;
+    }
+
+    const sdf::Model* URDFPrefabMaker::GetFirstModel() const
+    {
+        // First look for the model at the root of the SDF
+        if (const sdf::Model* model = m_root->Model();
+            model != nullptr)
+        {
+            return model;
+        }
+
+        // Next check if there is a world at the root of the sdf
+        if (m_root->WorldCount() > 0)
+        {
+            if (const sdf::World* world = m_root->WorldByIndex(0);
+                world != nullptr && world->ModelCount() > 0)
+            {
+                return world->ModelByIndex(0);
+            }
+        }
+
+        return nullptr;
     }
 } // namespace ROS2

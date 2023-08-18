@@ -19,16 +19,13 @@
 
 #include <sdf/sdf.hh>
 
-namespace ROS2
+namespace ROS2::Utils
 {
-    namespace
+    inline namespace Internal
     {
-        static inline bool FileExistsCall(const AZStd::string& filename)
-        {
-            return AZ::IO::SystemFile::Exists(filename.c_str());
-        };
-    } // namespace
-}
+        bool FileExistsCall(const AZ::IO::PathView& filePath);
+    } // namespace Internal
+} // namespace ROS2::Utils
 
 namespace ROS2::Utils
 {
@@ -46,7 +43,8 @@ namespace ROS2::Utils
     AZ::Transform GetWorldTransformURDF(const sdf::Link* link, AZ::Transform t = AZ::Transform::Identity());
 
     //! Callback which is invoke for each link within a model
-    using LinkVisitorCallback = AZStd::function<void(const sdf::Link&)>;
+    //! @return Return true to continue visiting links or false to halt
+    using LinkVisitorCallback = AZStd::function<bool(const sdf::Link&)>;
     //! Visit links from URDF or SDF
     //! @param sdfModel Model object of SDF document corresponding to the <model> tag. It used to query link
     //! @param visitNestedModelLinks When true recurses to any nested <model> tags of the Model object and invoke visitor on their links as well
@@ -63,7 +61,8 @@ namespace ROS2::Utils
         bool gatherNestedModelLinks = false);
 
     //! Callback which is invoke for each valid joint for a given model
-    using JointVisitorCallback = AZStd::function<void(const sdf::Joint&)>;
+    //! @return Return true to continue visiting joint or false to halt
+    using JointVisitorCallback = AZStd::function<bool(const sdf::Joint&)>;
     //! Visit joints from URDF
     //! @param sdfModel Model object of SDF document corresponding to the <model> tag. It used to query joints
     //! @param visitNestedModelJoints When true recurses to any nested <model> tags of the Model object and invoke visitor on their joints as well
@@ -102,17 +101,22 @@ namespace ROS2::Utils
     //! @returns set of meshes' filenames.
     AZStd::unordered_set<AZStd::string> GetMeshesFilenames(const sdf::Root* root, bool visual, bool colliders);
 
+    //! Callback used to check for file exist of a path referenced within a URDF/SDF file
+    //! @param path Candidate local filesystem path to check for existence
+    //! @return true should be returned if the file exist otherwise false
+    using FileExistsCB = AZStd::function<bool(const AZ::IO::PathView&)>;
+
     //! Resolves path from unresolved URDF path.
     //! @param unresolvedPath - unresolved URDF path, example : `package://meshes/foo.dae`.
     //! @param urdfFilePath - the absolute path of URDF file which contains the path that is to be resolved.
     //! @param amentPrefixPath - the string that contains available packages' path, separated by ':' signs.
     //! @param fileExists - functor to check if the given file exists. Exposed for unit test, default one should be used.
-    //! @returns resolved path to the mesh
-    AZStd::string ResolveURDFPath(
-        AZStd::string unresolvedPath,
-        const AZStd::string& urdfFilePath,
-        const AZStd::string& amentPrefixPath,
-        const AZStd::function<bool(const AZStd::string&)>& fileExists = FileExistsCall);
+    //! @returns resolved path to the referenced file within the URDF
+    AZ::IO::Path ResolveURDFPath(
+        AZ::IO::Path unresolvedPath,
+        const AZ::IO::PathView& urdfFilePath,
+        const AZ::IO::PathView& amentPrefixPath,
+        const FileExistsCB& fileExists = &Internal::FileExistsCall);
 
     //! Waits for asset processor to process provided assets.
     //! This function will timeout after the time specified in /O3DE/ROS2/RobotImporter/AssetProcessorTimeoutInSeconds

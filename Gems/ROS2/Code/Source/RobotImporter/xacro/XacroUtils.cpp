@@ -14,6 +14,8 @@
 #include <AzFramework/Process/ProcessWatcher.h>
 #include <QString>
 
+#include <SdfAssetBuilder/SdfAssetBuilderSettings.h>
+
 namespace ROS2::Utils::xacro
 {
 
@@ -65,7 +67,13 @@ namespace ROS2::Utils::xacro
         {
             AZ_Printf("ParseXacro", "xacro finished with success \n");
             const auto& output = process_output.outputResult;
-            outcome.m_urdfHandle = UrdfParser::Parse(output);
+            // Read the SDF Settings from the Settings Registry into a local struct
+            SdfAssetBuilderSettings sdfBuilderSettings;
+            sdfBuilderSettings.LoadSettings();
+            // Set the parser config settings for URDF content
+            sdf::ParserConfig parserConfig;
+            parserConfig.URDFSetPreserveFixedJoint(sdfBuilderSettings.m_urdfPreserveFixedJoints);
+            outcome.m_urdfHandle = UrdfParser::Parse(output, parserConfig);
             outcome.m_succeed = true;
         }
         else

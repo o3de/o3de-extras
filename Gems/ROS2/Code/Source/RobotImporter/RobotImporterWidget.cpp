@@ -12,10 +12,12 @@
 #include <AzCore/Utils/Utils.h>
 
 #include "RobotImporterWidget.h"
-#include "URDF/URDFPrefabMaker.h"
-#include "URDF/UrdfParser.h"
-#include "Utils/FilePath.h"
-#include "Utils/RobotImporterUtils.h"
+#include <SdfAssetBuilder/SdfAssetBuilderSettings.h>
+#include <URDF/URDFPrefabMaker.h>
+#include <URDF/UrdfParser.h>
+#include <Utils/FilePath.h>
+#include <Utils/RobotImporterUtils.h>
+#include <Utils/ErrorUtils.h>
 #include <QApplication>
 #include <QScreen>
 #include <QTranslator>
@@ -130,13 +132,19 @@ namespace ROS2
             else if (Utils::IsFileUrdf(m_urdfPath))
             {
                 // standard URDF
-                parsedUrdfOutcome = UrdfParser::ParseFromFile(m_urdfPath);
+                // Read the SDF Settings from the Settings Registry into a local struct
+                SdfAssetBuilderSettings sdfBuilderSettings;
+                sdfBuilderSettings.LoadSettings();
+                // Set the parser config settings for URDF content
+                sdf::ParserConfig parserConfig;
+                parserConfig.URDFSetPreserveFixedJoint(sdfBuilderSettings.m_urdfPreserveFixedJoints);
+                parsedUrdfOutcome = UrdfParser::ParseFromFile(m_urdfPath, parserConfig);
             }
             else
             {
                 AZ_Assert(false, "Unknown file extension : %s \n", m_urdfPath.c_str());
             }
-            const auto log = UrdfParser::GetUrdfParsingLog();
+            AZStd::string log;
             bool urdfParsedSuccess = parsedUrdfOutcome.has_value();
             if (urdfParsedSuccess)
             {
@@ -150,6 +158,7 @@ namespace ROS2
             }
             else
             {
+                log = Utils::JoinSdfErrorsToString(parsedUrdfOutcome.error());
                 report += "# " + tr("The URDF was not opened") + "\n";
                 report += tr("URDF parser returned following errors:") + "\n\n";
             }
@@ -228,7 +237,7 @@ namespace ROS2
                     AZStd::string sourcePath(kNotFoundAz);
                     AZStd::string resolvedPath(kNotFoundAz);
                     QString productAssetText;
-                    auto crc = AZ::Crc32();
+                    AZ::Crc32 crc;
                     QString tooltip = kNotFound;
                     bool visual = visualNames.contains(meshPath);
                     bool collider = collidersNames.contains(meshPath);
@@ -249,8 +258,8 @@ namespace ROS2
                     {
                         const auto& asset = m_urdfAssetsMapping->at(meshPath);
                         sourceAssetUuid = asset.m_availableAssetInfo.m_sourceGuid;
-                        sourcePath = asset.m_availableAssetInfo.m_sourceAssetRelativePath;
-                        resolvedPath = asset.m_resolvedUrdfPath.data();
+                        sourcePath = asset.m_availableAssetInfo.m_sourceAssetRelativePath.String();
+                        resolvedPath = asset.m_resolvedUrdfPath.String();
                         crc = asset.m_urdfFileCRC;
                         tooltip = QString::fromUtf8(resolvedPath.data(), resolvedPath.size());
                     }
@@ -278,6 +287,8 @@ namespace ROS2
 
     bool RobotImporterWidget::validateCurrentPage()
     {
+        // If SDF file are desired to be brought in via the RobotImporter workflow
+        // an OpenSdf function would need to be added
         if (currentPage() == m_fileSelectPage)
         {
             m_params.clear();
@@ -289,7 +300,8 @@ namespace ROS2
                 m_xacroParamsPage->SetXacroParameters(m_params);
             }
             // no need to wait for param page - parse urdf now, nextId will skip unnecessary pages
-            if (m_params.empty())
+            if (const bool isFileUrdfOrXacro = Utils::IsFileXacro(m_urdfPath) || Utils::IsFileUrdf(m_urdfPath);
+                m_params.empty() && isFileUrdfOrXacro)
             {
                 OpenUrdf();
             }
@@ -298,7 +310,11 @@ namespace ROS2
         if (currentPage() == m_xacroParamsPage)
         {
             m_params = m_xacroParamsPage->GetXacroParameters();
-            OpenUrdf();
+            if (const bool isFileUrdfOrXacro = Utils::IsFileXacro(m_urdfPath) || Utils::IsFileUrdf(m_urdfPath);
+                isFileUrdfOrXacro)
+            {
+                OpenUrdf();
+            }
         }
         if (currentPage() == m_introPage)
         {
