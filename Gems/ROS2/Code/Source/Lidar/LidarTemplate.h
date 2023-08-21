@@ -54,6 +54,8 @@ namespace ROS2
 
         //! Name of lidar template
         AZStd::string m_name;
+        //! Whether the template is for a 2D Lidar
+        bool m_is2D = false;
         //! Minimum horizontal angle (altitude of the ray), in degrees
         float m_minHAngle = 0.0f;
         //! Maximum horizontal angle (altitude of the ray), in degrees

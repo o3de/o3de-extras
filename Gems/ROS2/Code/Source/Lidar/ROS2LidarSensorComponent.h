@@ -17,6 +17,7 @@
 
 #include "LidarRaycaster.h"
 #include "LidarSensorConfiguration.h"
+#include "LidarBase.h"
 
 namespace ROS2
 {
@@ -29,7 +30,7 @@ namespace ROS2
     public:
         AZ_COMPONENT(ROS2LidarSensorComponent, "{502A955F-7742-4E23-AD77-5E4063739DCA}", ROS2SensorComponent);
         ROS2LidarSensorComponent();
-        ROS2LidarSensorComponent(const SensorConfiguration& sensorConfiguration, const LidarSensorConfiguration& lidarConfiguration);
+        // ROS2LidarSensorComponent(const SensorConfiguration& sensorConfiguration, const LidarSensorConfiguration& lidarConfiguration);
         ~ROS2LidarSensorComponent() = default;
         static void Reflect(AZ::ReflectContext* context);
         //////////////////////////////////////////////////////////////////////////
@@ -44,22 +45,11 @@ namespace ROS2
         void FrequencyTick() override;
         void Visualize() override;
 
-        void ConnectToLidarRaycaster();
-        void ConfigureLidarRaycaster();
-
-        // A structure that maps each lidar implementation busId to the busId of a raycaster created by this LidarSensorComponent.
-        AZStd::unordered_map<AZStd::string, LidarId> m_implementationToRaycasterMap;
         bool m_canRaycasterPublish = false;
-        LidarId m_lidarRaycasterId;
         std::shared_ptr<rclcpp::Publisher<sensor_msgs::msg::PointCloud2>> m_pointCloudPublisher;
 
-        // Used only when visualization is on - points differ since they are in global transform as opposed to local
-        AZStd::vector<AZ::Vector3> m_visualizationPoints;
-        AZ::RPI::AuxGeomDrawPtr m_drawQueue;
+        LidarBase m_lidarBase;
 
-        LidarSensorConfiguration m_lidarConfiguration;
-
-        AZStd::vector<AZ::Vector3> m_lastRotations;
-        RaycastResult m_lastScanResults;
+        LidarId m_lidarRaycasterId;
     };
 } // namespace ROS2

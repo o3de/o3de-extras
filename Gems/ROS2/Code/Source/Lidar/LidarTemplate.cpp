@@ -91,10 +91,12 @@ namespace ROS2
                         AZ::Edit::UIHandlers::Default, &LidarTemplate::m_minVAngle, "Min vertical angle [Deg]", "Downwards reach of fov")
                     ->Attribute(AZ::Edit::Attributes::Min, -180.0f)
                     ->Attribute(AZ::Edit::Attributes::Max, 180.0f)
+                    ->Attribute(AZ::Edit::Attributes::Visibility, &LidarTemplate::IsLayersVisible)
                     ->DataElement(
                         AZ::Edit::UIHandlers::Default, &LidarTemplate::m_maxVAngle, "Max vertical angle [Deg]", "Upwards reach of fov")
                     ->Attribute(AZ::Edit::Attributes::Min, -180.0f)
                     ->Attribute(AZ::Edit::Attributes::Max, 180.0f)
+                    ->Attribute(AZ::Edit::Attributes::Visibility, &LidarTemplate::IsLayersVisible)
                     ->DataElement(AZ::Edit::UIHandlers::Default, &LidarTemplate::m_minRange, "Min range", "Minimum beam range [m]")
                     ->Attribute(AZ::Edit::Attributes::Min, 0.0f)
                     ->Attribute(AZ::Edit::Attributes::Max, 1000.0f)

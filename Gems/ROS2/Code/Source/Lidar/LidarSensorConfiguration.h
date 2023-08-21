@@ -25,13 +25,15 @@ namespace ROS2
         AZ_TYPE_INFO(LidarSensorConfiguration, "{e46e75f4-1e0e-48ca-a22f-43afc8f25101}");
         static void Reflect(AZ::ReflectContext* context);
 
+        LidarSensorConfiguration(AZStd::vector<LidarTemplate::LidarModel> availableModels = {});
+
         void FetchLidarImplementationFeatures();
 
         LidarSystemFeatures m_lidarSystemFeatures;
 
         AZStd::string m_lidarSystem;
-        LidarTemplate::LidarModel m_lidarModel = LidarTemplate::LidarModel::Custom3DLidar;
-        LidarTemplate m_lidarParameters = LidarTemplateUtils::GetTemplate(LidarTemplate::LidarModel::Custom3DLidar);
+        LidarTemplate::LidarModel m_lidarModel = LidarTemplate::LidarModel::Custom2DLidar;
+        LidarTemplate m_lidarParameters = LidarTemplateUtils::GetTemplate(LidarTemplate::LidarModel::Custom2DLidar);
 
         AZStd::unordered_set<AZ::u32> m_ignoredCollisionLayers;
         AZStd::vector<AZ::EntityId> m_excludedEntities;
@@ -44,9 +46,15 @@ namespace ROS2
         bool IsEntityExclusionVisible() const;
         bool IsMaxPointsConfigurationVisible() const;
 
+        AZStd::vector<AZStd::string> GetAvailableModels();
+        void SetModel();
+
         AZ::Crc32 OnLidarModelSelected();
         AZ::Crc32 OnLidarImplementationSelected();
         AZStd::vector<AZStd::string> FetchLidarSystemList();
+
+        AZStd::vector<LidarTemplate::LidarModel> m_availableModels;
+        AZStd::string m_lidarModelName = "CustomLidar2D";
 
         void UpdateShowNoise();
     };
