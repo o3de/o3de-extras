@@ -152,10 +152,9 @@ namespace ROS2
             AZ_Assert(false, "This Lidar Implementation does not support noise!");
         }
 
-        //! Configures Layer ignoring parameters
-        //! @param ignoreLayer Should a specified collision layer be ignored?
-        //! @param layerIndex Index of collision layer to be ignored.
-        virtual void ConfigureLayerIgnoring([[maybe_unused]] bool ignoreLayer, [[maybe_unused]] AZ::u32 layerIndex)
+        //! Configures which collision layers should be ignored.
+        //! @param layerIndices Indices of collision layers to be ignored.
+        virtual void ConfigureIgnoredCollisionLayers([[maybe_unused]] const AZStd::unordered_set<AZ::u32>& layerIndices)
         {
             AZ_Assert(false, "This Lidar Implementation does not support collision layer configurations!");
         }

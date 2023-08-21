@@ -33,8 +33,7 @@ namespace ROS2
         LidarTemplate::LidarModel m_lidarModel = LidarTemplate::LidarModel::Custom3DLidar;
         LidarTemplate m_lidarParameters = LidarTemplateUtils::GetTemplate(LidarTemplate::LidarModel::Custom3DLidar);
 
-        bool m_ignoreLayer = false;
-        AZ::u32 m_ignoredLayerIndex = 0;
+        AZStd::unordered_set<AZ::u32> m_ignoredCollisionLayers;
         AZStd::vector<AZ::EntityId> m_excludedEntities;
 
         bool m_addPointsAtMax = false;

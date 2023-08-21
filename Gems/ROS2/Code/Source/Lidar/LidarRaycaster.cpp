@@ -48,8 +48,7 @@ namespace ROS2
         , m_range{ lidarRaycaster.m_range }
         , m_addMaxRangePoints{ lidarRaycaster.m_addMaxRangePoints }
         , m_rayRotations{ AZStd::move(lidarRaycaster.m_rayRotations) }
-        , m_ignoreLayer{ lidarRaycaster.m_ignoreLayer }
-        , m_ignoredLayerIndex{ lidarRaycaster.m_ignoredLayerIndex }
+        , m_ignoredCollisionLayers{ lidarRaycaster.m_ignoredCollisionLayers }
     {
         lidarRaycaster.BusDisconnect();
         lidarRaycaster.m_busId = LidarId::CreateNull();
@@ -99,18 +98,17 @@ namespace ROS2
             request->m_direction = direction;
             request->m_distance = m_range;
             request->m_reportMultipleHits = false;
-            request->m_filterCallback = [ignoredLayerIndex = this->m_ignoredLayerIndex, ignoreLayer = this->m_ignoreLayer](
-                                            const AzPhysics::SimulatedBody* simBody, const Physics::Shape* shape)
+
+            request->m_filterCallback =
+                [ignoredCollisionLayers = this->m_ignoredCollisionLayers](const AzPhysics::SimulatedBody* simBody, const Physics::Shape* shape)
             {
-                if (ignoreLayer && (shape->GetCollisionLayer().GetIndex() == ignoredLayerIndex))
+                if (ignoredCollisionLayers.contains(shape->GetCollisionLayer().GetIndex()))
                 {
                     return AzPhysics::SceneQuery::QueryHitType::None;
                 }
-                else
-                {
-                    return AzPhysics::SceneQuery::QueryHitType::Block;
-                }
+                return AzPhysics::SceneQuery::QueryHitType::Block;
             };
+
             requests.emplace_back(AZStd::move(request));
         }
         return requests;
@@ -127,7 +125,6 @@ namespace ROS2
         }
 
         const AZStd::vector<AZ::Vector3> rayDirections = LidarTemplateUtils::RotationsToDirections(m_rayRotations, lidarTransform);
-
         AzPhysics::SceneQueryRequests requests = prepareRequests(lidarTransform, rayDirections);
 
         RaycastResult results;
@@ -179,10 +176,9 @@ namespace ROS2
         return results;
     }
 
-    void LidarRaycaster::ConfigureLayerIgnoring(bool ignoreLayer, AZ::u32 layerIndex)
+    void LidarRaycaster::ConfigureIgnoredCollisionLayers(const AZStd::unordered_set<AZ::u32>& layerIndices)
     {
-        m_ignoreLayer = ignoreLayer;
-        m_ignoredLayerIndex = layerIndex;
+        m_ignoredCollisionLayers = layerIndices;
     }
     void LidarRaycaster::ConfigureMaxRangePointAddition(bool addMaxRangePoints)
     {
