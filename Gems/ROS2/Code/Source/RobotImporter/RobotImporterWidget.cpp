@@ -90,43 +90,51 @@ namespace ROS2
             if (Utils::IsFileXacro(m_urdfPath))
             {
                 Utils::xacro::ExecutionOutcome outcome = Utils::xacro::ParseXacro(m_urdfPath.String(), m_params);
+                // Store off the URDF parsing outcome which will be output later in this function
+                parsedUrdfOutcome = outcome.m_urdfHandle;
                 if (outcome)
                 {
-                    parsedUrdfOutcome = outcome.m_urdfHandle;
                     report += "# " + tr("XACRO execution succeeded") + "\n";
                     m_assetPage->ClearAssetsList();
                 }
                 else
                 {
-                    report += "# " + tr("XACRO parsing failed") + "\n";
-                    report += "\n\n## " + tr("Command called") + "\n\n`" + QString::fromUtf8(outcome.m_called.data()) + "`";
-                    report += "\n\n" + tr("Process failed");
-                    report += "\n\n## " + tr("Error output") + "\n\n";
-                    report += "```\n";
-                    if (outcome.m_logErrorOutput.size())
+                    if (outcome.m_succeed)
                     {
-                        report +=
-                            QString::fromLocal8Bit(outcome.m_logErrorOutput.data(), static_cast<int>(outcome.m_logErrorOutput.size()));
+                        report += "# " + tr("XACRO execution succeeded, but URDF parsing failed") + "\n";
                     }
                     else
                     {
-                        report += tr("(EMPTY)");
+                        report += "# " + tr("XACRO parsing failed") + "\n";
+                        report += "\n\n## " + tr("Command called") + "\n\n`" + QString::fromUtf8(outcome.m_called.data()) + "`";
+                        report += "\n\n" + tr("Process failed");
+                        report += "\n\n## " + tr("Error output") + "\n\n";
+                        report += "```\n";
+                        if (outcome.m_logErrorOutput.size())
+                        {
+                            report +=
+                                QString::fromUtf8(outcome.m_logErrorOutput.data(), static_cast<int>(outcome.m_logErrorOutput.size()));
+                        }
+                        else
+                        {
+                            report += tr("(EMPTY)");
+                        }
+                        report += "\n```";
+                        report += "\n\n## " + tr("Standard output") + "\n\n";
+                        report += "```\n";
+                        if (outcome.m_logStandardOutput.size())
+                        {
+                            report += QString::fromUtf8(
+                                outcome.m_logStandardOutput.data(), static_cast<int>(outcome.m_logStandardOutput.size()));
+                        }
+                        else
+                        {
+                            report += tr("(EMPTY)");
+                        }
+                        report += "\n```";
+                        m_checkUrdfPage->ReportURDFResult(report, false);
+                        return;
                     }
-                    report += "\n```";
-                    report += "\n\n## " + tr("Standard output") + "\n\n";
-                    report += "```\n";
-                    if (outcome.m_logStandardOutput.size())
-                    {
-                        report += QString::fromLocal8Bit(
-                            outcome.m_logStandardOutput.data(), static_cast<int>(outcome.m_logStandardOutput.size()));
-                    }
-                    else
-                    {
-                        report += tr("(EMPTY)");
-                    }
-                    report += "\n```";
-                    m_checkUrdfPage->ReportURDFResult(report, false);
-                    return;
                 }
             }
             else if (Utils::IsFileUrdf(m_urdfPath))
