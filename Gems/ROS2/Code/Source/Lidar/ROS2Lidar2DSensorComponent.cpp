@@ -126,9 +126,9 @@ namespace ROS2
 
     ROS2Lidar2DSensorComponent::ROS2Lidar2DSensorComponent(
         const SensorConfiguration& sensorConfiguration, const Lidar2DSensorConfiguration& lidarConfiguration)
-        : m_lidarConfiguration(lidarConfiguration)
+        : m_lidarConfiguration(AZStd::move(lidarConfiguration))
     {
-        m_sensorConfiguration = sensorConfiguration;
+        m_sensorConfiguration = AZStd::move(sensorConfiguration);
     }
 
     void ROS2Lidar2DSensorComponent::Visualize()
@@ -220,5 +220,24 @@ namespace ROS2
 
         message.ranges.assign(m_lastScanResults.m_ranges.begin(), m_lastScanResults.m_ranges.end());
         m_laserScanPublisher->publish(message);
+    }
+
+    const SensorConfiguration& ROS2Lidar2DSensorComponent::GetSensorConfiguration() const
+    {
+        return m_sensorConfiguration;
+    }
+    void ROS2Lidar2DSensorComponent::SetSensorConfiguration(const SensorConfiguration& sensorConfiguration)
+    {
+        m_sensorConfiguration = sensorConfiguration;
+    }
+
+    const Lidar2DSensorConfiguration& ROS2Lidar2DSensorComponent::GetLidarSensorConfiguration() const
+    {
+        return m_lidarConfiguration;
+    }
+
+    void ROS2Lidar2DSensorComponent::SetLidarSensorConfiguration(const Lidar2DSensorConfiguration& lidarSensorConfiguration)
+    {
+        m_lidarConfiguration = lidarSensorConfiguration;
     }
 } // namespace ROS2

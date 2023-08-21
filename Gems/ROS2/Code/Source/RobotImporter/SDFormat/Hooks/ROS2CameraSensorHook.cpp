@@ -9,6 +9,7 @@
 #include <Camera/CameraConstants.h>
 #include <Camera/ROS2CameraSensorEditorComponent.h>
 #include <ROS2/Frame/ROS2FrameComponent.h>
+#include <ROS2/ROS2GemUtilities.h>
 #include <RobotImporter/SDFormat/ROS2SensorHooks.h>
 
 #include <sdf/Camera.hh>
@@ -16,7 +17,6 @@
 
 namespace ROS2::SDFormat
 {
-
     SensorImporterHook ROS2SensorHooks::ROS2CameraSensor()
     {
         SensorImporterHook importerHook;
@@ -59,32 +59,40 @@ namespace ROS2::SDFormat
             SensorConfiguration sensorConfiguration;
             sensorConfiguration.m_frequency = sdfSensor.UpdateRate();
             if (sdfSensor.Type() != sdf::SensorType::DEPTH_CAMERA)
-            {
+            { // COLOR_CAMERA and RGBD_CAMERA
                 Utils::AddTopicConfiguration(
                     sensorConfiguration, "camera_image_color", CameraConstants::ImageMessageType, CameraConstants::ColorImageConfig);
                 Utils::AddTopicConfiguration(
                     sensorConfiguration, "color_camera_info", CameraConstants::CameraInfoMessageType, CameraConstants::ColorInfoConfig);
             }
             if (sdfSensor.Type() != sdf::SensorType::CAMERA)
-            {
+            { // DEPTH_CAMERA and RGBD_CAMERA
                 Utils::AddTopicConfiguration(
                     sensorConfiguration, "camera_image_depth", CameraConstants::ImageMessageType, CameraConstants::DepthImageConfig);
                 Utils::AddTopicConfiguration(
                     sensorConfiguration, "depth_camera_info", CameraConstants::CameraInfoMessageType, CameraConstants::DepthInfoConfig);
             }
 
-            if (entity.CreateComponent<ROS2FrameComponent>() &&
-                entity.CreateComponent<ROS2CameraSensorEditorComponent>(sensorConfiguration, cameraConfiguration))
+            const auto& entityId = entity.GetId();
+            if (!ROS2::Utils::CreateComponent(entityId, ROS2FrameComponent::TYPEINFO_Uuid()))
             {
-                return AZ::Success();
+                return AZ::Failure(AZStd::string("Failed to create ROS2FrameComponent required for ROS2 Camera Sensor component"));
+            }
+            const auto componentId = ROS2::Utils::CreateComponent(entityId, ROS2CameraSensorEditorComponent::TYPEINFO_Uuid());
+            if (componentId)
+            {
+                auto* component = ROS2::Utils::GetGameOrEditorComponent<ROS2CameraSensorEditorComponent>(&entity);
+                component->SetSensorConfiguration(sensorConfiguration);
+                component->SetCameraSensorConfiguration(cameraConfiguration);
             }
             else
             {
                 return AZ::Failure(AZStd::string("Failed to create ROS2 Camera Sensor component"));
             }
+
+            return AZ::Success();
         };
 
         return importerHook;
     }
-
 } // namespace ROS2::SDFormat

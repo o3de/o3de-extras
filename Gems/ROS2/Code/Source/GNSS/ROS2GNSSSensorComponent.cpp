@@ -62,9 +62,9 @@ namespace ROS2
 
     ROS2GNSSSensorComponent::ROS2GNSSSensorComponent(
         const SensorConfiguration& sensorConfiguration, const GNSSSensorConfiguration& gnssConfiguration)
-        : m_gnssConfiguration(gnssConfiguration)
+        : m_gnssConfiguration(AZStd::move(gnssConfiguration))
     {
-        m_sensorConfiguration = sensorConfiguration;
+        m_sensorConfiguration = AZStd::move(sensorConfiguration);
     }
 
     void ROS2GNSSSensorComponent::Activate()
@@ -84,6 +84,26 @@ namespace ROS2
     {
         ROS2SensorComponent::Deactivate();
         m_gnssPublisher.reset();
+    }
+
+    const SensorConfiguration& ROS2GNSSSensorComponent::GetSensorConfiguration() const
+    {
+        return m_sensorConfiguration;
+    }
+
+    void ROS2GNSSSensorComponent::SetSensorConfiguration(const SensorConfiguration& sensorConfiguration)
+    {
+        m_sensorConfiguration = sensorConfiguration;
+    }
+
+    const GNSSSensorConfiguration& ROS2GNSSSensorComponent::GetGNSSSensorConfiguration() const
+    {
+        return m_gnssConfiguration;
+    }
+
+    void ROS2GNSSSensorComponent::SetGNSSSensorConfiguration(const GNSSSensorConfiguration& gnssConfiguration)
+    {
+        m_gnssConfiguration = gnssConfiguration;
     }
 
     void ROS2GNSSSensorComponent::FrequencyTick()

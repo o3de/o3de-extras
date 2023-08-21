@@ -8,6 +8,7 @@
 
 #include <Imu/ROS2ImuSensorComponent.h>
 #include <ROS2/Frame/ROS2FrameComponent.h>
+#include <ROS2/ROS2GemUtilities.h>
 #include <RobotImporter/SDFormat/ROS2SensorHooks.h>
 #include <Source/EditorStaticRigidBodyComponent.h>
 
@@ -16,7 +17,6 @@
 
 namespace ROS2::SDFormat
 {
-
     SensorImporterHook ROS2SensorHooks::ROS2ImuSensor()
     {
         SensorImporterHook importerHook;
@@ -81,18 +81,27 @@ namespace ROS2::SDFormat
             const AZStd::string messageType = "sensor_msgs::msg::Imu";
             Utils::AddTopicConfiguration(sensorConfiguration, "imu", messageType, messageType);
 
-            if (entity.CreateComponent<PhysX::EditorStaticRigidBodyComponent>() && entity.CreateComponent<ROS2FrameComponent>() &&
-                entity.CreateComponent<ROS2ImuSensorComponent>(sensorConfiguration, imuConfiguration))
+            const auto& entityId = entity.GetId();
+            if (!ROS2::Utils::CreateComponent(entityId, PhysX::EditorStaticRigidBodyComponent::TYPEINFO_Uuid()) ||
+                !ROS2::Utils::CreateComponent(entityId, ROS2FrameComponent::TYPEINFO_Uuid()))
             {
-                return AZ::Success();
+                return AZ::Failure(AZStd::string("Failed to create components required for ROS2 Imu Sensor component"));
+            }
+            const auto componentId = ROS2::Utils::CreateComponent(entityId, ROS2ImuSensorComponent::TYPEINFO_Uuid());
+            if (componentId)
+            {
+                auto* component = ROS2::Utils::GetGameOrEditorComponent<ROS2ImuSensorComponent>(&entity);
+                component->SetSensorConfiguration(sensorConfiguration);
+                component->SetImuSensorConfiguration(imuConfiguration);
             }
             else
             {
                 return AZ::Failure(AZStd::string("Failed to create ROS2 Imu Sensor component"));
             }
+
+            return AZ::Success();
         };
 
         return importerHook;
     }
-
 } // namespace ROS2::SDFormat

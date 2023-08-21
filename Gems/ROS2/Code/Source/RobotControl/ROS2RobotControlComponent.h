@@ -32,7 +32,7 @@ namespace ROS2
 
         void SetControlConfiguration(const ControlConfiguration& controlConfiguration);
 
-        const TopicConfiguration& GetSubscriberConfigration() const;
+        const TopicConfiguration& GetSubscriberConfiguration() const;
 
         void SetSubscriberConfiguration(const TopicConfiguration& subscriberConfiguration);
 

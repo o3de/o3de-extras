@@ -7,18 +7,7 @@
  */
 
 #include "ROS2SensorHooks.h"
-
-#include <Camera/CameraConstants.h>
-#include <Camera/ROS2CameraSensorEditorComponent.h>
-#include <GNSS/ROS2GNSSSensorComponent.h>
-#include <Imu/ROS2ImuSensorComponent.h>
-#include <Lidar/ROS2LidarSensorComponent.h>
-#include <ROS2/Frame/ROS2FrameComponent.h>
-#include <RobotImporter/Utils/RobotImporterUtils.h>
-#include <Source/EditorStaticRigidBodyComponent.h>
-
-#include <sdf/Camera.hh>
-#include <sdf/NavSat.hh>
+#include <ROS2/Communication/TopicConfiguration.h>
 
 namespace ROS2::SDFormat
 {
@@ -36,5 +25,4 @@ namespace ROS2::SDFormat
             sensorConfig.m_publishersConfigurations.insert(AZStd::make_pair(configName, config));
         }
     } // namespace ROS2SensorHooks
-
 } // namespace ROS2::SDFormat
