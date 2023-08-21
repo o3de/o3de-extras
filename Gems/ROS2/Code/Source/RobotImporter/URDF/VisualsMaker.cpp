@@ -27,7 +27,7 @@ namespace ROS2
 {
     VisualsMaker::VisualsMaker() = default;
     VisualsMaker::VisualsMaker(
-        AZStd::unordered_map<AZStd::string, const sdf::Material*> materials, const AZStd::shared_ptr<Utils::UrdfAssetMap>& urdfAssetsMapping)
+        MaterialNameMap materials, const AZStd::shared_ptr<Utils::UrdfAssetMap>& urdfAssetsMapping)
         : m_materials(AZStd::move(materials))
         , m_urdfAssetsMapping(urdfAssetsMapping)
     {

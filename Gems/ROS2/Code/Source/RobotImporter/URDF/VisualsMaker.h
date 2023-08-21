@@ -21,9 +21,11 @@ namespace ROS2
     class VisualsMaker
     {
     public:
+        using MaterialNameMap = AZStd::unordered_map<AZStd::string, const sdf::Material*>;
+
         VisualsMaker();
         VisualsMaker(
-            AZStd::unordered_map<AZStd::string, const sdf::Material*> materials,
+            MaterialNameMap materials,
             const AZStd::shared_ptr<Utils::UrdfAssetMap>& urdfAssetsMapping);
 
         //! Add zero, one or many visual elements to a given entity (depending on link content).
@@ -38,7 +40,7 @@ namespace ROS2
         void AddVisualToEntity(const sdf::Visual* visual, AZ::EntityId entityId) const;
         void AddMaterialForVisual(const sdf::Visual* visual, AZ::EntityId entityId) const;
 
-        AZStd::unordered_map<AZStd::string, const sdf::Material*> m_materials;
+        MaterialNameMap m_materials;
         AZStd::shared_ptr<Utils::UrdfAssetMap> m_urdfAssetsMapping;
     };
 } // namespace ROS2

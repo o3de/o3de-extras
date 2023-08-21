@@ -18,7 +18,7 @@ namespace ROS2
         {
             if (!filename.HasExtension())
             {
-                return "";
+                return AZStd::string{};
             }
             AZStd::string extension{ filename.Extension().Native() };
             AZStd::to_upper(extension.begin(), extension.end());
@@ -37,7 +37,7 @@ namespace ROS2
 
         bool IsFileSDF(const AZ::IO::Path& filename)
         {
-            return GetCapitalizedExtension(filename) == ".SDF";
+            return GetCapitalizedExtension(filename) == ".SDF" || GetCapitalizedExtension(filename) == ".WORLD";
         }
     } // namespace Utils
 } // namespace ROS2

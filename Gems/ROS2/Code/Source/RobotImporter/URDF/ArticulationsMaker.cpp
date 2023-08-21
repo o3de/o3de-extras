@@ -46,15 +46,15 @@ namespace ROS2
             const auto type = supportedArticulationType->second;
             articulationLinkConfiguration.m_articulationJointType = type;
             const AZ::Vector3 o3deJointDir{ 1.0, 0.0, 0.0 };
-            AZ::Vector3 jointCoorAxis = AZ::Vector3::CreateZero();
+            AZ::Vector3 jointCoordinateAxis = AZ::Vector3::CreateZero();
             auto quaternion = AZ::Quaternion::CreateIdentity();
 
             const sdf::JointAxis* jointAxis = joint->Axis();
             if (jointAxis != nullptr)
             {
-                jointCoorAxis = URDF::TypeConversions::ConvertVector3(jointAxis->Xyz());
+                jointCoordinateAxis = URDF::TypeConversions::ConvertVector3(jointAxis->Xyz());
                 quaternion =
-                    jointCoorAxis.IsZero() ? AZ::Quaternion::CreateIdentity() : AZ::Quaternion::CreateShortestArc(o3deJointDir, jointCoorAxis);
+                    jointCoordinateAxis.IsZero() ? AZ::Quaternion::CreateIdentity() : AZ::Quaternion::CreateShortestArc(o3deJointDir, jointCoordinateAxis);
             }
 
             const AZ::Vector3 rotation = quaternion.GetEulerDegrees();

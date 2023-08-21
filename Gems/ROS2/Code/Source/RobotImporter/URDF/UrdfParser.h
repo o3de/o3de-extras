@@ -33,7 +33,7 @@ namespace ROS2
 
         //! Parse string with URDF data and generate model.
         //! @param xmlString a string that contains URDF data (XML format).
-        //! @param parserConfig structure that contains configuration options for the SDFormater parser
+        //! @param parserConfig structure that contains configuration options for the SDFormatter parser
         //!        The relevant ParserConfig functions for URDF importing are
         //!        URDFPreserveFixedJoint() function to prevent merging of robot links bound by fixed joint
         //!        AddURIPath() function to provide a mapping of package:// and model:// references to the local filesystem
