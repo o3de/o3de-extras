@@ -8,6 +8,7 @@
 
 #pragma once
 
+#include "FollowingCameraConfiguration.h"
 #include <AzCore/Component/Component.h>
 #include <AzCore/Component/TickBus.h>
 #include <AzFramework/Components/TransformComponent.h>
@@ -15,7 +16,7 @@
 
 namespace ROS2
 {
-    //! The component used for cameras that follow robots.
+    //! The component used for cameras that follow moving objects
     //! It allows to switch between different cameras attached to entities, and to control the active camera using keyboard.
     class FollowingCameraComponent
         : public AZ::Component
@@ -23,7 +24,13 @@ namespace ROS2
         , public AzFramework::InputChannelEventListener
     {
     public:
+        FollowingCameraComponent() = default;
+        FollowingCameraComponent(const FollowingCameraConfiguration& configuration);
         static void GetRequiredServices(AZ::ComponentDescriptor::DependencyArrayType& required);
+
+        static void GetProvidedServices(AZ::ComponentDescriptor::DependencyArrayType& provided);
+
+        static void GetIncompatibleServices(AZ::ComponentDescriptor::DependencyArrayType& incompatible);
 
         static void Reflect(AZ::ReflectContext* reflection);
 
@@ -34,12 +41,11 @@ namespace ROS2
         void Deactivate() override;
 
     private:
-        // AZ::TickBus overrides
+        // AZ::TickBus overrides ..
         void OnTick(float deltaTime, AZ::ScriptTimePoint time) override;
 
-        // AzFramework::InputChannelEventListener overrides
+        // AzFramework::InputChannelEventListener overrides ...
         bool OnInputChannelEventFiltered(const AzFramework::InputChannel& inputChannel) override;
-
         void OnKeyboardEvent(const AzFramework::InputChannel& inputChannel);
 
         //! Compute weighted average of the vectors in the buffer.
@@ -66,25 +72,10 @@ namespace ROS2
         //! The smoothing buffer for rotation, the first element is the tangential vector, the second element is the weight.
         AZStd::deque<AZStd::pair<AZ::Quaternion, float>> m_lastRotationsBuffer;
 
-        //! Predefined view points.
-        AZStd::vector<AZ::EntityId> m_predefinedViews;
+        float m_rotationOffset = 0.0f; //!< The rotation change from the input.
+        float m_opticalAxisTranslation = 0.0f; //!< The zoom change from the input.
+        AZ::EntityId m_currentView; //!< Current used view point.
 
-        //! Default view point to active after activation.
-        int m_defaultView{ 0 };
-
-        //! Current used view point.
-        AZ::EntityId m_currentView;
-
-        //! The rotation and zoom change from the input.
-        float m_rotationOffset = 0.0f;
-        //! The translation offset from the defined view.
-        float m_opticalAxisTranslation = 0.0f;
-
-        //! The length of the smoothing buffer.
-        int m_smoothingBuffer = 30;
-        float m_zoomSpeed = 0.06f;
-        float m_rotationSpeed = 0.05f;
-
-        const float m_opticalAxisTranslationMin = 0.0f;
+        FollowingCameraConfiguration m_configuration; //!< The configuration of the following camera.
     };
 } // namespace ROS2

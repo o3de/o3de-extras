@@ -24,23 +24,23 @@ namespace ROS2
         { AzFramework::InputDeviceKeyboard::Key::Alphanumeric9, 8 }, { AzFramework::InputDeviceKeyboard::Key::Alphanumeric0, 9 }
     };
 
+    FollowingCameraComponent::FollowingCameraComponent(const FollowingCameraConfiguration& configuration)
+        : m_configuration(configuration)
+    {
+    }
+
     void FollowingCameraComponent::Reflect(AZ::ReflectContext* reflection)
     {
+        FollowingCameraConfiguration::Reflect(reflection);
         AZ::SerializeContext* serializeContext = azrtti_cast<AZ::SerializeContext*>(reflection);
         if (serializeContext)
         {
-            serializeContext->Class<FollowingCameraComponent, AZ::Component>()
-                ->Version(1)
-                ->Field("PredefinedViews", &FollowingCameraComponent::m_predefinedViews)
-                ->Field("SmoothingLength", &FollowingCameraComponent::m_smoothingBuffer)
-                ->Field("ZoomSpeed", &FollowingCameraComponent::m_zoomSpeed)
-                ->Field("RotationSpeed", &FollowingCameraComponent::m_rotationSpeed)
-                ->Field("DefaultView", &FollowingCameraComponent::m_defaultView);
-
+            serializeContext->Class<FollowingCameraComponent, AZ::Component>()->Version(1)->Field(
+                "FollowingCameraConfiguration", &FollowingCameraComponent::m_configuration);
             AZ::EditContext* editContext = serializeContext->GetEditContext();
             if (editContext)
             {
-                editContext->Class<FollowingCameraComponent>("Following Camera", "Camera following kraken")
+                editContext->Class<FollowingCameraComponent>("Following Camera", "Camera following entity with predefined views")
                     ->ClassElement(AZ::Edit::ClassElements::EditorData, "")
                     ->Attribute(AZ::Edit::Attributes::AppearsInAddComponentMenu, AZ_CRC("Game"))
                     ->Attribute(AZ::Edit::Attributes::Category, "ROS2 Utilities")
@@ -48,29 +48,27 @@ namespace ROS2
                     ->UIElement(AZ::Edit::UIHandlers::Label, "", "")
                     ->Attribute(
                         AZ::Edit::Attributes::ValueText,
-                        "This Component allows to switch camera among predefined transformation obtained from entities in Views. "
+                        "This Component allows to switch camera view between predefined views. "
                         "It also allows to zoom in/out and rotate around parent transformation. "
-                        "It has smoothing capabilities. "
-                        "Numerical keys allow to switch views. W,S,A,D keys allow to offset current view.")
+                        "Use 0-9 keys to switch views and W, S, A, D keys to manipulate current view.")
                     ->DataElement(
                         AZ::Edit::UIHandlers::Default,
-                        &FollowingCameraComponent::m_smoothingBuffer,
-                        "Smoothing Length",
-                        "Number of past transform used to smooth, larger value gives smoother result, but more lag")
-                    ->Attribute(AZ::Edit::Attributes::Min, 1)
-                    ->Attribute(AZ::Edit::Attributes::Max, 100)
-                    ->DataElement(AZ::Edit::UIHandlers::Default, &FollowingCameraComponent::m_zoomSpeed, "Zoom Speed", "Speed of zooming")
-                    ->DataElement(
-                        AZ::Edit::UIHandlers::Default,
-                        &FollowingCameraComponent::m_rotationSpeed,
-                        "Rotation Speed",
-                        "Rotation Speed around the target")
-                    ->DataElement(AZ::Edit::UIHandlers::Default, &FollowingCameraComponent::m_predefinedViews, "Views", "Views to follow")
-                    ->DataElement(
-                        AZ::Edit::UIHandlers::Default, &FollowingCameraComponent::m_defaultView, "Default View", "Default View to follow")
-                    ->Attribute(AZ::Edit::Attributes::Min, 0);
+                        &FollowingCameraComponent::m_configuration,
+                        "FollowingCameraConfiguration",
+                        "FollowingCameraConfiguration")
+                    ->Attribute(AZ::Edit::Attributes::Visibility, AZ::Edit::PropertyVisibility::ShowChildrenOnly);
             }
         }
+    }
+
+    void FollowingCameraComponent::GetProvidedServices(AZ::ComponentDescriptor::DependencyArrayType& provided)
+    {
+        provided.push_back(AZ_CRC("FollowingCameraService"));
+    }
+
+    void FollowingCameraComponent::GetIncompatibleServices(AZ::ComponentDescriptor::DependencyArrayType& incompatible)
+    {
+        incompatible.push_back(AZ_CRC("FollowingCameraService"));
     }
 
     void FollowingCameraComponent::GetRequiredServices(AZ::ComponentDescriptor::DependencyArrayType& required)
@@ -81,14 +79,14 @@ namespace ROS2
 
     void FollowingCameraComponent::Activate()
     {
-        if (m_predefinedViews.size() == 0)
+        if (m_configuration.m_predefinedViews.size() == 0)
         {
-                AZ_Warning("FollowingCameraComponent", false, "No predefined views");
-                return;
+            AZ_Warning("FollowingCameraComponent", false, "No predefined views");
+            return;
         }
-        if (m_defaultView < m_predefinedViews.size())
+        if (m_configuration.m_defaultView < m_configuration.m_predefinedViews.size())
         {
-            m_currentView = m_predefinedViews[m_defaultView];
+            m_currentView = m_configuration.m_predefinedViews[m_configuration.m_defaultView];
         }
         InputChannelEventListener::Connect();
         AZ::TickBus::Handler::BusConnect();
@@ -106,11 +104,11 @@ namespace ROS2
         m_lastTranslationsBuffer.push_back(AZStd::make_pair(transform.GetTranslation(), deltaTime));
         m_lastRotationsBuffer.push_back(AZStd::make_pair(transform.GetRotation(), deltaTime));
 
-        if (m_lastTranslationsBuffer.size() > m_smoothingBuffer)
+        if (m_lastTranslationsBuffer.size() > m_configuration.m_smoothingBuffer)
         {
             m_lastTranslationsBuffer.pop_front();
         }
-        if (m_lastRotationsBuffer.size() > m_smoothingBuffer)
+        if (m_lastRotationsBuffer.size() > m_configuration.m_smoothingBuffer)
         {
             m_lastRotationsBuffer.pop_front();
         }
@@ -136,7 +134,6 @@ namespace ROS2
         // get the averaged translation and quaternion
         AZ::Transform filtered_parent_transform = { SmoothTranslation(), SmoothRotation(), 1.f };
 
-        // modifier for zooming
         auto modifiedTransformZoom = AZ::Transform::CreateIdentity();
         modifiedTransformZoom.SetTranslation(AZ::Vector3::CreateAxisY(m_opticalAxisTranslation));
 
@@ -174,7 +171,6 @@ namespace ROS2
         for (int i = 1; i < m_lastRotationsBuffer.size(); i++)
         {
             q = q.Slerp(m_lastRotationsBuffer[i].first, m_lastRotationsBuffer[i].second);
-
         }
         return q;
     }
@@ -196,32 +192,32 @@ namespace ROS2
         const AzFramework::InputChannelId& channelId = inputChannel.GetInputChannelId();
         if (channelId == AzFramework::InputDeviceKeyboard::Key::AlphanumericW)
         {
-            m_opticalAxisTranslation += m_zoomSpeed;
-            m_opticalAxisTranslation = AZStd::min(m_opticalAxisTranslation, m_opticalAxisTranslationMin);
+            m_opticalAxisTranslation += m_configuration.m_zoomSpeed;
+            m_opticalAxisTranslation = AZStd::min(m_opticalAxisTranslation, m_configuration.m_opticalAxisTranslationMin);
             return;
         }
         if (channelId == AzFramework::InputDeviceKeyboard::Key::AlphanumericS)
         {
-            m_opticalAxisTranslation -= m_zoomSpeed;
+            m_opticalAxisTranslation -= m_configuration.m_zoomSpeed;
             return;
         }
         if (channelId == AzFramework::InputDeviceKeyboard::Key::AlphanumericA)
         {
-            m_rotationOffset -= m_rotationSpeed;
+            m_rotationOffset -= m_configuration.m_rotationSpeed;
             return;
         }
         if (channelId == AzFramework::InputDeviceKeyboard::Key::AlphanumericD)
         {
-            m_rotationOffset += m_rotationSpeed;
+            m_rotationOffset += m_configuration.m_rotationSpeed;
             return;
         }
-        auto it = KeysToView.find(channelId);
-        if (it != KeysToView.end())
+
+        // channelId is a numeric key (Key::Alphanumeric0-Key::Alphanumeric9)
+        if (auto it = KeysToView.find(channelId); it != KeysToView.end())
         {
-            int viewId = it->second;
-            if (viewId < m_predefinedViews.size())
+            if (int viewId = it->second; viewId < m_configuration.m_predefinedViews.size())
             {
-                m_currentView = m_predefinedViews[viewId];
+                m_currentView = m_configuration.m_predefinedViews[viewId];
                 m_lastTranslationsBuffer.clear();
                 m_lastRotationsBuffer.clear();
             }
