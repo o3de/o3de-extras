@@ -8,11 +8,8 @@
 
 #include "UrdfParser.h"
 
-#include <fstream>
-
 #include <AzCore/Debug/Trace.h>
 #include <AzCore/std/string/string.h>
-#include <console_bridge/console.h>
 
 namespace ROS2::UrdfParser
 {

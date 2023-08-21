@@ -11,6 +11,7 @@
 #include <AzCore/std/string/string.h>
 #include <AzTest/AzTest.h>
 #include <RobotImporter/URDF/UrdfParser.h>
+#include <RobotImporter/Utils/ErrorUtils.h>
 #include <RobotImporter/Utils/RobotImporterUtils.h>
 #include <RobotImporter/xacro/XacroUtils.h>
 
@@ -90,6 +91,35 @@ namespace UnitTest
                    "    <limit lower=\"10.0\" upper=\"20.0\" effort=\"90.0\" velocity=\"10.0\"/>"
                    "  </joint>"
                    "</robot>", AZ_STRING_ARG(jointType));
+        }
+
+        AZStd::string GetURDFWithTwoLinksAndBaseLinkNoInertia()
+        {
+            return R"(<?xml version="1.0" ?>
+                <robot name="always_ignored">
+                  <link name="base_link">
+                    <visual>
+                      <geometry>
+                        <box size="1.0 1.0 1.0"/>
+                      </geometry>
+                    </visual>
+                  </link>
+                  <link name="child_link">
+                    <inertial>
+                      <mass value="1.0"/>
+                      <inertia ixx="1.0" iyy="1.0" izz="1.0" ixy="0" ixz="0" iyz="0"/>
+                    </inertial>
+                    <visual>
+                      <geometry>
+                        <sphere radius="1.0"/>
+                      </geometry>
+                    </visual>
+                  </link>
+                  <joint name="joint12" type="fixed">
+                    <parent link="base_link"/>
+                    <child link="child_link"/>
+                  </joint>
+                </robot>)";
         }
 
         // A URDF <model> can only represent structure which is configurable though the <joint> tags
@@ -406,6 +436,39 @@ namespace UnitTest
         EXPECT_DOUBLE_EQ(AZStd::numeric_limits<double>::infinity(), joint12Axis->Upper());
         EXPECT_DOUBLE_EQ(90.0, joint12Axis->Effort());
         EXPECT_DOUBLE_EQ(10.0, joint12Axis->MaxVelocity());
+    }
+
+        TEST_F(UrdfParserTest, ParseURDF_WithTwoLinks_AndBaseLinkWithNoInertia_WithUrdfFixedJointPreservationOn_Fails)
+    {
+        const auto xmlStr = GetURDFWithTwoLinksAndBaseLinkNoInertia();
+        sdf::ParserConfig parserConfig;
+        parserConfig.URDFSetPreserveFixedJoint(true);
+        const auto sdfRootOutcome = ROS2::UrdfParser::Parse(xmlStr, parserConfig);
+        ASSERT_FALSE(sdfRootOutcome);
+        AZStd::string errorString = ROS2::Utils::JoinSdfErrorsToString(sdfRootOutcome.error());
+        printf("URDF with single link and no inertia: %s\n", errorString.c_str());
+    }
+
+    TEST_F(UrdfParserTest, ParseURDF_WithTwoLinks_AndBaseLinkWithNoInertia_WithUrdfFixedJointPreservationOff_Succeeds)
+    {
+        const auto xmlStr = GetURDFWithTwoLinksAndBaseLinkNoInertia();
+        sdf::ParserConfig parserConfig;
+        parserConfig.URDFSetPreserveFixedJoint(false);
+        const auto sdfRootOutcome = ROS2::UrdfParser::Parse(xmlStr, parserConfig);
+        ASSERT_TRUE(sdfRootOutcome);
+        const sdf::Root& sdfRoot = sdfRootOutcome.value();
+
+        const sdf::Model* model = sdfRoot.Model();
+        EXPECT_EQ("always_ignored", model->Name());
+        ASSERT_NE(nullptr, model);
+
+        ASSERT_EQ(1, model->LinkCount());
+
+        EXPECT_TRUE(model->FrameNameExists("child_link"));
+        EXPECT_TRUE(model->FrameNameExists("joint12"));
+
+        const sdf::Link* link1 = model->LinkByName("base_link");
+        ASSERT_NE(nullptr, link1);
     }
 
     TEST_F(UrdfParserTest, WheelHeuristicNameValid)
