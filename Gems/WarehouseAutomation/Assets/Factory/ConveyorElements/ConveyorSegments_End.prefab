@@ -140,10 +140,10 @@
                         "Configuration": {
                             "ModelAsset": {
                                 "assetId": {
-                                    "guid": "{8457BE50-86B6-5EF2-B57B-A353A36723C6}",
-                                    "subId": 274567641
+                                    "guid": "{ECFCEAEE-4E9B-5039-9087-93E6D18E0E66}",
+                                    "subId": 275306854
                                 },
-                                "assetHint": "assets/factory/conveyorelements/models/default_conveyorsegments_end_54dc45ea_362b_51c6_abeb_ac1a2ec305f9_.azmodel"
+                                "assetHint": "factory/conveyorelements/models/default_conveyorsegments_end_62c2cd2f_e4c5_5a32_b6a7_85d5d12cebfe_.azmodel"
                             }
                         }
                     }
@@ -181,9 +181,9 @@
                                     "Value": {
                                         "MaterialAsset": {
                                             "assetId": {
-                                                "guid": "{1FE53A4B-2DCB-5D86-8529-7A2DF104F232}"
+                                                "guid": "{DCF18B11-FC33-5874-8B0A-3C1B53A10919}"
                                             },
-                                            "assetHint": "assets/factory/conveyorelements/materials/conveyorsegments_straight_mframe.azmaterial"
+                                            "assetHint": "factory/conveyorelements/materials/conveyorsegments_straight_mframe.azmaterial"
                                         }
                                     }
                                 }
@@ -234,10 +234,10 @@
                         "Configuration": {
                             "ModelAsset": {
                                 "assetId": {
-                                    "guid": "{8457BE50-86B6-5EF2-B57B-A353A36723C6}",
-                                    "subId": 282713217
+                                    "guid": "{ECFCEAEE-4E9B-5039-9087-93E6D18E0E66}",
+                                    "subId": 282956452
                                 },
-                                "assetHint": "assets/factory/conveyorelements/models/default_conveyorsegments_end_bc077475_4523_55bb_9392_01e165716b42_.azmodel"
+                                "assetHint": "factory/conveyorelements/models/default_conveyorsegments_end_6ab1c6bd_7cc2_5406_8641_8126467bf0bc_.azmodel"
                             }
                         }
                     }
@@ -275,9 +275,9 @@
                                     "Value": {
                                         "MaterialAsset": {
                                             "assetId": {
-                                                "guid": "{1FE53A4B-2DCB-5D86-8529-7A2DF104F232}"
+                                                "guid": "{DCF18B11-FC33-5874-8B0A-3C1B53A10919}"
                                             },
-                                            "assetHint": "assets/factory/conveyorelements/materials/conveyorsegments_straight_mframe.azmaterial"
+                                            "assetHint": "factory/conveyorelements/materials/conveyorsegments_straight_mframe.azmaterial"
                                         }
                                     }
                                 }
@@ -364,19 +364,19 @@
                         "PhysicsAsset": {
                             "Asset": {
                                 "assetId": {
-                                    "guid": "{8457BE50-86B6-5EF2-B57B-A353A36723C6}",
+                                    "guid": "{ECFCEAEE-4E9B-5039-9087-93E6D18E0E66}",
                                     "subId": 3553430957
                                 },
-                                "assetHint": "assets/factory/conveyorelements/models/conveyorsegments_end_barrier_end.pxmesh"
+                                "assetHint": "factory/conveyorelements/models/conveyorsegments_end_barrier_end.pxmesh"
                             },
                             "Configuration": {
                                 "PhysicsAsset": {
                                     "assetId": {
-                                        "guid": "{8457BE50-86B6-5EF2-B57B-A353A36723C6}",
+                                        "guid": "{ECFCEAEE-4E9B-5039-9087-93E6D18E0E66}",
                                         "subId": 3553430957
                                     },
                                     "loadBehavior": "QueueLoad",
-                                    "assetHint": "assets/factory/conveyorelements/models/conveyorsegments_end_barrier_end.pxmesh"
+                                    "assetHint": "factory/conveyorelements/models/conveyorsegments_end_barrier_end.pxmesh"
                                 }
                             }
                         }
@@ -411,7 +411,7 @@
             "Components": {
                 "ConveyorBeltComponent": {
                     "$type": "GenericComponentWrapper",
-                    "Id": 15829021685689027598,
+                    "Id": 214906227116801806,
                     "m_template": {
                         "$type": "ConveyorBeltComponent",
                         "Configuration": {
@@ -422,10 +422,10 @@
                             "TextureScale": -0.8519999980926514,
                             "MaterialAsset": {
                                 "assetId": {
-                                    "guid": "{CA046C5E-3365-5CE2-AC1D-D260B9ADD249}",
+                                    "guid": "{FA6A6C39-14C9-56C1-8DE3-D8516588EDD8}",
                                     "subId": 1
                                 },
-                                "assetHint": "factory/conveyorline/conveyor_belt.physicsmaterial"
+                                "assetHint": "factory/conveyorelements/physics/conveyor_belt.physicsmaterial"
                             }
                         }
                     }
@@ -514,10 +514,10 @@
                         "Configuration": {
                             "ModelAsset": {
                                 "assetId": {
-                                    "guid": "{8457BE50-86B6-5EF2-B57B-A353A36723C6}",
-                                    "subId": 285072705
+                                    "guid": "{ECFCEAEE-4E9B-5039-9087-93E6D18E0E66}",
+                                    "subId": 272347648
                                 },
-                                "assetHint": "assets/factory/conveyorelements/models/default_conveyorsegments_end_d7036fe9_22d1_5cde_b2da_d4fa56b0fe0a_.azmodel"
+                                "assetHint": "factory/conveyorelements/models/default_conveyorsegments_end_a937b705_8062_5a02_9a1d_4f95ee0df204_.azmodel"
                             }
                         }
                     }
@@ -555,9 +555,9 @@
                                     "Value": {
                                         "MaterialAsset": {
                                             "assetId": {
-                                                "guid": "{1FE53A4B-2DCB-5D86-8529-7A2DF104F232}"
+                                                "guid": "{DCF18B11-FC33-5874-8B0A-3C1B53A10919}"
                                             },
-                                            "assetHint": "assets/factory/conveyorelements/materials/conveyorsegments_straight_mframe.azmaterial"
+                                            "assetHint": "factory/conveyorelements/materials/conveyorsegments_straight_mframe.azmaterial"
                                         }
                                     }
                                 },
@@ -568,9 +568,9 @@
                                     "Value": {
                                         "MaterialAsset": {
                                             "assetId": {
-                                                "guid": "{622F90BE-3F6C-5330-812D-12EC3BCE4BDB}"
+                                                "guid": "{B43AB377-6CB4-5584-902B-E7E53ED63F83}"
                                             },
-                                            "assetHint": "assets/factory/conveyorelements/materials/conveyorsegments_straight_mbelt.azmaterial"
+                                            "assetHint": "factory/conveyorelements/materials/conveyorsegments_straight_mbelt.azmaterial"
                                         }
                                     }
                                 }
@@ -621,10 +621,10 @@
                         "Configuration": {
                             "ModelAsset": {
                                 "assetId": {
-                                    "guid": "{661604EF-298C-587E-A4B1-F22A5B7557EB}",
-                                    "subId": 274352206
+                                    "guid": "{74EC05D4-E5A2-56E6-B48D-92EF29604325}",
+                                    "subId": 280594513
                                 },
-                                "assetHint": "assets/factory/conveyorline/default_conveyorbelt_effector_75e73d92_2074_54c6_afa7_b51165a40c77_.azmodel"
+                                "assetHint": "factory/conveyorline/default_conveyorbelt_effector_20c8b702_36c3_59f4_8ff7_e610cdda9f11_.azmodel"
                             }
                         }
                     }
@@ -650,10 +650,10 @@
                                     "Name": "Entire object",
                                     "MaterialAsset": {
                                         "assetId": {
-                                            "guid": "{640FDE0B-24D5-5E41-9D03-6E1591C46268}",
+                                            "guid": "{BD1F8235-FAD1-569F-993A-7F30323C92FA}",
                                             "subId": 1
                                         },
-                                        "assetHint": "assets/factory/conveyorelements/physics/conveyor_barriers.physicsmaterial"
+                                        "assetHint": "factory/conveyorelements/physics/conveyor_barriers.physicsmaterial"
                                     }
                                 }
                             ]
@@ -696,10 +696,10 @@
                                     "Name": "Entire object",
                                     "MaterialAsset": {
                                         "assetId": {
-                                            "guid": "{640FDE0B-24D5-5E41-9D03-6E1591C46268}",
+                                            "guid": "{BD1F8235-FAD1-569F-993A-7F30323C92FA}",
                                             "subId": 1
                                         },
-                                        "assetHint": "assets/factory/conveyorelements/physics/conveyor_barriers.physicsmaterial"
+                                        "assetHint": "factory/conveyorelements/physics/conveyor_barriers.physicsmaterial"
                                     }
                                 }
                             ]
@@ -742,10 +742,10 @@
                                     "Name": "Entire object",
                                     "MaterialAsset": {
                                         "assetId": {
-                                            "guid": "{640FDE0B-24D5-5E41-9D03-6E1591C46268}",
+                                            "guid": "{BD1F8235-FAD1-569F-993A-7F30323C92FA}",
                                             "subId": 1
                                         },
-                                        "assetHint": "assets/factory/conveyorelements/physics/conveyor_barriers.physicsmaterial"
+                                        "assetHint": "factory/conveyorelements/physics/conveyor_barriers.physicsmaterial"
                                     }
                                 }
                             ]
@@ -788,10 +788,10 @@
                                     "Name": "Entire object",
                                     "MaterialAsset": {
                                         "assetId": {
-                                            "guid": "{640FDE0B-24D5-5E41-9D03-6E1591C46268}",
+                                            "guid": "{BD1F8235-FAD1-569F-993A-7F30323C92FA}",
                                             "subId": 1
                                         },
-                                        "assetHint": "assets/factory/conveyorelements/physics/conveyor_barriers.physicsmaterial"
+                                        "assetHint": "factory/conveyorelements/physics/conveyor_barriers.physicsmaterial"
                                     }
                                 }
                             ]
@@ -834,10 +834,10 @@
                                     "Name": "Entire object",
                                     "MaterialAsset": {
                                         "assetId": {
-                                            "guid": "{640FDE0B-24D5-5E41-9D03-6E1591C46268}",
+                                            "guid": "{BD1F8235-FAD1-569F-993A-7F30323C92FA}",
                                             "subId": 1
                                         },
-                                        "assetHint": "assets/factory/conveyorelements/physics/conveyor_barriers.physicsmaterial"
+                                        "assetHint": "factory/conveyorelements/physics/conveyor_barriers.physicsmaterial"
                                     }
                                 }
                             ]
@@ -1033,19 +1033,19 @@
                         "PhysicsAsset": {
                             "Asset": {
                                 "assetId": {
-                                    "guid": "{8457BE50-86B6-5EF2-B57B-A353A36723C6}",
+                                    "guid": "{ECFCEAEE-4E9B-5039-9087-93E6D18E0E66}",
                                     "subId": 2971165656
                                 },
-                                "assetHint": "assets/factory/conveyorelements/models/conveyorsegments_end_barriers.pxmesh"
+                                "assetHint": "factory/conveyorelements/models/conveyorsegments_end_barriers.pxmesh"
                             },
                             "Configuration": {
                                 "PhysicsAsset": {
                                     "assetId": {
-                                        "guid": "{8457BE50-86B6-5EF2-B57B-A353A36723C6}",
+                                        "guid": "{ECFCEAEE-4E9B-5039-9087-93E6D18E0E66}",
                                         "subId": 2971165656
                                     },
                                     "loadBehavior": "QueueLoad",
-                                    "assetHint": "assets/factory/conveyorelements/models/conveyorsegments_end_barriers.pxmesh"
+                                    "assetHint": "factory/conveyorelements/models/conveyorsegments_end_barriers.pxmesh"
                                 }
                             }
                         }
@@ -1132,10 +1132,10 @@
                         "Configuration": {
                             "ModelAsset": {
                                 "assetId": {
-                                    "guid": "{8457BE50-86B6-5EF2-B57B-A353A36723C6}",
-                                    "subId": 281443668
+                                    "guid": "{ECFCEAEE-4E9B-5039-9087-93E6D18E0E66}",
+                                    "subId": 277841173
                                 },
-                                "assetHint": "assets/factory/conveyorelements/models/default_conveyorsegments_end_8eb57527_2ca1_55d0_868f_e0110152037c_.azmodel"
+                                "assetHint": "factory/conveyorelements/models/default_conveyorsegments_end_8043be38_4a6a_5fea_adf1_d4290a7b2d29_.azmodel"
                             }
                         }
                     }
@@ -1173,9 +1173,9 @@
                                     "Value": {
                                         "MaterialAsset": {
                                             "assetId": {
-                                                "guid": "{1FE53A4B-2DCB-5D86-8529-7A2DF104F232}"
+                                                "guid": "{DCF18B11-FC33-5874-8B0A-3C1B53A10919}"
                                             },
-                                            "assetHint": "assets/factory/conveyorelements/materials/conveyorsegments_straight_mframe.azmaterial"
+                                            "assetHint": "factory/conveyorelements/materials/conveyorsegments_straight_mframe.azmaterial"
                                         }
                                     }
                                 }

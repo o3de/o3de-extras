@@ -181,10 +181,10 @@
                         "Configuration": {
                             "ModelAsset": {
                                 "assetId": {
-                                    "guid": "{1885D5D6-F450-582C-ACE6-5811911664A5}",
-                                    "subId": 271390735
+                                    "guid": "{896662A9-272C-5C79-81B2-1BB817EBF67F}",
+                                    "subId": 274174840
                                 },
-                                "assetHint": "assets/factory/conveyorline/default_conveyorline_5ac77714_e9c3_58f4_bcd9_874cc3da7207_.azmodel"
+                                "assetHint": "factory/conveyorline/default_conveyorline_1024a9a1_dde7_59f2_a800_ad9fb30f3c3a_.azmodel"
                             }
                         }
                     }
@@ -231,7 +231,7 @@
                                     "Value": {
                                         "MaterialAsset": {
                                             "assetId": {
-                                                "guid": "{3B841633-11B8-52D9-A787-6C4C862157FC}"
+                                                "guid": "{D13451DB-5294-5514-9884-A3E2D76B19AF}"
                                             }
                                         }
                                     }
