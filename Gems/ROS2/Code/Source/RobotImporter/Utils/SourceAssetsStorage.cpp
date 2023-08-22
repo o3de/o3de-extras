@@ -354,6 +354,9 @@ namespace ROS2::Utils
 
         // Wait for assets to be scanned by asset processor
         Utils::WaitForAssetsToProcess(copiedFiles);
+        // Invalidate fingerprints to force asset processor to reprocess files
+        Utils::ClearFingerPrints(copiedFiles);
+
         // Add available asset info
         for (const auto& [unresolvedUrfFileName, sourceAssetGlobalPath] : copiedFiles)
         {

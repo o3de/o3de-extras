@@ -79,7 +79,6 @@ namespace ROS2
                     }
                 }
             }
-
             if (allAssetProcessed && !assetProcessorFailed)
             {
                 AZ_Printf("RobotImporterUtils", "All assets processed");
@@ -88,6 +87,18 @@ namespace ROS2
         }
 
         return false;
+    }
+
+    void Utils::ClearFingerPrints(const AZStd::unordered_map<AZStd::string, AZ::IO::Path>& sourceAssetsPaths)
+    {
+        // clear fingerprint for the manifest file to force asset processor to reprocess the manifest file
+        for (const auto& [AssetFileName, AssetFilePath] : sourceAssetsPaths)
+        {
+            bool fingerprintCleared = false;
+            AzToolsFramework::AssetSystemRequestBus::BroadcastResult(
+                fingerprintCleared, &AzToolsFramework::AssetSystemRequestBus::Events::ClearFingerprintForAsset, AssetFilePath.String());
+
+        }
     }
 
     bool Utils::IsWheelURDFHeuristics(const urdf::LinkConstSharedPtr& link)
