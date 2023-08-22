@@ -55,7 +55,7 @@ def generate_launch_description():
     declare_map_yaml_cmd = DeclareLaunchArgument(
         'map',
         default_value=os.path.join(
-            o3de_fleet_nav_dir, 'maps', 'map.yaml'),
+            o3de_fleet_nav_dir, 'maps', 'map_warehouse.yaml'),
         description='Full path to map file to load')
 
     declare_use_sim_time_cmd = DeclareLaunchArgument(

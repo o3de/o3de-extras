@@ -102,8 +102,8 @@ To understand more about transformations, see ROS 2 navigation [documentation](h
 ## Using your robots in the simulation
 
 You can also use your robots in the simulation. To do so, you need to:
-- [import robot](https://docs.o3de.org/docs/user-guide/interactivity/robotics/importing-robot/) from existing URDF file,
-  - or create a robot from scratch in a O3DE editor using ROS 2 gem components (see [Frames](https://docs.o3de.org/docs/user-guide/interactivity/robotics/concepts-and-components-overview/#frames)),
+- [import a robot](https://docs.o3de.org/docs/user-guide/interactivity/robotics/importing-robot/) from existing URDF file,
+  - or create a robot from scratch in a O3DE editor using ROS 2 gem components (see [Frames](https://docs.o3de.org/docs/user-guide/interactivity/robotics/concepts-and-components-overview)),
 - make sure that your robot has a 2D scanner attached 
   - and publishes scans on `scan` topic (see [Sensors](https://docs.o3de.org/docs/user-guide/interactivity/robotics/concepts-and-components-overview/#robot-control)),
 - is controlled via the `cmd_vel` topic (see [Robot Control](https://docs.o3de.org/docs/user-guide/interactivity/robotics/concepts-and-components-overview/#robot-control)).
@@ -158,6 +158,6 @@ cd Examples/ros2_ws
 ros2 launch o3de_fleet_nav o3de_fleet_nav_launch.py
 ```
 
-Few Rviz2 windows should appear. You can use the "Nav2 Goal" button to send goal to the robot.
+Few RViz2 windows should appear. You can use the "Nav2 Goal" button to send goal to the robot.
 
-![Rviz2](Screenshots/fleet_rviz.png)
+![RViz2](Screenshots/fleet_rviz.png)
