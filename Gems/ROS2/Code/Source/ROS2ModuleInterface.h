@@ -37,13 +37,13 @@
 #include <RobotControl/Controllers/SkidSteeringController/SkidSteeringControlComponent.h>
 #include <RobotControl/ROS2RobotControlComponent.h>
 #include <RobotImporter/ROS2RobotImporterSystemComponent.h>
+#include <SimulationUtils/FollowingCameraComponent.h>
 #include <Spawner/ROS2SpawnPointComponent.h>
 #include <Spawner/ROS2SpawnerComponent.h>
 #include <VehicleDynamics/ModelComponents/AckermannModelComponent.h>
 #include <VehicleDynamics/ModelComponents/SkidSteeringModelComponent.h>
 #include <VehicleDynamics/VehicleModelComponent.h>
 #include <VehicleDynamics/WheelControllerComponent.h>
-
 namespace ROS2
 {
     class ROS2ModuleInterface : public AZ::Module
@@ -95,7 +95,8 @@ namespace ROS2
                     VacuumGripperComponent::CreateDescriptor(),
                     ConveyorBeltComponent::CreateDescriptor(),
                     FingerGripperComponent::CreateDescriptor(),
-                    ROS2ContactSensorComponent::CreateDescriptor()
+                    ROS2ContactSensorComponent::CreateDescriptor(),
+                    FollowingCameraComponent::CreateDescriptor(),
                 });
         }
 
