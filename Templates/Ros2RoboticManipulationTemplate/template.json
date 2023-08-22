@@ -1102,7 +1102,7 @@
             "isTemplated": true
         },
         {
-            "file": "Levels/RoboticPaletization/RoboticPaletization.prefab",
+            "file": "Levels/RoboticPalletization/RoboticPalletization.prefab",
             "isTemplated": false
         },
         {
@@ -1278,7 +1278,7 @@
             "isTemplated": false
         },
         {
-            "file": "user/Registry/ViewBookmarks/RoboticPaletization_1691268770764352914.setreg",
+            "file": "user/Registry/ViewBookmarks/RoboticPalletization_1691268770764352914.setreg",
             "isTemplated": false
         },
         {
@@ -1335,7 +1335,7 @@
             "dir": "Levels"
         },
         {
-            "dir": "Levels/RoboticPaletization"
+            "dir": "Levels/RoboticPalletization"
         },
         {
             "dir": "Levels/RoboticManipulation"
