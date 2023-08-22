@@ -30,8 +30,8 @@ namespace ROS2
 
     ROS2CameraSensorEditorComponent::ROS2CameraSensorEditorComponent(
         const SensorConfiguration& sensorConfiguration, const CameraSensorConfiguration& cameraConfiguration)
-        : m_sensorConfiguration(AZStd::move(sensorConfiguration))
-        , m_cameraSensorConfiguration(AZStd::move(cameraConfiguration))
+        : m_sensorConfiguration(sensorConfiguration)
+        , m_cameraSensorConfiguration(cameraConfiguration)
     {
     }
 

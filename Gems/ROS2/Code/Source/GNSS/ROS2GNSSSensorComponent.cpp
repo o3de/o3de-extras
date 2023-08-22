@@ -62,9 +62,9 @@ namespace ROS2
 
     ROS2GNSSSensorComponent::ROS2GNSSSensorComponent(
         const SensorConfiguration& sensorConfiguration, const GNSSSensorConfiguration& gnssConfiguration)
-        : m_gnssConfiguration(AZStd::move(gnssConfiguration))
+        : m_gnssConfiguration(gnssConfiguration)
     {
-        m_sensorConfiguration = AZStd::move(sensorConfiguration);
+        m_sensorConfiguration = sensorConfiguration;
     }
 
     void ROS2GNSSSensorComponent::Activate()

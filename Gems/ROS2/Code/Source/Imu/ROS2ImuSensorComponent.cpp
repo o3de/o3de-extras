@@ -66,9 +66,9 @@ namespace ROS2
 
     ROS2ImuSensorComponent::ROS2ImuSensorComponent(
         const SensorConfiguration& sensorConfiguration, const ImuSensorConfiguration& imuConfiguration)
-        : m_imuSensorConfiguration(AZStd::move(imuConfiguration))
+        : m_imuSensorConfiguration(imuConfiguration)
     {
-        m_sensorConfiguration = AZStd::move(sensorConfiguration);
+        m_sensorConfiguration = sensorConfiguration;
     }
 
     void ROS2ImuSensorComponent::GetRequiredServices(AZ::ComponentDescriptor::DependencyArrayType& required)

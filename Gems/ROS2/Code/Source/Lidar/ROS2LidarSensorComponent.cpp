@@ -134,9 +134,9 @@ namespace ROS2
 
     ROS2LidarSensorComponent::ROS2LidarSensorComponent(
         const SensorConfiguration& sensorConfiguration, const LidarSensorConfiguration& lidarConfiguration)
-        : m_lidarConfiguration(AZStd::move(lidarConfiguration))
+        : m_lidarConfiguration(lidarConfiguration)
     {
-        m_sensorConfiguration = AZStd::move(sensorConfiguration);
+        m_sensorConfiguration = sensorConfiguration;
     }
 
     void ROS2LidarSensorComponent::Visualize()
