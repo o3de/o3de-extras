@@ -89,8 +89,8 @@ To the root entity of your newly created prefab add 3 new components.
 Enable motors on all joints and set ```motor force limit```, ```stiffness``` and ```damping``` values. 
 
 In the ```JointsManipulationEditorComponent``` add initial positions for all of the joints (the joint names can be found in the prefabs entities inside the ROS2FrameComponent joint name). The initial positions are in radians.  
-In the ```JointsTrajectoryComponent``` input the topic for controlling the trajectory. Usually this topic ends with ```joint_trajectory_controller```. The exact name of the topic will be available in the MoveIt configuration files. 
-Start the simulation and see as the robot sets itself into its initial position (if something is not right check the O3DE console for logs, which include all joint names). The robot is now ready for being controlled using Moveit.
+In the ```JointsTrajectoryComponent``` input the topic for controlling the trajectory. Usually this topic ends with ```joint_trajectory_controller```. The exact name of the topic will be available in the MoveIt configuration files.  
+Start the simulation and see as the robot sets itself into its initial position (if something is not right check the O3DE console for logs, which include all joint names). The robot is now ready for being controlled using MoveIt.
 
 ### MoveIt configuration
 Prepare the MoveIt launch files. This can be achieved by creating the files manually, using the already existing configuration provided with your robot or using the [MoveIt Setup Assistant](https://moveit.picknik.ai/main/doc/examples/setup_assistant/setup_assistant_tutorial.html).
