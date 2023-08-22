@@ -11,6 +11,7 @@
 #include <ROS2/Frame/ROS2FrameComponent.h>
 #include <ROS2/ROS2GemUtilities.h>
 #include <RobotImporter/SDFormat/ROS2SensorHooks.h>
+#include <RobotImporter/SDFormat/ROS2SensorHooksUtils.h>
 
 #include <sdf/Camera.hh>
 #include <sdf/Sensor.hh>

@@ -10,6 +10,7 @@
 #include <ROS2/Frame/ROS2FrameComponent.h>
 #include <ROS2/ROS2GemUtilities.h>
 #include <RobotImporter/SDFormat/ROS2SensorHooks.h>
+#include <RobotImporter/SDFormat/ROS2SensorHooksUtils.h>
 #include <Source/EditorStaticRigidBodyComponent.h>
 
 #include <sdf/Imu.hh>

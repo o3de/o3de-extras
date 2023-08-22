@@ -6,7 +6,7 @@
  *
  */
 
-#include "ROS2SensorHooks.h"
+#include "ROS2SensorHooksUtils.h"
 #include <ROS2/Communication/TopicConfiguration.h>
 
 namespace ROS2::SDFormat

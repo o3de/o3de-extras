@@ -9,6 +9,7 @@
 #include <GNSS/ROS2GNSSSensorComponent.h>
 #include <ROS2/ROS2GemUtilities.h>
 #include <RobotImporter/SDFormat/ROS2SensorHooks.h>
+#include <RobotImporter/SDFormat/ROS2SensorHooksUtils.h>
 
 #include <sdf/NavSat.hh>
 #include <sdf/Sensor.hh>
