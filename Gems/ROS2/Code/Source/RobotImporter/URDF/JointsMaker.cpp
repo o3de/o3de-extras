@@ -103,9 +103,9 @@ namespace ROS2
 
                 if (jointAxis != nullptr)
                 {
-                    const bool enableJointLimits = jointAxis->Upper() != AZStd::numeric_limits<LimitType>::infinity()
-                        || jointAxis->Lower() != -AZStd::numeric_limits<LimitType>::infinity()
                     using LimitType = decltype(jointAxis->Upper());
+                    const bool enableJointLimits = jointAxis->Upper() != AZStd::numeric_limits<LimitType>::infinity()
+                        || jointAxis->Lower() != -AZStd::numeric_limits<LimitType>::infinity();
                     const double limitUpper = jointAxis->Upper() != AZStd::numeric_limits<LimitType>::infinity()
                         ? AZ::RadToDeg(jointAxis->Upper())
                         : AZ::RadToDeg(AZ::Constants::TwoPi);

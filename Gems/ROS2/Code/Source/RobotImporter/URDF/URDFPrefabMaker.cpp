@@ -51,7 +51,7 @@ namespace ROS2
         {
             AZ_Assert(GetFirstModel(), "SDF Model is nullptr");
 
-            VisualsMaker::MaterialMap materialMap;
+            VisualsMaker::MaterialNameMap materialMap;
             auto GetVisualsFromModel = [&materialMap](const sdf::Model& model)
             {
                 for (uint64_t linkIndex{}; linkIndex < model.LinkCount(); ++linkIndex)

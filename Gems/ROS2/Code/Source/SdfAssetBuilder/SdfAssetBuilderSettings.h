@@ -35,4 +35,4 @@ namespace ROS2
         // By default, fixed joint in URDF files that are processed by libsdformat are preserved
         bool m_urdfPreserveFixedJoints = true;
     };
-} // ROS2
+} // namespace ROS2
