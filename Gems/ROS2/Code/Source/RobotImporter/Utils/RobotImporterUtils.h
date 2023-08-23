@@ -82,7 +82,7 @@ namespace ROS2
         bool WaitForAssetsToProcess(const AZStd::unordered_map<AZStd::string, AZ::IO::Path>& sourceAssetsPaths);
 
         //! Invalidate fingerprints for provided assets in asset processor.
-        //! This function make us sure that assets will be reprocessed by asset processor, when the assetinfo file is created.
+        //! This causes assets to be re-processed by asset processor when the .assetinfo file is created.
         //! @param sourceAssetsPaths - set of all non relative paths to assets for which we want to invalidate fingerprints.
         void ClearFingerPrints(const AZStd::unordered_map<AZStd::string, AZ::IO::Path>& sourceAssetsPaths);
 
