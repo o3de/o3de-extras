@@ -68,8 +68,8 @@ namespace ROS2::SDFormat
             lidarConfiguration.m_lidarParameters.m_minRange = lidarSensor->RangeMin();
             lidarConfiguration.m_lidarParameters.m_maxRange = lidarSensor->RangeMax();
 
-            if (entity.CreateComponent<ROS2FrameComponent>() &&
-                entity.CreateComponent<ROS2LidarSensorComponent>(sensorConfiguration, lidarConfiguration))
+            if (Utils::CreateComponent<ROS2FrameComponent>(entity) &&
+                Utils::CreateComponent<ROS2LidarSensorComponent>(entity, sensorConfiguration, lidarConfiguration))
             {
                 return AZ::Success();
             }

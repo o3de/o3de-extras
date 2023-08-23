@@ -35,7 +35,7 @@ namespace ROS2::SDFormat
             const AZStd::string messageType = "sensor_msgs::msg::NavSatFix";
             Utils::AddTopicConfiguration(sensorConfiguration, "gnss", messageType, messageType);
 
-            if (entity.CreateComponent<ROS2GNSSSensorComponent>(sensorConfiguration, GNSSSensorConfiguration()))
+            if (Utils::CreateComponent<ROS2GNSSSensorComponent>(entity, sensorConfiguration, GNSSSensorConfiguration()))
             {
                 return AZ::Success();
             }
