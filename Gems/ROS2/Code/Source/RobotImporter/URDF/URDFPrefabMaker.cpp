@@ -264,15 +264,31 @@ namespace ROS2
 
             const std::string& jointName = jointPtr->Name();
             AZStd::string azJointName(jointName.c_str(), jointName.size());
+            AZStd::string parentLinkName(jointPtr->ParentName().c_str(), jointPtr->ParentName().size());
+            AZStd::string childLinkName(jointPtr->ChildName().c_str(), jointPtr->ChildName().size());
+
+            auto parentLinkIter = createdLinks.find(parentLinkName);
+            if (parentLinkIter == createdLinks.end())
+            {
+                AZ_Warning("CreatePrefabFromURDF", false, "Joint %s has no parent link %s. Cannot create", azJointName.c_str(), parentLinkName.c_str());
+                continue;
+            }
+            auto leadEntity = parentLinkIter->second;
+
+            auto childLinkIter = createdLinks.find(childLinkName);
+            if (childLinkIter == createdLinks.end())
+            {
+                AZ_Warning("CreatePrefabFromURDF", false, "Joint %s has no child link %s. Cannot create", azJointName.c_str(), childLinkName.c_str());
+                continue;
+            }
+            auto childEntity = childLinkIter->second;
+
             AZ_Trace(
                 "CreatePrefabFromURDF",
                 "Creating joint %s : %s -> %s\n",
                 azJointName.c_str(),
                 jointPtr->ParentName().c_str(),
                 jointPtr->ChildName().c_str());
-
-            auto leadEntity = createdLinks.at(jointPtr->ParentName().c_str());
-            auto childEntity = createdLinks.at(jointPtr->ChildName().c_str());
 
 
             AZ::Entity* childEntityPtr = AzToolsFramework::GetEntityById(childEntity.GetValue());
