@@ -60,14 +60,14 @@ namespace ROS2::Utils
         AZ::Entity* rootEntity = nullptr;
         AZ::ComponentApplicationBus::BroadcastResult(rootEntity, &AZ::ComponentApplicationRequests::FindEntity, rootArticulationEntity);
 
-        PhysX::ArticulationLinkComponent* component = rootEntity->FindComponent<PhysX::ArticulationLinkComponent>();
-        AZStd::vector<AzPhysics::SimulatedBodyHandle> articulationHandles = component->GetSimulatedBodyHandles();
+        const PhysX::ArticulationLinkComponent* component = rootEntity->FindComponent<PhysX::ArticulationLinkComponent>();
+        const AZStd::vector<AzPhysics::SimulatedBodyHandle> articulationHandles = component->GetSimulatedBodyHandles();
 
         AZStd::unordered_map<AZ::EntityId, AzPhysics::SimulatedBodyHandle> result;
-        for (auto& articulationHandle : articulationHandles)
+        for (const auto& articulationHandle : articulationHandles)
         {
             auto* sceneInterface = AZ::Interface<AzPhysics::SceneInterface>::Get();
-            auto* body = sceneInterface->GetSimulatedBodyFromHandle(sceneHandle, articulationHandle);
+            const auto* body = sceneInterface->GetSimulatedBodyFromHandle(sceneHandle, articulationHandle);
             result.insert({body->GetEntityId(), articulationHandle});
         }
 

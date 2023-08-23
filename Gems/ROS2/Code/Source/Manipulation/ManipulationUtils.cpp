@@ -24,16 +24,16 @@ namespace ROS2::Utils
                 {
                     result.position = articulationJointRequests->GetJointPosition(jointInfo.m_axis);
                     result.velocity = articulationJointRequests->GetJointVelocity(jointInfo.m_axis);
-                    bool is_acceleration_driven = articulationJointRequests->IsAccelerationDrive(jointInfo.m_axis);
+                    const bool is_acceleration_driven = articulationJointRequests->IsAccelerationDrive(jointInfo.m_axis);
                     if (!is_acceleration_driven)
                     {
-                        float stiffness = articulationJointRequests->GetDriveStiffness(jointInfo.m_axis);
-                        float damping = articulationJointRequests->GetDriveDamping(jointInfo.m_axis);
-                        float target_position = articulationJointRequests->GetDriveTarget(jointInfo.m_axis);
-                        float target_velocity = articulationJointRequests->GetDriveTargetVelocity(jointInfo.m_axis);
-                        float max_effort = articulationJointRequests->GetMaxForce(jointInfo.m_axis);
-                        result.effort = stiffness * -(result.position - target_position) + damping * (target_velocity - result.velocity);
-                        result.effort = AZ::GetClamp(result.effort, -max_effort, max_effort);
+                        const float stiffness = articulationJointRequests->GetDriveStiffness(jointInfo.m_axis);
+                        const float damping = articulationJointRequests->GetDriveDamping(jointInfo.m_axis);
+                        const float targetPosition = articulationJointRequests->GetDriveTarget(jointInfo.m_axis);
+                        const float targetVelocity = articulationJointRequests->GetDriveTargetVelocity(jointInfo.m_axis);
+                        const float maxEffort = articulationJointRequests->GetMaxForce(jointInfo.m_axis);
+                        result.effort = stiffness * -(result.position - targetPosition) + damping * (targetVelocity - result.velocity);
+                        result.effort = AZ::GetClamp(result.effort, -maxEffort, maxEffort);
                     }
                 });
         }

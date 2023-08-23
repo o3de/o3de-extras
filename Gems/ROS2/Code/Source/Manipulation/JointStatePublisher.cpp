@@ -52,7 +52,7 @@ namespace ROS2
         ManipulationJoints manipulatorJoints;
         JointsManipulationRequestBus::EventResult(manipulatorJoints, m_context.m_entityId, &JointsManipulationRequests::GetJoints);
 
-        for (auto& [jointName, jointInfo] : manipulatorJoints)
+        for (const auto& [jointName, jointInfo] : manipulatorJoints)
         {
             m_jointNames.push_back(jointName);
             m_jointInfos.push_back(jointInfo);
@@ -66,7 +66,7 @@ namespace ROS2
         InstallPhysicalCallback();
     }
 
-    void JointStatePublisher::OnPhysicsSimulationFinished(AzPhysics::SceneHandle sceneHandle [[maybe_unused]], float deltaTime)
+    void JointStatePublisher::OnPhysicsSimulationFinished([[maybe_unused]] AzPhysics::SceneHandle sceneHandle, float deltaTime)
     {
         AZ_Assert(m_configuration.m_frequency > 0.f, "JointPublisher frequency must be greater than zero");
         auto frameTime = 1.f / m_configuration.m_frequency;
