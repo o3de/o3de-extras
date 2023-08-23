@@ -36,7 +36,7 @@ namespace ROS2
         if (AZ::SerializeContext* serialize = azrtti_cast<AZ::SerializeContext*>(context))
         {
             serialize->Class<ROS2ImuSensorComponent, ROS2SensorComponent>()->Version(2)->Field(
-                "imuSensorConfiguration", &ROS2ImuSensorComponent::m_imuSensorConfiguration);
+                "imuSensorConfiguration", &ROS2ImuSensorComponent::m_imuConfiguration);
 
             if (AZ::EditContext* ec = serialize->GetEditContext())
             {
@@ -46,7 +46,7 @@ namespace ROS2
                     ->Attribute(AZ::Edit::Attributes::AppearsInAddComponentMenu, AZ_CRC_CE("Game"))
                     ->DataElement(
                         AZ::Edit::UIHandlers::Default,
-                        &ROS2ImuSensorComponent::m_imuSensorConfiguration,
+                        &ROS2ImuSensorComponent::m_imuConfiguration,
                         "Imu sensor configuration",
                         "Imu sensor configuration")
                     ->Attribute(AZ::Edit::Attributes::Visibility, AZ::Edit::PropertyVisibility::ShowChildrenOnly);
@@ -66,7 +66,7 @@ namespace ROS2
 
     ROS2ImuSensorComponent::ROS2ImuSensorComponent(
         const SensorConfiguration& sensorConfiguration, const ImuSensorConfiguration& imuConfiguration)
-        : m_imuSensorConfiguration(imuConfiguration)
+        : m_imuConfiguration(imuConfiguration)
     {
         m_sensorConfiguration = sensorConfiguration;
     }
@@ -104,7 +104,7 @@ namespace ROS2
         m_filterAcceleration.push_back(linearVelocity);
         const auto angularVelocity = inv.TransformVector(rigidbody->GetAngularVelocity());
         m_filterAngularVelocity.push_back(angularVelocity);
-        if (m_filterAcceleration.size() > m_imuSensorConfiguration.m_filterSize)
+        if (m_filterAcceleration.size() > m_imuConfiguration.m_filterSize)
         {
             m_filterAcceleration.pop_front();
             m_filterAngularVelocity.pop_front();
@@ -122,7 +122,7 @@ namespace ROS2
 
             m_previousLinearVelocity = linearVelocityFilter;
             m_acceleration = -acc + angularRateFiltered.Cross(linearVelocityFilter);
-            if (m_imuSensorConfiguration.m_includeGravity)
+            if (m_imuConfiguration.m_includeGravity)
             {
                 m_acceleration += inv.TransformVector(gravity);
             }
@@ -131,7 +131,7 @@ namespace ROS2
             m_imuMsg.angular_velocity = ROS2Conversions::ToROS2Vector3(angularRateFiltered);
             m_imuMsg.angular_velocity_covariance = ROS2Conversions::ToROS2Covariance(m_angularVelocityCovariance);
 
-            if (m_imuSensorConfiguration.m_absoluteRotation)
+            if (m_imuConfiguration.m_absoluteRotation)
             {
                 m_imuMsg.orientation = ROS2Conversions::ToROS2Quaternion(rigidbody->GetTransform().GetRotation());
                 m_imuMsg.orientation_covariance = ROS2Conversions::ToROS2Covariance(m_orientationCovariance);
@@ -150,9 +150,9 @@ namespace ROS2
         const auto fullTopic = ROS2Names::GetNamespacedName(GetNamespace(), publisherConfig.m_topic);
         m_imuPublisher = ros2Node->create_publisher<sensor_msgs::msg::Imu>(fullTopic.data(), publisherConfig.GetQoS());
 
-        m_linearAccelerationCovariance = ToDiagonalCovarianceMatrix(m_imuSensorConfiguration.m_linearAccelerationVariance);
-        m_angularVelocityCovariance = ToDiagonalCovarianceMatrix(m_imuSensorConfiguration.m_angularVelocityVariance);
-        m_orientationCovariance = ToDiagonalCovarianceMatrix(m_imuSensorConfiguration.m_orientationVariance);
+        m_linearAccelerationCovariance = ToDiagonalCovarianceMatrix(m_imuConfiguration.m_linearAccelerationVariance);
+        m_angularVelocityCovariance = ToDiagonalCovarianceMatrix(m_imuConfiguration.m_angularVelocityVariance);
+        m_orientationCovariance = ToDiagonalCovarianceMatrix(m_imuConfiguration.m_orientationVariance);
 
         ROS2SensorComponent::Activate();
     }
@@ -171,26 +171,6 @@ namespace ROS2
         covarianceMatrix.SetElement(1, 1, variance.GetY());
         covarianceMatrix.SetElement(2, 2, variance.GetZ());
         return covarianceMatrix;
-    }
-
-    const SensorConfiguration& ROS2ImuSensorComponent::GetSensorConfiguration() const
-    {
-        return m_sensorConfiguration;
-    }
-
-    void ROS2ImuSensorComponent::SetSensorConfiguration(const SensorConfiguration& sensorConfiguration)
-    {
-        m_sensorConfiguration = sensorConfiguration;
-    }
-
-    const ImuSensorConfiguration& ROS2ImuSensorComponent::GetImuSensorConfiguration() const
-    {
-        return m_imuSensorConfiguration;
-    }
-
-    void ROS2ImuSensorComponent::SetImuSensorConfiguration(const ImuSensorConfiguration& imuSensorConfiguration)
-    {
-        m_imuSensorConfiguration = imuSensorConfiguration;
     }
 
 } // namespace ROS2

@@ -35,11 +35,6 @@ namespace ROS2
         void Deactivate() override;
         //////////////////////////////////////////////////////////////////////////
 
-        const SensorConfiguration& GetSensorConfiguration() const;
-        void SetSensorConfiguration(const SensorConfiguration& sensorConfiguration);
-        const GNSSSensorConfiguration& GetGNSSSensorConfiguration() const;
-        void SetGNSSSensorConfiguration(const GNSSSensorConfiguration& gnssConfiguration);
-
     private:
         GNSSSensorConfiguration m_gnssConfiguration;
 

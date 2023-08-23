@@ -41,11 +41,6 @@ namespace ROS2
         void Deactivate() override;
         //////////////////////////////////////////////////////////////////////////
 
-        const SensorConfiguration& GetSensorConfiguration() const;
-        void SetSensorConfiguration(const SensorConfiguration& sensorConfiguration);
-        const ImuSensorConfiguration& GetImuSensorConfiguration() const;
-        void SetImuSensorConfiguration(const ImuSensorConfiguration& imuSensorConfiguration);
-
     private:
         std::shared_ptr<rclcpp::Publisher<sensor_msgs::msg::Imu>> m_imuPublisher;
         sensor_msgs::msg::Imu m_imuMsg;
@@ -55,7 +50,7 @@ namespace ROS2
         AZStd::deque<AZ::Vector3> m_filterAcceleration;
         AZStd::deque<AZ::Vector3> m_filterAngularVelocity;
 
-        ImuSensorConfiguration m_imuSensorConfiguration;
+        ImuSensorConfiguration m_imuConfiguration;
 
         AZ::Matrix3x3 m_orientationCovariance = AZ::Matrix3x3::CreateZero();
         AZ::Matrix3x3 m_angularVelocityCovariance = AZ::Matrix3x3::CreateZero();

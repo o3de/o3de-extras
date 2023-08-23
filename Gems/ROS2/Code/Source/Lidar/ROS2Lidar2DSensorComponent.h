@@ -38,11 +38,6 @@ namespace ROS2
         void Deactivate() override;
         //////////////////////////////////////////////////////////////////////////
 
-        const SensorConfiguration& GetSensorConfiguration() const;
-        void SetSensorConfiguration(const SensorConfiguration& sensorConfiguration);
-        const Lidar2DSensorConfiguration& GetLidarSensorConfiguration() const;
-        void SetLidarSensorConfiguration(const Lidar2DSensorConfiguration& lidarSensorConfiguration);
-
     private:
         //////////////////////////////////////////////////////////////////////////
         // ROS2SensorComponent overrides

@@ -86,26 +86,6 @@ namespace ROS2
         m_gnssPublisher.reset();
     }
 
-    const SensorConfiguration& ROS2GNSSSensorComponent::GetSensorConfiguration() const
-    {
-        return m_sensorConfiguration;
-    }
-
-    void ROS2GNSSSensorComponent::SetSensorConfiguration(const SensorConfiguration& sensorConfiguration)
-    {
-        m_sensorConfiguration = sensorConfiguration;
-    }
-
-    const GNSSSensorConfiguration& ROS2GNSSSensorComponent::GetGNSSSensorConfiguration() const
-    {
-        return m_gnssConfiguration;
-    }
-
-    void ROS2GNSSSensorComponent::SetGNSSSensorConfiguration(const GNSSSensorConfiguration& gnssConfiguration)
-    {
-        m_gnssConfiguration = gnssConfiguration;
-    }
-
     void ROS2GNSSSensorComponent::FrequencyTick()
     {
         const AZ::Vector3 currentPosition = GetCurrentPose().GetTranslation();

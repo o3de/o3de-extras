@@ -51,11 +51,6 @@ namespace ROS2
         int GetHeight() const override;
         float GetVerticalFOV() const override;
 
-        const SensorConfiguration& GetSensorConfiguration() const;
-        void SetSensorConfiguration(const SensorConfiguration& sensorConfiguration);
-        const CameraSensorConfiguration& GetCameraSensorConfiguration() const;
-        void SetCameraSensorConfiguration(const CameraSensorConfiguration& cameraSensorConfiguration);
-
     private:
         // EntityDebugDisplayEventBus::Handler overrides
         void DisplayEntityViewport(const AzFramework::ViewportInfo& viewportInfo, AzFramework::DebugDisplayRequests& debugDisplay) override;

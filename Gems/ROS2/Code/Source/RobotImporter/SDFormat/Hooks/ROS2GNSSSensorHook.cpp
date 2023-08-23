@@ -7,7 +7,6 @@
  */
 
 #include <GNSS/ROS2GNSSSensorComponent.h>
-#include <ROS2/ROS2GemUtilities.h>
 #include <RobotImporter/SDFormat/ROS2SensorHooks.h>
 #include <RobotImporter/SDFormat/ROS2SensorHooksUtils.h>
 
@@ -36,19 +35,14 @@ namespace ROS2::SDFormat
             const AZStd::string messageType = "sensor_msgs::msg::NavSatFix";
             Utils::AddTopicConfiguration(sensorConfiguration, "gnss", messageType, messageType);
 
-            const auto& entityId = entity.GetId();
-            const auto componentId = ROS2::Utils::CreateComponent(entityId, ROS2GNSSSensorComponent::TYPEINFO_Uuid());
-            if (componentId)
+            if (entity.CreateComponent<ROS2GNSSSensorComponent>(sensorConfiguration, GNSSSensorConfiguration()))
             {
-                auto* component = ROS2::Utils::GetGameOrEditorComponent<ROS2GNSSSensorComponent>(&entity);
-                component->SetSensorConfiguration(sensorConfiguration);
+                return AZ::Success();
             }
             else
             {
                 return AZ::Failure(AZStd::string("Failed to create ROS2 GNSS Sensor component"));
             }
-
-            return AZ::Success();
         };
 
         return importerHook;

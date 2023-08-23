@@ -121,25 +121,6 @@ namespace ROS2
         return m_cameraSensorConfiguration.m_verticalFieldOfViewDeg;
     };
 
-    const SensorConfiguration& ROS2CameraSensorEditorComponent::GetSensorConfiguration() const
-    {
-        return m_sensorConfiguration;
-    }
-
-    void ROS2CameraSensorEditorComponent::SetSensorConfiguration(const SensorConfiguration& sensorConfiguration)
-    {
-        m_sensorConfiguration = sensorConfiguration;
-    }
-
-    const CameraSensorConfiguration& ROS2CameraSensorEditorComponent::GetCameraSensorConfiguration() const
-    {
-        return m_cameraSensorConfiguration;
-    }
-    void ROS2CameraSensorEditorComponent::SetCameraSensorConfiguration(const CameraSensorConfiguration& cameraSensorConfiguration)
-    {
-        m_cameraSensorConfiguration = cameraSensorConfiguration;
-    }
-
     void ROS2CameraSensorEditorComponent::DisplayEntityViewport(
         [[maybe_unused]] const AzFramework::ViewportInfo& viewportInfo, AzFramework::DebugDisplayRequests& debugDisplay)
     {

@@ -270,23 +270,4 @@ namespace ROS2
         memcpy(message.data.data(), m_lastScanResults.m_points.data(), sizeInBytes);
         m_pointCloudPublisher->publish(message);
     }
-
-    const SensorConfiguration& ROS2LidarSensorComponent::GetSensorConfiguration() const
-    {
-        return m_sensorConfiguration;
-    }
-    void ROS2LidarSensorComponent::SetSensorConfiguration(const SensorConfiguration& sensorConfiguration)
-    {
-        m_sensorConfiguration = sensorConfiguration;
-    }
-
-    const LidarSensorConfiguration& ROS2LidarSensorComponent::GetLidarSensorConfiguration() const
-    {
-        return m_lidarConfiguration;
-    }
-
-    void ROS2LidarSensorComponent::SetLidarSensorConfiguration(const LidarSensorConfiguration& lidarSensorConfiguration)
-    {
-        m_lidarConfiguration = lidarSensorConfiguration;
-    }
 } // namespace ROS2

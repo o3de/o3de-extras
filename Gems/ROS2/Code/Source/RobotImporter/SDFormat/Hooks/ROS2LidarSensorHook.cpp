@@ -8,7 +8,6 @@
 
 #include <Lidar/ROS2LidarSensorComponent.h>
 #include <ROS2/Frame/ROS2FrameComponent.h>
-#include <ROS2/ROS2GemUtilities.h>
 #include <RobotImporter/SDFormat/ROS2SensorHooks.h>
 #include <RobotImporter/SDFormat/ROS2SensorHooksUtils.h>
 
@@ -69,24 +68,15 @@ namespace ROS2::SDFormat
             lidarConfiguration.m_lidarParameters.m_minRange = lidarSensor->RangeMin();
             lidarConfiguration.m_lidarParameters.m_maxRange = lidarSensor->RangeMax();
 
-            const auto& entityId = entity.GetId();
-            if (!ROS2::Utils::CreateComponent(entityId, ROS2FrameComponent::TYPEINFO_Uuid()))
+            if (entity.CreateComponent<ROS2FrameComponent>() &&
+                entity.CreateComponent<ROS2LidarSensorComponent>(sensorConfiguration, lidarConfiguration))
             {
-                return AZ::Failure(AZStd::string("Failed to create ROS2FrameComponent required for ROS2 Lidar Sensor component"));
-            }
-            const auto componentId = ROS2::Utils::CreateComponent(entityId, ROS2LidarSensorComponent::TYPEINFO_Uuid());
-            if (componentId)
-            {
-                auto* component = ROS2::Utils::GetGameOrEditorComponent<ROS2LidarSensorComponent>(&entity);
-                component->SetSensorConfiguration(sensorConfiguration);
-                component->SetLidarSensorConfiguration(lidarConfiguration);
+                return AZ::Success();
             }
             else
             {
                 return AZ::Failure(AZStd::string("Failed to create ROS2 Lidar Sensor component"));
             }
-
-            return AZ::Success();
         };
 
         return importerHook;
