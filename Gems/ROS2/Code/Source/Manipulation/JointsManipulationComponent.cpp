@@ -10,6 +10,7 @@
 #include "Controllers/JointsArticulationControllerComponent.h"
 #include "Controllers/JointsPIDControllerComponent.h"
 #include "JointStatePublisher.h"
+#include "ManipulationUtils.h"
 #include <AzCore/Component/ComponentApplicationBus.h>
 #include <AzCore/Component/TransformBus.h>
 #include <AzCore/Debug/Trace.h>
@@ -211,15 +212,9 @@ namespace ROS2
         return m_manipulationJoints;
     }
 
-    AZ::Outcome<JointPosition, AZStd::string> JointsManipulationComponent::GetJointPosition(const AZStd::string& jointName)
+    AZ::Outcome<JointPosition, AZStd::string> JointsManipulationComponent::GetJointPosition(const JointInfo& jointInfo)
     {
-        if (!m_manipulationJoints.contains(jointName))
-        {
-            return AZ::Failure(AZStd::string::format("Joint %s does not exist", jointName.c_str()));
-        }
-
-        auto jointInfo = m_manipulationJoints.at(jointName);
-        float position{ 0 };
+        float position{ 0.f };
         if (jointInfo.m_isArticulation)
         {
             PhysX::ArticulationJointRequestBus::EventResult(
@@ -235,7 +230,7 @@ namespace ROS2
         return AZ::Success(position);
     }
 
-    AZ::Outcome<JointVelocity, AZStd::string> JointsManipulationComponent::GetJointVelocity(const AZStd::string& jointName)
+    AZ::Outcome<JointPosition, AZStd::string> JointsManipulationComponent::GetJointPosition(const AZStd::string& jointName)
     {
         if (!m_manipulationJoints.contains(jointName))
         {
@@ -243,7 +238,13 @@ namespace ROS2
         }
 
         auto jointInfo = m_manipulationJoints.at(jointName);
-        float velocity{ 0 };
+
+        return GetJointPosition(jointInfo);
+    }
+
+    AZ::Outcome<JointVelocity, AZStd::string> JointsManipulationComponent::GetJointVelocity(const JointInfo& jointInfo)
+    {
+        float velocity{ 0.f };
         if (jointInfo.m_isArticulation)
         {
             PhysX::ArticulationJointRequestBus::EventResult(
@@ -259,12 +260,23 @@ namespace ROS2
         return AZ::Success(velocity);
     }
 
+    AZ::Outcome<JointVelocity, AZStd::string> JointsManipulationComponent::GetJointVelocity(const AZStd::string& jointName)
+    {
+        if (!m_manipulationJoints.contains(jointName))
+        {
+            return AZ::Failure(AZStd::string::format("Joint %s does not exist", jointName.c_str()));
+        }
+
+        auto jointInfo = m_manipulationJoints.at(jointName);
+        return GetJointVelocity(jointInfo);
+    }
+
     JointsManipulationRequests::JointsPositionsMap JointsManipulationComponent::GetAllJointsPositions()
     {
         JointsManipulationRequests::JointsPositionsMap positions;
         for (const auto& [jointName, jointInfo] : m_manipulationJoints)
         {
-            positions[jointName] = GetJointPosition(jointName).GetValue();
+            positions[jointName] = GetJointPosition(jointInfo).GetValue();
         }
         return positions;
     }
@@ -274,9 +286,16 @@ namespace ROS2
         JointsManipulationRequests::JointsVelocitiesMap velocities;
         for (const auto& [jointName, jointInfo] : m_manipulationJoints)
         {
-            velocities[jointName] = GetJointVelocity(jointName).GetValue();
+            velocities[jointName] = GetJointVelocity(jointInfo).GetValue();
         }
         return velocities;
+    }
+
+    AZ::Outcome<JointEffort, AZStd::string> JointsManipulationComponent::GetJointEffort(const JointInfo& jointInfo)
+    {
+        auto jointStateData = Utils::GetJointState(jointInfo);
+
+        return AZ::Success(jointStateData.effort);
     }
 
     AZ::Outcome<JointEffort, AZStd::string> JointsManipulationComponent::GetJointEffort(const AZStd::string& jointName)
@@ -287,47 +306,7 @@ namespace ROS2
         }
 
         auto jointInfo = m_manipulationJoints.at(jointName);
-        float effort{ 0 };
-
-        if (!jointInfo.m_isArticulation)
-        {
-            // The joint isn't controlled by JointsArticulationControllerComponent.
-            // There is no easy way to calculate the effort.
-            return AZ::Success(effort);
-        }
-
-        bool is_acceleration_driven{ false };
-        PhysX::ArticulationJointRequestBus::EventResult(
-            is_acceleration_driven,
-            jointInfo.m_entityComponentIdPair.GetEntityId(),
-            &PhysX::ArticulationJointRequests::IsAccelerationDrive,
-            jointInfo.m_axis);
-
-        if (is_acceleration_driven)
-        {
-            // The formula below in this case will calculate acceleration, not effort.
-            // In this case we can't calculate the effort without PhysX engine support.
-            return AZ::Success(effort);
-        }
-
-        float stiffness{ 0 }, damping{ 0 }, target_pos{ 0 }, position{ 0 }, target_vel{ 0 }, velocity{ 0 }, max_force{ 0 };
-        PhysX::ArticulationJointRequestBus::Event(
-            jointInfo.m_entityComponentIdPair.GetEntityId(),
-            [&](PhysX::ArticulationJointRequests* articulationJointRequests)
-            {
-                stiffness = articulationJointRequests->GetDriveStiffness(jointInfo.m_axis);
-                damping = articulationJointRequests->GetDriveDamping(jointInfo.m_axis);
-                target_pos = articulationJointRequests->GetDriveTarget(jointInfo.m_axis);
-                position = articulationJointRequests->GetJointPosition(jointInfo.m_axis);
-                target_vel = articulationJointRequests->GetDriveTargetVelocity(jointInfo.m_axis);
-                velocity = articulationJointRequests->GetJointVelocity(jointInfo.m_axis);
-                max_force = articulationJointRequests->GetMaxForce(jointInfo.m_axis);
-            });
-        effort = stiffness * -(position - target_pos) + damping * (target_vel - velocity);
-
-        effort = AZ::GetClamp(effort, -max_force, max_force);
-
-        return AZ::Success(effort);
+        return GetJointEffort(jointInfo);
     }
 
     JointsManipulationRequests::JointsEffortsMap JointsManipulationComponent::GetAllJointsEfforts()
@@ -335,7 +314,7 @@ namespace ROS2
         JointsManipulationRequests::JointsEffortsMap efforts;
         for (const auto& [jointName, jointInfo] : m_manipulationJoints)
         {
-            efforts[jointName] = GetJointEffort(jointName).GetValue();
+            efforts[jointName] = GetJointEffort(jointInfo).GetValue();
         }
         return efforts;
     }
@@ -462,8 +441,8 @@ namespace ROS2
                 AZ::TickBus::Handler::BusDisconnect();
                 return;
             }
+            m_jointStatePublisher->InitializePublisher(GetEntityId());
         }
-        m_jointStatePublisher->OnTick(deltaTime);
         MoveToSetPositions(deltaTime);
     }
 } // namespace ROS2

@@ -13,9 +13,10 @@
 #include <AzCore/Serialization/SerializeContext.h>
 #include <AzFramework/Physics/Common/PhysicsEvents.h>
 #include <AzFramework/Physics/PhysicsScene.h>
+#include <AzFramework/Physics/PhysicsSystem.h>
 #include <AzFramework/Physics/SimulatedBodies/RigidBody.h>
 #include <ROS2/Sensor/ROS2SensorComponent.h>
-#include <Utilities/PhysicsCallbackHandler.h>
+#include <ROS2/Utilities/PhysicsCallbackHandler.h>
 #include <nav_msgs/msg/odometry.hpp>
 #include <rclcpp/publisher.hpp>
 
@@ -53,5 +54,8 @@ namespace ROS2
         // ROS2::Utils::PhysicsCallbackHandler overrides ...
         void OnPhysicsSimulationFinished(AzPhysics::SceneHandle sceneHandle, float deltaTime) override;
         void OnPhysicsInitialization(AzPhysics::SceneHandle sceneHandle) override;
+
+        //! Handler to simulated physical body
+        AzPhysics::SimulatedBodyHandle m_bodyHandle = AzPhysics::InvalidSimulatedBodyHandle;
     };
 } // namespace ROS2

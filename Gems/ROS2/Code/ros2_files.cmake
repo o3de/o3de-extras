@@ -85,6 +85,8 @@ set(FILES
         Source/Manipulation/JointsTrajectoryComponent.h
         Source/Manipulation/FollowJointTrajectoryActionServer.cpp
         Source/Manipulation/FollowJointTrajectoryActionServer.h
+        Source/Manipulation/ManipulationUtils.h
+        Source/Manipulation/ManipulationUtils.cpp
         Source/Manipulation/MotorizedJoints/JointMotorControllerComponent.cpp
         Source/Manipulation/MotorizedJoints/JointMotorControllerConfiguration.cpp
         Source/Manipulation/MotorizedJoints/ManualMotorControllerComponent.cpp
@@ -134,7 +136,6 @@ set(FILES
         Source/Utilities/JointUtilities.h
         Source/Utilities/Controllers/PidConfiguration.cpp
         Source/Utilities/PhysicsCallbackHandler.cpp
-        Source/Utilities/PhysicsCallbackHandler.h
         Source/Utilities/ROS2Conversions.cpp
         Source/Utilities/ROS2Names.cpp
         Source/VehicleDynamics/AxleConfiguration.cpp
