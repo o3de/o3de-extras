@@ -4,7 +4,14 @@ This project is a template designed to help you quickly start simulating robotic
 
 This template focuses on robotic arm manipulation with ROS 2 and [MoveIt 2](https://moveit.picknik.ai/main/index.html).
 
+## Prerequisites 
 
+Make sure that your system follow [Requirements](https://development--o3deorg.netlify.app/docs/welcome-guide/requirements/).
+
+Install necessary ROS2 packages required by this template:
+```bash
+sudo apt-get install ros-humble-moveit ros-humble-moveit-resources ros-humble-depth-image-proc
+```
 ## How to set up a new project with the template
 
 Please follow the instructions in [ROS 2 Gem documentation](https://development--o3deorg.netlify.app/docs/user-guide/interactivity/robotics/project-configuration/)
@@ -41,19 +48,13 @@ Includes a warehouse scene, [UR10](https://www.universal-robots.com/products/ur1
 
 ### Manipulation
 
-Install necessary ROS packages for MoveIt and depth image processing:
-
-```bash
-sudo apt-get install ros-humble-moveit ros-humble-moveit-resources ros-humble-depth-image-proc
-```
-
 And run the launch file in the project:
 
 ```bash
 ros2 launch Examples/panda_moveit_config_demo.launch.py
 ```
 
-This will result in RViz window appearing.
+This will result in RViz2 window appearing.
 Now you should be able to use `Motion Planning` from `moveit_ros_visualization package`.
 To understand more about MoveIt and robotic manipulation, see [tutorials](https://moveit.picknik.ai/main/doc/tutorials/quickstart_in_rviz/quickstart_in_rviz_tutorial.html#getting-started).
 
