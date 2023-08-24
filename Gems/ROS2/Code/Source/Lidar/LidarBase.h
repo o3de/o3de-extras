@@ -25,7 +25,6 @@ namespace ROS2
     class LidarBase
     {
     public:
-        // Should this just be random hex?
         AZ_TYPE_INFO(LidarBase, "{e46126a2-7a86-bb65-367a-416f2cab393c}");
         static void Reflect(AZ::ReflectContext* context);
 
