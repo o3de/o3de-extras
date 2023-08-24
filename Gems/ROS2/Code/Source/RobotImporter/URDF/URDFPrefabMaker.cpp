@@ -315,9 +315,12 @@ namespace ROS2
         }
 
         // Use the first entity based on a link that is not parented to any other link
-        AZ::EntityId contentEntityId = !linkEntityIdsWithoutParent.empty() ? linkEntityIdsWithoutParent.front() : AZ::EntityId{};
-        MoveEntityToDefaultSpawnPoint(contentEntityId, m_spawnPosition);
-        AddRobotControl(contentEntityId);
+        if (!linkEntityIdsWithoutParent.empty() && linkEntityIdsWithoutParent.front().IsValid())
+        {
+            AZ::EntityId contentEntityId = linkEntityIdsWithoutParent.front();
+            MoveEntityToDefaultSpawnPoint(contentEntityId, m_spawnPosition);
+            AddRobotControl(contentEntityId);
+        }
 
         // Create prefab, save it to disk immediately
         // Remove prefab, if it was already created.
