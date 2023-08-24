@@ -118,13 +118,6 @@ namespace ROS2::Utils
         const AZ::IO::PathView& amentPrefixPath,
         const FileExistsCB& fileExists = &Internal::FileExistsCall);
 
-    //! Waits for asset processor to process provided assets.
-    //! This function will timeout after the time specified in /O3DE/ROS2/RobotImporter/AssetProcessorTimeoutInSeconds
-    //! settings registry.
-    //! @param sourceAssetsPaths - set of all non relative paths to assets for which we want to wait for processing
-    //! @returns false if a timeout or error occurs, otherwise true
-    bool WaitForAssetsToProcess(const AZStd::unordered_map<AZStd::string, AZ::IO::Path>& sourceAssetsPaths);
-
 } // namespace ROS2::Utils
 
 namespace ROS2::Utils::SDFormat
