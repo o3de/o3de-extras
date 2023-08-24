@@ -1,0 +1,1407 @@
+{
+    "template_name": "Ros2RoboticManipulationTemplate",
+    "origin": "https://github.com/o3de/o3de-extras",
+    "license": "https://github.com/o3de/o3de-extras/tree/development/Templates/Ros2RoboticManipulationTemplate/Template/LICENSE.txt",
+    "display_name": "Ros2RoboticManipulationTemplate",
+    "summary": "A manipulation template for ROS2",
+    "canonical_tags": [],
+    "user_tags": [
+        "Ros2RoboticManipulationTemplate",
+        "ROS2",
+        "Move it2",
+        "Robots"
+    ],
+    "icon_path": "preview.png",
+    "copyFiles": [
+        {
+            "file": "CMakeLists.txt",
+            "isTemplated": true
+        },
+        {
+            "file": "Assets/Importer/pandaMoveit.prefab",
+            "isTemplated": "false"
+        },
+        {
+            "file": "Assets/Importer/ur10.prefab",
+            "isTemplated": "false"
+        },
+        {
+            "file": "Assets/Room/Room.fbx",
+            "isTemplated": "false"
+        },
+        {
+            "file": "Assets/Room/Desk_M_Desk.material",
+            "isTemplated": "false"
+        },
+        {
+            "file": "Assets/Room/Desk.fbx",
+            "isTemplated": "false"
+        },
+        {
+            "file": "Assets/Room/Textures/Floor/plane_divided_DefaultMaterial_Ambient.png",
+            "isTemplated": "false"
+        },
+        {
+            "file": "Assets/Room/Textures/Floor/plane_divided_DefaultMaterial_Height.png",
+            "isTemplated": "false"
+        },
+        {
+            "file": "Assets/Room/Textures/Floor/plane_divided_DefaultMaterial_Base_color.png",
+            "isTemplated": "false"
+        },
+        {
+            "file": "Assets/Room/Textures/Floor/plane_divided_DefaultMaterial_Normal.png",
+            "isTemplated": "false"
+        },
+        {
+            "file": "Assets/Room/Textures/Floor/plane_divided_DefaultMaterial_Metallic.png",
+            "isTemplated": "false"
+        },
+        {
+            "file": "Assets/Room/Textures/Floor/plane_divided_DefaultMaterial_Roughness.png",
+            "isTemplated": "false"
+        },
+        {
+            "file": "Assets/Room/Textures/Desk/Room_M_Desk_Normal.png",
+            "isTemplated": "false"
+        },
+        {
+            "file": "Assets/Room/Textures/Desk/Room_M_Desk_Base_color.png",
+            "isTemplated": "false"
+        },
+        {
+            "file": "Assets/Room/Textures/Desk/Room_M_Desk_Height.png",
+            "isTemplated": "false"
+        },
+        {
+            "file": "Assets/Room/Textures/Desk/Room_M_Desk_Roughness.png",
+            "isTemplated": "false"
+        },
+        {
+            "file": "Assets/Room/Textures/Desk/Room_M_Desk_Metallic.png",
+            "isTemplated": "false"
+        },
+        {
+            "file": "Assets/Room/Textures/Desk/Room_M_Desk_Ambient.png",
+            "isTemplated": "false"
+        },
+        {
+            "file": "Assets/Room/Textures/Walls/Room_M_Walls_Height.png",
+            "isTemplated": "false"
+        },
+        {
+            "file": "Assets/Room/Textures/Walls/Room_M_Walls_Normal.png",
+            "isTemplated": "false"
+        },
+        {
+            "file": "Assets/Room/Textures/Walls/Room_M_Walls_Ambient.png",
+            "isTemplated": "false"
+        },
+        {
+            "file": "Assets/Room/Textures/Walls/Room_M_Walls_Roughness.png",
+            "isTemplated": "false"
+        },
+        {
+            "file": "Assets/Room/Textures/Walls/Room_M_Walls_Base_color.png",
+            "isTemplated": "false"
+        },
+        {
+            "file": "Assets/Room/Textures/Walls/Room_M_Walls_Metallic.png",
+            "isTemplated": "false"
+        },
+        {
+            "file": "Assets/Factory/Warehouse.prefab",
+            "isTemplated": "false"
+        },
+        {
+            "file": "Assets/Factory/ConveyorLine.prefab",
+            "isTemplated": "false"
+        },
+        {
+            "file": "Assets/Factory/EuroPallet.prefab",
+            "isTemplated": "false"
+        },
+        {
+            "file": "Assets/Factory/Box1.prefab",
+            "isTemplated": "false"
+        },
+        {
+            "file": "Assets/Factory/Box3.prefab",
+            "isTemplated": "false"
+        },
+        {
+            "file": "Assets/Factory/Box4.prefab",
+            "isTemplated": "false"
+        },
+        {
+            "file": "Assets/Factory/TableUnderRobot.prefab",
+            "isTemplated": "false"
+        },
+        {
+            "file": "Assets/Factory/Box2.prefab",
+            "isTemplated": "false"
+        },
+        {
+            "file": "Assets/Factory/ConveyorLine/ConveyorBelt.fbx.assetinfo",
+            "isTemplated": "false"
+        },
+        {
+            "file": "Assets/Factory/ConveyorLine/EuroPallet.fbx.assetinfo",
+            "isTemplated": "false"
+        },
+        {
+            "file": "Assets/Factory/ConveyorLine/ConveyorLine_TableUnderRobot.material",
+            "isTemplated": "false"
+        },
+        {
+            "file": "Assets/Factory/ConveyorLine/ConveyorLine.fbx.assetinfo",
+            "isTemplated": "false"
+        },
+        {
+            "file": "Assets/Factory/ConveyorLine/ConveyorBelt_guards_segment.fbx.assetinfo",
+            "isTemplated": "false"
+        },
+        {
+            "file": "Assets/Factory/ConveyorLine/ConveyorBelt_effector_short.fbx.assetinfo",
+            "isTemplated": "false"
+        },
+        {
+            "file": "Assets/Factory/ConveyorLine/ConveyorBelt2.fbx",
+            "isTemplated": "false"
+        },
+        {
+            "file": "Assets/Factory/ConveyorLine/EuroPallet_Pallet.material",
+            "isTemplated": "false"
+        },
+        {
+            "file": "Assets/Factory/ConveyorLine/ConveyorBelt2_Conveyor2.material",
+            "isTemplated": "false"
+        },
+        {
+            "file": "Assets/Factory/ConveyorLine/ConveyorLine_Cage.material",
+            "isTemplated": "false"
+        },
+        {
+            "file": "Assets/Factory/ConveyorLine/ConveyorLine_ElectricBoxes.material",
+            "isTemplated": "false"
+        },
+        {
+            "file": "Assets/Factory/ConveyorLine/ConveyorLine_MBelt.material",
+            "isTemplated": "false"
+        },
+        {
+            "file": "Assets/Factory/ConveyorLine/ConveyorBelt.fbx",
+            "isTemplated": "false"
+        },
+        {
+            "file": "Assets/Factory/ConveyorLine/box.physxmaterial",
+            "isTemplated": "false"
+        },
+        {
+            "file": "Assets/Factory/ConveyorLine/conveyor_belt.physxmaterial",
+            "isTemplated": "false"
+        },
+        {
+            "file": "Assets/Factory/ConveyorLine/EuroPallet.fbx",
+            "isTemplated": "false"
+        },
+        {
+            "file": "Assets/Factory/ConveyorLine/conveyor_guards.physxmaterial",
+            "isTemplated": "false"
+        },
+        {
+            "file": "Assets/Factory/ConveyorLine/ConveyorBelt_effector_short.fbx",
+            "isTemplated": "false"
+        },
+        {
+            "file": "Assets/Factory/ConveyorLine/ConveyorBelt_bar.fbx",
+            "isTemplated": "false"
+        },
+        {
+            "file": "Assets/Factory/ConveyorLine/ConveyorBelt_effector.fbx",
+            "isTemplated": "false"
+        },
+        {
+            "file": "Assets/Factory/ConveyorLine/ConveyorBelt_effector.fbx.assetinfo",
+            "isTemplated": "false"
+        },
+        {
+            "file": "Assets/Factory/ConveyorLine/ConveyorLine.fbx",
+            "isTemplated": "false"
+        },
+        {
+            "file": "Assets/Factory/ConveyorLine/ConveyorBelt_guards_segment.fbx",
+            "isTemplated": "false"
+        },
+        {
+            "file": "Assets/Factory/ConveyorLine/ConveyorLine_MFrame.material",
+            "isTemplated": "false"
+        },
+        {
+            "file": "Assets/Factory/ConveyorLine/BeltTextures/Belt_low_DefaultMaterial_Base_color.png",
+            "isTemplated": "false"
+        },
+        {
+            "file": "Assets/Factory/ConveyorLine/BeltTextures/Belt_low_DefaultMaterial_Roughness.png",
+            "isTemplated": "false"
+        },
+        {
+            "file": "Assets/Factory/ConveyorLine/BeltTextures/Belt_low_DefaultMaterial_Metallic.png",
+            "isTemplated": "false"
+        },
+        {
+            "file": "Assets/Factory/ConveyorLine/BeltTextures/Belt_low_DefaultMaterial_Ambient.png",
+            "isTemplated": "false"
+        },
+        {
+            "file": "Assets/Factory/ConveyorLine/BeltTextures/Belt_low_DefaultMaterial_Height.png",
+            "isTemplated": "false"
+        },
+        {
+            "file": "Assets/Factory/ConveyorLine/BeltTextures/Belt_low_DefaultMaterial_Normal.png",
+            "isTemplated": "false"
+        },
+        {
+            "file": "Assets/Factory/ConveyorLine/Textures/Paper_Recycled_001_Normal.jpg",
+            "isTemplated": "false"
+        },
+        {
+            "file": "Assets/Factory/ConveyorLine/Textures/Grass_001_Basecolor.jpg",
+            "isTemplated": "false"
+        },
+        {
+            "file": "Assets/Factory/ConveyorLine/Textures/Concrete_Wall_005_Normal.jpg",
+            "isTemplated": "false"
+        },
+        {
+            "file": "Assets/Factory/ConveyorLine/Textures/ElectricBoxes_Specular.png",
+            "isTemplated": "false"
+        },
+        {
+            "file": "Assets/Factory/ConveyorLine/Textures/Grass_001_Normal.jpg",
+            "isTemplated": "false"
+        },
+        {
+            "file": "Assets/Factory/ConveyorLine/Textures/1K_Wall_Paint_Specular.jpg",
+            "isTemplated": "false"
+        },
+        {
+            "file": "Assets/Factory/ConveyorLine/Textures/Cage-Normal.png.assetinfo",
+            "isTemplated": "false"
+        },
+        {
+            "file": "Assets/Factory/ConveyorLine/Textures/ElectricBoxes_Roughness.png",
+            "isTemplated": "false"
+        },
+        {
+            "file": "Assets/Factory/ConveyorLine/Textures/Grass_001_Displacement.png",
+            "isTemplated": "false"
+        },
+        {
+            "file": "Assets/Factory/ConveyorLine/Textures/Metal_Scratched_007_Basecolor.jpg",
+            "isTemplated": "false"
+        },
+        {
+            "file": "Assets/Factory/ConveyorLine/Textures/Concrete_019_Basecolor.jpg",
+            "isTemplated": "false"
+        },
+        {
+            "file": "Assets/Factory/ConveyorLine/Textures/Metal_Galvanized_001_Normal.jpg",
+            "isTemplated": "false"
+        },
+        {
+            "file": "Assets/Factory/ConveyorLine/Textures/Specular.png",
+            "isTemplated": "false"
+        },
+        {
+            "file": "Assets/Factory/ConveyorLine/Textures/1K_Wall_Paint_Normal.jpg",
+            "isTemplated": "false"
+        },
+        {
+            "file": "Assets/Factory/ConveyorLine/Textures/Extinguisher_Basecolor.png",
+            "isTemplated": "false"
+        },
+        {
+            "file": "Assets/Factory/ConveyorLine/Textures/ElectricBoxes_Normal.png",
+            "isTemplated": "false"
+        },
+        {
+            "file": "Assets/Factory/ConveyorLine/Textures/Metal_Rusted_001_Basecolor.jpg",
+            "isTemplated": "false"
+        },
+        {
+            "file": "Assets/Factory/ConveyorLine/Textures/ElectricBoxes_Diffuse.png",
+            "isTemplated": "false"
+        },
+        {
+            "file": "Assets/Factory/ConveyorLine/Textures/Steering_Panel_Basecolor.png",
+            "isTemplated": "false"
+        },
+        {
+            "file": "Assets/Factory/ConveyorLine/Textures/Metal_Painted_Yellow_002_Basecolor.jpg",
+            "isTemplated": "false"
+        },
+        {
+            "file": "Assets/Factory/ConveyorLine/Textures/Metal_Galvanized_001_Basecolor.jpg",
+            "isTemplated": "false"
+        },
+        {
+            "file": "Assets/Factory/ConveyorLine/Textures/Metal_Painted_Red_002_Basecolor.jpg",
+            "isTemplated": "false"
+        },
+        {
+            "file": "Assets/Factory/ConveyorLine/Textures/1K_Wall_Paint_Basecolor.jpg",
+            "isTemplated": "false"
+        },
+        {
+            "file": "Assets/Factory/ConveyorLine/Textures/Wood_026_Normal.jpg",
+            "isTemplated": "false"
+        },
+        {
+            "file": "Assets/Factory/ConveyorLine/Textures/Cage-BaseColor.png",
+            "isTemplated": "false"
+        },
+        {
+            "file": "Assets/Factory/ConveyorLine/Textures/ElectricBoxes_Metalic.png",
+            "isTemplated": "false"
+        },
+        {
+            "file": "Assets/Factory/ConveyorLine/Textures/Pallet-MaskMap.png",
+            "isTemplated": "false"
+        },
+        {
+            "file": "Assets/Factory/ConveyorLine/Textures/Metal_Scratched_007_Roughness.jpg",
+            "isTemplated": "false"
+        },
+        {
+            "file": "Assets/Factory/ConveyorLine/Textures/Paper_Recycled_001_Basecolor.jpg",
+            "isTemplated": "false"
+        },
+        {
+            "file": "Assets/Factory/ConveyorLine/Textures/Metal_Painted_002_Normal.jpg",
+            "isTemplated": "false"
+        },
+        {
+            "file": "Assets/Factory/ConveyorLine/Textures/Cage-Roughness.png",
+            "isTemplated": "false"
+        },
+        {
+            "file": "Assets/Factory/ConveyorLine/Textures/Box-Normal.png",
+            "isTemplated": "false"
+        },
+        {
+            "file": "Assets/Factory/ConveyorLine/Textures/Grass_001_Roughness.jpg",
+            "isTemplated": "false"
+        },
+        {
+            "file": "Assets/Factory/ConveyorLine/Textures/Concrete_Wall_005_Roughness.jpg",
+            "isTemplated": "false"
+        },
+        {
+            "file": "Assets/Factory/ConveyorLine/Textures/Normal.png",
+            "isTemplated": "false"
+        },
+        {
+            "file": "Assets/Factory/ConveyorLine/Textures/Paper_Recycled_001_Roughness.jpg",
+            "isTemplated": "false"
+        },
+        {
+            "file": "Assets/Factory/ConveyorLine/Textures/Cage-Roughness.png.assetinfo",
+            "isTemplated": "false"
+        },
+        {
+            "file": "Assets/Factory/ConveyorLine/Textures/BaseColor.png",
+            "isTemplated": "false"
+        },
+        {
+            "file": "Assets/Factory/ConveyorLine/Textures/Box-Specular.png",
+            "isTemplated": "false"
+        },
+        {
+            "file": "Assets/Factory/ConveyorLine/Textures/Metal_Painted_White_002_Basecolor.jpg",
+            "isTemplated": "false"
+        },
+        {
+            "file": "Assets/Factory/ConveyorLine/Textures/Cage-Specular.png",
+            "isTemplated": "false"
+        },
+        {
+            "file": "Assets/Factory/ConveyorLine/Textures/Roughness.png",
+            "isTemplated": "false"
+        },
+        {
+            "file": "Assets/Factory/ConveyorLine/Textures/Metal_Rusted_001_Normal.jpg",
+            "isTemplated": "false"
+        },
+        {
+            "file": "Assets/Factory/ConveyorLine/Textures/Metallic.png",
+            "isTemplated": "false"
+        },
+        {
+            "file": "Assets/Factory/ConveyorLine/Textures/Pallet-Normal.png",
+            "isTemplated": "false"
+        },
+        {
+            "file": "Assets/Factory/ConveyorLine/Textures/Wood_026_Roughness.jpg",
+            "isTemplated": "false"
+        },
+        {
+            "file": "Assets/Factory/ConveyorLine/Textures/Cage-Metallic.png",
+            "isTemplated": "false"
+        },
+        {
+            "file": "Assets/Factory/ConveyorLine/Textures/Metal_Galvanized_001_Roughness.jpg",
+            "isTemplated": "false"
+        },
+        {
+            "file": "Assets/Factory/ConveyorLine/Textures/Metal_Scratched_007_Normal.jpg",
+            "isTemplated": "false"
+        },
+        {
+            "file": "Assets/Factory/ConveyorLine/Textures/Wood_026_Basecolor.jpg",
+            "isTemplated": "false"
+        },
+        {
+            "file": "Assets/Factory/ConveyorLine/Textures/Box-Metallic.png",
+            "isTemplated": "false"
+        },
+        {
+            "file": "Assets/Factory/ConveyorLine/Textures/Metal_Painted_002_Roughness.jpg",
+            "isTemplated": "false"
+        },
+        {
+            "file": "Assets/Factory/ConveyorLine/Textures/Concrete_Wall_005_Basecolor.jpg",
+            "isTemplated": "false"
+        },
+        {
+            "file": "Assets/Factory/ConveyorLine/Textures/Box-BaseColor.png",
+            "isTemplated": "false"
+        },
+        {
+            "file": "Assets/Factory/ConveyorLine/Textures/ElectricBoxes_Height.png",
+            "isTemplated": "false"
+        },
+        {
+            "file": "Assets/Factory/ConveyorLine/Textures/Metal_Rusted_001_Specular.jpg",
+            "isTemplated": "false"
+        },
+        {
+            "file": "Assets/Factory/ConveyorLine/Textures/Cage-Normal.png",
+            "isTemplated": "false"
+        },
+        {
+            "file": "Assets/Factory/ConveyorLine/Textures/Pallet-BaseMap.png",
+            "isTemplated": "false"
+        },
+        {
+            "file": "Assets/Factory/ConveyorLine/Textures/Box-Roughness.png",
+            "isTemplated": "false"
+        },
+        {
+            "file": "Assets/Factory/ConveyorLine/Textures/Tire_Normal.png",
+            "isTemplated": "false"
+        },
+        {
+            "file": "Assets/Factory/ConveyorLine/Textures/Concrete_019_Roughness.jpg",
+            "isTemplated": "false"
+        },
+        {
+            "file": "Assets/Factory/ConveyorLine/Textures/Concrete_019_Normal.jpg",
+            "isTemplated": "false"
+        },
+        {
+            "file": "Assets/Factory/ConveyorLine/TableUnderRobotTextures/TableUnderRobot_BaseColor.png",
+            "isTemplated": "false"
+        },
+        {
+            "file": "Assets/Factory/ConveyorLine/TableUnderRobotTextures/TableUnderRobot_Normal.png",
+            "isTemplated": "false"
+        },
+        {
+            "file": "Assets/Factory/ConveyorLine/TableUnderRobotTextures/TableUnderRobot_Roughness.png",
+            "isTemplated": "false"
+        },
+        {
+            "file": "Assets/Factory/ConveyorLine/TableUnderRobotTextures/TableUnderRobot_Metallic.png",
+            "isTemplated": "false"
+        },
+        {
+            "file": "Assets/Factory/ConveyorLine/TableUnderRobotTextures/TableUnderRobot_Height.png",
+            "isTemplated": "false"
+        },
+        {
+            "file": "Assets/Factory/ConveyorLine/FrameTextures/Frame_DefaultMaterial_Base_color.png",
+            "isTemplated": "false"
+        },
+        {
+            "file": "Assets/Factory/ConveyorLine/FrameTextures/Frame_DefaultMaterial_Height.png",
+            "isTemplated": "false"
+        },
+        {
+            "file": "Assets/Factory/ConveyorLine/FrameTextures/Frame_DefaultMaterial_Roughness.png",
+            "isTemplated": "false"
+        },
+        {
+            "file": "Assets/Factory/ConveyorLine/FrameTextures/Frame_DefaultMaterial_Ambient.png",
+            "isTemplated": "false"
+        },
+        {
+            "file": "Assets/Factory/ConveyorLine/FrameTextures/Frame_DefaultMaterial_Metallic.png",
+            "isTemplated": "false"
+        },
+        {
+            "file": "Assets/Factory/ConveyorLine/FrameTextures/Frame_DefaultMaterial_Normal.png",
+            "isTemplated": "false"
+        },
+        {
+            "file": "Assets/UR10_pretty/UR10_M_UR10.material",
+            "isTemplated": "false"
+        },
+        {
+            "file": "Assets/UR10_pretty/UR10.fbx",
+            "isTemplated": "false"
+        },
+        {
+            "file": "Assets/UR10_pretty/Textures/RoboticArm.json",
+            "isTemplated": "false"
+        },
+        {
+            "file": "Assets/UR10_pretty/Textures/UR10_Robotic_arm_Roughness.M_UR10.png",
+            "isTemplated": "false"
+        },
+        {
+            "file": "Assets/UR10_pretty/Textures/UR10_Robotic_arm_Metallic.M_UR10.png",
+            "isTemplated": "false"
+        },
+        {
+            "file": "Assets/UR10_pretty/Textures/UR10_Robotic_arm_BaseColor.M_UR10.png",
+            "isTemplated": "false"
+        },
+        {
+            "file": "Assets/UR10_pretty/Textures/UR10_Robotic_arm_Emissive.M_UR10.png",
+            "isTemplated": "false"
+        },
+        {
+            "file": "Assets/UR10_pretty/Textures/UR10_Robotic_arm_Height.M_UR10.png",
+            "isTemplated": "false"
+        },
+        {
+            "file": "Assets/UrdfImporter/1440394708_panda/hand_c.stl",
+            "isTemplated": "false"
+        },
+        {
+            "file": "Assets/UrdfImporter/1440394708_panda/link4_c.stl.assetinfo",
+            "isTemplated": "false"
+        },
+        {
+            "file": "Assets/UrdfImporter/1440394708_panda/link1.dae",
+            "isTemplated": "false"
+        },
+        {
+            "file": "Assets/UrdfImporter/1440394708_panda/finger_c.stl.assetinfo",
+            "isTemplated": "false"
+        },
+        {
+            "file": "Assets/UrdfImporter/1440394708_panda/hand.dae.assetinfo",
+            "isTemplated": "false"
+        },
+        {
+            "file": "Assets/UrdfImporter/1440394708_panda/link3_c.stl",
+            "isTemplated": "false"
+        },
+        {
+            "file": "Assets/UrdfImporter/1440394708_panda/link2_c.stl",
+            "isTemplated": "false"
+        },
+        {
+            "file": "Assets/UrdfImporter/1440394708_panda/link0.dae",
+            "isTemplated": "false"
+        },
+        {
+            "file": "Assets/UrdfImporter/1440394708_panda/link5_c.stl.assetinfo",
+            "isTemplated": "false"
+        },
+        {
+            "file": "Assets/UrdfImporter/1440394708_panda/link6_c.stl.assetinfo",
+            "isTemplated": "false"
+        },
+        {
+            "file": "Assets/UrdfImporter/1440394708_panda/link3_c.stl.assetinfo",
+            "isTemplated": "false"
+        },
+        {
+            "file": "Assets/UrdfImporter/1440394708_panda/link6.dae.assetinfo",
+            "isTemplated": "false"
+        },
+        {
+            "file": "Assets/UrdfImporter/1440394708_panda/link2.dae.assetinfo",
+            "isTemplated": "false"
+        },
+        {
+            "file": "Assets/UrdfImporter/1440394708_panda/link3.dae.assetinfo",
+            "isTemplated": "false"
+        },
+        {
+            "file": "Assets/UrdfImporter/1440394708_panda/link5.dae",
+            "isTemplated": "false"
+        },
+        {
+            "file": "Assets/UrdfImporter/1440394708_panda/link2_c.stl.assetinfo",
+            "isTemplated": "false"
+        },
+        {
+            "file": "Assets/UrdfImporter/1440394708_panda/finger.dae.assetinfo",
+            "isTemplated": "false"
+        },
+        {
+            "file": "Assets/UrdfImporter/1440394708_panda/finger_c.stl",
+            "isTemplated": "false"
+        },
+        {
+            "file": "Assets/UrdfImporter/1440394708_panda/link4.dae.assetinfo",
+            "isTemplated": "false"
+        },
+        {
+            "file": "Assets/UrdfImporter/1440394708_panda/hand_c.stl.assetinfo",
+            "isTemplated": "false"
+        },
+        {
+            "file": "Assets/UrdfImporter/1440394708_panda/link2.dae",
+            "isTemplated": "false"
+        },
+        {
+            "file": "Assets/UrdfImporter/1440394708_panda/link7.dae",
+            "isTemplated": "false"
+        },
+        {
+            "file": "Assets/UrdfImporter/1440394708_panda/link7_c.stl.assetinfo",
+            "isTemplated": "false"
+        },
+        {
+            "file": "Assets/UrdfImporter/1440394708_panda/link1_c.stl",
+            "isTemplated": "false"
+        },
+        {
+            "file": "Assets/UrdfImporter/1440394708_panda/link0_c.stl",
+            "isTemplated": "false"
+        },
+        {
+            "file": "Assets/UrdfImporter/1440394708_panda/link6.dae",
+            "isTemplated": "false"
+        },
+        {
+            "file": "Assets/UrdfImporter/1440394708_panda/hand.dae",
+            "isTemplated": "false"
+        },
+        {
+            "file": "Assets/UrdfImporter/1440394708_panda/finger.dae",
+            "isTemplated": "false"
+        },
+        {
+            "file": "Assets/UrdfImporter/1440394708_panda/link4.dae",
+            "isTemplated": "false"
+        },
+        {
+            "file": "Assets/UrdfImporter/1440394708_panda/link1.dae.assetinfo",
+            "isTemplated": "false"
+        },
+        {
+            "file": "Assets/UrdfImporter/1440394708_panda/link6_c.stl",
+            "isTemplated": "false"
+        },
+        {
+            "file": "Assets/UrdfImporter/1440394708_panda/link1_c.stl.assetinfo",
+            "isTemplated": "false"
+        },
+        {
+            "file": "Assets/UrdfImporter/1440394708_panda/link3.dae",
+            "isTemplated": "false"
+        },
+        {
+            "file": "Assets/UrdfImporter/1440394708_panda/link7_c.stl",
+            "isTemplated": "false"
+        },
+        {
+            "file": "Assets/UrdfImporter/1440394708_panda/link5_c.stl",
+            "isTemplated": "false"
+        },
+        {
+            "file": "Assets/UrdfImporter/1440394708_panda/link5.dae.assetinfo",
+            "isTemplated": "false"
+        },
+        {
+            "file": "Assets/UrdfImporter/1440394708_panda/link4_c.stl",
+            "isTemplated": "false"
+        },
+        {
+            "file": "Assets/UrdfImporter/1440394708_panda/link0.dae.assetinfo",
+            "isTemplated": "false"
+        },
+        {
+            "file": "Assets/UrdfImporter/1440394708_panda/link0_c.stl.assetinfo",
+            "isTemplated": "false"
+        },
+        {
+            "file": "Assets/UrdfImporter/1440394708_panda/link7.dae.assetinfo",
+            "isTemplated": "false"
+        },
+        {
+            "file": "Assets/UrdfImporter/783534404_ur.urdf/wrist1_collider.stl.assetinfo",
+            "isTemplated": "false"
+        },
+        {
+            "file": "Assets/UrdfImporter/783534404_ur.urdf/upperarm.dae.assetinfo",
+            "isTemplated": "false"
+        },
+        {
+            "file": "Assets/UrdfImporter/783534404_ur.urdf/forearm_collider.stl",
+            "isTemplated": "false"
+        },
+        {
+            "file": "Assets/UrdfImporter/783534404_ur.urdf/forearm_collider.stl.assetinfo",
+            "isTemplated": "false"
+        },
+        {
+            "file": "Assets/UrdfImporter/783534404_ur.urdf/wrist3.dae",
+            "isTemplated": "false"
+        },
+        {
+            "file": "Assets/UrdfImporter/783534404_ur.urdf/shoulder_collider.stl.assetinfo",
+            "isTemplated": "false"
+        },
+        {
+            "file": "Assets/UrdfImporter/783534404_ur.urdf/forearm.dae",
+            "isTemplated": "false"
+        },
+        {
+            "file": "Assets/UrdfImporter/783534404_ur.urdf/wrist3_collider.stl",
+            "isTemplated": "false"
+        },
+        {
+            "file": "Assets/UrdfImporter/783534404_ur.urdf/base_collider.stl",
+            "isTemplated": "false"
+        },
+        {
+            "file": "Assets/UrdfImporter/783534404_ur.urdf/shoulder.dae.assetinfo",
+            "isTemplated": "false"
+        },
+        {
+            "file": "Assets/UrdfImporter/783534404_ur.urdf/wrist1_collider.stl",
+            "isTemplated": "false"
+        },
+        {
+            "file": "Assets/UrdfImporter/783534404_ur.urdf/wrist2_collider.stl",
+            "isTemplated": "false"
+        },
+        {
+            "file": "Assets/UrdfImporter/783534404_ur.urdf/upperarm_collider.stl.assetinfo",
+            "isTemplated": "false"
+        },
+        {
+            "file": "Assets/UrdfImporter/783534404_ur.urdf/wrist2_collider.stl.assetinfo",
+            "isTemplated": "false"
+        },
+        {
+            "file": "Assets/UrdfImporter/783534404_ur.urdf/shoulder_collider.stl",
+            "isTemplated": "false"
+        },
+        {
+            "file": "Assets/UrdfImporter/783534404_ur.urdf/base.dae",
+            "isTemplated": "false"
+        },
+        {
+            "file": "Assets/UrdfImporter/783534404_ur.urdf/wrist1.dae.assetinfo",
+            "isTemplated": "false"
+        },
+        {
+            "file": "Assets/UrdfImporter/783534404_ur.urdf/wrist3_collider.stl.assetinfo",
+            "isTemplated": "false"
+        },
+        {
+            "file": "Assets/UrdfImporter/783534404_ur.urdf/upperarm.dae",
+            "isTemplated": "false"
+        },
+        {
+            "file": "Assets/UrdfImporter/783534404_ur.urdf/wrist2.dae.assetinfo",
+            "isTemplated": "false"
+        },
+        {
+            "file": "Assets/UrdfImporter/783534404_ur.urdf/wrist2.dae",
+            "isTemplated": "false"
+        },
+        {
+            "file": "Assets/UrdfImporter/783534404_ur.urdf/forearm.dae.assetinfo",
+            "isTemplated": "false"
+        },
+        {
+            "file": "Assets/UrdfImporter/783534404_ur.urdf/Gripper_collider.stl.assetinfo",
+            "isTemplated": "false"
+        },
+        {
+            "file": "Assets/UrdfImporter/783534404_ur.urdf/wrist1.dae",
+            "isTemplated": "false"
+        },
+        {
+            "file": "Assets/UrdfImporter/783534404_ur.urdf/Gripper_Gripper.material",
+            "isTemplated": "false"
+        },
+        {
+            "file": "Assets/UrdfImporter/783534404_ur.urdf/Gripper_collider.stl",
+            "isTemplated": "false"
+        },
+        {
+            "file": "Assets/UrdfImporter/783534404_ur.urdf/shoulder.dae",
+            "isTemplated": "false"
+        },
+        {
+            "file": "Assets/UrdfImporter/783534404_ur.urdf/base.dae.assetinfo",
+            "isTemplated": "false"
+        },
+        {
+            "file": "Assets/UrdfImporter/783534404_ur.urdf/upperarm_collider.stl",
+            "isTemplated": "false"
+        },
+        {
+            "file": "Assets/UrdfImporter/783534404_ur.urdf/Gripper.dae",
+            "isTemplated": "false"
+        },
+        {
+            "file": "Assets/UrdfImporter/783534404_ur.urdf/base_collider.stl.assetinfo",
+            "isTemplated": "false"
+        },
+        {
+            "file": "Assets/UrdfImporter/783534404_ur.urdf/wrist3.dae.assetinfo",
+            "isTemplated": "false"
+        },
+        {
+            "file": "Assets/UrdfImporter/783534404_ur.urdf/Textures/Gripper-BaseColor.png",
+            "isTemplated": "false"
+        },
+        {
+            "file": "Assets/UrdfImporter/783534404_ur.urdf/Textures/Gripper-Specular.png",
+            "isTemplated": "false"
+        },
+        {
+            "file": "Assets/UrdfImporter/783534404_ur.urdf/Textures/Gripper-Roughness.png",
+            "isTemplated": "false"
+        },
+        {
+            "file": "Assets/UrdfImporter/783534404_ur.urdf/Textures/Gripper-Metallic.png",
+            "isTemplated": "false"
+        },
+        {
+            "file": "Assets/UrdfImporter/783534404_ur.urdf/Textures/Gripper-Normal.png",
+            "isTemplated": "false"
+        },
+        {
+            "file": "Assets/Gripper/Gripper_collider.stl",
+            "isTemplated": "false"
+        },
+        {
+            "file": "Assets/Gripper/Gripper.dae",
+            "isTemplated": "false"
+        },
+        {
+            "file": "Assets/Gripper/Textures/Gripper-BaseColor.png",
+            "isTemplated": "false"
+        },
+        {
+            "file": "Assets/Gripper/Textures/Gripper-Specular.png",
+            "isTemplated": "false"
+        },
+        {
+            "file": "Assets/Gripper/Textures/Gripper-Roughness.png",
+            "isTemplated": "false"
+        },
+        {
+            "file": "Assets/Gripper/Textures/Gripper-Metallic.png",
+            "isTemplated": "false"
+        },
+        {
+            "file": "Assets/Gripper/Textures/Gripper-Normal.png",
+            "isTemplated": "false"
+        },
+        {
+            "file": "Assets/BoxToyPuzzle/ToyBox.fbx",
+            "isTemplated": "false"
+        },
+        {
+            "file": "Assets/BoxToyPuzzle/BoxTriangle.fbx",
+            "isTemplated": "false"
+        },
+        {
+            "file": "Assets/BoxToyPuzzle/BoxCube.fbx",
+            "isTemplated": "false"
+        },
+        {
+            "file": "Assets/BoxToyPuzzle/BoxTriangle.fbx.assetinfo",
+            "isTemplated": "false"
+        },
+        {
+            "file": "Assets/BoxToyPuzzle/BoxCyllinder.fbx",
+            "isTemplated": "false"
+        },
+        {
+            "file": "Assets/BoxToyPuzzle/texture/BoxToyPuzzle_MCube_pazzle_Glossiness.1001.png",
+            "isTemplated": "false"
+        },
+        {
+            "file": "Assets/BoxToyPuzzle/texture/BoxToyPuzzle_MCube_pazzle_Metallic.1001.png",
+            "isTemplated": "false"
+        },
+        {
+            "file": "Assets/BoxToyPuzzle/texture/BoxToyPuzzle_MCube_pazzle_Emissive.1001.png",
+            "isTemplated": "false"
+        },
+        {
+            "file": "Assets/BoxToyPuzzle/texture/BoxToyPuzzle_MCube_pazzle_Normal.1001.png",
+            "isTemplated": "false"
+        },
+        {
+            "file": "Assets/BoxToyPuzzle/texture/BoxToyPuzzle_MCube_pazzle_Height.1001.png",
+            "isTemplated": "false"
+        },
+        {
+            "file": "Assets/BoxToyPuzzle/texture/BoxToyPuzzle_MCube_pazzle_Roughness.1001.png",
+            "isTemplated": "false"
+        },
+        {
+            "file": "Assets/BoxToyPuzzle/texture/BoxToyPuzzle_MCube_pazzle_BaseMap.1001.png",
+            "isTemplated": "false"
+        },
+        {
+            "file": "Assets/BoxToyPuzzle/texture/BoxToyPuzzle_MCube_pazzle_Specular.1001.png",
+            "isTemplated": "false"
+        },
+        {
+            "file": "Assets/BoxToyPuzzle/texture/Roughness/MCube_pazzle_Roughness.1001.png",
+            "isTemplated": "false"
+        },       
+        {
+            "file": "Config/shader_global_build_options.json",
+            "isTemplated": false
+        },
+        {
+            "file": "DiffuseProbeGrids/Atom Default Environment_434B3A4E-7927-4EB4-B568-D0D75E72D270_ProbeData_lutrgba16f.dds",
+            "isTemplated": false
+        },
+        {
+            "file": "DiffuseProbeGrids/Atom Default Environment_691C813B-A7DA-435B-BE78-904F41AAECDD_Distance_lutrg32f.dds",
+            "isTemplated": false
+        },
+        {
+            "file": "DiffuseProbeGrids/Atom Default Environment_9DD87531-9B21-45AC-8169-4B6209456C02_Irradiance_lutrgba16f.dds",
+            "isTemplated": false
+        },
+        {
+            "file": "DiffuseProbeGrids/GI_4C638236-E6F7-413A-B1DF-26DA87A6CDC0_ProbeData_lutrgba16f.dds",
+            "isTemplated": false
+        },
+        {
+            "file": "DiffuseProbeGrids/GI_9A063636-4E64-4E87-8052-E1427ED3EC2C_Distance_lutrg32f.dds",
+            "isTemplated": false
+        },
+        {
+            "file": "DiffuseProbeGrids/GI_C092EE63-F1F9-43CC-93B5-19168F3EEADA_Irradiance_lutrgba16f.dds",
+            "isTemplated": false
+        },
+        {
+            "file": "DiffuseProbeGrids/Diffuse_Probe_Grid_1C06FE02-367E-4D6E-B8AE-9A48F2AF5F75_Irradiance_lutrgba16f.dds",
+            "isTemplated": false
+        },
+        {
+            "file": "DiffuseProbeGrids/Diffuse_Probe_Grid_4F50E1BF-2C8C-44EB-8183-34101107473C_Distance_lutrg32f.dds",
+            "isTemplated": false
+        },
+        {
+            "file": "DiffuseProbeGrids/Diffuse_Probe_Grid_ABC8A956-D89D-4CDB-829B-EF1DD8DE5404_ProbeData_lutrgba16f.dds",
+            "isTemplated": false
+        },
+        {
+            "file": "Examples/panda_moveit_config_demo.launch.py",
+            "isTemplated": false
+        },
+        {
+            "file": "Examples/panda_moveit_config_demo.rviz",
+            "isTemplated": false
+        },
+        {
+            "file": "Gem/${Name}_files.cmake",
+            "isTemplated": true
+        },
+        {
+            "file": "Gem/${Name}_shared_files.cmake",
+            "isTemplated": true
+        },
+        {
+            "file": "Gem/CMakeLists.txt",
+            "isTemplated": true
+        },
+        {
+            "file": "Gem/Include/${Name}/${Name}Bus.h",
+            "isTemplated": true
+        },
+        {
+            "file": "Gem/Platform/Linux/${Name}_linux_files.cmake",
+            "isTemplated": false
+        },
+        {
+            "file": "Gem/Platform/Linux/${Name}_shared_linux_files.cmake",
+            "isTemplated": false
+        },
+        {
+            "file": "Gem/Platform/Linux/PAL_linux.cmake",
+            "isTemplated": true
+        },
+        {
+            "file": "Gem/Platform/Mac/${Name}_mac_files.cmake",
+            "isTemplated": false
+        },
+        {
+            "file": "Gem/Platform/Mac/${Name}_shared_mac_files.cmake",
+            "isTemplated": false
+        },
+        {
+            "file": "Gem/Platform/Mac/PAL_mac.cmake",
+            "isTemplated": true
+        },
+        {
+            "file": "Gem/Platform/Windows/${Name}_shared_windows_files.cmake",
+            "isTemplated": false
+        },
+        {
+            "file": "Gem/Platform/Windows/${Name}_windows_files.cmake",
+            "isTemplated": false
+        },
+        {
+            "file": "Gem/Platform/Windows/PAL_windows.cmake",
+            "isTemplated": true
+        },
+        {
+            "file": "Gem/Registry/assetprocessor_settings.setreg",
+            "isTemplated": true
+        },
+        {
+            "file": "Gem/Source/${Name}Module.cpp",
+            "isTemplated": true
+        },
+        {
+            "file": "Gem/Source/${Name}SystemComponent.cpp",
+            "isTemplated": true
+        },
+        {
+            "file": "Gem/Source/${Name}SystemComponent.h",
+            "isTemplated": true
+        },
+        {
+            "file": "Gem/enabled_gems.cmake",
+            "isTemplated": true
+        },
+        {
+            "file": "Gem/gem.json",
+            "isTemplated": true
+        },
+        {
+            "file": "Levels/RoboticPalletization/RoboticPalletization.prefab",
+            "isTemplated": false
+        },
+        {
+            "file": "Levels/RoboticManipulation/RoboticManipulation.prefab",
+            "isTemplated": false
+        },
+        {
+            "file": "Passes/ContrastAdaptiveSharpening.pass",
+            "isTemplated": false
+        },
+        {
+            "file": "Passes/MainRenderPipeline.azasset",
+            "isTemplated": false
+        },
+        {
+            "file": "Passes/PostProcessParent.pass",
+            "isTemplated": false
+        },
+        {
+            "file": "Passes/SMAAConfiguration.azasset",
+            "isTemplated": false
+        },
+        {
+            "file": "Passes/Taa.pass",
+            "isTemplated": false
+        },
+        {
+            "file": "Platform/Linux/linux_project.cmake",
+            "isTemplated": false
+        },
+        {
+            "file": "Platform/Linux/linux_project.json",
+            "isTemplated": false
+        },
+        {
+            "file": "Platform/Mac/mac_project.cmake",
+            "isTemplated": false
+        },
+        {
+            "file": "Platform/Mac/mac_project.json",
+            "isTemplated": false
+        },
+        {
+            "file": "Platform/Windows/windows_project.cmake",
+            "isTemplated": false
+        },
+        {
+            "file": "Platform/Windows/windows_project.json",
+            "isTemplated": false
+        },
+        {
+            "file": "Prefabs/Cell.prefab",
+            "isTemplated": false
+        },
+        {
+            "file": "Prefabs/PandaRobot.prefab",
+            "isTemplated": false
+        },
+        {
+            "file": "Prefabs/ToyBox_fbx.prefab",
+            "isTemplated": false
+        },
+        {
+            "file": "ReflectionProbes/Entity6__8035B0D1-451A-4226-A488-0C8E6949F6F5__iblspecularcm256.dds",
+            "isTemplated": false
+        },
+        {
+            "file": "Registry/assetprocessor_settings.setreg",
+            "isTemplated": false
+        },
+        {
+            "file": "Registry/awscoreconfiguration.setreg",
+            "isTemplated": false
+        },
+        {
+            "file": "Registry/physxdebugconfiguration.setreg",
+            "isTemplated": false
+        },
+        {
+            "file": "Registry/physxdefaultsceneconfiguration.setreg",
+            "isTemplated": false
+        },
+        {
+            "file": "Registry/physxsystemconfiguration.setreg",
+            "isTemplated": false
+        },
+        {
+            "file": "Registry/sceneassetimporter.setreg",
+            "isTemplated": false
+        },
+        {
+            "file": "Resources/GameSDK.ico",
+            "isTemplated": false
+        },
+        {
+            "file": "Resources/LegacyLogoLauncher.bmp",
+            "isTemplated": false
+        },
+        {
+            "file": "Resources/Platform/Mac/Images.xcassets/AppIcon.appiconset/Contents.json",
+            "isTemplated": false
+        },
+        {
+            "file": "Resources/Platform/Mac/Images.xcassets/AppIcon.appiconset/icon_128.png",
+            "isTemplated": false
+        },
+        {
+            "file": "Resources/Platform/Mac/Images.xcassets/AppIcon.appiconset/icon_128_2x.png",
+            "isTemplated": false
+        },
+        {
+            "file": "Resources/Platform/Mac/Images.xcassets/AppIcon.appiconset/icon_16.png",
+            "isTemplated": false
+        },
+        {
+            "file": "Resources/Platform/Mac/Images.xcassets/AppIcon.appiconset/icon_16_2x.png",
+            "isTemplated": false
+        },
+        {
+            "file": "Resources/Platform/Mac/Images.xcassets/AppIcon.appiconset/icon_256.png",
+            "isTemplated": false
+        },
+        {
+            "file": "Resources/Platform/Mac/Images.xcassets/AppIcon.appiconset/icon_256_2x.png",
+            "isTemplated": false
+        },
+        {
+            "file": "Resources/Platform/Mac/Images.xcassets/AppIcon.appiconset/icon_32.png",
+            "isTemplated": false
+        },
+        {
+            "file": "Resources/Platform/Mac/Images.xcassets/AppIcon.appiconset/icon_32_2x.png",
+            "isTemplated": false
+        },
+        {
+            "file": "Resources/Platform/Mac/Images.xcassets/AppIcon.appiconset/icon_512.png",
+            "isTemplated": false
+        },
+        {
+            "file": "Resources/Platform/Mac/Images.xcassets/AppIcon.appiconset/icon_512_2x.png",
+            "isTemplated": false
+        },
+        {
+            "file": "Resources/Platform/Mac/Images.xcassets/Contents.json",
+            "isTemplated": false
+        },
+        {
+            "file": "Resources/Platform/Mac/Info.plist",
+            "isTemplated": true
+        },
+        {
+            "file": "ShaderLib/README.md",
+            "isTemplated": false
+        },
+        {
+            "file": "ShaderLib/scenesrg.srgi",
+            "isTemplated": false
+        },
+        {
+            "file": "ShaderLib/viewsrg.srgi",
+            "isTemplated": false
+        },
+        {
+            "file": "cmake/EngineFinder.cmake",
+            "isTemplated": false
+        },
+        {
+            "file": "user/Registry/editorpreferences.setreg",
+            "isTemplated": false
+        },
+        {
+            "file": "user/Registry/ViewBookmarks/robotic-arm_1671539006337141059.setreg",
+            "isTemplated": false
+        },
+        {
+            "file": "user/Registry/ViewBookmarks/RoboticPalletization_1691268770764352914.setreg",
+            "isTemplated": false
+        },
+        {
+            "file": "game.cfg",
+            "isTemplated": false
+        },
+        {
+            "file": "preview.png",
+            "isTemplated": false
+        },
+        {
+            "file": "project.json",
+            "isTemplated": true
+        }
+    ],
+    "createDirectories": [
+        {
+            "dir": "Config"
+        },
+        {
+            "dir": "DiffuseProbeGrids"
+        },
+        {
+            "dir": "Examples"
+        },
+        {
+            "dir": "Gem"
+        },
+        {
+            "dir": "Gem/Include"
+        },
+        {
+            "dir": "Gem/Include/${Name}"
+        },
+        {
+            "dir": "Gem/Platform"
+        },
+        {
+            "dir": "Gem/Platform/Linux"
+        },
+        {
+            "dir": "Gem/Platform/Mac"
+        },
+        {
+            "dir": "Gem/Platform/Windows"
+        },
+        {
+            "dir": "Gem/Registry"
+        },
+        {
+            "dir": "Gem/Source"
+        },
+        {
+            "dir": "Levels"
+        },
+        {
+            "dir": "Levels/RoboticPalletization"
+        },
+        {
+            "dir": "Levels/RoboticManipulation"
+        },
+        {
+            "dir": "Passes"
+        },
+        {
+            "dir": "Platform"
+        },
+        {
+            "dir": "Platform/Android"
+        },
+        {
+            "dir": "Platform/Linux"
+        },
+        {
+            "dir": "Platform/Mac"
+        },
+        {
+            "dir": "Platform/Windows"
+        },
+        {
+            "dir": "Prefabs"
+        },
+        {
+            "dir": "ReflectionProbes"
+        },
+        {
+            "dir": "Registry"
+        },
+        {
+            "dir": "Resources"
+        },
+        {
+            "dir": "Resources/Platform"
+        },
+        {
+            "dir": "Resources/Platform/Mac"
+        },
+        {
+            "dir": "Resources/Platform/Mac/Images.xcassets"
+        },
+        {
+            "dir": "Resources/Platform/Mac/Images.xcassets/AppIcon.appiconset"
+        },
+        {
+            "dir": "ShaderLib"
+        },
+        {
+            "dir": "Shaders"
+        },
+        {
+            "dir": "user"
+        },
+        {
+            "dir": "user/Registry"
+        },
+        {
+            "dir": "user/Registry/ViewBookmarks"
+        },
+        {
+            "dir": "Shaders/ShaderResourceGroups"
+        },
+        {
+            "dir": "cmake"
+        }
+    ]
+}
