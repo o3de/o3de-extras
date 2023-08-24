@@ -21,7 +21,7 @@ namespace ROS2
 {
     //! Lidar Base.
     //! Lidars (Light Detection and Ranging) emit laser light and measure it after reflection.
-    //! Lidar Base allows for simulation of Lidars. 
+    //! Lidar Base allows for simulation of Lidars.
     class LidarBase
     {
     public:
@@ -29,7 +29,7 @@ namespace ROS2
         AZ_TYPE_INFO(LidarBase, "{e46126a2-7a86-bb65-367a-416f2cab393c}");
         static void Reflect(AZ::ReflectContext* context);
 
-        LidarBase(AZStd::vector<LidarTemplate::LidarModel> availableModels = {});
+        LidarBase(const AZStd::vector<LidarTemplate::LidarModel>& availableModels = {});
         LidarBase(const LidarSensorConfiguration& lidarConfiguration);
         ~LidarBase() = default;
 
@@ -37,14 +37,13 @@ namespace ROS2
         void Deinit();
 
         RaycastResult PerformRaycast();
-        void VisualizeResults();
+        void VisualizeResults() const;
 
-        LidarId GetLidarRaycasterId();
+        LidarId GetLidarRaycasterId() const;
 
         LidarSensorConfiguration m_lidarConfiguration;
 
     private:
-
         void ConnectToLidarRaycaster();
         void ConfigureLidarRaycaster();
 

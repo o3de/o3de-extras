@@ -54,8 +54,14 @@ namespace ROS2
         AZStd::string type = kLaserScanType;
         ls.m_type = type;
         ls.m_topic = "ls";
-        m_sensorConfiguration.m_frequency = 10;
+        m_sensorConfiguration.m_frequency = 10.f;
         m_sensorConfiguration.m_publishersConfigurations.insert(AZStd::make_pair(type, ls));
+    }
+    ROS2Lidar2DSensorComponent::ROS2Lidar2DSensorComponent(
+        const SensorConfiguration& sensorConfiguration, const LidarSensorConfiguration& lidarConfiguration)
+        : m_lidarBase(lidarConfiguration)
+    {
+        m_sensorConfiguration = sensorConfiguration;
     }
 
     void ROS2Lidar2DSensorComponent::Visualize()
@@ -94,8 +100,8 @@ namespace ROS2
         message.header.stamp = ROS2Interface::Get()->GetROSTimestamp();
         message.angle_min = AZ::DegToRad(m_lidarBase.m_lidarConfiguration.m_lidarParameters.m_minHAngle);
         message.angle_max = AZ::DegToRad(m_lidarBase.m_lidarConfiguration.m_lidarParameters.m_maxHAngle);
-        message.angle_increment =
-            (message.angle_max - message.angle_min) / aznumeric_cast<float>(m_lidarBase.m_lidarConfiguration.m_lidarParameters.m_numberOfIncrements);
+        message.angle_increment = (message.angle_max - message.angle_min) /
+            aznumeric_cast<float>(m_lidarBase.m_lidarConfiguration.m_lidarParameters.m_numberOfIncrements);
 
         message.range_min = m_lidarBase.m_lidarConfiguration.m_lidarParameters.m_minRange;
         message.range_max = m_lidarBase.m_lidarConfiguration.m_lidarParameters.m_maxRange;

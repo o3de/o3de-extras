@@ -73,6 +73,7 @@ namespace ROS2
     {
         if (m_availableModels.empty())
         {
+            AZ_Warning("LidarSensorConfiguration", false, "Lidar configuration created with an empty models list");
             return;
         }
         m_lidarModel = m_availableModels.front();
@@ -94,25 +95,26 @@ namespace ROS2
         }
     }
 
-    AZStd::vector<AZStd::string> LidarSensorConfiguration::GetAvailableModels()
+    AZStd::vector<AZStd::string> LidarSensorConfiguration::GetAvailableModels() const
     {
         AZStd::vector<AZStd::string> result;
-        for (auto model : m_availableModels)
+        for (const auto model : m_availableModels)
         {
-            auto temp = LidarTemplateUtils::GetTemplate(model);
-            result.push_back({temp.m_name});
+            auto templ = LidarTemplateUtils::GetTemplate(model);
+            result.push_back({ templ.m_name });
         }
         return result;
     }
 
-    void LidarSensorConfiguration::SetModel()
+    void LidarSensorConfiguration::FetchLidarModelConfiguration()
     {
-        for (auto model : m_availableModels)
+        for (const auto model : m_availableModels)
         {
-            auto temp = LidarTemplateUtils::GetTemplate(model);
-            if (m_lidarModelName == temp.m_name)
+            auto templ = LidarTemplateUtils::GetTemplate(model);
+            if (m_lidarModelName == templ.m_name)
             {
                 m_lidarModel = model;
+                break;
             }
         }
         m_lidarParameters = LidarTemplateUtils::GetTemplate(m_lidarModel);
@@ -140,7 +142,7 @@ namespace ROS2
 
     AZ::Crc32 LidarSensorConfiguration::OnLidarModelSelected()
     {
-        SetModel();
+        FetchLidarModelConfiguration();
         UpdateShowNoise();
         return AZ::Edit::PropertyRefreshLevels::EntireTree;
     }

@@ -10,8 +10,8 @@
 #include <Atom/RPI.Public/AuxGeom/AuxGeomFeatureProcessorInterface.h>
 #include <Atom/RPI.Public/Scene.h>
 #include <AzFramework/Physics/PhysicsSystem.h>
-#include <Lidar/LidarRegistrarSystemComponent.h>
 #include <Lidar/LidarBase.h>
+#include <Lidar/LidarRegistrarSystemComponent.h>
 #include <ROS2/Frame/ROS2FrameComponent.h>
 #include <ROS2/ROS2Bus.h>
 #include <ROS2/Utilities/ROS2Names.h>
@@ -25,17 +25,13 @@ namespace ROS2
 
         if (auto serialize = azrtti_cast<AZ::SerializeContext*>(context))
         {
-            serialize->Class<LidarBase>()->Version(2)->Field(
-                "lidarConfiguration", &LidarBase::m_lidarConfiguration);
+            serialize->Class<LidarBase>()->Version(1)->Field("lidarConfiguration", &LidarBase::m_lidarConfiguration);
 
             if (AZ::EditContext* ec = serialize->GetEditContext())
             {
                 ec->Class<LidarBase>("ROS2 Lidar Sensor", "Lidar sensor component")
                     ->DataElement(
-                        AZ::Edit::UIHandlers::ComboBox,
-                        &LidarBase::m_lidarConfiguration,
-                        "Lidar configuration",
-                        "Lidar configuration")
+                        AZ::Edit::UIHandlers::ComboBox, &LidarBase::m_lidarConfiguration, "Lidar configuration", "Lidar configuration")
                     ->Attribute(AZ::Edit::Attributes::Visibility, AZ::Edit::PropertyVisibility::ShowChildrenOnly);
             }
         }
@@ -87,7 +83,9 @@ namespace ROS2
         if (m_lidarConfiguration.m_lidarSystemFeatures & LidarSystemFeatures::CollisionLayers)
         {
             LidarRaycasterRequestBus::Event(
-                m_lidarRaycasterId, &LidarRaycasterRequestBus::Events::ConfigureIgnoredCollisionLayers, m_lidarConfiguration.m_ignoredCollisionLayers);
+                m_lidarRaycasterId,
+                &LidarRaycasterRequestBus::Events::ConfigureIgnoredCollisionLayers,
+                m_lidarConfiguration.m_ignoredCollisionLayers);
         }
 
         if (m_lidarConfiguration.m_lidarSystemFeatures & LidarSystemFeatures::EntityExclusion)
@@ -105,7 +103,7 @@ namespace ROS2
         }
     }
 
-    LidarBase::LidarBase(AZStd::vector<LidarTemplate::LidarModel> availableModels)
+    LidarBase::LidarBase(const AZStd::vector<LidarTemplate::LidarModel>& availableModels)
         : m_lidarConfiguration(availableModels)
     {
     }
@@ -115,7 +113,7 @@ namespace ROS2
     {
     }
 
-    void LidarBase::VisualizeResults()
+    void LidarBase::VisualizeResults() const
     {
         if (m_lastScanResults.m_points.empty())
         {
@@ -160,7 +158,7 @@ namespace ROS2
         m_implementationToRaycasterMap.clear();
     }
 
-    LidarId LidarBase::GetLidarRaycasterId()
+    LidarId LidarBase::GetLidarRaycasterId() const
     {
         return m_lidarRaycasterId;
     }
@@ -169,7 +167,7 @@ namespace ROS2
     {
         AZ::Entity* entity = nullptr;
         AZ::ComponentApplicationBus::BroadcastResult(entity, &AZ::ComponentApplicationRequests::FindEntity, m_entityId);
-        auto entityTransform = entity->FindComponent<AzFramework::TransformComponent>();
+        const auto entityTransform = entity->FindComponent<AzFramework::TransformComponent>();
 
         LidarRaycasterRequestBus::EventResult(
             m_lastScanResults, m_lidarRaycasterId, &LidarRaycasterRequestBus::Events::PerformRaycast, entityTransform->GetWorldTM());

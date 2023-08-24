@@ -15,9 +15,9 @@
 #include <rclcpp/publisher.hpp>
 #include <sensor_msgs/msg/point_cloud2.hpp>
 
+#include "LidarBase.h"
 #include "LidarRaycaster.h"
 #include "LidarSensorConfiguration.h"
-#include "LidarBase.h"
 
 namespace ROS2
 {
@@ -30,7 +30,7 @@ namespace ROS2
     public:
         AZ_COMPONENT(ROS2LidarSensorComponent, "{502A955F-7742-4E23-AD77-5E4063739DCA}", ROS2SensorComponent);
         ROS2LidarSensorComponent();
-        // ROS2LidarSensorComponent(const SensorConfiguration& sensorConfiguration, const LidarSensorConfiguration& lidarConfiguration);
+        ROS2LidarSensorComponent(const SensorConfiguration& sensorConfiguration, const LidarSensorConfiguration& lidarConfiguration);
         ~ROS2LidarSensorComponent() = default;
         static void Reflect(AZ::ReflectContext* context);
         //////////////////////////////////////////////////////////////////////////

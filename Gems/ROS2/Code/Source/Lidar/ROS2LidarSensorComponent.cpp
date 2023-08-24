@@ -54,8 +54,15 @@ namespace ROS2
         AZStd::string type = kPointCloudType;
         pc.m_type = type;
         pc.m_topic = "pc";
-        m_sensorConfiguration.m_frequency = 10;
+        m_sensorConfiguration.m_frequency = 10.f;
         m_sensorConfiguration.m_publishersConfigurations.insert(AZStd::make_pair(type, pc));
+    }
+
+    ROS2LidarSensorComponent::ROS2LidarSensorComponent(
+        const SensorConfiguration& sensorConfiguration, const LidarSensorConfiguration& lidarConfiguration)
+        : m_lidarBase(lidarConfiguration)
+    {
+        m_sensorConfiguration = sensorConfiguration;
     }
 
     void ROS2LidarSensorComponent::Visualize()

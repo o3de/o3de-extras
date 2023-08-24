@@ -15,8 +15,8 @@
 #include <rclcpp/publisher.hpp>
 #include <sensor_msgs/msg/laser_scan.hpp>
 
-#include "LidarRaycaster.h"
 #include "LidarBase.h"
+#include "LidarRaycaster.h"
 
 namespace ROS2
 {

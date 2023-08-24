@@ -194,7 +194,7 @@ namespace ROS2
                 },
             }
         };
-    }
+    } // namespace
 
     LidarTemplate LidarTemplateUtils::GetTemplate(LidarTemplate::LidarModel model)
     {
@@ -210,8 +210,8 @@ namespace ROS2
     AZStd::vector<LidarTemplate::LidarModel> LidarTemplateUtils::Get2DModels()
     {
         AZStd::vector<LidarTemplate::LidarModel> result;
-        
-        for (auto &it : templates)
+
+        for (const auto& it : templates)
         {
             if (it.second.m_is2D)
             {
@@ -224,8 +224,8 @@ namespace ROS2
     AZStd::vector<LidarTemplate::LidarModel> LidarTemplateUtils::Get3DModels()
     {
         AZStd::vector<LidarTemplate::LidarModel> result;
-        
-        for (auto &it : templates)
+
+        for (const auto& it : templates)
         {
             if (!it.second.m_is2D)
             {

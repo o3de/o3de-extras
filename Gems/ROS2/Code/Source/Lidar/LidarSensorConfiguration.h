@@ -46,14 +46,14 @@ namespace ROS2
         bool IsEntityExclusionVisible() const;
         bool IsMaxPointsConfigurationVisible() const;
 
-        AZStd::vector<AZStd::string> GetAvailableModels();
-        void SetModel();
+        AZStd::vector<AZStd::string> GetAvailableModels() const;
+        void FetchLidarModelConfiguration();
 
         AZ::Crc32 OnLidarModelSelected();
         AZ::Crc32 OnLidarImplementationSelected();
         AZStd::vector<AZStd::string> FetchLidarSystemList();
 
-        AZStd::vector<LidarTemplate::LidarModel> m_availableModels;
+        const AZStd::vector<LidarTemplate::LidarModel> m_availableModels;
         AZStd::string m_lidarModelName = "CustomLidar2D";
 
         void UpdateShowNoise();
