@@ -95,7 +95,7 @@ namespace ROS2
         //! Whether transformation to parent frame can change during the simulation, or is fixed.
         bool IsDynamic() const;
 
-        const AZ::EntityId GetParentROS2FrameComponentId() const;
+        const AZ::EntityId GetParentROS2FrameEntityId() const;
 
         //! Return the frame id of this frame's parent. It can be useful to determine ROS 2 transformations.
         //! @return Parent frame ID.
@@ -113,7 +113,8 @@ namespace ROS2
 
         bool IsFrame() const override;
 
-    private:
+        void ConfigurationChange() const;
+
         ROS2FrameConfiguration m_configuration;
     };
 

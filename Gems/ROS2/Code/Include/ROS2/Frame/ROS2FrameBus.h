@@ -7,6 +7,9 @@
  */
 #pragma once
 
+#include "AzCore/Component/ComponentBus.h"
+#include "AzCore/Component/EntityId.h"
+#include "AzCore/EBus/EBus.h"
 #include <AzFramework/Components/TransformComponent.h>
 #include <ROS2/Frame/ROS2Transform.h>
 #include <ROS2/ROS2GemUtilities.h>
@@ -62,4 +65,22 @@ namespace ROS2
     };
 
     using ROS2FrameComponentBus = AZ::EBus<ROS2FrameComponentRequests>;
+
+    class ROS2FrameNotificationRequests : public AZ::ComponentBus
+    {
+    public:
+        static const AZ::EBusHandlerPolicy HandlerPolicy = AZ::EBusHandlerPolicy::Single;
+
+        static const AZ::EBusAddressPolicy AddressPolicy = AZ::EBusAddressPolicy::ById;
+
+        virtual void OnActivate(AZ::EntityId entity, AZ::EntityId parentEntity) = 0;
+
+        virtual void OnDeactivate(AZ::EntityId entity, AZ::EntityId parentEntity) = 0;
+
+        virtual void OnConfigurationChange() = 0;
+
+        virtual void OnReconfigure(AZ::EntityId entity) = 0;
+    };
+
+    using ROS2FrameNotificationBus = AZ::EBus<ROS2FrameNotificationRequests>;
 } // namespace ROS2

@@ -99,6 +99,11 @@ namespace ROS2
         }
     }
 
+    void ROS2FrameComponentController::ConfigurationChange() const
+    {
+        ROS2FrameNotificationBus::Event(m_configuration.m_activeEntityId, &ROS2FrameNotificationBus::Events::OnConfigurationChange);
+    }
+
     AZ::Entity* ROS2FrameConfiguration::GetEntity() const
     {
         AZ::Entity* entity = nullptr;
@@ -122,7 +127,8 @@ namespace ROS2
                 editContext->Class<ROS2FrameComponentController>("ROS2FrameConfiguration", "Configuration of the ROS2 frame")
                     ->ClassElement(AZ::Edit::ClassElements::EditorData, "")
                     ->Attribute(AZ::Edit::Attributes::Visibility, AZ::Edit::PropertyVisibility::ShowChildrenOnly)
-                    ->DataElement(AZ::Edit::UIHandlers::Default, &ROS2FrameComponentController::m_configuration);
+                    ->DataElement(AZ::Edit::UIHandlers::Default, &ROS2FrameComponentController::m_configuration)
+                    ->Attribute(AZ::Edit::Attributes::ChangeNotify, &ROS2FrameComponentController::ConfigurationChange);
             }
         }
     }
@@ -168,7 +174,7 @@ namespace ROS2
         return m_configuration.m_isDynamic;
     }
 
-    const AZ::EntityId ROS2FrameComponentController::GetParentROS2FrameComponentId() const
+    const AZ::EntityId ROS2FrameComponentController::GetParentROS2FrameEntityId() const
     {
         return Internal::GetFirstROS2FrameAncestorEntityId(m_configuration.m_activeEntityId);
     }
@@ -177,7 +183,7 @@ namespace ROS2
     {
         AZ::Transform worldFromThis{};
         AZ::TransformBus::EventResult(worldFromThis, m_configuration.m_activeEntityId, &AZ::TransformBus::Events::GetWorldTM);
-        const auto parentFrameId = GetParentROS2FrameComponentId();
+        const auto parentFrameId = GetParentROS2FrameEntityId();
         if (parentFrameId.IsValid())
         {
             AZ::Transform worldFromAncestor{};
@@ -190,7 +196,7 @@ namespace ROS2
 
     AZStd::string ROS2FrameComponentController::GetParentFrameID() const
     {
-        const auto parentFrameEntityId = GetParentROS2FrameComponentId();
+        const auto parentFrameEntityId = GetParentROS2FrameEntityId();
         if (parentFrameEntityId.IsValid())
         {
             AZStd::string parentFrameId;
@@ -213,7 +219,7 @@ namespace ROS2
 
     AZStd::string ROS2FrameComponentController::GetNamespace() const
     {
-        auto parentFrameId = GetParentROS2FrameComponentId();
+        auto parentFrameId = GetParentROS2FrameEntityId();
         AZStd::string parentNamespace;
         if (parentFrameId.IsValid())
         {

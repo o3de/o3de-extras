@@ -7,6 +7,12 @@
  */
 #pragma once
 
+#include "API/ToolsApplicationAPI.h"
+#include "AzCore/Component/Entity.h"
+#include "AzCore/Component/EntityBus.h"
+#include "AzCore/Component/EntityId.h"
+#include "AzCore/Component/TransformBus.h"
+#include "AzCore/std/string/string.h"
 #include <AzCore/Component/Component.h>
 #include <AzCore/std/smart_ptr/unique_ptr.h>
 #include <AzFramework/Components/TransformComponent.h>
@@ -29,10 +35,14 @@ namespace ROS2
     //! ros2 static and dynamic transforms (/tf_static, /tf). It also facilitates namespace handling.
     //! An entity can only have a single ROS2Frame on each level. Many ROS2 Components require this component.
     //! @note A robot should have this component on every level of entity hierarchy (for each joint, fixed or dynamic)
-    class ROS2FrameEditorComponent : public ROS2FrameEditorComponentBase
+    class ROS2FrameEditorComponent
+        : public ROS2FrameEditorComponentBase
+        , public ROS2FrameNotificationBus::Handler
+        , public AzToolsFramework::ToolsApplicationNotificationBus::Handler
+        , public AZ::EntityBus::Handler
     {
     public:
-        AZ_COMPONENT(ROS2FrameEditorComponent, "{EE743472-3E25-41EA-961B-14096AC1D66F}", AzToolsFramework::Components::EditorComponentBase);
+        AZ_COMPONENT(ROS2FrameEditorComponent, "{ed8cf823-1813-4423-a874-5de13e9124d2}", AzToolsFramework::Components::EditorComponentBase);
 
         ROS2FrameEditorComponent();
         //! Initialize to a specific frame id
@@ -82,6 +92,18 @@ namespace ROS2
 
         bool ShouldActivateController() const override;
 
+        void OnActivate(AZ::EntityId entity, AZ::EntityId parentEntity) override;
+
+        void OnDeactivate(AZ::EntityId entity, AZ::EntityId parentEntity) override;
+
+        void OnReconfigure(AZ::EntityId entity) override;
+
+        void OnConfigurationChange() override;
+
+        void EntityParentChanged(AZ::EntityId entityId, AZ::EntityId newParentId, AZ::EntityId oldParentId) override;
+
+        void OnEntityNameChanged(const AZStd::string& name);
+
     private:
         bool IsTopLevel() const; //!< True if this entity does not have a parent entity with ROS2.
 
@@ -94,6 +116,14 @@ namespace ROS2
         //! @see GetGlobalFrameName().
         AZStd::string GetParentFrameID() const;
 
+        void RefreshEffectiveNamespace();
+
         AZStd::unique_ptr<ROS2Transform> m_ros2Transform;
+
+        AZ::EntityId m_parentFrameEntity;
+
+        AZStd::set<AZ::EntityId> m_nonFramePredecessors;
+
+        AZStd::string m_effectiveNamespace;
     };
 } // namespace ROS2

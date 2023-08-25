@@ -161,7 +161,7 @@ namespace ROS2
         ROS2FrameComponentBase::Reflect(context);
         if (AZ::SerializeContext* serialize = azrtti_cast<AZ::SerializeContext*>(context))
         {
-            serialize->Class<ROS2FrameComponent, ROS2FrameComponentBase>()->Version(1);
+            serialize->Class<ROS2FrameComponent, ROS2FrameComponentBase>()->Version(2);
         }
     }
 
@@ -190,6 +190,11 @@ namespace ROS2
     ROS2FrameComponent::ROS2FrameComponent(const ROS2FrameConfiguration& config)
         : ROS2FrameComponentBase(config)
     {
+    }
+
+    ROS2FrameConfiguration ROS2FrameComponent::GetConfiguration() const
+    {
+        return m_controller.GetConfiguration();
     }
 
 } // namespace ROS2
