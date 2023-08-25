@@ -76,10 +76,11 @@ namespace ROS2
         m_controller.PopulateNamespace(m_controller.IsTopLevel(), GetEntity()->GetName());
         RefreshEffectiveNamespace();
 
+        ROS2FrameNotificationBus::Handler::BusConnect(GetEntityId());
+
         // Notify other ROS2FrameEditorComponents about new component activation.
         ROS2FrameNotificationBus::Broadcast(&ROS2FrameNotificationBus::Events::OnActivate, GetEntityId(), m_parentFrameEntity);
 
-        ROS2FrameNotificationBus::Handler::BusConnect(GetEntityId());
         AZ::EntityBus::Handler::BusConnect(GetEntityId());
         AzToolsFramework::ToolsApplicationNotificationBus::Handler::BusConnect();
     }
