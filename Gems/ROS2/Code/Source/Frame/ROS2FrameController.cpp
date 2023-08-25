@@ -257,6 +257,11 @@ namespace ROS2
         m_configuration.m_activeEntityId = entityId;
     }
 
+    void ROS2FrameComponentController::UpdateNamespaceConfiguration(const AZStd::string& ns, NamespaceConfiguration::NamespaceStrategy strategy)
+    {
+        m_configuration.m_namespaceConfiguration.SetNamespace(ns, strategy);
+    }
+
     bool ROS2FrameComponentController::IsFrame() const
     {
         return true;

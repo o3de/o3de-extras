@@ -101,10 +101,6 @@ namespace ROS2
         m_ros2Transform->Publish(m_controller.GetFrameTransform());
     }
 
-    void ROS2FrameComponent::UpdateNamespaceConfiguration(const AZStd::string& ns, NamespaceConfiguration::NamespaceStrategy strategy)
-    {
-        m_namespaceConfiguration.SetNamespace(ns, strategy);
-    }
     void ROS2FrameComponent::Reflect(AZ::ReflectContext* context)
     {
         ROS2FrameComponentBase::Reflect(context);

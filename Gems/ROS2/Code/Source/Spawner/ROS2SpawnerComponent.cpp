@@ -178,7 +178,7 @@ namespace ROS2
                 entity->SetName(instanceName);
                 if (!spawnableNamespace.empty())
                 {
-                    frameComponent->UpdateNamespaceConfiguration(spawnableNamespace, NamespaceConfiguration::NamespaceStrategy::Custom);
+                    ROS2FrameComponentBus::Event(entity->GetId(), &ROS2FrameComponentBus::Events::UpdateNamespaceConfiguration, spawnableNamespace, NamespaceConfiguration::NamespaceStrategy::Custom);
                 }
                 break;
             }

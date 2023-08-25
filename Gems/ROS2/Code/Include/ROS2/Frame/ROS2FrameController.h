@@ -61,19 +61,13 @@ namespace ROS2
         //////////////////////////////////////////////////////////////////////////
         // ROS2FrameComponentBus::Handler overrides
         AZStd::string GetFrameID() const override;
-
         void SetFrameID(const AZStd::string& frameId);
-
         AZ::Name GetJointName() const override;
-
         void SetJointName(const AZStd::string& jointNameString);
-
         AZStd::string GetNamespace() const override;
-
         AZ::Transform GetFrameTransform() const override;
-
         AZStd::string GetGlobalFrameName() const override;
-
+        void UpdateNamespaceConfiguration(const AZStd::string& ns, NamespaceConfiguration::NamespaceStrategy strategy) override;
         bool IsFrame() const override;
         //////////////////////////////////////////////////////////////////////////
 

@@ -48,11 +48,6 @@ namespace ROS2
         static void GetIncompatibleServices(AZ::ComponentDescriptor::DependencyArrayType& incompatible);
         static void GetRequiredServices(AZ::ComponentDescriptor::DependencyArrayType& required);
 
-        //! Updates the namespace and namespace strategy of the underlying namespace configuration
-        //! @param ns Namespace to set.
-        //! @param strategy Namespace strategy to use.
-        void UpdateNamespaceConfiguration(const AZStd::string& ns, NamespaceConfiguration::NamespaceStrategy strategy);
-
         ROS2FrameConfiguration GetConfiguration() const;
 
     private:
