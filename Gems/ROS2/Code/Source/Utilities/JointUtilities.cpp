@@ -7,8 +7,8 @@
  */
 
 #include "JointUtilities.h"
-#include "AzCore/Name/Name.h"
-#include "ROS2/Frame/ROS2FrameBus.h"
+#include <AzCore/Name/Name.h>
+#include <ROS2/Frame/ROS2FrameBus.h>
 #include <ROS2/Frame/ROS2FrameComponent.h>
 
 namespace ROS2::Utils

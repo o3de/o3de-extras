@@ -8,8 +8,8 @@
 
 #include "ROS2CameraSensorComponent.h"
 #include "CameraUtilities.h"
-#include "ROS2/Frame/ROS2FrameBus.h"
 #include <ROS2/Communication/TopicConfiguration.h>
+#include <ROS2/Frame/ROS2FrameBus.h>
 #include <ROS2/Frame/ROS2FrameComponent.h>
 
 #include <AzCore/Component/Entity.h>

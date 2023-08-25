@@ -7,20 +7,18 @@
  *
  */
 
-#include "AzCore/Name/Name.h"
-#include "AzCore/std/string/string.h"
-#include "ROS2/Frame/ROS2FrameBus.h"
-#include "ROS2/Frame/ROS2FrameEditorComponent.h"
 #include <AzCore/Asset/AssetManagerComponent.h>
 #include <AzCore/Component/ComponentApplication.h>
 #include <AzCore/Component/ComponentApplicationBus.h>
 #include <AzCore/Component/Entity.h>
 #include <AzCore/Component/EntityId.h>
+#include <AzCore/Name/Name.h>
 #include <AzCore/RTTI/RTTIMacros.h>
 #include <AzCore/Serialization/SerializeContext.h>
 #include <AzCore/Slice/SliceAssetHandler.h>
 #include <AzCore/UserSettings/UserSettingsComponent.h>
 #include <AzCore/std/containers/array.h>
+#include <AzCore/std/string/string.h>
 #include <AzCore/std/string/string_view.h>
 #include <AzQtComponents/Utilities/QtPluginPaths.h>
 #include <AzTest/GemTestEnvironment.h>
@@ -29,6 +27,7 @@
 #include <AzToolsFramework/ToolsComponents/TransformComponent.h>
 #include <AzToolsFramework/UnitTest/AzToolsFrameworkTestHelpers.h>
 #include <AzToolsFramework/UnitTest/ToolsTestApplication.h>
+#include <ROS2/Frame/ROS2FrameBus.h>
 #include <ROS2/Frame/ROS2FrameComponent.h>
 #include <ROS2/Frame/ROS2FrameEditorComponent.h>
 #include <ROS2/ROS2Bus.h>

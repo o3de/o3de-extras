@@ -7,10 +7,10 @@
  */
 
 #include "JointsTrajectoryComponent.h"
-#include "AzCore/std/string/string.h"
-#include "ROS2/Frame/ROS2FrameBus.h"
 #include <AzCore/Serialization/EditContext.h>
+#include <AzCore/std/string/string.h>
 #include <PhysX/ArticulationJointBus.h>
+#include <ROS2/Frame/ROS2FrameBus.h>
 #include <ROS2/Frame/ROS2FrameComponent.h>
 #include <ROS2/Manipulation/JointsManipulationRequests.h>
 #include <ROS2/ROS2Bus.h>

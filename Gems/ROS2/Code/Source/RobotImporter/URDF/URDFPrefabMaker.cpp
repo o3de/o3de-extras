@@ -9,7 +9,6 @@
 #include "URDFPrefabMaker.h"
 #include "CollidersMaker.h"
 #include "PrefabMakerUtils.h"
-#include "ROS2/Frame/ROS2FrameBus.h"
 #include <API/EditorAssetSystemAPI.h>
 #include <AzCore/Debug/Trace.h>
 #include <AzCore/IO/FileIO.h>
@@ -23,6 +22,7 @@
 #include <AzToolsFramework/Prefab/Procedural/ProceduralPrefabAsset.h>
 #include <AzToolsFramework/ToolsComponents/GenericComponentWrapper.h>
 #include <AzToolsFramework/ToolsComponents/TransformComponent.h>
+#include <ROS2/Frame/ROS2FrameBus.h>
 #include <ROS2/Frame/ROS2FrameEditorComponent.h>
 #include <ROS2/ROS2GemUtilities.h>
 #include <RobotControl/ROS2RobotControlComponent.h>

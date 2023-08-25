@@ -7,6 +7,7 @@
  */
 
 #include "ROS2GNSSSensorComponent.h"
+#include <ROS2/Frame/ROS2FrameBus.h>
 #include <ROS2/Frame/ROS2FrameComponent.h>
 #include <ROS2/ROS2Bus.h>
 #include <ROS2/ROS2GemUtilities.h>
@@ -14,12 +15,11 @@
 #include <ROS2/Utilities/ROS2Names.h>
 
 #include <AzCore/Math/Matrix4x4.h>
+#include <AzCore/Math/Transform.h>
 #include <AzCore/Serialization/EditContext.h>
 #include <AzCore/Serialization/EditContextConstants.inl>
 
-#include "AzCore/Math/Transform.h"
 #include "GNSSFormatConversions.h"
-#include "ROS2/Frame/ROS2FrameBus.h"
 
 namespace ROS2
 {

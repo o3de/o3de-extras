@@ -7,11 +7,11 @@
  */
 
 #include "ROS2SpawnerComponent.h"
-#include "ROS2/Frame/ROS2FrameBus.h"
 #include "Spawner/ROS2SpawnerComponentController.h"
 #include <AzCore/Serialization/EditContext.h>
 #include <AzCore/Serialization/SerializeContext.h>
 #include <AzFramework/Spawnable/Spawnable.h>
+#include <ROS2/Frame/ROS2FrameBus.h>
 #include <ROS2/Frame/ROS2FrameComponent.h>
 #include <ROS2/ROS2Bus.h>
 #include <ROS2/ROS2GemUtilities.h>

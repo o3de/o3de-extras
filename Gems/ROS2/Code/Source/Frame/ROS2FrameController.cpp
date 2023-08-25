@@ -24,7 +24,6 @@
 #include <ROS2/ROS2GemUtilities.h>
 #include <ROS2/Sensor/SensorConfiguration.h>
 #include <ROS2/Utilities/ROS2Names.h>
-#include <iostream>
 
 namespace ROS2
 {

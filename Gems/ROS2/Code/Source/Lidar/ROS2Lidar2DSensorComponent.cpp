@@ -6,12 +6,12 @@
  *
  */
 
-#include "ROS2/Frame/ROS2FrameBus.h"
 #include <Atom/RPI.Public/AuxGeom/AuxGeomFeatureProcessorInterface.h>
 #include <Atom/RPI.Public/Scene.h>
 #include <AzFramework/Physics/PhysicsSystem.h>
 #include <Lidar/LidarRegistrarSystemComponent.h>
 #include <Lidar/ROS2Lidar2DSensorComponent.h>
+#include <ROS2/Frame/ROS2FrameBus.h>
 #include <ROS2/Frame/ROS2FrameComponent.h>
 #include <ROS2/ROS2Bus.h>
 #include <ROS2/Utilities/ROS2Names.h>

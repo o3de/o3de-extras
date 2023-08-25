@@ -7,14 +7,14 @@
  */
 #pragma once
 
-#include "API/ToolsApplicationAPI.h"
-#include "AzCore/Component/Entity.h"
-#include "AzCore/Component/EntityBus.h"
-#include "AzCore/Component/EntityId.h"
-#include "AzCore/Component/TransformBus.h"
-#include "AzCore/std/string/string.h"
+#include <API/ToolsApplicationAPI.h>
 #include <AzCore/Component/Component.h>
+#include <AzCore/Component/Entity.h>
+#include <AzCore/Component/EntityBus.h>
+#include <AzCore/Component/EntityId.h>
+#include <AzCore/Component/TransformBus.h>
 #include <AzCore/std/smart_ptr/unique_ptr.h>
+#include <AzCore/std/string/string.h>
 #include <AzFramework/Components/TransformComponent.h>
 #include <AzToolsFramework/ToolsComponents/EditorComponentAdapter.h>
 #include <AzToolsFramework/ToolsComponents/EditorComponentBase.h>
@@ -53,27 +53,33 @@ namespace ROS2
         // Component overrides
         void Activate() override;
         void Deactivate() override;
+        bool ShouldActivateController() const override;
         //////////////////////////////////////////////////////////////////////////
         static void Reflect(AZ::ReflectContext* context);
         static void GetProvidedServices(AZ::ComponentDescriptor::DependencyArrayType& provided);
         static void GetIncompatibleServices(AZ::ComponentDescriptor::DependencyArrayType& incompatible);
         static void GetRequiredServices(AZ::ComponentDescriptor::DependencyArrayType& required);
 
-        bool ShouldActivateController() const override;
-
+        //////////////////////////////////////////////////////////////////////////
+        // ROS2FrameNotificationBus::Handler overrides
         void OnActivate(AZ::EntityId entity, AZ::EntityId parentEntity) override;
-
         void OnDeactivate(AZ::EntityId entity, AZ::EntityId parentEntity) override;
-
         void OnReconfigure(AZ::EntityId entity) override;
-
         void OnConfigurationChange() override;
+        //////////////////////////////////////////////////////////////////////////
 
+        //////////////////////////////////////////////////////////////////////////
+        // AzToolsFramework::ToolsApplicationNotificationBus::Handler overrides
         void EntityParentChanged(AZ::EntityId entityId, AZ::EntityId newParentId, AZ::EntityId oldParentId) override;
+        //////////////////////////////////////////////////////////////////////////
 
-        void OnEntityNameChanged(const AZStd::string& name);
+        //////////////////////////////////////////////////////////////////////////
+        //  AZ::EntityBus::Handler overrides
+        void OnEntityNameChanged(const AZStd::string& name) override;
+        //////////////////////////////////////////////////////////////////////////
 
     private:
+        // Refresh the editor reflection for m_effectiveNamespace
         void RefreshEffectiveNamespace();
 
         AZStd::unique_ptr<ROS2Transform> m_ros2Transform;

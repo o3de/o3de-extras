@@ -7,16 +7,17 @@
  */
 
 #include "JointsManipulationComponent.h"
-#include "AzCore/Name/Name.h"
 #include "Controllers/JointsArticulationControllerComponent.h"
 #include "Controllers/JointsPIDControllerComponent.h"
 #include "JointStatePublisher.h"
 #include "ManipulationUtils.h"
-#include "ROS2/Frame/ROS2FrameBus.h"
+#include <ROS2/Frame/ROS2FrameBus.h>
 #include <AzCore/Component/ComponentApplicationBus.h>
 #include <AzCore/Component/TransformBus.h>
 #include <AzCore/Debug/Trace.h>
+#include <AzCore/Name/Name.h>
 #include <AzCore/Serialization/EditContext.h>
+#include <ROS2/Frame/ROS2FrameBus.h>
 #include <ROS2/Frame/ROS2FrameComponent.h>
 #include <ROS2/Manipulation/Controllers/JointsPositionControllerRequests.h>
 #include <ROS2/Utilities/ROS2Names.h>

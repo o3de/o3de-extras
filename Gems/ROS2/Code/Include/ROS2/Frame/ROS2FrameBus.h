@@ -7,9 +7,9 @@
  */
 #pragma once
 
-#include "AzCore/Component/ComponentBus.h"
-#include "AzCore/Component/EntityId.h"
-#include "AzCore/EBus/EBus.h"
+#include <AzCore/Component/ComponentBus.h>
+#include <AzCore/Component/EntityId.h>
+#include <AzCore/EBus/EBus.h>
 #include <AzFramework/Components/TransformComponent.h>
 #include <ROS2/Frame/ROS2Transform.h>
 #include <ROS2/ROS2GemUtilities.h>
@@ -73,12 +73,21 @@ namespace ROS2
 
         static const AZ::EBusAddressPolicy AddressPolicy = AZ::EBusAddressPolicy::ById;
 
+        //! Notification when ROS2EditorFrameComponent activates.
+        //! @param entity - ID of the entity which activated the component.
+        //! @param parentEntity - ID of the closest parent which has a ROS2EditorFrameComponent.
         virtual void OnActivate(AZ::EntityId entity, AZ::EntityId parentEntity) = 0;
 
+        //! Notification when ROS2EditorFrameComponent deactivates.
+        //! @param entity - ID of the entity which activated the component.
+        //! @param parentEntity - ID of the closest parent which has a ROS2EditorFrameComponent.
         virtual void OnDeactivate(AZ::EntityId entity, AZ::EntityId parentEntity) = 0;
 
+        //! Notification when the reflected configuration changes in the editor.
         virtual void OnConfigurationChange() = 0;
 
+        //! Notification when ROS2EditorFrameComponent reconfigures (repopulates namespace, changed frameID etc.).
+        //! @param entity - ID of the ROS2EditorFrameComponent which reconfigured.
         virtual void OnReconfigure(AZ::EntityId entity) = 0;
     };
 

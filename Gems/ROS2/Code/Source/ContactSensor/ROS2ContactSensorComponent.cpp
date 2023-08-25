@@ -7,20 +7,20 @@
  */
 
 #include "ROS2ContactSensorComponent.h"
-#include "AzCore/std/string/string.h"
-#include "ROS2/Frame/ROS2FrameBus.h"
 #include <AzCore/Component/ComponentApplicationBus.h>
 #include <AzCore/Debug/Trace.h>
 #include <AzCore/Serialization/EditContext.h>
 #include <AzCore/Serialization/EditContextConstants.inl>
 #include <AzCore/std/parallel/lock.h>
 #include <AzCore/std/parallel/mutex.h>
+#include <AzCore/std/string/string.h>
 #include <AzCore/std/utility/move.h>
 #include <AzFramework/Physics/Collision/CollisionEvents.h>
 #include <AzFramework/Physics/Common/PhysicsSimulatedBody.h>
 #include <AzFramework/Physics/Common/PhysicsSimulatedBodyEvents.h>
 #include <AzFramework/Physics/Common/PhysicsTypes.h>
 #include <AzFramework/Physics/PhysicsSystem.h>
+#include <ROS2/Frame/ROS2FrameBus.h>
 #include <ROS2/Frame/ROS2FrameComponent.h>
 #include <ROS2/ROS2Bus.h>
 #include <ROS2/ROS2GemUtilities.h>

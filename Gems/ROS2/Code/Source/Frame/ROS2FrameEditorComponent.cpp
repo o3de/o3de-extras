@@ -6,15 +6,15 @@
  *
  */
 
-#include "API/ToolsApplicationAPI.h"
-#include "AzCore/Component/EntityBus.h"
-#include "AzCore/Component/TransformBus.h"
-#include "ROS2/Frame/ROS2FrameBus.h"
+#include <API/ToolsApplicationAPI.h>
 #include <AzCore/Component/Entity.h>
+#include <AzCore/Component/EntityBus.h>
 #include <AzCore/Component/EntityUtils.h>
+#include <AzCore/Component/TransformBus.h>
 #include <AzCore/Serialization/EditContext.h>
 #include <AzCore/Serialization/EditContextConstants.inl>
 #include <AzCore/Serialization/SerializeContext.h>
+#include <ROS2/Frame/ROS2FrameBus.h>
 #include <ROS2/Frame/ROS2FrameComponent.h>
 #include <ROS2/Frame/ROS2FrameController.h>
 #include <ROS2/Frame/ROS2FrameEditorComponent.h>
@@ -26,6 +26,8 @@ namespace ROS2
 {
     namespace Internal
     {
+        // Populates the nonFramePredecessors set with entityIDs of entities which do not have a ROS2FrameEditorComponent
+        // are the predecessor of entity up to the first ROS2FrameEditorComponent.
         void PopulateNonFramePredecessors(AZ::EntityId entity, AZStd::set<AZ::EntityId>& nonFramePredecessors)
         {
             AZ::EntityId parentEntityId;
@@ -74,6 +76,7 @@ namespace ROS2
         m_controller.PopulateNamespace(m_controller.IsTopLevel(), GetEntity()->GetName());
         RefreshEffectiveNamespace();
 
+        // Notify other ROS2FrameEditorComponents about new component activation.
         ROS2FrameNotificationBus::Broadcast(&ROS2FrameNotificationBus::Events::OnActivate, GetEntityId(), m_parentFrameEntity);
 
         ROS2FrameNotificationBus::Handler::BusConnect(GetEntityId());
@@ -89,6 +92,7 @@ namespace ROS2
 
         ROS2FrameEditorComponentBase::Deactivate();
 
+        // Notify other ROS2FrameEditorComponents about component deactivation.
         ROS2FrameNotificationBus::Broadcast(&ROS2FrameNotificationBus::Events::OnDeactivate, GetEntityId(), m_parentFrameEntity);
     }
 
@@ -145,6 +149,8 @@ namespace ROS2
         return true;
     }
 
+    // Check if a newly activated component is on the path to the current parent or the top entity.
+    // Repopulate namespaces if true.
     void ROS2FrameEditorComponent::OnActivate(AZ::EntityId entity, AZ::EntityId parentEntity)
     {
         if (m_parentFrameEntity == parentEntity && m_controller.GetParentROS2FrameEntityId() == entity)
@@ -156,6 +162,7 @@ namespace ROS2
         }
     }
 
+    // Check if a newly deactivated component is the parent of the current entity. If so repopulate namespace.
     void ROS2FrameEditorComponent::OnDeactivate(AZ::EntityId entity, AZ::EntityId parentEntity)
     {
         if (m_parentFrameEntity == entity)
@@ -167,6 +174,7 @@ namespace ROS2
         }
     }
 
+    // Repopulate namespaces when reflected configuration changes.
     void ROS2FrameEditorComponent::OnConfigurationChange()
     {
         m_controller.PopulateNamespace(m_controller.IsTopLevel(), GetEntity()->GetName());
@@ -175,6 +183,7 @@ namespace ROS2
         ROS2FrameNotificationBus::Broadcast(&ROS2FrameNotificationBus::Events::OnReconfigure, GetEntityId());
     }
 
+    // Check if the parent frame has reconfigured. If so also reconfigure.
     void ROS2FrameEditorComponent::OnReconfigure(AZ::EntityId entity)
     {
         if (m_parentFrameEntity == entity)
@@ -186,6 +195,7 @@ namespace ROS2
         }
     }
 
+    // Check if the branch of the entity tree which contains this ROS2FrameEditorComponent has been moved. If so reconfigure.
     void ROS2FrameEditorComponent::EntityParentChanged(AZ::EntityId entityId, AZ::EntityId newParentId, AZ::EntityId oldParentId)
     {
         if (GetEntityId() == entityId || m_nonFramePredecessors.contains(entityId))
@@ -211,6 +221,7 @@ namespace ROS2
         }
     }
 
+    // When name of the entity changes the component needs to reconfigure if the namespace strategy is default or generate name from entity.
     void ROS2FrameEditorComponent::OnEntityNameChanged(const AZStd::string& name)
     {
         (void)name;
