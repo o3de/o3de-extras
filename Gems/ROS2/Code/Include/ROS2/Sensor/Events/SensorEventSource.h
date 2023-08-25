@@ -29,16 +29,6 @@ namespace ROS2
         using SensorEventType = EventT<EventArgs...>;
         using SensorEventHandlerType = EventHandlerT<EventArgs...>;
 
-        AZ_TYPE_INFO(SensorEventSourceType, "{42ACE9CB-45ED-4BE9-9D5D-683436BE9FB2}");
-
-        static void Reflect(AZ::ReflectContext* context)
-        {
-            if (auto serializeContext = azrtti_cast<AZ::SerializeContext*>(context))
-            {
-                serializeContext->Class<SensorEventSourceType>()->Version(1);
-            }
-        }
-
         virtual ~SensorEventSource() = default;
 
         //! Connects given event handler to sensor event. Event is signalled based on event source internal logic. For more details check
