@@ -17,6 +17,29 @@ namespace UnitTest
     {
     };
 
+    TEST_F(MachineLearning_Activations, OneHotArgMax)
+    {
+        AZStd::size_t testValue = 1;
+        AZ::VectorN testVector;
+
+        MachineLearning::OneHotEncode(testValue, 10, testVector);
+        EXPECT_FLOAT_EQ(testVector.GetElement(0), 0.0f);
+        EXPECT_FLOAT_EQ(testVector.GetElement(1), 1.0f);
+        EXPECT_EQ(MachineLearning::ArgMaxDecode(testVector), testValue);
+
+        testValue = 3;
+        MachineLearning::OneHotEncode(testValue, 10, testVector);
+        EXPECT_EQ(MachineLearning::ArgMaxDecode(testVector), testValue);
+
+        testValue = 7;
+        MachineLearning::OneHotEncode(testValue, 10, testVector);
+        EXPECT_EQ(MachineLearning::ArgMaxDecode(testVector), testValue);
+
+        testValue = 8;
+        MachineLearning::OneHotEncode(testValue, 10, testVector);
+        EXPECT_EQ(MachineLearning::ArgMaxDecode(testVector), testValue);
+    }
+
     TEST_F(MachineLearning_Activations, TestRelu)
     {
         AZ::VectorN output = AZ::VectorN::CreateZero(1024);

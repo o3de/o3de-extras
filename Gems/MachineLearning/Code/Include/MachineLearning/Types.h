@@ -23,4 +23,12 @@ namespace MachineLearning
         Softmax,
         Linear
     );
+
+    AZ_ENUM_CLASS(AssetTypes,
+        Model,
+        TestData,
+        TestLabels,
+        TrainingData, 
+        TrainingLabels
+    );
 }

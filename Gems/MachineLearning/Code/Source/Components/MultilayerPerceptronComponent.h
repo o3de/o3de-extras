@@ -36,6 +36,9 @@ namespace MachineLearning
         static void Reflect(AZ::ReflectContext* context);
         static void GetProvidedServices(AZ::ComponentDescriptor::DependencyArrayType& provided);
 
+        MultilayerPerceptronComponent();
+        ~MultilayerPerceptronComponent();
+
         //! AZ::Component overrides
         //! @{
         void Activate() override;

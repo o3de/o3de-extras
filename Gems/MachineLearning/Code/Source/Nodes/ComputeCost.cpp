@@ -14,7 +14,9 @@ namespace MachineLearning
 {
     float ComputeCost::In(INeuralNetworkPtr Model, LossFunctions LossFunction, AZ::VectorN Activations, AZ::VectorN ExpectedOutput)
     {
-        const AZ::VectorN* modelOutput = Model->Forward(Activations);
+        AZStd::unique_ptr<IInferenceContext> inferenceContext;
+        inferenceContext.reset(Model->CreateInferenceContext());
+        const AZ::VectorN* modelOutput = Model->Forward(inferenceContext.get(), Activations);
         return ComputeTotalCost(LossFunction, ExpectedOutput, *modelOutput);
     }
 }

@@ -26,29 +26,29 @@ namespace UnitTest
         EXPECT_EQ(testLayer.m_weights.GetColumnCount(), 8);
         EXPECT_EQ(testLayer.m_weights.GetRowCount(), 4);
         EXPECT_EQ(testLayer.m_biases.GetDimensionality(), 4);
-        EXPECT_EQ(testLayer.m_output.GetDimensionality(), 4);
     }
 
     TEST_F(MachineLearning_Layers, TestForward)
     {
         // Construct a layer that takes 8 inputs and generates 4 outputs
         MachineLearning::Layer testLayer(MachineLearning::ActivationFunctions::Linear, 8, 4);
+        MachineLearning::LayerInferenceData inferenceData;
         testLayer.m_biases = AZ::VectorN::CreateOne(testLayer.m_biases.GetDimensionality());
         testLayer.m_weights = AZ::MatrixMxN::CreateZero(testLayer.m_weights.GetRowCount(), testLayer.m_weights.GetColumnCount());
         testLayer.m_weights += 1.0f;
 
         const AZ::VectorN ones = AZ::VectorN::CreateOne(8); // Input of all ones
-        testLayer.Forward(ones);
-        for (AZStd::size_t iter = 0; iter < testLayer.m_output.GetDimensionality(); ++iter)
+        testLayer.Forward(inferenceData, ones);
+        for (AZStd::size_t iter = 0; iter < inferenceData.m_output.GetDimensionality(); ++iter)
         {
-            ASSERT_FLOAT_EQ(testLayer.m_output.GetElement(iter), 9.0f); // 8 edges of 1's + 1 for the bias
+            ASSERT_FLOAT_EQ(inferenceData.m_output.GetElement(iter), 9.0f); // 8 edges of 1's + 1 for the bias
         }
 
         const AZ::VectorN zeros = AZ::VectorN::CreateZero(8); // Input of all zeros
-        testLayer.Forward(zeros);
-        for (AZStd::size_t iter = 0; iter < testLayer.m_output.GetDimensionality(); ++iter)
+        testLayer.Forward(inferenceData, zeros);
+        for (AZStd::size_t iter = 0; iter < inferenceData.m_output.GetDimensionality(); ++iter)
         {
-            ASSERT_FLOAT_EQ(testLayer.m_output.GetElement(iter), 1.0f); // Weights are all zero, leaving only the layer biases which are all set to 1
+            ASSERT_FLOAT_EQ(inferenceData.m_output.GetElement(iter), 1.0f); // Weights are all zero, leaving only the layer biases which are all set to 1
         }
     }
 }

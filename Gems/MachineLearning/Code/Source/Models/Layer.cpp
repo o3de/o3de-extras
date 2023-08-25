@@ -13,6 +13,7 @@
 #include <AzCore/RTTI/BehaviorContext.h>
 #include <AzCore/Serialization/EditContext.h>
 #include <AzCore/Serialization/SerializeContext.h>
+#include <random>
 
 namespace MachineLearning
 {
@@ -65,64 +66,100 @@ namespace MachineLearning
         OnSizesChanged();
     }
 
-    const AZ::VectorN& Layer::Forward(const AZ::VectorN& activations)
+    const AZ::VectorN& Layer::Forward(LayerInferenceData& inferenceData, const AZ::VectorN& activations)
     {
-        m_lastInput = activations;
-        m_output = m_biases;
-        AZ::VectorMatrixMultiply(m_weights, m_lastInput, m_output);
-        Activate(m_activationFunction, m_output, m_output);
-        return m_output;
+        inferenceData.m_output = m_biases;
+        AZ::VectorMatrixMultiply(m_weights, activations, inferenceData.m_output);
+        Activate(m_activationFunction, inferenceData.m_output, inferenceData.m_output);
+        return inferenceData.m_output;
     }
 
-    void Layer::AccumulateGradients(const AZ::VectorN& previousLayerGradients)
+    void Layer::AccumulateGradients(LayerTrainingData& trainingData, LayerInferenceData& inferenceData, const AZ::VectorN& previousLayerGradients)
     {
         // Ensure our bias gradient vector is appropriately sized
-        if (m_biasGradients.GetDimensionality() != m_outputSize)
+        if (trainingData.m_biasGradients.GetDimensionality() != m_outputSize)
         {
-            m_biasGradients = AZ::VectorN::CreateZero(m_outputSize);
+            trainingData.m_biasGradients = AZ::VectorN::CreateZero(m_outputSize);
         }
 
         // Ensure our weight gradient matrix is appropriately sized
-        if ((m_weightGradients.GetRowCount() != m_outputSize) || (m_weightGradients.GetColumnCount() != m_inputSize))
+        if ((trainingData.m_weightGradients.GetRowCount() != m_outputSize) || (trainingData.m_weightGradients.GetColumnCount() != m_inputSize))
         {
-            m_weightGradients = AZ::MatrixMxN::CreateZero(m_outputSize, m_inputSize);
+            trainingData.m_weightGradients = AZ::MatrixMxN::CreateZero(m_outputSize, m_inputSize);
         }
 
         // Ensure our backpropagation gradient vector is appropriately sized
-        if (m_backpropagationGradients.GetDimensionality() != m_inputSize)
+        if (trainingData.m_backpropagationGradients.GetDimensionality() != m_inputSize)
         {
-            m_backpropagationGradients = AZ::VectorN::CreateZero(m_inputSize);
+            trainingData.m_backpropagationGradients = AZ::VectorN::CreateZero(m_inputSize);
         }
 
         // Compute the partial derivatives of the output with respect to the activation function
-        Activate_Derivative(m_activationFunction, m_output, previousLayerGradients, m_activationGradients);
+        Activate_Derivative(m_activationFunction, inferenceData.m_output, previousLayerGradients, trainingData.m_activationGradients);
 
         // Accumulate the partial derivatives of the weight matrix with respect to the loss function
-        AZ::OuterProduct(m_activationGradients, m_lastInput, m_weightGradients);
+        AZ::OuterProduct(trainingData.m_activationGradients, *trainingData.m_lastInput, trainingData.m_weightGradients);
 
         // Accumulate the partial derivatives of the bias vector with respect to the loss function
-        m_biasGradients += m_activationGradients;
+        trainingData.m_biasGradients += trainingData.m_activationGradients;
 
         // Accumulate the gradients to pass to the preceding layer for back-propagation
-        AZ::VectorMatrixMultiplyLeft(m_activationGradients, m_weights, m_backpropagationGradients);
+        AZ::VectorMatrixMultiplyLeft(trainingData.m_activationGradients, m_weights, trainingData.m_backpropagationGradients);
     }
 
-    void Layer::ApplyGradients(float learningRate)
+    void Layer::ApplyGradients(LayerTrainingData& trainingData, float learningRate)
     {
-        m_weights -= m_weightGradients * learningRate;
-        m_biases -= m_biasGradients * learningRate;
+        m_weights -= trainingData.m_weightGradients * learningRate;
+        m_biases -= trainingData.m_biasGradients * learningRate;
 
-        m_biasGradients.SetZero();
-        m_weightGradients.SetZero();
-        m_backpropagationGradients.SetZero();
+        trainingData.m_biasGradients.SetZero();
+        trainingData.m_weightGradients.SetZero();
+        trainingData.m_backpropagationGradients.SetZero();
+    }
+
+    bool Layer::Serialize(AzNetworking::ISerializer& serializer)
+    {
+        return serializer.Serialize(m_inputSize, "inputSize")
+            && serializer.Serialize(m_outputSize, "outputSize")
+            && serializer.Serialize(m_weights, "weights")
+            && serializer.Serialize(m_biases, "biases")
+            && serializer.Serialize(m_activationFunction, "activationFunction");
+    }
+
+    AZStd::size_t Layer::EstimateSerializeSize() const
+    {
+        const AZStd::size_t padding = 64; // 64 bytes of extra padding just in case
+        return padding
+             + sizeof(m_inputSize)
+             + sizeof(m_outputSize)
+             + sizeof(AZStd::size_t) // for m_weights row count
+             + sizeof(AZStd::size_t) // for m_weights column count
+             + sizeof(AZStd::size_t) // for m_weights vector size
+             + sizeof(float) * m_outputSize * m_inputSize // m_weights buffer
+             + sizeof(AZStd::size_t) // for m_biases dimensionality
+             + sizeof(AZStd::size_t) // for m_biases vector size
+             + sizeof(float) * m_outputSize // m_biases buffer
+             + sizeof(m_activationFunction);
     }
 
     void Layer::OnSizesChanged()
     {
-        m_weights = AZ::MatrixMxN::CreateRandom(m_outputSize, m_inputSize);
-        m_weights -= 0.5f; // It's preferable for efficient training to keep initial weights centered around zero
+        // Specifically for ReLU, we use Kaiming He initialization as this is proven optimal for convergence
+        // For other activation functions we just use a standard normal distribution
+        float standardDeviation = (m_activationFunction == ActivationFunctions::ReLU) ? 2.0f / m_inputSize 
+                                                                                      : 1.0f / m_inputSize;
+        std::random_device rd{};
+        std::mt19937 gen{ rd() };
+        auto dist = std::normal_distribution<float>{ 0.0f, standardDeviation };
+        m_weights.Resize(m_outputSize, m_inputSize);
+        for (AZStd::size_t row = 0; row < m_weights.GetRowCount(); ++row)
+        {
+            for (AZStd::size_t col = 0; col < m_weights.GetRowCount(); ++col)
+            {
+                m_weights.SetElement(row, col, dist(gen));
+            }
+        }
 
         m_biases = AZ::VectorN(m_outputSize, 0.01f);
-        m_output = AZ::VectorN::CreateZero(m_outputSize);
     }
 }

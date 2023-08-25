@@ -54,11 +54,7 @@ namespace MachineLearning
                 Attribute(AZ::Script::Attributes::ExcludeFrom, AZ::Script::Attributes::ExcludeFlags::ListOnly)->
                 Constructor<>()->
                 Attribute(AZ::Script::Attributes::Storage, AZ::Script::Attributes::StorageType::Value)->
-                Method("AddLayer", &INeuralNetwork::AddLayer)->
-                Method("GetLayerCount", &INeuralNetwork::GetLayerCount)->
-                Method("GetLayer", &INeuralNetwork::GetLayer)->
-                Method("Forward", &INeuralNetwork::Forward)->
-                Method("Reverse", &INeuralNetwork::Reverse)
+                Method("GetName", &INeuralNetwork::GetName)
                 ;
         }
 
@@ -114,4 +110,19 @@ namespace MachineLearning
     {
         MachineLearningRequestBus::Handler::BusDisconnect();
     }
-} // namespace MachineLearning
+
+    void MachineLearningSystemComponent::RegisterModel(INeuralNetworkPtr model)
+    {
+        m_registeredModels.emplace(model);
+    }
+
+    void MachineLearningSystemComponent::UnregisterModel(INeuralNetworkPtr model)
+    {
+        m_registeredModels.erase(model);
+    }
+
+    ModelSet& MachineLearningSystemComponent::GetModelSet()
+    {
+        return m_registeredModels;
+    }
+}

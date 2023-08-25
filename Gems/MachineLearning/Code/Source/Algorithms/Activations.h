@@ -9,6 +9,7 @@
 #pragma once
 
 #include <AzCore/Math/VectorN.h>
+#include <AzCore/Serialization/EditContext.h>
 #include <MachineLearning/INeuralNetwork.h>
 
 namespace MachineLearning
@@ -18,6 +19,9 @@ namespace MachineLearning
 
     //! One-hot encodes the provided value into the resulting vector output, which will have dimensionality maxValue.
     void OneHotEncode(AZStd::size_t value, AZStd::size_t maxValue, AZ::VectorN& output);
+
+    //! Reverses one-hot encoding, returns the index of the element with the largest value.
+    AZStd::size_t ArgMaxDecode(const AZ::VectorN& vector);
 
     //! Computes the requested activation function applied to all elements of the source vector.
     void Activate(ActivationFunctions activationFunction, const AZ::VectorN& sourceVector, AZ::VectorN& output);

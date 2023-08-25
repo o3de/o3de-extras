@@ -22,5 +22,5 @@ namespace MachineLearning
     inline constexpr const char* MachineLearningEditorModuleTypeId = MachineLearningModuleTypeId;
 
     // Interface TypeIds
-    inline constexpr const char* MachineLearningRequestsTypeId = "{B65151FE-3588-432A-A0EE-1DB5BF5147CA}";
+    inline constexpr const char* IMachineLearningTypeId = "{B65151FE-3588-432A-A0EE-1DB5BF5147CA}";
 } // namespace MachineLearning

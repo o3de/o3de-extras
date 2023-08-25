@@ -85,12 +85,33 @@ ly_add_target(
             Gem::${gem_name}.Private.Object
 )
 
+ly_add_target(
+    NAME ${gem_name}.Debug ${PAL_TRAIT_MONOLITHIC_DRIVEN_MODULE_TYPE}
+    NAMESPACE Gem
+    FILES_CMAKE
+        machinelearning_debug_files.cmake
+    INCLUDE_DIRECTORIES
+        PRIVATE
+            Source
+            .
+        PUBLIC
+            Include
+    BUILD_DEPENDENCIES
+        PUBLIC
+            Gem::${gem_name}.API
+        PRIVATE
+            Gem::${gem_name}.Private.Object
+            AZ::AtomCore
+            Gem::Atom_Feature_Common.Static
+            Gem::ImGui.Static
+)
+
 # By default, we will specify that the above target ${gem_name} would be used by
 # Client and Server type targets when this gem is enabled.  If you don't want it
 # active in Clients or Servers by default, delete one of both of the following lines:
-ly_create_alias(NAME ${gem_name}.Unified NAMESPACE Gem TARGETS Gem::${gem_name} Gem::ScriptCanvas)
-ly_create_alias(NAME ${gem_name}.Clients NAMESPACE Gem TARGETS Gem::${gem_name} Gem::ScriptCanvas)
-ly_create_alias(NAME ${gem_name}.Servers NAMESPACE Gem TARGETS Gem::${gem_name} Gem::ScriptCanvas)
+ly_create_alias(NAME ${gem_name}.Unified NAMESPACE Gem TARGETS Gem::${gem_name} Gem::${gem_name}.Debug Gem::ScriptCanvas)
+ly_create_alias(NAME ${gem_name}.Clients NAMESPACE Gem TARGETS Gem::${gem_name} Gem::${gem_name}.Debug Gem::ScriptCanvas)
+ly_create_alias(NAME ${gem_name}.Servers NAMESPACE Gem TARGETS Gem::${gem_name} Gem::${gem_name}.Debug Gem::ScriptCanvas)
 
 # For the Client and Server variants of ${gem_name} Gem, an alias to the ${gem_name}.API target will be made
 ly_create_alias(NAME ${gem_name}.Clients.API NAMESPACE Gem TARGETS Gem::${gem_name}.API)
@@ -159,7 +180,7 @@ if(PAL_TRAIT_BUILD_HOST_TOOLS)
     # By default, we will specify that the above target ${gem_name} would be used by
     # Tool and Builder type targets when this gem is enabled.  If you don't want it
     # active in Tools or Builders by default, delete one of both of the following lines:
-    ly_create_alias(NAME ${gem_name}.Tools NAMESPACE Gem TARGETS Gem::${gem_name} Gem::ScriptCanvas.Editor)
+    ly_create_alias(NAME ${gem_name}.Tools NAMESPACE Gem TARGETS Gem::${gem_name} Gem::${gem_name}.Debug Gem::ScriptCanvas.Editor)
     ly_create_alias(NAME ${gem_name}.Builders NAMESPACE Gem TARGETS Gem::${gem_name} Gem::ScriptCanvas.Editor)
 
     # For the Tools and Builders variants of ${gem_name} Gem, an alias to the ${gem_name}.Editor API target will be made

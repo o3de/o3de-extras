@@ -10,6 +10,8 @@
 #include <Models/MultilayerPerceptron.h>
 #include <MachineLearning/ILabeledTrainingData.h>
 #include <Algorithms/Training.h>
+#include <AzCore/Console/ILogger.h>
+#include <AzCore/std/chrono/chrono.h>
 
 namespace MachineLearning
 {
@@ -27,7 +29,15 @@ namespace MachineLearning
         float EarlyStopCost
     )
     {
-        SupervisedLearningCycle(Model, TrainingData, TestData, static_cast<LossFunctions>(CostFunction), TotalIterations, BatchSize, LearningRate, LearningRateDecay, EarlyStopCost);
+        SupervisedLearningCycle trainingInstance(Model, TrainingData, TestData, static_cast<LossFunctions>(CostFunction), TotalIterations, BatchSize, LearningRate, LearningRateDecay, EarlyStopCost);
+
+        trainingInstance.StartTraining();
+        while (!trainingInstance.m_trainingComplete)
+        {
+            AZStd::this_thread::sleep_for(AZStd::chrono::milliseconds(1));
+        }
+        trainingInstance.StopTraining();
+
         return Model;
     }
 }

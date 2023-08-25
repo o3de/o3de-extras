@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<ScriptCanvas Include="Nodes/SaveModel.h" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <Class Name="SaveModel"
+           QualifiedName="MachineLearning::SaveModel"
+           PreferredClassName="Save model"
+           Category="MachineLearning"
+           Description="Saves a model to an asset file.">
+
+        <Input Name="In" DisplayGroup="In" Description="Parameters controlling the model to save">
+            <Parameter Name="Model" Type="MachineLearning::INeuralNetworkPtr" Description="The model to save."/>
+            <Return Name="Model" Type="MachineLearning::INeuralNetworkPtr" Shared="true"/>
+        </Input>
+    </Class>
+</ScriptCanvas>

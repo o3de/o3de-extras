@@ -18,7 +18,7 @@
 #include <AzCore/RTTI/BehaviorContext.h>
 #include <AzCore/Serialization/EditContext.h>
 #include <AzCore/Serialization/SerializeContext.h>
-#pragma optimize("", off)
+
 namespace MachineLearning
 {
     void MnistDataLoader::Reflect(AZ::ReflectContext* context)
@@ -64,6 +64,11 @@ namespace MachineLearning
     {
         OneHotEncode(m_labelBuffer[index], 10, m_labelVector);
         return m_labelVector;
+    }
+
+    AZStd::size_t MnistDataLoader::GetLabelAsValueByIndex(AZStd::size_t index)
+    {
+        return static_cast<AZStd::size_t>(m_labelBuffer[index]);
     }
 
     const AZ::VectorN& MnistDataLoader::GetDataByIndex(AZStd::size_t index)
@@ -174,7 +179,6 @@ namespace MachineLearning
         labelHeader.m_labelCount = ntohl(labelHeader.m_labelCount);
 
         constexpr uint32_t MnistLabelHeaderValue = 2049;
-
         if (labelHeader.m_labelHeader != MnistLabelHeaderValue)
         {
             // Invalid format
@@ -191,9 +195,8 @@ namespace MachineLearning
         }
 
         m_labelBuffer.resize(labelHeader.m_labelCount);
-        m_imageFile.Read(labelHeader.m_labelCount, m_labelBuffer.data());
+        m_labelFile.Read(labelHeader.m_labelCount, m_labelBuffer.data());
         AZLOG_INFO("Loaded MNIST archive %s containing %u samples", filePathFixed.c_str(), m_dataHeader.m_imageCount);
         return true;
     }
 }
-#pragma optimize("", on)

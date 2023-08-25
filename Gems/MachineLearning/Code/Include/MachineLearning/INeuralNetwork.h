@@ -10,7 +10,10 @@
 
 #include <AzCore/Math/VectorN.h>
 #include <MachineLearning/Types.h>
+#include <MachineLearning/IInferenceContext.h>
+#include <MachineLearning/ITrainingContext.h>
 #include <AzCore/EBus/EBus.h>
+#include <AzCore/std/string/string.h>
 
 namespace MachineLearning
 {
@@ -30,26 +33,44 @@ namespace MachineLearning
         INeuralNetwork& operator=(INeuralNetwork&&) = default;
         INeuralNetwork& operator=(const INeuralNetwork&) = default;
 
-        //! Adds a new layer to the network.
-        virtual void AddLayer([[maybe_unused]] AZStd::size_t layerDimensionality, [[maybe_unused]] ActivationFunctions activationFunction = ActivationFunctions::ReLU) {}
+        //! Returns a name for the model.
+        virtual AZStd::string GetName() const { return ""; }
+
+        //! Returns the file where model parameters are stored.
+        virtual AZStd::string GetAssetFile([[maybe_unused]] AssetTypes assetType) const { return ""; }
+
+        //! Returns the number of input neurons the model supports.
+        virtual AZStd::size_t GetInputDimensionality() const { return 0; }
+
+        //! Returns the number of output neurons the model supports.
+        virtual AZStd::size_t GetOutputDimensionality() const { return 0; }
 
         //! Returns the total number of layers in the network.
         virtual AZStd::size_t GetLayerCount() const { return 0; }
 
-        //! Retrieves a specific layer from the network indexed by the layerIndex.
-        virtual Layer* GetLayer([[maybe_unused]] AZStd::size_t layerIndex) { return nullptr; }
-
         //! Returns the total number of parameters in the neural network.
         virtual AZStd::size_t GetParameterCount() const { return 0; }
 
+        // Returns a new inference context suitable for forward propagation operations.
+        virtual IInferenceContextPtr CreateInferenceContext() { return nullptr; }
+
+        // Returns a new training context suitable for back-propagation and gradient descent.
+        virtual ITrainingContextPtr CreateTrainingContext() { return nullptr; }
+
         //! Performs a basic feed-forward operation to compute the output from a set of activation values.
-        virtual const AZ::VectorN* Forward([[maybe_unused]] const AZ::VectorN& activations) { return nullptr; }
+        virtual const AZ::VectorN* Forward([[maybe_unused]] IInferenceContextPtr context, [[maybe_unused]] const AZ::VectorN& activations) { return nullptr; }
 
         //! Accumulates the loss gradients given a loss function, an activation vector and a corresponding label vector.
-        virtual void Reverse([[maybe_unused]] LossFunctions lossFunction, [[maybe_unused]] const AZ::VectorN& activations, [[maybe_unused]] const AZ::VectorN& expected) {}
+        virtual void Reverse([[maybe_unused]] ITrainingContextPtr context, [[maybe_unused]] LossFunctions lossFunction, [[maybe_unused]] const AZ::VectorN& activations, [[maybe_unused]] const AZ::VectorN& expected) {}
 
         //! Performs a gradient descent step and resets all gradient accumulators to zero.
-        virtual void GradientDescent([[maybe_unused]] float learningRate) {}
+        virtual void GradientDescent([[maybe_unused]] ITrainingContextPtr context, [[maybe_unused]] float learningRate) {}
+
+        //! Loads the current model parameters from the associated asset file.
+        virtual bool LoadModel() { return false; }
+
+        //! Saves the current model parameters to the associated asset file.
+        virtual bool SaveModel() { return false; }
 
         //! For intrusive_ptr support
         //! @{

@@ -9,6 +9,7 @@
 #pragma once
 
 #include <Components/MultilayerPerceptronComponent.h>
+#include <MachineLearning/IMachineLearning.h>
 #include <AzCore/RTTI/RTTI.h>
 #include <AzCore/RTTI/BehaviorContext.h>
 #include <AzCore/Serialization/EditContext.h>
@@ -64,9 +65,19 @@ namespace MachineLearning
         provided.push_back(AZ_CRC("MultilayerPerceptronService"));
     }
 
-    void MultilayerPerceptronComponent::Activate()
+    MultilayerPerceptronComponent::MultilayerPerceptronComponent()
     {
         m_handle.reset(&m_model);
+        MachineLearningInterface::Get()->RegisterModel(m_handle);
+    }
+
+    MultilayerPerceptronComponent::~MultilayerPerceptronComponent()
+    {
+        MachineLearningInterface::Get()->UnregisterModel(m_handle);
+    }
+
+    void MultilayerPerceptronComponent::Activate()
+    {
         MultilayerPerceptronComponentRequestBus::Handler::BusConnect(GetEntityId());
     }
 

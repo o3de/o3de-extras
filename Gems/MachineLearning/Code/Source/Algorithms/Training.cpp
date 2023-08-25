@@ -10,72 +10,137 @@
 #include <Algorithms/LossFunctions.h>
 #include <AzCore/Math/SimdMath.h>
 #include <AzCore/Console/ILogger.h>
+#include <AzCore/Jobs/JobCompletion.h>
+#include <AzCore/Jobs/JobFunction.h>
 #include <numeric>
 #include <random>
 
 namespace MachineLearning
 {
-    float ComputeCurrentCost(INeuralNetworkPtr Model, ILabeledTrainingDataPtr TestData, LossFunctions CostFunction)
+    SupervisedLearningCycle::SupervisedLearningCycle()
     {
-        const AZStd::size_t totalTestSize = TestData->GetSampleCount();
-
-        double result = 0.0;
-        for (uint32_t iter = 0; iter < totalTestSize; ++iter)
-        {
-            const AZ::VectorN& activations = TestData->GetDataByIndex(iter);
-            const AZ::VectorN& label = TestData->GetLabelByIndex(iter);
-            const AZ::VectorN* output = Model->Forward(activations);
-            result += static_cast<double>(ComputeTotalCost(CostFunction, label, *output));
-        }
-        result /= static_cast<double>(totalTestSize);
-        return static_cast<float>(result);
+        AZ::JobManagerDesc jobDesc;
+        jobDesc.m_jobManagerName = "MachineLearning Training";
+        jobDesc.m_workerThreads.push_back(AZ::JobManagerThreadDesc()); // Just one thread
+        m_trainingJobManager = AZStd::make_unique<AZ::JobManager>(jobDesc);
+        m_trainingjobContext = AZStd::make_unique<AZ::JobContext>(*m_trainingJobManager);
     }
 
-    void SupervisedLearningCycle
+    SupervisedLearningCycle::SupervisedLearningCycle
     (
         INeuralNetworkPtr model,
         ILabeledTrainingDataPtr trainingData,
         ILabeledTrainingDataPtr testData,
-        LossFunctions costFunction, 
+        LossFunctions costFunction,
         AZStd::size_t totalIterations,
         AZStd::size_t batchSize,
         float learningRate,
         float learningRateDecay,
         float earlyStopCost
-    )
+    ) : SupervisedLearningCycle()
     {
-        const AZStd::size_t totalTrainingSize = trainingData->GetSampleCount();
-        const float initialCost = ComputeCurrentCost(model, testData, costFunction);
-        AZLOG_INFO("Initial model cost prior to training: %f", initialCost);
+        m_model = model;
+        m_trainingData = trainingData;
+        m_testData = testData;
+        m_costFunction = costFunction;
+        m_totalIterations = totalIterations;
+        m_batchSize = batchSize;
+        m_learningRate = learningRate;
+        m_learningRateDecay = learningRateDecay;
+        m_earlyStopCost = earlyStopCost;
+    }
+
+    void SupervisedLearningCycle::InitializeContexts()
+    {
+        if (m_inferenceContext == nullptr)
+        {
+            m_inferenceContext.reset(m_model->CreateInferenceContext());
+            m_trainingContext.reset(m_model->CreateTrainingContext());
+        }
+    }
+
+    void SupervisedLearningCycle::StartTraining()
+    {
+        InitializeContexts();
+
+        const AZStd::size_t totalTrainingSize = m_trainingData->GetSampleCount();
 
         // Generate a set of training indices that we can later shuffle
-        AZStd::vector<AZStd::size_t> indices;
-        indices.resize(totalTrainingSize);
-        std::iota(indices.begin(), indices.end(), 0);
+        m_indices.resize(totalTrainingSize);
+        std::iota(m_indices.begin(), m_indices.end(), 0);
+        std::shuffle(m_indices.begin(), m_indices.end(), std::mt19937(std::random_device{}()));
 
-        for (uint32_t epoch = 0; epoch < totalIterations; ++epoch)
+        // Start training
+        m_currentEpoch = 0;
+        m_trainingComplete = false;
+        m_currentIndex = 0;
+
+        auto job = [this]()
         {
-            // We reshuffle the training data indices each epoch to avoid patterns in the training data
-            std::shuffle(indices.begin(), indices.end(), std::mt19937(std::random_device{}()));
-            AZStd::size_t sampleCount = 0;
-            for (uint32_t batch = 0; (batch < batchSize) && (sampleCount < totalTrainingSize); ++batch, ++sampleCount)
-            {
-                const AZ::VectorN& activations = trainingData->GetDataByIndex(indices[sampleCount]);
-                const AZ::VectorN& label = trainingData->GetLabelByIndex(indices[sampleCount]);
-                model->Reverse(costFunction, activations, label);
-            }
-            model->GradientDescent(learningRate);
+            ExecTraining();
+        };
+        AZ::Job* trainingJob = AZ::CreateJobFunction(job, true, m_trainingjobContext.get());
+        trainingJob->Start();
+    }
 
-            const float currentTestCost = ComputeCurrentCost(model, testData, costFunction);
-            const float currentTrainCost = ComputeCurrentCost(model, trainingData, costFunction);
-            AZLOG_INFO("Epoch %u, Test cost: %f, Train cost: %f, Learning rate: %f", epoch, currentTestCost, currentTrainCost, learningRate);
-            if (currentTestCost < earlyStopCost)
+    void SupervisedLearningCycle::ExecTraining()
+    {
+        const AZStd::size_t totalTrainingSize = m_trainingData->GetSampleCount();
+        while (!m_trainingComplete)
+        {
+            if (m_currentIndex >= totalTrainingSize)
             {
-                AZLOG_INFO("Early stop threshold reached, exiting training loop: %f, %f", currentTestCost, earlyStopCost);
-                break;
+                // If we run out of training samples, we increment our epoch and reset for a new pass of the training data
+                m_currentIndex = 0;
+                m_learningRate *= m_learningRateDecay;
+
+                // We reshuffle the training data indices each epoch to avoid patterns in the training data
+                std::shuffle(m_indices.begin(), m_indices.end(), std::mt19937(std::random_device{}()));
+                ++m_currentEpoch;
+
+                // Generally we want to keep monitoring the models performence on both test and training data
+                // This allows us to detect if we're overfitting the model to the training data
+                float currentTestCost = ComputeCurrentCost(m_testData, m_costFunction);
+                if ((currentTestCost < m_earlyStopCost) || (m_currentEpoch >= m_totalIterations))
+                {
+                    m_trainingComplete = true;
+                    return;
+                }
             }
 
-            learningRate *= learningRateDecay;
+            for (uint32_t batch = 0; (batch < m_batchSize) && (m_currentIndex < totalTrainingSize); ++batch, ++m_currentIndex)
+            {
+                const AZ::VectorN& activations = m_trainingData->GetDataByIndex(m_indices[m_currentIndex]);
+                const AZ::VectorN& label = m_trainingData->GetLabelByIndex(m_indices[m_currentIndex]);
+                m_model->Reverse(m_trainingContext.get(), m_costFunction, activations, label);
+            }
+            AZStd::lock_guard lock(m_mutex);
+            m_model->GradientDescent(m_trainingContext.get(), m_learningRate);
         }
+    }
+
+    void SupervisedLearningCycle::StopTraining()
+    {
+        m_trainingComplete = true;
+    }
+
+    float SupervisedLearningCycle::ComputeCurrentCost(ILabeledTrainingDataPtr TestData, LossFunctions CostFunction, AZStd::size_t maxSamples)
+    {
+        InitializeContexts();
+
+        const AZStd::size_t totalTestSize = TestData->GetSampleCount();
+        maxSamples = (maxSamples == 0) ? totalTestSize : AZStd::min(maxSamples, totalTestSize);
+
+        AZStd::lock_guard lock(m_mutex);
+        double result = 0.0;
+        for (uint32_t iter = 0; iter < maxSamples; ++iter)
+        {
+            const AZ::VectorN& activations = TestData->GetDataByIndex(iter);
+            const AZ::VectorN& label = TestData->GetLabelByIndex(iter);
+            const AZ::VectorN* output = m_model->Forward(m_inferenceContext.get(), activations);
+            result += static_cast<double>(ComputeTotalCost(CostFunction, label, *output));
+        }
+        result /= static_cast<double>(maxSamples);
+        return static_cast<float>(result);
     }
 }

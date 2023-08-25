@@ -30,6 +30,22 @@ namespace MachineLearning
         output.SetElement(value, 1.0f);
     }
 
+    AZStd::size_t ArgMaxDecode(const AZ::VectorN& vector)
+    {
+        const AZStd::size_t numElements = vector.GetDimensionality();
+        float maxValue = 0.0f;
+        AZStd::size_t maxIndex = 0;
+        for (AZStd::size_t iter = 0; iter < numElements; ++iter)
+        {
+            if (vector.GetElement(iter) > maxValue)
+            {
+                maxValue = vector.GetElement(iter);
+                maxIndex = iter;
+            }
+        }
+        return maxIndex;
+    }
+
     void Activate(ActivationFunctions activationFunction, const AZ::VectorN& sourceVector, AZ::VectorN& output)
     {
         output.Resize(sourceVector.GetDimensionality());
@@ -69,13 +85,15 @@ namespace MachineLearning
     {
         const AZ::Vector4 vecZero = AZ::Vector4::CreateZero();
         const AZ::Vector4 vecOne = AZ::Vector4::CreateOne();
+        const AZ::Vector4 epsilon = AZ::Vector4(AZ::Constants::Tolerance);
         const AZStd::size_t numElements = sourceVector.GetVectorValues().size();
         output.Resize(sourceVector.GetDimensionality());
         for (AZStd::size_t iter = 0; iter < numElements; ++iter)
         {
             const AZ::Vector4& sourceElement = sourceVector.GetVectorValues()[iter];
             AZ::Vector4& outputElement = output.GetVectorValues()[iter];
-            outputElement = vecOne / (vecOne + (-sourceElement).GetExpEstimate());
+            const AZ::Vector4 divisor = (vecOne + (-sourceElement).GetExpEstimate()).GetMax(epsilon);
+            outputElement = vecOne / divisor;
             outputElement = outputElement.GetClamp(vecZero, vecOne);
         }
         output.FixLastVectorElement();
@@ -110,7 +128,7 @@ namespace MachineLearning
             partialSum += outputElement;
         }
 
-        const float divisor = 1.0f / partialSum.Dot(vecOne);
+        const float divisor = AZ::GetMax(1.0f / partialSum.Dot(vecOne), AZ::Constants::Tolerance);
         for (AZ::Vector4& element : output.GetVectorValues())
         {
             element = element * divisor;

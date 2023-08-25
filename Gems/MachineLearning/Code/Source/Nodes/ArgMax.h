@@ -12,13 +12,13 @@
 #include <ScriptCanvas/Core/Nodeable.h>
 #include <ScriptCanvas/Core/NodeableNode.h>
 #include <MachineLearning/INeuralNetwork.h>
-#include <Source/Nodes/GradientDescent.generated.h>
+#include <Source/Nodes/ArgMax.generated.h>
 
 namespace MachineLearning
 {
-    class GradientDescent
+    class ArgMax
         : public ScriptCanvas::Nodeable
     {
-        SCRIPTCANVAS_NODE_GradientDescent;
+        SCRIPTCANVAS_NODE_ArgMax;
     };
 }

@@ -13,7 +13,9 @@ namespace MachineLearning
 {
     AZ::VectorN FeedForward::In(INeuralNetworkPtr Model, AZ::VectorN Activations)
     {
-        AZ::VectorN results = *Model->Forward(Activations);
+        AZStd::unique_ptr<IInferenceContext> inferenceContext;
+        inferenceContext.reset(Model->CreateInferenceContext());
+        AZ::VectorN results = *Model->Forward(inferenceContext.get(), Activations);
         return results;
     }
 }

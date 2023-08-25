@@ -35,6 +35,7 @@ namespace MachineLearning
         bool LoadArchive(const AZStd::string& imageFilename, const AZStd::string& labelFilename) override;
         AZStd::size_t GetSampleCount() const override;
         const AZ::VectorN& GetLabelByIndex(AZStd::size_t index) override;
+        AZStd::size_t GetLabelAsValueByIndex(AZStd::size_t index) override;
         const AZ::VectorN& GetDataByIndex(AZStd::size_t index) override;
         //! @}
 

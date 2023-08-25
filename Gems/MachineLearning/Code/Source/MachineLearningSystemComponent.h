@@ -9,13 +9,14 @@
 #pragma once
 
 #include <AzCore/Component/Component.h>
-#include <MachineLearning/MachineLearningBus.h>
+#include <MachineLearning/IMachineLearning.h>
 
 namespace MachineLearning
 {
     class MachineLearningSystemComponent
         : public AZ::Component
         , protected MachineLearningRequestBus::Handler
+//        , public AZ::Interface<IMachineLearning>::Registrar
     {
     public:
         AZ_COMPONENT_DECL(MachineLearningSystemComponent);
@@ -31,17 +32,23 @@ namespace MachineLearning
         ~MachineLearningSystemComponent();
 
     protected:
-        ////////////////////////////////////////////////////////////////////////
-        // MachineLearningRequestBus interface implementation
 
-        ////////////////////////////////////////////////////////////////////////
-
-        ////////////////////////////////////////////////////////////////////////
-        // AZ::Component interface implementation
+        //! AZ::Component interface
+        //! @{
         void Init() override;
         void Activate() override;
         void Deactivate() override;
-        ////////////////////////////////////////////////////////////////////////
-    };
+        //! @}
 
-} // namespace MachineLearning
+        //! IMachineLearning interface
+        //! @{
+        void RegisterModel(INeuralNetworkPtr model) override;
+        void UnregisterModel(INeuralNetworkPtr model) override;
+        ModelSet& GetModelSet() override;
+        //! @}
+
+    private:
+
+        ModelSet m_registeredModels;
+    };
+}

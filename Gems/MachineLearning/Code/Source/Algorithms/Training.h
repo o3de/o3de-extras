@@ -9,29 +9,71 @@
 #pragma once
 
 #include <AzCore/Math/VectorN.h>
+#include <AzCore/Jobs/JobManager.h>
+#include <AzCore/Jobs/JobContext.h>
 #include <MachineLearning/INeuralNetwork.h>
 #include <MachineLearning/ILabeledTrainingData.h>
 
 namespace MachineLearning
 {
-    //! Calculates the average cost of the provided model on the set of labeled test data using the requested loss function.
-    float ComputeCurrentCost(INeuralNetworkPtr Model, ILabeledTrainingDataPtr TestData, LossFunctions CostFunction);
-
     //! Performs a supervised learning training cycle.
     //! Supervised learning is a form of machine learning where a model is provided a set of training data with expected output
     //! Training then takes place in an iterative loop where the total error (cost, loss) of the model is minimized
     //! This differs from unsupervised learning, where the training data lacks any form of labeling (expected correct output), and
     //! the model is expected to learn the underlying structures of data on its own.
-    void SupervisedLearningCycle
-    (
-        INeuralNetworkPtr model,
-        ILabeledTrainingDataPtr trainingData,
-        ILabeledTrainingDataPtr testData,
-        LossFunctions costFunction,
-        AZStd::size_t totalIterations,
-        AZStd::size_t batchSize,
-        float learningRate,
-        float learningRateDecay,
-        float earlyStopCost
-    );
+    class SupervisedLearningCycle
+    {
+    public:
+
+        SupervisedLearningCycle();
+
+        SupervisedLearningCycle
+        (
+            INeuralNetworkPtr model,
+            ILabeledTrainingDataPtr trainingData,
+            ILabeledTrainingDataPtr testData,
+            LossFunctions costFunction,
+            AZStd::size_t totalIterations,
+            AZStd::size_t batchSize,
+            float learningRate,
+            float learningRateDecay,
+            float earlyStopCost
+        );
+
+        void InitializeContexts();
+
+        void StartTraining();
+        void StopTraining();
+
+        //! Calculates the average cost of the provided model on the set of labeled test data using the requested loss function.
+        float ComputeCurrentCost(ILabeledTrainingDataPtr TestData, LossFunctions CostFunction, AZStd::size_t maxSamples = 0);
+
+        AZStd::atomic<AZStd::size_t> m_currentEpoch = 0;
+        std::atomic<bool> m_trainingComplete = true;
+
+    //private:
+        void ExecTraining();
+
+        INeuralNetworkPtr m_model;
+        ILabeledTrainingDataPtr m_trainingData;
+        ILabeledTrainingDataPtr m_testData;
+        LossFunctions m_costFunction = LossFunctions::MeanSquaredError;
+        AZStd::size_t m_totalIterations = 0;
+        AZStd::size_t m_batchSize = 0;
+        float m_learningRate = 0.0f;
+        float m_learningRateDecay = 0.0f;
+        float m_earlyStopCost = 0.0f;
+
+        AZStd::vector<AZStd::size_t> m_indices;
+        AZStd::size_t m_currentIndex = 0;
+
+        AZStd::unique_ptr<IInferenceContext> m_inferenceContext;
+        AZStd::unique_ptr<ITrainingContext> m_trainingContext;
+
+        AZStd::unique_ptr<AZ::JobManager> m_trainingJobManager;
+        AZStd::unique_ptr<AZ::JobContext> m_trainingjobContext;
+
+        //! Guards model state.
+        mutable AZStd::recursive_mutex m_mutex;
+    };
 }

@@ -6,14 +6,13 @@
  *
  */
 
-#include <Nodes/GradientDescent.h>
-#include <Models/MultilayerPerceptron.h>
+#include <Nodes/SaveModel.h>
 
 namespace MachineLearning
 {
-    INeuralNetworkPtr GradientDescent::In(INeuralNetworkPtr Model, float LearningRate)
+    INeuralNetworkPtr SaveModel::In(INeuralNetworkPtr Model)
     {
-        Model->GradientDescent(LearningRate);
+        Model->SaveModel();
         return Model;
     }
 }

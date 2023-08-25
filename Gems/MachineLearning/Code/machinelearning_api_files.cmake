@@ -7,9 +7,11 @@
 #
 
 set(FILES
+    Include/MachineLearning/IInferenceContext.h
     Include/MachineLearning/INeuralNetwork.h
     Include/MachineLearning/ILabeledTrainingData.h
-    Include/MachineLearning/MachineLearningBus.h
+    Include/MachineLearning/IMachineLearning.h
+    Include/MachineLearning/ITrainingContext.h
     Include/MachineLearning/MachineLearningTypeIds.h
     Include/MachineLearning/Types.h
 )

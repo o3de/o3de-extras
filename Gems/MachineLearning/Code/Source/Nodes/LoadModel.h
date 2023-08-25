@@ -12,13 +12,13 @@
 #include <ScriptCanvas/Core/Nodeable.h>
 #include <ScriptCanvas/Core/NodeableNode.h>
 #include <MachineLearning/INeuralNetwork.h>
-#include <Source/Nodes/AccumulateTrainingGradients.generated.h>
+#include <Source/Nodes/LoadModel.generated.h>
 
 namespace MachineLearning
 {
-    class AccumulateTrainingGradients
+    class LoadModel
         : public ScriptCanvas::Nodeable
     {
-        SCRIPTCANVAS_NODE_AccumulateTrainingGradients;
+        SCRIPTCANVAS_NODE_LoadModel;
     };
 }

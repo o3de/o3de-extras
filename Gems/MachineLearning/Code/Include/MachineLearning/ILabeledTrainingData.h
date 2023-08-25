@@ -28,6 +28,10 @@ namespace MachineLearning
         //! Returns the index-th label in the training data set.
         virtual const AZ::VectorN& GetLabelByIndex(AZStd::size_t index) = 0;
 
+        //! Returns the index-th label in the training data set as a value rather than a vector.
+        //! Note that not all data-sets may support this operation
+        virtual AZStd::size_t GetLabelAsValueByIndex(AZStd::size_t index) = 0;
+
         //! Returns the index-th set of activations in the training data set.
         virtual const AZ::VectorN& GetDataByIndex(AZStd::size_t index) = 0;
     };
