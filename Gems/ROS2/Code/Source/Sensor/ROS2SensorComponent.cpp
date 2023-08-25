@@ -6,6 +6,8 @@
  *
  */
 
+#include "AzCore/std/string/string.h"
+#include "ROS2/Frame/ROS2FrameBus.h"
 #include <AzCore/Component/Entity.h>
 #include <AzCore/Serialization/EditContext.h>
 #include <AzCore/Serialization/EditContextConstants.inl>
@@ -53,14 +55,16 @@ namespace ROS2
 
     AZStd::string ROS2SensorComponent::GetNamespace() const
     {
-        auto* ros2Frame = Utils::GetGameOrEditorComponent<ROS2FrameComponent>(GetEntity());
-        return ros2Frame->GetNamespace();
+        AZStd::string frameNamespace;
+        ROS2FrameComponentBus::EventResult(frameNamespace, GetEntityId(), &ROS2FrameComponentBus::Events::GetNamespace);
+        return frameNamespace;
     };
 
     AZStd::string ROS2SensorComponent::GetFrameID() const
     {
-        auto* ros2Frame = Utils::GetGameOrEditorComponent<ROS2FrameComponent>(GetEntity());
-        return ros2Frame->GetFrameID();
+        AZStd::string frameId;
+        ROS2FrameComponentBus::EventResult(frameId, GetEntityId(), &ROS2FrameComponentBus::Events::GetFrameID);
+        return frameId;
     }
 
     void ROS2SensorComponent::GetRequiredServices(AZ::ComponentDescriptor::DependencyArrayType& required)

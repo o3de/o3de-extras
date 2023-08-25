@@ -7,6 +7,7 @@
  */
 
 #include "ROS2SpawnerComponent.h"
+#include "ROS2/Frame/ROS2FrameBus.h"
 #include "Spawner/ROS2SpawnerComponentController.h"
 #include <AzCore/Serialization/EditContext.h>
 #include <AzCore/Serialization/SerializeContext.h>
@@ -170,8 +171,9 @@ namespace ROS2
         AZStd::string instanceName = AZStd::string::format("%s_%d", spawnableName.c_str(), m_counter++);
         for (AZ::Entity* entity : view)
         { // Update name for the first entity with ROS2Frame in hierarchy (left to right)
-            auto* frameComponent = Utils::GetGameOrEditorComponent<ROS2FrameComponent>(entity);
-            if (frameComponent)
+            bool hasFrameComponent = false;
+            ROS2FrameComponentBus::EventResult(hasFrameComponent, entity->GetId(), &ROS2FrameComponentBus::Events::IsFrame);
+            if (hasFrameComponent)
             {
                 entity->SetName(instanceName);
                 if (!spawnableNamespace.empty())

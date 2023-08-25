@@ -101,61 +101,10 @@ namespace ROS2
         m_ros2Transform->Publish(m_controller.GetFrameTransform());
     }
 
-    AZStd::string ROS2FrameComponent::GetGlobalFrameName() const
-    {
-        return m_controller.GetGlobalFrameName();
-    }
-
     void ROS2FrameComponent::UpdateNamespaceConfiguration(const AZStd::string& ns, NamespaceConfiguration::NamespaceStrategy strategy)
     {
         m_namespaceConfiguration.SetNamespace(ns, strategy);
     }
-
-    bool ROS2FrameComponent::IsTopLevel() const
-    {
-        return m_controller.IsTopLevel();
-    }
-
-    bool ROS2FrameComponent::IsDynamic() const
-    {
-        return m_controller.IsDynamic();
-    }
-
-    AZ::Transform ROS2FrameComponent::GetFrameTransform() const
-    {
-        return m_controller.GetFrameTransform();
-    }
-
-    AZStd::string ROS2FrameComponent::GetParentFrameID() const
-    {
-        return m_controller.GetParentFrameID();
-    }
-
-    AZStd::string ROS2FrameComponent::GetFrameID() const
-    {
-        return m_controller.GetFrameID();
-    }
-
-    void ROS2FrameComponent::SetFrameID(const AZStd::string& frameId)
-    {
-        m_controller.SetFrameID(frameId);
-    }
-
-    AZStd::string ROS2FrameComponent::GetNamespace() const
-    {
-        return m_controller.GetNamespace();
-    }
-
-    AZ::Name ROS2FrameComponent::GetJointName() const
-    {
-        return m_controller.GetJointName();
-    }
-
-    void ROS2FrameComponent::SetJointName(const AZStd::string& jointNameString)
-    {
-        m_controller.SetJointName(jointNameString);
-    }
-
     void ROS2FrameComponent::Reflect(AZ::ReflectContext* context)
     {
         ROS2FrameComponentBase::Reflect(context);

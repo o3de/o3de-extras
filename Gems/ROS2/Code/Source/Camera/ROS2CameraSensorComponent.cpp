@@ -6,8 +6,9 @@
  *
  */
 
-#include "CameraUtilities.h"
 #include "ROS2CameraSensorComponent.h"
+#include "CameraUtilities.h"
+#include "ROS2/Frame/ROS2FrameBus.h"
 #include <ROS2/Communication/TopicConfiguration.h>
 #include <ROS2/Frame/ROS2FrameComponent.h>
 
@@ -54,9 +55,10 @@ namespace ROS2
             AddImageSource<CameraDepthSensor>();
         }
 
-        const auto* component = Utils::GetGameOrEditorComponent<ROS2FrameComponent>(GetEntity());
-        AZ_Assert(component, "Entity has no ROS2FrameComponent");
-        m_frameName = component->GetFrameID();
+        bool hasFrameComponent = false;
+        ROS2FrameComponentBus::EventResult(hasFrameComponent, GetEntityId(), &ROS2FrameComponentBus::Events::IsFrame);
+        AZ_Assert(hasFrameComponent, "Entity has no ROS2FrameComponent");
+        ROS2FrameComponentBus::EventResult(m_frameName, GetEntityId(), &ROS2FrameComponentBus::Events::GetFrameID);
         ROS2::CameraCalibrationRequestBus::Handler::BusConnect(GetEntityId());
     }
 
@@ -118,11 +120,13 @@ namespace ROS2
 
     AZStd::string ROS2CameraSensorComponent::GetCameraNameFromFrame(const AZ::Entity* entity) const
     {
-        const auto* component = Utils::GetGameOrEditorComponent<ROS2FrameComponent>(entity);
-        AZ_Assert(component, "Entity %s has no ROS2CameraSensorComponent", entity->GetName().c_str());
-        if (component)
+        bool hasFrameComponent = false;
+        ROS2FrameComponentBus::EventResult(hasFrameComponent, entity->GetId(), &ROS2FrameComponentBus::Events::IsFrame);
+        AZ_Assert(hasFrameComponent, "Entity %s has no ROS2CameraSensorComponent", entity->GetName().c_str());
+        if (hasFrameComponent)
         {
-            AZStd::string cameraName = component->GetFrameID();
+            AZStd::string cameraName;
+            ROS2FrameComponentBus::EventResult(cameraName, entity->GetId(), &ROS2FrameComponentBus::Events::GetFrameID);
             AZStd::replace(cameraName.begin(), cameraName.end(), '/', '_');
             return cameraName;
         }

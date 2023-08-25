@@ -7,6 +7,8 @@
  */
 
 #include "JointUtilities.h"
+#include "AzCore/Name/Name.h"
+#include "ROS2/Frame/ROS2FrameBus.h"
 #include <ROS2/Frame/ROS2FrameComponent.h>
 
 namespace ROS2::Utils
@@ -18,10 +20,13 @@ namespace ROS2::Utils
         AZ_Assert(entity, "Entity %s not found.", entityId.ToString().c_str());
         if (entity)
         {
-            ROS2FrameComponent* component = entity->FindComponent<ROS2FrameComponent>();
-            if (component)
+            bool hasFrameComponent = false;
+            ROS2FrameComponentBus::EventResult(hasFrameComponent, entity->GetId(), &ROS2FrameComponentBus::Events::IsFrame);
+            if (hasFrameComponent)
             {
-                return component->GetJointName().GetStringView();
+                AZ::Name jointName;
+                ROS2FrameComponentBus::EventResult(jointName, entity->GetId(), &ROS2FrameComponentBus::Events::GetJointName);
+                return jointName.GetStringView();
             }
         }
         return AZStd::string();

@@ -7,6 +7,8 @@
  *
  */
 
+#include "AzCore/std/string/string.h"
+#include "ROS2/Frame/ROS2FrameBus.h"
 #include "Utils.h"
 
 #include "GripperActionServerComponent.h"
@@ -21,9 +23,12 @@ namespace ROS2
 {
     void GripperActionServerComponent::Activate()
     {
-        auto* ros2Frame = Utils::GetGameOrEditorComponent<ROS2FrameComponent>(GetEntity());
-        AZ_Assert(ros2Frame, "Missing Frame Component!");
-        AZStd::string namespacedAction = ROS2Names::GetNamespacedName(ros2Frame->GetNamespace(), m_gripperActionServerName);
+        bool hasFrameComponent = false;
+        ROS2FrameComponentBus::EventResult(hasFrameComponent, GetEntityId(), &ROS2FrameComponentBus::Events::IsFrame);
+        AZ_Assert(hasFrameComponent, "Missing Frame Component!");
+        AZStd::string frameNamespace;
+        ROS2FrameComponentBus::EventResult(frameNamespace, GetEntityId(), &ROS2FrameComponentBus::Events::GetFrameID);
+        AZStd::string namespacedAction = ROS2Names::GetNamespacedName(frameNamespace, m_gripperActionServerName);
         AZ_Printf("GripperActionServerComponent", "Creating Gripper Action Server: %s\n", namespacedAction.c_str());
         m_gripperActionServer = AZStd::make_unique<GripperActionServer>(namespacedAction, GetEntityId());
         AZ::TickBus::Handler::BusConnect();

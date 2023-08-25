@@ -6,6 +6,8 @@
  *
  */
 
+#include "AzCore/std/string/string.h"
+#include "ROS2/Frame/ROS2FrameBus.h"
 #include <Atom/RPI.Public/AuxGeom/AuxGeomFeatureProcessorInterface.h>
 #include <Atom/RPI.Public/Scene.h>
 #include <AzFramework/Physics/PhysicsSystem.h>
@@ -111,13 +113,14 @@ namespace ROS2
         if (m_lidarConfiguration.m_lidarSystemFeatures & LidarSystemFeatures::PointcloudPublishing)
         {
             const TopicConfiguration& publisherConfig = m_sensorConfiguration.m_publishersConfigurations[Internal::kPointCloudType];
-            auto* ros2Frame = Utils::GetGameOrEditorComponent<ROS2FrameComponent>(GetEntity());
+            AZStd::string frameId;
+            ROS2FrameComponentBus::EventResult(frameId, GetEntityId(), &ROS2FrameComponentBus::Events::GetFrameID);
 
             LidarRaycasterRequestBus::Event(
                 m_lidarRaycasterId,
                 &LidarRaycasterRequestBus::Events::ConfigurePointCloudPublisher,
                 ROS2Names::GetNamespacedName(GetNamespace(), publisherConfig.m_topic),
-                ros2Frame->GetFrameID().data(),
+                frameId.data(),
                 publisherConfig.GetQoS());
         }
     }
@@ -244,9 +247,10 @@ namespace ROS2
             point = inverseLidarTM.TransformPoint(point);
         }
 
-        auto* ros2Frame = Utils::GetGameOrEditorComponent<ROS2FrameComponent>(GetEntity());
+        AZStd::string frameId;
+        ROS2FrameComponentBus::EventResult(frameId, GetEntityId(), &ROS2FrameComponentBus::Events::GetFrameID);
         auto message = sensor_msgs::msg::PointCloud2();
-        message.header.frame_id = ros2Frame->GetFrameID().data();
+        message.header.frame_id = frameId.data();
         message.header.stamp = ROS2Interface::Get()->GetROSTimestamp();
         message.height = 1;
         message.width = m_lastScanResults.m_points.size();

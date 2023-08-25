@@ -199,7 +199,7 @@ if(PAL_TRAIT_BUILD_TESTS_SUPPORTED)
         )
 
         
-        # integration test for URDF importer
+        # integration test for ROS2 Frame
         ly_add_target(
             NAME ROS2.Frame.Tests ${PAL_TRAIT_TEST_TARGET_TYPE}
                 NAMESPACE Gem
@@ -219,8 +219,6 @@ if(PAL_TRAIT_BUILD_TESTS_SUPPORTED)
                     AZ::AzManipulatorTestFramework.Static
                     Gem::ROS2.Static
                     Gem::ROS2.Editor.Static
-                RUNTIME_DEPENDENCIES
-                    Gem::PhysX.Editor
         )
 
         ly_add_googletest(

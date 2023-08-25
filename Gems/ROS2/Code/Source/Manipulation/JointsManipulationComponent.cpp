@@ -7,10 +7,12 @@
  */
 
 #include "JointsManipulationComponent.h"
+#include "AzCore/Name/Name.h"
 #include "Controllers/JointsArticulationControllerComponent.h"
 #include "Controllers/JointsPIDControllerComponent.h"
 #include "JointStatePublisher.h"
 #include "ManipulationUtils.h"
+#include "ROS2/Frame/ROS2FrameBus.h"
 #include <AzCore/Component/ComponentApplicationBus.h>
 #include <AzCore/Component/TransformBus.h>
 #include <AzCore/Debug/Trace.h>
@@ -113,12 +115,15 @@ namespace ROS2
                 AZ_Assert(entity, "Unknown entity %s", descendantID.ToString().c_str());
 
                 // If there is a Frame Component, take joint name stored in it.
-                auto* frameComponent = Utils::GetGameOrEditorComponent<ROS2FrameComponent>(entity);
-                if (!frameComponent)
+                bool hasFrameComponent = false;
+                ROS2FrameComponentBus::EventResult(hasFrameComponent, entity->GetId(), &ROS2FrameComponentBus::Events::IsFrame);
+                if (!hasFrameComponent)
                 { // Frame Component is required for joints.
                     continue;
                 }
-                const AZStd::string jointName(frameComponent->GetJointName().GetCStr());
+                AZ::Name jointNameResult;
+                ROS2FrameComponentBus::EventResult(jointNameResult, entity->GetId(), &ROS2FrameComponentBus::Events::GetJointName);
+                const AZStd::string jointName(jointNameResult.GetCStr());
 
                 auto* hingeComponent =
                     azrtti_cast<PhysX::JointComponent*>(Utils::GetGameOrEditorComponent<PhysX::HingeJointComponent>(entity));
@@ -189,10 +194,13 @@ namespace ROS2
 
     void JointsManipulationComponent::Activate()
     {
-        auto* ros2Frame = Utils::GetGameOrEditorComponent<ROS2FrameComponent>(GetEntity());
+        AZStd::string frameNamespace;
+        AZStd::string frameId;
+        ROS2FrameComponentBus::EventResult(frameNamespace, GetEntityId(), &ROS2FrameComponentBus::Events::GetNamespace);
+        ROS2FrameComponentBus::EventResult(frameId, GetEntityId(), &ROS2FrameComponentBus::Events::GetFrameID);
         JointStatePublisherContext publisherContext;
-        publisherContext.m_publisherNamespace = ros2Frame->GetNamespace();
-        publisherContext.m_frameId = ros2Frame->GetFrameID();
+        publisherContext.m_publisherNamespace = frameNamespace;
+        publisherContext.m_frameId = frameId;
         publisherContext.m_entityId = GetEntityId();
 
         m_jointStatePublisher = AZStd::make_unique<JointStatePublisher>(m_jointStatePublisherConfiguration, publisherContext);

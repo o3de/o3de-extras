@@ -17,7 +17,9 @@
 #include <AzCore/Serialization/EditContext.h>
 #include <AzCore/Serialization/EditContextConstants.inl>
 
+#include "AzCore/Math/Transform.h"
 #include "GNSSFormatConversions.h"
+#include "ROS2/Frame/ROS2FrameBus.h"
 
 namespace ROS2
 {
@@ -106,7 +108,8 @@ namespace ROS2
 
     AZ::Transform ROS2GNSSSensorComponent::GetCurrentPose() const
     {
-        auto* ros2Frame = Utils::GetGameOrEditorComponent<ROS2FrameComponent>(GetEntity());
-        return ros2Frame->GetFrameTransform();
+        AZ::Transform frameTransform;
+        ROS2FrameComponentBus::EventResult(frameTransform, GetEntityId(), &ROS2FrameComponentBus::Events::GetFrameTransform);
+        return frameTransform;
     }
 } // namespace ROS2

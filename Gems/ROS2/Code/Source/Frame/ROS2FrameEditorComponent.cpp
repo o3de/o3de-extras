@@ -92,56 +92,6 @@ namespace ROS2
         ROS2FrameNotificationBus::Broadcast(&ROS2FrameNotificationBus::Events::OnDeactivate, GetEntityId(), m_parentFrameEntity);
     }
 
-    AZStd::string ROS2FrameEditorComponent::GetGlobalFrameName() const
-    {
-        return m_controller.GetGlobalFrameName();
-    }
-
-    bool ROS2FrameEditorComponent::IsTopLevel() const
-    {
-        return m_controller.IsTopLevel();
-    }
-
-    bool ROS2FrameEditorComponent::IsDynamic() const
-    {
-        return m_controller.IsDynamic();
-    }
-
-    AZ::Transform ROS2FrameEditorComponent::GetFrameTransform() const
-    {
-        return m_controller.GetFrameTransform();
-    }
-
-    AZStd::string ROS2FrameEditorComponent::GetParentFrameID() const
-    {
-        return m_controller.GetParentFrameID();
-    }
-
-    AZStd::string ROS2FrameEditorComponent::GetFrameID() const
-    {
-        return m_controller.GetFrameID();
-    }
-
-    void ROS2FrameEditorComponent::SetFrameID(const AZStd::string& frameId)
-    {
-        m_controller.SetFrameID(frameId);
-    }
-
-    AZStd::string ROS2FrameEditorComponent::GetNamespace() const
-    {
-        return m_controller.GetNamespace();
-    }
-
-    AZ::Name ROS2FrameEditorComponent::GetJointName() const
-    {
-        return m_controller.GetJointName();
-    }
-
-    void ROS2FrameEditorComponent::SetJointName(const AZStd::string& jointNameString)
-    {
-        m_controller.SetJointName(jointNameString);
-    }
-
     void ROS2FrameEditorComponent::Reflect(AZ::ReflectContext* context)
     {
         ROS2FrameEditorComponentBase::Reflect(context);

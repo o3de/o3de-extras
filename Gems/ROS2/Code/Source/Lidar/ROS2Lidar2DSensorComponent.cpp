@@ -6,6 +6,7 @@
  *
  */
 
+#include "ROS2/Frame/ROS2FrameBus.h"
 #include <Atom/RPI.Public/AuxGeom/AuxGeomFeatureProcessorInterface.h>
 #include <Atom/RPI.Public/Scene.h>
 #include <AzFramework/Physics/PhysicsSystem.h>
@@ -204,9 +205,10 @@ namespace ROS2
             m_visualizationPoints = m_lastScanResults.m_points;
         }
 
-        auto* ros2Frame = Utils::GetGameOrEditorComponent<ROS2FrameComponent>(GetEntity());
         auto message = sensor_msgs::msg::LaserScan();
-        message.header.frame_id = ros2Frame->GetFrameID().data();
+        AZStd::string frameId;
+        ROS2FrameComponentBus::EventResult(frameId, GetEntityId(), &ROS2FrameComponentBus::Events::GetFrameID);
+        message.header.frame_id = frameId.data();
         message.header.stamp = ROS2Interface::Get()->GetROSTimestamp();
         message.angle_min = AZ::DegToRad(m_lidarConfiguration.m_lidarParameters.m_minHAngle);
         message.angle_max = AZ::DegToRad(m_lidarConfiguration.m_lidarParameters.m_maxHAngle);

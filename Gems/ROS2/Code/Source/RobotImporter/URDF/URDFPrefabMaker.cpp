@@ -9,6 +9,7 @@
 #include "URDFPrefabMaker.h"
 #include "CollidersMaker.h"
 #include "PrefabMakerUtils.h"
+#include "ROS2/Frame/ROS2FrameBus.h"
 #include <API/EditorAssetSystemAPI.h>
 #include <AzCore/Debug/Trace.h>
 #include <AzCore/IO/FileIO.h>
@@ -16,13 +17,13 @@
 #include <AzCore/Serialization/Json/JsonUtils.h>
 #include <AzToolsFramework/Entity/EditorEntityHelpers.h>
 #include <AzToolsFramework/Prefab/PrefabLoaderInterface.h>
-#include <AzToolsFramework/Prefab/PrefabSystemComponentInterface.h>
 #include <AzToolsFramework/Prefab/PrefabLoaderScriptingBus.h>
+#include <AzToolsFramework/Prefab/PrefabSystemComponentInterface.h>
 #include <AzToolsFramework/Prefab/PrefabSystemScriptingBus.h>
 #include <AzToolsFramework/Prefab/Procedural/ProceduralPrefabAsset.h>
 #include <AzToolsFramework/ToolsComponents/GenericComponentWrapper.h>
 #include <AzToolsFramework/ToolsComponents/TransformComponent.h>
-#include <ROS2/Frame/ROS2FrameComponent.h>
+#include <ROS2/Frame/ROS2FrameEditorComponent.h>
 #include <ROS2/ROS2GemUtilities.h>
 #include <RobotControl/ROS2RobotControlComponent.h>
 #include <RobotImporter/Utils/RobotImporterUtils.h>
@@ -196,11 +197,8 @@ namespace ROS2
             AZ::Entity* childEntityPtr = AzToolsFramework::GetEntityById(childEntity.GetValue());
             if (childEntityPtr)
             {
-                auto* component = Utils::GetGameOrEditorComponent<ROS2FrameComponent>(childEntityPtr);
-                if (component)
-                {
-                    component->SetJointName(AZStd::string(name.c_str(), name.length()));
-                }
+                AZStd::string jointName(name.c_str(), name.length());
+                ROS2FrameComponentBus::Event(childEntityPtr->GetId(), &ROS2FrameComponentBus::Events::SetJointName, jointName);
             }
             // check if both has RigidBody and we are not creating articulation
             if (!m_useArticulations && leadEntity.IsSuccess() && childEntity.IsSuccess())
@@ -323,16 +321,17 @@ namespace ROS2
             return createEntityResult;
         }
         AZ::EntityId entityId = createEntityResult.GetValue();
-        AZ::Entity* entity = AzToolsFramework::GetEntityById(entityId);
 
         createdEntities.emplace_back(entityId);
 
-        const auto frameComponentId = Utils::CreateComponent(entityId, ROS2FrameComponent::TYPEINFO_Uuid());
+        const auto frameComponentId = Utils::CreateComponent(entityId, ROS2FrameEditorComponent::TYPEINFO_Uuid());
         if (frameComponentId)
         {
-            auto* component = Utils::GetGameOrEditorComponent<ROS2FrameComponent>(entity);
-            AZ_Assert(component, "ROS2 Frame Component does not exist for %s", entityId.ToString().c_str());
-            component->SetFrameID(AZStd::string(link->name.c_str(), link->name.size()));
+            bool hasFrameComponent = false;
+            ROS2FrameComponentBus::EventResult(hasFrameComponent, entityId, &ROS2FrameComponentBus::Events::IsFrame);
+            AZ_Assert(hasFrameComponent, "ROS2 Frame Component does not exist for %s", entityId.ToString().c_str());
+            AZStd::string frameId(link->name.c_str(), link->name.size());
+            ROS2FrameComponentBus::Event(entityId, &ROS2FrameComponentBus::Events::SetFrameID, frameId);
         }
         auto createdVisualEntities = m_visualsMaker.AddVisuals(link, entityId);
         createdEntities.insert(createdEntities.end(), createdVisualEntities.begin(), createdVisualEntities.end());

@@ -7,6 +7,8 @@
  */
 
 #include "ROS2ContactSensorComponent.h"
+#include "AzCore/std/string/string.h"
+#include "ROS2/Frame/ROS2FrameBus.h"
 #include <AzCore/Component/ComponentApplicationBus.h>
 #include <AzCore/Debug/Trace.h>
 #include <AzCore/Serialization/EditContext.h>
@@ -137,9 +139,12 @@ namespace ROS2
 
         // Publishes all contacts
         gazebo_msgs::msg::ContactsState msg;
-        const auto* ros2Frame = Utils::GetGameOrEditorComponent<ROS2FrameComponent>(GetEntity());
-        AZ_Assert(ros2Frame, "Invalid component pointer value");
-        msg.header.frame_id = ros2Frame->GetFrameID().data();
+        bool hasFrameComponent = false;
+        ROS2FrameComponentBus::EventResult(hasFrameComponent, GetEntityId(), &ROS2FrameComponentBus::Events::IsFrame);
+        AZ_Assert(hasFrameComponent, "Entity does not have ROS2FrameComponent");
+        AZStd::string frameId;
+        ROS2FrameComponentBus::EventResult(frameId, GetEntityId(), &ROS2FrameComponentBus::Events::GetFrameID);
+        msg.header.frame_id = frameId.data();
         msg.header.stamp = ROS2Interface::Get()->GetROSTimestamp();
 
         {

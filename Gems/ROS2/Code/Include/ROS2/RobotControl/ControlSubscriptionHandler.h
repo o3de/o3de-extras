@@ -7,6 +7,7 @@
  */
 #pragma once
 
+#include "ROS2/Frame/ROS2FrameBus.h"
 #include <ROS2/Communication/TopicConfiguration.h>
 #include <ROS2/Frame/ROS2FrameComponent.h>
 #include <ROS2/ROS2Bus.h>
@@ -41,8 +42,9 @@ namespace ROS2
             m_entityId = entity->GetId();
             if (!m_controlSubscription)
             {
-                auto ros2Frame = entity->FindComponent<ROS2FrameComponent>();
-                AZStd::string namespacedTopic = ROS2Names::GetNamespacedName(ros2Frame->GetNamespace(), subscriberConfiguration.m_topic);
+                AZStd::string frameNamespace;
+                ROS2FrameComponentBus::EventResult(frameNamespace, entity->GetId(), &ROS2FrameComponentBus::Events::GetNamespace);
+                AZStd::string namespacedTopic = ROS2Names::GetNamespacedName(frameNamespace, subscriberConfiguration.m_topic);
 
                 auto ros2Node = ROS2Interface::Get()->GetNode();
                 m_controlSubscription = ros2Node->create_subscription<T>(

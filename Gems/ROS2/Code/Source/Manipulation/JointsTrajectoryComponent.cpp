@@ -7,6 +7,8 @@
  */
 
 #include "JointsTrajectoryComponent.h"
+#include "AzCore/std/string/string.h"
+#include "ROS2/Frame/ROS2FrameBus.h"
 #include <AzCore/Serialization/EditContext.h>
 #include <PhysX/ArticulationJointBus.h>
 #include <ROS2/Frame/ROS2FrameComponent.h>
@@ -18,9 +20,12 @@ namespace ROS2
 {
     void JointsTrajectoryComponent::Activate()
     {
-        auto* ros2Frame = Utils::GetGameOrEditorComponent<ROS2FrameComponent>(GetEntity());
-        AZ_Assert(ros2Frame, "Missing Frame Component!");
-        AZStd::string namespacedAction = ROS2Names::GetNamespacedName(ros2Frame->GetNamespace(), m_followTrajectoryActionName);
+        bool hasFrameComponent = false;
+        ROS2FrameComponentBus::EventResult(hasFrameComponent, GetEntityId(), &ROS2FrameComponentBus::Events::IsFrame);
+        AZ_Assert(hasFrameComponent, "Missing Frame Component!");
+        AZStd::string frameNamespace;
+        ROS2FrameComponentBus::EventResult(frameNamespace, GetEntityId(), &ROS2FrameComponentBus::Events::GetNamespace);
+        AZStd::string namespacedAction = ROS2Names::GetNamespacedName(frameNamespace, m_followTrajectoryActionName);
         m_followTrajectoryServer = AZStd::make_unique<FollowJointTrajectoryActionServer>(namespacedAction, GetEntityId());
         AZ::TickBus::Handler::BusConnect();
         JointsTrajectoryRequestBus::Handler::BusConnect(GetEntityId());

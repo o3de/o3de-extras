@@ -7,6 +7,7 @@
  *
  */
 
+#include "AzCore/Name/Name.h"
 #include "AzCore/std/string/string.h"
 #include "ROS2/Frame/ROS2FrameBus.h"
 #include "ROS2/Frame/ROS2FrameEditorComponent.h"
@@ -87,13 +88,19 @@ namespace UnitTest
         AZ::Entity entity;
         const std::string entityName = entity.GetName().c_str();
         entity.CreateComponent<AzToolsFramework::Components::TransformComponent>();
-        auto frame = entity.CreateComponent<ROS2::ROS2FrameComponent>(config);
+        entity.CreateComponent<ROS2::ROS2FrameComponent>(config);
 
         entity.Init();
         entity.Activate();
 
-        const std::string jointName(frame->GetJointName().GetCStr());
-        const std::string frameId(frame->GetFrameID().c_str());
+        AZ::Name jointNameResult;
+        AZStd::string frameIdResult;
+
+        ROS2::ROS2FrameComponentBus::EventResult(jointNameResult, entity.GetId(), &ROS2::ROS2FrameComponentBus::Events::GetJointName);
+        ROS2::ROS2FrameComponentBus::EventResult(frameIdResult, entity.GetId(), &ROS2::ROS2FrameComponentBus::Events::GetFrameID);
+
+        const std::string jointName(jointNameResult.GetCStr());
+        const std::string frameId(frameIdResult.c_str());
 
         EXPECT_EQ(entity.GetState(), AZ::Entity::State::Active);
         EXPECT_STRCASEEQ(jointName.c_str(), ("o3de_" + entityName + "/").c_str());
@@ -134,8 +141,15 @@ namespace UnitTest
 
         for (int i = 0; i < numOfEntities; i++)
         {
-            const std::string jointName(frames[i]->GetJointName().GetCStr());
-            const std::string frameId(frames[i]->GetFrameID().c_str());
+            AZ::Name jointNameResult;
+            AZStd::string frameIdResult;
+
+            ROS2::ROS2FrameComponentBus::EventResult(
+                jointNameResult, entities[i]->GetId(), &ROS2::ROS2FrameComponentBus::Events::GetJointName);
+            ROS2::ROS2FrameComponentBus::EventResult(frameIdResult, entities[i]->GetId(), &ROS2::ROS2FrameComponentBus::Events::GetFrameID);
+
+            const std::string jointName(jointNameResult.GetCStr());
+            const std::string frameId(frameIdResult.c_str());
 
             EXPECT_EQ(entities[i]->GetState(), AZ::Entity::State::Active);
             EXPECT_STRCASEEQ(jointName.c_str(), (entities[0]->GetName() + "/").c_str());
