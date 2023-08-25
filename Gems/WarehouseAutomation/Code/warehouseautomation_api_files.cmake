@@ -3,8 +3,6 @@
 #
 # SPDX-License-Identifier: Apache-2.0 OR MIT
 set(FILES
-    Include/WarehouseAutomation/WarehouseAutomationBus.h
-    Include/WarehouseAutomation/WarehouseAutomationTypeIds.h
     Include/WarehouseAutomation/ConveyorBelt/ConveyorBeltRequestBus.h
     Include/WarehouseAutomation/ProximitySensor/ProximitySensorNotificationBus.h
     Include/WarehouseAutomation/ProximitySensor/ProximitySensorNotificationBusHandler.h

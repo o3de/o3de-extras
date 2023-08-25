@@ -5,41 +5,21 @@
  * SPDX-License-Identifier: Apache-2.0 OR MIT
  *
  */
-#include <WarehouseAutomation/WarehouseAutomationTypeIds.h>
 #include <WarehouseAutomationModuleInterface.h>
-#include "WarehouseAutomationEditorSystemComponent.h"
 
 namespace WarehouseAutomation
 {
-    class WarehouseAutomationEditorModule
-        : public WarehouseAutomationModuleInterface
+    class WarehouseAutomationEditorModule : public WarehouseAutomationModuleInterface
     {
     public:
-        AZ_RTTI(WarehouseAutomationEditorModule, WarehouseAutomationEditorModuleTypeId, WarehouseAutomationModuleInterface);
+        AZ_RTTI(WarehouseAutomationEditorModule, "{906B71F8-374D-4F8E-B8F2-EAFEFF863F7F}", WarehouseAutomationModuleInterface);
         AZ_CLASS_ALLOCATOR(WarehouseAutomationEditorModule, AZ::SystemAllocator);
 
         WarehouseAutomationEditorModule()
         {
-            // Push results of [MyComponent]::CreateDescriptor() into m_descriptors here.
-            // Add ALL components descriptors associated with this gem to m_descriptors.
-            // This will associate the AzTypeInfo information for the components with the the SerializeContext, BehaviorContext and EditContext.
-            // This happens through the [MyComponent]::Reflect() function.
-            m_descriptors.insert(m_descriptors.end(), {
-                WarehouseAutomationEditorSystemComponent::CreateDescriptor(),
-            });
-        }
-
-        /**
-         * Add required SystemComponents to the SystemEntity.
-         * Non-SystemComponents should not be added here
-         */
-        AZ::ComponentTypeList GetRequiredSystemComponents() const override
-        {
-            return AZ::ComponentTypeList {
-                azrtti_typeid<WarehouseAutomationEditorSystemComponent>(),
-            };
+            m_descriptors.insert(m_descriptors.end(), {});
         }
     };
-}// namespace WarehouseAutomation
+} // namespace WarehouseAutomation
 
 AZ_DECLARE_MODULE_CLASS(Gem_WarehouseAutomation, WarehouseAutomation::WarehouseAutomationEditorModule)

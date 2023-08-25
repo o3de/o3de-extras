@@ -5,8 +5,6 @@
 set(FILES
     Source/WarehouseAutomationModuleInterface.cpp
     Source/WarehouseAutomationModuleInterface.h
-    Source/WarehouseAutomationSystemComponent.cpp
-    Source/WarehouseAutomationSystemComponent.h
     Source/ConveyorBelt/ConveyorBeltComponent.cpp
     Source/ConveyorBelt/ConveyorBeltComponent.h
     Source/ConveyorBelt/ConveyorBeltComponentConfiguration.cpp

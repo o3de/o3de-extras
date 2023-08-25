@@ -12,8 +12,7 @@
 
 namespace WarehouseAutomation
 {
-    class WarehouseAutomationModuleInterface
-        : public AZ::Module
+    class WarehouseAutomationModuleInterface : public AZ::Module
     {
     public:
         AZ_TYPE_INFO_WITH_NAME_DECL(WarehouseAutomationModuleInterface)
@@ -21,10 +20,5 @@ namespace WarehouseAutomation
         AZ_CLASS_ALLOCATOR_DECL
 
         WarehouseAutomationModuleInterface();
-
-        /**
-         * Add required SystemComponents to the SystemEntity.
-         */
-        AZ::ComponentTypeList GetRequiredSystemComponents() const override;
     };
-}// namespace WarehouseAutomation
+} // namespace WarehouseAutomation
