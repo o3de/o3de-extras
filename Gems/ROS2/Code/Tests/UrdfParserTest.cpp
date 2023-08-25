@@ -122,6 +122,53 @@ namespace UnitTest
                 </robot>)";
         }
 
+        AZStd::string GetURDFWithFourLinksAndRootLinkNoInertia(AZStd::string_view rootLinkName)
+        {
+            return AZStd::string::format(R"(<?xml version="1.0" ?>
+                <robot name="FooRobot">
+                  <link name="%.*s"/>
+                  <link name="base_link"/>
+                  <link name="base_link_inertia">
+                    <inertial>
+                      <mass value="1.0"/>
+                      <inertia ixx="1.0" iyy="1.0" izz="1.0" ixy="0" ixz="0" iyz="0"/>
+                    </inertial>
+                    <visual>
+                      <geometry>
+                        <box size="1.0 1.0 1.0"/>
+                      </geometry>
+                    </visual>
+                  </link>
+                  <link name="child_link">
+                    <inertial>
+                      <mass value="2.0"/>
+                      <inertia ixx="1.0" iyy="1.0" izz="1.0" ixy="0" ixz="0" iyz="0"/>
+                    </inertial>
+                    <visual>
+                      <geometry>
+                        <sphere radius="1.0"/>
+                      </geometry>
+                    </visual>
+                  </link>
+                  <joint name="world_base_joint" type="fixed">
+                    <parent link="%.*s"/>
+                    <child link="base_link"/>
+                  </joint>
+                  <joint name="base_inertia_joint" type="fixed">
+                    <parent link="base_link"/>
+                    <child link="base_link_inertia"/>
+                  </joint>
+                  <joint name="base_inertia_child_joint" type="revolute">
+                    <parent link="base_link_inertia"/>
+                    <child link="child_link"/>
+                    <axis xyz="0 0 1" />
+                    <origin rpy="0 0 0" xyz="1.0 0.5 0.0"/>
+                    <dynamics damping="10.0" friction="5.0"/>
+                    <limit lower="10.0" upper="20.0" effort="90.0" velocity="10.0"/>
+                  </joint>
+                </robot>)", AZ_STRING_ARG(rootLinkName), AZ_STRING_ARG(rootLinkName));
+        }
+
         // A URDF <model> can only represent structure which is configurable though the <joint> tags
         // Therefore link can only appear as a child of a single joint.
         // It cannot be a child of multiple joints
@@ -469,6 +516,107 @@ namespace UnitTest
 
         const sdf::Link* link1 = model->LinkByName("base_link");
         ASSERT_NE(nullptr, link1);
+    }
+
+    MATCHER(UnorderedMapKeyMatcher, "") {
+        *result_listener << "Expected Key" << AZStd::get<1>(arg)
+            << "Actual Key" << AZStd::get<0>(arg).first.c_str();
+        return AZStd::get<0>(arg).first == AZStd::get<1>(arg);
+    }
+
+    TEST_F(UrdfParserTest, ParseUrdf_WithRootLink_WithName_world_DoesNotContain_world_Link)
+    {
+        // The libsdformat URDF parser skips converting the root link if its
+        // name is "world"
+        // https://github.com/gazebosim/sdformat/blob/a1027c3ed96f2f663760df10f13b06f47f922c55/src/parser_urdf.cc#L3385-L3399
+        // Therefore it will not be part of joint reduction
+        constexpr const char* RootLinkName = "world";
+        const auto xmlStr = GetURDFWithFourLinksAndRootLinkNoInertia(RootLinkName);
+        sdf::ParserConfig parserConfig;
+        // Make sure joint reduction occurs
+        parserConfig.URDFSetPreserveFixedJoint(false);
+        const auto sdfRootOutcome = ROS2::UrdfParser::Parse(xmlStr, parserConfig);
+        ASSERT_TRUE(sdfRootOutcome);
+        const sdf::Root& sdfRoot = sdfRootOutcome.value();
+
+        const sdf::Model* model = sdfRoot.Model();
+        EXPECT_EQ("FooRobot", model->Name());
+        ASSERT_NE(nullptr, model);
+
+        // Due to joint reduction there should be 2 links and 2 frames
+        ASSERT_EQ(2, model->LinkCount());
+        ASSERT_EQ(2, model->FrameCount());
+
+        // The base_inertia_joint was elimimated when the base_link parent
+        // merged with the base_link_inertia child
+        // NOTE: The "world_base_joint" is not merged because the root link
+        // is has a name of "world"
+        EXPECT_TRUE(model->FrameNameExists("base_inertia_joint"));
+        EXPECT_TRUE(model->FrameNameExists("base_link_inertia"));
+
+        const sdf::Link* link1 = model->LinkByName("base_link");
+        ASSERT_NE(nullptr, link1);
+
+        const sdf::Link* link2 = model->LinkByName("child_link");
+        ASSERT_NE(nullptr, link2);
+
+        // Check the ROS2 visitor logic to make sure the joint with "world" parent link isn't visited
+        auto joints = ROS2::Utils::GetAllJoints(*model);
+        EXPECT_EQ(1, joints.size());
+        EXPECT_THAT(joints, ::testing::UnorderedPointwise(UnorderedMapKeyMatcher(), { "base_inertia_child_joint" }));
+
+        // The libsdformat sdf::Model::JointCount function however returns 2
+        // as the "world_base_joint" is skipped over by joint reduction
+        // because the it's parent link is "world"
+        EXPECT_EQ(2, model->JointCount());
+    }
+
+    TEST_F(UrdfParserTest, ParseUrdf_WithRootLink_WithoutName_world_DoesContainThatLink)
+    {
+        // Because the name of the root link in the URDF is not "world"
+        // It should get reduced as part of joint reduction
+        constexpr const char* RootLinkName = "not_world";
+        const auto xmlStr = GetURDFWithFourLinksAndRootLinkNoInertia(RootLinkName);
+        sdf::ParserConfig parserConfig;
+        // Make sure joint reduction occurs
+        parserConfig.URDFSetPreserveFixedJoint(false);
+        const auto sdfRootOutcome = ROS2::UrdfParser::Parse(xmlStr, parserConfig);
+        ASSERT_TRUE(sdfRootOutcome);
+        const sdf::Root& sdfRoot = sdfRootOutcome.value();
+
+        const sdf::Model* model = sdfRoot.Model();
+        EXPECT_EQ("FooRobot", model->Name());
+        ASSERT_NE(nullptr, model);
+
+        // Due to joint reduction there should be 2 links and 43 frames
+        // This is different from the previous test, as the root link
+        // can now partipate in joint reduction because it has a name
+        // that isn't "world"
+        ASSERT_EQ(2, model->LinkCount());
+        ASSERT_EQ(4, model->FrameCount());
+
+        // The base_inertia_joint and world_base_joint should be merged
+        // together into the top level link of "not_world"
+        EXPECT_TRUE(model->FrameNameExists("base_inertia_joint"));
+        EXPECT_TRUE(model->FrameNameExists("base_link_inertia"));
+        EXPECT_TRUE(model->FrameNameExists("world_base_joint"));
+        EXPECT_TRUE(model->FrameNameExists("base_link"));
+
+        const sdf::Link* link1 = model->LinkByName(RootLinkName);
+        ASSERT_NE(nullptr, link1);
+
+        const sdf::Link* link2 = model->LinkByName("child_link");
+        ASSERT_NE(nullptr, link2);
+
+        // The ROS2 Visitor logic should visit all reduced joints which
+        // there should only be a single one of the revolute joint
+        auto joints = ROS2::Utils::GetAllJoints(*model);
+        EXPECT_EQ(1, joints.size());
+        EXPECT_THAT(joints, ::testing::UnorderedPointwise(UnorderedMapKeyMatcher(), { "base_inertia_child_joint" }));
+
+        // The libsdformat sdf::Model::JointCount function should match
+        // the ROS2 Visitor logic as the root link of "not_world" is part of joint reduction
+        EXPECT_EQ(1, model->JointCount());
     }
 
     TEST_F(UrdfParserTest, WheelHeuristicNameValid)

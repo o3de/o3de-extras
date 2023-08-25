@@ -267,7 +267,10 @@ namespace ROS2::Utils
                 for (uint64_t jointIndex{}; jointIndex < currentModel.JointCount(); ++jointIndex)
                 {
                     const sdf::Joint* joint = currentModel.JointByIndex(jointIndex);
-                    if (joint != nullptr)
+                    // Skip any joints whose parent and child link references
+                    // don't have an actual sdf::link in the parsed model
+                    if (joint != nullptr && currentModel.LinkNameExists(joint->ParentName())
+                        && currentModel.LinkByName(joint->ChildName()))
                     {
                         if (!m_jointVisitorCB(*joint))
                         {

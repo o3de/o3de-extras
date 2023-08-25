@@ -230,7 +230,6 @@ namespace ROS2
                 > defining the coordinate transformation from the parent link frame to the child link frame.
             */
 
-            jointsWhereLinkIsChild.front()->ParentName();
             AZStd::string parentName(jointsWhereLinkIsChild.front()->ParentName().c_str(),
                 jointsWhereLinkIsChild.front()->ParentName().size());
             const auto parentEntry = createdLinks.find(parentName);
@@ -253,14 +252,9 @@ namespace ROS2
             PrefabMakerUtils::SetEntityParent(linkPrefabResult.GetValue(), parentEntry->second.GetValue());
         }
 
-        for (uint64_t jointIndex{}; jointIndex < GetFirstModel()->JointCount(); ++jointIndex)
+        auto JointVisitor = [this, &createdLinks](const sdf::Joint& joint)
         {
-            auto jointPtr = GetFirstModel()->JointByIndex(jointIndex);
-            AZ_Assert(jointPtr, "joint at index %" PRIu64 " is null", jointIndex);
-            if (jointPtr == nullptr)
-            {
-                continue;
-            }
+            auto jointPtr = &joint;
 
             const std::string& jointName = jointPtr->Name();
             AZStd::string azJointName(jointName.c_str(), jointName.size());
@@ -271,7 +265,7 @@ namespace ROS2
             if (parentLinkIter == createdLinks.end())
             {
                 AZ_Warning("CreatePrefabFromURDF", false, "Joint %s has no parent link %s. Cannot create", azJointName.c_str(), parentLinkName.c_str());
-                continue;
+                return true;
             }
             auto leadEntity = parentLinkIter->second;
 
@@ -279,7 +273,7 @@ namespace ROS2
             if (childLinkIter == createdLinks.end())
             {
                 AZ_Warning("CreatePrefabFromURDF", false, "Joint %s has no child link %s. Cannot create", azJointName.c_str(), childLinkName.c_str());
-                continue;
+                return true;
             }
             auto childEntity = childLinkIter->second;
 
@@ -287,8 +281,8 @@ namespace ROS2
                 "CreatePrefabFromURDF",
                 "Creating joint %s : %s -> %s\n",
                 azJointName.c_str(),
-                jointPtr->ParentName().c_str(),
-                jointPtr->ChildName().c_str());
+                parentLinkName.c_str(),
+                childLinkName.c_str());
 
 
             AZ::Entity* childEntityPtr = AzToolsFramework::GetEntityById(childEntity.GetValue());
@@ -312,7 +306,15 @@ namespace ROS2
             {
                 AZ_Warning("CreatePrefabFromURDF", false, "cannot create joint %s", azJointName.c_str());
             }
-        }
+
+            return true;
+        };
+
+        // The JointVisitor is instead of iterating over the sdf::Model::JointCount
+        // as it will skip joints that exist that doesn't have an attached parent link or child link
+        // such as the root link when its name is "world"
+        constexpr bool visitNestedJoints = true;
+        Utils::VisitJoints(*GetFirstModel(), JointVisitor, visitNestedJoints);
 
         // Use the first entity based on a link that is not parented to any other link
         if (!linkEntityIdsWithoutParent.empty() && linkEntityIdsWithoutParent.front().IsValid())
