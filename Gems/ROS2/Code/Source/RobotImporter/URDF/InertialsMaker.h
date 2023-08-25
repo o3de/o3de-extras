@@ -20,6 +20,6 @@ namespace ROS2
         //! Add zero or one inertial elements to a given entity (depending on link content).
         //! @param inertial A pointer to a parsed URDF inertial structure, might be null.
         //! @param entityId A non-active entity which will be populated according to inertial content.
-        void AddInertial(urdf::InertialSharedPtr inertial, AZ::EntityId entityId) const;
+        void AddInertial(const gz::math::Inertiald& inertial, AZ::EntityId entityId) const;
     };
 } // namespace ROS2

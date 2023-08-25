@@ -21,7 +21,7 @@ namespace ROS2::Utils::xacro
     struct ExecutionOutcome
     {
         //! Parsed URDF from successful xacro's output
-        urdf::ModelInterfaceSharedPtr m_urdfHandle;
+        UrdfParser::RootObjectOutcome m_urdfHandle;
         //! Return code of 'xacro' program
         bool m_succeed{ false };
         //! Called program name
@@ -34,7 +34,7 @@ namespace ROS2::Utils::xacro
         //! Gets if execution was a success
         explicit operator bool() const
         {
-            return m_succeed && m_urdfHandle != nullptr;
+            return m_succeed && m_urdfHandle;
         }
     };
 

@@ -19,9 +19,9 @@ namespace ROS2::URDF
     //! Common types conversion between urdf and AZ formats
     namespace TypeConversions
     {
-        AZ::Vector3 ConvertVector3(const urdf::Vector3& urdfVector);
-        AZ::Quaternion ConvertQuaternion(const urdf::Rotation& urdfQuaternion);
-        AZ::Color ConvertColor(const urdf::Color& color);
-        AZ::Transform ConvertPose(const urdf::Pose& pose);
+        AZ::Vector3 ConvertVector3(const gz::math::Vector3d& urdfVector);
+        AZ::Quaternion ConvertQuaternion(const gz::math::Quaterniond& urdfQuaternion);
+        AZ::Color ConvertColor(const gz::math::Color& color);
+        AZ::Transform ConvertPose(const gz::math::Pose3d& pose);
     }; // namespace TypeConversions
 } // namespace ROS2::URDF

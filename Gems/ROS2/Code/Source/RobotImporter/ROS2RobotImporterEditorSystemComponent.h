@@ -13,7 +13,6 @@
 #include <AzToolsFramework/Entity/EditorEntityContextBus.h>
 #include <ROS2/RobotImporter/RobotImporterBus.h>
 #include <RobotImporter/Utils/SourceAssetsStorage.h>
-#include <urdf_parser/urdf_parser.h>
 namespace ROS2
 {
 

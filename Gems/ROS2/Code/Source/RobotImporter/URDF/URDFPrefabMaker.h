@@ -33,13 +33,13 @@ namespace ROS2
     public:
         //! Construct URDFPrefabMaker from arguments.
         //! @param modelFilePath path to the source URDF model.
-        //! @param model parsed model.
+        //! @param root parsed SDF root object.
         //! @param prefabPath path to the prefab which will be created as a result of import.
         //! @param urdfAssetsMapping prepared mapping of URDF meshes to Assets.
         //! @param useArticulations allows urdfImporter to create PhysXArticulations instead of multiple rigid bodies and joints.
         URDFPrefabMaker(
             const AZStd::string& modelFilePath,
-            urdf::ModelInterfaceSharedPtr model,
+            const sdf::Root* root,
             AZStd::string prefabPath,
             const AZStd::shared_ptr<Utils::UrdfAssetMap> urdfAssetsMapping,
             bool useArticulations = false,
@@ -69,12 +69,15 @@ namespace ROS2
         AZStd::string GetStatus();
 
     private:
-        AzToolsFramework::Prefab::PrefabEntityResult AddEntitiesForLink(urdf::LinkSharedPtr link, AZ::EntityId parentEntityId, AZStd::vector<AZ::EntityId>& createdEntities);
-        void BuildAssetsForLink(urdf::LinkSharedPtr link);
+        AzToolsFramework::Prefab::PrefabEntityResult AddEntitiesForLink(const sdf::Link* link, AZ::EntityId parentEntityId, AZStd::vector<AZ::EntityId>& createdEntities);
+        void BuildAssetsForLink(const sdf::Link* link);
         void AddRobotControl(AZ::EntityId rootEntityId);
         static void MoveEntityToDefaultSpawnPoint(const AZ::EntityId& rootEntityId, AZStd::optional<AZ::Transform> spawnPosition);
 
-        urdf::ModelInterfaceSharedPtr m_model;
+        // Returns the <model> at the root of the SDF or the first <world><model> if it exist
+        const sdf::Model* GetFirstModel() const;
+
+        const sdf::Root* m_root;
         AZStd::string m_prefabPath;
         VisualsMaker m_visualsMaker;
         CollidersMaker m_collidersMaker;
