@@ -67,6 +67,24 @@ namespace ROS2
                 // remove the affected product assets, so we don't need to trigger any
                 // additional rebuilds beyond that.
              ;
+
+            if (auto editContext = serializeContext->GetEditContext(); editContext != nullptr)
+            {
+                editContext
+                    ->Class<SdfAssetBuilderSettings>(
+                        "SDF Asset Import Settings", "Exposes settings which alters importing of URDF/XACRO/SDF files")
+                    ->DataElement(
+                        AZ::Edit::UIHandlers::Default,
+                        &SdfAssetBuilderSettings::m_useArticulations,
+                        "Use Articulations",
+                        "Determines whether PhysX articulation components should be used for joints and rigid bodies")
+                    ->DataElement(
+                        AZ::Edit::UIHandlers::Default,
+                        &SdfAssetBuilderSettings::m_urdfPreserveFixedJoints,
+                        "Preserve URDF fixed joints",
+                        "When set, preserves any fixed joints found when importing a URDF/XACRO file."
+                        " This prevents the joint reduction logic in libsdformat from merging links of those joints.");
+            }
         }
     }
 

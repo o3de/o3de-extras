@@ -308,7 +308,7 @@ namespace UnitTest
         sdf::ParserConfig parserConfig;
         const auto sdfRootOutcome = ROS2::UrdfParser::Parse(xmlStr, parserConfig);
         ASSERT_TRUE(sdfRootOutcome);
-        const sdf::Root& sdfRoot = sdfRootOutcome.value();
+        const sdf::Root& sdfRoot = sdfRootOutcome.GetRoot();
 
         const sdf::Model* model = sdfRoot.Model();
         EXPECT_EQ("test_one_link", model->Name());
@@ -358,7 +358,7 @@ namespace UnitTest
         sdf::ParserConfig parserConfig;
         const auto sdfRootOutcome = ROS2::UrdfParser::Parse(xmlStr, parserConfig);
         ASSERT_TRUE(sdfRootOutcome);
-        const sdf::Root& sdfRoot = sdfRootOutcome.value();
+        const sdf::Root& sdfRoot = sdfRootOutcome.GetRoot();
 
         const sdf::Model* model = sdfRoot.Model();
         EXPECT_EQ("test_two_links_one_joint", model->Name());
@@ -389,7 +389,7 @@ namespace UnitTest
         parserConfig.URDFSetPreserveFixedJoint(true);
         const auto sdfRootOutcome = ROS2::UrdfParser::Parse(xmlStr, parserConfig);
         ASSERT_TRUE(sdfRootOutcome);
-        const sdf::Root& sdfRoot = sdfRootOutcome.value();
+        const sdf::Root& sdfRoot = sdfRootOutcome.GetRoot();
 
         const sdf::Model* model = sdfRoot.Model();
         EXPECT_EQ("test_two_links_one_joint", model->Name());
@@ -439,7 +439,7 @@ namespace UnitTest
         sdf::ParserConfig parserConfig;
         const auto sdfRootOutcome = ROS2::UrdfParser::Parse(xmlStr, parserConfig);
         ASSERT_TRUE(sdfRootOutcome);
-        const sdf::Root& sdfRoot = sdfRootOutcome.value();
+        const sdf::Root& sdfRoot = sdfRootOutcome.GetRoot();
 
         const sdf::Model* model = sdfRoot.Model();
         EXPECT_EQ("test_two_links_one_joint", model->Name());
@@ -485,14 +485,14 @@ namespace UnitTest
         EXPECT_DOUBLE_EQ(10.0, joint12Axis->MaxVelocity());
     }
 
-        TEST_F(UrdfParserTest, ParseURDF_WithTwoLinks_AndBaseLinkWithNoInertia_WithUrdfFixedJointPreservationOn_Fails)
+    TEST_F(UrdfParserTest, ParseURDF_WithTwoLinks_AndBaseLinkWithNoInertia_WithUrdfFixedJointPreservationOn_Fails)
     {
         const auto xmlStr = GetURDFWithTwoLinksAndBaseLinkNoInertia();
         sdf::ParserConfig parserConfig;
         parserConfig.URDFSetPreserveFixedJoint(true);
         const auto sdfRootOutcome = ROS2::UrdfParser::Parse(xmlStr, parserConfig);
         ASSERT_FALSE(sdfRootOutcome);
-        AZStd::string errorString = ROS2::Utils::JoinSdfErrorsToString(sdfRootOutcome.error());
+        AZStd::string errorString = ROS2::Utils::JoinSdfErrorsToString(sdfRootOutcome.GetSdfErrors());
         printf("URDF with single link and no inertia: %s\n", errorString.c_str());
     }
 
@@ -503,7 +503,7 @@ namespace UnitTest
         parserConfig.URDFSetPreserveFixedJoint(false);
         const auto sdfRootOutcome = ROS2::UrdfParser::Parse(xmlStr, parserConfig);
         ASSERT_TRUE(sdfRootOutcome);
-        const sdf::Root& sdfRoot = sdfRootOutcome.value();
+        const sdf::Root& sdfRoot = sdfRootOutcome.GetRoot();
 
         const sdf::Model* model = sdfRoot.Model();
         EXPECT_EQ("always_ignored", model->Name());
@@ -537,7 +537,7 @@ namespace UnitTest
         parserConfig.URDFSetPreserveFixedJoint(false);
         const auto sdfRootOutcome = ROS2::UrdfParser::Parse(xmlStr, parserConfig);
         ASSERT_TRUE(sdfRootOutcome);
-        const sdf::Root& sdfRoot = sdfRootOutcome.value();
+        const sdf::Root& sdfRoot = sdfRootOutcome.GetRoot();
 
         const sdf::Model* model = sdfRoot.Model();
         EXPECT_EQ("FooRobot", model->Name());
@@ -582,7 +582,7 @@ namespace UnitTest
         parserConfig.URDFSetPreserveFixedJoint(false);
         const auto sdfRootOutcome = ROS2::UrdfParser::Parse(xmlStr, parserConfig);
         ASSERT_TRUE(sdfRootOutcome);
-        const sdf::Root& sdfRoot = sdfRootOutcome.value();
+        const sdf::Root& sdfRoot = sdfRootOutcome.GetRoot();
 
         const sdf::Model* model = sdfRoot.Model();
         EXPECT_EQ("FooRobot", model->Name());
@@ -626,7 +626,7 @@ namespace UnitTest
         const auto xmlStr = GetURDFWithWheel(wheelName, "continuous");
         const auto sdfRootOutcome = ROS2::UrdfParser::Parse(xmlStr, parserConfig);
         ASSERT_TRUE(sdfRootOutcome);
-        const sdf::Root& sdfRoot = sdfRootOutcome.value();
+        const sdf::Root& sdfRoot = sdfRootOutcome.GetRoot();
         const sdf::Model* model = sdfRoot.Model();
         ASSERT_NE(nullptr, model);
         auto wheelCandidate = model->LinkByName(std::string(wheelName.data(), wheelName.size()));
@@ -637,7 +637,7 @@ namespace UnitTest
         const auto xmlStr2 = GetURDFWithWheel(wheelNameSuffix, "continuous");
         const auto sdfRootOutcome2 = ROS2::UrdfParser::Parse(xmlStr2, parserConfig);
         ASSERT_TRUE(sdfRootOutcome2);
-        const sdf::Root& sdfRoot2 = sdfRootOutcome2.value();
+        const sdf::Root& sdfRoot2 = sdfRootOutcome2.GetRoot();
         const sdf::Model* model2 = sdfRoot2.Model();
         ASSERT_NE(nullptr, model2);
         auto wheelCandidate2 = model2->LinkByName(std::string(wheelNameSuffix.data(), wheelNameSuffix.size()));
@@ -652,7 +652,7 @@ namespace UnitTest
         sdf::ParserConfig parserConfig;
         const auto sdfRootOutcome = ROS2::UrdfParser::Parse(xmlStr, parserConfig);
         ASSERT_TRUE(sdfRootOutcome);
-        const sdf::Root& sdfRoot = sdfRootOutcome.value();
+        const sdf::Root& sdfRoot = sdfRootOutcome.GetRoot();
         const sdf::Model* model = sdfRoot.Model();
         ASSERT_NE(nullptr, model);
         auto wheelCandidate = model->LinkByName(std::string(wheelName.data(), wheelName.size()));
@@ -667,7 +667,7 @@ namespace UnitTest
         sdf::ParserConfig parserConfig;
         const auto sdfRootOutcome = ROS2::UrdfParser::Parse(xmlStr, parserConfig);
         ASSERT_TRUE(sdfRootOutcome);
-        const sdf::Root& sdfRoot = sdfRootOutcome.value();
+        const sdf::Root& sdfRoot = sdfRootOutcome.GetRoot();
         const sdf::Model* model = sdfRoot.Model();
         ASSERT_NE(nullptr, model);
         // SDFormat converts combines the links of a joint with a fixed type
@@ -690,7 +690,7 @@ namespace UnitTest
         sdf::ParserConfig parserConfig;
         const auto sdfRootOutcome = ROS2::UrdfParser::Parse(xmlStr, parserConfig);
         ASSERT_TRUE(sdfRootOutcome);
-        const sdf::Root& sdfRoot = sdfRootOutcome.value();
+        const sdf::Root& sdfRoot = sdfRootOutcome.GetRoot();
         const sdf::Model* model = sdfRoot.Model();
         ASSERT_NE(nullptr, model);
         auto wheelCandidate = model->LinkByName(std::string(wheelName.c_str(), wheelName.size()));
@@ -705,7 +705,7 @@ namespace UnitTest
         sdf::ParserConfig parserConfig;
         const auto sdfRootOutcome = ROS2::UrdfParser::Parse(xmlStr, parserConfig);
         ASSERT_TRUE(sdfRootOutcome);
-        const sdf::Root& sdfRoot = sdfRootOutcome.value();
+        const sdf::Root& sdfRoot = sdfRootOutcome.GetRoot();
         const sdf::Model* model = sdfRoot.Model();
         ASSERT_NE(nullptr, model);
         auto wheelCandidate = model->LinkByName(std::string(wheelName.c_str(), wheelName.size()));
@@ -719,7 +719,7 @@ namespace UnitTest
         sdf::ParserConfig parserConfig;
         const auto sdfRootOutcome = ROS2::UrdfParser::Parse(xmlStr, parserConfig);
         ASSERT_TRUE(sdfRootOutcome);
-        const sdf::Root& sdfRoot = sdfRootOutcome.value();
+        const sdf::Root& sdfRoot = sdfRootOutcome.GetRoot();
         const sdf::Model* model = sdfRoot.Model();
         ASSERT_NE(nullptr, model);
         auto links = ROS2::Utils::GetAllLinks(*model);
@@ -746,7 +746,7 @@ namespace UnitTest
         sdf::ParserConfig parserConfig;
         const auto sdfRootOutcome = ROS2::UrdfParser::Parse(xmlStr, parserConfig);
         ASSERT_TRUE(sdfRootOutcome);
-        const sdf::Root& sdfRoot = sdfRootOutcome.value();
+        const sdf::Root& sdfRoot = sdfRootOutcome.GetRoot();
         const sdf::Model* model = sdfRoot.Model();
         ASSERT_NE(nullptr, model);
         auto joints = ROS2::Utils::GetAllJoints(*model);
@@ -761,7 +761,7 @@ namespace UnitTest
         sdf::ParserConfig parserConfig;
         const auto sdfRootOutcome = ROS2::UrdfParser::Parse(xmlStr, parserConfig);
         ASSERT_TRUE(sdfRootOutcome);
-        const sdf::Root& sdfRoot = sdfRootOutcome.value();
+        const sdf::Root& sdfRoot = sdfRootOutcome.GetRoot();
         const sdf::Model* model = sdfRoot.Model();
         ASSERT_NE(nullptr, model);
         const auto links = ROS2::Utils::GetAllLinks(*model);
@@ -802,7 +802,7 @@ namespace UnitTest
         sdf::ParserConfig parserConfig;
         const auto sdfRootOutcome = ROS2::UrdfParser::Parse(xmlStr, parserConfig);
         ASSERT_TRUE(sdfRootOutcome);
-        const sdf::Root& sdfRoot = sdfRootOutcome.value();
+        const sdf::Root& sdfRoot = sdfRootOutcome.GetRoot();
         const sdf::Model* model = sdfRoot.Model();
         ASSERT_NE(nullptr, model);
         auto joints = ROS2::Utils::GetJointsForParentLink(*model, "base_link");
@@ -827,7 +827,7 @@ namespace UnitTest
         sdf::ParserConfig parserConfig;
         const auto sdfRootOutcome = ROS2::UrdfParser::Parse(xmlStr, parserConfig);
         ASSERT_TRUE(sdfRootOutcome);
-        const sdf::Root& sdfRoot = sdfRootOutcome.value();
+        const sdf::Root& sdfRoot = sdfRootOutcome.GetRoot();
         const sdf::Model* model = sdfRoot.Model();
         ASSERT_NE(nullptr, model);
         auto joints = ROS2::Utils::GetJointsForChildLink(*model, "link2");

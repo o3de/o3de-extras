@@ -36,7 +36,6 @@ namespace ROS2
         void reportProgress(const AZStd::string& progressForUser);
         void setSuccess(bool success);
         bool isComplete() const override;
-        bool IsUseArticulations() const;
         AZStd::optional<AZ::Transform> getSelectedSpawnPoint() const;
     Q_SIGNALS:
         void onCreateButtonPressed();
@@ -46,7 +45,6 @@ namespace ROS2
         QLineEdit* m_prefabName;
         QPushButton* m_createButton;
         QTextEdit* m_log;
-        QCheckBox* m_useArticulation;
         QComboBox* m_spawnPointsComboBox;
         AZStd::vector<SpawnPointInfoMap> m_spawnPointsInfos;
         RobotImporterWidget* m_parentImporterWidget;
