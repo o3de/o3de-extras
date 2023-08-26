@@ -18,7 +18,7 @@
 
 namespace ROS2::Utils::xacro
 {
-    ExecutionOutcome ParseXacro(const AZStd::string& filename, const Params& params)
+    ExecutionOutcome ParseXacro(const AZStd::string& filename, const Params& params, const sdf::ParserConfig& parserConfig)
     {
         ExecutionOutcome outcome;
         // test if xacro exists
@@ -90,12 +90,6 @@ namespace ROS2::Utils::xacro
         {
             AZ_Printf("ParseXacro", "xacro finished with success \n");
             const auto& output = process_output.outputResult;
-            // Read the SDF Settings from the Settings Registry into a local struct
-            SdfAssetBuilderSettings sdfBuilderSettings;
-            sdfBuilderSettings.LoadSettings();
-            // Set the parser config settings for URDF content
-            sdf::ParserConfig parserConfig;
-            parserConfig.URDFSetPreserveFixedJoint(sdfBuilderSettings.m_urdfPreserveFixedJoints);
             outcome.m_urdfHandle = UrdfParser::Parse(output, parserConfig);
             outcome.m_succeed = true;
         }

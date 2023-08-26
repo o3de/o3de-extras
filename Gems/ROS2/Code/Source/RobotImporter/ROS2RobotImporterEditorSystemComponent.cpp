@@ -109,7 +109,7 @@ namespace ROS2
         auto parsedUrdfOutcome = UrdfParser::ParseFromFile(filePath, parserConfig);
         if (!parsedUrdfOutcome)
         {
-            const AZStd::string log = Utils::JoinSdfErrorsToString(parsedUrdfOutcome.error());
+            const AZStd::string log = Utils::JoinSdfErrorsToString(parsedUrdfOutcome.GetSdfErrors());
 
             AZ_Warning("ROS2RobotImporterEditorSystemComponent", false, "URDF parsing failed with errors:\nRefer to %s",
                 log.c_str());
@@ -117,7 +117,7 @@ namespace ROS2
         }
 
         // Urdf Root has been parsed successfully retrieve it from the Outcome
-        const sdf::Root& parsedUrdfRoot = parsedUrdfOutcome.value();
+        const sdf::Root& parsedUrdfRoot = parsedUrdfOutcome.GetRoot();
 
         auto collidersNames = Utils::GetMeshesFilenames(&parsedUrdfRoot, false, true);
         auto visualNames = Utils::GetMeshesFilenames(&parsedUrdfRoot, true, false);
