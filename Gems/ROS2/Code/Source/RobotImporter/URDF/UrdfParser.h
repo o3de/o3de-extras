@@ -27,9 +27,45 @@ namespace ROS2
     namespace UrdfParser
     {
         //! Stores the result of parsing URDF data
-        //! On success the sdf::Root object is returned
-        //! On failure the sdf::Errors vector is returned
-        using RootObjectOutcome = AZStd::expected<sdf::Root, sdf::Errors>;
+        //! The operator bool returns true if the sdf::Errors vector is empty
+        struct ParseResult
+        {
+        private:
+            // Provides custom sdf::ErrorCode values when parsing is done through O3DE
+            inline static constexpr auto O3DESdfErrorCodeStart = static_cast<sdf::ErrorCode>(1000);
+        public:
+           inline static constexpr auto O3DESdfErrorParseNotStarted = static_cast<sdf::ErrorCode>(static_cast<int>(O3DESdfErrorCodeStart) + 1);
+
+            //! Ref qualifer overloads for retrieving sdf::Root
+            //! it supports a non-const lvalue overload to allow
+            //! modification of the sdf::Root objec directly
+            sdf::Root& GetRoot() &;
+            const sdf::Root& GetRoot() const&;
+            sdf::Root&& GetRoot() &&;
+
+            //! Property getters for retrieving parsing messages
+            //! logged during libsdformat parsing of the URDF content
+            //! This does not support a non-const lvalue overload
+            //! As modification the result structure parser messages
+            //! have no need to be modified inplace
+            const AZStd::string& GetParseMessages() const&;
+            AZStd::string&& GetParseMessages() &&;
+
+            //! Returns the sdf::Error vector containing any parser errors
+            //! This does not support a non-const lvalue overload
+            //! As modification the result structure sdf Errors
+            //! have no need to be modified inplace
+            const sdf::Errors& GetSdfErrors() const&;
+            sdf::Errors&& GetSdfErrors() &&;
+
+            //! Returns if the parsing of the SDF file has succeeded
+            explicit operator bool() const;
+
+            sdf::Root m_root;
+            AZStd::string m_parseMessages;
+            sdf::Errors m_sdfErrors{ sdf::Error{ O3DESdfErrorParseNotStarted, std::string{"No Parsing has occured yet"}} };
+        };
+        using RootObjectOutcome = ParseResult;
 
         //! Parse string with URDF data and generate model.
         //! @param xmlString a string that contains URDF data (XML format).
