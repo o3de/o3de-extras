@@ -8,12 +8,10 @@
 
 #pragma once
 
-#include <AzCore/RTTI/ReflectContext.h>
-#include <AzCore/RTTI/TypeInfoSimple.h>
-#include <AzCore/Serialization/SerializeContext.h>
-
 namespace ROS2
 {
+    struct SensorConfiguration;
+
     //! Base class template for sensor event sources.
     //! Sample event sources can be based on TickBus or engine physics callback. Developer that wants to implement new event source, should
     //! derive it from this class and signal m_sensorEvent based on chosen approach. Derived classes should rather not auto connect any
@@ -31,18 +29,38 @@ namespace ROS2
 
         virtual ~SensorEventSource() = default;
 
-        //! Connects given event handler to sensor event. Event is signalled based on event source internal logic. For more details check
-        //! event source specializations.
-        //! @see ROS2::TickBasedSource.
-        //! @see ROS2::PhysicsBasedSource.
-        virtual void ConnectEventHandler(SensorEventHandlerType& eventHandler)
+        //! Sets up event source - ee event source description for more details. After call to this method event source is supposed to start
+        //! signalling source event.
+        virtual void Activate()
         {
-            eventHandler.Connect(m_sensorEvent);
+        }
+
+        //! Shuts down event source - see event source description for more details. After call to this method event source is supposed to
+        //! stop signalling source event.
+        virtual void Deactivate()
+        {
+        }
+
+        //! Configures event source based on sensor settings. Details depend on specific event source implementation.
+        //! @param sensorConfiguration Implemented sensor configuration.
+        //! @note In most cases it will be safer to call this before Activate, however at the end it depends on specific event source
+        //! implementations.
+        virtual void Configure([[maybe_unused]] const SensorConfiguration& sensorConfiguration)
+        {
+        }
+
+        //! Connects given event handler to sensor source event. By design, source event is not restricted by frequency settings. This event
+        //! should be signalled based on event source internal logic (e.g. on draw call). For more details check event source
+        //! specializations.
+        //! @param eventHandler Event handler that will be connected to internal event.
+        void ConnectToSourceEvent(SensorEventHandlerType& sourceEventHandler)
+        {
+            sourceEventHandler.Connect(m_sensorSourceEvent);
         }
 
     protected:
         SensorEventSource() = default;
 
-        SensorEventType m_sensorEvent;
+        SensorEventType m_sensorSourceEvent{}; ///< This event should be signalled based on specific event source specialization.
     };
 } // namespace ROS2
