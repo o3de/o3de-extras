@@ -18,6 +18,7 @@ namespace ROS2
     //! Captures common behavior of ROS2 sensor Components.
     //! Sensors acquire data from the simulation engine and publish it to ROS2 ecosystem.
     //! Derive this Component to implement a new ROS2 sensor. Each sensor Component requires ROS2FrameComponent.
+    //! For high frequency sensors also derive PhysicsCallbackHandler.
     class ROS2SensorComponent
         : public AZ::Component
         , public AZ::TickBus::Handler

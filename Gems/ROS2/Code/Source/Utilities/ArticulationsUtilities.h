@@ -8,12 +8,18 @@
 
 #pragma once
 #include <AzCore/Component/Entity.h>
+#include <AzFramework/Physics/Common/PhysicsSimulatedBody.h>
 
 namespace ROS2::Utils
 {
     //! Retrieve root of articulation for given entity. If the entity is not part of an articulation, the invalid entity id is returned.
     //! @param entityId The entity to get the root of.
-    //! @return The root of articulation
+    //! @return The root of articulation.
     AZ::EntityId GetRootOfArticulation(AZ::EntityId entityId);
 
+    //! Get handles to all the articulation links in an articulation tree.
+    //! @param sceneHandle A handle to the scene.
+    //! @param entityId Any entity in the articulation tree.
+    //! @return Handles to all the articulation links in the tree.
+    AZStd::unordered_map<AZ::EntityId, AzPhysics::SimulatedBodyHandle> GetSimulatedBodyHandles(AzPhysics::SceneHandle sceneHandle, AZ::EntityId entityId);
 } // namespace ROS2::Utils

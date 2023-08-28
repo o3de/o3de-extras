@@ -28,6 +28,6 @@ namespace ROS2
         //! @param leadColliderEntityId An entity higher in hierarchy which is connected through the joint with the child entity.
         //! @returns created components Id or string with fail
         JointsMakerResult AddJointComponent(
-            urdf::JointSharedPtr joint, AZ::EntityId followColliderEntityId, AZ::EntityId leadColliderEntityId) const;
+            const sdf::Joint* joint, AZ::EntityId followColliderEntityId, AZ::EntityId leadColliderEntityId) const;
     };
 } // namespace ROS2

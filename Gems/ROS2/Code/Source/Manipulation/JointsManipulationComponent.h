@@ -71,6 +71,10 @@ namespace ROS2
 
         void MoveToSetPositions(float deltaTime);
 
+        AZ::Outcome<JointPosition, AZStd::string> GetJointPosition(const JointInfo& jointInfo);
+        AZ::Outcome<JointVelocity, AZStd::string> GetJointVelocity(const JointInfo& jointInfo);
+        AZ::Outcome<JointEffort, AZStd::string> GetJointEffort(const JointInfo& jointInfo);
+
         AZStd::unique_ptr<JointStatePublisher> m_jointStatePublisher;
         PublisherConfiguration m_jointStatePublisherConfiguration;
         ManipulationJoints m_manipulationJoints;

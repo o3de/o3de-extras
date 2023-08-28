@@ -8,6 +8,9 @@
 
 #include "FileSelectionPage.h"
 #include <AzCore/Utils/Utils.h>
+#include <AzToolsFramework/UI/PropertyEditor/ReflectedPropertyEditor.hxx>
+#include <SdfAssetBuilder/SdfAssetBuilderSettings.h>
+
 #include <QFileInfo>
 #include <QHBoxLayout>
 #include <QVBoxLayout>
@@ -16,30 +19,45 @@ namespace ROS2
 {
     FileSelectionPage::FileSelectionPage(QWizard* parent)
         : QWizardPage(parent)
+        , m_sdfAssetBuilderSettings(AZStd::make_unique<SdfAssetBuilderSettings>())
     {
         m_fileDialog = new QFileDialog(this);
         m_fileDialog->setDirectory(QString::fromUtf8(AZ::Utils::GetProjectPath().data()));
         m_fileDialog->setNameFilter("URDF, XACRO (*.urdf *.xacro)");
         m_button = new QPushButton("...", this);
         m_textEdit = new QLineEdit("", this);
-        m_copyFiles = new QCheckBox(tr("Import meshes during URDF load"), this);
-        m_copyFiles->setCheckState(Qt::CheckState::Checked);
         setTitle(tr("Load URDF file"));
         QVBoxLayout* layout = new QVBoxLayout;
         layout->addStretch();
         layout->addWidget(new QLabel(tr("URDF file path to load : "), this));
-        QHBoxLayout* layout_in = new QHBoxLayout;
-        layout_in->addWidget(m_button);
-        layout_in->addWidget(m_textEdit);
-        layout->addLayout(layout_in);
-        layout->addWidget(m_copyFiles);
-        layout->addStretch();
+        QHBoxLayout* layoutHorizontal = new QHBoxLayout;
+        layoutHorizontal->addWidget(m_button);
+        layoutHorizontal->addWidget(m_textEdit);
+        layout->addLayout(layoutHorizontal);
+
+        // Seed the SDF Asset Builder Settings with the values from the Settings Registry
+        m_sdfAssetBuilderSettings->LoadSettings();
+        // Create a reflected property editor that can modify the SDF AssetBuilder Settings
+        m_sdfAssetBuilderSettingsEditor = new AzToolsFramework::ReflectedPropertyEditor(this);
+        AZ::ComponentApplicationRequests* componentApplicationRequests = AZ::Interface<AZ::ComponentApplicationRequests>::Get();
+        AZ::SerializeContext* serializeContext{ componentApplicationRequests ? componentApplicationRequests->GetSerializeContext() : nullptr };
+        AZ_Assert(serializeContext != nullptr, "Serialize Context is missing. It is required for the SDF Asset Builder Settings Editor");
+        constexpr bool enableScrollBars = true;
+        m_sdfAssetBuilderSettingsEditor->Setup(serializeContext, nullptr, enableScrollBars);
+        m_sdfAssetBuilderSettingsEditor->AddInstance(m_sdfAssetBuilderSettings.get());
+        m_sdfAssetBuilderSettingsEditor->InvalidateAll();
+        // Make sure the SDF Asset Builder settings are expanded by default
+        m_sdfAssetBuilderSettingsEditor->ExpandAll();
+        layout->addWidget(m_sdfAssetBuilderSettingsEditor);
+
         this->setLayout(layout);
         connect(m_button, &QPushButton::pressed, this, &FileSelectionPage::onLoadButtonPressed);
         connect(m_fileDialog, &QFileDialog::fileSelected, this, &FileSelectionPage::onFileSelected);
         connect(m_textEdit, &QLineEdit::editingFinished, this, &FileSelectionPage::onEditingFinished);
         FileSelectionPage::onEditingFinished();
     }
+
+    FileSelectionPage::~FileSelectionPage() = default;
 
     void FileSelectionPage::onLoadButtonPressed()
     {
@@ -66,8 +84,13 @@ namespace ROS2
         return m_fileExists;
     }
 
-    bool FileSelectionPage::getIfCopyAssetsDuringUrdfImport() const
+    QString FileSelectionPage::getFileName() const
     {
-        return m_copyFiles->isChecked();
+        return isComplete() ? m_textEdit->text(): QString{};
+    }
+
+    const SdfAssetBuilderSettings& FileSelectionPage::GetSdfAssetBuilderSettings() const
+    {
+        return *m_sdfAssetBuilderSettings;
     }
 } // namespace ROS2

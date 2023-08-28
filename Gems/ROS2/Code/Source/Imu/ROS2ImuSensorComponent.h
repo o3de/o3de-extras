@@ -13,7 +13,7 @@
 #include <AzFramework/Physics/Common/PhysicsEvents.h>
 #include <AzFramework/Physics/PhysicsSystem.h>
 #include <ROS2/Sensor/ROS2SensorComponent.h>
-#include <Utilities/PhysicsCallbackHandler.h>
+#include <ROS2/Utilities/PhysicsCallbackHandler.h>
 #include <rclcpp/publisher.hpp>
 #include <sensor_msgs/msg/imu.hpp>
 
@@ -61,8 +61,12 @@ namespace ROS2
         void SetupRefreshLoop() override;
 
         // ROS2::Utils::PhysicsCallbackHandler overrides ...
+        void OnPhysicsInitialization(AzPhysics::SceneHandle sceneHandle) override;
         void OnPhysicsSimulationFinished(AzPhysics::SceneHandle sceneHandle, float deltaTime) override;
 
         AZ::Matrix3x3 ToDiagonalCovarianceMatrix(const AZ::Vector3& variance);
+
+        // Handle to the simulated physical body
+        AzPhysics::SimulatedBodyHandle m_bodyHandle = AzPhysics::InvalidSimulatedBodyHandle;
     };
 } // namespace ROS2

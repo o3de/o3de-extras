@@ -49,6 +49,8 @@ set(FILES
     Source/RobotImporter/xacro/XacroUtils.cpp
     Source/RobotImporter/xacro/XacroUtils.h
     Source/RobotImporter/Utils/DefaultSolverConfiguration.h
+    Source/RobotImporter/Utils/ErrorUtils.cpp
+    Source/RobotImporter/Utils/ErrorUtils.h
     Source/RobotImporter/Utils/FilePath.cpp
     Source/RobotImporter/Utils/FilePath.h
     Source/RobotImporter/Utils/RobotImporterUtils.cpp
@@ -66,6 +68,8 @@ set(FILES
     Source/Spawner/ROS2SpawnPointEditorComponent.h
     Source/SdfAssetBuilder/SdfAssetBuilder.cpp
     Source/SdfAssetBuilder/SdfAssetBuilder.h
+    Source/SdfAssetBuilder/SdfAssetBuilderSettings.cpp
+    Source/SdfAssetBuilder/SdfAssetBuilderSettings.h
     Source/SdfAssetBuilder/SdfAssetBuilderSystemComponent.cpp
     Source/SdfAssetBuilder/SdfAssetBuilderSystemComponent.h
 )

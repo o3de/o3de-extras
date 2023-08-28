@@ -92,14 +92,14 @@
                     "Id": 11259578117255245776,
                     "Controller": {
                         "Configuration": {
-                            "Editor entity id": "",
+                            "Editor entity id": "Entity_[112314723493220]",
                             "Spawnables": {
                                 "proteus": {
                                     "assetId": {
-                                        "guid": "{80419AAD-14CF-528D-A477-8B202D4C9B6D}",
-                                        "subId": 1966583575
+                                        "guid": "{D8E729B1-F767-5E45-8D90-7A49CFB9DA4B}",
+                                        "subId": 815852738
                                     },
-                                    "assetHint": "proteus.spawnable"
+                                    "assetHint": "prefabs/proteuslaserscanner.spawnable"
                                 }
                             }
                         }
@@ -397,8 +397,7 @@
                     "Id": 16880285896855930892,
                     "Controller": {
                         "Configuration": {
-                            "Field of View": 60.0,
-                            "EditorEntityId": 13315486001867137160
+                            "Field of View": 60.0
                         }
                     }
                 },
@@ -453,14 +452,8 @@
                 "Component_[5265045084611556958]": {
                     "$type": "EditorDisabledCompositionComponent",
                     "Id": 5265045084611556958,
-                    "DisabledComponents": [
-                        {
-                            "$type": "EditorLookAtComponent",
-                            "Id": 3614169361981986523,
-                            "Target": "",
-                            "ForwardAxis": 2
-                        },
-                        {
+                    "DisabledComponents": {
+                        "Component_[17802058751617023810]": {
                             "$type": "AZ::Render::EditorDepthOfFieldComponent",
                             "Id": 17802058751617023810,
                             "Controller": {
@@ -477,8 +470,14 @@
                                     ]
                                 }
                             }
+                        },
+                        "Component_[3614169361981986523]": {
+                            "$type": "EditorLookAtComponent",
+                            "Id": 3614169361981986523,
+                            "Target": "",
+                            "ForwardAxis": 2
                         }
-                    ]
+                    }
                 },
                 "Component_[5532915187718966079]": {
                     "$type": "AZ::Render::EditorBloomComponent",

@@ -67,14 +67,13 @@ namespace ROS2
 
     void ROS2WheelOdometryComponent::GetRequiredServices(AZ::ComponentDescriptor::DependencyArrayType& required)
     {
-        required.push_back(AZ_CRC_CE("PhysicsRigidBodyService"));
         required.push_back(AZ_CRC_CE("ROS2Frame"));
         required.push_back(AZ_CRC_CE("SkidSteeringModelService"));
     }
 
     void ROS2WheelOdometryComponent::SetupRefreshLoop()
     {
-        InstallPhysicalCallback(m_entity->GetId());
+        InstallPhysicalCallback();
     }
 
     void ROS2WheelOdometryComponent::OnPhysicsSimulationFinished(AzPhysics::SceneHandle sceneHandle, float deltaTime)

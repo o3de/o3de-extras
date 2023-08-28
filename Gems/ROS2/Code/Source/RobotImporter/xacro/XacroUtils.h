@@ -21,7 +21,7 @@ namespace ROS2::Utils::xacro
     struct ExecutionOutcome
     {
         //! Parsed URDF from successful xacro's output
-        urdf::ModelInterfaceSharedPtr m_urdfHandle;
+        UrdfParser::RootObjectOutcome m_urdfHandle;
         //! Return code of 'xacro' program
         bool m_succeed{ false };
         //! Called program name
@@ -34,14 +34,14 @@ namespace ROS2::Utils::xacro
         //! Gets if execution was a success
         explicit operator bool() const
         {
-            return m_succeed && m_urdfHandle != nullptr;
+            return m_succeed && m_urdfHandle;
         }
     };
 
     AZStd::unordered_map<AZStd::string, AZStd::string> GetParameterFromXacroData(const AZStd::string& data);
     AZStd::unordered_map<AZStd::string, AZStd::string> GetParameterFromXacroFile(const AZStd::string& filename);
 
-    ExecutionOutcome ParseXacro(const AZStd::string& filename, const Params& params);
+    ExecutionOutcome ParseXacro(const AZStd::string& filename, const Params& params, const sdf::ParserConfig& parserConfig);
 
 
 } // namespace ROS2::Utils::xacro

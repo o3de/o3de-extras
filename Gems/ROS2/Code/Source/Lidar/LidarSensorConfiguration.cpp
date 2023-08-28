@@ -21,8 +21,7 @@ namespace ROS2
                 ->Field("lidarModel", &LidarSensorConfiguration::m_lidarModel)
                 ->Field("lidarImplementation", &LidarSensorConfiguration::m_lidarSystem)
                 ->Field("LidarParameters", &LidarSensorConfiguration::m_lidarParameters)
-                ->Field("IgnoreLayer", &LidarSensorConfiguration::m_ignoreLayer)
-                ->Field("IgnoredLayerIndex", &LidarSensorConfiguration::m_ignoredLayerIndex)
+                ->Field("IgnoredLayerIndices", &LidarSensorConfiguration::m_ignoredCollisionLayers)
                 ->Field("ExcludedEntities", &LidarSensorConfiguration::m_excludedEntities)
                 ->Field("PointsAtMax", &LidarSensorConfiguration::m_addPointsAtMax);
 
@@ -51,16 +50,10 @@ namespace ROS2
                         "Configuration of Custom lidar")
                     ->Attribute(AZ::Edit::Attributes::Visibility, &LidarSensorConfiguration::IsConfigurationVisible)
                     ->DataElement(
-                        AZ::Edit::UIHandlers::ComboBox,
-                        &LidarSensorConfiguration::m_ignoreLayer,
-                        "Ignore layer",
-                        "Should we ignore selected layer index")
-                    ->Attribute(AZ::Edit::Attributes::Visibility, &LidarSensorConfiguration::IsIgnoredLayerConfigurationVisible)
-                    ->DataElement(
                         AZ::Edit::UIHandlers::Default,
-                        &LidarSensorConfiguration::m_ignoredLayerIndex,
-                        "Ignored layer index",
-                        "Layer index to ignore")
+                        &LidarSensorConfiguration::m_ignoredCollisionLayers,
+                        "Ignored collision layers",
+                        "Indices of collision layers to ignore")
                     ->Attribute(AZ::Edit::Attributes::Visibility, &LidarSensorConfiguration::IsIgnoredLayerConfigurationVisible)
                     ->DataElement(
                         AZ::Edit::UIHandlers::Default,

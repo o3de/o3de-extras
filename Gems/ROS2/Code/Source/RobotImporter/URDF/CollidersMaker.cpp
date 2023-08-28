@@ -64,41 +64,41 @@ namespace ROS2
         }
     }
 
-    void CollidersMaker::BuildColliders(urdf::LinkSharedPtr link)
+    void CollidersMaker::BuildColliders(const sdf::Link* link)
     {
-        for (auto collider : link->collision_array)
+        if (!link)
         {
-            BuildCollider(collider);
+            return;
         }
 
-        if (link->collision_array.empty())
+        for (uint64_t index = 0; index < link->CollisionCount(); index++)
         {
-            BuildCollider(link->collision);
+            BuildCollider(link->CollisionByIndex(index));
         }
     }
 
-    void CollidersMaker::BuildCollider(urdf::CollisionSharedPtr collision)
+    void CollidersMaker::BuildCollider(const sdf::Collision* collision)
     {
         if (!collision)
         { // it is ok not to have collision in a link
             return;
         }
 
-        auto geometry = collision->geometry;
-        bool isPrimitiveShape = geometry->type != urdf::Geometry::MESH;
+        auto geometry = collision->Geom();
+        bool isPrimitiveShape = geometry->Type() != sdf::GeometryType::MESH;
         if (!isPrimitiveShape)
         {
-            auto meshGeometry = std::dynamic_pointer_cast<urdf::Mesh>(geometry);
+            auto meshGeometry = geometry->MeshShape();
             if (!meshGeometry)
             {
                 return;
             }
-            const auto asset = PrefabMakerUtils::GetAssetFromPath(*m_urdfAssetsMapping, meshGeometry->filename);
+            const auto asset = PrefabMakerUtils::GetAssetFromPath(*m_urdfAssetsMapping, meshGeometry->Uri());
             if (!asset)
             {
                 return;
             }
-            const AZStd::string& azMeshPath = asset->m_sourceAssetGlobalPath;
+            const auto& azMeshPath = asset->m_sourceAssetGlobalPath;
 
             AZStd::shared_ptr<AZ::SceneAPI::Containers::Scene> scene;
             AZ::SceneAPI::Events::SceneSerializationBus::BroadcastResult(
@@ -110,7 +110,7 @@ namespace ROS2
                     false,
                     "Error loading collider. Invalid scene: %s, URDF path: %s",
                     azMeshPath.c_str(),
-                    meshGeometry->filename.c_str());
+                    meshGeometry->Uri().c_str());
                 return;
             }
 
@@ -205,13 +205,13 @@ namespace ROS2
         }
     }
 
-    void CollidersMaker::AddColliders(urdf::LinkSharedPtr link, AZ::EntityId entityId)
+    void CollidersMaker::AddColliders(const sdf::Model& model, const sdf::Link* link, AZ::EntityId entityId)
     {
         AZStd::string typeString = "collider";
-        const bool isWheelEntity = Utils::IsWheelURDFHeuristics(link);
+        const bool isWheelEntity = Utils::IsWheelURDFHeuristics(model, link);
         if (isWheelEntity)
         {
-            AZ_Printf(Internal::CollidersMakerLoggingTag, "Due to its name, %s is considered a wheel entity\n", link->name.c_str());
+            AZ_Printf(Internal::CollidersMakerLoggingTag, "Due to its name, %s is considered a wheel entity\n", link->Name().c_str());
             if (!m_wheelMaterial.GetId().IsValid())
             {
                 FindWheelMaterial();
@@ -220,21 +220,16 @@ namespace ROS2
         const AZ::Data::Asset<Physics::MaterialAsset> materialAsset =
             isWheelEntity ? m_wheelMaterial : AZ::Data::Asset<Physics::MaterialAsset>();
         size_t nameSuffixIndex = 0; // For disambiguation when multiple unnamed colliders are present. The order does not matter here
-        for (auto collider : link->collision_array)
+        for (uint64_t index = 0; index < link->CollisionCount(); index++)
         { // Add colliders (if any) from the collision array
             AddCollider(
-                collider, entityId, PrefabMakerUtils::MakeEntityName(link->name.c_str(), typeString, nameSuffixIndex), materialAsset);
+                link->CollisionByIndex(index), entityId, PrefabMakerUtils::MakeEntityName(link->Name().c_str(), typeString, nameSuffixIndex), materialAsset);
             nameSuffixIndex++;
-        }
-
-        if (nameSuffixIndex == 0)
-        { // If there are no colliders in the array, the element member is used instead
-            AddCollider(link->collision, entityId, PrefabMakerUtils::MakeEntityName(link->name.c_str(), typeString), materialAsset);
         }
     }
 
     void CollidersMaker::AddCollider(
-        urdf::CollisionSharedPtr collision,
+        const sdf::Collision* collision,
         AZ::EntityId entityId,
         const AZStd::string& generatedName,
         const AZ::Data::Asset<Physics::MaterialAsset>& materialAsset)
@@ -245,7 +240,7 @@ namespace ROS2
         }
         AZ_Trace(Internal::CollidersMakerLoggingTag, "Processing collisions for entity id:%s\n", entityId.ToString().c_str());
 
-        auto geometry = collision->geometry;
+        auto geometry = collision->Geom();
         if (!geometry)
         { // non-empty visual should have a geometry
             AZ_Warning(Internal::CollidersMakerLoggingTag, false, "No Geometry for a collider of entity %s", entityId.ToString().c_str());
@@ -256,25 +251,25 @@ namespace ROS2
     }
 
     void CollidersMaker::AddColliderToEntity(
-        urdf::CollisionSharedPtr collision, AZ::EntityId entityId, const AZ::Data::Asset<Physics::MaterialAsset>& materialAsset) const
+        const sdf::Collision* collision, AZ::EntityId entityId, const AZ::Data::Asset<Physics::MaterialAsset>& materialAsset) const
     {
         AZ::Entity* entity = AzToolsFramework::GetEntityById(entityId);
         AZ_Assert(entity, "AddColliderToEntity called with invalid entityId");
-        auto geometry = collision->geometry;
-        bool isPrimitiveShape = geometry->type != urdf::Geometry::MESH;
+        auto geometry = collision->Geom();
+        bool isPrimitiveShape = geometry->Type() != sdf::GeometryType::MESH;
 
         Physics::ColliderConfiguration colliderConfig;
 
         colliderConfig.m_materialSlots.SetMaterialAsset(0, materialAsset);
-        colliderConfig.m_position = URDF::TypeConversions::ConvertVector3(collision->origin.position);
-        colliderConfig.m_rotation = URDF::TypeConversions::ConvertQuaternion(collision->origin.rotation);
+        colliderConfig.m_position = URDF::TypeConversions::ConvertVector3(collision->RawPose().Pos());
+        colliderConfig.m_rotation = URDF::TypeConversions::ConvertQuaternion(collision->RawPose().Rot());
         if (!isPrimitiveShape)
         {
             AZ_Printf(Internal::CollidersMakerLoggingTag, "Adding mesh collider to %s\n", entityId.ToString().c_str());
-            auto meshGeometry = std::dynamic_pointer_cast<urdf::Mesh>(geometry);
+            auto meshGeometry = geometry->MeshShape();
             AZ_Assert(meshGeometry, "geometry is not meshGeometry");
 
-            auto asset = PrefabMakerUtils::GetAssetFromPath(*m_urdfAssetsMapping, meshGeometry->filename);
+            auto asset = PrefabMakerUtils::GetAssetFromPath(*m_urdfAssetsMapping, meshGeometry->Uri());
             if (!asset)
             {
                 return;
@@ -310,28 +305,28 @@ namespace ROS2
             return;
         }
 
-        AZ_Printf(Internal::CollidersMakerLoggingTag, "URDF geometry type: %d\n", geometry->type);
-        switch (geometry->type)
+        AZ_Printf(Internal::CollidersMakerLoggingTag, "URDF geometry type: %d\n", (int)geometry->Type());
+        switch (geometry->Type())
         {
-        case urdf::Geometry::SPHERE:
+        case sdf::GeometryType::SPHERE:
             {
-                auto sphereGeometry = std::dynamic_pointer_cast<urdf::Sphere>(geometry);
+                auto sphereGeometry = geometry->SphereShape();
                 AZ_Assert(sphereGeometry, "geometry is not sphereGeometry");
-                const Physics::SphereShapeConfiguration cfg{ static_cast<float>(sphereGeometry->radius) };
+                const Physics::SphereShapeConfiguration cfg{ static_cast<float>(sphereGeometry->Radius()) };
                 entity->CreateComponent<PhysX::EditorColliderComponent>(colliderConfig, cfg);
             }
             break;
-        case urdf::Geometry::BOX:
+        case sdf::GeometryType::BOX:
             {
-                const auto boxGeometry = std::dynamic_pointer_cast<urdf::Box>(geometry);
+                const auto boxGeometry = geometry->BoxShape();
                 AZ_Assert(boxGeometry, "geometry is not boxGeometry");
-                const Physics::BoxShapeConfiguration cfg{ URDF::TypeConversions::ConvertVector3(boxGeometry->dim) };
+                const Physics::BoxShapeConfiguration cfg{ URDF::TypeConversions::ConvertVector3(boxGeometry->Size()) };
                 entity->CreateComponent<PhysX::EditorColliderComponent>(colliderConfig, cfg);
             }
             break;
-        case urdf::Geometry::CYLINDER:
+        case sdf::GeometryType::CYLINDER:
             {
-                auto cylinderGeometry = std::dynamic_pointer_cast<urdf::Cylinder>(geometry);
+                auto cylinderGeometry = geometry->CylinderShape();
                 AZ_Assert(cylinderGeometry, "geometry is not cylinderGeometry");
                 Physics::BoxShapeConfiguration cfg;
                 auto* component = entity->CreateComponent<PhysX::EditorColliderComponent>(colliderConfig, cfg);
@@ -345,11 +340,11 @@ namespace ROS2
                     PhysX::EditorPrimitiveColliderComponentRequestBus::Event(
                         AZ::EntityComponentIdPair(entityId, component->GetId()),
                         &PhysX::EditorPrimitiveColliderComponentRequests::SetCylinderHeight,
-                        cylinderGeometry->length);
+                        cylinderGeometry->Length());
                     PhysX::EditorPrimitiveColliderComponentRequestBus::Event(
                         AZ::EntityComponentIdPair(entityId, component->GetId()),
                         &PhysX::EditorPrimitiveColliderComponentRequests::SetCylinderRadius,
-                        cylinderGeometry->radius);
+                        cylinderGeometry->Radius());
                     PhysX::EditorPrimitiveColliderComponentRequestBus::Event(
                         AZ::EntityComponentIdPair(entityId, component->GetId()),
                         &PhysX::EditorPrimitiveColliderComponentRequests::SetCylinderSubdivisionCount,
@@ -363,7 +358,7 @@ namespace ROS2
             }
             break;
         default:
-            AZ_Warning(Internal::CollidersMakerLoggingTag, false, "Unsupported collider geometry type: %d", geometry->type);
+            AZ_Warning(Internal::CollidersMakerLoggingTag, false, "Unsupported collider geometry type: %d", (int)geometry->Type());
             break;
         }
     }

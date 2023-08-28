@@ -1,0 +1,26 @@
+{
+    "values": [
+        {
+            "$type": "{5B03C8E6-8CEE-4DA0-A7FA-CD88689DD45B} MeshGroup",
+            "id": "{9122D1F7-8C4B-4D93-A7F0-A7DF2EFB22E3}",
+            "name": "link0",
+            "NodeSelectionList": {
+                "selectedNodes": [
+                    "<STL_BINARY>",
+                    "<STL_BINARY>.unnamed",
+                    "<STL_BINARY>.unnamed.transform",
+                    "<STL_BINARY>.unnamed.DefaultMaterial"
+                ]
+            },
+            "export method": 1,
+            "DecomposeMeshes": true,
+            "PhysicsMaterialSlots": {
+                "Slots": [
+                    {
+                        "Name": "DefaultMaterial"
+                    }
+                ]
+            }
+        }
+    ]
+}

@@ -1,0 +1,41 @@
+{
+    "O3DE":
+    {
+        "SceneAPI":
+        {
+            "AssetImporter":
+            {
+            	// This list controls the set of file types that will get processed
+            	// by the Scene asset builder.
+            	// All supported file types need to be listed here because setreg
+            	// merges will completely replace the contents of the array.
+                "SupportedFileTypeExtensions":
+                [
+                    ".dae",
+                    ".fbx",
+                    ".stl",
+                    ".gltf",
+                    ".glb",
+                    ".obj"
+                ]
+            }
+        }
+    },
+    "Amazon": {
+        "AssetProcessor": {
+            "Settings": {
+            	// Only the newly-exposed Scene types need to be listed here, as
+            	// these will get appended to any MetaDataTypes that have been
+            	// previously listed.
+            	// This setting ensures that changes to an .assetinfo file will cause
+            	// the source asset to automatically rebuild itself.
+                "MetaDataTypes": {
+                    "dae.assetinfo": "dae",
+                    "obj.assetinfo": "obj"
+                }
+            }
+        }
+    }
+}    
+}
+

@@ -7,14 +7,21 @@
  */
 
 #include "ROS2RobotImporterEditorSystemComponent.h"
-#include "RobotImporter/URDF/UrdfParser.h"
-#include "RobotImporter/Utils/FilePath.h"
+#include <RobotImporter/URDF/UrdfParser.h>
+#include <RobotImporter/Utils/FilePath.h>
+#include <RobotImporter/Utils/ErrorUtils.h>
 #include "RobotImporterWidget.h"
+#include <SdfAssetBuilder/SdfAssetBuilderSettings.h>
 #include <AzCore/Serialization/SerializeContext.h>
 #include <AzCore/Utils/Utils.h>
 #include <AzCore/std/chrono/chrono.h>
 #include <AzCore/std/string/string.h>
+#include <AzCore/StringFunc/StringFunc.h>
 #include <AzToolsFramework/API/ViewPaneOptions.h>
+
+
+#include <sdf/sdf.hh>
+
 #if !defined(Q_MOC_RUN)
 #include <QWindow>
 #endif
@@ -83,26 +90,38 @@ namespace ROS2
     {
         if (filePath.empty())
         {
-            AZ_Warning("ROS2EditorSystemComponent", false, "Path provided for prefab is empty");
+            AZ_Warning("ROS2RobotImporterEditorSystemComponent", false, "Path provided for prefab is empty");
             return false;
         }
         if (Utils::IsFileXacro(filePath))
         {
-            AZ_Warning("ROS2EditorSystemComponent", false, "XACRO formatted files are not supported");
+            AZ_Warning("ROS2RobotImporterEditorSystemComponent", false, "XACRO formatted files are not supported");
             return false;
         }
 
-        urdf::ModelInterfaceSharedPtr parsedUrdf = UrdfParser::ParseFromFile(filePath);
-        if (!parsedUrdf)
+        // Read the SDF Settings from the Settings Registry into a local struct
+        SdfAssetBuilderSettings sdfBuilderSettings;
+        sdfBuilderSettings.LoadSettings();
+        // Set the parser config settings for URDF content
+        sdf::ParserConfig parserConfig;
+        parserConfig.URDFSetPreserveFixedJoint(sdfBuilderSettings.m_urdfPreserveFixedJoints);
+
+        auto parsedUrdfOutcome = UrdfParser::ParseFromFile(filePath, parserConfig);
+        if (!parsedUrdfOutcome)
         {
-            const auto log = UrdfParser::GetUrdfParsingLog();
-            AZ_Warning("ROS2EditorSystemComponent", false, "URDF parsing failed. Refer to %s", log.c_str());
+            const AZStd::string log = Utils::JoinSdfErrorsToString(parsedUrdfOutcome.GetSdfErrors());
+
+            AZ_Warning("ROS2RobotImporterEditorSystemComponent", false, "URDF parsing failed with errors:\nRefer to %s",
+                log.c_str());
             return false;
         }
 
-        auto collidersNames = Utils::GetMeshesFilenames(parsedUrdf->getRoot(), false, true);
-        auto visualNames = Utils::GetMeshesFilenames(parsedUrdf->getRoot(), true, false);
-        auto meshNames = Utils::GetMeshesFilenames(parsedUrdf->getRoot(), true, true);
+        // Urdf Root has been parsed successfully retrieve it from the Outcome
+        const sdf::Root& parsedUrdfRoot = parsedUrdfOutcome.GetRoot();
+
+        auto collidersNames = Utils::GetMeshesFilenames(&parsedUrdfRoot, false, true);
+        auto visualNames = Utils::GetMeshesFilenames(&parsedUrdfRoot, true, false);
+        auto meshNames = Utils::GetMeshesFilenames(&parsedUrdfRoot, true, true);
         AZStd::shared_ptr<Utils::UrdfAssetMap> urdfAssetsMapping = AZStd::make_shared<Utils::UrdfAssetMap>();
         if (importAssetWithUrdf)
         {
@@ -126,7 +145,7 @@ namespace ROS2
 
             if (loopTime - loopStartTime > assetLoopTimeout)
             {
-                AZ_Warning("ROS2EditorSystemComponent", false, "Loop waiting for assets timed out");
+                AZ_Warning("ROS2RobotImporterEditorSystemComponent", false, "Loop waiting for assets timed out");
                 break;
             }
 
@@ -136,19 +155,19 @@ namespace ROS2
                 auto sourceAssetFullPath = asset.m_availableAssetInfo.m_sourceAssetGlobalPath;
                 if (sourceAssetFullPath.empty())
                 {
-                    AZ_Warning("ROS2EditorSystemComponent", false, "Asset %s missing `sourceAssetFullPath`", name.c_str());
+                    AZ_Warning("ROS2RobotImporterEditorSystemComponent", false, "Asset %s missing `sourceAssetFullPath`", name.c_str());
                     continue;
                 }
                 using namespace AzToolsFramework;
                 using namespace AzToolsFramework::AssetSystem;
                 AZ::Outcome<AssetSystem::JobInfoContainer> result = AZ::Failure();
                 AssetSystemJobRequestBus::BroadcastResult(
-                    result, &AssetSystemJobRequestBus::Events::GetAssetJobsInfo, sourceAssetFullPath, true);
+                    result, &AssetSystemJobRequestBus::Events::GetAssetJobsInfo, sourceAssetFullPath.Native(), true);
 
                 if (!result.IsSuccess())
                 {
                     assetProcessorFailed = true;
-                    AZ_Error("ROS2EditorSystemComponent", false, "Asset System failed to reply with jobs infos");
+                    AZ_Error("ROS2RobotImporterEditorSystemComponent", false, "Asset System failed to reply with jobs infos");
                     break;
                 }
 
@@ -157,34 +176,55 @@ namespace ROS2
                 {
                     if (job.m_status == JobStatus::Queued || job.m_status == JobStatus::InProgress)
                     {
-                        AZ_Printf("ROS2EditorSystemComponent", "asset %s is being processed", sourceAssetFullPath.c_str());
+                        AZ_Printf("ROS2RobotImporterEditorSystemComponent", "asset %s is being processed", sourceAssetFullPath.c_str());
                         allAssetProcessed = false;
                     }
                     else
                     {
-                        AZ_Printf("ROS2EditorSystemComponent", "asset %s is done", sourceAssetFullPath.c_str());
+                        AZ_Printf("ROS2RobotImporterEditorSystemComponent", "asset %s is done", sourceAssetFullPath.c_str());
                     }
                 }
             }
 
             if (allAssetProcessed && !assetProcessorFailed)
             {
-                AZ_Printf("ROS2EditorSystemComponent", "All assets processed");
+                AZ_Printf("ROS2RobotImporterEditorSystemComponent", "All assets processed");
             }
         };
 
-        AZStd::string prefabName = AZStd::string(parsedUrdf->getName().c_str(), parsedUrdf->getName().size()) + ".prefab";
+        // Use the name of the first model tag in the SDF for the prefab
+        // Otherwise use the name of the first world tag in the SDF
+        AZStd::string prefabName;
+        if (const sdf::Model* model = parsedUrdfRoot.Model();
+            model != nullptr)
+        {
+            prefabName = AZStd::string(model->Name().c_str(), model->Name().size()) + ".prefab";
+        }
+
+        if (uint64_t urdfWorldCount = parsedUrdfRoot.WorldCount();
+            prefabName.empty() && urdfWorldCount > 0)
+        {
+            const sdf::World* parsedUrdfWorld = parsedUrdfRoot.WorldByIndex(0);
+            prefabName = AZStd::string(parsedUrdfWorld->Name().c_str(), parsedUrdfWorld->Name().size()) + ".prefab";
+        }
+
+        if (prefabName.empty())
+        {
+            AZ_Error("ROS2RobotImporterEditorSystemComponent", false, "URDF file converted to SDF %.*s contains no worlds."
+                " O3DE Prefab cannot be created", AZ_STRING_ARG(filePath));
+            return false;
+        }
+
 
         const AZ::IO::Path prefabPathRelative(AZ::IO::Path("Assets") / "Importer" / prefabName);
         const AZ::IO::Path prefabPath(AZ::IO::Path(AZ::Utils::GetProjectPath()) / prefabPathRelative);
-        AZStd::unique_ptr<URDFPrefabMaker> prefabMaker;
-        prefabMaker = AZStd::make_unique<URDFPrefabMaker>(filePath, parsedUrdf, prefabPath.String(), urdfAssetsMapping, useArticulation);
+        AZStd::unique_ptr<URDFPrefabMaker> prefabMaker = AZStd::make_unique<URDFPrefabMaker>(filePath, &parsedUrdfRoot, prefabPath.String(), urdfAssetsMapping, useArticulation);
 
         auto prefabOutcome = prefabMaker->CreatePrefabFromURDF();
 
         if (!prefabOutcome.IsSuccess())
         {
-            AZ_Error("ROS2EditorSystemComponent", false, "Unable to create Prefab from URDF file %s", filePath.data());
+            AZ_Error("ROS2RobotImporterEditorSystemComponent", false, "Unable to create Prefab from URDF file %s", filePath.data());
             return false;
         }
 

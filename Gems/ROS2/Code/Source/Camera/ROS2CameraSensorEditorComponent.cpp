@@ -37,8 +37,6 @@ namespace ROS2
 
     void ROS2CameraSensorEditorComponent::Reflect(AZ::ReflectContext* context)
     {
-        CameraSensorConfiguration::Reflect(context);
-
         if (auto* serialize = azrtti_cast<AZ::SerializeContext*>(context))
         {
             serialize->Class<ROS2CameraSensorEditorComponent, AzToolsFramework::Components::EditorComponentBase>()
@@ -133,57 +131,53 @@ namespace ROS2
         const AZ::u32 stateBefore = debugDisplay.GetState();
         AZ::Transform transform = GetEntity()->GetTransform()->GetWorldTM();
 
+        const float distance = m_cameraSensorConfiguration.m_farClipDistance * 0.1f;
+        const float tangent = static_cast<float>(tan(0.5f * AZ::DegToRad(m_cameraSensorConfiguration.m_verticalFieldOfViewDeg)));
+
+        float height = distance * tangent;
+        float width = height * m_cameraSensorConfiguration.m_width / m_cameraSensorConfiguration.m_height;
+
+        AZ::Vector3 farPoints[4];
+        farPoints[0] = AZ::Vector3(width, height, distance);
+        farPoints[1] = AZ::Vector3(-width, height, distance);
+        farPoints[2] = AZ::Vector3(-width, -height, distance);
+        farPoints[3] = AZ::Vector3(width, -height, distance);
+
+        AZ::Vector3 nearPoints[4];
+        nearPoints[0] = farPoints[0].GetNormalizedSafe() * m_cameraSensorConfiguration.m_nearClipDistance;
+        nearPoints[1] = farPoints[1].GetNormalizedSafe() * m_cameraSensorConfiguration.m_nearClipDistance;
+        nearPoints[2] = farPoints[2].GetNormalizedSafe() * m_cameraSensorConfiguration.m_nearClipDistance;
+        nearPoints[3] = farPoints[3].GetNormalizedSafe() * m_cameraSensorConfiguration.m_nearClipDistance;
+
         // dimension of drawing
-        const float arrowRise = 1.1f;
-        const float arrowSize = 0.5f;
-        const float frustumScale = 0.1f;
+        const float arrowRise = 0.11f;
+        const float arrowSize = 0.05f;
 
-        transform.SetUniformScale(frustumScale);
-        debugDisplay.DepthTestOff();
-        const float vertical = 0.5f * AZStd::tan((AZ::DegToRad(m_cameraSensorConfiguration.m_verticalFieldOfViewDeg * 0.5f)));
-        const float horizontal = m_cameraSensorConfiguration.m_height * vertical / m_cameraSensorConfiguration.m_width;
+        const AZ::Vector3 pt0(0, 0, 0);
+        const auto ptz = AZ::Vector3::CreateAxisZ(0.2f);
+        const auto pty = AZ::Vector3::CreateAxisY(0.2f);
+        const auto ptx = AZ::Vector3::CreateAxisX(0.2f);
 
-        // frustum drawing
-        const AZ::Vector3 p1(-vertical, -horizontal, 1.f);
-        const AZ::Vector3 p2(vertical, -horizontal, 1.f);
-        const AZ::Vector3 p3(vertical, horizontal, 1.f);
-        const AZ::Vector3 p4(-vertical, horizontal, 1.f);
-        const AZ::Vector3 p0(0, 0, 0);
-        const AZ::Vector3 py(0.1, 0, 0);
-
-        const auto pt1 = transform.TransformPoint(p1);
-        const auto pt2 = transform.TransformPoint(p2);
-        const auto pt3 = transform.TransformPoint(p3);
-        const auto pt4 = transform.TransformPoint(p4);
-        const auto pt0 = transform.TransformPoint(p0);
-        const auto ptz = transform.TransformPoint(AZ::Vector3::CreateAxisZ(0.2f));
-        const auto pty = transform.TransformPoint(AZ::Vector3::CreateAxisY(0.2f));
-        const auto ptx = transform.TransformPoint(AZ::Vector3::CreateAxisX(0.2f));
+        debugDisplay.PushMatrix(transform);
 
         debugDisplay.SetColor(AZ::Color(0.f, 1.f, 1.f, 1.f));
-        debugDisplay.SetLineWidth(1);
-        debugDisplay.DrawLine(pt1, pt2);
-        debugDisplay.DrawLine(pt2, pt3);
-        debugDisplay.DrawLine(pt3, pt4);
-        debugDisplay.DrawLine(pt4, pt1);
-        debugDisplay.DrawLine(pt1, pt0);
-        debugDisplay.DrawLine(pt2, pt0);
-        debugDisplay.DrawLine(pt3, pt0);
-        debugDisplay.DrawLine(pt4, pt0);
+        debugDisplay.DrawLine(nearPoints[0], farPoints[0]);
+        debugDisplay.DrawLine(nearPoints[1], farPoints[1]);
+        debugDisplay.DrawLine(nearPoints[2], farPoints[2]);
+        debugDisplay.DrawLine(nearPoints[3], farPoints[3]);
+        debugDisplay.DrawPolyLine(nearPoints, AZ_ARRAY_SIZE(nearPoints));
+        debugDisplay.DrawPolyLine(farPoints, AZ_ARRAY_SIZE(farPoints));
 
         // up-arrow drawing
-        const AZ::Vector3 pa1(-arrowSize * vertical, -arrowRise * horizontal, 1.f);
-        const AZ::Vector3 pa2(arrowSize * vertical, -arrowRise * horizontal, 1.f);
-        const AZ::Vector3 pa3(0, (-arrowRise - arrowSize) * horizontal, 1.f);
-        const auto pat1 = transform.TransformPoint(pa1);
-        const auto pat2 = transform.TransformPoint(pa2);
-        const auto pat3 = transform.TransformPoint(pa3);
+        const AZ::Vector3 pa1(-arrowSize * height, -arrowRise * width, 1.f);
+        const AZ::Vector3 pa2(arrowSize * height, -arrowRise * width, 1.f);
+        const AZ::Vector3 pa3(0, (-arrowRise - arrowSize) * width, 1.f);
 
         debugDisplay.SetColor(AZ::Color(0.f, 0.6f, 1.f, 1.f));
         debugDisplay.SetLineWidth(1);
-        debugDisplay.DrawLine(pat1, pat2);
-        debugDisplay.DrawLine(pat2, pat3);
-        debugDisplay.DrawLine(pat3, pat1);
+        debugDisplay.DrawLine(pa1, pa2);
+        debugDisplay.DrawLine(pa2, pa3);
+        debugDisplay.DrawLine(pa3, pa1);
 
         // coordinate system drawing
         debugDisplay.SetColor(AZ::Color(1.f, 0.f, 0.f, 1.f));
@@ -197,6 +191,8 @@ namespace ROS2
         debugDisplay.SetColor(AZ::Color(0.f, 0.f, 1.f, 1.f));
         debugDisplay.SetLineWidth(2);
         debugDisplay.DrawLine(ptz, pt0);
+
+        debugDisplay.PopMatrix();
 
         debugDisplay.SetState(stateBefore);
     }

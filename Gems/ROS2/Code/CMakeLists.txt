@@ -140,9 +140,6 @@ if(PAL_TRAIT_BUILD_HOST_TOOLS)
                 3rdParty::sdformat
     )
 
-    find_package(urdfdom)
-    target_link_libraries(${gem_name}.Editor.Static PUBLIC urdfdom::urdfdom_model)
-
     ly_add_target(
         NAME ${gem_name}.Editor GEM_MODULE
         NAMESPACE Gem

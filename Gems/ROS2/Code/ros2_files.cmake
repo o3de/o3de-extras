@@ -85,6 +85,8 @@ set(FILES
         Source/Manipulation/JointsTrajectoryComponent.h
         Source/Manipulation/FollowJointTrajectoryActionServer.cpp
         Source/Manipulation/FollowJointTrajectoryActionServer.h
+        Source/Manipulation/ManipulationUtils.h
+        Source/Manipulation/ManipulationUtils.cpp
         Source/Manipulation/MotorizedJoints/JointMotorControllerComponent.cpp
         Source/Manipulation/MotorizedJoints/JointMotorControllerConfiguration.cpp
         Source/Manipulation/MotorizedJoints/ManualMotorControllerComponent.cpp
@@ -116,6 +118,10 @@ set(FILES
         Source/ROS2SystemComponent.h
         Source/Sensor/ROS2SensorComponent.cpp
         Source/Sensor/SensorConfiguration.cpp
+        Source/SimulationUtils/FollowingCameraConfiguration.cpp
+        Source/SimulationUtils/FollowingCameraConfiguration.h
+        Source/SimulationUtils/FollowingCameraComponent.cpp
+        Source/SimulationUtils/FollowingCameraComponent.h
         Source/Spawner/ROS2SpawnerComponent.cpp
         Source/Spawner/ROS2SpawnerComponent.h
         Source/Spawner/ROS2SpawnPointComponent.cpp
@@ -130,7 +136,6 @@ set(FILES
         Source/Utilities/JointUtilities.h
         Source/Utilities/Controllers/PidConfiguration.cpp
         Source/Utilities/PhysicsCallbackHandler.cpp
-        Source/Utilities/PhysicsCallbackHandler.h
         Source/Utilities/ROS2Conversions.cpp
         Source/Utilities/ROS2Names.cpp
         Source/VehicleDynamics/AxleConfiguration.cpp

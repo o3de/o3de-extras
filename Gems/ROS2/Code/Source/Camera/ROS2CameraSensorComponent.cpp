@@ -29,6 +29,8 @@ namespace ROS2
 
     void ROS2CameraSensorComponent::Reflect(AZ::ReflectContext* context)
     {
+        CameraSensorConfiguration::Reflect(context);
+
         auto* serialize = azrtti_cast<AZ::SerializeContext*>(context);
         if (serialize)
         {
