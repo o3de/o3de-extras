@@ -26,17 +26,14 @@ namespace ROS2
         m_fileDialog->setNameFilter("URDF, XACRO (*.urdf *.xacro)");
         m_button = new QPushButton("...", this);
         m_textEdit = new QLineEdit("", this);
-        m_copyFiles = new QCheckBox(tr("Import meshes during URDF load"), this);
-        m_copyFiles->setCheckState(Qt::CheckState::Checked);
         setTitle(tr("Load URDF file"));
         QVBoxLayout* layout = new QVBoxLayout;
         layout->addStretch();
         layout->addWidget(new QLabel(tr("URDF file path to load : "), this));
-        QHBoxLayout* layout_in = new QHBoxLayout;
-        layout_in->addWidget(m_button);
-        layout_in->addWidget(m_textEdit);
-        layout->addLayout(layout_in);
-        layout->addWidget(m_copyFiles);
+        QHBoxLayout* layoutHorizontal = new QHBoxLayout;
+        layoutHorizontal->addWidget(m_button);
+        layoutHorizontal->addWidget(m_textEdit);
+        layout->addLayout(layoutHorizontal);
 
         // Seed the SDF Asset Builder Settings with the values from the Settings Registry
         m_sdfAssetBuilderSettings->LoadSettings();
@@ -87,9 +84,9 @@ namespace ROS2
         return m_fileExists;
     }
 
-    bool FileSelectionPage::getIfCopyAssetsDuringUrdfImport() const
+    QString FileSelectionPage::getFileName() const
     {
-        return m_copyFiles->isChecked();
+        return isComplete() ? m_textEdit->text(): QString{};
     }
 
     const SdfAssetBuilderSettings& FileSelectionPage::GetSdfAssetBuilderSettings() const

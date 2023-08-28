@@ -36,9 +36,9 @@ namespace ROS2
         public:
            inline static constexpr auto O3DESdfErrorParseNotStarted = static_cast<sdf::ErrorCode>(static_cast<int>(O3DESdfErrorCodeStart) + 1);
 
-            //! Ref qualifer overloads for retrieving sdf::Root
+            //! Ref qualifier overloads for retrieving sdf::Root
             //! it supports a non-const lvalue overload to allow
-            //! modification of the sdf::Root objec directly
+            //! modification of the sdf::Root object directly
             sdf::Root& GetRoot() &;
             const sdf::Root& GetRoot() const&;
             sdf::Root&& GetRoot() &&;
@@ -63,7 +63,7 @@ namespace ROS2
 
             sdf::Root m_root;
             AZStd::string m_parseMessages;
-            sdf::Errors m_sdfErrors{ sdf::Error{ O3DESdfErrorParseNotStarted, std::string{"No Parsing has occured yet"}} };
+            sdf::Errors m_sdfErrors{ sdf::Error{ O3DESdfErrorParseNotStarted, std::string{"No Parsing has occurred yet"}} };
         };
         using RootObjectOutcome = ParseResult;
 

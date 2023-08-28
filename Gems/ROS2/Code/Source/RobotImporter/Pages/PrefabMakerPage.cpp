@@ -68,7 +68,6 @@ namespace ROS2
         connect(m_createButton, &QPushButton::pressed, this, &PrefabMakerPage::onCreateButtonPressed);
     }
 
-
     void PrefabMakerPage::setProposedPrefabName(const AZStd::string prefabName)
     {
         m_prefabName->setText(QString::fromUtf8(prefabName.data(), int(prefabName.size())));
