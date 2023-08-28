@@ -25,6 +25,26 @@ namespace ROS2
     class EventSourceAdapter
     {
     public:
+        static void Reflect(AZ::ReflectContext* context)
+        {
+            if (auto serializeContext = azrtti_cast<AZ::SerializeContext*>(context))
+            {
+                serializeContext->Class<EventSourceAdapter<EventSourceT>>()->Version(1)
+                    ->Field("Adapted Frequency", &EventSourceAdapter<EventSourceT>::m_adaptedFrequency);
+
+                if (auto editContext = serializeContext->GetEditContext())
+                {
+                    editContext->Class<EventSourceAdapter<EventSourceT>>("Event Source Adapter", "Adapts sensor event source to specific working frequency.")
+                        ->ClassElement(AZ::Edit::ClassElements::EditorData, "")
+                        ->DataElement(
+                            AZ::Edit::UIHandlers::Default,
+                            &EventSourceAdapter<EventSourceT>::m_adaptedFrequency,
+                            "Adapted Frequency",
+                            "Adapter event signalling frequency");
+                }
+            }
+        }
+
         //! Activates event source adapter - assigns internal adapted event handler and activates managed event source. In most cases, user
         //! should call ROS2::EventSourceAdapter::Configure first - this adapter itself would work without this requirement, however
         //! different event source implementations can behave differently.
@@ -105,4 +125,6 @@ namespace ROS2
         float m_adaptedFrequency{ 10.0f }; ///< Adapted frequency value.
         int m_tickCounter{ 0 }; ///< Internal counter for controlling adapter frequency.
     };
+
+    AZ_TYPE_INFO_TEMPLATE(EventSourceAdapter, "{DC8BB5F7-8E0E-42A1-BD82-5FCD9D31B9DD}", AZ_TYPE_INFO_CLASS)
 } // namespace ROS2
