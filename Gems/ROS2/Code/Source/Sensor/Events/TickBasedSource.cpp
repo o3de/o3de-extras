@@ -6,7 +6,6 @@
 *
 */
 
-#include <AzCore/Serialization/EditContext.h>
 #include <ROS2/Sensor/Events/TickBasedSource.h>
 #include <ROS2/Sensor/SensorConfiguration.h>
 

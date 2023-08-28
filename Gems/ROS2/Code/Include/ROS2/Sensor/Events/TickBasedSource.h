@@ -14,8 +14,10 @@
 
 namespace ROS2
 {
-    //! Class implementing system TickBus (draw calls) as sensor event source. Sensor source event (@see ROS2::SensorEventSource) is
-    //! signalled based on system ticks.
+    //! Class implementing system TickBus (draw calls) as sensor event source. Sensor source event (ROS2::SensorEventSource) is
+    //! signalled based on system ticks. This event source can de enabled / disable using m_publishingEnabled member of SensorConfiguration
+    //! (ROS2::TickBasedSource::Configure).
+    //! @see ROS2::SensorEventSource
     class TickBasedSource final
         : public SensorEventSource<AZ::Event, AZ::EventHandler, float>
         , protected AZ::TickBus::Handler
