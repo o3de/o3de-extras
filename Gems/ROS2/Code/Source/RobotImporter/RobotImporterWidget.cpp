@@ -314,7 +314,7 @@ namespace ROS2
             {
                 OpenUrdf();
             }
-            m_importAssetWithUrdf = m_fileSelectPage->getIfCopyAssetsDuringUrdfImport();
+            m_importAssetWithUrdf = m_fileSelectPage->GetSdfAssetBuilderSettings().m_importReferencedMeshFiles;
         }
         if (currentPage() == m_xacroParamsPage)
         {

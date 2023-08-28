@@ -18,6 +18,8 @@
 #include <QWizardPage>
 #endif
 
+#include <AzCore/std/smart_ptr/unique_ptr.h>
+
 namespace AzToolsFramework
 {
     class ReflectedPropertyEditor;
@@ -27,7 +29,6 @@ namespace ROS2
 {
     struct SdfAssetBuilderSettings;
 }
-
 
 namespace ROS2
 {
@@ -42,15 +43,7 @@ namespace ROS2
 
         bool isComplete() const override;
 
-        QString getFileName() const
-        {
-            if (m_fileExists)
-            {
-                return m_textEdit->text();
-            }
-            return "";
-        }
-        bool getIfCopyAssetsDuringUrdfImport() const;
+        QString getFileName() const;
 
         const SdfAssetBuilderSettings& GetSdfAssetBuilderSettings() const;
 
