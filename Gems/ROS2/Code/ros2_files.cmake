@@ -116,6 +116,7 @@ set(FILES
         Source/ROS2ModuleInterface.h
         Source/ROS2SystemComponent.cpp
         Source/ROS2SystemComponent.h
+        Source/Sensor/Events/TickBasedSource.cpp
         Source/Sensor/ROS2SensorComponent.cpp
         Source/Sensor/SensorConfiguration.cpp
         Source/SimulationUtils/FollowingCameraConfiguration.cpp
