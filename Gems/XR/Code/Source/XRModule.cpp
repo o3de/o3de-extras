@@ -9,6 +9,7 @@
 #include <AzCore/Memory/SystemAllocator.h>
 #include <AzCore/Module/Module.h>
 #include <XR/XRSystemComponent.h>
+#include <XR/XRPassRegisterSystemComponent.h>
 
 namespace XR
 {
@@ -25,12 +26,13 @@ namespace XR
                 m_descriptors.end(),
                 {
                     SystemComponent::CreateDescriptor(),
+                    PassRegisterSystemComponent::CreateDescriptor()
                 });
         }
 
         AZ::ComponentTypeList GetRequiredSystemComponents() const override
         {
-            return { azrtti_typeid<XR::SystemComponent>() };
+            return { azrtti_typeid<XR::SystemComponent>(), azrtti_typeid<XR::PassRegisterSystemComponent>() };
         }
     };
 }

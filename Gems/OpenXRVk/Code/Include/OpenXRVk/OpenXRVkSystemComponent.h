@@ -9,6 +9,7 @@
 #pragma once
 
 #include <XR/XRFactory.h>
+#include <OpenXRVk/OpenXRVkInstance.h>
 #include <AzCore/Component/Component.h>
 
 namespace OpenXRVk
@@ -61,6 +62,6 @@ namespace OpenXRVk
         ///////////////////////////////////////////////////////////////////
 
     private:
-        XR::Ptr<XR::Instance> m_instance;
+        XR::Ptr<OpenXRVk::Instance> m_instance;
     };
 }
