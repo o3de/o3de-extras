@@ -197,13 +197,13 @@ namespace ROS2
         auto parsedSdfRootOutcome = UrdfParser::ParseFromFile(fullSourcePath, parserConfig);
         if (!parsedSdfRootOutcome)
         {
-            const AZStd::string sdfParseErrors = Utils::JoinSdfErrorsToString(parsedSdfRootOutcome.error());
+            const AZStd::string sdfParseErrors = Utils::JoinSdfErrorsToString(parsedSdfRootOutcome.GetSdfErrors());
             AZ_Error(SdfAssetBuilderName, false, R"(Failed to parse source file "%s". Errors: "%s")",
                 fullSourcePath.c_str(), sdfParseErrors.c_str());
             return;
         }
 
-        const sdf::Root& sdfRoot = parsedSdfRootOutcome.value();
+        const sdf::Root& sdfRoot = parsedSdfRootOutcome.GetRoot();
 
         AZ_Info(SdfAssetBuilderName, "Finding asset IDs for all mesh and collider assets.");
         auto sourceAssetMap = AZStd::make_shared<Utils::UrdfAssetMap>(FindAssets(sdfRoot, fullSourcePath.String()));
@@ -260,14 +260,14 @@ namespace ROS2
         auto parsedSdfRootOutcome = UrdfParser::ParseFromFile(AZ::IO::PathView(request.m_fullPath), parserConfig);
         if (!parsedSdfRootOutcome)
         {
-            const AZStd::string sdfParseErrors = Utils::JoinSdfErrorsToString(parsedSdfRootOutcome.error());
+            const AZStd::string sdfParseErrors = Utils::JoinSdfErrorsToString(parsedSdfRootOutcome.GetSdfErrors());
             AZ_Error(SdfAssetBuilderName, false, R"(Failed to parse source file "%s". Errors: "%s")",
                 request.m_fullPath.c_str(), sdfParseErrors.c_str());
             response.m_resultCode = AssetBuilderSDK::ProcessJobResult_Failed;
             return;
         }
 
-        const sdf::Root& sdfRoot = parsedSdfRootOutcome.value();
+        const sdf::Root& sdfRoot = parsedSdfRootOutcome.GetRoot();
 
         // Resolve all the URI references into source asset GUIDs.
         AZ_Info(SdfAssetBuilderName, "Finding asset IDs for all mesh and collider assets.");

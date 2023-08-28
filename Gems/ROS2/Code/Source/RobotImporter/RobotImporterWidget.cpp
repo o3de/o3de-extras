@@ -83,15 +83,22 @@ namespace ROS2
 
     void RobotImporterWidget::OpenUrdf()
     {
-        UrdfParser::RootObjectOutcome parsedUrdfOutcome(AZStd::unexpect);
+        UrdfParser::RootObjectOutcome parsedUrdfOutcome;
         QString report;
         if (!m_urdfPath.empty())
         {
+            // Read the SDF Settings from PrefabMakerPage
+            const SdfAssetBuilderSettings& sdfBuilderSettings = m_fileSelectPage->GetSdfAssetBuilderSettings();
+
+            // Set the parser config settings for URDF content
+            sdf::ParserConfig parserConfig;
+            parserConfig.URDFSetPreserveFixedJoint(sdfBuilderSettings.m_urdfPreserveFixedJoints);
+
             if (Utils::IsFileXacro(m_urdfPath))
             {
-                Utils::xacro::ExecutionOutcome outcome = Utils::xacro::ParseXacro(m_urdfPath.String(), m_params);
+                Utils::xacro::ExecutionOutcome outcome = Utils::xacro::ParseXacro(m_urdfPath.String(), m_params, parserConfig);
                 // Store off the URDF parsing outcome which will be output later in this function
-                parsedUrdfOutcome = outcome.m_urdfHandle;
+                parsedUrdfOutcome = AZStd::move(outcome.m_urdfHandle);
                 if (outcome)
                 {
                     report += "# " + tr("XACRO execution succeeded") + "\n";
@@ -140,12 +147,6 @@ namespace ROS2
             else if (Utils::IsFileUrdf(m_urdfPath))
             {
                 // standard URDF
-                // Read the SDF Settings from the Settings Registry into a local struct
-                SdfAssetBuilderSettings sdfBuilderSettings;
-                sdfBuilderSettings.LoadSettings();
-                // Set the parser config settings for URDF content
-                sdf::ParserConfig parserConfig;
-                parserConfig.URDFSetPreserveFixedJoint(sdfBuilderSettings.m_urdfPreserveFixedJoints);
                 parsedUrdfOutcome = UrdfParser::ParseFromFile(m_urdfPath, parserConfig);
             }
             else
@@ -153,10 +154,10 @@ namespace ROS2
                 AZ_Assert(false, "Unknown file extension : %s \n", m_urdfPath.c_str());
             }
             AZStd::string log;
-            bool urdfParsedSuccess = parsedUrdfOutcome.has_value();
+            bool urdfParsedSuccess{ parsedUrdfOutcome };
             if (urdfParsedSuccess)
             {
-                m_parsedUrdf = AZStd::move(parsedUrdfOutcome.value());
+                m_parsedUrdf = AZStd::move(parsedUrdfOutcome.GetRoot());
                 report += "# " + tr("The URDF was parsed and opened successfully") + "\n";
                 m_prefabMaker.reset();
                 // Report the status of skipping this page
@@ -166,7 +167,7 @@ namespace ROS2
             }
             else
             {
-                log = Utils::JoinSdfErrorsToString(parsedUrdfOutcome.error());
+                log = Utils::JoinSdfErrorsToString(parsedUrdfOutcome.GetSdfErrors());
                 report += "# " + tr("The URDF was not opened") + "\n";
                 report += tr("URDF parser returned following errors:") + "\n\n";
             }
@@ -313,7 +314,7 @@ namespace ROS2
             {
                 OpenUrdf();
             }
-            m_importAssetWithUrdf = m_fileSelectPage->getIfCopyAssetsDuringUrdfImport();
+            m_importAssetWithUrdf = m_fileSelectPage->GetSdfAssetBuilderSettings().m_importReferencedMeshFiles;
         }
         if (currentPage() == m_xacroParamsPage)
         {
@@ -395,7 +396,9 @@ namespace ROS2
                 return;
             }
         }
-        const bool useArticulation = m_prefabMakerPage->IsUseArticulations();
+
+        const auto& sdfAssetBuilderSettings = m_fileSelectPage->GetSdfAssetBuilderSettings();
+        const bool useArticulation = sdfAssetBuilderSettings.m_useArticulations;
         m_prefabMaker = AZStd::make_unique<URDFPrefabMaker>(
             m_urdfPath.String(),
             &m_parsedUrdf,

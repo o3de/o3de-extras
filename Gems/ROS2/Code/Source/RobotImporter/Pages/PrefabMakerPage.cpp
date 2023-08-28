@@ -13,6 +13,7 @@
 #include <AzCore/Math/Transform.h>
 #include <AzCore/std/smart_ptr/make_shared.h>
 #include <AzCore/std/string/string.h>
+
 #include <ROS2/Spawner/SpawnerBus.h>
 #include <ROS2/Spawner/SpawnerInfo.h>
 #include <RobotImporter/RobotImporterWidget.h>
@@ -22,11 +23,10 @@
 
 namespace ROS2
 {
-
     PrefabMakerPage::PrefabMakerPage(RobotImporterWidget* parent)
         : QWizardPage(parent)
-        , m_parentImporterWidget(parent)
         , m_success(false)
+        , m_parentImporterWidget(parent)
     {
         AZ::EBusAggregateResults<AZStd::unordered_map<AZStd::string, SpawnPointInfo>> allActiveSpawnPoints;
         SpawnerRequestsBus::BroadcastResult(allActiveSpawnPoints, &SpawnerRequestsBus::Events::GetAllSpawnPointInfos);
@@ -45,14 +45,13 @@ namespace ROS2
         m_prefabName = new QLineEdit(this);
         m_createButton = new QPushButton(tr("Create Prefab"), this);
         m_log = new QTextEdit(this);
-        m_useArticulation = new QCheckBox(tr("Use articulation for joints and rigid bodies"), this);
+
         setTitle(tr("Prefab creation"));
         QVBoxLayout* layout = new QVBoxLayout;
         QHBoxLayout* layoutInner = new QHBoxLayout;
         layoutInner->addWidget(m_prefabName);
         layoutInner->addWidget(m_createButton);
         layout->addLayout(layoutInner);
-        layout->addWidget(m_useArticulation);
         QLabel* spawnPointListLabel;
         if (allActiveSpawnPoints.values.size() == 0)
         {
@@ -92,10 +91,6 @@ namespace ROS2
     {
         return m_success;
     }
-    bool PrefabMakerPage::IsUseArticulations() const
-    {
-        return m_useArticulation->isChecked();
-    }
     AZStd::optional<AZ::Transform> PrefabMakerPage::getSelectedSpawnPoint() const
     {
         if (!m_spawnPointsInfos.empty())
@@ -111,5 +106,4 @@ namespace ROS2
         }
         return AZStd::nullopt;
     }
-
 } // namespace ROS2

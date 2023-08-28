@@ -34,5 +34,7 @@ namespace ROS2
         bool m_useArticulations = true;
         // By default, fixed joint in URDF files that are processed by libsdformat are preserved
         bool m_urdfPreserveFixedJoints = true;
+        // When true, .dae/.stl mesh files are imported into the project folder to allow the AP to process them
+        bool m_importReferencedMeshFiles = true;
     };
 } // namespace ROS2

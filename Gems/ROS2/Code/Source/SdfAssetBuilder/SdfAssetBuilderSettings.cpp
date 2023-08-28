@@ -50,6 +50,7 @@ namespace ROS2
         constexpr auto SdfAssetBuilderSupportedFileExtensionsRegistryKey = SDFSettingsRootKey("SupportedFileTypeExtensions");
         constexpr auto SdfAssetBuilderUseArticulationsRegistryKey = SDFSettingsRootKey("UseArticulations");
         constexpr auto SdfAssetBuilderURDFPreserveFixedJointRegistryKey = SDFSettingsRootKey("URDFPreserveFixedJoint");
+        constexpr auto SdfAssetBuilderImportMeshesJointRegistryKey = SDFSettingsRootKey("ImportMeshes");
     }
 
     void SdfAssetBuilderSettings::Reflect(AZ::ReflectContext* context)
@@ -60,6 +61,7 @@ namespace ROS2
                 ->Version(0)
                 ->Field("UseArticulations", &SdfAssetBuilderSettings::m_useArticulations)
                 ->Field("URDFPreserveFixedJoint", &SdfAssetBuilderSettings::m_urdfPreserveFixedJoints)
+                ->Field("ImportReferencedMeshFiles", &SdfAssetBuilderSettings::m_importReferencedMeshFiles)
 
                 // m_builderPatterns aren't serialized because we only use the serialization
                 // to detect when global settings changes cause us to rebuild our assets.
@@ -67,6 +69,29 @@ namespace ROS2
                 // remove the affected product assets, so we don't need to trigger any
                 // additional rebuilds beyond that.
              ;
+
+            if (auto editContext = serializeContext->GetEditContext(); editContext != nullptr)
+            {
+                editContext
+                    ->Class<SdfAssetBuilderSettings>(
+                        "SDF Asset Import Settings", "Exposes settings which alters importing of URDF/XACRO/SDF files")
+                    ->DataElement(
+                        AZ::Edit::UIHandlers::Default,
+                        &SdfAssetBuilderSettings::m_useArticulations,
+                        "Use Articulations",
+                        "Determines whether PhysX articulation components should be used for joints and rigid bodies")
+                    ->DataElement(
+                        AZ::Edit::UIHandlers::Default,
+                        &SdfAssetBuilderSettings::m_urdfPreserveFixedJoints,
+                        "Preserve URDF fixed joints",
+                        "When set, preserves any fixed joints found when importing a URDF file."
+                        " This prevents the joint reduction logic in libsdformat from merging links of those joints.")
+                    ->DataElement(
+                        AZ::Edit::UIHandlers::Default,
+                        &SdfAssetBuilderSettings::m_importReferencedMeshFiles,
+                        "Import meshes",
+                        "Allows importing of referenced mesh content files such as .dae or .stl files when importing the URDF/SDF.");
+            }
         }
     }
 
@@ -84,6 +109,9 @@ namespace ROS2
 
         // Query the option to preserve child links of fixed joints when parsing a URDF using libsdformat
         settingsRegistry->Get(m_urdfPreserveFixedJoints, SdfAssetBuilderURDFPreserveFixedJointRegistryKey);
+
+        // Query the import references meshes option from the Settings Registry to determine if mesh source assets are copied
+        settingsRegistry->Get(m_importReferencedMeshFiles, SdfAssetBuilderImportMeshesJointRegistryKey);
 
         // Visit each supported file type extension and create an asset builder wildcard pattern for it.
         auto VisitFileTypeExtensions = [&settingsRegistry, this]
