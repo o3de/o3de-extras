@@ -6,11 +6,11 @@ This template focuses on robotic arm manipulation with ROS 2 and [MoveIt 2](http
 
 ## Prerequisites 
 
-Make sure that your system follow [Requirements](https://development--o3deorg.netlify.app/docs/welcome-guide/requirements/).
+Make sure that your system meets [Requirements](https://development--o3deorg.netlify.app/docs/welcome-guide/requirements/).
 
-Install necessary ROS2 packages required by this template:
+Install ROS2 dependencies for this template:
 ```bash
-sudo apt-get install ros-humble-moveit ros-humble-moveit-resources ros-humble-depth-image-proc
+sudo apt install ros-humble-moveit ros-humble-moveit-resources ros-humble-depth-image-proc
 ```
 ## How to set up a new project with the template
 
