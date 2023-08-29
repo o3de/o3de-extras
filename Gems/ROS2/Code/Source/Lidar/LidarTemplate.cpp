@@ -49,7 +49,7 @@ namespace ROS2
 
     bool LidarTemplate::IsLayersVisible() const
     {
-        return m_model != LidarTemplate::LidarModel::Custom2DLidar;
+        return !m_is2D;
     }
 
     void LidarTemplate::Reflect(AZ::ReflectContext* context)
@@ -89,13 +89,13 @@ namespace ROS2
                     ->Attribute(AZ::Edit::Attributes::Max, 180.0f)
                     ->DataElement(
                         AZ::Edit::UIHandlers::Default, &LidarTemplate::m_minVAngle, "Min vertical angle [Deg]", "Downwards reach of fov")
-                    ->Attribute(AZ::Edit::Attributes::Min, -180.0f)
-                    ->Attribute(AZ::Edit::Attributes::Max, 180.0f)
+                    ->Attribute(AZ::Edit::Attributes::Min, -90.0f)
+                    ->Attribute(AZ::Edit::Attributes::Max, 90.0f)
                     ->Attribute(AZ::Edit::Attributes::Visibility, &LidarTemplate::IsLayersVisible)
                     ->DataElement(
                         AZ::Edit::UIHandlers::Default, &LidarTemplate::m_maxVAngle, "Max vertical angle [Deg]", "Upwards reach of fov")
-                    ->Attribute(AZ::Edit::Attributes::Min, -180.0f)
-                    ->Attribute(AZ::Edit::Attributes::Max, 180.0f)
+                    ->Attribute(AZ::Edit::Attributes::Min, -90.0f)
+                    ->Attribute(AZ::Edit::Attributes::Max, 90.0f)
                     ->Attribute(AZ::Edit::Attributes::Visibility, &LidarTemplate::IsLayersVisible)
                     ->DataElement(AZ::Edit::UIHandlers::Default, &LidarTemplate::m_minRange, "Min range", "Minimum beam range [m]")
                     ->Attribute(AZ::Edit::Attributes::Min, 0.0f)

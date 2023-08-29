@@ -6,11 +6,10 @@
  *
  */
 
-#include "LidarBase.h"
+#include "LidarCore.h"
 #include <Atom/RPI.Public/AuxGeom/AuxGeomFeatureProcessorInterface.h>
 #include <Atom/RPI.Public/Scene.h>
 #include <AzFramework/Physics/PhysicsSystem.h>
-#include <Lidar/LidarBase.h>
 #include <Lidar/LidarRegistrarSystemComponent.h>
 #include <ROS2/Frame/ROS2FrameComponent.h>
 #include <ROS2/ROS2Bus.h>
@@ -19,25 +18,25 @@
 namespace ROS2
 {
 
-    void LidarBase::Reflect(AZ::ReflectContext* context)
+    void LidarCore::Reflect(AZ::ReflectContext* context)
     {
         LidarSensorConfiguration::Reflect(context);
 
         if (auto serialize = azrtti_cast<AZ::SerializeContext*>(context))
         {
-            serialize->Class<LidarBase>()->Version(1)->Field("lidarConfiguration", &LidarBase::m_lidarConfiguration);
+            serialize->Class<LidarCore>()->Version(1)->Field("lidarConfiguration", &LidarCore::m_lidarConfiguration);
 
             if (AZ::EditContext* ec = serialize->GetEditContext())
             {
-                ec->Class<LidarBase>("ROS2 Lidar Sensor", "Lidar sensor component")
+                ec->Class<LidarCore>("ROS2 Lidar Sensor", "Lidar sensor component")
                     ->DataElement(
-                        AZ::Edit::UIHandlers::ComboBox, &LidarBase::m_lidarConfiguration, "Lidar configuration", "Lidar configuration")
+                        AZ::Edit::UIHandlers::ComboBox, &LidarCore::m_lidarConfiguration, "Lidar configuration", "Lidar configuration")
                     ->Attribute(AZ::Edit::Attributes::Visibility, AZ::Edit::PropertyVisibility::ShowChildrenOnly);
             }
         }
     }
 
-    void LidarBase::ConnectToLidarRaycaster()
+    void LidarCore::ConnectToLidarRaycaster()
     {
         if (auto raycasterId = m_implementationToRaycasterMap.find(m_lidarConfiguration.m_lidarSystem);
             raycasterId != m_implementationToRaycasterMap.end())
@@ -54,7 +53,7 @@ namespace ROS2
         m_implementationToRaycasterMap.emplace(m_lidarConfiguration.m_lidarSystem, m_lidarRaycasterId);
     }
 
-    void LidarBase::ConfigureLidarRaycaster()
+    void LidarCore::ConfigureLidarRaycaster()
     {
         m_lidarConfiguration.FetchLidarImplementationFeatures();
         LidarRaycasterRequestBus::Event(m_lidarRaycasterId, &LidarRaycasterRequestBus::Events::ConfigureRayOrientations, m_lastRotations);
@@ -103,17 +102,17 @@ namespace ROS2
         }
     }
 
-    LidarBase::LidarBase(const AZStd::vector<LidarTemplate::LidarModel>& availableModels)
+    LidarCore::LidarCore(const AZStd::vector<LidarTemplate::LidarModel>& availableModels)
         : m_lidarConfiguration(availableModels)
     {
     }
 
-    LidarBase::LidarBase(const LidarSensorConfiguration& lidarConfiguration)
+    LidarCore::LidarCore(const LidarSensorConfiguration& lidarConfiguration)
         : m_lidarConfiguration(lidarConfiguration)
     {
     }
 
-    void LidarBase::VisualizeResults() const
+    void LidarCore::VisualizeResults() const
     {
         if (m_lastScanResults.m_points.empty())
         {
@@ -134,7 +133,7 @@ namespace ROS2
         }
     }
 
-    void LidarBase::Init(AZ::EntityId entityId)
+    void LidarCore::Init(AZ::EntityId entityId)
     {
         m_entityId = entityId;
 
@@ -148,7 +147,7 @@ namespace ROS2
         ConfigureLidarRaycaster();
     }
 
-    void LidarBase::Deinit()
+    void LidarCore::Deinit()
     {
         for (auto& [implementation, raycasterId] : m_implementationToRaycasterMap)
         {
@@ -158,12 +157,12 @@ namespace ROS2
         m_implementationToRaycasterMap.clear();
     }
 
-    LidarId LidarBase::GetLidarRaycasterId() const
+    LidarId LidarCore::GetLidarRaycasterId() const
     {
         return m_lidarRaycasterId;
     }
 
-    RaycastResult LidarBase::PerformRaycast()
+    RaycastResult LidarCore::PerformRaycast()
     {
         AZ::Entity* entity = nullptr;
         AZ::ComponentApplicationBus::BroadcastResult(entity, &AZ::ComponentApplicationRequests::FindEntity, m_entityId);

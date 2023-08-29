@@ -66,8 +66,8 @@ set(FILES
         Source/Lidar/LidarTemplate.h
         Source/Lidar/LidarTemplateUtils.cpp
         Source/Lidar/LidarTemplateUtils.h
-        Source/Lidar/LidarBase.cpp
-        Source/Lidar/LidarBase.h
+        Source/Lidar/LidarCore.cpp
+        Source/Lidar/LidarCore.h
         Source/Lidar/ROS2Lidar2DSensorComponent.cpp
         Source/Lidar/ROS2Lidar2DSensorComponent.h
         Source/Lidar/ROS2LidarSensorComponent.cpp

@@ -18,7 +18,7 @@
 
 namespace ROS2
 {
-    //! A structure capturing configuration of a lidar sensor (to be used with ROS2LidarSensorComponent).
+    //! A structure capturing configuration of a lidar sensor (to be used with LidarCore).
     class LidarSensorConfiguration
     {
     public:

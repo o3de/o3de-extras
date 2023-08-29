@@ -24,12 +24,10 @@ namespace ROS2
 
     void ROS2LidarSensorComponent::Reflect(AZ::ReflectContext* context)
     {
-        LidarBase::Reflect(context);
-
         if (AZ::SerializeContext* serialize = azrtti_cast<AZ::SerializeContext*>(context))
         {
             serialize->Class<ROS2LidarSensorComponent, ROS2SensorComponent>()->Version(2)->Field(
-                "lidarBase", &ROS2LidarSensorComponent::m_lidarBase);
+                "lidarCore", &ROS2LidarSensorComponent::m_lidarCore);
 
             if (AZ::EditContext* ec = serialize->GetEditContext())
             {
@@ -39,7 +37,7 @@ namespace ROS2
                     ->Attribute(AZ::Edit::Attributes::AppearsInAddComponentMenu, AZ_CRC_CE("Game"))
                     ->DataElement(
                         AZ::Edit::UIHandlers::ComboBox,
-                        &ROS2LidarSensorComponent::m_lidarBase,
+                        &ROS2LidarSensorComponent::m_lidarCore,
                         "Lidar configuration",
                         "Lidar configuration")
                     ->Attribute(AZ::Edit::Attributes::Visibility, AZ::Edit::PropertyVisibility::ShowChildrenOnly);
@@ -48,7 +46,7 @@ namespace ROS2
     }
 
     ROS2LidarSensorComponent::ROS2LidarSensorComponent()
-        : m_lidarBase(LidarTemplateUtils::Get3DModels())
+        : m_lidarCore(LidarTemplateUtils::Get3DModels())
     {
         TopicConfiguration pc;
         AZStd::string type = kPointCloudType;
@@ -60,23 +58,23 @@ namespace ROS2
 
     ROS2LidarSensorComponent::ROS2LidarSensorComponent(
         const SensorConfiguration& sensorConfiguration, const LidarSensorConfiguration& lidarConfiguration)
-        : m_lidarBase(lidarConfiguration)
+        : m_lidarCore(lidarConfiguration)
     {
         m_sensorConfiguration = sensorConfiguration;
     }
 
     void ROS2LidarSensorComponent::Visualize()
     {
-        m_lidarBase.VisualizeResults();
+        m_lidarCore.VisualizeResults();
     }
 
     void ROS2LidarSensorComponent::Activate()
     {
-        m_lidarBase.Init(GetEntityId());
+        m_lidarCore.Init(GetEntityId());
 
-        m_lidarRaycasterId = m_lidarBase.GetLidarRaycasterId();
+        m_lidarRaycasterId = m_lidarCore.GetLidarRaycasterId();
         m_canRaycasterPublish = false;
-        if (m_lidarBase.m_lidarConfiguration.m_lidarSystemFeatures & LidarSystemFeatures::PointcloudPublishing)
+        if (m_lidarCore.m_lidarConfiguration.m_lidarSystemFeatures & LidarSystemFeatures::PointcloudPublishing)
         {
             LidarRaycasterRequestBus::EventResult(
                 m_canRaycasterPublish, m_lidarRaycasterId, &LidarRaycasterRequestBus::Events::CanHandlePublishing);
@@ -111,7 +109,7 @@ namespace ROS2
     {
         ROS2SensorComponent::Deactivate();
         m_pointCloudPublisher.reset();
-        m_lidarBase.Deinit();
+        m_lidarCore.Deinit();
     }
 
     void ROS2LidarSensorComponent::FrequencyTick()
@@ -127,7 +125,7 @@ namespace ROS2
                 aznumeric_cast<AZ::u64>(timestamp.sec) * aznumeric_cast<AZ::u64>(1.0e9f) + timestamp.nanosec);
         }
 
-        auto lastScanResults = m_lidarBase.PerformRaycast();
+        auto lastScanResults = m_lidarCore.PerformRaycast();
 
         if (m_canRaycasterPublish)
         { // Skip publishing when it can be handled by the raycaster.

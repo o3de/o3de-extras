@@ -15,7 +15,7 @@
 #include <rclcpp/publisher.hpp>
 #include <sensor_msgs/msg/laser_scan.hpp>
 
-#include "LidarBase.h"
+#include "LidarCore.h"
 #include "LidarRaycaster.h"
 
 namespace ROS2
@@ -46,6 +46,6 @@ namespace ROS2
 
         std::shared_ptr<rclcpp::Publisher<sensor_msgs::msg::LaserScan>> m_laserScanPublisher;
 
-        LidarBase m_lidarBase;
+        LidarCore m_lidarCore;
     };
 } // namespace ROS2

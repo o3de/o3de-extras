@@ -54,7 +54,8 @@ namespace ROS2
 
         //! Name of lidar template
         AZStd::string m_name;
-        //! Whether the template is for a 2D Lidar
+        //! Whether the template is for a 2D Lidar.
+        //! This causes vertical parameters of the Lidar to be unmodifiable (m_minVAngle, m_maxVAngle, m_layers).
         bool m_is2D = false;
         //! Minimum horizontal angle (altitude of the ray), in degrees
         float m_minHAngle = 0.0f;

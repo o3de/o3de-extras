@@ -19,27 +19,34 @@
 
 namespace ROS2
 {
-    //! Lidar Base.
-    //! Lidars (Light Detection and Ranging) emit laser light and measure it after reflection.
-    //! Lidar Base allows for simulation of Lidars.
-    class LidarBase
+    //! A class for executing lidar operations, such as data acquisition and visualization.
+    class LidarCore
     {
     public:
-        AZ_TYPE_INFO(LidarBase, "{e46126a2-7a86-bb65-367a-416f2cab393c}");
+        AZ_TYPE_INFO(LidarCore, "{e46126a2-7a86-bb65-367a-416f2cab393c}");
         static void Reflect(AZ::ReflectContext* context);
 
-        LidarBase(const AZStd::vector<LidarTemplate::LidarModel>& availableModels = {});
-        LidarBase(const LidarSensorConfiguration& lidarConfiguration);
-        ~LidarBase() = default;
+        LidarCore(const AZStd::vector<LidarTemplate::LidarModel>& availableModels = {});
+        LidarCore(const LidarSensorConfiguration& lidarConfiguration);
+        ~LidarCore() = default;
 
+        //! Initialize when activating the lidar.
+        //! @param entityId Entity from which the rays are sent.
         void Init(AZ::EntityId entityId);
+        //! Deinitialize when deactivating the lidar.
         void Deinit();
 
+        //! Perform a raycast.
+        //! @return Results of the raycast.
         RaycastResult PerformRaycast();
+        //! Visualize the results of the last performed raycast.
         void VisualizeResults() const;
 
+        //! Get the raycaster used by this lidar.
+        //! @return Used raycaster's id.
         LidarId GetLidarRaycasterId() const;
 
+        //! Configuration according to which the lidar performs its raycasts.
         LidarSensorConfiguration m_lidarConfiguration;
 
     private:

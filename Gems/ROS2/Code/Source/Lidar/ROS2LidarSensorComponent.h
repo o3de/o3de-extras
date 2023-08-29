@@ -15,7 +15,7 @@
 #include <rclcpp/publisher.hpp>
 #include <sensor_msgs/msg/point_cloud2.hpp>
 
-#include "LidarBase.h"
+#include "LidarCore.h"
 #include "LidarRaycaster.h"
 #include "LidarSensorConfiguration.h"
 
@@ -48,7 +48,7 @@ namespace ROS2
         bool m_canRaycasterPublish = false;
         std::shared_ptr<rclcpp::Publisher<sensor_msgs::msg::PointCloud2>> m_pointCloudPublisher;
 
-        LidarBase m_lidarBase;
+        LidarCore m_lidarCore;
 
         LidarId m_lidarRaycasterId;
     };
