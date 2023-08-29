@@ -12,7 +12,6 @@
 #include <ROS2/Communication/PublisherConfiguration.h>
 #include <ROS2/Manipulation/JointInfo.h>
 #include <ROS2/Utilities/PhysicsCallbackHandler.h>
-#include <rclcpp/publisher.hpp>
 #include <sensor_msgs/msg/joint_state.hpp>
 #include <ROS2/Communication/FlexiblePublisher.h>
 

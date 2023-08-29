@@ -9,18 +9,15 @@
 
 #include <Atom/RPI.Public/AuxGeom/AuxGeomDraw.h>
 #include <AzCore/Math/Vector3.h>
+#include <ROS2/Communication/FlexiblePublisher.h>
 #include <ROS2/Sensor/ROS2SensorComponent.h>
-#include <ROS2/Utilities/ROS2ErrorHandler.h>
-#include <rclcpp/publisher.hpp>
 #include <std_msgs/msg/bool.hpp>
 
 namespace ROS2
 {
     //! Simple proximity sensor based on raycasting
     //! This component publishes a bool topic depending on the object presence
-    class ROS2ProximitySensor
-        : public ROS2SensorComponent
-        , public ROS2ErrorHandler
+    class ROS2ProximitySensor : public ROS2SensorComponent
     {
     public:
         AZ_COMPONENT(ROS2ProximitySensor, "{1f7b51f6-9450-4da4-9636-672a056e8812}", ROS2SensorComponent);
@@ -45,7 +42,7 @@ namespace ROS2
         float m_detectionDistance = 0.f;
         std::optional<AZ::Vector3> m_position;
 
-        std::shared_ptr<rclcpp::Publisher<std_msgs::msg::Bool>> m_detectionPublisher;
+        std::shared_ptr<FlexiblePublisher<std_msgs::msg::Bool>> m_detectionPublisher;
 
         AZ::RPI::AuxGeomDrawPtr m_drawQueue;
     };

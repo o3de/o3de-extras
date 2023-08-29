@@ -9,11 +9,10 @@
 
 #include <Atom/RPI.Public/AuxGeom/AuxGeomDraw.h>
 #include <AzCore/Serialization/SerializeContext.h>
+#include <ROS2/Communication/FlexiblePublisher.h>
 #include <ROS2/Lidar/LidarRegistrarBus.h>
 #include <ROS2/Lidar/LidarSystemBus.h>
 #include <ROS2/Sensor/ROS2SensorComponent.h>
-#include <ROS2/Utilities/ROS2ErrorHandler.h>
-#include <rclcpp/publisher.hpp>
 #include <sensor_msgs/msg/point_cloud2.hpp>
 
 #include "LidarRaycaster.h"
@@ -25,9 +24,7 @@ namespace ROS2
     //! Lidars (Light Detection and Ranging) emit laser light and measure it after reflection.
     //! Lidar Component allows customization of lidar type and behavior and encapsulates both simulation
     //! and data publishing. It requires ROS2FrameComponent.
-    class ROS2LidarSensorComponent
-        : public ROS2SensorComponent
-        , public ROS2ErrorHandler
+    class ROS2LidarSensorComponent : public ROS2SensorComponent
     {
     public:
         AZ_COMPONENT(ROS2LidarSensorComponent, "{502A955F-7742-4E23-AD77-5E4063739DCA}", ROS2SensorComponent);
@@ -54,7 +51,7 @@ namespace ROS2
         AZStd::unordered_map<AZStd::string, LidarId> m_implementationToRaycasterMap;
         bool m_canRaycasterPublish = false;
         LidarId m_lidarRaycasterId;
-        std::shared_ptr<rclcpp::Publisher<sensor_msgs::msg::PointCloud2>> m_pointCloudPublisher;
+        std::shared_ptr<FlexiblePublisher<sensor_msgs::msg::PointCloud2>> m_pointCloudPublisher;
 
         // Used only when visualization is on - points differ since they are in global transform as opposed to local
         AZStd::vector<AZ::Vector3> m_visualizationPoints;

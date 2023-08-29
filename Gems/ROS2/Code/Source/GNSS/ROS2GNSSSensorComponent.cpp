@@ -7,6 +7,12 @@
  */
 
 #include "ROS2GNSSSensorComponent.h"
+#include "GNSSFormatConversions.h"
+
+#include <AzCore/Component/ComponentApplicationBus.h>
+#include <AzCore/Component/Entity.h>
+#include <AzCore/Component/EntityId.h>
+#include <ROS2/Communication/FlexiblePublisher.h>
 #include <ROS2/Frame/ROS2FrameComponent.h>
 #include <ROS2/ROS2Bus.h>
 #include <ROS2/ROS2GemUtilities.h>
@@ -16,8 +22,7 @@
 #include <AzCore/Math/Matrix4x4.h>
 #include <AzCore/Serialization/EditContext.h>
 #include <AzCore/Serialization/EditContextConstants.inl>
-
-#include <exception>
+#include <memory>
 
 namespace ROS2
 {
@@ -70,19 +75,10 @@ namespace ROS2
     void ROS2GNSSSensorComponent::Activate()
     {
         ROS2SensorComponent::Activate();
-        auto ros2Node = ROS2Interface::Get()->GetNode();
         AZ_Assert(m_sensorConfiguration.m_publishersConfigurations.size() == 1, "Invalid configuration of publishers for GNSS sensor");
 
-        const auto publisherConfig = m_sensorConfiguration.m_publishersConfigurations[Internal::kGNSSMsgType];
-        const auto fullTopic = ROS2Names::GetNamespacedName(GetNamespace(), publisherConfig.m_topic);
-        ExecuteROS2Context(
-            [this, &ros2Node, &fullTopic, &publisherConfig]()
-            {
-                m_gnssPublisher = ros2Node->create_publisher<sensor_msgs::msg::NavSatFix>(fullTopic.data(), publisherConfig.GetQoS());
-            },
-            "ROS2GNSSSensorComponent",
-            "The Activate failed.");
-
+        m_gnssPublisher = std::make_shared<FlexiblePublisher<sensor_msgs::msg::NavSatFix>>(
+            m_sensorConfiguration.m_publishersConfigurations[Internal::kGNSSMsgType], GetNamespace(), GetEntityId(), "GNSS sensor");
         m_gnssMsg.header.frame_id = "gnss_frame_id";
     }
 
@@ -94,11 +90,6 @@ namespace ROS2
 
     void ROS2GNSSSensorComponent::FrequencyTick()
     {
-        if (!IsComponentValid())
-        {
-            return;
-        }
-
         const AZ::Vector3 currentPosition = GetCurrentPose().GetTranslation();
         const AZ::Vector3 currentPositionECEF = GNSS::ENUToECEF(
             { m_gnssConfiguration.m_originLatitudeDeg, m_gnssConfiguration.m_originLongitudeDeg, m_gnssConfiguration.m_originAltitude },
@@ -111,13 +102,8 @@ namespace ROS2
 
         m_gnssMsg.status.status = sensor_msgs::msg::NavSatStatus::STATUS_SBAS_FIX;
         m_gnssMsg.status.service = sensor_msgs::msg::NavSatStatus::SERVICE_GALILEO;
-        ExecuteROS2Context(
-            [this]()
-            {
-                m_gnssPublisher->publish(m_gnssMsg);
-            },
-            "ROS2GNSSSensorComponent",
-            "Publishing failed.");
+
+        m_gnssPublisher->publish(m_gnssMsg);
     }
 
     AZ::Transform ROS2GNSSSensorComponent::GetCurrentPose() const

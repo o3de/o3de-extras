@@ -7,6 +7,7 @@
  */
 
 #include "ROS2ImuSensorComponent.h"
+#include <ROS2/Communication/FlexiblePublisher.h>
 #include <ROS2/Frame/ROS2FrameComponent.h>
 #include <ROS2/ROS2Bus.h>
 #include <ROS2/Utilities/ROS2Conversions.h>
@@ -20,8 +21,7 @@
 #include <AzCore/Serialization/EditContext.h>
 #include <AzCore/Serialization/EditContextConstants.inl>
 #include <AzCore/std/numeric.h>
-#include <AzCore/std/smart_ptr/make_shared.h>
-#include <exception>
+#include <memory>
 
 namespace ROS2
 {
@@ -95,11 +95,6 @@ namespace ROS2
 
     void ROS2ImuSensorComponent::OnPhysicsSimulationFinished(AzPhysics::SceneHandle sceneHandle, float deltaTime)
     {
-        if (!IsComponentValid())
-        {
-            return;
-        }
-
         auto* sceneInterface = AZ::Interface<AzPhysics::SceneInterface>::Get();
         const auto gravity = sceneInterface->GetGravity(sceneHandle);
         auto* body = sceneInterface->GetSimulatedBodyFromHandle(sceneHandle, m_bodyHandle);
@@ -143,35 +138,20 @@ namespace ROS2
                 m_imuMsg.orientation_covariance = ROS2Conversions::ToROS2Covariance(m_orientationCovariance);
             }
             m_imuMsg.header.stamp = ROS2Interface::Get()->GetROSTimestamp();
-            ExecuteROS2Context(
-                [this]()
-                {
-                    this->m_imuPublisher->publish(m_imuMsg);
-                },
-                "ROS2ImuSensorComponent",
-                "Publishing failed.");
+            this->m_imuPublisher->publish(m_imuMsg);
         }
-    };
+    }
 
     void ROS2ImuSensorComponent::Activate()
     {
-        auto ros2Node = ROS2Interface::Get()->GetNode();
         AZ_Assert(m_sensorConfiguration.m_publishersConfigurations.size() == 1, "Invalid configuration of publishers for IMU sensor");
         m_imuMsg.header.frame_id = GetFrameID().c_str();
-        const auto publisherConfig = m_sensorConfiguration.m_publishersConfigurations[Internal::kImuMsgType];
-        const auto fullTopic = ROS2Names::GetNamespacedName(GetNamespace(), publisherConfig.m_topic);
         m_linearAccelerationCovariance = ToDiagonalCovarianceMatrix(m_imuConfiguration.m_linearAccelerationVariance);
         m_angularVelocityCovariance = ToDiagonalCovarianceMatrix(m_imuConfiguration.m_angularVelocityVariance);
         m_orientationCovariance = ToDiagonalCovarianceMatrix(m_imuConfiguration.m_orientationVariance);
 
-        ExecuteROS2Context(
-            [this, &ros2Node, &fullTopic, &publisherConfig]()
-            {
-                m_imuPublisher = ros2Node->create_publisher<sensor_msgs::msg::Imu>(fullTopic.data(), publisherConfig.GetQoS());
-            },
-            "ROS2ImuSensorComponent",
-            "The Activate failed.");
-            
+        m_imuPublisher = std::make_shared<FlexiblePublisher<sensor_msgs::msg::Imu>>(
+            m_sensorConfiguration.m_publishersConfigurations[Internal::kImuMsgType], GetNamespace(), GetEntityId(), "IMU sensor");
         ROS2SensorComponent::Activate();
     }
 

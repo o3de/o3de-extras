@@ -91,6 +91,8 @@ ly_add_target(
     NAMESPACE Gem
     FILES_CMAKE
         ros2_shared_files.cmake
+    PLATFORM_INCLUDE_FILES
+        ${CMAKE_CURRENT_LIST_DIR}/Platform/Common/${PAL_TRAIT_COMPILER_ID}/ros2_static_${PAL_TRAIT_COMPILER_ID_LOWERCASE}.cmake
     INCLUDE_DIRECTORIES
         PUBLIC
             Include

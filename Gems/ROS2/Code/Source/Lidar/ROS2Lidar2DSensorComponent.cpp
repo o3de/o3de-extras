@@ -6,16 +6,16 @@
  *
  */
 
+#include "ROS2/Communication/FlexiblePublisher.h"
 #include <Atom/RPI.Public/AuxGeom/AuxGeomFeatureProcessorInterface.h>
 #include <Atom/RPI.Public/Scene.h>
-#include <AzCore/Debug/Trace.h>
 #include <AzFramework/Physics/PhysicsSystem.h>
 #include <Lidar/LidarRegistrarSystemComponent.h>
 #include <Lidar/ROS2Lidar2DSensorComponent.h>
 #include <ROS2/Frame/ROS2FrameComponent.h>
 #include <ROS2/ROS2Bus.h>
 #include <ROS2/Utilities/ROS2Names.h>
-#include <exception>
+#include <memory>
 
 namespace ROS2
 {
@@ -51,11 +51,6 @@ namespace ROS2
 
     void ROS2Lidar2DSensorComponent::ConnectToLidarRaycaster()
     {
-        if (!IsComponentValid())
-        {
-            return;
-        }
-
         if (auto raycasterId = m_implementationToRaycasterMap.find(m_lidarConfiguration.m_lidarSystem);
             raycasterId != m_implementationToRaycasterMap.end())
         {
@@ -73,11 +68,6 @@ namespace ROS2
 
     void ROS2Lidar2DSensorComponent::ConfigureLidarRaycaster()
     {
-        if (!IsComponentValid())
-        {
-            return;
-        }
-
         m_lidarConfiguration.FetchLidarImplementationFeatures();
         LidarRaycasterRequestBus::Event(m_lidarRaycasterId, &LidarRaycasterRequestBus::Events::ConfigureRayOrientations, m_lastRotations);
         LidarRaycasterRequestBus::Event(
@@ -145,7 +135,7 @@ namespace ROS2
 
     void ROS2Lidar2DSensorComponent::Visualize()
     {
-        if (m_visualizationPoints.empty() || !IsComponentValid())
+        if (m_visualizationPoints.empty())
         {
             return;
         }
@@ -166,18 +156,9 @@ namespace ROS2
 
     void ROS2Lidar2DSensorComponent::Activate()
     {
-        auto ros2Node = ROS2Interface::Get()->GetNode();
         AZ_Assert(m_sensorConfiguration.m_publishersConfigurations.size() == 1, "Invalid configuration of publishers for lidar sensor");
-
-        const TopicConfiguration& publisherConfig = m_sensorConfiguration.m_publishersConfigurations[Internal::kLaserScanType];
-        AZStd::string fullTopic = ROS2Names::GetNamespacedName(GetNamespace(), publisherConfig.m_topic);
-        ExecuteROS2Context(
-            [this, &ros2Node, &fullTopic, &publisherConfig]()
-            {
-                m_laserScanPublisher = ros2Node->create_publisher<sensor_msgs::msg::LaserScan>(fullTopic.data(), publisherConfig.GetQoS());
-            },
-            "ROS2Lidar2DSensorComponent",
-            "The Activate failed.");
+        m_laserScanPublisher = std::make_shared<FlexiblePublisher<sensor_msgs::msg::LaserScan>>(
+            m_sensorConfiguration.m_publishersConfigurations[Internal::kLaserScanType], GetNamespace(), GetEntityId(), "Lidar2D Sensor");
 
         if (m_sensorConfiguration.m_visualize)
         {
@@ -202,11 +183,6 @@ namespace ROS2
 
     void ROS2Lidar2DSensorComponent::FrequencyTick()
     {
-        if (!IsComponentValid())
-        {
-            return;
-        }
-
         auto entityTransform = GetEntity()->FindComponent<AzFramework::TransformComponent>();
 
         RaycastResultFlags requestedFlags = RaycastResultFlags::Ranges;
@@ -242,13 +218,6 @@ namespace ROS2
         message.time_increment = 0.0f;
 
         message.ranges.assign(m_lastScanResults.m_ranges.begin(), m_lastScanResults.m_ranges.end());
-
-        ExecuteROS2Context(
-            [this, &message]()
-            {
-                m_laserScanPublisher->publish(message);
-            },
-            "ROS2Lidar2DSensorComponent",
-            "Publishing failed.");
+        m_laserScanPublisher->publish(message);
     }
 } // namespace ROS2

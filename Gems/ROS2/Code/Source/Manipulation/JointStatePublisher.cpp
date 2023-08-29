@@ -18,9 +18,8 @@ namespace ROS2
         : m_configuration(configuration)
         , m_context(context)
     {
-        auto topicConfiguration = m_configuration.m_topicConfiguration;
-        m_jointStatePublisher =
-            std::make_shared<FlexiblePublisher<sensor_msgs::msg::JointState>>(topicConfiguration, context.m_publisherNamespace);
+        m_jointStatePublisher = std::make_shared<FlexiblePublisher<sensor_msgs::msg::JointState>>(
+            m_configuration.m_topicConfiguration, context.m_publisherNamespace, m_context.m_entityId, "Joint State Publisher");
     }
 
     void JointStatePublisher::PublishMessage()
