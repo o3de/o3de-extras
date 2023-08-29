@@ -21,6 +21,8 @@ namespace ROS2
     class ROS2SensorComponentBase : public AZ::Component
     {
     public:
+        using SensorBaseType = ROS2SensorComponentBase<EventSourceT>;
+
         AZ_COMPONENT_DECL((ROS2SensorComponentBase, AZ_CLASS));
 
         static void Reflect(AZ::ReflectContext* context)
@@ -36,7 +38,7 @@ namespace ROS2
                 serialize->Class<ROS2SensorComponentBase<EventSourceT>, AZ::Component>()
                     ->Version(1)
                     ->Field("Sensor configuration", &ROS2SensorComponentBase<EventSourceT>::m_sensorConfiguration)
-                    ->Field("Source adapter configuration", &ROS2SensorComponentBase::m_eventSourceAdapter);
+                    ->Field("Source adapter configuration", &ROS2SensorComponentBase<EventSourceT>::m_eventSourceAdapter);
 
                 if (auto editContext = serialize->GetEditContext())
                 {
@@ -61,6 +63,14 @@ namespace ROS2
         }
 
         virtual ~ROS2SensorComponentBase() = default;
+
+        void Activate() override
+        {
+        }
+
+        void Deactivate() override
+        {
+        }
 
     protected:
         //! Returns a complete namespace for this sensor topics and frame ids.
