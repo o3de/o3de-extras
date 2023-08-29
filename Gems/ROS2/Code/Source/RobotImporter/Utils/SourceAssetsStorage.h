@@ -142,4 +142,12 @@ namespace ROS2::Utils
         AZStd::string_view outputDirSuffix = "",
         AZ::IO::FileIOBase* fileIO = AZ::IO::FileIOBase::GetInstance());
 
+    //! A function that blocks execution (with timeout) until the Asset Processor starts to report asset processing status.
+    //! It also escalates the source asset job.
+    //! @param relativePath - path to asset relative to project's root
+    //! @param timeout - timeout value for blocking operation
+    //! @returns job info container
+    AZ::Outcome<AzToolsFramework::AssetSystem::JobInfoContainer> WaitForAPAndEscalate(
+        const AZStd::string& relativePath, const AZStd::chrono::duration<int, AZStd::milli>& timeout = AZStd::chrono::milliseconds(5000));
+
 } // namespace ROS2::Utils
