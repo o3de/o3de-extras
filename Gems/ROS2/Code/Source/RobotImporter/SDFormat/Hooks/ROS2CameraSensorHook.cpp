@@ -73,8 +73,11 @@ namespace ROS2::SDFormat
                     sensorConfiguration, "depth_camera_info", CameraConstants::CameraInfoMessageType, CameraConstants::DepthInfoConfig);
             }
 
-            if (Utils::CreateComponent<ROS2FrameComponent>(entity) &&
-                Utils::CreateComponent<ROS2CameraSensorEditorComponent>(entity, sensorConfiguration, cameraConfiguration))
+            // Create required components
+            Utils::CreateComponent<ROS2FrameComponent>(entity);
+
+            // Create Camera component
+            if (Utils::CreateComponent<ROS2CameraSensorEditorComponent>(entity, sensorConfiguration, cameraConfiguration))
             {
                 return AZ::Success();
             }

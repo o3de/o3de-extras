@@ -81,9 +81,12 @@ namespace ROS2::SDFormat
             const AZStd::string messageType = "sensor_msgs::msg::Imu";
             Utils::AddTopicConfiguration(sensorConfiguration, "imu", messageType, messageType);
 
-            if (Utils::CreateComponent<PhysX::EditorStaticRigidBodyComponent>(entity) &&
-                Utils::CreateComponent<ROS2FrameComponent>(entity) &&
-                Utils::CreateComponent<ROS2ImuSensorComponent>(entity, sensorConfiguration, imuConfiguration))
+            // Create required components
+            Utils::CreateComponent<ROS2FrameComponent>(entity);
+            Utils::CreateComponent<PhysX::EditorStaticRigidBodyComponent>(entity);
+
+            // Create Imu component
+            if (Utils::CreateComponent<ROS2ImuSensorComponent>(entity, sensorConfiguration, imuConfiguration))
             {
                 return AZ::Success();
             }

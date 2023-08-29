@@ -42,6 +42,12 @@ namespace ROS2::SDFormat
             template<class ComponentType, typename... Args>
             AZ::Component* CreateComponent(AZ::Entity& entity, Args&&... args)
             {
+                // Do not create a component if the same type is already added.
+                if (entity.FindComponent<ComponentType>())
+                {
+                    return nullptr;
+                }
+
                 // Create component.
                 // If it's not an "editor component" then wrap it in a GenericComponentWrapper.
                 AZ::Component* component = nullptr;
@@ -59,7 +65,7 @@ namespace ROS2::SDFormat
 
                 if (component)
                 {
-                    if (!entity.AddComponent(component))
+                    if (!entity.IsComponentReadyToAdd(component) || !entity.AddComponent(component))
                     {
                         delete component;
                         component = nullptr;
