@@ -44,7 +44,7 @@ namespace ROS2::SDFormat
             cameraConfiguration.m_width = cameraSensor->ImageWidth();
             cameraConfiguration.m_height = cameraSensor->ImageHeight();
             cameraConfiguration.m_verticalFieldOfViewDeg =
-                cameraSensor->HorizontalFov().Degree() * (cameraConfiguration.m_height / cameraConfiguration.m_width);
+                cameraSensor->HorizontalFov().Degree() * cameraConfiguration.m_height / cameraConfiguration.m_width;
             if (sdfSensor.Type() != sdf::SensorType::DEPTH_CAMERA)
             {
                 cameraConfiguration.m_nearClipDistance = static_cast<float>(cameraSensor->NearClip());
