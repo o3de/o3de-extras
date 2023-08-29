@@ -46,7 +46,7 @@ namespace ROS2
         void ConnectToLidarRaycaster();
         void ConfigureLidarRaycaster();
 
-        // A structure that maps each lidar implementation busId to the busId of a raycaster created by this LidarSensorComponent.
+        //! An unordered map of lidar implementations to their raycasters created by this LidarSensorComponent.
         AZStd::unordered_map<AZStd::string, LidarId> m_implementationToRaycasterMap;
         LidarId m_lidarRaycasterId;
 
