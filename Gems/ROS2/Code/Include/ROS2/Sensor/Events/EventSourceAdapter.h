@@ -19,7 +19,8 @@ namespace ROS2
     //! SensorEventSource source event, and signals adapted event according to frequency set (ROS2::EventSourceAdapter::Configure).
     //! User can connect to this event using ROS2::EventSourceAdapter::ConnectToAdaptedEvent method. This class should be used, instead
     //! of using directly a class derived from SensorEventSource, when specific working frequency is required. Following this path, user can
-    //! still use source event - ROS2::EventSourceAdapter::ConnectToSourceEvent.
+    //! still use source event - ROS2::EventSourceAdapter::ConnectToSourceEvent. This template has to be resolved using a class derived from
+    //! SensorEventSource.
     //! @see ROS2::SensorEventSource
     template<class EventSourceT>
     class EventSourceAdapter
@@ -27,20 +28,32 @@ namespace ROS2
     public:
         static void Reflect(AZ::ReflectContext* context)
         {
+            EventSourceT::Reflect(context);
+
             if (auto serializeContext = azrtti_cast<AZ::SerializeContext*>(context))
             {
-                serializeContext->Class<EventSourceAdapter<EventSourceT>>()->Version(1)
-                    ->Field("Adapted Frequency", &EventSourceAdapter<EventSourceT>::m_adaptedFrequency);
+                serializeContext->Class<EventSourceAdapter<EventSourceT>>()
+                    ->Version(1)
+                    ->Field("Adapted Frequency", &EventSourceAdapter<EventSourceT>::m_adaptedFrequency)
+                    ->Field("Event Source Configuration", &EventSourceAdapter<EventSourceT>::m_eventSource);
 
                 if (auto editContext = serializeContext->GetEditContext())
                 {
-                    editContext->Class<EventSourceAdapter<EventSourceT>>("Event Source Adapter", "Adapts sensor event source to specific working frequency.")
+                    editContext
+                        ->Class<EventSourceAdapter<EventSourceT>>(
+                            "Event Source Adapter", "Adapts sensor event source to specified working frequency")
                         ->ClassElement(AZ::Edit::ClassElements::EditorData, "")
                         ->DataElement(
                             AZ::Edit::UIHandlers::Default,
                             &EventSourceAdapter<EventSourceT>::m_adaptedFrequency,
-                            "Adapted Frequency",
-                            "Adapter event signalling frequency");
+                            "Adapted frequency",
+                            "Adapter event signalling frequency")
+                        ->DataElement(
+                            AZ::Edit::UIHandlers::Default,
+                            &EventSourceAdapter<EventSourceT>::m_eventSource,
+                            "Event source configuration",
+                            "Event source configuration")
+                        ->Attribute(AZ::Edit::Attributes::Visibility, AZ::Edit::PropertyVisibility::ShowChildrenOnly);
                 }
             }
         }
@@ -118,9 +131,14 @@ namespace ROS2
             return true;
         }
 
-        EventSourceT m_eventSource{}; ///< Event source managed by this adapter.
-        typename EventSourceT::SensorEventHandlerType m_adaptedEventHandler{}; ///< Event handler for adapting event source to specific frequency.
-        typename EventSourceT::SensorEventType m_sensorAdaptedEvent{}; ///< Adapted event that is called with specific frequency.
+        //! Event source managed by this adapter.
+        EventSourceT m_eventSource{};
+
+        //! Event handler for adapting event source to specific frequency.
+        typename EventSourceT::SensorEventHandlerType m_adaptedEventHandler{};
+
+        //! Adapted event that is called with specific frequency.
+        typename EventSourceT::SensorEventType m_sensorAdaptedEvent{};
 
         float m_adaptedFrequency{ 10.0f }; ///< Adapted frequency value.
         int m_tickCounter{ 0 }; ///< Internal counter for controlling adapter frequency.
