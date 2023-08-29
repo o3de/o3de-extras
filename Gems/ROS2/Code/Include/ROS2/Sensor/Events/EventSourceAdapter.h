@@ -84,6 +84,7 @@ namespace ROS2
                         ->Class<EventSourceAdapter<EventSourceT>>(
                             "Event Source Adapter", "Adapts sensor event source to specified working frequency")
                         ->ClassElement(AZ::Edit::ClassElements::EditorData, "")
+                        ->ElementAttribute(AZ::Edit::Attributes::AutoExpand, true)
                         ->DataElement(
                             AZ::Edit::UIHandlers::Default,
                             &EventSourceAdapter<EventSourceT>::m_adaptedFrequency,
