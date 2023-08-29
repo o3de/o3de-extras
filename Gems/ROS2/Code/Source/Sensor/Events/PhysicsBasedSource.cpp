@@ -35,6 +35,10 @@ namespace ROS2
         m_onSceneSimulationEvent = AzPhysics::SceneEvents::OnSceneSimulationFinishHandler(
             [this](AzPhysics::SceneHandle sceneHandle, float deltaTime)
             {
+                if (!m_sourceEnabled)
+                {
+                    return;
+                }
                 m_sourceEvent.Signal(sceneHandle, deltaTime);
             });
 

@@ -51,7 +51,6 @@ namespace ROS2
         {
             return;
         }
-
         m_sourceEvent.Signal(deltaTime, time);
     }
 } // namespace ROS2
