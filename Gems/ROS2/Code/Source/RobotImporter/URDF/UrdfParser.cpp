@@ -13,6 +13,7 @@
 #include <AzCore/Debug/Trace.h>
 #include <AzCore/std/string/regex.h>
 #include <AzCore/std/string/string.h>
+#include <RobotImporter/FixURDF/FixURDF.h>
 #include <RobotImporter/Utils/ErrorUtils.h>
 
 namespace ROS2::UrdfParser
@@ -128,6 +129,8 @@ namespace ROS2::UrdfParser
         }
 
         std::string xmlStr((std::istreambuf_iterator<char>(istream)), std::istreambuf_iterator<char>());
-        return Parse(xmlStr, parserConfig);
+        // modify in memory
+        std::string xmlStrChanged = (ROS2::Utils::ModifyURDFInMemory(xmlStr));
+        return Parse(xmlStrChanged, parserConfig);
     }
 } // namespace ROS2

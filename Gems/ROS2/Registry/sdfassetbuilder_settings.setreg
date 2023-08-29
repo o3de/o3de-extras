@@ -13,7 +13,7 @@
                     "xacro"
                 ],
                 "UseArticulations": true,
-                "URDFPreserveFixedJoint": true
+                "URDFPreserveFixedJoint": false
             }
         }
     }
