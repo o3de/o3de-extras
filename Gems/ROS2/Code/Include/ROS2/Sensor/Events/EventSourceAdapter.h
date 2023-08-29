@@ -64,6 +64,9 @@ namespace ROS2
         static_assert(AZStd::is_base_of<typename EventSourceT::SourceBaseType, EventSourceT>::value);
         static_assert(AZStd::is_abstract<EventSourceT>::value == false);
 
+        using SourceEventType = typename EventSourceT::SourceEventType;
+        using SourceEventHandlerType = typename EventSourceT::SourceEventHandlerType;
+
         static void Reflect(AZ::ReflectContext* context)
         {
             EventSourceT::Reflect(context);
