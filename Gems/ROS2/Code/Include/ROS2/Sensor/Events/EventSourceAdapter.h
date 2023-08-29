@@ -60,8 +60,8 @@ namespace ROS2
     {
     public:
         // Require non-abstract type derived from SensorEventSource.
-        static_assert(Internal::is_specialization_of<SensorEventSource, typename EventSourceT::SensorEventSourceType>::value);
-        static_assert(AZStd::is_base_of<typename EventSourceT::SensorEventSourceType, EventSourceT>::value);
+        static_assert(Internal::is_specialization_of<SensorEventSource, typename EventSourceT::SourceBaseType>::value);
+        static_assert(AZStd::is_base_of<typename EventSourceT::SourceBaseType, EventSourceT>::value);
         static_assert(AZStd::is_abstract<EventSourceT>::value == false);
 
         static void Reflect(AZ::ReflectContext* context)
@@ -101,7 +101,7 @@ namespace ROS2
         //! different event source implementations can behave differently.
         void Activate()
         {
-            m_adaptedEventHandler = typename EventSourceT::SensorEventHandlerType(
+            m_adaptedEventHandler = typename EventSourceT::SourceEventHandlerType(
                 [this](auto... args)
                 {
                     const AZStd::chrono::duration<float, AZStd::chrono::seconds::period> expectedLoopTime =
@@ -139,7 +139,7 @@ namespace ROS2
         //! ROS2::EventSourceAdapter::ConnectToAdaptedEvent method.
         //! @param sourceEventHandler Event handler for source event (frequency not managed by event source adapter).
         //! @see ROS2::SensorEventSource
-        void ConnectToSourceEvent(typename EventSourceT::SensorEventHandlerType& sourceEventHandler)
+        void ConnectToSourceEvent(typename EventSourceT::SourceEventHandlerType& sourceEventHandler)
         {
             m_eventSource.ConnectToSourceEvent(sourceEventHandler);
         }
@@ -147,7 +147,7 @@ namespace ROS2
         //! Connects given event handler to adapted event (ROS2::EventSourceAdapter). This event is signalled with a frequency set in event
         //! source adapter configuration (ROS2::EventSourceAdapter::Configure).
         //! @param adaptedEventHandler Event handler for adapted event (frequency set through event source adapter configuration).
-        void ConnectToAdaptedEvent(typename EventSourceT::SensorEventHandlerType& adaptedEventHandler)
+        void ConnectToAdaptedEvent(typename EventSourceT::SourceEventHandlerType& adaptedEventHandler)
         {
             adaptedEventHandler.Connect(m_sensorAdaptedEvent);
         }
@@ -173,10 +173,10 @@ namespace ROS2
         EventSourceT m_eventSource{};
 
         //! Event handler for adapting event source to specific frequency.
-        typename EventSourceT::SensorEventHandlerType m_adaptedEventHandler{};
+        typename EventSourceT::SourceEventHandlerType m_adaptedEventHandler{};
 
         //! Adapted event that is called with specific frequency.
-        typename EventSourceT::SensorEventType m_sensorAdaptedEvent{};
+        typename EventSourceT::SourceEventType m_sensorAdaptedEvent{};
 
         float m_adaptedFrequency{ 10.0f }; ///< Adapted frequency value.
         int m_tickCounter{ 0 }; ///< Internal counter for controlling adapter frequency.

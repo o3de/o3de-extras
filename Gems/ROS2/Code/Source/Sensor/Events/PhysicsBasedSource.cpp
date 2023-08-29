@@ -35,7 +35,7 @@ namespace ROS2
         m_onSceneSimulationEvent = AzPhysics::SceneEvents::OnSceneSimulationFinishHandler(
             [this](AzPhysics::SceneHandle sceneHandle, float deltaTime)
             {
-                m_sensorSourceEvent.Signal(sceneHandle, deltaTime);
+                m_sourceEvent.Signal(sceneHandle, deltaTime);
             });
 
         auto sceneInterface = AZ::Interface<AzPhysics::SceneInterface>::Get();

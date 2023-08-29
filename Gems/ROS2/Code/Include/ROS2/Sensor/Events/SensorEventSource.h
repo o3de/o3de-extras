@@ -22,9 +22,9 @@ namespace ROS2
     class SensorEventSource
     {
     public:
-        using SensorEventSourceType = SensorEventSource<EventT, EventHandlerT, EventArgs...>;
-        using SensorEventType = EventT<EventArgs...>;
-        using SensorEventHandlerType = EventHandlerT<EventArgs...>;
+        using SourceBaseType = SensorEventSource<EventT, EventHandlerT, EventArgs...>;
+        using SourceEventType = EventT<EventArgs...>;
+        using SourceEventHandlerType = EventHandlerT<EventArgs...>;
 
         virtual ~SensorEventSource() = default;
 
@@ -52,14 +52,14 @@ namespace ROS2
         //! should be signalled based on event source internal logic (e.g. on draw call). For more details check event source
         //! specializations.
         //! @param sourceEventHandler Event handler that will be connected to source event.
-        void ConnectToSourceEvent(SensorEventHandlerType& sourceEventHandler)
+        void ConnectToSourceEvent(SourceEventHandlerType& sourceEventHandler)
         {
-            sourceEventHandler.Connect(m_sensorSourceEvent);
+            sourceEventHandler.Connect(m_sourceEvent);
         }
 
     protected:
         SensorEventSource() = default;
 
-        SensorEventType m_sensorSourceEvent{}; ///< This event should be signalled based on specific event source specialization.
+        SourceEventType m_sourceEvent{}; ///< This event should be signalled based on specific event source specialization.
     };
 } // namespace ROS2

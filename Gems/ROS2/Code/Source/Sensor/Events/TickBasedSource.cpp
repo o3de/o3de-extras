@@ -45,13 +45,13 @@ namespace ROS2
         m_sourceEnabled = sensorConfiguration.m_publishingEnabled;
     }
 
-    void TickBasedSource::OnTick(float deltaTime, [[maybe_unused]] AZ::ScriptTimePoint time)
+    void TickBasedSource::OnTick(float deltaTime, AZ::ScriptTimePoint time)
     {
         if (!m_sourceEnabled)
         {
             return;
         }
 
-        m_sensorSourceEvent.Signal(deltaTime);
+        m_sourceEvent.Signal(deltaTime, time);
     }
 } // namespace ROS2
