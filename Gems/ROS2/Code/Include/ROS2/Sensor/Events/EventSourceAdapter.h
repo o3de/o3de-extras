@@ -14,6 +14,39 @@
 
 namespace ROS2
 {
+    namespace Internal
+    {
+        template<
+            template<
+                template<typename...>
+                class, // EventType
+                template<typename...>
+                class, // EventHandlerType
+                typename...> // Event parameters
+            class C,
+            class T>
+        struct is_specialization_of : AZStd::false_type
+        {
+        };
+
+        template<
+            template<
+                template<typename...>
+                class, // EventType
+                template<typename...>
+                class, // EventHandlerType
+                typename...> // Event parameters
+            class Base,
+            template<typename...>
+            class EventType,
+            template<typename...>
+            class EventHandlerType,
+            typename... Args>
+        struct is_specialization_of<Base, Base<EventType, EventHandlerType, Args...>> : AZStd::true_type
+        {
+        };
+    } // namespace Internal
+
     //! Class adapting event source (ROS2::SensorEventSource) to configurable working frequency. This is handled via adapted event, in
     //! a similar manner like it is done in SensorEventSource. EventSourceAdapter has its internal handler that connects to
     //! SensorEventSource source event, and signals adapted event according to frequency set (ROS2::EventSourceAdapter::Configure).
@@ -26,6 +59,11 @@ namespace ROS2
     class EventSourceAdapter
     {
     public:
+        // Require non-abstract type derived from SensorEventSource.
+        static_assert(Internal::is_specialization_of<SensorEventSource, typename EventSourceT::SensorEventSourceType>::value);
+        static_assert(AZStd::is_base_of<typename EventSourceT::SensorEventSourceType, EventSourceT>::value);
+        static_assert(AZStd::is_abstract<EventSourceT>::value == false);
+
         static void Reflect(AZ::ReflectContext* context)
         {
             EventSourceT::Reflect(context);
