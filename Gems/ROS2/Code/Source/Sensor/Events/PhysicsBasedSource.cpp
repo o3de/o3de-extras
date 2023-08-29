@@ -6,7 +6,6 @@
  *
  */
 
-#include <AzCore/Serialization/EditContext.h>
 #include <ROS2/Sensor/Events/PhysicsBasedSource.h>
 #include <ROS2/Sensor/SensorConfiguration.h>
 
@@ -38,6 +37,10 @@ namespace ROS2
             {
                 m_sensorSourceEvent.Signal(sceneHandle, deltaTime);
             });
+
+        auto sceneInterface = AZ::Interface<AzPhysics::SceneInterface>::Get();
+        AzPhysics::SceneHandle sceneHandle = sceneInterface->GetSceneHandle(AzPhysics::DefaultPhysicsSceneName);
+        sceneInterface->RegisterSceneSimulationFinishHandler(sceneHandle, m_onSceneSimulationEvent);
     }
 
     void PhysicsBasedSource::Deactivate()
