@@ -15,7 +15,7 @@ namespace ROS2
     {
         if (auto serializeContext = azrtti_cast<AZ::SerializeContext*>(context))
         {
-            serializeContext->Class<TickBasedSource>()->Version(1)->Field("Source Enabled", &TickBasedSource::m_sourceEnabled);
+            serializeContext->Class<TickBasedSource>()->Version(1)->Field("Source enabled", &TickBasedSource::m_sourceEnabled);
 
             if (auto editContext = serializeContext->GetEditContext())
             {
@@ -24,7 +24,7 @@ namespace ROS2
                     ->DataElement(
                         AZ::Edit::UIHandlers::Default,
                         &TickBasedSource::m_sourceEnabled,
-                        "Source Enabled",
+                        "Source enabled",
                         "Enable/disable event source");
             }
         }

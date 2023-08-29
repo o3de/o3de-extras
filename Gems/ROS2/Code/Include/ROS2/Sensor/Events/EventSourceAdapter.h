@@ -72,8 +72,8 @@ namespace ROS2
             {
                 serializeContext->Class<EventSourceAdapter<EventSourceT>>()
                     ->Version(1)
-                    ->Field("Adapted Frequency", &EventSourceAdapter<EventSourceT>::m_adaptedFrequency)
-                    ->Field("Event Source Configuration", &EventSourceAdapter<EventSourceT>::m_eventSource);
+                    ->Field("Adapted frequency", &EventSourceAdapter<EventSourceT>::m_adaptedFrequency)
+                    ->Field("Event source configuration", &EventSourceAdapter<EventSourceT>::m_eventSource);
 
                 if (auto editContext = serializeContext->GetEditContext())
                 {
