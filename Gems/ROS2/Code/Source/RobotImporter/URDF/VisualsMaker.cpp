@@ -26,8 +26,7 @@
 namespace ROS2
 {
     VisualsMaker::VisualsMaker() = default;
-    VisualsMaker::VisualsMaker(
-        MaterialNameMap materials, const AZStd::shared_ptr<Utils::UrdfAssetMap>& urdfAssetsMapping)
+    VisualsMaker::VisualsMaker(MaterialNameMap materials, const AZStd::shared_ptr<Utils::UrdfAssetMap>& urdfAssetsMapping)
         : m_materials(AZStd::move(materials))
         , m_urdfAssetsMapping(urdfAssetsMapping)
     {
@@ -54,7 +53,10 @@ namespace ROS2
 
             for (uint64_t index = 0; index < link->VisualCount(); index++)
             {
-                auto createdEntity = AddVisual(link->VisualByIndex(index), entityId, PrefabMakerUtils::MakeEntityName(link->Name().c_str(), typeString, nameSuffixIndex));
+                auto createdEntity = AddVisual(
+                    link->VisualByIndex(index),
+                    entityId,
+                    PrefabMakerUtils::MakeEntityName(link->Name().c_str(), typeString, nameSuffixIndex));
                 if (createdEntity.IsValid())
                 {
                     createdEntities.emplace_back(createdEntity);
@@ -100,7 +102,6 @@ namespace ROS2
         // Apply transform as per origin
         PrefabMakerUtils::SetEntityTransformLocal(visual->RawPose(), entityId);
 
-        AZ::Entity* entity = AzToolsFramework::GetEntityById(entityId);
         auto geometry = visual->Geom();
         switch (geometry->Type())
         {
@@ -108,97 +109,117 @@ namespace ROS2
             {
                 auto sphereGeometry = geometry->SphereShape();
                 AZ_Assert(sphereGeometry, "geometry is not Sphere");
-                entity->CreateComponent(LmbrCentral::EditorSphereShapeComponentTypeId);
-                entity->Activate();
-                LmbrCentral::SphereShapeComponentRequestsBus::Event(
-                    entityId, &LmbrCentral::SphereShapeComponentRequests::SetRadius, sphereGeometry->Radius());
-                LmbrCentral::EditorShapeComponentRequestsBus::Event(
-                    entityId, &LmbrCentral::EditorShapeComponentRequests::SetVisibleInGame, true);
-                entity->Deactivate();
+                const AZ::Vector3 sphereDimensions(sphereGeometry->Radius());
+
+                // The `_sphere_1x1.azmodel` is created by Asset Processor based on O3DE `PrimitiveAssets` Gem source.
+                AZ::Data::AssetId assetId;
+                const char* sphereAssetRelPath = "objects/_primitives/_sphere_1x1.azmodel"; // relative path to cache folder.
+                AZ::Data::AssetCatalogRequestBus::BroadcastResult(
+                    assetId,
+                    &AZ::Data::AssetCatalogRequestBus::Events::GetAssetIdByPath,
+                    sphereAssetRelPath,
+                    AZ::Data::s_invalidAssetType,
+                    false);
+                AZ_Warning("AddVisual", assetId.IsValid(), "There is no product asset for %s.", sphereAssetRelPath);
+
+                AddVisualAssetToEntity(entityId, assetId, sphereDimensions);
             }
             break;
         case sdf::GeometryType::CYLINDER:
             {
                 auto cylinderGeometry = geometry->CylinderShape();
                 AZ_Assert(cylinderGeometry, "geometry is not Cylinder");
-                entity->CreateComponent(LmbrCentral::EditorCylinderShapeComponentTypeId);
-                entity->Activate();
-                LmbrCentral::CylinderShapeComponentRequestsBus::Event(
-                    entityId, &LmbrCentral::CylinderShapeComponentRequests::SetRadius, cylinderGeometry->Radius());
-                LmbrCentral::CylinderShapeComponentRequestsBus::Event(
-                    entityId, &LmbrCentral::CylinderShapeComponentRequests::SetHeight, cylinderGeometry->Length());
-                LmbrCentral::EditorShapeComponentRequestsBus::Event(
-                    entityId, &LmbrCentral::EditorShapeComponentRequests::SetVisibleInGame, true);
-                entity->Deactivate();
+                const AZ::Vector3 cylinderDimensions(cylinderGeometry->Radius(), cylinderGeometry->Radius(), cylinderGeometry->Length());
+
+                // The `_cylinder_1x1.azmodel` is created by Asset Processor based on O3DE `PrimitiveAssets` Gem source.
+                AZ::Data::AssetId assetId;
+                const char* cylinderAssetRelPath = "objects/_primitives/_cylinder_1x1.azmodel"; // relative path to cache folder.
+                AZ::Data::AssetCatalogRequestBus::BroadcastResult(
+                    assetId,
+                    &AZ::Data::AssetCatalogRequestBus::Events::GetAssetIdByPath,
+                    cylinderAssetRelPath,
+                    AZ::Data::s_invalidAssetType,
+                    false);
+                AZ_Warning("AddVisual", assetId.IsValid(), "There is no product asset for %s.", cylinderAssetRelPath);
+
+                AddVisualAssetToEntity(entityId, assetId, cylinderDimensions);
             }
             break;
         case sdf::GeometryType::BOX:
             {
                 auto boxGeometry = geometry->BoxShape();
                 AZ_Assert(boxGeometry, "geometry is not Box");
-                entity->CreateComponent(LmbrCentral::EditorBoxShapeComponentTypeId);
-                AZ::Vector3 boxDimensions = URDF::TypeConversions::ConvertVector3(boxGeometry->Size());
-                entity->Activate();
-                LmbrCentral::BoxShapeComponentRequestsBus::Event(
-                    entityId, &LmbrCentral::BoxShapeComponentRequests::SetBoxDimensions, boxDimensions);
-                LmbrCentral::EditorShapeComponentRequestsBus::Event(
-                    entityId, &LmbrCentral::EditorShapeComponentRequests::SetVisibleInGame, true);
-                entity->Deactivate();
+                const AZ::Vector3 boxDimensions = URDF::TypeConversions::ConvertVector3(boxGeometry->Size());
+
+                // The `_box_1x1.azmodel` is created by Asset Processor based on O3DE `PrimitiveAssets` Gem source.
+                AZ::Data::AssetId assetId;
+                const char* boxAssetRelPath = "objects/_primitives/_box_1x1.azmodel"; // relative path to cache folder.
+                AZ::Data::AssetCatalogRequestBus::BroadcastResult(
+                    assetId,
+                    &AZ::Data::AssetCatalogRequestBus::Events::GetAssetIdByPath,
+                    boxAssetRelPath,
+                    AZ::Data::s_invalidAssetType,
+                    false);
+                AZ_Warning("AddVisual", assetId.IsValid(), "There is no product asset for %s.", boxAssetRelPath);
+
+                AddVisualAssetToEntity(entityId, assetId, boxDimensions);
             }
             break;
         case sdf::GeometryType::MESH:
             {
                 auto meshGeometry = geometry->MeshShape();
                 AZ_Assert(meshGeometry, "geometry is not Mesh");
+                const AZ::Vector3 scaleVector = URDF::TypeConversions::ConvertVector3(meshGeometry->Scale());
 
                 const auto asset = PrefabMakerUtils::GetAssetFromPath(*m_urdfAssetsMapping, AZStd::string(meshGeometry->Uri().c_str()));
+                AZ::Data::AssetId assetId = Utils::GetModelProductAssetId(asset->m_sourceGuid);
+                AZ_Warning("AddVisual", assetId.IsValid(), "There is no product asset for %s.", asset->m_sourceAssetRelativePath.c_str());
 
-                if (asset)
-                {
-                    auto editorMeshComponent = entity->CreateComponent(AZ::Render::EditorMeshComponentTypeId);
-
-                    // Prepare scale
-                    AZ::Vector3 scaleVector = URDF::TypeConversions::ConvertVector3(meshGeometry->Scale());
-                    bool isUniformScale =
-                        AZ::IsClose(scaleVector.GetMaxElement(), scaleVector.GetMinElement(), AZ::Constants::FloatEpsilon);
-                    if (!isUniformScale)
-                    {
-                        entity->CreateComponent<AzToolsFramework::Components::EditorNonUniformScaleComponent>();
-                    }
-
-                    if (editorMeshComponent)
-                    {
-                        auto editorBaseComponent = azrtti_cast<AzToolsFramework::Components::EditorComponentBase*>(editorMeshComponent);
-                        AZ_Assert(editorBaseComponent, "EditorMeshComponent didn't derive from EditorComponentBase.");
-
-                        AZ::Data::AssetId modelId = Utils::GetModelProductAssetId(asset->m_sourceGuid);
-                        AZ_Warning(
-                            "AddVisual",
-                            modelId.IsValid(),
-                            "There is no product asset for %s.",
-                            asset->m_sourceAssetRelativePath.c_str());
-                        editorBaseComponent->SetPrimaryAsset(modelId);
-                    }
-
-                    entity->Activate();
-
-                    // Set scale, uniform or non-uniform
-                    if (isUniformScale)
-                    {
-                        AZ::TransformBus::Event(entityId, &AZ::TransformBus::Events::SetLocalUniformScale, scaleVector.GetX());
-                    }
-                    else
-                    {
-                        AZ::NonUniformScaleRequestBus::Event(entityId, &AZ::NonUniformScaleRequests::SetScale, scaleVector);
-                    }
-                    entity->Deactivate();
-                }
+                AddVisualAssetToEntity(entityId, assetId, scaleVector);
             }
             break;
         default:
             AZ_Warning("AddVisual", false, "Unsupported visual geometry type, %d", (int)geometry->Type());
             return;
         }
+    }
+
+    void VisualsMaker::AddVisualAssetToEntity(AZ::EntityId entityId, const AZ::Data::AssetId& assetId, const AZ::Vector3 scale) const
+    {
+        if (!assetId.IsValid())
+        {
+            return;
+        }
+
+        AZ::Entity* entity = AzToolsFramework::GetEntityById(entityId);
+        auto editorMeshComponent = entity->CreateComponent(AZ::Render::EditorMeshComponentTypeId);
+
+        // Prepare scale
+        bool isUniformScale = AZ::IsClose(scale.GetMaxElement(), scale.GetMinElement(), AZ::Constants::FloatEpsilon);
+        if (!isUniformScale)
+        {
+            entity->CreateComponent<AzToolsFramework::Components::EditorNonUniformScaleComponent>();
+        }
+
+        if (editorMeshComponent)
+        {
+            auto editorBaseComponent = azrtti_cast<AzToolsFramework::Components::EditorComponentBase*>(editorMeshComponent);
+            AZ_Assert(editorBaseComponent, "EditorMeshComponent didn't derive from EditorComponentBase.");
+            editorBaseComponent->SetPrimaryAsset(assetId);
+        }
+
+        entity->Activate();
+
+        // Set scale, uniform or non-uniform
+        if (isUniformScale)
+        {
+            AZ::TransformBus::Event(entityId, &AZ::TransformBus::Events::SetLocalUniformScale, scale.GetX());
+        }
+        else
+        {
+            AZ::NonUniformScaleRequestBus::Event(entityId, &AZ::NonUniformScaleRequests::SetScale, scale);
+        }
+        entity->Deactivate();
     }
 
     void VisualsMaker::AddMaterialForVisual(const sdf::Visual* visual, AZ::EntityId entityId) const
@@ -218,7 +239,8 @@ namespace ROS2
         const AZStd::string azMaterialName{ materialName.c_str(), materialName.size() };
 
         // If present in map, take map color definition as priority, otherwise apply local node definition
-        const auto materialColorUrdf = m_materials.contains(azMaterialName) ? m_materials.at(azMaterialName)->Diffuse() : visual->Material()->Diffuse();
+        const auto materialColorUrdf =
+            m_materials.contains(azMaterialName) ? m_materials.at(azMaterialName)->Diffuse() : visual->Material()->Diffuse();
 
         const AZ::Color materialColor = URDF::TypeConversions::ConvertColor(materialColorUrdf);
         bool isPrimitive = visual->Geom()->Type() != sdf::GeometryType::MESH;
