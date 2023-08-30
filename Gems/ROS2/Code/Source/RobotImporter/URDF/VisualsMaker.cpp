@@ -184,7 +184,7 @@ namespace ROS2
         }
     }
 
-    void VisualsMaker::AddVisualAssetToEntity(AZ::EntityId entityId, const AZ::Data::AssetId& assetId, const AZ::Vector3 scale) const
+    void VisualsMaker::AddVisualAssetToEntity(AZ::EntityId entityId, const AZ::Data::AssetId& assetId, const AZ::Vector3& scale) const
     {
         if (!assetId.IsValid())
         {

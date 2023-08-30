@@ -36,7 +36,7 @@ namespace ROS2
     private:
         AZ::EntityId AddVisual(const sdf::Visual* visual, AZ::EntityId entityId, const AZStd::string& generatedName) const;
         void AddVisualToEntity(const sdf::Visual* visual, AZ::EntityId entityId) const;
-        void AddVisualAssetToEntity(AZ::EntityId entityId, const AZ::Data::AssetId& assetId, const AZ::Vector3 scale) const;
+        void AddVisualAssetToEntity(AZ::EntityId entityId, const AZ::Data::AssetId& assetId, const AZ::Vector3& scale) const;
         void AddMaterialForVisual(const sdf::Visual* visual, AZ::EntityId entityId) const;
 
         MaterialNameMap m_materials;
