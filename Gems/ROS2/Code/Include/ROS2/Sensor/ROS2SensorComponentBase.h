@@ -17,6 +17,20 @@
 
 namespace ROS2
 {
+    //! Base sensor component class for all specific sensor implementations. Developer working on the new sensor should derive from this
+    //! class, defining necessary event source type (EventSourceT template parameter). Available sources are e.g. TickBasedSource or
+    //! PhysicsBasedSource. Chosen event source is wrapped into EventSourceAdapter, making it possible to work with specific frequency
+    //! (configured using ROS2::EventSourceAdapter::Configure method). Handlers for not restricted source events should be connected via
+    //! ROS2::EventSourceAdapter::ConnectToSourceEvent method - they will be signalled with event source frequency (depends on its
+    //! implementation). Handlers for adapted frequency should be connected via ROS2::EventSourceAdapter::ConnectToAdaptedEvent method -
+    //! they will be called with adapter frequency set during event source adapter configuration. Working with adapter and event sources
+    //! will result in:
+    //!  - sensor Activate method - assigning event handlers (m_sourceEventHandler and m_adaptedEventHandler), connecting them to events,
+    //!     configuring and activating adapter,
+    //!  - sensor Deactivate method - deactivating adapter and disconnecting handlers.
+    //! Order of these operations is intended
+    //! @see ROS2::TickBasedSource
+    //! @see ROS2::PhysicsBasedSource
     template<class EventSourceT>
     class ROS2SensorComponentBase : public AZ::Component
     {
@@ -87,9 +101,13 @@ namespace ROS2
             return ros2Frame->GetFrameID();
         }
 
-        SensorConfiguration m_sensorConfiguration;
-        EventSourceAdapter<EventSourceT> m_eventSourceAdapter;
+        SensorConfiguration m_sensorConfiguration; ///< Basic sensor configuration.
+        EventSourceAdapter<EventSourceT> m_eventSourceAdapter; ///< Adapter for selected event source (see this class documentation).
+
+        //! Handler for source event. Requires manual assignment and connecting to source event in derived class.
         typename EventSourceAdapter<EventSourceT>::SourceEventHandlerType m_sourceEventHandler;
+
+        //! Handler for adapted event. Requires manual assignment and connecting to adapted event in derived class.
         typename EventSourceAdapter<EventSourceT>::SourceEventHandlerType m_adaptedEventHandler;
     };
 
