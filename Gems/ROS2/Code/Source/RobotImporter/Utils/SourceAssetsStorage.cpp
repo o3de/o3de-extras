@@ -13,6 +13,7 @@
 #include <AzCore/Utils/Utils.h>
 #include <AzCore/std/smart_ptr/make_shared.h>
 #include <AzCore/std/smart_ptr/shared_ptr.h>
+#include <AzFramework/Asset/AssetSystemBus.h>
 #include <AzToolsFramework/Asset/AssetUtils.h>
 #include <SceneAPI/SceneCore/Containers/Scene.h>
 #include <SceneAPI/SceneCore/Containers/Utilities/Filters.h>
@@ -267,30 +268,6 @@ namespace ROS2::Utils
         return availableAssets;
     }
 
-    AZ::Outcome<AzToolsFramework::AssetSystem::JobInfoContainer> WaitForAPAndEscalate(
-        const AZStd::string& relativePath, const AZStd::chrono::duration<int, AZStd::milli>& timeout)
-    {
-        const auto loopTime = AZStd::chrono::system_clock::now();
-        using namespace AzToolsFramework;
-        using namespace AzToolsFramework::AssetSystem;
-        AZ::Outcome<AssetSystem::JobInfoContainer> result = AZ::Failure();
-
-        while (loopTime - AZStd::chrono::system_clock::now() < timeout)
-        {
-            AssetSystemJobRequestBus::BroadcastResult(result, &AssetSystemJobRequestBus::Events::GetAssetJobsInfo, relativePath, true);
-            if (result.IsSuccess())
-            {
-                return result;
-            }
-        }
-        AZ_Warning(
-            "WaitForAPAndEscalate",
-            false,
-            "Cannot find job for %s, import may be incomplete or AssetProcessor is not running.",
-            relativePath.c_str());
-        return result;
-    }
-
     UrdfAssetMap CopyAssetForURDFAndCreateAssetMap(
         const AZStd::unordered_set<AZStd::string>& meshesFilenames,
         const AZStd::string& urdfFilename,
@@ -391,7 +368,20 @@ namespace ROS2::Utils
                             targetPathAssetTmp.c_str(),
                             targetPathAssetDst.c_str(),
                             outcomeMoveDst.GetResultCode());
-                        WaitForAPAndEscalate(targetPathAssetDst.c_str());
+
+                        // call GetAssetStatus_FlushIO to ensure the asset processor is aware of the new file
+                        AzFramework::AssetSystem::AssetStatus copiedAssetStatus =
+                            AzFramework::AssetSystem::AssetStatus::AssetStatus_Unknown;
+                        AzFramework::AssetSystemRequestBus::BroadcastResult(
+                            copiedAssetStatus,
+                            &AzFramework::AssetSystem::AssetSystemRequests::GetAssetStatus_FlushIO,
+                            targetPathAssetDst.c_str());
+                        AZ_Warning(
+                            "CopyAssetForURDF",
+                            copiedAssetStatus != AzFramework::AssetSystem::AssetStatus::AssetStatus_Unknown,
+                            "Asset processor did not recognize the new file %s.",
+                            targetPathAssetDst.c_str());
+
                         if (outcomeMoveDst)
                         {
                             copiedFiles[unresolvedUrfFileName] = targetPathAssetDst.String();
