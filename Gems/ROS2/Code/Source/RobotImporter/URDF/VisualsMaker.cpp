@@ -225,7 +225,7 @@ namespace ROS2
     void VisualsMaker::AddMaterialForVisual(const sdf::Visual* visual, AZ::EntityId entityId) const
     {
         // URDF does not include information from <gazebo> tags with specific materials, diffuse, specular and emissive params
-        if (!visual->Material() || !visual->Geom())
+        if (!visual->Material())
         {
             // Material is optional, and it requires geometry
             return;
@@ -241,20 +241,10 @@ namespace ROS2
         // If present in map, take map color definition as priority, otherwise apply local node definition
         const auto materialColorUrdf =
             m_materials.contains(azMaterialName) ? m_materials.at(azMaterialName)->Diffuse() : visual->Material()->Diffuse();
-
         const AZ::Color materialColor = URDF::TypeConversions::ConvertColor(materialColorUrdf);
-        bool isPrimitive = visual->Geom()->Type() != sdf::GeometryType::MESH;
-        if (isPrimitive)
-        { // For primitives, set the color in the shape component
-            entity->Activate();
-            LmbrCentral::EditorShapeComponentRequestsBus::Event(
-                entityId, &LmbrCentral::EditorShapeComponentRequests::SetShapeColor, materialColor);
-            entity->Deactivate();
-            return;
-        }
 
         entity->CreateComponent(AZ::Render::EditorMaterialComponentTypeId);
-        AZ_Printf("AddVisual", "Setting color for material %s\n", azMaterialName.c_str());
+        AZ_Trace("AddVisual", "Setting color for material %s\n", azMaterialName.c_str());
         entity->Activate();
         AZ::Render::MaterialComponentRequestBus::Event(
             entityId,
