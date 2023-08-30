@@ -9,6 +9,8 @@
 #pragma once
 
 #include <Atom/RPI.Public/AuxGeom/AuxGeomDraw.h>
+#include <AzCore/Component/Component.h>
+#include <AzCore/Component/TickBus.h>
 #include <AzCore/Math/Vector3.h>
 
 namespace WarehouseAutomation

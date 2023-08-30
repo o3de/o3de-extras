@@ -23,6 +23,7 @@
     ],
     "icon_path": "preview.png",
     "dependencies": [
+        "ROS2",
         "PhysX"
     ],
     "repo_uri": "https://github.com/o3de/o3de-extras",

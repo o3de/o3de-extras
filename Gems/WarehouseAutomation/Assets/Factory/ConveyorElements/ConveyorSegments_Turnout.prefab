@@ -64,7 +64,7 @@
                                     "guid": "{A2893F22-4359-5AF8-AF88-5AE7CC8B8CC0}",
                                     "subId": 276997345
                                 },
-                                "assetHint": "factory/conveyorelements/models/default_conveyorsegments_turnout_b1810876_10f6_51de_916a_bc0670fbcbf1_.azmodel"
+                                "assetHint": "factory/conveyorelements/models/default_conveyorsegments_turnout_b1810876_10f6_51de_916a_bc0670fbcbf1_.fbx.azmodel"
                             }
                         }
                     }
@@ -158,7 +158,7 @@
                                     "guid": "{A2893F22-4359-5AF8-AF88-5AE7CC8B8CC0}",
                                     "subId": 271046668
                                 },
-                                "assetHint": "factory/conveyorelements/models/default_conveyorsegments_turnout_1d55edc8_1340_569d_81be_d0a2be3653a8_.azmodel"
+                                "assetHint": "factory/conveyorelements/models/default_conveyorsegments_turnout_1d55edc8_1340_569d_81be_d0a2be3653a8_.fbx.azmodel"
                             }
                         }
                     }
@@ -355,7 +355,7 @@
                                     "guid": "{A2893F22-4359-5AF8-AF88-5AE7CC8B8CC0}",
                                     "subId": 3520309775
                                 },
-                                "assetHint": "factory/conveyorelements/models/conveyorsegments_turnout_side_barriers.pxmesh"
+                                "assetHint": "factory/conveyorelements/models/conveyorsegments_turnout_side_barriers.fbx.pxmesh"
                             },
                             "Configuration": {
                                 "PhysicsAsset": {
@@ -364,7 +364,7 @@
                                         "subId": 3520309775
                                     },
                                     "loadBehavior": "QueueLoad",
-                                    "assetHint": "factory/conveyorelements/models/conveyorsegments_turnout_side_barriers.pxmesh"
+                                    "assetHint": "factory/conveyorelements/models/conveyorsegments_turnout_side_barriers.fbx.pxmesh"
                                 }
                             }
                         }
@@ -570,7 +570,7 @@
                                     "guid": "{A2893F22-4359-5AF8-AF88-5AE7CC8B8CC0}",
                                     "subId": 275822480
                                 },
-                                "assetHint": "factory/conveyorelements/models/default_conveyorsegments_turnout_301c3323_4faf_5191_a89a_b03a1c75f392_.azmodel"
+                                "assetHint": "factory/conveyorelements/models/default_conveyorsegments_turnout_301c3323_4faf_5191_a89a_b03a1c75f392_.fbx.azmodel"
                             }
                         }
                     }
@@ -707,7 +707,7 @@
                                     "guid": "{A2893F22-4359-5AF8-AF88-5AE7CC8B8CC0}",
                                     "subId": 282836752
                                 },
-                                "assetHint": "factory/conveyorelements/models/default_conveyorsegments_turnout_9a297c01_bd79_5a00_b3a8_83e0cdbcb7a2_.azmodel"
+                                "assetHint": "factory/conveyorelements/models/default_conveyorsegments_turnout_9a297c01_bd79_5a00_b3a8_83e0cdbcb7a2_.fbx.azmodel"
                             }
                         }
                     }
@@ -1405,7 +1405,7 @@
                                         0.0
                                     ],
                                     [
-                                        2.4327220916748047,
+                                        1.2784416675567627,
                                         0.0,
                                         0.0
                                     ]
@@ -1451,7 +1451,7 @@
                                     "guid": "{A2893F22-4359-5AF8-AF88-5AE7CC8B8CC0}",
                                     "subId": 282191330
                                 },
-                                "assetHint": "factory/conveyorelements/models/default_conveyorsegments_turnout_5da0d0c3_e1ba_501e_9ebe_49ebfda83173_.azmodel"
+                                "assetHint": "factory/conveyorelements/models/default_conveyorsegments_turnout_5da0d0c3_e1ba_501e_9ebe_49ebfda83173_.fbx.azmodel"
                             }
                         }
                     }
@@ -1607,7 +1607,7 @@
                                     "guid": "{A2893F22-4359-5AF8-AF88-5AE7CC8B8CC0}",
                                     "subId": 279963009
                                 },
-                                "assetHint": "factory/conveyorelements/models/default_conveyorsegments_turnout_a9684d36_e0ba_5851_b1dc_c9bdbd87e4a1_.azmodel"
+                                "assetHint": "factory/conveyorelements/models/default_conveyorsegments_turnout_a9684d36_e0ba_5851_b1dc_c9bdbd87e4a1_.fbx.azmodel"
                             }
                         }
                     }
@@ -1701,7 +1701,7 @@
                                     "guid": "{A2893F22-4359-5AF8-AF88-5AE7CC8B8CC0}",
                                     "subId": 272467391
                                 },
-                                "assetHint": "factory/conveyorelements/models/default_conveyorsegments_turnout_e03df11b_9ac5_556a_a3ea_e3ae5d4de0a8_.azmodel"
+                                "assetHint": "factory/conveyorelements/models/default_conveyorsegments_turnout_e03df11b_9ac5_556a_a3ea_e3ae5d4de0a8_.fbx.azmodel"
                             }
                         }
                     }
@@ -1795,7 +1795,7 @@
                                     "guid": "{A2893F22-4359-5AF8-AF88-5AE7CC8B8CC0}",
                                     "subId": 280878357
                                 },
-                                "assetHint": "factory/conveyorelements/models/default_conveyorsegments_turnout_8835ff76_4ae7_5b2b_bee7_2a2b46610e62_.azmodel"
+                                "assetHint": "factory/conveyorelements/models/default_conveyorsegments_turnout_8835ff76_4ae7_5b2b_bee7_2a2b46610e62_.fbx.azmodel"
                             }
                         }
                     }
@@ -1946,7 +1946,7 @@
                                     "guid": "{A2893F22-4359-5AF8-AF88-5AE7CC8B8CC0}",
                                     "subId": 279453056
                                 },
-                                "assetHint": "factory/conveyorelements/models/default_conveyorsegments_turnout_df6f7c76_f08f_59e7_a7f9_698f2f0b6b88_.azmodel"
+                                "assetHint": "factory/conveyorelements/models/default_conveyorsegments_turnout_df6f7c76_f08f_59e7_a7f9_698f2f0b6b88_.fbx.azmodel"
                             }
                         }
                     }
@@ -2040,7 +2040,7 @@
                                     "guid": "{A2893F22-4359-5AF8-AF88-5AE7CC8B8CC0}",
                                     "subId": 273455683
                                 },
-                                "assetHint": "factory/conveyorelements/models/default_conveyorsegments_turnout_16484ee3_2953_5709_821b_3cef29615834_.azmodel"
+                                "assetHint": "factory/conveyorelements/models/default_conveyorsegments_turnout_16484ee3_2953_5709_821b_3cef29615834_.fbx.azmodel"
                             }
                         }
                     }
@@ -2134,7 +2134,7 @@
                                     "guid": "{A2893F22-4359-5AF8-AF88-5AE7CC8B8CC0}",
                                     "subId": 275058420
                                 },
-                                "assetHint": "factory/conveyorelements/models/default_conveyorsegments_turnout_8636c6bc_e611_5362_8a5d_f5e8a1f33f55_.azmodel"
+                                "assetHint": "factory/conveyorelements/models/default_conveyorsegments_turnout_8636c6bc_e611_5362_8a5d_f5e8a1f33f55_.fbx.azmodel"
                             }
                         }
                     }
