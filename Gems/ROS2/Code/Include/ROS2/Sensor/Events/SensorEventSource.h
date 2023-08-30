@@ -13,11 +13,13 @@ namespace ROS2
     struct SensorConfiguration;
 
     //! Base class template for sensor event sources (based e.g. on TickBus or engine physics callback). Developer that wants to implement
-    //! new event source, should derive it from this class and signal m_sensorEvent based on chosen approach. Derived classes should rather
-    //! not auto connect any handler to m_sensorEvent, unless it is done to manage their internal logic. This event is for the final user
-    //! that can connect prepared event handler to it using ConnectToSourceEvent method.
-    //! @see ROS2::TickBasedSource.
-    //! @see ROS2::PhysicsBasedSource.
+    //! new event source should derive from this class and signal m_sensorEvent based on chosen approach. Derived classes can be used
+    //! directly as unconstrained source of frequency - e.g. TickBasedSource, when synchronization with draw calls is necessary. However, in
+    //! most common case they will be used as source of events for sensors, through EventSourceAdapter object, where their m_sensorEvent
+    //! will be additionally adapted to some sensor-specific frequency.
+    //! @see ROS2::EventSourceAdapter
+    //! @see ROS2::TickBasedSource
+    //! @see ROS2::PhysicsBasedSource
     template<template<typename...> class EventT, template<typename...> class EventHandlerT, typename... EventArgs>
     class SensorEventSource
     {
@@ -28,8 +30,8 @@ namespace ROS2
 
         virtual ~SensorEventSource() = default;
 
-        //! Sets up event source - ee event source description for more details. After call to this method event source is supposed to start
-        //! signalling source event.
+        //! Sets up event source - see event source description for more details. After call to this method event source is supposed to
+        //! start signalling source event.
         virtual void Activate()
         {
         }

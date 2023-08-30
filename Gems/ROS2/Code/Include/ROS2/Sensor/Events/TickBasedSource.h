@@ -31,11 +31,10 @@ namespace ROS2
         void Deactivate() override;
         void Configure(const SensorConfiguration& sensorConfiguration) override;
 
-    protected:
+    private:
         // Override of AZ::TickBus::Handler.
         void OnTick(float deltaTime, AZ::ScriptTimePoint time) override;
 
-    private:
         bool m_sourceEnabled{ true }; ///< Toggle for event source enabled/disabled state.
     };
 } // namespace ROS2
