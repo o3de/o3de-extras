@@ -10,7 +10,7 @@ Make sure that your system meets [Requirements](https://development--o3deorg.net
 
 Install ROS2 dependencies for this template:
 ```bash
-sudo apt install ros-humble-moveit ros-humble-moveit-resources ros-humble-depth-image-proc
+sudo apt install ros-${ROS_DISTRO}-moveit ros-${ROS_DISTRO}-moveit-resources ros-${ROS_DISTRO}-depth-image-proc
 ```
 ## How to set up a new project with the template
 
