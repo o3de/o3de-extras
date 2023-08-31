@@ -106,14 +106,14 @@ namespace ROS2
         void Activate()
         {
             m_adaptedEventHandler = typename EventSourceT::SourceEventHandlerType(
-                [this](auto... args)
+                [this](auto&&... args)
                 {
                     const AZStd::chrono::duration<float, AZStd::chrono::seconds::period> expectedLoopTime =
                         ROS2Interface::Get()->GetSimulationClock().GetExpectedSimulationLoopTime();
 
                     if (IsPublicationDeadline(expectedLoopTime.count()))
                     {
-                        m_sensorAdaptedEvent.Signal(args...);
+                        m_sensorAdaptedEvent.Signal(AZStd::forward<decltype(args)>(args)...);
                     }
                 });
             m_eventSource.ConnectToSourceEvent(m_adaptedEventHandler);
