@@ -25,14 +25,14 @@ namespace ROS2
     {
         Lidar2DSensorConfiguration::Reflect(context);
 
-        if (auto* serialize = azrtti_cast<AZ::SerializeContext*>(context))
+        if (auto serializeContext = azrtti_cast<AZ::SerializeContext*>(context))
         {
-            serialize->Class<ROS2Lidar2DSensorComponent, SensorBaseType>()->Version(2)
+            serializeContext->Class<ROS2Lidar2DSensorComponent, SensorBaseType>()->Version(2)
                 ->Field("lidarConfiguration", &ROS2Lidar2DSensorComponent::m_lidarConfiguration);
 
-            if (AZ::EditContext* ec = serialize->GetEditContext())
+            if (auto editContext = serializeContext->GetEditContext())
             {
-                ec->Class<ROS2Lidar2DSensorComponent>("ROS2 Lidar 2D Sensor", "Lidar 2D sensor component")
+                editContext->Class<ROS2Lidar2DSensorComponent>("ROS2 Lidar 2D Sensor", "Lidar 2D sensor component")
                     ->ClassElement(AZ::Edit::ClassElements::EditorData, "")
                     ->Attribute(AZ::Edit::Attributes::Category, "ROS2")
                     ->Attribute(AZ::Edit::Attributes::AppearsInAddComponentMenu, AZ_CRC_CE("Game"))
