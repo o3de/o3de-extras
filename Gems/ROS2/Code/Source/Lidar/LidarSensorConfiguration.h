@@ -27,8 +27,6 @@ namespace ROS2
 
         LidarSensorConfiguration(AZStd::vector<LidarTemplate::LidarModel> availableModels = {});
 
-        void FetchLidarImplementationFeatures();
-
         LidarSystemFeatures m_lidarSystemFeatures;
 
         AZStd::string m_lidarSystem;
@@ -46,11 +44,17 @@ namespace ROS2
         bool IsEntityExclusionVisible() const;
         bool IsMaxPointsConfigurationVisible() const;
 
-        AZStd::vector<AZStd::string> GetAvailableModels() const;
+        //! Update the lidar configuration based on the current lidar model selected.
         void FetchLidarModelConfiguration();
+        //! Update the lidar system features based on the current lidar system selected.
+        void FetchLidarImplementationFeatures();
 
         AZ::Crc32 OnLidarModelSelected();
         AZ::Crc32 OnLidarImplementationSelected();
+
+        //! Get all models this configuration can be set to (for example all 2D lidar models).
+        AZStd::vector<AZStd::string> GetAvailableModels() const;
+        //! Get all available lidar systems.
         AZStd::vector<AZStd::string> FetchLidarSystemList();
 
         const AZStd::vector<LidarTemplate::LidarModel> m_availableModels;

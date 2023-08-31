@@ -19,7 +19,7 @@ namespace ROS2
 {
     namespace
     {
-        const char* kLaserScanType = "sensor_msgs::msg::LaserScan";
+        const char* LaserScanType = "sensor_msgs::msg::LaserScan";
     }
 
     void ROS2Lidar2DSensorComponent::Reflect(AZ::ReflectContext* context)
@@ -49,7 +49,7 @@ namespace ROS2
         : m_lidarCore(LidarTemplateUtils::Get2DModels())
     {
         TopicConfiguration ls;
-        AZStd::string type = kLaserScanType;
+        AZStd::string type = LaserScanType;
         ls.m_type = type;
         ls.m_topic = "ls";
         m_sensorConfiguration.m_frequency = 10.f;
@@ -74,7 +74,7 @@ namespace ROS2
         auto ros2Node = ROS2Interface::Get()->GetNode();
         AZ_Assert(m_sensorConfiguration.m_publishersConfigurations.size() == 1, "Invalid configuration of publishers for lidar sensor");
 
-        const TopicConfiguration& publisherConfig = m_sensorConfiguration.m_publishersConfigurations[kLaserScanType];
+        const TopicConfiguration& publisherConfig = m_sensorConfiguration.m_publishersConfigurations[LaserScanType];
         AZStd::string fullTopic = ROS2Names::GetNamespacedName(GetNamespace(), publisherConfig.m_topic);
         m_laserScanPublisher = ros2Node->create_publisher<sensor_msgs::msg::LaserScan>(fullTopic.data(), publisherConfig.GetQoS());
 

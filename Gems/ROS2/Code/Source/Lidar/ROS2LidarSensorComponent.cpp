@@ -19,7 +19,7 @@ namespace ROS2
 {
     namespace
     {
-        const char* kPointCloudType = "sensor_msgs::msg::PointCloud2";
+        const char* PointCloudType = "sensor_msgs::msg::PointCloud2";
     }
 
     void ROS2LidarSensorComponent::Reflect(AZ::ReflectContext* context)
@@ -49,7 +49,7 @@ namespace ROS2
         : m_lidarCore(LidarTemplateUtils::Get3DModels())
     {
         TopicConfiguration pc;
-        AZStd::string type = kPointCloudType;
+        AZStd::string type = PointCloudType;
         pc.m_type = type;
         pc.m_topic = "pc";
         m_sensorConfiguration.m_frequency = 10.f;
@@ -82,7 +82,7 @@ namespace ROS2
 
         if (m_canRaycasterPublish)
         {
-            const TopicConfiguration& publisherConfig = m_sensorConfiguration.m_publishersConfigurations[kPointCloudType];
+            const TopicConfiguration& publisherConfig = m_sensorConfiguration.m_publishersConfigurations[PointCloudType];
             auto* ros2Frame = Utils::GetGameOrEditorComponent<ROS2FrameComponent>(GetEntity());
 
             LidarRaycasterRequestBus::Event(
@@ -97,7 +97,7 @@ namespace ROS2
             auto ros2Node = ROS2Interface::Get()->GetNode();
             AZ_Assert(m_sensorConfiguration.m_publishersConfigurations.size() == 1, "Invalid configuration of publishers for lidar sensor");
 
-            const TopicConfiguration& publisherConfig = m_sensorConfiguration.m_publishersConfigurations[kPointCloudType];
+            const TopicConfiguration& publisherConfig = m_sensorConfiguration.m_publishersConfigurations[PointCloudType];
             AZStd::string fullTopic = ROS2Names::GetNamespacedName(GetNamespace(), publisherConfig.m_topic);
             m_pointCloudPublisher = ros2Node->create_publisher<sensor_msgs::msg::PointCloud2>(fullTopic.data(), publisherConfig.GetQoS());
         }
