@@ -350,7 +350,7 @@ namespace ROS2
     {
         if ((currentPage() == m_fileSelectPage && m_params.empty()) || currentPage() == m_xacroParamsPage)
         {
-            if (m_parsedUrdf.Model() != nullptr)
+            if (m_parsedUrdf.Model() != nullptr && m_checkUrdfPage->isComplete())
             {
                 if (m_meshNames.size() == 0)
                 {
