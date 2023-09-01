@@ -51,6 +51,8 @@ namespace MachineLearning
 
         void FillIndicies();
 
+        AZStd::size_t m_firstCache = 0;
+        AZStd::size_t m_lastCache = 0;
         AZStd::vector<AZStd::size_t> m_indices;
         ILabeledTrainingDataPtr m_sourceData;
     };

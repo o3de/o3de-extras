@@ -69,6 +69,10 @@ namespace MachineLearning
     {
         AZ_Assert(m_sourceData, "No datasource assigned to view");
         AZ_Assert(index + m_first < m_last, "Out of range index requested");
+        if (m_firstCache != m_first || m_lastCache != m_last)
+        {
+            FillIndicies();
+        }
         return m_sourceData->GetLabelByIndex(m_indices[index]);
     }
 
@@ -76,13 +80,19 @@ namespace MachineLearning
     {
         AZ_Assert(m_sourceData, "No datasource assigned to view");
         AZ_Assert(index + m_first < m_last, "Out of range index requested");
+        if (m_firstCache != m_first || m_lastCache != m_last)
+        {
+            FillIndicies();
+        }
         return m_sourceData->GetDataByIndex(m_indices[index]);
     }
 
     void TrainingDataView::FillIndicies()
     {
         // Generate a set of training indices that we can later optionally shuffle
-        m_indices.resize(GetOriginalSize());
+        m_indices.resize(m_last);
         std::iota(m_indices.begin(), m_indices.end(), m_first);
+        m_firstCache = m_first;
+        m_lastCache = m_last;
     }
 }
