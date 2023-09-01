@@ -18,10 +18,6 @@
 #include <AzCore/Component/TransformBus.h>
 #include <AzToolsFramework/Entity/EditorEntityHelpers.h>
 #include <AzToolsFramework/ToolsComponents/EditorNonUniformScaleComponent.h>
-#include <LmbrCentral/Shape/BoxShapeComponentBus.h>
-#include <LmbrCentral/Shape/CylinderShapeComponentBus.h>
-#include <LmbrCentral/Shape/EditorShapeComponentBus.h>
-#include <LmbrCentral/Shape/SphereShapeComponentBus.h>
 
 namespace ROS2
 {
@@ -111,9 +107,9 @@ namespace ROS2
                 AZ_Assert(sphereGeometry, "geometry is not Sphere");
                 const AZ::Vector3 sphereDimensions(sphereGeometry->Radius());
 
-                // The `_sphere_1x1.azmodel` is created by Asset Processor based on O3DE `PrimitiveAssets` Gem source.
+                // The `_sphere_1x1.fbx.azmodel` is created by Asset Processor based on O3DE `PrimitiveAssets` Gem source.
                 AZ::Data::AssetId assetId;
-                const char* sphereAssetRelPath = "objects/_primitives/_sphere_1x1.azmodel"; // relative path to cache folder.
+                const char* sphereAssetRelPath = "objects/_primitives/_sphere_1x1.fbx.azmodel"; // relative path to cache folder.
                 AZ::Data::AssetCatalogRequestBus::BroadcastResult(
                     assetId,
                     &AZ::Data::AssetCatalogRequestBus::Events::GetAssetIdByPath,
@@ -131,9 +127,9 @@ namespace ROS2
                 AZ_Assert(cylinderGeometry, "geometry is not Cylinder");
                 const AZ::Vector3 cylinderDimensions(cylinderGeometry->Radius(), cylinderGeometry->Radius(), cylinderGeometry->Length());
 
-                // The `_cylinder_1x1.azmodel` is created by Asset Processor based on O3DE `PrimitiveAssets` Gem source.
+                // The `_cylinder_1x1.fbx.azmodel` is created by Asset Processor based on O3DE `PrimitiveAssets` Gem source.
                 AZ::Data::AssetId assetId;
-                const char* cylinderAssetRelPath = "objects/_primitives/_cylinder_1x1.azmodel"; // relative path to cache folder.
+                const char* cylinderAssetRelPath = "objects/_primitives/_cylinder_1x1.fbx.azmodel"; // relative path to cache folder.
                 AZ::Data::AssetCatalogRequestBus::BroadcastResult(
                     assetId,
                     &AZ::Data::AssetCatalogRequestBus::Events::GetAssetIdByPath,
@@ -151,9 +147,9 @@ namespace ROS2
                 AZ_Assert(boxGeometry, "geometry is not Box");
                 const AZ::Vector3 boxDimensions = URDF::TypeConversions::ConvertVector3(boxGeometry->Size());
 
-                // The `_box_1x1.azmodel` is created by Asset Processor based on O3DE `PrimitiveAssets` Gem source.
+                // The `_box_1x1.fbx.azmodel` is created by Asset Processor based on O3DE `PrimitiveAssets` Gem source.
                 AZ::Data::AssetId assetId;
-                const char* boxAssetRelPath = "objects/_primitives/_box_1x1.azmodel"; // relative path to cache folder.
+                const char* boxAssetRelPath = "objects/_primitives/_box_1x1.fbx.azmodel"; // relative path to cache folder.
                 AZ::Data::AssetCatalogRequestBus::BroadcastResult(
                     assetId,
                     &AZ::Data::AssetCatalogRequestBus::Events::GetAssetIdByPath,

@@ -11,6 +11,7 @@
 #include "UrdfParser.h"
 #include <AzCore/Component/EntityId.h>
 #include <AzCore/IO/Path/Path.h>
+#include <AzCore/Math/Vector3.h>
 #include <AzCore/std/containers/unordered_map.h>
 #include <AzCore/std/smart_ptr/shared_ptr.h>
 #include <RobotImporter/Utils/SourceAssetsStorage.h>
