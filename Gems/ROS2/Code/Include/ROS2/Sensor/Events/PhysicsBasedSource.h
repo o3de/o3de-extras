@@ -24,8 +24,8 @@ namespace ROS2
         static void Reflect(AZ::ReflectContext* context);
 
         // Overrides of ROS2::SensorEventSource specialization.
-        void Activate() override;
-        void Deactivate() override;
+        void Start() override;
+        void Stop() override;
         float GetDeltaTime(AzPhysics::SceneHandle sceneHandle, float deltaTime) const override;
 
     private:

@@ -8,6 +8,8 @@
 
 #pragma once
 
+
+
 namespace ROS2
 {
     struct SensorConfiguration;
@@ -26,6 +28,9 @@ namespace ROS2
     public:
         using SourceBaseType = SensorEventSource<EventT, EventHandlerT, EventArgs...>;
 
+        using SourceCallbackType = AZStd::function<void(EventArgs...)>;
+        using AdaptedCallbackType = AZStd::function<void(float, EventArgs...)>;
+
         using SourceEventType = EventT<EventArgs...>;
         using SourceEventHandlerType = EventHandlerT<EventArgs...>;
 
@@ -36,13 +41,13 @@ namespace ROS2
 
         //! Sets up event source - see event source description for more details. After call to this method event source is supposed to
         //! start signalling source event.
-        virtual void Activate()
+        virtual void Start()
         {
         }
 
         //! Shuts down event source - see event source description for more details. After call to this method event source is supposed to
         //! stop signalling source event.
-        virtual void Deactivate()
+        virtual void Stop()
         {
         }
 

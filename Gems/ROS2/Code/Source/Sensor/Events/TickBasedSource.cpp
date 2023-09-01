@@ -19,12 +19,12 @@ namespace ROS2
         }
     }
 
-    void TickBasedSource::Activate()
+    void TickBasedSource::Start()
     {
         AZ::TickBus::Handler::BusConnect();
     }
 
-    void TickBasedSource::Deactivate()
+    void TickBasedSource::Stop()
     {
         AZ::TickBus::Handler::BusDisconnect();
     }

@@ -19,7 +19,7 @@ namespace ROS2
         }
     }
 
-    void PhysicsBasedSource::Activate()
+    void PhysicsBasedSource::Start()
     {
         m_onSceneSimulationEventHandler = AzPhysics::SceneEvents::OnSceneSimulationFinishHandler(
             [this](AzPhysics::SceneHandle sceneHandle, float deltaTime)
@@ -32,7 +32,7 @@ namespace ROS2
         sceneInterface->RegisterSceneSimulationFinishHandler(sceneHandle, m_onSceneSimulationEventHandler);
     }
 
-    void PhysicsBasedSource::Deactivate()
+    void PhysicsBasedSource::Stop()
     {
         m_onSceneSimulationEventHandler.Disconnect();
     }

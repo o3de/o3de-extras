@@ -35,7 +35,7 @@ namespace ROS2
 
         if (auto* serializeContext = azrtti_cast<AZ::SerializeContext*>(context))
         {
-            serializeContext->Class<ROS2ImuSensorComponent, SensorBaseType>()->Version(2)->Field(
+            serializeContext->Class<ROS2ImuSensorComponent, SensorBaseType>()->Version(3)->Field(
                 "imuSensorConfiguration", &ROS2ImuSensorComponent::m_imuConfiguration);
 
             if (auto* editContext = serializeContext->GetEditContext())
@@ -90,19 +90,8 @@ namespace ROS2
         m_angularVelocityCovariance = ToDiagonalCovarianceMatrix(m_imuConfiguration.m_angularVelocityVariance);
         m_orientationCovariance = ToDiagonalCovarianceMatrix(m_imuConfiguration.m_orientationVariance);
 
-        // Event source adapter setup.
-        m_sourceEventHandler = decltype(m_sourceEventHandler)(
-            [this](AzPhysics::SceneHandle sceneHandle, [[maybe_unused]] float physicsDeltaTime)
-            {
-                if (!m_sensorConfiguration.m_publishingEnabled)
-                {
-                    return;
-                }
-                OnPhysicsEvent(sceneHandle);
-            });
-        m_eventSourceAdapter.ConnectToSourceEvent(m_sourceEventHandler);
-
-        m_adaptedEventHandler = decltype(m_adaptedEventHandler)(
+        StartSensor(
+            m_sensorConfiguration.m_frequency,
             [this](float imuDeltaTime, AzPhysics::SceneHandle sceneHandle, float physicsDeltaTime)
             {
                 if (!m_sensorConfiguration.m_publishingEnabled)
@@ -110,19 +99,16 @@ namespace ROS2
                     return;
                 }
                 OnImuEvent(imuDeltaTime, sceneHandle, physicsDeltaTime);
+            },
+            [this]([[maybe_unused]] AzPhysics::SceneHandle sceneHandle, float physicsDeltaTime)
+            {
+                OnPhysicsEvent(sceneHandle);
             });
-        m_eventSourceAdapter.ConnectToAdaptedEvent(m_adaptedEventHandler);
-
-        m_eventSourceAdapter.Configure(m_sensorConfiguration.m_frequency);
-        m_eventSourceAdapter.Activate();
     }
 
     void ROS2ImuSensorComponent::Deactivate()
     {
-        m_eventSourceAdapter.Deactivate();
-        m_adaptedEventHandler.Disconnect();
-        m_sourceEventHandler.Disconnect();
-
+        StopSensor();
         m_bodyHandle = AzPhysics::InvalidSimulatedBodyHandle;
         m_imuPublisher.reset();
     }

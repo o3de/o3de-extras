@@ -82,6 +82,34 @@ namespace ROS2
         }
 
     protected:
+        void StartSensor(
+            float sensorFrequency,
+            typename EventSourceT::AdaptedCallbackType adaptedCallback,
+            typename EventSourceT::SourceCallbackType sourceCallback = nullptr)
+        {
+            AZ_TracePrintf("SensorBase", "StartSensor frequency %f", sensorFrequency);
+
+            m_eventSourceAdapter.SetFrequency(sensorFrequency);
+
+            m_adaptedEventHandler.Disconnect();
+            m_adaptedEventHandler = decltype(m_adaptedEventHandler)(adaptedCallback);
+            m_eventSourceAdapter.ConnectToAdaptedEvent(m_adaptedEventHandler);
+
+            m_sourceEventHandler.Disconnect();
+            if (sourceCallback)
+            {
+                m_sourceEventHandler = decltype(m_sourceEventHandler)(sourceCallback);
+                m_eventSourceAdapter.ConnectToSourceEvent(m_sourceEventHandler);
+            }
+
+            m_eventSourceAdapter.Start();
+        }
+
+        void StopSensor()
+        {
+            m_eventSourceAdapter.Stop();
+        }
+
         //! Returns a complete namespace for this sensor topics and frame ids.
         [[nodiscard]] AZStd::string GetNamespace() const
         {
@@ -100,10 +128,10 @@ namespace ROS2
         EventSourceAdapter<EventSourceT> m_eventSourceAdapter; ///< Adapter for selected event source (see this class documentation).
 
         //! Handler for source event. Requires manual assignment and connecting to source event in derived class.
-        typename EventSourceAdapter<EventSourceT>::SourceEventHandlerType m_sourceEventHandler;
+        typename EventSourceT::SourceEventHandlerType m_sourceEventHandler;
 
         //! Handler for adapted event. Requires manual assignment and connecting to adapted event in derived class.
-        typename EventSourceAdapter<EventSourceT>::AdaptedEventHandlerType m_adaptedEventHandler;
+        typename EventSourceT::AdaptedEventHandlerType m_adaptedEventHandler;
     };
 
     AZ_COMPONENT_IMPL_INLINE(

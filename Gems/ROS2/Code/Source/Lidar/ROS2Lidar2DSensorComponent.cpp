@@ -27,7 +27,7 @@ namespace ROS2
 
         if (auto* serializeContext = azrtti_cast<AZ::SerializeContext*>(context))
         {
-            serializeContext->Class<ROS2Lidar2DSensorComponent, SensorBaseType>()->Version(2)->Field(
+            serializeContext->Class<ROS2Lidar2DSensorComponent, SensorBaseType>()->Version(3)->Field(
                 "lidarConfiguration", &ROS2Lidar2DSensorComponent::m_lidarConfiguration);
 
             if (auto* editContext = serializeContext->GetEditContext())
@@ -174,38 +174,25 @@ namespace ROS2
         ConnectToLidarRaycaster();
         ConfigureLidarRaycaster();
 
-        m_sourceEventHandler = decltype(m_sourceEventHandler)(
-            [this](auto... args)
+        StartSensor(
+            m_sensorConfiguration.m_frequency,
+            [this]([[maybe_unused]] auto&&... args)
             {
                 if (!m_sensorConfiguration.m_publishingEnabled)
                 {
                     return;
                 }
-                this->Visualize();
-            });
-        m_eventSourceAdapter.ConnectToSourceEvent(m_sourceEventHandler);
-
-        m_adaptedEventHandler = decltype(m_adaptedEventHandler)(
-            [this](auto... args)
+                FrequencyTick();
+            },
+            [this]([[maybe_unused]] auto&&... args)
             {
-                if (!m_sensorConfiguration.m_publishingEnabled)
-                {
-                    return;
-                }
-                this->FrequencyTick();
+                Visualize();
             });
-        m_eventSourceAdapter.ConnectToAdaptedEvent(m_adaptedEventHandler);
-
-        m_eventSourceAdapter.Configure(m_sensorConfiguration.m_frequency);
-        m_eventSourceAdapter.Activate();
     }
 
     void ROS2Lidar2DSensorComponent::Deactivate()
     {
-        m_eventSourceAdapter.Deactivate();
-        m_adaptedEventHandler.Disconnect();
-        m_sourceEventHandler.Disconnect();
-
+        StopSensor();
         m_laserScanPublisher.reset();
     }
 
