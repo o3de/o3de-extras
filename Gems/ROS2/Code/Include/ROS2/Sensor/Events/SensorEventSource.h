@@ -25,8 +25,12 @@ namespace ROS2
     {
     public:
         using SourceBaseType = SensorEventSource<EventT, EventHandlerT, EventArgs...>;
+
         using SourceEventType = EventT<EventArgs...>;
         using SourceEventHandlerType = EventHandlerT<EventArgs...>;
+
+        using AdaptedEventType = EventT<float, EventArgs...>;
+        using AdaptedEventHandlerType = EventHandlerT<float, EventArgs...>;
 
         virtual ~SensorEventSource() = default;
 
@@ -58,6 +62,11 @@ namespace ROS2
         {
             sourceEventHandler.Connect(m_sourceEvent);
         }
+
+        //! Returns delta time from set of source event parameters. The purpose of this method is to give developers access to event source
+        //! delta time, without additional variables or helpers.
+        //! @return Delta time in seconds.
+        virtual float GetDeltaTime(EventArgs... args) const = 0;
 
     protected:
         SensorEventSource() = default;

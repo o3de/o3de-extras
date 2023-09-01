@@ -58,7 +58,7 @@ namespace ROS2
     private:
         void OnPhysicsEvent(AzPhysics::SceneHandle sceneHandle);
 
-        void OnImuEvent(AzPhysics::SceneHandle sceneHandle, float deltaTime);
+        void OnImuEvent(float imuDeltaTime, AzPhysics::SceneHandle sceneHandle, float physicsDeltaTime);
 
         AZ::Matrix3x3 ToDiagonalCovarianceMatrix(const AZ::Vector3& variance);
 

@@ -56,4 +56,9 @@ namespace ROS2
     {
         m_sourceEnabled = sensorConfiguration.m_publishingEnabled;
     }
+
+    float PhysicsBasedSource::GetDeltaTime(AzPhysics::SceneHandle sceneHandle, float deltaTime) const
+    {
+        return deltaTime;
+    }
 } // namespace ROS2

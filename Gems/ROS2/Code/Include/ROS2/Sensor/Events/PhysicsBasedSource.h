@@ -25,6 +25,8 @@ namespace ROS2
         void Deactivate() override;
         void Configure(const SensorConfiguration& sensorConfiguration) override;
 
+        float GetDeltaTime(AzPhysics::SceneHandle sceneHandle, float deltaTime) const override;
+
     private:
         AzPhysics::SceneEvents::OnSceneSimulationFinishHandler m_onSceneSimulationEvent;
         bool m_sourceEnabled{ true }; ///< Toggle for event source enabled/disabled state.

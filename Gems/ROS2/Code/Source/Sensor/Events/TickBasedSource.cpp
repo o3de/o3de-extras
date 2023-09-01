@@ -45,6 +45,11 @@ namespace ROS2
         m_sourceEnabled = sensorConfiguration.m_publishingEnabled;
     }
 
+    float TickBasedSource::GetDeltaTime(float deltaTime, AZ::ScriptTimePoint time) const
+    {
+        return deltaTime;
+    }
+
     void TickBasedSource::OnTick(float deltaTime, AZ::ScriptTimePoint time)
     {
         if (!m_sourceEnabled)

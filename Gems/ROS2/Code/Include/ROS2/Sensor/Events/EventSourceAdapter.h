@@ -67,6 +67,9 @@ namespace ROS2
         using SourceEventType = typename EventSourceT::SourceEventType;
         using SourceEventHandlerType = typename EventSourceT::SourceEventHandlerType;
 
+        using AdaptedEventType = typename EventSourceT::AdaptedEventType;
+        using AdaptedEventHandlerType = typename EventSourceT::AdaptedEventHandlerType;
+
         static void Reflect(AZ::ReflectContext* context)
         {
             EventSourceT::Reflect(context);
@@ -105,18 +108,21 @@ namespace ROS2
         //! different event source implementations can behave differently.
         void Activate()
         {
-            m_adaptedEventHandler = typename EventSourceT::SourceEventHandlerType(
+            m_sourceAdaptingEventHandler = typename EventSourceT::SourceEventHandlerType(
                 [this](auto&&... args)
                 {
-                    const AZStd::chrono::duration<float, AZStd::chrono::seconds::period> expectedLoopTime =
-                        ROS2Interface::Get()->GetSimulationClock().GetExpectedSimulationLoopTime();
+                    const float sourceDeltaTime = m_eventSource.GetDeltaTime(args...);
+                    m_adaptedDeltaTime += sourceDeltaTime;
 
-                    if (IsPublicationDeadline(expectedLoopTime.count()))
+                    if (!IsPublicationDeadline(sourceDeltaTime))
                     {
-                        m_sensorAdaptedEvent.Signal(AZStd::forward<decltype(args)>(args)...);
+                        return;
                     }
+
+                    m_sensorAdaptedEvent.Signal(m_adaptedDeltaTime, AZStd::forward<decltype(args)>(args)...);
+                    m_adaptedDeltaTime = 0.0f;
                 });
-            m_eventSource.ConnectToSourceEvent(m_adaptedEventHandler);
+            m_eventSource.ConnectToSourceEvent(m_sourceAdaptingEventHandler);
             m_eventSource.Activate();
         }
 
@@ -126,7 +132,7 @@ namespace ROS2
         void Deactivate()
         {
             m_eventSource.Deactivate();
-            m_adaptedEventHandler.Disconnect();
+            m_sourceAdaptingEventHandler.Disconnect();
         }
 
         //! Parses sensor configuration into event source configuration.
@@ -151,7 +157,7 @@ namespace ROS2
         //! Connects given event handler to adapted event (ROS2::EventSourceAdapter). This event is signalled with a frequency set in event
         //! source adapter configuration (ROS2::EventSourceAdapter::Configure).
         //! @param adaptedEventHandler Event handler for adapted event (frequency set through event source adapter configuration).
-        void ConnectToAdaptedEvent(typename EventSourceT::SourceEventHandlerType& adaptedEventHandler)
+        void ConnectToAdaptedEvent(typename EventSourceT::AdaptedEventHandlerType& adaptedEventHandler)
         {
             adaptedEventHandler.Connect(m_sensorAdaptedEvent);
         }
@@ -160,29 +166,25 @@ namespace ROS2
         //! Uses tick counter, expected loop time and frequency set for adapter to support managing calls from event source.
         //! @param expectedLoopTime Expected simulation loop time.
         //! @return Whether it is time to signal adapted event.
-        bool IsPublicationDeadline(float expectedLoopTime)
+        bool IsPublicationDeadline(float sourceDeltaTime)
         {
             if (--m_tickCounter > 0)
             {
                 return false;
             }
 
-            const auto frameTime = m_adaptedFrequency == 0.f ? 1.f : 1.f / m_adaptedFrequency;
-            const float numberOfFrames = frameTime / expectedLoopTime;
+            const float frameTime = m_adaptedFrequency == 0.f ? 1.f : 1.f / m_adaptedFrequency;
+            const float numberOfFrames = frameTime / sourceDeltaTime;
             m_tickCounter = aznumeric_cast<int>(AZStd::round(numberOfFrames));
             return true;
         }
 
-        //! Event source managed by this adapter.
-        EventSourceT m_eventSource{};
-
-        //! Event handler for adapting event source to specific frequency.
-        typename EventSourceT::SourceEventHandlerType m_adaptedEventHandler{};
-
-        //! Adapted event that is called with specific frequency.
-        typename EventSourceT::SourceEventType m_sensorAdaptedEvent{};
+        EventSourceT m_eventSource{}; ///< Event source managed by this adapter.
+        SourceEventHandlerType m_sourceAdaptingEventHandler{}; ///< Event handler for adapting event source to specific frequency.
+        AdaptedEventType m_sensorAdaptedEvent{}; ///< Adapted event that is called with specific frequency.
 
         float m_adaptedFrequency{ 10.0f }; ///< Adapted frequency value.
+        float m_adaptedDeltaTime{ 0.0f }; ///< Accumulator for calculating adapted delta time.
         int m_tickCounter{ 0 }; ///< Internal counter for controlling adapter frequency.
     };
 

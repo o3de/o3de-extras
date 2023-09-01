@@ -91,15 +91,15 @@ namespace ROS2
         m_orientationCovariance = ToDiagonalCovarianceMatrix(m_imuConfiguration.m_orientationVariance);
 
         // Event source adapter setup.
-        m_sourceEventHandler = decltype(m_sourceEventHandler)([this](AzPhysics::SceneHandle sceneHandle, [[maybe_unused]] float deltaTime)
+        m_sourceEventHandler = decltype(m_sourceEventHandler)([this](AzPhysics::SceneHandle sceneHandle, [[maybe_unused]] float physicsDeltaTime)
         {
             OnPhysicsEvent(sceneHandle);
         });
         m_eventSourceAdapter.ConnectToSourceEvent(m_sourceEventHandler);
 
-        m_adaptedEventHandler = decltype(m_adaptedEventHandler)([this](AzPhysics::SceneHandle sceneHandle, [[maybe_unused]] float deltaTime)
+        m_adaptedEventHandler = decltype(m_adaptedEventHandler)([this](float imuDeltaTime, AzPhysics::SceneHandle sceneHandle, float physicsDeltaTime)
         {
-            OnImuEvent(sceneHandle, deltaTime);
+            OnImuEvent(imuDeltaTime, sceneHandle, physicsDeltaTime);
         });
         m_eventSourceAdapter.ConnectToAdaptedEvent(m_adaptedEventHandler);
 
@@ -144,7 +144,7 @@ namespace ROS2
         }
     }
 
-    void ROS2ImuSensorComponent::OnImuEvent(AzPhysics::SceneHandle sceneHandle, float deltaTime)
+    void ROS2ImuSensorComponent::OnImuEvent([[maybe_unused]] float imuDeltaTime, AzPhysics::SceneHandle sceneHandle, float physicsDeltaTime)
     {
         const AZ::Vector3 linearVelocityFilter =
             AZStd::accumulate(m_filterAcceleration.begin(), m_filterAcceleration.end(), AZ::Vector3{ 0 }) / m_filterAcceleration.size();
@@ -153,7 +153,8 @@ namespace ROS2
             AZStd::accumulate(m_filterAngularVelocity.begin(), m_filterAngularVelocity.end(), AZ::Vector3{ 0 }) /
             m_filterAngularVelocity.size();
 
-        auto acc = (linearVelocityFilter - m_previousLinearVelocity) / deltaTime;
+        // Physics delta time is used here intentionally - linear velocities are accumulated with that delta (see OnPhysicsEvent method).
+        auto acc = (linearVelocityFilter - m_previousLinearVelocity) / physicsDeltaTime;
 
         auto* sceneInterface = AZ::Interface<AzPhysics::SceneInterface>::Get();
         auto* body = sceneInterface->GetSimulatedBodyFromHandle(sceneHandle, m_bodyHandle);

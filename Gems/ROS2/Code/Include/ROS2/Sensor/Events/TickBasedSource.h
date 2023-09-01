@@ -31,6 +31,8 @@ namespace ROS2
         void Deactivate() override;
         void Configure(const SensorConfiguration& sensorConfiguration) override;
 
+        float GetDeltaTime(float deltaTime, AZ::ScriptTimePoint time) const override;
+
     private:
         // Override of AZ::TickBus::Handler.
         void OnTick(float deltaTime, AZ::ScriptTimePoint time) override;

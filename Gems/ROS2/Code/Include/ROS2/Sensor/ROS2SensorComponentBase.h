@@ -108,7 +108,7 @@ namespace ROS2
         typename EventSourceAdapter<EventSourceT>::SourceEventHandlerType m_sourceEventHandler;
 
         //! Handler for adapted event. Requires manual assignment and connecting to adapted event in derived class.
-        typename EventSourceAdapter<EventSourceT>::SourceEventHandlerType m_adaptedEventHandler;
+        typename EventSourceAdapter<EventSourceT>::AdaptedEventHandlerType m_adaptedEventHandler;
     };
 
     AZ_COMPONENT_IMPL_INLINE(
