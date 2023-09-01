@@ -106,7 +106,7 @@ namespace MachineLearning
                 }
                 ++m_currentEpoch;
 
-                // Generally we want to keep monitoring the models performence on both test and training data
+                // Generally we want to keep monitoring the model's performance on both test and training data
                 // This allows us to detect if we're overfitting the model to the training data
                 float currentTestCost = ComputeCurrentCost(m_testData, m_costFunction);
                 float currentTrainCost = ComputeCurrentCost(m_trainData, m_costFunction);
