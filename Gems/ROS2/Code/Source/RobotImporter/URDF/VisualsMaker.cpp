@@ -105,7 +105,8 @@ namespace ROS2
             {
                 auto sphereGeometry = geometry->SphereShape();
                 AZ_Assert(sphereGeometry, "geometry is not Sphere");
-                const AZ::Vector3 sphereDimensions(sphereGeometry->Radius());
+                // Convert radius to diameter: the `_sphere_1x1.fbx.azmodel` model has a diameter of 1
+                const AZ::Vector3 sphereDimensions(sphereGeometry->Radius() * 2);
 
                 // The `_sphere_1x1.fbx.azmodel` is created by Asset Processor based on O3DE `PrimitiveAssets` Gem source.
                 AZ::Data::AssetId assetId;
@@ -125,7 +126,9 @@ namespace ROS2
             {
                 auto cylinderGeometry = geometry->CylinderShape();
                 AZ_Assert(cylinderGeometry, "geometry is not Cylinder");
-                const AZ::Vector3 cylinderDimensions(cylinderGeometry->Radius(), cylinderGeometry->Radius(), cylinderGeometry->Length());
+                // Convert radius to diameter: the `_cylinder_1x1.fbx.azmodel` model has a diameter of 1
+                const AZ::Vector3 cylinderDimensions(
+                    cylinderGeometry->Radius() * 2, cylinderGeometry->Radius() * 2, cylinderGeometry->Length());
 
                 // The `_cylinder_1x1.fbx.azmodel` is created by Asset Processor based on O3DE `PrimitiveAssets` Gem source.
                 AZ::Data::AssetId assetId;
