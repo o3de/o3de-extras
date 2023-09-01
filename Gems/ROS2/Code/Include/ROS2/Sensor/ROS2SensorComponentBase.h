@@ -87,8 +87,6 @@ namespace ROS2
             typename EventSourceT::AdaptedCallbackType adaptedCallback,
             typename EventSourceT::SourceCallbackType sourceCallback = nullptr)
         {
-            AZ_TracePrintf("SensorBase", "StartSensor frequency %f", sensorFrequency);
-
             m_eventSourceAdapter.SetFrequency(sensorFrequency);
 
             m_adaptedEventHandler.Disconnect();
