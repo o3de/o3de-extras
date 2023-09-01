@@ -7,6 +7,7 @@
  */
 
 #include <AzCore/Component/ComponentBus.h>
+#include <AzCore/RTTI/BehaviorContext.h>
 #include <AzCore/Serialization/EditContext.h>
 #include <PhysX/Joint/PhysXJointRequestsBus.h>
 #include <ROS2/Manipulation/MotorizedJoints/PidMotorControllerComponent.h>
@@ -36,6 +37,16 @@ namespace ROS2
                         "Allows to change offset of zero to set point")
                     ->DataElement(AZ::Edit::UIHandlers::Default, &PidMotorControllerComponent::m_pidPos, "Pid Position", "Pid Position");
             }
+        }
+
+        if (AZ::BehaviorContext* behaviorContext = azrtti_cast<AZ::BehaviorContext*>(context))
+        {
+            behaviorContext->EBus<PidMotorControllerRequestBus>("PidMotorControllerComponent", "PidMotorControllerRequestBus")
+                ->Attribute(AZ::Edit::Attributes::Category, "ROS2/PidMotorController")
+                ->Event("SetSetpoint", &PidMotorControllerRequestBus::Events::SetSetpoint)
+                ->Event("GetSetpoint", &PidMotorControllerRequestBus::Events::GetSetpoint)
+                ->Event("GetCurrentMeasurement", &PidMotorControllerRequestBus::Events::GetCurrentMeasurement)
+                ->Event("GetError", &PidMotorControllerRequestBus::Events::GetError);
         }
     }
 

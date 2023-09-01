@@ -33,7 +33,7 @@ namespace ROS2
 
         RaycastResult PerformRaycast(const AZ::Transform& lidarTransform) override;
 
-        void ConfigureLayerIgnoring(bool ignoreLayer, AZ::u32 layerIndex) override;
+        void ConfigureIgnoredCollisionLayers(const AZStd::unordered_set<AZ::u32>& layerIndices) override;
         void ConfigureMaxRangePointAddition(bool addMaxRangePoints) override;
 
     private:
@@ -50,7 +50,6 @@ namespace ROS2
         bool m_addMaxRangePoints{ false };
         AZStd::vector<AZ::Vector3> m_rayRotations{ { AZ::Vector3::CreateZero() } };
 
-        bool m_ignoreLayer{ false };
-        AZ::u32 m_ignoredLayerIndex{ 0 };
+        AZStd::unordered_set<AZ::u32> m_ignoredCollisionLayers;
     };
 } // namespace ROS2

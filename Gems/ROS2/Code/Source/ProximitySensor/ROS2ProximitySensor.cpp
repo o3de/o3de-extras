@@ -15,6 +15,8 @@
 #include <AzCore/std/string/string.h>
 
 #include <ROS2/Communication/TopicConfiguration.h>
+#include <ROS2/ProximitySensor/ProximitySensorNotificationBus.h>
+#include <ROS2/ProximitySensor/ProximitySensorNotificationBusHandler.h>
 #include <ROS2/ROS2Bus.h>
 #include <ROS2/Sensor/ROS2SensorComponent.h>
 #include <ROS2/Utilities/ROS2Names.h>
@@ -49,6 +51,12 @@ namespace ROS2
                     ->Attribute(AZ::Edit::Attributes::Min, 0.);
             }
         }
+        if (AZ::BehaviorContext* behaviorContext = azrtti_cast<AZ::BehaviorContext*>(context))
+        {
+            behaviorContext->EBus<ProximitySensorNotificationBus>("ROS2ProximitySensor", "ProximitySensorNotificationBus")
+                ->Attribute(AZ::Edit::Attributes::Category, "ROS2/ProximitySensor")
+                ->Handler<ProximitySensorNotificationBusHandler>();
+        }
     }
 
     ROS2ProximitySensor::ROS2ProximitySensor()
@@ -70,7 +78,7 @@ namespace ROS2
         AZStd::string fullTopic = ROS2Names::GetNamespacedName(GetNamespace(), publisherConfig.m_topic);
         m_detectionPublisher = ros2Node->create_publisher<std_msgs::msg::Bool>(fullTopic.data(), publisherConfig.GetQoS());
 
-        if (m_sensorConfiguration.m_visualise)
+        if (m_sensorConfiguration.m_visualize)
         {
             auto* entityScene = AZ::RPI::Scene::GetSceneForEntityId(GetEntityId());
             m_drawQueue = AZ::RPI::AuxGeomFeatureProcessorInterface::GetDrawQueueForScene(entityScene);
@@ -91,7 +99,7 @@ namespace ROS2
         ROS2SensorComponent::Deactivate();
     }
 
-    void ROS2ProximitySensor::Visualise()
+    void ROS2ProximitySensor::Visualize()
     {
         if (m_drawQueue)
         {
@@ -143,8 +151,17 @@ namespace ROS2
 
             std_msgs::msg::Bool msg;
             m_position = !result.m_hits.empty() ? std::make_optional(result.m_hits.front().m_position) : std::nullopt;
-            msg.data = m_position ? true : false;;
+            msg.data = m_position ? true : false;
             m_detectionPublisher->publish(msg);
+
+            if (m_position)
+            {
+                ProximitySensorNotificationBus::Event(GetEntityId(), &ProximitySensorNotifications::OnObjectInRange);
+            }
+            else
+            {
+                ProximitySensorNotificationBus::Event(GetEntityId(), &ProximitySensorNotifications::OnObjectOutOfRange);
+            }
         }
     }
 } // namespace ROS2

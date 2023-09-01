@@ -11,7 +11,12 @@
 #include <AzCore/Memory/SystemAllocator.h>
 #include <AzCore/Module/Module.h>
 #include <Camera/ROS2CameraSensorComponent.h>
+#include <ContactSensor/ROS2ContactSensorComponent.h>
+#include <FactorySimulation/ConveyorBeltComponent.h>
 #include <GNSS/ROS2GNSSSensorComponent.h>
+#include <Gripper/FingerGripperComponent.h>
+#include <Gripper/GripperActionServerComponent.h>
+#include <Gripper/VacuumGripperComponent.h>
 #include <Imu/ROS2ImuSensorComponent.h>
 #include <Lidar/LidarRegistrarSystemComponent.h>
 #include <Lidar/ROS2Lidar2DSensorComponent.h>
@@ -32,13 +37,13 @@
 #include <RobotControl/Controllers/SkidSteeringController/SkidSteeringControlComponent.h>
 #include <RobotControl/ROS2RobotControlComponent.h>
 #include <RobotImporter/ROS2RobotImporterSystemComponent.h>
+#include <SimulationUtils/FollowingCameraComponent.h>
 #include <Spawner/ROS2SpawnPointComponent.h>
 #include <Spawner/ROS2SpawnerComponent.h>
 #include <VehicleDynamics/ModelComponents/AckermannModelComponent.h>
 #include <VehicleDynamics/ModelComponents/SkidSteeringModelComponent.h>
 #include <VehicleDynamics/VehicleModelComponent.h>
 #include <VehicleDynamics/WheelControllerComponent.h>
-
 namespace ROS2
 {
     class ROS2ModuleInterface : public AZ::Module
@@ -86,6 +91,12 @@ namespace ROS2
                     JointsTrajectoryComponent::CreateDescriptor(),
                     PidMotorControllerComponent::CreateDescriptor(),
                     ROS2ProximitySensor::CreateDescriptor(),
+                    GripperActionServerComponent::CreateDescriptor(),
+                    VacuumGripperComponent::CreateDescriptor(),
+                    ConveyorBeltComponent::CreateDescriptor(),
+                    FingerGripperComponent::CreateDescriptor(),
+                    ROS2ContactSensorComponent::CreateDescriptor(),
+                    FollowingCameraComponent::CreateDescriptor(),
                 });
         }
 

@@ -33,7 +33,7 @@ namespace OpenXRVk
         m_xrInstance = xrVkInstance->GetXRInstance();
         AZ_Printf("OpenXRVk", "Creating session...\n");
         m_graphicsBinding.instance = xrVkInstance->GetNativeInstance();
-        m_graphicsBinding.physicalDevice = xrVkInstance->GetActivePhysicalDevice();
+        m_graphicsBinding.physicalDevice = xrVkDevice->GetNativePhysicalDevice();
         m_graphicsBinding.device = xrVkDevice->GetNativeDevice();
         m_graphicsBinding.queueFamilyIndex = sessionDescriptor->m_inputData.m_graphicsBinding.m_queueFamilyIndex;
         m_graphicsBinding.queueIndex = sessionDescriptor->m_inputData.m_graphicsBinding.m_queueIndex;

@@ -10,20 +10,23 @@
 #include "Controllers/JointsArticulationControllerComponent.h"
 #include "Controllers/JointsPIDControllerComponent.h"
 #include "JointStatePublisher.h"
+#include "ManipulationUtils.h"
 #include <AzCore/Component/ComponentApplicationBus.h>
 #include <AzCore/Component/TransformBus.h>
+#include <AzCore/Debug/Trace.h>
 #include <AzCore/Serialization/EditContext.h>
 #include <ROS2/Frame/ROS2FrameComponent.h>
 #include <ROS2/Manipulation/Controllers/JointsPositionControllerRequests.h>
 #include <ROS2/Utilities/ROS2Names.h>
 #include <Source/ArticulationLinkComponent.h>
 #include <Source/HingeJointComponent.h>
+#include <Source/PrismaticJointComponent.h>
 
 namespace ROS2
 {
     namespace Internal
     {
-        void AddHingeJointInfo(const AZ::EntityComponentIdPair& idPair, const AZStd::string& jointName, ManipulationJoints& joints)
+        void Add1DOFJointInfo(const AZ::EntityComponentIdPair& idPair, const AZStd::string& jointName, ManipulationJoints& joints)
         {
             if (joints.find(jointName) != joints.end())
             {
@@ -117,11 +120,15 @@ namespace ROS2
                 }
                 const AZStd::string jointName(frameComponent->GetJointName().GetCStr());
 
-                auto* hingeComponent = Utils::GetGameOrEditorComponent<PhysX::HingeJointComponent>(entity);
+                auto* hingeComponent =
+                    azrtti_cast<PhysX::JointComponent*>(Utils::GetGameOrEditorComponent<PhysX::HingeJointComponent>(entity));
+                auto* prismaticComponent =
+                    azrtti_cast<PhysX::JointComponent*>(Utils::GetGameOrEditorComponent<PhysX::PrismaticJointComponent>(entity));
                 auto* articulationComponent = Utils::GetGameOrEditorComponent<PhysX::ArticulationLinkComponent>(entity);
+                bool classicJoint = hingeComponent || prismaticComponent;
                 AZ_Warning(
                     "JointsManipulationComponent",
-                    (hingeComponent && supportsClassicJoints) || !hingeComponent,
+                    (classicJoint && supportsClassicJoints) || !classicJoint,
                     "Found classic joints but the controller does not support them!");
                 AZ_Warning(
                     "JointsManipulationComponent",
@@ -132,7 +139,14 @@ namespace ROS2
                 if (supportsClassicJoints && hingeComponent)
                 {
                     auto idPair = AZ::EntityComponentIdPair(hingeComponent->GetEntityId(), hingeComponent->GetId());
-                    Internal::AddHingeJointInfo(idPair, jointName, manipulationJoints);
+                    Internal::Add1DOFJointInfo(idPair, jointName, manipulationJoints);
+                }
+
+                // See if there is a Prismatic Joint in the entity, add it to map.
+                if (supportsClassicJoints && prismaticComponent)
+                {
+                    auto idPair = AZ::EntityComponentIdPair(prismaticComponent->GetEntityId(), prismaticComponent->GetId());
+                    Internal::Add1DOFJointInfo(idPair, jointName, manipulationJoints);
                 }
 
                 // See if there is an Articulation Link in the entity, add it to map.
@@ -198,15 +212,9 @@ namespace ROS2
         return m_manipulationJoints;
     }
 
-    AZ::Outcome<JointPosition, AZStd::string> JointsManipulationComponent::GetJointPosition(const AZStd::string& jointName)
+    AZ::Outcome<JointPosition, AZStd::string> JointsManipulationComponent::GetJointPosition(const JointInfo& jointInfo)
     {
-        if (!m_manipulationJoints.contains(jointName))
-        {
-            return AZ::Failure(AZStd::string::format("Joint %s does not exist", jointName.c_str()));
-        }
-
-        auto jointInfo = m_manipulationJoints.at(jointName);
-        float position{ 0 };
+        float position{ 0.f };
         if (jointInfo.m_isArticulation)
         {
             PhysX::ArticulationJointRequestBus::EventResult(
@@ -222,14 +230,114 @@ namespace ROS2
         return AZ::Success(position);
     }
 
+    AZ::Outcome<JointPosition, AZStd::string> JointsManipulationComponent::GetJointPosition(const AZStd::string& jointName)
+    {
+        if (!m_manipulationJoints.contains(jointName))
+        {
+            return AZ::Failure(AZStd::string::format("Joint %s does not exist", jointName.c_str()));
+        }
+
+        auto jointInfo = m_manipulationJoints.at(jointName);
+
+        return GetJointPosition(jointInfo);
+    }
+
+    AZ::Outcome<JointVelocity, AZStd::string> JointsManipulationComponent::GetJointVelocity(const JointInfo& jointInfo)
+    {
+        float velocity{ 0.f };
+        if (jointInfo.m_isArticulation)
+        {
+            PhysX::ArticulationJointRequestBus::EventResult(
+                velocity,
+                jointInfo.m_entityComponentIdPair.GetEntityId(),
+                &PhysX::ArticulationJointRequests::GetJointVelocity,
+                jointInfo.m_axis);
+        }
+        else
+        {
+            PhysX::JointRequestBus::EventResult(velocity, jointInfo.m_entityComponentIdPair, &PhysX::JointRequests::GetVelocity);
+        }
+        return AZ::Success(velocity);
+    }
+
+    AZ::Outcome<JointVelocity, AZStd::string> JointsManipulationComponent::GetJointVelocity(const AZStd::string& jointName)
+    {
+        if (!m_manipulationJoints.contains(jointName))
+        {
+            return AZ::Failure(AZStd::string::format("Joint %s does not exist", jointName.c_str()));
+        }
+
+        auto jointInfo = m_manipulationJoints.at(jointName);
+        return GetJointVelocity(jointInfo);
+    }
+
     JointsManipulationRequests::JointsPositionsMap JointsManipulationComponent::GetAllJointsPositions()
     {
         JointsManipulationRequests::JointsPositionsMap positions;
         for (const auto& [jointName, jointInfo] : m_manipulationJoints)
         {
-            positions[jointName] = GetJointPosition(jointName).GetValue();
+            positions[jointName] = GetJointPosition(jointInfo).GetValue();
         }
         return positions;
+    }
+
+    JointsManipulationRequests::JointsVelocitiesMap JointsManipulationComponent::GetAllJointsVelocities()
+    {
+        JointsManipulationRequests::JointsVelocitiesMap velocities;
+        for (const auto& [jointName, jointInfo] : m_manipulationJoints)
+        {
+            velocities[jointName] = GetJointVelocity(jointInfo).GetValue();
+        }
+        return velocities;
+    }
+
+    AZ::Outcome<JointEffort, AZStd::string> JointsManipulationComponent::GetJointEffort(const JointInfo& jointInfo)
+    {
+        auto jointStateData = Utils::GetJointState(jointInfo);
+
+        return AZ::Success(jointStateData.effort);
+    }
+
+    AZ::Outcome<JointEffort, AZStd::string> JointsManipulationComponent::GetJointEffort(const AZStd::string& jointName)
+    {
+        if (!m_manipulationJoints.contains(jointName))
+        {
+            return AZ::Failure(AZStd::string::format("Joint %s does not exist", jointName.c_str()));
+        }
+
+        auto jointInfo = m_manipulationJoints.at(jointName);
+        return GetJointEffort(jointInfo);
+    }
+
+    JointsManipulationRequests::JointsEffortsMap JointsManipulationComponent::GetAllJointsEfforts()
+    {
+        JointsManipulationRequests::JointsEffortsMap efforts;
+        for (const auto& [jointName, jointInfo] : m_manipulationJoints)
+        {
+            efforts[jointName] = GetJointEffort(jointInfo).GetValue();
+        }
+        return efforts;
+    }
+
+    AZ::Outcome<void, AZStd::string> JointsManipulationComponent::SetMaxJointEffort(const AZStd::string& jointName, JointEffort maxEffort)
+    {
+        if (!m_manipulationJoints.contains(jointName))
+        {
+            return AZ::Failure(AZStd::string::format("Joint %s does not exist", jointName.c_str()));
+        }
+
+        auto jointInfo = m_manipulationJoints.at(jointName);
+
+        if (jointInfo.m_isArticulation)
+        {
+            PhysX::ArticulationJointRequestBus::Event(
+                jointInfo.m_entityComponentIdPair.GetEntityId(),
+                &PhysX::ArticulationJointRequests::SetMaxForce,
+                jointInfo.m_axis,
+                maxEffort);
+        }
+
+        return AZ::Success();
     }
 
     AZ::Outcome<void, AZStd::string> JointsManipulationComponent::MoveJointToPosition(
@@ -315,7 +423,8 @@ namespace ROS2
     void JointsManipulationComponent::Stop()
     {
         for (auto& [jointName, jointInfo] : m_manipulationJoints)
-        { // Set all target joint positions to their current positions.
+        { // Set all target joint positions to their current positions. There is no need to check if the outcome is successful, because
+          // jointName is always valid.
             jointInfo.m_restPosition = GetJointPosition(jointName).GetValue();
         }
     }
@@ -332,8 +441,8 @@ namespace ROS2
                 AZ::TickBus::Handler::BusDisconnect();
                 return;
             }
+            m_jointStatePublisher->InitializePublisher(GetEntityId());
         }
-        m_jointStatePublisher->OnTick(deltaTime);
         MoveToSetPositions(deltaTime);
     }
 } // namespace ROS2

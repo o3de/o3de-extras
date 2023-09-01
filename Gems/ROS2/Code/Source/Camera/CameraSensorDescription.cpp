@@ -22,7 +22,11 @@ namespace ROS2
         , m_cameraName(cameraName)
         , m_cameraNamespace(effectiveNamespace)
         , m_viewToClipMatrix(CameraUtils::MakeClipMatrix(
-              m_cameraConfiguration.m_width, m_cameraConfiguration.m_height, m_cameraConfiguration.m_verticalFieldOfViewDeg))
+              m_cameraConfiguration.m_width,
+              m_cameraConfiguration.m_height,
+              m_cameraConfiguration.m_verticalFieldOfViewDeg,
+              m_cameraConfiguration.m_nearClipDistance,
+              m_cameraConfiguration.m_farClipDistance))
         , m_cameraIntrinsics(CameraUtils::MakeCameraIntrinsics(
               m_cameraConfiguration.m_width, m_cameraConfiguration.m_height, m_cameraConfiguration.m_verticalFieldOfViewDeg))
     {
@@ -37,6 +41,11 @@ namespace ROS2
         AZ_Assert(
             m_cameraConfiguration.m_width > 0 && m_cameraConfiguration.m_height > 0, "Camera resolution dimensions should be above zero");
         AZ_Assert(!m_cameraName.empty(), "Camera name cannot be empty");
+        AZ_Assert(m_cameraConfiguration.m_nearClipDistance > 0.0f, "Near clip distance should be greater than zero");
+        AZ_Assert(m_cameraConfiguration.m_farClipDistance > m_cameraConfiguration.m_nearClipDistance , "Far clip distance should be greater than the near plane distance");
+        AZ_Assert(
+            m_cameraConfiguration.m_farClipDistance > m_cameraConfiguration.m_nearClipDistance,
+            "Far clip distance should be greater than near clip distance");
     }
 
 } // namespace ROS2

@@ -22,6 +22,7 @@
 #include <AzCore/Time/ITime.h>
 #include <AzCore/std/smart_ptr/make_shared.h>
 #include <AzCore/std/string/string_view.h>
+#include <AzFramework/API/ApplicationAPI.h>
 
 namespace ROS2
 {
@@ -76,22 +77,6 @@ namespace ROS2
         {
             ROS2Interface::Register(this);
         }
-
-        bool useSteadyTime = false;
-        auto* registry = AZ::SettingsRegistry::Get();
-        AZ_Assert(registry, "No Registry available");
-        if (registry)
-        {
-            registry->Get(useSteadyTime, EnablePhysicsSteadyClockConfigurationKey);
-            if (useSteadyTime)
-            {
-                AZ_Printf("ROS2SystemComponent", "Enabling Physical steady clock");
-                m_simulationClock = AZStd::make_unique<PhysicallyStableClock>();
-                return;
-            }
-        }
-        AZ_Printf("ROS2SystemComponent", "Enabling realtime clock");
-        m_simulationClock = AZStd::make_unique<SimulationClock>();
         return;
     }
 
@@ -107,17 +92,29 @@ namespace ROS2
     void ROS2SystemComponent::Init()
     {
         rclcpp::init(0, 0);
-        m_simulationClock->Activate();
-        m_ros2Node = std::make_shared<rclcpp::Node>("o3de_ros2_node");
-        m_executor = AZStd::make_shared<rclcpp::executors::SingleThreadedExecutor>();
-        m_executor->add_node(m_ros2Node);
     }
 
-    void ROS2SystemComponent::Activate()
+    void ROS2SystemComponent::InitClock()
     {
-        m_staticTFBroadcaster = AZStd::make_unique<tf2_ros::StaticTransformBroadcaster>(m_ros2Node);
-        m_dynamicTFBroadcaster = AZStd::make_unique<tf2_ros::TransformBroadcaster>(m_ros2Node);
+        bool useSteadyTime = false;
+        auto* registry = AZ::SettingsRegistry::Get();
+        AZ_Assert(registry, "No Registry available");
+        if (registry)
+        {
+            registry->Get(useSteadyTime, EnablePhysicsSteadyClockConfigurationKey);
+            if (useSteadyTime)
+            {
+                AZ_Printf("ROS2SystemComponent", "Enabling Physical steady clock");
+                m_simulationClock = AZStd::make_unique<PhysicallyStableClock>();
+                return;
+            }
+        }
+        AZ_Printf("ROS2SystemComponent", "Enabling realtime clock");
+        m_simulationClock = AZStd::make_unique<SimulationClock>();
+    }
 
+    void ROS2SystemComponent::InitPassTemplateMappingsHandler()
+    {
         auto* passSystem = AZ::RPI::PassSystemInterface::Get();
         AZ_Assert(passSystem, "Cannot get the pass system.");
 
@@ -127,6 +124,25 @@ namespace ROS2
                 this->LoadPassTemplateMappings();
             });
         passSystem->ConnectEvent(m_loadTemplatesHandler);
+    }
+
+    void ROS2SystemComponent::Activate()
+    {
+        InitClock();
+        m_simulationClock->Activate();
+        m_ros2Node = std::make_shared<rclcpp::Node>("o3de_ros2_node");
+        m_executor = AZStd::make_shared<rclcpp::executors::SingleThreadedExecutor>();
+        m_executor->add_node(m_ros2Node);
+
+        m_staticTFBroadcaster = AZStd::make_unique<tf2_ros::StaticTransformBroadcaster>(m_ros2Node);
+        m_dynamicTFBroadcaster = AZStd::make_unique<tf2_ros::TransformBroadcaster>(m_ros2Node);
+
+        AZ::ApplicationTypeQuery appType;
+        AZ::ComponentApplicationBus::Broadcast(&AZ::ComponentApplicationBus::Events::QueryApplicationType, appType);
+        if (appType.IsGame())
+        {
+            InitPassTemplateMappingsHandler();
+        }
 
         ROS2RequestBus::Handler::BusConnect();
         AZ::TickBus::Handler::BusConnect();
@@ -140,6 +156,10 @@ namespace ROS2
         m_loadTemplatesHandler.Disconnect();
         m_dynamicTFBroadcaster.reset();
         m_staticTFBroadcaster.reset();
+        m_executor->remove_node(m_ros2Node);
+        m_executor.reset();
+        m_simulationClock.reset();
+        m_ros2Node.reset();
     }
 
     builtin_interfaces::msg::Time ROS2SystemComponent::GetROSTimestamp() const

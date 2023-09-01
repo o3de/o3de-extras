@@ -7,6 +7,7 @@
  */
 
 #include "ROS2SpawnPointComponent.h"
+#include "Spawner/ROS2SpawnPointComponentController.h"
 #include <AzCore/Component/Entity.h>
 
 #include <AzCore/Serialization/EditContext.h>
@@ -17,47 +18,34 @@
 
 namespace ROS2
 {
+    ROS2SpawnPointComponent::ROS2SpawnPointComponent(const ROS2SpawnPointComponentConfig& config)
+        : ROS2SpawnPointComponentBase(config)
+    {
+    }
+
     void ROS2SpawnPointComponent::Activate()
     {
+        ROS2SpawnPointComponentBase::Activate();
     }
 
     void ROS2SpawnPointComponent::Deactivate()
     {
+        ROS2SpawnPointComponentBase::Deactivate();
     }
 
     void ROS2SpawnPointComponent::Reflect(AZ::ReflectContext* context)
     {
+        ROS2SpawnPointComponentBase::Reflect(context);
+
         if (AZ::SerializeContext* serialize = azrtti_cast<AZ::SerializeContext*>(context))
         {
-            serialize->Class<ROS2SpawnPointComponent, AZ::Component>()
-                ->Version(1)
-                ->Field("Name", &ROS2SpawnPointComponent::m_name)
-                ->Field("Info", &ROS2SpawnPointComponent::m_info);
-
-            if (AZ::EditContext* ec = serialize->GetEditContext())
-            {
-                ec->Class<ROS2SpawnPointComponent>("ROS2 Spawn Point", "Spawn Point")
-                    ->ClassElement(AZ::Edit::ClassElements::EditorData, "Stores information about available spawn point")
-                    ->Attribute(AZ::Edit::Attributes::AppearsInAddComponentMenu, AZ_CRC_CE("Game"))
-                    ->Attribute(AZ::Edit::Attributes::Category, "ROS2")
-                    ->DataElement(AZ::Edit::UIHandlers::EntityId, &ROS2SpawnPointComponent::m_name, "Name", "Name")
-                    ->DataElement(
-                        AZ::Edit::UIHandlers::EntityId, &ROS2SpawnPointComponent::m_info, "Info", "Spawn point detailed description");
-            }
+            serialize->Class<ROS2SpawnPointComponent, ROS2SpawnPointComponentBase>()->Version(1);
         }
     }
 
     AZStd::pair<AZStd::string, SpawnPointInfo> ROS2SpawnPointComponent::GetInfo() const
     {
-        auto transform_component = GetEntity()->FindComponent<AzFramework::TransformComponent>();
-
-        // if SpawnPointComponent entity for some reason does not include TransformComponent - this default pose will be returned
-        AZ::Transform transform = { AZ::Vector3{ 0, 0, 0 }, AZ::Quaternion{ 0, 0, 0, 1.0 }, 1.0 };
-
-        if (transform_component != nullptr)
-        {
-            transform = transform_component->GetWorldTM();
-        }
-        return { m_name, SpawnPointInfo{ m_info, transform } };
+        return m_controller.GetInfo();
     }
+
 } // namespace ROS2

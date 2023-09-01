@@ -27,6 +27,7 @@ namespace OpenXRVk
 
         //////////////////////////////////////////////////////////////////////////
         // XR::Device overrides
+        
         // Create the xr specific native device object and populate the XRDeviceDescriptor with it.
         AZ::RHI::ResultCode InitDeviceInternal(AZ::RHI::XRDeviceDescriptor* instanceDescriptor) override;
         //! Get the Fov data  of the view specified by view index
@@ -41,8 +42,8 @@ namespace OpenXRVk
         //! Get the native device
         VkDevice GetNativeDevice() const;
 
-        //! Get glad vulkan context.
-        const GladVulkanContext& GetContext() const;
+        //! Get the native physical device
+        VkPhysicalDevice GetNativePhysicalDevice() const;
 
         //! Reserve space for appropriate number of views 
         void InitXrViews(uint32_t numViews);
@@ -67,12 +68,12 @@ namespace OpenXRVk
         //////////////////////////////////////////////////////////////////////////
 
         VkDevice m_xrVkDevice = VK_NULL_HANDLE;
+        VkPhysicalDevice m_xrVkPhysicalDevice = VK_NULL_HANDLE;
         XrFrameState m_frameState{ XR_TYPE_FRAME_STATE };
         AZStd::vector<XrCompositionLayerBaseHeader*> m_xrLayers;
         XrCompositionLayerProjection m_xrLayer{ XR_TYPE_COMPOSITION_LAYER_PROJECTION };
         AZStd::vector<XrCompositionLayerProjectionView> m_projectionLayerViews;
         AZStd::vector<XrView> m_views;
         uint32_t m_viewCountOutput = 0;
-        GladVulkanContext m_context = {};
     };
 }

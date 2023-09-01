@@ -42,8 +42,18 @@ namespace ROS2
         ManipulationJoints GetJoints() override;
         //! @see ROS2::JointsManipulationRequestBus::GetJointPosition
         AZ::Outcome<JointPosition, AZStd::string> GetJointPosition(const AZStd::string& jointName) override;
+        //! @see ROS2::JointsManipulationRequestBus::GetJointVelocity
+        AZ::Outcome<JointVelocity, AZStd::string> GetJointVelocity(const AZStd::string& jointName) override;
         //! @see ROS2::JointsManipulationRequestBus::GetAllJointsPositions
         JointsPositionsMap GetAllJointsPositions() override;
+        //! @see ROS2::JointsManipulationRequestBus::GetAllJointsVelocities
+        JointsVelocitiesMap GetAllJointsVelocities() override;
+        //! @see ROS2::JointsManipulationRequestBus::GetJointEffort
+        AZ::Outcome<JointEffort, AZStd::string> GetJointEffort(const AZStd::string& jointName) override;
+        //! @see ROS2::JointsManipulationRequestBus::GetAllJointsEfforts
+        JointsEffortsMap GetAllJointsEfforts() override;
+        //! @see ROS2::JointsManipulationRequestBus::SetMaxJointEffort
+        AZ::Outcome<void, AZStd::string> SetMaxJointEffort(const AZStd::string& jointName, JointEffort maxEffort);
         //! @see ROS2::JointsManipulationRequestBus::MoveJointsToPositions
         AZ::Outcome<void, AZStd::string> MoveJointsToPositions(const JointsPositionsMap& positions) override;
         //! @see ROS2::JointsManipulationRequestBus::MoveJointToPosition
@@ -60,6 +70,10 @@ namespace ROS2
         void OnTick(float deltaTime, AZ::ScriptTimePoint time) override;
 
         void MoveToSetPositions(float deltaTime);
+
+        AZ::Outcome<JointPosition, AZStd::string> GetJointPosition(const JointInfo& jointInfo);
+        AZ::Outcome<JointVelocity, AZStd::string> GetJointVelocity(const JointInfo& jointInfo);
+        AZ::Outcome<JointEffort, AZStd::string> GetJointEffort(const JointInfo& jointInfo);
 
         AZStd::unique_ptr<JointStatePublisher> m_jointStatePublisher;
         PublisherConfiguration m_jointStatePublisherConfiguration;

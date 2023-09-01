@@ -1,0 +1,20 @@
+{
+    "O3DE":
+    {
+        "ROS2":
+        {
+            "SdfAssetBuilder":
+            {
+                "SupportedFileTypeExtensions":
+                [
+                    "sdf",
+                    "urdf",
+                    "world",
+                    "xacro"
+                ],
+                "UseArticulations": true,
+                "URDFPreserveFixedJoint": true
+            }
+        }
+    }
+}

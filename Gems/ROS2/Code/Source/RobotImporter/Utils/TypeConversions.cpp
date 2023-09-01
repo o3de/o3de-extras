@@ -10,25 +10,25 @@
 
 namespace ROS2::URDF
 {
-    AZ::Vector3 TypeConversions::ConvertVector3(const urdf::Vector3& urdfVector)
+    AZ::Vector3 TypeConversions::ConvertVector3(const gz::math::Vector3d& urdfVector)
     {
-        return AZ::Vector3(urdfVector.x, urdfVector.y, urdfVector.z);
+        return AZ::Vector3(urdfVector.X(), urdfVector.Y(), urdfVector.Z());
     }
 
-    AZ::Quaternion TypeConversions::ConvertQuaternion(const urdf::Rotation& urdfQuaternion)
+    AZ::Quaternion TypeConversions::ConvertQuaternion(const gz::math::Quaterniond& urdfQuaternion)
     {
-        return AZ::Quaternion(urdfQuaternion.x, urdfQuaternion.y, urdfQuaternion.z, urdfQuaternion.w);
+        return AZ::Quaternion(urdfQuaternion.X(), urdfQuaternion.Y(), urdfQuaternion.Z(), urdfQuaternion.W());
     }
 
-    AZ::Color TypeConversions::ConvertColor(const urdf::Color& color)
+    AZ::Color TypeConversions::ConvertColor(const gz::math::Color& color)
     {
-        return AZ::Color(color.r, color.g, color.b, color.a);
+        return AZ::Color(color.R(), color.G(), color.B(), color.A());
     }
 
-    AZ::Transform TypeConversions::ConvertPose(const urdf::Pose& pose)
+    AZ::Transform TypeConversions::ConvertPose(const gz::math::Pose3d& pose)
     {
-        AZ::Quaternion azRotation = URDF::TypeConversions::ConvertQuaternion(pose.rotation);
-        AZ::Vector3 azPosition = URDF::TypeConversions::ConvertVector3(pose.position);
+        AZ::Quaternion azRotation = URDF::TypeConversions::ConvertQuaternion(pose.Rot());
+        AZ::Vector3 azPosition = URDF::TypeConversions::ConvertVector3(pose.Pos());
         return AZ::Transform(azPosition, azRotation, 1.0f);
     }
 

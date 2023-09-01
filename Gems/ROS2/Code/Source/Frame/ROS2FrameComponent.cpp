@@ -139,6 +139,11 @@ namespace ROS2
         return ROS2Names::GetNamespacedName(GetNamespace(), AZStd::string("odom"));
     }
 
+    void ROS2FrameComponent::UpdateNamespaceConfiguration(const AZStd::string& ns, NamespaceConfiguration::NamespaceStrategy strategy)
+    {
+        m_namespaceConfiguration.SetNamespace(ns, strategy);
+    }
+
     bool ROS2FrameComponent::IsTopLevel() const
     {
         return GetGlobalFrameName() == GetParentFrameID();

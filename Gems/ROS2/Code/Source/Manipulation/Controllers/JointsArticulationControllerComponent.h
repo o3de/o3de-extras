@@ -23,6 +23,7 @@ namespace ROS2
         ~JointsArticulationControllerComponent() = default;
         AZ_COMPONENT(JointsArticulationControllerComponent, "{243E9F07-5F84-4F83-9E6D-D1DA04D7CEF9}", AZ::Component);
 
+        static void GetRequiredServices(AZ::ComponentDescriptor::DependencyArrayType& required);
         static void GetProvidedServices(AZ::ComponentDescriptor::DependencyArrayType& provided);
         static void GetIncompatibleServices(AZ::ComponentDescriptor::DependencyArrayType& incompatible);
         static void Reflect(AZ::ReflectContext* context);

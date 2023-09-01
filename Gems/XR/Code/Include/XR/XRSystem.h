@@ -85,7 +85,6 @@ namespace XR
 
         ///////////////////////////////////////////////////////////////////
         // AZ::RHI::XRRenderingInterface overrides
-        AZ::RHI::ResultCode InitNativeInstance(AZ::RHI::XRInstanceDescriptor* instanceDescriptor) override;
         AZ::u32 GetNumPhysicalDevices() const override;
         AZ::RHI::ResultCode GetXRPhysicalDevice(AZ::RHI::XRPhysicalDeviceDescriptor* physicalDeviceDescriptor, int32_t index) override;
         AZ::RHI::ResultCode CreateDevice(AZ::RHI::XRDeviceDescriptor* deviceDescriptor) override;
@@ -101,6 +100,8 @@ namespace XR
         ///////////////////////////////////////////////////////////////////
 
     private:
+        Instance* GetInstance();
+
         Ptr<Instance> m_instance;
         Ptr<Session> m_session;
         Ptr<SwapChain> m_swapChain;

@@ -28,13 +28,12 @@ namespace ROS2
 
     void ROS2GNSSSensorComponent::Reflect(AZ::ReflectContext* context)
     {
+        GNSSSensorConfiguration::Reflect(context);
+
         if (AZ::SerializeContext* serialize = azrtti_cast<AZ::SerializeContext*>(context))
         {
-            serialize->Class<ROS2GNSSSensorComponent, ROS2SensorComponent>()
-                ->Version(1)
-                ->Field("gnssOriginLatitude", &ROS2GNSSSensorComponent::m_gnssOriginLatitudeDeg)
-                ->Field("gnssOriginLongitude", &ROS2GNSSSensorComponent::m_gnssOriginLongitudeDeg)
-                ->Field("gnssOriginAltitude", &ROS2GNSSSensorComponent::m_gnssOriginAltitude);
+            serialize->Class<ROS2GNSSSensorComponent, ROS2SensorComponent>()->Version(2)->Field(
+                "gnssSensorConfiguration", &ROS2GNSSSensorComponent::m_gnssConfiguration);
 
             if (AZ::EditContext* ec = serialize->GetEditContext())
             {
@@ -44,19 +43,10 @@ namespace ROS2
                     ->Attribute(AZ::Edit::Attributes::AppearsInAddComponentMenu, AZ_CRC_CE("Game"))
                     ->DataElement(
                         AZ::Edit::UIHandlers::Default,
-                        &ROS2GNSSSensorComponent::m_gnssOriginLatitudeDeg,
-                        "Latitude offset",
-                        "GNSS latitude position offset in degrees")
-                    ->DataElement(
-                        AZ::Edit::UIHandlers::Default,
-                        &ROS2GNSSSensorComponent::m_gnssOriginLongitudeDeg,
-                        "Longitude offset",
-                        "GNSS longitude position offset in degrees")
-                    ->DataElement(
-                        AZ::Edit::UIHandlers::Default,
-                        &ROS2GNSSSensorComponent::m_gnssOriginAltitude,
-                        "Altitude offset",
-                        "GNSS altitude position offset in meters");
+                        &ROS2GNSSSensorComponent::m_gnssConfiguration,
+                        "GNSS sensor configuration",
+                        "GNSS sensor configuration")
+                    ->Attribute(AZ::Edit::Attributes::Visibility, AZ::Edit::PropertyVisibility::ShowChildrenOnly);
             }
         }
     }
@@ -68,6 +58,13 @@ namespace ROS2
         pc.m_topic = "gnss";
         m_sensorConfiguration.m_frequency = 10;
         m_sensorConfiguration.m_publishersConfigurations.insert(AZStd::make_pair(Internal::kGNSSMsgType, pc));
+    }
+
+    ROS2GNSSSensorComponent::ROS2GNSSSensorComponent(
+        const SensorConfiguration& sensorConfiguration, const GNSSSensorConfiguration& gnssConfiguration)
+        : m_gnssConfiguration(gnssConfiguration)
+    {
+        m_sensorConfiguration = sensorConfiguration;
     }
 
     void ROS2GNSSSensorComponent::Activate()
@@ -92,8 +89,9 @@ namespace ROS2
     void ROS2GNSSSensorComponent::FrequencyTick()
     {
         const AZ::Vector3 currentPosition = GetCurrentPose().GetTranslation();
-        const AZ::Vector3 currentPositionECEF =
-            GNSS::ENUToECEF({ m_gnssOriginLatitudeDeg, m_gnssOriginLongitudeDeg, m_gnssOriginAltitude }, currentPosition);
+        const AZ::Vector3 currentPositionECEF = GNSS::ENUToECEF(
+            { m_gnssConfiguration.m_originLatitudeDeg, m_gnssConfiguration.m_originLongitudeDeg, m_gnssConfiguration.m_originAltitude },
+            currentPosition);
         const AZ::Vector3 currentPositionWGS84 = GNSS::ECEFToWGS84(currentPositionECEF);
 
         m_gnssMsg.latitude = currentPositionWGS84.GetX();

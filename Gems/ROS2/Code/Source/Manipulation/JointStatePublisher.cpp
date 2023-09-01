@@ -7,6 +7,7 @@
  */
 
 #include "JointStatePublisher.h"
+#include "ManipulationUtils.h"
 #include <ROS2/Manipulation/JointsManipulationRequests.h>
 #include <ROS2/ROS2Bus.h>
 #include <ROS2/Utilities/ROS2Names.h>
@@ -30,30 +31,42 @@ namespace ROS2
         rosHeader.stamp = ROS2::ROS2Interface::Get()->GetROSTimestamp();
         m_jointStateMsg.header = rosHeader;
 
+        AZ_Assert(m_jointNames.size() == m_jointStateMsg.name.size(), "The expected message size doesn't match with the joint list size");
+
+        for (size_t i = 0; i < m_jointStateMsg.name.size(); i++)
+        {
+            m_jointStateMsg.name[i] = m_jointNames[i].c_str();
+            JointInfo& jointInfo = m_jointInfos[i];
+
+            auto jointStateData = Utils::GetJointState(jointInfo);
+
+            m_jointStateMsg.position[i] = jointStateData.position;
+            m_jointStateMsg.velocity[i] = jointStateData.velocity;
+            m_jointStateMsg.effort[i] = jointStateData.effort;
+        }
+        m_jointStatePublisher->publish(m_jointStateMsg);
+    }
+
+    void JointStatePublisher::InitializePublisher(AZ::EntityId entityId)
+    {
         ManipulationJoints manipulatorJoints;
         JointsManipulationRequestBus::EventResult(manipulatorJoints, m_context.m_entityId, &JointsManipulationRequests::GetJoints);
+
+        for (const auto& [jointName, jointInfo] : manipulatorJoints)
+        {
+            m_jointNames.push_back(jointName);
+            m_jointInfos.push_back(jointInfo);
+        }
 
         m_jointStateMsg.name.resize(manipulatorJoints.size());
         m_jointStateMsg.position.resize(manipulatorJoints.size());
         m_jointStateMsg.velocity.resize(manipulatorJoints.size());
         m_jointStateMsg.effort.resize(manipulatorJoints.size());
-        size_t i = 0;
-        for (const auto& [jointName, jointInfo] : manipulatorJoints)
-        {
-            AZ::Outcome<float, AZStd::string> result;
-            JointsManipulationRequestBus::EventResult(result, m_context.m_entityId, &JointsManipulationRequests::GetJointPosition, jointName);
-            auto currentJointPosition = result.GetValue();
 
-            m_jointStateMsg.name[i] = jointName.c_str();
-            m_jointStateMsg.position[i] = currentJointPosition;
-            m_jointStateMsg.velocity[i] = 0.0;
-            m_jointStateMsg.effort[i] = 0.0;
-            i++;
-        }
-        m_jointStatePublisher->publish(m_jointStateMsg);
+        InstallPhysicalCallback();
     }
 
-    void JointStatePublisher::OnTick(float deltaTime)
+    void JointStatePublisher::OnPhysicsSimulationFinished([[maybe_unused]] AzPhysics::SceneHandle sceneHandle, float deltaTime)
     {
         AZ_Assert(m_configuration.m_frequency > 0.f, "JointPublisher frequency must be greater than zero");
         auto frameTime = 1.f / m_configuration.m_frequency;

@@ -18,6 +18,7 @@ namespace ROS2
     //! Captures common behavior of ROS2 sensor Components.
     //! Sensors acquire data from the simulation engine and publish it to ROS2 ecosystem.
     //! Derive this Component to implement a new ROS2 sensor. Each sensor Component requires ROS2FrameComponent.
+    //! For high frequency sensors also derive PhysicsCallbackHandler.
     class ROS2SensorComponent
         : public AZ::Component
         , public AZ::TickBus::Handler
@@ -59,10 +60,10 @@ namespace ROS2
         virtual void FrequencyTick(){};
 
     private:
-        //! Visualise sensor operation.
+        //! Visualize sensor operation.
         //! For example, draw points or rays for a lidar, viewport for a camera, etc.
-        //! Visualisation can be turned on or off in SensorConfiguration.
-        virtual void Visualise(){};
+        //! Visualization can be turned on or off in SensorConfiguration.
+        virtual void Visualize(){};
 
         //! The number of ticks that are expected to pass to trigger next measurement.
         AZ::s32 m_tickCountDown{ 0 };
