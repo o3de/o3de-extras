@@ -19,6 +19,11 @@
 #include <AzCore/std/containers/unordered_set.h>
 #include <AzToolsFramework/API/EditorAssetSystemAPI.h>
 
+namespace ROS2
+{
+    struct SdfAssetBuilderSettings;
+}  // namespace ROS2
+
 namespace ROS2::Utils
 {
     //! Structure contains essential information about the source and product assets in O3DE.
@@ -67,14 +72,16 @@ namespace ROS2::Utils
     //! Discover an association between meshes in URDF and O3DE source and product assets.
     //! The @param meshesFilenames contains the list of unresolved URDF filenames that are to be found as assets.
     //! Steps:
-    //! - Functions resolves URDF filenames with `ResolveURDFPath`.
+    //! - Functions resolves URDF filenames with `ResolveAssetPath`.
     //! - Files pointed by resolved URDF patches have their checksum computed `GetFileCRC`.
     //! - Function scans all available O3DE assets by calling `GetInterestingSourceAssetsCRC`.
     //! - Suitable mapping to the O3DE asset is found by comparing the checksum of the file pointed by the URDF path and source asset.
     //! @param meshesFilenames - list of the unresolved path from the URDF file
     //! @param urdfFilename - filename of URDF file, used for resolvement
+    //! @param sdfBuilderSettings - the builder settings that should be used to resolve paths
     //! @returns a URDF Asset map where the key is unresolved URDF path to AvailableAsset
-    UrdfAssetMap FindAssetsForUrdf(const AZStd::unordered_set<AZStd::string>& meshesFilenames, const AZStd::string& urdfFilename);
+    UrdfAssetMap FindAssetsForUrdf(const AZStd::unordered_set<AZStd::string>& meshesFilenames, const AZStd::string& urdfFilename, 
+        const SdfAssetBuilderSettings& sdfBuilderSettings);
 
     //! Helper function that gives product's path from source asset GUID
     //! @param sourceAssetUUID is source asset GUID
@@ -131,6 +138,7 @@ namespace ROS2::Utils
     //! @param urdFilename - path to URDF file (as a global path)
     //! @param colliders - files to create collider assetinfo (as unresolved urdf paths)
     //! @param visuals - files to create visual assetinfo (as unresolved urdf paths)
+    //! @param sdfBuilderSettings - the builder settings to use to convert the SDF/URDF files
     //! @param outputDirSuffix - suffix to make output directory unique, if xacro file was used
     //! @param fileIO - instance to fileIO class
     //! @returns mapping from unresolved urdf paths to source asset info
@@ -139,6 +147,7 @@ namespace ROS2::Utils
         const AZStd::string& urdfFilename,
         const AZStd::unordered_set<AZStd::string>& colliders,
         const AZStd::unordered_set<AZStd::string>& visual,
+        const SdfAssetBuilderSettings& sdfBuilderSettings,
         AZStd::string_view outputDirSuffix = "",
         AZ::IO::FileIOBase* fileIO = AZ::IO::FileIOBase::GetInstance());
 

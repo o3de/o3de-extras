@@ -16,6 +16,7 @@
 #include <AzCore/std/function/function_template.h>
 #include <AzCore/std/string/string.h>
 #include <RobotImporter/URDF/UrdfParser.h>
+#include <SdfAssetBuilder/SdfAssetBuilderSettings.h>
 
 #include <sdf/sdf.hh>
 
@@ -106,18 +107,22 @@ namespace ROS2::Utils
     //! @return true should be returned if the file exist otherwise false
     using FileExistsCB = AZStd::function<bool(const AZ::IO::PathView&)>;
 
-    //! Resolves path from unresolved URDF path.
-    //! @param unresolvedPath - unresolved URDF path, example : `package://meshes/foo.dae`.
-    //! @param urdfFilePath - the absolute path of URDF file which contains the path that is to be resolved.
+    //! Resolves path for an asset referenced in a URDF/SDF file.
+    //! @param unresolvedPath - unresolved URDF/SDF path, example : `model://meshes/foo.dae`.
+    //! @param baseFilePath - the absolute path of URDF/SDF file which contains the path that is to be resolved.
     //! @param amentPrefixPath - the string that contains available packages' path, separated by ':' signs.
+    //! @param settings - the asset path resolution settings to use for attempting to locate the correct files
     //! @param fileExists - functor to check if the given file exists. Exposed for unit test, default one should be used.
-    //! @returns resolved path to the referenced file within the URDF
-    AZ::IO::Path ResolveURDFPath(
+    //! @returns resolved path to the referenced file within the URDF/SDF, or the passed-in path if no resolution was possible.
+    AZ::IO::Path ResolveAssetPath(
         AZ::IO::Path unresolvedPath,
-        const AZ::IO::PathView& urdfFilePath,
-        const AZ::IO::PathView& amentPrefixPath,
+        const AZ::IO::PathView& baseFilePath,
+        AZStd::string_view amentPrefixPath,
+        const SdfAssetBuilderSettings& settings,
         const FileExistsCB& fileExists = &Internal::FileExistsCall);
 
+    static constexpr inline int AmentPrefixPathMaxSize = 4096;
+    AZStd::fixed_string<AmentPrefixPathMaxSize> GetAmentPrefixPath();
 } // namespace ROS2::Utils
 
 namespace ROS2::Utils::SDFormat
@@ -140,4 +145,10 @@ namespace ROS2::Utils::SDFormat
     //! @param supportedPlugins set of predefined plugins that are supported
     //! @returns true if plugin is supported
     bool IsPluginSupported(const sdf::Plugin& plugin, const AZStd::unordered_set<AZStd::string>& supportedPlugins);
+
+    //! Given a set of SdfAssetBuilderSettings, produce an sdf::ParserConfig that can be used by the sdformat library.
+    //! @param settings The input settings to use
+    //! @return The output parser config to use with sdformat.
+    sdf::ParserConfig CreateSdfParserConfigFromSettings(const SdfAssetBuilderSettings& settings);
+
 } // namespace ROS2::Utils::SDFormat

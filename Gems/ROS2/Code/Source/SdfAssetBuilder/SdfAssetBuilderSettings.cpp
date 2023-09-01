@@ -51,17 +51,56 @@ namespace ROS2
         constexpr auto SdfAssetBuilderUseArticulationsRegistryKey = SDFSettingsRootKey("UseArticulations");
         constexpr auto SdfAssetBuilderURDFPreserveFixedJointRegistryKey = SDFSettingsRootKey("URDFPreserveFixedJoint");
         constexpr auto SdfAssetBuilderImportMeshesJointRegistryKey = SDFSettingsRootKey("ImportMeshes");
+        constexpr auto SdfAssetBuilderUriPrefixMapRegistryKey = SDFSettingsRootKey("PathPrefixMap");
+    }
+
+    void SdfAssetPathResolverSettings::Reflect(AZ::ReflectContext* context)
+    {
+        if (auto serializeContext = azrtti_cast<AZ::SerializeContext*>(context))
+        {
+            serializeContext->Class<SdfAssetPathResolverSettings>()
+                ->Version(0)
+                ->Field("UseAmentPrefixPath", &SdfAssetPathResolverSettings::m_useAmentPrefixPath)
+                ->Field("UseAncestorPaths", &SdfAssetPathResolverSettings::m_useAncestorPaths)
+                ->Field("URIPrefixMap", &SdfAssetPathResolverSettings::m_uriPrefixMap)
+             ;
+
+            if (auto editContext = serializeContext->GetEditContext(); editContext != nullptr)
+            {
+                editContext
+                    ->Class<SdfAssetPathResolverSettings>(
+                        "Asset Paths", "Exposes settings for resolving asset path references")
+                    ->DataElement(
+                        AZ::Edit::UIHandlers::Default,
+                        &SdfAssetPathResolverSettings::m_useAmentPrefixPath,
+                        "Use AMENT_PREFIX_PATH",
+                        "Uses the AMENT_PREFIX_PATH environment variable to try and locate asset references")
+                    ->DataElement(
+                        AZ::Edit::UIHandlers::Default,
+                        &SdfAssetPathResolverSettings::m_useAncestorPaths,
+                        "Search parent paths",
+                        "Tries to resolve partial paths by traversing parent folders to look for partial path matches")
+                    ->DataElement(
+                        AZ::Edit::UIHandlers::Default,
+                        &SdfAssetPathResolverSettings::m_uriPrefixMap,
+                        "Prefix replacements",
+                        "Map path prefixes to specific paths (ex: 'model://' -> 'Assets/models')");
+            }
+        }
     }
 
     void SdfAssetBuilderSettings::Reflect(AZ::ReflectContext* context)
     {
+        SdfAssetPathResolverSettings::Reflect(context);
+
         if (auto serializeContext = azrtti_cast<AZ::SerializeContext*>(context))
         {
             serializeContext->Class<SdfAssetBuilderSettings>()
-                ->Version(0)
+                ->Version(1)
                 ->Field("UseArticulations", &SdfAssetBuilderSettings::m_useArticulations)
                 ->Field("URDFPreserveFixedJoint", &SdfAssetBuilderSettings::m_urdfPreserveFixedJoints)
                 ->Field("ImportReferencedMeshFiles", &SdfAssetBuilderSettings::m_importReferencedMeshFiles)
+                ->Field("AssetResolverSettings", &SdfAssetBuilderSettings::m_resolverSettings)
 
                 // m_builderPatterns aren't serialized because we only use the serialization
                 // to detect when global settings changes cause us to rebuild our assets.
@@ -74,12 +113,14 @@ namespace ROS2
             {
                 editContext
                     ->Class<SdfAssetBuilderSettings>(
-                        "SDF Asset Import Settings", "Exposes settings which alters importing of URDF/XACRO/SDF files")
+                        "URDF/SDF Asset Import Settings", "Exposes settings which alters importing of URDF/XACRO/SDF files.")
+                        ->ClassElement(AZ::Edit::ClassElements::EditorData, "")
+                            ->Attribute(AZ::Edit::Attributes::AutoExpand, true)
                     ->DataElement(
                         AZ::Edit::UIHandlers::Default,
                         &SdfAssetBuilderSettings::m_useArticulations,
                         "Use Articulations",
-                        "Determines whether PhysX articulation components should be used for joints and rigid bodies")
+                        "Determines whether PhysX articulation components should be used for joints and rigid bodies.")
                     ->DataElement(
                         AZ::Edit::UIHandlers::Default,
                         &SdfAssetBuilderSettings::m_urdfPreserveFixedJoints,
@@ -90,7 +131,13 @@ namespace ROS2
                         AZ::Edit::UIHandlers::Default,
                         &SdfAssetBuilderSettings::m_importReferencedMeshFiles,
                         "Import meshes",
-                        "Allows importing of referenced mesh content files such as .dae or .stl files when importing the URDF/SDF.");
+                        "Allows importing of referenced mesh content files such as .dae or .stl files when importing the URDF/SDF.")
+                    ->DataElement(
+                        AZ::Edit::UIHandlers::Default,
+                        &SdfAssetBuilderSettings::m_resolverSettings,
+                        "Path Resolvers",
+                        "Determines how to resolve any partial asset paths.")
+                        ;
             }
         }
     }
@@ -141,6 +188,9 @@ namespace ROS2
                 return AZ::SettingsRegistryInterface::VisitResponse::Continue;
             };
         AZ::SettingsRegistryVisitorUtils::VisitArray(*settingsRegistry, VisitFileTypeExtensions, SdfAssetBuilderSupportedFileExtensionsRegistryKey);
+
+        // Get the URI prefix map
+        settingsRegistry->GetObject(m_resolverSettings.m_uriPrefixMap, SdfAssetBuilderUriPrefixMapRegistryKey);
 
         AZ_Warning(SdfAssetBuilderName, !m_builderPatterns.empty(), "SdfAssetBuilder disabled, no supported file type extensions found.");
     }

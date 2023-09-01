@@ -14,6 +14,7 @@
 #include <RobotImporter/Utils/ErrorUtils.h>
 #include <RobotImporter/Utils/RobotImporterUtils.h>
 #include <RobotImporter/xacro/XacroUtils.h>
+#include <SdfAssetBuilder/SdfAssetBuilderSettings.h>
 
 namespace UnitTest
 {
@@ -299,6 +300,18 @@ namespace UnitTest
                    "    </joint>\n"
                    "</robot>";
             // clang-format on
+        }
+
+        ROS2::SdfAssetBuilderSettings GetTestSettings()
+        {
+            ROS2::SdfAssetBuilderSettings settings;
+            settings.m_resolverSettings.m_useAmentPrefixPath = false;
+            settings.m_resolverSettings.m_useAncestorPaths = true;
+            settings.m_resolverSettings.m_uriPrefixMap.emplace("model://", AZStd::vector<AZStd::string>({"."}));
+            settings.m_resolverSettings.m_uriPrefixMap.emplace("package://", AZStd::vector<AZStd::string>({"."}));
+            settings.m_resolverSettings.m_uriPrefixMap.emplace("file://", AZStd::vector<AZStd::string>({"."}));
+
+            return settings;
         }
     };
 
@@ -850,12 +863,13 @@ namespace UnitTest
     {
         constexpr AZ::IO::PathView dae = "file:///home/foo/ros_ws/install/foo_robot/meshes/bar.dae";
         constexpr AZ::IO::PathView urdf = "/home/foo/ros_ws/install/foo_robot/foo_robot.urdf";
-        auto result = ROS2::Utils::ResolveURDFPath(
+        constexpr AZ::IO::PathView expectedResult = "/home/foo/ros_ws/install/foo_robot/meshes/bar.dae";
+        auto result = ROS2::Utils::ResolveAssetPath(
             dae,
-            urdf, "",
-            [](const AZ::IO::PathView&) -> bool
+            urdf, "", GetTestSettings(),
+            [expectedResult](const AZ::IO::PathView& p) -> bool
             {
-                return false;
+                return (p == expectedResult);
             });
         EXPECT_EQ(result, "/home/foo/ros_ws/install/foo_robot/meshes/bar.dae");
     }
@@ -864,14 +878,15 @@ namespace UnitTest
     {
         constexpr AZ::IO::PathView dae = "meshes/bar.dae";
         constexpr AZ::IO::PathView urdf = "/home/foo/ros_ws/install/foo_robot/foo_robot.urdf";
-        auto result = ROS2::Utils::ResolveURDFPath(
+        constexpr AZ::IO::PathView expectedResult = "/home/foo/ros_ws/install/foo_robot/meshes/bar.dae";
+        auto result = ROS2::Utils::ResolveAssetPath(
             dae,
-            urdf, "",
-            [](const AZ::IO::PathView&) -> bool
+            urdf, "", GetTestSettings(),
+            [expectedResult](const AZ::IO::PathView& p) -> bool
             {
-                return false;
+                return p == expectedResult;
             });
-        EXPECT_EQ(result, "/home/foo/ros_ws/install/foo_robot/meshes/bar.dae");
+        EXPECT_EQ(result, expectedResult);
     }
 
     TEST_F(UrdfParserTest, TestPathResolvementRelativePackage)
@@ -884,7 +899,7 @@ namespace UnitTest
         {
             return (p == xml || p == resolvedDae);
         };
-        auto result = ROS2::Utils::ResolveURDFPath(dae, urdf, "", mockFileSystem);
+        auto result = ROS2::Utils::ResolveAssetPath(dae, urdf, "", GetTestSettings(), mockFileSystem);
         EXPECT_EQ(result, resolvedDae);
     }
 
@@ -898,7 +913,7 @@ namespace UnitTest
         {
             return (p == xml || p == resolvedDae);
         };
-        auto result = ROS2::Utils::ResolveURDFPath(dae, urdf, "/home/foo/ros_ws/install/foo_robot", mockFileSystem);
+        auto result = ROS2::Utils::ResolveAssetPath(dae, urdf, "/home/foo/ros_ws/install/foo_robot", GetTestSettings(), mockFileSystem);
         EXPECT_EQ(result, resolvedDae);
     }
 
@@ -912,7 +927,7 @@ namespace UnitTest
         {
             return (p == xml || p == resolvedDae);
         };
-        auto result = ROS2::Utils::ResolveURDFPath(dae, urdf, "/home/foo/ros_ws/install/foo_robot", mockFileSystem);
+        auto result = ROS2::Utils::ResolveAssetPath(dae, urdf, "/home/foo/ros_ws/install/foo_robot", GetTestSettings(), mockFileSystem);
         EXPECT_EQ(result, resolvedDae);
     }
 

@@ -92,10 +92,7 @@ namespace ROS2
 
         using AssetSysReqBus = AzToolsFramework::AssetSystemRequestBus;
 
-        // Unlike the RobotImporter, the SDF Asset Builder does not use the AMENT_PREFIX_PATH
-        // to resolve file locations. There wouldn't be a way to guarantee identical results across
-        // machines or to detect the need to rebuild assets if the environment variable changes.
-        constexpr AZ::IO::PathView emptyAmentPrefixPath;
+        auto amentPrefixPath = Utils::GetAmentPrefixPath();
 
         for (const auto& uri : assetNames)
         {
@@ -103,8 +100,8 @@ namespace ROS2
             asset.m_urdfPath = uri;
 
             // Attempt to find the absolute path for the raw uri reference, which might look something like "model://meshes/model.dae"
-            asset.m_resolvedUrdfPath = Utils::ResolveURDFPath(asset.m_urdfPath, AZ::IO::PathView(sourceFilename),
-                emptyAmentPrefixPath);
+            asset.m_resolvedUrdfPath = Utils::ResolveAssetPath(asset.m_urdfPath, AZ::IO::PathView(sourceFilename), amentPrefixPath,
+                m_globalSettings);
             if (asset.m_resolvedUrdfPath.empty())
             {
                 AZ_Warning(SdfAssetBuilderName, false, "Failed to resolve file reference '%s' to an absolute path, skipping.", uri.c_str());
@@ -190,8 +187,7 @@ namespace ROS2
         const auto fullSourcePath = AZ::IO::Path(request.m_watchFolder) / AZ::IO::Path(request.m_sourceFile);
 
         // Set the parser config settings for parsing URDF content through the libsdformat parser
-        sdf::ParserConfig parserConfig;
-        parserConfig.URDFSetPreserveFixedJoint(m_globalSettings.m_urdfPreserveFixedJoints);
+        sdf::ParserConfig parserConfig = Utils::SDFormat::CreateSdfParserConfigFromSettings(m_globalSettings);
 
         AZ_Info(SdfAssetBuilderName, "Parsing source file: %s", fullSourcePath.c_str());
         auto parsedSdfRootOutcome = UrdfParser::ParseFromFile(fullSourcePath, parserConfig);
@@ -252,8 +248,7 @@ namespace ROS2
         tempAssetOutputPath.ReplaceExtension("procprefab");
 
         // Set the parser config settings for parsing URDF content through the libsdformat parser
-        sdf::ParserConfig parserConfig;
-        parserConfig.URDFSetPreserveFixedJoint(m_globalSettings.m_urdfPreserveFixedJoints);
+        sdf::ParserConfig parserConfig = Utils::SDFormat::CreateSdfParserConfigFromSettings(m_globalSettings);
 
         // Read in and parse the source SDF file.
         AZ_Info(SdfAssetBuilderName, "Parsing source file: %s", request.m_fullPath.c_str());

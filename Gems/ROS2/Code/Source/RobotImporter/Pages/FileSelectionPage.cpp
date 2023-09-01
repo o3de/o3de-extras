@@ -22,7 +22,6 @@ namespace ROS2
         , m_sdfAssetBuilderSettings(AZStd::make_unique<SdfAssetBuilderSettings>())
     {
         m_fileDialog = new QFileDialog(this);
-        m_fileDialog->setDirectory(QString::fromUtf8(AZ::Utils::GetProjectPath().data()));
         m_fileDialog->setNameFilter("URDF, XACRO (*.urdf *.xacro)");
         m_button = new QPushButton("...", this);
         m_textEdit = new QLineEdit("", this);
@@ -46,8 +45,6 @@ namespace ROS2
         m_sdfAssetBuilderSettingsEditor->Setup(serializeContext, nullptr, enableScrollBars);
         m_sdfAssetBuilderSettingsEditor->AddInstance(m_sdfAssetBuilderSettings.get());
         m_sdfAssetBuilderSettingsEditor->InvalidateAll();
-        // Make sure the SDF Asset Builder settings are expanded by default
-        m_sdfAssetBuilderSettingsEditor->ExpandAll();
         layout->addWidget(m_sdfAssetBuilderSettingsEditor);
 
         this->setLayout(layout);

@@ -22,17 +22,23 @@ namespace UnitTest
     public:
         AZStd::shared_ptr<sdf::Root> Parse(const std::string& xmlString)
         {
+          sdf::ParserConfig sdfConfig;
+          return Parse(xmlString, sdfConfig);
+        }
+
+        AZStd::shared_ptr<sdf::Root> Parse(const std::string& xmlString, const sdf::ParserConfig& sdfConfig)
+        {
             sdf::SDFPtr sdfElement(new sdf::SDF());
             sdf::init(sdfElement);
             sdf::Errors readErrors;
-            const bool success = sdf::readString(xmlString, sdfElement, readErrors);
+            const bool success = sdf::readString(xmlString, sdfConfig, sdfElement, readErrors);
             if (!success)
             {
                 return nullptr;
             }
 
             auto sdfDom = AZStd::make_shared<sdf::Root>();
-            sdf::Errors parseErrors = sdfDom->Load(sdfElement);
+            sdf::Errors parseErrors = sdfDom->Load(sdfElement, sdfConfig);
             return sdfDom;
         }
 
@@ -238,4 +244,5 @@ namespace UnitTest
         EXPECT_TRUE(importerHook.m_sensorTypes.contains(sdf::SensorType::DEPTH_CAMERA));
         EXPECT_FALSE(importerHook.m_sensorTypes.contains(sdf::SensorType::GPS));
     }
+
 } // namespace UnitTest

@@ -341,161 +341,175 @@ namespace ROS2::Utils
         return filenames;
     }
 
-    /// Finds global path from URDF path
-    AZ::IO::Path ResolveURDFPath(
+    /// Finds global path from URDF/SDF path
+    AZ::IO::Path ResolveAssetPath(
         AZ::IO::Path unresolvedPath,
-        const AZ::IO::PathView& urdfFilePath,
-        const AZ::IO::PathView& amentPrefixPath,
-        const FileExistsCB& fileExists)
+        const AZ::IO::PathView& baseFilePath,
+        AZStd::string_view amentPrefixPath,
+        const SdfAssetBuilderSettings& settings,
+        const FileExistsCB& fileExistsCB)
     {
-        AZ_Printf("ResolveURDFPath", "ResolveURDFPath with %s\n", unresolvedPath.c_str());
+        AZ_Printf("ResolveAssetPath", "ResolveAssetPath with %s\n", unresolvedPath.c_str());
 
-        // TODO: Query URDF prefix map from Settings Registry
+        const auto& pathResolverSettings = settings.m_resolverSettings;
+
+        // Parse the AMENT_PREFIX_PATH environment variable if the settings enable using it for path resolution.
+        // If not, leave the set of paths empty.
         AZStd::vector<AZ::IO::Path> amentPrefixPaths;
-
-        // Split the AMENT_PREFIX_PATH into multiple paths
-        auto AmentPrefixPathVisitor = [&amentPrefixPaths](
-            AZStd::string_view prefixPath)
+        if (pathResolverSettings.m_useAmentPrefixPath)
         {
-            amentPrefixPaths.push_back(prefixPath);
-        };
-        // Note this code only works on Unix platforms
-        // For Windows this will not work as the drive letter has a colon in it (C:\)
-        AZ::StringFunc::TokenizeVisitor(amentPrefixPath.Native(), AmentPrefixPathVisitor, ':');
+            // Split the AMENT_PREFIX_PATH into multiple paths
+            auto AmentPrefixPathVisitor = [&amentPrefixPaths](
+                AZStd::string_view prefixPath)
+            {
+                amentPrefixPaths.push_back(prefixPath);
+            };
+            // Note this code only works on Unix platforms
+            // For Windows this will not work as the drive letter has a colon in it (C:\)
+            AZ::StringFunc::TokenizeVisitor(amentPrefixPath, AmentPrefixPathVisitor, ':');
+        }
 
-        // Append the urdf file ancestor directories to the candidate replacement paths
-        AZStd::vector<AZ::IO::Path> urdfAncestorPaths;
-        if (!urdfFilePath.empty())
+        // Append all ancestor directories from the root file to the candidate replacement paths if the settings enable using
+        // them for path resolution and the root file isn't empty.
+        AZStd::vector<AZ::IO::Path> ancestorPaths;
+        if (!baseFilePath.empty() && pathResolverSettings.m_useAncestorPaths)
         {
-            AZ::IO::Path urdfFileAncestorPath = urdfFilePath;
-            bool rootPathVisited = false;
+            // The first time through this loop, fileAncestorPath contains the full file name ('/a/b/c.sdf') so
+            // ParentPath() will return the path containing the file ('/a/b'). Each iteration will walk up the path
+            // to the root, including the root, before stopping ('/a', '/').
+            AZ::IO::Path fileAncestorPath = baseFilePath;
             do
             {
-                AZ::IO::PathView parentPath = urdfFileAncestorPath.ParentPath();
-                rootPathVisited = (urdfFileAncestorPath == parentPath);
-                urdfAncestorPaths.emplace_back(parentPath);
-                urdfFileAncestorPath = parentPath;
-            } while (!rootPathVisited);
+                fileAncestorPath = fileAncestorPath.ParentPath();
+                ancestorPaths.emplace_back(fileAncestorPath);
+            } while (fileAncestorPath != fileAncestorPath.RootPath());
         }
 
-        // Structure which accepts a callback that can convert an unresolved URI path(package://, model://, file://, etc...)
-        // to a filesystem path
-        struct UriPrefix
+        // Loop through each prefix in the builder settings and attempt to resolve it.
+        // TODO: also loop through each replacement path?
+        for (const auto& [prefix, replacements] : pathResolverSettings.m_uriPrefixMap)
         {
-            using SchemeResolver = AZStd::function<AZStd::optional<AZ::IO::Path>(AZ::IO::PathView)>;
-            SchemeResolver m_schemeResolver;
-        };
-
-        auto GetReplacementSchemeResolver = [](
-            AZStd::string_view schemePrefix, AZStd::span<const AZ::IO::Path> amentPrefixPaths,
-            AZStd::span<const AZ::IO::Path> urdfAncestorPaths, const FileExistsCB& fileExistsCB)
-        {
-            return [schemePrefix, amentPrefixPaths, urdfAncestorPaths, &fileExistsCB](
-                AZ::IO::PathView uriPath) -> AZStd::optional<AZ::IO::Path>
+            // Note this is a case-sensitive check to match the exact URI scheme
+            // If that is not desired, then this code should be updated to read
+            // a value from the Setting Registry indicating whether the uriPrefix matching
+            // should be case sensitive
+            constexpr bool uriPrefixMatchCaseSensitive = true;
+            // If the path doesn't start with the given prefix, move on to the next prefix
+            if (!AZ::StringFunc::StartsWith(unresolvedPath.Native(), prefix, uriPrefixMatchCaseSensitive))
             {
-                // Note this is a case-sensitive check to match the exact URI scheme
-                // If that is not desired, then this code should be updated to read
-                // a value from the Setting Registry indicating whether the uriPrefix matching
-                // should be case sensitive
-                bool uriPrefixMatchCaseSensitive = true;
-                // Check if the path starts with the URI scheme prefix
-                if (AZ::StringFunc::StartsWith(uriPath.Native(), schemePrefix, uriPrefixMatchCaseSensitive))
+                continue;
+            }
+
+            // Strip the number of characters from the Uri scheme from beginning of the path
+            AZ::IO::PathView strippedUriPath = AZ::IO::PathView(unresolvedPath).Native().substr(prefix.size());
+
+            // If the stripped URI path is empty, there is nothing to resolve
+            if (strippedUriPath.empty())
+            {
+                AZ_Trace("ResolveAssetPath", R"(Resolved Path is empty: "%.*s" -> "")" "\n", AZ_PATH_ARG(unresolvedPath));
+                return "";
+            }
+
+            // If the remaining path is an absolute path, simply return whether or not it exists.
+            if (strippedUriPath.IsAbsolute())
+            {
+                if (fileExistsCB(strippedUriPath))
                 {
-                    // Strip the number of characters from the Uri scheme from beginning of the path
-                    AZ::IO::PathView strippedUriPath = uriPath.Native().substr(schemePrefix.size());
-                    if (strippedUriPath.empty())
-                    {
-                        // The stripped URI path is empty, so there is nothing to resolve
-                        return AZStd::nullopt;
-                    }
-
-                    // Check to see if the relative part of the URI path refers to a location
-                    // within each <ament prefix path>/share directory
-                    for (const AZ::IO::Path& amentPrefixPath : amentPrefixPaths)
-                    {
-                        auto pathIter = strippedUriPath.begin();
-                        AZ::IO::PathView packageName = *pathIter;
-                        const AZ::IO::Path amentSharePath = amentPrefixPath / "share";
-                        const AZ::IO::Path packageManifestPath = amentSharePath / packageName / "package.xml";
-
-                        if (const AZ::IO::Path candidateResolvedPath = amentSharePath / strippedUriPath;
-                            fileExistsCB(packageManifestPath) && fileExistsCB(candidateResolvedPath))
-                        {
-                            return candidateResolvedPath;
-                        }
-                    }
-
-                    // The URI path cannot be resolved within the any ament prefix path,
-                    // so try the directory containing the URDF file as well as any of its parent directories
-                    for (const AZ::IO::Path& urdfAncestorPath : urdfAncestorPaths)
-                    {
-                        if (const AZ::IO::Path candidateResolvedPath = urdfAncestorPath / strippedUriPath;
-                            fileExistsCB(candidateResolvedPath))
-                        {
-                            return candidateResolvedPath;
-                        }
-                    }
+                    AZ_Trace("ResolveAssetPath", R"(Resolved Absolute Path: "%.*s" -> "%.*s")" "\n", 
+                        AZ_PATH_ARG(unresolvedPath), AZ_PATH_ARG(strippedUriPath));
+                    return strippedUriPath;
                 }
-
-                return AZStd::nullopt;
-            };
-        };
-
-        constexpr AZStd::string_view PackageSchemePrefix = "package://";
-        UriPrefix packageUriPrefix;
-        packageUriPrefix.m_schemeResolver = GetReplacementSchemeResolver(PackageSchemePrefix,
-            amentPrefixPaths, urdfAncestorPaths, fileExists);
-
-        constexpr AZStd::string_view ModelSchemePrefix = "model://";
-        UriPrefix modelUriPrefix;
-        modelUriPrefix.m_schemeResolver = GetReplacementSchemeResolver(ModelSchemePrefix,
-            amentPrefixPaths, urdfAncestorPaths, fileExists);
-
-        // For a local file path convert the file URI to a local path
-        UriPrefix fileUriPrefix;
-        fileUriPrefix.m_schemeResolver = [](AZ::IO::PathView uriPath) -> AZStd::optional<AZ::IO::Path>
-        {
-            constexpr AZStd::string_view FileSchemePrefix = "file://";
-            // Paths that start with 'file:///' are absolute paths, so only 'file://' needs to be stripped
-            bool uriPrefixMatchCaseSensitive = true;
-            if (AZ::StringFunc::StartsWith(uriPath.Native(), FileSchemePrefix, uriPrefixMatchCaseSensitive))
-            {
-                AZStd::string_view strippedUriPath = uriPath.Native().substr(FileSchemePrefix.size());
-                return AZ::IO::Path(strippedUriPath);
+                else
+                {
+                    AZ_Trace("ResolveAssetPath", R"(Failed to resolve Absolute Path: "%.*s" -> "%.*s")" "\n", 
+                        AZ_PATH_ARG(unresolvedPath), AZ_PATH_ARG(strippedUriPath));
+                    return "";
+                }
             }
 
-            return AZStd::nullopt;
-        };
-
-        // Step 1: Attempt to resolved URI scheme paths
-        // libsdformat seems to convert package:// references to model:// references
-        // So the model:// URI prefix resolver is run first
-        const auto uriPrefixes = AZStd::to_array<UriPrefix>({
-            AZStd::move(modelUriPrefix),
-            AZStd::move(fileUriPrefix),
-            AZStd::move(packageUriPrefix)});
-        for (const UriPrefix& uriPrefix : uriPrefixes)
-        {
-            if (auto resolvedPath = uriPrefix.m_schemeResolver(unresolvedPath);
-                resolvedPath.has_value())
+            // Check to see if the relative part of the URI path refers to a location
+            // within each <ament prefix path>/share directory
+            for (const AZ::IO::Path& amentPrefixPath : amentPrefixPaths)
             {
-                AZ_Printf("ResolveURDFPath", R"(Resolved Path using URI Prefix "%.*s" -> "%.*s")" "\n", AZ_PATH_ARG(unresolvedPath),
-                    AZ_PATH_ARG(resolvedPath.value()));
-                return resolvedPath.value();
+                auto pathIter = strippedUriPath.begin();
+                AZ::IO::PathView packageName = *pathIter;
+                const AZ::IO::Path amentSharePath = amentPrefixPath / "share";
+                const AZ::IO::Path packageManifestPath = amentSharePath / packageName / "package.xml";
+
+                // Given a path like 'ambulance/meshes/model.stl', it will be considered a match if
+                // <ament prefix path>/share/ambulance/package.xml exists and 
+                // <ament prefix path>/share/ambulance/meshes/model.stl exists.
+                if (const AZ::IO::Path candidateResolvedPath = amentSharePath / strippedUriPath;
+                    fileExistsCB(packageManifestPath) && fileExistsCB(candidateResolvedPath))
+                {
+                    AZ_Trace("ResolveAssetPath", R"(Resolved using AMENT_PREFIX_PATH: "%.*s" -> "%.*s")" "\n", 
+                        AZ_PATH_ARG(unresolvedPath), AZ_PATH_ARG(candidateResolvedPath));
+                    return candidateResolvedPath;
+                }
+            }
+
+            // The URI path cannot be resolved within the any ament prefix path,
+            // so try the directory containing the root file as well as any of its parent directories
+            for (const AZ::IO::Path& ancestorPath : ancestorPaths)
+            {
+                if (const AZ::IO::Path candidateResolvedPath = ancestorPath / strippedUriPath;
+                    fileExistsCB(candidateResolvedPath))
+                {
+                    AZ_Trace("ResolveAssetPath", R"(Resolved using ancestor paths: "%.*s" -> "%.*s")" "\n", 
+                        AZ_PATH_ARG(unresolvedPath), AZ_PATH_ARG(candidateResolvedPath));
+                    return candidateResolvedPath;
+                }
             }
         }
 
-        // At this point, the path has no URI scheme
+
+        // At this point, the path has no identified URI prefix. If it's an absolute path, try to locate and return it.
+        // Otherwise, return an empty path as an error.
         if (unresolvedPath.IsAbsolute())
         {
-            AZ_Printf("ResolveURDFPath", "Input Path is an absolute local filesystem path to : %s\n", unresolvedPath.c_str());
-            return unresolvedPath;
+            if (fileExistsCB(unresolvedPath))
+            {
+                AZ_Trace("ResolveAssetPath", R"(Resolved Absolute Path: "%.*s")" "\n", 
+                    AZ_PATH_ARG(unresolvedPath));
+                return unresolvedPath;
+            }
+            else
+            {
+                AZ_Trace("ResolveAssetPath", R"(Failed to resolve Absolute Path: "%.*s")" "\n", 
+                    AZ_PATH_ARG(unresolvedPath));
+                return "";
+            }
         }
 
-        // The path is relative path, so append to the directory containing the .urdf file
-        const AZ::IO::Path resolvedPath = AZ::IO::Path(urdfFilePath.ParentPath()) / unresolvedPath;
-        AZ_Printf("ResolveURDFPath", "Input Path %s is being returned as is\n", unresolvedPath.c_str());
-        return resolvedPath;
+        // The path is a relative path, so use the directory containing the base URDF/SDF file as the root path,
+        // and if the file can be found successfully, return the path. Otherwise, return an empty path as an error.
+        const AZ::IO::Path relativePath = AZ::IO::Path(baseFilePath.ParentPath()) / unresolvedPath;
+
+        if (fileExistsCB(relativePath))
+        {
+            AZ_Trace("ResolveAssetPath", R"(Resolved Relative Path: "%.*s" -> "%.*s")" "\n", 
+                AZ_PATH_ARG(unresolvedPath), AZ_PATH_ARG(relativePath));
+            return relativePath;
+        }
+
+        AZ_Trace("ResolveAssetPath", R"(Failed to resolve Relative Path: "%.*s" -> "%.*s")" "\n", 
+            AZ_PATH_ARG(unresolvedPath), AZ_PATH_ARG(relativePath));
+        return "";
+    }
+
+    AZStd::fixed_string<AmentPrefixPathMaxSize> GetAmentPrefixPath()
+    {
+        // Support reading the AMENT_PREFIX_PATH environment variable on Unix/Windows platforms
+        auto StoreAmentPrefixPath = [](char* buffer, size_t size) -> size_t
+        {
+            auto getEnvOutcome = AZ::Utils::GetEnv(AZStd::span(buffer, size), "AMENT_PREFIX_PATH");
+            return getEnvOutcome ? getEnvOutcome.GetValue().size() : 0;
+        };
+        AZStd::fixed_string<AmentPrefixPathMaxSize> amentPrefixPath;
+        amentPrefixPath.resize_and_overwrite(amentPrefixPath.capacity(), StoreAmentPrefixPath);
+        AZ_Error("UrdfAssetMap", !amentPrefixPath.empty(), "AMENT_PREFIX_PATH is not found.");
+
+        return amentPrefixPath;
     }
 
 } // namespace ROS2::Utils
@@ -548,5 +562,43 @@ namespace ROS2::Utils::SDFormat
     bool IsPluginSupported(const sdf::Plugin& plugin, const AZStd::unordered_set<AZStd::string>& supportedPlugins)
     {
         return supportedPlugins.contains(GetPluginFilename(plugin));
+    }
+
+    sdf::ParserConfig CreateSdfParserConfigFromSettings(const SdfAssetBuilderSettings& settings)
+    {
+        sdf::ParserConfig sdfConfig;
+
+        sdfConfig.URDFSetPreserveFixedJoint(settings.m_urdfPreserveFixedJoints);
+
+        // Fill in the URI resolution with the supplied prefix mappings.
+        for (auto& entry : settings.m_resolverSettings.m_uriPrefixMap)
+        {
+            std::string uriPath;
+            for(auto& path : entry.second)
+            {
+                if (!uriPath.empty())
+                {
+                    uriPath.append(std::string(":"));
+                }
+
+                uriPath.append(std::string(path.c_str(), path.size()));
+            }
+            if (!entry.first.empty() && !uriPath.empty())
+            {
+                std::string uriPrefix(entry.first.c_str(), entry.first.size());
+                sdfConfig.AddURIPath(uriPrefix, uriPath);
+                AZ_Info("SdfParserConfig", "Added URI mapping '%s' -> '%s'", uriPrefix.c_str(), uriPath.c_str());
+            }
+        }
+
+        // If any files couldn't be found using our supplied prefix mappings, this callback will get called.
+        // Print a warning for any missing files.
+        sdfConfig.SetFindCallback([](const std::string &fileName) -> std::string
+        {
+            AZ_Warning("SdfParserConfig", false, "SDF SetFindCallback called with '%s'", fileName.c_str());
+            return fileName;
+        });
+
+        return sdfConfig;
     }
 } // namespace ROS2::Utils::SDFormat

@@ -13,7 +13,12 @@
                     "xacro"
                 ],
                 "UseArticulations": true,
-                "URDFPreserveFixedJoint": true
+                "URDFPreserveFixedJoint": true,
+                "PathPrefixMap": {
+                    "model://": ["./", "../" ],
+                    "package://": ["./", "../" ],
+                    "file://":  ["/"]
+                }                
             }
         }
     }

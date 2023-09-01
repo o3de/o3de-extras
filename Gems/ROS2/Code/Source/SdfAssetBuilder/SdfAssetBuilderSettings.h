@@ -8,11 +8,32 @@
 
 #pragma once
 
+#include <AzCore/std/containers/unordered_map.h>
 #include <AssetBuilderSDK/AssetBuilderSDK.h>
 #include <AzCore/Settings/SettingsRegistry.h>
 
 namespace ROS2
 {
+    struct SdfAssetPathResolverSettings
+    {
+        public:
+            AZ_RTTI(SdfAssetPathResolverSettings, "{51EDDB99-FE82-4783-9C91-7DF403AD4EFA}");
+
+            SdfAssetPathResolverSettings() = default;
+            virtual ~SdfAssetPathResolverSettings() = default;
+
+            static void Reflect(AZ::ReflectContext* context);
+
+        using UriPrefixMap = AZStd::unordered_map<AZStd::string, AZStd::vector<AZStd::string>>;
+
+        //! When true, use the set of paths in the AMENT_PREFIX_PATH environment variable to search for files
+        bool m_useAmentPrefixPath = true;
+        //! When true, search ancestor paths all the way up to the root to search for files
+        bool m_useAncestorPaths = true; 
+        //! The map of URI prefixes to replace with paths
+        UriPrefixMap m_uriPrefixMap;
+    };
+
     struct SdfAssetBuilderSettings
     {
     public:
@@ -32,9 +53,11 @@ namespace ROS2
 
         AZStd::vector<AssetBuilderSDK::AssetBuilderPattern> m_builderPatterns;
         bool m_useArticulations = true;
-        // By default, fixed joint in URDF files that are processed by libsdformat are preserved
+        //! By default, fixed joint in URDF files that are processed by libsdformat are preserved
         bool m_urdfPreserveFixedJoints = true;
-        // When true, .dae/.stl mesh files are imported into the project folder to allow the AP to process them
+        //! When true, .dae/.stl mesh files are imported into the project folder to allow the AP to process them
         bool m_importReferencedMeshFiles = true;
+
+        SdfAssetPathResolverSettings m_resolverSettings;
     };
 } // namespace ROS2
