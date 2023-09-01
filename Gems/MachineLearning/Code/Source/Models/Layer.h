@@ -43,7 +43,7 @@ namespace MachineLearning
 
         //! Performs a gradient computation against the provided expected output using the provided gradients from the previous layer.
         //! This method presumes that we've completed a forward pass immediately prior to fill all the relevant vectors
-        void AccumulateGradients(LayerTrainingData& trainingData, LayerInferenceData& inferenceData, const AZ::VectorN& expected);
+        void AccumulateGradients(AZStd::size_t samples, LayerTrainingData& trainingData, LayerInferenceData& inferenceData, const AZ::VectorN& expected);
 
         //! Applies the current gradient values to the layers weights and biases and resets the gradient values for a new accumulation pass.
         void ApplyGradients(LayerTrainingData& trainingData, float learningRate);

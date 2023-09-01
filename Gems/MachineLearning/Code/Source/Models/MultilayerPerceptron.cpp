@@ -154,6 +154,18 @@ namespace MachineLearning
         return m_layers.size();
     }
 
+    AZ::MatrixMxN MultilayerPerceptron::GetLayerWeights(AZStd::size_t layerIndex) const
+    {
+        //AZStd::lock_guard lock(m_mutex);
+        return m_layers[layerIndex].m_weights;
+    }
+
+    AZ::VectorN MultilayerPerceptron::GetLayerBiases(AZStd::size_t layerIndex) const
+    {
+        //AZStd::lock_guard lock(m_mutex);
+        return m_layers[layerIndex].m_biases;
+    }
+
     AZStd::size_t MultilayerPerceptron::GetParameterCount() const
     {
         //AZStd::lock_guard lock(m_mutex);
@@ -217,7 +229,7 @@ namespace MachineLearning
         AZ::VectorN* lossGradient = &costGradients;
         for (int64_t iter = static_cast<int64_t>(m_layers.size()) - 1; iter >= 0; --iter)
         {
-            m_layers[iter].AccumulateGradients(reverseContext->m_layerData[iter], forwardContext->m_layerData[iter], *lossGradient);
+            m_layers[iter].AccumulateGradients(reverseContext->m_trainingSampleSize, reverseContext->m_layerData[iter], forwardContext->m_layerData[iter], *lossGradient);
             lossGradient = &reverseContext->m_layerData[iter].m_backpropagationGradients;
         }
     }
@@ -228,10 +240,10 @@ namespace MachineLearning
         MlpTrainingContext* reverseContext = static_cast<MlpTrainingContext*>(context);
         if (reverseContext->m_trainingSampleSize > 0)
         {
-            const float adjustedLearningRate = learningRate / static_cast<float>(reverseContext->m_trainingSampleSize);
+            //const float adjustedLearningRate = learningRate / static_cast<float>(reverseContext->m_trainingSampleSize);
             for (AZStd::size_t iter = 0; iter < m_layers.size(); ++iter)
             {
-                m_layers[iter].ApplyGradients(reverseContext->m_layerData[iter], adjustedLearningRate);
+                m_layers[iter].ApplyGradients(reverseContext->m_layerData[iter], learningRate);
             }
         }
         reverseContext->m_trainingSampleSize = 0;

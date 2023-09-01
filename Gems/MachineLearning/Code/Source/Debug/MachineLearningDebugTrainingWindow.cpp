@@ -9,13 +9,20 @@
 #include <Source/Debug/MachineLearningDebugTrainingWindow.h>
 #include <Source/Assets/MnistDataLoader.h>
 #include <Source/Algorithms/Activations.h>
-#include <ImGuiContextScope.h>
-#include <ImGui/ImGuiPass.h>
-#include <imgui/imgui.h>
-#include <imgui/imgui_internal.h>
+#include <AzCore/Console/IConsole.h>
+#include <AzCore/Console/ILogger.h>
+
+#ifdef IMGUI_ENABLED
+#   include <ImGuiContextScope.h>
+#   include <ImGui/ImGuiPass.h>
+#   include <imgui/imgui.h>
+#   include <imgui/imgui_internal.h>
+#endif
 
 namespace MachineLearning
 {
+    AZ_CVAR(bool, ml_logAccuracyValues, false, nullptr, AZ::ConsoleFunctorFlags::Null, "Dumps the actual and expected labels during accuracy calculations");
+
 #ifdef IMGUI_ENABLED
     int32_t AZStdStringResizeCallback(ImGuiInputTextCallbackData* data)
     {
@@ -64,31 +71,45 @@ namespace MachineLearning
 
     void MachineLearningDebugTrainingWindow::LoadTestTrainData(TrainingInstance* trainingInstance)
     {
-        if (trainingInstance->m_trainingCycle.m_trainingData == nullptr)
+        if (!trainingInstance->m_trainingCycle.m_trainData.IsValid())
         {
-            trainingInstance->m_trainingCycle.m_trainingData = AZStd::make_shared<MnistDataLoader>();
-            trainingInstance->m_trainingCycle.m_trainingData->LoadArchive(trainingInstance->m_trainDataName, trainingInstance->m_trainLabelName);
+            ILabeledTrainingDataPtr dataPtr = AZStd::make_shared<MnistDataLoader>();
+            trainingInstance->m_trainingCycle.m_trainData.SetSourceData(dataPtr);
+            trainingInstance->m_trainingCycle.m_trainData.LoadArchive(trainingInstance->m_trainDataName, trainingInstance->m_trainLabelName);
         }
-        if (trainingInstance->m_trainingCycle.m_testData == nullptr)
+
+        if (!trainingInstance->m_trainingCycle.m_testData.IsValid())
         {
-            trainingInstance->m_trainingCycle.m_testData = AZStd::make_shared<MnistDataLoader>();
-            trainingInstance->m_trainingCycle.m_testData->LoadArchive(trainingInstance->m_testDataName, trainingInstance->m_testLabelName);
+            ILabeledTrainingDataPtr dataPtr = AZStd::make_shared<MnistDataLoader>();
+            trainingInstance->m_trainingCycle.m_testData.SetSourceData(dataPtr);
+            trainingInstance->m_trainingCycle.m_testData.LoadArchive(trainingInstance->m_testDataName, trainingInstance->m_testLabelName);
         }
     }
 
-    void MachineLearningDebugTrainingWindow::RecalculateAccuracy(TrainingInstance* trainingInstance, ILabeledTrainingDataPtr data)
+    void LogVectorN(const AZ::VectorN& value, const char* label)
+    {
+        AZStd::string vectorString(label);
+        for (AZStd::size_t iter = 0; iter < value.GetDimensionality(); ++iter)
+        {
+            vectorString += AZStd::string::format(" %.02f", value.GetElement(iter));
+        }
+        AZLOG_INFO(vectorString.c_str());
+    }
+
+    void MachineLearningDebugTrainingWindow::RecalculateAccuracy(TrainingInstance* trainingInstance, ILabeledTrainingData& data)
     {
         trainingInstance->m_trainingCycle.InitializeContexts();
-        trainingInstance->m_totalSamples = static_cast<int32_t>(data->GetSampleCount());
+        trainingInstance->m_totalSamples = static_cast<int32_t>(data.GetSampleCount());
         trainingInstance->m_correctPredictions = 0;
         trainingInstance->m_incorrectPredictions = 0;
         for (int32_t iter = 0; iter < trainingInstance->m_totalSamples; ++iter)
         {
-            const AZ::VectorN& activations = data->GetDataByIndex(iter);
-            const AZStd::size_t label = data->GetLabelAsValueByIndex(iter);
+            const AZ::VectorN& activations = data.GetDataByIndex(iter);
+            const AZ::VectorN& label = data.GetLabelByIndex(iter);
             const AZ::VectorN* output = m_selectedModel->Forward(trainingInstance->m_trainingCycle.m_inferenceContext.get(), activations);
             AZStd::size_t prediction = ArgMaxDecode(*output);
-            if (label == prediction)
+            AZStd::size_t actual = ArgMaxDecode(label);
+            if (prediction == actual)
             {
                 ++trainingInstance->m_correctPredictions;
             }
@@ -96,7 +117,33 @@ namespace MachineLearning
             {
                 ++trainingInstance->m_incorrectPredictions;
             }
+
+            if (ml_logAccuracyValues)
+            {
+                LogVectorN(label, "Actual");
+                LogVectorN(*output, "Output");
+            }
         }
+    }
+
+    void MachineLearningDebugTrainingWindow::DrawLayerParameters(TrainingInstance* trainingInstance, AZStd::size_t layerIndex)
+    {
+        if (trainingInstance->m_layerWeights.size() < layerIndex)
+        {
+            trainingInstance->m_layerWeights.resize(layerIndex + 1);
+            trainingInstance->m_layerWeights[layerIndex].Init("Weights", 250, ImGui::LYImGuiUtils::HistogramContainer::ViewType::Histogram, true, 0.0f, 1.0f, ImGui::LYImGuiUtils::HistogramContainer::AutoExpand);
+        }
+
+        if (trainingInstance->m_layerBiases.size() < layerIndex)
+        {
+            trainingInstance->m_layerBiases.resize(layerIndex + 1);
+            trainingInstance->m_layerBiases[layerIndex].Init("Biases", 250, ImGui::LYImGuiUtils::HistogramContainer::ViewType::Histogram, true, 0.0f, 1.0f, ImGui::LYImGuiUtils::HistogramContainer::AutoExpand);
+        }
+
+        //m_selectedModel->GetLayerWeights(layerIter), m_selectedModel->GetLayerBiases(layerIter)
+
+        //trainingInstance->m_layerWeights[layerIndex].Draw(ImGui::GetColumnWidth(), 200.0f);
+        //trainingInstance->m_layerBiases[layerIndex].Draw(ImGui::GetColumnWidth(), 200.0f);
     }
 
     void MachineLearningDebugTrainingWindow::OnImGuiUpdate()
@@ -154,18 +201,29 @@ namespace MachineLearning
             ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(8.0f, 4.0f));
             TrainingInstance* trainingInstance = RetrieveTrainingInstance(m_selectedModel);
 
-            float currentTestCost = 0.0f;
-            float currentTrainCost = 0.0f;
-            if (trainingInstance->m_trainingCycle.m_testData != nullptr && trainingInstance->m_trainingCycle.m_trainingData != nullptr)
             {
-                currentTestCost = trainingInstance->m_trainingCycle.ComputeCurrentCost(trainingInstance->m_trainingCycle.m_testData, trainingInstance->m_trainingCycle.m_costFunction, m_costSampleSize);
-                currentTrainCost = trainingInstance->m_trainingCycle.ComputeCurrentCost(trainingInstance->m_trainingCycle.m_trainingData, trainingInstance->m_trainingCycle.m_costFunction, m_costSampleSize);
+                AZStd::deque<float> costs;
+                trainingInstance->m_trainingCycle.m_testCosts.Swap(costs);
+                for (float item : costs)
+                {
+                    trainingInstance->m_testHistogram.PushValue(item);
+                }
             }
+
+            {
+                AZStd::deque<float> costs;
+                trainingInstance->m_trainingCycle.m_trainCosts.Swap(costs);
+                for (float item : costs)
+                {
+                    trainingInstance->m_trainHistogram.PushValue(item);
+                }
+            }
+
+            int32_t batchSize = static_cast<int32_t>(trainingInstance->m_trainingCycle.m_batchSize);
+            int32_t totalIterations = static_cast<int32_t>(trainingInstance->m_trainingCycle.m_totalIterations);
 
             if (!trainingInstance->m_trainingCycle.m_trainingComplete)
             {
-                trainingInstance->m_testHistogram.PushValue(currentTestCost);
-                trainingInstance->m_trainHistogram.PushValue(currentTrainCost);
                 if (ImGui::Button("Stop training"))
                 {
                     trainingInstance->m_trainingCycle.StopTraining();
@@ -179,6 +237,8 @@ namespace MachineLearning
                 if (ImGui::Button("Start training"))
                 {
                     LoadTestTrainData(trainingInstance);
+                    trainingInstance->m_testHistogram.Init("Test Cost", totalIterations, ImGui::LYImGuiUtils::HistogramContainer::ViewType::Histogram, true, 0.0f, 0.2f, ImGui::LYImGuiUtils::HistogramContainer::AutoExpand);
+                    trainingInstance->m_trainHistogram.Init("Train Cost", totalIterations, ImGui::LYImGuiUtils::HistogramContainer::ViewType::Histogram, true, 0.0f, 0.2f, ImGui::LYImGuiUtils::HistogramContainer::AutoExpand);
                     trainingInstance->m_trainingCycle.StartTraining();
                 }
                 ImGui::SameLine();
@@ -201,7 +261,7 @@ namespace MachineLearning
                 if (ImGui::Button("Recalculate accuracy on training data"))
                 {
                     LoadTestTrainData(trainingInstance);
-                    RecalculateAccuracy(trainingInstance, trainingInstance->m_trainingCycle.m_trainingData);
+                    RecalculateAccuracy(trainingInstance, trainingInstance->m_trainingCycle.m_trainData);
                 }
             }
  
@@ -217,41 +277,72 @@ namespace MachineLearning
             const float accuracy = (static_cast<float>(trainingInstance->m_correctPredictions) * 100.0f) / static_cast<float>(trainingInstance->m_totalSamples);
             ImGui::Text("Accuracy: %f", accuracy);
 
-            ImGui::Text("Test score: %f", currentTestCost);
+            ImGui::Text("Test score: %f", trainingInstance->m_testHistogram.GetLastValue());
             trainingInstance->m_testHistogram.Draw(ImGui::GetColumnWidth(), 200.0f);
-            ImGui::Text("Train score: %f", currentTrainCost);
+            ImGui::Text("Train score: %f", trainingInstance->m_trainHistogram.GetLastValue());
             trainingInstance->m_trainHistogram.Draw(ImGui::GetColumnWidth(), 200.0f);
-            ImGui::SliderInt("Cost evaluation sample size", &m_costSampleSize, 10, 10000);
+            ImGui::Checkbox("Shuffle data", &trainingInstance->m_trainingCycle.m_shuffleTrainingData);
             ImGui::NewLine();
-
-            TextInputHelper("Test data asset file", trainingInstance->m_testDataName);
-            TextInputHelper("Test data label file", trainingInstance->m_testLabelName);
-            ImGui::NewLine();
-            TextInputHelper("Train data asset file", trainingInstance->m_trainDataName);
-            TextInputHelper("Train data label file", trainingInstance->m_trainLabelName);
-            ImGui::NewLine();
-
-            //AZStd::fixed_string<64> valueString;
-            //valueString = AZStd::fixed_string<64>::format("%0.3f", trainingInstance->m_trainingCycle.m_learningRate);
-            //float logValue = log(trainingInstance->m_trainingCycle.m_learningRate);
-            //ImGui::SliderFloat("LearningRate", &logValue, log(0.0001f), log(1.0f), valueString.c_str());
-            //trainingInstance->m_trainingCycle.m_learningRate = exp(logValue);
 
             ImGui::SliderFloat("LearningRate", &trainingInstance->m_trainingCycle.m_learningRate, 0.0f, 0.1f);
             ImGui::SliderFloat("LearningRateDecay", &trainingInstance->m_trainingCycle.m_learningRateDecay, 0.0f, 1.0f);
+            ImGui::SliderFloat("EarlyStop", &trainingInstance->m_trainingCycle.m_earlyStopCost, 0.0f, 1.0f);
             ImGui::NewLine();
 
-            int32_t batchSize = static_cast<int32_t>(trainingInstance->m_trainingCycle.m_batchSize);
             ImGui::SliderInt("Batch size", &batchSize, 1, 1000);
             trainingInstance->m_trainingCycle.m_batchSize = batchSize;
-            int32_t totalIterations = static_cast<int32_t>(trainingInstance->m_trainingCycle.m_totalIterations);
             ImGui::SliderInt("Number of iterations", &totalIterations, 1, 1000);
             trainingInstance->m_trainingCycle.m_totalIterations = totalIterations;
 
             int32_t costMetric = static_cast<int32_t>(trainingInstance->m_trainingCycle.m_costFunction);
             ImGui::Combo("Cost metric", &costMetric, "MeanSquaredError\0");
             trainingInstance->m_trainingCycle.m_costFunction = static_cast<LossFunctions>(costMetric);
+            ImGui::NewLine();
 
+            ImGui::PushItemWidth(ImGui::GetWindowWidth() * 0.4f);
+
+            if (ImGui::CollapsingHeader("Test data", ImGuiTreeNodeFlags_Framed))
+            {
+                ImGui::PushID(&trainingInstance->m_trainingCycle.m_testData);
+                int32_t firstElement = static_cast<int32_t>(trainingInstance->m_trainingCycle.m_testData.m_first);
+                int32_t lastElement = static_cast<int32_t>(trainingInstance->m_trainingCycle.m_testData.m_last);
+                TextInputHelper("Asset file", trainingInstance->m_testDataName);
+                TextInputHelper("Label file", trainingInstance->m_testLabelName);
+                ImGui::SliderInt("First", &firstElement, 0, lastElement);
+                ImGui::SameLine();
+                ImGui::SliderInt("Last", &lastElement, firstElement, static_cast<int32_t>(trainingInstance->m_trainingCycle.m_testData.GetOriginalSize()));
+                trainingInstance->m_trainingCycle.m_testData.m_first = firstElement;
+                trainingInstance->m_trainingCycle.m_testData.m_last = lastElement;
+                ImGui::PopID();
+            }
+            ImGui::NewLine();
+
+            if (ImGui::CollapsingHeader("Train data", ImGuiTreeNodeFlags_Framed))
+            {
+                ImGui::PushID(&trainingInstance->m_trainingCycle.m_trainData);
+                int32_t firstElement = static_cast<int32_t>(trainingInstance->m_trainingCycle.m_trainData.m_first);
+                int32_t lastElement = static_cast<int32_t>(trainingInstance->m_trainingCycle.m_trainData.m_last);
+                TextInputHelper("Asset file", trainingInstance->m_trainDataName);
+                TextInputHelper("Label file", trainingInstance->m_trainLabelName);
+                ImGui::SliderInt("First", &firstElement, 0, lastElement);
+                ImGui::SameLine();
+                ImGui::SliderInt("Last", &lastElement, firstElement, static_cast<int32_t>(trainingInstance->m_trainingCycle.m_trainData.GetOriginalSize()));
+                trainingInstance->m_trainingCycle.m_trainData.m_first = firstElement;
+                trainingInstance->m_trainingCycle.m_trainData.m_last = lastElement;
+                ImGui::PopID();
+            }
+
+            //for (AZStd::size_t layerIter = 0; layerIter < m_selectedModel->GetLayerCount(); ++layerIter)
+            //{
+            //    AZStd::fixed_string<64> name;
+            //    name = AZStd::string::format("Layer %u Parameters", static_cast<uint32_t>(layerIter));
+            //    if (ImGui::CollapsingHeader(name.c_str()))
+            //    {
+            //        DrawLayerParameters(trainingInstance, layerIter);
+            //    }
+            //}
+
+            ImGui::PopItemWidth();
             ImGui::PopStyleVar();
         }
 

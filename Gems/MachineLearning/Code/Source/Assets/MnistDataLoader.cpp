@@ -66,11 +66,6 @@ namespace MachineLearning
         return m_labelVector;
     }
 
-    AZStd::size_t MnistDataLoader::GetLabelAsValueByIndex(AZStd::size_t index)
-    {
-        return static_cast<AZStd::size_t>(m_labelBuffer[index]);
-    }
-
     const AZ::VectorN& MnistDataLoader::GetDataByIndex(AZStd::size_t index)
     {
         const AZStd::size_t imageDataStride = m_dataHeader.m_height * m_dataHeader.m_width;

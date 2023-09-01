@@ -9,6 +9,7 @@
 #pragma once
 
 #include <AzCore/Math/VectorN.h>
+#include <AzCore/Math/MatrixMxN.h>
 #include <MachineLearning/Types.h>
 #include <MachineLearning/IInferenceContext.h>
 #include <MachineLearning/ITrainingContext.h>
@@ -47,6 +48,12 @@ namespace MachineLearning
 
         //! Returns the total number of layers in the network.
         virtual AZStd::size_t GetLayerCount() const { return 0; }
+
+        //! Returns the weight matrix for the requested layer.
+        virtual AZ::MatrixMxN GetLayerWeights([[maybe_unused]] AZStd::size_t layerIndex) const { return AZ::MatrixMxN(); }
+
+        //! Returns the weight matrix for the requested layer.
+        virtual AZ::VectorN GetLayerBiases([[maybe_unused]] AZStd::size_t layerIndex) const { return AZ::VectorN(); }
 
         //! Returns the total number of parameters in the neural network.
         virtual AZStd::size_t GetParameterCount() const { return 0; }

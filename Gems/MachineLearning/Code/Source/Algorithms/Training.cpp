@@ -40,7 +40,7 @@ namespace MachineLearning
     ) : SupervisedLearningCycle()
     {
         m_model = model;
-        m_trainingData = trainingData;
+        m_trainData = trainingData;
         m_testData = testData;
         m_costFunction = costFunction;
         m_totalIterations = totalIterations;
@@ -63,17 +63,16 @@ namespace MachineLearning
     {
         InitializeContexts();
 
-        const AZStd::size_t totalTrainingSize = m_trainingData->GetSampleCount();
-
-        // Generate a set of training indices that we can later shuffle
-        m_indices.resize(totalTrainingSize);
-        std::iota(m_indices.begin(), m_indices.end(), 0);
-        std::shuffle(m_indices.begin(), m_indices.end(), std::mt19937(std::random_device{}()));
+        const AZStd::size_t totalTrainingSize = m_trainData.GetSampleCount();
 
         // Start training
         m_currentEpoch = 0;
         m_trainingComplete = false;
         m_currentIndex = 0;
+        if (m_shuffleTrainingData)
+        {
+            m_trainData.ShuffleSamples();
+        }
 
         auto job = [this]()
         {
@@ -83,9 +82,14 @@ namespace MachineLearning
         trainingJob->Start();
     }
 
+    void SupervisedLearningCycle::StopTraining()
+    {
+        m_trainingComplete = true;
+    }
+
     void SupervisedLearningCycle::ExecTraining()
     {
-        const AZStd::size_t totalTrainingSize = m_trainingData->GetSampleCount();
+        const AZStd::size_t totalTrainingSize = m_trainData.GetSampleCount();
         while (!m_trainingComplete)
         {
             if (m_currentIndex >= totalTrainingSize)
@@ -95,12 +99,19 @@ namespace MachineLearning
                 m_learningRate *= m_learningRateDecay;
 
                 // We reshuffle the training data indices each epoch to avoid patterns in the training data
-                std::shuffle(m_indices.begin(), m_indices.end(), std::mt19937(std::random_device{}()));
+                if (m_shuffleTrainingData)
+                {
+                    AZStd::lock_guard lock(m_mutex);
+                    m_trainData.ShuffleSamples();
+                }
                 ++m_currentEpoch;
 
                 // Generally we want to keep monitoring the models performence on both test and training data
                 // This allows us to detect if we're overfitting the model to the training data
                 float currentTestCost = ComputeCurrentCost(m_testData, m_costFunction);
+                float currentTrainCost = ComputeCurrentCost(m_trainData, m_costFunction);
+                m_testCosts.PushBackItem(currentTestCost);
+                m_trainCosts.PushBackItem(currentTrainCost);
                 if ((currentTestCost < m_earlyStopCost) || (m_currentEpoch >= m_totalIterations))
                 {
                     m_trainingComplete = true;
@@ -110,8 +121,8 @@ namespace MachineLearning
 
             for (uint32_t batch = 0; (batch < m_batchSize) && (m_currentIndex < totalTrainingSize); ++batch, ++m_currentIndex)
             {
-                const AZ::VectorN& activations = m_trainingData->GetDataByIndex(m_indices[m_currentIndex]);
-                const AZ::VectorN& label = m_trainingData->GetLabelByIndex(m_indices[m_currentIndex]);
+                const AZ::VectorN& activations = m_trainData.GetDataByIndex(m_currentIndex);
+                const AZ::VectorN& label = m_trainData.GetLabelByIndex(m_currentIndex);
                 m_model->Reverse(m_trainingContext.get(), m_costFunction, activations, label);
             }
             AZStd::lock_guard lock(m_mutex);
@@ -119,28 +130,20 @@ namespace MachineLearning
         }
     }
 
-    void SupervisedLearningCycle::StopTraining()
-    {
-        m_trainingComplete = true;
-    }
-
-    float SupervisedLearningCycle::ComputeCurrentCost(ILabeledTrainingDataPtr TestData, LossFunctions CostFunction, AZStd::size_t maxSamples)
+    float SupervisedLearningCycle::ComputeCurrentCost(ILabeledTrainingData& testData, LossFunctions costFunction)
     {
         InitializeContexts();
 
-        const AZStd::size_t totalTestSize = TestData->GetSampleCount();
-        maxSamples = (maxSamples == 0) ? totalTestSize : AZStd::min(maxSamples, totalTestSize);
-
-        AZStd::lock_guard lock(m_mutex);
         double result = 0.0;
-        for (uint32_t iter = 0; iter < maxSamples; ++iter)
+        const AZStd::size_t totalTestSize = testData.GetSampleCount();
+        for (uint32_t iter = 0; iter < totalTestSize; ++iter)
         {
-            const AZ::VectorN& activations = TestData->GetDataByIndex(iter);
-            const AZ::VectorN& label = TestData->GetLabelByIndex(iter);
+            const AZ::VectorN& activations = testData.GetDataByIndex(iter);
+            const AZ::VectorN& label = testData.GetLabelByIndex(iter);
             const AZ::VectorN* output = m_model->Forward(m_inferenceContext.get(), activations);
-            result += static_cast<double>(ComputeTotalCost(CostFunction, label, *output));
+            result += static_cast<double>(ComputeTotalCost(costFunction, label, *output));
         }
-        result /= static_cast<double>(maxSamples);
+        result /= static_cast<double>(totalTestSize);
         return static_cast<float>(result);
     }
 }

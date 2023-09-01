@@ -13,10 +13,95 @@
 #include <AzCore/RTTI/BehaviorContext.h>
 #include <AzCore/Serialization/EditContext.h>
 #include <AzCore/Serialization/SerializeContext.h>
+#include <AzCore/Console/IConsole.h>
+#include <AzCore/Console/ILogger.h>
 #include <random>
 
 namespace MachineLearning
 {
+    AZ_CVAR(bool, ml_logGradients, false, nullptr, AZ::ConsoleFunctorFlags::Null, "Dumps some gradient metrics so they can be monitored during training");
+
+    void AccumulateBiasGradients(AZ::VectorN& biasGradients, const AZ::VectorN& activationGradients, AZStd::size_t currentSamples)
+    {
+        AZ::Vector4 divisor(static_cast<float>(currentSamples));
+
+        AZStd::vector<AZ::Vector4>& biasValues = biasGradients.GetVectorValues();
+        const AZStd::vector<AZ::Vector4>& activationValues = activationGradients.GetVectorValues();
+        for (AZStd::size_t iter = 0; iter < biasValues.size(); ++iter)
+        {
+            // average += (next - average) / samples
+            biasValues[iter] += (activationValues[iter] - biasValues[iter]) / divisor;
+        }
+    }
+
+    void AccumulateWeightGradients(const AZ::VectorN& activationGradients, const AZ::VectorN& lastInput, AZ::MatrixMxN& weightGradients, AZStd::size_t currentSamples)
+    {
+        // The following performs an outer product between activationGradients and lastInput
+        // The reason we're not simply iteratively invoking OuterProduct is so that we can compute a more numerically stable average and preserve our gradients better over large batch sizes
+        const AZ::Simd::Vec4::FloatType divisor = AZ::Simd::Vec4::Splat(static_cast<float>(currentSamples));
+        for (AZStd::size_t colIter = 0; colIter < weightGradients.GetColumnGroups(); ++colIter)
+        {
+            AZ::Simd::Vec4::FloatType rhsElement = lastInput.GetVectorValues()[colIter].GetSimdValue();
+            AZ::Simd::Vec4::FloatType splat0 = AZ::Simd::Vec4::SplatIndex0(rhsElement);
+            AZ::Simd::Vec4::FloatType splat1 = AZ::Simd::Vec4::SplatIndex1(rhsElement);
+            AZ::Simd::Vec4::FloatType splat2 = AZ::Simd::Vec4::SplatIndex2(rhsElement);
+            AZ::Simd::Vec4::FloatType splat3 = AZ::Simd::Vec4::SplatIndex3(rhsElement);
+            for (AZStd::size_t rowIter = 0; rowIter < weightGradients.GetRowGroups(); ++rowIter)
+            {
+                AZ::Simd::Vec4::FloatType lhsElement = activationGradients.GetVectorValues()[rowIter].GetSimdValue();
+                AZ::Matrix4x4& outputElement = weightGradients.GetSubmatrix(rowIter, colIter);
+                AZ::Simd::Vec4::FloatType next0 = AZ::Simd::Vec4::Sub(AZ::Simd::Vec4::Mul(lhsElement, splat0), outputElement.GetSimdValues()[0]);
+                AZ::Simd::Vec4::FloatType next1 = AZ::Simd::Vec4::Sub(AZ::Simd::Vec4::Mul(lhsElement, splat1), outputElement.GetSimdValues()[1]);
+                AZ::Simd::Vec4::FloatType next2 = AZ::Simd::Vec4::Sub(AZ::Simd::Vec4::Mul(lhsElement, splat2), outputElement.GetSimdValues()[2]);
+                AZ::Simd::Vec4::FloatType next3 = AZ::Simd::Vec4::Sub(AZ::Simd::Vec4::Mul(lhsElement, splat3), outputElement.GetSimdValues()[3]);
+
+                // average += (next - average) / samples
+                outputElement.GetSimdValues()[0] = AZ::Simd::Vec4::Add(outputElement.GetSimdValues()[0], AZ::Simd::Vec4::Div(next0, divisor));
+                outputElement.GetSimdValues()[1] = AZ::Simd::Vec4::Add(outputElement.GetSimdValues()[1], AZ::Simd::Vec4::Div(next1, divisor));
+                outputElement.GetSimdValues()[2] = AZ::Simd::Vec4::Add(outputElement.GetSimdValues()[2], AZ::Simd::Vec4::Div(next2, divisor));
+                outputElement.GetSimdValues()[3] = AZ::Simd::Vec4::Add(outputElement.GetSimdValues()[3], AZ::Simd::Vec4::Div(next3, divisor));
+            }
+        }
+        weightGradients.FixUnusedElements();
+    }
+
+    void GetMinMaxElements(const AZ::VectorN& source, float& min, float& max)
+    {
+        const AZStd::vector<AZ::Vector4>& elements = source.GetVectorValues();
+        if (!elements.empty())
+        {
+            AZ::Vector4 minimum = elements[0];
+            AZ::Vector4 maximum = elements[0];
+            for (AZStd::size_t i = 1; i < elements.size(); ++i)
+            {
+                minimum.GetMin(elements[i]);
+                maximum.GetMax(elements[i]);
+            }
+            min = AZ::GetMin(AZ::GetMin(minimum.GetX(), minimum.GetY()), AZ::GetMin(minimum.GetZ(), minimum.GetW()));
+            max = AZ::GetMax(AZ::GetMax(minimum.GetX(), minimum.GetY()), AZ::GetMax(minimum.GetZ(), minimum.GetW()));
+        }
+    }
+
+    void GetMinMaxElements(AZ::MatrixMxN& source, float& min, float& max)
+    {
+        AZStd::vector<AZ::Matrix4x4>& elements = source.GetMatrixElements();
+        if (!elements.empty())
+        {
+            AZ::Vector4 minimum = elements[0].GetRow(0);
+            AZ::Vector4 maximum = elements[0].GetRow(0);
+            for (AZStd::size_t i = 1; i < elements.size(); ++i)
+            {
+                for (int32_t j = 0; j < 4; ++j)
+                {
+                    minimum = minimum.GetMin(elements[i].GetRow(j));
+                    maximum = maximum.GetMax(elements[i].GetRow(j));
+                }
+            }
+            min = AZ::GetMin(AZ::GetMin(minimum.GetX(), minimum.GetY()), AZ::GetMin(minimum.GetZ(), minimum.GetW()));
+            max = AZ::GetMax(AZ::GetMax(minimum.GetX(), minimum.GetY()), AZ::GetMax(minimum.GetZ(), minimum.GetW()));
+        }
+    }
+
     void Layer::Reflect(AZ::ReflectContext* context)
     {
         if (auto serializeContext = azrtti_cast<AZ::SerializeContext*>(context))
@@ -74,7 +159,7 @@ namespace MachineLearning
         return inferenceData.m_output;
     }
 
-    void Layer::AccumulateGradients(LayerTrainingData& trainingData, LayerInferenceData& inferenceData, const AZ::VectorN& previousLayerGradients)
+    void Layer::AccumulateGradients(AZStd::size_t samples, LayerTrainingData& trainingData, LayerInferenceData& inferenceData, const AZ::VectorN& previousLayerGradients)
     {
         // Ensure our bias gradient vector is appropriately sized
         if (trainingData.m_biasGradients.GetDimensionality() != m_outputSize)
@@ -98,13 +183,39 @@ namespace MachineLearning
         Activate_Derivative(m_activationFunction, inferenceData.m_output, previousLayerGradients, trainingData.m_activationGradients);
 
         // Accumulate the partial derivatives of the weight matrix with respect to the loss function
-        AZ::OuterProduct(trainingData.m_activationGradients, *trainingData.m_lastInput, trainingData.m_weightGradients);
+        AccumulateWeightGradients(trainingData.m_activationGradients, *trainingData.m_lastInput, trainingData.m_weightGradients, samples);
 
         // Accumulate the partial derivatives of the bias vector with respect to the loss function
-        trainingData.m_biasGradients += trainingData.m_activationGradients;
+        AccumulateBiasGradients(trainingData.m_biasGradients, trainingData.m_activationGradients, samples);
 
         // Accumulate the gradients to pass to the preceding layer for back-propagation
         AZ::VectorMatrixMultiplyLeft(trainingData.m_activationGradients, m_weights, trainingData.m_backpropagationGradients);
+
+        if (ml_logGradients)
+        {
+            float min = 0.f;
+            float max = 0.f;
+            GetMinMaxElements(trainingData.m_weightGradients, min, max);
+            AZLOG_INFO("Weight gradients: min value %f, max value %f", min, max);
+
+            GetMinMaxElements(trainingData.m_biasGradients, min, max);
+            AZLOG_INFO("Bias gradients: min value %f, max value %f", min, max);
+
+            GetMinMaxElements(trainingData.m_backpropagationGradients, min, max);
+            AZLOG_INFO("Back-propagation gradients: min value %f, max value %f", min, max);
+
+            //for (AZStd::size_t i = 0; i < trainingData.m_weightGradients.GetRowCount(); ++i)
+            //{
+            //    for (AZStd::size_t j = 0; j < trainingData.m_weightGradients.GetColumnCount(); ++j)
+            //    {
+            //        AZLOG_INFO("Weight %ux%u : %f", i, j, trainingData.m_weightGradients.GetElement(i, j));
+            //    }
+            //}
+            //for (AZStd::size_t i = 0; i < trainingData.m_biasGradients.GetDimensionality(); ++i)
+            //{
+            //    AZLOG_INFO("Bias %u : %f", i, trainingData.m_biasGradients.GetElement(i));
+            //}
+        }
     }
 
     void Layer::ApplyGradients(LayerTrainingData& trainingData, float learningRate)
@@ -144,7 +255,7 @@ namespace MachineLearning
 
     void Layer::OnSizesChanged()
     {
-        // Specifically for ReLU, we use Kaiming He initialization as this is proven optimal for convergence
+        // Specifically for ReLU, we use Kaiming He initialization as this is optimal for convergence
         // For other activation functions we just use a standard normal distribution
         float standardDeviation = (m_activationFunction == ActivationFunctions::ReLU) ? 2.0f / m_inputSize 
                                                                                       : 1.0f / m_inputSize;

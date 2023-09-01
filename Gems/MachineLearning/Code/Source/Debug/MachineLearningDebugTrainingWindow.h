@@ -39,6 +39,9 @@ namespace MachineLearning
 #ifdef IMGUI_ENABLED
         ImGui::LYImGuiUtils::HistogramContainer m_testHistogram;
         ImGui::LYImGuiUtils::HistogramContainer m_trainHistogram;
+
+        AZStd::vector<ImGui::LYImGuiUtils::HistogramContainer> m_layerWeights;
+        AZStd::vector<ImGui::LYImGuiUtils::HistogramContainer> m_layerBiases;
 #endif
     };
 
@@ -49,16 +52,16 @@ namespace MachineLearning
 
         TrainingInstance* RetrieveTrainingInstance(INeuralNetworkPtr modelPtr);
         void LoadTestTrainData(TrainingInstance* trainingInstance);
-        void RecalculateAccuracy(TrainingInstance* trainingInstance, ILabeledTrainingDataPtr data);
+        void RecalculateAccuracy(TrainingInstance* trainingInstance, ILabeledTrainingData& data);
 
 #ifdef IMGUI_ENABLED
+        void DrawLayerParameters(TrainingInstance* trainingInstance, AZStd::size_t layerIndex);
         void OnImGuiUpdate();
 #endif
 
         AZStd::size_t m_selectedModelIndex = 0;
         INeuralNetworkPtr m_selectedModel = nullptr;
         float m_trainingSplitWidth = 400.0f;
-        int32_t m_costSampleSize = 1000;
 
         AZStd::map<INeuralNetworkPtr, TrainingInstance*> m_trainingInstances;
     };

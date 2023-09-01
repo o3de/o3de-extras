@@ -11,8 +11,9 @@
 #include <AzCore/Math/VectorN.h>
 #include <AzCore/Jobs/JobManager.h>
 #include <AzCore/Jobs/JobContext.h>
+#include <AzCore/Threading/ThreadSafeDeque.h>
 #include <MachineLearning/INeuralNetwork.h>
-#include <MachineLearning/ILabeledTrainingData.h>
+#include <Assets/TrainingDataView.h>
 
 namespace MachineLearning
 {
@@ -45,26 +46,28 @@ namespace MachineLearning
         void StartTraining();
         void StopTraining();
 
-        //! Calculates the average cost of the provided model on the set of labeled test data using the requested loss function.
-        float ComputeCurrentCost(ILabeledTrainingDataPtr TestData, LossFunctions CostFunction, AZStd::size_t maxSamples = 0);
-
         AZStd::atomic<AZStd::size_t> m_currentEpoch = 0;
         std::atomic<bool> m_trainingComplete = true;
 
+        AZ::ThreadSafeDeque<float> m_testCosts;
+        AZ::ThreadSafeDeque<float> m_trainCosts;
+
     //private:
+        //! Calculates the average cost of the provided model on the set of labeled test data using the requested loss function.
+        float ComputeCurrentCost(ILabeledTrainingData& testData, LossFunctions costFunction);
+
         void ExecTraining();
 
         INeuralNetworkPtr m_model;
-        ILabeledTrainingDataPtr m_trainingData;
-        ILabeledTrainingDataPtr m_testData;
+        bool m_shuffleTrainingData = true;
+        TrainingDataView m_trainData;
+        TrainingDataView m_testData;
         LossFunctions m_costFunction = LossFunctions::MeanSquaredError;
         AZStd::size_t m_totalIterations = 0;
         AZStd::size_t m_batchSize = 0;
         float m_learningRate = 0.0f;
         float m_learningRateDecay = 0.0f;
         float m_earlyStopCost = 0.0f;
-
-        AZStd::vector<AZStd::size_t> m_indices;
         AZStd::size_t m_currentIndex = 0;
 
         AZStd::unique_ptr<IInferenceContext> m_inferenceContext;

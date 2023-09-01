@@ -12,6 +12,7 @@
 #include <MachineLearning/INeuralNetwork.h>
 #include <AzCore/Interface/Interface.h>
 #include <AzCore/EBus/EBus.h>
+#include <AzCore/std/containers/set.h>
 
 namespace MachineLearning
 {

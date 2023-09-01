@@ -41,6 +41,8 @@ namespace MachineLearning
         AZStd::size_t GetInputDimensionality() const override;
         AZStd::size_t GetOutputDimensionality() const override;
         AZStd::size_t GetLayerCount() const override;
+        AZ::MatrixMxN GetLayerWeights(AZStd::size_t layerIndex) const override;
+        AZ::VectorN GetLayerBiases(AZStd::size_t layerIndex) const override;
         AZStd::size_t GetParameterCount() const override;
         IInferenceContextPtr CreateInferenceContext() override;
         ITrainingContextPtr CreateTrainingContext() override;
