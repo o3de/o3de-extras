@@ -13,20 +13,9 @@ namespace ROS2
 {
     void TickBasedSource::Reflect(AZ::ReflectContext* context)
     {
-        if (auto serializeContext = azrtti_cast<AZ::SerializeContext*>(context))
+        if (auto* serializeContext = azrtti_cast<AZ::SerializeContext*>(context))
         {
-            serializeContext->Class<TickBasedSource>()->Version(1)->Field("Source enabled", &TickBasedSource::m_sourceEnabled);
-
-            if (auto editContext = serializeContext->GetEditContext())
-            {
-                editContext->Class<TickBasedSource>("Tick Based Source", "Sensor event source based on system ticks")
-                    ->ClassElement(AZ::Edit::ClassElements::EditorData, "")
-                    ->DataElement(
-                        AZ::Edit::UIHandlers::Default,
-                        &TickBasedSource::m_sourceEnabled,
-                        "Source enabled",
-                        "Enable/disable event source");
-            }
+            serializeContext->Class<TickBasedSource>()->Version(1);
         }
     }
 
@@ -40,11 +29,6 @@ namespace ROS2
         AZ::TickBus::Handler::BusDisconnect();
     }
 
-    void TickBasedSource::Configure(const SensorConfiguration& sensorConfiguration)
-    {
-        m_sourceEnabled = sensorConfiguration.m_publishingEnabled;
-    }
-
     float TickBasedSource::GetDeltaTime(float deltaTime, AZ::ScriptTimePoint time) const
     {
         return deltaTime;
@@ -52,10 +36,6 @@ namespace ROS2
 
     void TickBasedSource::OnTick(float deltaTime, AZ::ScriptTimePoint time)
     {
-        if (!m_sourceEnabled)
-        {
-            return;
-        }
         m_sourceEvent.Signal(deltaTime, time);
     }
 } // namespace ROS2

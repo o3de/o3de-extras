@@ -14,6 +14,9 @@
 
 namespace ROS2
 {
+    //! Class implementing physics callbacks as sensor event source. Source event (ROS2::SensorEventSource) is signalled based on scene
+    //! simulation finish event.
+    //! @see ROS2::SensorEventSource
     class PhysicsBasedSource final : public SensorEventSource<AZ::OrderedEvent, AZ::OrderedEventHandler, AzPhysics::SceneHandle, float>
     {
     public:
@@ -23,12 +26,9 @@ namespace ROS2
         // Overrides of ROS2::SensorEventSource specialization.
         void Activate() override;
         void Deactivate() override;
-        void Configure(const SensorConfiguration& sensorConfiguration) override;
-
         float GetDeltaTime(AzPhysics::SceneHandle sceneHandle, float deltaTime) const override;
 
     private:
-        AzPhysics::SceneEvents::OnSceneSimulationFinishHandler m_onSceneSimulationEvent;
-        bool m_sourceEnabled{ true }; ///< Toggle for event source enabled/disabled state.
+        AzPhysics::SceneEvents::OnSceneSimulationFinishHandler m_onSceneSimulationEventHandler; ///< Handler for physics callback.
     };
 } // namespace ROS2

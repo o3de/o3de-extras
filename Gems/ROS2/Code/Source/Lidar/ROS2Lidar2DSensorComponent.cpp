@@ -25,12 +25,12 @@ namespace ROS2
     {
         Lidar2DSensorConfiguration::Reflect(context);
 
-        if (auto serializeContext = azrtti_cast<AZ::SerializeContext*>(context))
+        if (auto* serializeContext = azrtti_cast<AZ::SerializeContext*>(context))
         {
-            serializeContext->Class<ROS2Lidar2DSensorComponent, SensorBaseType>()->Version(2)
-                ->Field("lidarConfiguration", &ROS2Lidar2DSensorComponent::m_lidarConfiguration);
+            serializeContext->Class<ROS2Lidar2DSensorComponent, SensorBaseType>()->Version(2)->Field(
+                "lidarConfiguration", &ROS2Lidar2DSensorComponent::m_lidarConfiguration);
 
-            if (auto editContext = serializeContext->GetEditContext())
+            if (auto* editContext = serializeContext->GetEditContext())
             {
                 editContext->Class<ROS2Lidar2DSensorComponent>("ROS2 Lidar 2D Sensor", "Lidar 2D sensor component")
                     ->ClassElement(AZ::Edit::ClassElements::EditorData, "")
@@ -95,7 +95,9 @@ namespace ROS2
         if (m_lidarConfiguration.m_lidarSystemFeatures & LidarSystemFeatures::CollisionLayers)
         {
             LidarRaycasterRequestBus::Event(
-                m_lidarRaycasterId, &LidarRaycasterRequestBus::Events::ConfigureIgnoredCollisionLayers, m_lidarConfiguration.m_ignoredCollisionLayers);
+                m_lidarRaycasterId,
+                &LidarRaycasterRequestBus::Events::ConfigureIgnoredCollisionLayers,
+                m_lidarConfiguration.m_ignoredCollisionLayers);
         }
 
         if (m_lidarConfiguration.m_lidarSystemFeatures & LidarSystemFeatures::EntityExclusion)
@@ -172,19 +174,29 @@ namespace ROS2
         ConnectToLidarRaycaster();
         ConfigureLidarRaycaster();
 
-        m_sourceEventHandler = decltype(m_sourceEventHandler)([this](auto... args)
-        {
-            this->Visualize();
-        });
+        m_sourceEventHandler = decltype(m_sourceEventHandler)(
+            [this](auto... args)
+            {
+                if (!m_sensorConfiguration.m_publishingEnabled)
+                {
+                    return;
+                }
+                this->Visualize();
+            });
         m_eventSourceAdapter.ConnectToSourceEvent(m_sourceEventHandler);
 
-        m_adaptedEventHandler = decltype(m_adaptedEventHandler)([this](auto... args)
-        {
-            this->FrequencyTick();
-        });
+        m_adaptedEventHandler = decltype(m_adaptedEventHandler)(
+            [this](auto... args)
+            {
+                if (!m_sensorConfiguration.m_publishingEnabled)
+                {
+                    return;
+                }
+                this->FrequencyTick();
+            });
         m_eventSourceAdapter.ConnectToAdaptedEvent(m_adaptedEventHandler);
 
-        m_eventSourceAdapter.Configure(m_sensorConfiguration);
+        m_eventSourceAdapter.Configure(m_sensorConfiguration.m_frequency);
         m_eventSourceAdapter.Activate();
     }
 

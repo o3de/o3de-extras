@@ -47,26 +47,21 @@ namespace ROS2
             // problem.
             EventSourceAdapter<EventSourceT>::Reflect(context);
 
-            if (auto serializeContext = azrtti_cast<AZ::SerializeContext*>(context))
+            if (auto* serializeContext = azrtti_cast<AZ::SerializeContext*>(context))
             {
                 serializeContext->Class<ROS2SensorComponentBase<EventSourceT>, AZ::Component>()
                     ->Version(1)
                     ->Field("Sensor configuration", &ROS2SensorComponentBase<EventSourceT>::m_sensorConfiguration)
                     ->Field("Source adapter configuration", &ROS2SensorComponentBase<EventSourceT>::m_eventSourceAdapter);
 
-                if (auto editContext = serializeContext->GetEditContext())
+                if (auto* editContext = serializeContext->GetEditContext())
                 {
                     editContext->Class<ROS2SensorComponentBase<EventSourceT>>("ROS2 Sensor Component Base", "Base component for sensors")
                         ->DataElement(
                             AZ::Edit::UIHandlers::Default,
                             &ROS2SensorComponentBase<EventSourceT>::m_sensorConfiguration,
                             "Sensor configuration",
-                            "Sensor configuration")
-                        ->DataElement(
-                            AZ::Edit::UIHandlers::Default,
-                            &ROS2SensorComponentBase<EventSourceT>::m_eventSourceAdapter,
-                            "Source adapter configuration",
-                            "Source adapter configuration");
+                            "Sensor configuration");
                 }
             }
         }

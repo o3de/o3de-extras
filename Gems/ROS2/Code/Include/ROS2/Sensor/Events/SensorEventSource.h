@@ -46,14 +46,6 @@ namespace ROS2
         {
         }
 
-        //! Configures event source based on sensor settings. Details depend on specific event source implementation.
-        //! @param sensorConfiguration Implemented sensor configuration.
-        //! @note In most cases it will be safer to call this before Activate, however at the end it depends on specific event source
-        //! implementations.
-        virtual void Configure([[maybe_unused]] const SensorConfiguration& sensorConfiguration)
-        {
-        }
-
         //! Connects given event handler to sensor source event. By design, source event is not restricted by frequency settings. This event
         //! should be signalled based on event source internal logic (e.g. on draw call). For more details check event source
         //! specializations.

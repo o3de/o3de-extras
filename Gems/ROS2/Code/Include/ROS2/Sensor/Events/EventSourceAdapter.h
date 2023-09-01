@@ -74,14 +74,14 @@ namespace ROS2
         {
             EventSourceT::Reflect(context);
 
-            if (auto serializeContext = azrtti_cast<AZ::SerializeContext*>(context))
+            if (auto* serializeContext = azrtti_cast<AZ::SerializeContext*>(context))
             {
                 serializeContext->Class<EventSourceAdapter<EventSourceT>>()
                     ->Version(1)
                     ->Field("Adapted frequency", &EventSourceAdapter<EventSourceT>::m_adaptedFrequency)
                     ->Field("Event source configuration", &EventSourceAdapter<EventSourceT>::m_eventSource);
 
-                if (auto editContext = serializeContext->GetEditContext())
+                if (auto* editContext = serializeContext->GetEditContext())
                 {
                     editContext
                         ->Class<EventSourceAdapter<EventSourceT>>(
@@ -92,13 +92,7 @@ namespace ROS2
                             AZ::Edit::UIHandlers::Default,
                             &EventSourceAdapter<EventSourceT>::m_adaptedFrequency,
                             "Adapted frequency",
-                            "Adapter event signalling frequency")
-                        ->DataElement(
-                            AZ::Edit::UIHandlers::Default,
-                            &EventSourceAdapter<EventSourceT>::m_eventSource,
-                            "Event source configuration",
-                            "Event source configuration")
-                        ->Attribute(AZ::Edit::Attributes::Visibility, AZ::Edit::PropertyVisibility::ShowChildrenOnly);
+                            "Adapter event signalling frequency");
                 }
             }
         }
@@ -135,12 +129,14 @@ namespace ROS2
             m_sourceAdaptingEventHandler.Disconnect();
         }
 
-        //! Parses sensor configuration into event source configuration.
-        //! @param sensorConfiguration Configuration of sensor using this event source adapter.
-        void Configure(const SensorConfiguration& sensorConfiguration)
+        //! Sets adapter working frequency. By design, adapter will not work correctly, if this frequency will be greater than used event
+        //! source frequency - e.g. adapter will be requested to work in 60Hz, when using event source working in 30Hz. In general, adapted
+        //! frequency should be equal or lower than event source frequency. Optimal (highest precision in timing events) working conditions
+        //! take place when event source frequency is a multiple of adapted frequency.
+        //! @param adaptedFrequency Adapter working frequency. When set to zero or less adapter will be assumed to work in 1Hz..
+        void Configure(float adaptedFrequency)
         {
-            m_eventSource.Configure(sensorConfiguration);
-            m_adaptedFrequency = sensorConfiguration.m_frequency;
+            m_adaptedFrequency = adaptedFrequency;
         }
 
         //! Connects given event handler to source event (ROS2::SensorEventSource). That event is signalled regardless of adapted frequency
@@ -173,7 +169,7 @@ namespace ROS2
                 return false;
             }
 
-            const float frameTime = m_adaptedFrequency == 0.f ? 1.f : 1.f / m_adaptedFrequency;
+            const float frameTime = m_adaptedFrequency <= 0.f ? 1.f : 1.f / m_adaptedFrequency;
             const float numberOfFrames = frameTime / sourceDeltaTime;
             m_tickCounter = aznumeric_cast<int>(AZStd::round(numberOfFrames));
             return true;

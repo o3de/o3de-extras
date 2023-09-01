@@ -33,12 +33,12 @@ namespace ROS2
     {
         ImuSensorConfiguration::Reflect(context);
 
-        if (auto serializeContext = azrtti_cast<AZ::SerializeContext*>(context))
+        if (auto* serializeContext = azrtti_cast<AZ::SerializeContext*>(context))
         {
             serializeContext->Class<ROS2ImuSensorComponent, SensorBaseType>()->Version(2)->Field(
                 "imuSensorConfiguration", &ROS2ImuSensorComponent::m_imuConfiguration);
 
-            if (auto editContext = serializeContext->GetEditContext())
+            if (auto* editContext = serializeContext->GetEditContext())
             {
                 editContext->Class<ROS2ImuSensorComponent>("ROS2 Imu Sensor", "Imu sensor component")
                     ->ClassElement(AZ::Edit::ClassElements::EditorData, "")
@@ -91,19 +91,29 @@ namespace ROS2
         m_orientationCovariance = ToDiagonalCovarianceMatrix(m_imuConfiguration.m_orientationVariance);
 
         // Event source adapter setup.
-        m_sourceEventHandler = decltype(m_sourceEventHandler)([this](AzPhysics::SceneHandle sceneHandle, [[maybe_unused]] float physicsDeltaTime)
-        {
-            OnPhysicsEvent(sceneHandle);
-        });
+        m_sourceEventHandler = decltype(m_sourceEventHandler)(
+            [this](AzPhysics::SceneHandle sceneHandle, [[maybe_unused]] float physicsDeltaTime)
+            {
+                if (!m_sensorConfiguration.m_publishingEnabled)
+                {
+                    return;
+                }
+                OnPhysicsEvent(sceneHandle);
+            });
         m_eventSourceAdapter.ConnectToSourceEvent(m_sourceEventHandler);
 
-        m_adaptedEventHandler = decltype(m_adaptedEventHandler)([this](float imuDeltaTime, AzPhysics::SceneHandle sceneHandle, float physicsDeltaTime)
-        {
-            OnImuEvent(imuDeltaTime, sceneHandle, physicsDeltaTime);
-        });
+        m_adaptedEventHandler = decltype(m_adaptedEventHandler)(
+            [this](float imuDeltaTime, AzPhysics::SceneHandle sceneHandle, float physicsDeltaTime)
+            {
+                if (!m_sensorConfiguration.m_publishingEnabled)
+                {
+                    return;
+                }
+                OnImuEvent(imuDeltaTime, sceneHandle, physicsDeltaTime);
+            });
         m_eventSourceAdapter.ConnectToAdaptedEvent(m_adaptedEventHandler);
 
-        m_eventSourceAdapter.Configure(m_sensorConfiguration);
+        m_eventSourceAdapter.Configure(m_sensorConfiguration.m_frequency);
         m_eventSourceAdapter.Activate();
     }
 
