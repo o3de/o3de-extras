@@ -12,7 +12,6 @@
 #include <AzCore/Asset/AssetManager.h>
 #include <AzCore/Asset/AssetManagerBus.h>
 #include <AzCore/IO/Path/Path.h>
-#include <AzCore/Settings/SettingsRegistry.h>
 #include <AzCore/StringFunc/StringFunc.h>
 #include <AzCore/std/string/regex.h>
 #include <AzToolsFramework/API/EditorAssetSystemAPI.h>
@@ -27,76 +26,6 @@ namespace ROS2::Utils
             AZ::IO::FixedMaxPath pathStorage(filePath);
             return AZ::IO::SystemFile::Exists(pathStorage.c_str());
         };
-    }
-
-    bool WaitForAssetsToProcess(const AZStd::unordered_map<AZStd::string, AZ::IO::Path>& sourceAssetsPaths)
-    {
-        bool allAssetProcessed = false;
-        bool assetProcessorFailed = false;
-        auto loopStartTime = AZStd::chrono::system_clock::now();
-
-        AZStd::chrono::seconds assetJobTimeout = AZStd::chrono::seconds(30);
-        auto settingsRegistry = AZ::SettingsRegistry::Get();
-        AZ::s64 loopTimeoutValue;
-        if (settingsRegistry->Get(loopTimeoutValue, "/O3DE/ROS2/RobotImporter/AssetProcessorTimeoutInSeconds"))
-        {
-            assetJobTimeout = AZStd::chrono::seconds(loopTimeoutValue);
-        }
-
-        /* This loop waits until all of the assets are processed.
-           There are three stop conditions: allAssetProcessed, assetProcessorFailed and a timeout.
-           After all asset are processed the allAssetProcessed will be set to true.
-           assetProcessorFailed will be set to true if the asset processor does not respond.
-           The time out will break the loop if assetLoopTimeout is exceed. */
-        while (!allAssetProcessed && !assetProcessorFailed)
-        {
-            auto loopTime = AZStd::chrono::system_clock::now();
-
-            if (loopTime - loopStartTime > assetJobTimeout)
-            {
-                AZ_Warning("RobotImporterUtils", false, "Loop waiting for assets timed out");
-                break;
-            }
-
-            allAssetProcessed = true;
-            for (const auto& [AssetFileName, AssetFilePath] : sourceAssetsPaths)
-            {
-                if (AssetFilePath.empty())
-                {
-                    AZ_Warning("RobotImporterUtils", false, "WaitForAssetsToProcess got an empty filepath ");
-                    continue;
-                }
-                using namespace AzToolsFramework;
-                using namespace AzToolsFramework::AssetSystem;
-                AZ::Outcome<AssetSystem::JobInfoContainer> result = AZ::Failure();
-                AssetSystemJobRequestBus::BroadcastResult(
-                    result, &AssetSystemJobRequestBus::Events::GetAssetJobsInfo, AssetFilePath.String(), true);
-
-                if (!result.IsSuccess())
-                {
-                    assetProcessorFailed = true;
-                    AZ_Error("RobotImporterUtils", false, "Asset System failed to reply with jobs infos");
-                    break;
-                }
-
-                JobInfoContainer& allJobs = result.GetValue();
-                for (const JobInfo& job : allJobs)
-                {
-                    if (job.m_status == JobStatus::Queued || job.m_status == JobStatus::InProgress)
-                    {
-                        allAssetProcessed = false;
-                    }
-                }
-            }
-
-            if (allAssetProcessed && !assetProcessorFailed)
-            {
-                AZ_Printf("RobotImporterUtils", "All assets processed");
-                return true;
-            }
-        }
-
-        return false;
     }
 
     bool IsWheelURDFHeuristics(const sdf::Model& model, const sdf::Link* link)

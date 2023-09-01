@@ -295,18 +295,20 @@ namespace ROS2
                 }
             }
             // check if both has RigidBody and we are not creating articulation
-            if (!m_useArticulations && leadEntity.IsSuccess() && childEntity.IsSuccess())
+            if (!m_useArticulations)
             {
-                AZStd::lock_guard<AZStd::mutex> lck(m_statusLock);
-                auto result = m_jointsMaker.AddJointComponent(jointPtr, childEntity.GetValue(), leadEntity.GetValue());
-                m_status.emplace(
-                    azJointName, AZStd::string::format(" %s %llu", result.IsSuccess() ? "created as" : "Failed", result.GetValue()));
+                if (leadEntity.IsSuccess() && childEntity.IsSuccess())
+                {
+                    AZStd::lock_guard<AZStd::mutex> lck(m_statusLock);
+                    auto result = m_jointsMaker.AddJointComponent(jointPtr, childEntity.GetValue(), leadEntity.GetValue());
+                    m_status.emplace(
+                        azJointName, AZStd::string::format(" %s %llu", result.IsSuccess() ? "created as" : "Failed", result.GetValue()));
+                }
+                else
+                {
+                    AZ_Warning("CreatePrefabFromURDF", false, "cannot create joint %s", azJointName.c_str());
+                }
             }
-            else
-            {
-                AZ_Warning("CreatePrefabFromURDF", false, "cannot create joint %s", azJointName.c_str());
-            }
-
             return true;
         };
 
