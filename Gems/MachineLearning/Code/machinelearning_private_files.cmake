@@ -19,6 +19,8 @@ set(FILES
     Source/Algorithms/Training.h
     Source/Assets/MnistDataLoader.cpp
     Source/Assets/MnistDataLoader.h
+    Source/Assets/ModelAsset.cpp
+    Source/Assets/ModelAsset.h
     Source/Assets/TrainingDataView.cpp
     Source/Assets/TrainingDataView.h
     Source/Components/MultilayerPerceptronComponent.cpp

@@ -27,6 +27,7 @@ namespace MachineLearning
         {
             serializeContext->Class<MultilayerPerceptron>()
                 ->Version(1)
+                ->Field("ModelAsset", &MultilayerPerceptron::m_asset)
                 ->Field("Name", &MultilayerPerceptron::m_name)
                 ->Field("ModelFile", &MultilayerPerceptron::m_modelFile)
                 ->Field("TestDataFile", &MultilayerPerceptron::m_testDataFile)
@@ -41,6 +42,7 @@ namespace MachineLearning
             {
                 editContext->Class<MultilayerPerceptron>("A basic multilayer perceptron class", "")
                     ->ClassElement(AZ::Edit::ClassElements::EditorData, "")
+                    ->DataElement(AZ::Edit::UIHandlers::Default, &MultilayerPerceptron::m_asset, "ModelAsset", "The model asset")
                     ->DataElement(AZ::Edit::UIHandlers::Default, &MultilayerPerceptron::m_name, "Name", "The name for this model")
                     ->DataElement(AZ::Edit::UIHandlers::Default, &MultilayerPerceptron::m_modelFile, "ModelFile", "The file this model is saved to and loaded from")
                     ->DataElement(AZ::Edit::UIHandlers::Default, &MultilayerPerceptron::m_testDataFile, "TestDataFile", "The file test data should be loaded from")
@@ -140,7 +142,6 @@ namespace MachineLearning
 
     AZStd::size_t MultilayerPerceptron::GetOutputDimensionality() const
     {
-        //AZStd::lock_guard lock(m_mutex);
         if (!m_layers.empty())
         {
             return m_layers.back().m_biases.GetDimensionality();
@@ -150,25 +151,21 @@ namespace MachineLearning
 
     AZStd::size_t MultilayerPerceptron::GetLayerCount() const
     {
-        //AZStd::lock_guard lock(m_mutex);
         return m_layers.size();
     }
 
     AZ::MatrixMxN MultilayerPerceptron::GetLayerWeights(AZStd::size_t layerIndex) const
     {
-        //AZStd::lock_guard lock(m_mutex);
         return m_layers[layerIndex].m_weights;
     }
 
     AZ::VectorN MultilayerPerceptron::GetLayerBiases(AZStd::size_t layerIndex) const
     {
-        //AZStd::lock_guard lock(m_mutex);
         return m_layers[layerIndex].m_biases;
     }
 
     AZStd::size_t MultilayerPerceptron::GetParameterCount() const
     {
-        //AZStd::lock_guard lock(m_mutex);
         AZStd::size_t parameterCount = 0;
         for (const Layer& layer : m_layers)
         {
@@ -189,7 +186,6 @@ namespace MachineLearning
 
     const AZ::VectorN* MultilayerPerceptron::Forward(IInferenceContextPtr context, const AZ::VectorN& activations)
     {
-        //AZStd::lock_guard lock(m_mutex);
         MlpInferenceContext* forwardContext = static_cast<MlpInferenceContext*>(context);
         forwardContext->m_layerData.resize(m_layers.size());
 
@@ -204,7 +200,6 @@ namespace MachineLearning
 
     void MultilayerPerceptron::Reverse(ITrainingContextPtr context, LossFunctions lossFunction, const AZ::VectorN& activations, const AZ::VectorN& expected)
     {
-        //AZStd::lock_guard lock(m_mutex);
         MlpTrainingContext* reverseContext = static_cast<MlpTrainingContext*>(context);
         MlpInferenceContext* forwardContext = &reverseContext->m_forward;
         reverseContext->m_layerData.resize(m_layers.size());
@@ -236,11 +231,9 @@ namespace MachineLearning
 
     void MultilayerPerceptron::GradientDescent(ITrainingContextPtr context, float learningRate)
     {
-        //AZStd::lock_guard lock(m_mutex);
         MlpTrainingContext* reverseContext = static_cast<MlpTrainingContext*>(context);
         if (reverseContext->m_trainingSampleSize > 0)
         {
-            //const float adjustedLearningRate = learningRate / static_cast<float>(reverseContext->m_trainingSampleSize);
             for (AZStd::size_t iter = 0; iter < m_layers.size(); ++iter)
             {
                 m_layers[iter].ApplyGradients(reverseContext->m_layerData[iter], learningRate);
@@ -251,7 +244,6 @@ namespace MachineLearning
 
     void MultilayerPerceptron::OnActivationCountChanged()
     {
-        //AZStd::lock_guard lock(m_mutex);
         AZStd::size_t lastLayerDimensionality = m_activationCount;
         for (Layer& layer : m_layers)
         {
@@ -334,7 +326,6 @@ namespace MachineLearning
 
     bool MultilayerPerceptron::Serialize(AzNetworking::ISerializer& serializer)
     {
-        //AZStd::lock_guard lock(m_mutex);
         return serializer.Serialize(m_name, "Name")
             && serializer.Serialize(m_activationCount, "activationCount")
             && serializer.Serialize(m_layers, "layers");
@@ -348,7 +339,6 @@ namespace MachineLearning
             + m_name.size()
             + sizeof(m_activationCount)
             + sizeof(AZStd::size_t);
-        //AZStd::lock_guard lock(m_mutex);
         for (const Layer& layer : m_layers)
         {
             estimatedSize += layer.EstimateSerializeSize();

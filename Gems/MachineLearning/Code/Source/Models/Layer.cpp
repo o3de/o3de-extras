@@ -20,6 +20,31 @@
 namespace MachineLearning
 {
     AZ_CVAR(bool, ml_logGradients, false, nullptr, AZ::ConsoleFunctorFlags::Null, "Dumps some gradient metrics so they can be monitored during training");
+    AZ_CVAR(bool, ml_logGradientsVerbose, false, nullptr, AZ::ConsoleFunctorFlags::Null, "Dumps complete gradient values to the console for examination, this can be a significant amount of data");
+
+    void DumpVectorGradients(const AZ::VectorN& value, const char* label)
+    {
+        AZStd::string vectorString(label);
+        for (AZStd::size_t iter = 0; iter < value.GetDimensionality(); ++iter)
+        {
+            vectorString += AZStd::string::format(" %.02f", value.GetElement(iter));
+        }
+        AZLOG_INFO(vectorString.c_str());
+    }
+
+    void DumpMatrixGradients(const AZ::MatrixMxN& value, const char* label)
+    {
+        for (AZStd::size_t i = 0; i < value.GetRowCount(); ++i)
+        {
+            AZStd::string rowString(label);
+            rowString += AZStd::string::format(":%u", static_cast<uint32_t>(i));
+            for (AZStd::size_t j = 0; j < value.GetColumnCount(); ++j)
+            {
+                rowString += AZStd::string::format(" %.02f", value.GetElement(i, j));
+            }
+            AZLOG_INFO(rowString.c_str());
+        }
+    }
 
     void AccumulateBiasGradients(AZ::VectorN& biasGradients, const AZ::VectorN& activationGradients, AZStd::size_t currentSamples)
     {
@@ -203,18 +228,12 @@ namespace MachineLearning
 
             GetMinMaxElements(trainingData.m_backpropagationGradients, min, max);
             AZLOG_INFO("Back-propagation gradients: min value %f, max value %f", min, max);
+        }
 
-            //for (AZStd::size_t i = 0; i < trainingData.m_weightGradients.GetRowCount(); ++i)
-            //{
-            //    for (AZStd::size_t j = 0; j < trainingData.m_weightGradients.GetColumnCount(); ++j)
-            //    {
-            //        AZLOG_INFO("Weight %ux%u : %f", i, j, trainingData.m_weightGradients.GetElement(i, j));
-            //    }
-            //}
-            //for (AZStd::size_t i = 0; i < trainingData.m_biasGradients.GetDimensionality(); ++i)
-            //{
-            //    AZLOG_INFO("Bias %u : %f", i, trainingData.m_biasGradients.GetElement(i));
-            //}
+        if (ml_logGradientsVerbose)
+        {
+            DumpMatrixGradients(trainingData.m_weightGradients, "WeightGradients");
+            DumpVectorGradients(trainingData.m_biasGradients, "BiasGradients");
         }
     }
 

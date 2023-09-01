@@ -12,6 +12,7 @@
 #include <AzNetworking/Serialization/ISerializer.h>
 #include <MachineLearning/INeuralNetwork.h>
 #include <Models/Layer.h>
+#include <Assets/ModelAsset.h>
 
 namespace MachineLearning
 {
@@ -70,6 +71,9 @@ namespace MachineLearning
     private:
 
         void OnActivationCountChanged();
+
+        //! The model asset.
+        AZ::Data::Asset<ModelAsset> m_asset;
 
         //! The model name.
         AZStd::string m_name;

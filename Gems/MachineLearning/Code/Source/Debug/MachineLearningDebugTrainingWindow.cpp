@@ -126,26 +126,6 @@ namespace MachineLearning
         }
     }
 
-    void MachineLearningDebugTrainingWindow::DrawLayerParameters(TrainingInstance* trainingInstance, AZStd::size_t layerIndex)
-    {
-        if (trainingInstance->m_layerWeights.size() < layerIndex)
-        {
-            trainingInstance->m_layerWeights.resize(layerIndex + 1);
-            trainingInstance->m_layerWeights[layerIndex].Init("Weights", 250, ImGui::LYImGuiUtils::HistogramContainer::ViewType::Histogram, true, 0.0f, 1.0f, ImGui::LYImGuiUtils::HistogramContainer::AutoExpand);
-        }
-
-        if (trainingInstance->m_layerBiases.size() < layerIndex)
-        {
-            trainingInstance->m_layerBiases.resize(layerIndex + 1);
-            trainingInstance->m_layerBiases[layerIndex].Init("Biases", 250, ImGui::LYImGuiUtils::HistogramContainer::ViewType::Histogram, true, 0.0f, 1.0f, ImGui::LYImGuiUtils::HistogramContainer::AutoExpand);
-        }
-
-        //m_selectedModel->GetLayerWeights(layerIter), m_selectedModel->GetLayerBiases(layerIter)
-
-        //trainingInstance->m_layerWeights[layerIndex].Draw(ImGui::GetColumnWidth(), 200.0f);
-        //trainingInstance->m_layerBiases[layerIndex].Draw(ImGui::GetColumnWidth(), 200.0f);
-    }
-
     void DrawDataPanel(TrainingDataView& data, AZStd::string& dataName, AZStd::string& labelName)
     {
         ImGui::PushID(&data);
@@ -356,16 +336,6 @@ namespace MachineLearning
             {
                 DrawDataPanel(trainingInstance->m_trainingCycle.m_trainData, trainingInstance->m_trainDataName, trainingInstance->m_trainLabelName);
             }
-
-            //for (AZStd::size_t layerIter = 0; layerIter < m_selectedModel->GetLayerCount(); ++layerIter)
-            //{
-            //    AZStd::fixed_string<64> name;
-            //    name = AZStd::string::format("Layer %u Parameters", static_cast<uint32_t>(layerIter));
-            //    if (ImGui::CollapsingHeader(name.c_str()))
-            //    {
-            //        DrawLayerParameters(trainingInstance, layerIter);
-            //    }
-            //}
 
             ImGui::PopItemWidth();
             ImGui::PopStyleVar();

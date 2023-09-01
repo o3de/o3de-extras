@@ -39,9 +39,6 @@ namespace MachineLearning
 #ifdef IMGUI_ENABLED
         ImGui::LYImGuiUtils::HistogramContainer m_testHistogram;
         ImGui::LYImGuiUtils::HistogramContainer m_trainHistogram;
-
-        AZStd::vector<ImGui::LYImGuiUtils::HistogramContainer> m_layerWeights;
-        AZStd::vector<ImGui::LYImGuiUtils::HistogramContainer> m_layerBiases;
 #endif
     };
 
@@ -55,7 +52,6 @@ namespace MachineLearning
         void RecalculateAccuracy(TrainingInstance* trainingInstance, ILabeledTrainingData& data);
 
 #ifdef IMGUI_ENABLED
-        void DrawLayerParameters(TrainingInstance* trainingInstance, AZStd::size_t layerIndex);
         void OnImGuiUpdate();
 #endif
 

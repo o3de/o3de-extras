@@ -20,7 +20,6 @@ namespace MachineLearning
         INeuralNetworkPtr Model,
         ILabeledTrainingDataPtr TrainingData, 
         ILabeledTrainingDataPtr TestData,
-        //LossFunctions CostFunction, 
         AZStd::size_t CostFunction,
         AZStd::size_t TotalIterations,
         AZStd::size_t BatchSize,

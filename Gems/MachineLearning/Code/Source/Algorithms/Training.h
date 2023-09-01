@@ -52,12 +52,6 @@ namespace MachineLearning
         AZ::ThreadSafeDeque<float> m_testCosts;
         AZ::ThreadSafeDeque<float> m_trainCosts;
 
-    //private:
-        //! Calculates the average cost of the provided model on the set of labeled test data using the requested loss function.
-        float ComputeCurrentCost(ILabeledTrainingData& testData, LossFunctions costFunction);
-
-        void ExecTraining();
-
         INeuralNetworkPtr m_model;
         bool m_shuffleTrainingData = true;
         TrainingDataView m_trainData;
@@ -69,9 +63,14 @@ namespace MachineLearning
         float m_learningRateDecay = 0.0f;
         float m_earlyStopCost = 0.0f;
         AZStd::size_t m_currentIndex = 0;
-
         AZStd::unique_ptr<IInferenceContext> m_inferenceContext;
         AZStd::unique_ptr<ITrainingContext> m_trainingContext;
+
+    private:
+
+        //! Calculates the average cost of the provided model on the set of labeled test data using the requested loss function.
+        float ComputeCurrentCost(ILabeledTrainingData& testData, LossFunctions costFunction);
+        void ExecTraining();
 
         AZStd::unique_ptr<AZ::JobManager> m_trainingJobManager;
         AZStd::unique_ptr<AZ::JobContext> m_trainingjobContext;

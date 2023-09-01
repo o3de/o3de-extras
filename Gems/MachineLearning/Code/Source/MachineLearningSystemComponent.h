@@ -10,13 +10,13 @@
 
 #include <AzCore/Component/Component.h>
 #include <MachineLearning/IMachineLearning.h>
+#include <Assets/ModelAsset.h>
 
 namespace MachineLearning
 {
     class MachineLearningSystemComponent
         : public AZ::Component
         , protected MachineLearningRequestBus::Handler
-//        , public AZ::Interface<IMachineLearning>::Registrar
     {
     public:
         AZ_COMPONENT_DECL(MachineLearningSystemComponent);
@@ -50,5 +50,6 @@ namespace MachineLearning
     private:
 
         ModelSet m_registeredModels;
+        ModelAssetHandler m_assetHandler;
     };
 }

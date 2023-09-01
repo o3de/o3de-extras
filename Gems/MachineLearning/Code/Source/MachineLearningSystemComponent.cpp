@@ -104,10 +104,12 @@ namespace MachineLearning
     void MachineLearningSystemComponent::Activate()
     {
         MachineLearningRequestBus::Handler::BusConnect();
+        m_assetHandler.Register();
     }
 
     void MachineLearningSystemComponent::Deactivate()
     {
+        m_assetHandler.Unregister();
         MachineLearningRequestBus::Handler::BusDisconnect();
     }
 

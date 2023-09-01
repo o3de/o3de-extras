@@ -87,8 +87,10 @@ namespace UnitTest
 
         // Additionally, the sum of all the elements should be <= 1, as softmax returns a probability distribution
         const float totalSum = output.L1Norm();
+
         // Between floating point precision and the estimates we use for exp(x), the total sum probability can be slightly greater than one
         // We add a small epsilon to account for this error
+        ASSERT_GE(totalSum, 1.0f - AZ::Constants::Tolerance);
         ASSERT_LE(totalSum, 1.0f + AZ::Constants::Tolerance);
     }
 
