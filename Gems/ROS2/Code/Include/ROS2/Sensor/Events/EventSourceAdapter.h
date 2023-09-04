@@ -49,17 +49,17 @@ namespace ROS2
 
     //! Class adapting event source (ROS2::SensorEventSource) to configurable working frequency. This is handled via adapted event, in
     //! a similar manner like it is done in SensorEventSource. EventSourceAdapter has its internal handler that connects to
-    //! SensorEventSource source event, and signals adapted event according to frequency set (ROS2::EventSourceAdapter::Configure).
+    //! SensorEventSource source event, and signals adapted event according to frequency set (ROS2::EventSourceAdapter::SetFrequency).
     //! User can connect to this event using ROS2::EventSourceAdapter::ConnectToAdaptedEvent method. This class should be used, instead
     //! of using directly a class derived from SensorEventSource, when specific working frequency is required. Following this path, user can
     //! still use source event - ROS2::EventSourceAdapter::ConnectToSourceEvent. This template has to be resolved using a class derived from
-    //! SensorEventSource.
+    //! SensorEventSource specialization.
     //! @see ROS2::SensorEventSource
     template<class EventSourceT>
     class EventSourceAdapter
     {
     public:
-        // Require non-abstract type derived from SensorEventSource.
+        // Require non-abstract type derived from SensorEventSource specialization.
         static_assert(Internal::is_specialization_of<SensorEventSource, typename EventSourceT::SourceBaseType>::value);
         static_assert(AZStd::is_base_of<typename EventSourceT::SourceBaseType, EventSourceT>::value);
         static_assert(AZStd::is_abstract<EventSourceT>::value == false);
@@ -91,15 +91,14 @@ namespace ROS2
             }
         }
 
-        //! Activates event source adapter - assigns internal adapted event handler and activates managed event source. In most cases, user
-        //! should call ROS2::EventSourceAdapter::Configure first - this adapter itself would work without this requirement, however
-        //! different event source implementations can behave differently.
+        //! Starts event source adapter - assigns internal adapted event handler and starts managed event source. Adapted frequency can be
+        //! set using ROS2::EventSourceAdapter::SetFrequency method.
         void Start()
         {
             m_sourceAdaptingEventHandler = typename EventSourceT::SourceEventHandlerType(
                 [this](auto&&... args)
                 {
-                    const float sourceDeltaTime = m_eventSource.GetDeltaTime(args...);
+                    const float sourceDeltaTime = m_eventSource.GetDeltaTime(AZStd::forward<decltype(args)>(args)...);
                     m_adaptedDeltaTime += sourceDeltaTime;
 
                     if (!IsPublicationDeadline(sourceDeltaTime))
@@ -114,9 +113,9 @@ namespace ROS2
             m_eventSource.Start();
         }
 
-        //! Deactivates event source adapter - deactivates event source and disconnects internal adapted event handler from source event. If
-        //! it will be necessary, this implementation allows multiple consecutive calls of Activate / Deactivate, however user must also
-        //! investigate specific event source implementation with such case in mind.
+        //! Stops event source adapter - stops event source and disconnects internal adapted event handler from source event. If it will be
+        //! necessary, this implementation allows multiple consecutive calls of Start / Stop, however user must also investigate specific
+        //! event source implementation with such case in mind.
         void Stop()
         {
             m_eventSource.Stop();
@@ -127,15 +126,15 @@ namespace ROS2
         //! source frequency - e.g. adapter will be requested to work in 60Hz, when using event source working in 30Hz. In general, adapted
         //! frequency should be equal or lower than event source frequency. Optimal (highest precision in timing events) working conditions
         //! take place when event source frequency is an integer multiple of adapted frequency.
-        //! @param adaptedFrequency Adapter working frequency. When set to zero or less adapter will be assumed to work in 1Hz..
+        //! @param adaptedFrequency Adapter working frequency. When set to zero or less adapter will be assumed to work in 1Hz.
         void SetFrequency(float adaptedFrequency)
         {
             m_adaptedFrequency = adaptedFrequency;
         }
 
         //! Connects given event handler to source event (ROS2::SensorEventSource). That event is signalled regardless of adapted frequency
-        //! set for event source adapter (ROS2::EventSourceAdapter::Configure). Its frequency depends only on specific event source
-        //! implementation. If specific working frequency is required (main purpose of ROS2::EventSourceAdapter), user should see
+        //! set for event source adapter (ROS2::EventSourceAdapter::SetFrequency). Its frequency depends only on specific event source
+        //! implementation. If different working frequency is required (main purpose of ROS2::EventSourceAdapter), user should see
         //! ROS2::EventSourceAdapter::ConnectToAdaptedEvent method.
         //! @param sourceEventHandler Event handler for source event (frequency not managed by event source adapter).
         //! @see ROS2::SensorEventSource
@@ -144,19 +143,24 @@ namespace ROS2
             m_eventSource.ConnectToSourceEvent(sourceEventHandler);
         }
 
-        //! Connects given event handler to adapted event (ROS2::EventSourceAdapter). This event is signalled with a frequency set in event
-        //! source adapter configuration (ROS2::EventSourceAdapter::Configure).
-        //! @param adaptedEventHandler Event handler for adapted event (frequency set through event source adapter configuration).
+        //! Connects given event handler to adapted event (ROS2::EventSourceAdapter). This event is signalled with a frequency set with
+        //! ROS2::EventSourceAdapter::SetFrequency method.
+        //! @param adaptedEventHandler Event handler for adapted event.
         void ConnectToAdaptedEvent(typename EventSourceT::AdaptedEventHandlerType& adaptedEventHandler)
         {
             adaptedEventHandler.Connect(m_sensorAdaptedEvent);
         }
 
     private:
-        //! Uses tick counter, expected loop time and frequency set for adapter to support managing calls from event source.
-        //! @param expectedLoopTime Expected simulation loop time.
+        //! Uses:
+        //!  - internal tick counter,
+        //!  - last delta time of event source and
+        //!  - frequency set for adapter
+        //! to support managing calls from event source. In other words, uses delta time of event source to calculate average number of
+        //! source event calls per adapted event call.
+        //! @param sourceDeltaTime Delta time of event source.
         //! @return Whether it is time to signal adapted event.
-        bool IsPublicationDeadline(float sourceDeltaTime)
+        [[nodiscard]] bool IsPublicationDeadline(float sourceDeltaTime)
         {
             if (--m_tickCounter > 0)
             {

@@ -8,8 +8,6 @@
 
 #pragma once
 
-
-
 namespace ROS2
 {
     struct SensorConfiguration;
@@ -39,17 +37,23 @@ namespace ROS2
 
         virtual ~SensorEventSource() = default;
 
-        //! Sets up event source - see event source description for more details. After call to this method event source is supposed to
-        //! start signalling source event.
+        //! Starts event source - see specific event source description for more details. After call to this method event source is supposed
+        //! to start signalling source event.
         virtual void Start()
         {
         }
 
-        //! Shuts down event source - see event source description for more details. After call to this method event source is supposed to
-        //! stop signalling source event.
+        //! Stops event source - see specific event source description for more details. After call to this method event source is supposed
+        //! to stop signalling source event.
         virtual void Stop()
         {
         }
+
+        //! Returns delta time from set of source event parameters (passed as variadic up to some point). The purpose of this method is to
+        //! give developers access to event source delta time, without additional variables or helpers.
+        //! @param args Set of source event parameters.
+        //! @return Delta time in seconds.
+        [[nodiscard]] virtual float GetDeltaTime(EventArgs... args) const = 0;
 
         //! Connects given event handler to sensor source event. By design, source event is not restricted by frequency settings. This event
         //! should be signalled based on event source internal logic (e.g. on draw call). For more details check event source
@@ -59,11 +63,6 @@ namespace ROS2
         {
             sourceEventHandler.Connect(m_sourceEvent);
         }
-
-        //! Returns delta time from set of source event parameters. The purpose of this method is to give developers access to event source
-        //! delta time, without additional variables or helpers.
-        //! @return Delta time in seconds.
-        virtual float GetDeltaTime(EventArgs... args) const = 0;
 
     protected:
         SensorEventSource() = default;

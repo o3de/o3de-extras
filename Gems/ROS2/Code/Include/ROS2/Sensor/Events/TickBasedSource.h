@@ -25,10 +25,10 @@ namespace ROS2
         AZ_TYPE_INFO(TickBasedSource, "{AD3CC041-5F7C-45E8-AA2D-5D8A1D4CC466}");
         static void Reflect(AZ::ReflectContext* context);
 
-        // Overrides of ROS2::SensorEventSource specialization.
+        // Overrides of ROS2::SensorEventSource.
         void Start() override;
         void Stop() override;
-        float GetDeltaTime(float deltaTime, AZ::ScriptTimePoint time) const override;
+        [[nodiscard]] float GetDeltaTime(float deltaTime, AZ::ScriptTimePoint time) const override;
 
     private:
         // Override of AZ::TickBus::Handler.

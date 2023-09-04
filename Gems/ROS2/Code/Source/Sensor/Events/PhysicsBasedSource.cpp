@@ -27,7 +27,7 @@ namespace ROS2
                 m_sourceEvent.Signal(sceneHandle, deltaTime);
             });
 
-        auto sceneInterface = AZ::Interface<AzPhysics::SceneInterface>::Get();
+        auto* sceneInterface = AZ::Interface<AzPhysics::SceneInterface>::Get();
         AzPhysics::SceneHandle sceneHandle = sceneInterface->GetSceneHandle(AzPhysics::DefaultPhysicsSceneName);
         sceneInterface->RegisterSceneSimulationFinishHandler(sceneHandle, m_onSceneSimulationEventHandler);
     }
@@ -37,7 +37,7 @@ namespace ROS2
         m_onSceneSimulationEventHandler.Disconnect();
     }
 
-    float PhysicsBasedSource::GetDeltaTime(AzPhysics::SceneHandle sceneHandle, float deltaTime) const
+    float PhysicsBasedSource::GetDeltaTime([[maybe_unused]] AzPhysics::SceneHandle sceneHandle, float deltaTime) const
     {
         return deltaTime;
     }

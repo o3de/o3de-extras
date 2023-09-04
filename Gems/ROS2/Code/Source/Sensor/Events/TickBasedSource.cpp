@@ -29,7 +29,7 @@ namespace ROS2
         AZ::TickBus::Handler::BusDisconnect();
     }
 
-    float TickBasedSource::GetDeltaTime(float deltaTime, AZ::ScriptTimePoint time) const
+    float TickBasedSource::GetDeltaTime(float deltaTime, [[maybe_unused]] AZ::ScriptTimePoint time) const
     {
         return deltaTime;
     }
