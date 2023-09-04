@@ -6,33 +6,17 @@
  *
  */
 
-#include "ROS2SensorHooks.h"
-
 #include <Camera/CameraConstants.h>
 #include <Camera/ROS2CameraSensorEditorComponent.h>
-#include <GNSS/ROS2GNSSSensorComponent.h>
-#include <RobotImporter/Utils/RobotImporterUtils.h>
+#include <ROS2/Frame/ROS2FrameComponent.h>
+#include <RobotImporter/SDFormat/ROS2SensorHooks.h>
+#include <RobotImporter/SDFormat/ROS2SensorHooksUtils.h>
 
 #include <sdf/Camera.hh>
-#include <sdf/NavSat.hh>
+#include <sdf/Sensor.hh>
 
 namespace ROS2::SDFormat
 {
-    namespace Internal
-    {
-        void AddTopicConfiguration(
-            SensorConfiguration& sensorConfig,
-            const AZStd::string& topic,
-            const AZStd::string& messageType,
-            const AZStd::string& configName)
-        {
-            TopicConfiguration config;
-            config.m_topic = topic;
-            config.m_type = messageType;
-            sensorConfig.m_publishersConfigurations.insert(AZStd::make_pair(configName, config));
-        }
-    } // namespace Internal
-
     SensorImporterHook ROS2SensorHooks::ROS2CameraSensor()
     {
         SensorImporterHook importerHook;
@@ -49,14 +33,22 @@ namespace ROS2::SDFormat
                                                          const sdf::Sensor& sdfSensor) -> SensorImporterHook::ConvertSensorOutcome
         {
             auto* cameraSensor = sdfSensor.CameraSensor();
+            if (!cameraSensor)
+            {
+                return AZ::Failure(AZStd::string("Failed to read parsed SDFormat data of %s camera sensor", sdfSensor.Name().c_str()));
+            }
 
             CameraSensorConfiguration cameraConfiguration;
             cameraConfiguration.m_depthCamera = cameraSensor->HasDepthCamera();
             cameraConfiguration.m_colorCamera = (sdfSensor.Type() != sdf::SensorType::DEPTH_CAMERA) ? true : false;
             cameraConfiguration.m_width = cameraSensor->ImageWidth();
             cameraConfiguration.m_height = cameraSensor->ImageHeight();
-            cameraConfiguration.m_verticalFieldOfViewDeg =
-                cameraSensor->HorizontalFov().Degree() * (cameraConfiguration.m_height / cameraConfiguration.m_width);
+            if (cameraConfiguration.m_width != 0)
+            {
+                double aspectRatio = static_cast<double>(cameraConfiguration.m_height) / cameraConfiguration.m_width;
+                cameraConfiguration.m_verticalFieldOfViewDeg =
+                    2.0 * AZStd::atan(AZStd::tan(cameraSensor->HorizontalFov().Radian() / 2.0) * aspectRatio);
+            }
             if (sdfSensor.Type() != sdf::SensorType::DEPTH_CAMERA)
             {
                 cameraConfiguration.m_nearClipDistance = static_cast<float>(cameraSensor->NearClip());
@@ -71,21 +63,25 @@ namespace ROS2::SDFormat
             SensorConfiguration sensorConfiguration;
             sensorConfiguration.m_frequency = sdfSensor.UpdateRate();
             if (sdfSensor.Type() != sdf::SensorType::DEPTH_CAMERA)
-            {
-                Internal::AddTopicConfiguration(
+            { // COLOR_CAMERA and RGBD_CAMERA
+                Utils::AddTopicConfiguration(
                     sensorConfiguration, "camera_image_color", CameraConstants::ImageMessageType, CameraConstants::ColorImageConfig);
-                Internal::AddTopicConfiguration(
+                Utils::AddTopicConfiguration(
                     sensorConfiguration, "color_camera_info", CameraConstants::CameraInfoMessageType, CameraConstants::ColorInfoConfig);
             }
             if (sdfSensor.Type() != sdf::SensorType::CAMERA)
-            {
-                Internal::AddTopicConfiguration(
+            { // DEPTH_CAMERA and RGBD_CAMERA
+                Utils::AddTopicConfiguration(
                     sensorConfiguration, "camera_image_depth", CameraConstants::ImageMessageType, CameraConstants::DepthImageConfig);
-                Internal::AddTopicConfiguration(
+                Utils::AddTopicConfiguration(
                     sensorConfiguration, "depth_camera_info", CameraConstants::CameraInfoMessageType, CameraConstants::DepthInfoConfig);
             }
 
-            if (entity.CreateComponent<ROS2CameraSensorEditorComponent>(sensorConfiguration, cameraConfiguration))
+            // Create required components
+            Utils::CreateComponent<ROS2FrameComponent>(entity);
+
+            // Create Camera component
+            if (Utils::CreateComponent<ROS2CameraSensorEditorComponent>(entity, sensorConfiguration, cameraConfiguration))
             {
                 return AZ::Success();
             }
@@ -97,5 +93,4 @@ namespace ROS2::SDFormat
 
         return importerHook;
     }
-
 } // namespace ROS2::SDFormat
