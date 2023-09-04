@@ -89,7 +89,7 @@ namespace ROS2
         return m_controlConfiguration;
     }
 
-    const TopicConfiguration& ROS2RobotControlComponent::GetSubscriberConfigration() const
+    const TopicConfiguration& ROS2RobotControlComponent::GetSubscriberConfiguration() const
     {
         return m_subscriberConfiguration;
     }

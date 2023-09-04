@@ -28,7 +28,12 @@ set(FILES
     Source/RobotImporter/RobotImporterWidget.h
     Source/RobotImporter/ROS2RobotImporterEditorSystemComponent.cpp
     Source/RobotImporter/ROS2RobotImporterEditorSystemComponent.h
-    Source/RobotImporter/SDFormat/ROS2SensorHooks.cpp
+    Source/RobotImporter/SDFormat/Hooks/ROS2CameraSensorHook.cpp
+    Source/RobotImporter/SDFormat/Hooks/ROS2GNSSSensorHook.cpp
+    Source/RobotImporter/SDFormat/Hooks/ROS2ImuSensorHook.cpp
+    Source/RobotImporter/SDFormat/Hooks/ROS2LidarSensorHook.cpp
+    Source/RobotImporter/SDFormat/ROS2SensorHooksUtils.cpp
+    Source/RobotImporter/SDFormat/ROS2SensorHooksUtils.h
     Source/RobotImporter/SDFormat/ROS2SensorHooks.h
     Source/RobotImporter/URDF/ArticulationsMaker.cpp
     Source/RobotImporter/URDF/ArticulationsMaker.h
