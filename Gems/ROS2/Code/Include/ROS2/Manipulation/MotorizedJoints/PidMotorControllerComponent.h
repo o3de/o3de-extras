@@ -41,6 +41,7 @@ namespace ROS2
         float m_zeroOffset{ 0.0f }; //!< Offset added to setpoint.
         float m_setPoint{ 0.0f }; //!< Desired local position.
         float m_error{ 0.0f }; //!< Current error (difference between control value and measurement).
+        float m_minPID{ 0.0f }; //!< Minimal PID result that's required to do anything. Decreases jitteriness.
 
         // JointMotorControllerComponent overrides
         float CalculateMotorSpeed([[maybe_unused]] float deltaTime) override;

@@ -22,6 +22,7 @@ namespace ROS2
             serializeContext->Class<PidMotorControllerComponent, JointMotorControllerComponent>()
                 ->Field("ZeroOffset", &PidMotorControllerComponent::m_zeroOffset)
                 ->Field("PidPosition", &PidMotorControllerComponent::m_pidPos)
+                ->Field("MinPid", &PidMotorControllerComponent::m_minPID)
                 ->Version(2);
 
             if (AZ::EditContext* ec = serializeContext->GetEditContext())
@@ -35,7 +36,13 @@ namespace ROS2
                         &PidMotorControllerComponent::m_zeroOffset,
                         "Zero Offset",
                         "Allows to change offset of zero to set point")
-                    ->DataElement(AZ::Edit::UIHandlers::Default, &PidMotorControllerComponent::m_pidPos, "Pid Position", "Pid Position");
+                    ->DataElement(AZ::Edit::UIHandlers::Default, &PidMotorControllerComponent::m_pidPos, "Pid Position", "Pid Position")
+                    ->DataElement(
+                        AZ::Edit::UIHandlers::Default,
+                        &PidMotorControllerComponent::m_minPID,
+                        "Minimal Pid result",
+                        "Minimal Pid result that will cause movement, can be used to decrease jitteriness")
+                    ->Attribute(AZ::Edit::Attributes::Min, 0.0);
             }
         }
 
@@ -89,7 +96,14 @@ namespace ROS2
         m_error = controlPositionError;
 
         const auto deltaTimeNs = aznumeric_cast<uint64_t>(deltaTime * 1.0e9f);
-        return aznumeric_cast<float>(m_pidPos.ComputeCommand(controlPositionError, deltaTimeNs));
+
+        const auto speed = aznumeric_cast<float>(m_pidPos.ComputeCommand(controlPositionError, deltaTimeNs));
+
+        if (AZStd::abs(speed) < m_minPID)
+        {
+            return 0.f;
+        }
+        return speed;
     }
 
     void PidMotorControllerComponent::DisplayControllerParameters()
