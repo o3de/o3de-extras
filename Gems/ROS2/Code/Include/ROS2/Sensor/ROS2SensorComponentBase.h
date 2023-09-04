@@ -38,18 +38,11 @@ namespace ROS2
 
         static void Reflect(AZ::ReflectContext* context)
         {
-            SensorConfiguration::Reflect(context);
-
-            // Verify during review -> multiple sensor implementation, using the same EventSourceT, will call this Reflect - this can be a
-            // problem.
-            EventSourceAdapter<EventSourceT>::Reflect(context);
-
             if (auto* serializeContext = azrtti_cast<AZ::SerializeContext*>(context))
             {
                 serializeContext->Class<ROS2SensorComponentBase<EventSourceT>, AZ::Component>()
                     ->Version(1)
-                    ->Field("Sensor configuration", &ROS2SensorComponentBase<EventSourceT>::m_sensorConfiguration)
-                    ->Field("Source adapter configuration", &ROS2SensorComponentBase<EventSourceT>::m_eventSourceAdapter);
+                    ->Field("SensorConfiguration", &ROS2SensorComponentBase<EventSourceT>::m_sensorConfiguration);
 
                 if (auto* editContext = serializeContext->GetEditContext())
                 {
