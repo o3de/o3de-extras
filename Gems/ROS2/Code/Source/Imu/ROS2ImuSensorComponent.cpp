@@ -120,7 +120,14 @@ namespace ROS2
             AzPhysics::RigidBody* rigidBody = nullptr;
             AZ::EntityId entityId = GetEntityId();
             Physics::RigidBodyRequestBus::EventResult(rigidBody, entityId, &Physics::RigidBodyRequests::GetRigidBody);
-            AZ_Assert(rigidBody, "Entity %s does not have rigid body.", entityId.ToString().c_str());
+
+            if (!rigidBody)
+            {
+                AZ_Error("ROS2ImuSensorComponent", false, "Entity %s does not have a rigid body - stopping Imu sensor.", entityId.ToString().c_str());
+                StopSensor();
+                return;
+            }
+
             m_bodyHandle = rigidBody->m_bodyHandle;
         }
 
