@@ -124,8 +124,9 @@ namespace ROS2
 
         //! Sets adapter working frequency. By design, adapter will not work correctly, if this frequency will be greater than used event
         //! source frequency - e.g. adapter will be requested to work in 60Hz, when using event source working in 30Hz. In general, adapted
-        //! frequency should be equal or lower than event source frequency. Optimal (highest precision in timing events) working conditions
-        //! take place when event source frequency is an integer multiple of adapted frequency.
+        //! frequency should be equal or lower than event source frequency - this is forced internally
+        //! (ROS2::EventSourceAdapter::IsPublicationDeadline). Optimal (highest precision in timing events) working conditions take place
+        //! when event source frequency is an integer multiple of adapted frequency.
         //! @param adaptedFrequency Adapter working frequency. When set to zero or less adapter will be assumed to work in 1Hz.
         void SetFrequency(float adaptedFrequency)
         {
@@ -167,8 +168,9 @@ namespace ROS2
                 return false;
             }
 
-            const float frameTime = m_adaptedFrequency <= 0.f ? 1.f : 1.f / m_adaptedFrequency;
-            const float numberOfFrames = frameTime / sourceDeltaTime;
+            const float sourceFrequencyEstimation = 1.0f / sourceDeltaTime;
+            const float numberOfFrames =
+                m_adaptedFrequency <= sourceFrequencyEstimation ? (sourceFrequencyEstimation / m_adaptedFrequency) : 1.0f;
             m_tickCounter = aznumeric_cast<int>(AZStd::round(numberOfFrames));
             return true;
         }
