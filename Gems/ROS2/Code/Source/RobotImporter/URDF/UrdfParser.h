@@ -10,16 +10,17 @@
 
 #include <AzCore/IO/Path/Path.h>
 #include <AzCore/std/utility/expected.h>
-#include <sdf/Root.hh>
-#include <sdf/Link.hh>
-#include <sdf/Mesh.hh>
-#include <sdf/Material.hh>
-#include <sdf/Model.hh>
+#include <SdfAssetBuilder/SdfAssetBuilderSettings.h>
+#include <sdf/Collision.hh>
+#include <sdf/Geometry.hh>
 #include <sdf/Joint.hh>
 #include <sdf/JointAxis.hh>
+#include <sdf/Link.hh>
+#include <sdf/Material.hh>
+#include <sdf/Mesh.hh>
+#include <sdf/Model.hh>
+#include <sdf/Root.hh>
 #include <sdf/Visual.hh>
-#include <sdf/Geometry.hh>
-#include <sdf/Collision.hh>
 
 namespace ROS2
 {
@@ -64,6 +65,11 @@ namespace ROS2
             sdf::Root m_root;
             AZStd::string m_parseMessages;
             sdf::Errors m_sdfErrors{ sdf::Error{ O3DESdfErrorParseNotStarted, std::string{"No Parsing has occurred yet"}} };
+
+            //! Stores the modified URDF content after parsing, empty if no modification occurred
+            std::string m_modifiedURDFContent;
+            //! Stores the modified URDF tags after parsing, empty if no modification occurred
+            AZStd::vector<AZStd::string> m_modifiedURDFTags;
         };
         using RootObjectOutcome = ParseResult;
 
@@ -83,7 +89,8 @@ namespace ROS2
         //!        The relevant ParserConfig functions for URDF importing are
         //!        URDFPreserveFixedJoint() function to prevent merging of robot links bound by fixed joint
         //!        AddURIPath() function to provide a mapping of package:// and model:// references to the local filesystem
+        //! @paragraph settings structure that contains configuration options for the SDFAssetBuilder
         //! @return SDF root object containing parsed <world> or <model> tags
-        RootObjectOutcome ParseFromFile(AZ::IO::PathView filePath, const sdf::ParserConfig& parserConfig);
+        RootObjectOutcome ParseFromFile(AZ::IO::PathView filePath, const sdf::ParserConfig& parserConfig, const SdfAssetBuilderSettings& settings);
     }; // namespace UrdfParser
 } // namespace ROS2

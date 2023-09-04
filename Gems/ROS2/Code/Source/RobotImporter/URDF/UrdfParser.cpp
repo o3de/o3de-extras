@@ -15,6 +15,7 @@
 #include <AzCore/std/string/string.h>
 #include <RobotImporter/FixURDF/FixURDF.h>
 #include <RobotImporter/Utils/ErrorUtils.h>
+#include <RobotImporter/Utils/FilePath.cpp>
 
 namespace ROS2::UrdfParser
 {
@@ -27,8 +28,7 @@ namespace ROS2::UrdfParser
         // @param consoleStream Reference to sdf::Console::ConsoleStream whose
         //        output will be redirected
         // @param redirectStream reference to stream where console stream output is redirected to
-        RedirectSDFOutputStream(sdf::Console::ConsoleStream& consoleStream,
-            std::ostream& redirectStream)
+        RedirectSDFOutputStream(sdf::Console::ConsoleStream& consoleStream, std::ostream& redirectStream)
             : m_consoleStreamRef(consoleStream)
             , m_origConsoleStream(consoleStream)
         {
@@ -52,7 +52,7 @@ namespace ROS2::UrdfParser
     {
         return m_root;
     }
-    const sdf::Root& ParseResult::GetRoot() const &
+    const sdf::Root& ParseResult::GetRoot() const&
     {
         return m_root;
     }
@@ -111,7 +111,8 @@ namespace ROS2::UrdfParser
         return parseResult;
     }
 
-    RootObjectOutcome ParseFromFile(AZ::IO::PathView filePath, const sdf::ParserConfig& parserConfig)
+    RootObjectOutcome ParseFromFile(
+        AZ::IO::PathView filePath, const sdf::ParserConfig& parserConfig, const SdfAssetBuilderSettings& settings)
     {
         // Store path in a AZ::IO::FixedMaxPath which is stack based structure that provides memory
         // for the path string and is null terminated.
@@ -122,15 +123,24 @@ namespace ROS2::UrdfParser
         {
             auto fileNotFoundMessage = AZStd::fixed_string<1024>::format("File %.*s does not exist", AZ_PATH_ARG(urdfFilePath));
             ParseResult fileNotFoundResult;
-            fileNotFoundResult.m_sdfErrors.emplace_back(sdf::ErrorCode::FILE_READ,
-                        std::string{ fileNotFoundMessage.c_str(), fileNotFoundMessage.size() },
-                        std::string{ urdfFilePath.c_str(), urdfFilePath.Native().size() });
+            fileNotFoundResult.m_sdfErrors.emplace_back(
+                sdf::ErrorCode::FILE_READ,
+                std::string{ fileNotFoundMessage.c_str(), fileNotFoundMessage.size() },
+                std::string{ urdfFilePath.c_str(), urdfFilePath.Native().size() });
             return fileNotFoundResult;
         }
 
         std::string xmlStr((std::istreambuf_iterator<char>(istream)), std::istreambuf_iterator<char>());
         // modify in memory
-        std::string xmlStrChanged = (ROS2::Utils::ModifyURDFInMemory(xmlStr));
-        return Parse(xmlStrChanged, parserConfig);
+        if (Utils::IsFileUrdf(filePath) && settings.m_fixURDF)
+        {
+            const auto& [modifiedXmlStr, modifiedElements] = (ROS2::Utils::ModifyURDFInMemory(xmlStr));
+
+            auto result = Parse(modifiedXmlStr, parserConfig);
+            result.m_modifiedURDFTags = modifiedElements;
+            result.m_modifiedURDFContent = modifiedXmlStr;
+            return result;
+        }
+        return Parse(xmlStr, parserConfig);
     }
-} // namespace ROS2
+} // namespace ROS2::UrdfParser

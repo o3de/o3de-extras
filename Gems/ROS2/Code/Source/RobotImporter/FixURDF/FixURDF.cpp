@@ -1,10 +1,10 @@
 /*
-* Copyright (c) Contributors to the Open 3D Engine Project.
-* For complete copyright and license terms please see the LICENSE at the root of this distribution.
-*
-* SPDX-License-Identifier: Apache-2.0 OR MIT
-*
-*/
+ * Copyright (c) Contributors to the Open 3D Engine Project.
+ * For complete copyright and license terms please see the LICENSE at the root of this distribution.
+ *
+ * SPDX-License-Identifier: Apache-2.0 OR MIT
+ *
+ */
 
 #include "FixURDF.h"
 #include <AzCore/XML/rapidxml_print.h>
@@ -25,9 +25,8 @@ namespace ROS2::Utils
             }
         }
 
-        for (auto * link : links)
+        for (auto* link : links)
         {
-
             xml_node<>* inertial = urdf->document()->allocate_node(node_element, "inertial");
 
             xml_node<>* mass = urdf->document()->allocate_node(node_element, "mass");
@@ -59,7 +58,6 @@ namespace ROS2::Utils
                 modifiedLinks.push_back(name->value());
             }
             link->append_node(inertial);
-
         }
 
         return modifiedLinks;
@@ -90,17 +88,18 @@ namespace ROS2::Utils
                     linkAndJointsName.insert(newName);
                     modifiedLinks.push_back(newName);
                 }
-                else{
+                else
+                {
                     linkAndJointsName.insert(name->value());
                 }
-
             }
         }
         return modifiedLinks;
     }
 
-    std::string ModifyURDFInMemory(const std::string& data)
+    AZStd::pair<std::string, AZStd::vector<AZStd::string>> ModifyURDFInMemory(const std::string& data)
     {
+        AZStd::vector<AZStd::string> modifiedElements;
         using namespace AZ::rapidxml;
         xml_document<> doc;
         doc.parse<0>(const_cast<char*>(data.c_str()));
@@ -112,7 +111,8 @@ namespace ROS2::Utils
             AZ_Warning("ROS2", false, "Added missing inertia to links: ");
             for (auto& link : links)
             {
-                    AZ_Warning("ROS2", false, "  -> %s", link.c_str());
+                modifiedElements.push_back(link);
+                AZ_Warning("ROS2", false, "  -> %s", link.c_str());
             }
         }
 
@@ -122,13 +122,14 @@ namespace ROS2::Utils
             AZ_Warning("ROS2", false, "Renamed duplicated links and joints: ");
             for (auto& dup : renames)
             {
-                    AZ_Warning("ROS2", false, "  -> %s", dup.c_str());
+                modifiedElements.push_back(dup);
+                AZ_Warning("ROS2", false, "  -> %s", dup.c_str());
             }
         }
 
         std::string xmlDocString;
         AZ::rapidxml::print(std::back_inserter(xmlDocString), *urdf, 0);
 
-        return xmlDocString;
+        return { xmlDocString, modifiedElements };
     }
 } // namespace ROS2::Utils
