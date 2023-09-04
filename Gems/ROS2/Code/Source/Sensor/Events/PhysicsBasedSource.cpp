@@ -21,6 +21,7 @@ namespace ROS2
 
     void PhysicsBasedSource::Start()
     {
+        m_onSceneSimulationEventHandler.Disconnect();
         m_onSceneSimulationEventHandler = AzPhysics::SceneEvents::OnSceneSimulationFinishHandler(
             [this](AzPhysics::SceneHandle sceneHandle, float deltaTime)
             {

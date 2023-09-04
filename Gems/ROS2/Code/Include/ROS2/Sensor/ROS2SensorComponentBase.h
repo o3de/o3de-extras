@@ -19,16 +19,13 @@ namespace ROS2
 {
     //! Base sensor component class for all specific sensor implementations. Developer working on the new sensor should derive from this
     //! class, defining necessary event source type (EventSourceT template parameter). Available sources are e.g. TickBasedSource or
-    //! PhysicsBasedSource. Chosen event source is wrapped into EventSourceAdapter, making it possible to work with specific frequency
-    //! (configured using ROS2::EventSourceAdapter::Configure method). Handlers for not restricted source events should be connected via
-    //! ROS2::EventSourceAdapter::ConnectToSourceEvent method - they will be signalled with event source frequency (depends on its
-    //! implementation). Handlers for adapted frequency should be connected via ROS2::EventSourceAdapter::ConnectToAdaptedEvent method -
-    //! they will be called with adapter frequency set during event source adapter configuration. Working with adapter and event sources
-    //! will result in:
-    //!  - sensor Activate method - assigning event handlers (m_sourceEventHandler and m_adaptedEventHandler), connecting them to events,
-    //!     configuring and activating adapter,
-    //!  - sensor Deactivate method - deactivating adapter and disconnecting handlers.
-    //! Order of these operations is intended
+    //! PhysicsBasedSource. Chosen event source is wrapped into EventSourceAdapter, making it possible to work with specific frequency.
+    //! Derived implementation should call ROS2::ROS2SensorComponentBase::StartSensor at the end of Activate (or whenever sensor
+    //! configuration is already set up) and StopSensor in Deactivate. Starting sensor base requires passing two parameters:
+    //!  - sensor working frequency - how often sensor logic should be processed,
+    //!  - adapted event callback - what should be done in sensor logic processing.
+    //! Optionally, user can pass third parameter, which is source event callback - this will be called with source event frequency (check
+    //! chosen event source implementation).
     //! @see ROS2::TickBasedSource
     //! @see ROS2::PhysicsBasedSource
     template<class EventSourceT>
@@ -82,6 +79,11 @@ namespace ROS2
         }
 
     protected:
+        //! Starts sensor with passed frequency and adapted event callback. Optionally, user can pass source event callback, that will be
+        //! called with event source frequency.
+        //! @param sensorFrequency Sensor working frequency.
+        //! @param adaptedCallback Adapted event callback - called with sensor working frequency.
+        //! @param sourceCallback Source event callback - called with event source frequency.
         void StartSensor(
             float sensorFrequency,
             typename EventSourceT::AdaptedCallbackType adaptedCallback,
@@ -103,22 +105,25 @@ namespace ROS2
             m_eventSourceAdapter.Start();
         }
 
+        //! Stops sensor and disconnects event callbacks passed through RSO2::ROS2SensorComponentBase::StartSensor.
         void StopSensor()
         {
             m_eventSourceAdapter.Stop();
+            m_sourceEventHandler.Disconnect();
+            m_adaptedEventHandler.Disconnect();
         }
 
         //! Returns a complete namespace for this sensor topics and frame ids.
         [[nodiscard]] AZStd::string GetNamespace() const
         {
-            auto ros2Frame = Utils::GetGameOrEditorComponent<ROS2FrameComponent>(GetEntity());
+            auto* ros2Frame = Utils::GetGameOrEditorComponent<ROS2FrameComponent>(GetEntity());
             return ros2Frame->GetNamespace();
         }
 
         //! Returns this sensor frame ID. The ID contains namespace.
         [[nodiscard]] AZStd::string GetFrameID() const
         {
-            auto ros2Frame = Utils::GetGameOrEditorComponent<ROS2FrameComponent>(GetEntity());
+            auto* ros2Frame = Utils::GetGameOrEditorComponent<ROS2FrameComponent>(GetEntity());
             return ros2Frame->GetFrameID();
         }
 
