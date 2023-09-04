@@ -8,11 +8,9 @@
 
 #include <Atom/RPI.Public/AuxGeom/AuxGeomFeatureProcessorInterface.h>
 #include <Atom/RPI.Public/Scene.h>
-#include <AzFramework/Physics/PhysicsSystem.h>
 #include <Lidar/LidarRegistrarSystemComponent.h>
 #include <Lidar/ROS2LidarSensorComponent.h>
 #include <ROS2/Frame/ROS2FrameComponent.h>
-#include <ROS2/ROS2Bus.h>
 #include <ROS2/Utilities/ROS2Names.h>
 
 namespace ROS2
@@ -26,14 +24,14 @@ namespace ROS2
     {
         LidarSensorConfiguration::Reflect(context);
 
-        if (AZ::SerializeContext* serialize = azrtti_cast<AZ::SerializeContext*>(context))
+        if (auto* serializeContext = azrtti_cast<AZ::SerializeContext*>(context))
         {
-            serialize->Class<ROS2LidarSensorComponent, ROS2SensorComponent>()->Version(2)->Field(
+            serializeContext->Class<ROS2LidarSensorComponent, SensorBaseType>()->Version(3)->Field(
                 "lidarConfiguration", &ROS2LidarSensorComponent::m_lidarConfiguration);
 
-            if (AZ::EditContext* ec = serialize->GetEditContext())
+            if (auto* editContext = serializeContext->GetEditContext())
             {
-                ec->Class<ROS2LidarSensorComponent>("ROS2 Lidar Sensor", "Lidar sensor component")
+                editContext->Class<ROS2LidarSensorComponent>("ROS2 Lidar Sensor", "Lidar sensor component")
                     ->ClassElement(AZ::Edit::ClassElements::EditorData, "")
                     ->Attribute(AZ::Edit::Attributes::Category, "ROS2")
                     ->Attribute(AZ::Edit::Attributes::AppearsInAddComponentMenu, AZ_CRC_CE("Game"))
@@ -91,7 +89,9 @@ namespace ROS2
         if (m_lidarConfiguration.m_lidarSystemFeatures & LidarSystemFeatures::CollisionLayers)
         {
             LidarRaycasterRequestBus::Event(
-                m_lidarRaycasterId, &LidarRaycasterRequestBus::Events::ConfigureIgnoredCollisionLayers, m_lidarConfiguration.m_ignoredCollisionLayers);
+                m_lidarRaycasterId,
+                &LidarRaycasterRequestBus::Events::ConfigureIgnoredCollisionLayers,
+                m_lidarConfiguration.m_ignoredCollisionLayers);
         }
 
         if (m_lidarConfiguration.m_lidarSystemFeatures & LidarSystemFeatures::EntityExclusion)
@@ -191,12 +191,25 @@ namespace ROS2
             m_pointCloudPublisher = ros2Node->create_publisher<sensor_msgs::msg::PointCloud2>(fullTopic.data(), publisherConfig.GetQoS());
         }
 
-        ROS2SensorComponent::Activate();
+        StartSensor(
+            m_sensorConfiguration.m_frequency,
+            [this]([[maybe_unused]] auto&&... args)
+            {
+                if (!m_sensorConfiguration.m_publishingEnabled)
+                {
+                    return;
+                }
+                FrequencyTick();
+            },
+            [this]([[maybe_unused]] auto&&... args)
+            {
+                Visualize();
+            });
     }
 
     void ROS2LidarSensorComponent::Deactivate()
     {
-        ROS2SensorComponent::Deactivate();
+        StopSensor();
         m_pointCloudPublisher.reset();
 
         for (auto& [implementation, raycasterId] : m_implementationToRaycasterMap)
