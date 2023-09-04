@@ -97,7 +97,7 @@ namespace ROS2
                         AZ::Edit::UIHandlers::Default,
                         &SdfAssetBuilderSettings::m_fixURDF,
                         "Fix URDF to be compatible with libsdformat",
-                        "When set, fixes the URDF file before importing it. This is useful for fixing URDF files that have missing inertials."
+                        "When set, fixes the URDF file before importing it. This is useful for fixing URDF files that have missing inertials or duplicate names within links and joints."
                         );
             }
         }

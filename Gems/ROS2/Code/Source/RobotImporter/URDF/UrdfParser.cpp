@@ -15,7 +15,7 @@
 #include <AzCore/std/string/string.h>
 #include <RobotImporter/FixURDF/FixURDF.h>
 #include <RobotImporter/Utils/ErrorUtils.h>
-#include <RobotImporter/Utils/FilePath.cpp>
+#include <RobotImporter/Utils/FilePath.h>
 
 namespace ROS2::UrdfParser
 {
@@ -86,6 +86,11 @@ namespace ROS2::UrdfParser
         return m_sdfErrors.empty();
     }
 
+    bool ParseResult::UrdfParsedWithModifiedContent() const
+    {
+        return m_modifiedURDFTags.size() > 0;
+    }
+
     RootObjectOutcome Parse(AZStd::string_view xmlString, const sdf::ParserConfig& parserConfig)
     {
         return Parse(std::string(xmlString.data(), xmlString.size()), parserConfig);
@@ -131,16 +136,18 @@ namespace ROS2::UrdfParser
         }
 
         std::string xmlStr((std::istreambuf_iterator<char>(istream)), std::istreambuf_iterator<char>());
-        // modify in memory
         if (Utils::IsFileUrdf(filePath) && settings.m_fixURDF)
         {
-            const auto& [modifiedXmlStr, modifiedElements] = (ROS2::Utils::ModifyURDFInMemory(xmlStr));
+            // modify in memory
+            auto [modifiedXmlStr, modifiedElements] = (ROS2::Utils::ModifyURDFInMemory(xmlStr));
 
             auto result = Parse(modifiedXmlStr, parserConfig);
-            result.m_modifiedURDFTags = modifiedElements;
-            result.m_modifiedURDFContent = modifiedXmlStr;
+            result.m_modifiedURDFTags = AZStd::move(modifiedElements);
+            result.m_modifiedURDFContent = AZStd::move(modifiedXmlStr);
             return result;
         }
         return Parse(xmlStr, parserConfig);
     }
+
+
 } // namespace ROS2::UrdfParser

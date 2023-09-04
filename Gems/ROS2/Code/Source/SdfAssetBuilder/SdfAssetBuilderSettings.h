@@ -36,7 +36,7 @@ namespace ROS2
         bool m_urdfPreserveFixedJoints = true;
         // When true, .dae/.stl mesh files are imported into the project folder to allow the AP to process them
         bool m_importReferencedMeshFiles = true;
-        // When true URDF will be fixed to be compatible with SDF
+        // When true URDF will be fixed to be compatible with SDFormat.
         bool m_fixURDF = true;
     };
 } // namespace ROS2

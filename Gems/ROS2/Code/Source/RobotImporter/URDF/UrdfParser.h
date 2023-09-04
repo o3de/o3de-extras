@@ -9,6 +9,7 @@
 #pragma once
 
 #include <AzCore/IO/Path/Path.h>
+#include <AzCore/std/containers/vector.h>
 #include <AzCore/std/utility/expected.h>
 #include <SdfAssetBuilder/SdfAssetBuilderSettings.h>
 #include <sdf/Collision.hh>
@@ -34,8 +35,10 @@ namespace ROS2
         private:
             // Provides custom sdf::ErrorCode values when parsing is done through O3DE
             inline static constexpr auto O3DESdfErrorCodeStart = static_cast<sdf::ErrorCode>(1000);
+
         public:
-           inline static constexpr auto O3DESdfErrorParseNotStarted = static_cast<sdf::ErrorCode>(static_cast<int>(O3DESdfErrorCodeStart) + 1);
+            inline static constexpr auto O3DESdfErrorParseNotStarted =
+                static_cast<sdf::ErrorCode>(static_cast<int>(O3DESdfErrorCodeStart) + 1);
 
             //! Ref qualifier overloads for retrieving sdf::Root
             //! it supports a non-const lvalue overload to allow
@@ -62,12 +65,16 @@ namespace ROS2
             //! Returns if the parsing of the SDF file has succeeded
             explicit operator bool() const;
 
+            //! Returns if the URDF content was modified during parsing
+            bool UrdfParsedWithModifiedContent() const;
+
             sdf::Root m_root;
             AZStd::string m_parseMessages;
-            sdf::Errors m_sdfErrors{ sdf::Error{ O3DESdfErrorParseNotStarted, std::string{"No Parsing has occurred yet"}} };
+            sdf::Errors m_sdfErrors{ sdf::Error{ O3DESdfErrorParseNotStarted, std::string{ "No Parsing has occurred yet" } } };
 
             //! Stores the modified URDF content after parsing, empty if no modification occurred
             std::string m_modifiedURDFContent;
+
             //! Stores the modified URDF tags after parsing, empty if no modification occurred
             AZStd::vector<AZStd::string> m_modifiedURDFTags;
         };
@@ -91,6 +98,7 @@ namespace ROS2
         //!        AddURIPath() function to provide a mapping of package:// and model:// references to the local filesystem
         //! @paragraph settings structure that contains configuration options for the SDFAssetBuilder
         //! @return SDF root object containing parsed <world> or <model> tags
-        RootObjectOutcome ParseFromFile(AZ::IO::PathView filePath, const sdf::ParserConfig& parserConfig, const SdfAssetBuilderSettings& settings);
+        RootObjectOutcome ParseFromFile(
+            AZ::IO::PathView filePath, const sdf::ParserConfig& parserConfig, const SdfAssetBuilderSettings& settings);
     }; // namespace UrdfParser
 } // namespace ROS2

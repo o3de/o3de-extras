@@ -153,13 +153,13 @@ namespace ROS2
                 AZ_Assert(false, "Unknown file extension : %s \n", m_urdfPath.c_str());
             }
             AZStd::string log;
-            bool urdfParsedSuccess{ parsedUrdfOutcome };
-            bool urdfParsedWithWarnings{ parsedUrdfOutcome.m_modifiedURDFContent.size() > 0};
+            const bool urdfParsedSuccess{ parsedUrdfOutcome };
+            const bool urdfParsedWithWarnings{ parsedUrdfOutcome.UrdfParsedWithModifiedContent() };
             if (urdfParsedSuccess)
             {
                 if (urdfParsedWithWarnings)
                 {
-                    report += "# " + tr("The URDF was parsed, but it was modified to be compatible") + "\n";
+                    report += "# " + tr("The URDF was parsed, though results were modified to be compatible with SDFormat") + "\n";
                     report += tr("Modified tags in URDF:") + "\n";
                     for (const auto& modifiedTag : parsedUrdfOutcome.m_modifiedURDFTags)
                     {

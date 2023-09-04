@@ -16,20 +16,20 @@ namespace ROS2
 {
     namespace Utils
     {
-        //! Modifies in memory URDF to add missing inertia to links, circle navigate SDF error 19
-        //! @param urdf - the in memory URDF to modify
-        //! @returns a list of links that were modified
-        AZStd::vector<AZStd::string> AddMissingInertiaToLink(AZ::rapidxml::xml_node<>* urdf);
+        //! Modifies a parsed URDF in memory to add missing inertia to links, which prevents SDF error 19.
+        //! @param urdf URDF to modify.
+        //! @returns a list of names of links that were modified.
+        AZStd::vector<AZStd::string> AddMissingInertiaToLinks(AZ::rapidxml::xml_node<>* urdf);
 
-        //! Modifies names of links and joints to be unique, circle navigate SDF error 2
-        //! @param urdf - the in memory URDF to modify
+        //! Modifies names of links and joints to be unique, which means that a set of both contains no duplicates. This prevents SDF
+        //! error 2.
+        //! @param urdf URDF to modify.
         //! @returns a list of links that were modified
         AZStd::vector<AZStd::string> ChangeDuplications(AZ::rapidxml::xml_node<>* urdf);
 
         //! Modifies in memory URDF to add missing elements
-        //! @param urdf - the in memory URDF to modify
+        //! @param urdf URDF to modify.
         //! @returns a modified URDF and a list of XML element that were modified
         AZStd::pair<std::string, AZStd::vector<AZStd::string>> ModifyURDFInMemory(const std::string& data);
-
     } // namespace Utils
 } // namespace ROS2

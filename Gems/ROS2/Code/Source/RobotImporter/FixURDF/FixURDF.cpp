@@ -8,11 +8,12 @@
 
 #include "FixURDF.h"
 #include <AzCore/XML/rapidxml_print.h>
-#include <AzCore/std/containers/set.h>
+#include <AzCore/std/containers/unordered_set.h>
 #include <iostream>
+
 namespace ROS2::Utils
 {
-    AZStd::vector<AZStd::string> AddMissingInertiaToLink(AZ::rapidxml::xml_node<>* urdf)
+    AZStd::vector<AZStd::string> AddMissingInertiaToLinks(AZ::rapidxml::xml_node<>* urdf)
     {
         AZStd::vector<AZStd::string> modifiedLinks;
         using namespace AZ::rapidxml;
@@ -67,7 +68,7 @@ namespace ROS2::Utils
     {
         using namespace AZ::rapidxml;
         AZStd::vector<AZStd::string> modifiedLinks;
-        AZStd::set<AZStd::string> linkAndJointsName;
+        AZStd::unordered_set<AZStd::string> linkAndJointsName;
         for (xml_node<>* link = urdf->first_node("link"); link; link = link->next_sibling("link"))
         {
             auto* name = link->first_attribute("name");
@@ -86,7 +87,7 @@ namespace ROS2::Utils
                     auto newName = AZStd::string(name->value()) + "_joint_dup";
                     name->value(urdf->document()->allocate_string(newName.c_str()));
                     linkAndJointsName.insert(newName);
-                    modifiedLinks.push_back(newName);
+                    modifiedLinks.push_back(AZStd::move(newName));
                 }
                 else
                 {
@@ -104,7 +105,7 @@ namespace ROS2::Utils
         xml_document<> doc;
         doc.parse<0>(const_cast<char*>(data.c_str()));
         xml_node<>* urdf = doc.first_node("robot");
-        auto links = AddMissingInertiaToLink(urdf);
+        auto links = AddMissingInertiaToLinks(urdf);
 
         if (links.size())
         {
