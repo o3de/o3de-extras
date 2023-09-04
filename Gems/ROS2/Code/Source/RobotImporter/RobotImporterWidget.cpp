@@ -177,6 +177,14 @@ namespace ROS2
                 report += QString::fromUtf8(log.data(), int(log.size()));
                 report += "`";
             }
+            if (parsedUrdfOutcome.m_parseMessages.size()>0)
+            {
+                report += "\n\n";
+                report += tr("URDF parser returned following messages:") + "\n\n";
+                report += "```bash\n";
+                report += QString::fromUtf8(parsedUrdfOutcome.m_parseMessages.data(), int(parsedUrdfOutcome.m_parseMessages.size()));
+                report += "\n```\n";
+            }
             m_checkUrdfPage->ReportURDFResult(report, urdfParsedSuccess);
         }
     }
