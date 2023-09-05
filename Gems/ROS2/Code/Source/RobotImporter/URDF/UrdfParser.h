@@ -96,7 +96,7 @@ namespace ROS2
         //!        The relevant ParserConfig functions for URDF importing are
         //!        URDFPreserveFixedJoint() function to prevent merging of robot links bound by fixed joint
         //!        AddURIPath() function to provide a mapping of package:// and model:// references to the local filesystem
-        //! @paragraph settings structure that contains configuration options for the SDFAssetBuilder
+        //! @param settings structure that contains configuration options for the SDFAssetBuilder
         //! @return SDF root object containing parsed <world> or <model> tags
         RootObjectOutcome ParseFromFile(
             AZ::IO::PathView filePath, const sdf::ParserConfig& parserConfig, const SdfAssetBuilderSettings& settings);
