@@ -177,7 +177,7 @@ namespace ROS2
                 report += QString::fromUtf8(log.data(), int(log.size()));
                 report += "`";
             }
-            if (parsedUrdfOutcome.m_parseMessages.size()>0)
+            if (parsedUrdfOutcome.m_parseMessages.size() > 0)
             {
                 report += "\n\n";
                 report += tr("URDF parser returned following messages:") + "\n\n";
