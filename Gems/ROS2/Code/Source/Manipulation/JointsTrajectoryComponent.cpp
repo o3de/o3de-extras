@@ -8,6 +8,7 @@
 
 #include "JointsTrajectoryComponent.h"
 #include <AzCore/Serialization/EditContext.h>
+#include <AzCore/Serialization/EditContextConstants.inl>
 #include <PhysX/ArticulationJointBus.h>
 #include <ROS2/Frame/ROS2FrameComponent.h>
 #include <ROS2/Manipulation/JointsManipulationRequests.h>
@@ -59,7 +60,8 @@ namespace ROS2
                         AZ::Edit::UIHandlers::Default,
                         &JointsTrajectoryComponent::m_followTrajectoryActionName,
                         "Action Name",
-                        "Name the follow trajectory action server to accept movement commands");
+                        "Name the follow trajectory action server to accept movement commands")
+                    ->Attribute(AZ::Edit::Attributes::ChangeValidate, &ROS2Names::ValidateFullTopicField);
             }
         }
     }

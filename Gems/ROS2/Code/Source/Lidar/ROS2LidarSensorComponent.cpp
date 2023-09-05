@@ -8,6 +8,7 @@
 
 #include <Atom/RPI.Public/AuxGeom/AuxGeomFeatureProcessorInterface.h>
 #include <Atom/RPI.Public/Scene.h>
+#include <AzCore/Component/EntityId.h>
 #include <AzFramework/Physics/PhysicsSystem.h>
 #include <Lidar/LidarRegistrarSystemComponent.h>
 #include <Lidar/ROS2LidarSensorComponent.h>
@@ -183,12 +184,9 @@ namespace ROS2
 
         if (!m_canRaycasterPublish)
         {
-            auto ros2Node = ROS2Interface::Get()->GetNode();
             AZ_Assert(m_sensorConfiguration.m_publishersConfigurations.size() == 1, "Invalid configuration of publishers for lidar sensor");
-
-            const TopicConfiguration& publisherConfig = m_sensorConfiguration.m_publishersConfigurations[Internal::kPointCloudType];
-            AZStd::string fullTopic = ROS2Names::GetNamespacedName(GetNamespace(), publisherConfig.m_topic);
-            m_pointCloudPublisher = ros2Node->create_publisher<sensor_msgs::msg::PointCloud2>(fullTopic.data(), publisherConfig.GetQoS());
+            m_pointCloudPublisher = std::make_shared<FlexiblePublisher<sensor_msgs::msg::PointCloud2>>(
+                m_sensorConfiguration.m_publishersConfigurations[Internal::kPointCloudType], GetNamespace(), GetEntityId(), "Lidar Sensor");
         }
 
         ROS2SensorComponent::Activate();

@@ -18,10 +18,8 @@ namespace ROS2
         : m_configuration(configuration)
         , m_context(context)
     {
-        auto topicConfiguration = m_configuration.m_topicConfiguration;
-        AZStd::string topic = ROS2Names::GetNamespacedName(context.m_publisherNamespace, topicConfiguration.m_topic);
-        auto ros2Node = ROS2Interface::Get()->GetNode();
-        m_jointStatePublisher = ros2Node->create_publisher<sensor_msgs::msg::JointState>(topic.data(), topicConfiguration.GetQoS());
+        m_jointStatePublisher = std::make_shared<FlexiblePublisher<sensor_msgs::msg::JointState>>(
+            m_configuration.m_topicConfiguration, context.m_publisherNamespace, m_context.m_entityId, "Joint State Publisher");
     }
 
     void JointStatePublisher::PublishMessage()

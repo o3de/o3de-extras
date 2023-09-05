@@ -12,11 +12,11 @@
 #include <ROS2/Lidar/LidarRegistrarBus.h>
 #include <ROS2/Lidar/LidarSystemBus.h>
 #include <ROS2/Sensor/ROS2SensorComponent.h>
-#include <rclcpp/publisher.hpp>
 #include <sensor_msgs/msg/laser_scan.hpp>
 
 #include "Lidar2DSensorConfiguration.h"
 #include "LidarRaycaster.h"
+#include "ROS2/Communication/FlexiblePublisher.h"
 
 namespace ROS2
 {
@@ -24,7 +24,8 @@ namespace ROS2
     //! Lidars (Light Detection and Ranging) emit laser light and measure it after reflection.
     //! Lidar Component allows customization of lidar type and behavior and encapsulates both simulation
     //! and data publishing. It requires ROS2FrameComponent.
-    class ROS2Lidar2DSensorComponent : public ROS2SensorComponent
+    class ROS2Lidar2DSensorComponent
+        : public ROS2SensorComponent
     {
     public:
         AZ_COMPONENT(ROS2Lidar2DSensorComponent, "{F4C2D970-1D69-40F2-9D4D-B52DCFDD2704}", ROS2SensorComponent);
@@ -50,7 +51,7 @@ namespace ROS2
         // A structure that maps each lidar implementation busId to the busId of a raycaster created by this LidarSensorComponent.
         AZStd::unordered_map<AZStd::string, LidarId> m_implementationToRaycasterMap;
         LidarId m_lidarRaycasterId;
-        std::shared_ptr<rclcpp::Publisher<sensor_msgs::msg::LaserScan>> m_laserScanPublisher;
+        std::shared_ptr<FlexiblePublisher<sensor_msgs::msg::LaserScan>> m_laserScanPublisher;
 
         // Used only when visualization is on - points differ since they are in global transform as opposed to local
         AZStd::vector<AZ::Vector3> m_visualizationPoints;

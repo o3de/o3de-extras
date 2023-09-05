@@ -9,8 +9,8 @@
 
 #include <AzCore/Math/Transform.h>
 #include <AzCore/Serialization/SerializeContext.h>
+#include <ROS2/Communication/FlexiblePublisher.h>
 #include <ROS2/Sensor/ROS2SensorComponent.h>
-#include <rclcpp/publisher.hpp>
 #include <sensor_msgs/msg/nav_sat_fix.hpp>
 
 #include "GNSSSensorConfiguration.h"
@@ -45,7 +45,7 @@ namespace ROS2
 
         AZ::Transform GetCurrentPose() const;
 
-        std::shared_ptr<rclcpp::Publisher<sensor_msgs::msg::NavSatFix>> m_gnssPublisher;
+        std::shared_ptr<FlexiblePublisher<sensor_msgs::msg::NavSatFix>> m_gnssPublisher;
         sensor_msgs::msg::NavSatFix m_gnssMsg;
     };
 

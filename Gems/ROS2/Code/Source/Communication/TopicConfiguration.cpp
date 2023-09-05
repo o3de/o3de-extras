@@ -7,6 +7,7 @@
  */
 
 #include <AzCore/Serialization/EditContext.h>
+#include <AzCore/Serialization/EditContextConstants.inl>
 #include <ROS2/Communication/TopicConfiguration.h>
 #include <ROS2/Utilities/ROS2Names.h>
 
@@ -29,7 +30,7 @@ namespace ROS2
                     ->DataElement(AZ::Edit::UIHandlers::Default, &TopicConfiguration::m_type, "Type", "Type of topic messages")
                     ->Attribute(AZ::Edit::Attributes::ReadOnly, true)
                     ->DataElement(AZ::Edit::UIHandlers::Default, &TopicConfiguration::m_topic, "Topic", "Topic with no namespace")
-                    ->Attribute(AZ::Edit::Attributes::ChangeValidate, &ROS2Names::ValidateTopicField)
+                    ->Attribute(AZ::Edit::Attributes::ChangeValidate, &ROS2Names::ValidateFullTopicField)
                     ->DataElement(AZ::Edit::UIHandlers::Default, &TopicConfiguration::m_qos, "QoS", "Quality of Service");
             }
         }

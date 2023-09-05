@@ -9,10 +9,13 @@
 #include "CameraPublishers.h"
 #include "CameraConstants.h"
 #include "CameraSensor.h"
+#include <AzCore/Component/EntityId.h>
+#include <ROS2/Communication/FlexiblePublisher.h>
 #include <ROS2/Communication/TopicConfiguration.h>
 #include <ROS2/ROS2Bus.h>
 #include <ROS2/Sensor/SensorConfiguration.h>
 #include <ROS2/Utilities/ROS2Names.h>
+#include <memory>
 
 namespace ROS2
 {
@@ -74,13 +77,12 @@ namespace ROS2
         void AddPublishersFromConfiguration(
             const AZStd::string& cameraNamespace,
             const TopicConfigurations configurations,
-            AZStd::unordered_map<CameraSensorDescription::CameraChannelType, std::shared_ptr<rclcpp::Publisher<PublishedData>>>& publishers)
+            AZStd::unordered_map<CameraSensorDescription::CameraChannelType, std::shared_ptr<FlexiblePublisher<PublishedData>>>& publishers,
+            const AZ::EntityId& entityId)
         {
             for (const auto& [channel, configuration] : configurations)
             {
-                AZStd::string fullTopic = ROS2Names::GetNamespacedName(cameraNamespace, configuration.m_topic);
-                auto ros2Node = ROS2Interface::Get()->GetNode();
-                auto publisher = ros2Node->create_publisher<PublishedData>(fullTopic.data(), configuration.GetQoS());
+                auto publisher = std::make_shared<FlexiblePublisher<PublishedData>>(configuration, cameraNamespace, entityId, "Camera Sensor");
                 publishers[channel] = publisher;
             }
         }
@@ -94,25 +96,26 @@ namespace ROS2
         void AddCameraPublishers(
             const CameraSensorDescription& cameraDescription,
             AZStd::unordered_map<CameraSensorDescription::CameraChannelType, CameraPublishers::ImagePublisherPtrType>& imagePublishers,
-            AZStd::unordered_map<CameraSensorDescription::CameraChannelType, CameraPublishers::CameraInfoPublisherPtrType>& infoPublishers)
+            AZStd::unordered_map<CameraSensorDescription::CameraChannelType, CameraPublishers::CameraInfoPublisherPtrType>& infoPublishers,
+            const AZ::EntityId& entityId)
         {
             const auto cameraImagePublisherConfigs = GetCameraTopicConfiguration<CameraType>(cameraDescription.m_sensorConfiguration);
-            AddPublishersFromConfiguration(cameraDescription.m_cameraNamespace, cameraImagePublisherConfigs, imagePublishers);
+            AddPublishersFromConfiguration(cameraDescription.m_cameraNamespace, cameraImagePublisherConfigs, imagePublishers, entityId);
             const auto cameraInfoPublisherConfigs = GetCameraInfoTopicConfiguration<CameraType>(cameraDescription.m_sensorConfiguration);
-            AddPublishersFromConfiguration(cameraDescription.m_cameraNamespace, cameraInfoPublisherConfigs, infoPublishers);
+            AddPublishersFromConfiguration(cameraDescription.m_cameraNamespace, cameraInfoPublisherConfigs, infoPublishers, entityId);
         }
     } // namespace Internal
 
-    CameraPublishers::CameraPublishers(const CameraSensorDescription& cameraDescription)
+    CameraPublishers::CameraPublishers(const CameraSensorDescription& cameraDescription, const AZ::EntityId& entityId)
     {
         if (cameraDescription.m_cameraConfiguration.m_colorCamera)
         {
-            Internal::AddCameraPublishers<CameraColorSensor>(cameraDescription, m_imagePublishers, m_infoPublishers);
+            Internal::AddCameraPublishers<CameraColorSensor>(cameraDescription, m_imagePublishers, m_infoPublishers, entityId);
         }
 
         if (cameraDescription.m_cameraConfiguration.m_depthCamera)
         {
-            Internal::AddCameraPublishers<CameraDepthSensor>(cameraDescription, m_imagePublishers, m_infoPublishers);
+            Internal::AddCameraPublishers<CameraDepthSensor>(cameraDescription, m_imagePublishers, m_infoPublishers, entityId);
         }
     }
 

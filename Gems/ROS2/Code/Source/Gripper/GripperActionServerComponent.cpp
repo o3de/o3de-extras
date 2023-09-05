@@ -53,7 +53,8 @@ namespace ROS2
                         AZ::Edit::UIHandlers::Default,
                         &GripperActionServerComponent::m_gripperActionServerName,
                         "Gripper Action Server",
-                        "Action name for the gripper server.");
+                        "Action name for the gripper server.")
+                    ->Attribute(AZ::Edit::Attributes::ChangeValidate, &ROS2Names::ValidateFullTopicField);
             }
         }
     }

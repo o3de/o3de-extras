@@ -11,7 +11,8 @@
 
 #include <AzCore/std/containers/unordered_map.h>
 
-#include <rclcpp/publisher.hpp>
+#include <AzCore/Component/EntityId.h>
+#include <ROS2/Communication/FlexiblePublisher.h>
 #include <sensor_msgs/msg/camera_info.hpp>
 #include <sensor_msgs/msg/image.hpp>
 #include <std_msgs/msg/header.hpp>
@@ -24,12 +25,12 @@ namespace ROS2
     {
     public:
         //! ROS2 image publisher type.
-        using ImagePublisherPtrType = std::shared_ptr<rclcpp::Publisher<sensor_msgs::msg::Image>>;
+        using ImagePublisherPtrType = std::shared_ptr<FlexiblePublisher<sensor_msgs::msg::Image>>;
 
         //! ROS2 camera sensor publisher type.
-        using CameraInfoPublisherPtrType = std::shared_ptr<rclcpp::Publisher<sensor_msgs::msg::CameraInfo>>;
+        using CameraInfoPublisherPtrType = std::shared_ptr<FlexiblePublisher<sensor_msgs::msg::CameraInfo>>;
 
-        CameraPublishers(const CameraSensorDescription& cameraDescription);
+        CameraPublishers(const CameraSensorDescription& cameraDescription, const AZ::EntityId& entityId);
 
         ImagePublisherPtrType GetImagePublisher(CameraSensorDescription::CameraChannelType type);
         CameraInfoPublisherPtrType GetInfoPublisher(CameraSensorDescription::CameraChannelType type);

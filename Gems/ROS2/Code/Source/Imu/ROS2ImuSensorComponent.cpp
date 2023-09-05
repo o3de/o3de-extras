@@ -7,6 +7,7 @@
  */
 
 #include "ROS2ImuSensorComponent.h"
+#include <ROS2/Communication/FlexiblePublisher.h>
 #include <ROS2/Frame/ROS2FrameComponent.h>
 #include <ROS2/ROS2Bus.h>
 #include <ROS2/Utilities/ROS2Conversions.h>
@@ -20,7 +21,7 @@
 #include <AzCore/Serialization/EditContext.h>
 #include <AzCore/Serialization/EditContextConstants.inl>
 #include <AzCore/std/numeric.h>
-#include <AzCore/std/smart_ptr/make_shared.h>
+#include <memory>
 
 namespace ROS2
 {
@@ -139,21 +140,18 @@ namespace ROS2
             m_imuMsg.header.stamp = ROS2Interface::Get()->GetROSTimestamp();
             this->m_imuPublisher->publish(m_imuMsg);
         }
-    };
+    }
 
     void ROS2ImuSensorComponent::Activate()
     {
-        auto ros2Node = ROS2Interface::Get()->GetNode();
         AZ_Assert(m_sensorConfiguration.m_publishersConfigurations.size() == 1, "Invalid configuration of publishers for IMU sensor");
         m_imuMsg.header.frame_id = GetFrameID().c_str();
-        const auto publisherConfig = m_sensorConfiguration.m_publishersConfigurations[Internal::kImuMsgType];
-        const auto fullTopic = ROS2Names::GetNamespacedName(GetNamespace(), publisherConfig.m_topic);
-        m_imuPublisher = ros2Node->create_publisher<sensor_msgs::msg::Imu>(fullTopic.data(), publisherConfig.GetQoS());
-
         m_linearAccelerationCovariance = ToDiagonalCovarianceMatrix(m_imuConfiguration.m_linearAccelerationVariance);
         m_angularVelocityCovariance = ToDiagonalCovarianceMatrix(m_imuConfiguration.m_angularVelocityVariance);
         m_orientationCovariance = ToDiagonalCovarianceMatrix(m_imuConfiguration.m_orientationVariance);
 
+        m_imuPublisher = std::make_shared<FlexiblePublisher<sensor_msgs::msg::Imu>>(
+            m_sensorConfiguration.m_publishersConfigurations[Internal::kImuMsgType], GetNamespace(), GetEntityId(), "IMU sensor");
         ROS2SensorComponent::Activate();
     }
 

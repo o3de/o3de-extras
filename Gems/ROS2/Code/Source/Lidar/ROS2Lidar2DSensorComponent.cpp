@@ -6,6 +6,7 @@
  *
  */
 
+#include "ROS2/Communication/FlexiblePublisher.h"
 #include <Atom/RPI.Public/AuxGeom/AuxGeomFeatureProcessorInterface.h>
 #include <Atom/RPI.Public/Scene.h>
 #include <AzFramework/Physics/PhysicsSystem.h>
@@ -14,6 +15,7 @@
 #include <ROS2/Frame/ROS2FrameComponent.h>
 #include <ROS2/ROS2Bus.h>
 #include <ROS2/Utilities/ROS2Names.h>
+#include <memory>
 
 namespace ROS2
 {
@@ -154,12 +156,9 @@ namespace ROS2
 
     void ROS2Lidar2DSensorComponent::Activate()
     {
-        auto ros2Node = ROS2Interface::Get()->GetNode();
         AZ_Assert(m_sensorConfiguration.m_publishersConfigurations.size() == 1, "Invalid configuration of publishers for lidar sensor");
-
-        const TopicConfiguration& publisherConfig = m_sensorConfiguration.m_publishersConfigurations[Internal::kLaserScanType];
-        AZStd::string fullTopic = ROS2Names::GetNamespacedName(GetNamespace(), publisherConfig.m_topic);
-        m_laserScanPublisher = ros2Node->create_publisher<sensor_msgs::msg::LaserScan>(fullTopic.data(), publisherConfig.GetQoS());
+        m_laserScanPublisher = std::make_shared<FlexiblePublisher<sensor_msgs::msg::LaserScan>>(
+            m_sensorConfiguration.m_publishersConfigurations[Internal::kLaserScanType], GetNamespace(), GetEntityId(), "Lidar2D Sensor");
 
         if (m_sensorConfiguration.m_visualize)
         {

@@ -13,10 +13,10 @@
 #include <AzFramework/Physics/Common/PhysicsEvents.h>
 #include <AzFramework/Physics/PhysicsSystem.h>
 #include <AzFramework/Physics/SimulatedBodies/RigidBody.h>
+#include <ROS2/Communication/FlexiblePublisher.h>
 #include <ROS2/Sensor/ROS2SensorComponent.h>
 #include <ROS2/Utilities/PhysicsCallbackHandler.h>
 #include <nav_msgs/msg/odometry.hpp>
-#include <rclcpp/publisher.hpp>
 
 namespace ROS2
 {
@@ -41,7 +41,7 @@ namespace ROS2
         //////////////////////////////////////////////////////////////////////////
 
     private:
-        std::shared_ptr<rclcpp::Publisher<nav_msgs::msg::Odometry>> m_odometryPublisher;
+        std::shared_ptr<FlexiblePublisher<nav_msgs::msg::Odometry>> m_odometryPublisher;
         nav_msgs::msg::Odometry m_odometryMsg;
         AZ::Vector3 m_robotPose{ 0 };
         AZ::Quaternion m_robotRotation{ 0, 0, 0, 1 };

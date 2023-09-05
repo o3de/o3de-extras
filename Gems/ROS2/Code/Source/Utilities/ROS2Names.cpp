@@ -10,6 +10,8 @@
 #include <AzCore/std/string/regex.h>
 #include <ROS2/Utilities/ROS2Names.h>
 #include <rcl/validate_topic_name.h>
+#include <rmw/ret_types.h>
+#include <rmw/validate_full_topic_name.h>
 #include <rmw/validate_namespace.h>
 
 namespace ROS2
@@ -128,5 +130,37 @@ namespace ROS2
 
         const AZStd::string& topic(*reinterpret_cast<const AZStd::string*>(newValue));
         return ValidateTopic(topic);
+    }
+
+    AZ::Outcome<void, AZStd::string> ROS2Names::ValidateFullTopic(const AZStd::string& topic)
+    {
+        auto ros2GlobalizedTopic = topic;
+        const char topicPrefix = '/';
+        ros2GlobalizedTopic = topicPrefix + topic;
+
+        int validationResult = 0;
+        if (rmw_validate_full_topic_name(ros2GlobalizedTopic.c_str(), &validationResult, NULL) != RMW_RET_OK)
+        {
+            AZ_Error("ValidateTopic", false, "Call to rmw validation for topic failed");
+            return AZ::Failure(AZStd::string("Unable to validate topic due to rmw error"));
+        }
+
+        if (validationResult != RMW_TOPIC_VALID)
+        {
+            return AZ::Failure(AZStd::string(rmw_full_topic_name_validation_result_string(validationResult)));
+        }
+
+        return AZ::Success();
+    }
+
+    AZ::Outcome<void, AZStd::string> ROS2Names::ValidateFullTopicField(void* newValue, const AZ::Uuid& valueType)
+    {
+        if (azrtti_typeid<AZStd::string>() != valueType)
+        {
+            return AZ::Failure(AZStd::string("Unexpected field type: the only valid input is a character string"));
+        }
+
+        const AZStd::string& fullTopic(*reinterpret_cast<const AZStd::string*>(newValue));
+        return ValidateFullTopic(fullTopic);
     }
 } // namespace ROS2

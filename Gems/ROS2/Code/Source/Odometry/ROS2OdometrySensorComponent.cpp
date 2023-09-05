@@ -7,14 +7,18 @@
  */
 
 #include "ROS2OdometrySensorComponent.h"
+#include <AzCore/Component/ComponentApplicationBus.h>
+#include <AzCore/Component/Entity.h>
 #include <AzCore/Serialization/EditContext.h>
 #include <AzCore/Serialization/EditContextConstants.inl>
 #include <AzFramework/Physics/RigidBodyBus.h>
 #include <AzFramework/Physics/SimulatedBodies/RigidBody.h>
+#include <ROS2/Communication/FlexiblePublisher.h>
 #include <ROS2/Frame/ROS2FrameComponent.h>
 #include <ROS2/ROS2Bus.h>
 #include <ROS2/Utilities/ROS2Conversions.h>
 #include <ROS2/Utilities/ROS2Names.h>
+#include <memory>
 
 namespace ROS2
 {
@@ -55,7 +59,6 @@ namespace ROS2
         required.push_back(AZ_CRC_CE("ROS2Frame"));
     }
 
-    // ROS2SensorComponent overrides ...
     void ROS2OdometrySensorComponent::SetupRefreshLoop()
     {
         InstallPhysicalCallback();
@@ -105,12 +108,10 @@ namespace ROS2
         // "odom" is globally fixed frame for all robots, no matter the namespace
         m_odometryMsg.header.frame_id = ROS2Names::GetNamespacedName(GetNamespace(), "odom").c_str();
         m_odometryMsg.child_frame_id = GetFrameID().c_str();
-        auto ros2Node = ROS2Interface::Get()->GetNode();
         AZ_Assert(m_sensorConfiguration.m_publishersConfigurations.size() == 1, "Invalid configuration of publishers for Odometry sensor");
 
-        const auto publisherConfig = m_sensorConfiguration.m_publishersConfigurations[Internal::kOdometryMsgType];
-        const auto fullTopic = ROS2Names::GetNamespacedName(GetNamespace(), publisherConfig.m_topic);
-        m_odometryPublisher = ros2Node->create_publisher<nav_msgs::msg::Odometry>(fullTopic.data(), publisherConfig.GetQoS());
+        m_odometryPublisher = std::make_shared<FlexiblePublisher<nav_msgs::msg::Odometry>>(
+            m_sensorConfiguration.m_publishersConfigurations[Internal::kOdometryMsgType], GetNamespace(), GetEntityId(), "Odometry sensor");
 
         ROS2SensorComponent::Activate();
     }

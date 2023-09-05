@@ -25,6 +25,7 @@
 #include <ROS2/Utilities/ROS2Conversions.h>
 #include <ROS2/Utilities/ROS2Names.h>
 #include <geometry_msgs/msg/wrench.hpp>
+#include <memory>
 
 namespace ROS2
 {
@@ -71,12 +72,9 @@ namespace ROS2
         AZ::Entity* entity = nullptr;
         AZ::ComponentApplicationBus::BroadcastResult(entity, &AZ::ComponentApplicationRequests::FindEntity, m_entityId);
         m_entityName = entity->GetName();
-
-        auto ros2Node = ROS2Interface::Get()->GetNode();
         AZ_Assert(m_sensorConfiguration.m_publishersConfigurations.size() == 1, "Invalid configuration of publishers for Contact sensor");
-        const auto publisherConfig = m_sensorConfiguration.m_publishersConfigurations["gazebo_msgs::msg::ContactsState"];
-        const auto fullTopic = ROS2Names::GetNamespacedName(GetNamespace(), publisherConfig.m_topic);
-        m_contactsPublisher = ros2Node->create_publisher<gazebo_msgs::msg::ContactsState>(fullTopic.data(), publisherConfig.GetQoS());
+        m_contactsPublisher = std::make_shared<FlexiblePublisher<gazebo_msgs::msg::ContactsState>>(
+            m_sensorConfiguration.m_publishersConfigurations["gazebo_msgs::msg::ContactsState"], GetNamespace(), m_entityId, "Contact Sensor");
 
         m_onCollisionBeginHandler = AzPhysics::SimulatedBodyEvents::OnCollisionBegin::Handler(
             [this]([[maybe_unused]] AzPhysics::SimulatedBodyHandle bodyHandle, const AzPhysics::CollisionEvent& event)
@@ -151,6 +149,7 @@ namespace ROS2
                 {
                     msg.states.push_back(AZStd::move(contact));
                 }
+
                 m_contactsPublisher->publish(AZStd::move(msg));
                 m_activeContacts.clear();
             }

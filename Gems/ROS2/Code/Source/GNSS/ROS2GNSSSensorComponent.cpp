@@ -7,6 +7,12 @@
  */
 
 #include "ROS2GNSSSensorComponent.h"
+#include "GNSSFormatConversions.h"
+
+#include <AzCore/Component/ComponentApplicationBus.h>
+#include <AzCore/Component/Entity.h>
+#include <AzCore/Component/EntityId.h>
+#include <ROS2/Communication/FlexiblePublisher.h>
 #include <ROS2/Frame/ROS2FrameComponent.h>
 #include <ROS2/ROS2Bus.h>
 #include <ROS2/ROS2GemUtilities.h>
@@ -16,8 +22,7 @@
 #include <AzCore/Math/Matrix4x4.h>
 #include <AzCore/Serialization/EditContext.h>
 #include <AzCore/Serialization/EditContextConstants.inl>
-
-#include "GNSSFormatConversions.h"
+#include <memory>
 
 namespace ROS2
 {
@@ -70,13 +75,10 @@ namespace ROS2
     void ROS2GNSSSensorComponent::Activate()
     {
         ROS2SensorComponent::Activate();
-        auto ros2Node = ROS2Interface::Get()->GetNode();
         AZ_Assert(m_sensorConfiguration.m_publishersConfigurations.size() == 1, "Invalid configuration of publishers for GNSS sensor");
 
-        const auto publisherConfig = m_sensorConfiguration.m_publishersConfigurations[Internal::kGNSSMsgType];
-        const auto fullTopic = ROS2Names::GetNamespacedName(GetNamespace(), publisherConfig.m_topic);
-        m_gnssPublisher = ros2Node->create_publisher<sensor_msgs::msg::NavSatFix>(fullTopic.data(), publisherConfig.GetQoS());
-
+        m_gnssPublisher = std::make_shared<FlexiblePublisher<sensor_msgs::msg::NavSatFix>>(
+            m_sensorConfiguration.m_publishersConfigurations[Internal::kGNSSMsgType], GetNamespace(), GetEntityId(), "GNSS sensor");
         m_gnssMsg.header.frame_id = "gnss_frame_id";
     }
 

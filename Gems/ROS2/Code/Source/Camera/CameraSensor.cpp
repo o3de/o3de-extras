@@ -114,7 +114,7 @@ namespace ROS2
     } // namespace Internal
 
     CameraSensor::CameraSensor(const CameraSensorDescription& cameraSensorDescription, const AZ::EntityId& entityId)
-        : m_cameraPublishers(cameraSensorDescription)
+        : m_cameraPublishers(cameraSensorDescription, entityId)
         , m_cameraSensorDescription(cameraSensorDescription)
         , m_entityId(entityId)
     {

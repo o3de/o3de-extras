@@ -12,9 +12,9 @@
 #include <AzCore/Serialization/SerializeContext.h>
 #include <AzFramework/Physics/Common/PhysicsEvents.h>
 #include <AzFramework/Physics/PhysicsSystem.h>
+#include <ROS2/Communication/FlexiblePublisher.h>
 #include <ROS2/Sensor/ROS2SensorComponent.h>
 #include <ROS2/Utilities/PhysicsCallbackHandler.h>
-#include <rclcpp/publisher.hpp>
 #include <sensor_msgs/msg/imu.hpp>
 
 #include "ImuSensorConfiguration.h"
@@ -42,7 +42,7 @@ namespace ROS2
         //////////////////////////////////////////////////////////////////////////
 
     private:
-        std::shared_ptr<rclcpp::Publisher<sensor_msgs::msg::Imu>> m_imuPublisher;
+        std::shared_ptr<FlexiblePublisher<sensor_msgs::msg::Imu>> m_imuPublisher;
         sensor_msgs::msg::Imu m_imuMsg;
         AZ::Vector3 m_previousLinearVelocity = AZ::Vector3::CreateZero();
 
