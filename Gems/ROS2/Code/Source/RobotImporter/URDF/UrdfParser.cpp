@@ -98,19 +98,11 @@ namespace ROS2::UrdfParser
             parseResult.m_sdfErrors = parseResult.m_root.LoadSdfString(xmlString, parserConfig);
             // Get any captured sdf::Error messages
         }
-        // escape console's color codes
-        // Define a regex pattern to match ANSI escape sequences
-
-        // The pattern matches the following ANSI escape sequences:
-
-        // escape console's color codes
-        // Define a regex pattern to match ANSI escape sequences
-
-
         const auto & parseMessages = parseStringStream.str();
 
-
+        // regular exprsion to escape console's color codes
         const AZStd::regex escapeColor("\x1B\\[[0-9;]*[A-Za-z]");
+
         parseResult.m_parseMessages =  AZStd::regex_replace(AZStd::string(parseMessages.c_str(), parseMessages.size()),escapeColor, "");
         AZ_Printf("ROS2", "SDF Stream: %s", parseResult.m_parseMessages.c_str());
 
