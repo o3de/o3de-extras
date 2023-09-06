@@ -42,7 +42,7 @@ namespace ROS2
                         &PidMotorControllerComponent::m_minPID,
                         "Minimal Pid result",
                         "Minimal Pid result that will cause movement, can be used to decrease jitteriness")
-                    ->Attribute(AZ::Edit::Attributes::Min, 0.0);
+                    ->Attribute(AZ::Edit::Attributes::Min, 0.0f);
             }
         }
 
@@ -101,7 +101,7 @@ namespace ROS2
 
         if (AZStd::abs(speed) < m_minPID)
         {
-            return 0.f;
+            return 0.0f;
         }
         return speed;
     }
