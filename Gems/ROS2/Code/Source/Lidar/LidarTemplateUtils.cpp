@@ -12,16 +12,17 @@
 
 namespace ROS2
 {
-    LidarTemplate LidarTemplateUtils::GetTemplate(LidarTemplate::LidarModel model)
+    namespace
     {
         using Model = LidarTemplate::LidarModel;
 
-        static const std::unordered_map<Model, LidarTemplate> templates = {
+        static const AZStd::map<Model, LidarTemplate> templates = {
             {
                 Model::Custom3DLidar,
                 {
                     /*.m_model = */ Model::Custom3DLidar,
                     /*.m_name = */ "CustomLidar",
+                    /*.m_is2D = */ false,
                     /*.m_minHAngle = */ -180.0f,
                     /*.m_maxHAngle = */ 180.0f,
                     /*.m_minVAngle = */ -35.0f,
@@ -43,6 +44,7 @@ namespace ROS2
                 {
                     /*.m_model = */ Model::Ouster_OS0_64,
                     /*.m_name = */ "Ouster OS0-64",
+                    /*.m_is2D = */ false,
                     /*.m_minHAngle = */ -180.0f,
                     /*.m_maxHAngle = */ 180.0f,
                     /*.m_minVAngle = */ -45.0f,
@@ -64,6 +66,7 @@ namespace ROS2
                 {
                     /*.m_model = */ Model::Ouster_OS1_64,
                     /*.m_name = */ "Ouster OS1-64",
+                    /*.m_is2D = */ false,
                     /*.m_minHAngle = */ -180.0f,
                     /*.m_maxHAngle = */ 180.0f,
                     /*.m_minVAngle = */ 22.5f,
@@ -83,8 +86,9 @@ namespace ROS2
             {
                 Model::Ouster_OS2_64,
                 {
-                    /*.m_model = */ Model::Ouster_OS1_64,
-                    /*.m_name = */ "Ouster OS1-64",
+                    /*.m_model = */ Model::Ouster_OS2_64,
+                    /*.m_name = */ "Ouster OS2-64",
+                    /*.m_is2D = */ false,
                     /*.m_minHAngle = */ -180.0f,
                     /*.m_maxHAngle = */ 180.0f,
                     /*.m_minVAngle = */ 11.25f,
@@ -106,6 +110,7 @@ namespace ROS2
                 {
                     /*.m_model = */ Model::Velodyne_Puck,
                     /*.m_name = */ "Velodyne Puck (VLP-16)",
+                    /*.m_is2D = */ false,
                     /*.m_minHAngle = */ -180.0f,
                     /*.m_maxHAngle = */ 180.0f,
                     /*.m_minVAngle = */ 15.0f,
@@ -127,6 +132,7 @@ namespace ROS2
                 {
                     /*.m_model = */ Model::Velodyne_HDL_32E,
                     /*.m_name = */ "Velodyne HDL-32E",
+                    /*.m_is2D = */ false,
                     /*.m_minHAngle = */ -180.0f,
                     /*.m_maxHAngle = */ 180.0f,
                     /*.m_minVAngle = */ 10.67f,
@@ -148,6 +154,7 @@ namespace ROS2
                 {
                     /*.m_model = */ Model::Custom2DLidar,
                     /*.m_name = */ "CustomLidar2D",
+                    /*.m_is2D = */ true,
                     /*.m_minHAngle = */ -180.0f,
                     /*.m_maxHAngle = */ 180.0f,
                     /*.m_minVAngle = */ 0.f,
@@ -169,6 +176,7 @@ namespace ROS2
                 {
                     /*.m_model = */ Model::Slamtec_RPLIDAR_S1,
                     /*.m_name = */ "Slamtec RPLIDAR S1",
+                    /*.m_is2D = */ true,
                     /*.m_minHAngle = */ -180.0f,
                     /*.m_maxHAngle = */ 180.0f,
                     /*.m_minVAngle = */ 0.f,
@@ -186,7 +194,10 @@ namespace ROS2
                 },
             }
         };
+    } // namespace
 
+    LidarTemplate LidarTemplateUtils::GetTemplate(LidarTemplate::LidarModel model)
+    {
         auto it = templates.find(model);
         if (it == templates.end())
         {
@@ -194,6 +205,34 @@ namespace ROS2
         }
 
         return it->second;
+    }
+
+    AZStd::vector<LidarTemplate::LidarModel> LidarTemplateUtils::Get2DModels()
+    {
+        AZStd::vector<LidarTemplate::LidarModel> result;
+
+        for (const auto& it : templates)
+        {
+            if (it.second.m_is2D)
+            {
+                result.push_back(it.first);
+            }
+        }
+        return result;
+    }
+
+    AZStd::vector<LidarTemplate::LidarModel> LidarTemplateUtils::Get3DModels()
+    {
+        AZStd::vector<LidarTemplate::LidarModel> result;
+
+        for (const auto& it : templates)
+        {
+            if (!it.second.m_is2D)
+            {
+                result.push_back(it.first);
+            }
+        }
+        return result;
     }
 
     size_t LidarTemplateUtils::TotalPointCount(const LidarTemplate& t)
