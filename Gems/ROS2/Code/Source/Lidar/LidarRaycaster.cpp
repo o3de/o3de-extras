@@ -99,8 +99,8 @@ namespace ROS2
             request->m_distance = m_range;
             request->m_reportMultipleHits = false;
 
-            request->m_filterCallback =
-                [ignoredCollisionLayers = this->m_ignoredCollisionLayers](const AzPhysics::SimulatedBody* simBody, const Physics::Shape* shape)
+            request->m_filterCallback = [ignoredCollisionLayers = this->m_ignoredCollisionLayers](
+                                            const AzPhysics::SimulatedBody* simBody, const Physics::Shape* shape)
             {
                 if (ignoredCollisionLayers.contains(shape->GetCollisionLayer().GetIndex()))
                 {

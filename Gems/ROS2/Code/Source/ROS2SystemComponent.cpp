@@ -5,6 +5,7 @@
  * SPDX-License-Identifier: Apache-2.0 OR MIT
  *
  */
+#include <Lidar/LidarCore.h>
 #include <ROS2/Clock/PhysicallyStableClock.h>
 #include <ROS2/Communication/PublisherConfiguration.h>
 #include <ROS2/Communication/QoS.h>
@@ -34,6 +35,7 @@ namespace ROS2
         QoS::Reflect(context);
         TopicConfiguration::Reflect(context);
         PublisherConfiguration::Reflect(context);
+        LidarCore::Reflect(context);
         VehicleDynamics::VehicleModelComponent::Reflect(context);
         ROS2::Controllers::PidConfiguration::Reflect(context);
         if (AZ::SerializeContext* serialize = azrtti_cast<AZ::SerializeContext*>(context))
