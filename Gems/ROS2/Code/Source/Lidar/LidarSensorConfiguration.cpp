@@ -18,7 +18,7 @@ namespace ROS2
         {
             serializeContext->Class<LidarSensorConfiguration>()
                 ->Version(1)
-                ->Field("lidarModel", &LidarSensorConfiguration::m_lidarModel)
+                ->Field("lidarModelName", &LidarSensorConfiguration::m_lidarModelName)
                 ->Field("lidarImplementation", &LidarSensorConfiguration::m_lidarSystem)
                 ->Field("LidarParameters", &LidarSensorConfiguration::m_lidarParameters)
                 ->Field("IgnoredLayerIndices", &LidarSensorConfiguration::m_ignoredCollisionLayers)
@@ -27,15 +27,10 @@ namespace ROS2
 
             if (AZ::EditContext* ec = serializeContext->GetEditContext())
             {
-                ec->Class<LidarSensorConfiguration>("ROS2 Lidar Sensor configuration", "Lidar sensor configuration")
-                    ->DataElement(AZ::Edit::UIHandlers::ComboBox, &LidarSensorConfiguration::m_lidarModel, "Lidar Model", "Lidar model")
+                ec->Class<LidarSensorConfiguration>("Lidar Sensor configuration", "Lidar sensor configuration")
+                    ->DataElement(AZ::Edit::UIHandlers::ComboBox, &LidarSensorConfiguration::m_lidarModelName, "Lidar Model", "Lidar model")
                     ->Attribute(AZ::Edit::Attributes::ChangeNotify, &LidarSensorConfiguration::OnLidarModelSelected)
-                    ->EnumAttribute(LidarTemplate::LidarModel::Custom3DLidar, "Custom Lidar")
-                    ->EnumAttribute(LidarTemplate::LidarModel::Ouster_OS0_64, "Ouster OS0-64")
-                    ->EnumAttribute(LidarTemplate::LidarModel::Ouster_OS1_64, "Ouster OS1-64")
-                    ->EnumAttribute(LidarTemplate::LidarModel::Ouster_OS2_64, "Ouster OS2-64")
-                    ->EnumAttribute(LidarTemplate::LidarModel::Velodyne_Puck, "Velodyne Puck (VLP-16)")
-                    ->EnumAttribute(LidarTemplate::LidarModel::Velodyne_HDL_32E, "Velodyne HDL-32E")
+                    ->Attribute(AZ::Edit::Attributes::StringList, &LidarSensorConfiguration::GetAvailableModels)
                     ->DataElement(
                         AZ::Edit::UIHandlers::ComboBox,
                         &LidarSensorConfiguration::m_lidarSystem,
@@ -73,6 +68,19 @@ namespace ROS2
         }
     }
 
+    LidarSensorConfiguration::LidarSensorConfiguration(AZStd::vector<LidarTemplate::LidarModel> availableModels)
+        : m_availableModels(AZStd::move(availableModels))
+    {
+        if (m_availableModels.empty())
+        {
+            AZ_Warning("LidarSensorConfiguration", false, "Lidar configuration created with an empty models list");
+            return;
+        }
+        m_lidarModel = m_availableModels.front();
+        m_lidarParameters = LidarTemplateUtils::GetTemplate(m_lidarModel);
+        m_lidarModelName = m_lidarParameters.m_name;
+    }
+
     void LidarSensorConfiguration::FetchLidarImplementationFeatures()
     {
         if (m_lidarSystem.empty())
@@ -87,9 +95,34 @@ namespace ROS2
         }
     }
 
+    AZStd::vector<AZStd::string> LidarSensorConfiguration::GetAvailableModels() const
+    {
+        AZStd::vector<AZStd::string> result;
+        for (const auto model : m_availableModels)
+        {
+            auto templ = LidarTemplateUtils::GetTemplate(model);
+            result.push_back({ templ.m_name });
+        }
+        return result;
+    }
+
+    void LidarSensorConfiguration::FetchLidarModelConfiguration()
+    {
+        for (const auto model : m_availableModels)
+        {
+            auto templ = LidarTemplateUtils::GetTemplate(model);
+            if (m_lidarModelName == templ.m_name)
+            {
+                m_lidarModel = model;
+                break;
+            }
+        }
+        m_lidarParameters = LidarTemplateUtils::GetTemplate(m_lidarModel);
+    }
+
     bool LidarSensorConfiguration::IsConfigurationVisible() const
     {
-        return m_lidarModel == LidarTemplate::LidarModel::Custom3DLidar;
+        return m_lidarModel == LidarTemplate::LidarModel::Custom3DLidar || m_lidarModel == LidarTemplate::LidarModel::Custom2DLidar;
     }
 
     bool LidarSensorConfiguration::IsIgnoredLayerConfigurationVisible() const
@@ -109,7 +142,7 @@ namespace ROS2
 
     AZ::Crc32 LidarSensorConfiguration::OnLidarModelSelected()
     {
-        m_lidarParameters = LidarTemplateUtils::GetTemplate(m_lidarModel);
+        FetchLidarModelConfiguration();
         UpdateShowNoise();
         return AZ::Edit::PropertyRefreshLevels::EntireTree;
     }
