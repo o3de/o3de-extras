@@ -28,7 +28,7 @@
 namespace ROS2::Utils
 {
 
-    //! A helper class that do no extend PhysX::Pipeline::MeshGroup functionality, but gives neccessary setters.
+    //! A helper class that do no extend PhysX::Pipeline::MeshGroup functionality, but gives necessary setters.
     class UrdfPhysxMeshGroupHelper : public PhysX::Pipeline::MeshGroup
     {
     public:
@@ -323,15 +323,14 @@ namespace ROS2::Utils
 
         for (const auto& unresolvedUrfFileName : meshesFilenames)
         {
-           auto resolved = Utils::ResolveAssetPath(unresolvedUrfFileName, AZ::IO::PathView(urdfFilename),
-                amentPrefixPath, sdfBuilderSettings);
-            if (resolved.empty())
+            auto resolvedPath =
+                Utils::ResolveAssetPath(unresolvedUrfFileName, AZ::IO::PathView(urdfFilename), amentPrefixPath, sdfBuilderSettings);
+            if (resolvedPath.empty())
             {
                 AZ_Warning("CopyAssetForURDF", false, "There is no resolved path for %s", unresolvedUrfFileName.c_str());
                 continue;
             }
 
-            AZ::IO::Path resolvedPath(resolved);
             const bool needsVisual = visuals.contains(unresolvedUrfFileName);
             const bool needsCollider = colliders.contains(unresolvedUrfFileName);
 
@@ -342,7 +341,7 @@ namespace ROS2::Utils
 
             if (!fileIO->Exists(targetPathAssetDst.c_str()))
             {
-                // copy mesh file to temporary location ingored by AP
+                // copy mesh file to temporary location ignored by AP
                 const auto outcomeCopyTmp = fileIO->Copy(resolvedPath.c_str(), targetPathAssetTmp.c_str());
                 AZ_Printf(
                     "CopyAssetForURDF",
@@ -384,7 +383,7 @@ namespace ROS2::Utils
                         {
                             copiedFiles[unresolvedUrfFileName] = targetPathAssetDst.String();
                         }
-                    };
+                    }
                 }
             }
             else
@@ -395,8 +394,8 @@ namespace ROS2::Utils
 
             Utils::UrdfAsset asset;
             asset.m_urdfPath = urdfFilename;
-            asset.m_resolvedUrdfPath = Utils::ResolveAssetPath(unresolvedUrfFileName, AZ::IO::PathView(urdfFilename),
-                amentPrefixPath, sdfBuilderSettings);
+            asset.m_resolvedUrdfPath =
+                Utils::ResolveAssetPath(unresolvedUrfFileName, AZ::IO::PathView(urdfFilename), amentPrefixPath, sdfBuilderSettings);
             asset.m_urdfFileCRC = AZ::Crc32();
             urdfAssetMap.emplace(unresolvedUrfFileName, AZStd::move(asset));
         }
@@ -418,7 +417,9 @@ namespace ROS2::Utils
         return urdfAssetMap;
     }
 
-    UrdfAssetMap FindAssetsForUrdf(const AZStd::unordered_set<AZStd::string>& meshesFilenames, const AZStd::string& urdfFilename,
+    UrdfAssetMap FindAssetsForUrdf(
+        const AZStd::unordered_set<AZStd::string>& meshesFilenames,
+        const AZStd::string& urdfFilename,
         const SdfAssetBuilderSettings& sdfBuilderSettings)
     {
         auto amentPrefixPath = Utils::GetAmentPrefixPath();
@@ -428,8 +429,8 @@ namespace ROS2::Utils
         {
             Utils::UrdfAsset asset;
             asset.m_urdfPath = t;
-            asset.m_resolvedUrdfPath = Utils::ResolveAssetPath(asset.m_urdfPath, AZ::IO::PathView(urdfFilename),
-                amentPrefixPath, sdfBuilderSettings);
+            asset.m_resolvedUrdfPath =
+                Utils::ResolveAssetPath(asset.m_urdfPath, AZ::IO::PathView(urdfFilename), amentPrefixPath, sdfBuilderSettings);
             asset.m_urdfFileCRC = Utils::GetFileCRC(asset.m_resolvedUrdfPath);
             urdfToAsset.emplace(t, AZStd::move(asset));
         }
@@ -455,14 +456,13 @@ namespace ROS2::Utils
 
     bool CreateSceneManifest(const AZ::IO::Path& sourceAssetPath, const AZ::IO::Path& assetInfoFile, bool collider, bool visual)
     {
-        const auto& azMeshPath = sourceAssetPath;
         AZ_Printf("CreateSceneManifest", "Creating manifest for asset %s at : %s ", sourceAssetPath.c_str(), assetInfoFile.c_str());
         AZStd::shared_ptr<AZ::SceneAPI::Containers::Scene> scene;
         AZ::SceneAPI::Events::SceneSerializationBus::BroadcastResult(
-            scene, &AZ::SceneAPI::Events::SceneSerialization::LoadScene, azMeshPath.c_str(), AZ::Uuid::CreateNull(), "");
+            scene, &AZ::SceneAPI::Events::SceneSerialization::LoadScene, sourceAssetPath.c_str(), AZ::Uuid::CreateNull(), "");
         if (!scene)
         {
-            AZ_Error("CreateSceneManifest", false, "Error loading collider. Invalid scene: %s", azMeshPath.c_str());
+            AZ_Error("CreateSceneManifest", false, "Error loading collider. Invalid scene: %s", sourceAssetPath.c_str());
             return false;
         }
 
@@ -470,7 +470,7 @@ namespace ROS2::Utils
         auto valueStorage = manifest.GetValueStorage();
         if (valueStorage.empty())
         {
-            AZ_Error("CreateSceneManifest", false, "Error loading collider. Invalid value storage: %s", azMeshPath.c_str());
+            AZ_Error("CreateSceneManifest", false, "Error loading collider. Invalid value storage: %s", sourceAssetPath.c_str());
             return false;
         }
 
@@ -537,8 +537,6 @@ namespace ROS2::Utils
 
     bool CreateSceneManifest(const AZ::IO::Path& sourceAssetPath, bool collider, bool visual)
     {
-        auto assetInfoFilePath = AZ::IO::Path{ sourceAssetPath };
-        assetInfoFilePath.Native() += ".assetinfo";
         return CreateSceneManifest(sourceAssetPath, sourceAssetPath.Native() + ".assetinfo", collider, visual);
     }
 } // namespace ROS2::Utils

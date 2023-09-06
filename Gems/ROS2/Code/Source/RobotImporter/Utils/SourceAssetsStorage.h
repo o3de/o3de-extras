@@ -131,7 +131,7 @@ namespace ROS2::Utils
     //! @returns true if succeed
     bool CreateSceneManifest(const AZ::IO::Path& sourceAssetPath, const AZ::IO::Path& assetInfoFile, bool collider, bool visual);
 
-    //! A function that copies and prepares meshes that are referenced in URDF.
+    //! Copies and prepares meshes that are referenced in URDF.
     //! It resolves every mesh, creates a directory in Project's Asset directory, copies files, and prepares assets info.
     //! Finally, it assembles its results into mapping that allows mapping Urdf's mesh name to the source asset.
     //! @param meshesFilenames - files to copy (as unresolved urdf paths)
