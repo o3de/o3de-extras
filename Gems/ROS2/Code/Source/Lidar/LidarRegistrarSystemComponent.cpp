@@ -113,14 +113,14 @@ namespace ROS2
     }
 
     AZStd::string Details::GetDefaultLidarSystem()
+    {
+        const auto& lidarSystemList = LidarRegistrarInterface::Get()->GetRegisteredLidarSystems();
+        if (lidarSystemList.empty())
         {
-            const auto& lidarSystemList = LidarRegistrarInterface::Get()->GetRegisteredLidarSystems();
-            if (lidarSystemList.empty())
-            {
-                AZ_Warning("ROS2LidarSensorComponent", false, "No LIDAR system for the sensor to use.");
-                return {};
-            }
-            return lidarSystemList.front();
+            AZ_Warning("ROS2LidarSensorComponent", false, "No LIDAR system for the sensor to use.");
+            return {};
         }
+        return lidarSystemList.front();
+    }
 
 } // namespace ROS2
