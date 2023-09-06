@@ -18,6 +18,7 @@
 #include <AzCore/std/containers/unordered_map.h>
 #include <AzCore/std/containers/unordered_set.h>
 #include <AzToolsFramework/API/EditorAssetSystemAPI.h>
+#include <SceneAPI/SceneCore/Containers/Scene.h>
 
 namespace ROS2
 {
@@ -120,16 +121,24 @@ namespace ROS2::Utils
     //! @param sourceAssetPath - global path to source asset
     //! @param collider - create assetinfo section for collider product asset
     //! @param visual - create assetinfo section for visual mesh
+    //! @param assetsFilenames - created list of additional files (such as textures) required by the imported scene
     //! @returns true if succeed
-    bool CreateSceneManifest(const AZ::IO::Path& sourceAssetPath, bool collider, bool visual);
+    bool CreateSceneManifest(
+        const AZ::IO::Path& sourceAssetPath, const bool collider, const bool visual, AZStd::unordered_set<AZStd::string>& assetsFilenames);
 
     //! Creates side-car file (.assetinfo) that configures the imported scene (eg DAE file).
     //! @param sourceAssetPath - global path to source asset
     //! @param assetInfoFile - global path to assetInfo file to create
     //! @param collider - create assetinfo section for collider product asset
     //! @param visual - create assetinfo section for visual mesh
+    //! @param assetsFilenames - created list of additional files (such as textures) required by the imported scene
     //! @returns true if succeed
-    bool CreateSceneManifest(const AZ::IO::Path& sourceAssetPath, const AZ::IO::Path& assetInfoFile, bool collider, bool visual);
+    bool CreateSceneManifest(
+        const AZ::IO::Path& sourceAssetPath,
+        const AZ::IO::Path& assetInfoFile,
+        const bool collider,
+        const bool visual,
+        AZStd::unordered_set<AZStd::string>& assetsFilenames);
 
     //! Copies and prepares meshes that are referenced in URDF.
     //! It resolves every mesh, creates a directory in Project's Asset directory, copies files, and prepares assets info.
@@ -150,5 +159,10 @@ namespace ROS2::Utils
         const SdfAssetBuilderSettings& sdfBuilderSettings,
         AZStd::string_view outputDirSuffix = "",
         AZ::IO::FileIOBase* fileIO = AZ::IO::FileIOBase::GetInstance());
+
+    //! Creates a list of files referenced in scene (e.g. materials)
+    //! @param scene - parsed scene file with correctly loaded graph
+    //! @returns list of file names referenced in the scene
+    AZStd::unordered_set<AZStd::string> GetMeshAssets(const AZStd::shared_ptr<AZ::SceneAPI::Containers::Scene>& scene);
 
 } // namespace ROS2::Utils

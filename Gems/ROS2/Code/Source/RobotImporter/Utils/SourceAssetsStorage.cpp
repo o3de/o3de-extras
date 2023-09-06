@@ -15,8 +15,8 @@
 #include <AzCore/std/smart_ptr/shared_ptr.h>
 #include <AzFramework/Asset/AssetSystemBus.h>
 #include <AzToolsFramework/Asset/AssetUtils.h>
-#include <SceneAPI/SceneCore/Containers/Scene.h>
 #include <SceneAPI/SceneCore/Containers/Utilities/Filters.h>
+#include <SceneAPI/SceneCore/DataTypes/GraphData/IMaterialData.h>
 #include <SceneAPI/SceneCore/DataTypes/Groups/ISceneNodeGroup.h>
 #include <SceneAPI/SceneCore/Events/AssetImportRequest.h>
 #include <SceneAPI/SceneCore/Events/SceneSerializationBus.h>
@@ -352,8 +352,9 @@ namespace ROS2::Utils
                 if (outcomeCopyTmp)
                 {
                     // create asset info at destination location using the temporary mesh file
-                    const bool assetInfoOk =
-                        CreateSceneManifest(targetPathAssetTmp.String(), targetPathAssetInfo.String(), needsCollider, needsVisual);
+                    AZStd::unordered_set<AZStd::string> assetsFilenames;
+                    const bool assetInfoOk = CreateSceneManifest(
+                        targetPathAssetTmp.String(), targetPathAssetInfo.String(), needsCollider, needsVisual, assetsFilenames);
 
                     if (assetInfoOk)
                     {
@@ -382,6 +383,21 @@ namespace ROS2::Utils
                         if (outcomeMoveDst)
                         {
                             copiedFiles[unresolvedUrfFileName] = targetPathAssetDst.String();
+                        }
+
+                        // copy additional assets' files (such as textures)
+                        for (const auto& unresolvedAssetFilename : assetsFilenames)
+                        {
+                            auto resolvedAssetPath = Utils::ResolveAssetPath(
+                                unresolvedAssetFilename, AZ::IO::PathView(urdfFilename), amentPrefixPath, sdfBuilderSettings);
+                            AZ::IO::Path resolvedAssetDst(importDirectoryDst / resolvedAssetPath.Filename());
+                            const auto outcomeCopyTmp = fileIO->Copy(resolvedAssetPath.c_str(), resolvedAssetDst.c_str());
+                            AZ_Printf(
+                                "CopyAssetForURDF",
+                                "Copy %s to %s, result: %d",
+                                resolvedAssetPath.String().c_str(),
+                                resolvedAssetDst.String().c_str(),
+                                outcomeCopyTmp.GetResultCode());
                         }
                     }
                 }
@@ -454,7 +470,12 @@ namespace ROS2::Utils
         return urdfToAsset;
     }
 
-    bool CreateSceneManifest(const AZ::IO::Path& sourceAssetPath, const AZ::IO::Path& assetInfoFile, bool collider, bool visual)
+    bool CreateSceneManifest(
+        const AZ::IO::Path& sourceAssetPath,
+        const AZ::IO::Path& assetInfoFile,
+        const bool collider,
+        const bool visual,
+        AZStd::unordered_set<AZStd::string>& assetsFilenames)
     {
         AZ_Printf("CreateSceneManifest", "Creating manifest for asset %s at : %s ", sourceAssetPath.c_str(), assetInfoFile.c_str());
         AZStd::shared_ptr<AZ::SceneAPI::Containers::Scene> scene;
@@ -532,11 +553,46 @@ namespace ROS2::Utils
         scene->GetManifest().SaveToFile(assetInfoFile.Native());
         AZ_Printf("CreateSceneManifest", "Saving scene manifest to %s\n", assetInfoFile.c_str());
 
+        assetsFilenames = GetMeshAssets(scene);
+        AZ_Printf("CreateSceneManifest", "Found %d assets for %s scene\n", assetsFilenames.size(), assetInfoFile.c_str());
+
         return true;
     }
 
-    bool CreateSceneManifest(const AZ::IO::Path& sourceAssetPath, bool collider, bool visual)
+    bool CreateSceneManifest(
+        const AZ::IO::Path& sourceAssetPath, const bool collider, const bool visual, AZStd::unordered_set<AZStd::string>& assetsFilenames)
     {
-        return CreateSceneManifest(sourceAssetPath, sourceAssetPath.Native() + ".assetinfo", collider, visual);
+        return CreateSceneManifest(sourceAssetPath, sourceAssetPath.Native() + ".assetinfo", collider, visual, assetsFilenames);
+    }
+
+    AZStd::unordered_set<AZStd::string> GetMeshAssets(const AZStd::shared_ptr<AZ::SceneAPI::Containers::Scene>& scene)
+    {
+        AZStd::unordered_set<AZStd::string> assetsFilenames;
+
+        // Look for material files
+        AZStd::initializer_list<AZ::SceneAPI::DataTypes::IMaterialData::TextureMapType> allTextureTypes = {
+            AZ::SceneAPI::DataTypes::IMaterialData::TextureMapType::Diffuse,
+            AZ::SceneAPI::DataTypes::IMaterialData::TextureMapType::Specular,
+            AZ::SceneAPI::DataTypes::IMaterialData::TextureMapType::Bump,
+            AZ::SceneAPI::DataTypes::IMaterialData::TextureMapType::Normal,
+            AZ::SceneAPI::DataTypes::IMaterialData::TextureMapType::Metallic,
+            AZ::SceneAPI::DataTypes::IMaterialData::TextureMapType::Roughness,
+            AZ::SceneAPI::DataTypes::IMaterialData::TextureMapType::AmbientOcclusion,
+            AZ::SceneAPI::DataTypes::IMaterialData::TextureMapType::Emissive,
+            AZ::SceneAPI::DataTypes::IMaterialData::TextureMapType::BaseColor
+        };
+        auto view =
+            AZ::SceneAPI::Containers::MakeDerivedFilterView<AZ::SceneAPI::DataTypes::IMaterialData>(scene->GetGraph().GetContentStorage());
+        for (const auto& material : view)
+        {
+            for (auto textureType : allTextureTypes)
+            {
+                if (const AZ::IO::Path filePath(material.GetTexture(textureType)); !filePath.empty())
+                {
+                    assetsFilenames.emplace(filePath.Filename().String());
+                }
+            }
+        }
+        return assetsFilenames;
     }
 } // namespace ROS2::Utils
