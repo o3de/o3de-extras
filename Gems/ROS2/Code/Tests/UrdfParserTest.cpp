@@ -869,7 +869,7 @@ namespace UnitTest
             urdf, "", GetTestSettings(),
             [expectedResult](const AZ::IO::PathView& p) -> bool
             {
-                return (p == expectedResult);
+                return p == expectedResult;
             });
         EXPECT_EQ(result, "/home/foo/ros_ws/install/foo_robot/meshes/bar.dae");
     }
