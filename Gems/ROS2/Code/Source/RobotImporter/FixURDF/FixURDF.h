@@ -8,28 +8,16 @@
 
 #pragma once
 
-#include <AzCore/XML/rapidxml.h>
 #include <AzCore/std/containers/vector.h>
 #include <AzCore/std/string/string.h>
 
-namespace ROS2
+namespace ROS2::Utils
 {
-    namespace Utils
-    {
-        //! Modifies a parsed URDF in memory to add missing inertia to links, which prevents SDF error 19.
-        //! @param urdf URDF to modify.
-        //! @returns a list of names of links that were modified.
-        AZStd::vector<AZStd::string> AddMissingInertiaToLinks(AZ::rapidxml::xml_node<>* urdf);
-
-        //! Modifies names of links and joints to be unique, which means that a set of both contains no duplicates. This prevents SDF
-        //! error 2.
-        //! @param urdf URDF to modify.
-        //! @returns a list of links that were modified
-        AZStd::vector<AZStd::string> ChangeDuplications(AZ::rapidxml::xml_node<>* urdf);
-
-        //! Modifies in memory URDF to add missing elements
-        //! @param urdf URDF to modify.
-        //! @returns a modified URDF and a list of XML element that were modified
-        AZStd::pair<std::string, AZStd::vector<AZStd::string>> ModifyURDFInMemory(const std::string& data);
-    } // namespace Utils
-} // namespace ROS2
+    //! Modifies in memory URDF to increase chance of successful conversion to SDF.
+    //! It does the following:
+    //! - Adds missing inertia to links of mass 1 kg and identity inertia matrix.
+    //! - Renames joints that have the same name as a link.
+    //! @param urdf URDF to modify.
+    //! @returns a modified URDF and a list of XML element that were modified
+    AZStd::pair<std::string, AZStd::vector<AZStd::string>> ModifyURDFInMemory(const std::string& data);
+} // namespace ROS2::Utils

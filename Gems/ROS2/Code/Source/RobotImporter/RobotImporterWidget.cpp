@@ -342,7 +342,8 @@ namespace ROS2
         if (currentPage() == m_xacroParamsPage)
         {
             m_params = m_xacroParamsPage->GetXacroParameters();
-            if (const bool isFileUrdfOrXacro = Utils::IsFileXacro(m_urdfPath) || Utils::IsFileUrdf(m_urdfPath); isFileUrdfOrXacro)
+            if (const bool isFileUrdfOrXacro = Utils::IsFileXacro(m_urdfPath) || Utils::IsFileUrdf(m_urdfPath);
+                isFileUrdfOrXacro)
             {
                 OpenUrdf();
             }
@@ -372,7 +373,7 @@ namespace ROS2
     {
         if ((currentPage() == m_fileSelectPage && m_params.empty()) || currentPage() == m_xacroParamsPage)
         {
-            if (m_parsedUrdf.Model() != nullptr && m_checkUrdfPage->isWarning())
+            if (m_parsedUrdf.Model() != nullptr && !m_checkUrdfPage->isWarning())
             {
                 return m_xacroParamsPage->nextId();
             }
