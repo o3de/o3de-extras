@@ -14,11 +14,15 @@
                 ],
                 "UseArticulations": true,
                 "URDFPreserveFixedJoint": true,
-                "PathPrefixMap": {
-                    "model://": ["./", "../" ],
-                    "package://": ["./", "../" ],
-                    "file://":  [""]
-                }                
+                "AssetResolverSettings":
+                {
+                    "URIPrefixMap": 
+                    {
+                        "model://": ["./", "../" ],
+                        "package://": ["./", "../" ],
+                        "file://":  [""]
+                    }                
+                }
             }
         }
     }

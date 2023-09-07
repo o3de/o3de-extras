@@ -51,7 +51,7 @@ namespace ROS2
         constexpr auto SdfAssetBuilderUseArticulationsRegistryKey = SDFSettingsRootKey("UseArticulations");
         constexpr auto SdfAssetBuilderURDFPreserveFixedJointRegistryKey = SDFSettingsRootKey("URDFPreserveFixedJoint");
         constexpr auto SdfAssetBuilderImportMeshesJointRegistryKey = SDFSettingsRootKey("ImportMeshes");
-        constexpr auto SdfAssetBuilderUriPrefixMapRegistryKey = SDFSettingsRootKey("PathPrefixMap");
+        constexpr auto SdfAssetBuilderAssetResolverRegistryKey = SDFSettingsRootKey("AssetResolverSettings");
     }
 
     void SdfAssetPathResolverSettings::Reflect(AZ::ReflectContext* context)
@@ -189,8 +189,8 @@ namespace ROS2
             };
         AZ::SettingsRegistryVisitorUtils::VisitArray(*settingsRegistry, VisitFileTypeExtensions, SdfAssetBuilderSupportedFileExtensionsRegistryKey);
 
-        // Get the URI prefix map
-        settingsRegistry->GetObject(m_resolverSettings.m_uriPrefixMap, SdfAssetBuilderUriPrefixMapRegistryKey);
+        // Get the Asset Resolver settings
+        settingsRegistry->GetObject(m_resolverSettings, SdfAssetBuilderAssetResolverRegistryKey);
 
         AZ_Warning(SdfAssetBuilderName, !m_builderPatterns.empty(), "SdfAssetBuilder disabled, no supported file type extensions found.");
     }
