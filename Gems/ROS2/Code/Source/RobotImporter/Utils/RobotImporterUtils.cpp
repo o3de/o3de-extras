@@ -14,6 +14,7 @@
 #include <AzCore/IO/Path/Path.h>
 #include <AzCore/StringFunc/StringFunc.h>
 #include <AzCore/std/string/regex.h>
+#include <AzCore/Utils/Utils.h>
 #include <AzToolsFramework/API/EditorAssetSystemAPI.h>
 #include <string.h>
 
