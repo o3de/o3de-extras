@@ -37,8 +37,6 @@ namespace ROS2
 
     void ROS2CameraSensorEditorComponent::Reflect(AZ::ReflectContext* context)
     {
-        CameraSensorConfiguration::Reflect(context);
-
         if (auto* serialize = azrtti_cast<AZ::SerializeContext*>(context))
         {
             serialize->Class<ROS2CameraSensorEditorComponent, AzToolsFramework::Components::EditorComponentBase>()

@@ -24,15 +24,16 @@
 
 #include <RobotImporter/URDF/URDFPrefabMaker.h>
 #include <RobotImporter/URDF/UrdfParser.h>
+#include <SdfAssetBuilder/SdfAssetBuilderSettings.h>
+#include <RobotImporter/Utils/ErrorUtils.h>
 #include <Utils/RobotImporterUtils.h>
 
 namespace ROS2
 {
-        namespace
-        {
-            [[maybe_unused]] constexpr const char* SdfAssetBuilderName = "SdfAssetBuilder";
-            constexpr const char* SdfAssetBuilderJobKey = "Sdf Asset Builder";
-        }
+    inline namespace SDFAssetBuilderInternal
+    {
+        constexpr const char* SdfAssetBuilderJobKey = "Sdf Asset Builder";
+    }
 
     SdfAssetBuilder::SdfAssetBuilder()
     {
@@ -44,7 +45,7 @@ namespace ROS2
         // The fingerprint should only use the global builder settings, not the per-file settings.
         // The analysis fingerprint is set at the builder level, outside of any individual files,
         // so it should only include data that's invariant across files.
-        // Per-file settings changes will cause rebuilds of individual files through a separate 
+        // Per-file settings changes will cause rebuilds of individual files through a separate
         // mechanism in the Asset Processor that detects when an associated metadata settings file changes.
         m_fingerprint = GetFingerprint();
 
@@ -56,14 +57,14 @@ namespace ROS2
         sdfAssetBuilderDescriptor.m_patterns = m_globalSettings.m_builderPatterns;
         sdfAssetBuilderDescriptor.m_analysisFingerprint = m_fingerprint; // set the fingerprint to the global settings
 
-        sdfAssetBuilderDescriptor.m_createJobFunction = [this](auto && request, auto && response) 
-            { 
-                return CreateJobs(request, response); 
+        sdfAssetBuilderDescriptor.m_createJobFunction = [this](auto && request, auto && response)
+            {
+                return CreateJobs(request, response);
             };
 
-        sdfAssetBuilderDescriptor.m_processJobFunction = [this](auto && request, auto && response) 
-            { 
-                return ProcessJob(request, response); 
+        sdfAssetBuilderDescriptor.m_processJobFunction = [this](auto && request, auto && response)
+            {
+                return ProcessJob(request, response);
             };
 
         // Listen for asset builder notifications requesting jobs for any of the sdf source file types.
@@ -82,10 +83,10 @@ namespace ROS2
         // The AssetBuilderSDK doesn't support deregistration, so there's nothing more to do here.
     }
 
-    Utils::UrdfAssetMap SdfAssetBuilder::FindAssets(const urdf::LinkConstSharedPtr& rootLink, const AZStd::string& sourceFilename) const
+    Utils::UrdfAssetMap SdfAssetBuilder::FindAssets(const sdf::Root& root, const AZStd::string& sourceFilename) const
     {
         AZ_Info(SdfAssetBuilderName, "Parsing mesh and collider names");
-        auto assetNames = Utils::GetMeshesFilenames(rootLink, true, true);
+        auto assetNames = Utils::GetMeshesFilenames(&root, true, true);
 
         Utils::UrdfAssetMap assetMap;
 
@@ -94,7 +95,7 @@ namespace ROS2
         // Unlike the RobotImporter, the SDF Asset Builder does not use the AMENT_PREFIX_PATH
         // to resolve file locations. There wouldn't be a way to guarantee identical results across
         // machines or to detect the need to rebuild assets if the environment variable changes.
-        const AZStd::string emptyAmentPrefixPath;
+        constexpr AZ::IO::PathView emptyAmentPrefixPath;
 
         for (const auto& uri : assetNames)
         {
@@ -102,7 +103,8 @@ namespace ROS2
             asset.m_urdfPath = uri;
 
             // Attempt to find the absolute path for the raw uri reference, which might look something like "model://meshes/model.dae"
-            asset.m_resolvedUrdfPath = Utils::ResolveURDFPath(asset.m_urdfPath, sourceFilename, emptyAmentPrefixPath);
+            asset.m_resolvedUrdfPath = Utils::ResolveURDFPath(asset.m_urdfPath, AZ::IO::PathView(sourceFilename),
+                emptyAmentPrefixPath);
             if (asset.m_resolvedUrdfPath.empty())
             {
                 AZ_Warning(SdfAssetBuilderName, false, "Failed to resolve file reference '%s' to an absolute path, skipping.", uri.c_str());
@@ -119,7 +121,7 @@ namespace ROS2
             AZ::Data::AssetInfo assetInfo;
             AZStd::string watchFolder;
             AssetSysReqBus::BroadcastResult(
-                sourceAssetFound, &AssetSysReqBus::Events::GetSourceInfoBySourcePath, 
+                sourceAssetFound, &AssetSysReqBus::Events::GetSourceInfoBySourcePath,
                 asset.m_resolvedUrdfPath.c_str(), assetInfo, watchFolder);
 
             if (!sourceAssetFound)
@@ -165,7 +167,7 @@ namespace ROS2
 
         [[maybe_unused]] AZ::Outcome<void, AZStd::string> saveObjectResult =
             AZ::JsonSerializationUtils::SaveObjectToStream(&m_globalSettings, stream, {}, &jsonSettings);
-        AZ_Assert(saveObjectResult.IsSuccess(), "Failed to save settings to fingerprint string: %s", 
+        AZ_Assert(saveObjectResult.IsSuccess(), "Failed to save settings to fingerprint string: %s",
             saveObjectResult.GetError().c_str());
 
         return settingsString;
@@ -176,7 +178,7 @@ namespace ROS2
         AssetBuilderSDK::CreateJobsResponse& response) const
     {
         // To be able to successfully process the SDF job, we need job dependencies on every asset
-        // referenced by the SDF file. Otherwise we won't be able to connect the references to the 
+        // referenced by the SDF file. Otherwise we won't be able to connect the references to the
         // correct product assets. Unfortunately, this means that we need to redundantly parse the
         // source file once here to set up the job dependencies, and then we'll parse it a second
         // time when actually running ProcessJob().
@@ -187,16 +189,24 @@ namespace ROS2
 
         const auto fullSourcePath = AZ::IO::Path(request.m_watchFolder) / AZ::IO::Path(request.m_sourceFile);
 
+        // Set the parser config settings for parsing URDF content through the libsdformat parser
+        sdf::ParserConfig parserConfig;
+        parserConfig.URDFSetPreserveFixedJoint(m_globalSettings.m_urdfPreserveFixedJoints);
+
         AZ_Info(SdfAssetBuilderName, "Parsing source file: %s", fullSourcePath.c_str());
-        auto parsedSourceFile = UrdfParser::ParseFromFile(fullSourcePath.String());
-        if (!parsedSourceFile)
+        auto parsedSdfRootOutcome = UrdfParser::ParseFromFile(fullSourcePath, parserConfig);
+        if (!parsedSdfRootOutcome)
         {
-            AZ_Error(SdfAssetBuilderName, false, "Failed to parse source file '%s'.", fullSourcePath.c_str());
+            const AZStd::string sdfParseErrors = Utils::JoinSdfErrorsToString(parsedSdfRootOutcome.GetSdfErrors());
+            AZ_Error(SdfAssetBuilderName, false, R"(Failed to parse source file "%s". Errors: "%s")",
+                fullSourcePath.c_str(), sdfParseErrors.c_str());
             return;
         }
 
+        const sdf::Root& sdfRoot = parsedSdfRootOutcome.GetRoot();
+
         AZ_Info(SdfAssetBuilderName, "Finding asset IDs for all mesh and collider assets.");
-        auto sourceAssetMap = AZStd::make_shared<Utils::UrdfAssetMap>(FindAssets(parsedSourceFile->getRoot(), fullSourcePath.String()));
+        auto sourceAssetMap = AZStd::make_shared<Utils::UrdfAssetMap>(FindAssets(sdfRoot, fullSourcePath.String()));
 
         // Create an output job for each platform
         for (const AssetBuilderSDK::PlatformInfo& platformInfo : request.m_enabledPlatforms)
@@ -241,24 +251,32 @@ namespace ROS2
         auto tempAssetOutputPath = AZ::IO::Path(request.m_tempDirPath) / request.m_sourceFile;
         tempAssetOutputPath.ReplaceExtension("procprefab");
 
+        // Set the parser config settings for parsing URDF content through the libsdformat parser
+        sdf::ParserConfig parserConfig;
+        parserConfig.URDFSetPreserveFixedJoint(m_globalSettings.m_urdfPreserveFixedJoints);
+
         // Read in and parse the source SDF file.
         AZ_Info(SdfAssetBuilderName, "Parsing source file: %s", request.m_fullPath.c_str());
-        auto parsedSourceFile = UrdfParser::ParseFromFile(request.m_fullPath);
-        if (!parsedSourceFile)
+        auto parsedSdfRootOutcome = UrdfParser::ParseFromFile(AZ::IO::PathView(request.m_fullPath), parserConfig);
+        if (!parsedSdfRootOutcome)
         {
-            AZ_Error(SdfAssetBuilderName, false, "Failed to parse source file '%s'.", request.m_fullPath.c_str());
+            const AZStd::string sdfParseErrors = Utils::JoinSdfErrorsToString(parsedSdfRootOutcome.GetSdfErrors());
+            AZ_Error(SdfAssetBuilderName, false, R"(Failed to parse source file "%s". Errors: "%s")",
+                request.m_fullPath.c_str(), sdfParseErrors.c_str());
             response.m_resultCode = AssetBuilderSDK::ProcessJobResult_Failed;
             return;
         }
 
+        const sdf::Root& sdfRoot = parsedSdfRootOutcome.GetRoot();
+
         // Resolve all the URI references into source asset GUIDs.
         AZ_Info(SdfAssetBuilderName, "Finding asset IDs for all mesh and collider assets.");
-        auto assetMap = AZStd::make_shared<Utils::UrdfAssetMap>(FindAssets(parsedSourceFile->getRoot(), request.m_fullPath));
+        auto assetMap = AZStd::make_shared<Utils::UrdfAssetMap>(FindAssets(sdfRoot, request.m_fullPath));
 
         // Given the parsed source file and asset mappings, generate an in-memory prefab.
         AZ_Info(SdfAssetBuilderName, "Creating prefab from source file.");
         auto prefabMaker = AZStd::make_unique<URDFPrefabMaker>(
-            request.m_fullPath, parsedSourceFile, tempAssetOutputPath.String(), assetMap, useArticulation);
+            request.m_fullPath, &sdfRoot, tempAssetOutputPath.String(), assetMap, useArticulation);
         auto prefabResult = prefabMaker->CreatePrefabTemplateFromURDF();
         if (!prefabResult.IsSuccess())
         {
@@ -278,14 +296,14 @@ namespace ROS2
 
         if (!saveResult)
         {
-            AZ_Error(SdfAssetBuilderName, false, "Failed to write out temp asset file '%s'.", 
+            AZ_Error(SdfAssetBuilderName, false, "Failed to write out temp asset file '%s'.",
                 tempAssetOutputPath.c_str());
             response.m_resultCode = AssetBuilderSDK::ProcessJobResult_Failed;
             return;
         }
 
         AZ_Info(SdfAssetBuilderName, "Prefab creation completed successfully.");
-        
+
         // Mark the resulting prefab as a product asset with the "procedural prefab" asset type.
         AssetBuilderSDK::JobProduct sdfJobProduct;
         sdfJobProduct.m_productFileName = tempAssetOutputPath.String();

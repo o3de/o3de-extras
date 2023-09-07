@@ -16,6 +16,7 @@
 #include <rclcpp/publisher.hpp>
 #include <sensor_msgs/msg/point_cloud2.hpp>
 
+#include "LidarCore.h"
 #include "LidarRaycaster.h"
 #include "LidarSensorConfiguration.h"
 
@@ -45,22 +46,11 @@ namespace ROS2
         void FrequencyTick();
         void Visualize();
 
-        void ConnectToLidarRaycaster();
-        void ConfigureLidarRaycaster();
-
-        // A structure that maps each lidar implementation busId to the busId of a raycaster created by this LidarSensorComponent.
-        AZStd::unordered_map<AZStd::string, LidarId> m_implementationToRaycasterMap;
         bool m_canRaycasterPublish = false;
-        LidarId m_lidarRaycasterId;
         std::shared_ptr<rclcpp::Publisher<sensor_msgs::msg::PointCloud2>> m_pointCloudPublisher;
 
-        // Used only when visualization is on - points differ since they are in global transform as opposed to local
-        AZStd::vector<AZ::Vector3> m_visualizationPoints;
-        AZ::RPI::AuxGeomDrawPtr m_drawQueue;
+        LidarCore m_lidarCore;
 
-        LidarSensorConfiguration m_lidarConfiguration;
-
-        AZStd::vector<AZ::Vector3> m_lastRotations;
-        RaycastResult m_lastScanResults;
+        LidarId m_lidarRaycasterId;
     };
 } // namespace ROS2

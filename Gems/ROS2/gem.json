@@ -30,7 +30,9 @@
         "Atom_Component_DebugCamera",
         "CommonFeaturesAtom",
         "PhysX",
+        "PrimitiveAssets",
         "StartingPointInput"
+
     ],
     "restricted": "ROS2",
     "repo_uri": "https://raw.githubusercontent.com/o3de/o3de-extras/development",

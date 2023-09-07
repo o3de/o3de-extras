@@ -1,4 +1,4 @@
-import os
+from pathlib import Path
 from launch import LaunchDescription
 from launch.actions import DeclareLaunchArgument, OpaqueFunction
 from launch.substitutions import LaunchConfiguration, PathJoinSubstitution
@@ -24,8 +24,8 @@ def generate_launch_description():
 
 def launch_setup(context, *args, **kwargs):
 
-    current_file_path = os.path.abspath(__file__)
-    current_directory = os.path.dirname(current_file_path)
+    current_file_path = Path(__file__).resolve()
+    current_directory = current_file_path.parent
 
     use_sim_time = { "use_sim_time": True}
     moveit_config = (

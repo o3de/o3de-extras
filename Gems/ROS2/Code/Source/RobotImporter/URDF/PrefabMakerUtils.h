@@ -32,7 +32,7 @@ namespace ROS2::PrefabMakerUtils
     //! Set the transform for an entity.
     //! @param origin pose for the entity to set.
     //! @param entityId entity which will be modified.
-    void SetEntityTransformLocal(const urdf::Pose& origin, AZ::EntityId entityId);
+    void SetEntityTransformLocal(const gz::math::Pose3d& origin, AZ::EntityId entityId);
 
     //! Create a prefab entity in a hierarchy. The new entity will not yet be active.
     //! @param parentEntityId id of parent entity for this new entity.

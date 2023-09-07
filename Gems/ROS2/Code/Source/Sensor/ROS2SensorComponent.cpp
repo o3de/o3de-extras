@@ -68,7 +68,10 @@ namespace ROS2
 
     void ROS2SensorComponent::OnTick([[maybe_unused]] float deltaTime, [[maybe_unused]] AZ::ScriptTimePoint time)
     {
-        Visualize(); // each frame
+        if (m_sensorConfiguration.m_visualize)
+        {
+            Visualize(); // each frame
+        }
         if (m_onTickCall)
         {
             m_onTickCall();

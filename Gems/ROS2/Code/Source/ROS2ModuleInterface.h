@@ -12,7 +12,6 @@
 #include <AzCore/Module/Module.h>
 #include <Camera/ROS2CameraSensorComponent.h>
 #include <ContactSensor/ROS2ContactSensorComponent.h>
-#include <FactorySimulation/ConveyorBeltComponent.h>
 #include <GNSS/ROS2GNSSSensorComponent.h>
 #include <Gripper/FingerGripperComponent.h>
 #include <Gripper/GripperActionServerComponent.h>
@@ -27,7 +26,6 @@
 #include <Manipulation/JointsTrajectoryComponent.h>
 #include <Odometry/ROS2OdometrySensorComponent.h>
 #include <Odometry/ROS2WheelOdometry.h>
-#include <ProximitySensor/ROS2ProximitySensor.h>
 #include <ROS2/Frame/ROS2FrameComponent.h>
 #include <ROS2/Manipulation/MotorizedJoints/JointMotorControllerComponent.h>
 #include <ROS2/Manipulation/MotorizedJoints/ManualMotorControllerComponent.h>
@@ -54,10 +52,6 @@ namespace ROS2
 
         ROS2ModuleInterface()
         {
-            // Push results of [MyComponent]::CreateDescriptor() into m_descriptors here.
-            // Add ALL components descriptors associated with this gem to m_descriptors.
-            // This will associate the AzTypeInfo information for the components with the SerializeContext, BehaviorContext and EditContext.
-            // This happens through the [MyComponent]::Reflect() function.
             m_descriptors.insert(
                 m_descriptors.end(),
                 {
@@ -92,17 +86,14 @@ namespace ROS2
                     JointsPIDControllerComponent::CreateDescriptor(),
                     JointsTrajectoryComponent::CreateDescriptor(),
                     PidMotorControllerComponent::CreateDescriptor(),
-                    ROS2ProximitySensor::CreateDescriptor(),
                     GripperActionServerComponent::CreateDescriptor(),
                     VacuumGripperComponent::CreateDescriptor(),
-                    ConveyorBeltComponent::CreateDescriptor(),
                     FingerGripperComponent::CreateDescriptor(),
                     ROS2ContactSensorComponent::CreateDescriptor(),
                     FollowingCameraComponent::CreateDescriptor(),
                 });
         }
 
-        //! Add required SystemComponents to the SystemEntity.
         AZ::ComponentTypeList GetRequiredSystemComponents() const override
         {
             return AZ::ComponentTypeList{
