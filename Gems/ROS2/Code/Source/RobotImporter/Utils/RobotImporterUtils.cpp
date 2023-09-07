@@ -341,6 +341,75 @@ namespace ROS2::Utils
         return filenames;
     }
 
+    AZ::IO::Path ResolveAmentPrefixPath(
+        AZ::IO::Path unresolvedPath,
+        AZStd::string_view amentPrefixPath,
+        const FileExistsCB& fileExistsCB)
+    {
+        AZStd::vector<AZ::IO::Path> amentPrefixPaths;
+
+        // Parse the AMENT_PREFIX_PATH environment variable into a set of distinct paths.
+        auto AmentPrefixPathVisitor = [&amentPrefixPaths](
+            AZStd::string_view prefixPath)
+        {
+            amentPrefixPaths.push_back(prefixPath);
+        };
+        // Note this code only works on Unix platforms
+        // For Windows this will not work as the drive letter has a colon in it (C:\)
+        AZ::StringFunc::TokenizeVisitor(amentPrefixPath, AmentPrefixPathVisitor, ':');
+
+        AZ::IO::PathView strippedPath;
+
+        // The AMENT_PREFIX_PATH is only used for lookups if the URI starts with "model://" or "package://"
+        constexpr AZStd::string_view ValidAmentPrefixes[] = {"model://", "package://"};
+        for (const auto& prefix : ValidAmentPrefixes)
+        {
+            // Perform a case-sensitive check to look for the prefix.
+            constexpr bool prefixMatchCaseSensitive = true;
+            if (AZ::StringFunc::StartsWith(unresolvedPath.Native(), prefix, prefixMatchCaseSensitive))
+            {
+                strippedPath = AZ::IO::PathView(unresolvedPath).Native().substr(prefix.size());
+                break;
+            }
+        }
+
+        // If no valid prefix was found, or if the URI *only* contains the prefix, return an empty result.
+        if (strippedPath.empty())
+        {
+            return {};
+        }
+
+        // If the remaining path is an absolute path, it shouldn't get resolved with AMENT_PREFIX_PATH. return an empty result.
+        if (strippedPath.IsAbsolute())
+        {
+            return {};
+        }
+
+        // Check to see if the relative part of the URI path refers to a location
+        // within each <ament prefix path>/share directory
+        for (const AZ::IO::Path& amentPrefixPath : amentPrefixPaths)
+        {
+            auto pathIter = strippedPath.begin();
+            AZ::IO::PathView packageName = *pathIter;
+            const AZ::IO::Path amentSharePath = amentPrefixPath / "share";
+            const AZ::IO::Path packageManifestPath = amentSharePath / packageName / "package.xml";
+
+            // Given a path like 'ambulance/meshes/model.stl', it will be considered a match if
+            // <ament prefix path>/share/ambulance/package.xml exists and 
+            // <ament prefix path>/share/ambulance/meshes/model.stl exists.
+            if (const AZ::IO::Path candidateResolvedPath = amentSharePath / strippedPath;
+                fileExistsCB(packageManifestPath) && fileExistsCB(candidateResolvedPath))
+            {
+                AZ_Trace("ResolveAssetPath", R"(Resolved using AMENT_PREFIX_PATH: "%.*s" -> "%.*s")" "\n", 
+                    AZ_PATH_ARG(unresolvedPath), AZ_PATH_ARG(candidateResolvedPath));
+                return candidateResolvedPath;
+            }
+        }
+
+        // No resolution was found, return an empty result.
+        return {};
+    }
+
     /// Finds global path from URDF/SDF path
     AZ::IO::Path ResolveAssetPath(
         AZ::IO::Path unresolvedPath,
@@ -353,20 +422,13 @@ namespace ROS2::Utils
 
         const auto& pathResolverSettings = settings.m_resolverSettings;
 
-        // Parse the AMENT_PREFIX_PATH environment variable if the settings enable using it for path resolution.
-        // If not, leave the set of paths empty.
-        AZStd::vector<AZ::IO::Path> amentPrefixPaths;
+        // If the settings tell us to try the AMENT_PREFIX_PATH, use that first to try and resolve path.
         if (pathResolverSettings.m_useAmentPrefixPath)
         {
-            // Split the AMENT_PREFIX_PATH into multiple paths
-            auto AmentPrefixPathVisitor = [&amentPrefixPaths](
-                AZStd::string_view prefixPath)
+            if (AZ::IO::Path amentResolvedPath = ResolveAmentPrefixPath(unresolvedPath, amentPrefixPath, fileExistsCB); !amentResolvedPath.empty())
             {
-                amentPrefixPaths.push_back(prefixPath);
-            };
-            // Note this code only works on Unix platforms
-            // For Windows this will not work as the drive letter has a colon in it (C:\)
-            AZ::StringFunc::TokenizeVisitor(amentPrefixPath, AmentPrefixPathVisitor, ':');
+                return amentResolvedPath;
+            }
         }
 
         // Append all ancestor directories from the root file to the candidate replacement paths if the settings enable using
@@ -385,8 +447,8 @@ namespace ROS2::Utils
             } while (fileAncestorPath != fileAncestorPath.RootPath());
         }
 
-        // Loop through each prefix in the builder settings and attempt to resolve it.
-        // TODO: also loop through each replacement path?
+        // Loop through each prefix in the builder settings and attempt to resolve it as either an absolute path
+        // or a relative path that's relative in some way to the base file.
         for (const auto& [prefix, replacements] : pathResolverSettings.m_uriPrefixMap)
         {
             // Note this is a case-sensitive check to match the exact URI scheme
@@ -403,61 +465,48 @@ namespace ROS2::Utils
             // Strip the number of characters from the Uri scheme from beginning of the path
             AZ::IO::PathView strippedUriPath = AZ::IO::PathView(unresolvedPath).Native().substr(prefix.size());
 
-            // If the stripped URI path is empty, there is nothing to resolve
-            if (strippedUriPath.empty())
+            // Loop through each replacement path for this prefix, attach it to the front, and look for matches.
+            for (const auto& replacement : replacements)
             {
-                AZ_Trace("ResolveAssetPath", R"(Resolved Path is empty: "%.*s" -> "")" "\n", AZ_PATH_ARG(unresolvedPath));
-                return "";
-            }
+                AZ::IO::Path replacedUriPath(replacement);
+                replacedUriPath /= strippedUriPath;
 
-            // If the remaining path is an absolute path, simply return whether or not it exists.
-            if (strippedUriPath.IsAbsolute())
-            {
-                if (fileExistsCB(strippedUriPath))
+                // If we successfully matched the prefix, and the replacement path is completely empty, we don't need to look any further.
+                // There's no match.
+                if (replacedUriPath.empty())
                 {
-                    AZ_Trace("ResolveAssetPath", R"(Resolved Absolute Path: "%.*s" -> "%.*s")" "\n", 
-                        AZ_PATH_ARG(unresolvedPath), AZ_PATH_ARG(strippedUriPath));
-                    return strippedUriPath;
-                }
-                else
-                {
-                    AZ_Trace("ResolveAssetPath", R"(Failed to resolve Absolute Path: "%.*s" -> "%.*s")" "\n", 
-                        AZ_PATH_ARG(unresolvedPath), AZ_PATH_ARG(strippedUriPath));
+                    AZ_Trace("ResolveAssetPath", R"(Resolved Path is empty: "%.*s" -> "")" "\n", AZ_PATH_ARG(unresolvedPath));
                     return "";
                 }
-            }
 
-            // Check to see if the relative part of the URI path refers to a location
-            // within each <ament prefix path>/share directory
-            for (const AZ::IO::Path& amentPrefixPath : amentPrefixPaths)
-            {
-                auto pathIter = strippedUriPath.begin();
-                AZ::IO::PathView packageName = *pathIter;
-                const AZ::IO::Path amentSharePath = amentPrefixPath / "share";
-                const AZ::IO::Path packageManifestPath = amentSharePath / packageName / "package.xml";
-
-                // Given a path like 'ambulance/meshes/model.stl', it will be considered a match if
-                // <ament prefix path>/share/ambulance/package.xml exists and 
-                // <ament prefix path>/share/ambulance/meshes/model.stl exists.
-                if (const AZ::IO::Path candidateResolvedPath = amentSharePath / strippedUriPath;
-                    fileExistsCB(packageManifestPath) && fileExistsCB(candidateResolvedPath))
+                // If the replaced path is an absolute path, if it exists, return it.
+                // If it doesn't exist, keep trying other replacements.
+                if (replacedUriPath.IsAbsolute())
                 {
-                    AZ_Trace("ResolveAssetPath", R"(Resolved using AMENT_PREFIX_PATH: "%.*s" -> "%.*s")" "\n", 
-                        AZ_PATH_ARG(unresolvedPath), AZ_PATH_ARG(candidateResolvedPath));
-                    return candidateResolvedPath;
+                    if (fileExistsCB(replacedUriPath))
+                    {
+                        AZ_Trace("ResolveAssetPath", R"(Resolved Absolute Path: "%.*s" -> "%.*s")" "\n", 
+                            AZ_PATH_ARG(unresolvedPath), AZ_PATH_ARG(replacedUriPath));
+                        return replacedUriPath;
+                    }
+                    else
+                    {
+                        // The file didn't exist, so continue.
+                        continue;
+                    }
                 }
-            }
 
-            // The URI path cannot be resolved within the any ament prefix path,
-            // so try the directory containing the root file as well as any of its parent directories
-            for (const AZ::IO::Path& ancestorPath : ancestorPaths)
-            {
-                if (const AZ::IO::Path candidateResolvedPath = ancestorPath / strippedUriPath;
-                    fileExistsCB(candidateResolvedPath))
+                // The URI path cannot be resolved within the any ament prefix path,
+                // so try the directory containing the root file as well as any of its parent directories
+                for (const AZ::IO::Path& ancestorPath : ancestorPaths)
                 {
-                    AZ_Trace("ResolveAssetPath", R"(Resolved using ancestor paths: "%.*s" -> "%.*s")" "\n", 
-                        AZ_PATH_ARG(unresolvedPath), AZ_PATH_ARG(candidateResolvedPath));
-                    return candidateResolvedPath;
+                    if (const AZ::IO::Path candidateResolvedPath = ancestorPath / replacedUriPath;
+                        fileExistsCB(candidateResolvedPath))
+                    {
+                        AZ_Trace("ResolveAssetPath", R"(Resolved using ancestor paths: "%.*s" -> "%.*s")" "\n", 
+                            AZ_PATH_ARG(unresolvedPath), AZ_PATH_ARG(candidateResolvedPath));
+                        return candidateResolvedPath;
+                    }
                 }
             }
         }
@@ -571,10 +620,10 @@ namespace ROS2::Utils::SDFormat
         sdfConfig.URDFSetPreserveFixedJoint(settings.m_urdfPreserveFixedJoints);
 
         // Fill in the URI resolution with the supplied prefix mappings.
-        for (auto& entry : settings.m_resolverSettings.m_uriPrefixMap)
+        for (auto& [prefix, pathList] : settings.m_resolverSettings.m_uriPrefixMap)
         {
             std::string uriPath;
-            for(auto& path : entry.second)
+            for(auto& path : pathList)
             {
                 if (!uriPath.empty())
                 {
@@ -583,9 +632,9 @@ namespace ROS2::Utils::SDFormat
 
                 uriPath.append(std::string(path.c_str(), path.size()));
             }
-            if (!entry.first.empty() && !uriPath.empty())
+            if (!prefix.empty() && !uriPath.empty())
             {
-                std::string uriPrefix(entry.first.c_str(), entry.first.size());
+                std::string uriPrefix(prefix.c_str(), prefix.size());
                 sdfConfig.AddURIPath(uriPrefix, uriPath);
                 AZ_Info("SdfParserConfig", "Added URI mapping '%s' -> '%s'", uriPrefix.c_str(), uriPath.c_str());
             }
