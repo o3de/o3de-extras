@@ -16,13 +16,13 @@ namespace ROS2
 {
     struct SdfAssetPathResolverSettings
     {
-        public:
-            AZ_RTTI(SdfAssetPathResolverSettings, "{51EDDB99-FE82-4783-9C91-7DF403AD4EFA}");
+    public:
+        AZ_RTTI(SdfAssetPathResolverSettings, "{51EDDB99-FE82-4783-9C91-7DF403AD4EFA}");
 
-            SdfAssetPathResolverSettings() = default;
-            virtual ~SdfAssetPathResolverSettings() = default;
+        SdfAssetPathResolverSettings() = default;
+        virtual ~SdfAssetPathResolverSettings() = default;
 
-            static void Reflect(AZ::ReflectContext* context);
+        static void Reflect(AZ::ReflectContext* context);
 
         using UriPrefixMap = AZStd::unordered_map<AZStd::string, AZStd::vector<AZStd::string>>;
 
