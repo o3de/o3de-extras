@@ -307,9 +307,9 @@ namespace UnitTest
             ROS2::SdfAssetBuilderSettings settings;
             settings.m_resolverSettings.m_useAmentPrefixPath = true;
             settings.m_resolverSettings.m_useAncestorPaths = true;
-            settings.m_resolverSettings.m_uriPrefixMap.emplace("model://", AZStd::vector<AZStd::string>({"."}));
-            settings.m_resolverSettings.m_uriPrefixMap.emplace("package://", AZStd::vector<AZStd::string>({"."}));
-            settings.m_resolverSettings.m_uriPrefixMap.emplace("file://", AZStd::vector<AZStd::string>({"."}));
+            settings.m_resolverSettings.m_uriPrefixMap.emplace("model://", AZStd::vector<AZ::IO::Path>({"."}));
+            settings.m_resolverSettings.m_uriPrefixMap.emplace("package://", AZStd::vector<AZ::IO::Path>({"."}));
+            settings.m_resolverSettings.m_uriPrefixMap.emplace("file://", AZStd::vector<AZ::IO::Path>({"."}));
 
             return settings;
         }

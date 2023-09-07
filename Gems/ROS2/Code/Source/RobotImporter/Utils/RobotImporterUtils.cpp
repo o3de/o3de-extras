@@ -631,7 +631,7 @@ namespace ROS2::Utils::SDFormat
                     uriPath.append(std::string(":"));
                 }
 
-                uriPath.append(std::string(path.c_str(), path.size()));
+                uriPath.append(std::string(path.c_str(), path.Native().size()));
             }
             if (!prefix.empty() && !uriPath.empty())
             {

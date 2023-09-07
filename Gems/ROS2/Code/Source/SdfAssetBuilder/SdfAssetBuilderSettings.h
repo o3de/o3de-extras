@@ -10,6 +10,7 @@
 
 #include <AzCore/std/containers/unordered_map.h>
 #include <AssetBuilderSDK/AssetBuilderSDK.h>
+#include <AzCore/IO/Path/Path.h>
 #include <AzCore/Settings/SettingsRegistry.h>
 
 namespace ROS2
@@ -24,7 +25,7 @@ namespace ROS2
 
         static void Reflect(AZ::ReflectContext* context);
 
-        using UriPrefixMap = AZStd::unordered_map<AZStd::string, AZStd::vector<AZStd::string>>;
+        using UriPrefixMap = AZStd::unordered_map<AZStd::string, AZStd::vector<AZ::IO::Path>>;
 
         //! When true, use the set of paths in the AMENT_PREFIX_PATH environment variable to search for files
         bool m_useAmentPrefixPath = true;
