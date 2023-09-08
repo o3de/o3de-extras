@@ -543,7 +543,7 @@ namespace ROS2::Utils
 
         AZ_Trace("ResolveAssetPath", R"(Failed to resolve Relative Path: "%.*s" -> "%.*s")" "\n", 
             AZ_PATH_ARG(unresolvedPath), AZ_PATH_ARG(relativePath));
-        return "";
+        return {};
     }
 
     AZStd::fixed_string<AmentPrefixPathMaxSize> GetAmentPrefixPath()
