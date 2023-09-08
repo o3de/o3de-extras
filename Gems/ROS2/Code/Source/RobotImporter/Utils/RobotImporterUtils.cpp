@@ -477,7 +477,7 @@ namespace ROS2::Utils
                 if (replacedUriPath.empty())
                 {
                     AZ_Trace("ResolveAssetPath", R"(Resolved Path is empty: "%.*s" -> "")" "\n", AZ_PATH_ARG(unresolvedPath));
-                    return "";
+                    return {};
                 }
 
                 // If the replaced path is an absolute path, if it exists, return it.
