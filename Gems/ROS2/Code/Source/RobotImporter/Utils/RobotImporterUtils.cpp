@@ -497,8 +497,7 @@ namespace ROS2::Utils
                     }
                 }
 
-                // The URI path cannot be resolved within the any ament prefix path,
-                // so try the directory containing the root file as well as any of its parent directories
+                // The URI path is not absolute, so attempt to append it to the ancestor directories of the URDF/SDF file
                 for (const AZ::IO::Path& ancestorPath : ancestorPaths)
                 {
                     if (const AZ::IO::Path candidateResolvedPath = ancestorPath / replacedUriPath;
