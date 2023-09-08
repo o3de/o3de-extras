@@ -1,0 +1,23 @@
+/*
+ * Copyright (c) Contributors to the Open 3D Engine Project.
+ * For complete copyright and license terms please see the LICENSE at the root of this distribution.
+ *
+ * SPDX-License-Identifier: Apache-2.0 OR MIT
+ *
+ */
+
+#pragma once
+
+#include <AzCore/std/containers/vector.h>
+#include <AzCore/std/string/string.h>
+
+namespace ROS2::Utils
+{
+    //! Modifies in memory URDF to increase chance of successful conversion to SDF.
+    //! It does the following:
+    //! - Adds missing inertia to links of mass 1 kg and identity inertia matrix.
+    //! - Renames joints that have the same name as a link.
+    //! @param urdf URDF to modify.
+    //! @returns a modified URDF and a list of XML element that were modified
+    AZStd::pair<std::string, AZStd::vector<AZStd::string>> ModifyURDFInMemory(const std::string& data);
+} // namespace ROS2::Utils

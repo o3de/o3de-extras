@@ -14,6 +14,7 @@ namespace ROS2
     CheckUrdfPage::CheckUrdfPage(QWizard* parent)
         : QWizardPage(parent)
         , m_success(false)
+        , m_warning(false)
     {
         m_log = new QTextEdit(this);
         setTitle(tr("URDF opening results:"));
@@ -24,15 +25,21 @@ namespace ROS2
         setLayout(layout);
     }
 
-    void CheckUrdfPage::ReportURDFResult(const QString& status, bool isSuccess)
+    void CheckUrdfPage::ReportURDFResult(const QString& status, bool isSuccess, bool isWarning)
     {
         m_log->setMarkdown(status);
         m_success = isSuccess;
+        m_warning = isWarning;
         emit completeChanged();
     }
 
     bool CheckUrdfPage::isComplete() const
     {
         return m_success;
+    }
+
+    bool CheckUrdfPage::isWarning() const
+    {
+        return m_warning;
     }
 } // namespace ROS2

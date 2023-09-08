@@ -51,6 +51,7 @@ namespace ROS2
         constexpr auto SdfAssetBuilderUseArticulationsRegistryKey = SDFSettingsRootKey("UseArticulations");
         constexpr auto SdfAssetBuilderURDFPreserveFixedJointRegistryKey = SDFSettingsRootKey("URDFPreserveFixedJoint");
         constexpr auto SdfAssetBuilderImportMeshesJointRegistryKey = SDFSettingsRootKey("ImportMeshes");
+        constexpr auto SdfAssetBuilderFixURDFRegistryKey = SDFSettingsRootKey("FixURDF");
     }
 
     void SdfAssetBuilderSettings::Reflect(AZ::ReflectContext* context)
@@ -62,6 +63,7 @@ namespace ROS2
                 ->Field("UseArticulations", &SdfAssetBuilderSettings::m_useArticulations)
                 ->Field("URDFPreserveFixedJoint", &SdfAssetBuilderSettings::m_urdfPreserveFixedJoints)
                 ->Field("ImportReferencedMeshFiles", &SdfAssetBuilderSettings::m_importReferencedMeshFiles)
+                ->Field("FixURDF", &SdfAssetBuilderSettings::m_fixURDF)
 
                 // m_builderPatterns aren't serialized because we only use the serialization
                 // to detect when global settings changes cause us to rebuild our assets.
@@ -90,7 +92,13 @@ namespace ROS2
                         AZ::Edit::UIHandlers::Default,
                         &SdfAssetBuilderSettings::m_importReferencedMeshFiles,
                         "Import meshes",
-                        "Allows importing of referenced mesh content files such as .dae or .stl files when importing the URDF/SDF.");
+                        "Allows importing of referenced mesh content files such as .dae or .stl files when importing the URDF/SDF.")
+                    ->DataElement(
+                        AZ::Edit::UIHandlers::Default,
+                        &SdfAssetBuilderSettings::m_fixURDF,
+                        "Fix URDF to be compatible with libsdformat",
+                        "When set, fixes the URDF file before importing it. This is useful for fixing URDF files that have missing inertials or duplicate names within links and joints."
+                        );
             }
         }
     }
@@ -112,6 +120,9 @@ namespace ROS2
 
         // Query the import references meshes option from the Settings Registry to determine if mesh source assets are copied
         settingsRegistry->Get(m_importReferencedMeshFiles, SdfAssetBuilderImportMeshesJointRegistryKey);
+
+        // Query the fix URDF option from the Settings Registry to determine if the URDF file should be fixed before importing
+        settingsRegistry->Get(m_fixURDF, SdfAssetBuilderFixURDFRegistryKey);
 
         // Visit each supported file type extension and create an asset builder wildcard pattern for it.
         auto VisitFileTypeExtensions = [&settingsRegistry, this]
