@@ -526,7 +526,7 @@ namespace ROS2::Utils
             {
                 AZ_Trace("ResolveAssetPath", R"(Failed to resolve Absolute Path: "%.*s")" "\n", 
                     AZ_PATH_ARG(unresolvedPath));
-                return "";
+                return {};
             }
         }
 
