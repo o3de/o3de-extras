@@ -61,6 +61,10 @@ namespace ROS2
 
         void onEditingFinished();
 
+        //! Refresh the default path in the file dialog based either on what was previously selected
+        //! or what was entered in on the text edit line.
+        void RefreshDefaultPath();
+
         bool m_fileExists{ false };
     };
 } // namespace ROS2
