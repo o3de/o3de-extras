@@ -18,7 +18,7 @@
 
 namespace ROS2
 {
-    static const char FileSelectionPageDefaultFile[] = "RobotImporter/SelectFileDefaultFile";
+    static constexpr const char FileSelectionPageDefaultFile[] = "RobotImporter/SelectFileDefaultFile";
 
     FileSelectionPage::FileSelectionPage(QWizard* parent)
         : QWizardPage(parent)

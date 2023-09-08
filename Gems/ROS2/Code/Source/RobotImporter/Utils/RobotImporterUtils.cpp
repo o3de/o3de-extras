@@ -546,7 +546,7 @@ namespace ROS2::Utils
         return {};
     }
 
-    AZStd::fixed_string<AmentPrefixPathMaxSize> GetAmentPrefixPath()
+    AmentPrefixString GetAmentPrefixPath()
     {
         // Support reading the AMENT_PREFIX_PATH environment variable on Unix/Windows platforms
         auto StoreAmentPrefixPath = [](char* buffer, size_t size) -> size_t
@@ -554,7 +554,7 @@ namespace ROS2::Utils
             auto getEnvOutcome = AZ::Utils::GetEnv(AZStd::span(buffer, size), "AMENT_PREFIX_PATH");
             return getEnvOutcome ? getEnvOutcome.GetValue().size() : 0;
         };
-        AZStd::fixed_string<AmentPrefixPathMaxSize> amentPrefixPath;
+        AmentPrefixString amentPrefixPath;
         amentPrefixPath.resize_and_overwrite(amentPrefixPath.capacity(), StoreAmentPrefixPath);
         AZ_Error("UrdfAssetMap", !amentPrefixPath.empty(), "AMENT_PREFIX_PATH is not found.");
 

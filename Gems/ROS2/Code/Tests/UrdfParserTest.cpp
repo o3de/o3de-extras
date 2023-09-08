@@ -862,7 +862,8 @@ namespace UnitTest
     TEST_F(UrdfParserTest, TestPathResolve_ValidAbsolutePath_ResolvesCorrectly)
     {
         // Verify that an absolute path that wouldn't be resolved by prefixes or ancestor paths 
-        // or the AMENT_PREFIX_PATH will still resolve correctly as long as the absolute path exists on disk.
+        // or the AMENT_PREFIX_PATH will still resolve correctly as long as the absolute path exists
+        // (as determined by the mocked-out FileExistsCallback below).
         constexpr AZ::IO::PathView dae = "file:///usr/ros/humble/meshes/bar.dae";
         constexpr AZ::IO::PathView urdf = "/home/foo/ros_ws/install/foo_robot/foo_robot.urdf";
         constexpr AZ::IO::PathView expectedResult = "/usr/ros/humble/meshes/bar.dae";
@@ -871,7 +872,7 @@ namespace UnitTest
             urdf, "", GetTestSettings(),
             [expectedResult](const AZ::IO::PathView& p) -> bool
             {
-                // Only a file name that matches the expected result will return that it exists on disk.
+                // Only a file name that matches the expected result will return that it exists.
                 return p.LexicallyNormal() == expectedResult;
             });
         EXPECT_EQ(result.LexicallyNormal(), expectedResult);
@@ -879,7 +880,8 @@ namespace UnitTest
 
     TEST_F(UrdfParserTest, TestPathResolve_InvalidAbsolutePath_ReturnsEmptyPath)
     {
-        // Verify that an absolute path that isn't found on disk returns an empty path.
+        // Verify that an absolute path that isn't found (as determined by the mocked-out
+        // FileExistsCallback below) returns an empty path.
         constexpr AZ::IO::PathView dae = "file:///usr/ros/humble/meshes/bar.dae";
         constexpr AZ::IO::PathView urdf = "/home/foo/ros_ws/install/foo_robot/foo_robot.urdf";
         constexpr AZ::IO::PathView expectedResult = "";
@@ -905,7 +907,7 @@ namespace UnitTest
             urdf, "", GetTestSettings(),
             [expectedResult](const AZ::IO::PathView& p) -> bool
             {
-                // Only a file name that matches the expected result will return that it exists on disk.
+                // Only a file name that matches the expected result will return that it exists.
                 return p.LexicallyNormal() == expectedResult;
             });
         EXPECT_EQ(result.LexicallyNormal(), expectedResult);
