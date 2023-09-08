@@ -873,9 +873,9 @@ namespace UnitTest
             [expectedResult](const AZ::IO::PathView& p) -> bool
             {
                 // Only a file name that matches the expected result will return that it exists.
-                return p.LexicallyNormal() == expectedResult;
+                return p == expectedResult;
             });
-        EXPECT_EQ(result.LexicallyNormal(), expectedResult);
+        EXPECT_EQ(result, expectedResult);
     }
 
     TEST_F(UrdfParserTest, TestPathResolve_InvalidAbsolutePath_ReturnsEmptyPath)
@@ -893,7 +893,7 @@ namespace UnitTest
                 // Always return "not found" for all file names.
                 return false;
             });
-        EXPECT_EQ(result.LexicallyNormal(), expectedResult);
+        EXPECT_EQ(result, expectedResult);
     }
 
     TEST_F(UrdfParserTest, TestPathResolve_ValidRelativePath_ResolvesCorrectly)
@@ -908,9 +908,9 @@ namespace UnitTest
             [expectedResult](const AZ::IO::PathView& p) -> bool
             {
                 // Only a file name that matches the expected result will return that it exists.
-                return p.LexicallyNormal() == expectedResult;
+                return p == expectedResult;
             });
-        EXPECT_EQ(result.LexicallyNormal(), expectedResult);
+        EXPECT_EQ(result, expectedResult);
     }
 
     TEST_F(UrdfParserTest, TestPathResolve_InvalidRelativePath_ReturnsEmptyPath)
@@ -927,7 +927,7 @@ namespace UnitTest
                 // Always return "not found"
                 return false;
             });
-        EXPECT_EQ(result.LexicallyNormal(), expectedResult);
+        EXPECT_EQ(result, expectedResult);
     }
 
     TEST_F(UrdfParserTest, TestPathResolve_ValidAmentRelativePathButNoPrefix_ReturnsEmptyPath)
@@ -946,9 +946,9 @@ namespace UnitTest
                 // For an AMENT_PREFIX_PATH to be a valid match, the share/<package>/package.xml and share/<relative path>
                 // both need to exist. We'll return that both exist, but since the dae file entry doesn't start with 
                 // "package://" or "model://", it shouldn't get resolved.
-                return (p.LexicallyNormal() == AZ::IO::PathView("/ament/path2/share/robot/package.xml")) || (p.LexicallyNormal() == "/ament/path2/share/robot/meshes/bar.dae");
+                return (p == AZ::IO::PathView("/ament/path2/share/robot/package.xml")) || (p == "/ament/path2/share/robot/meshes/bar.dae");
             });
-        EXPECT_EQ(result.LexicallyNormal(), expectedResult);
+        EXPECT_EQ(result, expectedResult);
     }
 
     TEST_F(UrdfParserTest, TestPathResolve_ValidAmentRelativePathAndPrefix_ResolvesCorrectly)
@@ -966,9 +966,9 @@ namespace UnitTest
             {
                 // For an AMENT_PREFIX_PATH to be a valid match, the share/<package>/package.xml and share/<relative path>
                 // both need to exist.
-                return (p.LexicallyNormal() == AZ::IO::PathView("/ament/path2/share/robot/package.xml")) || (p.LexicallyNormal() == expectedResult);
+                return (p == AZ::IO::PathView("/ament/path2/share/robot/package.xml")) || (p == expectedResult);
             });
-        EXPECT_EQ(result.LexicallyNormal(), expectedResult);
+        EXPECT_EQ(result, expectedResult);
     }
 
     TEST_F(UrdfParserTest, TestPathResolve_ValidPathRelativeToAncestorPath_ResolvesCorrectly)
@@ -976,13 +976,13 @@ namespace UnitTest
         // Verify that a path that's relative to an ancestor path of the urdf file resolves correctly
         constexpr AZ::IO::PathView dae = "package://meshes/bar.dae";
         constexpr AZ::IO::PathView urdf = "/home/foo/ros_ws/install/foo_robot/description/foo_robot.urdf";
-        constexpr AZStd::string_view resolvedDae = "/home/foo/ros_ws/install/foo_robot/meshes/bar.dae";
+        constexpr AZ::IO::PathView expectedResult = "/home/foo/ros_ws/install/foo_robot/meshes/bar.dae";
         auto mockFileSystem = [&](const AZ::IO::PathView& p) -> bool
         {
-            return (p.LexicallyNormal() == resolvedDae);
+            return p.LexicallyNormal() == expectedResult;
         };
         auto result = ROS2::Utils::ResolveAssetPath(dae, urdf, "", GetTestSettings(), mockFileSystem);
-        EXPECT_EQ(result.LexicallyNormal(), resolvedDae);
+        EXPECT_EQ(result.LexicallyNormal(), expectedResult);
     }
 
     TEST_F(UrdfParserTest, TestPathResolve_ValidPathRelativeToAncestorPath_FailsToResolveWhenAncestorPathsDisabled)
@@ -990,7 +990,7 @@ namespace UnitTest
         // Verify that a path that's relative to an ancestor path of the urdf file fails to resolve if "use ancestor paths" is disabled.
         constexpr AZ::IO::PathView dae = "package://meshes/bar.dae";
         constexpr AZ::IO::PathView urdf = "/home/foo/ros_ws/install/foo_robot/description/foo_robot.urdf";
-        constexpr AZStd::string_view resolvedDae = "/home/foo/ros_ws/install/foo_robot/meshes/bar.dae";
+        constexpr AZ::IO::PathView resolvedDae = "/home/foo/ros_ws/install/foo_robot/meshes/bar.dae";
         
         auto settings = GetTestSettings();
         settings.m_resolverSettings.m_useAncestorPaths = false;
@@ -998,10 +998,10 @@ namespace UnitTest
         auto mockFileSystem = [&](const AZ::IO::PathView& p) -> bool
         {
             // This should never return true, because this path should never get requested.
-            return (p.LexicallyNormal() == resolvedDae);
+            return p == resolvedDae;
         };
         auto result = ROS2::Utils::ResolveAssetPath(dae, urdf, "", settings, mockFileSystem);
-        EXPECT_EQ(result.LexicallyNormal(), "");
+        EXPECT_EQ(result, "");
     }
 
     TEST_F(UrdfParserTest, TestPathResolvementExplicitPackageName)
@@ -1009,13 +1009,13 @@ namespace UnitTest
         constexpr AZ::IO::PathView dae = "package://foo_robot/meshes/bar.dae";
         constexpr AZ::IO::PathView urdf = "/home/foo/ros_ws/install/foo_robot/share/foo_robot/description/foo_robot.urdf";
         constexpr AZ::IO::PathView xml = "/home/foo/ros_ws/install/foo_robot/share/foo_robot/package.xml";
-        constexpr AZStd::string_view resolvedDae = "/home/foo/ros_ws/install/foo_robot/share/foo_robot/meshes/bar.dae";
+        constexpr AZ::IO::PathView resolvedDae = "/home/foo/ros_ws/install/foo_robot/share/foo_robot/meshes/bar.dae";
         auto mockFileSystem = [&](const AZ::IO::PathView& p) -> bool
         {
-            return (p.LexicallyNormal() == xml || p.LexicallyNormal() == resolvedDae);
+            return (p == xml) || (p == resolvedDae);
         };
         auto result = ROS2::Utils::ResolveAssetPath(dae, urdf, "/home/foo/ros_ws/install/foo_robot", GetTestSettings(), mockFileSystem);
-        EXPECT_EQ(result.LexicallyNormal(), resolvedDae);
+        EXPECT_EQ(result, resolvedDae);
     }
 
     TEST_F(UrdfParserTest, ResolvePath_UsingModelUriScheme_Succeeds)
@@ -1023,13 +1023,13 @@ namespace UnitTest
         constexpr AZ::IO::PathView dae = "model://foo_robot/meshes/bar.dae";
         constexpr AZ::IO::PathView urdf = "/home/foo/ros_ws/install/foo_robot/share/foo_robot/description/foo_robot.urdf";
         constexpr AZ::IO::PathView xml = "/home/foo/ros_ws/install/foo_robot/share/foo_robot/package.xml";
-        constexpr AZStd::string_view resolvedDae = "/home/foo/ros_ws/install/foo_robot/share/foo_robot/meshes/bar.dae";
+        constexpr AZ::IO::PathView resolvedDae = "/home/foo/ros_ws/install/foo_robot/share/foo_robot/meshes/bar.dae";
         auto mockFileSystem = [&](const AZ::IO::PathView& p) -> bool
         {
-            return (p.LexicallyNormal() == xml || p.LexicallyNormal() == resolvedDae);
+            return (p == xml) || (p == resolvedDae);
         };
         auto result = ROS2::Utils::ResolveAssetPath(dae, urdf, "/home/foo/ros_ws/install/foo_robot", GetTestSettings(), mockFileSystem);
-        EXPECT_EQ(result.LexicallyNormal(), resolvedDae);
+        EXPECT_EQ(result, resolvedDae);
     }
 
     TEST_F(UrdfParserTest, XacroParseArgsInvalid)
