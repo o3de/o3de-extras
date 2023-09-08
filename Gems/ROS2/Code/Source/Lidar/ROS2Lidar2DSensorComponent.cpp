@@ -25,7 +25,7 @@ namespace ROS2
     {
         if (auto* serializeContext = azrtti_cast<AZ::SerializeContext*>(context))
         {
-            serializeContext->Class<ROS2Lidar2DSensorComponent, SensorBaseType>()->Version(2)->Field(
+            serializeContext->Class<ROS2Lidar2DSensorComponent, SensorBaseType>()->Version(3)->Field(
                 "lidarCore", &ROS2Lidar2DSensorComponent::m_lidarCore);
 
             if (auto* editContext = serializeContext->GetEditContext())
@@ -61,11 +61,6 @@ namespace ROS2
         m_sensorConfiguration = sensorConfiguration;
     }
 
-    void ROS2Lidar2DSensorComponent::Visualize()
-    {
-        m_lidarCore.VisualizeResults();
-    }
-
     void ROS2Lidar2DSensorComponent::Activate()
     {
         m_lidarCore.Init(GetEntityId());
@@ -89,7 +84,11 @@ namespace ROS2
             },
             [this]([[maybe_unused]] auto&&... args)
             {
-                Visualize();
+                if (!m_sensorConfiguration.m_visualize)
+                {
+                    return;
+                }
+                m_lidarCore.VisualizeResults();
             });
     }
 

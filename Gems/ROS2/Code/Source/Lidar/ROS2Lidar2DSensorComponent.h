@@ -42,7 +42,6 @@ namespace ROS2
     private:
         //////////////////////////////////////////////////////////////////////////
         void FrequencyTick();
-        void Visualize();
 
         std::shared_ptr<rclcpp::Publisher<sensor_msgs::msg::LaserScan>> m_laserScanPublisher;
 

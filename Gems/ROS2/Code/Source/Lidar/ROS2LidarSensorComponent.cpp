@@ -61,11 +61,6 @@ namespace ROS2
         m_sensorConfiguration = sensorConfiguration;
     }
 
-    void ROS2LidarSensorComponent::Visualize()
-    {
-        m_lidarCore.VisualizeResults();
-    }
-
     void ROS2LidarSensorComponent::Activate()
     {
         m_lidarCore.Init(GetEntityId());
@@ -112,7 +107,11 @@ namespace ROS2
             },
             [this]([[maybe_unused]] auto&&... args)
             {
-                Visualize();
+                if (!m_sensorConfiguration.m_visualize)
+                {
+                    return;
+                }
+                m_lidarCore.VisualizeResults();
             });
     }
 

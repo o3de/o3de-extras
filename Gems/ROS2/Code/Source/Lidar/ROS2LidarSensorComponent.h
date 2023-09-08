@@ -44,7 +44,6 @@ namespace ROS2
         //////////////////////////////////////////////////////////////////////////
         // ROS2SensorComponent overrides
         void FrequencyTick();
-        void Visualize();
 
         bool m_canRaycasterPublish = false;
         std::shared_ptr<rclcpp::Publisher<sensor_msgs::msg::PointCloud2>> m_pointCloudPublisher;
