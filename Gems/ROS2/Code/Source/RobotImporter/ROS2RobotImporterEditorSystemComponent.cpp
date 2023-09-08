@@ -105,7 +105,7 @@ namespace ROS2
         // Set the parser config settings for URDF content
         sdf::ParserConfig parserConfig = Utils::SDFormat::CreateSdfParserConfigFromSettings(sdfBuilderSettings);
 
-        auto parsedUrdfOutcome = UrdfParser::ParseFromFile(filePath, parserConfig);
+        auto parsedUrdfOutcome = UrdfParser::ParseFromFile(filePath, parserConfig, sdfBuilderSettings);
         if (!parsedUrdfOutcome)
         {
             const AZStd::string log = Utils::JoinSdfErrorsToString(parsedUrdfOutcome.GetSdfErrors());

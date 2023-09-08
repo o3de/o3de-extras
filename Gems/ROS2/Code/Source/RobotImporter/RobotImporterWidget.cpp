@@ -12,15 +12,15 @@
 #include <AzCore/Utils/Utils.h>
 
 #include "RobotImporterWidget.h"
-#include <SdfAssetBuilder/SdfAssetBuilderSettings.h>
-#include <URDF/URDFPrefabMaker.h>
-#include <URDF/UrdfParser.h>
-#include <Utils/FilePath.h>
-#include <Utils/RobotImporterUtils.h>
-#include <Utils/ErrorUtils.h>
 #include <QApplication>
 #include <QScreen>
 #include <QTranslator>
+#include <SdfAssetBuilder/SdfAssetBuilderSettings.h>
+#include <URDF/URDFPrefabMaker.h>
+#include <URDF/UrdfParser.h>
+#include <Utils/ErrorUtils.h>
+#include <Utils/FilePath.h>
+#include <Utils/RobotImporterUtils.h>
 
 namespace ROS2
 {
@@ -118,8 +118,7 @@ namespace ROS2
                         report += "```\n";
                         if (outcome.m_logErrorOutput.size())
                         {
-                            report +=
-                                QString::fromUtf8(outcome.m_logErrorOutput.data(), static_cast<int>(outcome.m_logErrorOutput.size()));
+                            report += QString::fromUtf8(outcome.m_logErrorOutput.data(), static_cast<int>(outcome.m_logErrorOutput.size()));
                         }
                         else
                         {
@@ -130,8 +129,8 @@ namespace ROS2
                         report += "```\n";
                         if (outcome.m_logStandardOutput.size())
                         {
-                            report += QString::fromUtf8(
-                                outcome.m_logStandardOutput.data(), static_cast<int>(outcome.m_logStandardOutput.size()));
+                            report +=
+                                QString::fromUtf8(outcome.m_logStandardOutput.data(), static_cast<int>(outcome.m_logStandardOutput.size()));
                         }
                         else
                         {
@@ -146,21 +145,36 @@ namespace ROS2
             else if (Utils::IsFileUrdf(m_urdfPath))
             {
                 // standard URDF
-                parsedUrdfOutcome = UrdfParser::ParseFromFile(m_urdfPath, parserConfig);
+                parsedUrdfOutcome = UrdfParser::ParseFromFile(m_urdfPath, parserConfig, sdfBuilderSettings);
             }
             else
             {
                 AZ_Assert(false, "Unknown file extension : %s \n", m_urdfPath.c_str());
             }
             AZStd::string log;
-            bool urdfParsedSuccess{ parsedUrdfOutcome };
+            const bool urdfParsedSuccess{ parsedUrdfOutcome };
+            const bool urdfParsedWithWarnings{ parsedUrdfOutcome.UrdfParsedWithModifiedContent() };
             if (urdfParsedSuccess)
             {
+                if (urdfParsedWithWarnings)
+                {
+                    report += "# " + tr("The URDF was parsed, though results were modified to be compatible with SDFormat") + "\n";
+                    report += tr("Modified tags in URDF:") + "\n";
+                    for (const auto& modifiedTag : parsedUrdfOutcome.m_modifiedURDFTags)
+                    {
+                        report += " - " + QString::fromUtf8(modifiedTag.data(), static_cast<int>(modifiedTag.size())) + "\n";
+                    }
+                    report += "\n# "+tr("The modified URDF code:") + "\n";
+                    report += "```\n" + QString::fromStdString(parsedUrdfOutcome.m_modifiedURDFContent) + "```\n";
+                }
+                else
+                {
+                    report += "# " + tr("The URDF was parsed and opened successfully") + "\n";
+                    AZ_Printf("Wizard", "Wizard skips m_checkUrdfPage since there is no errors in URDF\n");
+                }
                 m_parsedUrdf = AZStd::move(parsedUrdfOutcome.GetRoot());
-                report += "# " + tr("The URDF was parsed and opened successfully") + "\n";
                 m_prefabMaker.reset();
                 // Report the status of skipping this page
-                AZ_Printf("Wizard", "Wizard skips m_checkUrdfPage since there is no errors in URDF\n");
                 m_meshNames = Utils::GetMeshesFilenames(&m_parsedUrdf, true, true);
                 m_assetPage->ClearAssetsList();
             }
@@ -176,6 +190,7 @@ namespace ROS2
                 report += QString::fromUtf8(log.data(), int(log.size()));
                 report += "`";
             }
+            m_checkUrdfPage->ReportURDFResult(report, urdfParsedSuccess, urdfParsedWithWarnings);
             if (parsedUrdfOutcome.m_parseMessages.size() > 0)
             {
                 report += "\n\n";
@@ -360,6 +375,10 @@ namespace ROS2
     {
         if ((currentPage() == m_fileSelectPage && m_params.empty()) || currentPage() == m_xacroParamsPage)
         {
+            if (m_parsedUrdf.Model() != nullptr && !m_checkUrdfPage->isWarning())
+            {
+                return m_xacroParamsPage->nextId();
+            }
             if (m_parsedUrdf.Model() != nullptr && m_checkUrdfPage->isComplete())
             {
                 if (m_meshNames.size() == 0)

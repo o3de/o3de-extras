@@ -71,13 +71,16 @@ namespace ROS2
 
         void MoveToSetPositions(float deltaTime);
 
+        AZStd::string GetManipulatorNamespace() const;
+
         AZ::Outcome<JointPosition, AZStd::string> GetJointPosition(const JointInfo& jointInfo);
         AZ::Outcome<JointVelocity, AZStd::string> GetJointVelocity(const JointInfo& jointInfo);
         AZ::Outcome<JointEffort, AZStd::string> GetJointEffort(const JointInfo& jointInfo);
 
         AZStd::unique_ptr<JointStatePublisher> m_jointStatePublisher;
         PublisherConfiguration m_jointStatePublisherConfiguration;
-        ManipulationJoints m_manipulationJoints;
-        AZStd::unordered_map<AZStd::string, JointPosition> m_initialPositions;
+        ManipulationJoints m_manipulationJoints; //!< Map of JointInfo where the key is a joint name (with namespace included)
+        AZStd::unordered_map<AZStd::string, JointPosition>
+            m_initialPositions; //!< Initial positions where the key is joint name (without namespace included)
     };
 } // namespace ROS2
