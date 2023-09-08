@@ -121,8 +121,8 @@ namespace ROS2::Utils
         const SdfAssetBuilderSettings& settings,
         const FileExistsCB& fileExists = &Internal::FileExistsCall);
 
-    static constexpr inline int AmentPrefixPathMaxSize = 4096;
-    AZStd::fixed_string<AmentPrefixPathMaxSize> GetAmentPrefixPath();
+    using AmentPrefixString = AZStd::fixed_string<4096>;
+    AmentPrefixString GetAmentPrefixPath();
 } // namespace ROS2::Utils
 
 namespace ROS2::Utils::SDFormat
