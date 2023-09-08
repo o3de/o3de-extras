@@ -194,7 +194,7 @@ namespace ROS2
         parserConfig.URDFSetPreserveFixedJoint(m_globalSettings.m_urdfPreserveFixedJoints);
 
         AZ_Info(SdfAssetBuilderName, "Parsing source file: %s", fullSourcePath.c_str());
-        auto parsedSdfRootOutcome = UrdfParser::ParseFromFile(fullSourcePath, parserConfig);
+        auto parsedSdfRootOutcome = UrdfParser::ParseFromFile(fullSourcePath, parserConfig, m_globalSettings);
         if (!parsedSdfRootOutcome)
         {
             const AZStd::string sdfParseErrors = Utils::JoinSdfErrorsToString(parsedSdfRootOutcome.GetSdfErrors());
@@ -257,7 +257,7 @@ namespace ROS2
 
         // Read in and parse the source SDF file.
         AZ_Info(SdfAssetBuilderName, "Parsing source file: %s", request.m_fullPath.c_str());
-        auto parsedSdfRootOutcome = UrdfParser::ParseFromFile(AZ::IO::PathView(request.m_fullPath), parserConfig);
+        auto parsedSdfRootOutcome = UrdfParser::ParseFromFile(AZ::IO::PathView(request.m_fullPath), parserConfig, m_globalSettings);
         if (!parsedSdfRootOutcome)
         {
             const AZStd::string sdfParseErrors = Utils::JoinSdfErrorsToString(parsedSdfRootOutcome.GetSdfErrors());

@@ -106,7 +106,7 @@ namespace ROS2
         sdf::ParserConfig parserConfig;
         parserConfig.URDFSetPreserveFixedJoint(sdfBuilderSettings.m_urdfPreserveFixedJoints);
 
-        auto parsedUrdfOutcome = UrdfParser::ParseFromFile(filePath, parserConfig);
+        auto parsedUrdfOutcome = UrdfParser::ParseFromFile(filePath, parserConfig, sdfBuilderSettings);
         if (!parsedUrdfOutcome)
         {
             const AZStd::string log = Utils::JoinSdfErrorsToString(parsedUrdfOutcome.GetSdfErrors());
