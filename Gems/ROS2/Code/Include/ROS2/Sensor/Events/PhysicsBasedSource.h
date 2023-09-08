@@ -9,6 +9,7 @@
 #pragma once
 
 #include <AzCore/EBus/OrderedEvent.h>
+#include <AzFramework/Physics/Common/PhysicsEvents.h>
 #include <AzFramework/Physics/Common/PhysicsTypes.h>
 #include <ROS2/Sensor/Events/SensorEventSource.h>
 
