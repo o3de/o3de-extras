@@ -307,9 +307,9 @@ namespace UnitTest
             ROS2::SdfAssetBuilderSettings settings;
             settings.m_resolverSettings.m_useAmentPrefixPath = true;
             settings.m_resolverSettings.m_useAncestorPaths = true;
-            settings.m_resolverSettings.m_uriPrefixMap.emplace("model://", AZStd::vector<AZ::IO::Path>({"."}));
-            settings.m_resolverSettings.m_uriPrefixMap.emplace("package://", AZStd::vector<AZ::IO::Path>({"."}));
-            settings.m_resolverSettings.m_uriPrefixMap.emplace("file://", AZStd::vector<AZ::IO::Path>({"."}));
+            settings.m_resolverSettings.m_uriPrefixMap.emplace("model://", AZStd::vector<AZStd::string>({"."}));
+            settings.m_resolverSettings.m_uriPrefixMap.emplace("package://", AZStd::vector<AZStd::string>({"."}));
+            settings.m_resolverSettings.m_uriPrefixMap.emplace("file://", AZStd::vector<AZStd::string>({"."}));
 
             return settings;
         }
@@ -979,10 +979,10 @@ namespace UnitTest
         constexpr AZ::IO::PathView expectedResult = "/home/foo/ros_ws/install/foo_robot/meshes/bar.dae";
         auto mockFileSystem = [&](const AZ::IO::PathView& p) -> bool
         {
-            return p.LexicallyNormal() == expectedResult;
+            return p == expectedResult;
         };
         auto result = ROS2::Utils::ResolveAssetPath(dae, urdf, "", GetTestSettings(), mockFileSystem);
-        EXPECT_EQ(result.LexicallyNormal(), expectedResult);
+        EXPECT_EQ(result, expectedResult);
     }
 
     TEST_F(UrdfParserTest, TestPathResolve_ValidPathRelativeToAncestorPath_FailsToResolveWhenAncestorPathsDisabled)
