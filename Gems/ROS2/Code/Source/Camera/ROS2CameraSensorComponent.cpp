@@ -6,17 +6,9 @@
  *
  */
 
-#include "CameraUtilities.h"
 #include "ROS2CameraSensorComponent.h"
-#include <ROS2/Communication/TopicConfiguration.h>
+#include "CameraUtilities.h"
 #include <ROS2/Frame/ROS2FrameComponent.h>
-
-#include <AzCore/Component/Entity.h>
-#include <AzCore/Component/TransformBus.h>
-#include <AzCore/Serialization/EditContext.h>
-#include <AzCore/Serialization/SerializeContext.h>
-
-#include <sensor_msgs/distortion_models.hpp>
 
 namespace ROS2
 {
@@ -34,15 +26,13 @@ namespace ROS2
         auto* serialize = azrtti_cast<AZ::SerializeContext*>(context);
         if (serialize)
         {
-            serialize->Class<ROS2CameraSensorComponent, ROS2SensorComponent>()->Version(4)->Field(
+            serialize->Class<ROS2CameraSensorComponent, SensorBaseType>()->Version(5)->Field(
                 "CameraSensorConfig", &ROS2CameraSensorComponent::m_cameraConfiguration);
         }
     }
 
     void ROS2CameraSensorComponent::Activate()
     {
-        ROS2SensorComponent::Activate();
-
         if (m_cameraConfiguration.m_colorCamera && m_cameraConfiguration.m_depthCamera)
         {
             AddImageSource<CameraRGBDSensor>();
@@ -57,15 +47,26 @@ namespace ROS2
         }
 
         const auto* component = Utils::GetGameOrEditorComponent<ROS2FrameComponent>(GetEntity());
-        AZ_Assert(component, "Entity has no ROS2FrameComponent");
+        AZ_Assert(component, "Entity has no ROS2FrameComponent")
         m_frameName = component->GetFrameID();
         ROS2::CameraCalibrationRequestBus::Handler::BusConnect(GetEntityId());
+
+        StartSensor(
+            m_sensorConfiguration.m_frequency,
+            [this]([[maybe_unused]] auto&&... args)
+            {
+                if (!m_sensorConfiguration.m_publishingEnabled)
+                {
+                    return;
+                }
+                FrequencyTick();
+            });
     }
 
     void ROS2CameraSensorComponent::Deactivate()
     {
+        StopSensor();
         m_cameraSensor.reset();
-        ROS2SensorComponent::Deactivate();
         ROS2::CameraCalibrationRequestBus::Handler::BusDisconnect(GetEntityId());
     }
 
@@ -73,22 +74,22 @@ namespace ROS2
     {
         return CameraUtils::MakeCameraIntrinsics(
             m_cameraConfiguration.m_width, m_cameraConfiguration.m_height, m_cameraConfiguration.m_verticalFieldOfViewDeg);
-    };
+    }
 
     int ROS2CameraSensorComponent::GetWidth() const
     {
         return m_cameraConfiguration.m_width;
-    };
+    }
 
     int ROS2CameraSensorComponent::GetHeight() const
     {
         return m_cameraConfiguration.m_height;
-    };
+    }
 
     float ROS2CameraSensorComponent::GetVerticalFOV() const
     {
         return m_cameraConfiguration.m_verticalFieldOfViewDeg;
-    };
+    }
 
     void ROS2CameraSensorComponent::GetRequiredServices(AZ::ComponentDescriptor::DependencyArrayType& required)
     {
@@ -107,21 +108,24 @@ namespace ROS2
 
     void ROS2CameraSensorComponent::FrequencyTick()
     {
+        if (!m_cameraSensor)
+        {
+            return;
+        }
+
         const AZ::Transform transform = GetEntity()->GetTransform()->GetWorldTM();
         const auto timestamp = ROS2Interface::Get()->GetROSTimestamp();
-        if (m_cameraSensor)
-        {
-            std_msgs::msg::Header messageHeader;
-            messageHeader.stamp = timestamp;
-            messageHeader.frame_id = m_frameName.c_str();
-            m_cameraSensor->RequestMessagePublication(transform, messageHeader);
-        }
+
+        std_msgs::msg::Header messageHeader;
+        messageHeader.stamp = timestamp;
+        messageHeader.frame_id = m_frameName.c_str();
+        m_cameraSensor->RequestMessagePublication(transform, messageHeader);
     }
 
     AZStd::string ROS2CameraSensorComponent::GetCameraNameFromFrame(const AZ::Entity* entity) const
     {
         const auto* component = Utils::GetGameOrEditorComponent<ROS2FrameComponent>(entity);
-        AZ_Assert(component, "Entity %s has no ROS2CameraSensorComponent", entity->GetName().c_str());
+        AZ_Assert(component, "Entity %s has no ROS2CameraSensorComponent", entity->GetName().c_str())
         if (component)
         {
             AZStd::string cameraName = component->GetFrameID();
