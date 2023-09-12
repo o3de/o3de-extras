@@ -133,8 +133,10 @@ namespace ROS2
 
         auto* sceneInterface = AZ::Interface<AzPhysics::SceneInterface>::Get();
         auto* body = sceneInterface->GetSimulatedBodyFromHandle(sceneHandle, m_bodyHandle);
-        auto rigidbody = azrtti_cast<AzPhysics::RigidBody*>(body);
+        AZ_Assert(body, "Requested simulated body does not exist");
+        auto* rigidbody = azrtti_cast<AzPhysics::RigidBody*>(body);
         AZ_Assert(rigidbody, "Requested simulated body is not a rigid body");
+
         auto inv = rigidbody->GetTransform().GetInverse();
         const auto linearVelocity = inv.TransformVector(rigidbody->GetLinearVelocity());
         m_filterAcceleration.push_back(linearVelocity);
