@@ -50,7 +50,7 @@ namespace ROS2
         TopicConfiguration ls;
         AZStd::string type = LaserScanType;
         ls.m_type = type;
-        ls.m_topic = "ls";
+        ls.m_topic = "scan";
         m_sensorConfiguration.m_frequency = 10.f;
         m_sensorConfiguration.m_publishersConfigurations.insert(AZStd::make_pair(type, ls));
     }
