@@ -102,15 +102,14 @@ namespace ROS2::UrdfParser
         {
             RedirectSDFOutputStream redirectConsoleStreamMsg(sdf::Console::Instance()->GetMsgStream(), parseStringStream);
             parseResult.m_sdfErrors = parseResult.m_root.LoadSdfString(xmlString, parserConfig);
-            // Get any captured sdf::Error messages
         }
-        const auto & parseMessages = parseStringStream.str();
+        // Get any captured sdf::Console messages
+        const auto& parseMessages = parseStringStream.str();
 
-        // regular exprsion to escape console's color codes
+        // regular expression to escape console's color codes
         const AZStd::regex escapeColor("\x1B\\[[0-9;]*[A-Za-z]");
 
         parseResult.m_parseMessages =  AZStd::regex_replace(AZStd::string(parseMessages.c_str(), parseMessages.size()),escapeColor, "");
-        AZ_Printf("ROS2", "SDF Stream: %s", parseResult.m_parseMessages.c_str());
 
         // if there are no parse errors return the sdf Root object otherwise return the errors
         return parseResult;

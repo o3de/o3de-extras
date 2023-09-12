@@ -116,7 +116,7 @@ namespace ROS2
         Utils::VisitJoints(*GetFirstModel(), BuildAssetsFromJointChildLinks, visitNestedModelLinks);
     }
 
-    URDFPrefabMaker::CreatePrefabTemplateResult URDFPrefabMaker::CreatePrefabTemplateFromURDF()
+    URDFPrefabMaker::CreatePrefabTemplateResult URDFPrefabMaker::CreatePrefabTemplateFromUrdfOrSdf()
     {
         {
             AZStd::lock_guard<AZStd::mutex> lck(m_statusLock);
@@ -141,7 +141,7 @@ namespace ROS2
         for (const auto& [name, result] : createdLinks)
         {
             AZ_Trace(
-                "CreatePrefabFromURDF",
+                "CreatePrefabFromUrdfOrSdf",
                 "Link with name %s was created as: %s\n",
                 name.c_str(),
                 result.IsSuccess() ? (result.GetValue().ToString().c_str()) : ("[Failed]"));
@@ -170,7 +170,7 @@ namespace ROS2
                     if (transformInterface)
                     {
                         AZ_Trace(
-                            "CreatePrefabFromURDF",
+                            "CreatePrefabFromUrdfOrSdf",
                             "Setting transform %s %s to [%f %f %f] [%f %f %f %f]\n",
                             name.c_str(),
                             thisEntry.GetValue().ToString().c_str(),
@@ -185,7 +185,7 @@ namespace ROS2
                     }
                     else
                     {
-                        AZ_Trace("CreatePrefabFromURDF", "Setting transform failed: %s does not have transform interface\n", name.c_str());
+                        AZ_Trace("CreatePrefabFromUrdfOrSdf", "Setting transform failed: %s does not have transform interface\n", name.c_str());
                     }
                 }
             }
@@ -198,7 +198,7 @@ namespace ROS2
             const auto linkPrefabResult = createdLinks.at(linkName);
             if (!linkPrefabResult.IsSuccess())
             {
-                AZ_Trace("CreatePrefabFromURDF", "Link %s creation failed\n", linkName.c_str());
+                AZ_Trace("CreatePrefabFromUrdfOrSdf", "Link %s creation failed\n", linkName.c_str());
                 continue;
             }
 
@@ -213,7 +213,7 @@ namespace ROS2
                 {
                     linkEntityIdsWithoutParent.emplace_back(linkPrefabResult.GetValue());
                 }
-                AZ_Trace("CreatePrefabFromURDF", "Link %s has no parents\n", linkName.c_str());
+                AZ_Trace("CreatePrefabFromUrdfOrSdf", "Link %s has no parents\n", linkName.c_str());
                 continue;
             }
 
@@ -235,20 +235,20 @@ namespace ROS2
             const auto parentEntry = createdLinks.find(parentName);
             if (parentEntry == createdLinks.end())
             {
-                AZ_Trace("CreatePrefabFromURDF", "Link %s has invalid parent name %s\n", linkName.c_str(), parentName.c_str());
+                AZ_Trace("CreatePrefabFromUrdfOrSdf", "Link %s has invalid parent name %s\n", linkName.c_str(), parentName.c_str());
                 continue;
             }
             if (!parentEntry->second.IsSuccess())
             {
-                AZ_Trace("CreatePrefabFromURDF", "Link %s has parent %s which has failed to create\n", linkName.c_str(), parentName.c_str());
+                AZ_Trace("CreatePrefabFromUrdfOrSdf", "Link %s has parent %s which has failed to create\n", linkName.c_str(), parentName.c_str());
                 continue;
             }
             AZ_Trace(
-                "CreatePrefabFromURDF",
+                "CreatePrefabFromUrdfOrSdf",
                 "Link %s setting parent to %s\n",
                 linkPrefabResult.GetValue().ToString().c_str(),
                 parentEntry->second.GetValue().ToString().c_str());
-            AZ_Trace("CreatePrefabFromURDF", "Link %s setting parent to %s\n", linkName.c_str(), parentName.c_str());
+            AZ_Trace("CreatePrefabFromUrdfOrSdf", "Link %s setting parent to %s\n", linkName.c_str(), parentName.c_str());
             PrefabMakerUtils::SetEntityParent(linkPrefabResult.GetValue(), parentEntry->second.GetValue());
         }
 
@@ -264,7 +264,7 @@ namespace ROS2
             auto parentLinkIter = createdLinks.find(parentLinkName);
             if (parentLinkIter == createdLinks.end())
             {
-                AZ_Warning("CreatePrefabFromURDF", false, "Joint %s has no parent link %s. Cannot create", azJointName.c_str(), parentLinkName.c_str());
+                AZ_Warning("CreatePrefabFromUrdfOrSdf", false, "Joint %s has no parent link %s. Cannot create", azJointName.c_str(), parentLinkName.c_str());
                 return true;
             }
             auto leadEntity = parentLinkIter->second;
@@ -272,13 +272,13 @@ namespace ROS2
             auto childLinkIter = createdLinks.find(childLinkName);
             if (childLinkIter == createdLinks.end())
             {
-                AZ_Warning("CreatePrefabFromURDF", false, "Joint %s has no child link %s. Cannot create", azJointName.c_str(), childLinkName.c_str());
+                AZ_Warning("CreatePrefabFromUrdfOrSdf", false, "Joint %s has no child link %s. Cannot create", azJointName.c_str(), childLinkName.c_str());
                 return true;
             }
             auto childEntity = childLinkIter->second;
 
             AZ_Trace(
-                "CreatePrefabFromURDF",
+                "CreatePrefabFromUrdfOrSdf",
                 "Creating joint %s : %s -> %s\n",
                 azJointName.c_str(),
                 parentLinkName.c_str(),
@@ -306,7 +306,7 @@ namespace ROS2
                 }
                 else
                 {
-                    AZ_Warning("CreatePrefabFromURDF", false, "cannot create joint %s", azJointName.c_str());
+                    AZ_Warning("CreatePrefabFromUrdfOrSdf", false, "cannot create joint %s", azJointName.c_str());
                 }
             }
             return true;
@@ -353,16 +353,16 @@ namespace ROS2
 
         if (prefabTemplateId == AzToolsFramework::Prefab::InvalidTemplateId)
         {
-            AZ_Error("CreatePrefabFromURDF", false, "Could not create a prefab template for entities.");
+            AZ_Error("CreatePrefabFromUrdfOrSdf", false, "Could not create a prefab template for entities.");
             return AZ::Failure("Could not create a prefab template for entities.");
         }
 
-        AZ_Info("CreatePrefabFromURDF", "Successfully created prefab %s\n", m_prefabPath.c_str());
+        AZ_Info("CreatePrefabFromUrdfOrSdf", "Successfully created prefab %s\n", m_prefabPath.c_str());
 
         return AZ::Success(prefabTemplateId);
     }
 
-    URDFPrefabMaker::CreatePrefabTemplateResult URDFPrefabMaker::CreatePrefabFromURDF()
+    URDFPrefabMaker::CreatePrefabTemplateResult URDFPrefabMaker::CreatePrefabFromUrdfOrSdf()
     {
         // Begin an undo batch for prefab creation process
         AzToolsFramework::UndoSystem::URSequencePoint* currentUndoBatch = nullptr;
@@ -373,7 +373,7 @@ namespace ROS2
             AZ_Warning("URDF Prefab Maker", false, "Unable to start undobatch, EBus might not be listening");
         }
 
-        auto result = CreatePrefabTemplateFromURDF();
+        auto result = CreatePrefabTemplateFromUrdfOrSdf();
         if (!result.IsSuccess())
         {
             // End undo batch labeled "Robot Importer prefab creation" preemptively if an error occurs

@@ -27,21 +27,21 @@
 
 namespace ROS2
 {
-    //! Encapsulates constructive mapping of URDF elements to a complete prefab with entities and components
+    //! Encapsulates constructive mapping of SDF elements to a complete prefab with entities and components
     class URDFPrefabMaker
     {
     public:
-        //! Construct URDFPrefabMaker from arguments.
-        //! @param modelFilePath path to the source URDF model.
+        //! Construct PrefabMaker from arguments.
+        //! @param modelFilePath path to the source URDF/SDF model or world.
         //! @param root parsed SDF root object.
         //! @param prefabPath path to the prefab which will be created as a result of import.
-        //! @param urdfAssetsMapping prepared mapping of URDF meshes to Assets.
-        //! @param useArticulations allows urdfImporter to create PhysXArticulations instead of multiple rigid bodies and joints.
+        //! @param urdfAssetsMapping prepared mapping of SDF meshes to Assets.
+        //! @param useArticulations allows sdfImporter to create PhysXArticulations instead of multiple rigid bodies and joints.
         URDFPrefabMaker(
             const AZStd::string& modelFilePath,
             const sdf::Root* root,
             AZStd::string prefabPath,
-            const AZStd::shared_ptr<Utils::UrdfAssetMap> urdfAssetsMapping,
+            const AZStd::shared_ptr<Utils::UrdfAssetMap> sdfAssetsMapping,
             bool useArticulations = false,
             AZStd::optional<AZ::Transform> spawnPosition = AZStd::nullopt);
 
@@ -51,14 +51,14 @@ namespace ROS2
         //! and an error string on failure.
         using CreatePrefabTemplateResult = AZ::Outcome<AzToolsFramework::Prefab::TemplateId, AZStd::string>;
 
-        //! Create and return a prefab template corresponding to the URDF model as set through the constructor.
+        //! Create and return a prefab template corresponding to the SDF model as set through the constructor.
         //! This will also instantiate the prefab template into the level.
         //! @return result which is either the prefab template id containing the imported model or an error message.
-        CreatePrefabTemplateResult CreatePrefabFromURDF();
+        CreatePrefabTemplateResult CreatePrefabFromUrdfOrSdf();
 
-        //! Create and return a prefab template id corresponding to the URDF model set in the constructor.
+        //! Create and return a prefab template id corresponding to the URDF/SDF model/world set in the constructor.
         //! @return result which is either the prefab template id or an error message.
-        CreatePrefabTemplateResult CreatePrefabTemplateFromURDF();
+        CreatePrefabTemplateResult CreatePrefabTemplateFromUrdfOrSdf();
 
         //! Get path to the prefab resulting from the import.
         //! @return path to the prefab.

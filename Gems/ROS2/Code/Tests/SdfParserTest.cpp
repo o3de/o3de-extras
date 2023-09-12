@@ -10,32 +10,16 @@
 #include <AzCore/std/smart_ptr/make_shared.h>
 #include <AzTest/AzTest.h>
 #include <RobotImporter/SDFormat/ROS2SensorHooks.h>
+#include <RobotImporter/Utils/ErrorUtils.h>
 #include <RobotImporter/Utils/RobotImporterUtils.h>
-
-#include <sdf/sdf.hh>
+#include <RobotImporter/URDF/UrdfParser.h>
 
 namespace UnitTest
 {
-
-    class SdfParserTest : public LeakDetectionFixture
+    class SdfParserTest
+      : public LeakDetectionFixture
     {
     public:
-        AZStd::shared_ptr<sdf::Root> Parse(const std::string& xmlString)
-        {
-            sdf::SDFPtr sdfElement(new sdf::SDF());
-            sdf::init(sdfElement);
-            sdf::Errors readErrors;
-            const bool success = sdf::readString(xmlString, sdfElement, readErrors);
-            if (!success)
-            {
-                return nullptr;
-            }
-
-            auto sdfDom = AZStd::make_shared<sdf::Root>();
-            sdf::Errors parseErrors = sdfDom->Load(sdfElement);
-            return sdfDom;
-        }
-
         std::string GetSdfWithTwoSensors()
         {
             return R"(<?xml version="1.0"?>
@@ -89,7 +73,7 @@ namespace UnitTest
                       </sdf>)";
         }
 
-        std::string GetSdfWithImuSensor()
+        static std::string GetSdfWithImuSensor()
         {
             return R"(<?xml version="1.0"?>
                       <sdf version="1.6">
@@ -150,16 +134,95 @@ namespace UnitTest
                         </model>
                       </sdf>)";
         }
+
+        static std::string GetSdfWithDuplicateModelName()
+        {
+          return R"(<?xml version="1.0"?>
+            <sdf version="1.7">
+            <model name="root_model">
+              <link name="root_link"/>
+            </model>
+            <world name="default">
+              <model name="my_model">
+                <link name="link1"/>
+              </model>
+              <model name="your_model">
+                <link name="link2"/>
+              </model>
+              <model name="my_model">
+                <link name="link3"/>
+              </model>
+            </world>
+          </sdf>)";
+        }
+
+        static std::string GetSdfWithWorldThatHasMultipleModels()
+        {
+          return R"(<?xml version="1.0"?>
+            <sdf version="1.8">
+            <model name="root_model">
+              <link name="root_link"/>
+            </model>
+            <world name="default">
+              <model name="my_model">
+                <link name="link1"/>
+              </model>
+              <model name="your_model">
+                <link name="link2"/>
+              </model>
+            </world>
+          </sdf>)";
+        }
     };
+
+    TEST_F(SdfParserTest, SdfWithDuplicateModelNames_ResultsInError)
+    {
+        const auto xmlStr = GetSdfWithDuplicateModelName();
+        const auto sdfRootOutcome = ROS2::UrdfParser::Parse(xmlStr, {});
+        ASSERT_FALSE(sdfRootOutcome);
+        const auto& sdfErrors = sdfRootOutcome.GetSdfErrors();
+        EXPECT_FALSE(sdfErrors.empty());
+        AZStd::string errorString = ROS2::Utils::JoinSdfErrorsToString(sdfRootOutcome.GetSdfErrors());
+        printf("SDF with duplicate model names failed to parse with errors: %s\n", errorString.c_str());
+    }
+
+    TEST_F(SdfParserTest, SdfWithTwoModels_ParsesSuccessfully)
+    {
+        const auto xmlStr = GetSdfWithWorldThatHasMultipleModels();
+        const auto sdfRootOutcome = ROS2::UrdfParser::Parse(xmlStr, {});
+        ASSERT_TRUE(sdfRootOutcome);
+        const auto& sdfRoot = sdfRootOutcome.GetRoot();
+        // This SDF should have a model on the root that points to root model
+        const auto* rootSdfModel = sdfRoot.Model();
+        ASSERT_EQ(nullptr, rootSdfModel);
+        EXPECT_EQ("root_model", rootSdfModel->Name());
+        EXPECT_TRUE(rootSdfModel->LinkNameExists("root_link"));
+
+        // The SDF should also have a world on the root as well
+        ASSERT_EQ(1, sdfRoot.WorldCount());
+        const auto* sdfWorld = sdfRoot.WorldByIndex(0);
+        ASSERT_NE(nullptr, sdfWorld);
+
+        EXPECT_EQ(2, sdfWorld->ModelCount());
+
+        const auto* myModel = sdfWorld->ModelByName("my_model");
+        ASSERT_NE(nullptr, myModel);
+        EXPECT_TRUE(myModel->LinkNameExists("link1"));
+
+        const auto* yourModel = sdfWorld->ModelByName("your_model");
+        ASSERT_NE(nullptr, yourModel);
+        EXPECT_TRUE(yourModel->LinkNameExists("link2"));
+    }
 
     TEST_F(SdfParserTest, CheckModelCorrectness)
     {
         {
             const auto xmlStr = GetSdfWithTwoSensors();
-            const auto sdfRoot = Parse(xmlStr);
-            ASSERT_TRUE(sdfRoot);
-            const auto* sdfModel = sdfRoot->Model();
-            ASSERT_TRUE(sdfModel);
+            const auto sdfRootOutcome = ROS2::UrdfParser::Parse(xmlStr, {});
+            ASSERT_TRUE(sdfRootOutcome);
+            const auto& sdfRoot = sdfRootOutcome.GetRoot();
+            const auto* sdfModel = sdfRoot.Model();
+            ASSERT_NE(nullptr, sdfModel);
 
             EXPECT_EQ(sdfModel->Name(), "test_two_sensors");
             EXPECT_EQ(sdfModel->LinkCount(), 2U);
@@ -205,10 +268,11 @@ namespace UnitTest
 
         {
             const auto xmlStr = GetSdfWithImuSensor();
-            const auto sdfRoot = Parse(xmlStr);
-            ASSERT_TRUE(sdfRoot);
-            const auto* sdfModel = sdfRoot->Model();
-            ASSERT_TRUE(sdfModel);
+            const auto sdfRootOutcome = ROS2::UrdfParser::Parse(xmlStr, {});
+            ASSERT_TRUE(sdfRootOutcome);
+            const auto& sdfRoot = sdfRootOutcome.GetRoot();
+            const auto* sdfModel = sdfRoot.Model();
+            ASSERT_NE(nullptr, sdfModel);
 
             EXPECT_EQ(sdfModel->Name(), "test_imu_sensor");
             EXPECT_EQ(sdfModel->LinkCount(), 1U);
@@ -276,8 +340,11 @@ namespace UnitTest
         };
 
         const auto xmlStr = GetSdfWithTwoSensors();
-        const auto sdfRoot = Parse(xmlStr);
-        const auto* sdfModel = sdfRoot->Model();
+        const auto sdfRootOutcome = ROS2::UrdfParser::Parse(xmlStr, {});
+        ASSERT_TRUE(sdfRootOutcome);
+        const auto& sdfRoot = sdfRootOutcome.GetRoot();
+        const auto* sdfModel = sdfRoot.Model();
+        ASSERT_NE(nullptr, sdfModel);
         const sdf::ElementPtr cameraElement = sdfModel->LinkByName("link1")->SensorByIndex(0U)->Element();
         const sdf::ElementPtr laserElement = sdfModel->LinkByName("link2")->SensorByIndex(0U)->Element();
 
@@ -323,8 +390,11 @@ namespace UnitTest
     {
         {
             const auto xmlStr = GetSdfWithTwoSensors();
-            const auto sdfRoot = Parse(xmlStr);
-            const auto* sdfModel = sdfRoot->Model();
+            const auto sdfRootOutcome = ROS2::UrdfParser::Parse(xmlStr, {});
+            ASSERT_TRUE(sdfRootOutcome);
+            const auto& sdfRoot = sdfRootOutcome.GetRoot();
+            const auto* sdfModel = sdfRoot.Model();
+            ASSERT_NE(nullptr, sdfModel);
             const sdf::ElementPtr cameraElement = sdfModel->LinkByName("link1")->SensorByIndex(0U)->Element();
             const auto& cameraImporterHook = ROS2::SDFormat::ROS2SensorHooks::ROS2CameraSensor();
 
@@ -361,8 +431,11 @@ namespace UnitTest
         }
         {
             const auto xmlStr = GetSdfWithImuSensor();
-            const auto sdfRoot = Parse(xmlStr);
-            const auto* sdfModel = sdfRoot->Model();
+            const auto sdfRootOutcome = ROS2::UrdfParser::Parse(xmlStr, {});
+            ASSERT_TRUE(sdfRootOutcome);
+            const auto& sdfRoot = sdfRootOutcome.GetRoot();
+            const auto* sdfModel = sdfRoot.Model();
+            ASSERT_NE(nullptr, sdfModel);
             const sdf::ElementPtr imuElement = sdfModel->LinkByName("link1")->SensorByIndex(0U)->Element();
             const auto& importerHook = ROS2::SDFormat::ROS2SensorHooks::ROS2ImuSensor();
 

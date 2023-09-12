@@ -108,7 +108,7 @@ namespace ROS2
                 AZ_Error(
                     Internal::CollidersMakerLoggingTag,
                     false,
-                    "Error loading collider. Invalid scene: %s, URDF path: %s",
+                    "Error loading collider. Invalid scene: %s, URDF/SDF path: %s",
                     azMeshPath.c_str(),
                     meshGeometry->Uri().c_str());
                 return;
@@ -305,7 +305,7 @@ namespace ROS2
             return;
         }
 
-        AZ_Printf(Internal::CollidersMakerLoggingTag, "URDF geometry type: %d\n", (int)geometry->Type());
+        AZ_Printf(Internal::CollidersMakerLoggingTag, "URDF/SDF geometry type: %d\n", (int)geometry->Type());
         switch (geometry->Type())
         {
         case sdf::GeometryType::SPHERE:

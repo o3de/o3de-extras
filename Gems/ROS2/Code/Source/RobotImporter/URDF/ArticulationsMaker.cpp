@@ -38,7 +38,7 @@ namespace ROS2
         AZ_Warning(
             "ArticulationsMaker",
             supportedArticulationType != SupportedJointTypes.end(),
-            "Articulations do not support type %d for URDF joint %s.",
+            "Articulations do not support type %d for URDF/SDF joint %s.",
             static_cast<int>(joint->Type()),
             joint->Name().c_str());
         if (supportedArticulationType != SupportedJointTypes.end())
@@ -95,7 +95,7 @@ namespace ROS2
 
         if (!URDF::TypeConversions::ConvertQuaternion(inertial.Pose().Rot()).IsIdentity())
         { // There is a rotation component in URDF that we are not able to apply
-            AZ_Warning("AddArticulationLink", false, "Ignoring URDF inertial origin rotation (no such field in rigid body configuration)");
+            AZ_Warning("AddArticulationLink", false, "Ignoring URDF/SDF inertial origin rotation (no such field in rigid body configuration)");
         }
         return articulationLinkConfiguration;
     }
