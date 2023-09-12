@@ -27,7 +27,7 @@ namespace ROS2
 
         if (auto* serialize = azrtti_cast<AZ::SerializeContext*>(context))
         {
-            serialize->Class<ROS2GNSSSensorComponent, SensorBaseType>()->Version(2)->Field(
+            serialize->Class<ROS2GNSSSensorComponent, SensorBaseType>()->Version(3)->Field(
                 "gnssSensorConfiguration", &ROS2GNSSSensorComponent::m_gnssConfiguration);
 
             if (auto* editContext = serialize->GetEditContext())
