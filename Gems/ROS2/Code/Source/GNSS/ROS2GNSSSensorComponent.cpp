@@ -32,7 +32,7 @@ namespace ROS2
 
         if (AZ::SerializeContext* serialize = azrtti_cast<AZ::SerializeContext*>(context))
         {
-            serialize->Class<ROS2GNSSSensorComponent, ROS2SensorComponent>()->Version(2)->Field(
+            serialize->Class<ROS2GNSSSensorComponent, SensorBaseType>()->Version(2)->Field(
                 "gnssSensorConfiguration", &ROS2GNSSSensorComponent::m_gnssConfiguration);
 
             if (AZ::EditContext* ec = serialize->GetEditContext())
@@ -69,7 +69,6 @@ namespace ROS2
 
     void ROS2GNSSSensorComponent::Activate()
     {
-        ROS2SensorComponent::Activate();
         auto ros2Node = ROS2Interface::Get()->GetNode();
         AZ_Assert(m_sensorConfiguration.m_publishersConfigurations.size() == 1, "Invalid configuration of publishers for GNSS sensor");
 
@@ -78,11 +77,22 @@ namespace ROS2
         m_gnssPublisher = ros2Node->create_publisher<sensor_msgs::msg::NavSatFix>(fullTopic.data(), publisherConfig.GetQoS());
 
         m_gnssMsg.header.frame_id = "gnss_frame_id";
+
+        StartSensor(
+            m_sensorConfiguration.m_frequency,
+            [this]([[maybe_unused]] auto&&... args)
+            {
+                if (!m_sensorConfiguration.m_publishingEnabled)
+                {
+                    return;
+                }
+                FrequencyTick();
+            });
     }
 
     void ROS2GNSSSensorComponent::Deactivate()
     {
-        ROS2SensorComponent::Deactivate();
+        StopSensor();
         m_gnssPublisher.reset();
     }
 
