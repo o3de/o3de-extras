@@ -50,24 +50,24 @@ namespace ROS2
         void Deactivate() override;
 
         // CameraCalibrationRequestBus::Handler overrides ...
-        AZ::Matrix3x3 GetCameraMatrix() const override;
-        int GetWidth() const override;
-        int GetHeight() const override;
-        float GetVerticalFOV() const override;
+        [[nodiscard]] AZ::Matrix3x3 GetCameraMatrix() const override;
+        [[nodiscard]] int GetWidth() const override;
+        [[nodiscard]] int GetHeight() const override;
+        [[nodiscard]] float GetVerticalFOV() const override;
 
     private:
         //! Helper that adds an image source.
         //! @tparam CameraType type of camera sensor (eg 'CameraColorSensor')
         template<typename CameraType>
-        void AddImageSource()
+        void SetImageSource()
         {
-            auto cameraName = GetCameraNameFromFrame(GetEntity());
+            const auto cameraName = GetCameraNameFromFrame(GetEntity());
             const CameraSensorDescription description{ cameraName, GetNamespace(), m_cameraConfiguration, m_sensorConfiguration };
             m_cameraSensor = AZStd::make_shared<CameraType>(description, GetEntityId());
         }
         //! Retrieve camera name from ROS2FrameComponent's FrameID.
         //! @param entity pointer entity that has ROS2FrameComponent.
-        AZStd::string GetCameraNameFromFrame(const AZ::Entity* entity) const;
+        [[nodiscard]] AZStd::string GetCameraNameFromFrame(const AZ::Entity* entity) const;
 
         ///! Requests message publication from camera sensor.
         void FrequencyTick();

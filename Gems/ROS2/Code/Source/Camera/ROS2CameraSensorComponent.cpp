@@ -35,15 +35,15 @@ namespace ROS2
     {
         if (m_cameraConfiguration.m_colorCamera && m_cameraConfiguration.m_depthCamera)
         {
-            AddImageSource<CameraRGBDSensor>();
+            SetImageSource<CameraRGBDSensor>();
         }
         else if (m_cameraConfiguration.m_colorCamera)
         {
-            AddImageSource<CameraColorSensor>();
+            SetImageSource<CameraColorSensor>();
         }
         else if (m_cameraConfiguration.m_depthCamera)
         {
-            AddImageSource<CameraDepthSensor>();
+            SetImageSource<CameraDepthSensor>();
         }
 
         const auto* component = Utils::GetGameOrEditorComponent<ROS2FrameComponent>(GetEntity());
