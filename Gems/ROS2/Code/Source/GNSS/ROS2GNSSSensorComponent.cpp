@@ -6,38 +6,33 @@
  *
  */
 
+#include <AzCore/Math/Matrix4x4.h>
 #include "ROS2GNSSSensorComponent.h"
 #include <ROS2/Frame/ROS2FrameComponent.h>
-#include <ROS2/ROS2Bus.h>
 #include <ROS2/ROS2GemUtilities.h>
-#include <ROS2/Utilities/ROS2Conversions.h>
 #include <ROS2/Utilities/ROS2Names.h>
-
-#include <AzCore/Math/Matrix4x4.h>
-#include <AzCore/Serialization/EditContext.h>
-#include <AzCore/Serialization/EditContextConstants.inl>
 
 #include "GNSSFormatConversions.h"
 
 namespace ROS2
 {
-    namespace Internal
+    namespace
     {
-        const char* kGNSSMsgType = "sensor_msgs::msg::NavSatFix";
+        const char* GNSSMsgType = "sensor_msgs::msg::NavSatFix";
     }
 
     void ROS2GNSSSensorComponent::Reflect(AZ::ReflectContext* context)
     {
         GNSSSensorConfiguration::Reflect(context);
 
-        if (AZ::SerializeContext* serialize = azrtti_cast<AZ::SerializeContext*>(context))
+        if (auto* serialize = azrtti_cast<AZ::SerializeContext*>(context))
         {
             serialize->Class<ROS2GNSSSensorComponent, SensorBaseType>()->Version(2)->Field(
                 "gnssSensorConfiguration", &ROS2GNSSSensorComponent::m_gnssConfiguration);
 
-            if (AZ::EditContext* ec = serialize->GetEditContext())
+            if (auto* editContext = serialize->GetEditContext())
             {
-                ec->Class<ROS2GNSSSensorComponent>("ROS2 GNSS Sensor", "GNSS sensor component")
+                editContext->Class<ROS2GNSSSensorComponent>("ROS2 GNSS Sensor", "GNSS sensor component")
                     ->ClassElement(AZ::Edit::ClassElements::EditorData, "")
                     ->Attribute(AZ::Edit::Attributes::Category, "ROS2")
                     ->Attribute(AZ::Edit::Attributes::AppearsInAddComponentMenu, AZ_CRC_CE("Game"))
@@ -54,10 +49,10 @@ namespace ROS2
     ROS2GNSSSensorComponent::ROS2GNSSSensorComponent()
     {
         TopicConfiguration pc;
-        pc.m_type = Internal::kGNSSMsgType;
+        pc.m_type = GNSSMsgType;
         pc.m_topic = "gnss";
         m_sensorConfiguration.m_frequency = 10;
-        m_sensorConfiguration.m_publishersConfigurations.insert(AZStd::make_pair(Internal::kGNSSMsgType, pc));
+        m_sensorConfiguration.m_publishersConfigurations.insert(AZStd::make_pair(GNSSMsgType, pc));
     }
 
     ROS2GNSSSensorComponent::ROS2GNSSSensorComponent(
@@ -72,7 +67,7 @@ namespace ROS2
         auto ros2Node = ROS2Interface::Get()->GetNode();
         AZ_Assert(m_sensorConfiguration.m_publishersConfigurations.size() == 1, "Invalid configuration of publishers for GNSS sensor");
 
-        const auto publisherConfig = m_sensorConfiguration.m_publishersConfigurations[Internal::kGNSSMsgType];
+        const auto publisherConfig = m_sensorConfiguration.m_publishersConfigurations[GNSSMsgType];
         const auto fullTopic = ROS2Names::GetNamespacedName(GetNamespace(), publisherConfig.m_topic);
         m_gnssPublisher = ros2Node->create_publisher<sensor_msgs::msg::NavSatFix>(fullTopic.data(), publisherConfig.GetQoS());
 

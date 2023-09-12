@@ -37,14 +37,14 @@ namespace ROS2
         //////////////////////////////////////////////////////////////////////////
 
     private:
-        GNSSSensorConfiguration m_gnssConfiguration;
-
-        //////////////////////////////////////////////////////////////////////////
+        ///! Requests gnss message publication.
         void FrequencyTick();
-        //////////////////////////////////////////////////////////////////////////
 
-        AZ::Transform GetCurrentPose() const;
+        //! Returns current entity position.
+        //! @return Current entity position.
+        [[nodiscard]] AZ::Transform GetCurrentPose() const;
 
+        GNSSSensorConfiguration m_gnssConfiguration;
         std::shared_ptr<rclcpp::Publisher<sensor_msgs::msg::NavSatFix>> m_gnssPublisher;
         sensor_msgs::msg::NavSatFix m_gnssMsg;
     };
