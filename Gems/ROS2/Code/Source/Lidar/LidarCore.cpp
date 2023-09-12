@@ -55,6 +55,8 @@ namespace ROS2
 
     void LidarCore::ConfigureLidarRaycaster()
     {
+        m_lidarConfiguration.FetchLidarImplementationFeatures();
+
         LidarRaycasterRequestBus::Event(m_lidarRaycasterId, &LidarRaycasterRequestBus::Events::ConfigureRayOrientations, m_lastRotations);
         LidarRaycasterRequestBus::Event(
             m_lidarRaycasterId,

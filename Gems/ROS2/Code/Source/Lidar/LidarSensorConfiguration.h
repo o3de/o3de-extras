@@ -38,6 +38,9 @@ namespace ROS2
 
         bool m_addPointsAtMax = false;
 
+        //! Update the lidar system features based on the current lidar system selected.
+        void FetchLidarImplementationFeatures();
+
     private:
         bool IsConfigurationVisible() const;
         bool IsIgnoredLayerConfigurationVisible() const;
@@ -46,8 +49,6 @@ namespace ROS2
 
         //! Update the lidar configuration based on the current lidar model selected.
         void FetchLidarModelConfiguration();
-        //! Update the lidar system features based on the current lidar system selected.
-        void FetchLidarImplementationFeatures();
 
         AZ::Crc32 OnLidarModelSelected();
         AZ::Crc32 OnLidarImplementationSelected();
