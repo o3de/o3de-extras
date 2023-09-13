@@ -10,16 +10,10 @@
 #include <AzCore/Math/Quaternion.h>
 #include <AzCore/Math/Transform.h>
 #include <AzCore/Math/Vector3.h>
-#include <AzCore/Serialization/SerializeContext.h>
-#include <AzFramework/Physics/Common/PhysicsEvents.h>
-#include <AzFramework/Physics/PhysicsScene.h>
-#include <AzFramework/Physics/PhysicsSystem.h>
-#include <AzFramework/Physics/SimulatedBodies/RigidBody.h>
-#include <ROS2/Sensor/Events/PhysicsBasedSource.h>
-#include <ROS2/Sensor/ROS2SensorComponentBase.h>
-#include <ROS2/Utilities/PhysicsCallbackHandler.h>
 #include <nav_msgs/msg/odometry.hpp>
 #include <rclcpp/publisher.hpp>
+#include <ROS2/Sensor/Events/PhysicsBasedSource.h>
+#include <ROS2/Sensor/ROS2SensorComponentBase.h>
 
 namespace ROS2
 {

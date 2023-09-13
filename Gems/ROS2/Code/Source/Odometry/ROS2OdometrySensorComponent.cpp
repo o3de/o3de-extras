@@ -6,8 +6,10 @@
  *
  */
 
-#include "ROS2OdometrySensorComponent.h"
+#include <AzFramework/Physics/PhysicsScene.h>
 #include <AzFramework/Physics/RigidBodyBus.h>
+#include <AzFramework/Physics/SimulatedBodies/RigidBody.h>
+#include "ROS2OdometrySensorComponent.h"
 #include <ROS2/Utilities/ROS2Conversions.h>
 #include <ROS2/Utilities/ROS2Names.h>
 
