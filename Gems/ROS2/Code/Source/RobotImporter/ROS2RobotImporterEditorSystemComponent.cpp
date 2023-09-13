@@ -190,38 +190,15 @@ namespace ROS2
             }
         };
 
-        // Use the name of the first world model tag in the SDF for the prefab
-        // Otherwise use the name of the first model that can be found in the SDF root or world tag
-        AZStd::string prefabName;
-        if (uint64_t urdfWorldCount = parsedSdfRoot.WorldCount(); urdfWorldCount > 0)
-        {
-            const sdf::World* parsedUrdfWorld = parsedSdfRoot.WorldByIndex(0);
-            prefabName = AZStd::string(parsedUrdfWorld->Name().c_str(), parsedUrdfWorld->Name().size()) + ".prefab";
-        }
-
-        if (prefabName.empty())
-        {
-            auto GetFirstModelName = [&prefabName](const sdf::Model& model) -> Utils::VisitModelResponse
-            {
-                prefabName = AZStd::string(model.Name().c_str(), model.Name().size()) + ".prefab";
-                // Stop visitation after the first call to this functor
-                return Utils::VisitModelResponse::Stop;
-            };
-            Utils::VisitModels(parsedSdfRoot, GetFirstModelName);
-        }
-
-        // Use the file path stem as a fallback name for the prefab
-        if (prefabName.empty())
-        {
-            prefabName = AZStd::string(AZ::IO::PathView(prefabName).Stem().Native());
-        }
+        // Use the URDF/SDF file name stem the prefab name
+        AZStd::string prefabName = AZStd::string(AZ::IO::PathView(filePath).Stem().Native());
 
         if (prefabName.empty())
         {
             AZ_Error(
                 "ROS2RobotImporterEditorSystemComponent",
                 false,
-                R"(URDF/SDF doesn't contain a <model> or <world> "%.*s".)"
+                R"(URDF/SDF doesn't filename doesn't contain a stem "%.*s".)"
                 " O3DE Prefab cannot be created",
                 AZ_STRING_ARG(filePath));
             return false;

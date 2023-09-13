@@ -127,7 +127,7 @@ namespace ROS2
 
         if (!ContainsModel())
         {
-            return AZ::Failure(AZStd::string("URDF/SDF doesn't containg any models."));
+            return AZ::Failure(AZStd::string("URDF/SDF doesn't contain any models."));
         }
 
         // Build up a list of all entities created as a part of processing the file.

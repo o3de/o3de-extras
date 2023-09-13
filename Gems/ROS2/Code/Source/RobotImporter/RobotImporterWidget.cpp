@@ -310,32 +310,8 @@ namespace ROS2
 
     void RobotImporterWidget::FillPrefabMakerPage()
     {
-        // Use the name of the first world tag for the prefab,
-        // followed by the name of the first model that can be found if there is no world tag
-        // otherwise fallback to using the URDF/SDF file name stem
-        AZStd::string robotName;
-        if (uint64_t urdfWorldCount = m_parsedSdf.WorldCount(); urdfWorldCount > 0)
-        {
-            const sdf::World* parsedUrdfWorld = m_parsedSdf.WorldByIndex(0);
-            robotName = AZStd::string(parsedUrdfWorld->Name().c_str(), parsedUrdfWorld->Name().size()) + ".prefab";
-        }
-
-        if (robotName.empty())
-        {
-            auto GetFirstModelName = [&robotName](const sdf::Model& model) -> Utils::VisitModelResponse
-            {
-                robotName = AZStd::string(model.Name().c_str(), model.Name().size()) + ".prefab";
-                // Stop visitation after the first call to this functor
-                return Utils::VisitModelResponse::Stop;
-            };
-            Utils::VisitModels(m_parsedSdf, GetFirstModelName);
-        }
-
-        // Use the URDF/SDF file name as fallback for the prefab name
-        if (robotName.empty())
-        {
-            robotName = AZStd::string(m_urdfPath.Stem().Native());
-        }
+        // Use the URDF/SDF file name stem the prefab name
+        AZStd::string robotName = AZStd::string(m_urdfPath.Stem().Native());
         m_prefabMakerPage->setProposedPrefabName(robotName);
         QWizard::button(PrefabCreationButtonId)->setText(tr("Create Prefab"));
         QWizard::setOption(HavePrefabCreationButton, true);
