@@ -22,7 +22,7 @@ namespace ROS2
     {
         if (auto* serialize = azrtti_cast<AZ::SerializeContext*>(context))
         {
-            serialize->Class<ROS2OdometrySensorComponent, SensorBaseType>()->Version(1);
+            serialize->Class<ROS2OdometrySensorComponent, SensorBaseType>()->Version(2);
 
             if (auto* editContext = serialize->GetEditContext())
             {
