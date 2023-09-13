@@ -148,7 +148,8 @@ namespace ROS2::Utils::SDFormat
 
     //! Given a set of SdfAssetBuilderSettings, produce an sdf::ParserConfig that can be used by the sdformat library.
     //! @param settings The input settings to use
+    //! @param baseFilePath The base file getting parsed, which is used to help resolve file paths
     //! @return The output parser config to use with sdformat.
-    sdf::ParserConfig CreateSdfParserConfigFromSettings(const SdfAssetBuilderSettings& settings);
+    sdf::ParserConfig CreateSdfParserConfigFromSettings(const SdfAssetBuilderSettings& settings, const AZ::IO::PathView& baseFilePath);
 
 } // namespace ROS2::Utils::SDFormat

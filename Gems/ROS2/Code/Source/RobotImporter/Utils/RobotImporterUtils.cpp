@@ -613,7 +613,7 @@ namespace ROS2::Utils::SDFormat
         return supportedPlugins.contains(GetPluginFilename(plugin));
     }
 
-    sdf::ParserConfig CreateSdfParserConfigFromSettings(const SdfAssetBuilderSettings& settings)
+    sdf::ParserConfig CreateSdfParserConfigFromSettings(const SdfAssetBuilderSettings& settings, const AZ::IO::PathView& baseFilePath)
     {
         sdf::ParserConfig sdfConfig;
 
@@ -636,15 +636,24 @@ namespace ROS2::Utils::SDFormat
             {
                 std::string uriPrefix(prefix.c_str(), prefix.size());
                 sdfConfig.AddURIPath(uriPrefix, uriPath);
-                AZ_Info("SdfParserConfig", "Added URI mapping '%s' -> '%s'", uriPrefix.c_str(), uriPath.c_str());
+                AZ_Trace("SdfParserConfig", "Added URI mapping '%s' -> '%s'", uriPrefix.c_str(), uriPath.c_str());
             }
         }
 
         // If any files couldn't be found using our supplied prefix mappings, this callback will get called.
-        // Print a warning for any missing files.
-        sdfConfig.SetFindCallback([](const std::string &fileName) -> std::string
+        // Attempt to use our full path resolution, and print a warning if it still couldn't be resolved.
+        sdfConfig.SetFindCallback([settings, baseFilePath](const std::string &fileName) -> std::string
         {
-            AZ_Warning("SdfParserConfig", false, "SDF SetFindCallback called with '%s'", fileName.c_str());
+            auto amentPrefixPath = Utils::GetAmentPrefixPath();
+
+            auto resolved = Utils::ResolveAssetPath(AZ::IO::Path(fileName.c_str()), baseFilePath, amentPrefixPath, settings);
+            if (!resolved.empty())
+            {
+                AZ_Trace("SdfParserConfig", "SDF SetFindCallback resolved '%s' -> '%s'", fileName.c_str(), resolved.c_str());
+                return resolved.c_str();
+            }
+
+            AZ_Warning("SdfParserConfig", false, "SDF SetFindCallback failed to resolve '%s'", fileName.c_str());
             return fileName;
         });
 

@@ -103,7 +103,7 @@ namespace ROS2
         SdfAssetBuilderSettings sdfBuilderSettings;
         sdfBuilderSettings.LoadSettings();
         // Set the parser config settings for URDF content
-        sdf::ParserConfig parserConfig = Utils::SDFormat::CreateSdfParserConfigFromSettings(sdfBuilderSettings);
+        sdf::ParserConfig parserConfig = Utils::SDFormat::CreateSdfParserConfigFromSettings(sdfBuilderSettings, filePath);
 
         auto parsedUrdfOutcome = UrdfParser::ParseFromFile(filePath, parserConfig, sdfBuilderSettings);
         if (!parsedUrdfOutcome)

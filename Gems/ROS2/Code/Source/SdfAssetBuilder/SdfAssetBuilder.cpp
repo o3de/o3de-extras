@@ -187,7 +187,7 @@ namespace ROS2
         const auto fullSourcePath = AZ::IO::Path(request.m_watchFolder) / AZ::IO::Path(request.m_sourceFile);
 
         // Set the parser config settings for parsing URDF content through the libsdformat parser
-        sdf::ParserConfig parserConfig = Utils::SDFormat::CreateSdfParserConfigFromSettings(m_globalSettings);
+        sdf::ParserConfig parserConfig = Utils::SDFormat::CreateSdfParserConfigFromSettings(m_globalSettings, fullSourcePath);
 
         AZ_Info(SdfAssetBuilderName, "Parsing source file: %s", fullSourcePath.c_str());
         auto parsedSdfRootOutcome = UrdfParser::ParseFromFile(fullSourcePath, parserConfig, m_globalSettings);
@@ -248,7 +248,7 @@ namespace ROS2
         tempAssetOutputPath.ReplaceExtension("procprefab");
 
         // Set the parser config settings for parsing URDF content through the libsdformat parser
-        sdf::ParserConfig parserConfig = Utils::SDFormat::CreateSdfParserConfigFromSettings(m_globalSettings);
+        sdf::ParserConfig parserConfig = Utils::SDFormat::CreateSdfParserConfigFromSettings(m_globalSettings, AZ::IO::PathView(request.m_sourceFile));
 
         // Read in and parse the source SDF file.
         AZ_Info(SdfAssetBuilderName, "Parsing source file: %s", request.m_fullPath.c_str());

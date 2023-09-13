@@ -16,10 +16,12 @@
                 "URDFPreserveFixedJoint": true,
                 "AssetResolverSettings":
                 {
+                    "UseAmentPrefixPath": true,
+                    "UseAncestorPaths": true,
                     "URIPrefixMap": 
                     {
-                        "model://": ["./", "../" ],
-                        "package://": ["./", "../" ],
+                        "model://": [""],
+                        "package://": [""],
                         "file://":  [""]
                     }                
                 }
