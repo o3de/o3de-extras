@@ -17,7 +17,7 @@ namespace ROS2
         setTitle(QObject::tr("Introduction"));
 
         m_label = new QLabel(
-            QObject::tr("This wizard allows you to build a robot prefab using a URDF description file or object/environment prefab using a SDF file."
+            QObject::tr("This wizard allows you to build a robot prefab using a URDF description file or object/environment prefab using an SDF file."
                         " Before processing, please make sure that all of the robot's description packages have been built and sourced."
                         " Details can be found <a "
                         "href=\"https://www.o3de.org/docs/user-guide/interactivity/robotics/importing-robot/"
