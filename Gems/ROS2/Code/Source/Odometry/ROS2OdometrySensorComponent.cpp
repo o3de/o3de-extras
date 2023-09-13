@@ -27,7 +27,7 @@ namespace ROS2
     {
         if (AZ::SerializeContext* serialize = azrtti_cast<AZ::SerializeContext*>(context))
         {
-            serialize->Class<ROS2OdometrySensorComponent, ROS2SensorComponent>()->Version(1);
+            serialize->Class<ROS2OdometrySensorComponent, SensorBaseType>()->Version(1);
 
             if (AZ::EditContext* ec = serialize->GetEditContext())
             {
@@ -55,33 +55,27 @@ namespace ROS2
         required.push_back(AZ_CRC_CE("ROS2Frame"));
     }
 
-    // ROS2SensorComponent overrides ...
-    void ROS2OdometrySensorComponent::SetupRefreshLoop()
+    void ROS2OdometrySensorComponent::OnOdometryEvent(AzPhysics::SceneHandle sceneHandle)
     {
-        InstallPhysicalCallback();
-    }
+        if (m_bodyHandle == AzPhysics::InvalidSimulatedBodyHandle)
+        {
+            AzPhysics::RigidBody* rigidBody = nullptr;
+            AZ::EntityId entityId = GetEntityId();
+            Physics::RigidBodyRequestBus::EventResult(rigidBody, entityId, &Physics::RigidBodyRequests::GetRigidBody);
+            AZ_Assert(rigidBody, "Entity %s does not have rigid body.", entityId.ToString().c_str());
 
-    void ROS2OdometrySensorComponent::OnPhysicsInitialization(AzPhysics::SceneHandle sceneHandle)
-    {
-        AzPhysics::RigidBody* rigidBody = nullptr;
-        AZ::EntityId entityId = GetEntityId();
-        Physics::RigidBodyRequestBus::EventResult(rigidBody, entityId, &Physics::RigidBodyRequests::GetRigidBody);
-        AZ_Assert(rigidBody, "Entity %s does not have rigid body.", entityId.ToString().c_str());
+            m_bodyHandle = rigidBody->m_bodyHandle;
 
-        m_bodyHandle = rigidBody->m_bodyHandle;
+            auto* sceneInterface = AZ::Interface<AzPhysics::SceneInterface>::Get();
+            auto* simulatedBodyPtr = sceneInterface->GetSimulatedBodyFromHandle(sceneHandle, m_bodyHandle);
+            auto* rigidbodyPtr = azrtti_cast<AzPhysics::RigidBody*>(simulatedBodyPtr);
+            AZ_Assert(rigidbodyPtr, "Requested simulated body is not a rigid body");
+            m_initialTransform = rigidbodyPtr->GetTransform();
+        }
 
         auto* sceneInterface = AZ::Interface<AzPhysics::SceneInterface>::Get();
         auto* simulatedBodyPtr = sceneInterface->GetSimulatedBodyFromHandle(sceneHandle, m_bodyHandle);
-        auto rigidbodyPtr = azrtti_cast<AzPhysics::RigidBody*>(simulatedBodyPtr);
-        AZ_Assert(rigidbodyPtr, "Requested simulated body is not a rigid body");
-        m_initialTransform = rigidbodyPtr->GetTransform();
-    }
-
-    void ROS2OdometrySensorComponent::OnPhysicsSimulationFinished(AzPhysics::SceneHandle sceneHandle, float deltaTime)
-    {
-        auto* sceneInterface = AZ::Interface<AzPhysics::SceneInterface>::Get();
-        auto* simulatedBodyPtr = sceneInterface->GetSimulatedBodyFromHandle(sceneHandle, m_bodyHandle);
-        auto rigidbodyPtr = azrtti_cast<AzPhysics::RigidBody*>(simulatedBodyPtr);
+        auto* rigidbodyPtr = azrtti_cast<AzPhysics::RigidBody*>(simulatedBodyPtr);
         AZ_Assert(rigidbodyPtr, "Requested simulated body is not a rigid body");
 
         const auto transform = rigidbodyPtr->GetTransform().GetInverse();
@@ -94,11 +88,8 @@ namespace ROS2
 
         const auto odometry = m_initialTransform.GetInverse() * rigidbodyPtr->GetTransform();
 
-        if (IsPublicationDeadline(deltaTime))
-        {
-            m_odometryMsg.pose.pose = ROS2Conversions::ToROS2Pose(odometry);
-            m_odometryPublisher->publish(m_odometryMsg);
-        }
+        m_odometryMsg.pose.pose = ROS2Conversions::ToROS2Pose(odometry);
+        m_odometryPublisher->publish(m_odometryMsg);
     }
     void ROS2OdometrySensorComponent::Activate()
     {
@@ -112,12 +103,21 @@ namespace ROS2
         const auto fullTopic = ROS2Names::GetNamespacedName(GetNamespace(), publisherConfig.m_topic);
         m_odometryPublisher = ros2Node->create_publisher<nav_msgs::msg::Odometry>(fullTopic.data(), publisherConfig.GetQoS());
 
-        ROS2SensorComponent::Activate();
+        StartSensor(
+            m_sensorConfiguration.m_frequency,
+            [this]([[maybe_unused]] float odomDeltaTime, AzPhysics::SceneHandle sceneHandle, [[maybe_unused]] float physicsDeltaTime)
+            {
+                if (!m_sensorConfiguration.m_publishingEnabled)
+                {
+                    return;
+                }
+                OnOdometryEvent(sceneHandle);
+            });
     }
 
     void ROS2OdometrySensorComponent::Deactivate()
     {
-        ROS2SensorComponent::Deactivate();
+        StopSensor();
         m_odometryPublisher.reset();
     }
 } // namespace ROS2

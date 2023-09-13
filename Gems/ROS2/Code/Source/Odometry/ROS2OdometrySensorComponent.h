@@ -15,7 +15,8 @@
 #include <AzFramework/Physics/PhysicsScene.h>
 #include <AzFramework/Physics/PhysicsSystem.h>
 #include <AzFramework/Physics/SimulatedBodies/RigidBody.h>
-#include <ROS2/Sensor/ROS2SensorComponent.h>
+#include <ROS2/Sensor/Events/PhysicsBasedSource.h>
+#include <ROS2/Sensor/ROS2SensorComponentBase.h>
 #include <ROS2/Utilities/PhysicsCallbackHandler.h>
 #include <nav_msgs/msg/odometry.hpp>
 #include <rclcpp/publisher.hpp>
@@ -27,11 +28,10 @@ namespace ROS2
     //! This is a ground truth "sensor", which can be helpful for development and machine learning.
     //! @see <a href="https://index.ros.org/p/nav_msgs/"> nav_msgs package. </a>
     class ROS2OdometrySensorComponent
-        : public ROS2SensorComponent
-        , public ROS2::Utils::PhysicsCallbackHandler
+        : public ROS2SensorComponentBase<PhysicsBasedSource>
     {
     public:
-        AZ_COMPONENT(ROS2OdometrySensorComponent, "{61387448-63AA-4563-AF87-60C72B05B863}", ROS2SensorComponent);
+        AZ_COMPONENT(ROS2OdometrySensorComponent, "{61387448-63AA-4563-AF87-60C72B05B863}", SensorBaseType);
         ROS2OdometrySensorComponent();
         ~ROS2OdometrySensorComponent() = default;
         static void GetRequiredServices(AZ::ComponentDescriptor::DependencyArrayType& required);
@@ -43,19 +43,11 @@ namespace ROS2
         //////////////////////////////////////////////////////////////////////////
 
     private:
+        AzPhysics::SimulatedBodyHandle m_bodyHandle = AzPhysics::InvalidSimulatedBodyHandle;
         std::shared_ptr<rclcpp::Publisher<nav_msgs::msg::Odometry>> m_odometryPublisher;
         nav_msgs::msg::Odometry m_odometryMsg;
         AZ::Transform m_initialTransform;
 
-    private:
-        // ROS2SensorComponent overrides ...
-        void SetupRefreshLoop() override;
-
-        // ROS2::Utils::PhysicsCallbackHandler overrides ...
-        void OnPhysicsSimulationFinished(AzPhysics::SceneHandle sceneHandle, float deltaTime) override;
-        void OnPhysicsInitialization(AzPhysics::SceneHandle sceneHandle) override;
-
-        //! Handler to simulated physical body
-        AzPhysics::SimulatedBodyHandle m_bodyHandle = AzPhysics::InvalidSimulatedBodyHandle;
+        void OnOdometryEvent(AzPhysics::SceneHandle sceneHandle);
     };
 } // namespace ROS2
