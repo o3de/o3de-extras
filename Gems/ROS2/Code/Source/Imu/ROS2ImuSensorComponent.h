@@ -5,6 +5,7 @@
  * SPDX-License-Identifier: Apache-2.0 OR MIT
  *
  */
+
 #pragma once
 
 #include <AzCore/Math/Matrix3x3.h>
@@ -12,8 +13,8 @@
 #include <AzCore/Serialization/SerializeContext.h>
 #include <AzFramework/Physics/Common/PhysicsEvents.h>
 #include <AzFramework/Physics/PhysicsSystem.h>
-#include <ROS2/Sensor/ROS2SensorComponent.h>
-#include <ROS2/Utilities/PhysicsCallbackHandler.h>
+#include <ROS2/Sensor/Events/PhysicsBasedSource.h>
+#include <ROS2/Sensor/ROS2SensorComponentBase.h>
 #include <rclcpp/publisher.hpp>
 #include <sensor_msgs/msg/imu.hpp>
 
@@ -24,12 +25,10 @@ namespace ROS2
     //! An IMU (Inertial Measurement Unit) sensor Component.
     //! IMUs typically include gyroscopes, accelerometers and magnetometers. This component encapsulates data
     //! acquisition and its publishing to ROS2 ecosystem. IMU Component requires ROS2FrameComponent.
-    class ROS2ImuSensorComponent
-        : public ROS2SensorComponent
-        , public ROS2::Utils::PhysicsCallbackHandler
+    class ROS2ImuSensorComponent : public ROS2SensorComponentBase<PhysicsBasedSource>
     {
     public:
-        AZ_COMPONENT(ROS2ImuSensorComponent, "{502A955E-7742-4E23-AD77-5E4063739DCA}", ROS2SensorComponent);
+        AZ_COMPONENT(ROS2ImuSensorComponent, "{502A955E-7742-4E23-AD77-5E4063739DCA}", SensorBaseType);
         ROS2ImuSensorComponent();
         ROS2ImuSensorComponent(const SensorConfiguration& sensorConfiguration, const ImuSensorConfiguration& imuConfiguration);
         ~ROS2ImuSensorComponent() = default;
@@ -57,12 +56,9 @@ namespace ROS2
         AZ::Matrix3x3 m_linearAccelerationCovariance = AZ::Matrix3x3::CreateZero();
 
     private:
-        // ROS2SensorComponent overrides ...
-        void SetupRefreshLoop() override;
+        void OnPhysicsEvent(AzPhysics::SceneHandle sceneHandle);
 
-        // ROS2::Utils::PhysicsCallbackHandler overrides ...
-        void OnPhysicsInitialization(AzPhysics::SceneHandle sceneHandle) override;
-        void OnPhysicsSimulationFinished(AzPhysics::SceneHandle sceneHandle, float deltaTime) override;
+        void OnImuEvent(float imuDeltaTime, AzPhysics::SceneHandle sceneHandle, float physicsDeltaTime);
 
         AZ::Matrix3x3 ToDiagonalCovarianceMatrix(const AZ::Vector3& variance);
 
