@@ -49,8 +49,6 @@ namespace ROS2
         AZ_Assert(m_root, "SDF Root is nullptr");
         if (m_root != nullptr)
         {
-            AZ_Assert(GetFirstModel(), "SDF Model is nullptr");
-
             VisualsMaker::MaterialNameMap materialMap;
             auto GetVisualsFromModel = [&materialMap](const sdf::Model& model)
             {
@@ -74,24 +72,14 @@ namespace ROS2
             };
 
             // Iterate over all visuals to get their materials
-            for (uint64_t worldIndex{}; worldIndex < m_root->WorldCount(); ++worldIndex)
+            auto VisitAllModels = [&GetVisualsFromModel](const sdf::Model& model) -> Utils::VisitModelResponse
             {
-                if (const sdf::World* world = m_root->WorldByIndex(worldIndex); world != nullptr)
-                {
-                    for (uint64_t modelIndex{}; modelIndex < world->ModelCount(); ++modelIndex)
-                    {
-                        if (const sdf::Model* model = world->ModelByIndex(modelIndex); model != nullptr)
-                        {
-                            GetVisualsFromModel(*model);
-                        }
-                    }
-                }
-            }
-            // If there is a model tag at the root, iterate over it now
-            if (const sdf::Model* model = m_root->Model(); model != nullptr)
-            {
-                GetVisualsFromModel(*model);
-            }
+                GetVisualsFromModel(model);
+                // Continue to visit all models within the SDF document and query their <visual> tags
+                return Utils::VisitModelResponse::VisitNestedAndSiblings;
+            };
+            Utils::VisitModels(*m_root, VisitAllModels);
+
             m_visualsMaker = VisualsMaker(AZStd::move(materialMap), urdfAssetsMapping);
         }
     }
@@ -99,21 +87,35 @@ namespace ROS2
     void URDFPrefabMaker::BuildAssetsForLink(const sdf::Link* link)
     {
         m_collidersMaker.BuildColliders(link);
-        // Find the links which are childen in a joint where this link
-        // is a parent
-        auto BuildAssetsFromJointChildLinks = [this](const sdf::Joint& joint)
+
+        auto GetAssetsForLinkInModel = [this, link](const sdf::Model& model) -> Utils::VisitModelResponse
         {
-            const sdf::Model& model = *GetFirstModel();
-            if (const sdf::Link* childLink = model.LinkByName(joint.ChildName());
-                childLink != nullptr)
+            // Find the links which are children in a joint where this link is a parent
+            auto BuildAssetsFromJointChildLinks = [this, &model](const sdf::Joint& joint)
             {
-                BuildAssetsForLink(childLink);
+                if (const sdf::Link* childLink = model.LinkByName(joint.ChildName()); childLink != nullptr)
+                {
+                    BuildAssetsForLink(childLink);
+                }
+
+                return true;
+            };
+
+            // Make sure the link is a child of the model being visited
+            // Before visiting the joints of the model
+            if (const sdf::Link* searchLink = model.LinkByName(link->Name()); searchLink != nullptr)
+            {
+                // Don't visit nested models using the VisitJoints function as the outer call
+                // to VisitModels already visits nested models
+                constexpr bool visitNestedModelLinks = false;
+                Utils::VisitJoints(model, BuildAssetsFromJointChildLinks, visitNestedModelLinks);
             }
 
-            return true;
+            return Utils::VisitModelResponse::VisitNestedAndSiblings;
         };
-        constexpr bool visitNestedModelLinks = true;
-        Utils::VisitJoints(*GetFirstModel(), BuildAssetsFromJointChildLinks, visitNestedModelLinks);
+
+        constexpr bool visitNestedModels = true;
+        Utils::VisitModels(*m_root, GetAssetsForLinkInModel, visitNestedModels);
     }
 
     URDFPrefabMaker::CreatePrefabTemplateResult URDFPrefabMaker::CreatePrefabTemplateFromUrdfOrSdf()
@@ -123,15 +125,30 @@ namespace ROS2
             m_status.clear();
         }
 
-        if (GetFirstModel() == nullptr)
+        if (!ContainsModel())
         {
-            return AZ::Failure(AZStd::string("Null model."));
+            return AZ::Failure(AZStd::string("URDF/SDF doesn't containg any models."));
         }
 
         // Build up a list of all entities created as a part of processing the file.
         AZStd::vector<AZ::EntityId> createdEntities;
         AZStd::unordered_map<AZStd::string, AzToolsFramework::Prefab::PrefabEntityResult> createdLinks;
-        auto links = Utils::GetAllLinks(*GetFirstModel(), true);
+        AZStd::unordered_map<AZStd::string, const sdf::Link*> links;
+        // Gather all links from all the models in the SDF
+        auto GetAllLinksFromModel = [&links](const sdf::Model& model) -> Utils::VisitModelResponse
+        {
+            // As the VisitModels function visits nested models by default, gatherNestedModelLinks is set to false
+            constexpr bool gatherNestedModelLinks = false;
+            auto linksForModel = Utils::GetAllLinks(model, gatherNestedModelLinks);
+            links.insert(linksForModel.begin(), linksForModel.end());
+
+            return Utils::VisitModelResponse::VisitNestedAndSiblings;
+        };
+
+        // Visit any nested models in the SDF as well
+        constexpr bool visitNestedModels = true;
+        Utils::VisitModels(*m_root, GetAllLinksFromModel, visitNestedModels);
+
 
         for (const auto& [name, linkPtr] : links)
         {
@@ -202,8 +219,13 @@ namespace ROS2
                 continue;
             }
 
-            AZStd::vector<const sdf::Joint*> jointsWhereLinkIsChild = Utils::GetJointsForChildLink(*GetFirstModel(),
-                linkName, true);
+            AZStd::vector<const sdf::Joint*> jointsWhereLinkIsChild;
+            if (const sdf::Model* modelContainingLink = Utils::GetModelContainingLink(*m_root, *linkPtr); modelContainingLink != nullptr)
+            {
+                bool gatherNestedModelJoints = true;
+                jointsWhereLinkIsChild = Utils::GetJointsForChildLink(*modelContainingLink, linkName, gatherNestedModelJoints);
+            }
+
             if (jointsWhereLinkIsChild.empty())
             {
                 // emplace unique entry to the container of links that don't have a parent link associated with it
@@ -312,11 +334,21 @@ namespace ROS2
             return true;
         };
 
-        // The JointVisitor is instead of iterating over the sdf::Model::JointCount
-        // as it will skip joints that exist that doesn't have an attached parent link or child link
-        // such as the root link when its name is "world"
-        constexpr bool visitNestedJoints = true;
-        Utils::VisitJoints(*GetFirstModel(), JointVisitor, visitNestedJoints);
+        // Visit all joints that has at least a parent or child link in every model inside of the SDF document
+        auto VisitJointsInModel = [&JointVisitor](const sdf::Model& model) -> Utils::VisitModelResponse
+        {
+            // The JointVisitor is used instead of iterating over the sdf::Model::JointCount
+            // as it will skip joints that exist that doesn't have an attached parent link or child link
+            // such as the root link when its name is "world"
+
+            // As the VisitModels function visits nested models by default, visitNestedJoints
+            // is set to false to prevent visiting joints twice
+            constexpr bool visitNestedJoints = false;
+            Utils::VisitJoints(model, JointVisitor, visitNestedJoints);
+            return Utils::VisitModelResponse::VisitNestedAndSiblings;
+        };
+
+        Utils::VisitModels(*m_root, VisitJointsInModel, visitNestedModels);
 
         // Use the first entity based on a link that is not parented to any other link
         if (!linkEntityIdsWithoutParent.empty() && linkEntityIdsWithoutParent.front().IsValid())
@@ -441,16 +473,25 @@ namespace ROS2
         auto createdVisualEntities = m_visualsMaker.AddVisuals(link, entityId);
         createdEntities.insert(createdEntities.end(), createdVisualEntities.begin(), createdVisualEntities.end());
 
+        // Get the SDF model where this link is a child
+        const sdf::Model* modelContainingLink = Utils::GetModelContainingLink(*m_root, *link);
+
         if (!m_useArticulations)
         {
             m_inertialsMaker.AddInertial(link->Inertial(), entityId);
         }
         else
         {
-            m_articulationsMaker.AddArticulationLink(*GetFirstModel(), link, entityId);
+            if (modelContainingLink != nullptr)
+            {
+                m_articulationsMaker.AddArticulationLink(*modelContainingLink, link, entityId);
+            }
         }
 
-        m_collidersMaker.AddColliders(*GetFirstModel(), link, entityId);
+        if (modelContainingLink != nullptr)
+        {
+            m_collidersMaker.AddColliders(*modelContainingLink, link, entityId);
+        }
         return AZ::Success(entityId);
     }
 
@@ -509,25 +550,16 @@ namespace ROS2
         return str;
     }
 
-    const sdf::Model* URDFPrefabMaker::GetFirstModel() const
+    bool URDFPrefabMaker::ContainsModel() const
     {
-        // First look for the model at the root of the SDF
-        if (const sdf::Model* model = m_root->Model();
-            model != nullptr)
+        const sdf::Model* sdfModel{};
+        auto GetModelAndStopIteration = [&sdfModel](const sdf::Model& model) -> Utils::VisitModelResponse
         {
-            return model;
-        }
-
-        // Next check if there is a world at the root of the sdf
-        if (m_root->WorldCount() > 0)
-        {
-            if (const sdf::World* world = m_root->WorldByIndex(0);
-                world != nullptr && world->ModelCount() > 0)
-            {
-                return world->ModelByIndex(0);
-            }
-        }
-
-        return nullptr;
+            sdfModel = &model;
+            // Return stop to prevent further visitation of additional models
+            return Utils::VisitModelResponse::Stop;
+        };
+        Utils::VisitModels(*m_root, GetModelAndStopIteration);
+        return sdfModel != nullptr;
     }
 } // namespace ROS2

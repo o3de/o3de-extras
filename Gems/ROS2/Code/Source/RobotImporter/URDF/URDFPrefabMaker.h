@@ -74,8 +74,8 @@ namespace ROS2
         void AddRobotControl(AZ::EntityId rootEntityId);
         static void MoveEntityToDefaultSpawnPoint(const AZ::EntityId& rootEntityId, AZStd::optional<AZ::Transform> spawnPosition);
 
-        // Returns the <model> at the root of the SDF or the first <world><model> if it exist
-        const sdf::Model* GetFirstModel() const;
+        // Returns if SDF document contains any model objects, be that at the root or within an <world> tag
+        bool ContainsModel() const;
 
         const sdf::Root* m_root;
         AZStd::string m_prefabPath;

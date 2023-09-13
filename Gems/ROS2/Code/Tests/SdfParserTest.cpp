@@ -171,6 +171,11 @@ namespace UnitTest
                 <link name="link2"/>
               </model>
             </world>
+            <world name="second">
+              <model name="every_model">
+                <link name="link3"/>
+              </model>
+            </world>
           </sdf>)";
         }
     };
@@ -186,7 +191,7 @@ namespace UnitTest
         printf("SDF with duplicate model names failed to parse with errors: %s\n", errorString.c_str());
     }
 
-    TEST_F(SdfParserTest, SdfWithTwoModels_ParsesSuccessfully)
+    TEST_F(SdfParserTest, SdfWithModelsOnRootAndWorld_ParsesSuccessfully)
     {
         const auto xmlStr = GetSdfWithWorldThatHasMultipleModels();
         const auto sdfRootOutcome = ROS2::UrdfParser::Parse(xmlStr, {});
@@ -194,13 +199,17 @@ namespace UnitTest
         const auto& sdfRoot = sdfRootOutcome.GetRoot();
         // This SDF should have a model on the root that points to root model
         const auto* rootSdfModel = sdfRoot.Model();
-        ASSERT_EQ(nullptr, rootSdfModel);
+        ASSERT_NE(nullptr, rootSdfModel);
         EXPECT_EQ("root_model", rootSdfModel->Name());
         EXPECT_TRUE(rootSdfModel->LinkNameExists("root_link"));
 
         // The SDF should also have a world on the root as well
-        ASSERT_EQ(1, sdfRoot.WorldCount());
+        ASSERT_EQ(2, sdfRoot.WorldCount());
         const auto* sdfWorld = sdfRoot.WorldByIndex(0);
+        ASSERT_NE(nullptr, sdfWorld);
+
+        // Also validate that the world can be looked up by name
+        sdfWorld = sdfRoot.WorldByName("default");
         ASSERT_NE(nullptr, sdfWorld);
 
         EXPECT_EQ(2, sdfWorld->ModelCount());
@@ -212,6 +221,57 @@ namespace UnitTest
         const auto* yourModel = sdfWorld->ModelByName("your_model");
         ASSERT_NE(nullptr, yourModel);
         EXPECT_TRUE(yourModel->LinkNameExists("link2"));
+
+        sdfWorld = sdfRoot.WorldByName("second");
+        ASSERT_NE(nullptr, sdfWorld);
+
+        const auto* everyModel = sdfWorld->ModelByName("every_model");
+        ASSERT_NE(nullptr, everyModel);
+        EXPECT_TRUE(everyModel->LinkNameExists("link3"));
+
+        AZStd::vector<const sdf::Model*> models;
+        // Test visitation return results. All model siblings and nested models are visited
+        auto StoreModelAndVisitNestedModelsAndSiblings = [&models](const sdf::Model& model) -> ROS2::Utils::VisitModelResponse
+        {
+          models.push_back(&model);
+          return ROS2::Utils::VisitModelResponse::VisitNestedAndSiblings;
+        };
+        ROS2::Utils::VisitModels(sdfRoot, StoreModelAndVisitNestedModelsAndSiblings);
+
+        ASSERT_EQ(4, models.size());
+        EXPECT_EQ("root_model", models[0]->Name());
+        EXPECT_EQ("my_model", models[1]->Name());
+        EXPECT_EQ("your_model", models[2]->Name());
+        EXPECT_EQ("every_model", models[3]->Name());
+
+        // Test visiting models where siblings visited
+        // In this case only models directly on the SDF root object
+        // or directory child of the sdf world has there models visited
+        models.clear();
+        auto StoreModelAndVisitSiblings = [&models](const sdf::Model& model) -> ROS2::Utils::VisitModelResponse
+        {
+          models.push_back(&model);
+          return ROS2::Utils::VisitModelResponse::VisitSiblings;
+        };
+        ROS2::Utils::VisitModels(sdfRoot, StoreModelAndVisitSiblings);
+
+        ASSERT_EQ(4, models.size());
+        EXPECT_EQ("root_model", models[0]->Name());
+        EXPECT_EQ("my_model", models[1]->Name());
+        EXPECT_EQ("your_model", models[2]->Name());
+        EXPECT_EQ("every_model", models[3]->Name());
+
+        // Visit only the first model and stop any futher visitation
+        models.clear();
+        auto StoreModelAndStop = [&models](const sdf::Model& model) -> ROS2::Utils::VisitModelResponse
+        {
+          models.push_back(&model);
+          return ROS2::Utils::VisitModelResponse::Stop;
+        };
+        ROS2::Utils::VisitModels(sdfRoot, StoreModelAndStop);
+
+        ASSERT_EQ(1, models.size());
+        EXPECT_EQ("root_model", models[0]->Name());
     }
 
     TEST_F(SdfParserTest, CheckModelCorrectness)
