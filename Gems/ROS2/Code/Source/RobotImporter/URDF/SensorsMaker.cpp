@@ -9,6 +9,7 @@
 #include "SensorsMaker.h"
 
 #include <AzCore/Component/EntityId.h>
+#include <AzCore/std/containers/vector.h>
 #include <AzToolsFramework/Entity/EditorEntityHelpers.h>
 
 #include <ROS2/RobotImporter/SDFormatSensorImporterHook.h>
@@ -25,22 +26,25 @@ namespace ROS2
         serializeContext->EnumerateAll(
             [&](const AZ::SerializeContext::ClassData* classData, const AZ::Uuid& typeId) -> bool
             {
-                auto* attribute = AZ::FindAttribute(AZ::Crc32("SDFormatSensorImporter"), classData->m_attributes);
+                auto* attribute = AZ::FindAttribute(AZ::Crc32("SensorImporterHooks"), classData->m_attributes);
                 if (attribute == nullptr)
                 {
                     return true;
                 }
 
                 AZ::AttributeReader reader(nullptr, attribute);
-                SDFormat::SensorImporterHook sensorHook;
-                if (reader.Read<SDFormat::SensorImporterHook>(sensorHook))
+                AZStd::vector<ROS2::SDFormat::SensorImporterHook> sensorHooks;
+                if (reader.Read<AZStd::vector<ROS2::SDFormat::SensorImporterHook>>(sensorHooks))
                 {
-                    for (const auto& t : sensorHook.m_sensorTypes)
+                    for (const auto& hook : sensorHooks)
                     {
-                        if (sensor->Type() == t)
+                        for (const auto& t : hook.m_sensorTypes)
                         {
-                            sensorHook.m_sdfSensorToComponentCallback(*entity, *sensor);
-                            return false;
+                            if (sensor->Type() == t)
+                            {
+                                hook.m_sdfSensorToComponentCallback(*entity, *sensor);
+                                return false;
+                            }
                         }
                     }
                 }

@@ -12,11 +12,14 @@
 #include <AzCore/StringFunc/StringFunc.h>
 #include <AzCore/Utils/Utils.h>
 #include <AzCore/std/chrono/chrono.h>
+#include <AzCore/std/containers/vector.h>
 #include <AzCore/std/string/string.h>
+#include <AzCore/std/utility/move.h>
 #include <AzToolsFramework/API/ViewPaneOptions.h>
 #include <RobotImporter/URDF/UrdfParser.h>
 #include <RobotImporter/Utils/ErrorUtils.h>
 #include <RobotImporter/Utils/FilePath.h>
+#include <SDFormat/ROS2SensorHooks.h>
 #include <SdfAssetBuilder/SdfAssetBuilderSettings.h>
 
 #include <sdf/sdf.hh>
@@ -31,7 +34,16 @@ namespace ROS2
     {
         if (auto serializeContext = azrtti_cast<AZ::SerializeContext*>(context))
         {
-            serializeContext->Class<ROS2RobotImporterEditorSystemComponent, ROS2RobotImporterSystemComponent>()->Version(0);
+            const auto& importerHookCamera = ROS2::SDFormat::ROS2SensorHooks::ROS2CameraSensor();
+            const auto& importerHookGNSS = ROS2::SDFormat::ROS2SensorHooks::ROS2GNSSSensor();
+            const auto& importerHookImu = ROS2::SDFormat::ROS2SensorHooks::ROS2ImuSensor();
+            const auto& importerHookLidar = ROS2::SDFormat::ROS2SensorHooks::ROS2LidarSensor();
+            serializeContext->Class<ROS2RobotImporterEditorSystemComponent, ROS2RobotImporterSystemComponent>()->Version(0)->Attribute(
+                "SensorImporterHooks",
+                AZStd::vector<ROS2::SDFormat::SensorImporterHook>{ AZStd::move(importerHookCamera),
+                                                                   AZStd::move(importerHookGNSS),
+                                                                   AZStd::move(importerHookImu),
+                                                                   AZStd::move(importerHookLidar) });
         }
 
         if (AZ::BehaviorContext* behaviorContext = azrtti_cast<AZ::BehaviorContext*>(context))
