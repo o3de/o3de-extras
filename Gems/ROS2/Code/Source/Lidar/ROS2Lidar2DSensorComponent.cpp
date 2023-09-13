@@ -12,7 +12,6 @@
 #include <Lidar/LidarRegistrarSystemComponent.h>
 #include <Lidar/ROS2Lidar2DSensorComponent.h>
 #include <ROS2/Frame/ROS2FrameComponent.h>
-#include <ROS2/ROS2Bus.h>
 #include <ROS2/Utilities/ROS2Names.h>
 
 namespace ROS2
@@ -24,14 +23,14 @@ namespace ROS2
 
     void ROS2Lidar2DSensorComponent::Reflect(AZ::ReflectContext* context)
     {
-        if (auto* serialize = azrtti_cast<AZ::SerializeContext*>(context))
+        if (auto* serializeContext = azrtti_cast<AZ::SerializeContext*>(context))
         {
-            serialize->Class<ROS2Lidar2DSensorComponent, ROS2SensorComponent>()->Version(2)->Field(
+            serializeContext->Class<ROS2Lidar2DSensorComponent, SensorBaseType>()->Version(3)->Field(
                 "lidarCore", &ROS2Lidar2DSensorComponent::m_lidarCore);
 
-            if (AZ::EditContext* ec = serialize->GetEditContext())
+            if (auto* editContext = serializeContext->GetEditContext())
             {
-                ec->Class<ROS2Lidar2DSensorComponent>("ROS2 Lidar 2D Sensor", "Lidar 2D sensor component")
+                editContext->Class<ROS2Lidar2DSensorComponent>("ROS2 Lidar 2D Sensor", "Lidar 2D sensor component")
                     ->ClassElement(AZ::Edit::ClassElements::EditorData, "")
                     ->Attribute(AZ::Edit::Attributes::Category, "ROS2")
                     ->Attribute(AZ::Edit::Attributes::AppearsInAddComponentMenu, AZ_CRC_CE("Game"))
@@ -51,7 +50,7 @@ namespace ROS2
         TopicConfiguration ls;
         AZStd::string type = LaserScanType;
         ls.m_type = type;
-        ls.m_topic = "ls";
+        ls.m_topic = "scan";
         m_sensorConfiguration.m_frequency = 10.f;
         m_sensorConfiguration.m_publishersConfigurations.insert(AZStd::make_pair(type, ls));
     }
@@ -60,11 +59,6 @@ namespace ROS2
         : m_lidarCore(lidarConfiguration)
     {
         m_sensorConfiguration = sensorConfiguration;
-    }
-
-    void ROS2Lidar2DSensorComponent::Visualize()
-    {
-        m_lidarCore.VisualizeResults();
     }
 
     void ROS2Lidar2DSensorComponent::Activate()
@@ -78,12 +72,29 @@ namespace ROS2
         AZStd::string fullTopic = ROS2Names::GetNamespacedName(GetNamespace(), publisherConfig.m_topic);
         m_laserScanPublisher = ros2Node->create_publisher<sensor_msgs::msg::LaserScan>(fullTopic.data(), publisherConfig.GetQoS());
 
-        ROS2SensorComponent::Activate();
+        StartSensor(
+            m_sensorConfiguration.m_frequency,
+            [this]([[maybe_unused]] auto&&... args)
+            {
+                if (!m_sensorConfiguration.m_publishingEnabled)
+                {
+                    return;
+                }
+                FrequencyTick();
+            },
+            [this]([[maybe_unused]] auto&&... args)
+            {
+                if (!m_sensorConfiguration.m_visualize)
+                {
+                    return;
+                }
+                m_lidarCore.VisualizeResults();
+            });
     }
 
     void ROS2Lidar2DSensorComponent::Deactivate()
     {
-        ROS2SensorComponent::Deactivate();
+        StopSensor();
         m_laserScanPublisher.reset();
         m_lidarCore.Deinit();
     }
