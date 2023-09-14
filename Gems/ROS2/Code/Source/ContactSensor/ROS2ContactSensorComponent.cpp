@@ -47,7 +47,7 @@ namespace ROS2
     {
         if (AZ::SerializeContext* serialize = azrtti_cast<AZ::SerializeContext*>(context))
         {
-            serialize->Class<ROS2ContactSensorComponent, ROS2SensorComponent>()->Version(1);
+            serialize->Class<ROS2ContactSensorComponent, SensorBaseType>()->Version(1);
 
             if (AZ::EditContext* editContext = serialize->GetEditContext())
             {
@@ -97,17 +97,26 @@ namespace ROS2
                 m_activeContacts.erase(event.m_body2->GetEntityId());
             });
 
-        ROS2SensorComponent::Activate();
+        StartSensor(
+            m_sensorConfiguration.m_frequency,
+            [this](auto&&... args)
+            {
+                if (!m_sensorConfiguration.m_publishingEnabled)
+                {
+                    return;
+                }
+                FrequencyTick();
+            });
     }
 
     void ROS2ContactSensorComponent::Deactivate()
     {
+        StopSensor();
         m_activeContacts.clear();
         m_contactsPublisher.reset();
         m_onCollisionBeginHandler.Disconnect();
         m_onCollisionPersistHandler.Disconnect();
         m_onCollisionEndHandler.Disconnect();
-        ROS2SensorComponent::Deactivate();
     }
 
     void ROS2ContactSensorComponent::FrequencyTick()
