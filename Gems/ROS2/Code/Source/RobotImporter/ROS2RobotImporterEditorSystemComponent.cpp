@@ -101,9 +101,8 @@ namespace ROS2
         // Read the SDF Settings from the Settings Registry into a local struct
         SdfAssetBuilderSettings sdfBuilderSettings;
         sdfBuilderSettings.LoadSettings();
-        // Set the parser config settings for SDF content
-        sdf::ParserConfig parserConfig;
-        parserConfig.URDFSetPreserveFixedJoint(sdfBuilderSettings.m_urdfPreserveFixedJoints);
+        // Set the parser config settings for URDF content
+        sdf::ParserConfig parserConfig = Utils::SDFormat::CreateSdfParserConfigFromSettings(sdfBuilderSettings, filePath);
 
         auto parsedSdfOutcome = UrdfParser::ParseFromFile(filePath, parserConfig, sdfBuilderSettings);
         if (!parsedSdfOutcome)
@@ -124,7 +123,7 @@ namespace ROS2
         if (importAssetWithUrdf)
         {
             urdfAssetsMapping = AZStd::make_shared<Utils::UrdfAssetMap>(
-                Utils::CopyAssetForURDFAndCreateAssetMap(meshNames, filePath, collidersNames, visualNames));
+                Utils::CopyAssetForURDFAndCreateAssetMap(meshNames, filePath, collidersNames, visualNames, sdfBuilderSettings));
         }
         bool allAssetProcessed = false;
         bool assetProcessorFailed = false;

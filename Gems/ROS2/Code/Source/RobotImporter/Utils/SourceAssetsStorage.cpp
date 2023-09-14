@@ -273,12 +273,10 @@ namespace ROS2::Utils
         const AZStd::string& urdfFilename,
         const AZStd::unordered_set<AZStd::string>& colliders,
         const AZStd::unordered_set<AZStd::string>& visuals,
+        const SdfAssetBuilderSettings& sdfBuilderSettings,
         AZStd::string_view outputDirSuffix,
         AZ::IO::FileIOBase* fileIO)
     {
-        auto enviromentalVariable = std::getenv("AMENT_PREFIX_PATH");
-        AZ_Error("UrdfAssetMap", enviromentalVariable, "AMENT_PREFIX_PATH is not found.");
-
         UrdfAssetMap urdfAssetMap;
         if (meshesFilenames.empty())
         {
@@ -320,16 +318,16 @@ namespace ROS2::Utils
             }
             return urdfAssetMap;
         }
-        AZStd::string amentPrefixPath{ enviromentalVariable };
+        auto amentPrefixPath = Utils::GetAmentPrefixPath();
         AZStd::set<AZStd::string> files;
 
         for (const auto& unresolvedUrfFileName : meshesFilenames)
         {
-            auto resolved =
-                Utils::ResolveURDFPath(unresolvedUrfFileName, AZ::IO::PathView(urdfFilename), AZ::IO::PathView(amentPrefixPath));
+           auto resolved = Utils::ResolveAssetPath(unresolvedUrfFileName, AZ::IO::PathView(urdfFilename),
+                amentPrefixPath, sdfBuilderSettings);
             if (resolved.empty())
             {
-                AZ_Warning("CopyAssetForURDF", false, "There is not resolved path for %s", unresolvedUrfFileName.c_str());
+                AZ_Warning("CopyAssetForURDF", false, "There is no resolved path for %s", unresolvedUrfFileName.c_str());
                 continue;
             }
 
@@ -397,8 +395,8 @@ namespace ROS2::Utils
 
             Utils::UrdfAsset asset;
             asset.m_urdfPath = urdfFilename;
-            asset.m_resolvedUrdfPath =
-                Utils::ResolveURDFPath(unresolvedUrfFileName, AZ::IO::PathView(urdfFilename), AZ::IO::PathView(amentPrefixPath));
+            asset.m_resolvedUrdfPath = Utils::ResolveAssetPath(unresolvedUrfFileName, AZ::IO::PathView(urdfFilename),
+                amentPrefixPath, sdfBuilderSettings);
             asset.m_urdfFileCRC = AZ::Crc32();
             urdfAssetMap.emplace(unresolvedUrfFileName, AZStd::move(asset));
         }
@@ -420,25 +418,18 @@ namespace ROS2::Utils
         return urdfAssetMap;
     }
 
-    UrdfAssetMap FindAssetsForUrdf(const AZStd::unordered_set<AZStd::string>& meshesFilenames, const AZStd::string& urdfFilename)
+    UrdfAssetMap FindAssetsForUrdf(const AZStd::unordered_set<AZStd::string>& meshesFilenames, const AZStd::string& urdfFilename,
+        const SdfAssetBuilderSettings& sdfBuilderSettings)
     {
-        // Support reading the AMENT_PREFIX_PATH environment variable on Unix/Windows platforms
-        auto StoreAmentPrefixPath = [](char* buffer, size_t size) -> size_t
-        {
-            auto getEnvOutcome = AZ::Utils::GetEnv(AZStd::span(buffer, size), "AMENT_PREFIX_PATH");
-            return getEnvOutcome ? getEnvOutcome.GetValue().size() : 0;
-        };
-        AZStd::fixed_string<4096> amentPrefixPath;
-        amentPrefixPath.resize_and_overwrite(amentPrefixPath.capacity(), StoreAmentPrefixPath);
-        AZ_Error("UrdfAssetMap", !amentPrefixPath.empty(), "AMENT_PREFIX_PATH is not found.");
+        auto amentPrefixPath = Utils::GetAmentPrefixPath();
 
         UrdfAssetMap urdfToAsset;
         for (const auto& t : meshesFilenames)
         {
             Utils::UrdfAsset asset;
             asset.m_urdfPath = t;
-            asset.m_resolvedUrdfPath =
-                Utils::ResolveURDFPath(asset.m_urdfPath, AZ::IO::PathView(urdfFilename), AZ::IO::PathView(amentPrefixPath));
+            asset.m_resolvedUrdfPath = Utils::ResolveAssetPath(asset.m_urdfPath, AZ::IO::PathView(urdfFilename),
+                amentPrefixPath, sdfBuilderSettings);
             asset.m_urdfFileCRC = Utils::GetFileCRC(asset.m_resolvedUrdfPath);
             urdfToAsset.emplace(t, AZStd::move(asset));
         }
