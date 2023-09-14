@@ -14,16 +14,30 @@
 #include <QFileInfo>
 #include <QHBoxLayout>
 #include <QVBoxLayout>
+#include <QSettings>
 
 namespace ROS2
 {
+    static constexpr const char FileSelectionPageDefaultFile[] = "RobotImporter/SelectFileDefaultFile";
+
     FileSelectionPage::FileSelectionPage(QWizard* parent)
         : QWizardPage(parent)
         , m_sdfAssetBuilderSettings(AZStd::make_unique<SdfAssetBuilderSettings>())
     {
         m_fileDialog = new QFileDialog(this);
-        m_fileDialog->setDirectory(QString::fromUtf8(AZ::Utils::GetProjectPath().data()));
         m_fileDialog->setNameFilter("URDF, XACRO, SDF, WORLD (*.urdf *.xacro *.sdf *.world)");
+        // Whenever the selected file is successfully changed via the File Dialog or the Text Edit widget,
+        // save the full file name with path into the QSettings so that it defaults correctly the next time it is opened.
+        connect(this, &QWizardPage::completeChanged, [this]()
+        {
+            if (m_fileExists)
+            {
+                QSettings settings;
+                const QString absolutePath = m_textEdit->text();
+                settings.setValue(FileSelectionPageDefaultFile, absolutePath);
+            }
+        });
+
         m_button = new QPushButton("...", this);
         m_textEdit = new QLineEdit("", this);
         setTitle(tr("Load URDF/SDF file"));
@@ -46,8 +60,6 @@ namespace ROS2
         m_sdfAssetBuilderSettingsEditor->Setup(serializeContext, nullptr, enableScrollBars);
         m_sdfAssetBuilderSettingsEditor->AddInstance(m_sdfAssetBuilderSettings.get());
         m_sdfAssetBuilderSettingsEditor->InvalidateAll();
-        // Make sure the SDF Asset Builder settings are expanded by default
-        m_sdfAssetBuilderSettingsEditor->ExpandAll();
         layout->addWidget(m_sdfAssetBuilderSettingsEditor);
 
         this->setLayout(layout);
@@ -59,8 +71,33 @@ namespace ROS2
 
     FileSelectionPage::~FileSelectionPage() = default;
 
+    void FileSelectionPage::RefreshDefaultPath()
+    {
+        // The first time this dialog ever gets opened, default to the project's root directory.
+        // Once a URDF/SDF file has been selected or typed in, change the default directory to the location of that file.
+        // This gets stored in QSettings, so it will persist between Editor runs.
+        QSettings settings;
+        QString defaultFile(settings.value(FileSelectionPageDefaultFile).toString());
+        if (!defaultFile.isEmpty() && QFile(defaultFile).exists())
+        {
+            // Set both the default directory and the default file in that directory.
+            m_fileDialog->setDirectory(QFileInfo(defaultFile).absolutePath());
+            m_fileDialog->selectFile(QFileInfo(defaultFile).fileName());
+        }
+        else
+        {
+            // No valid file was found, so default back to the current project path.
+            m_fileDialog->setDirectory(QString::fromUtf8(AZ::Utils::GetProjectPath().c_str()));
+            m_fileDialog->selectFile("");
+        }
+    }
+
     void FileSelectionPage::onLoadButtonPressed()
     {
+        // Refresh the default path in the file dialog every time it is opened so that
+        // any changes in the text edit box are reflected in its default path and any Cancel
+        // pressed to escape from the file dialog *don't* change its default path.
+        RefreshDefaultPath();
         m_fileDialog->show();
     }
 

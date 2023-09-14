@@ -505,4 +505,5 @@ namespace UnitTest
             EXPECT_EQ(unsupportedImuParams[0U], ">always_on");
         }
     }
+
 } // namespace UnitTest
