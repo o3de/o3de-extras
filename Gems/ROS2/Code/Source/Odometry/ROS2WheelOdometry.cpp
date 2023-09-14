@@ -30,7 +30,7 @@ namespace ROS2
 
         if (AZ::SerializeContext* serialize = azrtti_cast<AZ::SerializeContext*>(context))
         {
-            serialize->Class<ROS2WheelOdometryComponent, ROS2SensorComponent>()
+            serialize->Class<ROS2WheelOdometryComponent, SensorBaseType>()
                 ->Version(1)
                 ->Field("Twist covariance", &ROS2WheelOdometryComponent::m_twistCovariance)
                 ->Field("Pose covariance", &ROS2WheelOdometryComponent::m_poseCovariance);
@@ -71,12 +71,16 @@ namespace ROS2
         required.push_back(AZ_CRC_CE("SkidSteeringModelService"));
     }
 
-    void ROS2WheelOdometryComponent::SetupRefreshLoop()
+    void ROS2WheelOdometryComponent::OnOdometryEvent()
     {
-        InstallPhysicalCallback();
+        m_odometryMsg.pose.pose.position = ROS2Conversions::ToROS2Point(m_robotPose);
+        m_odometryMsg.pose.pose.orientation = ROS2Conversions::ToROS2Quaternion(m_robotRotation);
+        m_odometryMsg.pose.covariance = m_poseCovariance.GetRosCovariance();
+
+        m_odometryPublisher->publish(m_odometryMsg);
     }
 
-    void ROS2WheelOdometryComponent::OnPhysicsSimulationFinished(AzPhysics::SceneHandle sceneHandle, float deltaTime)
+    void ROS2WheelOdometryComponent::OnPhysicsEvent(float physicsDeltaTime)
     {
         AZStd::pair<AZ::Vector3, AZ::Vector3> vt;
 
@@ -87,20 +91,13 @@ namespace ROS2
         m_odometryMsg.twist.twist.linear = ROS2Conversions::ToROS2Vector3(vt.first);
         m_odometryMsg.twist.twist.angular = ROS2Conversions::ToROS2Vector3(vt.second);
         m_odometryMsg.twist.covariance = m_twistCovariance.GetRosCovariance();
+
         if (m_sensorConfiguration.m_frequency > 0)
         {
-            auto updatePos = deltaTime * vt.first; // in meters
-            auto updateRot = deltaTime * vt.second; // in radians
+            auto updatePos = physicsDeltaTime * vt.first; // in meters
+            auto updateRot = physicsDeltaTime * vt.second; // in radians
             m_robotPose += m_robotRotation.TransformVector(updatePos);
             m_robotRotation *= AZ::Quaternion::CreateFromScaledAxisAngle(updateRot);
-        }
-        if (IsPublicationDeadline(deltaTime))
-        {
-            m_odometryMsg.pose.pose.position = ROS2Conversions::ToROS2Point(m_robotPose);
-            m_odometryMsg.pose.pose.orientation = ROS2Conversions::ToROS2Quaternion(m_robotRotation);
-            m_odometryMsg.pose.covariance = m_poseCovariance.GetRosCovariance();
-
-            m_odometryPublisher->publish(m_odometryMsg);
         }
     }
 
@@ -119,13 +116,26 @@ namespace ROS2
         const auto publisherConfig = m_sensorConfiguration.m_publishersConfigurations[Internal::kWheelOdometryMsgType];
         const auto fullTopic = ROS2Names::GetNamespacedName(GetNamespace(), publisherConfig.m_topic);
         m_odometryPublisher = ros2Node->create_publisher<nav_msgs::msg::Odometry>(fullTopic.data(), publisherConfig.GetQoS());
-        ROS2SensorComponent::Activate();
+
+        StartSensor(
+            m_sensorConfiguration.m_frequency,
+            [this]([[maybe_unused]] auto&&... args)
+            {
+                if (!m_sensorConfiguration.m_publishingEnabled)
+                {
+                    return;
+                }
+                OnOdometryEvent();
+            },
+            [this]([[maybe_unused]] AzPhysics::SceneHandle sceneHandle, float physicsDeltaTime)
+            {
+                OnPhysicsEvent(physicsDeltaTime);
+            });
     }
 
     void ROS2WheelOdometryComponent::Deactivate()
     {
-        RemovePhysicalCallback();
-        ROS2SensorComponent::Deactivate();
+        StopSensor();
         m_odometryPublisher.reset();
     }
 } // namespace ROS2
