@@ -14,9 +14,9 @@
 
 namespace ROS2
 {
-    namespace Internal
+    namespace
     {
-        const char* kWheelOdometryMsgType = "nav_msgs::msg::Odometry";
+        const char* WheelOdometryMsgType = "nav_msgs::msg::Odometry";
     }
 
     void ROS2WheelOdometryComponent::Reflect(AZ::ReflectContext* context)
@@ -26,7 +26,7 @@ namespace ROS2
         if (auto* serialize = azrtti_cast<AZ::SerializeContext*>(context))
         {
             serialize->Class<ROS2WheelOdometryComponent, SensorBaseType>()
-                ->Version(1)
+                ->Version(2)
                 ->Field("Twist covariance", &ROS2WheelOdometryComponent::m_twistCovariance)
                 ->Field("Pose covariance", &ROS2WheelOdometryComponent::m_poseCovariance);
 
@@ -53,7 +53,7 @@ namespace ROS2
     ROS2WheelOdometryComponent::ROS2WheelOdometryComponent()
     {
         TopicConfiguration tc;
-        const AZStd::string type = Internal::kWheelOdometryMsgType;
+        const AZStd::string type = WheelOdometryMsgType;
         tc.m_type = type;
         tc.m_topic = "odom";
         m_sensorConfiguration.m_frequency = 10;
@@ -108,7 +108,7 @@ namespace ROS2
         auto ros2Node = ROS2Interface::Get()->GetNode();
         AZ_Assert(m_sensorConfiguration.m_publishersConfigurations.size() == 1, "Invalid configuration of publishers for Odometry sensor")
 
-        const auto publisherConfig = m_sensorConfiguration.m_publishersConfigurations[Internal::kWheelOdometryMsgType];
+        const auto publisherConfig = m_sensorConfiguration.m_publishersConfigurations[WheelOdometryMsgType];
         const auto fullTopic = ROS2Names::GetNamespacedName(GetNamespace(), publisherConfig.m_topic);
         m_odometryPublisher = ros2Node->create_publisher<nav_msgs::msg::Odometry>(fullTopic.data(), publisherConfig.GetQoS());
 
