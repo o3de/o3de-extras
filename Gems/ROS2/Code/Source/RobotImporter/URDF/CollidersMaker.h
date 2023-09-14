@@ -30,19 +30,19 @@ namespace ROS2
     class CollidersMaker
     {
     public:
-        //! Construct the class based on URDF asset mapping.
-        //! @param urdfAssetsMapping a prepared mapping of Assets used by the source URDF.
-        CollidersMaker(const AZStd::shared_ptr<Utils::UrdfAssetMap>& urdfAssetsMapping);
+        //! Construct the class based on SDF asset mapping.
+        //! @param sdfAssetsMapping a prepared mapping of Assets used by the source URDF/SDF.
+        CollidersMaker(const AZStd::shared_ptr<Utils::UrdfAssetMap>& sdfAssetsMapping);
 
         //! Prevent copying of existing CollidersMaker
         CollidersMaker(const CollidersMaker& other) = delete;
 
         //! Builds .pxmeshes for every collider in link collider mesh.
-        //! @param link A parsed URDF tree link node which could hold information about colliders.
+        //! @param link A parsed SDF tree link node which could hold information about colliders.
         void BuildColliders(const sdf::Link* link);
         //! Add zero, one or many collider elements (depending on link content).
-        //! @param model An SDF model object provided by libsdformat from a parsed URDF
-        //! @param link A parsed URDF tree link node which could hold information about colliders.
+        //! @param model An SDF model object provided by libsdformat from a parsed URDF/SDF
+        //! @param link A parsed SDF tree link node which could hold information about colliders.
         //! @param entityId A non-active entity which will be affected.
         void AddColliders(const sdf::Model& model, const sdf::Link* link, AZ::EntityId entityId);
         //! Sends meshes required for colliders to asset processor.

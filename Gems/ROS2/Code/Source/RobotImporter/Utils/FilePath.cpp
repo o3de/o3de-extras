@@ -8,36 +8,49 @@
 
 #include "FilePath.h"
 
-namespace ROS2
+#include <AzCore/std/string/conversions.h>
+#include <AzCore/IO/Path/Path.h>
+
+namespace ROS2::Utils
 {
-    namespace Utils
+    //! @returns the capitalized extention of provided file.
+    //! In the case that the file does not have an extension an empty string will be returned.
+    static AZ::IO::FixedMaxPathString GetCapitalizedExtension(AZ::IO::PathView filename)
     {
-        //! @returns the capitalized extention of provided file.
-        //! In the case that the file does not have an extension an empty string will be returned.
-        AZStd::string GetCapitalizedExtension(const AZ::IO::Path& filename)
+        if (!filename.HasExtension())
         {
-            if (!filename.HasExtension())
-            {
-                return AZStd::string{};
-            }
-            AZStd::string extension{ filename.Extension().Native() };
-            AZStd::to_upper(extension.begin(), extension.end());
-            return extension;
+            return AZ::IO::FixedMaxPathString{};
         }
+        AZ::IO::FixedMaxPathString extension{ filename.Extension().Native() };
+        AZStd::to_upper(extension.begin(), extension.end());
+        return extension;
+    }
 
-        bool IsFileXacro(const AZ::IO::Path& filename)
-        {
-            return GetCapitalizedExtension(filename) == ".XACRO";
-        }
+    bool IsFileXacro(AZ::IO::PathView filename)
+    {
+        return GetCapitalizedExtension(filename) == ".XACRO";
+    }
 
-        bool IsFileUrdf(const AZ::IO::Path& filename)
-        {
-            return GetCapitalizedExtension(filename) == ".URDF";
-        }
+    bool IsFileUrdf(AZ::IO::PathView filename)
+    {
+        return GetCapitalizedExtension(filename) == ".URDF";
+    }
 
-        bool IsFileSDF(const AZ::IO::Path& filename)
-        {
-            return GetCapitalizedExtension(filename) == ".SDF" || GetCapitalizedExtension(filename) == ".WORLD";
-        }
-    } // namespace Utils
-} // namespace ROS2
+    bool IsFileSdf(AZ::IO::PathView filename)
+    {
+        AZ::IO::FixedMaxPathString extension = GetCapitalizedExtension(filename);
+        return extension == ".SDF" || extension == ".WORLD";
+    }
+
+    bool IsFileUrdfOrSdf(AZ::IO::PathView filename)
+    {
+        AZ::IO::FixedMaxPathString extension = GetCapitalizedExtension(filename);
+        return extension == ".URDF" || extension == ".SDF" || extension == ".WORLD";
+    }
+
+    bool IsFileXacroOrUrdfOrSdf(AZ::IO::PathView filename)
+    {
+        AZ::IO::FixedMaxPathString extension = GetCapitalizedExtension(filename);
+        return extension == ".XACRO" || extension == ".URDF" || extension == ".SDF" || extension == ".WORLD";
+    }
+} // namespace ROS2::Utils
