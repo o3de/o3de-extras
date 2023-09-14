@@ -24,10 +24,10 @@ namespace ROS2
         AZ::Entity* followColliderEntity = AzToolsFramework::GetEntityById(followColliderEntityId);
         PhysX::EditorJointComponent* jointComponent = nullptr;
 
-        // URDF has a joint axis configurable by a normalized vector - that is given by the 'axis' sub-element in the joint element.
+        // URDF/SDF has a joint axis configurable by a normalized vector - that is given by the 'axis' sub-element in the joint element.
         // The o3de has a slightly different way of configuring the axis of the joint. The o3de has an axis around positive `X` and rotation
         // with Euler angles can be applied to configure the desirable direction of the joint. A quaternion that transforms a unit vector X
-        // {1,0,0} to a vector given by the URDF joint need to be found. Heavily suboptimal element in this conversion is needed of
+        // {1,0,0} to a vector given by the URDF/SDF joint need to be found. Heavily suboptimal element in this conversion is needed of
         // converting the unit quaternion to Euler vector.
         const AZ::Vector3 o3deJointDir{ 1.0, 0.0, 0.0 };
         const sdf::JointAxis* jointAxis = joint->Axis();
@@ -42,7 +42,7 @@ namespace ROS2
 
         AZ_Printf(
             "JointsMaker",
-            "Quaternion from URDF to o3de %f, %f, %f, %f",
+            "Quaternion from URDF/SDF to o3de %f, %f, %f, %f",
             quaternion.GetX(),
             quaternion.GetY(),
             quaternion.GetZ(),
@@ -114,7 +114,7 @@ namespace ROS2
                         : -AZ::RadToDeg(AZ::Constants::TwoPi);
                     AZ_Printf(
                         "JointsMaker",
-                        "Setting limits : upper: %.1f lower: %.1f (URDF:%f,%f)",
+                        "Setting limits : upper: %.1f lower: %.1f (URDF/SDF:%f,%f)",
                         limitUpper,
                         limitLower,
                         jointAxis->Upper(),

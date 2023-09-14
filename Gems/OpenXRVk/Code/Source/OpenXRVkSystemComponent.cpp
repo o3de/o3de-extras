@@ -84,7 +84,7 @@ namespace OpenXRVk
     {
         if (XR::IsOpenXREnabled())
         {
-            m_instance = CreateInstance();
+            m_instance = AZStd::static_pointer_cast<OpenXRVk::Instance>(CreateInstance());
             //Get the validation mode
             AZ::RHI::ValidationMode validationMode = AZ::RHI::ValidationMode::Disabled;
             AZ::RHI::FactoryManagerBus::BroadcastResult(validationMode, &AZ::RHI::FactoryManagerRequest::DetermineValidationMode);

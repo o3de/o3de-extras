@@ -19,6 +19,7 @@ set(FILES
     Include/XR/XRSystemComponent.h
     Include/XR/XRUtils.h
     Include/XR/XRObject.h
+    Include/XR/XRPassRegisterSystemComponent.h
     Source/XRDevice.cpp
     Source/XRFactory.cpp
     Source/XRInput.cpp
@@ -29,4 +30,7 @@ set(FILES
     Source/XRSystem.cpp
     Source/XRSystemComponent.cpp
     Source/XRUtils.cpp
+    Source/XRPassRegisterSystemComponent.cpp
+    Source/Passes/FoveatedImagePass.h
+    Source/Passes/FoveatedImagePass.cpp
 )

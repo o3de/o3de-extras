@@ -8,16 +8,20 @@
 
 #pragma once
 
-#include <AzToolsFramework/API/ToolsApplicationAPI.h>
+#include <AzCore/IO/Path/Path_fwd.h>
 
-namespace ROS2
+namespace ROS2::Utils
 {
-    namespace Utils
-    {
-        AZStd::string GetCapitalizedExtension(const AZ::IO::Path& filename);
+    //! Returns true if the specified file path extension is .xacro
+    bool IsFileXacro(AZ::IO::PathView filename);
+    //! Returns true if the specified file path extension is .urdf
+    bool IsFileUrdf(AZ::IO::PathView filename);
+    //! Returns true if the specified file path extension is .sdf or .world
+    bool IsFileSdf(AZ::IO::PathView filename);
 
-        bool IsFileXacro(const AZ::IO::Path& filename);
+    //! Returns true if the specified file path is either a URDF or SDF file
+    bool IsFileUrdfOrSdf(AZ::IO::PathView filename);
 
-        bool IsFileUrdf(const AZ::IO::Path& filename);
-    } // namespace Utils
-} // namespace ROS2
+    //! Returns true if true specified file path is either a Xacro, URDF or SDF file
+    bool IsFileXacroOrUrdfOrSdf(AZ::IO::PathView filename);
+} // namespace ROS2::Utils

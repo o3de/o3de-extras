@@ -13,6 +13,7 @@
 #include <XR/XRFactory.h>
 #include <XR/XRSystem.h>
 #include <XR/XRUtils.h>
+#include <Passes/FoveatedImagePass.h>
 #include <Atom/RHI/Image.h>
 #include <Atom/RHI/ImagePool.h>
 #include <Atom/RHI/RHISystemInterface.h>
@@ -23,10 +24,13 @@
 #include <Atom/RPI.Reflect/Image/AttachmentImageAsset.h>
 #include <Atom/RPI.Reflect/Image/AttachmentImageAssetCreator.h>
 #include <Atom/RPI.Reflect/Pass/PassTemplate.h>
+#include <Atom/RPI.Reflect/System/RenderPipelineDescriptor.h>
 
 
 namespace XR
 {
+    static constexpr const char* const FoveatedAttachmentSlotName = "FoveatedImageInput";
+
 #if AZ_TRAIT_OS_IS_HOST_OS_PLATFORM
     AZ_CVAR(
         bool,
@@ -37,11 +41,26 @@ namespace XR
         "When an XR system is present in a host platform, this will enable the regular render pipeline on the host PC as well "
         "(true by default).");
 #endif
+    AZ_CVAR(AZ::CVarFixedString, r_default_openxr_foveated_pass_template, "MultiViewForwardPassTemplate", nullptr, AZ::ConsoleFunctorFlags::DontReplicate, "Pass template to add foveated rendering");
 
     void System::Init(const System::Descriptor& descriptor)
     {
         m_validationMode = descriptor.m_validationMode;
         AZ::SystemTickBus::Handler::BusConnect();
+
+        // Check settings registry for the foveated level
+        if (AZ::SettingsRegistryInterface* settingsRegistry = AZ::SettingsRegistry::Get())
+        {
+            if (AZ::u64 foveatedLevel; settingsRegistry->Get(foveatedLevel, AZ::RHI::XRFoveatedLevelKey))
+            {
+                AZ_Assert(
+                    foveatedLevel <= static_cast<AZ::u64>(AZ::RHI::XRFoveatedLevel::High),
+                    "Invalid foveated level %d", static_cast<int>(foveatedLevel));
+                m_foveatedLevel = static_cast<AZ::RHI::XRFoveatedLevel>(foveatedLevel);
+            }
+        }
+
+        AzFramework::AssetCatalogEventBus::Handler::BusConnect();
     }
 
     AZ::RHI::ResultCode System::InitInstance()
@@ -289,82 +308,6 @@ namespace XR
         return 0.0f;
     }
 
-    AZ::Data::Instance<AZ::RPI::AttachmentImage> System::InitPassFoveatedAttachment(const AZ::RPI::PassTemplate& passTemplate, const AZ::RHI::XRFoveatedLevel* level) const
-    {
-        // Need to fill the contents of the Variable shade rating image.
-        // Find the Shading Rate Attachment
-        AZ::Data::Asset<AZ::RPI::AttachmentImageAsset> vrsImageAsset;
-        for (const auto& imageAttachment : passTemplate.m_imageAttachments)
-        {
-            if (AZ::RHI::CheckBitsAll(imageAttachment.m_imageDescriptor.m_bindFlags, AZ::RHI::ImageBindFlags::ShadingRate))
-            {
-                vrsImageAsset = AZ::RPI::AssetUtils::LoadAssetById<AZ::RPI::AttachmentImageAsset>(imageAttachment.m_assetRef.m_assetId, AZ::RPI::AssetUtils::TraceLevel::Error);
-                break;
-            }
-        }
-
-        AZ::Data::Instance<AZ::RPI::AttachmentImage> textureAsset;
-        if (vrsImageAsset && vrsImageAsset.IsReady())
-        {
-            AZ::RHI::Device* device = AZ::RHI::RHISystemInterface::Get()->GetDevice();
-            // Resize the image to match the proper tile size
-            AZ::u32 outputWidth = GetSwapChainWidth(1);
-            AZ::u32 outputHeight = GetSwapChainHeight(1);
-
-            const auto& tileSize = device->GetLimits().m_shadingRateTileSize;
-            AZ::RHI::ImageDescriptor imageDescriptor = vrsImageAsset->GetImageDescriptor();
-            imageDescriptor.m_size.m_width = aznumeric_cast<uint32_t>(ceil(static_cast<float>(outputWidth) / tileSize.m_width));
-            imageDescriptor.m_size.m_height = aznumeric_cast<uint32_t>(ceil(static_cast<float>(outputHeight) / tileSize.m_height));
-
-            // Find the appropriate format for the image
-            for (uint32_t i = 0; i < static_cast<uint32_t>(AZ::RHI::Format::Count); ++i)
-            {
-                AZ::RHI::Format format = static_cast<AZ::RHI::Format>(i);
-                AZ::RHI::FormatCapabilities capabilities = device->GetFormatCapabilities(format);
-                if (AZ::RHI::CheckBitsAll(capabilities, AZ::RHI::FormatCapabilities::ShadingRate))
-                {
-                    imageDescriptor.m_format = format;
-                    break;
-                }
-            }
-
-            // Create the new asset with the proper size and format and register it in the AZ::RPI::AttachmentImage database
-            AZ::RPI::AttachmentImageAssetCreator imageAssetCreator;
-            imageAssetCreator.Begin(vrsImageAsset->GetId());
-            imageAssetCreator.SetImageDescriptor(imageDescriptor);
-            imageAssetCreator.SetName(vrsImageAsset->GetName(), vrsImageAsset->HasUniqueName());
-
-            AZ::Data::Asset<AZ::RPI::AttachmentImageAsset> asset;
-            if (imageAssetCreator.End(asset))
-            {
-                textureAsset = AZ::RPI::AttachmentImage::FindOrCreate(asset);
-                AZ::RHI::XRFoveatedLevel foveatedType = AZ::RHI::XRFoveatedLevel::None;
-                if (level)
-                {
-                    foveatedType = *level;
-                }
-                else
-                {
-                    // Check settings registry for the foveated level
-                    if (AZ::SettingsRegistryInterface* settingsRegistry = AZ::SettingsRegistry::Get())
-                    {
-                        if (AZ::u64 foveatedLevel; settingsRegistry->Get(foveatedLevel, AZ::RHI::XRFoveatedLevelKey))
-                        {
-                            AZ_Assert(
-                                foveatedLevel <= static_cast<AZ::u64>(AZ::RHI::XRFoveatedLevel::High),
-                                "Invalid foveated level %d", static_cast<int>(foveatedLevel));
-                            foveatedType = static_cast<AZ::RHI::XRFoveatedLevel>(foveatedLevel);
-                        }
-                    }
-                }
-                // Fill up the contents of the shading rate image
-                InitVariableRateShadingImageContent(textureAsset->GetRHIImage(), foveatedType);
-            }
-        }
-
-        return textureAsset;
-    }
-
     float System::GetXButtonState() const
     {
         if (m_session->IsSessionRunning())
@@ -433,6 +376,8 @@ namespace XR
 
     void System::Shutdown()
     {
+        AZ::RPI::PassSystemTemplateNotificationsBus::MultiHandler::BusDisconnect();
+        AzFramework::AssetCatalogEventBus::Handler::BusDisconnect();
         AZ::SystemTickBus::Handler::BusDisconnect();
         m_instance = nullptr;
         m_device = nullptr;
@@ -599,6 +544,64 @@ namespace XR
         return imagePool->UpdateImageContents(request);
     }
 
+    void System::OnCatalogLoaded(const char*)
+    {        
+        // Check device features first
+        if (AZ::RHI::Device* device = AZ::RHI::RHISystemInterface::Get()->GetDevice(); 
+            m_foveatedLevel != AZ::RHI::XRFoveatedLevel::None &&
+            AZ::RHI::CheckBitsAll(device->GetFeatures().m_shadingRateTypeMask, AZ::RHI::ShadingRateTypeFlags::PerRegion))
+        {
+            // Start listening for the openxr pipeline and the r_default_openxr_foveated_pass_template so we can add the shading rate attachment.
+            if (ConnectToPipelineTemplateListener("r_default_openxr_left_pipeline_name") &&
+                ConnectToPipelineTemplateListener("r_default_openxr_right_pipeline_name"))
+            {
+                AZ::RPI::PassSystemTemplateNotificationsBus::MultiHandler::BusConnect(AZ::Name(static_cast<AZ::CVarFixedString>(r_default_openxr_foveated_pass_template)));
+            }
+        }
+    }
+
+    void System::OnAddingPassTemplate(const AZStd::shared_ptr<AZ::RPI::PassTemplate>& passTemplate)
+    {
+        AZ::Name foveatedPassTemplate = AZ::Name(static_cast<AZ::CVarFixedString>(r_default_openxr_foveated_pass_template));
+        if (passTemplate->m_name == foveatedPassTemplate)
+        {
+            // Add the Shading Rate Attachment to the r_default_openxr_foveated_pass_template Pass
+            AZ::RPI::PassSlot slot;
+            slot.m_name = AZ::Name(FoveatedAttachmentSlotName);
+            slot.m_slotType = AZ::RPI::PassSlotType::Input;
+            slot.m_scopeAttachmentUsage = AZ::RHI::ScopeAttachmentUsage::ShadingRate;
+            slot.m_loadStoreAction.m_storeAction = AZ::RHI::AttachmentStoreAction::DontCare;
+            passTemplate->AddSlot(slot);
+        }
+        else
+        {
+            // Need to add the FoveatedImagePass that is in charge of initialization of the foveated image
+            auto findIt = AZStd::find_if(passTemplate->m_passRequests.begin(), passTemplate->m_passRequests.end(), [&](AZ::RPI::PassRequest& request)
+                {
+                    return request.m_templateName == foveatedPassTemplate;
+                });
+
+            if (findIt != passTemplate->m_passRequests.end())
+            {
+                // Add the connection between the FoveatedImagePass and the r_default_openxr_foveated_pass_template
+                AZ::RPI::PassConnection connection;
+                connection.m_localSlot = AZ::Name(FoveatedAttachmentSlotName);
+                connection.m_attachmentRef.m_pass = "FoveatedImagePass";
+                connection.m_attachmentRef.m_attachment = AZ::Name(FoveatedImageSlotName);
+                findIt->AddInputConnection(connection);
+
+                // Add the FoveatedImagePass to the OpenXR pipeline
+                AZ::RPI::PassRequest request;
+                request.m_passName = connection.m_attachmentRef.m_pass;
+                request.m_templateName = AZ::Name(FoveatedImagePassTemplateName);
+                AZStd::shared_ptr<FoveatedImagePassData> passData = AZStd::make_shared<FoveatedImagePassData>();
+                passData->m_foveatedLevel = m_foveatedLevel;
+                request.m_passData = passData;
+                passTemplate->m_passRequests.insert(findIt, request);
+            }
+        }
+    }
+
     Instance* System::GetInstance()
     {
         if (!m_instance)
@@ -606,5 +609,29 @@ namespace XR
             m_instance = AZ::Interface<Instance>::Get();
         }
         return m_instance.get();
+    }
+    bool System::ConnectToPipelineTemplateListener(const char* pipelineAsseCvar)
+    {
+        // Get the pipeline asset so we can get the root template.
+        // We will add the FoveatedImagePass to the root template of the pipeline.
+        auto* console = AZ::Interface<AZ::IConsole>::Get();
+        AZ::CVarFixedString pipelineName;
+        auto result = console->GetCvarValue(pipelineAsseCvar, pipelineName);
+        if (result != AZ::GetValueResult::Success)
+        {
+            return false;
+        }
+        AZ::Data::Asset<AZ::RPI::AnyAsset> pipelineAsset =
+            AZ::RPI::AssetUtils::LoadCriticalAsset<AZ::RPI::AnyAsset>(pipelineName.data(), AZ::RPI::AssetUtils::TraceLevel::Error);
+        if (!pipelineAsset)
+        {
+            return false;
+        }
+
+        AZ::RPI::RenderPipelineDescriptor renderPipelineDescriptor =
+            *AZ::RPI::GetDataFromAnyAsset<AZ::RPI::RenderPipelineDescriptor>(pipelineAsset); // Copy descriptor from asset
+        pipelineAsset.Release();
+        AZ::RPI::PassSystemTemplateNotificationsBus::MultiHandler::BusConnect(AZ::Name(renderPipelineDescriptor.m_rootPassTemplate));
+        return true;
     }
 }

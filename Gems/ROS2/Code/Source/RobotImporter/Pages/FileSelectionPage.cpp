@@ -25,8 +25,7 @@ namespace ROS2
         , m_sdfAssetBuilderSettings(AZStd::make_unique<SdfAssetBuilderSettings>())
     {
         m_fileDialog = new QFileDialog(this);
-        m_fileDialog->setNameFilter("URDF, XACRO (*.urdf *.xacro)");
-
+        m_fileDialog->setNameFilter("URDF, XACRO, SDF, WORLD (*.urdf *.xacro *.sdf *.world)");
         // Whenever the selected file is successfully changed via the File Dialog or the Text Edit widget,
         // save the full file name with path into the QSettings so that it defaults correctly the next time it is opened.
         connect(this, &QWizardPage::completeChanged, [this]()
@@ -41,10 +40,10 @@ namespace ROS2
 
         m_button = new QPushButton("...", this);
         m_textEdit = new QLineEdit("", this);
-        setTitle(tr("Load URDF file"));
+        setTitle(tr("Load URDF/SDF file"));
         QVBoxLayout* layout = new QVBoxLayout;
         layout->addStretch();
-        layout->addWidget(new QLabel(tr("URDF file path to load : "), this));
+        layout->addWidget(new QLabel(tr("URDF/SDF file path to load : "), this));
         QHBoxLayout* layoutHorizontal = new QHBoxLayout;
         layoutHorizontal->addWidget(m_button);
         layoutHorizontal->addWidget(m_textEdit);

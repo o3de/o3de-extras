@@ -22,7 +22,7 @@ namespace ROS2
         //! Add zero or one inertial and joints elements to a given entity (depending on link content).
         //! @param model SDF model object which can be queried to locate the joints needed to determine if the supplied
         //!              link is a child link within a joint
-        //! @param link A pointer to a parsed URDF link.
+        //! @param link A pointer to a parsed SDF link.
         //! @param entityId A non-active entity which will be populated according to inertial content.
         void AddArticulationLink(const sdf::Model& model, const sdf::Link* link, AZ::EntityId entityId) const;
     };
