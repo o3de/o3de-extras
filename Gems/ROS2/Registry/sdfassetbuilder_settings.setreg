@@ -13,7 +13,18 @@
                     "xacro"
                 ],
                 "UseArticulations": true,
-                "URDFPreserveFixedJoint": true
+                "URDFPreserveFixedJoint": true,
+                "AssetResolverSettings":
+                {
+                    "UseAmentPrefixPath": true,
+                    "UseAncestorPaths": true,
+                    "URIPrefixMap": 
+                    {
+                        "model://": [""],
+                        "package://": [""],
+                        "file://":  [""]
+                    }                
+                }
             }
         }
     }
