@@ -295,6 +295,8 @@ namespace ROS2
                 assetId.ToString<AZStd::string>().c_str());
 
             Physics::PhysicsAssetShapeConfiguration shapeConfiguration;
+            auto scale = geometry->MeshShape()->Scale();
+            shapeConfiguration.m_assetScale = AZ::Vector3(scale.X(), scale.Y(), scale.Z());
             shapeConfiguration.m_useMaterialsFromAsset = false;
             if (assetId.IsValid())
             {
