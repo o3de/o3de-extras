@@ -23,13 +23,13 @@ namespace ROS2
     {
         m_fileDialog = new QFileDialog(this);
         m_fileDialog->setDirectory(QString::fromUtf8(AZ::Utils::GetProjectPath().data()));
-        m_fileDialog->setNameFilter("URDF, XACRO (*.urdf *.xacro)");
+        m_fileDialog->setNameFilter("URDF, XACRO, SDF, WORLD (*.urdf *.xacro *.sdf *.world)");
         m_button = new QPushButton("...", this);
         m_textEdit = new QLineEdit("", this);
-        setTitle(tr("Load URDF file"));
+        setTitle(tr("Load URDF/SDF file"));
         QVBoxLayout* layout = new QVBoxLayout;
         layout->addStretch();
-        layout->addWidget(new QLabel(tr("URDF file path to load : "), this));
+        layout->addWidget(new QLabel(tr("URDF/SDF file path to load : "), this));
         QHBoxLayout* layoutHorizontal = new QHBoxLayout;
         layoutHorizontal->addWidget(m_button);
         layoutHorizontal->addWidget(m_textEdit);
