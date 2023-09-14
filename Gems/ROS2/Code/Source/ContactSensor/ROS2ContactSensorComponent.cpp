@@ -7,20 +7,10 @@
  */
 
 #include "ROS2ContactSensorComponent.h"
-#include <AzCore/Component/ComponentApplicationBus.h>
-#include <AzCore/Debug/Trace.h>
-#include <AzCore/Serialization/EditContext.h>
-#include <AzCore/Serialization/EditContextConstants.inl>
-#include <AzCore/std/parallel/lock.h>
-#include <AzCore/std/parallel/mutex.h>
-#include <AzCore/std/utility/move.h>
 #include <AzFramework/Physics/Collision/CollisionEvents.h>
 #include <AzFramework/Physics/Common/PhysicsSimulatedBody.h>
-#include <AzFramework/Physics/Common/PhysicsSimulatedBodyEvents.h>
-#include <AzFramework/Physics/Common/PhysicsTypes.h>
 #include <AzFramework/Physics/PhysicsSystem.h>
 #include <ROS2/Frame/ROS2FrameComponent.h>
-#include <ROS2/ROS2Bus.h>
 #include <ROS2/ROS2GemUtilities.h>
 #include <ROS2/Utilities/ROS2Conversions.h>
 #include <ROS2/Utilities/ROS2Names.h>
@@ -28,7 +18,7 @@
 
 namespace ROS2
 {
-    namespace Internal
+    namespace
     {
         constexpr float ContactMaximumSeparation = 0.0001f;
     }
@@ -45,11 +35,11 @@ namespace ROS2
 
     void ROS2ContactSensorComponent::Reflect(AZ::ReflectContext* context)
     {
-        if (AZ::SerializeContext* serialize = azrtti_cast<AZ::SerializeContext*>(context))
+        if (auto* serialize = azrtti_cast<AZ::SerializeContext*>(context))
         {
-            serialize->Class<ROS2ContactSensorComponent, SensorBaseType>()->Version(1);
+            serialize->Class<ROS2ContactSensorComponent, SensorBaseType>()->Version(2);
 
-            if (AZ::EditContext* editContext = serialize->GetEditContext())
+            if (auto* editContext = serialize->GetEditContext())
             {
                 editContext->Class<ROS2ContactSensorComponent>("ROS2 Contact Sensor", "Contact detection controller")
                     ->ClassElement(AZ::Edit::ClassElements::EditorData, "")
@@ -73,7 +63,7 @@ namespace ROS2
         m_entityName = entity->GetName();
 
         auto ros2Node = ROS2Interface::Get()->GetNode();
-        AZ_Assert(m_sensorConfiguration.m_publishersConfigurations.size() == 1, "Invalid configuration of publishers for Contact sensor");
+        AZ_Assert(m_sensorConfiguration.m_publishersConfigurations.size() == 1, "Invalid configuration of publishers for Contact sensor")
         const auto publisherConfig = m_sensorConfiguration.m_publishersConfigurations["gazebo_msgs::msg::ContactsState"];
         const auto fullTopic = ROS2Names::GetNamespacedName(GetNamespace(), publisherConfig.m_topic);
         m_contactsPublisher = ros2Node->create_publisher<gazebo_msgs::msg::ContactsState>(fullTopic.data(), publisherConfig.GetQoS());
@@ -133,7 +123,7 @@ namespace ROS2
         {
             AZStd::pair<AzPhysics::SceneHandle, AzPhysics::SimulatedBodyHandle> foundBody =
                 physicsSystem->FindAttachedBodyHandleFromEntityId(GetEntityId());
-            AZ_Warning("Contact Sensor", foundBody.first != AzPhysics::InvalidSceneHandle, "Invalid scene handle");
+            AZ_Warning("Contact Sensor", foundBody.first != AzPhysics::InvalidSceneHandle, "Invalid scene handle")
             if (foundBody.first != AzPhysics::InvalidSceneHandle)
             {
                 AzPhysics::SimulatedBodyEvents::RegisterOnCollisionBeginHandler(
@@ -147,7 +137,7 @@ namespace ROS2
         // Publishes all contacts
         gazebo_msgs::msg::ContactsState msg;
         const auto* ros2Frame = Utils::GetGameOrEditorComponent<ROS2FrameComponent>(GetEntity());
-        AZ_Assert(ros2Frame, "Invalid component pointer value");
+        AZ_Assert(ros2Frame, "Invalid component pointer value")
         msg.header.frame_id = ros2Frame->GetFrameID().data();
         msg.header.stamp = ROS2Interface::Get()->GetROSTimestamp();
 
@@ -156,7 +146,7 @@ namespace ROS2
             AZStd::lock_guard<AZStd::mutex> lock(m_activeContactsMutex);
             if (!m_activeContacts.empty())
             {
-                for (auto& [id, contact] : m_activeContacts)
+                for (auto [id, contact] : m_activeContacts)
                 {
                     msg.states.push_back(AZStd::move(contact));
                 }
@@ -172,13 +162,13 @@ namespace ROS2
         AZ::ComponentApplicationBus::BroadcastResult(
             contactedEntity, &AZ::ComponentApplicationRequests::FindEntity, event.m_body2->GetEntityId());
         gazebo_msgs::msg::ContactState state;
-        AZ_Assert(contactedEntity, "Invalid entity pointer value");
+        AZ_Assert(contactedEntity, "Invalid entity pointer value")
         state.collision1_name = ("ID: " + m_entityId.ToString() + " Name:" + m_entityName).c_str();
         state.collision2_name = ("ID: " + event.m_body2->GetEntityId().ToString() + " Name:" + contactedEntity->GetName()).c_str();
         geometry_msgs::msg::Wrench totalWrench;
         for (auto& contact : event.m_contacts)
         {
-            if (contact.m_separation < Internal::ContactMaximumSeparation)
+            if (contact.m_separation < ContactMaximumSeparation)
             {
                 state.contact_positions.emplace_back(ROS2Conversions::ToROS2Vector3(contact.m_position));
                 state.contact_normals.emplace_back(ROS2Conversions::ToROS2Vector3(contact.m_normal));
