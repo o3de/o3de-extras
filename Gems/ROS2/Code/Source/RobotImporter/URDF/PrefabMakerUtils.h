@@ -48,19 +48,19 @@ namespace ROS2::PrefabMakerUtils
 
     //! Create an entity name from arguments.
     //! @param rootName root of entity's name.
-    //! @param type type of entity, depending on corresponding URDF tag. For example, "visual".
+    //! @param type type of entity, depending on corresponding SDF tag. For example, "visual".
     //! @param index index of entity, useful when multiple visuals or colliders are present for a single link.
     //! @return entity name, for example "robotBumper_visual_1".
     AZStd::string MakeEntityName(const AZStd::string& rootName, const AZStd::string& type, size_t index = 0);
 
     //! Get an Asset for a specified mesh given its path and mapping.
-    //! @param urdfAssetsMapping mapping of URDF assets.
-    //! @param urdfMeshPath a path to the mesh for which the Asset is requested.
+    //! @param sdfAssetsMapping mapping of SDF assets.
+    //! @param sdfMeshPath a path to the mesh for which the Asset is requested.
     //! @return Asset for the mesh, if found in the mapping.
     AZStd::optional<Utils::AvailableAsset> GetAssetFromPath(
-        const Utils::UrdfAssetMap& urdfAssetsMapping, const AZStd::string& urdfMeshPath);
+        const Utils::UrdfAssetMap& sdfAssetsMapping, const AZStd::string& sdfMeshPath);
 
     //! Get Asset from path. Version for std::string.
     //! @see GetAssetFromPath.
-    AZStd::optional<Utils::AvailableAsset> GetAssetFromPath(const Utils::UrdfAssetMap& urdfAssetsMapping, const std::string& urdfMeshPath);
+    AZStd::optional<Utils::AvailableAsset> GetAssetFromPath(const Utils::UrdfAssetMap& sdfAssetsMapping, const std::string& sdfMeshPath);
 } // namespace ROS2::PrefabMakerUtils

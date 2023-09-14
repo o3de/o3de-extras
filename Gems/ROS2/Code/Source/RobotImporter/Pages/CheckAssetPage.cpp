@@ -17,7 +17,7 @@ namespace ROS2
 {
     namespace Columns
     {
-        constexpr int UrdfMeshPath{ 0 };
+        constexpr int SdfMeshPath{ 0 };
         constexpr int ResolvedMeshPath{ 1 };
         constexpr int SourceAsset{ 3 };
         constexpr int ProductAsset{ 2 };
@@ -48,10 +48,10 @@ namespace ROS2
         m_table->setSelectionBehavior(QAbstractItemView::SelectRows);
         m_table->setSelectionMode(QAbstractItemView::SingleSelection);
         // Set the header items.
-        QTableWidgetItem* headerItem = new QTableWidgetItem(tr("URDF mesh path"));
+        QTableWidgetItem* headerItem = new QTableWidgetItem(tr("URDF/SDF mesh path"));
         headerItem->setTextAlignment(Qt::AlignVCenter | Qt::AlignLeft);
-        m_table->setHorizontalHeaderItem(Columns::UrdfMeshPath, headerItem);
-        headerItem = new QTableWidgetItem(tr("Resolved mesh from URDF"));
+        m_table->setHorizontalHeaderItem(Columns::SdfMeshPath, headerItem);
+        headerItem = new QTableWidgetItem(tr("Resolved mesh from URDF/SDF"));
         headerItem->setTextAlignment(Qt::AlignVCenter | Qt::AlignLeft);
         m_table->setHorizontalHeaderItem(Columns::ResolvedMeshPath, headerItem);
         headerItem = new QTableWidgetItem(tr("Type"));
@@ -63,7 +63,7 @@ namespace ROS2
         headerItem = new QTableWidgetItem(tr("Product asset"));
         headerItem->setTextAlignment(Qt::AlignVCenter | Qt::AlignLeft);
         m_table->setHorizontalHeaderItem(Columns::ProductAsset, headerItem);
-        m_table->horizontalHeader()->resizeSection(Columns::UrdfMeshPath, 200);
+        m_table->horizontalHeader()->resizeSection(Columns::SdfMeshPath, 200);
         m_table->horizontalHeader()->resizeSection(Columns::ResolvedMeshPath, 350);
         m_table->horizontalHeader()->resizeSection(Columns::Type, 50);
         m_table->horizontalHeader()->resizeSection(Columns::SourceAsset, 400);
@@ -96,11 +96,11 @@ namespace ROS2
 
     void CheckAssetPage::ReportAsset(
         const AZ::Uuid assetUuid,
-        const AZStd::string urdfPath,
+        const AZStd::string sdfPath,
         const QString& type,
         const AZStd::string assetSourcePath,
         const AZ::Crc32& crc32,
-        const AZStd::string resolvedUrdfPath)
+        const AZStd::string resolvedSdfPath)
     {
         int i = m_table->rowCount();
         m_table->setRowCount(i + 1);
@@ -112,14 +112,14 @@ namespace ROS2
         }
         SetTitle();
         AZStd::string crcStr = AZStd::to_string(crc32);
-        QTableWidgetItem* p = createCell(isOk, QString::fromUtf8(urdfPath.data(), urdfPath.size()));
+        QTableWidgetItem* p = createCell(isOk, QString::fromUtf8(sdfPath.data(), sdfPath.size()));
         if (crc32 != AZ::Crc32())
         {
             p->setToolTip(tr("CRC for file : ") + QString::fromUtf8(crcStr.data(), crcStr.size()));
         }
-        m_table->setItem(i, Columns::UrdfMeshPath, p);
+        m_table->setItem(i, Columns::SdfMeshPath, p);
         m_table->setItem(
-            i, Columns::ResolvedMeshPath, createCell(isOk, QString::fromUtf8(resolvedUrdfPath.data(), resolvedUrdfPath.size())));
+            i, Columns::ResolvedMeshPath, createCell(isOk, QString::fromUtf8(resolvedSdfPath.data(), resolvedSdfPath.size())));
         m_table->setItem(i, Columns::Type, createCell(isOk, type));
         m_table->setItem(i, Columns::SourceAsset, createCell(isOk, QString::fromUtf8(assetSourcePath.data(), assetSourcePath.size())));
         if (isOk)

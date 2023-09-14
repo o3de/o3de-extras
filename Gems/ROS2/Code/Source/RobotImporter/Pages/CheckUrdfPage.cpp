@@ -17,7 +17,7 @@ namespace ROS2
         , m_warning(false)
     {
         m_log = new QTextEdit(this);
-        setTitle(tr("URDF opening results:"));
+        setTitle(tr("URDF/SDF opening results:"));
         QVBoxLayout* layout = new QVBoxLayout;
         layout->addWidget(m_log);
         m_log->acceptRichText();

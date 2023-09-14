@@ -37,7 +37,7 @@ namespace ROS2::Utils
     bool IsWheelURDFHeuristics(const sdf::Model& model, const sdf::Link* link);
 
     //! The recursive function for the given link goes through URDF and finds world-to-entity transformation for us.
-    //! @param link pointer to URDF link that root of robot description
+    //! @param link pointer to URDF/SDF link that root of robot description
     //! @param t initial transform, should be identity for non-recursive call.
     //! @returns root to entity transform
     AZ::Transform GetWorldTransformURDF(const sdf::Link* link, AZ::Transform t = AZ::Transform::Identity());
@@ -45,61 +45,102 @@ namespace ROS2::Utils
     //! Callback which is invoke for each link within a model
     //! @return Return true to continue visiting links or false to halt
     using LinkVisitorCallback = AZStd::function<bool(const sdf::Link&)>;
-    //! Visit links from URDF or SDF
+    //! Visit links from URDF/SDF
     //! @param sdfModel Model object of SDF document corresponding to the <model> tag. It used to query link
-    //! @param visitNestedModelLinks When true recurses to any nested <model> tags of the Model object and invoke visitor on their links as well
+    //! @param visitNestedModelLinks When true recurses to any nested <model> tags of the Model object and invoke visitor on their links as
+    //! well
     //! @returns void
-    void VisitLinks(const sdf::Model& sdfModel, const LinkVisitorCallback& linkVisitorCB,
-        bool visitNestedModelLinks = false);
+    void VisitLinks(const sdf::Model& sdfModel, const LinkVisitorCallback& linkVisitorCB, bool visitNestedModelLinks = false);
 
-    //! Retrieve all links in URDF as a map, where a key is link's name and a value is a pointer to link.
+    //! Retrieve all links in URDF/SDF as a map, where a key is link's name and a value is a pointer to link.
     //! Allows to retrieve a pointer to a link given it name.
     //! @param sdfModel object of SDF document corresponding to the <model> tag. It used to query links
     //! @param gatherNestedModelLinks When true recurses to any nested <model> tags of the Model object and also gathers their links as well
     //! @returns mapping from link name to link pointer
-    AZStd::unordered_map<AZStd::string, const sdf::Link*> GetAllLinks(const sdf::Model& sdfModel,
-        bool gatherNestedModelLinks = false);
+    AZStd::unordered_map<AZStd::string, const sdf::Link*> GetAllLinks(const sdf::Model& sdfModel, bool gatherNestedModelLinks = false);
 
     //! Callback which is invoke for each valid joint for a given model
     //! @return Return true to continue visiting joint or false to halt
     using JointVisitorCallback = AZStd::function<bool(const sdf::Joint&)>;
-    //! Visit joints from URDF
+    //! Visit joints from URDF/SDF
     //! @param sdfModel Model object of SDF document corresponding to the <model> tag. It used to query joints
-    //! @param visitNestedModelJoints When true recurses to any nested <model> tags of the Model object and invoke visitor on their joints as well
+    //! @param visitNestedModelJoints When true recurses to any nested <model> tags of the Model object and invoke visitor on their joints
+    //! as well
     //! @returns void
-    void VisitJoints(const sdf::Model& sdfModel, const JointVisitorCallback& jointVisitorCB,
-        bool visitNestedModelJoints = false);
+    void VisitJoints(const sdf::Model& sdfModel, const JointVisitorCallback& jointVisitorCB, bool visitNestedModelJoints = false);
 
-    //! Retrieve all joints in URDF.
+    //! Retrieve all joints in URDF/SDF.
     //! @param sdfModel Model object of SDF document corresponding to the <model> tag. It used to query joints
-    //! @param gatherNestedModelJoints When true recurses to any nested <model> tags of the Model object and also gathers their joints as well
+    //! @param gatherNestedModelJoints When true recurses to any nested <model> tags of the Model object and also gathers their joints as
+    //! well
     //! @returns mapping from joint name to joint pointer
-    AZStd::unordered_map<AZStd::string, const sdf::Joint*> GetAllJoints(const sdf::Model& sdfModel,
-        bool gatherNestedModelJoints = false);
+    AZStd::unordered_map<AZStd::string, const sdf::Joint*> GetAllJoints(const sdf::Model& sdfModel, bool gatherNestedModelJoints = false);
 
-    //! Retrieve all joints from URDF in which the specified link is a child in a sdf::Joint.
+    //! Retrieve all joints from URDF/SDF in which the specified link is a child in a sdf::Joint.
     //! @param sdfModel Model object of SDF document corresponding to the <model> tag. It used to query joints
     //! @param linkName Name of link which to query in joint objects ChildName()
-    //! @param gatherNestedModelJoints When true recurses to any nested <model> tags of the Model object and also gathers their joints as well
+    //! @param gatherNestedModelJoints When true recurses to any nested <model> tags of the Model object and also gathers their joints as
+    //! well
     //! @returns vector of joints where link is a child
-    AZStd::vector<const sdf::Joint*> GetJointsForChildLink(const sdf::Model& sdfModel, AZStd::string_view linkName,
-        bool gatherNestedModelJoints = false);
+    AZStd::vector<const sdf::Joint*> GetJointsForChildLink(
+        const sdf::Model& sdfModel, AZStd::string_view linkName, bool gatherNestedModelJoints = false);
 
-    //! Retrieve all joints from URDF in which the specified link is a parent in a sdf::Joint.
+    //! Retrieve all joints from URDF/SDF in which the specified link is a parent in a sdf::Joint.
     //! @param sdfModel Model object of SDF document corresponding to the <model> tag. It used to query joints
     //! @param linkName Name of link which to query in joint objects ParentName()
-    //! @param gatherNestedModelJoints When true recurses to any nested <model> tags of the Model object and also gathers their joints as well
+    //! @param gatherNestedModelJoints When true recurses to any nested <model> tags of the Model object and also gathers their joints as
+    //! well
     //! @returns vector of joints where link is a parent
-    AZStd::vector<const sdf::Joint*> GetJointsForParentLink(const sdf::Model& sdfModel, AZStd::string_view linkName,
-        bool gatherNestedModelJoints = false);
+    AZStd::vector<const sdf::Joint*> GetJointsForParentLink(
+        const sdf::Model& sdfModel, AZStd::string_view linkName, bool gatherNestedModelJoints = false);
+
+    //! Visitation Enum to determine if visiting models should halt, continue to visit sibling models or continue to visit
+    //! sibling and nested models of the current model
+    enum class VisitModelResponse
+    {
+        //! Visit any nested model of the current model, and then continue to visit sibling models
+        VisitNestedAndSiblings,
+        //! If returned, sibling <model> to the current model will be visited,
+        //! but not any nested children
+        VisitSiblings,
+        //! Stop visitation of future sibling <model> tags or nested <model> to the current model
+        Stop,
+    };
+
+    //! Callback which is invoke for each model in the SDF
+    //! This function visits any <model> tags in the root of the SDF XML content
+    //! as well as any <model> tags in any <world> tags that are in the root of the SDF XML content
+    //! @return Return true to continue visiting models or false to halt
+    using ModelVisitorCallback = AZStd::function<VisitModelResponse(const sdf::Model&)>;
+    //! Visit Models from URDF/SDF
+    //! @param sdfRoot Root object of SDF document
+    //! @param visitNestedModels When true recurses to any nested <model> tags of the Model objects and invoke the visitor on them
+    //! @returns void
+    void VisitModels(const sdf::Root& sdfRoot, const ModelVisitorCallback& modelVisitorCB, bool visitNestedModels = true);
 
     //! Retrieve all meshes referenced in URDF as unresolved URDF patches.
     //! Note that returned filenames are unresolved URDF patches.
+    //! @param root - reference to SDF Root object representing the root of the parsed SDF xml document
     //! @param visual - search for visual meshes.
     //! @param colliders - search for collider meshes.
-    //! @param rootLink - pointer to sdf Rootobject that corresponds to to root of robot description after it hasbeen converted from URDF to SDF
     //! @returns set of meshes' filenames.
-    AZStd::unordered_set<AZStd::string> GetMeshesFilenames(const sdf::Root* root, bool visual, bool colliders);
+    AZStd::unordered_set<AZStd::string> GetMeshesFilenames(const sdf::Root& root, bool visual, bool colliders);
+
+    //! Returns the SDF model object which contains the specified link
+    //! @param root - reference to SDF Root object representing the root of the parsed SDF xml document
+    //! @param linkName - Name of SDF link to lookup in the SDF document
+    const sdf::Model* GetModelContainingLink(const sdf::Root& root, AZStd::string_view linkName);
+    //! @param root - reference to SDF Root object representing the root of the parsed SDF xml document
+    //! @param link - SDF link object to lookup in the SDF document
+    const sdf::Model* GetModelContainingLink(const sdf::Root& root, const sdf::Link& link);
+
+    //! Returns the SDF model object which contains the specified joint
+    //! @param root - reference to SDF Root object representing the root of the parsed SDF xml document
+    //! @param jointName - Name of SDF joint to lookup in the SDF document
+    const sdf::Model* GetModelContainingJoint(const sdf::Root& root, AZStd::string_view jointName);
+    //! @param root - reference to SDF Root object representing the root of the parsed SDF xml document
+    //! @param jointName - Name of SDF joint to lookup in the SDF document
+    const sdf::Model* GetModelContainingJoint(const sdf::Root& root, const sdf::Joint& joint);
 
     //! Callback used to check for file exist of a path referenced within a URDF/SDF file
     //! @param path Candidate local filesystem path to check for existence

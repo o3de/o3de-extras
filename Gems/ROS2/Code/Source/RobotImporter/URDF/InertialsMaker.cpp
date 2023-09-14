@@ -35,7 +35,7 @@ namespace ROS2
 
         if (!URDF::TypeConversions::ConvertQuaternion(inertial.Pose().Rot()).IsIdentity())
         { // There is a rotation component in URDF that we are not able to apply
-            AZ_Warning("AddInertial", false, "Ignoring URDF inertial origin rotation (no such field in rigid body configuration)");
+            AZ_Warning("AddInertial", false, "Ignoring URDF/SDF inertial origin rotation (no such field in rigid body configuration)");
         }
 
         auto moi = inertial.Moi();
