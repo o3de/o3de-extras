@@ -9,11 +9,6 @@
 #include "ROS2WheelOdometry.h"
 #include "Odometry/ROS2OdometryCovariance.h"
 #include "VehicleModelComponent.h"
-#include <AzCore/Serialization/EditContext.h>
-#include <AzCore/Serialization/EditContextConstants.inl>
-#include <AzFramework/Physics/RigidBodyBus.h>
-#include <ROS2/Frame/ROS2FrameComponent.h>
-#include <ROS2/ROS2Bus.h>
 #include <ROS2/Utilities/ROS2Conversions.h>
 #include <ROS2/Utilities/ROS2Names.h>
 
@@ -28,16 +23,16 @@ namespace ROS2
     {
         ROS2OdometryCovariance::Reflect(context);
 
-        if (AZ::SerializeContext* serialize = azrtti_cast<AZ::SerializeContext*>(context))
+        if (auto* serialize = azrtti_cast<AZ::SerializeContext*>(context))
         {
             serialize->Class<ROS2WheelOdometryComponent, SensorBaseType>()
                 ->Version(1)
                 ->Field("Twist covariance", &ROS2WheelOdometryComponent::m_twistCovariance)
                 ->Field("Pose covariance", &ROS2WheelOdometryComponent::m_poseCovariance);
 
-            if (AZ::EditContext* ec = serialize->GetEditContext())
+            if (auto* editContext = serialize->GetEditContext())
             {
-                ec->Class<ROS2WheelOdometryComponent>("ROS2 Wheel Odometry Sensor", "Odometry sensor component")
+                editContext->Class<ROS2WheelOdometryComponent>("ROS2 Wheel Odometry Sensor", "Odometry sensor component")
                     ->ClassElement(AZ::Edit::ClassElements::EditorData, "")
                     ->Attribute(AZ::Edit::Attributes::Category, "ROS2")
                     ->Attribute(AZ::Edit::Attributes::AppearsInAddComponentMenu, AZ_CRC_CE("Game"))
@@ -94,8 +89,8 @@ namespace ROS2
 
         if (m_sensorConfiguration.m_frequency > 0)
         {
-            auto updatePos = physicsDeltaTime * vt.first; // in meters
-            auto updateRot = physicsDeltaTime * vt.second; // in radians
+            const auto updatePos = physicsDeltaTime * vt.first; // in meters
+            const auto updateRot = physicsDeltaTime * vt.second; // in radians
             m_robotPose += m_robotRotation.TransformVector(updatePos);
             m_robotRotation *= AZ::Quaternion::CreateFromScaledAxisAngle(updateRot);
         }
@@ -111,7 +106,7 @@ namespace ROS2
         m_odometryMsg.child_frame_id = GetFrameID().c_str();
 
         auto ros2Node = ROS2Interface::Get()->GetNode();
-        AZ_Assert(m_sensorConfiguration.m_publishersConfigurations.size() == 1, "Invalid configuration of publishers for Odometry sensor");
+        AZ_Assert(m_sensorConfiguration.m_publishersConfigurations.size() == 1, "Invalid configuration of publishers for Odometry sensor")
 
         const auto publisherConfig = m_sensorConfiguration.m_publishersConfigurations[Internal::kWheelOdometryMsgType];
         const auto fullTopic = ROS2Names::GetNamespacedName(GetNamespace(), publisherConfig.m_topic);
