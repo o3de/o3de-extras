@@ -6,11 +6,12 @@
  *
  */
 
-#include "JointStatePublisher.h"
-#include "ManipulationUtils.h"
 #include <ROS2/Manipulation/JointsManipulationRequests.h>
 #include <ROS2/ROS2Bus.h>
 #include <ROS2/Utilities/ROS2Names.h>
+
+#include "JointStatePublisher.h"
+#include "ManipulationUtils.h"
 
 namespace ROS2
 {
@@ -24,6 +25,12 @@ namespace ROS2
         m_jointStatePublisher = ros2Node->create_publisher<sensor_msgs::msg::JointState>(topic.data(), topicConfiguration.GetQoS());
     }
 
+    JointStatePublisher::~JointStatePublisher()
+    {
+        m_eventSourceAdapter.Stop();
+        m_adaptedEventHandler.Disconnect();
+    }
+
     void JointStatePublisher::PublishMessage()
     {
         std_msgs::msg::Header rosHeader;
@@ -31,7 +38,7 @@ namespace ROS2
         rosHeader.stamp = ROS2::ROS2Interface::Get()->GetROSTimestamp();
         m_jointStateMsg.header = rosHeader;
 
-        AZ_Assert(m_jointNames.size() == m_jointStateMsg.name.size(), "The expected message size doesn't match with the joint list size");
+        AZ_Assert(m_jointNames.size() == m_jointStateMsg.name.size(), "The expected message size doesn't match with the joint list size")
 
         for (size_t i = 0; i < m_jointStateMsg.name.size(); i++)
         {
@@ -47,7 +54,7 @@ namespace ROS2
         m_jointStatePublisher->publish(m_jointStateMsg);
     }
 
-    void JointStatePublisher::InitializePublisher(AZ::EntityId entityId)
+    void JointStatePublisher::InitializePublisher([[maybe_unused]] AZ::EntityId entityId)
     {
         ManipulationJoints manipulatorJoints;
         JointsManipulationRequestBus::EventResult(manipulatorJoints, m_context.m_entityId, &JointsManipulationRequests::GetJoints);
@@ -63,25 +70,17 @@ namespace ROS2
         m_jointStateMsg.velocity.resize(manipulatorJoints.size());
         m_jointStateMsg.effort.resize(manipulatorJoints.size());
 
-        InstallPhysicalCallback();
-    }
-
-    void JointStatePublisher::OnPhysicsSimulationFinished([[maybe_unused]] AzPhysics::SceneHandle sceneHandle, float deltaTime)
-    {
-        AZ_Assert(m_configuration.m_frequency > 0.f, "JointPublisher frequency must be greater than zero");
-        auto frameTime = 1.f / m_configuration.m_frequency;
-
-        m_timeElapsedSinceLastTick += deltaTime;
-        if (m_timeElapsedSinceLastTick < frameTime)
-        {
-            return;
-        }
-
-        m_timeElapsedSinceLastTick -= frameTime;
-        if (deltaTime > frameTime)
-        { // Frequency higher than possible, not catching up, just keep going with each frame.
-            m_timeElapsedSinceLastTick = 0.0f;
-        }
-        PublishMessage();
+        m_eventSourceAdapter.SetFrequency(m_configuration.m_frequency);
+        m_adaptedEventHandler = decltype(m_adaptedEventHandler)(
+            [this](auto&&... args)
+            {
+                if (!m_configuration.m_publish)
+                {
+                    return;
+                }
+                PublishMessage();
+            });
+        m_eventSourceAdapter.ConnectToAdaptedEvent(m_adaptedEventHandler);
+        m_eventSourceAdapter.Start();
     }
 } // namespace ROS2
