@@ -20,7 +20,7 @@
                     "UseAncestorPaths": true,
                     "URIPrefixMap": 
                     {
-                        "model://": [""],
+                        "model://": ["", "../models"],
                         "package://": [""],
                         "file://":  [""]
                     }                
