@@ -60,7 +60,6 @@ namespace ROS2
                     ROS2SensorComponentBase<PhysicsBasedSource>::CreateDescriptor(),
                     LidarRegistrarSystemComponent::CreateDescriptor(),
                     ROS2RobotImporterSystemComponent::CreateDescriptor(),
-                    ROS2SensorComponent::CreateDescriptor(),
                     ROS2ImuSensorComponent::CreateDescriptor(),
                     ROS2GNSSSensorComponent::CreateDescriptor(),
                     ROS2LidarSensorComponent::CreateDescriptor(),

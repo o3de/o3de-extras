@@ -36,7 +36,6 @@ set(FILES
         Include/ROS2/Sensor/Events/SensorEventSource.h
         Include/ROS2/Sensor/Events/PhysicsBasedSource.h
         Include/ROS2/Sensor/Events/TickBasedSource.h
-        Include/ROS2/Sensor/ROS2SensorComponent.h
         Include/ROS2/Sensor/ROS2SensorComponentBase.h
         Include/ROS2/Sensor/SensorConfiguration.h
         Include/ROS2/Spawner/SpawnerBus.h
