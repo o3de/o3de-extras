@@ -32,6 +32,7 @@ namespace ROS2
         ROS2Lidar2DSensorComponent();
         ROS2Lidar2DSensorComponent(const SensorConfiguration& sensorConfiguration, const LidarSensorConfiguration& lidarConfiguration);
         ~ROS2Lidar2DSensorComponent() = default;
+        static void GetRequiredServices(AZ::ComponentDescriptor::DependencyArrayType& required);
         static void Reflect(AZ::ReflectContext* context);
         //////////////////////////////////////////////////////////////////////////
         // Component overrides

@@ -43,6 +43,11 @@ namespace ROS2
         }
     }
 
+    void ROS2LidarSensorComponent::GetRequiredServices(AZ::ComponentDescriptor::DependencyArrayType& required)
+    {
+        required.push_back(AZ_CRC_CE("ROS2Frame"));
+    }
+
     ROS2LidarSensorComponent::ROS2LidarSensorComponent()
         : m_lidarCore(LidarTemplateUtils::Get3DModels())
     {

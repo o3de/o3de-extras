@@ -99,6 +99,11 @@ namespace ROS2
         m_lidarCore.Deinit();
     }
 
+    void ROS2Lidar2DSensorComponent::GetRequiredServices(AZ::ComponentDescriptor::DependencyArrayType& required)
+    {
+        required.push_back(AZ_CRC_CE("ROS2Frame"));
+    }
+
     void ROS2Lidar2DSensorComponent::FrequencyTick()
     {
         RaycastResult lastScanResults = m_lidarCore.PerformRaycast();
