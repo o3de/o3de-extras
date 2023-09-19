@@ -23,7 +23,7 @@
 namespace ROS2
 {
     struct SdfAssetBuilderSettings;
-}  // namespace ROS2
+} // namespace ROS2
 
 namespace ROS2::Utils
 {
@@ -81,7 +81,9 @@ namespace ROS2::Utils
     //! @param urdfFilename - filename of URDF file, used for resolvement
     //! @param sdfBuilderSettings - the builder settings that should be used to resolve paths
     //! @returns a URDF Asset map where the key is unresolved URDF path to AvailableAsset
-    UrdfAssetMap FindAssetsForUrdf(const AZStd::unordered_set<AZStd::string>& meshesFilenames, const AZStd::string& urdfFilename, 
+    UrdfAssetMap FindAssetsForUrdf(
+        const AZStd::unordered_set<AZStd::string>& meshesFilenames,
+        const AZStd::string& urdfFilename,
         const SdfAssetBuilderSettings& sdfBuilderSettings);
 
     //! Helper function that gives product's path from source asset GUID
@@ -121,24 +123,17 @@ namespace ROS2::Utils
     //! @param sourceAssetPath - global path to source asset
     //! @param collider - create assetinfo section for collider product asset
     //! @param visual - create assetinfo section for visual mesh
-    //! @param assetsFilepaths - created list of additional files (such as textures) required by the imported scene
     //! @returns true if succeed
-    bool CreateSceneManifest(
-        const AZ::IO::Path& sourceAssetPath, const bool collider, const bool visual, AZStd::unordered_set<AZ::IO::Path>& assetsFilepaths);
+    bool CreateSceneManifest(const AZ::IO::Path& sourceAssetPath, const bool collider, const bool visual);
 
     //! Creates side-car file (.assetinfo) that configures the imported scene (e.g. DAE file).
     //! @param sourceAssetPath - global path to source asset
     //! @param assetInfoFile - global path to assetInfo file to create
     //! @param collider - create assetinfo section for collider product asset
     //! @param visual - create assetinfo section for visual mesh
-    //! @param assetsFilepaths - created list of additional files (such as textures) required by the imported scene
     //! @returns true if succeed
     bool CreateSceneManifest(
-        const AZ::IO::Path& sourceAssetPath,
-        const AZ::IO::Path& assetInfoFile,
-        const bool collider,
-        const bool visual,
-        AZStd::unordered_set<AZ::IO::Path>& assetsFilepaths);
+        const AZ::IO::Path& sourceAssetPath, const AZ::IO::Path& assetInfoFile, const bool collider, const bool visual);
 
     //! Copies and prepares meshes that are referenced in URDF.
     //! It resolves every mesh, creates a directory in Project's Asset directory, copies files, and prepares assets info.
@@ -160,9 +155,9 @@ namespace ROS2::Utils
         AZStd::string_view outputDirSuffix = "",
         AZ::IO::FileIOBase* fileIO = AZ::IO::FileIOBase::GetInstance());
 
-    //! Creates a list of files referenced in a scene (e.g. materials)
-    //! @param scene - parsed scene file with correctly loaded graph
+    //! Creates a list of files referenced in an asset (e.g. materials)
+    //! @param sourceAssetPath - global path to source asset used to find scene
     //! @returns list of file paths referenced in the scene
-    AZStd::unordered_set<AZ::IO::Path> GetMeshAssets(const AZStd::shared_ptr<AZ::SceneAPI::Containers::Scene>& scene);
+    AZStd::unordered_set<AZ::IO::Path> GetMeshAssets(const AZ::IO::Path& sourceAssetPath);
 
 } // namespace ROS2::Utils
