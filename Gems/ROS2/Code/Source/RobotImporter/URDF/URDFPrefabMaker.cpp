@@ -168,7 +168,7 @@ namespace ROS2
             auto linksForModel = Utils::GetAllLinks(model, gatherNestedModelLinks);
             for (const auto& [fullyQualifiedName, link] : linksForModel)
             {
-                // Push back the mapping of link to attached model into the orderd vector
+                // Push back the mapping of link to attached model into the ordered vector
                 LinksMapper::LinkToAttachedModel linkToAttachedModel{ AZStd::string(fullyQualifiedName.c_str(), fullyQualifiedName.size()),
                                                                       link,
                                                                       &model };
@@ -409,8 +409,6 @@ namespace ROS2
 
         // Create prefab, save it to disk immediately
         // Remove prefab, if it was already created.
-
-        AZ::IO::FixedMaxPath prefabTemplateName{ AZ::IO::PathView(m_prefabPath).FixedMaxPathStringAsPosix() };
 
         // clear out any previously created prefab template for this path
         auto* prefabSystemComponentInterface = AZ::Interface<AzToolsFramework::Prefab::PrefabSystemComponentInterface>::Get();

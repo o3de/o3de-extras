@@ -539,8 +539,7 @@ namespace UnitTest
 
     TEST_F(UrdfParserTest, ParseUrdf_WithRootLink_WithName_world_DoesNotContain_world_Link)
     {
-        // The libsdformat URDF parser skips converting the root link if its
-        // name is "world"
+        // The libsdformat URDF parser skips converting the root link if its name is "world"
         // https://github.com/gazebosim/sdformat/blob/a1027c3ed96f2f663760df10f13b06f47f922c55/src/parser_urdf.cc#L3385-L3399
         // Therefore it will not be part of joint reduction
         constexpr const char* RootLinkName = "world";
@@ -603,7 +602,7 @@ namespace UnitTest
 
         // Due to joint reduction there should be 2 links and 4 frames
         // This is different from the previous test, as the root link
-        // can now partipate in joint reduction because its name isn't "world"
+        // can now participate in joint reduction because its name isn't "world"
         ASSERT_EQ(2, model->LinkCount());
         ASSERT_EQ(4, model->FrameCount());
 

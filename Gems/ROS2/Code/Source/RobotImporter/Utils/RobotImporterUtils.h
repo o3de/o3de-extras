@@ -74,23 +74,21 @@ namespace ROS2::Utils
     using JointVisitorCallback = AZStd::function<bool(const sdf::Joint& joint, const ModelStack& modelStack)>;
     //! Visit joints from URDF/SDF
     //! @param sdfModel Model object of SDF document corresponding to the <model> tag. It used to query joints
-    //! @param visitNestedModelJoints When true recurses to any nested <model> tags of the Model object and invoke visitor on their joints
-    //! as well
+    //! @param visitNestedModelJoints When true recurses to any nested <model> tags of the Model object and invoke visitor on their joint as well
     //! @returns void
     void VisitJoints(const sdf::Model& sdfModel, const JointVisitorCallback& jointVisitorCB, bool visitNestedModelJoints = false);
 
-    //! Retrieve all joints in URDF/SDF wehre the key is the full
+    //! Retrieve all joints in URDF/SDF where the key is the full composed path following the name scoping proposal in SDF 1.8
+    //! http://sdformat.org/tutorials?tut=composition_proposal#1-nesting-and-encapsulation
     //! @param sdfModel Model object of SDF document corresponding to the <model> tag. It used to query joints
     //! @param gatherNestedModelJoints When true recurses to any nested <model> tags of the Model object and also gathers their joints as well
-    //! well
     //! @returns mapping from fully qualified joint name(such as "model_name::joint_name") to joint pointer
     AZStd::unordered_map<AZStd::string, const sdf::Joint*> GetAllJoints(const sdf::Model& sdfModel, bool gatherNestedModelJoints = false);
 
     //! Retrieve all joints from URDF/SDF in which the specified link is a child in a sdf::Joint.
     //! @param sdfModel Model object of SDF document corresponding to the <model> tag. It used to query joints
     //! @param linkName Name of link which to query in joint objects ChildName()
-    //! @param gatherNestedModelJoints When true recurses to any nested <model> tags of the Model object and also gathers their joints as
-    //! well
+    //! @param gatherNestedModelJoints When true recurses to any nested <model> tags of the Model object and also gathers their joints as well
     //! @returns vector of joints where link is a child
     AZStd::vector<const sdf::Joint*> GetJointsForChildLink(
         const sdf::Model& sdfModel, AZStd::string_view linkName, bool gatherNestedModelJoints = false);
@@ -98,8 +96,7 @@ namespace ROS2::Utils
     //! Retrieve all joints from URDF/SDF in which the specified link is a parent in a sdf::Joint.
     //! @param sdfModel Model object of SDF document corresponding to the <model> tag. It used to query joints
     //! @param linkName Name of link which to query in joint objects ParentName()
-    //! @param gatherNestedModelJoints When true recurses to any nested <model> tags of the Model object and also gathers their joints as
-    //! well
+    //! @param gatherNestedModelJoints When true recurses to any nested <model> tags of the Model object and also gathers their joints as well
     //! @returns vector of joints where link is a parent
     AZStd::vector<const sdf::Joint*> GetJointsForParentLink(
         const sdf::Model& sdfModel, AZStd::string_view linkName, bool gatherNestedModelJoints = false);
@@ -133,28 +130,32 @@ namespace ROS2::Utils
 
     //! Retrieve all meshes referenced in URDF as unresolved URDF patches.
     //! Note that returned filenames are unresolved URDF patches.
-    //! @param root - reference to SDF Root object representing the root of the parsed SDF xml document
-    //! @param visual - search for visual meshes.
-    //! @param colliders - search for collider meshes.
+    //! @param root reference to SDF Root object representing the root of the parsed SDF xml document
+    //! @param visual search for visual meshes.
+    //! @param colliders search for collider meshes.
     //! @returns set of meshes' filenames.
     AZStd::unordered_set<AZStd::string> GetMeshesFilenames(const sdf::Root& root, bool visual, bool colliders);
 
     //! Returns the SDF model object which contains the specified link
-    //! @param root - reference to SDF Root object representing the root of the parsed SDF xml document
-    //! @param linkName - Fully qualified name of of SDF link to lookup in the SDF document
-    //! A fully qualified can be of the form "modelname1::nested_modelname1::linkname"
+    //! @param root reference to SDF Root object representing the root of the parsed SDF xml document
+    //! @param linkName Fully qualified name of SDF link to lookup in the SDF document
+    //! A fully qualified name has the form "modelname1::nested_modelname1::linkname"
+    //! This is detailed in the SDF format composition proposal: http://sdformat.org/tutorials?tut=composition_proposal#motivation
     const sdf::Model* GetModelContainingLink(const sdf::Root& root, AZStd::string_view linkName);
-    //! @param root - reference to SDF Root object representing the root of the parsed SDF xml document
-    //! @param link - SDF link object to lookup in the SDF document
+
+    //! @param root reference to SDF Root object representing the root of the parsed SDF xml document
+    //! @param link SDF link object to lookup in the SDF document
     const sdf::Model* GetModelContainingLink(const sdf::Root& root, const sdf::Link& link);
 
     //! Returns the SDF model object which contains the specified joint
-    //! @param root - reference to SDF Root object representing the root of the parsed SDF xml document
-    //! @param jointName - Name of SDF joint to lookup in the SDF document
-    //! A fully qualified can be of the form "modelname1::nested_modelname1::jointname"
+    //! @param root reference to SDF Root object representing the root of the parsed SDF xml document
+    //! @param jointName Name of SDF joint to lookup in the SDF document
+    //! A fully qualified name has the form "modelname1::nested_modelname1::jointname"
+    //! This is detailed in the SDF format composition proposal: http://sdformat.org/tutorials?tut=composition_proposal#motivation
     const sdf::Model* GetModelContainingJoint(const sdf::Root& root, AZStd::string_view jointName);
-    //! @param root - reference to SDF Root object representing the root of the parsed SDF xml document
-    //! @param joint- SDF joint pointer to lookup in the SDF document
+
+    //! @param root reference to SDF Root object representing the root of the parsed SDF xml document
+    //! @param joint SDF joint pointer to lookup in the SDF document
     const sdf::Model* GetModelContainingJoint(const sdf::Root& root, const sdf::Joint& joint);
 
     //! Callback used to check for file exist of a path referenced within a URDF/SDF file
@@ -163,11 +164,11 @@ namespace ROS2::Utils
     using FileExistsCB = AZStd::function<bool(const AZ::IO::PathView&)>;
 
     //! Resolves path for an asset referenced in a URDF/SDF file.
-    //! @param unresolvedPath - unresolved URDF/SDF path, example : `model://meshes/foo.dae`.
-    //! @param baseFilePath - the absolute path of URDF/SDF file which contains the path that is to be resolved.
-    //! @param amentPrefixPath - the string that contains available packages' path, separated by ':' signs.
-    //! @param settings - the asset path resolution settings to use for attempting to locate the correct files
-    //! @param fileExists - functor to check if the given file exists. Exposed for unit test, default one should be used.
+    //! @param unresolvedPath unresolved URDF/SDF path, example : `model://meshes/foo.dae`.
+    //! @param baseFilePath the absolute path of URDF/SDF file which contains the path that is to be resolved.
+    //! @param amentPrefixPath the string that contains available packages' path, separated by ':' signs.
+    //! @param settings the asset path resolution settings to use for attempting to locate the correct files
+    //! @param fileExists functor to check if the given file exists. Exposed for unit test, default one should be used.
     //! @returns resolved path to the referenced file within the URDF/SDF, or the passed-in path if no resolution was possible.
     AZ::IO::Path ResolveAssetPath(
         AZ::IO::Path unresolvedPath,
