@@ -79,8 +79,6 @@ namespace ROS2
         m_lidarModel = m_availableModels.front();
         m_lidarParameters = LidarTemplateUtils::GetTemplate(m_lidarModel);
         m_lidarModelName = m_lidarParameters.m_name;
-
-        FetchLidarImplementationFeatures();
     }
 
     void LidarSensorConfiguration::FetchLidarImplementationFeatures()
