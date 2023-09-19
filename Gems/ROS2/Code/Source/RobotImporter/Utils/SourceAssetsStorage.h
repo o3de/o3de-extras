@@ -18,7 +18,6 @@
 #include <AzCore/std/containers/unordered_map.h>
 #include <AzCore/std/containers/unordered_set.h>
 #include <AzToolsFramework/API/EditorAssetSystemAPI.h>
-#include <SceneAPI/SceneCore/Containers/Scene.h>
 
 namespace ROS2
 {

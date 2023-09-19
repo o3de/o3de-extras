@@ -15,6 +15,7 @@
 #include <AzCore/std/smart_ptr/shared_ptr.h>
 #include <AzFramework/Asset/AssetSystemBus.h>
 #include <AzToolsFramework/Asset/AssetUtils.h>
+#include <SceneAPI/SceneCore/Containers/Scene.h>
 #include <SceneAPI/SceneCore/Containers/Utilities/Filters.h>
 #include <SceneAPI/SceneCore/DataTypes/GraphData/IMaterialData.h>
 #include <SceneAPI/SceneCore/DataTypes/Groups/ISceneNodeGroup.h>
