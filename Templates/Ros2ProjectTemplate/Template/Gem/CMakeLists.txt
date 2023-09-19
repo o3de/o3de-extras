@@ -112,21 +112,21 @@ if(PAL_TRAIT_BUILD_HOST_TOOLS)
                 ${gem_name}.Private.Object
     )
 
-ly_add_target(
-    NAME ${gem_name}.Editor GEM_MODULE
-    NAMESPACE Gem
-    FILES_CMAKE
-        ${NameLower}_editor_shared_files.cmake
-    INCLUDE_DIRECTORIES
-        PRIVATE
-            Source
-        PUBLIC
-            Include
-    BUILD_DEPENDENCIES
-        PUBLIC
-            ${gem_name}.Editor.Static
-            Gem::Atom_Feature_Common.Static
-)
+    ly_add_target(
+        NAME ${gem_name}.Editor GEM_MODULE
+        NAMESPACE Gem
+        FILES_CMAKE
+            ${NameLower}_editor_shared_files.cmake
+        INCLUDE_DIRECTORIES
+            PRIVATE
+                Source
+            PUBLIC
+                Include
+        BUILD_DEPENDENCIES
+            PUBLIC
+                ${gem_name}.Editor.Static
+                Gem::Atom_Feature_Common.Static
+    )
 
 endif()
 
