@@ -17,12 +17,12 @@
 
 namespace ROS2
 {
-    //! Populates a given entity with all the contents of the <sensor> tag in robot description of Gazebo.
-    //! In SDFormat, sensors are specified as children of link of joint.
+    //! Populates a given entity with all the contents of the <sensor> tag.
+    //! Sensors are specified as children of link or joint in SDFormat.
     class SensorsMaker
     {
     public:
-        //! Adds a Gazebo sensor to an entity and sets it accordingly
+        //! Adds a sensor to an entity and sets it accordingly based on SDFormat description.
         //! @param model A parsed SDF model which could hold information about sensor to be made.
         //! @param link A parsed SDF tree link node used to identify link being currently processed.
         //! @param entityId A non-active entity which will be affected.

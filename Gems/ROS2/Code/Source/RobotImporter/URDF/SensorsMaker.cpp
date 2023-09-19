@@ -9,9 +9,8 @@
 #include "SensorsMaker.h"
 
 #include <AzCore/Component/EntityId.h>
-#include <AzCore/std/containers/vector.h>
 #include <AzToolsFramework/Entity/EditorEntityHelpers.h>
-
+#include <ROS2/RobotImporter/RobotImporterBus.h>
 #include <ROS2/RobotImporter/SDFormatSensorImporterHook.h>
 
 #include <sdf/Link.hh>
@@ -19,38 +18,21 @@
 
 namespace ROS2
 {
-    void AddSensor(AZ::EntityId entityId, const sdf::Sensor* sensor)
+    bool AddSensor(AZ::EntityId entityId, const sdf::Sensor* sensor)
     {
-        AZ::Entity* entity = AzToolsFramework::GetEntityById(entityId);
-        auto serializeContext = AZ::Interface<AZ::ComponentApplicationRequests>::Get()->GetSerializeContext();
-        serializeContext->EnumerateAll(
-            [&](const AZ::SerializeContext::ClassData* classData, const AZ::Uuid& typeId) -> bool
+        SDFormat::SensorImporterHooksStorage sensorHooks;
+        ROS2::RobotImporterRequestBus::BroadcastResult(sensorHooks, &ROS2::RobotImporterRequest::GetSensorHooks);
+        for (const auto& hook : sensorHooks)
+        {
+            if (hook.m_sensorTypes.contains(sensor->Type()))
             {
-                auto* attribute = AZ::FindAttribute(AZ::Crc32("SensorImporterHooks"), classData->m_attributes);
-                if (attribute == nullptr)
-                {
-                    return true;
-                }
-
-                AZ::AttributeReader reader(nullptr, attribute);
-                AZStd::vector<ROS2::SDFormat::SensorImporterHook> sensorHooks;
-                if (reader.Read<AZStd::vector<ROS2::SDFormat::SensorImporterHook>>(sensorHooks))
-                {
-                    for (const auto& hook : sensorHooks)
-                    {
-                        for (const auto& t : hook.m_sensorTypes)
-                        {
-                            if (sensor->Type() == t)
-                            {
-                                hook.m_sdfSensorToComponentCallback(*entity, *sensor);
-                                return false;
-                            }
-                        }
-                    }
-                }
-
+                AZ::Entity* entity = AzToolsFramework::GetEntityById(entityId);
+                hook.m_sdfSensorToComponentCallback(*entity, *sensor);
                 return true;
-            });
+            }
+        }
+
+        return false;
     }
 
     void SensorsMaker::AddSensors(const sdf::Model& model, const sdf::Link* link, AZ::EntityId entityId) const
@@ -58,7 +40,8 @@ namespace ROS2
         for (size_t si = 0; si < link->SensorCount(); ++si)
         {
             const auto* sensor = link->SensorByIndex(si);
-            AddSensor(entityId, sensor);
+            const bool success = AddSensor(entityId, sensor);
+            AZ_Warning("SensorMaker", success, "Cannot find a sensor hook for sensor %d", sensor->Type());
         }
     }
 } // namespace ROS2
