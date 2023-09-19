@@ -222,7 +222,8 @@ namespace ROS2
         };
 
         // Use the URDF/SDF file name stem the prefab name
-        AZStd::string prefabName = AZStd::string(AZ::IO::PathView(filePath).Stem().Native());
+        auto fileStem = AZ::IO::PathView(filePath).Stem();
+        AZStd::string prefabName = AZStd::string::format("%.*s.prefab", AZ_PATH_ARG(fileStem));
 
         if (prefabName.empty())
         {

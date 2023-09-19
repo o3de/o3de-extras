@@ -348,7 +348,7 @@ namespace ROS2
     void RobotImporterWidget::FillPrefabMakerPage()
     {
         // Use the URDF/SDF file name stem the prefab name
-        AZStd::string robotName = AZStd::string(m_urdfPath.Stem().Native()) + ".prefab";
+        AZStd::string robotName = AZStd::string::format("%.*s.prefab", AZ_PATH_ARG(m_urdfPath.Stem()));
         m_prefabMakerPage->setProposedPrefabName(robotName);
         QWizard::button(PrefabCreationButtonId)->setText(tr("Create Prefab"));
         QWizard::setOption(HavePrefabCreationButton, true);
@@ -439,7 +439,6 @@ namespace ROS2
         const AZ::IO::Path prefabPath(AZ::IO::Path(AZ::Utils::GetProjectPath()) / prefabPathRelative);
         bool fileExists = AZ::IO::FileIOBase::GetInstance()->Exists(prefabPath.c_str());
 
-        if (CheckCyclicalDependency(prefabPathRelative))
         {
             m_prefabMakerPage->setSuccess(false);
             return;

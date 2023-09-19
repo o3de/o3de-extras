@@ -178,6 +178,21 @@ namespace UnitTest
             </world>
           </sdf>)";
         }
+
+        static std::string GetSdfWithMultipleModelsThatHaveLinksWithTheSameName()
+        {
+          return R"(<?xml version="1.0"?>
+            <sdf version="1.10">
+            <world name="default">
+              <model name="my_model">
+                <link name="same_link_name"/>
+              </model>
+              <model name="your_model">
+                <link name="same_link_name"/>
+              </model>
+            </world>
+          </sdf>)";
+        }
     };
 
     TEST_F(SdfParserTest, SdfWithDuplicateModelNames_ResultsInError)
@@ -231,10 +246,11 @@ namespace UnitTest
 
         AZStd::vector<const sdf::Model*> models;
         // Test visitation return results. All model siblings and nested models are visited
-        auto StoreModelAndVisitNestedModelsAndSiblings = [&models](const sdf::Model& model) -> ROS2::Utils::VisitModelResponse
+        auto StoreModelAndVisitNestedModelsAndSiblings =
+            [&models](const sdf::Model& model, const ROS2::Utils::ModelStack&) -> ROS2::Utils::VisitModelResponse
         {
-          models.push_back(&model);
-          return ROS2::Utils::VisitModelResponse::VisitNestedAndSiblings;
+            models.push_back(&model);
+            return ROS2::Utils::VisitModelResponse::VisitNestedAndSiblings;
         };
         ROS2::Utils::VisitModels(sdfRoot, StoreModelAndVisitNestedModelsAndSiblings);
 
@@ -248,10 +264,11 @@ namespace UnitTest
         // In this case only models directly on the SDF root object
         // or directory child of the sdf world has there models visited
         models.clear();
-        auto StoreModelAndVisitSiblings = [&models](const sdf::Model& model) -> ROS2::Utils::VisitModelResponse
+        auto StoreModelAndVisitSiblings =
+            [&models](const sdf::Model& model, const ROS2::Utils::ModelStack&) -> ROS2::Utils::VisitModelResponse
         {
-          models.push_back(&model);
-          return ROS2::Utils::VisitModelResponse::VisitSiblings;
+            models.push_back(&model);
+            return ROS2::Utils::VisitModelResponse::VisitSiblings;
         };
         ROS2::Utils::VisitModels(sdfRoot, StoreModelAndVisitSiblings);
 
@@ -263,15 +280,47 @@ namespace UnitTest
 
         // Visit only the first model and stop any futher visitation
         models.clear();
-        auto StoreModelAndStop = [&models](const sdf::Model& model) -> ROS2::Utils::VisitModelResponse
+        auto StoreModelAndStop = [&models](const sdf::Model& model, const ROS2::Utils::ModelStack&) -> ROS2::Utils::VisitModelResponse
         {
-          models.push_back(&model);
-          return ROS2::Utils::VisitModelResponse::Stop;
+            models.push_back(&model);
+            return ROS2::Utils::VisitModelResponse::Stop;
         };
         ROS2::Utils::VisitModels(sdfRoot, StoreModelAndStop);
 
         ASSERT_EQ(1, models.size());
         EXPECT_EQ("root_model", models[0]->Name());
+    }
+
+    TEST_F(SdfParserTest, VisitingSdfWithMultipleModelsWithSameLinkName_VisitsAllLinks)
+    {
+        const auto xmlStr = GetSdfWithMultipleModelsThatHaveLinksWithTheSameName();
+        const auto sdfRootOutcome = ROS2::UrdfParser::Parse(xmlStr, {});
+        ASSERT_TRUE(sdfRootOutcome);
+        const auto& sdfRoot = sdfRootOutcome.GetRoot();
+        // The SDF should also have a single world
+        ASSERT_EQ(1, sdfRoot.WorldCount());
+        const auto* sdfWorld = sdfRoot.WorldByIndex(0);
+        ASSERT_NE(nullptr, sdfWorld);
+
+        // There should be two models of "my_model" and "your_model"
+        EXPECT_EQ(2, sdfWorld->ModelCount());
+
+        const auto* myModel = sdfWorld->ModelByName("my_model");
+        ASSERT_NE(nullptr, myModel);
+        EXPECT_TRUE(myModel->LinkNameExists("same_link_name"));
+
+        const auto* yourModel = sdfWorld->ModelByName("your_model");
+        ASSERT_NE(nullptr, yourModel);
+        EXPECT_TRUE(yourModel->LinkNameExists("same_link_name"));
+
+        // Make sure that all links are gathered
+        AZStd::unordered_map<AZStd::string, const sdf::Link*> links = ROS2::Utils::GetAllLinks(*myModel, true);
+        auto otherLinks = ROS2::Utils::GetAllLinks(*yourModel, true);
+        links.insert(AZStd::move(otherLinks.begin()), AZStd::move(otherLinks.end()));
+
+        ASSERT_EQ(2, links.size());
+        EXPECT_TRUE(links.contains("my_model::same_link_name"));
+        EXPECT_TRUE(links.contains("your_model::same_link_name"));
     }
 
     TEST_F(SdfParserTest, CheckModelCorrectness)
