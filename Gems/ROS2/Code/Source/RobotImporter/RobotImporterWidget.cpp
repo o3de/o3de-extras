@@ -244,12 +244,13 @@ namespace ROS2
 
             if (m_importAssetWithUrdf)
             {
-                m_urdfAssetsMapping = AZStd::make_shared<Utils::UrdfAssetMap>(
-                    Utils::CopyAssetForURDFAndCreateAssetMap(m_meshNames, m_urdfPath.String(), collidersNames, visualNames, sdfBuilderSettings, dirSuffix));
+                m_urdfAssetsMapping = AZStd::make_shared<Utils::UrdfAssetMap>(Utils::CopyAssetForURDFAndCreateAssetMap(
+                    m_meshNames, m_urdfPath.String(), collidersNames, visualNames, sdfBuilderSettings, dirSuffix));
             }
             else
             {
-                m_urdfAssetsMapping = AZStd::make_shared<Utils::UrdfAssetMap>(Utils::FindAssetsForUrdf(m_meshNames, m_urdfPath.String(), sdfBuilderSettings));
+                m_urdfAssetsMapping =
+                    AZStd::make_shared<Utils::UrdfAssetMap>(Utils::FindAssetsForUrdf(m_meshNames, m_urdfPath.String(), sdfBuilderSettings));
                 for (const AZStd::string& meshPath : m_meshNames)
                 {
                     if (m_urdfAssetsMapping->contains(meshPath))
@@ -400,11 +401,11 @@ namespace ROS2
 
     void RobotImporterWidget::CreatePrefab(AZStd::string prefabName)
     {
-        const AZ::IO::Path prefabPathRealative(AZ::IO::Path("Assets") / "Importer" / prefabName);
-        const AZ::IO::Path prefabPath(AZ::IO::Path(AZ::Utils::GetProjectPath()) / prefabPathRealative);
+        const AZ::IO::Path prefabPathRelative(AZ::IO::Path("Assets") / "Importer" / prefabName);
+        const AZ::IO::Path prefabPath(AZ::IO::Path(AZ::Utils::GetProjectPath()) / prefabPathRelative);
         bool fileExists = AZ::IO::FileIOBase::GetInstance()->Exists(prefabPath.c_str());
 
-        if (CheckCyclicalDependency(prefabPathRealative))
+        if (CheckCyclicalDependency(prefabPathRelative))
         {
             m_prefabMakerPage->setSuccess(false);
             return;
