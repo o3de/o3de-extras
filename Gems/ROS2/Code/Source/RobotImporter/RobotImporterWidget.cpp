@@ -162,7 +162,7 @@ namespace ROS2
                     // This is a URDF only path, and therefore the report text does not mention SDF
                     report += "# " + tr("The URDF was parsed, though results were modified to be compatible with SDFormat") + "\n";
 
-                    report += tr("Inertial information in the following links is missing, reset to default: ") + "\n";
+                    report += "## " + tr("Inertial information in the following links is missing, reset to default: ") + "\n";
                     for (const auto& modifiedTag : parsedSdfOutcome.m_urdfModifications.missingInertias)
                     {
                         report +=
@@ -170,7 +170,7 @@ namespace ROS2
                     }
                     report += "\n";
 
-                    report += tr("Inertial information in the following links is incomplete, set default values for listed subtags: ") +
+                    report += "## " + tr("Inertial information in the following links is incomplete, set default values for listed subtags: ") +
                         "\n";
                     for (const auto& modifiedTag : parsedSdfOutcome.m_urdfModifications.incompleteInertias)
                     {
@@ -186,7 +186,7 @@ namespace ROS2
                     }
                     report += "\n";
 
-                    report += tr("The following joints were renamed to avoid duplication") + "\n";
+                    report += "## " + tr("The following joints were renamed to avoid duplication") + "\n";
                     for (const auto& modifiedTag : parsedSdfOutcome.m_urdfModifications.duplicatedJoints)
                     {
                         report += " - " + QString::fromUtf8(modifiedTag.oldName.data(), static_cast<int>(modifiedTag.oldName.size())) +
