@@ -319,7 +319,7 @@ namespace ROS2::Utils
             return urdfAssetMap;
         }
         auto amentPrefixPath = Utils::GetAmentPrefixPath();
-        AZStd::set<AZStd::string> files;
+        AZStd::unordered_map<AZStd::string, unsigned int> countFilenames;
 
         for (const auto& unresolvedUrfFileName : meshesFilenames)
         {
@@ -335,8 +335,17 @@ namespace ROS2::Utils
             const bool needsVisual = visuals.contains(unresolvedUrfFileName);
             const bool needsCollider = colliders.contains(unresolvedUrfFileName);
 
-            AZ::IO::Path targetPathAssetDst(importDirectoryDst / resolvedPath.Filename());
-            AZ::IO::Path targetPathAssetTmp(importDirectoryTmp / resolvedPath.Filename());
+            AZStd::string filename = resolvedPath.Filename().String();
+            auto count = countFilenames[filename]++;
+            if (count > 0)
+            {
+                AZStd::string stem = resolvedPath.Stem().String();
+                AZStd::string extension = resolvedPath.Extension().String();
+                filename = AZStd::string::format("%s_dup_%u%s", stem.c_str(), count, extension.c_str());
+            }
+
+            AZ::IO::Path targetPathAssetDst(importDirectoryDst / filename);
+            AZ::IO::Path targetPathAssetTmp(importDirectoryTmp / filename);
 
             AZ::IO::Path targetPathAssetInfo(targetPathAssetDst.Native() + ".assetinfo");
 
