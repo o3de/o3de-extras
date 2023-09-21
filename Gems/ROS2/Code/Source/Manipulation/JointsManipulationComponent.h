@@ -14,7 +14,9 @@
 #include <AzCore/Name/Name.h>
 
 #include "JointStatePublisher.h"
+#include "std_msgs/msg/float64_multi_array.hpp"
 #include <ROS2/Manipulation/JointsManipulationRequests.h>
+#include <rclcpp/subscription.hpp>
 
 namespace ROS2
 {
@@ -28,7 +30,10 @@ namespace ROS2
     public:
         JointsManipulationComponent();
         JointsManipulationComponent(
-            const PublisherConfiguration& configuration, const AZStd::unordered_map<AZStd::string, JointPosition>& initialPositions);
+            const PublisherConfiguration& configuration,
+            const AZStd::unordered_map<AZStd::string, JointPosition>& initialPositions,
+            AZStd::vector<AZStd::string> jointNames,
+            AZStd::string positionCommandTopic);
         ~JointsManipulationComponent() = default;
         AZ_COMPONENT(JointsManipulationComponent, "{3da9abfc-0028-4e3e-8d04-4e4440d2e319}", AZ::Component);
 
@@ -70,6 +75,7 @@ namespace ROS2
         void OnTick(float deltaTime, AZ::ScriptTimePoint time) override;
 
         void MoveToSetPositions(float deltaTime);
+        void PositionCommandCallback(std_msgs::msg::Float64MultiArray command);
 
         AZStd::string GetManipulatorNamespace() const;
 
@@ -82,5 +88,8 @@ namespace ROS2
         ManipulationJoints m_manipulationJoints; //!< Map of JointInfo where the key is a joint name (with namespace included)
         AZStd::unordered_map<AZStd::string, JointPosition>
             m_initialPositions; //!< Initial positions where the key is joint name (without namespace included)
+        std::shared_ptr<rclcpp::Subscription<std_msgs::msg::Float64MultiArray>> m_jointPositionSubscriber;
+        AZStd::vector<AZStd::string> m_jointNames;
+        AZStd::string m_positionCommandTopic;
     };
 } // namespace ROS2

@@ -17,6 +17,7 @@
 #include <AzCore/Serialization/EditContext.h>
 #include <ROS2/Frame/ROS2FrameComponent.h>
 #include <ROS2/Manipulation/Controllers/JointsPositionControllerRequests.h>
+#include <ROS2/ROS2Bus.h>
 #include <ROS2/Utilities/ROS2Names.h>
 #include <Source/ArticulationLinkComponent.h>
 #include <Source/HingeJointComponent.h>
@@ -181,10 +182,40 @@ namespace ROS2
     }
 
     JointsManipulationComponent::JointsManipulationComponent(
-        const PublisherConfiguration& configuration, const AZStd::unordered_map<AZStd::string, JointPosition>& initialPositions)
+        const PublisherConfiguration& configuration,
+        const AZStd::unordered_map<AZStd::string, JointPosition>& initialPositions,
+        AZStd::vector<AZStd::string> jointNames,
+        AZStd::string positionCommandTopic)
         : m_jointStatePublisherConfiguration(configuration)
         , m_initialPositions(initialPositions)
+        , m_jointNames(jointNames)
+        , m_positionCommandTopic(positionCommandTopic)
     {
+    }
+
+    void JointsManipulationComponent::PositionCommandCallback(std_msgs::msg::Float64MultiArray command)
+    {
+        if (command.data.size() != m_jointNames.size())
+        {
+            AZ_Error(
+                "JointsManipulationComponent",
+                false,
+                "PositionConroller: command size %d does not match the number of joints %d",
+                command.data.size(),
+                m_jointNames.size())
+            return;
+        }
+
+        for (size_t i = 0; i < command.data.size(); i++)
+        {
+            auto res = MoveJointToPosition(m_jointNames[i], command.data[i]);
+            AZ_Error(
+                "JointsManipulationComponent",
+                res,
+                "PositionConroller: command failed for joint %s: ",
+                m_jointNames[i].c_str(),
+                res.GetError().c_str());
+        }
     }
 
     void JointsManipulationComponent::Activate()
@@ -196,6 +227,11 @@ namespace ROS2
         publisherContext.m_entityId = GetEntityId();
 
         m_jointStatePublisher = AZStd::make_unique<JointStatePublisher>(m_jointStatePublisherConfiguration, publisherContext);
+        auto ros2Node = ROS2Interface::Get()->GetNode();
+        m_jointPositionSubscriber = ros2Node->create_subscription<std_msgs::msg::Float64MultiArray>(
+            m_positionCommandTopic.c_str(),
+            10,
+            std::bind(&JointsManipulationComponent::PositionCommandCallback, this, std::placeholders::_1));
 
         AZ::TickBus::Handler::BusConnect();
         JointsManipulationRequestBus::Handler::BusConnect(GetEntityId());
@@ -388,7 +424,9 @@ namespace ROS2
             serialize->Class<JointsManipulationComponent, AZ::Component>()
                 ->Version(1)
                 ->Field("JointStatesPublisherConfiguration", &JointsManipulationComponent::m_jointStatePublisherConfiguration)
-                ->Field("InitialJointPosition", &JointsManipulationComponent::m_initialPositions);
+                ->Field("InitialJointPosition", &JointsManipulationComponent::m_initialPositions)
+                ->Field("Joint Names", &JointsManipulationComponent::m_jointNames)
+                ->Field("Position Command Topic", &JointsManipulationComponent::m_positionCommandTopic);
         }
     }
 

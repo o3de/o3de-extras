@@ -8,7 +8,10 @@
 
 #pragma once
 
+#include "AzCore/base.h"
+#include "ROS2/Manipulation/JointInfo.h"
 #include <AzCore/std/containers/unordered_map.h>
+#include <AzCore/std/containers/vector.h>
 #include <AzCore/std/string/string.h>
 #include <AzToolsFramework/ToolsComponents/EditorComponentBase.h>
 #include <ROS2/Communication/PublisherConfiguration.h>
@@ -31,8 +34,12 @@ namespace ROS2
         // AzToolsFramework::Components::EditorComponentBase overrides
         void BuildGameEntity(AZ::Entity* gameEntity) override;
 
+        static bool ConvertVersion(AZ::SerializeContext& context, AZ::SerializeContext::DataElementNode& classElement);
+
     private:
         PublisherConfiguration m_jointStatePublisherConfiguration;
-        AZStd::unordered_map<AZStd::string, float> m_initialPositions;
+
+        AZStd::set<JointInitialPosition, JointInitiaPositionComparator> m_initialPositions;
+        AZStd::string m_positionCommandTopic = "/position_controller/commands";
     };
 } // namespace ROS2

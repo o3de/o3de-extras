@@ -30,4 +30,29 @@ namespace ROS2
         JointPosition m_restPosition = 0.0f; //!< Keeps this position if no commands are given (for example, opposing gravity).
     };
     using ManipulationJoints = AZStd::unordered_map<AZStd::string, JointInfo>;
+   
+    struct JointInitialPosition
+    {
+        AZ_TYPE_INFO(JointInitialPosition, "{e81914ba-343a-478c-a4df-174d1f7b8a3d}");
+        static void Reflect(AZ::ReflectContext* context);
+
+        AZStd::string m_name;
+        float m_position;
+        AZ::u32 m_index;
+    };
+
+
+    struct JointInitiaPositionComparator
+    {
+        AZ_TYPE_INFO(JointInitiaPositionComparator, "{9f585880-26a0-4dfc-ac4e-abf6160863d4}")
+        
+        bool operator()(const JointInitialPosition& a, const JointInitialPosition& b)
+        {
+            if (a.m_index != b.m_index)
+            {
+                return a.m_index < b.m_index;
+            }
+            return a.m_name < b.m_name;
+        }
+    };
 } // namespace ROS2
