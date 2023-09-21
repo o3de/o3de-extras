@@ -155,8 +155,8 @@ namespace ROS2::Utils
         AZ::IO::FileIOBase* fileIO = AZ::IO::FileIOBase::GetInstance());
 
     //! Creates a list of files referenced in an asset (e.g. materials)
-    //! @param sourceAssetPath - global path to source asset used to find scene
+    //! @param sourceMeshAssetPath - global path to source asset used to find scene
     //! @returns list of file paths referenced in the scene
-    AZStd::unordered_set<AZ::IO::Path> GetMeshAssets(const AZ::IO::Path& sourceAssetPath);
+    AZStd::unordered_set<AZ::IO::Path> GetMeshTextureAssets(const AZ::IO::Path& sourceMeshAssetPath);
 
 } // namespace ROS2::Utils

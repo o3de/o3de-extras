@@ -358,13 +358,12 @@ namespace ROS2::Utils
                     if (assetInfoOk)
                     {
                         // copy additional assets such as textures directly to destination location
-                        const auto& assetPaths = Utils::GetMeshAssets(targetPathAssetTmp);
-                        for (const auto& unresolvedAssetFilepath : assetPaths)
+                        const auto& meshTextureAssets = Utils::GetMeshTextureAssets(targetPathAssetTmp);
+                        for (const auto& unresolvedAssetPath : meshTextureAssets)
                         {
                             // Manifest returns local path in Project's directory temp folder
-                            const AZ::IO::Path assetLocalPath(
-                                AZ::IO::Path(AZ::IO::Path(AZ::Utils::GetProjectPath()) / unresolvedAssetFilepath)
-                                    .LexicallyRelative(importDirectoryTmp));
+                            const AZ::IO::Path assetLocalPath(AZ::IO::Path(AZ::IO::Path(AZ::Utils::GetProjectPath()) / unresolvedAssetPath)
+                                                                  .LexicallyRelative(importDirectoryTmp));
 
                             const AZ::IO::Path assetFullPathSrc(AZ::IO::Path(resolvedPath.ParentPath()) / assetLocalPath);
                             const AZ::IO::Path assetFullPathDst(importDirectoryDst / assetLocalPath);
@@ -565,14 +564,14 @@ namespace ROS2::Utils
         return CreateSceneManifest(sourceAssetPath, sourceAssetPath.Native() + ".assetinfo", collider, visual);
     }
 
-    AZStd::unordered_set<AZ::IO::Path> GetMeshAssets(const AZ::IO::Path& sourceAssetPath)
+    AZStd::unordered_set<AZ::IO::Path> GetMeshTextureAssets(const AZ::IO::Path& sourceMeshAssetPath)
     {
         AZStd::shared_ptr<AZ::SceneAPI::Containers::Scene> scene;
         AZ::SceneAPI::Events::SceneSerializationBus::BroadcastResult(
-            scene, &AZ::SceneAPI::Events::SceneSerialization::LoadScene, sourceAssetPath.c_str(), AZ::Uuid::CreateNull(), "");
+            scene, &AZ::SceneAPI::Events::SceneSerialization::LoadScene, sourceMeshAssetPath.c_str(), AZ::Uuid::CreateNull(), "");
         if (!scene)
         {
-            AZ_Error("GetMeshAssets", false, "Error loading mesh assets. Invalid scene: %s", sourceAssetPath.c_str());
+            AZ_Error("GetMeshTextureAssets", false, "Error loading mesh assets. Invalid scene: %s", sourceMeshAssetPath.c_str());
             return AZStd::unordered_set<AZ::IO::Path>();
         }
 
