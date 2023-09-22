@@ -20,4 +20,6 @@ namespace ROS2::Utils
     //! @param urdf URDF to modify.
     //! @returns a modified URDF and a list of XML element that were modified
     AZStd::pair<std::string, AZStd::vector<AZStd::string>> ModifyURDFInMemory(const std::string& data);
+    AZStd::pair<std::string, AZStd::vector<AZStd::string>> ModifyURDFInMemory(const AZStd::string& data);
+
 } // namespace ROS2::Utils

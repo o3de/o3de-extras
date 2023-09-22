@@ -94,7 +94,7 @@ namespace ROS2
 
             if (Utils::IsFileXacro(m_urdfPath))
             {
-                Utils::xacro::ExecutionOutcome outcome = Utils::xacro::ParseXacro(m_urdfPath.String(), m_params, parserConfig);
+                Utils::xacro::ExecutionOutcome outcome = Utils::xacro::ParseXacro(m_urdfPath.String(), m_params, parserConfig, sdfBuilderSettings);
                 // Store off the URDF parsing outcome which will be output later in this function
                 parsedSdfOutcome = AZStd::move(outcome.m_urdfHandle);
                 if (outcome)
@@ -150,6 +150,7 @@ namespace ROS2
             {
                 AZ_Assert(false, "Unknown file extension : %s \n", m_urdfPath.c_str());
             }
+
             AZStd::string log;
             const bool urdfParsedSuccess{ parsedSdfOutcome };
             const bool urdfParsedWithWarnings{ parsedSdfOutcome.UrdfParsedWithModifiedContent() };

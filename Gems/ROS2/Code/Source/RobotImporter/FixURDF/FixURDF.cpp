@@ -108,7 +108,7 @@ namespace ROS2::Utils
         return modifiedLinks;
     }
 
-    AZStd::pair<std::string, AZStd::vector<AZStd::string>> ModifyURDFInMemory(const std::string& data)
+    AZStd::pair<std::string, AZStd::vector<AZStd::string>> ModifyURDFInMemory(const AZStd::string& data)
     {
         AZStd::vector<AZStd::string> modifiedElements;
         using namespace AZ::rapidxml;
@@ -126,4 +126,10 @@ namespace ROS2::Utils
         AZ::rapidxml::print(std::back_inserter(xmlDocString), *urdf, 0);
         return { xmlDocString, modifiedElements };
     }
+
+    AZStd::pair<std::string, AZStd::vector<AZStd::string>> ModifyURDFInMemory(const std::string& data)
+    {
+        return ModifyURDFInMemory(AZStd::string(data.c_str()));
+    }
+
 } // namespace ROS2::Utils
