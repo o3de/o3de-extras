@@ -114,7 +114,9 @@ namespace ROS2
 
     AZStd::string Details::GetDefaultLidarSystem()
     {
-        const auto& lidarSystemList = LidarRegistrarInterface::Get()->GetRegisteredLidarSystems();
+        const auto& lidarInterface = LidarRegistrarInterface::Get();
+        AZ_Assert(lidarInterface, "LidarRegistrarInterface is not registered.");
+        const auto& lidarSystemList = lidarInterface->GetRegisteredLidarSystems();
         if (lidarSystemList.empty())
         {
             AZ_Warning("ROS2LidarSensorComponent", false, "No LIDAR system for the sensor to use.");
