@@ -21,48 +21,65 @@ namespace ROS2::Utils
     {
         AZStd::vector<AZStd::string> modifiedLinks;
         using namespace AZ::rapidxml;
-        AZStd::vector<xml_node<>*> links;
+
         for (xml_node<>* link = urdf->first_node("link"); link; link = link->next_sibling("link"))
         {
-            if (!link->first_node("inertial"))
+            bool modified = false;
+            bool inertiaPresent = true;
+
+            auto name_xml = link->first_attribute("name");
+            AZStd::string name = "unknown_link";
+            if (name_xml)
             {
-                links.push_back(link);
+                name = name_xml->value();
             }
-        }
 
-        for (auto* link : links)
-        {
-            xml_node<>* inertial = urdf->document()->allocate_node(node_element, "inertial");
-
-            xml_node<>* mass = urdf->document()->allocate_node(node_element, "mass");
-            mass->append_attribute(urdf->document()->allocate_attribute("value", "1."));
-            inertial->append_node(mass);
-            xml_node<>* inertia = urdf->document()->allocate_node(node_element, "inertia");
-
-            inertia->append_attribute(urdf->document()->allocate_attribute("ixx", "1."));
-            inertia->append_attribute(urdf->document()->allocate_attribute("ixy", "0."));
-            inertia->append_attribute(urdf->document()->allocate_attribute("ixz", "0."));
-
-            inertia->append_attribute(urdf->document()->allocate_attribute("iyx", "0."));
-            inertia->append_attribute(urdf->document()->allocate_attribute("iyy", "1."));
-            inertia->append_attribute(urdf->document()->allocate_attribute("iyz", "0."));
-
-            inertia->append_attribute(urdf->document()->allocate_attribute("izx", "0."));
-            inertia->append_attribute(urdf->document()->allocate_attribute("izy", "0."));
-            inertia->append_attribute(urdf->document()->allocate_attribute("izz", "1."));
-
-            inertial->append_node(inertia);
-
-            xml_node<>* origin = urdf->document()->allocate_node(node_element, "origin");
-            origin->append_attribute(urdf->document()->allocate_attribute("xyz", "0. 0. 0."));
-            inertial->append_node(origin);
-
-            auto* name = link->first_attribute("name");
-            if (name)
+            auto inertial = link->first_node("inertial");
+            if (!inertial)
             {
-                modifiedLinks.push_back(name->value());
+                AZ_Warning("URDF", false, "Missing inertial tag in link %s, applying default tag.", name.c_str());
+                inertial = urdf->document()->allocate_node(node_element, "inertial");
+                link->append_node(inertial);
+                modified = true;
+                inertiaPresent = false;
             }
-            link->append_node(inertial);
+
+            auto mass = inertial->first_node("mass");
+            if (!mass)
+            {
+                AZ_Warning("URDF", !inertiaPresent, "Missing mass tag inside the inertial tag link %s, applying default mass tag.", name.c_str());
+                mass = urdf->document()->allocate_node(node_element, "mass");
+                mass->append_attribute(urdf->document()->allocate_attribute("value", "1."));
+                inertial->append_node(mass);
+                modified = true;
+            }
+
+            auto inertia = inertial->first_node("inertia");
+            if (!inertia)
+            {
+                AZ_Warning("URDF", !inertiaPresent, "Missing inertia tag inside the inertial tag link %s, applying default inertia tag.", name.c_str());
+                inertia = urdf->document()->allocate_node(node_element, "inertia");
+
+                inertia->append_attribute(urdf->document()->allocate_attribute("ixx", "1."));
+                inertia->append_attribute(urdf->document()->allocate_attribute("ixy", "0."));
+                inertia->append_attribute(urdf->document()->allocate_attribute("ixz", "0."));
+
+                inertia->append_attribute(urdf->document()->allocate_attribute("iyx", "0."));
+                inertia->append_attribute(urdf->document()->allocate_attribute("iyy", "1."));
+                inertia->append_attribute(urdf->document()->allocate_attribute("iyz", "0."));
+
+                inertia->append_attribute(urdf->document()->allocate_attribute("izx", "0."));
+                inertia->append_attribute(urdf->document()->allocate_attribute("izy", "0."));
+                inertia->append_attribute(urdf->document()->allocate_attribute("izz", "1."));
+
+                inertial->append_node(inertia);
+                modified = true;
+            }
+
+            if (modified)
+            {
+                modifiedLinks.push_back(name);
+            }
         }
 
         return modifiedLinks;
@@ -115,6 +132,11 @@ namespace ROS2::Utils
         xml_document<> doc;
         doc.parse<0>(const_cast<char*>(data.c_str()));
         xml_node<>* urdf = doc.first_node("robot");
+        if (!urdf)
+        {
+            AZ_Warning("URDF", false, "No robot tag in URDF");
+            return {data, modifiedElements};
+        }
         auto links = AddMissingInertiaToLinks(urdf);
         modifiedElements.insert(modifiedElements.end(), AZStd::make_move_iterator(links.begin()), AZStd::make_move_iterator(links.end()));
 
