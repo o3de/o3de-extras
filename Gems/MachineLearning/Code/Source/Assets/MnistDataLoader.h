@@ -32,7 +32,7 @@ namespace MachineLearning
 
         //! ILabeledTrainingData interface
         //! @{
-        bool LoadArchive(const AZStd::string& imageFilename, const AZStd::string& labelFilename) override;
+        bool LoadArchive(const AZ::IO::Path& imageFilename, const AZ::IO::Path& labelFilename) override;
         AZStd::size_t GetSampleCount() const override;
         const AZ::VectorN& GetLabelByIndex(AZStd::size_t index) override;
         const AZ::VectorN& GetDataByIndex(AZStd::size_t index) override;
@@ -40,8 +40,8 @@ namespace MachineLearning
 
     private:
 
-        bool LoadImageFile(const AZStd::string& imageFilename);
-        bool LoadLabelFile(const AZStd::string& labelFilename);
+        bool LoadImageFile(const AZ::IO::Path& imageFilename);
+        bool LoadLabelFile(const AZ::IO::Path& labelFilename);
 
         struct MnistDataHeader
         {

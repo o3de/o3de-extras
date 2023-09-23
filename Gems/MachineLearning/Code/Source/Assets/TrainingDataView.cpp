@@ -52,7 +52,7 @@ namespace MachineLearning
         std::shuffle(m_indices.begin(), m_indices.end(), std::mt19937(std::random_device{}()));
     }
 
-    bool TrainingDataView::LoadArchive(const AZStd::string& imageFilename, const AZStd::string& labelFilename)
+    bool TrainingDataView::LoadArchive(const AZ::IO::Path& imageFilename, const AZ::IO::Path& labelFilename)
     {
         AZ_Assert(m_sourceData, "No datasource assigned to view");
         bool result = m_sourceData->LoadArchive(imageFilename, labelFilename);

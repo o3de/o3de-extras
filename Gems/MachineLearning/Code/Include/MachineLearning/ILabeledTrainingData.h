@@ -20,7 +20,7 @@ namespace MachineLearning
         virtual ~ILabeledTrainingData() = default;
 
         //! Loads the indicated label and data files.
-        virtual bool LoadArchive(const AZStd::string& imageFilename, const AZStd::string& labelFilename) = 0;
+        virtual bool LoadArchive(const AZ::IO::Path& imageFilename, const AZ::IO::Path& labelFilename) = 0;
 
         //! Returns the total number of samples contained in the training data set.
         virtual AZStd::size_t GetSampleCount() const = 0;

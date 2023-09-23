@@ -18,7 +18,7 @@
 #include <AzCore/RTTI/BehaviorContext.h>
 #include <AzCore/Serialization/EditContext.h>
 #include <AzCore/Serialization/SerializeContext.h>
-#pragma optimize("", off)
+
 namespace MachineLearning
 {
     void MnistDataLoader::Reflect(AZ::ReflectContext* context)
@@ -50,7 +50,7 @@ namespace MachineLearning
         }
     }
 
-    bool MnistDataLoader::LoadArchive(const AZStd::string& imageFilename, const AZStd::string& labelFilename)
+    bool MnistDataLoader::LoadArchive(const AZ::IO::Path& imageFilename, const AZ::IO::Path& labelFilename)
     {
         return LoadImageFile(imageFilename) && LoadLabelFile(labelFilename);
     }
@@ -77,7 +77,7 @@ namespace MachineLearning
         return m_imageVector;
     }
 
-    bool MnistDataLoader::LoadImageFile(const AZStd::string& imageFilename)
+    bool MnistDataLoader::LoadImageFile(const AZ::IO::Path& imageFilename)
     {
         AZ::IO::FixedMaxPath filePathFixed = imageFilename.c_str();
         if (AZ::IO::FileIOBase* fileIOBase = AZ::IO::FileIOBase::GetInstance())
@@ -130,7 +130,7 @@ namespace MachineLearning
         return true;
     }
 
-    bool MnistDataLoader::LoadLabelFile(const AZStd::string& labelFilename)
+    bool MnistDataLoader::LoadLabelFile(const AZ::IO::Path& labelFilename)
     {
         AZ::IO::FixedMaxPath filePathFixed = labelFilename.c_str();
         if (AZ::IO::FileIOBase* fileIOBase = AZ::IO::FileIOBase::GetInstance())
@@ -195,4 +195,4 @@ namespace MachineLearning
         return true;
     }
 }
-#pragma optimize("", on)
+
