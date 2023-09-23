@@ -61,8 +61,7 @@ namespace WarehouseAutomation
 
     void ConveyorBeltComponent::Activate()
     {
-        AzPhysics::SystemInterface* physicsSystem = AZ::Interface<AzPhysics::SystemInterface>::Get();
-        AZ_Assert(physicsSystem, "No physics system");
+        AZ_Assert(AZ::Interface<AzPhysics::SystemInterface>::Get(), "No physics system");
         AzPhysics::SceneInterface* sceneInterface = AZ::Interface<AzPhysics::SceneInterface>::Get();
         AZ_Assert(sceneInterface, "No scene interface");
         AzPhysics::SceneHandle defaultSceneHandle = sceneInterface->GetSceneHandle(AzPhysics::DefaultPhysicsSceneName);
