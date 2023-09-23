@@ -32,8 +32,6 @@ namespace ROS2
 
     void ROS2SensorComponent::Reflect(AZ::ReflectContext* context)
     {
-        SensorConfiguration::Reflect(context);
-
         if (AZ::SerializeContext* serialize = azrtti_cast<AZ::SerializeContext*>(context))
         {
             serialize->Class<ROS2SensorComponent, AZ::Component>()->Version(1)->Field(
@@ -70,7 +68,10 @@ namespace ROS2
 
     void ROS2SensorComponent::OnTick([[maybe_unused]] float deltaTime, [[maybe_unused]] AZ::ScriptTimePoint time)
     {
-        Visualize(); // each frame
+        if (m_sensorConfiguration.m_visualize)
+        {
+            Visualize(); // each frame
+        }
         if (m_onTickCall)
         {
             m_onTickCall();

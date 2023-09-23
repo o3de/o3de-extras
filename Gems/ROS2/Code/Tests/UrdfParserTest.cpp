@@ -14,6 +14,7 @@
 #include <RobotImporter/Utils/ErrorUtils.h>
 #include <RobotImporter/Utils/RobotImporterUtils.h>
 #include <RobotImporter/xacro/XacroUtils.h>
+#include <SdfAssetBuilder/SdfAssetBuilderSettings.h>
 
 namespace UnitTest
 {
@@ -299,6 +300,18 @@ namespace UnitTest
                    "    </joint>\n"
                    "</robot>";
             // clang-format on
+        }
+
+        ROS2::SdfAssetBuilderSettings GetTestSettings()
+        {
+            ROS2::SdfAssetBuilderSettings settings;
+            settings.m_resolverSettings.m_useAmentPrefixPath = true;
+            settings.m_resolverSettings.m_useAncestorPaths = true;
+            settings.m_resolverSettings.m_uriPrefixMap.emplace("model://", AZStd::vector<AZStd::string>({"."}));
+            settings.m_resolverSettings.m_uriPrefixMap.emplace("package://", AZStd::vector<AZStd::string>({"."}));
+            settings.m_resolverSettings.m_uriPrefixMap.emplace("file://", AZStd::vector<AZStd::string>({"."}));
+
+            return settings;
         }
     };
 
@@ -846,46 +859,149 @@ namespace UnitTest
         ASSERT_TRUE(AZStd::ranges::contains(joints, "joint1", jointToNameProjection));
     }
 
-    TEST_F(UrdfParserTest, TestPathResolvementGlobal)
+    TEST_F(UrdfParserTest, TestPathResolve_ValidAbsolutePath_ResolvesCorrectly)
     {
-        constexpr AZ::IO::PathView dae = "file:///home/foo/ros_ws/install/foo_robot/meshes/bar.dae";
+        // Verify that an absolute path that wouldn't be resolved by prefixes or ancestor paths 
+        // or the AMENT_PREFIX_PATH will still resolve correctly as long as the absolute path exists
+        // (as determined by the mocked-out FileExistsCallback below).
+        constexpr AZ::IO::PathView dae = "file:///usr/ros/humble/meshes/bar.dae";
         constexpr AZ::IO::PathView urdf = "/home/foo/ros_ws/install/foo_robot/foo_robot.urdf";
-        auto result = ROS2::Utils::ResolveURDFPath(
+        constexpr AZ::IO::PathView expectedResult = "/usr/ros/humble/meshes/bar.dae";
+        auto result = ROS2::Utils::ResolveAssetPath(
             dae,
-            urdf, "",
-            [](const AZ::IO::PathView&) -> bool
+            urdf, "", GetTestSettings(),
+            [expectedResult](const AZ::IO::PathView& p) -> bool
             {
-                return false;
+                // Only a file name that matches the expected result will return that it exists.
+                return p == expectedResult;
             });
-        EXPECT_EQ(result, "/home/foo/ros_ws/install/foo_robot/meshes/bar.dae");
+        EXPECT_EQ(result, expectedResult);
     }
 
-    TEST_F(UrdfParserTest, TestPathResolvementRelative)
+    TEST_F(UrdfParserTest, TestPathResolve_InvalidAbsolutePath_ReturnsEmptyPath)
     {
+        // Verify that an absolute path that isn't found (as determined by the mocked-out
+        // FileExistsCallback below) returns an empty path.
+        constexpr AZ::IO::PathView dae = "file:///usr/ros/humble/meshes/bar.dae";
+        constexpr AZ::IO::PathView urdf = "/home/foo/ros_ws/install/foo_robot/foo_robot.urdf";
+        constexpr AZ::IO::PathView expectedResult = "";
+        auto result = ROS2::Utils::ResolveAssetPath(
+            dae,
+            urdf, "", GetTestSettings(),
+            [](const AZ::IO::PathView& p) -> bool
+            {
+                // Always return "not found" for all file names.
+                return false;
+            });
+        EXPECT_EQ(result, expectedResult);
+    }
+
+    TEST_F(UrdfParserTest, TestPathResolve_ValidRelativePath_ResolvesCorrectly)
+    {
+        // Verify that a path that is intended to be relative to the location of the .urdf file resolves correctly.
         constexpr AZ::IO::PathView dae = "meshes/bar.dae";
         constexpr AZ::IO::PathView urdf = "/home/foo/ros_ws/install/foo_robot/foo_robot.urdf";
-        auto result = ROS2::Utils::ResolveURDFPath(
+        constexpr AZ::IO::PathView expectedResult = "/home/foo/ros_ws/install/foo_robot/meshes/bar.dae";
+        auto result = ROS2::Utils::ResolveAssetPath(
             dae,
-            urdf, "",
-            [](const AZ::IO::PathView&) -> bool
+            urdf, "", GetTestSettings(),
+            [expectedResult](const AZ::IO::PathView& p) -> bool
             {
-                return false;
+                // Only a file name that matches the expected result will return that it exists.
+                return p == expectedResult;
             });
-        EXPECT_EQ(result, "/home/foo/ros_ws/install/foo_robot/meshes/bar.dae");
+        EXPECT_EQ(result, expectedResult);
     }
 
-    TEST_F(UrdfParserTest, TestPathResolvementRelativePackage)
+    TEST_F(UrdfParserTest, TestPathResolve_InvalidRelativePath_ReturnsEmptyPath)
     {
+        // Verify that a relative path that can't be found returns an empty path.
+        constexpr AZ::IO::PathView dae = "meshes/bar.dae";
+        constexpr AZ::IO::PathView urdf = "/home/foo/ros_ws/install/foo_robot/foo_robot.urdf";
+        constexpr AZ::IO::PathView expectedResult = "";
+        auto result = ROS2::Utils::ResolveAssetPath(
+            dae,
+            urdf, "", GetTestSettings(),
+            [](const AZ::IO::PathView& p) -> bool
+            {
+                // Always return "not found"
+                return false;
+            });
+        EXPECT_EQ(result, expectedResult);
+    }
+
+    TEST_F(UrdfParserTest, TestPathResolve_ValidAmentRelativePathButNoPrefix_ReturnsEmptyPath)
+    {
+        // Verify that a path that is intended to be relative to the location of one of the AMENT_PREFIX_PATH paths
+        // doesn't resolve if it doesn't start with a prefix like "package://" or "model://".
+        constexpr AZ::IO::PathView dae = "robot/meshes/bar.dae";
+        constexpr AZ::IO::PathView urdf = "/home/foo/ros_ws/install/foo_robot/foo_robot.urdf";
+        constexpr AZStd::string_view amentPrefixPath = "/ament/path1:/ament/path2";
+        constexpr AZ::IO::PathView expectedResult = "";
+        auto result = ROS2::Utils::ResolveAssetPath(
+            dae,
+            urdf, amentPrefixPath, GetTestSettings(),
+            [](const AZ::IO::PathView& p) -> bool
+            {
+                // For an AMENT_PREFIX_PATH to be a valid match, the share/<package>/package.xml and share/<relative path>
+                // both need to exist. We'll return that both exist, but since the dae file entry doesn't start with 
+                // "package://" or "model://", it shouldn't get resolved.
+                return (p == AZ::IO::PathView("/ament/path2/share/robot/package.xml")) || (p == "/ament/path2/share/robot/meshes/bar.dae");
+            });
+        EXPECT_EQ(result, expectedResult);
+    }
+
+    TEST_F(UrdfParserTest, TestPathResolve_ValidAmentRelativePathAndPrefix_ResolvesCorrectly)
+    {
+        // Verify that a path that is intended to be relative to the location of one of the AMENT_PREFIX_PATH paths
+        // doesn't resolve if it doesn't start with a prefix like "package://" or "model://".
+        constexpr AZ::IO::PathView dae = "model://robot/meshes/bar.dae";
+        constexpr AZ::IO::PathView urdf = "/home/foo/ros_ws/install/foo_robot/foo_robot.urdf";
+        constexpr AZStd::string_view amentPrefixPath = "/ament/path1:/ament/path2";
+        constexpr AZ::IO::PathView expectedResult = "/ament/path2/share/robot/meshes/bar.dae";
+        auto result = ROS2::Utils::ResolveAssetPath(
+            dae,
+            urdf, amentPrefixPath, GetTestSettings(),
+            [expectedResult](const AZ::IO::PathView& p) -> bool
+            {
+                // For an AMENT_PREFIX_PATH to be a valid match, the share/<package>/package.xml and share/<relative path>
+                // both need to exist.
+                return (p == AZ::IO::PathView("/ament/path2/share/robot/package.xml")) || (p == expectedResult);
+            });
+        EXPECT_EQ(result, expectedResult);
+    }
+
+    TEST_F(UrdfParserTest, TestPathResolve_ValidPathRelativeToAncestorPath_ResolvesCorrectly)
+    {
+        // Verify that a path that's relative to an ancestor path of the urdf file resolves correctly
         constexpr AZ::IO::PathView dae = "package://meshes/bar.dae";
         constexpr AZ::IO::PathView urdf = "/home/foo/ros_ws/install/foo_robot/description/foo_robot.urdf";
-        constexpr AZ::IO::PathView xml = "/home/foo/ros_ws/install/foo_robot/package.xml";
-        constexpr AZStd::string_view resolvedDae = "/home/foo/ros_ws/install/foo_robot/meshes/bar.dae";
+        constexpr AZ::IO::PathView expectedResult = "/home/foo/ros_ws/install/foo_robot/meshes/bar.dae";
         auto mockFileSystem = [&](const AZ::IO::PathView& p) -> bool
         {
-            return (p == xml || p == resolvedDae);
+            return p == expectedResult;
         };
-        auto result = ROS2::Utils::ResolveURDFPath(dae, urdf, "", mockFileSystem);
-        EXPECT_EQ(result, resolvedDae);
+        auto result = ROS2::Utils::ResolveAssetPath(dae, urdf, "", GetTestSettings(), mockFileSystem);
+        EXPECT_EQ(result, expectedResult);
+    }
+
+    TEST_F(UrdfParserTest, TestPathResolve_ValidPathRelativeToAncestorPath_FailsToResolveWhenAncestorPathsDisabled)
+    {
+        // Verify that a path that's relative to an ancestor path of the urdf file fails to resolve if "use ancestor paths" is disabled.
+        constexpr AZ::IO::PathView dae = "package://meshes/bar.dae";
+        constexpr AZ::IO::PathView urdf = "/home/foo/ros_ws/install/foo_robot/description/foo_robot.urdf";
+        constexpr AZ::IO::PathView resolvedDae = "/home/foo/ros_ws/install/foo_robot/meshes/bar.dae";
+        
+        auto settings = GetTestSettings();
+        settings.m_resolverSettings.m_useAncestorPaths = false;
+
+        auto mockFileSystem = [&](const AZ::IO::PathView& p) -> bool
+        {
+            // This should never return true, because this path should never get requested.
+            return p == resolvedDae;
+        };
+        auto result = ROS2::Utils::ResolveAssetPath(dae, urdf, "", settings, mockFileSystem);
+        EXPECT_EQ(result, "");
     }
 
     TEST_F(UrdfParserTest, TestPathResolvementExplicitPackageName)
@@ -893,12 +1009,12 @@ namespace UnitTest
         constexpr AZ::IO::PathView dae = "package://foo_robot/meshes/bar.dae";
         constexpr AZ::IO::PathView urdf = "/home/foo/ros_ws/install/foo_robot/share/foo_robot/description/foo_robot.urdf";
         constexpr AZ::IO::PathView xml = "/home/foo/ros_ws/install/foo_robot/share/foo_robot/package.xml";
-        constexpr AZStd::string_view resolvedDae = "/home/foo/ros_ws/install/foo_robot/share/foo_robot/meshes/bar.dae";
+        constexpr AZ::IO::PathView resolvedDae = "/home/foo/ros_ws/install/foo_robot/share/foo_robot/meshes/bar.dae";
         auto mockFileSystem = [&](const AZ::IO::PathView& p) -> bool
         {
-            return (p == xml || p == resolvedDae);
+            return (p == xml) || (p == resolvedDae);
         };
-        auto result = ROS2::Utils::ResolveURDFPath(dae, urdf, "/home/foo/ros_ws/install/foo_robot", mockFileSystem);
+        auto result = ROS2::Utils::ResolveAssetPath(dae, urdf, "/home/foo/ros_ws/install/foo_robot", GetTestSettings(), mockFileSystem);
         EXPECT_EQ(result, resolvedDae);
     }
 
@@ -907,12 +1023,12 @@ namespace UnitTest
         constexpr AZ::IO::PathView dae = "model://foo_robot/meshes/bar.dae";
         constexpr AZ::IO::PathView urdf = "/home/foo/ros_ws/install/foo_robot/share/foo_robot/description/foo_robot.urdf";
         constexpr AZ::IO::PathView xml = "/home/foo/ros_ws/install/foo_robot/share/foo_robot/package.xml";
-        constexpr AZStd::string_view resolvedDae = "/home/foo/ros_ws/install/foo_robot/share/foo_robot/meshes/bar.dae";
+        constexpr AZ::IO::PathView resolvedDae = "/home/foo/ros_ws/install/foo_robot/share/foo_robot/meshes/bar.dae";
         auto mockFileSystem = [&](const AZ::IO::PathView& p) -> bool
         {
-            return (p == xml || p == resolvedDae);
+            return (p == xml) || (p == resolvedDae);
         };
-        auto result = ROS2::Utils::ResolveURDFPath(dae, urdf, "/home/foo/ros_ws/install/foo_robot", mockFileSystem);
+        auto result = ROS2::Utils::ResolveAssetPath(dae, urdf, "/home/foo/ros_ws/install/foo_robot", GetTestSettings(), mockFileSystem);
         EXPECT_EQ(result, resolvedDae);
     }
 

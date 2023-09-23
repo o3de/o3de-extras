@@ -21,6 +21,14 @@ namespace ROS2
         //! @return the matching template which describes parameters for the model.
         LidarTemplate GetTemplate(LidarTemplate::LidarModel model);
 
+        //! Get all 2D lidar models.
+        //! @return 2D lidar models.
+        AZStd::vector<LidarTemplate::LidarModel> Get2DModels();
+
+        //! Get all 3D lidar models.
+        //! @return 3D lidar models.
+        AZStd::vector<LidarTemplate::LidarModel> Get3DModels();
+
         //! Get total point count for a given template.
         //! @param t lidar template.
         //! @return total count of points that the lidar specified by the template would produce on each scan.

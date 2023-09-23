@@ -11,8 +11,11 @@
 #include <sstream>
 
 #include <AzCore/Debug/Trace.h>
+#include <AzCore/std/string/regex.h>
 #include <AzCore/std/string/string.h>
+#include <RobotImporter/FixURDF/FixURDF.h>
 #include <RobotImporter/Utils/ErrorUtils.h>
+#include <RobotImporter/Utils/FilePath.h>
 
 namespace ROS2::UrdfParser
 {
@@ -25,8 +28,7 @@ namespace ROS2::UrdfParser
         // @param consoleStream Reference to sdf::Console::ConsoleStream whose
         //        output will be redirected
         // @param redirectStream reference to stream where console stream output is redirected to
-        RedirectSDFOutputStream(sdf::Console::ConsoleStream& consoleStream,
-            std::ostream& redirectStream)
+        RedirectSDFOutputStream(sdf::Console::ConsoleStream& consoleStream, std::ostream& redirectStream)
             : m_consoleStreamRef(consoleStream)
             , m_origConsoleStream(consoleStream)
         {
@@ -50,7 +52,7 @@ namespace ROS2::UrdfParser
     {
         return m_root;
     }
-    const sdf::Root& ParseResult::GetRoot() const &
+    const sdf::Root& ParseResult::GetRoot() const&
     {
         return m_root;
     }
@@ -84,6 +86,11 @@ namespace ROS2::UrdfParser
         return m_sdfErrors.empty();
     }
 
+    bool ParseResult::UrdfParsedWithModifiedContent() const
+    {
+        return m_modifiedURDFTags.size() > 0;
+    }
+
     RootObjectOutcome Parse(AZStd::string_view xmlString, const sdf::ParserConfig& parserConfig)
     {
         return Parse(std::string(xmlString.data(), xmlString.size()), parserConfig);
@@ -93,19 +100,23 @@ namespace ROS2::UrdfParser
         ParseResult parseResult;
         std::ostringstream parseStringStream;
         {
-            RedirectSDFOutputStream redirectConsoleStream(sdf::Console::Instance()->GetMsgStream(), parseStringStream);
+            RedirectSDFOutputStream redirectConsoleStreamMsg(sdf::Console::Instance()->GetMsgStream(), parseStringStream);
             parseResult.m_sdfErrors = parseResult.m_root.LoadSdfString(xmlString, parserConfig);
-            // Get any captured sdf::Error messages
         }
+        // Get any captured sdf::Console messages
+        const auto& parseMessages = parseStringStream.str();
 
-        std::string parseMessages = parseStringStream.str();
-        parseResult.m_parseMessages = AZStd::string(parseMessages.c_str(), parseMessages.size());
+        // regular expression to escape console's color codes
+        const AZStd::regex escapeColor("\x1B\\[[0-9;]*[A-Za-z]");
+
+        parseResult.m_parseMessages =  AZStd::regex_replace(AZStd::string(parseMessages.c_str(), parseMessages.size()),escapeColor, "");
 
         // if there are no parse errors return the sdf Root object otherwise return the errors
         return parseResult;
     }
 
-    RootObjectOutcome ParseFromFile(AZ::IO::PathView filePath, const sdf::ParserConfig& parserConfig)
+    RootObjectOutcome ParseFromFile(
+        AZ::IO::PathView filePath, const sdf::ParserConfig& parserConfig, const SdfAssetBuilderSettings& settings)
     {
         // Store path in a AZ::IO::FixedMaxPath which is stack based structure that provides memory
         // for the path string and is null terminated.
@@ -116,13 +127,26 @@ namespace ROS2::UrdfParser
         {
             auto fileNotFoundMessage = AZStd::fixed_string<1024>::format("File %.*s does not exist", AZ_PATH_ARG(urdfFilePath));
             ParseResult fileNotFoundResult;
-            fileNotFoundResult.m_sdfErrors.emplace_back(sdf::ErrorCode::FILE_READ,
-                        std::string{ fileNotFoundMessage.c_str(), fileNotFoundMessage.size() },
-                        std::string{ urdfFilePath.c_str(), urdfFilePath.Native().size() });
+            fileNotFoundResult.m_sdfErrors.emplace_back(
+                sdf::ErrorCode::FILE_READ,
+                std::string{ fileNotFoundMessage.c_str(), fileNotFoundMessage.size() },
+                std::string{ urdfFilePath.c_str(), urdfFilePath.Native().size() });
             return fileNotFoundResult;
         }
 
         std::string xmlStr((std::istreambuf_iterator<char>(istream)), std::istreambuf_iterator<char>());
+        if (Utils::IsFileUrdf(filePath) && settings.m_fixURDF)
+        {
+            // modify in memory
+            auto [modifiedXmlStr, modifiedElements] = (ROS2::Utils::ModifyURDFInMemory(xmlStr));
+
+            auto result = Parse(modifiedXmlStr, parserConfig);
+            result.m_modifiedURDFTags = AZStd::move(modifiedElements);
+            result.m_modifiedURDFContent = AZStd::move(modifiedXmlStr);
+            return result;
+        }
         return Parse(xmlStr, parserConfig);
     }
-} // namespace ROS2
+
+
+} // namespace ROS2::UrdfParser

@@ -31,7 +31,7 @@ namespace ROS2
 
         //! Frequency in Hz (1/s).
         //! Applies both to data acquisition and publishing.
-        float m_frequency = 10;
+        float m_frequency = 10.f;
 
         bool m_publishingEnabled = true; //!< Determines whether the sensor is publishing (sending data to ROS 2 ecosystem).
         bool m_visualize = true; //!< Determines whether the sensor is visualized in O3DE (for example, point cloud is drawn for LIDAR).

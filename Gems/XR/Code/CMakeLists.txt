@@ -82,6 +82,7 @@ ly_create_alias(NAME XR.Unified NAMESPACE Gem TARGETS Gem::XR)
 
 if(PAL_TRAIT_BUILD_HOST_TOOLS)
     ly_create_alias(NAME XR.Tools NAMESPACE Gem TARGETS Gem::XR)
+    ly_create_alias(NAME XR.Builders NAMESPACE Gem TARGETS Gem::XR)
 endif()
 
 ################################################################################

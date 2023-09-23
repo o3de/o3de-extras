@@ -27,10 +27,6 @@ set(FILES
         Source/Communication/QoS.cpp
         Source/Communication/PublisherConfiguration.cpp
         Source/Communication/TopicConfiguration.cpp
-        Source/FactorySimulation/ConveyorBeltComponent.cpp
-        Source/FactorySimulation/ConveyorBeltComponent.h
-        Source/FactorySimulation/ConveyorBeltComponentConfiguration.cpp
-        Source/FactorySimulation/ConveyorBeltComponentConfiguration.h
         Source/ContactSensor/ROS2ContactSensorComponent.cpp
         Source/ContactSensor/ROS2ContactSensorComponent.h
         Source/Frame/NamespaceConfiguration.cpp
@@ -58,8 +54,6 @@ set(FILES
         Source/Lidar/LidarRaycaster.h
         Source/Lidar/LidarRegistrarSystemComponent.cpp
         Source/Lidar/LidarRegistrarSystemComponent.h
-        Source/Lidar/Lidar2DSensorConfiguration.cpp
-        Source/Lidar/Lidar2DSensorConfiguration.h
         Source/Lidar/LidarSensorConfiguration.cpp
         Source/Lidar/LidarSensorConfiguration.h
         Source/Lidar/LidarSystem.cpp
@@ -68,6 +62,8 @@ set(FILES
         Source/Lidar/LidarTemplate.h
         Source/Lidar/LidarTemplateUtils.cpp
         Source/Lidar/LidarTemplateUtils.h
+        Source/Lidar/LidarCore.cpp
+        Source/Lidar/LidarCore.h
         Source/Lidar/ROS2Lidar2DSensorComponent.cpp
         Source/Lidar/ROS2Lidar2DSensorComponent.h
         Source/Lidar/ROS2LidarSensorComponent.cpp
@@ -97,8 +93,6 @@ set(FILES
         Source/Odometry/ROS2WheelOdometry.h
         Source/Odometry/ROS2OdometryCovariance.cpp
         Source/Odometry/ROS2OdometryCovariance.h
-        Source/ProximitySensor/ROS2ProximitySensor.cpp
-        Source/ProximitySensor/ROS2ProximitySensor.h
         Source/RobotControl/Ackermann/AckermannSubscriptionHandler.cpp
         Source/RobotControl/Ackermann/AckermannSubscriptionHandler.h
         Source/RobotControl/ControlConfiguration.cpp
@@ -116,6 +110,8 @@ set(FILES
         Source/ROS2ModuleInterface.h
         Source/ROS2SystemComponent.cpp
         Source/ROS2SystemComponent.h
+        Source/Sensor/Events/PhysicsBasedSource.cpp
+        Source/Sensor/Events/TickBasedSource.cpp
         Source/Sensor/ROS2SensorComponent.cpp
         Source/Sensor/SensorConfiguration.cpp
         Source/SimulationUtils/FollowingCameraConfiguration.cpp
