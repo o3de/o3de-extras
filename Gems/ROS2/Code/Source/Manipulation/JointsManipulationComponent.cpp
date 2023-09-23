@@ -125,7 +125,7 @@ namespace ROS2
                 auto* prismaticComponent =
                     azrtti_cast<PhysX::JointComponent*>(Utils::GetGameOrEditorComponent<PhysX::PrismaticJointComponent>(entity));
                 auto* articulationComponent = Utils::GetGameOrEditorComponent<PhysX::ArticulationLinkComponent>(entity);
-                bool classicJoint = hingeComponent || prismaticComponent;
+                [[maybe_unused]] bool classicJoint = hingeComponent || prismaticComponent;
                 AZ_Warning(
                     "JointsManipulationComponent",
                     (classicJoint && supportsClassicJoints) || !classicJoint,
