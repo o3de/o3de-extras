@@ -63,8 +63,6 @@ namespace MachineLearning
     {
         InitializeContexts();
 
-        const AZStd::size_t totalTrainingSize = m_trainData.GetSampleCount();
-
         // Start training
         m_currentEpoch = 0;
         m_trainingComplete = false;

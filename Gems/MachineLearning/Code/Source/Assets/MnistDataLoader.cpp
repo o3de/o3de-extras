@@ -18,7 +18,7 @@
 #include <AzCore/RTTI/BehaviorContext.h>
 #include <AzCore/Serialization/EditContext.h>
 #include <AzCore/Serialization/SerializeContext.h>
-
+#pragma optimize("", off)
 namespace MachineLearning
 {
     void MnistDataLoader::Reflect(AZ::ReflectContext* context)
@@ -195,3 +195,4 @@ namespace MachineLearning
         return true;
     }
 }
+#pragma optimize("", on)

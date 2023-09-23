@@ -12,8 +12,8 @@
                     "recursive": 1,
                     "order": 102
                 },
-                "RC mlasset": {
-                    "glob": "*.mlasset",
+                "RC MachineLearning Model": {
+                    "glob": "*.mlmodel",
                     "params": "copy",
                     "productAssetType": "{4D8D3782-DC3A-499A-A59D-542B85F5EDE9}"
                 }

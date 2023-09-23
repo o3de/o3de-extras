@@ -59,6 +59,7 @@ namespace MachineLearning
         }
 
         Layer::Reflect(context);
+        ModelAsset::Reflect(context);
         MnistDataLoader::Reflect(context);
         MultilayerPerceptron::Reflect(context);
     }
@@ -104,12 +105,13 @@ namespace MachineLearning
     void MachineLearningSystemComponent::Activate()
     {
         MachineLearningRequestBus::Handler::BusConnect();
-        m_assetHandler.Register();
+        m_assetHandler = AZStd::make_unique<ModelAssetHandler>();
+        m_assetHandler->Register();
     }
 
     void MachineLearningSystemComponent::Deactivate()
     {
-        m_assetHandler.Unregister();
+        m_assetHandler->Unregister();
         MachineLearningRequestBus::Handler::BusDisconnect();
     }
 

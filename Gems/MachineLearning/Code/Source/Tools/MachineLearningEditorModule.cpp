@@ -1,6 +1,14 @@
+/*
+ * Copyright (c) Contributors to the Open 3D Engine Project.
+ * For complete copyright and license terms please see the LICENSE at the root of this distribution.
+ *
+ * SPDX-License-Identifier: Apache-2.0 OR MIT
+ *
+ */
 
 #include <MachineLearning/MachineLearningTypeIds.h>
 #include <MachineLearningModuleInterface.h>
+#include <Tools/MultilayerPerceptronEditorComponent.h>
 #include "MachineLearningEditorSystemComponent.h"
 
 namespace MachineLearning
@@ -20,6 +28,7 @@ namespace MachineLearning
             // This happens through the [MyComponent]::Reflect() function.
             m_descriptors.insert(m_descriptors.end(), {
                 MachineLearningEditorSystemComponent::CreateDescriptor(),
+                MultilayerPerceptronEditorComponent::CreateDescriptor()
             });
         }
 

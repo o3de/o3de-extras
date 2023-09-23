@@ -12,6 +12,21 @@
 
 namespace MachineLearning
 {
+    void ModelAsset::Reflect(AZ::ReflectContext* context)
+    {
+        if (auto serializeContext = azrtti_cast<AZ::SerializeContext*>(context))
+        {
+            serializeContext->Class<ModelAsset>()
+                ->Version(1);
+
+            if (AZ::EditContext* editContext = serializeContext->GetEditContext())
+            {
+                editContext->Class<ModelAsset>("ML Model Asset", "ML Model Asset")
+                    ->ClassElement(AZ::Edit::ClassElements::EditorData, "");
+            }
+        }
+    }
+
     bool ModelAsset::Serialize(AzNetworking::ISerializer& serializer)
     {
         return serializer.Serialize(m_name, "Name")

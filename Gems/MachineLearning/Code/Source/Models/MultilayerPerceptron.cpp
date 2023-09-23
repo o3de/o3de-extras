@@ -27,9 +27,7 @@ namespace MachineLearning
         {
             serializeContext->Class<MultilayerPerceptron>()
                 ->Version(1)
-                ->Field("ModelAsset", &MultilayerPerceptron::m_asset)
                 ->Field("Name", &MultilayerPerceptron::m_name)
-                ->Field("ModelFile", &MultilayerPerceptron::m_modelFile)
                 ->Field("TestDataFile", &MultilayerPerceptron::m_testDataFile)
                 ->Field("TestLabelFile", &MultilayerPerceptron::m_testLabelFile)
                 ->Field("TrainDataFile", &MultilayerPerceptron::m_trainDataFile)
@@ -42,9 +40,7 @@ namespace MachineLearning
             {
                 editContext->Class<MultilayerPerceptron>("A basic multilayer perceptron class", "")
                     ->ClassElement(AZ::Edit::ClassElements::EditorData, "")
-                    ->DataElement(AZ::Edit::UIHandlers::Default, &MultilayerPerceptron::m_asset, "ModelAsset", "The model asset")
                     ->DataElement(AZ::Edit::UIHandlers::Default, &MultilayerPerceptron::m_name, "Name", "The name for this model")
-                    ->DataElement(AZ::Edit::UIHandlers::Default, &MultilayerPerceptron::m_modelFile, "ModelFile", "The file this model is saved to and loaded from")
                     ->DataElement(AZ::Edit::UIHandlers::Default, &MultilayerPerceptron::m_testDataFile, "TestDataFile", "The file test data should be loaded from")
                     ->DataElement(AZ::Edit::UIHandlers::Default, &MultilayerPerceptron::m_testLabelFile, "TestLabelFile", "The file test labels should be loaded from")
                     ->DataElement(AZ::Edit::UIHandlers::Default, &MultilayerPerceptron::m_trainDataFile, "TrainDataFile", "The file training data should be loaded from")
@@ -80,7 +76,6 @@ namespace MachineLearning
 
     MultilayerPerceptron::MultilayerPerceptron(const MultilayerPerceptron& rhs)
         : m_name(rhs.m_name)
-        , m_modelFile(rhs.m_modelFile)
         , m_testDataFile(rhs.m_testDataFile)
         , m_testLabelFile(rhs.m_testLabelFile)
         , m_trainDataFile(rhs.m_trainDataFile)
@@ -102,13 +97,22 @@ namespace MachineLearning
     MultilayerPerceptron& MultilayerPerceptron::operator=(const MultilayerPerceptron& rhs)
     {
         m_name = rhs.m_name;
-        m_modelFile = rhs.m_modelFile;
         m_testDataFile = rhs.m_testDataFile;
         m_testLabelFile = rhs.m_testLabelFile;
         m_trainDataFile = rhs.m_trainDataFile;
         m_trainLabelFile = rhs.m_trainLabelFile;
         m_activationCount = rhs.m_activationCount;
         m_layers = rhs.m_layers;
+        OnActivationCountChanged();
+        return *this;
+    }
+
+    MultilayerPerceptron& MultilayerPerceptron::operator=(const ModelAsset& asset)
+    {
+        m_name = asset.m_name;
+        m_activationCount = asset.m_activationCount;
+        m_layers = asset.m_layers;
+        OnActivationCountChanged();
         return *this;
     }
 
@@ -121,8 +125,6 @@ namespace MachineLearning
     {
         switch (assetType)
         {
-        case AssetTypes::Model:
-            return m_modelFile;
         case AssetTypes::TestData:
             return m_testDataFile;
         case AssetTypes::TestLabels:
@@ -255,59 +257,19 @@ namespace MachineLearning
 
     bool MultilayerPerceptron::LoadModel()
     {
-        AZ::IO::SystemFile modelFile;
-        AZ::IO::FixedMaxPath filePathFixed = m_modelFile.c_str();
-        if (AZ::IO::FileIOBase* fileIOBase = AZ::IO::FileIOBase::GetInstance())
+        if (m_proxy)
         {
-            fileIOBase->ResolvePath(filePathFixed, m_modelFile.c_str());
+            return m_proxy->LoadAsset();
         }
-
-        if (!modelFile.Open(filePathFixed.c_str(), AZ::IO::SystemFile::SF_OPEN_READ_ONLY))
-        {
-            AZLOG_ERROR("Failed to load '%s'. File could not be opened.", filePathFixed.c_str());
-            return false;
-        }
-
-        const AZ::IO::SizeType length = modelFile.Length();
-        if (length == 0)
-        {
-            AZLOG_ERROR("Failed to load '%s'. File is empty.", filePathFixed.c_str());
-            return false;
-        }
-
-        AZStd::vector<uint8_t> serializeBuffer;
-        serializeBuffer.resize(length);
-        modelFile.Seek(0, AZ::IO::SystemFile::SF_SEEK_BEGIN);
-        modelFile.Read(serializeBuffer.size(), serializeBuffer.data());
-        AzNetworking::NetworkOutputSerializer serializer(serializeBuffer.data(), static_cast<uint32_t>(serializeBuffer.size()));
-        return Serialize(serializer);
+        return false;
     }
 
     bool MultilayerPerceptron::SaveModel()
     {
-        AZ::IO::SystemFile modelFile;
-        AZ::IO::FixedMaxPath filePathFixed = m_modelFile.c_str();
-        if (AZ::IO::FileIOBase* fileIOBase = AZ::IO::FileIOBase::GetInstance())
+        if (m_proxy)
         {
-            fileIOBase->ResolvePath(filePathFixed, m_modelFile.c_str());
+            return m_proxy->SaveAsset();
         }
-
-        if (!modelFile.Open(filePathFixed.c_str(), AZ::IO::SystemFile::SF_OPEN_READ_WRITE | AZ::IO::SystemFile::SF_OPEN_CREATE))
-        {
-            AZLOG_ERROR("Failed to save to '%s'. File could not be opened for writing.", filePathFixed.c_str());
-            return false;
-        }
-        modelFile.Seek(0, AZ::IO::SystemFile::SF_SEEK_BEGIN);
-
-        AZStd::vector<uint8_t> serializeBuffer;
-        serializeBuffer.resize(EstimateSerializeSize());
-        AzNetworking::NetworkInputSerializer serializer(serializeBuffer.data(), static_cast<uint32_t>(serializeBuffer.size()));
-        if (Serialize(serializer))
-        {
-            modelFile.Write(serializeBuffer.data(), serializeBuffer.size());
-            return true;
-        }
-
         return false;
     }
 
@@ -322,27 +284,5 @@ namespace MachineLearning
     {
         // This is not thread safe, this method should only be used by unit testing to inspect layer weights and biases for correctness
         return &m_layers[layerIndex];
-    }
-
-    bool MultilayerPerceptron::Serialize(AzNetworking::ISerializer& serializer)
-    {
-        return serializer.Serialize(m_name, "Name")
-            && serializer.Serialize(m_activationCount, "activationCount")
-            && serializer.Serialize(m_layers, "layers");
-    }
-
-    AZStd::size_t MultilayerPerceptron::EstimateSerializeSize() const
-    {
-        const AZStd::size_t padding = 64; // 64 bytes of extra padding just in case
-        AZStd::size_t estimatedSize = padding 
-            + sizeof(AZStd::size_t)
-            + m_name.size()
-            + sizeof(m_activationCount)
-            + sizeof(AZStd::size_t);
-        for (const Layer& layer : m_layers)
-        {
-            estimatedSize += layer.EstimateSerializeSize();
-        }
-        return estimatedSize;
     }
 }

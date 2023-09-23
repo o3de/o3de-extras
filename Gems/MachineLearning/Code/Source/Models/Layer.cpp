@@ -133,10 +133,7 @@ namespace MachineLearning
         {
             serializeContext->Class<Layer>()
                 ->Version(1)
-                ->Field("InputSize", &Layer::m_inputSize)
                 ->Field("OutputSize", &Layer::m_outputSize)
-                ->Field("Weights", &Layer::m_weights)
-                ->Field("Biases", &Layer::m_biases)
                 ->Field("ActivationFunction", &Layer::m_activationFunction)
                 ;
 
@@ -161,7 +158,6 @@ namespace MachineLearning
                 Attribute(AZ::Script::Attributes::ExcludeFrom, AZ::Script::Attributes::ExcludeFlags::ListOnly)->
                 Constructor<ActivationFunctions, AZStd::size_t, AZStd::size_t>()->
                 Attribute(AZ::Script::Attributes::Storage, AZ::Script::Attributes::StorageType::Value)->
-                Property("InputSize", BehaviorValueProperty(&Layer::m_inputSize))->
                 Property("OutputSize", BehaviorValueProperty(&Layer::m_outputSize))->
                 Property("ActivationFunction", BehaviorValueProperty(&Layer::m_activationFunction))
                 ;

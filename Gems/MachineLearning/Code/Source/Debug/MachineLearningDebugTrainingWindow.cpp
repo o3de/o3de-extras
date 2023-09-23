@@ -151,8 +151,6 @@ namespace MachineLearning
             | ImGuiTableFlags_RowBg
             | ImGuiTableFlags_NoBordersInBody;
 
-        const ImGuiTreeNodeFlags nodeFlags = (ImGuiTreeNodeFlags_Leaf | ImGuiTreeNodeFlags_NoTreePushOnOpen | ImGuiTreeNodeFlags_SpanFullWidth);
-
         IMachineLearning* machineLearning = MachineLearningInterface::Get();
         const ModelSet& modelSet = machineLearning->GetModelSet();
 
@@ -262,7 +260,6 @@ namespace MachineLearning
  
             ImGui::NewLine();
             ImGui::Text("Model Name: %s", m_selectedModel->GetName().c_str());
-            ImGui::Text("Asset location: %s", m_selectedModel->GetAssetFile(AssetTypes::Model).c_str());
 
             if (ImGui::BeginTable("Accuracy", 2, flags))
             {

@@ -25,10 +25,17 @@ namespace MachineLearning
     );
 
     AZ_ENUM_CLASS(AssetTypes,
-        Model,
         TestData,
         TestLabels,
         TrainingData, 
         TrainingLabels
     );
+
+    class IAssetPersistenceProxy
+    {
+    public:
+        virtual ~IAssetPersistenceProxy() = default;
+        virtual bool SaveAsset() = 0;
+        virtual bool LoadAsset() = 0;
+    };
 }

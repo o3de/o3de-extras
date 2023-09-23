@@ -7,6 +7,8 @@
 #
 
 set(FILES
+    Source/Tools/MultilayerPerceptronEditorComponent.cpp
+    Source/Tools/MultilayerPerceptronEditorComponent.h
     Source/Tools/MachineLearningEditorSystemComponent.cpp
     Source/Tools/MachineLearningEditorSystemComponent.h
 )

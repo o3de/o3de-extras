@@ -66,18 +66,15 @@ namespace MachineLearning
             | ImGuiTableFlags_RowBg
             | ImGuiTableFlags_NoBordersInBody;
 
-        const ImGuiTreeNodeFlags nodeFlags = (ImGuiTreeNodeFlags_Leaf | ImGuiTreeNodeFlags_NoTreePushOnOpen | ImGuiTreeNodeFlags_SpanFullWidth);
-
         IMachineLearning* machineLearning = MachineLearningInterface::Get();
         const ModelSet& modelSet = machineLearning->GetModelSet();
 
         ImGui::Text("Total registered models: %u", static_cast<uint32_t>(modelSet.size()));
         ImGui::NewLine();
 
-        if (ImGui::BeginTable("Model Details", 6, flags))
+        if (ImGui::BeginTable("Model Details", 5, flags))
         {
             ImGui::TableSetupColumn("Name", ImGuiTableColumnFlags_WidthFixed, TEXT_BASE_WIDTH * 32.0f);
-            ImGui::TableSetupColumn("File", ImGuiTableColumnFlags_WidthStretch);
             ImGui::TableSetupColumn("Input Neurons", ImGuiTableColumnFlags_WidthFixed, TEXT_BASE_WIDTH * 12.0f);
             ImGui::TableSetupColumn("Output Neurons", ImGuiTableColumnFlags_WidthFixed, TEXT_BASE_WIDTH * 12.0f);
             ImGui::TableSetupColumn("Layers", ImGuiTableColumnFlags_WidthFixed, TEXT_BASE_WIDTH * 12.0f);
@@ -90,8 +87,6 @@ namespace MachineLearning
                 ImGui::TableNextRow();
                 ImGui::TableNextColumn();
                 ImGui::Text(neuralNetwork->GetName().c_str());
-                ImGui::TableNextColumn();
-                ImGui::Text(neuralNetwork->GetAssetFile(AssetTypes::Model).c_str());
                 ImGui::TableNextColumn();
                 ImGui::Text("%lld", aznumeric_cast<AZ::s64>(neuralNetwork->GetInputDimensionality()));
                 ImGui::TableNextColumn();

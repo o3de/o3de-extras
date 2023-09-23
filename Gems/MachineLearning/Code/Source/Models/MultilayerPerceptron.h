@@ -9,7 +9,6 @@
 #pragma once
 
 #include <AzCore/Math/MatrixMxN.h>
-#include <AzNetworking/Serialization/ISerializer.h>
 #include <MachineLearning/INeuralNetwork.h>
 #include <Models/Layer.h>
 #include <Assets/ModelAsset.h>
@@ -34,6 +33,7 @@ namespace MachineLearning
         virtual ~MultilayerPerceptron();
 
         MultilayerPerceptron& operator=(const MultilayerPerceptron&);
+        MultilayerPerceptron& operator=(const ModelAsset&);
 
         //! INeuralNetwork interface
         //! @{
@@ -60,26 +60,12 @@ namespace MachineLearning
         //! Retrieves a specific layer from the model, this is not thread safe and should only be used during unit testing to validate model parameters.
         Layer* GetLayer(AZStd::size_t layerIndex);
 
-        //! Base serialize method for all serializable structures or classes to implement.
-        //! @param serializer ISerializer instance to use for serialization
-        //! @return boolean true for success, false for serialization failure
-        bool Serialize(AzNetworking::ISerializer& serializer);
-
-        //! Returns the estimated size required to serialize this model.
-        AZStd::size_t EstimateSerializeSize() const;
-
     private:
 
         void OnActivationCountChanged();
 
-        //! The model asset.
-        AZ::Data::Asset<ModelAsset> m_asset;
-
         //! The model name.
         AZStd::string m_name;
-
-        //! The model asset file.
-        AZStd::string m_modelFile;
 
         //! Optional test and train asset data files.
         AZStd::string m_testDataFile;
@@ -92,6 +78,9 @@ namespace MachineLearning
 
         //! The set of layers in the network.
         AZStd::vector<Layer> m_layers;
+
+        IAssetPersistenceProxy* m_proxy = nullptr;
+        friend class MultilayerPerceptronEditorComponent;
     };
 
     struct MlpInferenceContext

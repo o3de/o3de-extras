@@ -50,6 +50,6 @@ namespace MachineLearning
     private:
 
         ModelSet m_registeredModels;
-        ModelAssetHandler m_assetHandler;
+        AZStd::unique_ptr<ModelAssetHandler> m_assetHandler;
     };
 }

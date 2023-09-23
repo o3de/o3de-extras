@@ -27,6 +27,8 @@ namespace MachineLearning
         AZ_RTTI(ModelAsset, "{4D8D3782-DC3A-499A-A59D-542B85F5EDE9}", AZ::Data::AssetData);
         AZ_CLASS_ALLOCATOR(ModelAsset, AZ::SystemAllocator);
 
+        static void Reflect(AZ::ReflectContext* context);
+
         ~ModelAsset() = default;
 
         //! Base serialize method for all serializable structures or classes to implement.
