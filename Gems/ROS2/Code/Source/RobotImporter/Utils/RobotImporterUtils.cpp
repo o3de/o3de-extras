@@ -768,7 +768,7 @@ namespace ROS2::Utils
                     AZ_Error(
                         "UrdfAssetMap",
                         false,
-                        "AMENT_PREFIX_PATH is too long (%d), maximum permissible size is %d ",
+                        "AMENT_PREFIX_PATH is too long (%zu), maximum permissible size is %zu ",
                         getEnvOutcome.GetError().m_requiredSize,
                         size);
                 }
