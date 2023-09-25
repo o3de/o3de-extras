@@ -13,7 +13,10 @@
 #include <AzCore/Memory/SystemAllocator.h>
 #include <Atom/RHI/ValidationLayer.h>
 #include <Atom/RHI/XRRenderingInterface.h>
+#include <Atom/RPI.Public/Pass/PassSystemBus.h>
+#include <Atom/RPI.Public/Pass/PassSystemInterface.h>
 #include <Atom/RPI.Public/XR/XRRenderingInterface.h>
+#include <AzFramework/Asset/AssetCatalogBus.h>
 #include <XR/XRDevice.h>
 #include <XR/XRInstance.h>
 #include <XR/XRSwapChain.h>
@@ -28,6 +31,8 @@ namespace XR
         , public AZ::RHI::XRRenderingInterface
         , public AZ::SystemTickBus::Handler
         , public AZStd::intrusive_base
+        , public AZ::RPI::PassSystemTemplateNotificationsBus::MultiHandler
+        , public AzFramework::AssetCatalogEventBus::Handler
     {
     public:
         AZ_CLASS_ALLOCATOR(System, AZ::SystemAllocator);
@@ -80,7 +85,6 @@ namespace XR
         float GetYJoyStickState(AZ::u32 handIndex) const override;
         float GetSqueezeState(AZ::u32 handIndex) const override;
         float GetTriggerState(AZ::u32 handIndex) const override;
-        AZ::Data::Instance<AZ::RPI::AttachmentImage> InitPassFoveatedAttachment(const AZ::RPI::PassTemplate& passTemplate, const AZ::RHI::XRFoveatedLevel* level = nullptr) const override;
         ///////////////////////////////////////////////////////////////////
 
         ///////////////////////////////////////////////////////////////////
@@ -99,8 +103,16 @@ namespace XR
         AZ::RHI::ResultCode InitVariableRateShadingImageContent(AZ::RHI::Image* image, AZ::RHI::XRFoveatedLevel type) const override;
         ///////////////////////////////////////////////////////////////////
 
+        // AzFramework::AssetCatalogEventBus::Handler overrides ...
+        void OnCatalogLoaded(const char*) override;
+
+        // PassSystemTemplateNotificationsBus::Handler overrides ....
+        void OnAddingPassTemplate(const AZStd::shared_ptr<AZ::RPI::PassTemplate>& passTemplate) override;
+
     private:
         Instance* GetInstance();
+
+        bool ConnectToPipelineTemplateListener(const char* pipelineAsset);
 
         Ptr<Instance> m_instance;
         Ptr<Session> m_session;
@@ -108,5 +120,6 @@ namespace XR
         Ptr<Device> m_device;
         AZ::RHI::ValidationMode m_validationMode = AZ::RHI::ValidationMode::Disabled;
         bool m_isInFrame = false;
+        AZ::RHI::XRFoveatedLevel m_foveatedLevel = AZ::RHI::XRFoveatedLevel::None;
     };
 } // namespace XR

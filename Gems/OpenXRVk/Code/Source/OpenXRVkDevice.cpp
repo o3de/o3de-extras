@@ -14,7 +14,6 @@
 #include <OpenXRVk/OpenXRVkUtils.h>
 #include <OpenXRVkCommon.h>
 #include <Atom/RHI.Reflect/VkAllocator.h>
-#include <Atom/RHI.Reflect/Vulkan/XRVkDescriptors.h>
 #include <AzCore/Casting/numeric_cast.h>
 
 namespace OpenXRVk
@@ -29,6 +28,7 @@ namespace OpenXRVk
         AZ::Vulkan::XRDeviceDescriptor* xrDeviceDescriptor = static_cast<AZ::Vulkan::XRDeviceDescriptor*>(deviceDescriptor);
         m_xrVkDevice = xrDeviceDescriptor->m_inputData.m_xrVkDevice;
         m_xrVkPhysicalDevice = xrDeviceDescriptor->m_inputData.m_xrVkPhysicalDevice;
+        m_xrQueueBinding = xrDeviceDescriptor->m_inputData.m_xrQueueBinding;
         return AZ::RHI::ResultCode::Success;
     }
 
@@ -180,6 +180,11 @@ namespace OpenXRVk
     VkPhysicalDevice Device::GetNativePhysicalDevice() const
     {
         return m_xrVkPhysicalDevice;
+    }
+
+    const AZ::Vulkan::XRDeviceDescriptor::GraphicsBinding& Device::GetGraphicsBinding(AZ::RHI::HardwareQueueClass queueClass) const
+    {
+        return m_xrQueueBinding[static_cast<uint32_t>(queueClass)];
     }
 
     AZ::RHI::ResultCode Device::GetViewFov(AZ::u32 viewIndex, AZ::RPI::FovData& outFovData) const
