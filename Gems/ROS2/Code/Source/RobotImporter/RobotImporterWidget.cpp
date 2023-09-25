@@ -86,33 +86,43 @@ namespace ROS2
         // This is a URDF only path, and therefore the report text does not mention SDF
         report += "# " + tr("The URDF was parsed, though results were modified to be compatible with SDFormat") + "\n";
 
-        report += "## " + tr("Inertial information in the following links is missing, reset to default: ") + "\n";
-        for (const auto& modifiedTag : parsedSdfOutcome.m_urdfModifications.missingInertias)
+        if (!parsedSdfOutcome.m_urdfModifications.missingInertias.empty())
         {
-            report += " - " + QString::fromUtf8(modifiedTag.linkName.data(), static_cast<int>(modifiedTag.linkName.size())) + "\n";
-        }
-        report += "\n";
-
-        report += "## " + tr("Inertial information in the following links is incomplete, set default values for listed subtags: ") + "\n";
-        for (const auto& modifiedTag : parsedSdfOutcome.m_urdfModifications.incompleteInertias)
-        {
-            report += " - " + QString::fromUtf8(modifiedTag.linkName.data(), static_cast<int>(modifiedTag.linkName.size())) + ": ";
-
-            for (const auto& tag : modifiedTag.missingTags)
+            report += "## " + tr("Inertial information in the following links is missing, reset to default: ") + "\n";
+            for (const auto& modifiedTag : parsedSdfOutcome.m_urdfModifications.missingInertias)
             {
-                report += QString::fromUtf8(tag.data(), static_cast<int>(tag.size())) + ", ";
+                report += " - " + QString::fromUtf8(modifiedTag.linkName.data(), static_cast<int>(modifiedTag.linkName.size())) + "\n";
             }
-
             report += "\n";
         }
-        report += "\n";
 
-        report += "## " + tr("The following joints were renamed to avoid duplication") + "\n";
-        for (const auto& modifiedTag : parsedSdfOutcome.m_urdfModifications.duplicatedJoints)
+        if (!parsedSdfOutcome.m_urdfModifications.incompleteInertias.empty())
         {
-            report += " - " + QString::fromUtf8(modifiedTag.oldName.data(), static_cast<int>(modifiedTag.oldName.size())) + " -> " +
-                QString::fromUtf8(modifiedTag.newName.data(), static_cast<int>(modifiedTag.newName.size())) + "\n";
+            report += "## " + tr("Inertial information in the following links is incomplete, set default values for listed subtags: ") + "\n";
+            for (const auto& modifiedTag : parsedSdfOutcome.m_urdfModifications.incompleteInertias)
+            {
+                report += " - " + QString::fromUtf8(modifiedTag.linkName.data(), static_cast<int>(modifiedTag.linkName.size())) + ": ";
+
+                for (const auto& tag : modifiedTag.missingTags)
+                {
+                    report += QString::fromUtf8(tag.data(), static_cast<int>(tag.size())) + ", ";
+                }
+
+                report += "\n";
+            }
+            report += "\n";
         }
+
+        if(!parsedSdfOutcome.m_urdfModifications.duplicatedJoints.empty())
+        {
+            report += "## " + tr("The following joints were renamed to avoid duplication") + "\n";
+            for (const auto& modifiedTag : parsedSdfOutcome.m_urdfModifications.duplicatedJoints)
+            {
+                report += " - " + QString::fromUtf8(modifiedTag.oldName.data(), static_cast<int>(modifiedTag.oldName.size())) + " -> " +
+                    QString::fromUtf8(modifiedTag.newName.data(), static_cast<int>(modifiedTag.newName.size())) + "\n";
+            }
+        }
+
         report += "\n# " + tr("The modified URDF code:") + "\n";
         report += "```\n" + QString::fromStdString(parsedSdfOutcome.m_modifiedURDFContent) + "```\n";
     }
