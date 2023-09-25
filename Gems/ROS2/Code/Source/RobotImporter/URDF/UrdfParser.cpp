@@ -88,7 +88,10 @@ namespace ROS2::UrdfParser
 
     bool ParseResult::UrdfParsedWithModifiedContent() const
     {
-        return m_modifiedURDFTags.size() > 0;
+        return 
+            m_urdfModifications.duplicatedJoints.size() > 0
+            || m_urdfModifications.missingInertias.size() > 0
+            ||  m_urdfModifications.incompleteInertias.size() > 0;
     }
 
     RootObjectOutcome Parse(AZStd::string_view xmlString, const sdf::ParserConfig& parserConfig)
@@ -141,7 +144,7 @@ namespace ROS2::UrdfParser
             auto [modifiedXmlStr, modifiedElements] = (ROS2::Utils::ModifyURDFInMemory(xmlStr));
 
             auto result = Parse(modifiedXmlStr, parserConfig);
-            result.m_modifiedURDFTags = AZStd::move(modifiedElements);
+            result.m_urdfModifications = AZStd::move(modifiedElements);
             result.m_modifiedURDFContent = AZStd::move(modifiedXmlStr);
             return result;
         }

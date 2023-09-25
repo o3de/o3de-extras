@@ -20,6 +20,7 @@
 #include "URDF/UrdfParser.h"
 #include <AzCore/Asset/AssetCommon.h>
 #include <AzCore/std/containers/unordered_map.h>
+#include <RobotImporter/FixURDF/URDFModifications.h>
 #include <RobotImporter/Utils/RobotImporterUtils.h>
 #include <RobotImporter/xacro/XacroUtils.h>
 

@@ -8,6 +8,7 @@
 
 #pragma once
 
+#include "URDFModifications.h"
 #include <AzCore/std/containers/vector.h>
 #include <AzCore/std/string/string.h>
 
@@ -19,7 +20,7 @@ namespace ROS2::Utils
     //! - Renames joints that have the same name as a link.
     //! @param urdf URDF to modify.
     //! @returns a modified URDF and a list of XML element that were modified
-    AZStd::pair<std::string, AZStd::vector<AZStd::string>> ModifyURDFInMemory(const std::string& data);
-    AZStd::pair<std::string, AZStd::vector<AZStd::string>> ModifyURDFInMemory(const AZStd::string& data);
+    AZStd::pair<std::string, UrdfModifications> ModifyURDFInMemory(const std::string& data);
+    AZStd::pair<std::string, UrdfModifications> ModifyURDFInMemory(const AZStd::string& data);
 
 } // namespace ROS2::Utils
