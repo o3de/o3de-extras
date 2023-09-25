@@ -97,6 +97,8 @@ namespace ROS2
         //! @param errorMessage error message to display to the user
         void ReportError(const QString& errorMessage);
 
+        void AddModificationWarningsToReportString(QString& report, const UrdfParser::RootObjectOutcome& parsedSdfOutcome);
+
         static constexpr QWizard::WizardButton PrefabCreationButtonId{ QWizard::CustomButton1 };
         static constexpr QWizard::WizardOption HavePrefabCreationButton{ QWizard::HaveCustomButton1 };
     };
