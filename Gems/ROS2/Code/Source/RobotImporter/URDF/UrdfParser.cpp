@@ -88,10 +88,8 @@ namespace ROS2::UrdfParser
 
     bool ParseResult::UrdfParsedWithModifiedContent() const
     {
-        return 
-            m_urdfModifications.duplicatedJoints.size() > 0
-            || m_urdfModifications.missingInertias.size() > 0
-            ||  m_urdfModifications.incompleteInertias.size() > 0;
+        return m_urdfModifications.duplicatedJoints.size() > 0 || m_urdfModifications.missingInertias.size() > 0 ||
+            m_urdfModifications.incompleteInertias.size() > 0;
     }
 
     RootObjectOutcome Parse(AZStd::string_view xmlString, const sdf::ParserConfig& parserConfig)
@@ -150,6 +148,5 @@ namespace ROS2::UrdfParser
         }
         return Parse(xmlStr, parserConfig);
     }
-
 
 } // namespace ROS2::UrdfParser

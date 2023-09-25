@@ -98,7 +98,8 @@ namespace ROS2
 
         if (!parsedSdfOutcome.m_urdfModifications.incompleteInertias.empty())
         {
-            report += "## " + tr("Inertial information in the following links is incomplete, set default values for listed subtags: ") + "\n";
+            report +=
+                "## " + tr("Inertial information in the following links is incomplete, set default values for listed subtags: ") + "\n";
             for (const auto& modifiedTag : parsedSdfOutcome.m_urdfModifications.incompleteInertias)
             {
                 report += " - " + QString::fromUtf8(modifiedTag.linkName.data(), static_cast<int>(modifiedTag.linkName.size())) + ": ";
@@ -113,7 +114,7 @@ namespace ROS2
             report += "\n";
         }
 
-        if(!parsedSdfOutcome.m_urdfModifications.duplicatedJoints.empty())
+        if (!parsedSdfOutcome.m_urdfModifications.duplicatedJoints.empty())
         {
             report += "## " + tr("The following joints were renamed to avoid duplication") + "\n";
             for (const auto& modifiedTag : parsedSdfOutcome.m_urdfModifications.duplicatedJoints)
@@ -141,7 +142,8 @@ namespace ROS2
 
             if (Utils::IsFileXacro(m_urdfPath))
             {
-                Utils::xacro::ExecutionOutcome outcome = Utils::xacro::ParseXacro(m_urdfPath.String(), m_params, parserConfig, sdfBuilderSettings);
+                Utils::xacro::ExecutionOutcome outcome =
+                    Utils::xacro::ParseXacro(m_urdfPath.String(), m_params, parserConfig, sdfBuilderSettings);
                 // Store off the URDF parsing outcome which will be output later in this function
                 parsedSdfOutcome = AZStd::move(outcome.m_urdfHandle);
                 if (outcome)
