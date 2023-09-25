@@ -756,11 +756,32 @@ namespace ROS2::Utils
         auto StoreAmentPrefixPath = [](char* buffer, size_t size) -> size_t
         {
             auto getEnvOutcome = AZ::Utils::GetEnv(AZStd::span(buffer, size), "AMENT_PREFIX_PATH");
+
+            if (!getEnvOutcome.IsSuccess())
+            {
+                if (getEnvOutcome.GetError().m_errorCode == AZ::Utils::GetEnvErrorCode::EnvNotSet)
+                {
+                    AZ_Error("UrdfAssetMap", false, "AMENT_PREFIX_PATH is not set in the environment.");
+                }
+                else if (getEnvOutcome.GetError().m_errorCode == AZ::Utils::GetEnvErrorCode::BufferTooSmall)
+                {
+                    AZ_Error(
+                        "UrdfAssetMap",
+                        false,
+                        "AMENT_PREFIX_PATH is too long (%d), maximum permissible size is %d ",
+                        getEnvOutcome.GetError().m_requiredSize,
+                        size);
+                }
+                else
+                {
+                    AZ_Error("UrdfAssetMap", false, "AMENT_PREFIX_PATH is not found.");
+                }
+            }
+
             return getEnvOutcome ? getEnvOutcome.GetValue().size() : 0;
         };
         AmentPrefixString amentPrefixPath;
         amentPrefixPath.resize_and_overwrite(amentPrefixPath.capacity(), StoreAmentPrefixPath);
-        AZ_Error("UrdfAssetMap", !amentPrefixPath.empty(), "AMENT_PREFIX_PATH is not found.");
 
         return amentPrefixPath;
     }
