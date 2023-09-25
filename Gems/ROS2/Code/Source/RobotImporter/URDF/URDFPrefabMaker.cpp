@@ -16,8 +16,8 @@
 #include <AzCore/Serialization/Json/JsonUtils.h>
 #include <AzToolsFramework/Entity/EditorEntityHelpers.h>
 #include <AzToolsFramework/Prefab/PrefabLoaderInterface.h>
-#include <AzToolsFramework/Prefab/PrefabSystemComponentInterface.h>
 #include <AzToolsFramework/Prefab/PrefabLoaderScriptingBus.h>
+#include <AzToolsFramework/Prefab/PrefabSystemComponentInterface.h>
 #include <AzToolsFramework/Prefab/PrefabSystemScriptingBus.h>
 #include <AzToolsFramework/Prefab/Procedural/ProceduralPrefabAsset.h>
 #include <AzToolsFramework/ToolsComponents/GenericComponentWrapper.h>
@@ -149,7 +149,6 @@ namespace ROS2
         constexpr bool visitNestedModels = true;
         Utils::VisitModels(*m_root, GetAllLinksFromModel, visitNestedModels);
 
-
         for (const auto& [name, linkPtr] : links)
         {
             createdLinks[name] = AddEntitiesForLink(linkPtr, AZ::EntityId{}, createdEntities);
@@ -176,8 +175,7 @@ namespace ROS2
         // Set the transforms of links
         for (const auto& [name, linkPtr] : links)
         {
-            if (const auto thisEntry = createdLinks.at(name);
-                thisEntry.IsSuccess())
+            if (const auto thisEntry = createdLinks.at(name); thisEntry.IsSuccess())
             {
                 AZ::Transform tf = Utils::GetWorldTransformURDF(linkPtr);
                 auto* entity = AzToolsFramework::GetEntityById(thisEntry.GetValue());
@@ -202,7 +200,8 @@ namespace ROS2
                     }
                     else
                     {
-                        AZ_Trace("CreatePrefabFromUrdfOrSdf", "Setting transform failed: %s does not have transform interface\n", name.c_str());
+                        AZ_Trace(
+                            "CreatePrefabFromUrdfOrSdf", "Setting transform failed: %s does not have transform interface\n", name.c_str());
                     }
                 }
             }
@@ -252,8 +251,8 @@ namespace ROS2
                 > defining the coordinate transformation from the parent link frame to the child link frame.
             */
 
-            AZStd::string parentName(jointsWhereLinkIsChild.front()->ParentName().c_str(),
-                jointsWhereLinkIsChild.front()->ParentName().size());
+            AZStd::string parentName(
+                jointsWhereLinkIsChild.front()->ParentName().c_str(), jointsWhereLinkIsChild.front()->ParentName().size());
             const auto parentEntry = createdLinks.find(parentName);
             if (parentEntry == createdLinks.end())
             {
@@ -262,7 +261,11 @@ namespace ROS2
             }
             if (!parentEntry->second.IsSuccess())
             {
-                AZ_Trace("CreatePrefabFromUrdfOrSdf", "Link %s has parent %s which has failed to create\n", linkName.c_str(), parentName.c_str());
+                AZ_Trace(
+                    "CreatePrefabFromUrdfOrSdf",
+                    "Link %s has parent %s which has failed to create\n",
+                    linkName.c_str(),
+                    parentName.c_str());
                 continue;
             }
             AZ_Trace(
@@ -286,7 +289,12 @@ namespace ROS2
             auto parentLinkIter = createdLinks.find(parentLinkName);
             if (parentLinkIter == createdLinks.end())
             {
-                AZ_Warning("CreatePrefabFromUrdfOrSdf", false, "Joint %s has no parent link %s. Cannot create", azJointName.c_str(), parentLinkName.c_str());
+                AZ_Warning(
+                    "CreatePrefabFromUrdfOrSdf",
+                    false,
+                    "Joint %s has no parent link %s. Cannot create",
+                    azJointName.c_str(),
+                    parentLinkName.c_str());
                 return true;
             }
             auto leadEntity = parentLinkIter->second;
@@ -294,7 +302,12 @@ namespace ROS2
             auto childLinkIter = createdLinks.find(childLinkName);
             if (childLinkIter == createdLinks.end())
             {
-                AZ_Warning("CreatePrefabFromUrdfOrSdf", false, "Joint %s has no child link %s. Cannot create", azJointName.c_str(), childLinkName.c_str());
+                AZ_Warning(
+                    "CreatePrefabFromUrdfOrSdf",
+                    false,
+                    "Joint %s has no child link %s. Cannot create",
+                    azJointName.c_str(),
+                    childLinkName.c_str());
                 return true;
             }
             auto childEntity = childLinkIter->second;
@@ -305,7 +318,6 @@ namespace ROS2
                 azJointName.c_str(),
                 parentLinkName.c_str(),
                 childLinkName.c_str());
-
 
             AZ::Entity* childEntityPtr = AzToolsFramework::GetEntityById(childEntity.GetValue());
             if (childEntityPtr)
@@ -381,7 +393,8 @@ namespace ROS2
         AzToolsFramework::Prefab::PrefabSystemScriptingBus::BroadcastResult(
             prefabTemplateId,
             &AzToolsFramework::Prefab::PrefabSystemScriptingBus::Events::CreatePrefabTemplate,
-            createdEntities, relativePath.String());
+            createdEntities,
+            relativePath.String());
 
         if (prefabTemplateId == AzToolsFramework::Prefab::InvalidTemplateId)
         {
@@ -432,8 +445,7 @@ namespace ROS2
         }
         else
         {
-            result = AZ::Failure(AZStd::string::format("Could not save the newly created prefab to '%s'",
-                m_prefabPath.c_str()));
+            result = AZ::Failure(AZStd::string::format("Could not save the newly created prefab to '%s'", m_prefabPath.c_str()));
         }
 
         // End undo batch labeled "Robot Importer prefab creation"
@@ -446,7 +458,8 @@ namespace ROS2
         return result;
     }
 
-    AzToolsFramework::Prefab::PrefabEntityResult URDFPrefabMaker::AddEntitiesForLink(const sdf::Link* link, AZ::EntityId parentEntityId, AZStd::vector<AZ::EntityId>& createdEntities)
+    AzToolsFramework::Prefab::PrefabEntityResult URDFPrefabMaker::AddEntitiesForLink(
+        const sdf::Link* link, AZ::EntityId parentEntityId, AZStd::vector<AZ::EntityId>& createdEntities)
     {
         if (!link)
         {
@@ -491,6 +504,7 @@ namespace ROS2
         if (modelContainingLink != nullptr)
         {
             m_collidersMaker.AddColliders(*modelContainingLink, link, entityId);
+            m_sensorsMaker.AddSensors(*modelContainingLink, link, entityId);
         }
         return AZ::Success(entityId);
     }
@@ -524,8 +538,7 @@ namespace ROS2
             return;
         }
 
-        if (auto entity_ = AzToolsFramework::GetEntityById(rootEntityId);
-            entity_ != nullptr)
+        if (auto entity_ = AzToolsFramework::GetEntityById(rootEntityId); entity_ != nullptr)
         {
             auto* transformInterface_ = entity_->FindComponent<AzToolsFramework::Components::TransformComponent>();
 

@@ -88,7 +88,7 @@ namespace ROS2
 
         //! Checks if the importedPrefabFilename is the same as focused prefab name.
         //! @param importedPrefabFilename name of imported prefab
-        //! @return True if names of prefabs are identical or an erorr occured during validation
+        //! @return True if names of prefabs are identical or an error occurred during validation
         bool CheckCyclicalDependency(AZ::IO::Path importedPrefabFilename);
 
         //! Report an error to the user.
