@@ -97,7 +97,11 @@ namespace WarehouseAutomation
             const float normalizedDistanceStep = SegmentSeparation * m_configuration.m_segmentSize / m_splineLength;
             for (float normalizedIndex = 0.f; normalizedIndex < 1.f + normalizedDistanceStep; normalizedIndex += normalizedDistanceStep)
             {
-                m_conveyorSegments.push_back(CreateSegment(splinePtr, normalizedIndex));
+                auto segment = CreateSegment(splinePtr, normalizedIndex);
+                if (segment.second != AzPhysics::InvalidSimulatedBodyHandle)
+                {
+                    m_conveyorSegments.emplace_back(AZStd::move(segment));
+                }
             }
             AZ_Printf("ConveyorBeltComponent", "Initial Number of segments: %d", m_conveyorSegments.size());
             AZ::TickBus::Handler::BusConnect();
@@ -185,7 +189,6 @@ namespace WarehouseAutomation
         conveyorSegmentRigidBodyConfig.m_entityId = GetEntityId();
         conveyorSegmentRigidBodyConfig.m_debugName = "ConveyorBeltSegment";
         AzPhysics::SimulatedBodyHandle handle = physicsSystem->GetScene(m_sceneHandle)->AddSimulatedBody(&conveyorSegmentRigidBodyConfig);
-        AZ_Assert(handle == AzPhysics::InvalidSimulatedBodyHandle, "Body created with invalid handle");
         return AZStd::make_pair(normalizedLocation, handle);
     }
 
