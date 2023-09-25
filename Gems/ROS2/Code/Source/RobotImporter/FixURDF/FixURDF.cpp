@@ -135,7 +135,7 @@ namespace ROS2::Utils
         if (!urdf)
         {
             AZ_Warning("URDF", false, "No robot tag in URDF");
-            return {data, modifiedElements};
+            return { data.c_str(), modifiedElements };
         }
         auto links = AddMissingInertiaToLinks(urdf);
         modifiedElements.insert(modifiedElements.end(), AZStd::make_move_iterator(links.begin()), AZStd::make_move_iterator(links.end()));
