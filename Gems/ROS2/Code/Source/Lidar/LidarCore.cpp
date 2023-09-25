@@ -141,6 +141,7 @@ namespace ROS2
 
         m_lastRotations = LidarTemplateUtils::PopulateRayRotations(m_lidarConfiguration.m_lidarParameters);
 
+        m_lidarConfiguration.FetchLidarImplementationFeatures();
         ConnectToLidarRaycaster();
         ConfigureLidarRaycaster();
     }
