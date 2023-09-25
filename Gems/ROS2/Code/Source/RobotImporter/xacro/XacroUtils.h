@@ -41,7 +41,10 @@ namespace ROS2::Utils::xacro
     AZStd::unordered_map<AZStd::string, AZStd::string> GetParameterFromXacroData(const AZStd::string& data);
     AZStd::unordered_map<AZStd::string, AZStd::string> GetParameterFromXacroFile(const AZStd::string& filename);
 
-    ExecutionOutcome ParseXacro(const AZStd::string& filename, const Params& params, const sdf::ParserConfig& parserConfig);
-
+    ExecutionOutcome ParseXacro(
+        const AZStd::string& filename,
+        const Params& params,
+        const sdf::ParserConfig& parserConfig,
+        const SdfAssetBuilderSettings& settings);
 
 } // namespace ROS2::Utils::xacro
