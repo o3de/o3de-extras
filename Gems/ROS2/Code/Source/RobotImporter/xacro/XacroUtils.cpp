@@ -12,13 +12,14 @@
 #include <AzCore/XML/rapidxml.h>
 #include <AzFramework/Process/ProcessCommunicator.h>
 #include <AzFramework/Process/ProcessWatcher.h>
+#include <FixURDF/FixURDF.h>
 #include <QString>
-
 #include <SdfAssetBuilder/SdfAssetBuilderSettings.h>
 
 namespace ROS2::Utils::xacro
 {
-    ExecutionOutcome ParseXacro(const AZStd::string& filename, const Params& params, const sdf::ParserConfig& parserConfig)
+    ExecutionOutcome ParseXacro(
+        const AZStd::string& filename, const Params& params, const sdf::ParserConfig& parserConfig, const SdfAssetBuilderSettings& settings)
     {
         ExecutionOutcome outcome;
         // test if xacro exists
@@ -90,8 +91,21 @@ namespace ROS2::Utils::xacro
         {
             AZ_Printf("ParseXacro", "xacro finished with success \n");
             const auto& output = process_output.outputResult;
-            outcome.m_urdfHandle = UrdfParser::Parse(output, parserConfig);
-            outcome.m_succeed = true;
+
+            if (settings.m_fixURDF)
+            {
+                // modify in memory URDF result
+                auto [modifiedXmlStr, modifiedElements] = (ROS2::Utils::ModifyURDFInMemory(output));
+                outcome.m_urdfHandle = UrdfParser::Parse(modifiedXmlStr, parserConfig);
+                outcome.m_urdfHandle.m_modifiedURDFContent = AZStd::move(modifiedXmlStr);
+                outcome.m_urdfHandle.m_modifiedURDFTags = AZStd::move(modifiedElements);
+                outcome.m_succeed = true;
+            }
+            else
+            {
+                outcome.m_urdfHandle = UrdfParser::Parse(output, parserConfig);
+                outcome.m_succeed = true;
+            }
         }
         else
         {
