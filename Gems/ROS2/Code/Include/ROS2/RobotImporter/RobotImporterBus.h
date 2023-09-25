@@ -7,9 +7,10 @@
  */
 #pragma once
 
+#include <AzCore/EBus/EBus.h>
 #include <AzCore/EBus/Policies.h>
 #include <AzCore/std/string/string.h>
-#include <AzCore/EBus/EBus.h>
+#include <ROS2/RobotImporter/SDFormatSensorImporterHook.h>
 
 namespace ROS2
 {
@@ -24,6 +25,9 @@ namespace ROS2
         //! @param importAssetWithUrdf If true, the assets referenced in the urdf file will be imported
         //! @param useArticulation If true, the prefab will be generated with articulation
         virtual bool GeneratePrefabFromFile(const AZStd::string_view filePath, bool importAssetWithUrdf, bool useArticulation) = 0;
+
+        //! Return the reference to the list of sensor importer hooks
+        virtual const SDFormat::SensorImporterHooksStorage& GetSensorHooks() const = 0;
     };
 
     using RobotImporterRequestBus = AZ::EBus<RobotImporterRequest>;
