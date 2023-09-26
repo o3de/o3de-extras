@@ -11,6 +11,7 @@
 #include <AzCore/Math/Uuid.h>
 #include <AzCore/Utils/Utils.h>
 
+#include "FixURDF/URDFModifications.h"
 #include "RobotImporterWidget.h"
 #include <QApplication>
 #include <QScreen>
@@ -80,6 +81,53 @@ namespace ROS2
         }
     }
 
+    void RobotImporterWidget::AddModificationWarningsToReportString(QString& report, const UrdfParser::RootObjectOutcome& parsedSdfOutcome)
+    {
+        // This is a URDF only path, and therefore the report text does not mention SDF
+        report += "# " + tr("The URDF was parsed, though results were modified to be compatible with SDFormat") + "\n";
+
+        if (!parsedSdfOutcome.m_urdfModifications.missingInertias.empty())
+        {
+            report += "## " + tr("Inertial information in the following links is missing, reset to default: ") + "\n";
+            for (const auto& modifiedTag : parsedSdfOutcome.m_urdfModifications.missingInertias)
+            {
+                report += " - " + QString::fromUtf8(modifiedTag.linkName.data(), static_cast<int>(modifiedTag.linkName.size())) + "\n";
+            }
+            report += "\n";
+        }
+
+        if (!parsedSdfOutcome.m_urdfModifications.incompleteInertias.empty())
+        {
+            report +=
+                "## " + tr("Inertial information in the following links is incomplete, set default values for listed subtags: ") + "\n";
+            for (const auto& modifiedTag : parsedSdfOutcome.m_urdfModifications.incompleteInertias)
+            {
+                report += " - " + QString::fromUtf8(modifiedTag.linkName.data(), static_cast<int>(modifiedTag.linkName.size())) + ": ";
+
+                for (const auto& tag : modifiedTag.missingTags)
+                {
+                    report += QString::fromUtf8(tag.data(), static_cast<int>(tag.size())) + ", ";
+                }
+
+                report += "\n";
+            }
+            report += "\n";
+        }
+
+        if (!parsedSdfOutcome.m_urdfModifications.duplicatedJoints.empty())
+        {
+            report += "## " + tr("The following joints were renamed to avoid duplication") + "\n";
+            for (const auto& modifiedTag : parsedSdfOutcome.m_urdfModifications.duplicatedJoints)
+            {
+                report += " - " + QString::fromUtf8(modifiedTag.oldName.data(), static_cast<int>(modifiedTag.oldName.size())) + " -> " +
+                    QString::fromUtf8(modifiedTag.newName.data(), static_cast<int>(modifiedTag.newName.size())) + "\n";
+            }
+        }
+
+        report += "\n# " + tr("The modified URDF code:") + "\n";
+        report += "```\n" + QString::fromStdString(parsedSdfOutcome.m_modifiedURDFContent) + "```\n";
+    }
+
     void RobotImporterWidget::OpenUrdf()
     {
         UrdfParser::RootObjectOutcome parsedSdfOutcome;
@@ -94,7 +142,8 @@ namespace ROS2
 
             if (Utils::IsFileXacro(m_urdfPath))
             {
-                Utils::xacro::ExecutionOutcome outcome = Utils::xacro::ParseXacro(m_urdfPath.String(), m_params, parserConfig);
+                Utils::xacro::ExecutionOutcome outcome =
+                    Utils::xacro::ParseXacro(m_urdfPath.String(), m_params, parserConfig, sdfBuilderSettings);
                 // Store off the URDF parsing outcome which will be output later in this function
                 parsedSdfOutcome = AZStd::move(outcome.m_urdfHandle);
                 if (outcome)
@@ -150,6 +199,7 @@ namespace ROS2
             {
                 AZ_Assert(false, "Unknown file extension : %s \n", m_urdfPath.c_str());
             }
+
             AZStd::string log;
             const bool urdfParsedSuccess{ parsedSdfOutcome };
             const bool urdfParsedWithWarnings{ parsedSdfOutcome.UrdfParsedWithModifiedContent() };
@@ -157,15 +207,7 @@ namespace ROS2
             {
                 if (urdfParsedWithWarnings)
                 {
-                    // This is a URDF only path, and therefore the report text does not mention SDF
-                    report += "# " + tr("The URDF was parsed, though results were modified to be compatible with SDFormat") + "\n";
-                    report += tr("Modified tags in URDF:") + "\n";
-                    for (const auto& modifiedTag : parsedSdfOutcome.m_modifiedURDFTags)
-                    {
-                        report += " - " + QString::fromUtf8(modifiedTag.data(), static_cast<int>(modifiedTag.size())) + "\n";
-                    }
-                    report += "\n# " + tr("The modified URDF code:") + "\n";
-                    report += "```\n" + QString::fromStdString(parsedSdfOutcome.m_modifiedURDFContent) + "```\n";
+                    AddModificationWarningsToReportString(report, parsedSdfOutcome);
                 }
                 else
                 {
@@ -244,12 +286,13 @@ namespace ROS2
 
             if (m_importAssetWithUrdf)
             {
-                m_urdfAssetsMapping = AZStd::make_shared<Utils::UrdfAssetMap>(
-                    Utils::CopyAssetForURDFAndCreateAssetMap(m_meshNames, m_urdfPath.String(), collidersNames, visualNames, sdfBuilderSettings, dirSuffix));
+                m_urdfAssetsMapping = AZStd::make_shared<Utils::UrdfAssetMap>(Utils::CopyAssetForURDFAndCreateAssetMap(
+                    m_meshNames, m_urdfPath.String(), collidersNames, visualNames, sdfBuilderSettings, dirSuffix));
             }
             else
             {
-                m_urdfAssetsMapping = AZStd::make_shared<Utils::UrdfAssetMap>(Utils::FindAssetsForUrdf(m_meshNames, m_urdfPath.String(), sdfBuilderSettings));
+                m_urdfAssetsMapping =
+                    AZStd::make_shared<Utils::UrdfAssetMap>(Utils::FindAssetsForUrdf(m_meshNames, m_urdfPath.String(), sdfBuilderSettings));
                 for (const AZStd::string& meshPath : m_meshNames)
                 {
                     if (m_urdfAssetsMapping->contains(meshPath))
@@ -313,7 +356,7 @@ namespace ROS2
     void RobotImporterWidget::FillPrefabMakerPage()
     {
         // Use the URDF/SDF file name stem the prefab name
-        AZStd::string robotName = AZStd::string(m_urdfPath.Stem().Native());
+        AZStd::string robotName = AZStd::string(m_urdfPath.Stem().Native()) + ".prefab";
         m_prefabMakerPage->setProposedPrefabName(robotName);
         QWizard::button(PrefabCreationButtonId)->setText(tr("Create Prefab"));
         QWizard::setOption(HavePrefabCreationButton, true);
@@ -400,11 +443,11 @@ namespace ROS2
 
     void RobotImporterWidget::CreatePrefab(AZStd::string prefabName)
     {
-        const AZ::IO::Path prefabPathRealative(AZ::IO::Path("Assets") / "Importer" / prefabName);
-        const AZ::IO::Path prefabPath(AZ::IO::Path(AZ::Utils::GetProjectPath()) / prefabPathRealative);
+        const AZ::IO::Path prefabPathRelative(AZ::IO::Path("Assets") / "Importer" / prefabName);
+        const AZ::IO::Path prefabPath(AZ::IO::Path(AZ::Utils::GetProjectPath()) / prefabPathRelative);
         bool fileExists = AZ::IO::FileIOBase::GetInstance()->Exists(prefabPath.c_str());
 
-        if (CheckCyclicalDependency(prefabPathRealative))
+        if (CheckCyclicalDependency(prefabPathRelative))
         {
             m_prefabMakerPage->setSuccess(false);
             return;
