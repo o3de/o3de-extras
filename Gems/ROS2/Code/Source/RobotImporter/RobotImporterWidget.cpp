@@ -11,6 +11,7 @@
 #include <AzCore/Math/Uuid.h>
 #include <AzCore/Utils/Utils.h>
 
+#include "FixURDF/URDFModifications.h"
 #include "RobotImporterWidget.h"
 #include <QApplication>
 #include <QScreen>
@@ -80,6 +81,53 @@ namespace ROS2
         }
     }
 
+    void RobotImporterWidget::AddModificationWarningsToReportString(QString& report, const UrdfParser::RootObjectOutcome& parsedSdfOutcome)
+    {
+        // This is a URDF only path, and therefore the report text does not mention SDF
+        report += "# " + tr("The URDF was parsed, though results were modified to be compatible with SDFormat") + "\n";
+
+        if (!parsedSdfOutcome.m_urdfModifications.missingInertias.empty())
+        {
+            report += "## " + tr("Inertial information in the following links is missing, reset to default: ") + "\n";
+            for (const auto& modifiedTag : parsedSdfOutcome.m_urdfModifications.missingInertias)
+            {
+                report += " - " + QString::fromUtf8(modifiedTag.linkName.data(), static_cast<int>(modifiedTag.linkName.size())) + "\n";
+            }
+            report += "\n";
+        }
+
+        if (!parsedSdfOutcome.m_urdfModifications.incompleteInertias.empty())
+        {
+            report +=
+                "## " + tr("Inertial information in the following links is incomplete, set default values for listed subtags: ") + "\n";
+            for (const auto& modifiedTag : parsedSdfOutcome.m_urdfModifications.incompleteInertias)
+            {
+                report += " - " + QString::fromUtf8(modifiedTag.linkName.data(), static_cast<int>(modifiedTag.linkName.size())) + ": ";
+
+                for (const auto& tag : modifiedTag.missingTags)
+                {
+                    report += QString::fromUtf8(tag.data(), static_cast<int>(tag.size())) + ", ";
+                }
+
+                report += "\n";
+            }
+            report += "\n";
+        }
+
+        if (!parsedSdfOutcome.m_urdfModifications.duplicatedJoints.empty())
+        {
+            report += "## " + tr("The following joints were renamed to avoid duplication") + "\n";
+            for (const auto& modifiedTag : parsedSdfOutcome.m_urdfModifications.duplicatedJoints)
+            {
+                report += " - " + QString::fromUtf8(modifiedTag.oldName.data(), static_cast<int>(modifiedTag.oldName.size())) + " -> " +
+                    QString::fromUtf8(modifiedTag.newName.data(), static_cast<int>(modifiedTag.newName.size())) + "\n";
+            }
+        }
+
+        report += "\n# " + tr("The modified URDF code:") + "\n";
+        report += "```\n" + QString::fromStdString(parsedSdfOutcome.m_modifiedURDFContent) + "```\n";
+    }
+
     void RobotImporterWidget::OpenUrdf()
     {
         UrdfParser::RootObjectOutcome parsedSdfOutcome;
@@ -94,7 +142,8 @@ namespace ROS2
 
             if (Utils::IsFileXacro(m_urdfPath))
             {
-                Utils::xacro::ExecutionOutcome outcome = Utils::xacro::ParseXacro(m_urdfPath.String(), m_params, parserConfig, sdfBuilderSettings);
+                Utils::xacro::ExecutionOutcome outcome =
+                    Utils::xacro::ParseXacro(m_urdfPath.String(), m_params, parserConfig, sdfBuilderSettings);
                 // Store off the URDF parsing outcome which will be output later in this function
                 parsedSdfOutcome = AZStd::move(outcome.m_urdfHandle);
                 if (outcome)
@@ -158,15 +207,7 @@ namespace ROS2
             {
                 if (urdfParsedWithWarnings)
                 {
-                    // This is a URDF only path, and therefore the report text does not mention SDF
-                    report += "# " + tr("The URDF was parsed, though results were modified to be compatible with SDFormat") + "\n";
-                    report += tr("Modified tags in URDF:") + "\n";
-                    for (const auto& modifiedTag : parsedSdfOutcome.m_modifiedURDFTags)
-                    {
-                        report += " - " + QString::fromUtf8(modifiedTag.data(), static_cast<int>(modifiedTag.size())) + "\n";
-                    }
-                    report += "\n# " + tr("The modified URDF code:") + "\n";
-                    report += "```\n" + QString::fromStdString(parsedSdfOutcome.m_modifiedURDFContent) + "```\n";
+                    AddModificationWarningsToReportString(report, parsedSdfOutcome);
                 }
                 else
                 {
