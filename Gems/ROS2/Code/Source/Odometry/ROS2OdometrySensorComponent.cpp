@@ -65,6 +65,8 @@ namespace ROS2
             m_bodyHandle = rigidBody->m_bodyHandle;
 
             auto* sceneInterface = AZ::Interface<AzPhysics::SceneInterface>::Get();
+            AZ_Assert(sceneInterface, "Requested scene interface is missing");
+
             auto* simulatedBodyPtr = sceneInterface->GetSimulatedBodyFromHandle(sceneHandle, m_bodyHandle);
             auto* rigidbodyPtr = azrtti_cast<AzPhysics::RigidBody*>(simulatedBodyPtr);
             AZ_Assert(rigidbodyPtr, "Requested simulated body is not a rigid body");
@@ -72,6 +74,8 @@ namespace ROS2
         }
 
         auto* sceneInterface = AZ::Interface<AzPhysics::SceneInterface>::Get();
+        AZ_Assert(sceneInterface, "Requested scene interface is missing");
+
         auto* simulatedBodyPtr = sceneInterface->GetSimulatedBodyFromHandle(sceneHandle, m_bodyHandle);
         auto* rigidbodyPtr = azrtti_cast<AzPhysics::RigidBody*>(simulatedBodyPtr);
         AZ_Assert(rigidbodyPtr, "Requested simulated body is not a rigid body");
