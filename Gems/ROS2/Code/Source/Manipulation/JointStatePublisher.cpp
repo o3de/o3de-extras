@@ -38,7 +38,7 @@ namespace ROS2
         rosHeader.stamp = ROS2::ROS2Interface::Get()->GetROSTimestamp();
         m_jointStateMsg.header = rosHeader;
 
-        AZ_Assert(m_jointNames.size() == m_jointStateMsg.name.size(), "The expected message size doesn't match with the joint list size")
+        AZ_Assert(m_jointNames.size() == m_jointStateMsg.name.size(), "The expected message size doesn't match with the joint list size");
 
         for (size_t i = 0; i < m_jointStateMsg.name.size(); i++)
         {

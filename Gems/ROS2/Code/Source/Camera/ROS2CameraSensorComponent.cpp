@@ -47,7 +47,7 @@ namespace ROS2
         }
 
         const auto* component = Utils::GetGameOrEditorComponent<ROS2FrameComponent>(GetEntity());
-        AZ_Assert(component, "Entity has no ROS2FrameComponent")
+        AZ_Assert(component, "Entity has no ROS2FrameComponent");
         m_frameName = component->GetFrameID();
         ROS2::CameraCalibrationRequestBus::Handler::BusConnect(GetEntityId());
 
@@ -125,7 +125,7 @@ namespace ROS2
     AZStd::string ROS2CameraSensorComponent::GetCameraNameFromFrame(const AZ::Entity* entity) const
     {
         const auto* component = Utils::GetGameOrEditorComponent<ROS2FrameComponent>(entity);
-        AZ_Assert(component, "Entity %s has no ROS2CameraSensorComponent", entity->GetName().c_str())
+        AZ_Assert(component, "Entity %s has no ROS2CameraSensorComponent", entity->GetName().c_str());
         if (component)
         {
             AZStd::string cameraName = component->GetFrameID();

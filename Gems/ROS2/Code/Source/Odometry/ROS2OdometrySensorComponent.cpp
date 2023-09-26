@@ -60,21 +60,21 @@ namespace ROS2
             AzPhysics::RigidBody* rigidBody = nullptr;
             AZ::EntityId entityId = GetEntityId();
             Physics::RigidBodyRequestBus::EventResult(rigidBody, entityId, &Physics::RigidBodyRequests::GetRigidBody);
-            AZ_Assert(rigidBody, "Entity %s does not have rigid body.", entityId.ToString().c_str())
+            AZ_Assert(rigidBody, "Entity %s does not have rigid body.", entityId.ToString().c_str());
 
             m_bodyHandle = rigidBody->m_bodyHandle;
 
             auto* sceneInterface = AZ::Interface<AzPhysics::SceneInterface>::Get();
             auto* simulatedBodyPtr = sceneInterface->GetSimulatedBodyFromHandle(sceneHandle, m_bodyHandle);
             auto* rigidbodyPtr = azrtti_cast<AzPhysics::RigidBody*>(simulatedBodyPtr);
-            AZ_Assert(rigidbodyPtr, "Requested simulated body is not a rigid body")
+            AZ_Assert(rigidbodyPtr, "Requested simulated body is not a rigid body");
             m_initialTransform = rigidbodyPtr->GetTransform();
         }
 
         auto* sceneInterface = AZ::Interface<AzPhysics::SceneInterface>::Get();
         auto* simulatedBodyPtr = sceneInterface->GetSimulatedBodyFromHandle(sceneHandle, m_bodyHandle);
         auto* rigidbodyPtr = azrtti_cast<AzPhysics::RigidBody*>(simulatedBodyPtr);
-        AZ_Assert(rigidbodyPtr, "Requested simulated body is not a rigid body")
+        AZ_Assert(rigidbodyPtr, "Requested simulated body is not a rigid body");
 
         const auto transform = rigidbodyPtr->GetTransform().GetInverse();
         const auto localAngular = transform.TransformVector(rigidbodyPtr->GetAngularVelocity());
@@ -95,7 +95,7 @@ namespace ROS2
         m_odometryMsg.header.frame_id = ROS2Names::GetNamespacedName(GetNamespace(), "odom").c_str();
         m_odometryMsg.child_frame_id = GetFrameID().c_str();
         auto ros2Node = ROS2Interface::Get()->GetNode();
-        AZ_Assert(m_sensorConfiguration.m_publishersConfigurations.size() == 1, "Invalid configuration of publishers for Odometry sensor")
+        AZ_Assert(m_sensorConfiguration.m_publishersConfigurations.size() == 1, "Invalid configuration of publishers for Odometry sensor");
 
         const auto publisherConfig = m_sensorConfiguration.m_publishersConfigurations[OdometryMsgType];
         const auto fullTopic = ROS2Names::GetNamespacedName(GetNamespace(), publisherConfig.m_topic);
