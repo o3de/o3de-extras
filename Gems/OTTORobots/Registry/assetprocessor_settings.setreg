@@ -1,0 +1,18 @@
+{
+    "Amazon": {
+        "AssetProcessor": {
+            "Settings": {
+                "ScanFolder OTTORobots/Assets": {
+                    "watch": "@GEMROOT:OTTORobots@/Assets",
+                    "recursive": 1,
+                    "order": 101
+                },
+                "ScanFolder OTTORobots/Registry": {
+                    "watch": "@GEMROOT:OTTORobots@/Registry",
+                    "recursive": 1,
+                    "order": 102
+                }
+            }
+        }
+    }
+}
