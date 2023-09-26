@@ -50,10 +50,10 @@ namespace ROS2
         void Deactivate() override;
 
         // CameraCalibrationRequestBus::Handler overrides ...
-        [[nodiscard]] AZ::Matrix3x3 GetCameraMatrix() const override;
-        [[nodiscard]] int GetWidth() const override;
-        [[nodiscard]] int GetHeight() const override;
-        [[nodiscard]] float GetVerticalFOV() const override;
+        AZ::Matrix3x3 GetCameraMatrix() const override;
+        int GetWidth() const override;
+        int GetHeight() const override;
+        float GetVerticalFOV() const override;
 
     private:
         //! Helper that adds an image source.

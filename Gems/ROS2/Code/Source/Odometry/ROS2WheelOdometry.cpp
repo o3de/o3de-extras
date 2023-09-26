@@ -108,7 +108,7 @@ namespace ROS2
         auto ros2Node = ROS2Interface::Get()->GetNode();
         AZ_Assert(m_sensorConfiguration.m_publishersConfigurations.size() == 1, "Invalid configuration of publishers for Odometry sensor");
 
-        const auto publisherConfig = m_sensorConfiguration.m_publishersConfigurations[WheelOdometryMsgType];
+        const auto& publisherConfig = m_sensorConfiguration.m_publishersConfigurations[WheelOdometryMsgType];
         const auto fullTopic = ROS2Names::GetNamespacedName(GetNamespace(), publisherConfig.m_topic);
         m_odometryPublisher = ros2Node->create_publisher<nav_msgs::msg::Odometry>(fullTopic.data(), publisherConfig.GetQoS());
 

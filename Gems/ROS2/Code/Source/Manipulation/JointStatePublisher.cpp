@@ -54,7 +54,7 @@ namespace ROS2
         m_jointStatePublisher->publish(m_jointStateMsg);
     }
 
-    void JointStatePublisher::InitializePublisher([[maybe_unused]] AZ::EntityId entityId)
+    void JointStatePublisher::InitializePublisher()
     {
         ManipulationJoints manipulatorJoints;
         JointsManipulationRequestBus::EventResult(manipulatorJoints, m_context.m_entityId, &JointsManipulationRequests::GetJoints);

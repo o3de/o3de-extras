@@ -34,7 +34,7 @@ namespace ROS2
         JointStatePublisher(const PublisherConfiguration& configuration, const JointStatePublisherContext& context);
         virtual ~JointStatePublisher();
 
-        void InitializePublisher(AZ::EntityId entityId);
+        void InitializePublisher();
 
     private:
         void PublishMessage();

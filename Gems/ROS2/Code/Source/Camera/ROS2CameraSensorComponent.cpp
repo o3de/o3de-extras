@@ -113,7 +113,7 @@ namespace ROS2
             return;
         }
 
-        const AZ::Transform transform = GetEntity()->GetTransform()->GetWorldTM();
+        const AZ::Transform& transform = GetEntity()->GetTransform()->GetWorldTM();
         const auto timestamp = ROS2Interface::Get()->GetROSTimestamp();
 
         std_msgs::msg::Header messageHeader;
