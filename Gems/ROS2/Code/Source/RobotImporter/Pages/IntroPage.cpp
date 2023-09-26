@@ -17,7 +17,7 @@ namespace ROS2
         setTitle(QObject::tr("Introduction"));
 
         m_label = new QLabel(
-            QObject::tr("This wizard allows you to build a robot prefab using a URDF description file."
+            QObject::tr("This wizard allows you to build a robot prefab using a URDF description file or object/environment prefab using an SDF file."
                         " Before processing, please make sure that all of the robot's description packages have been built and sourced."
                         " Details can be found <a "
                         "href=\"https://www.o3de.org/docs/user-guide/interactivity/robotics/importing-robot/"
@@ -25,7 +25,7 @@ namespace ROS2
                         " The Open 3D Engine can only use files in its internal <a "
                         "href=\"https://www.o3de.org/docs/user-guide/assets/asset-types/\">format</a>."
                         "During the import process, the assets will be imported and processed."
-                        "A level must be opened before using the URDF Importer."));
+                        "A level must be opened before using the URDF/SDF Importer."));
         m_label->setTextFormat(Qt::RichText);
         m_label->setOpenExternalLinks(true);
         m_label->setWordWrap(true);

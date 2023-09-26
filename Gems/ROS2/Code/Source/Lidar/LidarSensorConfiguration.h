@@ -27,6 +27,9 @@ namespace ROS2
 
         LidarSensorConfiguration(AZStd::vector<LidarTemplate::LidarModel> availableModels = {});
 
+        //! Update the lidar system features based on the current lidar system selected.
+        void FetchLidarImplementationFeatures();
+
         LidarSystemFeatures m_lidarSystemFeatures;
 
         AZStd::string m_lidarSystem;
@@ -46,8 +49,6 @@ namespace ROS2
 
         //! Update the lidar configuration based on the current lidar model selected.
         void FetchLidarModelConfiguration();
-        //! Update the lidar system features based on the current lidar system selected.
-        void FetchLidarImplementationFeatures();
 
         AZ::Crc32 OnLidarModelSelected();
         AZ::Crc32 OnLidarImplementationSelected();

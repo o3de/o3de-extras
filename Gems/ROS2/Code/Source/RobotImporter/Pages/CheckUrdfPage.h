@@ -22,12 +22,14 @@ namespace ROS2
         Q_OBJECT
     public:
         explicit CheckUrdfPage(QWizard* parent);
-        void ReportURDFResult(const QString& result, bool isSuccess);
+        void ReportURDFResult(const QString& result, bool isSuccess, bool isWarning = false);
         bool isComplete() const override;
+        bool isWarning() const;
 
     private:
         QTextEdit* m_log;
         QString m_fileName;
         bool m_success;
+        bool m_warning;
     };
 } // namespace ROS2

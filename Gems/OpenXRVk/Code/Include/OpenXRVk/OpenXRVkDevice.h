@@ -11,6 +11,7 @@
 #include <XR/XRDevice.h>
 #include <XR/XRSwapChain.h>
 #include <OpenXRVk_Platform.h>
+#include <Atom/RHI.Reflect/Vulkan/XRVkDescriptors.h>
 
 namespace OpenXRVk
 {
@@ -45,6 +46,9 @@ namespace OpenXRVk
         //! Get the native physical device
         VkPhysicalDevice GetNativePhysicalDevice() const;
 
+        //! Returns the graphic binding for a hardware queue
+        const AZ::Vulkan::XRDeviceDescriptor::GraphicsBinding& GetGraphicsBinding(AZ::RHI::HardwareQueueClass queueClass) const;
+
         //! Reserve space for appropriate number of views 
         void InitXrViews(uint32_t numViews);
 
@@ -69,6 +73,7 @@ namespace OpenXRVk
 
         VkDevice m_xrVkDevice = VK_NULL_HANDLE;
         VkPhysicalDevice m_xrVkPhysicalDevice = VK_NULL_HANDLE;
+        AZStd::array<AZ::Vulkan::XRDeviceDescriptor::GraphicsBinding, AZ::RHI::HardwareQueueClassCount> m_xrQueueBinding;
         XrFrameState m_frameState{ XR_TYPE_FRAME_STATE };
         AZStd::vector<XrCompositionLayerBaseHeader*> m_xrLayers;
         XrCompositionLayerProjection m_xrLayer{ XR_TYPE_COMPOSITION_LAYER_PROJECTION };

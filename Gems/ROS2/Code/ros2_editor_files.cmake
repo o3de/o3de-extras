@@ -12,6 +12,8 @@ set(FILES
     Source/Lidar/LidarRegistrarEditorSystemComponent.h
     Source/Manipulation/JointsManipulationEditorComponent.cpp
     Source/Manipulation/JointsManipulationEditorComponent.h
+    Source/RobotImporter/FixURDF/FixURDF.cpp
+    Source/RobotImporter/FixURDF/FixURDF.h
     Source/RobotImporter/Pages/CheckAssetPage.cpp
     Source/RobotImporter/Pages/CheckAssetPage.h
     Source/RobotImporter/Pages/CheckUrdfPage.cpp
@@ -45,6 +47,8 @@ set(FILES
     Source/RobotImporter/URDF/JointsMaker.h
     Source/RobotImporter/URDF/PrefabMakerUtils.cpp
     Source/RobotImporter/URDF/PrefabMakerUtils.h
+    Source/RobotImporter/URDF/SensorsMaker.cpp
+    Source/RobotImporter/URDF/SensorsMaker.h
     Source/RobotImporter/URDF/UrdfParser.cpp
     Source/RobotImporter/URDF/UrdfParser.h
     Source/RobotImporter/URDF/URDFPrefabMaker.cpp

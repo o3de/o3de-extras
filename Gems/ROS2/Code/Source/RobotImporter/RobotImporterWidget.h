@@ -69,7 +69,7 @@ namespace ROS2
         PrefabMakerPage* m_prefabMakerPage;
         XacroParamsPage* m_xacroParamsPage;
         AZ::IO::Path m_urdfPath;
-        sdf::Root m_parsedUrdf{};
+        sdf::Root m_parsedSdf{};
 
         //! User's choice to copy meshes during urdf import
         bool m_importAssetWithUrdf{ false };
@@ -88,7 +88,7 @@ namespace ROS2
 
         //! Checks if the importedPrefabFilename is the same as focused prefab name.
         //! @param importedPrefabFilename name of imported prefab
-        //! @return True if names of prefabs are identical or an erorr occured during validation
+        //! @return True if names of prefabs are identical or an error occurred during validation
         bool CheckCyclicalDependency(AZ::IO::Path importedPrefabFilename);
 
         //! Report an error to the user.

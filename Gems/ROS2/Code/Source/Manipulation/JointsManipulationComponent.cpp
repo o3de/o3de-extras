@@ -125,7 +125,7 @@ namespace ROS2
                 auto* prismaticComponent =
                     azrtti_cast<PhysX::JointComponent*>(Utils::GetGameOrEditorComponent<PhysX::PrismaticJointComponent>(entity));
                 auto* articulationComponent = Utils::GetGameOrEditorComponent<PhysX::ArticulationLinkComponent>(entity);
-                bool classicJoint = hingeComponent || prismaticComponent;
+                [[maybe_unused]] bool classicJoint = hingeComponent || prismaticComponent;
                 AZ_Warning(
                     "JointsManipulationComponent",
                     (classicJoint && supportsClassicJoints) || !classicJoint,
@@ -429,12 +429,31 @@ namespace ROS2
         }
     }
 
+    AZStd::string JointsManipulationComponent::GetManipulatorNamespace() const
+    {
+        auto* frameComponent = Utils::GetGameOrEditorComponent<ROS2FrameComponent>(m_entity);
+        AZ_Assert(frameComponent, "ROS2FrameComponent is required for joints.");
+        return frameComponent->GetNamespace();
+    }
+
     void JointsManipulationComponent::OnTick(float deltaTime, [[maybe_unused]] AZ::ScriptTimePoint time)
     {
         if (m_manipulationJoints.empty())
         {
+            const AZStd::string manipulatorNamespace = GetManipulatorNamespace();
+            AZStd::unordered_map<AZStd::string, JointPosition> intialPositonNamespaced;
+            AZStd::transform(
+                m_initialPositions.begin(),
+                m_initialPositions.end(),
+                AZStd::inserter(intialPositonNamespaced, intialPositonNamespaced.end()),
+                [&manipulatorNamespace](const auto& pair)
+                {
+                    return AZStd::make_pair(ROS2::ROS2Names::GetNamespacedName(manipulatorNamespace, pair.first), pair.second);
+                });
+
             m_manipulationJoints = Internal::GetAllEntityHierarchyJoints(GetEntityId());
-            Internal::SetInitialPositions(m_manipulationJoints, m_initialPositions);
+
+            Internal::SetInitialPositions(m_manipulationJoints, intialPositonNamespaced);
             if (m_manipulationJoints.empty())
             {
                 AZ_Warning("JointsManipulationComponent", false, "No manipulation joints to handle!");

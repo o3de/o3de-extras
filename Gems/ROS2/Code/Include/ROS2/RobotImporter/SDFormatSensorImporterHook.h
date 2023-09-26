@@ -56,4 +56,7 @@ namespace ROS2::SDFormat
         using ConvertSDFSensorCallback = AZStd::function<ConvertSensorOutcome(AZ::Entity&, const sdf::Sensor&)>;
         ConvertSDFSensorCallback m_sdfSensorToComponentCallback;
     };
+
+    //! Buffer for SensorImporterHook data
+    using SensorImporterHooksStorage = AZStd::vector<ROS2::SDFormat::SensorImporterHook>;
 } // namespace ROS2::SDFormat
