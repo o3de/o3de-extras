@@ -49,6 +49,8 @@ namespace ROS2
                     ->ClassElement(AZ::Edit::ClassElements::EditorData, "GripperActionServer")
                     ->Attribute(AZ::Edit::Attributes::AppearsInAddComponentMenu, AZ_CRC("Game"))
                     ->Attribute(AZ::Edit::Attributes::Category, "ROS2")
+                    ->Attribute(AZ::Edit::Attributes::Icon, "Editor/Icons/Components/GripperActionServerComponent.svg")
+                    ->Attribute(AZ::Edit::Attributes::ViewportIcon, "Editor/Icons/Components/Viewport/GripperActionServerComponent.svg")
                     ->DataElement(
                         AZ::Edit::UIHandlers::Default,
                         &GripperActionServerComponent::m_gripperActionServerName,

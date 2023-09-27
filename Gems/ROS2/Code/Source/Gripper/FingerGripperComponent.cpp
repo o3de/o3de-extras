@@ -65,6 +65,8 @@ namespace ROS2
                     ->ClassElement(AZ::Edit::ClassElements::EditorData, "FingerGripperComponent")
                     ->Attribute(AZ::Edit::Attributes::AppearsInAddComponentMenu, AZ_CRC("Game"))
                     ->Attribute(AZ::Edit::Attributes::Category, "ROS2")
+                    ->Attribute(AZ::Edit::Attributes::Icon, "Editor/Icons/Components/FingerGripperComponent.svg")
+                    ->Attribute(AZ::Edit::Attributes::ViewportIcon, "Editor/Icons/Components/Viewport/FingerGripperComponent.svg")
                     ->DataElement(
                         AZ::Edit::UIHandlers::Default,
                         &FingerGripperComponent::m_velocityEpsilon,
