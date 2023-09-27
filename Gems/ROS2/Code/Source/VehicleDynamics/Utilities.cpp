@@ -104,7 +104,7 @@ namespace ROS2::VehicleDynamics::Utilities
                     AZ_Warning(
                         "GetAllSteeringEntitiesData",
                         false,
-                        "Steering entity specified for WheelController in entity %s does not have a HingeJointComponent nor an "
+                        "Steering entity specified for WheelController in entity %s does not have either a HingeJointComponent or an "
                         "ArticulationLinkComponent, ignoring",
                         wheel.ToString().c_str());
                     continue;
@@ -131,11 +131,9 @@ namespace ROS2::VehicleDynamics::Utilities
                 if (articulation)
                 {
                     steeringData.m_steeringJoint = articulation->GetId();
-                    bool hasFreeAxis = Utils::TryGetFreeArticulationAxis(steeringData.m_steeringEntity, steeringData.m_axis);
-                    if (!hasFreeAxis)
-                    {
-                        AZ_Error("VehicleDynamics::Utilities", false, "Articulation steering has no free axis somehow");
-                    }
+                    const bool hasFreeAxis = Utils::TryGetFreeArticulationAxis(steeringData.m_steeringEntity, steeringData.m_axis);
+
+                    AZ_Error("VehicleDynamics::Utilities", hasFreeAxis, "Articulation steering has no free axis somehow");
                 }
                 else
                 {
@@ -217,11 +215,9 @@ namespace ROS2::VehicleDynamics::Utilities
                 if (articulation)
                 {
                     wheelData.m_wheelJoint = articulation->GetId();
-                    bool hasFreeAxis = Utils::TryGetFreeArticulationAxis(wheelData.m_wheelEntity, wheelData.m_axis);
-                    if (!hasFreeAxis)
-                    {
-                        AZ_Error("VehicleDynamics::Utilities", false, "Articulation wheel has no free axis somehow");
-                    }
+                    const bool hasFreeAxis = Utils::TryGetFreeArticulationAxis(wheelData.m_wheelEntity, wheelData.m_axis);
+
+                    AZ_Error("VehicleDynamics::Utilities", hasFreeAxis, "Articulation wheel has no free axis somehow");
                 }
                 else
                 {
