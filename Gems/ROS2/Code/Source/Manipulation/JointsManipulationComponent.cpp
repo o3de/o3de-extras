@@ -21,6 +21,7 @@
 #include <Source/ArticulationLinkComponent.h>
 #include <Source/HingeJointComponent.h>
 #include <Source/PrismaticJointComponent.h>
+#include <Utilities/ArticulationsUtilities.h>
 
 namespace ROS2
 {
@@ -41,26 +42,10 @@ namespace ROS2
             joints[jointName] = jointInfo;
         }
 
-        bool TryGetFreeArticulationAxis(const AZ::EntityId& entityId, PhysX::ArticulationJointAxis& axis)
-        {
-            for (AZ::u8 i = 0; i <= static_cast<AZ::u8>(PhysX::ArticulationJointAxis::Z); i++)
-            {
-                PhysX::ArticulationJointMotionType type = PhysX::ArticulationJointMotionType::Locked;
-                axis = static_cast<PhysX::ArticulationJointAxis>(i);
-                // Use bus to prevent compilation error without PhysX Articulation support.
-                PhysX::ArticulationJointRequestBus::EventResult(type, entityId, &PhysX::ArticulationJointRequests::GetMotion, axis);
-                if (type != PhysX::ArticulationJointMotionType::Locked)
-                {
-                    return true;
-                }
-            }
-            return false;
-        }
-
         void AddArticulationJointInfo(const AZ::EntityComponentIdPair& idPair, const AZStd::string& jointName, ManipulationJoints& joints)
         {
             PhysX::ArticulationJointAxis freeAxis;
-            bool hasFreeAxis = TryGetFreeArticulationAxis(idPair.GetEntityId(), freeAxis);
+            bool hasFreeAxis = Utils::TryGetFreeArticulationAxis(idPair.GetEntityId(), freeAxis);
             if (!hasFreeAxis)
             { // Do not add a joint since it is a fixed one
                 AZ_Printf("JointsManipulationComponent", "Articulation joint %s is fixed, skipping\n", jointName.c_str());

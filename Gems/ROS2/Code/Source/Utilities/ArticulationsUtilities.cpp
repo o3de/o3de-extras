@@ -6,9 +6,9 @@
  *
  */
 
-#include <AzFramework/Physics/PhysicsScene.h>
 #include "ArticulationsUtilities.h"
 #include "Source/ArticulationLinkComponent.h"
+#include <AzFramework/Physics/PhysicsScene.h>
 
 namespace ROS2::Utils
 {
@@ -54,7 +54,8 @@ namespace ROS2::Utils
         return GetRootOfArticulation(parentEntity->GetId());
     }
 
-    AZStd::unordered_map<AZ::EntityId, AzPhysics::SimulatedBodyHandle> GetSimulatedBodyHandles(AzPhysics::SceneHandle sceneHandle, AZ::EntityId entityId)
+    AZStd::unordered_map<AZ::EntityId, AzPhysics::SimulatedBodyHandle> GetSimulatedBodyHandles(
+        AzPhysics::SceneHandle sceneHandle, AZ::EntityId entityId)
     {
         AZ::EntityId rootArticulationEntity = GetRootOfArticulation(entityId);
         AZ::Entity* rootEntity = nullptr;
@@ -68,9 +69,27 @@ namespace ROS2::Utils
         {
             auto* sceneInterface = AZ::Interface<AzPhysics::SceneInterface>::Get();
             const auto* body = sceneInterface->GetSimulatedBodyFromHandle(sceneHandle, articulationHandle);
-            result.insert({body->GetEntityId(), articulationHandle});
+            result.insert({ body->GetEntityId(), articulationHandle });
         }
 
         return result;
+    }
+
+    bool TryGetFreeArticulationAxis(const AZ::EntityId& entityId, PhysX::ArticulationJointAxis& axis)
+    {
+        PhysX::ArticulationJointAxis tempAxis;
+        for (AZ::u8 i = 0; i <= static_cast<AZ::u8>(PhysX::ArticulationJointAxis::Z); i++)
+        {
+            PhysX::ArticulationJointMotionType type = PhysX::ArticulationJointMotionType::Locked;
+            tempAxis = static_cast<PhysX::ArticulationJointAxis>(i);
+            // Use bus to prevent compilation error without PhysX Articulation support.
+            PhysX::ArticulationJointRequestBus::EventResult(type, entityId, &PhysX::ArticulationJointRequests::GetMotion, tempAxis);
+            if (type != PhysX::ArticulationJointMotionType::Locked)
+            {
+                axis = tempAxis;
+                return true;
+            }
+        }
+        return false;
     }
 } // namespace ROS2::Utils

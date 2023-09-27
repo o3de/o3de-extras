@@ -9,6 +9,7 @@
 #pragma once
 #include <AzCore/Component/Entity.h>
 #include <AzFramework/Physics/Common/PhysicsSimulatedBody.h>
+#include <PhysX/ArticulationTypes.h>
 
 namespace ROS2::Utils
 {
@@ -21,5 +22,12 @@ namespace ROS2::Utils
     //! @param sceneHandle A handle to the scene.
     //! @param entityId Any entity in the articulation tree.
     //! @return Handles to all the articulation links in the tree.
-    AZStd::unordered_map<AZ::EntityId, AzPhysics::SimulatedBodyHandle> GetSimulatedBodyHandles(AzPhysics::SceneHandle sceneHandle, AZ::EntityId entityId);
+    AZStd::unordered_map<AZ::EntityId, AzPhysics::SimulatedBodyHandle> GetSimulatedBodyHandles(
+        AzPhysics::SceneHandle sceneHandle, AZ::EntityId entityId);
+
+    //! Try to get a free articulation axis of an articulation link.
+    //! @param entityId The entity with the articulation link.
+    //! @param axis Is set to a free axis, if one exists.
+    //! @return Whether we found a free articulation axis or not.
+    bool TryGetFreeArticulationAxis(const AZ::EntityId& entityId, PhysX::ArticulationJointAxis& axis);
 } // namespace ROS2::Utils
