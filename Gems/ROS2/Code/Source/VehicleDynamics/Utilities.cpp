@@ -104,7 +104,7 @@ namespace ROS2::VehicleDynamics::Utilities
                     AZ_Warning(
                         "GetAllSteeringEntitiesData",
                         false,
-                        "Steering entity specified for WheelController in entity %s does not have a HingeJointComponent nor an "
+                        "Steering entity specified for WheelController in entity %s does not have either a HingeJointComponent or an "
                         "ArticulationLinkComponent, ignoring",
                         wheel.ToString().c_str());
                     continue;
