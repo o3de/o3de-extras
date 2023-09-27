@@ -135,7 +135,7 @@ namespace ROS2
 
         m_table->setItem(i, Columns::Type, createCell(isOk, type));
 
-        if (assetSourcePath)
+        if (assetSourcePath && !assetSourcePath->empty())
         {
             m_table->setItem(
                 i, Columns::SourceAsset, createCell(true, QString::fromUtf8(assetSourcePath->data(), assetSourcePath->size())));
