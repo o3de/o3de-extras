@@ -460,7 +460,7 @@ namespace ROS2
                 AZ::TickBus::Handler::BusDisconnect();
                 return;
             }
-            m_jointStatePublisher->InitializePublisher(GetEntityId());
+            m_jointStatePublisher->InitializePublisher();
         }
         MoveToSetPositions(deltaTime);
     }
