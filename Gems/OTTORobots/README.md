@@ -1,7 +1,5 @@
 # OTTO Robots Gem
 
-<!-- ![](docs/images/OttoRobots.png) -->
-
 ## General description
 
 This gem contains OTTO1500 and OTTO600 assets and the stands for these robots.
