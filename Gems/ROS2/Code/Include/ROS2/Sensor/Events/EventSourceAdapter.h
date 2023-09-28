@@ -8,6 +8,7 @@
 
 #pragma once
 
+#include <AzCore/Serialization/EditContext.h>
 #include <ROS2/ROS2Bus.h>
 #include <ROS2/Sensor/Events/SensorEventSource.h>
 #include <ROS2/Sensor/SensorConfiguration.h>

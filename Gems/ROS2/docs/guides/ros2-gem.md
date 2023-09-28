@@ -14,7 +14,7 @@ You can browse Doxygen-generated documentation on [Gem's GitHub page](https://ro
   - ROS2SystemComponent
 - __Core abstractions__
   - ROS2FrameComponent
-  - ROS2SensorComponent
+  - ROS2SensorComponentBase
 - __Sensors__
   - ROS2CameraSensorComponent
   - ROS2GNSSSensorComponent
@@ -93,15 +93,21 @@ All Sensors and the Robot Control Component require `ROS2FrameComponent`.
 
 ### Sensors
 
-Sensors are Components deriving from `ROS2SensorComponent`. They acquire data from the simulated environment and publish
-it to ROS 2 domain.
+Sensors are Components deriving from `ROS2SensorComponentBase` specialization. They acquire data from the simulated 
+environment and publish it to ROS 2 domain.
 
 - Each sensor has a configuration, including one or more Publishers.
 - Sensors publish at a given rate (frequency).
 - Some sensors can be visualised.
 
-If you intend to add your own sensor, it might be useful to look at how sensors already provided within the Gem are
-implemented.
+Sensors processing and publishing depends on their base class - `ROS2SensorComponentBase` that is specialized using the 
+type of event source. At this moment, there are two event sources available: 
+- TickBasedSource - that signals events according to draw calls,
+- PhysicsBasedSource - that signals events based on physics.
+
+Above sources events are further handled by an adapter that is internal to `ROS2SensorComponentBase`. This way an 
+additional event (adapted event) is provided to synchronize source event signals to specific frequency. If you intend to 
+add your own sensor, it might be useful to look at how sensors already provided within the Gem are implemented.
 
 Sensors can be fall into one of two categories:
 - sensors which replicate real devices to some degree of realism.

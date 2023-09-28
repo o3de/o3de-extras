@@ -12,7 +12,6 @@
 #include <AzCore/Serialization/SerializeContext.h>
 #include <ROS2/Lidar/LidarRegistrarBus.h>
 #include <ROS2/Lidar/LidarSystemBus.h>
-#include <ROS2/Sensor/ROS2SensorComponent.h>
 
 #include "LidarRaycaster.h"
 #include "LidarSensorConfiguration.h"
