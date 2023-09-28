@@ -202,8 +202,7 @@ namespace ROS2
                 false,
                 "PositionConroller: command size %d does not match the number of joints %d",
                 command.data.size(),
-                m_jointNames.size())
-            return;
+                m_jointNames.size()) return;
         }
 
         for (size_t i = 0; i < command.data.size(); i++)
