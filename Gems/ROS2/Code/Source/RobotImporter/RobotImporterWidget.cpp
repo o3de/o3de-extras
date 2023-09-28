@@ -447,6 +447,7 @@ namespace ROS2
         const AZ::IO::Path prefabPath(AZ::IO::Path(AZ::Utils::GetProjectPath()) / prefabPathRelative);
         bool fileExists = AZ::IO::FileIOBase::GetInstance()->Exists(prefabPath.c_str());
 
+        if (CheckCyclicalDependency(prefabPathRelative))
         {
             m_prefabMakerPage->setSuccess(false);
             return;
