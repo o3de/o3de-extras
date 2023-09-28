@@ -18,7 +18,7 @@ manipulation diagram (simplified by danielemorra98):
 
 - If using camera to do actual detection (as opposed to using ground truth)
   - Choose camera configuration - RGB, depth, resolution, FOV, etc.
-  - Set up O3DE [`ROS2SensorComponent`](https://github.com/RobotecAI/o3de-ros2-gem/blob/de2d1cdfa68310c6c0d885d65c0d62fa972a4a69/Code/Include/ROS2/Sensor/ROS2SensorComponent.h).
+  - Set up O3DE `ROS2SensorComponentBase`.
     Choose camera transport topic name and type (
     [`sensor_msgs/*`](https://docs.ros2.org/latest/api/sensor_msgs/index-msg.html))
     for communication with ROS.

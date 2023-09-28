@@ -43,7 +43,6 @@ namespace ROS2
 
     private:
         //////////////////////////////////////////////////////////////////////////
-        // ROS2SensorComponent overrides
         void FrequencyTick();
 
         bool m_canRaycasterPublish = false;
