@@ -248,7 +248,13 @@ namespace ROS2
 
             for (auto& [id, materialAssignment] : overrides)
             {
-                // TODO: All of the texture references need to become ImageAsset references, not strings.
+                // To truly add PBR conversion, all of the texture map references need to get detected and handled.
+                // The code in the following commented-out blocks demonstrate how to detect the texture maps 
+                // and shows the correct property overrides to connect them to. However, the property overrides
+                // currently require an ImageAsset reference, not a string, so the code won't quite work as-is.
+                // Either the Material overrides need to be changed to work with strings, or this code needs to be changed
+                // to provide ImageAsset references, which would mean that the texture references would already need to be resolved
+                // and processed by the Asset Processor.
                 /*
                 if (auto texture = pbrWorkflow->AlbedoMap(); !texture.empty())
                 {
@@ -274,7 +280,6 @@ namespace ROS2
 
                 if (pbrWorkflow->Type() == sdf::PbrWorkflowType::METAL)
                 {
-                    // TODO: All of the texture references need to become ImageAsset references, not strings.
                     /*
                     if (auto texture = pbrWorkflow->RoughnessMap(); !texture.empty())
                     {
