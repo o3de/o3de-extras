@@ -40,7 +40,7 @@ namespace ROS2
         bool useArticulations,
         const AZStd::optional<AZ::Transform> spawnPosition)
         : m_root(root)
-        , m_visualsMaker{}
+        , m_visualsMaker(urdfAssetsMapping)
         , m_collidersMaker(urdfAssetsMapping)
         , m_prefabPath(std::move(prefabPath))
         , m_urdfAssetsMapping(urdfAssetsMapping)
@@ -49,10 +49,6 @@ namespace ROS2
     {
         AZ_Assert(!m_prefabPath.empty(), "Prefab path is empty");
         AZ_Assert(m_root, "SDF Root is nullptr");
-        if (m_root != nullptr)
-        {
-            m_visualsMaker = VisualsMaker(urdfAssetsMapping);
-        }
     }
 
     URDFPrefabMaker::CreatePrefabTemplateResult URDFPrefabMaker::CreatePrefabTemplateFromUrdfOrSdf()

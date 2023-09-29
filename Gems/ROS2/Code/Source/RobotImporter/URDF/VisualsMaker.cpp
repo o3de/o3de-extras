@@ -466,6 +466,8 @@ namespace ROS2
         auto modelAsset = AZ::Data::AssetManager::Instance().GetAsset<AZ::RPI::ModelAsset>(assetId, AZ::Data::AssetLoadBehavior::Default);
         modelAsset.BlockUntilLoadComplete();
 
+        AZ_Error("AddMaterial", modelAsset.IsReady(), "Trying to create materials for a model that couldn't load. The generated material overrides may not work correctly.");
+
         // Initialize the material component configuration to contain all of the material mappings from the model.
         AZ::Render::MaterialComponentConfig config;
         config.m_materials = AZ::Render::GetDefautMaterialMapFromModelAsset(modelAsset);
