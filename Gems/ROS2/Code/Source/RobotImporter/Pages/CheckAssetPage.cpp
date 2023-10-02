@@ -98,30 +98,53 @@ namespace ROS2
         const AZ::Uuid assetUuid,
         const AZStd::string sdfPath,
         const QString& type,
-        const AZStd::string assetSourcePath,
-        const AZ::Crc32& crc32,
-        const AZStd::string resolvedSdfPath)
+        const AZStd::optional<AZStd::string>& assetSourcePath,
+        const AZStd::optional<AZ::Crc32>& crc32,
+        const AZStd::optional<AZStd::string>& resolvedSdfPath)
     {
         int i = m_table->rowCount();
         m_table->setRowCount(i + 1);
 
-        bool isOk = !assetSourcePath.empty();
+        bool isOk = assetSourcePath.has_value() && resolvedSdfPath.has_value();
         if (!isOk)
         {
             m_missingCount++;
         }
         SetTitle();
-        AZStd::string crcStr = AZStd::to_string(crc32);
+        AZStd::string crcStr;
+        if (crc32)
+        {
+            crcStr = AZStd::to_string(*crc32);
+        }
         QTableWidgetItem* p = createCell(isOk, QString::fromUtf8(sdfPath.data(), sdfPath.size()));
         if (crc32 != AZ::Crc32())
         {
             p->setToolTip(tr("CRC for file : ") + QString::fromUtf8(crcStr.data(), crcStr.size()));
         }
         m_table->setItem(i, Columns::SdfMeshPath, p);
-        m_table->setItem(
-            i, Columns::ResolvedMeshPath, createCell(isOk, QString::fromUtf8(resolvedSdfPath.data(), resolvedSdfPath.size())));
+
+        if (resolvedSdfPath)
+        {
+            m_table->setItem(
+                i, Columns::ResolvedMeshPath, createCell(true, QString::fromUtf8(resolvedSdfPath->data(), resolvedSdfPath->size())));
+        }
+        else
+        {
+            m_table->setItem(i, Columns::ResolvedMeshPath, createCell(false, tr("Not found")));
+        }
+
         m_table->setItem(i, Columns::Type, createCell(isOk, type));
-        m_table->setItem(i, Columns::SourceAsset, createCell(isOk, QString::fromUtf8(assetSourcePath.data(), assetSourcePath.size())));
+
+        if (assetSourcePath && !assetSourcePath->empty())
+        {
+            m_table->setItem(
+                i, Columns::SourceAsset, createCell(true, QString::fromUtf8(assetSourcePath->data(), assetSourcePath->size())));
+        }
+        else
+        {
+            m_table->setItem(i, Columns::SourceAsset, createCell(false, tr("Not found")));
+        }
+
         if (isOk)
         {
             m_table->item(i, Columns::ResolvedMeshPath)->setIcon(m_okIcon);
@@ -131,7 +154,7 @@ namespace ROS2
             m_table->item(i, Columns::ResolvedMeshPath)->setIcon(m_failureIcon);
             m_table->setItem(i, Columns::ProductAsset, createCell(false, QString()));
         }
-        m_assetsPaths.push_back(assetSourcePath);
+        m_assetsPaths.push_back(assetSourcePath ? *assetSourcePath : AZStd::string());
         m_assetsUuids.push_back(assetUuid);
     }
 
