@@ -105,7 +105,7 @@ namespace ROS2
         int i = m_table->rowCount();
         m_table->setRowCount(i + 1);
 
-        // The Asset ID GUID not be null(all zeros) and the asset source path must not be empty
+        // The Asset ID GUID must not be null(all zeros) and the asset source path must not be empty
         bool isOk = (assetSourcePath.has_value() && !assetSourcePath->empty() && assetSourcePath != "not found")
             && (resolvedSdfPath.has_value() && !resolvedSdfPath->empty()) && !assetUuid.IsNull();
         if (!isOk)

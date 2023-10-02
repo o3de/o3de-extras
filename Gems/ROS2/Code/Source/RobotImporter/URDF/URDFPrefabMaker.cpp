@@ -535,7 +535,7 @@ namespace ROS2
             return createEntityResult;
         }
 
-        // Get the model entity and update it's transform component with the pose information
+        // Get the model entity and update its transform component with the pose information
         AZ::EntityId entityId = createEntityResult.GetValue();
         AZStd::unique_ptr<AZ::Entity> entity(AzToolsFramework::GetEntityById(entityId));
 
