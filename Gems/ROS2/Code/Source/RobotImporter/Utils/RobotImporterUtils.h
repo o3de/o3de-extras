@@ -144,7 +144,7 @@ namespace ROS2::Utils
     const sdf::Model* GetModelContainingLink(const sdf::Root& root, AZStd::string_view linkName);
 
     //! @param root reference to SDF Root object representing the root of the parsed SDF xml document
-    //! @param link SDF link object to lookup in the SDF document
+    //! @param link SDF link reference to lookup in the SDF document
     const sdf::Model* GetModelContainingLink(const sdf::Root& root, const sdf::Link& link);
 
     //! Returns the SDF model object which contains the specified joint
@@ -155,8 +155,14 @@ namespace ROS2::Utils
     const sdf::Model* GetModelContainingJoint(const sdf::Root& root, AZStd::string_view jointName);
 
     //! @param root reference to SDF Root object representing the root of the parsed SDF xml document
-    //! @param joint SDF joint pointer to lookup in the SDF document
+    //! @param joint SDF joint reference to lookup in the SDF document
     const sdf::Model* GetModelContainingJoint(const sdf::Root& root, const sdf::Joint& joint);
+
+    //! Returns the SDF model object which contains the specified model
+    //! @param root reference to SDF Root object representing the root of the parsed SDF xml document
+    //! @param model SDF model reference to lookup in the SDF document
+    //! @return pointer to parent model containing this model if the model is nested, otherwise nullptr
+    const sdf::Model* GetModelContainingModel(const sdf::Root& root, const sdf::Model& model);
 
     //! Callback used to check for file exist of a path referenced within a URDF/SDF file
     //! @param path Candidate local filesystem path to check for existence

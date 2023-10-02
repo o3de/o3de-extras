@@ -330,14 +330,11 @@ namespace ROS2
                         type = tr("Collider");
                     }
 
-                    if (m_urdfAssetsMapping->contains(meshPath))
-                    {
-                        const auto& asset = m_urdfAssetsMapping->at(meshPath);
-                        sourceAssetUuid = asset.m_availableAssetInfo.m_sourceGuid;
-                        sourcePath = asset.m_availableAssetInfo.m_sourceAssetRelativePath.String();
-                        resolvedPath = asset.m_resolvedUrdfPath.String();
-                        crc = asset.m_urdfFileCRC;
-                    }
+                    const auto& asset = m_urdfAssetsMapping->at(meshPath);
+                    sourceAssetUuid = asset.m_availableAssetInfo.m_sourceGuid;
+                    sourcePath = asset.m_availableAssetInfo.m_sourceAssetRelativePath.String();
+                    resolvedPath = asset.m_resolvedUrdfPath.String();
+                    crc = asset.m_urdfFileCRC;
                 }
                 m_assetPage->ReportAsset(sourceAssetUuid, meshPath, type, sourcePath, crc, resolvedPath);
             }
