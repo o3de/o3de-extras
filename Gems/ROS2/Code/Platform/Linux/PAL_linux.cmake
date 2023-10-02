@@ -9,11 +9,11 @@
 set(PAL_TRAIT_BUILD_ROS2_GEM_SUPPORTED TRUE)
 
 if(${CMAKE_SYSTEM_PROCESSOR} STREQUAL "x86_64")
-    ly_associate_package(PACKAGE_NAME sdformat-13.5.0-rev1-linux
+    ly_associate_package(PACKAGE_NAME sdformat-13.5.0-rev2-linux
         TARGETS sdformat
-        PACKAGE_HASH 71a86e255cfc7a176f6087e069fb26c9837c98e277becf87f3a4b0e25fe90bd3)
+        PACKAGE_HASH b8e988954c07f41b99ba0950da3f4d3e8489ffabaaff157f79ab0c716e2142e0)
 elseif(${CMAKE_SYSTEM_PROCESSOR} STREQUAL "aarch64")
-    ly_associate_package(PACKAGE_NAME sdformat-13.5.0-rev1-linux-aarch64
+    ly_associate_package(PACKAGE_NAME sdformat-13.5.0-rev2-linux-aarch64
         TARGETS sdformat
-        PACKAGE_HASH c8ca2ffad604162cbc8ed852c8ea8695851c4c69c5f39f2a9d8e423511ce78f9)
+        PACKAGE_HASH 7e51cc60c61a058c1f8aba7277574946ab974af3ff4601884e72380e8585c0ea)
 endif()
