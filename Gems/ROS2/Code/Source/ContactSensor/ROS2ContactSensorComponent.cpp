@@ -44,7 +44,9 @@ namespace ROS2
                 editContext->Class<ROS2ContactSensorComponent>("ROS2 Contact Sensor", "Contact detection controller")
                     ->ClassElement(AZ::Edit::ClassElements::EditorData, "")
                     ->Attribute(AZ::Edit::Attributes::Category, "ROS2")
-                    ->Attribute(AZ::Edit::Attributes::AppearsInAddComponentMenu, AZ_CRC_CE("Game"));
+                    ->Attribute(AZ::Edit::Attributes::AppearsInAddComponentMenu, AZ_CRC_CE("Game"))
+                    ->Attribute(AZ::Edit::Attributes::Icon, "Editor/Icons/Components/ROS2ContactSensor.svg")
+                    ->Attribute(AZ::Edit::Attributes::ViewportIcon, "Editor/Icons/Components/Viewport/ROS2ContactSensor.svg");
             }
         }
     }
