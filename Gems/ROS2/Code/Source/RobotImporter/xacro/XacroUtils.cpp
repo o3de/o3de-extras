@@ -98,7 +98,7 @@ namespace ROS2::Utils::xacro
                 auto [modifiedXmlStr, modifiedElements] = (ROS2::Utils::ModifyURDFInMemory(output));
                 outcome.m_urdfHandle = UrdfParser::Parse(modifiedXmlStr, parserConfig);
                 outcome.m_urdfHandle.m_modifiedURDFContent = AZStd::move(modifiedXmlStr);
-                outcome.m_urdfHandle.m_modifiedURDFTags = AZStd::move(modifiedElements);
+                outcome.m_urdfHandle.m_urdfModifications = AZStd::move(modifiedElements);
                 outcome.m_succeed = true;
             }
             else
