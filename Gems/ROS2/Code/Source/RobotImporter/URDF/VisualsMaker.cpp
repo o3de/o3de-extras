@@ -20,6 +20,9 @@
 #include <AzToolsFramework/Entity/EditorEntityHelpers.h>
 #include <AzToolsFramework/ToolsComponents/EditorNonUniformScaleComponent.h>
 
+#include <sdf/Material.hh>
+#include <sdf/Pbr.hh>
+
 namespace ROS2
 {
     VisualsMaker::VisualsMaker() = default;
@@ -171,9 +174,11 @@ namespace ROS2
                 const AZ::Vector3 scaleVector = URDF::TypeConversions::ConvertVector3(meshGeometry->Scale());
 
                 const auto asset = PrefabMakerUtils::GetAssetFromPath(*m_urdfAssetsMapping, AZStd::string(meshGeometry->Uri().c_str()));
-                assetId = Utils::GetModelProductAssetId(asset->m_sourceGuid);
+                AZ_Warning("AddVisual", asset, "There is no source asset for %s.", meshGeometry->Uri().c_str());
+
                 if (asset)
                 {
+                    assetId = Utils::GetModelProductAssetId(asset->m_sourceGuid);
                     AZ_Warning("AddVisual", assetId.IsValid(), "There is no product asset for %s.", asset->m_sourceAssetRelativePath.c_str());
                 }
 
