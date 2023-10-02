@@ -47,7 +47,7 @@ namespace ROS2::SDFormat
             {
                 double aspectRatio = static_cast<double>(cameraConfiguration.m_height) / cameraConfiguration.m_width;
                 cameraConfiguration.m_verticalFieldOfViewDeg =
-                    2.0 * AZStd::atan(AZStd::tan(cameraSensor->HorizontalFov().Radian() / 2.0) * aspectRatio);
+                    AZ::RadToDeg(2.0 * AZStd::atan(AZStd::tan(cameraSensor->HorizontalFov().Radian() / 2.0) * aspectRatio));
             }
             if (sdfSensor.Type() != sdf::SensorType::DEPTH_CAMERA)
             {
