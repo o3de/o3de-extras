@@ -43,6 +43,8 @@ namespace WarehouseAutomation
                     ->ClassElement(AZ::Edit::ClassElements::EditorData, "")
                     ->Attribute(AZ::Edit::Attributes::Category, "WarehouseAutomation")
                     ->Attribute(AZ::Edit::Attributes::AppearsInAddComponentMenu, AZ_CRC_CE("Game"))
+                    ->Attribute(AZ::Edit::Attributes::Icon, "Editor/Icons/Components/ProximitySensor.svg")
+                    ->Attribute(AZ::Edit::Attributes::ViewportIcon, "Editor/Icons/Components/Viewport/ProximitySensor.svg")
                     ->DataElement(
                         AZ::Edit::UIHandlers::Default, &ProximitySensor::m_visualize, "Visualize", "Whether the detection beam is shown")
                     ->DataElement(AZ::Edit::UIHandlers::Default, &ProximitySensor::m_frequency, "Frequency", "Detection frequency")

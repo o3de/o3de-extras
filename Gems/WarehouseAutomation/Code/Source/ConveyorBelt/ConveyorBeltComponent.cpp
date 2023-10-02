@@ -37,6 +37,8 @@ namespace WarehouseAutomation
                     ->Attribute(AZ::Edit::Attributes::AutoExpand, true)
                     ->Attribute(AZ::Edit::Attributes::Category, "WarehouseAutomation")
                     ->Attribute(AZ::Edit::Attributes::AppearsInAddComponentMenu, AZ_CRC_CE("Game"))
+                    ->Attribute(AZ::Edit::Attributes::Icon, "Editor/Icons/Components/ConveyorBeltComponent.svg")
+                    ->Attribute(AZ::Edit::Attributes::ViewportIcon, "Editor/Icons/Components/Viewport/ConveyorBeltComponent.svg")
                     ->DataElement(
                         AZ::Edit::UIHandlers::Default,
                         &ConveyorBeltComponent::m_configuration,
