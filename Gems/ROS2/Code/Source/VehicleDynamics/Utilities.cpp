@@ -7,12 +7,14 @@
  */
 
 #include "Utilities.h"
+#include "Source/ArticulationLinkComponent.h"
 #include "WheelControllerComponent.h"
 #include <AzCore/Component/ComponentApplicationBus.h>
 #include <AzCore/Component/Entity.h>
 #include <AzCore/std/string/string.h>
 #include <HingeJointComponent.h>
 #include <PhysX/Joint/PhysXJointRequestsBus.h>
+#include <Utilities/ArticulationsUtilities.h>
 
 namespace ROS2::VehicleDynamics::Utilities
 {
@@ -87,27 +89,56 @@ namespace ROS2::VehicleDynamics::Utilities
                 }
 
                 const float steeringScale = controllerComponent->m_steeringScale;
-                PhysX::HingeJointComponent* hingeComponent{ nullptr };
                 AZ::Entity* steeringEntityptr{ nullptr };
                 AZ::ComponentApplicationBus::BroadcastResult(
                     steeringEntityptr, &AZ::ComponentApplicationRequests::FindEntity, steeringEntity);
                 AZ_Assert(steeringEntityptr, "Cannot find a steering entity for %s", steeringEntity.ToString().c_str());
-                hingeComponent = steeringEntityptr->FindComponent<PhysX::HingeJointComponent>();
 
-                if (!hingeComponent)
+                PhysX::HingeJointComponent* hingeComponent{ nullptr };
+                hingeComponent = steeringEntityptr->FindComponent<PhysX::HingeJointComponent>();
+                PhysX::ArticulationLinkComponent* articulation{ nullptr };
+                articulation = steeringEntityptr->FindComponent<PhysX::ArticulationLinkComponent>();
+
+                if (!hingeComponent && !articulation)
                 {
                     AZ_Warning(
                         "GetAllSteeringEntitiesData",
                         false,
-                        "Steering entity specified for WheelController in entity %s does not not have HingeJointComponent, ignoring",
+                        "Steering entity specified for WheelController in entity %s does not have either a HingeJointComponent or an "
+                        "ArticulationLinkComponent, ignoring",
                         wheel.ToString().c_str());
                     continue;
+                }
+
+                if (articulation)
+                {
+                    if (articulation->m_config.m_articulationJointType != PhysX::ArticulationJointType::Hinge)
+                    {
+                        AZ_Warning(
+                            "GetAllSteeringEntitiesData",
+                            false,
+                            "Steering entity specified for WheelController in entity %s has an Articulation Link, but it's not a hinge "
+                            "joint, ignoring",
+                            wheel.ToString().c_str());
+                        continue;
+                    }
                 }
 
                 VehicleDynamics::SteeringDynamicsData steeringData;
                 steeringData.m_steeringScale = steeringScale;
                 steeringData.m_steeringEntity = steeringEntity;
-                steeringData.m_hingeJoint = hingeComponent->GetId();
+                steeringData.m_isArticulation = articulation;
+                if (articulation)
+                {
+                    steeringData.m_steeringJoint = articulation->GetId();
+                    const bool hasFreeAxis = Utils::TryGetFreeArticulationAxis(steeringData.m_steeringEntity, steeringData.m_axis);
+
+                    AZ_Error("VehicleDynamics::Utilities", hasFreeAxis, "Articulation steering has no free axis somehow");
+                }
+                else
+                {
+                    steeringData.m_steeringJoint = hingeComponent->GetId();
+                }
                 steeringEntitiesAndAxis.push_back(steeringData);
             }
         }
@@ -152,19 +183,46 @@ namespace ROS2::VehicleDynamics::Utilities
                 PhysX::HingeJointComponent* hingeComponent{ nullptr };
                 hingeComponent = wheelEntity->FindComponent<PhysX::HingeJointComponent>();
 
-                if (!hingeComponent)
+                PhysX::ArticulationLinkComponent* articulation{ nullptr };
+                articulation = wheelEntity->FindComponent<PhysX::ArticulationLinkComponent>();
+
+                if (!hingeComponent && !articulation)
                 {
                     AZ_Warning(
                         "GetAllDriveWheelsData",
                         false,
-                        "Wheel entity for axle %s is missing a HingeJointComponent component, ignoring",
+                        "Wheel entity for axle %s does not have a HingeJointComponent nor an ArticulationLinkComponent, ignoring",
                         axle.m_axleTag.c_str());
                     continue;
                 }
 
+                if (articulation)
+                {
+                    if (articulation->m_config.m_articulationJointType != PhysX::ArticulationJointType::Hinge)
+                    {
+                        AZ_Warning(
+                            "GetAllDriveWheelsData",
+                            false,
+                            "Wheel entity for axle %s has an Articulation Link, but it's not a hinge joint, ignoring",
+                            wheel.ToString().c_str());
+                        continue;
+                    }
+                }
+
                 VehicleDynamics::WheelDynamicsData wheelData;
+                wheelData.m_isArticulation = articulation;
                 wheelData.m_wheelEntity = wheel;
-                wheelData.m_hingeJoint = hingeComponent->GetId();
+                if (articulation)
+                {
+                    wheelData.m_wheelJoint = articulation->GetId();
+                    const bool hasFreeAxis = Utils::TryGetFreeArticulationAxis(wheelData.m_wheelEntity, wheelData.m_axis);
+
+                    AZ_Error("VehicleDynamics::Utilities", hasFreeAxis, "Articulation wheel has no free axis somehow");
+                }
+                else
+                {
+                    wheelData.m_wheelJoint = hingeComponent->GetId();
+                }
                 wheelData.m_wheelRadius = axle.m_wheelRadius;
                 driveWheelEntities.push_back(wheelData);
             }
@@ -210,5 +268,4 @@ namespace ROS2::VehicleDynamics::Utilities
         }
         return AZStd::clamp(commandVelocity, -maxVelocity, maxVelocity);
     }
-
 } // namespace ROS2::VehicleDynamics::Utilities
