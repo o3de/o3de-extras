@@ -25,8 +25,9 @@
 #include <ROS2/Frame/ROS2FrameComponent.h>
 #include <ROS2/ROS2GemUtilities.h>
 #include <RobotControl/ROS2RobotControlComponent.h>
+#include <RobotImporter/Utils/ErrorUtils.h>
 #include <RobotImporter/Utils/RobotImporterUtils.h>
-#include <optional>
+#include <RobotImporter/Utils/TypeConversions.h>
 
 namespace ROS2
 {
@@ -183,10 +184,43 @@ namespace ROS2
         // Build up a list of all entities created as a part of processing the file.
         AZStd::vector<AZ::EntityId> createdEntities;
         AZStd::unordered_map<const sdf::Link*, AzToolsFramework::Prefab::PrefabEntityResult> createdLinks;
+        AZStd::unordered_map<const sdf::Model*, AzToolsFramework::Prefab::PrefabEntityResult> createdModels;
         AZStd::unordered_map<AZStd::string, const sdf::Link*> links;
-        for ([[maybe_unused]] const auto& [fullLinkName, linkPtr, _] : linksMapper.m_links)
+        for ([[maybe_unused]] const auto& [fullLinkName, linkPtr, attachedModel] : linksMapper.m_links)
         {
-            createdLinks[linkPtr] = AddEntitiesForLink(linkPtr, AZ::EntityId{}, createdEntities);
+            // Create entities for the model containing the link
+            AZ::EntityId modelEntityId;
+            if (attachedModel != nullptr)
+            {
+                if (auto modelIt = createdModels.find(attachedModel); modelIt != createdModels.end())
+                {
+                    if (modelIt->second.IsSuccess())
+                    {
+                        modelEntityId = modelIt->second.GetValue();
+                    }
+                }
+                else
+                {
+                    if (AzToolsFramework::Prefab::PrefabEntityResult createModelEntityResult = CreateEntityForModel(*attachedModel);
+                        createModelEntityResult)
+                    {
+                        modelEntityId = createModelEntityResult.GetValue();
+                        // Add the model entity to the created entity list
+                        // so that it gets added to the prefab
+                        createdEntities.emplace_back(modelEntityId);
+
+                        std::string modelName = attachedModel->Name();
+                        AZStd::string azModelName(modelName.c_str(), modelName.size());
+                        AZStd::lock_guard<AZStd::mutex> lck(m_statusLock);
+                        m_status.emplace(azModelName, AZStd::string::format("created as: %s", modelEntityId.ToString().c_str()));
+                        createdModels.emplace(attachedModel, createModelEntityResult);
+                    }
+                }
+
+            }
+
+            // Add all link as children of their attached model entity by default
+            createdLinks[linkPtr] = AddEntitiesForLink(*linkPtr, attachedModel, modelEntityId, createdEntities);
         }
 
         for (const auto& [linkPtr, result] : createdLinks)
@@ -389,7 +423,7 @@ namespace ROS2
                     AZStd::lock_guard<AZStd::mutex> lck(m_statusLock);
                     auto result = m_jointsMaker.AddJointComponent(jointPtr, childEntity.GetValue(), leadEntity.GetValue());
                     m_status.emplace(
-                        azJointName, AZStd::string::format(" %s %llu", result.IsSuccess() ? "created as" : "Failed", result.GetValue()));
+                        azJointName, AZStd::string::format(" %s: %llu", result.IsSuccess() ? "created as" : "failed", result.GetValue()));
                 }
                 else
                 {
@@ -493,15 +527,91 @@ namespace ROS2
         return result;
     }
 
-    AzToolsFramework::Prefab::PrefabEntityResult URDFPrefabMaker::AddEntitiesForLink(
-        const sdf::Link* link, AZ::EntityId parentEntityId, AZStd::vector<AZ::EntityId>& createdEntities)
+    AzToolsFramework::Prefab::PrefabEntityResult URDFPrefabMaker::CreateEntityForModel(const sdf::Model& model)
     {
-        if (!link)
+        auto createEntityResult = PrefabMakerUtils::CreateEntity(AZ::EntityId{}, model.Name().c_str());
+        if (!createEntityResult.IsSuccess())
         {
-            AZ::Failure(AZStd::string("Failed to create prefab entity - link is null"));
+            return createEntityResult;
         }
 
-        auto createEntityResult = PrefabMakerUtils::CreateEntity(parentEntityId, link->Name().c_str());
+        // Get the model entity and update it's transform component with the pose information
+        AZ::EntityId entityId = createEntityResult.GetValue();
+        AZStd::unique_ptr<AZ::Entity> entity(AzToolsFramework::GetEntityById(entityId));
+
+        if (auto* transformComponent = entity->FindComponent<AzToolsFramework::Components::TransformComponent>();
+            transformComponent != nullptr)
+        {
+            gz::math::Pose3d modelPose;
+            if (sdf::Errors poseResolveErrors = model.SemanticPose().Resolve(modelPose); !poseResolveErrors.empty())
+            {
+                AZStd::string poseErrorMessages = Utils::JoinSdfErrorsToString(poseResolveErrors);
+
+                auto poseErrorsForModel = AZStd::string::format(
+                    R"(Unable to resolve semantic pose for model %s. Creation of Model entity has failed. Errors: "%s")",
+                    model.Name().c_str(),
+                    poseErrorMessages.c_str());
+
+                return AZ::Failure(poseErrorsForModel);
+            }
+
+            AZ::Transform modelTransform = URDF::TypeConversions::ConvertPose(modelPose);
+
+            // If the model is nested below another model, check if it has a placement frame
+            if (const sdf::Model* parentModel = Utils::GetModelContainingModel(*m_root, model); parentModel != nullptr)
+            {
+                if (const sdf::Frame* modelPlacementFrame = parentModel->FrameByName(model.PlacementFrameName()); modelPlacementFrame != nullptr)
+                {
+                    gz::math::Pose3d placementFramePose;
+                    if (sdf::Errors poseResolveErrors = modelPlacementFrame->SemanticPose().Resolve(placementFramePose);
+                        !poseResolveErrors.empty())
+                    {
+                        AZStd::string poseErrorMessages = Utils::JoinSdfErrorsToString(poseResolveErrors);
+
+                        auto poseErrorsForModel = AZStd::string::format(
+                            R"(Unable to resolve semantic pose for model %s parent model %s. Creation of Model entity has failed. Errors: "%s")",
+                            model.Name().c_str(),
+                            parentModel->Name().c_str(),
+                            poseErrorMessages.c_str());
+
+                        return AZ::Failure(poseErrorsForModel);
+                    }
+
+                    modelTransform = modelTransform * URDF::TypeConversions::ConvertPose(placementFramePose);
+                }
+            }
+
+            if (const sdf::Frame* implicitFrame = model.FrameByName("__model__"); implicitFrame != nullptr)
+            {
+                gz::math::Pose3d implicitFramePose;
+                if (sdf::Errors poseResolveErrors = implicitFrame->SemanticPose().Resolve(implicitFramePose); !poseResolveErrors.empty())
+                {
+                    AZStd::string poseErrorMessages = Utils::JoinSdfErrorsToString(poseResolveErrors);
+
+                    auto poseErrorsForModel = AZStd::string::format(
+                        R"(Unable to resolve semantic pose for model's implicit frame %s. Creation of Model entity has failed. Errors: "%s")",
+                        implicitFrame->Name().c_str(),
+                        poseErrorMessages.c_str());
+
+                    return AZ::Failure(poseErrorsForModel);
+                }
+
+                modelTransform = modelTransform * URDF::TypeConversions::ConvertPose(implicitFramePose);
+            }
+
+            transformComponent->SetWorldTM(AZStd::move(modelTransform));
+        }
+
+        // Allow the created model entity to persist if there are no errors at ths point
+        entity.release();
+
+        return entityId;
+    }
+
+    AzToolsFramework::Prefab::PrefabEntityResult URDFPrefabMaker::AddEntitiesForLink(
+        const sdf::Link& link, const sdf::Model* attachedModel, AZ::EntityId parentEntityId, AZStd::vector<AZ::EntityId>& createdEntities)
+    {
+        auto createEntityResult = PrefabMakerUtils::CreateEntity(parentEntityId, link.Name().c_str());
         if (!createEntityResult.IsSuccess())
         {
             return createEntityResult;
@@ -516,30 +626,27 @@ namespace ROS2
         {
             auto* component = Utils::GetGameOrEditorComponent<ROS2FrameComponent>(entity);
             AZ_Assert(component, "ROS2 Frame Component does not exist for %s", entityId.ToString().c_str());
-            component->SetFrameID(AZStd::string(link->Name().c_str(), link->Name().size()));
+            component->SetFrameID(AZStd::string(link.Name().c_str(), link.Name().size()));
         }
-        auto createdVisualEntities = m_visualsMaker.AddVisuals(link, entityId);
+        auto createdVisualEntities = m_visualsMaker.AddVisuals(&link, entityId);
         createdEntities.insert(createdEntities.end(), createdVisualEntities.begin(), createdVisualEntities.end());
-
-        // Get the SDF model where this link is a child
-        const sdf::Model* modelContainingLink = Utils::GetModelContainingLink(*m_root, *link);
 
         if (!m_useArticulations)
         {
-            m_inertialsMaker.AddInertial(link->Inertial(), entityId);
+            m_inertialsMaker.AddInertial(link.Inertial(), entityId);
         }
         else
         {
-            if (modelContainingLink != nullptr)
+            if (attachedModel != nullptr)
             {
-                m_articulationsMaker.AddArticulationLink(*modelContainingLink, link, entityId);
+                m_articulationsMaker.AddArticulationLink(*attachedModel, &link, entityId);
             }
         }
 
-        if (modelContainingLink != nullptr)
+        if (attachedModel != nullptr)
         {
-            m_collidersMaker.AddColliders(*modelContainingLink, link, entityId);
-            m_sensorsMaker.AddSensors(*modelContainingLink, link, entityId);
+            m_collidersMaker.AddColliders(*attachedModel, &link, entityId);
+            m_sensorsMaker.AddSensors(*attachedModel, &link, entityId);
         }
         return AZ::Success(entityId);
     }
