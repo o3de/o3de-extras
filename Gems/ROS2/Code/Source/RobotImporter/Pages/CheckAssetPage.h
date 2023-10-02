@@ -34,11 +34,11 @@ namespace ROS2
         //! Function reports assets that are will be processed by asset processor.
         void ReportAsset(
             const AZ::Uuid assetUuid,
-            const AZStd::string urdfPath,
+            const AZStd::string sdfPath,
             const QString& type,
-            const AZStd::string assetSourcePath,
-            const AZ::Crc32& crc32,
-            const AZStd::string resolvedUrdfPath);
+            const AZStd::optional<AZStd::string>& assetSourcePath,
+            const AZStd::optional<AZ::Crc32>& crc32,
+            const AZStd::optional<AZStd::string>& resolvedSdfPath);
         void ClearAssetsList();
         bool IsEmpty() const;
         bool isComplete() const override;
