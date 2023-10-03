@@ -133,7 +133,7 @@
                 {
                     "op": "replace",
                     "path": "/Entities/Entity_[15629654211104]/Components/Component_[17075084475750345983]/Configuration/Centre of mass offset/0",
-                    "value": 2.94287438862284e-9
+                    "value": 2.9428743886228403e-9
                 },
                 {
                     "op": "replace",
@@ -163,7 +163,7 @@
                 {
                     "op": "replace",
                     "path": "/Entities/Entity_[15672603884064]/Components/Component_[11685358238844952494]/Configuration/Centre of mass offset/0",
-                    "value": 2.94287438862284e-9
+                    "value": 2.9428743886228403e-9
                 },
                 {
                     "op": "replace",
@@ -263,8 +263,8 @@
                                         "Name": "CustomLidar2D",
                                         "Layers": 1,
                                         "Points per layer": 924,
-                                        "Min horizontal angle": -180.0,
-                                        "Max horizontal angle": 180.0,
+                                        "Min horizontal angle": -90.0,
+                                        "Max horizontal angle": 90.0,
                                         "Min vertical angle": 0.0,
                                         "Max vertical angle": 0.0,
                                         "Min range": 0.0,
