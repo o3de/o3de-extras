@@ -379,7 +379,7 @@ namespace ROS2
                     "Joint %s has no parent link %s. Cannot create",
                     azJointName.c_str(),
                     parentLinkName.c_str());
-                return true;
+                continue;
             }
             auto leadEntity = parentEntityIter->second;
 
@@ -395,7 +395,7 @@ namespace ROS2
                     "Joint %s has no child link %s. Cannot create",
                     azJointName.c_str(),
                     childLinkName.c_str());
-                return true;
+                continue;
             }
             auto childEntity = childEntityIter->second;
 
@@ -430,7 +430,6 @@ namespace ROS2
                     AZ_Warning("CreatePrefabFromUrdfOrSdf", false, "cannot create joint %s", azJointName.c_str());
                 }
             }
-            return true;
         }
 
         // Use the first entity based on a link that is not parented to any other link
