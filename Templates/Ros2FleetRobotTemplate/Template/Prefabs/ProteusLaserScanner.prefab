@@ -122,16 +122,6 @@
                 },
                 {
                     "op": "replace",
-                    "path": "/Entities/Entity_[15659718982176]/Components/Component_[1153232506834696450]/ColliderConfiguration/CollisionLayer/Index",
-                    "value": 1
-                },
-                {
-                    "op": "replace",
-                    "path": "/Entities/Entity_[15659718982176]/Components/Component_[639102350977932618]/m_template/Namespace Configuration/Namespace Strategy",
-                    "value": 1
-                },
-                {
-                    "op": "replace",
                     "path": "/Entities/Entity_[15629654211104]/Components/Component_[12925256151907998248]/ColliderConfiguration/CollisionLayer/Index",
                     "value": 1
                 },
@@ -143,7 +133,7 @@
                 {
                     "op": "replace",
                     "path": "/Entities/Entity_[15629654211104]/Components/Component_[17075084475750345983]/Configuration/Centre of mass offset/0",
-                    "value": 2.9428743886228403e-9
+                    "value": 2.94287438862284e-9
                 },
                 {
                     "op": "replace",
@@ -153,7 +143,7 @@
                 {
                     "op": "replace",
                     "path": "/Entities/Entity_[15629654211104]/Components/Component_[17075084475750345983]/Configuration/Centre of mass offset/2",
-                    "value": -4.170040701634292e-10
+                    "value": -4.1700407016342917e-10
                 },
                 {
                     "op": "replace",
@@ -173,7 +163,7 @@
                 {
                     "op": "replace",
                     "path": "/Entities/Entity_[15672603884064]/Components/Component_[11685358238844952494]/Configuration/Centre of mass offset/0",
-                    "value": 2.9428743886228403e-9
+                    "value": 2.94287438862284e-9
                 },
                 {
                     "op": "replace",
@@ -183,7 +173,7 @@
                 {
                     "op": "replace",
                     "path": "/Entities/Entity_[15672603884064]/Components/Component_[11685358238844952494]/Configuration/Centre of mass offset/2",
-                    "value": -4.170040701634292e-10
+                    "value": -4.1700407016342917e-10
                 },
                 {
                     "op": "replace",
@@ -203,6 +193,26 @@
                 {
                     "op": "replace",
                     "path": "/Entities/Entity_[15642539112992]/Components/Component_[8110923963616165068]/ColliderConfiguration/CollisionLayer/Index",
+                    "value": 1
+                },
+                {
+                    "op": "replace",
+                    "path": "/Entities/Entity_[15659718982176]/Components/Component_[1153232506834696450]/ColliderConfiguration/CollisionLayer/Index",
+                    "value": 1
+                },
+                {
+                    "op": "replace",
+                    "path": "/Entities/Entity_[15659718982176]/Components/Component_[1153232506834696450]/ShapeConfiguration/PhysicsAsset/Asset/assetHint",
+                    "value": "proteus_chassis.fbx.pxmesh"
+                },
+                {
+                    "op": "replace",
+                    "path": "/Entities/Entity_[15659718982176]/Components/Component_[1153232506834696450]/ShapeConfiguration/PhysicsAsset/Configuration/PhysicsAsset/assetHint",
+                    "value": "proteus_chassis.fbx.pxmesh"
+                },
+                {
+                    "op": "replace",
+                    "path": "/Entities/Entity_[15659718982176]/Components/Component_[639102350977932618]/m_template/Namespace Configuration/Namespace Strategy",
                     "value": 1
                 },
                 {
@@ -245,31 +255,33 @@
                                     }
                                 }
                             },
-                            "lidarConfiguration": {
-                                "lidarModel": 6,
-                                "lidarImplementation": "Scene Queries",
-                                "LidarParameters": {
-                                    "Name": "CustomLidar2D",
-                                    "Layers": 1,
-                                    "Points per layer": 924,
-                                    "Min horizontal angle": -180.0,
-                                    "Max horizontal angle": 180.0,
-                                    "Min vertical angle": 0.0,
-                                    "Max vertical angle": 0.0,
-                                    "Min range": 0.0,
-                                    "Max range": 100.0,
-                                    "Enable Noise": true,
-                                    "Noise Parameters": {
-                                        "Angular noise standard deviation": 0.0,
-                                        "Distance noise standard deviation base": 0.019999999552965164,
-                                        "Distance noise standard deviation slope": 0.0010000000474974513
-                                    }
-                                },
-                                "IgnoredLayerIndices": [
-                                    1
-                                ],
-                                "ExcludedEntities": [],
-                                "PointsAtMax": false
+                            "lidarCore": {
+                                "lidarConfiguration": {
+                                    "lidarModelName": "CustomLidar2D",
+                                    "lidarImplementation": "Scene Queries",
+                                    "LidarParameters": {
+                                        "Name": "CustomLidar2D",
+                                        "Layers": 1,
+                                        "Points per layer": 924,
+                                        "Min horizontal angle": -180.0,
+                                        "Max horizontal angle": 180.0,
+                                        "Min vertical angle": 0.0,
+                                        "Max vertical angle": 0.0,
+                                        "Min range": 0.0,
+                                        "Max range": 100.0,
+                                        "Enable Noise": true,
+                                        "Noise Parameters": {
+                                            "Angular noise standard deviation": 0.0,
+                                            "Distance noise standard deviation base": 0.019999999552965164,
+                                            "Distance noise standard deviation slope": 0.0010000000474974513
+                                        }
+                                    },
+                                    "IgnoredLayerIndices": [
+                                        1
+                                    ],
+                                    "ExcludedEntities": [],
+                                    "PointsAtMax": false
+                                }
                             }
                         }
                     }
