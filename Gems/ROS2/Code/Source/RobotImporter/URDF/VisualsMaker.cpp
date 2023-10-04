@@ -301,7 +301,7 @@ namespace ROS2
 
             for (auto& [id, materialAssignment] : overrides)
             {
-                auto GetImageAssetFromPath = [&assetMapping](const std::string& uri) -> AZ::Data::Asset<AZ::RPI::ImageAsset>
+                auto GetImageAssetIdFromPath = [&assetMapping](const std::string& uri) -> AZ::Data::AssetId
                 {
                     AZ::Data::AssetId assetId;
                     const auto asset = PrefabMakerUtils::GetAssetFromPath(*assetMapping, uri);
@@ -312,40 +312,40 @@ namespace ROS2
                         assetId = Utils::GetImageProductAssetId(asset->m_sourceGuid);
                         AZ_Warning("AddVisual", assetId.IsValid(), "There is no product image asset for %s.", asset->m_sourceAssetRelativePath.c_str());
                     }
-                    return AZ::Data::Asset<AZ::RPI::ImageAsset>(assetId, azrtti_typeid<AZ::RPI::ImageAsset>());
+                    return assetId;
                 };
 
                 if (auto texture = pbrWorkflow->AlbedoMap(); !texture.empty())
                 {
-                    materialAssignment.m_propertyOverrides.emplace(AZ::Name("baseColor.textureMap"), AZStd::any(GetImageAssetFromPath(texture)));
+                    materialAssignment.m_propertyOverrides.emplace(AZ::Name("baseColor.textureMap"), AZStd::any(GetImageAssetIdFromPath(texture)));
                 }
 
                 if (auto texture = pbrWorkflow->NormalMap(); !texture.empty())
                 {
-                    materialAssignment.m_propertyOverrides.emplace(AZ::Name("normal.textureMap"), AZStd::any(GetImageAssetFromPath(texture)));
+                    materialAssignment.m_propertyOverrides.emplace(AZ::Name("normal.textureMap"), AZStd::any(GetImageAssetIdFromPath(texture)));
                 }
 
                 if (auto texture = pbrWorkflow->AmbientOcclusionMap(); !texture.empty())
                 {
-                    materialAssignment.m_propertyOverrides.emplace(AZ::Name("occlusion.diffuseTextureMap"), AZStd::any(GetImageAssetFromPath(texture)));
+                    materialAssignment.m_propertyOverrides.emplace(AZ::Name("occlusion.diffuseTextureMap"), AZStd::any(GetImageAssetIdFromPath(texture)));
                 }
 
                 if (auto texture = pbrWorkflow->EmissiveMap(); !texture.empty())
                 {
                     materialAssignment.m_propertyOverrides.emplace(AZ::Name("emissive.enable"), AZStd::any(true));
-                    materialAssignment.m_propertyOverrides.emplace(AZ::Name("emissive.textureMap"), AZStd::any(GetImageAssetFromPath(texture)));
+                    materialAssignment.m_propertyOverrides.emplace(AZ::Name("emissive.textureMap"), AZStd::any(GetImageAssetIdFromPath(texture)));
                 }
 
                 if (pbrWorkflow->Type() == sdf::PbrWorkflowType::METAL)
                 {
                     if (auto texture = pbrWorkflow->RoughnessMap(); !texture.empty())
                     {
-                        materialAssignment.m_propertyOverrides.emplace(AZ::Name("roughness.textureMap"), AZStd::any(GetImageAssetFromPath(texture)));
+                        materialAssignment.m_propertyOverrides.emplace(AZ::Name("roughness.textureMap"), AZStd::any(GetImageAssetIdFromPath(texture)));
                     }
 
                     if (auto texture = pbrWorkflow->MetalnessMap(); !texture.empty())
                     {
-                        materialAssignment.m_propertyOverrides.emplace(AZ::Name("metallic.textureMap"), AZStd::any(GetImageAssetFromPath(texture)));
+                        materialAssignment.m_propertyOverrides.emplace(AZ::Name("metallic.textureMap"), AZStd::any(GetImageAssetIdFromPath(texture)));
                     }
 
                     if (pbrWorkflow->Element()->HasElement("roughness"))
