@@ -392,150 +392,6 @@
                     }
                 },
                 {
-                    "op": "add",
-                    "path": "/Entities/Entity_[4510077878745]",
-                    "value": {
-                        "Id": "Entity_[4510077878745]",
-                        "Name": "velodyne",
-                        "Components": {
-                            "EditorDisabledCompositionComponent": {
-                                "$type": "EditorDisabledCompositionComponent",
-                                "Id": 10247805019617821821,
-                                "DisabledComponents": []
-                            },
-                            "EditorEntityIconComponent": {
-                                "$type": "EditorEntityIconComponent",
-                                "Id": 7020195246846297767,
-                                "EntityIconAssetId": {
-                                    "guid": "{00000000-0000-0000-0000-000000000000}",
-                                    "subId": 0
-                                }
-                            },
-                            "EditorEntitySortComponent": {
-                                "$type": "EditorEntitySortComponent",
-                                "Id": 13750873293047960510,
-                                "Child Entity Order": []
-                            },
-                            "EditorInspectorComponent": {
-                                "$type": "EditorInspectorComponent",
-                                "Id": 13205214379646988492,
-                                "ComponentOrderEntryArray": []
-                            },
-                            "EditorLockComponent": {
-                                "$type": "EditorLockComponent",
-                                "Id": 2729472657298306789,
-                                "Locked": false
-                            },
-                            "EditorOnlyEntityComponent": {
-                                "$type": "EditorOnlyEntityComponent",
-                                "Id": 4693832123164241905,
-                                "IsEditorOnly": false
-                            },
-                            "EditorPendingCompositionComponent": {
-                                "$type": "EditorPendingCompositionComponent",
-                                "Id": 17466938277281288553,
-                                "PendingComponents": []
-                            },
-                            "EditorVisibilityComponent": {
-                                "$type": "EditorVisibilityComponent",
-                                "Id": 6095707461105765349,
-                                "VisibilityFlag": true
-                            },
-                            "ROS2FrameComponent": {
-                                "$type": "GenericComponentWrapper",
-                                "Id": 14365734668344824407,
-                                "m_template": {
-                                    "$type": "ROS2FrameComponent",
-                                    "Id": 0,
-                                    "Namespace Configuration": {
-                                        "Namespace Strategy": 0,
-                                        "Namespace": ""
-                                    },
-                                    "Frame Name": "velodyne",
-                                    "Joint Name": "",
-                                    "Publish Transform": true
-                                }
-                            },
-                            "ROS2LidarSensorComponent_2": {
-                                "$type": "GenericComponentWrapper",
-                                "Id": 14130657555606726475,
-                                "m_template": {
-                                    "$type": "ROS2LidarSensorComponent",
-                                    "Id": 0,
-                                    "SensorConfiguration": {
-                                        "Visualize": true,
-                                        "Publishing Enabled": true,
-                                        "Frequency (HZ)": 10.0,
-                                        "Publishers": {
-                                            "sensor_msgs::msg::PointCloud2": {
-                                                "Type": "sensor_msgs::msg::PointCloud2",
-                                                "Topic": "pc",
-                                                "QoS": {
-                                                    "Reliability": 2,
-                                                    "Durability": 2,
-                                                    "Depth": 5
-                                                }
-                                            }
-                                        }
-                                    },
-                                    "lidarConfiguration": {
-                                        "lidarModel": 4,
-                                        "lidarImplementation": "Scene Queries",
-                                        "LidarParameters": {
-                                            "Name": "Velodyne Puck (VLP-16)",
-                                            "Layers": 16,
-                                            "Points per layer": 1800,
-                                            "Min horizontal angle": -180.0,
-                                            "Max horizontal angle": 180.0,
-                                            "Min vertical angle": 15.0,
-                                            "Max vertical angle": -15.0,
-                                            "Max range": 100.0,
-                                            "Noise Parameters": {
-                                                "Angular noise standard deviation": 0.0,
-                                                "Distance noise standard deviation base": 0.029999999329447743,
-                                                "Distance noise standard deviation slope": 0.0010000000474974513
-                                            }
-                                        },
-                                        "IgnoreLayer": true,
-                                        "IgnoredLayerIndex": 1,
-                                        "ExcludedEntities": [],
-                                        "PointsAtMax": false
-                                    }
-                                }
-                            },
-                            "TransformComponent": {
-                                "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
-                                "Id": 12095662157746061718,
-                                "Parent Entity": "Entity_[4501487944153]",
-                                "Transform Data": {
-                                    "Translate": [
-                                        0.0,
-                                        0.0,
-                                        0.03799999877810478
-                                    ],
-                                    "Rotate": [
-                                        0.0,
-                                        0.0,
-                                        0.0
-                                    ],
-                                    "Scale": [
-                                        1.0,
-                                        1.0,
-                                        1.0
-                                    ],
-                                    "Locked": false,
-                                    "UniformScale": 1.0
-                                },
-                                "Parent Activation Transform Mode": 0,
-                                "IsStatic": false,
-                                "InterpolatePosition": 0,
-                                "InterpolateRotation": 0
-                            }
-                        },
-                        "IsRuntimeActive": true
-                    }
-                },
-                {
                     "op": "replace",
                     "path": "/ContainerEntity/Components/Component_[1258474389347419349]/Parent Entity",
                     "value": "../ContainerEntity"
@@ -708,6 +564,165 @@
                                 "$type": "EditorVisibilityComponent",
                                 "Id": 8923586385206059299,
                                 "VisibilityFlag": true
+                            }
+                        },
+                        "IsRuntimeActive": true
+                    }
+                },
+                {
+                    "op": "replace",
+                    "path": "/Entities/Entity_[7507839849146]/Components/Component_[1153232506834696450]/ShapeConfiguration/PhysicsAsset/Asset/assetHint",
+                    "value": "robot/rosbot_xl_description/meshes/body_colision.stl.pxmesh"
+                },
+                {
+                    "op": "replace",
+                    "path": "/Entities/Entity_[7507839849146]/Components/Component_[1153232506834696450]/ShapeConfiguration/PhysicsAsset/Configuration/PhysicsAsset/assetHint",
+                    "value": "robot/rosbot_xl_description/meshes/body_colision.stl.pxmesh"
+                },
+                {
+                    "op": "add",
+                    "path": "/Entities/Entity_[4510077878745]",
+                    "value": {
+                        "Id": "Entity_[4510077878745]",
+                        "Name": "velodyne",
+                        "Components": {
+                            "EditorDisabledCompositionComponent": {
+                                "$type": "EditorDisabledCompositionComponent",
+                                "Id": 10247805019617821821,
+                                "DisabledComponents": []
+                            },
+                            "EditorEntityIconComponent": {
+                                "$type": "EditorEntityIconComponent",
+                                "Id": 7020195246846297767,
+                                "EntityIconAssetId": {
+                                    "guid": "{00000000-0000-0000-0000-000000000000}",
+                                    "subId": 0
+                                }
+                            },
+                            "EditorEntitySortComponent": {
+                                "$type": "EditorEntitySortComponent",
+                                "Id": 13750873293047960510,
+                                "Child Entity Order": []
+                            },
+                            "EditorInspectorComponent": {
+                                "$type": "EditorInspectorComponent",
+                                "Id": 13205214379646988492,
+                                "ComponentOrderEntryArray": []
+                            },
+                            "EditorLockComponent": {
+                                "$type": "EditorLockComponent",
+                                "Id": 2729472657298306789,
+                                "Locked": false
+                            },
+                            "EditorOnlyEntityComponent": {
+                                "$type": "EditorOnlyEntityComponent",
+                                "Id": 4693832123164241905,
+                                "IsEditorOnly": false
+                            },
+                            "EditorPendingCompositionComponent": {
+                                "$type": "EditorPendingCompositionComponent",
+                                "Id": 17466938277281288553,
+                                "PendingComponents": []
+                            },
+                            "EditorVisibilityComponent": {
+                                "$type": "EditorVisibilityComponent",
+                                "Id": 6095707461105765349,
+                                "VisibilityFlag": true
+                            },
+                            "ROS2FrameComponent": {
+                                "$type": "GenericComponentWrapper",
+                                "Id": 14365734668344824407,
+                                "m_template": {
+                                    "$type": "ROS2FrameComponent",
+                                    "Id": 0,
+                                    "Namespace Configuration": {
+                                        "Namespace Strategy": 0,
+                                        "Namespace": ""
+                                    },
+                                    "Frame Name": "velodyne",
+                                    "Joint Name": "",
+                                    "Publish Transform": true
+                                }
+                            },
+                            "ROS2LidarSensorComponent_2": {
+                                "$type": "GenericComponentWrapper",
+                                "Id": 14130657555606726475,
+                                "m_template": {
+                                    "$type": "ROS2LidarSensorComponent",
+                                    "Id": 0,
+                                    "SensorConfiguration": {
+                                        "Visualize": true,
+                                        "Publishing Enabled": true,
+                                        "Frequency (HZ)": 10.0,
+                                        "Publishers": {
+                                            "sensor_msgs::msg::PointCloud2": {
+                                                "Type": "sensor_msgs::msg::PointCloud2",
+                                                "Topic": "pc",
+                                                "QoS": {
+                                                    "Reliability": 2,
+                                                    "Durability": 2,
+                                                    "Depth": 5
+                                                }
+                                            }
+                                        }
+                                    },
+                                    "lidarCore": {
+                                        "lidarConfiguration": {
+                                            "lidarModelName": "CustomLidar",
+                                            "lidarImplementation": "Scene Queries",
+                                            "LidarParameters": {
+                                                "Name": "CustomLidar",
+                                                "Layers": 24,
+                                                "Points per layer": 924,
+                                                "Min horizontal angle": -180.0,
+                                                "Max horizontal angle": 180.0,
+                                                "Min vertical angle": -35.0,
+                                                "Max vertical angle": 35.0,
+                                                "Min range": 0.0,
+                                                "Max range": 100.0,
+                                                "Enable Noise": true,
+                                                "Noise Parameters": {
+                                                    "Angular noise standard deviation": 0.0,
+                                                    "Distance noise standard deviation base": 0.009999999776482582,
+                                                    "Distance noise standard deviation slope": 0.0010000000474974513
+                                                }
+                                            },
+                                            "IgnoredLayerIndices": [
+                                                1
+                                            ],
+                                            "ExcludedEntities": [],
+                                            "PointsAtMax": false
+                                        }
+                                    }
+                                }
+                            },
+                            "TransformComponent": {
+                                "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
+                                "Id": 12095662157746061718,
+                                "Parent Entity": "Entity_[4501487944153]",
+                                "Transform Data": {
+                                    "Translate": [
+                                        0.0,
+                                        0.0,
+                                        0.03799999877810478
+                                    ],
+                                    "Rotate": [
+                                        0.0,
+                                        0.0,
+                                        0.0
+                                    ],
+                                    "Scale": [
+                                        1.0,
+                                        1.0,
+                                        1.0
+                                    ],
+                                    "Locked": false,
+                                    "UniformScale": 1.0
+                                },
+                                "Parent Activation Transform Mode": 0,
+                                "IsStatic": false,
+                                "InterpolatePosition": 0,
+                                "InterpolateRotation": 0
                             }
                         },
                         "IsRuntimeActive": true

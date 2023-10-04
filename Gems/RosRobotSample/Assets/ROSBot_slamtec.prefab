@@ -65,6 +65,189 @@
                 },
                 {
                     "op": "add",
+                    "path": "/Entities/Entity_[5434025951973]",
+                    "value": {
+                        "Id": "Entity_[5434025951973]",
+                        "Name": "slamtec_rplidar_s1_link_visual",
+                        "Components": {
+                            "Component_[13558631120334703172]": {
+                                "$type": "EditorInspectorComponent",
+                                "Id": 13558631120334703172,
+                                "ComponentOrderEntryArray": []
+                            },
+                            "Component_[15937921940637916859]": {
+                                "$type": "EditorEntitySortComponent",
+                                "Id": 15937921940637916859,
+                                "Child Entity Order": []
+                            },
+                            "Component_[16880687897144235879]": {
+                                "$type": "EditorVisibilityComponent",
+                                "Id": 16880687897144235879,
+                                "VisibilityFlag": true
+                            },
+                            "Component_[17782893825045371782]": {
+                                "$type": "EditorPendingCompositionComponent",
+                                "Id": 17782893825045371782,
+                                "PendingComponents": []
+                            },
+                            "Component_[2514902925827828913]": {
+                                "$type": "EditorDisabledCompositionComponent",
+                                "Id": 2514902925827828913,
+                                "DisabledComponents": []
+                            },
+                            "Component_[2561471299578768190]": {
+                                "$type": "EditorOnlyEntityComponent",
+                                "Id": 2561471299578768190,
+                                "IsEditorOnly": false
+                            },
+                            "Component_[2663517450077638093]": {
+                                "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
+                                "Id": 2663517450077638093,
+                                "Parent Entity": "Entity_[5429730984677]",
+                                "Transform Data": {
+                                    "Translate": [
+                                        0.0,
+                                        0.0,
+                                        0.0
+                                    ],
+                                    "Rotate": [
+                                        0.0,
+                                        0.0,
+                                        0.0
+                                    ],
+                                    "Scale": [
+                                        1.0,
+                                        1.0,
+                                        1.0
+                                    ],
+                                    "Locked": false,
+                                    "UniformScale": 1.0
+                                },
+                                "Parent Activation Transform Mode": 0,
+                                "IsStatic": false,
+                                "InterpolatePosition": 0,
+                                "InterpolateRotation": 0
+                            },
+                            "Component_[3265076674777361038]": {
+                                "$type": "EditorLockComponent",
+                                "Id": 3265076674777361038,
+                                "Locked": false
+                            },
+                            "Component_[6586089230771174257]": {
+                                "$type": "EditorMaterialComponent",
+                                "Id": 6586089230771174257,
+                                "Controller": {
+                                    "Configuration": {
+                                        "materials": [
+                                            {
+                                                "Key": {
+                                                    "lodIndex": 18446744073709551615,
+                                                    "materialSlotStableId": 1311805850
+                                                },
+                                                "Value": {
+                                                    "MaterialAsset": {
+                                                        "assetId": {
+                                                            "guid": "{6F8ACA28-0900-5937-A365-FFED5F372998}",
+                                                            "subId": 0
+                                                        },
+                                                        "loadBehavior": "QueueLoad",
+                                                        "assetHint": ""
+                                                    },
+                                                    "PropertyOverrides": [],
+                                                    "ModelUvOverrides": []
+                                                }
+                                            },
+                                            {
+                                                "Key": {
+                                                    "lodIndex": 18446744073709551615,
+                                                    "materialSlotStableId": 3117107120
+                                                },
+                                                "Value": {
+                                                    "MaterialAsset": {
+                                                        "assetId": {
+                                                            "guid": "{B8C827B6-2493-58DC-ADDC-8B721E34DA55}",
+                                                            "subId": 0
+                                                        },
+                                                        "loadBehavior": "QueueLoad",
+                                                        "assetHint": ""
+                                                    },
+                                                    "PropertyOverrides": [],
+                                                    "ModelUvOverrides": []
+                                                }
+                                            },
+                                            {
+                                                "Key": {
+                                                    "lodIndex": 18446744073709551615,
+                                                    "materialSlotStableId": 4154092942
+                                                },
+                                                "Value": {
+                                                    "MaterialAsset": {
+                                                        "assetId": {
+                                                            "guid": "{DBB9C83E-9304-504B-8428-769E3AC42221}",
+                                                            "subId": 0
+                                                        },
+                                                        "loadBehavior": "QueueLoad",
+                                                        "assetHint": ""
+                                                    },
+                                                    "PropertyOverrides": [],
+                                                    "ModelUvOverrides": []
+                                                }
+                                            }
+                                        ]
+                                    }
+                                },
+                                "materialSlotsByLodEnabled": false
+                            },
+                            "Component_[780474675560340036]": {
+                                "$type": "EditorEntityIconComponent",
+                                "Id": 780474675560340036,
+                                "EntityIconAssetId": {
+                                    "guid": "{00000000-0000-0000-0000-000000000000}",
+                                    "subId": 0
+                                }
+                            },
+                            "Component_[9753263690525804004]": {
+                                "$type": "AZ::Render::EditorMeshComponent",
+                                "Id": 9753263690525804004,
+                                "Controller": {
+                                    "Configuration": {
+                                        "ModelAsset": {
+                                            "assetId": {
+                                                "guid": "{45977802-63D1-54D0-AAA3-FF63FEE5F690}",
+                                                "subId": 282870366
+                                            },
+                                            "loadBehavior": "QueueLoad",
+                                            "assetHint": "robot/ros_components_description/meshes/slamtec_rplidar_s1.azmodel"
+                                        },
+                                        "SortKey": 0,
+                                        "ExcludeFromReflectionCubeMaps": false,
+                                        "UseForwardPassIBLSpecular": false,
+                                        "IsRayTracingEnabled": true,
+                                        "IsAlwaysDynamic": false,
+                                        "LodType": 0,
+                                        "LodOverride": 0,
+                                        "MinimumScreenCoverage": 0.0009259259095415472,
+                                        "QualityDecayRate": 0.5
+                                    }
+                                },
+                                "meshStats": {}
+                            }
+                        },
+                        "IsRuntimeActive": true
+                    }
+                },
+                {
+                    "op": "replace",
+                    "path": "/Entities/Entity_[7507839849146]/Components/Component_[1153232506834696450]/ShapeConfiguration/PhysicsAsset/Asset/assetHint",
+                    "value": "robot/rosbot_xl_description/meshes/body_colision.stl.pxmesh"
+                },
+                {
+                    "op": "replace",
+                    "path": "/Entities/Entity_[7507839849146]/Components/Component_[1153232506834696450]/ShapeConfiguration/PhysicsAsset/Configuration/PhysicsAsset/assetHint",
+                    "value": "robot/rosbot_xl_description/meshes/body_colision.stl.pxmesh"
+                },
+                {
+                    "op": "add",
                     "path": "/Entities/Entity_[5429730984677]",
                     "value": {
                         "Id": "Entity_[5429730984677]",
@@ -222,7 +405,7 @@
                                     "Position": [
                                         0.0,
                                         0.0,
-                                        0.02549999952316284
+                                        0.025499999523162842
                                     ],
                                     "Rotation": [
                                         0.0,
@@ -292,7 +475,7 @@
                                             "Type": 1
                                         },
                                         "Subdivision": 32,
-                                        "Height": 0.05099999904632568,
+                                        "Height": 0.050999999046325684,
                                         "Radius": 0.02775000035762787
                                     },
                                     "PhysicsAsset": {
@@ -377,7 +560,7 @@
                                     "Breakable": false,
                                     "Maximum Force": 1.0,
                                     "Maximum Torque": 1.0,
-                                    "Display Debug": 1,
+                                    "Display Debug": "Selected",
                                     "Select Lead on Snap": true,
                                     "Self Collide": false
                                 },
@@ -446,7 +629,7 @@
                                     "Lock Angular X": false,
                                     "Lock Angular Y": false,
                                     "Lock Angular Z": false,
-                                    "Mass": 0.10500000417232512,
+                                    "Mass": 0.10500000417232513,
                                     "Compute COM": false,
                                     "Centre of mass offset": [
                                         0.0,
@@ -616,21 +799,33 @@
                                             }
                                         }
                                     },
-                                    "lidarConfiguration": {
-                                        "lidarModel": 7,
-                                        "lidarImplementation": "Scene Queries",
-                                        "LidarParameters": {
-                                            "Name": "Slamtec RPLIDAR S1",
-                                            "Points per layer": 921,
-                                            "Min horizontal angle": -180.0,
-                                            "Max horizontal angle": 180.0,
-                                            "Min range": 0.10000000149011612,
-                                            "Max range": 40.0
-                                        },
-                                        "IgnoreLayer": true,
-                                        "IgnoredLayerIndex": 1,
-                                        "ExcludedEntities": [],
-                                        "PointsAtMax": false
+                                    "lidarCore": {
+                                        "lidarConfiguration": {
+                                            "lidarModelName": "CustomLidar2D",
+                                            "lidarImplementation": "Scene Queries",
+                                            "LidarParameters": {
+                                                "Name": "CustomLidar2D",
+                                                "Layers": 1,
+                                                "Points per layer": 924,
+                                                "Min horizontal angle": -180.0,
+                                                "Max horizontal angle": 180.0,
+                                                "Min vertical angle": 0.0,
+                                                "Max vertical angle": 0.0,
+                                                "Min range": 0.0,
+                                                "Max range": 100.0,
+                                                "Enable Noise": true,
+                                                "Noise Parameters": {
+                                                    "Angular noise standard deviation": 0.0,
+                                                    "Distance noise standard deviation base": 0.019999999552965164,
+                                                    "Distance noise standard deviation slope": 0.0010000000474974513
+                                                }
+                                            },
+                                            "IgnoredLayerIndices": [
+                                                1
+                                            ],
+                                            "ExcludedEntities": [],
+                                            "PointsAtMax": false
+                                        }
                                     }
                                 }
                             },
@@ -661,179 +856,6 @@
                                 "IsStatic": false,
                                 "InterpolatePosition": 0,
                                 "InterpolateRotation": 0
-                            }
-                        },
-                        "IsRuntimeActive": true
-                    }
-                },
-                {
-                    "op": "add",
-                    "path": "/Entities/Entity_[5434025951973]",
-                    "value": {
-                        "Id": "Entity_[5434025951973]",
-                        "Name": "slamtec_rplidar_s1_link_visual",
-                        "Components": {
-                            "Component_[13558631120334703172]": {
-                                "$type": "EditorInspectorComponent",
-                                "Id": 13558631120334703172,
-                                "ComponentOrderEntryArray": []
-                            },
-                            "Component_[15937921940637916859]": {
-                                "$type": "EditorEntitySortComponent",
-                                "Id": 15937921940637916859,
-                                "Child Entity Order": []
-                            },
-                            "Component_[16880687897144235879]": {
-                                "$type": "EditorVisibilityComponent",
-                                "Id": 16880687897144235879,
-                                "VisibilityFlag": true
-                            },
-                            "Component_[17782893825045371782]": {
-                                "$type": "EditorPendingCompositionComponent",
-                                "Id": 17782893825045371782,
-                                "PendingComponents": []
-                            },
-                            "Component_[2514902925827828913]": {
-                                "$type": "EditorDisabledCompositionComponent",
-                                "Id": 2514902925827828913,
-                                "DisabledComponents": []
-                            },
-                            "Component_[2561471299578768190]": {
-                                "$type": "EditorOnlyEntityComponent",
-                                "Id": 2561471299578768190,
-                                "IsEditorOnly": false
-                            },
-                            "Component_[2663517450077638093]": {
-                                "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
-                                "Id": 2663517450077638093,
-                                "Parent Entity": "Entity_[5429730984677]",
-                                "Transform Data": {
-                                    "Translate": [
-                                        0.0,
-                                        0.0,
-                                        0.0
-                                    ],
-                                    "Rotate": [
-                                        0.0,
-                                        0.0,
-                                        0.0
-                                    ],
-                                    "Scale": [
-                                        1.0,
-                                        1.0,
-                                        1.0
-                                    ],
-                                    "Locked": false,
-                                    "UniformScale": 1.0
-                                },
-                                "Parent Activation Transform Mode": 0,
-                                "IsStatic": false,
-                                "InterpolatePosition": 0,
-                                "InterpolateRotation": 0
-                            },
-                            "Component_[3265076674777361038]": {
-                                "$type": "EditorLockComponent",
-                                "Id": 3265076674777361038,
-                                "Locked": false
-                            },
-                            "Component_[6586089230771174257]": {
-                                "$type": "EditorMaterialComponent",
-                                "Id": 6586089230771174257,
-                                "Controller": {
-                                    "Configuration": {
-                                        "materials": [
-                                            {
-                                                "Key": {
-                                                    "lodIndex": 18446744073709551615,
-                                                    "materialSlotStableId": 1311805850
-                                                },
-                                                "Value": {
-                                                    "MaterialAsset": {
-                                                        "assetId": {
-                                                            "guid": "{6F8ACA28-0900-5937-A365-FFED5F372998}",
-                                                            "subId": 0
-                                                        },
-                                                        "loadBehavior": "QueueLoad",
-                                                        "assetHint": ""
-                                                    },
-                                                    "PropertyOverrides": [],
-                                                    "ModelUvOverrides": []
-                                                }
-                                            },
-                                            {
-                                                "Key": {
-                                                    "lodIndex": 18446744073709551615,
-                                                    "materialSlotStableId": 3117107120
-                                                },
-                                                "Value": {
-                                                    "MaterialAsset": {
-                                                        "assetId": {
-                                                            "guid": "{B8C827B6-2493-58DC-ADDC-8B721E34DA55}",
-                                                            "subId": 0
-                                                        },
-                                                        "loadBehavior": "QueueLoad",
-                                                        "assetHint": ""
-                                                    },
-                                                    "PropertyOverrides": [],
-                                                    "ModelUvOverrides": []
-                                                }
-                                            },
-                                            {
-                                                "Key": {
-                                                    "lodIndex": 18446744073709551615,
-                                                    "materialSlotStableId": 4154092942
-                                                },
-                                                "Value": {
-                                                    "MaterialAsset": {
-                                                        "assetId": {
-                                                            "guid": "{DBB9C83E-9304-504B-8428-769E3AC42221}",
-                                                            "subId": 0
-                                                        },
-                                                        "loadBehavior": "QueueLoad",
-                                                        "assetHint": ""
-                                                    },
-                                                    "PropertyOverrides": [],
-                                                    "ModelUvOverrides": []
-                                                }
-                                            }
-                                        ]
-                                    }
-                                },
-                                "materialSlotsByLodEnabled": false
-                            },
-                            "Component_[780474675560340036]": {
-                                "$type": "EditorEntityIconComponent",
-                                "Id": 780474675560340036,
-                                "EntityIconAssetId": {
-                                    "guid": "{00000000-0000-0000-0000-000000000000}",
-                                    "subId": 0
-                                }
-                            },
-                            "Component_[9753263690525804004]": {
-                                "$type": "AZ::Render::EditorMeshComponent",
-                                "Id": 9753263690525804004,
-                                "Controller": {
-                                    "Configuration": {
-                                        "ModelAsset": {
-                                            "assetId": {
-                                                "guid": "{45977802-63D1-54D0-AAA3-FF63FEE5F690}",
-                                                "subId": 282870366
-                                            },
-                                            "loadBehavior": "QueueLoad",
-                                            "assetHint": "robot/ros_components_description/meshes/slamtec_rplidar_s1.azmodel"
-                                        },
-                                        "SortKey": 0,
-                                        "ExcludeFromReflectionCubeMaps": false,
-                                        "UseForwardPassIBLSpecular": false,
-                                        "IsRayTracingEnabled": true,
-                                        "IsAlwaysDynamic": false,
-                                        "LodType": 0,
-                                        "LodOverride": 0,
-                                        "MinimumScreenCoverage": 0.0009259259095415473,
-                                        "QualityDecayRate": 0.5
-                                    }
-                                },
-                                "meshStats": {}
                             }
                         },
                         "IsRuntimeActive": true
