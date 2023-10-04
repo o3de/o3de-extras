@@ -24,7 +24,9 @@ namespace ROS2
                 ec->Class<AckermannControlComponent>("Ackermann Control", "Relays Ackermann commands to vehicle inputs")
                     ->ClassElement(AZ::Edit::ClassElements::EditorData, "")
                     ->Attribute(AZ::Edit::Attributes::AppearsInAddComponentMenu, AZ_CRC_CE("Game"))
-                    ->Attribute(AZ::Edit::Attributes::Category, "ROS2");
+                    ->Attribute(AZ::Edit::Attributes::Category, "ROS2")
+                    ->Attribute(AZ::Edit::Attributes::Icon, "Editor/Icons/Components/AckermannControl.svg")
+                    ->Attribute(AZ::Edit::Attributes::ViewportIcon, "Editor/Icons/Components/Viewport/AckermannControl.svg");
             }
         }
     }

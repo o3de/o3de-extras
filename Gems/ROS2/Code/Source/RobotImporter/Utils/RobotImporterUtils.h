@@ -177,7 +177,7 @@ namespace ROS2::Utils
         const SdfAssetBuilderSettings& settings,
         const FileExistsCB& fileExists = &Internal::FileExistsCall);
 
-    using AmentPrefixString = AZStd::fixed_string<4096>;
+    using AmentPrefixString = AZStd::fixed_string<32768>;
     AmentPrefixString GetAmentPrefixPath();
 } // namespace ROS2::Utils
 

@@ -25,10 +25,12 @@ namespace ROS2
             serialize->Class<SkidSteeringControlComponent, AZ::Component>()->Version(1);
             if (AZ::EditContext* editorContext = serialize->GetEditContext())
             {
-                editorContext->Class<SkidSteeringControlComponent>("Skid steering Twist Control", "")
+                editorContext->Class<SkidSteeringControlComponent>("Skid Steering Twist Control", "")
                     ->ClassElement(AZ::Edit::ClassElements::EditorData, "")
                     ->Attribute(AZ::Edit::Attributes::AppearsInAddComponentMenu, AZ_CRC_CE("Game"))
-                    ->Attribute(AZ::Edit::Attributes::Category, "ROS2");
+                    ->Attribute(AZ::Edit::Attributes::Category, "ROS2")
+                    ->Attribute(AZ::Edit::Attributes::Icon, "Editor/Icons/Components/SkidSteeringTwistControl.svg")
+                    ->Attribute(AZ::Edit::Attributes::ViewportIcon, "Editor/Icons/Components/Viewport/SkidSteeringTwistControl.svg");
             }
         }
     }
