@@ -260,7 +260,7 @@ namespace ROS2
         // No asset was found, we can't convert the material script.
         if (!assetId.IsValid())
         {
-            AZ_Warning("AddMaterial", false, "Failed to find product material for %s", materialProductPath.String().c_str());
+            AZ_Warning("AddMaterial", false, "Failed to find product material for %s", materialProductPath.c_str());
             return;
         }
 
