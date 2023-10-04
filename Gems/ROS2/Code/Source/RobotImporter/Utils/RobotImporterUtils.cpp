@@ -427,7 +427,7 @@ namespace ROS2::Utils
     AssetFilenameReferences GetReferencedAssetFilenames(const sdf::Root& root)
     {
         AssetFilenameReferences filenames;
-        auto GetMeshesFromModel = [&filenames](const sdf::Model& model, const ModelStack&) -> VisitModelResponse
+        auto GetAssetsFromModel = [&filenames](const sdf::Model& model, const ModelStack&) -> VisitModelResponse
         {
             const auto addFilenameFromGeometry = [&filenames](const sdf::Geometry* geometry, ReferencedAssetType assetType)
             {
@@ -525,7 +525,7 @@ namespace ROS2::Utils
             return VisitModelResponse::VisitNestedAndSiblings;
         };
 
-        VisitModels(root, GetMeshesFromModel);
+        VisitModels(root, GetAssetsFromModel);
 
         return filenames;
     }
