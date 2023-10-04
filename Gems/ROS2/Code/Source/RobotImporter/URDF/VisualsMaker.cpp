@@ -475,7 +475,7 @@ namespace ROS2
 
         // Initialize the material component configuration to contain all of the material mappings from the model.
         AZ::Render::MaterialComponentConfig config;
-        config.m_materials = AZ::Render::GetDefautMaterialMapFromModelAsset(modelAsset);
+        config.m_materials = AZ::Render::GetDefaultMaterialMapFromModelAsset(modelAsset);
 
         // Try to override all of the various material settings based on what's contained in the <material> and <visual> elements in the source file.
         OverrideMaterialPbrSettings(material, config.m_materials);
