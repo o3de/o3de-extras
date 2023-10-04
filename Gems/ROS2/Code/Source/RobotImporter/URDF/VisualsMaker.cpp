@@ -240,6 +240,8 @@ namespace ROS2
             return;
         }
 
+        // Make sure the material name is lowercased before checking the path in the Asset Cache
+        AZStd::to_lower(materialName);
         // If a material has a <script> element we'll treat the name as a path and name to an O3DE material.
         // For example, "Gazebo/Wood" will look for a product material in "<cache>/gazebo/wood.azmaterial"
         AZ::IO::Path materialProductPath(materialName);
