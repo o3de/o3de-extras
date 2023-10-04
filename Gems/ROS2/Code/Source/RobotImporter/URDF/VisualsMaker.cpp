@@ -278,7 +278,7 @@ namespace ROS2
             }
         }
 
-        AZ_Info("AddMaterial", "Added product material %s", materialProductPath.c_str());
+        AZ_Info("AddMaterial", "Added product material %s\n", materialProductPath.c_str());
     }
 
     static void OverrideMaterialPbrSettings(const sdf::Material* material, const AZStd::shared_ptr<Utils::UrdfAssetMap>& assetMapping, AZ::Render::MaterialAssignmentMap& overrides)
