@@ -78,7 +78,7 @@ namespace ROS2
         /// mapping from urdf path to asset source
         AZStd::shared_ptr<Utils::UrdfAssetMap> m_urdfAssetsMapping;
         AZStd::unique_ptr<URDFPrefabMaker> m_prefabMaker;
-        AZStd::unordered_set<AZStd::string> m_meshNames;
+        Utils::AssetFilenameReferences m_assetNames;
 
         /// Xacro params
         Utils::xacro::Params m_params;
