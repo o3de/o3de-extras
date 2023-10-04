@@ -109,17 +109,17 @@ namespace ROS2::Utils
     //! @returns product asset id (invalid id if not found)
     AZ::Data::AssetId GetProductAssetId(const AZ::Uuid& sourceAssetUUID, const AZ::TypeId typeId);
 
-    //! Helper function that gives AZ::RPI::ImageAsset product asset from source asset GUID
+    //! Helper function that gives AZ::RPI::ImageAsset product asset ID from source asset GUID
     //! @param sourceAssetUUID is source asset GUID
     //! @returns product asset id (invalid id if not found)
     AZ::Data::AssetId GetImageProductAssetId(const AZ::Uuid& sourceAssetUUID);
 
-    //! Helper function that gives AZ::RPI::ModelAsset product asset from source asset GUID
+    //! Helper function that gives AZ::RPI::ModelAsset product asset ID from source asset GUID
     //! @param sourceAssetUUID is source asset GUID
     //! @returns product asset id (invalid id if not found)
     AZ::Data::AssetId GetModelProductAssetId(const AZ::Uuid& sourceAssetUUID);
 
-    //! Helper function that gives PhysX::Pipeline::MeshAsset product asset from source asset GUID
+    //! Helper function that gives PhysX::Pipeline::MeshAsset product asset ID from source asset GUID
     //! @param sourceAssetUUID is source asset GUID
     //! @returns product asset id (invalid id if not found)
     AZ::Data::AssetId GetPhysXMeshProductAssetId(const AZ::Uuid& sourceAssetUUID);
