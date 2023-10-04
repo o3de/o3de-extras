@@ -10,10 +10,12 @@
 #include "CollidersMaker.h"
 #include "PrefabMakerUtils.h"
 #include <API/EditorAssetSystemAPI.h>
+#include <Atom/Feature/Mesh/MeshFeatureProcessor.h>
 #include <AzCore/Debug/Trace.h>
 #include <AzCore/IO/FileIO.h>
 #include <AzCore/Math/Transform.h>
 #include <AzCore/Serialization/Json/JsonUtils.h>
+#include <AzFramework/Scene/SceneSystemInterface.h>
 #include <AzToolsFramework/Entity/EditorEntityHelpers.h>
 #include <AzToolsFramework/Prefab/PrefabLoaderInterface.h>
 #include <AzToolsFramework/Prefab/PrefabLoaderScriptingBus.h>
@@ -39,7 +41,7 @@ namespace ROS2
         bool useArticulations,
         const AZStd::optional<AZ::Transform> spawnPosition)
         : m_root(root)
-        , m_visualsMaker{}
+        , m_visualsMaker(urdfAssetsMapping)
         , m_collidersMaker(urdfAssetsMapping)
         , m_prefabPath(std::move(prefabPath))
         , m_urdfAssetsMapping(urdfAssetsMapping)
@@ -48,41 +50,6 @@ namespace ROS2
     {
         AZ_Assert(!m_prefabPath.empty(), "Prefab path is empty");
         AZ_Assert(m_root, "SDF Root is nullptr");
-        if (m_root != nullptr)
-        {
-            VisualsMaker::MaterialNameMap materialMap;
-            auto GetVisualsFromModel = [&materialMap](const sdf::Model& model)
-            {
-                for (uint64_t linkIndex{}; linkIndex < model.LinkCount(); ++linkIndex)
-                {
-                    if (const sdf::Link* link = model.LinkByIndex(linkIndex); link != nullptr)
-                    {
-                        for (uint64_t visualIndex{}; visualIndex < link->VisualCount(); ++visualIndex)
-                        {
-                            if (const sdf::Visual* visual = link->VisualByIndex(visualIndex); visual != nullptr)
-                            {
-                                if (const sdf::Material* material = visual->Material(); material != nullptr)
-                                {
-                                    const std::string visualName = visual->Name();
-                                    materialMap.emplace(AZStd::string{ visualName.c_str(), visualName.size() }, material);
-                                }
-                            }
-                        }
-                    }
-                }
-            };
-
-            // Iterate over all visuals to get their materials
-            auto VisitAllModels = [&GetVisualsFromModel](const sdf::Model& model, const Utils::ModelStack&) -> Utils::VisitModelResponse
-            {
-                GetVisualsFromModel(model);
-                // Continue to visit all models within the SDF document and query their <visual> tags
-                return Utils::VisitModelResponse::VisitNestedAndSiblings;
-            };
-            Utils::VisitModels(*m_root, VisitAllModels);
-
-            m_visualsMaker = VisualsMaker(AZStd::move(materialMap), urdfAssetsMapping);
-        }
     }
 
     URDFPrefabMaker::CreatePrefabTemplateResult URDFPrefabMaker::CreatePrefabTemplateFromUrdfOrSdf()
