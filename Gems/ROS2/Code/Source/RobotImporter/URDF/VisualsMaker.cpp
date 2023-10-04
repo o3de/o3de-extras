@@ -232,7 +232,7 @@ namespace ROS2
         entity->Deactivate();
     }
 
-    static void OverrideScriptMaterial(const sdf::Material* material, [[maybe_unused]] AZ::Render::MaterialAssignmentMap& overrides)
+    static void OverrideScriptMaterial(const sdf::Material* material, AZ::Render::MaterialAssignmentMap& overrides)
     {
         AZStd::string materialName(material->ScriptName().c_str(), material->ScriptName().size());
         if (materialName.empty())
