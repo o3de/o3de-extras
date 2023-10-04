@@ -434,9 +434,10 @@ namespace ROS2::Utils
                 if (geometry->Type() == sdf::GeometryType::MESH)
                 {
                     auto pMesh = geometry->MeshShape();
-                    if (pMesh)
+                    std::string meshUri = pMesh->Uri();
+                    if (pMesh && !meshUri.empty())
                     {
-                        filenames.insert(AZStd::string(pMesh->Uri().c_str(), pMesh->Uri().size()));
+                        filenames.emplace(meshUri.c_str(), meshUri.size());
                     }
                 }
             };
@@ -543,6 +544,25 @@ namespace ROS2::Utils
             return VisitModelResponse::VisitNestedAndSiblings;
         };
         VisitModels(root, IsJointInModel);
+
+        return resultModel;
+    }
+
+    const sdf::Model* GetModelContainingModel(const sdf::Root& root, const sdf::Model& model)
+    {
+        const sdf::Model* resultModel{};
+        auto IsModelInModel = [&model, &resultModel](const sdf::Model& outerModel, const ModelStack&) -> VisitModelResponse
+        {
+            // Validate the memory address of the model matches the outer model found searching the visited model "child models"
+            if (const sdf::Model* searchModel = outerModel.ModelByName(model.Name()); searchModel != &model)
+            {
+                resultModel = &outerModel;
+                return VisitModelResponse::Stop;
+            }
+
+            return VisitModelResponse::VisitNestedAndSiblings;
+        };
+        VisitModels(root, IsModelInModel);
 
         return resultModel;
     }

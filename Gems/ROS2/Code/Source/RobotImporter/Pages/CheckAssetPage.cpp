@@ -105,7 +105,9 @@ namespace ROS2
         int i = m_table->rowCount();
         m_table->setRowCount(i + 1);
 
-        bool isOk = assetSourcePath.has_value() && resolvedSdfPath.has_value();
+        // The Asset ID GUID must not be null(all zeros) and the asset source path must not be empty
+        bool isOk = (assetSourcePath.has_value() && !assetSourcePath->empty() && assetSourcePath != "not found")
+            && (resolvedSdfPath.has_value() && !resolvedSdfPath->empty()) && !assetUuid.IsNull();
         if (!isOk)
         {
             m_missingCount++;
@@ -154,8 +156,13 @@ namespace ROS2
             m_table->item(i, Columns::ResolvedMeshPath)->setIcon(m_failureIcon);
             m_table->setItem(i, Columns::ProductAsset, createCell(false, QString()));
         }
-        m_assetsPaths.push_back(assetSourcePath ? *assetSourcePath : AZStd::string());
-        m_assetsUuids.push_back(assetUuid);
+
+        // Don't add an empty asset path to the list of resolved assets
+        if (isOk)
+        {
+            m_assetsPaths.push_back(AZStd::move(*assetSourcePath));
+            m_assetsUuids.push_back(assetUuid);
+        }
     }
 
     void CheckAssetPage::StartWatchAsset()

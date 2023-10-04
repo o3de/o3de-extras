@@ -70,7 +70,8 @@ namespace ROS2
         AZStd::string GetStatus();
 
     private:
-        AzToolsFramework::Prefab::PrefabEntityResult AddEntitiesForLink(const sdf::Link* link, AZ::EntityId parentEntityId, AZStd::vector<AZ::EntityId>& createdEntities);
+        AzToolsFramework::Prefab::PrefabEntityResult CreateEntityForModel(const sdf::Model& model);
+        AzToolsFramework::Prefab::PrefabEntityResult AddEntitiesForLink(const sdf::Link& link, const sdf::Model* attachedModel, AZ::EntityId parentEntityId, AZStd::vector<AZ::EntityId>& createdEntities);
         void AddRobotControl(AZ::EntityId rootEntityId);
         static void MoveEntityToDefaultSpawnPoint(const AZ::EntityId& rootEntityId, AZStd::optional<AZ::Transform> spawnPosition);
 
