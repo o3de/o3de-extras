@@ -12,16 +12,18 @@
 #include <AzCore/XML/rapidxml.h>
 #include <AzFramework/Process/ProcessCommunicator.h>
 #include <AzFramework/Process/ProcessWatcher.h>
+#include <FixURDF/FixURDF.h>
 #include <QString>
+#include <SdfAssetBuilder/SdfAssetBuilderSettings.h>
 
 namespace ROS2::Utils::xacro
 {
-
-    ExecutionOutcome ParseXacro(const AZStd::string& filename, const Params& params)
+    ExecutionOutcome ParseXacro(
+        const AZStd::string& filename, const Params& params, const sdf::ParserConfig& parserConfig, const SdfAssetBuilderSettings& settings)
     {
         ExecutionOutcome outcome;
         // test if xacro exists
-        AZStd::string xacroPath = "xacro";
+        AZ::IO::Path xacroPath = "xacro";
         auto settingsRegistry = AZ::SettingsRegistry::Get();
         AZStd::string xacroExecutablePath;
         if (settingsRegistry && settingsRegistry->Get(xacroExecutablePath, "/O3DE/ROS2/xacro_executable_path"))
@@ -35,16 +37,40 @@ namespace ROS2::Utils::xacro
             }
         }
 
-        AZ_Warning("ParseXacro", !xacroPath.empty(), "There is xacro executable in your path");
-        if (xacroPath.empty())
+        AzFramework::ProcessLauncher::ProcessLaunchInfo processLaunchInfo;
+        processLaunchInfo.m_processExecutableString = xacroPath.Native();
+        processLaunchInfo.m_commandlineParameters.emplace<AZStd::vector<AZStd::string>>({ AZStd::string("--help") });
+        if (AZStd::unique_ptr<AzFramework::ProcessWatcher> xacroHelpProcess(AzFramework::ProcessWatcher::LaunchProcess(processLaunchInfo,
+            AzFramework::ProcessCommunicationType::COMMUNICATOR_TYPE_STDINOUT));
+            xacroHelpProcess != nullptr)
         {
-            return ExecutionOutcome{};
+            // 60 seconds is used as a cap on how long it should take to run the `xacro --help` command
+            // In reality this should take less than a second, but there has been a couple of occurrences
+            // where it takes over a second to run. 60 seconds is a fail fase value
+            constexpr AZStd::chrono::seconds helpCommandWaitTime{ 60 };
+
+            AZ::u32 exitCode{ AZStd::numeric_limits<AZ::u32>::max() };
+            xacroHelpProcess->WaitForProcessToExit(static_cast<AZ::u32>(helpCommandWaitTime.count()), &exitCode);
+            if (exitCode != 0)
+            {
+                const auto fullProcessCommand = AZStd::string::format("%s %s",
+                    processLaunchInfo.m_processExecutableString.c_str(),
+                    processLaunchInfo.GetCommandLineParametersAsString().c_str());
+                AZ_Warning(
+                    "ParseXacro",
+                    false,
+                    "Attempted to run validate xacro existence with command: %s",
+                    fullProcessCommand.c_str());
+                outcome.m_called = fullProcessCommand;
+                return outcome;
+            }
         }
+
         AZ_Printf("ParseXacro", "xacro executable : %s \n", xacroPath.c_str());
         AZ_Printf("ParseXacro", "Convert xacro file : %s \n", filename.c_str());
-        const QString program = QString::fromUtf8(xacroPath.data(), xacroPath.size());
-        AzFramework::ProcessLauncher::ProcessLaunchInfo processLaunchInfo;
-        processLaunchInfo.m_processExecutableString = xacroPath;
+        // Clear out the processLanunchInfo structure
+        processLaunchInfo = {};
+        processLaunchInfo.m_processExecutableString = xacroPath.Native();
         processLaunchInfo.m_commandlineParameters.emplace<AZStd::vector<AZStd::string>>({ filename });
         for (const auto& param : params)
         {
@@ -65,8 +91,21 @@ namespace ROS2::Utils::xacro
         {
             AZ_Printf("ParseXacro", "xacro finished with success \n");
             const auto& output = process_output.outputResult;
-            outcome.m_urdfHandle = UrdfParser::Parse(output.data());
-            outcome.m_succeed = true;
+
+            if (settings.m_fixURDF)
+            {
+                // modify in memory URDF result
+                auto [modifiedXmlStr, modifiedElements] = (ROS2::Utils::ModifyURDFInMemory(output));
+                outcome.m_urdfHandle = UrdfParser::Parse(modifiedXmlStr, parserConfig);
+                outcome.m_urdfHandle.m_modifiedURDFContent = AZStd::move(modifiedXmlStr);
+                outcome.m_urdfHandle.m_urdfModifications = AZStd::move(modifiedElements);
+                outcome.m_succeed = true;
+            }
+            else
+            {
+                outcome.m_urdfHandle = UrdfParser::Parse(output, parserConfig);
+                outcome.m_succeed = true;
+            }
         }
         else
         {
@@ -94,7 +133,15 @@ namespace ROS2::Utils::xacro
         AZStd::unordered_map<AZStd::string, AZStd::string> params;
         AZ::rapidxml::xml_document<char> doc;
         doc.parse<AZ::rapidxml::parse_full>(dataArray.data());
+        if (doc.first_node() == nullptr)
+        {
+            return params;
+        }
         AZ::rapidxml::xml_node<char>* xmlRootNode = doc.first_node("robot");
+        if (xmlRootNode == nullptr)
+        {
+            return params;
+        }
         for (AZ::rapidxml::xml_node<>* child_node = xmlRootNode->first_node(); child_node; child_node = child_node->next_sibling())
         {
             if (strcmp(argNameTag, child_node->name()) == 0)

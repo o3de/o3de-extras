@@ -8,91 +8,145 @@
 
 #include "UrdfParser.h"
 
-#include <fstream>
+#include <sstream>
 
 #include <AzCore/Debug/Trace.h>
+#include <AzCore/std/string/regex.h>
 #include <AzCore/std/string/string.h>
-#include <console_bridge/console.h>
-#include <urdf_model/model.h>
+#include <RobotImporter/FixURDF/FixURDF.h>
+#include <RobotImporter/Utils/ErrorUtils.h>
+#include <RobotImporter/Utils/FilePath.h>
 
-namespace ROS2
+namespace ROS2::UrdfParser
 {
-    namespace UrdfParser::Internal
+    class RedirectSDFOutputStream
     {
-        void CheckIfCurrentLocaleHasDotAsADecimalSeparator()
+    public:
+        // Copy the original console stream to restore in the destructor via RAII
+        // the console stream itself is referenced here and redirected to a local
+        // os stream by default
+        // @param consoleStream Reference to sdf::Console::ConsoleStream whose
+        //        output will be redirected
+        // @param redirectStream reference to stream where console stream output is redirected to
+        RedirectSDFOutputStream(sdf::Console::ConsoleStream& consoleStream, std::ostream& redirectStream)
+            : m_consoleStreamRef(consoleStream)
+            , m_origConsoleStream(consoleStream)
         {
-            // Due to the fact that URDF parser takes into account the locale information, incompatibility between URDF file locale and
-            // system locale might lead to incorrect URDF parsing. Mainly it affects floating point numbers, and the decimal separator. When
-            // locales are set to system with comma as decimal separator and URDF file is created with dot as decimal separator, URDF parser
-            // will trim the floating point number after comma. For example, if parsing 0.1, URDF parser will parse it as 0.
-            // This might lead to incorrect URDF loading. If the current locale is not a dot (as per standard ROS locale), we warn the user.
-            std::locale currentLocale("");
-            if (std::use_facet<std::numpunct<char>>(currentLocale).decimal_point() != '.')
-            {
-                AZ_Warning(
-                    "UrdfParser", false, "Locale %s might be incompatible with the URDF file content.\n", currentLocale.name().c_str());
-            }
+            // Redirect the Output stream to the supplied
+            m_consoleStreamRef = sdf::Console::ConsoleStream(&redirectStream);
         }
 
-        class CustomConsoleHandler : public console_bridge::OutputHandler
+        ~RedirectSDFOutputStream()
         {
-        private:
-            std::stringstream console_ss;
-
-        public:
-            void log(const std::string& text, console_bridge::LogLevel level, const char* filename, int line) override final;
-
-            //! Clears accumulated log
-            void Clear();
-
-            //! Read accumulated log to a string
-            AZStd::string GetLog();
-        };
-
-        void CustomConsoleHandler::log(const std::string& text, console_bridge::LogLevel level, const char* filename, int line)
-        {
-            AZ_Printf("UrdfParser", "%s\n", text.c_str());
-            console_ss << text << "\n";
+            // Restore the original console stream
+            m_consoleStreamRef = AZStd::move(m_origConsoleStream);
         }
 
-        void CustomConsoleHandler::Clear()
-        {
-            console_ss = std::stringstream();
-        }
+    private:
+        sdf::Console::ConsoleStream& m_consoleStreamRef;
+        sdf::Console::ConsoleStream m_origConsoleStream;
+    };
 
-        AZStd::string CustomConsoleHandler::GetLog()
-        {
-            return AZStd::string(console_ss.str().c_str(), console_ss.str().size());
-        }
-
-        CustomConsoleHandler customConsoleHandler;
-    } // namespace UrdfParser::Internal
-
-    urdf::ModelInterfaceSharedPtr UrdfParser::Parse(const AZStd::string& xmlString)
+    // Parser result member functions
+    sdf::Root& ParseResult::GetRoot() &
     {
-        console_bridge::useOutputHandler(&Internal::customConsoleHandler);
-        Internal::CheckIfCurrentLocaleHasDotAsADecimalSeparator();
-        const auto ret = urdf::parseURDF(xmlString.c_str());
-        console_bridge::restorePreviousOutputHandler();
-        return ret;
+        return m_root;
+    }
+    const sdf::Root& ParseResult::GetRoot() const&
+    {
+        return m_root;
+    }
+    sdf::Root&& ParseResult::GetRoot() &&
+    {
+        return AZStd::move(m_root);
     }
 
-    urdf::ModelInterfaceSharedPtr UrdfParser::ParseFromFile(const AZStd::string& filePath)
+    const AZStd::string& ParseResult::GetParseMessages() const&
     {
-        std::ifstream istream(filePath.c_str());
+        return m_parseMessages;
+    }
+
+    AZStd::string&& ParseResult::GetParseMessages() &&
+    {
+        return AZStd::move(m_parseMessages);
+    }
+
+    const sdf::Errors& ParseResult::GetSdfErrors() const&
+    {
+        return m_sdfErrors;
+    }
+
+    sdf::Errors&& ParseResult::GetSdfErrors() &&
+    {
+        return AZStd::move(m_sdfErrors);
+    }
+
+    ParseResult::operator bool() const
+    {
+        return m_sdfErrors.empty();
+    }
+
+    bool ParseResult::UrdfParsedWithModifiedContent() const
+    {
+        return m_urdfModifications.duplicatedJoints.size() > 0 || m_urdfModifications.missingInertias.size() > 0 ||
+            m_urdfModifications.incompleteInertias.size() > 0;
+    }
+
+    RootObjectOutcome Parse(AZStd::string_view xmlString, const sdf::ParserConfig& parserConfig)
+    {
+        return Parse(std::string(xmlString.data(), xmlString.size()), parserConfig);
+    }
+    RootObjectOutcome Parse(const std::string& xmlString, const sdf::ParserConfig& parserConfig)
+    {
+        ParseResult parseResult;
+        std::ostringstream parseStringStream;
+        {
+            RedirectSDFOutputStream redirectConsoleStreamMsg(sdf::Console::Instance()->GetMsgStream(), parseStringStream);
+            parseResult.m_sdfErrors = parseResult.m_root.LoadSdfString(xmlString, parserConfig);
+        }
+        // Get any captured sdf::Console messages
+        const auto& parseMessages = parseStringStream.str();
+
+        // regular expression to escape console's color codes
+        const AZStd::regex escapeColor("\x1B\\[[0-9;]*[A-Za-z]");
+
+        parseResult.m_parseMessages =  AZStd::regex_replace(AZStd::string(parseMessages.c_str(), parseMessages.size()),escapeColor, "");
+
+        // if there are no parse errors return the sdf Root object otherwise return the errors
+        return parseResult;
+    }
+
+    RootObjectOutcome ParseFromFile(
+        AZ::IO::PathView filePath, const sdf::ParserConfig& parserConfig, const SdfAssetBuilderSettings& settings)
+    {
+        // Store path in a AZ::IO::FixedMaxPath which is stack based structure that provides memory
+        // for the path string and is null terminated.
+        // It is backed by an AZStd::fixed_string<1024> which is a char buffer of 1025 internally
+        AZ::IO::FixedMaxPath urdfFilePath = filePath.FixedMaxPathString();
+        std::ifstream istream(urdfFilePath.c_str());
         if (!istream)
         {
-            AZ_Error("UrdfParser", false, "File %s does not exist", filePath.c_str());
-            return nullptr;
+            auto fileNotFoundMessage = AZStd::fixed_string<1024>::format("File %.*s does not exist", AZ_PATH_ARG(urdfFilePath));
+            ParseResult fileNotFoundResult;
+            fileNotFoundResult.m_sdfErrors.emplace_back(
+                sdf::ErrorCode::FILE_READ,
+                std::string{ fileNotFoundMessage.c_str(), fileNotFoundMessage.size() },
+                std::string{ urdfFilePath.c_str(), urdfFilePath.Native().size() });
+            return fileNotFoundResult;
         }
 
         std::string xmlStr((std::istreambuf_iterator<char>(istream)), std::istreambuf_iterator<char>());
-        return Parse(xmlStr.c_str());
+        if (Utils::IsFileUrdf(filePath) && settings.m_fixURDF)
+        {
+            // modify in memory
+            auto [modifiedXmlStr, modifiedElements] = (ROS2::Utils::ModifyURDFInMemory(xmlStr));
+
+            auto result = Parse(modifiedXmlStr, parserConfig);
+            result.m_urdfModifications = AZStd::move(modifiedElements);
+            result.m_modifiedURDFContent = AZStd::move(modifiedXmlStr);
+            return result;
+        }
+        return Parse(xmlStr, parserConfig);
     }
 
-    AZStd::string UrdfParser::GetUrdfParsingLog()
-    {
-        return Internal::customConsoleHandler.GetLog();
-    }
-
-} // namespace ROS2
+} // namespace ROS2::UrdfParser

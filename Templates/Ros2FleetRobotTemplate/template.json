@@ -1,13 +1,17 @@
 {
     "template_name": "Ros2FleetRobotTemplate",
+    "version": "1.1.0",
     "origin": "Open 3D Engine Extras",
     "origin_url": "https://github.com/o3de/o3de-extras",
+    "repo_uri": "https://raw.githubusercontent.com/o3de/o3de-extras/development",
     "license_url": "https://github.com/o3de/o3de-extras/tree/development/Templates/Ros2FleetRobotTemplate/Template/LICENSE.txt",
-    "display_name": "Ros2FleetRobotTemplate",
+    "display_name": "ROS2 Fleet Robot",
     "summary": "Template for ROS2 multi-robot project.",
     "canonical_tags": [],
     "user_tags": [
-        "Ros2FleetRobotTemplate", "ROS2", "ROS"
+        "Ros2FleetRobotTemplate",
+        "ROS2",
+        "ROS"
     ],
     "icon_path": "preview.png",
     "copyFiles": [
@@ -244,6 +248,10 @@
             "isTemplated": false
         },
         {
+            "file": "Prefabs/ProteusLaserScanner.prefab",
+            "isTemplated": false
+        },
+        {
             "file": "autoexec.cfg",
             "isTemplated": false
         },
@@ -262,7 +270,92 @@
         {
             "file": "project.json",
             "isTemplated": true
+        },
+        {
+            "file": "Examples/ros2_ws/src/o3de_fleet_nav/maps/map_warehouse.yaml",
+            "isTemplated": false
+        },
+        {
+            "file": "Examples/ros2_ws/src/o3de_fleet_nav/maps/map_warehouse.pgm",
+            "isTemplated": false
+        },
+        {
+            "file": "Examples/ros2_ws/src/o3de_fleet_nav/resource/o3de_fleet_nav",
+            "isTemplated": false
+        },
+        {
+            "file": "Examples/ros2_ws/src/o3de_fleet_nav/params/humble/nav2_multirobot_params.yaml",
+            "isTemplated": false
+        },
+        {
+            "file": "Examples/ros2_ws/src/o3de_fleet_nav/params/humble/nav2_params.yaml",
+            "isTemplated": false
+        },
+        {
+            "file": "Examples/ros2_ws/src/o3de_fleet_nav/params/iron/nav2_multirobot_params.yaml",
+            "isTemplated": false
+        },
+        {
+            "file": "Examples/ros2_ws/src/o3de_fleet_nav/params/iron/nav2_params.yaml",
+            "isTemplated": false
+        },
+        {
+            "file": "Examples/ros2_ws/src/o3de_fleet_nav/setup.py",
+            "isTemplated": false
+        },
+        {
+            "file": "Examples/ros2_ws/src/o3de_fleet_nav/package.xml",
+            "isTemplated": false
+        },
+        {
+            "file": "Examples/ros2_ws/src/o3de_fleet_nav/NOTICE",
+            "isTemplated": false
+        },
+        {
+            "file": "Examples/ros2_ws/src/o3de_fleet_nav/config/fleet_config.yaml",
+            "isTemplated": false
+        },
+        {
+            "file": "Examples/ros2_ws/src/o3de_fleet_nav/launch/o3de_rviz_launch.py",
+            "isTemplated": false
+        },
+        {
+            "file": "Examples/ros2_ws/src/o3de_fleet_nav/launch/o3de_nav_launch.py",
+            "isTemplated": false
+        },
+        {
+            "file": "Examples/ros2_ws/src/o3de_fleet_nav/launch/o3de_fleet_nav_launch.py",
+            "isTemplated": false
+        },
+        {
+            "file": "Examples/ros2_ws/src/o3de_fleet_nav/o3de_fleet_nav/__init__.py",
+            "isTemplated": false
+        },
+        {
+            "file": "Examples/ros2_ws/src/o3de_fleet_nav/o3de_fleet_nav/robot_spawner.py",
+            "isTemplated": false
+        },
+        {
+            "file": "Examples/ros2_ws/src/o3de_fleet_nav/test/test_pep257.py",
+            "isTemplated": false
+        },
+        {
+            "file": "Examples/ros2_ws/src/o3de_fleet_nav/test/test_flake8.py",
+            "isTemplated": false
+        },
+        {
+            "file": "Examples/ros2_ws/src/o3de_fleet_nav/test/test_copyright.py",
+            "isTemplated": false
+        },
+        {
+            "file": "Examples/ros2_ws/src/o3de_fleet_nav/setup.cfg",
+            "isTemplated": false
+        },
+        {
+            "file": "Examples/ros2_ws/src/o3de_fleet_nav/rviz/nav2_namespaced_view.rviz",
+            "isTemplated": false
         }
+        
     ],
     "createDirectories": [
         {
@@ -356,40 +449,50 @@
             "dir": "Shaders"
         },
         {
+            "dir": "Prefabs"
+        },
+        {
             "dir": "Shaders/ShaderResourceGroups"
         },
         {
             "dir": "cmake"
         },
         {
-            "dir": "proteus_nav"
+            "dir": "Examples"
         },
         {
-            "dir": "proteus_nav/src"
+            "dir": "Examples/ros2_ws"
         },
         {
-            "dir": "proteus_nav/src/proteus_nav"
+            "dir": "Examples/ros2_ws/src"
         },
         {
-            "dir": "proteus_nav/src/proteus_nav/launch"
+            "dir": "Examples/ros2_ws/src/o3de_fleet_nav"
         },
         {
-            "dir": "proteus_nav/src/proteus_nav/launch/__pycache__"
+            "dir": "Examples/ros2_ws/src/o3de_fleet_nav/config"
         },
         {
-            "dir": "proteus_nav/src/proteus_nav/launch/config"
+            "dir": "Examples/ros2_ws/src/o3de_fleet_nav/launch"
         },
         {
-            "dir": "proteus_nav/src/proteus_nav/proteus_nav"
+            "dir": "Examples/ros2_ws/src/o3de_fleet_nav/maps"
         },
         {
-            "dir": "proteus_nav/src/proteus_nav/resource"
+            "dir": "Examples/ros2_ws/src/o3de_fleet_nav/o3de_fleet_nav"
         },
         {
-            "dir": "proteus_nav/src/proteus_nav/test"
+            "dir": "Examples/ros2_ws/src/o3de_fleet_nav/params"
         },
         {
-            "dir": "proteus_nav/src/proteus_nav/test/__pycache__"
+            "dir": "Examples/ros2_ws/src/o3de_fleet_nav/resource"
+        },
+        {
+            "dir": "Examples/ros2_ws/src/o3de_fleet_nav/rviz"
+        },
+        {
+            "dir": "Examples/ros2_ws/src/o3de_fleet_nav/test"
         }
-    ]
+    ],
+    "download_source_uri": "https://github.com/o3de/o3de-extras/releases/download/2.0/ros2fleetrobottemplate-1.1.0-template.zip"
 }

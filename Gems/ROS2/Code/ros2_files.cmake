@@ -9,44 +9,90 @@ set(FILES
         ../Assets/Passes/PipelineROSColor.pass
         ../Assets/Passes/PipelineROSDepth.pass
         ../Assets/Passes/ROSPassTemplates.azasset
+        Source/Camera/CameraConstants.h
+        Source/Camera/CameraPublishers.cpp
+        Source/Camera/CameraPublishers.h
         Source/Camera/CameraSensor.cpp
         Source/Camera/CameraSensor.h
+        Source/Camera/CameraSensorDescription.cpp
+        Source/Camera/CameraSensorDescription.h
         Source/Camera/CameraSensorConfiguration.cpp
         Source/Camera/CameraSensorConfiguration.h
         Source/Camera/ROS2CameraSensorComponent.cpp
         Source/Camera/ROS2CameraSensorComponent.h
+        Source/Camera/CameraUtilities.cpp
+        Source/Camera/CameraUtilities.h
         Source/Clock/PhysicallyStableClock.cpp
         Source/Clock/SimulationClock.cpp
         Source/Communication/QoS.cpp
+        Source/Communication/PublisherConfiguration.cpp
         Source/Communication/TopicConfiguration.cpp
+        Source/ContactSensor/ROS2ContactSensorComponent.cpp
+        Source/ContactSensor/ROS2ContactSensorComponent.h
         Source/Frame/NamespaceConfiguration.cpp
         Source/Frame/ROS2FrameComponent.cpp
         Source/Frame/ROS2Transform.cpp
+        Source/Gripper/GripperActionServer.cpp
+        Source/Gripper/GripperActionServer.h
+        Source/Gripper/GripperActionServerComponent.cpp
+        Source/Gripper/GripperActionServerComponent.h
+        Source/Gripper/VacuumGripperComponent.h
+        Source/Gripper/VacuumGripperComponent.cpp
+        Source/Gripper/FingerGripperComponent.h
+        Source/Gripper/FingerGripperComponent.cpp
         Source/GNSS/GNSSFormatConversions.cpp
         Source/GNSS/GNSSFormatConversions.h
+        Source/GNSS/GNSSSensorConfiguration.cpp
+        Source/GNSS/GNSSSensorConfiguration.h
         Source/GNSS/ROS2GNSSSensorComponent.cpp
         Source/GNSS/ROS2GNSSSensorComponent.h
+        Source/Imu/ImuSensorConfiguration.cpp
+        Source/Imu/ImuSensorConfiguration.h
         Source/Imu/ROS2ImuSensorComponent.cpp
         Source/Imu/ROS2ImuSensorComponent.h
         Source/Lidar/LidarRaycaster.cpp
         Source/Lidar/LidarRaycaster.h
         Source/Lidar/LidarRegistrarSystemComponent.cpp
         Source/Lidar/LidarRegistrarSystemComponent.h
+        Source/Lidar/LidarSensorConfiguration.cpp
+        Source/Lidar/LidarSensorConfiguration.h
         Source/Lidar/LidarSystem.cpp
         Source/Lidar/LidarSystem.h
         Source/Lidar/LidarTemplate.cpp
         Source/Lidar/LidarTemplate.h
         Source/Lidar/LidarTemplateUtils.cpp
         Source/Lidar/LidarTemplateUtils.h
+        Source/Lidar/LidarCore.cpp
+        Source/Lidar/LidarCore.h
         Source/Lidar/ROS2Lidar2DSensorComponent.cpp
         Source/Lidar/ROS2Lidar2DSensorComponent.h
         Source/Lidar/ROS2LidarSensorComponent.cpp
         Source/Lidar/ROS2LidarSensorComponent.h
-        Source/Manipulator/MotorizedJointComponent.cpp
+        Source/Manipulation/Controllers/JointsArticulationControllerComponent.cpp
+        Source/Manipulation/Controllers/JointsArticulationControllerComponent.h
+        Source/Manipulation/Controllers/JointsPIDControllerComponent.cpp
+        Source/Manipulation/Controllers/JointsPIDControllerComponent.h
+        Source/Manipulation/JointInfo.cpp
+        Source/Manipulation/JointStatePublisher.cpp
+        Source/Manipulation/JointStatePublisher.h
+        Source/Manipulation/JointsManipulationComponent.cpp
+        Source/Manipulation/JointsManipulationComponent.h
+        Source/Manipulation/JointsTrajectoryComponent.cpp
+        Source/Manipulation/JointsTrajectoryComponent.h
+        Source/Manipulation/FollowJointTrajectoryActionServer.cpp
+        Source/Manipulation/FollowJointTrajectoryActionServer.h
+        Source/Manipulation/ManipulationUtils.h
+        Source/Manipulation/ManipulationUtils.cpp
+        Source/Manipulation/MotorizedJoints/JointMotorControllerComponent.cpp
+        Source/Manipulation/MotorizedJoints/JointMotorControllerConfiguration.cpp
+        Source/Manipulation/MotorizedJoints/ManualMotorControllerComponent.cpp
+        Source/Manipulation/MotorizedJoints/PidMotorControllerComponent.cpp
         Source/Odometry/ROS2OdometrySensorComponent.cpp
         Source/Odometry/ROS2OdometrySensorComponent.h
         Source/Odometry/ROS2WheelOdometry.cpp
         Source/Odometry/ROS2WheelOdometry.h
+        Source/Odometry/ROS2OdometryCovariance.cpp
+        Source/Odometry/ROS2OdometryCovariance.h
         Source/RobotControl/Ackermann/AckermannSubscriptionHandler.cpp
         Source/RobotControl/Ackermann/AckermannSubscriptionHandler.h
         Source/RobotControl/ControlConfiguration.cpp
@@ -64,15 +110,26 @@ set(FILES
         Source/ROS2ModuleInterface.h
         Source/ROS2SystemComponent.cpp
         Source/ROS2SystemComponent.h
-        Source/Sensor/ROS2SensorComponent.cpp
+        Source/Sensor/Events/PhysicsBasedSource.cpp
+        Source/Sensor/Events/TickBasedSource.cpp
         Source/Sensor/SensorConfiguration.cpp
+        Source/SimulationUtils/FollowingCameraConfiguration.cpp
+        Source/SimulationUtils/FollowingCameraConfiguration.h
+        Source/SimulationUtils/FollowingCameraComponent.cpp
+        Source/SimulationUtils/FollowingCameraComponent.h
         Source/Spawner/ROS2SpawnerComponent.cpp
         Source/Spawner/ROS2SpawnerComponent.h
         Source/Spawner/ROS2SpawnPointComponent.cpp
         Source/Spawner/ROS2SpawnPointComponent.h
+        Source/Spawner/ROS2SpawnerComponentController.cpp
+        Source/Spawner/ROS2SpawnerComponentController.h
+        Source/Spawner/ROS2SpawnPointComponentController.cpp
+        Source/Spawner/ROS2SpawnPointComponentController.h
+        Source/Utilities/ArticulationsUtilities.cpp
+        Source/Utilities/ArticulationsUtilities.h
+        Source/Utilities/JointUtilities.cpp
+        Source/Utilities/JointUtilities.h
         Source/Utilities/Controllers/PidConfiguration.cpp
-        Source/Utilities/PhysicsCallbackHandler.cpp
-        Source/Utilities/PhysicsCallbackHandler.h
         Source/Utilities/ROS2Conversions.cpp
         Source/Utilities/ROS2Names.cpp
         Source/VehicleDynamics/AxleConfiguration.cpp

@@ -24,19 +24,19 @@ namespace OpenXRVk
         return aznew Session;
     }
 
-    AZ::RHI::ResultCode Session::InitInternal(AZ::RHI::XRSessionDescriptor* descriptor)
+    AZ::RHI::ResultCode Session::InitInternal([[maybe_unused]] AZ::RHI::XRSessionDescriptor* descriptor)
     {
-        AZ::Vulkan::XRSessionDescriptor* sessionDescriptor = static_cast<AZ::Vulkan::XRSessionDescriptor*>(descriptor);
         Instance* xrVkInstance = static_cast<Instance*>(GetDescriptor().m_instance.get());
         Device* xrVkDevice = static_cast<Device*>(GetDescriptor().m_device.get());
+        auto graphicBinding = xrVkDevice->GetGraphicsBinding(AZ::RHI::HardwareQueueClass::Graphics);
 
         m_xrInstance = xrVkInstance->GetXRInstance();
         AZ_Printf("OpenXRVk", "Creating session...\n");
         m_graphicsBinding.instance = xrVkInstance->GetNativeInstance();
-        m_graphicsBinding.physicalDevice = xrVkInstance->GetActivePhysicalDevice();
+        m_graphicsBinding.physicalDevice = xrVkDevice->GetNativePhysicalDevice();
         m_graphicsBinding.device = xrVkDevice->GetNativeDevice();
-        m_graphicsBinding.queueFamilyIndex = sessionDescriptor->m_inputData.m_graphicsBinding.m_queueFamilyIndex;
-        m_graphicsBinding.queueIndex = sessionDescriptor->m_inputData.m_graphicsBinding.m_queueIndex;
+        m_graphicsBinding.queueFamilyIndex = graphicBinding.m_queueFamilyIndex;
+        m_graphicsBinding.queueIndex = graphicBinding.m_queueIndex;
 
         AZ_Assert(m_xrInstance != XR_NULL_HANDLE, "XR instance is null.");
         AZ_Assert(m_session == XR_NULL_HANDLE, "XR session is already initialized.");

@@ -1,22 +1,25 @@
+# Copyright (c) Contributors to the Open 3D Engine Project.
+# For complete copyright and license terms please see the LICENSE at the root of this distribution.
+#
+# SPDX-License-Identifier: Apache-2.0 OR MIT
 
 # Query the gem name from the gem.json file if possible
 # otherwise fallback to using ProteusRobot
-o3de_find_ancestor_gem_root(gem_path gem_name "${CMAKE_CURRENT_SOURCE_DIR}")
+o3de_find_ancestor_gem_root(gem_root_path gem_name "${CMAKE_CURRENT_SOURCE_DIR}")
 if (NOT gem_name)
     set(gem_name "ProteusRobot")
 endif()
 
-# Fallback to using the current source CMakeLists.txt directory as the gem root path
-if (NOT gem_path)
-    set(gem_path ${CMAKE_CURRENT_SOURCE_DIR})
+# This indicates to the Builders applications(AssetProcessor, AssetBuilder, AssetBundler)
+# that the gem should be added to the "cmake_dependencies.<project>.assetbuilder.setreg"
+# which is generated when cmake configure occurs.
+# Also tooling applications such as the Editor needs the CMake alias
+# to see the gem as active
+if(PAL_TRAIT_BUILD_HOST_TOOLS)
+    ly_create_alias(NAME ${gem_name}.Builders NAMESPACE Gem)
+    ly_create_alias(NAME ${gem_name}.Tools NAMESPACE Gem)
+
+    # Add in CMake dependencies for each gem dependency listed in this gem's gem.json file
+    # for the Tools and Builders gem variants
+    o3de_add_variant_dependencies_for_gem_dependencies(GEM_NAME ${gem_name} VARIANTS Tools Builders)
 endif()
-
-set(gem_json ${gem_path}/gem.json)
-
-o3de_restricted_path(${gem_json} gem_restricted_path gem_parent_relative_path)
-
-o3de_pal_dir(pal_dir ${CMAKE_CURRENT_SOURCE_DIR}/Platform/${PAL_PLATFORM_NAME} "${gem_restricted_path}" "${gem_path}" "${gem_parent_relative_path}")
-
-ly_add_external_target_path(${CMAKE_CURRENT_SOURCE_DIR}/3rdParty)
-
-add_subdirectory(Code)

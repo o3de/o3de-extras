@@ -1,6 +1,9 @@
 {
     "project_name": "OpenXRTest",
+    "version": "1.0.0",
     "project_id": "{947211d5-689a-437f-8ad7-7f558edcd40a}",
+    "repo_uri": "https://raw.githubusercontent.com/o3de/o3de-extras/development",
+    "download_source_uri": "https://github.com/o3de/o3de-extras/releases/download/2.0/openxrtest-1.0.0-project.zip",
     "origin": "https://github.com/o3de/o3de-extras",
     "license": "For terms please see the LICENSE*.TXT files at the root of this distribution.",
     "display_name": "OpenXRTest",

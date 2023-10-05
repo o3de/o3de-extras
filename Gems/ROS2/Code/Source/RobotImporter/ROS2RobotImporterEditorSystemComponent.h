@@ -9,14 +9,19 @@
 #pragma once
 
 #include "ROS2RobotImporterSystemComponent.h"
+#include <AzCore/std/string/string.h>
 #include <AzToolsFramework/Entity/EditorEntityContextBus.h>
-
+#include <ROS2/RobotImporter/RobotImporterBus.h>
+#include <ROS2/RobotImporter/SDFormatSensorImporterHook.h>
+#include <RobotImporter/Utils/SourceAssetsStorage.h>
 namespace ROS2
 {
+
     //! Editor component for RobotImporter widget
     class ROS2RobotImporterEditorSystemComponent
         : public ROS2RobotImporterSystemComponent
         , private AzToolsFramework::EditorEvents::Bus::Handler
+        , private RobotImporterRequestBus::Handler
     {
     public:
         AZ_COMPONENT(ROS2RobotImporterEditorSystemComponent, "{1cc069d0-72f9-411e-a94b-9159979e5a0c}", ROS2RobotImporterSystemComponent);
@@ -29,15 +34,21 @@ namespace ROS2
         ~ROS2RobotImporterEditorSystemComponent() = default;
 
     private:
-        //////////////////////////////////////////////////////////////////////////
-        // Component overrides
+        // Component overrides ...
         void Activate() override;
         void Deactivate() override;
-        //////////////////////////////////////////////////////////////////////////
 
-        //////////////////////////////////////////////////////////////////////////
-        // AzToolsFramework::EditorEvents::Bus::Handler overrides
+        // AzToolsFramework::EditorEvents::Bus::Handler overrides ...
         void NotifyRegisterViews() override;
-        //////////////////////////////////////////////////////////////////////////
+
+        // RobotImporterRequestsBus::Handler overrides ..
+        bool GeneratePrefabFromFile(const AZStd::string_view filePath, bool importAssetWithUrdf, bool useArticulation) override;
+        const SDFormat::SensorImporterHooksStorage& GetSensorHooks() const override;
+
+        // Timeout for loop waiting for assets to be built
+        static constexpr AZStd::chrono::seconds assetLoopTimeout = AZStd::chrono::seconds(30);
+
+        // Cache for storing sensor importer hooks (read only once)
+        SDFormat::SensorImporterHooksStorage m_sensorHooks;
     };
 } // namespace ROS2

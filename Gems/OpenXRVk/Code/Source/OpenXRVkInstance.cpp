@@ -9,6 +9,7 @@
 #include <OpenXRVk/OpenXRVkInstance.h>
 #include <OpenXRVk/OpenXRVkUtils.h>
 #include <Atom/RHI.Reflect/Vulkan/XRVkDescriptors.h>
+#include <Atom/RHI.Reflect/VkAllocator.h>
 #include <AzCore/Casting/numeric_cast.h>
 #include <OpenXRVkCommon.h>
 
@@ -190,6 +191,18 @@ namespace OpenXRVk
         graphicsRequirements.maxApiVersionSupported = legacyRequirements.maxApiVersionSupported;
         graphicsRequirements.minApiVersionSupported = legacyRequirements.minApiVersionSupported;
 
+        m_minVulkanAPIVersion = VK_MAKE_API_VERSION(
+            0,
+            XR_VERSION_MAJOR(graphicsRequirements.minApiVersionSupported),
+            XR_VERSION_MINOR(graphicsRequirements.minApiVersionSupported),
+            XR_VERSION_PATCH(graphicsRequirements.minApiVersionSupported));
+
+        m_maxVulkanAPIVersion = VK_MAKE_API_VERSION(
+            0,
+            XR_VERSION_MAJOR(graphicsRequirements.maxApiVersionSupported),
+            XR_VERSION_MINOR(graphicsRequirements.maxApiVersionSupported),
+            XR_VERSION_PATCH(graphicsRequirements.maxApiVersionSupported));
+
         if (m_validationMode == AZ::RHI::ValidationMode::Enabled)
         {
             AZ_Printf("OpenXRVk", "graphicsRequirements.maxApiVersionSupported %d.%d.%d\n",
@@ -205,7 +218,62 @@ namespace OpenXRVk
             AZ_Printf("OpenXRVk", "Using system %d for form factor %s\n", m_xrSystemId, to_string(m_formFactor));
             LogViewConfigurations();
         }
-		
+
+        PFN_xrGetVulkanInstanceExtensionsKHR pfnGetVulkanInstanceExtensionsKHR = nullptr;
+        result = xrGetInstanceProcAddr(m_xrInstance, "xrGetVulkanInstanceExtensionsKHR", reinterpret_cast<PFN_xrVoidFunction*>(&pfnGetVulkanInstanceExtensionsKHR));
+        ASSERT_IF_UNSUCCESSFUL(result);
+
+        AZ::u32 extensionNamesSize = 0;
+        result = pfnGetVulkanInstanceExtensionsKHR(m_xrInstance, m_xrSystemId, 0, &extensionNamesSize, nullptr);
+        ASSERT_IF_UNSUCCESSFUL(result);
+
+        AZStd::vector<char> extensionNames(extensionNamesSize);
+        result = pfnGetVulkanInstanceExtensionsKHR(m_xrInstance, m_xrSystemId, extensionNamesSize, &extensionNamesSize, &extensionNames[0]);
+        ASSERT_IF_UNSUCCESSFUL(result);
+
+        AZStd::vector<const char*> requiredInstanceExtensions = ParseExtensionString(&extensionNames[0]);
+        m_requireVulkanInstanceExtensions.insert(m_requireVulkanInstanceExtensions.end(), requiredInstanceExtensions.begin(), requiredInstanceExtensions.end());
+        if (m_validationMode == AZ::RHI::ValidationMode::Enabled)
+        {
+            AZ_Printf("OpenXRVk", "Vulkan instance extensions to enable: (%i)\n", requiredInstanceExtensions.size());
+            for (const AZStd::string& extension : requiredInstanceExtensions)
+            {
+                AZ_Printf("OpenXRVk", "Name=%s\n", extension.c_str());
+            }
+        }
+
+        AZ::Vulkan::InstanceRequirementBus::Handler::BusConnect();
+
+        PFN_xrGetVulkanDeviceExtensionsKHR pfnGetVulkanDeviceExtensionsKHR = nullptr;
+        result = xrGetInstanceProcAddr(
+            m_xrInstance,
+            "xrGetVulkanDeviceExtensionsKHR",
+            reinterpret_cast<PFN_xrVoidFunction*>(&pfnGetVulkanDeviceExtensionsKHR));
+        ASSERT_IF_UNSUCCESSFUL(result);
+
+        AZ::u32 deviceExtensionNamesSize = 0;
+        result = pfnGetVulkanDeviceExtensionsKHR(m_xrInstance, m_xrSystemId, 0, &deviceExtensionNamesSize, nullptr);
+        ASSERT_IF_UNSUCCESSFUL(result);
+
+        AZStd::vector<char> deviceExtensionNames(deviceExtensionNamesSize);
+        result = pfnGetVulkanDeviceExtensionsKHR(
+            m_xrInstance, m_xrSystemId, deviceExtensionNamesSize, &deviceExtensionNamesSize, &deviceExtensionNames[0]);
+        ASSERT_IF_UNSUCCESSFUL(result);
+
+        AZStd::vector<const char*> requiredDeviceExtensions = ParseExtensionString(&deviceExtensionNames[0]);
+        m_requireVulkanDeviceExtensions.insert(m_requireVulkanDeviceExtensions.end(), requiredDeviceExtensions.begin(), requiredDeviceExtensions.end());
+        if (m_validationMode == AZ::RHI::ValidationMode::Enabled)
+        {
+            AZ_Printf("OpenXRVk", "Vulkan device extensions to enable: (%i)\n", requiredDeviceExtensions.size());
+            for (const AZStd::string& extension : requiredDeviceExtensions)
+            {
+                AZ_Printf("OpenXRVk", "Name=%s\n", extension.c_str());
+            }
+        }
+
+        AZ::Vulkan::DeviceRequirementBus::Handler::BusConnect();
+        AZ::Vulkan::InstanceNotificationBus::Handler::BusConnect();
+
         return AZ::RHI::ResultCode::Success;
     }
 
@@ -288,109 +356,50 @@ namespace OpenXRVk
         }
     }
 
-    AZ::RHI::ResultCode Instance::InitNativeInstance(AZ::RHI::XRInstanceDescriptor* instanceDescriptor)
-    {
-        m_functionLoader = AZ::Vulkan::FunctionLoader::Create();
-        if (!m_functionLoader->Init() ||
-            !m_functionLoader->LoadProcAddresses(&m_context, VK_NULL_HANDLE, VK_NULL_HANDLE, VK_NULL_HANDLE))
-        {
-            m_functionLoader.reset();
-            AZ_Error("OpenXRVk", false, "Could not initialize function loader.");
-            return AZ::RHI::ResultCode::Fail;
-        }
-
-        AZ::Vulkan::XRInstanceDescriptor* xrInstanceDescriptor = static_cast<AZ::Vulkan::XRInstanceDescriptor*>(instanceDescriptor);
-        XrVulkanInstanceCreateInfoKHR createInfo{ XR_TYPE_VULKAN_INSTANCE_CREATE_INFO_KHR };
-        createInfo.systemId = m_xrSystemId;
-        createInfo.pfnGetInstanceProcAddr = m_context.GetInstanceProcAddr;
-        createInfo.vulkanCreateInfo = xrInstanceDescriptor->m_inputData.m_createInfo;
-        createInfo.vulkanAllocator = nullptr;
-
-        PFN_xrGetVulkanInstanceExtensionsKHR pfnGetVulkanInstanceExtensionsKHR = nullptr;
-        XrResult result = xrGetInstanceProcAddr(m_xrInstance, "xrGetVulkanInstanceExtensionsKHR", reinterpret_cast<PFN_xrVoidFunction*>(&pfnGetVulkanInstanceExtensionsKHR));
-        ASSERT_IF_UNSUCCESSFUL(result);
-
-        AZ::u32 extensionNamesSize = 0;
-        result = pfnGetVulkanInstanceExtensionsKHR(m_xrInstance, m_xrSystemId, 0, &extensionNamesSize, nullptr);
-        ASSERT_IF_UNSUCCESSFUL(result);
-
-        AZStd::vector<char> extensionNames(extensionNamesSize);
-        result = pfnGetVulkanInstanceExtensionsKHR(m_xrInstance, m_xrSystemId, extensionNamesSize, &extensionNamesSize, &extensionNames[0]);
-        ASSERT_IF_UNSUCCESSFUL(result);
-
-        AZStd::vector<const char*> extensions = ParseExtensionString(&extensionNames[0]);
-        for (uint32_t i = 0; i < createInfo.vulkanCreateInfo->enabledExtensionCount; ++i)
-        {
-            extensions.push_back(createInfo.vulkanCreateInfo->ppEnabledExtensionNames[i]);
-        }
-
-        if (m_validationMode == AZ::RHI::ValidationMode::Enabled)
-        {
-            AZ_Printf("OpenXRVk", "Vulkan instance extensions to enable: (%i)\n", extensions.size());
-            for (const AZStd::string& extension : extensions)
-            {
-                AZ_Printf("OpenXRVk", "Name=%s\n", extension.c_str());
-            }
-        }
-
-        VkInstanceCreateInfo instInfo{ VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO };
-        memcpy(&instInfo, createInfo.vulkanCreateInfo, sizeof(instInfo));
-        instInfo.enabledExtensionCount = aznumeric_cast<AZ::u32>(extensions.size());
-        instInfo.ppEnabledExtensionNames = extensions.empty() ? nullptr : extensions.data();
-
-        auto pfnCreateInstance = (PFN_vkCreateInstance)createInfo.pfnGetInstanceProcAddr(nullptr, "vkCreateInstance");
-        VkResult vkResult = pfnCreateInstance(&instInfo, nullptr, &m_xrVkInstance);
-        if (vkResult != VK_SUCCESS)
-        {
-            ShutdownInternal();
-            AZ_Error("OpenXRVk", false, "Failed to create the instance.");
-            return AZ::RHI::ResultCode::Fail;
-        }
-
-        // Now that we have created the instance, load the function pointers for it.
-        if (!m_functionLoader->LoadProcAddresses(&m_context, m_xrVkInstance, VK_NULL_HANDLE, VK_NULL_HANDLE))
-        {
-            ShutdownInternal();
-            AZ_Warning("OpenXRVk", false, "Failed to initialize function loader for the instance.");
-            return AZ::RHI::ResultCode::Fail;
-        }
-
-        FilterAvailableExtensions(m_context);
-
-        //Populate the instance descriptor with the correct VkInstance
-        xrInstanceDescriptor->m_outputData.m_xrVkInstance = m_xrVkInstance;
-        xrInstanceDescriptor->m_outputData.m_context = m_context;
-
-        //Get the list of Physical devices
-        m_supportedXRDevices = PhysicalDevice::EnumerateDeviceList(m_xrSystemId, m_xrInstance, m_xrVkInstance);
-        if (m_supportedXRDevices.empty())
-        {
-            ShutdownInternal();
-            AZ_Error("OpenXRVk", false, "No physical devices found.");
-            return AZ::RHI::ResultCode::Fail;
-        }
-
-        //Just use the first device at the moment.
-        m_physicalDeviceActiveIndex = 0;
-
-        return AZ::RHI::ResultCode::Success;
-    }
-
     void Instance::ShutdownInternal()
     {
-        if (m_xrVkInstance != VK_NULL_HANDLE)
-        {
-            m_supportedXRDevices.clear();
+        AZ::Vulkan::InstanceNotificationBus::Handler::BusDisconnect();
+        AZ::Vulkan::DeviceRequirementBus::Handler::BusDisconnect();
+        AZ::Vulkan::InstanceRequirementBus::Handler::BusDisconnect();
 
-            m_context.DestroyInstance(m_xrVkInstance, nullptr);
-            m_xrVkInstance = VK_NULL_HANDLE;
-        }
+        m_supportedXRDevices.clear();
+        m_xrVkInstance = VK_NULL_HANDLE;
+    }
 
-        if (m_functionLoader)
+    void Instance::CollectAdditionalRequiredInstanceExtensions(AZStd::vector<AZStd::string>& extensions)
+    {
+        extensions.insert(extensions.end(), m_requireVulkanInstanceExtensions.begin(), m_requireVulkanInstanceExtensions.end());
+    }
+
+    void Instance::CollectMinMaxVulkanAPIVersions(AZStd::vector<uint32_t>& min, AZStd::vector<uint32_t>& max)
+    {
+        min.push_back(m_minVulkanAPIVersion);
+        max.push_back(m_maxVulkanAPIVersion);
+    }
+
+    void Instance::CollectAdditionalRequiredDeviceExtensions(AZStd::vector<AZStd::string>& extensions)
+    {
+        extensions.insert(extensions.end(), m_requireVulkanDeviceExtensions.begin(), m_requireVulkanDeviceExtensions.end());
+    }
+
+    void Instance::FilterSupportedDevices(AZStd::vector<VkPhysicalDevice>& supportedDevices)
+    {
+        AZStd::erase_if(supportedDevices, [&](const auto& physicalDevice)
         {
-            m_functionLoader->Shutdown();
-        }
-        m_functionLoader = nullptr;
+            return AZStd::find(m_supportedXRDevices.begin(), m_supportedXRDevices.end(), physicalDevice) == m_supportedXRDevices.end();
+        });
+    }
+
+    void Instance::OnInstanceCreated(VkInstance instance)
+    {
+        m_xrVkInstance = instance;
+        m_supportedXRDevices = PhysicalDevice::EnumerateDeviceList(m_xrSystemId, m_xrInstance, m_xrVkInstance);
+    }
+
+    void Instance::OnInstanceDestroyed()
+    {
+        m_xrVkInstance = XR_NULL_HANDLE;
+        m_supportedXRDevices.clear();
     }
 
     AZ::RHI::ResultCode Instance::GetXRPhysicalDevice(AZ::RHI::XRPhysicalDeviceDescriptor* physicalDeviceDescriptor, int32_t index)
@@ -409,12 +418,6 @@ namespace OpenXRVk
         return aznumeric_cast<AZ::u32>(m_supportedXRDevices.size());
     }
 
-    VkPhysicalDevice Instance::GetActivePhysicalDevice() const
-    {
-        AZ_Assert(m_physicalDeviceActiveIndex < m_supportedXRDevices.size(), "Index out of range");
-        return m_supportedXRDevices[m_physicalDeviceActiveIndex];
-    }
-
     XrInstance Instance::GetXRInstance() const
     {
         return m_xrInstance;
@@ -428,16 +431,6 @@ namespace OpenXRVk
     VkInstance Instance::GetNativeInstance() const
     {
         return m_xrVkInstance;
-    }
-
-    GladVulkanContext& Instance::GetContext()
-    {
-        return m_context;
-    }
-
-    AZ::Vulkan::FunctionLoader& Instance::GetFunctionLoader()
-    {
-        return *m_functionLoader;
     }
 
     XrEnvironmentBlendMode Instance::GetEnvironmentBlendMode() const

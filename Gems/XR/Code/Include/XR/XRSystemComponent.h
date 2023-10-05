@@ -21,6 +21,7 @@ namespace XR
         AZ_COMPONENT(SystemComponent, "{93A3A7E7-5188-49CD-8C37-26816476A3AE}");
 
         static void GetProvidedServices(AZ::ComponentDescriptor::DependencyArrayType& provided);
+        static void GetDependentServices(AZ::ComponentDescriptor::DependencyArrayType& required);
         static void Reflect(AZ::ReflectContext* context);
 
         SystemComponent() = default;
@@ -33,9 +34,6 @@ namespace XR
         //////////////////////////////////////////////////////////////////////////
 
     private:
-        //! Check is OpenXR is enable via command line option or settings registry.
-        bool IsOpenXREnabled();
-
         Ptr<XR::System> m_xrSystem;
     };
 }

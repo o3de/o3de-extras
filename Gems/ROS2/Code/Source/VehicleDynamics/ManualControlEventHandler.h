@@ -44,9 +44,19 @@ namespace ROS2::VehicleDynamics
         AZStd::string m_eventName;
         OnHeldHandlerFunction m_handler;
 
+        void OnPressed(float value) override
+        {
+            m_handler(value);
+        }
+
         void OnHeld(float value) override
         {
             m_handler(value);
+        }
+
+        void OnReleased([[maybe_unused]] float value) override
+        {
+            m_handler(0);
         }
     };
 

@@ -18,6 +18,11 @@ namespace ROS2
     void PhysicallyStableClock::Activate()
     {
         auto* systemInterface = AZ::Interface<AzPhysics::SystemInterface>::Get();
+        if (!systemInterface)
+        {
+            AZ_Warning("SimulationPhysicalClock", false, "Failed to get AzPhysics::SystemInterface");
+            return;
+        }
         m_onSceneSimulationEvent = AzPhysics::SceneEvents::OnSceneSimulationFinishHandler(
             [this](AzPhysics::SceneHandle sceneHandle, float deltaTime)
             {

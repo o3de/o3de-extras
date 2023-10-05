@@ -9,9 +9,12 @@
 
 #include <AzCore/Math/Transform.h>
 #include <AzCore/Serialization/SerializeContext.h>
-#include <ROS2/Sensor/ROS2SensorComponent.h>
+#include <ROS2/Sensor/Events/TickBasedSource.h>
+#include <ROS2/Sensor/ROS2SensorComponentBase.h>
 #include <rclcpp/publisher.hpp>
 #include <sensor_msgs/msg/nav_sat_fix.hpp>
+
+#include "GNSSSensorConfiguration.h"
 
 namespace ROS2
 {
@@ -19,11 +22,12 @@ namespace ROS2
     //! It provides NavSatFix data of sensor's position in GNSS frame which is defined by GNSS origin offset
     //! Offset is provided as latitude [deg], longitude [deg], altitude [m] of o3de global frame
     //! It is assumed that o3de global frame overlaps with ENU coordinate system
-    class ROS2GNSSSensorComponent : public ROS2SensorComponent
+    class ROS2GNSSSensorComponent : public ROS2SensorComponentBase<TickBasedSource>
     {
     public:
-        AZ_COMPONENT(ROS2GNSSSensorComponent, "{55B4A299-7FA3-496A-88F0-764C75B0E9A7}", ROS2SensorComponent);
+        AZ_COMPONENT(ROS2GNSSSensorComponent, "{55B4A299-7FA3-496A-88F0-764C75B0E9A7}", SensorBaseType);
         ROS2GNSSSensorComponent();
+        ROS2GNSSSensorComponent(const SensorConfiguration& sensorConfiguration, const GNSSSensorConfiguration& gnssConfiguration);
         ~ROS2GNSSSensorComponent() = default;
         static void Reflect(AZ::ReflectContext* context);
         //////////////////////////////////////////////////////////////////////////
@@ -33,17 +37,14 @@ namespace ROS2
         //////////////////////////////////////////////////////////////////////////
 
     private:
-        float m_gnssOriginLatitudeDeg = 0.0f;
-        float m_gnssOriginLongitudeDeg = 0.0f;
-        float m_gnssOriginAltitude = 0.0f;
+        ///! Requests gnss message publication.
+        void FrequencyTick();
 
-        //////////////////////////////////////////////////////////////////////////
-        // ROS2SensorComponent overrides
-        void FrequencyTick() override;
-        //////////////////////////////////////////////////////////////////////////
+        //! Returns current entity position.
+        //! @return Current entity position.
+        [[nodiscard]] AZ::Transform GetCurrentPose() const;
 
-        AZ::Transform GetCurrentPose() const;
-
+        GNSSSensorConfiguration m_gnssConfiguration;
         std::shared_ptr<rclcpp::Publisher<sensor_msgs::msg::NavSatFix>> m_gnssPublisher;
         sensor_msgs::msg::NavSatFix m_gnssMsg;
     };

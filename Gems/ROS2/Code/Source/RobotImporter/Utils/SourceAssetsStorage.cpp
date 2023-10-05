@@ -11,11 +11,13 @@
 #include <AzCore/IO/FileIO.h>
 #include <AzCore/Serialization/Json/JsonUtils.h>
 #include <AzCore/Utils/Utils.h>
-#include <AzCore/std/smart_ptr/shared_ptr.h>
 #include <AzCore/std/smart_ptr/make_shared.h>
+#include <AzCore/std/smart_ptr/shared_ptr.h>
+#include <AzFramework/Asset/AssetSystemBus.h>
 #include <AzToolsFramework/Asset/AssetUtils.h>
 #include <SceneAPI/SceneCore/Containers/Scene.h>
 #include <SceneAPI/SceneCore/Containers/Utilities/Filters.h>
+#include <SceneAPI/SceneCore/DataTypes/GraphData/IMaterialData.h>
 #include <SceneAPI/SceneCore/DataTypes/Groups/ISceneNodeGroup.h>
 #include <SceneAPI/SceneCore/Events/AssetImportRequest.h>
 #include <SceneAPI/SceneCore/Events/SceneSerializationBus.h>
@@ -27,7 +29,7 @@
 namespace ROS2::Utils
 {
 
-    //! A helper class that do no extend PhysX::Pipeline::MeshGroup functionality, but gives neccessary setters.
+    //! A helper class that do no extend PhysX::Pipeline::MeshGroup functionality, but gives necessary setters.
     class UrdfPhysxMeshGroupHelper : public PhysX::Pipeline::MeshGroup
     {
     public:
@@ -46,6 +48,7 @@ namespace ROS2::Utils
     {
         struct Visitor : AZ::SettingsRegistryInterface::Visitor
         {
+            using AZ::SettingsRegistryInterface::Visitor::Visit;
             void Visit(const AZ::SettingsRegistryInterface::VisitArgs&, AZStd::string_view value) override
             {
                 m_supportedFileExtensions.emplace_back(value);
@@ -70,7 +73,7 @@ namespace ROS2::Utils
     }
 
     /// Function computes CRC32 on first kilobyte of file.
-    AZ::Crc32 GetFileCRC(const AZStd::string& filename)
+    AZ::Crc32 GetFileCRC(const AZ::IO::Path& filename)
     {
         auto fileSize = AZ::IO::SystemFile::Length(filename.c_str());
         fileSize = AZStd::min(fileSize, 1024ull); // limit crc computation to first kilobyte
@@ -122,34 +125,49 @@ namespace ROS2::Utils
         return GetProductAsset(sourceAssetUUID, AZ::TypeId("{7A2871B9-5EAB-4DE0-A901-B0D2C6920DDB}")); // PhysX::Pipeline::MeshAsset
     }
 
+    AZ::Data::AssetId GetProductAssetId(const AZ::Uuid& sourceAssetUUID, const AZ::TypeId typeId)
+    {
+        AZStd::vector<AZ::Data::AssetInfo> productsAssetInfo;
+        using AssetSysReqBus = AzToolsFramework::AssetSystemRequestBus;
+        bool ok{ false };
+        AssetSysReqBus::BroadcastResult(ok, &AssetSysReqBus::Events::GetAssetsProducedBySourceUUID, sourceAssetUUID, productsAssetInfo);
+        if (ok)
+        {
+            for (const auto& product : productsAssetInfo)
+            {
+                if (product.m_assetType == typeId)
+                {
+                    return product.m_assetId;
+                }
+            }
+        }
+        return {};
+    }
+
+    AZ::Data::AssetId GetModelProductAssetId(const AZ::Uuid& sourceAssetUUID)
+    {
+        return GetProductAssetId(sourceAssetUUID, AZ::TypeId("{2C7477B6-69C5-45BE-8163-BCD6A275B6D8}")); // AZ::RPI::ModelAsset;
+    }
+
+    AZ::Data::AssetId GetPhysXMeshProductAssetId(const AZ::Uuid& sourceAssetUUID)
+    {
+        return GetProductAssetId(sourceAssetUUID, AZ::TypeId("{7A2871B9-5EAB-4DE0-A901-B0D2C6920DDB}")); // PhysX::Pipeline::MeshAsset
+    }
+
     AvailableAsset GetAvailableAssetInfo(const AZStd::string& globalSourceAssetPath)
     {
         using AssetSysReqBus = AzToolsFramework::AssetSystemRequestBus;
         AvailableAsset foundAsset;
-
-        // get relativePath
-        bool relativePathFound{ false };
-        AZStd::string relativeSourcePath;
-        AZStd::string rootFilePath;
-        AssetSysReqBus::BroadcastResult(
-            relativePathFound,
-            &AssetSysReqBus::Events::GenerateRelativeSourcePath,
-            globalSourceAssetPath,
-            relativeSourcePath,
-            rootFilePath);
-        if (!relativePathFound)
-        {
-            return foundAsset;
-        }
 
         // get source asset info
         bool sourceAssetFound{ false };
         AZ::Data::AssetInfo assetInfo;
         AZStd::string watchFolder;
         AssetSysReqBus::BroadcastResult(
-            sourceAssetFound, &AssetSysReqBus::Events::GetSourceInfoBySourcePath, relativeSourcePath.c_str(), assetInfo, watchFolder);
+            sourceAssetFound, &AssetSysReqBus::Events::GetSourceInfoBySourcePath, globalSourceAssetPath.c_str(), assetInfo, watchFolder);
         if (!sourceAssetFound)
         {
+            AZ_Trace("GetAvailableAssetInfo", "Source asset info not found for: %s", globalSourceAssetPath.c_str());
             return foundAsset;
         }
 
@@ -164,7 +182,7 @@ namespace ROS2::Utils
             AZ_Warning("GetInterestingSourceAssetsCRC", false, "Zero CRC for source asset %s", foundAsset.m_sourceAssetGlobalPath.c_str());
             return foundAsset;
         }
-        // Todo Remove in review
+
         AZ_Printf("GetAvailableAssetInfo", "Found asset:");
         AZ_Printf("GetAvailableAssetInfo", "\tm_sourceAssetRelativePath  : %s", foundAsset.m_sourceAssetRelativePath.c_str());
         AZ_Printf("GetAvailableAssetInfo", "\tm_sourceAssetGlobalPath    : %s", foundAsset.m_sourceAssetGlobalPath.c_str());
@@ -184,6 +202,7 @@ namespace ROS2::Utils
         if (!assetDatabaseConnection.OpenDatabase())
         {
             AZ_Warning("GetInterestingSourceAssetsCRC", false, "Cannot open database");
+            return {};
         }
         auto callback = [&availableAssets](AzToolsFramework::AssetDatabase::SourceDatabaseEntry& entry)
         {
@@ -255,11 +274,10 @@ namespace ROS2::Utils
         const AZStd::string& urdfFilename,
         const AZStd::unordered_set<AZStd::string>& colliders,
         const AZStd::unordered_set<AZStd::string>& visuals,
+        const SdfAssetBuilderSettings& sdfBuilderSettings,
+        AZStd::string_view outputDirSuffix,
         AZ::IO::FileIOBase* fileIO)
     {
-        auto enviromentalVariable = std::getenv("AMENT_PREFIX_PATH");
-        AZ_Error("UrdfAssetMap", enviromentalVariable, "AMENT_PREFIX_PATH is not found.");
-
         UrdfAssetMap urdfAssetMap;
         if (meshesFilenames.empty())
         {
@@ -273,8 +291,12 @@ namespace ROS2::Utils
         AZ::Crc32 urdfFileCrc;
         urdfFileCrc.Add(urdfFilename);
         const AZ::IO::Path urdfPath(urdfFilename);
+
+        // By naming the temp directory '$tmp_*', the default configuration in AssetProcessorPlatformConfig.setreg will
+        // exclude these files from processing.
         const AZStd::string directoryNameTmp = AZStd::string::format("$tmp_%u.tmp", AZ::u32(urdfFileCrc));
-        const AZStd::string directoryNameDst = AZStd::string::format("%u_%s", AZ::u32(urdfFileCrc), urdfPath.Stem().String().c_str());
+        const auto directoryNameDst = AZ::IO::FixedMaxPathString::format(
+            "%u_%.*s%.*s", AZ::u32(urdfFileCrc), AZ_PATH_ARG(urdfPath.Stem()), AZ_STRING_ARG(outputDirSuffix));
 
         const AZ::IO::Path importDirectoryTmp = AZ::IO::Path(AZ::Utils::GetProjectPath()) / "Assets" / "UrdfImporter" / directoryNameTmp;
         const AZ::IO::Path importDirectoryDst = AZ::IO::Path(AZ::Utils::GetProjectPath()) / "Assets" / "UrdfImporter" / directoryNameDst;
@@ -287,32 +309,49 @@ namespace ROS2::Utils
 
         if (!outcomeCreateDstDir || !outcomeCreateTmpDir)
         {
+            if (outcomeCreateDstDir)
+            {
+                fileIO->DestroyPath(importDirectoryDst.c_str());
+            }
+            if (outcomeCreateTmpDir)
+            {
+                fileIO->DestroyPath(importDirectoryTmp.c_str());
+            }
             return urdfAssetMap;
         }
-        AZStd::string amentPrefixPath{ enviromentalVariable };
-        AZStd::set<AZStd::string> files;
+        auto amentPrefixPath = Utils::GetAmentPrefixPath();
+        AZStd::unordered_map<AZStd::string, unsigned int> countFilenames;
 
         for (const auto& unresolvedUrfFileName : meshesFilenames)
         {
-            auto resolved = Utils::ResolveURDFPath(unresolvedUrfFileName, urdfFilename, amentPrefixPath);
-            if (resolved.empty())
+            auto resolvedPath =
+                Utils::ResolveAssetPath(unresolvedUrfFileName, AZ::IO::PathView(urdfFilename), amentPrefixPath, sdfBuilderSettings);
+            if (resolvedPath.empty())
             {
-                AZ_Warning("CopyAssetForURDF", false, "There is not resolved path for %s", unresolvedUrfFileName.c_str());
+                AZ_Warning("CopyAssetForURDF", false, "There is no resolved path for %s", unresolvedUrfFileName.c_str());
                 continue;
             }
-
-            AZ::IO::Path resolvedPath(resolved);
-            AZ::IO::Path targetPathAssetDst(importDirectoryDst / resolvedPath.Filename());
-            AZ::IO::Path targetPathAssetTmp(importDirectoryTmp / resolvedPath.Filename());
-
-            AZ::IO::Path targetPathAssetInfo(targetPathAssetDst.Native() + ".assetinfo");
 
             const bool needsVisual = visuals.contains(unresolvedUrfFileName);
             const bool needsCollider = colliders.contains(unresolvedUrfFileName);
 
+            AZStd::string filename = resolvedPath.Filename().String();
+            auto count = countFilenames[filename]++;
+            if (count > 0)
+            {
+                AZStd::string stem = resolvedPath.Stem().String();
+                AZStd::string extension = resolvedPath.Extension().String();
+                filename = AZStd::string::format("%s_dup_%u%s", stem.c_str(), count, extension.c_str());
+            }
+
+            AZ::IO::Path targetPathAssetDst(importDirectoryDst / filename);
+            AZ::IO::Path targetPathAssetTmp(importDirectoryTmp / filename);
+
+            AZ::IO::Path targetPathAssetInfo(targetPathAssetDst.Native() + ".assetinfo");
+
             if (!fileIO->Exists(targetPathAssetDst.c_str()))
             {
-                // Copy from ROS2 install to temporary
+                // copy mesh file to temporary location ignored by AP
                 const auto outcomeCopyTmp = fileIO->Copy(resolvedPath.c_str(), targetPathAssetTmp.c_str());
                 AZ_Printf(
                     "CopyAssetForURDF",
@@ -322,24 +361,62 @@ namespace ROS2::Utils
                     outcomeCopyTmp.GetResultCode());
                 if (outcomeCopyTmp)
                 {
-                    // create asset info at destination
-                    const bool assetInfoOk =
-                        CreateSceneManifest(targetPathAssetTmp.String(), targetPathAssetInfo.String(), needsCollider, needsVisual);
+                    // create asset info at destination location using the temporary mesh file
+                    const bool assetInfoOk = CreateSceneManifest(targetPathAssetTmp, targetPathAssetInfo, needsCollider, needsVisual);
 
                     if (assetInfoOk)
                     {
-                        const auto outcomeMoveDst = fileIO->Copy(targetPathAssetTmp.c_str(), targetPathAssetDst.c_str());
+                        // copy additional assets such as textures directly to destination location
+                        const auto& meshTextureAssets = Utils::GetMeshTextureAssets(targetPathAssetTmp);
+                        for (const auto& unresolvedAssetPath : meshTextureAssets)
+                        {
+                            // Manifest returns local path in Project's directory temp folder
+                            const AZ::IO::Path assetLocalPath(AZ::IO::Path(AZ::IO::Path(AZ::Utils::GetProjectPath()) / unresolvedAssetPath)
+                                                                  .LexicallyRelative(importDirectoryTmp));
+
+                            const AZ::IO::Path assetFullPathSrc(AZ::IO::Path(resolvedPath.ParentPath()) / assetLocalPath);
+                            const AZ::IO::Path assetFullPathDst(importDirectoryDst / assetLocalPath);
+
+                            const auto outcomeMkdir = fileIO->CreatePath(AZ::IO::Path(assetFullPathDst.ParentPath()).c_str());
+                            if (!outcomeMkdir)
+                            {
+                                break;
+                            }
+
+                            const auto outcomeCopy = fileIO->Copy(assetFullPathSrc.c_str(), assetFullPathDst.c_str());
+                            if (outcomeCopy)
+                            {
+                                copiedFiles[assetFullPathSrc.String()] = assetFullPathDst.String();
+                            }
+                        }
+
+                        // move mesh file from temporary location to destination location
+                        const auto outcomeMoveDst = fileIO->Rename(targetPathAssetTmp.c_str(), targetPathAssetDst.c_str());
                         AZ_Printf(
                             "CopyAssetForURDF",
-                            "Move %s to %s, result: %d",
+                            "Rename file %s to %s, result: %d",
                             targetPathAssetTmp.c_str(),
                             targetPathAssetDst.c_str(),
                             outcomeMoveDst.GetResultCode());
+
+                        // call GetAssetStatus_FlushIO to ensure the asset processor is aware of the new file
+                        AzFramework::AssetSystem::AssetStatus copiedAssetStatus =
+                            AzFramework::AssetSystem::AssetStatus::AssetStatus_Unknown;
+                        AzFramework::AssetSystemRequestBus::BroadcastResult(
+                            copiedAssetStatus,
+                            &AzFramework::AssetSystem::AssetSystemRequests::GetAssetStatus_FlushIO,
+                            targetPathAssetDst.c_str());
+                        AZ_Warning(
+                            "CopyAssetForURDF",
+                            copiedAssetStatus != AzFramework::AssetSystem::AssetStatus::AssetStatus_Unknown,
+                            "Asset processor did not recognize the new file %s.",
+                            targetPathAssetDst.c_str());
+
                         if (outcomeMoveDst)
                         {
                             copiedFiles[unresolvedUrfFileName] = targetPathAssetDst.String();
                         }
-                    };
+                    }
                 }
             }
             else
@@ -350,7 +427,8 @@ namespace ROS2::Utils
 
             Utils::UrdfAsset asset;
             asset.m_urdfPath = urdfFilename;
-            asset.m_resolvedUrdfPath = Utils::ResolveURDFPath(unresolvedUrfFileName, urdfFilename, amentPrefixPath);
+            asset.m_resolvedUrdfPath =
+                Utils::ResolveAssetPath(unresolvedUrfFileName, AZ::IO::PathView(urdfFilename), amentPrefixPath, sdfBuilderSettings);
             asset.m_urdfFileCRC = AZ::Crc32();
             urdfAssetMap.emplace(unresolvedUrfFileName, AZStd::move(asset));
         }
@@ -372,48 +450,52 @@ namespace ROS2::Utils
         return urdfAssetMap;
     }
 
-    UrdfAssetMap FindAssetsForUrdf(const AZStd::unordered_set<AZStd::string>& meshesFilenames, const AZStd::string& urdfFilename)
+    UrdfAssetMap FindAssetsForUrdf(
+        const AZStd::unordered_set<AZStd::string>& meshesFilenames,
+        const AZStd::string& urdfFilename,
+        const SdfAssetBuilderSettings& sdfBuilderSettings)
     {
-        auto enviromentalVariable = std::getenv("AMENT_PREFIX_PATH");
-        AZ_Error("UrdfAssetMap", enviromentalVariable, "AMENT_PREFIX_PATH is not found.");
-        AZStd::string amentPrefixPath{ enviromentalVariable };
+        auto amentPrefixPath = Utils::GetAmentPrefixPath();
 
         UrdfAssetMap urdfToAsset;
         for (const auto& t : meshesFilenames)
         {
             Utils::UrdfAsset asset;
             asset.m_urdfPath = t;
-            asset.m_resolvedUrdfPath = Utils::ResolveURDFPath(asset.m_urdfPath, urdfFilename, amentPrefixPath);
+            asset.m_resolvedUrdfPath =
+                Utils::ResolveAssetPath(asset.m_urdfPath, AZ::IO::PathView(urdfFilename), amentPrefixPath, sdfBuilderSettings);
             asset.m_urdfFileCRC = Utils::GetFileCRC(asset.m_resolvedUrdfPath);
             urdfToAsset.emplace(t, AZStd::move(asset));
         }
 
-        AZStd::unordered_map<AZ::Crc32, AvailableAsset> availableAssets = Utils::GetInterestingSourceAssetsCRC();
-
-        // Search for suitable mappings by comparing checksum
-        for (auto it = urdfToAsset.begin(); it != urdfToAsset.end(); it++)
+        if (!urdfToAsset.empty())
         {
-            Utils::UrdfAsset& asset = it->second;
-            auto found_source_asset = availableAssets.find(asset.m_urdfFileCRC);
-            if (found_source_asset != availableAssets.end())
+            AZStd::unordered_map<AZ::Crc32, AvailableAsset> availableAssets = Utils::GetInterestingSourceAssetsCRC();
+
+            // Search for suitable mappings by comparing checksum
+            for (auto it = urdfToAsset.begin(); it != urdfToAsset.end(); it++)
             {
-                asset.m_availableAssetInfo = found_source_asset->second;
+                Utils::UrdfAsset& asset = it->second;
+                auto found_source_asset = availableAssets.find(asset.m_urdfFileCRC);
+                if (found_source_asset != availableAssets.end())
+                {
+                    asset.m_availableAssetInfo = found_source_asset->second;
+                }
             }
         }
 
         return urdfToAsset;
     }
 
-    bool CreateSceneManifest(const AZStd::string& sourceAssetPath, const AZStd::string& assetInfoFile, bool collider, bool visual)
+    bool CreateSceneManifest(const AZ::IO::Path& sourceAssetPath, const AZ::IO::Path& assetInfoFile, const bool collider, const bool visual)
     {
-        const AZStd::string azMeshPath = sourceAssetPath;
         AZ_Printf("CreateSceneManifest", "Creating manifest for asset %s at : %s ", sourceAssetPath.c_str(), assetInfoFile.c_str());
         AZStd::shared_ptr<AZ::SceneAPI::Containers::Scene> scene;
         AZ::SceneAPI::Events::SceneSerializationBus::BroadcastResult(
-            scene, &AZ::SceneAPI::Events::SceneSerialization::LoadScene, azMeshPath.c_str(), AZ::Uuid::CreateNull(), "");
+            scene, &AZ::SceneAPI::Events::SceneSerialization::LoadScene, sourceAssetPath.c_str(), AZ::Uuid::CreateNull(), "");
         if (!scene)
         {
-            AZ_Error("CreateSceneManifest", false, "Error loading collider. Invalid scene: %s", azMeshPath.c_str());
+            AZ_Error("CreateSceneManifest", false, "Error loading collider. Invalid scene: %s", sourceAssetPath.c_str());
             return false;
         }
 
@@ -421,7 +503,7 @@ namespace ROS2::Utils
         auto valueStorage = manifest.GetValueStorage();
         if (valueStorage.empty())
         {
-            AZ_Error("CreateSceneManifest", false, "Error loading collider. Invalid value storage: %s", azMeshPath.c_str());
+            AZ_Error("CreateSceneManifest", false, "Error loading collider. Invalid value storage: %s", sourceAssetPath.c_str());
             return false;
         }
 
@@ -476,20 +558,58 @@ namespace ROS2::Utils
 
         if (result.GetResult() != AZ::SceneAPI::Events::ProcessingResult::Success)
         {
-            AZ_TracePrintf("CreateSceneManifest", "Scene updated\n");
+            AZ_Trace("CreateSceneManifest", "Scene updated\n");
             return false;
         }
 
-        scene->GetManifest().SaveToFile(assetInfoFile.c_str());
+        scene->GetManifest().SaveToFile(assetInfoFile.Native());
         AZ_Printf("CreateSceneManifest", "Saving scene manifest to %s\n", assetInfoFile.c_str());
 
         return true;
     }
 
-    bool CreateSceneManifest(const AZStd::string& sourceAssetPath, bool collider, bool visual)
+    bool CreateSceneManifest(const AZ::IO::Path& sourceAssetPath, const bool collider, const bool visual)
     {
-        auto assetInfoFilePath = AZ::IO::Path{ sourceAssetPath };
-        assetInfoFilePath.Native() += ".assetinfo";
-        return CreateSceneManifest(sourceAssetPath, assetInfoFilePath.String(), collider, visual);
+        return CreateSceneManifest(sourceAssetPath, sourceAssetPath.Native() + ".assetinfo", collider, visual);
+    }
+
+    AZStd::unordered_set<AZ::IO::Path> GetMeshTextureAssets(const AZ::IO::Path& sourceMeshAssetPath)
+    {
+        AZStd::shared_ptr<AZ::SceneAPI::Containers::Scene> scene;
+        AZ::SceneAPI::Events::SceneSerializationBus::BroadcastResult(
+            scene, &AZ::SceneAPI::Events::SceneSerialization::LoadScene, sourceMeshAssetPath.c_str(), AZ::Uuid::CreateNull(), "");
+        if (!scene)
+        {
+            AZ_Error("GetMeshTextureAssets", false, "Error loading mesh assets. Invalid scene: %s", sourceMeshAssetPath.c_str());
+            return AZStd::unordered_set<AZ::IO::Path>();
+        }
+
+        AZStd::unordered_set<AZ::IO::Path> assetsFilepaths;
+
+        // Look for material files
+        static const AZStd::array<AZ::SceneAPI::DataTypes::IMaterialData::TextureMapType, 9> allTextureTypes{
+            AZ::SceneAPI::DataTypes::IMaterialData::TextureMapType::Diffuse,
+            AZ::SceneAPI::DataTypes::IMaterialData::TextureMapType::Specular,
+            AZ::SceneAPI::DataTypes::IMaterialData::TextureMapType::Bump,
+            AZ::SceneAPI::DataTypes::IMaterialData::TextureMapType::Normal,
+            AZ::SceneAPI::DataTypes::IMaterialData::TextureMapType::Metallic,
+            AZ::SceneAPI::DataTypes::IMaterialData::TextureMapType::Roughness,
+            AZ::SceneAPI::DataTypes::IMaterialData::TextureMapType::AmbientOcclusion,
+            AZ::SceneAPI::DataTypes::IMaterialData::TextureMapType::Emissive,
+            AZ::SceneAPI::DataTypes::IMaterialData::TextureMapType::BaseColor
+        };
+        auto view =
+            AZ::SceneAPI::Containers::MakeDerivedFilterView<AZ::SceneAPI::DataTypes::IMaterialData>(scene->GetGraph().GetContentStorage());
+        for (const auto& material : view)
+        {
+            for (auto textureType : allTextureTypes)
+            {
+                if (const AZ::IO::Path filePath(material.GetTexture(textureType)); !filePath.empty())
+                {
+                    assetsFilepaths.emplace(filePath);
+                }
+            }
+        }
+        return assetsFilepaths;
     }
 } // namespace ROS2::Utils

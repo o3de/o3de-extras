@@ -30,34 +30,35 @@ namespace ROS2
     class CollidersMaker
     {
     public:
-        //! Construct the class based on URDF asset mapping.
-        //! @param urdfAssetsMapping a prepared mapping of Assets used by the source URDF.
-        CollidersMaker(const AZStd::shared_ptr<Utils::UrdfAssetMap>& urdfAssetsMapping);
+        //! Construct the class based on SDF asset mapping.
+        //! @param sdfAssetsMapping a prepared mapping of Assets used by the source URDF/SDF.
+        CollidersMaker(const AZStd::shared_ptr<Utils::UrdfAssetMap>& sdfAssetsMapping);
 
         //! Prevent copying of existing CollidersMaker
         CollidersMaker(const CollidersMaker& other) = delete;
 
         //! Builds .pxmeshes for every collider in link collider mesh.
-        //! @param link A parsed URDF tree link node which could hold information about colliders.
-        void BuildColliders(urdf::LinkSharedPtr link);
+        //! @param link A parsed SDF tree link node which could hold information about colliders.
+        void BuildColliders(const sdf::Link* link);
         //! Add zero, one or many collider elements (depending on link content).
-        //! @param link A parsed URDF tree link node which could hold information about colliders.
+        //! @param model An SDF model object provided by libsdformat from a parsed URDF/SDF
+        //! @param link A parsed SDF tree link node which could hold information about colliders.
         //! @param entityId A non-active entity which will be affected.
-        void AddColliders(urdf::LinkSharedPtr link, AZ::EntityId entityId);
+        void AddColliders(const sdf::Model& model, const sdf::Link* link, AZ::EntityId entityId);
         //! Sends meshes required for colliders to asset processor.
         //! @param buildReadyCb Function to call when the processing finishes.
         void ProcessMeshes(BuildReadyCallback notifyBuildReadyCb);
 
     private:
         void FindWheelMaterial();
-        void BuildCollider(urdf::CollisionSharedPtr collision);
+        void BuildCollider(const sdf::Collision* collision);
         void AddCollider(
-            urdf::CollisionSharedPtr collision,
+            const sdf::Collision* collision,
             AZ::EntityId entityId,
             const AZStd::string& generatedName,
             const AZ::Data::Asset<Physics::MaterialAsset>& materialAsset);
         void AddColliderToEntity(
-            urdf::CollisionSharedPtr collision, AZ::EntityId entityId, const AZ::Data::Asset<Physics::MaterialAsset>& materialAsset) const;
+            const sdf::Collision* collision, AZ::EntityId entityId, const AZ::Data::Asset<Physics::MaterialAsset>& materialAsset) const;
 
         AZ::Data::Asset<Physics::MaterialAsset> m_wheelMaterial;
         AZStd::shared_ptr<Utils::UrdfAssetMap> m_urdfAssetsMapping;
