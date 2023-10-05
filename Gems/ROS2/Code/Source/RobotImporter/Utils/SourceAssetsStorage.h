@@ -59,6 +59,19 @@ namespace ROS2::Utils
         AvailableAsset m_availableAssetInfo;
     };
 
+    //! Bitfield containing the types of asset references are associated with a given unresolved URI or path reference.
+    //! These are flags because the same mesh URI can refer to both a Visual and a Collider entry, for example.
+    enum class ReferencedAssetType
+    {
+        VisualMesh =   0b00000001,   //! URI references a mesh for a Visual entry
+        ColliderMesh = 0b00000010,   //! URI references a mesh for a Collider entry
+        Texture =      0b00000100,   //! URI references one of a multitude of texture types (Diffuse, Normal, AO, etc)
+    };
+    AZ_DEFINE_ENUM_BITWISE_OPERATORS(ReferencedAssetType);
+
+    //! Maps unresolved URI asset references to the type of reference(s) - mesh, texture, etc.
+    using AssetFilenameReferences = AZStd::unordered_map<AZStd::string, ReferencedAssetType>;
+
     /// Type that hold result of mapping from URDF path to asset info
     using UrdfAssetMap = AZStd::unordered_map<AZ::IO::Path, Utils::UrdfAsset>;
 
@@ -76,30 +89,19 @@ namespace ROS2::Utils
     //! - Files pointed by resolved URDF patches have their checksum computed `GetFileCRC`.
     //! - Function scans all available O3DE assets by calling `GetInterestingSourceAssetsCRC`.
     //! - Suitable mapping to the O3DE asset is found by comparing the checksum of the file pointed by the URDF path and source asset.
-    //! @param meshesFilenames - list of the unresolved path from the URDF file
+    //! @param assetFilenames - list of the unresolved paths from the SDF/URDF file
     //! @param urdfFilename - filename of URDF file, used for resolvement
     //! @param sdfBuilderSettings - the builder settings that should be used to resolve paths
     //! @returns a URDF Asset map where the key is unresolved URDF path to AvailableAsset
-    UrdfAssetMap FindAssetsForUrdf(
-        const AZStd::unordered_set<AZStd::string>& meshesFilenames,
+    UrdfAssetMap FindReferencedAssets(
+        const AssetFilenameReferences& assetFilenames,
         const AZStd::string& urdfFilename,
         const SdfAssetBuilderSettings& sdfBuilderSettings);
 
-    //! Helper function that gives product's path from source asset GUID
+    //! Helper function that gets all the potential primary product asset paths from the source asset GUID
     //! @param sourceAssetUUID is source asset GUID
-    //! @param typeId type of product asset
-    //! @returns relative path to product, empty string if product is not found
-    AZStd::string GetProductAsset(const AZ::Uuid& sourceAssetUUID, const AZ::TypeId typeId);
-
-    //! Helper function that gives AZ::RPI::ModelAsset product asset from source asset GUID
-    //! @param sourceAssetUUID is source asset GUID
-    //! @returns relative path to product, empty string if product is not found
-    AZStd::string GetModelProductAsset(const AZ::Uuid& sourceAssetUUID);
-
-    //! Helper function that gives PhysX::Pipeline::MeshAsset product asset from source asset GUID
-    //! @param sourceAssetUUID is source asset GUID
-    //! @returns relative path to product, empty string if product is not found
-    AZStd::string GetPhysXMeshProductAsset(const AZ::Uuid& sourceAssetUUID);
+    //! @returns vector of relative paths to products, empty if no products are found
+    AZStd::vector<AZStd::string> GetProductAssets(const AZ::Uuid& sourceAssetUUID);
 
     //! Helper function that gives the desired product asset ID from source asset GUID
     //! @param sourceAssetUUID is source asset GUID
@@ -107,12 +109,17 @@ namespace ROS2::Utils
     //! @returns product asset id (invalid id if not found)
     AZ::Data::AssetId GetProductAssetId(const AZ::Uuid& sourceAssetUUID, const AZ::TypeId typeId);
 
-    //! Helper function that gives AZ::RPI::ModelAsset product asset from source asset GUID
+    //! Helper function that gives AZ::RPI::ImageAsset product asset ID from source asset GUID
+    //! @param sourceAssetUUID is source asset GUID
+    //! @returns product asset id (invalid id if not found)
+    AZ::Data::AssetId GetImageProductAssetId(const AZ::Uuid& sourceAssetUUID);
+
+    //! Helper function that gives AZ::RPI::ModelAsset product asset ID from source asset GUID
     //! @param sourceAssetUUID is source asset GUID
     //! @returns product asset id (invalid id if not found)
     AZ::Data::AssetId GetModelProductAssetId(const AZ::Uuid& sourceAssetUUID);
 
-    //! Helper function that gives PhysX::Pipeline::MeshAsset product asset from source asset GUID
+    //! Helper function that gives PhysX::Pipeline::MeshAsset product asset ID from source asset GUID
     //! @param sourceAssetUUID is source asset GUID
     //! @returns product asset id (invalid id if not found)
     AZ::Data::AssetId GetPhysXMeshProductAssetId(const AZ::Uuid& sourceAssetUUID);
@@ -134,22 +141,18 @@ namespace ROS2::Utils
     bool CreateSceneManifest(
         const AZ::IO::Path& sourceAssetPath, const AZ::IO::Path& assetInfoFile, const bool collider, const bool visual);
 
-    //! Copies and prepares meshes that are referenced in URDF.
-    //! It resolves every mesh, creates a directory in Project's Asset directory, copies files, and prepares assets info.
-    //! Finally, it assembles its results into mapping that allows mapping Urdf's mesh name to the source asset.
-    //! @param meshesFilenames - files to copy (as unresolved urdf paths)
-    //! @param urdFilename - path to URDF file (as a global path)
-    //! @param colliders - files to create collider assetinfo (as unresolved urdf paths)
-    //! @param visuals - files to create visual assetinfo (as unresolved urdf paths)
+    //! Copies and prepares assets that are referenced in SDF/URDF.
+    //! It resolves every asset, creates a directory in Project's Asset directory, copies files, and prepares assets info.
+    //! Finally, it assembles its results into mapping that allows mapping the SDF/URDF mesh name to the source asset.
+    //! @param assetFilenames - files to copy (as unresolved urdf paths)
+    //! @param urdfFilename - path to URDF file (as a global path)
     //! @param sdfBuilderSettings - the builder settings to use to convert the SDF/URDF files
     //! @param outputDirSuffix - suffix to make output directory unique, if xacro file was used
     //! @param fileIO - instance to fileIO class
     //! @returns mapping from unresolved urdf paths to source asset info
-    UrdfAssetMap CopyAssetForURDFAndCreateAssetMap(
-        const AZStd::unordered_set<AZStd::string>& meshesFilenames,
+    UrdfAssetMap CopyReferencedAssetsAndCreateAssetMap(
+        const AssetFilenameReferences& assetFilenames,
         const AZStd::string& urdfFilename,
-        const AZStd::unordered_set<AZStd::string>& colliders,
-        const AZStd::unordered_set<AZStd::string>& visual,
         const SdfAssetBuilderSettings& sdfBuilderSettings,
         AZStd::string_view outputDirSuffix = "",
         AZ::IO::FileIOBase* fileIO = AZ::IO::FileIOBase::GetInstance());

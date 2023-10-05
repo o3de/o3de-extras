@@ -424,39 +424,96 @@ namespace ROS2::Utils
         VisitModelsForNestedModels(sdfRoot);
     }
 
-    AZStd::unordered_set<AZStd::string> GetMeshesFilenames(const sdf::Root& root, bool visual, bool colliders)
+    AssetFilenameReferences GetReferencedAssetFilenames(const sdf::Root& root)
     {
-        AZStd::unordered_set<AZStd::string> filenames;
-        auto GetMeshesFromModel = [&filenames, visual, colliders](const sdf::Model& model, const ModelStack&) -> VisitModelResponse
+        AssetFilenameReferences filenames;
+        auto GetAssetsFromModel = [&filenames](const sdf::Model& model, const ModelStack&) -> VisitModelResponse
         {
-            const auto addFilenameFromGeometry = [&filenames](const sdf::Geometry* geometry)
+            const auto addFilenameFromGeometry = [&filenames](const sdf::Geometry* geometry, ReferencedAssetType assetType)
             {
                 if (geometry->Type() == sdf::GeometryType::MESH)
                 {
-                    auto pMesh = geometry->MeshShape();
-                    std::string meshUri = pMesh->Uri();
-                    if (pMesh && !meshUri.empty())
+                    if (auto mesh = geometry->MeshShape(); mesh)
                     {
-                        filenames.emplace(meshUri.c_str(), meshUri.size());
+                        AZStd::string uri(mesh->Uri().c_str(), mesh->Uri().size());
+                        if (filenames.contains(uri))
+                        {
+                            filenames[uri] = filenames[uri] | assetType;
+                        }
+                        else
+                        {
+                            filenames.emplace(uri, assetType);
+                        }
                     }
                 }
             };
 
-            const auto processLink = [&addFilenameFromGeometry, visual, colliders](const sdf::Link* link)
+            const auto addFilenamesFromMaterial = [&filenames](const sdf::Material* material)
             {
-                if (visual)
+                // Only PBR entries on a material have filenames that need to be added.
+                if ((!material) || (!material->PbrMaterial()))
                 {
-                    for (uint64_t index = 0; index < link->VisualCount(); index++)
+                    return;
+                }
+
+                if (auto pbr = material->PbrMaterial(); pbr)
+                {
+                    auto pbrWorkflow = pbr->Workflow(sdf::PbrWorkflowType::METAL);
+                    if (!pbrWorkflow)
                     {
-                        addFilenameFromGeometry(link->VisualByIndex(index)->Geom());
+                        pbrWorkflow = pbr->Workflow(sdf::PbrWorkflowType::SPECULAR);
+                        if (!pbrWorkflow)
+                        {
+                            return;
+                        }
+                    }
+
+                    if (auto texture = pbrWorkflow->AlbedoMap(); !texture.empty())
+                    {
+                        filenames.emplace(AZStd::string(texture.c_str(), texture.size()), ReferencedAssetType::Texture);
+                    }
+
+                    if (auto texture = pbrWorkflow->NormalMap(); !texture.empty())
+                    {
+                        filenames.emplace(AZStd::string(texture.c_str(), texture.size()), ReferencedAssetType::Texture);
+                    }
+
+                    if (auto texture = pbrWorkflow->AmbientOcclusionMap(); !texture.empty())
+                    {
+                        filenames.emplace(AZStd::string(texture.c_str(), texture.size()), ReferencedAssetType::Texture);
+                    }
+
+                    if (auto texture = pbrWorkflow->EmissiveMap(); !texture.empty())
+                    {
+                        filenames.emplace(AZStd::string(texture.c_str(), texture.size()), ReferencedAssetType::Texture);
+                    }
+
+                    if (pbrWorkflow->Type() == sdf::PbrWorkflowType::METAL)
+                    {
+                        if (auto texture = pbrWorkflow->RoughnessMap(); !texture.empty())
+                        {
+                            filenames.emplace(AZStd::string(texture.c_str(), texture.size()), ReferencedAssetType::Texture);
+                        }
+
+                        if (auto texture = pbrWorkflow->MetalnessMap(); !texture.empty())
+                        {
+                            filenames.emplace(AZStd::string(texture.c_str(), texture.size()), ReferencedAssetType::Texture);
+                        }
                     }
                 }
-                if (colliders)
+            };
+
+            const auto processLink = [&addFilenameFromGeometry, &addFilenamesFromMaterial](const sdf::Link* link)
+            {
+                for (uint64_t index = 0; index < link->VisualCount(); index++)
                 {
-                    for (uint64_t index = 0; index < link->CollisionCount(); index++)
-                    {
-                        addFilenameFromGeometry(link->CollisionByIndex(index)->Geom());
-                    }
+                    addFilenameFromGeometry(link->VisualByIndex(index)->Geom(), ReferencedAssetType::VisualMesh);
+                    addFilenamesFromMaterial(link->VisualByIndex(index)->Material());
+                }
+
+                for (uint64_t index = 0; index < link->CollisionCount(); index++)
+                {
+                    addFilenameFromGeometry(link->CollisionByIndex(index)->Geom(), ReferencedAssetType::ColliderMesh);
                 }
             };
 
@@ -468,7 +525,7 @@ namespace ROS2::Utils
             return VisitModelResponse::VisitNestedAndSiblings;
         };
 
-        VisitModels(root, GetMeshesFromModel);
+        VisitModels(root, GetAssetsFromModel);
 
         return filenames;
     }
