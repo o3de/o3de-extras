@@ -148,14 +148,12 @@ namespace ROS2
         // Urdf Root has been parsed successfully retrieve it from the Outcome
         const sdf::Root& parsedSdfRoot = parsedSdfOutcome.GetRoot();
 
-        auto collidersNames = Utils::GetMeshesFilenames(parsedSdfRoot, false, true);
-        auto visualNames = Utils::GetMeshesFilenames(parsedSdfRoot, true, false);
-        auto meshNames = Utils::GetMeshesFilenames(parsedSdfRoot, true, true);
+        auto assetNames = Utils::GetReferencedAssetFilenames(parsedSdfRoot);
         AZStd::shared_ptr<Utils::UrdfAssetMap> urdfAssetsMapping = AZStd::make_shared<Utils::UrdfAssetMap>();
         if (importAssetWithUrdf)
         {
             urdfAssetsMapping = AZStd::make_shared<Utils::UrdfAssetMap>(
-                Utils::CopyAssetForURDFAndCreateAssetMap(meshNames, filePath, collidersNames, visualNames, sdfBuilderSettings));
+                Utils::CopyReferencedAssetsAndCreateAssetMap(assetNames, filePath, sdfBuilderSettings));
         }
         bool allAssetProcessed = false;
         bool assetProcessorFailed = false;

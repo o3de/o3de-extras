@@ -1,0 +1,23 @@
+{
+    "materialType": "Materials/Types/StandardPBR.materialtype",
+    "materialTypeVersion": 5,
+    "propertyValues": {
+        "metallic.useTexture": false,
+        "normal.useTexture": false,
+        "roughness.useTexture": false,
+        "specularF0.enableMultiScatterCompensation": true,
+        "specularF0.useTexture": false,
+        "baseColor.useTexture": false,
+        "roughness.factor": 0.9,
+        "metallic.factor": 0.0,
+        "baseColor.color": [
+            0.5,
+            0.5,
+            0.5,
+            1.0
+        ],
+        "opacity.mode": "Blended",
+        "opacity.alphaSource": "None",
+        "opacity.factor": 0.5
+    }
+}

@@ -16,6 +16,7 @@
 #include <AzCore/std/function/function_template.h>
 #include <AzCore/std/string/string.h>
 #include <RobotImporter/URDF/UrdfParser.h>
+#include <RobotImporter/Utils/SourceAssetsStorage.h>
 #include <SdfAssetBuilder/SdfAssetBuilderSettings.h>
 
 #include <sdf/sdf.hh>
@@ -128,13 +129,11 @@ namespace ROS2::Utils
     //! @returns void
     void VisitModels(const sdf::Root& sdfRoot, const ModelVisitorCallback& modelVisitorCB, bool visitNestedModels = true);
 
-    //! Retrieve all meshes referenced in URDF as unresolved URDF patches.
-    //! Note that returned filenames are unresolved URDF patches.
+    //! Retrieve all assets referenced in SDF/URDF as unresolved URIs.
+    //! The URIs will still need to get resolved via ResolveAssetPath() to point to a valid file location.
     //! @param root reference to SDF Root object representing the root of the parsed SDF xml document
-    //! @param visual search for visual meshes.
-    //! @param colliders search for collider meshes.
     //! @returns set of meshes' filenames.
-    AZStd::unordered_set<AZStd::string> GetMeshesFilenames(const sdf::Root& root, bool visual, bool colliders);
+    AssetFilenameReferences GetReferencedAssetFilenames(const sdf::Root& root);
 
     //! Returns the SDF model object which contains the specified link
     //! @param root reference to SDF Root object representing the root of the parsed SDF xml document

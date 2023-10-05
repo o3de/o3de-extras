@@ -10,6 +10,7 @@
 #include "RobotImporter/URDF/PrefabMakerUtils.h"
 #include "RobotImporter/Utils/TypeConversions.h"
 
+#include <Atom/RPI.Reflect/Material/MaterialAsset.h>
 #include <AtomLyIntegration/CommonFeatures/Material/MaterialComponentBus.h>
 #include <AtomLyIntegration/CommonFeatures/Material/MaterialComponentConfig.h>
 #include <AtomLyIntegration/CommonFeatures/Material/MaterialComponentConstants.h>
@@ -231,7 +232,56 @@ namespace ROS2
         entity->Deactivate();
     }
 
-    static void OverrideMaterialPbrSettings(const sdf::Material* material, [[maybe_unused]] AZ::Render::MaterialAssignmentMap& overrides)
+    static void OverrideScriptMaterial(const sdf::Material* material, AZ::Render::MaterialAssignmentMap& overrides)
+    {
+        AZStd::string materialName(material->ScriptName().c_str(), material->ScriptName().size());
+        if (materialName.empty())
+        {
+            return;
+        }
+
+        // Make sure the material name is lowercased before checking the path in the Asset Cache
+        AZStd::to_lower(materialName);
+        // If a material has a <script> element we'll treat the name as a path and name to an O3DE material.
+        // For example, "Gazebo/Wood" will look for a product material in "<cache>/gazebo/wood.azmaterial"
+        AZ::IO::Path materialProductPath(materialName);
+        materialProductPath.ReplaceExtension(".azmaterial");
+
+        // Try getting an asset ID for the given name.
+        constexpr bool AutoGenerateId = false;
+        AZ::Data::AssetId assetId;
+        AZ::Data::AssetCatalogRequestBus::BroadcastResult(
+            assetId,
+            &AZ::Data::AssetCatalogRequestBus::Events::GetAssetIdByPath,
+            materialProductPath.String().c_str(),
+            azrtti_typeid<AZ::RPI::MaterialAsset>(),
+            AutoGenerateId);
+
+        // No asset was found, we can't convert the material script.
+        if (!assetId.IsValid())
+        {
+            AZ_Warning("AddMaterial", false, "Failed to find product material for %s", materialProductPath.c_str());
+            return;
+        }
+
+        // The asset was found, so replace all the material assets in the given material assignment map.
+        AZ::Data::Asset<AZ::RPI::MaterialAsset> materialAsset(assetId, azrtti_typeid<AZ::RPI::MaterialAsset>());
+        for (auto& [id, override] : overrides)
+        {
+            if (id == AZ::Render::DefaultMaterialAssignmentId)
+            {
+                override.m_defaultMaterialAsset = materialAsset;
+            }
+            else
+            {
+                override.m_materialAsset = materialAsset;
+            }
+        }
+
+        AZ_Info("AddMaterial", "Added product material %s\n", materialProductPath.c_str());
+    }
+
+    static void OverrideMaterialPbrSettings(const sdf::Material* material, const AZStd::shared_ptr<Utils::UrdfAssetMap>& assetMapping, AZ::Render::MaterialAssignmentMap& overrides)
     {
         if (auto pbr = material->PbrMaterial(); pbr)
         {
@@ -253,49 +303,52 @@ namespace ROS2
 
             for (auto& [id, materialAssignment] : overrides)
             {
-                // To truly add PBR conversion, all of the texture map references need to get detected and handled.
-                // The code in the following commented-out blocks demonstrate how to detect the texture maps 
-                // and shows the correct property overrides to connect them to. However, the property overrides
-                // currently require an ImageAsset reference, not a string, so the code won't quite work as-is.
-                // Either the Material overrides need to be changed to work with strings, or this code needs to be changed
-                // to provide ImageAsset references, which would mean that the texture references would already need to be resolved
-                // and processed by the Asset Processor.
-                /*
+                auto GetImageAssetIdFromPath = [&assetMapping](const std::string& uri) -> AZ::Data::AssetId
+                {
+                    AZ::Data::AssetId assetId;
+                    const auto asset = PrefabMakerUtils::GetAssetFromPath(*assetMapping, uri);
+                    AZ_Warning("AddVisual", asset, "There is no source image asset for %s.", uri.c_str());
+
+                    if (asset)
+                    {
+                        assetId = Utils::GetImageProductAssetId(asset->m_sourceGuid);
+                        AZ_Warning("AddVisual", assetId.IsValid(), "There is no product image asset for %s.", asset->m_sourceAssetRelativePath.c_str());
+                    }
+                    return assetId;
+                };
+
                 if (auto texture = pbrWorkflow->AlbedoMap(); !texture.empty())
                 {
-                    materialAssignment.m_propertyOverrides.emplace(AZ::Name("baseColor.textureMap"), AZStd::any(AZStd::string(texture.data(), texture.size())));
+                    materialAssignment.m_propertyOverrides.emplace(AZ::Name("baseColor.textureMap"), AZStd::any(GetImageAssetIdFromPath(texture)));
                 }
 
                 if (auto texture = pbrWorkflow->NormalMap(); !texture.empty())
                 {
-                    materialAssignment.m_propertyOverrides.emplace(AZ::Name("normal.textureMap"), AZStd::any(AZStd::string(texture.data(), texture.size())));
+                    materialAssignment.m_propertyOverrides.emplace(AZ::Name("normal.textureMap"), AZStd::any(GetImageAssetIdFromPath(texture)));
                 }
 
                 if (auto texture = pbrWorkflow->AmbientOcclusionMap(); !texture.empty())
                 {
-                    materialAssignment.m_propertyOverrides.emplace(AZ::Name("occlusion.diffuseTextureMap"), AZStd::any(AZStd::string(texture.data(), texture.size())));
+                    materialAssignment.m_propertyOverrides.emplace(AZ::Name("occlusion.diffuseTextureMap"), AZStd::any(GetImageAssetIdFromPath(texture)));
                 }
 
                 if (auto texture = pbrWorkflow->EmissiveMap(); !texture.empty())
                 {
                     materialAssignment.m_propertyOverrides.emplace(AZ::Name("emissive.enable"), AZStd::any(true));
-                    materialAssignment.m_propertyOverrides.emplace(AZ::Name("emissive.textureMap"), AZStd::any(AZStd::string(texture.data(), texture.size())));
+                    materialAssignment.m_propertyOverrides.emplace(AZ::Name("emissive.textureMap"), AZStd::any(GetImageAssetIdFromPath(texture)));
                 }
-                */
 
                 if (pbrWorkflow->Type() == sdf::PbrWorkflowType::METAL)
                 {
-                    /*
                     if (auto texture = pbrWorkflow->RoughnessMap(); !texture.empty())
                     {
-                        materialAssignment.m_propertyOverrides.emplace(AZ::Name("roughness.textureMap"), AZStd::any(AZStd::string(texture.data(), texture.size())));
+                        materialAssignment.m_propertyOverrides.emplace(AZ::Name("roughness.textureMap"), AZStd::any(GetImageAssetIdFromPath(texture)));
                     }
 
                     if (auto texture = pbrWorkflow->MetalnessMap(); !texture.empty())
                     {
-                        materialAssignment.m_propertyOverrides.emplace(AZ::Name("metallic.textureMap"), AZStd::any(AZStd::string(texture.data(), texture.size())));
+                        materialAssignment.m_propertyOverrides.emplace(AZ::Name("metallic.textureMap"), AZStd::any(GetImageAssetIdFromPath(texture)));
                     }
-                    */
 
                     if (pbrWorkflow->Element()->HasElement("roughness"))
                     {
@@ -478,7 +531,8 @@ namespace ROS2
         config.m_materials = AZ::Render::GetDefaultMaterialMapFromModelAsset(modelAsset);
 
         // Try to override all of the various material settings based on what's contained in the <material> and <visual> elements in the source file.
-        OverrideMaterialPbrSettings(material, config.m_materials);
+        OverrideScriptMaterial(material, config.m_materials);
+        OverrideMaterialPbrSettings(material, m_urdfAssetsMapping, config.m_materials);
         OverrideMaterialBaseColor(material, config.m_materials);
         OverrideMaterialTransparency(visual, config.m_materials);
         OverrideMaterialEmissiveSettings(material, config.m_materials);

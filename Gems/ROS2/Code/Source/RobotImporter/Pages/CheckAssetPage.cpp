@@ -48,10 +48,10 @@ namespace ROS2
         m_table->setSelectionBehavior(QAbstractItemView::SelectRows);
         m_table->setSelectionMode(QAbstractItemView::SingleSelection);
         // Set the header items.
-        QTableWidgetItem* headerItem = new QTableWidgetItem(tr("URDF/SDF mesh path"));
+        QTableWidgetItem* headerItem = new QTableWidgetItem(tr("URDF/SDF asset path"));
         headerItem->setTextAlignment(Qt::AlignVCenter | Qt::AlignLeft);
         m_table->setHorizontalHeaderItem(Columns::SdfMeshPath, headerItem);
-        headerItem = new QTableWidgetItem(tr("Resolved mesh from URDF/SDF"));
+        headerItem = new QTableWidgetItem(tr("Resolved asset from URDF/SDF"));
         headerItem->setTextAlignment(Qt::AlignVCenter | Qt::AlignLeft);
         m_table->setHorizontalHeaderItem(Columns::ResolvedMeshPath, headerItem);
         headerItem = new QTableWidgetItem(tr("Type"));
@@ -81,11 +81,11 @@ namespace ROS2
     {
         if (m_missingCount == 0)
         {
-            setTitle(tr("Resolved meshes"));
+            setTitle(tr("Resolved assets"));
         }
         else
         {
-            setTitle(tr("There are ") + QString::number(m_missingCount) + tr(" unresolved meshes"));
+            setTitle(tr("There are ") + QString::number(m_missingCount) + tr(" unresolved assets"));
         }
     }
 
@@ -243,10 +243,12 @@ namespace ROS2
                     {
                         if (!failed)
                         {
-                            const AZStd::string productRelPathVisual = Utils::GetModelProductAsset(assetUuid);
-                            const AZStd::string productRelPathCollider = Utils::GetPhysXMeshProductAsset(assetUuid);
-                            QString text = QString::fromUtf8(productRelPathVisual.data(), productRelPathVisual.size()) + " " +
-                                QString::fromUtf8(productRelPathCollider.data(), productRelPathCollider.size());
+                            const AZStd::vector<AZStd::string> productPaths = Utils::GetProductAssets(assetUuid);
+                            QString text;
+                            for (const auto& productPath : productPaths)
+                            {
+                                text += QString::fromUtf8(productPath.data(), productPath.size()) + " ";
+                            }
                             m_table->setItem(i, Columns::ProductAsset, createCell(true, text));
                             m_table->item(i, Columns::ProductAsset)->setIcon(m_okIcon);
                         }
@@ -265,12 +267,12 @@ namespace ROS2
             m_refreshTimer->stop();
             if (m_failedCount == 0 && m_missingCount == 0)
             {
-                setTitle(tr("All meshes were processed"));
+                setTitle(tr("All assets were processed"));
             }
             else
             {
                 setTitle(
-                    tr("There are ") + QString::number(m_missingCount) + tr(" unresolved meshes.") + tr("There are ") +
+                    tr("There are ") + QString::number(m_missingCount) + tr(" unresolved assets.") + tr("There are ") +
                     QString::number(m_failedCount) + tr(" failed asset processor jobs."));
             }
         }
