@@ -539,8 +539,7 @@ namespace UnitTest
 
     TEST_F(UrdfParserTest, ParseUrdf_WithRootLink_WithName_world_DoesNotContain_world_Link)
     {
-        // The libsdformat URDF parser skips converting the root link if its
-        // name is "world"
+        // The libsdformat URDF parser skips converting the root link if its name is "world"
         // https://github.com/gazebosim/sdformat/blob/a1027c3ed96f2f663760df10f13b06f47f922c55/src/parser_urdf.cc#L3385-L3399
         // Therefore it will not be part of joint reduction
         constexpr const char* RootLinkName = "world";
@@ -576,7 +575,7 @@ namespace UnitTest
         // Check the ROS2 visitor logic to make sure the joint with "world" parent link isn't visited
         auto joints = ROS2::Utils::GetAllJoints(*model);
         EXPECT_EQ(1, joints.size());
-        EXPECT_THAT(joints, ::testing::UnorderedPointwise(UnorderedMapKeyMatcher(), { "base_inertia_child_joint" }));
+        EXPECT_THAT(joints, ::testing::UnorderedPointwise(UnorderedMapKeyMatcher(), { "FooRobot::base_inertia_child_joint" }));
 
         // The libsdformat sdf::Model::JointCount function however returns 2
         // as the "world_base_joint" is skipped over by joint reduction
@@ -601,10 +600,9 @@ namespace UnitTest
         EXPECT_EQ("FooRobot", model->Name());
         ASSERT_NE(nullptr, model);
 
-        // Due to joint reduction there should be 2 links and 43 frames
+        // Due to joint reduction there should be 2 links and 4 frames
         // This is different from the previous test, as the root link
-        // can now partipate in joint reduction because it has a name
-        // that isn't "world"
+        // can now participate in joint reduction because its name isn't "world"
         ASSERT_EQ(2, model->LinkCount());
         ASSERT_EQ(4, model->FrameCount());
 
@@ -625,7 +623,7 @@ namespace UnitTest
         // there should only be a single one of the revolute joint
         auto joints = ROS2::Utils::GetAllJoints(*model);
         EXPECT_EQ(1, joints.size());
-        EXPECT_THAT(joints, ::testing::UnorderedPointwise(UnorderedMapKeyMatcher(), { "base_inertia_child_joint" }));
+        EXPECT_THAT(joints, ::testing::UnorderedPointwise(UnorderedMapKeyMatcher(), { "FooRobot::base_inertia_child_joint" }));
 
         // The libsdformat sdf::Model::JointCount function should match
         // the ROS2 Visitor logic as the root link of "not_world" is part of joint reduction
@@ -741,12 +739,12 @@ namespace UnitTest
         // into the base_link of the SDF
         // However there are Frames for the combined links and joints
         EXPECT_EQ(links.size(), 3);
-        ASSERT_TRUE(links.contains("base_link"));
-        ASSERT_TRUE(links.contains("link2"));
-        ASSERT_TRUE(links.contains("link3"));
-        EXPECT_EQ("base_link", links.at("base_link")->Name());
-        EXPECT_EQ("link2", links.at("link2")->Name());
-        EXPECT_EQ("link3", links.at("link3")->Name());
+        ASSERT_TRUE(links.contains("complicated::base_link"));
+        ASSERT_TRUE(links.contains("complicated::link2"));
+        ASSERT_TRUE(links.contains("complicated::link3"));
+        EXPECT_EQ("base_link", links.at("complicated::base_link")->Name());
+        EXPECT_EQ("link2", links.at("complicated::link2")->Name());
+        EXPECT_EQ("link3", links.at("complicated::link3")->Name());
 
         // Check that the frame names exist on the model
         EXPECT_TRUE(model->FrameNameExists("joint_bs"));
@@ -764,8 +762,8 @@ namespace UnitTest
         ASSERT_NE(nullptr, model);
         auto joints = ROS2::Utils::GetAllJoints(*model);
         EXPECT_EQ(2, joints.size());
-        ASSERT_TRUE(joints.contains("joint0"));
-        ASSERT_TRUE(joints.contains("joint1"));
+        ASSERT_TRUE(joints.contains("complicated::joint0"));
+        ASSERT_TRUE(joints.contains("complicated::joint1"));
     }
 
     TEST_F(UrdfParserTest, TestTransforms)
@@ -781,12 +779,12 @@ namespace UnitTest
         // The "link1" is combined with the base_link through
         // joint reduction in the URDF->SDF parser logic
         // https://github.com/gazebosim/sdformat/issues/1110
-        ASSERT_TRUE(links.contains("base_link"));
-        ASSERT_TRUE(links.contains("link2"));
-        ASSERT_TRUE(links.contains("link3"));
-        const auto base_link_ptr = links.at("base_link");
-        const auto link2_ptr = links.at("link2");
-        const auto link3_ptr = links.at("link3");
+        ASSERT_TRUE(links.contains("complicated::base_link"));
+        ASSERT_TRUE(links.contains("complicated::link2"));
+        ASSERT_TRUE(links.contains("complicated::link3"));
+        const auto base_link_ptr = links.at("complicated::base_link");
+        const auto link2_ptr = links.at("complicated::link2");
+        const auto link3_ptr = links.at("complicated::link3");
 
         // values exported from Blender
         const AZ::Vector3 expected_translation_link1{ 0.0, 0.0, 0.0 };
@@ -861,7 +859,7 @@ namespace UnitTest
 
     TEST_F(UrdfParserTest, TestPathResolve_ValidAbsolutePath_ResolvesCorrectly)
     {
-        // Verify that an absolute path that wouldn't be resolved by prefixes or ancestor paths 
+        // Verify that an absolute path that wouldn't be resolved by prefixes or ancestor paths
         // or the AMENT_PREFIX_PATH will still resolve correctly as long as the absolute path exists
         // (as determined by the mocked-out FileExistsCallback below).
         constexpr AZ::IO::PathView dae = "file:///usr/ros/humble/meshes/bar.dae";
@@ -944,7 +942,7 @@ namespace UnitTest
             [](const AZ::IO::PathView& p) -> bool
             {
                 // For an AMENT_PREFIX_PATH to be a valid match, the share/<package>/package.xml and share/<relative path>
-                // both need to exist. We'll return that both exist, but since the dae file entry doesn't start with 
+                // both need to exist. We'll return that both exist, but since the dae file entry doesn't start with
                 // "package://" or "model://", it shouldn't get resolved.
                 return (p == AZ::IO::PathView("/ament/path2/share/robot/package.xml")) || (p == "/ament/path2/share/robot/meshes/bar.dae");
             });
@@ -991,7 +989,7 @@ namespace UnitTest
         constexpr AZ::IO::PathView dae = "package://meshes/bar.dae";
         constexpr AZ::IO::PathView urdf = "/home/foo/ros_ws/install/foo_robot/description/foo_robot.urdf";
         constexpr AZ::IO::PathView resolvedDae = "/home/foo/ros_ws/install/foo_robot/meshes/bar.dae";
-        
+
         auto settings = GetTestSettings();
         settings.m_resolverSettings.m_useAncestorPaths = false;
 

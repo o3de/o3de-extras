@@ -86,7 +86,7 @@ namespace ROS2
     Utils::UrdfAssetMap SdfAssetBuilder::FindAssets(const sdf::Root& root, const AZStd::string& sourceFilename) const
     {
         AZ_Info(SdfAssetBuilderName, "Parsing mesh and collider names");
-        auto assetNames = Utils::GetMeshesFilenames(root, true, true);
+        auto assetNames = Utils::GetReferencedAssetFilenames(root);
 
         Utils::UrdfAssetMap assetMap;
 
@@ -94,7 +94,7 @@ namespace ROS2
 
         auto amentPrefixPath = Utils::GetAmentPrefixPath();
 
-        for (const auto& uri : assetNames)
+        for (const auto& [uri, assetReferenceType] : assetNames)
         {
             Utils::UrdfAsset asset;
             asset.m_urdfPath = uri;
