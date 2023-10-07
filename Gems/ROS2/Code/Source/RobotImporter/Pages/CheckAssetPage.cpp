@@ -48,10 +48,10 @@ namespace ROS2
         m_table->setSelectionBehavior(QAbstractItemView::SelectRows);
         m_table->setSelectionMode(QAbstractItemView::SingleSelection);
         // Set the header items.
-        QTableWidgetItem* headerItem = new QTableWidgetItem(tr("URDF/SDF mesh path"));
+        QTableWidgetItem* headerItem = new QTableWidgetItem(tr("URDF/SDF asset path"));
         headerItem->setTextAlignment(Qt::AlignVCenter | Qt::AlignLeft);
         m_table->setHorizontalHeaderItem(Columns::SdfMeshPath, headerItem);
-        headerItem = new QTableWidgetItem(tr("Resolved mesh from URDF/SDF"));
+        headerItem = new QTableWidgetItem(tr("Resolved asset from URDF/SDF"));
         headerItem->setTextAlignment(Qt::AlignVCenter | Qt::AlignLeft);
         m_table->setHorizontalHeaderItem(Columns::ResolvedMeshPath, headerItem);
         headerItem = new QTableWidgetItem(tr("Type"));
@@ -81,11 +81,11 @@ namespace ROS2
     {
         if (m_missingCount == 0)
         {
-            setTitle(tr("Resolved meshes"));
+            setTitle(tr("Resolved assets"));
         }
         else
         {
-            setTitle(tr("There are ") + QString::number(m_missingCount) + tr(" unresolved meshes"));
+            setTitle(tr("There are ") + QString::number(m_missingCount) + tr(" unresolved assets"));
         }
     }
 
@@ -102,10 +102,12 @@ namespace ROS2
         const AZStd::optional<AZ::Crc32>& crc32,
         const AZStd::optional<AZStd::string>& resolvedSdfPath)
     {
-        int i = m_table->rowCount();
-        m_table->setRowCount(i + 1);
+        int rowId = m_table->rowCount();
+        m_table->setRowCount(rowId + 1);
 
-        bool isOk = assetSourcePath.has_value() && resolvedSdfPath.has_value();
+        // The Asset ID GUID must not be null(all zeros) and the asset source path must not be empty
+        bool isOk = (assetSourcePath.has_value() && !assetSourcePath->empty() && assetSourcePath != "not found")
+            && (resolvedSdfPath.has_value() && !resolvedSdfPath->empty()) && !assetUuid.IsNull();
         if (!isOk)
         {
             m_missingCount++;
@@ -121,41 +123,44 @@ namespace ROS2
         {
             p->setToolTip(tr("CRC for file : ") + QString::fromUtf8(crcStr.data(), crcStr.size()));
         }
-        m_table->setItem(i, Columns::SdfMeshPath, p);
+        m_table->setItem(rowId, Columns::SdfMeshPath, p);
 
         if (resolvedSdfPath)
         {
             m_table->setItem(
-                i, Columns::ResolvedMeshPath, createCell(true, QString::fromUtf8(resolvedSdfPath->data(), resolvedSdfPath->size())));
+                rowId, Columns::ResolvedMeshPath, createCell(true, QString::fromUtf8(resolvedSdfPath->data(), resolvedSdfPath->size())));
         }
         else
         {
-            m_table->setItem(i, Columns::ResolvedMeshPath, createCell(false, tr("Not found")));
+            m_table->setItem(rowId, Columns::ResolvedMeshPath, createCell(false, tr("Not found")));
         }
 
-        m_table->setItem(i, Columns::Type, createCell(isOk, type));
+        m_table->setItem(rowId, Columns::Type, createCell(isOk, type));
 
         if (assetSourcePath && !assetSourcePath->empty())
         {
             m_table->setItem(
-                i, Columns::SourceAsset, createCell(true, QString::fromUtf8(assetSourcePath->data(), assetSourcePath->size())));
+                rowId, Columns::SourceAsset, createCell(true, QString::fromUtf8(assetSourcePath->data(), assetSourcePath->size())));
+            m_assetsPaths[assetUuid] = *assetSourcePath;
         }
         else
         {
-            m_table->setItem(i, Columns::SourceAsset, createCell(false, tr("Not found")));
+            m_table->setItem(rowId, Columns::SourceAsset, createCell(false, tr("Not found")));
         }
 
         if (isOk)
         {
-            m_table->item(i, Columns::ResolvedMeshPath)->setIcon(m_okIcon);
+            m_table->item(rowId, Columns::ResolvedMeshPath)->setIcon(m_okIcon);
         }
         else
         {
-            m_table->item(i, Columns::ResolvedMeshPath)->setIcon(m_failureIcon);
-            m_table->setItem(i, Columns::ProductAsset, createCell(false, QString()));
+            m_table->item(rowId, Columns::ResolvedMeshPath)->setIcon(m_failureIcon);
+            m_table->setItem(rowId, Columns::ProductAsset, createCell(false, QString()));
         }
-        m_assetsPaths.push_back(assetSourcePath ? *assetSourcePath : AZStd::string());
-        m_assetsUuids.push_back(assetUuid);
+        if (isOk)
+        {
+            m_assetsUuidsToColumnIndex[assetUuid] = rowId;
+        }
     }
 
     void CheckAssetPage::StartWatchAsset()
@@ -177,7 +182,7 @@ namespace ROS2
 
     void CheckAssetPage::ClearAssetsList()
     {
-        m_assetsUuids.clear();
+        m_assetsUuidsToColumnIndex.clear();
         m_assetsUuidsFinished.clear();
         m_assetsPaths.clear();
         m_table->setRowCount(0);
@@ -188,27 +193,30 @@ namespace ROS2
 
     bool CheckAssetPage::IsEmpty() const
     {
-        return m_assetsUuids.empty();
+        return m_assetsUuidsToColumnIndex.empty();
     }
 
     void CheckAssetPage::DoubleClickRow(int row, [[maybe_unused]] int col)
     {
-        AZ_Printf("CheckAssetPage", "Clicked on row", row);
-        if (row < m_assetsPaths.size())
+        for (const auto& [assetUuid, columnId] : m_assetsUuidsToColumnIndex)
         {
-            AzFramework::AssetSystemRequestBus::Broadcast(
-                &AzFramework::AssetSystem::AssetSystemRequests::ShowInAssetProcessor, m_assetsPaths[row]);
+            if (columnId == row && m_assetsPaths.contains(assetUuid))
+            {
+                AzFramework::AssetSystemRequestBus::Broadcast(
+                    &AzFramework::AssetSystem::AssetSystemRequests::ShowInAssetProcessor, m_assetsPaths[assetUuid]);
+            }
+
         }
     }
 
     void CheckAssetPage::RefreshTimerElapsed()
     {
-        for (int i = 0; i < m_assetsUuids.size(); i++)
+        for (const auto& [assetUuid, rowId] : m_assetsUuidsToColumnIndex)
         {
-            const AZ::Uuid& assetUuid = m_assetsUuids[i];
-            const AZStd::string& sourceAssetFullPath = m_assetsPaths[i];
-            if (!m_assetsUuidsFinished.contains(assetUuid))
+            if (m_assetsPaths.contains(assetUuid) && !m_assetsUuidsFinished.contains(assetUuid))
             {
+                // Execute for all found source assets that are not finished yet.
+                const AZStd::string& sourceAssetFullPath = m_assetsPaths[assetUuid];
                 using namespace AzToolsFramework;
                 using namespace AzToolsFramework::AssetSystem;
 
@@ -218,7 +226,7 @@ namespace ROS2
                 if (result)
                 {
                     bool allFinished = true;
-                    bool failed = false;
+                    bool productAssetFailed = false;
                     JobInfoContainer& allJobs = result.GetValue();
                     for (const JobInfo& job : allJobs)
                     {
@@ -228,42 +236,45 @@ namespace ROS2
                         }
                         if (job.m_status == JobStatus::Failed)
                         {
-                            failed = true;
-                            m_failedCount++;
+                            productAssetFailed = true;
                         }
                     }
                     if (allFinished)
                     {
-                        if (!failed)
+                        if (!productAssetFailed)
                         {
-                            const AZStd::string productRelPathVisual = Utils::GetModelProductAsset(assetUuid);
-                            const AZStd::string productRelPathCollider = Utils::GetPhysXMeshProductAsset(assetUuid);
-                            QString text = QString::fromUtf8(productRelPathVisual.data(), productRelPathVisual.size()) + " " +
-                                QString::fromUtf8(productRelPathCollider.data(), productRelPathCollider.size());
-                            m_table->setItem(i, Columns::ProductAsset, createCell(true, text));
-                            m_table->item(i, Columns::ProductAsset)->setIcon(m_okIcon);
+                            const AZStd::vector<AZStd::string> productPaths = Utils::GetProductAssets(assetUuid);
+                            QString text;
+                            for (const auto& productPath : productPaths)
+                            {
+                                text += QString::fromUtf8(productPath.data(), productPath.size()) + " ";
+                            }
+                            m_table->setItem(rowId, Columns::ProductAsset, createCell(true, text));
+                            m_table->item(rowId, Columns::ProductAsset)->setIcon(m_okIcon);
                         }
                         else
                         {
-                            m_table->setItem(i, Columns::ProductAsset, createCell(false, tr("Failed")));
-                            m_table->item(i, Columns::ProductAsset)->setIcon(m_failureIcon);
+                            m_table->setItem(rowId, Columns::ProductAsset, createCell(false, tr("Failed")));
+                            m_table->item(rowId, Columns::ProductAsset)->setIcon(m_failureIcon);
+                            m_failedCount++;
                         }
                         m_assetsUuidsFinished.insert(assetUuid);
                     }
                 }
             }
         }
-        if (m_assetsUuidsFinished.size() == m_assetsUuids.size())
+
+        if (m_assetsUuidsFinished.size() == m_assetsUuidsToColumnIndex.size())
         {
             m_refreshTimer->stop();
             if (m_failedCount == 0 && m_missingCount == 0)
             {
-                setTitle(tr("All meshes were processed"));
+                setTitle(tr("All assets were processed"));
             }
             else
             {
                 setTitle(
-                    tr("There are ") + QString::number(m_missingCount) + tr(" unresolved meshes.") + tr("There are ") +
+                    tr("There are ") + QString::number(m_missingCount) + tr(" unresolved assets.") + tr("There are ") +
                     QString::number(m_failedCount) + tr(" failed asset processor jobs."));
             }
         }

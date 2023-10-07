@@ -37,9 +37,6 @@ namespace ROS2
         //! Prevent copying of existing CollidersMaker
         CollidersMaker(const CollidersMaker& other) = delete;
 
-        //! Builds .pxmeshes for every collider in link collider mesh.
-        //! @param link A parsed SDF tree link node which could hold information about colliders.
-        void BuildColliders(const sdf::Link* link);
         //! Add zero, one or many collider elements (depending on link content).
         //! @param model An SDF model object provided by libsdformat from a parsed URDF/SDF
         //! @param link A parsed SDF tree link node which could hold information about colliders.
@@ -51,7 +48,6 @@ namespace ROS2
 
     private:
         void FindWheelMaterial();
-        void BuildCollider(const sdf::Collision* collision);
         void AddCollider(
             const sdf::Collision* collision,
             AZ::EntityId entityId,

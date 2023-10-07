@@ -217,7 +217,7 @@ namespace ROS2
                 m_parsedSdf = AZStd::move(parsedSdfOutcome.GetRoot());
                 m_prefabMaker.reset();
                 // Report the status of skipping this page
-                m_meshNames = Utils::GetMeshesFilenames(m_parsedSdf, true, true);
+                m_assetNames = Utils::GetReferencedAssetFilenames(m_parsedSdf);
                 m_assetPage->ClearAssetsList();
             }
             else
@@ -265,9 +265,6 @@ namespace ROS2
     {
         if (m_assetPage->IsEmpty())
         {
-            auto collidersNames = Utils::GetMeshesFilenames(m_parsedSdf, false, true);
-            auto visualNames = Utils::GetMeshesFilenames(m_parsedSdf, true, false);
-
             AZ::Uuid::FixedString dirSuffix;
             if (!m_params.empty())
             {
@@ -286,26 +283,29 @@ namespace ROS2
 
             if (m_importAssetWithUrdf)
             {
-                m_urdfAssetsMapping = AZStd::make_shared<Utils::UrdfAssetMap>(Utils::CopyAssetForURDFAndCreateAssetMap(
-                    m_meshNames, m_urdfPath.String(), collidersNames, visualNames, sdfBuilderSettings, dirSuffix));
+                m_urdfAssetsMapping = AZStd::make_shared<Utils::UrdfAssetMap>(Utils::CopyReferencedAssetsAndCreateAssetMap(
+                    m_assetNames, m_urdfPath.String(), sdfBuilderSettings, dirSuffix));
             }
             else
             {
                 m_urdfAssetsMapping =
-                    AZStd::make_shared<Utils::UrdfAssetMap>(Utils::FindAssetsForUrdf(m_meshNames, m_urdfPath.String(), sdfBuilderSettings));
-                for (const AZStd::string& meshPath : m_meshNames)
+                    AZStd::make_shared<Utils::UrdfAssetMap>(Utils::FindReferencedAssets(m_assetNames, m_urdfPath.String(), sdfBuilderSettings));
+                for (const auto& [assetPath, assetReferenceType] : m_assetNames)
                 {
-                    if (m_urdfAssetsMapping->contains(meshPath))
+                    if (m_urdfAssetsMapping->contains(assetPath))
                     {
-                        const auto& asset = m_urdfAssetsMapping->at(meshPath);
-                        bool visual = visualNames.contains(meshPath);
-                        bool collider = collidersNames.contains(meshPath);
-                        Utils::CreateSceneManifest(asset.m_availableAssetInfo.m_sourceAssetGlobalPath, collider, visual);
+                        const auto& asset = m_urdfAssetsMapping->at(assetPath);
+                        bool visual = (assetReferenceType & Utils::ReferencedAssetType::VisualMesh) == Utils::ReferencedAssetType::VisualMesh;
+                        bool collider = (assetReferenceType & Utils::ReferencedAssetType::ColliderMesh) == Utils::ReferencedAssetType::ColliderMesh;
+                        if (visual || collider)
+                        {
+                            Utils::CreateSceneManifest(asset.m_availableAssetInfo.m_sourceAssetGlobalPath, collider, visual);
+                        }
                     }
                 }
             };
 
-            for (const AZStd::string& meshPath : m_meshNames)
+            for (const auto& [assetPath, assetReferenceType] : m_assetNames)
             {
                 AZ::Uuid sourceAssetUuid = AZ::Uuid::CreateNull();
                 QString type = tr("Unknown");
@@ -313,33 +313,35 @@ namespace ROS2
                 AZStd::optional<AZStd::string> sourcePath;
                 AZStd::optional<AZStd::string> resolvedPath;
 
-                if (m_urdfAssetsMapping->contains(meshPath))
+                if (m_urdfAssetsMapping->contains(assetPath))
                 {
-                    bool visual = visualNames.contains(meshPath);
-                    bool collider = collidersNames.contains(meshPath);
+                    bool visual = (assetReferenceType & Utils::ReferencedAssetType::VisualMesh) == Utils::ReferencedAssetType::VisualMesh;
+                    bool collider = (assetReferenceType & Utils::ReferencedAssetType::ColliderMesh) == Utils::ReferencedAssetType::ColliderMesh;
+                    bool texture = (assetReferenceType & Utils::ReferencedAssetType::Texture) == Utils::ReferencedAssetType::Texture;
                     if (visual && collider)
                     {
-                        type = tr("Visual and Collider");
+                        type = tr("Visual and Collider Mesh");
                     }
                     else if (visual)
                     {
-                        type = tr("Visual");
+                        type = tr("Visual Mesh");
                     }
                     else if (collider)
                     {
-                        type = tr("Collider");
+                        type = tr("Collider Mesh");
+                    }
+                    else if (texture)
+                    {
+                        type = tr("Texture");
                     }
 
-                    if (m_urdfAssetsMapping->contains(meshPath))
-                    {
-                        const auto& asset = m_urdfAssetsMapping->at(meshPath);
-                        sourceAssetUuid = asset.m_availableAssetInfo.m_sourceGuid;
-                        sourcePath = asset.m_availableAssetInfo.m_sourceAssetRelativePath.String();
-                        resolvedPath = asset.m_resolvedUrdfPath.String();
-                        crc = asset.m_urdfFileCRC;
-                    }
+                    const auto& asset = m_urdfAssetsMapping->at(assetPath);
+                    sourceAssetUuid = asset.m_availableAssetInfo.m_sourceGuid;
+                    sourcePath = asset.m_availableAssetInfo.m_sourceAssetRelativePath.String();
+                    resolvedPath = asset.m_resolvedUrdfPath.String();
+                    crc = asset.m_urdfFileCRC;
                 }
-                m_assetPage->ReportAsset(sourceAssetUuid, meshPath, type, sourcePath, crc, resolvedPath);
+                m_assetPage->ReportAsset(sourceAssetUuid, assetPath, type, sourcePath, crc, resolvedPath);
             }
             m_assetPage->StartWatchAsset();
         }
@@ -348,7 +350,7 @@ namespace ROS2
     void RobotImporterWidget::FillPrefabMakerPage()
     {
         // Use the URDF/SDF file name stem the prefab name
-        AZStd::string robotName = AZStd::string(m_urdfPath.Stem().Native()) + ".prefab";
+        AZStd::string robotName = AZStd::string::format("%.*s.prefab", AZ_PATH_ARG(m_urdfPath.Stem()));
         m_prefabMakerPage->setProposedPrefabName(robotName);
         QWizard::button(PrefabCreationButtonId)->setText(tr("Create Prefab"));
         QWizard::setOption(HavePrefabCreationButton, true);
@@ -414,9 +416,9 @@ namespace ROS2
             }
             if (m_checkUrdfPage->isComplete())
             {
-                if (m_meshNames.size() == 0)
+                if (m_assetNames.empty())
                 {
-                    // skip two pages when urdf/sdf is parsed without problems, and it has no meshes
+                    // skip two pages when urdf/sdf is parsed without problems, and it has no assets
                     return m_assetPage->nextId();
                 }
                 else

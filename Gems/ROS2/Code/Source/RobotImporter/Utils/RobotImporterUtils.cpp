@@ -113,17 +113,19 @@ namespace ROS2::Utils
         // Optionally it supports recursing nested models to visit their links as well
         struct VisitLinksForNestedModels_fn
         {
-            void operator()(const sdf::Model& model)
+            VisitModelResponse operator()(const sdf::Model& model)
             {
-                if (VisitLinksForModel(model) && m_recurseModels)
+                m_modelStack.push_back(model);
+                VisitModelResponse visitResponse = VisitLinksForModel(model);
+                if (m_recurseModels && visitResponse == VisitModelResponse::VisitNestedAndSiblings)
                 {
                     // Nested model link are only visited if the joint visitor returns true
                     for (uint64_t modelIndex{}; modelIndex < model.ModelCount(); ++modelIndex)
                     {
-                        const sdf::Model* nestedModel = model.ModelByIndex(modelIndex);
-                        if (nestedModel != nullptr)
+                        if (const sdf::Model* nestedModel = model.ModelByIndex(modelIndex); nestedModel != nullptr)
                         {
-                            if (!VisitLinksForModel(*nestedModel))
+                            if (VisitModelResponse nestedVisitResponse = operator()(*nestedModel);
+                                nestedVisitResponse >= VisitModelResponse::Stop)
                             {
                                 // Sibling nested model links are only visited
                                 // if the joint visitor returns true
@@ -132,31 +134,36 @@ namespace ROS2::Utils
                         }
                     }
                 }
+                m_modelStack.pop_back();
+
+                return visitResponse;
             }
 
         private:
             //! Returns success by default
             //! But an invoked visitor can return false to halt further iteration
-            bool VisitLinksForModel(const sdf::Model& currentModel)
+            VisitModelResponse VisitLinksForModel(const sdf::Model& currentModel)
             {
                 for (uint64_t linkIndex{}; linkIndex < currentModel.LinkCount(); ++linkIndex)
                 {
-                    const sdf::Link* link = currentModel.LinkByIndex(linkIndex);
-                    if (link != nullptr)
+                    if (const sdf::Link* link = currentModel.LinkByIndex(linkIndex); link != nullptr)
                     {
-                        if (!m_linkVisitorCB(*link))
+                        if (!m_linkVisitorCB(*link, m_modelStack))
                         {
-                            return false;
+                            return VisitModelResponse::Stop;
                         }
                     }
                 }
 
-                return true;
+                return VisitModelResponse::VisitNestedAndSiblings;
             }
 
         public:
             LinkVisitorCallback m_linkVisitorCB;
             bool m_recurseModels{};
+        private:
+            // Stack storing the current composition of models visited so far
+            ModelStack m_modelStack;
         };
 
         VisitLinksForNestedModels_fn VisitLinksForNestedModels{};
@@ -171,17 +178,19 @@ namespace ROS2::Utils
         // Optionally it supports recursing nested models to visit their joints as well
         struct VisitJointsForNestedModels_fn
         {
-            void operator()(const sdf::Model& model)
+            VisitModelResponse operator()(const sdf::Model& model)
             {
-                if (VisitJointsForModel(model) && m_recurseModels)
+                m_modelStack.push_back(model);
+                VisitModelResponse visitResponse = VisitJointsForModel(model);
+                if (m_recurseModels && visitResponse == VisitModelResponse::VisitNestedAndSiblings)
                 {
                     // Nested model joints are only visited if the joint visitor returns true
                     for (uint64_t modelIndex{}; modelIndex < model.ModelCount(); ++modelIndex)
                     {
-                        const sdf::Model* nestedModel = model.ModelByIndex(modelIndex);
-                        if (nestedModel != nullptr)
+                        if (const sdf::Model* nestedModel = model.ModelByIndex(modelIndex); nestedModel != nullptr)
                         {
-                            if (!VisitJointsForModel(*nestedModel))
+                            if (VisitModelResponse nestedVisitResponse = operator()(*nestedModel);
+                                nestedVisitResponse >= VisitModelResponse::Stop)
                             {
                                 // Sibling nested model joints are only visited
                                 // if the joint visitor returns true
@@ -190,10 +199,13 @@ namespace ROS2::Utils
                         }
                     }
                 }
+                m_modelStack.pop_back();
+
+                return visitResponse;
             }
 
         private:
-            bool VisitJointsForModel(const sdf::Model& currentModel)
+            VisitModelResponse VisitJointsForModel(const sdf::Model& currentModel)
             {
                 for (uint64_t jointIndex{}; jointIndex < currentModel.JointCount(); ++jointIndex)
                 {
@@ -202,19 +214,22 @@ namespace ROS2::Utils
                     // don't have an actual sdf::link in the parsed model
                     if (joint != nullptr && currentModel.LinkNameExists(joint->ParentName()) && currentModel.LinkByName(joint->ChildName()))
                     {
-                        if (!m_jointVisitorCB(*joint))
+                        if (!m_jointVisitorCB(*joint, m_modelStack))
                         {
-                            return false;
+                            return VisitModelResponse::Stop;
                         }
                     }
                 }
 
-                return true;
+                return VisitModelResponse::VisitNestedAndSiblings;
             }
 
         public:
             JointVisitorCallback m_jointVisitorCB;
             bool m_recurseModels{};
+        private:
+            // Stack storing the current composition of models visited so far
+            ModelStack m_modelStack;
         };
 
         VisitJointsForNestedModels_fn VisitJointsForNestedModels{};
@@ -227,10 +242,19 @@ namespace ROS2::Utils
     {
         using LinkMap = AZStd::unordered_map<AZStd::string, const sdf::Link*>;
         LinkMap links;
-        auto GatherLinks = [&links](const sdf::Link& link)
+        auto GatherLinks = [&links](const sdf::Link& link, const ModelStack& modelStack)
         {
-            AZStd::string linkName(link.Name().c_str(), link.Name().size());
-            links.insert_or_assign(AZStd::move(linkName), &link);
+            std::string fullyQualifiedLinkName;
+            // Prepend the Model names to the link name using the Name Scoping support in libsdformat
+            // http://sdformat.org/tutorials?tut=composition_proposal#1-3-name-scoping-and-cross-referencing
+            for (const sdf::Model& model : modelStack)
+            {
+                fullyQualifiedLinkName = sdf::JoinName(fullyQualifiedLinkName, model.Name());
+            }
+            fullyQualifiedLinkName = sdf::JoinName(fullyQualifiedLinkName, link.Name());
+
+            AZStd::string azLinkName(fullyQualifiedLinkName.c_str(), fullyQualifiedLinkName.size());
+            links.insert_or_assign(AZStd::move(azLinkName), &link);
             return true;
         };
 
@@ -242,10 +266,19 @@ namespace ROS2::Utils
     {
         using JointMap = AZStd::unordered_map<AZStd::string, const sdf::Joint*>;
         JointMap joints;
-        auto GatherJoints = [&joints](const sdf::Joint& joint)
+        auto GatherJoints = [&joints](const sdf::Joint& joint, const ModelStack& modelStack)
         {
-            AZStd::string jointName(joint.Name().c_str(), joint.Name().size());
-            joints.insert_or_assign(AZStd::move(jointName), &joint);
+            std::string fullyQualifiedJointName;
+            // Prepend the Model names to the joint name using the Name Scoping support in libsdformat
+            // http://sdformat.org/tutorials?tut=composition_proposal#1-3-name-scoping-and-cross-referencing
+            for (const sdf::Model& model : modelStack)
+            {
+                fullyQualifiedJointName = sdf::JoinName(fullyQualifiedJointName, model.Name());
+            }
+            fullyQualifiedJointName = sdf::JoinName(fullyQualifiedJointName, joint.Name());
+
+            AZStd::string azJointName(fullyQualifiedJointName.c_str(), fullyQualifiedJointName.size());
+            joints.insert_or_assign(AZStd::move(azJointName), &joint);
             return true;
         };
 
@@ -258,7 +291,7 @@ namespace ROS2::Utils
     {
         using JointVector = AZStd::vector<const sdf::Joint*>;
         JointVector joints;
-        auto GatherJointsWhereLinkIsChild = [&joints, linkName](const sdf::Joint& joint)
+        auto GatherJointsWhereLinkIsChild = [&joints, linkName](const sdf::Joint& joint, const ModelStack& modelStack)
         {
             if (AZStd::string_view jointChildName{ joint.ChildName().c_str(), joint.ChildName().size() }; jointChildName == linkName)
             {
@@ -277,7 +310,7 @@ namespace ROS2::Utils
     {
         using JointVector = AZStd::vector<const sdf::Joint*>;
         JointVector joints;
-        auto GatherJointsWhereLinkIsParent = [&joints, linkName](const sdf::Joint& joint)
+        auto GatherJointsWhereLinkIsParent = [&joints, linkName](const sdf::Joint& joint, const ModelStack& modelStack)
         {
             if (AZStd::string_view jointParentName{ joint.ParentName().c_str(), joint.ParentName().size() }; jointParentName == linkName)
             {
@@ -305,11 +338,12 @@ namespace ROS2::Utils
                 // The VisitModelResponse enum value is used to filter out
                 // less callbacks the higher the value grows.
                 // So any values above VisitNestedAndSiblings will not visit nested models
-                VisitModelResponse visitResponse = m_modelVisitorCB(model);
+                VisitModelResponse visitResponse = m_modelVisitorCB(model, m_modelStack);
 
                 if (m_recurseModels && visitResponse == VisitModelResponse::VisitNestedAndSiblings)
                 {
                     // Nested models are only visited if the model visitor returns VisitNestedAndSiblings
+                    m_modelStack.push_back(model);
                     for (uint64_t modelIndex{}; modelIndex < model.ModelCount(); ++modelIndex)
                     {
                         if (const sdf::Model* nestedModel = model.ModelByIndex(modelIndex); nestedModel != nullptr)
@@ -322,6 +356,7 @@ namespace ROS2::Utils
                             }
                         }
                     }
+                    m_modelStack.pop_back();
                 }
 
                 return visitResponse;
@@ -378,6 +413,9 @@ namespace ROS2::Utils
         public:
             ModelVisitorCallback m_modelVisitorCB;
             bool m_recurseModels{};
+        private:
+            // Stack storing the current composition of models visited so far
+            ModelStack m_modelStack;
         };
 
         VisitModelsForNestedModels_fn VisitModelsForNestedModels{};
@@ -386,38 +424,96 @@ namespace ROS2::Utils
         VisitModelsForNestedModels(sdfRoot);
     }
 
-    AZStd::unordered_set<AZStd::string> GetMeshesFilenames(const sdf::Root& root, bool visual, bool colliders)
+    AssetFilenameReferences GetReferencedAssetFilenames(const sdf::Root& root)
     {
-        AZStd::unordered_set<AZStd::string> filenames;
-        auto GetMeshesFromModel = [&filenames, visual, colliders](const sdf::Model& model) -> VisitModelResponse
+        AssetFilenameReferences filenames;
+        auto GetAssetsFromModel = [&filenames](const sdf::Model& model, const ModelStack&) -> VisitModelResponse
         {
-            const auto addFilenameFromGeometry = [&filenames](const sdf::Geometry* geometry)
+            const auto addFilenameFromGeometry = [&filenames](const sdf::Geometry* geometry, ReferencedAssetType assetType)
             {
                 if (geometry->Type() == sdf::GeometryType::MESH)
                 {
-                    auto pMesh = geometry->MeshShape();
-                    if (pMesh)
+                    if (auto mesh = geometry->MeshShape(); mesh)
                     {
-                        filenames.insert(AZStd::string(pMesh->Uri().c_str(), pMesh->Uri().size()));
+                        AZStd::string uri(mesh->Uri().c_str(), mesh->Uri().size());
+                        if (filenames.contains(uri))
+                        {
+                            filenames[uri] = filenames[uri] | assetType;
+                        }
+                        else
+                        {
+                            filenames.emplace(uri, assetType);
+                        }
                     }
                 }
             };
 
-            const auto processLink = [&addFilenameFromGeometry, visual, colliders](const sdf::Link* link)
+            const auto addFilenamesFromMaterial = [&filenames](const sdf::Material* material)
             {
-                if (visual)
+                // Only PBR entries on a material have filenames that need to be added.
+                if ((!material) || (!material->PbrMaterial()))
                 {
-                    for (uint64_t index = 0; index < link->VisualCount(); index++)
+                    return;
+                }
+
+                if (auto pbr = material->PbrMaterial(); pbr)
+                {
+                    auto pbrWorkflow = pbr->Workflow(sdf::PbrWorkflowType::METAL);
+                    if (!pbrWorkflow)
                     {
-                        addFilenameFromGeometry(link->VisualByIndex(index)->Geom());
+                        pbrWorkflow = pbr->Workflow(sdf::PbrWorkflowType::SPECULAR);
+                        if (!pbrWorkflow)
+                        {
+                            return;
+                        }
+                    }
+
+                    if (auto texture = pbrWorkflow->AlbedoMap(); !texture.empty())
+                    {
+                        filenames.emplace(AZStd::string(texture.c_str(), texture.size()), ReferencedAssetType::Texture);
+                    }
+
+                    if (auto texture = pbrWorkflow->NormalMap(); !texture.empty())
+                    {
+                        filenames.emplace(AZStd::string(texture.c_str(), texture.size()), ReferencedAssetType::Texture);
+                    }
+
+                    if (auto texture = pbrWorkflow->AmbientOcclusionMap(); !texture.empty())
+                    {
+                        filenames.emplace(AZStd::string(texture.c_str(), texture.size()), ReferencedAssetType::Texture);
+                    }
+
+                    if (auto texture = pbrWorkflow->EmissiveMap(); !texture.empty())
+                    {
+                        filenames.emplace(AZStd::string(texture.c_str(), texture.size()), ReferencedAssetType::Texture);
+                    }
+
+                    if (pbrWorkflow->Type() == sdf::PbrWorkflowType::METAL)
+                    {
+                        if (auto texture = pbrWorkflow->RoughnessMap(); !texture.empty())
+                        {
+                            filenames.emplace(AZStd::string(texture.c_str(), texture.size()), ReferencedAssetType::Texture);
+                        }
+
+                        if (auto texture = pbrWorkflow->MetalnessMap(); !texture.empty())
+                        {
+                            filenames.emplace(AZStd::string(texture.c_str(), texture.size()), ReferencedAssetType::Texture);
+                        }
                     }
                 }
-                if (colliders)
+            };
+
+            const auto processLink = [&addFilenameFromGeometry, &addFilenamesFromMaterial](const sdf::Link* link)
+            {
+                for (uint64_t index = 0; index < link->VisualCount(); index++)
                 {
-                    for (uint64_t index = 0; index < link->CollisionCount(); index++)
-                    {
-                        addFilenameFromGeometry(link->CollisionByIndex(index)->Geom());
-                    }
+                    addFilenameFromGeometry(link->VisualByIndex(index)->Geom(), ReferencedAssetType::VisualMesh);
+                    addFilenamesFromMaterial(link->VisualByIndex(index)->Material());
+                }
+
+                for (uint64_t index = 0; index < link->CollisionCount(); index++)
+                {
+                    addFilenameFromGeometry(link->CollisionByIndex(index)->Geom(), ReferencedAssetType::ColliderMesh);
                 }
             };
 
@@ -429,17 +525,18 @@ namespace ROS2::Utils
             return VisitModelResponse::VisitNestedAndSiblings;
         };
 
-        VisitModels(root, GetMeshesFromModel);
+        VisitModels(root, GetAssetsFromModel);
 
         return filenames;
     }
 
-    const sdf::Model* GetModelContainingLink(const sdf::Root& root, AZStd::string_view linkName)
+    const sdf::Model* GetModelContainingLink(const sdf::Root& root, AZStd::string_view fullyQualifiedLinkName)
     {
         const sdf::Model* resultModel{};
-        auto IsLinkInModel = [&linkName, &resultModel](const sdf::Model& model) -> VisitModelResponse
+        auto IsLinkInModel = [&fullyQualifiedLinkName,
+                              &resultModel](const sdf::Model& model, const ModelStack&) -> VisitModelResponse
         {
-            const std::string stdLinkName(linkName.data(), linkName.size());
+            const std::string stdLinkName(fullyQualifiedLinkName.data(), fullyQualifiedLinkName.size());
             if (const sdf::Link* searchLink = model.LinkByName(stdLinkName); searchLink != nullptr)
             {
                 resultModel = &model;
@@ -456,9 +553,9 @@ namespace ROS2::Utils
     const sdf::Model* GetModelContainingLink(const sdf::Root& root, const sdf::Link& link)
     {
         const sdf::Model* resultModel{};
-        auto IsLinkInModel = [&link, &resultModel](const sdf::Model& model) -> VisitModelResponse
+        auto IsLinkInModel = [&link, &resultModel](const sdf::Model& model, const ModelStack&) -> VisitModelResponse
         {
-            if (const sdf::Link* searchLink = model.LinkByName(link.Name()); searchLink != nullptr)
+            if (const sdf::Link* searchLink = model.LinkByName(link.Name()); searchLink != &link)
             {
                 resultModel = &model;
                 return VisitModelResponse::Stop;
@@ -471,12 +568,12 @@ namespace ROS2::Utils
         return resultModel;
     }
 
-    const sdf::Model* GetModelContainingJoint(const sdf::Root& root, AZStd::string_view jointName)
+    const sdf::Model* GetModelContainingJoint(const sdf::Root& root, AZStd::string_view fullyQualifiedJointName)
     {
         const sdf::Model* resultModel{};
-        auto IsJointInModel = [&jointName, &resultModel](const sdf::Model& model) -> VisitModelResponse
+        auto IsJointInModel = [&fullyQualifiedJointName, &resultModel](const sdf::Model& model, const ModelStack&) -> VisitModelResponse
         {
-            const std::string stdJointName(jointName.data(), jointName.size());
+            const std::string stdJointName(fullyQualifiedJointName.data(), fullyQualifiedJointName.size());
             if (const sdf::Joint* searchJoint = model.JointByName(stdJointName); searchJoint != nullptr)
             {
                 resultModel = &model;
@@ -493,9 +590,9 @@ namespace ROS2::Utils
     const sdf::Model* GetModelContainingJoint(const sdf::Root& root, const sdf::Joint& joint)
     {
         const sdf::Model* resultModel{};
-        auto IsJointInModel = [&joint, &resultModel](const sdf::Model& model) -> VisitModelResponse
+        auto IsJointInModel = [&joint, &resultModel](const sdf::Model& model, const ModelStack&) -> VisitModelResponse
         {
-            if (const sdf::Joint* searchJoint = model.JointByName(joint.Name()); searchJoint != nullptr)
+            if (const sdf::Joint* searchJoint = model.JointByName(joint.Name()); searchJoint != &joint)
             {
                 resultModel = &model;
                 return VisitModelResponse::Stop;
@@ -504,6 +601,25 @@ namespace ROS2::Utils
             return VisitModelResponse::VisitNestedAndSiblings;
         };
         VisitModels(root, IsJointInModel);
+
+        return resultModel;
+    }
+
+    const sdf::Model* GetModelContainingModel(const sdf::Root& root, const sdf::Model& model)
+    {
+        const sdf::Model* resultModel{};
+        auto IsModelInModel = [&model, &resultModel](const sdf::Model& outerModel, const ModelStack&) -> VisitModelResponse
+        {
+            // Validate the memory address of the model matches the outer model found searching the visited model "child models"
+            if (const sdf::Model* searchModel = outerModel.ModelByName(model.Name()); searchModel != &model)
+            {
+                resultModel = &outerModel;
+                return VisitModelResponse::Stop;
+            }
+
+            return VisitModelResponse::VisitNestedAndSiblings;
+        };
+        VisitModels(root, IsModelInModel);
 
         return resultModel;
     }
@@ -562,12 +678,12 @@ namespace ROS2::Utils
             const AZ::IO::Path packageManifestPath = amentSharePath / packageName / "package.xml";
 
             // Given a path like 'ambulance/meshes/model.stl', it will be considered a match if
-            // <ament prefix path>/share/ambulance/package.xml exists and 
+            // <ament prefix path>/share/ambulance/package.xml exists and
             // <ament prefix path>/share/ambulance/meshes/model.stl exists.
             if (const AZ::IO::Path candidateResolvedPath = amentSharePath / strippedPath;
                 fileExistsCB(packageManifestPath) && fileExistsCB(candidateResolvedPath))
             {
-                AZ_Trace("ResolveAssetPath", R"(Resolved using AMENT_PREFIX_PATH: "%.*s" -> "%.*s")" "\n", 
+                AZ_Trace("ResolveAssetPath", R"(Resolved using AMENT_PREFIX_PATH: "%.*s" -> "%.*s")" "\n",
                     AZ_PATH_ARG(unresolvedPath), AZ_PATH_ARG(candidateResolvedPath));
                 return candidateResolvedPath;
             }
@@ -652,7 +768,7 @@ namespace ROS2::Utils
                 {
                     if (fileExistsCB(replacedUriPath))
                     {
-                        AZ_Trace("ResolveAssetPath", R"(Resolved Absolute Path: "%.*s" -> "%.*s")" "\n", 
+                        AZ_Trace("ResolveAssetPath", R"(Resolved Absolute Path: "%.*s" -> "%.*s")" "\n",
                             AZ_PATH_ARG(unresolvedPath), AZ_PATH_ARG(replacedUriPath));
                         return replacedUriPath;
                     }
@@ -669,7 +785,7 @@ namespace ROS2::Utils
                     if (const AZ::IO::Path candidateResolvedPath = ancestorPath / replacedUriPath;
                         fileExistsCB(candidateResolvedPath))
                     {
-                        AZ_Trace("ResolveAssetPath", R"(Resolved using ancestor paths: "%.*s" -> "%.*s")" "\n", 
+                        AZ_Trace("ResolveAssetPath", R"(Resolved using ancestor paths: "%.*s" -> "%.*s")" "\n",
                             AZ_PATH_ARG(unresolvedPath), AZ_PATH_ARG(candidateResolvedPath));
                         return candidateResolvedPath;
                     }
@@ -684,13 +800,13 @@ namespace ROS2::Utils
         {
             if (fileExistsCB(unresolvedPath))
             {
-                AZ_Trace("ResolveAssetPath", R"(Resolved Absolute Path: "%.*s")" "\n", 
+                AZ_Trace("ResolveAssetPath", R"(Resolved Absolute Path: "%.*s")" "\n",
                     AZ_PATH_ARG(unresolvedPath));
                 return unresolvedPath;
             }
             else
             {
-                AZ_Trace("ResolveAssetPath", R"(Failed to resolve Absolute Path: "%.*s")" "\n", 
+                AZ_Trace("ResolveAssetPath", R"(Failed to resolve Absolute Path: "%.*s")" "\n",
                     AZ_PATH_ARG(unresolvedPath));
                 return {};
             }
@@ -702,12 +818,12 @@ namespace ROS2::Utils
 
         if (fileExistsCB(relativePath))
         {
-            AZ_Trace("ResolveAssetPath", R"(Resolved Relative Path: "%.*s" -> "%.*s")" "\n", 
+            AZ_Trace("ResolveAssetPath", R"(Resolved Relative Path: "%.*s" -> "%.*s")" "\n",
                 AZ_PATH_ARG(unresolvedPath), AZ_PATH_ARG(relativePath));
             return relativePath;
         }
 
-        AZ_Trace("ResolveAssetPath", R"(Failed to resolve Relative Path: "%.*s" -> "%.*s")" "\n", 
+        AZ_Trace("ResolveAssetPath", R"(Failed to resolve Relative Path: "%.*s" -> "%.*s")" "\n",
             AZ_PATH_ARG(unresolvedPath), AZ_PATH_ARG(relativePath));
         return {};
     }
