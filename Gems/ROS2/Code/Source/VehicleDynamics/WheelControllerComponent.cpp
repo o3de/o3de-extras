@@ -67,10 +67,12 @@ namespace ROS2::VehicleDynamics
 
             if (AZ::EditContext* ec = serialize->GetEditContext())
             {
-                ec->Class<WheelControllerComponent>("Wheel controller", "Handle wheel physics")
+                ec->Class<WheelControllerComponent>("Wheel Controller", "Handle wheel physics")
                     ->ClassElement(AZ::Edit::ClassElements::EditorData, "")
                     ->Attribute(AZ::Edit::Attributes::AppearsInAddComponentMenu, AZ_CRC_CE("Game"))
                     ->Attribute(AZ::Edit::Attributes::Category, "ROS2")
+                    ->Attribute(AZ::Edit::Attributes::Icon, "Editor/Icons/Components/WheelController.svg")
+                    ->Attribute(AZ::Edit::Attributes::ViewportIcon, "Editor/Icons/Components/Viewport/WheelController.svg")
                     ->DataElement(
                         AZ::Edit::UIHandlers::Default,
                         &WheelControllerComponent::m_steeringEntity,

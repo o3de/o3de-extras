@@ -27,5 +27,6 @@ namespace ROS2
         AZ::Transform FromROS2Pose(const geometry_msgs::msg::Pose& ros2pose);
         AZ::Vector3 FromROS2Point(const geometry_msgs::msg::Point& ros2point);
         AZ::Quaternion FromROS2Quaternion(const geometry_msgs::msg::Quaternion& ros2quaternion);
+        std::array<double, 9> ToROS2Covariance(const AZ::Matrix3x3& covariance);
     }; // namespace ROS2Conversions
 } // namespace ROS2

@@ -8,14 +8,12 @@
 #pragma once
 
 #include <AzCore/Math/Transform.h>
-#include <AzCore/Serialization/SerializeContext.h>
-#include <AzFramework/Physics/Common/PhysicsEvents.h>
-#include <AzFramework/Physics/PhysicsSystem.h>
-#include <AzFramework/Physics/SimulatedBodies/RigidBody.h>
-#include <ROS2/Sensor/ROS2SensorComponent.h>
 #include <nav_msgs/msg/odometry.hpp>
 #include <rclcpp/publisher.hpp>
-#include <Utilities/PhysicsCallbackHandler.h>
+#include <ROS2/Sensor/Events/PhysicsBasedSource.h>
+#include <ROS2/Sensor/ROS2SensorComponentBase.h>
+
+#include "ROS2OdometryCovariance.h"
 
 namespace ROS2
 {
@@ -24,11 +22,10 @@ namespace ROS2
     //! This is a physical sensor that takes a vehicle's configuration and computes updates from the wheels' rotations.
     //! @see <a href="https://index.ros.org/p/nav_msgs/">nav_msgs package</a>.
     class ROS2WheelOdometryComponent
-        : public ROS2SensorComponent
-        , public ROS2::Utils::PhysicsCallbackHandler
+        : public ROS2SensorComponentBase<PhysicsBasedSource>
     {
     public:
-        AZ_COMPONENT(ROS2WheelOdometryComponent, "{9bdb8c23-ac76-4c25-8d35-37aaa9f43fac}", ROS2SensorComponent);
+        AZ_COMPONENT(ROS2WheelOdometryComponent, "{9bdb8c23-ac76-4c25-8d35-37aaa9f43fac}", SensorBaseType);
         ROS2WheelOdometryComponent();
         ~ROS2WheelOdometryComponent() = default;
         static void GetRequiredServices(AZ::ComponentDescriptor::DependencyArrayType& required);
@@ -44,10 +41,10 @@ namespace ROS2
         nav_msgs::msg::Odometry m_odometryMsg;
         AZ::Vector3 m_robotPose{ 0 };
         AZ::Quaternion m_robotRotation{ 0, 0, 0, 1 };
+        ROS2OdometryCovariance m_poseCovariance;
+        ROS2OdometryCovariance m_twistCovariance;
 
-        // ROS2SensorComponent overrides ...
-        void SetupRefreshLoop() override;
-        // ROS2::Utils::PhysicsCallbackHandler overrides ...
-        void OnPhysicsSimulationFinished(AzPhysics::SceneHandle sceneHandle, float deltaTime) override;
+        void OnOdometryEvent();
+        void OnPhysicsEvent(float physicsDeltaTime);
     };
 } // namespace ROS2

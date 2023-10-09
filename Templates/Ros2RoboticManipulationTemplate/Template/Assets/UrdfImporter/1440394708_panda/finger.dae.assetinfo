@@ -1,0 +1,27 @@
+{
+    "values": [
+        {
+            "$type": "{07B356B7-3635-40B5-878A-FAC4EFD5AD86} MeshGroup",
+            "name": "finger",
+            "nodeSelectionList": {
+                "selectedNodes": [
+                    "Scene",
+                    "Scene.node0",
+                    "Scene.node1",
+                    "Scene.node0.transform",
+                    "Scene.node0.Part__Feature_007",
+                    "Scene.node1.transform",
+                    "Scene.node1.Part__Feature001_006"
+                ]
+            },
+            "rules": {
+                "rules": [
+                    {
+                        "$type": "UVsRule"
+                    }
+                ]
+            },
+            "id": "{A3FE4597-74B4-4460-803F-2C5B67673888}"
+        }
+    ]
+}

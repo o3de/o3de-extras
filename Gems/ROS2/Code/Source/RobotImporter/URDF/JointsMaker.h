@@ -16,18 +16,18 @@
 namespace ROS2
 {
     //! Populates a given entity with all the contents of the <joint> tag in robot description.
-    //! In URDF, joints are specified between two given links, but in PhysX they are between two Bodies / Colliders.
+    //! In URDF/SDF, joints are specified between two given links, but in PhysX they are between two Bodies / Colliders.
     class JointsMaker
     {
     public:
         using JointsMakerResult = AZ::Outcome<AZ::ComponentId, AZStd::string>;
 
-        //! Add a joint to an entity and sets it accordingly to urdf::Joint
+        //! Add a joint to an entity and sets it accordingly to sdf::Joint
         //! @param joint Joint data
         //! @param followColliderEntityId A non-active entity which will be populated with Joint components.
         //! @param leadColliderEntityId An entity higher in hierarchy which is connected through the joint with the child entity.
         //! @returns created components Id or string with fail
         JointsMakerResult AddJointComponent(
-            urdf::JointSharedPtr joint, AZ::EntityId followColliderEntityId, AZ::EntityId leadColliderEntityId) const;
+            const sdf::Joint* joint, AZ::EntityId followColliderEntityId, AZ::EntityId leadColliderEntityId) const;
     };
 } // namespace ROS2

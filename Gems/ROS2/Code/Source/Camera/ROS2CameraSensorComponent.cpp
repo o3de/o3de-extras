@@ -7,15 +7,8 @@
  */
 
 #include "ROS2CameraSensorComponent.h"
-#include <ROS2/Communication/TopicConfiguration.h>
+#include "CameraUtilities.h"
 #include <ROS2/Frame/ROS2FrameComponent.h>
-
-#include <AzCore/Component/Entity.h>
-#include <AzCore/Component/TransformBus.h>
-#include <AzCore/Serialization/EditContext.h>
-#include <AzCore/Serialization/SerializeContext.h>
-
-#include <sensor_msgs/distortion_models.hpp>
 
 namespace ROS2
 {
@@ -28,71 +21,105 @@ namespace ROS2
 
     void ROS2CameraSensorComponent::Reflect(AZ::ReflectContext* context)
     {
+        CameraSensorConfiguration::Reflect(context);
+
         auto* serialize = azrtti_cast<AZ::SerializeContext*>(context);
         if (serialize)
         {
-            serialize->Class<ROS2CameraSensorComponent, ROS2SensorComponent>()->Version(4)->Field(
+            serialize->Class<ROS2CameraSensorComponent, SensorBaseType>()->Version(5)->Field(
                 "CameraSensorConfig", &ROS2CameraSensorComponent::m_cameraConfiguration);
         }
     }
 
     void ROS2CameraSensorComponent::Activate()
     {
-        ROS2SensorComponent::Activate();
-
         if (m_cameraConfiguration.m_colorCamera && m_cameraConfiguration.m_depthCamera)
         {
-            AddImageSource<CameraRGBDSensor>();
+            SetImageSource<CameraRGBDSensor>();
         }
         else if (m_cameraConfiguration.m_colorCamera)
         {
-            AddImageSource<CameraColorSensor>();
+            SetImageSource<CameraColorSensor>();
         }
         else if (m_cameraConfiguration.m_depthCamera)
         {
-            AddImageSource<CameraDepthSensor>();
+            SetImageSource<CameraDepthSensor>();
         }
 
         const auto* component = Utils::GetGameOrEditorComponent<ROS2FrameComponent>(GetEntity());
         AZ_Assert(component, "Entity has no ROS2FrameComponent");
         m_frameName = component->GetFrameID();
+        ROS2::CameraCalibrationRequestBus::Handler::BusConnect(GetEntityId());
+
+        StartSensor(
+            m_sensorConfiguration.m_frequency,
+            [this]([[maybe_unused]] auto&&... args)
+            {
+                if (!m_sensorConfiguration.m_publishingEnabled)
+                {
+                    return;
+                }
+                FrequencyTick();
+            });
     }
 
     void ROS2CameraSensorComponent::Deactivate()
     {
+        StopSensor();
         m_cameraSensor.reset();
-        m_imagePublishers.clear();
-        m_cameraInfoPublishers.clear();
-        ROS2SensorComponent::Deactivate();
+        ROS2::CameraCalibrationRequestBus::Handler::BusDisconnect(GetEntityId());
+    }
+
+    AZ::Matrix3x3 ROS2CameraSensorComponent::GetCameraMatrix() const
+    {
+        return CameraUtils::MakeCameraIntrinsics(
+            m_cameraConfiguration.m_width, m_cameraConfiguration.m_height, m_cameraConfiguration.m_verticalFieldOfViewDeg);
+    }
+
+    int ROS2CameraSensorComponent::GetWidth() const
+    {
+        return m_cameraConfiguration.m_width;
+    }
+
+    int ROS2CameraSensorComponent::GetHeight() const
+    {
+        return m_cameraConfiguration.m_height;
+    }
+
+    float ROS2CameraSensorComponent::GetVerticalFOV() const
+    {
+        return m_cameraConfiguration.m_verticalFieldOfViewDeg;
+    }
+
+    void ROS2CameraSensorComponent::GetRequiredServices(AZ::ComponentDescriptor::DependencyArrayType& required)
+    {
+        required.push_back(AZ_CRC("ROS2Frame"));
+    }
+
+    void ROS2CameraSensorComponent::GetIncompatibleServices(AZ::ComponentDescriptor::DependencyArrayType& incompatible)
+    {
+        incompatible.push_back(AZ_CRC_CE("ROS2CameraSensor"));
+    }
+
+    void ROS2CameraSensorComponent::GetProvidedServices(AZ::ComponentDescriptor::DependencyArrayType& provided)
+    {
+        provided.push_back(AZ_CRC_CE("ROS2CameraSensor"));
     }
 
     void ROS2CameraSensorComponent::FrequencyTick()
     {
-        const AZ::Transform transform = GetEntity()->GetTransform()->GetWorldTM();
-        const auto timestamp = ROS2Interface::Get()->GetROSTimestamp();
-        std_msgs::msg::Header ros_header;
-        if (!m_imagePublishers.empty() && m_cameraSensor)
+        if (!m_cameraSensor)
         {
-            const auto& cameraDescription = m_cameraSensor->GetCameraSensorDescription();
-            const auto& cameraIntrinsics = cameraDescription.m_cameraIntrinsics;
-            sensor_msgs::msg::CameraInfo cameraInfo;
-            ros_header.stamp = timestamp;
-            ros_header.frame_id = m_frameName.c_str();
-            cameraInfo.header = ros_header;
-            cameraInfo.width = m_cameraConfiguration.m_width;
-            cameraInfo.height = m_cameraConfiguration.m_height;
-            cameraInfo.distortion_model = sensor_msgs::distortion_models::PLUMB_BOB;
-            AZ_Assert(cameraIntrinsics.size() == 9, "camera matrix should have 9 elements");
-            AZ_Assert(cameraInfo.k.size() == 9, "camera matrix should have 9 elements");
-            AZStd::copy(cameraIntrinsics.begin(), cameraIntrinsics.end(), cameraInfo.k.begin());
-            cameraInfo.p = { cameraInfo.k[0], cameraInfo.k[1], cameraInfo.k[2], 0, cameraInfo.k[3], cameraInfo.k[4], cameraInfo.k[5], 0,
-                             cameraInfo.k[6], cameraInfo.k[7], cameraInfo.k[8], 0 };
-            for (CameraInfoPublisherPtrType& cameraInfoPublisher : m_cameraInfoPublishers)
-            {
-                cameraInfoPublisher->publish(cameraInfo);
-            }
-            m_cameraSensor->RequestMessagePublication(m_imagePublishers, transform, ros_header);
+            return;
         }
+
+        const AZ::Transform& transform = GetEntity()->GetTransform()->GetWorldTM();
+        const auto timestamp = ROS2Interface::Get()->GetROSTimestamp();
+
+        std_msgs::msg::Header messageHeader;
+        messageHeader.stamp = timestamp;
+        messageHeader.frame_id = m_frameName.c_str();
+        m_cameraSensor->RequestMessagePublication(transform, messageHeader);
     }
 
     AZStd::string ROS2CameraSensorComponent::GetCameraNameFromFrame(const AZ::Entity* entity) const

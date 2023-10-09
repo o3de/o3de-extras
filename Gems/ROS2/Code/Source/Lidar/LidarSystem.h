@@ -31,7 +31,8 @@ namespace ROS2
 
         // LidarSystemRequestBus overrides
         LidarId CreateLidar(AZ::EntityId lidarEntityId) override;
+        void DestroyLidar(LidarId lidarId) override;
 
-        AZStd::vector<LidarRaycaster> m_lidars;
+        AZStd::unordered_map<LidarId, LidarRaycaster> m_lidars;
     };
 } // namespace ROS2

@@ -1,0 +1,32 @@
+{
+    "values": [
+        {
+            "$type": "{5B03C8E6-8CEE-4DA0-A7FA-CD88689DD45B} MeshGroup",
+            "id": "{5ACC7A58-1309-4085-8CD4-26A1A1DE63AC}",
+            "name": "finger",
+            "NodeSelectionList": {
+                "selectedNodes": [
+                    "<STL_BINARY>",
+                    "<STL_BINARY>.unnamed",
+                    "<STL_BINARY>.unnamed.transform",
+                    "<STL_BINARY>.unnamed.DefaultMaterial"
+                ]
+            },
+            "export method": 1,
+            "ConvexAssetParams": {
+                "AreaTestEpsilon": 0.009999999776482582
+            },
+            "DecomposeMeshes": true,
+            "ConvexDecompositionParams": {
+                "PCA": true
+            },
+            "PhysicsMaterialSlots": {
+                "Slots": [
+                    {
+                        "Name": "DefaultMaterial"
+                    }
+                ]
+            }
+        }
+    ]
+}

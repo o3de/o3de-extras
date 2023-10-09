@@ -25,7 +25,9 @@ namespace ROS2
                 ec->Class<RigidBodyTwistControlComponent>("Rigid Body Twist Control", "Simple control through RigidBody")
                     ->ClassElement(AZ::Edit::ClassElements::EditorData, "")
                     ->Attribute(AZ::Edit::Attributes::AppearsInAddComponentMenu, AZ_CRC_CE("Game"))
-                    ->Attribute(AZ::Edit::Attributes::Category, "ROS2");
+                    ->Attribute(AZ::Edit::Attributes::Category, "ROS2")
+                    ->Attribute(AZ::Edit::Attributes::Icon, "Editor/Icons/Components/RigidBodyTwistControl.svg")
+                    ->Attribute(AZ::Edit::Attributes::ViewportIcon, "Editor/Icons/Components/Viewport/RigidBodyTwistControl.svg");
             }
         }
     }

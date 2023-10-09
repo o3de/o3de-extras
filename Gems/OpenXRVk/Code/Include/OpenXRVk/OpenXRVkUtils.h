@@ -63,7 +63,4 @@ namespace OpenXRVk
     //! Iterate through the characters while caching the starting pointer to a string
     //! and every time ' ' is encountered replace it with '\0' to indicate the end of a string.
     AZStd::vector<const char*> ParseExtensionString(char* names);
-
-    //! Disable certain extensions because function pointers didn't load correctly.
-    void FilterAvailableExtensions(GladVulkanContext& context);
 }

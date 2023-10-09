@@ -10,7 +10,6 @@ set(ENABLED_GEMS
     ${Name}
     Atom
     AudioSystem
-    AWSCore
     CameraFramework
     DebugDraw
     EditorPythonBindings
@@ -32,5 +31,6 @@ set(ENABLED_GEMS
     Compression
     WarehouseSample
     RosRobotSample
-    ROS2    
+    ROS2
+    ImGui
 )

@@ -46,7 +46,7 @@ namespace ROS2
             float m_angularNoiseStdDev = 0.0f;
             //! Distance noise standard deviation base value, in meters
             float m_distanceNoiseStdDevBase = 0.0f;
-            //! Distance noise standard deviation increase per meter distance travelled, in meters
+            //! Distance noise standard deviation increase per meter distance traveled, in meters
             float m_distanceNoiseStdDevRisePerMeter = 0.0f;
         };
 
@@ -54,6 +54,9 @@ namespace ROS2
 
         //! Name of lidar template
         AZStd::string m_name;
+        //! Whether the template is for a 2D Lidar.
+        //! This causes vertical parameters of the Lidar to be unmodifiable (m_minVAngle, m_maxVAngle, m_layers).
+        bool m_is2D = false;
         //! Minimum horizontal angle (altitude of the ray), in degrees
         float m_minHAngle = 0.0f;
         //! Maximum horizontal angle (altitude of the ray), in degrees
@@ -72,9 +75,11 @@ namespace ROS2
         float m_maxRange = 0.0f;
 
         NoiseParameters m_noiseParameters;
+        bool m_isNoiseEnabled = true;
         bool m_showNoiseConfig = false;
 
     private:
         bool IsLayersVisible() const;
+        [[nodiscard]] bool IsNoiseConfigVisible() const;
     };
 } // namespace ROS2

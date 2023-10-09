@@ -1,19 +1,23 @@
 {
     "template_name": "Ros2ProjectTemplate",
+    "version": "1.0.0",
     "origin": "Open 3D Engine Extras",
     "origin_url": "https://github.com/o3de/o3de-extras",
     "license": "https://github.com/o3de/o3de-extras/tree/development/Templates/Ros2ProjectTemplate/Template/LICENSE.txt",
-    "origin_uri": "https://github.com/o3de/o3de-extras/releases/download/1.0/Ros2ProjectTemplate-1.0.zip",
-    "sha256": "b627fd0af300de1eb78d8f6bccb465eac8d331eb9e6cb94a7c8e231379839c3e",
-    "repo_uri": "https://raw.githubusercontent.com/o3de/o3de-extras/development",
-    "display_name": "Ros2ProjectTemplate",
+    "display_name": "ROS2 Project",
     "summary": "Template for ROS2 projects.",
     "canonical_tags": [],
     "user_tags": [
-        "Ros2ProjectTemplate", "ROS2", "ROS"
+        "Ros2ProjectTemplate",
+        "ROS2",
+        "ROS"
     ],
     "icon_path": "preview.png",
     "copyFiles": [
+        {
+            "file": ".clang-format",
+            "isTemplated": false
+        },
         {
             "file": ".gitattributes",
             "isTemplated": false
@@ -43,9 +47,18 @@
             "isTemplated": true
         },
         {
+            "file": "Gem/${NameLower}_editor_files.cmake",
+            "isTemplated": true
+        },
+        {
             "file": "Gem/${NameLower}_shared_files.cmake",
             "isTemplated": true
         },
+        {
+            "file": "Gem/${NameLower}_editor_shared_files.cmake",
+            "isTemplated": true
+        },
+        
         {
             "file": "Gem/CMakeLists.txt",
             "isTemplated": true
@@ -123,11 +136,35 @@
             "isTemplated": true
         },
         {
+            "file": "Gem/Source/${Name}EditorModule.cpp",
+            "isTemplated": true
+        },
+        {
+            "file": "Gem/Source/${Name}ModuleInterface.h",
+            "isTemplated": true
+        },
+        {
             "file": "Gem/Source/${Name}SystemComponent.cpp",
             "isTemplated": true
         },
         {
             "file": "Gem/Source/${Name}SystemComponent.h",
+            "isTemplated": true
+        },
+        {
+            "file": "Gem/Source/${Name}EditorSystemComponent.cpp",
+            "isTemplated": true
+        },
+        {
+            "file": "Gem/Source/${Name}EditorSystemComponent.h",
+            "isTemplated": true
+        },
+        {
+            "file": "Gem/Source/${Name}SampleComponent.cpp",
+            "isTemplated": true
+        },
+        {
+            "file": "Gem/Source/${Name}SampleComponent.h",
             "isTemplated": true
         },
         {
@@ -140,7 +177,7 @@
         },
         {
             "file": "Levels/DemoLevel/DemoLevel.prefab",
-            "isTemplated": false
+            "isTemplated": true
         },
         {
             "file": "Platform/Android/android_project.cmake",
@@ -519,5 +556,7 @@
         {
             "dir": "Examples/slam_navigation/launch/config"
         }
-    ]
+    ],
+    "repo_uri": "https://raw.githubusercontent.com/o3de/o3de-extras/development",
+    "download_source_uri": "https://github.com/o3de/o3de-extras/releases/download/2.0/ros2projecttemplate-1.0.0-template.zip"
 }

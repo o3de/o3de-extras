@@ -66,9 +66,11 @@ namespace ROS2
         const SimulationClock& GetSimulationClock() const override;
         //////////////////////////////////////////////////////////////////////////
 
+        void InitPassTemplateMappingsHandler();
+
     protected:
         ////////////////////////////////////////////////////////////////////////
-        // AZ::Component interface implementation
+        // AZ::Component override
         void Init() override;
         void Activate() override;
         void Deactivate() override;
@@ -79,6 +81,8 @@ namespace ROS2
         void OnTick(float deltaTime, AZ::ScriptTimePoint time) override;
         ////////////////////////////////////////////////////////////////////////
     private:
+        void InitClock();
+
         std::shared_ptr<rclcpp::Node> m_ros2Node;
         AZStd::shared_ptr<rclcpp::executors::SingleThreadedExecutor> m_executor;
         AZStd::unique_ptr<tf2_ros::TransformBroadcaster> m_dynamicTFBroadcaster;

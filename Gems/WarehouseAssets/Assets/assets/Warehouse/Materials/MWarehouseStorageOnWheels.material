@@ -10,13 +10,14 @@
             1.0
         ],
         "metallic.textureMap": "../Textures/WarehouseStorageOnWheels/WarehouseStorageOnWheelsMaskMap_R.png",
+        "normal.factor": 0.5400000214576721,
         "normal.flipX": true,
         "normal.textureMap": "../Textures/WarehouseStorageOnWheels/WarehouseStorageOnWheelsNormal.png",
         "opacity.factor": 1.0,
         "roughness.factor": 0.5,
-        "roughness.lowerBound": 0.4099999964237213,
+        "roughness.lowerBound": 0.4300000071525574,
         "roughness.textureMap": "../Textures/WarehouseStorageOnWheels/WarehouseStorageOnWheelsMaskMap_A.png",
-        "roughness.upperBound": 0.05000000074505806,
+        "roughness.upperBound": 0.0,
         "specularF0.factor": 0.6200000047683716
     }
 }

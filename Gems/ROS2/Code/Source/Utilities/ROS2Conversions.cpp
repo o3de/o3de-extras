@@ -6,6 +6,7 @@
  *
  */
 
+#include <AzCore/Math/Matrix3x3.h>
 #include <AzCore/Math/Transform.h>
 #include <ROS2/Utilities/ROS2Conversions.h>
 
@@ -71,4 +72,15 @@ namespace ROS2
         azquaternion.SetW(ros2quaternion.w);
         return azquaternion;
     }
+
+    std::array<double, 9> ROS2Conversions::ToROS2Covariance(const AZ::Matrix3x3& covariance)
+    {
+        std::array<double, 9> ros2Covariance;
+        for (int i = 0; i < 9; ++i)
+        {
+            ros2Covariance[i] = covariance.GetElement(i / 3, i % 3);
+        }
+        return ros2Covariance;
+    }
+
 } // namespace ROS2

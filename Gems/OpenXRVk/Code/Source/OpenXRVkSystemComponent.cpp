@@ -9,6 +9,8 @@
 
 #include <AzCore/Serialization/SerializeContext.h>
 
+#include <Atom/RHI/FactoryManagerBus.h>
+
 #include <OpenXRVk/OpenXRVkDevice.h>
 #include <OpenXRVk/OpenXRVkInput.h>
 #include <OpenXRVk/OpenXRVkInstance.h>
@@ -17,11 +19,14 @@
 #include <OpenXRVk/OpenXRVkSwapChain.h>
 #include <OpenXRVk/OpenXRVkSystemComponent.h>
 
+#include <XR/XRUtils.h>
+
 namespace OpenXRVk
 {
     void SystemComponent::GetProvidedServices(AZ::ComponentDescriptor::DependencyArrayType& provided)
     {
         provided.push_back(XR::Factory::GetPlatformService());
+        provided.push_back(AZ_CRC_CE("VulkanRequirementsService"));
     }
 
     void SystemComponent::Reflect(AZ::ReflectContext* context)
@@ -33,17 +38,6 @@ namespace OpenXRVk
         }
 
         AzFramework::InputDeviceXRController::Reflect(context);
-    }
-
-    SystemComponent::SystemComponent()
-    {
-        // Only have Vulkan back-end implementation for XR at the moment so register it. 
-        XR::Factory::Register(this);
-    }
-
-    SystemComponent::~SystemComponent()
-    {
-        XR::Factory::Unregister(this);
     }
 
     XR::Ptr<XR::Instance> SystemComponent::CreateInstance()
@@ -88,9 +82,33 @@ namespace OpenXRVk
 
     void SystemComponent::Activate()
     {
+        if (XR::IsOpenXREnabled())
+        {
+            m_instance = AZStd::static_pointer_cast<OpenXRVk::Instance>(CreateInstance());
+            //Get the validation mode
+            AZ::RHI::ValidationMode validationMode = AZ::RHI::ValidationMode::Disabled;
+            AZ::RHI::FactoryManagerBus::BroadcastResult(validationMode, &AZ::RHI::FactoryManagerRequest::DetermineValidationMode);
+
+            if (m_instance->Init(validationMode) == AZ::RHI::ResultCode::Success)
+            {
+                XR::Factory::Register(this);
+                AZ::Interface<XR::Instance>::Register(m_instance.get());
+            }
+            else
+            {
+                AZ_Warning("OpenXRVK", false, "OpenXRVK is not supported on this platform");
+                m_instance = nullptr;
+            }
+        }
     }
 
     void SystemComponent::Deactivate()
     {
+        if (m_instance)
+        {
+            XR::Factory::Unregister(this);
+            AZ::Interface<XR::Instance>::Unregister(m_instance.get());
+            m_instance = nullptr;
+        }
     }
 }

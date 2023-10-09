@@ -50,6 +50,16 @@ namespace ROS2
         //! Set a above-mentioned frame id
         void SetFrameID(const AZStd::string& frameId);
 
+        //! Get the joint name including the namespace
+        //! @note Supplementary metadata for Joint components, necessary in some cases for joints addressed by name in ROS 2
+        //! @return The namespaced joint name, ready to send in a ROS2 message
+        AZ::Name GetJointName() const;
+
+        //! Set the joint name
+        //! @note May be populated during URDF import or set by the user in the Editor view 
+        //! @param jointNameString does not include the namespace. The namespace prefix is added automatically.
+        void SetJointName(const AZStd::string& jointNameString);
+
         //! Get a namespace, which should be used for any publisher or subscriber in the same entity.
         //! @return A complete namespace (including parent namespaces)
         AZStd::string GetNamespace() const;
@@ -63,6 +73,11 @@ namespace ROS2
         //! Global frame name in ros2 ecosystem.
         //! @return The name of the global frame with namespace attached. It is typically "odom", "map", "world".
         AZStd::string GetGlobalFrameName() const;
+
+        //! Updates the namespace and namespace strategy of the underlying namespace configuration
+        //! @param ns Namespace to set.
+        //! @param strategy Namespace strategy to use.
+        void UpdateNamespaceConfiguration(const AZStd::string& ns, NamespaceConfiguration::NamespaceStrategy strategy);
 
     private:
         //////////////////////////////////////////////////////////////////////////
@@ -85,6 +100,7 @@ namespace ROS2
 
         NamespaceConfiguration m_namespaceConfiguration;
         AZStd::string m_frameName = "sensor_frame";
+        AZStd::string m_jointNameString;
 
         bool m_publishTransform = true;
         bool m_isDynamic = false;

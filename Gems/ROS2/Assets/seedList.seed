@@ -1,0 +1,14 @@
+{
+    "Type": "JsonSerialization",
+    "Version": 1,
+    "ClassName": "AZStd::vector<SeedInfo, allocator>",
+    "ClassData": [
+        {
+            "assetId": {
+                "guid": "{58E05BD5-3187-58D7-9792-18DA2F6F63A0}"
+            },
+            "platformFlags": 2,
+            "pathHint": "passes/rospasstemplates.azasset"
+        }
+    ]
+}

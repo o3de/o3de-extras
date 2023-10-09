@@ -32,30 +32,35 @@ namespace ROS2::PrefabMakerUtils
     //! Set the transform for an entity.
     //! @param origin pose for the entity to set.
     //! @param entityId entity which will be modified.
-    void SetEntityTransformLocal(const urdf::Pose& origin, AZ::EntityId entityId);
+    void SetEntityTransformLocal(const gz::math::Pose3d& origin, AZ::EntityId entityId);
 
-    //! Create a prefab entity in hierarchy.
+    //! Create a prefab entity in a hierarchy. The new entity will not yet be active.
     //! @param parentEntityId id of parent entity for this new entity.
     //! Passing an invalid id would get the entity in the current context (for example, an entity which is currently open in the Editor).
     //! @param name name for the new entity.
     //! @return a result which is either a created prefab entity or an error.
     AzToolsFramework::Prefab::PrefabEntityResult CreateEntity(AZ::EntityId parentEntityId, const AZStd::string& name);
 
+    //! Set the parent entity for an entity. The entity getting parent is expected to be inactive.
+    //! @param entityId the id for entity that needs a parent.
+    //! @param parentEntityId the id for the parent entity.
+    void SetEntityParent(AZ::EntityId entityId, AZ::EntityId parentEntityId);
+
     //! Create an entity name from arguments.
     //! @param rootName root of entity's name.
-    //! @param type type of entity, depending on corresponding URDF tag. For example, "visual".
+    //! @param type type of entity, depending on corresponding SDF tag. For example, "visual".
     //! @param index index of entity, useful when multiple visuals or colliders are present for a single link.
     //! @return entity name, for example "robotBumper_visual_1".
     AZStd::string MakeEntityName(const AZStd::string& rootName, const AZStd::string& type, size_t index = 0);
 
     //! Get an Asset for a specified mesh given its path and mapping.
-    //! @param urdfAssetsMapping mapping of URDF assets.
-    //! @param urdfMeshPath a path to the mesh for which the Asset is requested.
+    //! @param sdfAssetsMapping mapping of SDF assets.
+    //! @param sdfMeshPath a path to the mesh for which the Asset is requested.
     //! @return Asset for the mesh, if found in the mapping.
     AZStd::optional<Utils::AvailableAsset> GetAssetFromPath(
-        const Utils::UrdfAssetMap& urdfAssetsMapping, const AZStd::string& urdfMeshPath);
+        const Utils::UrdfAssetMap& sdfAssetsMapping, const AZStd::string& sdfMeshPath);
 
     //! Get Asset from path. Version for std::string.
     //! @see GetAssetFromPath.
-    AZStd::optional<Utils::AvailableAsset> GetAssetFromPath(const Utils::UrdfAssetMap& urdfAssetsMapping, const std::string& urdfMeshPath);
+    AZStd::optional<Utils::AvailableAsset> GetAssetFromPath(const Utils::UrdfAssetMap& sdfAssetsMapping, const std::string& sdfMeshPath);
 } // namespace ROS2::PrefabMakerUtils

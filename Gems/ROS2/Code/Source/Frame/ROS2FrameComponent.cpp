@@ -15,7 +15,6 @@
 #include <ROS2/ROS2Bus.h>
 #include <ROS2/ROS2GemUtilities.h>
 #include <ROS2/Utilities/ROS2Names.h>
-
 namespace ROS2
 {
     namespace Internal
@@ -93,7 +92,9 @@ namespace ROS2
                     m_entity, AZ::Uuid("{B01FD1D2-1D91-438D-874A-BF5EB7E919A8}")); // Physx::JointComponent;
                 const bool hasFixedJoints = Internal::CheckIfEntityHasComponentOfType(
                     m_entity, AZ::Uuid("{02E6C633-8F44-4CEE-AE94-DCB06DE36422}")); // Physx::FixedJointComponent
-                m_isDynamic = hasJoints && !hasFixedJoints;
+                const bool hasArticulations = Internal::CheckIfEntityHasComponentOfType(
+                    m_entity, AZ::Uuid("{48751E98-B35F-4A2F-A908-D9CDD5230264}")); // Physx::ArticulationComponent
+                m_isDynamic = (hasJoints && !hasFixedJoints) || hasArticulations;
             }
 
             AZ_TracePrintf(
@@ -138,6 +139,11 @@ namespace ROS2
         return ROS2Names::GetNamespacedName(GetNamespace(), AZStd::string("odom"));
     }
 
+    void ROS2FrameComponent::UpdateNamespaceConfiguration(const AZStd::string& ns, NamespaceConfiguration::NamespaceStrategy strategy)
+    {
+        m_namespaceConfiguration.SetNamespace(ns, strategy);
+    }
+
     bool ROS2FrameComponent::IsTopLevel() const
     {
         return GetGlobalFrameName() == GetParentFrameID();
@@ -147,6 +153,7 @@ namespace ROS2
     {
         return m_isDynamic;
     }
+
     const ROS2FrameComponent* ROS2FrameComponent::GetParentROS2FrameComponent() const
     {
         return Internal::GetFirstROS2FrameAncestor(GetEntity());
@@ -199,6 +206,16 @@ namespace ROS2
         return m_namespaceConfiguration.GetNamespace(parentNamespace);
     }
 
+    AZ::Name ROS2FrameComponent::GetJointName() const
+    {
+        return AZ::Name(ROS2Names::GetNamespacedName(GetNamespace(), m_jointNameString).c_str());
+    }
+
+    void ROS2FrameComponent::SetJointName(const AZStd::string& jointNameString)
+    {
+        m_jointNameString = jointNameString;
+    }
+
     void ROS2FrameComponent::Reflect(AZ::ReflectContext* context)
     {
         NamespaceConfiguration::Reflect(context);
@@ -208,6 +225,7 @@ namespace ROS2
                 ->Version(1)
                 ->Field("Namespace Configuration", &ROS2FrameComponent::m_namespaceConfiguration)
                 ->Field("Frame Name", &ROS2FrameComponent::m_frameName)
+                ->Field("Joint Name", &ROS2FrameComponent::m_jointNameString)
                 ->Field("Publish Transform", &ROS2FrameComponent::m_publishTransform);
 
             if (AZ::EditContext* ec = serialize->GetEditContext())
@@ -216,12 +234,15 @@ namespace ROS2
                     ->ClassElement(AZ::Edit::ClassElements::EditorData, "")
                     ->Attribute(AZ::Edit::Attributes::Category, "ROS2")
                     ->Attribute(AZ::Edit::Attributes::AppearsInAddComponentMenu, AZ_CRC_CE("Game"))
+                    ->Attribute(AZ::Edit::Attributes::Icon, "Editor/Icons/Components/ROS2Frame.svg")
+                    ->Attribute(AZ::Edit::Attributes::ViewportIcon, "Editor/Icons/Components/Viewport/ROS2Frame.svg")
                     ->DataElement(
                         AZ::Edit::UIHandlers::Default,
                         &ROS2FrameComponent::m_namespaceConfiguration,
                         "Namespace Configuration",
                         "Namespace Configuration")
                     ->DataElement(AZ::Edit::UIHandlers::Default, &ROS2FrameComponent::m_frameName, "Frame Name", "Frame Name")
+                    ->DataElement(AZ::Edit::UIHandlers::Default, &ROS2FrameComponent::m_jointNameString, "Joint Name", "Joint Name")
                     ->DataElement(
                         AZ::Edit::UIHandlers::Default, &ROS2FrameComponent::m_publishTransform, "Publish Transform", "Publish Transform");
             }

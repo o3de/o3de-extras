@@ -1,0 +1,19 @@
+fleet:
+  - robot_name: proteus
+    robot_namespace: robot1
+    position: 
+      x: -6.0
+      y: 0.5
+      z: 0.2
+  - robot_name: proteus
+    robot_namespace: robot2
+    position: 
+      x: -6.0
+      y: 7.5
+      z: 0.2
+  - robot_name: proteus
+    robot_namespace: robot3
+    position: 
+      x: -6.0
+      y: -6.0
+      z: 0.2

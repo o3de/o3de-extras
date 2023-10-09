@@ -65,7 +65,7 @@
                     "Parent Entity": "Entity_[7507839849146]",
                     "Transform Data": {
                         "Translate": [
-                            -0.1550000011920929,
+                            -0.15399999916553497,
                             -0.054999999701976776,
                             0.06499999761581421
                         ]
@@ -201,9 +201,9 @@
                     "Parent Entity": "Entity_[7507839849146]",
                     "Transform Data": {
                         "Translate": [
-                            -0.1679999977350235,
+                            -0.17729999125003815,
                             -0.054999999701976776,
-                            0.0729999989271164
+                            0.07729999721050262
                         ]
                     }
                 },
@@ -222,6 +222,166 @@
                 "Component_[8688905423920807041]": {
                     "$type": "EditorVisibilityComponent",
                     "Id": 8688905423920807041
+                }
+            }
+        },
+        "Entity_[460172273345]": {
+            "Id": "Entity_[460172273345]",
+            "Name": "antenna_link_visual",
+            "Components": {
+                "Component_[10468191716726705250]": {
+                    "$type": "AZ::Render::EditorMeshComponent",
+                    "Id": 10468191716726705250,
+                    "Controller": {
+                        "Configuration": {
+                            "ModelAsset": {
+                                "assetId": {
+                                    "guid": "{A671DA35-5744-5F40-BDE6-998B8470337D}",
+                                    "subId": 276514550
+                                },
+                                "assetHint": "robot/rosbot_xl_description/meshes/components/antenna.azmodel"
+                            }
+                        }
+                    }
+                },
+                "Component_[12311355802259657364]": {
+                    "$type": "EditorPendingCompositionComponent",
+                    "Id": 12311355802259657364
+                },
+                "Component_[15366376648063644718]": {
+                    "$type": "EditorEntityIconComponent",
+                    "Id": 15366376648063644718
+                },
+                "Component_[17545258268704876103]": {
+                    "$type": "EditorOnlyEntityComponent",
+                    "Id": 17545258268704876103
+                },
+                "Component_[18284090908771094036]": {
+                    "$type": "EditorInspectorComponent",
+                    "Id": 18284090908771094036
+                },
+                "Component_[2446945717645942542]": {
+                    "$type": "EditorEntitySortComponent",
+                    "Id": 2446945717645942542
+                },
+                "Component_[2639585472100882010]": {
+                    "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
+                    "Id": 2639585472100882010,
+                    "Parent Entity": "Entity_[2840956269491]"
+                },
+                "Component_[2800143263731114396]": {
+                    "$type": "EditorLockComponent",
+                    "Id": 2800143263731114396
+                },
+                "Component_[521234537851643377]": {
+                    "$type": "EditorMaterialComponent",
+                    "Id": 521234537851643377,
+                    "Controller": {
+                        "Configuration": {
+                            "materials": [
+                                {
+                                    "Key": {
+                                        "materialSlotStableId": 2322179940
+                                    },
+                                    "Value": {
+                                        "MaterialAsset": {
+                                            "assetId": {
+                                                "guid": "{D5BE771A-53A9-534E-8DCC-A91D6127540D}"
+                                            }
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                },
+                "Component_[5737436170439652420]": {
+                    "$type": "EditorVisibilityComponent",
+                    "Id": 5737436170439652420
+                },
+                "Component_[7826737103373402220]": {
+                    "$type": "EditorDisabledCompositionComponent",
+                    "Id": 7826737103373402220
+                }
+            }
+        },
+        "Entity_[636265932481]": {
+            "Id": "Entity_[636265932481]",
+            "Name": "antenna_connector_link_visual",
+            "Components": {
+                "Component_[12879837392965145457]": {
+                    "$type": "EditorDisabledCompositionComponent",
+                    "Id": 12879837392965145457
+                },
+                "Component_[14411228070330556044]": {
+                    "$type": "EditorEntityIconComponent",
+                    "Id": 14411228070330556044
+                },
+                "Component_[15024577071450740303]": {
+                    "$type": "EditorVisibilityComponent",
+                    "Id": 15024577071450740303
+                },
+                "Component_[3439030910326885807]": {
+                    "$type": "EditorMaterialComponent",
+                    "Id": 3439030910326885807,
+                    "Controller": {
+                        "Configuration": {
+                            "materials": [
+                                {
+                                    "Key": {
+                                        "materialSlotStableId": 3521207417
+                                    },
+                                    "Value": {
+                                        "MaterialAsset": {
+                                            "assetId": {
+                                                "guid": "{D5BE771A-53A9-534E-8DCC-A91D6127540D}"
+                                            }
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                },
+                "Component_[3688516838091446552]": {
+                    "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
+                    "Id": 3688516838091446552,
+                    "Parent Entity": "Entity_[1655118118701]"
+                },
+                "Component_[4301045900714688705]": {
+                    "$type": "EditorEntitySortComponent",
+                    "Id": 4301045900714688705
+                },
+                "Component_[5724723885453509795]": {
+                    "$type": "EditorInspectorComponent",
+                    "Id": 5724723885453509795
+                },
+                "Component_[6324485849162496589]": {
+                    "$type": "EditorOnlyEntityComponent",
+                    "Id": 6324485849162496589
+                },
+                "Component_[7242693290076648834]": {
+                    "$type": "EditorLockComponent",
+                    "Id": 7242693290076648834
+                },
+                "Component_[7318739390624779462]": {
+                    "$type": "AZ::Render::EditorMeshComponent",
+                    "Id": 7318739390624779462,
+                    "Controller": {
+                        "Configuration": {
+                            "ModelAsset": {
+                                "assetId": {
+                                    "guid": "{C50539EC-486B-52D3-9799-010A98F7032B}",
+                                    "subId": 277341266
+                                },
+                                "assetHint": "robot/rosbot_xl_description/meshes/components/antenna_connector.azmodel"
+                            }
+                        }
+                    }
+                },
+                "Component_[7934151776997983158]": {
+                    "$type": "EditorPendingCompositionComponent",
+                    "Id": 7934151776997983158
                 }
             }
         },
@@ -323,9 +483,25 @@
             "Id": "Entity_[7482070045370]",
             "Name": "imu_link",
             "Components": {
+                "Component_[11310786217061747012]": {
+                    "$type": "EditorFixedJointComponent",
+                    "Id": 11310786217061747012,
+                    "Configuration": {
+                        "Parent Entity": "",
+                        "Child Entity": "Entity_[7482070045370]"
+                    }
+                },
                 "Component_[11483902887902604628]": {
                     "$type": "EditorInspectorComponent",
                     "Id": 11483902887902604628
+                },
+                "Component_[12432694652345033923]": {
+                    "$type": "EditorRigidBodyComponent",
+                    "Id": 12432694652345033923,
+                    "Configuration": {
+                        "entityId": "",
+                        "Kinematic": true
+                    }
                 },
                 "Component_[12817635789820242289]": {
                     "$type": "EditorEntitySortComponent",
@@ -344,17 +520,7 @@
                 },
                 "Component_[17191079459924416406]": {
                     "$type": "EditorPendingCompositionComponent",
-                    "Id": 17191079459924416406,
-                    "PendingComponents": [
-                        {
-                            "$type": "EditorFixedJointComponent",
-                            "Id": 11310786217061747012,
-                            "Configuration": {
-                                "Parent Entity": "",
-                                "Child Entity": ""
-                            }
-                        }
-                    ]
+                    "Id": 17191079459924416406
                 },
                 "Component_[17775749381982911317]": {
                     "$type": "EditorDisabledCompositionComponent",
@@ -630,7 +796,8 @@
                                         "MaterialAsset": {
                                             "assetId": {
                                                 "guid": "{F4A951F1-9880-56A7-A443-B2D685E6E734}"
-                                            }
+                                            },
+                                            "assetHint": "robot/rosbot_xl_description/meshes/wheel_metal.azmaterial"
                                         }
                                     }
                                 }
@@ -859,21 +1026,19 @@
                 },
                 "Component_[17768210655719860684]": {
                     "$type": "EditorPendingCompositionComponent",
-                    "Id": 17768210655719860684,
-                    "PendingComponents": [
-                        {
-                            "$type": "EditorFixedJointComponent",
-                            "Id": 9934662879286617893,
-                            "Configuration": {
-                                "Parent Entity": "",
-                                "Child Entity": ""
-                            }
-                        }
-                    ]
+                    "Id": 17768210655719860684
                 },
                 "Component_[17859749258720088518]": {
                     "$type": "EditorDisabledCompositionComponent",
                     "Id": 17859749258720088518
+                },
+                "Component_[3303670314104435058]": {
+                    "$type": "EditorRigidBodyComponent",
+                    "Id": 3303670314104435058,
+                    "Configuration": {
+                        "entityId": "",
+                        "Kinematic": true
+                    }
                 },
                 "Component_[5503518763347768805]": {
                     "$type": "EditorInspectorComponent",
@@ -882,6 +1047,14 @@
                 "Component_[8747820045819434329]": {
                     "$type": "EditorLockComponent",
                     "Id": 8747820045819434329
+                },
+                "Component_[9934662879286617893]": {
+                    "$type": "EditorFixedJointComponent",
+                    "Id": 9934662879286617893,
+                    "Configuration": {
+                        "Parent Entity": "",
+                        "Child Entity": "Entity_[7499249914554]"
+                    }
                 }
             }
         },
@@ -901,32 +1074,175 @@
                     "$type": "EditorDisabledCompositionComponent",
                     "Id": 14526978337792614620
                 },
-                "Component_[16571991202305947722]": {
-                    "$type": "EditorVisibilityComponent",
-                    "Id": 16571991202305947722
-                },
-                "Component_[1903472310047731371]": {
+                "Component_[16224560699560920318]": {
                     "$type": "EditorMaterialComponent",
-                    "Id": 1903472310047731371,
+                    "Id": 16224560699560920318,
                     "Controller": {
                         "Configuration": {
                             "materials": [
                                 {
                                     "Key": {
-                                        "materialSlotStableId": 164162197
+                                        "materialSlotStableId": 642792236
                                     },
                                     "Value": {
                                         "MaterialAsset": {
                                             "assetId": {
-                                                "guid": "{988CEB57-770F-54E3-9E70-D1C628F3DA3C}"
+                                                "guid": "{3105668F-9F30-5984-8505-536E27A438C9}"
                                             },
-                                            "assetHint": "robot/rosbot_mat.azmaterial"
+                                            "assetHint": "robot/rosbot_xl_description/meshes/materials/body_steel_-_satin.azmaterial"
+                                        }
+                                    }
+                                },
+                                {
+                                    "Key": {
+                                        "materialSlotStableId": 786448836
+                                    },
+                                    "Value": {
+                                        "MaterialAsset": {
+                                            "assetId": {
+                                                "guid": "{B5536685-D115-5710-8B6C-BC3847D52F2A}"
+                                            },
+                                            "assetHint": "robot/rosbot_xl_description/meshes/materials/body_trunk.azmaterial"
+                                        }
+                                    }
+                                },
+                                {
+                                    "Key": {
+                                        "materialSlotStableId": 815259011
+                                    },
+                                    "Value": {
+                                        "MaterialAsset": {
+                                            "assetId": {
+                                                "guid": "{8805EC5F-0807-58E4-A06D-091C915890F3}"
+                                            },
+                                            "assetHint": "robot/rosbot_xl_description/meshes/materials/body_brass_-_polished.azmaterial"
+                                        }
+                                    }
+                                },
+                                {
+                                    "Key": {
+                                        "materialSlotStableId": 1383263231
+                                    },
+                                    "Value": {
+                                        "MaterialAsset": {
+                                            "assetId": {
+                                                "guid": "{31DA447B-9530-5E91-BB16-FD5267E44376}"
+                                            },
+                                            "assetHint": "robot/rosbot_xl_description/meshes/materials/body_roof.azmaterial"
+                                        }
+                                    }
+                                },
+                                {
+                                    "Key": {
+                                        "materialSlotStableId": 1841710152
+                                    },
+                                    "Value": {
+                                        "MaterialAsset": {
+                                            "assetId": {
+                                                "guid": "{F7A7BEF7-CEDE-5264-936F-38F562C50204}"
+                                            },
+                                            "assetHint": "robot/rosbot_xl_description/meshes/materials/body_powder_coat_-_rough_black_.azmaterial"
+                                        }
+                                    }
+                                },
+                                {
+                                    "Key": {
+                                        "materialSlotStableId": 2214454258
+                                    },
+                                    "Value": {
+                                        "MaterialAsset": {
+                                            "assetId": {
+                                                "guid": "{84044D82-3345-5D96-9660-6804FAD63D96}"
+                                            },
+                                            "assetHint": "robot/rosbot_xl_description/meshes/materials/body_nickel_-_polished.azmaterial"
+                                        }
+                                    }
+                                },
+                                {
+                                    "Key": {
+                                        "materialSlotStableId": 2454090141
+                                    },
+                                    "Value": {
+                                        "MaterialAsset": {
+                                            "assetId": {
+                                                "guid": "{130408E5-F370-5167-AD30-8CC776DB98F2}"
+                                            },
+                                            "assetHint": "robot/rosbot_xl_description/meshes/materials/body_fender_l.azmaterial"
+                                        }
+                                    }
+                                },
+                                {
+                                    "Key": {
+                                        "materialSlotStableId": 2595386789
+                                    },
+                                    "Value": {
+                                        "MaterialAsset": {
+                                            "assetId": {
+                                                "guid": "{79312637-9007-5FBB-9B0B-DA8C03E8EDE1}"
+                                            },
+                                            "assetHint": "robot/rosbot_xl_description/meshes/materials/body_powder_coat_-_rough_white_.azmaterial"
+                                        }
+                                    }
+                                },
+                                {
+                                    "Key": {
+                                        "materialSlotStableId": 2901342142
+                                    },
+                                    "Value": {
+                                        "MaterialAsset": {
+                                            "assetId": {
+                                                "guid": "{C97280A9-EB48-5C2E-B37D-B3BD2EF8DF00}"
+                                            },
+                                            "assetHint": "robot/rosbot_xl_description/meshes/materials/body_led_red_.azmaterial"
+                                        }
+                                    }
+                                },
+                                {
+                                    "Key": {
+                                        "materialSlotStableId": 2950365042
+                                    },
+                                    "Value": {
+                                        "MaterialAsset": {
+                                            "assetId": {
+                                                "guid": "{C46C0CED-041C-593C-B127-2EAA5B9ECA2B}"
+                                            },
+                                            "assetHint": "robot/rosbot_xl_description/meshes/materials/body_led_-_smd_3528_-_8lm_white_.azmaterial"
+                                        }
+                                    }
+                                },
+                                {
+                                    "Key": {
+                                        "materialSlotStableId": 3521207417
+                                    },
+                                    "Value": {
+                                        "MaterialAsset": {
+                                            "assetId": {
+                                                "guid": "{1EDD06F5-C72F-5F43-938A-D7913BBD0F25}"
+                                            },
+                                            "assetHint": "robot/rosbot_xl_description/meshes/materials/body_plastic_-_matte_black_.azmaterial"
+                                        }
+                                    }
+                                },
+                                {
+                                    "Key": {
+                                        "materialSlotStableId": 4106326220
+                                    },
+                                    "Value": {
+                                        "MaterialAsset": {
+                                            "assetId": {
+                                                "guid": "{64867D02-952D-509F-B279-6E349F2DBCEC}"
+                                            },
+                                            "assetHint": "robot/rosbot_xl_description/meshes/materials/body_led_green_.azmaterial"
                                         }
                                     }
                                 }
                             ]
                         }
                     }
+                },
+                "Component_[16571991202305947722]": {
+                    "$type": "EditorVisibilityComponent",
+                    "Id": 16571991202305947722
                 },
                 "Component_[4509141370554846912]": {
                     "$type": "EditorLockComponent",
@@ -1417,7 +1733,14 @@
                 "Component_[5480932395561979584]": {
                     "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
                     "Id": 5480932395561979584,
-                    "Parent Entity": "Entity_[7494954947258]"
+                    "Parent Entity": "Entity_[7494954947258]",
+                    "Transform Data": {
+                        "Translate": [
+                            0.0,
+                            -0.004000000189989805,
+                            0.0
+                        ]
+                    }
                 },
                 "Component_[5510461653561526274]": {
                     "$type": "EditorEntitySortComponent",
@@ -1599,6 +1922,11 @@
                     "Id": 10346297318647313753,
                     "Parent Entity": "Entity_[7525019718330]",
                     "Transform Data": {
+                        "Translate": [
+                            0.0,
+                            0.004000000189989805,
+                            0.0
+                        ],
                         "Rotate": [
                             0.0,
                             0.0,

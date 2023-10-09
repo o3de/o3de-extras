@@ -20,6 +20,7 @@
 #include "URDF/UrdfParser.h"
 #include <AzCore/Asset/AssetCommon.h>
 #include <AzCore/std/containers/unordered_map.h>
+#include <RobotImporter/FixURDF/URDFModifications.h>
 #include <RobotImporter/Utils/RobotImporterUtils.h>
 #include <RobotImporter/xacro/XacroUtils.h>
 
@@ -69,7 +70,7 @@ namespace ROS2
         PrefabMakerPage* m_prefabMakerPage;
         XacroParamsPage* m_xacroParamsPage;
         AZ::IO::Path m_urdfPath;
-        urdf::ModelInterfaceSharedPtr m_parsedUrdf;
+        sdf::Root m_parsedSdf{};
 
         //! User's choice to copy meshes during urdf import
         bool m_importAssetWithUrdf{ false };
@@ -77,7 +78,7 @@ namespace ROS2
         /// mapping from urdf path to asset source
         AZStd::shared_ptr<Utils::UrdfAssetMap> m_urdfAssetsMapping;
         AZStd::unique_ptr<URDFPrefabMaker> m_prefabMaker;
-        AZStd::unordered_set<AZStd::string> m_meshNames;
+        Utils::AssetFilenameReferences m_assetNames;
 
         /// Xacro params
         Utils::xacro::Params m_params;
@@ -88,7 +89,7 @@ namespace ROS2
 
         //! Checks if the importedPrefabFilename is the same as focused prefab name.
         //! @param importedPrefabFilename name of imported prefab
-        //! @return True if names of prefabs are identical or an erorr occured during validation
+        //! @return True if names of prefabs are identical or an error occurred during validation
         bool CheckCyclicalDependency(AZ::IO::Path importedPrefabFilename);
 
         //! Report an error to the user.
@@ -96,17 +97,7 @@ namespace ROS2
         //! @param errorMessage error message to display to the user
         void ReportError(const QString& errorMessage);
 
-        //! Returns if file is xacro.
-        //! @param filename path to check
-        bool IsFileXacro(const AZ::IO::Path& filename) const;
-
-        //! Returns if file is urdf.
-        //! @param filename path to check
-        bool IsFileUrdf(const AZ::IO::Path& filename) const;
-
-        //! Returns capitalized extension.
-        //! @param filename path to check
-        AZStd::string GetCapitalizedExtension(const AZ::IO::Path& filename) const;
+        void AddModificationWarningsToReportString(QString& report, const UrdfParser::RootObjectOutcome& parsedSdfOutcome);
 
         static constexpr QWizard::WizardButton PrefabCreationButtonId{ QWizard::CustomButton1 };
         static constexpr QWizard::WizardOption HavePrefabCreationButton{ QWizard::HaveCustomButton1 };
