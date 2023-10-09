@@ -327,101 +327,281 @@ namespace ROS2::Utils
     //! Provides overloads for comparison operators for the VisitModelResponse enum
     AZ_DEFINE_ENUM_RELATIONAL_OPERATORS(VisitModelResponse);
 
-    void VisitModels(const sdf::Root& sdfRoot, const ModelVisitorCallback& modelVisitorCB, bool visitNestedModels)
+    // Function object which can visit all models in an SDF document
+    // Optionally it supports recursing nested models as well
+    struct VisitModelsForNestedModels_fn
     {
-        // Function object which can visit all models in an SDF document
-        // Optionally it supports recursing nested models as well
-        struct VisitModelsForNestedModels_fn
+        VisitModelResponse operator()(const sdf::Model& model)
         {
-            VisitModelResponse operator()(const sdf::Model& model)
+            // The VisitModelResponse enum value is used to filter out
+            // less callbacks the higher the value grows.
+            // So any values above VisitNestedAndSiblings will not visit nested models
+            VisitModelResponse visitResponse = m_modelVisitorCB(model, m_modelStack);
+
+            if (m_recurseModels && visitResponse == VisitModelResponse::VisitNestedAndSiblings)
             {
-                // The VisitModelResponse enum value is used to filter out
-                // less callbacks the higher the value grows.
-                // So any values above VisitNestedAndSiblings will not visit nested models
-                VisitModelResponse visitResponse = m_modelVisitorCB(model, m_modelStack);
-
-                if (m_recurseModels && visitResponse == VisitModelResponse::VisitNestedAndSiblings)
+                // Nested models are only visited if the model visitor returns VisitNestedAndSiblings
+                m_modelStack.push_back(model);
+                for (uint64_t modelIndex{}; modelIndex < model.ModelCount(); ++modelIndex)
                 {
-                    // Nested models are only visited if the model visitor returns VisitNestedAndSiblings
-                    m_modelStack.push_back(model);
-                    for (uint64_t modelIndex{}; modelIndex < model.ModelCount(); ++modelIndex)
+                    if (const sdf::Model* nestedModel = model.ModelByIndex(modelIndex); nestedModel != nullptr)
                     {
-                        if (const sdf::Model* nestedModel = model.ModelByIndex(modelIndex); nestedModel != nullptr)
+                        if (VisitModelResponse nestedVisitResponse = operator()(*nestedModel);
+                            nestedVisitResponse >= VisitModelResponse::Stop)
                         {
-                            if (VisitModelResponse nestedVisitResponse = operator()(*nestedModel);
-                                nestedVisitResponse >= VisitModelResponse::Stop)
-                            {
-                                // Visiting of the nested model has returned Stop, so halt any sibling model visitation
-                                break;
-                            }
-                        }
-                    }
-                    m_modelStack.pop_back();
-                }
-
-                return visitResponse;
-            }
-
-            VisitModelResponse operator()(const sdf::World& world)
-            {
-                // Nested model are only visited if the model visitor returns true
-                for (uint64_t modelIndex{}; modelIndex < world.ModelCount(); ++modelIndex)
-                {
-                    if (const sdf::Model* model = world.ModelByIndex(modelIndex); model != nullptr)
-                    {
-                        // Delegate to the sdf::Model call operator overload to visit nested models
-                        // Stop visited the world's <model> children if any children return Stop
-                        if (VisitModelResponse visitResponse = operator()(*model); visitResponse >= VisitModelResponse::Stop)
-                        {
-                            return visitResponse;
-                        }
-                    }
-                }
-
-                // By default visit any sibling worlds' models if visitation doesn't return Stop
-                return VisitModelResponse::VisitNestedAndSiblings;
-            }
-
-            void operator()(const sdf::Root& root)
-            {
-                // Visit the root <model> tag if one exist
-                VisitModelResponse modelVisitResponse = VisitModelResponse::VisitNestedAndSiblings;
-                if (const sdf::Model* model = root.Model(); model != nullptr)
-                {
-                    modelVisitResponse = operator()(*model);
-                }
-
-                // If the root <model> indicated that visitation should stop, then return
-                if (modelVisitResponse >= VisitModelResponse::Stop)
-                {
-                    return;
-                }
-                // Next visit any <world> tags in the SDF
-                for (uint64_t worldIndex{}; worldIndex < root.WorldCount(); ++worldIndex)
-                {
-                    if (const sdf::World* world = root.WorldByIndex(worldIndex); world != nullptr)
-                    {
-                        // Delegate to the sdf::World call operator overload to visit any <model> tags in the World
-                        if (VisitModelResponse worldVisitResponse = operator()(*world); worldVisitResponse >= VisitModelResponse::Stop)
-                        {
+                            // Visiting of the nested model has returned Stop, so halt any sibling model visitation
                             break;
                         }
                     }
                 }
+                m_modelStack.pop_back();
             }
 
-        public:
-            ModelVisitorCallback m_modelVisitorCB;
-            bool m_recurseModels{};
-        private:
-            // Stack storing the current composition of models visited so far
-            ModelStack m_modelStack;
-        };
+            return visitResponse;
+        }
 
+        VisitModelResponse operator()(const sdf::World& world)
+        {
+            // Nested model are only visited if the model visitor returns true
+            for (uint64_t modelIndex{}; modelIndex < world.ModelCount(); ++modelIndex)
+            {
+                if (const sdf::Model* model = world.ModelByIndex(modelIndex); model != nullptr)
+                {
+                    // Delegate to the sdf::Model call operator overload to visit nested models
+                    // Stop visited the world's <model> children if any children return Stop
+                    if (VisitModelResponse visitResponse = operator()(*model); visitResponse >= VisitModelResponse::Stop)
+                    {
+                        return visitResponse;
+                    }
+                }
+            }
+
+            // By default visit any sibling worlds' models if visitation doesn't return Stop
+            return VisitModelResponse::VisitNestedAndSiblings;
+        }
+
+        void operator()(const sdf::Root& root)
+        {
+            // Visit the root <model> tag if one exist
+            VisitModelResponse modelVisitResponse = VisitModelResponse::VisitNestedAndSiblings;
+            if (const sdf::Model* model = root.Model(); model != nullptr)
+            {
+                modelVisitResponse = operator()(*model);
+            }
+
+            // If the root <model> indicated that visitation should stop, then return
+            if (modelVisitResponse >= VisitModelResponse::Stop)
+            {
+                return;
+            }
+            // Next visit any <world> tags in the SDF
+            for (uint64_t worldIndex{}; worldIndex < root.WorldCount(); ++worldIndex)
+            {
+                if (const sdf::World* world = root.WorldByIndex(worldIndex); world != nullptr)
+                {
+                    // Delegate to the sdf::World call operator overload to visit any <model> tags in the World
+                    if (VisitModelResponse worldVisitResponse = operator()(*world); worldVisitResponse >= VisitModelResponse::Stop)
+                    {
+                        break;
+                    }
+                }
+            }
+        }
+
+    public:
+        ModelVisitorCallback m_modelVisitorCB;
+        bool m_recurseModels{};
+
+    private:
+        // Stack storing the current composition of models visited so far
+        ModelStack m_modelStack;
+    };
+
+    void VisitModels(const sdf::Root& sdfRoot, const ModelVisitorCallback& modelVisitorCB, bool visitNestedModels)
+    {
         VisitModelsForNestedModels_fn VisitModelsForNestedModels{};
         VisitModelsForNestedModels.m_modelVisitorCB = modelVisitorCB;
         VisitModelsForNestedModels.m_recurseModels = visitNestedModels;
         VisitModelsForNestedModels(sdfRoot);
+    }
+
+    void VisitModels(const sdf::World& sdfWorld, const ModelVisitorCallback& modelVisitorCB, bool visitNestedModels)
+    {
+        VisitModelsForNestedModels_fn VisitModelsForNestedModels{};
+        VisitModelsForNestedModels.m_modelVisitorCB = modelVisitorCB;
+        VisitModelsForNestedModels.m_recurseModels = visitNestedModels;
+        VisitModelsForNestedModels(sdfWorld);
+    }
+
+    void VisitModels(const sdf::Model& sdfModel, const ModelVisitorCallback& modelVisitorCB, bool visitNestedModels)
+    {
+        VisitModelsForNestedModels_fn VisitModelsForNestedModels{};
+        VisitModelsForNestedModels.m_modelVisitorCB = modelVisitorCB;
+        VisitModelsForNestedModels.m_recurseModels = visitNestedModels;
+        VisitModelsForNestedModels(sdfModel);
+    }
+
+    ModelMap GetAllModels(const sdf::Root& sdfRoot, bool gatherNestedModelsForModel)
+    {
+        ModelMap modelMap;
+        auto GatherModels = [&modelMap](const sdf::Model& nestedModel, const ModelStack& modelStack) -> VisitModelResponse
+        {
+            std::string fullyQualifiedModelName;
+            // Prepend the Model names to the joint name using the Name Scoping support in libsdformat
+            // http://sdformat.org/tutorials?tut=composition_proposal#1-3-name-scoping-and-cross-referencing
+            for (const sdf::Model& model : modelStack)
+            {
+                fullyQualifiedModelName = sdf::JoinName(fullyQualifiedModelName, model.Name());
+            }
+            fullyQualifiedModelName = sdf::JoinName(fullyQualifiedModelName, nestedModel.Name());
+
+            AZStd::string azFullModelName(fullyQualifiedModelName.c_str(), fullyQualifiedModelName.size());
+            modelMap.insert_or_assign(AZStd::move(azFullModelName), &nestedModel);
+            return VisitModelResponse::VisitNestedAndSiblings;
+        };
+
+        VisitModels(sdfRoot, GatherModels, gatherNestedModelsForModel);
+        return modelMap;
+    }
+
+    ModelMap GetAllModels(const sdf::World& sdfWorld, bool gatherNestedModelsForModel)
+    {
+        ModelMap modelMap;
+        auto GatherModels = [&modelMap](const sdf::Model& nestedModel, const ModelStack& modelStack) -> VisitModelResponse
+        {
+            std::string fullyQualifiedModelName;
+            // Prepend the Model names to the joint name using the Name Scoping support in libsdformat
+            // http://sdformat.org/tutorials?tut=composition_proposal#1-3-name-scoping-and-cross-referencing
+            for (const sdf::Model& model : modelStack)
+            {
+                fullyQualifiedModelName = sdf::JoinName(fullyQualifiedModelName, model.Name());
+            }
+            fullyQualifiedModelName = sdf::JoinName(fullyQualifiedModelName, nestedModel.Name());
+
+            AZStd::string azFullModelName(fullyQualifiedModelName.c_str(), fullyQualifiedModelName.size());
+            modelMap.insert_or_assign(AZStd::move(azFullModelName), &nestedModel);
+            return VisitModelResponse::VisitNestedAndSiblings;
+        };
+
+        VisitModels(sdfWorld, GatherModels, gatherNestedModelsForModel);
+        return modelMap;
+    }
+
+    ModelMap GetAllModels(const sdf::Model& sdfModel, bool gatherNestedModelsForModel)
+    {
+        ModelMap modelMap;
+        auto GatherModels = [&modelMap](const sdf::Model& nestedModel, const ModelStack& modelStack) -> VisitModelResponse
+        {
+            std::string fullyQualifiedModelName;
+            // Prepend the Model names to the joint name using the Name Scoping support in libsdformat
+            // http://sdformat.org/tutorials?tut=composition_proposal#1-3-name-scoping-and-cross-referencing
+            for (const sdf::Model& model : modelStack)
+            {
+                fullyQualifiedModelName = sdf::JoinName(fullyQualifiedModelName, model.Name());
+            }
+            fullyQualifiedModelName = sdf::JoinName(fullyQualifiedModelName, nestedModel.Name());
+
+            AZStd::string azFullModelName(fullyQualifiedModelName.c_str(), fullyQualifiedModelName.size());
+            modelMap.insert_or_assign(AZStd::move(azFullModelName), &nestedModel);
+            return VisitModelResponse::VisitNestedAndSiblings;
+        };
+
+        VisitModels(sdfModel, GatherModels, gatherNestedModelsForModel);
+        return modelMap;
+    }
+
+    const sdf::Model* GetModelContainingLink(const sdf::Root& root, AZStd::string_view fullyQualifiedLinkName)
+    {
+        const sdf::Model* resultModel{};
+        auto IsLinkInModel = [&fullyQualifiedLinkName,
+                              &resultModel](const sdf::Model& model, const ModelStack&) -> VisitModelResponse
+        {
+            const std::string stdLinkName(fullyQualifiedLinkName.data(), fullyQualifiedLinkName.size());
+            if (const sdf::Link* searchLink = model.LinkByName(stdLinkName); searchLink != nullptr)
+            {
+                resultModel = &model;
+                return VisitModelResponse::Stop;
+            }
+
+            return VisitModelResponse::VisitNestedAndSiblings;
+        };
+        VisitModels(root, IsLinkInModel);
+
+        return resultModel;
+    }
+
+    const sdf::Model* GetModelContainingLink(const sdf::Root& root, const sdf::Link& link)
+    {
+        const sdf::Model* resultModel{};
+        auto IsLinkInModel = [&link, &resultModel](const sdf::Model& model, const ModelStack&) -> VisitModelResponse
+        {
+            if (const sdf::Link* searchLink = model.LinkByName(link.Name()); searchLink != &link)
+            {
+                resultModel = &model;
+                return VisitModelResponse::Stop;
+            }
+
+            return VisitModelResponse::VisitNestedAndSiblings;
+        };
+        VisitModels(root, IsLinkInModel);
+
+        return resultModel;
+    }
+
+    const sdf::Model* GetModelContainingJoint(const sdf::Root& root, AZStd::string_view fullyQualifiedJointName)
+    {
+        const sdf::Model* resultModel{};
+        auto IsJointInModel = [&fullyQualifiedJointName, &resultModel](const sdf::Model& model, const ModelStack&) -> VisitModelResponse
+        {
+            const std::string stdJointName(fullyQualifiedJointName.data(), fullyQualifiedJointName.size());
+            if (const sdf::Joint* searchJoint = model.JointByName(stdJointName); searchJoint != nullptr)
+            {
+                resultModel = &model;
+                return VisitModelResponse::Stop;
+            }
+
+            return VisitModelResponse::VisitNestedAndSiblings;
+        };
+        VisitModels(root, IsJointInModel);
+
+        return resultModel;
+    }
+
+    const sdf::Model* GetModelContainingJoint(const sdf::Root& root, const sdf::Joint& joint)
+    {
+        const sdf::Model* resultModel{};
+        auto IsJointInModel = [&joint, &resultModel](const sdf::Model& model, const ModelStack&) -> VisitModelResponse
+        {
+            if (const sdf::Joint* searchJoint = model.JointByName(joint.Name()); searchJoint != &joint)
+            {
+                resultModel = &model;
+                return VisitModelResponse::Stop;
+            }
+
+            return VisitModelResponse::VisitNestedAndSiblings;
+        };
+        VisitModels(root, IsJointInModel);
+
+        return resultModel;
+    }
+
+    const sdf::Model* GetModelContainingModel(const sdf::Root& root, const sdf::Model& model)
+    {
+        const sdf::Model* resultModel{};
+        auto IsModelInModel = [&model, &resultModel](const sdf::Model& outerModel, const ModelStack&) -> VisitModelResponse
+        {
+            // Validate the memory address of the model matches the outer model found searching the visited model "child models"
+            if (const sdf::Model* searchModel = outerModel.ModelByName(model.Name()); searchModel != &model)
+            {
+                resultModel = &outerModel;
+                return VisitModelResponse::Stop;
+            }
+
+            return VisitModelResponse::VisitNestedAndSiblings;
+        };
+        VisitModels(root, IsModelInModel);
+
+        return resultModel;
     }
 
     AssetFilenameReferences GetReferencedAssetFilenames(const sdf::Root& root)
@@ -528,100 +708,6 @@ namespace ROS2::Utils
         VisitModels(root, GetAssetsFromModel);
 
         return filenames;
-    }
-
-    const sdf::Model* GetModelContainingLink(const sdf::Root& root, AZStd::string_view fullyQualifiedLinkName)
-    {
-        const sdf::Model* resultModel{};
-        auto IsLinkInModel = [&fullyQualifiedLinkName,
-                              &resultModel](const sdf::Model& model, const ModelStack&) -> VisitModelResponse
-        {
-            const std::string stdLinkName(fullyQualifiedLinkName.data(), fullyQualifiedLinkName.size());
-            if (const sdf::Link* searchLink = model.LinkByName(stdLinkName); searchLink != nullptr)
-            {
-                resultModel = &model;
-                return VisitModelResponse::Stop;
-            }
-
-            return VisitModelResponse::VisitNestedAndSiblings;
-        };
-        VisitModels(root, IsLinkInModel);
-
-        return resultModel;
-    }
-
-    const sdf::Model* GetModelContainingLink(const sdf::Root& root, const sdf::Link& link)
-    {
-        const sdf::Model* resultModel{};
-        auto IsLinkInModel = [&link, &resultModel](const sdf::Model& model, const ModelStack&) -> VisitModelResponse
-        {
-            if (const sdf::Link* searchLink = model.LinkByName(link.Name()); searchLink != &link)
-            {
-                resultModel = &model;
-                return VisitModelResponse::Stop;
-            }
-
-            return VisitModelResponse::VisitNestedAndSiblings;
-        };
-        VisitModels(root, IsLinkInModel);
-
-        return resultModel;
-    }
-
-    const sdf::Model* GetModelContainingJoint(const sdf::Root& root, AZStd::string_view fullyQualifiedJointName)
-    {
-        const sdf::Model* resultModel{};
-        auto IsJointInModel = [&fullyQualifiedJointName, &resultModel](const sdf::Model& model, const ModelStack&) -> VisitModelResponse
-        {
-            const std::string stdJointName(fullyQualifiedJointName.data(), fullyQualifiedJointName.size());
-            if (const sdf::Joint* searchJoint = model.JointByName(stdJointName); searchJoint != nullptr)
-            {
-                resultModel = &model;
-                return VisitModelResponse::Stop;
-            }
-
-            return VisitModelResponse::VisitNestedAndSiblings;
-        };
-        VisitModels(root, IsJointInModel);
-
-        return resultModel;
-    }
-
-    const sdf::Model* GetModelContainingJoint(const sdf::Root& root, const sdf::Joint& joint)
-    {
-        const sdf::Model* resultModel{};
-        auto IsJointInModel = [&joint, &resultModel](const sdf::Model& model, const ModelStack&) -> VisitModelResponse
-        {
-            if (const sdf::Joint* searchJoint = model.JointByName(joint.Name()); searchJoint != &joint)
-            {
-                resultModel = &model;
-                return VisitModelResponse::Stop;
-            }
-
-            return VisitModelResponse::VisitNestedAndSiblings;
-        };
-        VisitModels(root, IsJointInModel);
-
-        return resultModel;
-    }
-
-    const sdf::Model* GetModelContainingModel(const sdf::Root& root, const sdf::Model& model)
-    {
-        const sdf::Model* resultModel{};
-        auto IsModelInModel = [&model, &resultModel](const sdf::Model& outerModel, const ModelStack&) -> VisitModelResponse
-        {
-            // Validate the memory address of the model matches the outer model found searching the visited model "child models"
-            if (const sdf::Model* searchModel = outerModel.ModelByName(model.Name()); searchModel != &model)
-            {
-                resultModel = &outerModel;
-                return VisitModelResponse::Stop;
-            }
-
-            return VisitModelResponse::VisitNestedAndSiblings;
-        };
-        VisitModels(root, IsModelInModel);
-
-        return resultModel;
     }
 
     AZ::IO::Path ResolveAmentPrefixPath(
