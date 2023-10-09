@@ -510,28 +510,6 @@ namespace ROS2::Utils
 
     bool CreateSceneManifest(const AZ::IO::Path& sourceAssetPath, const AZ::IO::Path& assetInfoFile, const bool collider, const bool visual)
     {
-        // Start with a default set of import settings.
-        AZ::SceneAPI::SceneImportSettings importSettings;
-
-        // OBJ files used for robotics might be authored with hundreds or thousands of tiny groups of meshes. By default,
-        // AssImp splits each object or group in an OBJ into a separate submesh, creating an extremely non-optimal result.
-        // By turning on the AssImp options to optimize the scene and the meshes, all of these submeshes will get recombined
-        // back into just a few submeshes.
-        if (sourceAssetPath.Extension() == ".obj")
-        {
-            importSettings.m_optimizeScene = true;
-            importSettings.m_optimizeMeshes = true;
-        }
-
-        // Set the import settings into the settings registry.
-        // This needs to happen before calling LoadScene so that the AssImp import settings are applied to the scene being
-        // read into memory. These settings affect the list of scene nodes referenced by the MeshGroup and PhysXGroup settings,
-        // so it's important to apply them here to get the proper node lists.
-        if (AZ::SettingsRegistryInterface* settingsRegistry = AZ::SettingsRegistry::Get(); settingsRegistry)
-        {
-            settingsRegistry->SetObject(AZ::SceneAPI::DataTypes::IImportGroup::SceneImportSettingsRegistryKey, importSettings);
-        }
-
         AZ_Printf("CreateSceneManifest", "Creating manifest for asset %s at : %s ", sourceAssetPath.c_str(), assetInfoFile.c_str());
         AZStd::shared_ptr<AZ::SceneAPI::Containers::Scene> scene;
         AZ::SceneAPI::Events::SceneSerializationBus::BroadcastResult(

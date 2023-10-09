@@ -25,7 +25,7 @@ def generate_launch_description():
 def launch_setup(context, *args, **kwargs):
 
     current_file_path = Path(__file__).resolve()
-    current_directory = current_file_path.parent
+    current_directory = str(current_file_path.parent)
 
     use_sim_time = { "use_sim_time": True}
     moveit_config = (
