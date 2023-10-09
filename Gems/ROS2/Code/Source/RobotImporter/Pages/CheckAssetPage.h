@@ -53,9 +53,9 @@ namespace ROS2
         unsigned int m_missingCount{ 0 };
         unsigned int m_failedCount{ 0 };
         void SetTitle();
-        AZStd::vector<AZ::Uuid> m_assetsUuids;
-        AZStd::vector<AZStd::string> m_assetsPaths;
-        AZStd::unordered_set<AZ::Uuid> m_assetsUuidsFinished;
+        AZStd::unordered_map<AZ::Uuid, int> m_assetsUuidsToColumnIndex; //!< Map of asset UUIDs to column index in the table.
+        AZStd::unordered_map<AZ::Uuid, AZStd::string> m_assetsPaths; //! Map of asset UUIDs to asset source paths.
+        AZStd::unordered_set<AZ::Uuid> m_assetsUuidsFinished; //!< Set of asset UUIDs that have been processed by asset processor.
         void DoubleClickRow(int row, int col);
         void RefreshTimerElapsed();
         QIcon m_failureIcon;
