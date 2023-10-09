@@ -374,7 +374,7 @@ namespace UnitTest
         // Verify the nested test SDF file has been created
         ASSERT_TRUE(nestedModelFullPath.has_value());
 
-        // Now grab the world sdf content and use the Parse command to parse the contens
+        // Now grab the world sdf content and use the Parse command to parse the contents
         const auto xmlStr = sdfStack.m_stack.front();
 
         sdf::ParserConfig sdfConfig;
@@ -397,10 +397,10 @@ namespace UnitTest
         const auto* sdfWorld = sdfRoot.WorldByIndex(0);
         ASSERT_NE(nullptr, sdfWorld);
 
-        // There should be model on the world that is the "top_model"
+        // There should be only one model on the world that is the "top_model"
         EXPECT_EQ(1, sdfWorld->ModelCount());
 
-        // The nested model contain the name from within
+        // The nested model contains the name from within
         const auto* topModel = sdfWorld->ModelByName("top_model");
         ASSERT_NE(nullptr, topModel);
 
