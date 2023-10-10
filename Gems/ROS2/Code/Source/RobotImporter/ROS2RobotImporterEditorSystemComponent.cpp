@@ -13,10 +13,13 @@
 #include <AzCore/Utils/Utils.h>
 #include <AzCore/std/chrono/chrono.h>
 #include <AzCore/std/string/string.h>
+#include <AzCore/std/utility/move.h>
 #include <AzToolsFramework/API/ViewPaneOptions.h>
+#include <AzToolsFramework/Entity/EditorEntityHelpers.h>
 #include <RobotImporter/URDF/UrdfParser.h>
 #include <RobotImporter/Utils/ErrorUtils.h>
 #include <RobotImporter/Utils/FilePath.h>
+#include <SDFormat/ROS2SensorHooks.h>
 #include <SdfAssetBuilder/SdfAssetBuilderSettings.h>
 
 #include <sdf/sdf.hh>
@@ -31,7 +34,16 @@ namespace ROS2
     {
         if (auto serializeContext = azrtti_cast<AZ::SerializeContext*>(context))
         {
-            serializeContext->Class<ROS2RobotImporterEditorSystemComponent, ROS2RobotImporterSystemComponent>()->Version(0);
+            const auto& importerHookCamera = ROS2::SDFormat::ROS2SensorHooks::ROS2CameraSensor();
+            const auto& importerHookGNSS = ROS2::SDFormat::ROS2SensorHooks::ROS2GNSSSensor();
+            const auto& importerHookImu = ROS2::SDFormat::ROS2SensorHooks::ROS2ImuSensor();
+            const auto& importerHookLidar = ROS2::SDFormat::ROS2SensorHooks::ROS2LidarSensor();
+            serializeContext->Class<ROS2RobotImporterEditorSystemComponent, ROS2RobotImporterSystemComponent>()->Version(0)->Attribute(
+                "SensorImporterHooks",
+                SDFormat::SensorImporterHooksStorage{ AZStd::move(importerHookCamera),
+                                                      AZStd::move(importerHookGNSS),
+                                                      AZStd::move(importerHookImu),
+                                                      AZStd::move(importerHookLidar) });
         }
 
         if (AZ::BehaviorContext* behaviorContext = azrtti_cast<AZ::BehaviorContext*>(context))
@@ -61,6 +73,26 @@ namespace ROS2
         ROS2RobotImporterSystemComponent::Activate();
         AzToolsFramework::EditorEvents::Bus::Handler::BusConnect();
         RobotImporterRequestBus::Handler::BusConnect();
+
+        auto serializeContext = AZ::Interface<AZ::ComponentApplicationRequests>::Get()->GetSerializeContext();
+        serializeContext->EnumerateAll(
+            [&](const AZ::SerializeContext::ClassData* classData, const AZ::Uuid& typeId) -> bool
+            {
+                auto* attribute = AZ::FindAttribute(AZ::Crc32("SensorImporterHooks"), classData->m_attributes);
+                if (attribute == nullptr)
+                {
+                    return true;
+                }
+
+                AZ::AttributeReader reader(nullptr, attribute);
+                SDFormat::SensorImporterHooksStorage sensorHooks;
+                if (reader.Read<SDFormat::SensorImporterHooksStorage>(sensorHooks))
+                {
+                    m_sensorHooks.insert(m_sensorHooks.end(), sensorHooks.begin(), sensorHooks.end());
+                }
+
+                return false;
+            });
     }
 
     void ROS2RobotImporterEditorSystemComponent::Deactivate()
@@ -116,14 +148,12 @@ namespace ROS2
         // Urdf Root has been parsed successfully retrieve it from the Outcome
         const sdf::Root& parsedSdfRoot = parsedSdfOutcome.GetRoot();
 
-        auto collidersNames = Utils::GetMeshesFilenames(parsedSdfRoot, false, true);
-        auto visualNames = Utils::GetMeshesFilenames(parsedSdfRoot, true, false);
-        auto meshNames = Utils::GetMeshesFilenames(parsedSdfRoot, true, true);
+        auto assetNames = Utils::GetReferencedAssetFilenames(parsedSdfRoot);
         AZStd::shared_ptr<Utils::UrdfAssetMap> urdfAssetsMapping = AZStd::make_shared<Utils::UrdfAssetMap>();
         if (importAssetWithUrdf)
         {
             urdfAssetsMapping = AZStd::make_shared<Utils::UrdfAssetMap>(
-                Utils::CopyAssetForURDFAndCreateAssetMap(meshNames, filePath, collidersNames, visualNames, sdfBuilderSettings));
+                Utils::CopyReferencedAssetsAndCreateAssetMap(assetNames, filePath, sdfBuilderSettings));
         }
         bool allAssetProcessed = false;
         bool assetProcessorFailed = false;
@@ -190,7 +220,8 @@ namespace ROS2
         };
 
         // Use the URDF/SDF file name stem the prefab name
-        AZStd::string prefabName = AZStd::string(AZ::IO::PathView(filePath).Stem().Native());
+        auto fileStem = AZ::IO::PathView(filePath).Stem();
+        AZStd::string prefabName = AZStd::string::format("%.*s.prefab", AZ_PATH_ARG(fileStem));
 
         if (prefabName.empty())
         {
@@ -221,6 +252,11 @@ namespace ROS2
         }
 
         return true;
+    }
+
+    const SDFormat::SensorImporterHooksStorage& ROS2RobotImporterEditorSystemComponent::GetSensorHooks() const
+    {
+        return m_sensorHooks;
     }
 
 } // namespace ROS2

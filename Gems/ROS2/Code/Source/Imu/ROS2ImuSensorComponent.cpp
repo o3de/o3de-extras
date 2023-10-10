@@ -44,6 +44,8 @@ namespace ROS2
                     ->ClassElement(AZ::Edit::ClassElements::EditorData, "")
                     ->Attribute(AZ::Edit::Attributes::Category, "ROS2")
                     ->Attribute(AZ::Edit::Attributes::AppearsInAddComponentMenu, AZ_CRC_CE("Game"))
+                    ->Attribute(AZ::Edit::Attributes::Icon, "Editor/Icons/Components/ROS2ImuSensor.svg")
+                    ->Attribute(AZ::Edit::Attributes::ViewportIcon, "Editor/Icons/Components/Viewport/ROS2ImuSensor.svg")
                     ->DataElement(
                         AZ::Edit::UIHandlers::Default,
                         &ROS2ImuSensorComponent::m_imuConfiguration,
@@ -159,7 +161,7 @@ namespace ROS2
             m_filterAngularVelocity.size();
 
         // Physics delta time is used here intentionally - linear velocities are accumulated with that delta (see OnPhysicsEvent method).
-        auto acc = (linearVelocityFilter - m_previousLinearVelocity) / physicsDeltaTime;
+        auto acc = (linearVelocityFilter - m_previousLinearVelocity) / imuDeltaTime;
 
         auto* sceneInterface = AZ::Interface<AzPhysics::SceneInterface>::Get();
         auto* body = sceneInterface->GetSimulatedBodyFromHandle(sceneHandle, m_bodyHandle);
@@ -167,12 +169,12 @@ namespace ROS2
         auto inv = rigidbody->GetTransform().GetInverse();
 
         m_previousLinearVelocity = linearVelocityFilter;
-        m_acceleration = -acc + angularRateFiltered.Cross(linearVelocityFilter);
+        m_acceleration = acc - angularRateFiltered.Cross(linearVelocityFilter);
 
         if (m_imuConfiguration.m_includeGravity)
         {
             const auto gravity = sceneInterface->GetGravity(sceneHandle);
-            m_acceleration += inv.TransformVector(gravity);
+            m_acceleration -= inv.TransformVector(gravity);
         }
         m_imuMsg.linear_acceleration = ROS2Conversions::ToROS2Vector3(m_acceleration);
         m_imuMsg.linear_acceleration_covariance = ROS2Conversions::ToROS2Covariance(m_linearAccelerationCovariance);

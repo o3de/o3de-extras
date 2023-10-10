@@ -20,6 +20,7 @@
 #include "URDF/UrdfParser.h"
 #include <AzCore/Asset/AssetCommon.h>
 #include <AzCore/std/containers/unordered_map.h>
+#include <RobotImporter/FixURDF/URDFModifications.h>
 #include <RobotImporter/Utils/RobotImporterUtils.h>
 #include <RobotImporter/xacro/XacroUtils.h>
 
@@ -77,7 +78,7 @@ namespace ROS2
         /// mapping from urdf path to asset source
         AZStd::shared_ptr<Utils::UrdfAssetMap> m_urdfAssetsMapping;
         AZStd::unique_ptr<URDFPrefabMaker> m_prefabMaker;
-        AZStd::unordered_set<AZStd::string> m_meshNames;
+        Utils::AssetFilenameReferences m_assetNames;
 
         /// Xacro params
         Utils::xacro::Params m_params;
@@ -88,13 +89,15 @@ namespace ROS2
 
         //! Checks if the importedPrefabFilename is the same as focused prefab name.
         //! @param importedPrefabFilename name of imported prefab
-        //! @return True if names of prefabs are identical or an erorr occured during validation
+        //! @return True if names of prefabs are identical or an error occurred during validation
         bool CheckCyclicalDependency(AZ::IO::Path importedPrefabFilename);
 
         //! Report an error to the user.
         //! Populates the log, sets status information in the status label and shows an error popup with the message
         //! @param errorMessage error message to display to the user
         void ReportError(const QString& errorMessage);
+
+        void AddModificationWarningsToReportString(QString& report, const UrdfParser::RootObjectOutcome& parsedSdfOutcome);
 
         static constexpr QWizard::WizardButton PrefabCreationButtonId{ QWizard::CustomButton1 };
         static constexpr QWizard::WizardOption HavePrefabCreationButton{ QWizard::HaveCustomButton1 };

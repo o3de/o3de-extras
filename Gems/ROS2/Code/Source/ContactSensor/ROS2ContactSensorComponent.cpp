@@ -7,20 +7,10 @@
  */
 
 #include "ROS2ContactSensorComponent.h"
-#include <AzCore/Component/ComponentApplicationBus.h>
-#include <AzCore/Debug/Trace.h>
-#include <AzCore/Serialization/EditContext.h>
-#include <AzCore/Serialization/EditContextConstants.inl>
-#include <AzCore/std/parallel/lock.h>
-#include <AzCore/std/parallel/mutex.h>
-#include <AzCore/std/utility/move.h>
 #include <AzFramework/Physics/Collision/CollisionEvents.h>
 #include <AzFramework/Physics/Common/PhysicsSimulatedBody.h>
-#include <AzFramework/Physics/Common/PhysicsSimulatedBodyEvents.h>
-#include <AzFramework/Physics/Common/PhysicsTypes.h>
 #include <AzFramework/Physics/PhysicsSystem.h>
 #include <ROS2/Frame/ROS2FrameComponent.h>
-#include <ROS2/ROS2Bus.h>
 #include <ROS2/ROS2GemUtilities.h>
 #include <ROS2/Utilities/ROS2Conversions.h>
 #include <ROS2/Utilities/ROS2Names.h>
@@ -28,7 +18,7 @@
 
 namespace ROS2
 {
-    namespace Internal
+    namespace
     {
         constexpr float ContactMaximumSeparation = 0.0001f;
     }
@@ -45,16 +35,18 @@ namespace ROS2
 
     void ROS2ContactSensorComponent::Reflect(AZ::ReflectContext* context)
     {
-        if (AZ::SerializeContext* serialize = azrtti_cast<AZ::SerializeContext*>(context))
+        if (auto* serialize = azrtti_cast<AZ::SerializeContext*>(context))
         {
-            serialize->Class<ROS2ContactSensorComponent, ROS2SensorComponent>()->Version(1);
+            serialize->Class<ROS2ContactSensorComponent, SensorBaseType>()->Version(2);
 
-            if (AZ::EditContext* editContext = serialize->GetEditContext())
+            if (auto* editContext = serialize->GetEditContext())
             {
                 editContext->Class<ROS2ContactSensorComponent>("ROS2 Contact Sensor", "Contact detection controller")
                     ->ClassElement(AZ::Edit::ClassElements::EditorData, "")
                     ->Attribute(AZ::Edit::Attributes::Category, "ROS2")
-                    ->Attribute(AZ::Edit::Attributes::AppearsInAddComponentMenu, AZ_CRC_CE("Game"));
+                    ->Attribute(AZ::Edit::Attributes::AppearsInAddComponentMenu, AZ_CRC_CE("Game"))
+                    ->Attribute(AZ::Edit::Attributes::Icon, "Editor/Icons/Components/ROS2ContactSensor.svg")
+                    ->Attribute(AZ::Edit::Attributes::ViewportIcon, "Editor/Icons/Components/Viewport/ROS2ContactSensor.svg");
             }
         }
     }
@@ -97,17 +89,26 @@ namespace ROS2
                 m_activeContacts.erase(event.m_body2->GetEntityId());
             });
 
-        ROS2SensorComponent::Activate();
+        StartSensor(
+            m_sensorConfiguration.m_frequency,
+            [this](auto&&... args)
+            {
+                if (!m_sensorConfiguration.m_publishingEnabled)
+                {
+                    return;
+                }
+                FrequencyTick();
+            });
     }
 
     void ROS2ContactSensorComponent::Deactivate()
     {
+        StopSensor();
         m_activeContacts.clear();
         m_contactsPublisher.reset();
         m_onCollisionBeginHandler.Disconnect();
         m_onCollisionPersistHandler.Disconnect();
         m_onCollisionEndHandler.Disconnect();
-        ROS2SensorComponent::Deactivate();
     }
 
     void ROS2ContactSensorComponent::FrequencyTick()
@@ -124,7 +125,7 @@ namespace ROS2
         {
             AZStd::pair<AzPhysics::SceneHandle, AzPhysics::SimulatedBodyHandle> foundBody =
                 physicsSystem->FindAttachedBodyHandleFromEntityId(GetEntityId());
-            AZ_Warning("Contact Sensor", foundBody.first != AzPhysics::InvalidSceneHandle, "Invalid scene handle");
+            AZ_Warning("Contact Sensor", foundBody.first != AzPhysics::InvalidSceneHandle, "Invalid scene handle")
             if (foundBody.first != AzPhysics::InvalidSceneHandle)
             {
                 AzPhysics::SimulatedBodyEvents::RegisterOnCollisionBeginHandler(
@@ -147,7 +148,7 @@ namespace ROS2
             AZStd::lock_guard<AZStd::mutex> lock(m_activeContactsMutex);
             if (!m_activeContacts.empty())
             {
-                for (auto& [id, contact] : m_activeContacts)
+                for (auto [id, contact] : m_activeContacts)
                 {
                     msg.states.push_back(AZStd::move(contact));
                 }
@@ -169,7 +170,7 @@ namespace ROS2
         geometry_msgs::msg::Wrench totalWrench;
         for (auto& contact : event.m_contacts)
         {
-            if (contact.m_separation < Internal::ContactMaximumSeparation)
+            if (contact.m_separation < ContactMaximumSeparation)
             {
                 state.contact_positions.emplace_back(ROS2Conversions::ToROS2Vector3(contact.m_position));
                 state.contact_normals.emplace_back(ROS2Conversions::ToROS2Vector3(contact.m_normal));

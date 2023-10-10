@@ -12,6 +12,7 @@
 #include "CollidersMaker.h"
 #include "InertialsMaker.h"
 #include "JointsMaker.h"
+#include "SensorsMaker.h"
 #include "UrdfParser.h"
 #include "VisualsMaker.h"
 #include <AzCore/Component/EntityId.h>
@@ -69,8 +70,8 @@ namespace ROS2
         AZStd::string GetStatus();
 
     private:
-        AzToolsFramework::Prefab::PrefabEntityResult AddEntitiesForLink(const sdf::Link* link, AZ::EntityId parentEntityId, AZStd::vector<AZ::EntityId>& createdEntities);
-        void BuildAssetsForLink(const sdf::Link* link);
+        AzToolsFramework::Prefab::PrefabEntityResult CreateEntityForModel(const sdf::Model& model);
+        AzToolsFramework::Prefab::PrefabEntityResult AddEntitiesForLink(const sdf::Link& link, const sdf::Model* attachedModel, AZ::EntityId parentEntityId, AZStd::vector<AZ::EntityId>& createdEntities);
         void AddRobotControl(AZ::EntityId rootEntityId);
         static void MoveEntityToDefaultSpawnPoint(const AZ::EntityId& rootEntityId, AZStd::optional<AZ::Transform> spawnPosition);
 
@@ -81,6 +82,7 @@ namespace ROS2
         AZStd::string m_prefabPath;
         VisualsMaker m_visualsMaker;
         CollidersMaker m_collidersMaker;
+        SensorsMaker m_sensorsMaker;
         InertialsMaker m_inertialsMaker;
         JointsMaker m_jointsMaker;
         ArticulationsMaker m_articulationsMaker;

@@ -88,6 +88,8 @@ namespace ROS2
                     ->ClassElement(AZ::Edit::ClassElements::EditorData, "VacuumGripper")
                     ->Attribute(AZ::Edit::Attributes::AppearsInAddComponentMenu, AZ_CRC("Game"))
                     ->Attribute(AZ::Edit::Attributes::Category, "ROS2")
+                    ->Attribute(AZ::Edit::Attributes::Icon, "Editor/Icons/Components/VacuumGripperComponent.svg")
+                    ->Attribute(AZ::Edit::Attributes::ViewportIcon, "Editor/Icons/Components/Viewport/VacuumGripperComponent.svg")
                     ->DataElement(
                         AZ::Edit::UIHandlers::EntityId,
                         &VacuumGripperComponent::m_gripperEffectorCollider,
@@ -104,8 +106,7 @@ namespace ROS2
 
     void VacuumGripperComponent::OnTick(float delta, AZ::ScriptTimePoint timePoint)
     {
-        AzPhysics::SystemInterface* physicsSystem = AZ::Interface<AzPhysics::SystemInterface>::Get();
-        AZ_Assert(physicsSystem, "No physics system.");
+        AZ_Assert(AZ::Interface<AzPhysics::SystemInterface>::Get(), "No physics system.");
 
         AzPhysics::SceneInterface* sceneInterface = AZ::Interface<AzPhysics::SceneInterface>::Get();
         AZ_Assert(sceneInterface, "No scene intreface.");
@@ -186,8 +187,7 @@ namespace ROS2
             // No object to grip
             return false;
         }
-        PhysX::ArticulationLinkComponent* component = m_entity->FindComponent<PhysX::ArticulationLinkComponent>();
-        AZ_Assert(component, "No PhysX::ArticulationLinkComponent found on entity ");
+        AZ_Assert(m_entity->FindComponent<PhysX::ArticulationLinkComponent>(), "No PhysX::ArticulationLinkComponent found on entity ");
 
         auto* sceneInterface = AZ::Interface<AzPhysics::SceneInterface>::Get();
         AzPhysics::SceneHandle defaultSceneHandle = sceneInterface->GetSceneHandle(AzPhysics::DefaultPhysicsSceneName);

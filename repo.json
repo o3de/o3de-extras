@@ -122,10 +122,6 @@
             "user_tags": [
                 "ROS2"
             ],
-            "compatible_engines": [
-                "o3de-sdk==1.2.0",
-                "o3de>=1.2.0"
-            ],
             "icon_path": "preview.png",
             "requirements": "Requires ROS 2 installation (supported distributions: Humble). Source your workspace before building the Gem",
             "documentation_url": "https://o3de.org/docs/user-guide/gems/reference/design/ros2/",
@@ -139,13 +135,24 @@
             ],
             "restricted": "ROS2",
             "repo_uri": "https://raw.githubusercontent.com/o3de/o3de-extras/development",
-            "download_source_uri": "https://github.com/o3de/o3de-extras/releases/download/2.0/ros2-1.0.0-gem.zip",
-            "sha256": "fb17868ab3f10d4fb1fae66667281978f68c6f36ea4dd1d814dafdb4fbecc23d",
             "versions_data": [
                 {
+                    "compatible_engines": [
+                        "o3de-sdk==1.2.0",
+                        "o3de>=1.2.0"
+                    ],
+                    "download_source_uri": "https://github.com/o3de/o3de-extras/releases/download/2.0/ros2-1.0.0-gem.zip",
                     "sha256": "62db01423611893c366c7905b91b165ebfc5da4a09a08ddebddf188e98acdce4",
-                    "version": "1.0.0",
-                    "download_source_uri": "https://github.com/o3de/o3de-extras/releases/download/2.0/ros2-1.0.0-gem.zip"
+                    "version": "1.0.0"
+                },
+                {
+                    "version": "2.0.0",
+                    "compatible_engines": [
+                        "o3de-sdk>=2.1.0",
+                        "o3de>=2.1.0"
+                    ],
+                    "download_source_uri": "https://github.com/o3de/o3de-extras/releases/download/2.0/ros2-2.0.0-gem.zip",
+                    "sha256": "93a51bebd7d5b931996025d6622bb09a6c20d6071da625d57eddf80f285444af"
                 }
             ]
         },
