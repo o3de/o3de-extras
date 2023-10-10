@@ -569,8 +569,9 @@ namespace ROS2
         {
             gz::math::Pose3d modelPose = model.RawPose();
             AZ::Transform modelTransform = URDF::TypeConversions::ConvertPose(modelPose);
-
-            transformComponent->SetWorldTM(AZStd::move(modelTransform));
+            // Set the local transform for each model to have it be translated in relation
+            // to its parent
+            transformComponent->SetLocalTM(AZStd::move(modelTransform));
         }
 
         // Allow the created model entity to persist if there are no errors at ths point
