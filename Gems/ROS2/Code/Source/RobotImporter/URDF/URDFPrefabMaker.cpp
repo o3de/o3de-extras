@@ -73,8 +73,8 @@ namespace ROS2
             struct JointToAttachedModel
             {
                 AZStd::string m_fullyQualifiedName;
-                const sdf::Joint* m_joint;
-                const sdf::Model* m_attachedModel;
+                const sdf::Joint* m_joint{};
+                const sdf::Model* m_attachedModel{};
             };
             // this is a unique ordered vector
             AZStd::vector<JointToAttachedModel> m_joints;
@@ -121,8 +121,8 @@ namespace ROS2
             struct LinkToAttachedModel
             {
                 AZStd::string m_fullyQualifiedName;
-                const sdf::Link* m_link;
-                const sdf::Model* m_attachedModel;
+                const sdf::Link* m_link{};
+                const sdf::Model* m_attachedModel{};
             };
             // this is a unique ordered vector
             AZStd::vector<LinkToAttachedModel> m_links;
@@ -134,8 +134,8 @@ namespace ROS2
             struct NestedModelToAttachedModel
             {
                 AZStd::string m_fullyQualifiedName;
-                const sdf::Model* m_nestedModel;
-                const sdf::Model* m_attachedModel;
+                const sdf::Model* m_nestedModel{};
+                const sdf::Model* m_attachedModel{};
             };
             // this is a unique ordered vector
             AZStd::vector<NestedModelToAttachedModel> m_models;
@@ -156,7 +156,8 @@ namespace ROS2
             }
 
             // Use the model stack to create a mapping from the current model
-            // to the any model it is attached or nullptr if the model is at the top level SDF Root
+            // to the parent model it is attached to.
+            // If the current model has no parent model the attached model is set to nullptr
             std::string stdFullModelName;
             for (const sdf::Model& ancestorModel : modelStack)
             {
@@ -173,7 +174,7 @@ namespace ROS2
             return Utils::VisitModelResponse::VisitNestedAndSiblings;
         };
 
-        // Gather all links and direct nested from all the models in the SDF
+        // Gather all links and add a mapping of nested model -> parent model for each model in the SDF
         Utils::VisitModels(*m_root, GetAllLinksAndSetModelHierarchy, visitNestedModels);
 
         // Build up a list of all entities created as a part of processing the file.

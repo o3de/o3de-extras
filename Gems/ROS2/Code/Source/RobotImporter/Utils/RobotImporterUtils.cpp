@@ -368,7 +368,7 @@ namespace ROS2::Utils
                 if (const sdf::Model* model = world.ModelByIndex(modelIndex); model != nullptr)
                 {
                     // Delegate to the sdf::Model call operator overload to visit nested models
-                    // Stop visited the world's <model> children if any children return Stop
+                    // Stop visiting the world's <model> children if any children return Stop
                     if (VisitModelResponse visitResponse = operator()(*model); visitResponse >= VisitModelResponse::Stop)
                     {
                         return visitResponse;
@@ -382,7 +382,7 @@ namespace ROS2::Utils
 
         void operator()(const sdf::Root& root)
         {
-            // Visit the root <model> tag if one exist
+            // Visit all <model> tags at the root of the SDF
             VisitModelResponse modelVisitResponse = VisitModelResponse::VisitNestedAndSiblings;
             if (const sdf::Model* model = root.Model(); model != nullptr)
             {
