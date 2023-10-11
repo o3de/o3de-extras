@@ -1,0 +1,60 @@
+{
+    "entries": [
+        {
+            "base": "{4E0AAD3E-A05D-3BCB-2F80-B80A602913F9}",
+            "context": "ScriptCanvas::Node",
+            "variant": "",
+            "details": {
+                "name": "Accumulate training gradients",
+                "category": "MachineLearning",
+                "tooltip": "Accumulates the loss gradients for a machine learning model against a set of activations and a set of expected outputs."
+            },
+            "slots": [
+                {
+                    "base": "Input_In_0",
+                    "details": {
+                        "name": "In",
+                        "tooltip": "Parameters controlling loss gradient calculation"
+                    }
+                },
+                {
+                    "base": "DataInput_Model_0",
+                    "details": {
+                        "name": "Model"
+                    }
+                },
+                {
+                    "base": "DataInput_CostFunction_1",
+                    "details": {
+                        "name": "CostFunction"
+                    }
+                },
+                {
+                    "base": "DataInput_Activations_2",
+                    "details": {
+                        "name": "Activations"
+                    }
+                },
+                {
+                    "base": "DataInput_ExpectedOutput_3",
+                    "details": {
+                        "name": "ExpectedOutput"
+                    }
+                },
+                {
+                    "base": "Output_On In_0",
+                    "details": {
+                        "name": "On In",
+                        "tooltip": "Parameters controlling loss gradient calculation"
+                    }
+                },
+                {
+                    "base": "DataOutput_Model_0",
+                    "details": {
+                        "name": "Model"
+                    }
+                }
+            ]
+        }
+    ]
+}

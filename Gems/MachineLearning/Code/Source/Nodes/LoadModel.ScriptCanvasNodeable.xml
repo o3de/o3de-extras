@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<ScriptCanvas Include="Nodes/LoadModel.h" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <Class Name="LoadModel"
+           QualifiedName="MachineLearning::LoadModel"
+           PreferredClassName="Load model"
+           Category="MachineLearning"
+           Description="Loads a model from an asset file.">
+
+        <Input Name="In" DisplayGroup="In" Description="Parameters controlling the model to load">
+            <Parameter Name="Model" Type="MachineLearning::INeuralNetworkPtr" Description="The model to load parameters to."/>
+            <Return Name="Model" Type="MachineLearning::INeuralNetworkPtr" Shared="true"/>
+        </Input>
+    </Class>
+</ScriptCanvas>

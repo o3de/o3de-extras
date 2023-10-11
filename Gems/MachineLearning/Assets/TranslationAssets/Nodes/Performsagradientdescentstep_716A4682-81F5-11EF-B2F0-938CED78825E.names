@@ -1,0 +1,48 @@
+{
+    "entries": [
+        {
+            "base": "{716A4682-81F5-11EF-B2F0-938CED78825E}",
+            "context": "ScriptCanvas::Node",
+            "variant": "",
+            "details": {
+                "name": "Gradient descent",
+                "category": "MachineLearning",
+                "tooltip": "Performs a gradient descent step on a model, and zeroes all gradient vectors."
+            },
+            "slots": [
+                {
+                    "base": "Input_In_0",
+                    "details": {
+                        "name": "In",
+                        "tooltip": "Parameters controlling gradient descent"
+                    }
+                },
+                {
+                    "base": "DataInput_Model_0",
+                    "details": {
+                        "name": "Model"
+                    }
+                },
+                {
+                    "base": "DataInput_LearningRate_1",
+                    "details": {
+                        "name": "LearningRate"
+                    }
+                },
+                {
+                    "base": "Output_On In_0",
+                    "details": {
+                        "name": "On In",
+                        "tooltip": "Parameters controlling gradient descent"
+                    }
+                },
+                {
+                    "base": "DataOutput_Model_0",
+                    "details": {
+                        "name": "Model"
+                    }
+                }
+            ]
+        }
+    ]
+}
