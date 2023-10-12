@@ -9,6 +9,7 @@
 #include <AzCore/UnitTest/TestTypes.h>
 #include <AzCore/std/smart_ptr/make_shared.h>
 #include <AzTest/AzTest.h>
+#include <AzTest/Utils.h>
 #include <RobotImporter/SDFormat/ROS2SensorHooks.h>
 #include <RobotImporter/Utils/ErrorUtils.h>
 #include <RobotImporter/Utils/RobotImporterUtils.h>
@@ -137,7 +138,7 @@ namespace UnitTest
 
         static std::string GetSdfWithDuplicateModelName()
         {
-          return R"(<?xml version="1.0"?>
+            return R"(<?xml version="1.0"?>
             <sdf version="1.7">
             <model name="root_model">
               <link name="root_link"/>
@@ -158,7 +159,7 @@ namespace UnitTest
 
         static std::string GetSdfWithWorldThatHasMultipleModels()
         {
-          return R"(<?xml version="1.0"?>
+            return R"(<?xml version="1.0"?>
             <sdf version="1.8">
             <model name="root_model">
               <link name="root_link"/>
@@ -181,7 +182,7 @@ namespace UnitTest
 
         static std::string GetSdfWithMultipleModelsThatHaveLinksWithTheSameName()
         {
-          return R"(<?xml version="1.0"?>
+            return R"(<?xml version="1.0"?>
             <sdf version="1.10">
             <world name="default">
               <model name="my_model">
@@ -192,6 +193,39 @@ namespace UnitTest
               </model>
             </world>
           </sdf>)";
+        }
+
+        struct SdfXmlStack
+        {
+            AZStd::deque<std::string> m_stack;
+        };
+        static SdfXmlStack GetSdfWorldWithNestedModelWithPose()
+        {
+            SdfXmlStack sdfXmlStack;
+            sdfXmlStack.m_stack.emplace_back(R"(<?xml version="1.0"?>
+            <sdf version="1.10">
+                <world name="default">
+                    <model name="top_model">
+                        <include>
+                            <uri>model://nested_test.sdf</uri>
+                        </include>
+                        <pose>8 2 4 0 -0 -1.564217</pose>
+                    </model>
+                </world>
+            </sdf>)");
+
+            sdfXmlStack.m_stack.emplace_back(R"(<?xml version="1.0"?>
+            <sdf version="1.10">
+                <model name="nested_model">
+                    <link name="link">
+                        <inertial>
+                            <mass>50</mass>
+                        </inertial>
+                    </link>
+                </model>
+            </sdf>)");
+
+            return sdfXmlStack;
         }
     };
 
@@ -321,6 +355,69 @@ namespace UnitTest
         ASSERT_EQ(2, links.size());
         EXPECT_TRUE(links.contains("my_model::same_link_name"));
         EXPECT_TRUE(links.contains("your_model::same_link_name"));
+    }
+
+    TEST_F(SdfParserTest, NestedModel_CanBeIncludedFromURI_Succeeds)
+    {
+        const SdfXmlStack sdfStack = GetSdfWorldWithNestedModelWithPose();
+        ASSERT_EQ(2, sdfStack.m_stack.size());
+
+        // First create the model file in a temporary directory and setup
+        // the model URI prefixes
+        const std::string& nestedModelXml = sdfStack.m_stack.back();
+
+        constexpr AZ::IO::PathView nestedModelFilePath = "nested_test.sdf";
+        AZ::Test::ScopedAutoTempDirectory tempDirectory;
+        AZStd::optional<AZ::IO::FixedMaxPath> nestedModelFullPath =
+            AZ::Test::CreateTestFile(tempDirectory, nestedModelFilePath, AZStd::string_view(nestedModelXml.data(), nestedModelXml.size()));
+
+        // Verify the nested test SDF file has been created
+        ASSERT_TRUE(nestedModelFullPath.has_value());
+
+        // Now grab the world sdf content and use the Parse command to parse the contents
+        const auto xmlStr = sdfStack.m_stack.front();
+
+        sdf::ParserConfig sdfConfig;
+        // Add the temporary directory as a URI prefix
+        sdfConfig.AddURIPath("model://", tempDirectory.GetDirectory());
+
+        auto SdfFindCallback = [](const std::string& fileName) -> std::string
+        {
+            ADD_FAILURE() << "File " << fileName << " was not found in UnitTest.\n";
+            return std::string{};
+        };
+
+        sdfConfig.SetFindCallback(AZStd::move(SdfFindCallback));
+
+        const auto sdfRootOutcome = ROS2::UrdfParser::Parse(xmlStr, sdfConfig);
+        ASSERT_TRUE(sdfRootOutcome);
+        const auto& sdfRoot = sdfRootOutcome.GetRoot();
+        // The SDF should also have a single world
+        ASSERT_EQ(1, sdfRoot.WorldCount());
+        const auto* sdfWorld = sdfRoot.WorldByIndex(0);
+        ASSERT_NE(nullptr, sdfWorld);
+
+        // There should be only one model on the world that is the "top_model"
+        EXPECT_EQ(1, sdfWorld->ModelCount());
+
+        // The nested model contains the name from within
+        const auto* topModel = sdfWorld->ModelByName("top_model");
+        ASSERT_NE(nullptr, topModel);
+
+        gz::math::Pose3d modelPose = topModel->RawPose();
+        EXPECT_DOUBLE_EQ(8.0, modelPose.X());
+        EXPECT_DOUBLE_EQ(2.0, modelPose.Y());
+        EXPECT_DOUBLE_EQ(4.0, modelPose.Z());
+        EXPECT_DOUBLE_EQ(-1.564217, modelPose.Yaw());
+
+        ASSERT_EQ(1, topModel->ModelCount());
+        const auto* nestedModel = topModel->ModelByName("nested_model");
+        ASSERT_NE(nullptr, nestedModel);
+
+        // The nested model should have a link on it
+        EXPECT_TRUE(nestedModel->LinkNameExists("link"));
+        // The link name can also be looked up using the relative scoped name as well from the parent top model
+        EXPECT_TRUE(topModel->LinkNameExists("nested_model::link"));
     }
 
     TEST_F(SdfParserTest, CheckModelCorrectness)
