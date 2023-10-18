@@ -29,11 +29,13 @@ namespace ROS2
 
         //! Update the lidar system features based on the current lidar system selected.
         void FetchLidarImplementationFeatures();
+        AZ::Crc32 OnLidarModelSelected();
 
         LidarSystemFeatures m_lidarSystemFeatures;
 
         AZStd::string m_lidarSystem;
         LidarTemplate::LidarModel m_lidarModel = LidarTemplate::LidarModel::Custom2DLidar;
+        AZStd::string m_lidarModelName = "CustomLidar2D";
         LidarTemplate m_lidarParameters = LidarTemplateUtils::GetTemplate(LidarTemplate::LidarModel::Custom2DLidar);
 
         AZStd::unordered_set<AZ::u32> m_ignoredCollisionLayers;
@@ -50,7 +52,6 @@ namespace ROS2
         //! Update the lidar configuration based on the current lidar model selected.
         void FetchLidarModelConfiguration();
 
-        AZ::Crc32 OnLidarModelSelected();
         AZ::Crc32 OnLidarImplementationSelected();
 
         //! Get all models this configuration can be set to (for example all 2D lidar models).
@@ -59,7 +60,6 @@ namespace ROS2
         AZStd::vector<AZStd::string> FetchLidarSystemList();
 
         const AZStd::vector<LidarTemplate::LidarModel> m_availableModels;
-        AZStd::string m_lidarModelName = "CustomLidar2D";
 
         void UpdateShowNoise();
     };

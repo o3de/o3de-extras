@@ -57,7 +57,8 @@ namespace ROS2::SDFormat
             Utils::AddTopicConfiguration(sensorConfiguration, "pc", messageType, messageType);
 
             LidarSensorConfiguration lidarConfiguration;
-            lidarConfiguration.m_lidarParameters.m_model = LidarTemplate::LidarModel::Custom3DLidar;
+            lidarConfiguration.m_lidarModelName = "CustomLidar";
+            lidarConfiguration.OnLidarModelSelected();
             lidarConfiguration.m_lidarParameters.m_name = AZStd::string(sdfSensor.Name().c_str());
             lidarConfiguration.m_lidarParameters.m_minHAngle = lidarSensor->HorizontalScanMinAngle().Degree();
             lidarConfiguration.m_lidarParameters.m_maxHAngle = lidarSensor->HorizontalScanMaxAngle().Degree();
