@@ -6,6 +6,7 @@
  *
  */
 
+#include <Lidar/ROS2Lidar2DSensorComponent.h>
 #include <Lidar/ROS2LidarSensorComponent.h>
 #include <ROS2/Frame/ROS2FrameComponent.h>
 #include <RobotImporter/SDFormat/ROS2SensorHooks.h>
@@ -51,13 +52,16 @@ namespace ROS2::SDFormat
                 return AZ::Failure(AZStd::string("Failed to read parsed SDFormat data of %s Lidar sensor", sdfSensor.Name().c_str()));
             }
 
+            const bool is2DLidar = (lidarSensor->VerticalScanSamples() == 1);
+
             SensorConfiguration sensorConfiguration;
             sensorConfiguration.m_frequency = sdfSensor.UpdateRate();
-            const AZStd::string messageType = "sensor_msgs::msg::PointCloud2";
-            Utils::AddTopicConfiguration(sensorConfiguration, "pc", messageType, messageType);
+            const AZStd::string messageType = is2DLidar ? "sensor_msgs::msg::LaserScan" : "sensor_msgs::msg::PointCloud2";
+            const AZStd::string messageTopic = is2DLidar ? "scan" : "pc";
+            Utils::AddTopicConfiguration(sensorConfiguration, messageTopic, messageType, messageType);
 
-            LidarSensorConfiguration lidarConfiguration;
-            lidarConfiguration.m_lidarParameters.m_model = LidarTemplate::LidarModel::Custom3DLidar;
+            LidarSensorConfiguration lidarConfiguration{ is2DLidar ? LidarTemplateUtils::Get2DModels()
+                                                                   : LidarTemplateUtils::Get3DModels() };
             lidarConfiguration.m_lidarParameters.m_name = AZStd::string(sdfSensor.Name().c_str());
             lidarConfiguration.m_lidarParameters.m_minHAngle = lidarSensor->HorizontalScanMinAngle().Degree();
             lidarConfiguration.m_lidarParameters.m_maxHAngle = lidarSensor->HorizontalScanMaxAngle().Degree();
@@ -72,7 +76,10 @@ namespace ROS2::SDFormat
             Utils::CreateComponent<ROS2FrameComponent>(entity);
 
             // Create Lidar component
-            if (Utils::CreateComponent<ROS2LidarSensorComponent>(entity, sensorConfiguration, lidarConfiguration))
+            const auto lidarComponent = is2DLidar
+                ? Utils::CreateComponent<ROS2Lidar2DSensorComponent>(entity, sensorConfiguration, lidarConfiguration)
+                : Utils::CreateComponent<ROS2LidarSensorComponent>(entity, sensorConfiguration, lidarConfiguration);
+            if (lidarComponent)
             {
                 return AZ::Success();
             }
