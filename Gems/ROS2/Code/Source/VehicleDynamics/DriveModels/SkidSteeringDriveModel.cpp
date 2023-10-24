@@ -51,9 +51,8 @@ namespace ROS2::VehicleDynamics
         AZ::ComponentApplicationBus::BroadcastResult(wheelEntityPtr, &AZ::ComponentApplicationRequests::FindEntity, wheelEntityId);
         AZ_Assert(wheelEntityPtr, "The wheelEntity should not be null here");
         auto* wheelControllerComponentPtr = Utils::GetGameOrEditorComponent<WheelControllerComponent>(wheelEntityPtr);
-        auto hingeId = VehicleDynamics::Utilities::GetWheelPhysxHinge(wheelEntityId);
-        AZ::Transform hingeTransform{ AZ::Transform::Identity() };
-        PhysX::JointRequestBus::EventResult(hingeTransform, hingeId, &PhysX::JointRequests::GetTransform);
+        auto wheelData = VehicleDynamics::Utilities::GetWheelData(wheelEntityId, axle.m_wheelRadius);
+        AZ::Transform hingeTransform = Utilities::GetJointTransform(wheelData);
         if (wheelControllerComponentPtr)
         {
             const float normalizedWheelId = -1.f + 2.f * wheelNumber / (wheelCount - 1);
@@ -136,8 +135,8 @@ namespace ROS2::VehicleDynamics
                 }
                 for (const auto& wheel : axle.m_axleWheels)
                 {
-                    auto hinge = VehicleDynamics::Utilities::GetWheelPhysxHinge(wheel);
-                    m_wheelsData[wheel] = hinge;
+                    auto wheelData = VehicleDynamics::Utilities::GetWheelData(wheel, axle.m_wheelRadius);
+                    m_wheelsData[wheel] = wheelData;
                 }
                 AZ_Warning(
                     "SkidSteeringDriveModel",
@@ -158,17 +157,13 @@ namespace ROS2::VehicleDynamics
             }
             for (size_t wheelId = 0; wheelId < wheelCount; wheelId++)
             {
-                const auto& wheel = axle.m_axleWheels[wheelId];
-                auto hingePtr = m_wheelsData.find(wheel);
-                if (hingePtr == m_wheelsData.end())
-                {
-                    continue;
-                }
+                const auto& wheelEntityId = axle.m_axleWheels[wheelId];
                 float normalizedWheelId = -1.f + 2.f * wheelId / (wheelCount - 1);
                 float wheelBase = normalizedWheelId * m_config.m_wheelbase / 2.f;
                 AZ_Assert(axle.m_wheelRadius != 0, "axle.m_wheelRadius must be non-zero");
                 float wheelRate = (m_currentLinearVelocity + m_currentAngularVelocity * wheelBase) / axle.m_wheelRadius;
-                PhysX::JointRequestBus::Event(hingePtr->second, &PhysX::JointRequests::SetVelocity, wheelRate);
+                const auto& wheelData = m_wheelsData[wheelEntityId];
+                VehicleDynamics::Utilities::SetWheelRotationSpeed(wheelData, wheelRate);
             }
         }
     }

@@ -180,73 +180,48 @@ namespace ROS2::VehicleDynamics::Utilities
                     continue;
                 }
 
-                PhysX::HingeJointComponent* hingeComponent{ nullptr };
-                hingeComponent = wheelEntity->FindComponent<PhysX::HingeJointComponent>();
-
-                PhysX::ArticulationLinkComponent* articulation{ nullptr };
-                articulation = wheelEntity->FindComponent<PhysX::ArticulationLinkComponent>();
-
-                if (!hingeComponent && !articulation)
-                {
-                    AZ_Warning(
-                        "GetAllDriveWheelsData",
-                        false,
-                        "Wheel entity for axle %s does not have a HingeJointComponent nor an ArticulationLinkComponent, ignoring",
-                        axle.m_axleTag.c_str());
-                    continue;
-                }
-
-                if (articulation)
-                {
-                    if (articulation->m_config.m_articulationJointType != PhysX::ArticulationJointType::Hinge)
-                    {
-                        AZ_Warning(
-                            "GetAllDriveWheelsData",
-                            false,
-                            "Wheel entity for axle %s has an Articulation Link, but it's not a hinge joint, ignoring",
-                            wheel.ToString().c_str());
-                        continue;
-                    }
-                }
-
-                VehicleDynamics::WheelDynamicsData wheelData;
-                wheelData.m_isArticulation = articulation;
-                wheelData.m_wheelEntity = wheel;
-                if (articulation)
-                {
-                    wheelData.m_wheelJoint = articulation->GetId();
-                    const bool hasFreeAxis = Utils::TryGetFreeArticulationAxis(wheelData.m_wheelEntity, wheelData.m_axis);
-
-                    AZ_Error("VehicleDynamics::Utilities", hasFreeAxis, "Articulation wheel has no free axis somehow");
-                }
-                else
-                {
-                    wheelData.m_wheelJoint = hingeComponent->GetId();
-                }
-                wheelData.m_wheelRadius = axle.m_wheelRadius;
+                VehicleDynamics::WheelDynamicsData wheelData = GetWheelData(wheel, axle.m_wheelRadius);
                 driveWheelEntities.push_back(wheelData);
             }
         }
         return driveWheelEntities;
     }
 
-    AZ::EntityComponentIdPair GetWheelPhysxHinge(const AZ::EntityId wheelEntityId)
+    VehicleDynamics::WheelDynamicsData GetWheelData(const AZ::EntityId wheelEntityId, float wheelRadius)
     {
+        VehicleDynamics::WheelDynamicsData wheelData;
+        wheelData.m_wheelEntity = wheelEntityId;
+        wheelData.m_wheelRadius = wheelRadius;
         AZ::Entity* wheelEntity = nullptr;
         AZ::ComponentApplicationBus::BroadcastResult(wheelEntity, &AZ::ComponentApplicationRequests::FindEntity, wheelEntityId);
         if (!wheelEntity)
         {
             AZ_Warning("GetWheelDynamicData", false, "Entity %s was not found", wheelEntityId.ToString().c_str());
-            return AZ::EntityComponentIdPair();
+            return wheelData;
         }
         PhysX::HingeJointComponent* hingeComponent{ nullptr };
         hingeComponent = wheelEntity->FindComponent<PhysX::HingeJointComponent>();
-        if (!hingeComponent)
+
+        PhysX::ArticulationLinkComponent* articulationComponent{ nullptr };
+        articulationComponent = wheelEntity->FindComponent<PhysX::ArticulationLinkComponent>();
+
+        if (hingeComponent)
         {
-            AZ_Warning("GetWheelDynamicData", false, "Entity %s has no PhysX::HingeJointComponent", wheelEntityId.ToString().c_str());
-            return AZ::EntityComponentIdPair();
+            wheelData.m_isArticulation = false;
+            wheelData.m_wheelJoint = hingeComponent->GetId();
+            return wheelData;
         }
-        return AZ::EntityComponentIdPair(wheelEntityId, hingeComponent->GetId());
+        if (articulationComponent)
+        {
+            wheelData.m_isArticulation = true;
+            Utils::TryGetFreeArticulationAxis(wheelEntityId, wheelData.m_axis);
+            wheelData.m_wheelJoint = articulationComponent->GetId();
+            return wheelData;
+
+        }
+
+        AZ_Warning("GetWheelDynamicData", false, "Entity %s has no PhysX::HingeJointComponent", wheelEntityId.ToString().c_str());
+        return wheelData;
     }
 
     float ComputeRampVelocity(float targetVelocty, float lastVelocity, AZ::u64 deltaTimeNs, float acceleration, float maxVelocity)
@@ -267,5 +242,32 @@ namespace ROS2::VehicleDynamics::Utilities
             commandVelocity = lastVelocity - deltaAcceleration;
         }
         return AZStd::clamp(commandVelocity, -maxVelocity, maxVelocity);
+    }
+
+    void SetWheelRotationSpeed(const  VehicleDynamics::WheelDynamicsData& data, float wheelRotationSpeed)
+    {
+        if (data.m_isArticulation)
+        {
+            PhysX::ArticulationJointRequestBus::Event(
+                data.m_wheelEntity, &PhysX::ArticulationJointRequests::SetDriveTargetVelocity, data.m_axis, wheelRotationSpeed);
+        }
+        else
+        {
+            PhysX::JointRequestBus::Event( AZ::EntityComponentIdPair(data.m_wheelEntity,data.m_wheelJoint), &PhysX::JointRequests::SetVelocity, wheelRotationSpeed);
+        }
+    }
+
+    AZ::Transform GetJointTransform(const VehicleDynamics::WheelDynamicsData& data)
+    {
+        AZ::Transform hingeTransform{ AZ::Transform::Identity() };
+        if (data.m_isArticulation)
+        {
+            hingeTransform = AZ::Transform::Identity();
+        }
+        else
+        {
+            PhysX::JointRequestBus::EventResult(hingeTransform, AZ::EntityComponentIdPair(data.m_wheelEntity,data.m_wheelJoint), &PhysX::JointRequests::GetTransform);
+        }
+        return hingeTransform;
     }
 } // namespace ROS2::VehicleDynamics::Utilities

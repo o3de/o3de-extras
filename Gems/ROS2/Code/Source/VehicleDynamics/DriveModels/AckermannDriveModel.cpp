@@ -140,22 +140,10 @@ namespace ROS2::VehicleDynamics
 
         for (const auto& wheelData : m_driveWheelsData)
         {
-            const auto wheelEntity = wheelData.m_wheelEntity;
             float wheelRadius = wheelData.m_wheelRadius;
-            const auto jointComponent = wheelData.m_wheelJoint;
-            const auto id = AZ::EntityComponentIdPair(wheelEntity, jointComponent);
             AZ_Assert(wheelRadius != 0, "wheelRadius must be non-zero");
             auto desiredAngularSpeedX = (m_speedCommand / wheelRadius);
-
-            if (wheelData.m_isArticulation)
-            {
-                PhysX::ArticulationJointRequestBus::Event(
-                    wheelEntity, &PhysX::ArticulationJointRequests::SetDriveTargetVelocity, wheelData.m_axis, desiredAngularSpeedX);
-            }
-            else
-            {
-                PhysX::JointRequestBus::Event(id, &PhysX::JointRequests::SetVelocity, desiredAngularSpeedX);
-            }
+            VehicleDynamics::Utilities::SetWheelRotationSpeed(wheelData, desiredAngularSpeedX);
         }
     }
 
