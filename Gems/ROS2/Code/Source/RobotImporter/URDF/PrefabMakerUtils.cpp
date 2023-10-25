@@ -90,7 +90,9 @@ namespace ROS2::PrefabMakerUtils
             }
         }
 
-        SetEntityParent(entityId, parentEntityId);
+        // Default the entity world transform to be the same as the parent entity world transform
+        // Calling SetEntityParent would have the transform be at world origin
+        SetEntityParentRelative(entityId, parentEntityId);
 
         return entityId;
     }
@@ -105,13 +107,13 @@ namespace ROS2::PrefabMakerUtils
 
         if (auto* transformComponent = entity->FindComponent<AzToolsFramework::Components::TransformComponent>(); transformComponent)
         {
-            if (!useLocalTransform)
+            if (useLocalTransform)
             {
-                transformComponent->SetParent(parentEntityId);
+                transformComponent->SetParentRelative(parentEntityId);
             }
             else
             {
-                transformComponent->SetParentRelative(parentEntityId);
+                transformComponent->SetParent(parentEntityId);
             }
         }
     }
