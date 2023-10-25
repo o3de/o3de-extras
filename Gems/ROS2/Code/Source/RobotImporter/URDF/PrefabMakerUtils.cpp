@@ -77,7 +77,7 @@ namespace ROS2::PrefabMakerUtils
         }
 
         AZ_Trace("CreateEntity", "Processing entity id: %s with name: %s\n", entityId.ToString().c_str(), name.c_str());
-        
+
         // If the parent is invalid, parent to the container of the currently focused prefab if one exists.
         if (!parentEntityId.IsValid())
         {
@@ -95,7 +95,7 @@ namespace ROS2::PrefabMakerUtils
         return entityId;
     }
 
-    void SetEntityParent(AZ::EntityId entityId, AZ::EntityId parentEntityId)
+    static void SetEntityParentInternal(AZ::EntityId entityId, AZ::EntityId parentEntityId, bool useLocalTransform)
     {
         auto* entity = AzToolsFramework::GetEntityById(entityId);
         AZ_Assert(entity, "Unknown entity %s", entityId.ToString().c_str());
@@ -105,8 +105,27 @@ namespace ROS2::PrefabMakerUtils
 
         if (auto* transformComponent = entity->FindComponent<AzToolsFramework::Components::TransformComponent>(); transformComponent)
         {
-            transformComponent->SetParent(parentEntityId);
+            if (!useLocalTransform)
+            {
+                transformComponent->SetParent(parentEntityId);
+            }
+            else
+            {
+                transformComponent->SetParentRelative(parentEntityId);
+            }
         }
+    }
+
+    void SetEntityParent(AZ::EntityId entityId, AZ::EntityId parentEntityId)
+    {
+        constexpr bool useLocalTransform = false;
+        return SetEntityParentInternal(entityId, parentEntityId, useLocalTransform);
+    }
+
+    void SetEntityParentRelative(AZ::EntityId entityId, AZ::EntityId parentEntityId)
+    {
+        constexpr bool useLocalTransform = true;
+        return SetEntityParentInternal(entityId, parentEntityId, useLocalTransform);
     }
 
     void AddRequiredComponentsToEntity(AZ::EntityId entityId)

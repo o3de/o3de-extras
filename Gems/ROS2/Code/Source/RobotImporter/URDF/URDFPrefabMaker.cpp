@@ -228,7 +228,9 @@ namespace ROS2
             // set the current model transform component parent to the parent model
             if (parentModelEntityId.IsValid() && modelEntityId.IsValid())
             {
-                PrefabMakerUtils::SetEntityParent(modelEntityId, parentModelEntityId);
+                // The model entity local transform should be used
+                // to allow it to move, rotate, scale relative to the parent
+                PrefabMakerUtils::SetEntityParentRelative(modelEntityId, parentModelEntityId);
             }
         }
 
@@ -277,7 +279,7 @@ namespace ROS2
             {
                 AZ::EntityId createdEntityId = createLinkEntityResult.GetValue();
                 std::string linkName = linkPtr->Name();
-                AZ::Transform tf = Utils::GetWorldTransformURDF(linkPtr);
+                AZ::Transform tf = Utils::GetLocalTransformURDF(linkPtr);
                 auto* entity = AzToolsFramework::GetEntityById(createdEntityId);
                 if (entity)
                 {
@@ -296,7 +298,7 @@ namespace ROS2
                             tf.GetRotation().GetY(),
                             tf.GetRotation().GetZ(),
                             tf.GetRotation().GetW());
-                        transformInterface->SetWorldTM(tf);
+                        transformInterface->SetLocalTM(tf);
                     }
                     else
                     {
@@ -382,7 +384,9 @@ namespace ROS2
                 linkPrefabResult.GetValue().ToString().c_str(),
                 parentEntityIter->second.GetValue().ToString().c_str());
             AZ_Trace("CreatePrefabFromUrdfOrSdf", "Link %s setting parent to %s\n", linkName.c_str(), parentName.c_str());
-            PrefabMakerUtils::SetEntityParent(linkPrefabResult.GetValue(), parentEntityIter->second.GetValue());
+            // As the link transforms are relative, use SetEntityParentRelative to make sure the link are
+            // translated, scaled and rotated to correct world location
+            PrefabMakerUtils::SetEntityParentRelative(linkPrefabResult.GetValue(), parentEntityIter->second.GetValue());
         }
 
         // Iterate over all the joints and locate the entity associated with the link
