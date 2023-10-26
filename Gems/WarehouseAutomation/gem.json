@@ -5,7 +5,7 @@
     "license": "Apache-2.0",
     "license_url": "https://opensource.org/licenses/Apache-2.0",
     "origin": "RobotecAI",
-    "origin_url": "https://github.com/o3de/o3de-extras/development/Gems/WarehouseAutomation",
+    "origin_url": "https://robotec.ai",
     "type": "Code",
     "summary": "Gem for simulating an automated warehouse or factory",
     "canonical_tags": [
@@ -22,6 +22,7 @@
         "Linux"
     ],
     "icon_path": "preview.png",
+    "requirements": "This gem requires ROS 2 gem and PhysX gem.",
     "dependencies": [
         "ROS2",
         "PhysX"
