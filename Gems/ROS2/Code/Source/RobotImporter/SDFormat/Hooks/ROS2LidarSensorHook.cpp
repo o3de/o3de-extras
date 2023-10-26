@@ -20,7 +20,7 @@ namespace ROS2::SDFormat
     SensorImporterHook ROS2SensorHooks::ROS2LidarSensor()
     {
         SensorImporterHook importerHook;
-        importerHook.m_sensorTypes = AZStd::unordered_set<sdf::SensorType>{ sdf::SensorType::LIDAR };
+        importerHook.m_sensorTypes = AZStd::unordered_set<sdf::SensorType>{ sdf::SensorType::LIDAR, sdf::SensorType::GPU_LIDAR };
         importerHook.m_supportedSensorParams = AZStd::unordered_set<AZStd::string>{
             ">update_rate",
             ">lidar>scan>horizontal>samples",
@@ -67,10 +67,26 @@ namespace ROS2::SDFormat
             lidarConfiguration.m_lidarParameters.m_maxHAngle = lidarSensor->HorizontalScanMaxAngle().Degree();
             lidarConfiguration.m_lidarParameters.m_minVAngle = lidarSensor->VerticalScanMinAngle().Degree();
             lidarConfiguration.m_lidarParameters.m_maxVAngle = lidarSensor->VerticalScanMaxAngle().Degree();
-            lidarConfiguration.m_lidarParameters.m_layers = lidarSensor->HorizontalScanSamples();
-            lidarConfiguration.m_lidarParameters.m_numberOfIncrements = lidarSensor->VerticalScanSamples();
+            lidarConfiguration.m_lidarParameters.m_numberOfIncrements = lidarSensor->HorizontalScanSamples();
+            lidarConfiguration.m_lidarParameters.m_layers = lidarSensor->VerticalScanSamples();
             lidarConfiguration.m_lidarParameters.m_minRange = lidarSensor->RangeMin();
             lidarConfiguration.m_lidarParameters.m_maxRange = lidarSensor->RangeMax();
+
+            const auto lidarSystems = LidarRegistrarInterface::Get()->GetRegisteredLidarSystems();
+            if (!lidarSystems.empty())
+            {
+                const AZStd::string query = (sdfSensor.Type() == sdf::SensorType::GPU_LIDAR ? "RobotecGPULidar" : LidarSystem::SystemName);
+                if (const auto it = AZStd::find(lidarSystems.begin(), lidarSystems.end(), query); it != lidarSystems.end())
+                {
+                    lidarConfiguration.m_lidarSystem = *it;
+                }
+            }
+
+            AZ_Warning("ROS2LidarSensorHook", !lidarConfiguration.m_lidarSystem.empty(), "Lidar System not set.");
+            if (sdfSensor.Type() == sdf::SensorType::GPU_LIDAR)
+            {
+                AZ_Info("ROS2LidarSensorHook", "Enable RGL Gem to import GPU Lidar.");
+            }
 
             // Create required components
             Utils::CreateComponent<ROS2FrameComponent>(entity);

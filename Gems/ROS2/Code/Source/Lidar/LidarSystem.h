@@ -26,9 +26,9 @@ namespace ROS2
         void Activate();
         void Deactivate();
 
-    private:
         static constexpr const char* SystemName = "Scene Queries";
 
+    private:
         // LidarSystemRequestBus overrides
         LidarId CreateLidar(AZ::EntityId lidarEntityId) override;
         void DestroyLidar(LidarId lidarId) override;
