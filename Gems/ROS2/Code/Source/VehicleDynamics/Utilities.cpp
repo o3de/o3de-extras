@@ -260,11 +260,7 @@ namespace ROS2::VehicleDynamics::Utilities
     AZ::Transform GetJointTransform(const VehicleDynamics::WheelDynamicsData& data)
     {
         AZ::Transform hingeTransform{ AZ::Transform::Identity() };
-        if (data.m_isArticulation)
-        {
-            hingeTransform = AZ::Transform::Identity();
-        }
-        else
+        if (!data.m_isArticulation)
         {
             PhysX::JointRequestBus::EventResult(hingeTransform, AZ::EntityComponentIdPair(data.m_wheelEntity,data.m_wheelJoint), &PhysX::JointRequests::GetTransform);
         }
