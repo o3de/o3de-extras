@@ -2,7 +2,7 @@
     "template_name": "Ros2RoboticManipulationTemplate",
     "origin": "https://github.com/o3de/o3de-extras",
     "license": "https://github.com/o3de/o3de-extras/tree/development/Templates/Ros2RoboticManipulationTemplate/Template/LICENSE.txt",
-    "display_name": "Ros2RoboticManipulationTemplate",
+    "display_name": "ROS2 Robotic Manipulation",
     "summary": "A manipulation template for ROS2",
     "canonical_tags": [],
     "user_tags": [
