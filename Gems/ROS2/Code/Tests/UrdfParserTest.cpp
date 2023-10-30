@@ -791,17 +791,17 @@ namespace UnitTest
         const AZ::Vector3 expected_translation_link2{ -1.2000000476837158, 2.0784599781036377, 0.0 };
         const AZ::Vector3 expected_translation_link3{ -2.4000000953674316, 0.0, 0.0 };
 
-        const AZ::Transform transform_from_urdf_link1 = ROS2::Utils::GetWorldTransformURDF(base_link_ptr);
+        const AZ::Transform transform_from_urdf_link1 = ROS2::Utils::GetLocalTransformURDF(base_link_ptr);
         EXPECT_NEAR(expected_translation_link1.GetX(), transform_from_urdf_link1.GetTranslation().GetX(), 1e-5);
         EXPECT_NEAR(expected_translation_link1.GetY(), transform_from_urdf_link1.GetTranslation().GetY(), 1e-5);
         EXPECT_NEAR(expected_translation_link1.GetZ(), transform_from_urdf_link1.GetTranslation().GetZ(), 1e-5);
 
-        const AZ::Transform transform_from_urdf_link2 = ROS2::Utils::GetWorldTransformURDF(link2_ptr);
+        const AZ::Transform transform_from_urdf_link2 = ROS2::Utils::GetLocalTransformURDF(link2_ptr);
         EXPECT_NEAR(expected_translation_link2.GetX(), transform_from_urdf_link2.GetTranslation().GetX(), 1e-5);
         EXPECT_NEAR(expected_translation_link2.GetY(), transform_from_urdf_link2.GetTranslation().GetY(), 1e-5);
         EXPECT_NEAR(expected_translation_link2.GetZ(), transform_from_urdf_link2.GetTranslation().GetZ(), 1e-5);
 
-        const AZ::Transform transform_from_urdf_link3 = ROS2::Utils::GetWorldTransformURDF(link3_ptr);
+        const AZ::Transform transform_from_urdf_link3 = ROS2::Utils::GetLocalTransformURDF(link3_ptr);
         EXPECT_NEAR(expected_translation_link3.GetX(), transform_from_urdf_link3.GetTranslation().GetX(), 1e-5);
         EXPECT_NEAR(expected_translation_link3.GetY(), transform_from_urdf_link3.GetTranslation().GetY(), 1e-5);
         EXPECT_NEAR(expected_translation_link3.GetZ(), transform_from_urdf_link3.GetTranslation().GetZ(), 1e-5);

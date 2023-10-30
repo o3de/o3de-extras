@@ -38,11 +38,11 @@ namespace ROS2::Utils
     //! @return true if the link is likely a wheel link.
     bool IsWheelURDFHeuristics(const sdf::Model& model, const sdf::Link* link);
 
-    //! The recursive function for the given link goes through URDF and finds world-to-entity transformation for us.
-    //! @param link pointer to URDF/SDF link that root of robot description
-    //! @param t initial transform, should be identity for non-recursive call.
-    //! @returns root to entity transform
-    AZ::Transform GetWorldTransformURDF(const sdf::Link* link, AZ::Transform t = AZ::Transform::Identity());
+    //! Returns an AZ::Transform converted from the link pose defined relative to another frame.
+    //! @param link pointer to URDF/SDF link
+    //! @param t initial transform, multiplied against link transform
+    //! @returns Transform of link
+    AZ::Transform GetLocalTransformURDF(const sdf::Link* link, AZ::Transform t = AZ::Transform::Identity());
 
     //! Type Alias representing a "stack" of Model object that were visited on the way to the current Link/Joint Visitor Callback
     using ModelStack = AZStd::deque<AZStd::reference_wrapper<const sdf::Model>>;

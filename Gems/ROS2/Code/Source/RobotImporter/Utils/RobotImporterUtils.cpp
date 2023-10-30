@@ -80,7 +80,7 @@ namespace ROS2::Utils
         return isWheel;
     }
 
-    AZ::Transform GetWorldTransformURDF(const sdf::Link* link, AZ::Transform t)
+    AZ::Transform GetLocalTransformURDF(const sdf::Link* link, AZ::Transform t)
     {
         // Determine if the pose is relative to another link
         // See doxygen at
