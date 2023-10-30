@@ -11,6 +11,8 @@
 #include <ROS2/Frame/NamespaceConfiguration.h>
 #include <ROS2/Utilities/ROS2Names.h>
 
+#include <iostream>
+
 namespace ROS2
 {
     void NamespaceConfiguration::PopulateNamespace(bool isRoot, const AZStd::string& entityName)
@@ -48,19 +50,47 @@ namespace ROS2
         return AZ::Edit::PropertyRefreshLevels::EntireTree;
     }
 
-    AZStd::string NamespaceConfiguration::GetNamespace(const AZStd::string& parentNamespace) const
+    AZStd::string NamespaceConfiguration::GetNamespace() const
     {
-        if (parentNamespace.empty())
+        if (m_parentsNamespace.empty())
         {
             return m_namespace;
         }
 
         if (m_namespace.empty())
         {
-            return parentNamespace;
+            return m_parentsNamespace;
         }
 
-        return ROS2Names::GetNamespacedName(parentNamespace, m_namespace);
+        return ROS2Names::GetNamespacedName(m_parentsNamespace, m_namespace);
+    }
+
+    AZStd::string NamespaceConfiguration::GetNamespace(const AZStd::string& parentsNamespace) const
+    {
+        if (parentsNamespace.empty())
+        {
+            return m_namespace;
+        }
+
+        if (m_namespace.empty())
+        {
+            return parentsNamespace;
+        }
+
+        return ROS2Names::GetNamespacedName(parentsNamespace, m_namespace);
+    }
+
+    void NamespaceConfiguration::SetNamespace(const AZStd::string& ns, NamespaceStrategy strategy)
+    {
+        m_namespace = ns;
+        m_namespaceStrategy = strategy;
+        UpdateNamespace();
+    }
+
+    void NamespaceConfiguration::SetParentsNamespace(const AZStd::string& parentsNamespace)
+    {
+        m_parentsNamespace = parentsNamespace;
+        UpdateNamespace();
     }
 
     void NamespaceConfiguration::SetNamespace(const AZStd::string& ns, NamespaceStrategy strategy)
@@ -92,7 +122,7 @@ namespace ROS2
                         &NamespaceConfiguration::m_namespaceStrategy,
                         "Namespace strategy",
                         "Determines how namespace for frames and topics is created from the hierarchy")
-                    ->Attribute(AZ::Edit::Attributes::ChangeNotify, &NamespaceConfiguration::OnNamespaceStrategySelected)
+                    // ->Attribute(AZ::Edit::Attributes::ChangeNotify, &NamespaceConfiguration::OnNamespaceStrategySelected)
                     ->EnumAttribute(NamespaceConfiguration::NamespaceStrategy::Default, "Default")
                     ->EnumAttribute(NamespaceConfiguration::NamespaceStrategy::Empty, "Empty")
                     ->EnumAttribute(NamespaceConfiguration::NamespaceStrategy::FromEntityName, "Generate from entity name")

@@ -39,7 +39,16 @@ namespace ROS2
         //! @param isRoot Whether or not the namespace belongs to top-level entity in the entity hierarchy.
         //! @param entityName Raw (not ros-ified) name of the entity to which the namespace belongs.
         void PopulateNamespace(bool isRoot, const AZStd::string& entityName);
-        AZStd::string GetNamespace(const AZStd::string& parentNamespace) const;
+        AZStd::string GetNamespace() const;
+        AZStd::string GetNamespace(const AZStd::string& parentsNamespace) const;
+
+        //! Update namespace and strategy.
+        //! @param ns Desired namespace.
+        //! @param strategy Namespace strategy.
+        void SetNamespace(const AZStd::string& ns, NamespaceStrategy strategy);
+
+        // Update the parents namespace.
+        void SetParentsNamespace(const AZStd::string& parentsNamespace);
 
         //! Update namespace and strategy.
         //! @param ns Desired namespace.
@@ -48,6 +57,7 @@ namespace ROS2
 
     private:
         AZStd::string m_namespace;
+        AZStd::string m_parentsNamespace;
         NamespaceStrategy m_namespaceStrategy = NamespaceStrategy::Default;
         bool m_isRoot;
         AZStd::string m_entityName;

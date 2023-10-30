@@ -38,17 +38,12 @@ namespace ROS2
         //! @return A complete namespace (including parent namespaces)
         virtual AZStd::string GetNamespace() const = 0;
 
-        //! Get a transform between this frame and the next frame up in hierarchy.
-        //! @return If the parent frame is found, return a Transform between this frame and the parent.
-        //! Otherwise, return a global Transform.
-        //! @note Parent frame is not the same as parent Transform: there could be many Transforms in between without ROS2Frame components.
-        virtual AZ::Transform GetFrameTransform() const = 0;
+        //! Update the parents namespace. This should be used only by the ROS2FrameSystemComponent
+        virtual void UpdateParentsNamespace(AZStd::string parentsNamespace) = 0;
 
         //! Global frame name in ros2 ecosystem.
         //! @return The name of the global frame with namespace attached. It is typically "odom", "map", "world".
         virtual AZStd::string GetGlobalFrameName() const = 0;
-
-        virtual bool IsFrame() const = 0;
     };
 
     using ROS2FrameComponentBus = AZ::EBus<ROS2FrameComponentRequests>;

@@ -7,6 +7,8 @@
  */
 #pragma once
 
+#include "AzCore/RTTI/RTTIMacros.h"
+#include "ROS2/Frame/ROS2FrameSystemComponent.h"
 #include "ROS2SystemComponent.h"
 #include <AzCore/Memory/SystemAllocator.h>
 #include <AzCore/Module/Module.h>
@@ -91,8 +93,6 @@ namespace ROS2
                     VacuumGripperComponent::CreateDescriptor(),
                     FingerGripperComponent::CreateDescriptor(),
                     ROS2ContactSensorComponent::CreateDescriptor(),
-                    FollowingCameraComponent::CreateDescriptor(),
-                    GeoReferenceLevelComponent::CreateDescriptor(),
                 });
         }
 
