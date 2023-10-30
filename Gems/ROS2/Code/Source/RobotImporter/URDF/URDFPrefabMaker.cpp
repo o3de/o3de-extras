@@ -228,7 +228,9 @@ namespace ROS2
             // set the current model transform component parent to the parent model
             if (parentModelEntityId.IsValid() && modelEntityId.IsValid())
             {
-                PrefabMakerUtils::SetEntityParent(modelEntityId, parentModelEntityId);
+                // The model entity local transform should be used
+                // to allow it to move, rotate, scale relative to the parent
+                PrefabMakerUtils::SetEntityParentRelative(modelEntityId, parentModelEntityId);
             }
         }
 
@@ -277,7 +279,7 @@ namespace ROS2
             {
                 AZ::EntityId createdEntityId = createLinkEntityResult.GetValue();
                 std::string linkName = linkPtr->Name();
-                AZ::Transform tf = Utils::GetWorldTransformURDF(linkPtr);
+                AZ::Transform tf = Utils::GetLocalTransformURDF(linkPtr);
                 auto* entity = AzToolsFramework::GetEntityById(createdEntityId);
                 if (entity)
                 {
@@ -296,7 +298,7 @@ namespace ROS2
                             tf.GetRotation().GetY(),
                             tf.GetRotation().GetZ(),
                             tf.GetRotation().GetW());
-                        transformInterface->SetWorldTM(tf);
+                        transformInterface->SetLocalTM(tf);
                     }
                     else
                     {
@@ -354,7 +356,7 @@ namespace ROS2
 
             // Use the first joint where this link is a child to locate the parent link pointer.
             const sdf::Joint* joint = jointsWhereLinkIsChild.front();
-                        std::string parentLinkName = joint->ParentName();
+            std::string parentLinkName = joint->ParentName();
             AZStd::string parentName(parentLinkName.c_str(), parentLinkName.size());
 
             // Lookup the entity created from the parent link using the JointMapper to locate the parent SDF link.
@@ -382,6 +384,9 @@ namespace ROS2
                 linkPrefabResult.GetValue().ToString().c_str(),
                 parentEntityIter->second.GetValue().ToString().c_str());
             AZ_Trace("CreatePrefabFromUrdfOrSdf", "Link %s setting parent to %s\n", linkName.c_str(), parentName.c_str());
+            // The joint hierarchy which specifies how a parent and child link hierarchy is represented in an SDF document
+            // is used to establish the entity parent child hiearachy, but does not modify the world location of the link entities
+            // therefore SetEntityParent is used to maintain the world transform of the child link
             PrefabMakerUtils::SetEntityParent(linkPrefabResult.GetValue(), parentEntityIter->second.GetValue());
         }
 
