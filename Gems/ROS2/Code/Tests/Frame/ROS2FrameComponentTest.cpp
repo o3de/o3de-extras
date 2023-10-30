@@ -16,10 +16,10 @@
 
 #include <AzCore/Asset/AssetManagerComponent.h>
 #include <AzCore/Component/ComponentApplication.h>
+#include <AzCore/Component/ComponentApplicationBus.h>
 #include <AzCore/Component/Entity.h>
 #include <AzCore/Component/EntityId.h>
-#include <AzCore/RTTI/RTTIMacros.h<
-#include <AzCore/Component/ComponentApplicationBus.h>
+#include <AzCore/RTTI/RTTIMacros.h>
 #include <AzCore/Serialization/SerializeContext.h>
 #include <AzCore/Slice/SliceAssetHandler.h>
 #include <AzCore/UserSettings/UserSettingsComponent.h>
@@ -34,7 +34,7 @@
 #include <AzToolsFramework/UnitTest/ToolsTestApplication.h>
 #include <ROS2/Frame/ROS2FrameComponent.h>
 #include <ROS2/ROS2Bus.h>
-#include <ROS2/Sensor/ROS2SensorComponent.h>
+// #include <ROS2/Sensor/ROS2SensorComponent.h>
 #include <ROS2SystemComponent.h>
 
 #include <QApplication>

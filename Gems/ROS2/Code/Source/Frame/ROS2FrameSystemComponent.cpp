@@ -346,11 +346,11 @@ namespace ROS2
             }
             ROS2FrameSystemTransformHandler& handler = m_watchedEntitiesHandlers.find(oldWatchedEntity)->second;
             handler.RemoveFrameEntity(frameEntityId);
+            watchedEntitiesToRemove.push_back(oldWatchedEntity);
             if (handler.GetFrameAmount() == 0)
             {
                 handler.BusDisconnect();
                 m_watchedEntitiesHandlers.erase(oldWatchedEntity);
-                watchedEntitiesToRemove.push_back(oldWatchedEntity);
             }
         }
         for (const auto& entityIdToRemove : watchedEntitiesToRemove)
@@ -358,8 +358,14 @@ namespace ROS2
             oldWatchedEntities.erase(entityIdToRemove);
         }
 
+        // Remove itself from parents children
+        m_frameChildren.find(m_frameParent.find(frameEntityId)->second)->second.erase(frameEntityId);
+
         // Replace the parent
         m_frameParent.find(frameEntityId)->second = newFrameParent;
+
+        // Add itself as a new child
+        m_frameChildren.find(newFrameParent)->second.insert(frameEntityId);
 
         // Create or add the frame to handlers
         for (const AZ::EntityId& entityIdOnPath : newPathToParentFrame)
