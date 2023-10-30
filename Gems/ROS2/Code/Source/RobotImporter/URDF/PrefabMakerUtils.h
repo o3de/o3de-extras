@@ -41,10 +41,19 @@ namespace ROS2::PrefabMakerUtils
     //! @return a result which is either a created prefab entity or an error.
     AzToolsFramework::Prefab::PrefabEntityResult CreateEntity(AZ::EntityId parentEntityId, const AZStd::string& name);
 
-    //! Set the parent entity for an entity. The entity getting parent is expected to be inactive.
+    //! Set the parent entity for an entity. The entity being attached to the parent entity is expected to be inactive.
+    //! NOTE: This uses the world transform of the entity when updating the transform
+    //! The world location of the entity will not change
     //! @param entityId the id for entity that needs a parent.
     //! @param parentEntityId the id for the parent entity.
     void SetEntityParent(AZ::EntityId entityId, AZ::EntityId parentEntityId);
+
+    //! Set the parent entity for an entity. The entity being attached to the parent is expected to be inactive.
+    //! NOTE: This uses the local transform of the entity when updating the transform
+    //! and therefore allows the entity to relocate based on the parent world transform
+    //! @param entityId the id for entity that needs a parent.
+    //! @param parentEntityId the id for the parent entity.
+    void SetEntityParentRelative(AZ::EntityId entityId, AZ::EntityId parentEntityId);
 
     //! Create an entity name from arguments.
     //! @param rootName root of entity's name.
