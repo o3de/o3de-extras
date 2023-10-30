@@ -6,27 +6,13 @@
  *
  */
 
-#include "AzCore/Component/ComponentApplicationBus.h"
-#include "AzCore/Component/Entity.h"
-#include "AzCore/Component/EntityId.h"
-#include "AzCore/Component/EntityUtils.h"
-#include "AzCore/Component/TransformBus.h"
-#include "AzCore/Math/Transform.h"
-#include "AzCore/RTTI/RTTIMacros.h"
-#include "AzCore/RTTI/ReflectContext.h"
-#include "AzCore/RTTI/TypeInfo.h"
-#include "AzCore/Serialization/SerializeContext.h"
-#include "AzFramework/Components/TransformComponent.h"
-#include "ROS2/Frame/ROS2FrameBus.h"
-#include "ROS2/Frame/ROS2FrameSystemBus.h"
-#include "ROS2/ROS2GemUtilities.h"
-#include "ROS2/Sensor/SensorConfiguration.h"
 #include <AzCore/Serialization/EditContext.h>
 #include <AzCore/Serialization/EditContextConstants.inl>
+#include <AzCore/Serialization/SerializeContext.h>
 #include <ROS2/Frame/NamespaceConfiguration.h>
 #include <ROS2/Frame/ROS2FrameConfiguration.h>
+#include <ROS2/ROS2GemUtilities.h>
 #include <ROS2/Utilities/ROS2Names.h>
-#include <iostream>
 
 namespace ROS2
 {

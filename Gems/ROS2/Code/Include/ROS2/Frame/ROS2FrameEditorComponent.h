@@ -7,13 +7,12 @@
  */
 #pragma once
 
-#include "ROS2/Frame/ROS2FrameConfiguration.h"
 #include <AzCore/Component/Component.h>
-#include <AzCore/std/smart_ptr/unique_ptr.h>
 #include <AzFramework/Components/TransformComponent.h>
 #include <AzToolsFramework/ToolsComponents/EditorComponentBase.h>
 #include <ROS2/Frame/NamespaceConfiguration.h>
 #include <ROS2/Frame/ROS2FrameComponent.h>
+#include <ROS2/Frame/ROS2FrameConfiguration.h>
 #include <ROS2/Frame/ROS2Transform.h>
 #include <ROS2/ROS2GemUtilities.h>
 
@@ -71,7 +70,7 @@ namespace ROS2
 
         //! Update the parents namespace
         //! @param parentsNamespace
-        void UpdateParentsNamespace(AZStd::string parentsNamespace) override;
+        void OnNamespaceChange(AZStd::string parentsNamespace) override;
 
         //! Updates the namespace and namespace strategy of the underlying namespace configuration
         //! @param ns Namespace to set.

@@ -5,18 +5,17 @@
  * SPDX-License-Identifier: Apache-2.0 OR MIT
  *
  */
-<<<<<<< HEAD
 #include "Georeference/GeoreferenceLevelEditorComponent.h"
-=======
 #include "AzCore/RTTI/RTTIMacros.h"
 #include "ROS2/Frame/ROS2FrameEditorComponent.h"
 #include "ROS2/Frame/ROS2FrameSystemComponent.h"
->>>>>>> 59e2f857 (Workig effective namespace)
 #include "Spawner/ROS2SpawnPointEditorComponent.h"
 #include "Spawner/ROS2SpawnerEditorComponent.h"
 #include <Camera/ROS2CameraSensorEditorComponent.h>
 #include <Lidar/LidarRegistrarEditorSystemComponent.h>
 #include <Manipulation/JointsManipulationEditorComponent.h>
+#include <ROS2/Frame/ROS2FrameEditorComponent.h>
+#include <ROS2/Frame/ROS2FrameSystemComponent.h>
 #include <ROS2EditorSystemComponent.h>
 #include <ROS2ModuleInterface.h>
 #include <RobotImporter/ROS2RobotImporterEditorSystemComponent.h>

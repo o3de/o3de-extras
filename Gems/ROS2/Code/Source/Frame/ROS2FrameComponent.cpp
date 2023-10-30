@@ -6,9 +6,9 @@
  *
  */
 
-#include "AzCore/RTTI/ReflectContext.h"
 #include <AzCore/Component/Entity.h>
 #include <AzCore/Component/EntityUtils.h>
+#include <AzCore/RTTI/ReflectContext.h>
 #include <AzCore/Serialization/EditContext.h>
 #include <AzCore/Serialization/EditContextConstants.inl>
 #include <AzCore/Serialization/SerializeContext.h>
@@ -16,6 +16,7 @@
 #include <ROS2/ROS2Bus.h>
 #include <ROS2/ROS2GemUtilities.h>
 #include <ROS2/Utilities/ROS2Names.h>
+
 namespace ROS2
 {
     namespace Internal
@@ -145,11 +146,6 @@ namespace ROS2
         m_configuration.m_namespaceConfiguration.SetNamespace(ns, strategy);
     }
 
-    void ROS2FrameComponent::UpdateNamespaceConfiguration(const AZStd::string& ns, NamespaceConfiguration::NamespaceStrategy strategy)
-    {
-        m_namespaceConfiguration.SetNamespace(ns, strategy);
-    }
-
     bool ROS2FrameComponent::IsTopLevel() const
     {
         return GetGlobalFrameName() == GetParentFrameID();
@@ -229,22 +225,6 @@ namespace ROS2
         {
             serialize->Class<ROS2FrameComponent, AZ::Component>()->Version(1)->Field(
                 "ROS2FrameConfiguration", &ROS2FrameComponent::m_configuration);
-
-            // if (AZ::EditContext* ec = serialize->GetEditContext())
-            // {
-            //     ec->Class<ROS2FrameComponent>("ROS2 Frame", "[ROS2 Frame component]")
-            //         ->ClassElement(AZ::Edit::ClassElements::EditorData, "")
-            //         ->Attribute(AZ::Edit::Attributes::Category, "ROS2")
-            //         ->Attribute(AZ::Edit::Attributes::AppearsInAddComponentMenu, AZ_CRC_CE("Game"))
-            //         ->Attribute(AZ::Edit::Attributes::Icon, "Editor/Icons/Components/ROS2Frame.svg")
-            //         ->Attribute(AZ::Edit::Attributes::ViewportIcon, "Editor/Icons/Components/Viewport/ROS2Frame.svg")
-            //         ->DataElement(
-            //             AZ::Edit::UIHandlers::Default,
-            //             &ROS2FrameComponent::m_configuration,
-            //             "ROS2Frame Configuration",
-            //             "ROS2Frame Configuration")
-            //         ->Attribute(AZ::Edit::Attributes::Visibility, AZ::Edit::PropertyVisibility::ShowChildrenOnly);
-            // }
         }
     }
 

@@ -6,35 +6,24 @@
  *
  */
 
-#include "AzCore/Component/ComponentApplicationBus.h"
-#include "AzCore/Component/ComponentBus.h"
-#include "AzCore/Component/Entity.h"
-#include "AzCore/Component/EntityId.h"
-#include "AzCore/Module/Module.h"
-#include "AzCore/std/containers/set.h"
-#include "AzCore/std/parallel/lock.h"
-#include "AzCore/std/string/string.h"
-#include "AzCore/std/utility/move.h"
-#include "ROS2/Frame/ROS2FrameBus.h"
-#include "ROS2/Frame/ROS2FrameComponent.h"
-#include "ROS2/Frame/ROS2FrameSystemBus.h"
-#include "ROS2/ROS2GemUtilities.h"
+#include <AzCore/Component/ComponentApplicationBus.h>
+#include <AzCore/Component/ComponentBus.h>
+#include <AzCore/Component/Entity.h>
+#include <AzCore/Component/EntityId.h>
+#include <AzCore/std/containers/set.h>
+#include <AzCore/std/string/string.h>
 #include <AzToolsFramework/ToolsComponents/TransformComponent.h>
+#include <ROS2/Frame/ROS2FrameBus.h>
+#include <ROS2/Frame/ROS2FrameComponent.h>
+#include <ROS2/Frame/ROS2FrameSystemBus.h>
 #include <ROS2/Frame/ROS2FrameSystemComponent.h>
-#include <iostream>
+#include <ROS2/ROS2GemUtilities.h>
 
 namespace ROS2
 {
 
-    ROS2FrameSystemTransformHandler::ROS2FrameSystemTransformHandler(AZStd::mutex& frameSystemMutex, const AZ::EntityId& watchedEntityId)
-        : AZ::TransformNotificationBus::Handler()
-        , m_frameSystemMutex(frameSystemMutex)
-    {
-    }
-
     void ROS2FrameSystemTransformHandler::OnParentChanged(AZ::EntityId oldParent, AZ::EntityId newParent)
     {
-        AZStd::lock_guard<AZStd::mutex> lock(m_frameSystemMutex);
         for (auto frameEntityId : m_frameEntities)
         {
             ROS2FrameSystemInterface::Get()->MoveFrame(frameEntityId, newParent);
@@ -50,7 +39,6 @@ namespace ROS2
     }
     void ROS2FrameSystemTransformHandler::RemoveFrameEntity(const AZ::EntityId& frameEntityId)
     {
-        // AZStd::lock_guard<AZStd::mutex> lock(m_frameSystemMutex);
         if (m_frameEntities.contains(frameEntityId))
         {
             m_frameEntities.erase(frameEntityId);
@@ -61,13 +49,6 @@ namespace ROS2
     {
         return m_frameEntities.size();
     }
-
-    // ROS2FrameSystemTransformHandler::ROS2FrameSystemTransformHandler(ROS2FrameSystemTransformHandler&& other)
-    //     : m_frameSystemMutex(other.m_frameSystemMutex)
-    //     , m_watchedEntity(other.m_watchedEntity)
-    //     , m_frameEntities(AZStd::move(other.m_frameEntities))
-    // {
-    // }
 
     ROS2FrameSystemComponent::ROS2FrameSystemComponent()
     {
@@ -253,8 +234,7 @@ namespace ROS2
                 }
                 frameToRegisterWatchedEntities.insert(entityOnPath);
                 ROS2FrameSystemTransformHandler& handler =
-                    m_watchedEntitiesHandlers.insert({ entityOnPath, ROS2FrameSystemTransformHandler(m_frameSystemMutex, entityOnPath) })
-                        .first->second;
+                    m_watchedEntitiesHandlers.insert({ entityOnPath, ROS2FrameSystemTransformHandler() }).first->second;
                 // Add which entity should be notified
                 handler.AddFrameEntity(frameToRegister);
                 // Connect the handler
@@ -396,9 +376,7 @@ namespace ROS2
             else
             {
                 ROS2FrameSystemTransformHandler& handler =
-                    m_watchedEntitiesHandlers
-                        .insert({ entityIdOnPath, ROS2FrameSystemTransformHandler(m_frameSystemMutex, entityIdOnPath) })
-                        .first->second;
+                    m_watchedEntitiesHandlers.insert({ entityIdOnPath, ROS2FrameSystemTransformHandler() }).first->second;
                 // Add which entity should be notified
                 handler.AddFrameEntity(frameEntityId);
                 handler.BusConnect(entityIdOnPath);
@@ -414,7 +392,7 @@ namespace ROS2
 
     void ROS2FrameSystemComponent::UpdateNamespaces(AZ::EntityId frameEntity, AZStd::string parentsNamespace, bool isActive)
     {
-        ROS2FrameComponentBus::Event(frameEntity, &ROS2FrameComponentBus::Events::UpdateParentsNamespace, parentsNamespace);
+        ROS2FrameComponentBus::Event(frameEntity, &ROS2FrameComponentBus::Events::OnNamespaceChange, parentsNamespace);
         const AZStd::set<AZ::EntityId>& children = m_frameChildren.find(frameEntity)->second;
         AZStd::string ns;
         if (isActive)
@@ -440,11 +418,6 @@ namespace ROS2
             ROS2FrameComponentBus::EventResult(ns, m_frameParent.find(frameEntityId)->second, &ROS2FrameComponentBus::Events::GetNamespace);
             UpdateNamespaces(frameEntityId, ns);
         }
-    }
-
-    void ROS2FrameSystemComponent::GetRequiredServices(AZ::ComponentDescriptor::DependencyArrayType& required)
-    {
-        // required.push_back(AZ_CRC_CE("TransformService"));
     }
 
 } // namespace ROS2

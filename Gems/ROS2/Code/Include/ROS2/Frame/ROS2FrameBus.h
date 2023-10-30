@@ -7,6 +7,8 @@
  */
 #pragma once
 
+#include "AzCore/Component/ComponentBus.h"
+#include "AzCore/Component/EntityId.h"
 #include <AzFramework/Components/TransformComponent.h>
 #include <ROS2/Frame/ROS2Transform.h>
 #include <ROS2/ROS2GemUtilities.h>
@@ -38,8 +40,8 @@ namespace ROS2
         //! @return A complete namespace (including parent namespaces)
         virtual AZStd::string GetNamespace() const = 0;
 
-        //! Update the parents namespace. This should be used only by the ROS2FrameSystemComponent
-        virtual void UpdateParentsNamespace(AZStd::string parentsNamespace) = 0;
+        //! Update the parents namespace and effective namespace.
+        virtual void OnNamespaceChange(AZStd::string parentsNamespace) = 0;
 
         //! Global frame name in ros2 ecosystem.
         //! @return The name of the global frame with namespace attached. It is typically "odom", "map", "world".
@@ -47,4 +49,19 @@ namespace ROS2
     };
 
     using ROS2FrameComponentBus = AZ::EBus<ROS2FrameComponentRequests>;
+
+    class ROS2FrameComponentNotifications : public AZ::ComponentBus
+    {
+    public:
+        static const AZ::EBusHandlerPolicy HandlerPolicy = AZ::EBusHandlerPolicy::Multiple;
+        static const AZ::EBusAddressPolicy AddressPolicy = AZ::EBusAddressPolicy::ById;
+
+        using BusIdType = AZ::EntityId;
+
+        //! Notification when the ROS2FrameComponent changes its configuration or namespace
+        virtual void OnConfigurationChange();
+    };
+
+    using ROS2FrameComponentNotificaionBus = AZ::EBus<ROS2FrameComponentNotifications>;
+
 } // namespace ROS2

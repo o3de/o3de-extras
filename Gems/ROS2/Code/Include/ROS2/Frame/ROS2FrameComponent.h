@@ -7,12 +7,12 @@
  */
 #pragma once
 
-#include "ROS2/Frame/ROS2FrameBus.h"
-#include "ROS2/Frame/ROS2FrameConfiguration.h"
 #include <AzCore/Component/Component.h>
 #include <AzCore/std/smart_ptr/unique_ptr.h>
 #include <AzFramework/Components/TransformComponent.h>
 #include <ROS2/Frame/NamespaceConfiguration.h>
+#include <ROS2/Frame/ROS2FrameBus.h>
+#include <ROS2/Frame/ROS2FrameConfiguration.h>
 #include <ROS2/Frame/ROS2Transform.h>
 #include <ROS2/ROS2GemUtilities.h>
 
@@ -76,11 +76,6 @@ namespace ROS2
         //! Global frame name in ros2 ecosystem.
         //! @return The name of the global frame with namespace attached. It is typically "odom", "map", "world".
         AZStd::string GetGlobalFrameName() const;
-
-        //! Updates the namespace and namespace strategy of the underlying namespace configuration
-        //! @param ns Namespace to set.
-        //! @param strategy Namespace strategy to use.
-        void UpdateNamespaceConfiguration(const AZStd::string& ns, NamespaceConfiguration::NamespaceStrategy strategy);
 
         //! Updates the namespace and namespace strategy of the underlying namespace configuration
         //! @param ns Namespace to set.

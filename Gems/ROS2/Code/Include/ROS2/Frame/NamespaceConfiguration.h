@@ -47,13 +47,9 @@ namespace ROS2
         //! @param strategy Namespace strategy.
         void SetNamespace(const AZStd::string& ns, NamespaceStrategy strategy);
 
-        // Update the parents namespace.
+        //! Update the parents namespace.
+        //! @param parentsNamespace parents namespace.
         void SetParentsNamespace(const AZStd::string& parentsNamespace);
-
-        //! Update namespace and strategy.
-        //! @param ns Desired namespace.
-        //! @param strategy Namespace strategy.
-        void SetNamespace(const AZStd::string& ns, NamespaceStrategy strategy);
 
     private:
         AZStd::string m_namespace;

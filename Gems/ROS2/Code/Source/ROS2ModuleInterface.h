@@ -7,8 +7,6 @@
  */
 #pragma once
 
-#include "AzCore/RTTI/RTTIMacros.h"
-#include "ROS2/Frame/ROS2FrameSystemComponent.h"
 #include "ROS2SystemComponent.h"
 #include <AzCore/Memory/SystemAllocator.h>
 #include <AzCore/Module/Module.h>
@@ -58,41 +56,40 @@ namespace ROS2
         {
             m_descriptors.insert(
                 m_descriptors.end(),
-                {
-                    ROS2SystemComponent::CreateDescriptor(),
-                    ROS2SensorComponentBase<TickBasedSource>::CreateDescriptor(),
-                    ROS2SensorComponentBase<PhysicsBasedSource>::CreateDescriptor(),
-                    LidarRegistrarSystemComponent::CreateDescriptor(),
-                    ROS2RobotImporterSystemComponent::CreateDescriptor(),
-                    ROS2ImuSensorComponent::CreateDescriptor(),
-                    ROS2GNSSSensorComponent::CreateDescriptor(),
-                    ROS2LidarSensorComponent::CreateDescriptor(),
-                    ROS2Lidar2DSensorComponent::CreateDescriptor(),
-                    ROS2OdometrySensorComponent::CreateDescriptor(),
-                    ROS2WheelOdometryComponent::CreateDescriptor(),
-                    ROS2FrameComponent::CreateDescriptor(),
-                    ROS2RobotControlComponent::CreateDescriptor(),
-                    ROS2CameraSensorComponent::CreateDescriptor(),
-                    AckermannControlComponent::CreateDescriptor(),
-                    RigidBodyTwistControlComponent::CreateDescriptor(),
-                    SkidSteeringControlComponent::CreateDescriptor(),
-                    ROS2CameraSensorComponent::CreateDescriptor(),
-                    ROS2SpawnerComponent::CreateDescriptor(),
-                    ROS2SpawnPointComponent::CreateDescriptor(),
-                    VehicleDynamics::AckermannVehicleModelComponent::CreateDescriptor(),
-                    VehicleDynamics::WheelControllerComponent::CreateDescriptor(),
-                    VehicleDynamics::SkidSteeringModelComponent::CreateDescriptor(),
-                    JointMotorControllerComponent::CreateDescriptor(),
-                    ManualMotorControllerComponent::CreateDescriptor(),
-                    JointsManipulationComponent::CreateDescriptor(),
-                    JointsArticulationControllerComponent::CreateDescriptor(),
-                    JointsPIDControllerComponent::CreateDescriptor(),
-                    JointsTrajectoryComponent::CreateDescriptor(),
-                    PidMotorControllerComponent::CreateDescriptor(),
-                    GripperActionServerComponent::CreateDescriptor(),
-                    VacuumGripperComponent::CreateDescriptor(),
-                    FingerGripperComponent::CreateDescriptor(),
-                    ROS2ContactSensorComponent::CreateDescriptor(),
+                { ROS2SystemComponent::CreateDescriptor(),
+                  ROS2SensorComponentBase<TickBasedSource>::CreateDescriptor(),
+                  ROS2SensorComponentBase<PhysicsBasedSource>::CreateDescriptor(),
+                  LidarRegistrarSystemComponent::CreateDescriptor(),
+                  ROS2RobotImporterSystemComponent::CreateDescriptor(),
+                  ROS2ImuSensorComponent::CreateDescriptor(),
+                  ROS2GNSSSensorComponent::CreateDescriptor(),
+                  ROS2LidarSensorComponent::CreateDescriptor(),
+                  ROS2Lidar2DSensorComponent::CreateDescriptor(),
+                  ROS2OdometrySensorComponent::CreateDescriptor(),
+                  ROS2WheelOdometryComponent::CreateDescriptor(),
+                  ROS2FrameComponent::CreateDescriptor(),
+                  ROS2RobotControlComponent::CreateDescriptor(),
+                  ROS2CameraSensorComponent::CreateDescriptor(),
+                  AckermannControlComponent::CreateDescriptor(),
+                  RigidBodyTwistControlComponent::CreateDescriptor(),
+                  SkidSteeringControlComponent::CreateDescriptor(),
+                  ROS2CameraSensorComponent::CreateDescriptor(),
+                  ROS2SpawnerComponent::CreateDescriptor(),
+                  ROS2SpawnPointComponent::CreateDescriptor(),
+                  VehicleDynamics::AckermannVehicleModelComponent::CreateDescriptor(),
+                  VehicleDynamics::WheelControllerComponent::CreateDescriptor(),
+                  VehicleDynamics::SkidSteeringModelComponent::CreateDescriptor(),
+                  JointMotorControllerComponent::CreateDescriptor(),
+                  ManualMotorControllerComponent::CreateDescriptor(),
+                  JointsManipulationComponent::CreateDescriptor(),
+                  JointsArticulationControllerComponent::CreateDescriptor(),
+                  JointsPIDControllerComponent::CreateDescriptor(),
+                  JointsTrajectoryComponent::CreateDescriptor(),
+                  PidMotorControllerComponent::CreateDescriptor(),
+                  GripperActionServerComponent::CreateDescriptor(),
+                  VacuumGripperComponent::CreateDescriptor(),
+                  FingerGripperComponent::CreateDescriptor(),
+                  ROS2ContactSensorComponent::CreateDescriptor()
                 });
         }
 

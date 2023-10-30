@@ -6,41 +6,25 @@
  *
  */
 
-#include "AzCore/Component/ComponentApplicationBus.h"
-#include "AzCore/Component/EntityBus.h"
-#include "AzCore/Component/EntityId.h"
-#include "ROS2/Frame/ROS2FrameBus.h"
-#include "ROS2/Frame/ROS2FrameComponent.h"
-#include "ROS2/Frame/ROS2FrameSystemBus.h"
-#include "ROS2/Frame/ROS2FrameSystemComponent.h"
+#include <AzCore/Component/ComponentApplicationBus.h>
 #include <AzCore/Component/Entity.h>
+#include <AzCore/Component/EntityBus.h>
+#include <AzCore/Component/EntityId.h>
 #include <AzCore/Component/EntityUtils.h>
 #include <AzCore/Serialization/EditContext.h>
 #include <AzCore/Serialization/EditContextConstants.inl>
 #include <AzCore/Serialization/SerializeContext.h>
 #include <AzToolsFramework/UI/PropertyEditor/PropertyEditorAPI.h>
+#include <ROS2/Frame/ROS2FrameBus.h>
+#include <ROS2/Frame/ROS2FrameComponent.h>
 #include <ROS2/Frame/ROS2FrameEditorComponent.h>
+#include <ROS2/Frame/ROS2FrameSystemBus.h>
 #include <ROS2/ROS2Bus.h>
 #include <ROS2/ROS2GemUtilities.h>
 #include <ROS2/Utilities/ROS2Names.h>
 
 namespace ROS2
 {
-    // namespace Internal
-    // {
-    //     AZ::TransformInterface* GetEntityTransformInterface(const AZ::Entity* entity)
-    //     {
-    //         if (!entity)
-    //         {
-    //             AZ_Error("GetEntityTransformInterface", false, "Invalid entity!");
-    //             return nullptr;
-    //         }
-
-    //         auto* interface = Utils::GetGameOrEditorComponent<AzFramework::TransformComponent>(entity);
-
-    //         return interface;
-    //     }
-    // }; // namespace Internal
 
     void ROS2FrameEditorComponent::Activate()
     {
@@ -66,21 +50,6 @@ namespace ROS2
         return ROS2FrameSystemInterface::Get()->IsTopLevel(GetEntityId());
     }
 
-    // AZStd::string ROS2FrameEditorComponent::GetParentFrameID() const
-    // {
-    //     AZ::EntityId parentEntityId = ROS2FrameSystemInterface::Get()->GetParentEntityId(GetEntityId());
-    //     if (parentEntityId.IsValid())
-    //     {
-    //         AZStd::string parentFrameId;
-    //         ROS2FrameComponentBus::EventResult(parentEntityId, parentEntityId, &ROS2FrameComponentBus::Events::GetFrameID);
-    //         return parentFrameId;
-    //     }
-    //     else
-    //     {
-    //         return GetGlobalFrameName();
-    //     }
-    // }
-
     AZStd::string ROS2FrameEditorComponent::GetFrameID() const
     {
         return ROS2Names::GetNamespacedName(GetNamespace(), m_configuration.m_frameName);
@@ -96,7 +65,7 @@ namespace ROS2
         return m_configuration.m_namespaceConfiguration.GetNamespace();
     }
 
-    void ROS2FrameEditorComponent::UpdateParentsNamespace(AZStd::string parentsNamespace)
+    void ROS2FrameEditorComponent::OnNamespaceChange(AZStd::string parentsNamespace)
     {
         m_configuration.m_namespaceConfiguration.SetParentsNamespace(parentsNamespace);
         m_configuration.m_namespaceConfiguration.PopulateNamespace(IsTopLevel(), GetEntity()->GetName());
@@ -105,6 +74,8 @@ namespace ROS2
             GetEntityId(),
             &AzToolsFramework::PropertyEditorEntityChangeNotificationBus::Events::OnEntityComponentPropertyChanged,
             GetEntity()->FindComponent<ROS2FrameEditorComponent>()->GetId());
+
+        ROS2FrameComponentNotificaionBus::Event(GetEntityId(), &ROS2FrameComponentNotificaionBus::Events::OnConfigurationChange);
     }
 
     void ROS2FrameEditorComponent::UpdateNamespaceConfiguration(const AZStd::string& ns, NamespaceConfiguration::NamespaceStrategy strategy)
@@ -124,7 +95,6 @@ namespace ROS2
 
     void ROS2FrameEditorComponent::Reflect(AZ::ReflectContext* context)
     {
-        // NamespaceConfiguration::Reflect(context);
         if (AZ::SerializeContext* serialize = azrtti_cast<AZ::SerializeContext*>(context))
         {
             serialize->Class<ROS2FrameEditorComponent>()->Version(1)->Field(
