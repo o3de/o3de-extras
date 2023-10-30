@@ -1,14 +1,19 @@
-# ROS2  Robotic Manipulation Template
+# ROS 2 Robotic Manipulation Template
 
 This project is a template designed to help you quickly start simulating robotic arms in Open 3D Engine (O3DE) with Robot Operating System (ROS) 2.
 
 This template focuses on robotic arm manipulation with ROS 2 and [MoveIt 2](https://moveit.picknik.ai/main/index.html).
 
+To learn about other robotic templates, please refer to documentation of  
+[Robotic templates](https://development--o3deorg.netlify.app/docs/user-guide/interactivity/robotics/overview/#templates).
+
+To understand how the manipulation feature works in O3DE, please refer to [Joints Manipulation Documentation](https://development--o3deorg.netlify.app/docs/user-guide/interactivity/robotics/joints-manipulation/).
+
 ## Prerequisites 
 
 Make sure that your system meets [Requirements](https://development--o3deorg.netlify.app/docs/welcome-guide/requirements/).
 
-Install ROS2 dependencies for this template:
+Install ROS 2 dependencies for this template:
 ```bash
 sudo apt install ros-${ROS_DISTRO}-moveit ros-${ROS_DISTRO}-moveit-resources ros-${ROS_DISTRO}-depth-image-proc
 ```
@@ -78,7 +83,7 @@ ros2 launch ur_moveit_config ur_moveit.launch.py ur_type:=ur10 use_sim_time:=tru
 ## Working with custom manipulator
 
 ### Robot importing 
-Import a robot using URDF or XACRO into O3DE using the provided [tutorial](https://docs.o3de.org/docs/user-guide/interactivity/robotics/importing-robot/).  
+Import a robot using URDF, XACRO or SDFormat into O3DE using the provided [tutorial](https://docs.o3de.org/docs/user-guide/interactivity/robotics/importing-robot/).  
 During importing check the ```Use articulation for joints and rigid bodies``` on the last page of the importer.
 
 ### Configuring the robot
