@@ -1,6 +1,6 @@
 # O3DE ROS 2 Gem
 
-With the ROS 2 Gem you can develop robotic simulations with [ROS (Robot Operating System) 2](https://www.ros.org/) in [Open 3D Engine (O3DE)](https:://o3de.org).
+With the ROS 2 Gem you can develop robotic simulations with [ROS (Robot Operating System) 2](https://www.ros.org/) in [Open 3D Engine (O3DE)](https://o3de.org).
 
 ### Platform
 The Gem is tested with ROS 2 Humble and Iron on Ubuntu 22.04. ROS 2 Jazzy support will be available on distro release day. 
