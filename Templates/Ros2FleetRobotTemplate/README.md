@@ -5,8 +5,10 @@ This project is a template designed to help you quickly start simulating robots 
 
 This template focuses on use-cases with multiple robots in environments such as warehouses and fulfillment centers.
 The warehouse assets used in the template are modular and well-suited for reconfiguration to match a custom warehouse.
-If your simulation does not match this and you would like to start with a simple and versatile template, consider using a more generic template:
-- [ROS 2 Project Template](https://github.com/o3de/o3de-extras/tree/development/Templates/Ros2ProjectTemplate).
+
+To learn about other robotic templates, please refer to documentation of  
+[Robotic templates](https://development--o3deorg.netlify.app/docs/user-guide/interactivity/robotics/overview/#templates).
+
 
 ![Template picture](Screenshots/fleet_template.png)
 
@@ -102,9 +104,9 @@ To understand more about transformations, see ROS 2 navigation [documentation](h
 ## Using your robots in the simulation
 
 You can also use your robots in the simulation. To do so, you need to:
-- [import a robot](https://docs.o3de.org/docs/user-guide/interactivity/robotics/importing-robot/) from existing URDF file,
+- [import a robot](https://docs.o3de.org/docs/user-guide/interactivity/robotics/importing-robot/) from URDF or SDFormat file,
   - or create a robot from scratch in a O3DE editor using ROS 2 gem components (see [Frames](https://docs.o3de.org/docs/user-guide/interactivity/robotics/concepts-and-components-overview)),
-- make sure that your robot has a 2D scanner attached 
+- make sure that your robot has a 2D lidar attached 
   - and publishes scans on `scan` topic (see [Sensors](https://docs.o3de.org/docs/user-guide/interactivity/robotics/concepts-and-components-overview/#robot-control)),
 - is controlled via the `cmd_vel` topic (see [Robot Control](https://docs.o3de.org/docs/user-guide/interactivity/robotics/concepts-and-components-overview/#robot-control)).
 
@@ -158,6 +160,6 @@ cd Examples/ros2_ws
 ros2 launch o3de_fleet_nav o3de_fleet_nav_launch.py
 ```
 
-Few RViz2 windows should appear. You can use the "Nav2 Goal" button to send goal to the robot.
+Several RViz2 windows should appear. You can use the "Nav2 Goal" button to send goal to the robot.
 
 ![RViz2](Screenshots/fleet_rviz.png)
