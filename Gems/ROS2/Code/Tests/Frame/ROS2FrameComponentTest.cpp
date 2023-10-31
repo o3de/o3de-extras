@@ -88,7 +88,7 @@ namespace UnitTest
 
         AZ::Entity entity;
         const std::string entityName = entity.GetName().c_str();
-        entity.CreateComponent<AzToolsFramework::Components::TransformComponent>();
+        entity.CreateComponent<AzFramework::TransformComponent>();
         auto frame = entity.CreateComponent<ROS2::ROS2FrameComponent>(config);
 
         entity.Init();
@@ -118,7 +118,7 @@ namespace UnitTest
 
         for (int i = 0; i < numOfEntities; i++)
         {
-            entities[i]->CreateComponent<AzToolsFramework::Components::TransformComponent>();
+            entities[i]->CreateComponent<AzFramework::TransformComponent>();
             entities[i]->SetName(("entity" + std::to_string(i)).c_str());
             entities[i]->Init();
             entities[i]->Activate();
