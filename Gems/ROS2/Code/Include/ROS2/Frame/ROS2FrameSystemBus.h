@@ -25,33 +25,33 @@ namespace ROS2
         //! Registers the ROS2FrameEditorComponent into the system. All ROS2FrameEditorComponents should
         //! register using this function during activation
         //! @param frameEntityId entityId containing the frame to register.
-        virtual void RegisterFrame(AZ::EntityId frameEntityId) = 0;
+        virtual void RegisterFrame(const AZ::EntityId& frameEntityId) = 0;
 
         //! Unregister the ROS2FrameEditorComponent into the system. All ROS2FrameEditorComponents should
         //! unregister using this function during deactivation.
         //! @param frameEntityId entityId containing the frame to unregister.
-        virtual void UnregisterFrame(AZ::EntityId frameEntityId) = 0;
+        virtual void UnregisterFrame(const AZ::EntityId& frameEntityId) = 0;
 
         //! Move the frame in the entity tree.
         //! Moves the frame entity and updates all namespaces.
         //! @param frameEntityId entityId of the frame to move.
         //! @param newParent entityId of the new parent of the moved frame (does not need to be a entity
         //! containing a frame component).
-        virtual void MoveFrame(AZ::EntityId frameEntityId, AZ::EntityId newParent) = 0;
+        virtual void MoveFrame(const AZ::EntityId& frameEntityId, const AZ::EntityId& newParent) = 0;
 
         //! Notify the system entity about frames configuration change.
         //! @param frameEntityId entityId of the frame components entity that has changed its configuration.
-        virtual void NotifyChange(AZ::EntityId frameEntityId) = 0;
+        virtual void NotifyChange(const AZ::EntityId& frameEntityId) = 0;
 
         //! Check if the frame is the highest frame in the entity tree.
         //! @param frameEntityId entityId of the frame to check.
         //! @return boolean value of the check. True for top level.
-        virtual bool IsTopLevel(AZ::EntityId frameEntityId) const = 0;
+        virtual bool IsTopLevel(const AZ::EntityId& frameEntityId) const = 0;
 
         //! Find the parent frame of the entity.
         //! @param frameEntityId entityId of the frame to check.
         //! @return entityId of the parent frame or an invalid entityId if the frame is top level.
-        virtual AZ::EntityId GetParentEntityId(AZ::EntityId frameEntityId) const = 0;
+        virtual AZ::EntityId GetParentEntityId(const AZ::EntityId& frameEntityId) const = 0;
     };
 
     class ROS2FrameSystemBusTraits : public AZ::EBusTraits

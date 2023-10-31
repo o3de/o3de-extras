@@ -32,11 +32,11 @@ namespace ROS2
 
         //! Add a frame entity which should be notified about a change in the tree.
         //! @param frameEntityId frame to notify.
-        void AddFrameEntity(const AZ::EntityId& frameEntityId);
+        void AddFrameEntity(AZ::EntityId frameEntityId);
 
         //! Remove a frame entity which shouldn't be notified about a change in the tree.
         //! @param frameEntityId frame to remove.
-        void RemoveFrameEntity(const AZ::EntityId& frameEntityId);
+        void RemoveFrameEntity(AZ::EntityId frameEntityId);
 
         //! Get size of the m_frameEntities.
         //! @return size of the m_frameEntities.
@@ -54,17 +54,17 @@ namespace ROS2
         AZ_COMPONENT(ROS2FrameSystemComponent, "{360c4b45-ac02-42d2-9e1a-1d77eb22a054}");
         static void Reflect(AZ::ReflectContext* context);
 
+        // AZ::Component overrides.
         void Activate() override;
         void Deactivate() override;
 
-        void RegisterFrame(AZ::EntityId frameEntityId) override;
-        void UnregisterFrame(AZ::EntityId frameEntityId) override;
-        void MoveFrame(AZ::EntityId frameEntityId, AZ::EntityId newParent) override;
-
-        void NotifyChange(AZ::EntityId frameEntityId) override;
-
-        bool IsTopLevel(AZ::EntityId frameEntityId) const override;
-        AZ::EntityId GetParentEntityId(AZ::EntityId frameEntityId) const override;
+        // ROS2FrameSystemInterface::Registrar overrides.
+        void RegisterFrame(const AZ::EntityId& frameEntityId) override;
+        void UnregisterFrame(const AZ::EntityId& frameEntityId) override;
+        void MoveFrame(const AZ::EntityId& frameEntityId, const AZ::EntityId& newParent) override;
+        void NotifyChange(const AZ::EntityId& frameEntityId) override;
+        bool IsTopLevel(const AZ::EntityId& frameEntityId) const override;
+        AZ::EntityId GetParentEntityId(const AZ::EntityId& frameEntityId) const override;
 
         ROS2FrameSystemComponent();
 
@@ -73,6 +73,7 @@ namespace ROS2
     private:
         //! Finds a path from the frame to its parent. If there isn't a frame parent the top level entity will be a parent.
         AZStd::vector<AZ::EntityId> FindFrameParentPath(AZ::EntityId frameEntityId);
+
         AZ::TransformInterface* GetEntityTransformInterface(const AZ::Entity* entity);
 
         //! Updates the namespaces of all children of the frameEntity.

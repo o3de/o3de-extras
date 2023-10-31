@@ -31,8 +31,6 @@ namespace ROS2
         AZ_COMPONENT(ROS2FrameComponent, "{EE743472-3E25-41EA-961B-14096AC1D66F}");
 
         ROS2FrameComponent();
-        //! Initialize to a specific frame id
-        ROS2FrameComponent(const AZStd::string& frameId);
         ROS2FrameComponent(const ROS2FrameConfiguration& configuration);
 
         //////////////////////////////////////////////////////////////////////////

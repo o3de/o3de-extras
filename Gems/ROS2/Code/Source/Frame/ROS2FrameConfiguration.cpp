@@ -52,4 +52,9 @@ namespace ROS2
         }
     }
 
+    void ROS2FrameConfiguration::SetEffectiveNamespace(const AZStd::string& effectiveNamespace)
+    {
+        m_effectiveNamespace = effectiveNamespace;
+    }
+
 } // namespace ROS2

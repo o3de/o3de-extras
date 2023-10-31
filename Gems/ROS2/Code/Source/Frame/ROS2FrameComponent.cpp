@@ -245,11 +245,6 @@ namespace ROS2
 
     ROS2FrameComponent::ROS2FrameComponent() = default;
 
-    ROS2FrameComponent::ROS2FrameComponent(const AZStd::string& frameId)
-    {
-        m_configuration.m_frameName = frameId;
-    }
-
     ROS2FrameComponent::ROS2FrameComponent(const ROS2FrameConfiguration& configuration) {
         m_configuration = configuration;
     }

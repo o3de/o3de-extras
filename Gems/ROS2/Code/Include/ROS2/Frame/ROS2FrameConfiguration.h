@@ -26,10 +26,13 @@ namespace ROS2
         AZStd::string m_frameName = "sensor_frame";
         AZStd::string m_jointNameString;
 
-        AZStd::string m_effectiveNamespace = "";
-
         bool m_publishTransform = true;
         bool m_isDynamic = false;
+
+        void SetEffectiveNamespace(const AZStd::string& effectiveNamespace);
+
+    private:
+        AZStd::string m_effectiveNamespace = "";
     };
 
 } // namespace ROS2

@@ -69,7 +69,7 @@ namespace ROS2
     {
         m_configuration.m_namespaceConfiguration.SetParentsNamespace(parentsNamespace);
         m_configuration.m_namespaceConfiguration.PopulateNamespace(IsTopLevel(), GetEntity()->GetName());
-        m_configuration.m_effectiveNamespace = GetNamespace();
+        m_configuration.SetEffectiveNamespace(GetNamespace());
         AzToolsFramework::PropertyEditorEntityChangeNotificationBus::Event(
             GetEntityId(),
             &AzToolsFramework::PropertyEditorEntityChangeNotificationBus::Events::OnEntityComponentPropertyChanged,
@@ -78,7 +78,8 @@ namespace ROS2
         ROS2FrameComponentNotificaionBus::Event(GetEntityId(), &ROS2FrameComponentNotificaionBus::Events::OnConfigurationChange);
     }
 
-    void ROS2FrameEditorComponent::UpdateNamespaceConfiguration(const AZStd::string& ns, NamespaceConfiguration::NamespaceStrategy strategy)
+    void ROS2FrameEditorComponent::UpdateNamespaceConfiguration(
+        const AZStd::string& ns, const NamespaceConfiguration::NamespaceStrategy& strategy)
     {
         m_configuration.m_namespaceConfiguration.SetNamespace(ns, strategy);
     }
@@ -108,12 +109,12 @@ namespace ROS2
                     ->Attribute(AZ::Edit::Attributes::Category, "ROS2")
                     ->Attribute(AZ::Edit::Attributes::Icon, "Editor/Icons/Components/ROS2Frame.svg")
                     ->Attribute(AZ::Edit::Attributes::ViewportIcon, "Editor/Icons/Components/Viewport/ROS2Frame.svg")
-                    ->Attribute(AZ::Edit::Attributes::Visibility, AZ::Edit::PropertyVisibility::ShowChildrenOnly)
                     ->DataElement(
                         AZ::Edit::UIHandlers::Default,
                         &ROS2FrameEditorComponent::m_configuration,
                         "ROS2Frame Configuration",
                         "ROS2Frame Configuration")
+                    ->Attribute(AZ::Edit::Attributes::Visibility, AZ::Edit::PropertyVisibility::ShowChildrenOnly)
                     ->Attribute(AZ::Edit::Attributes::ChangeNotify, &ROS2FrameEditorComponent::OnConfigurationChange)
                     ->Attribute(AZ::Edit::Attributes::ChangeNotify, AZ::Edit::PropertyRefreshLevels::AttributesAndValues);
             }

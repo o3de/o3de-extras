@@ -30,14 +30,14 @@ namespace ROS2
         }
     }
 
-    void ROS2FrameSystemTransformHandler::AddFrameEntity(const AZ::EntityId& frameEntityId)
+    void ROS2FrameSystemTransformHandler::AddFrameEntity(AZ::EntityId frameEntityId)
     {
         if (!m_frameEntities.contains(frameEntityId))
         {
             m_frameEntities.insert(frameEntityId);
         }
     }
-    void ROS2FrameSystemTransformHandler::RemoveFrameEntity(const AZ::EntityId& frameEntityId)
+    void ROS2FrameSystemTransformHandler::RemoveFrameEntity(AZ::EntityId frameEntityId)
     {
         if (m_frameEntities.contains(frameEntityId))
         {
@@ -95,7 +95,7 @@ namespace ROS2
         return interface;
     }
 
-    bool ROS2FrameSystemComponent::IsTopLevel(AZ::EntityId frameEntityId) const
+    bool ROS2FrameSystemComponent::IsTopLevel(const AZ::EntityId& frameEntityId) const
     {
         if (m_frameParent.contains(frameEntityId))
         {
@@ -106,7 +106,7 @@ namespace ROS2
         return false;
     }
 
-    AZ::EntityId ROS2FrameSystemComponent::GetParentEntityId(AZ::EntityId frameEntityId) const
+    AZ::EntityId ROS2FrameSystemComponent::GetParentEntityId(const AZ::EntityId& frameEntityId) const
     {
         if (m_frameParent.contains(frameEntityId))
         {
@@ -154,7 +154,7 @@ namespace ROS2
         return path;
     }
 
-    void ROS2FrameSystemComponent::RegisterFrame(AZ::EntityId frameToRegister)
+    void ROS2FrameSystemComponent::RegisterFrame(const AZ::EntityId& frameToRegister)
     {
         // Check if the frame is valid and if it's already registered;
         if (!frameToRegister.IsValid() || m_frameParent.contains(frameToRegister))
@@ -248,7 +248,7 @@ namespace ROS2
         UpdateNamespaces(frameToRegister, ns);
     }
 
-    void ROS2FrameSystemComponent::UnregisterFrame(AZ::EntityId frameToUnregister)
+    void ROS2FrameSystemComponent::UnregisterFrame(const AZ::EntityId& frameToUnregister)
     {
         // Check if the frame is already unregistered and valid
         if (!frameToUnregister.IsValid() || !m_frameParent.contains(frameToUnregister))
@@ -318,7 +318,7 @@ namespace ROS2
         }
     }
 
-    void ROS2FrameSystemComponent::MoveFrame(AZ::EntityId frameEntityId, AZ::EntityId newParent)
+    void ROS2FrameSystemComponent::MoveFrame(const AZ::EntityId& frameEntityId, const AZ::EntityId& newParent)
     {
         // Check if the frame is already registered and valid
         if (!frameEntityId.IsValid() || !m_frameParent.contains(frameEntityId))
@@ -415,7 +415,7 @@ namespace ROS2
         }
     }
 
-    void ROS2FrameSystemComponent::NotifyChange(AZ::EntityId frameEntityId)
+    void ROS2FrameSystemComponent::NotifyChange(const AZ::EntityId& frameEntityId)
     {
         if (frameEntityId.IsValid() && m_frameParent.contains(frameEntityId))
         {
