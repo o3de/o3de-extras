@@ -8,6 +8,7 @@
 #pragma once
 
 #include <AzCore/Component/Component.h>
+#include <AzCore/Component/EntityId.h>
 #include <AzFramework/Components/TransformComponent.h>
 #include <AzToolsFramework/ToolsComponents/EditorComponentBase.h>
 #include <ROS2/Frame/NamespaceConfiguration.h>
@@ -67,6 +68,8 @@ namespace ROS2
         void OnNamespaceChange(AZStd::string parentsNamespace) override;
         AZStd::string GetGlobalFrameName() const override;
         bool IsTopLevel() const override; //!< True if this entity does not have a parent entity with ROS2.
+        AZ::EntityId GetFrameParent() const override;
+        AZStd::set<AZ::EntityId> GetFrameChildren() const override;
 
     private:
         AZ::Crc32 OnConfigurationChange();

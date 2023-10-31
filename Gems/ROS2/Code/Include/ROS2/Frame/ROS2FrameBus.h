@@ -7,8 +7,9 @@
  */
 #pragma once
 
-#include "AzCore/Component/ComponentBus.h"
-#include "AzCore/Component/EntityId.h"
+#include <AzCore/Component/ComponentBus.h>
+#include <AzCore/Component/EntityId.h>
+#include <AzCore/std/containers/set.h>
 #include <AzFramework/Components/TransformComponent.h>
 #include <ROS2/Frame/ROS2Transform.h>
 #include <ROS2/ROS2GemUtilities.h>
@@ -39,6 +40,14 @@ namespace ROS2
         //! Get a namespace, which should be used for any publisher or subscriber in the same entity.
         //! @return A complete namespace (including parent namespaces)
         virtual AZStd::string GetNamespace() const = 0;
+
+        //! Find the parent frame of the entity.
+        //! @return entityId of the parent frame or an invalid entityId if the frame is top level.
+        virtual AZ::EntityId GetFrameParent() const = 0;
+
+        //! Find all frame children of the frame.
+        //! @return set of all entityIds of children. Empty if no children or the frameEntityId is invalid.
+        virtual AZStd::set<AZ::EntityId> GetFrameChildren() const = 0;
 
         //! Update the parents namespace and effective namespace.
         virtual void OnNamespaceChange(AZStd::string parentsNamespace) = 0;

@@ -65,6 +65,7 @@ namespace ROS2
         void NotifyChange(const AZ::EntityId& frameEntityId) override;
         bool IsTopLevel(const AZ::EntityId& frameEntityId) const override;
         AZ::EntityId GetParentEntityId(const AZ::EntityId& frameEntityId) const override;
+        AZStd::set<AZ::EntityId> GetChildrenEntityId(const AZ::EntityId& frameEntityId) const override;
 
         ROS2FrameSystemComponent();
 

@@ -52,6 +52,11 @@ namespace ROS2
         //! @param frameEntityId entityId of the frame to check.
         //! @return entityId of the parent frame or an invalid entityId if the frame is top level.
         virtual AZ::EntityId GetParentEntityId(const AZ::EntityId& frameEntityId) const = 0;
+
+        //! Find all frame children of the frame.
+        //! @param frameEntityId entityId of the frame to check.
+        //! @return set of all entityIds of children. Empty if no children or the frameEntityId is invalid.
+        virtual AZStd::set<AZ::EntityId> GetChildrenEntityId(const AZ::EntityId& frameEntityId) const = 0;
     };
 
     class ROS2FrameSystemBusTraits : public AZ::EBusTraits

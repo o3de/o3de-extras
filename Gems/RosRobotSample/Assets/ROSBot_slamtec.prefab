@@ -665,21 +665,6 @@
                                 "Id": 17880429133386895196,
                                 "VisibilityFlag": true
                             },
-                            "ROS2FrameComponent": {
-                                "$type": "GenericComponentWrapper",
-                                "Id": 8120896383852689752,
-                                "m_template": {
-                                    "$type": "ROS2FrameComponent",
-                                    "Id": 0,
-                                    "Namespace Configuration": {
-                                        "Namespace Strategy": 0,
-                                        "Namespace": ""
-                                    },
-                                    "Frame Name": "slamtec_rplidar_s1_link",
-                                    "Joint Name": "cover_to_slamtec_rplidar_s1_joint",
-                                    "Publish Transform": true
-                                }
-                            },
                             "TransformComponent": {
                                 "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
                                 "Id": 9692259687288593691,
@@ -707,6 +692,20 @@
                                 "IsStatic": false,
                                 "InterpolatePosition": 0,
                                 "InterpolateRotation": 0
+                            },
+                            "ROS2FrameEditorComponent": {
+                                "$type": "ROS2FrameEditorComponent",
+                                "Id": 8120896383852689752,
+                                "ROS2FrameConfiguration": {
+                                    "Id": 0,
+                                    "Namespace Configuration": {
+                                        "Namespace Strategy": 0,
+                                        "Namespace": ""
+                                    },
+                                    "Frame Name": "slamtec_rplidar_s1_link",
+                                    "Joint Name": "cover_to_slamtec_rplidar_s1_joint",
+                                    "Publish Transform": true
+                                }
                             }
                         },
                         "IsRuntimeActive": true
@@ -761,21 +760,6 @@
                                 "$type": "EditorVisibilityComponent",
                                 "Id": 9118740895747240865,
                                 "VisibilityFlag": true
-                            },
-                            "ROS2FrameComponent": {
-                                "$type": "GenericComponentWrapper",
-                                "Id": 12598642067614797199,
-                                "m_template": {
-                                    "$type": "ROS2FrameComponent",
-                                    "Id": 0,
-                                    "Namespace Configuration": {
-                                        "Namespace Strategy": 0,
-                                        "Namespace": ""
-                                    },
-                                    "Frame Name": "laser",
-                                    "Joint Name": "",
-                                    "Publish Transform": true
-                                }
                             },
                             "ROS2Lidar2DSensorComponent_2": {
                                 "$type": "GenericComponentWrapper",
@@ -856,6 +840,20 @@
                                 "IsStatic": false,
                                 "InterpolatePosition": 0,
                                 "InterpolateRotation": 0
+                            },
+                            "ROS2FrameEditorComponent": {
+                                "$type": "ROS2FrameEditorComponent",
+                                "Id": 12598642067614797199,
+                                "ROS2FrameConfiguration": {
+                                    "Id": 0,
+                                    "Namespace Configuration": {
+                                        "Namespace Strategy": 0,
+                                        "Namespace": ""
+                                    },
+                                    "Frame Name": "laser",
+                                    "Joint Name": "",
+                                    "Publish Transform": true
+                                }
                             }
                         },
                         "IsRuntimeActive": true

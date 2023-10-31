@@ -426,4 +426,14 @@ namespace ROS2
         }
     }
 
+    AZStd::set<AZ::EntityId> ROS2FrameSystemComponent::GetChildrenEntityId(const AZ::EntityId& frameEntityId) const
+    {
+        if (!frameEntityId.IsValid() || !m_frameChildren.contains(frameEntityId))
+        {
+            return AZStd::set<AZ::EntityId>();
+        }
+
+        return m_frameChildren.find(frameEntityId)->second;
+    }
+
 } // namespace ROS2
