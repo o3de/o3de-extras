@@ -12,7 +12,7 @@ namespace WarehouseAutomation
     class WarehouseAutomationModule : public WarehouseAutomationModuleInterface
     {
     public:
-        AZ_RTTI(WarehouseAutomationModule, "{906B71F8-374D-4F8E-B8F2-EAFEFF863F7F}", WarehouseAutomationModuleInterface);
+        AZ_RTTI(WarehouseAutomationModule, "{E7816766-0AE9-4B3E-A9EA-F80CCE35A6D5}", WarehouseAutomationModuleInterface);
         AZ_CLASS_ALLOCATOR(WarehouseAutomationModule, AZ::SystemAllocator);
     };
 } // namespace WarehouseAutomation
