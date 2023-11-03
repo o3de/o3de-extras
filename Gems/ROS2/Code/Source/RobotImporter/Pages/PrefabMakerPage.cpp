@@ -34,9 +34,11 @@ namespace ROS2
         m_spawnPointsComboBox = new QComboBox(this);
         m_spawnPointsInfos = allActiveSpawnPoints.values;
 
-        for (int i = 0; i < allActiveSpawnPoints.values.size(); i++)
+        m_spawnPointsComboBox->addItem("default", QVariant(0));
+
+        for (int i = 1; i <= allActiveSpawnPoints.values.size(); i++)
         {
-            for (const auto& element : allActiveSpawnPoints.values[i])
+            for (const auto& element : allActiveSpawnPoints.values[i - 1])
             {
                 m_spawnPointsComboBox->addItem(element.first.c_str(), QVariant(i));
             }
@@ -96,8 +98,12 @@ namespace ROS2
         if (!m_spawnPointsInfos.empty())
         {
             int vectorIndex = m_spawnPointsComboBox->currentData().toInt();
+            if (vectorIndex == 0)
+            {
+                return AZStd::nullopt;
+            }
             AZStd::string mapKey(m_spawnPointsComboBox->currentText().toStdString().c_str());
-            auto& map = m_spawnPointsInfos[vectorIndex];
+            auto& map = m_spawnPointsInfos[vectorIndex - 1];
             if (auto spawnInfo = map.find(mapKey);
                 spawnInfo != map.end())
             {
