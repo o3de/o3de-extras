@@ -137,8 +137,9 @@ namespace ROS2
             nextEntityId = currentTransform->GetParentId();
             AZ::Entity* parent = nullptr;
             AZ::ComponentApplicationBus::BroadcastResult(parent, &AZ::ComponentApplicationRequests::FindEntity, nextEntityId);
-            if (parent == nullptr)
+            if (parent == nullptr || !nextEntityId.IsValid())
             { // Found top of the level
+                path.push_back(nextEntityId);
                 return path;
             }
             if (ROS2FrameComponentBus::HasHandlers(nextEntityId))
