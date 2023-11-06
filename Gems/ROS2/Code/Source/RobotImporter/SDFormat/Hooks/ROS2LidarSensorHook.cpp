@@ -82,10 +82,13 @@ namespace ROS2::SDFormat
                 }
             }
 
-            AZ_Warning("ROS2LidarSensorHook", !lidarConfiguration.m_lidarSystem.empty(), "Lidar System not set.");
-            if (sdfSensor.Type() == sdf::SensorType::GPU_LIDAR)
+            if (lidarConfiguration.m_lidarSystem.empty())
             {
-                AZ_Info("ROS2LidarSensorHook", "Enable RGL Gem to import GPU Lidar.");
+                AZ_Warning("ROS2LidarSensorHook", false, "Lidar System in imported robot not set.");
+                AZ_Warning(
+                    "ROS2LidarSensorHook",
+                    sdfSensor.Type() != sdf::SensorType::GPU_LIDAR,
+                    "GPU Lidar requires RGL Gem, see https://github.com/RobotecAI/o3de-rgl-gem for more details.\n");
             }
 
             // Create required components
