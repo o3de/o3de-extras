@@ -61,6 +61,7 @@ namespace ROS2
         //////////////////////////////////////////////////////////////////////////
         // ROS2RequestBus::Handler overrides
         std::shared_ptr<rclcpp::Node> GetNode() const override;
+        void ConnectOnNodeChanged(NodeChangedEvent::Handler& handler) override;
         builtin_interfaces::msg::Time GetROSTimestamp() const override;
         void BroadcastTransform(const geometry_msgs::msg::TransformStamped& t, bool isDynamic) override;
         const SimulationClock& GetSimulationClock() const override;
@@ -90,6 +91,7 @@ namespace ROS2
         AZStd::unique_ptr<tf2_ros::TransformBroadcaster> m_dynamicTFBroadcaster;
         AZStd::unique_ptr<tf2_ros::StaticTransformBroadcaster> m_staticTFBroadcaster;
         AZStd::unique_ptr<SimulationClock> m_simulationClock;
+        NodeChangedEvent m_nodeChangedEvent;
         //! Load the pass templates of the ROS2 gem.
         void LoadPassTemplateMappings();
         AZ::RPI::PassSystemInterface::OnReadyLoadTemplatesEvent::Handler m_loadTemplatesHandler;
