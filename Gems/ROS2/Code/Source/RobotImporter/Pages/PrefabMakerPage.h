@@ -41,6 +41,10 @@ namespace ROS2
         void onCreateButtonPressed();
 
     private:
+        static bool IsZeroPoint(AZStd::string spawnPointName, int data);
+
+        static constexpr AZStd::string_view zeroPoint = "Simulation origin";
+
         bool m_success;
         QLineEdit* m_prefabName;
         QPushButton* m_createButton;

@@ -46,7 +46,7 @@ namespace ROS2
     AZStd::unordered_map<AZStd::string, SpawnPointInfo> ROS2SpawnerEditorComponent::GetSpawnPoints() const
     {
         AZStd::unordered_map<AZStd::string, SpawnPointInfo> result;
-        result[GetEntity()->GetName() + "-default"] =
+        result[GetEntity()->GetName() + " - default"] =
             SpawnPointInfo{ "Default spawn pose defined in the Editor", m_controller.GetDefaultSpawnPose() };
 
         AZStd::vector<AZ::EntityId> children;

@@ -34,13 +34,14 @@ namespace ROS2
         m_spawnPointsComboBox = new QComboBox(this);
         m_spawnPointsInfos = allActiveSpawnPoints.values;
 
-        m_spawnPointsComboBox->addItem("default", QVariant(0));
+        m_spawnPointsComboBox->addItem(zeroPoint.data(), QVariant(0));
 
-        for (int i = 1; i <= allActiveSpawnPoints.values.size(); i++)
+        for (int i = 0; i < allActiveSpawnPoints.values.size(); i++)
         {
-            for (const auto& element : allActiveSpawnPoints.values[i - 1])
+            for (const auto& element : allActiveSpawnPoints.values[i])
             {
-                m_spawnPointsComboBox->addItem(element.first.c_str(), QVariant(i));
+                // The index of the element is increased by one due to the zero point having the index 0.
+                m_spawnPointsComboBox->addItem(element.first.c_str(), QVariant(i + 1));
             }
         }
 
@@ -98,18 +99,22 @@ namespace ROS2
         if (!m_spawnPointsInfos.empty())
         {
             int vectorIndex = m_spawnPointsComboBox->currentData().toInt();
-            if (vectorIndex == 0)
+            AZStd::string spawnPointName(m_spawnPointsComboBox->currentText().toStdString().c_str());
+            if (IsZeroPoint(spawnPointName, vectorIndex))
             {
                 return AZStd::nullopt;
             }
-            AZStd::string mapKey(m_spawnPointsComboBox->currentText().toStdString().c_str());
             auto& map = m_spawnPointsInfos[vectorIndex - 1];
-            if (auto spawnInfo = map.find(mapKey);
-                spawnInfo != map.end())
+            if (auto spawnInfo = map.find(spawnPointName); spawnInfo != map.end())
             {
                 return spawnInfo->second.pose;
             }
         }
         return AZStd::nullopt;
+    }
+
+    bool PrefabMakerPage::IsZeroPoint(AZStd::string spawnPointName, int data)
+    {
+        return data == 0 && spawnPointName == PrefabMakerPage::zeroPoint;
     }
 } // namespace ROS2
