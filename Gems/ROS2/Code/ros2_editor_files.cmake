@@ -8,6 +8,8 @@ set(FILES
     ../Assets/Editor/Images/Icons/ROS_import_icon.svg
     Source/Camera/ROS2CameraSensorEditorComponent.cpp
     Source/Camera/ROS2CameraSensorEditorComponent.h
+    Source/Georeference/GeoreferenceLevelEditorComponent.cpp
+    Source/Georeference/GeoreferenceLevelEditorComponent.h
     Source/Lidar/LidarRegistrarEditorSystemComponent.cpp
     Source/Lidar/LidarRegistrarEditorSystemComponent.h
     Source/Manipulation/JointsManipulationEditorComponent.cpp
