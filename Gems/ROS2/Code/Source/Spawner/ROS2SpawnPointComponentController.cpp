@@ -50,8 +50,8 @@ namespace ROS2
                 editContext
                     ->Class<ROS2SpawnPointComponentController>("ROS2SpawnPointController", "Controller for the ROS2 Spawn Point Component")
                     ->ClassElement(AZ::Edit::ClassElements::EditorData, "")
-                    ->Attribute(AZ::Edit::Attributes::Visibility, AZ::Edit::PropertyVisibility::ShowChildrenOnly)
-                    ->DataElement(AZ::Edit::UIHandlers::Default, &ROS2SpawnPointComponentController::m_config);
+                    ->DataElement(AZ::Edit::UIHandlers::Default, &ROS2SpawnPointComponentController::m_config)
+                    ->Attribute(AZ::Edit::Attributes::Visibility, AZ::Edit::PropertyVisibility::ShowChildrenOnly);
             }
         }
     }
