@@ -62,7 +62,7 @@ namespace ROS2
 
             if (editorSpawnPoint != nullptr)
             {
-                result.insert(editorSpawnPoint->GetInfo());
+                result.insert({ GetEntity()->GetName() + " - " + editorSpawnPoint->GetInfo().first, editorSpawnPoint->GetInfo().second });
             }
         }
 
