@@ -32,16 +32,15 @@ namespace ROS2
         SpawnerRequestsBus::BroadcastResult(allActiveSpawnPoints, &SpawnerRequestsBus::Events::GetAllSpawnPointInfos);
 
         m_spawnPointsComboBox = new QComboBox(this);
-        m_spawnPointsInfos = allActiveSpawnPoints.values;
 
-        m_spawnPointsComboBox->addItem(zeroPoint.data(), QVariant(0));
+        m_spawnPointsComboBox->addItem(tr(zeroPoint.data()));
 
-        for (int i = 0; i < allActiveSpawnPoints.values.size(); i++)
+        for (const auto& spawnPointMap : allActiveSpawnPoints.values)
         {
-            for (const auto& element : allActiveSpawnPoints.values[i])
+            for (const auto& spawnPoint : spawnPointMap)
             {
-                // The index of the element is increased by one due to the zero point having the index 0.
-                m_spawnPointsComboBox->addItem(element.first.c_str(), QVariant(i + 1));
+                m_spawnPointsComboBox->addItem(spawnPoint.first.c_str());
+                m_spawnPointsInfos.insert({ spawnPoint.first.c_str(), spawnPoint.second });
             }
         }
 
@@ -58,11 +57,11 @@ namespace ROS2
         QLabel* spawnPointListLabel;
         if (allActiveSpawnPoints.values.size() == 0)
         {
-            spawnPointListLabel = new QLabel("Select spawn position (No spawn positions were detected)", this);
+            spawnPointListLabel = new QLabel(tr("Select spawn position (No spawn positions were detected)"), this);
         }
         else
         {
-            spawnPointListLabel = new QLabel("Select spawn position", this);
+            spawnPointListLabel = new QLabel(tr("Select spawn position"), this);
         }
         layout->addWidget(spawnPointListLabel);
         layout->addWidget(m_spawnPointsComboBox);
@@ -98,14 +97,12 @@ namespace ROS2
     {
         if (!m_spawnPointsInfos.empty())
         {
-            int vectorIndex = m_spawnPointsComboBox->currentData().toInt();
             AZStd::string spawnPointName(m_spawnPointsComboBox->currentText().toStdString().c_str());
-            if (IsZeroPoint(spawnPointName, vectorIndex))
+            if (IsZeroPoint(spawnPointName))
             {
                 return AZStd::nullopt;
             }
-            auto& map = m_spawnPointsInfos[vectorIndex - 1];
-            if (auto spawnInfo = map.find(spawnPointName); spawnInfo != map.end())
+            if (auto spawnInfo = m_spawnPointsInfos.find(spawnPointName); spawnInfo != m_spawnPointsInfos.end())
             {
                 return spawnInfo->second.pose;
             }
@@ -113,8 +110,8 @@ namespace ROS2
         return AZStd::nullopt;
     }
 
-    bool PrefabMakerPage::IsZeroPoint(AZStd::string spawnPointName, int data)
+    bool PrefabMakerPage::IsZeroPoint(AZStd::string spawnPointName)
     {
-        return data == 0 && spawnPointName == PrefabMakerPage::zeroPoint;
+        return spawnPointName == PrefabMakerPage::zeroPoint;
     }
 } // namespace ROS2
