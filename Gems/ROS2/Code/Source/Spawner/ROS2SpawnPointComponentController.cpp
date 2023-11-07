@@ -28,9 +28,9 @@ namespace ROS2
                 editContext
                     ->Class<ROS2SpawnPointComponentConfig>("ROS2SpawnPointComponentConfig", "Config for the ROS2 Spawn Point Component")
                     ->ClassElement(AZ::Edit::ClassElements::EditorData, "Stores information about available spawn point")
-                    ->DataElement(AZ::Edit::UIHandlers::EntityId, &ROS2SpawnPointComponentConfig::m_name, "Name", "Name")
+                    ->DataElement(AZ::Edit::UIHandlers::Default, &ROS2SpawnPointComponentConfig::m_name, "Name", "Name")
                     ->DataElement(
-                        AZ::Edit::UIHandlers::EntityId, &ROS2SpawnPointComponentConfig::m_info, "Info", "Spawn point detailed description");
+                        AZ::Edit::UIHandlers::Default, &ROS2SpawnPointComponentConfig::m_info, "Info", "Spawn point detailed description");
             }
         }
     }
