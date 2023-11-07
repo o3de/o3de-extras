@@ -202,34 +202,30 @@ namespace ROS2
         }
 
         AZ::Entity* entity = AzToolsFramework::GetEntityById(entityId);
-        auto editorMeshComponent = entity->CreateComponent(AZ::Render::EditorMeshComponentTypeId);
 
-        // Prepare scale
         bool isUniformScale = AZ::IsClose(scale.GetMaxElement(), scale.GetMinElement(), AZ::Constants::FloatEpsilon);
-        if (!isUniformScale)
+        if (isUniformScale)
         {
-            entity->CreateComponent<AzToolsFramework::Components::EditorNonUniformScaleComponent>();
+            auto* transformComponent = entity->FindComponent(AZ::EditorTransformComponentTypeId);
+            AZ_Assert(transformComponent, "Entity doesn't have a transform component.");
+            auto* transformInterface = azrtti_cast<AZ::TransformInterface*>(transformComponent);
+            AZ_Assert(transformInterface, "Found component has no transformInterface");
+            transformInterface->SetLocalUniformScale(scale.GetX());
+        }
+        else
+        {
+            auto component = entity->CreateComponent<AzToolsFramework::Components::EditorNonUniformScaleComponent>();
+            AZ_Assert(component, "EditorNonUniformScaleComponent was not created");
+            component->SetScale(scale);
         }
 
+        auto editorMeshComponent = entity->CreateComponent(AZ::Render::EditorMeshComponentTypeId);
         if (editorMeshComponent)
         {
             auto editorBaseComponent = azrtti_cast<AzToolsFramework::Components::EditorComponentBase*>(editorMeshComponent);
             AZ_Assert(editorBaseComponent, "EditorMeshComponent didn't derive from EditorComponentBase.");
             editorBaseComponent->SetPrimaryAsset(assetId);
         }
-
-        entity->Activate();
-
-        // Set scale, uniform or non-uniform
-        if (isUniformScale)
-        {
-            AZ::TransformBus::Event(entityId, &AZ::TransformBus::Events::SetLocalUniformScale, scale.GetX());
-        }
-        else
-        {
-            AZ::NonUniformScaleRequestBus::Event(entityId, &AZ::NonUniformScaleRequests::SetScale, scale);
-        }
-        entity->Deactivate();
     }
 
     static void OverrideScriptMaterial(const sdf::Material* material, AZ::Render::MaterialAssignmentMap& overrides)
