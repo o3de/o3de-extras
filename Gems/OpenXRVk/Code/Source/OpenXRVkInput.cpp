@@ -14,6 +14,8 @@
 #include <OpenXRVk/OpenXRVkUtils.h>
 #include <AzCore/Casting/numeric_cast.h>
 
+#include <Atom/RPI.Public/XR/XRSpaceNotificationBus.h>
+
 namespace OpenXRVk
 {
     XR::Ptr<Input> Input::Create()
@@ -221,7 +223,6 @@ namespace OpenXRVk
     {
         const auto session = static_cast<Session*>(GetDescriptor().m_session.get());
         XrSession xrSession = session->GetXrSession();
-        const auto device = static_cast<Device*>(GetDescriptor().m_device.get());
         m_handActive = { XR_FALSE, XR_FALSE };
 
         auto& rawControllerData = m_xrControllerImpl->GetRawState();
@@ -335,6 +336,31 @@ namespace OpenXRVk
         rawControllerData.m_leftMotorVibrationValue = 0.f;
         rawControllerData.m_rightMotorVibrationValue = 0.f;
 
+        // Check if the Quit (Home) button was pressed this sync...
+        const bool quitPressed = GetButtonState(InputDeviceXRController::Button::Home);
+        if (quitPressed && !m_wasQuitPressedLastSync)
+        {
+            result = xrRequestExitSession(xrSession);
+            WARN_IF_UNSUCCESSFUL(result);
+        }
+        m_wasQuitPressedLastSync = quitPressed;
+    }
+
+
+    bool Input::UpdateXrSpaceLocations(const OpenXRVk::Device& device, XrTime predictedDisplayTime, AZStd::vector<XrView>& xrViews)
+    {
+        const auto thisDevice = static_cast<Device*>(GetDescriptor().m_device.get());
+        if (thisDevice != &device)
+        {
+            return false;
+        }
+
+        auto& rawControllerData = m_xrControllerImpl->GetRawState();
+        const auto session = static_cast<Session*>(GetDescriptor().m_session.get());
+        XrSession xrSession = session->GetXrSession();
+        XrSpace xrBaseSpaceForVisualization = session->GetXrSpace(session->GetBaseSpaceTypeForVisualization());
+        XrSpace xrBaseSpaceForJoysticks = session->GetXrSpace(session->GetBaseSpaceTypeForControllers());
+
         // Update poses
         for (const auto hand : { XR::Side::Left, XR::Side::Right })
         {
@@ -345,50 +371,77 @@ namespace OpenXRVk
             XrActionStatePose poseState{};
             poseState.type = XR_TYPE_ACTION_STATE_POSE;
 
-            result = xrGetActionStatePose(xrSession, &getInfo, &poseState);
+            XrResult result = xrGetActionStatePose(xrSession, &getInfo, &poseState);
             WARN_IF_UNSUCCESSFUL(result);
             m_handActive[static_cast<AZ::u32>(hand)] = poseState.isActive;
 
-            LocateControllerSpace(device->GetPredictedDisplayTime(), session->GetXrSpace(OpenXRVk::SpaceType::View), static_cast<AZ::u32>(hand));
+            LocateControllerSpace(predictedDisplayTime, xrBaseSpaceForJoysticks, static_cast<AZ::u32>(hand));
         }
 
         // Cache 3d location information
         for (AZ::u32 i = 0; i < static_cast<AZ::u32>(SpaceType::Count); i++)
         {
             const auto spaceType = static_cast<SpaceType>(i);
-            LocateVisualizedSpace(device->GetPredictedDisplayTime(), session->GetXrSpace(spaceType),
-                                  session->GetXrSpace(OpenXRVk::SpaceType::View), spaceType);
+            LocateVisualizedSpace(predictedDisplayTime, session->GetXrSpace(spaceType),
+                xrBaseSpaceForVisualization, spaceType);
         }
 
-        // XR to AZ vector conversion...
-        // Goes from y-up to z-up configuration (keeping Right Handed system)
-        const auto convertVector3 = [](const XrVector3f& xrVec3) -> AZ::Vector3
+        rawControllerData.m_leftPositionState = AzPositionFromXrPose(m_handSpaceLocation[static_cast<AZ::u32>(XR::Side::Left)].pose);
+        rawControllerData.m_rightPositionState = AzPositionFromXrPose(m_handSpaceLocation[static_cast<AZ::u32>(XR::Side::Right)].pose);
+
+        rawControllerData.m_leftOrientationState = AzQuaternionFromXrPose(m_handSpaceLocation[static_cast<AZ::u32>(XR::Side::Left)].pose);
+        rawControllerData.m_rightOrientationState = AzQuaternionFromXrPose(m_handSpaceLocation[static_cast<AZ::u32>(XR::Side::Right)].pose);
+
+        if (LocateEyeViews(predictedDisplayTime, xrViews))
         {
-            return AZ::Vector3{ xrVec3.x, -xrVec3.z, xrVec3.y };
-        };
+            //! Time to notify the engine that we have new poses.
+            const auto& xrSpaceLocationHeadToBase = m_xrVisualizedSpaceLocations[OpenXRVk::SpaceType::View];
+            const auto baseToHeadTm = AzTransformFromXrPose(xrSpaceLocationHeadToBase.pose);
+            const auto headToLeftEyeTm = AzTransformFromXrPose(xrViews[0].pose);
+            const auto headToRightEyeTm = AzTransformFromXrPose(xrViews[1].pose);
 
-        // XR to AZ quaternion conversion...
-        // Goes from y-up to z-up configuration (keeping Right Handed system)
-        const auto convertQuat = [](const XrQuaternionf& xrQuat) -> AZ::Quaternion
-        {
-            return AZ::Quaternion{ xrQuat.x, -xrQuat.z, xrQuat.y, xrQuat.w };
-        };
-
-        rawControllerData.m_leftPositionState = convertVector3(m_handSpaceLocation[static_cast<AZ::u32>(XR::Side::Left)].pose.position);
-        rawControllerData.m_rightPositionState = convertVector3(m_handSpaceLocation[static_cast<AZ::u32>(XR::Side::Right)].pose.position);
-
-        rawControllerData.m_leftOrientationState = convertQuat(m_handSpaceLocation[static_cast<AZ::u32>(XR::Side::Left)].pose.orientation);
-        rawControllerData.m_rightOrientationState = convertQuat(m_handSpaceLocation[static_cast<AZ::u32>(XR::Side::Right)].pose.orientation);
-
-        // Check if the Quit (Home) button was pressed this sync...
-        const bool quitPressed = GetButtonState(InputDeviceXRController::Button::Home);
-        if (quitPressed && !m_wasQuitPressedLastSync)
-        {
-            result = xrRequestExitSession(xrSession);
-            WARN_IF_UNSUCCESSFUL(result);
+            AZ::RPI::XRSpaceNotificationBus::Broadcast(&AZ::RPI::XRSpaceNotifications::OnXRSpaceLocationsChanged,
+                baseToHeadTm, headToLeftEyeTm, headToRightEyeTm);
         }
-        m_wasQuitPressedLastSync = quitPressed;
+
+        return false;
     }
+
+    bool Input::LocateEyeViews(XrTime predictedDisplayTime, AZStd::vector<XrView>& xrViews)
+    {
+        const auto session = static_cast<Session*>(GetDescriptor().m_session.get());
+        XrSession xrSession = session->GetXrSession();
+        const auto xrVkInstance = static_cast<Instance*>(GetDescriptor().m_instance.get());
+
+        // Let's get the FOV data, which for most practical purposes it is always the same
+        // across all frames. But most importantly we need to get the location of each Eye relative to the View Space pose.
+
+        Space* xrSpace = static_cast<Space*>(session->GetSpace());
+
+        XrViewState viewState{ XR_TYPE_VIEW_STATE };
+        uint32_t viewCapacityInput = aznumeric_cast<uint32_t>(xrViews.size());
+        uint32_t viewCountOutput = 0;
+
+        XrViewLocateInfo viewLocateInfo{ XR_TYPE_VIEW_LOCATE_INFO };
+        viewLocateInfo.viewConfigurationType = xrVkInstance->GetViewConfigType();
+        viewLocateInfo.displayTime = predictedDisplayTime;
+        viewLocateInfo.space = xrSpace->GetXrSpace(OpenXRVk::SpaceType::View);
+
+        XrResult result = xrLocateViews(xrSession, &viewLocateInfo, &viewState, viewCapacityInput, &viewCountOutput, xrViews.data());
+        ASSERT_IF_UNSUCCESSFUL(result);
+
+        if ((viewState.viewStateFlags & XR_VIEW_STATE_POSITION_VALID_BIT) == 0 ||
+            (viewState.viewStateFlags & XR_VIEW_STATE_ORIENTATION_VALID_BIT) == 0)
+        {
+            //There is no valid tracking poses for the views
+            return false;
+        }
+
+        AZ_Error(LogName, viewCountOutput == viewCapacityInput, "Size mismatch between xrLocateViews %i and xrEnumerateViewConfigurationViews %i", viewCountOutput, viewCapacityInput);
+
+        return (viewCountOutput == viewCapacityInput);
+    }
+
 
     void Input::LocateControllerSpace(XrTime predictedDisplayTime, XrSpace baseSpace, AZ::u32 handIndex)
     {
@@ -420,28 +473,46 @@ namespace OpenXRVk
         }
     }
 
-    AZ::RHI::ResultCode Input::GetControllerPose(AZ::u32 handIndex, AZ::RPI::PoseData& outPoseData) const
+    AZ::RHI::ResultCode Input::GetControllerPose(AZ::u32 handIndex, AZ::RPI::PoseData& outPoseData, bool convertToO3de) const
     {
         if (handIndex < AZStd::size(m_handSpaceLocation))
         {
-            const XrQuaternionf& orientation = m_handSpaceLocation[handIndex].pose.orientation;
-            const XrVector3f& position = m_handSpaceLocation[handIndex].pose.position;
-            outPoseData.m_orientation.Set(orientation.x, orientation.y, orientation.z, orientation.w);
-            outPoseData.m_position.Set(position.x, position.y, position.z);
+            outPoseData.m_orientation = AzQuaternionFromXrPose(m_handSpaceLocation[handIndex].pose, convertToO3de);
+            outPoseData.m_position = AzPositionFromXrPose(m_handSpaceLocation[handIndex].pose, convertToO3de);
             return AZ::RHI::ResultCode::Success;
         }
         return AZ::RHI::ResultCode::Fail;
     }
 
-    AZ::RHI::ResultCode Input::GetVisualizedSpacePose(OpenXRVk::SpaceType visualizedSpaceType, AZ::RPI::PoseData& outPoseData) const
+    AZ::RHI::ResultCode Input::GetControllerTransform(AZ::u32 handIndex, AZ::Transform& outTransform, bool convertToO3de) const
+    {
+        if (handIndex < AZStd::size(m_handSpaceLocation))
+        {
+            outTransform = AzTransformFromXrPose(m_handSpaceLocation[handIndex].pose, convertToO3de);
+            outTransform.SetUniformScale(m_handScale[handIndex]);
+            return AZ::RHI::ResultCode::Success;
+        }
+        return AZ::RHI::ResultCode::Fail;
+    }
+
+    AZ::RHI::ResultCode Input::GetVisualizedSpacePose(OpenXRVk::SpaceType visualizedSpaceType, AZ::RPI::PoseData& outPoseData, bool convertToO3de) const
     {
         const auto spaceIndex = static_cast<AZ::u32>(visualizedSpaceType);
         if (spaceIndex < AZStd::size(m_xrVisualizedSpaceLocations))
         {
-            const XrQuaternionf& orientation = m_xrVisualizedSpaceLocations[spaceIndex].pose.orientation;
-            const XrVector3f& position = m_xrVisualizedSpaceLocations[spaceIndex].pose.position;
-            outPoseData.m_orientation.Set(orientation.x, orientation.y, orientation.z, orientation.w);
-            outPoseData.m_position.Set(position.x, position.y, position.z);
+            outPoseData.m_orientation = AzQuaternionFromXrPose(m_xrVisualizedSpaceLocations[spaceIndex].pose, convertToO3de);
+            outPoseData.m_position = AzPositionFromXrPose(m_xrVisualizedSpaceLocations[spaceIndex].pose, convertToO3de);
+            return AZ::RHI::ResultCode::Success;
+        }
+        return AZ::RHI::ResultCode::Fail;
+    }
+
+    AZ::RHI::ResultCode Input::GetVisualizedSpaceTransform(OpenXRVk::SpaceType visualizedSpaceType, AZ::Transform& outTransform, bool convertToO3de) const
+    {
+        const auto spaceIndex = static_cast<AZ::u32>(visualizedSpaceType);
+        if (spaceIndex < AZStd::size(m_xrVisualizedSpaceLocations))
+        {
+            outTransform = AzTransformFromXrPose(m_xrVisualizedSpaceLocations[spaceIndex].pose, convertToO3de);
             return AZ::RHI::ResultCode::Success;
         }
         return AZ::RHI::ResultCode::Fail;

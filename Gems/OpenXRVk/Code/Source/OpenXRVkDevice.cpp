@@ -52,6 +52,11 @@ namespace OpenXRVk
         {
             WARN_IF_UNSUCCESSFUL(result);
         }
+
+        // Notify the input system that we have a new predicted display time.
+        // The new predicted display time will be used to calculate XrPoses for the current frame.
+        session->UpdateXrSpaceLocations(*this, m_frameState.predictedDisplayTime, m_views);
+
         //Always return true as we want EndFrame to always be called. 
         return true;
     }
@@ -112,36 +117,10 @@ namespace OpenXRVk
     {
         XR::SwapChain::View* baseSwapChainView = baseSwapChain->GetView(viewIndex);
         SwapChain::View* swapChainView = static_cast<SwapChain::View*>(baseSwapChainView);
-        Space* xrSpace = static_cast<Space*>(GetSession()->GetSpace());
-        Instance* instance = static_cast<Instance*>(GetDescriptor().m_instance.get());
-        Session* session = static_cast<Session*>(GetSession().get());
-        XrSession xrSession = session->GetXrSession();
         XrSwapchain swapChainHandle = swapChainView->GetSwapChainHandle();
 
-        XrViewState viewState{ XR_TYPE_VIEW_STATE };
-        uint32_t viewCapacityInput = aznumeric_cast<uint32_t>(m_views.size());
-
-        XrViewLocateInfo viewLocateInfo{ XR_TYPE_VIEW_LOCATE_INFO };
-        viewLocateInfo.viewConfigurationType = instance->GetViewConfigType(); 
-        viewLocateInfo.displayTime = m_frameState.predictedDisplayTime;
-        viewLocateInfo.space = xrSpace->GetXrSpace(OpenXRVk::SpaceType::View);
-
-        XrResult result = xrLocateViews(xrSession, &viewLocateInfo, &viewState, viewCapacityInput, &m_viewCountOutput, m_views.data());
-        ASSERT_IF_UNSUCCESSFUL(result);
-        
-        if ((viewState.viewStateFlags & XR_VIEW_STATE_POSITION_VALID_BIT) == 0 ||
-            (viewState.viewStateFlags & XR_VIEW_STATE_ORIENTATION_VALID_BIT) == 0)
-        {
-            //There is no valid tracking poses for the views
-            return false;
-        }
-
-        AZ_Assert(m_viewCountOutput == viewCapacityInput, "Size mismatch between xrLocateViews %i and xrEnumerateViewConfigurationViews %i", m_viewCountOutput, viewCapacityInput);
-        AZ_Assert(m_viewCountOutput == static_cast<SwapChain*>(baseSwapChain)->GetViewConfigs().size(), "Size mismatch between xrLocateViews %i and xrEnumerateViewConfigurationViews %i", m_viewCountOutput, static_cast<SwapChain*>(baseSwapChain)->GetViewConfigs().size());
-
-        m_projectionLayerViews.resize(m_viewCountOutput);
         XrSwapchainImageAcquireInfo acquireInfo{ XR_TYPE_SWAPCHAIN_IMAGE_ACQUIRE_INFO };
-        result = xrAcquireSwapchainImage(swapChainHandle, &acquireInfo, &baseSwapChainView->m_activeImageIndex);
+        auto result = xrAcquireSwapchainImage(swapChainHandle, &acquireInfo, &baseSwapChainView->m_activeImageIndex);
         baseSwapChainView->m_isImageAcquired = (result == XR_SUCCESS);
         WARN_IF_UNSUCCESSFUL(result);
         
@@ -150,6 +129,9 @@ namespace OpenXRVk
         result = xrWaitSwapchainImage(swapChainHandle, &waitInfo);
         ASSERT_IF_UNSUCCESSFUL(result);
 
+        // REMARK: The data in m_views was updated during BeginFrameInternal(), which
+        // calls session->UpdateXrSpaceLocations(...).
+        m_projectionLayerViews.resize(m_views.size());
         m_projectionLayerViews[viewIndex] = { XR_TYPE_COMPOSITION_LAYER_PROJECTION_VIEW };
         m_projectionLayerViews[viewIndex].pose = m_views[viewIndex].pose;
         m_projectionLayerViews[viewIndex].fov = m_views[viewIndex].fov;
@@ -189,12 +171,12 @@ namespace OpenXRVk
 
     AZ::RHI::ResultCode Device::GetViewFov(AZ::u32 viewIndex, AZ::RPI::FovData& outFovData) const
     {
-        if(viewIndex < m_projectionLayerViews.size())
+        if(viewIndex < m_views.size())
         { 
-            outFovData.m_angleLeft = m_projectionLayerViews[viewIndex].fov.angleLeft;
-            outFovData.m_angleRight = m_projectionLayerViews[viewIndex].fov.angleRight;
-            outFovData.m_angleUp = m_projectionLayerViews[viewIndex].fov.angleUp;
-            outFovData.m_angleDown = m_projectionLayerViews[viewIndex].fov.angleDown;
+            outFovData.m_angleLeft = m_views[viewIndex].fov.angleLeft;
+            outFovData.m_angleRight = m_views[viewIndex].fov.angleRight;
+            outFovData.m_angleUp = m_views[viewIndex].fov.angleUp;
+            outFovData.m_angleDown = m_views[viewIndex].fov.angleDown;
             return AZ::RHI::ResultCode::Success;
         }
         return AZ::RHI::ResultCode::Fail;
@@ -202,17 +184,10 @@ namespace OpenXRVk
 
     AZ::RHI::ResultCode Device::GetViewPose(AZ::u32 viewIndex, AZ::RPI::PoseData& outPoseData) const
     { 
-        if (viewIndex < m_projectionLayerViews.size())
+        if (viewIndex < m_views.size())
         {
-            const XrQuaternionf& orientation = m_projectionLayerViews[viewIndex].pose.orientation;
-            const XrVector3f& position = m_projectionLayerViews[viewIndex].pose.position;
-            outPoseData.m_orientation.Set(orientation.x,
-                                          orientation.y, 
-                                          orientation.z, 
-                                          orientation.w);
-            outPoseData.m_position.Set(position.x,
-                                       position.y, 
-                                       position.z);
+            outPoseData.m_orientation = AzQuaternionFromXrPose(m_views[viewIndex].pose);
+            outPoseData.m_position = AzPositionFromXrPose(m_views[viewIndex].pose);
             return AZ::RHI::ResultCode::Success;
         }
         return AZ::RHI::ResultCode::Fail;
@@ -231,4 +206,5 @@ namespace OpenXRVk
         m_xrVkDevice = VK_NULL_HANDLE;
         m_xrVkPhysicalDevice = VK_NULL_HANDLE;
     }
+
 }
