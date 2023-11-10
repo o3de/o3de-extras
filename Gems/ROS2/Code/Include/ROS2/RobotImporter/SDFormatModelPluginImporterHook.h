@@ -14,6 +14,14 @@
 #include <AzCore/std/function/function_template.h>
 #include <AzCore/std/string/string.h>
 
+namespace sdf
+{
+    inline namespace v13
+    {
+        class Model;
+    } // namespace v13
+} // namespace sdf
+
 namespace ROS2::SDFormat
 {
     //! Hook used in ROS2 Gem Robot Importer to create ROS2 components based on SDFormat model description.
@@ -42,5 +50,5 @@ namespace ROS2::SDFormat
     };
 
     //! Buffer for ModelPluginImporterHook data
-    using ModelPluginImporterHookStorage = AZStd::vector<ROS2::SDFormat::ModelPluginImporterHook>;
+    using ModelPluginImporterHooksStorage = AZStd::vector<ROS2::SDFormat::ModelPluginImporterHook>;
 } // namespace ROS2::SDFormat

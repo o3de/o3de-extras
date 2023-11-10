@@ -12,6 +12,7 @@
 #include <AzCore/std/string/string.h>
 #include <AzToolsFramework/Entity/EditorEntityContextBus.h>
 #include <ROS2/RobotImporter/RobotImporterBus.h>
+#include <ROS2/RobotImporter/SDFormatModelPluginImporterHook.h>
 #include <ROS2/RobotImporter/SDFormatSensorImporterHook.h>
 #include <RobotImporter/Utils/SourceAssetsStorage.h>
 namespace ROS2
@@ -44,11 +45,15 @@ namespace ROS2
         // RobotImporterRequestsBus::Handler overrides ..
         bool GeneratePrefabFromFile(const AZStd::string_view filePath, bool importAssetWithUrdf, bool useArticulation) override;
         const SDFormat::SensorImporterHooksStorage& GetSensorHooks() const override;
+        const SDFormat::ModelPluginImporterHooksStorage& GetModelPluginHooks() const override;
 
         // Timeout for loop waiting for assets to be built
         static constexpr AZStd::chrono::seconds assetLoopTimeout = AZStd::chrono::seconds(30);
 
         // Cache for storing sensor importer hooks (read only once)
         SDFormat::SensorImporterHooksStorage m_sensorHooks;
+
+        // Cache for storing model plugin importer hooks (read only once)
+        SDFormat::ModelPluginImporterHooksStorage m_modelPluginHooks;
     };
 } // namespace ROS2
