@@ -16,6 +16,8 @@
 
 namespace OpenXRVk
 {
+    class Device;
+
     // Class that will help manage XrActionSet/XrAction
     class Input final
         : public XR::Input
@@ -24,10 +26,25 @@ namespace OpenXRVk
         AZ_CLASS_ALLOCATOR(Input, AZ::SystemAllocator);
         AZ_RTTI(Input, "{97ADD1FE-27DF-4F36-9F61-683F881F9477}", XR::Input);
 
+        static constexpr char LogName[] = "OpenXRVkInput";
+
         static XR::Ptr<Input> Create();
 
-        //! Sync all the actions and update controller
-        //! as well as various tracked space poses
+        //! Called by the session when the predicted display time has been updated (typically
+        //! the device updates the predicted display time during BeginFrame).
+        //! \param[in] device The device that emitted this event.
+        //! \param[in] predictedTime The predicted display time for the current frame.
+        //! \param[out] xrViews Vector where each Eye Pose will be stored. Eye poses are always relative to the VIEW space.
+        //!                     The VIEW pose typically represents the pose of the Head (The Head is typically centered
+        //!                     between both eyes). Subscript 0 is the left eye, while subscript 1 is the right eye.                   
+        //! Returns true if the number of Eye Poses matches the size of @xrViews.
+        bool UpdateXrSpaceLocations(const OpenXRVk::Device& device, XrTime predictedDisplayTime, AZStd::vector<XrView>& xrViews);
+
+        //! Sync all the actions and update controller.
+        //! REMARK: XrPoses are not updated in this function. Instead, poses are updated upon UpdateXrSpaceLocations().
+        //! Why? Because PollActions() is called on the main thread outside of the BeginFrame()/EndFrame() loop.
+        //! This means the if Poses are updated during PollActions(), those poses would be using the predicted display time
+        //! of the previous frame instead of the current frame.
         void PollActions();
 
         //! Initialize various actions/actions sets and add support for Oculus touch bindings
@@ -39,20 +56,30 @@ namespace OpenXRVk
         //! Attach action sets
         AZ::RHI::ResultCode InitializeActionSets(XrSession xrSession) const;
 
-        //! Update Controller space information
+        //! Updates a Controller/Joystick pose.
         void LocateControllerSpace(XrTime predictedDisplayTime, XrSpace baseSpace, AZ::u32 handIndex);
 
-        //! Update information for a specific tracked space type (i.e visualizedSpaceType)
+        //! Update pose information for the view. 
         void LocateVisualizedSpace(XrTime predictedDisplayTime, XrSpace space, XrSpace baseSpace, OpenXRVk::SpaceType visualizedSpaceType);
 
         //! Return Pose data for a controller attached to a hand index
-        AZ::RHI::ResultCode GetControllerPose(AZ::u32 handIndex, AZ::RPI::PoseData& outPoseData) const;
+        //! By default the pose data is converted per O3DE convention: Xright, Yfront, Zup.
+        //! You can read the raw XR Pose data by setting @convertToO3de to false (Not recommended, but useful for debugging).
+        AZ::RHI::ResultCode GetControllerPose(AZ::u32 handIndex, AZ::RPI::PoseData& outPoseData, bool convertToO3de = true) const;
 
-        //! Return scale for a controller attached to a hand index
+        //! Same as above but returns the pose data as an AZ::Transform. The AZ::Transform also includes the controller scale.
+        AZ::RHI::ResultCode GetControllerTransform(AZ::u32 handIndex, AZ::Transform& outTransform, bool convertToO3de = true) const;
+
+        //! Returns scale for a controller attached to a hand index
         float GetControllerScale(AZ::u32 handIndex) const;
 
-        //! Return Pose data for a tracked space type (i.e visualizedSpaceType)
-        AZ::RHI::ResultCode GetVisualizedSpacePose(OpenXRVk::SpaceType visualizedSpaceType, AZ::RPI::PoseData& outPoseData) const;
+        //! Return Pose data for a tracked space type (i.e visualizedSpaceType).
+        //! By default the pose data is converted per O3DE convention: Xright, Yfront, Zup.
+        //! You can read the raw XR Pose data by setting @convertToO3de to false (Not recommended, but useful for debugging).
+        AZ::RHI::ResultCode GetVisualizedSpacePose(OpenXRVk::SpaceType visualizedSpaceType, AZ::RPI::PoseData& outPoseData, bool convertToO3de = true) const;
+
+        //! Same as above but returns the pose data as an AZ::Transform
+        AZ::RHI::ResultCode GetVisualizedSpaceTransform(OpenXRVk::SpaceType visualizedSpaceType, AZ::Transform& outTransform, bool convertToO3de = true) const;
 
         //! Get the Squeeze action
         XrAction GetSqueezeAction(AZ::u32 handIndex) const;
@@ -106,6 +133,9 @@ namespace OpenXRVk
 
         //! Destroy native objects
         void ShutdownInternal() override;
+
+        //! Returns true if the number of Eye Poses matches the size of @xrViews.
+        bool LocateEyeViews(XrTime predictedDisplayTime, AZStd::vector<XrView>& xrViews);
 
         XrActionSet m_actionSet{ XR_NULL_HANDLE };
 

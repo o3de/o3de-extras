@@ -40,6 +40,21 @@ namespace OpenXRVk
         //! Return the Xrspace related to the SpaceType enum
         XrSpace GetXrSpace(SpaceType spaceType) const;
 
+        ////////////////////////////////////////////////////////////////////////////////////////////
+        //! Called by a Device when the predicted display time has been updated (typically
+        //! the device updates the predicted display time during BeginFrame).
+        //! See OpenXRVkInput.h UpdateXrSpaceLocations(...) for more details.
+        void UpdateXrSpaceLocations(const OpenXRVk::Device& device, XrTime predictedDisplayTime, AZStd::vector<XrView>& xrViews);
+
+        //! Setters and Getters for the base spaces that will be used
+        //! when calling xrLocateSpace().
+        //! By default, the base space for visualization is SpaceType::Local
+        //! and the base space for Joysticks/controllers is SpaceType::View (aka the Head)
+        void SetBaseSpaceTypeForVisualization(SpaceType spaceType);
+        void SetBaseSpaceTypeForControllers(SpaceType spaceType);
+        SpaceType GetBaseSpaceTypeForVisualization() const;
+        SpaceType GetBaseSpaceTypeForControllers() const;
+
         //////////////////////////////////////////////////////////////////////////
         // XR::Session overrides
         AZ::RHI::ResultCode InitInternal(AZ::RHI::XRSessionDescriptor* descriptor) override;
@@ -50,6 +65,7 @@ namespace OpenXRVk
         void PollEvents() override;
         void LocateControllerSpace(AZ::u32 handIndex) override;
         AZ::RHI::ResultCode GetControllerPose(AZ::u32 handIndex, AZ::RPI::PoseData& outPoseData) const override;
+        AZ::RHI::ResultCode GetControllerTransform(AZ::u32 handIndex, AZ::Transform& outTransform) const override;
         AZ::RHI::ResultCode GetControllerStagePose(AZ::u32 handIndex, AZ::RPI::PoseData& outPoseData) const override;
         AZ::RHI::ResultCode GetViewFrontPose(AZ::RPI::PoseData& outPoseData) const override;
         AZ::RHI::ResultCode GetViewLocalPose(AZ::RPI::PoseData& outPoseData) const override;
@@ -68,12 +84,25 @@ namespace OpenXRVk
         void ShutdownInternal() override;
         void LogActionSourceName(XrAction action, const AZStd::string_view actionName) const;
         Input* GetNativeInput() const;
+        // Spaces are reset every time the proximity sensor turns off, or the user wears the headset
+        // when the proximity sensor is ON.
+        void ResetSpaces();
 
         XrSession m_session = XR_NULL_HANDLE;
         XrSessionState m_sessionState = XR_SESSION_STATE_UNKNOWN;
         XrEventDataBuffer m_eventDataBuffer;
         XrInstance m_xrInstance = XR_NULL_HANDLE;
         XrGraphicsBindingVulkan2KHR m_graphicsBinding{ XR_TYPE_GRAPHICS_BINDING_VULKAN_KHR };
+        
+        // Application defined base space that will used to calculate
+        // the relative pose of all other spaces.
+        // Typically SpaceType::Local or SpaceType::Stage.
+        SpaceType m_baseSpaceTypeForVisualization = SpaceType::Local;
+
+        // Application defined base space that will use to calculate
+        // the relative pose of the joysticks (aka XR Controllers).
+        // Typically SpaceType::View, but could be SpaceType::Local or SpaceType::Stage.
+        SpaceType m_baseSpaceTypeForControllers = SpaceType::View;
 
         bool m_sessionRunning = false;
         bool m_exitRenderLoop = false;
