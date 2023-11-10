@@ -38,11 +38,11 @@ namespace ROS2::Utils
     //! @return true if the link is likely a wheel link.
     bool IsWheelURDFHeuristics(const sdf::Model& model, const sdf::Link* link);
 
-    //! The recursive function for the given link goes through URDF and finds world-to-entity transformation for us.
-    //! @param link pointer to URDF/SDF link that root of robot description
-    //! @param t initial transform, should be identity for non-recursive call.
-    //! @returns root to entity transform
-    AZ::Transform GetWorldTransformURDF(const sdf::Link* link, AZ::Transform t = AZ::Transform::Identity());
+    //! Returns an AZ::Transform converted from the link pose defined relative to another frame.
+    //! @param link pointer to URDF/SDF link
+    //! @param t initial transform, multiplied against link transform
+    //! @returns Transform of link
+    AZ::Transform GetLocalTransformURDF(const sdf::Link* link, AZ::Transform t = AZ::Transform::Identity());
 
     //! Type Alias representing a "stack" of Model object that were visited on the way to the current Link/Joint Visitor Callback
     using ModelStack = AZStd::deque<AZStd::reference_wrapper<const sdf::Model>>;
@@ -128,12 +128,31 @@ namespace ROS2::Utils
     //! @param visitNestedModels When true recurses to any nested <model> tags of the Model objects and invoke the visitor on them
     //! @returns void
     void VisitModels(const sdf::Root& sdfRoot, const ModelVisitorCallback& modelVisitorCB, bool visitNestedModels = true);
+    //! @param sdfWorld World object of SDF document corresponding to the <world> tag.
+    //! @param visitNestedModels When true recurses to any nested <model> tags of the Model objects and invoke the visitor on them
+    //! @returns void
+    void VisitModels(const sdf::World& sdfWorld, const ModelVisitorCallback& modelVisitorCB, bool visitNestedModels = true);
+    //! @param sdfModel Model object corresponding to a <model> tag in the SDF.
+    //! @param visitNestedModels When true recurses to any nested <model> tags of the Model objects and invoke the visitor on them
+    //! @returns void
+    void VisitModels(const sdf::Model& sdfModel, const ModelVisitorCallback& modelVisitorCB, bool visitNestedModels = true);
 
-    //! Retrieve all assets referenced in SDF/URDF as unresolved URIs.
-    //! The URIs will still need to get resolved via ResolveAssetPath() to point to a valid file location.
-    //! @param root reference to SDF Root object representing the root of the parsed SDF xml document
-    //! @returns set of meshes' filenames.
-    AssetFilenameReferences GetReferencedAssetFilenames(const sdf::Root& root);
+    using ModelMap = AZStd::unordered_map<AZStd::string, const sdf::Model*>;
+    //! Retrieve all models in URDF/SDF where the key is the fully composed path following the name scoping proposal in SDF 1.8
+    //! http://sdformat.org/tutorials?tut=composition_proposal#1-nesting-and-encapsulation
+    //! @param sdfRoot Root object of SDF document. The SDF <world> and <model> tags are recursed to locate SDF models
+    //! @param gatherNestedModelsForModel When true recurses to any nested <model> tags of the Model object and also gathers their models as well
+    //! @returns mapping from fully qualified model name(such as "model_name::nested_model_name") to model pointer
+    //! NOTE: For the SDF world object if gatherNestedModelsForModel=false, then only the direct models of the world are gathered
+    ModelMap GetAllModels(const sdf::Root& sdfRoot, bool gatherNestedModelsForModel = false);
+    //! @param sdfWorld World object of SDF document corresponding to the <world> tag. It used to query models
+    //! @param gatherNestedModelsForModel When true recurses to any nested <model> tags of the Model object and also gathers their models as well
+    //! @returns mapping from fully qualified model name(such as "model_name::nested_model_name") to model pointer
+    ModelMap GetAllModels(const sdf::World& sdfWorld, bool gatherNestedModelsForModel = false);
+    //! @param sdfModel Model object corresponding to a <model> tag in the SDF. It used to query nested models
+    //! @param gatherNestedModelsForModel When true recurses to any nested <model> tags of the Model object and also gathers their models as well
+    //! @returns mapping from fully qualified model name(such as "model_name::nested_model_name") to model pointer
+    ModelMap GetAllModels(const sdf::Model& sdfModel, bool gatherNestedModelsForModel = false);
 
     //! Returns the SDF model object which contains the specified link
     //! @param root reference to SDF Root object representing the root of the parsed SDF xml document
@@ -162,6 +181,12 @@ namespace ROS2::Utils
     //! @param model SDF model reference to lookup in the SDF document
     //! @return pointer to parent model containing this model if the model is nested, otherwise nullptr
     const sdf::Model* GetModelContainingModel(const sdf::Root& root, const sdf::Model& model);
+
+    //! Retrieve all assets referenced in SDF/URDF as unresolved URIs.
+    //! The URIs will still need to get resolved via ResolveAssetPath() to point to a valid file location.
+    //! @param root reference to SDF Root object representing the root of the parsed SDF xml document
+    //! @returns set of meshes' filenames.
+    AssetFilenameReferences GetReferencedAssetFilenames(const sdf::Root& root);
 
     //! Callback used to check for file exist of a path referenced within a URDF/SDF file
     //! @param path Candidate local filesystem path to check for existence

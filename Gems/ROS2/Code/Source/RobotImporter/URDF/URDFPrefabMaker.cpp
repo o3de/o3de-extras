@@ -73,8 +73,8 @@ namespace ROS2
             struct JointToAttachedModel
             {
                 AZStd::string m_fullyQualifiedName;
-                const sdf::Joint* m_joint;
-                const sdf::Model* m_attachedModel;
+                const sdf::Joint* m_joint{};
+                const sdf::Model* m_attachedModel{};
             };
             // this is a unique ordered vector
             AZStd::vector<JointToAttachedModel> m_joints;
@@ -121,15 +121,28 @@ namespace ROS2
             struct LinkToAttachedModel
             {
                 AZStd::string m_fullyQualifiedName;
-                const sdf::Link* m_link;
-                const sdf::Model* m_attachedModel;
+                const sdf::Link* m_link{};
+                const sdf::Model* m_attachedModel{};
             };
             // this is a unique ordered vector
             AZStd::vector<LinkToAttachedModel> m_links;
         };
         LinksMapper linksMapper;
 
-        auto GetAllLinksFromModel = [&linksMapper](const sdf::Model& model, const Utils::ModelStack&) -> Utils::VisitModelResponse
+        struct ModelMapper
+        {
+            struct NestedModelToAttachedModel
+            {
+                AZStd::string m_fullyQualifiedName;
+                const sdf::Model* m_nestedModel{};
+                const sdf::Model* m_attachedModel{};
+            };
+            // this is a unique ordered vector
+            AZStd::vector<NestedModelToAttachedModel> m_models;
+        };
+        ModelMapper modelMapper;
+
+        auto GetAllLinksAndSetModelHierarchy = [&linksMapper, &modelMapper](const sdf::Model& model, const Utils::ModelStack& modelStack) -> Utils::VisitModelResponse
         {
             // As the VisitModels function visits nested models by default, gatherNestedModelLinks is set to false
             constexpr bool gatherNestedModelLinks = false;
@@ -137,25 +150,93 @@ namespace ROS2
             for (const auto& [fullyQualifiedName, link] : linksForModel)
             {
                 // Push back the mapping of link to attached model into the ordered vector
-                LinksMapper::LinkToAttachedModel linkToAttachedModel{ AZStd::string(fullyQualifiedName.c_str(), fullyQualifiedName.size()),
-                                                                      link,
-                                                                      &model };
+                AZStd::string fullLinkName(fullyQualifiedName.c_str(), fullyQualifiedName.size());
+                LinksMapper::LinkToAttachedModel linkToAttachedModel{ AZStd::move(fullLinkName), link, &model };
                 linksMapper.m_links.push_back(AZStd::move(linkToAttachedModel));
             }
+
+            // Use the model stack to create a mapping from the current model
+            // to the parent model it is attached to.
+            // If the current model has no parent model the attached model is set to nullptr
+            std::string stdFullModelName;
+            for (const sdf::Model& ancestorModel : modelStack)
+            {
+                stdFullModelName = sdf::JoinName(stdFullModelName, ancestorModel.Name());
+            }
+            stdFullModelName = sdf::JoinName(stdFullModelName, model.Name());
+            AZStd::string fullModelName(stdFullModelName.c_str(), stdFullModelName.size());
+            ModelMapper::NestedModelToAttachedModel nestedModelToAttachedModel;
+            nestedModelToAttachedModel.m_fullyQualifiedName = AZStd::move(fullModelName);
+            nestedModelToAttachedModel.m_nestedModel = &model;
+            nestedModelToAttachedModel.m_attachedModel = !modelStack.empty() ? &modelStack.back().get() : nullptr;
+            modelMapper.m_models.push_back(AZStd::move(nestedModelToAttachedModel));
+
             return Utils::VisitModelResponse::VisitNestedAndSiblings;
         };
 
-        // Gather all links from all the models in the SDF
-        Utils::VisitModels(*m_root, GetAllLinksFromModel, visitNestedModels);
+        // Gather all links and add a mapping of nested model -> parent model for each model in the SDF
+        Utils::VisitModels(*m_root, GetAllLinksAndSetModelHierarchy, visitNestedModels);
 
         // Build up a list of all entities created as a part of processing the file.
         AZStd::vector<AZ::EntityId> createdEntities;
-        AZStd::unordered_map<const sdf::Link*, AzToolsFramework::Prefab::PrefabEntityResult> createdLinks;
         AZStd::unordered_map<const sdf::Model*, AzToolsFramework::Prefab::PrefabEntityResult> createdModels;
+
+        AZStd::unordered_map<const sdf::Link*, AzToolsFramework::Prefab::PrefabEntityResult> createdLinks;
         AZStd::unordered_map<AZStd::string, const sdf::Link*> links;
-        for ([[maybe_unused]] const auto& [fullLinkName, linkPtr, attachedModel] : linksMapper.m_links)
+
+        // Create an entity for each model
+        for ([[maybe_unused]] const auto& [fullModelName, modelPtr, _] : modelMapper.m_models)
         {
-            // Create entities for the model containing the link
+            // Create entities for each model in the SDF
+            if (AzToolsFramework::Prefab::PrefabEntityResult createModelEntityResult = CreateEntityForModel(*modelPtr);
+                createModelEntityResult)
+            {
+                AZ::EntityId createdModelEntityId = createModelEntityResult.GetValue();
+                // Add the model entity to the created entity list so that it gets added to the prefab
+                createdEntities.emplace_back(createdModelEntityId);
+
+                std::string modelName = modelPtr->Name();
+                AZStd::string azModelName(modelName.c_str(), modelName.size());
+                AZStd::lock_guard<AZStd::mutex> lck(m_statusLock);
+                m_status.emplace(azModelName, AZStd::string::format("[model] created as: %s", createdModelEntityId.ToString().c_str()));
+                createdModels.emplace(modelPtr, createModelEntityResult);
+            }
+        }
+
+        //! Setup the parent hierarchy for the nested models
+        for ([[maybe_unused]] const auto& [_, modelPtr, parentModelPtr] : modelMapper.m_models)
+        {
+            // If there is no parent model, then the model would be at the top level of the hiearachy
+            if (parentModelPtr == nullptr || modelPtr == nullptr)
+            {
+                continue;
+            }
+            // Create entities for each model in the SDF
+            AZ::EntityId modelEntityId;
+            if (auto modelIt = createdModels.find(modelPtr); modelIt != createdModels.end() && modelIt->second)
+            {
+                modelEntityId = modelIt->second.GetValue();
+            }
+
+            AZ::EntityId parentModelEntityId;
+            if (auto parentModelIt = createdModels.find(parentModelPtr); parentModelIt != createdModels.end() && parentModelIt->second)
+            {
+                parentModelEntityId = parentModelIt->second.GetValue();
+            }
+
+            // If the both the parent model and current model entity exist
+            // set the current model transform component parent to the parent model
+            if (parentModelEntityId.IsValid() && modelEntityId.IsValid())
+            {
+                // The model entity local transform should be used
+                // to allow it to move, rotate, scale relative to the parent
+                PrefabMakerUtils::SetEntityParentRelative(modelEntityId, parentModelEntityId);
+            }
+        }
+
+        // Create an entity for each link and set the parent to be the model entity where the link is attached
+        for ([[maybe_unused]] const auto& [_, linkPtr, attachedModel] : linksMapper.m_links)
+        {
             AZ::EntityId modelEntityId;
             if (attachedModel != nullptr)
             {
@@ -166,26 +247,7 @@ namespace ROS2
                         modelEntityId = modelIt->second.GetValue();
                     }
                 }
-                else
-                {
-                    if (AzToolsFramework::Prefab::PrefabEntityResult createModelEntityResult = CreateEntityForModel(*attachedModel);
-                        createModelEntityResult)
-                    {
-                        modelEntityId = createModelEntityResult.GetValue();
-                        // Add the model entity to the created entity list
-                        // so that it gets added to the prefab
-                        createdEntities.emplace_back(modelEntityId);
-
-                        std::string modelName = attachedModel->Name();
-                        AZStd::string azModelName(modelName.c_str(), modelName.size());
-                        AZStd::lock_guard<AZStd::mutex> lck(m_statusLock);
-                        m_status.emplace(azModelName, AZStd::string::format("created as: %s", modelEntityId.ToString().c_str()));
-                        createdModels.emplace(attachedModel, createModelEntityResult);
-                    }
-                }
-
             }
-
             // Add all link as children of their attached model entity by default
             createdLinks[linkPtr] = AddEntitiesForLink(*linkPtr, attachedModel, modelEntityId, createdEntities);
         }
@@ -202,11 +264,11 @@ namespace ROS2
             AZStd::lock_guard<AZStd::mutex> lck(m_statusLock);
             if (result.IsSuccess())
             {
-                m_status.emplace(azLinkName, AZStd::string::format("created as: %s", result.GetValue().ToString().c_str()));
+                m_status.emplace(azLinkName, AZStd::string::format("[link] created as: %s", result.GetValue().ToString().c_str()));
             }
             else
             {
-                m_status.emplace(azLinkName, AZStd::string::format("failed : %s", result.GetError().c_str()));
+                m_status.emplace(azLinkName, AZStd::string::format("[link] failed : %s", result.GetError().c_str()));
             }
         }
 
@@ -217,7 +279,7 @@ namespace ROS2
             {
                 AZ::EntityId createdEntityId = createLinkEntityResult.GetValue();
                 std::string linkName = linkPtr->Name();
-                AZ::Transform tf = Utils::GetWorldTransformURDF(linkPtr);
+                AZ::Transform tf = Utils::GetLocalTransformURDF(linkPtr);
                 auto* entity = AzToolsFramework::GetEntityById(createdEntityId);
                 if (entity)
                 {
@@ -236,7 +298,7 @@ namespace ROS2
                             tf.GetRotation().GetY(),
                             tf.GetRotation().GetZ(),
                             tf.GetRotation().GetW());
-                        transformInterface->SetWorldTM(tf);
+                        transformInterface->SetLocalTM(tf);
                     }
                     else
                     {
@@ -294,7 +356,7 @@ namespace ROS2
 
             // Use the first joint where this link is a child to locate the parent link pointer.
             const sdf::Joint* joint = jointsWhereLinkIsChild.front();
-                        std::string parentLinkName = joint->ParentName();
+            std::string parentLinkName = joint->ParentName();
             AZStd::string parentName(parentLinkName.c_str(), parentLinkName.size());
 
             // Lookup the entity created from the parent link using the JointMapper to locate the parent SDF link.
@@ -322,6 +384,9 @@ namespace ROS2
                 linkPrefabResult.GetValue().ToString().c_str(),
                 parentEntityIter->second.GetValue().ToString().c_str());
             AZ_Trace("CreatePrefabFromUrdfOrSdf", "Link %s setting parent to %s\n", linkName.c_str(), parentName.c_str());
+            // The joint hierarchy which specifies how a parent and child link hierarchy is represented in an SDF document
+            // is used to establish the entity parent child hiearachy, but does not modify the world location of the link entities
+            // therefore SetEntityParent is used to maintain the world transform of the child link
             PrefabMakerUtils::SetEntityParent(linkPrefabResult.GetValue(), parentEntityIter->second.GetValue());
         }
 
@@ -390,7 +455,7 @@ namespace ROS2
                     AZStd::lock_guard<AZStd::mutex> lck(m_statusLock);
                     auto result = m_jointsMaker.AddJointComponent(jointPtr, childEntity.GetValue(), leadEntity.GetValue());
                     m_status.emplace(
-                        azJointName, AZStd::string::format(" %s: %llu", result.IsSuccess() ? "created as" : "failed", result.GetValue()));
+                        azJointName, AZStd::string::format("[joint] %s: %llu", result.IsSuccess() ? "created as" : "failed", result.GetValue()));
                 }
                 else
                 {
@@ -508,64 +573,11 @@ namespace ROS2
         if (auto* transformComponent = entity->FindComponent<AzToolsFramework::Components::TransformComponent>();
             transformComponent != nullptr)
         {
-            gz::math::Pose3d modelPose;
-            if (sdf::Errors poseResolveErrors = model.SemanticPose().Resolve(modelPose); !poseResolveErrors.empty())
-            {
-                AZStd::string poseErrorMessages = Utils::JoinSdfErrorsToString(poseResolveErrors);
-
-                auto poseErrorsForModel = AZStd::string::format(
-                    R"(Unable to resolve semantic pose for model %s. Creation of Model entity has failed. Errors: "%s")",
-                    model.Name().c_str(),
-                    poseErrorMessages.c_str());
-
-                return AZ::Failure(poseErrorsForModel);
-            }
-
+            gz::math::Pose3d modelPose = model.RawPose();
             AZ::Transform modelTransform = URDF::TypeConversions::ConvertPose(modelPose);
-
-            // If the model is nested below another model, check if it has a placement frame
-            if (const sdf::Model* parentModel = Utils::GetModelContainingModel(*m_root, model); parentModel != nullptr)
-            {
-                if (const sdf::Frame* modelPlacementFrame = parentModel->FrameByName(model.PlacementFrameName()); modelPlacementFrame != nullptr)
-                {
-                    gz::math::Pose3d placementFramePose;
-                    if (sdf::Errors poseResolveErrors = modelPlacementFrame->SemanticPose().Resolve(placementFramePose);
-                        !poseResolveErrors.empty())
-                    {
-                        AZStd::string poseErrorMessages = Utils::JoinSdfErrorsToString(poseResolveErrors);
-
-                        auto poseErrorsForModel = AZStd::string::format(
-                            R"(Unable to resolve semantic pose for model %s parent model %s. Creation of Model entity has failed. Errors: "%s")",
-                            model.Name().c_str(),
-                            parentModel->Name().c_str(),
-                            poseErrorMessages.c_str());
-
-                        return AZ::Failure(poseErrorsForModel);
-                    }
-
-                    modelTransform = modelTransform * URDF::TypeConversions::ConvertPose(placementFramePose);
-                }
-            }
-
-            if (const sdf::Frame* implicitFrame = model.FrameByName("__model__"); implicitFrame != nullptr)
-            {
-                gz::math::Pose3d implicitFramePose;
-                if (sdf::Errors poseResolveErrors = implicitFrame->SemanticPose().Resolve(implicitFramePose); !poseResolveErrors.empty())
-                {
-                    AZStd::string poseErrorMessages = Utils::JoinSdfErrorsToString(poseResolveErrors);
-
-                    auto poseErrorsForModel = AZStd::string::format(
-                        R"(Unable to resolve semantic pose for model's implicit frame %s. Creation of Model entity has failed. Errors: "%s")",
-                        implicitFrame->Name().c_str(),
-                        poseErrorMessages.c_str());
-
-                    return AZ::Failure(poseErrorsForModel);
-                }
-
-                modelTransform = modelTransform * URDF::TypeConversions::ConvertPose(implicitFramePose);
-            }
-
-            transformComponent->SetWorldTM(AZStd::move(modelTransform));
+            // Set the local transform for each model to have it be translated in relation
+            // to its parent
+            transformComponent->SetLocalTM(AZStd::move(modelTransform));
         }
 
         // Allow the created model entity to persist if there are no errors at ths point
