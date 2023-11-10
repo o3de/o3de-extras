@@ -25,24 +25,6 @@
 
 namespace OpenXRVk
 {
-    static AZ::Transform GetCameraTransformFromCurrentView()
-    {
-        if (const auto viewportContextMgr = AZ::Interface<AZ::RPI::ViewportContextRequestsInterface>::Get();
-            viewportContextMgr != nullptr)
-        {
-            if (const AZ::RPI::ViewportContextPtr viewportContext = viewportContextMgr->GetDefaultViewportContext();
-                viewportContext != nullptr)
-            {
-                if (const AZ::RPI::ViewPtr view = viewportContext->GetDefaultView();
-                    view != nullptr)
-                {
-                    return view->GetCameraTransform();
-                }
-            }
-        }
-        return AZ::Transform::CreateIdentity();
-    }
-
     void XRCameraMovementComponent::Reflect(AZ::ReflectContext* context)
     {
         if (auto serializeContext = azrtti_cast<AZ::SerializeContext*>(context))
@@ -99,25 +81,39 @@ namespace OpenXRVk
 
     void XRCameraMovementComponent::Activate()
     {
-        AzFramework::InputChannelEventListener::Connect();
-        AZ::TickBus::Handler::BusConnect();
+        Camera::CameraNotificationBus::Handler::BusConnect();
+        if (m_isActive)
+        {
+            AzFramework::InputChannelEventListener::Connect();
+            AZ::TickBus::Handler::BusConnect();
+        }
     }
 
     void XRCameraMovementComponent::Deactivate()
     {
-        AZ::TickBus::Handler::BusDisconnect();
-        AzFramework::InputChannelEventListener::Disconnect();
+        if (AZ::TickBus::Handler::BusIsConnected())
+        {
+            AZ::TickBus::Handler::BusDisconnect();
+        }
+        if (AzFramework::InputChannelEventListener::BusIsConnected())
+        {
+            AzFramework::InputChannelEventListener::Disconnect();
+        }
+        
+        Camera::CameraNotificationBus::Handler::BusDisconnect();
     }
 
     void XRCameraMovementComponent::OnTick(float deltaTime, [[maybe_unused]] AZ::ScriptTimePoint timePoint)
     {
-        AZ::Transform cameraTransform = GetCameraTransformFromCurrentView();
+        AZ::Transform cameraTransform;
+        AZ::TransformBus::EventResult(cameraTransform, GetEntityId(), &AZ::TransformBus::Events::GetWorldTM);
 
         // Update movement...
         const float moveSpeed = m_moveSpeed * deltaTime;
-        const AZ::Vector3 movementVec = (cameraTransform.GetBasisX() * m_movement.GetX())
+        const AZ::Vector3 movementVec = 
+              (cameraTransform.GetBasisX() * m_movement.GetX())
             + (cameraTransform.GetBasisY() * m_movement.GetY())
-            + (AZ::Vector3{0.f, 0.f, 1.f} * m_movement.GetZ()); // use a fixed UP for the Z direction
+            + (cameraTransform.GetBasisZ() * m_movement.GetZ());
         const AZ::Vector3 newPosition{ (cameraTransform.GetTranslation() + (movementVec * moveSpeed)) };
         cameraTransform.SetTranslation(newPosition);
 
@@ -160,6 +156,34 @@ namespace OpenXRVk
         if (channelId == AzFramework::InputDeviceXRController::Button::B)
         {   // up
             m_movement.SetZ(inputChannel.GetValue() * m_movementSensitivity);
+        }
+    }
+
+    // Camera::CameraNotificationBus::Handler overrides
+    void XRCameraMovementComponent::OnActiveViewChanged(const AZ::EntityId& activeEntityId)
+    {
+        m_isActive = activeEntityId == GetEntityId();
+        if (m_isActive)
+        {
+            if (!AZ::TickBus::Handler::BusIsConnected())
+            {
+                AZ::TickBus::Handler::BusConnect();
+            }
+            if (!AzFramework::InputChannelEventListener::BusIsConnected())
+            {
+                AzFramework::InputChannelEventListener::Connect();
+            }
+        }
+        else
+        {
+            if (AZ::TickBus::Handler::BusIsConnected())
+            {
+                AZ::TickBus::Handler::BusDisconnect();
+            }
+            if (AzFramework::InputChannelEventListener::BusIsConnected())
+            {
+                AzFramework::InputChannelEventListener::Disconnect();
+            }
         }
     }
 

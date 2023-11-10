@@ -8,8 +8,10 @@
 
 #pragma once
 
+#include <AzCore/Math/Transform.h>
 #include <OpenXRVk_Platform.h>
 #include <XR/XRBase.h>
+
 
 // Macro to generate stringify functions for OpenXR enumerations based data provided in openxr_reflection.h
 #define ENUM_CASE_STR(name, val) case name: return #name;
@@ -63,4 +65,10 @@ namespace OpenXRVk
     //! Iterate through the characters while caching the starting pointer to a string
     //! and every time ' ' is encountered replace it with '\0' to indicate the end of a string.
     AZStd::vector<const char*> ParseExtensionString(char* names);
+
+    AZ::Quaternion AzQuaternionFromXrPose(const XrPosef& pose, bool convertCoordinates = true);
+    AZ::Vector3 AzPositionFromXrPose(const XrPosef& pose, bool convertCoordinates = true);
+    AZ::Transform AzTransformFromXrPose(const XrPosef& pose, bool convertCoordinates = true);
+    XrPosef XrPoseFromAzTransform(const AZ::Transform& tm, bool convertCoordinates = true);
+
 }
