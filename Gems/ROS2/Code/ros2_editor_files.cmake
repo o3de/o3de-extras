@@ -55,6 +55,8 @@ set(FILES
     Source/RobotImporter/URDF/JointsMaker.h
     Source/RobotImporter/URDF/PrefabMakerUtils.cpp
     Source/RobotImporter/URDF/PrefabMakerUtils.h
+    Source/RobotImporter/URDF/RobotControlMaker.cpp
+    Source/RobotImporter/URDF/RobotControlMaker.h
     Source/RobotImporter/URDF/SensorsMaker.cpp
     Source/RobotImporter/URDF/SensorsMaker.h
     Source/RobotImporter/URDF/UrdfParser.cpp

@@ -16,8 +16,9 @@ namespace ROS2::SDFormat
         importerHook.m_pluginNames =
             AZStd::unordered_set<AZStd::string>{ "libgazebo_ros_diff_drive.so", "libgazebo_ros_skid_steer_drive.so" };
 
-        importerHook.m_sdfPluginToComponentCallback = [](AZ::Entity& entity,
-                                                         const sdf::Model& sdfSensor) -> ModelPluginImporterHook::ConvertPluginOutcome
+        importerHook.m_sdfPluginToComponentCallback =
+            []([[maybe_unused]] AZ::Entity& entity,
+               [[maybe_unused]] const sdf::Plugin& sdfPlugin) -> ModelPluginImporterHook::ConvertPluginOutcome
         {
             // TODO: print some text for debug -> this should be fixed with a real code
             AZ_Error("ROS2SkidSteeringModel", false, "Hello, is it me you are looking for?");

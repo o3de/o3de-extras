@@ -18,7 +18,7 @@ namespace sdf
 {
     inline namespace v13
     {
-        class Model;
+        class Plugin;
     } // namespace v13
 } // namespace sdf
 
@@ -45,7 +45,7 @@ namespace ROS2::SDFormat
         //! @param sdf::Model& a reference to the models data in SDFormat, which is used to configure O3DE components
         using ErrorString = AZStd::string;
         using ConvertPluginOutcome = AZ::Outcome<void, ErrorString>;
-        using ConvertSDFModelPluginCallback = AZStd::function<ConvertPluginOutcome(AZ::Entity&, const sdf::Model&)>;
+        using ConvertSDFModelPluginCallback = AZStd::function<ConvertPluginOutcome(AZ::Entity&, const sdf::Plugin&)>;
         ConvertSDFModelPluginCallback m_sdfPluginToComponentCallback;
     };
 

@@ -12,6 +12,7 @@
 #include "CollidersMaker.h"
 #include "InertialsMaker.h"
 #include "JointsMaker.h"
+#include "RobotControlMaker.h"
 #include "SensorsMaker.h"
 #include "UrdfParser.h"
 #include "VisualsMaker.h"
@@ -76,7 +77,6 @@ namespace ROS2
             const sdf::Model* attachedModel,
             AZ::EntityId parentEntityId,
             AZStd::vector<AZ::EntityId>& createdEntities);
-        void AddRobotControl(AZ::EntityId rootEntityId);
         static void MoveEntityToDefaultSpawnPoint(const AZ::EntityId& rootEntityId, AZStd::optional<AZ::Transform> spawnPosition);
 
         // Returns if SDF document contains any model objects, be that at the root or within an <world> tag
@@ -90,6 +90,7 @@ namespace ROS2
         InertialsMaker m_inertialsMaker;
         JointsMaker m_jointsMaker;
         ArticulationsMaker m_articulationsMaker;
+        RobotControlMaker m_controlMaker;
 
         //! Type of a status message.
         enum class StatusMessageType
