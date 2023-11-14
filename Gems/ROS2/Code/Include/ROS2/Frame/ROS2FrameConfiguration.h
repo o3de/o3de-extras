@@ -29,6 +29,8 @@ namespace ROS2
         bool m_publishTransform = true;
         bool m_isDynamic = false;
 
+        //! Sets the effective namespace shown in the Editor.
+        //! @param effectiveNamespace namespace to be set.
         void SetEffectiveNamespace(const AZStd::string& effectiveNamespace);
 
     private:

@@ -7,13 +7,6 @@
  *
  */
 
-//#include "Components/EditorWhiteBoxColliderComponent.h"
-//#include "Components/WhiteBoxColliderComponent.h"
-//#include "WhiteBox/EditorWhiteBoxComponentBus.h"
-//#include "WhiteBox/WhiteBoxToolApi.h"
-//#include "WhiteBoxTestFixtures.h"
-//#include "WhiteBoxTestUtil.h"
-
 #include <AzCore/Asset/AssetManagerComponent.h>
 #include <AzCore/Component/ComponentApplication.h>
 #include <AzCore/Component/ComponentApplicationBus.h>
@@ -34,7 +27,6 @@
 #include <AzToolsFramework/UnitTest/ToolsTestApplication.h>
 #include <ROS2/Frame/ROS2FrameComponent.h>
 #include <ROS2/ROS2Bus.h>
-// #include <ROS2/Sensor/ROS2SensorComponent.h>
 #include <ROS2SystemComponent.h>
 
 #include <QApplication>

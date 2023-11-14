@@ -65,7 +65,7 @@ namespace ROS2
         return m_configuration.m_namespaceConfiguration.GetNamespace();
     }
 
-    void ROS2FrameEditorComponent::OnNamespaceChange(AZStd::string parentsNamespace)
+    void ROS2FrameEditorComponent::UpdateNamespace(const AZStd::string& parentsNamespace)
     {
         m_configuration.m_namespaceConfiguration.SetParentsNamespace(parentsNamespace);
         m_configuration.m_namespaceConfiguration.PopulateNamespace(IsTopLevel(), GetEntity()->GetName());

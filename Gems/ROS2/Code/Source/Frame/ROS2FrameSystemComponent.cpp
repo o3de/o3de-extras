@@ -136,11 +136,20 @@ namespace ROS2
             }
             nextEntityId = currentTransform->GetParentId();
             AZ::Entity* parent = nullptr;
-            AZ::ComponentApplicationBus::BroadcastResult(parent, &AZ::ComponentApplicationRequests::FindEntity, nextEntityId);
-            if (parent == nullptr || !nextEntityId.IsValid())
+
+            if (!nextEntityId.IsValid())
             { // Found top of the level
                 path.push_back(nextEntityId);
                 return path;
+            }
+            else
+            {
+                AZ::ComponentApplicationBus::BroadcastResult(parent, &AZ::ComponentApplicationRequests::FindEntity, nextEntityId);
+                if (parent == nullptr)
+                {
+                    path.push_back(nextEntityId);
+                    return path;
+                }
             }
             if (ROS2FrameComponentBus::HasHandlers(nextEntityId))
             {
@@ -174,9 +183,9 @@ namespace ROS2
 
         bool laysOnPath = false;
 
-        if (m_frameChildren.contains(frameParent))
+        if (auto frameChildrenIt = m_frameChildren.find(frameParent); frameChildrenIt != m_frameChildren.end())
         {
-            AZStd::set<AZ::EntityId>& parentsChildren = m_frameChildren.find(frameParent)->second;
+            AZStd::set<AZ::EntityId>& parentsChildren = frameChildrenIt->second;
             // Check if a frameToRegister lays on one or more childrens paths
             AZStd::vector<AZ::EntityId> childrenToErase;
             for (const AZ::EntityId& parentsChild : parentsChildren)
@@ -244,9 +253,7 @@ namespace ROS2
         }
 
         // Update namespaces
-        AZStd::string ns;
-        ROS2FrameComponentBus::EventResult(ns, frameParent, &ROS2FrameComponentBus::Events::GetNamespace);
-        UpdateNamespaces(frameToRegister, ns);
+        UpdateNamespaces(frameToRegister, frameParent);
     }
 
     void ROS2FrameSystemComponent::UnregisterFrame(const AZ::EntityId& frameToUnregister)
@@ -296,9 +303,7 @@ namespace ROS2
         }
 
         // Update namespaces before removal of children
-        AZStd::string ns;
-        ROS2FrameComponentBus::EventResult(ns, frameToUnregisterParent, &ROS2FrameComponentBus::Events::GetNamespace);
-        UpdateNamespaces(frameToUnregister, ns, false);
+        UpdateNamespaces(frameToUnregister, frameToUnregisterParent, false);
 
         // Remove all references to the unregisteredEntity
         m_frameChildren.erase(frameToUnregister);
@@ -392,14 +397,19 @@ namespace ROS2
         }
 
         // Notify about namespace changes
+        UpdateNamespaces(frameEntityId, newFrameParent);
+    }
+
+    void ROS2FrameSystemComponent::UpdateNamespaces(AZ::EntityId frameEntity, AZ::EntityId frameParentEntity, bool isActive)
+    {
         AZStd::string ns;
-        ROS2FrameComponentBus::EventResult(ns, newFrameParent, &ROS2FrameComponentBus::Events::GetNamespace);
-        UpdateNamespaces(frameEntityId, ns);
+        ROS2FrameComponentBus::EventResult(ns, frameParentEntity, &ROS2FrameComponentBus::Events::GetNamespace);
+        UpdateNamespaces(frameEntity, ns);
     }
 
     void ROS2FrameSystemComponent::UpdateNamespaces(AZ::EntityId frameEntity, AZStd::string parentsNamespace, bool isActive)
     {
-        ROS2FrameComponentBus::Event(frameEntity, &ROS2FrameComponentBus::Events::OnNamespaceChange, parentsNamespace);
+        ROS2FrameComponentBus::Event(frameEntity, &ROS2FrameComponentBus::Events::UpdateNamespace, parentsNamespace);
         const AZStd::set<AZ::EntityId>& children = m_frameChildren.find(frameEntity)->second;
         AZStd::string ns;
         if (isActive)
@@ -421,9 +431,7 @@ namespace ROS2
         if (frameEntityId.IsValid() && m_frameParent.contains(frameEntityId))
         {
             // Notify about namespace changes
-            AZStd::string ns;
-            ROS2FrameComponentBus::EventResult(ns, m_frameParent.find(frameEntityId)->second, &ROS2FrameComponentBus::Events::GetNamespace);
-            UpdateNamespaces(frameEntityId, ns);
+            UpdateNamespaces(frameEntityId, m_frameParent.find(frameEntityId)->second);
         }
     }
 

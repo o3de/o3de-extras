@@ -39,7 +39,14 @@ namespace ROS2
         //! @param isRoot Whether or not the namespace belongs to top-level entity in the entity hierarchy.
         //! @param entityName Raw (not ros-ified) name of the entity to which the namespace belongs.
         void PopulateNamespace(bool isRoot, const AZStd::string& entityName);
+
+        //! Get the namespace of the frame, based on the parent namespace from the ROS2FrameSystemComponent.
+        //! @return namespace of the frame.
         AZStd::string GetNamespace() const;
+
+        //! Get the namespace of the frame, based on the provided namespace.
+        //! @param parentsNamespace namespace of the parent frame.
+        //! @return namespace of the frame.
         AZStd::string GetNamespace(const AZStd::string& parentsNamespace) const;
 
         //! Update namespace and strategy.

@@ -83,6 +83,12 @@ namespace ROS2
         //! @param isActive boolean value describing if the frameEntity is currently active.
         void UpdateNamespaces(AZ::EntityId frameEntity, AZStd::string parentsNamespace = "", bool isActive = true);
 
+        //! Updates the namespaces of all children of the frameEntity.
+        //! @param frameEntity frame to be updated.
+        //! @param frameParentEntity entityId of the parent frame.
+        //! @param isActive boolean value describing if the frameEntity is currently active.
+        void UpdateNamespaces(AZ::EntityId frameEntity, AZ::EntityId frameParentEntity, bool isActive = false);
+
         AZStd::map<AZ::EntityId, AZStd::set<AZ::EntityId>> m_frameChildren;
         AZStd::map<AZ::EntityId, AZ::EntityId> m_frameParent;
         AZStd::map<AZ::EntityId, AZStd::set<AZ::EntityId>> m_watchedEntities;

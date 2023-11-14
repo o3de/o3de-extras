@@ -65,7 +65,7 @@ namespace ROS2
         AZStd::string GetFrameID() const override;
         AZ::Name GetJointName() const override;
         AZStd::string GetNamespace() const override;
-        void OnNamespaceChange(AZStd::string parentsNamespace) override;
+        void UpdateNamespace(const AZStd::string& parentsNamespace) override;
         AZStd::string GetGlobalFrameName() const override;
         bool IsTopLevel() const override; //!< True if this entity does not have a parent entity with ROS2.
         AZ::EntityId GetFrameParent() const override;
