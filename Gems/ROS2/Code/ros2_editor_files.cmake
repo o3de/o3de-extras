@@ -42,8 +42,8 @@ set(FILES
     Source/RobotImporter/SDFormat/Hooks/ROS2LidarSensorHook.cpp
     Source/RobotImporter/SDFormat/Hooks/ROS2SkidSteeringModelHook.cpp
     Source/RobotImporter/SDFormat/ROS2ModelPluginHooks.h
-    Source/RobotImporter/SDFormat/ROS2SensorHooksUtils.cpp
-    Source/RobotImporter/SDFormat/ROS2SensorHooksUtils.h
+    Source/RobotImporter/SDFormat/ROS2SDFormatHooksUtils.cpp
+    Source/RobotImporter/SDFormat/ROS2SDFormatHooksUtils.h
     Source/RobotImporter/SDFormat/ROS2SensorHooks.h
     Source/RobotImporter/URDF/ArticulationsMaker.cpp
     Source/RobotImporter/URDF/ArticulationsMaker.h
