@@ -55,7 +55,7 @@ namespace ROS2
         for (const auto& p : plugins)
         {
             const bool success = AddPlugin(entityId, p);
-            AZ_Warning("SensorMaker", success, "Cannot find a model plugin hook for plugin %s", p.Name().c_str());
+            AZ_Warning("RobotControlMaker", success, "Cannot find a model plugin hook for plugin %s", p.Name().c_str());
         }
     }
 } // namespace ROS2
