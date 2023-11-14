@@ -23,8 +23,8 @@ namespace ROS2
         {
             serialize->Class<GeoReferenceLevelConfig, AZ::ComponentConfig>()
                 ->Version(1)
-                ->Field("EnuOriginWSG84", &GeoReferenceLevelConfig::m_OriginLocation)
-                ->Field("EnuOriginLocationEntityId", &GeoReferenceLevelConfig::m_EnuOriginLocationEntityId);
+                ->Field("EnuOriginWSG84", &GeoReferenceLevelConfig::m_originLocation)
+                ->Field("EnuOriginLocationEntityId", &GeoReferenceLevelConfig::m_enuOriginLocationEntityId);
 
             if (auto* editContext = serialize->GetEditContext())
             {
@@ -32,12 +32,12 @@ namespace ROS2
                     ->ClassElement(AZ::Edit::ClassElements::EditorData, "")
                     ->DataElement(
                         AZ::Edit::UIHandlers::Default,
-                        &GeoReferenceLevelConfig::m_EnuOriginLocationEntityId,
+                        &GeoReferenceLevelConfig::m_enuOriginLocationEntityId,
                         "ENU Origin Transform",
                         "ENU (East-North-Up) origin in the level")
                     ->DataElement(
                         AZ::Edit::UIHandlers::Default,
-                        &GeoReferenceLevelConfig::m_OriginLocation,
+                        &GeoReferenceLevelConfig::m_originLocation,
                         "ENU Origin Coordinates in WGS84",
                         "ENU Origin Coordinates in WGS84");
             }
@@ -74,7 +74,7 @@ namespace ROS2
 
     void GeoReferenceLevelController::Activate(AZ::EntityId entityId)
     {
-        AZ::EntityBus::Handler::BusConnect(m_config.m_EnuOriginLocationEntityId);
+        AZ::EntityBus::Handler::BusConnect(m_config.m_enuOriginLocationEntityId);
         GeoreferenceRequestsBus::Handler::BusConnect();
     }
 
@@ -86,17 +86,17 @@ namespace ROS2
 
     void GeoReferenceLevelController::OnEntityActivated(const AZ::EntityId& entityId)
     {
-        m_EnuOriginTransform = AZ::Transform::CreateIdentity();
-        AZ::TransformBus::EventResult(m_EnuOriginTransform, m_config.m_EnuOriginLocationEntityId, &AZ::TransformBus::Events::GetWorldTM);
-        m_EnuOriginTransform.Invert();
+        m_enuOriginTransform = AZ::Transform::CreateIdentity();
+        AZ::TransformBus::EventResult(m_enuOriginTransform, m_config.m_enuOriginLocationEntityId, &AZ::TransformBus::Events::GetWorldTM);
+        m_enuOriginTransform.Invert();
         AZ::EntityBus::Handler::BusDisconnect();
     }
 
     WGS::WGS84Coordinate GeoReferenceLevelController::ConvertFromLevelToWSG84(const AZ::Vector3& xyz)
     {
         using namespace ROS2::Utils::GeodeticConversions;
-        const auto enu = WGS::Vector3d(m_EnuOriginTransform.TransformPoint(xyz));
-        const auto ecef = ENUToECEF(m_config.m_OriginLocation, enu);
+        const auto enu = WGS::Vector3d(m_enuOriginTransform.TransformPoint(xyz));
+        const auto ecef = ENUToECEF(m_config.m_originLocation, enu);
         return ECEFToWGS84(ecef);
     }
 
@@ -104,13 +104,13 @@ namespace ROS2
     {
         using namespace ROS2::Utils::GeodeticConversions;
         const auto ecef = WGS84ToECEF(latLon);
-        const auto enu = ECEFToENU(m_config.m_OriginLocation, ecef);
-        return m_EnuOriginTransform.GetInverse().TransformPoint(enu.ToVector3f());
+        const auto enu = ECEFToENU(m_config.m_originLocation, ecef);
+        return m_enuOriginTransform.GetInverse().TransformPoint(enu.ToVector3f());
     };
 
-    AZ::Quaternion GeoReferenceLevelController::ConvertFromLevelRotationToENU()
+    AZ::Quaternion GeoReferenceLevelController::GetRotationFromLevelToENU()
     {
-        return m_EnuOriginTransform.GetRotation();
+        return m_enuOriginTransform.GetRotation();
     };
 
     void GeoReferenceLevelController::SetConfiguration(const GeoReferenceLevelConfig& config)

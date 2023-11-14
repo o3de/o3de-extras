@@ -32,7 +32,7 @@ namespace ROS2::Utils::GeodeticConversions
     {
         const double latitudeRad = DegToRad(latitudeLongitudeAltitude.m_latitude);
         const double longitudeRad = DegToRad(latitudeLongitudeAltitude.m_longitude);
-        const double& altitude = latitudeLongitudeAltitude.m_altitude;
+        const double altitude = latitudeLongitudeAltitude.m_altitude;
 
         const double helper = std::sqrt(1.0f - firstEccentricitySquared * std::sin(latitudeRad) * std::sin(latitudeRad));
 

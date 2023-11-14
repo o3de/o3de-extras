@@ -30,10 +30,10 @@ namespace ROS2
         //!  @return Vector3 in Level's coordinate system.
         virtual AZ::Vector3 ConvertFromWSG84ToLevel(const WGS::WGS84Coordinate& latLon) = 0;
 
-        //! Function converts from Level's rotation to ENU (East-North-Up) rotation.
+        //! Function returns rotation from Level's frame to ENU's (East-North-Up) rotation.
         //! Function is useful to fin georeference rotation of the level.
         //! @return Quaternion in ENU coordinate system.
-        virtual AZ::Quaternion ConvertFromLevelRotationToENU() = 0;
+        virtual AZ::Quaternion GetRotationFromLevelToENU() = 0;
     };
 
     class GeoreferenceRequestsTraits : public AZ::EBusTraits

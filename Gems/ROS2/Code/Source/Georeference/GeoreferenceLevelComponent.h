@@ -21,8 +21,8 @@ namespace ROS2
 
         static void Reflect(AZ::ReflectContext* context);
 
-        AZ::EntityId m_EnuOriginLocationEntityId; //!< EntityId of the entity that lays in the origin of the ENU coordinate system
-        WGS::WGS84Coordinate m_OriginLocation; //!< Location of the entity that lays in the origin of the ENU coordinate system
+        AZ::EntityId m_enuOriginLocationEntityId; //!< EntityId of the entity that lays in the origin of the ENU coordinate system
+        WGS::WGS84Coordinate m_originLocation; //!< Location of the entity that lays in the origin of the ENU coordinate system
     };
 
     class GeoReferenceLevelController
@@ -51,10 +51,10 @@ namespace ROS2
         // GeoreferenceRequestsBus::Handler overrides ...
         WGS::WGS84Coordinate ConvertFromLevelToWSG84(const AZ::Vector3& xyz) override;
         AZ::Vector3 ConvertFromWSG84ToLevel(const WGS::WGS84Coordinate& latLon) override;
-        AZ::Quaternion ConvertFromLevelRotationToENU() override;
+        AZ::Quaternion GetRotationFromLevelToENU() override;
 
         GeoReferenceLevelConfig m_config;
-        AZ::Transform m_EnuOriginTransform; //!< Transform of the entity that lays in the origin of the ENU coordinate system
+        AZ::Transform m_enuOriginTransform; //!< Transform of the entity that lays in the origin of the ENU coordinate system
     };
 
     using GeoReferenceLevelComponentBase = AzFramework::Components::ComponentAdapter<GeoReferenceLevelController, GeoReferenceLevelConfig>;
