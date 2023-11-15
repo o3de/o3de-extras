@@ -40,9 +40,12 @@ namespace ROS2
 
         m_spawnService = ros2Node->create_service<gazebo_msgs::srv::SpawnEntity>(
             "spawn_entity",
-            [this](const SpawnEntityRequest request, SpawnEntityResponse response)
+            [this](
+                const SpawnEntityServiceHandle service_handle,
+                const std::shared_ptr<rmw_request_id_t> header,
+                const SpawnEntityRequest request)
             {
-                SpawnEntity(request, response);
+                SpawnEntity(service_handle, header, request);
             });
 
         m_getSpawnPointInfoService = ros2Node->create_service<gazebo_msgs::srv::GetModelState>(
@@ -89,17 +92,21 @@ namespace ROS2
         }
     }
 
-    void ROS2SpawnerComponent::SpawnEntity(const SpawnEntityRequest request, SpawnEntityResponse response)
+    void ROS2SpawnerComponent::SpawnEntity(
+        const SpawnEntityServiceHandle service_handle, const std::shared_ptr<rmw_request_id_t> header, const SpawnEntityRequest request)
     {
         AZStd::string spawnableName(request->name.c_str());
         AZStd::string spawnableNamespace(request->robot_namespace.c_str());
         AZStd::string spawnPointName(request->xml.c_str(), request->xml.size());
 
+        SpawnEntityResponse response;
+
         auto namespaceValidation = ROS2Names::ValidateNamespace(spawnableNamespace);
         if (!namespaceValidation.IsSuccess())
         {
-            response->success = false;
-            response->status_message = namespaceValidation.GetError().data();
+            response.success = false;
+            response.status_message = namespaceValidation.GetError().data();
+            service_handle->send_response(*header, response);
             return;
         }
 
@@ -107,8 +114,9 @@ namespace ROS2
 
         if (!m_controller.GetSpawnables().contains(spawnableName))
         {
-            response->success = false;
-            response->status_message = "Could not find spawnable with given name: " + request->name;
+            response.success = false;
+            response.status_message = "Could not find spawnable with given name: " + request->name;
+            service_handle->send_response(*header, response);
             return;
         }
 
@@ -146,9 +154,14 @@ namespace ROS2
             PreSpawn(id, view, transform, spawnableName, spawnableNamespace);
         };
 
-        spawner->SpawnAllEntities(m_tickets.at(spawnableName), optionalArgs);
+        optionalArgs.m_completionCallback = [service_handle, header](auto id, auto view)
+        {
+            SpawnEntityResponse response;
+            response.success = true;
+            service_handle->send_response(*header, response);
+        };
 
-        response->success = true;
+        spawner->SpawnAllEntities(m_tickets.at(spawnableName), optionalArgs);
     }
 
     void ROS2SpawnerComponent::PreSpawn(
