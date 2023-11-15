@@ -34,21 +34,6 @@ namespace ROS2
         return false;
     }
 
-    void RobotControlMaker::AddRobotControl(AZ::EntityId entityId) const
-    {
-        const auto componentId = Utils::CreateComponent(entityId, ROS2RobotControlComponent::TYPEINFO_Uuid());
-        if (componentId)
-        {
-            ControlConfiguration controlConfiguration;
-            TopicConfiguration subscriberConfiguration;
-            subscriberConfiguration.m_topic = "cmd_vel";
-            AZ::Entity* entity = AzToolsFramework::GetEntityById(entityId);
-            auto* component = Utils::GetGameOrEditorComponent<ROS2RobotControlComponent>(entity);
-            component->SetControlConfiguration(controlConfiguration);
-            component->SetSubscriberConfiguration(subscriberConfiguration);
-        }
-    }
-
     void RobotControlMaker::AddControlPlugins(const sdf::Model& model, AZ::EntityId entityId) const
     {
         const auto plugins = model.Plugins();

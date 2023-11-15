@@ -65,7 +65,6 @@ namespace ROS2::SDFormat
             VehicleDynamics::SkidSteeringModelLimits modelLimits(11.0f, 13.0f, 15.0f, 17.0f);
 
             // Create required components
-            // Note: ROS2FrameComponent and ROS2RobotControlComponent might be created already
             HooksUtils::CreateComponent<ROS2FrameComponent>(entity);
             HooksUtils::CreateComponent<ROS2RobotControlComponent>(entity);
             HooksUtils::CreateComponent<VehicleDynamics::SkidSteeringModelComponent>(

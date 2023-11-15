@@ -21,10 +21,6 @@ namespace ROS2
     class RobotControlMaker
     {
     public:
-        //! Adds ROS2RobotControlComponent component to a given entity.
-        //! @param entityId A non-active entity which will be affected.
-        void AddRobotControl(AZ::EntityId entityId) const;
-
         //! Adds model control plugins and sets it accordingly based on the SDFormat description.
         //! @param model A parsed SDF model which could hold information about a model control plugin.
         //! @param entityId A non-active entity which will be affected.

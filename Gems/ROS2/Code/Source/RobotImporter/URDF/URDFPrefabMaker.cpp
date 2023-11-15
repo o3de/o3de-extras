@@ -324,7 +324,7 @@ namespace ROS2
         }
 
         // Set the hierarchy
-        AZStd::vector<AZ::EntityId> linkEntityIdsWithoutParent;
+        AZStd::vector<AZStd::pair<AZ::EntityId, const sdf::Model*>> linkEntityIdsWithoutParent;
         for (const auto& [fullLinkName, linkPtr, attachedModel] : linksMapper.m_links)
         {
             std::string linkName = linkPtr->Name();
@@ -343,11 +343,15 @@ namespace ROS2
             if (jointsWhereLinkIsChild.empty())
             {
                 // emplace unique entry to the container of links that don't have a parent link associated with it
+                auto linkPrefabTest = [&linkPrefabResult](const AZStd::pair<AZ::EntityId, const sdf::Model*>& query)
+                {
+                    return (query.first == linkPrefabResult.GetValue());
+                };
                 if (auto existingLinkIt =
-                        AZStd::find(linkEntityIdsWithoutParent.begin(), linkEntityIdsWithoutParent.end(), linkPrefabResult.GetValue());
+                        AZStd::find_if(linkEntityIdsWithoutParent.begin(), linkEntityIdsWithoutParent.end(), linkPrefabTest);
                     existingLinkIt == linkEntityIdsWithoutParent.end())
                 {
-                    linkEntityIdsWithoutParent.emplace_back(linkPrefabResult.GetValue());
+                    linkEntityIdsWithoutParent.emplace_back(AZStd::make_pair(linkPrefabResult.GetValue(), attachedModel));
                 }
                 AZ_Trace("CreatePrefabFromUrdfOrSdf", "Link %s has no parents\n", linkName.c_str());
                 continue;
@@ -486,18 +490,14 @@ namespace ROS2
         }
 
         // Use the first entity based on a link that is not parented to any other link
-        if (!linkEntityIdsWithoutParent.empty() && linkEntityIdsWithoutParent.front().IsValid())
+        if (!linkEntityIdsWithoutParent.empty())
         {
-            AZ::EntityId contentEntityId = linkEntityIdsWithoutParent.front();
-            m_controlMaker.AddRobotControl(contentEntityId);
-        }
-
-        // Create components serving as SDFormat model plugins
-        for (const auto& [modelPtr, entityRes] : createdModels)
-        {
-            if (entityRes)
+            for (const auto& [contentEntityId, modelPtr] : linkEntityIdsWithoutParent)
             {
-                m_controlMaker.AddControlPlugins(*modelPtr, entityRes.GetValue());
+                if (contentEntityId.IsValid())
+                {
+                    m_controlMaker.AddControlPlugins(*modelPtr, contentEntityId);
+                }
             }
         }
 
