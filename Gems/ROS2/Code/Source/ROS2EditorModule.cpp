@@ -5,6 +5,7 @@
  * SPDX-License-Identifier: Apache-2.0 OR MIT
  *
  */
+#include "Georeference/GeoreferenceLevelEditorComponent.h"
 #include "Spawner/ROS2SpawnPointEditorComponent.h"
 #include "Spawner/ROS2SpawnerEditorComponent.h"
 #include <Camera/ROS2CameraSensorEditorComponent.h>
@@ -44,7 +45,8 @@ namespace ROS2
                   ROS2SpawnerEditorComponent::CreateDescriptor(),
                   ROS2SpawnPointEditorComponent::CreateDescriptor(),
                   SdfAssetBuilderSystemComponent::CreateDescriptor(),
-                  JointsManipulationEditorComponent::CreateDescriptor() });
+                  JointsManipulationEditorComponent::CreateDescriptor(),
+                  GeoReferenceLevelEditorComponent::CreateDescriptor() });
         }
 
         AZ::ComponentTypeList GetRequiredSystemComponents() const override

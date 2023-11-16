@@ -6,13 +6,14 @@
  *
  */
 
-#include <AzCore/Math/Matrix4x4.h>
 #include "ROS2GNSSSensorComponent.h"
+#include <AzCore/Math/Matrix4x4.h>
 #include <ROS2/Frame/ROS2FrameComponent.h>
 #include <ROS2/ROS2GemUtilities.h>
 #include <ROS2/Utilities/ROS2Names.h>
 
-#include "GNSSFormatConversions.h"
+#include "Georeference/GNSSFormatConversions.h"
+#include <ROS2/Georeference/GeoreferenceBus.h>
 
 namespace ROS2
 {
@@ -23,12 +24,9 @@ namespace ROS2
 
     void ROS2GNSSSensorComponent::Reflect(AZ::ReflectContext* context)
     {
-        GNSSSensorConfiguration::Reflect(context);
-
         if (auto* serialize = azrtti_cast<AZ::SerializeContext*>(context))
         {
-            serialize->Class<ROS2GNSSSensorComponent, SensorBaseType>()->Version(3)->Field(
-                "gnssSensorConfiguration", &ROS2GNSSSensorComponent::m_gnssConfiguration);
+            serialize->Class<ROS2GNSSSensorComponent, SensorBaseType>()->Version(4);
 
             if (auto* editContext = serialize->GetEditContext())
             {
@@ -38,11 +36,6 @@ namespace ROS2
                     ->Attribute(AZ::Edit::Attributes::AppearsInAddComponentMenu, AZ_CRC_CE("Game"))
                     ->Attribute(AZ::Edit::Attributes::Icon, "Editor/Icons/Components/ROS2GNSSSensor.svg")
                     ->Attribute(AZ::Edit::Attributes::ViewportIcon, "Editor/Icons/Components/Viewport/ROS2GNSSSensor.svg")
-                    ->DataElement(
-                        AZ::Edit::UIHandlers::Default,
-                        &ROS2GNSSSensorComponent::m_gnssConfiguration,
-                        "GNSS sensor configuration",
-                        "GNSS sensor configuration")
                     ->Attribute(AZ::Edit::Attributes::Visibility, AZ::Edit::PropertyVisibility::ShowChildrenOnly);
             }
         }
@@ -57,9 +50,7 @@ namespace ROS2
         m_sensorConfiguration.m_publishersConfigurations.insert(AZStd::make_pair(GNSSMsgType, pc));
     }
 
-    ROS2GNSSSensorComponent::ROS2GNSSSensorComponent(
-        const SensorConfiguration& sensorConfiguration, const GNSSSensorConfiguration& gnssConfiguration)
-        : m_gnssConfiguration(gnssConfiguration)
+    ROS2GNSSSensorComponent::ROS2GNSSSensorComponent(const SensorConfiguration& sensorConfiguration)
     {
         m_sensorConfiguration = sensorConfiguration;
     }
@@ -95,25 +86,23 @@ namespace ROS2
 
     void ROS2GNSSSensorComponent::FrequencyTick()
     {
-        const AZ::Vector3 currentPosition = GetCurrentPose().GetTranslation();
-        const AZ::Vector3 currentPositionECEF = GNSS::ENUToECEF(
-            { m_gnssConfiguration.m_originLatitudeDeg, m_gnssConfiguration.m_originLongitudeDeg, m_gnssConfiguration.m_originAltitude },
-            currentPosition);
-        const AZ::Vector3 currentPositionWGS84 = GNSS::ECEFToWGS84(currentPositionECEF);
 
-        m_gnssMsg.latitude = currentPositionWGS84.GetX();
-        m_gnssMsg.longitude = currentPositionWGS84.GetY();
-        m_gnssMsg.altitude = currentPositionWGS84.GetZ();
+        AZ::Vector3 currentPosition{ 0.0f };
+        AZ::TransformBus::EventResult(currentPosition, GetEntityId(), &AZ::TransformBus::Events::GetWorldTranslation);
+
+        WGS::WGS84Coordinate currentPositionWGS84;
+        ROS2::GeoreferenceRequestsBus::BroadcastResult(
+            currentPositionWGS84, &GeoreferenceRequests::ConvertFromLevelToWSG84, currentPosition);
+
+        m_gnssMsg.latitude = currentPositionWGS84.m_latitude;
+        m_gnssMsg.longitude = currentPositionWGS84.m_longitude;
+        m_gnssMsg.altitude = currentPositionWGS84.m_altitude;
 
         m_gnssMsg.status.status = sensor_msgs::msg::NavSatStatus::STATUS_SBAS_FIX;
-        m_gnssMsg.status.service = sensor_msgs::msg::NavSatStatus::SERVICE_GALILEO;
+        m_gnssMsg.status.service = sensor_msgs::msg::NavSatStatus::SERVICE_GPS;
 
         m_gnssPublisher->publish(m_gnssMsg);
     }
 
-    AZ::Transform ROS2GNSSSensorComponent::GetCurrentPose() const
-    {
-        auto* ros2Frame = Utils::GetGameOrEditorComponent<ROS2FrameComponent>(GetEntity());
-        return ros2Frame->GetFrameTransform();
-    }
+
 } // namespace ROS2

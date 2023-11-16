@@ -14,8 +14,6 @@
 #include <rclcpp/publisher.hpp>
 #include <sensor_msgs/msg/nav_sat_fix.hpp>
 
-#include "GNSSSensorConfiguration.h"
-
 namespace ROS2
 {
     //! Global Navigation Satellite Systems (GNSS) sensor component class
@@ -27,7 +25,7 @@ namespace ROS2
     public:
         AZ_COMPONENT(ROS2GNSSSensorComponent, "{55B4A299-7FA3-496A-88F0-764C75B0E9A7}", SensorBaseType);
         ROS2GNSSSensorComponent();
-        ROS2GNSSSensorComponent(const SensorConfiguration& sensorConfiguration, const GNSSSensorConfiguration& gnssConfiguration);
+        ROS2GNSSSensorComponent(const SensorConfiguration& sensorConfiguration);
         ~ROS2GNSSSensorComponent() = default;
         static void Reflect(AZ::ReflectContext* context);
         //////////////////////////////////////////////////////////////////////////
@@ -44,7 +42,6 @@ namespace ROS2
         //! @return Current entity position.
         [[nodiscard]] AZ::Transform GetCurrentPose() const;
 
-        GNSSSensorConfiguration m_gnssConfiguration;
         std::shared_ptr<rclcpp::Publisher<sensor_msgs::msg::NavSatFix>> m_gnssPublisher;
         sensor_msgs::msg::NavSatFix m_gnssMsg;
     };

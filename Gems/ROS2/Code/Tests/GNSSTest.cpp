@@ -9,7 +9,7 @@
 #include <AzCore/UnitTest/TestTypes.h>
 #include <AzTest/AzTest.h>
 
-#include <GNSS/GNSSFormatConversions.h>
+#include <Georeference/GNSSFormatConversions.h>
 
 namespace UnitTest
 {
@@ -18,75 +18,82 @@ namespace UnitTest
     {
     };
 
+    constexpr double OneMillimiter = 0.001; // 1 mm in meters
+    constexpr double OneMillimeterInDegreesOnEquator = 360.0 / (40000.0 * 1000.0 / OneMillimiter); // 40000 km is the equator length
+
     TEST_F(GNSSTest, WGS84ToECEF)
     {
-        const AZStd::vector<AZStd::pair<AZ::Vector3, AZ::Vector3>> inputGoldSet = {
-            { { 10.0f, 20.0f, 300.0f }, { 5903307.167667380f, 2148628.092761247f, 1100300.642188661f } },
-            { { -70.0f, 170.0f, 500.0f }, { -2154856.524084172f, 379959.3447517005f, -5971509.853428957f } },
-            { { 50.0f, -120.0f, -100.0f }, { -2053899.906222906f, -3557458.991239029f, 4862712.433262121f } },
+        using namespace ROS2::WGS;
+        const AZStd::vector<AZStd::pair<WGS84Coordinate, Vector3d>> inputGoldSet = {
+            { { 10.0, 20.0, 300.0 }, { 5903307.167667380, 2148628.092761247, 1100300.642188661 } },
+            { { -70.0, 170.0, 500.0 }, { -2154856.524084172, 379959.3447517005, -5971509.853428957 } },
+            { { 50.0, -120.0, -100.0 }, { -2053899.906222906, -3557458.991239029, 4862712.433262121 } },
         };
         for (const auto& [input, goldResult] : inputGoldSet)
         {
-            AZ::Vector3 result = ROS2::GNSS::WGS84ToECEF(input);
-            EXPECT_NEAR(result.GetX(), goldResult.GetX(), 1.0f);
-            EXPECT_NEAR(result.GetY(), goldResult.GetY(), 1.0f);
-            EXPECT_NEAR(result.GetZ(), goldResult.GetZ(), 1.0f);
+            const auto result = ROS2::GNSS::WGS84ToECEF(input);
+            EXPECT_NEAR(result.m_x, goldResult.m_x, OneMillimiter);
+            EXPECT_NEAR(result.m_y, goldResult.m_y, OneMillimiter);
+            EXPECT_NEAR(result.m_z, goldResult.m_z, OneMillimiter);
         }
     }
 
     TEST_F(GNSSTest, ECEFToENU)
     {
-        const AZStd::vector<AZStd::tuple<AZ::Vector3, AZ::Vector3, AZ::Vector3>> inputGoldSet = {
-            { { -2053900.0f, -3557459.0f, 4862712.0f }, { 50.0f, -120.0f, -100.0f }, { -0.076833f, -0.3202f, -0.2969f } },
-            { { 5903307.167667380f, 2148628.092761247f, 1100300.642188661f },
-              { 11.0f, 21.0f, 400.0f },
-              { -109638.9539891188f, -110428.2398398574f, -2004.501240225796f } },
-            { { -2154856.524084172f, 379959.3447517005f, -5971509.853428957f },
-              { -72.0f, 169.0f, 1000.0f },
-              { 38187.58712786288f, 222803.8182465429f, -4497.428919329745f } },
+        using namespace ROS2::WGS;
+        const AZStd::vector<AZStd::tuple<Vector3d, WGS84Coordinate, Vector3d>> inputGoldSet = {
+            { { -2053900.0, -3557459.0, 4862712.0 }, { 50.0, -120.0, -100.0 }, { -0.076833, -0.3202, -0.2969 } },
+            { { 5903307.167667380, 2148628.092761247, 1100300.642188661 },
+              { 11.0, 21.0, 400.0 },
+              { -109638.9539891188, -110428.2398398574, -2004.501240225796 } },
+            { { -2154856.524084172, 379959.3447517005, -5971509.853428957 },
+              { -72.0, 169.0, 1000.0 },
+              { 38187.58712786288, 222803.8182465429, -4497.428919329745 } },
         };
         for (const auto& [input, refWGS84, goldResult] : inputGoldSet)
         {
-            AZ::Vector3 result = ROS2::GNSS::ECEFToENU(refWGS84, input);
-            EXPECT_NEAR(result.GetX(), goldResult.GetX(), 1.0f);
-            EXPECT_NEAR(result.GetY(), goldResult.GetY(), 1.0f);
-            EXPECT_NEAR(result.GetZ(), goldResult.GetZ(), 1.0f);
+            const auto result = ROS2::GNSS::ECEFToENU(refWGS84, input);
+            EXPECT_NEAR(result.m_x, goldResult.m_x, OneMillimiter);
+            EXPECT_NEAR(result.m_y, goldResult.m_y, OneMillimiter);
+            EXPECT_NEAR(result.m_z, goldResult.m_z, OneMillimiter);
         }
     }
 
     TEST_F(GNSSTest, ENUToECEF)
     {
-        const AZStd::vector<AZStd::tuple<AZ::Vector3, AZ::Vector3, AZ::Vector3>> inputGoldSet = {
-            { { -0.076833f, -0.3202f, -0.2969f }, { 50.0f, -120.0f, -100.0f }, { -2053900.0f, -3557459.0f, 4862712.0f } },
-            { { -109638.9539891188f, -110428.2398398574f, -2004.501240225796f },
-              { 11.0f, 21.0f, 400.0f },
-              { 5903307.167667380f, 2148628.092761247f, 1100300.642188661f } },
-            { { 38187.58712786288f, 222803.8182465429f, -4497.428919329745f },
-              { -72.0f, 169.0f, 1000.0f },
-              { -2154856.524084172f, 379959.3447517005f, -5971509.853428957f } },
+        using namespace ROS2::WGS;
+        const AZStd::vector<AZStd::tuple<Vector3d, WGS84Coordinate, Vector3d>> inputGoldSet = {
+            { { -0.076833, -0.3202, -0.2969 }, { 50.0, -120.0, -100.0 }, { -2053900.0, -3557459.0, 4862712.0 } },
+            { { -109638.9539891188, -110428.2398398574, -2004.501240225796 },
+              { 11.0, 21.0, 400.0 },
+              { 5903307.167667380, 2148628.092761247, 1100300.642188661 } },
+            { { 38187.58712786288, 222803.8182465429, -4497.428919329745 },
+              { -72.0, 169.0, 1000.0 },
+              { -2154856.524084172, 379959.3447517005, -5971509.853428957 } },
         };
         for (const auto& [input, refWGS84, goldResult] : inputGoldSet)
         {
-            AZ::Vector3 result = ROS2::GNSS::ENUToECEF(refWGS84, input);
-            EXPECT_NEAR(result.GetX(), goldResult.GetX(), 1.0f);
-            EXPECT_NEAR(result.GetY(), goldResult.GetY(), 1.0f);
-            EXPECT_NEAR(result.GetZ(), goldResult.GetZ(), 1.0f);
+            const auto result = ROS2::GNSS::ENUToECEF(refWGS84, input);
+            EXPECT_NEAR(result.m_x, goldResult.m_x, OneMillimiter);
+            EXPECT_NEAR(result.m_y, goldResult.m_y, OneMillimiter);
+            EXPECT_NEAR(result.m_z, goldResult.m_z, OneMillimiter);
         }
     }
 
     TEST_F(GNSSTest, ECEFToWSG84)
     {
-        const AZStd::vector<AZStd::pair<AZ::Vector3, AZ::Vector3>> inputGoldSet = {
-            { { 5903307.167667380f, 2148628.092761247f, 1100300.642188661f }, { 10.0f, 20.0f, 300.0f } },
-            { { -2154856.524084172f, 379959.3447517005f, -5971509.853428957f }, { -70.0f, 170.0f, 500.0f } },
-            { { -2053899.906222906f, -3557458.991239029f, 4862712.433262121f }, { 50.0f, -120.0f, -100.0f } },
+        using namespace ROS2::WGS;
+        const AZStd::vector<AZStd::pair<Vector3d, WGS84Coordinate>> inputGoldSet = {
+            { { 5903307.167667380, 2148628.092761247, 1100300.642188661 }, { 10.0, 20.0, 300.0 } },
+            { { -2154856.524084172, 379959.3447517005, -5971509.853428957 }, { -70.0, 170.0, 500.0 } },
+            { { -2053899.906222906, -3557458.991239029, 4862712.433262121 }, { 50.0, -120.0, -100.0 } },
         };
         for (const auto& [input, goldResult] : inputGoldSet)
         {
-            AZ::Vector3 result = ROS2::GNSS::ECEFToWGS84(input);
-            EXPECT_NEAR(result.GetX(), goldResult.GetX(), 0.001f);
-            EXPECT_NEAR(result.GetY(), goldResult.GetY(), 0.001f);
-            EXPECT_NEAR(result.GetZ(), goldResult.GetZ(), 1.0f);
+            const auto result = ROS2::GNSS::ECEFToWGS84(input);
+            EXPECT_NEAR(result.m_longitude, goldResult.m_longitude, OneMillimeterInDegreesOnEquator);
+            EXPECT_NEAR(result.m_latitude, goldResult.m_latitude, OneMillimeterInDegreesOnEquator);
+            EXPECT_NEAR(result.m_altitude, goldResult.m_altitude, OneMillimiter);
         }
     }
 } // namespace UnitTest
