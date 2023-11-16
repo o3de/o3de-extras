@@ -7,18 +7,18 @@
  */
 
 #pragma once
-
+#include <ROS2/Georeference/GeoreferenceStructures.h>
 #include <AzCore/Math/Matrix4x4.h>
 
-namespace ROS2::GNSS
+namespace ROS2::Utils::GeodeticConversions
 {
 
     //! Converts point in 1984 World Geodetic System (GS84) to Earth Centred Earth Fixed (ECEF)
-    //! @param latitudeLongitudeAltitude - point's latitude, longitude and altitude as 3d vector.
+    //! @param latitudeLongitudeAltitude - point's latitude, longitude and altitude as WGS::WGS84Coordinate.
     //!     latitude and longitude are in decimal degrees
     //!     altitude is in meters
     //! @return 3d vector of ECEF coordinates.
-    AZ::Vector3 WGS84ToECEF(const AZ::Vector3& latitudeLongitudeAltitude);
+    WGS::Vector3d WGS84ToECEF(const WGS::WGS84Coordinate& latitudeLongitudeAltitude);
 
     //! Converts Earth Centred Earth Fixed (ECEF) coordinates to local east, north, up (ENU)
     //! @param referenceLatitudeLongitudeAltitude - reference point's latitude, longitude and altitude as 3d vector.
@@ -26,20 +26,18 @@ namespace ROS2::GNSS
     //!     altitude is in meters
     //! @param ECEFPoint - ECEF point to bo converted.
     //! @return 3d vector of local east, north, up (ENU) coordinates.
-    AZ::Vector3 ECEFToENU(const AZ::Vector3& referenceLatitudeLongitudeAltitude, const AZ::Vector3& ECEFPoint);
+    WGS::Vector3d ECEFToENU(const WGS::WGS84Coordinate& referenceLatitudeLongitudeAltitude, const WGS::Vector3d& ECEFPoint);
 
     //! Converts local east, north, up (ENU) coordinates to Earth Centred Earth Fixed (ECEF)
-    //! @param referenceLatitudeLongitudeAltitude - reference point's latitude, longitude and altitude as 3d vector.
-    //!     latitude and longitude are in decimal degrees
-    //!     altitude is in meters
+    //! @param referenceLatitudeLongitudeAltitude - reference point's latitude, longitude and altitude as WGS::WGS84Coordinate.
     //! @param ENUPoint - ENU point to bo converted.
     //! @return 3d vector of ECEF coordinates.
-    AZ::Vector3 ENUToECEF(const AZ::Vector3& referenceLatitudeLongitudeAltitude, const AZ::Vector3& ENUPoint);
+    WGS::Vector3d ENUToECEF(const WGS::WGS84Coordinate& referenceLatitudeLongitudeAltitude, const  WGS::Vector3d& ENUPoint);
 
     //! Converts point in Earth Centred Earth Fixed (ECEF) to  984 World Geodetic System (GS84)
     //! @param ECEFPoint - ECEF point to bo converted.
     //! @return point's latitude, longitude and altitude as 3d vector.
     //!     latitude and longitude are in decimal degrees
     //!     altitude is in meters
-    AZ::Vector3 ECEFToWGS84(const AZ::Vector3& ECFEPoint);
+    WGS::WGS84Coordinate ECEFToWGS84(const WGS::Vector3d& ECFEPoint);
 } // namespace ROS2::GNSS

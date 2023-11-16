@@ -42,6 +42,8 @@
 #include <VehicleDynamics/ModelComponents/SkidSteeringModelComponent.h>
 #include <VehicleDynamics/VehicleModelComponent.h>
 #include <VehicleDynamics/WheelControllerComponent.h>
+#include <Georeference/GeoreferenceLevelComponent.h>
+
 namespace ROS2
 {
     class ROS2ModuleInterface : public AZ::Module
@@ -90,6 +92,7 @@ namespace ROS2
                     FingerGripperComponent::CreateDescriptor(),
                     ROS2ContactSensorComponent::CreateDescriptor(),
                     FollowingCameraComponent::CreateDescriptor(),
+                    GeoReferenceLevelComponent::CreateDescriptor(),
                 });
         }
 
