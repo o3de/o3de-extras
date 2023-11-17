@@ -151,6 +151,7 @@ namespace ROS2
 
         ROS2RequestBus::Handler::BusConnect();
         AZ::TickBus::Handler::BusConnect();
+        m_nodeChangedEvent.Signal(m_ros2Node);
     }
 
     void ROS2SystemComponent::Deactivate()
@@ -165,6 +166,7 @@ namespace ROS2
         m_executor.reset();
         m_simulationClock.reset();
         m_ros2Node.reset();
+        m_nodeChangedEvent.Signal(m_ros2Node);
     }
 
     builtin_interfaces::msg::Time ROS2SystemComponent::GetROSTimestamp() const
@@ -175,6 +177,11 @@ namespace ROS2
     std::shared_ptr<rclcpp::Node> ROS2SystemComponent::GetNode() const
     {
         return m_ros2Node;
+    }
+
+    void ROS2SystemComponent::ConnectOnNodeChanged(NodeChangedEvent::Handler& handler)
+    {
+        handler.Connect(m_nodeChangedEvent);
     }
 
     const SimulationClock& ROS2SystemComponent::GetSimulationClock() const
