@@ -57,9 +57,9 @@ namespace ROS2
         void SetJointName(const AZStd::string& jointNameString);
 
         //! Updates the namespace and namespace strategy of the underlying namespace configuration
-        //! @param ns Namespace to set.
+        //! @param ROS2Namespace Namespace to set.
         //! @param strategy Namespace strategy to use.
-        void UpdateNamespaceConfiguration(const AZStd::string& ns, const NamespaceConfiguration::NamespaceStrategy& strategy);
+        void UpdateNamespaceConfiguration(const AZStd::string& ROS2Namespace, const NamespaceConfiguration::NamespaceStrategy& strategy);
 
         // ROS2FrameComponentBus::Handler overrides
         AZStd::string GetFrameID() const override;

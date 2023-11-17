@@ -89,6 +89,10 @@ namespace ROS2
         //! @param isActive boolean value describing if the frameEntity is currently active.
         void UpdateNamespaces(AZ::EntityId frameEntity, AZ::EntityId frameParentEntity, bool isActive = false);
 
+        void MoveFrameDetach(const AZ::EntityId& frameEntityId, const AZStd::set<AZ::EntityId>& newPathToParentFrameSet);
+        void MoveFrameAttach(
+            const AZ::EntityId& frameEntityId, const AZ::EntityId& newFrameParent, const AZStd::vector<AZ::EntityId>& newPathToParentFrame);
+
         AZStd::map<AZ::EntityId, AZStd::set<AZ::EntityId>> m_frameChildren;
         AZStd::map<AZ::EntityId, AZ::EntityId> m_frameParent;
         AZStd::map<AZ::EntityId, AZStd::set<AZ::EntityId>> m_watchedEntities;

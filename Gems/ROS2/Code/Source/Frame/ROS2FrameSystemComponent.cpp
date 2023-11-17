@@ -324,23 +324,9 @@ namespace ROS2
         }
     }
 
-    void ROS2FrameSystemComponent::MoveFrame(const AZ::EntityId& frameEntityId, const AZ::EntityId& newParent)
+    void ROS2FrameSystemComponent::MoveFrameDetach(
+        const AZ::EntityId& frameEntityId, const AZStd::set<AZ::EntityId>& newPathToParentFrameSet)
     {
-        // Check if the frame is already registered and valid
-        if (!frameEntityId.IsValid() || !m_frameParent.contains(frameEntityId))
-        {
-            return;
-        }
-
-        AZStd::vector<AZ::EntityId> newPathToParentFrame = FindFrameParentPath(frameEntityId);
-        const AZ::EntityId& newFrameParent = newPathToParentFrame[newPathToParentFrame.size() - 1];
-        AZStd::set<AZ::EntityId> newPathToParentFrameSet;
-
-        for (const auto& entityOnPath : newPathToParentFrame)
-        {
-            newPathToParentFrameSet.insert(entityOnPath);
-        }
-
         // Remove all handlers
         AZStd::set<AZ::EntityId>& oldWatchedEntities = m_watchedEntities.find(frameEntityId)->second;
         AZStd::vector<AZ::EntityId> watchedEntitiesToRemove;
@@ -366,9 +352,12 @@ namespace ROS2
 
         // Remove itself from parents children
         m_frameChildren.find(m_frameParent.find(frameEntityId)->second)->second.erase(frameEntityId);
+    }
 
-        // Replace the parent
-        m_frameParent.find(frameEntityId)->second = newFrameParent;
+    void ROS2FrameSystemComponent::MoveFrameAttach(
+        const AZ::EntityId& frameEntityId, const AZ::EntityId& newFrameParent, const AZStd::vector<AZ::EntityId>& newPathToParentFrame)
+    {
+        AZStd::set<AZ::EntityId>& oldWatchedEntities = m_watchedEntities.find(frameEntityId)->second;
 
         // Add itself as a new child
         m_frameChildren.find(newFrameParent)->second.insert(frameEntityId);
@@ -395,6 +384,31 @@ namespace ROS2
             }
             oldWatchedEntities.insert(entityIdOnPath);
         }
+    }
+
+    void ROS2FrameSystemComponent::MoveFrame(const AZ::EntityId& frameEntityId, const AZ::EntityId& newParent)
+    {
+        // Check if the frame is already registered and valid
+        if (!frameEntityId.IsValid() || !m_frameParent.contains(frameEntityId))
+        {
+            return;
+        }
+
+        AZStd::vector<AZ::EntityId> newPathToParentFrame = FindFrameParentPath(frameEntityId);
+        const AZ::EntityId& newFrameParent = newPathToParentFrame[newPathToParentFrame.size() - 1];
+        AZStd::set<AZ::EntityId> newPathToParentFrameSet;
+
+        for (const auto& entityOnPath : newPathToParentFrame)
+        {
+            newPathToParentFrameSet.insert(entityOnPath);
+        }
+
+        MoveFrameDetach(frameEntityId, newPathToParentFrameSet);
+
+        // Replace the parent
+        m_frameParent.find(frameEntityId)->second = newFrameParent;
+
+        MoveFrameAttach(frameEntityId, newFrameParent, newPathToParentFrame);
 
         // Notify about namespace changes
         UpdateNamespaces(frameEntityId, newFrameParent);
@@ -402,27 +416,27 @@ namespace ROS2
 
     void ROS2FrameSystemComponent::UpdateNamespaces(AZ::EntityId frameEntity, AZ::EntityId frameParentEntity, bool isActive)
     {
-        AZStd::string ns;
-        ROS2FrameComponentBus::EventResult(ns, frameParentEntity, &ROS2FrameComponentBus::Events::GetNamespace);
-        UpdateNamespaces(frameEntity, ns);
+        AZStd::string ROS2Namespace;
+        ROS2FrameComponentBus::EventResult(ROS2Namespace, frameParentEntity, &ROS2FrameComponentBus::Events::GetNamespace);
+        UpdateNamespaces(frameEntity, ROS2Namespace);
     }
 
     void ROS2FrameSystemComponent::UpdateNamespaces(AZ::EntityId frameEntity, AZStd::string parentsNamespace, bool isActive)
     {
         ROS2FrameComponentBus::Event(frameEntity, &ROS2FrameComponentBus::Events::UpdateNamespace, parentsNamespace);
         const AZStd::set<AZ::EntityId>& children = m_frameChildren.find(frameEntity)->second;
-        AZStd::string ns;
+        AZStd::string ROS2Namespace;
         if (isActive)
         {
-            ROS2FrameComponentBus::EventResult(ns, frameEntity, &ROS2FrameComponentBus::Events::GetNamespace);
+            ROS2FrameComponentBus::EventResult(ROS2Namespace, frameEntity, &ROS2FrameComponentBus::Events::GetNamespace);
         }
         else
         {
-            ns = parentsNamespace;
+            ROS2Namespace = parentsNamespace;
         }
         for (const AZ::EntityId& child : children)
         {
-            UpdateNamespaces(child, ns);
+            UpdateNamespaces(child, ROS2Namespace);
         }
     }
 
