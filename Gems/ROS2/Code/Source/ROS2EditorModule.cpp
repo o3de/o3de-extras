@@ -52,7 +52,8 @@ namespace ROS2
                   SdfAssetBuilderSystemComponent::CreateDescriptor(),
                   JointsManipulationEditorComponent::CreateDescriptor(),
                   GeoReferenceLevelEditorComponent::CreateDescriptor(),
-                  ROS2FrameSystemComponent::CreateDescriptor() });
+                  ROS2FrameSystemComponent::CreateDescriptor(),
+                  ROS2FrameEditorComponent::CreateDescriptor() });
         }
 
         AZ::ComponentTypeList GetRequiredSystemComponents() const override

@@ -56,7 +56,7 @@ namespace ROS2
         {
             m_descriptors.insert(
                 m_descriptors.end(),
-                { 
+                {
                     ROS2SystemComponent::CreateDescriptor(),
                     ROS2SensorComponentBase<TickBasedSource>::CreateDescriptor(),
                     ROS2SensorComponentBase<PhysicsBasedSource>::CreateDescriptor(),
@@ -90,7 +90,9 @@ namespace ROS2
                     GripperActionServerComponent::CreateDescriptor(),
                     VacuumGripperComponent::CreateDescriptor(),
                     FingerGripperComponent::CreateDescriptor(),
-                    ROS2ContactSensorComponent::CreateDescriptor()
+                    ROS2ContactSensorComponent::CreateDescriptor(),
+                    FollowingCameraComponent::CreateDescriptor(),
+                    GeoReferenceLevelComponent::CreateDescriptor(),
                 });
         }
 
