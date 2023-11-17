@@ -46,10 +46,12 @@ namespace ROS2
 
     AZStd::unordered_map<AZStd::string, SpawnPointInfo> ROS2SpawnerEditorComponent::GetSpawnPoints() const
     {
+        AZStd::unordered_map<AZStd::string, SpawnPointInfo> result;
+        result[GetEntity()->GetName() + " - default"] =
+            SpawnPointInfo{ "Default spawn pose defined in the Editor", m_controller.GetDefaultSpawnPose() };
+
         AZStd::vector<AZ::EntityId> children;
         AZ::TransformBus::EventResult(children, m_controller.GetEditorEntityId(), &AZ::TransformBus::Events::GetChildren);
-
-        AZStd::unordered_map<AZStd::string, SpawnPointInfo> result;
 
         for (const AZ::EntityId& child : children)
         {
@@ -61,13 +63,10 @@ namespace ROS2
 
             if (editorSpawnPoint != nullptr)
             {
-                result.insert(editorSpawnPoint->GetInfo());
+                result.insert({ GetEntity()->GetName() + " - " + editorSpawnPoint->GetInfo().first, editorSpawnPoint->GetInfo().second });
             }
         }
 
-        // setting name of spawn point component "default" in a child entity will have no effect since it is overwritten here with the
-        // default spawn pose of spawner
-        result["default"] = SpawnPointInfo{ "Default spawn pose defined in the Editor", m_controller.GetDefaultSpawnPose() };
         return result;
     }
 
