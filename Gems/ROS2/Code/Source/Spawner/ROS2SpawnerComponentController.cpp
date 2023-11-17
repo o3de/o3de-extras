@@ -77,8 +77,8 @@ namespace ROS2
             {
                 editContext->Class<ROS2SpawnerComponentController>("ROS2SpawnerComponentController", "Controller for ROS2SpawnerComponent")
                     ->ClassElement(AZ::Edit::ClassElements::EditorData, "Manages spawning of robots in configurable locations")
-                    ->Attribute(AZ::Edit::Attributes::Visibility, AZ::Edit::PropertyVisibility::ShowChildrenOnly)
-                    ->DataElement(AZ::Edit::UIHandlers::Default, &ROS2SpawnerComponentController::m_config);
+                    ->DataElement(AZ::Edit::UIHandlers::Default, &ROS2SpawnerComponentController::m_config)
+                    ->Attribute(AZ::Edit::Attributes::Visibility, AZ::Edit::PropertyVisibility::ShowChildrenOnly);
             }
         }
     }
