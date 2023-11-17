@@ -52,7 +52,7 @@ namespace ROS2::VehicleDynamics
             int wheelNumber, const AxleConfiguration& axle, const int axisCount) const;
 
         SkidSteeringModelLimits m_limits;
-        AZStd::unordered_map<AZ::EntityId, AZ::EntityComponentIdPair> m_wheelsData;
+        AZStd::unordered_map<AZ::EntityId, VehicleDynamics::WheelDynamicsData> m_wheelsData;
         AZStd::vector<AZStd::tuple<VehicleDynamics::WheelControllerComponent*, AZ::Vector2, AZ::Vector3>> m_wheelColumns;
         VehicleConfiguration m_config;
         float m_currentLinearVelocity = 0.0f;

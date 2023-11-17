@@ -1,0 +1,8 @@
+{
+    "Amazon": {
+        "Physics": {
+            "EnableReducedCoordinateArticulations": true
+            }
+        }
+}
+

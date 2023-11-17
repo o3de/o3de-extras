@@ -62,17 +62,27 @@ namespace ROS2
 
             if (jointAxis)
             {
-                if (type == PhysX::ArticulationJointType::Hinge)
+                using LimitType = decltype(jointAxis->Upper());
+                const bool enableJointLimits = jointAxis->Upper() != AZStd::numeric_limits<LimitType>::infinity() ||
+                    jointAxis->Lower() != -AZStd::numeric_limits<LimitType>::infinity();
+                articulationLinkConfiguration.m_isLimited = enableJointLimits;
+                if (enableJointLimits)
                 {
-                    const double limitUpper = AZ::RadToDeg(jointAxis->Upper());
-                    const double limitLower = AZ::RadToDeg(jointAxis->Lower());
-                    articulationLinkConfiguration.m_angularLimitNegative = limitLower;
-                    articulationLinkConfiguration.m_angularLimitPositive = limitUpper;
-                }
-                else if (type == PhysX::ArticulationJointType::Prismatic)
-                {
-                    articulationLinkConfiguration.m_linearLimitLower = jointAxis->Upper();
-                    articulationLinkConfiguration.m_linearLimitUpper = jointAxis->Lower();
+                    if (type == PhysX::ArticulationJointType::Hinge)
+                    {
+                        if (enableJointLimits)
+                        {
+                            const double limitUpper = AZ::RadToDeg(jointAxis->Upper());
+                            const double limitLower = AZ::RadToDeg(jointAxis->Lower());
+                            articulationLinkConfiguration.m_angularLimitNegative = limitLower;
+                            articulationLinkConfiguration.m_angularLimitPositive = limitUpper;
+                        }
+                    }
+                    else if (type == PhysX::ArticulationJointType::Prismatic)
+                    {
+                        articulationLinkConfiguration.m_linearLimitLower = jointAxis->Upper();
+                        articulationLinkConfiguration.m_linearLimitUpper = jointAxis->Lower();
+                    }
                 }
             }
             else
