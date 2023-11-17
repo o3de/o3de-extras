@@ -41,12 +41,16 @@ namespace ROS2
         void onCreateButtonPressed();
 
     private:
+        static bool IsZeroPoint(AZStd::string spawnPointName);
+
+        static constexpr AZStd::string_view zeroPoint = "Simulation origin";
+
         bool m_success;
         QLineEdit* m_prefabName;
         QPushButton* m_createButton;
         QTextEdit* m_log;
         QComboBox* m_spawnPointsComboBox;
-        AZStd::vector<SpawnPointInfoMap> m_spawnPointsInfos;
+        SpawnPointInfoMap m_spawnPointsInfos;
         RobotImporterWidget* m_parentImporterWidget;
     };
 } // namespace ROS2
