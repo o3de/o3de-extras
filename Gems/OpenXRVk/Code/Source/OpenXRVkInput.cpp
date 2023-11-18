@@ -402,6 +402,8 @@ namespace OpenXRVk
 
             AZ::RPI::XRSpaceNotificationBus::Broadcast(&AZ::RPI::XRSpaceNotifications::OnXRSpaceLocationsChanged,
                 baseToHeadTm, headToLeftEyeTm, headToRightEyeTm);
+
+            return true;
         }
 
         return false;
