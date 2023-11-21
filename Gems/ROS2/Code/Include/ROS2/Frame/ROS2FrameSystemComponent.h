@@ -40,7 +40,7 @@ namespace ROS2
 
         //! Get size of the m_frameEntities.
         //! @return size of the m_frameEntities.
-        unsigned int GetFrameAmount();
+        unsigned int GetFrameCount();
 
     private:
         AZStd::set<AZ::EntityId> m_frameEntities;
@@ -72,7 +72,11 @@ namespace ROS2
         ~ROS2FrameSystemComponent();
 
     private:
-        //! Finds a path from the frame to its parent. If there isn't a frame parent the top level entity will be a parent.
+        //! Find the path from the frameEntity to the frame parent of that entity.
+        //! This path will include the frameEntity and the frame parent.
+        //! If there is no frame parent, path to the root entity (included) will be returned.
+        //! @param frameEntityId frame to find the path to the parent.
+        //! @return vector of entityIds which represent the path to the parent. frameEntityId is first, parent is last.
         AZStd::vector<AZ::EntityId> FindFrameParentPath(AZ::EntityId frameEntityId);
 
         AZ::TransformInterface* GetEntityTransformInterface(const AZ::Entity* entity);

@@ -11,8 +11,6 @@
 #include <ROS2/Frame/NamespaceConfiguration.h>
 #include <ROS2/Utilities/ROS2Names.h>
 
-#include <iostream>
-
 namespace ROS2
 {
     void NamespaceConfiguration::PopulateNamespace(bool isRoot, const AZStd::string& entityName)
@@ -80,9 +78,9 @@ namespace ROS2
         return ROS2Names::GetNamespacedName(parentNamespace, m_namespace);
     }
 
-    void NamespaceConfiguration::SetNamespace(const AZStd::string& ROS2Namespace, NamespaceStrategy strategy)
+    void NamespaceConfiguration::SetNamespace(const AZStd::string& ros2Namespace, NamespaceStrategy strategy)
     {
-        m_namespace = ROS2Namespace;
+        m_namespace = ros2Namespace;
         m_namespaceStrategy = strategy;
         UpdateNamespace();
     }

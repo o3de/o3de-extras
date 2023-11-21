@@ -45,7 +45,7 @@ namespace ROS2
         }
     }
 
-    unsigned int ROS2FrameSystemTransformHandler::GetFrameAmount()
+    unsigned int ROS2FrameSystemTransformHandler::GetFrameCount()
     {
         return m_frameEntities.size();
     }
@@ -70,7 +70,7 @@ namespace ROS2
     {
         if (AZ::SerializeContext* serialize = azrtti_cast<AZ::SerializeContext*>(context))
         {
-            serialize->Class<ROS2FrameSystemComponent, AZ::Component>()->Version(0);
+            serialize->Class<ROS2FrameSystemComponent, AZ::Component>();
         }
     }
 
@@ -275,7 +275,7 @@ namespace ROS2
             {
                 ROS2FrameSystemTransformHandler& handler = m_watchedEntitiesHandlers.find(watchedEntity)->second;
                 handler.RemoveFrameEntity(frameToUnregister);
-                if (handler.GetFrameAmount() == 0)
+                if (handler.GetFrameCount() == 0)
                 {
                     handler.BusDisconnect();
                     m_watchedEntitiesHandlers.erase(watchedEntity);
@@ -339,7 +339,7 @@ namespace ROS2
             ROS2FrameSystemTransformHandler& handler = m_watchedEntitiesHandlers.find(oldWatchedEntity)->second;
             handler.RemoveFrameEntity(frameEntityId);
             watchedEntitiesToRemove.push_back(oldWatchedEntity);
-            if (handler.GetFrameAmount() == 0)
+            if (handler.GetFrameCount() == 0)
             {
                 handler.BusDisconnect();
                 m_watchedEntitiesHandlers.erase(oldWatchedEntity);
@@ -416,27 +416,27 @@ namespace ROS2
 
     void ROS2FrameSystemComponent::UpdateNamespaces(AZ::EntityId frameEntity, AZ::EntityId frameParentEntity, bool isActive)
     {
-        AZStd::string ROS2Namespace;
-        ROS2FrameComponentBus::EventResult(ROS2Namespace, frameParentEntity, &ROS2FrameComponentBus::Events::GetNamespace);
-        UpdateNamespaces(frameEntity, ROS2Namespace);
+        AZStd::string ros2Namespace;
+        ROS2FrameComponentBus::EventResult(ros2Namespace, frameParentEntity, &ROS2FrameComponentBus::Events::GetNamespace);
+        UpdateNamespaces(frameEntity, ros2Namespace);
     }
 
     void ROS2FrameSystemComponent::UpdateNamespaces(AZ::EntityId frameEntity, AZStd::string parentsNamespace, bool isActive)
     {
         ROS2FrameComponentBus::Event(frameEntity, &ROS2FrameComponentBus::Events::UpdateNamespace, parentsNamespace);
         const AZStd::set<AZ::EntityId>& children = m_frameChildren.find(frameEntity)->second;
-        AZStd::string ROS2Namespace;
+        AZStd::string ros2Namespace;
         if (isActive)
         {
-            ROS2FrameComponentBus::EventResult(ROS2Namespace, frameEntity, &ROS2FrameComponentBus::Events::GetNamespace);
+            ROS2FrameComponentBus::EventResult(ros2Namespace, frameEntity, &ROS2FrameComponentBus::Events::GetNamespace);
         }
         else
         {
-            ROS2Namespace = parentsNamespace;
+            ros2Namespace = parentsNamespace;
         }
         for (const AZ::EntityId& child : children)
         {
-            UpdateNamespaces(child, ROS2Namespace);
+            UpdateNamespaces(child, ros2Namespace);
         }
     }
 

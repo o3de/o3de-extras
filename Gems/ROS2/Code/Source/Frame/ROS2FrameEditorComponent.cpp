@@ -79,9 +79,9 @@ namespace ROS2
     }
 
     void ROS2FrameEditorComponent::UpdateNamespaceConfiguration(
-        const AZStd::string& ROS2Namespace, const NamespaceConfiguration::NamespaceStrategy& strategy)
+        const AZStd::string& ros2Namespace, const NamespaceConfiguration::NamespaceStrategy& strategy)
     {
-        m_configuration.m_namespaceConfiguration.SetNamespace(ROS2Namespace, strategy);
+        m_configuration.m_namespaceConfiguration.SetNamespace(ros2Namespace, strategy);
     }
 
     AZ::Name ROS2FrameEditorComponent::GetJointName() const

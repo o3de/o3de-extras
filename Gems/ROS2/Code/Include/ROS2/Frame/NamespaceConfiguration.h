@@ -50,9 +50,9 @@ namespace ROS2
         AZStd::string GetNamespace(const AZStd::string& parentsNamespace) const;
 
         //! Update namespace and strategy.
-        //! @param ROS2Namespace Desired namespace.
+        //! @param ros2Namespace Desired namespace.
         //! @param strategy Namespace strategy.
-        void SetNamespace(const AZStd::string& ROS2Namespace, NamespaceStrategy strategy);
+        void SetNamespace(const AZStd::string& ros2Namespace, NamespaceStrategy strategy);
 
         //! Update the parents namespace.
         //! @param parentsNamespace parents namespace.

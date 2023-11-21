@@ -142,9 +142,9 @@ namespace ROS2
     }
 
     void ROS2FrameComponent::UpdateNamespaceConfiguration(
-        const AZStd::string& ROS2Namespace, NamespaceConfiguration::NamespaceStrategy strategy)
+        const AZStd::string& ros2Namespace, NamespaceConfiguration::NamespaceStrategy strategy)
     {
-        m_configuration.m_namespaceConfiguration.SetNamespace(ROS2Namespace, strategy);
+        m_configuration.m_namespaceConfiguration.SetNamespace(ros2Namespace, strategy);
     }
 
     bool ROS2FrameComponent::IsTopLevel() const

@@ -76,9 +76,9 @@ namespace ROS2
         AZStd::string GetGlobalFrameName() const;
 
         //! Updates the namespace and namespace strategy of the underlying namespace configuration
-        //! @param ROS2Namespace Namespace to set.
+        //! @param ros2Namespace Namespace to set.
         //! @param strategy Namespace strategy to use.
-        void UpdateNamespaceConfiguration(const AZStd::string& ROS2Namespace, NamespaceConfiguration::NamespaceStrategy strategy);
+        void UpdateNamespaceConfiguration(const AZStd::string& ros2Namespace, NamespaceConfiguration::NamespaceStrategy strategy);
 
     private:
         //////////////////////////////////////////////////////////////////////////
