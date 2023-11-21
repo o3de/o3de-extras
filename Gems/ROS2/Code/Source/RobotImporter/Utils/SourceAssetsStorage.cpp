@@ -371,8 +371,11 @@ namespace ROS2::Utils
                     resolvedPath.c_str(),
                     targetPathAssetTmp.c_str(),
                     outcomeCopyTmp.GetResultCode());
+
                 if (outcomeCopyTmp)
                 {
+                    FlushIOOfAsset(targetPathAssetTmp);
+
                     const bool needsVisual = (assetReferenceType & ReferencedAssetType::VisualMesh) == ReferencedAssetType::VisualMesh;
                     const bool needsCollider = (assetReferenceType & ReferencedAssetType::ColliderMesh) == ReferencedAssetType::ColliderMesh;
                     const bool isMeshFile = (needsVisual || needsCollider);
@@ -420,18 +423,8 @@ namespace ROS2::Utils
                             targetPathAssetDst.c_str(),
                             outcomeMoveDst.GetResultCode());
 
-                        // call GetAssetStatus_FlushIO to ensure the asset processor is aware of the new file
-                        AzFramework::AssetSystem::AssetStatus copiedAssetStatus =
-                            AzFramework::AssetSystem::AssetStatus::AssetStatus_Unknown;
-                        AzFramework::AssetSystemRequestBus::BroadcastResult(
-                            copiedAssetStatus,
-                            &AzFramework::AssetSystem::AssetSystemRequests::GetAssetStatus_FlushIO,
-                            targetPathAssetDst.c_str());
-                        AZ_Warning(
-                            "CopyAssetForURDF",
-                            copiedAssetStatus != AzFramework::AssetSystem::AssetStatus::AssetStatus_Unknown,
-                            "Asset processor did not recognize the new file %s.",
-                            targetPathAssetDst.c_str());
+                        // call FlushIOOfAsset to ensure the asset processor is aware of the new file
+                        FlushIOOfAsset(targetPathAssetDst);
 
                         if (outcomeMoveDst)
                         {
@@ -660,5 +653,19 @@ namespace ROS2::Utils
             }
         }
         return assetsFilepaths;
+    }
+
+    AzFramework::AssetSystem::AssetStatus FlushIOOfAsset(const AZ::IO::Path& path)
+    {
+        AzFramework::AssetSystem::AssetStatus assetStatus = AzFramework::AssetSystem::AssetStatus::AssetStatus_Unknown;
+        AzFramework::AssetSystemRequestBus::BroadcastResult(
+            assetStatus, &AzFramework::AssetSystem::AssetSystemRequests::GetAssetStatus_FlushIO, path.c_str());
+        AZ_Warning(
+            "CopyAssetForURDF",
+            assetStatus != AzFramework::AssetSystem::AssetStatus::AssetStatus_Unknown,
+            "Asset processor did not recognize the new file %s.",
+            path.c_str());
+
+        return assetStatus;
     }
 } // namespace ROS2::Utils
