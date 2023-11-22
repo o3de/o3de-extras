@@ -21,7 +21,7 @@
     ],
     "restricted": "OpenXRTest",
     "gem_names": [
-        "XR",
-        "OpenXRVk"
+        "XR>=1.0.1",
+        "OpenXRVk>=1.0.1"
     ]
 }
