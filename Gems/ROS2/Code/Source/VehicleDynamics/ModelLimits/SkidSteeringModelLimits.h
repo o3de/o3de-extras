@@ -35,6 +35,8 @@ namespace ROS2::VehicleDynamics
         float GetLinearSpeedLimit() const;
         float GetAngularSpeedLimit() const;
 
+        void SetAngularAccelerationLimit(const float limit);
+
     private:
         float m_linearLimit = 2.0f; //!< [m/s] Maximum travel velocity.
         float m_angularLimit = 3.5f; //!< [Rad/s] Maximum rotation speed.

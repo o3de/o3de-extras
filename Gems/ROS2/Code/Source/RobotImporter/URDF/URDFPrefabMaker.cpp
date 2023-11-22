@@ -496,7 +496,7 @@ namespace ROS2
             {
                 if (contentEntityId.IsValid())
                 {
-                    m_controlMaker.AddControlPlugins(*modelPtr, contentEntityId);
+                    m_controlMaker.AddControlPlugins(*modelPtr, contentEntityId, createdLinks);
                 }
             }
         }

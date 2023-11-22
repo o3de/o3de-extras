@@ -84,7 +84,6 @@ namespace ROS2
                         articulationLinkConfiguration.m_linearLimitUpper = jointAxis->Lower();
                     }
                 }
-                articulationLinkConfiguration.m_motorConfiguration.m_useMotor = true;
                 articulationLinkConfiguration.m_motorConfiguration.m_driveDamping = jointAxis->Damping();
                 articulationLinkConfiguration.m_motorConfiguration.m_driveForceLimit = jointAxis->Effort();
                 articulationLinkConfiguration.m_motorConfiguration.m_driveStiffness = jointAxis->Stiffness();

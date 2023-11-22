@@ -106,4 +106,9 @@ namespace ROS2::VehicleDynamics
         return m_angularLimit;
     }
 
+    void SkidSteeringModelLimits::SetAngularAccelerationLimit(const float limit)
+    {
+        m_angularAcceleration = limit;
+    }
+
 } // namespace ROS2::VehicleDynamics
