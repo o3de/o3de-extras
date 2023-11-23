@@ -83,40 +83,14 @@ namespace ROS2
         serializeContext->EnumerateAll(
             [&](const AZ::SerializeContext::ClassData* classData, const AZ::Uuid& typeId) -> bool
             {
-                auto* attribute = AZ::FindAttribute(AZ::Crc32("SensorImporterHooks"), classData->m_attributes);
-                if (attribute == nullptr)
-                {
-                    return true;
-                }
-
-                AZ::AttributeReader reader(nullptr, attribute);
-                SDFormat::SensorImporterHooksStorage sensorHooks;
-                if (reader.Read<SDFormat::SensorImporterHooksStorage>(sensorHooks))
-                {
-                    m_sensorHooks.insert(m_sensorHooks.end(), sensorHooks.begin(), sensorHooks.end());
-                }
-
-                return false;
+                return ParseAttributes<SDFormat::SensorImporterHooksStorage>(m_sensorHooks, classData, "SensorImporterHooks");
             });
 
-        // TODO: implement lambda, this is just a quick test
         serializeContext->EnumerateAll(
             [&](const AZ::SerializeContext::ClassData* classData, const AZ::Uuid& typeId) -> bool
             {
-                auto* attribute = AZ::FindAttribute(AZ::Crc32("ModelPluginImporterHooks"), classData->m_attributes);
-                if (attribute == nullptr)
-                {
-                    return true;
-                }
-
-                AZ::AttributeReader reader(nullptr, attribute);
-                SDFormat::ModelPluginImporterHooksStorage modelPluginHooks;
-                if (reader.Read<SDFormat::ModelPluginImporterHooksStorage>(modelPluginHooks))
-                {
-                    m_modelPluginHooks.insert(m_modelPluginHooks.end(), modelPluginHooks.begin(), modelPluginHooks.end());
-                }
-
-                return false;
+                return ParseAttributes<SDFormat::ModelPluginImporterHooksStorage>(
+                    m_modelPluginHooks, classData, "ModelPluginImporterHooks");
             });
     }
 

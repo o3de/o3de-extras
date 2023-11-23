@@ -47,6 +47,26 @@ namespace ROS2
         const SDFormat::SensorImporterHooksStorage& GetSensorHooks() const override;
         const SDFormat::ModelPluginImporterHooksStorage& GetModelPluginHooks() const override;
 
+        // Method for parsing attributes used for both sensor importer hooks and model plugin importer hooks
+        template<typename T>
+        bool ParseAttributes(T& outputBuffer, const AZ::SerializeContext::ClassData* classData, const AZStd::string& attributeName)
+        {
+            auto* attribute = AZ::FindAttribute(AZ::Crc32(attributeName.c_str()), classData->m_attributes);
+            if (attribute == nullptr)
+            {
+                return true;
+            }
+
+            AZ::AttributeReader reader(nullptr, attribute);
+            T readData;
+            if (reader.Read<T>(readData))
+            {
+                outputBuffer.insert(outputBuffer.end(), readData.begin(), readData.end());
+            }
+
+            return false;
+        }
+
         // Timeout for loop waiting for assets to be built
         static constexpr AZStd::chrono::seconds assetLoopTimeout = AZStd::chrono::seconds(30);
 
