@@ -26,7 +26,8 @@ namespace ROS2
     using GetAvailableSpawnableNamesRequest = std::shared_ptr<gazebo_msgs::srv::GetWorldProperties::Request>;
     using GetAvailableSpawnableNamesResponse = std::shared_ptr<gazebo_msgs::srv::GetWorldProperties::Response>;
     using SpawnEntityRequest = std::shared_ptr<gazebo_msgs::srv::SpawnEntity::Request>;
-    using SpawnEntityResponse = std::shared_ptr<gazebo_msgs::srv::SpawnEntity::Response>;
+    using SpawnEntityResponse = gazebo_msgs::srv::SpawnEntity::Response;
+    using SpawnEntityServiceHandle = std::shared_ptr<rclcpp::Service<gazebo_msgs::srv::SpawnEntity>>;
     using GetSpawnPointInfoRequest = std::shared_ptr<gazebo_msgs::srv::GetModelState::Request>;
     using GetSpawnPointInfoResponse = std::shared_ptr<gazebo_msgs::srv::GetModelState::Response>;
     using GetSpawnPointsNamesRequest = std::shared_ptr<gazebo_msgs::srv::GetWorldProperties::Request>;
@@ -61,7 +62,11 @@ namespace ROS2
         rclcpp::Service<gazebo_msgs::srv::GetModelState>::SharedPtr m_getSpawnPointInfoService;
 
         void GetAvailableSpawnableNames(const GetAvailableSpawnableNamesRequest request, GetAvailableSpawnableNamesResponse response);
-        void SpawnEntity(const SpawnEntityRequest request, SpawnEntityResponse response);
+        void SpawnEntity(
+            const SpawnEntityServiceHandle service_handle,
+            const std::shared_ptr<rmw_request_id_t> header,
+            const SpawnEntityRequest request);
+
         void PreSpawn(
             AzFramework::EntitySpawnTicket::Id,
             AzFramework::SpawnableEntityContainerView,
