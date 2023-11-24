@@ -10,7 +10,7 @@ This gem contains a set of models and prefabs which can be used to create a ware
 
 ## Contents
 
-All the contents of this gem reside in the folder `Assets`. It comprises 2 sub-folders:
+All of the contents of this gem reside in the folder `Assets`. It comprises 2 sub-folders:
 
 - `assets` containing models, textures, and material definitions,
 - `Prefabs` containing prefabs that can be used to build the scene.

@@ -80,7 +80,7 @@ namespace WarehouseAutomation
         if (splinePtr)
         {
             m_splineConsPtr = splinePtr;
-            m_sceneSimStartHandler = AzPhysics::SceneEvents::OnSceneSimulationStartHandler (
+            m_sceneFinishSimHandler = AzPhysics::SceneEvents::OnSceneSimulationFinishHandler(
                 [this]([[maybe_unused]] AzPhysics::SceneHandle sceneHandle, float fixedDeltaTime)
                 {
                     SpawnSegments(fixedDeltaTime);
@@ -88,7 +88,7 @@ namespace WarehouseAutomation
                     DespawnSegments();
                 },
                 aznumeric_cast<int32_t>(AzPhysics::SceneEvents::PhysicsStartFinishSimulationPriority::Components));
-            sceneInterface->RegisterSceneSimulationStartHandler(defaultSceneHandle, m_sceneSimStartHandler);
+            sceneInterface->RegisterSceneSimulationFinishHandler(defaultSceneHandle, m_sceneFinishSimHandler);
             const auto& [startPoint, endPoint] = GetStartAndEndPointOfBelt(splinePtr);
             m_startPoint = startPoint;
             m_endPoint = endPoint;
@@ -114,9 +114,9 @@ namespace WarehouseAutomation
 
     void ConveyorBeltComponent::Deactivate()
     {
-        if (m_sceneSimStartHandler.IsConnected())
+        if (m_sceneFinishSimHandler.IsConnected())
         {
-            m_sceneSimStartHandler.Disconnect();
+            m_sceneFinishSimHandler.Disconnect();
         }
         ConveyorBeltRequestBus::Handler::BusDisconnect();
         AZ::EntityBus::Handler::BusDisconnect();

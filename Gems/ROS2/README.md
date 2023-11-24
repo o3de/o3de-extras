@@ -1,50 +1,53 @@
-# O3DE ROS 2 Gem
+# O3DE ROS2 Gem
 
-With the ROS 2 Gem you can develop robotic simulations with [ROS (Robot Operating System) 2](https://www.ros.org/) in [Open 3D Engine (O3DE)](https://o3de.org).
+With the ROS2 Gem you can develop robotic simulations with [ROS (Robot Operating System) 2](https://www.ros.org/) in Open 3D Engine (O3DE).
 
-### Platform
-The Gem is tested with ROS 2 Humble and Iron on Ubuntu 22.04. ROS 2 Jazzy support will be available on distro release day. 
-
->> The Gem is not available for Windows and does not support ROS 1.
-
-## Installation
-
-Refer to [this part of the documentation](https://www.o3de.org/docs/user-guide/interactivity/robotics/project-configuration/) to learn how to create a new project with the ROS 2 Gem.
-
-## Documentation
-
-A great place to start learning about this Gem is the [O3DE Robotics Documentation](https://www.o3de.org/docs/user-guide/interactivity/robotics/).
+Access the the whole ROS2 Gem documentation by clicking [here](https://www.o3de.org/docs/user-guide/interactivity/robotics/). Other sections in this README link to specific parts of the provided documentation.
 
 ## Features
 
-* Direct and natural support of ROS 2 ecosystem:
-  * No bridges. Your simulation node will function as any other ROS 2 node. You can write ROS 2 code in simulation! 
-    * This is also good for performance.
-  * Easy way to include ROS 2 dependencies.
-  * "Just works" with custom messages, services and actions.
+* Direct and natural support of ROS2 ecosystem:
+  * No bridges. Your simulation node will function as any other ROS2 node.
+    * This is also good for performance
+  * Easy way to include ROS2 dependencies.
 * Sensors:
-  * Customizable sensors: Lidar3D, Lidar2D, Camera, IMU, Odometry, GNSS, Contact.
-    * Easy to implement other sensors through handy abstractions.
-* Robot control and dynamics components:
-  * A quick to use method of controlling your mobile robot with Twist or Ackermann messages.
-  * Control and state components for joint systems, such as robotic manipulator arms.
-  * Vacuum and finger grippers.
-* Robot Importer feature working with `URDF` and `SDFormat` (including `.xacro` and `.world` files)
-  * Plugin support which allows you to import robots with sensors already there!
+  * Sensor Component serving as a handy abstraction.
+  * Example implementations of Lidar, Camera, IMU sensors.
+    * Including a few Assets and prefabs which are ready to use. 
 * Automated handling of:
   * Simulation time, publishing `/clock` supporting non-real time.
   * Publishing of transformation frames (`/tf`, `/tf_static`).
   * Validation for topic and namespace names.
+* Robot Control Component:
+  * A quick to use method of controlling your robot with Twist messages.
+  * Can be used with custom LUA scripting. 
 
 For a "feel" of these features, see an [example project](#example-project) which uses this Gem to run navigation stack.
 
+## Example project
+
+You can test the O3DE ROS2 Gem with the [Robot Vacuum](https://github.com/o3de/RobotVacuumSample) project. It will allow you to run a robot navigation simulation. All necessary assets are included.
+
+## Installation
+
+Refer to [this part of the documentation](https://www.o3de.org/docs/user-guide/interactivity/robotics/project-configuration/) to configure your project with the ROS2 Gem.
+
+
+## Learn about ROS2 Gem
+
+Visit [this part of the documentation](https://www.o3de.org/docs/user-guide/interactivity/robotics/concepts-and-components-overview/) to learn about the ROS2 Gems Concepts and Structure. Additionally you can learn about ROS 2 Concepts [here](https://docs.ros.org/en/humble/Concepts.html).
+
+## How to create your own robotic simulation
+
+Refer [here](https://www.o3de.org/docs/user-guide/interactivity/robotics/creating-robotic-simulation/) to access a list of steps guiding you through the creation of your own simulation.
+
 ## Importing robots
 
-Please refer to [Robot Importer documentation](https://www.o3de.org/docs/user-guide/interactivity/robotics/importing-robot/).
+Access [this part](https://www.o3de.org/docs/user-guide/interactivity/robotics/importing-robot/) of the documentation to learn about importing robots from common formats such as the [Unified Robot Description Format (URDF)](http://wiki.ros.org/urdf). 
 
 ## Troubleshooting
 
-See [Troubleshooting guide](https://www.o3de.org/docs/user-guide/interactivity/robotics/troubleshooting/).
+If you have any problems with the ROS2 Gem, visit [here](https://www.o3de.org/docs/user-guide/interactivity/robotics/troubleshooting/) for troubleshooting guides and suggestions.
 
 ## User Guides
 

@@ -104,7 +104,7 @@ namespace WarehouseAutomation
 
         ConveyorBeltComponentConfiguration m_configuration; //!< Configuration of the component
 
-        AzPhysics::SceneEvents::OnSceneSimulationStartHandler m_sceneSimStartHandler; //!< Handler called after every physics sub-step
+        AzPhysics::SceneEvents::OnSceneSimulationFinishHandler m_sceneFinishSimHandler; //!< Handler called after every physics sub-step
         AZStd::deque<AZStd::pair<float, AzPhysics::SimulatedBodyHandle>> m_conveyorSegments; //!< Cache of created segments
         float m_textureOffset = 0.0f; //!< Current offset of the texture during animation
         AZ::ConstSplinePtr m_splineConsPtr{ nullptr }; //!< Pointer to the spline

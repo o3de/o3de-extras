@@ -1,9 +1,9 @@
-# ROS 2 Robot Sample
+# ROS2 Robot Sample
 
-This gem contains a sample robot asset, ready to be used with the ROS 2 Gem. 
+This gem contains a sample robot asset, ready to be used with the ROS2 Gem. 
 
-The robot is delivered as a ready to use prefab containing models, physics and following ROS 2 components:
-- Frame
-- Robot Control
+The robot is delivered as a ready to use prefab containing models, physics and following ROS components:
+- ROS2 Frame
+- ROS2 Robot Control
 - Twist Control
-- Lidar Sensor
+- ROS2 Lidar Sensor
