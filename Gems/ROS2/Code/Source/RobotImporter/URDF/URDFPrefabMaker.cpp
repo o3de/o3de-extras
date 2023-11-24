@@ -468,6 +468,7 @@ namespace ROS2
         if (!linkEntityIdsWithoutParent.empty() && linkEntityIdsWithoutParent.front().IsValid())
         {
             AZ::EntityId contentEntityId = linkEntityIdsWithoutParent.front();
+            MoveEntityToDefaultSpawnPoint(contentEntityId, m_spawnPosition);
             AddRobotControl(contentEntityId);
         }
 
@@ -541,10 +542,6 @@ namespace ROS2
             auto prefabInterface = AZ::Interface<AzToolsFramework::Prefab::PrefabPublicInterface>::Get();
             [[maybe_unused]] auto createPrefabOutcome =
                 prefabInterface->InstantiatePrefab(relativePath.String(), AZ::EntityId(), AZ::Vector3::CreateZero());
-            if (createPrefabOutcome.IsSuccess())
-            {
-                MoveEntityToDefaultSpawnPoint(createPrefabOutcome.GetValue(), m_spawnPosition);
-            }
         }
         else
         {
