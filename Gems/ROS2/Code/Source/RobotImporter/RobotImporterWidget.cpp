@@ -68,6 +68,8 @@ namespace ROS2
                 AZ_Printf("page", "QDialog::finished : %d", id);
                 parentWidget()->close();
             });
+
+        m_urdfAssetsMappingMutex = AZStd::make_shared<AZStd::mutex>();
     }
 
     void RobotImporterWidget::OnUrdfCreated()
@@ -265,6 +267,7 @@ namespace ROS2
     {
         if (m_assetPage->IsEmpty())
         {
+            QWizard::button(QWizard::NextButton)->setDisabled(true);
             AZ::Uuid::FixedString dirSuffix;
             if (!m_params.empty())
             {
@@ -283,8 +286,8 @@ namespace ROS2
 
             if (m_importAssetWithUrdf)
             {
-                m_urdfAssetsMapping = AZStd::make_shared<Utils::UrdfAssetMap>(Utils::CopyReferencedAssetsAndCreateAssetMap(
-                    m_assetNames, m_urdfPath.String(), sdfBuilderSettings, dirSuffix));
+                m_urdfAssetsMapping =
+                    AZStd::make_shared<Utils::UrdfAssetMap>(Utils::CreateAssetMap(m_assetNames, m_urdfPath.String(), sdfBuilderSettings));
             }
             else
             {
@@ -305,45 +308,42 @@ namespace ROS2
                 }
             };
 
-            for (const auto& [assetPath, assetReferenceType] : m_assetNames)
+            for (auto& [unresolvedFileName, urdfAsset] : *m_urdfAssetsMapping)
             {
-                AZ::Uuid sourceAssetUuid = AZ::Uuid::CreateNull();
                 QString type = tr("Unknown");
-                AZStd::optional<AZ::Crc32> crc;
-                AZStd::optional<AZStd::string> sourcePath;
-                AZStd::optional<AZStd::string> resolvedPath;
 
-                if (m_urdfAssetsMapping->contains(assetPath))
+                bool visual =
+                    (urdfAsset.m_assetReferenceType & Utils::ReferencedAssetType::VisualMesh) == Utils::ReferencedAssetType::VisualMesh;
+                bool collider =
+                    (urdfAsset.m_assetReferenceType & Utils::ReferencedAssetType::ColliderMesh) == Utils::ReferencedAssetType::ColliderMesh;
+                bool texture =
+                    (urdfAsset.m_assetReferenceType & Utils::ReferencedAssetType::Texture) == Utils::ReferencedAssetType::Texture;
+                if (visual && collider)
                 {
-                    bool visual = (assetReferenceType & Utils::ReferencedAssetType::VisualMesh) == Utils::ReferencedAssetType::VisualMesh;
-                    bool collider = (assetReferenceType & Utils::ReferencedAssetType::ColliderMesh) == Utils::ReferencedAssetType::ColliderMesh;
-                    bool texture = (assetReferenceType & Utils::ReferencedAssetType::Texture) == Utils::ReferencedAssetType::Texture;
-                    if (visual && collider)
-                    {
-                        type = tr("Visual and Collider Mesh");
-                    }
-                    else if (visual)
-                    {
-                        type = tr("Visual Mesh");
-                    }
-                    else if (collider)
-                    {
-                        type = tr("Collider Mesh");
-                    }
-                    else if (texture)
-                    {
-                        type = tr("Texture");
-                    }
-
-                    const auto& asset = m_urdfAssetsMapping->at(assetPath);
-                    sourceAssetUuid = asset.m_availableAssetInfo.m_sourceGuid;
-                    sourcePath = asset.m_availableAssetInfo.m_sourceAssetRelativePath.String();
-                    resolvedPath = asset.m_resolvedUrdfPath.String();
-                    crc = asset.m_urdfFileCRC;
+                    type = tr("Visual and Collider Mesh");
                 }
-                m_assetPage->ReportAsset(sourceAssetUuid, assetPath, type, sourcePath, crc, resolvedPath);
+                else if (visual)
+                {
+                    type = tr("Visual Mesh");
+                }
+                else if (collider)
+                {
+                    type = tr("Collider Mesh");
+                }
+                else if (texture)
+                {
+                    type = tr("Texture");
+                }
+
+                m_assetPage->ReportAsset(unresolvedFileName.c_str(), urdfAsset, type);
             }
-            m_assetPage->StartWatchAsset();
+            m_copyReferencedAssetsThread = AZStd::make_shared<AZStd::thread>(
+                [this, dirSuffix]()
+                {
+                    Utils::CopyReferencedAssets(*m_urdfAssetsMapping, *m_urdfAssetsMappingMutex, m_urdfPath.String(), dirSuffix);
+                    QWizard::button(QWizard::NextButton)->setDisabled(false);
+                });
+            m_assetPage->StartWatchAsset(m_urdfAssetsMapping, m_urdfAssetsMappingMutex);
         }
     }
 
@@ -408,6 +408,13 @@ namespace ROS2
 
     int RobotImporterWidget::nextId() const
     {
+        if (currentPage() == m_assetPage)
+        {
+            if (m_copyReferencedAssetsThread)
+            {
+                m_copyReferencedAssetsThread->join();
+            }
+        }
         if ((currentPage() == m_fileSelectPage && m_params.empty()) || currentPage() == m_xacroParamsPage)
         {
             if (!m_checkUrdfPage->isWarning())

@@ -20,6 +20,8 @@
 #include "URDF/UrdfParser.h"
 #include <AzCore/Asset/AssetCommon.h>
 #include <AzCore/std/containers/unordered_map.h>
+#include <AzCore/std/parallel/thread.h>
+#include <AzCore/std/smart_ptr/shared_ptr.h>
 #include <RobotImporter/FixURDF/URDFModifications.h>
 #include <RobotImporter/Utils/RobotImporterUtils.h>
 #include <RobotImporter/xacro/XacroUtils.h>
@@ -77,6 +79,9 @@ namespace ROS2
 
         /// mapping from urdf path to asset source
         AZStd::shared_ptr<Utils::UrdfAssetMap> m_urdfAssetsMapping;
+        AZStd::shared_ptr<AZStd::mutex> m_urdfAssetsMappingMutex;
+        AZStd::shared_ptr<AZStd::thread> m_copyReferencedAssetsThread;
+
         AZStd::unique_ptr<URDFPrefabMaker> m_prefabMaker;
         Utils::AssetFilenameReferences m_assetNames;
 

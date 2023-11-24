@@ -9,10 +9,12 @@
 #include "CheckAssetPage.h"
 #include "RobotImporter/Utils/SourceAssetsStorage.h"
 #include <AzCore/Math/MathStringConversions.h>
+#include <AzCore/std/parallel/lock.h>
 #include <AzFramework/Asset/AssetSystemBus.h>
 #include <QHeaderView>
 #include <QPushButton>
 #include <QVBoxLayout>
+
 namespace ROS2
 {
     namespace Columns
@@ -30,6 +32,7 @@ namespace ROS2
         , m_missingCount(0)
         , m_failureIcon(QStringLiteral(":/stylesheet/img/logging/failure.svg"))
         , m_okIcon(QStringLiteral(":/stylesheet/img/logging/valid.svg"))
+        , m_processingIcon(QStringLiteral(":/stylesheet/img/logging/processing.svg"))
     {
         m_table = new QTableWidget(parent);
         SetTitle();
@@ -94,77 +97,49 @@ namespace ROS2
         return m_success;
     };
 
-    void CheckAssetPage::ReportAsset(
-        const AZ::Uuid assetUuid,
-        const AZStd::string sdfPath,
-        const QString& type,
-        const AZStd::optional<AZStd::string>& assetSourcePath,
-        const AZStd::optional<AZ::Crc32>& crc32,
-        const AZStd::optional<AZStd::string>& resolvedSdfPath)
+    void CheckAssetPage::ReportAsset(const AZStd::string unresolvedFileName, const Utils::UrdfAsset& urdfAsset, const QString& type)
     {
         int rowId = m_table->rowCount();
         m_table->setRowCount(rowId + 1);
 
-        // The Asset ID GUID must not be null(all zeros) and the asset source path must not be empty
-        bool isOk = (assetSourcePath.has_value() && !assetSourcePath->empty() && assetSourcePath != "not found")
-            && (resolvedSdfPath.has_value() && !resolvedSdfPath->empty()) && !assetUuid.IsNull();
-        if (!isOk)
-        {
-            m_missingCount++;
-        }
         SetTitle();
         AZStd::string crcStr;
-        if (crc32)
-        {
-            crcStr = AZStd::to_string(*crc32);
-        }
-        QTableWidgetItem* p = createCell(isOk, QString::fromUtf8(sdfPath.data(), sdfPath.size()));
-        if (crc32 != AZ::Crc32())
+
+        crcStr = AZStd::to_string(urdfAsset.m_urdfFileCRC);
+
+        QTableWidgetItem* p =
+            createCell(true, QString::fromUtf8(urdfAsset.m_urdfPath.String().data(), urdfAsset.m_urdfPath.String().size()));
+        if (urdfAsset.m_urdfFileCRC != AZ::Crc32())
         {
             p->setToolTip(tr("CRC for file : ") + QString::fromUtf8(crcStr.data(), crcStr.size()));
         }
         m_table->setItem(rowId, Columns::SdfMeshPath, p);
 
-        if (resolvedSdfPath)
+        if (!urdfAsset.m_resolvedUrdfPath.empty())
         {
             m_table->setItem(
-                rowId, Columns::ResolvedMeshPath, createCell(true, QString::fromUtf8(resolvedSdfPath->data(), resolvedSdfPath->size())));
-        }
-        else
-        {
-            m_table->setItem(rowId, Columns::ResolvedMeshPath, createCell(false, tr("Not found")));
-        }
-
-        m_table->setItem(rowId, Columns::Type, createCell(isOk, type));
-
-        if (assetSourcePath && !assetSourcePath->empty())
-        {
-            m_table->setItem(
-                rowId, Columns::SourceAsset, createCell(true, QString::fromUtf8(assetSourcePath->data(), assetSourcePath->size())));
-            m_assetsPaths[assetUuid] = *assetSourcePath;
-        }
-        else
-        {
-            m_table->setItem(rowId, Columns::SourceAsset, createCell(false, tr("Not found")));
-        }
-
-        if (isOk)
-        {
+                rowId,
+                Columns::ResolvedMeshPath,
+                createCell(
+                    true, QString::fromUtf8(urdfAsset.m_resolvedUrdfPath.String().data(), urdfAsset.m_resolvedUrdfPath.String().size())));
             m_table->item(rowId, Columns::ResolvedMeshPath)->setIcon(m_okIcon);
         }
         else
         {
+            m_table->setItem(rowId, Columns::ResolvedMeshPath, createCell(false, tr("Not found")));
             m_table->item(rowId, Columns::ResolvedMeshPath)->setIcon(m_failureIcon);
-            m_table->setItem(rowId, Columns::ProductAsset, createCell(false, QString()));
         }
-        if (isOk)
-        {
-            m_assetsUuidsToColumnIndex[assetUuid] = rowId;
-        }
+
+        m_table->setItem(rowId, Columns::Type, createCell(true, type));
+
+        m_assetsToColumnIndex[unresolvedFileName] = rowId;
     }
 
-    void CheckAssetPage::StartWatchAsset()
+    void CheckAssetPage::StartWatchAsset(
+        AZStd::shared_ptr<Utils::UrdfAssetMap> urdfAssetMap, AZStd::shared_ptr<AZStd::mutex> urdfAssetMapMutex)
     {
+        m_urdfAssetMap = urdfAssetMap;
+        m_urdfAssetMapMutex = urdfAssetMapMutex;
         m_refreshTimer->start();
     }
 
@@ -182,8 +157,8 @@ namespace ROS2
 
     void CheckAssetPage::ClearAssetsList()
     {
-        m_assetsUuidsToColumnIndex.clear();
-        m_assetsUuidsFinished.clear();
+        m_assetsToColumnIndex.clear();
+        m_assetsFinished.clear();
         m_assetsPaths.clear();
         m_table->setRowCount(0);
         m_missingCount = 0;
@@ -193,78 +168,133 @@ namespace ROS2
 
     bool CheckAssetPage::IsEmpty() const
     {
-        return m_assetsUuidsToColumnIndex.empty();
+        return m_assetsToColumnIndex.empty();
     }
 
     void CheckAssetPage::DoubleClickRow(int row, [[maybe_unused]] int col)
     {
-        for (const auto& [assetUuid, columnId] : m_assetsUuidsToColumnIndex)
+        if (!m_urdfAssetMap)
         {
-            if (columnId == row && m_assetsPaths.contains(assetUuid))
+            return;
+        }
+        AZStd::lock_guard<AZStd::mutex> lock(*m_urdfAssetMapMutex);
+        for (const auto& [assetPath, columnId] : m_assetsToColumnIndex)
+        {
+            if (columnId == row && (*m_urdfAssetMap).contains(assetPath))
             {
+                auto productAssetRelativePath = (*m_urdfAssetMap)[assetPath].m_availableAssetInfo.m_productAssetRelativePath;
+                if (productAssetRelativePath.empty())
+                {
+                    return;
+                }
                 AzFramework::AssetSystemRequestBus::Broadcast(
-                    &AzFramework::AssetSystem::AssetSystemRequests::ShowInAssetProcessor, m_assetsPaths[assetUuid]);
+                    &AzFramework::AssetSystem::AssetSystemRequests::ShowInAssetProcessor, productAssetRelativePath.String());
             }
-
         }
     }
 
     void CheckAssetPage::RefreshTimerElapsed()
     {
-        for (const auto& [assetUuid, rowId] : m_assetsUuidsToColumnIndex)
+        for (const auto& [unresolvedAssetPath, rowId] : m_assetsToColumnIndex)
         {
-            if (m_assetsPaths.contains(assetUuid) && !m_assetsUuidsFinished.contains(assetUuid))
+            Utils::UrdfAsset urdfAsset;
             {
-                // Execute for all found source assets that are not finished yet.
-                const AZStd::string& sourceAssetFullPath = m_assetsPaths[assetUuid];
-                using namespace AzToolsFramework;
-                using namespace AzToolsFramework::AssetSystem;
-
-                AZ::Outcome<AssetSystem::JobInfoContainer> result = AZ::Failure();
-                AssetSystemJobRequestBus::BroadcastResult(
-                    result, &AssetSystemJobRequestBus::Events::GetAssetJobsInfo, sourceAssetFullPath, true);
-                if (result)
+                AZStd::lock_guard<AZStd::mutex> lock(*m_urdfAssetMapMutex);
+                auto urdfAssetIt = m_urdfAssetMap->find(unresolvedAssetPath);
+                if (urdfAssetIt == m_urdfAssetMap->end())
                 {
-                    bool allFinished = true;
-                    bool productAssetFailed = false;
-                    JobInfoContainer& allJobs = result.GetValue();
-                    for (const JobInfo& job : allJobs)
+                    continue;
+                }
+                urdfAsset = urdfAssetIt->second;
+            }
+            auto copyStatus = urdfAsset.m_copyStatus;
+            if (!m_assetsFinished.contains(unresolvedAssetPath))
+            {
+                if (copyStatus == Utils::CopyStatus::Unresolvable)
+                {
+                    m_table->setItem(rowId, Columns::ResolvedMeshPath, createCell(false, tr("Unable to resolve mesh path")));
+                    m_table->item(rowId, Columns::ResolvedMeshPath)->setIcon(m_failureIcon);
+                    m_assetsFinished.insert(unresolvedAssetPath);
+                    m_failedCount++;
+                }
+                else if (copyStatus == Utils::CopyStatus::Failed)
+                {
+                    m_table->setItem(rowId, Columns::ProductAsset, createCell(false, tr("Failed to copy mesh")));
+                    m_table->item(rowId, Columns::ProductAsset)->setIcon(m_failureIcon);
+                    m_assetsFinished.insert(unresolvedAssetPath);
+                    m_failedCount++;
+                }
+                else if (copyStatus == Utils::CopyStatus::Copying)
+                {
+                    m_table->setItem(rowId, Columns::ProductAsset, createCell(true, tr("Copying")));
+                    m_table->item(rowId, Columns::ProductAsset)->setIcon(m_processingIcon);
+                }
+                else if (copyStatus == Utils::CopyStatus::Copied || copyStatus == Utils::CopyStatus::Exists)
+                {
+                    auto copiedText = tr("Copied, waiting to be processed");
+                    auto foundText = tr("Found file, waiting to be processed");
+
+                    m_table->setItem(
+                        rowId, Columns::ProductAsset, createCell(true, copyStatus == Utils::CopyStatus::Copied ? copiedText : foundText));
+                    m_table->item(rowId, Columns::ProductAsset)->setIcon(m_processingIcon);
+                    m_table->setItem(
+                        rowId, Columns::SourceAsset, createCell(true, urdfAsset.m_availableAssetInfo.m_sourceAssetRelativePath.c_str()));
+                }
+
+                if (copyStatus == Utils::CopyStatus::Copied || copyStatus == Utils::CopyStatus::Exists)
+                {
+                    // Execute for all found source assets that are not finished yet.
+                    const AZStd::string& sourceAssetFullPath = urdfAsset.m_availableAssetInfo.m_sourceAssetGlobalPath.c_str();
+                    using namespace AzToolsFramework;
+                    using namespace AzToolsFramework::AssetSystem;
+
+                    AZ::Outcome<AssetSystem::JobInfoContainer> result = AZ::Failure();
+                    AssetSystemJobRequestBus::BroadcastResult(
+                        result, &AssetSystemJobRequestBus::Events::GetAssetJobsInfo, sourceAssetFullPath, true);
+                    if (result)
                     {
-                        if (job.m_status == JobStatus::Queued || job.m_status == JobStatus::InProgress)
+                        bool allFinished = true;
+                        bool productAssetFailed = false;
+                        JobInfoContainer& allJobs = result.GetValue();
+                        for (const JobInfo& job : allJobs)
                         {
-                            allFinished = false;
-                        }
-                        if (job.m_status == JobStatus::Failed)
-                        {
-                            productAssetFailed = true;
-                        }
-                    }
-                    if (allFinished)
-                    {
-                        if (!productAssetFailed)
-                        {
-                            const AZStd::vector<AZStd::string> productPaths = Utils::GetProductAssets(assetUuid);
-                            QString text;
-                            for (const auto& productPath : productPaths)
+                            if (job.m_status == JobStatus::Queued || job.m_status == JobStatus::InProgress)
                             {
-                                text += QString::fromUtf8(productPath.data(), productPath.size()) + " ";
+                                allFinished = false;
                             }
-                            m_table->setItem(rowId, Columns::ProductAsset, createCell(true, text));
-                            m_table->item(rowId, Columns::ProductAsset)->setIcon(m_okIcon);
+                            if (job.m_status == JobStatus::Failed)
+                            {
+                                productAssetFailed = true;
+                            }
                         }
-                        else
+                        if (allFinished)
                         {
-                            m_table->setItem(rowId, Columns::ProductAsset, createCell(false, tr("Failed")));
-                            m_table->item(rowId, Columns::ProductAsset)->setIcon(m_failureIcon);
-                            m_failedCount++;
+                            if (!productAssetFailed)
+                            {
+                                const AZStd::vector<AZStd::string> productPaths =
+                                    Utils::GetProductAssets(urdfAsset.m_availableAssetInfo.m_sourceGuid);
+                                QString text;
+                                for (const auto& productPath : productPaths)
+                                {
+                                    text += QString::fromUtf8(productPath.data(), productPath.size()) + " ";
+                                }
+                                m_table->setItem(rowId, Columns::ProductAsset, createCell(true, text));
+                                m_table->item(rowId, Columns::ProductAsset)->setIcon(m_okIcon);
+                            }
+                            else
+                            {
+                                m_table->setItem(rowId, Columns::ProductAsset, createCell(false, tr("Failed")));
+                                m_table->item(rowId, Columns::ProductAsset)->setIcon(m_failureIcon);
+                                m_failedCount++;
+                            }
+                            m_assetsFinished.insert(unresolvedAssetPath);
                         }
-                        m_assetsUuidsFinished.insert(assetUuid);
                     }
                 }
             }
         }
 
-        if (m_assetsUuidsFinished.size() == m_assetsUuidsToColumnIndex.size())
+        if (m_assetsFinished.size() == m_assetsToColumnIndex.size())
         {
             m_refreshTimer->stop();
             if (m_failedCount == 0 && m_missingCount == 0)

@@ -14,9 +14,11 @@
 #include <AzCore/Asset/AssetManagerBus.h>
 #include <AzCore/IO/FileIO.h>
 #include <AzCore/IO/Path/Path.h>
+#include <AzCore/IO/Path/Path_fwd.h>
 #include <AzCore/Math/Crc.h>
 #include <AzCore/std/containers/unordered_map.h>
 #include <AzCore/std/containers/unordered_set.h>
+#include <AzCore/std/parallel/mutex.h>
 #include <AzFramework/Asset/AssetSystemBus.h>
 #include <AzToolsFramework/API/EditorAssetSystemAPI.h>
 
@@ -44,31 +46,51 @@ namespace ROS2::Utils
         AZ::Uuid m_sourceGuid = AZ::Uuid::CreateNull();
     };
 
-    //! The structure contains a mapping between URDF's path to O3DE asset information.
-    struct UrdfAsset
+    //! Status of the copy process.
+    enum CopyStatus
     {
-        //! Unresolved URDF path to mesh, eg `package://meshes/bar_link.dae`.
-        AZ::IO::Path m_urdfPath;
-
-        //! Resolved URDF path, points to the valid mesh in the filestystem, eg `/home/user/ros_ws/src/foo_robot/meshes/bar_link.dae'
-        AZ::IO::Path m_resolvedUrdfPath;
-
-        //! Checksum of the file located pointed by `m_resolvedUrdfPath`.
-        AZ::Crc32 m_urdfFileCRC;
-
-        //! Found O3DE asset.
-        AvailableAsset m_availableAssetInfo;
+        Unresolvable, //! Unresolvable
+        Waiting, //! Waiting for copy
+        Copying, //! Copying
+        Copied, //! Copied
+        Exists, //! Already exists
+        Failed, //! Failed
     };
 
     //! Bitfield containing the types of asset references are associated with a given unresolved URI or path reference.
     //! These are flags because the same mesh URI can refer to both a Visual and a Collider entry, for example.
     enum class ReferencedAssetType
     {
-        VisualMesh =   0b00000001,   //! URI references a mesh for a Visual entry
-        ColliderMesh = 0b00000010,   //! URI references a mesh for a Collider entry
-        Texture =      0b00000100,   //! URI references one of a multitude of texture types (Diffuse, Normal, AO, etc)
+        VisualMesh = 0b00000001, //! URI references a mesh for a Visual entry
+        ColliderMesh = 0b00000010, //! URI references a mesh for a Collider entry
+        Texture = 0b00000100, //! URI references one of a multitude of texture types (Diffuse, Normal, AO, etc)
     };
     AZ_DEFINE_ENUM_BITWISE_OPERATORS(ReferencedAssetType);
+
+    //! The structure contains a mapping between URDF's path to O3DE asset information.
+    struct UrdfAsset
+    {
+        //! Unresolved URDF path to mesh, eg `package://meshes/bar_link.dae`.
+        AZ::IO::Path m_urdfPath;
+
+        //! Resolved URDF path, points to the valid mesh in the filesystem, eg `/home/user/ros_ws/src/foo_robot/meshes/bar_link.dae'
+        AZ::IO::Path m_resolvedUrdfPath;
+
+        //! Unresolved file name, points to the valid mesh in the filesystem
+        AZStd::string m_unresolvedFileName;
+
+        //! Checksum of the file located pointed by `m_resolvedUrdfPath`.
+        AZ::Crc32 m_urdfFileCRC;
+
+        //! Status of the copy process.
+        CopyStatus m_copyStatus = Waiting;
+
+        //! Type of asset reference(s) - mesh, texture, etc.
+        ReferencedAssetType m_assetReferenceType;
+
+        //! Found O3DE asset.
+        AvailableAsset m_availableAssetInfo;
+    };
 
     //! Maps unresolved URI asset references to the type of reference(s) - mesh, texture, etc.
     using AssetFilenameReferences = AZStd::unordered_map<AZStd::string, ReferencedAssetType>;
@@ -155,6 +177,31 @@ namespace ROS2::Utils
         const AssetFilenameReferences& assetFilenames,
         const AZStd::string& urdfFilename,
         const SdfAssetBuilderSettings& sdfBuilderSettings,
+        AZStd::string_view outputDirSuffix = "",
+        AZ::IO::FileIOBase* fileIO = AZ::IO::FileIOBase::GetInstance());
+
+    //! Creates a mapping from unresolved URDF paths to source asset info.
+    //! @param assetFilenames - files to copy (as unresolved urdf paths)
+    //! @param urdfFilename - path to URDF file (as a global path)
+    //! @param sdfBuilderSettings - the builder settings to use to convert the SDF/URDF files
+    //! @returns mapping from unresolved urdf paths to source asset info
+    UrdfAssetMap CreateAssetMap(
+        const AssetFilenameReferences& assetFilenames,
+        const AZStd::string& urdfFilename,
+        const SdfAssetBuilderSettings& sdfBuilderSettings);
+
+    //! Copies and prepares assets that are referenced in SDF/URDF.
+    //! Modifies urdfAssetMap in place.
+    //! @param urdfAssetMap - mapping from unresolved urdf paths to source asset info
+    //! @param urdfAssetMapMutex - mutex to protect changes done to urdfAssetMap from other threads
+    //! @param urdfFilename - path to URDF file (as a global path)
+    //! @param outputDirSuffix - suffix to make output directory unique, if xacro file was used
+    //! @param fileIO - instance to fileIO class
+    //! @returns true if succeed
+    bool CopyReferencedAssets(
+        UrdfAssetMap& urdfAssetMap,
+        AZStd::mutex& urdfAssetMapMutex,
+        const AZStd::string& urdfFilename,
         AZStd::string_view outputDirSuffix = "",
         AZ::IO::FileIOBase* fileIO = AZ::IO::FileIOBase::GetInstance());
 
