@@ -62,7 +62,7 @@ namespace ROS2
         // ROS2RequestBus::Handler overrides
         std::shared_ptr<rclcpp::Node> GetNode() const override;
         builtin_interfaces::msg::Time GetROSTimestamp() const override;
-        void BroadcastTransform(const geometry_msgs::msg::TransformStamped& t, bool isDynamic) const override;
+        void BroadcastTransform(const geometry_msgs::msg::TransformStamped& t, bool isDynamic) override;
         const SimulationClock& GetSimulationClock() const override;
         //////////////////////////////////////////////////////////////////////////
 
@@ -82,6 +82,8 @@ namespace ROS2
         ////////////////////////////////////////////////////////////////////////
     private:
         void InitClock();
+
+        std::vector<geometry_msgs::msg::TransformStamped> m_frameTransforms;
 
         std::shared_ptr<rclcpp::Node> m_ros2Node;
         AZStd::shared_ptr<rclcpp::executors::SingleThreadedExecutor> m_executor;

@@ -668,23 +668,17 @@
                                     },
                                     "lidarCore": {
                                         "lidarConfiguration": {
-                                            "lidarModelName": "CustomLidar",
+                                            "lidarModelName": "Velodyne Puck (VLP-16)",
                                             "lidarImplementation": "Scene Queries",
                                             "LidarParameters": {
-                                                "Name": "CustomLidar",
-                                                "Layers": 24,
-                                                "Points per layer": 924,
-                                                "Min horizontal angle": -180.0,
-                                                "Max horizontal angle": 180.0,
-                                                "Min vertical angle": -35.0,
-                                                "Max vertical angle": 35.0,
-                                                "Min range": 0.0,
-                                                "Max range": 100.0,
+                                                "Name": "Velodyne Puck (VLP-16)",
+                                                "Layers": 16,
+                                                "Points per layer": 1800,
+                                                "Min vertical angle": 15.0,
+                                                "Max vertical angle": -15.0,
                                                 "Enable Noise": true,
                                                 "Noise Parameters": {
-                                                    "Angular noise standard deviation": 0.0,
-                                                    "Distance noise standard deviation base": 0.009999999776482582,
-                                                    "Distance noise standard deviation slope": 0.0010000000474974513
+                                                    "Distance noise standard deviation base": 0.029999999329447746
                                                 }
                                             },
                                             "IgnoredLayerIndices": [
