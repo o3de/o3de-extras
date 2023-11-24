@@ -32,15 +32,13 @@ namespace ROS2
         SpawnerRequestsBus::BroadcastResult(allActiveSpawnPoints, &SpawnerRequestsBus::Events::GetAllSpawnPointInfos);
 
         m_spawnPointsComboBox = new QComboBox(this);
+        m_spawnPointsInfos = allActiveSpawnPoints.values;
 
-        m_spawnPointsComboBox->addItem(tr(zeroPoint.data()));
-
-        for (const auto& spawnPointMap : allActiveSpawnPoints.values)
+        for (int i = 0; i < allActiveSpawnPoints.values.size(); i++)
         {
-            for (const auto& spawnPoint : spawnPointMap)
+            for (const auto& element : allActiveSpawnPoints.values[i])
             {
-                m_spawnPointsComboBox->addItem(spawnPoint.first.c_str());
-                m_spawnPointsInfos.insert({ spawnPoint.first.c_str(), spawnPoint.second });
+                m_spawnPointsComboBox->addItem(element.first.c_str(), QVariant(i));
             }
         }
 
@@ -57,11 +55,11 @@ namespace ROS2
         QLabel* spawnPointListLabel;
         if (allActiveSpawnPoints.values.size() == 0)
         {
-            spawnPointListLabel = new QLabel(tr("Select spawn position (No spawn positions were detected)"), this);
+            spawnPointListLabel = new QLabel("Select spawn position (No spawn positions were detected)", this);
         }
         else
         {
-            spawnPointListLabel = new QLabel(tr("Select spawn position"), this);
+            spawnPointListLabel = new QLabel("Select spawn position", this);
         }
         layout->addWidget(spawnPointListLabel);
         layout->addWidget(m_spawnPointsComboBox);
@@ -97,21 +95,15 @@ namespace ROS2
     {
         if (!m_spawnPointsInfos.empty())
         {
-            AZStd::string spawnPointName(m_spawnPointsComboBox->currentText().toStdString().c_str());
-            if (IsZeroPoint(spawnPointName))
-            {
-                return AZStd::nullopt;
-            }
-            if (auto spawnInfo = m_spawnPointsInfos.find(spawnPointName); spawnInfo != m_spawnPointsInfos.end())
+            int vectorIndex = m_spawnPointsComboBox->currentData().toInt();
+            AZStd::string mapKey(m_spawnPointsComboBox->currentText().toStdString().c_str());
+            auto& map = m_spawnPointsInfos[vectorIndex];
+            if (auto spawnInfo = map.find(mapKey);
+                spawnInfo != map.end())
             {
                 return spawnInfo->second.pose;
             }
         }
         return AZStd::nullopt;
-    }
-
-    bool PrefabMakerPage::IsZeroPoint(AZStd::string spawnPointName)
-    {
-        return spawnPointName == PrefabMakerPage::zeroPoint;
     }
 } // namespace ROS2

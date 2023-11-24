@@ -11,8 +11,7 @@
 					".fbx",
 					".stl",
 					".gltf",
-					".glb",
-					".obj"
+					".glb"
 				]
 			},
 			"MaterialConverter": 

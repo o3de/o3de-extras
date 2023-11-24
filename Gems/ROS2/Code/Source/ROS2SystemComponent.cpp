@@ -182,11 +182,11 @@ namespace ROS2
         return *m_simulationClock;
     }
 
-    void ROS2SystemComponent::BroadcastTransform(const geometry_msgs::msg::TransformStamped& t, bool isDynamic)
+    void ROS2SystemComponent::BroadcastTransform(const geometry_msgs::msg::TransformStamped& t, bool isDynamic) const
     {
         if (isDynamic)
         {
-            m_frameTransforms.push_back(t);
+            m_dynamicTFBroadcaster->sendTransform(t);
         }
         else
         {
@@ -198,9 +198,6 @@ namespace ROS2
     {
         if (rclcpp::ok())
         {
-            m_dynamicTFBroadcaster->sendTransform(m_frameTransforms);
-            m_frameTransforms.clear();
-
             m_simulationClock->Tick();
             m_executor->spin_some();
         }
