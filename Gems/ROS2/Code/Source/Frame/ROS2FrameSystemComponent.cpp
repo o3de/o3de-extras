@@ -418,7 +418,7 @@ namespace ROS2
     {
         AZStd::string ros2Namespace;
         ROS2FrameComponentBus::EventResult(ros2Namespace, frameParentEntity, &ROS2FrameComponentBus::Events::GetNamespace);
-        UpdateNamespaces(frameEntity, ros2Namespace);
+        UpdateNamespaces(frameEntity, ros2Namespace, isActive);
     }
 
     void ROS2FrameSystemComponent::UpdateNamespaces(AZ::EntityId frameEntity, AZStd::string parentsNamespace, bool isActive)
