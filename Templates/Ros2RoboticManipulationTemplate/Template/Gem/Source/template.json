@@ -1,15 +1,12 @@
 {
     "template_name": "Ros2RoboticManipulationTemplate",
-    "origin": "https://github.com/o3de/o3de-extras",
-    "license": "https://github.com/o3de/o3de-extras/tree/development/Templates/Ros2RoboticManipulationTemplate/Template/LICENSE.txt",
+    "origin": "The primary repo for Ros2RoboticManipulationTemplate goes here: i.e. http://www.mydomain.com",
+    "license": "What license Ros2RoboticManipulationTemplate uses goes here: i.e. https://opensource.org/licenses/MIT",
     "display_name": "Ros2RoboticManipulationTemplate",
-    "summary": "A manipulation template for ROS2",
+    "summary": "A short description of Ros2RoboticManipulationTemplate.",
     "canonical_tags": [],
     "user_tags": [
-        "Ros2RoboticManipulationTemplate",
-        "ROS2",
-        "Move it2",
-        "Robots"
+        "Ros2RoboticManipulationTemplate"
     ],
     "icon_path": "preview.png",
     "copyFiles": [
@@ -1006,23 +1003,7 @@
             "isTemplated": false
         },
         {
-            "file": "DiffuseProbeGrids/Diffuse_Probe_Grid_1C06FE02-367E-4D6E-B8AE-9A48F2AF5F75_Irradiance_lutrgba16f.dds",
-            "isTemplated": false
-        },
-        {
-            "file": "DiffuseProbeGrids/Diffuse_Probe_Grid_4F50E1BF-2C8C-44EB-8183-34101107473C_Distance_lutrg32f.dds",
-            "isTemplated": false
-        },
-        {
-            "file": "DiffuseProbeGrids/Diffuse_Probe_Grid_ABC8A956-D89D-4CDB-829B-EF1DD8DE5404_ProbeData_lutrgba16f.dds",
-            "isTemplated": false
-        },
-        {
-            "file": "Examples/panda_moveit_config_demo.launch.py",
-            "isTemplated": false
-        },
-        {
-            "file": "Examples/panda_moveit_config_demo.rviz",
+            "file": "Examples/panda_rgbd.launch.py",
             "isTemplated": false
         },
         {
@@ -1102,7 +1083,7 @@
             "isTemplated": true
         },
         {
-            "file": "Levels/RoboticPalletization/RoboticPalletization.prefab",
+            "file": "Levels/RoboticPaletization/RoboticPaletization.prefab",
             "isTemplated": false
         },
         {
@@ -1270,18 +1251,6 @@
             "isTemplated": false
         },
         {
-            "file": "user/Registry/editorpreferences.setreg",
-            "isTemplated": false
-        },
-        {
-            "file": "user/Registry/ViewBookmarks/robotic-arm_1671539006337141059.setreg",
-            "isTemplated": false
-        },
-        {
-            "file": "user/Registry/ViewBookmarks/RoboticPalletization_1691268770764352914.setreg",
-            "isTemplated": false
-        },
-        {
             "file": "game.cfg",
             "isTemplated": false
         },
@@ -1335,7 +1304,7 @@
             "dir": "Levels"
         },
         {
-            "dir": "Levels/RoboticPalletization"
+            "dir": "Levels/RoboticPaletization"
         },
         {
             "dir": "Levels/RoboticManipulation"
@@ -1387,15 +1356,6 @@
         },
         {
             "dir": "Shaders"
-        },
-        {
-            "dir": "user"
-        },
-        {
-            "dir": "user/Registry"
-        },
-        {
-            "dir": "user/Registry/ViewBookmarks"
         },
         {
             "dir": "Shaders/ShaderResourceGroups"
