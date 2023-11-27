@@ -11,6 +11,7 @@
 #include <RobotControl/ROS2RobotControlComponent.h>
 #include <RobotImporter/SDFormat/ROS2ModelPluginHooks.h>
 #include <RobotImporter/SDFormat/ROS2SDFormatHooksUtils.h>
+#include <Source/EditorHingeJointComponent.h>
 #include <VehicleDynamics/ModelComponents/SkidSteeringModelComponent.h>
 
 #include <sdf/Joint.hh>
@@ -39,6 +40,29 @@ namespace ROS2::SDFormat
             return AZ::EntityId();
         }
 
+        void EnableMotor(const AZ::EntityId& entityId)
+        {
+            AZ::Entity* entity = nullptr;
+            AZ::ComponentApplicationBus::BroadcastResult(entity, &AZ::ComponentApplicationRequests::FindEntity, entityId);
+            if (entity != nullptr)
+            {
+                PhysX::EditorHingeJointComponent* jointComponent = entity->FindComponent<PhysX::EditorHingeJointComponent>();
+                if (jointComponent != nullptr)
+                {
+                    jointComponent->Activate();
+                    PhysX::EditorJointRequestBus::Event(
+                        AZ::EntityComponentIdPair(entityId, jointComponent->GetId()),
+                        &PhysX::EditorJointRequests::SetBoolValue,
+                        PhysX::JointsComponentModeCommon::ParameterNames::EnableMotor,
+                        true);
+                    jointComponent->Deactivate();
+                    return;
+                }
+            }
+
+            AZ_Warning("ROS2SkidSteeringModelPluginHook", false, "Cannot switch on motor in wheel joint. Joint does not exist.");
+        }
+
         VehicleDynamics::VehicleConfiguration GetConfiguration(
             const sdf::ElementPtr element, const sdf::Model& sdfModel, const CreatedEntitiesMap& createdEntities)
         {
@@ -61,6 +85,8 @@ namespace ROS2::SDFormat
                 {
                     axle.m_axleWheels.emplace_back(AZStd::move(entityIdLeft));
                     axle.m_axleWheels.emplace_back(AZStd::move(entityIdRight));
+                    EnableMotor(entityIdLeft);
+                    EnableMotor(entityIdRight);
                 }
                 else
                 {
