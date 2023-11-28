@@ -46,6 +46,16 @@ namespace ROS2::Utils
         AZ::Uuid m_sourceGuid = AZ::Uuid::CreateNull();
     };
 
+    //! Bitfield containing the types of asset references are associated with a given unresolved URI or path reference.
+    //! These are flags because the same mesh URI can refer to both a Visual and a Collider entry, for example.
+    enum class ReferencedAssetType
+    {
+        VisualMesh = 0b00000001, //! URI references a mesh for a Visual entry
+        ColliderMesh = 0b00000010, //! URI references a mesh for a Collider entry
+        Texture = 0b00000100, //! URI references one of a multitude of texture types (Diffuse, Normal, AO, etc)
+    };
+    AZ_DEFINE_ENUM_BITWISE_OPERATORS(ReferencedAssetType);
+
     //! Status of the copy process.
     enum CopyStatus
     {
@@ -56,16 +66,6 @@ namespace ROS2::Utils
         Exists, //! Already exists
         Failed, //! Failed
     };
-
-    //! Bitfield containing the types of asset references are associated with a given unresolved URI or path reference.
-    //! These are flags because the same mesh URI can refer to both a Visual and a Collider entry, for example.
-    enum class ReferencedAssetType
-    {
-        VisualMesh = 0b00000001, //! URI references a mesh for a Visual entry
-        ColliderMesh = 0b00000010, //! URI references a mesh for a Collider entry
-        Texture = 0b00000100, //! URI references one of a multitude of texture types (Diffuse, Normal, AO, etc)
-    };
-    AZ_DEFINE_ENUM_BITWISE_OPERATORS(ReferencedAssetType);
 
     //! The structure contains a mapping between URDF's path to O3DE asset information.
     struct UrdfAsset

@@ -103,9 +103,7 @@ namespace ROS2
         m_table->setRowCount(rowId + 1);
 
         SetTitle();
-        AZStd::string crcStr;
-
-        crcStr = AZStd::to_string(urdfAsset.m_urdfFileCRC);
+        const AZStd::string crcStr = AZStd::to_string(urdfAsset.m_urdfFileCRC);
 
         QTableWidgetItem* p =
             createCell(true, QString::fromUtf8(urdfAsset.m_urdfPath.String().data(), urdfAsset.m_urdfPath.String().size()));
