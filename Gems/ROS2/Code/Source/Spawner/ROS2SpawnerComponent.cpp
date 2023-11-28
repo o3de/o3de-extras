@@ -10,6 +10,8 @@
 #include "Spawner/ROS2SpawnerComponentController.h"
 #include <AzCore/Serialization/EditContext.h>
 #include <AzCore/Serialization/SerializeContext.h>
+#include <AzCore/std/string/conversions.h>
+#include <AzCore/std/string/string.h>
 #include <AzFramework/Spawnable/Spawnable.h>
 #include <ROS2/Frame/ROS2FrameComponent.h>
 #include <ROS2/ROS2Bus.h>
@@ -48,6 +50,14 @@ namespace ROS2
                 SpawnEntity(service_handle, header, request);
             });
 
+        m_deleteService = ros2Node->create_service<gazebo_msgs::srv::DeleteEntity>(
+            "delete_entity",
+            [this](
+                const DeleteEntityServiceHandle service_handle, const std::shared_ptr<rmw_request_id_t> header, DeleteEntityRequest request)
+            {
+                DeleteEntity(service_handle, header, request);
+            });
+
         m_getSpawnPointInfoService = ros2Node->create_service<gazebo_msgs::srv::GetModelState>(
             "get_spawn_point_info",
             [this](const GetSpawnPointInfoRequest request, GetSpawnPointInfoResponse response)
@@ -69,8 +79,10 @@ namespace ROS2
 
         m_getSpawnablesNamesService.reset();
         m_spawnService.reset();
+        m_deleteService.reset();
         m_getSpawnPointInfoService.reset();
         m_getSpawnPointsNamesService.reset();
+        m_tickets.clear();
     }
 
     void ROS2SpawnerComponent::Reflect(AZ::ReflectContext* context)
@@ -120,13 +132,11 @@ namespace ROS2
             return;
         }
 
-        if (!m_tickets.contains(spawnableName))
-        {
-            // if a ticket for this spawnable was not created but the spawnable name is correct, create the ticket and then use it to
-            // spawn an entity
-            auto spawnable = m_controller.GetSpawnables().find(spawnableName);
-            m_tickets.emplace(spawnable->first, AzFramework::EntitySpawnTicket(spawnable->second));
-        }
+        auto spawnable = m_controller.GetSpawnables().find(spawnableName);
+        auto spawnableTicket = AzFramework::EntitySpawnTicket(spawnable->second);
+        auto ticketId = spawnableTicket.GetId();
+        AZStd::string ticketName = spawnable->first + "_" + AZStd::to_string(ticketId);
+        m_tickets.emplace(ticketName, AZStd::move(spawnableTicket));
 
         auto spawner = AZ::Interface<AzFramework::SpawnableEntitiesDefinition>::Get();
 
@@ -154,14 +164,15 @@ namespace ROS2
             PreSpawn(id, view, transform, spawnableName, spawnableNamespace);
         };
 
-        optionalArgs.m_completionCallback = [service_handle, header](auto id, auto view)
+        optionalArgs.m_completionCallback = [service_handle, header, ticketName](auto id, auto view)
         {
             SpawnEntityResponse response;
             response.success = true;
+            response.status_message = ticketName.c_str();
             service_handle->send_response(*header, response);
         };
 
-        spawner->SpawnAllEntities(m_tickets.at(spawnableName), optionalArgs);
+        spawner->SpawnAllEntities(m_tickets.at(ticketName), optionalArgs);
     }
 
     void ROS2SpawnerComponent::PreSpawn(
@@ -194,6 +205,33 @@ namespace ROS2
                 break;
             }
         }
+    }
+
+    void ROS2SpawnerComponent::DeleteEntity(
+        const DeleteEntityServiceHandle service_handle, const std::shared_ptr<rmw_request_id_t> header, DeleteEntityRequest request)
+    {
+        auto deleteName = AZStd::string(request->name.c_str());
+        if (!m_tickets.contains(deleteName))
+        {
+            DeleteEntityResponse response;
+            response.success = false;
+            response.status_message = "Could not find entity with given name: " + request->name;
+            service_handle->send_response(*header, response);
+            return;
+        }
+        auto spawner = AZ::Interface<AzFramework::SpawnableEntitiesDefinition>::Get();
+
+        AzFramework::DespawnAllEntitiesOptionalArgs optionalArgs;
+
+        optionalArgs.m_completionCallback = [service_handle, header](auto id)
+        {
+            DeleteEntityResponse response;
+            response.success = true;
+            service_handle->send_response(*header, response);
+        };
+
+        spawner->DespawnAllEntities(m_tickets.at(deleteName), optionalArgs);
+        m_tickets.erase(deleteName);
     }
 
     void ROS2SpawnerComponent::GetSpawnPointsNames(
