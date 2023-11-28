@@ -431,7 +431,7 @@ namespace ROS2::Utils
                             targetPathAssetDst.c_str(),
                             outcomeMoveDst.GetResultCode());
 
-                        // call FlushIOOfAsset to ensure the asset processor is aware of the new file
+                        // call FlushIOOfAsset to ensure the asset processor is aware of the move operation.
                         FlushIOOfAsset(targetPathAssetDst);
 
                         if (outcomeMoveDst)
