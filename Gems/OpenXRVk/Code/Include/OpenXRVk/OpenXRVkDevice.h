@@ -79,6 +79,5 @@ namespace OpenXRVk
         XrCompositionLayerProjection m_xrLayer{ XR_TYPE_COMPOSITION_LAYER_PROJECTION };
         AZStd::vector<XrCompositionLayerProjectionView> m_projectionLayerViews;
         AZStd::vector<XrView> m_views;
-        uint32_t m_viewCountOutput = 0;
     };
 }

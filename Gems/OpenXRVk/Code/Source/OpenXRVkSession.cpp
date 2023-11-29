@@ -112,6 +112,12 @@ namespace OpenXRVk
                 XrResult result = xrBeginSession(m_session, &sessionBeginInfo);
                 WARN_IF_UNSUCCESSFUL(result);
                 m_sessionRunning = true;
+                // It's important to reset the spaces when this event is received.
+                // Typically the Proximity Sensor is ON, which reduces battery usage when the user
+                // is not wearing the headset. Each time the proximity sensor is disabled or the user
+                // decides to wear the headset, the XrSpaces need to be recreated, otherwise their
+                // poses would be corrupted.
+                ResetSpaces();
                 break;
             }
             case XR_SESSION_STATE_STOPPING:
@@ -141,6 +147,13 @@ namespace OpenXRVk
                 break;
             }
         }
+    }
+
+    void Session::ResetSpaces()
+    {
+        Space* xrVkSpace = static_cast<Space*>(GetSpace());
+        xrVkSpace->ShutdownInternal();
+        xrVkSpace->CreateVisualizedSpaces(m_session);
     }
     
     const XrEventDataBaseHeader* Session::TryReadNextEvent()
@@ -222,6 +235,26 @@ namespace OpenXRVk
         }
     }
 
+    void Session::SetBaseSpaceTypeForVisualization(SpaceType spaceType)
+    {
+        m_baseSpaceTypeForVisualization = spaceType;
+    }
+
+    void Session::SetBaseSpaceTypeForControllers(SpaceType spaceType)
+    {
+        m_baseSpaceTypeForControllers = spaceType;
+    }
+
+    SpaceType Session::GetBaseSpaceTypeForVisualization() const
+    {
+        return m_baseSpaceTypeForVisualization;
+    }
+
+    SpaceType Session::GetBaseSpaceTypeForControllers() const
+    {
+        return m_baseSpaceTypeForControllers;
+    }
+
     void Session::LogActionSourceName(XrAction action, const AZStd::string_view actionName) const
     {
         XrBoundSourcesForActionEnumerateInfo getInfo = { XR_TYPE_BOUND_SOURCES_FOR_ACTION_ENUMERATE_INFO };
@@ -278,6 +311,11 @@ namespace OpenXRVk
     {
         return GetNativeInput()->GetControllerPose(handIndex, outPoseData);
     }
+
+    AZ::RHI::ResultCode Session::GetControllerTransform(AZ::u32 handIndex, AZ::Transform& outTransform) const
+    {
+        return GetNativeInput()->GetControllerTransform(handIndex, outTransform);
+    }
     
     AZ::RHI::ResultCode Session::GetControllerStagePose(AZ::u32 handIndex, AZ::RPI::PoseData& outPoseData) const
     {
@@ -293,7 +331,7 @@ namespace OpenXRVk
 
     AZ::RHI::ResultCode Session::GetViewLocalPose(AZ::RPI::PoseData& outPoseData) const
     {
-        return GetNativeInput()->GetVisualizedSpacePose(OpenXRVk::SpaceType::Local, outPoseData);
+        return GetNativeInput()->GetVisualizedSpacePose(OpenXRVk::SpaceType::View, outPoseData);
     }
 
     float Session::GetControllerScale(AZ::u32 handIndex) const
@@ -383,5 +421,10 @@ namespace OpenXRVk
     Input* Session::GetNativeInput() const
     {
         return static_cast<Input*>(GetInput());
+    }
+
+    void Session::UpdateXrSpaceLocations(const OpenXRVk::Device& device, XrTime predictedDisplayTime, AZStd::vector<XrView>& xrViews)
+    {
+        GetNativeInput()->UpdateXrSpaceLocations(device, predictedDisplayTime, xrViews);
     }
 }

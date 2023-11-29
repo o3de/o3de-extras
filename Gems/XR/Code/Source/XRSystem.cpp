@@ -254,6 +254,15 @@ namespace XR
         return AZ::RHI::ResultCode::NotReady;
     }
 
+    AZ::RHI::ResultCode System::GetControllerTransform(const AZ::u32 handIndex, AZ::Transform& outTransform) const
+    {
+        if (m_session->IsSessionRunning())
+        {
+            return m_session->GetControllerTransform(handIndex, outTransform);
+        }
+        return AZ::RHI::ResultCode::NotReady;
+    }
+
     AZ::RHI::ResultCode System::GetControllerStagePose(AZ::u32 handIndex, AZ::RPI::PoseData& outPoseData) const
     {
         if (m_session->IsSessionRunning())
