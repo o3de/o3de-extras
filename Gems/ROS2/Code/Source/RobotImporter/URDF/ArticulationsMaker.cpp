@@ -28,7 +28,8 @@ namespace ROS2
         } };
     } // namespace
 
-    ArticulationCfg& AddToArticulationConfig(ArticulationCfg& articulationLinkConfiguration, const sdf::Joint* joint)
+    ArticulationCfg& AddToArticulationConfig(
+        ArticulationCfg& articulationLinkConfiguration, const sdf::Joint* joint, const bool isWheelEntity)
     {
         if (!joint)
         {
@@ -84,9 +85,7 @@ namespace ROS2
                         articulationLinkConfiguration.m_linearLimitUpper = jointAxis->Lower();
                     }
                 }
-                articulationLinkConfiguration.m_motorConfiguration.m_driveDamping = jointAxis->Damping();
-                articulationLinkConfiguration.m_motorConfiguration.m_driveForceLimit = jointAxis->Effort();
-                articulationLinkConfiguration.m_motorConfiguration.m_driveStiffness = jointAxis->Stiffness();
+                articulationLinkConfiguration.m_motorConfiguration.m_useMotor = isWheelEntity;
             }
             else
             {
@@ -133,7 +132,8 @@ namespace ROS2
         AZStd::string linkName(link->Name().c_str(), link->Name().size());
         for (const sdf::Joint* joint : Utils::GetJointsForChildLink(model, linkName, getNestedModelJoints))
         {
-            articulationLinkConfiguration = AddToArticulationConfig(articulationLinkConfiguration, joint);
+            const bool isWheelEntity = Utils::IsWheelURDFHeuristics(model, link);
+            articulationLinkConfiguration = AddToArticulationConfig(articulationLinkConfiguration, joint, isWheelEntity);
         }
 
         const auto articulationLink = entity->CreateComponent<PhysX::EditorArticulationLinkComponent>(articulationLinkConfiguration);

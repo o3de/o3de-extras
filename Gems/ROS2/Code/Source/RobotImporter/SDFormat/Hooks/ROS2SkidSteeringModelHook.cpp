@@ -11,8 +11,10 @@
 #include <RobotControl/ROS2RobotControlComponent.h>
 #include <RobotImporter/SDFormat/ROS2ModelPluginHooks.h>
 #include <RobotImporter/SDFormat/ROS2SDFormatHooksUtils.h>
+#include <Source/EditorArticulationLinkComponent.h>
 #include <Source/EditorHingeJointComponent.h>
 #include <VehicleDynamics/ModelComponents/SkidSteeringModelComponent.h>
+#include <VehicleDynamics/Utilities.h>
 
 #include <sdf/Joint.hh>
 #include <sdf/Link.hh>
@@ -58,6 +60,19 @@ namespace ROS2::SDFormat
                     jointComponent->Deactivate();
                     return;
                 }
+
+                PhysX::EditorArticulationLinkComponent* articulationComponent =
+                    entity->FindComponent<PhysX::EditorArticulationLinkComponent>();
+                if (articulationComponent != nullptr)
+                {
+                    const auto wheelComponentPtr = HooksUtils::CreateComponent<VehicleDynamics::WheelControllerComponent>(*entity);
+                    AZ_Warning(
+                        "ROS2SkidSteeringModelPluginHook",
+                        wheelComponentPtr != nullptr,
+                        "Cannot create WheelControllerComponent in articulation link.");
+
+                    return;
+                }
             }
 
             AZ_Warning("ROS2SkidSteeringModelPluginHook", false, "Cannot switch on motor in wheel joint. Joint does not exist.");
@@ -67,26 +82,22 @@ namespace ROS2::SDFormat
             const sdf::ElementPtr element, const sdf::Model& sdfModel, const CreatedEntitiesMap& createdEntities)
         {
             VehicleDynamics::VehicleConfiguration configuration;
-            auto configureAxle = [&sdfModel, &createdEntities](
-                                     const std::string& jointNameLeft,
-                                     const std::string& jointNameRight,
-                                     const float wheelDiameter,
-                                     AZStd::string tag) -> VehicleDynamics::AxleConfiguration
+            auto addAxle = [&sdfModel, &createdEntities, &configuration](
+                               const std::string& jointNameLeft,
+                               const std::string& jointNameRight,
+                               const float wheelDiameter,
+                               AZStd::string tag) -> void
             {
-                VehicleDynamics::AxleConfiguration axle;
-                axle.m_axleTag = AZStd::move(tag);
-                axle.m_isSteering = false; // Skid steering model does not have any steering wheels.
-                axle.m_isDrive = true;
-                axle.m_wheelRadius = wheelDiameter / 2.0f;
-
                 const auto entityIdLeft = GetAxleWheelId(jointNameLeft, sdfModel, createdEntities);
                 const auto entityIdRight = GetAxleWheelId(jointNameRight, sdfModel, createdEntities);
                 if (entityIdLeft.IsValid() && entityIdRight.IsValid())
                 {
-                    axle.m_axleWheels.emplace_back(AZStd::move(entityIdLeft));
-                    axle.m_axleWheels.emplace_back(AZStd::move(entityIdRight));
                     EnableMotor(entityIdLeft);
                     EnableMotor(entityIdRight);
+                    constexpr bool steering = false; // Skid steering model does not have any steering wheels.
+                    constexpr bool drive = true;
+                    configuration.m_axles.emplace_back(ROS2::VehicleDynamics::Utilities::Create2WheelAxle(
+                        entityIdLeft, entityIdRight, AZStd::move(tag), wheelDiameter / 2.0f, steering, drive));
                 }
                 else
                 {
@@ -97,8 +108,6 @@ namespace ROS2::SDFormat
                         jointNameLeft.c_str(),
                         jointNameRight.c_str());
                 }
-
-                return axle;
             };
 
             if (element->HasElement("wheelSeparation") && element->HasElement("wheelDiameter"))
@@ -109,30 +118,30 @@ namespace ROS2::SDFormat
                 { // ROS 1 version libgazebo_ros_skid_steer_drive.so
                     if (element->HasElement("leftJoint") && element->HasElement("rightJoint"))
                     {
-                        configuration.m_axles.emplace_back(configureAxle(
+                        addAxle(
                             element->Get<std::string>("leftJoint"),
                             element->Get<std::string>("rightJoint"),
                             element->Get<float>("wheelDiameter"),
-                            ""));
+                            "");
                     }
                 }
 
                 { // ROS 1 version libgazebo_ros_diff_drive.so
                     if (element->HasElement("leftFrontJoint") && element->HasElement("rightFrontJoint"))
                     {
-                        configuration.m_axles.emplace_back(configureAxle(
+                        addAxle(
                             element->Get<std::string>("leftFrontJoint"),
                             element->Get<std::string>("rightFrontJoint"),
                             element->Get<float>("wheelDiameter"),
-                            "Front"));
+                            "Front");
                     }
                     if (element->HasElement("leftRearJoint") && element->HasElement("rightRearJoint"))
                     {
-                        configuration.m_axles.emplace_back(configureAxle(
+                        addAxle(
                             element->Get<std::string>("leftRearJoint"),
                             element->Get<std::string>("rightRearJoint"),
                             element->Get<float>("wheelDiameter"),
-                            "Rear"));
+                            "Rear");
                     }
                 }
             }
@@ -157,17 +166,18 @@ namespace ROS2::SDFormat
                     }
                     else
                     {
+                        constexpr float epsilon = 0.001f;
                         AZ_Warning(
                             "ROS2SkidSteeringModelPluginHook",
-                            fabsf(configuration.m_wheelbase - wheelSeparation->Get<float>()) < 0.001f,
+                            fabsf(configuration.m_wheelbase - wheelSeparation->Get<float>()) < epsilon,
                             "Different wheel separation distances in one model are not supported.");
                     }
 
-                    configuration.m_axles.emplace_back(configureAxle(
+                    addAxle(
                         jointLeft->Get<std::string>(),
                         jointRight->Get<std::string>(),
                         wheelDiameter->Get<float>(),
-                        AZStd::to_string(dataCount)));
+                        AZStd::to_string(dataCount));
 
                     jointLeft = jointLeft->GetNextElement("left_joint");
                     jointRight = jointRight->GetNextElement("right_joint");
