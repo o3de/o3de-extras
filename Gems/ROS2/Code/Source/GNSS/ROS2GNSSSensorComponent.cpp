@@ -13,6 +13,7 @@
 #include <ROS2/Utilities/ROS2Names.h>
 
 #include "Georeference/GNSSFormatConversions.h"
+#include <ROS2/GNSS/GNSSPostProcessingRequestBus.h>
 #include <ROS2/Georeference/GeoreferenceBus.h>
 
 namespace ROS2
@@ -62,6 +63,17 @@ namespace ROS2
 
         const auto publisherConfig = m_sensorConfiguration.m_publishersConfigurations[GNSSMsgType];
         const auto fullTopic = ROS2Names::GetNamespacedName(GetNamespace(), publisherConfig.m_topic);
+
+        const AZStd::string service_name = AZStd::string(fullTopic.data()) + "/set_fix";
+
+        m_setFixService = ros2Node->create_service<std_srvs::srv::SetBool>(
+            service_name.data(),
+            [this](const std_srvs::srv::SetBool::Request::SharedPtr request, std_srvs::srv::SetBool::Response::SharedPtr response)
+            {
+                SetFixState(request->data);
+                response->success = true;
+            });
+
         m_gnssPublisher = ros2Node->create_publisher<sensor_msgs::msg::NavSatFix>(fullTopic.data(), publisherConfig.GetQoS());
 
         m_gnssMsg.header.frame_id = "gnss_frame_id";
@@ -84,25 +96,57 @@ namespace ROS2
         m_gnssPublisher.reset();
     }
 
+    bool ROS2GNSSSensorComponent::GetFixState()
+    {
+        return m_isFix;
+    }
+
+    void ROS2GNSSSensorComponent::SetFixState(bool isFix)
+    {
+        m_isFix = isFix;
+    }
+
+    void ROS2GNSSSensorComponent::ToggleFixLoss()
+    {
+        m_isFix = !m_isFix;
+    }
+
     void ROS2GNSSSensorComponent::FrequencyTick()
     {
+        if (!m_isFix)
+        {
+            // Simulate fix loss
+            m_gnssMsg.status.status = sensor_msgs::msg::NavSatStatus::STATUS_NO_FIX;
+            m_gnssMsg.latitude = std::numeric_limits<double>::quiet_NaN();
+            m_gnssMsg.longitude = std::numeric_limits<double>::quiet_NaN();
+            m_gnssMsg.altitude = std::numeric_limits<double>::quiet_NaN();
+        }
+        else
+        {
+            // Normal operation, publish current position
+            AZ::Vector3 currentPosition{ 0.0f };
+            const auto entityId = GetEntityId();
+            AZ::TransformBus::EventResult(currentPosition, entityId, &AZ::TransformBus::Events::GetWorldTranslation);
 
-        AZ::Vector3 currentPosition{ 0.0f };
-        AZ::TransformBus::EventResult(currentPosition, GetEntityId(), &AZ::TransformBus::Events::GetWorldTranslation);
+            WGS::WGS84Coordinate currentPositionWGS84;
+            ROS2::GeoreferenceRequestsBus::BroadcastResult(
+                currentPositionWGS84, &GeoreferenceRequests::ConvertFromLevelToWSG84, currentPosition);
 
-        WGS::WGS84Coordinate currentPositionWGS84;
-        ROS2::GeoreferenceRequestsBus::BroadcastResult(
-            currentPositionWGS84, &GeoreferenceRequests::ConvertFromLevelToWSG84, currentPosition);
+            m_gnssMsg.latitude = currentPositionWGS84.m_latitude;
+            m_gnssMsg.longitude = currentPositionWGS84.m_longitude;
+            m_gnssMsg.altitude = currentPositionWGS84.m_altitude;
+            m_gnssMsg.status.status = sensor_msgs::msg::NavSatStatus::STATUS_SBAS_FIX;
+            m_gnssMsg.status.service = sensor_msgs::msg::NavSatStatus::SERVICE_GPS;
 
-        m_gnssMsg.latitude = currentPositionWGS84.m_latitude;
-        m_gnssMsg.longitude = currentPositionWGS84.m_longitude;
-        m_gnssMsg.altitude = currentPositionWGS84.m_altitude;
-
-        m_gnssMsg.status.status = sensor_msgs::msg::NavSatStatus::STATUS_SBAS_FIX;
-        m_gnssMsg.status.service = sensor_msgs::msg::NavSatStatus::SERVICE_GPS;
+            GNSSPostProcessingRequestBus::Event(entityId, &GNSSPostProcessingRequests::ApplyPostProcessing, m_gnssMsg);
+        }
 
         m_gnssPublisher->publish(m_gnssMsg);
     }
 
+    void ROS2GNSSSensorComponent::GetProvidedServices(AZ::ComponentDescriptor::DependencyArrayType& provided)
+    {
+        provided.push_back(AZ_CRC_CE("ROS2GNSSSensor"));
+    }
 
 } // namespace ROS2

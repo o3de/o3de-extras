@@ -13,6 +13,8 @@
 #include <ROS2/Sensor/ROS2SensorComponentBase.h>
 #include <rclcpp/publisher.hpp>
 #include <sensor_msgs/msg/nav_sat_fix.hpp>
+#include <std_srvs/srv/set_bool.hpp>
+#include <rclcpp/rclcpp.hpp>
 
 namespace ROS2
 {
@@ -28,22 +30,33 @@ namespace ROS2
         ROS2GNSSSensorComponent(const SensorConfiguration& sensorConfiguration);
         ~ROS2GNSSSensorComponent() = default;
         static void Reflect(AZ::ReflectContext* context);
+
+        static void GetProvidedServices(AZ::ComponentDescriptor::DependencyArrayType& provided);
         //////////////////////////////////////////////////////////////////////////
         // Component overrides
         void Activate() override;
         void Deactivate() override;
         //////////////////////////////////////////////////////////////////////////
+        //! Returns true if the sensor has a fix, false otherwise.
+        bool GetFixState();
+        void SetFixState(bool isFix);
+        void ToggleFixLoss(); 
 
     private:
         ///! Requests gnss message publication.
         void FrequencyTick();
+
+        //! Changes the message
 
         //! Returns current entity position.
         //! @return Current entity position.
         [[nodiscard]] AZ::Transform GetCurrentPose() const;
 
         std::shared_ptr<rclcpp::Publisher<sensor_msgs::msg::NavSatFix>> m_gnssPublisher;
+        rclcpp::Service<std_srvs::srv::SetBool>::SharedPtr m_setFixService;
+
         sensor_msgs::msg::NavSatFix m_gnssMsg;
+        bool m_isFix = true;
     };
 
 } // namespace ROS2
