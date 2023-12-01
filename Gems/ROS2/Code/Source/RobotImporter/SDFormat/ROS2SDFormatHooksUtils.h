@@ -15,7 +15,12 @@
 #include <AzCore/std/string/string.h>
 #include <AzToolsFramework/ToolsComponents/EditorComponentBase.h>
 #include <AzToolsFramework/ToolsComponents/GenericComponentWrapper.h>
+#include <ROS2/RobotImporter/SDFormatModelPluginImporterHook.h>
 #include <ROS2/Sensor/SensorConfiguration.h>
+#include <Source/EditorArticulationLinkComponent.h>
+#include <Source/EditorHingeJointComponent.h>
+
+#include <sdf/Model.hh>
 
 namespace ROS2::SDFormat
 {
@@ -31,6 +36,18 @@ namespace ROS2::SDFormat
             const AZStd::string& topic,
             const AZStd::string& messageType,
             const AZStd::string& configName);
+
+        //! Find O3DE entity id of the SDFormat joint based on its name and a map of all created entities.
+        //! @param jointName name of the joint in query
+        //! @param sdfModel reference to SDFormat model
+        //! @param createdEntities list of all created entities passed as entity creation results
+        //! @return entity id (invalid id if not found)
+        AZ::EntityId GetJointEntityId(const std::string& jointName, const sdf::Model& sdfModel, const CreatedEntitiesMap& createdEntities);
+
+        //! Enable motor in EditorHingeJointComponent if possible or create WheelControllerComponent otherwise (when articulations are
+        //! used); this method shows a warning message if neither was possible
+        //! @param entityId entity id of the modified entity
+        void EnableMotor(const AZ::EntityId& entityId);
 
         //! Create a component and attach the component to the entity.
         //! This method ensures that game components are wrapped into GenericComponentWrapper.

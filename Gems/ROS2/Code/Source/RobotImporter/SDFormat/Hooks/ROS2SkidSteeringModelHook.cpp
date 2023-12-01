@@ -11,8 +11,6 @@
 #include <RobotControl/ROS2RobotControlComponent.h>
 #include <RobotImporter/SDFormat/ROS2ModelPluginHooks.h>
 #include <RobotImporter/SDFormat/ROS2SDFormatHooksUtils.h>
-#include <Source/EditorArticulationLinkComponent.h>
-#include <Source/EditorHingeJointComponent.h>
 #include <VehicleDynamics/ModelComponents/SkidSteeringModelComponent.h>
 #include <VehicleDynamics/Utilities.h>
 
@@ -25,59 +23,6 @@ namespace ROS2::SDFormat
 {
     namespace Parser
     {
-        AZ::EntityId GetAxleWheelId(const std::string& jointName, const sdf::Model& sdfModel, const CreatedEntitiesMap& createdEntities)
-        {
-            const auto jointPtr = sdfModel.JointByName(jointName);
-            if (jointPtr != nullptr)
-            {
-                const auto linkName(jointPtr->ChildName().c_str());
-                const auto linkPtr = sdfModel.LinkByName(linkName);
-                if (linkPtr != nullptr && createdEntities.contains(linkPtr))
-                {
-                    const auto& entityResult = createdEntities.at(linkPtr);
-                    return entityResult.IsSuccess() ? entityResult.GetValue() : AZ::EntityId();
-                }
-            }
-
-            return AZ::EntityId();
-        }
-
-        void EnableMotor(const AZ::EntityId& entityId)
-        {
-            AZ::Entity* entity = nullptr;
-            AZ::ComponentApplicationBus::BroadcastResult(entity, &AZ::ComponentApplicationRequests::FindEntity, entityId);
-            if (entity != nullptr)
-            {
-                PhysX::EditorHingeJointComponent* jointComponent = entity->FindComponent<PhysX::EditorHingeJointComponent>();
-                if (jointComponent != nullptr)
-                {
-                    jointComponent->Activate();
-                    PhysX::EditorJointRequestBus::Event(
-                        AZ::EntityComponentIdPair(entityId, jointComponent->GetId()),
-                        &PhysX::EditorJointRequests::SetBoolValue,
-                        PhysX::JointsComponentModeCommon::ParameterNames::EnableMotor,
-                        true);
-                    jointComponent->Deactivate();
-                    return;
-                }
-
-                PhysX::EditorArticulationLinkComponent* articulationComponent =
-                    entity->FindComponent<PhysX::EditorArticulationLinkComponent>();
-                if (articulationComponent != nullptr)
-                {
-                    const auto wheelComponentPtr = HooksUtils::CreateComponent<VehicleDynamics::WheelControllerComponent>(*entity);
-                    AZ_Warning(
-                        "ROS2SkidSteeringModelPluginHook",
-                        wheelComponentPtr != nullptr,
-                        "Cannot create WheelControllerComponent in articulation link.");
-
-                    return;
-                }
-            }
-
-            AZ_Warning("ROS2SkidSteeringModelPluginHook", false, "Cannot switch on motor in wheel joint. Joint does not exist.");
-        }
-
         VehicleDynamics::VehicleConfiguration GetConfiguration(
             const sdf::ElementPtr element, const sdf::Model& sdfModel, const CreatedEntitiesMap& createdEntities)
         {
@@ -88,12 +33,12 @@ namespace ROS2::SDFormat
                                const float wheelDiameter,
                                AZStd::string tag) -> void
             {
-                const auto entityIdLeft = GetAxleWheelId(jointNameLeft, sdfModel, createdEntities);
-                const auto entityIdRight = GetAxleWheelId(jointNameRight, sdfModel, createdEntities);
+                const auto entityIdLeft = HooksUtils::GetJointEntityId(jointNameLeft, sdfModel, createdEntities);
+                const auto entityIdRight = HooksUtils::GetJointEntityId(jointNameRight, sdfModel, createdEntities);
                 if (entityIdLeft.IsValid() && entityIdRight.IsValid())
                 {
-                    EnableMotor(entityIdLeft);
-                    EnableMotor(entityIdRight);
+                    HooksUtils::EnableMotor(entityIdLeft);
+                    HooksUtils::EnableMotor(entityIdRight);
                     constexpr bool steering = false; // Skid steering model does not have any steering wheels.
                     constexpr bool drive = true;
                     configuration.m_axles.emplace_back(ROS2::VehicleDynamics::Utilities::Create2WheelAxle(
