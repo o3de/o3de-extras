@@ -24,7 +24,7 @@ namespace ROS2
 
         NamespaceConfiguration m_namespaceConfiguration;
         AZStd::string m_frameName = "sensor_frame";
-        AZStd::string m_jointNameString;
+        AZStd::string m_jointName;
 
         bool m_publishTransform = true;
         bool m_isDynamic = false;

@@ -45,9 +45,9 @@ namespace ROS2
         AZStd::string GetNamespace() const;
 
         //! Get the namespace of the frame, based on the provided namespace.
-        //! @param parentsNamespace namespace of the parent frame.
+        //! @param parentNamespace namespace of the parent frame.
         //! @return namespace of the frame.
-        AZStd::string GetNamespace(const AZStd::string& parentsNamespace) const;
+        AZStd::string GetNamespace(const AZStd::string& parentNamespace) const;
 
         //! Update namespace and strategy.
         //! @param ros2Namespace Desired namespace.
@@ -55,12 +55,12 @@ namespace ROS2
         void SetNamespace(const AZStd::string& ros2Namespace, NamespaceStrategy strategy);
 
         //! Update the parents namespace.
-        //! @param parentsNamespace parents namespace.
-        void SetParentsNamespace(const AZStd::string& parentsNamespace);
+        //! @param parentNamespace parent namespace.
+        void SetParentNamespace(const AZStd::string& parentNamespace);
 
     private:
         AZStd::string m_namespace;
-        AZStd::string m_parentsNamespace;
+        AZStd::string m_parentNamespace;
         NamespaceStrategy m_namespaceStrategy = NamespaceStrategy::Default;
         bool m_isRoot;
         AZStd::string m_entityName;

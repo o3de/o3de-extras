@@ -421,9 +421,9 @@ namespace ROS2
         UpdateNamespaces(frameEntity, ros2Namespace, isActive);
     }
 
-    void ROS2FrameSystemComponent::UpdateNamespaces(AZ::EntityId frameEntity, AZStd::string parentsNamespace, bool isActive)
+    void ROS2FrameSystemComponent::UpdateNamespaces(AZ::EntityId frameEntity, AZStd::string parentNamespace, bool isActive)
     {
-        ROS2FrameComponentBus::Event(frameEntity, &ROS2FrameComponentBus::Events::UpdateNamespace, parentsNamespace);
+        ROS2FrameComponentBus::Event(frameEntity, &ROS2FrameComponentBus::Events::UpdateNamespace, parentNamespace);
         const AZStd::set<AZ::EntityId>& children = m_frameChildren.find(frameEntity)->second;
         AZStd::string ros2Namespace;
         if (isActive)
@@ -432,7 +432,7 @@ namespace ROS2
         }
         else
         {
-            ros2Namespace = parentsNamespace;
+            ros2Namespace = parentNamespace;
         }
         for (const AZ::EntityId& child : children)
         {

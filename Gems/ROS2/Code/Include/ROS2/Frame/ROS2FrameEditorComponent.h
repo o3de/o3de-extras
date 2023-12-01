@@ -53,8 +53,8 @@ namespace ROS2
 
         //! Set the joint name
         //! @note May be populated during URDF import or set by the user in the Editor view
-        //! @param jointNameString does not include the namespace. The namespace prefix is added automatically.
-        void SetJointName(const AZStd::string& jointNameString);
+        //! @param jointName joint name without the namespace (the namespace prefix is added automatically).
+        void SetJointName(const AZStd::string& jointName);
 
         //! Updates the namespace and namespace strategy of the underlying namespace configuration
         //! @param ros2Namespace Namespace to set.
@@ -65,7 +65,7 @@ namespace ROS2
         AZStd::string GetFrameID() const override;
         AZ::Name GetJointName() const override;
         AZStd::string GetNamespace() const override;
-        void UpdateNamespace(const AZStd::string& parentsNamespace) override;
+        void UpdateNamespace(const AZStd::string& parentNamespace) override;
         AZStd::string GetGlobalFrameName() const override;
         bool IsTopLevel() const override; //!< True if this entity does not have a parent entity with ROS2.
         AZ::EntityId GetFrameParent() const override;

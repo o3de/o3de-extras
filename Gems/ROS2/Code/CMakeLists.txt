@@ -193,7 +193,6 @@ if(PAL_TRAIT_BUILD_TESTS_SUPPORTED)
         ly_add_googletest(
             NAME Gem::${gem_name}.Tests
         )
-
         
         # integration test for URDF importer
         ly_add_target(

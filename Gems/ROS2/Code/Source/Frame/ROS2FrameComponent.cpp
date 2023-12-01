@@ -211,12 +211,12 @@ namespace ROS2
 
     AZ::Name ROS2FrameComponent::GetJointName() const
     {
-        return AZ::Name(ROS2Names::GetNamespacedName(GetNamespace(), m_configuration.m_jointNameString).c_str());
+        return AZ::Name(ROS2Names::GetNamespacedName(GetNamespace(), m_configuration.m_jointName).c_str());
     }
 
-    void ROS2FrameComponent::SetJointName(const AZStd::string& jointNameString)
+    void ROS2FrameComponent::SetJointName(const AZStd::string& jointName)
     {
-        m_configuration.m_jointNameString = jointNameString;
+        m_configuration.m_jointName = jointName;
     }
 
     void ROS2FrameComponent::Reflect(AZ::ReflectContext* context)

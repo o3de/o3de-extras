@@ -50,17 +50,17 @@ namespace ROS2
 
     AZStd::string NamespaceConfiguration::GetNamespace() const
     {
-        if (m_parentsNamespace.empty())
+        if (m_parentNamespace.empty())
         {
             return m_namespace;
         }
 
         if (m_namespace.empty())
         {
-            return m_parentsNamespace;
+            return m_parentNamespace;
         }
 
-        return ROS2Names::GetNamespacedName(m_parentsNamespace, m_namespace);
+        return ROS2Names::GetNamespacedName(m_parentNamespace, m_namespace);
     }
 
     AZStd::string NamespaceConfiguration::GetNamespace(const AZStd::string& parentNamespace) const
@@ -85,9 +85,9 @@ namespace ROS2
         UpdateNamespace();
     }
 
-    void NamespaceConfiguration::SetParentsNamespace(const AZStd::string& parentsNamespace)
+    void NamespaceConfiguration::SetParentNamespace(const AZStd::string& parentNamespace)
     {
-        m_parentsNamespace = parentsNamespace;
+        m_parentNamespace = parentNamespace;
         UpdateNamespace();
     }
 

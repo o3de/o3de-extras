@@ -65,9 +65,9 @@ namespace ROS2
         return m_configuration.m_namespaceConfiguration.GetNamespace();
     }
 
-    void ROS2FrameEditorComponent::UpdateNamespace(const AZStd::string& parentsNamespace)
+    void ROS2FrameEditorComponent::UpdateNamespace(const AZStd::string& parentNamespace)
     {
-        m_configuration.m_namespaceConfiguration.SetParentsNamespace(parentsNamespace);
+        m_configuration.m_namespaceConfiguration.SetParentNamespace(parentNamespace);
         m_configuration.m_namespaceConfiguration.PopulateNamespace(IsTopLevel(), GetEntity()->GetName());
         m_configuration.SetEffectiveNamespace(GetNamespace());
         AzToolsFramework::PropertyEditorEntityChangeNotificationBus::Event(
@@ -86,12 +86,12 @@ namespace ROS2
 
     AZ::Name ROS2FrameEditorComponent::GetJointName() const
     {
-        return AZ::Name(ROS2Names::GetNamespacedName(GetNamespace(), m_configuration.m_jointNameString).c_str());
+        return AZ::Name(ROS2Names::GetNamespacedName(GetNamespace(), m_configuration.m_jointName).c_str());
     }
 
-    void ROS2FrameEditorComponent::SetJointName(const AZStd::string& jointNameString)
+    void ROS2FrameEditorComponent::SetJointName(const AZStd::string& jointName)
     {
-        m_configuration.m_jointNameString = jointNameString;
+        m_configuration.m_jointName = jointName;
     }
 
     void ROS2FrameEditorComponent::Reflect(AZ::ReflectContext* context)

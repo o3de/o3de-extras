@@ -26,7 +26,7 @@ namespace ROS2
                 ->Version(1)
                 ->Field("Namespace Configuration", &ROS2FrameConfiguration::m_namespaceConfiguration)
                 ->Field("Frame Name", &ROS2FrameConfiguration::m_frameName)
-                ->Field("Joint Name", &ROS2FrameConfiguration::m_jointNameString)
+                ->Field("Joint Name", &ROS2FrameConfiguration::m_jointName)
                 ->Field("Publish Transform", &ROS2FrameConfiguration::m_publishTransform)
                 ->Field("Effective namespace", &ROS2FrameConfiguration::m_effectiveNamespace);
 
@@ -40,7 +40,7 @@ namespace ROS2
                         "Namespace Configuration",
                         "Namespace Configuration")
                     ->DataElement(AZ::Edit::UIHandlers::Default, &ROS2FrameConfiguration::m_frameName, "Frame Name", "Frame Name")
-                    ->DataElement(AZ::Edit::UIHandlers::Default, &ROS2FrameConfiguration::m_jointNameString, "Joint Name", "Joint Name")
+                    ->DataElement(AZ::Edit::UIHandlers::Default, &ROS2FrameConfiguration::m_jointName, "Joint Name", "Joint Name")
                     ->DataElement(
                         AZ::Edit::UIHandlers::Default,
                         &ROS2FrameConfiguration::m_publishTransform,

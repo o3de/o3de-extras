@@ -83,9 +83,9 @@ namespace ROS2
 
         //! Updates the namespaces of all children of the frameEntity.
         //! @param frameEntity frame to be updated.
-        //! @param parentsNamespace namespace of the parent frame. Empty if no parent is present.
+        //! @param parentNamespace namespace of the parent frame. Empty if no parent is present.
         //! @param isActive boolean value describing if the frameEntity is currently active.
-        void UpdateNamespaces(AZ::EntityId frameEntity, AZStd::string parentsNamespace = "", bool isActive = true);
+        void UpdateNamespaces(AZ::EntityId frameEntity, AZStd::string parentNamespace = "", bool isActive = true);
 
         //! Updates the namespaces of all children of the frameEntity.
         //! @param frameEntity frame to be updated.
