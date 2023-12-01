@@ -106,7 +106,7 @@ if(PAL_TRAIT_BUILD_HOST_TOOLS)
                 Gem::ImGui.Static
                 Gem::ROS2.Static
                 AZ::AzToolsFramework
-                Gem::AtomLyIntegration_CommonFeatures.Editor.Static
+                Gem::CommonFeaturesAtom.Editor.Static
                 Gem::LmbrCentral.API
             PRIVATE
                 ${gem_name}.Private.Object
