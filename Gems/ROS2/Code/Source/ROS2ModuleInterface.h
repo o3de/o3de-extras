@@ -7,7 +7,8 @@
  */
 #pragma once
 
-#include "ROS2SystemComponent.h"
+#include "SystemComponents/ROS2CameraSystemComponent.h"
+#include "SystemComponents/ROS2SystemComponent.h"
 #include <AzCore/Memory/SystemAllocator.h>
 #include <AzCore/Module/Module.h>
 #include <Camera/ROS2CameraSensorComponent.h>
@@ -58,6 +59,7 @@ namespace ROS2
                 m_descriptors.end(),
                 {
                     ROS2SystemComponent::CreateDescriptor(),
+                    ROS2SystemCameraComponent::CreateDescriptor(),
                     ROS2SensorComponentBase<TickBasedSource>::CreateDescriptor(),
                     ROS2SensorComponentBase<PhysicsBasedSource>::CreateDescriptor(),
                     LidarRegistrarSystemComponent::CreateDescriptor(),
@@ -100,6 +102,7 @@ namespace ROS2
         {
             return AZ::ComponentTypeList{
                 azrtti_typeid<ROS2SystemComponent>(),
+                azrtti_typeid<ROS2SystemCameraComponent>(),
                 azrtti_typeid<LidarRegistrarSystemComponent>(),
                 azrtti_typeid<ROS2RobotImporterSystemComponent>(),
             };

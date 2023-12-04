@@ -70,8 +70,6 @@ set(FILES
     Source/RobotImporter/Utils/SourceAssetsStorage.h
     Source/RobotImporter/Utils/TypeConversions.cpp
     Source/RobotImporter/Utils/TypeConversions.h
-    Source/ROS2EditorSystemComponent.cpp
-    Source/ROS2EditorSystemComponent.h
     Source/ROS2GemUtilities.cpp
     Source/Spawner/ROS2SpawnerEditorComponent.cpp
     Source/Spawner/ROS2SpawnerEditorComponent.h
@@ -83,4 +81,8 @@ set(FILES
     Source/SdfAssetBuilder/SdfAssetBuilderSettings.h
     Source/SdfAssetBuilder/SdfAssetBuilderSystemComponent.cpp
     Source/SdfAssetBuilder/SdfAssetBuilderSystemComponent.h
+    Source/SystemComponents/ROS2CameraSystemEditorComponent.cpp
+    Source/SystemComponents/ROS2CameraSystemEditorComponent.h
+    Source/SystemComponents/ROS2EditorSystemComponent.cpp
+    Source/SystemComponents/ROS2EditorSystemComponent.h
 )

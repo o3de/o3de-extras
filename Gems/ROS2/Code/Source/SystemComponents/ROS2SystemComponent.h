@@ -7,7 +7,6 @@
  */
 #pragma once
 
-#include <Atom/RPI.Public/Pass/PassSystemInterface.h>
 #include <AzCore/Component/Component.h>
 #include <AzCore/Component/TickBus.h>
 #include <AzCore/std/smart_ptr/unique_ptr.h>
@@ -67,8 +66,6 @@ namespace ROS2
         const SimulationClock& GetSimulationClock() const override;
         //////////////////////////////////////////////////////////////////////////
 
-        void InitPassTemplateMappingsHandler();
-
     protected:
         ////////////////////////////////////////////////////////////////////////
         // AZ::Component override
@@ -92,8 +89,5 @@ namespace ROS2
         AZStd::unique_ptr<tf2_ros::StaticTransformBroadcaster> m_staticTFBroadcaster;
         AZStd::unique_ptr<SimulationClock> m_simulationClock;
         NodeChangedEvent m_nodeChangedEvent;
-        //! Load the pass templates of the ROS2 gem.
-        void LoadPassTemplateMappings();
-        AZ::RPI::PassSystemInterface::OnReadyLoadTemplatesEvent::Handler m_loadTemplatesHandler;
     };
 } // namespace ROS2

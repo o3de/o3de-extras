@@ -109,8 +109,6 @@ set(FILES
         Source/RobotImporter/ROS2RobotImporterSystemComponent.cpp
         Source/RobotImporter/ROS2RobotImporterSystemComponent.h
         Source/ROS2ModuleInterface.h
-        Source/ROS2SystemComponent.cpp
-        Source/ROS2SystemComponent.h
         Source/Sensor/Events/PhysicsBasedSource.cpp
         Source/Sensor/Events/TickBasedSource.cpp
         Source/Sensor/SensorConfiguration.cpp
@@ -126,6 +124,11 @@ set(FILES
         Source/Spawner/ROS2SpawnerComponentController.h
         Source/Spawner/ROS2SpawnPointComponentController.cpp
         Source/Spawner/ROS2SpawnPointComponentController.h
+        Source/SystemComponents/ROS2CameraSystemComponent.cpp
+        Source/SystemComponents/ROS2CameraSystemComponent.h
+        Source/SystemComponents/ROS2SystemComponent.cpp
+        Source/SystemComponents/ROS2SystemComponent.h
+        Source/SystemComponents/ROS2SystemComponent.h
         Source/Utilities/ArticulationsUtilities.cpp
         Source/Utilities/ArticulationsUtilities.h
         Source/Utilities/JointUtilities.cpp

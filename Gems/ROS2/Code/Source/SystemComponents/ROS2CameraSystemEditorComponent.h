@@ -7,25 +7,25 @@
  */
 #pragma once
 
-#include <ROS2SystemComponent.h>
+#include "ROS2CameraSystemComponent.h"
 
 #include <AzToolsFramework/Entity/EditorEntityContextBus.h>
 
 namespace ROS2
 {
     /// System component for ROS2 editor
-    class ROS2EditorSystemComponent
-        : public ROS2SystemComponent
+    class ROS2EditorCameraSystemComponent
+        : public ROS2SystemCameraComponent
         , private AzToolsFramework::EditorEntityContextNotificationBus::Handler
     {
-        using BaseSystemComponent = ROS2SystemComponent;
+        using BaseSystemComponent = ROS2SystemCameraComponent;
 
     public:
-        AZ_COMPONENT(ROS2EditorSystemComponent, "{34fa5d9a-956b-4655-a6bc-1d57dce8e7a2}", BaseSystemComponent);
+        AZ_COMPONENT(ROS2EditorCameraSystemComponent, "{407f51c0-92c9-11ee-b9d1-0242ac120002}", BaseSystemComponent);
         static void Reflect(AZ::ReflectContext* context);
 
-        ROS2EditorSystemComponent();
-        ~ROS2EditorSystemComponent();
+        ROS2EditorCameraSystemComponent();
+        ~ROS2EditorCameraSystemComponent();
 
     private:
         static void GetProvidedServices(AZ::ComponentDescriptor::DependencyArrayType& provided);

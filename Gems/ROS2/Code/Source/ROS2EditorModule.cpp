@@ -5,18 +5,18 @@
  * SPDX-License-Identifier: Apache-2.0 OR MIT
  *
  */
-#include "Georeference/GeoreferenceLevelEditorComponent.h"
-#include "Spawner/ROS2SpawnPointEditorComponent.h"
-#include "Spawner/ROS2SpawnerEditorComponent.h"
 #include <Camera/ROS2CameraSensorEditorComponent.h>
+#include <Georeference/GeoreferenceLevelEditorComponent.h>
 #include <Lidar/LidarRegistrarEditorSystemComponent.h>
 #include <Manipulation/JointsManipulationEditorComponent.h>
-#include <ROS2EditorSystemComponent.h>
+#include <QtCore/qglobal.h>
 #include <ROS2ModuleInterface.h>
 #include <RobotImporter/ROS2RobotImporterEditorSystemComponent.h>
 #include <SdfAssetBuilder/SdfAssetBuilderSystemComponent.h>
-
-#include <QtCore/qglobal.h>
+#include <Spawner/ROS2SpawnPointEditorComponent.h>
+#include <Spawner/ROS2SpawnerEditorComponent.h>
+#include <SystemComponents/ROS2CameraSystemEditorComponent.h>
+#include <SystemComponents/ROS2EditorSystemComponent.h>
 
 void InitROS2Resources()
 {
@@ -39,6 +39,7 @@ namespace ROS2
             m_descriptors.insert(
                 m_descriptors.end(),
                 { ROS2EditorSystemComponent::CreateDescriptor(),
+                  ROS2EditorCameraSystemComponent::CreateDescriptor(),
                   LidarRegistrarEditorSystemComponent::CreateDescriptor(),
                   ROS2RobotImporterEditorSystemComponent::CreateDescriptor(),
                   ROS2CameraSensorEditorComponent::CreateDescriptor(),
@@ -53,6 +54,7 @@ namespace ROS2
         {
             return AZ::ComponentTypeList{
                 azrtti_typeid<ROS2EditorSystemComponent>(),
+                azrtti_typeid<ROS2EditorCameraSystemComponent>(),
                 azrtti_typeid<LidarRegistrarEditorSystemComponent>(),
                 azrtti_typeid<ROS2RobotImporterEditorSystemComponent>(),
                 azrtti_typeid<SdfAssetBuilderSystemComponent>(),
