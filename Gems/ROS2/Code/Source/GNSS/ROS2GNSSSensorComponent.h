@@ -39,14 +39,12 @@ namespace ROS2
         //////////////////////////////////////////////////////////////////////////
         //! Returns true if the sensor has a fix, false otherwise.
         bool GetFixState();
-        void SetFixState(bool isFix);
+        void SetFixState(const bool isFix);
         void ToggleFixLoss(); 
 
     private:
         ///! Requests gnss message publication.
         void FrequencyTick();
-
-        //! Changes the message
 
         //! Returns current entity position.
         //! @return Current entity position.

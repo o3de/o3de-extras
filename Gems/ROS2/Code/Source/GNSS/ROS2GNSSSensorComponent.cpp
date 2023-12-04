@@ -101,7 +101,7 @@ namespace ROS2
         return m_isFix;
     }
 
-    void ROS2GNSSSensorComponent::SetFixState(bool isFix)
+    void ROS2GNSSSensorComponent::SetFixState(const bool isFix)
     {
         m_isFix = isFix;
     }
