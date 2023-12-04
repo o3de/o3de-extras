@@ -19,7 +19,7 @@ namespace ROS2
     //!
     //! Each function call can be processed without blocking Bus for other dispatches.
     //! Do not use connects / disconnects to this bus during event dispatch, as they are not allowed for this concurrency model.
-    //! Those constraints allow for processing multiple gnss frames in the same time.
+    //! Those constraints allow for processing multiple GNSS frames at the same time.
     //! Bus implementations should allow for asynchronous execution of provided functions.
     class GNSSPostProcessingRequests : public AZ::EBusSharedDispatchTraits<GNSSPostProcessingRequests>
     {
