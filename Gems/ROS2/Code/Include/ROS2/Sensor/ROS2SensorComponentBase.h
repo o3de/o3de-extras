@@ -71,6 +71,12 @@ namespace ROS2
         {
         }
 
+        //! Returns sensor configuration.
+        const SensorConfiguration& GetSensorConfiguration() const
+        {
+            return m_sensorConfiguration;
+        }
+
     protected:
         //! Starts sensor with passed frequency and adapted event callback. Optionally, user can pass source event callback, that will be
         //! called with event source frequency.

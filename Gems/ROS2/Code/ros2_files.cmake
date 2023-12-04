@@ -47,6 +47,10 @@ set(FILES
         Source/Georeference/GNSSFormatConversions.h
         Source/GNSS/ROS2GNSSSensorComponent.cpp
         Source/GNSS/ROS2GNSSSensorComponent.h
+        Source/ImGui/ImGuiComponent.cpp
+        Source/ImGui/ImGuiComponent.h
+        Source/ImGui/Ros2ImGui.cpp
+        Source/ImGui/Ros2ImGui.h
         Source/Imu/ImuSensorConfiguration.cpp
         Source/Imu/ImuSensorConfiguration.h
         Source/Imu/ROS2ImuSensorComponent.cpp

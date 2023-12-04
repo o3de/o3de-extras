@@ -16,6 +16,7 @@
 #include <Gripper/FingerGripperComponent.h>
 #include <Gripper/GripperActionServerComponent.h>
 #include <Gripper/VacuumGripperComponent.h>
+#include <ImGui/ImGuiComponent.h>
 #include <Imu/ROS2ImuSensorComponent.h>
 #include <Lidar/LidarRegistrarSystemComponent.h>
 #include <Lidar/ROS2Lidar2DSensorComponent.h>
@@ -63,6 +64,7 @@ namespace ROS2
                     LidarRegistrarSystemComponent::CreateDescriptor(),
                     ROS2RobotImporterSystemComponent::CreateDescriptor(),
                     ROS2ImuSensorComponent::CreateDescriptor(),
+                    ImGuiComponent::CreateDescriptor(),
                     ROS2GNSSSensorComponent::CreateDescriptor(),
                     ROS2LidarSensorComponent::CreateDescriptor(),
                     ROS2Lidar2DSensorComponent::CreateDescriptor(),

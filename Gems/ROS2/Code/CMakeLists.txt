@@ -67,6 +67,9 @@ ly_add_target(
             Gem::StartingPointInput
             Gem::PhysX.Static
             Gem::LmbrCentral.API
+            Gem::ImGui.imguilib
+        RUNTIME_DEPENDENCIES
+                    Gem::ImGui.imguilib
 )
 
 target_depends_on_ros2_packages(${gem_name}.Static rclcpp builtin_interfaces std_msgs sensor_msgs nav_msgs tf2_ros ackermann_msgs gazebo_msgs)
