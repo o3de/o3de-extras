@@ -6,12 +6,14 @@
  *
  */
 
+#include "ROS2/Frame/ROS2FrameEditorComponent.h"
 #include <AzCore/Component/ComponentApplicationBus.h>
 #include <AzCore/Component/ComponentBus.h>
 #include <AzCore/Component/Entity.h>
 #include <AzCore/Component/EntityId.h>
 #include <AzCore/std/containers/set.h>
 #include <AzCore/std/string/string.h>
+#include <AzToolsFramework/ToolsComponents/GenericComponentWrapper.h>
 #include <AzToolsFramework/ToolsComponents/TransformComponent.h>
 #include <ROS2/Frame/ROS2FrameBus.h>
 #include <ROS2/Frame/ROS2FrameComponent.h>
@@ -457,6 +459,62 @@ namespace ROS2
         }
 
         return m_frameChildren.find(frameEntityId)->second;
+    }
+
+    void ROS2FrameSystemComponent::InformAboutNeededConversion()
+    {
+        if (m_conversionNeeded)
+        {
+            return;
+        }
+        m_conversionNeeded = true;
+        AZ::SystemTickBus::QueueFunction(
+            [this]()
+            {
+                AZ::EntityId levelEntityId;
+                AzToolsFramework::ToolsApplicationRequestBus::BroadcastResult(
+                    levelEntityId, &AzToolsFramework::ToolsApplicationRequests::GetCurrentLevelEntityId);
+
+                AZ::Entity* levelEntity{ nullptr };
+                AZ::ComponentApplicationBus::BroadcastResult(levelEntity, &AZ::ComponentApplicationRequests::FindEntity, levelEntityId);
+
+                if (!levelEntity)
+                {
+                    return;
+                }
+
+                AZStd::function<void(AZ::Entity*)> frameConversion(
+                    [](AZ::Entity* entity)
+                    {
+                        AZStd::vector<AzToolsFramework::Components::GenericComponentWrapper*> genericComponentsArray =
+                            entity->FindComponents<AzToolsFramework::Components::GenericComponentWrapper>();
+                        if (genericComponentsArray.empty())
+                        {
+                            return;
+                        }
+
+                        for (AzToolsFramework::Components::GenericComponentWrapper* genericComponent : genericComponentsArray)
+                        {
+                            auto componentType = genericComponent->GetUnderlyingComponentType();
+                            if (componentType == azrtti_typeid<ROS2FrameComponent>())
+                            {
+                                auto ros2FrameComponent = static_cast<ROS2FrameComponent*>(genericComponent->GetTemplate());
+                                if (ros2FrameComponent != nullptr)
+                                {
+                                    auto ros2FrameConfiguration = ros2FrameComponent->GetConfiguration();
+                                    entity->Deactivate();
+                                    entity->RemoveComponent(genericComponent);
+                                    entity->CreateComponent<ROS2FrameEditorComponent>(ros2FrameConfiguration);
+                                    entity->Activate();
+                                }
+                            }
+                        }
+                    });
+
+                AZ::ComponentApplicationBus::Broadcast(&AZ::ComponentApplicationRequests::EnumerateEntities, frameConversion);
+
+                m_conversionNeeded = false;
+            });
     }
 
 } // namespace ROS2

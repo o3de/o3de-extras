@@ -57,6 +57,10 @@ namespace ROS2
         //! @param frameEntityId entityId of the frame to check.
         //! @return set of all entityIds of children. Empty if no children or the frameEntityId is invalid.
         virtual AZStd::set<AZ::EntityId> GetChildrenEntityId(const AZ::EntityId& frameEntityId) const = 0;
+
+        //! This function is used by the ROS2FrameComponent to inform the system component that a conversion
+        //! for ROS2FrameComponent to ROS2FrameEditorComponent is needed. The conversion will take place on the next tick.
+        virtual void InformAboutNeededConversion() = 0;
     };
 
     class ROS2FrameSystemBusTraits : public AZ::EBusTraits

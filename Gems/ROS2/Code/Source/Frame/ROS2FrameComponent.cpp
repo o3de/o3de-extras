@@ -6,6 +6,11 @@
  *
  */
 
+#include "AzCore/Serialization/Json/JsonSerialization.h"
+#include "AzCore/Serialization/Json/JsonSerializationResult.h"
+#include "AzCore/Serialization/Json/RegistrationContext.h"
+#include "ROS2/Frame/ROS2FrameConfiguration.h"
+#include "ROS2/Frame/ROS2FrameSystemComponent.h"
 #include <AzCore/Component/Entity.h>
 #include <AzCore/Component/EntityUtils.h>
 #include <AzCore/RTTI/ReflectContext.h>
@@ -16,6 +21,8 @@
 #include <ROS2/ROS2Bus.h>
 #include <ROS2/ROS2GemUtilities.h>
 #include <ROS2/Utilities/ROS2Names.h>
+#include <rapidjson/document.h>
+#include <rapidjson/stringbuffer.h>
 
 namespace ROS2
 {
@@ -73,6 +80,91 @@ namespace ROS2
         }
 
     } // namespace Internal
+
+    AZ::JsonSerializationResult::Result JsonFrameComponentConfigSerializer::Load(
+        void* outputValue, const AZ::Uuid& outputValueTypeId, const rapidjson::Value& inputValue, AZ::JsonDeserializerContext& context)
+    {
+        auto ros2frameSystemInterface = ROS2FrameSystemInterface::Get();
+        if (ros2frameSystemInterface == nullptr)
+        {
+            AZ_Warning(
+                "ROS2FrameComponent",
+                false,
+                "An old version of the ROS2FrameComponent is being loaded. The loaded components will work as intended but will not be "
+                "displayed in the editor. Manual conversion is required.");
+        }
+        else
+        {
+            AZ_Warning(
+                "ROS2FrameComponent",
+                false,
+                "An old version of the ROS2FrameComponent is being loaded. This component will be automatically converted to the new "
+                "ROS2FrameEditorComponent.");
+            ros2frameSystemInterface->InformAboutNeededConversion();
+        }
+
+        namespace JSR = AZ::JsonSerializationResult;
+
+        auto configInstance = reinterpret_cast<ROS2FrameComponent*>(outputValue);
+        AZ_Assert(configInstance, "Output value for JsonFrameComponentConfigSerializer can't be null.");
+
+        JSR::ResultCode result(JSR::Tasks::ReadField);
+
+        {
+            JSR::ResultCode componentIdLoadResult = ContinueLoadingFromJsonObjectField(
+                &configInstance->m_configuration.m_jointName,
+                azrtti_typeid<decltype(configInstance->m_configuration.m_jointName)>(),
+                inputValue,
+                "Joint Name",
+                context);
+
+            result.Combine(componentIdLoadResult);
+        }
+        {
+            JSR::ResultCode componentIdLoadResult = ContinueLoadingFromJsonObjectField(
+                &configInstance->m_configuration.m_frameName,
+                azrtti_typeid<decltype(configInstance->m_configuration.m_frameName)>(),
+                inputValue,
+                "Frame Name",
+                context);
+
+            result.Combine(componentIdLoadResult);
+        }
+        {
+            JSR::ResultCode componentIdLoadResult = ContinueLoadingFromJsonObjectField(
+                &configInstance->m_configuration.m_publishTransform,
+                azrtti_typeid<decltype(configInstance->m_configuration.m_publishTransform)>(),
+                inputValue,
+                "Publish Transform",
+                context);
+
+            result.Combine(componentIdLoadResult);
+        }
+        {
+            JSR::ResultCode componentIdLoadResult = ContinueLoadingFromJsonObjectField(
+                &configInstance->m_configuration.m_namespaceConfiguration,
+                azrtti_typeid<decltype(configInstance->m_configuration.m_namespaceConfiguration)>(),
+                inputValue,
+                "Namespace Configuration",
+                context);
+
+            result.Combine(componentIdLoadResult);
+        }
+
+        result.Combine(ContinueLoadingFromJsonObjectField(
+            &configInstance->m_configuration,
+            azrtti_typeid<decltype(configInstance->m_configuration)>(),
+            inputValue,
+            "ROS2FrameConfiguration",
+            context));
+
+        return context.Report(
+            result,
+            result.GetProcessing() != JSR::Processing::Halted ? "Successfully loaded ROS2FrameComponent information."
+                                                              : "Failed to load ROS2FrameComponent information.");
+    }
+
+    AZ_CLASS_ALLOCATOR_IMPL(JsonFrameComponentConfigSerializer, AZ::SystemAllocator);
 
     void ROS2FrameComponent::Activate()
     {
@@ -221,6 +313,11 @@ namespace ROS2
 
     void ROS2FrameComponent::Reflect(AZ::ReflectContext* context)
     {
+        if (auto jsonContext = azrtti_cast<AZ::JsonRegistrationContext*>(context))
+        {
+            jsonContext->Serializer<JsonFrameComponentConfigSerializer>()->HandlesType<ROS2FrameComponent>();
+        }
+
         ROS2FrameConfiguration::Reflect(context);
         if (AZ::SerializeContext* serialize = azrtti_cast<AZ::SerializeContext*>(context))
         {
@@ -248,5 +345,10 @@ namespace ROS2
 
     ROS2FrameComponent::ROS2FrameComponent(const ROS2FrameConfiguration& configuration) {
         m_configuration = configuration;
+    }
+
+    ROS2FrameConfiguration ROS2FrameComponent::GetConfiguration() const
+    {
+        return m_configuration;
     }
 } // namespace ROS2

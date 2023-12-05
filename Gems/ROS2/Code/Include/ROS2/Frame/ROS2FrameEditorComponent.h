@@ -37,6 +37,8 @@ namespace ROS2
         //! Initialize to a specific frame id
         ROS2FrameEditorComponent(const AZStd::string& frameId);
 
+        ROS2FrameEditorComponent(const ROS2FrameConfiguration ros2FrameConfiguration);
+
         // AzToolsFramework::Components::EditorComponentBase overrides
         void Activate() override;
         void Deactivate() override;

@@ -7,6 +7,7 @@
  */
 #pragma once
 
+#include "AzCore/Serialization/Json/BaseJsonSerializer.h"
 #include <AzCore/Component/Component.h>
 #include <AzCore/std/smart_ptr/unique_ptr.h>
 #include <AzFramework/Components/TransformComponent.h>
@@ -18,6 +19,24 @@
 
 namespace ROS2
 {
+
+    // Custom JSON serializer for ROS2FrameComponent configuration to handle version conversion
+    class JsonFrameComponentConfigSerializer : public AZ::BaseJsonSerializer
+    {
+    public:
+        AZ_RTTI(ROS2::JsonFrameComponentConfigSerializer, "{ac74cbc1-a5dc-4014-85d7-0e7934f352bd}", AZ::BaseJsonSerializer);
+        AZ_CLASS_ALLOCATOR_DECL;
+
+        AZ::JsonSerializationResult::Result Load(
+            void* outputValue,
+            const AZ::Uuid& outputValueTypeId,
+            const rapidjson::Value& inputValue,
+            AZ::JsonDeserializerContext& context) override;
+
+        // AZ::JsonSerializationResult::Result Store(rapidjson::Value& outputValue, const void* inputValue, const void* defaultValue,
+        //     const AZ::Uuid& valueTypeId, AZ::JsonSerializerContext& context);
+    };
+
     //! This component marks an interesting reference frame for ROS2 ecosystem.
     //! It serves as sensor data frame of reference and is responsible, through ROS2Transform, for publishing
     //! ros2 static and dynamic transforms (/tf_static, /tf). It also facilitates namespace handling.
@@ -27,6 +46,8 @@ namespace ROS2
         : public AZ::Component
         , public AZ::TickBus::Handler
     {
+        friend class JsonFrameComponentConfigSerializer;
+
     public:
         AZ_COMPONENT(ROS2FrameComponent, "{EE743472-3E25-41EA-961B-14096AC1D66F}");
 
@@ -79,6 +100,9 @@ namespace ROS2
         //! @param ros2Namespace Namespace to set.
         //! @param strategy Namespace strategy to use.
         void UpdateNamespaceConfiguration(const AZStd::string& ros2Namespace, NamespaceConfiguration::NamespaceStrategy strategy);
+
+        //! Get the configuration of this component.
+        ROS2FrameConfiguration GetConfiguration() const;
 
     private:
         //////////////////////////////////////////////////////////////////////////

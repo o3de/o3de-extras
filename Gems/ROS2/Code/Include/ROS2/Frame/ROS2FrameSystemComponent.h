@@ -66,6 +66,7 @@ namespace ROS2
         bool IsTopLevel(const AZ::EntityId& frameEntityId) const override;
         AZ::EntityId GetParentEntityId(const AZ::EntityId& frameEntityId) const override;
         AZStd::set<AZ::EntityId> GetChildrenEntityId(const AZ::EntityId& frameEntityId) const override;
+        void InformAboutNeededConversion() override;
 
         ROS2FrameSystemComponent();
 
@@ -101,5 +102,8 @@ namespace ROS2
         AZStd::map<AZ::EntityId, AZ::EntityId> m_frameParent;
         AZStd::map<AZ::EntityId, AZStd::set<AZ::EntityId>> m_watchedEntities;
         AZStd::map<AZ::EntityId, ROS2FrameSystemTransformHandler> m_watchedEntitiesHandlers;
+
+        //! Check to prevent multiple conversions at the same time.
+        bool m_conversionNeeded = false;
     };
 } // namespace ROS2
