@@ -9,12 +9,10 @@
 #include "CheckAssetPage.h"
 #include "RobotImporter/Utils/SourceAssetsStorage.h"
 #include <AzCore/Math/MathStringConversions.h>
-#include <AzCore/std/parallel/lock.h>
 #include <AzFramework/Asset/AssetSystemBus.h>
 #include <QHeaderView>
 #include <QPushButton>
 #include <QVBoxLayout>
-#include <iostream>
 
 namespace ROS2
 {
@@ -75,10 +73,6 @@ namespace ROS2
         m_table->verticalHeader()->hide();
         connect(m_table, &QTableWidget::cellDoubleClicked, this, &CheckAssetPage::DoubleClickRow);
         this->setLayout(layout);
-        m_refreshTimer = new QTimer(this);
-        m_refreshTimer->setInterval(250);
-        m_refreshTimer->setSingleShot(false);
-        connect(m_refreshTimer, &QTimer::timeout, this, &CheckAssetPage::RefreshTimerElapsed);
     }
 
     void CheckAssetPage::SetTitle()
@@ -134,14 +128,6 @@ namespace ROS2
         m_assetsToColumnIndex[unresolvedFileName] = rowId;
     }
 
-    void CheckAssetPage::StartWatchAsset(
-        AZStd::shared_ptr<Utils::UrdfAssetMap> urdfAssetMap, AZStd::shared_ptr<AZStd::mutex> urdfAssetMapMutex)
-    {
-        m_urdfAssetMap = urdfAssetMap;
-        m_urdfAssetMapMutex = urdfAssetMapMutex;
-        m_refreshTimer->start();
-    }
-
     QTableWidgetItem* CheckAssetPage::createCell(bool isOk, const QString& text)
     {
         QTableWidgetItem* p = new QTableWidgetItem(text);
@@ -157,12 +143,10 @@ namespace ROS2
     void CheckAssetPage::ClearAssetsList()
     {
         m_assetsToColumnIndex.clear();
-        m_assetsFinished.clear();
         m_assetsPaths.clear();
         m_table->setRowCount(0);
         m_missingCount = 0;
         m_failedCount = 0;
-        m_refreshTimer->stop();
     }
 
     bool CheckAssetPage::IsEmpty() const
@@ -253,7 +237,6 @@ namespace ROS2
         {
             return;
         }
-        AZStd::lock_guard<AZStd::mutex> lock(*m_urdfAssetMapMutex);
         for (const auto& [assetPath, columnId] : m_assetsToColumnIndex)
         {
             if (columnId == row && (*m_urdfAssetMap).contains(assetPath))
@@ -269,120 +252,4 @@ namespace ROS2
         }
     }
 
-    void CheckAssetPage::RefreshTimerElapsed()
-    {
-        for (const auto& [unresolvedAssetPath, rowId] : m_assetsToColumnIndex)
-        {
-            Utils::UrdfAsset urdfAsset;
-            {
-                AZStd::lock_guard<AZStd::mutex> lock(*m_urdfAssetMapMutex);
-                auto urdfAssetIt = m_urdfAssetMap->find(unresolvedAssetPath);
-                if (urdfAssetIt == m_urdfAssetMap->end())
-                {
-                    continue;
-                }
-                urdfAsset = urdfAssetIt->second;
-            }
-            auto copyStatus = urdfAsset.m_copyStatus;
-            if (!m_assetsFinished.contains(unresolvedAssetPath))
-            {
-                if (copyStatus == Utils::CopyStatus::Unresolvable)
-                {
-                    m_table->setItem(rowId, Columns::ResolvedMeshPath, createCell(false, tr("Unable to resolve mesh path")));
-                    m_table->item(rowId, Columns::ResolvedMeshPath)->setIcon(m_failureIcon);
-                    m_assetsFinished.insert(unresolvedAssetPath);
-                    m_failedCount++;
-                }
-                else if (copyStatus == Utils::CopyStatus::Failed)
-                {
-                    m_table->setItem(rowId, Columns::ProductAsset, createCell(false, tr("Failed to copy mesh")));
-                    m_table->item(rowId, Columns::ProductAsset)->setIcon(m_failureIcon);
-                    m_assetsFinished.insert(unresolvedAssetPath);
-                    m_failedCount++;
-                }
-                else if (copyStatus == Utils::CopyStatus::Copying)
-                {
-                    m_table->setItem(rowId, Columns::ProductAsset, createCell(true, tr("Copying")));
-                    m_table->item(rowId, Columns::ProductAsset)->setIcon(m_processingIcon);
-                }
-                else if (copyStatus == Utils::CopyStatus::Copied || copyStatus == Utils::CopyStatus::Exists)
-                {
-                    auto copiedText = tr("Copied, waiting to be processed");
-                    auto foundText = tr("Found file, waiting to be processed");
-
-                    m_table->setItem(
-                        rowId, Columns::ProductAsset, createCell(true, copyStatus == Utils::CopyStatus::Copied ? copiedText : foundText));
-                    m_table->item(rowId, Columns::ProductAsset)->setIcon(m_processingIcon);
-                    m_table->setItem(
-                        rowId, Columns::SourceAsset, createCell(true, urdfAsset.m_availableAssetInfo.m_sourceAssetRelativePath.c_str()));
-                }
-
-                if (copyStatus == Utils::CopyStatus::Copied || copyStatus == Utils::CopyStatus::Exists)
-                {
-                    // Execute for all found source assets that are not finished yet.
-                    const AZStd::string& sourceAssetFullPath = urdfAsset.m_availableAssetInfo.m_sourceAssetGlobalPath.c_str();
-                    using namespace AzToolsFramework;
-                    using namespace AzToolsFramework::AssetSystem;
-
-                    AZ::Outcome<AssetSystem::JobInfoContainer> result = AZ::Failure();
-                    AssetSystemJobRequestBus::BroadcastResult(
-                        result, &AssetSystemJobRequestBus::Events::GetAssetJobsInfo, sourceAssetFullPath, true);
-                    if (result)
-                    {
-                        bool allFinished = true;
-                        bool productAssetFailed = false;
-                        JobInfoContainer& allJobs = result.GetValue();
-                        for (const JobInfo& job : allJobs)
-                        {
-                            if (job.m_status == JobStatus::Queued || job.m_status == JobStatus::InProgress)
-                            {
-                                allFinished = false;
-                            }
-                            if (job.m_status == JobStatus::Failed)
-                            {
-                                productAssetFailed = true;
-                            }
-                        }
-                        if (allFinished)
-                        {
-                            if (!productAssetFailed)
-                            {
-                                const AZStd::vector<AZStd::string> productPaths =
-                                    Utils::GetProductAssets(urdfAsset.m_availableAssetInfo.m_sourceGuid);
-                                QString text;
-                                for (const auto& productPath : productPaths)
-                                {
-                                    text += QString::fromUtf8(productPath.data(), productPath.size()) + " ";
-                                }
-                                m_table->setItem(rowId, Columns::ProductAsset, createCell(true, text));
-                                m_table->item(rowId, Columns::ProductAsset)->setIcon(m_okIcon);
-                            }
-                            else
-                            {
-                                m_table->setItem(rowId, Columns::ProductAsset, createCell(false, tr("Failed")));
-                                m_table->item(rowId, Columns::ProductAsset)->setIcon(m_failureIcon);
-                                m_failedCount++;
-                            }
-                            m_assetsFinished.insert(unresolvedAssetPath);
-                        }
-                    }
-                }
-            }
-        }
-
-        if (m_assetsFinished.size() == m_assetsToColumnIndex.size())
-        {
-            m_refreshTimer->stop();
-            if (m_failedCount == 0 && m_missingCount == 0)
-            {
-                setTitle(tr("All assets were processed"));
-            }
-            else
-            {
-                setTitle(
-                    tr("There are ") + QString::number(m_missingCount) + tr(" unresolved assets.") + tr("There are ") +
-                    QString::number(m_failedCount) + tr(" failed asset processor jobs."));
-            }
-        }
-    }
 } // namespace ROS2

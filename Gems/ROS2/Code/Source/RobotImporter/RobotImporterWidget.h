@@ -8,7 +8,6 @@
 
 #pragma once
 
-#include <atomic>
 #if !defined(Q_MOC_RUN)
 #include "Pages/CheckAssetPage.h"
 #include "Pages/CheckUrdfPage.h"
@@ -59,11 +58,6 @@ namespace ROS2
         explicit RobotImporterWidget(QWidget* parent = nullptr);
         void CreatePrefab(AZStd::string prefabName);
 
-    signals:
-        void CopyStatusChanged(const Utils::CopyStatus& status, const AZStd::string& unresolvedFileName, const AZStd::string& assetPath);
-
-        void AssetProcessStatusChanged(const AZStd::string& unresolvedFileName, const Utils::UrdfAsset& urdfAsset, bool isError);
-
     private:
         int nextId() const override;
         bool validateCurrentPage() override;
@@ -108,8 +102,11 @@ namespace ROS2
 
         //! Checks all assets that are in the m_toProcessAssets set and emits signals based on results.
         void CheckToProcessAssets();
+
+        //! Checks if the asset is finished processing by asset processor. Timer callback.
         void RefreshTimerElapsed();
         QTimer* m_refreshTimerCheckAssets{};
+        //! Variable used to start the timer as the timer start function cannot be called from a different thread.
         AZStd::atomic_bool m_shouldCheckAssets{ false };
 
         //! Checks if the importedPrefabFilename is the same as focused prefab name.

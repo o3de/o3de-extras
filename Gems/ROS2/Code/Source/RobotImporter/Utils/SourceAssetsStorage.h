@@ -18,7 +18,6 @@
 #include <AzCore/Math/Crc.h>
 #include <AzCore/std/containers/unordered_map.h>
 #include <AzCore/std/containers/unordered_set.h>
-#include <AzCore/std/parallel/mutex.h>
 #include <AzFramework/Asset/AssetSystemBus.h>
 #include <AzToolsFramework/API/EditorAssetSystemAPI.h>
 
@@ -200,14 +199,14 @@ namespace ROS2::Utils
         const AZStd::string& urdfFilename,
         const SdfAssetBuilderSettings& sdfBuilderSettings);
 
-    //! Copies and prepares assets that are referenced in SDF/URDF.
-    //! Modifies urdfAssetMap in place.
-    //! @param urdfAssetMap - mapping from unresolved urdf paths to source asset info
-    //! @param urdfAssetMapMutex - mutex to protect changes done to urdfAssetMap from other threads
-    //! @param urdfFilename - path to URDF file (as a global path)
-    //! @param outputDirSuffix - suffix to make output directory unique, if xacro file was used
+    //! Copies and prepares asset that is referenced in SDF/URDF.
+    //! Modifies urdfAsset in place.
+    //! @param unresolvedFileName - unresolved urdf path to asset
+    //! @param importedAssetsDest - destination ImportedAssetsDest for imported assets.
+    //! @param urdfAsset - asset info. Will be modified.
+    //! @param duplicationCounter - number indication the number of times the asset has been duplicated
     //! @param fileIO - instance to fileIO class
-    //! @returns true if succeed
+    //! @returns status of the copy process
     CopyStatus CopyReferencedAsset(
         const AZ::IO::Path& unresolvedFileName,
         const ImportedAssetsDest& importedAssetsDest,
@@ -215,11 +214,20 @@ namespace ROS2::Utils
         unsigned int duplicationCounter,
         AZ::IO::FileIOBase* fileIO = AZ::IO::FileIOBase::GetInstance());
 
+    //! Prepares temporary and final directory for imported assets.
+    //! @param urdfFilename - path to URDF file (as a global path)
+    //! @param outputDirSuffix - name of the output directory
+    //! @param fileIO - instance to fileIO class
+    //! @returns structure containing paths to temporary and final directory for imported assets, or failure if failed to create.
     AZ::Outcome<ImportedAssetsDest> PrepareImportedAssetsDest(
         const AZStd::string& urdfFilename,
         AZStd::string_view outputDirSuffix = "",
         AZ::IO::FileIOBase* fileIO = AZ::IO::FileIOBase::GetInstance());
 
+    //! Remove temporary directory for imported assets.
+    //! @param tmpDir - path to temporary directory
+    //! @param fileIO - instance to fileIO class
+    //! @returns true if succeed
     AZ::Outcome<bool> Remove$tmpDir(const AZ::IO::Path $tmpDir, AZ::IO::FileIOBase* fileIO = AZ::IO::FileIOBase::GetInstance());
 
     //! Creates a list of files referenced in an asset (e.g. materials)

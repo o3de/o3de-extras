@@ -15,7 +15,6 @@
 #include <AzCore/Serialization/Json/JsonImporter.h>
 #include <AzCore/Serialization/Json/JsonUtils.h>
 #include <AzCore/Utils/Utils.h>
-#include <AzCore/std/parallel/lock.h>
 #include <AzCore/std/smart_ptr/make_shared.h>
 #include <AzCore/std/smart_ptr/shared_ptr.h>
 #include <AzFramework/Asset/AssetSystemBus.h>
@@ -301,7 +300,27 @@ namespace ROS2::Utils
         {
             return urdfAssetMap;
         }
-        // CopyReferencedAsset(urdfAssetMap, urdfAssetMapMutex, urdfFilename, outputDirSuffix, fileIO);
+
+        auto destDirectory = PrepareImportedAssetsDest(urdfFilename, outputDirSuffix, fileIO);
+        if (!destDirectory.IsSuccess())
+        {
+            return urdfAssetMap;
+        }
+
+        AZStd::unordered_map<AZ::IO::Path, unsigned int> duplicatedFilenames;
+        for (auto& [unresolvedFileName, urdfAsset] : urdfAssetMap)
+        {
+            if (duplicatedFilenames.contains(unresolvedFileName))
+            {
+                duplicatedFilenames[unresolvedFileName]++;
+            }
+            else
+            {
+                duplicatedFilenames[unresolvedFileName] = 0;
+            }
+            CopyReferencedAsset(unresolvedFileName, destDirectory.GetValue(), urdfAsset, duplicatedFilenames[unresolvedFileName]);
+        }
+        Utils::Remove$tmpDir(destDirectory.GetValue().importDirectoryTmp);
 
         return urdfAssetMap;
     }
