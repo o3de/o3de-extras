@@ -7,6 +7,7 @@
  */
 
 #include "SourceAssetsStorage.h"
+#include "AzCore/Outcome/Outcome.h"
 #include "RobotImporterUtils.h"
 #include <Atom/RPI.Reflect/Image/StreamingImageAsset.h>
 #include <Atom/RPI.Reflect/Model/ModelAsset.h>
@@ -300,7 +301,7 @@ namespace ROS2::Utils
         {
             return urdfAssetMap;
         }
-        CopyReferencedAssets(urdfAssetMap, urdfAssetMapMutex, urdfFilename, outputDirSuffix, fileIO);
+        // CopyReferencedAsset(urdfAssetMap, urdfAssetMapMutex, urdfFilename, outputDirSuffix, fileIO);
 
         return urdfAssetMap;
     }
@@ -481,12 +482,8 @@ namespace ROS2::Utils
         return urdfAssetMap;
     }
 
-    bool CopyReferencedAssets(
-        UrdfAssetMap& urdfAssetMap,
-        AZStd::mutex& urdfAssetMapMutex,
-        const AZStd::string& urdfFilename,
-        AZStd::string_view outputDirSuffix,
-        AZ::IO::FileIOBase* fileIO)
+    AZ::Outcome<ImportedAssetsDest> PrepareImportedAssetsDest(
+        const AZStd::string& urdfFilename, AZStd::string_view outputDirSuffix, AZ::IO::FileIOBase* fileIO)
     {
         AZ_Assert(fileIO, "No FileIO instance");
         AZ::Crc32 urdfFileCrc;
@@ -518,154 +515,144 @@ namespace ROS2::Utils
             {
                 fileIO->DestroyPath(importDirectoryTmp.c_str());
             }
-            return false;
+            return AZ::Failure();
         }
 
-        AZStd::unordered_map<AZStd::string, unsigned int> countFilenames;
-        for (auto& [unresolvedFileName, urdfAsset] : urdfAssetMap)
+        const ImportedAssetsDest importedAssetsDest = { importDirectoryTmp, importDirectoryDst };
+
+        return AZ::Success(importedAssetsDest);
+    }
+
+    AZ::Outcome<bool> Remove$tmpDir(const AZ::IO::Path $tmpDir, AZ::IO::FileIOBase* fileIO)
+    {
+        AZ_Assert(fileIO, "No FileIO instance");
+        const auto outcomeRemoveTmpDir = fileIO->DestroyPath($tmpDir.c_str());
+        if (!outcomeRemoveTmpDir)
         {
-            if (urdfAsset.m_resolvedUrdfPath.empty())
+            AZ_Error("CopyAssetForURDF", false, "Cannot remove temporary directory : %s", $tmpDir.c_str());
+            return AZ::Failure();
+        }
+        return AZ::Success(true);
+    }
+
+    CopyStatus CopyReferencedAsset(
+        const AZ::IO::Path& unresolvedFileName,
+        const ImportedAssetsDest& importedAssetsDest,
+        Utils::UrdfAsset& urdfAsset,
+        unsigned int duplicationCounter,
+        AZ::IO::FileIOBase* fileIO)
+    {
+        if (urdfAsset.m_resolvedUrdfPath.empty())
+        {
+            AZ_Warning("CopyAssetForURDF", false, "There is no resolved path for %s", unresolvedFileName.c_str());
+            return CopyStatus::Unresolvable;
+        }
+
+        AZStd::string filename = urdfAsset.m_resolvedUrdfPath.Filename().String();
+        if (duplicationCounter > 0)
+        {
+            AZStd::string stem = urdfAsset.m_resolvedUrdfPath.Stem().String();
+            AZStd::string extension = urdfAsset.m_resolvedUrdfPath.Extension().String();
+            filename = AZStd::string::format("%s_dup_%u%s", stem.c_str(), duplicationCounter, extension.c_str());
+        }
+
+        AZ::IO::Path targetPathAssetDst(importedAssetsDest.importDirectoryDst / filename);
+        AZ::IO::Path targetPathAssetTmp(importedAssetsDest.importDirectoryTmp / filename);
+
+        AZ::IO::Path targetPathAssetInfo(targetPathAssetDst.Native() + ".assetinfo");
+
+        bool targetAssetExists = fileIO->Exists(targetPathAssetDst.c_str());
+        if (!targetAssetExists)
+        {
+            urdfAsset.m_copyStatus = CopyStatus::Copying;
+
+            // copy mesh file to temporary location ignored by AP
+            const auto outcomeCopyTmp = fileIO->Copy(urdfAsset.m_resolvedUrdfPath.c_str(), targetPathAssetTmp.c_str());
+            AZ_Printf(
+                "CopyAssetForURDF",
+                "Copy %s to %s, result: %d",
+                urdfAsset.m_resolvedUrdfPath.c_str(),
+                targetPathAssetTmp.c_str(),
+                outcomeCopyTmp.GetResultCode());
+
+            if (outcomeCopyTmp)
             {
-                AZ_Warning("CopyAssetForURDF", false, "There is no resolved path for %s", unresolvedFileName.c_str());
+                // call FlushIOOfAsset to ensure the asset processor is aware of the new file
+                FlushIOOfAsset(targetPathAssetTmp);
+
+                const bool needsVisual =
+                    (urdfAsset.m_assetReferenceType & ReferencedAssetType::VisualMesh) == ReferencedAssetType::VisualMesh;
+                const bool needsCollider =
+                    (urdfAsset.m_assetReferenceType & ReferencedAssetType::ColliderMesh) == ReferencedAssetType::ColliderMesh;
+                const bool isMeshFile = (needsVisual || needsCollider);
+
+                // if the asset is a mesh, create asset info at destination location using the temporary mesh file
+                const bool assetInfoOk =
+                    isMeshFile ? CreateSceneManifest(targetPathAssetTmp, targetPathAssetInfo, needsCollider, needsVisual) : true;
+
+                if (assetInfoOk)
                 {
-                    AZStd::lock_guard<AZStd::mutex> lock(urdfAssetMapMutex);
-                    urdfAsset.m_copyStatus = CopyStatus::Unresolvable;
-                }
-                continue;
-            }
-
-            AZStd::string filename = urdfAsset.m_resolvedUrdfPath.Filename().String();
-            auto count = countFilenames[filename]++;
-            if (count > 0)
-            {
-                AZStd::string stem = urdfAsset.m_resolvedUrdfPath.Stem().String();
-                AZStd::string extension = urdfAsset.m_resolvedUrdfPath.Extension().String();
-                filename = AZStd::string::format("%s_dup_%u%s", stem.c_str(), count, extension.c_str());
-            }
-
-            AZ::IO::Path targetPathAssetDst(importDirectoryDst / filename);
-            AZ::IO::Path targetPathAssetTmp(importDirectoryTmp / filename);
-
-            AZ::IO::Path targetPathAssetInfo(targetPathAssetDst.Native() + ".assetinfo");
-
-            bool targetAssetExists = fileIO->Exists(targetPathAssetDst.c_str());
-            if (!targetAssetExists)
-            {
-                {
-                    AZStd::lock_guard<AZStd::mutex> lock(urdfAssetMapMutex);
-                    urdfAsset.m_copyStatus = CopyStatus::Copying;
-                }
-                // copy mesh file to temporary location ignored by AP
-                const auto outcomeCopyTmp = fileIO->Copy(urdfAsset.m_resolvedUrdfPath.c_str(), targetPathAssetTmp.c_str());
-                AZ_Printf(
-                    "CopyAssetForURDF",
-                    "Copy %s to %s, result: %d",
-                    urdfAsset.m_resolvedUrdfPath.c_str(),
-                    targetPathAssetTmp.c_str(),
-                    outcomeCopyTmp.GetResultCode());
-
-                if (outcomeCopyTmp)
-                {
-                    // call FlushIOOfAsset to ensure the asset processor is aware of the new file
-                    FlushIOOfAsset(targetPathAssetTmp);
-
-                    const bool needsVisual =
-                        (urdfAsset.m_assetReferenceType & ReferencedAssetType::VisualMesh) == ReferencedAssetType::VisualMesh;
-                    const bool needsCollider =
-                        (urdfAsset.m_assetReferenceType & ReferencedAssetType::ColliderMesh) == ReferencedAssetType::ColliderMesh;
-                    const bool isMeshFile = (needsVisual || needsCollider);
-
-                    // if the asset is a mesh, create asset info at destination location using the temporary mesh file
-                    const bool assetInfoOk =
-                        isMeshFile ? CreateSceneManifest(targetPathAssetTmp, targetPathAssetInfo, needsCollider, needsVisual) : true;
-
-                    if (assetInfoOk)
+                    // copy additional assets such as textures directly to destination location
+                    if (isMeshFile)
                     {
-                        // copy additional assets such as textures directly to destination location
-                        if (isMeshFile)
+                        const auto& meshTextureAssets = Utils::GetMeshTextureAssets(targetPathAssetTmp);
+                        for (const auto& unresolvedAssetPath : meshTextureAssets)
                         {
-                            const auto& meshTextureAssets = Utils::GetMeshTextureAssets(targetPathAssetTmp);
-                            for (const auto& unresolvedAssetPath : meshTextureAssets)
+                            // Manifest returns local path in Project's directory temp folder
+                            const AZ::IO::Path assetLocalPath(AZ::IO::Path(AZ::IO::Path(AZ::Utils::GetProjectPath()) / unresolvedAssetPath)
+                                                                  .LexicallyRelative(importedAssetsDest.importDirectoryTmp));
+
+                            const AZ::IO::Path assetFullPathSrc(AZ::IO::Path(urdfAsset.m_resolvedUrdfPath.ParentPath()) / assetLocalPath);
+                            const AZ::IO::Path assetFullPathDst(importedAssetsDest.importDirectoryDst / assetLocalPath);
+
+                            const auto outcomeMkdir = fileIO->CreatePath(AZ::IO::Path(assetFullPathDst.ParentPath()).c_str());
+                            if (!outcomeMkdir)
                             {
-                                // Manifest returns local path in Project's directory temp folder
-                                const AZ::IO::Path assetLocalPath(
-                                    AZ::IO::Path(AZ::IO::Path(AZ::Utils::GetProjectPath()) / unresolvedAssetPath)
-                                        .LexicallyRelative(importDirectoryTmp));
+                                break;
+                            }
 
-                                const AZ::IO::Path assetFullPathSrc(
-                                    AZ::IO::Path(urdfAsset.m_resolvedUrdfPath.ParentPath()) / assetLocalPath);
-                                const AZ::IO::Path assetFullPathDst(importDirectoryDst / assetLocalPath);
-
-                                const auto outcomeMkdir = fileIO->CreatePath(AZ::IO::Path(assetFullPathDst.ParentPath()).c_str());
-                                if (!outcomeMkdir)
-                                {
-                                    break;
-                                }
-
-                                const auto outcomeCopy = fileIO->Copy(assetFullPathSrc.c_str(), assetFullPathDst.c_str());
-                                if (!outcomeCopy)
-                                {
-                                    AZStd::lock_guard<AZStd::mutex> lock(urdfAssetMapMutex);
-                                    urdfAsset.m_copyStatus = CopyStatus::Failed;
-                                }
+                            const auto outcomeCopy = fileIO->Copy(assetFullPathSrc.c_str(), assetFullPathDst.c_str());
+                            if (!outcomeCopy)
+                            {
+                                urdfAsset.m_copyStatus = CopyStatus::Failed;
                             }
                         }
-
-                        // move asset file from temporary location to destination location
-                        const auto outcomeMoveDst = fileIO->Rename(targetPathAssetTmp.c_str(), targetPathAssetDst.c_str());
-                        AZ_Printf(
-                            "CopyAssetForURDF",
-                            "Rename file %s to %s, result: %d",
-                            targetPathAssetTmp.c_str(),
-                            targetPathAssetDst.c_str(),
-                            outcomeMoveDst.GetResultCode());
-
-                        // call FlushIOOfAsset to ensure the asset processor is aware of the new file
-                        FlushIOOfAsset(targetPathAssetDst);
-
-                        if (!outcomeMoveDst)
-                        {
-                            AZStd::lock_guard<AZStd::mutex> lock(urdfAssetMapMutex);
-                            urdfAsset.m_copyStatus = CopyStatus::Failed;
-                        }
-                        else
-                        {
-                            AZStd::lock_guard<AZStd::mutex> lock(urdfAssetMapMutex);
-                            urdfAsset.m_copyStatus = CopyStatus::Copied;
-                        }
                     }
-                }
-                else
-                {
-                    {
-                        AZStd::lock_guard<AZStd::mutex> lock(urdfAssetMapMutex);
-                        urdfAsset.m_copyStatus = CopyStatus::Failed;
-                    }
+
+                    // move asset file from temporary location to destination location
+                    const auto outcomeMoveDst = fileIO->Rename(targetPathAssetTmp.c_str(), targetPathAssetDst.c_str());
+                    AZ_Printf(
+                        "CopyAssetForURDF",
+                        "Rename file %s to %s, result: %d",
+                        targetPathAssetTmp.c_str(),
+                        targetPathAssetDst.c_str(),
+                        outcomeMoveDst.GetResultCode());
+
+                    // call FlushIOOfAsset to ensure the asset processor is aware of the new file
+                    FlushIOOfAsset(targetPathAssetDst);
+
+                    urdfAsset.m_copyStatus = outcomeMoveDst ? CopyStatus::Copied : CopyStatus::Failed;
                 }
             }
             else
             {
-                AZ_Printf("CopyAssetForURDF", "File %s already exists, omitting import", targetPathAssetDst.c_str());
-                {
-                    AZStd::lock_guard<AZStd::mutex> lock(urdfAssetMapMutex);
-                    urdfAsset.m_copyStatus = CopyStatus::Exists;
-                }
-            }
-            {
-                AZStd::lock_guard<AZStd::mutex> lock(urdfAssetMapMutex);
-                if (urdfAsset.m_copyStatus == CopyStatus::Exists || urdfAsset.m_copyStatus == CopyStatus::Copied)
-                {
-                    urdfAsset.m_copyStatus = targetAssetExists ? CopyStatus::Exists : CopyStatus::Copied;
-                    urdfAsset.m_availableAssetInfo = Utils::GetAvailableAssetInfo(targetPathAssetDst.String());
-                }
-                urdfAsset.m_urdfPath = urdfFilename;
-                urdfAsset.m_urdfFileCRC = AZ::Crc32();
+                urdfAsset.m_copyStatus = CopyStatus::Failed;
             }
         }
+        else
+        {
+            AZ_Printf("CopyAssetForURDF", "File %s already exists, omitting import", targetPathAssetDst.c_str());
+            urdfAsset.m_copyStatus = CopyStatus::Exists;
+        }
 
-        fileIO->DestroyPath(importDirectoryTmp.c_str());
+        if (urdfAsset.m_copyStatus == CopyStatus::Exists || urdfAsset.m_copyStatus == CopyStatus::Copied)
+        {
+            urdfAsset.m_availableAssetInfo = Utils::GetAvailableAssetInfo(targetPathAssetDst.String());
+        }
+        urdfAsset.m_urdfPath = "";
+        urdfAsset.m_urdfFileCRC = AZ::Crc32();
 
-        return true;
+        return urdfAsset.m_copyStatus;
     }
 
     AZStd::unordered_set<AZ::IO::Path> GetMeshTextureAssets(const AZ::IO::Path& sourceMeshAssetPath)

@@ -92,6 +92,16 @@ namespace ROS2::Utils
         AvailableAsset m_availableAssetInfo;
     };
 
+    //! Structure contains paths to the temporary and destination directories for imported assets.
+    struct ImportedAssetsDest
+    {
+        //! Temporary directory for imported assets.
+        AZ::IO::Path importDirectoryTmp;
+
+        //! Destination directory for imported assets.
+        AZ::IO::Path importDirectoryDst;
+    };
+
     //! Maps unresolved URI asset references to the type of reference(s) - mesh, texture, etc.
     using AssetFilenameReferences = AZStd::unordered_map<AZStd::string, ReferencedAssetType>;
 
@@ -198,12 +208,19 @@ namespace ROS2::Utils
     //! @param outputDirSuffix - suffix to make output directory unique, if xacro file was used
     //! @param fileIO - instance to fileIO class
     //! @returns true if succeed
-    bool CopyReferencedAssets(
-        UrdfAssetMap& urdfAssetMap,
-        AZStd::mutex& urdfAssetMapMutex,
+    CopyStatus CopyReferencedAsset(
+        const AZ::IO::Path& unresolvedFileName,
+        const ImportedAssetsDest& importedAssetsDest,
+        Utils::UrdfAsset& urdfAsset,
+        unsigned int duplicationCounter,
+        AZ::IO::FileIOBase* fileIO = AZ::IO::FileIOBase::GetInstance());
+
+    AZ::Outcome<ImportedAssetsDest> PrepareImportedAssetsDest(
         const AZStd::string& urdfFilename,
         AZStd::string_view outputDirSuffix = "",
         AZ::IO::FileIOBase* fileIO = AZ::IO::FileIOBase::GetInstance());
+
+    AZ::Outcome<bool> Remove$tmpDir(const AZ::IO::Path $tmpDir, AZ::IO::FileIOBase* fileIO = AZ::IO::FileIOBase::GetInstance());
 
     //! Creates a list of files referenced in an asset (e.g. materials)
     //! @param sourceMeshAssetPath - global path to source asset used to find scene

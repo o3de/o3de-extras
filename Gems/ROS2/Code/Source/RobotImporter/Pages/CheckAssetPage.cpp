@@ -14,6 +14,7 @@
 #include <QHeaderView>
 #include <QPushButton>
 #include <QVBoxLayout>
+#include <iostream>
 
 namespace ROS2
 {
@@ -167,6 +168,83 @@ namespace ROS2
     bool CheckAssetPage::IsEmpty() const
     {
         return m_assetsToColumnIndex.empty();
+    }
+
+    int CheckAssetPage::GetRowIndex(const AZStd::string& unresolvedFileName)
+    {
+        auto it = m_assetsToColumnIndex.find(unresolvedFileName);
+        if (it == m_assetsToColumnIndex.end())
+        {
+            return -1;
+        }
+        return it->second;
+    }
+
+    void CheckAssetPage::OnAssetCopyStatusChanged(
+        const Utils::CopyStatus& status, const AZStd::string& unresolvedFileName, const AZStd::string assetPath)
+    {
+        int rowId = GetRowIndex(unresolvedFileName);
+        if (rowId == -1)
+        {
+            return;
+        }
+
+        switch (status)
+        {
+        case Utils::CopyStatus::Unresolvable:
+            m_table->setItem(rowId, Columns::ResolvedMeshPath, createCell(false, tr("Unable to resolve mesh path")));
+            m_table->item(rowId, Columns::ResolvedMeshPath)->setIcon(m_failureIcon);
+            m_table->setItem(rowId, Columns::ProductAsset, createCell(true, ""));
+            m_missingCount++;
+            break;
+        case Utils::CopyStatus::Failed:
+            m_table->setItem(rowId, Columns::ProductAsset, createCell(false, tr("Failed to copy mesh")));
+            m_table->item(rowId, Columns::ProductAsset)->setIcon(m_failureIcon);
+            m_failedCount++;
+            break;
+        case Utils::CopyStatus::Copying:
+            m_table->setItem(rowId, Columns::ProductAsset, createCell(true, tr("Copying")));
+            m_table->item(rowId, Columns::ProductAsset)->setIcon(m_processingIcon);
+            break;
+        case Utils::CopyStatus::Copied:
+            m_table->setItem(rowId, Columns::ProductAsset, createCell(true, tr("Copied, waiting to be processed")));
+            m_table->item(rowId, Columns::ProductAsset)->setIcon(m_processingIcon);
+            m_table->setItem(rowId, Columns::SourceAsset, createCell(true, assetPath.c_str()));
+            break;
+        case Utils::CopyStatus::Exists:
+            m_table->setItem(rowId, Columns::ProductAsset, createCell(true, tr("Found file, waiting to be processed")));
+            m_table->item(rowId, Columns::ProductAsset)->setIcon(m_processingIcon);
+
+            m_table->setItem(rowId, Columns::SourceAsset, createCell(true, assetPath.c_str()));
+            break;
+        }
+    }
+
+    void CheckAssetPage::OnAssetProcessStatusChanged(
+        const AZStd::string& unresolvedFileName, const Utils::UrdfAsset& urdfAsset, bool isError)
+    {
+        int rowId = GetRowIndex(unresolvedFileName);
+        if (rowId == -1)
+        {
+            return;
+        }
+
+        if (!isError)
+        {
+            const AZStd::vector<AZStd::string> productPaths = Utils::GetProductAssets(urdfAsset.m_availableAssetInfo.m_sourceGuid);
+            QString text;
+            for (const auto& productPath : productPaths)
+            {
+                text += QString::fromUtf8(productPath.data(), productPath.size()) + " ";
+            }
+            m_table->setItem(rowId, Columns::ProductAsset, createCell(true, text));
+            m_table->item(rowId, Columns::ProductAsset)->setIcon(m_okIcon);
+        }
+        else
+        {
+            m_table->setItem(rowId, Columns::ProductAsset, createCell(false, tr("Failed")));
+            m_table->item(rowId, Columns::ProductAsset)->setIcon(m_failureIcon);
+        }
     }
 
     void CheckAssetPage::DoubleClickRow(int row, [[maybe_unused]] int col)

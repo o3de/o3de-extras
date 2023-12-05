@@ -8,6 +8,7 @@
 
 #pragma once
 
+#include <atomic>
 #if !defined(Q_MOC_RUN)
 #include "Pages/CheckAssetPage.h"
 #include "Pages/CheckUrdfPage.h"
@@ -58,6 +59,11 @@ namespace ROS2
         explicit RobotImporterWidget(QWidget* parent = nullptr);
         void CreatePrefab(AZStd::string prefabName);
 
+    signals:
+        void CopyStatusChanged(const Utils::CopyStatus& status, const AZStd::string& unresolvedFileName, const AZStd::string& assetPath);
+
+        void AssetProcessStatusChanged(const AZStd::string& unresolvedFileName, const Utils::UrdfAsset& urdfAsset, bool isError);
+
     private:
         int nextId() const override;
         bool validateCurrentPage() override;
@@ -79,7 +85,6 @@ namespace ROS2
 
         /// mapping from urdf path to asset source
         AZStd::shared_ptr<Utils::UrdfAssetMap> m_urdfAssetsMapping;
-        AZStd::shared_ptr<AZStd::mutex> m_urdfAssetsMappingMutex;
         AZStd::shared_ptr<AZStd::thread> m_copyReferencedAssetsThread;
 
         AZStd::unique_ptr<URDFPrefabMaker> m_prefabMaker;
@@ -88,9 +93,24 @@ namespace ROS2
         /// Xacro params
         Utils::xacro::Params m_params;
 
+        // Assets ready to be processed by asset processor
+        AZStd::set<AZ::IO::Path> m_toProcessAssets;
+
         void onCurrentIdChanged(int id);
         void FillAssetPage();
         void FillPrefabMakerPage();
+
+        //! Checks if the asset is finished processing by asset processor.
+        //! @param assetGlobalPath global path to the asset.
+        //! @return True if asset is finished processing, false if it an error occurred, and AZ::Failure if the asset is not finished
+        //! processing.
+        static AZ::Outcome<bool> CheckIfAssetFinished(const AZStd::string& assetGlobalPath);
+
+        //! Checks all assets that are in the m_toProcessAssets set and emits signals based on results.
+        void CheckToProcessAssets();
+        void RefreshTimerElapsed();
+        QTimer* m_refreshTimerCheckAssets{};
+        AZStd::atomic_bool m_shouldCheckAssets{ false };
 
         //! Checks if the importedPrefabFilename is the same as focused prefab name.
         //! @param importedPrefabFilename name of imported prefab

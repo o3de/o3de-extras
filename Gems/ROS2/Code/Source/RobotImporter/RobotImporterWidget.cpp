@@ -13,6 +13,7 @@
 
 #include "FixURDF/URDFModifications.h"
 #include "RobotImporterWidget.h"
+#include "Utils/SourceAssetsStorage.h"
 #include <QApplication>
 #include <QScreen>
 #include <QTranslator>
@@ -69,7 +70,10 @@ namespace ROS2
                 parentWidget()->close();
             });
 
-        m_urdfAssetsMappingMutex = AZStd::make_shared<AZStd::mutex>();
+        m_refreshTimerCheckAssets = new QTimer(this);
+        m_refreshTimerCheckAssets->setInterval(250);
+        m_refreshTimerCheckAssets->setSingleShot(false);
+        connect(m_refreshTimerCheckAssets, &QTimer::timeout, this, &RobotImporterWidget::RefreshTimerElapsed);
     }
 
     void RobotImporterWidget::OnUrdfCreated()
@@ -263,6 +267,37 @@ namespace ROS2
         }
     }
 
+    AZ::Outcome<bool> RobotImporterWidget::CheckIfAssetFinished(const AZStd::string& assetGlobalPath)
+    {
+        using namespace AzToolsFramework;
+        using namespace AzToolsFramework::AssetSystem;
+
+        AZ::Outcome<AssetSystem::JobInfoContainer> result = AZ::Failure();
+        AssetSystemJobRequestBus::BroadcastResult(result, &AssetSystemJobRequestBus::Events::GetAssetJobsInfo, assetGlobalPath, true);
+        if (result)
+        {
+            bool allFinished = true;
+            bool productAssetFailed = false;
+            JobInfoContainer& allJobs = result.GetValue();
+            for (const JobInfo& job : allJobs)
+            {
+                if (job.m_status == JobStatus::Queued || job.m_status == JobStatus::InProgress)
+                {
+                    allFinished = false;
+                }
+                if (job.m_status == JobStatus::Failed)
+                {
+                    productAssetFailed = true;
+                }
+            }
+            if (allFinished)
+            {
+                return AZ::Success(!productAssetFailed);
+            }
+        }
+        return AZ::Failure();
+    }
+
     void RobotImporterWidget::FillAssetPage()
     {
         if (m_assetPage->IsEmpty())
@@ -337,13 +372,106 @@ namespace ROS2
 
                 m_assetPage->ReportAsset(unresolvedFileName.c_str(), urdfAsset, type);
             }
-            m_copyReferencedAssetsThread = AZStd::make_shared<AZStd::thread>(
-                [this, dirSuffix]()
+            m_refreshTimerCheckAssets->start();
+            if (m_importAssetWithUrdf)
+            {
+                m_copyReferencedAssetsThread = AZStd::make_shared<AZStd::thread>(
+                    [this, dirSuffix]()
+                    {
+                        auto destStatus = Utils::PrepareImportedAssetsDest(m_urdfPath.String(), dirSuffix);
+                        if (!destStatus.IsSuccess())
+                        {
+                            AZ_Error("RobotImporterWidget", false, "Failed to create destination folder for imported assets");
+                            QWizard::button(QWizard::NextButton)->setDisabled(false);
+                            return;
+                        }
+                        AZStd::unordered_map<AZ::IO::Path, unsigned int> duplicatedFilenames;
+                        for (auto& [unresolvedFileName, urdfAsset] : *m_urdfAssetsMapping)
+                        {
+                            if (duplicatedFilenames.contains(unresolvedFileName))
+                            {
+                                duplicatedFilenames[unresolvedFileName]++;
+                            }
+                            else
+                            {
+                                duplicatedFilenames[unresolvedFileName] = 0;
+                            }
+                            if (urdfAsset.m_copyStatus == Utils::CopyStatus::Waiting)
+                            {
+                                m_assetPage->OnAssetCopyStatusChanged(
+                                    Utils::CopyStatus::Copying, AZStd::string(unresolvedFileName.c_str()), "");
+                            }
+                            auto copyStatus = Utils::CopyReferencedAsset(
+                                unresolvedFileName, destStatus.GetValue(), urdfAsset, duplicatedFilenames[unresolvedFileName]);
+
+                            m_assetPage->OnAssetCopyStatusChanged(
+                                copyStatus,
+                                AZStd::string(unresolvedFileName.c_str()),
+                                AZStd::string(urdfAsset.m_availableAssetInfo.m_sourceAssetRelativePath.c_str()));
+
+                            if (copyStatus == Utils::CopyStatus::Copied || copyStatus == Utils::CopyStatus::Exists)
+                            {
+                                m_toProcessAssets.insert(unresolvedFileName);
+                            }
+
+                            // Check all assets that are ready to be processed
+                            CheckToProcessAssets();
+                        }
+                        Utils::Remove$tmpDir(destStatus.GetValue().importDirectoryTmp);
+
+                        if (!m_toProcessAssets.empty())
+                        {
+                            m_shouldCheckAssets = true;
+                        }
+
+                        QWizard::button(QWizard::NextButton)->setDisabled(false);
+                    });
+            }
+            else
+            {
+                QWizard::button(QWizard::NextButton)->setDisabled(false);
+            }
+        }
+    }
+
+    void RobotImporterWidget::RefreshTimerElapsed()
+    {
+        if (!m_shouldCheckAssets)
+        {
+            return;
+        }
+        CheckToProcessAssets();
+        if (m_toProcessAssets.empty())
+        {
+            m_refreshTimerCheckAssets->stop();
+        }
+    }
+
+    void RobotImporterWidget::CheckToProcessAssets()
+    {
+        AZStd::set<AZ::IO::Path> processedAssets;
+        for (auto& assetToProcessPath : m_toProcessAssets)
+        {
+            auto urdfAsset = m_urdfAssetsMapping->find(assetToProcessPath)->second;
+            auto assetFinishedOutcome = CheckIfAssetFinished(urdfAsset.m_availableAssetInfo.m_sourceAssetGlobalPath.c_str());
+
+            if (assetFinishedOutcome.IsSuccess())
+            {
+                processedAssets.insert(assetToProcessPath);
+                if (assetFinishedOutcome.GetValue() == false)
                 {
-                    Utils::CopyReferencedAssets(*m_urdfAssetsMapping, *m_urdfAssetsMappingMutex, m_urdfPath.String(), dirSuffix);
-                    QWizard::button(QWizard::NextButton)->setDisabled(false);
-                });
-            m_assetPage->StartWatchAsset(m_urdfAssetsMapping, m_urdfAssetsMappingMutex);
+                    m_assetPage->OnAssetProcessStatusChanged(assetToProcessPath.c_str(), urdfAsset, true);
+                }
+                else
+                {
+                    m_assetPage->OnAssetProcessStatusChanged(assetToProcessPath.c_str(), urdfAsset, false);
+                }
+            }
+        }
+
+        for (auto& processedAsset : processedAssets)
+        {
+            m_toProcessAssets.erase(processedAsset);
         }
     }
 

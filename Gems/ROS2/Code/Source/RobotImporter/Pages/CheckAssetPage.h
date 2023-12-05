@@ -41,6 +41,12 @@ namespace ROS2
         bool isComplete() const override;
         void StartWatchAsset(AZStd::shared_ptr<Utils::UrdfAssetMap> urdfAssetMap, AZStd::shared_ptr<AZStd::mutex> urdfAssetMapMutex);
 
+    public:
+        void OnAssetCopyStatusChanged(
+            const Utils::CopyStatus& status, const AZStd::string& unresolvedFileName, const AZStd::string assetPath);
+
+        void OnAssetProcessStatusChanged(const AZStd::string& unresolvedFileName, const Utils::UrdfAsset& urdfAsset, bool isError);
+
     private:
         bool m_success;
         QTimer* m_refreshTimer{};
@@ -61,5 +67,7 @@ namespace ROS2
         QIcon m_failureIcon;
         QIcon m_okIcon;
         QIcon m_processingIcon;
+
+        int GetRowIndex(const AZStd::string& unresolvedFileName);
     };
 } // namespace ROS2
