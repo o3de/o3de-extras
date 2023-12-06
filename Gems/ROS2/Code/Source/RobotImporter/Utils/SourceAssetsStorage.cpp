@@ -371,8 +371,19 @@ namespace ROS2::Utils
                     resolvedPath.c_str(),
                     targetPathAssetTmp.c_str(),
                     outcomeCopyTmp.GetResultCode());
+
                 if (outcomeCopyTmp)
                 {
+                    // An I/O flush is required here because we need to load the Scene file into memory from the temporary directory
+                    // to generate a proper manifest for it in the final directory before the Scene file itself is moved into the final
+                    // directory and processed. This ensures that when the Scene file is detected by the Asset Processor in the final
+                    // location, it will already have the desired export settings in the manifest to cause it to be exported correctly.
+                    // If we didn't flush the I/O here, the Scene file load can fail because the load contains a call to 
+                    // AssetSystemComponent::GetSourceInfoBySourcePath that will fail if the Asset Processor hasn't detected the
+                    // existence of the file yet. With the flush, everything works correctly.
+
+                    FlushIOOfAsset(targetPathAssetTmp);
+
                     const bool needsVisual = (assetReferenceType & ReferencedAssetType::VisualMesh) == ReferencedAssetType::VisualMesh;
                     const bool needsCollider = (assetReferenceType & ReferencedAssetType::ColliderMesh) == ReferencedAssetType::ColliderMesh;
                     const bool isMeshFile = (needsVisual || needsCollider);
@@ -420,18 +431,8 @@ namespace ROS2::Utils
                             targetPathAssetDst.c_str(),
                             outcomeMoveDst.GetResultCode());
 
-                        // call GetAssetStatus_FlushIO to ensure the asset processor is aware of the new file
-                        AzFramework::AssetSystem::AssetStatus copiedAssetStatus =
-                            AzFramework::AssetSystem::AssetStatus::AssetStatus_Unknown;
-                        AzFramework::AssetSystemRequestBus::BroadcastResult(
-                            copiedAssetStatus,
-                            &AzFramework::AssetSystem::AssetSystemRequests::GetAssetStatus_FlushIO,
-                            targetPathAssetDst.c_str());
-                        AZ_Warning(
-                            "CopyAssetForURDF",
-                            copiedAssetStatus != AzFramework::AssetSystem::AssetStatus::AssetStatus_Unknown,
-                            "Asset processor did not recognize the new file %s.",
-                            targetPathAssetDst.c_str());
+                        // call FlushIOOfAsset to ensure the asset processor is aware of the move operation.
+                        FlushIOOfAsset(targetPathAssetDst);
 
                         if (outcomeMoveDst)
                         {
@@ -660,5 +661,19 @@ namespace ROS2::Utils
             }
         }
         return assetsFilepaths;
+    }
+
+    AzFramework::AssetSystem::AssetStatus FlushIOOfAsset(const AZ::IO::Path& path)
+    {
+        AzFramework::AssetSystem::AssetStatus assetStatus = AzFramework::AssetSystem::AssetStatus::AssetStatus_Unknown;
+        AzFramework::AssetSystemRequestBus::BroadcastResult(
+            assetStatus, &AzFramework::AssetSystem::AssetSystemRequests::GetAssetStatus_FlushIO, path.c_str());
+        AZ_Warning(
+            "CopyAssetForURDF",
+            assetStatus != AzFramework::AssetSystem::AssetStatus::AssetStatus_Unknown,
+            "Asset processor did not recognize the new file %s.",
+            path.c_str());
+
+        return assetStatus;
     }
 } // namespace ROS2::Utils
