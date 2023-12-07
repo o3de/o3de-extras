@@ -48,8 +48,8 @@ namespace ROS2
             if (AZ::EditContext* ec = serialize->GetEditContext())
             {
                 ec->Class<ROS2SystemComponent>(
-                      "ROS2 System Component",
-                      "This component is responsible for creating ROS2 node and executor, provides ROS2 interfaces, manages ROS2 clock and "
+                      "ROS 2 System Component",
+                      "This component is responsible for creating ROS 2 node and executor, provides ROS 2 interfaces, manages ROS 2 clock and "
                       "publishes transforms.")
                     ->ClassElement(AZ::Edit::ClassElements::EditorData, "")
                     ->Attribute(AZ::Edit::Attributes::AppearsInAddComponentMenu, AZ_CRC_CE("System"))
