@@ -6,6 +6,7 @@
  *
  */
 #include <Camera/ROS2CameraSensorEditorComponent.h>
+#include <Camera/ROS2CameraSystemEditorComponent.h>
 #include <Georeference/GeoreferenceLevelEditorComponent.h>
 #include <Lidar/LidarRegistrarEditorSystemComponent.h>
 #include <Manipulation/JointsManipulationEditorComponent.h>
@@ -15,7 +16,6 @@
 #include <SdfAssetBuilder/SdfAssetBuilderSystemComponent.h>
 #include <Spawner/ROS2SpawnPointEditorComponent.h>
 #include <Spawner/ROS2SpawnerEditorComponent.h>
-#include <SystemComponents/ROS2CameraSystemEditorComponent.h>
 #include <SystemComponents/ROS2EditorSystemComponent.h>
 
 void InitROS2Resources()

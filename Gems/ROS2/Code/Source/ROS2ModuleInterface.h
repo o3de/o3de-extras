@@ -7,13 +7,14 @@
  */
 #pragma once
 
-#include "SystemComponents/ROS2CameraSystemComponent.h"
+#include "Camera/ROS2CameraSystemComponent.h"
 #include "SystemComponents/ROS2SystemComponent.h"
 #include <AzCore/Memory/SystemAllocator.h>
 #include <AzCore/Module/Module.h>
 #include <Camera/ROS2CameraSensorComponent.h>
 #include <ContactSensor/ROS2ContactSensorComponent.h>
 #include <GNSS/ROS2GNSSSensorComponent.h>
+#include <Georeference/GeoreferenceLevelComponent.h>
 #include <Gripper/FingerGripperComponent.h>
 #include <Gripper/GripperActionServerComponent.h>
 #include <Gripper/VacuumGripperComponent.h>
@@ -43,7 +44,6 @@
 #include <VehicleDynamics/ModelComponents/SkidSteeringModelComponent.h>
 #include <VehicleDynamics/VehicleModelComponent.h>
 #include <VehicleDynamics/WheelControllerComponent.h>
-#include <Georeference/GeoreferenceLevelComponent.h>
 
 namespace ROS2
 {

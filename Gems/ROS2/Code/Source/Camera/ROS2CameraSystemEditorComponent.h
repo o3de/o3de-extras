@@ -13,7 +13,7 @@
 
 namespace ROS2
 {
-    /// System component for ROS2 editor
+    /// Editor system component for ROS2 camera simulation.
     class ROS2EditorCameraSystemComponent
         : public ROS2SystemCameraComponent
         , private AzToolsFramework::EditorEntityContextNotificationBus::Handler
@@ -31,7 +31,6 @@ namespace ROS2
         static void GetProvidedServices(AZ::ComponentDescriptor::DependencyArrayType& provided);
         static void GetIncompatibleServices(AZ::ComponentDescriptor::DependencyArrayType& incompatible);
         static void GetRequiredServices(AZ::ComponentDescriptor::DependencyArrayType& required);
-        static void GetDependentServices(AZ::ComponentDescriptor::DependencyArrayType& dependent);
 
         //////////////////////////////////////////////////////////////////////////
         // Component overrides

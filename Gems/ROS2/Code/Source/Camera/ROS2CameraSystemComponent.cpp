@@ -19,7 +19,7 @@ namespace ROS2
 
            if (AZ::EditContext* ec = serialize->GetEditContext())
            {
-               ec->Class<ROS2SystemCameraComponent>("ROS2 System Camera Component", "This system component is responsible for the ROS2 Camera simulation.")
+               ec->Class<ROS2SystemCameraComponent>("ROS 2 System Camera Component", "This system component is responsible for setting a pass template for simulation of camera sensors.")
                    ->ClassElement(AZ::Edit::ClassElements::EditorData, "")
                    ->Attribute(AZ::Edit::Attributes::AppearsInAddComponentMenu, AZ_CRC_CE("System"))
                    ->Attribute(AZ::Edit::Attributes::Category, "ROS2")
@@ -44,14 +44,6 @@ namespace ROS2
        required.push_back(AZ_CRC_CE("RPISystem"));
    }
 
-   void ROS2SystemCameraComponent::GetDependentServices([[maybe_unused]] AZ::ComponentDescriptor::DependencyArrayType& dependent)
-   {
-   }
-
-   void ROS2SystemCameraComponent::Init()
-   {
-   }
-
    void ROS2SystemCameraComponent::InitPassTemplateMappingsHandler()
    {
        auto* passSystem = AZ::RPI::PassSystemInterface::Get();
@@ -67,7 +59,6 @@ namespace ROS2
 
    void ROS2SystemCameraComponent::Activate()
    {
-
        AZ::ApplicationTypeQuery appType;
        AZ::ComponentApplicationBus::Broadcast(&AZ::ComponentApplicationBus::Events::QueryApplicationType, appType);
        if (appType.IsGame() || appType.IsEditor())
@@ -91,5 +82,4 @@ namespace ROS2
        [[maybe_unused]] bool isOk = passSystem->LoadPassTemplateMappings(passTemplatesFile);
        AZ_Assert(isOk, "LoadPassTemplateMappings return false ");
    }
-
 } // namespace ROS2

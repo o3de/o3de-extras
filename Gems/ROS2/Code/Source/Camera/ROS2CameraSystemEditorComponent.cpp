@@ -40,11 +40,6 @@ namespace ROS2
         BaseSystemComponent::GetRequiredServices(required);
     }
 
-    void ROS2EditorCameraSystemComponent::GetDependentServices([[maybe_unused]] AZ::ComponentDescriptor::DependencyArrayType& dependent)
-    {
-        BaseSystemComponent::GetDependentServices(dependent);
-    }
-
     void ROS2EditorCameraSystemComponent::Activate()
     {
         AZ_Printf("ROS2EditorCameraSystemComponent", "ROS2EditorCameraSystemComponent::Activate()");
@@ -65,5 +60,4 @@ namespace ROS2
     {
         BaseSystemComponent::Deactivate();
     }
-
 } // namespace ROS2

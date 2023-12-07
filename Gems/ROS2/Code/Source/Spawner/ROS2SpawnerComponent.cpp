@@ -32,7 +32,7 @@ namespace ROS2
         ROS2SpawnerComponentBase::Activate();
 
         auto ros2Node = ROS2Interface::Get()->GetNode();
-        AZ_Assert(ros2Node, "ROS2 node is not initialized");
+        AZ_Assert(ros2Node, "ROS 2 node is not initialized");
 
         m_getSpawnablesNamesService = ros2Node->create_service<gazebo_msgs::srv::GetWorldProperties>(
             "get_available_spawnable_namespawnable_names",

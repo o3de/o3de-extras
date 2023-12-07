@@ -20,6 +20,8 @@ set(FILES
         Source/Camera/CameraSensorConfiguration.h
         Source/Camera/ROS2CameraSensorComponent.cpp
         Source/Camera/ROS2CameraSensorComponent.h
+        Source/Camera/ROS2CameraSystemComponent.cpp
+        Source/Camera/ROS2CameraSystemComponent.h
         Source/Camera/CameraUtilities.cpp
         Source/Camera/CameraUtilities.h
         Source/Clock/PhysicallyStableClock.cpp
@@ -124,8 +126,6 @@ set(FILES
         Source/Spawner/ROS2SpawnerComponentController.h
         Source/Spawner/ROS2SpawnPointComponentController.cpp
         Source/Spawner/ROS2SpawnPointComponentController.h
-        Source/SystemComponents/ROS2CameraSystemComponent.cpp
-        Source/SystemComponents/ROS2CameraSystemComponent.h
         Source/SystemComponents/ROS2SystemComponent.cpp
         Source/SystemComponents/ROS2SystemComponent.h
         Source/SystemComponents/ROS2SystemComponent.h

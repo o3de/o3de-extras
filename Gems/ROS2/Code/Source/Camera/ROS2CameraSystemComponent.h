@@ -25,7 +25,6 @@ namespace ROS2
        static void GetProvidedServices(AZ::ComponentDescriptor::DependencyArrayType& provided);
        static void GetIncompatibleServices(AZ::ComponentDescriptor::DependencyArrayType& incompatible);
        static void GetRequiredServices(AZ::ComponentDescriptor::DependencyArrayType& required);
-       static void GetDependentServices(AZ::ComponentDescriptor::DependencyArrayType& dependent);
 
        ROS2SystemCameraComponent() = default;
        ~ROS2SystemCameraComponent() override = default;
@@ -36,7 +35,6 @@ namespace ROS2
    protected:
        ////////////////////////////////////////////////////////////////////////
        // AZ::Component override
-       void Init() override;
        void Activate() override;
        void Deactivate() override;
        ////////////////////////////////////////////////////////////////////////
