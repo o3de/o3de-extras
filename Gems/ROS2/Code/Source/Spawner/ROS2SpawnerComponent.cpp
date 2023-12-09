@@ -136,8 +136,7 @@ namespace ROS2
 
         if (spawnable->second->IsLoading())
         {
-            // This check is done during the simulation. All assets in the build of the simulation are loaded and processed.
-            // This will only run when the simulation is started before all assets are processed.
+            // This is an Editor only situation. All assets during game mode are fully loaded.
             response.success = false;
             response.status_message = "Asset for spawnable " + request->name + " has not yet loaded.";
             service_handle->send_response(*header, response);
@@ -147,7 +146,7 @@ namespace ROS2
         if (spawnable->second->IsError())
         {
             response.success = false;
-            response.status_message = "Spawnable " + request->name + " loaded with an error";
+            response.status_message = "Spawnable " + request->name + " loaded with an error.";
             service_handle->send_response(*header, response);
             return;
         }
