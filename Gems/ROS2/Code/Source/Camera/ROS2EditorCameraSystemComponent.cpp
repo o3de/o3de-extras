@@ -5,7 +5,7 @@
  * SPDX-License-Identifier: Apache-2.0 OR MIT
  *
  */
-#include "ROS2CameraSystemEditorComponent.h"
+#include "ROS2EditorCameraSystemComponent.h"
 #include <AzCore/Component/ComponentApplicationBus.h>
 #include <AzCore/Serialization/SerializeContext.h>
 
@@ -18,10 +18,6 @@ namespace ROS2
             serializeContext->Class<ROS2EditorCameraSystemComponent, BaseSystemComponent>()->Version(0);
         }
     }
-
-    ROS2EditorCameraSystemComponent::ROS2EditorCameraSystemComponent() = default;
-
-    ROS2EditorCameraSystemComponent::~ROS2EditorCameraSystemComponent() = default;
 
     void ROS2EditorCameraSystemComponent::GetProvidedServices(AZ::ComponentDescriptor::DependencyArrayType& provided)
     {

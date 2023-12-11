@@ -12,7 +12,7 @@
 
 namespace ROS2
 {
-    //! System Component for Camera simulation in ROS2.
+    //! System Component for Camera simulation in ROS 2.
    class ROS2SystemCameraComponent
        : public AZ::Component
    {
@@ -24,9 +24,6 @@ namespace ROS2
        static void GetProvidedServices(AZ::ComponentDescriptor::DependencyArrayType& provided);
        static void GetIncompatibleServices(AZ::ComponentDescriptor::DependencyArrayType& incompatible);
        static void GetRequiredServices(AZ::ComponentDescriptor::DependencyArrayType& required);
-
-       ROS2SystemCameraComponent() = default;
-       ~ROS2SystemCameraComponent() override = default;
 
        void InitPassTemplateMappingsHandler();
 

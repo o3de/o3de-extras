@@ -6,7 +6,7 @@
  *
  */
 #include <Camera/ROS2CameraSensorEditorComponent.h>
-#include <Camera/ROS2CameraSystemEditorComponent.h>
+#include <Camera/ROS2EditorCameraSystemComponent.h>
 #include <Georeference/GeoreferenceLevelEditorComponent.h>
 #include <Lidar/LidarRegistrarEditorSystemComponent.h>
 #include <Manipulation/JointsManipulationEditorComponent.h>
