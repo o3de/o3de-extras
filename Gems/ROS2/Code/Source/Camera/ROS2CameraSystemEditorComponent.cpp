@@ -35,14 +35,13 @@ namespace ROS2
         incompatible.push_back(AZ_CRC_CE("ROS2EditorCameraSystemService"));
     }
 
-    void ROS2EditorCameraSystemComponent::GetRequiredServices([[maybe_unused]] AZ::ComponentDescriptor::DependencyArrayType& required)
+    void ROS2EditorCameraSystemComponent::GetRequiredServices(AZ::ComponentDescriptor::DependencyArrayType& required)
     {
         BaseSystemComponent::GetRequiredServices(required);
     }
 
     void ROS2EditorCameraSystemComponent::Activate()
     {
-        AZ_Printf("ROS2EditorCameraSystemComponent", "ROS2EditorCameraSystemComponent::Activate()");
         AzToolsFramework::EditorEntityContextNotificationBus::Handler::BusConnect();
         BaseSystemComponent::Activate();
     }

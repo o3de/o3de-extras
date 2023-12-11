@@ -79,7 +79,7 @@ namespace ROS2
        AZ_Assert(passSystem, "PassSystemInterface is null");
 
        const char* passTemplatesFile = "Passes/ROSPassTemplates.azasset";
-       [[maybe_unused]] bool isOk = passSystem->LoadPassTemplateMappings(passTemplatesFile);
+       [[maybe_unused]] const bool isOk = passSystem->LoadPassTemplateMappings(passTemplatesFile);
        AZ_Assert(isOk, "LoadPassTemplateMappings return false ");
    }
 } // namespace ROS2

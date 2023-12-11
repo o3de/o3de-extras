@@ -128,7 +128,6 @@ set(FILES
         Source/Spawner/ROS2SpawnPointComponentController.h
         Source/SystemComponents/ROS2SystemComponent.cpp
         Source/SystemComponents/ROS2SystemComponent.h
-        Source/SystemComponents/ROS2SystemComponent.h
         Source/Utilities/ArticulationsUtilities.cpp
         Source/Utilities/ArticulationsUtilities.h
         Source/Utilities/JointUtilities.cpp

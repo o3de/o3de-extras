@@ -7,8 +7,8 @@
  */
 #pragma once
 
-#include "Camera/ROS2CameraSystemComponent.h"
-#include "SystemComponents/ROS2SystemComponent.h"
+#include <Camera/ROS2CameraSystemComponent.h>
+#include <SystemComponents/ROS2SystemComponent.h>
 #include <AzCore/Memory/SystemAllocator.h>
 #include <AzCore/Module/Module.h>
 #include <Camera/ROS2CameraSensorComponent.h>

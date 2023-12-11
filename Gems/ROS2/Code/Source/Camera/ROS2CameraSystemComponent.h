@@ -12,7 +12,6 @@
 
 namespace ROS2
 {
-
     //! System Component for Camera simulation in ROS2.
    class ROS2SystemCameraComponent
        : public AZ::Component
@@ -29,7 +28,6 @@ namespace ROS2
        ROS2SystemCameraComponent() = default;
        ~ROS2SystemCameraComponent() override = default;
 
-
        void InitPassTemplateMappingsHandler();
 
    protected:
@@ -39,9 +37,8 @@ namespace ROS2
        void Deactivate() override;
        ////////////////////////////////////////////////////////////////////////
 
-
    private:
-       //! Load the pass templates of the ROS2 Camera.
+       //! Load the pass templates of the ROS 2 Camera.
        void LoadPassTemplateMappings();
        AZ::RPI::PassSystemInterface::OnReadyLoadTemplatesEvent::Handler m_loadTemplatesHandler;
    };
