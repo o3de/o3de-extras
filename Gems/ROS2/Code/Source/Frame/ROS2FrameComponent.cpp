@@ -85,21 +85,13 @@ namespace ROS2
         void* outputValue, const AZ::Uuid& outputValueTypeId, const rapidjson::Value& inputValue, AZ::JsonDeserializerContext& context)
     {
         auto ros2frameSystemInterface = ROS2FrameSystemInterface::Get();
-        if (ros2frameSystemInterface == nullptr)
+        AZ_Error(
+            "ROS2FrameComponent",
+            false,
+            "An old version of the ROS2FrameComponent is being loaded. Manual conversion is required. The conversion script is located in: "
+            "o3de-extras/Gems/ROS2/Code/Source/Frame/Conversions/FrameConversion.py");
+        if (ros2frameSystemInterface != nullptr)
         {
-            AZ_Warning(
-                "ROS2FrameComponent",
-                false,
-                "An old version of the ROS2FrameComponent is being loaded. The loaded components will work as intended but will not be "
-                "displayed in the editor. Manual conversion is required.");
-        }
-        else
-        {
-            AZ_Warning(
-                "ROS2FrameComponent",
-                false,
-                "An old version of the ROS2FrameComponent is being loaded. This component will be automatically converted to the new "
-                "ROS2FrameEditorComponent.");
             ros2frameSystemInterface->InformAboutNeededConversion();
         }
 
