@@ -65,7 +65,6 @@ namespace ROS2::SDFormat
             {
                 const auto wheelComponentPtr = HooksUtils::CreateComponent<VehicleDynamics::WheelControllerComponent>(*entity);
                 AZ_Warning("HooksUtils", wheelComponentPtr != nullptr, "Cannot create WheelControllerComponent in articulation link.");
-
                 return;
             }
         }

@@ -26,10 +26,10 @@ namespace ROS2::SDFormat
 {
     namespace HooksUtils
     {
-        //! Add a ROS2 topic configuration to sensor parameters.
+        //! Add a ROS 2 topic configuration to sensor parameters.
         //! @param sensorConfig sensor's configuration which hosts multiple topic configurations
-        //! @param topic ROS2 topic name
-        //! @param messageType ROS2 message type
+        //! @param topic ROS 2 topic name
+        //! @param messageType ROS 2 message type
         //! @param configName name under which topic configuration is stored in sensor's configuration
         void AddTopicConfiguration(
             SensorConfiguration& sensorConfig,

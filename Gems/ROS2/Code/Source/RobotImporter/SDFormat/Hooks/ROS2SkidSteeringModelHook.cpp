@@ -41,7 +41,7 @@ namespace ROS2::SDFormat
                     HooksUtils::EnableMotor(entityIdRight);
                     constexpr bool steering = false; // Skid steering model does not have any steering wheels.
                     constexpr bool drive = true;
-                    configuration.m_axles.emplace_back(ROS2::VehicleDynamics::Utilities::Create2WheelAxle(
+                    configuration.m_axles.emplace_back(VehicleDynamics::Utilities::Create2WheelAxle(
                         entityIdLeft, entityIdRight, AZStd::move(tag), wheelDiameter / 2.0f, steering, drive));
                 }
                 else
@@ -193,7 +193,7 @@ namespace ROS2::SDFormat
             }
             else
             {
-                return AZ::Failure(AZStd::string("Failed to create ROS2 Skid Steering Control Component"));
+                return AZ::Failure(AZStd::string("Failed to create ROS 2 Skid Steering Control Component"));
             }
         };
 
