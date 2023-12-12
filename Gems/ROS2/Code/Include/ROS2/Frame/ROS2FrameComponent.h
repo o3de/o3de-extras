@@ -123,7 +123,15 @@ namespace ROS2
         //! @see GetGlobalFrameName().
         AZStd::string GetParentFrameID() const;
 
-        ROS2FrameConfiguration m_configuration;
+        // ROS2FrameConfiguration m_configuration;
+
+        // Deprecated values used for backwards compatibility
+        NamespaceConfiguration m_namespaceConfiguration;
+        AZStd::string m_frameName;
+        AZStd::string m_jointName;
+
+        bool m_publishTransform;
+        bool m_isDynamic;
 
         AZStd::unique_ptr<ROS2Transform> m_ros2Transform;
     };

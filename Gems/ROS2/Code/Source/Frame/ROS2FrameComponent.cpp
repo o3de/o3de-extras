@@ -88,7 +88,9 @@ namespace ROS2
         AZ_Error(
             "ROS2FrameComponent",
             false,
-            "An old version of the ROS2FrameComponent is being loaded. Manual conversion is required. The conversion script is located in: "
+            "An old version of the ROS2FrameComponent is being loaded. These components will be converted to the new "
+            "ROS2EditorFrameComponents, but NOT SAVED. Manual conversion to save the new project is required. The conversion script is "
+            "located in: "
             "o3de-extras/Gems/ROS2/Code/Source/Frame/Conversions/FrameConversion.py");
         if (ros2frameSystemInterface != nullptr)
         {
@@ -104,28 +106,20 @@ namespace ROS2
 
         {
             JSR::ResultCode componentIdLoadResult = ContinueLoadingFromJsonObjectField(
-                &configInstance->m_configuration.m_jointName,
-                azrtti_typeid<decltype(configInstance->m_configuration.m_jointName)>(),
-                inputValue,
-                "Joint Name",
-                context);
+                &configInstance->m_jointName, azrtti_typeid<decltype(configInstance->m_jointName)>(), inputValue, "Joint Name", context);
 
             result.Combine(componentIdLoadResult);
         }
         {
             JSR::ResultCode componentIdLoadResult = ContinueLoadingFromJsonObjectField(
-                &configInstance->m_configuration.m_frameName,
-                azrtti_typeid<decltype(configInstance->m_configuration.m_frameName)>(),
-                inputValue,
-                "Frame Name",
-                context);
+                &configInstance->m_frameName, azrtti_typeid<decltype(configInstance->m_frameName)>(), inputValue, "Frame Name", context);
 
             result.Combine(componentIdLoadResult);
         }
         {
             JSR::ResultCode componentIdLoadResult = ContinueLoadingFromJsonObjectField(
-                &configInstance->m_configuration.m_publishTransform,
-                azrtti_typeid<decltype(configInstance->m_configuration.m_publishTransform)>(),
+                &configInstance->m_publishTransform,
+                azrtti_typeid<decltype(configInstance->m_publishTransform)>(),
                 inputValue,
                 "Publish Transform",
                 context);
@@ -134,21 +128,14 @@ namespace ROS2
         }
         {
             JSR::ResultCode componentIdLoadResult = ContinueLoadingFromJsonObjectField(
-                &configInstance->m_configuration.m_namespaceConfiguration,
-                azrtti_typeid<decltype(configInstance->m_configuration.m_namespaceConfiguration)>(),
+                &configInstance->m_namespaceConfiguration,
+                azrtti_typeid<decltype(configInstance->m_namespaceConfiguration)>(),
                 inputValue,
                 "Namespace Configuration",
                 context);
 
             result.Combine(componentIdLoadResult);
         }
-
-        result.Combine(ContinueLoadingFromJsonObjectField(
-            &configInstance->m_configuration,
-            azrtti_typeid<decltype(configInstance->m_configuration)>(),
-            inputValue,
-            "ROS2FrameConfiguration",
-            context));
 
         return context.Report(
             result,
@@ -160,16 +147,16 @@ namespace ROS2
 
     void ROS2FrameComponent::Activate()
     {
-        m_configuration.m_namespaceConfiguration.PopulateNamespace(IsTopLevel(), GetEntity()->GetName());
+        m_namespaceConfiguration.PopulateNamespace(IsTopLevel(), GetEntity()->GetName());
 
-        if (m_configuration.m_publishTransform)
+        if (m_publishTransform)
         {
             AZ_TracePrintf("ROS2FrameComponent", "Setting up %s", GetFrameID().data());
 
             // The frame will always be dynamic if it's a top entity.
             if (IsTopLevel())
             {
-                m_configuration.m_isDynamic = true;
+                m_isDynamic = true;
             }
             // Otherwise it'll be dynamic when it has joints and it's not a fixed joint.
             else
@@ -180,7 +167,7 @@ namespace ROS2
                     m_entity, AZ::Uuid("{02E6C633-8F44-4CEE-AE94-DCB06DE36422}")); // Physx::FixedJointComponent
                 const bool hasArticulations = Internal::CheckIfEntityHasComponentOfType(
                     m_entity, AZ::Uuid("{48751E98-B35F-4A2F-A908-D9CDD5230264}")); // Physx::ArticulationComponent
-                m_configuration.m_isDynamic = (hasJoints && !hasFixedJoints) || hasArticulations;
+                m_isDynamic = (hasJoints && !hasFixedJoints) || hasArticulations;
             }
 
             AZ_TracePrintf(
@@ -205,7 +192,7 @@ namespace ROS2
 
     void ROS2FrameComponent::Deactivate()
     {
-        if (m_configuration.m_publishTransform)
+        if (m_publishTransform)
         {
             if (IsDynamic())
             {
@@ -228,7 +215,7 @@ namespace ROS2
     void ROS2FrameComponent::UpdateNamespaceConfiguration(
         const AZStd::string& ros2Namespace, NamespaceConfiguration::NamespaceStrategy strategy)
     {
-        m_configuration.m_namespaceConfiguration.SetNamespace(ros2Namespace, strategy);
+        m_namespaceConfiguration.SetNamespace(ros2Namespace, strategy);
     }
 
     bool ROS2FrameComponent::IsTopLevel() const
@@ -238,7 +225,7 @@ namespace ROS2
 
     bool ROS2FrameComponent::IsDynamic() const
     {
-        return m_configuration.m_isDynamic;
+        return m_isDynamic;
     }
 
     const ROS2FrameComponent* ROS2FrameComponent::GetParentROS2FrameComponent() const
@@ -274,12 +261,12 @@ namespace ROS2
 
     AZStd::string ROS2FrameComponent::GetFrameID() const
     {
-        return ROS2Names::GetNamespacedName(GetNamespace(), m_configuration.m_frameName);
+        return ROS2Names::GetNamespacedName(GetNamespace(), m_frameName);
     }
 
     void ROS2FrameComponent::SetFrameID(const AZStd::string& frameId)
     {
-        m_configuration.m_frameName = frameId;
+        m_frameName = frameId;
     }
 
     AZStd::string ROS2FrameComponent::GetNamespace() const
@@ -290,17 +277,17 @@ namespace ROS2
         {
             parentNamespace = parentFrame->GetNamespace();
         }
-        return m_configuration.m_namespaceConfiguration.GetNamespace(parentNamespace);
+        return m_namespaceConfiguration.GetNamespace(parentNamespace);
     }
 
     AZ::Name ROS2FrameComponent::GetJointName() const
     {
-        return AZ::Name(ROS2Names::GetNamespacedName(GetNamespace(), m_configuration.m_jointName).c_str());
+        return AZ::Name(ROS2Names::GetNamespacedName(GetNamespace(), m_jointName).c_str());
     }
 
     void ROS2FrameComponent::SetJointName(const AZStd::string& jointName)
     {
-        m_configuration.m_jointName = jointName;
+        m_jointName = jointName;
     }
 
     void ROS2FrameComponent::Reflect(AZ::ReflectContext* context)
@@ -313,8 +300,13 @@ namespace ROS2
         ROS2FrameConfiguration::Reflect(context);
         if (AZ::SerializeContext* serialize = azrtti_cast<AZ::SerializeContext*>(context))
         {
-            serialize->Class<ROS2FrameComponent, AZ::Component>()->Version(1)->Field(
-                "ROS2FrameConfiguration", &ROS2FrameComponent::m_configuration);
+            serialize->Class<ROS2FrameComponent, AZ::Component>()
+                ->Version(1)
+                // ->Field("ROS2FrameConfiguration", &ROS2FrameComponent::m_configuration)
+                ->Field("Frame Name", &ROS2FrameComponent::m_frameName)
+                ->Field("Joint Name", &ROS2FrameComponent::m_jointName)
+                ->Field("Publish Transform", &ROS2FrameComponent::m_publishTransform)
+                ->Field("Namespace Configuration", &ROS2FrameComponent::m_namespaceConfiguration);
         }
     }
 
@@ -333,14 +325,24 @@ namespace ROS2
         required.push_back(AZ_CRC_CE("TransformService"));
     }
 
-    ROS2FrameComponent::ROS2FrameComponent() = default;
+    ROS2FrameComponent::ROS2FrameComponent(){};
 
-    ROS2FrameComponent::ROS2FrameComponent(const ROS2FrameConfiguration& configuration) {
-        m_configuration = configuration;
-    }
+    ROS2FrameComponent::ROS2FrameComponent(const ROS2FrameConfiguration& configuration)
+        : m_namespaceConfiguration(configuration.m_namespaceConfiguration)
+        , m_frameName(configuration.m_frameName)
+        , m_jointName(configuration.m_jointName)
+        , m_publishTransform(configuration.m_publishTransform)
+        , m_isDynamic(configuration.m_isDynamic){};
 
     ROS2FrameConfiguration ROS2FrameComponent::GetConfiguration() const
     {
-        return m_configuration;
+        ROS2FrameConfiguration configuration;
+        configuration.m_namespaceConfiguration = m_namespaceConfiguration;
+        configuration.m_frameName = m_frameName;
+        configuration.m_jointName = m_jointName;
+        configuration.m_publishTransform = m_publishTransform;
+        configuration.m_isDynamic = m_isDynamic;
+
+        return configuration;
     }
 } // namespace ROS2
