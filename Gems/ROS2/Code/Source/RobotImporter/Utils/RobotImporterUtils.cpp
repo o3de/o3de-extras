@@ -515,7 +515,8 @@ namespace ROS2::Utils
     const sdf::Model* GetModelContainingLink(const sdf::Root& root, AZStd::string_view fullyQualifiedLinkName)
     {
         const sdf::Model* resultModel{};
-        auto IsLinkInModel = [&fullyQualifiedLinkName, &resultModel](const sdf::Model& model, const ModelStack&) -> VisitModelResponse
+        auto IsLinkInModel = [&fullyQualifiedLinkName,
+                              &resultModel](const sdf::Model& model, const ModelStack&) -> VisitModelResponse
         {
             const std::string stdLinkName(fullyQualifiedLinkName.data(), fullyQualifiedLinkName.size());
             if (const sdf::Link* searchLink = model.LinkByName(stdLinkName); searchLink != nullptr)
@@ -711,12 +712,16 @@ namespace ROS2::Utils
         return filenames;
     }
 
-    AZ::IO::Path ResolveAmentPrefixPath(AZ::IO::Path unresolvedPath, AZStd::string_view amentPrefixPath, const FileExistsCB& fileExistsCB)
+    AZ::IO::Path ResolveAmentPrefixPath(
+        AZ::IO::Path unresolvedPath,
+        AZStd::string_view amentPrefixPath,
+        const FileExistsCB& fileExistsCB)
     {
         AZStd::vector<AZ::IO::Path> amentPrefixPaths;
 
         // Parse the AMENT_PREFIX_PATH environment variable into a set of distinct paths.
-        auto AmentPrefixPathVisitor = [&amentPrefixPaths](AZStd::string_view prefixPath)
+        auto AmentPrefixPathVisitor = [&amentPrefixPaths](
+            AZStd::string_view prefixPath)
         {
             amentPrefixPaths.push_back(prefixPath);
         };
@@ -727,7 +732,7 @@ namespace ROS2::Utils
         AZ::IO::PathView strippedPath;
 
         // The AMENT_PREFIX_PATH is only used for lookups if the URI starts with "model://" or "package://"
-        constexpr AZStd::string_view ValidAmentPrefixes[] = { "model://", "package://" };
+        constexpr AZStd::string_view ValidAmentPrefixes[] = {"model://", "package://"};
         for (const auto& prefix : ValidAmentPrefixes)
         {
             // Perform a case-sensitive check to look for the prefix.
@@ -766,12 +771,8 @@ namespace ROS2::Utils
             if (const AZ::IO::Path candidateResolvedPath = amentSharePath / strippedPath;
                 fileExistsCB(packageManifestPath) && fileExistsCB(candidateResolvedPath))
             {
-                AZ_Trace(
-                    "ResolveAssetPath",
-                    R"(Resolved using AMENT_PREFIX_PATH: "%.*s" -> "%.*s")"
-                    "\n",
-                    AZ_PATH_ARG(unresolvedPath),
-                    AZ_PATH_ARG(candidateResolvedPath));
+                AZ_Trace("ResolveAssetPath", R"(Resolved using AMENT_PREFIX_PATH: "%.*s" -> "%.*s")" "\n",
+                    AZ_PATH_ARG(unresolvedPath), AZ_PATH_ARG(candidateResolvedPath));
                 return candidateResolvedPath;
             }
         }
@@ -795,8 +796,7 @@ namespace ROS2::Utils
         // If the settings tell us to try the AMENT_PREFIX_PATH, use that first to try and resolve path.
         if (pathResolverSettings.m_useAmentPrefixPath)
         {
-            if (AZ::IO::Path amentResolvedPath = ResolveAmentPrefixPath(unresolvedPath, amentPrefixPath, fileExistsCB);
-                !amentResolvedPath.empty())
+            if (AZ::IO::Path amentResolvedPath = ResolveAmentPrefixPath(unresolvedPath, amentPrefixPath, fileExistsCB); !amentResolvedPath.empty())
             {
                 return amentResolvedPath;
             }
@@ -846,11 +846,7 @@ namespace ROS2::Utils
                 // There's no match.
                 if (replacedUriPath.empty())
                 {
-                    AZ_Trace(
-                        "ResolveAssetPath",
-                        R"(Resolved Path is empty: "%.*s" -> "")"
-                        "\n",
-                        AZ_PATH_ARG(unresolvedPath));
+                    AZ_Trace("ResolveAssetPath", R"(Resolved Path is empty: "%.*s" -> "")" "\n", AZ_PATH_ARG(unresolvedPath));
                     return {};
                 }
 
@@ -860,12 +856,8 @@ namespace ROS2::Utils
                 {
                     if (fileExistsCB(replacedUriPath))
                     {
-                        AZ_Trace(
-                            "ResolveAssetPath",
-                            R"(Resolved Absolute Path: "%.*s" -> "%.*s")"
-                            "\n",
-                            AZ_PATH_ARG(unresolvedPath),
-                            AZ_PATH_ARG(replacedUriPath));
+                        AZ_Trace("ResolveAssetPath", R"(Resolved Absolute Path: "%.*s" -> "%.*s")" "\n",
+                            AZ_PATH_ARG(unresolvedPath), AZ_PATH_ARG(replacedUriPath));
                         return replacedUriPath;
                     }
                     else
@@ -878,14 +870,11 @@ namespace ROS2::Utils
                 // The URI path is not absolute, so attempt to append it to the ancestor directories of the URDF/SDF file
                 for (const AZ::IO::Path& ancestorPath : ancestorPaths)
                 {
-                    if (const AZ::IO::Path candidateResolvedPath = ancestorPath / replacedUriPath; fileExistsCB(candidateResolvedPath))
+                    if (const AZ::IO::Path candidateResolvedPath = ancestorPath / replacedUriPath;
+                        fileExistsCB(candidateResolvedPath))
                     {
-                        AZ_Trace(
-                            "ResolveAssetPath",
-                            R"(Resolved using ancestor paths: "%.*s" -> "%.*s")"
-                            "\n",
-                            AZ_PATH_ARG(unresolvedPath),
-                            AZ_PATH_ARG(candidateResolvedPath));
+                        AZ_Trace("ResolveAssetPath", R"(Resolved using ancestor paths: "%.*s" -> "%.*s")" "\n",
+                            AZ_PATH_ARG(unresolvedPath), AZ_PATH_ARG(candidateResolvedPath));
                         return candidateResolvedPath;
                     }
                 }
@@ -898,19 +887,13 @@ namespace ROS2::Utils
         {
             if (fileExistsCB(unresolvedPath))
             {
-                AZ_Trace(
-                    "ResolveAssetPath",
-                    R"(Resolved Absolute Path: "%.*s")"
-                    "\n",
+                AZ_Trace("ResolveAssetPath", R"(Resolved Absolute Path: "%.*s")" "\n",
                     AZ_PATH_ARG(unresolvedPath));
                 return unresolvedPath;
             }
             else
             {
-                AZ_Trace(
-                    "ResolveAssetPath",
-                    R"(Failed to resolve Absolute Path: "%.*s")"
-                    "\n",
+                AZ_Trace("ResolveAssetPath", R"(Failed to resolve Absolute Path: "%.*s")" "\n",
                     AZ_PATH_ARG(unresolvedPath));
                 return {};
             }
@@ -922,21 +905,13 @@ namespace ROS2::Utils
 
         if (fileExistsCB(relativePath))
         {
-            AZ_Trace(
-                "ResolveAssetPath",
-                R"(Resolved Relative Path: "%.*s" -> "%.*s")"
-                "\n",
-                AZ_PATH_ARG(unresolvedPath),
-                AZ_PATH_ARG(relativePath));
+            AZ_Trace("ResolveAssetPath", R"(Resolved Relative Path: "%.*s" -> "%.*s")" "\n",
+                AZ_PATH_ARG(unresolvedPath), AZ_PATH_ARG(relativePath));
             return relativePath;
         }
 
-        AZ_Trace(
-            "ResolveAssetPath",
-            R"(Failed to resolve Relative Path: "%.*s" -> "%.*s")"
-            "\n",
-            AZ_PATH_ARG(unresolvedPath),
-            AZ_PATH_ARG(relativePath));
+        AZ_Trace("ResolveAssetPath", R"(Failed to resolve Relative Path: "%.*s" -> "%.*s")" "\n",
+            AZ_PATH_ARG(unresolvedPath), AZ_PATH_ARG(relativePath));
         return {};
     }
     AmentPrefixString GetAmentPrefixPath()
@@ -1056,21 +1031,20 @@ namespace ROS2::Utils::SDFormat
 
         // If any files couldn't be found using our supplied prefix mappings, this callback will get called.
         // Attempt to use our full path resolution, and print a warning if it still couldn't be resolved.
-        sdfConfig.SetFindCallback(
-            [settings, baseFilePath](const std::string& fileName) -> std::string
+        sdfConfig.SetFindCallback([settings, baseFilePath](const std::string &fileName) -> std::string
+        {
+            auto amentPrefixPath = Utils::GetAmentPrefixPath();
+
+            auto resolved = Utils::ResolveAssetPath(AZ::IO::Path(fileName.c_str()), baseFilePath, amentPrefixPath, settings);
+            if (!resolved.empty())
             {
-                auto amentPrefixPath = Utils::GetAmentPrefixPath();
+                AZ_Trace("SdfParserConfig", "SDF SetFindCallback resolved '%s' -> '%s'", fileName.c_str(), resolved.c_str());
+                return resolved.c_str();
+            }
 
-                auto resolved = Utils::ResolveAssetPath(AZ::IO::Path(fileName.c_str()), baseFilePath, amentPrefixPath, settings);
-                if (!resolved.empty())
-                {
-                    AZ_Trace("SdfParserConfig", "SDF SetFindCallback resolved '%s' -> '%s'", fileName.c_str(), resolved.c_str());
-                    return resolved.c_str();
-                }
-
-                AZ_Warning("SdfParserConfig", false, "SDF SetFindCallback failed to resolve '%s'", fileName.c_str());
-                return fileName;
-            });
+            AZ_Warning("SdfParserConfig", false, "SDF SetFindCallback failed to resolve '%s'", fileName.c_str());
+            return fileName;
+        });
 
         return sdfConfig;
     }
