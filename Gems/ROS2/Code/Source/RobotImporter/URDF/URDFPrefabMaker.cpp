@@ -489,7 +489,7 @@ namespace ROS2
             }
         }
 
-        // Use the first entity based on a link that is not parented to any other link
+        // Add control components to links that are not parented to any other link (first link of each model) based on SDFormat data.
         if (!linkEntityIdsWithoutParent.empty())
         {
             for (const auto& [contentEntityId, modelPtr] : linkEntityIdsWithoutParent)

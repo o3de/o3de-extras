@@ -47,14 +47,19 @@ namespace ROS2
         const SDFormat::SensorImporterHooksStorage& GetSensorHooks() const override;
         const SDFormat::ModelPluginImporterHooksStorage& GetModelPluginHooks() const override;
 
-        // Method for parsing attributes used for both sensor importer hooks and model plugin importer hooks
+        //! Callback for finding hooks defined in class reflection for certain SerializeContext attribute. This callback should be used
+        //! with EnumerateAll method and it is meant to be called only once, as the search results are copied and can be reused.
+        //! @param outputBuffer output buffer where hooks are copied
+        //! @param classData serialization context in which queried attribute might exist.
+        //! @param attributeName name of the attribute used to store hooks.
+        //! @return true if not found; false if found (stop iterating)
         template<typename T>
-        bool ParseAttributes(T& outputBuffer, const AZ::SerializeContext::ClassData* classData, const AZStd::string& attributeName)
+        bool CopyHooksCallback(T& outputBuffer, const AZ::SerializeContext::ClassData* classData, const AZStd::string& attributeName)
         {
             auto* attribute = AZ::FindAttribute(AZ::Crc32(attributeName.c_str()), classData->m_attributes);
             if (attribute == nullptr)
             {
-                return true;
+                return true; // attribute not found; keep iterating
             }
 
             AZ::AttributeReader reader(nullptr, attribute);
@@ -64,7 +69,7 @@ namespace ROS2
                 outputBuffer.insert(outputBuffer.end(), readData.begin(), readData.end());
             }
 
-            return false;
+            return false; // attribute found, hooks copied; stop iterating
         }
 
         // Timeout for loop waiting for assets to be built

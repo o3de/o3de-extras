@@ -83,13 +83,13 @@ namespace ROS2
         serializeContext->EnumerateAll(
             [&](const AZ::SerializeContext::ClassData* classData, const AZ::Uuid& typeId) -> bool
             {
-                return ParseAttributes<SDFormat::SensorImporterHooksStorage>(m_sensorHooks, classData, "SensorImporterHooks");
+                return CopyHooksCallback<SDFormat::SensorImporterHooksStorage>(m_sensorHooks, classData, "SensorImporterHooks");
             });
 
         serializeContext->EnumerateAll(
             [&](const AZ::SerializeContext::ClassData* classData, const AZ::Uuid& typeId) -> bool
             {
-                return ParseAttributes<SDFormat::ModelPluginImporterHooksStorage>(
+                return CopyHooksCallback<SDFormat::ModelPluginImporterHooksStorage>(
                     m_modelPluginHooks, classData, "ModelPluginImporterHooks");
             });
     }
