@@ -52,14 +52,14 @@ namespace ROS2
         //! @param outputBuffer output buffer where hooks are copied
         //! @param classData serialization context in which queried attribute might exist.
         //! @param attributeName name of the attribute used to store hooks.
-        //! @return true if not found; false if found (stop iterating)
+        //! @return this method returns always true, to enforce EnumerateAll method to iterate over all classes
         template<typename T>
         bool CopyHooksCallback(T& outputBuffer, const AZ::SerializeContext::ClassData* classData, const AZStd::string& attributeName)
         {
             auto* attribute = AZ::FindAttribute(AZ::Crc32(attributeName.c_str()), classData->m_attributes);
             if (attribute == nullptr)
             {
-                return true; // attribute not found; keep iterating
+                return true; // attribute not found, keep iterating
             }
 
             AZ::AttributeReader reader(nullptr, attribute);
@@ -69,7 +69,7 @@ namespace ROS2
                 outputBuffer.insert(outputBuffer.end(), readData.begin(), readData.end());
             }
 
-            return false; // attribute found, hooks copied; stop iterating
+            return true; // attribute found, keep iterating to find hooks declared in other classes
         }
 
         // Timeout for loop waiting for assets to be built
