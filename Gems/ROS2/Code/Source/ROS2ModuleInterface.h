@@ -7,12 +7,14 @@
  */
 #pragma once
 
-#include "ROS2SystemComponent.h"
+#include <Camera/ROS2CameraSystemComponent.h>
+#include <SystemComponents/ROS2SystemComponent.h>
 #include <AzCore/Memory/SystemAllocator.h>
 #include <AzCore/Module/Module.h>
 #include <Camera/ROS2CameraSensorComponent.h>
 #include <ContactSensor/ROS2ContactSensorComponent.h>
 #include <GNSS/ROS2GNSSSensorComponent.h>
+#include <Georeference/GeoreferenceLevelComponent.h>
 #include <Gripper/FingerGripperComponent.h>
 #include <Gripper/GripperActionServerComponent.h>
 #include <Gripper/VacuumGripperComponent.h>
@@ -42,7 +44,6 @@
 #include <VehicleDynamics/ModelComponents/SkidSteeringModelComponent.h>
 #include <VehicleDynamics/VehicleModelComponent.h>
 #include <VehicleDynamics/WheelControllerComponent.h>
-#include <Georeference/GeoreferenceLevelComponent.h>
 
 namespace ROS2
 {
@@ -58,6 +59,7 @@ namespace ROS2
                 m_descriptors.end(),
                 {
                     ROS2SystemComponent::CreateDescriptor(),
+                    ROS2SystemCameraComponent::CreateDescriptor(),
                     ROS2SensorComponentBase<TickBasedSource>::CreateDescriptor(),
                     ROS2SensorComponentBase<PhysicsBasedSource>::CreateDescriptor(),
                     LidarRegistrarSystemComponent::CreateDescriptor(),
@@ -100,6 +102,7 @@ namespace ROS2
         {
             return AZ::ComponentTypeList{
                 azrtti_typeid<ROS2SystemComponent>(),
+                azrtti_typeid<ROS2SystemCameraComponent>(),
                 azrtti_typeid<LidarRegistrarSystemComponent>(),
                 azrtti_typeid<ROS2RobotImporterSystemComponent>(),
             };

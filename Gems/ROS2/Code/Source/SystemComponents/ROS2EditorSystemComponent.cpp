@@ -5,10 +5,9 @@
  * SPDX-License-Identifier: Apache-2.0 OR MIT
  *
  */
-#include "ROS2SystemComponent.h"
+#include "ROS2EditorSystemComponent.h"
 #include <AzCore/Component/ComponentApplicationBus.h>
 #include <AzCore/Serialization/SerializeContext.h>
-#include <ROS2EditorSystemComponent.h>
 
 namespace ROS2
 {
@@ -49,7 +48,6 @@ namespace ROS2
     void ROS2EditorSystemComponent::Activate()
     {
         AzToolsFramework::EditorEntityContextNotificationBus::Handler::BusConnect();
-        ROS2SystemComponent::InitPassTemplateMappingsHandler();
     }
 
     void ROS2EditorSystemComponent::Deactivate()
