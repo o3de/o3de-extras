@@ -15,7 +15,7 @@ Please refer to [O3DE documentation](https://docs.o3de.org/docs/user-guide/gems/
 - Any O3DE project with the [O3DE ROS2 Gem](https://github.com/o3de/o3de-extras/tree/development/Gems/ROS2) enabled.
 
 ## Description
-This is an Asset Gem only. It contains the Husarion ROSbot XL asset stored as O3DE prefab: `ROSbot.prefab`. The robot is delivered as a ready-to-use prefab containing models, physics and the following ROS 2 components:
+This is an Asset Gem. It contains the Husarion ROSbot XL asset stored as O3DE prefab: `ROSbot.prefab`. The robot is delivered as a ready-to-use prefab containing models, physics and the following ROS 2 components:
 - `ROS2 Frame`
 - `ROS2 Robot Control`
 - `ROS2 Skid Steering Twist Control`
