@@ -4,7 +4,7 @@
 
 ## General description
 
-This gem contains a set of models and prefabs which can be used to create a warehouse project suitable for robotic simulations.
+This gem contains a set of models and prefabs that can be used to create a warehouse project suitable for robotic simulations.
 
 > Note: in O3DE there are 2 ways you can alter instantiated prefab: by changing prefab instance or prefab definition (source). If you modify prefab source, all instances will be altered. Thus unless you really know what you are doing, you should edit instances only. Please refer to [this document](https://www.o3de.org/docs/learning-guide/tutorials/entities-and-prefabs/entity-and-prefab-basics/) to learn about working with prefabs.
 
@@ -88,7 +88,7 @@ The folder contains also a `Components` subfolder, containing assets used in the
 
 ![](docs/images/WarehouseScene.png)
 
-The `WarehouseScene.prefab` contains a sample, ready-to-use warehouse scene, built from prefabs listed in this document. It is built as a tree of assets and prefabs defining each element of the warehouse. The top-level objects are shown on the following image:
+The `WarehouseScene.prefab` contains a sample, ready-to-use warehouse scene, built from prefabs listed in this document. It is built as a tree of assets and prefabs defining each element of the warehouse. The top-level objects are shown in the following image:
 
 ![](docs/images/WarehouseSceneStructure.png)
 
@@ -108,7 +108,7 @@ These objects are followed by instances of warehouse structural assets:
 - `Warehouse_Walls.prefab`
 - `Warehouse_Roof.prefab`
 
-The structure of prefabs in the warehouse scene is highly nested. For example, location of one of boxes in the structure looks like this:
+The structure of prefabs in the warehouse scene is highly nested. For example, the location of one of the boxes in the structure looks like this:
 
 ![](docs/images/WarehouseSceneSampleTree.png)
 
@@ -154,7 +154,7 @@ A sample set of parameters can be seen in this image:
 
 ***Tip 5***
 
-The `WarehouseScene.prefab` is equipped with 2 Reflection Probes, which can be found in: `Warehouse/Global_illumination/Reflection_Probe`. To work correctly, Reflection Probes require baked materials, thus are disabled by default. For a better visual experience, it is advised to enable them. To do so follow these steps:
+The `WarehouseScene.prefab` is equipped with 2 Reflection Probes, which can be found in `Warehouse/Global_illumination/Reflection_Probe`. To work correctly, Reflection Probes require baked materials and, thus are disabled by default. For a better visual experience, it is advised to enable them. To do so follow these steps:
 
 1. Open the `WarehouseScene.prefab`.
 2. Navigate to `Warehouse/Global_illumination` and locate 2 `Reflection_Probe` entities.

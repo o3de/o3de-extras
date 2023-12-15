@@ -2,12 +2,11 @@
 
 # ProteusRobot Gem for Open 3D Engine (O3DE)
 
-## A bit of context
+## Introduction
 
-* [Open 3D Engine](https:://o3de.org) - an open-source game & simulation engine. O3DE is extendable through modules called Gems. This is one of such Gems.
-* [Robot Operating System (ROS)](https://docs.ros.org/en/rolling/index.html) - an open-source middleware and, de facto, standard for robotics.
-* [ROS2 Gem](https://github.com/o3de/o3de-extras/tree/development/Gems/ROS2) - an open-source module for O3DE that enables simulation for robotics using modern ROS.
-* [Proteus Robot](https://robotsguide.com/robots/proteus) - an autonomous mobile robot that can pick up, transport, and drop off containers in [Amazon](https://www.aboutamazon.com) fulfillment facilities.
+This Gem contains a set of models and prefabs suitable for robotic simulations. More details about such simulations in [Open 3D Engine](https:://o3de.org) can be found in [ROS2 Gem documentation](https://github.com/o3de/o3de-extras/tree/development/Gems/ROS2). The Gem was implemented primarily for [ROS2 Project Template](https://github.com/o3de/o3de-extras/tree/development/Templates/Ros2ProjectTemplate) and it was separated for easier reuse in other works.
+
+Please refer to [O3DE documentation](https://docs.o3de.org/docs/user-guide/gems/) to learn more about Gems and about registering Gems in the system and O3DE projects.
 
 Please refer to [O3DE documentation](https://docs.o3de.org/docs/user-guide/gems/) to learn more about Gems and about registering Gems in the system and O3DE projects.
 
@@ -15,7 +14,7 @@ Please refer to [O3DE documentation](https://docs.o3de.org/docs/user-guide/gems/
 - Any O3DE project with the [O3DE ROS2 Gem](https://github.com/o3de/o3de-extras/tree/development/Gems/ROS2) enabled.
 
 ## Description
-This is an Asset Gem. It contains the Proteus Robot asset stored as O3DE prefab: `Proteus.prefab`. The robot is delivered as a ready-to-use prefab containing models, physics and the following ROS 2 components:
+This is an Asset Gem. It contains the [Proteus Robot](https://robotsguide.com/robots/proteus) - an autonomous mobile robot that can pick up, transport, and drop off containers in [Amazon](https://www.aboutamazon.com) fulfillment facilities. It is delivered as a ready-to-use O3DE prefab, `Proteus.prefab`, containing visual models, physics and the following ROS 2 components:
 - `ROS2 Frame`
 - `ROS2 Robot Control`
 - `ROS2 Skid Steering Twist Control`
@@ -23,7 +22,7 @@ This is an Asset Gem. It contains the Proteus Robot asset stored as O3DE prefab:
 
 Additionally, the model is equipped with links that allow simple extension with `ROS2 Camera` and `ROS2 Imu` sensors.
 
-The robot publishes Lidar Sensor's output on the`/base_link/pc` ROS 2 topic and can be driven using the `/base_link/cmd_vel` ROS 2 topic. An example of its use can be found in [ROS2 Fleet Template](https://github.com/o3de/o3de-extras/tree/development/Templates/Ros2FleetRobotTemplate).
+The robot publishes Lidar Sensor's output on the`/base_link/pc` ROS 2 topic and can be driven using the `/base_link/cmd_vel` ROS 2 topic. 
 
 ## Screenshots
 ![](docs/images/front.png)

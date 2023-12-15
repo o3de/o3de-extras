@@ -2,12 +2,9 @@
 
 # RosRobotSample Gem for Open 3D Engine (O3DE)
 
-## A bit of context
+## Introduction
 
-* [Open 3D Engine](https:://o3de.org) - an open-source game & simulation engine. O3DE is extendable through modules called Gems. This is one of such Gems.
-* [Robot Operating System (ROS)](https://docs.ros.org/en/rolling/index.html) - an open-source middleware and, de facto, standard for robotics.
-* [ROS2 Gem](https://github.com/o3de/o3de-extras/tree/development/Gems/ROS2) - an open-source module for O3DE that enables simulation for robotics using modern ROS.
-* [Husarion ROSbot XL](https://husarion.com/manuals/rosbot-xl/) - an autonomous mobile robot platform equipped with a 4x4 drive, allowing for trouble-free expansion with optional devices such as LIDAR, RGB-D cameras or a manipulator developed by [Husarion](https://husarion.com).
+This Gem contains a set of models and prefabs suitable for robotic simulations. More details about such simulations in [Open 3D Engine](https:://o3de.org) can be found in [ROS2 Gem documentation](https://github.com/o3de/o3de-extras/tree/development/Gems/ROS2). 
 
 Please refer to [O3DE documentation](https://docs.o3de.org/docs/user-guide/gems/) to learn more about Gems and about registering Gems in the system and O3DE projects.
 
@@ -15,7 +12,7 @@ Please refer to [O3DE documentation](https://docs.o3de.org/docs/user-guide/gems/
 - Any O3DE project with the [O3DE ROS2 Gem](https://github.com/o3de/o3de-extras/tree/development/Gems/ROS2) enabled.
 
 ## Description
-This is an Asset Gem. It contains the Husarion ROSbot XL asset stored as O3DE prefab: `ROSbot.prefab`. The robot is delivered as a ready-to-use prefab containing models, physics and the following ROS 2 components:
+This is an Asset Gem. It contains the [Husarion ROSbot XL](https://husarion.com/manuals/rosbot-xl/) robot - an autonomous mobile robot platform equipped with a 4x4 drive, allowing for trouble-free expansion with optional devices such as LIDAR, RGB-D cameras or a manipulator developed by [Husarion](https://husarion.com). The robot is delivered as a ready-to-use prefab, `ROSbot.prefab`, containing visual models, physics and the following ROS 2 components:
 - `ROS2 Frame`
 - `ROS2 Robot Control`
 - `ROS2 Skid Steering Twist Control`
