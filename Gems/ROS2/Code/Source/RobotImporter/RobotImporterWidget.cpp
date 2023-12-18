@@ -238,7 +238,6 @@ namespace ROS2
                 report += QString::fromUtf8(log.data(), int(log.size()));
                 report += "`";
             }
-            m_robotDescriptionPage->ReportParsingResult(report, urdfParsedSuccess, urdfParsedWithWarnings);
             const auto& messages = parsedSdfOutcome.GetParseMessages();
             if (!messages.empty())
             {
@@ -249,7 +248,7 @@ namespace ROS2
                 report += "\n```\n";
                 AZ_Printf("RobotImporterWidget", "SDF Stream: %s\n", messages.c_str());
             }
-            m_robotDescriptionPage->ReportParsingResult(report, urdfParsedSuccess);
+            m_robotDescriptionPage->ReportParsingResult(report, urdfParsedSuccess, urdfParsedWithWarnings);
         }
     }
 
@@ -479,7 +478,7 @@ namespace ROS2
     {
         // Use the URDF/SDF file name stem the prefab name
         AZStd::string robotName = AZStd::string::format("%.*s.prefab", AZ_PATH_ARG(m_urdfPath.Stem()));
-        m_prefabMakerPage->setProposedPrefabName(robotName);
+        m_prefabMakerPage->SetProposedPrefabName(robotName);
         QWizard::button(PrefabCreationButtonId)->setText(tr("Create Prefab"));
         QWizard::setOption(HavePrefabCreationButton, true);
     }
@@ -578,7 +577,7 @@ namespace ROS2
 
         if (CheckCyclicalDependency(prefabPathRelative))
         {
-            m_prefabMakerPage->setSuccess(false);
+            m_prefabMakerPage->SetSuccess(false);
             return;
         }
         if (fileExists)
@@ -591,7 +590,7 @@ namespace ROS2
             int ret = msgBox.exec();
             if (ret == QMessageBox::Cancel)
             {
-                m_prefabMakerPage->setSuccess(false);
+                m_prefabMakerPage->SetSuccess(false);
                 return;
             }
         }
@@ -610,22 +609,22 @@ namespace ROS2
         if (prefabOutcome.IsSuccess())
         {
             AZStd::string status = m_prefabMaker->GetStatus();
-            m_prefabMakerPage->reportProgress(status);
-            m_prefabMakerPage->setSuccess(true);
+            m_prefabMakerPage->ReportProgress(status);
+            m_prefabMakerPage->SetSuccess(true);
         }
         else
         {
             AZStd::string status = "Failed to create prefab\n";
             status += prefabOutcome.GetError() + "\n";
             status += m_prefabMaker->GetStatus();
-            m_prefabMakerPage->reportProgress(status);
-            m_prefabMakerPage->setSuccess(false);
+            m_prefabMakerPage->ReportProgress(status);
+            m_prefabMakerPage->SetSuccess(false);
         }
     }
 
     void RobotImporterWidget::onCreateButtonPressed()
     {
-        CreatePrefab(m_prefabMakerPage->getPrefabName());
+        CreatePrefab(m_prefabMakerPage->GetPrefabName());
     }
 
     bool RobotImporterWidget::CheckCyclicalDependency(AZ::IO::Path importedPrefabPath)

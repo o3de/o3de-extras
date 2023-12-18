@@ -22,7 +22,7 @@ namespace ROS2
         Q_OBJECT
     public:
         explicit RobotDescriptionPage(QWizard* parent);
-        void ReportParsingResult(const QString& result, bool isSuccess, bool isWarning = false);
+        void ReportParsingResult(const QString& status, bool isSuccess, bool isWarning = false);
         bool isComplete() const override;
         bool isWarning() const;
 

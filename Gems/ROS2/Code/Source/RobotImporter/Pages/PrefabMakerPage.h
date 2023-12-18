@@ -31,10 +31,10 @@ namespace ROS2
         Q_OBJECT
     public:
         explicit PrefabMakerPage(RobotImporterWidget* parent);
-        void setProposedPrefabName(const AZStd::string prefabName);
-        AZStd::string getPrefabName() const;
-        void reportProgress(const AZStd::string& progressForUser);
-        void setSuccess(bool success);
+        void SetProposedPrefabName(const AZStd::string prefabName);
+        AZStd::string GetPrefabName() const;
+        void ReportProgress(const AZStd::string& progressForUser);
+        void SetSuccess(bool success);
         bool isComplete() const override;
         AZStd::optional<AZ::Transform> getSelectedSpawnPoint() const;
     Q_SIGNALS:

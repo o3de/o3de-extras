@@ -70,29 +70,32 @@ namespace ROS2
         connect(m_createButton, &QPushButton::pressed, this, &PrefabMakerPage::onCreateButtonPressed);
     }
 
-    void PrefabMakerPage::setProposedPrefabName(const AZStd::string prefabName)
+    void PrefabMakerPage::SetProposedPrefabName(const AZStd::string prefabName)
     {
         m_prefabName->setText(QString::fromUtf8(prefabName.data(), int(prefabName.size())));
     }
 
-    AZStd::string PrefabMakerPage::getPrefabName() const
+    AZStd::string PrefabMakerPage::GetPrefabName() const
     {
         return AZStd::string(m_prefabName->text().toUtf8().constData());
     }
 
-    void PrefabMakerPage::reportProgress(const AZStd::string& progressForUser)
+    void PrefabMakerPage::ReportProgress(const AZStd::string& progressForUser)
     {
         m_log->setText(QString::fromUtf8(progressForUser.data(), int(progressForUser.size())));
     }
-    void PrefabMakerPage::setSuccess(bool success)
+
+    void PrefabMakerPage::SetSuccess(bool success)
     {
         m_success = success;
         emit completeChanged();
     }
+
     bool PrefabMakerPage::isComplete() const
     {
         return m_success;
     }
+
     AZStd::optional<AZ::Transform> PrefabMakerPage::getSelectedSpawnPoint() const
     {
         if (!m_spawnPointsInfos.empty())
