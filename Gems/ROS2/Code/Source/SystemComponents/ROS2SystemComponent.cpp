@@ -5,6 +5,8 @@
  * SPDX-License-Identifier: Apache-2.0 OR MIT
  *
  */
+#include <signal.h>
+
 #include "ROS2SystemComponent.h"
 #include <Lidar/LidarCore.h>
 #include <ROS2/Clock/PhysicallyStableClock.h>
@@ -99,6 +101,12 @@ namespace ROS2
     void ROS2SystemComponent::Init()
     {
         rclcpp::init(0, 0);
+        
+        // handle sigint, e.g. via Ctrl+C
+        signal(SIGINT, [](int sig){
+            rclcpp::shutdown(); // shutdown rclcpp
+            std::raise(SIGINT); // shutdown o3de
+            });
     }
 
     void ROS2SystemComponent::InitClock()
