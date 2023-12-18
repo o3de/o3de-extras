@@ -31,7 +31,7 @@ namespace ROS2
     {
         m_introPage = new IntroPage(this);
         m_fileSelectPage = new FileSelectionPage(this);
-        m_checkUrdfPage = new CheckUrdfPage(this);
+        m_robotDescriptionPage = new RobotDescriptionPage(this);
         m_assetPage = new CheckAssetPage(this);
         m_prefabMakerPage = new PrefabMakerPage(this);
         m_xacroParamsPage = new XacroParamsPage(this);
@@ -39,7 +39,7 @@ namespace ROS2
         addPage(m_introPage);
         addPage(m_fileSelectPage);
         addPage(m_xacroParamsPage);
-        addPage(m_checkUrdfPage);
+        addPage(m_robotDescriptionPage);
         addPage(m_assetPage);
         addPage(m_prefabMakerPage);
 
@@ -191,7 +191,7 @@ namespace ROS2
                             report += tr("(EMPTY)");
                         }
                         report += "\n```";
-                        m_checkUrdfPage->ReportURDFResult(report, false);
+                        m_robotDescriptionPage->ReportParsingResult(report, false);
                         return;
                     }
                 }
@@ -218,7 +218,7 @@ namespace ROS2
                 else
                 {
                     report += "# " + tr("The URDF/SDF was parsed and opened successfully") + "\n";
-                    AZ_Printf("Wizard", "Wizard skips m_checkUrdfPage since there is no errors in URDF\n");
+                    AZ_Printf("Wizard", "Wizard skips m_robotDescriptionPage since there is no errors in URDF\n");
                 }
                 m_parsedSdf = AZStd::move(parsedSdfOutcome.GetRoot());
                 m_prefabMaker.reset();
@@ -238,7 +238,7 @@ namespace ROS2
                 report += QString::fromUtf8(log.data(), int(log.size()));
                 report += "`";
             }
-            m_checkUrdfPage->ReportURDFResult(report, urdfParsedSuccess, urdfParsedWithWarnings);
+            m_robotDescriptionPage->ReportParsingResult(report, urdfParsedSuccess, urdfParsedWithWarnings);
             const auto& messages = parsedSdfOutcome.GetParseMessages();
             if (!messages.empty())
             {
@@ -249,7 +249,7 @@ namespace ROS2
                 report += "\n```\n";
                 AZ_Printf("RobotImporterWidget", "SDF Stream: %s\n", messages.c_str());
             }
-            m_checkUrdfPage->ReportURDFResult(report, urdfParsedSuccess);
+            m_robotDescriptionPage->ReportParsingResult(report, urdfParsedSuccess);
         }
     }
 
@@ -545,11 +545,11 @@ namespace ROS2
         }
         if ((currentPage() == m_fileSelectPage && m_params.empty()) || currentPage() == m_xacroParamsPage)
         {
-            if (!m_checkUrdfPage->isWarning())
+            if (!m_robotDescriptionPage->isWarning())
             {
                 return m_xacroParamsPage->nextId();
             }
-            if (m_checkUrdfPage->isComplete())
+            if (m_robotDescriptionPage->isComplete())
             {
                 if (m_assetNames.empty())
                 {
@@ -559,7 +559,7 @@ namespace ROS2
                 else
                 {
                     // skip one page when urdf/sdf is parsed without problems
-                    return m_checkUrdfPage->nextId();
+                    return m_robotDescriptionPage->nextId();
                 }
             }
             if (m_params.empty())

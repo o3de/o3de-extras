@@ -10,10 +10,10 @@
 
 #if !defined(Q_MOC_RUN)
 #include "Pages/CheckAssetPage.h"
-#include "Pages/CheckUrdfPage.h"
 #include "Pages/FileSelectionPage.h"
 #include "Pages/IntroPage.h"
 #include "Pages/PrefabMakerPage.h"
+#include "Pages/RobotDescriptionPage.h"
 #include "Pages/XacroParamsPage.h"
 
 #include "URDF/URDFPrefabMaker.h"
@@ -67,7 +67,7 @@ namespace ROS2
 
         IntroPage* m_introPage;
         FileSelectionPage* m_fileSelectPage;
-        CheckUrdfPage* m_checkUrdfPage;
+        RobotDescriptionPage* m_robotDescriptionPage;
         CheckAssetPage* m_assetPage;
         PrefabMakerPage* m_prefabMakerPage;
         XacroParamsPage* m_xacroParamsPage;

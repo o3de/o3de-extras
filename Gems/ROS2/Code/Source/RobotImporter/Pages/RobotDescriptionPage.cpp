@@ -6,12 +6,12 @@
  *
  */
 
-#include "CheckUrdfPage.h"
+#include "RobotDescriptionPage.h"
 #include <QVBoxLayout>
 
 namespace ROS2
 {
-    CheckUrdfPage::CheckUrdfPage(QWizard* parent)
+    RobotDescriptionPage::RobotDescriptionPage(QWizard* parent)
         : QWizardPage(parent)
         , m_success(false)
         , m_warning(false)
@@ -25,7 +25,7 @@ namespace ROS2
         setLayout(layout);
     }
 
-    void CheckUrdfPage::ReportURDFResult(const QString& status, bool isSuccess, bool isWarning)
+    void RobotDescriptionPage::ReportParsingResult(const QString& status, bool isSuccess, bool isWarning)
     {
         m_log->setMarkdown(status);
         m_success = isSuccess;
@@ -33,12 +33,12 @@ namespace ROS2
         emit completeChanged();
     }
 
-    bool CheckUrdfPage::isComplete() const
+    bool RobotDescriptionPage::isComplete() const
     {
         return m_success;
     }
 
-    bool CheckUrdfPage::isWarning() const
+    bool RobotDescriptionPage::isWarning() const
     {
         return m_warning;
     }

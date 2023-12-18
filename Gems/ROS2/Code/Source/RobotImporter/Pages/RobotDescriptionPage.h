@@ -17,12 +17,12 @@
 
 namespace ROS2
 {
-    class CheckUrdfPage : public QWizardPage
+    class RobotDescriptionPage : public QWizardPage
     {
         Q_OBJECT
     public:
-        explicit CheckUrdfPage(QWizard* parent);
-        void ReportURDFResult(const QString& result, bool isSuccess, bool isWarning = false);
+        explicit RobotDescriptionPage(QWizard* parent);
+        void ReportParsingResult(const QString& result, bool isSuccess, bool isWarning = false);
         bool isComplete() const override;
         bool isWarning() const;
 
