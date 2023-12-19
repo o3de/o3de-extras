@@ -1,11 +1,11 @@
 {
     "gem_name": "AudioEngineWwise",
-    "version": "0.0.0",
+    "version": "1.0.0",
     "display_name": "Wwise Audio Engine",
     "license": "Apache-2.0 Or MIT",
     "license_url": "https://github.com/o3de/o3de/blob/development/LICENSE.txt",
     "origin": "Open 3D Engine - o3de.org",
-    "origin_url": "https://github.com/o3de/o3de",
+    "origin_url": "https://github.com/o3de/o3de-extras/development/Gems/AudioEngineWwise",
     "type": "Code",
     "summary": "The Wwise Audio Engine Gem provides support for Audiokinetic Wave Works Interactive Sound Engine (Wwise).",
     "canonical_tags": [
@@ -16,10 +16,16 @@
         "Utility",
         "Tools"
     ],
+    "compatible_engines": [
+        "o3de-sdk>=2.1.0",
+        "o3de>=2.1.0"
+    ],
     "icon_path": "preview.png",
     "requirements": "Users will need to download Wwise from the <a href='https://www.audiokinetic.com/download/'>Audiokinetic Web Site</a>.",
     "documentation_url": "https://o3de.org/docs/user-guide/gems/reference/audio/wwise/audio-engine-wwise/",
     "dependencies": [
         "AudioSystem"
-    ]
+    ],
+    "repo_uri": "https://raw.githubusercontent.com/o3de/o3de-extras/development",
+    "download_source_uri": "https://github.com/o3de/o3de-extras/releases/download/2.0/audioenginewwise-1.0.0-gem.zip"
 }
