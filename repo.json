@@ -319,7 +319,18 @@
             ],
             "repo_uri": "https://raw.githubusercontent.com/o3de/o3de-extras/development",
             "download_source_uri": "https://github.com/o3de/o3de-extras/releases/download/2.0/audioenginewwise-0.1.0-gem.zip",
-            "sha256": "fce79ddb145564bafbb490b9fc8422c0f1c22f459b1c94b1129cbac68a0065bb"
+            "sha256": "fce79ddb145564bafbb490b9fc8422c0f1c22f459b1c94b1129cbac68a0065bb",
+            "versions_data": [
+                {
+                    "version": "0.2.0",
+                    "compatible_engines": [
+                        "o3de-sdk>2.2.0",
+                        "o3de>=4.0.0"
+                    ],
+                    "download_source_uri": "https://github.com/o3de/o3de-extras/releases/download/2.0/audioenginewwise-0.2.0-gem.zip",
+                    "sha256": "2f45e3b53f6e21e12258706f122d8f167831789cd3e9b1eeae782f02f6a60cb4"
+                }
+            ]
         }
     ],
     "templates": [
