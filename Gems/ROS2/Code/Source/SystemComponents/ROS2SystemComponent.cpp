@@ -5,6 +5,7 @@
  * SPDX-License-Identifier: Apache-2.0 OR MIT
  *
  */
+#include "ROS2SystemComponent.h"
 #include <Lidar/LidarCore.h>
 #include <ROS2/Clock/PhysicallyStableClock.h>
 #include <ROS2/Communication/PublisherConfiguration.h>
@@ -12,7 +13,6 @@
 #include <ROS2/Communication/TopicConfiguration.h>
 #include <ROS2/Sensor/SensorConfiguration.h>
 #include <ROS2/Utilities/Controllers/PidConfiguration.h>
-#include <ROS2SystemComponent.h>
 #include <VehicleDynamics/VehicleModelComponent.h>
 
 #include <Atom/RPI.Public/Pass/PassSystemInterface.h>
@@ -47,7 +47,10 @@ namespace ROS2
 
             if (AZ::EditContext* ec = serialize->GetEditContext())
             {
-                ec->Class<ROS2SystemComponent>("ROS2 System Component", "[Description of functionality provided by this System Component]")
+                ec->Class<ROS2SystemComponent>(
+                      "ROS 2 System Component",
+                      "This component is responsible for creating ROS 2 node and executor, provides ROS 2 interfaces, manages ROS 2 clock and "
+                      "publishes transforms.")
                     ->ClassElement(AZ::Edit::ClassElements::EditorData, "")
                     ->Attribute(AZ::Edit::Attributes::AppearsInAddComponentMenu, AZ_CRC_CE("System"))
                     ->Attribute(AZ::Edit::Attributes::Category, "ROS2")
@@ -82,7 +85,6 @@ namespace ROS2
         {
             ROS2Interface::Register(this);
         }
-        return;
     }
 
     ROS2SystemComponent::~ROS2SystemComponent()
@@ -118,19 +120,6 @@ namespace ROS2
         m_simulationClock = AZStd::make_unique<SimulationClock>();
     }
 
-    void ROS2SystemComponent::InitPassTemplateMappingsHandler()
-    {
-        auto* passSystem = AZ::RPI::PassSystemInterface::Get();
-        AZ_Assert(passSystem, "Cannot get the pass system.");
-
-        m_loadTemplatesHandler = AZ::RPI::PassSystemInterface::OnReadyLoadTemplatesEvent::Handler(
-            [this]()
-            {
-                this->LoadPassTemplateMappings();
-            });
-        passSystem->ConnectEvent(m_loadTemplatesHandler);
-    }
-
     void ROS2SystemComponent::Activate()
     {
         InitClock();
@@ -142,13 +131,6 @@ namespace ROS2
         m_staticTFBroadcaster = AZStd::make_unique<tf2_ros::StaticTransformBroadcaster>(m_ros2Node);
         m_dynamicTFBroadcaster = AZStd::make_unique<tf2_ros::TransformBroadcaster>(m_ros2Node);
 
-        AZ::ApplicationTypeQuery appType;
-        AZ::ComponentApplicationBus::Broadcast(&AZ::ComponentApplicationBus::Events::QueryApplicationType, appType);
-        if (appType.IsGame())
-        {
-            InitPassTemplateMappingsHandler();
-        }
-
         ROS2RequestBus::Handler::BusConnect();
         AZ::TickBus::Handler::BusConnect();
         m_nodeChangedEvent.Signal(m_ros2Node);
@@ -159,7 +141,6 @@ namespace ROS2
         AZ::TickBus::Handler::BusDisconnect();
         ROS2RequestBus::Handler::BusDisconnect();
         m_simulationClock->Deactivate();
-        m_loadTemplatesHandler.Disconnect();
         m_dynamicTFBroadcaster.reset();
         m_staticTFBroadcaster.reset();
         m_executor->remove_node(m_ros2Node);
@@ -211,17 +192,6 @@ namespace ROS2
             m_simulationClock->Tick();
             m_executor->spin_some();
         }
-    }
-
-    void ROS2SystemComponent::LoadPassTemplateMappings()
-    {
-        AZ_Printf("ROS2CameraSensorComponent", "LoadPassTemplateMappings\n");
-        auto* passSystem = AZ::RPI::PassSystemInterface::Get();
-        AZ_Assert(passSystem, "PassSystemInterface is null");
-
-        const char* passTemplatesFile = "Passes/ROSPassTemplates.azasset";
-        [[maybe_unused]] bool isOk = passSystem->LoadPassTemplateMappings(passTemplatesFile);
-        AZ_Assert(isOk, "LoadPassTemplateMappings return false ");
     }
 
 } // namespace ROS2

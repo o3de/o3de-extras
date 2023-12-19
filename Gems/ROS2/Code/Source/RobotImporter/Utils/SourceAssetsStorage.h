@@ -17,6 +17,7 @@
 #include <AzCore/Math/Crc.h>
 #include <AzCore/std/containers/unordered_map.h>
 #include <AzCore/std/containers/unordered_set.h>
+#include <AzFramework/Asset/AssetSystemBus.h>
 #include <AzToolsFramework/API/EditorAssetSystemAPI.h>
 
 namespace ROS2
@@ -161,5 +162,10 @@ namespace ROS2::Utils
     //! @param sourceMeshAssetPath - global path to source asset used to find scene
     //! @returns list of file paths referenced in the scene
     AZStd::unordered_set<AZ::IO::Path> GetMeshTextureAssets(const AZ::IO::Path& sourceMeshAssetPath);
+
+    //! Flushes the IO of an asset to disk
+    //! @param path - path to asset to flush
+    //! @returns status of the asset after flushing
+    AzFramework::AssetSystem::AssetStatus FlushIOOfAsset(const AZ::IO::Path& path);
 
 } // namespace ROS2::Utils

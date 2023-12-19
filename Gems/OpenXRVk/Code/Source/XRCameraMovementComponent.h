@@ -11,6 +11,7 @@
 #include <AzCore/Component/Component.h>
 #include <AzCore/Component/TickBus.h>
 #include <AzFramework/Input/Events/InputChannelEventListener.h>
+#include <AzFramework/Components/CameraBus.h>
 
 
 namespace OpenXRVk
@@ -22,6 +23,7 @@ namespace OpenXRVk
         : public AZ::Component
         , public AZ::TickBus::Handler
         , public AzFramework::InputChannelEventListener
+        , public Camera::CameraNotificationBus::Handler
     {
     public:
         AZ_COMPONENT(OpenXRVk::XRCameraMovementComponent, "{7FEC0A04-D994-445C-B8DE-190D03BC3820}");
@@ -44,6 +46,9 @@ namespace OpenXRVk
         // AzFramework::InputChannelEventListener
         bool OnInputChannelEventFiltered(const AzFramework::InputChannel& inputChannel) override;
 
+        // Camera::CameraNotificationBus::Handler overrides
+        void OnActiveViewChanged(const AZ::EntityId&) override;
+
     private:
         void OnXRControllerEvent(const AzFramework::InputChannel& inputChannel);
 
@@ -54,6 +59,9 @@ namespace OpenXRVk
         // Serialized data...
         float m_moveSpeed = 20.f;
         float m_movementSensitivity = 0.025f;
+
+        // We will process XR Actions only if the entity that owns this component is the active camera. 
+        bool m_isActive = false;
     };
 
 } // namespace OpenXRVk

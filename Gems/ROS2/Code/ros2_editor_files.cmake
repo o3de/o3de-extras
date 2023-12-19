@@ -8,6 +8,8 @@ set(FILES
     ../Assets/Editor/Images/Icons/ROS_import_icon.svg
     Source/Camera/ROS2CameraSensorEditorComponent.cpp
     Source/Camera/ROS2CameraSensorEditorComponent.h
+    Source/Camera/ROS2EditorCameraSystemComponent.cpp
+    Source/Camera/ROS2EditorCameraSystemComponent.h
     Source/Georeference/GeoreferenceLevelEditorComponent.cpp
     Source/Georeference/GeoreferenceLevelEditorComponent.h
     Source/Lidar/LidarRegistrarEditorSystemComponent.cpp
@@ -70,8 +72,6 @@ set(FILES
     Source/RobotImporter/Utils/SourceAssetsStorage.h
     Source/RobotImporter/Utils/TypeConversions.cpp
     Source/RobotImporter/Utils/TypeConversions.h
-    Source/ROS2EditorSystemComponent.cpp
-    Source/ROS2EditorSystemComponent.h
     Source/ROS2GemUtilities.cpp
     Source/Spawner/ROS2SpawnerEditorComponent.cpp
     Source/Spawner/ROS2SpawnerEditorComponent.h
@@ -85,4 +85,6 @@ set(FILES
     Source/SdfAssetBuilder/SdfAssetBuilderSystemComponent.h
     Source/Frame/ROS2FrameEditorComponent.cpp
     Source/Frame/ROS2FrameSystemComponent.cpp
+    Source/SystemComponents/ROS2EditorSystemComponent.cpp
+    Source/SystemComponents/ROS2EditorSystemComponent.h
 )

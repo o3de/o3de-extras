@@ -7,8 +7,8 @@
  */
 
 #pragma once
-#include <ROS2/Georeference/GeoreferenceStructures.h>
 #include <AzCore/Math/Matrix4x4.h>
+#include <ROS2/Georeference/GeoreferenceStructures.h>
 
 namespace ROS2::Utils::GeodeticConversions
 {
@@ -32,7 +32,7 @@ namespace ROS2::Utils::GeodeticConversions
     //! @param referenceLatitudeLongitudeAltitude - reference point's latitude, longitude and altitude as WGS::WGS84Coordinate.
     //! @param ENUPoint - ENU point to bo converted.
     //! @return 3d vector of ECEF coordinates.
-    WGS::Vector3d ENUToECEF(const WGS::WGS84Coordinate& referenceLatitudeLongitudeAltitude, const  WGS::Vector3d& ENUPoint);
+    WGS::Vector3d ENUToECEF(const WGS::WGS84Coordinate& referenceLatitudeLongitudeAltitude, const WGS::Vector3d& ENUPoint);
 
     //! Converts point in Earth Centred Earth Fixed (ECEF) to  984 World Geodetic System (GS84)
     //! @param ECEFPoint - ECEF point to bo converted.
@@ -40,4 +40,4 @@ namespace ROS2::Utils::GeodeticConversions
     //!     latitude and longitude are in decimal degrees
     //!     altitude is in meters
     WGS::WGS84Coordinate ECEFToWGS84(const WGS::Vector3d& ECFEPoint);
-} // namespace ROS2::GNSS
+} // namespace ROS2::Utils::GeodeticConversions

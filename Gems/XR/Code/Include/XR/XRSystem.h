@@ -71,6 +71,8 @@ namespace XR
         AZ::RHI::ResultCode GetViewLocalPose(AZ::RPI::PoseData& outPoseData) const override;
         AZ::RHI::ResultCode GetControllerStagePose(AZ::u32 handIndex, AZ::RPI::PoseData& outPoseData) const override;
         AZ::RHI::ResultCode GetControllerPose(AZ::u32 handIndex, AZ::RPI::PoseData& outPoseData) const override;
+        AZ::RHI::ResultCode GetControllerTransform(const AZ::u32 handIndex, AZ::Transform& outTransform) const override;
+
         float GetControllerScale(AZ::u32 handIndex) const override;
         bool ShouldRender() const override;
         AZ::Matrix4x4 CreateStereoscopicProjection(float angleLeft, float angleRight,

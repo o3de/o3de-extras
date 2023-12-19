@@ -74,4 +74,48 @@ namespace OpenXRVk
         }
         return list;
     }
+
+    AZ::Quaternion AzQuaternionFromXrPose(const XrPosef& pose, bool convertCoordinates)
+    {
+        if (convertCoordinates)
+        {
+            return AZ::Quaternion(pose.orientation.x, -pose.orientation.z, pose.orientation.y, pose.orientation.w);
+        }
+        return AZ::Quaternion(pose.orientation.x, pose.orientation.y, pose.orientation.z, pose.orientation.w);
+    }
+
+    AZ::Vector3 AzPositionFromXrPose(const XrPosef& pose, bool convertCoordinates)
+    {
+        return AZ::Vector3(pose.position.x,
+                           convertCoordinates ? -pose.position.z : pose.position.y,
+                           convertCoordinates ? pose.position.y : pose.position.z);
+    }
+
+    AZ::Transform AzTransformFromXrPose(const XrPosef& pose, bool convertCoordinates)
+    {
+        const auto azQuat = AzQuaternionFromXrPose(pose, convertCoordinates);
+        const auto azVec = AzPositionFromXrPose(pose, convertCoordinates);
+        AZ::Transform tm = AZ::Transform::CreateFromQuaternionAndTranslation(azQuat, azVec);
+        return tm;
+    }
+
+    XrPosef XrPoseFromAzTransform(const AZ::Transform& tm, bool convertCoordinates)
+    {
+        const auto &azQuat = tm.GetRotation();
+        const auto &azPos = tm.GetTranslation();
+        
+        XrPosef pose;
+        
+        pose.orientation.x = azQuat.GetX();
+        pose.orientation.y = convertCoordinates ? -azQuat.GetZ() : azQuat.GetY();
+        pose.orientation.z = convertCoordinates ? azQuat.GetY() : azQuat.GetZ();
+        pose.orientation.w = azQuat.GetW();
+
+        pose.position.x = azPos.GetX();
+        pose.position.y = convertCoordinates ? -azPos.GetZ() : azPos.GetY();
+        pose.position.z = convertCoordinates ?  azPos.GetY() : azPos.GetZ();
+
+        return pose; 
+    }
+
 }

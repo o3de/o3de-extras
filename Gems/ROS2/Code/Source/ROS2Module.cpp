@@ -7,7 +7,6 @@
  */
 
 #include <ROS2ModuleInterface.h>
-#include <ROS2SystemComponent.h>
 
 namespace ROS2
 {
