@@ -238,6 +238,7 @@ namespace ROS2
                 report += QString::fromUtf8(log.data(), int(log.size()));
                 report += "`";
             }
+            m_robotDescriptionPage->ReportParsingResult(report, urdfParsedSuccess, urdfParsedWithWarnings);
             const auto& messages = parsedSdfOutcome.GetParseMessages();
             if (!messages.empty())
             {
@@ -248,7 +249,7 @@ namespace ROS2
                 report += "\n```\n";
                 AZ_Printf("RobotImporterWidget", "SDF Stream: %s\n", messages.c_str());
             }
-            m_robotDescriptionPage->ReportParsingResult(report, urdfParsedSuccess, urdfParsedWithWarnings);
+            m_robotDescriptionPage->ReportParsingResult(report, urdfParsedSuccess);
         }
     }
 
