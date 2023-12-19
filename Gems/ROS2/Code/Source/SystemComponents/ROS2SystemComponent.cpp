@@ -102,11 +102,13 @@ namespace ROS2
     {
         rclcpp::init(0, 0);
         
-        // handle sigint, e.g. via Ctrl+C
-        signal(SIGINT, [](int sig){
+        // handle signals, e.g. via `Ctrl+C` hotkey or `kill` command 
+        auto handler = [](int sig){
             rclcpp::shutdown(); // shutdown rclcpp
             std::raise(SIGINT); // shutdown o3de
-            });
+            };
+        signal(SIGINT, handler);
+        signal(SIGTERM, handler);
     }
 
     void ROS2SystemComponent::InitClock()
