@@ -1,0 +1,13 @@
+<ATLConfig atl_name="default_controls">
+ <AudioTriggers>
+  <ATLTrigger atl_name="get_focus"/>
+  <ATLTrigger atl_name="lose_focus"/>
+  <ATLTrigger atl_name="mute_all"/>
+  <ATLTrigger atl_name="unmute_all"/>
+  <ATLTrigger atl_name="do_nothing"/>
+ </AudioTriggers>
+ <AudioRtpcs>
+ </AudioRtpcs>
+ <AudioSwitches>
+ </AudioSwitches>
+</ATLConfig>

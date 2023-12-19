@@ -130,56 +130,6 @@ endif() # PAL_TRAIT_BUILD_TESTS_SUPPORTED
 ################################################################################
 if (PAL_TRAIT_BUILD_HOST_TOOLS)
     ly_add_target(
-        NAME ${gem_name}.Editor.Private.Object STATIC
-        NAMESPACE Gem
-        AUTORCC
-        FILES_CMAKE
-            audioenginewwise_editor_files.cmake
-        TARGET_PROPERTIES
-            O3DE_PRIVATE_TARGET TRUE
-        COMPILE_DEFINITIONS
-            PUBLIC
-                ${AUDIOENGINEWWISE_COMPILEDEFINITIONS}
-        INCLUDE_DIRECTORIES
-            PRIVATE
-                Source/Engine
-                Source/Editor
-                ${pal_dir}
-        BUILD_DEPENDENCIES
-            PUBLIC
-                3rdParty::Wwise
-                Gem::AudioSystem.Editor.API
-                Legacy::CryCommon
-            PRIVATE
-                Legacy::EditorCore
-                Gem::${gem_name}.Private.Object
-        RUNTIME_DEPENDENCIES
-            Gem::AudioSystem.Editor
-    )
-
-    ly_add_target(
-        NAME ${gem_name}.Editor GEM_MODULE
-        NAMESPACE Gem
-        FILES_CMAKE
-            audioenginewwise_editor_shared_files.cmake
-        COMPILE_DEFINITIONS
-            PRIVATE
-                AUDIO_ENGINE_WWISE_EDITOR
-        INCLUDE_DIRECTORIES
-            PRIVATE
-                Source/Engine
-                Source/Editor
-                ${pal_dir}
-        BUILD_DEPENDENCIES
-            PUBLIC
-                Gem::AudioSystem.API
-            PRIVATE
-                Gem::${gem_name}.Editor.Private.Object
-        RUNTIME_DEPENDENCIES
-            Gem::AudioSystem.Editor
-    )
-
-    ly_add_target(
         NAME ${gem_name}.Builder.Private.Object STATIC
         NAMESPACE Gem
         FILES_CMAKE
@@ -227,8 +177,78 @@ if (PAL_TRAIT_BUILD_HOST_TOOLS)
                 Gem::${gem_name}.Private.Object
     )
 
+    ly_add_target(
+        NAME ${gem_name}.Editor.Private.Object STATIC
+        NAMESPACE Gem
+        AUTORCC
+        FILES_CMAKE
+            audioenginewwise_editor_files.cmake
+        TARGET_PROPERTIES
+            O3DE_PRIVATE_TARGET TRUE
+        COMPILE_DEFINITIONS
+            PUBLIC
+                ${AUDIOENGINEWWISE_COMPILEDEFINITIONS}
+        INCLUDE_DIRECTORIES
+            PRIVATE
+                Source/Engine
+                Source/Editor
+                ${pal_dir}
+        BUILD_DEPENDENCIES
+            PUBLIC
+                3rdParty::Wwise
+                Gem::AudioSystem.Editor.API
+                Legacy::CryCommon
+            PRIVATE
+                Legacy::EditorCore
+                Gem::${gem_name}.Private.Object
+        RUNTIME_DEPENDENCIES
+            Gem::AudioSystem.Editor
+    )
+
+    ly_add_target(
+        NAME ${gem_name}.Editor GEM_MODULE
+        NAMESPACE Gem
+        FILES_CMAKE
+            audioenginewwise_editor_shared_files.cmake
+        COMPILE_DEFINITIONS
+            PRIVATE
+                AUDIO_ENGINE_WWISE_EDITOR
+        INCLUDE_DIRECTORIES
+            PRIVATE
+                Source/Engine
+                Source/Editor
+                ${pal_dir}
+        BUILD_DEPENDENCIES
+            PUBLIC
+                Gem::AudioSystem.API
+            PRIVATE
+                Gem::${gem_name}.Editor.Private.Object
+        RUNTIME_DEPENDENCIES
+            Gem::AudioSystem.Editor
+            ${gem_name}.Builder 
+    )
+
+
     ly_create_alias(NAME ${gem_name}.Builders   NAMESPACE Gem TARGETS Gem::${gem_name}.Builder)
     ly_create_alias(NAME ${gem_name}.Tools      NAMESPACE Gem TARGETS Gem::${gem_name}.Editor)
+
+    # Copy initial wwise project, audio banks and ATL libs if needed
+    foreach(project ${LY_PROJECTS})
+        file(REAL_PATH ${project} project_path BASE_DIRECTORY ${LY_ROOT_FOLDER})
+        cmake_path(SET project_sounds_path  "${project_path}/Sounds")
+        if (NOT EXISTS ${project_sounds_path})
+            message(STATUS "Copying default Wwise Project and banks to ${project_sounds_path}")
+            cmake_path(SET sounds_path_source "${CMAKE_CURRENT_SOURCE_DIR}/../External/Sounds")
+            file(COPY ${sounds_path_source} DESTINATION ${project_path})
+        endif()
+
+        cmake_path(SET audio_atl_path  "${project_path}/libs/gameaudio/wwise")
+        if (NOT EXISTS ${audio_atl_path})
+            message(STATUS "Copying default ATL libraries to ${audio_atl_path}")
+            cmake_path(SET audio_atl_path_source "${CMAKE_CURRENT_SOURCE_DIR}/../External/libs")
+            file(COPY ${audio_atl_path_source} DESTINATION ${audio_atl_path})
+        endif()
+    endforeach()
 
     if (PAL_TRAIT_BUILD_TESTS_SUPPORTED)
         ly_add_target(

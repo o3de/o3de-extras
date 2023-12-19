@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<WwiseDocument Type="WorkUnit" ID="{A42623DF-F587-47CD-B8B0-D38A3A2DB704}" SchemaVersion="103">
+	<Events>
+		<WorkUnit Name="Default Work Unit" ID="{A42623DF-F587-47CD-B8B0-D38A3A2DB704}" PersistMode="Standalone">
+			<ChildrenList>
+				<Event Name="do_nothing" ID="{56D6EA09-1C7B-42C8-9434-B5D3624E92B0}"/>
+				<Event Name="get_focus" ID="{F34BD743-654F-46A1-9EA9-BE46224D9F74}">
+					<ChildrenList>
+						<Action Name="" ID="{C0E8300E-A64C-4574-87D8-E8499D78F137}" ShortID="712983038">
+							<PropertyList>
+								<Property Name="ActionType" Type="int16" Value="5"/>
+							</PropertyList>
+							<ReferenceList>
+								<Reference Name="Target">
+									<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{C805CA09-4FBD-4A75-8519-F03C7F13FF6D}"/>
+								</Reference>
+							</ReferenceList>
+						</Action>
+					</ChildrenList>
+				</Event>
+				<Event Name="lose_focus" ID="{4E07F272-C8FD-4E03-B615-9207332E19DA}">
+					<ChildrenList>
+						<Action Name="" ID="{3431715C-BF6C-4341-A0CB-EF792DA3DA40}" ShortID="171493104">
+							<PropertyList>
+								<Property Name="ActionType" Type="int16" Value="4"/>
+							</PropertyList>
+							<ReferenceList>
+								<Reference Name="Target">
+									<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{C805CA09-4FBD-4A75-8519-F03C7F13FF6D}"/>
+								</Reference>
+							</ReferenceList>
+						</Action>
+					</ChildrenList>
+				</Event>
+				<Event Name="mute_all" ID="{74483CC1-7E8B-4BDE-B590-1E88E8D28FE2}">
+					<ChildrenList>
+						<Action Name="" ID="{63C42FD3-0CAF-4C0E-A02D-386EA539DCC4}" ShortID="658544379">
+							<PropertyList>
+								<Property Name="ActionType" Type="int16" Value="4"/>
+							</PropertyList>
+							<ReferenceList>
+								<Reference Name="Target">
+									<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{C805CA09-4FBD-4A75-8519-F03C7F13FF6D}"/>
+								</Reference>
+							</ReferenceList>
+						</Action>
+					</ChildrenList>
+				</Event>
+				<Event Name="unmute_all" ID="{A145D9AA-C381-4AC7-9378-83DA7891903B}">
+					<ChildrenList>
+						<Action Name="" ID="{25242E1E-2FD1-45C1-B4E5-CD8E0AE79388}" ShortID="1007572928">
+							<PropertyList>
+								<Property Name="ActionType" Type="int16" Value="5"/>
+							</PropertyList>
+							<ReferenceList>
+								<Reference Name="Target">
+									<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{C805CA09-4FBD-4A75-8519-F03C7F13FF6D}"/>
+								</Reference>
+							</ReferenceList>
+						</Action>
+					</ChildrenList>
+				</Event>
+			</ChildrenList>
+		</WorkUnit>
+	</Events>
+</WwiseDocument>
