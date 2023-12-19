@@ -98,7 +98,7 @@ namespace ROS2
                 AZ_Assert(entity, "Unknown entity %s", descendantID.ToString().c_str());
 
                 // If there is a Frame Component, take joint name stored in it.
-                auto* frameComponent = Utils::GetGameOrEditorComponent<ROS2FrameComponent>(entity);
+                auto* frameComponent = entity->FindComponent<ROS2FrameComponent>();
                 if (!frameComponent)
                 { // Frame Component is required for joints.
                     continue;
@@ -174,7 +174,7 @@ namespace ROS2
 
     void JointsManipulationComponent::Activate()
     {
-        auto* ros2Frame = Utils::GetGameOrEditorComponent<ROS2FrameComponent>(GetEntity());
+        auto* ros2Frame = GetEntity()->FindComponent<ROS2FrameComponent>();
         JointStatePublisherContext publisherContext;
         publisherContext.m_publisherNamespace = ros2Frame->GetNamespace();
         publisherContext.m_frameId = ros2Frame->GetFrameID();
@@ -416,7 +416,7 @@ namespace ROS2
 
     AZStd::string JointsManipulationComponent::GetManipulatorNamespace() const
     {
-        auto* frameComponent = Utils::GetGameOrEditorComponent<ROS2FrameComponent>(m_entity);
+        auto* frameComponent = GetEntity()->FindComponent<ROS2FrameComponent>();
         AZ_Assert(frameComponent, "ROS2FrameComponent is required for joints.");
         return frameComponent->GetNamespace();
     }

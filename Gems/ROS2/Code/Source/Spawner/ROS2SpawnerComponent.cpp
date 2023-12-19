@@ -170,7 +170,7 @@ namespace ROS2
         AZStd::string instanceName = AZStd::string::format("%s_%d", spawnableName.c_str(), m_counter++);
         for (AZ::Entity* entity : view)
         { // Update name for the first entity with ROS2Frame in hierarchy (left to right)
-            auto* frameComponent = Utils::GetGameOrEditorComponent<ROS2FrameComponent>(entity);
+            auto* frameComponent = entity->FindComponent<ROS2FrameComponent>();
             if (frameComponent)
             {
                 entity->SetName(instanceName);

@@ -6,6 +6,7 @@
  *
  */
 
+#include "ROS2/Frame/ROS2FrameEditorComponent.h"
 #include <Camera/CameraConstants.h>
 #include <Camera/ROS2CameraSensorEditorComponent.h>
 #include <ROS2/Frame/ROS2FrameComponent.h>
@@ -78,7 +79,7 @@ namespace ROS2::SDFormat
             }
 
             // Create required components
-            Utils::CreateComponent<ROS2FrameComponent>(entity);
+            Utils::CreateComponent<ROS2FrameEditorComponent>(entity);
 
             // Create Camera component
             if (Utils::CreateComponent<ROS2CameraSensorEditorComponent>(entity, sensorConfiguration, cameraConfiguration))

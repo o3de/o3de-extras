@@ -18,7 +18,7 @@ namespace ROS2
 {
     void JointsTrajectoryComponent::Activate()
     {
-        auto* ros2Frame = Utils::GetGameOrEditorComponent<ROS2FrameComponent>(GetEntity());
+        auto* ros2Frame = GetEntity()->FindComponent<ROS2FrameComponent>();
         AZ_Assert(ros2Frame, "Missing Frame Component!");
         AZStd::string namespacedAction = ROS2Names::GetNamespacedName(ros2Frame->GetNamespace(), m_followTrajectoryActionName);
         m_followTrajectoryServer = AZStd::make_unique<FollowJointTrajectoryActionServer>(namespacedAction, GetEntityId());

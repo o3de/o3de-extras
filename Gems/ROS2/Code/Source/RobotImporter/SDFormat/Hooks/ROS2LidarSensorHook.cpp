@@ -6,6 +6,7 @@
  *
  */
 
+#include "ROS2/Frame/ROS2FrameEditorComponent.h"
 #include <Lidar/ROS2Lidar2DSensorComponent.h>
 #include <Lidar/ROS2LidarSensorComponent.h>
 #include <ROS2/Frame/ROS2FrameComponent.h>
@@ -92,7 +93,7 @@ namespace ROS2::SDFormat
             }
 
             // Create required components
-            Utils::CreateComponent<ROS2FrameComponent>(entity);
+            Utils::CreateComponent<ROS2FrameEditorComponent>(entity);
 
             // Create Lidar component
             const auto lidarComponent = is2DLidar

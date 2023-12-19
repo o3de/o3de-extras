@@ -9,6 +9,7 @@
 #include "URDFPrefabMaker.h"
 #include "CollidersMaker.h"
 #include "PrefabMakerUtils.h"
+#include "ROS2/Frame/ROS2FrameEditorComponent.h"
 #include <API/EditorAssetSystemAPI.h>
 #include <Atom/Feature/Mesh/MeshFeatureProcessor.h>
 #include <AzCore/Debug/Trace.h>
@@ -441,7 +442,7 @@ namespace ROS2
             AZ::Entity* childEntityPtr = AzToolsFramework::GetEntityById(childEntity.GetValue());
             if (childEntityPtr)
             {
-                auto* component = Utils::GetGameOrEditorComponent<ROS2FrameComponent>(childEntityPtr);
+                auto* component = childEntityPtr->FindComponent<ROS2FrameComponent>();
                 if (component)
                 {
                     component->SetJointName(azJointName);
@@ -602,10 +603,10 @@ namespace ROS2
 
         createdEntities.emplace_back(entityId);
 
-        const auto frameComponentId = Utils::CreateComponent(entityId, ROS2FrameComponent::TYPEINFO_Uuid());
+        const auto frameComponentId = Utils::CreateComponent(entityId, ROS2FrameEditorComponent::TYPEINFO_Uuid());
         if (frameComponentId)
         {
-            auto* component = Utils::GetGameOrEditorComponent<ROS2FrameComponent>(entity);
+            auto* component = entity->FindComponent<ROS2FrameEditorComponent>();
             AZ_Assert(component, "ROS2 Frame Component does not exist for %s", entityId.ToString().c_str());
             component->SetFrameID(AZStd::string(link.Name().c_str(), link.Name().size()));
         }
