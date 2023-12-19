@@ -565,7 +565,11 @@ namespace Audio
         if (!IS_WWISE_OK(akResult))
         {
             // This does not qualify for a fallback to the 'Null' audio implementation!
+#if defined(WWISE_RELEASE)
             AZLOG_ERROR("Wwise failed to load %s, returned AKRESULT %d", Wwise::InitBank, akResult);
+#else
+            AZLOG_WARN("Wwise failed to load %s, returned AKRESULT %d. Have you generated Wwise audio banks?", Wwise::InitBank, akResult);
+#endif
             m_initBankID = AK_INVALID_BANK_ID;
         }
 
