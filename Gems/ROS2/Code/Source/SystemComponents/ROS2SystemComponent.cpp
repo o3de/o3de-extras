@@ -105,7 +105,7 @@ namespace ROS2
         // handle signals, e.g. via `Ctrl+C` hotkey or `kill` command 
         auto handler = [](int sig){
             rclcpp::shutdown(); // shutdown rclcpp
-            std::raise(SIGINT); // shutdown o3de
+            std::raise(sig); // shutdown o3de
             };
         signal(SIGINT, handler);
         signal(SIGTERM, handler);
