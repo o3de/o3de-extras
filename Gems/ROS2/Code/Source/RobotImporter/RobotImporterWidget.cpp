@@ -256,6 +256,7 @@ namespace ROS2
     void RobotImporterWidget::onCurrentIdChanged(int id)
     {
         AZ_Printf("Wizard", "Wizard at page %d", id);
+        QWizard::setOption(HavePrefabCreationButton, false);
 
         if (currentPage() == m_assetPage)
         {
