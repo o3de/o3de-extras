@@ -154,7 +154,7 @@ A sample set of parameters can be seen in this image:
 
 ***Tip 5***
 
-The `WarehouseScene.prefab` is equipped with 2 Reflection Probes, which can be found in `Warehouse/Global_illumination/Reflection_Probe`. To work correctly, Reflection Probes require baked materials and, thus are disabled by default. For a better visual experience, it is advised to enable them. To do so follow these steps:
+The `WarehouseScene.prefab` is equipped with 2 Reflection Probes, which can be found in `Warehouse/Global_illumination/Reflection_Probe`. To work correctly, Reflection Probes require baked materials and, as such, are disabled by default. For a better visual experience, it is advised to enable them. To do so follow these steps:
 
 1. Open the `WarehouseScene.prefab`.
 2. Navigate to `Warehouse/Global_illumination` and locate 2 `Reflection_Probe` entities.
