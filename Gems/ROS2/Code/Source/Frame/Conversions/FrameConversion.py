@@ -24,6 +24,14 @@ def find_and_replace(data):
                 del modifiedElement["m_template"]
                 del item["ROS2FrameComponent"]
                 item["ROS2FrameEditorComponent"] = modifiedElement
+            if foundComponents and "m_template" in item:
+                if "$type" in item["m_template"] and item["m_template"]["$type"] == "ROS2FrameComponent":
+                    modifiedElement = item
+                    modifiedElement["$type"] = "ROS2FrameEditorComponent"
+                    del modifiedElement["m_template"]["$type"]
+                    modifiedElement["ROS2FrameConfiguration"] = modifiedElement["m_template"]
+                    del modifiedElement["m_template"]
+                    item = modifiedElement
             if "op" in item and item["op"] == "replace" and "path" in item:
                 item["path"] = item["path"].replace("ROS2FrameComponent/m_template", "ROS2FrameEditorComponent/ROS2FrameConfiguration")
             for value in item.values():

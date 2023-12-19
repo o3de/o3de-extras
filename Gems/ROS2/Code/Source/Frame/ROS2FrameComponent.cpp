@@ -84,18 +84,12 @@ namespace ROS2
     AZ::JsonSerializationResult::Result JsonFrameComponentConfigSerializer::Load(
         void* outputValue, const AZ::Uuid& outputValueTypeId, const rapidjson::Value& inputValue, AZ::JsonDeserializerContext& context)
     {
-        auto ros2frameSystemInterface = ROS2FrameSystemInterface::Get();
         AZ_Error(
             "ROS2FrameComponent",
             false,
-            "An old version of the ROS2FrameComponent is being loaded. These components will be converted to the new "
-            "ROS2EditorFrameComponents, but NOT SAVED. Manual conversion to save the new project is required. The conversion script is "
+            "An old version of the ROS2FrameComponent is being loaded. Manual conversion is required. The conversion script is "
             "located in: "
             "o3de-extras/Gems/ROS2/Code/Source/Frame/Conversions/FrameConversion.py");
-        if (ros2frameSystemInterface != nullptr)
-        {
-            ros2frameSystemInterface->InformAboutNeededConversion();
-        }
 
         namespace JSR = AZ::JsonSerializationResult;
 
@@ -302,11 +296,39 @@ namespace ROS2
         {
             serialize->Class<ROS2FrameComponent, AZ::Component>()
                 ->Version(1)
-                // ->Field("ROS2FrameConfiguration", &ROS2FrameComponent::m_configuration)
                 ->Field("Frame Name", &ROS2FrameComponent::m_frameName)
                 ->Field("Joint Name", &ROS2FrameComponent::m_jointName)
                 ->Field("Publish Transform", &ROS2FrameComponent::m_publishTransform)
                 ->Field("Namespace Configuration", &ROS2FrameComponent::m_namespaceConfiguration);
+
+            if (AZ::EditContext* ec = serialize->GetEditContext())
+            {
+                ec->Class<ROS2FrameComponent>("ROS2 Frame Game Component [depreciated]", "[ROS2 Frame component]")
+                    ->ClassElement(AZ::Edit::ClassElements::EditorData, "")
+                    ->Attribute(AZ::Edit::Attributes::Category, "ROS2")
+                    ->Attribute(AZ::Edit::Attributes::Icon, "Icons/Components/ROS2Frame.svg")
+                    ->Attribute(AZ::Edit::Attributes::ViewportIcon, "Icons/Components/Viewport/ROS2Frame.svg")
+                    ->Attribute(AZ::Edit::Attributes::HelpPageURL, "https://o3de.org/docs/user-guide/components/reference/ros2-frame/")
+                    ->UIElement(
+                        AZ::Edit::UIHandlers::Label,
+                        "This component is no longer supported. Manual conversion to the ROS2FrameEditorComponent is required.")
+                    ->DataElement(AZ::Edit::UIHandlers::Default, &ROS2FrameComponent::m_frameName, "Frame Name", "Name of the frame.")
+                    // ->Attribute(AZ::Edit::Attributes::ReadOnly, true)
+                    ->DataElement(AZ::Edit::UIHandlers::Default, &ROS2FrameComponent::m_jointName, "Joint Name", "Name of the joint.")
+                    // ->Attribute(AZ::Edit::Attributes::ReadOnly, true)
+                    ->DataElement(
+                        AZ::Edit::UIHandlers::Default,
+                        &ROS2FrameComponent::m_publishTransform,
+                        "Publish Transform",
+                        "Publish the transform of this frame.")
+                    // ->Attribute(AZ::Edit::Attributes::ReadOnly, true)
+                    ->DataElement(
+                        AZ::Edit::UIHandlers::Default,
+                        &ROS2FrameComponent::m_namespaceConfiguration,
+                        "Namespace Configuration",
+                        "Configuration of the namespace for this frame.");
+                // ->Attribute(AZ::Edit::Attributes::ReadOnly, true);;
+            }
         }
     }
 
