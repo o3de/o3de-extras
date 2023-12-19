@@ -3,7 +3,7 @@
 # Warehouse Automation Gem for Open 3D Engine (O3DE)
 
 ## Requirements
-- Any O3DE project with the [O3DE ROS2 Gem](https://github.com/o3de/o3de-extras/tree/development/Gems/ROS2) enabled.
+- Any O3DE project with the [ROS 2 Gem](https://github.com/o3de/o3de-extras/tree/development/Gems/ROS2) enabled.
 
 Please refer to [O3DE documentation](https://docs.o3de.org/docs/user-guide/gems/) to learn more about Gems and about registering Gems in the system and O3DE projects.
 
@@ -21,7 +21,7 @@ Images of all prefabs are given in the next section.
 
 The proximity sensor is an O3DE component with no corresponding visualization. It uses `AzPhysics::RayCastRequest` to check for collisions in its range and returns continuously the result of this test via `ProximitySensorNotificationBus`. Any O3DE component can connect to this bus and react to certain events. The sensor and the bus are also available for scripting in [ScriptCanvas](https://docs.o3de.org/docs/user-guide/scripting/script-canvas/). It is possible to set the frequency and the range of the sensor. The visualization beam can be disabled.
 
-The Gem was implemented primarily for [ROSCon2023Demo](https://github.com/RobotecAI/ROSCon2023Demo) project and it was separated for easier reuse in other works. More details about robotic simulations can be found in [ROS2 Gem documentation](https://docs.o3de.org/docs/user-guide/interactivity/robotics/). 
+The Gem was implemented primarily for [ROSCon2023Demo](https://github.com/RobotecAI/ROSCon2023Demo) project and it was separated for easier reuse in other works. More details about robotic simulations can be found in [ROS 2 Gem documentation](https://docs.o3de.org/docs/user-guide/interactivity/robotics/). 
 
 ## Screenshots
 

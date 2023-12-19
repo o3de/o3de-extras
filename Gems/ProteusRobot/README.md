@@ -3,7 +3,7 @@
 # Proteus Robot Gem for Open 3D Engine (O3DE)
 
 ## Requirements
-- Any O3DE project with the [O3DE ROS2 Gem](https://github.com/o3de/o3de-extras/tree/development/Gems/ROS2) enabled.
+- Any O3DE project with the [ROS 2 Gem](https://github.com/o3de/o3de-extras/tree/development/Gems/ROS2) enabled.
 
 Please refer to [O3DE documentation](https://docs.o3de.org/docs/user-guide/gems/) to learn more about Gems and about registering Gems in the system and O3DE projects.
 
