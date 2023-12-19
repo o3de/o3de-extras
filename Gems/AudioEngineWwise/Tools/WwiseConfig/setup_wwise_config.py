@@ -31,12 +31,10 @@ class WwiseVersionInfo:
         self.display_name = ''
         self.install_dir = ''
         self.version_name = version
-        self.is_ltx = False
         self.is_new_cli = False     # For different invoke syntax
 
     def __str__(self):
         return f'{self.display_name}\n' \
-               f'  LTX: {self.is_ltx}\n' \
                f'  CLI: {self.cli_tool}\n' \
                f'  EXE: {self.exe_tool}\n'
 
@@ -69,7 +67,7 @@ def get_options():
     """
     parser = ArgumentParser()
     parser.add_argument('--project_path', '-p', required=True,
-                        help='Path to LY project to set up')
+                        help='Path to the O3DE project to set up')
     options = parser.parse_args()
 
     wwise_install_table_file = os.path.join(os.environ['ProgramFiles(x86)'],
@@ -103,13 +101,6 @@ def parse_wwise_project(wwise_project):
     """
     wwise_doc = ElementTree.parse(wwise_project)
     root = wwise_doc.getroot()
-
-    # There is no known 'LTX' designation contained in the Wwise Project xml.
-    # But we can count on the existence (or lack thereof) of certain features/folders/etc to figure
-    # out if this project is Wwise LTX or not.
-    music_folder = root.find('./ProjectInfo/Project/PhysicalFolderList/PhysicalFolder[@Path="Interactive Music Hierarchy"]')
-    if music_folder is None:
-        sys.exit('[Error] Wwise LTX Project: Project Needs Upgrade')
 
     project_version = root.get('WwiseVersion')
 
@@ -173,7 +164,6 @@ def parse_wwise_versions(install_table):
         info = WwiseVersionInfo(version_name)
         info.install_dir = version_data['targetDir']
         info.display_name = version_data['bundle']['displayName']
-        info.is_ltx = 'LTX' in version_data['bundle']['version']['nickname']
 
         # Wwise Authoring EXE
         info.exe_tool = os.path.join(info.install_dir,
@@ -190,7 +180,7 @@ def parse_wwise_versions(install_table):
                                      'Authoring', 'x64', 'Release', 'bin',
                                      tool + '.exe')
             if os.path.exists(tool_path):
-                info.is_new_cli = tool is 'WwiseConsole'
+                info.is_new_cli = tool == 'WwiseConsole'
                 info.cli_tool = tool_path
                 break
 
@@ -323,7 +313,7 @@ def run_wwise_setup():
     print(__copyright__)
     print()
 
-    if platform.system() is not 'Windows':
+    if platform.system() != 'Windows':
         sys.exit(f'[Error] {platform.system()} is not supported.  Please run this script from a Windows OS.')
 
     options = get_options()

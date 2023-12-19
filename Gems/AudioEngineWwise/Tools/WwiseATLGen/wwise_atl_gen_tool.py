@@ -29,7 +29,7 @@ STATE_TYPE = 1
 
 
 def get_options():
-    parser = ArgumentParser(description='Process soundbank metadata and generate ATL xml data for Lumberyard.\n'
+    parser = ArgumentParser(description='Process soundbank metadata and generate ATL xml data for O3DE.\n'
                             'Path arguments can be relative to the working directory of this script.')
     parser.add_argument('--bankPath', required=True,
                         help='Root path where to look for banks, e.g. <Project>\\Sounds\\wwise')
