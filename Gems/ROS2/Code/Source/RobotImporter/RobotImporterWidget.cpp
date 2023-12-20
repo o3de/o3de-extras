@@ -35,6 +35,7 @@ namespace ROS2
         m_assetPage = new CheckAssetPage(this);
         m_prefabMakerPage = new PrefabMakerPage(this);
         m_xacroParamsPage = new XacroParamsPage(this);
+        m_modifiedUrdfWindow = new ModifiedURDFWindow();
 
         addPage(m_introPage);
         addPage(m_fileSelectPage);
@@ -46,6 +47,16 @@ namespace ROS2
         connect(this, &QWizard::currentIdChanged, this, &RobotImporterWidget::onCurrentIdChanged);
         connect(m_prefabMakerPage, &QWizardPage::completeChanged, this, &RobotImporterWidget::OnUrdfCreated);
         connect(m_prefabMakerPage, &PrefabMakerPage::onCreateButtonPressed, this, &RobotImporterWidget::onCreateButtonPressed);
+        connect(
+            m_robotDescriptionPage,
+            &RobotDescriptionPage::onSaveModifiedURDFPressed,
+            this,
+            &RobotImporterWidget::onSaveModifiedURDFPressed);
+        connect(
+            m_robotDescriptionPage,
+            &RobotDescriptionPage::onShowModifiedURDFPressed,
+            this,
+            &RobotImporterWidget::onShowModifiedURDFPressed);
         connect(
             this,
             &QWizard::customButtonClicked,
@@ -91,6 +102,7 @@ namespace ROS2
     {
         // This is a URDF only path, and therefore the report text does not mention SDF
         report += "# " + tr("The URDF was parsed, though results were modified to be compatible with SDFormat") + "\n";
+        report += tr("Please check the modified code and/or save it using the button below.") + "\n";
 
         if (!parsedSdfOutcome.m_urdfModifications.missingInertias.empty())
         {
@@ -130,8 +142,7 @@ namespace ROS2
             }
         }
 
-        report += "\n# " + tr("The modified URDF code:") + "\n";
-        report += "```\n" + QString::fromStdString(parsedSdfOutcome.m_modifiedURDFContent) + "```\n";
+        m_modifiedUrdfWindow->SetUrdfData(QString::fromStdString(parsedSdfOutcome.m_modifiedURDFContent));
     }
 
     void RobotImporterWidget::OpenUrdf()
@@ -627,6 +638,17 @@ namespace ROS2
     void RobotImporterWidget::onCreateButtonPressed()
     {
         CreatePrefab(m_prefabMakerPage->GetPrefabName());
+    }
+
+    void RobotImporterWidget::onSaveModifiedURDFPressed()
+    {
+        AZ_Warning("JHTODO", false, "Save pressed");
+    }
+
+    void RobotImporterWidget::onShowModifiedURDFPressed()
+    {
+        m_modifiedUrdfWindow->resize(this->size());
+        m_modifiedUrdfWindow->show();
     }
 
     bool RobotImporterWidget::CheckCyclicalDependency(AZ::IO::Path importedPrefabPath)

@@ -18,6 +18,8 @@ set(FILES
     Source/Manipulation/JointsManipulationEditorComponent.h
     Source/RobotImporter/FixURDF/FixURDF.cpp
     Source/RobotImporter/FixURDF/FixURDF.h
+    Source/RobotImporter/Pages/ModifiedURDFWindow.cpp
+    Source/RobotImporter/Pages/ModifiedURDFWindow.h
     Source/RobotImporter/Pages/CheckAssetPage.cpp
     Source/RobotImporter/Pages/CheckAssetPage.h
     Source/RobotImporter/Pages/RobotDescriptionPage.cpp

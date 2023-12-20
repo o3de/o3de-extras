@@ -10,6 +10,8 @@
 
 #if !defined(Q_MOC_RUN)
 #include <QLabel>
+#include <QLineEdit>
+#include <QPushButton>
 #include <QString>
 #include <QTextEdit>
 #include <QWizardPage>
@@ -25,10 +27,16 @@ namespace ROS2
         void ReportParsingResult(const QString& status, bool isSuccess, bool isWarning = false);
         bool isComplete() const override;
         bool isWarning() const;
+    Q_SIGNALS:
+        void onSaveModifiedURDFPressed();
+        void onShowModifiedURDFPressed();
 
     private:
         QTextEdit* m_log;
         QString m_fileName;
+        QLineEdit* m_urdfName;
+        QPushButton* m_saveButton;
+        QPushButton* m_showButton;
         bool m_success;
         bool m_warning;
     };

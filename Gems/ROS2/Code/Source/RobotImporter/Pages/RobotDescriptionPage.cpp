@@ -16,13 +16,26 @@ namespace ROS2
         , m_success(false)
         , m_warning(false)
     {
+        m_urdfName = new QLineEdit(this);
+        m_saveButton = new QPushButton(tr("Save URDF"), this);
+        m_showButton = new QPushButton(tr("Show URDF"), this);
         m_log = new QTextEdit(this);
-        setTitle(tr("URDF/SDF opening results:"));
-        QVBoxLayout* layout = new QVBoxLayout;
-        layout->addWidget(m_log);
         m_log->acceptRichText();
         m_log->setReadOnly(true);
+
+        QVBoxLayout* layout = new QVBoxLayout;
+        QHBoxLayout* layoutInner = new QHBoxLayout;
+        layoutInner->addWidget(m_urdfName);
+        layoutInner->addWidget(m_saveButton);
+        layoutInner->addWidget(m_showButton);
+
+        layout->addWidget(m_log);
+        layout->addLayout(layoutInner);
+
+        setTitle(tr("URDF/SDF opening results:"));
         setLayout(layout);
+        connect(m_saveButton, &QPushButton::pressed, this, &RobotDescriptionPage::onSaveModifiedURDFPressed);
+        connect(m_showButton, &QPushButton::pressed, this, &RobotDescriptionPage::onShowModifiedURDFPressed);
     }
 
     void RobotDescriptionPage::ReportParsingResult(const QString& status, bool isSuccess, bool isWarning)

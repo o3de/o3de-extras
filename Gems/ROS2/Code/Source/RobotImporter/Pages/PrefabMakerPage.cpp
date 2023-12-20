@@ -47,6 +47,8 @@ namespace ROS2
         m_prefabName = new QLineEdit(this);
         m_createButton = new QPushButton(tr("Create Prefab"), this);
         m_log = new QTextEdit(this);
+        m_log->acceptRichText();
+        m_log->setReadOnly(true);
 
         setTitle(tr("Prefab creation"));
         QVBoxLayout* layout = new QVBoxLayout;
