@@ -61,15 +61,6 @@ namespace ROS2::VehicleDynamics
         }
     }
 
-    SkidSteeringModelLimits::SkidSteeringModelLimits(
-        const float linearLimit, const float angularLimit, const float linearAcceleration, const float angularAcceleration)
-    {
-        m_linearLimit = AZStd::clamp(linearLimit, 0.0f, 100.0f);
-        m_angularLimit = AZStd::clamp(angularLimit, 0.0f, 10.0f);
-        m_linearAcceleration = AZStd::clamp(linearAcceleration, 0.0f, 100.0f);
-        m_angularAcceleration = AZStd::clamp(angularAcceleration, 0.0f, 100.0f);
-    }
-
     VehicleInputs SkidSteeringModelLimits::LimitState(const VehicleInputs& inputState) const
     {
         VehicleInputs ret = inputState;

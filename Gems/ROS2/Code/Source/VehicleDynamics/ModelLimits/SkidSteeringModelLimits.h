@@ -21,8 +21,6 @@ namespace ROS2::VehicleDynamics
     public:
         AZ_RTTI(SkidSteeringModelLimits, "{23420EFB-BB62-48C7-AD37-E50580A53C39}", VehicleModelLimits);
         SkidSteeringModelLimits() = default;
-        SkidSteeringModelLimits(
-            const float linearLimit, const float angularLimit, const float linearAcceleration, const float angularAcceleration);
 
         static void Reflect(AZ::ReflectContext* context);
 

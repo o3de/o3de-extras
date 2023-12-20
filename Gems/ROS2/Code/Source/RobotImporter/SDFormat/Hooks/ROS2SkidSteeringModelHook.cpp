@@ -23,7 +23,7 @@ namespace ROS2::SDFormat
 {
     namespace Parser
     {
-        VehicleDynamics::VehicleConfiguration GetConfiguration(
+        VehicleDynamics::VehicleConfiguration CreateVehicleConfiguration(
             const sdf::ElementPtr element, const sdf::Model& sdfModel, const CreatedEntitiesMap& createdEntities)
         {
             VehicleDynamics::VehicleConfiguration configuration;
@@ -47,7 +47,7 @@ namespace ROS2::SDFormat
                 else
                 {
                     AZ_Warning(
-                        "ROS2SkidSteeringModelPluginHook",
+                        "CreateVehicleConfiguration",
                         false,
                         "Cannot find entity ID for one of the joints: %s or %s",
                         jointNameLeft.c_str(),
@@ -113,7 +113,7 @@ namespace ROS2::SDFormat
                     {
                         constexpr float epsilon = 0.001f;
                         AZ_Warning(
-                            "ROS2SkidSteeringModelPluginHook",
+                            "CreateVehicleConfiguration",
                             fabsf(configuration.m_wheelbase - wheelSeparation->Get<float>()) < epsilon,
                             "Different wheel separation distances in one model are not supported.");
                     }
@@ -130,7 +130,7 @@ namespace ROS2::SDFormat
                     wheelDiameter = wheelDiameter->GetNextElement("wheel_diameter");
                 }
                 AZ_Warning(
-                    "ROS2SkidSteeringModelPluginHook",
+                    "CreateVehicleConfiguration",
                     wheelPairs == configuration.m_axles.size(),
                     "VehicleConfiguration parsing might be incorrect: expected %d axles, found %d.",
                     wheelPairs,
@@ -138,14 +138,12 @@ namespace ROS2::SDFormat
             }
 
             AZ_Warning(
-                "ROS2SkidSteeringModelPluginHook",
-                !configuration.m_axles.empty(),
-                "VehicleConfiguration parsing error: cannot find any axles.");
+                "CreateVehicleConfiguration", !configuration.m_axles.empty(), "VehicleConfiguration parsing error: cannot find any axles.");
 
             return configuration;
         }
 
-        VehicleDynamics::SkidSteeringModelLimits GetModelLimits(const sdf::ElementPtr element)
+        VehicleDynamics::SkidSteeringModelLimits CreateModelLimits(const sdf::ElementPtr element)
         {
             VehicleDynamics::SkidSteeringModelLimits modelLimits;
             if (element->HasElement("wheelAcceleration"))
@@ -158,7 +156,7 @@ namespace ROS2::SDFormat
             }
             else
             {
-                AZ_Warning("ROS2SkidSteeringModelPluginHook", false, "VehicleConfiguration parsing error: cannot determine model limits.");
+                AZ_Warning("CreateModelLimits", false, "VehicleConfiguration parsing error: cannot determine model limits.");
             }
 
             return modelLimits;
@@ -177,8 +175,9 @@ namespace ROS2::SDFormat
         {
             // Parse parameters
             const sdf::ElementPtr element = sdfPlugin.Element();
-            VehicleDynamics::VehicleConfiguration vehicleConfiguration = Parser::GetConfiguration(element, sdfModel, createdEntities);
-            VehicleDynamics::SkidSteeringModelLimits modelLimits = Parser::GetModelLimits(element);
+            VehicleDynamics::VehicleConfiguration vehicleConfiguration =
+                Parser::CreateVehicleConfiguration(element, sdfModel, createdEntities);
+            VehicleDynamics::SkidSteeringModelLimits modelLimits = Parser::CreateModelLimits(element);
 
             // Create required components
             HooksUtils::CreateComponent<ROS2FrameComponent>(entity);
