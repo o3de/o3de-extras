@@ -3,7 +3,7 @@
 # Proteus Robot Gem for Open 3D Engine (O3DE)
 
 ## Requirements
-- Any O3DE project with the [ROS 2 Gem](https://github.com/o3de/o3de-extras/tree/development/Gems/ROS2) enabled.
+- Any O3DE project with the [ROS 2 Gem](https://docs.o3de.org/docs/user-guide/interactivity/robotics/) enabled.
 
 Please refer to [O3DE documentation](https://docs.o3de.org/docs/user-guide/gems/) to learn more about Gems and about registering Gems in the system and O3DE projects.
 
@@ -16,7 +16,7 @@ This is an Asset Gem. It contains a simplified model of [Proteus Robot](https://
 
 Additionally, the model is equipped with links that are suitable for adding `Camera` and `Imu` sensors.
 
-The robot publishes Lidar Sensor's output on the`/base_link/pc` ROS 2 topic and can be driven using the `/base_link/cmd_vel` ROS 2 topic. 
+The robot publishes Lidar Sensor's output on the`/base_link/pc` ROS 2 topic and can be driven using the `/base_link/cmd_vel` ROS 2 topic. An example of its use can be found in [ROS 2 Project Template](https://github.com/o3de/o3de-extras/tree/development/Templates/Ros2FleetRobotTemplate).
 
 ## Screenshots
 ![](docs/images/front.png)
