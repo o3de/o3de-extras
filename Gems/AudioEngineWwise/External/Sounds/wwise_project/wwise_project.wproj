@@ -47,9 +47,9 @@
 				<Property Name="SoundBankPostGenerateCustomCmdLines" Type="string">
 					<ValueList>
 						<Value Platform="Windows">"$(CopyStreamedFilesExePath)" -info "$(InfoFilePath)" -outputpath "$(SoundBankPath)" -banks "$(SoundBankListAsTextFile)" -languages "$(LanguageList)" 
-						"$(WwiseProjectPath)\..\..\..\python\python.cmd" "$(WwiseProjectPath)\Tools\WwiseAuthoringScripts\bank_info_parser.py" "$(InfoFilePath)" "$(SoundBankPath)"</Value>
+"$(WwiseProjectPath)/Tools/WwiseAuthoringScripts/run_bank_info_parser.cmd" "$(WwiseProjectPath)/../../" "$(InfoFilePath)" "$(SoundBankPath)"</Value>
 						<Value Platform="Linux">"$(CopyStreamedFilesExePath)" -info "$(InfoFilePath)" -outputpath "$(SoundBankPath)" -banks "$(SoundBankListAsTextFile)" -languages "$(LanguageList)" 
-						"$(WwiseProjectPath)/../../../python/python.sh" "$(WwiseProjectPath)/Tools/WwiseAuthoringScripts/bank_info_parser.py" "$(InfoFilePath)" "$(SoundBankPath)"</Value>
+"$(WwiseProjectPath)/Tools/WwiseAuthoringScripts/run_bank_info_parser.cmd" "$(WwiseProjectPath)/../../" "$(InfoFilePath)" "$(SoundBankPath)"</Value>
 					</ValueList>
 				</Property>
 				<Property Name="SoundBankPreGenerateCustomCmdDescription" Type="string">
