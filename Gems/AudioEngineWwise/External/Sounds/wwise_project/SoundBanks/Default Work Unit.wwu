@@ -4,7 +4,10 @@
 		<WorkUnit Name="Default Work Unit" ID="{C05CA78C-87B3-4E38-88D1-E3E79CD4BED8}" PersistMode="Standalone">
 			<ChildrenList>
 				<SoundBank Name="default" ID="{244C7441-076F-4AE5-8BA5-90D15C057F81}">
-					<ObjectInclusionList/>
+					<ObjectInclusionList>
+						<ObjectRef Name="gun_blaster_no_trigger_shot_1" ID="{9D598E92-B93A-416E-AC49-228104A021BA}" WorkUnitID="{7458331F-AEA0-4860-9FFF-D3D504856040}" Origin="Manual" Filter="7"/>
+						<ObjectRef Name="Play_Blaster_Shot" ID="{7B05EAAD-4DEC-43E8-B397-1217E376F3B7}" WorkUnitID="{A42623DF-F587-47CD-B8B0-D38A3A2DB704}" Origin="Manual" Filter="7"/>
+					</ObjectInclusionList>
 					<ObjectExclusionList/>
 					<GameSyncExclusionList/>
 				</SoundBank>

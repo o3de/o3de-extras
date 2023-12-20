@@ -60,6 +60,17 @@
 						</Action>
 					</ChildrenList>
 				</Event>
+				<Event Name="Play_Blaster_Shot" ID="{7B05EAAD-4DEC-43E8-B397-1217E376F3B7}">
+					<ChildrenList>
+						<Action Name="" ID="{1C51545A-AC75-462E-BC8C-0EA920E32F34}" ShortID="748674742">
+							<ReferenceList>
+								<Reference Name="Target">
+									<ObjectRef Name="gun_blaster_no_trigger_shot_1" ID="{9D598E92-B93A-416E-AC49-228104A021BA}" WorkUnitID="{7458331F-AEA0-4860-9FFF-D3D504856040}"/>
+								</Reference>
+							</ReferenceList>
+						</Action>
+					</ChildrenList>
+				</Event>
 			</ChildrenList>
 		</WorkUnit>
 	</Events>

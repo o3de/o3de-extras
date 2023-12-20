@@ -246,7 +246,7 @@ if (PAL_TRAIT_BUILD_HOST_TOOLS)
         if (NOT EXISTS ${audio_atl_path})
             message(STATUS "Copying default ATL libraries to ${audio_atl_path}")
             cmake_path(SET audio_atl_path_source "${CMAKE_CURRENT_SOURCE_DIR}/../External/libs")
-            file(COPY ${audio_atl_path_source} DESTINATION ${audio_atl_path})
+            file(COPY ${audio_atl_path_source} DESTINATION ${project_path})
         endif()
     endforeach()
 

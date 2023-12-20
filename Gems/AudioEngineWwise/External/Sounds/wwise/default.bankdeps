@@ -1,0 +1,10 @@
+{
+    "version": "1.0",
+    "bankName": "default.bnk",
+    "dependencies": [
+        "Init.bnk"
+    ],
+    "includedEvents": [
+        "Play_Blaster_Shot"
+    ]
+}
