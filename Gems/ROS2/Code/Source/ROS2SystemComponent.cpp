@@ -5,6 +5,9 @@
  * SPDX-License-Identifier: Apache-2.0 OR MIT
  *
  */
+#include <signal.h>
+
+#include "ROS2SystemComponent.h"
 #include <Lidar/LidarCore.h>
 #include <ROS2/Clock/PhysicallyStableClock.h>
 #include <ROS2/Communication/PublisherConfiguration.h>
@@ -12,7 +15,6 @@
 #include <ROS2/Communication/TopicConfiguration.h>
 #include <ROS2/Sensor/SensorConfiguration.h>
 #include <ROS2/Utilities/Controllers/PidConfiguration.h>
-#include <ROS2SystemComponent.h>
 #include <VehicleDynamics/VehicleModelComponent.h>
 
 #include <Atom/RPI.Public/Pass/PassSystemInterface.h>
@@ -47,7 +49,10 @@ namespace ROS2
 
             if (AZ::EditContext* ec = serialize->GetEditContext())
             {
-                ec->Class<ROS2SystemComponent>("ROS2 System Component", "[Description of functionality provided by this System Component]")
+                ec->Class<ROS2SystemComponent>(
+                      "ROS 2 System Component",
+                      "This component is responsible for creating ROS 2 node and executor, provides ROS 2 interfaces, manages ROS 2 clock and "
+                      "publishes transforms.")
                     ->ClassElement(AZ::Edit::ClassElements::EditorData, "")
                     ->Attribute(AZ::Edit::Attributes::AppearsInAddComponentMenu, AZ_CRC_CE("System"))
                     ->Attribute(AZ::Edit::Attributes::Category, "ROS2")
@@ -82,7 +87,6 @@ namespace ROS2
         {
             ROS2Interface::Register(this);
         }
-        return;
     }
 
     ROS2SystemComponent::~ROS2SystemComponent()
@@ -97,6 +101,14 @@ namespace ROS2
     void ROS2SystemComponent::Init()
     {
         rclcpp::init(0, 0);
+
+        // handle signals, e.g. via `Ctrl+C` hotkey or `kill` command
+        auto handler = [](int sig){
+            rclcpp::shutdown(); // shutdown rclcpp
+            std::raise(sig); // shutdown o3de
+            };
+        signal(SIGINT, handler);
+        signal(SIGTERM, handler);
     }
 
     void ROS2SystemComponent::InitClock()
