@@ -117,8 +117,47 @@ namespace ROS2
             // if a ticket for this spawnable was not created but the spawnable name is correct, create the ticket and then use it to
             // spawn an entity
             auto spawnable = m_controller.GetSpawnables().find(spawnableName);
+
+        if (spawnable->second->IsLoading())
+        {
+            // This is an Editor only situation. All assets during game mode are fully loaded.
+            response.success = false;
+            response.status_message = "Asset for spawnable " + request->name + " has not yet loaded.";
+            service_handle->send_response(*header, response);
+            return;
+        }
+
+        auto spawnable = m_controller.GetSpawnables().find(spawnableName);
+
+        if (spawnable->second->IsLoading())
+        {
+            // This is an Editor only situation. All assets during game mode are fully loaded.
+            response.success = false;
+            response.status_message = "Asset for spawnable " + request->name + " has not yet loaded.";
+            service_handle->send_response(*header, response);
+            return;
+        }
+
+        if (spawnable->second->IsError())
+        {
+            response.success = false;
+            response.status_message = "Spawnable " + request->name + " loaded with an error.";
+            service_handle->send_response(*header, response);
+            return;
+        }
+
+        if (!m_tickets.contains(spawnableName))
+        {
+            // if a ticket for this spawnable was not created but the spawnable name is correct, create the ticket and then use it to
+            // spawn an entity
+            auto spawnable = m_controller.GetSpawnables().find(spawnableName);
             m_tickets.emplace(spawnable->first, AzFramework::EntitySpawnTicket(spawnable->second));
         }
+
+        auto spawnableTicket = AzFramework::EntitySpawnTicket(spawnable->second);
+        auto ticketId = spawnableTicket.GetId();
+        AZStd::string ticketName = spawnable->first + "_" + AZStd::to_string(ticketId);
+        m_tickets.emplace(ticketName, AZStd::move(spawnableTicket));
 
         auto spawner = AZ::Interface<AzFramework::SpawnableEntitiesDefinition>::Get();
 
