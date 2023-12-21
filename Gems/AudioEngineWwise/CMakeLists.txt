@@ -35,4 +35,10 @@ endif()
 
 o3de_gem_setup("AudioEngineWwise")
 
+if(TARGET AudioEngineWwise)
+    # For backwards compatibility with engines that include AudioEngineWwise
+    # use Wwise for the targets if AudioEngineWwise is already defined
+    set(gem_name "Wwise")
+endif()
+
 add_subdirectory(Code)
