@@ -46,6 +46,16 @@ namespace ROS2
         emit completeChanged();
     }
 
+    void RobotDescriptionPage::SetModifiedURDFName(const AZStd::string prefabName)
+    {
+        m_urdfName->setText(QString::fromUtf8(prefabName.data(), int(prefabName.size())));
+    }
+
+    AZStd::string RobotDescriptionPage::GetModifiedURDFName() const
+    {
+        return AZStd::string(m_urdfName->text().toUtf8().constData());
+    }
+
     bool RobotDescriptionPage::isComplete() const
     {
         return m_success;

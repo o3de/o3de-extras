@@ -142,7 +142,7 @@ namespace ROS2
             }
         }
 
-        m_modifiedUrdfWindow->SetUrdfData(QString::fromStdString(parsedSdfOutcome.m_modifiedURDFContent));
+        m_modifiedUrdfWindow->SetUrdfData(AZStd::move(parsedSdfOutcome.m_modifiedURDFContent));
     }
 
     void RobotImporterWidget::OpenUrdf()
@@ -276,6 +276,12 @@ namespace ROS2
         else if (currentPage() == m_prefabMakerPage)
         {
             FillPrefabMakerPage();
+        }
+        else if (currentPage() == m_robotDescriptionPage)
+        {
+            AZStd::string urdfName = m_urdfPath.ReplaceExtension("").String();
+            urdfName.append("_modified.urdf");
+            m_robotDescriptionPage->SetModifiedURDFName(urdfName);
         }
     }
 
@@ -642,7 +648,24 @@ namespace ROS2
 
     void RobotImporterWidget::onSaveModifiedURDFPressed()
     {
-        AZ_Warning("JHTODO", false, "Save pressed");
+        const auto filePath = m_robotDescriptionPage->GetModifiedURDFName();
+        const auto& streamData = m_modifiedUrdfWindow->GetUrdfData();
+        bool success = false;
+        AZ::IO::FileIOBase* fileIo = AZ::IO::FileIOBase::GetInstance();
+        AZ::IO::FixedMaxPathString resolvedPath;
+        if (fileIo == nullptr || !fileIo->ResolvePath(filePath.c_str(), resolvedPath.data(), resolvedPath.capacity() + 1))
+        {
+            resolvedPath = filePath;
+        }
+        if (AZ::IO::SystemFile fileHandle; fileHandle.Open(
+                resolvedPath.c_str(),
+                AZ::IO::SystemFile::SF_OPEN_CREATE | AZ::IO::SystemFile::SF_OPEN_CREATE_PATH | AZ::IO::SystemFile::SF_OPEN_WRITE_ONLY))
+        {
+            AZ::IO::SizeType bytesWritten = fileHandle.Write(streamData.data(), streamData.size());
+            success = (bytesWritten == streamData.size());
+        }
+
+        AZ_Warning("onSaveModifiedURDFPressed", success, "Cannot save the output file %s", filePath.c_str());
     }
 
     void RobotImporterWidget::onShowModifiedURDFPressed()

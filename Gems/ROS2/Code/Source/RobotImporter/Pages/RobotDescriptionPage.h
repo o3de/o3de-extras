@@ -8,6 +8,8 @@
 
 #pragma once
 
+#include <AzCore/std/string/string.h>
+
 #if !defined(Q_MOC_RUN)
 #include <QLabel>
 #include <QLineEdit>
@@ -25,6 +27,8 @@ namespace ROS2
     public:
         explicit RobotDescriptionPage(QWizard* parent);
         void ReportParsingResult(const QString& status, bool isSuccess, bool isWarning = false);
+        void SetModifiedURDFName(const AZStd::string prefabName);
+        AZStd::string GetModifiedURDFName() const;
         bool isComplete() const override;
         bool isWarning() const;
     Q_SIGNALS:

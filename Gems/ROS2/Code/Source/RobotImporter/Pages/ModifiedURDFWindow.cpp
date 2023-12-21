@@ -31,8 +31,14 @@ namespace ROS2
         this->hide();
     }
 
-    void ModifiedURDFWindow::SetUrdfData(const QString& urdf)
+    void ModifiedURDFWindow::SetUrdfData(const std::string& urdf)
     {
-        m_log->setText(urdf);
+        m_urdf = AZStd::move(urdf);
+        m_log->setText(QString::fromStdString(m_urdf));
+    }
+
+    const std::string& ModifiedURDFWindow::GetUrdfData() const
+    {
+        return m_urdf;
     }
 } // namespace ROS2

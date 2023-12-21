@@ -8,6 +8,8 @@
 
 #pragma once
 
+#include <string>
+
 #if !defined(Q_MOC_RUN)
 #include <QLabel>
 #include <QPushButton>
@@ -23,12 +25,14 @@ namespace ROS2
         Q_OBJECT
     public:
         ModifiedURDFWindow();
-        void SetUrdfData(const QString& urdf);
+        const std::string& GetUrdfData() const;
+        void SetUrdfData(const std::string& urdf);
 
     protected:
         void closeEvent(QCloseEvent* event) override;
 
     private:
         QTextEdit* m_log;
+        std::string m_urdf;
     };
 } // namespace ROS2
