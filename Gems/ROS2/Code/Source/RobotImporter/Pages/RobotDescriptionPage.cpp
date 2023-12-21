@@ -34,8 +34,8 @@ namespace ROS2
 
         setTitle(tr("URDF/SDF opening results:"));
         setLayout(layout);
-        connect(m_saveButton, &QPushButton::pressed, this, &RobotDescriptionPage::onSaveModifiedURDFPressed);
-        connect(m_showButton, &QPushButton::pressed, this, &RobotDescriptionPage::onShowModifiedURDFPressed);
+        connect(m_saveButton, &QPushButton::pressed, this, &RobotDescriptionPage::onSaveModifiedUrdfPressed);
+        connect(m_showButton, &QPushButton::pressed, this, &RobotDescriptionPage::onShowModifiedUrdfPressed);
     }
 
     void RobotDescriptionPage::ReportParsingResult(const QString& status, bool isSuccess, bool isWarning)
@@ -46,12 +46,12 @@ namespace ROS2
         emit completeChanged();
     }
 
-    void RobotDescriptionPage::SetModifiedURDFName(const AZStd::string prefabName)
+    void RobotDescriptionPage::SetModifiedUrdfName(const AZStd::string prefabName)
     {
         m_urdfName->setText(QString::fromUtf8(prefabName.data(), int(prefabName.size())));
     }
 
-    AZStd::string RobotDescriptionPage::GetModifiedURDFName() const
+    AZStd::string RobotDescriptionPage::GetModifiedUrdfName() const
     {
         return AZStd::string(m_urdfName->text().toUtf8().constData());
     }

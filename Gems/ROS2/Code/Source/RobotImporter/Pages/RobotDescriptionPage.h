@@ -27,13 +27,13 @@ namespace ROS2
     public:
         explicit RobotDescriptionPage(QWizard* parent);
         void ReportParsingResult(const QString& status, bool isSuccess, bool isWarning = false);
-        void SetModifiedURDFName(const AZStd::string prefabName);
-        AZStd::string GetModifiedURDFName() const;
+        void SetModifiedUrdfName(const AZStd::string prefabName);
+        AZStd::string GetModifiedUrdfName() const;
         bool isComplete() const override;
         bool isWarning() const;
     Q_SIGNALS:
-        void onSaveModifiedURDFPressed();
-        void onShowModifiedURDFPressed();
+        void onSaveModifiedUrdfPressed();
+        void onShowModifiedUrdfPressed();
 
     private:
         QTextEdit* m_log;

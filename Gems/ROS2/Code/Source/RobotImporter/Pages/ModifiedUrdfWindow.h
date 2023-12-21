@@ -20,11 +20,11 @@
 
 namespace ROS2
 {
-    class ModifiedURDFWindow : public QWidget
+    class ModifiedUrdfWindow : public QWidget
     {
         Q_OBJECT
     public:
-        ModifiedURDFWindow();
+        ModifiedUrdfWindow();
         const std::string& GetUrdfData() const;
         void SetUrdfData(const std::string& urdf);
 

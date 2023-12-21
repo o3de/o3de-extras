@@ -35,7 +35,7 @@ namespace ROS2
         m_assetPage = new CheckAssetPage(this);
         m_prefabMakerPage = new PrefabMakerPage(this);
         m_xacroParamsPage = new XacroParamsPage(this);
-        m_modifiedUrdfWindow = new ModifiedURDFWindow();
+        m_modifiedUrdfWindow = new ModifiedUrdfWindow();
 
         addPage(m_introPage);
         addPage(m_fileSelectPage);
@@ -49,14 +49,14 @@ namespace ROS2
         connect(m_prefabMakerPage, &PrefabMakerPage::onCreateButtonPressed, this, &RobotImporterWidget::onCreateButtonPressed);
         connect(
             m_robotDescriptionPage,
-            &RobotDescriptionPage::onSaveModifiedURDFPressed,
+            &RobotDescriptionPage::onSaveModifiedUrdfPressed,
             this,
-            &RobotImporterWidget::onSaveModifiedURDFPressed);
+            &RobotImporterWidget::onSaveModifiedUrdfPressed);
         connect(
             m_robotDescriptionPage,
-            &RobotDescriptionPage::onShowModifiedURDFPressed,
+            &RobotDescriptionPage::onShowModifiedUrdfPressed,
             this,
-            &RobotImporterWidget::onShowModifiedURDFPressed);
+            &RobotImporterWidget::onShowModifiedUrdfPressed);
         connect(
             this,
             &QWizard::customButtonClicked,
@@ -281,7 +281,7 @@ namespace ROS2
         {
             AZStd::string urdfName = m_urdfPath.ReplaceExtension("").String();
             urdfName.append("_modified.urdf");
-            m_robotDescriptionPage->SetModifiedURDFName(urdfName);
+            m_robotDescriptionPage->SetModifiedUrdfName(urdfName);
         }
     }
 
@@ -646,9 +646,9 @@ namespace ROS2
         CreatePrefab(m_prefabMakerPage->GetPrefabName());
     }
 
-    void RobotImporterWidget::onSaveModifiedURDFPressed()
+    void RobotImporterWidget::onSaveModifiedUrdfPressed()
     {
-        const auto filePath = m_robotDescriptionPage->GetModifiedURDFName();
+        const auto filePath = m_robotDescriptionPage->GetModifiedUrdfName();
         const auto& streamData = m_modifiedUrdfWindow->GetUrdfData();
         bool success = false;
         AZ::IO::FileIOBase* fileIo = AZ::IO::FileIOBase::GetInstance();
@@ -665,10 +665,10 @@ namespace ROS2
             success = (bytesWritten == streamData.size());
         }
 
-        AZ_Warning("onSaveModifiedURDFPressed", success, "Cannot save the output file %s", filePath.c_str());
+        AZ_Warning("onSaveModifiedUrdfPressed", success, "Cannot save the output file %s", filePath.c_str());
     }
 
-    void RobotImporterWidget::onShowModifiedURDFPressed()
+    void RobotImporterWidget::onShowModifiedUrdfPressed()
     {
         m_modifiedUrdfWindow->resize(this->size());
         m_modifiedUrdfWindow->show();
