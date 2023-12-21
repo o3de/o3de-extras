@@ -84,7 +84,7 @@ namespace ROS2
 
     void PrefabMakerPage::ReportProgress(const AZStd::string& progressForUser)
     {
-        m_log->setText(QString::fromUtf8(progressForUser.data(), int(progressForUser.size())));
+        m_log->setMarkdown(QString::fromUtf8(progressForUser.data(), int(progressForUser.size())));
     }
 
     void PrefabMakerPage::SetSuccess(bool success)

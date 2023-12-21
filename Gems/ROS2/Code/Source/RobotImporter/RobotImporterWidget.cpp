@@ -102,7 +102,6 @@ namespace ROS2
     {
         // This is a URDF only path, and therefore the report text does not mention SDF
         report += "# " + tr("The URDF was parsed, though results were modified to be compatible with SDFormat") + "\n";
-        report += tr("Please check the modified code and/or save it using the button below.") + "\n";
 
         if (!parsedSdfOutcome.m_urdfModifications.missingInertias.empty())
         {
@@ -142,6 +141,7 @@ namespace ROS2
             }
         }
 
+        report += "\n\n# " + tr("💡Please check the modified code and/or save it using the interface below.") + "\n";
         m_modifiedUrdfWindow->SetUrdfData(AZStd::move(parsedSdfOutcome.m_modifiedURDFContent));
     }
 
@@ -633,7 +633,7 @@ namespace ROS2
         }
         else
         {
-            AZStd::string status = "Failed to create prefab\n";
+            AZStd::string status = "# Failed to create prefab\n";
             status += prefabOutcome.GetError() + "\n";
             status += m_prefabMaker->GetStatus();
             m_prefabMakerPage->ReportProgress(status);
