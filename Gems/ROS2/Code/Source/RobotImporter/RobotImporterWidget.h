@@ -12,7 +12,7 @@
 #include "Pages/CheckAssetPage.h"
 #include "Pages/FileSelectionPage.h"
 #include "Pages/IntroPage.h"
-#include "Pages/ModifiedUrdfWindow.h"
+#include "Pages/ModifiedURDFWindow.h"
 #include "Pages/PrefabMakerPage.h"
 #include "Pages/RobotDescriptionPage.h"
 #include "Pages/XacroParamsPage.h"
@@ -74,7 +74,7 @@ namespace ROS2
         CheckAssetPage* m_assetPage;
         PrefabMakerPage* m_prefabMakerPage;
         XacroParamsPage* m_xacroParamsPage;
-        ModifiedUrdfWindow* m_modifiedUrdfWindow;
+        ModifiedURDFWindow* m_modifiedUrdfWindow;
         AZ::IO::Path m_urdfPath;
         sdf::Root m_parsedSdf{};
 

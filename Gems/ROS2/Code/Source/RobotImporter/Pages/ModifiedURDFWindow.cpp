@@ -6,14 +6,14 @@
  *
  */
 
-#include "ModifiedUrdfWindow.h"
+#include "ModifiedURDFWindow.h"
 #include <AzCore/Utils/Utils.h>
 #include <QCloseEvent>
 #include <QVBoxLayout>
 
 namespace ROS2
 {
-    ModifiedUrdfWindow::ModifiedUrdfWindow()
+    ModifiedURDFWindow::ModifiedURDFWindow()
     {
         m_log = new QTextEdit();
         m_log->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOn);
@@ -25,19 +25,19 @@ namespace ROS2
         this->setLayout(layout);
     }
 
-    void ModifiedUrdfWindow::closeEvent([[maybe_unused]] QCloseEvent* event)
+    void ModifiedURDFWindow::closeEvent([[maybe_unused]] QCloseEvent* event)
     {
         event->ignore();
         this->hide();
     }
 
-    void ModifiedUrdfWindow::SetUrdfData(const std::string& urdf)
+    void ModifiedURDFWindow::SetUrdfData(const std::string& urdf)
     {
         m_urdf = AZStd::move(urdf);
         m_log->setText(QString::fromStdString(m_urdf));
     }
 
-    const std::string& ModifiedUrdfWindow::GetUrdfData() const
+    const std::string& ModifiedURDFWindow::GetUrdfData() const
     {
         return m_urdf;
     }

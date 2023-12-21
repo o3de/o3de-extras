@@ -35,7 +35,7 @@ namespace ROS2
         m_assetPage = new CheckAssetPage(this);
         m_prefabMakerPage = new PrefabMakerPage(this);
         m_xacroParamsPage = new XacroParamsPage(this);
-        m_modifiedUrdfWindow = new ModifiedUrdfWindow();
+        m_modifiedUrdfWindow = new ModifiedURDFWindow();
 
         addPage(m_introPage);
         addPage(m_fileSelectPage);
