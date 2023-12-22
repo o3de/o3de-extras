@@ -22,8 +22,9 @@ namespace ROS2
     public:
         AZ_RTTI(ROS2FrameSystemRequests, "{24fe4584-0499-4a37-bc1a-00ca04bd22f5}");
 
-        //! Registers the ROS2FrameEditorComponent into the system. All ROS2FrameEditorComponents should
-        //! register using this function during activation
+        //! Registers the ROS2FrameEditorComponent into the ROS2FrameSystemComponent. All ROS2FrameEditorComponents should
+        //! register using this function during activation.
+        //! This is used to properly handle the entity tree and namespaces, for the ROS2FrameEditorComponents.
         //! @param frameEntityId entityId containing the frame to register.
         virtual void RegisterFrame(const AZ::EntityId& frameEntityId) = 0;
 
@@ -34,12 +35,14 @@ namespace ROS2
 
         //! Move the frame in the entity tree.
         //! Moves the frame entity and updates all namespaces.
+        //! Used by the ROS2FrameSystemComponent to change the frames configuration after entity move in the editor.
         //! @param frameEntityId entityId of the frame to move.
         //! @param newParent entityId of the new parent of the moved frame (does not need to be a entity
         //! containing a frame component).
         virtual void MoveFrame(const AZ::EntityId& frameEntityId, const AZ::EntityId& newParent) = 0;
 
         //! Notify the system entity about frames configuration change.
+        //! This function should be called when a frame entity has changed its reflected configuration.
         //! @param frameEntityId entityId of the frame components entity that has changed its configuration.
         virtual void NotifyChange(const AZ::EntityId& frameEntityId) = 0;
 

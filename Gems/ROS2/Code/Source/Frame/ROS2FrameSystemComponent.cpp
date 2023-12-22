@@ -6,7 +6,8 @@
  *
  */
 
-#include "ROS2/Frame/ROS2FrameEditorComponent.h"
+#include "ROS2FrameSystemComponent.h"
+#include "ROS2FrameSystemBus.h"
 #include <AzCore/Component/ComponentApplicationBus.h>
 #include <AzCore/Component/ComponentBus.h>
 #include <AzCore/Component/Entity.h>
@@ -17,8 +18,7 @@
 #include <AzToolsFramework/ToolsComponents/TransformComponent.h>
 #include <ROS2/Frame/ROS2FrameBus.h>
 #include <ROS2/Frame/ROS2FrameComponent.h>
-#include <ROS2/Frame/ROS2FrameSystemBus.h>
-#include <ROS2/Frame/ROS2FrameSystemComponent.h>
+#include <ROS2/Frame/ROS2FrameEditorComponent.h>
 #include <ROS2/ROS2GemUtilities.h>
 
 namespace ROS2

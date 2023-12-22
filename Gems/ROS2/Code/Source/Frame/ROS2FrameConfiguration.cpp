@@ -16,7 +16,6 @@
 
 namespace ROS2
 {
-
     void ROS2FrameConfiguration::Reflect(AZ::ReflectContext* context)
     {
         NamespaceConfiguration::Reflect(context);

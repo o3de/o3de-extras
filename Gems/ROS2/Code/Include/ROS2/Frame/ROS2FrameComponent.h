@@ -7,8 +7,8 @@
  */
 #pragma once
 
-#include "AzCore/Serialization/Json/BaseJsonSerializer.h"
 #include <AzCore/Component/Component.h>
+#include <AzCore/Serialization/Json/BaseJsonSerializer.h>
 #include <AzCore/std/smart_ptr/unique_ptr.h>
 #include <AzFramework/Components/TransformComponent.h>
 #include <ROS2/Frame/NamespaceConfiguration.h>
@@ -19,7 +19,6 @@
 
 namespace ROS2
 {
-
     // Custom JSON serializer for ROS2FrameComponent configuration to handle version conversion
     class JsonFrameComponentConfigSerializer : public AZ::BaseJsonSerializer
     {
@@ -32,9 +31,6 @@ namespace ROS2
             const AZ::Uuid& outputValueTypeId,
             const rapidjson::Value& inputValue,
             AZ::JsonDeserializerContext& context) override;
-
-        // AZ::JsonSerializationResult::Result Store(rapidjson::Value& outputValue, const void* inputValue, const void* defaultValue,
-        //     const AZ::Uuid& valueTypeId, AZ::JsonSerializerContext& context);
     };
 
     //! This component marks an interesting reference frame for ROS2 ecosystem.
@@ -122,8 +118,6 @@ namespace ROS2
         //! @note This also works with top-level frames, returning a global frame name.
         //! @see GetGlobalFrameName().
         AZStd::string GetParentFrameID() const;
-
-        // ROS2FrameConfiguration m_configuration;
 
         // Deprecated values used for backwards compatibility
         NamespaceConfiguration m_namespaceConfiguration;

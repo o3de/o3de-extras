@@ -6,18 +6,18 @@
  *
  */
 
-#include "AzCore/Serialization/Json/JsonSerialization.h"
-#include "AzCore/Serialization/Json/JsonSerializationResult.h"
-#include "AzCore/Serialization/Json/RegistrationContext.h"
-#include "ROS2/Frame/ROS2FrameConfiguration.h"
-#include "ROS2/Frame/ROS2FrameSystemComponent.h"
+#include "ROS2FrameSystemComponent.h"
 #include <AzCore/Component/Entity.h>
 #include <AzCore/Component/EntityUtils.h>
 #include <AzCore/RTTI/ReflectContext.h>
 #include <AzCore/Serialization/EditContext.h>
 #include <AzCore/Serialization/EditContextConstants.inl>
+#include <AzCore/Serialization/Json/JsonSerialization.h>
+#include <AzCore/Serialization/Json/JsonSerializationResult.h>
+#include <AzCore/Serialization/Json/RegistrationContext.h>
 #include <AzCore/Serialization/SerializeContext.h>
 #include <ROS2/Frame/ROS2FrameComponent.h>
+#include <ROS2/Frame/ROS2FrameConfiguration.h>
 #include <ROS2/ROS2Bus.h>
 #include <ROS2/ROS2GemUtilities.h>
 #include <ROS2/Utilities/ROS2Names.h>
@@ -303,7 +303,10 @@ namespace ROS2
 
             if (AZ::EditContext* ec = serialize->GetEditContext())
             {
-                ec->Class<ROS2FrameComponent>("ROS2 Frame Game Component [depreciated]", "[ROS2 Frame component]")
+                ec->Class<ROS2FrameComponent>(
+                      "ROS2 Frame Game Component (outdated)",
+                      "This is a game version of the ROS2 Frame component. This is outdated and was updated to the new "
+                      "ROS2FrameEditorComponent. If you see this component a manual conversion is required.")
                     ->ClassElement(AZ::Edit::ClassElements::EditorData, "")
                     ->Attribute(AZ::Edit::Attributes::Category, "ROS2")
                     ->Attribute(AZ::Edit::Attributes::Icon, "Icons/Components/ROS2Frame.svg")
@@ -313,21 +316,17 @@ namespace ROS2
                         AZ::Edit::UIHandlers::Label,
                         "This component is no longer supported. Manual conversion to the ROS2FrameEditorComponent is required.")
                     ->DataElement(AZ::Edit::UIHandlers::Default, &ROS2FrameComponent::m_frameName, "Frame Name", "Name of the frame.")
-                    // ->Attribute(AZ::Edit::Attributes::ReadOnly, true)
                     ->DataElement(AZ::Edit::UIHandlers::Default, &ROS2FrameComponent::m_jointName, "Joint Name", "Name of the joint.")
-                    // ->Attribute(AZ::Edit::Attributes::ReadOnly, true)
                     ->DataElement(
                         AZ::Edit::UIHandlers::Default,
                         &ROS2FrameComponent::m_publishTransform,
                         "Publish Transform",
                         "Publish the transform of this frame.")
-                    // ->Attribute(AZ::Edit::Attributes::ReadOnly, true)
                     ->DataElement(
                         AZ::Edit::UIHandlers::Default,
                         &ROS2FrameComponent::m_namespaceConfiguration,
                         "Namespace Configuration",
                         "Configuration of the namespace for this frame.");
-                // ->Attribute(AZ::Edit::Attributes::ReadOnly, true);;
             }
         }
     }

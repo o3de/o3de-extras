@@ -15,7 +15,6 @@
 
 namespace ROS2
 {
-
     class ROS2FrameConfiguration final : public AZ::ComponentConfig
     {
     public:

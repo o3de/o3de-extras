@@ -7,6 +7,7 @@
  */
 #pragma once
 
+#include "ROS2FrameSystemBus.h"
 #include <AzCore/Component/Component.h>
 #include <AzCore/Component/Entity.h>
 #include <AzCore/Component/EntityId.h>
@@ -15,13 +16,13 @@
 #include <AzCore/RTTI/RTTIMacros.h>
 #include <AzCore/std/containers/map.h>
 #include <AzCore/std/containers/vector.h>
-#include <AzCore/std/parallel/mutex.h>
 #include <AzCore/std/string/string.h>
-#include <ROS2/Frame/ROS2FrameSystemBus.h>
 
 namespace ROS2
 {
     // Handler class for the ROS2FrameEditorComponent. It watches for changes in the entity tree and notifies about moves.
+    // Used by the ROS2FrameSystemComponent, to track changes in the entity tree. It notifies the ROS2FrameSystemComponent
+    // and calls the appropriate functions to update the changes.
     class ROS2FrameSystemTransformHandler : public AZ::TransformNotificationBus::Handler
     {
     public:
@@ -38,7 +39,7 @@ namespace ROS2
         //! @param frameEntityId frame to remove.
         void RemoveFrameEntity(AZ::EntityId frameEntityId);
 
-        //! Get size of the m_frameEntities.
+        //! Get the number of frame entities which will be notified about a change in the tree.
         //! @return size of the m_frameEntities.
         unsigned int GetFrameCount();
 
@@ -46,6 +47,10 @@ namespace ROS2
         AZStd::set<AZ::EntityId> m_frameEntities;
     };
 
+    //! Component which manages the frame entities and their hierarchy.
+    //! It is responsible for updating the namespaces of the frame entities and their children.
+    //! It also notifies the ROS2FrameEditorComponent about changes in the tree.
+    //! Used to register, unregister, track the frame entities in the level entity tree.
     class ROS2FrameSystemComponent
         : public AZ::Component
         , public ROS2FrameSystemInterface::Registrar

@@ -8,12 +8,12 @@
 #include <AzCore/RTTI/RTTIMacros.h>
 #include <Camera/ROS2CameraSensorEditorComponent.h>
 #include <Camera/ROS2EditorCameraSystemComponent.h>
+#include <Frame/ROS2FrameSystemComponent.h>
 #include <Georeference/GeoreferenceLevelEditorComponent.h>
 #include <Lidar/LidarRegistrarEditorSystemComponent.h>
 #include <Manipulation/JointsManipulationEditorComponent.h>
 #include <QtCore/qglobal.h>
 #include <ROS2/Frame/ROS2FrameEditorComponent.h>
-#include <ROS2/Frame/ROS2FrameSystemComponent.h>
 #include <ROS2ModuleInterface.h>
 #include <RobotImporter/ROS2RobotImporterEditorSystemComponent.h>
 #include <SdfAssetBuilder/SdfAssetBuilderSystemComponent.h>

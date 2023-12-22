@@ -16,6 +16,8 @@
 
 namespace ROS2
 {
+    //! Interface for the ROS2FrameEditorComponent.
+    //! Used to change and get information about the ROS2FrameEditorComponent.
     class ROS2FrameComponentRequests : public AZ::ComponentBus
     {
     public:
@@ -76,5 +78,4 @@ namespace ROS2
     };
 
     using ROS2FrameComponentNotificaionBus = AZ::EBus<ROS2FrameComponentNotifications>;
-
 } // namespace ROS2
