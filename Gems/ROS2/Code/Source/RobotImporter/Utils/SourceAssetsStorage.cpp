@@ -320,7 +320,7 @@ namespace ROS2::Utils
             }
             CopyReferencedAsset(unresolvedFileName, destDirectory.GetValue(), urdfAsset, duplicatedFilenames[unresolvedFileName]);
         }
-        Utils::Remove$tmpDir(destDirectory.GetValue().importDirectoryTmp);
+        Utils::RemoveTmpDir(destDirectory.GetValue().importDirectoryTmp);
 
         return urdfAssetMap;
     }
@@ -542,7 +542,7 @@ namespace ROS2::Utils
         return AZ::Success(importedAssetsDest);
     }
 
-    AZ::Outcome<bool> Remove$tmpDir(const AZ::IO::Path $tmpDir, AZ::IO::FileIOBase* fileIO)
+    AZ::Outcome<bool> RemoveTmpDir(const AZ::IO::Path $tmpDir, AZ::IO::FileIOBase* fileIO)
     {
         AZ_Assert(fileIO, "No FileIO instance");
         const auto outcomeRemoveTmpDir = fileIO->DestroyPath($tmpDir.c_str());

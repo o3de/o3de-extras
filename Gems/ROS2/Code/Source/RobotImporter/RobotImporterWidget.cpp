@@ -417,7 +417,7 @@ namespace ROS2
                             // Check all assets that are ready to be processed
                             CheckToProcessAssets();
                         }
-                        Utils::Remove$tmpDir(destStatus.GetValue().importDirectoryTmp);
+                        Utils::RemoveTmpDir(destStatus.GetValue().importDirectoryTmp);
 
                         if (!m_toProcessAssets.empty())
                         {

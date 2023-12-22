@@ -14,7 +14,6 @@
 #include <AzCore/Asset/AssetManagerBus.h>
 #include <AzCore/IO/FileIO.h>
 #include <AzCore/IO/Path/Path.h>
-#include <AzCore/IO/Path/Path_fwd.h>
 #include <AzCore/Math/Crc.h>
 #include <AzCore/std/containers/unordered_map.h>
 #include <AzCore/std/containers/unordered_set.h>
@@ -228,7 +227,7 @@ namespace ROS2::Utils
     //! @param tmpDir - path to temporary directory
     //! @param fileIO - instance to fileIO class
     //! @returns true if succeed
-    AZ::Outcome<bool> Remove$tmpDir(const AZ::IO::Path $tmpDir, AZ::IO::FileIOBase* fileIO = AZ::IO::FileIOBase::GetInstance());
+    AZ::Outcome<bool> RemoveTmpDir(const AZ::IO::Path $tmpDir, AZ::IO::FileIOBase* fileIO = AZ::IO::FileIOBase::GetInstance());
 
     //! Creates a list of files referenced in an asset (e.g. materials)
     //! @param sourceMeshAssetPath - global path to source asset used to find scene
