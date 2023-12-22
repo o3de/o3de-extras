@@ -642,7 +642,23 @@ namespace ROS2
         {
             if (attachedModel != nullptr)
             {
-                m_articulationsMaker.AddArticulationLink(*attachedModel, &link, entityId);
+                const auto linkResult = m_articulationsMaker.AddArticulationLink(*attachedModel, &link, entityId);
+                std::string linkName = link.Name();
+                AZStd::string azLinkName(linkName.c_str(), linkName.size());
+                if (linkResult.IsSuccess())
+                {
+                    AZStd::lock_guard<AZStd::mutex> lck(m_statusLock);
+                    m_status.emplace(
+                        StatusMessageType::Joint,
+                        AZStd::string::format("%s created as articulation link: %llu", azLinkName.c_str(), linkResult.GetValue()));
+                }
+                else
+                {
+                    AZStd::lock_guard<AZStd::mutex> lck(m_statusLock);
+                    m_status.emplace(
+                        StatusMessageType::Joint,
+                        AZStd::string::format("%s as articulation link failed: %s", azLinkName.c_str(), linkResult.GetError().c_str()));
+                }
             }
         }
 
