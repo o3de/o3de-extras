@@ -202,7 +202,8 @@ namespace ROS2
                             report += tr("(EMPTY)");
                         }
                         report += "\n```";
-                        m_robotDescriptionPage->ReportParsingResult(report, false);
+                        constexpr bool isSuccess = false;
+                        m_robotDescriptionPage->ReportParsingResult(report, isSuccess);
                         return;
                     }
                 }
@@ -229,11 +230,9 @@ namespace ROS2
                 else
                 {
                     report += "# " + tr("The URDF/SDF was parsed and opened successfully") + "\n";
-                    AZ_Printf("Wizard", "Wizard skips m_robotDescriptionPage since there is no errors in URDF\n");
                 }
                 m_parsedSdf = AZStd::move(parsedSdfOutcome.GetRoot());
                 m_prefabMaker.reset();
-                // Report the status of skipping this page
                 m_assetNames = Utils::GetReferencedAssetFilenames(m_parsedSdf);
                 m_assetPage->ClearAssetsList();
             }
@@ -249,7 +248,6 @@ namespace ROS2
                 report += QString::fromUtf8(log.data(), int(log.size()));
                 report += "`";
             }
-            m_robotDescriptionPage->ReportParsingResult(report, urdfParsedSuccess, urdfParsedWithWarnings);
             const auto& messages = parsedSdfOutcome.GetParseMessages();
             if (!messages.empty())
             {
@@ -260,7 +258,7 @@ namespace ROS2
                 report += "\n```\n";
                 AZ_Printf("RobotImporterWidget", "SDF Stream: %s\n", messages.c_str());
             }
-            m_robotDescriptionPage->ReportParsingResult(report, urdfParsedSuccess);
+            m_robotDescriptionPage->ReportParsingResult(report, urdfParsedSuccess, urdfParsedWithWarnings);
         }
     }
 
@@ -563,12 +561,13 @@ namespace ROS2
         }
         if ((currentPage() == m_fileSelectPage && m_params.empty()) || currentPage() == m_xacroParamsPage)
         {
-            if (!m_robotDescriptionPage->isWarning())
-            {
-                return m_xacroParamsPage->nextId();
-            }
             if (m_robotDescriptionPage->isComplete())
             {
+                if (m_robotDescriptionPage->isWarning())
+                {
+                    // do not skip robot description page
+                    return m_xacroParamsPage->nextId();
+                }
                 if (m_assetNames.empty())
                 {
                     // skip two pages when urdf/sdf is parsed without problems, and it has no assets
@@ -580,11 +579,13 @@ namespace ROS2
                     return m_robotDescriptionPage->nextId();
                 }
             }
-            if (m_params.empty())
+            else
             {
+                // XACRO parameters page is already active or can be skipped
                 return m_xacroParamsPage->nextId();
             }
         }
+
         return currentPage()->nextId();
     }
 
