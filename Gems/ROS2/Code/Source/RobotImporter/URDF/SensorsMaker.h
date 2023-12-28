@@ -8,9 +8,12 @@
 
 #pragma once
 
+#include "UrdfParser.h"
 #include <AzCore/Component/ComponentBus.h>
 #include <AzCore/Component/EntityId.h>
 #include <AzCore/Outcome/Outcome.h>
+#include <AzCore/std/containers/map.h>
+#include <AzCore/std/containers/set.h>
 
 #include <sdf/sdf.hh>
 
@@ -26,6 +29,14 @@ namespace ROS2
         //! @param link A parsed SDF tree link node used to identify link being currently processed.
         //! @param entityId A non-active entity which will be affected.
         //! @return List containing any entities with sensors that were created.
-        AZStd::vector<AZ::EntityId> AddSensors(const sdf::Model& model, const sdf::Link* link, AZ::EntityId entityId) const;
+        AZStd::vector<AZ::EntityId>AddSensors(const sdf::Model& model, const sdf::Link* link, AZ::EntityId entityId);
+
+        //! Returns a reference to collection of status messages (read-only)
+        const AZStd::set<AZStd::string>& GetStatusMessages() const;
+
+    private:
+        AZStd::set<AZStd::string> m_status;
+
+        void AddSensor(AZ::EntityId entityId, const sdf::Sensor* sensor);
     };
 } // namespace ROS2

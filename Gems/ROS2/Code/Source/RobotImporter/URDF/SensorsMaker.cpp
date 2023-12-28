@@ -20,7 +20,7 @@
 
 namespace ROS2
 {
-    void ExecuteSensorHook(
+    void SensorsMaker::ExecuteSensorHook(
         AZ::EntityId entityId,
         const sdf::Sensor* sensor,
         const ROS2::SDFormat::SensorImporterHook* hook,
@@ -49,7 +49,7 @@ namespace ROS2
         SDFormat::HooksUtils::SetSensorEntityTransform(*sensorEntity, *sensor);
     }
 
-    void AddSensor(AZ::EntityId entityId, const sdf::Sensor* sensor, AZStd::vector<AZ::EntityId>& createdEntities)
+    void SensorsMaker::AddSensor(AZ::EntityId entityId, const sdf::Sensor* sensor, AZStd::vector<AZ::EntityId>& createdEntities)
     {
         SDFormat::SensorImporterHooksStorage sensorHooks;
         ROS2::RobotImporterRequestBus::BroadcastResult(sensorHooks, &ROS2::RobotImporterRequest::GetSensorHooks);
