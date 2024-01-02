@@ -28,6 +28,8 @@ namespace ROS2
         ROS2GNSSSensorComponent(const SensorConfiguration& sensorConfiguration);
         ~ROS2GNSSSensorComponent() = default;
         static void Reflect(AZ::ReflectContext* context);
+
+        static void GetProvidedServices(AZ::ComponentDescriptor::DependencyArrayType& provided);
         //////////////////////////////////////////////////////////////////////////
         // Component overrides
         void Activate() override;

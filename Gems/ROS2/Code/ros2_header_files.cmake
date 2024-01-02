@@ -17,6 +17,7 @@ set(FILES
         Include/ROS2/Georeference/GeoreferenceBus.h
         Include/ROS2/Georeference/GeoreferenceStructures.h
         Include/ROS2/Georeference/GeoreferenceStructures.h
+        Include/ROS2/GNSS/GNSSPostProcessingRequestBus.h
         Include/ROS2/Gripper/GripperRequestBus.h
         Include/ROS2/Manipulation/Controllers/JointsPositionControllerRequests.h
         Include/ROS2/Manipulation/JointInfo.h
@@ -41,6 +42,7 @@ set(FILES
         Include/ROS2/Sensor/Events/TickBasedSource.h
         Include/ROS2/Sensor/ROS2SensorComponentBase.h
         Include/ROS2/Sensor/SensorConfiguration.h
+        Include/ROS2/Sensor/SensorConfigurationRequestBus.h
         Include/ROS2/Spawner/SpawnerBus.h
         Include/ROS2/Utilities/Controllers/PidConfiguration.h
         Include/ROS2/Utilities/ROS2Conversions.h

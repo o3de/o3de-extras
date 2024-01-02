@@ -14,6 +14,7 @@
 #include <ROS2/ROS2GemUtilities.h>
 #include <ROS2/Sensor/Events/EventSourceAdapter.h>
 #include <ROS2/Sensor/SensorConfiguration.h>
+#include <ROS2/Sensor/SensorConfigurationRequestBus.h>
 
 namespace ROS2
 {
@@ -29,7 +30,9 @@ namespace ROS2
     //! @see ROS2::TickBasedSource
     //! @see ROS2::PhysicsBasedSource
     template<class EventSourceT>
-    class ROS2SensorComponentBase : public AZ::Component
+    class ROS2SensorComponentBase
+        : public AZ::Component
+        , public SensorConfigurationRequestBus::Handler
     {
     public:
         using SensorBaseType = ROS2SensorComponentBase<EventSourceT>;
@@ -40,9 +43,8 @@ namespace ROS2
         {
             if (auto* serializeContext = azrtti_cast<AZ::SerializeContext*>(context))
             {
-                serializeContext->Class<ROS2SensorComponentBase<EventSourceT>, AZ::Component>()
-                    ->Version(1)
-                    ->Field("SensorConfiguration", &ROS2SensorComponentBase<EventSourceT>::m_sensorConfiguration);
+                serializeContext->Class<ROS2SensorComponentBase<EventSourceT>, AZ::Component>()->Version(1)->Field(
+                    "SensorConfiguration", &ROS2SensorComponentBase<EventSourceT>::m_sensorConfiguration);
 
                 if (auto* editContext = serializeContext->GetEditContext())
                 {
@@ -59,6 +61,16 @@ namespace ROS2
         static void GetRequiredServices(AZ::ComponentDescriptor::DependencyArrayType& required)
         {
             required.push_back(AZ_CRC_CE("ROS2Frame"));
+        }
+
+        SensorConfiguration GetSensorConfiguration() const override
+        {
+            return m_sensorConfiguration;
+        }
+
+        void SetSensorConfiguration(const SensorConfiguration& sensorConfiguration) override
+        {
+            m_sensorConfiguration = sensorConfiguration;
         }
 
         virtual ~ROS2SensorComponentBase() = default;
