@@ -217,34 +217,33 @@ namespace ROS2::VehicleDynamics::Utilities
             Utils::TryGetFreeArticulationAxis(wheelEntityId, wheelData.m_axis);
             wheelData.m_wheelJoint = articulationComponent->GetId();
             return wheelData;
-
         }
 
         AZ_Warning("GetWheelDynamicData", false, "Entity %s has no PhysX::HingeJointComponent", wheelEntityId.ToString().c_str());
         return wheelData;
     }
 
-    float ComputeRampVelocity(float targetVelocty, float lastVelocity, AZ::u64 deltaTimeNs, float acceleration, float maxVelocity)
+    float ComputeRampVelocity(float targetVelocity, float lastVelocity, AZ::u64 deltaTimeNs, float acceleration, float maxVelocity)
     {
         const float deltaTimeSec = 1e-9f * static_cast<float>(deltaTimeNs);
         const float deltaAcceleration = deltaTimeSec * acceleration;
         float commandVelocity = 0;
-        if (AZStd::abs(lastVelocity - targetVelocty) < deltaAcceleration)
+        if (AZStd::abs(lastVelocity - targetVelocity) < deltaAcceleration)
         {
-            commandVelocity = targetVelocty;
+            commandVelocity = targetVelocity;
         }
-        else if (targetVelocty > lastVelocity)
+        else if (targetVelocity > lastVelocity)
         {
             commandVelocity = lastVelocity + deltaAcceleration;
         }
-        else if (targetVelocty < lastVelocity)
+        else if (targetVelocity < lastVelocity)
         {
             commandVelocity = lastVelocity - deltaAcceleration;
         }
         return AZStd::clamp(commandVelocity, -maxVelocity, maxVelocity);
     }
 
-    void SetWheelRotationSpeed(const  VehicleDynamics::WheelDynamicsData& data, float wheelRotationSpeed)
+    void SetWheelRotationSpeed(const VehicleDynamics::WheelDynamicsData& data, float wheelRotationSpeed)
     {
         if (data.m_isArticulation)
         {
@@ -253,7 +252,8 @@ namespace ROS2::VehicleDynamics::Utilities
         }
         else
         {
-            PhysX::JointRequestBus::Event( AZ::EntityComponentIdPair(data.m_wheelEntity,data.m_wheelJoint), &PhysX::JointRequests::SetVelocity, wheelRotationSpeed);
+            PhysX::JointRequestBus::Event(
+                AZ::EntityComponentIdPair(data.m_wheelEntity, data.m_wheelJoint), &PhysX::JointRequests::SetVelocity, wheelRotationSpeed);
         }
     }
 
@@ -262,7 +262,8 @@ namespace ROS2::VehicleDynamics::Utilities
         AZ::Transform hingeTransform{ AZ::Transform::Identity() };
         if (!data.m_isArticulation)
         {
-            PhysX::JointRequestBus::EventResult(hingeTransform, AZ::EntityComponentIdPair(data.m_wheelEntity,data.m_wheelJoint), &PhysX::JointRequests::GetTransform);
+            PhysX::JointRequestBus::EventResult(
+                hingeTransform, AZ::EntityComponentIdPair(data.m_wheelEntity, data.m_wheelJoint), &PhysX::JointRequests::GetTransform);
         }
         return hingeTransform;
     }
