@@ -43,11 +43,11 @@ namespace ROS2::VehicleDynamics
     void SkidSteeringDriveModel::Activate(const VehicleConfiguration& vehicleConfig)
     {
         m_config = vehicleConfig;
-        m_wheelsCache.clear();
+        m_wheelsData.clear();
         m_initialized = false;
     }
 
-    void SkidSteeringDriveModel::InitializeCache()
+    void SkidSteeringDriveModel::ComputeWheelsData()
     {
         // Compute number of drive axles to scale the contribution of each wheel to vehicle's velocity
         int driveAxlesCount = 0;
@@ -76,10 +76,10 @@ namespace ROS2::VehicleDynamics
             }
             for (size_t wheelId = 0; wheelId < wheelCount; wheelId++)
             {
-                const auto column = ProduceWheelColumn(wheelId, axle, driveAxlesCount);
-                if (column.wheelControllerComponentPtr != nullptr)
+                const auto data = ComputeSingleWheelData(wheelId, axle, driveAxlesCount);
+                if (data.wheelControllerComponentPtr != nullptr)
                 {
-                    m_wheelsCache.emplace_back(AZStd::move(column));
+                    m_wheelsData.emplace_back(AZStd::move(data));
                 }
             }
         }
@@ -87,7 +87,7 @@ namespace ROS2::VehicleDynamics
         m_initialized = true;
     }
 
-    SkidSteeringDriveModel::SkidSteeringWheelData SkidSteeringDriveModel::ProduceWheelColumn(
+    SkidSteeringDriveModel::SkidSteeringWheelData SkidSteeringDriveModel::ComputeSingleWheelData(
         const int wheelId, const AxleConfiguration& axle, const int axlesCount) const
     {
         SkidSteeringDriveModel::SkidSteeringWheelData out;
@@ -118,13 +118,13 @@ namespace ROS2::VehicleDynamics
     {
         if (!m_initialized)
         {
-            InitializeCache();
+            ComputeWheelsData();
         }
 
         float dX = 0; // accumulated contribution to vehicle's linear movements of every wheel
         float dPhi = 0; // accumulated contribution to vehicle's rotational movements of every wheel
 
-        for (const auto& wheel : m_wheelsCache)
+        for (const auto& wheel : m_wheelsData)
         {
             const float omega = wheel.axis.Dot(wheel.wheelControllerComponentPtr->GetRotationVelocity());
             dX += omega * wheel.dX;
@@ -143,7 +143,7 @@ namespace ROS2::VehicleDynamics
 
         if (!m_initialized)
         {
-            InitializeCache();
+            ComputeWheelsData();
         }
 
         const float angularTargetSpeed = inputs.m_angularRates.GetZ();
@@ -158,7 +158,7 @@ namespace ROS2::VehicleDynamics
         m_currentLinearVelocity =
             Utilities::ComputeRampVelocity(linearTargetSpeed, m_currentLinearVelocity, deltaTimeNs, linearAcceleration, maxLinearVelocity);
 
-        for (const auto& wheel : m_wheelsCache)
+        for (const auto& wheel : m_wheelsData)
         {
             const float wheelRate =
                 (m_currentLinearVelocity + m_currentAngularVelocity * wheel.wheelPosition) / wheel.wheelData.m_wheelRadius;
