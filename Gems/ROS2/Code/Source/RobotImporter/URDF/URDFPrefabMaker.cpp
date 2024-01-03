@@ -502,6 +502,16 @@ namespace ROS2
             }
         }
 
+        // Get the remaining log information (sensors, plugins)
+        {
+            AZStd::lock_guard<AZStd::mutex> lck(m_statusLock);
+            const auto& sensorStatus = m_sensorsMaker.GetStatusMessages();
+            for (const auto& ss : sensorStatus)
+            {
+                m_status.emplace(StatusMessageType::Sensor, ss);
+            }
+        }
+
         // Create prefab, save it to disk immediately
         // Remove prefab, if it was already created.
 
