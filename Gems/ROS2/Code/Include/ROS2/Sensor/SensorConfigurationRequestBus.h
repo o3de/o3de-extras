@@ -14,7 +14,7 @@
 
 namespace ROS2
 {
-    //! Interface allows to change sensor configuration.
+    //! Interface that allows to get sensor configuration and switch publish state.
     class SensorConfigurationRequest : public AZ::EBusTraits
     {
     public:
