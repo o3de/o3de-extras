@@ -68,9 +68,9 @@ namespace ROS2
             return m_sensorConfiguration;
         }
 
-        void SetSensorConfiguration(const SensorConfiguration& sensorConfiguration) override
+        void EnablePublishing(bool publishingEnabled) override
         {
-            m_sensorConfiguration = sensorConfiguration;
+            m_sensorConfiguration.m_publishingEnabled = publishingEnabled;
         }
 
         virtual ~ROS2SensorComponentBase() = default;

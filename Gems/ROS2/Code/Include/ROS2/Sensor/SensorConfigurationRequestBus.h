@@ -22,7 +22,7 @@ namespace ROS2
         static constexpr AZ::EBusAddressPolicy AddressPolicy = AZ::EBusAddressPolicy::ById;
 
         virtual SensorConfiguration GetSensorConfiguration() const = 0;
-        virtual void SetSensorConfiguration(const SensorConfiguration& sensorConfiguration) = 0;
+        virtual void EnablePublishing(bool publishingEnabled) = 0;
     };
 
     using SensorConfigurationRequestBus = AZ::EBus<SensorConfigurationRequest>;
