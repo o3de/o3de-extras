@@ -63,16 +63,7 @@ namespace ROS2
             imageMessage.data =
                 std::vector<uint8_t>(result.m_dataBuffer->data(), result.m_dataBuffer->data() + result.m_dataBuffer->size());
             imageMessage.header = header;
-            bool registeredPostProcessingSupportsEncoding = false;
-            CameraPostProcessingRequestBus::EventResult(
-                registeredPostProcessingSupportsEncoding,
-                entityId,
-                &CameraPostProcessingRequests::SupportsFormat,
-                AZStd::string(Internal::FormatMappings.at(format)));
-            if (registeredPostProcessingSupportsEncoding)
-            {
-                CameraPostProcessingRequestBus::Event(entityId, &CameraPostProcessingRequests::ApplyPostProcessing, imageMessage);
-            }
+            CameraPostProcessingRequestBus::Event(entityId, &CameraPostProcessingRequests::ApplyPostProcessing, imageMessage);
             return imageMessage;
         }
 

@@ -5,10 +5,11 @@
  * SPDX-License-Identifier: Apache-2.0 OR MIT
  *
  */
+
 #pragma once
 
-#include "AzCore/EBus/EBusSharedDispatchTraits.h"
 #include <AzCore/Component/EntityId.h>
+#include <AzCore/EBus/EBusSharedDispatchTraits.h>
 #include <AzCore/Interface/Interface.h>
 #include <AzCore/std/string/string.h>
 #include <sensor_msgs/msg/image.hpp>
@@ -24,21 +25,37 @@ namespace ROS2
     class CameraPostProcessingRequests : public AZ::EBusSharedDispatchTraits<CameraPostProcessingRequests>
     {
     public:
+        //! Each camera sensor component has its own post-processing bus.
         using BusIdType = AZ::EntityId;
         static constexpr AZ::EBusAddressPolicy AddressPolicy = AZ::EBusAddressPolicy::ById;
-        static constexpr AZ::EBusHandlerPolicy HandlerPolicy = AZ::EBusHandlerPolicy::Multiple;
+        //! Multiple post-processing functions can be registered to the bus.
+        //! They will be executed in the order
+        static constexpr AZ::EBusHandlerPolicy HandlerPolicy = AZ::EBusHandlerPolicy::MultipleAndOrdered;
+
+        //! Priority of the post-processing bus.
+        //! @note higher priority buses will be processed first.
+        constexpr static AZ::u8 MIN_PRIORITY = 0;
+        constexpr static AZ::u8 MAX_PRIORITY = 255;
+        constexpr static AZ::u8 DEFAULT_PRIORITY = 127;
 
         //! Apply post-processing function, if any implementations to the bus are in the entity.
         //! @param image standard image message passed as a reference. It will be changed through post-processing.
-        //! @note you should check whether the encoding format is supported first with SupportsFormat.
+        //! @note Handler should always handle function call, even if it does not support the format of the image.
+        //! in this case it should not change the image.
         virtual void ApplyPostProcessing(sensor_msgs::msg::Image& image) = 0;
 
-        //! Query whether a particular image encoding is supported by registered postprocessing.
-        //! @param encodingFormat name of the format.
-        virtual bool SupportsFormat(const AZStd::string& encodingFormat) = 0;
+        //! Get priority of the post-processing bus.
+        //! @return priority of the bus.
+        //! @note higher priority buses will be processed first.
+        virtual AZ::u8 GetPriority() const;
 
-    protected:
-        ~CameraPostProcessingRequests() = default;
+        //! Compare two post-processing buses.
+        //! @param other bus to compare to.
+        //! @return true if this bus should be processed before the other.
+        inline bool Compare(const CameraPostProcessingRequests* other) const
+        {
+            return GetPriority() > other->GetPriority();
+        }
     };
 
     using CameraPostProcessingRequestBus = AZ::EBus<CameraPostProcessingRequests>;
