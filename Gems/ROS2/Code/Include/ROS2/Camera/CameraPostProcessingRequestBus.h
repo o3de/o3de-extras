@@ -40,8 +40,9 @@ namespace ROS2
 
         //! Apply post-processing function, if any implementations to the bus are in the entity.
         //! @param image standard image message passed as a reference. It will be changed through post-processing.
-        //! @note Handler should always handle function call, even if it does not support the format of the image.
-        //! in this case it should not change the image.
+        //! @note Handler should always handle function call,
+        //! if handler does not support the format of the image, it should not change the image.
+        //! @note Every image is modified in place. Only one handler has access to the image at the time.
         virtual void ApplyPostProcessing(sensor_msgs::msg::Image& image) = 0;
 
         //! Get priority of the post-processing bus.
