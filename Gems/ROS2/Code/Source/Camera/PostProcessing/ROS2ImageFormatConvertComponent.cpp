@@ -31,7 +31,21 @@ namespace ROS2
     {
         void Rgba8ToRgb8(sensor_msgs::msg::Image& image)
         {
-            AZ_TracePrintf("ROS2ImageFormatConvert", "Rgba8ToRgb8");
+            AZ_Assert(image.encoding == "rgba8", "Image encoding is not rgba8");
+            AZ_Assert(image.step == image.width * 4, "Image step is not width * 4");
+            AZ_Assert(image.data.size() == image.step * image.height, "Image data size is not step * height");
+
+            for (size_t pixelId = 0; pixelId < image.width * image.height; ++pixelId)
+            {
+                size_t pixelOffsetIn = pixelId * 4;
+                size_t pixelOffsetOut = pixelId * 3;
+                image.data[pixelOffsetOut] = image.data[pixelOffsetIn];
+                image.data[pixelOffsetOut + 1] = image.data[pixelOffsetIn + 1];
+                image.data[pixelOffsetOut + 2] = image.data[pixelOffsetIn + 2];
+            }
+            image.encoding = "rgb8";
+            image.step = image.width * 3;
+            image.data.resize(image.step * image.height);
         }
 
         const AZStd::unordered_map<ImageEncoding, const char*> ImageEncodingNames = {
@@ -40,7 +54,7 @@ namespace ROS2
             { ImageEncoding::mono8, "mono8" },
             { ImageEncoding::mono16, "mono16" },
         };
-        const AZStd::unordered_map<const char*, ImageEncoding> ImageEncodingFromName = {
+        const AZStd::unordered_map<AZStd::string, ImageEncoding> ImageEncodingFromName = {
             { "rgba8", ImageEncoding::rgba8 },
             { "rgb8", ImageEncoding::rgb8 },
             { "mono8", ImageEncoding::mono8 },
@@ -128,7 +142,24 @@ namespace ROS2
 
     void ROS2ImageFormatConvertComponent::ApplyPostProcessing(sensor_msgs::msg::Image& image)
     {
-        AZ_TracePrintf("ROS2ImageFormatConvert", "ApplyPostProcessing");
+        auto nameIter = ImageEncodingFromName.find(image.encoding.c_str());
+        if (nameIter == ImageEncodingFromName.end())
+        {
+            return;
+        }
+        ImageEncoding encoding = nameIter->second;
+        if (encoding != m_encodingConvertData.encodingIn)
+        {
+            return;
+        }
+
+        auto convertIter = supportedFormatChange.find(m_encodingConvertData);
+        if (convertIter == supportedFormatChange.end())
+        {
+            return;
+        }
+
+        convertIter->second(image);
     }
 
     AZ::u8 ROS2ImageFormatConvertComponent::GetPriority() const
@@ -138,7 +169,6 @@ namespace ROS2
 
     AZ::Outcome<void, AZStd::string> ROS2ImageFormatConvertComponent::ValidateEncodingConversion(void* newValue, const AZ::Uuid& valueType)
     {
-        AZ_TracePrintf("ROS2ImageFormatConvert", "ValidateEncodingConversion");
         EncodingConvertData* data = reinterpret_cast<EncodingConvertData*>(newValue);
         if (supportedFormatChange.find(*data) == supportedFormatChange.end())
         {
