@@ -35,23 +35,7 @@ namespace ROS2
     {
         if (auto serializeContext = azrtti_cast<AZ::SerializeContext*>(context))
         {
-            const auto& importerHookCamera = SDFormat::ROS2SensorHooks::ROS2CameraSensor();
-            const auto& importerHookGNSS = SDFormat::ROS2SensorHooks::ROS2GNSSSensor();
-            const auto& importerHookImu = SDFormat::ROS2SensorHooks::ROS2ImuSensor();
-            const auto& importerHookLidar = SDFormat::ROS2SensorHooks::ROS2LidarSensor();
-            const auto& importerHookSkidSteering = SDFormat::ROS2ModelPluginHooks::ROS2SkidSteeringModel();
-            const auto& importerHookAckermann = SDFormat::ROS2ModelPluginHooks::ROS2AckermannModel();
-            serializeContext->Class<ROS2RobotImporterEditorSystemComponent, ROS2RobotImporterSystemComponent>()
-                ->Version(0)
-                ->Attribute(
-                    "SensorImporterHooks",
-                    SDFormat::SensorImporterHooksStorage{ AZStd::move(importerHookCamera),
-                                                          AZStd::move(importerHookGNSS),
-                                                          AZStd::move(importerHookImu),
-                                                          AZStd::move(importerHookLidar) })
-                ->Attribute(
-                    "ModelPluginImporterHooks",
-                    SDFormat::ModelPluginImporterHooksStorage{ AZStd::move(importerHookSkidSteering), AZStd::move(importerHookAckermann) });
+            serializeContext->Class<ROS2RobotImporterEditorSystemComponent, ROS2RobotImporterSystemComponent>()->Version(1);
         }
 
         if (AZ::BehaviorContext* behaviorContext = azrtti_cast<AZ::BehaviorContext*>(context))
@@ -82,6 +66,15 @@ namespace ROS2
         AzToolsFramework::EditorEvents::Bus::Handler::BusConnect();
         RobotImporterRequestBus::Handler::BusConnect();
 
+        // Register default sensor and plugin hooks
+        m_sensorHooks.emplace_back(SDFormat::ROS2SensorHooks::ROS2CameraSensor());
+        m_sensorHooks.emplace_back(SDFormat::ROS2SensorHooks::ROS2GNSSSensor());
+        m_sensorHooks.emplace_back(SDFormat::ROS2SensorHooks::ROS2ImuSensor());
+        m_sensorHooks.emplace_back(SDFormat::ROS2SensorHooks::ROS2LidarSensor());
+	m_modelPluginHooks.emplace_back(SDFormat::ROS2ModelPluginHooks::ROS2AckermannModel());
+        m_modelPluginHooks.emplace_back(SDFormat::ROS2ModelPluginHooks::ROS2SkidSteeringModel());
+
+        // Query user-defined sensor and plugin hooks
         auto serializeContext = AZ::Interface<AZ::ComponentApplicationRequests>::Get()->GetSerializeContext();
         serializeContext->EnumerateAll(
             [&](const AZ::SerializeContext::ClassData* classData, const AZ::Uuid& typeId) -> bool
