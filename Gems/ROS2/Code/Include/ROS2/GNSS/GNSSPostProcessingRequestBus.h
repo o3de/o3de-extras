@@ -7,7 +7,7 @@
  */
 #pragma once
 
-#include "AzCore/EBus/EBusSharedDispatchTraits.h"
+#include <AzCore/EBus/EBusSharedDispatchTraits.h>
 #include <AzCore/Component/EntityId.h>
 #include <AzCore/Interface/Interface.h>
 #include <AzCore/std/string/string.h>
