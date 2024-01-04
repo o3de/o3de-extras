@@ -29,7 +29,6 @@ namespace ROS2
 {
     namespace
     {
-
         void Rgba8ToRgb8(sensor_msgs::msg::Image& image)
         {
             AZ_TracePrintf("ROS2ImageFormatConvert", "Rgba8ToRgb8");
@@ -49,35 +48,9 @@ namespace ROS2
         };
 
         const AZStd::unordered_map<EncodingConvertData, const AZStd::function<void(sensor_msgs::msg::Image&)>> supportedFormatChange = {
-            { { ImageEncoding::rgb8, ImageEncoding::rgba8 }, Rgba8ToRgb8 },
+            { { ImageEncoding::rgba8, ImageEncoding::rgb8 }, Rgba8ToRgb8 },
         };
-
-        AZ::Outcome<void, AZStd::string> ValidateEncoding(const EncodingConvertData data)
-        {
-            if (supportedFormatChange.find(data) == supportedFormatChange.end())
-            {
-                return AZ::Failure(AZStd::string::format(
-                    "Unsupported encoding change from %s to %s",
-                    ImageEncodingNames.at(data.encodingIn),
-                    ImageEncodingNames.at(data.encodingOut)));
-            }
-            return AZ::Success();
-        }
-
     } // namespace
-    AZ::Outcome<void, AZStd::string> EncodingConvertData::ValidateInputEncoding(void* newValue, const AZ::Uuid& valueType)
-    {
-        ImageEncoding* encoding = reinterpret_cast<ImageEncoding*>(newValue);
-        EncodingConvertData newData = { *encoding, encodingOut };
-        return ValidateEncoding(newData);
-    }
-
-    AZ::Outcome<void, AZStd::string> EncodingConvertData::ValidateOutputEncoding(void* newValue, const AZ::Uuid& valueType)
-    {
-        ImageEncoding* encoding = reinterpret_cast<ImageEncoding*>(newValue);
-        EncodingConvertData newData = { encodingIn, *encoding };
-        return ValidateEncoding(newData);
-    }
 
     void EncodingConvertData::Reflect(AZ::ReflectContext* context)
     {
@@ -97,14 +70,12 @@ namespace ROS2
                     ->EnumAttribute(ImageEncoding::rgb8, "rgb8")
                     ->EnumAttribute(ImageEncoding::mono8, "mono8")
                     ->EnumAttribute(ImageEncoding::mono16, "mono16")
-                    // ->Attribute(AZ::Edit::Attributes::ChangeValidate, &EncodingConvertData::ValidateInputEncoding)
                     ->DataElement(
                         AZ::Edit::UIHandlers::ComboBox, &EncodingConvertData::encodingOut, "Encoding Out", "Encoding of the output image")
                     ->EnumAttribute(ImageEncoding::rgba8, "rgba8")
                     ->EnumAttribute(ImageEncoding::rgb8, "rgb8")
                     ->EnumAttribute(ImageEncoding::mono8, "mono8")
                     ->EnumAttribute(ImageEncoding::mono16, "mono16");
-                // ->Attribute(AZ::Edit::Attributes::ChangeValidate, &EncodingConvertData::ValidateOutputEncoding);
             }
         }
     }
@@ -139,7 +110,8 @@ namespace ROS2
                         AZ::Edit::UIHandlers::Default,
                         &ROS2ImageFormatConvertComponent::m_encodingConvertData,
                         "Encoding Convert Data",
-                        "Data for converting");
+                        "Data for converting")
+                    ->Attribute(AZ::Edit::Attributes::ChangeValidate, &ROS2ImageFormatConvertComponent::ValidateEncodingConversion);
             }
         }
     }
@@ -162,6 +134,20 @@ namespace ROS2
     AZ::u8 ROS2ImageFormatConvertComponent::GetPriority() const
     {
         return m_priority;
+    }
+
+    AZ::Outcome<void, AZStd::string> ROS2ImageFormatConvertComponent::ValidateEncodingConversion(void* newValue, const AZ::Uuid& valueType)
+    {
+        AZ_TracePrintf("ROS2ImageFormatConvert", "ValidateEncodingConversion");
+        EncodingConvertData* data = reinterpret_cast<EncodingConvertData*>(newValue);
+        if (supportedFormatChange.find(*data) == supportedFormatChange.end())
+        {
+            return AZ::Failure(AZStd::string::format(
+                "Unsupported encoding change from %s to %s",
+                ImageEncodingNames.at(data->encodingIn),
+                ImageEncodingNames.at(data->encodingOut)));
+        }
+        return AZ::Success();
     }
 
 } // namespace ROS2

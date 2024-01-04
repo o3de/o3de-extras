@@ -44,6 +44,7 @@ namespace ROS2
     {
     public:
         AZ_COMPONENT(ROS2ImageFormatConvertComponent, "12449810-d179-44f1-8f72-22d8d3fa4460");
+        static void Reflect(AZ::ReflectContext* context);
 
         ROS2ImageFormatConvertComponent() = default;
         ~ROS2ImageFormatConvertComponent() override = default;
@@ -55,7 +56,7 @@ namespace ROS2
         void ApplyPostProcessing(sensor_msgs::msg::Image& image) override;
         AZ::u8 GetPriority() const override;
 
-        static void Reflect(AZ::ReflectContext* context);
+        AZ::Outcome<void, AZStd::string> ValidateEncodingConversion(void* newValue, const AZ::Uuid& valueType);
 
     private:
         AZ::u16 m_priority = CameraPostProcessingRequests::DEFAULT_PRIORITY;
