@@ -47,7 +47,7 @@ namespace ROS2
         //! Get priority of the post-processing bus.
         //! @return priority of the bus.
         //! @note higher priority buses will be processed first.
-        virtual AZ::u8 GetPriority() const;
+        virtual AZ::u8 GetPriority() const = 0;
 
         //! Compare two post-processing buses.
         //! @param other bus to compare to.

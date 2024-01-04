@@ -13,17 +13,40 @@
 
 namespace ROS2
 {
+    enum class ImageEncoding : AZ::u8
+    {
+        rgba8,
+        rgb8,
+        mono8,
+        mono16,
+    };
+
+    struct EncodingConvertData
+    {
+        AZ_TYPE_INFO(EncodingConvertData, "{db361adc-b339-4a4e-a10b-c6bf6791eda6}");
+        static void Reflect(AZ::ReflectContext* context);
+        AZ::Outcome<void, AZStd::string> ValidateInputEncoding(void* newValue, const AZ::Uuid& valueType);
+        AZ::Outcome<void, AZStd::string> ValidateOutputEncoding(void* newValue, const AZ::Uuid& valueType);
+
+        ImageEncoding encodingIn = ImageEncoding::rgba8;
+        ImageEncoding encodingOut = ImageEncoding::rgb8;
+
+        bool operator==(const ROS2::EncodingConvertData& rhs) const
+        {
+            return encodingIn == rhs.encodingIn && encodingOut == rhs.encodingOut;
+        }
+    };
 
     //! Change image format
-    class ROS2ImageFormatConvert
+    class ROS2ImageFormatConvertComponent
         : public AZ::Component
         , public CameraPostProcessingRequestBus::Handler
     {
     public:
-        AZ_COMPONENT(ROS2ImageFormatConvert, "12449810-d179-44f1-8f72-22d8d3fa4460");
+        AZ_COMPONENT(ROS2ImageFormatConvertComponent, "12449810-d179-44f1-8f72-22d8d3fa4460");
 
-        ROS2ImageFormatConvert() = default;
-        ~ROS2ImageFormatConvert() override = default;
+        ROS2ImageFormatConvertComponent() = default;
+        ~ROS2ImageFormatConvertComponent() override = default;
 
         void Activate() override;
         void Deactivate() override;
@@ -36,5 +59,6 @@ namespace ROS2
 
     private:
         AZ::u16 m_priority = CameraPostProcessingRequests::DEFAULT_PRIORITY;
+        EncodingConvertData m_encodingConvertData;
     };
 } // namespace ROS2
