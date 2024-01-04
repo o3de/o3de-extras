@@ -141,7 +141,7 @@ namespace ROS2
             }
         }
 
-        report += "\n\n# " + tr("💡Please check the modified code and/or save it using the interface below.") + "\n";
+        report += "# " + tr("💡Please check the modified code and/or save it using the interface below.") + "\n";
         m_modifiedUrdfWindow->SetUrdfData(AZStd::move(parsedSdfOutcome.m_modifiedURDFContent));
     }
 
@@ -220,7 +220,7 @@ namespace ROS2
 
             AZStd::string log;
             const bool urdfParsedSuccess{ parsedSdfOutcome };
-            const bool urdfParsedWithWarnings{ parsedSdfOutcome.UrdfParsedWithModifiedContent() };
+            bool urdfParsedWithWarnings{ parsedSdfOutcome.UrdfParsedWithModifiedContent() };
             if (urdfParsedSuccess)
             {
                 if (urdfParsedWithWarnings)
@@ -240,23 +240,26 @@ namespace ROS2
             {
                 log = Utils::JoinSdfErrorsToString(parsedSdfOutcome.GetSdfErrors());
                 report += "# " + tr("The URDF/SDF was not opened") + "\n";
-                report += tr("URDF/SDF parser returned following errors:") + "\n\n";
+                report += "## " + tr("URDF/SDF parser returned following errors:") + "\n\n";
             }
             if (!log.empty())
             {
-                report += "`";
+                report += "```\n";
                 report += QString::fromUtf8(log.data(), int(log.size()));
-                report += "`";
+                report += "\n```\n";
+                AZ_Printf("RobotImporterWidget", "SDF Stream: %s\n", log.c_str());
+                urdfParsedWithWarnings = true;
             }
             const auto& messages = parsedSdfOutcome.GetParseMessages();
             if (!messages.empty())
             {
                 report += "\n\n";
-                report += tr("URDF/SDF parser returned following messages:") + "\n\n";
-                report += "```bash\n";
+                report += "## " + tr("URDF/SDF parser returned following messages:") + "\n\n";
+                report += "```\n";
                 report += QString::fromUtf8(messages.c_str(), int(messages.size()));
                 report += "\n```\n";
                 AZ_Printf("RobotImporterWidget", "SDF Stream: %s\n", messages.c_str());
+                urdfParsedWithWarnings = true;
             }
             m_robotDescriptionPage->ReportParsingResult(report, urdfParsedSuccess, urdfParsedWithWarnings);
         }
@@ -342,15 +345,17 @@ namespace ROS2
             }
             else
             {
-                m_urdfAssetsMapping =
-                    AZStd::make_shared<Utils::UrdfAssetMap>(Utils::FindReferencedAssets(m_assetNames, m_urdfPath.String(), sdfBuilderSettings));
+                m_urdfAssetsMapping = AZStd::make_shared<Utils::UrdfAssetMap>(
+                    Utils::FindReferencedAssets(m_assetNames, m_urdfPath.String(), sdfBuilderSettings));
                 for (const auto& [assetPath, assetReferenceType] : m_assetNames)
                 {
                     if (m_urdfAssetsMapping->contains(assetPath))
                     {
                         const auto& asset = m_urdfAssetsMapping->at(assetPath);
-                        bool visual = (assetReferenceType & Utils::ReferencedAssetType::VisualMesh) == Utils::ReferencedAssetType::VisualMesh;
-                        bool collider = (assetReferenceType & Utils::ReferencedAssetType::ColliderMesh) == Utils::ReferencedAssetType::ColliderMesh;
+                        bool visual =
+                            (assetReferenceType & Utils::ReferencedAssetType::VisualMesh) == Utils::ReferencedAssetType::VisualMesh;
+                        bool collider =
+                            (assetReferenceType & Utils::ReferencedAssetType::ColliderMesh) == Utils::ReferencedAssetType::ColliderMesh;
                         if (visual || collider)
                         {
                             Utils::CreateSceneManifest(asset.m_availableAssetInfo.m_sourceAssetGlobalPath, collider, visual);
