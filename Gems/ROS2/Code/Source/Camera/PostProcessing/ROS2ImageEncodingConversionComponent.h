@@ -26,6 +26,8 @@ namespace ROS2
     {
         AZ_TYPE_INFO(EncodingConversion, "{db361adc-b339-4a4e-a10b-c6bf6791eda6}");
         static void Reflect(AZ::ReflectContext* context);
+        AZ::Outcome<void, AZStd::string> ValidateInputEncoding(void* newValue, const AZ::Uuid& valueType);
+        AZ::Outcome<void, AZStd::string> ValidateOutputEncoding(void* newValue, const AZ::Uuid& valueType);
 
         bool operator==(const ROS2::EncodingConversion& rhs) const
         {
@@ -54,8 +56,6 @@ namespace ROS2
         //! CameraPostProcessingRequestBus::Handler overrides
         void ApplyPostProcessing(sensor_msgs::msg::Image& image) override;
         AZ::u8 GetPriority() const override;
-
-        AZ::Outcome<void, AZStd::string> ValidateEncodingConversion(void* newValue, const AZ::Uuid& valueType);
 
     private:
         AZ::u8 m_priority = CameraPostProcessingRequests::DEFAULT_PRIORITY;

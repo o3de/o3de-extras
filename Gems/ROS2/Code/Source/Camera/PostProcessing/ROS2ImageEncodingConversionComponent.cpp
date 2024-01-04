@@ -7,6 +7,7 @@
  */
 
 #include "ROS2ImageEncodingConversionComponent.h"
+#include <AzCore/Outcome/Outcome.h>
 #include <AzCore/RTTI/RTTIMacros.h>
 #include <AzCore/Serialization/EditContext.h>
 #include <AzCore/Serialization/SerializeContext.h>
@@ -28,26 +29,6 @@ namespace ROS2
 {
     namespace
     {
-        void Rgba8ToRgb8(sensor_msgs::msg::Image& image)
-        {
-            AZ_Assert(image.encoding == "rgba8", "Image encoding is not rgba8");
-            AZ_Assert(image.step == image.width * 4, "Image step is not width * 4");
-            AZ_Assert(image.data.size() == image.step * image.height, "Image data size is not step * height");
-
-            // Perform conversion in place
-            for (size_t pixelId = 0; pixelId < image.width * image.height; ++pixelId)
-            {
-                size_t pixelOffsetIn = pixelId * 4;
-                size_t pixelOffsetOut = pixelId * 3;
-                image.data[pixelOffsetOut] = image.data[pixelOffsetIn];
-                image.data[pixelOffsetOut + 1] = image.data[pixelOffsetIn + 1];
-                image.data[pixelOffsetOut + 2] = image.data[pixelOffsetIn + 2];
-            }
-            image.encoding = "rgb8";
-            image.step = image.width * 3;
-            image.data.resize(image.step * image.height);
-        }
-
         const AZStd::unordered_map<ImageEncoding, const char*> ImageEncodingNames = {
             { ImageEncoding::RGBA8, "rgba8" },
             { ImageEncoding::RGB8, "rgb8" },
@@ -61,9 +42,48 @@ namespace ROS2
             { "mono16", ImageEncoding::Mono16 },
         };
 
+        void Rgba8ToRgb8(sensor_msgs::msg::Image& image)
+        {
+            const std::string inputEncoding = ImageEncodingNames.at(ImageEncoding::RGBA8);
+            const std::string outputEncoding = ImageEncodingNames.at(ImageEncoding::RGB8);
+            AZ_Assert(image.encoding == inputEncoding, "Image encoding is %s, expected %s", image.encoding.c_str(), inputEncoding.c_str());
+            AZ_Assert(image.step == image.width * 4, "Image step is not width * 4");
+            AZ_Assert(image.data.size() == image.step * image.height, "Image data size is not step * height");
+
+            // Perform conversion in place
+            for (size_t pixelId = 0; pixelId < image.width * image.height; ++pixelId)
+            {
+                size_t pixelOffsetIn = pixelId * 4;
+                size_t pixelOffsetOut = pixelId * 3;
+                image.data[pixelOffsetOut] = image.data[pixelOffsetIn];
+                image.data[pixelOffsetOut + 1] = image.data[pixelOffsetIn + 1];
+                image.data[pixelOffsetOut + 2] = image.data[pixelOffsetIn + 2];
+            }
+            image.encoding = outputEncoding;
+            image.step = image.width * 3;
+            image.data.resize(image.step * image.height);
+        }
+
         const AZStd::unordered_map<EncodingConversion, const AZStd::function<void(sensor_msgs::msg::Image&)>> supportedFormatChange = {
             { { ImageEncoding::RGBA8, ImageEncoding::RGB8 }, Rgba8ToRgb8 },
         };
+
+        AZ::Outcome<void, AZStd::string> ValidateEncodingConversion(EncodingConversion newConversion)
+        {
+            if (newConversion.encodingIn == newConversion.encodingOut)
+            {
+                return AZ::Failure(AZStd::string("Conversion to same type if forbidden"));
+            }
+            if (supportedFormatChange.find(newConversion) == supportedFormatChange.end())
+            {
+                return AZ::Failure(AZStd::string::format(
+                    "Unsupported encoding change from %s to %s",
+                    ImageEncodingNames.at(newConversion.encodingIn),
+                    ImageEncodingNames.at(newConversion.encodingOut)));
+            }
+            return AZ::Success();
+        }
+
     } // namespace
 
     void EncodingConversion::Reflect(AZ::ReflectContext* context)
@@ -84,14 +104,30 @@ namespace ROS2
                     ->EnumAttribute(ImageEncoding::RGB8, "rgb8")
                     ->EnumAttribute(ImageEncoding::Mono8, "mono8")
                     ->EnumAttribute(ImageEncoding::Mono16, "mono16")
+                    ->Attribute(AZ::Edit::Attributes::ChangeValidate, &EncodingConversion::ValidateInputEncoding)
                     ->DataElement(
                         AZ::Edit::UIHandlers::ComboBox, &EncodingConversion::encodingOut, "Encoding Out", "Encoding of the output image")
                     ->EnumAttribute(ImageEncoding::RGBA8, "rgba8")
                     ->EnumAttribute(ImageEncoding::RGB8, "rgb8")
                     ->EnumAttribute(ImageEncoding::Mono8, "mono8")
-                    ->EnumAttribute(ImageEncoding::Mono16, "mono16");
+                    ->EnumAttribute(ImageEncoding::Mono16, "mono16")
+                    ->Attribute(AZ::Edit::Attributes::ChangeValidate, &EncodingConversion::ValidateOutputEncoding);
             }
         }
+    }
+
+    AZ::Outcome<void, AZStd::string> EncodingConversion::ValidateInputEncoding(void* newValue, const AZ::Uuid& valueType)
+    {
+        AZ_TracePrintf("EncodingConversion", "ValidateInputEncodingConversion");
+        ImageEncoding* newEncoding = static_cast<ImageEncoding*>(newValue);
+        return ValidateEncodingConversion({ *newEncoding, encodingOut });
+    }
+
+    AZ::Outcome<void, AZStd::string> EncodingConversion::ValidateOutputEncoding(void* newValue, const AZ::Uuid& valueType)
+    {
+        AZ_TracePrintf("EncodingConversion", "ValidateOutputEncodingConversion");
+        ImageEncoding* newEncoding = static_cast<ImageEncoding*>(newValue);
+        return ValidateEncodingConversion({ encodingIn, *newEncoding });
     }
 
     void ROS2ImageEncodingConversionComponent::Reflect(AZ::ReflectContext* context)
@@ -125,8 +161,7 @@ namespace ROS2
                         AZ::Edit::UIHandlers::Default,
                         &ROS2ImageEncodingConversionComponent::m_encodingConvertData,
                         "Encoding Conversion",
-                        "Specifies the encoding conversion to apply")
-                    ->Attribute(AZ::Edit::Attributes::ChangeValidate, &ROS2ImageEncodingConversionComponent::ValidateEncodingConversion);
+                        "Specifies the encoding conversion to apply");
             }
         }
     }
@@ -166,20 +201,6 @@ namespace ROS2
     AZ::u8 ROS2ImageEncodingConversionComponent::GetPriority() const
     {
         return m_priority;
-    }
-
-    AZ::Outcome<void, AZStd::string> ROS2ImageEncodingConversionComponent::ValidateEncodingConversion(
-        void* newValue, const AZ::Uuid& valueType)
-    {
-        EncodingConversion* data = reinterpret_cast<EncodingConversion*>(newValue);
-        if (supportedFormatChange.find(*data) == supportedFormatChange.end())
-        {
-            return AZ::Failure(AZStd::string::format(
-                "Unsupported encoding change from %s to %s",
-                ImageEncodingNames.at(data->encodingIn),
-                ImageEncodingNames.at(data->encodingOut)));
-        }
-        return AZ::Success();
     }
 
 } // namespace ROS2
