@@ -23,6 +23,7 @@ namespace ROS2::SDFormat
         SensorImporterHook importerHook;
         importerHook.m_sensorTypes = AZStd::unordered_set<sdf::SensorType>{ sdf::SensorType::LIDAR, sdf::SensorType::GPU_LIDAR };
         importerHook.m_supportedSensorParams = AZStd::unordered_set<AZStd::string>{
+            ">pose",
             ">update_rate",
             ">lidar>scan>horizontal>samples",
             ">lidar>scan>horizontal>min_angle",

@@ -12,6 +12,7 @@
 #include <AzToolsFramework/Entity/EditorEntityHelpers.h>
 #include <ROS2/RobotImporter/RobotImporterBus.h>
 #include <ROS2/RobotImporter/SDFormatSensorImporterHook.h>
+#include <RobotImporter/SDFormat/ROS2SDFormatHooksUtils.h>
 #include <RobotImporter/URDF/PrefabMakerUtils.h>
 
 #include <sdf/Link.hh>
@@ -27,6 +28,7 @@ namespace ROS2
     {
         // Since O3DE does not allow origin for sensors, we need to create a sub-entity and store sensor there
         AZStd::string subEntityName = sensor->Name().empty() ? sensor->TypeStr().c_str() : sensor->Name().c_str();
+        subEntityName.append("_sensor");
         auto createEntityResult = PrefabMakerUtils::CreateEntity(entityId, subEntityName);
         if (!createEntityResult.IsSuccess())
         {
@@ -44,6 +46,7 @@ namespace ROS2
         createdEntities.emplace_back(sensorEntityId);
         AZ::Entity* sensorEntity = AzToolsFramework::GetEntityById(sensorEntityId);
         hook->m_sdfSensorToComponentCallback(*sensorEntity, *sensor);
+        SDFormat::HooksUtils::SetSensorEntityTransform(*sensorEntity, *sensor);
     }
 
     void AddSensor(AZ::EntityId entityId, const sdf::Sensor* sensor, AZStd::vector<AZ::EntityId>& createdEntities)

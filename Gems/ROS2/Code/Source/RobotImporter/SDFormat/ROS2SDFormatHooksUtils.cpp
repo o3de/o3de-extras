@@ -7,7 +7,10 @@
  */
 
 #include "ROS2SDFormatHooksUtils.h"
+#include <AzToolsFramework/ToolsComponents/TransformComponent.h>
 #include <ROS2/Communication/TopicConfiguration.h>
+#include <RobotImporter/Utils/RobotImporterUtils.h>
+#include <RobotImporter/Utils/TypeConversions.h>
 #include <SdfAssetBuilder/SdfAssetBuilderSettings.h>
 #include <VehicleDynamics/WheelControllerComponent.h>
 
@@ -66,6 +69,33 @@ namespace ROS2::SDFormat
                     true);
                 entity->Deactivate();
             }
+        }
+    }
+
+    void HooksUtils::SetSensorEntityTransform(AZ::Entity& entity, const sdf::Sensor& sdfSensor)
+    {
+        const auto sensorSemanticPose = sdfSensor.SemanticPose();
+        AZ::Transform tf = Utils::GetLocalTransformURDF(sensorSemanticPose);
+        auto* transformInterface = entity.FindComponent<AzToolsFramework::Components::TransformComponent>();
+        if (transformInterface)
+        {
+            AZ_Trace(
+                "CreatePrefabFromUrdfOrSdf",
+                "Setting transform %s to [%f %f %f] [%f %f %f %f]\n",
+                sdfSensor.Name().c_str(),
+                tf.GetTranslation().GetX(),
+                tf.GetTranslation().GetY(),
+                tf.GetTranslation().GetZ(),
+                tf.GetRotation().GetX(),
+                tf.GetRotation().GetY(),
+                tf.GetRotation().GetZ(),
+                tf.GetRotation().GetW());
+            transformInterface->SetLocalTM(tf);
+        }
+        else
+        {
+            AZ_Trace(
+                "CreatePrefabFromUrdfOrSdf", "Setting transform failed: %s does not have transform interface\n", sdfSensor.Name().c_str());
         }
     }
 } // namespace ROS2::SDFormat

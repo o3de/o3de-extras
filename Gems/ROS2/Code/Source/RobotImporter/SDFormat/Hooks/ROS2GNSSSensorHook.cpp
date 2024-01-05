@@ -19,7 +19,7 @@ namespace ROS2::SDFormat
     {
         SensorImporterHook importerHook;
         importerHook.m_sensorTypes = AZStd::unordered_set<sdf::SensorType>{ sdf::SensorType::NAVSAT };
-        importerHook.m_supportedSensorParams = AZStd::unordered_set<AZStd::string>{ ">update_rate" };
+        importerHook.m_supportedSensorParams = AZStd::unordered_set<AZStd::string>{ ">pose", ">update_rate" };
         importerHook.m_pluginNames = AZStd::unordered_set<AZStd::string>{ "libgazebo_ros_gps_sensor.so" };
         importerHook.m_supportedPluginParams = AZStd::unordered_set<AZStd::string>{};
         importerHook.m_sdfSensorToComponentCallback = [](AZ::Entity& entity,

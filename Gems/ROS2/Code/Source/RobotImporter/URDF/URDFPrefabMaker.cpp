@@ -292,7 +292,8 @@ namespace ROS2
             {
                 AZ::EntityId createdEntityId = createLinkEntityResult.GetValue();
                 std::string linkName = linkPtr->Name();
-                AZ::Transform tf = Utils::GetLocalTransformURDF(linkPtr);
+                const auto linkSemanticPose = linkPtr->SemanticPose();
+                AZ::Transform tf = Utils::GetLocalTransformURDF(linkSemanticPose);
                 auto* entity = AzToolsFramework::GetEntityById(createdEntityId);
                 if (entity)
                 {
