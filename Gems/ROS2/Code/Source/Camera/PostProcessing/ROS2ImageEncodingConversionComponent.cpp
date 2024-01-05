@@ -178,18 +178,18 @@ namespace ROS2
 
     void ROS2ImageEncodingConversionComponent::ApplyPostProcessing(sensor_msgs::msg::Image& image)
     {
-        auto nameIter = ImageEncodingFromName.find(image.encoding.c_str());
+        const auto nameIter = ImageEncodingFromName.find(image.encoding.c_str());
         if (nameIter == ImageEncodingFromName.end())
         {
             return;
         }
-        ImageEncoding encoding = nameIter->second;
+        const ImageEncoding& encoding = nameIter->second;
         if (encoding != m_encodingConvertData.encodingIn)
         {
             return;
         }
 
-        auto convertIter = supportedFormatChange.find(m_encodingConvertData);
+        const auto convertIter = supportedFormatChange.find(m_encodingConvertData);
         if (convertIter == supportedFormatChange.end())
         {
             return;
