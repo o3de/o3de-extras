@@ -37,6 +37,7 @@ namespace OpenXRVk
                 ->Version(1);
         }
 
+        OpenXRActionBindingsAsset::Reflect(context);
         AzFramework::InputDeviceXRController::Reflect(context);
     }
 
@@ -82,6 +83,9 @@ namespace OpenXRVk
 
     void SystemComponent::Activate()
     {
+        m_actionsBindingAssetHandler = AZStd::make_unique<AzFramework::GenericAssetHandler<OpenXRActionBindingsAsset>>(OpenXRActionBindingsAsset::s_assetTypeName, "Other", OpenXRActionBindingsAsset::s_assetExtension);
+        m_actionsBindingAssetHandler->Register();
+
         if (XR::IsOpenXREnabled())
         {
             m_instance = AZStd::static_pointer_cast<OpenXRVk::Instance>(CreateInstance());
@@ -110,5 +114,30 @@ namespace OpenXRVk
             AZ::Interface<XR::Instance>::Unregister(m_instance.get());
             m_instance = nullptr;
         }
+
+        m_actionsBindingAssetHandler->Unregister();
     }
+
+    // ///////////////////////////////////////////////////////////////////
+    // // AssetTypeInfoBus overrides
+    // AZ::Data::AssetType SystemComponent::GetAssetType() const
+    // {
+    //     return AZ::AzTypeInfo<OpenXRActionBindingsAsset>::Uuid();
+    // }
+    // 
+    // const char* SystemComponent::GetAssetTypeDisplayName() const
+    // {
+    //     return OpenXRActionBindingsAsset::s_assetTypeName;
+    // }
+    // 
+    // void SystemComponent::GetAssetTypeExtensions(AZStd::vector<AZStd::string>& extensions)
+    // {
+    //     extensions.push_back(OpenXRActionBindingsAsset::s_assetExtension);
+    // }
+    // 
+    // bool SystemComponent::CanCreateComponent([[maybe_unused]] const AZ::Data::AssetId& assetId) const
+    // {
+    //     return false;
+    // }
+    // ///////////////////////////////////////////////////////////////////
 }
