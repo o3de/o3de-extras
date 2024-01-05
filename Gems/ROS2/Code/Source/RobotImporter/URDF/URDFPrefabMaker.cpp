@@ -674,7 +674,8 @@ namespace ROS2
         if (attachedModel != nullptr)
         {
             m_collidersMaker.AddColliders(*attachedModel, &link, entityId);
-            m_sensorsMaker.AddSensors(*attachedModel, &link, entityId);
+            auto createdSensorEntities = m_sensorsMaker.AddSensors(*attachedModel, &link, entityId);
+            createdEntities.insert(createdEntities.end(), createdSensorEntities.begin(), createdSensorEntities.end());
         }
         return AZ::Success(entityId);
     }

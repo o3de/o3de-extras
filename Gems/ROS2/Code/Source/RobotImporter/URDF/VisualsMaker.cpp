@@ -85,7 +85,7 @@ namespace ROS2
         // Use a name generated from the link unless specific name is defined for this visual
         AZStd::string subEntityName = visual->Name().empty() ? generatedName.c_str() : visual->Name().c_str();
         // Since O3DE does not allow origin for visuals, we need to create a sub-entity and store visual there
-        auto createEntityResult = PrefabMakerUtils::CreateEntity(entityId, subEntityName.c_str());
+        auto createEntityResult = PrefabMakerUtils::CreateEntity(entityId, subEntityName);
         if (!createEntityResult.IsSuccess())
         {
             AZ_Error("AddVisual", false, "Unable to create a sub-entity for visual element %s\n", subEntityName.c_str());
@@ -180,7 +180,8 @@ namespace ROS2
                 if (asset)
                 {
                     assetId = Utils::GetModelProductAssetId(asset->m_sourceGuid);
-                    AZ_Warning("AddVisual", assetId.IsValid(), "There is no product asset for %s.", asset->m_sourceAssetRelativePath.c_str());
+                    AZ_Warning(
+                        "AddVisual", assetId.IsValid(), "There is no product asset for %s.", asset->m_sourceAssetRelativePath.c_str());
                 }
 
                 AddVisualAssetToEntity(entityId, assetId, scaleVector);
@@ -277,7 +278,10 @@ namespace ROS2
         AZ_Info("AddMaterial", "Added product material %s\n", materialProductPath.c_str());
     }
 
-    static void OverrideMaterialPbrSettings(const sdf::Material* material, const AZStd::shared_ptr<Utils::UrdfAssetMap>& assetMapping, AZ::Render::MaterialAssignmentMap& overrides)
+    static void OverrideMaterialPbrSettings(
+        const sdf::Material* material,
+        const AZStd::shared_ptr<Utils::UrdfAssetMap>& assetMapping,
+        AZ::Render::MaterialAssignmentMap& overrides)
     {
         if (auto pbr = material->PbrMaterial(); pbr)
         {
@@ -292,7 +296,10 @@ namespace ROS2
                 pbrWorkflow = pbr->Workflow(sdf::PbrWorkflowType::SPECULAR);
                 if (!pbrWorkflow)
                 {
-                    AZ_Error("AddMaterial", false, "Material has a PBR definition, but it is neither a Metal nor a Specular workflow. Cannot convert.");
+                    AZ_Error(
+                        "AddMaterial",
+                        false,
+                        "Material has a PBR definition, but it is neither a Metal nor a Specular workflow. Cannot convert.");
                     return;
                 }
             }
@@ -308,64 +315,83 @@ namespace ROS2
                     if (asset)
                     {
                         assetId = Utils::GetImageProductAssetId(asset->m_sourceGuid);
-                        AZ_Warning("AddVisual", assetId.IsValid(), "There is no product image asset for %s.", asset->m_sourceAssetRelativePath.c_str());
+                        AZ_Warning(
+                            "AddVisual",
+                            assetId.IsValid(),
+                            "There is no product image asset for %s.",
+                            asset->m_sourceAssetRelativePath.c_str());
                     }
                     return assetId;
                 };
 
                 if (auto texture = pbrWorkflow->AlbedoMap(); !texture.empty())
                 {
-                    materialAssignment.m_propertyOverrides.emplace(AZ::Name("baseColor.textureMap"), AZStd::any(GetImageAssetIdFromPath(texture)));
+                    materialAssignment.m_propertyOverrides.emplace(
+                        AZ::Name("baseColor.textureMap"), AZStd::any(GetImageAssetIdFromPath(texture)));
                 }
 
                 if (auto texture = pbrWorkflow->NormalMap(); !texture.empty())
                 {
-                    materialAssignment.m_propertyOverrides.emplace(AZ::Name("normal.textureMap"), AZStd::any(GetImageAssetIdFromPath(texture)));
+                    materialAssignment.m_propertyOverrides.emplace(
+                        AZ::Name("normal.textureMap"), AZStd::any(GetImageAssetIdFromPath(texture)));
                 }
 
                 if (auto texture = pbrWorkflow->AmbientOcclusionMap(); !texture.empty())
                 {
-                    materialAssignment.m_propertyOverrides.emplace(AZ::Name("occlusion.diffuseTextureMap"), AZStd::any(GetImageAssetIdFromPath(texture)));
+                    materialAssignment.m_propertyOverrides.emplace(
+                        AZ::Name("occlusion.diffuseTextureMap"), AZStd::any(GetImageAssetIdFromPath(texture)));
                 }
 
                 if (auto texture = pbrWorkflow->EmissiveMap(); !texture.empty())
                 {
                     materialAssignment.m_propertyOverrides.emplace(AZ::Name("emissive.enable"), AZStd::any(true));
-                    materialAssignment.m_propertyOverrides.emplace(AZ::Name("emissive.textureMap"), AZStd::any(GetImageAssetIdFromPath(texture)));
+                    materialAssignment.m_propertyOverrides.emplace(
+                        AZ::Name("emissive.textureMap"), AZStd::any(GetImageAssetIdFromPath(texture)));
                 }
 
                 if (pbrWorkflow->Type() == sdf::PbrWorkflowType::METAL)
                 {
                     if (auto texture = pbrWorkflow->RoughnessMap(); !texture.empty())
                     {
-                        materialAssignment.m_propertyOverrides.emplace(AZ::Name("roughness.textureMap"), AZStd::any(GetImageAssetIdFromPath(texture)));
+                        materialAssignment.m_propertyOverrides.emplace(
+                            AZ::Name("roughness.textureMap"), AZStd::any(GetImageAssetIdFromPath(texture)));
                     }
 
                     if (auto texture = pbrWorkflow->MetalnessMap(); !texture.empty())
                     {
-                        materialAssignment.m_propertyOverrides.emplace(AZ::Name("metallic.textureMap"), AZStd::any(GetImageAssetIdFromPath(texture)));
+                        materialAssignment.m_propertyOverrides.emplace(
+                            AZ::Name("metallic.textureMap"), AZStd::any(GetImageAssetIdFromPath(texture)));
                     }
 
                     if (pbrWorkflow->Element()->HasElement("roughness"))
                     {
-                        materialAssignment.m_propertyOverrides.emplace(AZ::Name("roughness.factor"), AZStd::any(static_cast<float>(pbrWorkflow->Roughness())));
+                        materialAssignment.m_propertyOverrides.emplace(
+                            AZ::Name("roughness.factor"), AZStd::any(static_cast<float>(pbrWorkflow->Roughness())));
                     }
 
                     if (pbrWorkflow->Element()->HasElement("metalness"))
                     {
-                        materialAssignment.m_propertyOverrides.emplace(AZ::Name("metallic.factor"), AZStd::any(static_cast<float>(pbrWorkflow->Metalness())));
+                        materialAssignment.m_propertyOverrides.emplace(
+                            AZ::Name("metallic.factor"), AZStd::any(static_cast<float>(pbrWorkflow->Metalness())));
                     }
                 }
                 else
                 {
-                    AZ_Warning("AddMaterial", pbrWorkflow->GlossinessMap().empty(), 
-                        "PBR material has a Glossiness map (%s), which is a Specular PBR workflow, not a Metal PBR workflow. It will not be converted.", pbrWorkflow->GlossinessMap().c_str());
-                    AZ_Warning("AddMaterial", pbrWorkflow->SpecularMap().empty(), 
-                        "PBR material has a Specular map (%s), which is a Specular PBR workflow, not a Metal PBR workflow. It will not be converted.", pbrWorkflow->SpecularMap().c_str());
+                    AZ_Warning(
+                        "AddMaterial",
+                        pbrWorkflow->GlossinessMap().empty(),
+                        "PBR material has a Glossiness map (%s), which is a Specular PBR workflow, not a Metal PBR workflow. It will not "
+                        "be converted.",
+                        pbrWorkflow->GlossinessMap().c_str());
+                    AZ_Warning(
+                        "AddMaterial",
+                        pbrWorkflow->SpecularMap().empty(),
+                        "PBR material has a Specular map (%s), which is a Specular PBR workflow, not a Metal PBR workflow. It will not be "
+                        "converted.",
+                        pbrWorkflow->SpecularMap().c_str());
                 }
             }
         }
-
     }
 
     static void OverrideMaterialBaseColor(const sdf::Material* material, AZ::Render::MaterialAssignmentMap& overrides)
@@ -408,14 +434,16 @@ namespace ROS2
 
     static void OverrideMaterialEmissiveSettings(const sdf::Material* material, AZ::Render::MaterialAssignmentMap& overrides)
     {
-        // Emissive: If an emissive color has been specified, enable emissive on the material and set the emissive color to the provided one.
+        // Emissive: If an emissive color has been specified, enable emissive on the material and set the emissive color to the provided
+        // one.
         if (material->Element()->HasElement("emissive"))
         {
-            // Get the color and convert from gamma to linear to try and account for the different color spaces between phong and PBR rendering.
+            // Get the color and convert from gamma to linear to try and account for the different color spaces between phong and PBR
+            // rendering.
             const auto materialColor = material->Emissive();
             const AZ::Color emissiveColor = URDF::TypeConversions::ConvertColor(materialColor).GammaToLinear();
 
-            // It seems to be fairly common to have an emissive entry of black, which isn't emissive at all. 
+            // It seems to be fairly common to have an emissive entry of black, which isn't emissive at all.
             // Only enable the emissive color if it's a non-black value.
             if ((emissiveColor.GetR() > 0.0f) || (emissiveColor.GetG() > 0.0f) || (emissiveColor.GetB() > 0.0f))
             {
@@ -424,10 +452,10 @@ namespace ROS2
                     materialAssignment.m_propertyOverrides.emplace(AZ::Name("emissive.enable"), AZStd::any(true));
                     materialAssignment.m_propertyOverrides.emplace(AZ::Name("emissive.color"), AZStd::any(emissiveColor));
 
-                    // The URDF/SDF file doesn't specify an emissive intensity, just a color. 
+                    // The URDF/SDF file doesn't specify an emissive intensity, just a color.
                     // We're arbitrarily using a value slightly higher than the default emissive intensity.
-                    // This value was picked based on observations of emissive color behaviors in Gazebo. 
-                    // This intensity mostly preserves the color (though it lightens it a little) and 
+                    // This value was picked based on observations of emissive color behaviors in Gazebo.
+                    // This intensity mostly preserves the color (though it lightens it a little) and
                     // potentially adds a little bit of lighting to the scene if Bloom or Diffuse Probe Grid also exist in the world.
                     materialAssignment.m_propertyOverrides.emplace(AZ::Name("emissive.intensity"), AZStd::any(5.5f));
                 }
@@ -437,7 +465,8 @@ namespace ROS2
 
     static void OverrideMaterialRoughness(const sdf::Material* material, AZ::Render::MaterialAssignmentMap& overrides)
     {
-        // Metallic/Roughness: Try to use the shininess value for roughness if we have one, otherwise fall back to using the specular brightness.
+        // Metallic/Roughness: Try to use the shininess value for roughness if we have one, otherwise fall back to using the specular
+        // brightness.
         if (material->Element()->HasElement("shininess") || material->Element()->HasElement("specular"))
         {
             float shininess = 0.0f;
@@ -445,7 +474,7 @@ namespace ROS2
 
             if (material->Element()->HasElement("shininess"))
             {
-                // If we have a shininess value, we'll use it to set both metallic and roughness. 
+                // If we have a shininess value, we'll use it to set both metallic and roughness.
                 // The shinier it is, the more metallic and less rough we'll make the result.
                 shininess = material->Shininess();
                 roughness = 1.0f - shininess;
@@ -466,12 +495,11 @@ namespace ROS2
                 // Since specular color doesn't really speak to shininess, we'll arbitrarily scale down the specular brightness to
                 // 1/4 of the total brightness to modulate the metallic reflectiveness a little, but not too much. Without this scaling,
                 // a white specular color would always become fully metallic, perfectly smooth, and therefore fully reflective.
-                // With the scaling, a white specular color will be perfectly smooth but only 25% metallic, so it will have some reflectivity
-                // but not a lot.
+                // With the scaling, a white specular color will be perfectly smooth but only 25% metallic, so it will have some
+                // reflectivity but not a lot.
                 shininess = specularBrightness * 0.25f;
-
             }
-                
+
             for (auto& [id, materialAssignment] : overrides)
             {
                 materialAssignment.m_propertyOverrides.emplace(AZ::Name("metallic.factor"), AZStd::any(shininess));
@@ -520,13 +548,17 @@ namespace ROS2
         auto modelAsset = AZ::Data::AssetManager::Instance().GetAsset<AZ::RPI::ModelAsset>(assetId, AZ::Data::AssetLoadBehavior::Default);
         modelAsset.BlockUntilLoadComplete();
 
-        AZ_Error("AddMaterial", modelAsset.IsReady(), "Trying to create materials for a model that couldn't load. The generated material overrides may not work correctly.");
+        AZ_Error(
+            "AddMaterial",
+            modelAsset.IsReady(),
+            "Trying to create materials for a model that couldn't load. The generated material overrides may not work correctly.");
 
         // Initialize the material component configuration to contain all of the material mappings from the model.
         AZ::Render::MaterialComponentConfig config;
         config.m_materials = AZ::Render::GetDefaultMaterialMapFromModelAsset(modelAsset);
 
-        // Try to override all of the various material settings based on what's contained in the <material> and <visual> elements in the source file.
+        // Try to override all of the various material settings based on what's contained in the <material> and <visual> elements in the
+        // source file.
         OverrideScriptMaterial(material, config.m_materials);
         OverrideMaterialPbrSettings(material, m_urdfAssetsMapping, config.m_materials);
         OverrideMaterialBaseColor(material, config.m_materials);
@@ -535,7 +567,8 @@ namespace ROS2
         OverrideMaterialRoughness(material, config.m_materials);
         OverrideMaterialDoubleSided(material, config.m_materials);
 
-        // All the material overrides are in place, so get the entity, add the material component, and set its configuration to use the material overrides.
+        // All the material overrides are in place, so get the entity, add the material component, and set its configuration to use the
+        // material overrides.
         AZ::Entity* entity = AzToolsFramework::GetEntityById(entityId);
         AZ_Assert(entity, "Entity ID for visual %s couldn't be found.", visual->Name().c_str());
         auto component = entity->CreateComponent(AZ::Render::EditorMaterialComponentTypeId);
