@@ -15,7 +15,8 @@
 
 namespace OpenXRVk
 {
-    //! This class is the component related to the vulkan backend of XR.
+    //! This system component provides data that can be used to pick xrActions
+    //! that will used at runtime for any given application.
     class KHRSimpleProfileSystemComponent final
         : public AZ::Component
         , public OpenXRInteractionProviderBus::Handler
@@ -44,10 +45,14 @@ namespace OpenXRVk
         ///////////////////////////////////////////////////////////////////
 
     private:
-        AZStd::string m_name;
-        AZStd::vector<AZStd::string> m_userPaths;
+        static constexpr char LogName[] = "KHRSimpleProfileSystemComponent";
+
+        static constexpr AZStd::string_view LeftHand = "(L)";
+        static constexpr AZStd::string_view RightHand = "(R)";
+        OpenXRPath m_name;
+        AZStd::vector<OpenXRPath> m_userPaths;
         //! The key is a user path and the value is a list of component paths that exist
         //! for said user path. 
-        AZStd::unordered_map<AZStd::string, AZStd::vector<AZStd::string>> m_componentPaths;
+        AZStd::unordered_map<AZStd::string, AZStd::vector<OpenXRComponentPath>> m_componentPaths;
     };
 }//namespace OpenXRVk

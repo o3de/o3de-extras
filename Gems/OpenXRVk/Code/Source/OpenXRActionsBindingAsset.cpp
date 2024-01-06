@@ -6,6 +6,7 @@
  *
  */
 
+#include <OpenXRVk/OpenXRInteractionProviderBus.h>
 #include "OpenXRActionsBindingAsset.h"
 
 namespace OpenXRVk
@@ -47,37 +48,52 @@ namespace OpenXRVk
 
     AZStd::string OpenXRActionPath::GetEditorText() const
     {
-        return AZStd::string::format("%s-%s-%s", m_interactionProfile.c_str(), m_userPath.c_str(), m_componentPath.c_str());
+        return AZStd::string::format("%s %s %s", m_interactionProfile.c_str(), m_userPath.c_str(), m_componentPath.c_str());
     }
 
     AZ::Crc32 OpenXRActionPath::OnInteractionProfileSelected()
     {
-        return AZ::Edit::PropertyRefreshLevels::None;
+        return AZ::Edit::PropertyRefreshLevels::AttributesAndValues;
     }
 
     AZStd::vector<AZStd::string> OpenXRActionPath::GetInteractionProfiles() const
     {
-        return {};
+        AZStd::vector<AZStd::string> retList;
+
+        OpenXRInteractionProviderBus::EnumerateHandlers([&retList](OpenXRInteractionProvider* handler) -> bool {
+            retList.push_back(handler->GetName());
+            return true;
+        });
+
+        return retList;
     }
 
     AZ::Crc32 OpenXRActionPath::OnUserPathSelected()
     {
-        return AZ::Edit::PropertyRefreshLevels::None;
+        return AZ::Edit::PropertyRefreshLevels::AttributesAndValues;
     }
 
     AZStd::vector<AZStd::string> OpenXRActionPath::GetUserPaths() const
     {
-        return {};
+        AZStd::vector<AZStd::string> retList;
+
+        OpenXRInteractionProviderBus::EventResult(retList, m_interactionProfile, &OpenXRInteractionProvider::GetUserPaths);
+
+        return retList;
     }
 
     AZ::Crc32 OpenXRActionPath::OnComponentPathSelected()
     {
-        return AZ::Edit::PropertyRefreshLevels::None;
+        return AZ::Edit::PropertyRefreshLevels::AttributesAndValues;
     }
 
     AZStd::vector<AZStd::string> OpenXRActionPath::GetComponentPaths() const
     {
-        return {};
+        AZStd::vector<AZStd::string> retList;
+
+        OpenXRInteractionProviderBus::EventResult(retList, m_interactionProfile, &OpenXRInteractionProvider::GetComponentPaths, m_userPath);
+
+        return retList;
     }
     /// OpenXRActionPath
     ///////////////////////////////////////////////////////////
@@ -87,6 +103,8 @@ namespace OpenXRVk
     /// OpenXRAction
     void OpenXRAction::Reflect(AZ::ReflectContext* context)
     {
+        OpenXRActionPath::Reflect(context);
+
         AZ::SerializeContext* serialize = azrtti_cast<AZ::SerializeContext*>(context);
         if (serialize)
         {
@@ -129,6 +147,8 @@ namespace OpenXRVk
     /// OpenXRActionSet
     void OpenXRActionSet::Reflect(AZ::ReflectContext* context)
     {
+        OpenXRAction::Reflect(context);
+
         AZ::SerializeContext* serialize = azrtti_cast<AZ::SerializeContext*>(context);
         if (serialize)
         {
@@ -137,6 +157,7 @@ namespace OpenXRVk
                 ->Field("Name", &OpenXRActionSet::m_name)
                 ->Field("LocalizedName", &OpenXRActionSet::m_localizedName)
                 ->Field("Priority", &OpenXRActionSet::m_priority)
+                ->Field("Actions", &OpenXRActionSet::m_actions)
                 ;
 
             AZ::EditContext* edit = serialize->GetEditContext();
@@ -151,6 +172,7 @@ namespace OpenXRVk
                     ->DataElement(AZ::Edit::UIHandlers::Default, &OpenXRActionSet::m_localizedName, "Localized Name", "Action set display name.")
                         ->Attribute(AZ::Edit::Attributes::ChangeNotify, AZ_CRC("RefreshAttributesAndValues"))
                     ->DataElement(AZ::Edit::UIHandlers::SpinBox, &OpenXRActionSet::m_priority, "Priority", "The higher this value the higher the priority.")
+                    ->DataElement(AZ::Edit::UIHandlers::Default, &OpenXRActionSet::m_actions, "Actions", "List of actions for this action set.")
                     ;
             }
         }

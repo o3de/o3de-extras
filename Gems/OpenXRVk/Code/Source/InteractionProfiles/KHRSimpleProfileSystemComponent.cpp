@@ -29,19 +29,32 @@ namespace OpenXRVk
 
     void KHRSimpleProfileSystemComponent::Activate()
     {
-        
+        m_name = { 
+            "Khronos Simple Interaction Profile",
+            "/interaction_profiles/khr/simple_controller"
+        };
+
+        m_userPaths = {
+            {LeftHand, "/user/hand/left"},
+            {RightHand, "/user/hand/right"}
+        };
+
+        const AZStd::vector<OpenXRComponentPath> commonPaths = {
+            {"Select Button", "/input/select/click", XR_ACTION_TYPE_BOOLEAN_INPUT},
+            {"Menu Button",   "/input/menu/click",   XR_ACTION_TYPE_BOOLEAN_INPUT},
+            {"Grip",          "/input/grip/pose",    XR_ACTION_TYPE_POSE_INPUT},
+            {"Aim",           "/input/aim/pose",     XR_ACTION_TYPE_POSE_INPUT},
+            {"Vibration",     "/output/haptic",      XR_ACTION_TYPE_VIBRATION_OUTPUT},
+        };
+        m_componentPaths[LeftHand] = commonPaths;
+        m_componentPaths[RightHand] = commonPaths;
+
+        OpenXRInteractionProviderBus::Handler::BusConnect(m_name.m_displayName);
     }
 
     void KHRSimpleProfileSystemComponent::Deactivate()
     {
-        if (m_instance)
-        {
-            XR::Factory::Unregister(this);
-            AZ::Interface<XR::Instance>::Unregister(m_instance.get());
-            m_instance = nullptr;
-        }
-
-        m_actionsBindingAssetHandler->Unregister();
+        OpenXRInteractionProviderBus::Handler::BusDisconnect();
     }
 
     ///////////////////////////////////////////////////////////////////
@@ -49,17 +62,36 @@ namespace OpenXRVk
     //! Create OpenXRVk::Instance object
     AZStd::string KHRSimpleProfileSystemComponent::GetName() const
     {
-        return m_name;
+        return m_name.m_displayName;
     }
 
     AZStd::vector<AZStd::string> KHRSimpleProfileSystemComponent::GetUserPaths() const
     {
-        return m_userPaths;
+        AZStd::vector<AZStd::string> retList;
+        retList.reserve(m_userPaths.size());
+        for (const auto& pathTuple : m_userPaths)
+        {
+            retList.push_back(pathTuple.m_displayName);
+        }
+        return retList;
     }
 
     AZStd::vector<AZStd::string> KHRSimpleProfileSystemComponent::GetComponentPaths(const AZStd::string& userPath) const
     {
+        if (!m_componentPaths.contains(userPath))
+        {
+            AZ_Error(LogName, false, "Invalid user path [%s].\n", userPath.c_str());
+            return {};
+        }
 
+        const auto& paths = m_componentPaths.at(userPath);
+        AZStd::vector<AZStd::string> retList;
+        retList.reserve(paths.size());
+        for (const auto& pathTuple : paths)
+        {
+            retList.push_back(pathTuple.m_displayName);
+        }
+        return retList;
     }
     ///////////////////////////////////////////////////////////////////
 }
