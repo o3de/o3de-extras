@@ -5,10 +5,11 @@
  * SPDX-License-Identifier: Apache-2.0 OR MIT
  *
  */
+
 #pragma once
 
-#include <AzCore/EBus/EBusSharedDispatchTraits.h>
 #include <AzCore/Component/EntityId.h>
+#include <AzCore/EBus/EBusSharedDispatchTraits.h>
 #include <AzCore/Interface/Interface.h>
 #include <AzCore/std/string/string.h>
 #include <sensor_msgs/msg/nav_sat_fix.hpp>
@@ -26,11 +27,33 @@ namespace ROS2
     public:
         using BusIdType = AZ::EntityId;
         static constexpr AZ::EBusAddressPolicy AddressPolicy = AZ::EBusAddressPolicy::ById;
-        static constexpr AZ::EBusHandlerPolicy HandlerPolicy = AZ::EBusHandlerPolicy::Multiple;
+
+        //! Multiple post-processing functions can be registered to the bus.
+        //! They will be executed in the order
+        static constexpr AZ::EBusHandlerPolicy HandlerPolicy = AZ::EBusHandlerPolicy::MultipleAndOrdered;
+
+        //! Priority of the post-processing bus.
+        //! @note higher priority buses will be processed first.
+        static constexpr AZ::u8 MIN_PRIORITY = 0;
+        static constexpr AZ::u8 MAX_PRIORITY = 255;
+        static constexpr AZ::u8 DEFAULT_PRIORITY = 127;
 
         //! Apply post-processing function to GNSS data.
         //! @param gnss standard GNSS message passed as a reference. It will be changed through post-processing.
         virtual void ApplyPostProcessing(sensor_msgs::msg::NavSatFix& gnss) = 0;
+
+        //! Get priority of the post-processing bus.
+        //! @return priority of the bus.
+        //! @note higher priority buses will be processed first.
+        virtual AZ::u8 GetPriority() const = 0;
+
+        //! Compare two post-processing buses.
+        //! @param other bus to compare to.
+        //! @return true if this bus should be processed before the other.
+        inline bool Compare(const GNSSPostProcessingRequests* other) const
+        {
+            return GetPriority() > other->GetPriority();
+        }
 
     protected:
         ~GNSSPostProcessingRequests() = default;
