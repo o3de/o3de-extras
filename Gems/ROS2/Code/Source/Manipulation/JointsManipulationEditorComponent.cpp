@@ -26,11 +26,16 @@ namespace ROS2
         m_jointStatePublisherConfiguration.m_topicConfiguration.m_type = "sensor_msgs::msg::JointState";
         m_jointStatePublisherConfiguration.m_topicConfiguration.m_topic = "joint_states";
         m_jointStatePublisherConfiguration.m_frequency = 25.0f;
+
+        m_jointPositionsSubscriberConfiguration.m_subscribe = false;
+        m_jointPositionsSubscriberConfiguration.m_topicConfiguration.m_type = "std_msgs::msg::Float64MultiArray";
+        m_jointPositionsSubscriberConfiguration.m_topicConfiguration.m_topic = "/position_controller/commands";
     }
 
     void JointsManipulationEditorComponent::BuildGameEntity(AZ::Entity* gameEntity)
     {
-        gameEntity->CreateComponent<JointsManipulationComponent>(m_jointStatePublisherConfiguration, m_initialPositions);
+        gameEntity->CreateComponent<JointsManipulationComponent>(
+            m_jointStatePublisherConfiguration, m_jointPositionsSubscriberConfiguration, m_initialPositions);
     }
 
     void JointsManipulationEditorComponent::GetRequiredServices(AZ::ComponentDescriptor::DependencyArrayType& required)
@@ -54,8 +59,9 @@ namespace ROS2
         if (AZ::SerializeContext* serialize = azrtti_cast<AZ::SerializeContext*>(context))
         {
             serialize->Class<JointsManipulationEditorComponent, AZ::Component>()
-                ->Version(0)
+                ->Version(1)
                 ->Field("JointStatePublisherConfiguration", &JointsManipulationEditorComponent::m_jointStatePublisherConfiguration)
+                ->Field("JointPositionsSubscriberConfiguration", &JointsManipulationEditorComponent::m_jointPositionsSubscriberConfiguration)
                 ->Field("Initial positions", &JointsManipulationEditorComponent::m_initialPositions);
 
             if (AZ::EditContext* ec = serialize->GetEditContext())
@@ -71,6 +77,11 @@ namespace ROS2
                         &JointsManipulationEditorComponent::m_jointStatePublisherConfiguration,
                         "Joint State Publisher",
                         "Configuration of Joint State Publisher")
+                    ->DataElement(
+                        AZ::Edit::UIHandlers::Default,
+                        &JointsManipulationEditorComponent::m_jointPositionsSubscriberConfiguration,
+                        "Joint Positions Subscriber",
+                        "Configuration of Joint Positions Subscriber")
                     ->DataElement(
                         AZ::Edit::UIHandlers::Default,
                         &JointsManipulationEditorComponent::m_initialPositions,

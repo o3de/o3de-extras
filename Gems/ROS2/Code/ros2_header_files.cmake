@@ -9,6 +9,7 @@ set(FILES
         Include/ROS2/Clock/PhysicallyStableClock.h
         Include/ROS2/Clock/SimulationClock.h
         Include/ROS2/Communication/PublisherConfiguration.h
+        Include/ROS2/Communication/SubscriberConfiguration.h
         Include/ROS2/Communication/TopicConfiguration.h
         Include/ROS2/Communication/QoS.h
         Include/ROS2/Frame/NamespaceConfiguration.h
