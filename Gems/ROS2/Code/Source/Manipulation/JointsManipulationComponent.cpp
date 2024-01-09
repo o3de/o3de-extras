@@ -9,6 +9,7 @@
 #include "JointsManipulationComponent.h"
 #include "Controllers/JointsArticulationControllerComponent.h"
 #include "Controllers/JointsPIDControllerComponent.h"
+#include "JointPositionsSubscriptionHandler.h"
 #include "JointStatePublisher.h"
 #include "ManipulationUtils.h"
 #include <AzCore/Component/ComponentApplicationBus.h>
@@ -166,8 +167,11 @@ namespace ROS2
     }
 
     JointsManipulationComponent::JointsManipulationComponent(
-        const PublisherConfiguration& configuration, const AZStd::unordered_map<AZStd::string, JointPosition>& initialPositions)
-        : m_jointStatePublisherConfiguration(configuration)
+        const PublisherConfiguration& publisherConfiguration,
+        const SubscriberConfiguration& subscriberConfiguration,
+        const AZStd::unordered_map<AZStd::string, JointPosition>& initialPositions)
+        : m_jointStatePublisherConfiguration(publisherConfiguration)
+        , m_jointPositionsSubscriberConfiguration(subscriberConfiguration)
         , m_initialPositions(initialPositions)
     {
     }
@@ -182,12 +186,28 @@ namespace ROS2
 
         m_jointStatePublisher = AZStd::make_unique<JointStatePublisher>(m_jointStatePublisherConfiguration, publisherContext);
 
+        if (m_jointPositionsSubscriberConfiguration.m_subscribe)
+        {
+            m_jointPositionsSubscriptionHandler = AZStd::make_unique<JointPositionsSubscriptionHandler>(
+                [this](const JointPositionsSubscriptionHandler::MessageType& message)
+            {
+                ProcessPositionControlMessage(message);
+            });
+            m_jointPositionsSubscriptionHandler->Activate(GetEntity(), m_jointPositionsSubscriberConfiguration.m_topicConfiguration);
+        }
+
         AZ::TickBus::Handler::BusConnect();
         JointsManipulationRequestBus::Handler::BusConnect(GetEntityId());
     }
 
     void JointsManipulationComponent::Deactivate()
     {
+        if (m_jointPositionsSubscriptionHandler)
+        {
+            m_jointPositionsSubscriptionHandler->Deactivate();
+            m_jointPositionsSubscriptionHandler.reset();
+        }
+
         JointsManipulationRequestBus::Handler::BusDisconnect();
         AZ::TickBus::Handler::BusDisconnect();
     }
@@ -373,6 +393,7 @@ namespace ROS2
             serialize->Class<JointsManipulationComponent, AZ::Component>()
                 ->Version(1)
                 ->Field("JointStatesPublisherConfiguration", &JointsManipulationComponent::m_jointStatePublisherConfiguration)
+                ->Field("JointPositionsSubscriberConfiguration", &JointsManipulationComponent::m_jointPositionsSubscriberConfiguration)
                 ->Field("InitialJointPosition", &JointsManipulationComponent::m_initialPositions);
         }
     }
@@ -448,5 +469,32 @@ namespace ROS2
             m_jointStatePublisher->InitializePublisher();
         }
         MoveToSetPositions(deltaTime);
+    }
+
+    void JointsManipulationComponent::ProcessPositionControlMessage(const std_msgs::msg::Float64MultiArray& message)
+    {
+        if (message.data.size() != m_manipulationJoints.size())
+        {
+            AZ_Error(
+                "JointsManipulationComponent",
+                false,
+                "PositionConroller: command size %d does not match the number of joints %d",
+                message.data.size(),
+                m_manipulationJoints.size());
+            return;
+        }
+        
+        auto commandIter = message.data.cbegin();
+        for (const auto& joint : m_manipulationJoints)
+        {
+            auto result = MoveJointToPosition(joint.first, *commandIter);
+            ++commandIter;
+            AZ_Error(
+                "JointsManipulationComponent",
+                result,
+                "PositionConroller: command failed for joint %s: ",
+                joint.first.c_str(),
+                result.GetError().c_str());
+        }
     }
 } // namespace ROS2

@@ -12,6 +12,7 @@
 #include <AzCore/std/string/string.h>
 #include <AzToolsFramework/ToolsComponents/EditorComponentBase.h>
 #include <ROS2/Communication/PublisherConfiguration.h>
+#include <ROS2/Communication/SubscriberConfiguration.h>
 
 namespace ROS2
 {
@@ -33,6 +34,7 @@ namespace ROS2
 
     private:
         PublisherConfiguration m_jointStatePublisherConfiguration;
+        SubscriberConfiguration m_jointPositionsSubscriberConfiguration;
         AZStd::unordered_map<AZStd::string, float> m_initialPositions;
     };
 } // namespace ROS2
