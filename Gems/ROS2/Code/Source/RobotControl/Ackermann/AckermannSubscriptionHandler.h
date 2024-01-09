@@ -7,14 +7,14 @@
  */
 #pragma once
 
-#include <ROS2/RobotControl/ControlSubscriptionHandler.h>
+#include <ROS2/Communication/SubscriptionHandler.h>
 #include <ackermann_msgs/msg/ackermann_drive.hpp>
 
 namespace ROS2
 {
-    class AckermannSubscriptionHandler : public ControlSubscriptionHandler<ackermann_msgs::msg::AckermannDrive>
+    class AckermannSubscriptionHandler : public SubscriptionHandler<ackermann_msgs::msg::AckermannDrive>
     {
     private:
-        void SendToBus(const ackermann_msgs::msg::AckermannDrive& message) override;
+        void ExecuteUponMessage(const ackermann_msgs::msg::AckermannDrive& message) override;
     };
 } // namespace ROS2

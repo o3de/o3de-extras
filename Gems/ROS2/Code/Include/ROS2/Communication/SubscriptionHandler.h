@@ -16,23 +16,22 @@
 namespace ROS2
 {
     //! Component extension enabling polymorphic use of generics.
-    class IControlSubscriptionHandler
+    class ISubscriptionHandler
     {
     public:
         //! Interface handling component activation
-        //! Only activated IComponentActivationHandler will receive and process control messages.
+        //! Only activated ISubscriptionHandler will receive and process messages.
         //! @param entity Activation context for the owning Component - the entity it belongs to.
         //! @param subscriberConfiguration configuration with topic and qos
         virtual void Activate(const AZ::Entity* entity, const TopicConfiguration& subscriberConfiguration) = 0;
         //! Interface handling component deactivation
         virtual void Deactivate() = 0;
-        virtual ~IControlSubscriptionHandler() = default;
+        virtual ~ISubscriptionHandler() = default;
     };
 
-    //! The generic class for handling subscriptions to ROS2 control messages of different types.
-    //! @see ControlConfiguration::Steering.
+    //! The generic class for handling subscriptions to ROS2 messages of different types.
     template<typename T>
-    class ControlSubscriptionHandler : public IControlSubscriptionHandler
+    class SubscriptionHandler : public ISubscriptionHandler
     {
     public:
         void Activate(const AZ::Entity* entity, const TopicConfiguration& subscriberConfiguration) override final
@@ -50,7 +49,7 @@ namespace ROS2
                     subscriberConfiguration.GetQoS(),
                     [this](const T& message)
                     {
-                        OnControlMessage(message);
+                        OnMessage(message);
                     });
             }
         };
@@ -61,7 +60,7 @@ namespace ROS2
             m_controlSubscription.reset(); // Note: topic and qos can change, need to re-subscribe
         };
 
-        virtual ~ControlSubscriptionHandler() = default;
+        virtual ~SubscriptionHandler() = default;
 
     protected:
         AZ::EntityId GetEntityId() const
@@ -70,17 +69,17 @@ namespace ROS2
         }
 
     private:
-        void OnControlMessage(const T& message)
+        void OnMessage(const T& message)
         {
             if (!m_active)
             {
                 return;
             }
 
-            SendToBus(message);
+            ExecuteUponMessage(message);
         };
 
-        virtual void SendToBus(const T& message) = 0;
+        virtual void ExecuteUponMessage(const T& message) = 0;
 
         AZ::EntityId m_entityId;
         bool m_active = false;

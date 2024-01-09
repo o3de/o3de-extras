@@ -9,9 +9,9 @@
 
 #include <AzCore/Component/Component.h>
 #include <AzCore/std/smart_ptr/unique_ptr.h>
+#include <ROS2/Communication/SubscriptionHandler.h>
 #include <ROS2/Communication/TopicConfiguration.h>
 #include <ROS2/RobotControl/ControlConfiguration.h>
-#include <ROS2/RobotControl/ControlSubscriptionHandler.h>
 
 namespace ROS2
 {
@@ -48,7 +48,7 @@ namespace ROS2
         static void Reflect(AZ::ReflectContext* context);
 
     private:
-        AZStd::unique_ptr<IControlSubscriptionHandler> m_subscriptionHandler;
+        AZStd::unique_ptr<ISubscriptionHandler> m_subscriptionHandler;
         ControlConfiguration m_controlConfiguration;
         TopicConfiguration m_subscriberConfiguration;
     };

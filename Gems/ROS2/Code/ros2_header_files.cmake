@@ -9,6 +9,7 @@ set(FILES
         Include/ROS2/Clock/PhysicallyStableClock.h
         Include/ROS2/Clock/SimulationClock.h
         Include/ROS2/Communication/PublisherConfiguration.h
+        Include/ROS2/Communication/SubscriptionHandler.h
         Include/ROS2/Communication/TopicConfiguration.h
         Include/ROS2/Communication/QoS.h
         Include/ROS2/Frame/NamespaceConfiguration.h
@@ -28,7 +29,6 @@ set(FILES
         Include/ROS2/Manipulation/MotorizedJoints/PidMotorControllerBus.h
         Include/ROS2/Manipulation/MotorizedJoints/PidMotorControllerComponent.h
         Include/ROS2/RobotControl/ControlConfiguration.h
-        Include/ROS2/RobotControl/ControlSubscriptionHandler.h
         Include/ROS2/RobotImporter/SDFormatSensorImporterHook.h
         Include/ROS2/Lidar/LidarRaycasterBus.h
         Include/ROS2/Lidar/LidarSystemBus.h

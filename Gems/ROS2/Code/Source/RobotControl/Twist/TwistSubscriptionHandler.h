@@ -7,14 +7,14 @@
  */
 #pragma once
 
-#include <ROS2/RobotControl/ControlSubscriptionHandler.h>
+#include <ROS2/Communication/SubscriptionHandler.h>
 #include <geometry_msgs/msg/twist.hpp>
 
 namespace ROS2
 {
-    class TwistSubscriptionHandler : public ControlSubscriptionHandler<geometry_msgs::msg::Twist>
+    class TwistSubscriptionHandler : public SubscriptionHandler<geometry_msgs::msg::Twist>
     {
     private:
-        void SendToBus(const geometry_msgs::msg::Twist& message) override;
+        void ExecuteUponMessage(const geometry_msgs::msg::Twist& message) override;
     };
 } // namespace ROS2

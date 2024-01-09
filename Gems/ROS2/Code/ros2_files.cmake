@@ -28,6 +28,7 @@ set(FILES
         Source/Clock/SimulationClock.cpp
         Source/Communication/QoS.cpp
         Source/Communication/PublisherConfiguration.cpp
+        Source/Communication/SubscriberConfiguration.cpp
         Source/Communication/TopicConfiguration.cpp
         Source/ContactSensor/ROS2ContactSensorComponent.cpp
         Source/ContactSensor/ROS2ContactSensorComponent.h

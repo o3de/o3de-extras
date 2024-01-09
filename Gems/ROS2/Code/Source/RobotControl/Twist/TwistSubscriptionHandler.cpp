@@ -12,7 +12,7 @@
 
 namespace ROS2
 {
-    void TwistSubscriptionHandler::SendToBus(const geometry_msgs::msg::Twist& message)
+    void TwistSubscriptionHandler::ExecuteUponMessage(const geometry_msgs::msg::Twist& message)
     {
         const AZ::Vector3 linearVelocity = ROS2Conversions::FromROS2Vector3(message.linear);
         const AZ::Vector3 angularVelocity = ROS2Conversions::FromROS2Vector3(message.angular);

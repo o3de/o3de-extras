@@ -12,7 +12,7 @@
 
 namespace ROS2
 {
-    void AckermannSubscriptionHandler::SendToBus(const ackermann_msgs::msg::AckermannDrive& message)
+    void AckermannSubscriptionHandler::ExecuteUponMessage(const ackermann_msgs::msg::AckermannDrive& message)
     {
         AckermannCommandStruct acs;
         acs.m_acceleration = message.acceleration;
