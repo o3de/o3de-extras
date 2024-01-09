@@ -9,7 +9,9 @@
 
 #include <AzCore/Component/Component.h>
 #include <ROS2/RobotControl/Twist/TwistBus.h>
-
+#include <AzFramework/Physics/PhysicsSystem.h>
+#include <AzFramework/Physics/RigidBodyBus.h>
+#include <AzCore/Component/TickBus.h>
 namespace ROS2
 {
     //! A component with a simple handler for Twist type of control (linear and angular velocities).
@@ -17,6 +19,7 @@ namespace ROS2
     class RigidBodyTwistControlComponent
         : public AZ::Component
         , private TwistNotificationBus::Handler
+        , private AZ::TickBus::Handler
     {
     public:
         AZ_COMPONENT(RigidBodyTwistControlComponent, "{D994FE1A-AA6A-42B9-8B8E-B3B375891F5B}", AZ::Component);
@@ -36,5 +39,15 @@ namespace ROS2
         // TwistNotificationBus::Handler overrides
         void TwistReceived(const AZ::Vector3& linear, const AZ::Vector3& angular) override;
         //////////////////////////////////////////////////////////////////////////
+
+        //////////////////////////////////////////////////////////////////////////
+        // AZ::TickBus::Handler overrides
+        void OnTick(float deltaTime, AZ::ScriptTimePoint time) override;
+        //////////////////////////////////////////////////////////////////////////
+
+        AZ::Vector3 m_linearVelocityLocal {AZ::Vector3::CreateZero()}; //!< Linear velocity in local frame
+        AZ::Vector3 m_angularVelocityLocal {AZ::Vector3::CreateZero()}; //!< Angular velocity in local frame
+        AzPhysics::SceneEvents::OnSceneSimulationFinishHandler m_sceneFinishSimHandler; //!< Handler called after every physics sub-step
+        AzPhysics::SimulatedBodyHandle m_bodyHandle = AzPhysics::InvalidSimulatedBodyHandle; //!< Handle to the body to apply velocities to
     };
 } // namespace ROS2

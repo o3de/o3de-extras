@@ -12,7 +12,7 @@
 #include <AzCore/Serialization/EditContext.h>
 #include <AzCore/Serialization/EditContextConstants.inl>
 #include <AzFramework/Physics/RigidBodyBus.h>
-
+#include <AzFramework/Physics/SimulatedBodies/RigidBody.h>
 namespace ROS2
 {
     void RigidBodyTwistControlComponent::Reflect(AZ::ReflectContext* context)
@@ -34,12 +34,58 @@ namespace ROS2
 
     void RigidBodyTwistControlComponent::Activate()
     {
+
+        AZ::TickBus::Handler::BusConnect();
         TwistNotificationBus::Handler::BusConnect(GetEntityId());
     }
 
     void RigidBodyTwistControlComponent::Deactivate()
     {
         TwistNotificationBus::Handler::BusDisconnect();
+        if (m_sceneFinishSimHandler.IsConnected())
+        {
+            m_sceneFinishSimHandler.Disconnect();
+        }
+        if (AZ::TickBus::Handler::BusIsConnected())
+        {
+            AZ::TickBus::Handler::BusDisconnect();
+        }
+    }
+    
+    void RigidBodyTwistControlComponent::OnTick(float deltaTime, AZ::ScriptTimePoint time)
+    {
+        AZ_Assert(AZ::Interface<AzPhysics::SystemInterface>::Get(), "No physics system");
+        AzPhysics::SceneInterface* sceneInterface = AZ::Interface<AzPhysics::SceneInterface>::Get();
+        AZ_Assert(sceneInterface, "No scene interface");
+        AzPhysics::SceneHandle defaultSceneHandle = sceneInterface->GetSceneHandle(AzPhysics::DefaultPhysicsSceneName);
+        AZ_Assert(defaultSceneHandle != AzPhysics::InvalidSceneHandle, "Invalid default physics scene handle");
+
+        AzPhysics::RigidBody* rigidBody = nullptr;
+        Physics::RigidBodyRequestBus::EventResult(rigidBody, GetEntityId(), &Physics::RigidBodyRequests::GetRigidBody);
+        AZ_Warning("RigidBodyTwistControlComponent", rigidBody, "No rigid body found for entity %s", GetEntity()->GetName().c_str());
+        if (!rigidBody)
+        {
+            return;
+        }
+        m_bodyHandle = rigidBody->m_bodyHandle;
+        m_sceneFinishSimHandler = AzPhysics::SceneEvents::OnSceneSimulationFinishHandler(
+                [this]([[maybe_unused]] AzPhysics::SceneHandle sceneHandle, float fixedDeltaTime)
+                {
+
+                    AzPhysics::SceneInterface* sceneInterface = AZ::Interface<AzPhysics::SceneInterface>::Get();
+                    AZ_Assert(sceneInterface, "No scene interface");
+                    auto* rigidBody = sceneInterface->GetSimulatedBodyFromHandle(sceneHandle, m_bodyHandle);
+                    AZ_Assert(sceneInterface, "No body found for previously given handle");
+
+                    // Convert local steering to world frame
+                    const AZ::Transform robotTransform = rigidBody->GetTransform();
+                    const auto velocityLinearGlobal = robotTransform.TransformVector(m_linearVelocityLocal);
+                    const auto  angularVelocityGlobal = robotTransform.TransformVector(m_angularVelocityLocal);
+                    Physics::RigidBodyRequestBus::Event(GetEntityId(), &Physics::RigidBodyRequests::SetLinearVelocity, velocityLinearGlobal);
+                    Physics::RigidBodyRequestBus::Event(GetEntityId(), &Physics::RigidBodyRequests::SetAngularVelocity, angularVelocityGlobal);
+                },
+                aznumeric_cast<int32_t>(AzPhysics::SceneEvents::PhysicsStartFinishSimulationPriority::Components));
+        sceneInterface->RegisterSceneSimulationFinishHandler(defaultSceneHandle, m_sceneFinishSimHandler);
     }
 
     void RigidBodyTwistControlComponent::GetRequiredServices(AZ::ComponentDescriptor::DependencyArrayType& required)
@@ -50,21 +96,7 @@ namespace ROS2
 
     void RigidBodyTwistControlComponent::TwistReceived(const AZ::Vector3& linear, const AZ::Vector3& angular)
     {
-        auto thisEntityId = GetEntityId();
-        AZ::Vector3 currentLinearVelocity;
-        Physics::RigidBodyRequestBus::EventResult(currentLinearVelocity, thisEntityId, &Physics::RigidBodyRequests::GetLinearVelocity);
-
-        // Convert local steering to world frame
-        AZ::Transform robotTransform;
-        AZ::TransformBus::EventResult(robotTransform, thisEntityId, &AZ::TransformBus::Events::GetWorldTM);
-        auto transformedLinearVelocity = robotTransform.TransformVector(linear);
-
-        // Overwrite control velocities on two axis
-        currentLinearVelocity.SetX(transformedLinearVelocity.GetX());
-        currentLinearVelocity.SetY(transformedLinearVelocity.GetY());
-
-        // Reapply desired velocities
-        Physics::RigidBodyRequestBus::Event(thisEntityId, &Physics::RigidBodyRequests::SetLinearVelocity, currentLinearVelocity);
-        Physics::RigidBodyRequestBus::Event(thisEntityId, &Physics::RigidBodyRequests::SetAngularVelocity, angular);
+        m_linearVelocityLocal = linear;
+        m_angularVelocityLocal = angular;
     }
 } // namespace ROS2
