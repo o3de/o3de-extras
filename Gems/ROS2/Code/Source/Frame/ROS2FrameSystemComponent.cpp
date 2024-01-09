@@ -7,6 +7,7 @@
  */
 
 #include "ROS2FrameSystemComponent.h"
+#include "AzCore/std/containers/vector.h"
 #include "ROS2FrameSystemBus.h"
 #include <AzCore/Component/ComponentApplicationBus.h>
 #include <AzCore/Component/ComponentBus.h>
@@ -14,7 +15,6 @@
 #include <AzCore/Component/EntityId.h>
 #include <AzCore/std/containers/set.h>
 #include <AzCore/std/string/string.h>
-#include <AzToolsFramework/ToolsComponents/GenericComponentWrapper.h>
 #include <AzToolsFramework/ToolsComponents/TransformComponent.h>
 #include <ROS2/Frame/ROS2FrameBus.h>
 #include <ROS2/Frame/ROS2FrameComponent.h>
@@ -256,6 +256,13 @@ namespace ROS2
 
         // Update namespaces
         UpdateNamespaces(frameToRegister, frameParent);
+
+        auto predecessors = GetAllPredecessors(frameToRegister);
+        for (const auto& predecessor : predecessors)
+        {
+            ROS2FrameComponentNotificationBus::Event(
+                predecessor, &ROS2FrameComponentNotificationBus::Events::OnChildAdded, frameToRegister);
+        }
     }
 
     void ROS2FrameSystemComponent::UnregisterFrame(const AZ::EntityId& frameToUnregister)
@@ -265,6 +272,8 @@ namespace ROS2
         {
             return;
         }
+
+        auto predecessors = GetAllPredecessors(frameToUnregister);
 
         AZStd::set<AZ::EntityId>& frameToUnregisterChildren = m_frameChildren.find(frameToUnregister)->second;
         AZStd::set<AZ::EntityId>& frameToUnregisterWatchedEntities = m_watchedEntities.find(frameToUnregister)->second;
@@ -323,6 +332,12 @@ namespace ROS2
                 m_frameChildren.erase(frameToUnregisterParent);
                 m_frameParent.erase(frameToUnregisterParent);
             }
+        }
+
+        for (const auto& predecessor : predecessors)
+        {
+            ROS2FrameComponentNotificationBus::Event(
+                predecessor, &ROS2FrameComponentNotificationBus::Events::OnChildRemoved, frameToUnregister);
         }
     }
 
@@ -405,12 +420,36 @@ namespace ROS2
             newPathToParentFrameSet.insert(entityOnPath);
         }
 
+        auto oldPredecessors = GetAllPredecessors(frameEntityId);
+        auto successors = GetAllSuccessors(frameEntityId);
+        successors.push_back(frameEntityId);
+
         MoveFrameDetach(frameEntityId, newPathToParentFrameSet);
+
+        for (const auto& successor : successors)
+        {
+            for (const auto& oldPredecessor : oldPredecessors)
+            {
+                ROS2FrameComponentNotificationBus::Event(
+                    oldPredecessor, &ROS2FrameComponentNotificationBus::Events::OnChildRemoved, successor);
+            }
+        }
 
         // Replace the parent
         m_frameParent.find(frameEntityId)->second = newFrameParent;
 
         MoveFrameAttach(frameEntityId, newFrameParent, newPathToParentFrame);
+
+        auto newPredecessors = GetAllPredecessors(frameEntityId);
+
+        for (const auto& successor : successors)
+        {
+            for (const auto& newPredecessor : newPredecessors)
+            {
+                ROS2FrameComponentNotificationBus::Event(
+                    newPredecessor, &ROS2FrameComponentNotificationBus::Events::OnChildAdded, successor);
+            }
+        }
 
         // Notify about namespace changes
         UpdateNamespaces(frameEntityId, newFrameParent);
@@ -459,6 +498,38 @@ namespace ROS2
         }
 
         return m_frameChildren.find(frameEntityId)->second;
+    }
+
+    AZStd::vector<AZ::EntityId> ROS2FrameSystemComponent::GetAllPredecessors(const AZ::EntityId& frameEntityId) const
+    {
+        AZStd::vector<AZ::EntityId> predecessors;
+        auto childrenIt = m_frameParent.find(frameEntityId);
+        if (childrenIt == m_frameParent.end())
+        {
+            return predecessors;
+        }
+        AZ::EntityId currentEntityId = childrenIt->second;
+        while (m_frameParent.find(currentEntityId) != m_frameParent.end() && m_frameParent.find(currentEntityId)->second != currentEntityId)
+        {
+            predecessors.push_back(currentEntityId);
+            currentEntityId = m_frameParent.find(currentEntityId)->second;
+        }
+
+        return predecessors;
+    }
+
+    AZStd::vector<AZ::EntityId> ROS2FrameSystemComponent::GetAllSuccessors(const AZ::EntityId& frameEntityId) const
+    {
+        AZStd::vector<AZ::EntityId> successors;
+        AZStd::set<AZ::EntityId> children = GetChildrenEntityId(frameEntityId);
+        for (const AZ::EntityId& child : children)
+        {
+            successors.push_back(child);
+            AZStd::vector<AZ::EntityId> childSuccessors = GetAllSuccessors(child);
+            successors.insert(successors.end(), childSuccessors.begin(), childSuccessors.end());
+        }
+
+        return successors;
     }
 
 } // namespace ROS2

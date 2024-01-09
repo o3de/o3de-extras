@@ -102,6 +102,9 @@ namespace ROS2
         void MoveFrameAttach(
             const AZ::EntityId& frameEntityId, const AZ::EntityId& newFrameParent, const AZStd::vector<AZ::EntityId>& newPathToParentFrame);
 
+        AZStd::vector<AZ::EntityId> GetAllPredecessors(const AZ::EntityId& frameEntityId) const;
+        AZStd::vector<AZ::EntityId> GetAllSuccessors(const AZ::EntityId& frameEntityId) const;
+
         AZStd::map<AZ::EntityId, AZStd::set<AZ::EntityId>> m_frameChildren;
         AZStd::map<AZ::EntityId, AZ::EntityId> m_frameParent;
         AZStd::map<AZ::EntityId, AZStd::set<AZ::EntityId>> m_watchedEntities;

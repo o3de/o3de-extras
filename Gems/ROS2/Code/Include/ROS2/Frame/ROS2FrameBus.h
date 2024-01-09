@@ -74,8 +74,14 @@ namespace ROS2
         using BusIdType = AZ::EntityId;
 
         //! Notification when the ROS2FrameComponent changes its configuration or namespace
-        virtual void OnConfigurationChange();
+        virtual void OnConfigurationChange() = 0;
+
+        //! Notification when the ROS2FrameEditorComponent is added as a child to another ROS2FrameEditorComponent
+        virtual void OnChildAdded(AZ::EntityId addedChild) = 0;
+
+        //! Notification when the ROS2FrameEditorComponent is removed as a child from another ROS2FrameEditorComponent
+        virtual void OnChildRemoved(AZ::EntityId removedChild) = 0;
     };
 
-    using ROS2FrameComponentNotificaionBus = AZ::EBus<ROS2FrameComponentNotifications>;
+    using ROS2FrameComponentNotificationBus = AZ::EBus<ROS2FrameComponentNotifications>;
 } // namespace ROS2

@@ -79,7 +79,7 @@ namespace ROS2
             &AzToolsFramework::PropertyEditorEntityChangeNotificationBus::Events::OnEntityComponentPropertyChanged,
             GetEntity()->FindComponent<ROS2FrameEditorComponent>()->GetId());
 
-        ROS2FrameComponentNotificaionBus::Event(GetEntityId(), &ROS2FrameComponentNotificaionBus::Events::OnConfigurationChange);
+        ROS2FrameComponentNotificationBus::Event(GetEntityId(), &ROS2FrameComponentNotificationBus::Events::OnConfigurationChange);
     }
 
     void ROS2FrameEditorComponent::UpdateNamespaceConfiguration(
@@ -119,7 +119,7 @@ namespace ROS2
                         "ROS 2 Frame Configuration",
                         "Configuration of ROS 2 reference frame")
                     ->Attribute(AZ::Edit::Attributes::Visibility, AZ::Edit::PropertyVisibility::ShowChildrenOnly)
-                    ->Attribute(AZ::Edit::Attributes::ChangeNotify, &ROS2FrameEditorComponent::OnConfigurationChange)
+                    ->Attribute(AZ::Edit::Attributes::ChangeNotify, &ROS2FrameEditorComponent::OnFrameConfigurationChange)
                     ->Attribute(AZ::Edit::Attributes::ChangeNotify, AZ::Edit::PropertyRefreshLevels::AttributesAndValues);
             }
         }
@@ -135,7 +135,7 @@ namespace ROS2
         return ROS2FrameSystemInterface::Get()->GetChildrenEntityId(GetEntityId());
     }
 
-    AZ::Crc32 ROS2FrameEditorComponent::OnConfigurationChange()
+    AZ::Crc32 ROS2FrameEditorComponent::OnFrameConfigurationChange()
     {
         ROS2FrameSystemInterface::Get()->NotifyChange(GetEntityId());
         return AZ::Edit::PropertyRefreshLevels::EntireTree;
@@ -143,7 +143,7 @@ namespace ROS2
 
     void ROS2FrameEditorComponent::OnEntityNameChanged(const AZStd::string& name)
     {
-        OnConfigurationChange();
+        OnFrameConfigurationChange();
     }
 
     void ROS2FrameEditorComponent::GetProvidedServices(AZ::ComponentDescriptor::DependencyArrayType& provided)

@@ -74,7 +74,7 @@ namespace ROS2
         AZStd::set<AZ::EntityId> GetFrameChildren() const override;
 
     private:
-        AZ::Crc32 OnConfigurationChange();
+        AZ::Crc32 OnFrameConfigurationChange();
 
         // AZ::EntityBus::Handler override.
         void OnEntityNameChanged(const AZStd::string& name) override;
