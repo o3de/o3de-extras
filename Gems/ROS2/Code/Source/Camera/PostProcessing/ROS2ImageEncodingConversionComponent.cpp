@@ -47,8 +47,12 @@ namespace ROS2
             const std::string inputEncoding = ImageEncodingNames.at(ImageEncoding::RGBA8);
             const std::string outputEncoding = ImageEncodingNames.at(ImageEncoding::RGB8);
             AZ_Assert(image.encoding == inputEncoding, "Image encoding is %s, expected %s", image.encoding.c_str(), inputEncoding.c_str());
-            AZ_Assert(image.step == image.width * 4, "Image step is not width * 4");
-            AZ_Assert(image.data.size() == image.step * image.height, "Image data size is not step * height");
+            AZ_Assert(image.step == image.width * 4, "Image step (%d) is not width * 4 (%d)", image.step, image.width * 4);
+            AZ_Assert(
+                image.data.size() == image.step * image.height,
+                "Image data size (%d) is not step * height (%d)",
+                image.data.size(),
+                image.step * image.height);
 
             // Perform conversion in place
             for (size_t pixelId = 0; pixelId < image.width * image.height; ++pixelId)
@@ -72,7 +76,7 @@ namespace ROS2
         {
             if (newConversion.encodingIn == newConversion.encodingOut)
             {
-                return AZ::Failure(AZStd::string("Conversion to same type if forbidden"));
+                return AZ::Failure(AZStd::string("Conversion to same type is forbidden"));
             }
             if (supportedFormatChange.find(newConversion) == supportedFormatChange.end())
             {
@@ -118,14 +122,12 @@ namespace ROS2
 
     AZ::Outcome<void, AZStd::string> EncodingConversion::ValidateInputEncoding(void* newValue, const AZ::Uuid& valueType)
     {
-        AZ_TracePrintf("EncodingConversion", "ValidateInputEncodingConversion");
         ImageEncoding* newEncoding = static_cast<ImageEncoding*>(newValue);
         return ValidateEncodingConversion({ *newEncoding, encodingOut });
     }
 
     AZ::Outcome<void, AZStd::string> EncodingConversion::ValidateOutputEncoding(void* newValue, const AZ::Uuid& valueType)
     {
-        AZ_TracePrintf("EncodingConversion", "ValidateOutputEncodingConversion");
         ImageEncoding* newEncoding = static_cast<ImageEncoding*>(newValue);
         return ValidateEncodingConversion({ encodingIn, *newEncoding });
     }

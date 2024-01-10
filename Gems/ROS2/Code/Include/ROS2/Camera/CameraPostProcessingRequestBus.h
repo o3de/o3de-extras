@@ -34,9 +34,9 @@ namespace ROS2
 
         //! Priority of the post-processing bus.
         //! @note higher priority buses will be processed first.
-        constexpr static AZ::u8 MIN_PRIORITY = 0;
-        constexpr static AZ::u8 MAX_PRIORITY = 255;
-        constexpr static AZ::u8 DEFAULT_PRIORITY = 127;
+        static constexpr AZ::u8 MIN_PRIORITY = 0;
+        static constexpr AZ::u8 MAX_PRIORITY = 255;
+        static constexpr AZ::u8 DEFAULT_PRIORITY = 127;
 
         //! Apply post-processing function, if any implementations to the bus are in the entity.
         //! @param image standard image message passed as a reference. It will be changed through post-processing.
@@ -50,9 +50,9 @@ namespace ROS2
         //! @note higher priority buses will be processed first.
         virtual AZ::u8 GetPriority() const = 0;
 
-        //! Compare two post-processing buses.
-        //! @param other bus to compare to.
-        //! @return true if this bus should be processed before the other.
+        //! Compare function required by BusHandlerOrderCompare = BusHandlerCompareDefault
+        //! \param[in] other Another instance of the class to compare
+        //! @return True if this bus should be processed before the other.
         inline bool Compare(const CameraPostProcessingRequests* other) const
         {
             return GetPriority() > other->GetPriority();
