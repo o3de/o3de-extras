@@ -13,6 +13,7 @@
 #include <AzCore/Component/TickBus.h>
 #include <AzCore/Name/Name.h>
 
+#include "JointNamePositionPair.h"
 #include "JointStatePublisher.h"
 #include <ROS2/Communication/SubscriberConfiguration.h>
 #include <ROS2/Manipulation/JointsManipulationRequests.h>
@@ -33,7 +34,7 @@ namespace ROS2
         JointsManipulationComponent(
             const PublisherConfiguration& publisherConfiguration,
             const SubscriberConfiguration& subscriberConfiguration,
-            const AZStd::unordered_map<AZStd::string, JointPosition>& initialPositions);
+            const AZStd::vector<JointNamePositionPair>& orderedInitialPositions);
         ~JointsManipulationComponent() = default;
         AZ_COMPONENT(JointsManipulationComponent, "{3da9abfc-0028-4e3e-8d04-4e4440d2e319}", AZ::Component);
 
@@ -89,7 +90,8 @@ namespace ROS2
         AZStd::unique_ptr<IControlSubscriptionHandler> m_jointPositionsSubscriptionHandler;
         SubscriberConfiguration m_jointPositionsSubscriberConfiguration;
         ManipulationJoints m_manipulationJoints; //!< Map of JointInfo where the key is a joint name (with namespace included)
-        AZStd::unordered_map<AZStd::string, JointPosition>
-            m_initialPositions; //!< Initial positions where the key is joint name (without namespace included)
+        AZStd::vector<JointNamePositionPair>
+            m_orderedInitialPositions; //!< Initial positions where the key is joint name (without namespace included)
+        //TODO update docstring
     };
 } // namespace ROS2
