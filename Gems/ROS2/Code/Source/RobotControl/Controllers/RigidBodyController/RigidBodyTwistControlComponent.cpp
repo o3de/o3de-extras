@@ -52,7 +52,7 @@ namespace ROS2
         }
     }
     
-    void RigidBodyTwistControlComponent::OnTick(float deltaTime, AZ::ScriptTimePoint time)
+    void RigidBodyTwistControlComponent::OnTick([[maybe_unused]]float deltaTime, [[maybe_unused]]AZ::ScriptTimePoint time)
     {
         AZ_Assert(AZ::Interface<AzPhysics::SystemInterface>::Get(), "No physics system");
         AzPhysics::SceneInterface* sceneInterface = AZ::Interface<AzPhysics::SceneInterface>::Get();
@@ -80,7 +80,7 @@ namespace ROS2
                     // Convert local steering to world frame
                     const AZ::Transform robotTransform = rigidBody->GetTransform();
                     const auto velocityLinearGlobal = robotTransform.TransformVector(m_linearVelocityLocal);
-                    const auto  angularVelocityGlobal = robotTransform.TransformVector(m_angularVelocityLocal);
+                    const auto angularVelocityGlobal = robotTransform.TransformVector(m_angularVelocityLocal);
                     Physics::RigidBodyRequestBus::Event(GetEntityId(), &Physics::RigidBodyRequests::SetLinearVelocity, velocityLinearGlobal);
                     Physics::RigidBodyRequestBus::Event(GetEntityId(), &Physics::RigidBodyRequests::SetAngularVelocity, angularVelocityGlobal);
                 },

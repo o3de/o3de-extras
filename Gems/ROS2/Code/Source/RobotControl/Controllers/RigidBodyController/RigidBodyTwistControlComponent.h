@@ -10,7 +10,6 @@
 #include <AzCore/Component/Component.h>
 #include <ROS2/RobotControl/Twist/TwistBus.h>
 #include <AzFramework/Physics/PhysicsSystem.h>
-#include <AzFramework/Physics/RigidBodyBus.h>
 #include <AzCore/Component/TickBus.h>
 namespace ROS2
 {
