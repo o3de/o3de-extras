@@ -8,8 +8,12 @@
 
 #pragma once
 
+#include <AzCore/std/string/string.h>
+
 #if !defined(Q_MOC_RUN)
 #include <QLabel>
+#include <QLineEdit>
+#include <QPushButton>
 #include <QString>
 #include <QTextEdit>
 #include <QWizardPage>
@@ -17,18 +21,26 @@
 
 namespace ROS2
 {
-    class CheckUrdfPage : public QWizardPage
+    class RobotDescriptionPage : public QWizardPage
     {
         Q_OBJECT
     public:
-        explicit CheckUrdfPage(QWizard* parent);
-        void ReportURDFResult(const QString& result, bool isSuccess, bool isWarning = false);
+        explicit RobotDescriptionPage(QWizard* parent);
+        void ReportParsingResult(const QString& status, bool isSuccess, bool isWarning = false);
+        void SetModifiedUrdfName(const AZStd::string prefabName);
+        AZStd::string GetModifiedUrdfName() const;
         bool isComplete() const override;
         bool isWarning() const;
+    Q_SIGNALS:
+        void onSaveModifiedUrdfPressed();
+        void onShowModifiedUrdfPressed();
 
     private:
         QTextEdit* m_log;
         QString m_fileName;
+        QLineEdit* m_urdfName;
+        QPushButton* m_saveButton;
+        QPushButton* m_showButton;
         bool m_success;
         bool m_warning;
     };

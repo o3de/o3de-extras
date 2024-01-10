@@ -66,12 +66,16 @@ namespace ROS2
         const AZStd::string& GetPrefabPath() const;
 
         //! Get descriptive status of import.
-        //! A string with the status, which can be understood by the user.
+        //! A string with the status in Markdown format.
         AZStd::string GetStatus();
 
     private:
         AzToolsFramework::Prefab::PrefabEntityResult CreateEntityForModel(const sdf::Model& model);
-        AzToolsFramework::Prefab::PrefabEntityResult AddEntitiesForLink(const sdf::Link& link, const sdf::Model* attachedModel, AZ::EntityId parentEntityId, AZStd::vector<AZ::EntityId>& createdEntities);
+        AzToolsFramework::Prefab::PrefabEntityResult AddEntitiesForLink(
+            const sdf::Link& link,
+            const sdf::Model* attachedModel,
+            AZ::EntityId parentEntityId,
+            AZStd::vector<AZ::EntityId>& createdEntities);
         void AddRobotControl(AZ::EntityId rootEntityId);
         static void MoveEntityToDefaultSpawnPoint(const AZ::EntityId& rootEntityId, AZStd::optional<AZ::Transform> spawnPosition);
 
@@ -87,8 +91,18 @@ namespace ROS2
         JointsMaker m_jointsMaker;
         ArticulationsMaker m_articulationsMaker;
 
+        //! Type of a status message.
+        enum class StatusMessageType
+        {
+            Model = 0,
+            Link,
+            Joint,
+            Sensor,
+            SensorPlugin,
+            ModelPlugin
+        };
         AZStd::mutex m_statusLock;
-        AZStd::multimap<AZStd::string, AZStd::string> m_status;
+        AZStd::multimap<StatusMessageType, AZStd::string> m_status;
 
         AZStd::shared_ptr<Utils::UrdfAssetMap> m_urdfAssetsMapping;
         bool m_useArticulations{ false };

@@ -142,7 +142,8 @@ namespace ROS2
         };
         ModelMapper modelMapper;
 
-        auto GetAllLinksAndSetModelHierarchy = [&linksMapper, &modelMapper](const sdf::Model& model, const Utils::ModelStack& modelStack) -> Utils::VisitModelResponse
+        auto GetAllLinksAndSetModelHierarchy =
+            [&linksMapper, &modelMapper](const sdf::Model& model, const Utils::ModelStack& modelStack) -> Utils::VisitModelResponse
         {
             // As the VisitModels function visits nested models by default, gatherNestedModelLinks is set to false
             constexpr bool gatherNestedModelLinks = false;
@@ -188,25 +189,34 @@ namespace ROS2
         for ([[maybe_unused]] const auto& [fullModelName, modelPtr, _] : modelMapper.m_models)
         {
             // Create entities for each model in the SDF
+            const std::string modelName = modelPtr->Name();
+            const AZStd::string azModelName(modelName.c_str(), modelName.size());
             if (AzToolsFramework::Prefab::PrefabEntityResult createModelEntityResult = CreateEntityForModel(*modelPtr);
                 createModelEntityResult)
             {
                 AZ::EntityId createdModelEntityId = createModelEntityResult.GetValue();
                 // Add the model entity to the created entity list so that it gets added to the prefab
                 createdEntities.emplace_back(createdModelEntityId);
-
-                std::string modelName = modelPtr->Name();
-                AZStd::string azModelName(modelName.c_str(), modelName.size());
-                AZStd::lock_guard<AZStd::mutex> lck(m_statusLock);
-                m_status.emplace(azModelName, AZStd::string::format("[model] created as: %s", createdModelEntityId.ToString().c_str()));
                 createdModels.emplace(modelPtr, createModelEntityResult);
+
+                AZStd::lock_guard<AZStd::mutex> lck(m_statusLock);
+                m_status.emplace(
+                    StatusMessageType::Model,
+                    AZStd::string::format("%s created as: %s", azModelName.c_str(), createdModelEntityId.ToString().c_str()));
+            }
+            else
+            {
+                AZStd::lock_guard<AZStd::mutex> lck(m_statusLock);
+                m_status.emplace(
+                    StatusMessageType::Model,
+                    AZStd::string::format("%s failed: %s", azModelName.c_str(), createModelEntityResult.GetError().c_str()));
             }
         }
 
         //! Setup the parent hierarchy for the nested models
         for ([[maybe_unused]] const auto& [_, modelPtr, parentModelPtr] : modelMapper.m_models)
         {
-            // If there is no parent model, then the model would be at the top level of the hiearachy
+            // If there is no parent model, then the model would be at the top level of the hierarchy
             if (parentModelPtr == nullptr || modelPtr == nullptr)
             {
                 continue;
@@ -264,11 +274,14 @@ namespace ROS2
             AZStd::lock_guard<AZStd::mutex> lck(m_statusLock);
             if (result.IsSuccess())
             {
-                m_status.emplace(azLinkName, AZStd::string::format("[link] created as: %s", result.GetValue().ToString().c_str()));
+                m_status.emplace(
+                    StatusMessageType::Link,
+                    AZStd::string::format("%s created as: %s", azLinkName.c_str(), result.GetValue().ToString().c_str()));
             }
             else
             {
-                m_status.emplace(azLinkName, AZStd::string::format("[link] failed : %s", result.GetError().c_str()));
+                m_status.emplace(
+                    StatusMessageType::Link, AZStd::string::format("%s failed : %s", azLinkName.c_str(), result.GetError().c_str()));
             }
         }
 
@@ -454,8 +467,17 @@ namespace ROS2
                 {
                     AZStd::lock_guard<AZStd::mutex> lck(m_statusLock);
                     auto result = m_jointsMaker.AddJointComponent(jointPtr, childEntity.GetValue(), leadEntity.GetValue());
-                    m_status.emplace(
-                        azJointName, AZStd::string::format("[joint] %s: %llu", result.IsSuccess() ? "created as" : "failed", result.GetValue()));
+                    if (result.IsSuccess())
+                    {
+                        m_status.emplace(
+                            StatusMessageType::Joint, AZStd::string::format("%s created as: %llu", azJointName.c_str(), result.GetValue()));
+                    }
+                    else
+                    {
+                        m_status.emplace(
+                            StatusMessageType::Joint,
+                            AZStd::string::format("%s failed : %s", azJointName.c_str(), result.GetError().c_str()));
+                    }
                 }
                 else
                 {
@@ -620,7 +642,23 @@ namespace ROS2
         {
             if (attachedModel != nullptr)
             {
-                m_articulationsMaker.AddArticulationLink(*attachedModel, &link, entityId);
+                const auto linkResult = m_articulationsMaker.AddArticulationLink(*attachedModel, &link, entityId);
+                std::string linkName = link.Name();
+                AZStd::string azLinkName(linkName.c_str(), linkName.size());
+                if (linkResult.IsSuccess())
+                {
+                    AZStd::lock_guard<AZStd::mutex> lck(m_statusLock);
+                    m_status.emplace(
+                        StatusMessageType::Joint,
+                        AZStd::string::format("%s created as articulation link: %llu", azLinkName.c_str(), linkResult.GetValue()));
+                }
+                else
+                {
+                    AZStd::lock_guard<AZStd::mutex> lck(m_statusLock);
+                    m_status.emplace(
+                        StatusMessageType::Joint,
+                        AZStd::string::format("%s as articulation link failed: %s", azLinkName.c_str(), linkResult.GetError().c_str()));
+                }
             }
         }
 
@@ -677,13 +715,34 @@ namespace ROS2
 
     AZStd::string URDFPrefabMaker::GetStatus()
     {
-        AZStd::string str;
+        AZStd::string report;
         AZStd::lock_guard<AZStd::mutex> lck(m_statusLock);
-        for (const auto& [entry, entryStatus] : m_status)
+
+        report += "# The following components were found and parsed:\n";
+
+        const AZStd::unordered_map<StatusMessageType, AZStd::string> names = { { StatusMessageType::Model, "Models" },
+                                                                               { StatusMessageType::Link, "Links" },
+                                                                               { StatusMessageType::Joint, "Joints" },
+                                                                               { StatusMessageType::Sensor, "Sensors" },
+                                                                               { StatusMessageType::SensorPlugin, "Sensor plugins" },
+                                                                               { StatusMessageType::ModelPlugin, "Model plugins" } };
+        auto it = m_status.begin();
+        auto end = m_status.end();
+        while (it != end)
         {
-            str += entry + " " + entryStatus + "\n";
+            const auto key = it->first;
+            report += "\n## " + names.at(key) + ":\n";
+
+            do
+            {
+                report += "- " + it->second + "\n";
+                if (++it == end)
+                {
+                    break;
+                }
+            } while (it->first == key);
         }
-        return str;
+        return report;
     }
 
     bool URDFPrefabMaker::ContainsModel() const

@@ -31,21 +31,32 @@ namespace ROS2
     {
         m_introPage = new IntroPage(this);
         m_fileSelectPage = new FileSelectionPage(this);
-        m_checkUrdfPage = new CheckUrdfPage(this);
+        m_robotDescriptionPage = new RobotDescriptionPage(this);
         m_assetPage = new CheckAssetPage(this);
         m_prefabMakerPage = new PrefabMakerPage(this);
         m_xacroParamsPage = new XacroParamsPage(this);
+        m_modifiedUrdfWindow = new ModifiedURDFWindow();
 
         addPage(m_introPage);
         addPage(m_fileSelectPage);
         addPage(m_xacroParamsPage);
-        addPage(m_checkUrdfPage);
+        addPage(m_robotDescriptionPage);
         addPage(m_assetPage);
         addPage(m_prefabMakerPage);
 
         connect(this, &QWizard::currentIdChanged, this, &RobotImporterWidget::onCurrentIdChanged);
         connect(m_prefabMakerPage, &QWizardPage::completeChanged, this, &RobotImporterWidget::OnUrdfCreated);
         connect(m_prefabMakerPage, &PrefabMakerPage::onCreateButtonPressed, this, &RobotImporterWidget::onCreateButtonPressed);
+        connect(
+            m_robotDescriptionPage,
+            &RobotDescriptionPage::onSaveModifiedUrdfPressed,
+            this,
+            &RobotImporterWidget::onSaveModifiedUrdfPressed);
+        connect(
+            m_robotDescriptionPage,
+            &RobotDescriptionPage::onShowModifiedUrdfPressed,
+            this,
+            &RobotImporterWidget::onShowModifiedUrdfPressed);
         connect(
             this,
             &QWizard::customButtonClicked,
@@ -130,8 +141,8 @@ namespace ROS2
             }
         }
 
-        report += "\n# " + tr("The modified URDF code:") + "\n";
-        report += "```\n" + QString::fromStdString(parsedSdfOutcome.m_modifiedURDFContent) + "```\n";
+        report += "\n\n# " + tr("💡Please check the modified code and/or save it using the interface below.") + "\n";
+        m_modifiedUrdfWindow->SetUrdfData(AZStd::move(parsedSdfOutcome.m_modifiedURDFContent));
     }
 
     void RobotImporterWidget::OpenUrdf()
@@ -191,7 +202,7 @@ namespace ROS2
                             report += tr("(EMPTY)");
                         }
                         report += "\n```";
-                        m_checkUrdfPage->ReportURDFResult(report, false);
+                        m_robotDescriptionPage->ReportParsingResult(report, false);
                         return;
                     }
                 }
@@ -218,7 +229,7 @@ namespace ROS2
                 else
                 {
                     report += "# " + tr("The URDF/SDF was parsed and opened successfully") + "\n";
-                    AZ_Printf("Wizard", "Wizard skips m_checkUrdfPage since there is no errors in URDF\n");
+                    AZ_Printf("Wizard", "Wizard skips m_robotDescriptionPage since there is no errors in URDF\n");
                 }
                 m_parsedSdf = AZStd::move(parsedSdfOutcome.GetRoot());
                 m_prefabMaker.reset();
@@ -238,7 +249,7 @@ namespace ROS2
                 report += QString::fromUtf8(log.data(), int(log.size()));
                 report += "`";
             }
-            m_checkUrdfPage->ReportURDFResult(report, urdfParsedSuccess, urdfParsedWithWarnings);
+            m_robotDescriptionPage->ReportParsingResult(report, urdfParsedSuccess, urdfParsedWithWarnings);
             const auto& messages = parsedSdfOutcome.GetParseMessages();
             if (!messages.empty())
             {
@@ -249,13 +260,14 @@ namespace ROS2
                 report += "\n```\n";
                 AZ_Printf("RobotImporterWidget", "SDF Stream: %s\n", messages.c_str());
             }
-            m_checkUrdfPage->ReportURDFResult(report, urdfParsedSuccess);
+            m_robotDescriptionPage->ReportParsingResult(report, urdfParsedSuccess);
         }
     }
 
     void RobotImporterWidget::onCurrentIdChanged(int id)
     {
         AZ_Printf("Wizard", "Wizard at page %d", id);
+        QWizard::setOption(HavePrefabCreationButton, false);
 
         if (currentPage() == m_assetPage)
         {
@@ -264,6 +276,12 @@ namespace ROS2
         else if (currentPage() == m_prefabMakerPage)
         {
             FillPrefabMakerPage();
+        }
+        else if (currentPage() == m_robotDescriptionPage)
+        {
+            AZStd::string urdfName = m_urdfPath.ReplaceExtension("").String();
+            urdfName.append("_modified.urdf");
+            m_robotDescriptionPage->SetModifiedUrdfName(urdfName);
         }
     }
 
@@ -479,7 +497,7 @@ namespace ROS2
     {
         // Use the URDF/SDF file name stem the prefab name
         AZStd::string robotName = AZStd::string::format("%.*s.prefab", AZ_PATH_ARG(m_urdfPath.Stem()));
-        m_prefabMakerPage->setProposedPrefabName(robotName);
+        m_prefabMakerPage->SetProposedPrefabName(robotName);
         QWizard::button(PrefabCreationButtonId)->setText(tr("Create Prefab"));
         QWizard::setOption(HavePrefabCreationButton, true);
     }
@@ -545,11 +563,11 @@ namespace ROS2
         }
         if ((currentPage() == m_fileSelectPage && m_params.empty()) || currentPage() == m_xacroParamsPage)
         {
-            if (!m_checkUrdfPage->isWarning())
+            if (!m_robotDescriptionPage->isWarning())
             {
                 return m_xacroParamsPage->nextId();
             }
-            if (m_checkUrdfPage->isComplete())
+            if (m_robotDescriptionPage->isComplete())
             {
                 if (m_assetNames.empty())
                 {
@@ -559,7 +577,7 @@ namespace ROS2
                 else
                 {
                     // skip one page when urdf/sdf is parsed without problems
-                    return m_checkUrdfPage->nextId();
+                    return m_robotDescriptionPage->nextId();
                 }
             }
             if (m_params.empty())
@@ -578,7 +596,7 @@ namespace ROS2
 
         if (CheckCyclicalDependency(prefabPathRelative))
         {
-            m_prefabMakerPage->setSuccess(false);
+            m_prefabMakerPage->SetSuccess(false);
             return;
         }
         if (fileExists)
@@ -591,7 +609,7 @@ namespace ROS2
             int ret = msgBox.exec();
             if (ret == QMessageBox::Cancel)
             {
-                m_prefabMakerPage->setSuccess(false);
+                m_prefabMakerPage->SetSuccess(false);
                 return;
             }
         }
@@ -610,22 +628,50 @@ namespace ROS2
         if (prefabOutcome.IsSuccess())
         {
             AZStd::string status = m_prefabMaker->GetStatus();
-            m_prefabMakerPage->reportProgress(status);
-            m_prefabMakerPage->setSuccess(true);
+            m_prefabMakerPage->ReportProgress(status);
+            m_prefabMakerPage->SetSuccess(true);
         }
         else
         {
-            AZStd::string status = "Failed to create prefab\n";
+            AZStd::string status = "# Failed to create prefab\n";
             status += prefabOutcome.GetError() + "\n";
             status += m_prefabMaker->GetStatus();
-            m_prefabMakerPage->reportProgress(status);
-            m_prefabMakerPage->setSuccess(false);
+            m_prefabMakerPage->ReportProgress(status);
+            m_prefabMakerPage->SetSuccess(false);
         }
     }
 
     void RobotImporterWidget::onCreateButtonPressed()
     {
-        CreatePrefab(m_prefabMakerPage->getPrefabName());
+        CreatePrefab(m_prefabMakerPage->GetPrefabName());
+    }
+
+    void RobotImporterWidget::onSaveModifiedUrdfPressed()
+    {
+        const auto filePath = m_robotDescriptionPage->GetModifiedUrdfName();
+        const auto& streamData = m_modifiedUrdfWindow->GetUrdfData();
+        bool success = false;
+        AZ::IO::FileIOBase* fileIo = AZ::IO::FileIOBase::GetInstance();
+        AZ::IO::FixedMaxPathString resolvedPath;
+        if (fileIo == nullptr || !fileIo->ResolvePath(filePath.c_str(), resolvedPath.data(), resolvedPath.capacity() + 1))
+        {
+            resolvedPath = filePath;
+        }
+        if (AZ::IO::SystemFile fileHandle; fileHandle.Open(
+                resolvedPath.c_str(),
+                AZ::IO::SystemFile::SF_OPEN_CREATE | AZ::IO::SystemFile::SF_OPEN_CREATE_PATH | AZ::IO::SystemFile::SF_OPEN_WRITE_ONLY))
+        {
+            AZ::IO::SizeType bytesWritten = fileHandle.Write(streamData.data(), streamData.size());
+            success = (bytesWritten == streamData.size());
+        }
+
+        AZ_Warning("onSaveModifiedUrdfPressed", success, "Cannot save the output file %s", filePath.c_str());
+    }
+
+    void RobotImporterWidget::onShowModifiedUrdfPressed()
+    {
+        m_modifiedUrdfWindow->resize(this->size());
+        m_modifiedUrdfWindow->show();
     }
 
     bool RobotImporterWidget::CheckCyclicalDependency(AZ::IO::Path importedPrefabPath)
