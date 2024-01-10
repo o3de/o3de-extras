@@ -169,10 +169,10 @@ namespace ROS2
     JointsManipulationComponent::JointsManipulationComponent(
         const PublisherConfiguration& publisherConfiguration,
         const SubscriberConfiguration& subscriberConfiguration,
-        const AZStd::unordered_map<AZStd::string, JointPosition>& initialPositions)
+        const AZStd::vector<JointNamePositionPair>& initialPositions)
         : m_jointStatePublisherConfiguration(publisherConfiguration)
         , m_jointPositionsSubscriberConfiguration(subscriberConfiguration)
-        , m_initialPositions(initialPositions)
+        , m_orderedInitialPositions(initialPositions)
     {
     }
 
@@ -394,7 +394,7 @@ namespace ROS2
                 ->Version(1)
                 ->Field("JointStatesPublisherConfiguration", &JointsManipulationComponent::m_jointStatePublisherConfiguration)
                 ->Field("JointPositionsSubscriberConfiguration", &JointsManipulationComponent::m_jointPositionsSubscriberConfiguration)
-                ->Field("InitialJointPosition", &JointsManipulationComponent::m_initialPositions);
+                ->Field("OrderedInitialJointPositions", &JointsManipulationComponent::m_orderedInitialPositions);
         }
     }
 
@@ -444,17 +444,18 @@ namespace ROS2
 
     void JointsManipulationComponent::OnTick(float deltaTime, [[maybe_unused]] AZ::ScriptTimePoint time)
     {
+        //TODO InitializeManipulationJointsIfEmpty();
         if (m_manipulationJoints.empty())
         {
             const AZStd::string manipulatorNamespace = GetManipulatorNamespace();
             AZStd::unordered_map<AZStd::string, JointPosition> intialPositonNamespaced;
             AZStd::transform(
-                m_initialPositions.begin(),
-                m_initialPositions.end(),
+                m_orderedInitialPositions.begin(),
+                m_orderedInitialPositions.end(),
                 AZStd::inserter(intialPositonNamespaced, intialPositonNamespaced.end()),
                 [&manipulatorNamespace](const auto& pair)
                 {
-                    return AZStd::make_pair(ROS2::ROS2Names::GetNamespacedName(manipulatorNamespace, pair.first), pair.second);
+                    return AZStd::make_pair(ROS2::ROS2Names::GetNamespacedName(manipulatorNamespace, pair.m_name), pair.m_position);
                 });
 
             m_manipulationJoints = Internal::GetAllEntityHierarchyJoints(GetEntityId());
@@ -473,27 +474,27 @@ namespace ROS2
 
     void JointsManipulationComponent::ProcessPositionControlMessage(const std_msgs::msg::Float64MultiArray& message)
     {
-        if (message.data.size() != m_manipulationJoints.size())
+        if (message.data.size() != m_orderedInitialPositions.size())
         {
             AZ_Error(
                 "JointsManipulationComponent",
                 false,
                 "PositionConroller: command size %d does not match the number of joints %d",
                 message.data.size(),
-                m_manipulationJoints.size());
+                m_orderedInitialPositions.size());
             return;
         }
         
         auto commandIter = message.data.cbegin();
-        for (const auto& joint : m_manipulationJoints)
+        for (const auto& namePositionPair : m_orderedInitialPositions)
         {
-            auto result = MoveJointToPosition(joint.first, *commandIter);
+            auto result = MoveJointToPosition(namePositionPair.m_name, *commandIter);
             ++commandIter;
             AZ_Error(
                 "JointsManipulationComponent",
                 result,
                 "PositionConroller: command failed for joint %s: ",
-                joint.first.c_str(),
+                namePositionPair.m_name.c_str(),
                 result.GetError().c_str());
         }
     }
