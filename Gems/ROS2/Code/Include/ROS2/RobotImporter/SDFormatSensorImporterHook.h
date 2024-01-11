@@ -52,7 +52,7 @@ namespace ROS2::SDFormat
         //! @param AZ::Entity& a reference to the Entity in which one or more O3DE component is created by the importer
         //! @param sdf::Sensor& a reference to the sensor data in SDFormat, which is used to configure O3DE component
         using ErrorString = AZStd::string;
-        using ConvertSensorOutcome = AZ::Outcome<void, AZStd::string>;
+        using ConvertSensorOutcome = AZ::Outcome<void, ErrorString>;
         using ConvertSDFSensorCallback = AZStd::function<ConvertSensorOutcome(AZ::Entity&, const sdf::Sensor&)>;
         ConvertSDFSensorCallback m_sdfSensorToComponentCallback;
     };

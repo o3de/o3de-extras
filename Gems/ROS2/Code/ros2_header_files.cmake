@@ -29,6 +29,7 @@ set(FILES
         Include/ROS2/Manipulation/MotorizedJoints/PidMotorControllerComponent.h
         Include/ROS2/RobotControl/ControlConfiguration.h
         Include/ROS2/RobotControl/ControlSubscriptionHandler.h
+        Include/ROS2/RobotImporter/SDFormatModelPluginImporterHook.h
         Include/ROS2/RobotImporter/SDFormatSensorImporterHook.h
         Include/ROS2/Lidar/LidarRaycasterBus.h
         Include/ROS2/Lidar/LidarSystemBus.h

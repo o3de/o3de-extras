@@ -8,8 +8,8 @@
 
 #include <Imu/ROS2ImuSensorComponent.h>
 #include <ROS2/Frame/ROS2FrameComponent.h>
+#include <RobotImporter/SDFormat/ROS2SDFormatHooksUtils.h>
 #include <RobotImporter/SDFormat/ROS2SensorHooks.h>
-#include <RobotImporter/SDFormat/ROS2SensorHooksUtils.h>
 #include <Source/EditorStaticRigidBodyComponent.h>
 
 #include <sdf/Imu.hh>
@@ -79,14 +79,14 @@ namespace ROS2::SDFormat
             SensorConfiguration sensorConfiguration;
             sensorConfiguration.m_frequency = sdfSensor.UpdateRate();
             const AZStd::string messageType = "sensor_msgs::msg::Imu";
-            Utils::AddTopicConfiguration(sensorConfiguration, "imu", messageType, messageType);
+            HooksUtils::AddTopicConfiguration(sensorConfiguration, "imu", messageType, messageType);
 
             // Create required components
-            Utils::CreateComponent<ROS2FrameComponent>(entity);
-            Utils::CreateComponent<PhysX::EditorStaticRigidBodyComponent>(entity);
+            HooksUtils::CreateComponent<ROS2FrameComponent>(entity);
+            HooksUtils::CreateComponent<PhysX::EditorStaticRigidBodyComponent>(entity);
 
             // Create Imu component
-            if (Utils::CreateComponent<ROS2ImuSensorComponent>(entity, sensorConfiguration, imuConfiguration))
+            if (HooksUtils::CreateComponent<ROS2ImuSensorComponent>(entity, sensorConfiguration, imuConfiguration))
             {
                 return AZ::Success();
             }

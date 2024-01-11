@@ -26,7 +26,6 @@
 #include <AzToolsFramework/ToolsComponents/TransformComponent.h>
 #include <ROS2/Frame/ROS2FrameComponent.h>
 #include <ROS2/ROS2GemUtilities.h>
-#include <RobotControl/ROS2RobotControlComponent.h>
 #include <RobotImporter/Utils/ErrorUtils.h>
 #include <RobotImporter/Utils/RobotImporterUtils.h>
 #include <RobotImporter/Utils/TypeConversions.h>
@@ -325,7 +324,7 @@ namespace ROS2
         }
 
         // Set the hierarchy
-        AZStd::vector<AZ::EntityId> linkEntityIdsWithoutParent;
+        AZStd::vector<AZStd::pair<AZ::EntityId, const sdf::Model*>> linkEntityIdsWithoutParent;
         for (const auto& [fullLinkName, linkPtr, attachedModel] : linksMapper.m_links)
         {
             std::string linkName = linkPtr->Name();
@@ -344,11 +343,15 @@ namespace ROS2
             if (jointsWhereLinkIsChild.empty())
             {
                 // emplace unique entry to the container of links that don't have a parent link associated with it
+                auto linkPrefabTest = [&linkPrefabResult](const AZStd::pair<AZ::EntityId, const sdf::Model*>& query)
+                {
+                    return (query.first == linkPrefabResult.GetValue());
+                };
                 if (auto existingLinkIt =
-                        AZStd::find(linkEntityIdsWithoutParent.begin(), linkEntityIdsWithoutParent.end(), linkPrefabResult.GetValue());
+                        AZStd::find_if(linkEntityIdsWithoutParent.begin(), linkEntityIdsWithoutParent.end(), linkPrefabTest);
                     existingLinkIt == linkEntityIdsWithoutParent.end())
                 {
-                    linkEntityIdsWithoutParent.emplace_back(linkPrefabResult.GetValue());
+                    linkEntityIdsWithoutParent.emplace_back(AZStd::make_pair(linkPrefabResult.GetValue(), attachedModel));
                 }
                 AZ_Trace("CreatePrefabFromUrdfOrSdf", "Link %s has no parents\n", linkName.c_str());
                 continue;
@@ -398,7 +401,7 @@ namespace ROS2
                 parentEntityIter->second.GetValue().ToString().c_str());
             AZ_Trace("CreatePrefabFromUrdfOrSdf", "Link %s setting parent to %s\n", linkName.c_str(), parentName.c_str());
             // The joint hierarchy which specifies how a parent and child link hierarchy is represented in an SDF document
-            // is used to establish the entity parent child hiearachy, but does not modify the world location of the link entities
+            // is used to establish the entity parent child hierarchy, but does not modify the world location of the link entities
             // therefore SetEntityParent is used to maintain the world transform of the child link
             PrefabMakerUtils::SetEntityParent(linkPrefabResult.GetValue(), parentEntityIter->second.GetValue());
         }
@@ -486,11 +489,16 @@ namespace ROS2
             }
         }
 
-        // Use the first entity based on a link that is not parented to any other link
-        if (!linkEntityIdsWithoutParent.empty() && linkEntityIdsWithoutParent.front().IsValid())
+        // Add control components to links that are not parented to any other link (first link of each model) based on SDFormat data.
+        if (!linkEntityIdsWithoutParent.empty())
         {
-            AZ::EntityId contentEntityId = linkEntityIdsWithoutParent.front();
-            AddRobotControl(contentEntityId);
+            for (const auto& [contentEntityId, modelPtr] : linkEntityIdsWithoutParent)
+            {
+                if (contentEntityId.IsValid())
+                {
+                    m_controlMaker.AddControlPlugins(*modelPtr, contentEntityId, createdLinks);
+                }
+            }
         }
 
         // Create prefab, save it to disk immediately
@@ -668,21 +676,6 @@ namespace ROS2
             m_sensorsMaker.AddSensors(*attachedModel, &link, entityId);
         }
         return AZ::Success(entityId);
-    }
-
-    void URDFPrefabMaker::AddRobotControl(AZ::EntityId rootEntityId)
-    {
-        const auto componentId = Utils::CreateComponent(rootEntityId, ROS2RobotControlComponent::TYPEINFO_Uuid());
-        if (componentId)
-        {
-            ControlConfiguration controlConfiguration;
-            TopicConfiguration subscriberConfiguration;
-            subscriberConfiguration.m_topic = "cmd_vel";
-            AZ::Entity* rootEntity = AzToolsFramework::GetEntityById(rootEntityId);
-            auto* component = Utils::GetGameOrEditorComponent<ROS2RobotControlComponent>(rootEntity);
-            component->SetControlConfiguration(controlConfiguration);
-            component->SetSubscriberConfiguration(subscriberConfiguration);
-        }
     }
 
     const AZStd::string& URDFPrefabMaker::GetPrefabPath() const

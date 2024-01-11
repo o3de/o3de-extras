@@ -8,7 +8,6 @@
 
 #pragma once
 
-#include "UrdfParser.h"
 #include <AzCore/Component/ComponentBus.h>
 #include <AzCore/Component/EntityId.h>
 #include <AzCore/Outcome/Outcome.h>
@@ -26,7 +25,6 @@ namespace ROS2
         //! @param model A parsed SDF model which could hold information about sensor to be made.
         //! @param link A parsed SDF tree link node used to identify link being currently processed.
         //! @param entityId A non-active entity which will be affected.
-        //! @returns created components Id or string with fail
         void AddSensors(const sdf::Model& model, const sdf::Link* link, AZ::EntityId entityId) const;
     };
 } // namespace ROS2

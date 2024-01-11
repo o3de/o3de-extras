@@ -10,6 +10,7 @@
 #include <AzCore/EBus/EBus.h>
 #include <AzCore/EBus/Policies.h>
 #include <AzCore/std/string/string.h>
+#include <ROS2/RobotImporter/SDFormatModelPluginImporterHook.h>
 #include <ROS2/RobotImporter/SDFormatSensorImporterHook.h>
 
 namespace ROS2
@@ -28,6 +29,9 @@ namespace ROS2
 
         //! Return the reference to the list of sensor importer hooks
         virtual const SDFormat::SensorImporterHooksStorage& GetSensorHooks() const = 0;
+
+        //! Return the reference to the list of model plugin importer hooks
+        virtual const SDFormat::ModelPluginImporterHooksStorage& GetModelPluginHooks() const = 0;
     };
 
     using RobotImporterRequestBus = AZ::EBus<RobotImporterRequest>;

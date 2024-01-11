@@ -39,6 +39,13 @@ namespace ROS2::VehicleDynamics
         }
     }
 
+    SkidSteeringModelComponent::SkidSteeringModelComponent(
+        const VehicleConfiguration& vehicleConfiguration, const SkidSteeringDriveModel& driveModel)
+        : m_driveModel(driveModel)
+    {
+        m_vehicleConfiguration = vehicleConfiguration;
+    }
+
     void SkidSteeringModelComponent::GetProvidedServices(AZ::ComponentDescriptor::DependencyArrayType& provided)
     {
         provided.push_back(AZ_CRC_CE("SkidSteeringModelService"));

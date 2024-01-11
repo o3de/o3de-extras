@@ -28,7 +28,8 @@ namespace ROS2
         } };
     } // namespace
 
-    ArticulationCfg& AddToArticulationConfig(ArticulationCfg& articulationLinkConfiguration, const sdf::Joint* joint)
+    ArticulationCfg& AddToArticulationConfig(
+        ArticulationCfg& articulationLinkConfiguration, const sdf::Joint* joint, const bool isWheelEntity)
     {
         if (!joint)
         {
@@ -45,7 +46,6 @@ namespace ROS2
         {
             const auto type = supportedArticulationType->second;
             articulationLinkConfiguration.m_articulationJointType = type;
-            const AZ::Vector3 o3deJointDir{ 1.0, 0.0, 0.0 };
             AZ::Vector3 jointCoordinateAxis = AZ::Vector3::CreateZero();
             auto quaternion = AZ::Quaternion::CreateIdentity();
 
@@ -53,8 +53,9 @@ namespace ROS2
             if (jointAxis != nullptr)
             {
                 jointCoordinateAxis = URDF::TypeConversions::ConvertVector3(jointAxis->Xyz());
-                quaternion = jointCoordinateAxis.IsZero() ? AZ::Quaternion::CreateIdentity()
-                                                          : AZ::Quaternion::CreateShortestArc(o3deJointDir, jointCoordinateAxis);
+                quaternion = jointCoordinateAxis.IsZero()
+                    ? AZ::Quaternion::CreateIdentity()
+                    : AZ::Quaternion::CreateShortestArc(AZ::Vector3::CreateAxisX(), jointCoordinateAxis);
             }
 
             const AZ::Vector3 rotation = quaternion.GetEulerDegrees();
@@ -84,6 +85,7 @@ namespace ROS2
                         articulationLinkConfiguration.m_linearLimitUpper = jointAxis->Lower();
                     }
                 }
+                articulationLinkConfiguration.m_motorConfiguration.m_useMotor = isWheelEntity;
             }
             else
             {
@@ -130,7 +132,8 @@ namespace ROS2
         AZStd::string linkName(link->Name().c_str(), link->Name().size());
         for (const sdf::Joint* joint : Utils::GetJointsForChildLink(model, linkName, getNestedModelJoints))
         {
-            articulationLinkConfiguration = AddToArticulationConfig(articulationLinkConfiguration, joint);
+            const bool isWheelEntity = Utils::IsWheelURDFHeuristics(model, link);
+            articulationLinkConfiguration = AddToArticulationConfig(articulationLinkConfiguration, joint, isWheelEntity);
         }
 
         const auto articulationLink = entity->CreateComponent<PhysX::EditorArticulationLinkComponent>(articulationLinkConfiguration);
