@@ -13,6 +13,7 @@
 #include <AzCore/Serialization/EditContextConstants.inl>
 #include <AzFramework/Physics/RigidBodyBus.h>
 #include <AzFramework/Physics/SimulatedBodies/RigidBody.h>
+
 namespace ROS2
 {
     void RigidBodyTwistControlComponent::Reflect(AZ::ReflectContext* context)
@@ -34,7 +35,6 @@ namespace ROS2
 
     void RigidBodyTwistControlComponent::Activate()
     {
-
         AZ::TickBus::Handler::BusConnect();
         TwistNotificationBus::Handler::BusConnect(GetEntityId());
     }
