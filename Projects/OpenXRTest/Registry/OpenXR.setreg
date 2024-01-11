@@ -5,6 +5,12 @@
                 "Enable": true,
                 "android_ViewResolutionScale": 1.0,
                 "FoveatedLevel": 3
+            },
+            "DxcOverridePath": "C:\\Users\\galibfarrieta\\.o3de\\3rdParty\\packages\\DirectXShaderCompilerDxc-1.6.2112-o3de-rev1-windows\\DirectXShaderCompilerDxc\\bin\\Release\\dxc.exe",
+            "Shaders": {
+                "Build": {
+                    "ConfigPath": "@projectroot@/Config"
+                }
             }
         }
     }

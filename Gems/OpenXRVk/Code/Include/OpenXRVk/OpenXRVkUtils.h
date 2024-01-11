@@ -59,6 +59,7 @@ namespace OpenXRVk
     bool IsSuccess(XrResult result);
     bool IsError(XrResult result);
     const char* GetResultString(const XrResult result);
+    void PrintXrError(const char* windowName, const XrResult error, const char* fmt, ...);
     XR::RawStringList FilterList(const XR::RawStringList& source, const XR::StringList& filter);
 
     //! Input is an array of chars with multiple ' ' char embedded in it, indicating the start of a new string.

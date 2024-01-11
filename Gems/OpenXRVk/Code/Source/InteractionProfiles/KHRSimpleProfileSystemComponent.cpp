@@ -30,7 +30,7 @@ namespace OpenXRVk
     void KHRSimpleProfileSystemComponent::Activate()
     {
         m_name = { 
-            "Khronos Simple Interaction Profile",
+            "Khronos Simple", // Khronos Simple Interaction Profile
             "/interaction_profiles/khr/simple_controller"
         };
 
@@ -42,23 +42,23 @@ namespace OpenXRVk
         const AZStd::vector<OpenXRComponentPath> commonPaths = {
             {"Select Button", "/input/select/click", XR_ACTION_TYPE_BOOLEAN_INPUT},
             {"Menu Button",   "/input/menu/click",   XR_ACTION_TYPE_BOOLEAN_INPUT},
-            {"Grip",          "/input/grip/pose",    XR_ACTION_TYPE_POSE_INPUT},
-            {"Aim",           "/input/aim/pose",     XR_ACTION_TYPE_POSE_INPUT},
+            {"Grip Pose",     "/input/grip/pose",    XR_ACTION_TYPE_POSE_INPUT},
+            {"Aim Pose",      "/input/aim/pose",     XR_ACTION_TYPE_POSE_INPUT},
             {"Vibration",     "/output/haptic",      XR_ACTION_TYPE_VIBRATION_OUTPUT},
         };
         m_componentPaths[LeftHand] = commonPaths;
         m_componentPaths[RightHand] = commonPaths;
 
-        OpenXRInteractionProviderBus::Handler::BusConnect(m_name.m_displayName);
+        OpenXRInteractionProfileBus::Handler::BusConnect(m_name.m_displayName);
     }
 
     void KHRSimpleProfileSystemComponent::Deactivate()
     {
-        OpenXRInteractionProviderBus::Handler::BusDisconnect();
+        OpenXRInteractionProfileBus::Handler::BusDisconnect();
     }
 
     ///////////////////////////////////////////////////////////////////
-    // OpenXRInteractionProviderBus::Handler overrides
+    // OpenXRInteractionProfileBus::Handler overrides
     //! Create OpenXRVk::Instance object
     AZStd::string KHRSimpleProfileSystemComponent::GetName() const
     {
@@ -92,6 +92,44 @@ namespace OpenXRVk
             retList.push_back(pathTuple.m_displayName);
         }
         return retList;
+    }
+
+    OpenXRInteractionProfile::ActionPathInfo KHRSimpleProfileSystemComponent::GetActionPathInfo(const AZStd::string& userPath, const AZStd::string& componentPath) const
+    {
+        OpenXRInteractionProfile::ActionPathInfo retPathInfo;
+
+        const auto* openxrUserPath = AZStd::find_if(m_userPaths.begin(), m_userPaths.end(),
+            [userPath](const OpenXRPath& entry) {
+                return entry.m_displayName == userPath;
+            });
+
+        if (openxrUserPath == m_userPaths.end())
+        {
+            AZ_Error(LogName, false, "Invalid user path [%s].\n", userPath.c_str());
+            return retPathInfo;
+        }
+
+        const auto& componentPaths = m_componentPaths.at(userPath);
+        const auto* openxrComponentPath = AZStd::find_if(componentPaths.begin(), componentPaths.end(),
+            [componentPath](const OpenXRComponentPath& entry) {
+                return entry.m_displayName == componentPath;
+            });
+
+        if (openxrComponentPath == componentPaths.end())
+        {
+            AZ_Error(LogName, false, "Invalid component path [%s] for user path [%s].\n", componentPath.c_str(), userPath.c_str());
+            return retPathInfo;
+        }
+
+        retPathInfo.m_actionType = openxrComponentPath->m_actionType;
+        retPathInfo.m_absolutePath = openxrUserPath->m_xrRelativePath + openxrComponentPath->m_xrRelativePath;
+
+        return retPathInfo;
+    }
+
+    AZStd::string KHRSimpleProfileSystemComponent::GetInteractionProviderPath() const
+    {
+        return m_name.m_xrRelativePath;
     }
     ///////////////////////////////////////////////////////////////////
 }

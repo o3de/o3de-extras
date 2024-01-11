@@ -6,7 +6,7 @@
  *
  */
 
-#include <OpenXRVk/OpenXRInteractionProviderBus.h>
+#include <OpenXRVk/OpenXRInteractionProfileBus.h>
 #include "OpenXRActionsBindingAsset.h"
 
 namespace OpenXRVk
@@ -60,7 +60,7 @@ namespace OpenXRVk
     {
         AZStd::vector<AZStd::string> retList;
 
-        OpenXRInteractionProviderBus::EnumerateHandlers([&retList](OpenXRInteractionProvider* handler) -> bool {
+        OpenXRInteractionProfileBus::EnumerateHandlers([&retList](OpenXRInteractionProfile* handler) -> bool {
             retList.push_back(handler->GetName());
             return true;
         });
@@ -77,7 +77,7 @@ namespace OpenXRVk
     {
         AZStd::vector<AZStd::string> retList;
 
-        OpenXRInteractionProviderBus::EventResult(retList, m_interactionProfile, &OpenXRInteractionProvider::GetUserPaths);
+        OpenXRInteractionProfileBus::EventResult(retList, m_interactionProfile, &OpenXRInteractionProfile::GetUserPaths);
 
         return retList;
     }
@@ -91,7 +91,7 @@ namespace OpenXRVk
     {
         AZStd::vector<AZStd::string> retList;
 
-        OpenXRInteractionProviderBus::EventResult(retList, m_interactionProfile, &OpenXRInteractionProvider::GetComponentPaths, m_userPath);
+        OpenXRInteractionProfileBus::EventResult(retList, m_interactionProfile, &OpenXRInteractionProfile::GetComponentPaths, m_userPath);
 
         return retList;
     }

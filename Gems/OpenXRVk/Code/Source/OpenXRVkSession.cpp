@@ -6,16 +6,21 @@
  *
  */
 
-#include <OpenXRVk/OpenXRVkSession.h>
+#include <AzCore/Debug/Trace.h>
+#include <AzCore/Casting/numeric_cast.h>
+
+#include <XR/XRBase.h>
+
 #include <OpenXRVk/OpenXRVkDevice.h>
 #include <OpenXRVk/OpenXRVkInput.h>
 #include <OpenXRVk/OpenXRVkInstance.h>
 #include <OpenXRVk/OpenXRVkSpace.h>
 #include <OpenXRVk/OpenXRVkUtils.h>
-#include <AzCore/Debug/Trace.h>
-#include <AzCore/Casting/numeric_cast.h>
+#include <OpenXRVk/OpenXRVkSession.h>
+
 #include <Atom/RHI.Reflect/Vulkan/XRVkDescriptors.h>
-#include <XR/XRBase.h>
+
+#include "OpenXRActionsManager.h"
 
 namespace OpenXRVk
 {
@@ -46,7 +51,11 @@ namespace OpenXRVk
         createInfo.systemId = xrVkInstance->GetXRSystemId();
         XrResult result = xrCreateSession(m_xrInstance, &createInfo, &m_session);
         ASSERT_IF_UNSUCCESSFUL(result);
-        
+
+        m_actionsMgr = AZStd::make_unique<ActionsManager>();
+        bool actionsSuccess = m_actionsMgr->Init(m_xrInstance, m_session);
+        AZ_Assert(actionsSuccess, "Failed to instantiate the actions manager");
+
         LogReferenceSpaces();
         Input* xrVkInput = GetNativeInput();
         xrVkInput->InitializeActionSpace(m_session);

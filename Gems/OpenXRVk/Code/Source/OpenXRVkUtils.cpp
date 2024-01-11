@@ -44,6 +44,17 @@ namespace OpenXRVk
         return to_string(result);
     }
 
+    void PrintXrError(const char* windowName, const XrResult error, const char* fmt, ...)
+    {
+        va_list argList;
+        va_start(argList, fmt);
+
+        const auto subMsg = AZStd::string::format_arg(fmt, argList);
+        AZ_Error(windowName, false, "%s. Got OpenXR Error: %s\n", subMsg.c_str(), GetResultString(error));
+
+        va_end(argList);
+    }
+
     XR::RawStringList FilterList(const XR::RawStringList& source, const XR::StringList& filter)
     {
         XR::RawStringList filteredList;
