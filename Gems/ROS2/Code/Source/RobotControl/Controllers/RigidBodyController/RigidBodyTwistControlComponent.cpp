@@ -57,6 +57,10 @@ namespace ROS2
         AZ_Assert(AZ::Interface<AzPhysics::SystemInterface>::Get(), "No physics system");
         AzPhysics::SceneInterface* sceneInterface = AZ::Interface<AzPhysics::SceneInterface>::Get();
         AZ_Assert(sceneInterface, "No scene interface");
+        if (!sceneInterface)
+        {
+            return;
+        }
         AzPhysics::SceneHandle defaultSceneHandle = sceneInterface->GetSceneHandle(AzPhysics::DefaultPhysicsSceneName);
         AZ_Assert(defaultSceneHandle != AzPhysics::InvalidSceneHandle, "Invalid default physics scene handle");
 
@@ -69,19 +73,16 @@ namespace ROS2
         }
         m_bodyHandle = rigidBody->m_bodyHandle;
         m_sceneFinishSimHandler = AzPhysics::SceneEvents::OnSceneSimulationFinishHandler(
-                [this]([[maybe_unused]] AzPhysics::SceneHandle sceneHandle, float fixedDeltaTime)
+                [this, sceneInterface]([[maybe_unused]] AzPhysics::SceneHandle sceneHandle, float fixedDeltaTime)
                 {
-
-                    AzPhysics::SceneInterface* sceneInterface = AZ::Interface<AzPhysics::SceneInterface>::Get();
-                    AZ_Assert(sceneInterface, "No scene interface");
                     auto* rigidBody = sceneInterface->GetSimulatedBodyFromHandle(sceneHandle, m_bodyHandle);
                     AZ_Assert(sceneInterface, "No body found for previously given handle");
 
                     // Convert local steering to world frame
                     const AZ::Transform robotTransform = rigidBody->GetTransform();
-                    const auto velocityLinearGlobal = robotTransform.TransformVector(m_linearVelocityLocal);
+                    const auto linearVelocityGlobal = robotTransform.TransformVector(m_linearVelocityLocal);
                     const auto angularVelocityGlobal = robotTransform.TransformVector(m_angularVelocityLocal);
-                    Physics::RigidBodyRequestBus::Event(GetEntityId(), &Physics::RigidBodyRequests::SetLinearVelocity, velocityLinearGlobal);
+                    Physics::RigidBodyRequestBus::Event(GetEntityId(), &Physics::RigidBodyRequests::SetLinearVelocity, linearVelocityGlobal);
                     Physics::RigidBodyRequestBus::Event(GetEntityId(), &Physics::RigidBodyRequests::SetAngularVelocity, angularVelocityGlobal);
                 },
                 aznumeric_cast<int32_t>(AzPhysics::SceneEvents::PhysicsStartFinishSimulationPriority::Components));
