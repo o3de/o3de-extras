@@ -42,7 +42,7 @@ namespace ROS2::SDFormat
         return AZ::EntityId();
     }
 
-    void HooksUtils::EnableMotor(const AZ::EntityId& entityId)
+    void HooksUtils::SetWheelEntity(const AZ::EntityId& entityId)
     {
         AZ::Entity* entity = nullptr;
         AZ::ComponentApplicationBus::BroadcastResult(entity, &AZ::ComponentApplicationRequests::FindEntity, entityId);
@@ -52,15 +52,12 @@ namespace ROS2::SDFormat
             return;
         }
 
-        // Read the SDF Settings from the Settings Registry into a local struct
-        SdfAssetBuilderSettings sdfBuilderSettings;
-        sdfBuilderSettings.LoadSettings();
-
-        if (sdfBuilderSettings.m_useArticulations)
+        // Enable motor in hinge joint (only if articulations are not enabled)
+        PhysX::EditorHingeJointComponent* jointComponent = entity->FindComponent<PhysX::EditorHingeJointComponent>();
+        if (jointComponent != nullptr)
         {
-            PhysX::EditorHingeJointComponent* jointComponent = entity->FindComponent<PhysX::EditorHingeJointComponent>();
             entity->Activate();
-            if (jointComponent != nullptr && entity->GetState() == AZ::Entity::State::Active)
+            if (entity->GetState() == AZ::Entity::State::Active)
             {
                 PhysX::EditorJointRequestBus::Event(
                     AZ::EntityComponentIdPair(entityId, jointComponent->GetId()),
@@ -69,20 +66,10 @@ namespace ROS2::SDFormat
                     true);
                 entity->Deactivate();
             }
-            else
-            {
-                AZ_Warning("HooksUtils", false, "Cannot enable motor in hinge joint component.");
-            }
         }
-        else
-        {
-            AZ::Component* wheelComponentPtr = nullptr;
-            PhysX::EditorArticulationLinkComponent* articulationComponent = entity->FindComponent<PhysX::EditorArticulationLinkComponent>();
-            if (articulationComponent != nullptr)
-            {
-                wheelComponentPtr = HooksUtils::CreateComponent<VehicleDynamics::WheelControllerComponent>(*entity);
-            }
-            AZ_Warning("HooksUtils", wheelComponentPtr != nullptr, "Cannot create WheelControllerComponent in articulation link.");
-        }
+
+        // Add WheelControllerComponent
+        AZ::Component* wheelComponentPtr = HooksUtils::CreateComponent<VehicleDynamics::WheelControllerComponent>(*entity);
+        AZ_Warning("HooksUtils", wheelComponentPtr != nullptr, "Cannot create WheelControllerComponent in wheel entity.");
     }
 } // namespace ROS2::SDFormat

@@ -38,8 +38,8 @@ namespace ROS2::SDFormat
                 const auto entityIdRight = HooksUtils::GetJointEntityId(jointNameRight, sdfModel, createdEntities);
                 if (entityIdLeft.IsValid() && entityIdRight.IsValid())
                 {
-                    HooksUtils::EnableMotor(entityIdLeft);
-                    HooksUtils::EnableMotor(entityIdRight);
+                    HooksUtils::SetWheelEntity(entityIdLeft);
+                    HooksUtils::SetWheelEntity(entityIdRight);
                     constexpr bool steering = false; // Skid steering model does not have any steering wheels.
                     constexpr bool drive = true;
                     configuration.m_axles.emplace_back(VehicleDynamics::Utilities::Create2WheelAxle(
