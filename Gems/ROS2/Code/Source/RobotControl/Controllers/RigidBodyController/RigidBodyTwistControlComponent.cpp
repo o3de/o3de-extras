@@ -54,7 +54,6 @@ namespace ROS2
     
     void RigidBodyTwistControlComponent::OnTick([[maybe_unused]]float deltaTime, [[maybe_unused]]AZ::ScriptTimePoint time)
     {
-        AZ_Assert(AZ::Interface<AzPhysics::SystemInterface>::Get(), "No physics system");
         AzPhysics::SceneInterface* sceneInterface = AZ::Interface<AzPhysics::SceneInterface>::Get();
         AZ_Assert(sceneInterface, "No scene interface");
         if (!sceneInterface)
