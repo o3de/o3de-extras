@@ -10,6 +10,7 @@
 #include "ROS2SystemComponent.h"
 #include <AzCore/Memory/SystemAllocator.h>
 #include <AzCore/Module/Module.h>
+#include <Camera/PostProcessing/ROS2ImageEncodingConversionComponent.h>
 #include <Camera/ROS2CameraSensorComponent.h>
 #include <ContactSensor/ROS2ContactSensorComponent.h>
 #include <GNSS/ROS2GNSSSensorComponent.h>
@@ -69,6 +70,7 @@ namespace ROS2
                     ROS2FrameComponent::CreateDescriptor(),
                     ROS2RobotControlComponent::CreateDescriptor(),
                     ROS2CameraSensorComponent::CreateDescriptor(),
+                    ROS2ImageEncodingConversionComponent::CreateDescriptor(),
                     AckermannControlComponent::CreateDescriptor(),
                     RigidBodyTwistControlComponent::CreateDescriptor(),
                     SkidSteeringControlComponent::CreateDescriptor(),
