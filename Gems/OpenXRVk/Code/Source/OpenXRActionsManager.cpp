@@ -130,21 +130,30 @@ namespace OpenXRVk
         XrActionSetCreateInfo actionSetCreateInfo{};
         actionSetCreateInfo.type = XR_TYPE_ACTION_SET_CREATE_INFO;
         azstrcpy(actionSetCreateInfo.actionSetName, sizeof(actionSetCreateInfo.actionSetName), actionSet.m_name.c_str());
-        azstrcpy(actionSetCreateInfo.localizedActionSetName, sizeof(actionSetCreateInfo.localizedActionSetName), actionSet.m_localizedName.c_str());
+        const char* localizedNameCStr = actionSet.m_name.c_str();
+        if (!actionSet.m_localizedName.empty())
+        {
+            localizedNameCStr = actionSet.m_localizedName.c_str();
+        }
+        azstrcpy(actionSetCreateInfo.localizedActionSetName, sizeof(actionSetCreateInfo.localizedActionSetName), localizedNameCStr);
         actionSetCreateInfo.priority = actionSet.m_priority;
 
-        m_actionSets.push_back({});
-        ActionSetInfo& actionSetInfo = m_actionSets.back();
-        XrResult result = xrCreateActionSet(m_xrInstance, &actionSetInfo, &actionSetInfo.m_xrActionSet);
-        if (IsError(result))
         {
-            PrintXrError(LogName, result, "Failed to instantiate actionSet named [%s].", actionSet.m_name.c_str());
-            return false;
+            ActionSetInfo newActionSetInfo;
+            newActionSetInfo.m_name = actionSet.m_name;
+            XrResult result = xrCreateActionSet(m_xrInstance, &actionSetCreateInfo, &newActionSetInfo.m_xrActionSet);
+            if (IsError(result))
+            {
+                PrintXrError(LogName, result, "Failed to instantiate actionSet named [%s].", actionSet.m_name.c_str());
+                return false;
+            }
+            m_actionSets.emplace_back(AZStd::move(newActionSetInfo));
         }
 
+        ActionSetInfo& newActionSetInfo = m_actionSets.back();
         for (const auto& action : actionSet.m_actions)
         {
-            if (!InitActionBindingsInternal(actionSetInfo, action, activeProfiles, activeBindings))
+            if (!InitActionBindingsInternal(newActionSetInfo, action, activeProfiles, activeBindings))
             {
                 AZ_Error(LogName, false, "Failed to created action named [%s] under actionSet named [%s].",
                     action.m_name.c_str(), actionSet.m_name.c_str());
@@ -159,7 +168,8 @@ namespace OpenXRVk
         AZStd::unordered_set<XrPath>& activeProfiles,
         AZStd::vector<XrActionSuggestedBinding>& activeBindings)
     {
-        // One OpenXRAction object contains a list of XrActions that need to be created.
+        // One OpenXRAction object will become one XrAction.
+        // An OpenXRAction contains a list of OpenXRActionPath that need to be bound.
         // The action type for each XrAction will be the same and it will be determined by
         // the action type of the first action in the list. 
         AZ_Assert(!action.m_actionPaths.empty(), "OpenXR Actions list must contain at least one action.");
@@ -178,7 +188,12 @@ namespace OpenXRVk
         actionCreateInfo.type = XR_TYPE_ACTION_CREATE_INFO;
         actionCreateInfo.actionType = firstActionInfo.m_actionType;
         azstrcpy(actionCreateInfo.actionName, sizeof(actionCreateInfo.actionName), action.m_name.c_str());
-        azstrcpy(actionCreateInfo.localizedActionName, sizeof(actionCreateInfo.localizedActionName), action.m_localizedName.c_str());
+        const char* localizedNameCStr = action.m_name.c_str();
+        if (!action.m_localizedName.empty())
+        {
+            localizedNameCStr = action.m_localizedName.c_str();
+        }
+        azstrcpy(actionCreateInfo.localizedActionName, sizeof(actionCreateInfo.localizedActionName), localizedNameCStr);
         actionCreateInfo.countSubactionPaths = 0; // Subactions are not supported.
         actionCreateInfo.subactionPaths = nullptr; // Subactions are not supported.
 
@@ -352,7 +367,7 @@ namespace OpenXRVk
         XrActionStateBoolean state { XR_TYPE_ACTION_STATE_BOOLEAN };
         XrActionStateGetInfo getInfo{ XR_TYPE_ACTION_STATE_GET_INFO };
         getInfo.action = m_xrActions[actionIndex];
-        XrResult result = xrGetActionStateBoolean(m_xrSession, &getInfo, &state));
+        XrResult result = xrGetActionStateBoolean(m_xrSession, &getInfo, &state);
         if (IsError(result))
         {
             return AZ::Failure(AZStd::string(GetResultString(result)));
@@ -372,7 +387,7 @@ namespace OpenXRVk
         XrActionStateFloat state{ XR_TYPE_ACTION_STATE_FLOAT };
         XrActionStateGetInfo getInfo{ XR_TYPE_ACTION_STATE_GET_INFO };
         getInfo.action = m_xrActions[actionIndex];
-        XrResult result = xrGetActionStateBoolean(m_xrSession, &getInfo, &state));
+        XrResult result = xrGetActionStateFloat(m_xrSession, &getInfo, &state);
         if (IsError(result))
         {
             return AZ::Failure(AZStd::string(GetResultString(result)));
@@ -392,7 +407,7 @@ namespace OpenXRVk
         XrActionStateVector2f state{ XR_TYPE_ACTION_STATE_VECTOR2F };
         XrActionStateGetInfo getInfo{ XR_TYPE_ACTION_STATE_GET_INFO };
         getInfo.action = m_xrActions[actionIndex];
-        XrResult result = xrGetActionStateBoolean(m_xrSession, &getInfo, &state));
+        XrResult result = xrGetActionStateVector2f(m_xrSession, &getInfo, &state);
         if (IsError(result))
         {
             return AZ::Failure(AZStd::string(GetResultString(result)));
@@ -409,6 +424,7 @@ namespace OpenXRVk
             return AZ::Failure("Invalid actionHandle!");
         }
         [[maybe_unused]] const auto actionIndex = actionHandle.GetIndex();
+        AZ_Assert(false, "FIXME!");
         return AZ::Success(AZ::Transform::CreateIdentity());
     }
 
@@ -457,7 +473,7 @@ namespace OpenXRVk
     }
     /// OpenXRActionsInterface overrides
     /////////////////////////////////////////////////
-    AZ::Outcome<bool, AZStd::string> ActionsManager::ChangeActionSetStateInternal(const AZStd::string& actionSetName, bool activate, bool recreateXrActiveActionSets = false)
+    AZ::Outcome<bool, AZStd::string> ActionsManager::ChangeActionSetStateInternal(const AZStd::string& actionSetName, bool activate, bool recreateXrActiveActionSets)
     {
         // First get the index.
         size_t foundIdx = 0;

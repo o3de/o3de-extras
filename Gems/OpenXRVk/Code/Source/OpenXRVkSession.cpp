@@ -54,12 +54,13 @@ namespace OpenXRVk
 
         m_actionsMgr = AZStd::make_unique<ActionsManager>();
         bool actionsSuccess = m_actionsMgr->Init(m_xrInstance, m_session);
-        AZ_Assert(actionsSuccess, "Failed to instantiate the actions manager");
+        AZ_Error("OpenXRVk::Session", actionsSuccess, "Failed to instantiate the actions manager");
 
         LogReferenceSpaces();
-        Input* xrVkInput = GetNativeInput();
-        xrVkInput->InitializeActionSpace(m_session);
-        xrVkInput->InitializeActionSets(m_session);
+
+        //Input* xrVkInput = GetNativeInput();
+        //xrVkInput->InitializeActionSpace(m_session);
+        //xrVkInput->InitializeActionSets(m_session);
 
         Space* xrVkSpace = static_cast<Space*>(GetSpace());
         xrVkSpace->CreateVisualizedSpaces(m_session);
@@ -432,8 +433,9 @@ namespace OpenXRVk
         return static_cast<Input*>(GetInput());
     }
 
-    void Session::UpdateXrSpaceLocations(const OpenXRVk::Device& device, XrTime predictedDisplayTime, AZStd::vector<XrView>& xrViews)
+    void Session::UpdateXrSpaceLocations([[maybe_unused]] const OpenXRVk::Device& device, [[maybe_unused]] XrTime predictedDisplayTime, [[maybe_unused]] AZStd::vector<XrView>& xrViews)
     {
-        GetNativeInput()->UpdateXrSpaceLocations(device, predictedDisplayTime, xrViews);
+        m_actionsMgr->SyncActions();
+        //GetNativeInput()->UpdateXrSpaceLocations(device, predictedDisplayTime, xrViews);
     }
 }

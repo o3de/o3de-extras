@@ -53,7 +53,8 @@ namespace OpenXRVk
             WARN_IF_UNSUCCESSFUL(result);
         }
 
-        // Notify the input system that we have a new predicted display time.
+        // Now that we have a new predicted display time, the session should be able
+        // to sync actions and locate spaces.
         // The new predicted display time will be used to calculate XrPoses for the current frame.
         session->UpdateXrSpaceLocations(*this, m_frameState.predictedDisplayTime, m_views);
 

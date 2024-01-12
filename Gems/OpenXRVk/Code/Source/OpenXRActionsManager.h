@@ -49,15 +49,15 @@ namespace OpenXRVk
         AZ::Outcome<bool, AZStd::string> ChangeActionSetState(const AZStd::string& actionSetName, bool activate) override;
         AZ::Outcome<bool, AZStd::string> ChangeActionSetsState(const  AZStd::vector<AZStd::string>& actionSetNames, bool activate) override;
 
-        ActionHandle GetActionHandle(const AZStd::string& actionSetName, const AZStd::string& actionName) const = 0;
+        ActionHandle GetActionHandle(const AZStd::string& actionSetName, const AZStd::string& actionName) const override;
 
-        AZ::Outcome<bool, AZStd::string> GetActionStateBoolean(ActionHandle actionHandle) = 0;
-        AZ::Outcome<float, AZStd::string> GetActionStateFloat(ActionHandle actionHandle) = 0;
-        AZ::Outcome<AZ::Vector2, AZStd::string> GetActionStateVector2(ActionHandle actionHandle) = 0;
-        AZ::Outcome<AZ::Transform, AZStd::string> GetActionStatePose(ActionHandle actionHandle) = 0;
+        AZ::Outcome<bool, AZStd::string> GetActionStateBoolean(ActionHandle actionHandle) override;
+        AZ::Outcome<float, AZStd::string> GetActionStateFloat(ActionHandle actionHandle) override;
+        AZ::Outcome<AZ::Vector2, AZStd::string> GetActionStateVector2(ActionHandle actionHandle) override;
+        AZ::Outcome<AZ::Transform, AZStd::string> GetActionStatePose(ActionHandle actionHandle) override;
 
-        AZ::Outcome<bool, AZStd::string> ApplyHapticVibrationAction(ActionHandle actionHandle, uint64_t durationNanos, float frequencyHz, float amplitude) = 0;
-        AZ::Outcome<bool, AZStd::string> StopHapticVibrationAction(ActionHandle actionHandle) = 0;
+        AZ::Outcome<bool, AZStd::string> ApplyHapticVibrationAction(ActionHandle actionHandle, uint64_t durationNanos, float frequencyHz, float amplitude) override;
+        AZ::Outcome<bool, AZStd::string> StopHapticVibrationAction(ActionHandle actionHandle) override;
         /// OpenXRActionsInterface overrides
         /////////////////////////////////////////////////
 
@@ -74,9 +74,10 @@ namespace OpenXRVk
         struct ActionInfo
         {
             AZStd::string m_name;
-            XrActionType m_actionType;
-            // The index in @m_xrActions;
-            IOpenXRActions::ActionHandle m_actionHandle;
+            XrActionType m_actionType = XR_ACTION_TYPE_MAX_ENUM;
+            XrAction m_xrAction = XR_NULL_HANDLE;
+            // Only valid if m_actionType is XR_ACTION_TYPE_POSE_INPUT
+            XrSpace m_xrSpace = XR_NULL_HANDLE;
         };
 
         struct ActionSetInfo
@@ -84,7 +85,8 @@ namespace OpenXRVk
             AZStd::string m_name;
             XrActionSet m_xrActionSet;
             // The key is the name of the action.
-            AZStd::unordered_map<AZStd::string, ActionInfo> m_actions;
+            // The value is the index in @m_actions;
+            AZStd::unordered_map<AZStd::string, IOpenXRActions::ActionHandle> m_actions;
         };
 
         bool InitActionBindingsInternal(ActionSetInfo& actionSetInfo, const OpenXRAction& action,
@@ -100,9 +102,9 @@ namespace OpenXRVk
 
         //! Each actionSet in this list is guaranteed to contain at least one valid action.
         AZStd::vector<ActionSetInfo> m_actionSets;
-        //! This is a flat list of all XrActions across all actionSets.
+        //! This is a flat list of all actions across all actionSets.
         //! An IOpenXRActions::ActionHandle is actually an index into this list.
-        AZStd::vector<XrAction> m_xrActions;
+        AZStd::vector<ActionInfo> m_actions;
 
         //! 32 action sets should be enough
         static constexpr uint32_t MaxActionSets = 32;
