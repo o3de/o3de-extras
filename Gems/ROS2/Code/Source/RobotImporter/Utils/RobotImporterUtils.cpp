@@ -12,8 +12,8 @@
 #include <AzCore/Asset/AssetManagerBus.h>
 #include <AzCore/IO/Path/Path.h>
 #include <AzCore/StringFunc/StringFunc.h>
-#include <AzCore/std/string/regex.h>
 #include <AzCore/Utils/Utils.h>
+#include <AzCore/std/string/regex.h>
 #include <AzToolsFramework/API/EditorAssetSystemAPI.h>
 #include <RobotImporter/Utils/ErrorUtils.h>
 #include <string.h>
@@ -34,7 +34,7 @@ namespace ROS2::Utils
         auto wheelMatcher = [](AZStd::string_view name)
         {
             // StringFunc matches are case-insensitive by default
-            return AZ::StringFunc::StartsWith(name, "wheel_") || AZ::StringFunc::EndsWith(name, "_wheel");
+            return AZ::StringFunc::Contains(name, "wheel");
         };
 
         const AZStd::string linkName(link->Name().c_str(), link->Name().size());
@@ -161,6 +161,7 @@ namespace ROS2::Utils
         public:
             LinkVisitorCallback m_linkVisitorCB;
             bool m_recurseModels{};
+
         private:
             // Stack storing the current composition of models visited so far
             ModelStack m_modelStack;
@@ -227,6 +228,7 @@ namespace ROS2::Utils
         public:
             JointVisitorCallback m_jointVisitorCB;
             bool m_recurseModels{};
+
         private:
             // Stack storing the current composition of models visited so far
             ModelStack m_modelStack;
@@ -879,7 +881,6 @@ namespace ROS2::Utils
             }
         }
 
-
         // At this point, the path has no identified URI prefix. If it's an absolute path, try to locate and return it.
         // Otherwise, return an empty path as an error.
         if (unresolvedPath.IsAbsolute())
@@ -1011,7 +1012,7 @@ namespace ROS2::Utils::SDFormat
         for (auto& [prefix, pathList] : settings.m_resolverSettings.m_uriPrefixMap)
         {
             std::string uriPath;
-            for(auto& path : pathList)
+            for (auto& path : pathList)
             {
                 if (!uriPath.empty())
                 {

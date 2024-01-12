@@ -18,10 +18,12 @@ set(FILES
     Source/Manipulation/JointsManipulationEditorComponent.h
     Source/RobotImporter/FixURDF/FixURDF.cpp
     Source/RobotImporter/FixURDF/FixURDF.h
+    Source/RobotImporter/Pages/ModifiedURDFWindow.cpp
+    Source/RobotImporter/Pages/ModifiedURDFWindow.h
     Source/RobotImporter/Pages/CheckAssetPage.cpp
     Source/RobotImporter/Pages/CheckAssetPage.h
-    Source/RobotImporter/Pages/CheckUrdfPage.cpp
-    Source/RobotImporter/Pages/CheckUrdfPage.h
+    Source/RobotImporter/Pages/RobotDescriptionPage.cpp
+    Source/RobotImporter/Pages/RobotDescriptionPage.h
     Source/RobotImporter/Pages/FileSelectionPage.cpp
     Source/RobotImporter/Pages/FileSelectionPage.h
     Source/RobotImporter/Pages/PrefabMakerPage.cpp
@@ -38,8 +40,10 @@ set(FILES
     Source/RobotImporter/SDFormat/Hooks/ROS2GNSSSensorHook.cpp
     Source/RobotImporter/SDFormat/Hooks/ROS2ImuSensorHook.cpp
     Source/RobotImporter/SDFormat/Hooks/ROS2LidarSensorHook.cpp
-    Source/RobotImporter/SDFormat/ROS2SensorHooksUtils.cpp
-    Source/RobotImporter/SDFormat/ROS2SensorHooksUtils.h
+    Source/RobotImporter/SDFormat/Hooks/ROS2SkidSteeringModelHook.cpp
+    Source/RobotImporter/SDFormat/ROS2ModelPluginHooks.h
+    Source/RobotImporter/SDFormat/ROS2SDFormatHooksUtils.cpp
+    Source/RobotImporter/SDFormat/ROS2SDFormatHooksUtils.h
     Source/RobotImporter/SDFormat/ROS2SensorHooks.h
     Source/RobotImporter/URDF/ArticulationsMaker.cpp
     Source/RobotImporter/URDF/ArticulationsMaker.h
@@ -51,6 +55,8 @@ set(FILES
     Source/RobotImporter/URDF/JointsMaker.h
     Source/RobotImporter/URDF/PrefabMakerUtils.cpp
     Source/RobotImporter/URDF/PrefabMakerUtils.h
+    Source/RobotImporter/URDF/RobotControlMaker.cpp
+    Source/RobotImporter/URDF/RobotControlMaker.h
     Source/RobotImporter/URDF/SensorsMaker.cpp
     Source/RobotImporter/URDF/SensorsMaker.h
     Source/RobotImporter/URDF/UrdfParser.cpp

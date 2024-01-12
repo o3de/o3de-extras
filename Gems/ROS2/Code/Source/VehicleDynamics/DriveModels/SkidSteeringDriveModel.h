@@ -19,11 +19,13 @@
 
 namespace ROS2::VehicleDynamics
 {
-    //! A simple Ackermann system implementation converting speed and steering inputs into wheel impulse and steering element torque
+    //! A simple skid steering system implementation converting speed and steering inputs into wheel impulse and steering element torque
     class SkidSteeringDriveModel : public DriveModel
     {
     public:
         AZ_RTTI(SkidSteeringDriveModel, "{04AE1BF2-621A-46C3-B025-E0875856850D}", DriveModel);
+        SkidSteeringDriveModel() = default;
+        SkidSteeringDriveModel(const SkidSteeringModelLimits& limits);
 
         // DriveModel overrides
         void Activate(const VehicleConfiguration& vehicleConfig) override;

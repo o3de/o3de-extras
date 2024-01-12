@@ -1,11 +1,11 @@
 {
     "version": "1.0.0",
     "gem_name": "WarehouseAutomation",
-    "display_name": "WarehouseAutomation",
+    "display_name": "Warehouse Automation",
     "license": "Apache-2.0",
     "license_url": "https://opensource.org/licenses/Apache-2.0",
     "origin": "RobotecAI",
-    "origin_url": "https://github.com/o3de/o3de-extras/development/Gems/WarehouseAutomation",
+    "origin_url": "https://robotec.ai",
     "type": "Code",
     "summary": "Gem for simulating an automated warehouse or factory",
     "canonical_tags": [

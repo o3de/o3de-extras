@@ -35,6 +35,11 @@ namespace ROS2::VehicleDynamics
         }
     }
 
+    SkidSteeringDriveModel::SkidSteeringDriveModel(const SkidSteeringModelLimits& limits)
+        : m_limits(limits)
+    {
+    }
+
     void SkidSteeringDriveModel::Activate(const VehicleConfiguration& vehicleConfig)
     {
         m_config = vehicleConfig;

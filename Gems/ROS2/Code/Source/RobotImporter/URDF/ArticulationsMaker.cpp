@@ -28,7 +28,8 @@ namespace ROS2
         } };
     } // namespace
 
-    ArticulationCfg& AddToArticulationConfig(ArticulationCfg& articulationLinkConfiguration, const sdf::Joint* joint)
+    ArticulationCfg& AddToArticulationConfig(
+        ArticulationCfg& articulationLinkConfiguration, const sdf::Joint* joint, const bool isWheelEntity)
     {
         if (!joint)
         {
@@ -45,7 +46,6 @@ namespace ROS2
         {
             const auto type = supportedArticulationType->second;
             articulationLinkConfiguration.m_articulationJointType = type;
-            const AZ::Vector3 o3deJointDir{ 1.0, 0.0, 0.0 };
             AZ::Vector3 jointCoordinateAxis = AZ::Vector3::CreateZero();
             auto quaternion = AZ::Quaternion::CreateIdentity();
 
@@ -53,8 +53,9 @@ namespace ROS2
             if (jointAxis != nullptr)
             {
                 jointCoordinateAxis = URDF::TypeConversions::ConvertVector3(jointAxis->Xyz());
-                quaternion =
-                    jointCoordinateAxis.IsZero() ? AZ::Quaternion::CreateIdentity() : AZ::Quaternion::CreateShortestArc(o3deJointDir, jointCoordinateAxis);
+                quaternion = jointCoordinateAxis.IsZero()
+                    ? AZ::Quaternion::CreateIdentity()
+                    : AZ::Quaternion::CreateShortestArc(AZ::Vector3::CreateAxisX(), jointCoordinateAxis);
             }
 
             const AZ::Vector3 rotation = quaternion.GetEulerDegrees();
@@ -84,6 +85,7 @@ namespace ROS2
                         articulationLinkConfiguration.m_linearLimitUpper = jointAxis->Lower();
                     }
                 }
+                articulationLinkConfiguration.m_motorConfiguration.m_useMotor = isWheelEntity;
             }
             else
             {
@@ -105,15 +107,21 @@ namespace ROS2
 
         if (!URDF::TypeConversions::ConvertQuaternion(inertial.Pose().Rot()).IsIdentity())
         { // There is a rotation component in URDF that we are not able to apply
-            AZ_Warning("AddArticulationLink", false, "Ignoring URDF/SDF inertial origin rotation (no such field in rigid body configuration)");
+            AZ_Warning(
+                "AddArticulationLink", false, "Ignoring URDF/SDF inertial origin rotation (no such field in rigid body configuration)");
         }
         return articulationLinkConfiguration;
     }
 
-    void ArticulationsMaker::AddArticulationLink(const sdf::Model& model, const sdf::Link* link, AZ::EntityId entityId) const
+    ArticulationsMaker::ArticulationsMakerResult ArticulationsMaker::AddArticulationLink(
+        const sdf::Model& model, const sdf::Link* link, AZ::EntityId entityId) const
     {
         AZ::Entity* entity = AzToolsFramework::GetEntityById(entityId);
-        AZ_Assert(entity, "No entity for id %s", entityId.ToString().c_str());
+        if (entity == nullptr)
+        {
+            AZ::Failure(
+                AZStd::string::format("Failed to create component articulation link, no entity for id %s", entityId.ToString().c_str()));
+        }
 
         AZ_Trace("ArticulationsMaker", "Processing inertial for entity id: %s\n", entityId.ToString().c_str());
         PhysX::EditorArticulationLinkConfiguration articulationLinkConfiguration;
@@ -124,9 +132,18 @@ namespace ROS2
         AZStd::string linkName(link->Name().c_str(), link->Name().size());
         for (const sdf::Joint* joint : Utils::GetJointsForChildLink(model, linkName, getNestedModelJoints))
         {
-            articulationLinkConfiguration = AddToArticulationConfig(articulationLinkConfiguration, joint);
+            const bool isWheelEntity = Utils::IsWheelURDFHeuristics(model, link);
+            articulationLinkConfiguration = AddToArticulationConfig(articulationLinkConfiguration, joint, isWheelEntity);
         }
 
-        entity->CreateComponent<PhysX::EditorArticulationLinkComponent>(articulationLinkConfiguration);
+        const auto articulationLink = entity->CreateComponent<PhysX::EditorArticulationLinkComponent>(articulationLinkConfiguration);
+        if (articulationLink != nullptr)
+        {
+            return AZ::Success(articulationLink->GetId());
+        }
+        else
+        {
+            return AZ::Failure("Failed to create component articulation link.");
+        }
     }
 } // namespace ROS2

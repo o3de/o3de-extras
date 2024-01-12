@@ -10,8 +10,8 @@
 #include <Lidar/ROS2Lidar2DSensorComponent.h>
 #include <Lidar/ROS2LidarSensorComponent.h>
 #include <ROS2/Frame/ROS2FrameComponent.h>
+#include <RobotImporter/SDFormat/ROS2SDFormatHooksUtils.h>
 #include <RobotImporter/SDFormat/ROS2SensorHooks.h>
-#include <RobotImporter/SDFormat/ROS2SensorHooksUtils.h>
 
 #include <sdf/Lidar.hh>
 #include <sdf/Sensor.hh>
@@ -59,7 +59,7 @@ namespace ROS2::SDFormat
             sensorConfiguration.m_frequency = sdfSensor.UpdateRate();
             const AZStd::string messageType = is2DLidar ? "sensor_msgs::msg::LaserScan" : "sensor_msgs::msg::PointCloud2";
             const AZStd::string messageTopic = is2DLidar ? "scan" : "pc";
-            Utils::AddTopicConfiguration(sensorConfiguration, messageTopic, messageType, messageType);
+            HooksUtils::AddTopicConfiguration(sensorConfiguration, messageTopic, messageType, messageType);
 
             LidarSensorConfiguration lidarConfiguration{ is2DLidar ? LidarTemplateUtils::Get2DModels()
                                                                    : LidarTemplateUtils::Get3DModels() };
@@ -93,12 +93,12 @@ namespace ROS2::SDFormat
             }
 
             // Create required components
-            Utils::CreateComponent<ROS2FrameEditorComponent>(entity);
+            HooksUtils::CreateComponent<ROS2FrameComponent>(entity);
 
             // Create Lidar component
             const auto lidarComponent = is2DLidar
-                ? Utils::CreateComponent<ROS2Lidar2DSensorComponent>(entity, sensorConfiguration, lidarConfiguration)
-                : Utils::CreateComponent<ROS2LidarSensorComponent>(entity, sensorConfiguration, lidarConfiguration);
+                ? HooksUtils::CreateComponent<ROS2Lidar2DSensorComponent>(entity, sensorConfiguration, lidarConfiguration)
+                : HooksUtils::CreateComponent<ROS2LidarSensorComponent>(entity, sensorConfiguration, lidarConfiguration);
             if (lidarComponent)
             {
                 return AZ::Success();

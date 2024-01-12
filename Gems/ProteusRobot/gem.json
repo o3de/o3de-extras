@@ -2,10 +2,10 @@
     "gem_name": "ProteusRobot",
     "version": "1.0.0",
     "display_name": "Proteus Robot",
-    "license": "Apache-2.0",
+    "license": "Apache-2.0 or MIT",
     "license_url": "https://opensource.org/licenses/Apache-2.0",
     "origin": "RobotecAI",
-    "origin_url": "https://github.com/o3de/o3de-extras/tree/development/Gems/ProteusRobot",
+    "origin_url": "https://robotec.ai",
     "type": "Asset",
     "summary": "Proteus warehouse robot with Lidar sensor",
     "canonical_tags": [
@@ -18,11 +18,13 @@
         ""
     ],
     "icon_path": "preview.png",
-    "requirements": "Requires ROS 2 Gem for the Lidar to function",
+    "requirements": "Requires ROS 2 Gem",
     "documentation_url": "https://www.o3de.org/docs/user-guide/interactivity/robotics/project-configuration/#ros-2-project-templates",
-    "dependencies": [],
+    "dependencies": [
+        "ROS2==2.0.0"
+    ],
     "repo_uri": "https://raw.githubusercontent.com/o3de/o3de-extras/development",
-     "compatible_engines": [
+    "compatible_engines": [
         "o3de-sdk>=1.2.0",
         "o3de>=1.2.0"
     ],

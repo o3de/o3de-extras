@@ -7,8 +7,8 @@
  */
 
 #include <GNSS/ROS2GNSSSensorComponent.h>
+#include <RobotImporter/SDFormat/ROS2SDFormatHooksUtils.h>
 #include <RobotImporter/SDFormat/ROS2SensorHooks.h>
-#include <RobotImporter/SDFormat/ROS2SensorHooksUtils.h>
 
 #include <sdf/NavSat.hh>
 #include <sdf/Sensor.hh>
@@ -33,9 +33,9 @@ namespace ROS2::SDFormat
             SensorConfiguration sensorConfiguration;
             sensorConfiguration.m_frequency = sdfSensor.UpdateRate();
             const AZStd::string messageType = "sensor_msgs::msg::NavSatFix";
-            Utils::AddTopicConfiguration(sensorConfiguration, "gnss", messageType, messageType);
+            HooksUtils::AddTopicConfiguration(sensorConfiguration, "gnss", messageType, messageType);
 
-            if (Utils::CreateComponent<ROS2GNSSSensorComponent>(entity, sensorConfiguration))
+            if (HooksUtils::CreateComponent<ROS2GNSSSensorComponent>(entity, sensorConfiguration))
             {
                 return AZ::Success();
             }

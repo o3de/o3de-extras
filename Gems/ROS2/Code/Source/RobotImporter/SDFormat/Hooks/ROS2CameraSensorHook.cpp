@@ -10,8 +10,8 @@
 #include <Camera/CameraConstants.h>
 #include <Camera/ROS2CameraSensorEditorComponent.h>
 #include <ROS2/Frame/ROS2FrameComponent.h>
+#include <RobotImporter/SDFormat/ROS2SDFormatHooksUtils.h>
 #include <RobotImporter/SDFormat/ROS2SensorHooks.h>
-#include <RobotImporter/SDFormat/ROS2SensorHooksUtils.h>
 
 #include <sdf/Camera.hh>
 #include <sdf/Sensor.hh>
@@ -65,24 +65,24 @@ namespace ROS2::SDFormat
             sensorConfiguration.m_frequency = sdfSensor.UpdateRate();
             if (sdfSensor.Type() != sdf::SensorType::DEPTH_CAMERA)
             { // COLOR_CAMERA and RGBD_CAMERA
-                Utils::AddTopicConfiguration(
+                HooksUtils::AddTopicConfiguration(
                     sensorConfiguration, "camera_image_color", CameraConstants::ImageMessageType, CameraConstants::ColorImageConfig);
-                Utils::AddTopicConfiguration(
+                HooksUtils::AddTopicConfiguration(
                     sensorConfiguration, "color_camera_info", CameraConstants::CameraInfoMessageType, CameraConstants::ColorInfoConfig);
             }
             if (sdfSensor.Type() != sdf::SensorType::CAMERA)
             { // DEPTH_CAMERA and RGBD_CAMERA
-                Utils::AddTopicConfiguration(
+                HooksUtils::AddTopicConfiguration(
                     sensorConfiguration, "camera_image_depth", CameraConstants::ImageMessageType, CameraConstants::DepthImageConfig);
-                Utils::AddTopicConfiguration(
+                HooksUtils::AddTopicConfiguration(
                     sensorConfiguration, "depth_camera_info", CameraConstants::CameraInfoMessageType, CameraConstants::DepthInfoConfig);
             }
 
             // Create required components
-            Utils::CreateComponent<ROS2FrameEditorComponent>(entity);
+            HooksUtils::CreateComponent<ROS2FrameComponent>(entity);
 
             // Create Camera component
-            if (Utils::CreateComponent<ROS2CameraSensorEditorComponent>(entity, sensorConfiguration, cameraConfiguration))
+            if (HooksUtils::CreateComponent<ROS2CameraSensorEditorComponent>(entity, sensorConfiguration, cameraConfiguration))
             {
                 return AZ::Success();
             }
