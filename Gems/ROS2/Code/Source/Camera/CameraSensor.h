@@ -7,13 +7,10 @@
  */
 #pragma once
 
+#include "CameraPublishers.h"
 #include <Atom/Feature/Utils/FrameCaptureBus.h>
 #include <AzCore/std/containers/span.h>
-
-#include "CameraPublishers.h"
 #include <ROS2/ROS2GemUtilities.h>
-
-#include <chrono>
 #include <rclcpp/publisher.hpp>
 #include <sensor_msgs/msg/camera_info.hpp>
 #include <sensor_msgs/msg/image.hpp>
