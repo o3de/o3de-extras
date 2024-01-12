@@ -13,6 +13,7 @@
 #include <ROS2/Utilities/ROS2Names.h>
 
 #include "Georeference/GNSSFormatConversions.h"
+#include <ROS2/GNSS/GNSSPostProcessingRequestBus.h>
 #include <ROS2/Georeference/GeoreferenceBus.h>
 
 namespace ROS2
@@ -78,6 +79,11 @@ namespace ROS2
             });
     }
 
+    void ROS2GNSSSensorComponent::GetProvidedServices(AZ::ComponentDescriptor::DependencyArrayType& provided)
+    {
+        provided.push_back(AZ_CRC_CE("ROS2GNSSSensor"));
+    }
+
     void ROS2GNSSSensorComponent::Deactivate()
     {
         StopSensor();
@@ -86,7 +92,6 @@ namespace ROS2
 
     void ROS2GNSSSensorComponent::FrequencyTick()
     {
-
         AZ::Vector3 currentPosition{ 0.0f };
         AZ::TransformBus::EventResult(currentPosition, GetEntityId(), &AZ::TransformBus::Events::GetWorldTranslation);
 
@@ -100,9 +105,9 @@ namespace ROS2
 
         m_gnssMsg.status.status = sensor_msgs::msg::NavSatStatus::STATUS_SBAS_FIX;
         m_gnssMsg.status.service = sensor_msgs::msg::NavSatStatus::SERVICE_GPS;
+        GNSSPostProcessingRequestBus::Event(GetEntityId(), &GNSSPostProcessingRequests::ApplyPostProcessing, m_gnssMsg);
 
         m_gnssPublisher->publish(m_gnssMsg);
     }
-
 
 } // namespace ROS2
