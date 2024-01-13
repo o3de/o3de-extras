@@ -39,7 +39,7 @@ namespace OpenXRVk
         bool Init(XrInstance xrInstance, XrSession xrSession);
 
         //! Called by the Session each tick.
-        bool SyncActions();
+        bool SyncActions(XrTime predictedDisplayTime, XrSpace baseSpace);
 
         /////////////////////////////////////////////////
         /// OpenXRActionsInterface overrides
@@ -51,10 +51,11 @@ namespace OpenXRVk
 
         ActionHandle GetActionHandle(const AZStd::string& actionSetName, const AZStd::string& actionName) const override;
 
-        AZ::Outcome<bool, AZStd::string> GetActionStateBoolean(ActionHandle actionHandle) override;
-        AZ::Outcome<float, AZStd::string> GetActionStateFloat(ActionHandle actionHandle) override;
-        AZ::Outcome<AZ::Vector2, AZStd::string> GetActionStateVector2(ActionHandle actionHandle) override;
-        AZ::Outcome<AZ::Transform, AZStd::string> GetActionStatePose(ActionHandle actionHandle) override;
+        AZ::Outcome<bool, AZStd::string> GetActionStateBoolean(ActionHandle actionHandle) const override;
+        AZ::Outcome<float, AZStd::string> GetActionStateFloat(ActionHandle actionHandle) const override;
+        AZ::Outcome<AZ::Vector2, AZStd::string> GetActionStateVector2(ActionHandle actionHandle) const override;
+        AZ::Outcome<AZ::Transform, AZStd::string> GetActionStatePose(ActionHandle actionHandle) const override;
+        AZ::Outcome<PoseWithVelocities, AZStd::string> GetActionStatePoseWithVelocities(ActionHandle actionHandle) const override;
 
         AZ::Outcome<bool, AZStd::string> ApplyHapticVibrationAction(ActionHandle actionHandle, uint64_t durationNanos, float frequencyHz, float amplitude) override;
         AZ::Outcome<bool, AZStd::string> StopHapticVibrationAction(ActionHandle actionHandle) override;
@@ -93,12 +94,21 @@ namespace OpenXRVk
                                         AZStd::unordered_set<XrPath>& activeProfiles,
                                         AZStd::vector<XrActionSuggestedBinding>& activeBindings);
 
+        XrAction CreateXrActionAndXrSpace(const ActionSetInfo& actionSetInfo,
+            const OpenXRAction& action, const XrActionType actionType, XrSpace& newXrActionSpace) const;
+
+        uint32_t AppendActionBindings(const OpenXRAction& action, XrAction newXrAction,
+            AZStd::unordered_set<XrPath>& activeProfiles,
+            AZStd::vector<XrActionSuggestedBinding>& activeBindings) const;
         
         AZ::Outcome<bool, AZStd::string> ChangeActionSetStateInternal(const AZStd::string& actionSetName, bool activate, bool recreateXrActiveActionSets = false);
         void RecreateXrActiveActionSets();
 
         XrInstance m_xrInstance = XR_NULL_HANDLE;
         XrSession m_xrSession = XR_NULL_HANDLE;
+        // Updated each time SyncActions is called.
+        XrTime m_predictedDisplaytime;
+        XrSpace m_baseSpace;
 
         //! Each actionSet in this list is guaranteed to contain at least one valid action.
         AZStd::vector<ActionSetInfo> m_actionSets;

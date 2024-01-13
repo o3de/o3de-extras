@@ -68,8 +68,8 @@ namespace OpenXRVk
     AZStd::vector<const char*> ParseExtensionString(char* names);
 
     AZ::Quaternion AzQuaternionFromXrPose(const XrPosef& pose, bool convertCoordinates = true);
+    AZ::Vector3 AzVector3FromXrVector3(const XrVector3f& xrVec3, bool convertCoordinates = true);
     AZ::Vector3 AzPositionFromXrPose(const XrPosef& pose, bool convertCoordinates = true);
     AZ::Transform AzTransformFromXrPose(const XrPosef& pose, bool convertCoordinates = true);
     XrPosef XrPoseFromAzTransform(const AZ::Transform& tm, bool convertCoordinates = true);
-
 }

@@ -95,11 +95,16 @@ namespace OpenXRVk
         return AZ::Quaternion(pose.orientation.x, pose.orientation.y, pose.orientation.z, pose.orientation.w);
     }
 
+    AZ::Vector3 AzVector3FromXrVector3(const XrVector3f& xrVec3, bool convertCoordinates)
+    {
+        return AZ::Vector3(xrVec3.x,
+                           convertCoordinates ? -xrVec3.z : xrVec3.y,
+                           convertCoordinates ?  xrVec3.y : xrVec3.z);
+    }
+
     AZ::Vector3 AzPositionFromXrPose(const XrPosef& pose, bool convertCoordinates)
     {
-        return AZ::Vector3(pose.position.x,
-                           convertCoordinates ? -pose.position.z : pose.position.y,
-                           convertCoordinates ? pose.position.y : pose.position.z);
+        return AzVector3FromXrVector3(pose.position, convertCoordinates);
     }
 
     AZ::Transform AzTransformFromXrPose(const XrPosef& pose, bool convertCoordinates)

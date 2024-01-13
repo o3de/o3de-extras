@@ -99,13 +99,16 @@ namespace OpenXRVk
         return true;
     }
 
-    bool ActionsManager::SyncActions()
+    bool ActionsManager::SyncActions(XrTime predictedDisplayTime, XrSpace baseSpace)
     {
         if (m_xrActiveActionSets.empty())
         {
             // Nothing to do
             return true;
         }
+
+        m_predictedDisplaytime = predictedDisplayTime;
+        m_baseSpace = baseSpace;
 
         XrActionsSyncInfo syncInfo{ XR_TYPE_ACTIONS_SYNC_INFO };
         syncInfo.countActiveActionSets = aznumeric_cast<uint32_t>(m_xrActiveActionSets.size());
@@ -164,29 +167,23 @@ namespace OpenXRVk
         return true;
     }
 
-    bool ActionsManager::InitActionBindingsInternal(ActionSetInfo& actionSetInfo, const OpenXRAction& action,
-        AZStd::unordered_set<XrPath>& activeProfiles,
-        AZStd::vector<XrActionSuggestedBinding>& activeBindings)
+    static XrActionType GetActionTypeFromOpenXRActionPath(const OpenXRActionPath& actionPath)
     {
-        // One OpenXRAction object will become one XrAction.
-        // An OpenXRAction contains a list of OpenXRActionPath that need to be bound.
-        // The action type for each XrAction will be the same and it will be determined by
-        // the action type of the first action in the list. 
-        AZ_Assert(!action.m_actionPaths.empty(), "OpenXR Actions list must contain at least one action.");
-        const auto& firstAction = action.m_actionPaths[0];
-
-        auto interactionProviderIface = OpenXRInteractionProfileBus::FindFirstHandler(firstAction.m_interactionProfile);
+        auto interactionProviderIface = OpenXRInteractionProfileBus::FindFirstHandler(actionPath.m_interactionProfile);
         if (!interactionProviderIface)
         {
-            AZ_Error(LogName, false, "Couldn't find interaction data provider with id [%s].", firstAction.m_interactionProfile.c_str())
-            return false;
+            AZ_Error(ActionsManager::LogName, false, "Couldn't find interaction data provider with id [%s].", actionPath.m_interactionProfile.c_str());
+            return XR_ACTION_TYPE_MAX_ENUM;
         }
+        const auto actionPathInfo = interactionProviderIface->GetActionPathInfo(actionPath.m_userPath, actionPath.m_componentPath);
+        return actionPathInfo.m_actionType;
+    }
 
-        const auto firstActionInfo = interactionProviderIface->GetActionPathInfo(firstAction.m_userPath, firstAction.m_componentPath);
-
-        XrActionCreateInfo actionCreateInfo{};
-        actionCreateInfo.type = XR_TYPE_ACTION_CREATE_INFO;
-        actionCreateInfo.actionType = firstActionInfo.m_actionType;
+    XrAction ActionsManager::CreateXrActionAndXrSpace(const ActionSetInfo& actionSetInfo,
+        const OpenXRAction& action, const XrActionType actionType, XrSpace& newXrActionSpace) const
+    {
+        XrActionCreateInfo actionCreateInfo{ XR_TYPE_ACTION_CREATE_INFO };
+        actionCreateInfo.actionType = actionType;
         azstrcpy(actionCreateInfo.actionName, sizeof(actionCreateInfo.actionName), action.m_name.c_str());
         const char* localizedNameCStr = action.m_name.c_str();
         if (!action.m_localizedName.empty())
@@ -201,15 +198,38 @@ namespace OpenXRVk
         XrResult result = xrCreateAction(actionSetInfo.m_xrActionSet, &actionCreateInfo, &newXrAction);
         if (IsError(result))
         {
-            PrintXrError(LogName, result, "Failed to create action named %s.\n", action.m_name.c_str());
-            return false;
+            PrintXrError(ActionsManager::LogName, result, "Failed to create action named %s.\n", action.m_name.c_str());
+            return XR_NULL_HANDLE;
         }
 
-        // For each actionPath in the list, create the XrPath and its binding.
+        // The space will be relevant if the action type is POSE. 
+        newXrActionSpace = XR_NULL_HANDLE;
+        if (actionType == XR_ACTION_TYPE_POSE_INPUT)
+        {
+            XrActionSpaceCreateInfo actionSpaceInfo{ XR_TYPE_ACTION_SPACE_CREATE_INFO };
+            actionSpaceInfo.action = newXrAction;
+            actionSpaceInfo.poseInActionSpace.orientation.w = 1.f; // Make it an identity quaterion.
+            result = xrCreateActionSpace(m_xrSession, &actionSpaceInfo, &newXrActionSpace);
+            if (IsError(result))
+            {
+                xrDestroyAction(newXrAction);
+                PrintXrError(ActionsManager::LogName, result, "Failed to create XrSpace for action named %s.\n", action.m_name.c_str());
+                return XR_NULL_HANDLE;
+            }
+        }
+
+        return newXrAction;
+    }
+
+    uint32_t ActionsManager::AppendActionBindings(const OpenXRAction& action,
+        XrAction newXrAction,
+        AZStd::unordered_set<XrPath>& activeProfiles,
+        AZStd::vector<XrActionSuggestedBinding>& activeBindings) const
+    {
         uint32_t additionalBindingsCount = 0;
         for (const auto& actionPath : action.m_actionPaths)
         {
-            interactionProviderIface = OpenXRInteractionProfileBus::FindFirstHandler(actionPath.m_interactionProfile);
+            auto interactionProviderIface = OpenXRInteractionProfileBus::FindFirstHandler(actionPath.m_interactionProfile);
             if (!interactionProviderIface)
             {
                 AZ_Error(LogName, false, "Couldn't find interaction data provider with id [%s].", actionPath.m_interactionProfile.c_str())
@@ -225,7 +245,7 @@ namespace OpenXRVk
             }
 
             XrPath xrBindingPath;
-            result = xrStringToPath(m_xrInstance, pathInfo.m_absolutePath.c_str(), &xrBindingPath);
+            XrResult result = xrStringToPath(m_xrInstance, pathInfo.m_absolutePath.c_str(), &xrBindingPath);
             if (IsError(result))
             {
                 PrintXrError(LogName, result, "Failed to create XrPath for action with profile [%s], absolute path [%s].\n",
@@ -251,22 +271,50 @@ namespace OpenXRVk
             additionalBindingsCount++;
         }
 
+        return additionalBindingsCount;
+    }
+
+    bool ActionsManager::InitActionBindingsInternal(ActionSetInfo& actionSetInfo, const OpenXRAction& action,
+        AZStd::unordered_set<XrPath>& activeProfiles,
+        AZStd::vector<XrActionSuggestedBinding>& activeBindings)
+    {
+        // One OpenXRAction object will become one XrAction.
+        // An OpenXRAction contains a list of OpenXRActionPath that need to be bound.
+        // The action type for each XrAction will be the same and it will be determined by
+        // the action type of the first action in the list. 
+        AZ_Assert(!action.m_actionPaths.empty(), "OpenXR Actions list must contain at least one action.");
+        XrActionType firstActionType = GetActionTypeFromOpenXRActionPath(action.m_actionPaths[0]);
+
+        XrSpace newXrActionSpace = XR_NULL_HANDLE; // Optional.
+        XrAction newXrAction = CreateXrActionAndXrSpace(actionSetInfo, action, firstActionType, newXrActionSpace);
+        if (newXrAction == XR_NULL_HANDLE)
+        {
+            return false;
+        }
+
+        // For each actionPath in the list, create the XrPath and its binding.
+        const auto additionalBindingsCount = AppendActionBindings(action, newXrAction, activeProfiles, activeBindings);
         if (additionalBindingsCount < 1)
         {
-            // This action has no bindings. Remove it.
-            AZ_Warning(LogName, false, "The action [] had no bindings!.\n", action.m_name.c_str());
+            // This action has no bindings. Don't add it to the active actions list.
+            AZ_Warning(LogName, false, "The action [%s] had no bindings!.\n", action.m_name.c_str());
+            if (newXrActionSpace != XR_NULL_HANDLE)
+            {
+                xrDestroySpace(newXrActionSpace);
+            }
             xrDestroyAction(newXrAction);
             return true;
         }
 
-        m_xrActions.push_back(newXrAction);
-        uint16_t newActionIndex = aznumeric_cast<uint16_t>(m_xrActions.size() - 1);
-
-        ActionInfo newActionInfo;
+        m_actions.push_back({});
+        auto& newActionInfo = m_actions.back();
         newActionInfo.m_name = action.m_name;
-        newActionInfo.m_actionType = firstActionInfo.m_actionType;
-        newActionInfo.m_actionHandle = IOpenXRActions::ActionHandle(newActionIndex);
-        actionSetInfo.m_actions.emplace(action.m_name, AZStd::move(newActionInfo));
+        newActionInfo.m_actionType = firstActionType;
+        newActionInfo.m_xrAction = newXrAction;
+        newActionInfo.m_xrSpace = newXrActionSpace;
+
+        uint16_t newActionIndex = aznumeric_cast<uint16_t>(m_actions.size() - 1);
+        actionSetInfo.m_actions.emplace(action.m_name, IOpenXRActions::ActionHandle(newActionIndex));
 
         return true;
     }
@@ -351,12 +399,12 @@ namespace OpenXRVk
             {
                 return IOpenXRActions::ActionHandle::Null;
             }
-            return itor->second.m_actionHandle;
+            return itor->second;
         }
         return IOpenXRActions::ActionHandle::Null;
     }
 
-    AZ::Outcome<bool, AZStd::string> ActionsManager::GetActionStateBoolean(ActionHandle actionHandle)
+    AZ::Outcome<bool, AZStd::string> ActionsManager::GetActionStateBoolean(ActionHandle actionHandle) const
     {
         if (!actionHandle.IsValid())
         {
@@ -366,7 +414,7 @@ namespace OpenXRVk
 
         XrActionStateBoolean state { XR_TYPE_ACTION_STATE_BOOLEAN };
         XrActionStateGetInfo getInfo{ XR_TYPE_ACTION_STATE_GET_INFO };
-        getInfo.action = m_xrActions[actionIndex];
+        getInfo.action = m_actions[actionIndex].m_xrAction;
         XrResult result = xrGetActionStateBoolean(m_xrSession, &getInfo, &state);
         if (IsError(result))
         {
@@ -376,7 +424,7 @@ namespace OpenXRVk
         return AZ::Success(state.currentState);
     }
 
-    AZ::Outcome<float, AZStd::string> ActionsManager::GetActionStateFloat(ActionHandle actionHandle)
+    AZ::Outcome<float, AZStd::string> ActionsManager::GetActionStateFloat(ActionHandle actionHandle) const
     {
         if (!actionHandle.IsValid())
         {
@@ -386,7 +434,7 @@ namespace OpenXRVk
 
         XrActionStateFloat state{ XR_TYPE_ACTION_STATE_FLOAT };
         XrActionStateGetInfo getInfo{ XR_TYPE_ACTION_STATE_GET_INFO };
-        getInfo.action = m_xrActions[actionIndex];
+        getInfo.action = m_actions[actionIndex].m_xrAction;
         XrResult result = xrGetActionStateFloat(m_xrSession, &getInfo, &state);
         if (IsError(result))
         {
@@ -396,7 +444,7 @@ namespace OpenXRVk
         return AZ::Success(state.currentState);
     }
 
-    AZ::Outcome<AZ::Vector2, AZStd::string> ActionsManager::GetActionStateVector2(ActionHandle actionHandle)
+    AZ::Outcome<AZ::Vector2, AZStd::string> ActionsManager::GetActionStateVector2(ActionHandle actionHandle) const
     {
         if (!actionHandle.IsValid())
         {
@@ -406,7 +454,7 @@ namespace OpenXRVk
 
         XrActionStateVector2f state{ XR_TYPE_ACTION_STATE_VECTOR2F };
         XrActionStateGetInfo getInfo{ XR_TYPE_ACTION_STATE_GET_INFO };
-        getInfo.action = m_xrActions[actionIndex];
+        getInfo.action = m_actions[actionIndex].m_xrAction;
         XrResult result = xrGetActionStateVector2f(m_xrSession, &getInfo, &state);
         if (IsError(result))
         {
@@ -416,16 +464,81 @@ namespace OpenXRVk
         return AZ::Success(AZ::Vector2(state.currentState.x, state.currentState.y));
     }
 
-    AZ::Outcome<AZ::Transform, AZStd::string> ActionsManager::GetActionStatePose(ActionHandle actionHandle)
+    AZ::Outcome<AZ::Transform, AZStd::string> ActionsManager::GetActionStatePose(ActionHandle actionHandle) const
     {
-        //FIXME!
         if (!actionHandle.IsValid())
         {
             return AZ::Failure("Invalid actionHandle!");
         }
-        [[maybe_unused]] const auto actionIndex = actionHandle.GetIndex();
-        AZ_Assert(false, "FIXME!");
-        return AZ::Success(AZ::Transform::CreateIdentity());
+        const auto actionIndex = actionHandle.GetIndex();
+
+        XrSpaceLocation spaceLocation {XR_TYPE_SPACE_LOCATION};
+        XrResult result = xrLocateSpace(m_actions[actionIndex].m_xrSpace, m_baseSpace, m_predictedDisplaytime, &spaceLocation);
+        if (IsError(result))
+        {
+            return AZ::Failure(AZStd::string(GetResultString(result)));
+        }
+
+        AZ::Vector3 poseLocation = AZ::Vector3::CreateZero();
+        if (spaceLocation.locationFlags & XR_SPACE_LOCATION_POSITION_VALID_BIT)
+        {
+            poseLocation = AzPositionFromXrPose(spaceLocation.pose);
+        }
+        
+        AZ::Quaternion poseOrientation = AZ::Quaternion::CreateIdentity();
+        if (spaceLocation.locationFlags & XR_SPACE_LOCATION_ORIENTATION_VALID_BIT)
+        {
+            poseOrientation = AzQuaternionFromXrPose(spaceLocation.pose);
+        }
+
+        AZ::Transform retPoseTransform = AZ::Transform::CreateFromQuaternionAndTranslation(poseOrientation, poseLocation);
+        return AZ::Success(retPoseTransform);
+    }
+
+    AZ::Outcome<PoseWithVelocities, AZStd::string> ActionsManager::GetActionStatePoseWithVelocities(ActionHandle actionHandle) const
+    {
+        if (!actionHandle.IsValid())
+        {
+            return AZ::Failure("Invalid actionHandle!");
+        }
+        const auto actionIndex = actionHandle.GetIndex();
+
+        XrSpaceVelocity spaceVelocity{ XR_TYPE_SPACE_VELOCITY };
+        XrSpaceLocation spaceLocation{ XR_TYPE_SPACE_LOCATION, &spaceVelocity};
+        XrResult result = xrLocateSpace(m_actions[actionIndex].m_xrSpace, m_baseSpace, m_predictedDisplaytime, &spaceLocation);
+        if (IsError(result))
+        {
+            return AZ::Failure(AZStd::string(GetResultString(result)));
+        }
+
+        AZ::Vector3 poseLocation = AZ::Vector3::CreateZero();
+        AZ::Vector3 linearVelocity = AZ::Vector3::CreateZero();
+        if (spaceLocation.locationFlags & XR_SPACE_LOCATION_POSITION_VALID_BIT)
+        {
+            poseLocation = AzPositionFromXrPose(spaceLocation.pose);
+            if (spaceVelocity.velocityFlags & XR_SPACE_VELOCITY_LINEAR_VALID_BIT)
+            {
+                linearVelocity = AzVector3FromXrVector3(spaceVelocity.linearVelocity);
+            }
+        }
+
+        AZ::Quaternion poseOrientation = AZ::Quaternion::CreateIdentity();
+        AZ::Vector3 angularVelocity = AZ::Vector3::CreateZero();
+        if (spaceLocation.locationFlags & XR_SPACE_LOCATION_ORIENTATION_VALID_BIT)
+        {
+            poseOrientation = AzQuaternionFromXrPose(spaceLocation.pose);
+            if (spaceVelocity.velocityFlags & XR_SPACE_VELOCITY_ANGULAR_VALID_BIT)
+            {
+                angularVelocity = AzVector3FromXrVector3(spaceVelocity.angularVelocity);
+            }
+        }
+
+        PoseWithVelocities retPoseWithVelocities { 
+            AZ::Transform::CreateFromQuaternionAndTranslation(poseOrientation, poseLocation),
+            linearVelocity,
+            angularVelocity
+        };
+        return AZ::Success(retPoseWithVelocities);
     }
 
 
@@ -444,7 +557,7 @@ namespace OpenXRVk
         vibration.duration = durationNanos;
         vibration.frequency = frequencyHz;
         XrHapticActionInfo hapticActionInfo{ XR_TYPE_HAPTIC_ACTION_INFO };
-        hapticActionInfo.action = m_xrActions[actionIndex];
+        hapticActionInfo.action = m_actions[actionIndex].m_xrAction;
         XrResult result = xrApplyHapticFeedback(m_xrSession, &hapticActionInfo, (const XrHapticBaseHeader*)&vibration);
         if (IsError(result))
         {
@@ -463,7 +576,7 @@ namespace OpenXRVk
 
         // fire haptics using output action
         XrHapticActionInfo hapticActionInfo{ XR_TYPE_HAPTIC_ACTION_INFO };
-        hapticActionInfo.action = m_xrActions[actionIndex];
+        hapticActionInfo.action = m_actions[actionIndex].m_xrAction;
         XrResult result = xrStopHapticFeedback(m_xrSession, &hapticActionInfo);
         if (IsError(result))
         {

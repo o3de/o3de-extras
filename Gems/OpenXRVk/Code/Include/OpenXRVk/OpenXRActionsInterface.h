@@ -16,6 +16,12 @@
 
 namespace OpenXRVk
 {
+    struct PoseWithVelocities
+    {
+        AZ::Transform m_pose;
+        AZ::Vector3 m_linearVelocity;
+        AZ::Vector3 m_angularVelocity;
+    };
 
     //! Interface used to query the state of actions and also
     //! to drive the state of haptic feedback actions.
@@ -40,10 +46,12 @@ namespace OpenXRVk
 
         virtual ActionHandle GetActionHandle(const AZStd::string& actionSetName, const AZStd::string& actionName) const = 0;
 
-        virtual AZ::Outcome<bool, AZStd::string> GetActionStateBoolean(ActionHandle actionHandle) = 0;
-        virtual AZ::Outcome<float, AZStd::string> GetActionStateFloat(ActionHandle actionHandle) = 0;
-        virtual AZ::Outcome<AZ::Vector2, AZStd::string> GetActionStateVector2(ActionHandle actionHandle) = 0;
-        virtual AZ::Outcome<AZ::Transform, AZStd::string> GetActionStatePose(ActionHandle actionHandle) = 0;
+        virtual AZ::Outcome<bool, AZStd::string> GetActionStateBoolean(ActionHandle actionHandle) const = 0;
+        virtual AZ::Outcome<float, AZStd::string> GetActionStateFloat(ActionHandle actionHandle) const = 0;
+        virtual AZ::Outcome<AZ::Vector2, AZStd::string> GetActionStateVector2(ActionHandle actionHandle) const = 0;
+        virtual AZ::Outcome<AZ::Transform, AZStd::string> GetActionStatePose(ActionHandle actionHandle) const = 0;
+        //! Same as above, but also queries location (linear) and orientation (angular) velocities
+        virtual AZ::Outcome<PoseWithVelocities, AZStd::string> GetActionStatePoseWithVelocities(ActionHandle actionHandle) const = 0;
         
         virtual AZ::Outcome<bool, AZStd::string> ApplyHapticVibrationAction(ActionHandle actionHandle, uint64_t durationNanos, float frequencyHz, float amplitude) = 0;
         virtual AZ::Outcome<bool, AZStd::string> StopHapticVibrationAction(ActionHandle actionHandle) = 0;
