@@ -1,6 +1,6 @@
 {
     "gem_name": "ROS2",
-    "version": "2.0.0",
+    "version": "3.0.0",
     "platforms": [
         "Linux"
     ],
@@ -18,8 +18,8 @@
         "ROS2"
     ],
     "compatible_engines": [
-        "o3de-sdk>=2.1.0",
-        "o3de>=2.1.0"
+        "o3de-sdk>=4.1.0",
+        "o3de>=4.1.0"
     ],
     "icon_path": "preview.png",
     "requirements": "Requires ROS 2 installation (supported distributions: Humble). Source your workspace before building the Gem",
