@@ -121,14 +121,15 @@ namespace ROS2
         //! Returns a complete namespace for this sensor topics and frame ids.
         [[nodiscard]] AZStd::string GetNamespace() const
         {
-            auto* ros2Frame = Utils::GetGameOrEditorComponent<ROS2FrameComponent>(GetEntity());
+            auto* ros2Frame = GetEntity()->template FindComponent<ROS2FrameComponent>();
+
             return ros2Frame->GetNamespace();
         }
 
         //! Returns this sensor frame ID. The ID contains namespace.
         [[nodiscard]] AZStd::string GetFrameID() const
         {
-            auto* ros2Frame = Utils::GetGameOrEditorComponent<ROS2FrameComponent>(GetEntity());
+            auto* ros2Frame = GetEntity()->template FindComponent<ROS2FrameComponent>();
             return ros2Frame->GetFrameID();
         }
 

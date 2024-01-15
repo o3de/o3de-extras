@@ -344,21 +344,6 @@
                                 "Id": 17997022775023708009,
                                 "VisibilityFlag": true
                             },
-                            "ROS2FrameComponent": {
-                                "$type": "GenericComponentWrapper",
-                                "Id": 88600217186346884,
-                                "m_template": {
-                                    "$type": "ROS2FrameComponent",
-                                    "Id": 0,
-                                    "Namespace Configuration": {
-                                        "Namespace Strategy": 0,
-                                        "Namespace": ""
-                                    },
-                                    "Frame Name": "velodyne_puck_link",
-                                    "Joint Name": "",
-                                    "Publish Transform": true
-                                }
-                            },
                             "TransformComponent": {
                                 "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
                                 "Id": 285955374135339063,
@@ -386,6 +371,20 @@
                                 "IsStatic": false,
                                 "InterpolatePosition": 0,
                                 "InterpolateRotation": 0
+                            },
+                            "ROS2FrameEditorComponent": {
+                                "$type": "ROS2FrameEditorComponent",
+                                "Id": 88600217186346884,
+                                "ROS2FrameConfiguration": {
+                                    "Id": 0,
+                                    "Namespace Configuration": {
+                                        "Namespace Strategy": 0,
+                                        "Namespace": ""
+                                    },
+                                    "Frame Name": "velodyne_puck_link",
+                                    "Joint Name": "",
+                                    "Publish Transform": true
+                                }
                             }
                         },
                         "IsRuntimeActive": true
@@ -629,21 +628,6 @@
                                 "Id": 6095707461105765349,
                                 "VisibilityFlag": true
                             },
-                            "ROS2FrameComponent": {
-                                "$type": "GenericComponentWrapper",
-                                "Id": 14365734668344824407,
-                                "m_template": {
-                                    "$type": "ROS2FrameComponent",
-                                    "Id": 0,
-                                    "Namespace Configuration": {
-                                        "Namespace Strategy": 0,
-                                        "Namespace": ""
-                                    },
-                                    "Frame Name": "velodyne",
-                                    "Joint Name": "",
-                                    "Publish Transform": true
-                                }
-                            },
                             "ROS2LidarSensorComponent_2": {
                                 "$type": "GenericComponentWrapper",
                                 "Id": 14130657555606726475,
@@ -717,6 +701,20 @@
                                 "IsStatic": false,
                                 "InterpolatePosition": 0,
                                 "InterpolateRotation": 0
+                            },
+                            "ROS2FrameEditorComponent": {
+                                "$type": "ROS2FrameEditorComponent",
+                                "Id": 14365734668344824407,
+                                "ROS2FrameConfiguration": {
+                                    "Id": 0,
+                                    "Namespace Configuration": {
+                                        "Namespace Strategy": 0,
+                                        "Namespace": ""
+                                    },
+                                    "Frame Name": "velodyne",
+                                    "Joint Name": "",
+                                    "Publish Transform": true
+                                }
                             }
                         },
                         "IsRuntimeActive": true

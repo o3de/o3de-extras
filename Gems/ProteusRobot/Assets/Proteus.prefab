@@ -339,11 +339,9 @@
                     "Id": 7311879232144269420
                 },
                 "Component_[9031766191400117669]": {
-                    "$type": "GenericComponentWrapper",
+                    "$type": "ROS2FrameEditorComponent",
                     "Id": 9031766191400117669,
-                    "m_template": {
-                        "$type": "ROS2FrameComponent"
-                    }
+                    "ROS2FrameConfiguration": {}
                 }
             }
         },
@@ -731,10 +729,9 @@
                     "Id": 5852749630011233946
                 },
                 "Component_[639102350977932618]": {
-                    "$type": "GenericComponentWrapper",
+                    "$type": "ROS2FrameEditorComponent",
                     "Id": 639102350977932618,
-                    "m_template": {
-                        "$type": "ROS2FrameComponent",
+                    "ROS2FrameConfiguration": {
                         "Frame Name": "base_link"
                     }
                 },
@@ -2259,10 +2256,9 @@
                     "Id": 2877360700288979240
                 },
                 "Component_[3344702525066984561]": {
-                    "$type": "GenericComponentWrapper",
+                    "$type": "ROS2FrameEditorComponent",
                     "Id": 3344702525066984561,
-                    "m_template": {
-                        "$type": "ROS2FrameComponent",
+                    "ROS2FrameConfiguration": {
                         "Frame Name": "lidar"
                     }
                 },

@@ -89,6 +89,10 @@ set(FILES
     Source/SdfAssetBuilder/SdfAssetBuilderSettings.h
     Source/SdfAssetBuilder/SdfAssetBuilderSystemComponent.cpp
     Source/SdfAssetBuilder/SdfAssetBuilderSystemComponent.h
+    Source/Frame/ROS2FrameEditorComponent.cpp
+    Source/Frame/ROS2FrameSystemComponent.cpp
+    Source/Frame/ROS2FrameSystemComponent.h
+    Source/Frame/ROS2FrameSystemBus.h
     Source/SystemComponents/ROS2EditorSystemComponent.cpp
     Source/SystemComponents/ROS2EditorSystemComponent.h
 )

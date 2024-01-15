@@ -110,7 +110,7 @@ namespace ROS2
     {
         RaycastResult lastScanResults = m_lidarCore.PerformRaycast();
 
-        auto* ros2Frame = Utils::GetGameOrEditorComponent<ROS2FrameComponent>(GetEntity());
+        auto* ros2Frame = GetEntity()->FindComponent<ROS2FrameComponent>();
         auto message = sensor_msgs::msg::LaserScan();
         message.header.frame_id = ros2Frame->GetFrameID().data();
         message.header.stamp = ROS2Interface::Get()->GetROSTimestamp();
