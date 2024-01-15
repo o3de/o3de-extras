@@ -6,6 +6,7 @@
  *
  */
 
+#include <AzCore/Math/MathUtils.h>
 #include <ROS2/Frame/ROS2FrameComponent.h>
 #include <RobotControl/Controllers/SkidSteeringController/SkidSteeringControlComponent.h>
 #include <RobotControl/ROS2RobotControlComponent.h>
@@ -37,8 +38,8 @@ namespace ROS2::SDFormat
                 const auto entityIdRight = HooksUtils::GetJointEntityId(jointNameRight, sdfModel, createdEntities);
                 if (entityIdLeft.IsValid() && entityIdRight.IsValid())
                 {
-                    HooksUtils::EnableMotor(entityIdLeft);
-                    HooksUtils::EnableMotor(entityIdRight);
+                    HooksUtils::SetWheelEntity(entityIdLeft);
+                    HooksUtils::SetWheelEntity(entityIdRight);
                     constexpr bool steering = false; // Skid steering model does not have any steering wheels.
                     constexpr bool drive = true;
                     configuration.m_axles.emplace_back(VehicleDynamics::Utilities::Create2WheelAxle(
@@ -48,10 +49,16 @@ namespace ROS2::SDFormat
                 {
                     AZ_Warning(
                         "CreateVehicleConfiguration",
-                        false,
-                        "Cannot find entity ID for one of the joints: %s or %s",
+                        entityIdLeft.IsValid(),
+                        "Cannot find left joint entity %s while creating the axle %s.",
                         jointNameLeft.c_str(),
-                        jointNameRight.c_str());
+                        tag.c_str());
+                    AZ_Warning(
+                        "CreateVehicleConfiguration",
+                        entityIdRight.IsValid(),
+                        "Cannot find right joint entity %s while creating the axle %s.",
+                        jointNameRight.c_str(),
+                        tag.c_str());
                 }
             };
 
@@ -114,7 +121,7 @@ namespace ROS2::SDFormat
                         constexpr float epsilon = 0.001f;
                         AZ_Warning(
                             "CreateVehicleConfiguration",
-                            fabsf(configuration.m_wheelbase - wheelSeparation->Get<float>()) < epsilon,
+                            AZ::IsClose(configuration.m_wheelbase, wheelSeparation->Get<float>(), epsilon),
                             "Different wheel separation distances in one model are not supported.");
                     }
 

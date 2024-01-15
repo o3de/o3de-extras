@@ -44,10 +44,9 @@ namespace ROS2::SDFormat
         //! @return entity id (invalid id if not found)
         AZ::EntityId GetJointEntityId(const std::string& jointName, const sdf::Model& sdfModel, const CreatedEntitiesMap& createdEntities);
 
-        //! Enable motor in EditorHingeJointComponent if possible or create WheelControllerComponent otherwise (when articulations are
-        //! used); this method shows a warning message if neither was possible
+        //! Enable motor in EditorHingeJointComponent if possible and create WheelControllerComponent
         //! @param entityId entity id of the modified entity
-        void EnableMotor(const AZ::EntityId& entityId);
+        void SetWheelEntity(const AZ::EntityId& entityId);
 
         //! Create a component and attach the component to the entity.
         //! This method ensures that game components are wrapped into GenericComponentWrapper.
