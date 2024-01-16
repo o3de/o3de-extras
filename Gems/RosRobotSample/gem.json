@@ -20,7 +20,7 @@
     "requirements": "Requires ROS 2 Gem",
     "documentation_url": "",
     "dependencies": [
-        "ROS2==2.0.0"
+        "ROS2==3.0.0"
     ],
     "compatible_engines": [
         "o3de-sdk>=1.2.0",
