@@ -19,6 +19,15 @@ namespace ROS2::Controllers
     public:
         AZ_TYPE_INFO(PidConfiguration, "{814E0D1E-2C33-44A5-868E-C914640E2F7E}");
         static void Reflect(AZ::ReflectContext* context);
+        PidConfiguration() = default;
+        PidConfiguration(
+            const double p,
+            const double i,
+            const double d,
+            const double iMax,
+            const double iMin,
+            const bool antiWindup,
+            const double outputLimit);
 
         //! Initialize PID using member fields as set by the user.
         void InitializePid();

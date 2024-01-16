@@ -22,7 +22,7 @@
 
 namespace ROS2::SDFormat
 {
-    namespace Parser
+    namespace SkidSteeringParser
     {
         VehicleDynamics::VehicleConfiguration CreateVehicleConfiguration(
             const sdf::ElementPtr element, const sdf::Model& sdfModel, const CreatedEntitiesMap& createdEntities)
@@ -38,8 +38,10 @@ namespace ROS2::SDFormat
                 const auto entityIdRight = HooksUtils::GetJointEntityId(jointNameRight, sdfModel, createdEntities);
                 if (entityIdLeft.IsValid() && entityIdRight.IsValid())
                 {
-                    HooksUtils::SetWheelEntity(entityIdLeft);
-                    HooksUtils::SetWheelEntity(entityIdRight);
+                    HooksUtils::EnableMotor(entityIdLeft);
+                    HooksUtils::CreateComponent<VehicleDynamics::WheelControllerComponent>(entityIdLeft);
+                    HooksUtils::EnableMotor(entityIdRight);
+                    HooksUtils::CreateComponent<VehicleDynamics::WheelControllerComponent>(entityIdRight);
                     constexpr bool steering = false; // Skid steering model does not have any steering wheels.
                     constexpr bool drive = true;
                     configuration.m_axles.emplace_back(VehicleDynamics::Utilities::Create2WheelAxle(
@@ -168,7 +170,7 @@ namespace ROS2::SDFormat
 
             return modelLimits;
         }
-    } // namespace Parser
+    } // namespace SkidSteeringParser
 
     ModelPluginImporterHook ROS2ModelPluginHooks::ROS2SkidSteeringModel()
     {
@@ -183,8 +185,8 @@ namespace ROS2::SDFormat
             // Parse parameters
             const sdf::ElementPtr element = sdfPlugin.Element();
             VehicleDynamics::VehicleConfiguration vehicleConfiguration =
-                Parser::CreateVehicleConfiguration(element, sdfModel, createdEntities);
-            VehicleDynamics::SkidSteeringModelLimits modelLimits = Parser::CreateModelLimits(element);
+                SkidSteeringParser::CreateVehicleConfiguration(element, sdfModel, createdEntities);
+            VehicleDynamics::SkidSteeringModelLimits modelLimits = SkidSteeringParser::CreateModelLimits(element);
 
             // Create required components
             HooksUtils::CreateComponent<ROS2FrameComponent>(entity);

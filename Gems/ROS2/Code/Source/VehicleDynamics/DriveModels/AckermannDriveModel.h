@@ -22,6 +22,8 @@ namespace ROS2::VehicleDynamics
     {
     public:
         AZ_RTTI(AckermannDriveModel, "{104AC31D-E30B-4454-BF42-4FB37B8CFD9B}", DriveModel);
+        AckermannDriveModel() = default;
+        AckermannDriveModel(const AckermannModelLimits& limits, const ROS2::Controllers::PidConfiguration& steeringPid);
 
         // DriveModel overrides
         void Activate(const VehicleConfiguration& vehicleConfig) override;

@@ -21,7 +21,7 @@ namespace ROS2::VehicleDynamics
                 ->Version(1)
                 ->Field("SpeedLimit", &AckermannModelLimits::m_speedLimit)
                 ->Field("SteeringLimit", &AckermannModelLimits::m_steeringLimit)
-                ->Field("Acceleration", &AckermannModelLimits::m_accelearation);
+                ->Field("Acceleration", &AckermannModelLimits::m_acceleration);
 
             if (AZ::EditContext* ec = serialize->GetEditContext())
             {
@@ -37,18 +37,25 @@ namespace ROS2::VehicleDynamics
                     ->Attribute(AZ::Edit::Attributes::Min, 0.0f)
                     ->Attribute(AZ::Edit::Attributes::Max, 1.57f)
                     ->DataElement(
-                        AZ::Edit::UIHandlers::Default, &AckermannModelLimits::m_accelearation, "Acceleration", "Acceleration in m/s²")
+                        AZ::Edit::UIHandlers::Default, &AckermannModelLimits::m_acceleration, "Acceleration", "Acceleration in m/s²")
                     ->Attribute(AZ::Edit::Attributes::Min, 0.0f)
                     ->Attribute(AZ::Edit::Attributes::Max, 100.0f);
             }
         }
     }
 
+    AckermannModelLimits::AckermannModelLimits(const float speedLimit, const float steeringLimit, const float acceleration)
+    {
+        m_speedLimit = AZStd::clamp(speedLimit, 0.0f, 100.0f);
+        m_steeringLimit = AZStd::clamp(steeringLimit, 0.0f, 1.57f);
+        m_acceleration = AZStd::clamp(acceleration, 0.0f, 100.0f);
+    }
+
     VehicleInputs AckermannModelLimits::LimitState(const VehicleInputs& inputState) const
     {
         VehicleInputs ret = inputState;
-        ret.m_angularRates = AZ::Vector3{ 0 };
-        ret.m_speed = AZ::Vector3{ LimitValue(ret.m_speed.GetX(), m_speedLimit), 0.f, 0.f };
+        ret.m_angularRates = AZ::Vector3{ 0.0f };
+        ret.m_speed = AZ::Vector3{ LimitValue(ret.m_speed.GetX(), m_speedLimit), 0.0f, 0.0f };
         if (!ret.m_jointRequestedPosition.empty())
         {
             ret.m_jointRequestedPosition.front() = LimitValue(ret.m_jointRequestedPosition.front(), m_steeringLimit);
@@ -59,7 +66,7 @@ namespace ROS2::VehicleDynamics
     VehicleInputs AckermannModelLimits::GetMaximumState() const
     {
         VehicleInputs ret;
-        ret.m_speed = { m_speedLimit, 0, 0 };
+        ret.m_speed = { m_speedLimit, 0.0f, 0.0f };
         ret.m_jointRequestedPosition = { m_steeringLimit };
         return ret;
     }
@@ -71,7 +78,7 @@ namespace ROS2::VehicleDynamics
 
     float AckermannModelLimits::GetLinearAcceleration() const
     {
-        return m_accelearation;
+        return m_acceleration;
     }
 
 } // namespace ROS2::VehicleDynamics

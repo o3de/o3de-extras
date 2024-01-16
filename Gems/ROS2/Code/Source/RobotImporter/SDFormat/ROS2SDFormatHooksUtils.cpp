@@ -42,7 +42,7 @@ namespace ROS2::SDFormat
         return AZ::EntityId();
     }
 
-    void HooksUtils::SetWheelEntity(const AZ::EntityId& entityId)
+    void HooksUtils::EnableMotor(const AZ::EntityId& entityId)
     {
         AZ::Entity* entity = nullptr;
         AZ::ComponentApplicationBus::BroadcastResult(entity, &AZ::ComponentApplicationRequests::FindEntity, entityId);
@@ -67,9 +67,5 @@ namespace ROS2::SDFormat
                 entity->Deactivate();
             }
         }
-
-        // Add WheelControllerComponent
-        AZ::Component* wheelComponentPtr = HooksUtils::CreateComponent<VehicleDynamics::WheelControllerComponent>(*entity);
-        AZ_Warning("HooksUtils", wheelComponentPtr != nullptr, "Cannot create WheelControllerComponent in wheel entity.");
     }
 } // namespace ROS2::SDFormat
