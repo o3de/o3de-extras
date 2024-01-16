@@ -30,7 +30,7 @@ namespace OpenXRVk
     {
     public:
         AZ_CLASS_ALLOCATOR(ActionsManager, AZ::SystemAllocator);
-        AZ_RTTI(ActionsManager, "{79E2B285-073B-4042-93ED-B92E6C819CA6}");
+        AZ_RTTI(ActionsManager, "{79E2B285-073B-4042-93ED-B92E6C819CA6}", IOpenXRActions);
 
         static constexpr char LogName[] = "OpenXRVkActionsManager";
 

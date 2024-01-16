@@ -19,6 +19,7 @@ set(FILES
     Include/OpenXRVk/OpenXRVkUtils.h
     Include/OpenXRVk/OpenXRInteractionProfileBus.h
     Include/OpenXRVk/OpenXRActionsInterface.h
+    Include/OpenXRVk/OpenXRVisualizedSpacesInterface.h
     Source/InputDeviceXRController.cpp
     Source/OpenXRVkCommon.h
     Source/OpenXRVkDevice.cpp
@@ -38,4 +39,6 @@ set(FILES
     Source/InteractionProfiles/KHRSimpleProfileSystemComponent.h
     Source/OpenXRActionsManager.cpp
     Source/OpenXRActionsManager.h
+    Source/OpenXRVisualizedSpacesManager.cpp
+    Source/OpenXRVisualizedSpacesManager.h
 )

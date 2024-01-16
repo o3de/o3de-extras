@@ -161,6 +161,7 @@ namespace OpenXRVk
 
     void Session::ResetSpaces()
     {
+        // FIXME! What about action spaces??
         Space* xrVkSpace = static_cast<Space*>(GetSpace());
         xrVkSpace->ShutdownInternal();
         xrVkSpace->CreateVisualizedSpaces(m_session);
