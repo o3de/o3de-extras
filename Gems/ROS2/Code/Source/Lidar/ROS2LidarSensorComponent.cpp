@@ -83,7 +83,7 @@ namespace ROS2
         if (m_canRaycasterPublish)
         {
             const TopicConfiguration& publisherConfig = m_sensorConfiguration.m_publishersConfigurations[PointCloudType];
-            auto* ros2Frame = Utils::GetGameOrEditorComponent<ROS2FrameComponent>(GetEntity());
+            auto* ros2Frame = GetEntity()->FindComponent<ROS2FrameComponent>();
 
             LidarRaycasterRequestBus::Event(
                 m_lidarRaycasterId,
@@ -155,7 +155,7 @@ namespace ROS2
             point = inverseLidarTM.TransformPoint(point);
         }
 
-        auto* ros2Frame = Utils::GetGameOrEditorComponent<ROS2FrameComponent>(GetEntity());
+        auto* ros2Frame = GetEntity()->FindComponent<ROS2FrameComponent>();
         auto message = sensor_msgs::msg::PointCloud2();
         message.header.frame_id = ros2Frame->GetFrameID().data();
         message.header.stamp = ROS2Interface::Get()->GetROSTimestamp();

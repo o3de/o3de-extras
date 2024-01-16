@@ -8,14 +8,31 @@
 #pragma once
 
 #include <AzCore/Component/Component.h>
+#include <AzCore/Serialization/Json/BaseJsonSerializer.h>
 #include <AzCore/std/smart_ptr/unique_ptr.h>
 #include <AzFramework/Components/TransformComponent.h>
 #include <ROS2/Frame/NamespaceConfiguration.h>
+#include <ROS2/Frame/ROS2FrameBus.h>
+#include <ROS2/Frame/ROS2FrameConfiguration.h>
 #include <ROS2/Frame/ROS2Transform.h>
 #include <ROS2/ROS2GemUtilities.h>
 
 namespace ROS2
 {
+    // Custom JSON serializer for ROS2FrameComponent configuration to handle version conversion
+    class JsonFrameComponentConfigSerializer : public AZ::BaseJsonSerializer
+    {
+    public:
+        AZ_RTTI(ROS2::JsonFrameComponentConfigSerializer, "{ac74cbc1-a5dc-4014-85d7-0e7934f352bd}", AZ::BaseJsonSerializer);
+        AZ_CLASS_ALLOCATOR_DECL;
+
+        AZ::JsonSerializationResult::Result Load(
+            void* outputValue,
+            const AZ::Uuid& outputValueTypeId,
+            const rapidjson::Value& inputValue,
+            AZ::JsonDeserializerContext& context) override;
+    };
+
     //! This component marks an interesting reference frame for ROS2 ecosystem.
     //! It serves as sensor data frame of reference and is responsible, through ROS2Transform, for publishing
     //! ros2 static and dynamic transforms (/tf_static, /tf). It also facilitates namespace handling.
@@ -25,12 +42,13 @@ namespace ROS2
         : public AZ::Component
         , public AZ::TickBus::Handler
     {
+        friend class JsonFrameComponentConfigSerializer;
+
     public:
         AZ_COMPONENT(ROS2FrameComponent, "{EE743472-3E25-41EA-961B-14096AC1D66F}");
 
         ROS2FrameComponent();
-        //! Initialize to a specific frame id
-        ROS2FrameComponent(const AZStd::string& frameId);
+        ROS2FrameComponent(const ROS2FrameConfiguration& configuration);
 
         //////////////////////////////////////////////////////////////////////////
         // Component overrides
@@ -56,9 +74,9 @@ namespace ROS2
         AZ::Name GetJointName() const;
 
         //! Set the joint name
-        //! @note May be populated during URDF import or set by the user in the Editor view 
-        //! @param jointNameString does not include the namespace. The namespace prefix is added automatically.
-        void SetJointName(const AZStd::string& jointNameString);
+        //! @note May be populated during URDF import or set by the user in the Editor view
+        //! @param jointName does not include the namespace. The namespace prefix is added automatically.
+        void SetJointName(const AZStd::string& jointName);
 
         //! Get a namespace, which should be used for any publisher or subscriber in the same entity.
         //! @return A complete namespace (including parent namespaces)
@@ -75,9 +93,12 @@ namespace ROS2
         AZStd::string GetGlobalFrameName() const;
 
         //! Updates the namespace and namespace strategy of the underlying namespace configuration
-        //! @param ns Namespace to set.
+        //! @param ros2Namespace Namespace to set.
         //! @param strategy Namespace strategy to use.
-        void UpdateNamespaceConfiguration(const AZStd::string& ns, NamespaceConfiguration::NamespaceStrategy strategy);
+        void UpdateNamespaceConfiguration(const AZStd::string& ros2Namespace, NamespaceConfiguration::NamespaceStrategy strategy);
+
+        //! Get the configuration of this component.
+        ROS2FrameConfiguration GetConfiguration() const;
 
     private:
         //////////////////////////////////////////////////////////////////////////
@@ -98,12 +119,14 @@ namespace ROS2
         //! @see GetGlobalFrameName().
         AZStd::string GetParentFrameID() const;
 
+        // Deprecated values used for backwards compatibility
         NamespaceConfiguration m_namespaceConfiguration;
-        AZStd::string m_frameName = "sensor_frame";
-        AZStd::string m_jointNameString;
+        AZStd::string m_frameName;
+        AZStd::string m_jointName;
 
-        bool m_publishTransform = true;
-        bool m_isDynamic = false;
+        bool m_publishTransform;
+        bool m_isDynamic;
+
         AZStd::unique_ptr<ROS2Transform> m_ros2Transform;
     };
 } // namespace ROS2

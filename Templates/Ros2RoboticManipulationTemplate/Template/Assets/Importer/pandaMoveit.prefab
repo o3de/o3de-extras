@@ -204,16 +204,6 @@
                     "$type": "EditorVisibilityComponent",
                     "Id": 7693785181356171290
                 },
-                "ROS2FrameComponent": {
-                    "$type": "GenericComponentWrapper",
-                    "Id": 5523072711650562789,
-                    "m_template": {
-                        "$type": "ROS2FrameComponent",
-                        "Frame Name": "panda_link7",
-                        "Joint Name": "panda_joint7",
-                        "Publish Transform": false
-                    }
-                },
                 "TransformComponent": {
                     "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
                     "Id": 2871615767882177673,
@@ -229,6 +219,15 @@
                             0.0,
                             0.0
                         ]
+                    }
+                },
+                "ROS2FrameEditorComponent": {
+                    "$type": "ROS2FrameEditorComponent",
+                    "Id": 5523072711650562789,
+                    "ROS2FrameConfiguration": {
+                        "Frame Name": "panda_link7",
+                        "Joint Name": "panda_joint7",
+                        "Publish Transform": false
                     }
                 }
             }
@@ -335,16 +334,6 @@
                         "$type": "ImGuiJointDemo"
                     }
                 },
-                "ROS2FrameComponent": {
-                    "$type": "GenericComponentWrapper",
-                    "Id": 6450640149148955571,
-                    "m_template": {
-                        "$type": "ROS2FrameComponent",
-                        "Frame Name": "panda_leftfinger",
-                        "Joint Name": "panda_finger_joint1",
-                        "Publish Transform": false
-                    }
-                },
                 "TransformComponent": {
                     "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
                     "Id": 10887550008926597434,
@@ -355,6 +344,15 @@
                             0.0,
                             0.05840003490447998
                         ]
+                    }
+                },
+                "ROS2FrameEditorComponent": {
+                    "$type": "ROS2FrameEditorComponent",
+                    "Id": 6450640149148955571,
+                    "ROS2FrameConfiguration": {
+                        "Frame Name": "panda_leftfinger",
+                        "Joint Name": "panda_finger_joint1",
+                        "Publish Transform": false
                     }
                 }
             }
@@ -525,16 +523,6 @@
                         "$type": "ImGuiJointDemo"
                     }
                 },
-                "ROS2FrameComponent": {
-                    "$type": "GenericComponentWrapper",
-                    "Id": 11768382110306285512,
-                    "m_template": {
-                        "$type": "ROS2FrameComponent",
-                        "Frame Name": "panda_rightfinger",
-                        "Joint Name": "panda_finger_joint2",
-                        "Publish Transform": false
-                    }
-                },
                 "TransformComponent": {
                     "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
                     "Id": 6536106089667023420,
@@ -545,6 +533,15 @@
                             0.0,
                             0.05840003490447998
                         ]
+                    }
+                },
+                "ROS2FrameEditorComponent": {
+                    "$type": "ROS2FrameEditorComponent",
+                    "Id": 11768382110306285512,
+                    "ROS2FrameConfiguration": {
+                        "Frame Name": "panda_rightfinger",
+                        "Joint Name": "panda_finger_joint2",
+                        "Publish Transform": false
                     }
                 }
             }
@@ -828,16 +825,6 @@
                     "$type": "EditorVisibilityComponent",
                     "Id": 11477884454969487222
                 },
-                "ROS2FrameComponent": {
-                    "$type": "GenericComponentWrapper",
-                    "Id": 1296532423094429463,
-                    "m_template": {
-                        "$type": "ROS2FrameComponent",
-                        "Frame Name": "panda_link8",
-                        "Joint Name": "panda_joint8",
-                        "Publish Transform": false
-                    }
-                },
                 "TransformComponent": {
                     "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
                     "Id": 12608137672207484382,
@@ -853,6 +840,15 @@
                             0.0,
                             0.0
                         ]
+                    }
+                },
+                "ROS2FrameEditorComponent": {
+                    "$type": "ROS2FrameEditorComponent",
+                    "Id": 1296532423094429463,
+                    "ROS2FrameConfiguration": {
+                        "Frame Name": "panda_link8",
+                        "Joint Name": "panda_joint8",
+                        "Publish Transform": false
                     }
                 }
             }
@@ -974,16 +970,6 @@
                         "ActionServerName": "gripper_server"
                     }
                 },
-                "ROS2FrameComponent": {
-                    "$type": "GenericComponentWrapper",
-                    "Id": 15164989121167078780,
-                    "m_template": {
-                        "$type": "ROS2FrameComponent",
-                        "Frame Name": "panda_hand",
-                        "Joint Name": "panda_hand_joint",
-                        "Publish Transform": false
-                    }
-                },
                 "TransformComponent": {
                     "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
                     "Id": 7253629312020672339,
@@ -1003,6 +989,15 @@
                         "$type": "VacuumGripper",
                         "EffectorCollider": "Entity_[427084989373]",
                         "EffectorArticulation": "Entity_[427084989373]"
+                    }
+                },
+                "ROS2FrameEditorComponent": {
+                    "$type": "ROS2FrameEditorComponent",
+                    "Id": 15164989121167078780,
+                    "ROS2FrameConfiguration": {
+                        "Frame Name": "panda_hand",
+                        "Joint Name": "panda_hand_joint",
+                        "Publish Transform": false
                     }
                 }
             }
@@ -1161,16 +1156,6 @@
                     "$type": "EditorVisibilityComponent",
                     "Id": 10015980570813024335
                 },
-                "ROS2FrameComponent": {
-                    "$type": "GenericComponentWrapper",
-                    "Id": 16390462809478565130,
-                    "m_template": {
-                        "$type": "ROS2FrameComponent",
-                        "Frame Name": "panda_link3",
-                        "Joint Name": "panda_joint3",
-                        "Publish Transform": false
-                    }
-                },
                 "TransformComponent": {
                     "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
                     "Id": 1908616101616289238,
@@ -1186,6 +1171,15 @@
                             0.0,
                             0.0
                         ]
+                    }
+                },
+                "ROS2FrameEditorComponent": {
+                    "$type": "ROS2FrameEditorComponent",
+                    "Id": 16390462809478565130,
+                    "ROS2FrameConfiguration": {
+                        "Frame Name": "panda_link3",
+                        "Joint Name": "panda_joint3",
+                        "Publish Transform": false
                     }
                 }
             }
@@ -1286,16 +1280,6 @@
                     "$type": "EditorVisibilityComponent",
                     "Id": 820287223997121712
                 },
-                "ROS2FrameComponent": {
-                    "$type": "GenericComponentWrapper",
-                    "Id": 9761024793504549028,
-                    "m_template": {
-                        "$type": "ROS2FrameComponent",
-                        "Frame Name": "panda_link5",
-                        "Joint Name": "panda_joint5",
-                        "Publish Transform": false
-                    }
-                },
                 "TransformComponent": {
                     "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
                     "Id": 15390913156749739058,
@@ -1311,6 +1295,15 @@
                             0.0,
                             0.0
                         ]
+                    }
+                },
+                "ROS2FrameEditorComponent": {
+                    "$type": "ROS2FrameEditorComponent",
+                    "Id": 9761024793504549028,
+                    "ROS2FrameConfiguration": {
+                        "Frame Name": "panda_link5",
+                        "Joint Name": "panda_joint5",
+                        "Publish Transform": false
                     }
                 }
             }
@@ -1418,19 +1411,6 @@
                         "$type": "JointsArticulationControllerComponent"
                     }
                 },
-                "ROS2FrameComponent": {
-                    "$type": "GenericComponentWrapper",
-                    "Id": 12881829263483331296,
-                    "m_template": {
-                        "$type": "ROS2FrameComponent",
-                        "Namespace Configuration": {
-                            "Namespace Strategy": 1
-                        },
-                        "Frame Name": "panda_link1",
-                        "Joint Name": "panda_joint1",
-                        "Publish Transform": false
-                    }
-                },
                 "TransformComponent": {
                     "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
                     "Id": 8304187278466217246,
@@ -1441,6 +1421,18 @@
                             0.0,
                             0.3330000042915344
                         ]
+                    }
+                },
+                "ROS2FrameEditorComponent": {
+                    "$type": "ROS2FrameEditorComponent",
+                    "Id": 12881829263483331296,
+                    "ROS2FrameConfiguration": {
+                        "Namespace Configuration": {
+                            "Namespace Strategy": 1
+                        },
+                        "Frame Name": "panda_link1",
+                        "Joint Name": "panda_joint1",
+                        "Publish Transform": false
                     }
                 }
             }
@@ -1548,16 +1540,6 @@
                         "$type": "JointsArticulationControllerComponent"
                     }
                 },
-                "ROS2FrameComponent": {
-                    "$type": "GenericComponentWrapper",
-                    "Id": 12508960544319631443,
-                    "m_template": {
-                        "$type": "ROS2FrameComponent",
-                        "Frame Name": "panda_link2",
-                        "Joint Name": "panda_joint2",
-                        "Publish Transform": false
-                    }
-                },
                 "TransformComponent": {
                     "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
                     "Id": 8562421802946435150,
@@ -1568,6 +1550,15 @@
                             0.0,
                             0.0
                         ]
+                    }
+                },
+                "ROS2FrameEditorComponent": {
+                    "$type": "ROS2FrameEditorComponent",
+                    "Id": 12508960544319631443,
+                    "ROS2FrameConfiguration": {
+                        "Frame Name": "panda_link2",
+                        "Joint Name": "panda_joint2",
+                        "Publish Transform": false
                     }
                 }
             }
@@ -1668,16 +1659,6 @@
                     "$type": "EditorVisibilityComponent",
                     "Id": 12008370841442955950
                 },
-                "ROS2FrameComponent": {
-                    "$type": "GenericComponentWrapper",
-                    "Id": 15615923895396472745,
-                    "m_template": {
-                        "$type": "ROS2FrameComponent",
-                        "Frame Name": "panda_link4",
-                        "Joint Name": "panda_joint4",
-                        "Publish Transform": false
-                    }
-                },
                 "TransformComponent": {
                     "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
                     "Id": 4221805352766771998,
@@ -1693,6 +1674,15 @@
                             0.0,
                             0.0
                         ]
+                    }
+                },
+                "ROS2FrameEditorComponent": {
+                    "$type": "ROS2FrameEditorComponent",
+                    "Id": 15615923895396472745,
+                    "ROS2FrameConfiguration": {
+                        "Frame Name": "panda_link4",
+                        "Joint Name": "panda_joint4",
+                        "Publish Transform": false
                     }
                 }
             }
@@ -1882,22 +1872,21 @@
                         "Action name": "panda_arm_controller/follow_joint_trajectory"
                     }
                 },
-                "ROS2FrameComponent": {
-                    "$type": "GenericComponentWrapper",
+                "TransformComponent": {
+                    "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
+                    "Id": 18139814397266293165,
+                    "Parent Entity": "Entity_[470034662333]"
+                },
+                "ROS2FrameEditorComponent": {
+                    "$type": "ROS2FrameEditorComponent",
                     "Id": 2216843157768936757,
-                    "m_template": {
-                        "$type": "ROS2FrameComponent",
+                    "ROS2FrameConfiguration": {
                         "Namespace Configuration": {
                             "Namespace Strategy": 1
                         },
                         "Frame Name": "panda_link0",
                         "Publish Transform": false
                     }
-                },
-                "TransformComponent": {
-                    "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
-                    "Id": 18139814397266293165,
-                    "Parent Entity": "Entity_[470034662333]"
                 }
             }
         },
@@ -2222,16 +2211,6 @@
                     "$type": "EditorVisibilityComponent",
                     "Id": 6646001451510833896
                 },
-                "ROS2FrameComponent": {
-                    "$type": "GenericComponentWrapper",
-                    "Id": 2689469090216702038,
-                    "m_template": {
-                        "$type": "ROS2FrameComponent",
-                        "Frame Name": "panda_link6",
-                        "Joint Name": "panda_joint6",
-                        "Publish Transform": false
-                    }
-                },
                 "TransformComponent": {
                     "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
                     "Id": 6095301973554187840,
@@ -2242,6 +2221,15 @@
                             0.0,
                             0.0
                         ]
+                    }
+                },
+                "ROS2FrameEditorComponent": {
+                    "$type": "ROS2FrameEditorComponent",
+                    "Id": 2689469090216702038,
+                    "ROS2FrameConfiguration": {
+                        "Frame Name": "panda_link6",
+                        "Joint Name": "panda_joint6",
+                        "Publish Transform": false
                     }
                 }
             }

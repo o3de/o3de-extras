@@ -138,7 +138,7 @@ namespace ROS2
 
         // Publishes all contacts
         gazebo_msgs::msg::ContactsState msg;
-        const auto* ros2Frame = Utils::GetGameOrEditorComponent<ROS2FrameComponent>(GetEntity());
+        const auto* ros2Frame = GetEntity()->FindComponent<ROS2FrameComponent>();
         AZ_Assert(ros2Frame, "Invalid component pointer value");
         msg.header.frame_id = ros2Frame->GetFrameID().data();
         msg.header.stamp = ROS2Interface::Get()->GetROSTimestamp();

@@ -6,6 +6,7 @@
  *
  */
 
+#include "ROS2/Frame/ROS2FrameEditorComponent.h"
 #include <Camera/CameraConstants.h>
 #include <Camera/ROS2CameraSensorEditorComponent.h>
 #include <ROS2/Frame/ROS2FrameComponent.h>

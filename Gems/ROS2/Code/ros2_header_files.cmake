@@ -13,6 +13,7 @@ set(FILES
         Include/ROS2/Communication/QoS.h
         Include/ROS2/Frame/NamespaceConfiguration.h
         Include/ROS2/Frame/ROS2FrameComponent.h
+        Include/ROS2/Frame/ROS2FrameConfiguration.h
         Include/ROS2/Frame/ROS2Transform.h
         Include/ROS2/Georeference/GeoreferenceBus.h
         Include/ROS2/Georeference/GeoreferenceStructures.h

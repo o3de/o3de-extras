@@ -6,15 +6,24 @@
  *
  */
 
+#include "ROS2FrameSystemComponent.h"
 #include <AzCore/Component/Entity.h>
 #include <AzCore/Component/EntityUtils.h>
+#include <AzCore/RTTI/ReflectContext.h>
 #include <AzCore/Serialization/EditContext.h>
 #include <AzCore/Serialization/EditContextConstants.inl>
+#include <AzCore/Serialization/Json/JsonSerialization.h>
+#include <AzCore/Serialization/Json/JsonSerializationResult.h>
+#include <AzCore/Serialization/Json/RegistrationContext.h>
 #include <AzCore/Serialization/SerializeContext.h>
 #include <ROS2/Frame/ROS2FrameComponent.h>
+#include <ROS2/Frame/ROS2FrameConfiguration.h>
 #include <ROS2/ROS2Bus.h>
 #include <ROS2/ROS2GemUtilities.h>
 #include <ROS2/Utilities/ROS2Names.h>
+#include <rapidjson/document.h>
+#include <rapidjson/stringbuffer.h>
+
 namespace ROS2
 {
     namespace Internal
@@ -71,6 +80,64 @@ namespace ROS2
         }
 
     } // namespace Internal
+
+    AZ::JsonSerializationResult::Result JsonFrameComponentConfigSerializer::Load(
+        void* outputValue, const AZ::Uuid& outputValueTypeId, const rapidjson::Value& inputValue, AZ::JsonDeserializerContext& context)
+    {
+        AZ_Error(
+            "ROS2FrameComponent",
+            false,
+            "An old version of the ROS2FrameComponent is being loaded. Manual conversion is required. The conversion script is "
+            "located in: "
+            "o3de-extras/Gems/ROS2/Code/Source/Frame/Conversions/FrameConversion.py");
+
+        namespace JSR = AZ::JsonSerializationResult;
+
+        auto configInstance = reinterpret_cast<ROS2FrameComponent*>(outputValue);
+        AZ_Assert(configInstance, "Output value for JsonFrameComponentConfigSerializer can't be null.");
+
+        JSR::ResultCode result(JSR::Tasks::ReadField);
+
+        {
+            JSR::ResultCode componentIdLoadResult = ContinueLoadingFromJsonObjectField(
+                &configInstance->m_jointName, azrtti_typeid<decltype(configInstance->m_jointName)>(), inputValue, "Joint Name", context);
+
+            result.Combine(componentIdLoadResult);
+        }
+        {
+            JSR::ResultCode componentIdLoadResult = ContinueLoadingFromJsonObjectField(
+                &configInstance->m_frameName, azrtti_typeid<decltype(configInstance->m_frameName)>(), inputValue, "Frame Name", context);
+
+            result.Combine(componentIdLoadResult);
+        }
+        {
+            JSR::ResultCode componentIdLoadResult = ContinueLoadingFromJsonObjectField(
+                &configInstance->m_publishTransform,
+                azrtti_typeid<decltype(configInstance->m_publishTransform)>(),
+                inputValue,
+                "Publish Transform",
+                context);
+
+            result.Combine(componentIdLoadResult);
+        }
+        {
+            JSR::ResultCode componentIdLoadResult = ContinueLoadingFromJsonObjectField(
+                &configInstance->m_namespaceConfiguration,
+                azrtti_typeid<decltype(configInstance->m_namespaceConfiguration)>(),
+                inputValue,
+                "Namespace Configuration",
+                context);
+
+            result.Combine(componentIdLoadResult);
+        }
+
+        return context.Report(
+            result,
+            result.GetProcessing() != JSR::Processing::Halted ? "Successfully loaded ROS2FrameComponent information."
+                                                              : "Failed to load ROS2FrameComponent information.");
+    }
+
+    AZ_CLASS_ALLOCATOR_IMPL(JsonFrameComponentConfigSerializer, AZ::SystemAllocator);
 
     void ROS2FrameComponent::Activate()
     {
@@ -139,9 +206,10 @@ namespace ROS2
         return ROS2Names::GetNamespacedName(GetNamespace(), AZStd::string("odom"));
     }
 
-    void ROS2FrameComponent::UpdateNamespaceConfiguration(const AZStd::string& ns, NamespaceConfiguration::NamespaceStrategy strategy)
+    void ROS2FrameComponent::UpdateNamespaceConfiguration(
+        const AZStd::string& ros2Namespace, NamespaceConfiguration::NamespaceStrategy strategy)
     {
-        m_namespaceConfiguration.SetNamespace(ns, strategy);
+        m_namespaceConfiguration.SetNamespace(ros2Namespace, strategy);
     }
 
     bool ROS2FrameComponent::IsTopLevel() const
@@ -208,43 +276,57 @@ namespace ROS2
 
     AZ::Name ROS2FrameComponent::GetJointName() const
     {
-        return AZ::Name(ROS2Names::GetNamespacedName(GetNamespace(), m_jointNameString).c_str());
+        return AZ::Name(ROS2Names::GetNamespacedName(GetNamespace(), m_jointName).c_str());
     }
 
-    void ROS2FrameComponent::SetJointName(const AZStd::string& jointNameString)
+    void ROS2FrameComponent::SetJointName(const AZStd::string& jointName)
     {
-        m_jointNameString = jointNameString;
+        m_jointName = jointName;
     }
 
     void ROS2FrameComponent::Reflect(AZ::ReflectContext* context)
     {
-        NamespaceConfiguration::Reflect(context);
+        if (auto jsonContext = azrtti_cast<AZ::JsonRegistrationContext*>(context))
+        {
+            jsonContext->Serializer<JsonFrameComponentConfigSerializer>()->HandlesType<ROS2FrameComponent>();
+        }
+
+        ROS2FrameConfiguration::Reflect(context);
         if (AZ::SerializeContext* serialize = azrtti_cast<AZ::SerializeContext*>(context))
         {
             serialize->Class<ROS2FrameComponent, AZ::Component>()
                 ->Version(1)
-                ->Field("Namespace Configuration", &ROS2FrameComponent::m_namespaceConfiguration)
                 ->Field("Frame Name", &ROS2FrameComponent::m_frameName)
-                ->Field("Joint Name", &ROS2FrameComponent::m_jointNameString)
-                ->Field("Publish Transform", &ROS2FrameComponent::m_publishTransform);
+                ->Field("Joint Name", &ROS2FrameComponent::m_jointName)
+                ->Field("Publish Transform", &ROS2FrameComponent::m_publishTransform)
+                ->Field("Namespace Configuration", &ROS2FrameComponent::m_namespaceConfiguration);
 
             if (AZ::EditContext* ec = serialize->GetEditContext())
             {
-                ec->Class<ROS2FrameComponent>("ROS2 Frame", "[ROS2 Frame component]")
+                ec->Class<ROS2FrameComponent>(
+                      "ROS2 Frame Game Component (outdated)",
+                      "This is a game version of the ROS2 Frame component. This is outdated and was updated to the new "
+                      "ROS2FrameEditorComponent. If you see this component a manual conversion is required.")
                     ->ClassElement(AZ::Edit::ClassElements::EditorData, "")
                     ->Attribute(AZ::Edit::Attributes::Category, "ROS2")
-                    ->Attribute(AZ::Edit::Attributes::AppearsInAddComponentMenu, AZ_CRC_CE("Game"))
-                    ->Attribute(AZ::Edit::Attributes::Icon, "Editor/Icons/Components/ROS2Frame.svg")
-                    ->Attribute(AZ::Edit::Attributes::ViewportIcon, "Editor/Icons/Components/Viewport/ROS2Frame.svg")
+                    ->Attribute(AZ::Edit::Attributes::Icon, "Icons/Components/ROS2Frame.svg")
+                    ->Attribute(AZ::Edit::Attributes::ViewportIcon, "Icons/Components/Viewport/ROS2Frame.svg")
+                    ->Attribute(AZ::Edit::Attributes::HelpPageURL, "https://o3de.org/docs/user-guide/components/reference/ros2-frame/")
+                    ->UIElement(
+                        AZ::Edit::UIHandlers::Label,
+                        "This component is no longer supported. Manual conversion to the ROS2FrameEditorComponent is required.")
+                    ->DataElement(AZ::Edit::UIHandlers::Default, &ROS2FrameComponent::m_frameName, "Frame Name", "Name of the frame.")
+                    ->DataElement(AZ::Edit::UIHandlers::Default, &ROS2FrameComponent::m_jointName, "Joint Name", "Name of the joint.")
+                    ->DataElement(
+                        AZ::Edit::UIHandlers::Default,
+                        &ROS2FrameComponent::m_publishTransform,
+                        "Publish Transform",
+                        "Publish the transform of this frame.")
                     ->DataElement(
                         AZ::Edit::UIHandlers::Default,
                         &ROS2FrameComponent::m_namespaceConfiguration,
                         "Namespace Configuration",
-                        "Namespace Configuration")
-                    ->DataElement(AZ::Edit::UIHandlers::Default, &ROS2FrameComponent::m_frameName, "Frame Name", "Frame Name")
-                    ->DataElement(AZ::Edit::UIHandlers::Default, &ROS2FrameComponent::m_jointNameString, "Joint Name", "Joint Name")
-                    ->DataElement(
-                        AZ::Edit::UIHandlers::Default, &ROS2FrameComponent::m_publishTransform, "Publish Transform", "Publish Transform");
+                        "Configuration of the namespace for this frame.");
             }
         }
     }
@@ -264,10 +346,24 @@ namespace ROS2
         required.push_back(AZ_CRC_CE("TransformService"));
     }
 
-    ROS2FrameComponent::ROS2FrameComponent() = default;
+    ROS2FrameComponent::ROS2FrameComponent(){};
 
-    ROS2FrameComponent::ROS2FrameComponent(const AZStd::string& frameId)
-        : m_frameName(frameId)
+    ROS2FrameComponent::ROS2FrameComponent(const ROS2FrameConfiguration& configuration)
+        : m_namespaceConfiguration(configuration.m_namespaceConfiguration)
+        , m_frameName(configuration.m_frameName)
+        , m_jointName(configuration.m_jointName)
+        , m_publishTransform(configuration.m_publishTransform)
+        , m_isDynamic(configuration.m_isDynamic){};
+
+    ROS2FrameConfiguration ROS2FrameComponent::GetConfiguration() const
     {
+        ROS2FrameConfiguration configuration;
+        configuration.m_namespaceConfiguration = m_namespaceConfiguration;
+        configuration.m_frameName = m_frameName;
+        configuration.m_jointName = m_jointName;
+        configuration.m_publishTransform = m_publishTransform;
+        configuration.m_isDynamic = m_isDynamic;
+
+        return configuration;
     }
 } // namespace ROS2
