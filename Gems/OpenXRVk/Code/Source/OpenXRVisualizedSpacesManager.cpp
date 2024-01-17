@@ -73,6 +73,11 @@ namespace OpenXRVk
         return true;
     }
 
+    void VisualizedSpacesManager::ResetSpaces()
+    {
+        AZ_Error(LogName, false, "FIXME! %s", __FUNCTION__);
+    }
+
     /////////////////////////////////////////////////
     /// OpenXRVisualizedSpacesInterface overrides
     AZStd::vector<AZStd::string> VisualizedSpacesManager::GetVisualizedSpaceNames() const
@@ -137,6 +142,16 @@ namespace OpenXRVk
         xrDestroySpace(itor->second.m_xrSpace);
         m_spaces.erase(itor);
         return AZ::Success(true);
+    }
+
+    const void * VisualizedSpacesManager::GetVisualizedSpaceNativeHandle(const AZStd::string& spaceName) const
+    {
+        const auto spaceItor = m_spaces.find(spaceName);
+        if (spaceItor == m_spaces.end())
+        {
+            return nullptr;
+        }
+        return static_cast<void*>(spaceItor->second.m_xrSpace);
     }
 
 

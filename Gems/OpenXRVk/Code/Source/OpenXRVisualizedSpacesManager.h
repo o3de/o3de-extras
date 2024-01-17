@@ -30,6 +30,10 @@ namespace OpenXRVk
         //! Called by the Session each tick.
         bool UpdateViewSpacePoseAndEyeViewPoses(XrTime predictedDisplayTime);
 
+        // Spaces are reset every time the proximity sensor turns off, or the user wears the headset
+        // when the proximity sensor is ON.
+        void ResetSpaces();
+
         /////////////////////////////////////////////////
         /// OpenXRVisualizedSpacesInterface overrides
         AZStd::vector<AZStd::string> GetVisualizedSpaceNames() const override;
@@ -37,6 +41,7 @@ namespace OpenXRVk
             const AZStd::string& spaceName, const AZ::Transform& poseInReferenceSpace) override;
         AZ::Outcome<bool, AZStd::string> RemoveVisualizedSpace(const AZStd::string& spaceName) override;
 
+        const void * GetVisualizedSpaceNativeHandle(const AZStd::string& spaceName) const override;
 
         AZ::Outcome<AZ::Transform, AZStd::string> GetVisualizedSpacePose(const AZStd::string& spaceName,
             const AZStd::string& baseSpaceName) const override;

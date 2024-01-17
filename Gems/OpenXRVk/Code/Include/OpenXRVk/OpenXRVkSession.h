@@ -16,6 +16,7 @@
 namespace OpenXRVk
 {
     class ActionsManager;
+    class VisualizedSpacesManager;
 
     // Class that will help manage XrSession
     class Session final
@@ -86,9 +87,6 @@ namespace OpenXRVk
         void ShutdownInternal() override;
         void LogActionSourceName(XrAction action, const AZStd::string_view actionName) const;
         Input* GetNativeInput() const;
-        // Spaces are reset every time the proximity sensor turns off, or the user wears the headset
-        // when the proximity sensor is ON.
-        void ResetSpaces();
 
         XrSession m_session = XR_NULL_HANDLE;
         XrSessionState m_sessionState = XR_SESSION_STATE_UNKNOWN;
@@ -97,6 +95,7 @@ namespace OpenXRVk
         XrGraphicsBindingVulkan2KHR m_graphicsBinding{ XR_TYPE_GRAPHICS_BINDING_VULKAN_KHR };
 
         AZStd::unique_ptr<ActionsManager> m_actionsMgr;
+        AZStd::unique_ptr<VisualizedSpacesManager> m_visualizedSpacesMgr;
         
         // Application defined base space that will used to calculate
         // the relative pose of all other spaces.

@@ -16,10 +16,7 @@
 
 namespace OpenXRVk
 {
-    //! Interface used to query the state of actions and also
-    //! to drive the state of haptic feedback actions.
-    //! The implementation is encouraged to expose each method
-    //! of this interface as global functions in the behavior context.
+    //! REMARK: This class must be instantiated BEFORE OpenXRActionsInterface.
     class IOpenXRVisualizedSpaces
     {
     public:
@@ -46,6 +43,10 @@ namespace OpenXRVk
         virtual AZStd::vector<AZStd::string> GetVisualizedSpaceNames() const = 0;
         virtual AZ::Outcome<bool, AZStd::string> AddVisualizedSpace(ReferenceSpaceId referenceSpaceType, const AZStd::string& spaceName, const AZ::Transform& poseInReferenceSpace) = 0;
         virtual AZ::Outcome<bool, AZStd::string> RemoveVisualizedSpace(const AZStd::string& spaceName) = 0;
+
+        //! REMARK: Maybe it's a good idea to move this into a private interface for the OpenXRVk Gem,
+        //! and privately use the native handle (XrSpace)
+        virtual const void * GetVisualizedSpaceNativeHandle(const AZStd::string& spaceName) const = 0;
 
         // Returns the Pose of @spaceName relative to @baseSpaceName.
         virtual AZ::Outcome<AZ::Transform, AZStd::string> GetVisualizedSpacePose(const AZStd::string& spaceName, const AZStd::string& baseSpaceName) const = 0;
@@ -84,6 +85,8 @@ namespace OpenXRVk
         // is centered exactly where the View Space Centroid is located, so calling this function wouldn't
         // make much sense because it'll return an Identity transform.
         virtual const AZ::Transform& GetViewPose(uint32_t eyeIndex) const = 0;
+
+        virtual const AZ::RPI::FovData& GetViewFovData(uint32_t eyeIndex) const = 0;
     };
 
     using OpenXRVisualizedSpacesInterface = AZ::Interface<IOpenXRVisualizedSpaces>;
