@@ -6,6 +6,7 @@
  *
  */
 
+#include <AzCore/Math/MathUtils.h>
 #include <AzToolsFramework/Entity/EditorEntityHelpers.h>
 #include <AzToolsFramework/ToolsComponents/TransformComponent.h>
 #include <PhysX/EditorColliderComponentRequestBus.h>
@@ -49,8 +50,7 @@ namespace ROS2::SDFormat
         {
             if (entity)
             {
-                auto* transformInterface = entity->FindComponent<AzToolsFramework::Components::TransformComponent>();
-                if (transformInterface)
+                if (auto* transformInterface = entity->FindComponent<AzToolsFramework::Components::TransformComponent>())
                 {
                     return AZ::Success(transformInterface->GetWorldTM().GetTranslation());
                 }
@@ -63,8 +63,7 @@ namespace ROS2::SDFormat
         {
             const auto positionLeft = GetPosition(entityLeft);
             const auto positionRight = GetPosition(entityRight);
-
-            if (positionLeft.IsSuccess() && positionLeft.IsSuccess())
+            if (positionLeft.IsSuccess() && positionRight.IsSuccess())
             {
                 return positionLeft.GetValue().GetDistance(positionRight.GetValue());
             }
@@ -92,6 +91,7 @@ namespace ROS2::SDFormat
                 if (colliderComponent != nullptr)
                 {
                     float radius = 0.0f;
+                    AZ_Assert(entity->GetState() != AZ::Entity::State::Active, "Entity is active");
                     entity->Activate();
                     if (entity->GetState() == AZ::Entity::State::Active)
                     {
@@ -113,7 +113,7 @@ namespace ROS2::SDFormat
             const float radiusLeft = GetWheelRadius(entityLeft);
             const float radiusRight = GetWheelRadius(entityRight);
 
-            if (fabsf(radiusLeft - radiusRight) < epsilon)
+            if (AZ::IsClose(radiusLeft, radiusRight, epsilon))
             {
                 return radiusLeft;
             }
@@ -122,7 +122,7 @@ namespace ROS2::SDFormat
                 AZ_Warning(
                     "ROS2AckermannModelPluginHook",
                     false,
-                    "VehicleConfiguration parsing error: left and right wheel radii does not match. (%f and %f)",
+                    "VehicleConfiguration parsing error: left and right wheel radii (%.4f and %.4f) do not match.",
                     radiusLeft,
                     radiusRight);
                 return 0.0f;
@@ -135,8 +135,7 @@ namespace ROS2::SDFormat
             AZ::ComponentApplicationBus::BroadcastResult(entity, &AZ::ComponentApplicationRequests::FindEntity, entityId);
             if (entity != nullptr)
             {
-                auto* transformInterface = entity->FindComponent<AzToolsFramework::Components::TransformComponent>();
-                if (transformInterface)
+                if (auto* transformInterface = entity->FindComponent<AzToolsFramework::Components::TransformComponent>())
                 {
                     return transformInterface->GetLocalTM().GetTranslation();
                 }
@@ -212,7 +211,7 @@ namespace ROS2::SDFormat
                     {
                         AZ_Warning(
                             "ROS2AckermannModelPluginHook",
-                            (fabsf(configuration.m_track) < epsilon && fabsf(configuration.m_track - track) < epsilon),
+                            (AZ::IsClose(configuration.m_track, 0.0f, epsilon) && AZ::IsClose(configuration.m_track, track, epsilon)),
                             "VehicleConfiguration parsing error: different track per axis not supported.");
                         configuration.m_track = track;
                     }
