@@ -97,7 +97,7 @@ namespace OpenXRVk
         return true;
     }
 
-    bool ActionsManager::SyncActions(XrTime predictedDisplayTime, XrSpace baseSpace)
+    bool ActionsManager::SyncActions(XrTime predictedDisplayTime)
     {
         if (m_xrActiveActionSets.empty())
         {
@@ -106,7 +106,6 @@ namespace OpenXRVk
         }
 
         m_predictedDisplaytime = predictedDisplayTime;
-        m_baseSpace = baseSpace;
 
         XrActionsSyncInfo syncInfo{ XR_TYPE_ACTIONS_SYNC_INFO };
         syncInfo.countActiveActionSets = aznumeric_cast<uint32_t>(m_xrActiveActionSets.size());
@@ -476,14 +475,16 @@ namespace OpenXRVk
             return AZ::Failure("The OpenXRVisualizedSpacesInterface doesn't exist!");
         }
 
-        void* opaqueXrSpace = visualizedSpacesIface->GetVisualizedSpaceNativeHandle(visualizedSpaceName);
+        const void* opaqueXrSpace = visualizedSpacesIface->GetVisualizedSpaceNativeHandle(visualizedSpaceName);
         if (!opaqueXrSpace)
         {
-            return AZ::Failure("Visualized space with name [%s] doesn't exist. Will keep the current base space named [%s]",
-                visualizedSpaceName.c_str(), m_baseVisualizedSpaceName.c_str());
+            return AZ::Failure(
+                AZStd::string::format("Visualized space with name [%s] doesn't exist. Will keep the current base space named [%s]",
+                                      visualizedSpaceName.c_str(), m_baseVisualizedSpaceName.c_str())
+            );
         }
         m_baseVisualizedSpaceName = visualizedSpaceName;
-        m_xrBaseVisualizedSpace = reinterpret_cast<XrSpace>(opaqueXrSpace);
+        m_xrBaseVisualizedSpace = reinterpret_cast<XrSpace>(const_cast<void*>(opaqueXrSpace));
         return AZ::Success(true);
     }
 
@@ -533,7 +534,7 @@ namespace OpenXRVk
 
         XrSpaceVelocity spaceVelocity{ XR_TYPE_SPACE_VELOCITY };
         XrSpaceLocation spaceLocation{ XR_TYPE_SPACE_LOCATION, &spaceVelocity};
-        XrResult result = xrLocateSpace(m_actions[actionIndex].m_xrSpace, m_baseSpace, m_predictedDisplaytime, &spaceLocation);
+        XrResult result = xrLocateSpace(m_actions[actionIndex].m_xrSpace, m_xrBaseVisualizedSpace, m_predictedDisplaytime, &spaceLocation);
         if (IsError(result))
         {
             return AZ::Failure(AZStd::string(GetResultString(result)));

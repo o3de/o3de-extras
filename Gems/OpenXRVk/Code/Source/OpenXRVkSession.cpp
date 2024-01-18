@@ -55,11 +55,11 @@ namespace OpenXRVk
         ASSERT_IF_UNSUCCESSFUL(result);
 
         m_visualizedSpacesMgr = AZStd::make_unique<VisualizedSpacesManager>();
-        success = m_visualizedSpacesMgr->Init(m_xrInstance, m_session, xrVkInstance->GetViewConfigType(), 2 /*FIXME*/);
+        bool success = m_visualizedSpacesMgr->Init(m_xrInstance, m_session, xrVkInstance->GetViewConfigType(), 2 /*FIXME*/);
         AZ_Error("OpenXRVk::Session", success, "Failed to instantiate the visualized Spaces manager.");
 
         m_actionsMgr = AZStd::make_unique<ActionsManager>();
-        bool success = m_actionsMgr->Init(m_xrInstance, m_session);
+        success = m_actionsMgr->Init(m_xrInstance, m_session);
         AZ_Error("OpenXRVk::Session", success, "Failed to instantiate the actions manager");
 
         LogReferenceSpaces();
@@ -397,6 +397,16 @@ namespace OpenXRVk
         return space->GetXrSpace(spaceType);
     }
 
+    const AZStd::vector<XrView>& Session::GetXrViews() const
+    {
+        return m_visualizedSpacesMgr->GetXrViews();
+    }
+
+    XrSpace Session::GetViewSpaceXrSpace() const
+    {
+        return m_visualizedSpacesMgr->GetViewSpaceXrSpace();
+    }
+
     bool Session::IsSessionRunning() const
     {
         return m_sessionRunning;
@@ -430,9 +440,15 @@ namespace OpenXRVk
         return static_cast<Input*>(GetInput());
     }
 
-    void Session::UpdateXrSpaceLocations([[maybe_unused]] const OpenXRVk::Device& device, [[maybe_unused]] XrTime predictedDisplayTime, [[maybe_unused]] AZStd::vector<XrView>& xrViews)
+    void Session::OnBeginFrame(XrTime predictedDisplayTime)
     {
-        m_actionsMgr->SyncActions();
+        m_actionsMgr->SyncActions(predictedDisplayTime);
+        m_visualizedSpacesMgr->SyncViews(predictedDisplayTime);
+
+        //Notify the rest of the engine.
+        AZ::RPI::XRSpaceNotificationBus::Broadcast(&AZ::RPI::XRSpaceNotifications::OnXRSpaceLocationsChanged,
+            m_visualizedSpacesMgr->GetViewSpacePose(),
+            m_visualizedSpacesMgr->GetViewPoses());
 
         //GetNativeInput()->UpdateXrSpaceLocations(device, predictedDisplayTime, xrViews);
     }

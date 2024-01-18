@@ -28,11 +28,15 @@ namespace OpenXRVk
         bool Init(XrInstance xrInstance, XrSession xrSession, XrViewConfigurationType xrViewConfigurationType, uint32_t numEyeViews);
 
         //! Called by the Session each tick.
-        bool UpdateViewSpacePoseAndEyeViewPoses(XrTime predictedDisplayTime);
+        bool SyncViews(XrTime predictedDisplayTime);
 
         // Spaces are reset every time the proximity sensor turns off, or the user wears the headset
         // when the proximity sensor is ON.
         void ResetSpaces();
+
+        const AZStd::vector<XrView>& GetXrViews() const;
+
+        XrSpace GetViewSpaceXrSpace() const;
 
         /////////////////////////////////////////////////
         /// OpenXRVisualizedSpacesInterface overrides
@@ -51,8 +55,11 @@ namespace OpenXRVk
         const AZ::Transform& GetViewSpacePose() const override;
 
         uint32_t GetViewCount() const override;
-        void ForceViewPosesCacheUpdate() override;
         const AZ::Transform& GetViewPose(uint32_t eyeIndex) const override;
+        const AZ::RPI::FovData& GetViewFovData(uint32_t eyeIndex) const override;
+        const AZStd::vector<AZ::Transform>& GetViewPoses() const override;
+
+        void ForceViewPosesCacheUpdate() override;
         /// OpenXRVisualizedSpacesInterface overrides
         /////////////////////////////////////////////////
 
@@ -68,6 +75,8 @@ namespace OpenXRVk
         struct VisualizedSpace
         {
             AZStd::string m_name;
+            //! We shave this transform in case we have to reset the spaces.
+            AZ::Transform m_offsetPose;
             // Runtime data
             XrSpace m_xrSpace;
         };
@@ -83,6 +92,7 @@ namespace OpenXRVk
         AZ::Transform m_viewSpacePose;
         //! The following poses are always relative to @m_viewSpacePose.
         AZStd::vector<AZ::Transform> m_eyeViewPoses;
+        AZStd::vector<AZ::RPI::FovData> m_eyeViewFovDatas;
         AZStd::vector<XrView> m_xrViews;
 
         XrSpace CreateXrSpace(XrReferenceSpaceType referenceSpaceType, const AZ::Transform& relativePose);

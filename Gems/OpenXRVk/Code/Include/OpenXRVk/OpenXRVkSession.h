@@ -43,11 +43,15 @@ namespace OpenXRVk
         //! Return the Xrspace related to the SpaceType enum
         XrSpace GetXrSpace(SpaceType spaceType) const;
 
+        const AZStd::vector<XrView>& GetXrViews() const;
+
+        XrSpace GetViewSpaceXrSpace() const;
+
         ////////////////////////////////////////////////////////////////////////////////////////////
         //! Called by a Device when the predicted display time has been updated (typically
         //! the device updates the predicted display time during BeginFrame).
         //! See OpenXRVkInput.h UpdateXrSpaceLocations(...) for more details.
-        void UpdateXrSpaceLocations(const OpenXRVk::Device& device, XrTime predictedDisplayTime, AZStd::vector<XrView>& xrViews);
+        void OnBeginFrame(XrTime predictedDisplayTime);
 
         //! Setters and Getters for the base spaces that will be used
         //! when calling xrLocateSpace().

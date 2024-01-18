@@ -394,14 +394,14 @@ namespace OpenXRVk
 
         if (LocateEyeViews(predictedDisplayTime, xrViews))
         {
-            //! Time to notify the engine that we have new poses.
-            const auto& xrSpaceLocationHeadToBase = m_xrVisualizedSpaceLocations[OpenXRVk::SpaceType::View];
-            const auto baseToHeadTm = AzTransformFromXrPose(xrSpaceLocationHeadToBase.pose);
-            const auto headToLeftEyeTm = AzTransformFromXrPose(xrViews[0].pose);
-            const auto headToRightEyeTm = AzTransformFromXrPose(xrViews[1].pose);
-
-            AZ::RPI::XRSpaceNotificationBus::Broadcast(&AZ::RPI::XRSpaceNotifications::OnXRSpaceLocationsChanged,
-                baseToHeadTm, headToLeftEyeTm, headToRightEyeTm);
+            // //! Time to notify the engine that we have new poses.
+            // const auto& xrSpaceLocationHeadToBase = m_xrVisualizedSpaceLocations[OpenXRVk::SpaceType::View];
+            // const auto baseToHeadTm = AzTransformFromXrPose(xrSpaceLocationHeadToBase.pose);
+            // const auto headToLeftEyeTm = AzTransformFromXrPose(xrViews[0].pose);
+            // const auto headToRightEyeTm = AzTransformFromXrPose(xrViews[1].pose);
+            // 
+            // AZ::RPI::XRSpaceNotificationBus::Broadcast(&AZ::RPI::XRSpaceNotifications::OnXRSpaceLocationsChanged,
+            //     baseToHeadTm, headToLeftEyeTm, headToRightEyeTm);
 
             return true;
         }

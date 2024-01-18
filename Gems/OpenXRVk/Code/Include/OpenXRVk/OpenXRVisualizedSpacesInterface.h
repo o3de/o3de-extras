@@ -13,6 +13,7 @@
 #include <AzCore/Math/Transform.h>
 
 #include <Atom/RHI.Reflect/Handle.h>
+#include <Atom/RPI.Public/XR/XRRenderingInterface.h>
 
 namespace OpenXRVk
 {
@@ -71,6 +72,16 @@ namespace OpenXRVk
         // Some headsets like the Varjo support Quad Views and the eye counts will be 4. 
         virtual uint32_t GetViewCount() const = 0;
 
+        // Pose of a view(aka eye) relative to the View Space (aka Head) Pose.
+        // For AR applications running on a Phone (aka Mono view configuration) the Eye View Pose
+        // is centered exactly where the View Space Centroid is located, so calling this function wouldn't
+        // make much sense because it'll return an Identity transform.
+        virtual const AZ::Transform& GetViewPose(uint32_t eyeIndex) const = 0;
+
+        virtual const AZ::RPI::FovData& GetViewFovData(uint32_t eyeIndex) const = 0;
+
+        virtual const AZStd::vector<AZ::Transform>& GetViewPoses() const = 0;
+
         //! Forces updating the cached pose and projection data for all Views.
         //! Each frame, all view (aka eye) poses and projections are updated automatically, making this function optional to use.
         //! By default the caller simply gets the per-frame cached version, which should be fine for most applications.
@@ -79,14 +90,6 @@ namespace OpenXRVk
         //!  Instead the prediction gets increasingly accurate as the function is called closer to the
         //!  given time for which a prediction is made"
         virtual void ForceViewPosesCacheUpdate() = 0;
-
-        // Pose of a view(aka eye) relative to the View Space (aka Head) Pose.
-        // For AR applications running on a Phone (aka Mono view configuration) the Eye View Pose
-        // is centered exactly where the View Space Centroid is located, so calling this function wouldn't
-        // make much sense because it'll return an Identity transform.
-        virtual const AZ::Transform& GetViewPose(uint32_t eyeIndex) const = 0;
-
-        virtual const AZ::RPI::FovData& GetViewFovData(uint32_t eyeIndex) const = 0;
     };
 
     using OpenXRVisualizedSpacesInterface = AZ::Interface<IOpenXRVisualizedSpaces>;

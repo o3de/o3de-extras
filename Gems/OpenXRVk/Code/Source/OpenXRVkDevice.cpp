@@ -12,6 +12,7 @@
 #include <OpenXRVk/OpenXRVkSwapChain.h>
 #include <OpenXRVk/OpenXRVkSpace.h>
 #include <OpenXRVk/OpenXRVkUtils.h>
+#include <OpenXRVk/OpenXRVisualizedSpacesInterface.h>
 #include <OpenXRVkCommon.h>
 #include <Atom/RHI.Reflect/VkAllocator.h>
 #include <AzCore/Casting/numeric_cast.h>
@@ -56,8 +57,10 @@ namespace OpenXRVk
         // Now that we have a new predicted display time, the session should be able
         // to sync actions and locate spaces.
         // The new predicted display time will be used to calculate XrPoses for the current frame.
-        session->UpdateXrSpaceLocations(*this, m_frameState.predictedDisplayTime, m_views);
-
+        if (session->IsSessionFocused())
+        {
+            session->OnBeginFrame(m_frameState.predictedDisplayTime);
+        }
         //Always return true as we want EndFrame to always be called. 
         return true;
     }
@@ -69,7 +72,6 @@ namespace OpenXRVk
         Session* session = static_cast<Session*>(GetSession().get());
         Instance* instance = static_cast<Instance*>(GetDescriptor().m_instance.get());
         SwapChain* swapChain = static_cast<SwapChain*>(baseSwapChain.get());
-        Space* xrSpace = static_cast<Space*>(GetSession()->GetSpace());
         XrSession xrSession = session->GetXrSession();
 
         for(uint32_t i = 0; i < swapChain->GetNumViews(); i++)
@@ -87,7 +89,7 @@ namespace OpenXRVk
             }
         }
 
-        m_xrLayer.space = xrSpace->GetXrSpace(OpenXRVk::SpaceType::View);
+        m_xrLayer.space = session->GetViewSpaceXrSpace();
         m_xrLayer.viewCount = aznumeric_cast<uint32_t>(m_projectionLayerViews.size());
         m_xrLayer.views = m_projectionLayerViews.data();
 
@@ -119,6 +121,7 @@ namespace OpenXRVk
         XR::SwapChain::View* baseSwapChainView = baseSwapChain->GetView(viewIndex);
         SwapChain::View* swapChainView = static_cast<SwapChain::View*>(baseSwapChainView);
         XrSwapchain swapChainHandle = swapChainView->GetSwapChainHandle();
+        Session* session = static_cast<Session*>(GetSession().get());
 
         XrSwapchainImageAcquireInfo acquireInfo{ XR_TYPE_SWAPCHAIN_IMAGE_ACQUIRE_INFO };
         auto result = xrAcquireSwapchainImage(swapChainHandle, &acquireInfo, &baseSwapChainView->m_activeImageIndex);
@@ -131,11 +134,12 @@ namespace OpenXRVk
         ASSERT_IF_UNSUCCESSFUL(result);
 
         // REMARK: The data in m_views was updated during BeginFrameInternal(), which
-        // calls session->UpdateXrSpaceLocations(...).
-        m_projectionLayerViews.resize(m_views.size());
+        // calls session->OnBeginFrame(...).
+        const auto& xrViews = session->GetXrViews();
+        m_projectionLayerViews.resize(xrViews.size());
         m_projectionLayerViews[viewIndex] = { XR_TYPE_COMPOSITION_LAYER_PROJECTION_VIEW };
-        m_projectionLayerViews[viewIndex].pose = m_views[viewIndex].pose;
-        m_projectionLayerViews[viewIndex].fov = m_views[viewIndex].fov;
+        m_projectionLayerViews[viewIndex].pose = xrViews[viewIndex].pose;
+        m_projectionLayerViews[viewIndex].fov = xrViews[viewIndex].fov;
         m_projectionLayerViews[viewIndex].subImage.swapchain = swapChainHandle;
         m_projectionLayerViews[viewIndex].subImage.imageRect.offset = { 0, 0 };
         m_projectionLayerViews[viewIndex].subImage.imageRect.extent = { static_cast<int>(swapChainView->GetWidth()),
@@ -146,13 +150,6 @@ namespace OpenXRVk
     bool Device::ShouldRender() const
     {
         return m_frameState.shouldRender == XR_TRUE;
-    }
-
-    void Device::InitXrViews(uint32_t numViews)
-    {
-        // Create and cache view buffer for xrLocateViews later.
-        m_views.clear();
-        m_views.resize(numViews, { XR_TYPE_VIEW });
     }
 
     VkDevice Device::GetNativeDevice() const
@@ -170,27 +167,20 @@ namespace OpenXRVk
         return m_xrQueueBinding[static_cast<uint32_t>(queueClass)];
     }
 
-    AZ::RHI::ResultCode Device::GetViewFov(AZ::u32 viewIndex, AZ::RPI::FovData& outFovData) const
+    AZ::RHI::ResultCode Device::GetViewFov([[maybe_unused]] AZ::u32 viewIndex, [[maybe_unused]] AZ::RPI::FovData& outFovData) const
     {
-        if(viewIndex < m_views.size())
-        { 
-            outFovData.m_angleLeft = m_views[viewIndex].fov.angleLeft;
-            outFovData.m_angleRight = m_views[viewIndex].fov.angleRight;
-            outFovData.m_angleUp = m_views[viewIndex].fov.angleUp;
-            outFovData.m_angleDown = m_views[viewIndex].fov.angleDown;
+        if (auto spacesIface = OpenXRVisualizedSpacesInterface::Get();
+            spacesIface != nullptr)
+        {
+            outFovData = spacesIface->GetViewFovData(viewIndex);
             return AZ::RHI::ResultCode::Success;
         }
         return AZ::RHI::ResultCode::Fail;
     }
 
-    AZ::RHI::ResultCode Device::GetViewPose(AZ::u32 viewIndex, AZ::RPI::PoseData& outPoseData) const
+    AZ::RHI::ResultCode Device::GetViewPose([[maybe_unused]] AZ::u32 viewIndex, [[maybe_unused]] AZ::RPI::PoseData& outPoseData) const
     { 
-        if (viewIndex < m_views.size())
-        {
-            outPoseData.m_orientation = AzQuaternionFromXrPose(m_views[viewIndex].pose);
-            outPoseData.m_position = AzPositionFromXrPose(m_views[viewIndex].pose);
-            return AZ::RHI::ResultCode::Success;
-        }
+        AZ_Assert(false, "Don't call this function!");
         return AZ::RHI::ResultCode::Fail;
     }
 
@@ -202,7 +192,6 @@ namespace OpenXRVk
     void Device::ShutdownInternal()
     {
         m_projectionLayerViews.clear();
-        m_views.clear();
         m_xrLayers.clear();
         m_xrVkDevice = VK_NULL_HANDLE;
         m_xrVkPhysicalDevice = VK_NULL_HANDLE;

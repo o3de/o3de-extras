@@ -20,8 +20,10 @@ namespace OpenXRVk
         m_xrInstance = xrInstance;
         m_xrSession = xrSession;
         m_xrViewConfigurationType = xrViewConfigurationType;
-        m_xrViews.resize_no_construct(numEyeViews);
+        m_xrViews.resize(numEyeViews, { XR_TYPE_VIEW });
+
         m_eyeViewPoses.resize_no_construct(numEyeViews);
+        m_eyeViewFovDatas.resize_no_construct(numEyeViews);
         m_viewSpacePose = AZ::Transform::Identity();
         for (uint32_t eyeViewIdx = 0; eyeViewIdx < numEyeViews; eyeViewIdx++)
         {
@@ -56,7 +58,7 @@ namespace OpenXRVk
         return true;
     }
 
-    bool VisualizedSpacesManager::UpdateViewSpacePoseAndEyeViewPoses(XrTime predictedDisplayTime)
+    bool VisualizedSpacesManager::SyncViews(XrTime predictedDisplayTime)
     {
         m_predictedDisplaytime = predictedDisplayTime;
 
@@ -76,6 +78,16 @@ namespace OpenXRVk
     void VisualizedSpacesManager::ResetSpaces()
     {
         AZ_Error(LogName, false, "FIXME! %s", __FUNCTION__);
+    }
+
+    const AZStd::vector<XrView>& VisualizedSpacesManager::GetXrViews() const
+    {
+        return m_xrViews;
+    }
+
+    XrSpace VisualizedSpacesManager::GetViewSpaceXrSpace() const
+    {
+        return m_viewSpace->m_xrSpace;
     }
 
     /////////////////////////////////////////////////
@@ -106,6 +118,9 @@ namespace OpenXRVk
                 "with reference space type [%u]", spaceName.c_str(), referenceSpaceType)
             );
         }
+
+        VisualizedSpace visualizedSpace{ spaceName, poseInReferenceSpace, newXrSpace };
+        m_spaces.emplace(spaceName, AZStd::move(visualizedSpace));
 
         return AZ::Success(true);
     }
@@ -216,6 +231,40 @@ namespace OpenXRVk
         return aznumeric_cast<uint32_t>(m_eyeViewPoses.size());
     }
 
+    const AZ::Transform& VisualizedSpacesManager::GetViewPose(uint32_t eyeIndex) const
+    {
+        if (eyeIndex >= m_eyeViewPoses.size())
+        {
+            // Debug and Profile builds shoud crash here.
+            AZ_Assert(false, "Can't get View Pose because [%u] is out of bounds", eyeIndex);
+            // In Release build we'd see this message.
+            AZ_Error(LogName, false, "Can't get View Pose because [%u] is out of bounds", eyeIndex);
+            return AZ::Transform::Identity();
+        }
+
+        return m_eyeViewPoses[eyeIndex];
+    }
+
+    const AZ::RPI::FovData& VisualizedSpacesManager::GetViewFovData(uint32_t eyeIndex) const
+    {
+        if (eyeIndex >= m_eyeViewPoses.size())
+        {
+            // Debug and Profile builds shoud crash here.
+            AZ_Assert(false, "Can't get View FovData because [%u] is out of bounds", eyeIndex);
+            // In Release build we'd see this message.
+            AZ_Error(LogName, false, "Can't get View FovData because [%u] is out of bounds", eyeIndex);
+            static const AZ::RPI::FovData ZeroFovData{};
+            return ZeroFovData;
+        }
+
+        return m_eyeViewFovDatas[eyeIndex];
+    }
+
+    const AZStd::vector<AZ::Transform>& VisualizedSpacesManager::GetViewPoses() const
+    {
+        return m_eyeViewPoses;
+    }
+
     void VisualizedSpacesManager::ForceViewPosesCacheUpdate()
     {
         XrViewState viewState{ XR_TYPE_VIEW_STATE };
@@ -241,21 +290,13 @@ namespace OpenXRVk
         for (size_t viewIdx = 0; viewIdx < m_xrViews.size(); viewIdx++)
         {
             m_eyeViewPoses[viewIdx] = AzTransformFromXrPose(m_xrViews[viewIdx].pose);
+            auto& fovData = m_eyeViewFovDatas[viewIdx];
+            const auto& xrFov = m_xrViews[viewIdx].fov;
+            fovData.m_angleLeft = xrFov.angleLeft;
+            fovData.m_angleRight = xrFov.angleRight;
+            fovData.m_angleUp = xrFov.angleUp;
+            fovData.m_angleDown = xrFov.angleDown;
         }
-    }
-
-    const AZ::Transform& VisualizedSpacesManager::GetViewPose(uint32_t eyeIndex) const
-    {
-        if (eyeIndex >= m_eyeViewPoses.size())
-        {
-            // Debug and Profile builds shoud crash here.
-            AZ_Assert(false, "Can't get View Pose because [%u] is out of bounds", eyeIndex);
-            // In Release build we'd see this message.
-            AZ_Error(LogName, false, "Can't get View Pose because [%u] is out of bounds", eyeIndex);
-            return AZ::Transform::Identity();
-        }
-
-        return m_eyeViewPoses[eyeIndex];
     }
     /// OpenXRVisualizedSpacesInterface overrides
     /////////////////////////////////////////////////

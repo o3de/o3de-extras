@@ -39,7 +39,7 @@ namespace OpenXRVk
         bool Init(XrInstance xrInstance, XrSession xrSession);
 
         //! Called by the Session each tick.
-        bool SyncActions(XrTime predictedDisplayTime, XrSpace baseSpace);
+        bool SyncActions(XrTime predictedDisplayTime);
 
         /////////////////////////////////////////////////
         /// OpenXRActionsInterface overrides
