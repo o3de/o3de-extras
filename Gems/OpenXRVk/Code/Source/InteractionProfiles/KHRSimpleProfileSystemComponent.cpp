@@ -40,11 +40,11 @@ namespace OpenXRVk
         };
 
         const AZStd::vector<OpenXRComponentPath> commonPaths = {
-            {"Select Button", "/input/select/click", XR_ACTION_TYPE_BOOLEAN_INPUT},
-            {"Menu Button",   "/input/menu/click",   XR_ACTION_TYPE_BOOLEAN_INPUT},
-            {"Grip Pose",     "/input/grip/pose",    XR_ACTION_TYPE_POSE_INPUT},
-            {"Aim Pose",      "/input/aim/pose",     XR_ACTION_TYPE_POSE_INPUT},
-            {"Vibration",     "/output/haptic",      XR_ACTION_TYPE_VIBRATION_OUTPUT},
+                {{"Select Button", "/input/select/click"}, XR_ACTION_TYPE_BOOLEAN_INPUT},
+                {{"Menu Button",   "/input/menu/click"},   XR_ACTION_TYPE_BOOLEAN_INPUT},
+                {{"Grip Pose",     "/input/grip/pose"},    XR_ACTION_TYPE_POSE_INPUT},
+                {{"Aim Pose",      "/input/aim/pose"},     XR_ACTION_TYPE_POSE_INPUT},
+                {{"Vibration",     "/output/haptic"},      XR_ACTION_TYPE_VIBRATION_OUTPUT},
         };
         m_componentPaths[LeftHand] = commonPaths;
         m_componentPaths[RightHand] = commonPaths;
@@ -74,6 +74,18 @@ namespace OpenXRVk
             retList.push_back(pathTuple.m_displayName);
         }
         return retList;
+    }
+
+    AZStd::string KHRSimpleProfileSystemComponent::GetUserTopPath(const AZStd::string& userPathName) const
+    {
+        for (const auto& openxrPath : m_userPaths)
+        {
+            if (openxrPath.m_displayName == userPathName)
+            {
+                return openxrPath.m_xrRelativePath;
+            }
+        }
+        return AZStd::string("");
     }
 
     AZStd::vector<AZStd::string> KHRSimpleProfileSystemComponent::GetComponentPaths(const AZStd::string& userPath) const

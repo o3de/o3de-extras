@@ -13,7 +13,10 @@
 #include <AzCore/Serialization/EditContext.h>
 #include <AzCore/RTTI/BehaviorContext.h>
 
+#include <AzCore/Math/MathStringConversions.h> // GALIB
+
 #include <OpenXRVk/InputDeviceXRController.h>
+#include <OpenXRVk/OpenXRActionsInterface.h>
 
 #include <Atom/RPI.Public/ViewProviderBus.h>
 #include <Atom/RPI.Public/View.h>
@@ -105,6 +108,8 @@ namespace OpenXRVk
 
     void XRCameraMovementComponent::OnTick(float deltaTime, [[maybe_unused]] AZ::ScriptTimePoint timePoint)
     {
+        ProcessOpenXRActions();
+
         AZ::Transform cameraTransform;
         AZ::TransformBus::EventResult(cameraTransform, GetEntityId(), &AZ::TransformBus::Events::GetWorldTM);
 
@@ -157,6 +162,47 @@ namespace OpenXRVk
         {   // up
             m_movement.SetZ(inputChannel.GetValue() * m_movementSensitivity);
         }
+    }
+
+    void XRCameraMovementComponent::ProcessOpenXRActions()
+    {
+        auto actionsIFace = OpenXRActionsInterface::Get();
+        if (!actionsIFace)
+        {
+            return;
+        }
+        // Button
+        {
+            auto actionHandle = actionsIFace->GetActionHandle("my_action_set", "button");
+            if (!actionHandle.IsValid())
+            {
+                return;
+            }
+            auto outcome = actionsIFace->GetActionStateBoolean(actionHandle);
+            if (outcome.IsSuccess())
+            {
+                if (outcome.GetValue())
+                {
+                    // up
+                    m_movement.SetZ(m_movementSensitivity);
+                }
+            }
+        }
+        // Pose
+        {
+            auto actionHandle = actionsIFace->GetActionHandle("my_action_set", "left_pose");
+            if (!actionHandle.IsValid())
+            {
+                return;
+            }
+            auto outcome = actionsIFace->GetActionStatePose(actionHandle);
+            if (outcome.IsSuccess())
+            {
+                AZ::Transform tm(outcome.TakeValue());
+                AZ_Printf("Galib", "left_pose tm=\n%s\n", AZStd::to_string(tm).c_str());
+            }
+        }
+
     }
 
     // Camera::CameraNotificationBus::Handler overrides

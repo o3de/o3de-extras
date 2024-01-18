@@ -21,7 +21,7 @@ namespace OpenXRVk
     class IOpenXRVisualizedSpaces
     {
     public:
-        AZ_RTTI(IOpenXRVisualizedSpaces, "{7B163790-BDBE-4C5B-832E-768CF5CDF585}");
+        AZ_RTTI(IOpenXRVisualizedSpaces, "{244D24BE-DD6F-430A-8F99-1D24AC1665B6}");
         AZ_DISABLE_COPY_MOVE(IOpenXRVisualizedSpaces);
 
         IOpenXRVisualizedSpaces() = default;

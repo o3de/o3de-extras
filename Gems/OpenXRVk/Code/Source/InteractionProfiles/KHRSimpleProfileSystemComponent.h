@@ -59,6 +59,7 @@ namespace OpenXRVk
         //! Create OpenXRVk::Instance object
         AZStd::string GetName() const override;
         AZStd::vector<AZStd::string> GetUserPaths() const override;
+        AZStd::string GetUserTopPath(const AZStd::string& userPathName) const override;
         AZStd::vector<AZStd::string> GetComponentPaths(const AZStd::string& userPath) const override;
         OpenXRInteractionProfile::ActionPathInfo GetActionPathInfo(const AZStd::string& userPath, const AZStd::string& componentPath) const override;
         AZStd::string GetInteractionProviderPath() const override;

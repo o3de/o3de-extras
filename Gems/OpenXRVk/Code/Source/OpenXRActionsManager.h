@@ -41,6 +41,8 @@ namespace OpenXRVk
         //! Called by the Session each tick.
         bool SyncActions(XrTime predictedDisplayTime);
 
+        void LogCurrentInteractionProfile();
+
         /////////////////////////////////////////////////
         /// OpenXRActionsInterface overrides
         AZStd::vector<AZStd::string> GetAllActionSets() const override;

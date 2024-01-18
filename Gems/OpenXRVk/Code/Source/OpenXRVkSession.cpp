@@ -215,6 +215,8 @@ namespace OpenXRVk
                 {
                     // GALIB FIXME!
                     AZ_Printf("GALIB", "OpenXRVkSession FIXME XR_TYPE_EVENT_DATA_INTERACTION_PROFILE_CHANGED\n");
+                    m_actionsMgr->LogCurrentInteractionProfile();
+
 
                     //if (GetDescriptor().m_validationMode == AZ::RHI::ValidationMode::Enabled)
                     //{
@@ -442,7 +444,11 @@ namespace OpenXRVk
 
     void Session::OnBeginFrame(XrTime predictedDisplayTime)
     {
-        m_actionsMgr->SyncActions(predictedDisplayTime);
+        if (IsSessionFocused())
+        {
+            // Syncing actions only works if the session is in focused state
+            m_actionsMgr->SyncActions(predictedDisplayTime);
+        }
         m_visualizedSpacesMgr->SyncViews(predictedDisplayTime);
 
         //Notify the rest of the engine.

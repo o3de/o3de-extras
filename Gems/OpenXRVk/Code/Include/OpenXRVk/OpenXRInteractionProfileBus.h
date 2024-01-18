@@ -30,6 +30,7 @@ namespace OpenXRVk
         // The following functions are called during asset creation time. 
         virtual AZStd::string GetName() const = 0;
         virtual AZStd::vector<AZStd::string> GetUserPaths() const = 0;
+        virtual AZStd::string GetUserTopPath(const AZStd::string& userPathName) const = 0;
         virtual AZStd::vector<AZStd::string> GetComponentPaths(const AZStd::string& userPath) const = 0;
         //
         //////////////////////////////////////////////////////////

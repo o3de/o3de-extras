@@ -57,10 +57,7 @@ namespace OpenXRVk
         // Now that we have a new predicted display time, the session should be able
         // to sync actions and locate spaces.
         // The new predicted display time will be used to calculate XrPoses for the current frame.
-        if (session->IsSessionFocused())
-        {
-            session->OnBeginFrame(m_frameState.predictedDisplayTime);
-        }
+        session->OnBeginFrame(m_frameState.predictedDisplayTime);
         //Always return true as we want EndFrame to always be called. 
         return true;
     }

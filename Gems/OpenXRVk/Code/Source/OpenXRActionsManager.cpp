@@ -316,6 +316,52 @@ namespace OpenXRVk
         return true;
     }
 
+    void ActionsManager::LogCurrentInteractionProfile()
+    {
+        OpenXRInteractionProfileBus::EnumerateHandlers(
+        [this](OpenXRInteractionProfile* handler) -> bool
+        {
+            auto userPathStrs = handler->GetUserPaths();
+            auto profileName = handler->GetName();
+            AZ_Printf(LogName, "Visiting user paths for interaction profile [%s]\n", profileName.c_str());
+            for (const auto& userPathStr : userPathStrs)
+            {
+                const auto topPathstr = handler->GetUserTopPath(userPathStr);
+                XrPath xrPath;
+                XrResult result = xrStringToPath(m_xrInstance, topPathstr.c_str(), &xrPath);
+                if (IsError(result))
+                {
+                    PrintXrError(LogName, result, "Failed to get xrPath for user top path [%s]", topPathstr.c_str());
+                    continue;
+                }
+                XrInteractionProfileState profileStateOut{ XR_TYPE_INTERACTION_PROFILE_STATE };
+                result = xrGetCurrentInteractionProfile(
+                    m_xrSession, xrPath, &profileStateOut);
+                if (IsError(result))
+                {
+                    PrintXrError(LogName, result, "Failed to get profile state for user top path [%s]", topPathstr.c_str());
+                    continue;
+                }
+                if (profileStateOut.interactionProfile == XR_NULL_PATH)
+                {
+                    AZ_Printf(LogName, "Got an NULL Interaction Profile for [%s].\n", topPathstr.c_str());
+                    continue;
+                }
+                constexpr uint32_t numBytes = 256;
+                char pathAsCStr[numBytes];
+                uint32_t validBytes = 0;
+                result = xrPathToString(m_xrInstance, profileStateOut.interactionProfile, numBytes, &validBytes, pathAsCStr);
+                if (IsError(result))
+                {
+                    PrintXrError(LogName, result, "Failed to convert XrPath to string for user top path [%s]", topPathstr.c_str());
+                    continue;
+                }
+                AZ_Printf(LogName, "Current Interaction Profile for [%s] is [%s].\n", topPathstr.c_str(), pathAsCStr);
+            }
+            return true;
+        });
+    }
+
     /////////////////////////////////////////////////
     /// OpenXRActionsInterface overrides
     AZStd::vector<AZStd::string> ActionsManager::GetAllActionSets() const
@@ -417,6 +463,12 @@ namespace OpenXRVk
         {
             return AZ::Failure(AZStd::string(GetResultString(result)));
         }
+        if (!state.isActive)
+        {
+            return AZ::Failure(
+                AZStd::string::format("Boolean Action [%s] is NOT active.", m_actions[actionIndex].m_name.c_str())
+            );
+        }
 
         return AZ::Success(state.currentState);
     }
@@ -437,6 +489,12 @@ namespace OpenXRVk
         {
             return AZ::Failure(AZStd::string(GetResultString(result)));
         }
+        if (!state.isActive)
+        {
+            return AZ::Failure(
+                AZStd::string::format("Float Action [%s] is NOT active.", m_actions[actionIndex].m_name.c_str())
+            );
+        }
 
         return AZ::Success(state.currentState);
     }
@@ -456,6 +514,12 @@ namespace OpenXRVk
         if (IsError(result))
         {
             return AZ::Failure(AZStd::string(GetResultString(result)));
+        }
+        if (!state.isActive)
+        {
+            return AZ::Failure(
+                AZStd::string::format("Vector2 Action[%s] is NOT active.", m_actions[actionIndex].m_name.c_str())
+            );
         }
 
         return AZ::Success(AZ::Vector2(state.currentState.x, state.currentState.y));
@@ -501,8 +565,24 @@ namespace OpenXRVk
         }
         const auto actionIndex = actionHandle.GetIndex();
 
+        // First, we need to make sure the Action is active.
+        XrActionStatePose state{ XR_TYPE_ACTION_STATE_POSE };
+        XrActionStateGetInfo getInfo{ XR_TYPE_ACTION_STATE_GET_INFO };
+        getInfo.action = m_actions[actionIndex].m_xrAction;
+        XrResult result = xrGetActionStatePose(m_xrSession, &getInfo, &state);
+        if (IsError(result))
+        {
+            return AZ::Failure(AZStd::string(GetResultString(result)));
+        }
+        if (!state.isActive)
+        {
+            return AZ::Failure(
+                AZStd::string::format("Pose Action [%s] is NOT active.", m_actions[actionIndex].m_name.c_str())
+            );
+        }
+
         XrSpaceLocation spaceLocation {XR_TYPE_SPACE_LOCATION};
-        XrResult result = xrLocateSpace(m_actions[actionIndex].m_xrSpace, m_xrBaseVisualizedSpace, m_predictedDisplaytime, &spaceLocation);
+        result = xrLocateSpace(m_actions[actionIndex].m_xrSpace, m_xrBaseVisualizedSpace, m_predictedDisplaytime, &spaceLocation);
         if (IsError(result))
         {
             return AZ::Failure(AZStd::string(GetResultString(result)));
