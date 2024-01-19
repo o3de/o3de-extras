@@ -20,6 +20,7 @@ namespace ROS2::VehicleDynamics
     public:
         AZ_COMPONENT(WheelControllerComponent, "{AC594E08-DA5C-4B8D-9388-84D0840C177A}", AZ::Component);
         WheelControllerComponent() = default;
+        WheelControllerComponent(const AZ::EntityId& steeringEntity, const float steeringScale);
         ~WheelControllerComponent() = default;
 
         //////////////////////////////////////////////////////////////////////////

@@ -19,6 +19,7 @@ namespace ROS2::VehicleDynamics
     public:
         AZ_RTTI(AckermannModelLimits, "{796928D9-436F-472D-B841-E67F28F9CC82}", VehicleModelLimits);
         AckermannModelLimits() = default;
+        AckermannModelLimits(const float speedLimit, const float steeringLimit, const float acceleration);
         static void Reflect(AZ::ReflectContext* context);
 
         // VehicleModelLimits overrides
@@ -31,6 +32,6 @@ namespace ROS2::VehicleDynamics
     private:
         float m_speedLimit = 10.0f; //!< [Mps] Applies to absolute value
         float m_steeringLimit = 0.7f; //!< [rad] Applies to absolute value
-        float m_accelearation = 10.0f; //!< [m*s^(-2)] Linear acceleration limit
+        float m_acceleration = 10.0f; //!< [m*s^(-2)] Linear acceleration limit
     };
 } // namespace ROS2::VehicleDynamics

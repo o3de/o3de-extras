@@ -50,6 +50,23 @@ namespace ROS2::Controllers
             }
         }
     }
+    PidConfiguration::PidConfiguration(
+        const double p,
+        const double i,
+        const double d,
+        const double iMax,
+        const double iMin,
+        const bool antiWindup,
+        const double outputLimit)
+        : m_p(p)
+        , m_i(i)
+        , m_d(d)
+        , m_iMax(iMax)
+        , m_iMin(iMin)
+        , m_antiWindup(antiWindup)
+        , m_outputLimit(outputLimit)
+    {
+    }
 
     void PidConfiguration::InitializePid()
     {

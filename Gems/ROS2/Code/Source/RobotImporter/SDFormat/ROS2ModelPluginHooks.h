@@ -16,4 +16,8 @@ namespace ROS2::SDFormat::ROS2ModelPluginHooks
     //! components.
     ModelPluginImporterHook ROS2SkidSteeringModel();
 
+    //! Retrieve a model plugin importer hook which is used to map SDFormat model plugin of type Ackermann model drive into O3DE
+    //! components.
+    ModelPluginImporterHook ROS2AckermannModel();
+
 } // namespace ROS2::SDFormat::ROS2ModelPluginHooks

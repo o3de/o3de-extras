@@ -40,6 +40,7 @@ namespace ROS2
             const auto& importerHookImu = SDFormat::ROS2SensorHooks::ROS2ImuSensor();
             const auto& importerHookLidar = SDFormat::ROS2SensorHooks::ROS2LidarSensor();
             const auto& importerHookSkidSteering = SDFormat::ROS2ModelPluginHooks::ROS2SkidSteeringModel();
+            const auto& importerHookAckermann = SDFormat::ROS2ModelPluginHooks::ROS2AckermannModel();
             serializeContext->Class<ROS2RobotImporterEditorSystemComponent, ROS2RobotImporterSystemComponent>()
                 ->Version(0)
                 ->Attribute(
@@ -48,7 +49,9 @@ namespace ROS2
                                                           AZStd::move(importerHookGNSS),
                                                           AZStd::move(importerHookImu),
                                                           AZStd::move(importerHookLidar) })
-                ->Attribute("ModelPluginImporterHooks", SDFormat::ModelPluginImporterHooksStorage{ AZStd::move(importerHookSkidSteering) });
+                ->Attribute(
+                    "ModelPluginImporterHooks",
+                    SDFormat::ModelPluginImporterHooksStorage{ AZStd::move(importerHookSkidSteering), AZStd::move(importerHookAckermann) });
         }
 
         if (AZ::BehaviorContext* behaviorContext = azrtti_cast<AZ::BehaviorContext*>(context))

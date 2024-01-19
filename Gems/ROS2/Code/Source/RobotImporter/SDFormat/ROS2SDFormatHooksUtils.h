@@ -44,9 +44,9 @@ namespace ROS2::SDFormat
         //! @return entity id (invalid id if not found)
         AZ::EntityId GetJointEntityId(const std::string& jointName, const sdf::Model& sdfModel, const CreatedEntitiesMap& createdEntities);
 
-        //! Enable motor in EditorHingeJointComponent if possible and create WheelControllerComponent
+        //! Enable motor in EditorHingeJointComponent if possible
         //! @param entityId entity id of the modified entity
-        void SetWheelEntity(const AZ::EntityId& entityId);
+        void EnableMotor(const AZ::EntityId& entityId);
 
         //! Create a component and attach the component to the entity.
         //! This method ensures that game components are wrapped into GenericComponentWrapper.
@@ -86,6 +86,24 @@ namespace ROS2::SDFormat
                 }
             }
             return component;
+        }
+
+        //! Create a component and attach the component to the entity.
+        //! This method ensures that game components are wrapped into GenericComponentWrapper.
+        //! @param entityId entity id to which the new component is added
+        //! @param args constructor arguments used to create the new component
+        //! @return A pointer to the component. Returns a null pointer if the component could not be created.
+        template<class ComponentType, typename... Args>
+        AZ::Component* CreateComponent(const AZ::EntityId& entityId, Args&&... args)
+        {
+            AZ::Entity* entity = nullptr;
+            AZ::ComponentApplicationBus::BroadcastResult(entity, &AZ::ComponentApplicationRequests::FindEntity, entityId);
+            if (entity != nullptr)
+            {
+                return CreateComponent<ComponentType>(*entity, AZStd::forward<Args>(args)...);
+            }
+
+            return nullptr;
         }
     } // namespace HooksUtils
 } // namespace ROS2::SDFormat
