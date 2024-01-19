@@ -48,6 +48,14 @@ namespace ROS2
         bool OnInputChannelEventFiltered(const AzFramework::InputChannel& inputChannel) override;
         void OnKeyboardEvent(const AzFramework::InputChannel& inputChannel);
 
+
+        //! Remove the tilt from the transform.
+        //!
+        //! @param transform The transform to remove the tilt.
+        //! @return The transform without tilt.
+
+        AZ::Transform RemoveTiltFromTransform(const AZ::Transform& transform);
+
         //! Compute weighted average of the vectors in the buffer.
         //! @param buffer The buffer to compute the average.
         //! @return The average vector.

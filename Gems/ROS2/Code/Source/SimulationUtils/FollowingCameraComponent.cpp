@@ -29,6 +29,8 @@ namespace ROS2
     {
     }
 
+
+
     void FollowingCameraComponent::Reflect(AZ::ReflectContext* reflection)
     {
         FollowingCameraConfiguration::Reflect(reflection);
@@ -98,6 +100,40 @@ namespace ROS2
         InputChannelEventListener::Disconnect();
     }
 
+    AZ::Transform FollowingCameraComponent::RemoveTiltFromTransform(const AZ::Transform& transform)
+    {
+        const AZ::Vector3& entityTranslation = transform.GetTranslation();
+        const AZ::Vector3 axisX = transform.GetBasisX();
+        const AZ::Vector3 axisY = transform.GetBasisY();
+
+        const AZ::Matrix3x3 projectionOnXY {AZ::Matrix3x3::CreateFromColumns(AZ::Vector3::CreateAxisX(), AZ::Vector3::CreateAxisY(), AZ::Vector3::CreateZero())};
+
+        const AZ::Vector3 newAxisZ = AZ::Vector3::CreateAxisZ(); // new axis Z points up
+
+        // project axisX on the XY plane
+        const AZ::Vector3 projectedAxisX = (projectionOnXY * axisX);
+        const AZ::Vector3 projectedAxisY = (projectionOnXY * axisY);
+
+        AZ::Vector3 newAxisX = AZ::Vector3::CreateZero();
+        AZ::Vector3 newAxisY = AZ::Vector3::CreateZero();
+
+        // get 3rd vector of the new basis from the cross product of the projected vectors.
+        // Primarily we want to use the projectedAxisX as the newAxisX, but if it is zero-length, we use the projectedAxisY as the newAxisY.
+        if (!projectedAxisX.IsZero())
+        {
+            newAxisX = projectedAxisX.GetNormalized();
+            newAxisY = newAxisZ.Cross(newAxisX);
+        }
+        else
+        {
+            newAxisY = projectedAxisY.GetNormalized();
+            newAxisX = newAxisY.Cross(newAxisZ);
+        }
+
+        // create new transform from the new basis vectors and the old translation
+        return AZ::Transform::CreateFromMatrix3x3AndTranslation(AZ::Matrix3x3::CreateFromColumns(projectedAxisX, projectedAxisY, newAxisZ), entityTranslation);
+    }
+
     void FollowingCameraComponent::CacheTransform(const AZ::Transform& transform, float deltaTime)
     {
         // update the smoothing buffer
@@ -129,7 +165,7 @@ namespace ROS2
         // get parent's transform
         const AZ::Transform parent_transform = target_world_transform * target_local_transform.GetInverse();
 
-        CacheTransform(parent_transform, deltaTime);
+        CacheTransform(m_configuration.m_lockZAxis?RemoveTiltFromTransform(parent_transform):parent_transform , deltaTime);
 
         // get the averaged translation and quaternion
         AZ::Transform filtered_parent_transform = { SmoothTranslation(), SmoothRotation(), 1.f };
