@@ -35,7 +35,7 @@ namespace ROS2
         AZ_Assert(ros2Node, "ROS 2 node is not initialized");
 
         m_getSpawnablesNamesService = ros2Node->create_service<gazebo_msgs::srv::GetWorldProperties>(
-            "get_available_spawnable_namespawnable_names",
+            "get_available_spawnable_names",
             [this](const GetAvailableSpawnableNamesRequest request, GetAvailableSpawnableNamesResponse response)
             {
                 GetAvailableSpawnableNames(request, response);
@@ -114,16 +114,13 @@ namespace ROS2
 
         SpawnEntityResponse response;
 
-        auto namespaceValidation = ROS2Names::ValidateNamespace(spawnableNamespace);
-        if (!namespaceValidation.IsSuccess())
+        if (auto namespaceValidation = ROS2Names::ValidateNamespace(spawnableNamespace); !namespaceValidation.IsSuccess())
         {
             response.success = false;
             response.status_message = namespaceValidation.GetError().data();
             service_handle->send_response(*header, response);
             return;
         }
-
-        auto spawnPoints = GetSpawnPoints();
 
         if (!m_controller.GetSpawnables().contains(spawnableName))
         {
@@ -156,7 +153,6 @@ namespace ROS2
         {
             // if a ticket for this spawnable was not created but the spawnable name is correct, create the ticket and then use it to
             // spawn an entity
-            auto spawnable = m_controller.GetSpawnables().find(spawnableName);
             m_tickets.emplace(spawnable->first, AzFramework::EntitySpawnTicket(spawnable->second));
         }
 
@@ -171,7 +167,7 @@ namespace ROS2
 
         AZ::Transform transform;
 
-        if (spawnPoints.contains(spawnPointName))
+        if (auto spawnPoints = GetSpawnPoints(); spawnPoints.contains(spawnPointName))
         {
             transform = spawnPoints.at(spawnPointName).pose;
         }
