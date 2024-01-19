@@ -24,7 +24,7 @@
     "icon_path": "preview.png",
     "requirements": "This gem requires ROS 2 gem and PhysX gem.",
     "dependencies": [
-        "ROS2",
+        "ROS2==3.0.0",
         "PhysX"
     ],
     "repo_uri": "https://github.com/o3de/o3de-extras",
