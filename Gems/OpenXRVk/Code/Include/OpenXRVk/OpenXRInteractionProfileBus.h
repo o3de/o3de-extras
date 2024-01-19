@@ -51,6 +51,9 @@ namespace OpenXRVk
         //! @param componentPath Typically comes from OpenXRActionPath::m_componentPath.
         virtual ActionPathInfo GetActionPathInfo(const AZStd::string& userPath, const AZStd::string& componentPath) const = 0;
 
+        //! @returns An interaction profile/provider string path that looks like:
+        //! "/interaction_profiles/khr/simple_controller"
+        //! "/interaction_profiles/oculus/touch_controller"
         virtual AZStd::string GetInteractionProviderPath() const = 0;
         //
         /////////////////////////////////////////////////////////////

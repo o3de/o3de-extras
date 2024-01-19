@@ -134,4 +134,22 @@ namespace OpenXRVk
         return pose; 
     }
 
+    AZStd::string ConvertXrPathToString(XrInstance xrInstance, XrPath xrPath)
+    {
+        if ((xrInstance == XR_NULL_HANDLE) || (xrPath == XR_NULL_PATH))
+        {
+            return AZStd::string("");
+        }
+        constexpr uint32_t MaxBytes = 256;
+        char pathAsChars[MaxBytes];
+        uint32_t usedBytes = 0;
+        XrResult result = xrPathToString(xrInstance, xrPath, MaxBytes, &usedBytes, pathAsChars);
+        if (IsError(result))
+        {
+            PrintXrError("OpenXRVkUtils", result, "Failed to convert xrPath to a string with %u bytes.", MaxBytes);
+            return AZStd::string("");
+        }
+        return AZStd::string(pathAsChars);
+    }
+
 }

@@ -29,9 +29,27 @@ namespace OpenXRVk
 
     void KHRSimpleProfileSystemComponent::Activate()
     {
-        m_name = { 
-            "Khronos Simple", // Khronos Simple Interaction Profile
-            "/interaction_profiles/khr/simple_controller"
+        // m_name = { 
+        //     "Khronos Simple", // Khronos Simple Interaction Profile
+        //     "/interaction_profiles/khr/simple_controller"
+        // };
+        // 
+        // m_userPaths = {
+        //     {LeftHand, "/user/hand/left"},
+        //     {RightHand, "/user/hand/right"}
+        // };
+        // 
+        // const AZStd::vector<OpenXRComponentPath> commonPaths = {
+        //         {{"Select Button", "/input/select/click"}, XR_ACTION_TYPE_BOOLEAN_INPUT},
+        //         {{"Menu Button",   "/input/menu/click"},   XR_ACTION_TYPE_BOOLEAN_INPUT},
+        //         {{"Grip Pose",     "/input/grip/pose"},    XR_ACTION_TYPE_POSE_INPUT},
+        //         {{"Aim Pose",      "/input/aim/pose"},     XR_ACTION_TYPE_POSE_INPUT},
+        //         {{"Vibration",     "/output/haptic"},      XR_ACTION_TYPE_VIBRATION_OUTPUT},
+        // };
+
+        m_name = {
+            "Oculus Touch",
+            "/interaction_profiles/oculus/touch_controller"
         };
 
         m_userPaths = {
@@ -40,7 +58,9 @@ namespace OpenXRVk
         };
 
         const AZStd::vector<OpenXRComponentPath> commonPaths = {
-                {{"Select Button", "/input/select/click"}, XR_ACTION_TYPE_BOOLEAN_INPUT},
+                {{"X Click",   "/input/x/click"},   XR_ACTION_TYPE_BOOLEAN_INPUT},
+                {{"X Touch",   "/input/x/touch"},   XR_ACTION_TYPE_BOOLEAN_INPUT},
+                {{"Select Button", "/input/select/click"}, XR_ACTION_TYPE_BOOLEAN_INPUT}, // Just Testing. NOT supported in oculus
                 {{"Menu Button",   "/input/menu/click"},   XR_ACTION_TYPE_BOOLEAN_INPUT},
                 {{"Grip Pose",     "/input/grip/pose"},    XR_ACTION_TYPE_POSE_INPUT},
                 {{"Aim Pose",      "/input/aim/pose"},     XR_ACTION_TYPE_POSE_INPUT},

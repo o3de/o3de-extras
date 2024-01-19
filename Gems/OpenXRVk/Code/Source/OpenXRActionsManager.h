@@ -73,10 +73,24 @@ namespace OpenXRVk
         // Asset Cache relative path
         static constexpr char DefaultActionsAssetPath[] = "openxr.xractions";
 
+        // The following struct will be used at initialization only.
+        // All the bindings for all actions will be called 
+        struct SuggestedBindings
+        {
+            // Interaction Profile XrPath
+            XrPath m_profileXrPath;
+            // List of action bindings that will be registred for this profile.
+            AZStd::vector<XrActionSuggestedBinding> m_suggestedBindingsList;
+        };
+        //! The key is the user friendly profile name.
+        using SuggestedBindingsPerProfile = AZStd::unordered_map<AZStd::string, SuggestedBindings>;
 
+        //! @param actionSet The user configured data for the ActionSet.
+        //! @param suggestedBindingsPerProfile In this dictionary we will collect all the action bindings
+        //!                                    for each interaction profile.
         bool InitActionSetInternal(const OpenXRActionSet& actionSet,
-            AZStd::unordered_set<XrPath>& activeProfiles,
-            AZStd::vector<XrActionSuggestedBinding>& activeBindings);
+            SuggestedBindingsPerProfile& suggestedBindingsPerProfile
+            );
 
         struct ActionInfo
         {
@@ -97,15 +111,13 @@ namespace OpenXRVk
         };
 
         bool InitActionBindingsInternal(ActionSetInfo& actionSetInfo, const OpenXRAction& action,
-                                        AZStd::unordered_set<XrPath>& activeProfiles,
-                                        AZStd::vector<XrActionSuggestedBinding>& activeBindings);
+            SuggestedBindingsPerProfile& suggestedBindingsPerProfile);
 
         XrAction CreateXrActionAndXrSpace(const ActionSetInfo& actionSetInfo,
             const OpenXRAction& action, const XrActionType actionType, XrSpace& newXrActionSpace) const;
 
         uint32_t AppendActionBindings(const OpenXRAction& action, XrAction newXrAction,
-            AZStd::unordered_set<XrPath>& activeProfiles,
-            AZStd::vector<XrActionSuggestedBinding>& activeBindings) const;
+            SuggestedBindingsPerProfile& suggestedBindingsPerProfile) const;
         
         AZ::Outcome<bool, AZStd::string> ChangeActionSetStateInternal(const AZStd::string& actionSetName, bool activate, bool recreateXrActiveActionSets = false);
         void RecreateXrActiveActionSets();

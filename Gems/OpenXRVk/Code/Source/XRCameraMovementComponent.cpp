@@ -173,6 +173,7 @@ namespace OpenXRVk
         }
         // Button
         {
+            m_movement.SetZ(0.0f);
             auto actionHandle = actionsIFace->GetActionHandle("my_action_set", "button");
             if (!actionHandle.IsValid())
             {
@@ -199,7 +200,7 @@ namespace OpenXRVk
             if (outcome.IsSuccess())
             {
                 AZ::Transform tm(outcome.TakeValue());
-                AZ_Printf("Galib", "left_pose tm=\n%s\n", AZStd::to_string(tm).c_str());
+                //AZ_Printf("Galib", "left_pose tm=\n%s\n", AZStd::to_string(tm).c_str());
             }
         }
 

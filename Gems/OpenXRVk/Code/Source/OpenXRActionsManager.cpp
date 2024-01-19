@@ -45,31 +45,44 @@ namespace OpenXRVk
             return true;
         }
 
-        AZStd::unordered_set<XrPath> activeProfiles;
-        AZStd::vector<XrActionSuggestedBinding> activeBindings;
+        SuggestedBindingsPerProfile suggestedBindingsPerProfile;
         for (const auto& actionSet : actionsBindingAsset->m_actionSets)
         {
-            if (!InitActionSetInternal(actionSet, activeProfiles, activeBindings))
+            if (!InitActionSetInternal(actionSet, suggestedBindingsPerProfile))
             {
                 return false;
             }
         }
 
-        if (activeBindings.empty() || activeProfiles.empty())
+        if (suggestedBindingsPerProfile.empty())
         {
             AZ_Printf(LogName, "This application will run without actions.\n");
             return true;
         }
 
         // Register the bindings for each active interaction profile.
-        for (const auto& profilePath : activeProfiles)
+        uint32_t activeProfileCount = 0;
+        for (const auto& [profileName, suggestedBindings] : suggestedBindingsPerProfile)
         {
-            XrInteractionProfileSuggestedBinding suggestedBindings{ XR_TYPE_INTERACTION_PROFILE_SUGGESTED_BINDING };
-            suggestedBindings.interactionProfile = profilePath;
-            suggestedBindings.suggestedBindings = activeBindings.data();
-            suggestedBindings.countSuggestedBindings = static_cast<uint32_t>(activeBindings.size());
-            XrResult result = xrSuggestInteractionProfileBindings(m_xrInstance, &suggestedBindings);
-            WARN_IF_UNSUCCESSFUL(result);
+            XrInteractionProfileSuggestedBinding xrSuggestedBindings{ XR_TYPE_INTERACTION_PROFILE_SUGGESTED_BINDING };
+            xrSuggestedBindings.interactionProfile = suggestedBindings.m_profileXrPath;
+            xrSuggestedBindings.suggestedBindings = suggestedBindings.m_suggestedBindingsList.data();
+            xrSuggestedBindings.countSuggestedBindings = static_cast<uint32_t>(suggestedBindings.m_suggestedBindingsList.size());
+            XrResult result = xrSuggestInteractionProfileBindings(m_xrInstance, &xrSuggestedBindings);
+            if (IsError(result))
+            {
+                PrintXrError(LogName, result, "Got an error during suggested bindings registration for profile [%s].", profileName.c_str());
+            }
+            else
+            {
+                AZ_Printf(LogName, "Successfully registred action bindings for profile [%s].\n", profileName.c_str());
+                activeProfileCount++;
+            }
+        }
+        if (activeProfileCount < 1)
+        {
+            AZ_Error(LogName, false, "Failed to activate at least one interaction profile. This application will run without actions.\n");
+            return true;
         }
 
         AZStd::vector<XrActionSet> xrActionSets;
@@ -123,8 +136,7 @@ namespace OpenXRVk
 
 
     bool ActionsManager::InitActionSetInternal(const OpenXRActionSet& actionSet,
-        AZStd::unordered_set<XrPath>& activeProfiles,
-        AZStd::vector<XrActionSuggestedBinding>& activeBindings)
+        SuggestedBindingsPerProfile& suggestedBindingsPerProfile)
     {
         // Create an action set.
         XrActionSetCreateInfo actionSetCreateInfo{};
@@ -153,7 +165,7 @@ namespace OpenXRVk
         ActionSetInfo& newActionSetInfo = m_actionSets.back();
         for (const auto& action : actionSet.m_actions)
         {
-            if (!InitActionBindingsInternal(newActionSetInfo, action, activeProfiles, activeBindings))
+            if (!InitActionBindingsInternal(newActionSetInfo, action, suggestedBindingsPerProfile))
             {
                 AZ_Error(LogName, false, "Failed to created action named [%s] under actionSet named [%s].",
                     action.m_name.c_str(), actionSet.m_name.c_str());
@@ -220,8 +232,7 @@ namespace OpenXRVk
 
     uint32_t ActionsManager::AppendActionBindings(const OpenXRAction& action,
         XrAction newXrAction,
-        AZStd::unordered_set<XrPath>& activeProfiles,
-        AZStd::vector<XrActionSuggestedBinding>& activeBindings) const
+        SuggestedBindingsPerProfile& suggestedBindingsPerProfile) const
     {
         uint32_t additionalBindingsCount = 0;
         for (const auto& actionPath : action.m_actionPaths)
@@ -250,21 +261,28 @@ namespace OpenXRVk
                 continue;
             }
 
-            auto interactionProfilePathStr = interactionProviderIface->GetInteractionProviderPath();
-            XrPath xrProviderPath;
-            result = xrStringToPath(m_xrInstance, interactionProfilePathStr.c_str(), &xrProviderPath);
-            if (IsError(result))
+            // If the interaction profile is not in the dictionary, then add it.
+            auto profilePathStr = interactionProviderIface->GetInteractionProviderPath();
+            if (!suggestedBindingsPerProfile.contains(profilePathStr))
             {
-                PrintXrError(LogName, result, "Failed to create XrPath for action provider [%s], provider path [%s].\n",
-                    actionPath.m_interactionProfile.c_str(), interactionProfilePathStr.c_str());
-                continue;
+                XrPath profileXrPath;
+                result = xrStringToPath(m_xrInstance, profilePathStr.c_str(), &profileXrPath);
+                if (IsError(result))
+                {
+                    PrintXrError(LogName, result, "Failed to get profile [%s] XrPath while working on action [%s] and the action path [%s]",
+                        profilePathStr.c_str(), action.m_name.c_str(), actionPath.GetEditorText().c_str());
+                    continue;
+                }
+                suggestedBindingsPerProfile.emplace(profilePathStr, SuggestedBindings{});
+                SuggestedBindings& newProfileBindings = suggestedBindingsPerProfile.at(profilePathStr);
+                newProfileBindings.m_profileXrPath = profileXrPath;
             }
-            activeProfiles.emplace(xrProviderPath);
+            SuggestedBindings& profileBindings = suggestedBindingsPerProfile.at(profilePathStr);
 
             XrActionSuggestedBinding binding;
             binding.action = newXrAction;
             binding.binding = xrBindingPath;
-            activeBindings.push_back(binding);
+            profileBindings.m_suggestedBindingsList.push_back(binding);
             additionalBindingsCount++;
         }
 
@@ -272,8 +290,7 @@ namespace OpenXRVk
     }
 
     bool ActionsManager::InitActionBindingsInternal(ActionSetInfo& actionSetInfo, const OpenXRAction& action,
-        AZStd::unordered_set<XrPath>& activeProfiles,
-        AZStd::vector<XrActionSuggestedBinding>& activeBindings)
+        SuggestedBindingsPerProfile& suggestedBindingsPerProfile)
     {
         // One OpenXRAction object will become one XrAction.
         // An OpenXRAction contains a list of OpenXRActionPath that need to be bound.
@@ -290,7 +307,7 @@ namespace OpenXRVk
         }
 
         // For each actionPath in the list, create the XrPath and its binding.
-        const auto additionalBindingsCount = AppendActionBindings(action, newXrAction, activeProfiles, activeBindings);
+        const auto additionalBindingsCount = AppendActionBindings(action, newXrAction, suggestedBindingsPerProfile);
         if (additionalBindingsCount < 1)
         {
             // This action has no bindings. Don't add it to the active actions list.
@@ -347,16 +364,16 @@ namespace OpenXRVk
                     AZ_Printf(LogName, "Got an NULL Interaction Profile for [%s].\n", topPathstr.c_str());
                     continue;
                 }
-                constexpr uint32_t numBytes = 256;
-                char pathAsCStr[numBytes];
-                uint32_t validBytes = 0;
-                result = xrPathToString(m_xrInstance, profileStateOut.interactionProfile, numBytes, &validBytes, pathAsCStr);
-                if (IsError(result))
+                AZStd::string activeProfileName = ConvertXrPathToString(m_xrInstance, profileStateOut.interactionProfile);
+                if (activeProfileName.empty())
                 {
-                    PrintXrError(LogName, result, "Failed to convert XrPath to string for user top path [%s]", topPathstr.c_str());
+                    PrintXrError(LogName, result, "Failed to convert Interaction Profile XrPath to string for user top path [%s]", topPathstr.c_str());
                     continue;
                 }
-                AZ_Printf(LogName, "Current Interaction Profile for [%s] is [%s].\n", topPathstr.c_str(), pathAsCStr);
+                else
+                {
+                    AZ_Printf(LogName, "Current Interaction Profile for [%s] is [%s].\n", topPathstr.c_str(), activeProfileName.c_str());
+                }
             }
             return true;
         });
