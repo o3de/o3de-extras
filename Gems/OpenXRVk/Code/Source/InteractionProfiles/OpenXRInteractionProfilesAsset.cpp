@@ -11,7 +11,7 @@
 namespace OpenXRVk
 {
     ///////////////////////////////////////////////////////////
-    /// OpenXRActionBindingsAsset
+    /// OpenXRInteractionProfilesAsset
     void OpenXRInteractionProfilesAsset::Reflect(AZ::ReflectContext* context)
     {
         OpenXRInteractionProfileDescriptor::Reflect(context);
@@ -37,7 +37,15 @@ namespace OpenXRVk
             }
         }
     }
-    /// OpenXRActionBindingsAsset
+    /// OpenXRInteractionProfilesAsset
     ///////////////////////////////////////////////////////////
+
+    OpenXRInteractionProfilesAssetHandler::OpenXRInteractionProfilesAssetHandler()
+        : AzFramework::GenericAssetHandler<OpenXRInteractionProfilesAsset>(
+            OpenXRInteractionProfilesAsset::s_assetTypeName,
+            "Other",
+            OpenXRInteractionProfilesAsset::s_assetExtension)
+    {
+    }
 
 } // namespace OpenXRVk

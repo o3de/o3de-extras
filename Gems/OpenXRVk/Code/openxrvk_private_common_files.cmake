@@ -31,12 +31,16 @@ set(FILES
     Source/OpenXRVkSwapChain.cpp
     Source/OpenXRVkSystemComponent.cpp
     Source/OpenXRVkUtils.cpp
+    Source/InteractionProfiles/KHRSimpleProfileSystemComponent.cpp
+    Source/InteractionProfiles/KHRSimpleProfileSystemComponent.h
+    Source/InteractionProfiles/OpenXRInteractionProfileDescriptor.cpp
+    Source/InteractionProfiles/OpenXRInteractionProfileDescriptor.h
+    Source/InteractionProfiles/OpenXRInteractionProfilesAsset.cpp
+    Source/InteractionProfiles/OpenXRInteractionProfilesAsset.h
     Source/OpenXRActionsBindingAsset.cpp
     Source/OpenXRActionsBindingAsset.h
     Source/XRCameraMovementComponent.cpp
     Source/XRCameraMovementComponent.h
-    Source/InteractionProfiles/KHRSimpleProfileSystemComponent.cpp
-    Source/InteractionProfiles/KHRSimpleProfileSystemComponent.h
     Source/OpenXRActionsManager.cpp
     Source/OpenXRActionsManager.h
     Source/OpenXRVisualizedSpacesManager.cpp

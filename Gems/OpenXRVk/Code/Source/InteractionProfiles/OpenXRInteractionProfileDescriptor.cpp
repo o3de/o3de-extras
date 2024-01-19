@@ -141,9 +141,9 @@ namespace OpenXRVk
                     ->ClassElement(AZ::Edit::ClassElements::EditorData, "")
                     ->Attribute(AZ::Edit::Attributes::AutoExpand, true)
                     ->DataElement(AZ::Edit::UIHandlers::Default, &OpenXRInteractionProfileDescriptor::m_uniqueName, "Unique Name", "Unique name across all interaction profiles")
-                    ->DataElement(AZ::Edit::UIHandlers::Default, &OpenXRInteractionProfileDescriptor::m_uniqueName, "Path", "OpenXR Canonical Path for this interation profile.")
-                    ->DataElement(AZ::Edit::UIHandlers::Default, &OpenXRInteractionProfileDescriptor::m_uniqueName, "User Paths", "List of user paths")
-                    ->DataElement(AZ::Edit::UIHandlers::Default, &OpenXRInteractionProfileDescriptor::m_uniqueName, "Common Component Paths", "List of component paths supported by all User Paths")
+                    ->DataElement(AZ::Edit::UIHandlers::Default, &OpenXRInteractionProfileDescriptor::m_path, "Path", "OpenXR Canonical Path for this interation profile.")
+                    ->DataElement(AZ::Edit::UIHandlers::Default, &OpenXRInteractionProfileDescriptor::m_userPathDescriptors, "User Paths", "List of user paths")
+                    ->DataElement(AZ::Edit::UIHandlers::Default, &OpenXRInteractionProfileDescriptor::m_commonComponentPathDescriptors, "Common Component Paths", "List of component paths supported by all User Paths")
                     ;
             }
         }

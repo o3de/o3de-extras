@@ -15,6 +15,8 @@
 #include <AzCore/Serialization/ObjectStream.h>
 #include <AzCore/Asset/AssetCommon.h>
 
+#include <AzFramework/Asset/GenericAssetHandler.h>
+
 #include "InteractionProfiles/OpenXRInteractionProfileDescriptor.h"
 
 
@@ -30,8 +32,8 @@ namespace OpenXRVk
         : public AZ::Data::AssetData
     {
     public:
-        AZ_RTTI(OpenXRActionBindingsAsset, "{02555DCD-E363-42FB-935C-4E67CC3A1699}", AZ::Data::AssetData);
-        AZ_CLASS_ALLOCATOR(OpenXRActionBindingsAsset, AZ::SystemAllocator);
+        AZ_RTTI(OpenXRInteractionProfilesAsset, "{02555DCD-E363-42FB-935C-4E67CC3A1699}", AZ::Data::AssetData);
+        AZ_CLASS_ALLOCATOR(OpenXRInteractionProfilesAsset, AZ::SystemAllocator);
         static void Reflect(AZ::ReflectContext* context);
 
         static constexpr char s_assetTypeName[] = "OpenXR Interaction Profiles";
@@ -39,4 +41,17 @@ namespace OpenXRVk
 
         AZStd::vector<OpenXRInteractionProfileDescriptor> m_interactionProfileDescriptors;
     };
+
+    //! Custom asset handler
+    class OpenXRInteractionProfilesAssetHandler final
+        : public AzFramework::GenericAssetHandler<OpenXRInteractionProfilesAsset>
+    {
+    public:
+        AZ_RTTI(OpenXRInteractionProfilesAssetHandler, "{1C4A27E9-6768-4C59-9582-2A01A0DEC1D0}", AzFramework::GenericAssetHandler<OpenXRInteractionProfilesAsset>);
+        AZ_CLASS_ALLOCATOR(OpenXRInteractionProfilesAssetHandler, AZ::SystemAllocator);
+
+        OpenXRInteractionProfilesAssetHandler();
+    };
+
+
 }// namespace OpenXRVk
