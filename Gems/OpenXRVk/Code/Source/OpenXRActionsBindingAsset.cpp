@@ -6,7 +6,7 @@
  *
  */
 
-#include <OpenXRVk/OpenXRInteractionProfileBus.h>
+#include "InteractionProfiles/OpenXRInteractionProfilesProviderInterface.h"
 #include "OpenXRActionsBindingAsset.h"
 
 namespace OpenXRVk
@@ -58,14 +58,12 @@ namespace OpenXRVk
 
     AZStd::vector<AZStd::string> OpenXRActionPath::GetInteractionProfiles() const
     {
-        AZStd::vector<AZStd::string> retList;
-
-        OpenXRInteractionProfileBus::EnumerateHandlers([&retList](OpenXRInteractionProfile* handler) -> bool {
-            retList.push_back(handler->GetName());
-            return true;
-        });
-
-        return retList;
+        auto interactionProviderIface = OpenXRInteractionProfilesProviderInterface::Get();
+        if (!interactionProviderIface)
+        {
+            return {};
+        }
+        return interactionProviderIface->GetInteractionProfileNames();
     }
 
     AZ::Crc32 OpenXRActionPath::OnUserPathSelected()
@@ -76,9 +74,21 @@ namespace OpenXRVk
     AZStd::vector<AZStd::string> OpenXRActionPath::GetUserPaths() const
     {
         AZStd::vector<AZStd::string> retList;
+        auto interactionProviderIface = OpenXRInteractionProfilesProviderInterface::Get();
+        if (!interactionProviderIface)
+        {
+            return retList;
+        }
 
-        OpenXRInteractionProfileBus::EventResult(retList, m_interactionProfile, &OpenXRInteractionProfile::GetUserPaths);
-
+        const auto * profileDescriptor = interactionProviderIface->GetInteractionProfileDescriptor(m_interactionProfile);
+        if (!profileDescriptor)
+        {
+            return retList;
+        }
+        for (const auto& userPathDescriptor : profileDescriptor->m_userPathDescriptors)
+        {
+            retList.push_back(userPathDescriptor.m_name);
+        }
         return retList;
     }
 
@@ -90,8 +100,32 @@ namespace OpenXRVk
     AZStd::vector<AZStd::string> OpenXRActionPath::GetComponentPaths() const
     {
         AZStd::vector<AZStd::string> retList;
+        auto interactionProviderIface = OpenXRInteractionProfilesProviderInterface::Get();
+        if (!interactionProviderIface)
+        {
+            return retList;
+        }
 
-        OpenXRInteractionProfileBus::EventResult(retList, m_interactionProfile, &OpenXRInteractionProfile::GetComponentPaths, m_userPath);
+        const auto* profileDescriptor = interactionProviderIface->GetInteractionProfileDescriptor(m_interactionProfile);
+        if (!profileDescriptor)
+        {
+            return retList;
+        }
+        const auto* userPathDescriptor = profileDescriptor->GetUserPathDescriptor(m_userPath);
+        if (!userPathDescriptor)
+        {
+            return retList;
+        }
+
+        for (const auto& componentPath : userPathDescriptor->m_componentPathDescriptors)
+        {
+            retList.push_back(componentPath.m_name);
+        }
+
+        for (const auto& componentPath : profileDescriptor->m_commonComponentPathDescriptors)
+        {
+            retList.push_back(componentPath.m_name);
+        }
 
         return retList;
     }

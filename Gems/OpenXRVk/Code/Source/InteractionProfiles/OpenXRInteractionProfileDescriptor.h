@@ -46,6 +46,10 @@ namespace OpenXRVk
         //! The user will be presented with a combo box to avoid
         //! chances for error.
         AZStd::string m_actionTypeStr;
+
+    private:
+        AZStd::string GetEditorText();
+
     };
 
     class OpenXRInteractionUserPathDescriptor final
@@ -64,6 +68,10 @@ namespace OpenXRVk
         //! Component Paths that are only supported under this user path.
         //! This list can be empty.
         AZStd::vector<OpenXRInteractionComponentPathDescriptor> m_componentPathDescriptors;
+
+    private:
+        AZStd::string GetEditorText();
+
     };
 
     class OpenXRInteractionProfileDescriptor final
@@ -74,6 +82,13 @@ namespace OpenXRVk
 
         static void Reflect(AZ::ReflectContext* reflection);
 
+        static constexpr char LogName[] = "OpenXRInteractionProfileDescriptor";
+
+        //! Returns success only if the data makes sense, has proper casing, etc.
+        AZ::Outcome<void, AZStd::string> Validate() const;
+
+        const OpenXRInteractionUserPathDescriptor* GetUserPathDescriptor(const AZStd::string& userPathName) const;
+
         //! Unique name across all OpenXRInteractionProfileDescriptor.
         //! It serves also as user friendly display name, and because
         //! it is unique it can be used in a dictionary.
@@ -83,6 +98,9 @@ namespace OpenXRVk
         AZStd::vector<OpenXRInteractionUserPathDescriptor> m_userPathDescriptors;
         // ComponentsPaths that are supported by all User Paths listed in @m_userPathDescriptors
         AZStd::vector<OpenXRInteractionComponentPathDescriptor> m_commonComponentPathDescriptors;
+
+    private:
+        AZStd::string GetEditorText();
     };
 
 }// namespace OpenXRVk

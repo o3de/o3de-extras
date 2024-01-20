@@ -48,4 +48,36 @@ namespace OpenXRVk
     {
     }
 
+    bool OpenXRInteractionProfilesAssetHandler::SaveAssetData(const AZ::Data::Asset<AZ::Data::AssetData>& asset, AZ::IO::GenericStream* stream)
+    {
+        auto profileAsset = asset.GetAs<OpenXRInteractionProfilesAsset>();
+        if (!profileAsset)
+        {
+            AZ_Error(LogName, false, "This should be an OpenXR Interaction Profile Asset, as this is the only type this handler can process.");
+            return false;
+        }
+        const auto& descriptorsList = profileAsset->m_interactionProfileDescriptors;
+        if (descriptorsList.empty())
+        {
+            AZ_Error(LogName, false, "The list of Interaction Profile Descriptors is empty.");
+            return false;
+        }
+
+        if (!m_serializeContext)
+        {
+            AZ_Error(LogName, false, "Can't save the OpenXR Interaction Profile Asset without a serialize context.");
+            return false;
+        }
+
+        for (const auto& profileDescriptor : descriptorsList)
+        {
+            if (!profileDescriptor.Validate())
+            {
+                return false;
+            }
+        }
+        return AZ::Utils::SaveObjectToStream(*stream, AZ::ObjectStream::ST_JSON, profileAsset,
+            asset->RTTI_GetType(), m_serializeContext);
+    }
+
 } // namespace OpenXRVk

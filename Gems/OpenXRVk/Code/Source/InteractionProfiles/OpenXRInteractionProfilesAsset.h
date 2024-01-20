@@ -50,7 +50,11 @@ namespace OpenXRVk
         AZ_RTTI(OpenXRInteractionProfilesAssetHandler, "{1C4A27E9-6768-4C59-9582-2A01A0DEC1D0}", AzFramework::GenericAssetHandler<OpenXRInteractionProfilesAsset>);
         AZ_CLASS_ALLOCATOR(OpenXRInteractionProfilesAssetHandler, AZ::SystemAllocator);
 
+        static constexpr char LogName[] = "OpenXRInteractionProfilesAssetHandler";
+
         OpenXRInteractionProfilesAssetHandler();
+
+        bool SaveAssetData(const AZ::Data::Asset<AZ::Data::AssetData>& asset, AZ::IO::GenericStream* stream) override;
     };
 
 

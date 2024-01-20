@@ -123,26 +123,4 @@ namespace OpenXRVk
         m_interactionProfilesAssetHandler->Unregister();
     }
 
-    // ///////////////////////////////////////////////////////////////////
-    // // AssetTypeInfoBus overrides
-    // AZ::Data::AssetType SystemComponent::GetAssetType() const
-    // {
-    //     return AZ::AzTypeInfo<OpenXRActionBindingsAsset>::Uuid();
-    // }
-    // 
-    // const char* SystemComponent::GetAssetTypeDisplayName() const
-    // {
-    //     return OpenXRActionBindingsAsset::s_assetTypeName;
-    // }
-    // 
-    // void SystemComponent::GetAssetTypeExtensions(AZStd::vector<AZStd::string>& extensions)
-    // {
-    //     extensions.push_back(OpenXRActionBindingsAsset::s_assetExtension);
-    // }
-    // 
-    // bool SystemComponent::CanCreateComponent([[maybe_unused]] const AZ::Data::AssetId& assetId) const
-    // {
-    //     return false;
-    // }
-    // ///////////////////////////////////////////////////////////////////
 }
