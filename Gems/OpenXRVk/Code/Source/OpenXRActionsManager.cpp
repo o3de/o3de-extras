@@ -10,7 +10,7 @@
 
 #include <Atom/RPI.Reflect/Asset/AssetUtils.h>
 
-#include "OpenXRActionsBindingAsset.h"
+#include "OpenXRActionSetsAsset.h"
 #include <OpenXRVk/OpenXRInteractionProfileBus.h>
 #include <OpenXRVk/OpenXRVkUtils.h>
 #include <OpenXRVk/OpenXRVisualizedSpacesInterface.h>
