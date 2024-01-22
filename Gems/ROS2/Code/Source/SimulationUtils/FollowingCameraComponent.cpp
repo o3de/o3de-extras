@@ -100,9 +100,8 @@ namespace ROS2
         InputChannelEventListener::Disconnect();
     }
 
-    AZ::Transform FollowingCameraComponent::RemoveTiltFromTransform(const AZ::Transform& transform)
+    AZ::Transform FollowingCameraComponent::RemoveTiltFromTransform(AZ::Transform transform)
     {
-        const AZ::Vector3& entityTranslation = transform.GetTranslation();
         const AZ::Vector3 axisX = transform.GetBasisX();
         const AZ::Vector3 axisY = transform.GetBasisY();
 
@@ -129,9 +128,9 @@ namespace ROS2
             newAxisY = projectedAxisY.GetNormalized();
             newAxisX = newAxisY.Cross(newAxisZ);
         }
-
-        // create new transform from the new basis vectors and the old translation
-        return AZ::Transform::CreateFromMatrix3x3AndTranslation(AZ::Matrix3x3::CreateFromColumns(projectedAxisX, projectedAxisY, newAxisZ), entityTranslation);
+        // apply rotation using created basis
+        transform.SetRotation(AZ::Quaternion::CreateFromBasis(newAxisX, newAxisY, newAxisZ));
+        return transform;
     }
 
     void FollowingCameraComponent::CacheTransform(const AZ::Transform& transform, float deltaTime)
@@ -165,7 +164,8 @@ namespace ROS2
         // get parent's transform
         const AZ::Transform parent_transform = target_world_transform * target_local_transform.GetInverse();
 
-        CacheTransform(m_configuration.m_lockZAxis?RemoveTiltFromTransform(parent_transform):parent_transform , deltaTime);
+        const AZ::Transform transformToCache = m_configuration.m_lockZAxis ? RemoveTiltFromTransform(parent_transform) : parent_transform;
+        CacheTransform(transformToCache, deltaTime);
 
         // get the averaged translation and quaternion
         AZ::Transform filtered_parent_transform = { SmoothTranslation(), SmoothRotation(), 1.f };
