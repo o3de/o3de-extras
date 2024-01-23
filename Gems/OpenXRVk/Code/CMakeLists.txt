@@ -88,7 +88,8 @@ ly_create_alias(NAME OpenXRVk.Clients NAMESPACE Gem TARGETS Gem::OpenXRVk)
 ly_create_alias(NAME OpenXRVk.Unified NAMESPACE Gem TARGETS Gem::OpenXRVk)
 
 if(PAL_TRAIT_BUILD_HOST_TOOLS)
-
+    
+    #
     ly_add_target(
         NAME ${gem_name}.Builders.Static STATIC
         NAMESPACE Gem
@@ -104,8 +105,12 @@ if(PAL_TRAIT_BUILD_HOST_TOOLS)
                 AZ::AzCore
                 AZ::AzFramework
                 AZ::AssetBuilderSDK
+                ${openxr_dependency}
+                Gem::${gem_name}.Static
     )
 
+    # It is very important that the target name ends with "*.Buiders"
+    # because it maakes the module loadable by AssetBuilder.exe.
     ly_add_target(
         NAME ${gem_name}.Builders GEM_MODULE
         NAMESPACE Gem
@@ -134,8 +139,10 @@ if(PAL_TRAIT_BUILD_HOST_TOOLS)
                 O3DE_GEM_VERSION=${gem_version}
     )
 
-    # create an alias for the tool version
-    ly_create_alias(NAME ${gem_name}.Tools NAMESPACE Gem TARGETS Gem::${gem_name}.Builders)
+    # Create an alias for the tool version.
+    # This is necessary so the Editor loads the Module. And the trick
+    # is to make sure the alias name ends in ".Tools"
+    ly_create_alias(NAME ${gem_name}.Tools NAMESPACE Gem TARGETS Gem::${gem_name})
 
 endif()
 

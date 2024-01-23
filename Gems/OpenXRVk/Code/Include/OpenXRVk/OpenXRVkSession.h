@@ -98,8 +98,8 @@ namespace OpenXRVk
         XrInstance m_xrInstance = XR_NULL_HANDLE;
         XrGraphicsBindingVulkan2KHR m_graphicsBinding{ XR_TYPE_GRAPHICS_BINDING_VULKAN_KHR };
 
-        AZStd::unique_ptr<ActionsManager> m_actionsMgr;
-        AZStd::unique_ptr<VisualizedSpacesManager> m_visualizedSpacesMgr;
+        //AZStd::unique_ptr<ActionsManager> m_actionsMgr;
+        //AZStd::unique_ptr<VisualizedSpacesManager> m_visualizedSpacesMgr;
         
         // Application defined base space that will used to calculate
         // the relative pose of all other spaces.

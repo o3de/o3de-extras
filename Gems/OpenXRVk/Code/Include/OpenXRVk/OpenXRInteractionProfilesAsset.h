@@ -17,7 +17,7 @@
 
 #include <AzFramework/Asset/GenericAssetHandler.h>
 
-#include "InteractionProfiles/OpenXRInteractionProfileDescriptor.h"
+#include <OpenXRVk/OpenXRInteractionProfileDescriptor.h>
 
 
 namespace OpenXRVk

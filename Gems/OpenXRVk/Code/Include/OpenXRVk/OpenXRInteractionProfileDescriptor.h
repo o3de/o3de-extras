@@ -27,11 +27,11 @@ namespace OpenXRVk
 
         static void Reflect(AZ::ReflectContext* reflection);
 
-        static constexpr AZStd::string_view s_TypeBoolStr{ "XrBool" };
-        static constexpr AZStd::string_view s_TypeFloatStr = "XrFloat";
-        static constexpr AZStd::string_view s_TypeVector2Str = "XrVector2";
-        static constexpr AZStd::string_view s_TypePoseStr = "XrPose";
-        static constexpr AZStd::string_view s_TypeVibrationStr = "XrVibration";
+        static constexpr AZStd::string_view s_TypeBoolStr = "Boolean";
+        static constexpr AZStd::string_view s_TypeFloatStr = "Float";
+        static constexpr AZStd::string_view s_TypeVector2Str = "Vector2";
+        static constexpr AZStd::string_view s_TypePoseStr = "Pose";
+        static constexpr AZStd::string_view s_TypeVibrationStr = "Vibration";
 
         //! Helper method
         static XrActionType GetXrActionType(AZStd::string_view actionTypeStr);

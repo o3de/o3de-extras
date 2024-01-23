@@ -6,7 +6,7 @@
  *
  */
 
-#include "OpenXRInteractionProfilesAsset.h"
+#include <OpenXRVk/OpenXRInteractionProfilesAsset.h>
 
 namespace OpenXRVk
 {

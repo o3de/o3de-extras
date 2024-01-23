@@ -17,7 +17,7 @@
 
 #include <OpenXRVk/OpenXRActionsInterface.h>
 
-#include "OpenXRActionsBindingAsset.h"
+#include "OpenXRActionSetsAsset.h"
 
 namespace OpenXRVk
 {
@@ -88,9 +88,10 @@ namespace OpenXRVk
         //! @param actionSet The user configured data for the ActionSet.
         //! @param suggestedBindingsPerProfile In this dictionary we will collect all the action bindings
         //!                                    for each interaction profile.
-        bool InitActionSetInternal(const OpenXRActionSet& actionSet,
-            SuggestedBindingsPerProfile& suggestedBindingsPerProfile
-            );
+        
+        //bool InitActionSetInternal(const OpenXRActionSet& actionSet,
+        //    SuggestedBindingsPerProfile& suggestedBindingsPerProfile
+        //    );
 
         struct ActionInfo
         {

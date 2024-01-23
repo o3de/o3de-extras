@@ -9,12 +9,16 @@
 #include <AssetBuilderSDK/AssetBuilderSDK.h>
 #include <AssetBuilderSDK/AssetBuilderBusses.h>
 
+#include <OpenXRVk/OpenXRInteractionProfilesAsset.h>
+
 #include "OpenXRAssetBuildersSystemComponent.h"
 
 namespace OpenXRVkBuilders
 {
     void OpenXRAssetBuildersSystemComponent::Reflect(AZ::ReflectContext* context)
     {
+        OpenXRVk::OpenXRInteractionProfilesAsset::Reflect(context);
+
         if (AZ::SerializeContext* serialize = azrtti_cast<AZ::SerializeContext*>(context))
         {
             serialize->Class<OpenXRAssetBuildersSystemComponent, Component>()
@@ -41,7 +45,7 @@ namespace OpenXRVkBuilders
     
     void OpenXRAssetBuildersSystemComponent::GetDependentServices(AZ::ComponentDescriptor::DependencyArrayType& dependent)
     {
-        dependent.push_back(AZ_CRC("AssetCatalogService", 0xc68ffc57));
+        dependent.push_back(AZ_CRC("AssetCatalogService"));
     }
     
     void OpenXRAssetBuildersSystemComponent::Init()

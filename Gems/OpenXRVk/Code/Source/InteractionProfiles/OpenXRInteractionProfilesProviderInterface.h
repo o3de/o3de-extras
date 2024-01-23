@@ -14,7 +14,7 @@
 #include <AzCore/std/string/string.h>
 #include <AzCore/std/containers/vector.h>
 
-#include "OpenXRInteractionProfileDescriptor.h"
+#include <OpenXRVk/OpenXRInteractionProfileDescriptor.h>
 
 namespace OpenXRVk
 {

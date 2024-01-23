@@ -7,7 +7,7 @@
  */
 
 #include "InteractionProfiles/OpenXRInteractionProfilesProviderInterface.h"
-#include "OpenXRActionSetDescriptor.h"
+#include <OpenXRVk/OpenXRActionSetDescriptor.h>
 
 namespace OpenXRVk
 {

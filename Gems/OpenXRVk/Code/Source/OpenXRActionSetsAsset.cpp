@@ -10,7 +10,7 @@
 #include <AzCore/Serialization/EditContext.h>
 #include <AzCore/Serialization/ObjectStream.h>
 
-#include "OpenXRActionSetsAsset.h"
+#include <OpenXRVk/OpenXRActionSetsAsset.h>
 
 namespace OpenXRVk
 {

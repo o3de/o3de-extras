@@ -12,8 +12,9 @@
 #include <OpenXRVk/OpenXRVkInstance.h>
 #include <AzCore/Component/Component.h>
 #include <AzFramework/Asset/GenericAssetHandler.h>
-#include "OpenXRActionsBindingAsset.h"
-#include "InteractionProfiles/OpenXRInteractionProfilesAsset.h"
+
+#include <OpenXRVk/OpenXRInteractionProfilesAsset.h>
+#include <OpenXRVk/OpenXRActionSetsAsset.h>
 
 namespace OpenXRVk
 {
@@ -66,7 +67,8 @@ namespace OpenXRVk
 
     private:
         XR::Ptr<OpenXRVk::Instance> m_instance;
-        AZStd::unique_ptr<AzFramework::GenericAssetHandler<OpenXRActionBindingsAsset>> m_actionsBindingAssetHandler;
+
         AZStd::unique_ptr<OpenXRInteractionProfilesAssetHandler> m_interactionProfilesAssetHandler;
+        AZStd::unique_ptr<AzFramework::GenericAssetHandler<OpenXRActionSetsAsset>> m_actionSetsAssetHandler;
     };
 }

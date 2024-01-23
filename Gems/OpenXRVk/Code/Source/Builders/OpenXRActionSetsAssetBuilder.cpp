@@ -6,7 +6,10 @@
  *
  */
 
+#include <AzCore/StringFunc/StringFunc.h>
 #include <AssetBuilderSDK/SerializationDependencies.h>
+
+#include <OpenXRVk/OpenXRInteractionProfilesAsset.h>
 
 #include "OpenXRActionSetsAssetBuilder.h"
 
@@ -25,15 +28,91 @@ namespace OpenXRVkBuilders
     // };
     // const uint32_t NumberOfSourceExtensions = AZ_ARRAY_SIZE(AnyAssetSourceExtensions);
     
-    void OpenXRActionSetsAssetBuilder::CreateJobs([[maybe_unused]] const AssetBuilderSDK::CreateJobsRequest& request, [[maybe_unused]] AssetBuilderSDK::CreateJobsResponse& response) const
+    void OpenXRActionSetsAssetBuilder::CreateJobs(const AssetBuilderSDK::CreateJobsRequest& request, AssetBuilderSDK::CreateJobsResponse& response) const
     {
+        //! First get the extension 
+        constexpr bool includeDot = false;
+        AZStd::string fileExtension;
+        bool result = AZ::StringFunc::Path::GetExtension(request.m_sourceFile.c_str(), fileExtension, includeDot);
+        if (result && (fileExtension == OpenXRVk::OpenXRInteractionProfilesAsset::s_assetExtension))
+        {
+            CreateInteractionProfilesJobs(request, response);
+            return;
+        }
 
+        //! Unknown extension.
+        AZ_Error(LogName, false, "Unknown file extension [%s] for this builder. Source file [%s]", fileExtension.c_str(), request.m_sourceFile.c_str());
+        response.m_result = AssetBuilderSDK::CreateJobsResultCode::Failed;
     }
     
     
-    void OpenXRActionSetsAssetBuilder::ProcessJob([[maybe_unused]] const AssetBuilderSDK::ProcessJobRequest& request, [[maybe_unused]] AssetBuilderSDK::ProcessJobResponse& response) const
+    void OpenXRActionSetsAssetBuilder::ProcessJob(const AssetBuilderSDK::ProcessJobRequest& request, AssetBuilderSDK::ProcessJobResponse& response) const
     {
+        //! First get the extension 
+        constexpr bool includeDot = false;
+        AZStd::string fileExtension;
+        bool result = AZ::StringFunc::Path::GetExtension(request.m_sourceFile.c_str(), fileExtension, includeDot);
+        if (result && (fileExtension == OpenXRVk::OpenXRInteractionProfilesAsset::s_assetExtension))
+        {
+            ProcessInteractionProfilesJob(request, response);
+        }
+    }
 
+    void OpenXRActionSetsAssetBuilder::CreateInteractionProfilesJobs(const AssetBuilderSDK::CreateJobsRequest& request, AssetBuilderSDK::CreateJobsResponse& response) const
+    {
+        for (const AssetBuilderSDK::PlatformInfo& platformInfo : request.m_enabledPlatforms)
+        {
+            AssetBuilderSDK::JobDescriptor jobDescriptor;
+            // Very high priority because this asset is required to initialize the OpenXR runtime
+            // and initialize the I/O actions system.
+            jobDescriptor.m_priority = 1000;
+            jobDescriptor.m_critical = true;
+            jobDescriptor.m_jobKey = JobKey;
+            jobDescriptor.SetPlatformIdentifier(platformInfo.m_identifier.c_str());
+            response.m_createJobOutputs.emplace_back(AZStd::move(jobDescriptor));
+        } // for all request.m_enabledPlatforms
+
+        response.m_result = AssetBuilderSDK::CreateJobsResultCode::Success;
+    }
+
+    void OpenXRActionSetsAssetBuilder::ProcessInteractionProfilesJob([[maybe_unused]] const AssetBuilderSDK::ProcessJobRequest& request, [[maybe_unused]] AssetBuilderSDK::ProcessJobResponse& response) const
+    {
+        // Open the file, and make sure there's no redundant data, the OpenXR Paths are well formatted, etc.
+       auto interactionProfilesAssetPtr = AZ::Utils::LoadObjectFromFile<OpenXRVk::OpenXRInteractionProfilesAsset>(request.m_fullPath);
+       //AZ_Error(LogName, false, "The interaction profiles contain %zu profiles", interactionProfilesAssetPtr->m_interactionProfileDescriptors.size());
+
+       // FIXME: TODO: All this builder is supposed to do is validate the data.
+       // If the validation passes, then we simply generate a product which is just a copy of the original.
+
+       // We keep exact same asset name and extension.
+       AZStd::string assetFileName;
+       AZ::StringFunc::Path::GetFullFileName(request.m_fullPath.c_str(), assetFileName);
+
+       // Construct product full path
+       AZStd::string assetOutputPath;
+       AzFramework::StringFunc::Path::ConstructFull(request.m_tempDirPath.c_str(), assetFileName.c_str(), assetOutputPath, true);
+
+       bool result = AZ::Utils::SaveObjectToFile(assetOutputPath, AZ::DataStream::ST_XML, interactionProfilesAssetPtr);
+       if (result == false)
+       {
+           AZ_Error(LogName, false, "Failed to save asset to %s", assetOutputPath.c_str());
+           response.m_resultCode = AssetBuilderSDK::ProcessJobResult_Failed;
+           return;
+       }
+
+       // This step is very important, because it declares product dependency between ShaderAsset and the root ShaderVariantAssets (one for each supervariant).
+       // This will guarantee that when the ShaderAsset is loaded at runtime, the ShaderAsset will report OnAssetReady only after the root ShaderVariantAssets
+       // are already fully loaded and ready.
+       AssetBuilderSDK::JobProduct jobProduct;
+       if (!AssetBuilderSDK::OutputObject(interactionProfilesAssetPtr, assetOutputPath, azrtti_typeid<OpenXRVk::OpenXRInteractionProfilesAsset>(),
+           aznumeric_cast<uint32_t>(0), jobProduct))
+       {
+           AZ_Error(LogName, false, "FIXME this message.");
+           response.m_resultCode = AssetBuilderSDK::ProcessJobResult_Failed;
+           return;
+       }
+       response.m_outputProducts.emplace_back(AZStd::move(jobProduct));
+       response.m_resultCode = AssetBuilderSDK::ProcessJobResult_Success;
     }
     
 } // namespace OpenXRVkBuilders

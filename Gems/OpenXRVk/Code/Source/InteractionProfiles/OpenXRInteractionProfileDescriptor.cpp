@@ -8,7 +8,7 @@
 
 #include <AzCore/StringFunc/StringFunc.h>
 
-#include "OpenXRInteractionProfileDescriptor.h"
+#include <OpenXRVk/OpenXRInteractionProfileDescriptor.h>
 
 namespace OpenXRVk
 {
