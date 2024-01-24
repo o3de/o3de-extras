@@ -16,8 +16,8 @@
 #include <openxr/openxr.h>
 
 #include <OpenXRVk/OpenXRActionsInterface.h>
-
-#include "OpenXRActionSetsAsset.h"
+#include <OpenXRVk/OpenXRInteractionProfilesAsset.h>
+#include <OpenXRVk/OpenXRActionSetsAsset.h>
 
 namespace OpenXRVk
 {
@@ -111,20 +111,35 @@ namespace OpenXRVk
             AZStd::unordered_map<AZStd::string, IOpenXRActions::ActionHandle> m_actions;
         };
 
-        bool InitActionBindingsInternal(ActionSetInfo& actionSetInfo, const OpenXRAction& action,
+        bool InitActionSet(const OpenXRInteractionProfilesAsset& interactionProfilesAsset,
+            const OpenXRActionSetDescriptor& actionSetDescriptor,
+            SuggestedBindingsPerProfile& suggestedBindingsPerProfileOut);
+
+        bool AddActionToActionSet(const OpenXRInteractionProfilesAsset& interactionProfilesAsset,
+            ActionSetInfo& actionSetInfo,
+            const OpenXRActionDescriptor& actionDescriptor,
             SuggestedBindingsPerProfile& suggestedBindingsPerProfile);
 
         XrAction CreateXrActionAndXrSpace(const ActionSetInfo& actionSetInfo,
-            const OpenXRAction& action, const XrActionType actionType, XrSpace& newXrActionSpace) const;
+            const OpenXRActionDescriptor& actionDescriptor, const XrActionType actionType, XrSpace& newXrActionSpace) const;
 
-        uint32_t AppendActionBindings(const OpenXRAction& action, XrAction newXrAction,
+        uint32_t AppendActionBindings(const OpenXRInteractionProfilesAsset& interactionProfilesAsset,
+            const OpenXRActionDescriptor& actionDescriptor,
+            XrAction xrAction,
             SuggestedBindingsPerProfile& suggestedBindingsPerProfile) const;
+
+
         
         AZ::Outcome<bool, AZStd::string> ChangeActionSetStateInternal(const AZStd::string& actionSetName, bool activate, bool recreateXrActiveActionSets = false);
         void RecreateXrActiveActionSets();
 
         XrInstance m_xrInstance = XR_NULL_HANDLE;
         XrSession m_xrSession = XR_NULL_HANDLE;
+
+        // Load synchronously as critical assets upon initilization.
+        AZ::Data::Asset<OpenXRInteractionProfilesAsset> m_interactionProfilesAsset;
+        AZ::Data::Asset<OpenXRActionSetsAsset> m_actionSetAsset;
+
         // Updated each time SyncActions is called.
         XrTime m_predictedDisplaytime;
 

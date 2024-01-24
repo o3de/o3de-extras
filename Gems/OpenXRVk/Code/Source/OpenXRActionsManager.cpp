@@ -10,7 +10,6 @@
 
 #include <Atom/RPI.Reflect/Asset/AssetUtils.h>
 
-#include "OpenXRActionSetsAsset.h"
 //#include <OpenXRVk/OpenXRInteractionProfileBus.h>
 #include <OpenXRVk/OpenXRVkUtils.h>
 #include <OpenXRVk/OpenXRVisualizedSpacesInterface.h>
@@ -18,37 +17,96 @@
 
 namespace OpenXRVk
 {
+    // The action type of an action will always be the action type of the first action path descriptor. 
+    static XrActionType GetActionTypeFromActionDescriptor(const OpenXRInteractionProfilesAsset& interactionProfilesAsset,
+        const OpenXRActionDescriptor& actionDescriptor)
+    {
+        if (actionDescriptor.m_actionPathDescriptors.empty())
+        {
+            AZ_Error(ActionsManager::LogName, false, "Need at least one action path descriptor for action with name [%s].", actionDescriptor.m_name.c_str());
+            return XR_ACTION_TYPE_MAX_ENUM;
+        }
+
+        const auto& actionPathDescriptor = actionDescriptor.m_actionPathDescriptors[0];
+
+        auto interactionProfileDescriptor = interactionProfilesAsset.GetInteractionProfileDescriptor(actionPathDescriptor.m_interactionProfileName);
+        if (!interactionProfileDescriptor)
+        {
+            AZ_Error(ActionsManager::LogName, false, "Couldn't find interaction profile named [%s].", actionPathDescriptor.m_interactionProfileName.c_str());
+            return XR_ACTION_TYPE_MAX_ENUM;
+        }
+
+        auto userPathDescriptor = interactionProfileDescriptor->GetUserPathDescriptor(actionPathDescriptor.m_userPathName);
+        if (!userPathDescriptor)
+        {
+            AZ_Error(ActionsManager::LogName, false, "Couldn't find user path descriptor with name [%s].", actionPathDescriptor.m_userPathName.c_str());
+            return XR_ACTION_TYPE_MAX_ENUM;
+        }
+
+        // See if the component is owned by the user path.
+        auto componentPathDescriptor = userPathDescriptor->GetComponentPathDescriptor(actionPathDescriptor.m_componentPathName);
+        if (!componentPathDescriptor)
+        {
+            componentPathDescriptor = interactionProfileDescriptor->GetCommonComponentPathDescriptor(actionPathDescriptor.m_componentPathName);
+            if (!componentPathDescriptor)
+            {
+                AZ_Error(ActionsManager::LogName, false, "Couldn't find component path descriptor for component path with name [%s].", actionPathDescriptor.m_componentPathName.c_str());
+                return XR_ACTION_TYPE_MAX_ENUM;
+            }
+        }
+
+        return componentPathDescriptor->GetXrActionType();
+    }
+
+
     bool ActionsManager::Init(XrInstance xrInstance, XrSession xrSession)
     {
         m_xrInstance = xrInstance;
         m_xrSession = xrSession;
 
-        auto outcome = SetBaseVisualizedSpaceForPoseActions(IOpenXRVisualizedSpaces::ReferenceSpaceViewName);
+        auto outcome = SetBaseVisualizedSpaceForPoseActions(IOpenXRVisualizedSpaces::ReferenceSpaceNameView);
         if (!outcome.IsSuccess())
         {
             const auto outcomeMsg = outcome.TakeError();
             auto errorMsg = AZStd::string::format("Failed to set [%s] as the default base visualized space. Reason:\n%s.",
-                IOpenXRVisualizedSpaces::ReferenceSpaceViewName, outcomeMsg.c_str());
+                IOpenXRVisualizedSpaces::ReferenceSpaceNameView, outcomeMsg.c_str());
             AZ_Assert(false, "%s", errorMsg.c_str());
             AZ_Error(LogName, false, "%s", errorMsg.c_str());
             return false;
+        }
+
+        // There are two critical assets that need to be loaded.
+        // The first asset defines the list of interaction profiles supported by the current version
+        // of the OpenXR Gem.
+        const auto interactionProfilesAssetPath = OpenXRInteractionProfilesAsset::GetInteractionProfilesAssetPath();
+        if (interactionProfilesAssetPath.empty())
+        {
+            AZ_Warning(LogName, false, "No interaction profile asset has been defined. This application will run without user interaction support.");
+            return true;
+        }
+        const auto interactionProfilesAsset = AZ::RPI::AssetUtils::LoadCriticalAsset<OpenXRInteractionProfilesAsset>(interactionProfilesAssetPath);
+        if (!interactionProfilesAsset.IsReady())
+        {
+            AZ_Warning(LogName, false, "The system interaction profiles asset [%s] is not ready. This application will run without user interaction support.",
+                interactionProfilesAssetPath.c_str());
+            return true;
         }
 
         // OpenXR only allows to define ActionSets during session creation.
         // From the point of view of O3DE, the developer defines action sets
         // in an asset of type OpenXRActionBindingsAsset.
         // The default source path for said asset is "@project@/openxr.xractions".
-        const auto actionsBindingAsset = AZ::RPI::AssetUtils::LoadCriticalAsset<OpenXRActionBindingsAsset>({ DefaultActionsAssetPath });
-        if (!actionsBindingAsset.IsReady())
+        m_actionSetAsset = AZ::RPI::AssetUtils::LoadCriticalAsset<OpenXRActionSetsAsset>({ DefaultActionsAssetPath });
+        if (!m_actionSetAsset.IsReady())
         {
-            AZ_Printf(LogName, "This application won't support user interactions. Default action bindings asset [%s] not found.\n", DefaultActionsAssetPath);
+            AZ_Warning(LogName, false, "Action Sets asset [%s] not found. This application will run without user interaction support.", DefaultActionsAssetPath);
             return true;
         }
 
         SuggestedBindingsPerProfile suggestedBindingsPerProfile;
-        for (const auto& actionSet : actionsBindingAsset->m_actionSets)
+        for (const auto& actionSetDescriptor : m_actionSetAsset->m_actionSetDescriptors)
         {
-            if (!InitActionSetInternal(actionSet, suggestedBindingsPerProfile))
+            if (!InitActionSet(*interactionProfilesAsset, actionSetDescriptor, suggestedBindingsPerProfile))
             {
                 return false;
             }
@@ -135,40 +193,41 @@ namespace OpenXRVk
 
 
 
-    bool ActionsManager::InitActionSetInternal(const OpenXRActionSet& actionSet,
+    bool ActionsManager::InitActionSet(const OpenXRInteractionProfilesAsset& interactionProfilesAsset,
+        const OpenXRActionSetDescriptor& actionSetDescriptor,
         SuggestedBindingsPerProfile& suggestedBindingsPerProfile)
     {
         // Create an action set.
         XrActionSetCreateInfo actionSetCreateInfo{};
         actionSetCreateInfo.type = XR_TYPE_ACTION_SET_CREATE_INFO;
-        azstrcpy(actionSetCreateInfo.actionSetName, sizeof(actionSetCreateInfo.actionSetName), actionSet.m_name.c_str());
-        const char* localizedNameCStr = actionSet.m_name.c_str();
-        if (!actionSet.m_localizedName.empty())
+        azstrcpy(actionSetCreateInfo.actionSetName, sizeof(actionSetCreateInfo.actionSetName), actionSetDescriptor.m_name.c_str());
+        const char* localizedNameCStr = actionSetDescriptor.m_name.c_str();
+        if (!actionSetDescriptor.m_localizedName.empty())
         {
-            localizedNameCStr = actionSet.m_localizedName.c_str();
+            localizedNameCStr = actionSetDescriptor.m_localizedName.c_str();
         }
         azstrcpy(actionSetCreateInfo.localizedActionSetName, sizeof(actionSetCreateInfo.localizedActionSetName), localizedNameCStr);
-        actionSetCreateInfo.priority = actionSet.m_priority;
+        actionSetCreateInfo.priority = actionSetDescriptor.m_priority;
 
         {
             ActionSetInfo newActionSetInfo;
-            newActionSetInfo.m_name = actionSet.m_name;
+            newActionSetInfo.m_name = actionSetDescriptor.m_name;
             XrResult result = xrCreateActionSet(m_xrInstance, &actionSetCreateInfo, &newActionSetInfo.m_xrActionSet);
             if (IsError(result))
             {
-                PrintXrError(LogName, result, "Failed to instantiate actionSet named [%s].", actionSet.m_name.c_str());
+                PrintXrError(LogName, result, "Failed to instantiate actionSet named [%s].", actionSetDescriptor.m_name.c_str());
                 return false;
             }
             m_actionSets.emplace_back(AZStd::move(newActionSetInfo));
         }
 
         ActionSetInfo& newActionSetInfo = m_actionSets.back();
-        for (const auto& action : actionSet.m_actions)
+        for (const auto& actionDescriptor : actionSetDescriptor.m_actionDescriptors)
         {
-            if (!InitActionBindingsInternal(newActionSetInfo, action, suggestedBindingsPerProfile))
+            if (!AddActionToActionSet(interactionProfilesAsset, newActionSetInfo, actionDescriptor, suggestedBindingsPerProfile))
             {
-                AZ_Error(LogName, false, "Failed to created action named [%s] under actionSet named [%s].",
-                    action.m_name.c_str(), actionSet.m_name.c_str());
+                AZ_Error(LogName, false, "Failed to initialize action bindings for action named [%s] under actionSet named [%s].",
+                    actionDescriptor.m_name.c_str(), actionSetDescriptor.m_name.c_str());
                 return false;
             }
         }
@@ -176,28 +235,63 @@ namespace OpenXRVk
         return true;
     }
 
-    static XrActionType GetActionTypeFromOpenXRActionPath(const OpenXRActionPath& actionPath)
+    bool ActionsManager::AddActionToActionSet(const OpenXRInteractionProfilesAsset& interactionProfilesAsset,
+        ActionSetInfo& actionSetInfo,
+        const OpenXRActionDescriptor& actionDescriptor,
+        SuggestedBindingsPerProfile& suggestedBindingsPerProfile)
     {
-        auto interactionProviderIface = OpenXRInteractionProfileBus::FindFirstHandler(actionPath.m_interactionProfile);
-        if (!interactionProviderIface)
+        // One OpenXRAction object will become one XrAction.
+        // An OpenXRAction contains a list of OpenXRActionPath that need to be bound.
+        // The action type for each XrAction will be the same and it will be determined by
+        // the action type of the first action in the list. 
+        AZ_Assert(!actionDescriptor.m_actionPathDescriptors.empty(), "An action descriptor must contain at least one action path descriptor.");
+        XrActionType actionType = GetActionTypeFromActionDescriptor(interactionProfilesAsset, actionDescriptor);
+
+        XrSpace newXrActionSpace = XR_NULL_HANDLE; // Optional.
+        XrAction newXrAction = CreateXrActionAndXrSpace(actionSetInfo, actionDescriptor, actionType, newXrActionSpace);
+        if (newXrAction == XR_NULL_HANDLE)
         {
-            AZ_Error(ActionsManager::LogName, false, "Couldn't find interaction data provider with id [%s].", actionPath.m_interactionProfile.c_str());
-            return XR_ACTION_TYPE_MAX_ENUM;
+            return false;
         }
-        const auto actionPathInfo = interactionProviderIface->GetActionPathInfo(actionPath.m_userPath, actionPath.m_componentPath);
-        return actionPathInfo.m_actionType;
+
+        // For each actionPath in the list, create the XrPath and its binding.
+        const auto additionalBindingsCount = AppendActionBindings(interactionProfilesAsset, actionDescriptor, newXrAction, suggestedBindingsPerProfile);
+        if (additionalBindingsCount < 1)
+        {
+            // This action has no bindings. Don't add it to the active actions list.
+            AZ_Warning(LogName, false, "The action [%s] had no bindings!.\n", actionDescriptor.m_name.c_str());
+            if (newXrActionSpace != XR_NULL_HANDLE)
+            {
+                xrDestroySpace(newXrActionSpace);
+            }
+            xrDestroyAction(newXrAction);
+            return true;
+        }
+
+        m_actions.push_back({});
+        auto& newActionInfo = m_actions.back();
+        newActionInfo.m_name = actionDescriptor.m_name;
+        newActionInfo.m_actionType = actionType;
+        newActionInfo.m_xrAction = newXrAction;
+        newActionInfo.m_xrSpace = newXrActionSpace;
+
+        uint16_t newActionIndex = aznumeric_cast<uint16_t>(m_actions.size() - 1);
+        actionSetInfo.m_actions.emplace(actionDescriptor.m_name, IOpenXRActions::ActionHandle(newActionIndex));
+
+        return true;
     }
 
+
     XrAction ActionsManager::CreateXrActionAndXrSpace(const ActionSetInfo& actionSetInfo,
-        const OpenXRAction& action, const XrActionType actionType, XrSpace& newXrActionSpace) const
+        const OpenXRActionDescriptor& actionDescriptor, const XrActionType actionType, XrSpace& newXrActionSpace) const
     {
         XrActionCreateInfo actionCreateInfo{ XR_TYPE_ACTION_CREATE_INFO };
         actionCreateInfo.actionType = actionType;
-        azstrcpy(actionCreateInfo.actionName, sizeof(actionCreateInfo.actionName), action.m_name.c_str());
-        const char* localizedNameCStr = action.m_name.c_str();
-        if (!action.m_localizedName.empty())
+        azstrcpy(actionCreateInfo.actionName, sizeof(actionCreateInfo.actionName), actionDescriptor.m_name.c_str());
+        const char* localizedNameCStr = actionDescriptor.m_name.c_str();
+        if (!actionDescriptor.m_localizedName.empty())
         {
-            localizedNameCStr = action.m_localizedName.c_str();
+            localizedNameCStr = actionDescriptor.m_localizedName.c_str();
         }
         azstrcpy(actionCreateInfo.localizedActionName, sizeof(actionCreateInfo.localizedActionName), localizedNameCStr);
         actionCreateInfo.countSubactionPaths = 0; // Subactions are not supported.
@@ -207,7 +301,7 @@ namespace OpenXRVk
         XrResult result = xrCreateAction(actionSetInfo.m_xrActionSet, &actionCreateInfo, &newXrAction);
         if (IsError(result))
         {
-            PrintXrError(ActionsManager::LogName, result, "Failed to create action named %s.\n", action.m_name.c_str());
+            PrintXrError(LogName, result, "Failed to create XrAction named %s.\n", actionDescriptor.m_name.c_str());
             return XR_NULL_HANDLE;
         }
 
@@ -222,7 +316,7 @@ namespace OpenXRVk
             if (IsError(result))
             {
                 xrDestroyAction(newXrAction);
-                PrintXrError(ActionsManager::LogName, result, "Failed to create XrSpace for action named %s.\n", action.m_name.c_str());
+                PrintXrError(LogName, result, "Failed to create XrSpace for action named %s.\n", actionDescriptor.m_name.c_str());
                 return XR_NULL_HANDLE;
             }
         }
@@ -230,57 +324,63 @@ namespace OpenXRVk
         return newXrAction;
     }
 
-    uint32_t ActionsManager::AppendActionBindings(const OpenXRAction& action,
-        XrAction newXrAction,
+    uint32_t ActionsManager::AppendActionBindings(const OpenXRInteractionProfilesAsset& interactionProfilesAsset,
+        const OpenXRActionDescriptor& actionDescriptor, XrAction xrAction,
         SuggestedBindingsPerProfile& suggestedBindingsPerProfile) const
     {
         uint32_t additionalBindingsCount = 0;
-        for (const auto& actionPath : action.m_actionPaths)
+        for (const auto& actionPathDescriptor : actionDescriptor.m_actionPathDescriptors)
         {
-            auto interactionProviderIface = OpenXRInteractionProfileBus::FindFirstHandler(actionPath.m_interactionProfile);
-            if (!interactionProviderIface)
+            auto interactionProfileDescriptor = interactionProfilesAsset.GetInteractionProfileDescriptor(actionPathDescriptor.m_interactionProfileName);
+            if (!interactionProfileDescriptor)
             {
-                AZ_Error(LogName, false, "Couldn't find interaction data provider with id [%s].", actionPath.m_interactionProfile.c_str())
-                    return false;
+                AZ_Error(LogName, false, "Couldn't find interaction profile descriptor with name [%s].", actionPathDescriptor.m_interactionProfileName.c_str());
+                return false;
             }
 
-            const auto pathInfo = interactionProviderIface->GetActionPathInfo(actionPath.m_userPath, actionPath.m_componentPath);
-            if (pathInfo.m_absolutePath.empty())
+            auto userPathDescriptor = interactionProfileDescriptor->GetUserPathDescriptor(actionPathDescriptor.m_userPathName);
+            if (!userPathDescriptor)
             {
-                AZ_Warning(LogName, false, "Failed to retrieve action path info for profile [%s], user path [%s], component path [%s].\n",
-                    actionPath.m_interactionProfile.c_str(), actionPath.m_userPath.c_str(), actionPath.m_componentPath.c_str());
-                continue;
+                AZ_Error(LogName, false, "Couldn't find user path descriptor with name [%s].", actionPathDescriptor.m_userPathName.c_str());
+                return false;
+            }
+
+            const auto absoluteComponentPath = interactionProfileDescriptor->GetComponentAbsolutePath(*userPathDescriptor, actionPathDescriptor.m_componentPathName);
+            if (absoluteComponentPath.empty())
+            {
+                AZ_Error(LogName, false, "Failed to retrieve the absolute action path for profile [%s], user path [%s], component path [%s].\n",
+                    actionPathDescriptor.m_interactionProfileName.c_str(), actionPathDescriptor.m_userPathName.c_str(), actionPathDescriptor.m_componentPathName.c_str());
+                return false;
             }
 
             XrPath xrBindingPath;
-            XrResult result = xrStringToPath(m_xrInstance, pathInfo.m_absolutePath.c_str(), &xrBindingPath);
+            XrResult result = xrStringToPath(m_xrInstance, absoluteComponentPath.c_str(), &xrBindingPath);
             if (IsError(result))
             {
                 PrintXrError(LogName, result, "Failed to create XrPath for action with profile [%s], absolute path [%s].\n",
-                    actionPath.m_interactionProfile.c_str(), pathInfo.m_absolutePath.c_str());
+                    actionPathDescriptor.m_interactionProfileName.c_str(), absoluteComponentPath.c_str());
                 continue;
             }
 
             // If the interaction profile is not in the dictionary, then add it.
-            auto profilePathStr = interactionProviderIface->GetInteractionProviderPath();
-            if (!suggestedBindingsPerProfile.contains(profilePathStr))
+            if (!suggestedBindingsPerProfile.contains(interactionProfileDescriptor->m_uniqueName))
             {
                 XrPath profileXrPath;
-                result = xrStringToPath(m_xrInstance, profilePathStr.c_str(), &profileXrPath);
+                result = xrStringToPath(m_xrInstance, interactionProfileDescriptor->m_path.c_str(), &profileXrPath);
                 if (IsError(result))
                 {
-                    PrintXrError(LogName, result, "Failed to get profile [%s] XrPath while working on action [%s] and the action path [%s]",
-                        profilePathStr.c_str(), action.m_name.c_str(), actionPath.GetEditorText().c_str());
+                    PrintXrError(LogName, result, "Failed to get profile [%s] XrPath while working on action [%s]",
+                        interactionProfileDescriptor->m_path.c_str(), actionDescriptor.m_name.c_str());
                     continue;
                 }
-                suggestedBindingsPerProfile.emplace(profilePathStr, SuggestedBindings{});
-                SuggestedBindings& newProfileBindings = suggestedBindingsPerProfile.at(profilePathStr);
+                suggestedBindingsPerProfile.emplace(interactionProfileDescriptor->m_uniqueName, SuggestedBindings{});
+                SuggestedBindings& newProfileBindings = suggestedBindingsPerProfile.at(interactionProfileDescriptor->m_uniqueName);
                 newProfileBindings.m_profileXrPath = profileXrPath;
             }
-            SuggestedBindings& profileBindings = suggestedBindingsPerProfile.at(profilePathStr);
+            SuggestedBindings& profileBindings = suggestedBindingsPerProfile.at(interactionProfileDescriptor->m_uniqueName);
 
             XrActionSuggestedBinding binding;
-            binding.action = newXrAction;
+            binding.action = xrAction;
             binding.binding = xrBindingPath;
             profileBindings.m_suggestedBindingsList.push_back(binding);
             additionalBindingsCount++;
@@ -289,94 +389,52 @@ namespace OpenXRVk
         return additionalBindingsCount;
     }
 
-    bool ActionsManager::InitActionBindingsInternal(ActionSetInfo& actionSetInfo, const OpenXRAction& action,
-        SuggestedBindingsPerProfile& suggestedBindingsPerProfile)
-    {
-        // One OpenXRAction object will become one XrAction.
-        // An OpenXRAction contains a list of OpenXRActionPath that need to be bound.
-        // The action type for each XrAction will be the same and it will be determined by
-        // the action type of the first action in the list. 
-        AZ_Assert(!action.m_actionPaths.empty(), "OpenXR Actions list must contain at least one action.");
-        XrActionType firstActionType = GetActionTypeFromOpenXRActionPath(action.m_actionPaths[0]);
 
-        XrSpace newXrActionSpace = XR_NULL_HANDLE; // Optional.
-        XrAction newXrAction = CreateXrActionAndXrSpace(actionSetInfo, action, firstActionType, newXrActionSpace);
-        if (newXrAction == XR_NULL_HANDLE)
-        {
-            return false;
-        }
-
-        // For each actionPath in the list, create the XrPath and its binding.
-        const auto additionalBindingsCount = AppendActionBindings(action, newXrAction, suggestedBindingsPerProfile);
-        if (additionalBindingsCount < 1)
-        {
-            // This action has no bindings. Don't add it to the active actions list.
-            AZ_Warning(LogName, false, "The action [%s] had no bindings!.\n", action.m_name.c_str());
-            if (newXrActionSpace != XR_NULL_HANDLE)
-            {
-                xrDestroySpace(newXrActionSpace);
-            }
-            xrDestroyAction(newXrAction);
-            return true;
-        }
-
-        m_actions.push_back({});
-        auto& newActionInfo = m_actions.back();
-        newActionInfo.m_name = action.m_name;
-        newActionInfo.m_actionType = firstActionType;
-        newActionInfo.m_xrAction = newXrAction;
-        newActionInfo.m_xrSpace = newXrActionSpace;
-
-        uint16_t newActionIndex = aznumeric_cast<uint16_t>(m_actions.size() - 1);
-        actionSetInfo.m_actions.emplace(action.m_name, IOpenXRActions::ActionHandle(newActionIndex));
-
-        return true;
-    }
 
     void ActionsManager::LogCurrentInteractionProfile()
     {
-        OpenXRInteractionProfileBus::EnumerateHandlers(
-        [this](OpenXRInteractionProfile* handler) -> bool
-        {
-            auto userPathStrs = handler->GetUserPaths();
-            auto profileName = handler->GetName();
-            AZ_Printf(LogName, "Visiting user paths for interaction profile [%s]\n", profileName.c_str());
-            for (const auto& userPathStr : userPathStrs)
-            {
-                const auto topPathstr = handler->GetUserTopPath(userPathStr);
-                XrPath xrPath;
-                XrResult result = xrStringToPath(m_xrInstance, topPathstr.c_str(), &xrPath);
-                if (IsError(result))
-                {
-                    PrintXrError(LogName, result, "Failed to get xrPath for user top path [%s]", topPathstr.c_str());
-                    continue;
-                }
-                XrInteractionProfileState profileStateOut{ XR_TYPE_INTERACTION_PROFILE_STATE };
-                result = xrGetCurrentInteractionProfile(
-                    m_xrSession, xrPath, &profileStateOut);
-                if (IsError(result))
-                {
-                    PrintXrError(LogName, result, "Failed to get profile state for user top path [%s]", topPathstr.c_str());
-                    continue;
-                }
-                if (profileStateOut.interactionProfile == XR_NULL_PATH)
-                {
-                    AZ_Printf(LogName, "Got an NULL Interaction Profile for [%s].\n", topPathstr.c_str());
-                    continue;
-                }
-                AZStd::string activeProfileName = ConvertXrPathToString(m_xrInstance, profileStateOut.interactionProfile);
-                if (activeProfileName.empty())
-                {
-                    PrintXrError(LogName, result, "Failed to convert Interaction Profile XrPath to string for user top path [%s]", topPathstr.c_str());
-                    continue;
-                }
-                else
-                {
-                    AZ_Printf(LogName, "Current Interaction Profile for [%s] is [%s].\n", topPathstr.c_str(), activeProfileName.c_str());
-                }
-            }
-            return true;
-        });
+        // OpenXRInteractionProfileBus::EnumerateHandlers(
+        // [this](OpenXRInteractionProfile* handler) -> bool
+        // {
+        //     auto userPathStrs = handler->GetUserPaths();
+        //     auto profileName = handler->GetName();
+        //     AZ_Printf(LogName, "Visiting user paths for interaction profile [%s]\n", profileName.c_str());
+        //     for (const auto& userPathStr : userPathStrs)
+        //     {
+        //         const auto topPathstr = handler->GetUserTopPath(userPathStr);
+        //         XrPath xrPath;
+        //         XrResult result = xrStringToPath(m_xrInstance, topPathstr.c_str(), &xrPath);
+        //         if (IsError(result))
+        //         {
+        //             PrintXrError(LogName, result, "Failed to get xrPath for user top path [%s]", topPathstr.c_str());
+        //             continue;
+        //         }
+        //         XrInteractionProfileState profileStateOut{ XR_TYPE_INTERACTION_PROFILE_STATE };
+        //         result = xrGetCurrentInteractionProfile(
+        //             m_xrSession, xrPath, &profileStateOut);
+        //         if (IsError(result))
+        //         {
+        //             PrintXrError(LogName, result, "Failed to get profile state for user top path [%s]", topPathstr.c_str());
+        //             continue;
+        //         }
+        //         if (profileStateOut.interactionProfile == XR_NULL_PATH)
+        //         {
+        //             AZ_Printf(LogName, "Got an NULL Interaction Profile for [%s].\n", topPathstr.c_str());
+        //             continue;
+        //         }
+        //         AZStd::string activeProfileName = ConvertXrPathToString(m_xrInstance, profileStateOut.interactionProfile);
+        //         if (activeProfileName.empty())
+        //         {
+        //             PrintXrError(LogName, result, "Failed to convert Interaction Profile XrPath to string for user top path [%s]", topPathstr.c_str());
+        //             continue;
+        //         }
+        //         else
+        //         {
+        //             AZ_Printf(LogName, "Current Interaction Profile for [%s] is [%s].\n", topPathstr.c_str(), activeProfileName.c_str());
+        //         }
+        //     }
+        //     return true;
+        // });
     }
 
     /////////////////////////////////////////////////

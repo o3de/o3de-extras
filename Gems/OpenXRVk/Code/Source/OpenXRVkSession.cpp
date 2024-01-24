@@ -21,8 +21,9 @@
 #include <Atom/RHI.Reflect/Vulkan/XRVkDescriptors.h>
 #include <Atom/RPI.Public/XR/XRSpaceNotificationBus.h>
 
-//#include "OpenXRActionsManager.h"
-//#include "OpenXRVisualizedSpacesManager.h"
+#include "OpenXRVisualizedSpacesManager.h"
+#include "OpenXRActionsManager.h"
+
 
 namespace OpenXRVk
 {
@@ -54,13 +55,13 @@ namespace OpenXRVk
         XrResult result = xrCreateSession(m_xrInstance, &createInfo, &m_session);
         ASSERT_IF_UNSUCCESSFUL(result);
 
-        // m_visualizedSpacesMgr = AZStd::make_unique<VisualizedSpacesManager>();
-        // bool success = m_visualizedSpacesMgr->Init(m_xrInstance, m_session, xrVkInstance->GetViewConfigType(), 2 /*FIXME*/);
-        // AZ_Error("OpenXRVk::Session", success, "Failed to instantiate the visualized Spaces manager.");
-        // 
-        // m_actionsMgr = AZStd::make_unique<ActionsManager>();
-        // success = m_actionsMgr->Init(m_xrInstance, m_session);
-        // AZ_Error("OpenXRVk::Session", success, "Failed to instantiate the actions manager");
+        m_visualizedSpacesMgr = AZStd::make_unique<VisualizedSpacesManager>();
+        bool success = m_visualizedSpacesMgr->Init(m_xrInstance, m_session, xrVkInstance->GetViewConfigType(), 2 /*FIXME*/);
+        AZ_Error("OpenXRVk::Session", success, "Failed to instantiate the visualized Spaces manager.");
+        
+        m_actionsMgr = AZStd::make_unique<ActionsManager>();
+        success = m_actionsMgr->Init(m_xrInstance, m_session);
+        AZ_Error("OpenXRVk::Session", success, "Failed to instantiate the actions manager");
 
         LogReferenceSpaces();
 
@@ -127,7 +128,7 @@ namespace OpenXRVk
                 // is not wearing the headset. Each time the proximity sensor is disabled or the user
                 // decides to wear the headset, the XrSpaces need to be recreated, otherwise their
                 // poses would be corrupted.
-                //m_visualizedSpacesMgr->ResetSpaces();
+                m_visualizedSpacesMgr->ResetSpaces();
                 break;
             }
             case XR_SESSION_STATE_STOPPING:
@@ -401,15 +402,12 @@ namespace OpenXRVk
 
     const AZStd::vector<XrView>& Session::GetXrViews() const
     {
-        static AZStd::vector<XrView> ret;
-        return ret;
-        //return m_visualizedSpacesMgr->GetXrViews();
+        return m_visualizedSpacesMgr->GetXrViews();
     }
 
     XrSpace Session::GetViewSpaceXrSpace() const
     {
-        return XR_NULL_HANDLE;
-        //return m_visualizedSpacesMgr->GetViewSpaceXrSpace();
+        return m_visualizedSpacesMgr->GetViewSpaceXrSpace();
     }
 
     bool Session::IsSessionRunning() const
@@ -447,18 +445,17 @@ namespace OpenXRVk
 
     void Session::OnBeginFrame([[maybe_unused]] XrTime predictedDisplayTime)
     {
-        // if (IsSessionFocused())
-        // {
-        //     // Syncing actions only works if the session is in focused state
-        //     m_actionsMgr->SyncActions(predictedDisplayTime);
-        // }
-        // m_visualizedSpacesMgr->SyncViews(predictedDisplayTime);
-        // 
-        // //Notify the rest of the engine.
-        // AZ::RPI::XRSpaceNotificationBus::Broadcast(&AZ::RPI::XRSpaceNotifications::OnXRSpaceLocationsChanged,
-        //     m_visualizedSpacesMgr->GetViewSpacePose(),
-        //     m_visualizedSpacesMgr->GetViewPoses());
-        // 
-        // //GetNativeInput()->UpdateXrSpaceLocations(device, predictedDisplayTime, xrViews);
+        if (IsSessionFocused())
+        {
+            // Syncing actions only works if the session is in focused state
+            m_actionsMgr->SyncActions(predictedDisplayTime);
+        }
+
+        m_visualizedSpacesMgr->SyncViews(predictedDisplayTime);
+        
+        //Notify the rest of the engine.
+        AZ::RPI::XRSpaceNotificationBus::Broadcast(&AZ::RPI::XRSpaceNotifications::OnXRSpaceLocationsChanged,
+            m_visualizedSpacesMgr->GetViewSpacePose(),
+            m_visualizedSpacesMgr->GetViewPoses());
     }
 }

@@ -59,6 +59,7 @@ namespace OpenXRVk
         virtual ~OpenXRInteractionUserPathDescriptor() = default;
 
         static void Reflect(AZ::ReflectContext* reflection);
+        const OpenXRInteractionComponentPathDescriptor* GetComponentPathDescriptor(const AZStd::string& componentPathName) const;
 
         //! A user friendly name.
         AZStd::string m_name;
@@ -88,6 +89,8 @@ namespace OpenXRVk
         AZ::Outcome<void, AZStd::string> Validate() const;
 
         const OpenXRInteractionUserPathDescriptor* GetUserPathDescriptor(const AZStd::string& userPathName) const;
+        const OpenXRInteractionComponentPathDescriptor* GetCommonComponentPathDescriptor(const AZStd::string& componentPathName) const;
+        AZStd::string GetComponentAbsolutePath(const OpenXRInteractionUserPathDescriptor& userPathDescriptor, const AZStd::string& componentPathName) const;
 
         //! Unique name across all OpenXRInteractionProfileDescriptor.
         //! It serves also as user friendly display name, and because

@@ -43,8 +43,10 @@ set(FILES
     Source/OpenXRActionSetDescriptor.cpp
     Source/XRCameraMovementComponent.cpp
     Source/XRCameraMovementComponent.h
-#    Source/OpenXRActionsManager.cpp
-#    Source/OpenXRActionsManager.h
-#    Source/OpenXRVisualizedSpacesManager.cpp
-#    Source/OpenXRVisualizedSpacesManager.h
+    Source/OpenXRVisualizedSpacesManager.cpp
+    Source/OpenXRVisualizedSpacesManager.h
+    Source/OpenXRActionsManager.cpp
+    Source/OpenXRActionsManager.h
+    Source/OpenXRBehaviorReflection.cpp
+    Source/OpenXRBehaviorReflection.h
 )

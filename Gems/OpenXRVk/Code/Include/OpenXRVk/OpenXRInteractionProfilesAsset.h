@@ -39,6 +39,13 @@ namespace OpenXRVk
         static constexpr char s_assetTypeName[] = "OpenXR Interaction Profiles";
         static constexpr char s_assetExtension[] = "xrprofiles";
 
+        //! There's only one Interaction Profile Asset that is active and defined upon engine
+        //! initialization. The developer can also customize which one to use via a registry property.
+        //! There's a default path in case the registry property is not defined by the developer.
+        static AZStd::string GetInteractionProfilesAssetPath();
+
+        const OpenXRInteractionProfileDescriptor* GetInteractionProfileDescriptor(const AZStd::string& profileName) const;
+
         AZStd::vector<OpenXRInteractionProfileDescriptor> m_interactionProfileDescriptors;
     };
 

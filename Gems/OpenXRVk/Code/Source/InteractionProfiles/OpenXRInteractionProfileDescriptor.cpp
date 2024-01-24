@@ -129,6 +129,18 @@ namespace OpenXRVk
         return m_name.empty() ? "<Unknown User Path>" : m_name;
     }
 
+    const OpenXRInteractionComponentPathDescriptor* OpenXRInteractionUserPathDescriptor::GetComponentPathDescriptor(const AZStd::string& componentPathName) const
+    {
+        for (const auto& componentPathDescriptor : m_componentPathDescriptors)
+        {
+            if (componentPathDescriptor.m_name == componentPathName)
+            {
+                return &componentPathDescriptor;
+            }
+        }
+        return nullptr;
+    }
+
     /// OpenXRInteractionUserPathDescriptor
     ///////////////////////////////////////////////////////////
 
@@ -208,6 +220,35 @@ namespace OpenXRVk
             }
         }
         return nullptr;
+    }
+
+    const OpenXRInteractionComponentPathDescriptor* OpenXRInteractionProfileDescriptor::GetCommonComponentPathDescriptor(const AZStd::string& componentPathName) const
+    {
+        for (const auto& componentPathDescriptor : m_commonComponentPathDescriptors)
+        {
+            if (componentPathDescriptor.m_name == componentPathName)
+            {
+                return &componentPathDescriptor;
+            }
+        }
+        return nullptr;
+    }
+
+    AZStd::string OpenXRInteractionProfileDescriptor::GetComponentAbsolutePath(const OpenXRInteractionUserPathDescriptor& userPathDescriptor,
+        const AZStd::string& componentPathName) const
+    {
+        // First check if the user path owns the component path, if not, search in the common components list.
+        auto componentPathDescriptor = userPathDescriptor.GetComponentPathDescriptor(componentPathName);
+        if (!componentPathDescriptor)
+        {
+            // Look in common paths
+            componentPathDescriptor = GetCommonComponentPathDescriptor(componentPathName);
+            if (!componentPathDescriptor)
+            {
+                return {};
+            }
+        }
+        return userPathDescriptor.m_path + componentPathDescriptor->m_path;
     }
     /// OpenXRInteractionProfileDescriptor
     ///////////////////////////////////////////////////////////

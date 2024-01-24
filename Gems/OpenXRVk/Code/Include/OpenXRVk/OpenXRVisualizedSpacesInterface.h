@@ -37,9 +37,9 @@ namespace OpenXRVk
         static constexpr ReferenceSpaceId ReferenceSpaceIdLocal = 2;
         static constexpr ReferenceSpaceId ReferenceSpaceIdStage = 3;
         // With these names you can refer to the default system spaces.
-        static constexpr char ReferenceSpaceViewName[] = "View"; // Typically represents the user's head centroid.
-        static constexpr char ReferenceSpaceLocalName[] = "Local"; 
-        static constexpr char ReferenceSpaceStageName[] = "Stage";
+        static constexpr char ReferenceSpaceNameView[] = "View"; // Typically represents the user's head centroid.
+        static constexpr char ReferenceSpaceNameLocal[] = "Local"; 
+        static constexpr char ReferenceSpaceNameStage[] = "Stage";
 
         virtual AZStd::vector<AZStd::string> GetVisualizedSpaceNames() const = 0;
         virtual AZ::Outcome<bool, AZStd::string> AddVisualizedSpace(ReferenceSpaceId referenceSpaceType, const AZStd::string& spaceName, const AZ::Transform& poseInReferenceSpace) = 0;

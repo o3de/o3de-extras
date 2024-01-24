@@ -19,6 +19,8 @@
 #include <OpenXRVk/OpenXRVkSwapChain.h>
 #include <OpenXRVk/OpenXRVkSystemComponent.h>
 
+#include "OpenXRBehaviorReflection.h"
+
 #include <XR/XRUtils.h>
 
 namespace OpenXRVk
@@ -35,6 +37,11 @@ namespace OpenXRVk
         {
             serializeContext->Class<SystemComponent, AZ::Component>()
                 ->Version(1);
+        }
+
+        if (auto behaviorContext = azrtti_cast<AZ::BehaviorContext*>(context))
+        {
+            OpenXRBehaviorReflect(*behaviorContext);
         }
 
         AzFramework::InputDeviceXRController::Reflect(context);

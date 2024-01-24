@@ -12,6 +12,12 @@ namespace OpenXRVk
 {
     ///////////////////////////////////////////////////////////
     /// OpenXRInteractionProfilesAsset
+    /*static*/ AZStd::string OpenXRInteractionProfilesAsset::GetInteractionProfilesAssetPath()
+    {
+        //FIXME! GALIB
+        return "system.xrprofiles";
+    }
+
     void OpenXRInteractionProfilesAsset::Reflect(AZ::ReflectContext* context)
     {
         OpenXRInteractionProfileDescriptor::Reflect(context);
@@ -37,6 +43,19 @@ namespace OpenXRVk
             }
         }
     }
+
+    const OpenXRInteractionProfileDescriptor* OpenXRInteractionProfilesAsset::GetInteractionProfileDescriptor(const AZStd::string& profileName) const
+    {
+        for (const auto& profileDescriptor : m_interactionProfileDescriptors)
+        {
+            if (profileName == profileDescriptor.m_uniqueName)
+            {
+                return &profileDescriptor;
+            }
+        }
+        return nullptr;
+    }
+
     /// OpenXRInteractionProfilesAsset
     ///////////////////////////////////////////////////////////
 

@@ -33,9 +33,9 @@ namespace OpenXRVk
         const auto identityTm = AZ::Transform::CreateIdentity();
         AZStd::array<AZStd::pair<uint32_t, const char*>, 3> ReferenceSpaces = {
             {
-                {IOpenXRVisualizedSpaces::ReferenceSpaceIdView,  IOpenXRVisualizedSpaces::ReferenceSpaceViewName },
-                {IOpenXRVisualizedSpaces::ReferenceSpaceIdLocal, IOpenXRVisualizedSpaces::ReferenceSpaceLocalName },
-                {IOpenXRVisualizedSpaces::ReferenceSpaceIdStage, IOpenXRVisualizedSpaces::ReferenceSpaceStageName }
+                {IOpenXRVisualizedSpaces::ReferenceSpaceIdView,  IOpenXRVisualizedSpaces::ReferenceSpaceNameView },
+                {IOpenXRVisualizedSpaces::ReferenceSpaceIdLocal, IOpenXRVisualizedSpaces::ReferenceSpaceNameLocal },
+                {IOpenXRVisualizedSpaces::ReferenceSpaceIdStage, IOpenXRVisualizedSpaces::ReferenceSpaceNameStage }
             }
         };
         for (const auto& refPair : ReferenceSpaces)
@@ -50,10 +50,10 @@ namespace OpenXRVk
         }
         
         // Set the default base space for View Space pose calculation.
-        auto outcome = SetBaseSpaceForViewSpacePose({ IOpenXRVisualizedSpaces::ReferenceSpaceLocalName });
+        auto outcome = SetBaseSpaceForViewSpacePose({ IOpenXRVisualizedSpaces::ReferenceSpaceNameLocal });
         AZ_Assert(outcome.IsSuccess(), "Failed to set the base space for View Space pose location");
 
-        const auto& viewSpace = m_spaces.at(IOpenXRVisualizedSpaces::ReferenceSpaceViewName);
+        const auto& viewSpace = m_spaces.at(IOpenXRVisualizedSpaces::ReferenceSpaceNameView);
         m_viewSpace = &viewSpace;
         return true;
     }
@@ -128,9 +128,9 @@ namespace OpenXRVk
     AZ::Outcome<bool, AZStd::string> VisualizedSpacesManager::RemoveVisualizedSpace(const AZStd::string& spaceName)
     {
         static const AZStd::unordered_set<AZStd::string> defaultSystemSpaces {
-            {IOpenXRVisualizedSpaces::ReferenceSpaceViewName },
-            {IOpenXRVisualizedSpaces::ReferenceSpaceLocalName},
-            {IOpenXRVisualizedSpaces::ReferenceSpaceStageName}
+            {IOpenXRVisualizedSpaces::ReferenceSpaceNameView },
+            {IOpenXRVisualizedSpaces::ReferenceSpaceNameLocal},
+            {IOpenXRVisualizedSpaces::ReferenceSpaceNameStage}
         };
         if (defaultSystemSpaces.contains(spaceName))
         {
@@ -144,7 +144,7 @@ namespace OpenXRVk
             (m_baseSpaceForViewSpace->m_name == spaceName))
         {
             return AZ::Failure(AZStd::string::format("Can not remove space [%s] because it is the base space to locate the [%s] space pose.",
-                spaceName.c_str(), IOpenXRVisualizedSpaces::ReferenceSpaceViewName));
+                spaceName.c_str(), IOpenXRVisualizedSpaces::ReferenceSpaceNameView));
         }
 
         auto itor = m_spaces.find(spaceName);
