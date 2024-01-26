@@ -312,9 +312,9 @@ namespace UnitTest
             ROS2::SdfAssetBuilderSettings settings;
             settings.m_resolverSettings.m_useAmentPrefixPath = true;
             settings.m_resolverSettings.m_useAncestorPaths = true;
-            settings.m_resolverSettings.m_uriPrefixMap.emplace("model://", AZStd::vector<AZStd::string>({ "." }));
-            settings.m_resolverSettings.m_uriPrefixMap.emplace("package://", AZStd::vector<AZStd::string>({ "." }));
-            settings.m_resolverSettings.m_uriPrefixMap.emplace("file://", AZStd::vector<AZStd::string>({ "." }));
+            settings.m_resolverSettings.m_uriPrefixMap.emplace("model://", AZStd::vector<AZStd::string>({"."}));
+            settings.m_resolverSettings.m_uriPrefixMap.emplace("package://", AZStd::vector<AZStd::string>({"."}));
+            settings.m_resolverSettings.m_uriPrefixMap.emplace("file://", AZStd::vector<AZStd::string>({"."}));
 
             return settings;
         }
@@ -536,9 +536,9 @@ namespace UnitTest
         ASSERT_NE(nullptr, link1);
     }
 
-    MATCHER(UnorderedMapKeyMatcher, "")
-    {
-        *result_listener << "Expected Key" << AZStd::get<1>(arg) << "Actual Key" << AZStd::get<0>(arg).first.c_str();
+    MATCHER(UnorderedMapKeyMatcher, "") {
+        *result_listener << "Expected Key" << AZStd::get<1>(arg)
+            << "Actual Key" << AZStd::get<0>(arg).first.c_str();
         return AZStd::get<0>(arg).first == AZStd::get<1>(arg);
     }
 
@@ -875,9 +875,7 @@ namespace UnitTest
         constexpr AZ::IO::PathView expectedResult = "/usr/ros/humble/meshes/bar.dae";
         auto result = ROS2::Utils::ResolveAssetPath(
             dae,
-            urdf,
-            "",
-            GetTestSettings(),
+            urdf, "", GetTestSettings(),
             [expectedResult](const AZ::IO::PathView& p) -> bool
             {
                 // Only a file name that matches the expected result will return that it exists.
@@ -895,9 +893,7 @@ namespace UnitTest
         constexpr AZ::IO::PathView expectedResult = "";
         auto result = ROS2::Utils::ResolveAssetPath(
             dae,
-            urdf,
-            "",
-            GetTestSettings(),
+            urdf, "", GetTestSettings(),
             [](const AZ::IO::PathView& p) -> bool
             {
                 // Always return "not found" for all file names.
@@ -914,9 +910,7 @@ namespace UnitTest
         constexpr AZ::IO::PathView expectedResult = "/home/foo/ros_ws/install/foo_robot/meshes/bar.dae";
         auto result = ROS2::Utils::ResolveAssetPath(
             dae,
-            urdf,
-            "",
-            GetTestSettings(),
+            urdf, "", GetTestSettings(),
             [expectedResult](const AZ::IO::PathView& p) -> bool
             {
                 // Only a file name that matches the expected result will return that it exists.
@@ -933,9 +927,7 @@ namespace UnitTest
         constexpr AZ::IO::PathView expectedResult = "";
         auto result = ROS2::Utils::ResolveAssetPath(
             dae,
-            urdf,
-            "",
-            GetTestSettings(),
+            urdf, "", GetTestSettings(),
             [](const AZ::IO::PathView& p) -> bool
             {
                 // Always return "not found"
@@ -954,9 +946,7 @@ namespace UnitTest
         constexpr AZ::IO::PathView expectedResult = "";
         auto result = ROS2::Utils::ResolveAssetPath(
             dae,
-            urdf,
-            amentPrefixPath,
-            GetTestSettings(),
+            urdf, amentPrefixPath, GetTestSettings(),
             [](const AZ::IO::PathView& p) -> bool
             {
                 // For an AMENT_PREFIX_PATH to be a valid match, the share/<package>/package.xml and share/<relative path>
@@ -977,9 +967,7 @@ namespace UnitTest
         constexpr AZ::IO::PathView expectedResult = "/ament/path2/share/robot/meshes/bar.dae";
         auto result = ROS2::Utils::ResolveAssetPath(
             dae,
-            urdf,
-            amentPrefixPath,
-            GetTestSettings(),
+            urdf, amentPrefixPath, GetTestSettings(),
             [expectedResult](const AZ::IO::PathView& p) -> bool
             {
                 // For an AMENT_PREFIX_PATH to be a valid match, the share/<package>/package.xml and share/<relative path>
