@@ -7,5 +7,5 @@
 #
 
 set(FILES
-    Source/Builders/OpenXRBuilderModule.cpp
+    Source/Builders/OpenXRVkBuilderModule.cpp
 )

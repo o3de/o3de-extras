@@ -88,7 +88,7 @@ ly_create_alias(NAME OpenXRVk.Clients NAMESPACE Gem TARGETS Gem::OpenXRVk)
 ly_create_alias(NAME OpenXRVk.Unified NAMESPACE Gem TARGETS Gem::OpenXRVk)
 
 if(PAL_TRAIT_BUILD_HOST_TOOLS)
-    
+
     #
     ly_add_target(
         NAME ${gem_name}.Builders.Static STATIC
@@ -132,7 +132,7 @@ if(PAL_TRAIT_BUILD_HOST_TOOLS)
      # Inject the gem name into the Module source file
      ly_add_source_properties(
         SOURCES
-            Source/Builders/OpenXRBuilderModule.cpp
+            Source/Builders/OpenXRVkBuilderModule.cpp
         PROPERTY COMPILE_DEFINITIONS
             VALUES
                 O3DE_GEM_NAME=${gem_name}

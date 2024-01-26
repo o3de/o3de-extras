@@ -16,7 +16,7 @@
 #include <AzCore/Math/MathStringConversions.h> // GALIB
 
 #include <OpenXRVk/InputDeviceXRController.h>
-#include <OpenXRVk/OpenXRActionsInterface.h>
+#include <OpenXRVk/OpenXRVkActionsInterface.h>
 
 #include <Atom/RPI.Public/ViewProviderBus.h>
 #include <Atom/RPI.Public/View.h>

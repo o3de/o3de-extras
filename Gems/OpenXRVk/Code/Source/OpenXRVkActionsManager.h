@@ -15,8 +15,8 @@
 
 #include <openxr/openxr.h>
 
-#include <OpenXRVk/OpenXRActionsInterface.h>
-#include <OpenXRVk/OpenXRActionSetsAsset.h>
+#include <OpenXRVk/OpenXRVkActionsInterface.h>
+#include <OpenXRVk/OpenXRVkActionSetsAsset.h>
 
 namespace OpenXRVk
 {

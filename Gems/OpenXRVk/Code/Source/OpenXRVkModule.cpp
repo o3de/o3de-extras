@@ -11,7 +11,6 @@
 
 #include <OpenXRVk/OpenXRVkSystemComponent.h>
 #include <XRCameraMovementComponent.h>
-#include "InteractionProfiles/OpenXRInteractionProfilesProviderSystemComponent.h"
 
 namespace OpenXRVk
 {   
@@ -27,7 +26,6 @@ namespace OpenXRVk
             : AZ::Module()
         {
             m_descriptors.insert(m_descriptors.end(), {
-                OpenXRInteractionProfilesProviderSystemComponent::CreateDescriptor(),
                 SystemComponent::CreateDescriptor(),
                 XRCameraMovementComponent::CreateDescriptor(),
                 //KHRSimpleProfileSystemComponent::CreateDescriptor(),
@@ -38,7 +36,6 @@ namespace OpenXRVk
         {
             return
             {
-                azrtti_typeid<OpenXRInteractionProfilesProviderSystemComponent>(),
                 azrtti_typeid<OpenXRVk::SystemComponent>(),
             };
         }

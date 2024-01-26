@@ -6,9 +6,7 @@
  *
  */
 
-#include <AzCore/StringFunc/StringFunc.h>
-
-#include <OpenXRVk/OpenXRInteractionProfileDescriptor.h>
+#include <OpenXRVk/OpenXRVkInteractionProfilesAsset.h>
 
 namespace OpenXRVk
 {
@@ -73,13 +71,13 @@ namespace OpenXRVk
             {
                 edit->Class<OpenXRInteractionComponentPathDescriptor>("Component Path", "An OpenXR Component Path that is supported by an OpenXR User Path")
                     ->ClassElement(AZ::Edit::ClassElements::EditorData, "")
-                        ->Attribute(AZ::Edit::Attributes::NameLabelOverride, &OpenXRInteractionComponentPathDescriptor::GetEditorText)
-                        ->Attribute(AZ::Edit::Attributes::AutoExpand, true)
+                    ->Attribute(AZ::Edit::Attributes::NameLabelOverride, &OpenXRInteractionComponentPathDescriptor::GetEditorText)
+                    ->Attribute(AZ::Edit::Attributes::AutoExpand, true)
                     ->DataElement(AZ::Edit::UIHandlers::Default, &OpenXRInteractionComponentPathDescriptor::m_name, "Name", "User friendly name.")
-                        ->Attribute(AZ::Edit::Attributes::ChangeNotify, AZ::Edit::PropertyRefreshLevels::AttributesAndValues)
+                    ->Attribute(AZ::Edit::Attributes::ChangeNotify, AZ::Edit::PropertyRefreshLevels::AttributesAndValues)
                     ->DataElement(AZ::Edit::UIHandlers::Default, &OpenXRInteractionComponentPathDescriptor::m_path, "Path", "An OpenXR Path string that starts with '/' BUT is relative to a User Path.")
                     ->DataElement(AZ::Edit::UIHandlers::ComboBox, &OpenXRInteractionComponentPathDescriptor::m_actionTypeStr, "Action Type", "Data type of this action.")
-                        ->Attribute(AZ::Edit::Attributes::StringList, &GetEditorXrActionTypeNames)
+                    ->Attribute(AZ::Edit::Attributes::StringList, &GetEditorXrActionTypeNames)
                     ;
             }
         }
@@ -113,10 +111,10 @@ namespace OpenXRVk
             {
                 edit->Class<OpenXRInteractionUserPathDescriptor>("User Path", "Represents a User Path supported by an Interaction Profile")
                     ->ClassElement(AZ::Edit::ClassElements::EditorData, "")
-                        ->Attribute(AZ::Edit::Attributes::NameLabelOverride, &OpenXRInteractionUserPathDescriptor::GetEditorText)
-                        ->Attribute(AZ::Edit::Attributes::AutoExpand, true)
+                    ->Attribute(AZ::Edit::Attributes::NameLabelOverride, &OpenXRInteractionUserPathDescriptor::GetEditorText)
+                    ->Attribute(AZ::Edit::Attributes::AutoExpand, true)
                     ->DataElement(AZ::Edit::UIHandlers::Default, &OpenXRInteractionUserPathDescriptor::m_name, "Name", "User friendly name.")
-                        ->Attribute(AZ::Edit::Attributes::ChangeNotify, AZ::Edit::PropertyRefreshLevels::AttributesAndValues)
+                    ->Attribute(AZ::Edit::Attributes::ChangeNotify, AZ::Edit::PropertyRefreshLevels::AttributesAndValues)
                     ->DataElement(AZ::Edit::UIHandlers::Default, &OpenXRInteractionUserPathDescriptor::m_path, "Path", "An OpenXR Path string that starts with '/'.")
                     ->DataElement(AZ::Edit::UIHandlers::Default, &OpenXRInteractionUserPathDescriptor::m_componentPathDescriptors, "Component Paths", "List of component paths supported by this User Path")
                     ;
@@ -162,17 +160,17 @@ namespace OpenXRVk
                 ->Field("UserPathDescriptors", &OpenXRInteractionProfileDescriptor::m_userPathDescriptors)
                 ->Field("CommonComponentPathDescriptors", &OpenXRInteractionProfileDescriptor::m_commonComponentPathDescriptors)
                 ;
-  
+
             AZ::EditContext* edit = serialize->GetEditContext();
             if (edit)
             {
                 edit->Class<OpenXRInteractionProfileDescriptor>(
                     "Interaction Profile", "Defines an OpenXR Interaction Profile Supported by O3DE.")
                     ->ClassElement(AZ::Edit::ClassElements::EditorData, "")
-                        ->Attribute(AZ::Edit::Attributes::NameLabelOverride, &OpenXRInteractionProfileDescriptor::GetEditorText)
-                        ->Attribute(AZ::Edit::Attributes::AutoExpand, true)
+                    ->Attribute(AZ::Edit::Attributes::NameLabelOverride, &OpenXRInteractionProfileDescriptor::GetEditorText)
+                    ->Attribute(AZ::Edit::Attributes::AutoExpand, true)
                     ->DataElement(AZ::Edit::UIHandlers::Default, &OpenXRInteractionProfileDescriptor::m_uniqueName, "Unique Name", "Unique name across all interaction profiles")
-                        ->Attribute(AZ::Edit::Attributes::ChangeNotify, AZ::Edit::PropertyRefreshLevels::AttributesAndValues)
+                    ->Attribute(AZ::Edit::Attributes::ChangeNotify, AZ::Edit::PropertyRefreshLevels::AttributesAndValues)
                     ->DataElement(AZ::Edit::UIHandlers::Default, &OpenXRInteractionProfileDescriptor::m_path, "Path", "OpenXR Canonical Path for this interation profile.")
                     ->DataElement(AZ::Edit::UIHandlers::Default, &OpenXRInteractionProfileDescriptor::m_userPathDescriptors, "User Paths", "List of user paths")
                     ->DataElement(AZ::Edit::UIHandlers::Default, &OpenXRInteractionProfileDescriptor::m_commonComponentPathDescriptors, "Common Component Paths", "List of component paths supported by all User Paths")
@@ -252,5 +250,89 @@ namespace OpenXRVk
     }
     /// OpenXRInteractionProfileDescriptor
     ///////////////////////////////////////////////////////////
+
+
+    ///////////////////////////////////////////////////////////
+    /// OpenXRInteractionProfilesAsset
+    void OpenXRInteractionProfilesAsset::Reflect(AZ::ReflectContext* context)
+    {
+        OpenXRInteractionProfileDescriptor::Reflect(context);
+
+        AZ::SerializeContext* serialize = azrtti_cast<AZ::SerializeContext*>(context);
+        if (serialize)
+        {
+            serialize->Class<OpenXRInteractionProfilesAsset, AZ::Data::AssetData>()
+                ->Version(1)
+                ->Attribute(AZ::Edit::Attributes::EnableForAssetEditor, true)
+                ->Field("InteractionProfiles", &OpenXRInteractionProfilesAsset::m_interactionProfileDescriptors)
+                ;
+
+            AZ::EditContext* edit = serialize->GetEditContext();
+            if (edit)
+            {
+                edit->Class<OpenXRInteractionProfilesAsset>(
+                    s_assetTypeName, "Defines the OpenXR Interaction Profiles supported by O3DE.")
+                    ->ClassElement(AZ::Edit::ClassElements::EditorData, "")
+                    ->Attribute(AZ::Edit::Attributes::AutoExpand, true)
+                    ->DataElement(AZ::Edit::UIHandlers::Default, &OpenXRInteractionProfilesAsset::m_interactionProfileDescriptors, "Interaction Profiles", "List of interaction profile descriptors.")
+                    ;
+            }
+        }
+    }
+
+    const OpenXRInteractionProfileDescriptor* OpenXRInteractionProfilesAsset::GetInteractionProfileDescriptor(const AZStd::string& profileName) const
+    {
+        for (const auto& profileDescriptor : m_interactionProfileDescriptors)
+        {
+            if (profileName == profileDescriptor.m_uniqueName)
+            {
+                return &profileDescriptor;
+            }
+        }
+        return nullptr;
+    }
+
+    /// OpenXRInteractionProfilesAsset
+    ///////////////////////////////////////////////////////////
+
+    OpenXRInteractionProfilesAssetHandler::OpenXRInteractionProfilesAssetHandler()
+        : AzFramework::GenericAssetHandler<OpenXRInteractionProfilesAsset>(
+            OpenXRInteractionProfilesAsset::s_assetTypeName,
+            "Other",
+            OpenXRInteractionProfilesAsset::s_assetExtension)
+    {
+    }
+
+    bool OpenXRInteractionProfilesAssetHandler::SaveAssetData(const AZ::Data::Asset<AZ::Data::AssetData>& asset, AZ::IO::GenericStream* stream)
+    {
+        auto profileAsset = asset.GetAs<OpenXRInteractionProfilesAsset>();
+        if (!profileAsset)
+        {
+            AZ_Error(LogName, false, "This should be an OpenXR Interaction Profile Asset, as this is the only type this handler can process.");
+            return false;
+        }
+        const auto& descriptorsList = profileAsset->m_interactionProfileDescriptors;
+        if (descriptorsList.empty())
+        {
+            AZ_Error(LogName, false, "The list of Interaction Profile Descriptors is empty.");
+            return false;
+        }
+
+        if (!m_serializeContext)
+        {
+            AZ_Error(LogName, false, "Can't save the OpenXR Interaction Profile Asset without a serialize context.");
+            return false;
+        }
+
+        for (const auto& profileDescriptor : descriptorsList)
+        {
+            if (!profileDescriptor.Validate())
+            {
+                return false;
+            }
+        }
+        return AZ::Utils::SaveObjectToStream(*stream, AZ::ObjectStream::ST_JSON, profileAsset,
+            asset->RTTI_GetType(), m_serializeContext);
+    }
 
 } // namespace OpenXRVk

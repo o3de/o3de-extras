@@ -6,11 +6,9 @@
  *
  */
 
-#include "OpenXRBehaviorReflection.h"
+#include <OpenXRVk/OpenXRVkVisualizedSpacesInterface.h>
 
-// #include <AzCore/Script/ScriptContext.h>
-
-#include <OpenXRVk/OpenXRVisualizedSpacesInterface.h>
+#include "OpenXRVkBehaviorReflection.h"
 
 namespace OpenXRVk
 {

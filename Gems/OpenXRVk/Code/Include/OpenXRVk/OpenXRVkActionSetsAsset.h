@@ -9,11 +9,8 @@
 #pragma once
 
 #include <AzCore/Asset/AssetCommon.h>
-#include <AzCore/RTTI/RTTI.h>
-#include <AzCore/RTTI/ReflectContext.h>
-#include <AzCore/Serialization/SerializeContext.h>
-#include <AzCore/Serialization/EditContext.h>
-#include <AzCore/Serialization/ObjectStream.h>
+
+#include <OpenXRVk/OpenXRVkInteractionProfilesAsset.h>
 
 namespace OpenXRVk
 {
@@ -61,7 +58,7 @@ namespace OpenXRVk
         //! can only be added if they can map to a boolean.
         //! Another important case is if the this is a haptic feedback action (Output), then
         //! subsequent action paths can only be of type haptic feedback actions.
-        AZStd::vector<OpenXRActionPathDescriptor> m_actionPathDescriptors; 
+        AZStd::vector<OpenXRActionPathDescriptor> m_actionPathDescriptors;
     };
 
     class OpenXRActionSetDescriptor final
@@ -80,4 +77,47 @@ namespace OpenXRVk
         AZStd::vector<OpenXRActionDescriptor> m_actionDescriptors;
     };
 
+    //! This asset defines a list of  OpenXR Action Sets that an application supports
+    //! regarding inputs and haptics.
+    class OpenXRActionSetsAsset final
+        : public AZ::Data::AssetData
+    {
+    public:
+        AZ_CLASS_ALLOCATOR(OpenXRActionSetsAsset, AZ::SystemAllocator);
+        AZ_RTTI(OpenXRActionSetsAsset, "{C2DEE370-6151-4701-AEA5-AEA3CA247CFF}", AZ::Data::AssetData);
+        static void Reflect(AZ::ReflectContext* context);
+
+        OpenXRActionSetsAsset();
+
+        static constexpr char s_assetTypeName[] = "OpenXR Action Sets Asset";
+        static constexpr char s_assetExtension[] = "xractions";
+
+        AZ::Data::Asset<OpenXRInteractionProfilesAsset> m_interactionProfilesAsset;
+        AZStd::vector<OpenXRActionSetDescriptor> m_actionSetDescriptors;
+
+    private:
+        AZ::Crc32 OnInteractionProfilesAssetChanged();
+    };
+
+    //! We need a custom asset handler because OpenXRActionSetsAsset contains a reference to another
+    //! asset of type OpenXRInteractionProfilesAsset, and we don't have a custom builder that declares the
+    //! dependency in the Asset Catalog database. Without this custom handler, the engine asserts
+    //! complaining about the missing dependency.
+    class OpenXRActionSetsAssetHandler final
+        : public AzFramework::GenericAssetHandler<OpenXRActionSetsAsset>
+    {
+    public:
+        AZ_RTTI(OpenXRActionSetsAssetHandler, "{1C4A27E9-6768-4C59-9582-2A01A0DEC1D0}", AzFramework::GenericAssetHandler<OpenXRActionSetsAsset>);
+        AZ_CLASS_ALLOCATOR(OpenXRActionSetsAssetHandler, AZ::SystemAllocator);
+    
+        static constexpr char LogName[] = "OpenXRInteractionProfilesAssetHandler";
+    
+        OpenXRActionSetsAssetHandler();
+    
+        // Called by the asset manager to perform actual asset load.
+        AZ::Data::AssetHandler::LoadResult LoadAssetData(
+            const AZ::Data::Asset<AZ::Data::AssetData>& asset,
+            AZStd::shared_ptr<AZ::Data::AssetDataStream> stream,
+            const AZ::Data::AssetFilterCB& assetLoadFilterCB) override;
+    };
 }// namespace OpenXRVk

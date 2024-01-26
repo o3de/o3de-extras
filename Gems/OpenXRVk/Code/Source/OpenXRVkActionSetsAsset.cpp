@@ -13,32 +13,11 @@
 //! The error is triggered when calling ->Field("InteractionProfilesAsset", &OpenXRActionSetsAsset::m_interactionProfilesAsset)
 #include <AzCore/Asset/AssetSerializer.h>
 
-#include <OpenXRVk/OpenXRActionSetsAsset.h>
+#include <OpenXRVk/OpenXRVkActionSetsAsset.h>
 
 namespace OpenXRVk
 {
-    // // This function is only used when an OpenXRActionSetsAsset is being created/edited with the AssetEditor.
-    // static const AZ::Data::Asset<OpenXRInteractionProfilesAsset>& GetInteractionProfilesAsset()
-    // {
-    //     static AZ::Data::Asset<OpenXRInteractionProfilesAsset> s_asset;
-    //     if (!s_asset.IsReady())
-    //     {
-    //         const auto interactionProfilesAssetPath = OpenXRInteractionProfilesAsset::GetInteractionProfilesAssetPath();
-    //         if (interactionProfilesAssetPath.empty())
-    //         {
-    //             AZ_Error("OpenXRActionPathDescriptor", false, "No interaction profile asset has been defined");
-    //             return s_asset;
-    //         }
-    //         s_asset = AZ::RPI::AssetUtils::LoadCriticalAsset<OpenXRInteractionProfilesAsset>(interactionProfilesAssetPath);
-    //         if (!s_asset.IsReady())
-    //         {
-    //             AZ_Error("OpenXRActionPathDescriptor", false, "The system interaction profiles asset [%s] is not ready. There's no data available to create/edit an OpenXRActionSetsAsset",
-    //                 interactionProfilesAssetPath.c_str());
-    //             return s_asset;
-    //         }
-    //     }
-    //     return s_asset;
-    // }
+
 
     namespace EditorInternal
     {

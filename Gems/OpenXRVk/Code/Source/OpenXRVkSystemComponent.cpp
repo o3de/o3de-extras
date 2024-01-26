@@ -19,7 +19,7 @@
 #include <OpenXRVk/OpenXRVkSwapChain.h>
 #include <OpenXRVk/OpenXRVkSystemComponent.h>
 
-#include "OpenXRBehaviorReflection.h"
+#include "OpenXRVkBehaviorReflection.h"
 
 #include <XR/XRUtils.h>
 

@@ -13,8 +13,8 @@
 #include <AzCore/Component/Component.h>
 #include <AzFramework/Asset/GenericAssetHandler.h>
 
-#include <OpenXRVk/OpenXRInteractionProfilesAsset.h>
-#include <OpenXRVk/OpenXRActionSetsAsset.h>
+#include <OpenXRVk/OpenXRVkInteractionProfilesAsset.h>
+#include <OpenXRVk/OpenXRVkActionSetsAsset.h>
 
 namespace OpenXRVk
 {

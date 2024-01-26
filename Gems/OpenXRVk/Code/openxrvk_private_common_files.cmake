@@ -17,11 +17,10 @@ set(FILES
     Include/OpenXRVk/OpenXRVkSwapChain.h
     Include/OpenXRVk/OpenXRVkSystemComponent.h
     Include/OpenXRVk/OpenXRVkUtils.h
-    Include/OpenXRVk/OpenXRActionsInterface.h
-    Include/OpenXRVk/OpenXRVisualizedSpacesInterface.h
-    Include/OpenXRVk/OpenXRInteractionProfileDescriptor.h
-    Include/OpenXRVk/OpenXRInteractionProfilesAsset.h
-    Include/OpenXRVk/OpenXRActionSetsAsset.h
+    Include/OpenXRVk/OpenXRVkActionsInterface.h
+    Include/OpenXRVk/OpenXRVkVisualizedSpacesInterface.h
+    Include/OpenXRVk/OpenXRVkInteractionProfilesAsset.h
+    Include/OpenXRVk/OpenXRVkActionSetsAsset.h
     Source/InputDeviceXRController.cpp
     Source/OpenXRVkCommon.h
     Source/OpenXRVkDevice.cpp
@@ -33,18 +32,14 @@ set(FILES
     Source/OpenXRVkSwapChain.cpp
     Source/OpenXRVkSystemComponent.cpp
     Source/OpenXRVkUtils.cpp
-    Source/InteractionProfiles/OpenXRInteractionProfilesProviderSystemComponent.cpp
-    Source/InteractionProfiles/OpenXRInteractionProfilesProviderSystemComponent.h
-    Source/InteractionProfiles/OpenXRInteractionProfileDescriptor.cpp
-    Source/InteractionProfiles/OpenXRInteractionProfilesAsset.cpp
-    Source/InteractionProfiles/OpenXRInteractionProfilesProviderInterface.h
-    Source/OpenXRActionSetsAsset.cpp
+    Source/OpenXRVkInteractionProfilesAsset.cpp
+    Source/OpenXRVkActionSetsAsset.cpp
     Source/XRCameraMovementComponent.cpp
     Source/XRCameraMovementComponent.h
-    Source/OpenXRVisualizedSpacesManager.cpp
-    Source/OpenXRVisualizedSpacesManager.h
-    Source/OpenXRActionsManager.cpp
-    Source/OpenXRActionsManager.h
-    Source/OpenXRBehaviorReflection.cpp
-    Source/OpenXRBehaviorReflection.h
+    Source/OpenXRVkVisualizedSpacesManager.cpp
+    Source/OpenXRVkVisualizedSpacesManager.h
+    Source/OpenXRVkActionsManager.cpp
+    Source/OpenXRVkActionsManager.h
+    Source/OpenXRVkBehaviorReflection.cpp
+    Source/OpenXRVkBehaviorReflection.h
 )

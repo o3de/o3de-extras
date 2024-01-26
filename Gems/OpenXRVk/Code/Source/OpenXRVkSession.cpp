@@ -21,8 +21,8 @@
 #include <Atom/RHI.Reflect/Vulkan/XRVkDescriptors.h>
 #include <Atom/RPI.Public/XR/XRSpaceNotificationBus.h>
 
-#include "OpenXRVisualizedSpacesManager.h"
-#include "OpenXRActionsManager.h"
+#include "OpenXRVkVisualizedSpacesManager.h"
+#include "OpenXRVkActionsManager.h"
 
 
 namespace OpenXRVk

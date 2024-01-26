@@ -7,8 +7,8 @@
 #
 
 set(FILES
-    Source/Builders/OpenXRActionSetsAssetBuilder.cpp
-    Source/Builders/OpenXRActionSetsAssetBuilder.h
-    Source/Builders/OpenXRAssetBuildersSystemComponent.cpp
-    Source/Builders/OpenXRAssetBuildersSystemComponent.h
+    Source/Builders/OpenXRVkActionSetsAssetBuilder.cpp
+    Source/Builders/OpenXRVkActionSetsAssetBuilder.h
+    Source/Builders/OpenXRVkAssetBuildersSystemComponent.cpp
+    Source/Builders/OpenXRVkAssetBuildersSystemComponent.h
 )

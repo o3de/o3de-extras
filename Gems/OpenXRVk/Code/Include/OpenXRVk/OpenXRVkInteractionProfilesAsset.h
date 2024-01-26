@@ -10,12 +10,8 @@
 
 #include <openxr/openxr.h>
 
-#include <AzCore/RTTI/RTTI.h>
-#include <AzCore/RTTI/ReflectContext.h>
-#include <AzCore/Serialization/SerializeContext.h>
-#include <AzCore/Serialization/EditContext.h>
-#include <AzCore/std/string/string.h>
-#include <AzCore/std/containers/vector.h>
+#include <AzCore/Asset/AssetCommon.h>
+#include <AzFramework/Asset/GenericAssetHandler.h>
 
 namespace OpenXRVk
 {
@@ -105,5 +101,43 @@ namespace OpenXRVk
     private:
         AZStd::string GetEditorText();
     };
+
+    //! This asset defines a list of Interaction Profile Descriptors.
+    //! The Engine only needs one of these assets, which is used to express
+    //! all the different interaction profiles (aka XR Headset Devices) that
+    //! are supported by OpenXR.
+    //! Basically this asset contains data as listed here:
+    //! https://registry.khronos.org/OpenXR/specs/1.0/html/xrspec.html#semantic-path-interaction-profiles
+    class OpenXRInteractionProfilesAsset final
+        : public AZ::Data::AssetData
+    {
+    public:
+        AZ_CLASS_ALLOCATOR(OpenXRInteractionProfilesAsset, AZ::SystemAllocator);
+        AZ_RTTI(OpenXRInteractionProfilesAsset, "{02555DCD-E363-42FB-935C-4E67CC3A1699}", AZ::Data::AssetData);
+        static void Reflect(AZ::ReflectContext* context);
+
+        static constexpr char s_assetTypeName[] = "OpenXR Interaction Profiles";
+        static constexpr char s_assetExtension[] = "xrprofiles";
+
+        const OpenXRInteractionProfileDescriptor* GetInteractionProfileDescriptor(const AZStd::string& profileName) const;
+
+        AZStd::vector<OpenXRInteractionProfileDescriptor> m_interactionProfileDescriptors;
+    };
+
+    //! Custom asset handler
+    class OpenXRInteractionProfilesAssetHandler final
+        : public AzFramework::GenericAssetHandler<OpenXRInteractionProfilesAsset>
+    {
+    public:
+        AZ_RTTI(OpenXRInteractionProfilesAssetHandler, "{1C4A27E9-6768-4C59-9582-2A01A0DEC1D0}", AzFramework::GenericAssetHandler<OpenXRInteractionProfilesAsset>);
+        AZ_CLASS_ALLOCATOR(OpenXRInteractionProfilesAssetHandler, AZ::SystemAllocator);
+
+        static constexpr char LogName[] = "OpenXRInteractionProfilesAssetHandler";
+
+        OpenXRInteractionProfilesAssetHandler();
+
+        bool SaveAssetData(const AZ::Data::Asset<AZ::Data::AssetData>& asset, AZ::IO::GenericStream* stream) override;
+    };
+
 
 }// namespace OpenXRVk

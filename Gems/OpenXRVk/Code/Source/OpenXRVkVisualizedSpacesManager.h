@@ -10,7 +10,7 @@
 
 #include <openxr/openxr.h>
 
-#include <OpenXRVk/OpenXRVisualizedSpacesInterface.h>
+#include <OpenXRVk/OpenXRVkVisualizedSpacesInterface.h>
 
 namespace OpenXRVk
 {

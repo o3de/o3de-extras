@@ -14,8 +14,8 @@
 
 //#include <OpenXRVk/OpenXRInteractionProfileBus.h>
 #include <OpenXRVk/OpenXRVkUtils.h>
-#include <OpenXRVk/OpenXRVisualizedSpacesInterface.h>
-#include "OpenXRActionsManager.h"
+#include <OpenXRVk/OpenXRVkVisualizedSpacesInterface.h>
+#include "OpenXRVkActionsManager.h"
 
 namespace OpenXRVk
 {

@@ -11,7 +11,7 @@
 
 #include <OpenXRVk/OpenXRVkUtils.h>
 
-#include "OpenXRVisualizedSpacesManager.h"
+#include "OpenXRVkVisualizedSpacesManager.h"
 
 namespace OpenXRVk
 {
