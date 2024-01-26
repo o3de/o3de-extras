@@ -16,7 +16,6 @@
 #include <openxr/openxr.h>
 
 #include <OpenXRVk/OpenXRActionsInterface.h>
-#include <OpenXRVk/OpenXRInteractionProfilesAsset.h>
 #include <OpenXRVk/OpenXRActionSetsAsset.h>
 
 namespace OpenXRVk
@@ -26,13 +25,17 @@ namespace OpenXRVk
     // asset created by the developer where all actions of interest
     // are instantiated.
     class ActionsManager final :
-        public OpenXRActionsInterface::Registrar
+        public OpenXRActionsInterface::Registrar,
+        private AZ::Data::AssetBus::Handler
     {
     public:
         AZ_CLASS_ALLOCATOR(ActionsManager, AZ::SystemAllocator);
         AZ_RTTI(ActionsManager, "{79E2B285-073B-4042-93ED-B92E6C819CA6}", IOpenXRActions);
 
         static constexpr char LogName[] = "OpenXRVkActionsManager";
+
+        ActionsManager() = default;
+        ~ActionsManager();
 
         //! Initialize various actions and actionSets according to the
         //! "openxr.xractions" action bindings asset.
@@ -111,6 +114,9 @@ namespace OpenXRVk
             AZStd::unordered_map<AZStd::string, IOpenXRActions::ActionHandle> m_actions;
         };
 
+        AZStd::string GetActionSetsAssetPath();
+        bool StartActionSetAssetAsync();
+
         bool InitActionSet(const OpenXRInteractionProfilesAsset& interactionProfilesAsset,
             const OpenXRActionSetDescriptor& actionSetDescriptor,
             SuggestedBindingsPerProfile& suggestedBindingsPerProfileOut);
@@ -129,15 +135,29 @@ namespace OpenXRVk
             SuggestedBindingsPerProfile& suggestedBindingsPerProfile) const;
 
 
-        
         AZ::Outcome<bool, AZStd::string> ChangeActionSetStateInternal(const AZStd::string& actionSetName, bool activate, bool recreateXrActiveActionSets = false);
         void RecreateXrActiveActionSets();
+
+
+        /////////////////////////////////////////////////
+        /// AssetBus overrides
+        //! The reason we don't care for OnAssetReloaded() is because in OpenXR
+        //! once a group of ActionSets have been attached to the session, they become
+        //! immutable. To have different action sets, the session would have to be recreated.
+        void OnAssetReady(AZ::Data::Asset<AZ::Data::AssetData> asset) override;
+        void OnAssetError(AZ::Data::Asset<AZ::Data::AssetData> asset) override;
+        /// AssetBus overrides
+        /////////////////////////////////////////////////
+
+        // Called when m_actionSetAsset is ready.
+        void InitInternal();
 
         XrInstance m_xrInstance = XR_NULL_HANDLE;
         XrSession m_xrSession = XR_NULL_HANDLE;
 
-        // Load synchronously as critical assets upon initilization.
-        AZ::Data::Asset<OpenXRInteractionProfilesAsset> m_interactionProfilesAsset;
+        // Loaded Asynchronously. Once this asset is ready, the real initialization of the
+        // OpenXR Actions and ActionSets will occur.
+        // This asset is loaded once and never changes.
         AZ::Data::Asset<OpenXRActionSetsAsset> m_actionSetAsset;
 
         // Updated each time SyncActions is called.

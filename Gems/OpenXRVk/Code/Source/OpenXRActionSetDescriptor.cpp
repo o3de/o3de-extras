@@ -6,11 +6,36 @@
  *
  */
 
-#include "InteractionProfiles/OpenXRInteractionProfilesProviderInterface.h"
+#include <Atom/RPI.Reflect/Asset/AssetUtils.h>
+
+#include <OpenXRVk/OpenXRInteractionProfilesAsset.h>
 #include <OpenXRVk/OpenXRActionSetDescriptor.h>
 
 namespace OpenXRVk
 {
+    // This function is only used when an OpenXRActionSetsAsset is being created/edited with the AssetEditor.
+    static const AZ::Data::Asset<OpenXRInteractionProfilesAsset>& GetInteractionProfilesAsset()
+    {
+        static AZ::Data::Asset<OpenXRInteractionProfilesAsset> s_asset;
+        if (!s_asset.IsReady())
+        {
+            const auto interactionProfilesAssetPath = OpenXRInteractionProfilesAsset::GetInteractionProfilesAssetPath();
+            if (interactionProfilesAssetPath.empty())
+            {
+                AZ_Error("OpenXRActionPathDescriptor", false, "No interaction profile asset has been defined");
+                return s_asset;
+            }
+            s_asset = AZ::RPI::AssetUtils::LoadCriticalAsset<OpenXRInteractionProfilesAsset>(interactionProfilesAssetPath);
+            if (!s_asset.IsReady())
+            {
+                AZ_Error("OpenXRActionPathDescriptor", false, "The system interaction profiles asset [%s] is not ready. There's no data available to create/edit an OpenXRActionSetsAsset",
+                    interactionProfilesAssetPath.c_str());
+                return s_asset;
+            }
+        }
+        return s_asset;
+    }
+
     ///////////////////////////////////////////////////////////
     /// OpenXRActionPathDescriptor
     void OpenXRActionPathDescriptor::Reflect(AZ::ReflectContext* context)
@@ -58,12 +83,24 @@ namespace OpenXRVk
 
     AZStd::vector<AZStd::string> OpenXRActionPathDescriptor::GetInteractionProfiles() const
     {
-        auto interactionProviderIface = OpenXRInteractionProfilesProviderInterface::Get();
-        if (!interactionProviderIface)
+        // auto interactionProviderIface = OpenXRInteractionProfilesProviderInterface::Get();
+        // if (!interactionProviderIface)
+        // {
+        //     return {};
+        // }
+        // return interactionProviderIface->GetInteractionProfileNames();
+
+        const auto& interactionProfilesAsset = GetInteractionProfilesAsset();
+        if (!interactionProfilesAsset.IsReady())
         {
             return {};
         }
-        return interactionProviderIface->GetInteractionProfileNames();
+        AZStd::vector<AZStd::string> profileNames;
+        for (const auto& profileDescriptor : interactionProfilesAsset->m_interactionProfileDescriptors)
+        {
+            profileNames.push_back(profileDescriptor.m_uniqueName);
+        }
+        return profileNames;
     }
 
     AZ::Crc32 OpenXRActionPathDescriptor::OnUserPathSelected()
@@ -73,14 +110,14 @@ namespace OpenXRVk
 
     AZStd::vector<AZStd::string> OpenXRActionPathDescriptor::GetUserPaths() const
     {
-        AZStd::vector<AZStd::string> retList;
-        auto interactionProviderIface = OpenXRInteractionProfilesProviderInterface::Get();
-        if (!interactionProviderIface)
+        const auto& interactionProfilesAsset = GetInteractionProfilesAsset();
+        if (!interactionProfilesAsset.IsReady())
         {
-            return retList;
+            return {};
         }
 
-        const auto * profileDescriptor = interactionProviderIface->GetInteractionProfileDescriptor(m_interactionProfileName);
+        AZStd::vector<AZStd::string> retList;
+        const auto profileDescriptor = interactionProfilesAsset->GetInteractionProfileDescriptor(m_interactionProfileName);
         if (!profileDescriptor)
         {
             return retList;
@@ -90,6 +127,25 @@ namespace OpenXRVk
             retList.push_back(userPathDescriptor.m_name);
         }
         return retList;
+
+
+        // AZStd::vector<AZStd::string> retList;
+        // auto interactionProviderIface = OpenXRInteractionProfilesProviderInterface::Get();
+        // if (!interactionProviderIface)
+        // {
+        //     return retList;
+        // }
+        // 
+        // const auto * profileDescriptor = interactionProviderIface->GetInteractionProfileDescriptor(m_interactionProfileName);
+        // if (!profileDescriptor)
+        // {
+        //     return retList;
+        // }
+        // for (const auto& userPathDescriptor : profileDescriptor->m_userPathDescriptors)
+        // {
+        //     retList.push_back(userPathDescriptor.m_name);
+        // }
+        // return retList;
     }
 
     AZ::Crc32 OpenXRActionPathDescriptor::OnComponentPathSelected()
@@ -99,18 +155,20 @@ namespace OpenXRVk
 
     AZStd::vector<AZStd::string> OpenXRActionPathDescriptor::GetComponentPaths() const
     {
-        AZStd::vector<AZStd::string> retList;
-        auto interactionProviderIface = OpenXRInteractionProfilesProviderInterface::Get();
-        if (!interactionProviderIface)
+        const auto& interactionProfilesAsset = GetInteractionProfilesAsset();
+        if (!interactionProfilesAsset.IsReady())
         {
-            return retList;
+            return {};
         }
 
-        const auto* profileDescriptor = interactionProviderIface->GetInteractionProfileDescriptor(m_interactionProfileName);
+        AZStd::vector<AZStd::string> retList;
+
+        const auto profileDescriptor = interactionProfilesAsset->GetInteractionProfileDescriptor(m_interactionProfileName);
         if (!profileDescriptor)
         {
             return retList;
         }
+
         const auto* userPathDescriptor = profileDescriptor->GetUserPathDescriptor(m_userPathName);
         if (!userPathDescriptor)
         {

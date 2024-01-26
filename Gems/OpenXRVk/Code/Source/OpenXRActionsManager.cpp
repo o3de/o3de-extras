@@ -6,6 +6,8 @@
  *
  */
 
+#include <AzCore/Component/TickBus.h>
+
 #include <AzFramework/Asset/AssetSystemBus.h>
 
 #include <Atom/RPI.Reflect/Asset/AssetUtils.h>
@@ -58,6 +60,55 @@ namespace OpenXRVk
         return componentPathDescriptor->GetXrActionType();
     }
 
+    AZStd::string ActionsManager::GetActionSetsAssetPath()
+    {
+        // FIXME! Should be registry key also.
+        return AZStd::string(DefaultActionsAssetPath);
+    }
+
+    bool ActionsManager::StartActionSetAssetAsync()
+    {
+        // // There are two critical assets that need to be loaded.
+        // // The first asset defines the list of interaction profiles supported by the current version
+        // // of the OpenXR Gem.
+        // const auto interactionProfilesAssetPath = OpenXRInteractionProfilesAsset::GetInteractionProfilesAssetPath();
+        // if (interactionProfilesAssetPath.empty())
+        // {
+        //     AZ_Warning(LogName, false, "No interaction profile asset has been defined. This application will run without user interaction support.");
+        //     return true;
+        // }
+        // const auto interactionProfilesAsset = AZ::RPI::AssetUtils::LoadCriticalAsset<OpenXRInteractionProfilesAsset>(interactionProfilesAssetPath);
+        // if (!interactionProfilesAsset.IsReady())
+        // {
+        //     AZ_Warning(LogName, false, "The system interaction profiles asset [%s] is not ready. This application will run without user interaction support.",
+        //         interactionProfilesAssetPath.c_str());
+        //     return true;
+        // }
+
+        auto productPath = GetActionSetsAssetPath();
+        auto assetId = AZ::RPI::AssetUtils::GetAssetIdForProductPath(productPath.c_str(), AZ::RPI::AssetUtils::TraceLevel::Error);
+        if (!assetId.IsValid())
+        {
+            AZ_Error(LogName, false, "No ActionSet Asset named [%s] was found in the asset catalog.", productPath.c_str());
+            return true; // We return true, just in case we are running on the Editor and the user needs the Editor to verify the content of the asset.
+        }
+
+        AZ::Data::AssetBus::Handler::BusConnect(assetId);
+
+        m_actionSetAsset = AZ::Data::AssetManager::Instance().GetAsset(assetId,
+            azrtti_typeid<OpenXRActionSetsAsset>(), AZ::Data::AssetLoadBehavior::PreLoad);
+        m_actionSetAsset.QueueLoad();
+        return true;
+    }
+
+    ActionsManager::~ActionsManager()
+    {
+        if (AZ::Data::AssetBus::Handler::BusIsConnected())
+        {
+            AZ::Data::AssetBus::Handler::BusDisconnect();
+        }
+    }
+
 
     bool ActionsManager::Init(XrInstance xrInstance, XrSession xrSession)
     {
@@ -75,47 +126,29 @@ namespace OpenXRVk
             return false;
         }
 
-        // There are two critical assets that need to be loaded.
-        // The first asset defines the list of interaction profiles supported by the current version
-        // of the OpenXR Gem.
-        const auto interactionProfilesAssetPath = OpenXRInteractionProfilesAsset::GetInteractionProfilesAssetPath();
-        if (interactionProfilesAssetPath.empty())
-        {
-            AZ_Warning(LogName, false, "No interaction profile asset has been defined. This application will run without user interaction support.");
-            return true;
-        }
-        const auto interactionProfilesAsset = AZ::RPI::AssetUtils::LoadCriticalAsset<OpenXRInteractionProfilesAsset>(interactionProfilesAssetPath);
-        if (!interactionProfilesAsset.IsReady())
-        {
-            AZ_Warning(LogName, false, "The system interaction profiles asset [%s] is not ready. This application will run without user interaction support.",
-                interactionProfilesAssetPath.c_str());
-            return true;
-        }
+        return StartActionSetAssetAsync();
+    }
 
-        // OpenXR only allows to define ActionSets during session creation.
-        // From the point of view of O3DE, the developer defines action sets
-        // in an asset of type OpenXRActionBindingsAsset.
-        // The default source path for said asset is "@project@/openxr.xractions".
-        m_actionSetAsset = AZ::RPI::AssetUtils::LoadCriticalAsset<OpenXRActionSetsAsset>({ DefaultActionsAssetPath });
-        if (!m_actionSetAsset.IsReady())
-        {
-            AZ_Warning(LogName, false, "Action Sets asset [%s] not found. This application will run without user interaction support.", DefaultActionsAssetPath);
-            return true;
-        }
+    void ActionsManager::InitInternal()
+    {
+        AZ_Assert(m_actionSetAsset.IsReady(), "Action Sets asset should be ready!");
+        AZ_Assert(m_actionSetAsset->m_interactionProfilesAsset.IsReady(), "FIXME GALIB Be Readu!!");
+
+        const auto interactionProfilesAsset = m_actionSetAsset->m_interactionProfilesAsset;
 
         SuggestedBindingsPerProfile suggestedBindingsPerProfile;
         for (const auto& actionSetDescriptor : m_actionSetAsset->m_actionSetDescriptors)
         {
             if (!InitActionSet(*interactionProfilesAsset, actionSetDescriptor, suggestedBindingsPerProfile))
             {
-                return false;
+                return;
             }
         }
 
         if (suggestedBindingsPerProfile.empty())
         {
             AZ_Printf(LogName, "This application will run without actions.\n");
-            return true;
+            return;
         }
 
         // Register the bindings for each active interaction profile.
@@ -140,7 +173,7 @@ namespace OpenXRVk
         if (activeProfileCount < 1)
         {
             AZ_Error(LogName, false, "Failed to activate at least one interaction profile. This application will run without actions.\n");
-            return true;
+            return;
         }
 
         AZStd::vector<XrActionSet> xrActionSets;
@@ -162,10 +195,9 @@ namespace OpenXRVk
         {
             m_xrActiveActionSets.clear();
             PrintXrError(LogName, result, "Failed to attach %zu action sets to the session.", xrActionSets.size());
-            return false;
         }
 
-        return true;
+        AZ_Printf(LogName, "Successfully configure the Action Sets.");
     }
 
     bool ActionsManager::SyncActions(XrTime predictedDisplayTime)
@@ -770,6 +802,8 @@ namespace OpenXRVk
     }
     /// OpenXRActionsInterface overrides
     /////////////////////////////////////////////////
+    
+    
     AZ::Outcome<bool, AZStd::string> ActionsManager::ChangeActionSetStateInternal(const AZStd::string& actionSetName, bool activate, bool recreateXrActiveActionSets)
     {
         // First get the index.
@@ -799,6 +833,7 @@ namespace OpenXRVk
         return AZ::Success(true);
     }
 
+    
     void ActionsManager::RecreateXrActiveActionSets()
     {
         // Recreate and cache the XrActionActionSet list.
@@ -812,5 +847,35 @@ namespace OpenXRVk
             }
         }
     }
+
+
+    /////////////////////////////////////////////////
+    /// AssetBus overrides
+    void ActionsManager::OnAssetReady(AZ::Data::Asset<AZ::Data::AssetData> asset)
+    {
+        AZ::Data::AssetBus::Handler::BusDisconnect();
+
+        AZ_Printf(LogName, "Successfully loaded the Action Sets Asset [%s].\n", asset.GetHint().c_str());
+        
+        // Finish ActionsManager initialization on the main loop.
+        AZ::TickBus::QueueFunction([this, asset]()
+            {
+                m_actionSetAsset = asset;
+                InitInternal();
+            });
+    }
+
+    void ActionsManager::OnAssetError(AZ::Data::Asset<AZ::Data::AssetData> asset)
+    {
+        AZ::Data::AssetBus::Handler::BusDisconnect();
+
+        m_actionSetAsset = asset;
+
+        // Report the error and do nothing.
+        AZ_Assert(false, "Application failed to load The Action Sets asset. This application will keep running without user interaction support.");
+        AZ_Error(LogName, false, "Application failed to load The Action Sets asset. This application will keep running without user interaction support.");
+    }
+    /// AssetBus overrides
+    /////////////////////////////////////////////////
 
 } // namespace OpenXRVk

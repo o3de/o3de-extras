@@ -8,13 +8,7 @@
 
 #pragma once
 
-#include <AzCore/RTTI/RTTI.h>
-#include <AzCore/RTTI/ReflectContext.h>
-#include <AzCore/Serialization/SerializeContext.h>
-#include <AzCore/Serialization/EditContext.h>
-#include <AzCore/Serialization/ObjectStream.h>
 #include <AzCore/Asset/AssetCommon.h>
-
 #include <AzFramework/Asset/GenericAssetHandler.h>
 
 #include <OpenXRVk/OpenXRInteractionProfileDescriptor.h>
@@ -32,8 +26,8 @@ namespace OpenXRVk
         : public AZ::Data::AssetData
     {
     public:
-        AZ_RTTI(OpenXRInteractionProfilesAsset, "{02555DCD-E363-42FB-935C-4E67CC3A1699}", AZ::Data::AssetData);
         AZ_CLASS_ALLOCATOR(OpenXRInteractionProfilesAsset, AZ::SystemAllocator);
+        AZ_RTTI(OpenXRInteractionProfilesAsset, "{02555DCD-E363-42FB-935C-4E67CC3A1699}", AZ::Data::AssetData);
         static void Reflect(AZ::ReflectContext* context);
 
         static constexpr char s_assetTypeName[] = "OpenXR Interaction Profiles";

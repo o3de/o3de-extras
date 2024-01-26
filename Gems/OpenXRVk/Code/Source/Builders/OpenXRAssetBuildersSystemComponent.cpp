@@ -10,6 +10,7 @@
 #include <AssetBuilderSDK/AssetBuilderBusses.h>
 
 #include <OpenXRVk/OpenXRInteractionProfilesAsset.h>
+#include <OpenXRVk/OpenXRActionSetsAsset.h>
 
 #include "OpenXRAssetBuildersSystemComponent.h"
 
@@ -18,6 +19,7 @@ namespace OpenXRVkBuilders
     void OpenXRAssetBuildersSystemComponent::Reflect(AZ::ReflectContext* context)
     {
         OpenXRVk::OpenXRInteractionProfilesAsset::Reflect(context);
+        OpenXRVk::OpenXRActionSetsAsset::Reflect(context);
 
         if (AZ::SerializeContext* serialize = azrtti_cast<AZ::SerializeContext*>(context))
         {
@@ -58,8 +60,8 @@ namespace OpenXRVkBuilders
         AssetBuilderSDK::AssetBuilderDesc assetBuilderDescriptor;
         assetBuilderDescriptor.m_name = "OpenXR ActionSets Builder";
         assetBuilderDescriptor.m_version = 1; // First versuib
-        assetBuilderDescriptor.m_patterns.push_back(AssetBuilderSDK::AssetBuilderPattern(AZStd::string::format("*.%s", OpenXRActionSetsAssetBuilder::InteractionProfilesSourceFileExtension), AssetBuilderSDK::AssetBuilderPattern::PatternType::Wildcard));
-        //assetBuilderDescriptor.m_patterns.push_back(AssetBuilderSDK::AssetBuilderPattern(AZStd::string::format("*.%s", OpenXRActionSetsAssetBuilder::ActionSetsSourceFileExtension), AssetBuilderSDK::AssetBuilderPattern::PatternType::Wildcard));
+        assetBuilderDescriptor.m_patterns.push_back(AssetBuilderSDK::AssetBuilderPattern(AZStd::string::format("*.%s", OpenXRVk::OpenXRInteractionProfilesAsset::s_assetExtension), AssetBuilderSDK::AssetBuilderPattern::PatternType::Wildcard));
+        assetBuilderDescriptor.m_patterns.push_back(AssetBuilderSDK::AssetBuilderPattern(AZStd::string::format("*.%s", OpenXRVk::OpenXRActionSetsAsset::s_assetExtension), AssetBuilderSDK::AssetBuilderPattern::PatternType::Wildcard));
         assetBuilderDescriptor.m_busId = azrtti_typeid<OpenXRActionSetsAssetBuilder>();
         assetBuilderDescriptor.m_createJobFunction = AZStd::bind(&OpenXRActionSetsAssetBuilder::CreateJobs, &m_actionSetsAssetBuilder, AZStd::placeholders::_1, AZStd::placeholders::_2);
         assetBuilderDescriptor.m_processJobFunction = AZStd::bind(&OpenXRActionSetsAssetBuilder::ProcessJob, &m_actionSetsAssetBuilder, AZStd::placeholders::_1, AZStd::placeholders::_2);

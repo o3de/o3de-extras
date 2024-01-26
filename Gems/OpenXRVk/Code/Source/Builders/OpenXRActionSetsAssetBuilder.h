@@ -19,7 +19,8 @@ namespace OpenXRVkBuilders
     public:
         AZ_TYPE_INFO(OpenXRActionSetsAssetBuilder, "{1D053000-7799-459D-B99B-FF6AE6394BC1}");
 
-        static constexpr const char* JobKey = "XR Action Sets Asset";
+        static constexpr const char* InteractionProfilesAssetJobKey = "XR Interaction Profiles Asset";
+        static constexpr const char* ActionSetsAssetJobKey = "XR Action Sets Asset";
     
         OpenXRActionSetsAssetBuilder() = default;
         ~OpenXRActionSetsAssetBuilder() = default;
@@ -36,8 +37,11 @@ namespace OpenXRVkBuilders
 
         static constexpr char LogName[] = "OpenXRActionSetsAssetBuilder";
 
-        void CreateInteractionProfilesJobs(const AssetBuilderSDK::CreateJobsRequest& request, AssetBuilderSDK::CreateJobsResponse& response) const;
-        void ProcessInteractionProfilesJob(const AssetBuilderSDK::ProcessJobRequest& request, AssetBuilderSDK::ProcessJobResponse& response) const;
+        void CreateInteractionProfilesAssetJobs(const AssetBuilderSDK::CreateJobsRequest& request, AssetBuilderSDK::CreateJobsResponse& response) const;
+        void ProcessInteractionProfilesAssetJob(const AssetBuilderSDK::ProcessJobRequest& request, AssetBuilderSDK::ProcessJobResponse& response) const;
+
+        void CreateActionSetsAssetJobs(const AssetBuilderSDK::CreateJobsRequest& request, AssetBuilderSDK::CreateJobsResponse& response) const;
+        void ProcessActionSetsAssetJob(const AssetBuilderSDK::ProcessJobRequest& request, AssetBuilderSDK::ProcessJobResponse& response) const;
     };
 
 } // namespace OpenXRVkBuilders

@@ -91,7 +91,9 @@ namespace OpenXRVk
 
     void SystemComponent::Activate()
     {
-        m_actionSetsAssetHandler = AZStd::make_unique<AzFramework::GenericAssetHandler<OpenXRActionSetsAsset>>(OpenXRActionSetsAsset::s_assetTypeName, "Other", OpenXRActionSetsAsset::s_assetExtension);
+        //m_actionSetsAssetHandler = AZStd::make_unique<AzFramework::GenericAssetHandler<OpenXRActionSetsAsset>>(OpenXRActionSetsAsset::s_assetTypeName, "Other", OpenXRActionSetsAsset::s_assetExtension);
+        //m_actionSetsAssetHandler->Register();
+        m_actionSetsAssetHandler = AZStd::make_unique<OpenXRActionSetsAssetHandler>();
         m_actionSetsAssetHandler->Register();
 
         m_interactionProfilesAssetHandler = AZStd::make_unique<OpenXRInteractionProfilesAssetHandler>();

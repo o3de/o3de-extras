@@ -21,7 +21,6 @@ set(FILES
     Include/OpenXRVk/OpenXRVisualizedSpacesInterface.h
     Include/OpenXRVk/OpenXRInteractionProfileDescriptor.h
     Include/OpenXRVk/OpenXRInteractionProfilesAsset.h
-    Include/OpenXRVk/OpenXRActionSetDescriptor.h
     Include/OpenXRVk/OpenXRActionSetsAsset.h
     Source/InputDeviceXRController.cpp
     Source/OpenXRVkCommon.h
@@ -40,7 +39,6 @@ set(FILES
     Source/InteractionProfiles/OpenXRInteractionProfilesAsset.cpp
     Source/InteractionProfiles/OpenXRInteractionProfilesProviderInterface.h
     Source/OpenXRActionSetsAsset.cpp
-    Source/OpenXRActionSetDescriptor.cpp
     Source/XRCameraMovementComponent.cpp
     Source/XRCameraMovementComponent.h
     Source/OpenXRVisualizedSpacesManager.cpp
