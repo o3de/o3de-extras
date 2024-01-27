@@ -174,35 +174,52 @@ namespace OpenXRVk
         // Button
         {
             m_movement.SetZ(0.0f);
-            auto actionHandle = actionsIFace->GetActionHandle("my_action_set", "button");
-            if (!actionHandle.IsValid())
+            do
             {
-                return;
-            }
-            auto outcome = actionsIFace->GetActionStateBoolean(actionHandle);
-            if (outcome.IsSuccess())
-            {
-                if (outcome.GetValue())
+                auto outcomeHandle = actionsIFace->GetActionHandle("my_action_set", "button");
+                if (!outcomeHandle.IsSuccess())
                 {
-                    // up
+                    AZ_Error("XRCameraMovementComponent", false, "%s", outcomeHandle.GetError().c_str());
+                    break;
+                }
+                auto actionHandle = outcomeHandle.TakeValue();
+                if (!actionHandle.IsValid())
+                {
+                    break;
+                }
+                auto outcomeState = actionsIFace->GetActionStateBoolean(actionHandle);
+                if (!outcomeState.IsSuccess())
+                {
+                    // The action is not active, which means the controler is not being used at the moment
+                    break;
+                }
+                if (outcomeState.GetValue())
+                {
                     m_movement.SetZ(m_movementSensitivity);
                 }
-            }
+            } while (0);
         }
-        // Pose
-        {
-            auto actionHandle = actionsIFace->GetActionHandle("my_action_set", "left_pose");
-            if (!actionHandle.IsValid())
-            {
-                return;
-            }
-            auto outcome = actionsIFace->GetActionStatePose(actionHandle);
-            if (outcome.IsSuccess())
-            {
-                AZ::Transform tm(outcome.TakeValue());
-                //AZ_Printf("Galib", "left_pose tm=\n%s\n", AZStd::to_string(tm).c_str());
-            }
-        }
+        // // Pose
+        // {
+        //     auto actionHandle = IOpenXRActions::ActionHandle();
+        //     {
+        //         auto outcome = actionsIFace->GetActionHandle("my_action_set", "left_pose");
+        //         if (outcome.IsSuccess())
+        //         {
+        //             actionHandle = outcome.TakeValue();
+        //         }
+        //     }
+        //     if (!actionHandle.IsValid())
+        //     {
+        //         return;
+        //     }
+        //     auto outcome = actionsIFace->GetActionStatePose(actionHandle);
+        //     if (outcome.IsSuccess())
+        //     {
+        //         AZ::Transform tm(outcome.TakeValue());
+        //         //AZ_Printf("Galib", "left_pose tm=\n%s\n", AZStd::to_string(tm).c_str());
+        //     }
+        // }
 
     }
 

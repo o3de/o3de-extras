@@ -7,11 +7,36 @@
  */
 
 #include <OpenXRVk/OpenXRVkVisualizedSpacesInterface.h>
+#include <OpenXRVk/OpenXRVkActionsInterface.h>
 
 #include "OpenXRVkBehaviorReflection.h"
 
 namespace OpenXRVk
 {
+    void PoseWithVelocities::Reflect(AZ::ReflectContext* context)
+    {
+        if (AZ::SerializeContext* serializeContext = azrtti_cast<AZ::SerializeContext*>(context))
+        {
+            serializeContext->Class<PoseWithVelocities>()
+                ->Version(1)
+                ->Field("Pose", &PoseWithVelocities::m_pose)
+                ->Field("LinearVelocity", &PoseWithVelocities::m_linearVelocity)
+                ->Field("AngularVelocitu", &PoseWithVelocities::m_angularVelocity)
+                ;
+        }
+
+        if (AZ::BehaviorContext* behaviorContext = azrtti_cast<AZ::BehaviorContext*>(context))
+        {
+            behaviorContext->Class<PoseWithVelocities>()
+                ->Attribute(AZ::Script::Attributes::Scope, AZ::Script::Attributes::ScopeFlags::Common)
+                ->Attribute(AZ::Script::Attributes::Module, "openxr")
+                ->Property("pose", BehaviorValueGetter(&PoseWithVelocities::m_pose), nullptr)
+                ->Property("linearVelocity", BehaviorValueGetter(&PoseWithVelocities::m_linearVelocity), nullptr)
+                ->Property("angularVelocity", BehaviorValueGetter(&PoseWithVelocities::m_angularVelocity), nullptr)
+                ;
+        }
+    }
+
     class OpenXRVisualizedSpaces
     {
     public:
@@ -164,10 +189,179 @@ namespace OpenXRVk
             iface->ForceViewPosesCacheUpdate();
         }
 
-    };
+    }; // class OpenXRVisualizedSpaces
+
+    class OpenXRActions
+    {
+    public:
+        AZ_TYPE_INFO(OpenXRActions, "{290DF9D5-4042-4843-BF23-D49F9FAD6D90}");
+        AZ_CLASS_ALLOCATOR(OpenXRActions, AZ::SystemAllocator);
+
+        static constexpr char LogName[] = "OpenXRActions";
+
+        OpenXRActions() = default;
+        ~OpenXRActions() = default;
+
+        static AZStd::vector<AZStd::string> GetAllActionSets()
+        {
+            const auto iface = OpenXRActionsInterface::Get();
+            if (!iface)
+            {
+                AZ_Error(LogName, false, "%s: OpenXRActionsInterface is not available.", __FUNCTION__);
+                return {};
+            }
+            return iface->GetAllActionSets();
+        }
+
+        static AZ::Outcome<bool, AZStd::string> GetActionSetState(const AZStd::string& actionSetName)
+        {
+            const auto iface = OpenXRActionsInterface::Get();
+            if (!iface)
+            {
+                AZ_Error(LogName, false, "%s: OpenXRActionsInterface is not available.", __FUNCTION__);
+                return {};
+            }
+            return iface->GetActionSetState(actionSetName);
+        }
+
+        static AZ::Outcome<bool, AZStd::string> SetActionSetState(const AZStd::string& actionSetName, bool activate)
+        {
+            const auto iface = OpenXRActionsInterface::Get();
+            if (!iface)
+            {
+                AZ_Error(LogName, false, "%s: OpenXRActionsInterface is not available.", __FUNCTION__);
+                return {};
+            }
+            return iface->SetActionSetState(actionSetName, activate);
+        }
+
+        static AZ::Outcome<IOpenXRActions::ActionHandle, AZStd::string> GetActionHandle(const AZStd::string& actionSetName, const AZStd::string& actionName)
+        {
+            const auto iface = OpenXRActionsInterface::Get();
+            if (!iface)
+            {
+                return AZ::Failure(
+                    AZStd::string::format("%s: OpenXRActionsInterface is not available.", __FUNCTION__)
+                );
+            }
+            return iface->GetActionHandle(actionSetName, actionName);
+        }
+
+        static AZ::Outcome<bool, AZStd::string> GetActionStateBoolean(IOpenXRActions::ActionHandle actionHandle)
+        {
+            const auto iface = OpenXRActionsInterface::Get();
+            if (!iface)
+            {
+                return AZ::Failure(
+                    AZStd::string::format("%s: OpenXRActionsInterface is not available.", __FUNCTION__)
+                );
+            }
+            return iface->GetActionStateBoolean(actionHandle);
+        }
+
+        static AZ::Outcome<float, AZStd::string> GetActionStateFloat(IOpenXRActions::ActionHandle actionHandle)
+        {
+            const auto iface = OpenXRActionsInterface::Get();
+            if (!iface)
+            {
+                return AZ::Failure(
+                    AZStd::string::format("%s: OpenXRActionsInterface is not available.", __FUNCTION__)
+                );
+            }
+            return iface->GetActionStateFloat(actionHandle);
+        }
+
+        static AZ::Outcome<AZ::Vector2, AZStd::string> GetActionStateVector2(IOpenXRActions::ActionHandle actionHandle)
+        {
+            const auto iface = OpenXRActionsInterface::Get();
+            if (!iface)
+            {
+                return AZ::Failure(
+                    AZStd::string::format("%s: OpenXRActionsInterface is not available.", __FUNCTION__)
+                );
+            }
+            return iface->GetActionStateVector2(actionHandle);
+        }
+
+        static AZ::Outcome<bool, AZStd::string> SetBaseVisualizedSpaceForPoseActions(const AZStd::string& visualizedSpaceName)
+        {
+            const auto iface = OpenXRActionsInterface::Get();
+            if (!iface)
+            {
+                return AZ::Failure(
+                    AZStd::string::format("%s: OpenXRActionsInterface is not available.", __FUNCTION__)
+                );
+            }
+            return iface->SetBaseVisualizedSpaceForPoseActions(visualizedSpaceName);
+        }
+
+        static const AZStd::string& GetBaseVisualizedSpaceForPoseActions()
+        {
+            const auto iface = OpenXRActionsInterface::Get();
+            if (!iface)
+            {
+                AZ_Error(LogName, false, "%s: OpenXRActionsInterface is not available.", __FUNCTION__);
+                static const AZStd::string emptyStr;
+                return emptyStr;
+            }
+            return iface->GetBaseVisualizedSpaceForPoseActions();
+        }
+
+        static AZ::Outcome<AZ::Transform, AZStd::string> GetActionStatePose(IOpenXRActions::ActionHandle actionHandle)
+        {
+            const auto iface = OpenXRActionsInterface::Get();
+            if (!iface)
+            {
+                return AZ::Failure(
+                    AZStd::string::format("%s: OpenXRActionsInterface is not available.", __FUNCTION__)
+                );
+            }
+            return iface->GetActionStatePose(actionHandle);
+        }
+
+        static AZ::Outcome<PoseWithVelocities, AZStd::string> GetActionStatePoseWithVelocities(IOpenXRActions::ActionHandle actionHandle)
+        {
+            const auto iface = OpenXRActionsInterface::Get();
+            if (!iface)
+            {
+                return AZ::Failure(
+                    AZStd::string::format("%s: OpenXRActionsInterface is not available.", __FUNCTION__)
+                );
+            }
+            return iface->GetActionStatePoseWithVelocities(actionHandle);
+        }
+
+        static AZ::Outcome<bool, AZStd::string> ApplyHapticVibrationAction(IOpenXRActions::ActionHandle actionHandle, uint64_t durationNanos, float frequencyHz, float amplitude)
+        {
+            const auto iface = OpenXRActionsInterface::Get();
+            if (!iface)
+            {
+                return AZ::Failure(
+                    AZStd::string::format("%s: OpenXRActionsInterface is not available.", __FUNCTION__)
+                );
+            }
+            return iface->ApplyHapticVibrationAction(actionHandle, durationNanos, frequencyHz, amplitude);
+        }
+
+        static AZ::Outcome<bool, AZStd::string> StopHapticVibrationAction(IOpenXRActions::ActionHandle actionHandle)
+        {
+            const auto iface = OpenXRActionsInterface::Get();
+            if (!iface)
+            {
+                return AZ::Failure(
+                    AZStd::string::format("%s: OpenXRActionsInterface is not available.", __FUNCTION__)
+                );
+            }
+            return iface->StopHapticVibrationAction(actionHandle);
+        }
+
+    }; // class OpenXRActions
 
     void OpenXRBehaviorReflect(AZ::BehaviorContext& context)
     {
+        IOpenXRActions::ActionHandle::Reflect(&context);
+        PoseWithVelocities::Reflect(&context);
+
         context.Class<OpenXRVisualizedSpaces>("OpenXRVisualizedSpaces")
             ->Attribute(AZ::Script::Attributes::Scope, AZ::Script::Attributes::ScopeFlags::Common)
             ->Attribute(AZ::Script::Attributes::Module, "openxr")
@@ -193,6 +387,24 @@ namespace OpenXRVk
             ->Method("GetViewPoses", &OpenXRVisualizedSpaces::GetViewPoses)
             ->Method("ForceViewPosesCacheUpdate", &OpenXRVisualizedSpaces::ForceViewPosesCacheUpdate)
              ;
+
+        context.Class<OpenXRActions>("OpenXRActions")
+            ->Attribute(AZ::Script::Attributes::Scope, AZ::Script::Attributes::ScopeFlags::Common)
+            ->Attribute(AZ::Script::Attributes::Module, "openxr")
+            ->Method("GetAllActionSets", &OpenXRActions::GetAllActionSets)
+            ->Method("GetActionSetState", &OpenXRActions::GetActionSetState)
+            ->Method("SetActionSetState", &OpenXRActions::SetActionSetState)
+            ->Method("GetActionHandle", &OpenXRActions::GetActionHandle)
+            ->Method("GetActionStateBoolean", &OpenXRActions::GetActionStateBoolean)
+            ->Method("GetActionStateFloat", &OpenXRActions::GetActionStateFloat)
+            ->Method("GetActionStateVector2", &OpenXRActions::GetActionStateVector2)
+            ->Method("SetBaseVisualizedSpaceForPoseActions", &OpenXRActions::SetBaseVisualizedSpaceForPoseActions)
+            ->Method("GetBaseVisualizedSpaceForPoseActions", &OpenXRActions::GetBaseVisualizedSpaceForPoseActions)
+            ->Method("GetActionStatePose", &OpenXRActions::GetActionStatePose)
+            ->Method("GetActionStatePoseWithVelocities", &OpenXRActions::GetActionStatePoseWithVelocities)
+            ->Method("ApplyHapticVibrationAction", &OpenXRActions::ApplyHapticVibrationAction)
+            ->Method("StopHapticVibrationAction", &OpenXRActions::StopHapticVibrationAction)
+            ;
     }
 
 }

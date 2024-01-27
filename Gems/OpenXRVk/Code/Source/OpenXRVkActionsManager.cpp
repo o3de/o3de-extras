@@ -482,61 +482,42 @@ namespace OpenXRVk
         return retList;
     }
 
-
-    AZStd::vector<AZStd::string> ActionsManager::GetActiveActionSets() const
+    AZ::Outcome<bool, AZStd::string> ActionsManager::GetActionSetState(const AZStd::string& actionSetName) const
     {
-        AZStd::vector<AZStd::string> retList;
-        retList.reserve(m_activeActionSets.count());
         for (size_t i = 0; i < m_actionSets.size(); i++)
         {
-            if (m_activeActionSets[i])
+            if (m_actionSets[i].m_name == actionSetName)
             {
-                retList.push_back(m_actionSets[i].m_name);
+                return AZ::Success(m_activeActionSets[i]);
             }
         }
-        return retList;
+        return AZ::Failure(
+            AZStd::string::format("ActionSet with name [%s] not found.", actionSetName.c_str())
+        );
     }
 
-
-    AZStd::vector<AZStd::string> ActionsManager::GetInactiveActionSets() const
+    AZ::Outcome<bool, AZStd::string> ActionsManager::SetActionSetState(const AZStd::string& actionSetName, bool activate)
     {
-        AZStd::vector<AZStd::string> retList;
-        retList.reserve(m_actionSets.size() - m_activeActionSets.count());
         for (size_t i = 0; i < m_actionSets.size(); i++)
         {
-            if (!m_activeActionSets[i])
+            if (m_actionSets[i].m_name == actionSetName)
             {
-                retList.push_back(m_actionSets[i].m_name);
+                bool prevState = m_activeActionSets[i];
+                if (prevState != activate)
+                {
+                    m_activeActionSets[i] = activate;
+                    RecreateXrActiveActionSets();
+                }
+                return AZ::Success(prevState);
             }
         }
-        return retList;
+        return AZ::Failure(
+            AZStd::string::format("ActionSet with name [%s] not found.", actionSetName.c_str())
+        );
     }
 
 
-    AZ::Outcome<bool, AZStd::string> ActionsManager::ChangeActionSetState(const AZStd::string& actionSetName, bool activate)
-    {
-        constexpr bool recreateXrActiveActionSets = true;
-        return ChangeActionSetStateInternal(actionSetName, activate, recreateXrActiveActionSets);
-    }
-
-
-    AZ::Outcome<bool, AZStd::string> ActionsManager::ChangeActionSetsState(const  AZStd::vector<AZStd::string>& actionSetNames, bool activate)
-    {
-        constexpr bool recreateXrActiveActionSets = false;
-        for (const auto& actionSetName : actionSetNames)
-        {
-            auto outcome = ChangeActionSetStateInternal(actionSetName, activate, recreateXrActiveActionSets);
-            if (!outcome.IsSuccess())
-            {
-                return outcome;
-            }
-        }
-        RecreateXrActiveActionSets();
-        return AZ::Success(true);
-    }
-
-
-    IOpenXRActions::ActionHandle ActionsManager::GetActionHandle(const AZStd::string& actionSetName, const AZStd::string& actionName) const
+    AZ::Outcome<IOpenXRActions::ActionHandle, AZStd::string> ActionsManager::GetActionHandle(const AZStd::string& actionSetName, const AZStd::string& actionName) const
     {
         for (const auto& actionSetInfo : m_actionSets)
         {
@@ -547,11 +528,16 @@ namespace OpenXRVk
             const auto itor = actionSetInfo.m_actions.find(actionName);
             if (itor == actionSetInfo.m_actions.end())
             {
-                return IOpenXRActions::ActionHandle::Null;
+                return AZ::Failure(
+                    AZStd::string::format("ActionSet with name [%s] does not have an action named [%].",
+                        actionSetName.c_str(), actionName.c_str())
+                );
             }
-            return itor->second;
+            return AZ::Success(itor->second);
         }
-        return IOpenXRActions::ActionHandle::Null;
+        return AZ::Failure(
+            AZStd::string::format("ActionSet with name [%s] not found.", actionSetName.c_str())
+        );
     }
 
     AZ::Outcome<bool, AZStd::string> ActionsManager::GetActionStateBoolean(ActionHandle actionHandle) const
@@ -803,36 +789,6 @@ namespace OpenXRVk
     /// OpenXRActionsInterface overrides
     /////////////////////////////////////////////////
     
-    
-    AZ::Outcome<bool, AZStd::string> ActionsManager::ChangeActionSetStateInternal(const AZStd::string& actionSetName, bool activate, bool recreateXrActiveActionSets)
-    {
-        // First get the index.
-        size_t foundIdx = 0;
-        for (const auto& actionSetInfo : m_actionSets)
-        {
-            if (actionSetInfo.m_name == actionSetName)
-            {
-                break;
-            }
-            foundIdx++;
-        }
-
-        if (foundIdx >= m_actionSets.size())
-        {
-            return AZ::Failure(AZStd::string::format(
-                "ActionSet with name [%s] not found.", actionSetName.c_str()));
-        }
-
-        m_activeActionSets.set(foundIdx, activate);
-
-        if (recreateXrActiveActionSets)
-        {
-            RecreateXrActiveActionSets();
-        }
-
-        return AZ::Success(true);
-    }
-
     
     void ActionsManager::RecreateXrActiveActionSets()
     {

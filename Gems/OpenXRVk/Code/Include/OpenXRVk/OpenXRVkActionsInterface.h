@@ -16,8 +16,11 @@
 
 namespace OpenXRVk
 {
-    struct PoseWithVelocities
+    struct PoseWithVelocities final
     {
+        AZ_TYPE_INFO(PoseWithVelocities, "{AF5B9FF7-FB02-4DA4-89FB-66E605F728E2}");
+        static void Reflect(AZ::ReflectContext* context);
+
         AZ::Transform m_pose;
         AZ::Vector3 m_linearVelocity;
         AZ::Vector3 m_angularVelocity;
@@ -40,12 +43,18 @@ namespace OpenXRVk
         using ActionHandle = AZ::RHI::Handle<uint16_t, IOpenXRActions>;
 
         virtual AZStd::vector<AZStd::string> GetAllActionSets() const = 0;
-        virtual AZStd::vector<AZStd::string> GetActiveActionSets() const = 0;
-        virtual AZStd::vector<AZStd::string> GetInactiveActionSets() const = 0;
-        virtual AZ::Outcome<bool, AZStd::string> ChangeActionSetState(const AZStd::string& actionSetName, bool activate) = 0;
-        virtual AZ::Outcome<bool, AZStd::string> ChangeActionSetsState(const  AZStd::vector<AZStd::string>& actionSetNames, bool activate) = 0;
 
-        virtual ActionHandle GetActionHandle(const AZStd::string& actionSetName, const AZStd::string& actionName) const = 0;
+        // @returns:
+        //     If successful:
+        //     - true means the action set exists and is active.
+        //     - false means the action set exists and is inactive.
+        virtual AZ::Outcome<bool, AZStd::string> GetActionSetState(const AZStd::string& actionSetName) const = 0;
+        // @returns:
+        //     if successful:
+        //     returns the current state of the action set before changing it.
+        virtual AZ::Outcome<bool, AZStd::string> SetActionSetState(const AZStd::string& actionSetName, bool activate) = 0;
+
+        virtual AZ::Outcome<ActionHandle, AZStd::string> GetActionHandle(const AZStd::string& actionSetName, const AZStd::string& actionName) const = 0;
 
         virtual AZ::Outcome<bool, AZStd::string> GetActionStateBoolean(ActionHandle actionHandle) const = 0;
         virtual AZ::Outcome<float, AZStd::string> GetActionStateFloat(ActionHandle actionHandle) const = 0;

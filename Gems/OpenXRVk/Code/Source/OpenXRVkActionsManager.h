@@ -49,12 +49,10 @@ namespace OpenXRVk
         /////////////////////////////////////////////////
         /// OpenXRActionsInterface overrides
         AZStd::vector<AZStd::string> GetAllActionSets() const override;
-        AZStd::vector<AZStd::string> GetActiveActionSets() const override;
-        AZStd::vector<AZStd::string> GetInactiveActionSets() const override;
-        AZ::Outcome<bool, AZStd::string> ChangeActionSetState(const AZStd::string& actionSetName, bool activate) override;
-        AZ::Outcome<bool, AZStd::string> ChangeActionSetsState(const  AZStd::vector<AZStd::string>& actionSetNames, bool activate) override;
+        AZ::Outcome<bool, AZStd::string> GetActionSetState(const AZStd::string& actionSetName) const override;
+        AZ::Outcome<bool, AZStd::string> SetActionSetState(const AZStd::string& actionSetName, bool activate) override;
 
-        ActionHandle GetActionHandle(const AZStd::string& actionSetName, const AZStd::string& actionName) const override;
+        AZ::Outcome<ActionHandle, AZStd::string> GetActionHandle(const AZStd::string& actionSetName, const AZStd::string& actionName) const override;
 
         AZ::Outcome<bool, AZStd::string> GetActionStateBoolean(ActionHandle actionHandle) const override;
         AZ::Outcome<float, AZStd::string> GetActionStateFloat(ActionHandle actionHandle) const override;
@@ -135,7 +133,6 @@ namespace OpenXRVk
             SuggestedBindingsPerProfile& suggestedBindingsPerProfile) const;
 
 
-        AZ::Outcome<bool, AZStd::string> ChangeActionSetStateInternal(const AZStd::string& actionSetName, bool activate, bool recreateXrActiveActionSets = false);
         void RecreateXrActiveActionSets();
 
 
@@ -178,7 +175,9 @@ namespace OpenXRVk
         // the following lists are updated:
         //! Each bit is an index in @m_actionsSets
         AZStd::bitset<MaxActionSets> m_activeActionSets;
+
         //! Here we cache the list of OpenXR native handles for active action sets.
+        //! This list is recreated each time RecreateXrActiveActionSets() is called.
         AZStd::vector<XrActiveActionSet> m_xrActiveActionSets;
 
     };
