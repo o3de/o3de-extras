@@ -73,6 +73,7 @@ namespace OpenXRVk
         //! Same as above, but also queries location (linear) and orientation (angular) velocities
         virtual AZ::Outcome<PoseWithVelocities, AZStd::string> GetActionStatePoseWithVelocities(ActionHandle actionHandle) const = 0;
         
+        //! @param amplitude Will be clamped between 0.0f and 1.0f.
         virtual AZ::Outcome<bool, AZStd::string> ApplyHapticVibrationAction(ActionHandle actionHandle, uint64_t durationNanos, float frequencyHz, float amplitude) = 0;
         virtual AZ::Outcome<bool, AZStd::string> StopHapticVibrationAction(ActionHandle actionHandle) = 0;
     };

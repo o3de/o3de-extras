@@ -30,7 +30,7 @@ namespace OpenXRVk
         {
             return XR_ACTION_TYPE_POSE_INPUT;
         }
-        else if (actionTypeStr == s_TypePoseStr)
+        else if (actionTypeStr == s_TypeVibrationStr)
         {
             return XR_ACTION_TYPE_VIBRATION_OUTPUT;
         }
