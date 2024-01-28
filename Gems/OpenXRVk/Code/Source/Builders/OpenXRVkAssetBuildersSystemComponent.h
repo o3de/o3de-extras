@@ -10,7 +10,7 @@
 
 #include <AzCore/Component/Component.h>
 
-#include "OpenXRActionSetsAssetBuilder.h"
+#include "OpenXRVkActionSetsAssetBuilder.h"
 
 namespace OpenXRVkBuilders
 {        

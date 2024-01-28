@@ -30,7 +30,7 @@ namespace OpenXRVk
     //! to drive the state of haptic feedback actions.
     //! The implementation is encouraged to expose each method
     //! of this interface as global functions in the behavior context.
-    //! REMARK: This class must be instantiated AFTER OpenXRVisualizedSpacesInterface.
+    //! REMARK: This class must be instantiated AFTER OpenXRReferenceSpacesInterface.
     class IOpenXRActions
     {
     public:
@@ -62,10 +62,10 @@ namespace OpenXRVk
 
         //! Pose actions are also known as Action Spaces, and their Pose/Transform is always calculated
         //! using a reference/base visualized space. This is a stateful API that can be called at anytime.
-        //! See OpenXRVisualizedSpacesInterface to get details about Visualized Spaces.
-        //! By default the base VisualizedSpace is the "View" space, which represents thhe user's head centroid.
-        virtual AZ::Outcome<bool, AZStd::string> SetBaseVisualizedSpaceForPoseActions(const AZStd::string& visualizedSpaceName) = 0;
-        virtual const AZStd::string& GetBaseVisualizedSpaceForPoseActions() const = 0;
+        //! See OpenXRReferenceSpacesInterface to get details about Visualized Spaces.
+        //! By default the base ReferenceSpace is the "View" space, which represents thhe user's head centroid.
+        virtual AZ::Outcome<bool, AZStd::string> SetBaseReferenceSpaceForPoseActions(const AZStd::string& visualizedSpaceName) = 0;
+        virtual const AZStd::string& GetBaseReferenceSpaceForPoseActions() const = 0;
         
         //! The returned transform is relative to the base Visualized Space.
         virtual AZ::Outcome<AZ::Transform, AZStd::string> GetActionStatePose(ActionHandle actionHandle) const = 0;

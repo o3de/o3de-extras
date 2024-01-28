@@ -14,7 +14,7 @@
 
 //#include <OpenXRVk/OpenXRInteractionProfileBus.h>
 #include <OpenXRVk/OpenXRVkUtils.h>
-#include <OpenXRVk/OpenXRVkVisualizedSpacesInterface.h>
+#include <OpenXRVk/OpenXRVkReferenceSpacesInterface.h>
 #include "OpenXRVkActionsManager.h"
 
 namespace OpenXRVk
@@ -115,12 +115,12 @@ namespace OpenXRVk
         m_xrInstance = xrInstance;
         m_xrSession = xrSession;
 
-        auto outcome = SetBaseVisualizedSpaceForPoseActions(IOpenXRVisualizedSpaces::ReferenceSpaceNameView);
+        auto outcome = SetBaseReferenceSpaceForPoseActions(IOpenXRReferenceSpaces::ReferenceSpaceNameView);
         if (!outcome.IsSuccess())
         {
             const auto outcomeMsg = outcome.TakeError();
             auto errorMsg = AZStd::string::format("Failed to set [%s] as the default base visualized space. Reason:\n%s.",
-                IOpenXRVisualizedSpaces::ReferenceSpaceNameView, outcomeMsg.c_str());
+                IOpenXRReferenceSpaces::ReferenceSpaceNameView, outcomeMsg.c_str());
             AZ_Assert(false, "%s", errorMsg.c_str());
             AZ_Error(LogName, false, "%s", errorMsg.c_str());
             return false;
@@ -618,36 +618,36 @@ namespace OpenXRVk
         return AZ::Success(AZ::Vector2(state.currentState.x, state.currentState.y));
     }
 
-    AZ::Outcome<bool, AZStd::string> ActionsManager::SetBaseVisualizedSpaceForPoseActions(const AZStd::string& visualizedSpaceName)
+    AZ::Outcome<bool, AZStd::string> ActionsManager::SetBaseReferenceSpaceForPoseActions(const AZStd::string& visualizedSpaceName)
     {
-        if (visualizedSpaceName == m_baseVisualizedSpaceName)
+        if (visualizedSpaceName == m_baseReferenceSpaceName)
         {
             return AZ::Success(true);
         }
 
-        auto visualizedSpacesIface = OpenXRVisualizedSpacesInterface::Get();
+        auto visualizedSpacesIface = OpenXRReferenceSpacesInterface::Get();
         if (!visualizedSpacesIface)
         {
-            AZ_Assert(false, "The OpenXRVisualizedSpacesInterface doesn't exist!");
-            return AZ::Failure("The OpenXRVisualizedSpacesInterface doesn't exist!");
+            AZ_Assert(false, "The OpenXRReferenceSpacesInterface doesn't exist!");
+            return AZ::Failure("The OpenXRReferenceSpacesInterface doesn't exist!");
         }
 
-        const void* opaqueXrSpace = visualizedSpacesIface->GetVisualizedSpaceNativeHandle(visualizedSpaceName);
+        const void* opaqueXrSpace = visualizedSpacesIface->GetReferenceSpaceNativeHandle(visualizedSpaceName);
         if (!opaqueXrSpace)
         {
             return AZ::Failure(
                 AZStd::string::format("Visualized space with name [%s] doesn't exist. Will keep the current base space named [%s]",
-                                      visualizedSpaceName.c_str(), m_baseVisualizedSpaceName.c_str())
+                                      visualizedSpaceName.c_str(), m_baseReferenceSpaceName.c_str())
             );
         }
-        m_baseVisualizedSpaceName = visualizedSpaceName;
-        m_xrBaseVisualizedSpace = reinterpret_cast<XrSpace>(const_cast<void*>(opaqueXrSpace));
+        m_baseReferenceSpaceName = visualizedSpaceName;
+        m_xrBaseReferenceSpace = reinterpret_cast<XrSpace>(const_cast<void*>(opaqueXrSpace));
         return AZ::Success(true);
     }
 
-    const AZStd::string& ActionsManager::GetBaseVisualizedSpaceForPoseActions() const
+    const AZStd::string& ActionsManager::GetBaseReferenceSpaceForPoseActions() const
     {
-        return m_baseVisualizedSpaceName;
+        return m_baseReferenceSpaceName;
     }
 
     AZ::Outcome<AZ::Transform, AZStd::string> ActionsManager::GetActionStatePose(ActionHandle actionHandle) const
@@ -675,7 +675,7 @@ namespace OpenXRVk
         }
 
         XrSpaceLocation spaceLocation {XR_TYPE_SPACE_LOCATION};
-        result = xrLocateSpace(m_actions[actionIndex].m_xrSpace, m_xrBaseVisualizedSpace, m_predictedDisplaytime, &spaceLocation);
+        result = xrLocateSpace(m_actions[actionIndex].m_xrSpace, m_xrBaseReferenceSpace, m_predictedDisplaytime, &spaceLocation);
         if (IsError(result))
         {
             return AZ::Failure(AZStd::string(GetResultString(result)));
@@ -707,7 +707,7 @@ namespace OpenXRVk
 
         XrSpaceVelocity spaceVelocity{ XR_TYPE_SPACE_VELOCITY };
         XrSpaceLocation spaceLocation{ XR_TYPE_SPACE_LOCATION, &spaceVelocity};
-        XrResult result = xrLocateSpace(m_actions[actionIndex].m_xrSpace, m_xrBaseVisualizedSpace, m_predictedDisplaytime, &spaceLocation);
+        XrResult result = xrLocateSpace(m_actions[actionIndex].m_xrSpace, m_xrBaseReferenceSpace, m_predictedDisplaytime, &spaceLocation);
         if (IsError(result))
         {
             return AZ::Failure(AZStd::string(GetResultString(result)));

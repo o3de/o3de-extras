@@ -21,7 +21,7 @@
 #include <Atom/RHI.Reflect/Vulkan/XRVkDescriptors.h>
 #include <Atom/RPI.Public/XR/XRSpaceNotificationBus.h>
 
-#include "OpenXRVkVisualizedSpacesManager.h"
+#include "OpenXRVkReferenceSpacesManager.h"
 #include "OpenXRVkActionsManager.h"
 
 
@@ -55,8 +55,8 @@ namespace OpenXRVk
         XrResult result = xrCreateSession(m_xrInstance, &createInfo, &m_session);
         ASSERT_IF_UNSUCCESSFUL(result);
 
-        m_visualizedSpacesMgr = AZStd::make_unique<VisualizedSpacesManager>();
-        bool success = m_visualizedSpacesMgr->Init(m_xrInstance, m_session, xrVkInstance->GetViewConfigType(), 2 /*FIXME*/);
+        m_referenceSpacesMgr = AZStd::make_unique<ReferenceSpacesManager>();
+        bool success = m_referenceSpacesMgr->Init(m_xrInstance, m_session, xrVkInstance->GetViewConfigType(), 2 /*FIXME*/);
         AZ_Error("OpenXRVk::Session", success, "Failed to instantiate the visualized Spaces manager.");
         
         m_actionsMgr = AZStd::make_unique<ActionsManager>();
@@ -128,7 +128,7 @@ namespace OpenXRVk
                 // is not wearing the headset. Each time the proximity sensor is disabled or the user
                 // decides to wear the headset, the XrSpaces need to be recreated, otherwise their
                 // poses would be corrupted.
-                m_visualizedSpacesMgr->ResetSpaces();
+                m_referenceSpacesMgr->ResetSpaces();
                 break;
             }
             case XR_SESSION_STATE_STOPPING:
@@ -402,12 +402,12 @@ namespace OpenXRVk
 
     const AZStd::vector<XrView>& Session::GetXrViews() const
     {
-        return m_visualizedSpacesMgr->GetXrViews();
+        return m_referenceSpacesMgr->GetXrViews();
     }
 
     XrSpace Session::GetViewSpaceXrSpace() const
     {
-        return m_visualizedSpacesMgr->GetViewSpaceXrSpace();
+        return m_referenceSpacesMgr->GetViewSpaceXrSpace();
     }
 
     bool Session::IsSessionRunning() const
@@ -451,11 +451,11 @@ namespace OpenXRVk
             m_actionsMgr->SyncActions(predictedDisplayTime);
         }
 
-        m_visualizedSpacesMgr->SyncViews(predictedDisplayTime);
+        m_referenceSpacesMgr->SyncViews(predictedDisplayTime);
         
         //Notify the rest of the engine.
         AZ::RPI::XRSpaceNotificationBus::Broadcast(&AZ::RPI::XRSpaceNotifications::OnXRSpaceLocationsChanged,
-            m_visualizedSpacesMgr->GetViewSpacePose(),
-            m_visualizedSpacesMgr->GetViewPoses());
+            m_referenceSpacesMgr->GetViewSpacePose(),
+            m_referenceSpacesMgr->GetViewPoses());
     }
 }

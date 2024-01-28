@@ -16,7 +16,7 @@
 namespace OpenXRVk
 {
     class ActionsManager;
-    class VisualizedSpacesManager;
+    class ReferenceSpacesManager;
 
     // Class that will help manage XrSession
     class Session final
@@ -98,7 +98,7 @@ namespace OpenXRVk
         XrInstance m_xrInstance = XR_NULL_HANDLE;
         XrGraphicsBindingVulkan2KHR m_graphicsBinding{ XR_TYPE_GRAPHICS_BINDING_VULKAN_KHR };
 
-        AZStd::unique_ptr<VisualizedSpacesManager> m_visualizedSpacesMgr;
+        AZStd::unique_ptr<ReferenceSpacesManager> m_referenceSpacesMgr;
         AZStd::unique_ptr<ActionsManager> m_actionsMgr;
         
         // Application defined base space that will used to calculate

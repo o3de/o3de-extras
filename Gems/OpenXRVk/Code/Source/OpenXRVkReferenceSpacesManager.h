@@ -10,18 +10,18 @@
 
 #include <openxr/openxr.h>
 
-#include <OpenXRVk/OpenXRVkVisualizedSpacesInterface.h>
+#include <OpenXRVk/OpenXRVkReferenceSpacesInterface.h>
 
 namespace OpenXRVk
 {
-    class VisualizedSpacesManager final :
-        public OpenXRVisualizedSpacesInterface::Registrar
+    class ReferenceSpacesManager final :
+        public OpenXRReferenceSpacesInterface::Registrar
     {
     public:
-        AZ_CLASS_ALLOCATOR(VisualizedSpacesManager, AZ::SystemAllocator);
-        AZ_RTTI(VisualizedSpacesManager, "{4BC4D0C0-02D4-4676-8352-8BC51306AF02}", IOpenXRVisualizedSpaces)
+        AZ_CLASS_ALLOCATOR(ReferenceSpacesManager, AZ::SystemAllocator);
+        AZ_RTTI(ReferenceSpacesManager, "{4BC4D0C0-02D4-4676-8352-8BC51306AF02}", IOpenXRReferenceSpaces)
 
-        static constexpr char LogName[] = "OpenXRVkVisualizedSpacesManager";
+        static constexpr char LogName[] = "OpenXRVkReferenceSpacesManager";
 
         //! Initialize various actions and actionSets according to the
         //! "openxr.xractions" action bindings asset.
@@ -39,15 +39,15 @@ namespace OpenXRVk
         XrSpace GetViewSpaceXrSpace() const;
 
         /////////////////////////////////////////////////
-        /// OpenXRVisualizedSpacesInterface overrides
-        AZStd::vector<AZStd::string> GetVisualizedSpaceNames() const override;
-        AZ::Outcome<bool, AZStd::string> AddVisualizedSpace(ReferenceSpaceId referenceSpaceType,
+        /// OpenXRReferenceSpacesInterface overrides
+        AZStd::vector<AZStd::string> GetReferenceSpaceNames() const override;
+        AZ::Outcome<bool, AZStd::string> AddReferenceSpace(ReferenceSpaceId referenceSpaceType,
             const AZStd::string& spaceName, const AZ::Transform& poseInReferenceSpace) override;
-        AZ::Outcome<bool, AZStd::string> RemoveVisualizedSpace(const AZStd::string& spaceName) override;
+        AZ::Outcome<bool, AZStd::string> RemoveReferenceSpace(const AZStd::string& spaceName) override;
 
-        const void * GetVisualizedSpaceNativeHandle(const AZStd::string& spaceName) const override;
+        const void * GetReferenceSpaceNativeHandle(const AZStd::string& spaceName) const override;
 
-        AZ::Outcome<AZ::Transform, AZStd::string> GetVisualizedSpacePose(const AZStd::string& spaceName,
+        AZ::Outcome<AZ::Transform, AZStd::string> GetReferenceSpacePose(const AZStd::string& spaceName,
             const AZStd::string& baseSpaceName) const override;
 
         AZ::Outcome<bool, AZStd::string> SetBaseSpaceForViewSpacePose(const AZStd::string& spaceName) override;
@@ -60,7 +60,7 @@ namespace OpenXRVk
         const AZStd::vector<AZ::Transform>& GetViewPoses() const override;
 
         void ForceViewPosesCacheUpdate() override;
-        /// OpenXRVisualizedSpacesInterface overrides
+        /// OpenXRReferenceSpacesInterface overrides
         /////////////////////////////////////////////////
 
     private:
@@ -72,7 +72,7 @@ namespace OpenXRVk
         // Updated each time the Session calls UpdateViewSpacePoseAndEyeViewPoses().
         XrTime m_predictedDisplaytime;
 
-        struct VisualizedSpace
+        struct ReferenceSpace
         {
             AZStd::string m_name;
             //! We shave this transform in case we have to reset the spaces.
@@ -83,11 +83,11 @@ namespace OpenXRVk
 
         // At the bare minimum this map will always contain three spaces that can not be removed:
         // "View", "Local" and "Stage".
-        AZStd::unordered_map<AZStd::string, VisualizedSpace> m_spaces;
+        AZStd::unordered_map<AZStd::string, ReferenceSpace> m_spaces;
 
         // We cache here the base space what will be used to "locate" the View Space pose.
-        const VisualizedSpace* m_baseSpaceForViewSpace;
-        const VisualizedSpace* m_viewSpace; // Cached for convenience. This pointer is set once during initialization and never changes.
+        const ReferenceSpace* m_baseSpaceForViewSpace;
+        const ReferenceSpace* m_viewSpace; // Cached for convenience. This pointer is set once during initialization and never changes.
 
         AZ::Transform m_viewSpacePose;
         //! The following poses are always relative to @m_viewSpacePose.

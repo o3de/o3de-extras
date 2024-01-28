@@ -12,7 +12,7 @@
 #include <OpenXRVk/OpenXRVkSwapChain.h>
 #include <OpenXRVk/OpenXRVkSpace.h>
 #include <OpenXRVk/OpenXRVkUtils.h>
-#include <OpenXRVk/OpenXRVkVisualizedSpacesInterface.h>
+#include <OpenXRVk/OpenXRVkReferenceSpacesInterface.h>
 #include <OpenXRVkCommon.h>
 #include <Atom/RHI.Reflect/VkAllocator.h>
 #include <AzCore/Casting/numeric_cast.h>
@@ -166,7 +166,7 @@ namespace OpenXRVk
 
     AZ::RHI::ResultCode Device::GetViewFov([[maybe_unused]] AZ::u32 viewIndex, [[maybe_unused]] AZ::RPI::FovData& outFovData) const
     {
-        if (auto spacesIface = OpenXRVisualizedSpacesInterface::Get();
+        if (auto spacesIface = OpenXRReferenceSpacesInterface::Get();
             spacesIface != nullptr)
         {
             outFovData = spacesIface->GetViewFovData(viewIndex);

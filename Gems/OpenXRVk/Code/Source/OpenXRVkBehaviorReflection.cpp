@@ -6,7 +6,7 @@
  *
  */
 
-#include <OpenXRVk/OpenXRVkVisualizedSpacesInterface.h>
+#include <OpenXRVk/OpenXRVkReferenceSpacesInterface.h>
 #include <OpenXRVk/OpenXRVkActionsInterface.h>
 
 #include "OpenXRVkBehaviorReflection.h"
@@ -37,72 +37,72 @@ namespace OpenXRVk
         }
     }
 
-    class OpenXRVisualizedSpaces
+    class OpenXRReferenceSpaces
     {
     public:
-        AZ_TYPE_INFO(OpenXRVisualizedSpaces, "{A060D5C5-1514-421B-9AAA-1E276BA2E33E}");
-        AZ_CLASS_ALLOCATOR(OpenXRVisualizedSpaces, AZ::SystemAllocator);
+        AZ_TYPE_INFO(OpenXRReferenceSpaces, "{A060D5C5-1514-421B-9AAA-1E276BA2E33E}");
+        AZ_CLASS_ALLOCATOR(OpenXRReferenceSpaces, AZ::SystemAllocator);
 
-        static constexpr char LogName[] = "OpenXRVisualizedSpaces";
+        static constexpr char LogName[] = "OpenXRReferenceSpaces";
 
-        OpenXRVisualizedSpaces() = default;
-        ~OpenXRVisualizedSpaces() = default;
+        OpenXRReferenceSpaces() = default;
+        ~OpenXRReferenceSpaces() = default;
 
-        static AZStd::vector<AZStd::string> GetVisualizedSpaceNames()
+        static AZStd::vector<AZStd::string> GetReferenceSpaceNames()
         {
-            const auto iface = OpenXRVisualizedSpacesInterface::Get();
+            const auto iface = OpenXRReferenceSpacesInterface::Get();
             if (!iface)
             {
-                AZ_Error(LogName, false, "%s: OpenXRVisualizedSpacesInterface is not available.", __FUNCTION__);
+                AZ_Error(LogName, false, "%s: OpenXRReferenceSpacesInterface is not available.", __FUNCTION__);
                 return {};
             }
-            return iface->GetVisualizedSpaceNames();
+            return iface->GetReferenceSpaceNames();
         }
 
-        static AZ::Outcome<bool, AZStd::string> AddVisualizedSpace(IOpenXRVisualizedSpaces::ReferenceSpaceId referenceSpaceType,
+        static AZ::Outcome<bool, AZStd::string> AddReferenceSpace(IOpenXRReferenceSpaces::ReferenceSpaceId referenceSpaceType,
             const AZStd::string& spaceName, const AZ::Transform& poseInReferenceSpace)
         {
-            const auto iface = OpenXRVisualizedSpacesInterface::Get();
+            const auto iface = OpenXRReferenceSpacesInterface::Get();
             if (!iface)
             {
                 return AZ::Failure(
-                    AZStd::string::format("%s: OpenXRVisualizedSpacesInterface is not available.", __FUNCTION__)
+                    AZStd::string::format("%s: OpenXRReferenceSpacesInterface is not available.", __FUNCTION__)
                 );
             }
-            return iface->AddVisualizedSpace(referenceSpaceType, spaceName, poseInReferenceSpace);
+            return iface->AddReferenceSpace(referenceSpaceType, spaceName, poseInReferenceSpace);
         }
 
-        static AZ::Outcome<bool, AZStd::string> RemoveVisualizedSpace(const AZStd::string& spaceName)
+        static AZ::Outcome<bool, AZStd::string> RemoveReferenceSpace(const AZStd::string& spaceName)
         {
-            const auto iface = OpenXRVisualizedSpacesInterface::Get();
+            const auto iface = OpenXRReferenceSpacesInterface::Get();
             if (!iface)
             {
                 return AZ::Failure(
-                    AZStd::string::format("%s: OpenXRVisualizedSpacesInterface is not available.", __FUNCTION__)
+                    AZStd::string::format("%s: OpenXRReferenceSpacesInterface is not available.", __FUNCTION__)
                 );
             }
-            return iface->RemoveVisualizedSpace(spaceName);
+            return iface->RemoveReferenceSpace(spaceName);
         }
 
-        static AZ::Outcome<AZ::Transform, AZStd::string> GetVisualizedSpacePose(const AZStd::string& spaceName, const AZStd::string& baseSpaceName)
+        static AZ::Outcome<AZ::Transform, AZStd::string> GetReferenceSpacePose(const AZStd::string& spaceName, const AZStd::string& baseSpaceName)
         {
-            const auto iface = OpenXRVisualizedSpacesInterface::Get();
+            const auto iface = OpenXRReferenceSpacesInterface::Get();
             if (!iface)
             {
                 return AZ::Failure(
-                    AZStd::string::format("%s: OpenXRVisualizedSpacesInterface is not available.", __FUNCTION__)
+                    AZStd::string::format("%s: OpenXRReferenceSpacesInterface is not available.", __FUNCTION__)
                 );
             }
-            return iface->GetVisualizedSpacePose(spaceName, baseSpaceName);
+            return iface->GetReferenceSpacePose(spaceName, baseSpaceName);
         }
 
         static AZ::Outcome<bool, AZStd::string> SetBaseSpaceForViewSpacePose(const AZStd::string& spaceName)
         {
-            const auto iface = OpenXRVisualizedSpacesInterface::Get();
+            const auto iface = OpenXRReferenceSpacesInterface::Get();
             if (!iface)
             {
                 return AZ::Failure(
-                    AZStd::string::format("%s: OpenXRVisualizedSpacesInterface is not available.", __FUNCTION__)
+                    AZStd::string::format("%s: OpenXRReferenceSpacesInterface is not available.", __FUNCTION__)
                 );
             }
             return iface->SetBaseSpaceForViewSpacePose(spaceName);
@@ -110,10 +110,10 @@ namespace OpenXRVk
 
         static const AZStd::string& GetBaseSpaceForViewSpacePose()
         {
-            const auto iface = OpenXRVisualizedSpacesInterface::Get();
+            const auto iface = OpenXRReferenceSpacesInterface::Get();
             if (!iface)
             {
-                AZ_Error(LogName, false, "%s: OpenXRVisualizedSpacesInterface is not available.", __FUNCTION__);
+                AZ_Error(LogName, false, "%s: OpenXRReferenceSpacesInterface is not available.", __FUNCTION__);
                 static const AZStd::string emptyStr;
                 return emptyStr;
             }
@@ -122,10 +122,10 @@ namespace OpenXRVk
 
         static const AZ::Transform& GetViewSpacePose()
         {
-            const auto iface = OpenXRVisualizedSpacesInterface::Get();
+            const auto iface = OpenXRReferenceSpacesInterface::Get();
             if (!iface)
             {
-                AZ_Error(LogName, false, "%s: OpenXRVisualizedSpacesInterface is not available.", __FUNCTION__);
+                AZ_Error(LogName, false, "%s: OpenXRReferenceSpacesInterface is not available.", __FUNCTION__);
                 return AZ::Transform::Identity();
             }
             return iface->GetViewSpacePose();
@@ -133,10 +133,10 @@ namespace OpenXRVk
 
         static uint32_t GetViewCount()
         {
-            const auto iface = OpenXRVisualizedSpacesInterface::Get();
+            const auto iface = OpenXRReferenceSpacesInterface::Get();
             if (!iface)
             {
-                AZ_Error(LogName, false, "%s: OpenXRVisualizedSpacesInterface is not available.", __FUNCTION__);
+                AZ_Error(LogName, false, "%s: OpenXRReferenceSpacesInterface is not available.", __FUNCTION__);
                 return 0;
             }
             return iface->GetViewCount();
@@ -144,10 +144,10 @@ namespace OpenXRVk
 
         static const AZ::Transform& GetViewPose(uint32_t eyeIndex)
         {
-            const auto iface = OpenXRVisualizedSpacesInterface::Get();
+            const auto iface = OpenXRReferenceSpacesInterface::Get();
             if (!iface)
             {
-                AZ_Error(LogName, false, "%s: OpenXRVisualizedSpacesInterface is not available.", __FUNCTION__);
+                AZ_Error(LogName, false, "%s: OpenXRReferenceSpacesInterface is not available.", __FUNCTION__);
                 return AZ::Transform::Identity();
             }
             return iface->GetViewPose(eyeIndex);
@@ -156,10 +156,10 @@ namespace OpenXRVk
         //TODO: Serialize AZ::RPI::FovData
         static const AZ::RPI::FovData& GetViewFovData(uint32_t eyeIndex)
         {
-            const auto iface = OpenXRVisualizedSpacesInterface::Get();
+            const auto iface = OpenXRReferenceSpacesInterface::Get();
             if (!iface)
             {
-                AZ_Error(LogName, false, "%s: OpenXRVisualizedSpacesInterface is not available.", __FUNCTION__);
+                AZ_Error(LogName, false, "%s: OpenXRReferenceSpacesInterface is not available.", __FUNCTION__);
                 static const AZ::RPI::FovData fovData{};
                 return fovData;
             }
@@ -168,10 +168,10 @@ namespace OpenXRVk
 
         static const AZStd::vector<AZ::Transform>& GetViewPoses()
         {
-            const auto iface = OpenXRVisualizedSpacesInterface::Get();
+            const auto iface = OpenXRReferenceSpacesInterface::Get();
             if (!iface)
             {
-                AZ_Error(LogName, false, "%s: OpenXRVisualizedSpacesInterface is not available.", __FUNCTION__);
+                AZ_Error(LogName, false, "%s: OpenXRReferenceSpacesInterface is not available.", __FUNCTION__);
                 static AZStd::vector<AZ::Transform> EmptyList;
                 return EmptyList;
             }
@@ -180,16 +180,16 @@ namespace OpenXRVk
 
         static void ForceViewPosesCacheUpdate()
         {
-            const auto iface = OpenXRVisualizedSpacesInterface::Get();
+            const auto iface = OpenXRReferenceSpacesInterface::Get();
             if (!iface)
             {
-                AZ_Error(LogName, false, "%s: OpenXRVisualizedSpacesInterface is not available.", __FUNCTION__);
+                AZ_Error(LogName, false, "%s: OpenXRReferenceSpacesInterface is not available.", __FUNCTION__);
                 return;
             }
             iface->ForceViewPosesCacheUpdate();
         }
 
-    }; // class OpenXRVisualizedSpaces
+    }; // class OpenXRReferenceSpaces
 
     class OpenXRActions
     {
@@ -283,7 +283,7 @@ namespace OpenXRVk
             return iface->GetActionStateVector2(actionHandle);
         }
 
-        static AZ::Outcome<bool, AZStd::string> SetBaseVisualizedSpaceForPoseActions(const AZStd::string& visualizedSpaceName)
+        static AZ::Outcome<bool, AZStd::string> SetBaseReferenceSpaceForPoseActions(const AZStd::string& visualizedSpaceName)
         {
             const auto iface = OpenXRActionsInterface::Get();
             if (!iface)
@@ -292,10 +292,10 @@ namespace OpenXRVk
                     AZStd::string::format("%s: OpenXRActionsInterface is not available.", __FUNCTION__)
                 );
             }
-            return iface->SetBaseVisualizedSpaceForPoseActions(visualizedSpaceName);
+            return iface->SetBaseReferenceSpaceForPoseActions(visualizedSpaceName);
         }
 
-        static const AZStd::string& GetBaseVisualizedSpaceForPoseActions()
+        static const AZStd::string& GetBaseReferenceSpaceForPoseActions()
         {
             const auto iface = OpenXRActionsInterface::Get();
             if (!iface)
@@ -304,7 +304,7 @@ namespace OpenXRVk
                 static const AZStd::string emptyStr;
                 return emptyStr;
             }
-            return iface->GetBaseVisualizedSpaceForPoseActions();
+            return iface->GetBaseReferenceSpaceForPoseActions();
         }
 
         static AZ::Outcome<AZ::Transform, AZStd::string> GetActionStatePose(IOpenXRActions::ActionHandle actionHandle)
@@ -362,30 +362,30 @@ namespace OpenXRVk
         IOpenXRActions::ActionHandle::Reflect(&context);
         PoseWithVelocities::Reflect(&context);
 
-        context.Class<OpenXRVisualizedSpaces>("OpenXRVisualizedSpaces")
+        context.Class<OpenXRReferenceSpaces>("OpenXRReferenceSpaces")
             ->Attribute(AZ::Script::Attributes::Scope, AZ::Script::Attributes::ScopeFlags::Common)
             ->Attribute(AZ::Script::Attributes::Module, "openxr")
-            ->Constant("ReferenceSpaceIdView", BehaviorConstant(IOpenXRVisualizedSpaces::ReferenceSpaceIdView))
-            ->Constant("ReferenceSpaceIdLocal", BehaviorConstant(IOpenXRVisualizedSpaces::ReferenceSpaceIdLocal))
-            ->Constant("ReferenceSpaceIdStage", BehaviorConstant(IOpenXRVisualizedSpaces::ReferenceSpaceIdStage))
-            ->Constant("ReferenceSpaceNameView", BehaviorConstant(AZStd::string(IOpenXRVisualizedSpaces::ReferenceSpaceNameView)))
-            ->Constant("ReferenceSpaceNameLocal", BehaviorConstant(AZStd::string(IOpenXRVisualizedSpaces::ReferenceSpaceNameLocal)))
-            ->Constant("ReferenceSpaceNameStage", BehaviorConstant(AZStd::string(IOpenXRVisualizedSpaces::ReferenceSpaceNameStage)))
-            ->Constant("LeftEyeViewId", BehaviorConstant(IOpenXRVisualizedSpaces::LeftEyeView))
-            ->Constant("RightEyeViewId", BehaviorConstant(IOpenXRVisualizedSpaces::RightEyeView))
-            ->Method("GetVisualizedSpaceNames", &OpenXRVisualizedSpaces::GetVisualizedSpaceNames)
-            ->Method("AddVisualizedSpace", &OpenXRVisualizedSpaces::AddVisualizedSpace)
-            ->Method("RemoveVisualizedSpace", &OpenXRVisualizedSpaces::RemoveVisualizedSpace)
-            ->Method("GetVisualizedSpacePose", &OpenXRVisualizedSpaces::GetVisualizedSpacePose)
-            ->Method("SetBaseSpaceForViewSpacePose", &OpenXRVisualizedSpaces::SetBaseSpaceForViewSpacePose)
-            ->Method("GetBaseSpaceForViewSpacePose", &OpenXRVisualizedSpaces::GetBaseSpaceForViewSpacePose)
-            ->Method("GetViewSpacePose", &OpenXRVisualizedSpaces::GetViewSpacePose)
-            ->Method("GetViewCount", &OpenXRVisualizedSpaces::GetViewCount)
-            ->Method("GetViewPose", &OpenXRVisualizedSpaces::GetViewPose)
+            ->Constant("ReferenceSpaceIdView", BehaviorConstant(IOpenXRReferenceSpaces::ReferenceSpaceIdView))
+            ->Constant("ReferenceSpaceIdLocal", BehaviorConstant(IOpenXRReferenceSpaces::ReferenceSpaceIdLocal))
+            ->Constant("ReferenceSpaceIdStage", BehaviorConstant(IOpenXRReferenceSpaces::ReferenceSpaceIdStage))
+            ->Constant("ReferenceSpaceNameView", BehaviorConstant(AZStd::string(IOpenXRReferenceSpaces::ReferenceSpaceNameView)))
+            ->Constant("ReferenceSpaceNameLocal", BehaviorConstant(AZStd::string(IOpenXRReferenceSpaces::ReferenceSpaceNameLocal)))
+            ->Constant("ReferenceSpaceNameStage", BehaviorConstant(AZStd::string(IOpenXRReferenceSpaces::ReferenceSpaceNameStage)))
+            ->Constant("LeftEyeViewId", BehaviorConstant(IOpenXRReferenceSpaces::LeftEyeView))
+            ->Constant("RightEyeViewId", BehaviorConstant(IOpenXRReferenceSpaces::RightEyeView))
+            ->Method("GetReferenceSpaceNames", &OpenXRReferenceSpaces::GetReferenceSpaceNames)
+            ->Method("AddReferenceSpace", &OpenXRReferenceSpaces::AddReferenceSpace)
+            ->Method("RemoveReferenceSpace", &OpenXRReferenceSpaces::RemoveReferenceSpace)
+            ->Method("GetReferenceSpacePose", &OpenXRReferenceSpaces::GetReferenceSpacePose)
+            ->Method("SetBaseSpaceForViewSpacePose", &OpenXRReferenceSpaces::SetBaseSpaceForViewSpacePose)
+            ->Method("GetBaseSpaceForViewSpacePose", &OpenXRReferenceSpaces::GetBaseSpaceForViewSpacePose)
+            ->Method("GetViewSpacePose", &OpenXRReferenceSpaces::GetViewSpacePose)
+            ->Method("GetViewCount", &OpenXRReferenceSpaces::GetViewCount)
+            ->Method("GetViewPose", &OpenXRReferenceSpaces::GetViewPose)
             //TODO: Serialize AZ::RPI::FovData
-            //->Method("GetViewFovData", &OpenXRVisualizedSpaces::GetViewFovData)
-            ->Method("GetViewPoses", &OpenXRVisualizedSpaces::GetViewPoses)
-            ->Method("ForceViewPosesCacheUpdate", &OpenXRVisualizedSpaces::ForceViewPosesCacheUpdate)
+            //->Method("GetViewFovData", &OpenXRReferenceSpaces::GetViewFovData)
+            ->Method("GetViewPoses", &OpenXRReferenceSpaces::GetViewPoses)
+            ->Method("ForceViewPosesCacheUpdate", &OpenXRReferenceSpaces::ForceViewPosesCacheUpdate)
              ;
 
         context.Class<OpenXRActions>("OpenXRActions")
@@ -398,8 +398,8 @@ namespace OpenXRVk
             ->Method("GetActionStateBoolean", &OpenXRActions::GetActionStateBoolean)
             ->Method("GetActionStateFloat", &OpenXRActions::GetActionStateFloat)
             ->Method("GetActionStateVector2", &OpenXRActions::GetActionStateVector2)
-            ->Method("SetBaseVisualizedSpaceForPoseActions", &OpenXRActions::SetBaseVisualizedSpaceForPoseActions)
-            ->Method("GetBaseVisualizedSpaceForPoseActions", &OpenXRActions::GetBaseVisualizedSpaceForPoseActions)
+            ->Method("SetBaseReferenceSpaceForPoseActions", &OpenXRActions::SetBaseReferenceSpaceForPoseActions)
+            ->Method("GetBaseReferenceSpaceForPoseActions", &OpenXRActions::GetBaseReferenceSpaceForPoseActions)
             ->Method("GetActionStatePose", &OpenXRActions::GetActionStatePose)
             ->Method("GetActionStatePoseWithVelocities", &OpenXRActions::GetActionStatePoseWithVelocities)
             ->Method("ApplyHapticVibrationAction", &OpenXRActions::ApplyHapticVibrationAction)

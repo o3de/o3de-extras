@@ -18,14 +18,14 @@
 namespace OpenXRVk
 {
     //! REMARK: This class must be instantiated BEFORE OpenXRActionsInterface.
-    class IOpenXRVisualizedSpaces
+    class IOpenXRReferenceSpaces
     {
     public:
-        AZ_RTTI(IOpenXRVisualizedSpaces, "{244D24BE-DD6F-430A-8F99-1D24AC1665B6}");
-        AZ_DISABLE_COPY_MOVE(IOpenXRVisualizedSpaces);
+        AZ_RTTI(IOpenXRReferenceSpaces, "{244D24BE-DD6F-430A-8F99-1D24AC1665B6}");
+        AZ_DISABLE_COPY_MOVE(IOpenXRReferenceSpaces);
 
-        IOpenXRVisualizedSpaces() = default;
-        virtual ~IOpenXRVisualizedSpaces() = default;
+        IOpenXRReferenceSpaces() = default;
+        virtual ~IOpenXRReferenceSpaces() = default;
 
         // Identifiers for all reference spaces that all OpenXR implementations
         // must support. These are the default system spaces. Most OpenXR implementations
@@ -41,16 +41,16 @@ namespace OpenXRVk
         static constexpr char ReferenceSpaceNameLocal[] = "Local"; 
         static constexpr char ReferenceSpaceNameStage[] = "Stage";
 
-        virtual AZStd::vector<AZStd::string> GetVisualizedSpaceNames() const = 0;
-        virtual AZ::Outcome<bool, AZStd::string> AddVisualizedSpace(ReferenceSpaceId referenceSpaceType, const AZStd::string& spaceName, const AZ::Transform& poseInReferenceSpace) = 0;
-        virtual AZ::Outcome<bool, AZStd::string> RemoveVisualizedSpace(const AZStd::string& spaceName) = 0;
+        virtual AZStd::vector<AZStd::string> GetReferenceSpaceNames() const = 0;
+        virtual AZ::Outcome<bool, AZStd::string> AddReferenceSpace(ReferenceSpaceId referenceSpaceType, const AZStd::string& spaceName, const AZ::Transform& poseInReferenceSpace) = 0;
+        virtual AZ::Outcome<bool, AZStd::string> RemoveReferenceSpace(const AZStd::string& spaceName) = 0;
 
         //! REMARK: Maybe it's a good idea to move this into a private interface for the OpenXRVk Gem,
         //! and privately use the native handle (XrSpace)
-        virtual const void * GetVisualizedSpaceNativeHandle(const AZStd::string& spaceName) const = 0;
+        virtual const void * GetReferenceSpaceNativeHandle(const AZStd::string& spaceName) const = 0;
 
         // Returns the Pose of @spaceName relative to @baseSpaceName.
-        virtual AZ::Outcome<AZ::Transform, AZStd::string> GetVisualizedSpacePose(const AZStd::string& spaceName, const AZStd::string& baseSpaceName) const = 0;
+        virtual AZ::Outcome<AZ::Transform, AZStd::string> GetReferenceSpacePose(const AZStd::string& spaceName, const AZStd::string& baseSpaceName) const = 0;
 
         // By default the "View" space is the only space that will be automatically
         // located on each frame. The "View" space represents the User's head centroid.
@@ -92,6 +92,6 @@ namespace OpenXRVk
         virtual void ForceViewPosesCacheUpdate() = 0;
     };
 
-    using OpenXRVisualizedSpacesInterface = AZ::Interface<IOpenXRVisualizedSpaces>;
+    using OpenXRReferenceSpacesInterface = AZ::Interface<IOpenXRReferenceSpaces>;
 
 } // namespace OpenXRVk

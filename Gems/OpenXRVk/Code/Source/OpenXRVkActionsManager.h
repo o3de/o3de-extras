@@ -58,8 +58,8 @@ namespace OpenXRVk
         AZ::Outcome<float, AZStd::string> GetActionStateFloat(ActionHandle actionHandle) const override;
         AZ::Outcome<AZ::Vector2, AZStd::string> GetActionStateVector2(ActionHandle actionHandle) const override;
 
-        AZ::Outcome<bool, AZStd::string> SetBaseVisualizedSpaceForPoseActions(const AZStd::string& visualizedSpaceName) override;
-        const AZStd::string& GetBaseVisualizedSpaceForPoseActions() const override;
+        AZ::Outcome<bool, AZStd::string> SetBaseReferenceSpaceForPoseActions(const AZStd::string& visualizedSpaceName) override;
+        const AZStd::string& GetBaseReferenceSpaceForPoseActions() const override;
         AZ::Outcome<AZ::Transform, AZStd::string> GetActionStatePose(ActionHandle actionHandle) const override;
         
         AZ::Outcome<PoseWithVelocities, AZStd::string> GetActionStatePoseWithVelocities(ActionHandle actionHandle) const override;
@@ -160,8 +160,8 @@ namespace OpenXRVk
         // Updated each time SyncActions is called.
         XrTime m_predictedDisplaytime;
 
-        AZStd::string m_baseVisualizedSpaceName;
-        XrSpace m_xrBaseVisualizedSpace = XR_NULL_HANDLE;
+        AZStd::string m_baseReferenceSpaceName;
+        XrSpace m_xrBaseReferenceSpace = XR_NULL_HANDLE;
 
         //! Each actionSet in this list is guaranteed to contain at least one valid action.
         AZStd::vector<ActionSetInfo> m_actionSets;

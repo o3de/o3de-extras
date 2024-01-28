@@ -9,10 +9,10 @@
 #include <AssetBuilderSDK/AssetBuilderSDK.h>
 #include <AssetBuilderSDK/AssetBuilderBusses.h>
 
-#include <OpenXRVk/OpenXRInteractionProfilesAsset.h>
-#include <OpenXRVk/OpenXRActionSetsAsset.h>
+#include <OpenXRVk/OpenXRVkInteractionProfilesAsset.h>
+#include <OpenXRVk/OpenXRVkActionSetsAsset.h>
 
-#include "OpenXRAssetBuildersSystemComponent.h"
+#include "OpenXRVkAssetBuildersSystemComponent.h"
 
 namespace OpenXRVkBuilders
 {

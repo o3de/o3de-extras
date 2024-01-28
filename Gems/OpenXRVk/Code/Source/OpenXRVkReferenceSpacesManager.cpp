@@ -11,11 +11,11 @@
 
 #include <OpenXRVk/OpenXRVkUtils.h>
 
-#include "OpenXRVkVisualizedSpacesManager.h"
+#include "OpenXRVkReferenceSpacesManager.h"
 
 namespace OpenXRVk
 {
-    bool VisualizedSpacesManager::Init(XrInstance xrInstance, XrSession xrSession, XrViewConfigurationType xrViewConfigurationType, uint32_t numEyeViews)
+    bool ReferenceSpacesManager::Init(XrInstance xrInstance, XrSession xrSession, XrViewConfigurationType xrViewConfigurationType, uint32_t numEyeViews)
     {
         m_xrInstance = xrInstance;
         m_xrSession = xrSession;
@@ -33,14 +33,14 @@ namespace OpenXRVk
         const auto identityTm = AZ::Transform::CreateIdentity();
         AZStd::array<AZStd::pair<uint32_t, const char*>, 3> ReferenceSpaces = {
             {
-                {IOpenXRVisualizedSpaces::ReferenceSpaceIdView,  IOpenXRVisualizedSpaces::ReferenceSpaceNameView },
-                {IOpenXRVisualizedSpaces::ReferenceSpaceIdLocal, IOpenXRVisualizedSpaces::ReferenceSpaceNameLocal },
-                {IOpenXRVisualizedSpaces::ReferenceSpaceIdStage, IOpenXRVisualizedSpaces::ReferenceSpaceNameStage }
+                {IOpenXRReferenceSpaces::ReferenceSpaceIdView,  IOpenXRReferenceSpaces::ReferenceSpaceNameView },
+                {IOpenXRReferenceSpaces::ReferenceSpaceIdLocal, IOpenXRReferenceSpaces::ReferenceSpaceNameLocal },
+                {IOpenXRReferenceSpaces::ReferenceSpaceIdStage, IOpenXRReferenceSpaces::ReferenceSpaceNameStage }
             }
         };
         for (const auto& refPair : ReferenceSpaces)
         {
-            if (auto outcome = AddVisualizedSpace(refPair.first, { refPair.second }, identityTm);
+            if (auto outcome = AddReferenceSpace(refPair.first, { refPair.second }, identityTm);
                 !outcome.IsSuccess())
             {
                 AZ_Error(LogName, false, "Failed to create default reference space [%s].Reason:\n%s\n",
@@ -50,15 +50,15 @@ namespace OpenXRVk
         }
         
         // Set the default base space for View Space pose calculation.
-        auto outcome = SetBaseSpaceForViewSpacePose({ IOpenXRVisualizedSpaces::ReferenceSpaceNameLocal });
+        auto outcome = SetBaseSpaceForViewSpacePose({ IOpenXRReferenceSpaces::ReferenceSpaceNameLocal });
         AZ_Assert(outcome.IsSuccess(), "Failed to set the base space for View Space pose location");
 
-        const auto& viewSpace = m_spaces.at(IOpenXRVisualizedSpaces::ReferenceSpaceNameView);
+        const auto& viewSpace = m_spaces.at(IOpenXRReferenceSpaces::ReferenceSpaceNameView);
         m_viewSpace = &viewSpace;
         return true;
     }
 
-    bool VisualizedSpacesManager::SyncViews(XrTime predictedDisplayTime)
+    bool ReferenceSpacesManager::SyncViews(XrTime predictedDisplayTime)
     {
         m_predictedDisplaytime = predictedDisplayTime;
 
@@ -75,24 +75,24 @@ namespace OpenXRVk
         return true;
     }
 
-    void VisualizedSpacesManager::ResetSpaces()
+    void ReferenceSpacesManager::ResetSpaces()
     {
         AZ_Error(LogName, false, "FIXME! %s", __FUNCTION__);
     }
 
-    const AZStd::vector<XrView>& VisualizedSpacesManager::GetXrViews() const
+    const AZStd::vector<XrView>& ReferenceSpacesManager::GetXrViews() const
     {
         return m_xrViews;
     }
 
-    XrSpace VisualizedSpacesManager::GetViewSpaceXrSpace() const
+    XrSpace ReferenceSpacesManager::GetViewSpaceXrSpace() const
     {
         return m_viewSpace->m_xrSpace;
     }
 
     /////////////////////////////////////////////////
-    /// OpenXRVisualizedSpacesInterface overrides
-    AZStd::vector<AZStd::string> VisualizedSpacesManager::GetVisualizedSpaceNames() const
+    /// OpenXRReferenceSpacesInterface overrides
+    AZStd::vector<AZStd::string> ReferenceSpacesManager::GetReferenceSpaceNames() const
     {
         AZStd::vector<AZStd::string> retList;
         for (auto const& pair : m_spaces) {
@@ -101,7 +101,7 @@ namespace OpenXRVk
         return retList;
     }
 
-    AZ::Outcome<bool, AZStd::string> VisualizedSpacesManager::AddVisualizedSpace(ReferenceSpaceId referenceSpaceType,
+    AZ::Outcome<bool, AZStd::string> ReferenceSpacesManager::AddReferenceSpace(ReferenceSpaceId referenceSpaceType,
         const AZStd::string& spaceName, const AZ::Transform& poseInReferenceSpace)
     {
         if (m_spaces.contains(spaceName))
@@ -119,18 +119,18 @@ namespace OpenXRVk
             );
         }
 
-        VisualizedSpace visualizedSpace{ spaceName, poseInReferenceSpace, newXrSpace };
+        ReferenceSpace visualizedSpace{ spaceName, poseInReferenceSpace, newXrSpace };
         m_spaces.emplace(spaceName, AZStd::move(visualizedSpace));
 
         return AZ::Success(true);
     }
 
-    AZ::Outcome<bool, AZStd::string> VisualizedSpacesManager::RemoveVisualizedSpace(const AZStd::string& spaceName)
+    AZ::Outcome<bool, AZStd::string> ReferenceSpacesManager::RemoveReferenceSpace(const AZStd::string& spaceName)
     {
         static const AZStd::unordered_set<AZStd::string> defaultSystemSpaces {
-            {IOpenXRVisualizedSpaces::ReferenceSpaceNameView },
-            {IOpenXRVisualizedSpaces::ReferenceSpaceNameLocal},
-            {IOpenXRVisualizedSpaces::ReferenceSpaceNameStage}
+            {IOpenXRReferenceSpaces::ReferenceSpaceNameView },
+            {IOpenXRReferenceSpaces::ReferenceSpaceNameLocal},
+            {IOpenXRReferenceSpaces::ReferenceSpaceNameStage}
         };
         if (defaultSystemSpaces.contains(spaceName))
         {
@@ -144,7 +144,7 @@ namespace OpenXRVk
             (m_baseSpaceForViewSpace->m_name == spaceName))
         {
             return AZ::Failure(AZStd::string::format("Can not remove space [%s] because it is the base space to locate the [%s] space pose.",
-                spaceName.c_str(), IOpenXRVisualizedSpaces::ReferenceSpaceNameView));
+                spaceName.c_str(), IOpenXRReferenceSpaces::ReferenceSpaceNameView));
         }
 
         auto itor = m_spaces.find(spaceName);
@@ -159,7 +159,7 @@ namespace OpenXRVk
         return AZ::Success(true);
     }
 
-    const void * VisualizedSpacesManager::GetVisualizedSpaceNativeHandle(const AZStd::string& spaceName) const
+    const void * ReferenceSpacesManager::GetReferenceSpaceNativeHandle(const AZStd::string& spaceName) const
     {
         const auto spaceItor = m_spaces.find(spaceName);
         if (spaceItor == m_spaces.end())
@@ -170,7 +170,7 @@ namespace OpenXRVk
     }
 
 
-    AZ::Outcome<AZ::Transform, AZStd::string> VisualizedSpacesManager::GetVisualizedSpacePose(const AZStd::string& spaceName,
+    AZ::Outcome<AZ::Transform, AZStd::string> ReferenceSpacesManager::GetReferenceSpacePose(const AZStd::string& spaceName,
         const AZStd::string& baseSpaceName) const
     {
         const auto spaceItor = m_spaces.find(spaceName);
@@ -200,7 +200,7 @@ namespace OpenXRVk
         return AZ::Success(AzTransformFromXrPose(xrSpaceLocation.pose));
     }
 
-    AZ::Outcome<bool, AZStd::string> VisualizedSpacesManager::SetBaseSpaceForViewSpacePose(const AZStd::string& spaceName)
+    AZ::Outcome<bool, AZStd::string> ReferenceSpacesManager::SetBaseSpaceForViewSpacePose(const AZStd::string& spaceName)
     {
         const auto baseSpaceItor = m_spaces.find(spaceName);
         if (baseSpaceItor == m_spaces.end())
@@ -215,23 +215,23 @@ namespace OpenXRVk
         return AZ::Success(true);
     }
 
-    const AZStd::string& VisualizedSpacesManager::GetBaseSpaceForViewSpacePose() const
+    const AZStd::string& ReferenceSpacesManager::GetBaseSpaceForViewSpacePose() const
     {
         AZ_Assert(m_baseSpaceForViewSpace != nullptr, "A base space is always expected to exist!");
         return m_baseSpaceForViewSpace->m_name;
     }
 
-    const AZ::Transform& VisualizedSpacesManager::GetViewSpacePose() const
+    const AZ::Transform& ReferenceSpacesManager::GetViewSpacePose() const
     {
         return m_viewSpacePose;
     }
 
-    uint32_t VisualizedSpacesManager::GetViewCount() const
+    uint32_t ReferenceSpacesManager::GetViewCount() const
     {
         return aznumeric_cast<uint32_t>(m_eyeViewPoses.size());
     }
 
-    const AZ::Transform& VisualizedSpacesManager::GetViewPose(uint32_t eyeIndex) const
+    const AZ::Transform& ReferenceSpacesManager::GetViewPose(uint32_t eyeIndex) const
     {
         if (eyeIndex >= m_eyeViewPoses.size())
         {
@@ -245,7 +245,7 @@ namespace OpenXRVk
         return m_eyeViewPoses[eyeIndex];
     }
 
-    const AZ::RPI::FovData& VisualizedSpacesManager::GetViewFovData(uint32_t eyeIndex) const
+    const AZ::RPI::FovData& ReferenceSpacesManager::GetViewFovData(uint32_t eyeIndex) const
     {
         if (eyeIndex >= m_eyeViewPoses.size())
         {
@@ -260,12 +260,12 @@ namespace OpenXRVk
         return m_eyeViewFovDatas[eyeIndex];
     }
 
-    const AZStd::vector<AZ::Transform>& VisualizedSpacesManager::GetViewPoses() const
+    const AZStd::vector<AZ::Transform>& ReferenceSpacesManager::GetViewPoses() const
     {
         return m_eyeViewPoses;
     }
 
-    void VisualizedSpacesManager::ForceViewPosesCacheUpdate()
+    void ReferenceSpacesManager::ForceViewPosesCacheUpdate()
     {
         XrViewState viewState{ XR_TYPE_VIEW_STATE };
         uint32_t viewCapacityInput = aznumeric_cast<uint32_t>(m_xrViews.size());
@@ -298,10 +298,10 @@ namespace OpenXRVk
             fovData.m_angleDown = xrFov.angleDown;
         }
     }
-    /// OpenXRVisualizedSpacesInterface overrides
+    /// OpenXRReferenceSpacesInterface overrides
     /////////////////////////////////////////////////
 
-    XrSpace VisualizedSpacesManager::CreateXrSpace(XrReferenceSpaceType referenceSpaceType, const AZ::Transform& relativePose)
+    XrSpace ReferenceSpacesManager::CreateXrSpace(XrReferenceSpaceType referenceSpaceType, const AZ::Transform& relativePose)
     {
         XrReferenceSpaceCreateInfo referenceSpaceCreateInfo{ XR_TYPE_REFERENCE_SPACE_CREATE_INFO };
         referenceSpaceCreateInfo.poseInReferenceSpace = XrPoseFromAzTransform(relativePose);

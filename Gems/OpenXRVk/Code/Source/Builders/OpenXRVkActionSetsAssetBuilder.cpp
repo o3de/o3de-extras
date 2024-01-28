@@ -9,10 +9,10 @@
 #include <AzCore/StringFunc/StringFunc.h>
 #include <AssetBuilderSDK/SerializationDependencies.h>
 
-#include <OpenXRVk/OpenXRInteractionProfilesAsset.h>
-#include <OpenXRVk/OpenXRActionSetsAsset.h>
+#include <OpenXRVk/OpenXRVkInteractionProfilesAsset.h>
+#include <OpenXRVk/OpenXRVkActionSetsAsset.h>
 
-#include "OpenXRActionSetsAssetBuilder.h"
+#include "OpenXRVkActionSetsAssetBuilder.h"
 
 #pragma optimize( "", off ) // GALIB
 
