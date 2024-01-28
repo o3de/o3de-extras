@@ -9,7 +9,7 @@
 #include <AzCore/Memory/SystemAllocator.h>
 #include <AzCore/Module/Module.h>
 
-#include "OpenXRAssetBuildersSystemComponent.h"
+#include "OpenXRVkAssetBuildersSystemComponent.h"
 
 namespace OpenXRVkBuilders
 {

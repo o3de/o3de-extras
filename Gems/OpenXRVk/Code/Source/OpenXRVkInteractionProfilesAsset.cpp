@@ -232,19 +232,26 @@ namespace OpenXRVk
         return nullptr;
     }
 
-    AZStd::string OpenXRInteractionProfileDescriptor::GetComponentAbsolutePath(const OpenXRInteractionUserPathDescriptor& userPathDescriptor,
+    const OpenXRInteractionComponentPathDescriptor* OpenXRInteractionProfileDescriptor::GetComponentPathDescriptor(const OpenXRInteractionUserPathDescriptor& userPathDescriptor,
         const AZStd::string& componentPathName) const
     {
-        // First check if the user path owns the component path, if not, search in the common components list.
         auto componentPathDescriptor = userPathDescriptor.GetComponentPathDescriptor(componentPathName);
         if (!componentPathDescriptor)
         {
             // Look in common paths
-            componentPathDescriptor = GetCommonComponentPathDescriptor(componentPathName);
-            if (!componentPathDescriptor)
-            {
-                return {};
-            }
+            return GetCommonComponentPathDescriptor(componentPathName);
+        }
+        return componentPathDescriptor;
+    }
+
+    AZStd::string OpenXRInteractionProfileDescriptor::GetComponentAbsolutePath(const OpenXRInteractionUserPathDescriptor& userPathDescriptor,
+        const AZStd::string& componentPathName) const
+    {
+        // First check if the user path owns the component path, if not, search in the common components list.
+        auto componentPathDescriptor = GetComponentPathDescriptor(userPathDescriptor, componentPathName);
+        if (!componentPathDescriptor)
+        {
+            return {};
         }
         return userPathDescriptor.m_path + componentPathDescriptor->m_path;
     }

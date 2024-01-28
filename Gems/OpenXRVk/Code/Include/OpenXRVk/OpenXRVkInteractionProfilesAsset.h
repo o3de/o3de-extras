@@ -86,6 +86,7 @@ namespace OpenXRVk
 
         const OpenXRInteractionUserPathDescriptor* GetUserPathDescriptor(const AZStd::string& userPathName) const;
         const OpenXRInteractionComponentPathDescriptor* GetCommonComponentPathDescriptor(const AZStd::string& componentPathName) const;
+        const OpenXRInteractionComponentPathDescriptor* GetComponentPathDescriptor(const OpenXRInteractionUserPathDescriptor& userPathDescriptor, const AZStd::string& componentPathName) const;
         AZStd::string GetComponentAbsolutePath(const OpenXRInteractionUserPathDescriptor& userPathDescriptor, const AZStd::string& componentPathName) const;
 
         //! Unique name across all OpenXRInteractionProfileDescriptor.
