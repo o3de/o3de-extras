@@ -21,6 +21,7 @@ set(FILES
     Include/OpenXRVk/OpenXRVkReferenceSpacesInterface.h
     Include/OpenXRVk/OpenXRVkInteractionProfilesAsset.h
     Include/OpenXRVk/OpenXRVkActionSetsAsset.h
+    Include/OpenXRVk/OpenXRVkAssetsValidator.h
     Source/InputDeviceXRController.cpp
     Source/OpenXRVkCommon.h
     Source/OpenXRVkDevice.cpp
@@ -42,4 +43,5 @@ set(FILES
     Source/OpenXRVkActionsManager.h
     Source/OpenXRVkBehaviorReflection.cpp
     Source/OpenXRVkBehaviorReflection.h
+    Source/OpenXRVkAssetsValidator.cpp
 )

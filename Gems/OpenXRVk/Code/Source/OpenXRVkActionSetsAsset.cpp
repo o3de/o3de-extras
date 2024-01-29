@@ -14,6 +14,7 @@
 #include <AzCore/Asset/AssetSerializer.h>
 
 #include <OpenXRVk/OpenXRVkActionSetsAsset.h>
+#include <OpenXRVk/OpenXRVkAssetsValidator.h>
 
 namespace OpenXRVk
 {
@@ -27,18 +28,18 @@ namespace OpenXRVk
         static AZ::Data::Asset<OpenXRInteractionProfilesAsset> s_asset;
         static constexpr char LogName[] = "EditorInternal::OpenXRInteractionProfilesAsset";
 
-        static void BlockingReloadAssetIfNotReady()
+        static void BlockingReloadAssetIfNotReady(AZ::Data::Asset<OpenXRInteractionProfilesAsset>& profileAsset)
         {
-            if (!s_asset.GetId().IsValid())
+            if (!profileAsset.GetId().IsValid())
             {
                 return;
             }
-            if (!s_asset.IsReady())
+            if (!profileAsset.IsReady())
             {
-                s_asset.QueueLoad();
-                if (s_asset.IsLoading())
+                profileAsset.QueueLoad();
+                if (profileAsset.IsLoading())
                 {
-                    s_asset.BlockUntilLoadComplete();
+                    profileAsset.BlockUntilLoadComplete();
                 }
             }
         }
@@ -52,18 +53,18 @@ namespace OpenXRVk
                 s_asset = {};
                 return;
             }
-            s_asset = newProfilesAsset;
             if (loadAsset)
             {
-                BlockingReloadAssetIfNotReady();
+                BlockingReloadAssetIfNotReady(newProfilesAsset);
             }
+            s_asset = newProfilesAsset;
         }
 
         static const AZ::Data::Asset<OpenXRInteractionProfilesAsset>& GetCurrentInteractionProfilesAsset(bool loadAsset = true)
         {
             if (loadAsset)
             {
-                BlockingReloadAssetIfNotReady();
+                BlockingReloadAssetIfNotReady(s_asset);
             }
             return s_asset;
         }
@@ -363,6 +364,30 @@ namespace OpenXRVk
     
         return AZ::Data::AssetHandler::LoadResult::LoadComplete;
     
+    }
+
+    bool OpenXRActionSetsAssetHandler::SaveAssetData(const AZ::Data::Asset<AZ::Data::AssetData>& asset, AZ::IO::GenericStream* stream)
+    {
+        OpenXRActionSetsAsset* assetData = asset.GetAs<OpenXRActionSetsAsset>();
+        if (!assetData->m_interactionProfilesAsset.GetId().IsValid())
+        {
+            AZ_Error("OpenXRActionSetsAssetHandler", false, "Can't save this OpenXRActionSetsAsset without a valid OpenXRInteractionProfilesAsset")
+            return false;
+        }
+
+        if (!assetData->m_interactionProfilesAsset.IsReady())
+        {
+            EditorInternal::SetCurrentInteractionProfilesAsset(assetData->m_interactionProfilesAsset);
+        }
+
+        auto outcome = OpenXRVkAssetsValidator::ValidateActionSetsAsset(*assetData, *(assetData->m_interactionProfilesAsset.Get()));
+        if (!outcome.IsSuccess())
+        {
+            AZ_Error("OpenXRActionSetsAssetHandler", false, "Can't save this OpenXRActionSetsAsset. Reason:\n%s", outcome.GetError().c_str());
+            return false;
+        }
+
+        return AzFramework::GenericAssetHandler<OpenXRActionSetsAsset>::SaveAssetData(asset, stream);
     }
 
 } // namespace OpenXRVk

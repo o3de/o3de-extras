@@ -117,5 +117,7 @@ namespace OpenXRVk
             const AZ::Data::Asset<AZ::Data::AssetData>& asset,
             AZStd::shared_ptr<AZ::Data::AssetDataStream> stream,
             const AZ::Data::AssetFilterCB& assetLoadFilterCB) override;
+
+        bool SaveAssetData(const AZ::Data::Asset<AZ::Data::AssetData>& asset, AZ::IO::GenericStream* stream) override;
     };
 }// namespace OpenXRVk
