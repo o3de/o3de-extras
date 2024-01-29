@@ -68,7 +68,7 @@ namespace OpenXRVk
     private:
         XR::Ptr<OpenXRVk::Instance> m_instance;
 
-        AZStd::unique_ptr<OpenXRInteractionProfilesAssetHandler> m_interactionProfilesAssetHandler;
-        AZStd::unique_ptr<AzFramework::GenericAssetHandler<OpenXRActionSetsAsset>> m_actionSetsAssetHandler;
+        AZStd::unique_ptr<AzFramework::GenericAssetHandler<OpenXRInteractionProfilesAsset>> m_interactionProfilesAssetHandler;
+        AZStd::unique_ptr<OpenXRActionSetsAssetHandler> m_actionSetsAssetHandler;
     };
 }

@@ -98,9 +98,9 @@ namespace OpenXRVk
     };
 
     //! We need a custom asset handler because OpenXRActionSetsAsset contains a reference to another
-    //! asset of type OpenXRInteractionProfilesAsset, and we don't have a custom builder that declares the
-    //! dependency in the Asset Catalog database. Without this custom handler, the engine asserts
-    //! complaining about the missing dependency.
+    //! asset of type OpenXRInteractionProfilesAsset and we need to set a static singleton of type
+    //! OpenXRInteractionProfilesAsset when the user is creating/editing an OpenXRActionSetsAsset with
+    //! the Asset Editor. 
     class OpenXRActionSetsAssetHandler final
         : public AzFramework::GenericAssetHandler<OpenXRActionSetsAsset>
     {

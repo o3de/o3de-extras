@@ -18,7 +18,19 @@
 
 namespace OpenXRVkBuilders
 {
-    // Unlike an OpenXR Name, a Localized Name is just a utf-8 string, it can contain upper case letters
+    template<class AssetType>
+    static AZStd::unique_ptr<AssetType> LoadAssetAsUniquePtr(const AZStd::string& filePath)
+    {
+        AZ::ObjectStream::FilterDescriptor loadFilter = AZ::ObjectStream::FilterDescriptor(&AZ::Data::AssetFilterNoAssetLoading, AZ::ObjectStream::FILTERFLAG_IGNORE_UNKNOWN_CLASSES);
+        auto actionSetsAssetPtr = AZ::Utils::LoadObjectFromFile<AssetType>(filePath, nullptr, loadFilter);
+        if (!actionSetsAssetPtr)
+        {
+            return nullptr;
+        }
+        return AZStd::unique_ptr<AssetType>(actionSetsAssetPtr);
+    }
+
+    // A regular Name is just a utf-8 string, it can contain upper case letters
     // and spaces in between. But it can not be empty, and can not contain leading to trailing spaces.
     static AZ::Outcome<void, AZStd::string> ValidateName(const AZStd::string& name)
     {
@@ -43,6 +55,7 @@ namespace OpenXRVkBuilders
         return AZ::Success();
     }
 
+
     // Unlike an OpenXR Name, a Localized Name is just a utf-8 string, it can contain upper case letters
     // and spaces in between. But it can not be empty, and can not contain leading to trailing spaces.
     static AZ::Outcome<void, AZStd::string> ValidateOpenXRLocalizedName(const AZStd::string& name)
@@ -54,18 +67,9 @@ namespace OpenXRVkBuilders
                 AZStd::string::format("Localized Name [%s] is invalid. Reason:\n%s", name.c_str(), outcome.GetError().c_str())
             );
         }
+        return AZ::Success();
     }
 
-    // [[maybe_unused]] const char* AnyAssetBuilderName = "AnyAssetBuilder";
-    // const char* AnyAssetBuilderJobKey = "Any Asset Builder";
-    // const char* AnyAssetBuilderDefaultExtension = "azasset";
-    // const char* AnyAssetSourceExtensions[] =
-    // {
-    //     "azasset",
-    //     "attimage",
-    //     "azbuffer",
-    // };
-    // const uint32_t NumberOfSourceExtensions = AZ_ARRAY_SIZE(AnyAssetSourceExtensions);
     
     void OpenXRActionSetsAssetBuilder::CreateJobs(const AssetBuilderSDK::CreateJobsRequest& request, AssetBuilderSDK::CreateJobsResponse& response) const
     {
@@ -130,9 +134,52 @@ namespace OpenXRVkBuilders
 
     static AZ::Outcome<void, AZStd::string> ValidateActionTypeString(const AZStd::string& actionTypeStr)
     {
-        static const AZStd::unordered_set<AZStd::string> ValidActionTypes {
+        using CPD = OpenXRVk::OpenXRInteractionComponentPathDescriptor;
+        static const AZStd::unordered_set<AZStd::string> ValidActionTypes{
+            {CPD::s_TypeBoolStr},
+            {CPD::s_TypeFloatStr},
+            {CPD::s_TypeVector2Str},
+            {CPD::s_TypePoseStr},
+            {CPD::s_TypeVibrationStr}
+        };
 
+        if (!ValidActionTypes.contains(actionTypeStr))
+        {
+            static AZStd::string ValidListStr;
+            if (ValidListStr.empty())
+            {
+                ValidListStr += "[ ";
+                for (const auto& validActionTypeStr : ValidActionTypes)
+                {
+                    if (!ValidListStr.empty())
+                    {
+                        ValidListStr += ", ";
+                    }
+                    ValidListStr += validActionTypeStr;
+                }
+                ValidListStr += " ]";
+            }
+            return AZ::Failure(
+                AZStd::string::format("Action Type [%s] is invalid. It can only be one of %s",
+                    actionTypeStr.c_str(), ValidListStr.c_str())
+            );
         }
+
+        return AZ::Success();
+    }
+
+    // An OpenXR path string only contain characters as described here
+    // https://registry.khronos.org/OpenXR/specs/1.0/html/xrspec.html#well-formed-path-strings
+    static AZ::Outcome<void, AZStd::string> ValidateOpenXRPath(const AZStd::string& path)
+    {
+        static AZStd::regex s_validCharactersRegEx(R"(^(/[a-z0-9\-_\.]+)+$)", AZStd::regex::ECMAScript);
+        if (!AZStd::regex_match(path, s_validCharactersRegEx))
+        {
+            return AZ::Failure(
+                AZStd::string::format("The path [%s] contains an invalid character, or is missing a leading '/' or contains a leading '/'", path.c_str())
+            );
+        }
+        return AZ::Success();
     }
 
     static AZ::Outcome<void, AZStd::string> ValidateComponentPathDescriptor(const OpenXRVk::OpenXRInteractionComponentPathDescriptor& componentPathDescriptor,
@@ -181,7 +228,7 @@ namespace OpenXRVkBuilders
             );
         }
 
-        return AZ::Success()
+        return AZ::Success();
     }
 
 
@@ -319,10 +366,13 @@ namespace OpenXRVkBuilders
             return AZ::Failure("An InteractionProfiles asset requires at least one Interaction Profile");
         }
 
+        AZStd::unordered_set<AZStd::string> uniqueNames;
+        AZStd::unordered_set<AZStd::string> uniquePaths;
         uint32_t i = 0;
         for (const auto& interactionProfileDescriptor : interactionProfilesAsset.m_interactionProfileDescriptors)
         {
-            auto outcome = ValidateInteractionProfileDescriptor(interactionProfileDescriptor);
+            auto outcome = ValidateInteractionProfileDescriptor(interactionProfileDescriptor,
+                uniqueNames, uniquePaths);
             if (!outcome.IsSuccess())
             {
                 return AZ::Failure(
@@ -338,11 +388,22 @@ namespace OpenXRVkBuilders
     void OpenXRActionSetsAssetBuilder::ProcessInteractionProfilesAssetJob([[maybe_unused]] const AssetBuilderSDK::ProcessJobRequest& request, [[maybe_unused]] AssetBuilderSDK::ProcessJobResponse& response) const
     {
         // Open the file, and make sure there's no redundant data, the OpenXR Paths are well formatted, etc.
-       auto interactionProfilesAssetPtr = AZ::Utils::LoadObjectFromFile<OpenXRVk::OpenXRInteractionProfilesAsset>(request.m_fullPath);
-       //AZ_Error(LogName, false, "The interaction profiles contain %zu profiles", interactionProfilesAssetPtr->m_interactionProfileDescriptors.size());
+       auto interactionProfilesAssetPtr = LoadAssetAsUniquePtr<OpenXRVk::OpenXRInteractionProfilesAsset>(request.m_fullPath);
+       if (!interactionProfilesAssetPtr)
+       {
+           AZ_Error(LogName, false, "Failed to load interaction profile source asset [%s]", request.m_fullPath.c_str());
+           response.m_resultCode = AssetBuilderSDK::ProcessJobResult_Failed;
+           return;
+       }
 
-       // FIXME: TODO: All this builder is supposed to do is validate the data.
-       // If the validation passes, then we simply generate a product which is just a copy of the original.
+       auto outcome = ValidateInteractionProfilesAsset(*interactionProfilesAssetPtr.get());
+       if (!outcome.IsSuccess())
+       {
+           AZ_Error(LogName, false, "Invalid InteractionProfilesAsset [%s]. Reason:\n%s",
+               request.m_fullPath.c_str(), outcome.GetError().c_str());
+           response.m_resultCode = AssetBuilderSDK::ProcessJobResult_Failed;
+           return;
+       }
 
        // We keep exact same asset name and extension.
        AZStd::string assetFileName;
@@ -352,7 +413,7 @@ namespace OpenXRVkBuilders
        AZStd::string assetOutputPath;
        AzFramework::StringFunc::Path::ConstructFull(request.m_tempDirPath.c_str(), assetFileName.c_str(), assetOutputPath, true);
 
-       bool result = AZ::Utils::SaveObjectToFile(assetOutputPath, AZ::DataStream::ST_XML, interactionProfilesAssetPtr);
+       bool result = AZ::Utils::SaveObjectToFile(assetOutputPath, AZ::DataStream::ST_XML, interactionProfilesAssetPtr.get());
        if (result == false)
        {
            AZ_Error(LogName, false, "Failed to save asset to %s", assetOutputPath.c_str());
@@ -360,11 +421,9 @@ namespace OpenXRVkBuilders
            return;
        }
 
-       // This step is very important, because it declares product dependency between ShaderAsset and the root ShaderVariantAssets (one for each supervariant).
-       // This will guarantee that when the ShaderAsset is loaded at runtime, the ShaderAsset will report OnAssetReady only after the root ShaderVariantAssets
-       // are already fully loaded and ready.
        AssetBuilderSDK::JobProduct jobProduct;
-       if (!AssetBuilderSDK::OutputObject(interactionProfilesAssetPtr, assetOutputPath, azrtti_typeid<OpenXRVk::OpenXRInteractionProfilesAsset>(),
+       if (!AssetBuilderSDK::OutputObject(interactionProfilesAssetPtr.get(), assetOutputPath,
+           azrtti_typeid<OpenXRVk::OpenXRInteractionProfilesAsset>(),
            aznumeric_cast<uint32_t>(0), jobProduct))
        {
            AZ_Error(LogName, false, "FIXME this message.");
@@ -377,17 +436,6 @@ namespace OpenXRVkBuilders
     // OpenXRInteractionProfilesAsset Support End
     /////////////////////////////////////////////////////////////////////////////////////
 
-    template<class AssetType>
-    static AZStd::unique_ptr<AssetType> LoadAssetAsUniquePtr(const AZStd::string& filePath)
-    {
-        AZ::ObjectStream::FilterDescriptor loadFilter = AZ::ObjectStream::FilterDescriptor(&AZ::Data::AssetFilterNoAssetLoading, AZ::ObjectStream::FILTERFLAG_IGNORE_UNKNOWN_CLASSES);
-        auto actionSetsAssetPtr = AZ::Utils::LoadObjectFromFile<AssetType>(filePath, nullptr, loadFilter);
-        if (!actionSetsAssetPtr)
-        {
-            return nullptr;
-        }
-        return AZStd::unique_ptr<AssetType>(actionSetsAssetPtr);
-    }
 
     static AZStd::string GetInteractionProfileAssetSourcePath(const OpenXRVk::OpenXRActionSetsAsset& actionSetsAsset)
     {
@@ -459,7 +507,7 @@ namespace OpenXRVkBuilders
     static AZ::Outcome<void, AZStd::string> ValidateOpenXRName(const AZStd::string& name)
     {
         static AZStd::regex s_validCharactersRegEx (R"(^[a-z0-9\-_\.]+$)", AZStd::regex::ECMAScript);
-        if (!AZStd::regex_match(name, s_validCharactersRegEx)
+        if (!AZStd::regex_match(name, s_validCharactersRegEx))
         {
             return AZ::Failure(
                 AZStd::string::format("The name [%s] contains an invalid character", name.c_str())
@@ -470,8 +518,23 @@ namespace OpenXRVkBuilders
 
     
     static AZ::Outcome<void, AZStd::string> ValidateActionPathDescriptor(const OpenXRVk::OpenXRActionPathDescriptor& actionPathDescriptor,
-        const OpenXRVk::OpenXRInteractionProfilesAsset& interactionProfilesAsset)
+        const OpenXRVk::OpenXRInteractionProfilesAsset& interactionProfilesAsset,
+        AZStd::unordered_set<AZStd::string>& uniqueActionPaths)
     {
+        auto concatenatedActionPath = actionPathDescriptor.m_interactionProfileName
+            + actionPathDescriptor.m_userPathName
+            + actionPathDescriptor.m_componentPathName;
+        if (uniqueActionPaths.contains(concatenatedActionPath))
+        {
+            return AZ::Failure(
+                AZStd::string::format("An Action Path with profile[%s], userPath[%s], componentPath[%s] already exists.",
+                    actionPathDescriptor.m_interactionProfileName.c_str(),
+                    actionPathDescriptor.m_userPathName.c_str(),
+                    actionPathDescriptor.m_componentPathName.c_str())
+            );
+        }
+        uniqueActionPaths.emplace(AZStd::move(concatenatedActionPath));
+
         if (actionPathDescriptor.m_interactionProfileName.empty())
         {
             return AZ::Failure(
@@ -567,9 +630,19 @@ namespace OpenXRVkBuilders
 
     static AZ::Outcome<void, AZStd::string> ValidateActionDescriptor(
         const OpenXRVk::OpenXRInteractionProfilesAsset& interactionProfilesAsset,
-        const OpenXRVk::OpenXRActionDescriptor& actionDescriptor)
+        const OpenXRVk::OpenXRActionDescriptor& actionDescriptor,
+        AZStd::unordered_set<AZStd::string>& uniqueActionNames,
+        AZStd::unordered_set<AZStd::string>& uniqueActionLocalizedNames)
     {
         {
+            if (uniqueActionNames.contains(actionDescriptor.m_name))
+            {
+                return AZ::Failure(
+                    AZStd::string::format("An Action with name [%s] already exists.",
+                        actionDescriptor.m_name.c_str())
+                );
+            }
+            uniqueActionNames.emplace(actionDescriptor.m_name);
             auto outcome = ValidateOpenXRName(actionDescriptor.m_name);
             if (!outcome.IsSuccess())
             {
@@ -578,8 +651,18 @@ namespace OpenXRVkBuilders
                         actionDescriptor.m_name.c_str(), outcome.GetError().c_str())
                 );
             }
+        }
 
-            outcome = ValidateOpenXRLocalizedName(actionDescriptor.m_localizedName);
+        {
+            if (uniqueActionLocalizedNames.contains(actionDescriptor.m_localizedName))
+            {
+                return AZ::Failure(
+                    AZStd::string::format("An Action with localized name [%s] already exists.",
+                        actionDescriptor.m_localizedName.c_str())
+                );
+            }
+            uniqueActionLocalizedNames.emplace(actionDescriptor.m_localizedName);
+            auto outcome = ValidateOpenXRLocalizedName(actionDescriptor.m_localizedName);
             if (!outcome.IsSuccess())
             {
                 return AZ::Failure(
@@ -587,15 +670,18 @@ namespace OpenXRVkBuilders
                         actionDescriptor.m_name.c_str(), outcome.GetError().c_str())
                 );
             }
-
-            if (actionDescriptor.m_actionPathDescriptors.empty())
-            {
-                return AZ::Failure(
-                    AZStd::string::format("At least one ActionPath Descriptor is required by Action Descriptor named=[%s]\nReason:\n%s",
-                        actionDescriptor.m_name.c_str(), outcome.GetError().c_str())
-                );
-            }
         }
+
+
+        if (actionDescriptor.m_actionPathDescriptors.empty())
+        {
+            return AZ::Failure(
+                AZStd::string::format("At least one ActionPath Descriptor is required by Action Descriptor named=[%s].\n",
+                    actionDescriptor.m_name.c_str())
+            );
+        }
+
+        AZStd::unordered_set<AZStd::string> uniqueActionPaths;
         
         // It is very important that all action path descriptors have compatible data types.
         const AZStd::string& firstActionTypeStr = GetActionTypeStringFromActionPathDescriptor(
@@ -603,7 +689,7 @@ namespace OpenXRVkBuilders
         uint32_t actionPathIndex = 0;
         for (const auto& actionPathDescriptor : actionDescriptor.m_actionPathDescriptors)
         {
-            auto outcome = ValidateActionPathDescriptor(actionPathDescriptor, interactionProfilesAsset);
+            auto outcome = ValidateActionPathDescriptor(actionPathDescriptor, interactionProfilesAsset, uniqueActionPaths);
             if (!outcome.IsSuccess())
             {
                 return AZ::Failure(
@@ -635,9 +721,19 @@ namespace OpenXRVkBuilders
             return AZ::Failure("At least one ActionSet must be listed in an ActionSets asset");
         }
 
+        AZStd::unordered_set<AZStd::string> uniqueActionSetNames;
+        AZStd::unordered_set<AZStd::string> uniqueActionSetLocalizedNames;
         for (const auto& actionSetDescriptor : actionSetsAsset.m_actionSetDescriptors)
         {
             {
+                if (uniqueActionSetNames.contains(actionSetDescriptor.m_name))
+                {
+                    return AZ::Failure(
+                        AZStd::string::format("An ActionSet named=[%s] already exists.",
+                            actionSetDescriptor.m_name.c_str())
+                    );
+                }
+                uniqueActionSetNames.emplace(actionSetDescriptor.m_name);
                 auto outcome = ValidateOpenXRName(actionSetDescriptor.m_name);
                 if (!outcome.IsSuccess())
                 {
@@ -649,6 +745,14 @@ namespace OpenXRVkBuilders
             }
             
             {
+                if (uniqueActionSetLocalizedNames.contains(actionSetDescriptor.m_localizedName))
+                {
+                    return AZ::Failure(
+                        AZStd::string::format("An ActionSet with localized named=[%s] already exists.",
+                            actionSetDescriptor.m_localizedName.c_str())
+                    );
+                }
+                uniqueActionSetLocalizedNames.emplace(actionSetDescriptor.m_localizedName);
                 auto outcome = ValidateOpenXRLocalizedName(actionSetDescriptor.m_localizedName);
                 if (!outcome.IsSuccess())
                 {
@@ -658,10 +762,21 @@ namespace OpenXRVkBuilders
                     );
                 }
             }
+
+            if (actionSetDescriptor.m_actionDescriptors.empty())
+            {
+                return AZ::Failure(
+                    AZStd::string::format("ActionSet [%s] must contain at least one ActionDescriptor.",
+                        actionSetDescriptor.m_name.c_str())
+                );
+            }
             
+            AZStd::unordered_set<AZStd::string> uniqueActionNames;
+            AZStd::unordered_set<AZStd::string> uniqueActionLocalizedNames;
             for (const auto& actionDescriptor : actionSetDescriptor.m_actionDescriptors)
             {
-                auto outcome = ValidateActionDescriptor(interactionProfilesAsset, actionDescriptor);
+                auto outcome = ValidateActionDescriptor(interactionProfilesAsset, actionDescriptor,
+                    uniqueActionNames, uniqueActionLocalizedNames);
                 if (!outcome.IsSuccess())
                 {
                     return AZ::Failure(
@@ -732,7 +847,7 @@ namespace OpenXRVkBuilders
         auto outcome = ValidateActionSetsAsset(*actionSetsAssetPtr.get(), *interactionProfileAssetPtr.get());
         if (!outcome.IsSuccess())
         {
-            AZ_Error(LogName, false, "Invalid source ActionSets content when using source InteractionProfiles asset file [%s]. Reason:\n[%s]",
+            AZ_Error(LogName, false, "Invalid source ActionSets content when using source InteractionProfiles asset file [%s]. Reason:\n%s",
                 interactionProfileSourcePath.c_str(), outcome.GetError().c_str());
             response.m_resultCode = AssetBuilderSDK::ProcessJobResult_Failed;
             return;
