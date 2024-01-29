@@ -116,13 +116,6 @@ namespace OpenXRVk
 
     AZStd::vector<AZStd::string> OpenXRActionPathDescriptor::GetInteractionProfiles() const
     {
-        // auto interactionProviderIface = OpenXRInteractionProfilesProviderInterface::Get();
-        // if (!interactionProviderIface)
-        // {
-        //     return {};
-        // }
-        // return interactionProviderIface->GetInteractionProfileNames();
-
         const auto& interactionProfilesAsset = EditorInternal::GetCurrentInteractionProfilesAsset();
         if (!interactionProfilesAsset.IsReady())
         {
@@ -160,25 +153,6 @@ namespace OpenXRVk
             retList.push_back(userPathDescriptor.m_name);
         }
         return retList;
-
-
-        // AZStd::vector<AZStd::string> retList;
-        // auto interactionProviderIface = OpenXRInteractionProfilesProviderInterface::Get();
-        // if (!interactionProviderIface)
-        // {
-        //     return retList;
-        // }
-        // 
-        // const auto * profileDescriptor = interactionProviderIface->GetInteractionProfileDescriptor(m_interactionProfileName);
-        // if (!profileDescriptor)
-        // {
-        //     return retList;
-        // }
-        // for (const auto& userPathDescriptor : profileDescriptor->m_userPathDescriptors)
-        // {
-        //     retList.push_back(userPathDescriptor.m_name);
-        // }
-        // return retList;
     }
 
     AZ::Crc32 OpenXRActionPathDescriptor::OnComponentPathSelected()
@@ -344,16 +318,6 @@ namespace OpenXRVk
                     ;
             }
         }
-    }
-
-    OpenXRActionSetsAsset::OpenXRActionSetsAsset() : AZ::Data::AssetData()
-    {
-        // The reason we don't load the interaction profiles asset upon construction
-        // is because we only want to load the singleton asset only if we are 100% sure
-        // this asset is being edited by the Asset Editor.
-        // Remember that at game runtime, there's no such thing as the Asset Editor.
-        //constexpr bool loadAsset = false;
-        //EditorInternal::SetCurrentInteractionProfilesAsset(m_interactionProfilesAsset, loadAsset);
     }
 
     AZ::Crc32 OpenXRActionSetsAsset::OnInteractionProfilesAssetChanged()

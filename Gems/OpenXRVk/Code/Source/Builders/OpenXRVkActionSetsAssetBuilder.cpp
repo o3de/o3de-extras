@@ -18,6 +18,44 @@
 
 namespace OpenXRVkBuilders
 {
+    // Unlike an OpenXR Name, a Localized Name is just a utf-8 string, it can contain upper case letters
+    // and spaces in between. But it can not be empty, and can not contain leading to trailing spaces.
+    static AZ::Outcome<void, AZStd::string> ValidateName(const AZStd::string& name)
+    {
+        if (name.empty())
+        {
+            return AZ::Failure("Name should not be empty.");
+        }
+        //Spaces at the beginning and end of the name are not allowed.
+        AZStd::string tmpName(name);
+        AZ::StringFunc::TrimWhiteSpace(tmpName, true, true);
+        if (tmpName.empty())
+        {
+            return AZ::Failure("Name is just a bunch of spaces.");
+        }
+        if (tmpName.size() != name.size())
+        {
+            return AZ::Failure(
+                AZStd::string::format("Trailing or leading spaces are not allowed in a Name [%s].",
+                    name.c_str())
+            );
+        }
+        return AZ::Success();
+    }
+
+    // Unlike an OpenXR Name, a Localized Name is just a utf-8 string, it can contain upper case letters
+    // and spaces in between. But it can not be empty, and can not contain leading to trailing spaces.
+    static AZ::Outcome<void, AZStd::string> ValidateOpenXRLocalizedName(const AZStd::string& name)
+    {
+        auto outcome = ValidateName(name);
+        if (!outcome.IsSuccess())
+        {
+            return AZ::Failure(
+                AZStd::string::format("Localized Name [%s] is invalid. Reason:\n%s", name.c_str(), outcome.GetError().c_str())
+            );
+        }
+    }
+
     // [[maybe_unused]] const char* AnyAssetBuilderName = "AnyAssetBuilder";
     // const char* AnyAssetBuilderJobKey = "Any Asset Builder";
     // const char* AnyAssetBuilderDefaultExtension = "azasset";
@@ -88,6 +126,213 @@ namespace OpenXRVkBuilders
         } // for all request.m_enabledPlatforms
 
         response.m_result = AssetBuilderSDK::CreateJobsResultCode::Success;
+    }
+
+    static AZ::Outcome<void, AZStd::string> ValidateActionTypeString(const AZStd::string& actionTypeStr)
+    {
+        static const AZStd::unordered_set<AZStd::string> ValidActionTypes {
+
+        }
+    }
+
+    static AZ::Outcome<void, AZStd::string> ValidateComponentPathDescriptor(const OpenXRVk::OpenXRInteractionComponentPathDescriptor& componentPathDescriptor,
+        AZStd::unordered_set<AZStd::string>& uniqueComponentPathNames, AZStd::unordered_set<AZStd::string>& uniqueComponentPathPaths)
+    {
+        {
+            if (uniqueComponentPathNames.contains(componentPathDescriptor.m_name))
+            {
+                return AZ::Failure(
+                    AZStd::string::format("A Component Path with name [%s] already exists.",
+                        componentPathDescriptor.m_name.c_str())
+                );
+            }
+            uniqueComponentPathNames.emplace(componentPathDescriptor.m_name);
+            auto outcome = ValidateName(componentPathDescriptor.m_name);
+            if (!outcome.IsSuccess())
+            {
+                return AZ::Failure(
+                    AZStd::string::format("Component Name[% s] is invalid.Reason:\n % s", componentPathDescriptor.m_name.c_str(), outcome.GetError().c_str())
+                );
+            }
+        }
+        {
+            if (uniqueComponentPathPaths.contains(componentPathDescriptor.m_path))
+            {
+                return AZ::Failure(
+                    AZStd::string::format("A Component Path with path [%s] already exists.",
+                        componentPathDescriptor.m_path.c_str())
+                );
+            }
+            uniqueComponentPathPaths.emplace(componentPathDescriptor.m_path);
+            auto outcome = ValidateOpenXRPath(componentPathDescriptor.m_path);
+            if (!outcome.IsSuccess())
+            {
+                return AZ::Failure(
+                    AZStd::string::format("Component Path path [%s] is invalid. Reason:\n%s", componentPathDescriptor.m_path.c_str(), outcome.GetError().c_str())
+                );
+            }
+        }
+
+        auto outcome = ValidateActionTypeString(componentPathDescriptor.m_actionTypeStr);
+        if (!outcome.IsSuccess())
+        {
+            return AZ::Failure(
+                AZStd::string::format("Component Path path [%s] has an invalid action type. Reason:\n%s", componentPathDescriptor.m_name.c_str(), outcome.GetError().c_str())
+            );
+        }
+
+        return AZ::Success()
+    }
+
+
+    static AZ::Outcome<void, AZStd::string> ValidateUserPathDescriptor(const OpenXRVk::OpenXRInteractionUserPathDescriptor& userPathDescriptor,
+        AZStd::unordered_set<AZStd::string>& uniqueUserPathNames, AZStd::unordered_set<AZStd::string>& uniqueUserPathPaths,
+        AZStd::unordered_set<AZStd::string>& uniqueComponentPathNames, AZStd::unordered_set<AZStd::string>& uniqueComponentPathPaths)
+    {
+        {
+            if (uniqueUserPathNames.contains(userPathDescriptor.m_name))
+            {
+                return AZ::Failure(
+                    AZStd::string::format("An User Path with name [%s] already exists.",
+                        userPathDescriptor.m_name.c_str())
+                );
+            }
+            uniqueUserPathNames.emplace(userPathDescriptor.m_name);
+            auto outcome = ValidateName(userPathDescriptor.m_name);
+            if (!outcome.IsSuccess())
+            {
+                return AZ::Failure(
+                    AZStd::string::format("User Path Name [%s] is invalid. Reason:\n%s", userPathDescriptor.m_name.c_str(), outcome.GetError().c_str())
+                );
+            }
+        }
+        {
+            if (uniqueUserPathPaths.contains(userPathDescriptor.m_path))
+            {
+                return AZ::Failure(
+                    AZStd::string::format("An User Path with path [%s] already exists.",
+                        userPathDescriptor.m_path.c_str())
+                );
+            }
+            uniqueUserPathPaths.emplace(userPathDescriptor.m_path);
+            auto outcome = ValidateOpenXRPath(userPathDescriptor.m_path);
+            if (!outcome.IsSuccess())
+            {
+                return AZ::Failure(
+                    AZStd::string::format("User Path path [%s] is invalid. Reason:\n%s", userPathDescriptor.m_path.c_str(), outcome.GetError().c_str())
+                );
+            }
+        }
+        for (const auto& componentPathDescriptor : userPathDescriptor.m_componentPathDescriptors)
+        {
+            auto outcome = ValidateComponentPathDescriptor(componentPathDescriptor,
+                uniqueComponentPathNames, uniqueComponentPathPaths);
+            if (!outcome.IsSuccess())
+            {
+                return AZ::Failure(
+                    AZStd::string::format("Invalid Component Path [%s]. Reason:\n%s", componentPathDescriptor.m_name.c_str(), outcome.GetError().c_str())
+                );
+            }
+        }
+
+        return AZ::Success();
+    }
+
+
+    static AZ::Outcome<void, AZStd::string> ValidateInteractionProfileDescriptor(
+        const OpenXRVk::OpenXRInteractionProfileDescriptor& interactionProfileDescriptor,
+        AZStd::unordered_set<AZStd::string>& uniqueNames, AZStd::unordered_set<AZStd::string>& uniquePaths)
+    {
+        {
+            if (uniqueNames.contains(interactionProfileDescriptor.m_uniqueName))
+            {
+                return AZ::Failure(
+                    AZStd::string::format("An Interaction Profile with name [%s] already exists.",
+                        interactionProfileDescriptor.m_uniqueName.c_str())
+                );
+            }
+            uniqueNames.emplace(interactionProfileDescriptor.m_uniqueName);
+            auto outcome = ValidateName(interactionProfileDescriptor.m_uniqueName);
+            if (!outcome.IsSuccess())
+            {
+                return AZ::Failure(
+                    AZStd::string::format("Interaction Profile Unique Name [%s] is invalid. Reason:\n%s", interactionProfileDescriptor.m_uniqueName.c_str(), outcome.GetError().c_str())
+                );
+            }
+        }
+
+        {
+            if (uniquePaths.contains(interactionProfileDescriptor.m_path))
+            {
+                return AZ::Failure(
+                    AZStd::string::format("An Interaction Profile with path [%s] already exists.",
+                        interactionProfileDescriptor.m_path.c_str())
+                );
+            }
+            uniquePaths.emplace(interactionProfileDescriptor.m_path);
+            auto outcome = ValidateOpenXRPath(interactionProfileDescriptor.m_path);
+            if (!outcome.IsSuccess())
+            {
+                return AZ::Failure(
+                    AZStd::string::format("Interaction Profile Path [%s] is invalid. Reason:\n%s", interactionProfileDescriptor.m_path.c_str(), outcome.GetError().c_str())
+                );
+            }
+        }
+
+        AZStd::unordered_set<AZStd::string> uniqueUserPathNames;
+        AZStd::unordered_set<AZStd::string> uniqueUserPathPaths;
+        AZStd::unordered_set<AZStd::string> uniqueComponentPathNames;
+        AZStd::unordered_set<AZStd::string> uniqueComponentPathPaths;
+        for (const auto& userPathDescriptor : interactionProfileDescriptor.m_userPathDescriptors)
+        {
+            auto outcome = ValidateUserPathDescriptor(userPathDescriptor,
+                uniqueUserPathNames, uniqueUserPathPaths, uniqueComponentPathNames, uniqueComponentPathPaths);
+            if (!outcome.IsSuccess())
+            {
+                return AZ::Failure(
+                    AZStd::string::format("Invalid User Path [%s]. Reason:\n%s", userPathDescriptor.m_name.c_str(), outcome.GetError().c_str())
+                );
+            }
+        }
+
+        for (const auto& componentPathDescriptor : interactionProfileDescriptor.m_commonComponentPathDescriptors)
+        {
+            auto outcome = ValidateComponentPathDescriptor(componentPathDescriptor,
+                uniqueComponentPathNames, uniqueComponentPathPaths);
+            if (!outcome.IsSuccess())
+            {
+                return AZ::Failure(
+                    AZStd::string::format("Invalid Common Component Path [%s]. Reason:\n%s", componentPathDescriptor.m_name.c_str(), outcome.GetError().c_str())
+                );
+            }
+        }
+
+        return AZ::Success();
+    }
+
+
+    static AZ::Outcome<void, AZStd::string> ValidateInteractionProfilesAsset(
+        const OpenXRVk::OpenXRInteractionProfilesAsset& interactionProfilesAsset)
+    {
+        if (interactionProfilesAsset.m_interactionProfileDescriptors.empty())
+        {
+            return AZ::Failure("An InteractionProfiles asset requires at least one Interaction Profile");
+        }
+
+        uint32_t i = 0;
+        for (const auto& interactionProfileDescriptor : interactionProfilesAsset.m_interactionProfileDescriptors)
+        {
+            auto outcome = ValidateInteractionProfileDescriptor(interactionProfileDescriptor);
+            if (!outcome.IsSuccess())
+            {
+                return AZ::Failure(
+                    AZStd::string::format("InteractionProfile[%u] is invalid. Reason:\n%s",
+                        i, outcome.GetError().c_str())
+                );
+            }
+            i++;
+        }
+        return AZ::Success();
     }
 
     void OpenXRActionSetsAssetBuilder::ProcessInteractionProfilesAssetJob([[maybe_unused]] const AssetBuilderSDK::ProcessJobRequest& request, [[maybe_unused]] AssetBuilderSDK::ProcessJobResponse& response) const
@@ -209,8 +454,7 @@ namespace OpenXRVkBuilders
     }
 
 
-    // A well formed name string should follow this guideline:
-    // It should not contains characters which are not allowed in a SINGLE LEVEL of a well-formed path string
+    // An OpenXR name string only contain characters which are allowed in a SINGLE LEVEL of a well-formed path string
     // https://registry.khronos.org/OpenXR/specs/1.0/html/xrspec.html#well-formed-path-strings
     static AZ::Outcome<void, AZStd::string> ValidateOpenXRName(const AZStd::string& name)
     {
@@ -222,15 +466,6 @@ namespace OpenXRVkBuilders
             );
         }
         return AZ::Success();
-    }
-
-
-    static AZ::Outcome<void, AZStd::string> ValidateOpenXRLocalizedName(const AZStd::string& name)
-    {
-        (void)name;
-        return AZ::Failure(
-            AZStd::string::format("%s NOT IMPLEMENTED", __FUNCTION__)
-        );
     }
 
     
@@ -440,6 +675,29 @@ namespace OpenXRVkBuilders
         return AZ::Success();
     }
 
+    //! Each action in an actionSet has a "name" and a "localizedName". The "name" can never be empty, but
+    //! if "localizedName" is empty we automatically patch it as an identical copy of "name".
+    static void FixEmptyLocalizedNames(OpenXRVk::OpenXRActionSetsAsset& actionSetAsset)
+    {
+        for (auto& actionSetDescriptor : actionSetAsset.m_actionSetDescriptors)
+        {
+            if (actionSetDescriptor.m_localizedName.empty())
+            {
+                AZ_Printf(OpenXRActionSetsAssetBuilder::LogName, "ActionSet had empty LocalizedName. Taking new value of [%s]", actionSetDescriptor.m_name.c_str());
+                actionSetDescriptor.m_localizedName = actionSetDescriptor.m_name;
+            }
+            for (auto& actionDescriptor : actionSetDescriptor.m_actionDescriptors)
+            {
+                if (actionDescriptor.m_localizedName.empty())
+                {
+                    AZ_Printf(OpenXRActionSetsAssetBuilder::LogName, "Action in ActionSet [%s] had empty LocalizedName. Taking new value of [%s]",
+                        actionSetDescriptor.m_name.c_str(), actionDescriptor.m_name.c_str());
+                    actionDescriptor.m_localizedName = actionDescriptor.m_name;
+                }
+            }
+        }
+    }
+
     void OpenXRActionSetsAssetBuilder::ProcessActionSetsAssetJob(const AssetBuilderSDK::ProcessJobRequest& request, AssetBuilderSDK::ProcessJobResponse& response) const
     {
         auto actionSetsAssetPtr = LoadAssetAsUniquePtr<OpenXRVk::OpenXRActionSetsAsset>(request.m_fullPath);
@@ -449,6 +707,8 @@ namespace OpenXRVkBuilders
             response.m_resultCode = AssetBuilderSDK::ProcessJobResult_Failed;
             return;
         }
+
+        FixEmptyLocalizedNames(*actionSetsAssetPtr.get());
 
         // The Action Sets Asset contains an asset reference to the OpenXRInteractionProfilesAsset that was used
         // to construct the data in it. Because we are running in a builder context, the OpenXRInteractionProfilesAsset

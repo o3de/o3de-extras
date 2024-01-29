@@ -87,8 +87,6 @@ namespace OpenXRVk
         AZ_RTTI(OpenXRActionSetsAsset, "{C2DEE370-6151-4701-AEA5-AEA3CA247CFF}", AZ::Data::AssetData);
         static void Reflect(AZ::ReflectContext* context);
 
-        OpenXRActionSetsAsset();
-
         static constexpr char s_assetTypeName[] = "OpenXR Action Sets Asset";
         static constexpr char s_assetExtension[] = "xractions";
 

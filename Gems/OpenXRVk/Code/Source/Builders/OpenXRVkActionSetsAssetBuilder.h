@@ -19,6 +19,8 @@ namespace OpenXRVkBuilders
     public:
         AZ_TYPE_INFO(OpenXRActionSetsAssetBuilder, "{1D053000-7799-459D-B99B-FF6AE6394BC1}");
 
+        static constexpr char LogName[] = "OpenXRActionSetsAssetBuilder";
+
         static constexpr const char* InteractionProfilesAssetJobKey = "XR Interaction Profiles Asset";
         static constexpr const char* ActionSetsAssetJobKey = "XR Action Sets Asset";
     
@@ -34,8 +36,6 @@ namespace OpenXRVkBuilders
   
     private:
         AZ_DISABLE_COPY_MOVE(OpenXRActionSetsAssetBuilder);
-
-        static constexpr char LogName[] = "OpenXRActionSetsAssetBuilder";
 
         void CreateInteractionProfilesAssetJobs(const AssetBuilderSDK::CreateJobsRequest& request, AssetBuilderSDK::CreateJobsResponse& response) const;
         void ProcessInteractionProfilesAssetJob(const AssetBuilderSDK::ProcessJobRequest& request, AssetBuilderSDK::ProcessJobResponse& response) const;
