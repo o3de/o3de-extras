@@ -688,13 +688,6 @@ namespace ROS2
             m_collidersMaker.AddColliders(*attachedModel, &link, entityId);
             auto createdSensorEntities = m_sensorsMaker.AddSensors(*attachedModel, &link, entityId);
             createdEntities.insert(createdEntities.end(), createdSensorEntities.begin(), createdSensorEntities.end());
-
-            AZStd::lock_guard<AZStd::mutex> lck(m_statusLock);
-            const auto& sensorStatus = m_sensorsMaker.GetStatusMessages();
-            for (const auto& ss : sensorStatus)
-            {
-                m_status.emplace(StatusMessageType::Sensor, ss);
-            }
         }
         return AZ::Success(entityId);
     }
