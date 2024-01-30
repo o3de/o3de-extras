@@ -98,7 +98,7 @@ namespace OpenXRVk
         AZStd::vector<AZStd::string> profileNames;
         for (const auto& profileDescriptor : interactionProfilesAsset->m_interactionProfileDescriptors)
         {
-            profileNames.push_back(profileDescriptor.m_uniqueName);
+            profileNames.push_back(profileDescriptor.m_name);
         }
         return profileNames;
     }

@@ -14,6 +14,10 @@
 
 namespace OpenXRVk
 {
+    //! An Action Path Descriptor is nothing more than a tuple of three
+    //! strings that identify a unique Input or Haptic control for a particular
+    //! vendor equipment. The interesting point is that these strings MUST be limited
+    //! to the unique names provided by an OpenXRInteractionProfileAsset.
     class OpenXRActionPathDescriptor final
     {
     public:
@@ -24,8 +28,13 @@ namespace OpenXRVk
 
         AZStd::string GetEditorText() const;
 
+        //! Should match an OpenXRInteractionProfileDescriptor::m_name
         AZStd::string m_interactionProfileName;
+        
+        //! Should match an OpenXRInteractionUserPathDescriptor::m_name
         AZStd::string m_userPathName;
+
+        //! Should match an OpenXRInteractionComponentPathDescriptor::m_name
         AZStd::string m_componentPathName;
 
     private:
@@ -39,6 +48,8 @@ namespace OpenXRVk
         AZStd::vector<AZStd::string> GetComponentPaths() const;
     };
 
+    //! Describes a custom Action I/O that will be queried/driven
+    //! by the application gameplay.
     class OpenXRActionDescriptor final
     {
     public:
@@ -49,8 +60,17 @@ namespace OpenXRVk
 
         AZStd::string GetEditorText() const;
 
+        //! This name must be unique across all Actions listed in an Action Set.
+        //! The content of this string is limited to the characters listed here:
+        //! https://registry.khronos.org/OpenXR/specs/1.0/html/xrspec.html#well-formed-path-strings 
         AZStd::string m_name; // Regular char*
+
+        //! User friendly name.
         AZStd::string m_localizedName; // UTF-8 string.
+
+        //! Free form comment about this Action.
+        AZStd::string m_comment;
+
         //! List of I/O action paths that will be bound to this action.
         //! The first action path in this list, determines what type of action paths
         //! can be added to the list. For example:
@@ -61,6 +81,9 @@ namespace OpenXRVk
         AZStd::vector<OpenXRActionPathDescriptor> m_actionPathDescriptors;
     };
 
+    //! Describes a custom Action Set. All applications
+    //! will have custom Action Sets because that's how developers define
+    //! the gameplay I/O.
     class OpenXRActionSetDescriptor final
     {
     public:
@@ -71,9 +94,23 @@ namespace OpenXRVk
 
         AZStd::string GetEditorText() const;
 
-        AZStd::string m_name; // Regular char*
+        //! This name must be unique across all Action Sets listed in an Action Sets Asset.
+        //! The content of this string is limited to the characters listed here:
+        //! https://registry.khronos.org/OpenXR/specs/1.0/html/xrspec.html#well-formed-path-strings 
+        AZStd::string m_name;
+
+        //! User friendly name.
         AZStd::string m_localizedName; // UTF-8 string.
-        uint32_t m_priority = 0; // Higher values mean higher priority.
+        
+        //! Higher values mean higher priority.
+        //! The priority is used by the OpenXR runtime in case several action sets
+        //! use identical action paths and the highest priority will win the event.
+        uint32_t m_priority = 0;
+        
+        //! Free form comment about this Action Set.
+        AZStd::string m_comment;
+
+        //! List of all actions under this Action Set.
         AZStd::vector<OpenXRActionDescriptor> m_actionDescriptors;
     };
 
@@ -90,7 +127,12 @@ namespace OpenXRVk
         static constexpr char s_assetTypeName[] = "OpenXR Action Sets Asset";
         static constexpr char s_assetExtension[] = "xractions";
 
+        //! By referencing a particular Interaction Profiles asset, the actions
+        //! exposed in this Action Sets asset will be limited to the vendor support
+        //! profiles listed in the Interaction Profiles asset.
         AZ::Data::Asset<OpenXRInteractionProfilesAsset> m_interactionProfilesAsset;
+
+        //! List of all Action Sets the application will work with.
         AZStd::vector<OpenXRActionSetDescriptor> m_actionSetDescriptors;
 
     private:

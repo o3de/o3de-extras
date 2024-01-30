@@ -7,6 +7,7 @@
  */
 
 #include <AzCore/Component/TickBus.h>
+#include <AzCore/Settings/SettingsRegistry.h>
 
 #include <AzFramework/Asset/AssetSystemBus.h>
 
@@ -62,7 +63,25 @@ namespace OpenXRVk
 
     AZStd::string ActionsManager::GetActionSetsAssetPath()
     {
-        // FIXME! Should be registry key also.
+        // Asset Cache relative path
+        static constexpr char DefaultActionsAssetPath[] = "assets/openxrvk/default.xractions";
+        static constexpr char ActionSetsAssetPathRegistryKey[] = "/O3DE/Atom/OpenXR/ActionSetsAsset";
+
+        auto settingsRegistry = AZ::SettingsRegistry::Get();
+        if (settingsRegistry)
+        {
+            AZStd::string customPath;
+            bool keyExists = settingsRegistry->Get(customPath, ActionSetsAssetPathRegistryKey);
+            if (keyExists && !customPath.empty())
+            {
+                AZ_Printf(LogName, "The application defined a custom ActionSets asset at path [%s].\n",
+                    customPath.c_str());
+                return customPath;
+            }
+            
+        }
+        AZ_Printf(LogName, "The application will use the default ActionSets asset at path [%s].\n",
+            DefaultActionsAssetPath);
         return AZStd::string(DefaultActionsAssetPath);
     }
 
@@ -395,7 +414,7 @@ namespace OpenXRVk
             }
 
             // If the interaction profile is not in the dictionary, then add it.
-            if (!suggestedBindingsPerProfile.contains(interactionProfileDescriptor->m_uniqueName))
+            if (!suggestedBindingsPerProfile.contains(interactionProfileDescriptor->m_name))
             {
                 XrPath profileXrPath;
                 result = xrStringToPath(m_xrInstance, interactionProfileDescriptor->m_path.c_str(), &profileXrPath);
@@ -405,11 +424,11 @@ namespace OpenXRVk
                         interactionProfileDescriptor->m_path.c_str(), actionDescriptor.m_name.c_str());
                     continue;
                 }
-                suggestedBindingsPerProfile.emplace(interactionProfileDescriptor->m_uniqueName, SuggestedBindings{});
-                SuggestedBindings& newProfileBindings = suggestedBindingsPerProfile.at(interactionProfileDescriptor->m_uniqueName);
+                suggestedBindingsPerProfile.emplace(interactionProfileDescriptor->m_name, SuggestedBindings{});
+                SuggestedBindings& newProfileBindings = suggestedBindingsPerProfile.at(interactionProfileDescriptor->m_name);
                 newProfileBindings.m_profileXrPath = profileXrPath;
             }
-            SuggestedBindings& profileBindings = suggestedBindingsPerProfile.at(interactionProfileDescriptor->m_uniqueName);
+            SuggestedBindings& profileBindings = suggestedBindingsPerProfile.at(interactionProfileDescriptor->m_name);
 
             XrActionSuggestedBinding binding;
             binding.action = xrAction;

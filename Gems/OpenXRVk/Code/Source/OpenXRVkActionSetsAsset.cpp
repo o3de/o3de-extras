@@ -125,7 +125,7 @@ namespace OpenXRVk
         AZStd::vector<AZStd::string> profileNames;
         for (const auto& profileDescriptor : interactionProfilesAsset->m_interactionProfileDescriptors)
         {
-            profileNames.push_back(profileDescriptor.m_uniqueName);
+            profileNames.push_back(profileDescriptor.m_name);
         }
         return profileNames;
     }
@@ -212,6 +212,7 @@ namespace OpenXRVk
                 ->Version(1)
                 ->Field("Name", &OpenXRActionDescriptor::m_name)
                 ->Field("LocalizedName", &OpenXRActionDescriptor::m_localizedName)
+                ->Field("Comment", &OpenXRActionDescriptor::m_comment)
                 ->Field("ActionPathDescriptors", &OpenXRActionDescriptor::m_actionPathDescriptors)
                 ;
 
@@ -226,6 +227,7 @@ namespace OpenXRVk
                     ->Attribute(AZ::Edit::Attributes::ChangeNotify, AZ_CRC("RefreshAttributesAndValues"))
                     ->DataElement(AZ::Edit::UIHandlers::Default, &OpenXRActionDescriptor::m_localizedName, "Localized Name", "User friendly display name.")
                     ->Attribute(AZ::Edit::Attributes::ChangeNotify, AZ_CRC("RefreshAttributesAndValues"))
+                    ->DataElement(AZ::Edit::UIHandlers::MultiLineEdit, &OpenXRActionDescriptor::m_comment, "Comment", "Free form description of this Action Set.")
                     ->DataElement(AZ::Edit::UIHandlers::Default, &OpenXRActionDescriptor::m_actionPathDescriptors, "Action Paths", "List of action paths bound to this action")
                     ;
             }
@@ -234,11 +236,23 @@ namespace OpenXRVk
 
     AZStd::string OpenXRActionDescriptor::GetEditorText() const
     {
-        if (!m_localizedName.empty())
+        // In addition to showing the Action name, we'll append the Action Data Type
+        // of the first ActionPath, so it is easy for the developer to see what will be
+        // the expected data type at runtime.
+        AZStd::string actionTypeStr = "Unknown Type";
+        if (!m_actionPathDescriptors.empty())
         {
-            return m_localizedName;
+            if (EditorInternal::s_asset)
+            {
+                actionTypeStr = EditorInternal::s_asset->GetActionPathTypeStr(
+                    m_actionPathDescriptors[0].m_interactionProfileName,
+                    m_actionPathDescriptors[0].m_userPathName,
+                    m_actionPathDescriptors[0].m_componentPathName
+                );
+            }
         }
-        return m_name.empty() ? "<Unknown Action>" : m_name;
+        AZStd::string actionDescription = AZStd::string::format("%s [%s]", m_name.empty() ? "<Unknown Action>" : m_name.c_str(), actionTypeStr.c_str());
+        return actionDescription;
     }
     /// OpenXRActionDescriptor
     ///////////////////////////////////////////////////////////
@@ -257,6 +271,7 @@ namespace OpenXRVk
                 ->Field("Name", &OpenXRActionSetDescriptor::m_name)
                 ->Field("LocalizedName", &OpenXRActionSetDescriptor::m_localizedName)
                 ->Field("Priority", &OpenXRActionSetDescriptor::m_priority)
+                ->Field("Comment", &OpenXRActionSetDescriptor::m_comment)
                 ->Field("ActionDescriptors", &OpenXRActionSetDescriptor::m_actionDescriptors)
                 ;
 
@@ -272,6 +287,7 @@ namespace OpenXRVk
                     ->DataElement(AZ::Edit::UIHandlers::Default, &OpenXRActionSetDescriptor::m_localizedName, "Localized Name", "Action set display name.")
                     ->Attribute(AZ::Edit::Attributes::ChangeNotify, AZ_CRC("RefreshAttributesAndValues"))
                     ->DataElement(AZ::Edit::UIHandlers::SpinBox, &OpenXRActionSetDescriptor::m_priority, "Priority", "The higher this value the higher the priority.")
+                    ->DataElement(AZ::Edit::UIHandlers::MultiLineEdit, &OpenXRActionSetDescriptor::m_comment, "Comment", "Free form description of this Action Set.")
                     ->DataElement(AZ::Edit::UIHandlers::Default, &OpenXRActionSetDescriptor::m_actionDescriptors, "Actions", "List of actions for this action set.")
                     ;
             }
@@ -280,11 +296,11 @@ namespace OpenXRVk
 
     AZStd::string OpenXRActionSetDescriptor::GetEditorText() const
     {
-        if (!m_localizedName.empty())
+        if (!m_name.empty())
         {
-            return m_localizedName;
+            return m_name;
         }
-        return m_name.empty() ? "<Unknown Action Set>" : m_name;
+        return m_localizedName.empty() ? "<Unknown Action Set>" : m_localizedName;
     }
     /// OpenXRActionSetDescriptor
     ///////////////////////////////////////////////////////////

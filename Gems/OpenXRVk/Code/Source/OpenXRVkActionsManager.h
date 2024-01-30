@@ -70,10 +70,6 @@ namespace OpenXRVk
         /////////////////////////////////////////////////
 
     private:
-
-        // Asset Cache relative path
-        static constexpr char DefaultActionsAssetPath[] = "openxr.xractions";
-
         // The following struct will be used at initialization only.
         // All the bindings for all actions will be called 
         struct SuggestedBindings

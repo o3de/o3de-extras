@@ -155,7 +155,7 @@ namespace OpenXRVk
         {
             serialize->Class<OpenXRInteractionProfileDescriptor>()
                 ->Version(1)
-                ->Field("UniqueName", &OpenXRInteractionProfileDescriptor::m_uniqueName)
+                ->Field("UniqueName", &OpenXRInteractionProfileDescriptor::m_name)
                 ->Field("Path", &OpenXRInteractionProfileDescriptor::m_path)
                 ->Field("UserPathDescriptors", &OpenXRInteractionProfileDescriptor::m_userPathDescriptors)
                 ->Field("CommonComponentPathDescriptors", &OpenXRInteractionProfileDescriptor::m_commonComponentPathDescriptors)
@@ -169,7 +169,7 @@ namespace OpenXRVk
                     ->ClassElement(AZ::Edit::ClassElements::EditorData, "")
                     ->Attribute(AZ::Edit::Attributes::NameLabelOverride, &OpenXRInteractionProfileDescriptor::GetEditorText)
                     ->Attribute(AZ::Edit::Attributes::AutoExpand, true)
-                    ->DataElement(AZ::Edit::UIHandlers::Default, &OpenXRInteractionProfileDescriptor::m_uniqueName, "Unique Name", "Unique name across all interaction profiles")
+                    ->DataElement(AZ::Edit::UIHandlers::Default, &OpenXRInteractionProfileDescriptor::m_name, "Unique Name", "Unique name across all interaction profiles")
                     ->Attribute(AZ::Edit::Attributes::ChangeNotify, AZ::Edit::PropertyRefreshLevels::AttributesAndValues)
                     ->DataElement(AZ::Edit::UIHandlers::Default, &OpenXRInteractionProfileDescriptor::m_path, "Path", "OpenXR Canonical Path for this interation profile.")
                     ->DataElement(AZ::Edit::UIHandlers::Default, &OpenXRInteractionProfileDescriptor::m_userPathDescriptors, "User Paths", "List of user paths")
@@ -181,32 +181,9 @@ namespace OpenXRVk
 
     AZStd::string OpenXRInteractionProfileDescriptor::GetEditorText()
     {
-        return m_uniqueName.empty() ? "<Unknown Profile>" : m_uniqueName;
+        return m_name.empty() ? "<Unknown Profile>" : m_name;
     }
 
-    AZ::Outcome<void, AZStd::string> OpenXRInteractionProfileDescriptor::Validate() const
-    {
-        if (m_uniqueName.empty())
-        {
-            return AZ::Failure("OpenXRInteractionProfileDescriptor has no name.");
-        }
-        //Spaces at the beginning and end of the name are not allowed.
-        AZStd::string tmpName(m_uniqueName);
-        AZ::StringFunc::TrimWhiteSpace(tmpName, true, true);
-        if (tmpName.empty())
-        {
-            return AZ::Failure("The OpenXRInteractionProfileDescriptor name is just a bunch of spaces.");
-        }
-        if (tmpName.size() != m_uniqueName.size())
-        {
-            return AZ::Failure(
-                AZStd::string::format("Trailing or leading spaces are not allowed in the name of a OpenXRInteractionProfileDescriptor [%s].",
-                    m_uniqueName.c_str())
-            );
-        }
-        //TODO: Validate the remaining data.
-        return AZ::Success();
-    }
 
     const OpenXRInteractionUserPathDescriptor* OpenXRInteractionProfileDescriptor::GetUserPathDescriptor(const AZStd::string& userPathName) const
     {
@@ -291,12 +268,33 @@ namespace OpenXRVk
     {
         for (const auto& profileDescriptor : m_interactionProfileDescriptors)
         {
-            if (profileName == profileDescriptor.m_uniqueName)
+            if (profileName == profileDescriptor.m_name)
             {
                 return &profileDescriptor;
             }
         }
         return nullptr;
+    }
+
+    const AZStd::string& OpenXRInteractionProfilesAsset::GetActionPathTypeStr(const AZStd::string& profileName, const AZStd::string& userPathName, const AZStd::string& componentPathName) const
+    {
+        static const AZStd::string emptyStr;
+        const auto profileDescriptor = GetInteractionProfileDescriptor(profileName);
+        if (!profileDescriptor)
+        {
+            return emptyStr;
+        }
+        const auto userPathDescriptor = profileDescriptor->GetUserPathDescriptor(userPathName);
+        if (!userPathDescriptor)
+        {
+            return emptyStr;
+        }
+        const auto componentPathDescriptor = profileDescriptor->GetComponentPathDescriptor(*userPathDescriptor, componentPathName);
+        if (!componentPathDescriptor)
+        {
+            return emptyStr;
+        }
+        return componentPathDescriptor->m_actionTypeStr;
     }
 
     /// OpenXRInteractionProfilesAsset

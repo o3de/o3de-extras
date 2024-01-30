@@ -15,6 +15,9 @@
 
 namespace OpenXRVk
 {
+    //! A Component Path Descriptor identifies Inputs or Haptics
+    //! available in a particular controller Like the 'X' or 'Y' Buttons
+    //! or the ability to vibrate (Haptic)
     class OpenXRInteractionComponentPathDescriptor final
     {
     public:
@@ -48,6 +51,8 @@ namespace OpenXRVk
 
     };
 
+    //! A User Path descriptor describes the XrPath (as a string) that will be
+    //! use to identify a Left or Right hand controller, or a Game pad controller. 
     class OpenXRInteractionUserPathDescriptor final
     {
     public:
@@ -62,8 +67,9 @@ namespace OpenXRVk
         //! For OpenXR a User Path string would look like:
         //! "/user/hand/left", or "/user/hand/right", etc
         AZStd::string m_path;
-        //! Component Paths that are only supported under this user path.
-        //! This list can be empty.
+        //! Component Paths that are only supported under this User Path.
+        //! This list can be empty. In case it is empty, it means that all component Paths
+        //! are listed under the Interaction Profile Descriptor that owns this User Path Descriptor.
         AZStd::vector<OpenXRInteractionComponentPathDescriptor> m_componentPathDescriptors;
 
     private:
@@ -71,6 +77,8 @@ namespace OpenXRVk
 
     };
 
+    //! An Interaction Profile descriptor describes all the User Paths and Component Paths that
+    //! a particular Vendor Equipment supports.  
     class OpenXRInteractionProfileDescriptor final
     {
     public:
@@ -81,9 +89,6 @@ namespace OpenXRVk
 
         static constexpr char LogName[] = "OpenXRInteractionProfileDescriptor";
 
-        //! Returns success only if the data makes sense, has proper casing, etc.
-        AZ::Outcome<void, AZStd::string> Validate() const;
-
         const OpenXRInteractionUserPathDescriptor* GetUserPathDescriptor(const AZStd::string& userPathName) const;
         const OpenXRInteractionComponentPathDescriptor* GetCommonComponentPathDescriptor(const AZStd::string& componentPathName) const;
         const OpenXRInteractionComponentPathDescriptor* GetComponentPathDescriptor(const OpenXRInteractionUserPathDescriptor& userPathDescriptor, const AZStd::string& componentPathName) const;
@@ -92,11 +97,16 @@ namespace OpenXRVk
         //! Unique name across all OpenXRInteractionProfileDescriptor.
         //! It serves also as user friendly display name, and because
         //! it is unique it can be used in a dictionary.
-        AZStd::string m_uniqueName;
+        AZStd::string m_name;
+        //! A string convertible to XrPath like:
+        //! "/interaction_profiles/khr/simple_controller", or
+        //! "/interaction_profiles/oculus/touch_controller"
         AZStd::string m_path;
 
+        //! All the User Paths that this equipment supports.
         AZStd::vector<OpenXRInteractionUserPathDescriptor> m_userPathDescriptors;
-        // ComponentsPaths that are supported by all User Paths listed in @m_userPathDescriptors
+
+        //! Common Component Paths that are supported by all User Paths listed in @m_userPathDescriptors
         AZStd::vector<OpenXRInteractionComponentPathDescriptor> m_commonComponentPathDescriptors;
 
     private:
@@ -121,25 +131,27 @@ namespace OpenXRVk
         static constexpr char s_assetExtension[] = "xrprofiles";
 
         const OpenXRInteractionProfileDescriptor* GetInteractionProfileDescriptor(const AZStd::string& profileName) const;
+        const AZStd::string& GetActionPathTypeStr(const AZStd::string& profileName, const AZStd::string& userPathName, const AZStd::string& componentPathName) const;
 
+        //! The asset is just a list of Interaction Profile descriptors.
         AZStd::vector<OpenXRInteractionProfileDescriptor> m_interactionProfileDescriptors;
     };
 
-    // REMOVEME GALIB FIXME
-    // //! Custom asset handler
-    // class OpenXRInteractionProfilesAssetHandler final
-    //     : public AzFramework::GenericAssetHandler<OpenXRInteractionProfilesAsset>
-    // {
-    // public:
-    //     AZ_RTTI(OpenXRInteractionProfilesAssetHandler, "{1C4A27E9-6768-4C59-9582-2A01A0DEC1D0}", AzFramework::GenericAssetHandler<OpenXRInteractionProfilesAsset>);
-    //     AZ_CLASS_ALLOCATOR(OpenXRInteractionProfilesAssetHandler, AZ::SystemAllocator);
-    // 
-    //     static constexpr char LogName[] = "OpenXRInteractionProfilesAssetHandler";
-    // 
-    //     OpenXRInteractionProfilesAssetHandler();
-    // 
-    //     bool SaveAssetData(const AZ::Data::Asset<AZ::Data::AssetData>& asset, AZ::IO::GenericStream* stream) override;
-    // };
+    //! Custom asset handler that helps validate the content of the asset before allowing
+    //! it to be saved on disk.
+    class OpenXRInteractionProfilesAssetHandler final
+        : public AzFramework::GenericAssetHandler<OpenXRInteractionProfilesAsset>
+    {
+    public:
+        AZ_RTTI(OpenXRInteractionProfilesAssetHandler, "{1C4A27E9-6768-4C59-9582-2A01A0DEC1D0}", AzFramework::GenericAssetHandler<OpenXRInteractionProfilesAsset>);
+        AZ_CLASS_ALLOCATOR(OpenXRInteractionProfilesAssetHandler, AZ::SystemAllocator);
+    
+        static constexpr char LogName[] = "OpenXRInteractionProfilesAssetHandler";
+    
+        OpenXRInteractionProfilesAssetHandler();
+    
+        bool SaveAssetData(const AZ::Data::Asset<AZ::Data::AssetData>& asset, AZ::IO::GenericStream* stream) override;
+    };
 
 
 }// namespace OpenXRVk

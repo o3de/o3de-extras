@@ -219,19 +219,19 @@ namespace OpenXRVkAssetsValidator
         AZStd::unordered_set<AZStd::string>& uniqueNames, AZStd::unordered_set<AZStd::string>& uniquePaths)
     {
         {
-            if (uniqueNames.contains(interactionProfileDescriptor.m_uniqueName))
+            if (uniqueNames.contains(interactionProfileDescriptor.m_name))
             {
                 return AZ::Failure(
                     AZStd::string::format("An Interaction Profile with name [%s] already exists.",
-                        interactionProfileDescriptor.m_uniqueName.c_str())
+                        interactionProfileDescriptor.m_name.c_str())
                 );
             }
-            uniqueNames.emplace(interactionProfileDescriptor.m_uniqueName);
-            auto outcome = ValidateName(interactionProfileDescriptor.m_uniqueName);
+            uniqueNames.emplace(interactionProfileDescriptor.m_name);
+            auto outcome = ValidateName(interactionProfileDescriptor.m_name);
             if (!outcome.IsSuccess())
             {
                 return AZ::Failure(
-                    AZStd::string::format("Interaction Profile Unique Name [%s] is invalid. Reason:\n%s", interactionProfileDescriptor.m_uniqueName.c_str(), outcome.GetError().c_str())
+                    AZStd::string::format("Interaction Profile Unique Name [%s] is invalid. Reason:\n%s", interactionProfileDescriptor.m_name.c_str(), outcome.GetError().c_str())
                 );
             }
         }
@@ -389,25 +389,11 @@ namespace OpenXRVkAssetsValidator
         const OpenXRVk::OpenXRActionPathDescriptor& actionPathDescriptor
     )
     {
-        static const AZStd::string emptyStr;
-
-        const auto interactionProfileDescriptorPtr = interactionProfilesAsset.GetInteractionProfileDescriptor(actionPathDescriptor.m_interactionProfileName);
-        if (!interactionProfileDescriptorPtr)
-        {
-            return emptyStr;
-        }
-
-        const auto userPathDescriptorPtr = interactionProfileDescriptorPtr->GetUserPathDescriptor(actionPathDescriptor.m_userPathName);
-        if (!userPathDescriptorPtr)
-        {
-            return emptyStr;
-        }
-        const auto componentPathDescriptorPtr = interactionProfileDescriptorPtr->GetComponentPathDescriptor(*userPathDescriptorPtr, actionPathDescriptor.m_componentPathName);
-        if (!componentPathDescriptorPtr)
-        {
-            return emptyStr;
-        }
-        return componentPathDescriptorPtr->m_actionTypeStr;
+        return interactionProfilesAsset.GetActionPathTypeStr(
+            actionPathDescriptor.m_interactionProfileName,
+            actionPathDescriptor.m_userPathName,
+            actionPathDescriptor.m_componentPathName
+        );
     }
 
     static bool IsActionTypeBoolOrFloat(const AZStd::string& actionTypeStr)
@@ -467,6 +453,9 @@ namespace OpenXRVkAssetsValidator
             }
         }
 
+        // Only validate if not empty. If empty, the asset builder will force this to be a copy of
+        // actionDescriptor.m_name.
+        if (!actionDescriptor.m_localizedName.empty())
         {
             if (uniqueActionLocalizedNames.contains(actionDescriptor.m_localizedName))
             {
@@ -558,6 +547,9 @@ namespace OpenXRVkAssetsValidator
                 }
             }
 
+            // Only validate if not empty. If empty, the asset builder will force this to be a copy of
+            // actionSetDescriptor.m_name.
+            if (!actionSetDescriptor.m_localizedName.empty())
             {
                 if (uniqueActionSetLocalizedNames.contains(actionSetDescriptor.m_localizedName))
                 {
