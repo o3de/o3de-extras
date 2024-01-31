@@ -243,7 +243,7 @@ if(PAL_TRAIT_BUILD_TESTS_SUPPORTED)
                         AZ::AzTest
                         AZ::AzTestShared
                         AZ::AzToolsFramework
-                        Gem::${gem_name}.Editor
+                        Gem::${gem_name}.Editor.Static
                         3rdParty::sdformat
             )
 
