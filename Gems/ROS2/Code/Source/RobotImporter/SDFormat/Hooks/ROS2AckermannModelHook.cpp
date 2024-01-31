@@ -10,7 +10,6 @@
 #include <AzToolsFramework/Entity/EditorEntityHelpers.h>
 #include <AzToolsFramework/ToolsComponents/TransformComponent.h>
 #include <PhysX/EditorColliderComponentRequestBus.h>
-#include <ROS2/Frame/ROS2FrameComponent.h>
 #include <ROS2/Frame/ROS2FrameEditorComponent.h>
 #include <ROS2/RobotControl/ControlConfiguration.h>
 #include <RobotControl/Controllers/AckermannController/AckermannControlComponent.h>

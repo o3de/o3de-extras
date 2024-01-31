@@ -7,7 +7,6 @@
  */
 
 #include <AzCore/Math/MathUtils.h>
-#include <ROS2/Frame/ROS2FrameComponent.h>
 #include <ROS2/Frame/ROS2FrameEditorComponent.h>
 #include <RobotControl/Controllers/SkidSteeringController/SkidSteeringControlComponent.h>
 #include <RobotControl/ROS2RobotControlComponent.h>
