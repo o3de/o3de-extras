@@ -11,6 +11,7 @@
 #include <AzToolsFramework/ToolsComponents/TransformComponent.h>
 #include <PhysX/EditorColliderComponentRequestBus.h>
 #include <ROS2/Frame/ROS2FrameComponent.h>
+#include <ROS2/Frame/ROS2FrameEditorComponent.h>
 #include <ROS2/RobotControl/ControlConfiguration.h>
 #include <RobotControl/Controllers/AckermannController/AckermannControlComponent.h>
 #include <RobotControl/ROS2RobotControlComponent.h>
@@ -298,7 +299,7 @@ namespace ROS2::SDFormat
             controlConfiguration.m_steering = ControlConfiguration::Steering::Ackermann;
 
             // Create required components
-            HooksUtils::CreateComponent<ROS2FrameComponent>(entity);
+            HooksUtils::CreateComponent<ROS2FrameEditorComponent>(entity);
             HooksUtils::CreateComponent<ROS2RobotControlComponent>(entity, controlConfiguration);
             HooksUtils::CreateComponent<VehicleDynamics::AckermannVehicleModelComponent>(
                 entity, vehicleConfiguration, VehicleDynamics::AckermannDriveModel(modelLimits, steeringPid));

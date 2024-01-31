@@ -8,6 +8,7 @@
 
 #include <AzCore/Math/MathUtils.h>
 #include <ROS2/Frame/ROS2FrameComponent.h>
+#include <ROS2/Frame/ROS2FrameEditorComponent.h>
 #include <RobotControl/Controllers/SkidSteeringController/SkidSteeringControlComponent.h>
 #include <RobotControl/ROS2RobotControlComponent.h>
 #include <RobotImporter/SDFormat/ROS2ModelPluginHooks.h>
@@ -189,7 +190,7 @@ namespace ROS2::SDFormat
             VehicleDynamics::SkidSteeringModelLimits modelLimits = SkidSteeringParser::CreateModelLimits(element);
 
             // Create required components
-            HooksUtils::CreateComponent<ROS2FrameComponent>(entity);
+            HooksUtils::CreateComponent<ROS2FrameEditorComponent>(entity);
             HooksUtils::CreateComponent<ROS2RobotControlComponent>(entity);
             HooksUtils::CreateComponent<VehicleDynamics::SkidSteeringModelComponent>(
                 entity, vehicleConfiguration, VehicleDynamics::SkidSteeringDriveModel(modelLimits));
