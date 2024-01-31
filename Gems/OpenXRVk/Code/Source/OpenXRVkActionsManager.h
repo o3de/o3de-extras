@@ -8,11 +8,6 @@
 
 #pragma once
 
-//#include <XR/XRInput.h>
-//#include <OpenXRVk/InputDeviceXRController.h>
-//#include <OpenXRVk/OpenXRVkSpace.h>
-//#include <Atom/RPI.Public/XR/XRRenderingInterface.h>
-
 #include <openxr/openxr.h>
 
 #include <OpenXRVk/OpenXRVkActionsInterface.h>
@@ -37,14 +32,18 @@ namespace OpenXRVk
         ActionsManager() = default;
         ~ActionsManager();
 
-        //! Initialize various actions and actionSets according to the
-        //! "openxr.xractions" action bindings asset.
+        //! @returns True if it was able to start the initialization process by queueing
+        //!          asset loading of the Action Sets asset. This is a non-blocking call
+        //!          and the complete initialization will happend asynchronously but it 
+        //!          will be transparent to the Session.
         bool Init(XrInstance xrInstance, XrSession xrSession);
 
         //! Called by the Session each tick.
         bool SyncActions(XrTime predictedDisplayTime);
 
-        void LogCurrentInteractionProfile();
+        //! Called by the Session when the event XR_TYPE_EVENT_DATA_INTERACTION_PROFILE_CHANGED is
+        //! received.
+        void OnInteractionProfileChanged();
 
         /////////////////////////////////////////////////
         /// OpenXRActionsInterface overrides
@@ -82,14 +81,6 @@ namespace OpenXRVk
         //! The key is the user friendly profile name.
         using SuggestedBindingsPerProfile = AZStd::unordered_map<AZStd::string, SuggestedBindings>;
 
-        //! @param actionSet The user configured data for the ActionSet.
-        //! @param suggestedBindingsPerProfile In this dictionary we will collect all the action bindings
-        //!                                    for each interaction profile.
-        
-        //bool InitActionSetInternal(const OpenXRActionSet& actionSet,
-        //    SuggestedBindingsPerProfile& suggestedBindingsPerProfile
-        //    );
-
         struct ActionInfo
         {
             AZStd::string m_name;
@@ -108,27 +99,54 @@ namespace OpenXRVk
             AZStd::unordered_map<AZStd::string, IOpenXRActions::ActionHandle> m_actions;
         };
 
-        AZStd::string GetActionSetsAssetPath();
-        bool StartActionSetAssetAsync();
+        // Called when m_actionSetAsset is ready.
+        void InitInternal();
 
+        //! Returns the Asset Cache relative product path of the
+        //! ActionSets Asset.
+        AZStd::string GetActionSetsAssetPath();
+
+        //! Requests the Asset System to start loading the ActionSets Asset.
+        //! @returns Success if the asset loading request was queued successfully.
+        //! @remark Once OnAssetReady event is received, the XrActionSets and XrActions
+        //!         will be created, along with their bindings etc.
+        bool LoadActionSetAssetAsync();
+
+        //! This function is called by InitInternal() to instantiate an XrActionSet from an OpenXRActionSetDescriptor.
+        //! Additionally all XrActions for the XrActionSet will also be instantiated.
+        //! @param interactionProfilesAsset The interaction profiles asset that owns the XrPath string data
+        //!        that will be required to instantiate XrActions.
+        //! @param actionSetDescriptor Contains all the data required to create an XrActionSet and all of its
+        //!        XrActions
+        //! @param suggestedBindingsPerProfileOut In this dictionary, to be used later by InitInternal(),
+        //!        we collect all the Action Bindings for each Interaction Profile referenced by the
+        //!        OpenXRActionSetsAsset.
         bool InitActionSet(const OpenXRInteractionProfilesAsset& interactionProfilesAsset,
             const OpenXRActionSetDescriptor& actionSetDescriptor,
             SuggestedBindingsPerProfile& suggestedBindingsPerProfileOut);
 
+
+        //! Called by InitActionSet(...)
         bool AddActionToActionSet(const OpenXRInteractionProfilesAsset& interactionProfilesAsset,
             ActionSetInfo& actionSetInfo,
             const OpenXRActionDescriptor& actionDescriptor,
             SuggestedBindingsPerProfile& suggestedBindingsPerProfile);
 
+        //! Called by AddActionToActionSet(...)
         XrAction CreateXrActionAndXrSpace(const ActionSetInfo& actionSetInfo,
             const OpenXRActionDescriptor& actionDescriptor, const XrActionType actionType, XrSpace& newXrActionSpace) const;
 
+        //! Called by AddActionToActionSet(...)
         uint32_t AppendActionBindings(const OpenXRInteractionProfilesAsset& interactionProfilesAsset,
             const OpenXRActionDescriptor& actionDescriptor,
             XrAction xrAction,
             SuggestedBindingsPerProfile& suggestedBindingsPerProfile) const;
 
-
+        //! The application can selectively activate or deactivate Action Sets.
+        //! This is possible thanks to the public method SetActionSetState().
+        //! Each time an Action Set is activated or deactivated this function is called
+        //! to keep @m_xrActiveActionSets up to date, which allow us to call xrSyncActions
+        //! with the ActionSets that should be active for the current frame.
         void RecreateXrActiveActionSets();
 
 
@@ -142,15 +160,12 @@ namespace OpenXRVk
         /// AssetBus overrides
         /////////////////////////////////////////////////
 
-        // Called when m_actionSetAsset is ready.
-        void InitInternal();
-
         XrInstance m_xrInstance = XR_NULL_HANDLE;
         XrSession m_xrSession = XR_NULL_HANDLE;
 
-        // Loaded Asynchronously. Once this asset is ready, the real initialization of the
-        // OpenXR Actions and ActionSets will occur.
-        // This asset is loaded once and never changes.
+        //! Loaded Asynchronously. Once this asset is ready, the real initialization of the
+        //! OpenXR Actions and ActionSets will occur.
+        //! This asset is loaded once and never changes.
         AZ::Data::Asset<OpenXRActionSetsAsset> m_actionSetAsset;
 
         // Updated each time SyncActions is called.
@@ -164,6 +179,11 @@ namespace OpenXRVk
         //! This is a flat list of all actions across all actionSets.
         //! An IOpenXRActions::ActionHandle is actually an index into this list.
         AZStd::vector<ActionInfo> m_actions;
+
+        //! This set is only useful for debugging purposes, we keep track
+        //! of all the top level user paths so we can call xrGetCurrentInteractionProfile
+        //! each time the Session receives the event XR_TYPE_EVENT_DATA_INTERACTION_PROFILE_CHANGED.
+        mutable AZStd::unordered_set<AZStd::string> m_topLevelUserPaths;
 
         //! 32 action sets should be enough
         static constexpr uint32_t MaxActionSets = 32;

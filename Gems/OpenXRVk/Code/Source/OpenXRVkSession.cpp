@@ -214,21 +214,7 @@ namespace OpenXRVk
                 }
                 case XR_TYPE_EVENT_DATA_INTERACTION_PROFILE_CHANGED:
                 {
-                    // GALIB FIXME!
-                    AZ_Printf("GALIB", "OpenXRVkSession FIXME XR_TYPE_EVENT_DATA_INTERACTION_PROFILE_CHANGED\n");
-                   // m_actionsMgr->LogCurrentInteractionProfile();
-
-
-                    //if (GetDescriptor().m_validationMode == AZ::RHI::ValidationMode::Enabled)
-                    //{
-                    //    Input* xrVkInput = GetNativeInput();
-                    //    LogActionSourceName(xrVkInput->GetSqueezeAction(static_cast<AZ::u32>(XR::Side::Left)), "Squeeze Left");
-                    //    LogActionSourceName(xrVkInput->GetSqueezeAction(static_cast<AZ::u32>(XR::Side::Right)), "Squeeze Right");
-                    //    LogActionSourceName(xrVkInput->GetQuitAction(), "Quit");
-                    //    LogActionSourceName(xrVkInput->GetPoseAction(static_cast<AZ::u32>(XR::Side::Left)), "Pose Left");
-                    //    LogActionSourceName(xrVkInput->GetPoseAction(static_cast<AZ::u32>(XR::Side::Right)), "Pose Right");
-                    //    LogActionSourceName(xrVkInput->GetVibrationAction(), "Vibrate");
-                    //}
+                    m_actionsMgr->OnInteractionProfileChanged();
                     break;
                 }
                 case XR_TYPE_EVENT_DATA_REFERENCE_SPACE_CHANGE_PENDING:

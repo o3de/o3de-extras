@@ -23,8 +23,8 @@ namespace OpenXRVk
 
         static constexpr char LogName[] = "OpenXRVkReferenceSpacesManager";
 
-        //! Initialize various actions and actionSets according to the
-        //! "openxr.xractions" action bindings asset.
+        //! Instantiates the OpenXR Guaranteed Reference Spaces: View, Local and Stage.
+        //! And prepares all the internal data required to service the OpenXRReferenceSpacesInterface interface.
         bool Init(XrInstance xrInstance, XrSession xrSession, XrViewConfigurationType xrViewConfigurationType, uint32_t numEyeViews);
 
         //! Called by the Session each tick.

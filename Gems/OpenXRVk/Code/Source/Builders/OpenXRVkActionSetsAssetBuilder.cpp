@@ -15,8 +15,6 @@
 
 #include "OpenXRVkActionSetsAssetBuilder.h"
 
-#pragma optimize( "", off ) // GALIB FIXME REMOVE ME
-
 namespace OpenXRVkBuilders
 {
     template<class AssetType>
@@ -190,10 +188,6 @@ namespace OpenXRVkBuilders
         
         for (const AssetBuilderSDK::PlatformInfo& platformInfo : request.m_enabledPlatforms)
         {
-            if (platformInfo.m_identifier != "pc") //FIXME: GALIB REMOVE ME.
-            {
-                continue;
-            }
             AssetBuilderSDK::JobDescriptor jobDescriptor;
             // Very high priority because this asset is required to initialize the OpenXR runtime
             // and initialize the I/O actions system.
@@ -311,4 +305,3 @@ namespace OpenXRVkBuilders
     
 } // namespace OpenXRVkBuilders
 
-#pragma optimize( "", on )  // GALIB FIXME REMOVE ME

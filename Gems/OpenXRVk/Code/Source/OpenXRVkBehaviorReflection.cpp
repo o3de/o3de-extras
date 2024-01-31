@@ -235,16 +235,26 @@ namespace OpenXRVk
             return iface->SetActionSetState(actionSetName, activate);
         }
 
-        static AZ::Outcome<IOpenXRActions::ActionHandle, AZStd::string> GetActionHandle(const AZStd::string& actionSetName, const AZStd::string& actionName)
+        //! REMARK: The original idea was to return an:
+        //! AZ::Outcome<IOpenXRActions::ActionHandle, AZStd::string>
+        //! But when compiling for Android the Behavior Context ->Method() would statically
+        //! fail claiming that it was not constructible.
+        static IOpenXRActions::ActionHandle GetActionHandle(const AZStd::string& actionSetName, const AZStd::string& actionName)
         {
             const auto iface = OpenXRActionsInterface::Get();
             if (!iface)
             {
-                return AZ::Failure(
-                    AZStd::string::format("%s: OpenXRActionsInterface is not available.", __FUNCTION__)
-                );
+                AZ_Error(LogName, false, "%s: OpenXRActionsInterface is not available.", __FUNCTION__);
+                return {};
             }
-            return iface->GetActionHandle(actionSetName, actionName);
+            auto outcome = iface->GetActionHandle(actionSetName, actionName);
+            if (outcome.IsSuccess())
+            {
+                return outcome.GetValue();
+            }
+            AZ_Error(LogName, false, "%s: Failed to get action handle for actionSetName[%s], actionName[%s]. Reason:\n%s.",
+                     __FUNCTION__, actionSetName.c_str(), actionName.c_str(), outcome.GetError().c_str());
+            return {};
         }
 
         static AZ::Outcome<bool, AZStd::string> GetActionStateBoolean(IOpenXRActions::ActionHandle actionHandle)

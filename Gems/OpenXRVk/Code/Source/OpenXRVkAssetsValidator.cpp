@@ -126,7 +126,7 @@ namespace OpenXRVkAssetsValidator
             if (!outcome.IsSuccess())
             {
                 return AZ::Failure(
-                    AZStd::string::format("Component Name[% s] is invalid.Reason:\n % s", componentPathDescriptor.m_name.c_str(), outcome.GetError().c_str())
+                    AZStd::string::format("Component Name[%s] is invalid.Reason:\n%s", componentPathDescriptor.m_name.c_str(), outcome.GetError().c_str())
                 );
             }
         }

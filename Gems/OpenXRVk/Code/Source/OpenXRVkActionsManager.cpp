@@ -64,7 +64,7 @@ namespace OpenXRVk
     AZStd::string ActionsManager::GetActionSetsAssetPath()
     {
         // Asset Cache relative path
-        static constexpr char DefaultActionsAssetPath[] = "assets/openxrvk/default.xractions";
+        static constexpr char DefaultActionsAssetPath[] = "openxrvk/default.xractions";
         static constexpr char ActionSetsAssetPathRegistryKey[] = "/O3DE/Atom/OpenXR/ActionSetsAsset";
 
         auto settingsRegistry = AZ::SettingsRegistry::Get();
@@ -85,25 +85,8 @@ namespace OpenXRVk
         return AZStd::string(DefaultActionsAssetPath);
     }
 
-    bool ActionsManager::StartActionSetAssetAsync()
+    bool ActionsManager::LoadActionSetAssetAsync()
     {
-        // // There are two critical assets that need to be loaded.
-        // // The first asset defines the list of interaction profiles supported by the current version
-        // // of the OpenXR Gem.
-        // const auto interactionProfilesAssetPath = OpenXRInteractionProfilesAsset::GetInteractionProfilesAssetPath();
-        // if (interactionProfilesAssetPath.empty())
-        // {
-        //     AZ_Warning(LogName, false, "No interaction profile asset has been defined. This application will run without user interaction support.");
-        //     return true;
-        // }
-        // const auto interactionProfilesAsset = AZ::RPI::AssetUtils::LoadCriticalAsset<OpenXRInteractionProfilesAsset>(interactionProfilesAssetPath);
-        // if (!interactionProfilesAsset.IsReady())
-        // {
-        //     AZ_Warning(LogName, false, "The system interaction profiles asset [%s] is not ready. This application will run without user interaction support.",
-        //         interactionProfilesAssetPath.c_str());
-        //     return true;
-        // }
-
         auto productPath = GetActionSetsAssetPath();
         auto assetId = AZ::RPI::AssetUtils::GetAssetIdForProductPath(productPath.c_str(), AZ::RPI::AssetUtils::TraceLevel::Error);
         if (!assetId.IsValid())
@@ -145,7 +128,7 @@ namespace OpenXRVk
             return false;
         }
 
-        return StartActionSetAssetAsync();
+        return LoadActionSetAssetAsync();
     }
 
     void ActionsManager::InitInternal()
@@ -191,6 +174,7 @@ namespace OpenXRVk
         }
         if (activeProfileCount < 1)
         {
+            m_topLevelUserPaths.clear();
             AZ_Error(LogName, false, "Failed to activate at least one interaction profile. This application will run without actions.\n");
             return;
         }
@@ -396,6 +380,8 @@ namespace OpenXRVk
                 return false;
             }
 
+            m_topLevelUserPaths.emplace(userPathDescriptor->m_path);
+
             const auto absoluteComponentPath = interactionProfileDescriptor->GetComponentAbsolutePath(*userPathDescriptor, actionPathDescriptor.m_componentPathName);
             if (absoluteComponentPath.empty())
             {
@@ -442,50 +428,52 @@ namespace OpenXRVk
 
 
 
-    void ActionsManager::LogCurrentInteractionProfile()
+    void ActionsManager::OnInteractionProfileChanged()
     {
-        // OpenXRInteractionProfileBus::EnumerateHandlers(
-        // [this](OpenXRInteractionProfile* handler) -> bool
-        // {
-        //     auto userPathStrs = handler->GetUserPaths();
-        //     auto profileName = handler->GetName();
-        //     AZ_Printf(LogName, "Visiting user paths for interaction profile [%s]\n", profileName.c_str());
-        //     for (const auto& userPathStr : userPathStrs)
-        //     {
-        //         const auto topPathstr = handler->GetUserTopPath(userPathStr);
-        //         XrPath xrPath;
-        //         XrResult result = xrStringToPath(m_xrInstance, topPathstr.c_str(), &xrPath);
-        //         if (IsError(result))
-        //         {
-        //             PrintXrError(LogName, result, "Failed to get xrPath for user top path [%s]", topPathstr.c_str());
-        //             continue;
-        //         }
-        //         XrInteractionProfileState profileStateOut{ XR_TYPE_INTERACTION_PROFILE_STATE };
-        //         result = xrGetCurrentInteractionProfile(
-        //             m_xrSession, xrPath, &profileStateOut);
-        //         if (IsError(result))
-        //         {
-        //             PrintXrError(LogName, result, "Failed to get profile state for user top path [%s]", topPathstr.c_str());
-        //             continue;
-        //         }
-        //         if (profileStateOut.interactionProfile == XR_NULL_PATH)
-        //         {
-        //             AZ_Printf(LogName, "Got an NULL Interaction Profile for [%s].\n", topPathstr.c_str());
-        //             continue;
-        //         }
-        //         AZStd::string activeProfileName = ConvertXrPathToString(m_xrInstance, profileStateOut.interactionProfile);
-        //         if (activeProfileName.empty())
-        //         {
-        //             PrintXrError(LogName, result, "Failed to convert Interaction Profile XrPath to string for user top path [%s]", topPathstr.c_str());
-        //             continue;
-        //         }
-        //         else
-        //         {
-        //             AZ_Printf(LogName, "Current Interaction Profile for [%s] is [%s].\n", topPathstr.c_str(), activeProfileName.c_str());
-        //         }
-        //     }
-        //     return true;
-        // });
+        if (m_topLevelUserPaths.empty())
+        {
+            return;
+        }
+
+        uint32_t activeUserPathsCount = 0;
+        for (const auto& userPathStr : m_topLevelUserPaths)
+        {
+            XrPath xrUserPath;
+            XrResult result = xrStringToPath(m_xrInstance, userPathStr.c_str(), &xrUserPath);
+            if (IsError(result))
+            {
+                PrintXrError(LogName, result, "Failed to get xrPath for user top path [%s]", userPathStr.c_str());
+                continue;
+            }
+            XrInteractionProfileState profileStateOut{ XR_TYPE_INTERACTION_PROFILE_STATE };
+            result = xrGetCurrentInteractionProfile(
+                m_xrSession, xrUserPath, &profileStateOut);
+            if (IsError(result))
+            {
+                PrintXrError(LogName, result, "Failed to get active profile for user top path [%s]", userPathStr.c_str());
+                continue;
+            }
+            if (profileStateOut.interactionProfile == XR_NULL_PATH)
+            {
+                AZ_Printf(LogName, "Got an NULL Interaction Profile for [%s].\n", userPathStr.c_str());
+                continue;
+            }
+            AZStd::string activeProfileName = ConvertXrPathToString(m_xrInstance, profileStateOut.interactionProfile);
+            if (activeProfileName.empty())
+            {
+                AZ_Error(LogName, false, "Failed to convert Interaction Profile XrPath to string for user top path [%s]", userPathStr.c_str());
+                continue;
+            }
+            else
+            {
+                activeUserPathsCount++;
+                AZ_Printf(LogName, "Current Interaction Profile for [%s] is [%s].\n", userPathStr.c_str(), activeProfileName.c_str());
+            }
+        }
+        if (!activeUserPathsCount)
+        {
+            AZ_Printf(LogName, "No interaction profile is active at the moment.\n");
+        }
     }
 
     /////////////////////////////////////////////////
@@ -548,7 +536,7 @@ namespace OpenXRVk
             if (itor == actionSetInfo.m_actions.end())
             {
                 return AZ::Failure(
-                    AZStd::string::format("ActionSet with name [%s] does not have an action named [%].",
+                    AZStd::string::format("ActionSet with name [%s] does not have an action named [%s].",
                         actionSetName.c_str(), actionName.c_str())
                 );
             }
