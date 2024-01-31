@@ -123,12 +123,7 @@ namespace OpenXRVk
                 XrResult result = xrBeginSession(m_session, &sessionBeginInfo);
                 WARN_IF_UNSUCCESSFUL(result);
                 m_sessionRunning = true;
-                // It's important to reset the spaces when this event is received.
-                // Typically the Proximity Sensor is ON, which reduces battery usage when the user
-                // is not wearing the headset. Each time the proximity sensor is disabled or the user
-                // decides to wear the headset, the XrSpaces need to be recreated, otherwise their
-                // poses would be corrupted.
-                m_referenceSpacesMgr->ResetSpaces();
+                m_referenceSpacesMgr->OnSessionReady();
                 break;
             }
             case XR_SESSION_STATE_STOPPING:

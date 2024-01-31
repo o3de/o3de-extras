@@ -294,7 +294,7 @@ namespace OpenXRVkBuilders
         if (!AssetBuilderSDK::OutputObject(actionSetsAssetPtr.get(), assetOutputPath, azrtti_typeid<OpenXRVk::OpenXRActionSetsAsset>(),
             aznumeric_cast<uint32_t>(0), jobProduct))
         {
-            AZ_Error(LogName, false, "FIXME this message.");
+            AZ_Error(LogName, false, "Failed to output asset jobs and runtime dependencies.");
             response.m_resultCode = AssetBuilderSDK::ProcessJobResult_Failed;
             return;
         }

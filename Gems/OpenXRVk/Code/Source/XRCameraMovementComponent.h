@@ -13,6 +13,8 @@
 #include <AzFramework/Input/Events/InputChannelEventListener.h>
 #include <AzFramework/Components/CameraBus.h>
 
+#include <OpenXRVk/OpenXRVkActionsInterface.h>
+
 
 namespace OpenXRVk
 {
@@ -22,7 +24,6 @@ namespace OpenXRVk
     class XRCameraMovementComponent
         : public AZ::Component
         , public AZ::TickBus::Handler
-        , public AzFramework::InputChannelEventListener
         , public Camera::CameraNotificationBus::Handler
     {
     public:
@@ -44,13 +45,13 @@ namespace OpenXRVk
         void OnTick(float deltaTime, AZ::ScriptTimePoint timePoint) override;
 
         // AzFramework::InputChannelEventListener
-        bool OnInputChannelEventFiltered(const AzFramework::InputChannel& inputChannel) override;
+        // bool OnInputChannelEventFiltered(const AzFramework::InputChannel& inputChannel) override;
 
         // Camera::CameraNotificationBus::Handler overrides
         void OnActiveViewChanged(const AZ::EntityId&) override;
 
     private:
-        void OnXRControllerEvent(const AzFramework::InputChannel& inputChannel);
+        // void OnXRControllerEvent(const AzFramework::InputChannel& inputChannel);
         void ProcessOpenXRActions();
 
         // Transient data...
@@ -63,6 +64,11 @@ namespace OpenXRVk
 
         // We will process XR Actions only if the entity that owns this component is the active camera. 
         bool m_isActive = false;
+
+        IOpenXRActions::ActionHandle m_moveFrontwaysHandle;
+        IOpenXRActions::ActionHandle m_moveSidewaysHandle;
+        IOpenXRActions::ActionHandle m_moveUpHandle;
+        IOpenXRActions::ActionHandle m_moveDownHandle;
     };
 
 } // namespace OpenXRVk

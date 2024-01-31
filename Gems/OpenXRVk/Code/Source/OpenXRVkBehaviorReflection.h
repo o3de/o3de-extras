@@ -12,7 +12,7 @@
 namespace OpenXRVk
 {
     /**
-     * Reflects OpenXR related AZ::Interfaces as classes
+     * Reflects OpenXR related AZ::Interfaces as static classes
      * in the behavior context.
      */
     void OpenXRBehaviorReflect(AZ::BehaviorContext& context);

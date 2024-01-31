@@ -75,9 +75,15 @@ namespace OpenXRVk
         return true;
     }
 
-    void ReferenceSpacesManager::ResetSpaces()
+    void ReferenceSpacesManager::OnSessionReady()
     {
-        AZ_Error(LogName, false, "FIXME! %s", __FUNCTION__);
+        // REMARK: On previous versions of the OpenXRVk::Spaces API it was necessary
+        // to destroy and recreate the XrSpaces. But since the introduction of the
+        // OpenXRVk::OpenXRActionsInterface and other architectural changes
+        // that came with it, it appears that it is not ncessary anymore to recreate
+        // the XrSpaces.
+        // We are leaving this breadcrumb in case it becomes important in the future.
+        AZ_Printf(LogName, "%s. For now, this function does nothing.\n", __FUNCTION__);
     }
 
     const AZStd::vector<XrView>& ReferenceSpacesManager::GetXrViews() const

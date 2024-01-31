@@ -87,7 +87,7 @@ namespace OpenXRVk
         Camera::CameraNotificationBus::Handler::BusConnect();
         if (m_isActive)
         {
-            AzFramework::InputChannelEventListener::Connect();
+            //AzFramework::InputChannelEventListener::Connect();
             AZ::TickBus::Handler::BusConnect();
         }
     }
@@ -98,10 +98,10 @@ namespace OpenXRVk
         {
             AZ::TickBus::Handler::BusDisconnect();
         }
-        if (AzFramework::InputChannelEventListener::BusIsConnected())
-        {
-            AzFramework::InputChannelEventListener::Disconnect();
-        }
+        // if (AzFramework::InputChannelEventListener::BusIsConnected())
+        // {
+        //     AzFramework::InputChannelEventListener::Disconnect();
+        // }
         
         Camera::CameraNotificationBus::Handler::BusDisconnect();
     }
@@ -125,43 +125,50 @@ namespace OpenXRVk
         AZ::TransformBus::Event(GetEntityId(), &AZ::TransformBus::Events::SetWorldTM, cameraTransform);
     }
 
-    bool XRCameraMovementComponent::OnInputChannelEventFiltered([[maybe_unused]] const AzFramework::InputChannel& inputChannel)
+
+    // void XRCameraMovementComponent::OnXRControllerEvent([[maybe_unused]] const AzFramework::InputChannel& inputChannel)
+    // {
+    //     const auto& channelId = inputChannel.GetInputChannelId();
+    // 
+    //     // This currently uses specific xr controller channels to drive the movement.  Future iterations might
+    //     // use a higher-level concepts like InputMappings and InputContexts to generalize to additional
+    //     // input devices.
+    // 
+    //     // Left thumb-stick X/Y move the camera
+    //     if (channelId == AzFramework::InputDeviceXRController::ThumbStickAxis1D::LX)
+    //     {
+    //         m_movement.SetX(inputChannel.GetValue() * m_movementSensitivity);
+    //     }
+    //     if (channelId == AzFramework::InputDeviceXRController::ThumbStickAxis1D::LY)
+    //     {
+    //         m_movement.SetY(inputChannel.GetValue() * m_movementSensitivity);
+    //     }
+    // 
+    //     // A/B buttons update the height in Z of the camera
+    //     if (channelId == AzFramework::InputDeviceXRController::Button::A)
+    //     {   // down
+    //         m_movement.SetZ(-inputChannel.GetValue() * m_movementSensitivity);
+    //     }
+    //     if (channelId == AzFramework::InputDeviceXRController::Button::B)
+    //     {   // up
+    //         m_movement.SetZ(inputChannel.GetValue() * m_movementSensitivity);
+    //     }
+    // }
+
+    static float ReadActionHandleFloat(IOpenXRActions* iface, IOpenXRActions::ActionHandle actionHandle, float deadZone = 0.05f)
     {
-        const auto& deviceId = inputChannel.GetInputDevice().GetInputDeviceId();
-        if (AzFramework::InputDeviceXRController::IsXRControllerDevice(deviceId))
+        auto outcome = iface->GetActionStateFloat(actionHandle);
+        if (!outcome.IsSuccess())
         {
-            OnXRControllerEvent(inputChannel);
+            // Most likely the controller went to sleep.
+            return 0.0f;
         }
-        return false;
-    }
-
-    void XRCameraMovementComponent::OnXRControllerEvent([[maybe_unused]] const AzFramework::InputChannel& inputChannel)
-    {
-        const auto& channelId = inputChannel.GetInputChannelId();
-
-        // This currently uses specific xr controller channels to drive the movement.  Future iterations might
-        // use a higher-level concepts like InputMappings and InputContexts to generalize to additional
-        // input devices.
-
-        // Left thumb-stick X/Y move the camera
-        if (channelId == AzFramework::InputDeviceXRController::ThumbStickAxis1D::LX)
+        float value = outcome.GetValue();
+        if (fabsf(value) < deadZone)
         {
-            m_movement.SetX(inputChannel.GetValue() * m_movementSensitivity);
+            return 0.0f;
         }
-        if (channelId == AzFramework::InputDeviceXRController::ThumbStickAxis1D::LY)
-        {
-            m_movement.SetY(inputChannel.GetValue() * m_movementSensitivity);
-        }
-
-        // A/B buttons update the height in Z of the camera
-        if (channelId == AzFramework::InputDeviceXRController::Button::A)
-        {   // down
-            m_movement.SetZ(-inputChannel.GetValue() * m_movementSensitivity);
-        }
-        if (channelId == AzFramework::InputDeviceXRController::Button::B)
-        {   // up
-            m_movement.SetZ(inputChannel.GetValue() * m_movementSensitivity);
-        }
+        return value;
     }
 
     void XRCameraMovementComponent::ProcessOpenXRActions()
@@ -171,55 +178,50 @@ namespace OpenXRVk
         {
             return;
         }
-        // Button
+
+        if (!m_moveFrontwaysHandle.IsValid())
         {
-            m_movement.SetZ(0.0f);
-            do
+            // Try to cache all handles.
+            auto outcome = actionsIFace->GetActionHandle("main_action_set", "move_frontways");
+            if (!outcome.IsSuccess())
             {
-                auto outcomeHandle = actionsIFace->GetActionHandle("my_action_set", "button");
-                if (!outcomeHandle.IsSuccess())
-                {
-                    AZ_Error("XRCameraMovementComponent", false, "%s", outcomeHandle.GetError().c_str());
-                    break;
-                }
-                auto actionHandle = outcomeHandle.TakeValue();
-                if (!actionHandle.IsValid())
-                {
-                    break;
-                }
-                auto outcomeState = actionsIFace->GetActionStateBoolean(actionHandle);
-                if (!outcomeState.IsSuccess())
-                {
-                    // The action is not active, which means the controler is not being used at the moment
-                    break;
-                }
-                if (outcomeState.GetValue())
-                {
-                    m_movement.SetZ(m_movementSensitivity);
-                }
-            } while (0);
+                // Most likely the Action System failed to load the ActionSets asset.
+                return;
+            }
+
+            m_moveFrontwaysHandle = outcome.GetValue();
+            AZ_Assert(m_moveFrontwaysHandle.IsValid(), "Invalid action handle");
+            outcome = actionsIFace->GetActionHandle("main_action_set", "move_sideways");
+            m_moveSidewaysHandle = outcome.GetValue();
+            AZ_Assert(m_moveSidewaysHandle.IsValid(), "Invalid action handle");
+            outcome = actionsIFace->GetActionHandle("main_action_set", "move_up");
+            m_moveUpHandle = outcome.GetValue();
+            AZ_Assert(m_moveUpHandle.IsValid(), "Invalid action handle");
+            outcome = actionsIFace->GetActionHandle("main_action_set", "move_down");
+            m_moveDownHandle = outcome.GetValue();
+            AZ_Assert(m_moveDownHandle.IsValid(), "Invalid action handle");
         }
-        // // Pose
-        // {
-        //     auto actionHandle = IOpenXRActions::ActionHandle();
-        //     {
-        //         auto outcome = actionsIFace->GetActionHandle("my_action_set", "left_pose");
-        //         if (outcome.IsSuccess())
-        //         {
-        //             actionHandle = outcome.TakeValue();
-        //         }
-        //     }
-        //     if (!actionHandle.IsValid())
-        //     {
-        //         return;
-        //     }
-        //     auto outcome = actionsIFace->GetActionStatePose(actionHandle);
-        //     if (outcome.IsSuccess())
-        //     {
-        //         AZ::Transform tm(outcome.TakeValue());
-        //         //AZ_Printf("Galib", "left_pose tm=\n%s\n", AZStd::to_string(tm).c_str());
-        //     }
-        // }
+
+
+        m_movement.Set(0.0f);
+        m_movement.SetY(ReadActionHandleFloat(actionsIFace, m_moveFrontwaysHandle) * m_movementSensitivity);
+        m_movement.SetX(ReadActionHandleFloat(actionsIFace, m_moveSidewaysHandle) * m_movementSensitivity);
+
+        {
+            auto outcome = actionsIFace->GetActionStateBoolean(m_moveUpHandle);
+            if (outcome.IsSuccess() && outcome.GetValue())
+            {
+                m_movement.SetZ(m_movementSensitivity);
+            }
+        }
+
+        {
+            auto outcome = actionsIFace->GetActionStateBoolean(m_moveDownHandle);
+            if (outcome.IsSuccess() && outcome.GetValue())
+            {
+                m_movement.SetZ(-m_movementSensitivity);
+            }
+        }
 
     }
 
@@ -233,10 +235,10 @@ namespace OpenXRVk
             {
                 AZ::TickBus::Handler::BusConnect();
             }
-            if (!AzFramework::InputChannelEventListener::BusIsConnected())
-            {
-                AzFramework::InputChannelEventListener::Connect();
-            }
+            // if (!AzFramework::InputChannelEventListener::BusIsConnected())
+            // {
+            //     AzFramework::InputChannelEventListener::Connect();
+            // }
         }
         else
         {
@@ -244,10 +246,10 @@ namespace OpenXRVk
             {
                 AZ::TickBus::Handler::BusDisconnect();
             }
-            if (AzFramework::InputChannelEventListener::BusIsConnected())
-            {
-                AzFramework::InputChannelEventListener::Disconnect();
-            }
+           // if (AzFramework::InputChannelEventListener::BusIsConnected())
+           // {
+           //     AzFramework::InputChannelEventListener::Disconnect();
+           // }
         }
     }
 

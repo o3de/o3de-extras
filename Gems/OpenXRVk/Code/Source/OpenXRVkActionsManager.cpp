@@ -134,7 +134,7 @@ namespace OpenXRVk
     void ActionsManager::InitInternal()
     {
         AZ_Assert(m_actionSetAsset.IsReady(), "Action Sets asset should be ready!");
-        AZ_Assert(m_actionSetAsset->m_interactionProfilesAsset.IsReady(), "FIXME GALIB Be Readu!!");
+        AZ_Assert(m_actionSetAsset->m_interactionProfilesAsset.IsReady(), "Was expecting that the Asset System would have loaded the InteractionProfiles Asset.");
 
         const auto interactionProfilesAsset = m_actionSetAsset->m_interactionProfilesAsset;
 

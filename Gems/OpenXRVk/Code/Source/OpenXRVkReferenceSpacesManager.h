@@ -14,6 +14,10 @@
 
 namespace OpenXRVk
 {
+    //! Concrete implementation of OpenXRReferenceSpacesInterface.
+    //! The OpenXRVk::Session class should own an instance of this class.
+    //! Automatically instantiates the default system provided reference spaces
+    //! as mandated by the OpenXR Spec: View, Local and Stage. 
     class ReferenceSpacesManager final :
         public OpenXRReferenceSpacesInterface::Registrar
     {
@@ -30,12 +34,14 @@ namespace OpenXRVk
         //! Called by the Session each tick.
         bool SyncViews(XrTime predictedDisplayTime);
 
-        // Spaces are reset every time the proximity sensor turns off, or the user wears the headset
-        // when the proximity sensor is ON.
-        void ResetSpaces();
+        //! The Session calls this function when it receives the XR_SESSION_STATE_READY
+        //! event.
+        void OnSessionReady();
 
+        //! This is useful for the Swapchain system.
         const AZStd::vector<XrView>& GetXrViews() const;
 
+        //! This is useful for the Swapchain system
         XrSpace GetViewSpaceXrSpace() const;
 
         /////////////////////////////////////////////////
@@ -95,6 +101,7 @@ namespace OpenXRVk
         AZStd::vector<AZ::RPI::FovData> m_eyeViewFovDatas;
         AZStd::vector<XrView> m_xrViews;
 
+        //! Helper function to create an XrSpace.
         XrSpace CreateXrSpace(XrReferenceSpaceType referenceSpaceType, const AZ::Transform& relativePose);
     };
 }
