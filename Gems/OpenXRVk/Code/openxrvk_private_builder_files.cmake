@@ -7,8 +7,8 @@
 #
 
 set(FILES
-    Source/Builders/OpenXRVkActionSetsAssetBuilder.cpp
-    Source/Builders/OpenXRVkActionSetsAssetBuilder.h
-    Source/Builders/OpenXRVkAssetBuildersSystemComponent.cpp
-    Source/Builders/OpenXRVkAssetBuildersSystemComponent.h
+    Source/Builders/OpenXRVkAssetsBuilder.cpp
+    Source/Builders/OpenXRVkAssetsBuilder.h
+    Source/Builders/OpenXRVkAssetsBuilderSystemComponent.cpp
+    Source/Builders/OpenXRVkAssetsBuilderSystemComponent.h
 )

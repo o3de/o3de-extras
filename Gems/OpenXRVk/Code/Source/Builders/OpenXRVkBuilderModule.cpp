@@ -24,7 +24,7 @@ namespace OpenXRVkBuilders
         {
             // Push results of [MyComponent]::CreateDescriptor() into m_descriptors here.
             m_descriptors.insert(m_descriptors.end(), {
-                OpenXRAssetBuildersSystemComponent::CreateDescriptor(),
+                OpenXRAssetsBuilderSystemComponent::CreateDescriptor(),
             });
         }
     
@@ -34,7 +34,7 @@ namespace OpenXRVkBuilders
         AZ::ComponentTypeList GetRequiredSystemComponents() const override
         {
             return AZ::ComponentTypeList{
-                azrtti_typeid<OpenXRAssetBuildersSystemComponent>(),
+                azrtti_typeid<OpenXRAssetsBuilderSystemComponent>(),
             };
         }
     };

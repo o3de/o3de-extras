@@ -10,15 +10,15 @@
 
 #include <AzCore/Component/Component.h>
 
-#include "OpenXRVkActionSetsAssetBuilder.h"
+#include "OpenXRVkAssetsBuilder.h"
 
 namespace OpenXRVkBuilders
 {        
-    class OpenXRAssetBuildersSystemComponent
+    class OpenXRAssetsBuilderSystemComponent
         : public AZ::Component
     {
     public:
-        AZ_COMPONENT(OpenXRAssetBuildersSystemComponent, "{B046B553-CAB4-4AE5-9192-5E002771979B}");
+        AZ_COMPONENT(OpenXRAssetsBuilderSystemComponent, "{B046B553-CAB4-4AE5-9192-5E002771979B}");
     
         static void Reflect(AZ::ReflectContext* context);
     
@@ -42,7 +42,7 @@ namespace OpenXRVkBuilders
     
     
     private:
-        OpenXRActionSetsAssetBuilder m_actionSetsAssetBuilder;
+        OpenXRAssetsBuilder m_actionSetsAssetBuilder;
     
     };
         

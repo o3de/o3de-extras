@@ -13,7 +13,7 @@
 #include <OpenXRVk/OpenXRVkActionSetsAsset.h>
 #include <OpenXRVk/OpenXRVkAssetsValidator.h>
 
-#include "OpenXRVkActionSetsAssetBuilder.h"
+#include "OpenXRVkAssetsBuilder.h"
 
 namespace OpenXRVkBuilders
 {
@@ -29,7 +29,7 @@ namespace OpenXRVkBuilders
         return AZStd::unique_ptr<AssetType>(actionSetsAssetPtr);
     }
 
-    void OpenXRActionSetsAssetBuilder::CreateJobs(const AssetBuilderSDK::CreateJobsRequest& request, AssetBuilderSDK::CreateJobsResponse& response) const
+    void OpenXRAssetsBuilder::CreateJobs(const AssetBuilderSDK::CreateJobsRequest& request, AssetBuilderSDK::CreateJobsResponse& response) const
     {
         //! First get the extension 
         constexpr bool includeDot = false;
@@ -53,7 +53,7 @@ namespace OpenXRVkBuilders
     }
     
     
-    void OpenXRActionSetsAssetBuilder::ProcessJob(const AssetBuilderSDK::ProcessJobRequest& request, AssetBuilderSDK::ProcessJobResponse& response) const
+    void OpenXRAssetsBuilder::ProcessJob(const AssetBuilderSDK::ProcessJobRequest& request, AssetBuilderSDK::ProcessJobResponse& response) const
     {
         //! First get the extension 
         constexpr bool includeDot = false;
@@ -73,7 +73,7 @@ namespace OpenXRVkBuilders
 
     /////////////////////////////////////////////////////////////////////////////////
     // OpenXRInteractionProfilesAsset Support Begin
-    void OpenXRActionSetsAssetBuilder::CreateInteractionProfilesAssetJobs(const AssetBuilderSDK::CreateJobsRequest& request, AssetBuilderSDK::CreateJobsResponse& response) const
+    void OpenXRAssetsBuilder::CreateInteractionProfilesAssetJobs(const AssetBuilderSDK::CreateJobsRequest& request, AssetBuilderSDK::CreateJobsResponse& response) const
     {
         for (const AssetBuilderSDK::PlatformInfo& platformInfo : request.m_enabledPlatforms)
         {
@@ -92,7 +92,7 @@ namespace OpenXRVkBuilders
 
     
 
-    void OpenXRActionSetsAssetBuilder::ProcessInteractionProfilesAssetJob([[maybe_unused]] const AssetBuilderSDK::ProcessJobRequest& request, [[maybe_unused]] AssetBuilderSDK::ProcessJobResponse& response) const
+    void OpenXRAssetsBuilder::ProcessInteractionProfilesAssetJob([[maybe_unused]] const AssetBuilderSDK::ProcessJobRequest& request, [[maybe_unused]] AssetBuilderSDK::ProcessJobResponse& response) const
     {
         // Open the file, and make sure there's no redundant data, the OpenXR Paths are well formatted, etc.
        auto interactionProfilesAssetPtr = LoadAssetAsUniquePtr<OpenXRVk::OpenXRInteractionProfilesAsset>(request.m_fullPath);
@@ -162,7 +162,7 @@ namespace OpenXRVkBuilders
         return sourcePath;
     }
 
-    void OpenXRActionSetsAssetBuilder::CreateActionSetsAssetJobs(const AssetBuilderSDK::CreateJobsRequest& request, AssetBuilderSDK::CreateJobsResponse& response) const
+    void OpenXRAssetsBuilder::CreateActionSetsAssetJobs(const AssetBuilderSDK::CreateJobsRequest& request, AssetBuilderSDK::CreateJobsResponse& response) const
     {
         // Make sure the InteractionProfiles asset referenced in this ActionSets asset exists. and if so,
         // also declare job dependency.
@@ -216,14 +216,14 @@ namespace OpenXRVkBuilders
         {
             if (actionSetDescriptor.m_localizedName.empty())
             {
-                AZ_Printf(OpenXRActionSetsAssetBuilder::LogName, "ActionSet had empty LocalizedName. Taking new value of [%s]", actionSetDescriptor.m_name.c_str());
+                AZ_Printf(OpenXRAssetsBuilder::LogName, "ActionSet had empty LocalizedName. Taking new value of [%s]", actionSetDescriptor.m_name.c_str());
                 actionSetDescriptor.m_localizedName = actionSetDescriptor.m_name;
             }
             for (auto& actionDescriptor : actionSetDescriptor.m_actionDescriptors)
             {
                 if (actionDescriptor.m_localizedName.empty())
                 {
-                    AZ_Printf(OpenXRActionSetsAssetBuilder::LogName, "Action in ActionSet [%s] had empty LocalizedName. Taking new value of [%s]",
+                    AZ_Printf(OpenXRAssetsBuilder::LogName, "Action in ActionSet [%s] had empty LocalizedName. Taking new value of [%s]",
                         actionSetDescriptor.m_name.c_str(), actionDescriptor.m_name.c_str());
                     actionDescriptor.m_localizedName = actionDescriptor.m_name;
                 }
@@ -231,7 +231,7 @@ namespace OpenXRVkBuilders
         }
     }
 
-    void OpenXRActionSetsAssetBuilder::ProcessActionSetsAssetJob(const AssetBuilderSDK::ProcessJobRequest& request, AssetBuilderSDK::ProcessJobResponse& response) const
+    void OpenXRAssetsBuilder::ProcessActionSetsAssetJob(const AssetBuilderSDK::ProcessJobRequest& request, AssetBuilderSDK::ProcessJobResponse& response) const
     {
         auto actionSetsAssetPtr = LoadAssetAsUniquePtr<OpenXRVk::OpenXRActionSetsAsset>(request.m_fullPath);
         if (!actionSetsAssetPtr)
