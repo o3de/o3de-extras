@@ -29,6 +29,7 @@ namespace OpenXRVkBuilders
         return AZStd::unique_ptr<AssetType>(actionSetsAssetPtr);
     }
 
+
     void OpenXRAssetsBuilder::CreateJobs(const AssetBuilderSDK::CreateJobsRequest& request, AssetBuilderSDK::CreateJobsResponse& response) const
     {
         //! First get the extension 
@@ -91,7 +92,6 @@ namespace OpenXRVkBuilders
     }
 
     
-
     void OpenXRAssetsBuilder::ProcessInteractionProfilesAssetJob([[maybe_unused]] const AssetBuilderSDK::ProcessJobRequest& request, [[maybe_unused]] AssetBuilderSDK::ProcessJobResponse& response) const
     {
         // Open the file, and make sure there's no redundant data, the OpenXR Paths are well formatted, etc.
@@ -162,6 +162,7 @@ namespace OpenXRVkBuilders
         return sourcePath;
     }
 
+
     void OpenXRAssetsBuilder::CreateActionSetsAssetJobs(const AssetBuilderSDK::CreateJobsRequest& request, AssetBuilderSDK::CreateJobsResponse& response) const
     {
         // Make sure the InteractionProfiles asset referenced in this ActionSets asset exists. and if so,
@@ -208,6 +209,7 @@ namespace OpenXRVkBuilders
         response.m_result = AssetBuilderSDK::CreateJobsResultCode::Success;
     }
 
+
     //! Each action in an actionSet has a "name" and a "localizedName". The "name" can never be empty, but
     //! if "localizedName" is empty we automatically patch it as an identical copy of "name".
     static void FixEmptyLocalizedNames(OpenXRVk::OpenXRActionSetsAsset& actionSetAsset)
@@ -230,6 +232,7 @@ namespace OpenXRVkBuilders
             }
         }
     }
+
 
     void OpenXRAssetsBuilder::ProcessActionSetsAssetJob(const AssetBuilderSDK::ProcessJobRequest& request, AssetBuilderSDK::ProcessJobResponse& response) const
     {
