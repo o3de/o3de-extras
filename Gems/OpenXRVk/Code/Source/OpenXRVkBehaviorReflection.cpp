@@ -37,6 +37,7 @@ namespace OpenXRVk
         }
     }
 
+
     class OpenXRReferenceSpaces
     {
     public:
@@ -59,6 +60,7 @@ namespace OpenXRVk
             return iface->GetReferenceSpaceNames();
         }
 
+
         static AZ::Outcome<bool, AZStd::string> AddReferenceSpace(IOpenXRReferenceSpaces::ReferenceSpaceId referenceSpaceType,
             const AZStd::string& spaceName, const AZ::Transform& poseInReferenceSpace)
         {
@@ -72,6 +74,7 @@ namespace OpenXRVk
             return iface->AddReferenceSpace(referenceSpaceType, spaceName, poseInReferenceSpace);
         }
 
+
         static AZ::Outcome<bool, AZStd::string> RemoveReferenceSpace(const AZStd::string& spaceName)
         {
             const auto iface = OpenXRReferenceSpacesInterface::Get();
@@ -83,6 +86,7 @@ namespace OpenXRVk
             }
             return iface->RemoveReferenceSpace(spaceName);
         }
+
 
         static AZ::Outcome<AZ::Transform, AZStd::string> GetReferenceSpacePose(const AZStd::string& spaceName, const AZStd::string& baseSpaceName)
         {
@@ -96,6 +100,7 @@ namespace OpenXRVk
             return iface->GetReferenceSpacePose(spaceName, baseSpaceName);
         }
 
+
         static AZ::Outcome<bool, AZStd::string> SetBaseSpaceForViewSpacePose(const AZStd::string& spaceName)
         {
             const auto iface = OpenXRReferenceSpacesInterface::Get();
@@ -107,6 +112,7 @@ namespace OpenXRVk
             }
             return iface->SetBaseSpaceForViewSpacePose(spaceName);
         }
+
 
         static const AZStd::string& GetBaseSpaceForViewSpacePose()
         {
@@ -120,6 +126,7 @@ namespace OpenXRVk
             return iface->GetBaseSpaceForViewSpacePose();
         }
 
+
         static const AZ::Transform& GetViewSpacePose()
         {
             const auto iface = OpenXRReferenceSpacesInterface::Get();
@@ -131,6 +138,7 @@ namespace OpenXRVk
             return iface->GetViewSpacePose();
         }
 
+
         static uint32_t GetViewCount()
         {
             const auto iface = OpenXRReferenceSpacesInterface::Get();
@@ -141,6 +149,7 @@ namespace OpenXRVk
             }
             return iface->GetViewCount();
         }
+
 
         static const AZ::Transform& GetViewPose(uint32_t eyeIndex)
         {
@@ -166,6 +175,7 @@ namespace OpenXRVk
             return iface->GetViewFovData(eyeIndex);
         }
 
+
         static const AZStd::vector<AZ::Transform>& GetViewPoses()
         {
             const auto iface = OpenXRReferenceSpacesInterface::Get();
@@ -177,6 +187,7 @@ namespace OpenXRVk
             }
             return iface->GetViewPoses();
         }
+
 
         static void ForceViewPosesCacheUpdate()
         {
@@ -202,6 +213,7 @@ namespace OpenXRVk
         OpenXRActions() = default;
         ~OpenXRActions() = default;
 
+
         static AZStd::vector<AZStd::string> GetAllActionSets()
         {
             const auto iface = OpenXRActionsInterface::Get();
@@ -212,6 +224,7 @@ namespace OpenXRVk
             }
             return iface->GetAllActionSets();
         }
+
 
         static AZ::Outcome<bool, AZStd::string> GetActionSetState(const AZStd::string& actionSetName)
         {
@@ -224,6 +237,7 @@ namespace OpenXRVk
             return iface->GetActionSetState(actionSetName);
         }
 
+
         static AZ::Outcome<bool, AZStd::string> SetActionSetState(const AZStd::string& actionSetName, bool activate)
         {
             const auto iface = OpenXRActionsInterface::Get();
@@ -234,6 +248,7 @@ namespace OpenXRVk
             }
             return iface->SetActionSetState(actionSetName, activate);
         }
+
 
         //! REMARK: The original idea was to return an:
         //! AZ::Outcome<IOpenXRActions::ActionHandle, AZStd::string>
@@ -257,6 +272,7 @@ namespace OpenXRVk
             return {};
         }
 
+
         static AZ::Outcome<bool, AZStd::string> GetActionStateBoolean(IOpenXRActions::ActionHandle actionHandle)
         {
             const auto iface = OpenXRActionsInterface::Get();
@@ -268,6 +284,7 @@ namespace OpenXRVk
             }
             return iface->GetActionStateBoolean(actionHandle);
         }
+
 
         static AZ::Outcome<float, AZStd::string> GetActionStateFloat(IOpenXRActions::ActionHandle actionHandle)
         {
@@ -281,6 +298,7 @@ namespace OpenXRVk
             return iface->GetActionStateFloat(actionHandle);
         }
 
+
         static AZ::Outcome<AZ::Vector2, AZStd::string> GetActionStateVector2(IOpenXRActions::ActionHandle actionHandle)
         {
             const auto iface = OpenXRActionsInterface::Get();
@@ -292,6 +310,7 @@ namespace OpenXRVk
             }
             return iface->GetActionStateVector2(actionHandle);
         }
+
 
         static AZ::Outcome<bool, AZStd::string> SetBaseReferenceSpaceForPoseActions(const AZStd::string& visualizedSpaceName)
         {
@@ -305,6 +324,7 @@ namespace OpenXRVk
             return iface->SetBaseReferenceSpaceForPoseActions(visualizedSpaceName);
         }
 
+
         static const AZStd::string& GetBaseReferenceSpaceForPoseActions()
         {
             const auto iface = OpenXRActionsInterface::Get();
@@ -316,6 +336,7 @@ namespace OpenXRVk
             }
             return iface->GetBaseReferenceSpaceForPoseActions();
         }
+
 
         static AZ::Outcome<AZ::Transform, AZStd::string> GetActionStatePose(IOpenXRActions::ActionHandle actionHandle)
         {
@@ -329,6 +350,7 @@ namespace OpenXRVk
             return iface->GetActionStatePose(actionHandle);
         }
 
+
         static AZ::Outcome<PoseWithVelocities, AZStd::string> GetActionStatePoseWithVelocities(IOpenXRActions::ActionHandle actionHandle)
         {
             const auto iface = OpenXRActionsInterface::Get();
@@ -341,6 +363,7 @@ namespace OpenXRVk
             return iface->GetActionStatePoseWithVelocities(actionHandle);
         }
 
+
         static AZ::Outcome<bool, AZStd::string> ApplyHapticVibrationAction(IOpenXRActions::ActionHandle actionHandle, uint64_t durationNanos, float frequencyHz, float amplitude)
         {
             const auto iface = OpenXRActionsInterface::Get();
@@ -352,6 +375,7 @@ namespace OpenXRVk
             }
             return iface->ApplyHapticVibrationAction(actionHandle, durationNanos, frequencyHz, amplitude);
         }
+
 
         static AZ::Outcome<bool, AZStd::string> StopHapticVibrationAction(IOpenXRActions::ActionHandle actionHandle)
         {
@@ -366,6 +390,7 @@ namespace OpenXRVk
         }
 
     }; // class OpenXRActions
+
 
     void OpenXRBehaviorReflect(AZ::BehaviorContext& context)
     {

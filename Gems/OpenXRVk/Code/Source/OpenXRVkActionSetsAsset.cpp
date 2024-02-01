@@ -18,8 +18,6 @@
 
 namespace OpenXRVk
 {
-
-
     namespace EditorInternal
     {
         // This static asset reference is only relevant when the user is creating an OpenXRActionSetsAsset with the
@@ -44,6 +42,7 @@ namespace OpenXRVk
             }
         }
 
+
         static void SetCurrentInteractionProfilesAsset(AZ::Data::Asset<OpenXRInteractionProfilesAsset>& newProfilesAsset,
             bool loadAsset = true)
         {
@@ -59,6 +58,7 @@ namespace OpenXRVk
             }
             s_asset = newProfilesAsset;
         }
+
 
         static const AZ::Data::Asset<OpenXRInteractionProfilesAsset>& GetCurrentInteractionProfilesAsset(bool loadAsset = true)
         {
@@ -105,15 +105,30 @@ namespace OpenXRVk
         }
     }
 
+
     AZStd::string OpenXRActionPathDescriptor::GetEditorText() const
     {
+        if (m_interactionProfileName.empty())
+        {
+            return "<Unknown Interaction Profile>";
+        }
+        if (m_userPathName.empty())
+        {
+            return "<Unknown User Path>";
+        }
+        if (m_componentPathName.empty())
+        {
+            return "<Unknown Component Path>";
+        }
         return AZStd::string::format("%s %s %s", m_interactionProfileName.c_str(), m_userPathName.c_str(), m_componentPathName.c_str());
     }
+
 
     AZ::Crc32 OpenXRActionPathDescriptor::OnInteractionProfileSelected()
     {
         return AZ::Edit::PropertyRefreshLevels::AttributesAndValues;
     }
+
 
     AZStd::vector<AZStd::string> OpenXRActionPathDescriptor::GetInteractionProfiles() const
     {
@@ -130,10 +145,12 @@ namespace OpenXRVk
         return profileNames;
     }
 
+
     AZ::Crc32 OpenXRActionPathDescriptor::OnUserPathSelected()
     {
         return AZ::Edit::PropertyRefreshLevels::AttributesAndValues;
     }
+
 
     AZStd::vector<AZStd::string> OpenXRActionPathDescriptor::GetUserPaths() const
     {
@@ -156,10 +173,12 @@ namespace OpenXRVk
         return retList;
     }
 
+
     AZ::Crc32 OpenXRActionPathDescriptor::OnComponentPathSelected()
     {
         return AZ::Edit::PropertyRefreshLevels::AttributesAndValues;
     }
+
 
     AZStd::vector<AZStd::string> OpenXRActionPathDescriptor::GetComponentPaths() const
     {
@@ -234,6 +253,7 @@ namespace OpenXRVk
         }
     }
 
+
     AZStd::string OpenXRActionDescriptor::GetEditorText() const
     {
         // In addition to showing the Action name, we'll append the Action Data Type
@@ -294,6 +314,7 @@ namespace OpenXRVk
         }
     }
 
+
     AZStd::string OpenXRActionSetDescriptor::GetEditorText() const
     {
         if (!m_name.empty())
@@ -337,6 +358,7 @@ namespace OpenXRVk
         }
     }
 
+
     AZ::Crc32 OpenXRActionSetsAsset::OnInteractionProfilesAssetChanged()
     {
         EditorInternal::SetCurrentInteractionProfilesAsset(m_interactionProfilesAsset);
@@ -345,6 +367,9 @@ namespace OpenXRVk
     /// OpenXRActionBindingsAsset
     ///////////////////////////////////////////////////////////
     
+
+    ///////////////////////////////////////////////////////////
+    /// OpenXRActionBindingsAssetHandler
     OpenXRActionSetsAssetHandler::OpenXRActionSetsAssetHandler()
         : AzFramework::GenericAssetHandler<OpenXRActionSetsAsset>(
             OpenXRActionSetsAsset::s_assetTypeName,
@@ -353,6 +378,7 @@ namespace OpenXRVk
     {
     }
     
+
     AZ::Data::AssetHandler::LoadResult OpenXRActionSetsAssetHandler::LoadAssetData(
         const AZ::Data::Asset<AZ::Data::AssetData>& asset,
         AZStd::shared_ptr<AZ::Data::AssetDataStream> stream,
@@ -382,6 +408,7 @@ namespace OpenXRVk
     
     }
 
+
     bool OpenXRActionSetsAssetHandler::SaveAssetData(const AZ::Data::Asset<AZ::Data::AssetData>& asset, AZ::IO::GenericStream* stream)
     {
         OpenXRActionSetsAsset* assetData = asset.GetAs<OpenXRActionSetsAsset>();
@@ -405,5 +432,7 @@ namespace OpenXRVk
 
         return AzFramework::GenericAssetHandler<OpenXRActionSetsAsset>::SaveAssetData(asset, stream);
     }
+    /// OpenXRActionBindingsAssetHandler
+    ///////////////////////////////////////////////////////////
 
 } // namespace OpenXRVk

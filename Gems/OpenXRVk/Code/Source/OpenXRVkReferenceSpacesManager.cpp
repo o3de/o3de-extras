@@ -58,6 +58,7 @@ namespace OpenXRVk
         return true;
     }
 
+
     bool ReferenceSpacesManager::SyncViews(XrTime predictedDisplayTime)
     {
         m_predictedDisplaytime = predictedDisplayTime;
@@ -75,6 +76,7 @@ namespace OpenXRVk
         return true;
     }
 
+
     void ReferenceSpacesManager::OnSessionReady()
     {
         // REMARK: On previous versions of the OpenXRVk::Spaces API it was necessary
@@ -86,10 +88,12 @@ namespace OpenXRVk
         AZ_Printf(LogName, "%s. For now, this function does nothing.\n", __FUNCTION__);
     }
 
+
     const AZStd::vector<XrView>& ReferenceSpacesManager::GetXrViews() const
     {
         return m_xrViews;
     }
+
 
     XrSpace ReferenceSpacesManager::GetViewSpaceXrSpace() const
     {
@@ -106,6 +110,7 @@ namespace OpenXRVk
         }
         return retList;
     }
+
 
     AZ::Outcome<bool, AZStd::string> ReferenceSpacesManager::AddReferenceSpace(ReferenceSpaceId referenceSpaceType,
         const AZStd::string& spaceName, const AZ::Transform& poseInReferenceSpace)
@@ -130,6 +135,7 @@ namespace OpenXRVk
 
         return AZ::Success(true);
     }
+
 
     AZ::Outcome<bool, AZStd::string> ReferenceSpacesManager::RemoveReferenceSpace(const AZStd::string& spaceName)
     {
@@ -164,6 +170,7 @@ namespace OpenXRVk
         m_spaces.erase(itor);
         return AZ::Success(true);
     }
+
 
     const void * ReferenceSpacesManager::GetReferenceSpaceNativeHandle(const AZStd::string& spaceName) const
     {
@@ -206,6 +213,7 @@ namespace OpenXRVk
         return AZ::Success(AzTransformFromXrPose(xrSpaceLocation.pose));
     }
 
+
     AZ::Outcome<bool, AZStd::string> ReferenceSpacesManager::SetBaseSpaceForViewSpacePose(const AZStd::string& spaceName)
     {
         const auto baseSpaceItor = m_spaces.find(spaceName);
@@ -221,21 +229,25 @@ namespace OpenXRVk
         return AZ::Success(true);
     }
 
+
     const AZStd::string& ReferenceSpacesManager::GetBaseSpaceForViewSpacePose() const
     {
         AZ_Assert(m_baseSpaceForViewSpace != nullptr, "A base space is always expected to exist!");
         return m_baseSpaceForViewSpace->m_name;
     }
 
+
     const AZ::Transform& ReferenceSpacesManager::GetViewSpacePose() const
     {
         return m_viewSpacePose;
     }
 
+
     uint32_t ReferenceSpacesManager::GetViewCount() const
     {
         return aznumeric_cast<uint32_t>(m_eyeViewPoses.size());
     }
+
 
     const AZ::Transform& ReferenceSpacesManager::GetViewPose(uint32_t eyeIndex) const
     {
@@ -250,6 +262,7 @@ namespace OpenXRVk
 
         return m_eyeViewPoses[eyeIndex];
     }
+
 
     const AZ::RPI::FovData& ReferenceSpacesManager::GetViewFovData(uint32_t eyeIndex) const
     {
@@ -266,10 +279,12 @@ namespace OpenXRVk
         return m_eyeViewFovDatas[eyeIndex];
     }
 
+
     const AZStd::vector<AZ::Transform>& ReferenceSpacesManager::GetViewPoses() const
     {
         return m_eyeViewPoses;
     }
+
 
     void ReferenceSpacesManager::ForceViewPosesCacheUpdate()
     {

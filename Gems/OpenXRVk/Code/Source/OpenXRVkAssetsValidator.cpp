@@ -96,6 +96,7 @@ namespace OpenXRVkAssetsValidator
         return AZ::Success();
     }
 
+
     // An OpenXR path string only contain characters as described here
     // https://registry.khronos.org/OpenXR/specs/1.0/html/xrspec.html#well-formed-path-strings
     static AZ::Outcome<void, AZStd::string> ValidateOpenXRPath(const AZStd::string& path)
@@ -109,6 +110,7 @@ namespace OpenXRVkAssetsValidator
         }
         return AZ::Success();
     }
+
 
     static AZ::Outcome<void, AZStd::string> ValidateComponentPathDescriptor(const OpenXRVk::OpenXRInteractionComponentPathDescriptor& componentPathDescriptor,
         AZStd::unordered_set<AZStd::string>& uniqueComponentPathNames, AZStd::unordered_set<AZStd::string>& uniqueComponentPathPaths)
@@ -384,6 +386,7 @@ namespace OpenXRVkAssetsValidator
         return AZ::Success();
     }
 
+
     static const AZStd::string& GetActionTypeStringFromActionPathDescriptor(
         const OpenXRVk::OpenXRInteractionProfilesAsset& interactionProfilesAsset,
         const OpenXRVk::OpenXRActionPathDescriptor& actionPathDescriptor
@@ -396,6 +399,7 @@ namespace OpenXRVkAssetsValidator
         );
     }
 
+
     static bool IsActionTypeBoolOrFloat(const AZStd::string& actionTypeStr)
     {
         return (
@@ -403,6 +407,7 @@ namespace OpenXRVkAssetsValidator
             (actionTypeStr == OpenXRVk::OpenXRInteractionComponentPathDescriptor::s_TypeFloatStr)
             );
     }
+
 
     static bool AreCompatibleActionTypeStrings(const AZStd::string& lhs, const AZStd::string& rhs)
     {
@@ -412,6 +417,7 @@ namespace OpenXRVkAssetsValidator
         }
         return (lhs == rhs);
     }
+
 
     // An OpenXR name string only contain characters which are allowed in a SINGLE LEVEL of a well-formed path string
     // https://registry.khronos.org/OpenXR/specs/1.0/html/xrspec.html#well-formed-path-strings

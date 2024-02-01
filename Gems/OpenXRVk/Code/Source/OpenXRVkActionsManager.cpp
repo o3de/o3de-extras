@@ -61,6 +61,7 @@ namespace OpenXRVk
         return componentPathDescriptor->GetXrActionType();
     }
 
+
     AZStd::string ActionsManager::GetActionSetsAssetPath()
     {
         // Asset Cache relative path
@@ -85,6 +86,7 @@ namespace OpenXRVk
         return AZStd::string(DefaultActionsAssetPath);
     }
 
+
     bool ActionsManager::LoadActionSetAssetAsync()
     {
         auto productPath = GetActionSetsAssetPath();
@@ -102,6 +104,7 @@ namespace OpenXRVk
         m_actionSetAsset.QueueLoad();
         return true;
     }
+
 
     ActionsManager::~ActionsManager()
     {
@@ -130,6 +133,7 @@ namespace OpenXRVk
 
         return LoadActionSetAssetAsync();
     }
+
 
     void ActionsManager::InitInternal()
     {
@@ -203,6 +207,7 @@ namespace OpenXRVk
         AZ_Printf(LogName, "Successfully configure the Action Sets.");
     }
 
+
     bool ActionsManager::SyncActions(XrTime predictedDisplayTime)
     {
         if (m_xrActiveActionSets.empty())
@@ -225,7 +230,6 @@ namespace OpenXRVk
 
         return true;
     }
-
 
 
     bool ActionsManager::InitActionSet(const OpenXRInteractionProfilesAsset& interactionProfilesAsset,
@@ -269,6 +273,7 @@ namespace OpenXRVk
         
         return true;
     }
+
 
     bool ActionsManager::AddActionToActionSet(const OpenXRInteractionProfilesAsset& interactionProfilesAsset,
         ActionSetInfo& actionSetInfo,
@@ -359,6 +364,7 @@ namespace OpenXRVk
         return newXrAction;
     }
 
+
     uint32_t ActionsManager::AppendActionBindings(const OpenXRInteractionProfilesAsset& interactionProfilesAsset,
         const OpenXRActionDescriptor& actionDescriptor, XrAction xrAction,
         SuggestedBindingsPerProfile& suggestedBindingsPerProfile) const
@@ -427,7 +433,6 @@ namespace OpenXRVk
     }
 
 
-
     void ActionsManager::OnInteractionProfileChanged()
     {
         if (m_topLevelUserPaths.empty())
@@ -476,6 +481,7 @@ namespace OpenXRVk
         }
     }
 
+
     /////////////////////////////////////////////////
     /// OpenXRActionsInterface overrides
     AZStd::vector<AZStd::string> ActionsManager::GetAllActionSets() const
@@ -488,6 +494,7 @@ namespace OpenXRVk
         }
         return retList;
     }
+
 
     AZ::Outcome<bool, AZStd::string> ActionsManager::GetActionSetState(const AZStd::string& actionSetName) const
     {
@@ -502,6 +509,7 @@ namespace OpenXRVk
             AZStd::string::format("ActionSet with name [%s] not found.", actionSetName.c_str())
         );
     }
+
 
     AZ::Outcome<bool, AZStd::string> ActionsManager::SetActionSetState(const AZStd::string& actionSetName, bool activate)
     {
@@ -547,6 +555,7 @@ namespace OpenXRVk
         );
     }
 
+
     AZ::Outcome<bool, AZStd::string> ActionsManager::GetActionStateBoolean(ActionHandle actionHandle) const
     {
         if (!actionHandle.IsValid())
@@ -572,6 +581,7 @@ namespace OpenXRVk
 
         return AZ::Success(state.currentState);
     }
+
 
     AZ::Outcome<float, AZStd::string> ActionsManager::GetActionStateFloat(ActionHandle actionHandle) const
     {
@@ -599,6 +609,7 @@ namespace OpenXRVk
         return AZ::Success(state.currentState);
     }
 
+
     AZ::Outcome<AZ::Vector2, AZStd::string> ActionsManager::GetActionStateVector2(ActionHandle actionHandle) const
     {
         if (!actionHandle.IsValid())
@@ -624,6 +635,7 @@ namespace OpenXRVk
 
         return AZ::Success(AZ::Vector2(state.currentState.x, state.currentState.y));
     }
+
 
     AZ::Outcome<bool, AZStd::string> ActionsManager::SetBaseReferenceSpaceForPoseActions(const AZStd::string& visualizedSpaceName)
     {
@@ -652,10 +664,12 @@ namespace OpenXRVk
         return AZ::Success(true);
     }
 
+
     const AZStd::string& ActionsManager::GetBaseReferenceSpaceForPoseActions() const
     {
         return m_baseReferenceSpaceName;
     }
+
 
     AZ::Outcome<AZ::Transform, AZStd::string> ActionsManager::GetActionStatePose(ActionHandle actionHandle) const
     {
@@ -703,6 +717,7 @@ namespace OpenXRVk
         AZ::Transform retPoseTransform = AZ::Transform::CreateFromQuaternionAndTranslation(poseOrientation, poseLocation);
         return AZ::Success(retPoseTransform);
     }
+
 
     AZ::Outcome<PoseWithVelocities, AZStd::string> ActionsManager::GetActionStatePoseWithVelocities(ActionHandle actionHandle) const
     {
@@ -775,6 +790,7 @@ namespace OpenXRVk
         return AZ::Success(true);
     }
 
+
     AZ::Outcome<bool, AZStd::string> ActionsManager::StopHapticVibrationAction(ActionHandle actionHandle)
     {
         if (!actionHandle.IsValid())
@@ -827,6 +843,7 @@ namespace OpenXRVk
                 InitInternal();
             });
     }
+
 
     void ActionsManager::OnAssetError(AZ::Data::Asset<AZ::Data::AssetData> asset)
     {

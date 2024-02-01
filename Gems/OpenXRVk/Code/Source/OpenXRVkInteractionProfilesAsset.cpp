@@ -37,10 +37,12 @@ namespace OpenXRVk
         return XR_ACTION_TYPE_MAX_ENUM;
     }
 
+
     XrActionType OpenXRInteractionComponentPathDescriptor::GetXrActionType() const
     {
         return GetXrActionType(m_actionTypeStr);
     }
+
 
     static AZStd::vector<AZStd::string> GetEditorXrActionTypeNames()
     {
@@ -53,6 +55,7 @@ namespace OpenXRVk
         };
         return s_actionTypeNames;
     }
+
 
     void OpenXRInteractionComponentPathDescriptor::Reflect(AZ::ReflectContext* context)
     {
@@ -82,6 +85,7 @@ namespace OpenXRVk
             }
         }
     }
+
 
     AZStd::string OpenXRInteractionComponentPathDescriptor::GetEditorText()
     {
@@ -122,10 +126,12 @@ namespace OpenXRVk
         }
     }
 
+
     AZStd::string OpenXRInteractionUserPathDescriptor::GetEditorText()
     {
         return m_name.empty() ? "<Unknown User Path>" : m_name;
     }
+
 
     const OpenXRInteractionComponentPathDescriptor* OpenXRInteractionUserPathDescriptor::GetComponentPathDescriptor(const AZStd::string& componentPathName) const
     {
@@ -179,6 +185,7 @@ namespace OpenXRVk
         }
     }
 
+
     AZStd::string OpenXRInteractionProfileDescriptor::GetEditorText()
     {
         return m_name.empty() ? "<Unknown Profile>" : m_name;
@@ -197,6 +204,7 @@ namespace OpenXRVk
         return nullptr;
     }
 
+
     const OpenXRInteractionComponentPathDescriptor* OpenXRInteractionProfileDescriptor::GetCommonComponentPathDescriptor(const AZStd::string& componentPathName) const
     {
         for (const auto& componentPathDescriptor : m_commonComponentPathDescriptors)
@@ -209,6 +217,7 @@ namespace OpenXRVk
         return nullptr;
     }
 
+
     const OpenXRInteractionComponentPathDescriptor* OpenXRInteractionProfileDescriptor::GetComponentPathDescriptor(const OpenXRInteractionUserPathDescriptor& userPathDescriptor,
         const AZStd::string& componentPathName) const
     {
@@ -220,6 +229,7 @@ namespace OpenXRVk
         }
         return componentPathDescriptor;
     }
+
 
     AZStd::string OpenXRInteractionProfileDescriptor::GetComponentAbsolutePath(const OpenXRInteractionUserPathDescriptor& userPathDescriptor,
         const AZStd::string& componentPathName) const
@@ -264,6 +274,7 @@ namespace OpenXRVk
         }
     }
 
+
     const OpenXRInteractionProfileDescriptor* OpenXRInteractionProfilesAsset::GetInteractionProfileDescriptor(const AZStd::string& profileName) const
     {
         for (const auto& profileDescriptor : m_interactionProfileDescriptors)
@@ -275,6 +286,7 @@ namespace OpenXRVk
         }
         return nullptr;
     }
+
 
     const AZStd::string& OpenXRInteractionProfilesAsset::GetActionPathTypeStr(const AZStd::string& profileName, const AZStd::string& userPathName, const AZStd::string& componentPathName) const
     {
