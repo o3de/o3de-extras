@@ -163,6 +163,15 @@ namespace OpenXRVk
         //TODO::Add support for handheld display
         m_formFactor = XR_FORM_FACTOR_HEAD_MOUNTED_DISPLAY;
 
+        XrSystemGetInfo systemInfo{ XR_TYPE_SYSTEM_GET_INFO };
+        systemInfo.formFactor = m_formFactor;
+        result = xrGetSystem(m_xrInstance, &systemInfo, &m_xrSystemId);
+        if (IsError(result))
+        {
+            AZ_Warning("OpenXRVk", false, "Failed to get XR System id");
+            return AZ::RHI::ResultCode::Fail;
+        }
+
         //TODO::Add support for other view configuration types
         m_viewConfigType = XR_VIEW_CONFIGURATION_TYPE_PRIMARY_STEREO;
         m_viewCount = 0;
@@ -176,15 +185,6 @@ namespace OpenXRVk
 
         //TODO::Add support for other environment blend types
         m_environmentBlendMode = XR_ENVIRONMENT_BLEND_MODE_OPAQUE;
-
-        XrSystemGetInfo systemInfo{ XR_TYPE_SYSTEM_GET_INFO };
-        systemInfo.formFactor = m_formFactor;
-        result = xrGetSystem(m_xrInstance, &systemInfo, &m_xrSystemId);
-        if (IsError(result))
-        {
-            AZ_Warning("OpenXRVk", false, "Failed to get XR System id");
-            return AZ::RHI::ResultCode::Fail;
-        }
 
         // Query the runtime Vulkan API version requirements
         XrGraphicsRequirementsVulkan2KHR graphicsRequirements{ XR_TYPE_GRAPHICS_REQUIREMENTS_VULKAN2_KHR };
