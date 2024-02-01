@@ -10,7 +10,8 @@ set(ENABLED_GEMS
     EMotionFX
     ImGui
     LyShine
-    PhysX
+    PhysX5
+    PhysX5Debug
     PrimitiveAssets
     PrefabBuilder
     ScriptCanvasPhysics
@@ -22,5 +23,4 @@ set(ENABLED_GEMS
     Compression
     WarehouseAssets
     ROS2
-    PhysXDebug
 )

@@ -22,10 +22,10 @@
         "Linux"
     ],
     "icon_path": "preview.png",
-    "requirements": "This gem requires ROS 2 gem and PhysX gem.",
+    "requirements": "This gem requires ROS 2 gem and PhysX5 gem.",
     "dependencies": [
         "ROS2==3.0.0",
-        "PhysX"
+        "PhysX5"
     ],
     "repo_uri": "https://github.com/o3de/o3de-extras",
     "restricted": "WarehouseAutomation"

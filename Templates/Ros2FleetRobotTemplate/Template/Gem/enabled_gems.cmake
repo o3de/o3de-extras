@@ -19,7 +19,7 @@ set(ENABLED_GEMS
     EMotionFX
     ImGui
     LyShine
-    PhysX
+    PhysX5
     PrimitiveAssets
     PrefabBuilder
     ScriptCanvasPhysics

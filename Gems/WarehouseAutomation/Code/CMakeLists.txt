@@ -55,7 +55,7 @@ ly_add_target(
             AZ::AzCore
             AZ::AzFramework
             Gem::CommonFeaturesAtom.Static
-            Gem::PhysX.Static
+            Gem::PhysX5.Static
 )
 
 # Here add ${gem_name} target, it depends on the Private Object library and Public API interface
@@ -127,7 +127,7 @@ if(PAL_TRAIT_BUILD_HOST_TOOLS)
         BUILD_DEPENDENCIES
             PUBLIC
                 AZ::AzToolsFramework
-                Gem::PhysX.Editor.Static
+                Gem::PhysX5.Editor.Static
                 $<TARGET_OBJECTS:Gem::${gem_name}.Private.Object>
     )
 

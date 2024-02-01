@@ -18,7 +18,7 @@ set(ENABLED_GEMS
     ImGui
     LandscapeCanvas
     LyShine
-    PhysX
+    PhysX5
     PrimitiveAssets
     PrefabBuilder
     SaveData
