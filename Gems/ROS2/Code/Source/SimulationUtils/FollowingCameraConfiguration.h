@@ -26,6 +26,7 @@ namespace ROS2
         int m_smoothingBuffer = 30; //!< Number of past transforms used to smooth, larger value gives smoother result, but more lag
         float m_zoomSpeed = 0.06f; //!< Speed of zooming
         float m_rotationSpeed = 0.05f; //!< Rotation Speed around the target
+        bool m_lockZAxis = false; //!< Lock the Z axis of the camera
         const float m_opticalAxisTranslationMin = 0.0f; //!< Minimum zoom distance
     };
 } // namespace ROS2
