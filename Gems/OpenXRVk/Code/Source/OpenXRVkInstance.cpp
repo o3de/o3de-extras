@@ -165,6 +165,9 @@ namespace OpenXRVk
 
         //TODO::Add support for other view configuration types
         m_viewConfigType = XR_VIEW_CONFIGURATION_TYPE_PRIMARY_STEREO;
+        result = xrEnumerateViewConfigurationViews(m_xrInstance, m_xrSystemId, m_viewConfigType, 0, &m_viewCount, nullptr);
+        AZ_Assert(IsSuccess(result), "Failed to read the number of views for the configuration type: %u", aznumeric_cast<uint32_t>(m_viewConfigType));
+
 
         //TODO::Add support for other environment blend types
         m_environmentBlendMode = XR_ENVIRONMENT_BLEND_MODE_OPAQUE;
@@ -441,5 +444,10 @@ namespace OpenXRVk
     XrViewConfigurationType Instance::GetViewConfigType() const
     {
         return m_viewConfigType;
+    }
+
+    uint32_t Instance::GetViewCount() const
+    {
+        return m_viewCount;
     }
 }

@@ -56,7 +56,7 @@ namespace OpenXRVk
         ASSERT_IF_UNSUCCESSFUL(result);
 
         m_referenceSpacesMgr = AZStd::make_unique<ReferenceSpacesManager>();
-        bool success = m_referenceSpacesMgr->Init(m_xrInstance, m_session, xrVkInstance->GetViewConfigType(), 2 /*FIXME*/);
+        bool success = m_referenceSpacesMgr->Init(m_xrInstance, m_session, xrVkInstance->GetViewConfigType(), xrVkInstance->GetViewCount());
         AZ_Error("OpenXRVk::Session", success, "Failed to instantiate the visualized Spaces manager.");
         
         m_actionsMgr = AZStd::make_unique<ActionsManager>();

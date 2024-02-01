@@ -109,13 +109,8 @@ namespace OpenXRVk
                     systemProperties.trackingProperties.positionTracking == XR_TRUE ? "True" : "False");
         }
 
-        //Only supporting XR_VIEW_CONFIGURATION_TYPE_PRIMARY_STEREO for now
-        XrViewConfigurationType viewConfigType = XR_VIEW_CONFIGURATION_TYPE_PRIMARY_STEREO;
-
-        result = xrEnumerateViewConfigurationViews(xrInstance, xrSystemId,
-                                                   viewConfigType, 0, &m_numViews, nullptr);
-        WARN_IF_UNSUCCESSFUL(result);
-
+        m_numViews = xrVkInstance->GetViewCount();
+        XrViewConfigurationType viewConfigType = xrVkInstance->GetViewConfigType();
         m_configViews.resize(m_numViews, { XR_TYPE_VIEW_CONFIGURATION_VIEW });
         result = xrEnumerateViewConfigurationViews(xrInstance, xrSystemId,
                                                    viewConfigType, m_numViews, &m_numViews, m_configViews.data());
