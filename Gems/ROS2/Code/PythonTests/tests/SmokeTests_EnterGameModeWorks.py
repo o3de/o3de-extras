@@ -66,9 +66,13 @@ def SmokeTest_EnterGameModeWorks():
     # Required for automated tests
     helper.init_idle()
 
-    # Open the level called "Warehouse".
-    # We use a warehouse level for a smoke test - it already has a robot prefab present
-    helper.open_level(level="Warehouse", directory='')
+    # Open the level called "DefaultLevel".
+    # We use a DefaultLevel level for a smoke test.
+    # ROS2 System Component should publish below topics regardless of level
+    # - /tf
+    # - /tf_static
+    # - /clock
+    helper.open_level(level="DefaultLevel", directory='')
 
     topics_before_game_mode = check_topics()
 
