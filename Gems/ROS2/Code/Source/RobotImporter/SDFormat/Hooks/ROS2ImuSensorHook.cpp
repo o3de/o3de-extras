@@ -7,7 +7,7 @@
  */
 
 #include <Imu/ROS2ImuSensorComponent.h>
-#include <ROS2/Frame/ROS2FrameComponent.h>
+#include <ROS2/Frame/ROS2FrameEditorComponent.h>
 #include <RobotImporter/SDFormat/ROS2SDFormatHooksUtils.h>
 #include <RobotImporter/SDFormat/ROS2SensorHooks.h>
 #include <Source/EditorStaticRigidBodyComponent.h>
@@ -82,7 +82,7 @@ namespace ROS2::SDFormat
             HooksUtils::AddTopicConfiguration(sensorConfiguration, "imu", messageType, messageType);
 
             // Create required components
-            HooksUtils::CreateComponent<ROS2FrameComponent>(entity);
+            HooksUtils::CreateComponent<ROS2FrameEditorComponent>(entity);
             HooksUtils::CreateComponent<PhysX::EditorStaticRigidBodyComponent>(entity);
 
             // Create Imu component

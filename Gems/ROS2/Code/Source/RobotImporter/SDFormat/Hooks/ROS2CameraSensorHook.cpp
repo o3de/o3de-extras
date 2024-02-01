@@ -6,10 +6,9 @@
  *
  */
 
-#include "ROS2/Frame/ROS2FrameEditorComponent.h"
 #include <Camera/CameraConstants.h>
 #include <Camera/ROS2CameraSensorEditorComponent.h>
-#include <ROS2/Frame/ROS2FrameComponent.h>
+#include <ROS2/Frame/ROS2FrameEditorComponent.h>
 #include <RobotImporter/SDFormat/ROS2SDFormatHooksUtils.h>
 #include <RobotImporter/SDFormat/ROS2SensorHooks.h>
 
@@ -79,7 +78,7 @@ namespace ROS2::SDFormat
             }
 
             // Create required components
-            HooksUtils::CreateComponent<ROS2FrameComponent>(entity);
+            HooksUtils::CreateComponent<ROS2FrameEditorComponent>(entity);
 
             // Create Camera component
             if (HooksUtils::CreateComponent<ROS2CameraSensorEditorComponent>(entity, sensorConfiguration, cameraConfiguration))

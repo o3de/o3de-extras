@@ -9,7 +9,6 @@
 #include "URDFPrefabMaker.h"
 #include "CollidersMaker.h"
 #include "PrefabMakerUtils.h"
-#include "ROS2/Frame/ROS2FrameEditorComponent.h"
 #include <API/EditorAssetSystemAPI.h>
 #include <Atom/Feature/Mesh/MeshFeatureProcessor.h>
 #include <AzCore/Debug/Trace.h>
@@ -25,7 +24,7 @@
 #include <AzToolsFramework/Prefab/Procedural/ProceduralPrefabAsset.h>
 #include <AzToolsFramework/ToolsComponents/GenericComponentWrapper.h>
 #include <AzToolsFramework/ToolsComponents/TransformComponent.h>
-#include <ROS2/Frame/ROS2FrameComponent.h>
+#include <ROS2/Frame/ROS2FrameEditorComponent.h>
 #include <ROS2/ROS2GemUtilities.h>
 #include <RobotImporter/Utils/ErrorUtils.h>
 #include <RobotImporter/Utils/RobotImporterUtils.h>
@@ -458,7 +457,7 @@ namespace ROS2
             AZ::Entity* childEntityPtr = AzToolsFramework::GetEntityById(childEntity.GetValue());
             if (childEntityPtr)
             {
-                auto* component = childEntityPtr->FindComponent<ROS2FrameComponent>();
+                auto* component = childEntityPtr->FindComponent<ROS2FrameEditorComponent>();
                 if (component)
                 {
                     component->SetJointName(azJointName);
