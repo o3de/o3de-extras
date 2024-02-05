@@ -15,6 +15,7 @@
     ],
     "ENABLE_GEMS": [
         "Gems/XR",
-        "Gems/OpenXRVk"
+        "Gems/OpenXRVk",
+        "Gems/ROS2"
     ]
 }
