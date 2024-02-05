@@ -68,7 +68,7 @@ def SmokeTest_EnterGameModeWorks():
 
     # Open the level called "DefaultLevel".
     # We use a DefaultLevel level for a smoke test.
-    # ROS2 System Component should publish below topics regardless of level
+    # ROS2 System Component should publish topics listed below regardless of level
     # - /tf
     # - /tf_static
     # - /clock
