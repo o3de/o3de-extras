@@ -6,7 +6,8 @@
     ],
     "REGISTER_GEMS": [
         "Gems/XR",
-        "Gems/OpenXRVk"
+        "Gems/OpenXRVk",
+        "Gems/ROS2"
     ],
     "REGISTER_TEMPLATES": [
         "Templates/Multiplayer"
