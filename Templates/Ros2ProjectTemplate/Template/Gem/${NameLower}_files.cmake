@@ -12,5 +12,4 @@ set(FILES
     Source/${Name}SystemComponent.h
     Source/${Name}SampleComponent.cpp
     Source/${Name}SampleComponent.h
-    enabled_gems.cmake
 )

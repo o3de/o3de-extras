@@ -110,27 +110,6 @@ if(PAL_TRAIT_BUILD_HOST_TOOLS)
                 AZ::AzToolsFramework
     )
 
-    # The ${gem_name}.Editor.Private.Object target is an internal target
-    # which is only to be used by this gems CMakeLists.txt and any subdirectories
-    # Other gems should not use this target
-    ly_add_target(
-        NAME ${gem_name}.Editor.Private.Object STATIC
-        NAMESPACE Gem
-        FILES_CMAKE
-            warehouseautomation_editor_private_files.cmake
-        TARGET_PROPERTIES
-            O3DE_PRIVATE_TARGET TRUE
-        INCLUDE_DIRECTORIES
-            PRIVATE
-                Include
-                Source
-        BUILD_DEPENDENCIES
-            PUBLIC
-                AZ::AzToolsFramework
-                Gem::PhysX5.Editor.Static
-                $<TARGET_OBJECTS:Gem::${gem_name}.Private.Object>
-    )
-
     ly_add_target(
         NAME ${gem_name}.Editor GEM_MODULE
         NAMESPACE Gem
@@ -146,7 +125,8 @@ if(PAL_TRAIT_BUILD_HOST_TOOLS)
             PUBLIC
                 Gem::${gem_name}.Editor.API
             PRIVATE
-                Gem::${gem_name}.Editor.Private.Object
+                AZ::AzToolsFramework
+                ${gem_name}.Private.Object
     )
 
     # By default, we will specify that the above target ${gem_name} would be used by
@@ -199,8 +179,7 @@ if(PAL_TRAIT_BUILD_TESTS_SUPPORTED)
     if(PAL_TRAIT_BUILD_HOST_TOOLS)
         # We are a host platform, see if Editor tests are supported on this platform
         if(PAL_TRAIT_WAREHOUSEAUTOMATION_EDITOR_TEST_SUPPORTED)
-            # We support ${gem_name}.Editor.Tests on this platform, add ${gem_name}.Editor.Tests target which depends on
-            # private ${gem_name}.Editor.Private.Object target
+            # We support ${gem_name}.Editor.Tests on this platform
             ly_add_target(
                 NAME ${gem_name}.Editor.Tests ${PAL_TRAIT_TEST_TARGET_TYPE}
                 NAMESPACE Gem
@@ -214,7 +193,8 @@ if(PAL_TRAIT_BUILD_TESTS_SUPPORTED)
                 BUILD_DEPENDENCIES
                     PRIVATE
                         AZ::AzTest
-                        Gem::${gem_name}.Editor.Private.Object
+                        AZ::AzToolsFramework
+                        Gem::PhysX5.Editor.Static
             )
 
             # Add ${gem_name}.Editor.Tests to googletest

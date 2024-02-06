@@ -1,5 +1,6 @@
 {
     "gem_name": "RosRobotSample",
+    "version": "1.1.0",
     "display_name": "ROS Robot Sample",
     "license": "Apache-2.0 or MIT",
     "license_url": "https://opensource.org/licenses/Apache-2.0",
@@ -20,14 +21,13 @@
     "requirements": "Requires ROS 2 Gem",
     "documentation_url": "",
     "dependencies": [
-        "ROS2==3.0.0"
+        "ROS2>=3.1.0"
     ],
     "compatible_engines": [
-        "o3de-sdk>=1.2.0",
-        "o3de>=1.2.0"
+        "o3de-sdk>=4.1.0",
+        "o3de>=4.1.0"
     ],
     "repo_uri": "https://raw.githubusercontent.com/o3de/o3de-extras/development",
     "restricted": "",
-    "download_source_uri": "https://github.com/o3de/o3de-extras/releases/download/2.0/rosrobotsample-1.0.0-gem.zip",
-    "version": "1.0.0"
+    "download_source_uri": "https://github.com/o3de/o3de-extras/releases/download/2.0/rosrobotsample-1.1.0-gem.zip"
 }

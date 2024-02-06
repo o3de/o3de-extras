@@ -1,6 +1,6 @@
 {
-    "version": "1.0.0",
     "gem_name": "WarehouseAutomation",
+    "version": "1.1.0",
     "display_name": "Warehouse Automation",
     "license": "Apache-2.0",
     "license_url": "https://opensource.org/licenses/Apache-2.0",
@@ -15,8 +15,8 @@
         "WarehouseAutomation"
     ],
     "compatible_engines": [
-        "o3de-sdk>=1.2.0",
-        "o3de>=1.2.0"
+        "o3de-sdk>=4.1.0",
+        "o3de>=4.1.0"
     ],
     "platforms": [
         "Linux"
@@ -24,9 +24,9 @@
     "icon_path": "preview.png",
     "requirements": "This gem requires ROS 2 gem and PhysX5 gem.",
     "dependencies": [
-        "ROS2==3.0.0",
-        "PhysX5"
+        "ROS2>=3.1.0"
     ],
-    "repo_uri": "https://github.com/o3de/o3de-extras",
-    "restricted": "WarehouseAutomation"
+    "repo_uri": "https://raw.githubusercontent.com/o3de/o3de-extras/development",
+    "restricted": "WarehouseAutomation",
+    "download_source_uri": "https://github.com/o3de/o3de-extras/releases/download/2.0/warehouseautomation-1.1.0-gem.zip"
 }

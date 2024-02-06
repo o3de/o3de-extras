@@ -136,10 +136,3 @@ endif()
 # if enabled, ${gem_name} is used by all kinds of applications
 ly_create_alias(NAME ${gem_name}.Clients  NAMESPACE Gem TARGETS Gem::${gem_name})
 ly_create_alias(NAME ${gem_name}.Servers  NAMESPACE Gem TARGETS Gem::${gem_name})
-
-################################################################################
-# Gem dependencies
-################################################################################
-
-# Enable the specified list of gems from GEM_FILE or GEMS list for this specific project:
-ly_enable_gems(PROJECT_NAME ${Name} GEM_FILE enabled_gems.cmake)

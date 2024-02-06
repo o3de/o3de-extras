@@ -20,8 +20,28 @@
     "restricted": "${Name}",
     "engine_version": "1.0.0",
     "gem_names": [
-        "ProteusRobot",
-        "WarehouseAssets",
-        "ROS2"
+        "Atom",
+        "CameraFramework",
+        "Compression",
+        "DebugDraw",
+        "DiffuseProbeGrid",
+        "EditorPythonBindings",
+        "EMotionFX",
+        "ImGui",
+        "LyShine",
+        "PhysX5",
+        "PrimitiveAssets",
+        "PrefabBuilder",
+        "ProteusRobot>=1.1.0",
+        "ROS2>=3.1.0",
+        "ScriptCanvasPhysics",
+        "ScriptEvents",
+        "StartingPointInput",
+        "TextureAtlas",
+        "WhiteBox",
+        "WarehouseAssets"
     ]
 }
+
+
+

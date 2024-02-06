@@ -1,5 +1,6 @@
 {
     "template_name": "Ros2RoboticManipulationTemplate",
+    "version": "1.1.0",
     "origin": "https://github.com/o3de/o3de-extras",
     "license": "https://github.com/o3de/o3de-extras/tree/development/Templates/Ros2RoboticManipulationTemplate/Template/LICENSE.txt",
     "display_name": "ROS2 Robotic Manipulation",
@@ -976,7 +977,7 @@
         {
             "file": "Assets/BoxToyPuzzle/texture/Roughness/MCube_pazzle_Roughness.1001.png",
             "isTemplated": "false"
-        },       
+        },
         {
             "file": "Config/shader_global_build_options.json",
             "isTemplated": false
@@ -1091,10 +1092,6 @@
         },
         {
             "file": "Gem/Source/${Name}SystemComponent.h",
-            "isTemplated": true
-        },
-        {
-            "file": "Gem/enabled_gems.cmake",
             "isTemplated": true
         },
         {
@@ -1403,5 +1400,7 @@
         {
             "dir": "cmake"
         }
-    ]
+    ],
+    "repo_uri": "https://raw.githubusercontent.com/o3de/o3de-extras/development",
+    "download_source_uri": "https://github.com/o3de/o3de-extras/releases/download/2.0/ros2roboticmanipulationtemplate-1.1.0-template.zip"
 }
