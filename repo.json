@@ -247,7 +247,7 @@
             "display_name": "WarehouseAssets",
             "license": "Apache-2.0 or MIT",
             "license_url": "https://opensource.org/licenses/Apache-2.0",
-            "origin": "RobotecAI",
+            "origin": "The name of the originator or creator",
             "origin_url": "https://github.com/o3de/o3de-extras/tree/main/Gems/WarehouseAssets",
             "type": "Asset",
             "summary": "A set of prefabs and assets to build large warehouse scenes.",
