@@ -43,7 +43,7 @@ ly_add_target(
     NAME ${gem_name}.Static STATIC
     NAMESPACE Gem
     FILES_CMAKE
-        openxrvk_private_common_files.cmake
+        openxrvk_static_common_files.cmake
         ${pal_source_dir}/platform_private_${PAL_PLATFORM_NAME_LOWERCASE}_files.cmake
         ${pal_include_dir}/platform_private_${PAL_PLATFORM_NAME_LOWERCASE}_files.cmake
     PLATFORM_INCLUDE_FILES
@@ -70,7 +70,7 @@ ly_add_target(
     NAME ${gem_name} ${PAL_TRAIT_MONOLITHIC_DRIVEN_MODULE_TYPE}
     NAMESPACE Gem
     FILES_CMAKE
-        openxrvk_private_common_shared_files.cmake
+        openxrvk_module_files.cmake
     INCLUDE_DIRECTORIES
         PRIVATE
             Source
@@ -83,25 +83,36 @@ ly_add_target(
             Gem::${gem_name}.Static
 )
 
+# Inject the gem name into the Module source file
+ly_add_source_properties(
+    SOURCES
+        Source/OpenXRVkModule.cpp
+    PROPERTY COMPILE_DEFINITIONS
+        VALUES
+            O3DE_GEM_NAME=${gem_name}
+            O3DE_GEM_VERSION=${gem_version}
+)
+
 # use the OpenXRVk module in all aliases:
 ly_create_alias(NAME OpenXRVk.Clients NAMESPACE Gem TARGETS Gem::OpenXRVk)
 ly_create_alias(NAME OpenXRVk.Unified NAMESPACE Gem TARGETS Gem::OpenXRVk)
 
 if(PAL_TRAIT_BUILD_HOST_TOOLS)
 
-    #
+    # by naming this target ${gem_name}.Builders it ensures that it is loaded
+    # in any pipeline tools (Like Asset Processor, AssetBuilder, etc)
     ly_add_target(
         NAME ${gem_name}.Builders.Static STATIC
         NAMESPACE Gem
         FILES_CMAKE
-            openxrvk_private_builder_files.cmake
+            openxrvk_static_builders_files.cmake
         INCLUDE_DIRECTORIES
             PRIVATE
                 Source
             PUBLIC
                 Include
         BUILD_DEPENDENCIES
-            PRIVATE
+            PUBLIC
                 AZ::AzCore
                 AZ::AzFramework
                 AZ::AssetBuilderSDK
@@ -109,13 +120,11 @@ if(PAL_TRAIT_BUILD_HOST_TOOLS)
                 Gem::${gem_name}.Static
     )
 
-    # It is very important that the target name ends with "*.Buiders"
-    # because it maakes the module loadable by AssetBuilder.exe.
     ly_add_target(
         NAME ${gem_name}.Builders GEM_MODULE
         NAMESPACE Gem
         FILES_CMAKE
-            openxrvk_shared_builder_files.cmake
+            openxrvk_module_files.cmake
         INCLUDE_DIRECTORIES
             PRIVATE
                 Source
@@ -123,25 +132,15 @@ if(PAL_TRAIT_BUILD_HOST_TOOLS)
                 Include
         BUILD_DEPENDENCIES
             PRIVATE
-                AZ::AzCore
-                AZ::AzFramework
-                AZ::AssetBuilderSDK
                 Gem::${gem_name}.Builders.Static
+        COMPILE_DEFINITIONS
+            PRIVATE
+                OPENXRVK_BUILDERS
     )
 
-     # Inject the gem name into the Module source file
-     ly_add_source_properties(
-        SOURCES
-            Source/Builders/OpenXRVkBuilderModule.cpp
-        PROPERTY COMPILE_DEFINITIONS
-            VALUES
-                O3DE_GEM_NAME=${gem_name}
-                O3DE_GEM_VERSION=${gem_version}
-    )
-
-    # Create an alias for the tool version.
-    # This is necessary so the Editor loads the Module. And the trick
-    # is to make sure the alias name ends in ".Tools"
+    # For now the *.Tools alias leverages the ${gem_name} module.
+    # This is necessary so the Editor.exe and similar tool targets load the Module.
+    # And the tricks to make sure the alias name ends in ".Tools".
     ly_create_alias(NAME ${gem_name}.Tools NAMESPACE Gem TARGETS Gem::${gem_name})
 
 endif()

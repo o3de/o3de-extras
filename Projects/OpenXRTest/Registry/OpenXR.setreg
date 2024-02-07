@@ -5,6 +5,12 @@
                 "Enable": true,
                 "android_ViewResolutionScale": 1.0,
                 "FoveatedLevel": 3
+            },
+            "DxcOverridePath": "C:\\open\\fbsource\\arvr\\projects\\lars\\o3de\\Customized3rdParty\\dxc-1.6.2112-o3de-rev1-windows\\dxc.exe",
+            "Shaders": {
+                "Build": {
+                    "ConfigPath": "@projectroot@/Config"
+                }
             }
         }
     }
