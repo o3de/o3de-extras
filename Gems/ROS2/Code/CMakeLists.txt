@@ -65,7 +65,7 @@ ly_add_target(
             Gem::Atom_Feature_Common.Static
             Gem::Atom_Component_DebugCamera.Static
             Gem::StartingPointInput
-            Gem::PhysX.Static
+            Gem::PhysX5.Static
             Gem::LmbrCentral.API
 )
 
@@ -132,7 +132,7 @@ if(PAL_TRAIT_BUILD_HOST_TOOLS)
                 AZ::AzToolsFramework
                 Gem::CommonFeaturesAtom.Editor.Static
                 Gem::LmbrCentral.API
-                Gem::PhysX.Editor.Static
+                Gem::PhysX5.Editor.Static
                 Gem::${gem_name}.Static
             PRIVATE
                 AZ::AssetBuilderSDK
@@ -214,7 +214,7 @@ if(PAL_TRAIT_BUILD_TESTS_SUPPORTED)
                     AZ::AzManipulatorTestFramework.Static
                     Gem::ROS2.Static
                 RUNTIME_DEPENDENCIES
-                    Gem::PhysX.Editor
+                    Gem::PhysX5.Editor
         )
 
         ly_add_googletest(

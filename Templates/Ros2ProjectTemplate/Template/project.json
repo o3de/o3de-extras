@@ -18,8 +18,29 @@
     ],
     "restricted": "${Name}",
     "gem_names": [
-        "ROS2",
-        "WarehouseSample",
-        "RosRobotSample"
+        "Atom",
+        "AudioSystem",
+        "CameraFramework",
+        "Compression",
+        "DebugDraw",
+        "DiffuseProbeGrid",
+        "EditorPythonBindings",
+        "EMotionFX",
+        "GameState",
+        "ImGui",
+        "LandscapeCanvas",
+        "LyShine",
+        "PhysX5",
+        "PrimitiveAssets",
+        "PrefabBuilder",
+        "ROS2>=3.1.0",
+        "RosRobotSample>=1.1.0",
+        "SaveData",
+        "ScriptCanvasPhysics",
+        "ScriptEvents",
+        "StartingPointInput",
+        "TextureAtlas",
+        "WhiteBox",
+        "WarehouseSample"
     ]    
 }
