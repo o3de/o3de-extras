@@ -102,7 +102,7 @@ namespace ROS2
     {
         if (AZ::SerializeContext* serialize = azrtti_cast<AZ::SerializeContext*>(context))
         {
-            serialize->Class<ROS2FrameEditorComponent>()->Version(1)->Field(
+            serialize->Class<ROS2FrameEditorComponent, AzToolsFramework::Components::EditorComponentBase>()->Version(1)->Field(
                 "ROS2FrameConfiguration", &ROS2FrameEditorComponent::m_configuration);
 
             if (AZ::EditContext* ec = serialize->GetEditContext())
