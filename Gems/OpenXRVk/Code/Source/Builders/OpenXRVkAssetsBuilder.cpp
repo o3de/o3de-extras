@@ -133,7 +133,7 @@ namespace OpenXRVkBuilders
            azrtti_typeid<OpenXRVk::OpenXRInteractionProfilesAsset>(),
            aznumeric_cast<uint32_t>(0), jobProduct))
        {
-           AZ_Error(LogName, false, "FIXME this message.");
+           AZ_Error(LogName, false, "Failed to declare output product assets.");
            response.m_resultCode = AssetBuilderSDK::ProcessJobResult_Failed;
            return;
        }
