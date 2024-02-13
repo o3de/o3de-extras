@@ -65,6 +65,10 @@ namespace OpenXRVk
         //! Get XR configuration type.
         XrViewConfigurationType GetViewConfigType() const;
 
+        //! Get the number of views (aka eyes) according
+        //! to the current XrViewConfigurationType.
+        uint32_t GetViewCount() const;
+
     protected:
         // XR::Instance overrides...
         AZ::RHI::ResultCode InitInstanceInternal() override;
@@ -96,5 +100,8 @@ namespace OpenXRVk
         AZStd::vector<VkPhysicalDevice> m_supportedXRDevices;
         uint32_t m_minVulkanAPIVersion = 0;
         uint32_t m_maxVulkanAPIVersion = 0;
+        //! At runtime the number of views (eyes) will be calculate according
+        //! to the select view configuration in @m_viewConfigType.
+        uint32_t m_viewCount = 0;
     };
 }

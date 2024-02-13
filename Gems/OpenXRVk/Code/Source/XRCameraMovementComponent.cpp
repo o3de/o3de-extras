@@ -13,7 +13,7 @@
 #include <AzCore/Serialization/EditContext.h>
 #include <AzCore/RTTI/BehaviorContext.h>
 
-#include <OpenXRVk/InputDeviceXRController.h>
+#include <OpenXRVk/OpenXRVkActionsInterface.h>
 
 #include <Atom/RPI.Public/ViewProviderBus.h>
 #include <Atom/RPI.Public/View.h>
@@ -84,7 +84,6 @@ namespace OpenXRVk
         Camera::CameraNotificationBus::Handler::BusConnect();
         if (m_isActive)
         {
-            AzFramework::InputChannelEventListener::Connect();
             AZ::TickBus::Handler::BusConnect();
         }
     }
@@ -95,16 +94,14 @@ namespace OpenXRVk
         {
             AZ::TickBus::Handler::BusDisconnect();
         }
-        if (AzFramework::InputChannelEventListener::BusIsConnected())
-        {
-            AzFramework::InputChannelEventListener::Disconnect();
-        }
         
         Camera::CameraNotificationBus::Handler::BusDisconnect();
     }
 
     void XRCameraMovementComponent::OnTick(float deltaTime, [[maybe_unused]] AZ::ScriptTimePoint timePoint)
     {
+        ProcessOpenXRActions();
+
         AZ::Transform cameraTransform;
         AZ::TransformBus::EventResult(cameraTransform, GetEntityId(), &AZ::TransformBus::Events::GetWorldTM);
 
@@ -120,43 +117,75 @@ namespace OpenXRVk
         AZ::TransformBus::Event(GetEntityId(), &AZ::TransformBus::Events::SetWorldTM, cameraTransform);
     }
 
-    bool XRCameraMovementComponent::OnInputChannelEventFiltered([[maybe_unused]] const AzFramework::InputChannel& inputChannel)
+
+    static float ReadActionHandleFloat(IOpenXRActions* iface, IOpenXRActions::ActionHandle actionHandle, float deadZone = 0.05f)
     {
-        const auto& deviceId = inputChannel.GetInputDevice().GetInputDeviceId();
-        if (AzFramework::InputDeviceXRController::IsXRControllerDevice(deviceId))
+        auto outcome = iface->GetActionStateFloat(actionHandle);
+        if (!outcome.IsSuccess())
         {
-            OnXRControllerEvent(inputChannel);
+            // Most likely the controller went to sleep.
+            return 0.0f;
         }
-        return false;
+        float value = outcome.GetValue();
+        if (fabsf(value) < deadZone)
+        {
+            return 0.0f;
+        }
+        return value;
     }
 
-    void XRCameraMovementComponent::OnXRControllerEvent([[maybe_unused]] const AzFramework::InputChannel& inputChannel)
+    void XRCameraMovementComponent::ProcessOpenXRActions()
     {
-        const auto& channelId = inputChannel.GetInputChannelId();
-
-        // This currently uses specific xr controller channels to drive the movement.  Future iterations might
-        // use a higher-level concepts like InputMappings and InputContexts to generalize to additional
-        // input devices.
-
-        // Left thumb-stick X/Y move the camera
-        if (channelId == AzFramework::InputDeviceXRController::ThumbStickAxis1D::LX)
+        auto actionsIFace = OpenXRActionsInterface::Get();
+        if (!actionsIFace)
         {
-            m_movement.SetX(inputChannel.GetValue() * m_movementSensitivity);
-        }
-        if (channelId == AzFramework::InputDeviceXRController::ThumbStickAxis1D::LY)
-        {
-            m_movement.SetY(inputChannel.GetValue() * m_movementSensitivity);
+            return;
         }
 
-        // A/B buttons update the height in Z of the camera
-        if (channelId == AzFramework::InputDeviceXRController::Button::A)
-        {   // down
-            m_movement.SetZ(-inputChannel.GetValue() * m_movementSensitivity);
+        if (!m_moveFrontwaysHandle.IsValid())
+        {
+            // Try to cache all handles.
+            auto outcome = actionsIFace->GetActionHandle("main_action_set", "move_frontways");
+            if (!outcome.IsSuccess())
+            {
+                // Most likely the Action System failed to load the ActionSets asset.
+                return;
+            }
+
+            m_moveFrontwaysHandle = outcome.GetValue();
+            AZ_Assert(m_moveFrontwaysHandle.IsValid(), "Invalid action handle");
+            outcome = actionsIFace->GetActionHandle("main_action_set", "move_sideways");
+            m_moveSidewaysHandle = outcome.GetValue();
+            AZ_Assert(m_moveSidewaysHandle.IsValid(), "Invalid action handle");
+            outcome = actionsIFace->GetActionHandle("main_action_set", "move_up");
+            m_moveUpHandle = outcome.GetValue();
+            AZ_Assert(m_moveUpHandle.IsValid(), "Invalid action handle");
+            outcome = actionsIFace->GetActionHandle("main_action_set", "move_down");
+            m_moveDownHandle = outcome.GetValue();
+            AZ_Assert(m_moveDownHandle.IsValid(), "Invalid action handle");
         }
-        if (channelId == AzFramework::InputDeviceXRController::Button::B)
-        {   // up
-            m_movement.SetZ(inputChannel.GetValue() * m_movementSensitivity);
+
+
+        m_movement.Set(0.0f);
+        m_movement.SetY(ReadActionHandleFloat(actionsIFace, m_moveFrontwaysHandle) * m_movementSensitivity);
+        m_movement.SetX(ReadActionHandleFloat(actionsIFace, m_moveSidewaysHandle) * m_movementSensitivity);
+
+        {
+            auto outcome = actionsIFace->GetActionStateBoolean(m_moveUpHandle);
+            if (outcome.IsSuccess() && outcome.GetValue())
+            {
+                m_movement.SetZ(m_movementSensitivity);
+            }
         }
+
+        {
+            auto outcome = actionsIFace->GetActionStateBoolean(m_moveDownHandle);
+            if (outcome.IsSuccess() && outcome.GetValue())
+            {
+                m_movement.SetZ(-m_movementSensitivity);
+            }
+        }
+
     }
 
     // Camera::CameraNotificationBus::Handler overrides
@@ -169,20 +198,12 @@ namespace OpenXRVk
             {
                 AZ::TickBus::Handler::BusConnect();
             }
-            if (!AzFramework::InputChannelEventListener::BusIsConnected())
-            {
-                AzFramework::InputChannelEventListener::Connect();
-            }
         }
         else
         {
             if (AZ::TickBus::Handler::BusIsConnected())
             {
                 AZ::TickBus::Handler::BusDisconnect();
-            }
-            if (AzFramework::InputChannelEventListener::BusIsConnected())
-            {
-                AzFramework::InputChannelEventListener::Disconnect();
             }
         }
     }

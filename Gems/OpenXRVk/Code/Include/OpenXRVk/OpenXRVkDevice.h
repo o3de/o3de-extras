@@ -31,6 +31,8 @@ namespace OpenXRVk
         
         // Create the xr specific native device object and populate the XRDeviceDescriptor with it.
         AZ::RHI::ResultCode InitDeviceInternal(AZ::RHI::XRDeviceDescriptor* instanceDescriptor) override;
+
+        //! FIXME: Remove me!
         //! Get the Fov data  of the view specified by view index
         AZ::RHI::ResultCode GetViewFov(AZ::u32 viewIndex, AZ::RPI::FovData& outFovData) const override;
         //! Get the Pose data  of the view specified by view index
@@ -48,9 +50,6 @@ namespace OpenXRVk
 
         //! Returns the graphic binding for a hardware queue
         const AZ::Vulkan::XRDeviceDescriptor::GraphicsBinding& GetGraphicsBinding(AZ::RHI::HardwareQueueClass queueClass) const;
-
-        //! Reserve space for appropriate number of views 
-        void InitXrViews(uint32_t numViews);
 
         //! Get the anticipated display XrTime for the next application-generated frame.
         XrTime GetPredictedDisplayTime() const;
@@ -78,6 +77,5 @@ namespace OpenXRVk
         AZStd::vector<XrCompositionLayerBaseHeader*> m_xrLayers;
         XrCompositionLayerProjection m_xrLayer{ XR_TYPE_COMPOSITION_LAYER_PROJECTION };
         AZStd::vector<XrCompositionLayerProjectionView> m_projectionLayerViews;
-        AZStd::vector<XrView> m_views;
     };
 }

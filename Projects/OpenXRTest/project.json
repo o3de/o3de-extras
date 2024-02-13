@@ -22,6 +22,8 @@
     "restricted": "OpenXRTest",
     "gem_names": [
         "XR>=1.0.1",
-        "OpenXRVk>=1.0.1"
+        "OpenXRVk>=1.0.1",
+        "EditorPythonBindings",
+        "QtForPython"
     ]
 }

@@ -19,6 +19,8 @@
 #include <OpenXRVk/OpenXRVkSwapChain.h>
 #include <OpenXRVk/OpenXRVkSystemComponent.h>
 
+#include "OpenXRVkBehaviorReflection.h"
+
 #include <XR/XRUtils.h>
 
 namespace OpenXRVk
@@ -37,7 +39,14 @@ namespace OpenXRVk
                 ->Version(1);
         }
 
+        if (auto behaviorContext = azrtti_cast<AZ::BehaviorContext*>(context))
+        {
+            OpenXRBehaviorReflect(*behaviorContext);
+        }
+
         AzFramework::InputDeviceXRController::Reflect(context);
+        OpenXRInteractionProfilesAsset::Reflect(context);
+        OpenXRActionSetsAsset::Reflect(context);
     }
 
     XR::Ptr<XR::Instance> SystemComponent::CreateInstance()
@@ -82,6 +91,15 @@ namespace OpenXRVk
 
     void SystemComponent::Activate()
     {
+        m_actionSetsAssetHandler = AZStd::make_unique<OpenXRActionSetsAssetHandler>();
+        m_actionSetsAssetHandler->Register();
+
+        m_interactionProfilesAssetHandler = AZStd::make_unique<AzFramework::GenericAssetHandler<OpenXRInteractionProfilesAsset>>(
+            OpenXRInteractionProfilesAsset::s_assetTypeName,
+            "Other",
+            OpenXRInteractionProfilesAsset::s_assetExtension);
+        m_interactionProfilesAssetHandler->Register();
+
         if (XR::IsOpenXREnabled())
         {
             m_instance = AZStd::static_pointer_cast<OpenXRVk::Instance>(CreateInstance());
@@ -110,5 +128,9 @@ namespace OpenXRVk
             AZ::Interface<XR::Instance>::Unregister(m_instance.get());
             m_instance = nullptr;
         }
+
+        m_actionSetsAssetHandler->Unregister();
+        m_interactionProfilesAssetHandler->Unregister();
     }
+
 }

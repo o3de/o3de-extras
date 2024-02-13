@@ -59,7 +59,9 @@ namespace OpenXRVk
     bool IsSuccess(XrResult result);
     bool IsError(XrResult result);
     const char* GetResultString(const XrResult result);
+    void PrintXrError(const char* windowName, const XrResult error, const char* fmt, ...);
     XR::RawStringList FilterList(const XR::RawStringList& source, const XR::StringList& filter);
+    AZStd::string ConvertXrPathToString(XrInstance xrInstance, XrPath xrPath);
 
     //! Input is an array of chars with multiple ' ' char embedded in it, indicating the start of a new string.
     //! Iterate through the characters while caching the starting pointer to a string
@@ -67,8 +69,8 @@ namespace OpenXRVk
     AZStd::vector<const char*> ParseExtensionString(char* names);
 
     AZ::Quaternion AzQuaternionFromXrPose(const XrPosef& pose, bool convertCoordinates = true);
+    AZ::Vector3 AzVector3FromXrVector3(const XrVector3f& xrVec3, bool convertCoordinates = true);
     AZ::Vector3 AzPositionFromXrPose(const XrPosef& pose, bool convertCoordinates = true);
     AZ::Transform AzTransformFromXrPose(const XrPosef& pose, bool convertCoordinates = true);
     XrPosef XrPoseFromAzTransform(const AZ::Transform& tm, bool convertCoordinates = true);
-
 }

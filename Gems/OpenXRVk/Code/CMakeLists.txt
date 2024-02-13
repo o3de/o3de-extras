@@ -6,6 +6,10 @@
 #
 #
 
+# Queries the "gem_name" "version" values from the gem.json file for this gem
+# They are set in the ${gem_name} and ${gem_version} variables
+o3de_gem_setup("${Name}")
+
 o3de_pal_dir(pal_include_dir ${CMAKE_CURRENT_LIST_DIR}/Include/OpenXRVk/Platform/${PAL_PLATFORM_NAME} "${gem_restricted_path}" "${gem_path}" "${gem_parent_relative_path}")
 o3de_pal_dir(pal_source_dir ${CMAKE_CURRENT_LIST_DIR}/Source/Platform/${PAL_PLATFORM_NAME} "${gem_restricted_path}" "${gem_path}" "${gem_parent_relative_path}")
 
@@ -19,7 +23,7 @@ if(NOT PAL_TRAIT_OPENXRVK_SUPPORTED)
 
     # Create stub modules. Once we support gem loading configuration, we can remove this stubbed targets
     ly_add_target(
-        NAME OpenXRVk ${PAL_TRAIT_MONOLITHIC_DRIVEN_MODULE_TYPE}
+        NAME ${gem_name} ${PAL_TRAIT_MONOLITHIC_DRIVEN_MODULE_TYPE}
         NAMESPACE Gem
         FILES_CMAKE
             openxrvk_stub_module.cmake
@@ -36,7 +40,7 @@ if(NOT PAL_TRAIT_OPENXRVK_SUPPORTED)
 endif()
 
 ly_add_target(
-    NAME OpenXRVk.Static STATIC
+    NAME ${gem_name}.Static STATIC
     NAMESPACE Gem
     FILES_CMAKE
         openxrvk_private_common_files.cmake
@@ -63,7 +67,7 @@ ly_add_target(
 )
 
 ly_add_target(
-    NAME OpenXRVk ${PAL_TRAIT_MONOLITHIC_DRIVEN_MODULE_TYPE}
+    NAME ${gem_name} ${PAL_TRAIT_MONOLITHIC_DRIVEN_MODULE_TYPE}
     NAMESPACE Gem
     FILES_CMAKE
         openxrvk_private_common_shared_files.cmake
@@ -76,7 +80,7 @@ ly_add_target(
             ${pal_include_dir}
     BUILD_DEPENDENCIES
         PRIVATE
-            Gem::OpenXRVk.Static
+            Gem::${gem_name}.Static
 )
 
 # use the OpenXRVk module in all aliases:
@@ -84,8 +88,62 @@ ly_create_alias(NAME OpenXRVk.Clients NAMESPACE Gem TARGETS Gem::OpenXRVk)
 ly_create_alias(NAME OpenXRVk.Unified NAMESPACE Gem TARGETS Gem::OpenXRVk)
 
 if(PAL_TRAIT_BUILD_HOST_TOOLS)
-    ly_create_alias(NAME OpenXRVk.Tools NAMESPACE Gem TARGETS Gem::OpenXRVk)
-    ly_create_alias(NAME OpenXRVk.Builders NAMESPACE Gem TARGETS Gem::OpenXRVk)
+
+    #
+    ly_add_target(
+        NAME ${gem_name}.Builders.Static STATIC
+        NAMESPACE Gem
+        FILES_CMAKE
+            openxrvk_private_builder_files.cmake
+        INCLUDE_DIRECTORIES
+            PRIVATE
+                Source
+            PUBLIC
+                Include
+        BUILD_DEPENDENCIES
+            PRIVATE
+                AZ::AzCore
+                AZ::AzFramework
+                AZ::AssetBuilderSDK
+                ${openxr_dependency}
+                Gem::${gem_name}.Static
+    )
+
+    # It is very important that the target name ends with "*.Buiders"
+    # because it maakes the module loadable by AssetBuilder.exe.
+    ly_add_target(
+        NAME ${gem_name}.Builders GEM_MODULE
+        NAMESPACE Gem
+        FILES_CMAKE
+            openxrvk_shared_builder_files.cmake
+        INCLUDE_DIRECTORIES
+            PRIVATE
+                Source
+            PUBLIC
+                Include
+        BUILD_DEPENDENCIES
+            PRIVATE
+                AZ::AzCore
+                AZ::AzFramework
+                AZ::AssetBuilderSDK
+                Gem::${gem_name}.Builders.Static
+    )
+
+     # Inject the gem name into the Module source file
+     ly_add_source_properties(
+        SOURCES
+            Source/Builders/OpenXRVkBuilderModule.cpp
+        PROPERTY COMPILE_DEFINITIONS
+            VALUES
+                O3DE_GEM_NAME=${gem_name}
+                O3DE_GEM_VERSION=${gem_version}
+    )
+
+    # Create an alias for the tool version.
+    # This is necessary so the Editor loads the Module. And the trick
+    # is to make sure the alias name ends in ".Tools"
+    ly_create_alias(NAME ${gem_name}.Tools NAMESPACE Gem TARGETS Gem::${gem_name})
+
 endif()
 
 ################################################################################
