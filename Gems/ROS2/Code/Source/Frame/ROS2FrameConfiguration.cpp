@@ -26,8 +26,7 @@ namespace ROS2
                 ->Field("Namespace Configuration", &ROS2FrameConfiguration::m_namespaceConfiguration)
                 ->Field("Frame Name", &ROS2FrameConfiguration::m_frameName)
                 ->Field("Joint Name", &ROS2FrameConfiguration::m_jointName)
-                ->Field("Publish Transform", &ROS2FrameConfiguration::m_publishTransform)
-                ->Field("Effective namespace", &ROS2FrameConfiguration::m_effectiveNamespace);
+                ->Field("Publish Transform", &ROS2FrameConfiguration::m_publishTransform);
 
             if (AZ::EditContext* ec = serialize->GetEditContext())
             {
@@ -45,8 +44,8 @@ namespace ROS2
                         &ROS2FrameConfiguration::m_publishTransform,
                         "Publish Transform",
                         "Publish Transform")
-                    ->DataElement(AZ::Edit::UIHandlers::Default, &ROS2FrameConfiguration::m_effectiveNamespace, "Effective namespace", "")
-                    ->Attribute(AZ::Edit::Attributes::ReadOnly, true);
+                    ->UIElement(AZ::Edit::UIHandlers::Label, "Effective namespace", "")
+                    ->Attribute(AZ::Edit::Attributes::ValueText, &ROS2FrameConfiguration::m_effectiveNamespace);
             }
         }
     }
