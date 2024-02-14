@@ -38,6 +38,8 @@ namespace OpenXRVk
         }
 
         AzFramework::InputDeviceXRController::Reflect(context);
+        OpenXRInteractionProfilesAsset::Reflect(context);
+        OpenXRActionSetsAsset::Reflect(context);
     }
 
     XR::Ptr<XR::Instance> SystemComponent::CreateInstance()
@@ -82,6 +84,12 @@ namespace OpenXRVk
 
     void SystemComponent::Activate()
     {
+        m_actionSetsAssetHandler = AZStd::make_unique<OpenXRActionSetsAssetHandler>();
+        m_actionSetsAssetHandler->Register();
+
+        m_interactionProfilesAssetHandler = AZStd::make_unique<OpenXRInteractionProfilesAssetHandler>();
+        m_interactionProfilesAssetHandler->Register();
+
         if (XR::IsOpenXREnabled())
         {
             m_instance = AZStd::static_pointer_cast<OpenXRVk::Instance>(CreateInstance());
@@ -110,5 +118,9 @@ namespace OpenXRVk
             AZ::Interface<XR::Instance>::Unregister(m_instance.get());
             m_instance = nullptr;
         }
+
+        m_actionSetsAssetHandler->Unregister();
+        m_interactionProfilesAssetHandler->Unregister();
     }
+
 }

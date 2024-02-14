@@ -12,6 +12,9 @@
 #include <OpenXRVk/OpenXRVkInstance.h>
 #include <AzCore/Component/Component.h>
 
+#include <OpenXRVk/OpenXRVkInteractionProfilesAsset.h>
+#include <OpenXRVk/OpenXRVkActionSetsAsset.h>
+
 namespace OpenXRVk
 {
     //! This class is the component related to the vulkan backend of XR.
@@ -63,5 +66,8 @@ namespace OpenXRVk
 
     private:
         XR::Ptr<OpenXRVk::Instance> m_instance;
+
+        AZStd::unique_ptr<OpenXRInteractionProfilesAssetHandler> m_interactionProfilesAssetHandler;
+        AZStd::unique_ptr<OpenXRActionSetsAssetHandler> m_actionSetsAssetHandler;
     };
 }
