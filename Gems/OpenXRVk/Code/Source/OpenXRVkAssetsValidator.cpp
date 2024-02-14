@@ -187,7 +187,7 @@ namespace OpenXRVkAssetsValidator
             if (uniqueUserPathPaths.contains(userPathDescriptor.m_path))
             {
                 return AZ::Failure(
-                    AZStd::string::format("An User Path with path [%s] already exists.",
+                    AZStd::string::format("User Path with path [%s] already exists.",
                         userPathDescriptor.m_path.c_str())
                 );
             }
@@ -224,7 +224,7 @@ namespace OpenXRVkAssetsValidator
             if (uniqueNames.contains(interactionProfileDescriptor.m_name))
             {
                 return AZ::Failure(
-                    AZStd::string::format("An Interaction Profile with name [%s] already exists.",
+                    AZStd::string::format("Interaction Profile with name [%s] already exists.",
                         interactionProfileDescriptor.m_name.c_str())
                 );
             }
@@ -242,7 +242,7 @@ namespace OpenXRVkAssetsValidator
             if (uniquePaths.contains(interactionProfileDescriptor.m_path))
             {
                 return AZ::Failure(
-                    AZStd::string::format("An Interaction Profile with path [%s] already exists.",
+                    AZStd::string::format("Interaction Profile with path [%s] already exists.",
                         interactionProfileDescriptor.m_path.c_str())
                 );
             }
@@ -293,7 +293,7 @@ namespace OpenXRVkAssetsValidator
     {
         if (interactionProfilesAsset.m_interactionProfileDescriptors.empty())
         {
-            return AZ::Failure("An InteractionProfiles asset requires at least one Interaction Profile");
+            return AZ::Failure("InteractionProfiles asset requires at least one Interaction Profile.");
         }
 
         AZStd::unordered_set<AZStd::string> uniqueNames;

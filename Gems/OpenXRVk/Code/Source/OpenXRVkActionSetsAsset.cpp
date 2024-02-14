@@ -298,7 +298,7 @@ namespace OpenXRVk
             AZ::EditContext* edit = serialize->GetEditContext();
             if (edit)
             {
-                edit->Class<OpenXRActionSetDescriptor>("OpenXRActionSetDescriptor", "A group of OpenXR Actions that can be selectively activated/deactivated at runtime.")
+                edit->Class<OpenXRActionSetDescriptor>("OpenXRActionSetDescriptor", "Contains a list of OpenXR Actions.")
                     ->ClassElement(AZ::Edit::ClassElements::EditorData, "")
                     ->Attribute(AZ::Edit::Attributes::NameLabelOverride, &OpenXRActionSetDescriptor::GetEditorText)
                     ->Attribute(AZ::Edit::Attributes::AutoExpand, true)

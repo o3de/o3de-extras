@@ -18,9 +18,6 @@ namespace OpenXRVkBuilders
 {
     void OpenXRAssetsBuilderSystemComponent::Reflect(AZ::ReflectContext* context)
     {
-        OpenXRVk::OpenXRInteractionProfilesAsset::Reflect(context);
-        OpenXRVk::OpenXRActionSetsAsset::Reflect(context);
-
         if (AZ::SerializeContext* serialize = azrtti_cast<AZ::SerializeContext*>(context))
         {
             serialize->Class<OpenXRAssetsBuilderSystemComponent, Component>()
@@ -58,7 +55,7 @@ namespace OpenXRVkBuilders
     {    
         // Register Shader Asset Builder
         AssetBuilderSDK::AssetBuilderDesc assetBuilderDescriptor;
-        assetBuilderDescriptor.m_name = "OpenXR ActionSets Builder";
+        assetBuilderDescriptor.m_name = "OpenXR Assets Builder";
         assetBuilderDescriptor.m_version = 1; // First versuib
         assetBuilderDescriptor.m_patterns.push_back(AssetBuilderSDK::AssetBuilderPattern(AZStd::string::format("*.%s", OpenXRVk::OpenXRInteractionProfilesAsset::s_assetExtension), AssetBuilderSDK::AssetBuilderPattern::PatternType::Wildcard));
         assetBuilderDescriptor.m_patterns.push_back(AssetBuilderSDK::AssetBuilderPattern(AZStd::string::format("*.%s", OpenXRVk::OpenXRActionSetsAsset::s_assetExtension), AssetBuilderSDK::AssetBuilderPattern::PatternType::Wildcard));
