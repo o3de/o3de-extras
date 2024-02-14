@@ -133,7 +133,7 @@ namespace OpenXRVkBuilders
            azrtti_typeid<OpenXRVk::OpenXRInteractionProfilesAsset>(),
            aznumeric_cast<uint32_t>(0), jobProduct))
        {
-           AZ_Error(LogName, false, "Failed to declare output product assets.");
+           AZ_Error(LogName, false, "FIXME this message.");
            response.m_resultCode = AssetBuilderSDK::ProcessJobResult_Failed;
            return;
        }
@@ -142,6 +142,25 @@ namespace OpenXRVkBuilders
     }
     // OpenXRInteractionProfilesAsset Support End
     /////////////////////////////////////////////////////////////////////////////////////
+
+
+    static AZStd::string GetInteractionProfileAssetSourcePath(const OpenXRVk::OpenXRActionSetsAsset& actionSetsAsset)
+    {
+        const auto& sourceUuid = actionSetsAsset.m_interactionProfilesAsset.GetId().m_guid;
+        bool foundSource = false;
+        AZ::Data::AssetInfo sourceAssetInfo;
+        AZStd::string sourceWatchFolder;
+        AzToolsFramework::AssetSystemRequestBus::BroadcastResult(foundSource, &AzToolsFramework::AssetSystemRequestBus::Events::GetSourceInfoBySourceUUID,
+            sourceUuid, sourceAssetInfo, sourceWatchFolder);
+        AZStd::string sourcePath;
+        if (foundSource)
+        {
+            constexpr bool caseInsensitive = false;
+            constexpr bool normalize = true;
+            AZ::StringFunc::Path::Join(sourceWatchFolder.c_str(), sourceAssetInfo.m_relativePath.c_str(), sourcePath, caseInsensitive, normalize);
+        }
+        return sourcePath;
+    }
 
 
     void OpenXRAssetsBuilder::CreateActionSetsAssetJobs(const AssetBuilderSDK::CreateJobsRequest& request, AssetBuilderSDK::CreateJobsResponse& response) const
@@ -160,9 +179,10 @@ namespace OpenXRVkBuilders
             return;
         }
 
-        if (!actionSetsAssetPtr->m_interactionProfilesAsset.GetId().IsValid())
+        auto interactionProfileSourcePath = GetInteractionProfileAssetSourcePath(*actionSetsAssetPtr.get());
+        if (interactionProfileSourcePath.empty())
         {
-            AZ_Error(LogName, false, "Need a valid InteractionPRofile Asset UUID to setup the job dependency.");
+            AZ_Error(LogName, false, "An ActionSets source asset requires a valid InteractionProfiles source asset.");
             response.m_result = AssetBuilderSDK::CreateJobsResultCode::Failed;
             return;
         }
@@ -178,7 +198,7 @@ namespace OpenXRVkBuilders
             jobDescriptor.SetPlatformIdentifier(platformInfo.m_identifier.c_str());
 
             AssetBuilderSDK::SourceFileDependency sourceFileDependency{};
-            sourceFileDependency.m_sourceFileDependencyUUID = actionSetsAssetPtr->m_interactionProfilesAsset.GetId().m_guid;
+            sourceFileDependency.m_sourceFileDependencyPath = interactionProfileSourcePath;
             auto jobDependency = AssetBuilderSDK::JobDependency(InteractionProfilesAssetJobKey, platformInfo.m_identifier,
                 AssetBuilderSDK::JobDependencyType::Order, sourceFileDependency);
             jobDescriptor.m_jobDependencyList.emplace_back(AZStd::move(jobDependency));
@@ -211,26 +231,6 @@ namespace OpenXRVkBuilders
                 }
             }
         }
-    }
-
-
-    static AZStd::string GetInteractionProfileAssetSourcePath(const OpenXRVk::OpenXRActionSetsAsset& actionSetsAsset)
-    {
-        const auto& sourceUuid = actionSetsAsset.m_interactionProfilesAsset.GetId().m_guid;
-        bool foundSource = false;
-        AZ::Data::AssetInfo sourceAssetInfo;
-        AZStd::string sourceWatchFolder;
-        AzToolsFramework::AssetSystemRequestBus::BroadcastResult(foundSource, &AzToolsFramework::AssetSystemRequestBus::Events::GetSourceInfoBySourceUUID,
-            sourceUuid, sourceAssetInfo, sourceWatchFolder);
-        AZStd::string sourcePath;
-        if (foundSource)
-        {
-            constexpr bool caseInsensitive = false;
-            constexpr bool normalize = true;
-            AZ::StringFunc::Path::Join(sourceWatchFolder.c_str(), sourceAssetInfo.m_relativePath.c_str(), sourcePath, caseInsensitive, normalize);
-        }
-
-        return sourcePath;
     }
 
 

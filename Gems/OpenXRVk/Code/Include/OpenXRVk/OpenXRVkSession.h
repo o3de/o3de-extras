@@ -15,6 +15,9 @@
 
 namespace OpenXRVk
 {
+    class ActionsManager;
+    class ReferenceSpacesManager;
+
     // Class that will help manage XrSession
     class Session final
         : public XR::Session
@@ -40,11 +43,15 @@ namespace OpenXRVk
         //! Return the Xrspace related to the SpaceType enum
         XrSpace GetXrSpace(SpaceType spaceType) const;
 
+        const AZStd::vector<XrView>& GetXrViews() const;
+
+        XrSpace GetViewSpaceXrSpace() const;
+
         ////////////////////////////////////////////////////////////////////////////////////////////
         //! Called by a Device when the predicted display time has been updated (typically
         //! the device updates the predicted display time during BeginFrame).
         //! See OpenXRVkInput.h UpdateXrSpaceLocations(...) for more details.
-        void UpdateXrSpaceLocations(const OpenXRVk::Device& device, XrTime predictedDisplayTime, AZStd::vector<XrView>& xrViews);
+        void OnBeginFrame(XrTime predictedDisplayTime);
 
         //! Setters and Getters for the base spaces that will be used
         //! when calling xrLocateSpace().
@@ -84,15 +91,15 @@ namespace OpenXRVk
         void ShutdownInternal() override;
         void LogActionSourceName(XrAction action, const AZStd::string_view actionName) const;
         Input* GetNativeInput() const;
-        // Spaces are reset every time the proximity sensor turns off, or the user wears the headset
-        // when the proximity sensor is ON.
-        void ResetSpaces();
 
         XrSession m_session = XR_NULL_HANDLE;
         XrSessionState m_sessionState = XR_SESSION_STATE_UNKNOWN;
         XrEventDataBuffer m_eventDataBuffer;
         XrInstance m_xrInstance = XR_NULL_HANDLE;
         XrGraphicsBindingVulkan2KHR m_graphicsBinding{ XR_TYPE_GRAPHICS_BINDING_VULKAN_KHR };
+
+        AZStd::unique_ptr<ReferenceSpacesManager> m_referenceSpacesMgr;
+        AZStd::unique_ptr<ActionsManager> m_actionsMgr;
         
         // Application defined base space that will used to calculate
         // the relative pose of all other spaces.

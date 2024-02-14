@@ -19,6 +19,8 @@
 #include <OpenXRVk/OpenXRVkSwapChain.h>
 #include <OpenXRVk/OpenXRVkSystemComponent.h>
 
+#include "OpenXRVkBehaviorReflection.h"
+
 #include <XR/XRUtils.h>
 
 namespace OpenXRVk
@@ -35,6 +37,11 @@ namespace OpenXRVk
         {
             serializeContext->Class<SystemComponent, AZ::Component>()
                 ->Version(1);
+        }
+
+        if (auto behaviorContext = azrtti_cast<AZ::BehaviorContext*>(context))
+        {
+            OpenXRBehaviorReflect(*behaviorContext);
         }
 
         AzFramework::InputDeviceXRController::Reflect(context);
@@ -87,7 +94,10 @@ namespace OpenXRVk
         m_actionSetsAssetHandler = AZStd::make_unique<OpenXRActionSetsAssetHandler>();
         m_actionSetsAssetHandler->Register();
 
-        m_interactionProfilesAssetHandler = AZStd::make_unique<OpenXRInteractionProfilesAssetHandler>();
+        m_interactionProfilesAssetHandler = AZStd::make_unique<AzFramework::GenericAssetHandler<OpenXRInteractionProfilesAsset>>(
+            OpenXRInteractionProfilesAsset::s_assetTypeName,
+            "Other",
+            OpenXRInteractionProfilesAsset::s_assetExtension);
         m_interactionProfilesAssetHandler->Register();
 
         if (XR::IsOpenXREnabled())

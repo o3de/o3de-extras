@@ -7,7 +7,6 @@
  */
 
 #include <OpenXRVk/OpenXRVkInteractionProfilesAsset.h>
-#include <OpenXRVk/OpenXRVkAssetsValidator.h>
 
 namespace OpenXRVk
 {
@@ -311,45 +310,6 @@ namespace OpenXRVk
     }
 
     /// OpenXRInteractionProfilesAsset
-    ///////////////////////////////////////////////////////////
-
-
-    ///////////////////////////////////////////////////////////
-    /// OpenXRInteractionProfilesAssetHandler
-    OpenXRInteractionProfilesAssetHandler::OpenXRInteractionProfilesAssetHandler()
-        : AzFramework::GenericAssetHandler<OpenXRInteractionProfilesAsset>(
-            OpenXRInteractionProfilesAsset::s_assetTypeName,
-            "Other",
-            OpenXRInteractionProfilesAsset::s_assetExtension)
-    {
-    }
-    
-    bool OpenXRInteractionProfilesAssetHandler::SaveAssetData(const AZ::Data::Asset<AZ::Data::AssetData>& asset, AZ::IO::GenericStream* stream)
-    {
-        auto profileAsset = asset.GetAs<OpenXRInteractionProfilesAsset>();
-        if (!profileAsset)
-        {
-            AZ_Error(LogName, false, "This should be an OpenXR Interaction Profile Asset, as this is the only type this handler can process.");
-            return false;
-        }
-        
-        auto outcome = OpenXRVkAssetsValidator::ValidateInteractionProfilesAsset(*profileAsset);
-        if (!outcome.IsSuccess())
-        {
-            AZ_Error(LogName, false, "Can't save this interaction profiles asset. Reason:\n%s\n", outcome.GetError().c_str());
-            return false;
-        }
-    
-        if (!m_serializeContext)
-        {
-            AZ_Error(LogName, false, "Can't save the OpenXR Interaction Profile Asset without a serialize context.");
-            return false;
-        }
-    
-        return AZ::Utils::SaveObjectToStream(*stream, AZ::ObjectStream::ST_JSON, profileAsset,
-            asset->RTTI_GetType(), m_serializeContext);
-    }
-    /// OpenXRInteractionProfilesAssetHandler
     ///////////////////////////////////////////////////////////
 
 } // namespace OpenXRVk

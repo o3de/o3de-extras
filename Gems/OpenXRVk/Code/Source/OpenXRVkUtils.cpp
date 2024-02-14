@@ -44,6 +44,17 @@ namespace OpenXRVk
         return to_string(result);
     }
 
+    void PrintXrError(const char* windowName, const XrResult error, const char* fmt, ...)
+    {
+        va_list argList;
+        va_start(argList, fmt);
+
+        const auto subMsg = AZStd::string::format_arg(fmt, argList);
+        AZ_Error(windowName, false, "%s. Got OpenXR Error: %s\n", subMsg.c_str(), GetResultString(error));
+
+        va_end(argList);
+    }
+
     XR::RawStringList FilterList(const XR::RawStringList& source, const XR::StringList& filter)
     {
         XR::RawStringList filteredList;
@@ -84,11 +95,16 @@ namespace OpenXRVk
         return AZ::Quaternion(pose.orientation.x, pose.orientation.y, pose.orientation.z, pose.orientation.w);
     }
 
+    AZ::Vector3 AzVector3FromXrVector3(const XrVector3f& xrVec3, bool convertCoordinates)
+    {
+        return AZ::Vector3(xrVec3.x,
+                           convertCoordinates ? -xrVec3.z : xrVec3.y,
+                           convertCoordinates ?  xrVec3.y : xrVec3.z);
+    }
+
     AZ::Vector3 AzPositionFromXrPose(const XrPosef& pose, bool convertCoordinates)
     {
-        return AZ::Vector3(pose.position.x,
-                           convertCoordinates ? -pose.position.z : pose.position.y,
-                           convertCoordinates ? pose.position.y : pose.position.z);
+        return AzVector3FromXrVector3(pose.position, convertCoordinates);
     }
 
     AZ::Transform AzTransformFromXrPose(const XrPosef& pose, bool convertCoordinates)
@@ -116,6 +132,24 @@ namespace OpenXRVk
         pose.position.z = convertCoordinates ?  azPos.GetY() : azPos.GetZ();
 
         return pose; 
+    }
+
+    AZStd::string ConvertXrPathToString(XrInstance xrInstance, XrPath xrPath)
+    {
+        if ((xrInstance == XR_NULL_HANDLE) || (xrPath == XR_NULL_PATH))
+        {
+            return AZStd::string("");
+        }
+        constexpr uint32_t MaxBytes = 256;
+        char pathAsChars[MaxBytes];
+        uint32_t usedBytes = 0;
+        XrResult result = xrPathToString(xrInstance, xrPath, MaxBytes, &usedBytes, pathAsChars);
+        if (IsError(result))
+        {
+            PrintXrError("OpenXRVkUtils", result, "Failed to convert xrPath to a string with %u bytes.", MaxBytes);
+            return AZStd::string("");
+        }
+        return AZStd::string(pathAsChars);
     }
 
 }
