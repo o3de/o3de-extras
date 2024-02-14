@@ -11,7 +11,6 @@
 #include <XR/XRFactory.h>
 #include <OpenXRVk/OpenXRVkInstance.h>
 #include <AzCore/Component/Component.h>
-#include <AzFramework/Asset/GenericAssetHandler.h>
 
 #include <OpenXRVk/OpenXRVkInteractionProfilesAsset.h>
 #include <OpenXRVk/OpenXRVkActionSetsAsset.h>
@@ -68,7 +67,7 @@ namespace OpenXRVk
     private:
         XR::Ptr<OpenXRVk::Instance> m_instance;
 
-        AZStd::unique_ptr<AzFramework::GenericAssetHandler<OpenXRInteractionProfilesAsset>> m_interactionProfilesAssetHandler;
+        AZStd::unique_ptr<OpenXRInteractionProfilesAssetHandler> m_interactionProfilesAssetHandler;
         AZStd::unique_ptr<OpenXRActionSetsAssetHandler> m_actionSetsAssetHandler;
     };
 }

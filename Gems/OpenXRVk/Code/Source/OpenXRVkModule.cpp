@@ -8,9 +8,12 @@
 
 #include <AzCore/Memory/SystemAllocator.h>
 #include <AzCore/Module/Module.h>
-
 #include <OpenXRVk/OpenXRVkSystemComponent.h>
 #include <XRCameraMovementComponent.h>
+
+#if defined (OPENXRVK_BUILDERS)
+#include "Builders/OpenXRVkAssetsBuilderSystemComponent.h"
+#endif
 
 namespace OpenXRVk
 {   
@@ -28,7 +31,9 @@ namespace OpenXRVk
             m_descriptors.insert(m_descriptors.end(), {
                 SystemComponent::CreateDescriptor(),
                 XRCameraMovementComponent::CreateDescriptor(),
-                //KHRSimpleProfileSystemComponent::CreateDescriptor(),
+                #if defined (OPENXRVK_BUILDERS)
+                OpenXRVkBuilders::OpenXRAssetsBuilderSystemComponent::CreateDescriptor(),
+                #endif
             });
         }
 
@@ -43,7 +48,8 @@ namespace OpenXRVk
 }
 
 
-// DO NOT MODIFY THIS LINE UNLESS YOU RENAME THE GEM
-// The first parameter should be GemName_GemIdLower
-// The second should be the fully qualified name of the class above
+#if defined(O3DE_GEM_NAME)
+AZ_DECLARE_MODULE_CLASS(AZ_JOIN(Gem_, O3DE_GEM_NAME), OpenXRVk::Module)
+#else
 AZ_DECLARE_MODULE_CLASS(Gem_OpenXRVk, OpenXRVk::Module)
+#endif

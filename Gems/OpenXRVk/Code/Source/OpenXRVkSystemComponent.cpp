@@ -94,10 +94,7 @@ namespace OpenXRVk
         m_actionSetsAssetHandler = AZStd::make_unique<OpenXRActionSetsAssetHandler>();
         m_actionSetsAssetHandler->Register();
 
-        m_interactionProfilesAssetHandler = AZStd::make_unique<AzFramework::GenericAssetHandler<OpenXRInteractionProfilesAsset>>(
-            OpenXRInteractionProfilesAsset::s_assetTypeName,
-            "Other",
-            OpenXRInteractionProfilesAsset::s_assetExtension);
+        m_interactionProfilesAssetHandler = AZStd::make_unique<OpenXRInteractionProfilesAssetHandler>();
         m_interactionProfilesAssetHandler->Register();
 
         if (XR::IsOpenXREnabled())
