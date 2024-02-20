@@ -14,12 +14,29 @@
 #include <AzToolsFramework/ToolsComponents/EditorComponentBase.h>
 #include <ROS2/Communication/PublisherConfiguration.h>
 #include <ROS2/Communication/SubscriberConfiguration.h>
+#include <AzCore/Serialization/Json/BaseJsonSerializer.h>
 
 namespace ROS2
 {
+    // Custom JSON serializer for JointsManipulationEditorComponent configuration to handle version conversion
+    class JointsManipulationEditorComponentConfigSerializer : public AZ::BaseJsonSerializer
+    {
+    public:
+        AZ_RTTI(ROS2::JointsManipulationEditorComponentConfigSerializer, "{8b884dae-82b7-4514-a2b4-fd2e7fc4a4fb}", AZ::BaseJsonSerializer);
+        AZ_CLASS_ALLOCATOR_DECL;
+
+        AZ::JsonSerializationResult::Result Load(
+            void* outputValue,
+            const AZ::Uuid& outputValueTypeId,
+            const rapidjson::Value& inputValue,
+            AZ::JsonDeserializerContext& context) override;
+    };
+
     //! Editor Component responsible for a hierarchical system of joints such as robotic arm with Articulations or Hinge Joints.
     class JointsManipulationEditorComponent : public AzToolsFramework::Components::EditorComponentBase
     {
+        friend class JointsManipulationEditorComponentConfigSerializer;
+
     public:
         JointsManipulationEditorComponent();
         ~JointsManipulationEditorComponent() = default;

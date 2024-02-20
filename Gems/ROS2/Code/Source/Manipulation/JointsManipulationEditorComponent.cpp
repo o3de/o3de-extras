@@ -18,9 +18,35 @@
 #include <ROS2/Utilities/ROS2Names.h>
 #include <Source/ArticulationLinkComponent.h>
 #include <Source/HingeJointComponent.h>
+#include <AzCore/Serialization/Json/RegistrationContext.h>
 
 namespace ROS2
 {
+    AZ::JsonSerializationResult::Result JointsManipulationEditorComponentConfigSerializer::Load(
+        void* outputValue,
+        [[maybe_unused]] const AZ::Uuid& outputValueTypeId,
+        const rapidjson::Value& inputValue,
+        AZ::JsonDeserializerContext& context)
+    {
+        rapidjson::Value::ConstMemberIterator itr = inputValue.FindMember("Initial positions");
+        if (itr != inputValue.MemberEnd() && !itr->value.IsArray())
+        {
+            AZ_Error(
+                "JointsManipulationEditorComponent",
+                false,
+                "An old version of the JointsManipulationEditorComponent is being loaded. Manual conversion is required. The conversion script is "
+                "located in: "
+                "o3de-extras/Gems/ROS2/Code/Source/Manipulation/Conversions/JointsPositionsConversion.py");
+
+            return context.Report(AZ::JsonSerializationResult::Tasks::ReadField, AZ::JsonSerializationResult::Outcomes::Catastrophic,
+                "Old version of JointsManipulationEditorComponent Json was detected.");
+        }
+
+        return AZ::BaseJsonSerializer::Load(outputValue, outputValueTypeId, inputValue, context);
+    }
+
+    AZ_CLASS_ALLOCATOR_IMPL(JointsManipulationEditorComponentConfigSerializer, AZ::SystemAllocator);
+
     JointsManipulationEditorComponent::JointsManipulationEditorComponent()
     {
         m_jointStatePublisherConfiguration.m_topicConfiguration.m_type = "sensor_msgs::msg::JointState";
@@ -57,6 +83,11 @@ namespace ROS2
     void JointsManipulationEditorComponent::Reflect(AZ::ReflectContext* context)
     {
         JointNamePositionPair::Reflect(context);
+
+        if (auto jsonContext = azrtti_cast<AZ::JsonRegistrationContext*>(context))
+        {
+            jsonContext->Serializer<JointsManipulationEditorComponentConfigSerializer>()->HandlesType<JointsManipulationEditorComponent>();
+        }
 
         if (AZ::SerializeContext* serialize = azrtti_cast<AZ::SerializeContext*>(context))
         {
