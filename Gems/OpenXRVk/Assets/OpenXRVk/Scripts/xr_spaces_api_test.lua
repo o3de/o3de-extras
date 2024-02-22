@@ -53,7 +53,7 @@ function xr_spaces_api_test:OnDeactivate()
 end
 
 function xr_spaces_api_test:_DumpPoses(deltaTime, timePoint)
-	local outcome = OpenXRReferenceSpaces.GetReferenceSpacePose(self._mySpaceName, "Local")
+    local outcome = OpenXRReferenceSpaces.GetReferenceSpacePose(self._mySpaceName, "Local")
     if outcome:IsSuccess() then
         local tm = outcome:GetValue()
         Debug.Log("Current transform for <" .. self._mySpaceName .. "> == " .. tostring(tm))
