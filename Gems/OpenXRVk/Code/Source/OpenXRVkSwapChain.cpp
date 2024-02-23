@@ -86,7 +86,6 @@ namespace OpenXRVk
     {
         Instance* xrVkInstance = static_cast<Instance*>(GetDescriptor().m_instance.get());
         Session* xrVkSession = static_cast<Session*>(GetDescriptor().m_session.get());
-        Device* xrDevice = static_cast<Device*>(GetDescriptor().m_device.get());
         XrInstance xrInstance = xrVkInstance->GetXRInstance();
         XrSystemId xrSystemId = xrVkInstance->GetXRSystemId();
         XrSession xrSession = xrVkSession->GetXrSession();
@@ -110,20 +109,12 @@ namespace OpenXRVk
                     systemProperties.trackingProperties.positionTracking == XR_TRUE ? "True" : "False");
         }
 
-        //Only supporting XR_VIEW_CONFIGURATION_TYPE_PRIMARY_STEREO for now
-        XrViewConfigurationType viewConfigType = XR_VIEW_CONFIGURATION_TYPE_PRIMARY_STEREO;
-
-        result = xrEnumerateViewConfigurationViews(xrInstance, xrSystemId,
-                                                   viewConfigType, 0, &m_numViews, nullptr);
-        WARN_IF_UNSUCCESSFUL(result);
-
+        m_numViews = xrVkInstance->GetViewCount();
+        XrViewConfigurationType viewConfigType = xrVkInstance->GetViewConfigType();
         m_configViews.resize(m_numViews, { XR_TYPE_VIEW_CONFIGURATION_VIEW });
         result = xrEnumerateViewConfigurationViews(xrInstance, xrSystemId,
                                                    viewConfigType, m_numViews, &m_numViews, m_configViews.data());
         WARN_IF_UNSUCCESSFUL(result);
-
-        // Create and cache view buffer for xrLocateViews later.
-        xrDevice->InitXrViews(m_numViews);
 
         // Create the swapchain and get the images.
         if (m_numViews > 0)

@@ -10,19 +10,19 @@
 
 #include <AzCore/Component/Component.h>
 #include <AzCore/Component/TickBus.h>
-#include <AzFramework/Input/Events/InputChannelEventListener.h>
 #include <AzFramework/Components/CameraBus.h>
+
+#include <OpenXRVk/OpenXRVkActionsInterface.h>
 
 
 namespace OpenXRVk
 {
-    //! XRCameraMovementComponent integrates XR Controller inputs to control a camera.
+    //! XRCameraMovementComponent uses the OpenXRVk::OpenXRActionsInterface to read user input to control a camera.
     //! This is an example that hooks up a limited set of inputs, mostly thumbsticks, to
     //! drive the camera position to new places.
     class XRCameraMovementComponent
         : public AZ::Component
         , public AZ::TickBus::Handler
-        , public AzFramework::InputChannelEventListener
         , public Camera::CameraNotificationBus::Handler
     {
     public:
@@ -43,14 +43,11 @@ namespace OpenXRVk
         // AZ::TickBus::Handler
         void OnTick(float deltaTime, AZ::ScriptTimePoint timePoint) override;
 
-        // AzFramework::InputChannelEventListener
-        bool OnInputChannelEventFiltered(const AzFramework::InputChannel& inputChannel) override;
-
         // Camera::CameraNotificationBus::Handler overrides
         void OnActiveViewChanged(const AZ::EntityId&) override;
 
     private:
-        void OnXRControllerEvent(const AzFramework::InputChannel& inputChannel);
+        void ProcessOpenXRActions();
 
         // Transient data...
         AZ::Vector3 m_movement = AZ::Vector3::CreateZero();
@@ -62,6 +59,13 @@ namespace OpenXRVk
 
         // We will process XR Actions only if the entity that owns this component is the active camera. 
         bool m_isActive = false;
+
+        //! A cache of OpenXRVk Action Handles that provide straight
+        //! access into the user's input.
+        IOpenXRActions::ActionHandle m_moveFrontwaysHandle; // Float
+        IOpenXRActions::ActionHandle m_moveSidewaysHandle; // Float
+        IOpenXRActions::ActionHandle m_moveUpHandle; // Boolean
+        IOpenXRActions::ActionHandle m_moveDownHandle; // Boolean
     };
 
 } // namespace OpenXRVk
