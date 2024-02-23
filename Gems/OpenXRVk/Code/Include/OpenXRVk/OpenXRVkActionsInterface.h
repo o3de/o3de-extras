@@ -19,7 +19,7 @@ namespace OpenXRVk
     //! In addition to reading the current Pose of a particular Action
     //! it is also possible to read both the linear and angular Velocity
     //! of an action. When calling IOpenXRActions::GetActionStatePoseWithVelocities()
-    //! This is the returned data.
+    //! this is the returned data.
     struct PoseWithVelocities final
     {
         AZ_TYPE_INFO(PoseWithVelocities, "{AF5B9FF7-FB02-4DA4-89FB-66E605F728E2}");

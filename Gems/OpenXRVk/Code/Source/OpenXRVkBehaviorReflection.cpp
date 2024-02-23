@@ -38,6 +38,8 @@ namespace OpenXRVk
     }
 
 
+    //! This class implements the functions that are exported into the Behavior Context
+    //! as a means to provide scripting access to OpenXRReferenceSpacesInterface.
     class OpenXRReferenceSpaces
     {
     public:
@@ -162,19 +164,6 @@ namespace OpenXRVk
             return iface->GetViewPose(eyeIndex);
         }
 
-        //TODO: Serialize AZ::RPI::FovData
-        static const AZ::RPI::FovData& GetViewFovData(uint32_t eyeIndex)
-        {
-            const auto iface = OpenXRReferenceSpacesInterface::Get();
-            if (!iface)
-            {
-                AZ_Error(LogName, false, "%s: OpenXRReferenceSpacesInterface is not available.", __FUNCTION__);
-                static const AZ::RPI::FovData fovData{};
-                return fovData;
-            }
-            return iface->GetViewFovData(eyeIndex);
-        }
-
 
         static const AZStd::vector<AZ::Transform>& GetViewPoses()
         {
@@ -202,6 +191,9 @@ namespace OpenXRVk
 
     }; // class OpenXRReferenceSpaces
 
+
+    //! This class implements the functions that are exported into the Behavior Context
+    //! as a means to provide scripting access to OpenXRActionsInterface.
     class OpenXRActions
     {
     public:
@@ -410,8 +402,6 @@ namespace OpenXRVk
             ->Method("GetViewSpacePose", &OpenXRReferenceSpaces::GetViewSpacePose)
             ->Method("GetViewCount", &OpenXRReferenceSpaces::GetViewCount)
             ->Method("GetViewPose", &OpenXRReferenceSpaces::GetViewPose)
-            //TODO: Serialize AZ::RPI::FovData
-            //->Method("GetViewFovData", &OpenXRReferenceSpaces::GetViewFovData)
             ->Method("GetViewPoses", &OpenXRReferenceSpaces::GetViewPoses)
             ->Method("ForceViewPosesCacheUpdate", &OpenXRReferenceSpaces::ForceViewPosesCacheUpdate)
              ;
