@@ -25,6 +25,7 @@ namespace ROS2
         //! @param model A parsed SDF model which could hold information about sensor to be made.
         //! @param link A parsed SDF tree link node used to identify link being currently processed.
         //! @param entityId A non-active entity which will be affected.
-        void AddSensors(const sdf::Model& model, const sdf::Link* link, AZ::EntityId entityId) const;
+        //! @return List containing any entities with sensors that were created.
+        AZStd::vector<AZ::EntityId> AddSensors(const sdf::Model& model, const sdf::Link* link, AZ::EntityId entityId) const;
     };
 } // namespace ROS2

@@ -80,30 +80,23 @@ namespace ROS2::Utils
         return isWheel;
     }
 
-    AZ::Transform GetLocalTransformURDF(const sdf::Link* link, AZ::Transform t)
+    AZ::Transform GetLocalTransformURDF(const sdf::SemanticPose& semanticPose, AZ::Transform t)
     {
         // Determine if the pose is relative to another link
         // See doxygen at
         // http://osrf-distributions.s3.amazonaws.com/sdformat/api/13.2.0/classsdf_1_1SDF__VERSION__NAMESPACE_1_1Link.html#a011d84b31f584938d89ac6b8c8a09eb3
 
-        sdf::SemanticPose linkSemanticPos = link->SemanticPose();
         gz::math::Pose3d resolvedPose;
-
-        if (sdf::Errors poseResolveErrors = linkSemanticPos.Resolve(resolvedPose); !poseResolveErrors.empty())
+        if (sdf::Errors poseResolveErrors = semanticPose.Resolve(resolvedPose); !poseResolveErrors.empty())
         {
             AZStd::string poseErrorMessages = Utils::JoinSdfErrorsToString(poseResolveErrors);
 
-            AZ_Error(
-                "RobotImporter",
-                false,
-                R"(Failed to get world transform for link %s. Errors: "%s")",
-                link->Name().c_str(),
-                poseErrorMessages.c_str());
+            AZ_Error("RobotImporter", false, R"(Failed to get world transform. Errors: "%s")", poseErrorMessages.c_str());
             return {};
         }
 
-        const AZ::Transform linkTransform = URDF::TypeConversions::ConvertPose(resolvedPose);
-        const AZ::Transform resolvedTransform = linkTransform * t;
+        const AZ::Transform localTransform = URDF::TypeConversions::ConvertPose(resolvedPose);
+        const AZ::Transform resolvedTransform = localTransform * t;
         return resolvedTransform;
     }
 

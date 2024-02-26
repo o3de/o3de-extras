@@ -85,7 +85,7 @@ namespace ROS2
         // Use a name generated from the link unless specific name is defined for this visual
         AZStd::string subEntityName = visual->Name().empty() ? generatedName.c_str() : visual->Name().c_str();
         // Since O3DE does not allow origin for visuals, we need to create a sub-entity and store visual there
-        auto createEntityResult = PrefabMakerUtils::CreateEntity(entityId, subEntityName.c_str());
+        auto createEntityResult = PrefabMakerUtils::CreateEntity(entityId, subEntityName);
         if (!createEntityResult.IsSuccess())
         {
             AZ_Error("AddVisual", false, "Unable to create a sub-entity for visual element %s\n", subEntityName.c_str());
@@ -277,7 +277,10 @@ namespace ROS2
         AZ_Info("AddMaterial", "Added product material %s\n", materialProductPath.c_str());
     }
 
-    static void OverrideMaterialPbrSettings(const sdf::Material* material, const AZStd::shared_ptr<Utils::UrdfAssetMap>& assetMapping, AZ::Render::MaterialAssignmentMap& overrides)
+    static void OverrideMaterialPbrSettings(
+        const sdf::Material* material,
+        const AZStd::shared_ptr<Utils::UrdfAssetMap>& assetMapping,
+        AZ::Render::MaterialAssignmentMap& overrides)
     {
         if (auto pbr = material->PbrMaterial(); pbr)
         {
@@ -365,7 +368,6 @@ namespace ROS2
                 }
             }
         }
-
     }
 
     static void OverrideMaterialBaseColor(const sdf::Material* material, AZ::Render::MaterialAssignmentMap& overrides)
@@ -424,10 +426,10 @@ namespace ROS2
                     materialAssignment.m_propertyOverrides.emplace(AZ::Name("emissive.enable"), AZStd::any(true));
                     materialAssignment.m_propertyOverrides.emplace(AZ::Name("emissive.color"), AZStd::any(emissiveColor));
 
-                    // The URDF/SDF file doesn't specify an emissive intensity, just a color. 
+                    // The URDF/SDF file doesn't specify an emissive intensity, just a color.
                     // We're arbitrarily using a value slightly higher than the default emissive intensity.
-                    // This value was picked based on observations of emissive color behaviors in Gazebo. 
-                    // This intensity mostly preserves the color (though it lightens it a little) and 
+                    // This value was picked based on observations of emissive color behaviors in Gazebo.
+                    // This intensity mostly preserves the color (though it lightens it a little) and
                     // potentially adds a little bit of lighting to the scene if Bloom or Diffuse Probe Grid also exist in the world.
                     materialAssignment.m_propertyOverrides.emplace(AZ::Name("emissive.intensity"), AZStd::any(5.5f));
                 }
@@ -445,7 +447,7 @@ namespace ROS2
 
             if (material->Element()->HasElement("shininess"))
             {
-                // If we have a shininess value, we'll use it to set both metallic and roughness. 
+                // If we have a shininess value, we'll use it to set both metallic and roughness.
                 // The shinier it is, the more metallic and less rough we'll make the result.
                 shininess = material->Shininess();
                 roughness = 1.0f - shininess;
@@ -466,12 +468,11 @@ namespace ROS2
                 // Since specular color doesn't really speak to shininess, we'll arbitrarily scale down the specular brightness to
                 // 1/4 of the total brightness to modulate the metallic reflectiveness a little, but not too much. Without this scaling,
                 // a white specular color would always become fully metallic, perfectly smooth, and therefore fully reflective.
-                // With the scaling, a white specular color will be perfectly smooth but only 25% metallic, so it will have some reflectivity
-                // but not a lot.
+                // With the scaling, a white specular color will be perfectly smooth but only 25% metallic, so it will have some
+                // reflectivity but not a lot.
                 shininess = specularBrightness * 0.25f;
-
             }
-                
+
             for (auto& [id, materialAssignment] : overrides)
             {
                 materialAssignment.m_propertyOverrides.emplace(AZ::Name("metallic.factor"), AZStd::any(shininess));

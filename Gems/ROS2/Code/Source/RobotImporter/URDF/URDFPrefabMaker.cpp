@@ -291,7 +291,8 @@ namespace ROS2
             {
                 AZ::EntityId createdEntityId = createLinkEntityResult.GetValue();
                 std::string linkName = linkPtr->Name();
-                AZ::Transform tf = Utils::GetLocalTransformURDF(linkPtr);
+                const auto linkSemanticPose = linkPtr->SemanticPose();
+                AZ::Transform tf = Utils::GetLocalTransformURDF(linkSemanticPose);
                 auto* entity = AzToolsFramework::GetEntityById(createdEntityId);
                 if (entity)
                 {
@@ -673,7 +674,8 @@ namespace ROS2
         if (attachedModel != nullptr)
         {
             m_collidersMaker.AddColliders(*attachedModel, &link, entityId);
-            m_sensorsMaker.AddSensors(*attachedModel, &link, entityId);
+            auto createdSensorEntities = m_sensorsMaker.AddSensors(*attachedModel, &link, entityId);
+            createdEntities.insert(createdEntities.end(), createdSensorEntities.begin(), createdSensorEntities.end());
         }
         return AZ::Success(entityId);
     }

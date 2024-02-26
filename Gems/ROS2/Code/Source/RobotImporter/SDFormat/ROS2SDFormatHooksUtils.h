@@ -21,6 +21,7 @@
 #include <Source/EditorHingeJointComponent.h>
 
 #include <sdf/Model.hh>
+#include <sdf/Sensor.hh>
 
 namespace ROS2::SDFormat
 {
@@ -47,6 +48,11 @@ namespace ROS2::SDFormat
         //! Enable motor in EditorHingeJointComponent if possible
         //! @param entityId entity id of the modified entity
         void EnableMotor(const AZ::EntityId& entityId);
+
+        //! Set transform to entity containing sensor based on <pose> tag in sdformat data (if available).
+        //! @param entity entity to which the transform is set
+        //! @param sdfSensor reference to SDFormat sensor possibly containing <pose> tag
+        void SetSensorEntityTransform(AZ::Entity& entity, const sdf::Sensor& sdfSensor);
 
         //! Create a component and attach the component to the entity.
         //! This method ensures that game components are wrapped into GenericComponentWrapper.

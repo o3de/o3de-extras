@@ -21,7 +21,8 @@ namespace ROS2::SDFormat
     {
         SensorImporterHook importerHook;
         importerHook.m_sensorTypes = AZStd::unordered_set<sdf::SensorType>{ sdf::SensorType::IMU };
-        importerHook.m_supportedSensorParams = AZStd::unordered_set<AZStd::string>{ ">update_rate",
+        importerHook.m_supportedSensorParams = AZStd::unordered_set<AZStd::string>{ ">pose",
+                                                                                    ">update_rate",
                                                                                     ">imu>angular_velocity>x>noise>mean",
                                                                                     ">imu>angular_velocity>x>noise>stddev",
                                                                                     ">imu>angular_velocity>y>noise>mean",
