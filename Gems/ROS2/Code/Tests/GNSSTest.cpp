@@ -31,7 +31,7 @@ namespace UnitTest
         };
         for (const auto& [input, goldResult] : inputGoldSet)
         {
-            const auto result = ROS2::GNSS::WGS84ToECEF(input);
+            const auto result = ROS2::Utils::GeodeticConversions::WGS84ToECEF(input);
             EXPECT_NEAR(result.m_x, goldResult.m_x, OneMillimiter);
             EXPECT_NEAR(result.m_y, goldResult.m_y, OneMillimiter);
             EXPECT_NEAR(result.m_z, goldResult.m_z, OneMillimiter);
@@ -52,7 +52,7 @@ namespace UnitTest
         };
         for (const auto& [input, refWGS84, goldResult] : inputGoldSet)
         {
-            const auto result = ROS2::GNSS::ECEFToENU(refWGS84, input);
+            const auto result = ROS2::Utils::GeodeticConversions::ECEFToENU(refWGS84, input);
             EXPECT_NEAR(result.m_x, goldResult.m_x, OneMillimiter);
             EXPECT_NEAR(result.m_y, goldResult.m_y, OneMillimiter);
             EXPECT_NEAR(result.m_z, goldResult.m_z, OneMillimiter);
@@ -73,7 +73,7 @@ namespace UnitTest
         };
         for (const auto& [input, refWGS84, goldResult] : inputGoldSet)
         {
-            const auto result = ROS2::GNSS::ENUToECEF(refWGS84, input);
+            const auto result = ROS2::Utils::GeodeticConversions::ENUToECEF(refWGS84, input);
             EXPECT_NEAR(result.m_x, goldResult.m_x, OneMillimiter);
             EXPECT_NEAR(result.m_y, goldResult.m_y, OneMillimiter);
             EXPECT_NEAR(result.m_z, goldResult.m_z, OneMillimiter);
@@ -90,7 +90,7 @@ namespace UnitTest
         };
         for (const auto& [input, goldResult] : inputGoldSet)
         {
-            const auto result = ROS2::GNSS::ECEFToWGS84(input);
+            const auto result = ROS2::Utils::GeodeticConversions::ECEFToWGS84(input);
             EXPECT_NEAR(result.m_longitude, goldResult.m_longitude, OneMillimeterInDegreesOnEquator);
             EXPECT_NEAR(result.m_latitude, goldResult.m_latitude, OneMillimeterInDegreesOnEquator);
             EXPECT_NEAR(result.m_altitude, goldResult.m_altitude, OneMillimiter);
