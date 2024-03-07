@@ -1738,14 +1738,60 @@
                             }
                         }
                     },
-                    "Initial positions": {
-                        "elbow_joint": 1.399999976158142,
-                        "shoulder_lift_joint": -1.6200000047683716,
-                        "shoulder_pan_joint": {},
-                        "wrist_1_joint": -1.2000000476837158,
-                        "wrist_2_joint": -1.600000023841858,
-                        "wrist_3_joint": -0.10999999940395355
-                    }
+                    "Initial positions": [
+                        [
+                            "base_joint",
+                            {}
+                        ],
+                        [
+                            "base_link-base_fixed_joint",
+                            {}
+                        ],
+                        [
+                            "base_link-base_link_inertia",
+                            {}
+                        ],
+                        [
+                            "shoulder_pan_joint",
+                            {}
+                        ],
+                        [
+                            "shoulder_lift_joint",
+                            -1.6200000047683716
+                        ],
+                        [
+                            "elbow_joint",
+                            1.399999976158142
+                        ],
+                        [
+                            "wrist_1_joint",
+                            -1.2000000476837158
+                        ],
+                        [
+                            "wrist_2_joint",
+                            -1.600000023841858
+                        ],
+                        [
+                            "wrist_3_joint",
+                            -0.10999999940395355
+                        ],
+                        [
+                            "wrist_3-flange",
+                            {}
+                        ],
+                        [
+                            "flange-tool0",
+                            {}
+                        ],
+                        [
+                            "tool0-gripper",
+                            {}
+                        ],
+                        [
+                            "wrist_3_link-ft_frame",
+                            {}
+                        ]
+                    ]
                 },
                 "JointsTrajectoryComponent": {
                     "$type": "GenericComponentWrapper",
