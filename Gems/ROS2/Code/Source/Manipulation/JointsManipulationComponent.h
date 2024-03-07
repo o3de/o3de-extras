@@ -14,10 +14,10 @@
 #include <AzCore/Name/Name.h>
 
 #include "JointStatePublisher.h"
-#include <std_msgs/msg/float64_multi_array.hpp>
 #include <ROS2/Communication/SubscriberConfiguration.h>
-#include <ROS2/Communication/SubscriptionHandler.h>
 #include <ROS2/Manipulation/JointsManipulationRequests.h>
+#include <ROS2/RobotControl/ControlSubscriptionHandler.h>
+#include <std_msgs/msg/float64_multi_array.hpp>
 
 namespace ROS2
 {
@@ -86,7 +86,7 @@ namespace ROS2
 
         AZStd::unique_ptr<JointStatePublisher> m_jointStatePublisher;
         PublisherConfiguration m_jointStatePublisherConfiguration;
-        AZStd::unique_ptr<ISubscriptionHandler> m_jointPositionsSubscriptionHandler;
+        AZStd::unique_ptr<IControlSubscriptionHandler> m_jointPositionsSubscriptionHandler;
         SubscriberConfiguration m_jointPositionsSubscriberConfiguration;
         ManipulationJoints m_manipulationJoints; //!< Map of JointInfo where the key is a joint name (with namespace included)
         AZStd::unordered_map<AZStd::string, JointPosition>

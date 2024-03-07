@@ -17,7 +17,7 @@ namespace ROS2
         if (auto serializeContext = azrtti_cast<AZ::SerializeContext*>(context))
         {
             serializeContext->Class<SubscriberConfiguration>()
-                ->Version(1)
+                ->Version(0)
                 ->Field("Subscribe", &SubscriberConfiguration::m_subscribe)
                 ->Field("Topic", &SubscriberConfiguration::m_topicConfiguration);
 

@@ -15,7 +15,7 @@ namespace ROS2
     {
     }
 
-    void JointPositionsSubscriptionHandler::ExecuteUponMessage(const MessageType& message)
+    void JointPositionsSubscriptionHandler::SendToBus(const MessageType& message)
     {
         m_messageCallback(message);
     }
