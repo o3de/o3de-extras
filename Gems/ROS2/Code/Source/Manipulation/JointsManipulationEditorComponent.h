@@ -8,9 +8,10 @@
 
 #pragma once
 
-#include "JointNamePositionPair.h"
 #include <AzCore/std/containers/unordered_map.h>
+#include <AzCore/std/containers/vector.h>
 #include <AzCore/std/string/string.h>
+#include <AzCore/std/utility/pair.h>
 #include <AzToolsFramework/ToolsComponents/EditorComponentBase.h>
 #include <ROS2/Communication/PublisherConfiguration.h>
 #include <ROS2/Communication/SubscriberConfiguration.h>
@@ -36,6 +37,6 @@ namespace ROS2
     private:
         PublisherConfiguration m_jointStatePublisherConfiguration;
         SubscriberConfiguration m_jointPositionsSubscriberConfiguration;
-        AZStd::vector<JointNamePositionPair> m_initialPositions;
+        AZStd::vector<AZStd::pair<AZStd::string, float>> m_initialPositions;
     };
 } // namespace ROS2

@@ -56,8 +56,6 @@ namespace ROS2
 
     void JointsManipulationEditorComponent::Reflect(AZ::ReflectContext* context)
     {
-        JointNamePositionPair::Reflect(context);
-
         if (AZ::SerializeContext* serialize = azrtti_cast<AZ::SerializeContext*>(context))
         {
             serialize->Class<JointsManipulationEditorComponent, AZ::Component>()
@@ -87,8 +85,8 @@ namespace ROS2
                     ->DataElement(
                         AZ::Edit::UIHandlers::Default,
                         &JointsManipulationEditorComponent::m_initialPositions,
-                        "Joints order and initial positions",
-                        "Initial positions of all the joints and order for their control via subscriber");
+                        "Initial positions",
+                        "Initial positions of all the joints (in order)");
             }
         }
     }
