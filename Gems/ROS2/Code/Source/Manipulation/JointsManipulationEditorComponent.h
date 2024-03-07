@@ -35,6 +35,8 @@ namespace ROS2
         void BuildGameEntity(AZ::Entity* gameEntity) override;
 
     private:
+        AZ::Crc32 ReloadJoints();
+
         PublisherConfiguration m_jointStatePublisherConfiguration;
         SubscriberConfiguration m_jointPositionsSubscriberConfiguration;
         AZStd::vector<AZStd::pair<AZStd::string, float>> m_initialPositions;
