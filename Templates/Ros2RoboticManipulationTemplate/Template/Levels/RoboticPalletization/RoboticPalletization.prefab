@@ -13040,25 +13040,7 @@
                 },
                 "EditorDisabledCompositionComponent": {
                     "$type": "EditorDisabledCompositionComponent",
-                    "Id": 7348425279808915112,
-                    "DisabledComponents": {
-                        "AZ::Render::EditorMeshComponent": {
-                            "$type": "AZ::Render::EditorMeshComponent",
-                            "Id": 13985155662562537039,
-                            "Controller": {
-                                "Configuration": {
-                                    "ModelAsset": {
-                                        "assetId": {
-                                            "guid": "{30D64B4A-A307-5DE9-B53C-BFB80F1CD37C}",
-                                            "subId": 278609181
-                                        },
-                                        "loadBehavior": "PreLoad",
-                                        "assetHint": "assets/urdfimporter/783534404_ur.urdf/shoulder.azmodel"
-                                    }
-                                }
-                            }
-                        }
-                    }
+                    "Id": 7348425279808915112
                 },
                 "EditorEntityIconComponent": {
                     "$type": "EditorEntityIconComponent",
@@ -13522,25 +13504,7 @@
                 },
                 "EditorDisabledCompositionComponent": {
                     "$type": "EditorDisabledCompositionComponent",
-                    "Id": 4462216626240082402,
-                    "DisabledComponents": {
-                        "AZ::Render::EditorMeshComponent": {
-                            "$type": "AZ::Render::EditorMeshComponent",
-                            "Id": 11310062770855566961,
-                            "Controller": {
-                                "Configuration": {
-                                    "ModelAsset": {
-                                        "assetId": {
-                                            "guid": "{7F63A70F-C620-52D5-B601-D7BE161B8273}",
-                                            "subId": 270772955
-                                        },
-                                        "loadBehavior": "PreLoad",
-                                        "assetHint": "assets/urdfimporter/783534404_ur.urdf/upperarm.azmodel"
-                                    }
-                                }
-                            }
-                        }
-                    }
+                    "Id": 4462216626240082402
                 },
                 "EditorEntityIconComponent": {
                     "$type": "EditorEntityIconComponent",
@@ -13981,24 +13945,7 @@
                 },
                 "EditorDisabledCompositionComponent": {
                     "$type": "EditorDisabledCompositionComponent",
-                    "Id": 10759897156699312470,
-                    "DisabledComponents": {
-                        "AZ::Render::EditorMeshComponent": {
-                            "$type": "AZ::Render::EditorMeshComponent",
-                            "Id": 474419659385091867,
-                            "Controller": {
-                                "Configuration": {
-                                    "ModelAsset": {
-                                        "assetId": {
-                                            "guid": "{72B9A64F-89CC-5E4B-A1C7-F4B4BEFD932A}",
-                                            "subId": 284007441
-                                        },
-                                        "assetHint": "assets/urdfimporter/783534404_ur.urdf/wrist3.azmodel"
-                                    }
-                                }
-                            }
-                        }
-                    }
+                    "Id": 10759897156699312470
                 },
                 "EditorEntityIconComponent": {
                     "$type": "EditorEntityIconComponent",
@@ -14420,25 +14367,7 @@
                 },
                 "EditorDisabledCompositionComponent": {
                     "$type": "EditorDisabledCompositionComponent",
-                    "Id": 18264870614039265875,
-                    "DisabledComponents": {
-                        "AZ::Render::EditorMeshComponent": {
-                            "$type": "AZ::Render::EditorMeshComponent",
-                            "Id": 2448449650430994166,
-                            "Controller": {
-                                "Configuration": {
-                                    "ModelAsset": {
-                                        "assetId": {
-                                            "guid": "{0AADB8B5-BDAA-5845-985F-172184352826}",
-                                            "subId": 283376957
-                                        },
-                                        "loadBehavior": "PreLoad",
-                                        "assetHint": "assets/urdfimporter/783534404_ur.urdf/wrist1.azmodel"
-                                    }
-                                }
-                            }
-                        }
-                    }
+                    "Id": 18264870614039265875
                 },
                 "EditorEntityIconComponent": {
                     "$type": "EditorEntityIconComponent",
@@ -14757,25 +14686,7 @@
                 },
                 "EditorDisabledCompositionComponent": {
                     "$type": "EditorDisabledCompositionComponent",
-                    "Id": 10820992746363107804,
-                    "DisabledComponents": {
-                        "AZ::Render::EditorMeshComponent": {
-                            "$type": "AZ::Render::EditorMeshComponent",
-                            "Id": 12055921542785769913,
-                            "Controller": {
-                                "Configuration": {
-                                    "ModelAsset": {
-                                        "assetId": {
-                                            "guid": "{034FE6AD-C9B4-5FD0-8BA6-9D7A2BBF5719}",
-                                            "subId": 283815047
-                                        },
-                                        "loadBehavior": "PreLoad",
-                                        "assetHint": "assets/urdfimporter/783534404_ur.urdf/wrist2.azmodel"
-                                    }
-                                }
-                            }
-                        }
-                    }
+                    "Id": 10820992746363107804
                 },
                 "EditorEntityIconComponent": {
                     "$type": "EditorEntityIconComponent",
@@ -15706,25 +15617,7 @@
                 },
                 "EditorDisabledCompositionComponent": {
                     "$type": "EditorDisabledCompositionComponent",
-                    "Id": 5590969951531947332,
-                    "DisabledComponents": {
-                        "AZ::Render::EditorMeshComponent": {
-                            "$type": "AZ::Render::EditorMeshComponent",
-                            "Id": 9911298433454361624,
-                            "Controller": {
-                                "Configuration": {
-                                    "ModelAsset": {
-                                        "assetId": {
-                                            "guid": "{61798F7A-4504-5FB3-BC48-10BC2D2A0058}",
-                                            "subId": 274532406
-                                        },
-                                        "loadBehavior": "PreLoad",
-                                        "assetHint": "assets/urdfimporter/783534404_ur.urdf/forearm.azmodel"
-                                    }
-                                }
-                            }
-                        }
-                    }
+                    "Id": 5590969951531947332
                 },
                 "EditorEntityIconComponent": {
                     "$type": "EditorEntityIconComponent",
@@ -17761,25 +17654,7 @@
                 },
                 "EditorDisabledCompositionComponent": {
                     "$type": "EditorDisabledCompositionComponent",
-                    "Id": 6221609327881410154,
-                    "DisabledComponents": {
-                        "AZ::Render::EditorMeshComponent": {
-                            "$type": "AZ::Render::EditorMeshComponent",
-                            "Id": 9332560215805470524,
-                            "Controller": {
-                                "Configuration": {
-                                    "ModelAsset": {
-                                        "assetId": {
-                                            "guid": "{501BBAEE-663A-5A82-B1FB-2FBF8F3F7110}",
-                                            "subId": 280297057
-                                        },
-                                        "loadBehavior": "PreLoad",
-                                        "assetHint": "assets/urdfimporter/783534404_ur.urdf/base.azmodel"
-                                    }
-                                }
-                            }
-                        }
-                    }
+                    "Id": 6221609327881410154
                 },
                 "EditorEntityIconComponent": {
                     "$type": "EditorEntityIconComponent",
