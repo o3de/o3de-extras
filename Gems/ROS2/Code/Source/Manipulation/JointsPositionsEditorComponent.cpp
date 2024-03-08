@@ -62,8 +62,8 @@ namespace ROS2
                         &JointsPositionsEditorComponent::m_jointPositionsSubscriberConfiguration,
                         "Joint Positions Subscriber",
                         "Configuration of Joint Positions Subscriber")
-                    ->UIElement(AZ::Edit::UIHandlers::Button, "Find joints", "Find all joints")
-                    ->Attribute(AZ::Edit::Attributes::ButtonText, "Find joints")
+                    ->UIElement(AZ::Edit::UIHandlers::Button, "Find all joints", "Find all joints")
+                    ->Attribute(AZ::Edit::Attributes::ButtonText, "Find all joints")
                     ->Attribute(AZ::Edit::Attributes::ChangeNotify, &JointsPositionsEditorComponent::FindAllJoints)
                     ->Attribute(AZ::Edit::Attributes::NameLabelOverride, "")
                     ->DataElement(
