@@ -14,7 +14,6 @@
 #include <AzCore/std/utility/pair.h>
 #include <AzToolsFramework/ToolsComponents/EditorComponentBase.h>
 #include <ROS2/Communication/PublisherConfiguration.h>
-#include <ROS2/Communication/SubscriberConfiguration.h>
 
 namespace ROS2
 {
@@ -38,7 +37,6 @@ namespace ROS2
         AZ::Crc32 ReloadJoints();
 
         PublisherConfiguration m_jointStatePublisherConfiguration;
-        SubscriberConfiguration m_jointPositionsSubscriberConfiguration;
         AZStd::vector<AZStd::pair<AZStd::string, float>> m_initialPositions;
     };
 } // namespace ROS2

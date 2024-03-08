@@ -17,10 +17,7 @@
 #include <AzCore/std/utility/pair.h>
 
 #include "JointStatePublisher.h"
-#include <ROS2/Communication/SubscriberConfiguration.h>
 #include <ROS2/Manipulation/JointsManipulationRequests.h>
-#include <ROS2/RobotControl/ControlSubscriptionHandler.h>
-#include <std_msgs/msg/float64_multi_array.hpp>
 
 namespace ROS2
 {
@@ -35,7 +32,6 @@ namespace ROS2
         JointsManipulationComponent();
         JointsManipulationComponent(
             const PublisherConfiguration& publisherConfiguration,
-            const SubscriberConfiguration& subscriberConfiguration,
             const AZStd::vector<AZStd::pair<AZStd::string, float>>& initialPositions);
         ~JointsManipulationComponent() = default;
         AZ_COMPONENT(JointsManipulationComponent, "{3da9abfc-0028-4e3e-8d04-4e4440d2e319}", AZ::Component);
@@ -85,12 +81,8 @@ namespace ROS2
         AZ::Outcome<JointVelocity, AZStd::string> GetJointVelocity(const JointInfo& jointInfo);
         AZ::Outcome<JointEffort, AZStd::string> GetJointEffort(const JointInfo& jointInfo);
 
-        void ProcessPositionControlMessage(const std_msgs::msg::Float64MultiArray& message);
-
         AZStd::unique_ptr<JointStatePublisher> m_jointStatePublisher;
         PublisherConfiguration m_jointStatePublisherConfiguration;
-        AZStd::unique_ptr<IControlSubscriptionHandler> m_jointPositionsSubscriptionHandler;
-        SubscriberConfiguration m_jointPositionsSubscriberConfiguration;
         ManipulationJoints m_manipulationJoints; //!< Map of JointInfo where the key is a joint name (with namespace included)
         AZStd::vector<AZStd::pair<AZStd::string, float>> 
             m_initialPositions; //!< Initial positions per joint name (without namespace included)
