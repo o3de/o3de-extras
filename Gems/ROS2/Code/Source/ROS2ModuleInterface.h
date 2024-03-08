@@ -25,6 +25,7 @@
 #include <Manipulation/Controllers/JointsArticulationControllerComponent.h>
 #include <Manipulation/Controllers/JointsPIDControllerComponent.h>
 #include <Manipulation/JointsManipulationComponent.h>
+#include <Manipulation/JointsPositionsComponent.h>
 #include <Manipulation/JointsTrajectoryComponent.h>
 #include <Odometry/ROS2OdometrySensorComponent.h>
 #include <Odometry/ROS2WheelOdometry.h>
@@ -87,6 +88,7 @@ namespace ROS2
                     JointMotorControllerComponent::CreateDescriptor(),
                     ManualMotorControllerComponent::CreateDescriptor(),
                     JointsManipulationComponent::CreateDescriptor(),
+                    JointsPositionsComponent::CreateDescriptor(),
                     JointsArticulationControllerComponent::CreateDescriptor(),
                     JointsPIDControllerComponent::CreateDescriptor(),
                     JointsTrajectoryComponent::CreateDescriptor(),

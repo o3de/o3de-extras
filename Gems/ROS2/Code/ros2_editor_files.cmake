@@ -14,6 +14,8 @@ set(FILES
     Source/Georeference/GeoreferenceLevelEditorComponent.h
     Source/Lidar/LidarRegistrarEditorSystemComponent.cpp
     Source/Lidar/LidarRegistrarEditorSystemComponent.h
+    Source/Manipulation/JointsPositionsEditorComponent.cpp
+    Source/Manipulation/JointsPositionsEditorComponent.h
     Source/Manipulation/JointsManipulationEditorComponent.cpp
     Source/Manipulation/JointsManipulationEditorComponent.h
     Source/RobotImporter/FixURDF/FixURDF.cpp
