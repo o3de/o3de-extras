@@ -255,14 +255,6 @@
             "isTemplated": "false"
         },
         {
-            "file": "Assets/Factory/ConveyorLine/Textures/Paper_Recycled_001_Normal.jpg",
-            "isTemplated": "false"
-        },
-        {
-            "file": "Assets/Factory/ConveyorLine/Textures/Concrete_Wall_005_Normal.jpg",
-            "isTemplated": "false"
-        },
-        {
             "file": "Assets/Factory/ConveyorLine/Textures/ElectricBoxes_Specular.png",
             "isTemplated": "false"
         },
@@ -275,14 +267,6 @@
             "isTemplated": "false"
         },
         {
-            "file": "Assets/Factory/ConveyorLine/Textures/Concrete_019_Basecolor.jpg",
-            "isTemplated": "false"
-        },
-        {
-            "file": "Assets/Factory/ConveyorLine/Textures/Extinguisher_Basecolor.png",
-            "isTemplated": "false"
-        },
-        {
             "file": "Assets/Factory/ConveyorLine/Textures/ElectricBoxes_Normal.png",
             "isTemplated": "false"
         },
@@ -291,15 +275,7 @@
             "isTemplated": "false"
         },
         {
-            "file": "Assets/Factory/ConveyorLine/Textures/Steering_Panel_Basecolor.png",
-            "isTemplated": "false"
-        },
-        {
             "file": "Assets/Factory/ConveyorLine/Textures/1K_Wall_Paint_Basecolor.jpg",
-            "isTemplated": "false"
-        },
-        {
-            "file": "Assets/Factory/ConveyorLine/Textures/Wood_026_Normal.jpg",
             "isTemplated": "false"
         },
         {
@@ -315,10 +291,6 @@
             "isTemplated": "false"
         },
         {
-            "file": "Assets/Factory/ConveyorLine/Textures/Paper_Recycled_001_Basecolor.jpg",
-            "isTemplated": "false"
-        },
-        {
             "file": "Assets/Factory/ConveyorLine/Textures/Cage-Roughness.png",
             "isTemplated": "false"
         },
@@ -328,14 +300,6 @@
         },
         {
             "file": "Assets/Factory/ConveyorLine/Textures/Grass_001_Roughness.jpg",
-            "isTemplated": "false"
-        },
-        {
-            "file": "Assets/Factory/ConveyorLine/Textures/Concrete_Wall_005_Roughness.jpg",
-            "isTemplated": "false"
-        },
-        {
-            "file": "Assets/Factory/ConveyorLine/Textures/Paper_Recycled_001_Roughness.jpg",
             "isTemplated": "false"
         },
         {
@@ -355,23 +319,11 @@
             "isTemplated": "false"
         },
         {
-            "file": "Assets/Factory/ConveyorLine/Textures/Wood_026_Roughness.jpg",
-            "isTemplated": "false"
-        },
-        {
             "file": "Assets/Factory/ConveyorLine/Textures/Cage-Metallic.png",
             "isTemplated": "false"
         },
         {
-            "file": "Assets/Factory/ConveyorLine/Textures/Wood_026_Basecolor.jpg",
-            "isTemplated": "false"
-        },
-        {
             "file": "Assets/Factory/ConveyorLine/Textures/Box-Metallic.png",
-            "isTemplated": "false"
-        },
-        {
-            "file": "Assets/Factory/ConveyorLine/Textures/Concrete_Wall_005_Basecolor.jpg",
             "isTemplated": "false"
         },
         {
@@ -392,14 +344,6 @@
         },
         {
             "file": "Assets/Factory/ConveyorLine/Textures/Box-Roughness.png",
-            "isTemplated": "false"
-        },
-        {
-            "file": "Assets/Factory/ConveyorLine/Textures/Concrete_019_Roughness.jpg",
-            "isTemplated": "false"
-        },
-        {
-            "file": "Assets/Factory/ConveyorLine/Textures/Concrete_019_Normal.jpg",
             "isTemplated": "false"
         },
         {
