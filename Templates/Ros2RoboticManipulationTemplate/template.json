@@ -259,23 +259,11 @@
             "isTemplated": "false"
         },
         {
-            "file": "Assets/Factory/ConveyorLine/Textures/Grass_001_Basecolor.jpg",
-            "isTemplated": "false"
-        },
-        {
             "file": "Assets/Factory/ConveyorLine/Textures/Concrete_Wall_005_Normal.jpg",
             "isTemplated": "false"
         },
         {
             "file": "Assets/Factory/ConveyorLine/Textures/ElectricBoxes_Specular.png",
-            "isTemplated": "false"
-        },
-        {
-            "file": "Assets/Factory/ConveyorLine/Textures/Grass_001_Normal.jpg",
-            "isTemplated": "false"
-        },
-        {
-            "file": "Assets/Factory/ConveyorLine/Textures/1K_Wall_Paint_Specular.jpg",
             "isTemplated": "false"
         },
         {
@@ -287,27 +275,7 @@
             "isTemplated": "false"
         },
         {
-            "file": "Assets/Factory/ConveyorLine/Textures/Grass_001_Displacement.png",
-            "isTemplated": "false"
-        },
-        {
-            "file": "Assets/Factory/ConveyorLine/Textures/Metal_Scratched_007_Basecolor.jpg",
-            "isTemplated": "false"
-        },
-        {
             "file": "Assets/Factory/ConveyorLine/Textures/Concrete_019_Basecolor.jpg",
-            "isTemplated": "false"
-        },
-        {
-            "file": "Assets/Factory/ConveyorLine/Textures/Metal_Galvanized_001_Normal.jpg",
-            "isTemplated": "false"
-        },
-        {
-            "file": "Assets/Factory/ConveyorLine/Textures/Specular.png",
-            "isTemplated": "false"
-        },
-        {
-            "file": "Assets/Factory/ConveyorLine/Textures/1K_Wall_Paint_Normal.jpg",
             "isTemplated": "false"
         },
         {
@@ -319,27 +287,11 @@
             "isTemplated": "false"
         },
         {
-            "file": "Assets/Factory/ConveyorLine/Textures/Metal_Rusted_001_Basecolor.jpg",
-            "isTemplated": "false"
-        },
-        {
             "file": "Assets/Factory/ConveyorLine/Textures/ElectricBoxes_Diffuse.png",
             "isTemplated": "false"
         },
         {
             "file": "Assets/Factory/ConveyorLine/Textures/Steering_Panel_Basecolor.png",
-            "isTemplated": "false"
-        },
-        {
-            "file": "Assets/Factory/ConveyorLine/Textures/Metal_Painted_Yellow_002_Basecolor.jpg",
-            "isTemplated": "false"
-        },
-        {
-            "file": "Assets/Factory/ConveyorLine/Textures/Metal_Galvanized_001_Basecolor.jpg",
-            "isTemplated": "false"
-        },
-        {
-            "file": "Assets/Factory/ConveyorLine/Textures/Metal_Painted_Red_002_Basecolor.jpg",
             "isTemplated": "false"
         },
         {
@@ -363,15 +315,7 @@
             "isTemplated": "false"
         },
         {
-            "file": "Assets/Factory/ConveyorLine/Textures/Metal_Scratched_007_Roughness.jpg",
-            "isTemplated": "false"
-        },
-        {
             "file": "Assets/Factory/ConveyorLine/Textures/Paper_Recycled_001_Basecolor.jpg",
-            "isTemplated": "false"
-        },
-        {
-            "file": "Assets/Factory/ConveyorLine/Textures/Metal_Painted_002_Normal.jpg",
             "isTemplated": "false"
         },
         {
@@ -391,10 +335,6 @@
             "isTemplated": "false"
         },
         {
-            "file": "Assets/Factory/ConveyorLine/Textures/Normal.png",
-            "isTemplated": "false"
-        },
-        {
             "file": "Assets/Factory/ConveyorLine/Textures/Paper_Recycled_001_Roughness.jpg",
             "isTemplated": "false"
         },
@@ -403,31 +343,11 @@
             "isTemplated": "false"
         },
         {
-            "file": "Assets/Factory/ConveyorLine/Textures/BaseColor.png",
-            "isTemplated": "false"
-        },
-        {
             "file": "Assets/Factory/ConveyorLine/Textures/Box-Specular.png",
             "isTemplated": "false"
         },
         {
-            "file": "Assets/Factory/ConveyorLine/Textures/Metal_Painted_White_002_Basecolor.jpg",
-            "isTemplated": "false"
-        },
-        {
             "file": "Assets/Factory/ConveyorLine/Textures/Cage-Specular.png",
-            "isTemplated": "false"
-        },
-        {
-            "file": "Assets/Factory/ConveyorLine/Textures/Roughness.png",
-            "isTemplated": "false"
-        },
-        {
-            "file": "Assets/Factory/ConveyorLine/Textures/Metal_Rusted_001_Normal.jpg",
-            "isTemplated": "false"
-        },
-        {
-            "file": "Assets/Factory/ConveyorLine/Textures/Metallic.png",
             "isTemplated": "false"
         },
         {
@@ -443,23 +363,11 @@
             "isTemplated": "false"
         },
         {
-            "file": "Assets/Factory/ConveyorLine/Textures/Metal_Galvanized_001_Roughness.jpg",
-            "isTemplated": "false"
-        },
-        {
-            "file": "Assets/Factory/ConveyorLine/Textures/Metal_Scratched_007_Normal.jpg",
-            "isTemplated": "false"
-        },
-        {
             "file": "Assets/Factory/ConveyorLine/Textures/Wood_026_Basecolor.jpg",
             "isTemplated": "false"
         },
         {
             "file": "Assets/Factory/ConveyorLine/Textures/Box-Metallic.png",
-            "isTemplated": "false"
-        },
-        {
-            "file": "Assets/Factory/ConveyorLine/Textures/Metal_Painted_002_Roughness.jpg",
             "isTemplated": "false"
         },
         {
@@ -475,10 +383,6 @@
             "isTemplated": "false"
         },
         {
-            "file": "Assets/Factory/ConveyorLine/Textures/Metal_Rusted_001_Specular.jpg",
-            "isTemplated": "false"
-        },
-        {
             "file": "Assets/Factory/ConveyorLine/Textures/Cage-Normal.png",
             "isTemplated": "false"
         },
@@ -488,10 +392,6 @@
         },
         {
             "file": "Assets/Factory/ConveyorLine/Textures/Box-Roughness.png",
-            "isTemplated": "false"
-        },
-        {
-            "file": "Assets/Factory/ConveyorLine/Textures/Tire_Normal.png",
             "isTemplated": "false"
         },
         {
@@ -995,15 +895,7 @@
             "isTemplated": false
         },
         {
-            "file": "Prefabs/Cell.prefab",
-            "isTemplated": false
-        },
-        {
             "file": "Prefabs/PandaRobot.prefab",
-            "isTemplated": false
-        },
-        {
-            "file": "Prefabs/ToyBox_fbx.prefab",
             "isTemplated": false
         },
         {
