@@ -275,10 +275,6 @@
             "isTemplated": "false"
         },
         {
-            "file": "Assets/Factory/ConveyorLine/Textures/1K_Wall_Paint_Basecolor.jpg",
-            "isTemplated": "false"
-        },
-        {
             "file": "Assets/Factory/ConveyorLine/Textures/Cage-BaseColor.png",
             "isTemplated": "false"
         },
@@ -296,10 +292,6 @@
         },
         {
             "file": "Assets/Factory/ConveyorLine/Textures/Box-Normal.png",
-            "isTemplated": "false"
-        },
-        {
-            "file": "Assets/Factory/ConveyorLine/Textures/Grass_001_Roughness.jpg",
             "isTemplated": "false"
         },
         {
