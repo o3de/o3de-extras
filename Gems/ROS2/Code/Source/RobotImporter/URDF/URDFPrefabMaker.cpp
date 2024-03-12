@@ -506,6 +506,12 @@ namespace ROS2
         // Get the remaining log information (sensors, plugins)
         {
             AZStd::lock_guard<AZStd::mutex> lck(m_statusLock);
+            const auto& modelPluginStatus = m_controlMaker.GetStatusMessages();
+            for (const auto& mps : modelPluginStatus)
+            {
+                m_status.emplace(StatusMessageType::ModelPlugin, mps);
+            }
+
             const auto& sensorStatus = m_sensorsMaker.GetStatusMessages();
             for (const auto& ss : sensorStatus)
             {
