@@ -142,7 +142,8 @@ namespace ROS2
         auto* sceneInterface = AZ::Interface<AzPhysics::SceneInterface>::Get();
         auto requestResults = sceneInterface->QuerySceneBatch(m_sceneHandle, requests);
         AZ_Assert(requestResults.size() == rayDirections.size(), "Request size should be equal to directions size");
-        const auto localTransform = lidarTransform.GetInverse();
+        const auto localTransform =
+            AZ::Transform::CreateFromQuaternionAndTranslation(lidarTransform.GetRotation(), lidarTransform.GetTranslation()).GetInverse();
         const float maxRange = m_addMaxRangePoints ? m_range : AZStd::numeric_limits<float>::infinity();
 
         for (int i = 0; i < requestResults.size(); i++)
