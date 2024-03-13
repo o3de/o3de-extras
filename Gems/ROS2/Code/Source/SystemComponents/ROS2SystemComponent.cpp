@@ -11,7 +11,6 @@
 #include <Lidar/LidarCore.h>
 #include <ROS2/Clock/PhysicallyStableClock.h>
 #include <ROS2/Communication/PublisherConfiguration.h>
-#include <ROS2/Communication/SubscriberConfiguration.h>
 #include <ROS2/Communication/QoS.h>
 #include <ROS2/Communication/TopicConfiguration.h>
 #include <ROS2/Sensor/SensorConfiguration.h>
@@ -39,7 +38,6 @@ namespace ROS2
         QoS::Reflect(context);
         TopicConfiguration::Reflect(context);
         PublisherConfiguration::Reflect(context);
-        SubscriberConfiguration::Reflect(context);
         LidarCore::Reflect(context);
         SensorConfiguration::Reflect(context);
         VehicleDynamics::VehicleModelComponent::Reflect(context);

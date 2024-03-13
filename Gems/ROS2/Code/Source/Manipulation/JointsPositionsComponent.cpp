@@ -20,8 +20,8 @@
 namespace ROS2
 {
     JointsPositionsComponent::JointsPositionsComponent(
-        const SubscriberConfiguration& subscriberConfiguration, const AZStd::vector<AZStd::string>& jointNames)
-        : m_jointPositionsSubscriberConfiguration(subscriberConfiguration)
+        const TopicConfiguration& topicConfiguration, const AZStd::vector<AZStd::string>& jointNames)
+        : m_topicConfiguration(topicConfiguration)
         , m_jointNames(jointNames)
     {
     }
@@ -34,15 +34,12 @@ namespace ROS2
 
     void JointsPositionsComponent::Activate()
     {
-        if (m_jointPositionsSubscriberConfiguration.m_subscribe)
-        {
-            m_jointPositionsSubscriptionHandler = AZStd::make_unique<JointPositionsSubscriptionHandler>(
-                [this](const JointPositionsSubscriptionHandler::MessageType& message)
-                {
-                    ProcessPositionControlMessage(message);
-                });
-            m_jointPositionsSubscriptionHandler->Activate(GetEntity(), m_jointPositionsSubscriberConfiguration.m_topicConfiguration);
-        }
+        m_jointPositionsSubscriptionHandler = AZStd::make_unique<JointPositionsSubscriptionHandler>(
+            [this](const JointPositionsSubscriptionHandler::MessageType& message)
+            {
+                ProcessPositionControlMessage(message);
+            });
+        m_jointPositionsSubscriptionHandler->Activate(GetEntity(), m_topicConfiguration);
 
         AZ::TickBus::Handler::BusConnect();
     }
@@ -64,7 +61,7 @@ namespace ROS2
         {
             serialize->Class<JointsPositionsComponent, AZ::Component>()
                 ->Version(0)
-                ->Field("jointPositionsSubscriberConfiguration", &JointsPositionsComponent::m_jointPositionsSubscriberConfiguration)
+                ->Field("topicConfiguration", &JointsPositionsComponent::m_topicConfiguration)
                 ->Field("jointNames", &JointsPositionsComponent::m_jointNames);
         }
     }

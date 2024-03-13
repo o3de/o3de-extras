@@ -23,9 +23,8 @@ namespace ROS2
 {
     JointsPositionsEditorComponent::JointsPositionsEditorComponent()
     {
-        m_jointPositionsSubscriberConfiguration.m_subscribe = true;
-        m_jointPositionsSubscriberConfiguration.m_topicConfiguration.m_type = "std_msgs::msg::Float64MultiArray";
-        m_jointPositionsSubscriberConfiguration.m_topicConfiguration.m_topic = "/position_controller/commands";
+        m_topicConfiguration.m_type = "std_msgs::msg::Float64MultiArray";
+        m_topicConfiguration.m_topic = "/position_controller/commands";
     }
 
     void JointsPositionsEditorComponent::GetRequiredServices(AZ::ComponentDescriptor::DependencyArrayType& required)
@@ -36,7 +35,7 @@ namespace ROS2
 
     void JointsPositionsEditorComponent::BuildGameEntity(AZ::Entity* gameEntity)
     {
-        gameEntity->CreateComponent<JointsPositionsComponent>(m_jointPositionsSubscriberConfiguration, m_jointNames);
+        gameEntity->CreateComponent<JointsPositionsComponent>(m_topicConfiguration, m_jointNames);
     }
 
     void JointsPositionsEditorComponent::Reflect(AZ::ReflectContext* context)
@@ -45,7 +44,7 @@ namespace ROS2
         {
             serialize->Class<JointsPositionsEditorComponent, AZ::Component>()
                 ->Version(0)
-                ->Field("jointPositionsSubscriberConfiguration", &JointsPositionsEditorComponent::m_jointPositionsSubscriberConfiguration)
+                ->Field("topicConfiguration", &JointsPositionsEditorComponent::m_topicConfiguration)
                 ->Field("jointNames", &JointsPositionsEditorComponent::m_jointNames);
 
             if (AZ::EditContext* ec = serialize->GetEditContext())
@@ -59,9 +58,9 @@ namespace ROS2
                         AZ::Edit::Attributes::ViewportIcon, "Editor/Icons/Components/Viewport/JointsManipulationEditorComponent.svg")
                     ->DataElement(
                         AZ::Edit::UIHandlers::Default,
-                        &JointsPositionsEditorComponent::m_jointPositionsSubscriberConfiguration,
-                        "Joint Positions Subscriber",
-                        "Configuration of Joint Positions Subscriber")
+                        &JointsPositionsEditorComponent::m_topicConfiguration,
+                        "Topic configuration",
+                        "Topic configuration of Joint Positions Component")
                     ->UIElement(AZ::Edit::UIHandlers::Button, "Find all joints", "Find all joints")
                     ->Attribute(AZ::Edit::Attributes::ButtonText, "Find all joints")
                     ->Attribute(AZ::Edit::Attributes::ChangeNotify, &JointsPositionsEditorComponent::FindAllJoints)

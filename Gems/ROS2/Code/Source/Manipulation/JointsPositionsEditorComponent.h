@@ -13,8 +13,7 @@
 #include <AzCore/std/string/string.h>
 #include <AzCore/std/utility/pair.h>
 #include <AzToolsFramework/ToolsComponents/EditorComponentBase.h>
-#include <ROS2/Communication/PublisherConfiguration.h>
-#include <ROS2/Communication/SubscriberConfiguration.h>
+#include <ROS2/Communication/TopicConfiguration.h>
 
 namespace ROS2
 {
@@ -35,7 +34,7 @@ namespace ROS2
     private:
         AZ::Crc32 FindAllJoints();
 
-        SubscriberConfiguration m_jointPositionsSubscriberConfiguration;
+        TopicConfiguration m_topicConfiguration; //!< Configuration of the subscribed topic.
         AZStd::vector<AZStd::string> m_jointNames; //!< Ordered list of joint names that can be modified via subscriber
     };
 } // namespace ROS2

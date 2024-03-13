@@ -14,7 +14,7 @@
 #include <AzCore/std/containers/vector.h>
 #include <AzCore/std/string/string.h>
 
-#include <ROS2/Communication/SubscriberConfiguration.h>
+#include <ROS2/Communication/TopicConfiguration.h>
 #include <ROS2/Manipulation/JointsManipulationRequests.h>
 #include <ROS2/RobotControl/ControlSubscriptionHandler.h>
 #include <std_msgs/msg/float64_multi_array.hpp>
@@ -28,7 +28,7 @@ namespace ROS2
     {
     public:
         JointsPositionsComponent() = default;
-        JointsPositionsComponent(const SubscriberConfiguration& subscriberConfiguration, const AZStd::vector<AZStd::string>& jointNames);
+        JointsPositionsComponent(const TopicConfiguration& topicConfiguration, const AZStd::vector<AZStd::string>& jointNames);
         ~JointsPositionsComponent() = default;
         AZ_COMPONENT(JointsPositionsComponent, "{21335907-767e-4b2c-81c0-6f0b410b6d87}", AZ::Component);
 
@@ -47,7 +47,7 @@ namespace ROS2
         void ProcessPositionControlMessage(const std_msgs::msg::Float64MultiArray& message);
 
         AZStd::unique_ptr<IControlSubscriptionHandler> m_jointPositionsSubscriptionHandler;
-        SubscriberConfiguration m_jointPositionsSubscriberConfiguration;
+        TopicConfiguration m_topicConfiguration; //!< Configuration of the subscribed topic.
         AZStd::vector<AZStd::string> m_jointNames; //!< Ordered list of joint names that can be modified via subscriber
         AZ::EntityId m_rootOfArticulation; //!< The root of the articulation chain
     };
