@@ -33,12 +33,14 @@ namespace ROS2::SDFormat
             ">lidar>range>min",
             ">lidar>range>max",
             // Gazebo-classic
+            ">ray>scan>horizontal>resolution",
             ">ray>scan>horizontal>samples",
             ">ray>scan>horizontal>min_angle",
             ">ray>scan>horizontal>max_angle",
             ">ray>scan>vertical>samples",
             ">ray>scan>vertical>min_angle",
             ">ray>scan>vertical>max_angle",
+            ">ray>scan>vertical>resolution",
             ">ray>range>min",
             ">ray>range>max",
         };

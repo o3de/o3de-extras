@@ -43,6 +43,20 @@ namespace ROS2
         m_log->setMarkdown(status);
         m_success = isSuccess;
         m_warning = isWarning;
+
+        if ((isSuccess && isWarning == false) || isSuccess == false)
+        {
+            m_urdfName->setDisabled(true);
+            m_saveButton->setDisabled(true);
+            m_showButton->setDisabled(true);
+        }
+        else
+        {
+            m_urdfName->setDisabled(false);
+            m_saveButton->setDisabled(false);
+            m_showButton->setDisabled(false);
+        }
+
         emit completeChanged();
     }
 

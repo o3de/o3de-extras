@@ -104,6 +104,7 @@ namespace ROS2
         };
         AZStd::mutex m_statusLock;
         AZStd::multimap<StatusMessageType, AZStd::string> m_status;
+        unsigned int m_articulationsCounter{ 0u };
 
         AZStd::shared_ptr<Utils::UrdfAssetMap> m_urdfAssetsMapping;
         bool m_useArticulations{ false };

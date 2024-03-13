@@ -11,19 +11,19 @@
 #include <AzCore/Component/EntityId.h>
 #include <AzToolsFramework/Entity/EditorEntityHelpers.h>
 #include <ROS2/RobotImporter/RobotImporterBus.h>
-#include <ROS2/RobotImporter/SDFormatSensorImporterHook.h>
 #include <RobotImporter/SDFormat/ROS2SDFormatHooksUtils.h>
 #include <RobotImporter/URDF/PrefabMakerUtils.h>
+#include <RobotImporter/Utils/RobotImporterUtils.h>
 
 #include <sdf/Link.hh>
 #include <sdf/Sensor.hh>
 
 namespace ROS2
 {
-    void ExecuteSensorHook(
+    SensorsMaker::SensorHookCallOutcome SensorsMaker::CallSensorHook(
         AZ::EntityId entityId,
         const sdf::Sensor* sensor,
-        const ROS2::SDFormat::SensorImporterHook* hook,
+        const SDFormat::SensorImporterHook* hook,
         AZStd::vector<AZ::EntityId>& createdEntities)
     {
         // Since O3DE does not allow origin for sensors, we need to create a sub-entity and store sensor there
@@ -32,44 +32,76 @@ namespace ROS2
         auto createEntityResult = PrefabMakerUtils::CreateEntity(entityId, subEntityName);
         if (!createEntityResult.IsSuccess())
         {
-            AZ_Error("SensorMaker", false, "Unable to create a sub-entity %s for sensor element\n", subEntityName.c_str());
-            return;
+            return AZ::Failure(AZStd::string::format("Unable to create a sub-entity %s for sensor element\n", subEntityName.c_str()));
         }
 
         auto sensorEntityId = createEntityResult.GetValue();
         if (!sensorEntityId.IsValid())
         {
-            AZ_Error("SensorMaker", false, "Created sub-entity %s for sensor element is invalid\n", subEntityName.c_str());
-            return;
+            return AZ::Failure(AZStd::string::format("Created sub-entity %s for sensor element is invalid\n", subEntityName.c_str()));
         }
 
         createdEntities.emplace_back(sensorEntityId);
         AZ::Entity* sensorEntity = AzToolsFramework::GetEntityById(sensorEntityId);
-        hook->m_sdfSensorToComponentCallback(*sensorEntity, *sensor);
+        const auto sensorResult = hook->m_sdfSensorToComponentCallback(*sensorEntity, *sensor);
         SDFormat::HooksUtils::SetSensorEntityTransform(*sensorEntity, *sensor);
+
+        if (sensorResult.IsSuccess())
+        {
+            const auto sensorElement = sensor->Element();
+            const auto& unsupportedSensorParams = Utils::SDFormat::GetUnsupportedParams(sensorElement, hook->m_supportedSensorParams);
+            AZStd::string status;
+            if (unsupportedSensorParams.empty())
+            {
+                status = AZStd::string::format("%s (type %s) created successfully", sensor->Name().c_str(), sensor->TypeStr().c_str());
+            }
+            else
+            {
+                status = AZStd::string::format(
+                    "%s (type %s) created, %lu parameters not parsed: ",
+                    sensor->Name().c_str(),
+                    sensor->TypeStr().c_str(),
+                    unsupportedSensorParams.size());
+                for (const auto& up : unsupportedSensorParams)
+                {
+                    status.append("\n\t - " + up);
+                }
+            }
+            m_status.emplace(AZStd::move(status));
+        }
+        else
+        {
+            const auto message = AZStd::string::format(
+                "%s (type %s) not created: %s", sensor->Name().c_str(), sensor->TypeStr().c_str(), sensorResult.GetError().c_str());
+            m_status.emplace(message);
+            return AZ::Failure(message);
+        }
+
+        return AZ::Success();
     }
 
-    void AddSensor(AZ::EntityId entityId, const sdf::Sensor* sensor, AZStd::vector<AZ::EntityId>& createdEntities)
+    SensorsMaker::SensorHookCallOutcome SensorsMaker::AddSensor(
+        AZ::EntityId entityId, const sdf::Sensor* sensor, AZStd::vector<AZ::EntityId>& createdEntities)
     {
         SDFormat::SensorImporterHooksStorage sensorHooks;
         ROS2::RobotImporterRequestBus::BroadcastResult(sensorHooks, &ROS2::RobotImporterRequest::GetSensorHooks);
 
         const auto& sensorPlugins = sensor->Plugins();
+        // Add sensor without plugins
         if (sensorPlugins.empty())
         {
             for (auto& hook : sensorHooks)
             {
                 if (hook.m_sensorTypes.contains(sensor->Type()))
                 {
-                    ExecuteSensorHook(entityId, sensor, &hook, createdEntities);
-                    return;
+                    return CallSensorHook(entityId, sensor, &hook, createdEntities);
                 }
             }
-            AZ_Warning(
-                "SensorMaker", false, "Cannot find a hook for %s sensor (type %s)", sensor->Name().c_str(), sensor->TypeStr().c_str());
-            return;
+            return AZ::Failure(
+                AZStd::string::format("Cannot find a hook for %s sensor (type %s)", sensor->Name().c_str(), sensor->TypeStr().c_str()));
         }
 
+        // Add sensor with one or more plugins
         for (const auto& sp : sensorPlugins)
         {
             bool sensorProcessed = false;
@@ -80,7 +112,11 @@ namespace ROS2
                 {
                     if (hook.m_pluginNames.contains(sp.Filename().c_str()))
                     {
-                        ExecuteSensorHook(entityId, sensor, &hook, createdEntities);
+                        const auto outcome = CallSensorHook(entityId, sensor, &hook, createdEntities);
+                        if (!outcome.IsSuccess())
+                        {
+                            return outcome;
+                        }
                         sensorProcessed = true;
                         break;
                     }
@@ -91,23 +127,20 @@ namespace ROS2
                 }
             }
 
-            AZ_Warning(
-                "SensorMaker",
-                sensorProcessed,
-                "Cannot find a hook for %s sensor (type %s) with plugin %s",
-                sensor->Name().c_str(),
-                sensor->TypeStr().c_str(),
-                sp.Filename().c_str());
             if (sensorProcessed == false && defaultHook != nullptr)
             {
-                ExecuteSensorHook(entityId, sensor, defaultHook, createdEntities);
-                AZ_Warning(
-                    "SensorMaker", false, "Default hook for %s sensor (type %s) used.", sensor->Name().c_str(), sensor->TypeStr().c_str());
+                const auto outcome = CallSensorHook(entityId, sensor, defaultHook, createdEntities);
+                if (!outcome.IsSuccess())
+                {
+                    return outcome;
+                }
             }
         }
+
+        return AZ::Success();
     }
 
-    AZStd::vector<AZ::EntityId> SensorsMaker::AddSensors(const sdf::Model& model, const sdf::Link* link, AZ::EntityId entityId) const
+    AZStd::vector<AZ::EntityId> SensorsMaker::AddSensors(const sdf::Model& model, const sdf::Link* link, AZ::EntityId entityId)
     {
         AZStd::vector<AZ::EntityId> createdEntities;
         for (size_t si = 0; si < link->SensorCount(); ++si)
@@ -117,5 +150,10 @@ namespace ROS2
         }
 
         return createdEntities;
+    }
+
+    const AZStd::set<AZStd::string>& SensorsMaker::GetStatusMessages() const
+    {
+        return m_status;
     }
 } // namespace ROS2

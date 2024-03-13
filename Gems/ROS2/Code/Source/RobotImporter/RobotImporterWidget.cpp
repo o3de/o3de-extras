@@ -202,7 +202,8 @@ namespace ROS2
                             report += tr("(EMPTY)");
                         }
                         report += "\n```";
-                        m_robotDescriptionPage->ReportParsingResult(report, false);
+                        constexpr bool isSuccess = false;
+                        m_robotDescriptionPage->ReportParsingResult(report, isSuccess);
                         return;
                     }
                 }
@@ -219,7 +220,7 @@ namespace ROS2
 
             AZStd::string log;
             const bool urdfParsedSuccess{ parsedSdfOutcome };
-            const bool urdfParsedWithWarnings{ parsedSdfOutcome.UrdfParsedWithModifiedContent() };
+            bool urdfParsedWithWarnings{ parsedSdfOutcome.UrdfParsedWithModifiedContent() };
             if (urdfParsedSuccess)
             {
                 if (urdfParsedWithWarnings)
@@ -229,11 +230,9 @@ namespace ROS2
                 else
                 {
                     report += "# " + tr("The URDF/SDF was parsed and opened successfully") + "\n";
-                    AZ_Printf("Wizard", "Wizard skips m_robotDescriptionPage since there is no errors in URDF\n");
                 }
                 m_parsedSdf = AZStd::move(parsedSdfOutcome.GetRoot());
                 m_prefabMaker.reset();
-                // Report the status of skipping this page
                 m_assetNames = Utils::GetReferencedAssetFilenames(m_parsedSdf);
                 m_assetPage->ClearAssetsList();
             }
@@ -241,26 +240,28 @@ namespace ROS2
             {
                 log = Utils::JoinSdfErrorsToString(parsedSdfOutcome.GetSdfErrors());
                 report += "# " + tr("The URDF/SDF was not opened") + "\n";
-                report += tr("URDF/SDF parser returned following errors:") + "\n\n";
+                report += "## " + tr("URDF/SDF parser returned following errors:") + "\n\n";
             }
             if (!log.empty())
             {
-                report += "`";
+                report += "```\n";
                 report += QString::fromUtf8(log.data(), int(log.size()));
-                report += "`";
+                report += "\n```\n";
+                AZ_Printf("RobotImporterWidget", "SDF Stream: %s\n", log.c_str());
+                urdfParsedWithWarnings = true;
             }
-            m_robotDescriptionPage->ReportParsingResult(report, urdfParsedSuccess, urdfParsedWithWarnings);
             const auto& messages = parsedSdfOutcome.GetParseMessages();
             if (!messages.empty())
             {
                 report += "\n\n";
-                report += tr("URDF/SDF parser returned following messages:") + "\n\n";
-                report += "```bash\n";
+                report += "## " + tr("URDF/SDF parser returned following messages:") + "\n\n";
+                report += "```\n";
                 report += QString::fromUtf8(messages.c_str(), int(messages.size()));
                 report += "\n```\n";
                 AZ_Printf("RobotImporterWidget", "SDF Stream: %s\n", messages.c_str());
+                urdfParsedWithWarnings = true;
             }
-            m_robotDescriptionPage->ReportParsingResult(report, urdfParsedSuccess);
+            m_robotDescriptionPage->ReportParsingResult(report, urdfParsedSuccess, urdfParsedWithWarnings);
         }
     }
 
@@ -344,15 +345,17 @@ namespace ROS2
             }
             else
             {
-                m_urdfAssetsMapping =
-                    AZStd::make_shared<Utils::UrdfAssetMap>(Utils::FindReferencedAssets(m_assetNames, m_urdfPath.String(), sdfBuilderSettings));
+                m_urdfAssetsMapping = AZStd::make_shared<Utils::UrdfAssetMap>(
+                    Utils::FindReferencedAssets(m_assetNames, m_urdfPath.String(), sdfBuilderSettings));
                 for (const auto& [assetPath, assetReferenceType] : m_assetNames)
                 {
                     if (m_urdfAssetsMapping->contains(assetPath))
                     {
                         const auto& asset = m_urdfAssetsMapping->at(assetPath);
-                        bool visual = (assetReferenceType & Utils::ReferencedAssetType::VisualMesh) == Utils::ReferencedAssetType::VisualMesh;
-                        bool collider = (assetReferenceType & Utils::ReferencedAssetType::ColliderMesh) == Utils::ReferencedAssetType::ColliderMesh;
+                        bool visual =
+                            (assetReferenceType & Utils::ReferencedAssetType::VisualMesh) == Utils::ReferencedAssetType::VisualMesh;
+                        bool collider =
+                            (assetReferenceType & Utils::ReferencedAssetType::ColliderMesh) == Utils::ReferencedAssetType::ColliderMesh;
                         if (visual || collider)
                         {
                             Utils::CreateSceneManifest(asset.m_availableAssetInfo.m_sourceAssetGlobalPath, collider, visual);
@@ -563,12 +566,13 @@ namespace ROS2
         }
         if ((currentPage() == m_fileSelectPage && m_params.empty()) || currentPage() == m_xacroParamsPage)
         {
-            if (!m_robotDescriptionPage->isWarning())
-            {
-                return m_xacroParamsPage->nextId();
-            }
             if (m_robotDescriptionPage->isComplete())
             {
+                if (m_robotDescriptionPage->isWarning())
+                {
+                    // do not skip robot description page
+                    return m_xacroParamsPage->nextId();
+                }
                 if (m_assetNames.empty())
                 {
                     // skip two pages when urdf/sdf is parsed without problems, and it has no assets
@@ -580,11 +584,13 @@ namespace ROS2
                     return m_robotDescriptionPage->nextId();
                 }
             }
-            if (m_params.empty())
+            else
             {
+                // XACRO parameters page is already active or can be skipped
                 return m_xacroParamsPage->nextId();
             }
         }
+
         return currentPage()->nextId();
     }
 

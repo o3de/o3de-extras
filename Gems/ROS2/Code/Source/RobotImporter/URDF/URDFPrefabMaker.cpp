@@ -56,6 +56,7 @@ namespace ROS2
         {
             AZStd::lock_guard<AZStd::mutex> lck(m_statusLock);
             m_status.clear();
+            m_articulationsCounter = 0u;
         }
 
         if (!ContainsModel())
@@ -502,6 +503,16 @@ namespace ROS2
             }
         }
 
+        // Get the remaining log information (sensors, plugins)
+        {
+            AZStd::lock_guard<AZStd::mutex> lck(m_statusLock);
+            const auto& sensorStatus = m_sensorsMaker.GetStatusMessages();
+            for (const auto& ss : sensorStatus)
+            {
+                m_status.emplace(StatusMessageType::Sensor, ss);
+            }
+        }
+
         // Create prefab, save it to disk immediately
         // Remove prefab, if it was already created.
 
@@ -660,6 +671,7 @@ namespace ROS2
                     m_status.emplace(
                         StatusMessageType::Joint,
                         AZStd::string::format("%s created as articulation link: %llu", azLinkName.c_str(), linkResult.GetValue()));
+                    m_articulationsCounter++;
                 }
                 else
                 {
@@ -712,6 +724,14 @@ namespace ROS2
     {
         AZStd::string report;
         AZStd::lock_guard<AZStd::mutex> lck(m_statusLock);
+
+        // Print warnings first
+        constexpr unsigned int articulationsLimit = 64;
+        if (m_articulationsCounter >= articulationsLimit)
+        {
+            report += "\n## 💡 Note: the number of articulations (" + AZStd::to_string(m_articulationsCounter) +
+                ") might not be supported by the physics engine.\n";
+        }
 
         report += "# The following components were found and parsed:\n";
 
