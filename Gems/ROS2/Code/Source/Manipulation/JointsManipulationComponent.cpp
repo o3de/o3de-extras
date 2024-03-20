@@ -166,8 +166,9 @@ namespace ROS2
     }
 
     JointsManipulationComponent::JointsManipulationComponent(
-        const PublisherConfiguration& configuration, const AZStd::unordered_map<AZStd::string, JointPosition>& initialPositions)
-        : m_jointStatePublisherConfiguration(configuration)
+        const PublisherConfiguration& publisherConfiguration,
+        const AZStd::vector<AZStd::pair<AZStd::string, float>>& initialPositions)
+        : m_jointStatePublisherConfiguration(publisherConfiguration)
         , m_initialPositions(initialPositions)
     {
     }
@@ -371,9 +372,9 @@ namespace ROS2
         if (AZ::SerializeContext* serialize = azrtti_cast<AZ::SerializeContext*>(context))
         {
             serialize->Class<JointsManipulationComponent, AZ::Component>()
-                ->Version(1)
+                ->Version(2)
                 ->Field("JointStatesPublisherConfiguration", &JointsManipulationComponent::m_jointStatePublisherConfiguration)
-                ->Field("InitialJointPosition", &JointsManipulationComponent::m_initialPositions);
+                ->Field("OrderedInitialJointPositions", &JointsManipulationComponent::m_initialPositions);
         }
     }
 
@@ -426,11 +427,11 @@ namespace ROS2
         if (m_manipulationJoints.empty())
         {
             const AZStd::string manipulatorNamespace = GetManipulatorNamespace();
-            AZStd::unordered_map<AZStd::string, JointPosition> intialPositonNamespaced;
+            AZStd::unordered_map<AZStd::string, JointPosition> initialPositionNamespaced;
             AZStd::transform(
                 m_initialPositions.begin(),
                 m_initialPositions.end(),
-                AZStd::inserter(intialPositonNamespaced, intialPositonNamespaced.end()),
+                AZStd::inserter(initialPositionNamespaced, initialPositionNamespaced.end()),
                 [&manipulatorNamespace](const auto& pair)
                 {
                     return AZStd::make_pair(ROS2::ROS2Names::GetNamespacedName(manipulatorNamespace, pair.first), pair.second);
@@ -438,7 +439,7 @@ namespace ROS2
 
             m_manipulationJoints = Internal::GetAllEntityHierarchyJoints(GetEntityId());
 
-            Internal::SetInitialPositions(m_manipulationJoints, intialPositonNamespaced);
+            Internal::SetInitialPositions(m_manipulationJoints, initialPositionNamespaced);
             if (m_manipulationJoints.empty())
             {
                 AZ_Warning("JointsManipulationComponent", false, "No manipulation joints to handle!");

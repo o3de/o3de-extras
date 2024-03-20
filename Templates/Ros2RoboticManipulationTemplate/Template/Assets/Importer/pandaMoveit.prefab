@@ -1852,17 +1852,44 @@
                             }
                         }
                     },
-                    "Initial positions": {
-                        "panda_finger_joint1": 0.03999999910593033,
-                        "panda_finger_joint2": 0.03999999910593033,
-                        "panda_joint1": {},
-                        "panda_joint2": -0.7850000262260437,
-                        "panda_joint3": {},
-                        "panda_joint4": -2.3559999465942383,
-                        "panda_joint5": {},
-                        "panda_joint6": 1.5709999799728394,
-                        "panda_joint7": 0.7850000262260437
-                    }
+                    "Initial positions": [
+                        [
+                            "panda_joint1",
+                            {}
+                        ],
+                        [
+                            "panda_joint2",
+                            -0.7850000262260437
+                        ],
+                        [
+                            "panda_joint3",
+                            {}
+                        ],
+                        [
+                            "panda_joint4",
+                            -2.3559999465942383
+                        ],
+                        [
+                            "panda_joint5",
+                            {}
+                        ],
+                        [
+                            "panda_joint6",
+                            1.5709999799728394
+                        ],
+                        [
+                            "panda_joint7",
+                            0.7850000262260437
+                        ],
+                        [
+                            "panda_finger_joint1",
+                            0.03999999910593033
+                        ],
+                        [
+                            "panda_finger_joint2",
+                            0.03999999910593033
+                        ]
+                    ]
                 },
                 "JointsTrajectoryComponent": {
                     "$type": "GenericComponentWrapper",
