@@ -169,7 +169,9 @@ namespace ROS2
     void CameraSensor::RequestFrame(
         const AZ::Transform& cameraPose, AZStd::function<void(const AZ::RPI::AttachmentReadback::ReadbackResult& result)> callback)
     {
-        const AZ::Transform inverse = (cameraPose * AtomToRos).GetInverse();
+        const AZ::Transform cameraPoseNoScaling =
+            AZ::Transform::CreateFromQuaternionAndTranslation(cameraPose.GetRotation(), cameraPose.GetTranslation());
+        const AZ::Transform inverse = (cameraPoseNoScaling * AtomToRos).GetInverse();
         m_view->SetWorldToViewMatrix(AZ::Matrix4x4::CreateFromQuaternionAndTranslation(inverse.GetRotation(), inverse.GetTranslation()));
 
         AZ::Render::FrameCaptureOutcome captureOutcome;
