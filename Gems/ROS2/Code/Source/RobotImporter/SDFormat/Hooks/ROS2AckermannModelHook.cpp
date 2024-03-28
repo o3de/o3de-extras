@@ -283,6 +283,10 @@ namespace ROS2::SDFormat
     {
         ModelPluginImporterHook importerHook;
         importerHook.m_pluginNames = AZStd::unordered_set<AZStd::string>{ "libgazebo_ros_ackermann_drive.so" };
+        importerHook.m_supportedPluginParams = AZStd::unordered_set<AZStd::string>{
+            ">front_left_joint",     ">front_right_joint",        ">rear_left_joint",         ">rear_right_joint", ">left_steering_joint",
+            ">right_steering_joint", ">linear_velocity_pid_gain", ">linear_velocity_i_range", ">max_speed",        ">max_steer"
+        };
 
         importerHook.m_sdfPluginToComponentCallback =
             [](AZ::Entity& entity, const sdf::Plugin& sdfPlugin, const sdf::Model& sdfModel, const CreatedEntitiesMap& createdEntities)
