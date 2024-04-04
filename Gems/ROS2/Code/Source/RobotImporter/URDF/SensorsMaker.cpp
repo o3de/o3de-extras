@@ -97,8 +97,10 @@ namespace ROS2
                     return CallSensorHook(entityId, sensor, &hook, createdEntities);
                 }
             }
-            return AZ::Failure(
-                AZStd::string::format("Cannot find a hook for %s sensor (type %s)", sensor->Name().c_str(), sensor->TypeStr().c_str()));
+            const auto message =
+                AZStd::string::format("%s (type %s) not created: cannot find the hook", sensor->Name().c_str(), sensor->TypeStr().c_str());
+            m_status.emplace(message);
+            return AZ::Failure(message);
         }
 
         // Add sensor with one or more plugins
@@ -146,7 +148,8 @@ namespace ROS2
         for (size_t si = 0; si < link->SensorCount(); ++si)
         {
             const auto* sensor = link->SensorByIndex(si);
-            AddSensor(entityId, sensor, createdEntities);
+            const auto outcome = AddSensor(entityId, sensor, createdEntities);
+            AZ_Warning("SensorsMaker", outcome.IsSuccess(), outcome.GetError().c_str());
         }
 
         return createdEntities;

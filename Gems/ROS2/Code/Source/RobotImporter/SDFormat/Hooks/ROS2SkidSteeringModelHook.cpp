@@ -177,6 +177,11 @@ namespace ROS2::SDFormat
         ModelPluginImporterHook importerHook;
         importerHook.m_pluginNames =
             AZStd::unordered_set<AZStd::string>{ "libgazebo_ros_skid_steer_drive.so", "libgazebo_ros_diff_drive.so" };
+        importerHook.m_supportedPluginParams = AZStd::unordered_set<AZStd::string>{
+            ">wheelSeparation",        ">wheelDiameter",   ">wheelAcceleration", ">leftJoint",      ">rightJoint",       ">wheelDiameter",
+            ">leftFrontJoint",         ">rightFrontJoint", ">leftRearJoint",     ">rightRearJoint", ">wheel_separation", ">wheel_diameter",
+            ">max_wheel_acceleration", ">num_wheel_pairs", ">left_joint",        ">right_joint"
+        };
 
         importerHook.m_sdfPluginToComponentCallback =
             [](AZ::Entity& entity, const sdf::Plugin& sdfPlugin, const sdf::Model& sdfModel, const CreatedEntitiesMap& createdEntities)

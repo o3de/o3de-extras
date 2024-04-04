@@ -11,6 +11,7 @@
 #include <AzCore/Component/ComponentBus.h>
 #include <AzCore/Component/EntityId.h>
 #include <AzCore/Outcome/Outcome.h>
+#include <AzCore/std/containers/set.h>
 #include <ROS2/RobotImporter/SDFormatModelPluginImporterHook.h>
 
 #include <sdf/sdf.hh>
@@ -26,6 +27,17 @@ namespace ROS2
         //! @param model A parsed SDF model which could hold information about a model control plugin.
         //! @param entityId A non-active entity which will be affected.
         //! @param createdEntities A map of all created entities that can be used by plugins.
-        void AddControlPlugins(const sdf::Model& model, AZ::EntityId entityId, const SDFormat::CreatedEntitiesMap& createdEntities) const;
+        void AddControlPlugins(const sdf::Model& model, AZ::EntityId entityId, const SDFormat::CreatedEntitiesMap& createdEntities);
+
+        //! Get a reference to collection of status messages (read-only)
+        //! @return A reference to set containing status messages.
+        const AZStd::set<AZStd::string>& GetStatusMessages() const;
+
+    private:
+        AZStd::set<AZStd::string> m_status;
+
+        using ControlHookCallOutcome = AZ::Outcome<void, AZStd::string>;
+        ControlHookCallOutcome AddPlugin(
+            AZ::EntityId entityId, const sdf::Plugin& plugin, const sdf::Model& model, const SDFormat::CreatedEntitiesMap& createdEntities);
     };
 } // namespace ROS2
