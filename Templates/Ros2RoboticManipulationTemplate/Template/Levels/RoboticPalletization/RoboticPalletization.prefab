@@ -12893,6 +12893,687 @@
                 }
             }
         },
+        "Entity_[58947630625381]": {
+            "Id": "Entity_[58947630625381]",
+            "Name": "ConveyorEnd",
+            "Components": {
+                "EditorDisabledCompositionComponent": {
+                    "$type": "EditorDisabledCompositionComponent",
+                    "Id": 368151636202584318
+                },
+                "EditorEntityIconComponent": {
+                    "$type": "EditorEntityIconComponent",
+                    "Id": 16330904735667058463
+                },
+                "EditorEntitySortComponent": {
+                    "$type": "EditorEntitySortComponent",
+                    "Id": 9607213867376296089,
+                    "Child Entity Order": [
+                        "Entity_[58960515527269]",
+                        "Entity_[58956220559973]",
+                        "Entity_[58951925592677]"
+                    ]
+                },
+                "EditorInspectorComponent": {
+                    "$type": "EditorInspectorComponent",
+                    "Id": 2564868415799044746
+                },
+                "EditorLockComponent": {
+                    "$type": "EditorLockComponent",
+                    "Id": 4412324508693157804
+                },
+                "EditorOnlyEntityComponent": {
+                    "$type": "EditorOnlyEntityComponent",
+                    "Id": 3192686951368629518
+                },
+                "EditorPendingCompositionComponent": {
+                    "$type": "EditorPendingCompositionComponent",
+                    "Id": 2913235754663849822
+                },
+                "EditorVisibilityComponent": {
+                    "$type": "EditorVisibilityComponent",
+                    "Id": 8399408231991204710
+                },
+                "TransformComponent": {
+                    "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
+                    "Id": 14861779263139968143,
+                    "Parent Entity": "Entity_[59352376683229]",
+                    "Transform Data": {
+                        "Translate": [
+                            0.0,
+                            -2.9957454204559326,
+                            0.0
+                        ]
+                    }
+                }
+            }
+        },
+        "Entity_[58951925592677]": {
+            "Id": "Entity_[58951925592677]",
+            "Name": "ConveyorBelt_effector",
+            "Components": {
+                "AZ::Render::EditorMeshComponent": {
+                    "$type": "AZ::Render::EditorMeshComponent",
+                    "Id": 11864974877664747488,
+                    "Controller": {
+                        "Configuration": {
+                            "ModelAsset": {
+                                "assetId": {
+                                    "guid": "{661604EF-298C-587E-A4B1-F22A5B7557EB}",
+                                    "subId": 274352206
+                                },
+                                "assetHint": "assets/factory/conveyorline/default_conveyorbelt_effector_75e73d92_2074_54c6_afa7_b51165a40c77_.fbx.azmodel"
+                            }
+                        }
+                    }
+                },
+                "EditorColliderComponent": {
+                    "$type": "EditorColliderComponent",
+                    "Id": 10493330990372424311,
+                    "ColliderConfiguration": {
+                        "Position": [
+                            -0.05938149243593216,
+                            -0.21238388121128082,
+                            0.061392396688461304
+                        ],
+                        "Rotation": [
+                            0.0,
+                            0.0,
+                            -0.08204659819602966,
+                            0.9966285228729248
+                        ],
+                        "MaterialSlots": {
+                            "Slots": [
+                                {
+                                    "Name": "Entire object",
+                                    "MaterialAsset": {
+                                        "assetId": {
+                                            "guid": "{B7D2A6A1-D287-4E1C-8DFB-5A13EB7E110F}"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "ShapeConfiguration": {
+                        "ShapeType": 1,
+                        "Box": {
+                            "Scale": [
+                                0.800000011920929,
+                                0.800000011920929,
+                                0.800000011920929
+                            ],
+                            "Configuration": [
+                                0.010561764240264893,
+                                0.1499987244606018,
+                                0.12128281593322754
+                            ]
+                        }
+                    }
+                },
+                "EditorColliderComponent_2": {
+                    "$type": "EditorColliderComponent",
+                    "Id": 11336767273456035004,
+                    "ColliderConfiguration": {
+                        "Position": [
+                            -0.06049775332212448,
+                            -0.5122600793838501,
+                            0.0613924004137516
+                        ],
+                        "Rotation": [
+                            0.0,
+                            0.0,
+                            0.07245030999183655,
+                            0.997372031211853
+                        ],
+                        "MaterialSlots": {
+                            "Slots": [
+                                {
+                                    "Name": "Entire object",
+                                    "MaterialAsset": {
+                                        "assetId": {
+                                            "guid": "{F27B41FB-6066-56C7-8822-000E467A448A}",
+                                            "subId": 1
+                                        },
+                                        "assetHint": "assets/factory/conveyorline/conveyor_guards.physicsmaterial"
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "ShapeConfiguration": {
+                        "ShapeType": 1,
+                        "Box": {
+                            "Scale": [
+                                0.800000011920929,
+                                0.800000011920929,
+                                0.800000011920929
+                            ],
+                            "Configuration": [
+                                0.010561799630522728,
+                                0.14999869465827942,
+                                0.12128280103206635
+                            ]
+                        }
+                    }
+                },
+                "EditorColliderComponent_3": {
+                    "$type": "EditorColliderComponent",
+                    "Id": 3063718856867016350,
+                    "ColliderConfiguration": {
+                        "Position": [
+                            -0.07108332216739655,
+                            -0.3624451458454132,
+                            0.0613924004137516
+                        ],
+                        "Rotation": [
+                            0.0,
+                            0.0,
+                            -0.00038623809814453125,
+                            1.0
+                        ],
+                        "MaterialSlots": {
+                            "Slots": [
+                                {
+                                    "Name": "Entire object",
+                                    "MaterialAsset": {
+                                        "assetId": {
+                                            "guid": "{F27B41FB-6066-56C7-8822-000E467A448A}",
+                                            "subId": 1
+                                        },
+                                        "assetHint": "assets/factory/conveyorline/conveyor_guards.physicsmaterial"
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "ShapeConfiguration": {
+                        "ShapeType": 1,
+                        "Box": {
+                            "Scale": [
+                                0.800000011920929,
+                                0.800000011920929,
+                                0.800000011920929
+                            ],
+                            "Configuration": [
+                                0.010561799630522728,
+                                0.14999869465827942,
+                                0.12128280103206635
+                            ]
+                        }
+                    }
+                },
+                "EditorColliderComponent_4": {
+                    "$type": "EditorColliderComponent",
+                    "Id": 14374153890209585970,
+                    "ColliderConfiguration": {
+                        "Position": [
+                            -0.025573300197720528,
+                            -0.6597500443458557,
+                            0.0613924004137516
+                        ],
+                        "Rotation": [
+                            0.0,
+                            0.0,
+                            0.15149669349193573,
+                            0.9884577989578247
+                        ],
+                        "MaterialSlots": {
+                            "Slots": [
+                                {
+                                    "Name": "Entire object",
+                                    "MaterialAsset": {
+                                        "assetId": {
+                                            "guid": "{F27B41FB-6066-56C7-8822-000E467A448A}",
+                                            "subId": 1
+                                        },
+                                        "assetHint": "assets/factory/conveyorline/conveyor_guards.physicsmaterial"
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "ShapeConfiguration": {
+                        "ShapeType": 1,
+                        "Box": {
+                            "Scale": [
+                                0.800000011920929,
+                                0.800000011920929,
+                                0.800000011920929
+                            ],
+                            "Configuration": [
+                                0.010561799630522728,
+                                0.14999869465827942,
+                                0.12128280103206635
+                            ]
+                        }
+                    }
+                },
+                "EditorColliderComponent_5": {
+                    "$type": "EditorColliderComponent",
+                    "Id": 15366105893125683113,
+                    "ColliderConfiguration": {
+                        "Position": [
+                            -0.025573300197720528,
+                            -0.06703650206327438,
+                            0.0613924004137516
+                        ],
+                        "Rotation": [
+                            0.0,
+                            0.0,
+                            -0.14700070023536682,
+                            0.9891363978385925
+                        ],
+                        "MaterialSlots": {
+                            "Slots": [
+                                {
+                                    "Name": "Entire object",
+                                    "MaterialAsset": {
+                                        "assetId": {
+                                            "guid": "{F27B41FB-6066-56C7-8822-000E467A448A}",
+                                            "subId": 1
+                                        },
+                                        "assetHint": "assets/factory/conveyorline/conveyor_guards.physicsmaterial"
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "ShapeConfiguration": {
+                        "ShapeType": 1,
+                        "Box": {
+                            "Scale": [
+                                0.800000011920929,
+                                0.800000011920929,
+                                0.800000011920929
+                            ],
+                            "Configuration": [
+                                0.010561799630522728,
+                                0.14999869465827942,
+                                0.12128280103206635
+                            ]
+                        }
+                    }
+                },
+                "EditorDisabledCompositionComponent": {
+                    "$type": "EditorDisabledCompositionComponent",
+                    "Id": 1526911113350178604
+                },
+                "EditorEntityIconComponent": {
+                    "$type": "EditorEntityIconComponent",
+                    "Id": 3066607796419867815
+                },
+                "EditorEntitySortComponent": {
+                    "$type": "EditorEntitySortComponent",
+                    "Id": 2180347715972664189
+                },
+                "EditorHingeJointComponent": {
+                    "$type": "EditorHingeJointComponent",
+                    "Id": 13876802949819543457,
+                    "Configuration": {
+                        "Local Rotation": [
+                            0.0,
+                            90.0,
+                            0.0
+                        ],
+                        "Parent Entity": "",
+                        "Child Entity": "Entity_[58951925592677]"
+                    },
+                    "Angular Limit": {
+                        "Standard Limit Configuration": {
+                            "Is Soft Limit": true,
+                            "Damping": 5.0,
+                            "Stiffness": 50.0
+                        },
+                        "Positive Limit": 1.0,
+                        "Negative Limit": 0.0
+                    },
+                    "Motor": {
+                        "ForceLimit": 5.0
+                    }
+                },
+                "EditorInspectorComponent": {
+                    "$type": "EditorInspectorComponent",
+                    "Id": 17456920185953320810
+                },
+                "EditorLockComponent": {
+                    "$type": "EditorLockComponent",
+                    "Id": 15136532437149168424
+                },
+                "EditorMaterialComponent": {
+                    "$type": "EditorMaterialComponent",
+                    "Id": 14503601261797379259,
+                    "Controller": {
+                        "Configuration": {
+                            "materials": [
+                                {
+                                    "Key": {
+                                        "materialSlotStableId": 3850801320
+                                    },
+                                    "Value": {
+                                        "MaterialAsset": {
+                                            "assetId": {
+                                                "guid": "{549D26B8-881D-569F-AF05-961F36A43F4F}"
+                                            },
+                                            "assetHint": "materials/presets/pbr/metal_aluminum_matte.azmaterial"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                },
+                "EditorOnlyEntityComponent": {
+                    "$type": "EditorOnlyEntityComponent",
+                    "Id": 5964924433154819862
+                },
+                "EditorPendingCompositionComponent": {
+                    "$type": "EditorPendingCompositionComponent",
+                    "Id": 11328899035442399644
+                },
+                "EditorRigidBodyComponent": {
+                    "$type": "EditorRigidBodyComponent",
+                    "Id": 10234545285221682948,
+                    "Configuration": {
+                        "entityId": "",
+                        "Compute Mass": false,
+                        "Mass": 0.49188581109046936,
+                        "Centre of mass offset": [
+                            -0.0387374609708786,
+                            -0.29022017121315,
+                            0.0491139180958271
+                        ],
+                        "Inertia tensor": [
+                            0.014840544201433659,
+                            0.0,
+                            0.0,
+                            0.0,
+                            0.0005296904710121453,
+                            0.0,
+                            0.0,
+                            0.0,
+                            0.014598461799323559
+                        ]
+                    }
+                },
+                "EditorVisibilityComponent": {
+                    "$type": "EditorVisibilityComponent",
+                    "Id": 8138062543857271955
+                },
+                "TransformComponent": {
+                    "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
+                    "Id": 12832051830324863571,
+                    "Parent Entity": "Entity_[58947630625381]",
+                    "Transform Data": {
+                        "Translate": [
+                            -4.049839973449707,
+                            -0.8852120637893677,
+                            0.47012487053871155
+                        ],
+                        "Rotate": [
+                            0.0,
+                            0.0,
+                            -122.45709228515625
+                        ],
+                        "UniformScale": 0.800000011920929
+                    }
+                }
+            }
+        },
+        "Entity_[58956220559973]": {
+            "Id": "Entity_[58956220559973]",
+            "Name": "end-of-line_bed",
+            "Components": {
+                "EditorColliderComponent": {
+                    "$type": "EditorColliderComponent",
+                    "Id": 1461753943847310074,
+                    "ColliderConfiguration": {
+                        "Position": [
+                            -0.11232216656208038,
+                            0.17360985279083252,
+                            0.09786839783191681
+                        ],
+                        "MaterialSlots": {
+                            "Slots": [
+                                {
+                                    "Name": "Entire object",
+                                    "MaterialAsset": {
+                                        "assetId": {
+                                            "guid": "{F27B41FB-6066-56C7-8822-000E467A448A}",
+                                            "subId": 1
+                                        },
+                                        "assetHint": "assets/factory/conveyorline/conveyor_guards.physicsmaterial"
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "ShapeConfiguration": {
+                        "ShapeType": 1,
+                        "Box": {
+                            "Configuration": [
+                                0.8839261531829834,
+                                0.12050015479326248,
+                                0.4000000059604645
+                            ]
+                        }
+                    }
+                },
+                "EditorDisabledCompositionComponent": {
+                    "$type": "EditorDisabledCompositionComponent",
+                    "Id": 2299535321914186018
+                },
+                "EditorEntityIconComponent": {
+                    "$type": "EditorEntityIconComponent",
+                    "Id": 7577219562161824293
+                },
+                "EditorEntitySortComponent": {
+                    "$type": "EditorEntitySortComponent",
+                    "Id": 8096813013908045854
+                },
+                "EditorInspectorComponent": {
+                    "$type": "EditorInspectorComponent",
+                    "Id": 113487818910278726
+                },
+                "EditorLockComponent": {
+                    "$type": "EditorLockComponent",
+                    "Id": 1768930675503604317
+                },
+                "EditorOnlyEntityComponent": {
+                    "$type": "EditorOnlyEntityComponent",
+                    "Id": 2249728575844916161
+                },
+                "EditorPendingCompositionComponent": {
+                    "$type": "EditorPendingCompositionComponent",
+                    "Id": 4656608396264029436
+                },
+                "EditorStaticRigidBodyComponent": {
+                    "$type": "EditorStaticRigidBodyComponent",
+                    "Id": 18000606903430326936
+                },
+                "EditorVisibilityComponent": {
+                    "$type": "EditorVisibilityComponent",
+                    "Id": 4750309885876423634
+                },
+                "TransformComponent": {
+                    "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
+                    "Id": 4035220759704794959,
+                    "Parent Entity": "Entity_[58947630625381]",
+                    "Transform Data": {
+                        "Translate": [
+                            -4.617433071136475,
+                            -0.477152019739151,
+                            0.2246810495853424
+                        ],
+                        "Rotate": [
+                            89.99962615966797,
+                            89.99994659423828,
+                            0.0
+                        ]
+                    }
+                }
+            }
+        },
+        "Entity_[58960515527269]": {
+            "Id": "Entity_[58960515527269]",
+            "Name": "ConveyorBelt_guards_segment",
+            "Components": {
+                "AZ::Render::EditorMeshComponent": {
+                    "$type": "AZ::Render::EditorMeshComponent",
+                    "Id": 9749858389308344326,
+                    "Controller": {
+                        "Configuration": {
+                            "ModelAsset": {
+                                "assetId": {
+                                    "guid": "{F2061925-B71C-5B0E-9728-8A066B473F0A}",
+                                    "subId": 273053170
+                                },
+                                "assetHint": "assets/factory/conveyorline/default_conveyorbelt_guards_segment_bafc5697_1d73_5e8c_bddd_ae3ec74e4fbc_.fbx.azmodel"
+                            }
+                        }
+                    }
+                },
+                "EditorDisabledCompositionComponent": {
+                    "$type": "EditorDisabledCompositionComponent",
+                    "Id": 12360982408915024153
+                },
+                "EditorEntityIconComponent": {
+                    "$type": "EditorEntityIconComponent",
+                    "Id": 14219637609382134682
+                },
+                "EditorEntitySortComponent": {
+                    "$type": "EditorEntitySortComponent",
+                    "Id": 7567657066784969807
+                },
+                "EditorInspectorComponent": {
+                    "$type": "EditorInspectorComponent",
+                    "Id": 2310079476921611392
+                },
+                "EditorLockComponent": {
+                    "$type": "EditorLockComponent",
+                    "Id": 8055551908630149426
+                },
+                "EditorMaterialComponent": {
+                    "$type": "EditorMaterialComponent",
+                    "Id": 3779384672977264962,
+                    "Controller": {
+                        "Configuration": {
+                            "materials": [
+                                {
+                                    "Key": {
+                                        "materialSlotStableId": 3850801320
+                                    },
+                                    "Value": {
+                                        "MaterialAsset": {
+                                            "assetId": {
+                                                "guid": "{549D26B8-881D-569F-AF05-961F36A43F4F}"
+                                            },
+                                            "assetHint": "materials/presets/pbr/metal_aluminum_matte.azmaterial"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                },
+                "EditorMeshColliderComponent": {
+                    "$type": "EditorMeshColliderComponent",
+                    "Id": 1862997573692145468,
+                    "ColliderConfiguration": {
+                        "Rotation": [
+                            0.0,
+                            0.0,
+                            -0.7071067690849304,
+                            0.7071067094802856
+                        ],
+                        "MaterialSlots": {
+                            "Slots": [
+                                {
+                                    "Name": "MFrame",
+                                    "MaterialAsset": {
+                                        "assetId": {
+                                            "guid": "{F27B41FB-6066-56C7-8822-000E467A448A}",
+                                            "subId": 1
+                                        },
+                                        "assetHint": "assets/factory/conveyorline/conveyor_guards.physicsmaterial"
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "ShapeConfiguration": {
+                        "PhysicsAsset": {
+                            "Asset": {
+                                "assetId": {
+                                    "guid": "{F2061925-B71C-5B0E-9728-8A066B473F0A}",
+                                    "subId": 3427872660
+                                },
+                                "assetHint": "assets/factory/conveyorline/conveyorbelt_guards_segment.fbx.pxmesh"
+                            },
+                            "Configuration": {
+                                "Scale": [
+                                    1.0,
+                                    1.0,
+                                    1.8391063213348389
+                                ],
+                                "PhysicsAsset": {
+                                    "assetId": {
+                                        "guid": "{F2061925-B71C-5B0E-9728-8A066B473F0A}",
+                                        "subId": 3427872660
+                                    },
+                                    "loadBehavior": "QueueLoad",
+                                    "assetHint": "assets/factory/conveyorline/conveyorbelt_guards_segment.fbx.pxmesh"
+                                }
+                            }
+                        },
+                        "HasNonUniformScale": true
+                    },
+                    "HasNonUniformScale": true
+                },
+                "EditorNonUniformScaleComponent": {
+                    "$type": "EditorNonUniformScaleComponent",
+                    "Id": 5051025917948018295,
+                    "NonUniformScale": [
+                        1.0,
+                        1.0,
+                        1.8391063213348389
+                    ]
+                },
+                "EditorOnlyEntityComponent": {
+                    "$type": "EditorOnlyEntityComponent",
+                    "Id": 9633914239452666554
+                },
+                "EditorPendingCompositionComponent": {
+                    "$type": "EditorPendingCompositionComponent",
+                    "Id": 6120139324817821069
+                },
+                "EditorStaticRigidBodyComponent": {
+                    "$type": "EditorStaticRigidBodyComponent",
+                    "Id": 10441644533201745128
+                },
+                "EditorVisibilityComponent": {
+                    "$type": "EditorVisibilityComponent",
+                    "Id": 8374146964310941132
+                },
+                "TransformComponent": {
+                    "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
+                    "Id": 13781040730860285181,
+                    "Parent Entity": "Entity_[58947630625381]",
+                    "Transform Data": {
+                        "Translate": [
+                            -4.749582290649414,
+                            -0.6006476879119873,
+                            0.5
+                        ],
+                        "Rotate": [
+                            0.0,
+                            0.0,
+                            -89.99993133544922
+                        ]
+                    }
+                }
+            }
+        },
         "Entity_[59249297468125]": {
             "Id": "Entity_[59249297468125]",
             "Name": "Cell",
@@ -12996,6 +13677,15 @@
                     "$type": "EditorVisibilityComponent",
                     "Id": 3162201113938073911
                 },
+                "ROS2FrameEditorComponent": {
+                    "$type": "ROS2FrameEditorComponent",
+                    "Id": 11215053288689314569,
+                    "ROS2FrameConfiguration": {
+                        "Frame Name": "flange",
+                        "Joint Name": "wrist_3-flange",
+                        "Publish Transform": false
+                    }
+                },
                 "TransformComponent": {
                     "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
                     "Id": 400995838768749823,
@@ -13006,15 +13696,6 @@
                             0.000001707547198748216,
                             -90.00000762939453
                         ]
-                    }
-                },
-                "ROS2FrameEditorComponent": {
-                    "$type": "ROS2FrameEditorComponent",
-                    "Id": 11215053288689314569,
-                    "ROS2FrameConfiguration": {
-                        "Frame Name": "flange",
-                        "Joint Name": "wrist_3-flange",
-                        "Publish Transform": false
                     }
                 }
             }
@@ -13110,14 +13791,9 @@
                     "ArticulationConfiguration": {
                         "entityId": "",
                         "Local Position": [
-                            -0.28110378980636597,
-                            2.466628074645996,
-                            -0.618983805179596
-                        ],
-                        "Local Rotation": [
-                            7.86754498692652e-25,
-                            -7.062249689118779e-31,
-                            0.0
+                            -0.2552247941493988,
+                            2.356576919555664,
+                            -0.6189800500869751
                         ],
                         "Fix Joint Location": true,
                         "Is Limited": false
@@ -13155,6 +13831,17 @@
                     "$type": "EditorVisibilityComponent",
                     "Id": 4882093382413089942
                 },
+                "ROS2FrameEditorComponent": {
+                    "$type": "ROS2FrameEditorComponent",
+                    "Id": 2647709708475378771,
+                    "ROS2FrameConfiguration": {
+                        "Namespace Configuration": {
+                            "Namespace Strategy": 1
+                        },
+                        "Frame Name": "base",
+                        "Joint Name": "base_link-base_fixed_joint"
+                    }
+                },
                 "TransformComponent": {
                     "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
                     "Id": 8282631054892688013,
@@ -13165,17 +13852,6 @@
                             0.0,
                             180.0
                         ]
-                    }
-                },
-                "ROS2FrameEditorComponent": {
-                    "$type": "ROS2FrameEditorComponent",
-                    "Id": 2647709708475378771,
-                    "ROS2FrameConfiguration": {
-                        "Namespace Configuration": {
-                            "Namespace Strategy": 1
-                        },
-                        "Frame Name": "base",
-                        "Joint Name": "base_link-base_fixed_joint"
                     }
                 }
             }
@@ -13290,18 +13966,6 @@
                     "$type": "EditorVisibilityComponent",
                     "Id": 15346349257908877517
                 },
-                "TransformComponent": {
-                    "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
-                    "Id": 8727709477175995643,
-                    "Parent Entity": "Entity_[59348081715933]",
-                    "Transform Data": {
-                        "Translate": [
-                            -0.5722998380661011,
-                            -4.470348358154297e-8,
-                            0.16394098103046417
-                        ]
-                    }
-                },
                 "ROS2FrameEditorComponent": {
                     "$type": "ROS2FrameEditorComponent",
                     "Id": 8821592955977444905,
@@ -13312,6 +13976,18 @@
                         "Frame Name": "wrist_1_link",
                         "Joint Name": "wrist_1_joint",
                         "Publish Transform": false
+                    }
+                },
+                "TransformComponent": {
+                    "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
+                    "Id": 8727709477175995643,
+                    "Parent Entity": "Entity_[59348081715933]",
+                    "Transform Data": {
+                        "Translate": [
+                            -0.5722998380661011,
+                            -4.470348358154297e-8,
+                            0.16394098103046417
+                        ]
                     }
                 }
             }
@@ -13393,6 +14069,15 @@
                     "$type": "EditorVisibilityComponent",
                     "Id": 14178936275163388283
                 },
+                "ROS2FrameEditorComponent": {
+                    "$type": "ROS2FrameEditorComponent",
+                    "Id": 6725714804015519141,
+                    "ROS2FrameConfiguration": {
+                        "Frame Name": "tool0",
+                        "Joint Name": "flange-tool0",
+                        "Publish Transform": false
+                    }
+                },
                 "TransformComponent": {
                     "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
                     "Id": 12372534703390537978,
@@ -13403,15 +14088,6 @@
                             89.99996185302734,
                             0.0
                         ]
-                    }
-                },
-                "ROS2FrameEditorComponent": {
-                    "$type": "ROS2FrameEditorComponent",
-                    "Id": 6725714804015519141,
-                    "ROS2FrameConfiguration": {
-                        "Frame Name": "tool0",
-                        "Joint Name": "flange-tool0",
-                        "Publish Transform": false
                     }
                 }
             }
@@ -13460,6 +14136,15 @@
                     "$type": "EditorVisibilityComponent",
                     "Id": 534106856007224175
                 },
+                "ROS2FrameEditorComponent": {
+                    "$type": "ROS2FrameEditorComponent",
+                    "Id": 16309935774288793114,
+                    "ROS2FrameConfiguration": {
+                        "Frame Name": "ft_frame",
+                        "Joint Name": "wrist_3_link-ft_frame",
+                        "Publish Transform": false
+                    }
+                },
                 "TransformComponent": {
                     "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
                     "Id": 2109512160091696786,
@@ -13470,15 +14155,6 @@
                             -6.392019448087837e-29,
                             -3.1960067147783805e-29
                         ]
-                    }
-                },
-                "ROS2FrameEditorComponent": {
-                    "$type": "ROS2FrameEditorComponent",
-                    "Id": 16309935774288793114,
-                    "ROS2FrameConfiguration": {
-                        "Frame Name": "ft_frame",
-                        "Joint Name": "wrist_3_link-ft_frame",
-                        "Publish Transform": false
                     }
                 }
             }
@@ -13648,12 +14324,12 @@
                 "TransformComponent": {
                     "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
                     "Id": 7080416774926280422,
-                    "Parent Entity": "Entity_[59438276029149]",
+                    "Parent Entity": "Entity_[59352376683229]",
                     "Transform Data": {
                         "Translate": [
-                            -6.7580156326293945,
-                            -4.801725387573242,
-                            -0.06546655297279358
+                            -6.763777732849121,
+                            -4.8988118171691895,
+                            0.39349430799484253
                         ],
                         "Rotate": [
                             0.0,
@@ -13680,16 +14356,16 @@
                     "$type": "EditorEntitySortComponent",
                     "Id": 2336151030548320972,
                     "Child Entity Order": [
-                        "Instance_[7675426849712529]/ContainerEntity",
-                        "Instance_[287337150292413]/ContainerEntity",
-                        "Instance_[1865420997526175]/ContainerEntity",
+                        "Instance_[369185663139661]/ContainerEntity",
                         "Instance_[1865408112624287]/ContainerEntity",
                         "Instance_[12382254012170911]/ContainerEntity",
                         "Instance_[4980853547463014]/ContainerEntity",
                         "Instance_[1205512827607618]/ContainerEntity",
                         "Instance_[1205499942705730]/ContainerEntity",
                         "Instance_[51561655302581]/ContainerEntity",
-                        "Instance_[51574540204469]/ContainerEntity"
+                        "Instance_[51574540204469]/ContainerEntity",
+                        "Instance_[2018923072208249]/ContainerEntity",
+                        "Instance_[2018931662142841]/ContainerEntity"
                     ]
                 },
                 "EditorInspectorComponent": {
@@ -13732,194 +14408,6 @@
                             0.0,
                             89.99993896484375
                         ]
-                    }
-                }
-            }
-        },
-        "Entity_[59292247141085]": {
-            "Id": "Entity_[59292247141085]",
-            "Name": "ElectricBox01",
-            "Components": {
-                "AZ::Render::EditorMeshComponent": {
-                    "$type": "AZ::Render::EditorMeshComponent",
-                    "Id": 9174863117450103225,
-                    "Controller": {
-                        "Configuration": {
-                            "ModelAsset": {
-                                "assetId": {
-                                    "guid": "{1885D5D6-F450-582C-ACE6-5811911664A5}",
-                                    "subId": 276262237
-                                },
-                                "assetHint": "assets/factory/conveyorline/default_conveyorline_1509aafd_c10e_502d_aa7d_588e92405602_.fbx.azmodel"
-                            }
-                        }
-                    }
-                },
-                "EditorDisabledCompositionComponent": {
-                    "$type": "EditorDisabledCompositionComponent",
-                    "Id": 9832279213987373009
-                },
-                "EditorEntityIconComponent": {
-                    "$type": "EditorEntityIconComponent",
-                    "Id": 10081650589052761512
-                },
-                "EditorEntitySortComponent": {
-                    "$type": "EditorEntitySortComponent",
-                    "Id": 14948413392306582529
-                },
-                "EditorInspectorComponent": {
-                    "$type": "EditorInspectorComponent",
-                    "Id": 1207728031565804961
-                },
-                "EditorLockComponent": {
-                    "$type": "EditorLockComponent",
-                    "Id": 8647092588012388023
-                },
-                "EditorMaterialComponent": {
-                    "$type": "EditorMaterialComponent",
-                    "Id": 3437436443967943935,
-                    "Controller": {
-                        "Configuration": {
-                            "materials": [
-                                {
-                                    "Key": {
-                                        "materialSlotStableId": 1001677475
-                                    },
-                                    "Value": {
-                                        "MaterialAsset": {
-                                            "assetId": {
-                                                "guid": "{11CD5088-806D-5578-B223-960DAD18A0C3}"
-                                            },
-                                            "assetHint": "assets/factory/conveyorline/conveyorline_electricboxes.azmaterial"
-                                        }
-                                    }
-                                }
-                            ]
-                        }
-                    }
-                },
-                "EditorOnlyEntityComponent": {
-                    "$type": "EditorOnlyEntityComponent",
-                    "Id": 13032370493978468569
-                },
-                "EditorPendingCompositionComponent": {
-                    "$type": "EditorPendingCompositionComponent",
-                    "Id": 16169802343857012498
-                },
-                "EditorVisibilityComponent": {
-                    "$type": "EditorVisibilityComponent",
-                    "Id": 9579978369907396944
-                },
-                "TransformComponent": {
-                    "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
-                    "Id": 6628136327667502574,
-                    "Parent Entity": "Entity_[59425391127261]",
-                    "Transform Data": {
-                        "Translate": [
-                            -1.3698896169662476,
-                            0.2458663433790207,
-                            0.0
-                        ],
-                        "Rotate": [
-                            89.99998474121094,
-                            0.09144088625907898,
-                            0.0
-                        ],
-                        "UniformScale": 100.00001525878906
-                    }
-                }
-            }
-        },
-        "Entity_[59296542108381]": {
-            "Id": "Entity_[59296542108381]",
-            "Name": "Cage",
-            "Components": {
-                "AZ::Render::EditorMeshComponent": {
-                    "$type": "AZ::Render::EditorMeshComponent",
-                    "Id": 9763751324981375830,
-                    "Controller": {
-                        "Configuration": {
-                            "ModelAsset": {
-                                "assetId": {
-                                    "guid": "{1885D5D6-F450-582C-ACE6-5811911664A5}",
-                                    "subId": 269949122
-                                },
-                                "assetHint": "assets/factory/conveyorline/default_conveyorline_b11c887e_24e9_52ed_9e4a_92cefb839419_.fbx.azmodel"
-                            }
-                        }
-                    }
-                },
-                "EditorDisabledCompositionComponent": {
-                    "$type": "EditorDisabledCompositionComponent",
-                    "Id": 3163710387451129276
-                },
-                "EditorEntityIconComponent": {
-                    "$type": "EditorEntityIconComponent",
-                    "Id": 10488503824886212906
-                },
-                "EditorEntitySortComponent": {
-                    "$type": "EditorEntitySortComponent",
-                    "Id": 13938874482282751553
-                },
-                "EditorInspectorComponent": {
-                    "$type": "EditorInspectorComponent",
-                    "Id": 616715780408535521
-                },
-                "EditorLockComponent": {
-                    "$type": "EditorLockComponent",
-                    "Id": 14241525497192041164
-                },
-                "EditorMaterialComponent": {
-                    "$type": "EditorMaterialComponent",
-                    "Id": 16567248244120570555,
-                    "Controller": {
-                        "Configuration": {
-                            "materials": [
-                                {
-                                    "Key": {
-                                        "materialSlotStableId": 3782317465
-                                    },
-                                    "Value": {
-                                        "MaterialAsset": {
-                                            "assetId": {
-                                                "guid": "{6E496727-37B8-5DD3-B03C-03318C8AC6CC}"
-                                            },
-                                            "assetHint": "assets/factory/conveyorline/conveyorline_cage.azmaterial"
-                                        }
-                                    }
-                                }
-                            ]
-                        }
-                    }
-                },
-                "EditorOnlyEntityComponent": {
-                    "$type": "EditorOnlyEntityComponent",
-                    "Id": 1526968702930184744
-                },
-                "EditorPendingCompositionComponent": {
-                    "$type": "EditorPendingCompositionComponent",
-                    "Id": 4305683554053475595
-                },
-                "EditorVisibilityComponent": {
-                    "$type": "EditorVisibilityComponent",
-                    "Id": 3269811724650047013
-                },
-                "TransformComponent": {
-                    "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
-                    "Id": 10649625017144606554,
-                    "Parent Entity": "Entity_[59425391127261]",
-                    "Transform Data": {
-                        "Translate": [
-                            -2.5463075637817383,
-                            -6.546310901641846,
-                            1.0095064640045166
-                        ],
-                        "Rotate": [
-                            89.99998474121094,
-                            0.0,
-                            0.0
-                        ],
-                        "UniformScale": 100.0
                     }
                 }
             }
@@ -14013,99 +14501,6 @@
                             89.99999237060547,
                             0.0,
                             180.0
-                        ]
-                    }
-                }
-            }
-        },
-        "Entity_[59305132042973]": {
-            "Id": "Entity_[59305132042973]",
-            "Name": "ConveyorBelt_effector",
-            "Components": {
-                "AZ::Render::EditorMeshComponent": {
-                    "$type": "AZ::Render::EditorMeshComponent",
-                    "Id": 11657602370532116654,
-                    "Controller": {
-                        "Configuration": {
-                            "ModelAsset": {
-                                "assetId": {
-                                    "guid": "{73DDFF88-BACA-5E9A-83D6-5919287BA6E8}",
-                                    "subId": 282130487
-                                },
-                                "assetHint": "assets/factory/conveyorline/default_conveyorbelt_ae1e2382_a543_5572_8bb8_7b9e32bed532_.fbx.azmodel"
-                            }
-                        }
-                    }
-                },
-                "EditorDisabledCompositionComponent": {
-                    "$type": "EditorDisabledCompositionComponent",
-                    "Id": 10165778507883959539
-                },
-                "EditorEntityIconComponent": {
-                    "$type": "EditorEntityIconComponent",
-                    "Id": 9415908995778256456
-                },
-                "EditorEntitySortComponent": {
-                    "$type": "EditorEntitySortComponent",
-                    "Id": 5991975365634542946
-                },
-                "EditorInspectorComponent": {
-                    "$type": "EditorInspectorComponent",
-                    "Id": 17272376816268263281
-                },
-                "EditorLockComponent": {
-                    "$type": "EditorLockComponent",
-                    "Id": 11006636561340085061
-                },
-                "EditorMaterialComponent": {
-                    "$type": "EditorMaterialComponent",
-                    "Id": 12034108867821195486,
-                    "Controller": {
-                        "Configuration": {
-                            "materials": [
-                                {
-                                    "Key": {
-                                        "materialSlotStableId": 3850801320
-                                    },
-                                    "Value": {
-                                        "MaterialAsset": {
-                                            "assetId": {
-                                                "guid": "{826AE333-E797-52F4-A8AE-8BFED94E97FF}"
-                                            },
-                                            "assetHint": "assets/factory/conveyorline/conveyorline_mframe.azmaterial"
-                                        }
-                                    }
-                                }
-                            ]
-                        }
-                    }
-                },
-                "EditorOnlyEntityComponent": {
-                    "$type": "EditorOnlyEntityComponent",
-                    "Id": 12675024812660265222
-                },
-                "EditorPendingCompositionComponent": {
-                    "$type": "EditorPendingCompositionComponent",
-                    "Id": 228201535167205967
-                },
-                "EditorVisibilityComponent": {
-                    "$type": "EditorVisibilityComponent",
-                    "Id": 2722711464202431066
-                },
-                "TransformComponent": {
-                    "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
-                    "Id": 14246155696203681071,
-                    "Parent Entity": "Entity_[59391031388893]",
-                    "Transform Data": {
-                        "Translate": [
-                            -0.17112720012664795,
-                            1.2250303030014038,
-                            0.2204541563987732
-                        ],
-                        "Rotate": [
-                            0.0,
-                            0.0,
-                            -89.99994659423828
                         ]
                     }
                 }
@@ -14320,18 +14715,6 @@
                     "$type": "EditorVisibilityComponent",
                     "Id": 12870955700656991821
                 },
-                "TransformComponent": {
-                    "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
-                    "Id": 10121638506472911477,
-                    "Parent Entity": "Entity_[59442570996445]",
-                    "Transform Data": {
-                        "Rotate": [
-                            89.99998474121094,
-                            -7.0167078561561656e-15,
-                            3.7915164313689154e-22
-                        ]
-                    }
-                },
                 "ROS2FrameEditorComponent": {
                     "$type": "ROS2FrameEditorComponent",
                     "Id": 2428354820031729224,
@@ -14342,6 +14725,18 @@
                         "Frame Name": "upper_arm_link",
                         "Joint Name": "shoulder_lift_joint",
                         "Publish Transform": false
+                    }
+                },
+                "TransformComponent": {
+                    "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
+                    "Id": 10121638506472911477,
+                    "Parent Entity": "Entity_[59442570996445]",
+                    "Transform Data": {
+                        "Rotate": [
+                            89.99998474121094,
+                            -7.0167078561561656e-15,
+                            3.7915164313689154e-22
+                        ]
                     }
                 }
             }
@@ -14564,107 +14959,6 @@
                 }
             }
         },
-        "Entity_[59326606879453]": {
-            "Id": "Entity_[59326606879453]",
-            "Name": "ConveyorBelt_main",
-            "Components": {
-                "AZ::Render::EditorMeshComponent": {
-                    "$type": "AZ::Render::EditorMeshComponent",
-                    "Id": 13241881546241544661,
-                    "Controller": {
-                        "Configuration": {
-                            "ModelAsset": {
-                                "assetId": {
-                                    "guid": "{73DDFF88-BACA-5E9A-83D6-5919287BA6E8}",
-                                    "subId": 270990823
-                                },
-                                "assetHint": "assets/factory/conveyorline/default_conveyorbelt_ad8bdc1b_acea_59f0_b0e6_48eb38afea22_.fbx.azmodel"
-                            }
-                        }
-                    }
-                },
-                "EditorDisabledCompositionComponent": {
-                    "$type": "EditorDisabledCompositionComponent",
-                    "Id": 8843752303282008131
-                },
-                "EditorEntityIconComponent": {
-                    "$type": "EditorEntityIconComponent",
-                    "Id": 11507076264950757193
-                },
-                "EditorEntitySortComponent": {
-                    "$type": "EditorEntitySortComponent",
-                    "Id": 14856166301250894656
-                },
-                "EditorInspectorComponent": {
-                    "$type": "EditorInspectorComponent",
-                    "Id": 140828518428595759
-                },
-                "EditorLockComponent": {
-                    "$type": "EditorLockComponent",
-                    "Id": 14946345177511575830
-                },
-                "EditorMaterialComponent": {
-                    "$type": "EditorMaterialComponent",
-                    "Id": 14365934927034343273,
-                    "Controller": {
-                        "Configuration": {
-                            "materials": [
-                                {
-                                    "Key": {
-                                        "materialSlotStableId": 3608162025
-                                    },
-                                    "Value": {
-                                        "MaterialAsset": {
-                                            "assetId": {
-                                                "guid": "{48C9CA31-8DDE-5B1A-BB9F-97D75F558009}"
-                                            },
-                                            "assetHint": "assets/factory/conveyorline/conveyorline_mbelt.azmaterial"
-                                        }
-                                    }
-                                },
-                                {
-                                    "Key": {
-                                        "materialSlotStableId": 3850801320
-                                    },
-                                    "Value": {
-                                        "MaterialAsset": {
-                                            "assetId": {
-                                                "guid": "{826AE333-E797-52F4-A8AE-8BFED94E97FF}"
-                                            },
-                                            "assetHint": "assets/factory/conveyorline/conveyorline_mframe.azmaterial"
-                                        }
-                                    }
-                                }
-                            ]
-                        }
-                    }
-                },
-                "EditorOnlyEntityComponent": {
-                    "$type": "EditorOnlyEntityComponent",
-                    "Id": 12304720058860330269
-                },
-                "EditorPendingCompositionComponent": {
-                    "$type": "EditorPendingCompositionComponent",
-                    "Id": 5153927316680801753
-                },
-                "EditorVisibilityComponent": {
-                    "$type": "EditorVisibilityComponent",
-                    "Id": 11878179482216844977
-                },
-                "TransformComponent": {
-                    "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
-                    "Id": 6743322705821171489,
-                    "Parent Entity": "Entity_[59391031388893]",
-                    "Transform Data": {
-                        "Rotate": [
-                            0.0,
-                            0.0,
-                            -89.99998474121094
-                        ]
-                    }
-                }
-            }
-        },
         "Entity_[59330901846749]": {
             "Id": "Entity_[59330901846749]",
             "Name": "wrist_2_link_visual",
@@ -14797,6 +15091,29 @@
                     "$type": "EditorLockComponent",
                     "Id": 8055551908630149426
                 },
+                "EditorMaterialComponent": {
+                    "$type": "EditorMaterialComponent",
+                    "Id": 3779384672977264962,
+                    "Controller": {
+                        "Configuration": {
+                            "materials": [
+                                {
+                                    "Key": {
+                                        "materialSlotStableId": 3850801320
+                                    },
+                                    "Value": {
+                                        "MaterialAsset": {
+                                            "assetId": {
+                                                "guid": "{549D26B8-881D-569F-AF05-961F36A43F4F}"
+                                            },
+                                            "assetHint": "materials/presets/pbr/metal_aluminum_matte.azmaterial"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                },
                 "EditorMeshColliderComponent": {
                     "$type": "EditorMeshColliderComponent",
                     "Id": 1862997573692145468,
@@ -14883,100 +15200,13 @@
                     "Transform Data": {
                         "Translate": [
                             -4.749582290649414,
-                            -0.6006482839584351,
-                            0.6032143831253052
+                            -0.6006476879119873,
+                            0.5
                         ],
                         "Rotate": [
-                            2.605510251996179e-10,
-                            -0.000010245278645015787,
+                            0.0,
+                            0.0,
                             -89.99993133544922
-                        ]
-                    }
-                }
-            }
-        },
-        "Entity_[59339491781341]": {
-            "Id": "Entity_[59339491781341]",
-            "Name": "ShortLine",
-            "Components": {
-                "ConveyorBeltComponent": {
-                    "$type": "GenericComponentWrapper",
-                    "Id": 18170834209210017766,
-                    "m_template": {
-                        "$type": "ConveyorBeltComponent",
-                        "Configuration": {
-                            "BeltEntityId": ""
-                        }
-                    }
-                },
-                "EditorDisabledCompositionComponent": {
-                    "$type": "EditorDisabledCompositionComponent",
-                    "Id": 5251021685342533484
-                },
-                "EditorEntityIconComponent": {
-                    "$type": "EditorEntityIconComponent",
-                    "Id": 5079690417611265527
-                },
-                "EditorEntitySortComponent": {
-                    "$type": "EditorEntitySortComponent",
-                    "Id": 10750384217178531790
-                },
-                "EditorInspectorComponent": {
-                    "$type": "EditorInspectorComponent",
-                    "Id": 6427076785949152650
-                },
-                "EditorLockComponent": {
-                    "$type": "EditorLockComponent",
-                    "Id": 13399026302464084078
-                },
-                "EditorOnlyEntityComponent": {
-                    "$type": "EditorOnlyEntityComponent",
-                    "Id": 6603628442988563976
-                },
-                "EditorPendingCompositionComponent": {
-                    "$type": "EditorPendingCompositionComponent",
-                    "Id": 7524245229780679733
-                },
-                "EditorSplineComponent": {
-                    "$type": "EditorSplineComponent",
-                    "Id": 15766078169667711051,
-                    "Configuration": {
-                        "Spline": {
-                            "Vertices": {
-                                "Vertices": [
-                                    [
-                                        -2.9228532314300537,
-                                        0.02277231216430664,
-                                        0.0
-                                    ],
-                                    [
-                                        -1.0293635129928589,
-                                        -0.036563098430633545,
-                                        0.0
-                                    ]
-                                ]
-                            }
-                        }
-                    }
-                },
-                "EditorVisibilityComponent": {
-                    "$type": "EditorVisibilityComponent",
-                    "Id": 14541337051921462582
-                },
-                "TransformComponent": {
-                    "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
-                    "Id": 7080416774926280422,
-                    "Parent Entity": "Entity_[59438276029149]",
-                    "Transform Data": {
-                        "Translate": [
-                            -5.364384651184082,
-                            -2.620365619659424,
-                            0.0
-                        ],
-                        "Rotate": [
-                            0.0,
-                            0.0,
-                            180.0
                         ]
                     }
                 }
@@ -15086,6 +15316,18 @@
                     "$type": "EditorVisibilityComponent",
                     "Id": 4447019963576809044
                 },
+                "ROS2FrameEditorComponent": {
+                    "$type": "ROS2FrameEditorComponent",
+                    "Id": 11919293354833549866,
+                    "ROS2FrameConfiguration": {
+                        "Namespace Configuration": {
+                            "Namespace Strategy": 1
+                        },
+                        "Frame Name": "wrist_2_link",
+                        "Joint Name": "wrist_2_joint",
+                        "Publish Transform": false
+                    }
+                },
                 "TransformComponent": {
                     "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
                     "Id": 14125838079395442588,
@@ -15101,18 +15343,6 @@
                             -1.5166065725475662e-21,
                             -7.0167078561561656e-15
                         ]
-                    }
-                },
-                "ROS2FrameEditorComponent": {
-                    "$type": "ROS2FrameEditorComponent",
-                    "Id": 11919293354833549866,
-                    "ROS2FrameConfiguration": {
-                        "Namespace Configuration": {
-                            "Namespace Strategy": 1
-                        },
-                        "Frame Name": "wrist_2_link",
-                        "Joint Name": "wrist_2_joint",
-                        "Publish Transform": false
                     }
                 }
             }
@@ -15232,6 +15462,18 @@
                     "$type": "EditorVisibilityComponent",
                     "Id": 2900401725638520869
                 },
+                "ROS2FrameEditorComponent": {
+                    "$type": "ROS2FrameEditorComponent",
+                    "Id": 1337278135579268774,
+                    "ROS2FrameConfiguration": {
+                        "Namespace Configuration": {
+                            "Namespace Strategy": 1
+                        },
+                        "Frame Name": "forearm_link",
+                        "Joint Name": "elbow_joint",
+                        "Publish Transform": false
+                    }
+                },
                 "TransformComponent": {
                     "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
                     "Id": 8412104066248939483,
@@ -15247,18 +15489,6 @@
                             -9.039679602072037e-29,
                             -1.5166065725475662e-21
                         ]
-                    }
-                },
-                "ROS2FrameEditorComponent": {
-                    "$type": "ROS2FrameEditorComponent",
-                    "Id": 1337278135579268774,
-                    "ROS2FrameConfiguration": {
-                        "Namespace Configuration": {
-                            "Namespace Strategy": 1
-                        },
-                        "Frame Name": "forearm_link",
-                        "Joint Name": "elbow_joint",
-                        "Publish Transform": false
                     }
                 }
             }
@@ -15279,7 +15509,11 @@
                     "$type": "EditorEntitySortComponent",
                     "Id": 1412711794108958086,
                     "Child Entity Order": [
-                        "Entity_[59425391127261]"
+                        "Instance_[295863797431673]/ContainerEntity",
+                        "Entity_[59373851519709]",
+                        "Entity_[59433981061853]",
+                        "Entity_[58947630625381]",
+                        "Entity_[59283657206493]"
                     ]
                 },
                 "EditorInspectorComponent": {
@@ -15321,160 +15555,6 @@
                             0.0,
                             0.0,
                             -89.99994659423828
-                        ]
-                    }
-                }
-            }
-        },
-        "Entity_[59356671650525]": {
-            "Id": "Entity_[59356671650525]",
-            "Name": "end-of-line_bed",
-            "Components": {
-                "EditorColliderComponent": {
-                    "$type": "EditorColliderComponent",
-                    "Id": 1461753943847310074,
-                    "ColliderConfiguration": {
-                        "Position": [
-                            -0.11232216656208038,
-                            0.17360985279083252,
-                            0.09786839783191681
-                        ],
-                        "MaterialSlots": {
-                            "Slots": [
-                                {
-                                    "Name": "Entire object",
-                                    "MaterialAsset": {
-                                        "assetId": {
-                                            "guid": "{F27B41FB-6066-56C7-8822-000E467A448A}",
-                                            "subId": 1
-                                        },
-                                        "assetHint": "assets/factory/conveyorline/conveyor_guards.physicsmaterial"
-                                    }
-                                }
-                            ]
-                        }
-                    },
-                    "ShapeConfiguration": {
-                        "ShapeType": 1,
-                        "Box": {
-                            "Configuration": [
-                                0.8839261531829834,
-                                0.12050015479326248,
-                                0.4000000059604645
-                            ]
-                        }
-                    }
-                },
-                "EditorDisabledCompositionComponent": {
-                    "$type": "EditorDisabledCompositionComponent",
-                    "Id": 2299535321914186018
-                },
-                "EditorEntityIconComponent": {
-                    "$type": "EditorEntityIconComponent",
-                    "Id": 7577219562161824293
-                },
-                "EditorEntitySortComponent": {
-                    "$type": "EditorEntitySortComponent",
-                    "Id": 8096813013908045854
-                },
-                "EditorInspectorComponent": {
-                    "$type": "EditorInspectorComponent",
-                    "Id": 113487818910278726
-                },
-                "EditorLockComponent": {
-                    "$type": "EditorLockComponent",
-                    "Id": 1768930675503604317
-                },
-                "EditorOnlyEntityComponent": {
-                    "$type": "EditorOnlyEntityComponent",
-                    "Id": 2249728575844916161
-                },
-                "EditorPendingCompositionComponent": {
-                    "$type": "EditorPendingCompositionComponent",
-                    "Id": 4656608396264029436
-                },
-                "EditorStaticRigidBodyComponent": {
-                    "$type": "EditorStaticRigidBodyComponent",
-                    "Id": 18000606903430326936
-                },
-                "EditorVisibilityComponent": {
-                    "$type": "EditorVisibilityComponent",
-                    "Id": 4750309885876423634
-                },
-                "TransformComponent": {
-                    "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
-                    "Id": 4035220759704794959,
-                    "Parent Entity": "Entity_[59360966617821]",
-                    "Transform Data": {
-                        "Translate": [
-                            0.0,
-                            -0.0018371045589447021,
-                            -0.0000010132789611816406
-                        ],
-                        "Rotate": [
-                            0.0,
-                            0.0,
-                            0.000014488957276626024
-                        ]
-                    }
-                }
-            }
-        },
-        "Entity_[59360966617821]": {
-            "Id": "Entity_[59360966617821]",
-            "Name": "ConveyorEnd",
-            "Components": {
-                "EditorDisabledCompositionComponent": {
-                    "$type": "EditorDisabledCompositionComponent",
-                    "Id": 7124867952371473787
-                },
-                "EditorEntityIconComponent": {
-                    "$type": "EditorEntityIconComponent",
-                    "Id": 11635048114274144444
-                },
-                "EditorEntitySortComponent": {
-                    "$type": "EditorEntitySortComponent",
-                    "Id": 4348788183215252087,
-                    "Child Entity Order": [
-                        "Entity_[59416801192669]",
-                        "Entity_[59403916290781]",
-                        "Entity_[59356671650525]"
-                    ]
-                },
-                "EditorInspectorComponent": {
-                    "$type": "EditorInspectorComponent",
-                    "Id": 3155549882462954683
-                },
-                "EditorLockComponent": {
-                    "$type": "EditorLockComponent",
-                    "Id": 6125188060244274555
-                },
-                "EditorOnlyEntityComponent": {
-                    "$type": "EditorOnlyEntityComponent",
-                    "Id": 5814275636081746176
-                },
-                "EditorPendingCompositionComponent": {
-                    "$type": "EditorPendingCompositionComponent",
-                    "Id": 10934978260544333283
-                },
-                "EditorVisibilityComponent": {
-                    "$type": "EditorVisibilityComponent",
-                    "Id": 10141483557636295390
-                },
-                "TransformComponent": {
-                    "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
-                    "Id": 7726989758212915134,
-                    "Parent Entity": "Entity_[59425391127261]",
-                    "Transform Data": {
-                        "Translate": [
-                            -4.617433547973633,
-                            -3.50536847114563,
-                            0.22468066215515137
-                        ],
-                        "Rotate": [
-                            89.99962615966797,
-                            89.99994659423828,
-                            0.0
                         ]
                     }
                 }
@@ -15559,6 +15639,15 @@
                         "$type": "GripperActionServerComponent"
                     }
                 },
+                "ROS2FrameEditorComponent": {
+                    "$type": "ROS2FrameEditorComponent",
+                    "Id": 9111996756983695701,
+                    "ROS2FrameConfiguration": {
+                        "Frame Name": "gripper_link",
+                        "Joint Name": "tool0-gripper",
+                        "Publish Transform": false
+                    }
+                },
                 "TransformComponent": {
                     "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
                     "Id": 14197983517855441119,
@@ -15583,15 +15672,6 @@
                         "$type": "VacuumGripperComponent",
                         "EffectorCollider": "Entity_[59365261585117]",
                         "EffectorArticulation": "Entity_[59365261585117]"
-                    }
-                },
-                "ROS2FrameEditorComponent": {
-                    "$type": "ROS2FrameEditorComponent",
-                    "Id": 9111996756983695701,
-                    "ROS2FrameConfiguration": {
-                        "Frame Name": "gripper_link",
-                        "Joint Name": "tool0-gripper",
-                        "Publish Transform": false
                     }
                 }
             }
@@ -15691,23 +15771,8 @@
         },
         "Entity_[59373851519709]": {
             "Id": "Entity_[59373851519709]",
-            "Name": "ConveyorBelt_guards",
+            "Name": "ConveyorBeltSideWalls",
             "Components": {
-                "AZ::Render::EditorMeshComponent": {
-                    "$type": "AZ::Render::EditorMeshComponent",
-                    "Id": 17876183446473818072,
-                    "Controller": {
-                        "Configuration": {
-                            "ModelAsset": {
-                                "assetId": {
-                                    "guid": "{73DDFF88-BACA-5E9A-83D6-5919287BA6E8}",
-                                    "subId": 273551688
-                                },
-                                "assetHint": "assets/factory/conveyorline/default_conveyorbelt_638e635b_fb87_5f17_a85f_13bfbae6d816_.fbx.azmodel"
-                            }
-                        }
-                    }
-                },
                 "EditorDisabledCompositionComponent": {
                     "$type": "EditorDisabledCompositionComponent",
                     "Id": 8190068004989141267
@@ -15730,29 +15795,6 @@
                 "EditorLockComponent": {
                     "$type": "EditorLockComponent",
                     "Id": 2221927216056387086
-                },
-                "EditorMaterialComponent": {
-                    "$type": "EditorMaterialComponent",
-                    "Id": 14289151676747717068,
-                    "Controller": {
-                        "Configuration": {
-                            "materials": [
-                                {
-                                    "Key": {
-                                        "materialSlotStableId": 3850801320
-                                    },
-                                    "Value": {
-                                        "MaterialAsset": {
-                                            "assetId": {
-                                                "guid": "{826AE333-E797-52F4-A8AE-8BFED94E97FF}"
-                                            },
-                                            "assetHint": "assets/factory/conveyorline/conveyorline_mframe.azmaterial"
-                                        }
-                                    }
-                                }
-                            ]
-                        }
-                    }
                 },
                 "EditorMeshColliderComponent": {
                     "$type": "EditorMeshColliderComponent",
@@ -15825,17 +15867,17 @@
                 "TransformComponent": {
                     "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
                     "Id": 12675426775311304203,
-                    "Parent Entity": "Entity_[59391031388893]",
+                    "Parent Entity": "Entity_[59352376683229]",
                     "Transform Data": {
                         "Translate": [
-                            -0.1512862890958786,
-                            0.3075218200683594,
-                            0.2184305191040039
+                            -2.5216195583343506,
+                            -3.6122450828552246,
+                            0.5209137797355652
                         ],
                         "Rotate": [
                             0.0,
                             0.0,
-                            -89.99998474121094
+                            -179.99989318847656
                         ]
                     }
                 }
@@ -15933,18 +15975,6 @@
                     "$type": "EditorVisibilityComponent",
                     "Id": 3577927265296436934
                 },
-                "TransformComponent": {
-                    "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
-                    "Id": 16706756367717092850,
-                    "Parent Entity": "Entity_[59395326356189]",
-                    "Transform Data": {
-                        "Rotate": [
-                            0.0,
-                            0.0,
-                            180.0
-                        ]
-                    }
-                },
                 "ROS2FrameEditorComponent": {
                     "$type": "ROS2FrameEditorComponent",
                     "Id": 3643723356448930267,
@@ -15956,246 +15986,16 @@
                         "Joint Name": "base_link-base_link_inertia",
                         "Publish Transform": false
                     }
-                }
-            }
-        },
-        "Entity_[59382441454301]": {
-            "Id": "Entity_[59382441454301]",
-            "Name": "ElectricBox02",
-            "Components": {
-                "AZ::Render::EditorMeshComponent": {
-                    "$type": "AZ::Render::EditorMeshComponent",
-                    "Id": 11267363937413868483,
-                    "Controller": {
-                        "Configuration": {
-                            "ModelAsset": {
-                                "assetId": {
-                                    "guid": "{1885D5D6-F450-582C-ACE6-5811911664A5}",
-                                    "subId": 274490881
-                                },
-                                "assetHint": "assets/factory/conveyorline/default_conveyorline_5dfef90b_278d_54ca_b4da_8dca7ca46423_.fbx.azmodel"
-                            }
-                        }
-                    }
-                },
-                "EditorDisabledCompositionComponent": {
-                    "$type": "EditorDisabledCompositionComponent",
-                    "Id": 10543038042117654861
-                },
-                "EditorEntityIconComponent": {
-                    "$type": "EditorEntityIconComponent",
-                    "Id": 11601003535974089814
-                },
-                "EditorEntitySortComponent": {
-                    "$type": "EditorEntitySortComponent",
-                    "Id": 17258434470882287281
-                },
-                "EditorInspectorComponent": {
-                    "$type": "EditorInspectorComponent",
-                    "Id": 3673111820411588746
-                },
-                "EditorLockComponent": {
-                    "$type": "EditorLockComponent",
-                    "Id": 17410879153622464191
-                },
-                "EditorMaterialComponent": {
-                    "$type": "EditorMaterialComponent",
-                    "Id": 10177370943859467221,
-                    "Controller": {
-                        "Configuration": {
-                            "materials": [
-                                {
-                                    "Key": {
-                                        "materialSlotStableId": 625541626
-                                    },
-                                    "Value": {
-                                        "MaterialAsset": {
-                                            "assetId": {
-                                                "guid": "{11CD5088-806D-5578-B223-960DAD18A0C3}"
-                                            },
-                                            "assetHint": "assets/factory/conveyorline/conveyorline_electricboxes.azmaterial"
-                                        }
-                                    }
-                                }
-                            ]
-                        }
-                    }
-                },
-                "EditorOnlyEntityComponent": {
-                    "$type": "EditorOnlyEntityComponent",
-                    "Id": 14804244838549528452
-                },
-                "EditorPendingCompositionComponent": {
-                    "$type": "EditorPendingCompositionComponent",
-                    "Id": 16508443585448369328
-                },
-                "EditorVisibilityComponent": {
-                    "$type": "EditorVisibilityComponent",
-                    "Id": 13412174580418936973
                 },
                 "TransformComponent": {
                     "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
-                    "Id": 12355054722739420700,
-                    "Parent Entity": "Entity_[59425391127261]",
+                    "Id": 16706756367717092850,
+                    "Parent Entity": "Entity_[59395326356189]",
                     "Transform Data": {
-                        "Translate": [
-                            -2.6737847328186035,
-                            0.2439000904560089,
-                            1.4996830224990845
-                        ],
-                        "Rotate": [
-                            89.99998474121094,
-                            0.09144088625907898,
-                            0.0
-                        ],
-                        "UniformScale": 100.00001525878906
-                    }
-                }
-            }
-        },
-        "Entity_[59386736421597]": {
-            "Id": "Entity_[59386736421597]",
-            "Name": "BeltBallet",
-            "Components": {
-                "AZ::Render::EditorMeshComponent": {
-                    "$type": "AZ::Render::EditorMeshComponent",
-                    "Id": 15023960268335673264,
-                    "Controller": {
-                        "Configuration": {
-                            "ModelAsset": {
-                                "assetId": {
-                                    "guid": "{BA92AF61-AB59-5FD4-ACC1-D139D78430CC}",
-                                    "subId": 281176374
-                                },
-                                "assetHint": "assets/factory/conveyorline/conveyorbelt2.fbx.azmodel"
-                            }
-                        }
-                    }
-                },
-                "EditorDisabledCompositionComponent": {
-                    "$type": "EditorDisabledCompositionComponent",
-                    "Id": 214373965968019999
-                },
-                "EditorEntityIconComponent": {
-                    "$type": "EditorEntityIconComponent",
-                    "Id": 5773269189768229571
-                },
-                "EditorEntitySortComponent": {
-                    "$type": "EditorEntitySortComponent",
-                    "Id": 14294250898262745024
-                },
-                "EditorInspectorComponent": {
-                    "$type": "EditorInspectorComponent",
-                    "Id": 7825776922638648266
-                },
-                "EditorLockComponent": {
-                    "$type": "EditorLockComponent",
-                    "Id": 6217403255221514022
-                },
-                "EditorMaterialComponent": {
-                    "$type": "EditorMaterialComponent",
-                    "Id": 1496884305116341163,
-                    "Controller": {
-                        "Configuration": {
-                            "materials": [
-                                {
-                                    "Key": {
-                                        "materialSlotStableId": 3782317465
-                                    },
-                                    "Value": {
-                                        "MaterialAsset": {
-                                            "assetId": {
-                                                "guid": "{10E6B425-5AD2-5C71-80B6-CCC3674760FE}"
-                                            },
-                                            "assetHint": "assets/factory/conveyorline/conveyorbelt2_conveyor2.azmaterial"
-                                        }
-                                    }
-                                }
-                            ]
-                        }
-                    }
-                },
-                "EditorOnlyEntityComponent": {
-                    "$type": "EditorOnlyEntityComponent",
-                    "Id": 1476125957528701054
-                },
-                "EditorPendingCompositionComponent": {
-                    "$type": "EditorPendingCompositionComponent",
-                    "Id": 1768306542845674362
-                },
-                "EditorVisibilityComponent": {
-                    "$type": "EditorVisibilityComponent",
-                    "Id": 17662618341350101334
-                },
-                "TransformComponent": {
-                    "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
-                    "Id": 3487268330406074632,
-                    "Parent Entity": "Entity_[59425391127261]",
-                    "Transform Data": {
-                        "Translate": [
-                            -6.72912073135376,
-                            -3.535419464111328,
-                            0.35050660371780396
-                        ]
-                    }
-                }
-            }
-        },
-        "Entity_[59391031388893]": {
-            "Id": "Entity_[59391031388893]",
-            "Name": "ConveyorBelt",
-            "Components": {
-                "EditorDisabledCompositionComponent": {
-                    "$type": "EditorDisabledCompositionComponent",
-                    "Id": 13211123188822365448
-                },
-                "EditorEntityIconComponent": {
-                    "$type": "EditorEntityIconComponent",
-                    "Id": 16066400768121648546
-                },
-                "EditorEntitySortComponent": {
-                    "$type": "EditorEntitySortComponent",
-                    "Id": 765302054861318419,
-                    "Child Entity Order": [
-                        "Entity_[59305132042973]",
-                        "Entity_[59373851519709]",
-                        "Entity_[59326606879453]"
-                    ]
-                },
-                "EditorInspectorComponent": {
-                    "$type": "EditorInspectorComponent",
-                    "Id": 12638174225060639045
-                },
-                "EditorLockComponent": {
-                    "$type": "EditorLockComponent",
-                    "Id": 13083380435943852214
-                },
-                "EditorOnlyEntityComponent": {
-                    "$type": "EditorOnlyEntityComponent",
-                    "Id": 15208502062081007498
-                },
-                "EditorPendingCompositionComponent": {
-                    "$type": "EditorPendingCompositionComponent",
-                    "Id": 8299473995310530461
-                },
-                "EditorVisibilityComponent": {
-                    "$type": "EditorVisibilityComponent",
-                    "Id": 822377268361672007
-                },
-                "TransformComponent": {
-                    "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
-                    "Id": 12670401187663946116,
-                    "Parent Entity": "Entity_[59425391127261]",
-                    "Transform Data": {
-                        "Translate": [
-                            -2.82914137840271,
-                            -3.7635326385498047,
-                            0.3024832606315613
-                        ],
                         "Rotate": [
                             0.0,
                             0.0,
-                            -89.99993133544922
+                            180.0
                         ]
                     }
                 }
@@ -16268,56 +16068,12 @@
                     },
                     "Initial positions": [
                         [
-                            "base_joint",
-                            {}
-                        ],
-                        [
-                            "base_link-base_fixed_joint",
-                            {}
-                        ],
-                        [
-                            "base_link-base_link_inertia",
-                            {}
-                        ],
-                        [
-                            "shoulder_pan_joint",
-                            {}
-                        ],
-                        [
                             "shoulder_lift_joint",
-                            -1.6200000047683716
+                            -1.5
                         ],
                         [
                             "elbow_joint",
-                            1.399999976158142
-                        ],
-                        [
-                            "wrist_1_joint",
-                            -1.2000000476837158
-                        ],
-                        [
-                            "wrist_2_joint",
-                            -1.600000023841858
-                        ],
-                        [
-                            "wrist_3_joint",
-                            -0.10999999940395355
-                        ],
-                        [
-                            "wrist_3-flange",
-                            {}
-                        ],
-                        [
-                            "flange-tool0",
-                            {}
-                        ],
-                        [
-                            "tool0-gripper",
-                            {}
-                        ],
-                        [
-                            "wrist_3_link-ft_frame",
-                            {}
+                            1.0
                         ]
                     ]
                 },
@@ -16329,11 +16085,6 @@
                         "Action name": "joint_trajectory_controller/follow_joint_trajectory"
                     }
                 },
-                "TransformComponent": {
-                    "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
-                    "Id": 16030547047118712638,
-                    "Parent Entity": "Entity_[59446865963741]"
-                },
                 "ROS2FrameEditorComponent": {
                     "$type": "ROS2FrameEditorComponent",
                     "Id": 4167489356847728006,
@@ -16344,6 +16095,11 @@
                         "Frame Name": "base_link",
                         "Joint Name": "base_joint"
                     }
+                },
+                "TransformComponent": {
+                    "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
+                    "Id": 16030547047118712638,
+                    "Parent Entity": "Entity_[59446865963741]"
                 }
             }
         },
@@ -16719,579 +16475,6 @@
                 }
             }
         },
-        "Entity_[59403916290781]": {
-            "Id": "Entity_[59403916290781]",
-            "Name": "ConveyorBelt_effector",
-            "Components": {
-                "AZ::Render::EditorMeshComponent": {
-                    "$type": "AZ::Render::EditorMeshComponent",
-                    "Id": 11864974877664747488,
-                    "Controller": {
-                        "Configuration": {
-                            "ModelAsset": {
-                                "assetId": {
-                                    "guid": "{661604EF-298C-587E-A4B1-F22A5B7557EB}",
-                                    "subId": 274352206
-                                },
-                                "assetHint": "assets/factory/conveyorline/default_conveyorbelt_effector_75e73d92_2074_54c6_afa7_b51165a40c77_.fbx.azmodel"
-                            }
-                        }
-                    }
-                },
-                "EditorColliderComponent": {
-                    "$type": "EditorColliderComponent",
-                    "Id": 10493330990372424311,
-                    "ColliderConfiguration": {
-                        "Position": [
-                            -0.05938149243593216,
-                            -0.21238388121128082,
-                            0.061392396688461304
-                        ],
-                        "Rotation": [
-                            0.0,
-                            0.0,
-                            -0.08204659819602966,
-                            0.9966285228729248
-                        ],
-                        "MaterialSlots": {
-                            "Slots": [
-                                {
-                                    "Name": "Entire object",
-                                    "MaterialAsset": {
-                                        "assetId": {
-                                            "guid": "{B7D2A6A1-D287-4E1C-8DFB-5A13EB7E110F}"
-                                        }
-                                    }
-                                }
-                            ]
-                        }
-                    },
-                    "ShapeConfiguration": {
-                        "ShapeType": 1,
-                        "Box": {
-                            "Scale": [
-                                0.800000011920929,
-                                0.800000011920929,
-                                0.800000011920929
-                            ],
-                            "Configuration": [
-                                0.010561764240264893,
-                                0.1499987244606018,
-                                0.12128281593322754
-                            ]
-                        }
-                    }
-                },
-                "EditorColliderComponent_2": {
-                    "$type": "EditorColliderComponent",
-                    "Id": 11336767273456035004,
-                    "ColliderConfiguration": {
-                        "Position": [
-                            -0.06049775332212448,
-                            -0.5122600793838501,
-                            0.0613924004137516
-                        ],
-                        "Rotation": [
-                            0.0,
-                            0.0,
-                            0.07245030999183655,
-                            0.997372031211853
-                        ],
-                        "MaterialSlots": {
-                            "Slots": [
-                                {
-                                    "Name": "Entire object",
-                                    "MaterialAsset": {
-                                        "assetId": {
-                                            "guid": "{F27B41FB-6066-56C7-8822-000E467A448A}",
-                                            "subId": 1
-                                        },
-                                        "assetHint": "assets/factory/conveyorline/conveyor_guards.physicsmaterial"
-                                    }
-                                }
-                            ]
-                        }
-                    },
-                    "ShapeConfiguration": {
-                        "ShapeType": 1,
-                        "Box": {
-                            "Scale": [
-                                0.800000011920929,
-                                0.800000011920929,
-                                0.800000011920929
-                            ],
-                            "Configuration": [
-                                0.010561799630522728,
-                                0.14999869465827942,
-                                0.12128280103206635
-                            ]
-                        }
-                    }
-                },
-                "EditorColliderComponent_3": {
-                    "$type": "EditorColliderComponent",
-                    "Id": 3063718856867016350,
-                    "ColliderConfiguration": {
-                        "Position": [
-                            -0.07108332216739655,
-                            -0.3624451458454132,
-                            0.0613924004137516
-                        ],
-                        "Rotation": [
-                            0.0,
-                            0.0,
-                            -0.00038623809814453125,
-                            1.0
-                        ],
-                        "MaterialSlots": {
-                            "Slots": [
-                                {
-                                    "Name": "Entire object",
-                                    "MaterialAsset": {
-                                        "assetId": {
-                                            "guid": "{F27B41FB-6066-56C7-8822-000E467A448A}",
-                                            "subId": 1
-                                        },
-                                        "assetHint": "assets/factory/conveyorline/conveyor_guards.physicsmaterial"
-                                    }
-                                }
-                            ]
-                        }
-                    },
-                    "ShapeConfiguration": {
-                        "ShapeType": 1,
-                        "Box": {
-                            "Scale": [
-                                0.800000011920929,
-                                0.800000011920929,
-                                0.800000011920929
-                            ],
-                            "Configuration": [
-                                0.010561799630522728,
-                                0.14999869465827942,
-                                0.12128280103206635
-                            ]
-                        }
-                    }
-                },
-                "EditorColliderComponent_4": {
-                    "$type": "EditorColliderComponent",
-                    "Id": 14374153890209585970,
-                    "ColliderConfiguration": {
-                        "Position": [
-                            -0.025573300197720528,
-                            -0.6597500443458557,
-                            0.0613924004137516
-                        ],
-                        "Rotation": [
-                            0.0,
-                            0.0,
-                            0.15149669349193573,
-                            0.9884577989578247
-                        ],
-                        "MaterialSlots": {
-                            "Slots": [
-                                {
-                                    "Name": "Entire object",
-                                    "MaterialAsset": {
-                                        "assetId": {
-                                            "guid": "{F27B41FB-6066-56C7-8822-000E467A448A}",
-                                            "subId": 1
-                                        },
-                                        "assetHint": "assets/factory/conveyorline/conveyor_guards.physicsmaterial"
-                                    }
-                                }
-                            ]
-                        }
-                    },
-                    "ShapeConfiguration": {
-                        "ShapeType": 1,
-                        "Box": {
-                            "Scale": [
-                                0.800000011920929,
-                                0.800000011920929,
-                                0.800000011920929
-                            ],
-                            "Configuration": [
-                                0.010561799630522728,
-                                0.14999869465827942,
-                                0.12128280103206635
-                            ]
-                        }
-                    }
-                },
-                "EditorColliderComponent_5": {
-                    "$type": "EditorColliderComponent",
-                    "Id": 15366105893125683113,
-                    "ColliderConfiguration": {
-                        "Position": [
-                            -0.025573300197720528,
-                            -0.06703650206327438,
-                            0.0613924004137516
-                        ],
-                        "Rotation": [
-                            0.0,
-                            0.0,
-                            -0.14700070023536682,
-                            0.9891363978385925
-                        ],
-                        "MaterialSlots": {
-                            "Slots": [
-                                {
-                                    "Name": "Entire object",
-                                    "MaterialAsset": {
-                                        "assetId": {
-                                            "guid": "{F27B41FB-6066-56C7-8822-000E467A448A}",
-                                            "subId": 1
-                                        },
-                                        "assetHint": "assets/factory/conveyorline/conveyor_guards.physicsmaterial"
-                                    }
-                                }
-                            ]
-                        }
-                    },
-                    "ShapeConfiguration": {
-                        "ShapeType": 1,
-                        "Box": {
-                            "Scale": [
-                                0.800000011920929,
-                                0.800000011920929,
-                                0.800000011920929
-                            ],
-                            "Configuration": [
-                                0.010561799630522728,
-                                0.14999869465827942,
-                                0.12128280103206635
-                            ]
-                        }
-                    }
-                },
-                "EditorDisabledCompositionComponent": {
-                    "$type": "EditorDisabledCompositionComponent",
-                    "Id": 1526911113350178604
-                },
-                "EditorEntityIconComponent": {
-                    "$type": "EditorEntityIconComponent",
-                    "Id": 3066607796419867815
-                },
-                "EditorEntitySortComponent": {
-                    "$type": "EditorEntitySortComponent",
-                    "Id": 2180347715972664189
-                },
-                "EditorHingeJointComponent": {
-                    "$type": "EditorHingeJointComponent",
-                    "Id": 13876802949819543457,
-                    "Configuration": {
-                        "Local Rotation": [
-                            0.0,
-                            90.0,
-                            0.0
-                        ],
-                        "Parent Entity": "",
-                        "Child Entity": "Entity_[59403916290781]"
-                    },
-                    "Angular Limit": {
-                        "Standard Limit Configuration": {
-                            "Is Soft Limit": true,
-                            "Damping": 5.0,
-                            "Stiffness": 50.0
-                        },
-                        "Positive Limit": 1.0,
-                        "Negative Limit": 0.0
-                    },
-                    "Motor": {
-                        "ForceLimit": 5.0
-                    }
-                },
-                "EditorInspectorComponent": {
-                    "$type": "EditorInspectorComponent",
-                    "Id": 17456920185953320810
-                },
-                "EditorLockComponent": {
-                    "$type": "EditorLockComponent",
-                    "Id": 15136532437149168424
-                },
-                "EditorMaterialComponent": {
-                    "$type": "EditorMaterialComponent",
-                    "Id": 14974553855541802789,
-                    "Controller": {
-                        "Configuration": {
-                            "materials": [
-                                {
-                                    "Key": {
-                                        "materialSlotStableId": 3850801320
-                                    },
-                                    "Value": {
-                                        "MaterialAsset": {
-                                            "assetId": {
-                                                "guid": "{549D26B8-881D-569F-AF05-961F36A43F4F}"
-                                            },
-                                            "assetHint": "materials/presets/pbr/metal_aluminum_matte.azmaterial"
-                                        }
-                                    }
-                                }
-                            ]
-                        }
-                    }
-                },
-                "EditorOnlyEntityComponent": {
-                    "$type": "EditorOnlyEntityComponent",
-                    "Id": 5964924433154819862
-                },
-                "EditorPendingCompositionComponent": {
-                    "$type": "EditorPendingCompositionComponent",
-                    "Id": 11328899035442399644
-                },
-                "EditorRigidBodyComponent": {
-                    "$type": "EditorRigidBodyComponent",
-                    "Id": 10234545285221682948,
-                    "Configuration": {
-                        "entityId": "",
-                        "Compute Mass": false,
-                        "Mass": 0.49188581109046936,
-                        "Centre of mass offset": [
-                            -0.0387374609708786,
-                            -0.29022017121315,
-                            0.0491139180958271
-                        ],
-                        "Inertia tensor": [
-                            0.014840544201433659,
-                            0.0,
-                            0.0,
-                            0.0,
-                            0.0005296904710121453,
-                            0.0,
-                            0.0,
-                            0.0,
-                            0.014598461799323559
-                        ]
-                    }
-                },
-                "EditorVisibilityComponent": {
-                    "$type": "EditorVisibilityComponent",
-                    "Id": 8138062543857271955
-                },
-                "TransformComponent": {
-                    "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
-                    "Id": 12832051830324863571,
-                    "Parent Entity": "Entity_[59360966617821]",
-                    "Transform Data": {
-                        "Translate": [
-                            -0.38911402225494385,
-                            0.24544115364551544,
-                            0.5675926208496094
-                        ],
-                        "Rotate": [
-                            -90.0,
-                            -0.0003722452966030687,
-                            147.54295349121094
-                        ],
-                        "UniformScale": 0.800000011920929
-                    }
-                }
-            }
-        },
-        "Entity_[59408211258077]": {
-            "Id": "Entity_[59408211258077]",
-            "Name": "L-line",
-            "Components": {
-                "ConveyorBeltComponent": {
-                    "$type": "GenericComponentWrapper",
-                    "Id": 4840361835114902863,
-                    "m_template": {
-                        "$type": "ConveyorBeltComponent",
-                        "Configuration": {
-                            "BeltEntityId": "Entity_[59326606879453]"
-                        }
-                    }
-                },
-                "EditorDisabledCompositionComponent": {
-                    "$type": "EditorDisabledCompositionComponent",
-                    "Id": 5251021685342533484
-                },
-                "EditorEntityIconComponent": {
-                    "$type": "EditorEntityIconComponent",
-                    "Id": 5079690417611265527
-                },
-                "EditorEntitySortComponent": {
-                    "$type": "EditorEntitySortComponent",
-                    "Id": 10750384217178531790
-                },
-                "EditorInspectorComponent": {
-                    "$type": "EditorInspectorComponent",
-                    "Id": 6427076785949152650
-                },
-                "EditorLockComponent": {
-                    "$type": "EditorLockComponent",
-                    "Id": 13399026302464084078
-                },
-                "EditorOnlyEntityComponent": {
-                    "$type": "EditorOnlyEntityComponent",
-                    "Id": 6603628442988563976
-                },
-                "EditorPendingCompositionComponent": {
-                    "$type": "EditorPendingCompositionComponent",
-                    "Id": 7524245229780679733
-                },
-                "EditorSplineComponent": {
-                    "$type": "EditorSplineComponent",
-                    "Id": 15766078169667711051,
-                    "Configuration": {
-                        "Spline Type": 2612576363626472641,
-                        "Spline": {
-                            "$type": "BezierSpline",
-                            "Vertices": {
-                                "Vertices": [
-                                    [
-                                        -3.0,
-                                        0.0,
-                                        0.0
-                                    ],
-                                    [
-                                        3.0102601051330566,
-                                        0.005130767822265625,
-                                        0.0
-                                    ],
-                                    [
-                                        3.4276888370513916,
-                                        0.15117251873016357,
-                                        0.0
-                                    ],
-                                    [
-                                        3.7415616512298584,
-                                        0.39527350664138794,
-                                        0.0
-                                    ],
-                                    [
-                                        3.9828040599823,
-                                        0.7698107957839966,
-                                        0.0
-                                    ],
-                                    [
-                                        4.056817054748535,
-                                        1.1187282800674438,
-                                        0.0
-                                    ],
-                                    [
-                                        4.144201278686523,
-                                        2.2741339206695557,
-                                        0.0
-                                    ]
-                                ]
-                            },
-                            "Bezier Data": [
-                                {
-                                    "Forward": [
-                                        -0.9966890811920166,
-                                        -0.020983248949050903,
-                                        0.0
-                                    ],
-                                    "Back": [
-                                        -3.0,
-                                        0.0,
-                                        0.0
-                                    ]
-                                },
-                                {
-                                    "Forward": [
-                                        3.1576321125030518,
-                                        0.008596805855631828,
-                                        0.0
-                                    ],
-                                    "Back": [
-                                        1.0073931217193604,
-                                        -0.041974570602178574,
-                                        0.0
-                                    ]
-                                },
-                                {
-                                    "Forward": [
-                                        3.544628143310547,
-                                        0.21355858445167542,
-                                        0.0
-                                    ],
-                                    "Back": [
-                                        3.2976272106170654,
-                                        0.08178581297397614,
-                                        0.0
-                                    ]
-                                },
-                                {
-                                    "Forward": [
-                                        3.840740442276001,
-                                        0.5058015584945679,
-                                        0.0
-                                    ],
-                                    "Back": [
-                                        3.653043508529663,
-                                        0.29662591218948364,
-                                        0.0
-                                    ]
-                                },
-                                {
-                                    "Forward": [
-                                        4.030300140380859,
-                                        0.8788054585456848,
-                                        0.0
-                                    ],
-                                    "Back": [
-                                        3.9234800338745117,
-                                        0.6336727738380432,
-                                        0.0
-                                    ]
-                                },
-                                {
-                                    "Forward": [
-                                        4.098019123077393,
-                                        1.5027594566345215,
-                                        0.0
-                                    ],
-                                    "Back": [
-                                        4.04413366317749,
-                                        1.0005130767822266,
-                                        0.0
-                                    ]
-                                },
-                                {
-                                    "Forward": [
-                                        4.144201278686523,
-                                        2.2741339206695557,
-                                        0.0
-                                    ],
-                                    "Back": [
-                                        4.121118545532227,
-                                        1.8885891437530518,
-                                        0.0
-                                    ]
-                                }
-                            ],
-                            "Granularity": 19
-                        }
-                    }
-                },
-                "EditorVisibilityComponent": {
-                    "$type": "EditorVisibilityComponent",
-                    "Id": 14541337051921462582
-                },
-                "TransformComponent": {
-                    "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
-                    "Id": 7080416774926280422,
-                    "Parent Entity": "Entity_[59438276029149]",
-                    "Transform Data": {
-                        "Translate": [
-                            -2.060731887817383,
-                            -4.698684215545654,
-                            0.0
-                        ],
-                        "Rotate": [
-                            0.0,
-                            0.0,
-                            89.99994659423828
-                        ]
-                    }
-                }
-            }
-        },
         "Entity_[59412506225373]": {
             "Id": "Entity_[59412506225373]",
             "Name": "ur10",
@@ -17337,151 +16520,14 @@
                     "Parent Entity": "Entity_[59249297468125]",
                     "Transform Data": {
                         "Translate": [
-                            -1.9720485210418701,
-                            0.2811059355735779,
+                            -2.0820956230163574,
+                            0.25522738695144653,
                             0.6189841032028198
                         ],
                         "Rotate": [
                             0.0,
                             0.0,
                             -89.99994659423828
-                        ]
-                    }
-                }
-            }
-        },
-        "Entity_[59416801192669]": {
-            "Id": "Entity_[59416801192669]",
-            "Name": "ConveyorBelt_guards_segment",
-            "Components": {
-                "AZ::Render::EditorMeshComponent": {
-                    "$type": "AZ::Render::EditorMeshComponent",
-                    "Id": 9749858389308344326,
-                    "Controller": {
-                        "Configuration": {
-                            "ModelAsset": {
-                                "assetId": {
-                                    "guid": "{F2061925-B71C-5B0E-9728-8A066B473F0A}",
-                                    "subId": 273053170
-                                },
-                                "assetHint": "assets/factory/conveyorline/default_conveyorbelt_guards_segment_bafc5697_1d73_5e8c_bddd_ae3ec74e4fbc_.fbx.azmodel"
-                            }
-                        }
-                    }
-                },
-                "EditorDisabledCompositionComponent": {
-                    "$type": "EditorDisabledCompositionComponent",
-                    "Id": 12360982408915024153
-                },
-                "EditorEntityIconComponent": {
-                    "$type": "EditorEntityIconComponent",
-                    "Id": 14219637609382134682
-                },
-                "EditorEntitySortComponent": {
-                    "$type": "EditorEntitySortComponent",
-                    "Id": 7567657066784969807
-                },
-                "EditorInspectorComponent": {
-                    "$type": "EditorInspectorComponent",
-                    "Id": 2310079476921611392
-                },
-                "EditorLockComponent": {
-                    "$type": "EditorLockComponent",
-                    "Id": 8055551908630149426
-                },
-                "EditorMeshColliderComponent": {
-                    "$type": "EditorMeshColliderComponent",
-                    "Id": 1862997573692145468,
-                    "ColliderConfiguration": {
-                        "Rotation": [
-                            0.0,
-                            0.0,
-                            -0.7071067690849304,
-                            0.7071067094802856
-                        ],
-                        "MaterialSlots": {
-                            "Slots": [
-                                {
-                                    "Name": "MFrame",
-                                    "MaterialAsset": {
-                                        "assetId": {
-                                            "guid": "{F27B41FB-6066-56C7-8822-000E467A448A}",
-                                            "subId": 1
-                                        },
-                                        "assetHint": "assets/factory/conveyorline/conveyor_guards.physicsmaterial"
-                                    }
-                                }
-                            ]
-                        }
-                    },
-                    "ShapeConfiguration": {
-                        "PhysicsAsset": {
-                            "Asset": {
-                                "assetId": {
-                                    "guid": "{F2061925-B71C-5B0E-9728-8A066B473F0A}",
-                                    "subId": 3427872660
-                                },
-                                "assetHint": "assets/factory/conveyorline/conveyorbelt_guards_segment.fbx.pxmesh"
-                            },
-                            "Configuration": {
-                                "Scale": [
-                                    1.0,
-                                    1.0,
-                                    1.8391063213348389
-                                ],
-                                "PhysicsAsset": {
-                                    "assetId": {
-                                        "guid": "{F2061925-B71C-5B0E-9728-8A066B473F0A}",
-                                        "subId": 3427872660
-                                    },
-                                    "loadBehavior": "QueueLoad",
-                                    "assetHint": "assets/factory/conveyorline/conveyorbelt_guards_segment.fbx.pxmesh"
-                                }
-                            }
-                        },
-                        "HasNonUniformScale": true
-                    },
-                    "HasNonUniformScale": true
-                },
-                "EditorNonUniformScaleComponent": {
-                    "$type": "EditorNonUniformScaleComponent",
-                    "Id": 5051025917948018295,
-                    "NonUniformScale": [
-                        1.0,
-                        1.0,
-                        1.8391063213348389
-                    ]
-                },
-                "EditorOnlyEntityComponent": {
-                    "$type": "EditorOnlyEntityComponent",
-                    "Id": 9633914239452666554
-                },
-                "EditorPendingCompositionComponent": {
-                    "$type": "EditorPendingCompositionComponent",
-                    "Id": 6120139324817821069
-                },
-                "EditorStaticRigidBodyComponent": {
-                    "$type": "EditorStaticRigidBodyComponent",
-                    "Id": 10441644533201745128
-                },
-                "EditorVisibilityComponent": {
-                    "$type": "EditorVisibilityComponent",
-                    "Id": 8374146964310941132
-                },
-                "TransformComponent": {
-                    "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
-                    "Id": 13781040730860285181,
-                    "Parent Entity": "Entity_[59360966617821]",
-                    "Transform Data": {
-                        "Translate": [
-                            -0.09089922904968262,
-                            0.3785325884819031,
-                            -0.13214683532714844
-                        ],
-                        "Rotate": [
-                            -90.00001525878906,
-                            -0.0003718851075973362,
-                            -179.99989318847656
                         ]
                     }
                 }
@@ -17570,66 +16616,6 @@
                             0.0
                         ]
                     }
-                }
-            }
-        },
-        "Entity_[59425391127261]": {
-            "Id": "Entity_[59425391127261]",
-            "Name": "ConveyorLine",
-            "Components": {
-                "EditorDisabledCompositionComponent": {
-                    "$type": "EditorDisabledCompositionComponent",
-                    "Id": 5513213829067575244
-                },
-                "EditorEntityIconComponent": {
-                    "$type": "EditorEntityIconComponent",
-                    "Id": 15451707686197469186
-                },
-                "EditorEntitySortComponent": {
-                    "$type": "EditorEntitySortComponent",
-                    "Id": 7179105188930176937,
-                    "Child Entity Order": [
-                        "Entity_[59391031388893]",
-                        "Entity_[59292247141085]",
-                        "Entity_[59386736421597]",
-                        "Entity_[59382441454301]",
-                        "Entity_[59296542108381]",
-                        "Entity_[59438276029149]",
-                        "Instance_[64250519576458]/ContainerEntity",
-                        "Instance_[64332123955082]/ContainerEntity",
-                        "Entity_[59360966617821]",
-                        "Entity_[59433981061853]"
-                    ]
-                },
-                "EditorInspectorComponent": {
-                    "$type": "EditorInspectorComponent",
-                    "Id": 10011666298503304451,
-                    "ComponentOrderEntryArray": [
-                        {
-                            "ComponentId": 5620372636626554489
-                        }
-                    ]
-                },
-                "EditorLockComponent": {
-                    "$type": "EditorLockComponent",
-                    "Id": 3676600119702120104
-                },
-                "EditorOnlyEntityComponent": {
-                    "$type": "EditorOnlyEntityComponent",
-                    "Id": 7398222580938011937
-                },
-                "EditorPendingCompositionComponent": {
-                    "$type": "EditorPendingCompositionComponent",
-                    "Id": 2856392569769530500
-                },
-                "EditorVisibilityComponent": {
-                    "$type": "EditorVisibilityComponent",
-                    "Id": 865890236405389283
-                },
-                "TransformComponent": {
-                    "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
-                    "Id": 5620372636626554489,
-                    "Parent Entity": "Entity_[59352376683229]"
                 }
             }
         },
@@ -17765,67 +16751,12 @@
                 "TransformComponent": {
                     "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
                     "Id": 14861779263139968143,
-                    "Parent Entity": "Entity_[59425391127261]",
+                    "Parent Entity": "Entity_[59352376683229]",
                     "Transform Data": {
                         "Translate": [
                             0.0,
                             -1.0,
                             0.0
-                        ]
-                    }
-                }
-            }
-        },
-        "Entity_[59438276029149]": {
-            "Id": "Entity_[59438276029149]",
-            "Name": "ConveyorPhysics",
-            "Components": {
-                "EditorDisabledCompositionComponent": {
-                    "$type": "EditorDisabledCompositionComponent",
-                    "Id": 11705916613206293717
-                },
-                "EditorEntityIconComponent": {
-                    "$type": "EditorEntityIconComponent",
-                    "Id": 8945192074267862043
-                },
-                "EditorEntitySortComponent": {
-                    "$type": "EditorEntitySortComponent",
-                    "Id": 1808599541666957607,
-                    "Child Entity Order": [
-                        "Entity_[59408211258077]",
-                        "Entity_[59339491781341]",
-                        "Entity_[59283657206493]"
-                    ]
-                },
-                "EditorInspectorComponent": {
-                    "$type": "EditorInspectorComponent",
-                    "Id": 13768058919490902212
-                },
-                "EditorLockComponent": {
-                    "$type": "EditorLockComponent",
-                    "Id": 1587655889713115906
-                },
-                "EditorOnlyEntityComponent": {
-                    "$type": "EditorOnlyEntityComponent",
-                    "Id": 3738855972166458133
-                },
-                "EditorPendingCompositionComponent": {
-                    "$type": "EditorPendingCompositionComponent",
-                    "Id": 3725326438000897213
-                },
-                "EditorVisibilityComponent": {
-                    "$type": "EditorVisibilityComponent",
-                    "Id": 13480691194686557342
-                },
-                "TransformComponent": {
-                    "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
-                    "Id": 4087938131885372107,
-                    "Parent Entity": "Entity_[59425391127261]",
-                    "Transform Data": {
-                        "Translate": [
-                            0.0,
-                            -1.0,
-                            0.4589609205722809
                         ]
                     }
                 }
@@ -17936,18 +16867,6 @@
                     "$type": "EditorVisibilityComponent",
                     "Id": 11110003518163621478
                 },
-                "TransformComponent": {
-                    "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
-                    "Id": 14238198336063306324,
-                    "Parent Entity": "Entity_[59378146487005]",
-                    "Transform Data": {
-                        "Translate": [
-                            0.0,
-                            0.0,
-                            0.12729999423027039
-                        ]
-                    }
-                },
                 "ROS2FrameEditorComponent": {
                     "$type": "ROS2FrameEditorComponent",
                     "Id": 11750197844762334575,
@@ -17958,6 +16877,18 @@
                         "Frame Name": "shoulder_link",
                         "Joint Name": "shoulder_pan_joint",
                         "Publish Transform": false
+                    }
+                },
+                "TransformComponent": {
+                    "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
+                    "Id": 14238198336063306324,
+                    "Parent Entity": "Entity_[59378146487005]",
+                    "Transform Data": {
+                        "Translate": [
+                            0.0,
+                            0.0,
+                            0.12729999423027039
+                        ]
                     }
                 }
             }
@@ -18009,6 +16940,17 @@
                     "$type": "EditorVisibilityComponent",
                     "Id": 9697593403581928237
                 },
+                "ROS2FrameEditorComponent": {
+                    "$type": "ROS2FrameEditorComponent",
+                    "Id": 9761504380790994395,
+                    "ROS2FrameConfiguration": {
+                        "Namespace Configuration": {
+                            "Namespace Strategy": 1
+                        },
+                        "Frame Name": "world",
+                        "Publish Transform": false
+                    }
+                },
                 "ROS2RobotControlComponent": {
                     "$type": "GenericComponentWrapper",
                     "Id": 11101716935921684594,
@@ -18023,17 +16965,6 @@
                     "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
                     "Id": 15731962174482153453,
                     "Parent Entity": "Entity_[59412506225373]"
-                },
-                "ROS2FrameEditorComponent": {
-                    "$type": "ROS2FrameEditorComponent",
-                    "Id": 9761504380790994395,
-                    "ROS2FrameConfiguration": {
-                        "Namespace Configuration": {
-                            "Namespace Strategy": 1
-                        },
-                        "Frame Name": "world",
-                        "Publish Transform": false
-                    }
                 }
             }
         },
@@ -18153,6 +17084,18 @@
                     "$type": "EditorVisibilityComponent",
                     "Id": 14891883367921573398
                 },
+                "ROS2FrameEditorComponent": {
+                    "$type": "ROS2FrameEditorComponent",
+                    "Id": 15791815753167737967,
+                    "ROS2FrameConfiguration": {
+                        "Namespace Configuration": {
+                            "Namespace Strategy": 1
+                        },
+                        "Frame Name": "wrist_3_link",
+                        "Joint Name": "wrist_3_joint",
+                        "Publish Transform": false
+                    }
+                },
                 "TransformComponent": {
                     "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
                     "Id": 3868267867187415994,
@@ -18168,18 +17111,6 @@
                             -1.3559519403108056e-28,
                             3.791516178933426e-22
                         ]
-                    }
-                },
-                "ROS2FrameEditorComponent": {
-                    "$type": "ROS2FrameEditorComponent",
-                    "Id": 15791815753167737967,
-                    "ROS2FrameConfiguration": {
-                        "Namespace Configuration": {
-                            "Namespace Strategy": 1
-                        },
-                        "Frame Name": "wrist_3_link",
-                        "Joint Name": "wrist_3_joint",
-                        "Publish Transform": false
                     }
                 }
             }
@@ -18202,7 +17133,7 @@
                 {
                     "op": "replace",
                     "path": "/ContainerEntity/Components/TransformComponent/Transform Data/Translate/1",
-                    "value": 9.440332412719727
+                    "value": 9.440332412719728
                 },
                 {
                     "op": "replace",
@@ -29902,41 +28833,6 @@
                 }
             ]
         },
-        "Instance_[1865420997526175]": {
-            "Source": "Assets/Factory/Box1.prefab",
-            "Patches": [
-                {
-                    "op": "replace",
-                    "path": "/ContainerEntity/Components/TransformComponent/Parent Entity",
-                    "value": "../Entity_[59287952173789]"
-                },
-                {
-                    "op": "replace",
-                    "path": "/ContainerEntity/Components/TransformComponent/Transform Data/Translate/0",
-                    "value": -7.954623699188232
-                },
-                {
-                    "op": "replace",
-                    "path": "/ContainerEntity/Components/TransformComponent/Transform Data/Translate/1",
-                    "value": 12.5332612991333
-                },
-                {
-                    "op": "replace",
-                    "path": "/ContainerEntity/Components/TransformComponent/Transform Data/Translate/2",
-                    "value": 0.20681968331336975
-                },
-                {
-                    "op": "replace",
-                    "path": "/ContainerEntity/Components/TransformComponent/Transform Data/Rotate/2",
-                    "value": 89.99990844726563
-                },
-                {
-                    "op": "replace",
-                    "path": "/Entities/Entity_[191801695898434]/Components/Component_[7605271439870430818]/Controller/Configuration/ModelAsset/assetHint",
-                    "value": "assets/warehouse/models/box1.fbx.azmodel"
-                }
-            ]
-        },
         "Instance_[1924323732641629]": {
             "Source": "Prefabs/Warehouse_storage/Rack_protectors/Rack_side_protector.prefab",
             "Patches": [
@@ -31937,6 +30833,126 @@
                 }
             ]
         },
+        "Instance_[2018923072208249]": {
+            "Source": "Factory/EuroPallet.prefab",
+            "Patches": [
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/TransformComponent/Parent Entity",
+                    "value": "../Entity_[59287952173789]"
+                },
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/TransformComponent/Transform Data/Translate/0",
+                    "value": -3.217961311340332
+                },
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/TransformComponent/Transform Data/Translate/1",
+                    "value": 8.928691864013672
+                },
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/TransformComponent/Transform Data/Translate/2",
+                    "value": 0.13573689758777618
+                },
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/TransformComponent/Transform Data/Rotate/0",
+                    "value": 90.0
+                },
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/TransformComponent/Transform Data/Rotate/1",
+                    "value": -90.0
+                },
+                {
+                    "op": "replace",
+                    "path": "/Entities/Entity_[7675435439647121]/Components/EditorRigidBodyComponent/Configuration/Mass",
+                    "value": 95.22933197021484
+                },
+                {
+                    "op": "replace",
+                    "path": "/Entities/Entity_[7675435439647121]/Components/EditorRigidBodyComponent/Configuration/Centre of mass offset/0",
+                    "value": -0.00034657868673093617
+                },
+                {
+                    "op": "replace",
+                    "path": "/Entities/Entity_[7675435439647121]/Components/EditorRigidBodyComponent/Configuration/Centre of mass offset/2",
+                    "value": 0.0002915118238888681
+                },
+                {
+                    "op": "replace",
+                    "path": "/Entities/Entity_[7675435439647121]/Components/EditorRigidBodyComponent/Configuration/Inertia tensor/0",
+                    "value": 4.806522369384766
+                },
+                {
+                    "op": "replace",
+                    "path": "/Entities/Entity_[7675435439647121]/Components/EditorRigidBodyComponent/Configuration/Inertia tensor/8",
+                    "value": 9.80550479888916
+                }
+            ]
+        },
+        "Instance_[2018931662142841]": {
+            "Source": "Factory/EuroPallet.prefab",
+            "Patches": [
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/TransformComponent/Parent Entity",
+                    "value": "../Entity_[59287952173789]"
+                },
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/TransformComponent/Transform Data/Translate/0",
+                    "value": -3.217959403991699
+                },
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/TransformComponent/Transform Data/Translate/1",
+                    "value": 6.817050933837891
+                },
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/TransformComponent/Transform Data/Translate/2",
+                    "value": 0.13573679327964783
+                },
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/TransformComponent/Transform Data/Rotate/0",
+                    "value": 90.0
+                },
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/TransformComponent/Transform Data/Rotate/1",
+                    "value": -90.0
+                },
+                {
+                    "op": "replace",
+                    "path": "/Entities/Entity_[7675435439647121]/Components/EditorRigidBodyComponent/Configuration/Mass",
+                    "value": 95.22933197021484
+                },
+                {
+                    "op": "replace",
+                    "path": "/Entities/Entity_[7675435439647121]/Components/EditorRigidBodyComponent/Configuration/Centre of mass offset/0",
+                    "value": -0.00034657868673093617
+                },
+                {
+                    "op": "replace",
+                    "path": "/Entities/Entity_[7675435439647121]/Components/EditorRigidBodyComponent/Configuration/Centre of mass offset/2",
+                    "value": 0.0002915118238888681
+                },
+                {
+                    "op": "replace",
+                    "path": "/Entities/Entity_[7675435439647121]/Components/EditorRigidBodyComponent/Configuration/Inertia tensor/0",
+                    "value": 4.806522369384766
+                },
+                {
+                    "op": "replace",
+                    "path": "/Entities/Entity_[7675435439647121]/Components/EditorRigidBodyComponent/Configuration/Inertia tensor/8",
+                    "value": 9.80550479888916
+                }
+            ]
+        },
         "Instance_[23128749713802]": {
             "Source": "Prefabs/Warehouse_structural/Components/Storage_GI_light.prefab",
             "Patches": [
@@ -32962,53 +31978,28 @@
                 }
             ]
         },
-        "Instance_[287337150292413]": {
-            "Source": "Assets/Factory/EuroPallet.prefab",
+        "Instance_[295863797431673]": {
+            "Source": "Factory/ConveyorLine.prefab",
             "Patches": [
                 {
                     "op": "replace",
                     "path": "/ContainerEntity/Components/TransformComponent/Parent Entity",
-                    "value": "../Entity_[59287952173789]"
+                    "value": "../Entity_[59352376683229]"
                 },
                 {
                     "op": "replace",
                     "path": "/ContainerEntity/Components/TransformComponent/Transform Data/Translate/0",
-                    "value": -3.217959403991699
+                    "value": 0.031742095947265625
                 },
                 {
                     "op": "replace",
                     "path": "/ContainerEntity/Components/TransformComponent/Transform Data/Translate/1",
-                    "value": 6.817050933837891
+                    "value": -1.033982753753662
                 },
                 {
                     "op": "replace",
-                    "path": "/ContainerEntity/Components/TransformComponent/Transform Data/Translate/2",
-                    "value": 0.13573679327964783
-                },
-                {
-                    "op": "replace",
-                    "path": "/ContainerEntity/Components/TransformComponent/Transform Data/Rotate/0",
-                    "value": 89.99994659423828
-                },
-                {
-                    "op": "replace",
-                    "path": "/ContainerEntity/Components/TransformComponent/Transform Data/Rotate/1",
-                    "value": -89.99990844726563
-                },
-                {
-                    "op": "replace",
-                    "path": "/Entities/Entity_[7675435439647121]/Components/EditorMeshColliderComponent/ShapeConfiguration/PhysicsAsset/Asset/assetHint",
-                    "value": "assets/factory/conveyorline/europallet.fbx.pxmesh"
-                },
-                {
-                    "op": "replace",
-                    "path": "/Entities/Entity_[7675435439647121]/Components/EditorMeshColliderComponent/ShapeConfiguration/PhysicsAsset/Configuration/PhysicsAsset/assetHint",
-                    "value": "assets/factory/conveyorline/europallet.fbx.pxmesh"
-                },
-                {
-                    "op": "replace",
-                    "path": "/Entities/Entity_[7675439734614417]/Components/AZ::Render::EditorMeshComponent/Controller/Configuration/ModelAsset/assetHint",
-                    "value": "assets/factory/conveyorline/default_europallet_891b819b_706f_596f_8fd1_04c894deb906_.fbx.azmodel"
+                    "path": "/ContainerEntity/Components/TransformComponent/Transform Data/Rotate/2",
+                    "value": -0.000051226412324467674
                 }
             ]
         },
@@ -33939,6 +32930,46 @@
                     "op": "replace",
                     "path": "/Entities/Entity_[1261736678621474]/Components/Component_[9752009401792923326]/Controller/Configuration/ModelAsset/assetHint",
                     "value": "assets/warehouse/models/warehouse_frontrackprotector.fbx.azmodel"
+                }
+            ]
+        },
+        "Instance_[369185663139661]": {
+            "Source": "Assets/Factory/Box2.prefab",
+            "Patches": [
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/TransformComponent/Parent Entity",
+                    "value": "../Entity_[59287952173789]"
+                },
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/TransformComponent/Transform Data/Translate/0",
+                    "value": -7.974606513977051
+                },
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/TransformComponent/Transform Data/Translate/1",
+                    "value": 12.531888008117676
+                },
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/TransformComponent/Transform Data/Translate/2",
+                    "value": 0.2633407711982727
+                },
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/TransformComponent/Transform Data/Rotate/0",
+                    "value": 0.000012073757716279944
+                },
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/TransformComponent/Transform Data/Rotate/1",
+                    "value": 4.071109497693487e-13
+                },
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/TransformComponent/Transform Data/Rotate/2",
+                    "value": -4.2894607424325123e-20
                 }
             ]
         },
@@ -37280,91 +36311,6 @@
                 }
             ]
         },
-        "Instance_[64250519576458]": {
-            "Source": "Assets/Factory/TableUnderRobot.prefab",
-            "Patches": [
-                {
-                    "op": "replace",
-                    "path": "/ContainerEntity/Components/TransformComponent/Parent Entity",
-                    "value": "../Entity_[59425391127261]"
-                },
-                {
-                    "op": "replace",
-                    "path": "/ContainerEntity/Components/TransformComponent/Transform Data/Translate/0",
-                    "value": -5.518049240112305
-                },
-                {
-                    "op": "replace",
-                    "path": "/ContainerEntity/Components/TransformComponent/Transform Data/Translate/1",
-                    "value": -3.693599224090576
-                },
-                {
-                    "op": "replace",
-                    "path": "/ContainerEntity/Components/TransformComponent/Transform Data/Rotate/0",
-                    "value": 89.99994659423828
-                },
-                {
-                    "op": "replace",
-                    "path": "/ContainerEntity/Components/TransformComponent/Transform Data/Rotate/1",
-                    "value": -0.000004829676981898956
-                },
-                {
-                    "op": "replace",
-                    "path": "/ContainerEntity/Components/TransformComponent/Transform Data/Rotate/2",
-                    "value": 0.00000965934304986149
-                },
-                {
-                    "op": "replace",
-                    "path": "/Entities/Entity_[64259109511050]/Components/AZ::Render::EditorMeshComponent/Controller/Configuration/ModelAsset/assetHint",
-                    "value": "assets/factory/conveyorline/default_conveyorline_5ac77714_e9c3_58f4_bcd9_874cc3da7207_.fbx.azmodel"
-                }
-            ]
-        },
-        "Instance_[64332123955082]": {
-            "Source": "Assets/Factory/TableUnderRobot.prefab",
-            "Patches": [
-                {
-                    "op": "replace",
-                    "path": "/ContainerEntity/Components/TransformComponent/Parent Entity",
-                    "value": "../Entity_[59425391127261]"
-                },
-                {
-                    "op": "replace",
-                    "path": "/ContainerEntity/Components/TransformComponent/Transform Data/Translate/0",
-                    "value": -5.5180487632751465
-                },
-                {
-                    "op": "replace",
-                    "path": "/ContainerEntity/Components/TransformComponent/Transform Data/Translate/1",
-                    "value": -1.5804710388183594
-                },
-                {
-                    "op": "replace",
-                    "path": "/ContainerEntity/Components/TransformComponent/Transform Data/Translate/2",
-                    "value": -0.0000016816077277326258
-                },
-                {
-                    "op": "replace",
-                    "path": "/ContainerEntity/Components/TransformComponent/Transform Data/Rotate/0",
-                    "value": 89.99994659423828
-                },
-                {
-                    "op": "replace",
-                    "path": "/ContainerEntity/Components/TransformComponent/Transform Data/Rotate/1",
-                    "value": -0.000004829676981898956
-                },
-                {
-                    "op": "replace",
-                    "path": "/ContainerEntity/Components/TransformComponent/Transform Data/Rotate/2",
-                    "value": 0.00000965934304986149
-                },
-                {
-                    "op": "replace",
-                    "path": "/Entities/Entity_[64259109511050]/Components/AZ::Render::EditorMeshComponent/Controller/Configuration/ModelAsset/assetHint",
-                    "value": "assets/factory/conveyorline/default_conveyorline_5ac77714_e9c3_58f4_bcd9_874cc3da7207_.fbx.azmodel"
-                }
-            ]
-        },
         "Instance_[71711064348509]": {
             "Source": "Prefabs/Warehouse_storage/Rack_protectors/Rack_front_protector.prefab",
             "Patches": [
@@ -39142,56 +38088,6 @@
                     "op": "replace",
                     "path": "/Instances/Instance_[6503057959819]/Instances/Instance_[6134959700414]/Entities/Entity_[5641038461374]/Components/Component_[7605271439870430818]/Controller/Configuration/ModelAsset/assetHint",
                     "value": "assets/warehouse/models/box1.fbx.azmodel"
-                }
-            ]
-        },
-        "Instance_[7675426849712529]": {
-            "Source": "Assets/Factory/EuroPallet.prefab",
-            "Patches": [
-                {
-                    "op": "replace",
-                    "path": "/ContainerEntity/Components/TransformComponent/Parent Entity",
-                    "value": "../Entity_[59287952173789]"
-                },
-                {
-                    "op": "replace",
-                    "path": "/ContainerEntity/Components/TransformComponent/Transform Data/Translate/0",
-                    "value": -3.217961311340332
-                },
-                {
-                    "op": "replace",
-                    "path": "/ContainerEntity/Components/TransformComponent/Transform Data/Translate/1",
-                    "value": 8.928691864013672
-                },
-                {
-                    "op": "replace",
-                    "path": "/ContainerEntity/Components/TransformComponent/Transform Data/Translate/2",
-                    "value": 0.1357368528842926
-                },
-                {
-                    "op": "replace",
-                    "path": "/ContainerEntity/Components/TransformComponent/Transform Data/Rotate/0",
-                    "value": 89.99994659423828
-                },
-                {
-                    "op": "replace",
-                    "path": "/ContainerEntity/Components/TransformComponent/Transform Data/Rotate/1",
-                    "value": -89.99990844726563
-                },
-                {
-                    "op": "replace",
-                    "path": "/Entities/Entity_[7675435439647121]/Components/EditorMeshColliderComponent/ShapeConfiguration/PhysicsAsset/Asset/assetHint",
-                    "value": "assets/factory/conveyorline/europallet.fbx.pxmesh"
-                },
-                {
-                    "op": "replace",
-                    "path": "/Entities/Entity_[7675435439647121]/Components/EditorMeshColliderComponent/ShapeConfiguration/PhysicsAsset/Configuration/PhysicsAsset/assetHint",
-                    "value": "assets/factory/conveyorline/europallet.fbx.pxmesh"
-                },
-                {
-                    "op": "replace",
-                    "path": "/Entities/Entity_[7675439734614417]/Components/AZ::Render::EditorMeshComponent/Controller/Configuration/ModelAsset/assetHint",
-                    "value": "assets/factory/conveyorline/default_europallet_891b819b_706f_596f_8fd1_04c894deb906_.fbx.azmodel"
                 }
             ]
         },
