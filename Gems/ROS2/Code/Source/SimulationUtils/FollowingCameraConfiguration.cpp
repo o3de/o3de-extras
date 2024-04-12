@@ -20,9 +20,11 @@ namespace ROS2
                 ->Version(1)
                 ->Field("PredefinedViews", &FollowingCameraConfiguration::m_predefinedViews)
                 ->Field("SmoothingLength", &FollowingCameraConfiguration::m_smoothingBuffer)
-                ->Field("ZoomSpeed", &FollowingCameraConfiguration::m_zoomSpeed)
+                ->Field("SmoothFactor", &FollowingCameraConfiguration::m_smoothFactor)
                 ->Field("RotationSpeed", &FollowingCameraConfiguration::m_rotationSpeed)
+                ->Field("TranslationSpeed", &FollowingCameraConfiguration::m_translationSpeed)
                 ->Field("LockZAxis", &FollowingCameraConfiguration::m_lockZAxis)
+                ->Field("RotationSensitivity", &FollowingCameraConfiguration::m_rotationSensitivity)
                 ->Field("DefaultView", &FollowingCameraConfiguration::m_defaultView);
 
             if (AZ::EditContext* ec = serialize->GetEditContext())
@@ -36,15 +38,34 @@ namespace ROS2
                     ->Attribute(AZ::Edit::Attributes::Min, 1)
                     ->Attribute(AZ::Edit::Attributes::Max, 100)
                     ->DataElement(
-                        AZ::Edit::UIHandlers::Default, &FollowingCameraConfiguration::m_zoomSpeed, "Zoom Speed", "Speed of zooming")
+                        AZ::Edit::UIHandlers::Default,
+                        &FollowingCameraConfiguration::m_smoothFactor,
+                        "Smooth Factor",
+                        "Smoothing factor for camera movement (the higher the value, the newer entries have a progressively higher influence on the result.). Value 1.1 increase each subsequent weight by 10%")
+                    ->Attribute(AZ::Edit::Attributes::Min, 1.0f)
+                    ->Attribute(AZ::Edit::Attributes::Max, 10.0f)
                     ->DataElement(
                         AZ::Edit::UIHandlers::Default,
                         &FollowingCameraConfiguration::m_rotationSpeed,
                         "Rotation Speed",
-                        "Rotation Speed around the target")
+                        "Rotation Speed around with keyboard QE movement")
+                    ->DataElement(
+                        AZ::Edit::UIHandlers::Default,
+                        &FollowingCameraConfiguration::m_translationSpeed,
+                        "Translation Speed",
+                        "Translation Speed with keyboard WSAD movement")
+                    ->DataElement(
+                        AZ::Edit::UIHandlers::Default,
+                        &FollowingCameraConfiguration::m_rotationSensitivity,
+                        "Rotation Sensitivity",
+                        "Sensitivity of mouse rotation")
                     ->DataElement(
                         AZ::Edit::UIHandlers::Default, &FollowingCameraConfiguration::m_predefinedViews, "Views", "Views to follow")
-                    ->DataElement(AZ::Edit::UIHandlers::Default, &FollowingCameraConfiguration::m_lockZAxis, "Lock Z Axis", "Prevent camera from tilting")
+                    ->DataElement(
+                        AZ::Edit::UIHandlers::Default,
+                        &FollowingCameraConfiguration::m_lockZAxis,
+                        "Lock Z Axis",
+                        "Prevent camera from tilting")
                     ->DataElement(
                         AZ::Edit::UIHandlers::Default,
                         &FollowingCameraConfiguration::m_defaultView,
