@@ -11,8 +11,30 @@
 #include "FollowingCameraConfiguration.h"
 #include <AzCore/Component/Component.h>
 #include <AzCore/Component/TickBus.h>
+#include <AzCore/Math/Matrix4x4.h>
 #include <AzFramework/Components/TransformComponent.h>
 #include <AzFramework/Input/Events/InputChannelEventListener.h>
+#include <AzFramework/Input/Buses/Requests/InputSystemCursorRequestBus.h>
+
+namespace std
+{
+    template<>
+    struct hash<AzFramework::InputChannelId>
+    {
+        std::size_t operator()(const AzFramework::InputChannelId& channelId) const noexcept
+        {
+            return std::hash<std::string>()(channelId.GetName());
+        }
+    };
+} // namespace std
+
+struct InputChannelIdHash
+{
+    std::size_t operator()(const AzFramework::InputChannelId& channelId) const noexcept
+    {
+        return std::hash<std::string>()(channelId.GetName());
+    }
+};
 
 namespace ROS2
 {
@@ -46,7 +68,26 @@ namespace ROS2
 
         // AzFramework::InputChannelEventListener overrides ...
         bool OnInputChannelEventFiltered(const AzFramework::InputChannel& inputChannel) override;
-        void OnKeyboardEvent(const AzFramework::InputChannel& inputChannel);
+        void keyboardEvent(const AzFramework::InputChannel& inputChannel);
+        void mouseEvent(const AzFramework::InputChannel& inputChannel);
+
+        //! Rotate the camera in the screen space.
+        //! @param mouseDelta The mouse move delta in the screen space.
+        void RotateCameraOnMouse(const AZ::Vector2& mouseDelta);
+
+        //! Get the current mouse position (2D screen space).
+        AZ::Vector2 GetCurrentMousePosition();
+
+        //! Move the camera on the keys WSAD.
+        void MoveCameraOnKeys();
+
+        //! Rotate the camera around the axis up (yaw rotation) QE.
+        void RotateCameraOnKeys();
+
+        //! Get the pose of the entity.
+        //! @param entityId The entity to get the pose.
+        //! @return The pose of the entity (local transform).
+        AZ::Matrix4x4 GetEntityLocalPose(AZ::EntityId entityId);
 
         //! Remove the tilt from the transform.
         //! The tilt is removed by projecting the transform basis of rotation matrix to the ground plane.
@@ -57,7 +98,7 @@ namespace ROS2
         //! Compute weighted average of the vectors in the buffer.
         //! @param buffer The buffer to compute the average.
         //! @return The average vector.
-        AZ::Vector3 AverageVector(const AZStd::deque<AZStd::pair<AZ::Vector3, float>>& buffer) const;
+        AZ::Vector3 WeightedAverageVector(const AZStd::deque<AZStd::pair<AZ::Vector3, float>>& buffer) const;
 
         //! Compute weighted average of translation in the buffer.
         //! @return The average translation.
@@ -78,9 +119,22 @@ namespace ROS2
         //! The smoothing buffer for rotation, the first element is the tangential vector, the second element is the weight.
         AZStd::deque<AZStd::pair<AZ::Quaternion, float>> m_lastRotationsBuffer;
 
-        float m_rotationOffset = 0.0f; //!< The rotation change from the input.
         float m_opticalAxisTranslation = 0.0f; //!< The zoom change from the input.
         AZ::EntityId m_currentView; //!< Current used view point.
+
+        bool m_isRightMouseButtonPressed = false; //!< Apply mouse rotation whether the right mouse button is pressed.
+        AZ::Vector2 m_initialMousePosition; //!< The initial mouse position when the right mouse button is pressed.
+        AZ::Vector2 m_lastMousePosition = AZ::Vector2(0.0f, 0.0f);
+        float m_mouseDeltaX = 0.0f;
+        float m_mouseDeltaY = 0.0f;
+
+        AZ::Matrix4x4 m_cameraOffset = AZ::Matrix4x4::CreateIdentity(); //!< The current relative camera pose.
+        std::unordered_map<AzFramework::InputChannelId, bool, InputChannelIdHash> m_keyStates; //!< For multiple key press detection.
+
+        // smoothing camera
+        AZ::Vector3 m_cameraVelocity = AZ::Vector3::CreateZero(); //! Camera's current velocity
+        float m_springConstant = 50.0f; //! Spring constant (springiness)
+        float m_dampingConstant = 5.0f; //! Damping constant (resistance)
 
         FollowingCameraConfiguration m_configuration; //!< The configuration of the following camera.
     };

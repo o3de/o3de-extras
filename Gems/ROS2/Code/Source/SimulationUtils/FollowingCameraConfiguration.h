@@ -24,9 +24,10 @@ namespace ROS2
         AZStd::vector<AZ::EntityId> m_predefinedViews; //!< List of predefined views.
         int m_defaultView{ 0 }; //!< Index of the default view.
         int m_smoothingBuffer = 30; //!< Number of past transforms used to smooth, larger value gives smoother result, but more lag
-        float m_zoomSpeed = 0.06f; //!< Speed of zooming
+        float m_smoothFactor = 1.1f; //!< Smoothing factor for camera movement (the higher the value, the newer entries have a progressively higher influence on the result.
         float m_rotationSpeed = 0.05f; //!< Rotation Speed around the target
+        float m_translationSpeed = 0.15f; //!< Translation Speed
         bool m_lockZAxis = false; //!< Lock the Z axis of the camera
-        const float m_opticalAxisTranslationMin = 0.0f; //!< Minimum zoom distance
+        float m_rotationSensitivity = 1.0f; //!< Sensitivity of mouse rotation
     };
 } // namespace ROS2
