@@ -172,6 +172,12 @@ namespace ROS2
             return;
         }
 
+        if (!m_isFollowingEnabled)
+        {
+            AZ::TransformBus::Event(GetEntityId(), &AZ::TransformBus::Events::SetWorldTM, m_frozenTransform);
+            return; // Do not update the camera's position to follow the target
+        }
+
         // Follow the target
         // obtain the current view transform
         AZ::Transform target_local_transform;
@@ -432,6 +438,20 @@ namespace ROS2
             m_keyStates[channelId] = false;
         }
 
+        // Manage camera following based on Shift key state
+        if (channelId == AzFramework::InputDeviceKeyboard::Key::ModifierShiftL ||
+            channelId == AzFramework::InputDeviceKeyboard::Key::ModifierShiftR)
+        {
+            if (isKeyDown)
+            {
+                FreezeCamera();
+            }
+            else if (isKeyUp)
+            {
+                ResumeCamera();
+            }
+        }
+
         if (isKeyDown) // Only proceed if a key was pressed down
         {
             if (channelId == AzFramework::InputDeviceKeyboard::Key::AlphanumericW ||
@@ -476,6 +496,21 @@ namespace ROS2
 
         AZ::Matrix4x4 matrix = AZ::Matrix4x4::CreateFromTransform(target_local_transform);
         return matrix;
+    }
+
+    void FollowingCameraComponent::FreezeCamera()
+    {
+        // Capture the current transform
+        m_isFollowingEnabled = false;
+        m_frozenTransform = { SmoothTranslation(), SmoothRotation(), 1.f };
+    }
+
+    void FollowingCameraComponent::ResumeCamera()
+    {
+        // Resume following without trying to catch up
+        m_isFollowingEnabled = true;
+        m_lastTranslationsBuffer.clear();
+        m_lastRotationsBuffer.clear();
     }
 
 } // namespace ROS2

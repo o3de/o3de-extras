@@ -13,8 +13,8 @@
 #include <AzCore/Component/TickBus.h>
 #include <AzCore/Math/Matrix4x4.h>
 #include <AzFramework/Components/TransformComponent.h>
-#include <AzFramework/Input/Events/InputChannelEventListener.h>
 #include <AzFramework/Input/Buses/Requests/InputSystemCursorRequestBus.h>
+#include <AzFramework/Input/Events/InputChannelEventListener.h>
 
 namespace std
 {
@@ -113,6 +113,9 @@ namespace ROS2
         //! @param deltaTime The time between the last frame and the current frame.
         void CacheTransform(const AZ::Transform& transform, float deltaTime);
 
+        void FreezeCamera(); //! Freeze the camera in current position.
+        void ResumeCamera(); //! Resume the camera to follow the target.
+
         //! The smoothing buffer for translation, the first element is the translation, the second element is the weight.
         AZStd::deque<AZStd::pair<AZ::Vector3, float>> m_lastTranslationsBuffer;
 
@@ -121,7 +124,8 @@ namespace ROS2
 
         float m_opticalAxisTranslation = 0.0f; //!< The zoom change from the input.
         AZ::EntityId m_currentView; //!< Current used view point.
-
+        AZ::Transform m_frozenTransform;
+        bool m_isFollowingEnabled = true;
         bool m_isRightMouseButtonPressed = false; //!< Apply mouse rotation whether the right mouse button is pressed.
         AZ::Vector2 m_initialMousePosition; //!< The initial mouse position when the right mouse button is pressed.
         AZ::Vector2 m_lastMousePosition = AZ::Vector2(0.0f, 0.0f);
