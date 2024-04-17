@@ -19,6 +19,18 @@
 
 namespace ROS2
 {
+
+    struct ServiceNames
+    {
+        AZ_TYPE_INFO(ServiceNames, "{10D75AAC-BD51-4F33-BCAA-9001CFA219AE}");
+        AZStd::string availableSpawnableNamesServiceName = "get_available_spawnable_names";
+        AZStd::string spawnEntityServiceName = "spawn_entity";
+        AZStd::string spawnPointInfoServiceName = "get_spawn_point_info";
+        AZStd::string spawnPointsNamesServiceName = "get_spawn_points_names";
+
+        static void Reflect(AZ::ReflectContext* context);
+    };
+
     class ROS2SpawnerComponentConfig final : public AZ::ComponentConfig
     {
     public:
@@ -31,7 +43,7 @@ namespace ROS2
 
         AZ::EntityId m_editorEntityId;
         AZ::Transform m_defaultSpawnPose = { AZ::Vector3{ 0, 0, 0 }, AZ::Quaternion{ 0, 0, 0, 1 }, 1.0 };
-
+        ServiceNames m_serviceNames;
         AZStd::unordered_map<AZStd::string, AZ::Data::Asset<AzFramework::Spawnable>> m_spawnables;
     };
 
@@ -59,6 +71,7 @@ namespace ROS2
         SpawnPointInfoMap GetAllSpawnPointInfos() const override;
         //////////////////////////////////////////////////////////////////////////
 
+        const ServiceNames GetServiceNames() const;
         SpawnPointInfoMap GetSpawnPoints() const;
         AZ::EntityId GetEditorEntityId() const;
         AZStd::unordered_map<AZStd::string, AZ::Data::Asset<AzFramework::Spawnable>> GetSpawnables() const;

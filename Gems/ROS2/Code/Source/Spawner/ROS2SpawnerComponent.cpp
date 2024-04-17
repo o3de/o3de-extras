@@ -31,32 +31,42 @@ namespace ROS2
 
         auto ros2Node = ROS2Interface::Get()->GetNode();
 
+        auto serviceNames = m_controller.GetServiceNames();
+
         m_getSpawnablesNamesService = ros2Node->create_service<gazebo_msgs::srv::GetWorldProperties>(
-            "get_available_spawnable_namespawnable_names",
-            [this](const GetAvailableSpawnableNamesRequest request, GetAvailableSpawnableNamesResponse response)
+            serviceNames.availableSpawnableNamesServiceName.c_str(),
+            [this](
+                const std::shared_ptr<gazebo_msgs::srv::GetWorldProperties::Request> request,
+                std::shared_ptr<gazebo_msgs::srv::GetWorldProperties::Response> response)
             {
-                GetAvailableSpawnableNames(request, response);
+                this->GetAvailableSpawnableNames(request, response);
             });
 
         m_spawnService = ros2Node->create_service<gazebo_msgs::srv::SpawnEntity>(
-            "spawn_entity",
-            [this](const SpawnEntityRequest request, SpawnEntityResponse response)
+            serviceNames.spawnEntityServiceName.c_str(),
+            [this](
+                const std::shared_ptr<gazebo_msgs::srv::SpawnEntity::Request> request,
+                std::shared_ptr<gazebo_msgs::srv::SpawnEntity::Response> response)
             {
-                SpawnEntity(request, response);
+                this->SpawnEntity(request, response);
             });
 
         m_getSpawnPointInfoService = ros2Node->create_service<gazebo_msgs::srv::GetModelState>(
-            "get_spawn_point_info",
-            [this](const GetSpawnPointInfoRequest request, GetSpawnPointInfoResponse response)
+            serviceNames.spawnPointInfoServiceName.c_str(),
+            [this](
+                const std::shared_ptr<gazebo_msgs::srv::GetModelState::Request> request,
+                std::shared_ptr<gazebo_msgs::srv::GetModelState::Response> response)
             {
-                GetSpawnPointInfo(request, response);
+                this->GetSpawnPointInfo(request, response);
             });
 
         m_getSpawnPointsNamesService = ros2Node->create_service<gazebo_msgs::srv::GetWorldProperties>(
-            "get_spawn_points_names",
-            [this](const GetSpawnPointsNamesRequest request, GetSpawnPointsNamesResponse response)
+            serviceNames.spawnPointsNamesServiceName.c_str(),
+            [this](
+                const std::shared_ptr<gazebo_msgs::srv::GetWorldProperties::Request> request,
+                std::shared_ptr<gazebo_msgs::srv::GetWorldProperties::Response> response)
             {
-                GetSpawnPointsNames(request, response);
+                this->GetSpawnPointsNames(request, response);
             });
     }
 
@@ -166,6 +176,7 @@ namespace ROS2
 
         auto* transformInterface = root->FindComponent<AzFramework::TransformComponent>();
         transformInterface->SetWorldTM(transform);
+        transformInterface->SetParent(GetEntityId());
 
         AZStd::string instanceName = AZStd::string::format("%s_%d", spawnableName.c_str(), m_counter++);
         for (AZ::Entity* entity : view)

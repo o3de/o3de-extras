@@ -19,15 +19,59 @@
 
 namespace ROS2
 {
+
+    void ServiceNames::Reflect(AZ::ReflectContext* context)
+    {
+        if (auto serializeContext = azrtti_cast<AZ::SerializeContext*>(context))
+        {
+            serializeContext->Class<ServiceNames>()
+                ->Version(1)
+                ->Field("Get available spawnable names service name", &ServiceNames::availableSpawnableNamesServiceName)
+                ->Field("Spawn entity service name", &ServiceNames::spawnEntityServiceName)
+                ->Field("Get spawn point info service name", &ServiceNames::spawnPointInfoServiceName)
+                ->Field("Get spawn points names service name", &ServiceNames::spawnPointsNamesServiceName);
+
+            if (auto editContext = serializeContext->GetEditContext())
+            {
+                editContext->Class<ServiceNames>("ServiceNames", "Service names for ROS2SpawnerComponent")
+                    ->ClassElement(AZ::Edit::ClassElements::EditorData, "")
+                    ->DataElement(
+                        AZ::Edit::UIHandlers::Default,
+                        &ServiceNames::availableSpawnableNamesServiceName,
+                        "Get available spawnable names service name",
+                        "Service name for getting available spawnable names")
+                    ->DataElement(
+                        AZ::Edit::UIHandlers::Default,
+                        &ServiceNames::spawnEntityServiceName,
+                        "Spawn entity service name",
+                        "Service name for spawning entity")
+                    ->DataElement(
+                        AZ::Edit::UIHandlers::Default,
+                        &ServiceNames::spawnPointInfoServiceName,
+                        "Get spawn point info service name",
+                        "Service name for getting spawn point info")
+                    ->DataElement(
+                        AZ::Edit::UIHandlers::Default,
+                        &ServiceNames::spawnPointsNamesServiceName,
+                        "Get spawn points names service name",
+                        "Service name for getting spawn points names");
+            }
+        }
+    }
+
     void ROS2SpawnerComponentConfig::Reflect(AZ::ReflectContext* context)
     {
+
+        ServiceNames::Reflect(context); 
+        
         if (auto serializeContext = azrtti_cast<AZ::SerializeContext*>(context))
         {
             serializeContext->Class<ROS2SpawnerComponentConfig, AZ::ComponentConfig>()
                 ->Version(1)
                 ->Field("Editor entity id", &ROS2SpawnerComponentConfig::m_editorEntityId)
                 ->Field("Spawnables", &ROS2SpawnerComponentConfig::m_spawnables)
-                ->Field("Default spawn pose", &ROS2SpawnerComponentConfig::m_defaultSpawnPose);
+                ->Field("Default spawn pose", &ROS2SpawnerComponentConfig::m_defaultSpawnPose)
+                ->Field("Service names", &ROS2SpawnerComponentConfig::m_serviceNames);
 
             if (auto editContext = serializeContext->GetEditContext())
             {
@@ -38,7 +82,9 @@ namespace ROS2
                         AZ::Edit::UIHandlers::Default,
                         &ROS2SpawnerComponentConfig::m_defaultSpawnPose,
                         "Default spawn pose",
-                        "Default spawn pose");
+                        "Default spawn pose")
+                    ->DataElement(
+                        AZ::Edit::UIHandlers::Default, &ROS2SpawnerComponentConfig::m_serviceNames, "Service names", "Service names");
             }
         }
     }
@@ -56,6 +102,11 @@ namespace ROS2
     const AZ::Transform& ROS2SpawnerComponentController::GetDefaultSpawnPose() const
     {
         return m_config.m_defaultSpawnPose;
+    }
+
+    const ServiceNames ROS2SpawnerComponentController::GetServiceNames() const
+    {
+        return m_config.m_serviceNames;
     }
 
     AZStd::unordered_map<AZStd::string, SpawnPointInfo> ROS2SpawnerComponentController::GetAllSpawnPointInfos() const
