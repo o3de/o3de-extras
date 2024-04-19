@@ -184,7 +184,7 @@
                                     "guid": "{896662A9-272C-5C79-81B2-1BB817EBF67F}",
                                     "subId": 274174840
                                 },
-                                "assetHint": "factory/conveyorline/default_conveyorline_1024a9a1_dde7_59f2_a800_ad9fb30f3c3a_.azmodel"
+                                "assetHint": "factory/conveyorline/default_conveyorline_1024a9a1_dde7_59f2_a800_ad9fb30f3c3a_.fbx.azmodel"
                             }
                         }
                     }
@@ -232,7 +232,8 @@
                                         "MaterialAsset": {
                                             "assetId": {
                                                 "guid": "{D13451DB-5294-5514-9884-A3E2D76B19AF}"
-                                            }
+                                            },
+                                            "assetHint": "factory/conveyorline/conveyorline_tableunderrobot.azmaterial"
                                         }
                                     }
                                 }

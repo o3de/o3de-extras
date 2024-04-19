@@ -103,34 +103,6 @@
             "isTemplated": "false"
         },
         {
-            "file": "Assets/Factory/Warehouse.prefab",
-            "isTemplated": "false"
-        },
-        {
-            "file": "Assets/Factory/ConveyorLine.prefab",
-            "isTemplated": "false"
-        },
-        {
-            "file": "Assets/Factory/EuroPallet.prefab",
-            "isTemplated": "false"
-        },
-        {
-            "file": "Assets/Factory/Box1.prefab",
-            "isTemplated": "false"
-        },
-        {
-            "file": "Assets/Factory/Box3.prefab",
-            "isTemplated": "false"
-        },
-        {
-            "file": "Assets/Factory/Box4.prefab",
-            "isTemplated": "false"
-        },
-        {
-            "file": "Assets/Factory/TableUnderRobot.prefab",
-            "isTemplated": "false"
-        },
-        {
             "file": "Assets/Factory/Box2.prefab",
             "isTemplated": "false"
         },
@@ -139,47 +111,7 @@
             "isTemplated": "false"
         },
         {
-            "file": "Assets/Factory/ConveyorLine/EuroPallet.fbx.assetinfo",
-            "isTemplated": "false"
-        },
-        {
-            "file": "Assets/Factory/ConveyorLine/ConveyorLine_TableUnderRobot.material",
-            "isTemplated": "false"
-        },
-        {
-            "file": "Assets/Factory/ConveyorLine/ConveyorLine.fbx.assetinfo",
-            "isTemplated": "false"
-        },
-        {
             "file": "Assets/Factory/ConveyorLine/ConveyorBelt_guards_segment.fbx.assetinfo",
-            "isTemplated": "false"
-        },
-        {
-            "file": "Assets/Factory/ConveyorLine/ConveyorBelt_effector_short.fbx.assetinfo",
-            "isTemplated": "false"
-        },
-        {
-            "file": "Assets/Factory/ConveyorLine/ConveyorBelt2.fbx",
-            "isTemplated": "false"
-        },
-        {
-            "file": "Assets/Factory/ConveyorLine/EuroPallet_Pallet.material",
-            "isTemplated": "false"
-        },
-        {
-            "file": "Assets/Factory/ConveyorLine/ConveyorBelt2_Conveyor2.material",
-            "isTemplated": "false"
-        },
-        {
-            "file": "Assets/Factory/ConveyorLine/ConveyorLine_Cage.material",
-            "isTemplated": "false"
-        },
-        {
-            "file": "Assets/Factory/ConveyorLine/ConveyorLine_ElectricBoxes.material",
-            "isTemplated": "false"
-        },
-        {
-            "file": "Assets/Factory/ConveyorLine/ConveyorLine_MBelt.material",
             "isTemplated": "false"
         },
         {
@@ -187,27 +119,11 @@
             "isTemplated": "false"
         },
         {
-            "file": "Assets/Factory/ConveyorLine/box.physxmaterial",
-            "isTemplated": "false"
-        },
-        {
             "file": "Assets/Factory/ConveyorLine/conveyor_belt.physxmaterial",
             "isTemplated": "false"
         },
         {
-            "file": "Assets/Factory/ConveyorLine/EuroPallet.fbx",
-            "isTemplated": "false"
-        },
-        {
             "file": "Assets/Factory/ConveyorLine/conveyor_guards.physxmaterial",
-            "isTemplated": "false"
-        },
-        {
-            "file": "Assets/Factory/ConveyorLine/ConveyorBelt_effector_short.fbx",
-            "isTemplated": "false"
-        },
-        {
-            "file": "Assets/Factory/ConveyorLine/ConveyorBelt_bar.fbx",
             "isTemplated": "false"
         },
         {
@@ -219,167 +135,7 @@
             "isTemplated": "false"
         },
         {
-            "file": "Assets/Factory/ConveyorLine/ConveyorLine.fbx",
-            "isTemplated": "false"
-        },
-        {
             "file": "Assets/Factory/ConveyorLine/ConveyorBelt_guards_segment.fbx",
-            "isTemplated": "false"
-        },
-        {
-            "file": "Assets/Factory/ConveyorLine/ConveyorLine_MFrame.material",
-            "isTemplated": "false"
-        },
-        {
-            "file": "Assets/Factory/ConveyorLine/BeltTextures/Belt_low_DefaultMaterial_Base_color.png",
-            "isTemplated": "false"
-        },
-        {
-            "file": "Assets/Factory/ConveyorLine/BeltTextures/Belt_low_DefaultMaterial_Roughness.png",
-            "isTemplated": "false"
-        },
-        {
-            "file": "Assets/Factory/ConveyorLine/BeltTextures/Belt_low_DefaultMaterial_Metallic.png",
-            "isTemplated": "false"
-        },
-        {
-            "file": "Assets/Factory/ConveyorLine/BeltTextures/Belt_low_DefaultMaterial_Ambient.png",
-            "isTemplated": "false"
-        },
-        {
-            "file": "Assets/Factory/ConveyorLine/BeltTextures/Belt_low_DefaultMaterial_Height.png",
-            "isTemplated": "false"
-        },
-        {
-            "file": "Assets/Factory/ConveyorLine/BeltTextures/Belt_low_DefaultMaterial_Normal.png",
-            "isTemplated": "false"
-        },
-        {
-            "file": "Assets/Factory/ConveyorLine/Textures/ElectricBoxes_Specular.png",
-            "isTemplated": "false"
-        },
-        {
-            "file": "Assets/Factory/ConveyorLine/Textures/Cage-Normal.png.assetinfo",
-            "isTemplated": "false"
-        },
-        {
-            "file": "Assets/Factory/ConveyorLine/Textures/ElectricBoxes_Roughness.png",
-            "isTemplated": "false"
-        },
-        {
-            "file": "Assets/Factory/ConveyorLine/Textures/ElectricBoxes_Normal.png",
-            "isTemplated": "false"
-        },
-        {
-            "file": "Assets/Factory/ConveyorLine/Textures/ElectricBoxes_Diffuse.png",
-            "isTemplated": "false"
-        },
-        {
-            "file": "Assets/Factory/ConveyorLine/Textures/Cage-BaseColor.png",
-            "isTemplated": "false"
-        },
-        {
-            "file": "Assets/Factory/ConveyorLine/Textures/ElectricBoxes_Metalic.png",
-            "isTemplated": "false"
-        },
-        {
-            "file": "Assets/Factory/ConveyorLine/Textures/Pallet-MaskMap.png",
-            "isTemplated": "false"
-        },
-        {
-            "file": "Assets/Factory/ConveyorLine/Textures/Cage-Roughness.png",
-            "isTemplated": "false"
-        },
-        {
-            "file": "Assets/Factory/ConveyorLine/Textures/Box-Normal.png",
-            "isTemplated": "false"
-        },
-        {
-            "file": "Assets/Factory/ConveyorLine/Textures/Cage-Roughness.png.assetinfo",
-            "isTemplated": "false"
-        },
-        {
-            "file": "Assets/Factory/ConveyorLine/Textures/Box-Specular.png",
-            "isTemplated": "false"
-        },
-        {
-            "file": "Assets/Factory/ConveyorLine/Textures/Cage-Specular.png",
-            "isTemplated": "false"
-        },
-        {
-            "file": "Assets/Factory/ConveyorLine/Textures/Pallet-Normal.png",
-            "isTemplated": "false"
-        },
-        {
-            "file": "Assets/Factory/ConveyorLine/Textures/Cage-Metallic.png",
-            "isTemplated": "false"
-        },
-        {
-            "file": "Assets/Factory/ConveyorLine/Textures/Box-Metallic.png",
-            "isTemplated": "false"
-        },
-        {
-            "file": "Assets/Factory/ConveyorLine/Textures/Box-BaseColor.png",
-            "isTemplated": "false"
-        },
-        {
-            "file": "Assets/Factory/ConveyorLine/Textures/ElectricBoxes_Height.png",
-            "isTemplated": "false"
-        },
-        {
-            "file": "Assets/Factory/ConveyorLine/Textures/Cage-Normal.png",
-            "isTemplated": "false"
-        },
-        {
-            "file": "Assets/Factory/ConveyorLine/Textures/Pallet-BaseMap.png",
-            "isTemplated": "false"
-        },
-        {
-            "file": "Assets/Factory/ConveyorLine/Textures/Box-Roughness.png",
-            "isTemplated": "false"
-        },
-        {
-            "file": "Assets/Factory/ConveyorLine/TableUnderRobotTextures/TableUnderRobot_BaseColor.png",
-            "isTemplated": "false"
-        },
-        {
-            "file": "Assets/Factory/ConveyorLine/TableUnderRobotTextures/TableUnderRobot_Normal.png",
-            "isTemplated": "false"
-        },
-        {
-            "file": "Assets/Factory/ConveyorLine/TableUnderRobotTextures/TableUnderRobot_Roughness.png",
-            "isTemplated": "false"
-        },
-        {
-            "file": "Assets/Factory/ConveyorLine/TableUnderRobotTextures/TableUnderRobot_Metallic.png",
-            "isTemplated": "false"
-        },
-        {
-            "file": "Assets/Factory/ConveyorLine/TableUnderRobotTextures/TableUnderRobot_Height.png",
-            "isTemplated": "false"
-        },
-        {
-            "file": "Assets/Factory/ConveyorLine/FrameTextures/Frame_DefaultMaterial_Base_color.png",
-            "isTemplated": "false"
-        },
-        {
-            "file": "Assets/Factory/ConveyorLine/FrameTextures/Frame_DefaultMaterial_Height.png",
-            "isTemplated": "false"
-        },
-        {
-            "file": "Assets/Factory/ConveyorLine/FrameTextures/Frame_DefaultMaterial_Roughness.png",
-            "isTemplated": "false"
-        },
-        {
-            "file": "Assets/Factory/ConveyorLine/FrameTextures/Frame_DefaultMaterial_Ambient.png",
-            "isTemplated": "false"
-        },
-        {
-            "file": "Assets/Factory/ConveyorLine/FrameTextures/Frame_DefaultMaterial_Metallic.png",
-            "isTemplated": "false"
-        },
-        {
-            "file": "Assets/Factory/ConveyorLine/FrameTextures/Frame_DefaultMaterial_Normal.png",
             "isTemplated": "false"
         },
         {
