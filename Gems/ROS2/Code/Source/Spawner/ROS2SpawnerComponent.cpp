@@ -34,17 +34,17 @@ namespace ROS2
         auto ros2Node = ROS2Interface::Get()->GetNode();
         AZ_Assert(ros2Node, "ROS 2 node is not initialized");
 
-        auto serviceNames = m_controller.GetServiceNames();
+        const auto serviceNames = m_controller.GetServiceNames();
 
         m_getSpawnablesNamesService = ros2Node->create_service<gazebo_msgs::srv::GetWorldProperties>(
-            serviceNames.availableSpawnableNamesServiceName.c_str(),
+            serviceNames.m_availableSpawnableNamesServiceName.c_str(),
             [this](const GetAvailableSpawnableNamesRequest request, GetAvailableSpawnableNamesResponse response)
             {
                 GetAvailableSpawnableNames(request, response);
             });
 
         m_spawnService = ros2Node->create_service<gazebo_msgs::srv::SpawnEntity>(
-            serviceNames.spawnEntityServiceName.c_str(),
+            serviceNames.m_spawnEntityServiceName.c_str(),
             [this](
                 const SpawnEntityServiceHandle service_handle,
                 const std::shared_ptr<rmw_request_id_t> header,
@@ -54,7 +54,7 @@ namespace ROS2
             });
 
         m_deleteService = ros2Node->create_service<gazebo_msgs::srv::DeleteEntity>(
-            serviceNames.deleteEntityServiceName.c_str(),
+            serviceNames.m_deleteEntityServiceName.c_str(),
             [this](
                 const DeleteEntityServiceHandle service_handle, const std::shared_ptr<rmw_request_id_t> header, DeleteEntityRequest request)
             {
@@ -62,14 +62,14 @@ namespace ROS2
             });
 
         m_getSpawnPointInfoService = ros2Node->create_service<gazebo_msgs::srv::GetModelState>(
-            serviceNames.spawnPointInfoServiceName.c_str(),
+            serviceNames.m_spawnPointInfoServiceName.c_str(),
             [this](const GetSpawnPointInfoRequest request, GetSpawnPointInfoResponse response)
             {
                 GetSpawnPointInfo(request, response);
             });
 
         m_getSpawnPointsNamesService = ros2Node->create_service<gazebo_msgs::srv::GetWorldProperties>(
-            serviceNames.spawnPointsNamesServiceName.c_str(),
+            serviceNames.m_spawnPointsNamesServiceName.c_str(),
             [this](const GetSpawnPointsNamesRequest request, GetSpawnPointsNamesResponse response)
             {
                 GetSpawnPointsNames(request, response);
