@@ -44,7 +44,7 @@ namespace OpenXRVk
         return to_string(result);
     }
 
-    void PrintXrError(const char* windowName, const XrResult error, const char* fmt, ...)
+    void PrintXrError([[maybe_unused]]const char* windowName, [[maybe_unused]]const XrResult error, const char* fmt, ...)
     {
         va_list argList;
         va_start(argList, fmt);
