@@ -34,12 +34,12 @@ namespace ROS2
        auto ros2Node = ROS2Interface::Get()->GetNode();
        AZ_Assert(ros2Node, "ROS 2 node is not initialized");
 
-       m_getSpawnablesNamesService = ros2Node->create_service<gazebo_msgs::srv::GetWorldProperties>(
-           "get_available_spawnable_namespawnable_names",
-           [this](const GetAvailableSpawnableNamesRequest request, GetAvailableSpawnableNamesResponse response)
-           {
-               GetAvailableSpawnableNames(request, response);
-           });
+        m_getSpawnablesNamesService = ros2Node->create_service<gazebo_msgs::srv::GetWorldProperties>(
+            "get_available_spawnable_names",
+            [this](const GetAvailableSpawnableNamesRequest request, GetAvailableSpawnableNamesResponse response)
+            {
+                GetAvailableSpawnableNames(request, response);
+            });
 
        m_spawnService = ros2Node->create_service<gazebo_msgs::srv::SpawnEntity>(
            "spawn_entity",
@@ -114,24 +114,21 @@ namespace ROS2
 
        SpawnEntityResponse response;
 
-       auto namespaceValidation = ROS2Names::ValidateNamespace(spawnableNamespace);
-       if (!namespaceValidation.IsSuccess())
-       {
-           response.success = false;
-           response.status_message = namespaceValidation.GetError().data();
-           service_handle->send_response(*header, response);
-           return;
-       }
+        if (auto namespaceValidation = ROS2Names::ValidateNamespace(spawnableNamespace); !namespaceValidation.IsSuccess())
+        {
+            response.success = false;
+            response.status_message = namespaceValidation.GetError().data();
+            service_handle->send_response(*header, response);
+            return;
+        }
 
-       auto spawnPoints = GetSpawnPoints();
-
-       if (!m_controller.GetSpawnables().contains(spawnableName))
-       {
-           response.success = false;
-           response.status_message = "Could not find spawnable with given name: " + request->name;
-           service_handle->send_response(*header, response);
-           return;
-       }
+        if (!m_controller.GetSpawnables().contains(spawnableName))
+        {
+            response.success = false;
+            response.status_message = "Could not find spawnable with given name: " + request->name;
+            service_handle->send_response(*header, response);
+            return;
+        }
 
        auto spawnable = m_controller.GetSpawnables().find(spawnableName);
 
@@ -152,13 +149,12 @@ namespace ROS2
            return;
        }
 
-       if (!m_tickets.contains(spawnableName))
-       {
-           // if a ticket for this spawnable was not created but the spawnable name is correct, create the ticket and then use it to
-           // spawn an entity
-           auto spawnable = m_controller.GetSpawnables().find(spawnableName);
-           m_tickets.emplace(spawnable->first, AzFramework::EntitySpawnTicket(spawnable->second));
-       }
+        if (!m_tickets.contains(spawnableName))
+        {
+            // if a ticket for this spawnable was not created but the spawnable name is correct, create the ticket and then use it to
+            // spawn an entity
+            m_tickets.emplace(spawnable->first, AzFramework::EntitySpawnTicket(spawnable->second));
+        }
 
        auto spawnableTicket = AzFramework::EntitySpawnTicket(spawnable->second);
        auto ticketId = spawnableTicket.GetId();
@@ -171,20 +167,20 @@ namespace ROS2
 
        AZ::Transform transform;
 
-       if (spawnPoints.contains(spawnPointName))
-       {
-           transform = spawnPoints.at(spawnPointName).pose;
-       }
-       else
-       {
-           transform = { AZ::Vector3(request->initial_pose.position.x, request->initial_pose.position.y, request->initial_pose.position.z),
-                         AZ::Quaternion(
-                             request->initial_pose.orientation.x,
-                             request->initial_pose.orientation.y,
-                             request->initial_pose.orientation.z,
-                             request->initial_pose.orientation.w),
-                         1.0f };
-       }
+        if (auto spawnPoints = GetSpawnPoints(); spawnPoints.contains(spawnPointName))
+        {
+            transform = spawnPoints.at(spawnPointName).pose;
+        }
+        else
+        {
+            transform = { AZ::Vector3(request->initial_pose.position.x, request->initial_pose.position.y, request->initial_pose.position.z),
+                          AZ::Quaternion(
+                              request->initial_pose.orientation.x,
+                              request->initial_pose.orientation.y,
+                              request->initial_pose.orientation.z,
+                              request->initial_pose.orientation.w),
+                          1.0f };
+        }
 
        optionalArgs.m_preInsertionCallback = [this, transform, spawnableName, spawnableNamespace](auto id, auto view)
        {
