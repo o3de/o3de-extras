@@ -1409,10 +1409,6 @@
                     "isTemplated": false
                 },
                 {
-                    "file": "default.blastconfiguration",
-                    "isTemplated": false
-                },
-                {
                     "file": "editor.cfg",
                     "isTemplated": false
                 },
