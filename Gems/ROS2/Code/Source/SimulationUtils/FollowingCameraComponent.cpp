@@ -16,14 +16,14 @@
 namespace ROS2
 {
 
+    using Key = AzFramework::InputDeviceKeyboard::Key;
+
     // Default keyboard mapping for predefined views.
-    const AZStd::unordered_map<AzFramework::InputChannelId, int> KeysToView{
-        { AzFramework::InputDeviceKeyboard::Key::Alphanumeric1, 0 }, { AzFramework::InputDeviceKeyboard::Key::Alphanumeric2, 1 },
-        { AzFramework::InputDeviceKeyboard::Key::Alphanumeric3, 2 }, { AzFramework::InputDeviceKeyboard::Key::Alphanumeric4, 3 },
-        { AzFramework::InputDeviceKeyboard::Key::Alphanumeric5, 4 }, { AzFramework::InputDeviceKeyboard::Key::Alphanumeric6, 5 },
-        { AzFramework::InputDeviceKeyboard::Key::Alphanumeric7, 6 }, { AzFramework::InputDeviceKeyboard::Key::Alphanumeric8, 7 },
-        { AzFramework::InputDeviceKeyboard::Key::Alphanumeric9, 8 }, { AzFramework::InputDeviceKeyboard::Key::Alphanumeric0, 9 }
-    };
+    const AZStd::unordered_map<AzFramework::InputChannelId, int> KeysToView{ { Key::Alphanumeric1, 0 }, { Key::Alphanumeric2, 1 },
+                                                                             { Key::Alphanumeric3, 2 }, { Key::Alphanumeric4, 3 },
+                                                                             { Key::Alphanumeric5, 4 }, { Key::Alphanumeric6, 5 },
+                                                                             { Key::Alphanumeric7, 6 }, { Key::Alphanumeric8, 7 },
+                                                                             { Key::Alphanumeric9, 8 }, { Key::Alphanumeric0, 9 } };
 
     FollowingCameraComponent::FollowingCameraComponent(const FollowingCameraConfiguration& configuration)
         : m_configuration(configuration)
@@ -236,7 +236,7 @@ namespace ROS2
         AZ::Quaternion smoothedRotation = m_lastRotationsBuffer.front().first;
         float totalWeight = 0.0f;
         float currentWeight = 1.0f; // Initial weight
-        float weightIncreaseFactor = m_configuration.m_smoothFactor; // Determines how much more influence each subsequent rotation has
+        const float weightIncreaseFactor = m_configuration.m_smoothFactor; // Determines how much more influence each subsequent rotation has
 
         for (size_t i = 1; i < m_lastRotationsBuffer.size(); ++i)
         {
@@ -282,6 +282,7 @@ namespace ROS2
 
                 // Capture the initial mouse position and cursor state
                 m_initialMousePosition = GetCurrentMousePosition();
+                m_ignoreNextMovement = true; // Flag to ignore the next mouse movement preventing jump on re-centering
             }
             else if (inputChannel.IsStateEnded())
             {
@@ -301,6 +302,13 @@ namespace ROS2
         if (m_isRightMouseButtonPressed &&
             (channelId == AzFramework::InputDeviceMouse::Movement::X || channelId == AzFramework::InputDeviceMouse::Movement::Y))
         {
+            if (m_ignoreNextMovement)
+            {
+                m_ignoreNextMovement = false; // Reset the flag after ignoring one movement
+                m_lastMousePosition = GetCurrentMousePosition(); // Update the last position to current to avoid the jump
+                return; // Do not process this movement
+            }
+
             AZ::Vector2 currentMousePosition = GetCurrentMousePosition();
             AZ::Vector2 mouseDelta = currentMousePosition - m_lastMousePosition;
 
@@ -330,61 +338,58 @@ namespace ROS2
 
     void FollowingCameraComponent::RotateCameraOnMouse(const AZ::Vector2& mouseDelta)
     {
-        const float rotationSensitivity = m_configuration.m_rotationSensitivity;
+        const float& rotationSensitivity = m_configuration.m_rotationSensitivity;
 
         // Convert mouse delta to rotation angles
         float yawRotation = -mouseDelta.GetX() * rotationSensitivity; // Inverted X for reversed yaw rotation
         float pitchRotation = -mouseDelta.GetY() * rotationSensitivity; // Inverted Y for pitch, adjust as needed
 
         // Fetch the current camera orientation from m_cameraOffset
-        AZ::Quaternion currentRotation = AZ::Quaternion::CreateFromMatrix4x4(m_cameraOffset);
+        const AZ::Quaternion currentRotation = AZ::Quaternion::CreateFromMatrix4x4(m_cameraOffset);
 
-        // Global Z-axis for yaw rotation
-        AZ::Vector3 globalZAxis = AZ::Vector3(0, 0, 1);
-        AZ::Quaternion yawQuat = AZ::Quaternion::CreateFromAxisAngle(globalZAxis, yawRotation);
+        AZ::Quaternion yawQuat = AZ::Quaternion::CreateFromAxisAngle(AZ::Vector3::CreateAxisZ(), yawRotation);
 
         // Apply yaw rotation to current camera orientation
         AZ::Quaternion tempRotation = yawQuat * currentRotation;
-        tempRotation.Normalize();
 
         // Calculate pitch rotation around the camera's local X-axis after applying yaw
         // This ensures that pitch adjustments are made relative to the camera's adjusted orientation
-        AZ::Vector3 localXAxis = tempRotation.TransformVector(AZ::Vector3(1, 0, 0));
-        AZ::Quaternion pitchQuat = AZ::Quaternion::CreateFromAxisAngle(localXAxis, pitchRotation);
+        const AZ::Vector3 localXAxis = tempRotation.TransformVector(AZ::Vector3::CreateAxisX());
+        const auto pitchQuat = AZ::Quaternion::CreateFromAxisAngle(localXAxis, pitchRotation);
 
         // Apply pitch rotation
-        AZ::Quaternion newRotation = pitchQuat * tempRotation;
-        newRotation.Normalize();
-
+        auto newRotation = pitchQuat * tempRotation;
+        
         // Update the camera's offset matrix with the new orientation, keeping the position unchanged
-        AZ::Vector3 currentPosition = m_cameraOffset.GetTranslation();
+        const AZ::Vector3 currentPosition = m_cameraOffset.GetTranslation();
         m_cameraOffset = AZ::Matrix4x4::CreateFromQuaternionAndTranslation(newRotation, currentPosition);
     }
 
     void FollowingCameraComponent::MoveCameraOnKeys()
     {
-        AZ::Matrix4x4 localCamPoseChange = AZ::Matrix4x4::CreateIdentity();
-        float translationSpeed = m_configuration.m_translationSpeed;
+        auto localCamPoseChange = AZ::Vector3::CreateZero();
+        const auto translationSpeed = m_configuration.m_translationSpeed;
 
         // Check each key state and adjust the camera pose change accordingly
-        if (m_keyStates[AzFramework::InputDeviceKeyboard::Key::AlphanumericW])
+        if (m_keyStates[Key::AlphanumericW])
         {
-            localCamPoseChange = localCamPoseChange * AZ::Matrix4x4::CreateTranslation(AZ::Vector3::CreateAxisY() * translationSpeed);
+            localCamPoseChange += AZ::Vector3::CreateAxisY() * translationSpeed;
         }
-        if (m_keyStates[AzFramework::InputDeviceKeyboard::Key::AlphanumericS])
+        if (m_keyStates[Key::AlphanumericS])
         {
-            localCamPoseChange = localCamPoseChange * AZ::Matrix4x4::CreateTranslation(AZ::Vector3::CreateAxisY() * -translationSpeed);
+            localCamPoseChange -= AZ::Vector3::CreateAxisY() * translationSpeed;
         }
-        if (m_keyStates[AzFramework::InputDeviceKeyboard::Key::AlphanumericA])
+        if (m_keyStates[Key::AlphanumericA])
         {
-            localCamPoseChange = localCamPoseChange * AZ::Matrix4x4::CreateTranslation(AZ::Vector3::CreateAxisX() * -translationSpeed);
+            localCamPoseChange -= AZ::Vector3::CreateAxisX() * translationSpeed;
         }
-        if (m_keyStates[AzFramework::InputDeviceKeyboard::Key::AlphanumericD])
+        if (m_keyStates[Key::AlphanumericD])
         {
-            localCamPoseChange = localCamPoseChange * AZ::Matrix4x4::CreateTranslation(AZ::Vector3::CreateAxisX() * translationSpeed);
+            localCamPoseChange += AZ::Vector3::CreateAxisX() * translationSpeed;
         }
 
-        m_cameraOffset = m_cameraOffset * localCamPoseChange;
+        const auto localCamPoseChangeMatrix = AZ::Matrix4x4::CreateTranslation(localCamPoseChange);
+        m_cameraOffset = m_cameraOffset * localCamPoseChangeMatrix;
     }
 
     void FollowingCameraComponent::RotateCameraOnKeys()
@@ -393,11 +398,11 @@ namespace ROS2
 
         float yawRotation = 0.0f; // Initialize yaw rotation to 0
 
-        if (m_keyStates[AzFramework::InputDeviceKeyboard::Key::AlphanumericQ])
+        if (m_keyStates[Key::AlphanumericQ])
         {
             yawRotation = rotationSpeed; // Rotate left
         }
-        else if (m_keyStates[AzFramework::InputDeviceKeyboard::Key::AlphanumericE])
+        else if (m_keyStates[Key::AlphanumericE])
         {
             yawRotation = -rotationSpeed; // Rotate right
         }
@@ -405,15 +410,12 @@ namespace ROS2
         if (yawRotation != 0.0f) // Only proceed if there's a rotation to apply
         {
             // Fetch the current camera orientation from m_cameraOffset
-            AZ::Quaternion currentRotation = AZ::Quaternion::CreateFromMatrix4x4(m_cameraOffset);
+            const AZ::Quaternion currentRotation = AZ::Quaternion::CreateFromMatrix4x4(m_cameraOffset);
 
-            // Global Z-axis for yaw rotation
-            AZ::Vector3 globalZAxis = AZ::Vector3(0, 0, 1);
-            AZ::Quaternion yawQuat = AZ::Quaternion::CreateFromAxisAngle(globalZAxis, yawRotation);
+            const AZ::Quaternion yawQuat = AZ::Quaternion::CreateFromAxisAngle(AZ::Vector3::CreateAxisZ(), yawRotation);
 
             // Apply yaw rotation to current camera orientation
-            AZ::Quaternion newRotation = yawQuat * currentRotation;
-            newRotation.Normalize();
+            const AZ::Quaternion newRotation = yawQuat * currentRotation;
 
             // Update the camera's offset matrix with the new orientation, keeping the position unchanged
             AZ::Vector3 currentPosition = m_cameraOffset.GetTranslation();
@@ -439,8 +441,7 @@ namespace ROS2
         }
 
         // Manage camera following based on Shift key state
-        if (channelId == AzFramework::InputDeviceKeyboard::Key::ModifierShiftL ||
-            channelId == AzFramework::InputDeviceKeyboard::Key::ModifierShiftR)
+        if (channelId == Key::ModifierShiftL || channelId == Key::ModifierShiftR)
         {
             if (isKeyDown)
             {
@@ -454,16 +455,12 @@ namespace ROS2
 
         if (isKeyDown) // Only proceed if a key was pressed down
         {
-            if (channelId == AzFramework::InputDeviceKeyboard::Key::AlphanumericW ||
-                channelId == AzFramework::InputDeviceKeyboard::Key::AlphanumericS ||
-                channelId == AzFramework::InputDeviceKeyboard::Key::AlphanumericA ||
-                channelId == AzFramework::InputDeviceKeyboard::Key::AlphanumericD)
+            if (channelId == Key::AlphanumericW || channelId == Key::AlphanumericS || channelId == Key::AlphanumericA ||
+                channelId == Key::AlphanumericD)
             {
                 MoveCameraOnKeys();
             }
-            else if (
-                channelId == AzFramework::InputDeviceKeyboard::Key::AlphanumericQ ||
-                channelId == AzFramework::InputDeviceKeyboard::Key::AlphanumericE)
+            else if (channelId == Key::AlphanumericQ || channelId == Key::AlphanumericE)
             {
                 RotateCameraOnKeys();
             }
