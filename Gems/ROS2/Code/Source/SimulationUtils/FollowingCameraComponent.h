@@ -132,6 +132,8 @@ namespace ROS2
         float m_mouseDeltaX = 0.0f;
         float m_mouseDeltaY = 0.0f;
 
+        bool m_ignoreNextMovement = false; //!< Ignore the next movement to avoid camera jump.
+
         AZ::Matrix4x4 m_cameraOffset = AZ::Matrix4x4::CreateIdentity(); //!< The current relative camera pose.
         std::unordered_map<AzFramework::InputChannelId, bool, InputChannelIdHash> m_keyStates; //!< For multiple key press detection.
 
