@@ -9,14 +9,13 @@
 #include "FollowingCameraComponent.h"
 #include <AzCore/Serialization/EditContext.h>
 #include <AzCore/Serialization/SerializeContext.h>
-#include <AzFramework/Input/Devices/Keyboard/InputDeviceKeyboard.h>
 #include <AzFramework/Input/Devices/Mouse/InputDeviceMouse.h>
 #include <MathConversion.h>
 
 namespace ROS2
 {
-
     using Key = AzFramework::InputDeviceKeyboard::Key;
+    using Movement = AzFramework::InputDeviceMouse::Movement;
 
     // Default keyboard mapping for predefined views.
     const AZStd::unordered_map<AzFramework::InputChannelId, int> KeysToView{ { Key::Alphanumeric1, 0 }, { Key::Alphanumeric2, 1 },
@@ -229,14 +228,20 @@ namespace ROS2
     {
         if (m_lastRotationsBuffer.empty())
         {
-            return AZ::Quaternion::CreateIdentity(); // Return identity quaternion if the buffer is empty
+            return AZ::Quaternion::CreateIdentity();
         }
 
+        return CalculateSmoothedRotation();
+    }
+
+    AZ::Quaternion FollowingCameraComponent::CalculateSmoothedRotation() const
+    {
         // Start with the oldest rotation in the buffer
         AZ::Quaternion smoothedRotation = m_lastRotationsBuffer.front().first;
         float totalWeight = 0.0f;
         float currentWeight = 1.0f; // Initial weight
-        const float weightIncreaseFactor = m_configuration.m_smoothFactor; // Determines how much more influence each subsequent rotation has
+        const float weightIncreaseFactor =
+            m_configuration.m_smoothFactor; // Determines how much more influence each subsequent rotation has
 
         for (size_t i = 1; i < m_lastRotationsBuffer.size(); ++i)
         {
@@ -299,8 +304,7 @@ namespace ROS2
             }
         }
 
-        if (m_isRightMouseButtonPressed &&
-            (channelId == AzFramework::InputDeviceMouse::Movement::X || channelId == AzFramework::InputDeviceMouse::Movement::Y))
+        if (m_isRightMouseButtonPressed && (channelId == Movement::X || channelId == Movement::Y))
         {
             if (m_ignoreNextMovement)
             {
@@ -359,7 +363,7 @@ namespace ROS2
 
         // Apply pitch rotation
         auto newRotation = pitchQuat * tempRotation;
-        
+
         // Update the camera's offset matrix with the new orientation, keeping the position unchanged
         const AZ::Vector3 currentPosition = m_cameraOffset.GetTranslation();
         m_cameraOffset = AZ::Matrix4x4::CreateFromQuaternionAndTranslation(newRotation, currentPosition);
@@ -441,7 +445,7 @@ namespace ROS2
         }
 
         // Manage camera following based on Shift key state
-        if (channelId == Key::ModifierShiftL || channelId == Key::ModifierShiftR)
+        if (shiftKeys.find(channelId) != shiftKeys.end())
         {
             if (isKeyDown)
             {
@@ -455,12 +459,11 @@ namespace ROS2
 
         if (isKeyDown) // Only proceed if a key was pressed down
         {
-            if (channelId == Key::AlphanumericW || channelId == Key::AlphanumericS || channelId == Key::AlphanumericA ||
-                channelId == Key::AlphanumericD)
+            if (moveKeys.find(channelId) != moveKeys.end())
             {
                 MoveCameraOnKeys();
             }
-            else if (channelId == Key::AlphanumericQ || channelId == Key::AlphanumericE)
+            else if (rotateKeys.find(channelId) != rotateKeys.end())
             {
                 RotateCameraOnKeys();
             }

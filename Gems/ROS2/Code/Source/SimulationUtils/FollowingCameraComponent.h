@@ -14,6 +14,7 @@
 #include <AzCore/Math/Matrix4x4.h>
 #include <AzFramework/Components/TransformComponent.h>
 #include <AzFramework/Input/Buses/Requests/InputSystemCursorRequestBus.h>
+#include <AzFramework/Input/Devices/Keyboard/InputDeviceKeyboard.h>
 #include <AzFramework/Input/Events/InputChannelEventListener.h>
 
 namespace std
@@ -38,6 +39,8 @@ struct InputChannelIdHash
 
 namespace ROS2
 {
+    using Key = AzFramework::InputDeviceKeyboard::Key;
+
     //! The component used for cameras that follow moving objects
     //! It allows to switch between different cameras attached to entities, and to control the active camera using keyboard.
     class FollowingCameraComponent
@@ -104,9 +107,11 @@ namespace ROS2
         //! @return The average translation.
         AZ::Vector3 SmoothTranslation() const;
 
-        //! Compute weighted average of rotation in the buffer.
         //! @return The average rotation.
         AZ::Quaternion SmoothRotation() const;
+
+        //! Compute weighted average of rotation in the buffer.
+        AZ::Quaternion CalculateSmoothedRotation() const;
 
         //! Cache the transform in smoothing buffer.
         //! @param transform The transform to cache.
@@ -143,5 +148,14 @@ namespace ROS2
         float m_dampingConstant = 5.0f; //! Damping constant (resistance)
 
         FollowingCameraConfiguration m_configuration; //!< The configuration of the following camera.
+
+        // The keys for camera movement and rotation.
+
+        const std::unordered_set<AzFramework::InputChannelId> moveKeys = {
+            Key::AlphanumericW, Key::AlphanumericS, Key::AlphanumericA, Key::AlphanumericD
+        };
+        const std::unordered_set<AzFramework::InputChannelId> rotateKeys = { Key::AlphanumericQ, Key::AlphanumericE };
+        const std::unordered_set<AzFramework::InputChannelId> shiftKeys = { Key::ModifierShiftL, Key::ModifierShiftR };
     };
+
 } // namespace ROS2
