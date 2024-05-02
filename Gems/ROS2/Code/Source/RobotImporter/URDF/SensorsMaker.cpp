@@ -40,7 +40,7 @@ namespace ROS2
         for (size_t si = 0; si < link->SensorCount(); ++si)
         {
             const auto* sensor = link->SensorByIndex(si);
-            const bool success = AddSensor(entityId, sensor);
+            [[maybe_unused]] const bool success = AddSensor(entityId, sensor);
             AZ_Warning("SensorMaker", success, "Cannot find a sensor hook for sensor %d", sensor->Type());
         }
     }
