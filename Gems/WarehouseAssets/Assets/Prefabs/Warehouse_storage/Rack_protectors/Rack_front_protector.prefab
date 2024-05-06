@@ -81,7 +81,7 @@
                                     "guid": "{9928FCBB-9AD8-5B3E-94FF-3516CC574ED1}",
                                     "subId": 4102061829
                                 },
-                                "assetHint": "assets/warehouse/models/warehouse_frontrackprotector.pxmesh"
+                                "assetHint": "assets/warehouse/models/warehouse_frontrackprotector.fbx.pxmesh"
                             },
                             "Configuration": {
                                 "PhysicsAsset": {
@@ -90,7 +90,7 @@
                                         "subId": 4102061829
                                     },
                                     "loadBehavior": "QueueLoad",
-                                    "assetHint": "assets/warehouse/models/warehouse_frontrackprotector.pxmesh"
+                                    "assetHint": "assets/warehouse/models/warehouse_frontrackprotector.fbx.pxmesh"
                                 }
                             }
                         }

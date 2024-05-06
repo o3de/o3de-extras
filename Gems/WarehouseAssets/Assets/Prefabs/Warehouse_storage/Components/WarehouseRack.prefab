@@ -123,7 +123,7 @@
                                     "guid": "{665AB396-251A-55E3-83E2-AAB98CB864FB}",
                                     "subId": 1812650258
                                 },
-                                "assetHint": "assets/warehouse/models/warehouse_rack.pxmesh"
+                                "assetHint": "assets/warehouse/models/warehouse_rack.fbx.pxmesh"
                             },
                             "Configuration": {
                                 "PhysicsAsset": {
@@ -132,7 +132,7 @@
                                         "subId": 1812650258
                                     },
                                     "loadBehavior": "QueueLoad",
-                                    "assetHint": "assets/warehouse/models/warehouse_rack.pxmesh"
+                                    "assetHint": "assets/warehouse/models/warehouse_rack.fbx.pxmesh"
                                 }
                             }
                         }

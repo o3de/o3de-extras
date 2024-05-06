@@ -728,12 +728,12 @@
                 },
                 "Component_[639102350977932618]": {
                     "$type": "ROS2FrameEditorComponent",
+                    "Id": 1381491360893018223,
                     "ROS2FrameConfiguration": {
                         "Namespace Configuration": {
                             "Namespace": "base_link"
                         },
-                        "Frame Name": "base_link",
-                        "Effective namespace": "base_link"
+                        "Frame Name": "base_link"
                     }
                 },
                 "Component_[6563269519356188309]": {
