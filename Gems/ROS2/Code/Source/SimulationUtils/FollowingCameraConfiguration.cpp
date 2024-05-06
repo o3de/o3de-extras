@@ -43,7 +43,7 @@ namespace ROS2
                         "Smooth Factor",
                         "Smoothing factor for camera movement (the higher the value, the newer entries have a progressively higher influence on the result.). Value 1.1 increase each subsequent weight by 10%")
                     ->Attribute(AZ::Edit::Attributes::Min, 1.0f)
-                    ->Attribute(AZ::Edit::Attributes::Max, 10.0f)
+                    ->Attribute(AZ::Edit::Attributes::Max, 2.0f)
                     ->DataElement(
                         AZ::Edit::UIHandlers::Default,
                         &FollowingCameraConfiguration::m_rotationSpeed,

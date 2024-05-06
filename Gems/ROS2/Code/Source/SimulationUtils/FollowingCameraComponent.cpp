@@ -248,7 +248,10 @@ namespace ROS2
             totalWeight += currentWeight;
             float t = currentWeight / totalWeight; // Calculate interpolation factor
 
+            AZ_Assert(t >= 0.0f && t <= 1.0f, "Interpolation factor must be in the range [0, 1]");
+
             // Progressively slerp towards each newer rotation, with increasing influence
+            // Interpolates between series of rotations to get a smooth rotation with new rotations having more influence (less lag)
             smoothedRotation = smoothedRotation.Slerp(m_lastRotationsBuffer[i].first, t);
 
             currentWeight *= weightIncreaseFactor; // Increase the weight for the next rotation
