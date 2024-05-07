@@ -366,6 +366,7 @@ namespace ROS2
 
         // Apply pitch rotation
         auto newRotation = pitchQuat * tempRotation;
+        newRotation.Normalize();  // Normalize the quaternion to prevent drift and ensure no numerical instability
 
         // Update the camera's offset matrix with the new orientation, keeping the position unchanged
         const AZ::Vector3 currentPosition = m_cameraOffset.GetTranslation();
