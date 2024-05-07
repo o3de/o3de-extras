@@ -10,6 +10,9 @@ if (NOT gem_name)
     set(gem_name "ROS2")
 endif()
 
+# Add pip requirements required for ros2 packages.
+update_pip_requirements(${CMAKE_CURRENT_LIST_DIR}/requirements.txt ROS2)
+
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/Code")
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} PARENT_SCOPE)
 

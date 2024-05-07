@@ -110,27 +110,6 @@ if(PAL_TRAIT_BUILD_HOST_TOOLS)
                 AZ::AzToolsFramework
     )
 
-    # The ${gem_name}.Editor.Private.Object target is an internal target
-    # which is only to be used by this gems CMakeLists.txt and any subdirectories
-    # Other gems should not use this target
-    ly_add_target(
-        NAME ${gem_name}.Editor.Private.Object STATIC
-        NAMESPACE Gem
-        FILES_CMAKE
-            warehouseautomation_editor_private_files.cmake
-        TARGET_PROPERTIES
-            O3DE_PRIVATE_TARGET TRUE
-        INCLUDE_DIRECTORIES
-            PRIVATE
-                Include
-                Source
-        BUILD_DEPENDENCIES
-            PUBLIC
-                AZ::AzToolsFramework
-                Gem::PhysX.Editor.Static
-                $<TARGET_OBJECTS:Gem::${gem_name}.Private.Object>
-    )
-
     ly_add_target(
         NAME ${gem_name}.Editor GEM_MODULE
         NAMESPACE Gem
@@ -146,7 +125,8 @@ if(PAL_TRAIT_BUILD_HOST_TOOLS)
             PUBLIC
                 Gem::${gem_name}.Editor.API
             PRIVATE
-                Gem::${gem_name}.Editor.Private.Object
+                AZ::AzToolsFramework
+                ${gem_name}.Private.Object
     )
 
     # By default, we will specify that the above target ${gem_name} would be used by
