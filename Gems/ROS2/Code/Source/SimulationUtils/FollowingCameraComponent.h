@@ -22,9 +22,9 @@ namespace std
     template<>
     struct hash<AzFramework::InputChannelId>
     {
-        std::size_t operator()(const AzFramework::InputChannelId& channelId) const noexcept
+        size_t operator()(const AzFramework::InputChannelId& channelId) const noexcept
         {
-            return std::hash<std::string>()(channelId.GetName());
+            return hash<string>()(channelId.GetName());
         }
     };
 } // namespace std
@@ -127,7 +127,6 @@ namespace ROS2
         //! The smoothing buffer for rotation, the first element is the tangential vector, the second element is the weight.
         AZStd::deque<AZStd::pair<AZ::Quaternion, float>> m_lastRotationsBuffer;
 
-        float m_opticalAxisTranslation = 0.0f; //!< The zoom change from the input.
         AZ::EntityId m_currentView; //!< Current used view point.
         AZ::Transform m_frozenTransform;
         bool m_isFollowingEnabled = true;
@@ -136,26 +135,20 @@ namespace ROS2
         AZ::Vector2 m_lastMousePosition = AZ::Vector2(0.0f, 0.0f);
         float m_mouseDeltaX = 0.0f;
         float m_mouseDeltaY = 0.0f;
-
-        bool m_ignoreNextMovement = false; //!< Ignore the next movement to avoid camera jump.
+        bool m_ignoreNextMovement = false; //!< Ignore the next mouse movement to avoid camera jump.
 
         AZ::Matrix4x4 m_cameraOffset = AZ::Matrix4x4::CreateIdentity(); //!< The current relative camera pose.
-        std::unordered_map<AzFramework::InputChannelId, bool, InputChannelIdHash> m_keyStates; //!< For multiple key press detection.
-
-        // smoothing camera
-        AZ::Vector3 m_cameraVelocity = AZ::Vector3::CreateZero(); //! Camera's current velocity
-        float m_springConstant = 50.0f; //! Spring constant (springiness)
-        float m_dampingConstant = 5.0f; //! Damping constant (resistance)
+        AZStd::unordered_map<AzFramework::InputChannelId, bool, InputChannelIdHash> m_keyStates; //!< For multiple key press detection.
 
         FollowingCameraConfiguration m_configuration; //!< The configuration of the following camera.
 
         // The keys for camera movement and rotation.
 
-        const std::unordered_set<AzFramework::InputChannelId> moveKeys = {
+        const AZStd::unordered_set<AzFramework::InputChannelId> moveKeys = {
             Key::AlphanumericW, Key::AlphanumericS, Key::AlphanumericA, Key::AlphanumericD
         };
-        const std::unordered_set<AzFramework::InputChannelId> rotateKeys = { Key::AlphanumericQ, Key::AlphanumericE };
-        const std::unordered_set<AzFramework::InputChannelId> shiftKeys = { Key::ModifierShiftL, Key::ModifierShiftR };
+        const AZStd::unordered_set<AzFramework::InputChannelId> rotateKeys = { Key::AlphanumericQ, Key::AlphanumericE };
+        const AZStd::unordered_set<AzFramework::InputChannelId> shiftKeys = { Key::ModifierShiftL, Key::ModifierShiftR };
     };
 
 } // namespace ROS2
