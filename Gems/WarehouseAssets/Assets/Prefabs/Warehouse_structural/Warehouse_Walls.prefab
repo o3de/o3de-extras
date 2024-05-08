@@ -160,7 +160,7 @@
                                     "guid": "{9F3790A0-9383-5BBA-BB91-2AD9F04086B3}",
                                     "subId": 279508339
                                 },
-                                "assetHint": "assets/warehouse/models/warehouse_gate_closed.azmodel"
+                                "assetHint": "assets/warehouse/models/warehouse_gate_closed.fbx.azmodel"
                             }
                         }
                     }
@@ -180,7 +180,7 @@
                                             "assetId": {
                                                 "guid": "{9FF0270B-8936-528A-89EC-3E73A01AF755}"
                                             },
-                                            "assetHint": "assets/warehouse/materials/mwarehousemodules.azmaterial"
+                                            "assetHint": "assets/warehouse/materials/mwarehousemodules.material.azmaterial"
                                         }
                                     }
                                 },
@@ -193,7 +193,7 @@
                                             "assetId": {
                                                 "guid": "{06298918-E750-5053-B55B-10D158B1ED8C}"
                                             },
-                                            "assetHint": "assets/warehouse/materials/mwarehousegate.azmaterial"
+                                            "assetHint": "assets/warehouse/materials/mwarehousegate.material.azmaterial"
                                         }
                                     }
                                 }
@@ -295,7 +295,7 @@
                                     "guid": "{34CA9168-D5C7-5554-BE7D-8485A3D67AB6}",
                                     "subId": 279103289
                                 },
-                                "assetHint": "assets/warehouse/models/warehouse_walls_front_gate.azmodel"
+                                "assetHint": "assets/warehouse/models/warehouse_walls_front_gate.fbx.azmodel"
                             }
                         }
                     }
@@ -324,7 +324,7 @@
                                             "assetId": {
                                                 "guid": "{9FF0270B-8936-528A-89EC-3E73A01AF755}"
                                             },
-                                            "assetHint": "assets/warehouse/materials/mwarehousemodules.azmaterial"
+                                            "assetHint": "assets/warehouse/materials/mwarehousemodules.material.azmaterial"
                                         }
                                     }
                                 }
@@ -414,7 +414,7 @@
                                     "guid": "{995CFC9D-3583-51BC-B46E-4554DEF0650E}",
                                     "subId": 269507228
                                 },
-                                "assetHint": "assets/warehouse/models/warehouse_walls_front.azmodel"
+                                "assetHint": "assets/warehouse/models/warehouse_walls_front.fbx.azmodel"
                             }
                         }
                     }
@@ -439,7 +439,7 @@
                                             "assetId": {
                                                 "guid": "{9FF0270B-8936-528A-89EC-3E73A01AF755}"
                                             },
-                                            "assetHint": "assets/warehouse/materials/mwarehousemodules.azmaterial"
+                                            "assetHint": "assets/warehouse/materials/mwarehousemodules.material.azmaterial"
                                         }
                                     }
                                 }
@@ -567,7 +567,7 @@
                                             "assetId": {
                                                 "guid": "{9FF0270B-8936-528A-89EC-3E73A01AF755}"
                                             },
-                                            "assetHint": "assets/warehouse/materials/mwarehousemodules.azmaterial"
+                                            "assetHint": "assets/warehouse/materials/mwarehousemodules.material.azmaterial"
                                         }
                                     }
                                 }
@@ -623,7 +623,7 @@
                                     "guid": "{1DB458F4-42D7-5377-995B-415257F59549}",
                                     "subId": 277096602
                                 },
-                                "assetHint": "assets/warehouse/models/warehouse_walls_side.azmodel"
+                                "assetHint": "assets/warehouse/models/warehouse_walls_side.fbx.azmodel"
                             }
                         }
                     }
@@ -747,7 +747,7 @@
                                             "guid": "{995CFC9D-3583-51BC-B46E-4554DEF0650E}",
                                             "subId": 269507228
                                         },
-                                        "assetHint": "assets/warehouse/models/warehouse_walls_front.azmodel"
+                                        "assetHint": "assets/warehouse/models/warehouse_walls_front.fbx.azmodel"
                                     }
                                 }
                             }
@@ -807,7 +807,7 @@
                                                     "assetId": {
                                                         "guid": "{9FF0270B-8936-528A-89EC-3E73A01AF755}"
                                                     },
-                                                    "assetHint": "assets/warehouse/materials/mwarehousemodules.azmaterial"
+                                                    "assetHint": "assets/warehouse/materials/mwarehousemodules.material.azmaterial"
                                                 }
                                             }
                                         }
@@ -883,7 +883,7 @@
                                             "guid": "{34CA9168-D5C7-5554-BE7D-8485A3D67AB6}",
                                             "subId": 279103289
                                         },
-                                        "assetHint": "assets/warehouse/models/warehouse_walls_front_gate.azmodel"
+                                        "assetHint": "assets/warehouse/models/warehouse_walls_front_gate.fbx.azmodel"
                                     }
                                 }
                             }
@@ -943,7 +943,7 @@
                                                     "assetId": {
                                                         "guid": "{9FF0270B-8936-528A-89EC-3E73A01AF755}"
                                                     },
-                                                    "assetHint": "assets/warehouse/materials/mwarehousemodules.azmaterial"
+                                                    "assetHint": "assets/warehouse/materials/mwarehousemodules.material.azmaterial"
                                                 }
                                             }
                                         }
@@ -989,7 +989,7 @@
                                             "guid": "{9F3790A0-9383-5BBA-BB91-2AD9F04086B3}",
                                             "subId": 279508339
                                         },
-                                        "assetHint": "assets/warehouse/models/warehouse_gate_closed.azmodel"
+                                        "assetHint": "assets/warehouse/models/warehouse_gate_closed.fbx.azmodel"
                                     }
                                 }
                             }
@@ -1086,7 +1086,7 @@
                                                     "assetId": {
                                                         "guid": "{9FF0270B-8936-528A-89EC-3E73A01AF755}"
                                                     },
-                                                    "assetHint": "assets/warehouse/materials/mwarehousemodules.azmaterial"
+                                                    "assetHint": "assets/warehouse/materials/mwarehousemodules.material.azmaterial"
                                                 }
                                             }
                                         },
@@ -1099,7 +1099,7 @@
                                                     "assetId": {
                                                         "guid": "{06298918-E750-5053-B55B-10D158B1ED8C}"
                                                     },
-                                                    "assetHint": "assets/warehouse/materials/mwarehousegate.azmaterial"
+                                                    "assetHint": "assets/warehouse/materials/mwarehousegate.material.azmaterial"
                                                 }
                                             }
                                         }

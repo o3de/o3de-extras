@@ -153,7 +153,7 @@
                                             "assetId": {
                                                 "guid": "{DC927EEA-A70D-5383-96AA-665AC07DC591}"
                                             },
-                                            "assetHint": "assets/warehouse/materials/mwarehouseprops.azmaterial"
+                                            "assetHint": "assets/warehouse/materials/mwarehouseprops.material.azmaterial"
                                         }
                                     }
                                 },
@@ -166,7 +166,7 @@
                                             "assetId": {
                                                 "guid": "{DC927EEA-A70D-5383-96AA-665AC07DC591}"
                                             },
-                                            "assetHint": "assets/warehouse/materials/mwarehouseprops.azmaterial"
+                                            "assetHint": "assets/warehouse/materials/mwarehouseprops.material.azmaterial"
                                         }
                                     }
                                 }
@@ -192,7 +192,7 @@
                                     "guid": "{9928FCBB-9AD8-5B3E-94FF-3516CC574ED1}",
                                     "subId": 271948536
                                 },
-                                "assetHint": "assets/warehouse/models/warehouse_frontrackprotector.azmodel"
+                                "assetHint": "assets/warehouse/models/warehouse_frontrackprotector.fbx.azmodel"
                             }
                         }
                     }

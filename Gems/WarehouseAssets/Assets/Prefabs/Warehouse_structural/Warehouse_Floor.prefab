@@ -64,7 +64,7 @@
                                     "guid": "{4687EDB6-F57B-592A-8451-4A41BD678D9A}",
                                     "subId": 270838499
                                 },
-                                "assetHint": "assets/warehouse/models/warehouse_floor.azmodel"
+                                "assetHint": "assets/warehouse/models/warehouse_floor.fbx.azmodel"
                             }
                         }
                     }
@@ -199,7 +199,7 @@
                                             "assetId": {
                                                 "guid": "{67470786-4A32-5D05-9EE2-73060764DC1D}"
                                             },
-                                            "assetHint": "assets/warehouse/materials/mwarehousefloor.azmaterial"
+                                            "assetHint": "assets/warehouse/materials/mwarehousefloor.material.azmaterial"
                                         }
                                     }
                                 }
