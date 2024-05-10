@@ -19,15 +19,66 @@
 
 namespace ROS2
 {
+
+    void ROS2SpawnerServiceNames::Reflect(AZ::ReflectContext* context)
+    {
+        if (auto serializeContext = azrtti_cast<AZ::SerializeContext*>(context))
+        {
+            serializeContext->Class<ROS2SpawnerServiceNames>()
+                ->Version(1)
+                ->Field("Get available spawnable names service name", &ROS2SpawnerServiceNames::m_availableSpawnableNamesServiceName)
+                ->Field("Spawn entity service name", &ROS2SpawnerServiceNames::m_spawnEntityServiceName)
+                ->Field("Delete entity service name", &ROS2SpawnerServiceNames::m_deleteEntityServiceName)
+                ->Field("Get spawn point info service name", &ROS2SpawnerServiceNames::m_spawnPointInfoServiceName)
+                ->Field("Get spawn points names service name", &ROS2SpawnerServiceNames::m_spawnPointsNamesServiceName);
+
+            if (auto editContext = serializeContext->GetEditContext())
+            {
+                editContext->Class<ROS2SpawnerServiceNames>("ROS2SpawnerServiceNames", "Service names for ROS2SpawnerComponent")
+                    ->ClassElement(AZ::Edit::ClassElements::EditorData, "")
+                    ->DataElement(
+                        AZ::Edit::UIHandlers::Default,
+                        &ROS2SpawnerServiceNames::m_availableSpawnableNamesServiceName,
+                        "Get available spawnable names service name",
+                        "Service name for getting available spawnable names")
+                    ->DataElement(
+                        AZ::Edit::UIHandlers::Default,
+                        &ROS2SpawnerServiceNames::m_spawnEntityServiceName,
+                        "Spawn entity service name",
+                        "Service name for spawning entity")
+                    ->DataElement(
+                        AZ::Edit::UIHandlers::Default,
+                        &ROS2SpawnerServiceNames::m_deleteEntityServiceName,
+                        "Delete entity service name",
+                        "Service name for deleting entity")
+                    ->DataElement(
+                        AZ::Edit::UIHandlers::Default,
+                        &ROS2SpawnerServiceNames::m_spawnPointInfoServiceName,
+                        "Get spawn point info service name",
+                        "Service name for getting spawn point info")
+                    ->DataElement(
+                        AZ::Edit::UIHandlers::Default,
+                        &ROS2SpawnerServiceNames::m_spawnPointsNamesServiceName,
+                        "Get spawn points names service name",
+                        "Service name for getting spawn points names");
+            }
+        }
+    }
+
     void ROS2SpawnerComponentConfig::Reflect(AZ::ReflectContext* context)
     {
+        ROS2SpawnerServiceNames::Reflect(context);
+
         if (auto serializeContext = azrtti_cast<AZ::SerializeContext*>(context))
         {
             serializeContext->Class<ROS2SpawnerComponentConfig, AZ::ComponentConfig>()
                 ->Version(1)
                 ->Field("Editor entity id", &ROS2SpawnerComponentConfig::m_editorEntityId)
                 ->Field("Spawnables", &ROS2SpawnerComponentConfig::m_spawnables)
-                ->Field("Default spawn pose", &ROS2SpawnerComponentConfig::m_defaultSpawnPose);
+                ->Field("Default spawn pose", &ROS2SpawnerComponentConfig::m_defaultSpawnPose)
+                ->Field("Service names", &ROS2SpawnerComponentConfig::m_serviceNames)
+                ->Attribute(AZ::Edit::Attributes::AutoExpand, true)
+                ->Attribute(AZ::Edit::Attributes::Visibility, AZ::Edit::PropertyVisibility::ShowChildrenOnly);
 
             if (auto editContext = serializeContext->GetEditContext())
             {
@@ -38,7 +89,9 @@ namespace ROS2
                         AZ::Edit::UIHandlers::Default,
                         &ROS2SpawnerComponentConfig::m_defaultSpawnPose,
                         "Default spawn pose",
-                        "Default spawn pose");
+                        "Default spawn pose")
+                    ->DataElement(
+                        AZ::Edit::UIHandlers::Default, &ROS2SpawnerComponentConfig::m_serviceNames, "Service names", "Service names");
             }
         }
     }
@@ -136,6 +189,11 @@ namespace ROS2
     const ROS2SpawnerComponentConfig& ROS2SpawnerComponentController::GetConfiguration() const
     {
         return m_config;
+    }
+
+    const ROS2SpawnerServiceNames& ROS2SpawnerComponentController::GetServiceNames() const
+    {
+        return m_config.m_serviceNames;
     }
 
 } // namespace ROS2
