@@ -39,6 +39,7 @@
         "StartingPointInput",
         "TextureAtlas",
         "WhiteBox",
-        "WarehouseAssets"
+        "WarehouseAssets",
+        "${Name}"
     ]
 }
