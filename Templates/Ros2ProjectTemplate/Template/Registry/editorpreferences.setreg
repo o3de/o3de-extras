@@ -6,13 +6,13 @@
                 "HelpersVisible": false,
                 "Camera": {
                     "DefaultStartingPosition": {
-                        "x": 0.055202629417181015,
-                        "y": -12.046481132507324,
-                        "z": 1.7089390754699707
+                        "x": 46.467002868652344,
+                        "y": 0.6435350179672241,
+                        "z": 3.846293210983277
                     },
                     "DefaultOrbitDistance": 20.0,
-                    "DefaultStartingPitch": -48.0,
-                    "DefaultStartingYaw": -149.0,
+                    "DefaultStartingPitch": -20.0,
+                    "DefaultStartingYaw": 90.0,
                     "GoToPositionInstantly": false,
                     "GoToPositionDuration": 1.0,
                     "FovDegrees": 60.0,
