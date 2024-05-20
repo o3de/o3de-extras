@@ -94,19 +94,19 @@ namespace ROS2
             return;
         }
 
-        auto commandIter = message.data.cbegin();
-        for (const auto& jointName : m_jointNames)
+        for(int i=0; i<message.data.size(); i++)
         {
             AZ::Outcome<void, AZStd::string> result;
             JointsManipulationRequestBus::EventResult(
-                result, m_rootOfArticulation, &JointsManipulationRequests::MoveJointToPosition, jointName, *commandIter);
+                result, m_rootOfArticulation, &JointsManipulationRequests::MoveJointToPosition, m_jointNames[i], message.data[i]);
             if (!result.IsSuccess())
             {
                 AZ_Error(
                     "JointsPositionsComponent",
                     result,
-                    "PositionController: command failed for joint %s: ",
-                    jointName.c_str(),
+                    "PositionController: failed for joint %s and command %d: ",
+                    m_jointNames[i].c_str(),
+                    message.data[i],
                     result.GetError().c_str());
             }
         }
