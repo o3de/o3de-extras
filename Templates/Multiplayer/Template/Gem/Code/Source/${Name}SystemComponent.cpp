@@ -5,7 +5,7 @@
  *
  */
 
-#include "${SanitizedCppName}SystemComponent.h"
+#include "${Name}SystemComponent.h"
 
 #include <AzCore/Console/ILogger.h>
 #include <AzCore/Serialization/SerializeContext.h>
