@@ -161,7 +161,7 @@ namespace ROS2
         message.header.stamp = ROS2Interface::Get()->GetROSTimestamp();
         message.height = 1;
         message.width = lastScanResults.m_points.size();
-        message.point_step = sizeof(AZ::Vector3);
+        message.point_step = sizeof(AZ::Vector3) + sizeof(int32_t);
         message.row_step = message.width * message.point_step;
 
         AZStd::array<const char*, 3> point_field_names = { "x", "y", "z" };
@@ -175,10 +175,26 @@ namespace ROS2
             message.fields.push_back(pf);
         }
 
-        size_t sizeInBytes = lastScanResults.m_points.size() * sizeof(AZ::Vector3);
+        // TODO: Below point field formatting may be unified with XYZ point field above, e.g. array of names and types?
+        sensor_msgs::msg::PointField pfId;
+        pfId.name = "entity_id";
+        pfId.offset = sizeof(AZ::Vector3);
+        pfId.datatype = sensor_msgs::msg::PointField::INT32;
+        pfId.count = 1;
+        message.fields.push_back(pfId);
+
+        const auto bytesStep = sizeof(AZ::Vector3) + sizeof(int32_t);
+        const auto sizeInBytes = lastScanResults.m_points.size() * bytesStep;
         message.data.resize(sizeInBytes);
         AZ_Assert(message.row_step * message.height == sizeInBytes, "Inconsistency in the size of point cloud data");
-        memcpy(message.data.data(), lastScanResults.m_points.data(), sizeInBytes);
+
+        // TODO: May probably be easily unified with for-loop from line 153 above.
+        for (int i = 0; i < lastScanResults.m_points.size(); ++i)
+        {
+            memcpy(&message.data[i * bytesStep], &lastScanResults.m_points[i], sizeof(AZ::Vector3));
+            memcpy(&message.data[i * bytesStep + sizeof(AZ::Vector3)], &lastScanResults.m_ids[i], sizeof(int32_t));
+        }
+
         m_pointCloudPublisher->publish(message);
     }
 } // namespace ROS2
