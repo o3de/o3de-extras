@@ -62,6 +62,8 @@ set(FILES
         Source/Lidar/LidarRegistrarSystemComponent.h
         Source/Lidar/LidarSensorConfiguration.cpp
         Source/Lidar/LidarSensorConfiguration.h
+        Source/Lidar/LidarSegmentationClassConfiguration.cpp
+        Source/Lidar/LidarSegmentationClassConfiguration.h
         Source/Lidar/LidarSystem.cpp
         Source/Lidar/LidarSystem.h
         Source/Lidar/LidarTemplate.cpp
