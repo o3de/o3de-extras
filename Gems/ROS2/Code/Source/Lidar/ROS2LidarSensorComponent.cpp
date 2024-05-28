@@ -161,7 +161,7 @@ namespace ROS2
         message.header.stamp = ROS2Interface::Get()->GetROSTimestamp();
         message.height = 1;
         message.width = lastScanResults.m_points.size();
-        message.point_step = sizeof(AZ::Vector3) + sizeof(int32_t);
+        message.point_step = sizeof(AZ::Vector3) + sizeof(int32_t) + sizeof(uint8_t);
         message.row_step = message.width * message.point_step;
 
         AZStd::array<const char*, 3> point_field_names = { "x", "y", "z" };
@@ -182,8 +182,15 @@ namespace ROS2
         pfId.datatype = sensor_msgs::msg::PointField::INT32;
         pfId.count = 1;
         message.fields.push_back(pfId);
+        
+        sensor_msgs::msg::PointField pfClassId;
+        pfClassId.name = "class_id";
+        pfClassId.offset = sizeof(AZ::Vector3) + sizeof(int32_t);
+        pfClassId.datatype = sensor_msgs::msg::PointField::UINT8;
+        pfClassId.count = 1;
+        message.fields.push_back(pfClassId);
 
-        const auto bytesStep = sizeof(AZ::Vector3) + sizeof(int32_t);
+        const auto bytesStep = sizeof(AZ::Vector3) + sizeof(int32_t) + sizeof(uint8_t);
         const auto sizeInBytes = lastScanResults.m_points.size() * bytesStep;
         message.data.resize(sizeInBytes);
         AZ_Assert(message.row_step * message.height == sizeInBytes, "Inconsistency in the size of point cloud data");
@@ -193,6 +200,7 @@ namespace ROS2
         {
             memcpy(&message.data[i * bytesStep], &lastScanResults.m_points[i], sizeof(AZ::Vector3));
             memcpy(&message.data[i * bytesStep + sizeof(AZ::Vector3)], &lastScanResults.m_ids[i], sizeof(int32_t));
+            memcpy(&message.data[i * bytesStep + sizeof(AZ::Vector3) + sizeof(int32_t)], &lastScanResults.m_classes[i], sizeof(uint8_t));
         }
 
         m_pointCloudPublisher->publish(message);

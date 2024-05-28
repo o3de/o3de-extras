@@ -23,6 +23,7 @@ namespace ROS2
                 ->Field("LidarParameters", &LidarSensorConfiguration::m_lidarParameters)
                 ->Field("IgnoredLayerIndices", &LidarSensorConfiguration::m_ignoredCollisionLayers)
                 ->Field("ExcludedEntities", &LidarSensorConfiguration::m_excludedEntities)
+                ->Field("SegmentationClasses", &LidarSensorConfiguration::m_segmentationClasses)
                 ->Field("PointsAtMax", &LidarSensorConfiguration::m_addPointsAtMax);
 
             if (AZ::EditContext* ec = serializeContext->GetEditContext())
@@ -55,6 +56,14 @@ namespace ROS2
                         &LidarSensorConfiguration::m_excludedEntities,
                         "Excluded Entities",
                         "List of entities excluded from raycasting.")
+                    ->Attribute(AZ::Edit::Attributes::AutoExpand, true)
+                    ->Attribute(AZ::Edit::Attributes::ContainerCanBeModified, true)
+                    ->Attribute(AZ::Edit::Attributes::Visibility, &LidarSensorConfiguration::IsEntityExclusionVisible)
+                    ->DataElement(
+                        AZ::Edit::UIHandlers::Default,
+                        &LidarSensorConfiguration::m_segmentationClasses,
+                        "Segmentation Classes",
+                        "List of classes to segment entities into. Class 0 and 1 are special and reserved for free space and unknown.")
                     ->Attribute(AZ::Edit::Attributes::AutoExpand, true)
                     ->Attribute(AZ::Edit::Attributes::ContainerCanBeModified, true)
                     ->Attribute(AZ::Edit::Attributes::Visibility, &LidarSensorConfiguration::IsEntityExclusionVisible)

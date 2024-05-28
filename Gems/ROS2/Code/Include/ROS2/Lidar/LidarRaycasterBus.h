@@ -98,6 +98,7 @@ namespace ROS2
         AZStd::vector<AZ::Vector3> m_points;
         AZStd::vector<float> m_ranges;
         AZStd::vector<int32_t> m_ids;
+        AZStd::vector<AZ::u8> m_classes;
     };
 
     //! Interface class that allows for communication with a single Lidar instance.

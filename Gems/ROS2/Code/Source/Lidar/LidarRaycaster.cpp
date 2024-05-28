@@ -134,6 +134,7 @@ namespace ROS2
         {
             results.m_points.reserve(rayDirections.size());
             results.m_ids.reserve(results.m_points.size());
+            results.m_classes.reserve(results.m_points.size());
         }
         if (handleRanges)
         {
@@ -166,12 +167,14 @@ namespace ROS2
                     const AZ::Vector3 maxPoint = lidarTransform.TransformPoint(localTransform.TransformVector(rayDirections[i]) * hitRange);
                     results.m_points.push_back(maxPoint);
                     results.m_ids.push_back(0); // TODO: Default here (+ line 174) should match the one from RGL Gem LidarRaycaster.cpp
+                    results.m_classes.push_back(0);
                 }
                 else if (!AZStd::isinf(hitRange))
                 {
                     // otherwise they are already calculated by PhysX
                     results.m_points.push_back(requestResult.m_hits[0].m_position);
                     results.m_ids.push_back(0);
+                    results.m_classes.push_back(0);
                 }
             }
         }
