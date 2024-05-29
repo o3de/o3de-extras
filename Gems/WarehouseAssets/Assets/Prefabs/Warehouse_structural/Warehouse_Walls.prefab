@@ -160,7 +160,7 @@
                                     "guid": "{9F3790A0-9383-5BBA-BB91-2AD9F04086B3}",
                                     "subId": 279508339
                                 },
-                                "assetHint": "assets/warehouse/models/warehouse_gate_closed.azmodel"
+                                "assetHint": "assets/warehouse/models/warehouse_gate_closed.fbx.azmodel"
                             }
                         }
                     }
@@ -180,7 +180,7 @@
                                             "assetId": {
                                                 "guid": "{9FF0270B-8936-528A-89EC-3E73A01AF755}"
                                             },
-                                            "assetHint": "assets/warehouse/materials/mwarehousemodules.azmaterial"
+                                            "assetHint": "assets/warehouse/materials/mwarehousemodules.material.azmaterial"
                                         }
                                     }
                                 },
@@ -193,7 +193,7 @@
                                             "assetId": {
                                                 "guid": "{06298918-E750-5053-B55B-10D158B1ED8C}"
                                             },
-                                            "assetHint": "assets/warehouse/materials/mwarehousegate.azmaterial"
+                                            "assetHint": "assets/warehouse/materials/mwarehousegate.material.azmaterial"
                                         }
                                     }
                                 }
@@ -231,7 +231,7 @@
                                     "guid": "{9F3790A0-9383-5BBA-BB91-2AD9F04086B3}",
                                     "subId": 675098786
                                 },
-                                "assetHint": "assets/warehouse/models/warehouse_gate_closed.pxmesh"
+                                "assetHint": "assets/warehouse/models/warehouse_gate_closed.fbx.pxmesh"
                             },
                             "Configuration": {
                                 "PhysicsAsset": {
@@ -240,7 +240,7 @@
                                         "subId": 675098786
                                     },
                                     "loadBehavior": "QueueLoad",
-                                    "assetHint": "assets/warehouse/models/warehouse_gate_closed.pxmesh"
+                                    "assetHint": "assets/warehouse/models/warehouse_gate_closed.fbx.pxmesh"
                                 }
                             }
                         }
@@ -295,7 +295,7 @@
                                     "guid": "{34CA9168-D5C7-5554-BE7D-8485A3D67AB6}",
                                     "subId": 279103289
                                 },
-                                "assetHint": "assets/warehouse/models/warehouse_walls_front_gate.azmodel"
+                                "assetHint": "assets/warehouse/models/warehouse_walls_front_gate.fbx.azmodel"
                             }
                         }
                     }
@@ -324,7 +324,7 @@
                                             "assetId": {
                                                 "guid": "{9FF0270B-8936-528A-89EC-3E73A01AF755}"
                                             },
-                                            "assetHint": "assets/warehouse/materials/mwarehousemodules.azmaterial"
+                                            "assetHint": "assets/warehouse/materials/mwarehousemodules.material.azmaterial"
                                         }
                                     }
                                 }
@@ -351,7 +351,7 @@
                                     "guid": "{34CA9168-D5C7-5554-BE7D-8485A3D67AB6}",
                                     "subId": 3814177680
                                 },
-                                "assetHint": "assets/warehouse/models/warehouse_walls_front_gate.pxmesh"
+                                "assetHint": "assets/warehouse/models/warehouse_walls_front_gate.fbx.pxmesh"
                             },
                             "Configuration": {
                                 "PhysicsAsset": {
@@ -360,7 +360,7 @@
                                         "subId": 3814177680
                                     },
                                     "loadBehavior": "QueueLoad",
-                                    "assetHint": "assets/warehouse/models/warehouse_walls_front_gate.pxmesh"
+                                    "assetHint": "assets/warehouse/models/warehouse_walls_front_gate.fbx.pxmesh"
                                 }
                             }
                         }
@@ -414,7 +414,7 @@
                                     "guid": "{995CFC9D-3583-51BC-B46E-4554DEF0650E}",
                                     "subId": 269507228
                                 },
-                                "assetHint": "assets/warehouse/models/warehouse_walls_front.azmodel"
+                                "assetHint": "assets/warehouse/models/warehouse_walls_front.fbx.azmodel"
                             }
                         }
                     }
@@ -439,7 +439,7 @@
                                             "assetId": {
                                                 "guid": "{9FF0270B-8936-528A-89EC-3E73A01AF755}"
                                             },
-                                            "assetHint": "assets/warehouse/materials/mwarehousemodules.azmaterial"
+                                            "assetHint": "assets/warehouse/materials/mwarehousemodules.material.azmaterial"
                                         }
                                     }
                                 }
@@ -478,7 +478,7 @@
                                     "guid": "{995CFC9D-3583-51BC-B46E-4554DEF0650E}",
                                     "subId": 2510506373
                                 },
-                                "assetHint": "assets/warehouse/models/warehouse_walls_front.pxmesh"
+                                "assetHint": "assets/warehouse/models/warehouse_walls_front.fbx.pxmesh"
                             },
                             "Configuration": {
                                 "PhysicsAsset": {
@@ -487,7 +487,7 @@
                                         "subId": 2510506373
                                     },
                                     "loadBehavior": "QueueLoad",
-                                    "assetHint": "assets/warehouse/models/warehouse_walls_front.pxmesh"
+                                    "assetHint": "assets/warehouse/models/warehouse_walls_front.fbx.pxmesh"
                                 }
                             }
                         }
@@ -567,7 +567,7 @@
                                             "assetId": {
                                                 "guid": "{9FF0270B-8936-528A-89EC-3E73A01AF755}"
                                             },
-                                            "assetHint": "assets/warehouse/materials/mwarehousemodules.azmaterial"
+                                            "assetHint": "assets/warehouse/materials/mwarehousemodules.material.azmaterial"
                                         }
                                     }
                                 }
@@ -594,7 +594,7 @@
                                     "guid": "{1DB458F4-42D7-5377-995B-415257F59549}",
                                     "subId": 1364068586
                                 },
-                                "assetHint": "assets/warehouse/models/warehouse_walls_side.pxmesh"
+                                "assetHint": "assets/warehouse/models/warehouse_walls_side.fbx.pxmesh"
                             },
                             "Configuration": {
                                 "PhysicsAsset": {
@@ -603,7 +603,7 @@
                                         "subId": 1364068586
                                     },
                                     "loadBehavior": "QueueLoad",
-                                    "assetHint": "assets/warehouse/models/warehouse_walls_side.pxmesh"
+                                    "assetHint": "assets/warehouse/models/warehouse_walls_side.fbx.pxmesh"
                                 }
                             }
                         }
@@ -623,7 +623,7 @@
                                     "guid": "{1DB458F4-42D7-5377-995B-415257F59549}",
                                     "subId": 277096602
                                 },
-                                "assetHint": "assets/warehouse/models/warehouse_walls_side.azmodel"
+                                "assetHint": "assets/warehouse/models/warehouse_walls_side.fbx.azmodel"
                             }
                         }
                     }
@@ -736,8 +736,23 @@
                 "Component_[7017245480046407512]": {
                     "$type": "EditorDisabledCompositionComponent",
                     "Id": 7017245480046407512,
-                    "DisabledComponents": [
-                        {
+                    "DisabledComponents": {
+                        "Component_[10232715223514738948]": {
+                            "$type": "AZ::Render::EditorMeshComponent",
+                            "Id": 10232715223514738948,
+                            "Controller": {
+                                "Configuration": {
+                                    "ModelAsset": {
+                                        "assetId": {
+                                            "guid": "{995CFC9D-3583-51BC-B46E-4554DEF0650E}",
+                                            "subId": 269507228
+                                        },
+                                        "assetHint": "assets/warehouse/models/warehouse_walls_front.fbx.azmodel"
+                                    }
+                                }
+                            }
+                        },
+                        "Component_[3790789121538053334]": {
                             "$type": "EditorColliderComponent",
                             "Id": 3790789121538053334,
                             "ColliderConfiguration": {
@@ -770,29 +785,14 @@
                                     }
                                 }
                             }
-                        },
-                        {
-                            "$type": "AZ::Render::EditorMeshComponent",
-                            "Id": 10232715223514738948,
-                            "Controller": {
-                                "Configuration": {
-                                    "ModelAsset": {
-                                        "assetId": {
-                                            "guid": "{995CFC9D-3583-51BC-B46E-4554DEF0650E}",
-                                            "subId": 269507228
-                                        },
-                                        "assetHint": "assets/warehouse/models/warehouse_walls_front.azmodel"
-                                    }
-                                }
-                            }
                         }
-                    ]
+                    }
                 },
                 "Component_[8212625672736002681]": {
                     "$type": "EditorPendingCompositionComponent",
                     "Id": 8212625672736002681,
-                    "PendingComponents": [
-                        {
+                    "PendingComponents": {
+                        "Component_[11718397946111790072]": {
                             "$type": "EditorMaterialComponent",
                             "Id": 11718397946111790072,
                             "Controller": {
@@ -807,7 +807,7 @@
                                                     "assetId": {
                                                         "guid": "{9FF0270B-8936-528A-89EC-3E73A01AF755}"
                                                     },
-                                                    "assetHint": "assets/warehouse/materials/mwarehousemodules.azmaterial"
+                                                    "assetHint": "assets/warehouse/materials/mwarehousemodules.material.azmaterial"
                                                 }
                                             }
                                         }
@@ -815,7 +815,7 @@
                                 }
                             }
                         }
-                    ]
+                    }
                 },
                 "Component_[9253383058600544919]": {
                     "$type": "EditorInspectorComponent",
@@ -872,8 +872,23 @@
                 "Component_[7017245480046407512]": {
                     "$type": "EditorDisabledCompositionComponent",
                     "Id": 7017245480046407512,
-                    "DisabledComponents": [
-                        {
+                    "DisabledComponents": {
+                        "Component_[10232715223514738948]": {
+                            "$type": "AZ::Render::EditorMeshComponent",
+                            "Id": 10232715223514738948,
+                            "Controller": {
+                                "Configuration": {
+                                    "ModelAsset": {
+                                        "assetId": {
+                                            "guid": "{34CA9168-D5C7-5554-BE7D-8485A3D67AB6}",
+                                            "subId": 279103289
+                                        },
+                                        "assetHint": "assets/warehouse/models/warehouse_walls_front_gate.fbx.azmodel"
+                                    }
+                                }
+                            }
+                        },
+                        "Component_[1554132197757752789]": {
                             "$type": "EditorColliderComponent",
                             "Id": 1554132197757752789,
                             "ColliderConfiguration": {
@@ -906,29 +921,14 @@
                                     }
                                 }
                             }
-                        },
-                        {
-                            "$type": "AZ::Render::EditorMeshComponent",
-                            "Id": 10232715223514738948,
-                            "Controller": {
-                                "Configuration": {
-                                    "ModelAsset": {
-                                        "assetId": {
-                                            "guid": "{34CA9168-D5C7-5554-BE7D-8485A3D67AB6}",
-                                            "subId": 279103289
-                                        },
-                                        "assetHint": "assets/warehouse/models/warehouse_walls_front_gate.azmodel"
-                                    }
-                                }
-                            }
                         }
-                    ]
+                    }
                 },
                 "Component_[8212625672736002681]": {
                     "$type": "EditorPendingCompositionComponent",
                     "Id": 8212625672736002681,
-                    "PendingComponents": [
-                        {
+                    "PendingComponents": {
+                        "Component_[11718397946111790072]": {
                             "$type": "EditorMaterialComponent",
                             "Id": 11718397946111790072,
                             "Controller": {
@@ -943,7 +943,7 @@
                                                     "assetId": {
                                                         "guid": "{9FF0270B-8936-528A-89EC-3E73A01AF755}"
                                                     },
-                                                    "assetHint": "assets/warehouse/materials/mwarehousemodules.azmaterial"
+                                                    "assetHint": "assets/warehouse/materials/mwarehousemodules.material.azmaterial"
                                                 }
                                             }
                                         }
@@ -951,7 +951,7 @@
                                 }
                             }
                         }
-                    ]
+                    }
                 },
                 "Component_[9253383058600544919]": {
                     "$type": "EditorInspectorComponent",
@@ -978,8 +978,8 @@
                 "Component_[17614188821325671055]": {
                     "$type": "EditorDisabledCompositionComponent",
                     "Id": 17614188821325671055,
-                    "DisabledComponents": [
-                        {
+                    "DisabledComponents": {
+                        "Component_[10387122939797774050]": {
                             "$type": "AZ::Render::EditorMeshComponent",
                             "Id": 10387122939797774050,
                             "Controller": {
@@ -989,12 +989,12 @@
                                             "guid": "{9F3790A0-9383-5BBA-BB91-2AD9F04086B3}",
                                             "subId": 279508339
                                         },
-                                        "assetHint": "assets/warehouse/models/warehouse_gate_closed.azmodel"
+                                        "assetHint": "assets/warehouse/models/warehouse_gate_closed.fbx.azmodel"
                                     }
                                 }
                             }
                         },
-                        {
+                        "Component_[16809483465388003559]": {
                             "$type": "EditorColliderComponent",
                             "Id": 16809483465388003559,
                             "ColliderConfiguration": {
@@ -1031,7 +1031,7 @@
                                 }
                             }
                         }
-                    ]
+                    }
                 },
                 "Component_[17714278481541526192]": {
                     "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
@@ -1070,8 +1070,8 @@
                 "Component_[8806906810237163444]": {
                     "$type": "EditorPendingCompositionComponent",
                     "Id": 8806906810237163444,
-                    "PendingComponents": [
-                        {
+                    "PendingComponents": {
+                        "Component_[12188643545659218893]": {
                             "$type": "EditorMaterialComponent",
                             "Id": 12188643545659218893,
                             "Controller": {
@@ -1086,7 +1086,7 @@
                                                     "assetId": {
                                                         "guid": "{9FF0270B-8936-528A-89EC-3E73A01AF755}"
                                                     },
-                                                    "assetHint": "assets/warehouse/materials/mwarehousemodules.azmaterial"
+                                                    "assetHint": "assets/warehouse/materials/mwarehousemodules.material.azmaterial"
                                                 }
                                             }
                                         },
@@ -1099,7 +1099,7 @@
                                                     "assetId": {
                                                         "guid": "{06298918-E750-5053-B55B-10D158B1ED8C}"
                                                     },
-                                                    "assetHint": "assets/warehouse/materials/mwarehousegate.azmaterial"
+                                                    "assetHint": "assets/warehouse/materials/mwarehousegate.material.azmaterial"
                                                 }
                                             }
                                         }
@@ -1107,7 +1107,7 @@
                                 }
                             }
                         }
-                    ]
+                    }
                 },
                 "Component_[9994022325695796853]": {
                     "$type": "EditorStaticRigidBodyComponent",
