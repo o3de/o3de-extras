@@ -72,7 +72,7 @@
                                     "guid": "{665AB396-251A-55E3-83E2-AAB98CB864FB}",
                                     "subId": 280860284
                                 },
-                                "assetHint": "assets/warehouse/models/warehouse_rack.azmodel"
+                                "assetHint": "assets/warehouse/models/warehouse_rack.fbx.azmodel"
                             }
                         }
                     }
@@ -92,7 +92,7 @@
                                             "assetId": {
                                                 "guid": "{0F02CB79-3194-5377-808F-5EEF328D40DF}"
                                             },
-                                            "assetHint": "assets/warehouse/materials/mwarehousestorage.azmaterial"
+                                            "assetHint": "assets/warehouse/materials/mwarehousestorage.material.azmaterial"
                                         }
                                     }
                                 }
@@ -123,7 +123,7 @@
                                     "guid": "{665AB396-251A-55E3-83E2-AAB98CB864FB}",
                                     "subId": 1812650258
                                 },
-                                "assetHint": "assets/warehouse/models/warehouse_rack.pxmesh"
+                                "assetHint": "assets/warehouse/models/warehouse_rack.fbx.pxmesh"
                             },
                             "Configuration": {
                                 "PhysicsAsset": {
@@ -132,7 +132,7 @@
                                         "subId": 1812650258
                                     },
                                     "loadBehavior": "QueueLoad",
-                                    "assetHint": "assets/warehouse/models/warehouse_rack.pxmesh"
+                                    "assetHint": "assets/warehouse/models/warehouse_rack.fbx.pxmesh"
                                 }
                             }
                         }

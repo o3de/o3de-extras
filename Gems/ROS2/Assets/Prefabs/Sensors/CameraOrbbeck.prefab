@@ -77,7 +77,7 @@
                         "MaterialSlots": {
                             "Slots": [
                                 {
-                                    "Name": "Entire object"
+                                    "Name": "DefaultMaterial"
                                 }
                             ]
                         }
@@ -89,7 +89,7 @@
                                     "guid": "{0E27CF27-5752-5557-B77A-4B29A5870E0E}",
                                     "subId": 3865077323
                                 },
-                                "assetHint": "models/sensors/camera/cameraorbbeck.pxmesh"
+                                "assetHint": "models/sensors/camera/cameraorbbeck.fbx.pxmesh"
                             },
                             "Configuration": {
                                 "PhysicsAsset": {
@@ -98,7 +98,7 @@
                                         "subId": 3865077323
                                     },
                                     "loadBehavior": "QueueLoad",
-                                    "assetHint": "models/sensors/camera/cameraorbbeck.pxmesh"
+                                    "assetHint": "models/sensors/camera/cameraorbbeck.fbx.pxmesh"
                                 }
                             }
                         }

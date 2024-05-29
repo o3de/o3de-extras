@@ -304,7 +304,7 @@
                                             "assetId": {
                                                 "guid": "{EF5EE945-8A4F-578E-8AF5-2D545FA4CDEE}"
                                             },
-                                            "assetHint": "assets/warehouse/materials/mwarehousemodules_lamps.azmaterial"
+                                            "assetHint": "assets/warehouse/materials/mwarehousemodules_lamps.material.azmaterial"
                                         }
                                     }
                                 }
@@ -358,7 +358,7 @@
                                     "guid": "{3FE74ABC-001D-5AA5-ADBE-20F0964178DD}",
                                     "subId": 277792031
                                 },
-                                "assetHint": "assets/warehouse/models/warehouse_ceiling_lamp.azmodel"
+                                "assetHint": "assets/warehouse/models/warehouse_ceiling_lamp.fbx.azmodel"
                             }
                         }
                     }
