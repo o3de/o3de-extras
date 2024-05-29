@@ -115,7 +115,7 @@
                                     "guid": "{663633B0-B67A-5957-BC3A-53FA65F40353}",
                                     "subId": 282952590
                                 },
-                                "assetHint": "assets/warehouse/models/warehouse_siderackprotector.azmodel"
+                                "assetHint": "assets/warehouse/models/warehouse_siderackprotector.fbx.azmodel"
                             }
                         }
                     }
@@ -147,7 +147,7 @@
                                             "assetId": {
                                                 "guid": "{DC927EEA-A70D-5383-96AA-665AC07DC591}"
                                             },
-                                            "assetHint": "assets/warehouse/materials/mwarehouseprops.azmaterial"
+                                            "assetHint": "assets/warehouse/materials/mwarehouseprops.material.azmaterial"
                                         }
                                     }
                                 }
@@ -174,7 +174,7 @@
                                     "guid": "{663633B0-B67A-5957-BC3A-53FA65F40353}",
                                     "subId": 3163433385
                                 },
-                                "assetHint": "assets/warehouse/models/warehouse_siderackprotector.pxmesh"
+                                "assetHint": "assets/warehouse/models/warehouse_siderackprotector.fbx.pxmesh"
                             },
                             "Configuration": {
                                 "PhysicsAsset": {
@@ -183,7 +183,7 @@
                                         "subId": 3163433385
                                     },
                                     "loadBehavior": "QueueLoad",
-                                    "assetHint": "assets/warehouse/models/warehouse_siderackprotector.pxmesh"
+                                    "assetHint": "assets/warehouse/models/warehouse_siderackprotector.fbx.pxmesh"
                                 }
                             }
                         }

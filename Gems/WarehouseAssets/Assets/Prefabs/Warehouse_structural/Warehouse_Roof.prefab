@@ -510,7 +510,7 @@
                                     "guid": "{C8DB7BC9-31FC-5548-9E7A-CE1A886BE5E4}",
                                     "subId": 277880160
                                 },
-                                "assetHint": "assets/warehouse/models/warehouse_ceiling.azmodel"
+                                "assetHint": "assets/warehouse/models/warehouse_ceiling.fbx.azmodel"
                             }
                         }
                     }
@@ -542,7 +542,7 @@
                                             "assetId": {
                                                 "guid": "{4D881031-88E9-5300-B525-6F6E35182D97}"
                                             },
-                                            "assetHint": "assets/warehouse/materials/mwarehousemodules_roof.azmaterial"
+                                            "assetHint": "assets/warehouse/materials/mwarehousemodules_roof.material.azmaterial"
                                         }
                                     }
                                 }

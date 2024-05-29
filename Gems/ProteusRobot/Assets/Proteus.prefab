@@ -369,7 +369,7 @@
                                     "guid": "{8A2E7A82-D7C3-5E9C-A56C-6EDA70876347}",
                                     "subId": 268721130
                                 },
-                                "assetHint": "materialeditor/viewportmodels/cylinder.azmodel"
+                                "assetHint": "materialeditor/viewportmodels/cylinder.fbx.azmodel"
                             }
                         }
                     }
@@ -728,12 +728,12 @@
                 },
                 "Component_[639102350977932618]": {
                     "$type": "ROS2FrameEditorComponent",
+                    "Id": 1381491360893018223,
                     "ROS2FrameConfiguration": {
                         "Namespace Configuration": {
                             "Namespace": "base_link"
                         },
-                        "Frame Name": "base_link",
-                        "Effective namespace": "base_link"
+                        "Frame Name": "base_link"
                     }
                 },
                 "Component_[6563269519356188309]": {
@@ -1400,7 +1400,7 @@
                                     "guid": "{42648578-F5A3-52BC-89BF-0D5FC8608250}",
                                     "subId": 276024436
                                 },
-                                "assetHint": "proteus2_lift.azmodel"
+                                "assetHint": "proteus2_lift.fbx.azmodel"
                             }
                         }
                     }
@@ -1759,7 +1759,7 @@
                                     "guid": "{F9B95287-0FA8-5624-92A1-217B33F08280}",
                                     "subId": 277942675
                                 },
-                                "assetHint": "proteus_wheel.azmodel"
+                                "assetHint": "proteus_wheel.fbx.azmodel"
                             }
                         }
                     }
@@ -1875,7 +1875,7 @@
                                     "guid": "{F9B95287-0FA8-5624-92A1-217B33F08280}",
                                     "subId": 277942675
                                 },
-                                "assetHint": "proteus_wheel.azmodel"
+                                "assetHint": "proteus_wheel.fbx.azmodel"
                             }
                         }
                     }
@@ -2036,7 +2036,7 @@
                                     "guid": "{60318C54-1D60-53EC-85AA-2CADBFD83ED9}",
                                     "subId": 278773777
                                 },
-                                "assetHint": "proteus2_chassis.azmodel"
+                                "assetHint": "proteus2_chassis.fbx.azmodel"
                             }
                         }
                     }

@@ -85,7 +85,7 @@
                                             "assetId": {
                                                 "guid": "{B59DB34C-8CCC-5B6A-8F32-749689632151}"
                                             },
-                                            "assetHint": "assets/warehouse/materials/mwarehousestorageonwheels.azmaterial"
+                                            "assetHint": "assets/warehouse/materials/mwarehousestorageonwheels.material.azmaterial"
                                         }
                                     }
                                 }
@@ -111,7 +111,7 @@
                                     "guid": "{FD1A02B5-A597-52A4-88EF-33D00822FDD6}",
                                     "subId": 281610153
                                 },
-                                "assetHint": "assets/warehouse/models/warehouse_storage_on_wheels.azmodel"
+                                "assetHint": "assets/warehouse/models/warehouse_storage_on_wheels.fbx.azmodel"
                             }
                         }
                     }
