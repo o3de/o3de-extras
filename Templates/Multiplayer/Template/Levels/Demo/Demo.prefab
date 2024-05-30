@@ -10804,17 +10804,5 @@
         }
     },
     "Instances": {
-        "Instance_[20786871709415]": {
-            "Source": "Prefabs/PlayerSpawner.prefab"
-        },
-        "Instance_[20894245891815]": {
-            "Source": "Prefabs/PlayerSpawner.prefab"
-        },
-        "Instance_[20907130793703]": {
-            "Source": "Prefabs/PlayerSpawner.prefab"
-        },
-        "Instance_[20920015695591]": {
-            "Source": "Prefabs/PlayerSpawner.prefab"
-        }
     }
 }
