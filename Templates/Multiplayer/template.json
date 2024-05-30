@@ -668,10 +668,6 @@
             "isTemplated": true
         },
         {
-            "file": "Gem/Code/Source/AutoGen/NetworkPlayerSpawnerComponent.AutoComponent.xml",
-            "isTemplated": true
-        },
-        {
             "file": "Gem/Code/Source/AutoGen/NetworkRandomComponent.AutoComponent.xml",
             "isTemplated": true
         },
@@ -724,14 +720,6 @@
             "isTemplated": true
         },
         {
-            "file": "Gem/Code/Source/Components/NetworkPlayerSpawnerComponent.cpp",
-            "isTemplated": true
-        },
-        {
-            "file": "Gem/Code/Source/Components/NetworkPlayerSpawnerComponent.h",
-            "isTemplated": true
-        },
-        {
             "file": "Gem/Code/Source/Components/NetworkRandomComponent.cpp",
             "isTemplated": true
         },
@@ -761,18 +749,6 @@
         },
         {
             "file": "Gem/Code/Source/Components/NetworkPrefabSpawnerComponent.h",
-            "isTemplated": true
-        },
-        {
-            "file": "Gem/Code/Source/Spawners/IPlayerSpawner.h",
-            "isTemplated": true
-        },
-        {
-            "file": "Gem/Code/Source/Spawners/RoundRobinSpawner.cpp",
-            "isTemplated": true
-        },
-        {
-            "file": "Gem/Code/Source/Spawners/RoundRobinSpawner.h",
             "isTemplated": true
         },
         {
@@ -829,154 +805,6 @@
         },
         {
             "file": "Gem/Code/enabled_gems.cmake",
-            "isTemplated": true
-        },
-        {
-            "file": "Gem/Resources/GameSDK.ico",
-            "isTemplated": false
-        },
-        {
-            "file": "Gem/Resources/IOSLauncher/Images.xcassets/${Name}AppIcon.appiconset/Contents.json",
-            "isTemplated": false
-        },
-        {
-            "file": "Gem/Resources/IOSLauncher/Images.xcassets/${Name}AppIcon.appiconset/iPadAppIcon152x152.png",
-            "isTemplated": false
-        },
-        {
-            "file": "Gem/Resources/IOSLauncher/Images.xcassets/${Name}AppIcon.appiconset/iPadAppIcon76x76.png",
-            "isTemplated": false
-        },
-        {
-            "file": "Gem/Resources/IOSLauncher/Images.xcassets/${Name}AppIcon.appiconset/iPadProAppIcon167x167.png",
-            "isTemplated": false
-        },
-        {
-            "file": "Gem/Resources/IOSLauncher/Images.xcassets/${Name}AppIcon.appiconset/iPadSettingsIcon29x29.png",
-            "isTemplated": false
-        },
-        {
-            "file": "Gem/Resources/IOSLauncher/Images.xcassets/${Name}AppIcon.appiconset/iPadSettingsIcon58x58.png",
-            "isTemplated": false
-        },
-        {
-            "file": "Gem/Resources/IOSLauncher/Images.xcassets/${Name}AppIcon.appiconset/iPadSpotlightIcon40x40.png",
-            "isTemplated": false
-        },
-        {
-            "file": "Gem/Resources/IOSLauncher/Images.xcassets/${Name}AppIcon.appiconset/iPadSpotlightIcon80x80.png",
-            "isTemplated": false
-        },
-        {
-            "file": "Gem/Resources/IOSLauncher/Images.xcassets/${Name}AppIcon.appiconset/iPhoneAppIcon120x120.png",
-            "isTemplated": false
-        },
-        {
-            "file": "Gem/Resources/IOSLauncher/Images.xcassets/${Name}AppIcon.appiconset/iPhoneAppIcon180x180.png",
-            "isTemplated": false
-        },
-        {
-            "file": "Gem/Resources/IOSLauncher/Images.xcassets/${Name}AppIcon.appiconset/iPhoneSettingsIcon58x58.png",
-            "isTemplated": false
-        },
-        {
-            "file": "Gem/Resources/IOSLauncher/Images.xcassets/${Name}AppIcon.appiconset/iPhoneSettingsIcon87x87.png",
-            "isTemplated": false
-        },
-        {
-            "file": "Gem/Resources/IOSLauncher/Images.xcassets/${Name}AppIcon.appiconset/iPhoneSpotlightIcon120x120.png",
-            "isTemplated": false
-        },
-        {
-            "file": "Gem/Resources/IOSLauncher/Images.xcassets/${Name}AppIcon.appiconset/iPhoneSpotlightIcon80x80.png",
-            "isTemplated": false
-        },
-        {
-            "file": "Gem/Resources/IOSLauncher/Images.xcassets/Contents.json",
-            "isTemplated": false
-        },
-        {
-            "file": "Gem/Resources/IOSLauncher/Images.xcassets/LaunchImage.launchimage/Contents.json",
-            "isTemplated": false
-        },
-        {
-            "file": "Gem/Resources/IOSLauncher/Images.xcassets/LaunchImage.launchimage/iPadLaunchImage1024x768.png",
-            "isTemplated": false
-        },
-        {
-            "file": "Gem/Resources/IOSLauncher/Images.xcassets/LaunchImage.launchimage/iPadLaunchImage1536x2048.png",
-            "isTemplated": false
-        },
-        {
-            "file": "Gem/Resources/IOSLauncher/Images.xcassets/LaunchImage.launchimage/iPadLaunchImage2048x1536.png",
-            "isTemplated": false
-        },
-        {
-            "file": "Gem/Resources/IOSLauncher/Images.xcassets/LaunchImage.launchimage/iPadLaunchImage768x1024.png",
-            "isTemplated": false
-        },
-        {
-            "file": "Gem/Resources/IOSLauncher/Images.xcassets/LaunchImage.launchimage/iPhoneLaunchImage640x1136.png",
-            "isTemplated": false
-        },
-        {
-            "file": "Gem/Resources/IOSLauncher/Images.xcassets/LaunchImage.launchimage/iPhoneLaunchImage640x960.png",
-            "isTemplated": false
-        },
-        {
-            "file": "Gem/Resources/IOSLauncher/Info.plist",
-            "isTemplated": true
-        },
-        {
-            "file": "Gem/Resources/MacLauncher/Images.xcassets/CMakeTestbedAppIcon.appiconset/Contents.json",
-            "isTemplated": false
-        },
-        {
-            "file": "Gem/Resources/MacLauncher/Images.xcassets/CMakeTestbedAppIcon.appiconset/icon_128 _2x.png",
-            "isTemplated": false
-        },
-        {
-            "file": "Gem/Resources/MacLauncher/Images.xcassets/CMakeTestbedAppIcon.appiconset/icon_128.png",
-            "isTemplated": false
-        },
-        {
-            "file": "Gem/Resources/MacLauncher/Images.xcassets/CMakeTestbedAppIcon.appiconset/icon_16.png",
-            "isTemplated": false
-        },
-        {
-            "file": "Gem/Resources/MacLauncher/Images.xcassets/CMakeTestbedAppIcon.appiconset/icon_16_2x.png",
-            "isTemplated": false
-        },
-        {
-            "file": "Gem/Resources/MacLauncher/Images.xcassets/CMakeTestbedAppIcon.appiconset/icon_256 _2x.png",
-            "isTemplated": false
-        },
-        {
-            "file": "Gem/Resources/MacLauncher/Images.xcassets/CMakeTestbedAppIcon.appiconset/icon_256.png",
-            "isTemplated": false
-        },
-        {
-            "file": "Gem/Resources/MacLauncher/Images.xcassets/CMakeTestbedAppIcon.appiconset/icon_32.png",
-            "isTemplated": false
-        },
-        {
-            "file": "Gem/Resources/MacLauncher/Images.xcassets/CMakeTestbedAppIcon.appiconset/icon_32_2x.png",
-            "isTemplated": false
-        },
-        {
-            "file": "Gem/Resources/MacLauncher/Images.xcassets/CMakeTestbedAppIcon.appiconset/icon_512.png",
-            "isTemplated": false
-        },
-        {
-            "file": "Gem/Resources/MacLauncher/Images.xcassets/CMakeTestbedAppIcon.appiconset/icon_512_2x.png",
-            "isTemplated": false
-        },
-        {
-            "file": "Gem/Resources/MacLauncher/Images.xcassets/Contents.json",
-            "isTemplated": false
-        },
-        {
-            "file": "Gem/Resources/MacLauncher/Info.plist",
             "isTemplated": true
         },
         {
@@ -1069,10 +897,6 @@
         },
         {
             "file": "Prefabs/Player.prefab",
-            "isTemplated": true
-        },
-        {
-            "file": "Prefabs/PlayerSpawner.prefab",
             "isTemplated": true
         },
         {
@@ -1216,27 +1040,6 @@
         },
         {
             "dir": "Gem/Resources"
-        },
-        {
-            "dir": "Gem/Resources/IOSLauncher"
-        },
-        {
-            "dir": "Gem/Resources/IOSLauncher/Images.xcassets"
-        },
-        {
-            "dir": "Gem/Resources/IOSLauncher/Images.xcassets/${Name}AppIcon.appiconset"
-        },
-        {
-            "dir": "Gem/Resources/IOSLauncher/Images.xcassets/LaunchImage.launchimage"
-        },
-        {
-            "dir": "Gem/Resources/MacLauncher"
-        },
-        {
-            "dir": "Gem/Resources/MacLauncher/Images.xcassets"
-        },
-        {
-            "dir": "Gem/Resources/MacLauncher/Images.xcassets/CMakeTestbedAppIcon.appiconset"
         },
         {
             "dir": "InputBindings"
