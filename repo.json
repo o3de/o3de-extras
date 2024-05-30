@@ -3691,10 +3691,6 @@
                     "isTemplated": "false"
                 },
                 {
-                    "file": "Assets/Factory/ConveyorLine/ConveyorBelt_effector_short.fbx.assetinfo",
-                    "isTemplated": "false"
-                },
-                {
                     "file": "Assets/Factory/ConveyorLine/ConveyorBelt.fbx",
                     "isTemplated": "false"
                 },
@@ -3704,6 +3700,14 @@
                 },
                 {
                     "file": "Assets/Factory/ConveyorLine/conveyor_guards.physxmaterial",
+                    "isTemplated": "false"
+                },
+                {
+                    "file": "Assets/Factory/ConveyorLine/ConveyorBelt_effector.fbx",
+                    "isTemplated": "false"
+                },
+                {
+                    "file": "Assets/Factory/ConveyorLine/ConveyorBelt_effector.fbx.assetinfo",
                     "isTemplated": "false"
                 },
                 {
@@ -3900,6 +3904,10 @@
                 },
                 {
                     "file": "Assets/UrdfImporter/1440394708_panda/link7.dae.assetinfo",
+                    "isTemplated": "false"
+                },
+                {
+                    "file": "Assets/Gripper/Gripper_collider.stl",
                     "isTemplated": "false"
                 },
                 {
@@ -4399,7 +4407,7 @@
             ],
             "repo_uri": "https://raw.githubusercontent.com/o3de/o3de-extras/development",
             "download_source_uri": "https://github.com/o3de/o3de-extras/releases/download/2.0/ros2roboticmanipulationtemplate-1.1.0-template.zip",
-            "sha256": "7efe89a56731ad2efda60eb302fc73ec9ddf4f1bbb89d9b3cd9a9e357e64d9d3"
+            "sha256": "c709ef54a98710cb12554604251022079a40571674e28d14580805a3d78e6997"
         }
     ],
     "projects_data": [
