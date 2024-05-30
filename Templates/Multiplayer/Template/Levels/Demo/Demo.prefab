@@ -48,11 +48,38 @@
                     "Entity_[830977005898]",
                     "Entity_[611359903594]",
                     "Entity_[412839637138]",
-                    "Instance_[20786871709415]/ContainerEntity",
-                    "Instance_[20907130793703]/ContainerEntity",
-                    "Instance_[20894245891815]/ContainerEntity",
-                    "Instance_[20920015695591]/ContainerEntity"
+                    "Entity_[38385173399529]",
+                    "Entity_[40777470183401]",
+                    "Entity_[40790355085289]",
+                    "Entity_[40786060117993]"
                 ]
+            },
+            "LocalViewBookmarkComponent": {
+                "$type": "LocalViewBookmarkComponent",
+                "Id": 1002878053359895441,
+                "LocalBookmarkFileName": "Demo_17170250029674932.setreg"
+            },
+            "Multiplayer::SimplePlayerSpawnerComponent": {
+                "$type": "GenericComponentWrapper",
+                "Id": 7568417883525814634,
+                "m_template": {
+                    "$type": "Multiplayer::SimplePlayerSpawnerComponent",
+                    "PlayerSpawnable": {
+                        "Spawnable": {
+                            "assetId": {
+                                "guid": "{13BAFCBF-6669-5E4E-B3B0-8610349B2C01}",
+                                "subId": 738868766
+                            },
+                            "assetHint": "prefabs/player.network.spawnable"
+                        }
+                    },
+                    "SpawnPoints": [
+                        "Entity_[38385173399529]",
+                        "Entity_[40777470183401]",
+                        "Entity_[40790355085289]",
+                        "Entity_[40786060117993]"
+                    ]
+                }
             }
         }
     },
@@ -191,11 +218,6 @@
                                 {
                                     "Name": "Entire object"
                                 }
-                            ]
-                        },
-                        "MaterialSelection": {
-                            "MaterialIds": [
-                                {}
                             ]
                         }
                     },
@@ -355,11 +377,6 @@
                                     "Name": "Entire object"
                                 }
                             ]
-                        },
-                        "MaterialSelection": {
-                            "MaterialIds": [
-                                {}
-                            ]
                         }
                     },
                     "ShapeConfiguration": {
@@ -517,11 +534,6 @@
                                 {
                                     "Name": "Entire object"
                                 }
-                            ]
-                        },
-                        "MaterialSelection": {
-                            "MaterialIds": [
-                                {}
                             ]
                         }
                     },
@@ -681,11 +693,6 @@
                                     "Name": "Entire object"
                                 }
                             ]
-                        },
-                        "MaterialSelection": {
-                            "MaterialIds": [
-                                {}
-                            ]
                         }
                     },
                     "ShapeConfiguration": {
@@ -843,11 +850,6 @@
                                 {
                                     "Name": "Entire object"
                                 }
-                            ]
-                        },
-                        "MaterialSelection": {
-                            "MaterialIds": [
-                                {}
                             ]
                         }
                     },
@@ -1007,11 +1009,6 @@
                                     "Name": "Entire object"
                                 }
                             ]
-                        },
-                        "MaterialSelection": {
-                            "MaterialIds": [
-                                {}
-                            ]
                         }
                     },
                     "ShapeConfiguration": {
@@ -1169,11 +1166,6 @@
                                 {
                                     "Name": "Entire object"
                                 }
-                            ]
-                        },
-                        "MaterialSelection": {
-                            "MaterialIds": [
-                                {}
                             ]
                         }
                     },
@@ -1333,11 +1325,6 @@
                                     "Name": "Entire object"
                                 }
                             ]
-                        },
-                        "MaterialSelection": {
-                            "MaterialIds": [
-                                {}
-                            ]
                         }
                     },
                     "ShapeConfiguration": {
@@ -1495,11 +1482,6 @@
                                 {
                                     "Name": "Entire object"
                                 }
-                            ]
-                        },
-                        "MaterialSelection": {
-                            "MaterialIds": [
-                                {}
                             ]
                         }
                     },
@@ -1659,11 +1641,6 @@
                                     "Name": "Entire object"
                                 }
                             ]
-                        },
-                        "MaterialSelection": {
-                            "MaterialIds": [
-                                {}
-                            ]
                         }
                     },
                     "ShapeConfiguration": {
@@ -1821,11 +1798,6 @@
                                 {
                                     "Name": "Entire object"
                                 }
-                            ]
-                        },
-                        "MaterialSelection": {
-                            "MaterialIds": [
-                                {}
                             ]
                         }
                     },
@@ -1985,11 +1957,6 @@
                                     "Name": "Entire object"
                                 }
                             ]
-                        },
-                        "MaterialSelection": {
-                            "MaterialIds": [
-                                {}
-                            ]
                         }
                     },
                     "ShapeConfiguration": {
@@ -2147,11 +2114,6 @@
                                 {
                                     "Name": "Entire object"
                                 }
-                            ]
-                        },
-                        "MaterialSelection": {
-                            "MaterialIds": [
-                                {}
                             ]
                         }
                     },
@@ -2311,11 +2273,6 @@
                                     "Name": "Entire object"
                                 }
                             ]
-                        },
-                        "MaterialSelection": {
-                            "MaterialIds": [
-                                {}
-                            ]
                         }
                     },
                     "ShapeConfiguration": {
@@ -2473,11 +2430,6 @@
                                 {
                                     "Name": "Entire object"
                                 }
-                            ]
-                        },
-                        "MaterialSelection": {
-                            "MaterialIds": [
-                                {}
                             ]
                         }
                     },
@@ -2637,11 +2589,6 @@
                                     "Name": "Entire object"
                                 }
                             ]
-                        },
-                        "MaterialSelection": {
-                            "MaterialIds": [
-                                {}
-                            ]
                         }
                     },
                     "ShapeConfiguration": {
@@ -2799,11 +2746,6 @@
                                 {
                                     "Name": "Entire object"
                                 }
-                            ]
-                        },
-                        "MaterialSelection": {
-                            "MaterialIds": [
-                                {}
                             ]
                         }
                     },
@@ -2963,11 +2905,6 @@
                                     "Name": "Entire object"
                                 }
                             ]
-                        },
-                        "MaterialSelection": {
-                            "MaterialIds": [
-                                {}
-                            ]
                         }
                     },
                     "ShapeConfiguration": {
@@ -3125,11 +3062,6 @@
                                 {
                                     "Name": "Entire object"
                                 }
-                            ]
-                        },
-                        "MaterialSelection": {
-                            "MaterialIds": [
-                                {}
                             ]
                         }
                     },
@@ -3289,11 +3221,6 @@
                                     "Name": "Entire object"
                                 }
                             ]
-                        },
-                        "MaterialSelection": {
-                            "MaterialIds": [
-                                {}
-                            ]
                         }
                     },
                     "ShapeConfiguration": {
@@ -3451,11 +3378,6 @@
                                 {
                                     "Name": "Entire object"
                                 }
-                            ]
-                        },
-                        "MaterialSelection": {
-                            "MaterialIds": [
-                                {}
                             ]
                         }
                     },
@@ -3615,11 +3537,6 @@
                                     "Name": "Entire object"
                                 }
                             ]
-                        },
-                        "MaterialSelection": {
-                            "MaterialIds": [
-                                {}
-                            ]
                         }
                     },
                     "ShapeConfiguration": {
@@ -3777,11 +3694,6 @@
                                 {
                                     "Name": "Entire object"
                                 }
-                            ]
-                        },
-                        "MaterialSelection": {
-                            "MaterialIds": [
-                                {}
                             ]
                         }
                     },
@@ -3941,11 +3853,6 @@
                                     "Name": "Entire object"
                                 }
                             ]
-                        },
-                        "MaterialSelection": {
-                            "MaterialIds": [
-                                {}
-                            ]
                         }
                     },
                     "ShapeConfiguration": {
@@ -4103,11 +4010,6 @@
                                 {
                                     "Name": "Entire object"
                                 }
-                            ]
-                        },
-                        "MaterialSelection": {
-                            "MaterialIds": [
-                                {}
                             ]
                         }
                     },
@@ -4267,11 +4169,6 @@
                                     "Name": "Entire object"
                                 }
                             ]
-                        },
-                        "MaterialSelection": {
-                            "MaterialIds": [
-                                {}
-                            ]
                         }
                     },
                     "ShapeConfiguration": {
@@ -4429,11 +4326,6 @@
                                 {
                                     "Name": "Entire object"
                                 }
-                            ]
-                        },
-                        "MaterialSelection": {
-                            "MaterialIds": [
-                                {}
                             ]
                         }
                     },
@@ -4593,11 +4485,6 @@
                                     "Name": "Entire object"
                                 }
                             ]
-                        },
-                        "MaterialSelection": {
-                            "MaterialIds": [
-                                {}
-                            ]
                         }
                     },
                     "ShapeConfiguration": {
@@ -4755,11 +4642,6 @@
                                 {
                                     "Name": "Entire object"
                                 }
-                            ]
-                        },
-                        "MaterialSelection": {
-                            "MaterialIds": [
-                                {}
                             ]
                         }
                     },
@@ -4919,11 +4801,6 @@
                                     "Name": "Entire object"
                                 }
                             ]
-                        },
-                        "MaterialSelection": {
-                            "MaterialIds": [
-                                {}
-                            ]
                         }
                     },
                     "ShapeConfiguration": {
@@ -5081,11 +4958,6 @@
                                 {
                                     "Name": "Entire object"
                                 }
-                            ]
-                        },
-                        "MaterialSelection": {
-                            "MaterialIds": [
-                                {}
                             ]
                         }
                     },
@@ -5245,11 +5117,6 @@
                                     "Name": "Entire object"
                                 }
                             ]
-                        },
-                        "MaterialSelection": {
-                            "MaterialIds": [
-                                {}
-                            ]
                         }
                     },
                     "ShapeConfiguration": {
@@ -5407,11 +5274,6 @@
                                 {
                                     "Name": "Entire object"
                                 }
-                            ]
-                        },
-                        "MaterialSelection": {
-                            "MaterialIds": [
-                                {}
                             ]
                         }
                     },
@@ -5571,11 +5433,6 @@
                                     "Name": "Entire object"
                                 }
                             ]
-                        },
-                        "MaterialSelection": {
-                            "MaterialIds": [
-                                {}
-                            ]
                         }
                     },
                     "ShapeConfiguration": {
@@ -5733,11 +5590,6 @@
                                 {
                                     "Name": "Entire object"
                                 }
-                            ]
-                        },
-                        "MaterialSelection": {
-                            "MaterialIds": [
-                                {}
                             ]
                         }
                     },
@@ -5897,11 +5749,6 @@
                                     "Name": "Entire object"
                                 }
                             ]
-                        },
-                        "MaterialSelection": {
-                            "MaterialIds": [
-                                {}
-                            ]
                         }
                     },
                     "ShapeConfiguration": {
@@ -6059,11 +5906,6 @@
                                 {
                                     "Name": "Entire object"
                                 }
-                            ]
-                        },
-                        "MaterialSelection": {
-                            "MaterialIds": [
-                                {}
                             ]
                         }
                     },
@@ -6223,11 +6065,6 @@
                                     "Name": "Entire object"
                                 }
                             ]
-                        },
-                        "MaterialSelection": {
-                            "MaterialIds": [
-                                {}
-                            ]
                         }
                     },
                     "ShapeConfiguration": {
@@ -6385,11 +6222,6 @@
                                 {
                                     "Name": "Entire object"
                                 }
-                            ]
-                        },
-                        "MaterialSelection": {
-                            "MaterialIds": [
-                                {}
                             ]
                         }
                     },
@@ -6549,11 +6381,6 @@
                                     "Name": "Entire object"
                                 }
                             ]
-                        },
-                        "MaterialSelection": {
-                            "MaterialIds": [
-                                {}
-                            ]
                         }
                     },
                     "ShapeConfiguration": {
@@ -6711,11 +6538,6 @@
                                 {
                                     "Name": "Entire object"
                                 }
-                            ]
-                        },
-                        "MaterialSelection": {
-                            "MaterialIds": [
-                                {}
                             ]
                         }
                     },
@@ -6875,11 +6697,6 @@
                                     "Name": "Entire object"
                                 }
                             ]
-                        },
-                        "MaterialSelection": {
-                            "MaterialIds": [
-                                {}
-                            ]
                         }
                     },
                     "ShapeConfiguration": {
@@ -7037,11 +6854,6 @@
                                 {
                                     "Name": "Entire object"
                                 }
-                            ]
-                        },
-                        "MaterialSelection": {
-                            "MaterialIds": [
-                                {}
                             ]
                         }
                     },
@@ -7201,11 +7013,6 @@
                                     "Name": "Entire object"
                                 }
                             ]
-                        },
-                        "MaterialSelection": {
-                            "MaterialIds": [
-                                {}
-                            ]
                         }
                     },
                     "ShapeConfiguration": {
@@ -7363,11 +7170,6 @@
                                 {
                                     "Name": "Entire object"
                                 }
-                            ]
-                        },
-                        "MaterialSelection": {
-                            "MaterialIds": [
-                                {}
                             ]
                         }
                     },
@@ -7527,11 +7329,6 @@
                                     "Name": "Entire object"
                                 }
                             ]
-                        },
-                        "MaterialSelection": {
-                            "MaterialIds": [
-                                {}
-                            ]
                         }
                     },
                     "ShapeConfiguration": {
@@ -7689,11 +7486,6 @@
                                 {
                                     "Name": "Entire object"
                                 }
-                            ]
-                        },
-                        "MaterialSelection": {
-                            "MaterialIds": [
-                                {}
                             ]
                         }
                     },
@@ -7853,11 +7645,6 @@
                                     "Name": "Entire object"
                                 }
                             ]
-                        },
-                        "MaterialSelection": {
-                            "MaterialIds": [
-                                {}
-                            ]
                         }
                     },
                     "ShapeConfiguration": {
@@ -8015,11 +7802,6 @@
                                 {
                                     "Name": "Entire object"
                                 }
-                            ]
-                        },
-                        "MaterialSelection": {
-                            "MaterialIds": [
-                                {}
                             ]
                         }
                     },
@@ -8179,11 +7961,6 @@
                                     "Name": "Entire object"
                                 }
                             ]
-                        },
-                        "MaterialSelection": {
-                            "MaterialIds": [
-                                {}
-                            ]
                         }
                     },
                     "ShapeConfiguration": {
@@ -8341,11 +8118,6 @@
                                 {
                                     "Name": "Entire object"
                                 }
-                            ]
-                        },
-                        "MaterialSelection": {
-                            "MaterialIds": [
-                                {}
                             ]
                         }
                     },
@@ -8505,11 +8277,6 @@
                                     "Name": "Entire object"
                                 }
                             ]
-                        },
-                        "MaterialSelection": {
-                            "MaterialIds": [
-                                {}
-                            ]
                         }
                     },
                     "ShapeConfiguration": {
@@ -8667,11 +8434,6 @@
                                 {
                                     "Name": "Entire object"
                                 }
-                            ]
-                        },
-                        "MaterialSelection": {
-                            "MaterialIds": [
-                                {}
                             ]
                         }
                     },
@@ -8831,11 +8593,6 @@
                                     "Name": "Entire object"
                                 }
                             ]
-                        },
-                        "MaterialSelection": {
-                            "MaterialIds": [
-                                {}
-                            ]
                         }
                     },
                     "ShapeConfiguration": {
@@ -8993,11 +8750,6 @@
                                 {
                                     "Name": "Entire object"
                                 }
-                            ]
-                        },
-                        "MaterialSelection": {
-                            "MaterialIds": [
-                                {}
                             ]
                         }
                     },
@@ -9157,11 +8909,6 @@
                                     "Name": "Entire object"
                                 }
                             ]
-                        },
-                        "MaterialSelection": {
-                            "MaterialIds": [
-                                {}
-                            ]
                         }
                     },
                     "ShapeConfiguration": {
@@ -9319,11 +9066,6 @@
                                 {
                                     "Name": "Entire object"
                                 }
-                            ]
-                        },
-                        "MaterialSelection": {
-                            "MaterialIds": [
-                                {}
                             ]
                         }
                     },
@@ -9483,11 +9225,6 @@
                                     "Name": "Entire object"
                                 }
                             ]
-                        },
-                        "MaterialSelection": {
-                            "MaterialIds": [
-                                {}
-                            ]
                         }
                     },
                     "ShapeConfiguration": {
@@ -9645,11 +9382,6 @@
                                 {
                                     "Name": "Entire object"
                                 }
-                            ]
-                        },
-                        "MaterialSelection": {
-                            "MaterialIds": [
-                                {}
                             ]
                         }
                     },
@@ -9809,11 +9541,6 @@
                                     "Name": "Entire object"
                                 }
                             ]
-                        },
-                        "MaterialSelection": {
-                            "MaterialIds": [
-                                {}
-                            ]
                         }
                     },
                     "ShapeConfiguration": {
@@ -9971,11 +9698,6 @@
                                 {
                                     "Name": "Entire object"
                                 }
-                            ]
-                        },
-                        "MaterialSelection": {
-                            "MaterialIds": [
-                                {}
                             ]
                         }
                     },
@@ -10135,11 +9857,6 @@
                                     "Name": "Entire object"
                                 }
                             ]
-                        },
-                        "MaterialSelection": {
-                            "MaterialIds": [
-                                {}
-                            ]
                         }
                     },
                     "ShapeConfiguration": {
@@ -10297,11 +10014,6 @@
                                 {
                                     "Name": "Entire object"
                                 }
-                            ]
-                        },
-                        "MaterialSelection": {
-                            "MaterialIds": [
-                                {}
                             ]
                         }
                     },
@@ -10461,11 +10173,6 @@
                                     "Name": "Entire object"
                                 }
                             ]
-                        },
-                        "MaterialSelection": {
-                            "MaterialIds": [
-                                {}
-                            ]
                         }
                     },
                     "ShapeConfiguration": {
@@ -10610,6 +10317,206 @@
                 }
             }
         },
+        "Entity_[38385173399529]": {
+            "Id": "Entity_[38385173399529]",
+            "Name": "PlayerSpawnPoint1",
+            "Components": {
+                "EditorDisabledCompositionComponent": {
+                    "$type": "EditorDisabledCompositionComponent",
+                    "Id": 6591485825479826648
+                },
+                "EditorEntityIconComponent": {
+                    "$type": "EditorEntityIconComponent",
+                    "Id": 2367144183510810502
+                },
+                "EditorEntitySortComponent": {
+                    "$type": "EditorEntitySortComponent",
+                    "Id": 4214639344918693242
+                },
+                "EditorInspectorComponent": {
+                    "$type": "EditorInspectorComponent",
+                    "Id": 13703349599234854822
+                },
+                "EditorLockComponent": {
+                    "$type": "EditorLockComponent",
+                    "Id": 2821825903266239338
+                },
+                "EditorOnlyEntityComponent": {
+                    "$type": "EditorOnlyEntityComponent",
+                    "Id": 9480416283386826376
+                },
+                "EditorPendingCompositionComponent": {
+                    "$type": "EditorPendingCompositionComponent",
+                    "Id": 13742593734159151262
+                },
+                "EditorVisibilityComponent": {
+                    "$type": "EditorVisibilityComponent",
+                    "Id": 8555605313518401361
+                },
+                "TransformComponent": {
+                    "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
+                    "Id": 8432805947243630093,
+                    "Parent Entity": "Entity_[356758116574]",
+                    "Transform Data": {
+                        "Translate": [
+                            0.0,
+                            0.0,
+                            0.054884493350982666
+                        ]
+                    }
+                }
+            }
+        },
+        "Entity_[40777470183401]": {
+            "Id": "Entity_[40777470183401]",
+            "Name": "PlayerSpawnPoint2",
+            "Components": {
+                "EditorDisabledCompositionComponent": {
+                    "$type": "EditorDisabledCompositionComponent",
+                    "Id": 6591485825479826648
+                },
+                "EditorEntityIconComponent": {
+                    "$type": "EditorEntityIconComponent",
+                    "Id": 2367144183510810502
+                },
+                "EditorEntitySortComponent": {
+                    "$type": "EditorEntitySortComponent",
+                    "Id": 4214639344918693242
+                },
+                "EditorInspectorComponent": {
+                    "$type": "EditorInspectorComponent",
+                    "Id": 13703349599234854822
+                },
+                "EditorLockComponent": {
+                    "$type": "EditorLockComponent",
+                    "Id": 2821825903266239338
+                },
+                "EditorOnlyEntityComponent": {
+                    "$type": "EditorOnlyEntityComponent",
+                    "Id": 9480416283386826376
+                },
+                "EditorPendingCompositionComponent": {
+                    "$type": "EditorPendingCompositionComponent",
+                    "Id": 13742593734159151262
+                },
+                "EditorVisibilityComponent": {
+                    "$type": "EditorVisibilityComponent",
+                    "Id": 8555605313518401361
+                },
+                "TransformComponent": {
+                    "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
+                    "Id": 8432805947243630093,
+                    "Parent Entity": "Entity_[356758116574]",
+                    "Transform Data": {
+                        "Translate": [
+                            0.0,
+                            -8.555549621582031,
+                            0.054884493350982666
+                        ]
+                    }
+                }
+            }
+        },
+        "Entity_[40786060117993]": {
+            "Id": "Entity_[40786060117993]",
+            "Name": "PlayerSpawnPoint4",
+            "Components": {
+                "EditorDisabledCompositionComponent": {
+                    "$type": "EditorDisabledCompositionComponent",
+                    "Id": 6591485825479826648
+                },
+                "EditorEntityIconComponent": {
+                    "$type": "EditorEntityIconComponent",
+                    "Id": 2367144183510810502
+                },
+                "EditorEntitySortComponent": {
+                    "$type": "EditorEntitySortComponent",
+                    "Id": 4214639344918693242
+                },
+                "EditorInspectorComponent": {
+                    "$type": "EditorInspectorComponent",
+                    "Id": 13703349599234854822
+                },
+                "EditorLockComponent": {
+                    "$type": "EditorLockComponent",
+                    "Id": 2821825903266239338
+                },
+                "EditorOnlyEntityComponent": {
+                    "$type": "EditorOnlyEntityComponent",
+                    "Id": 9480416283386826376
+                },
+                "EditorPendingCompositionComponent": {
+                    "$type": "EditorPendingCompositionComponent",
+                    "Id": 13742593734159151262
+                },
+                "EditorVisibilityComponent": {
+                    "$type": "EditorVisibilityComponent",
+                    "Id": 8555605313518401361
+                },
+                "TransformComponent": {
+                    "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
+                    "Id": 8432805947243630093,
+                    "Parent Entity": "Entity_[356758116574]",
+                    "Transform Data": {
+                        "Translate": [
+                            -9.787205696105957,
+                            0.0,
+                            0.054884493350982666
+                        ]
+                    }
+                }
+            }
+        },
+        "Entity_[40790355085289]": {
+            "Id": "Entity_[40790355085289]",
+            "Name": "PlayerSpawnPoint3",
+            "Components": {
+                "EditorDisabledCompositionComponent": {
+                    "$type": "EditorDisabledCompositionComponent",
+                    "Id": 6591485825479826648
+                },
+                "EditorEntityIconComponent": {
+                    "$type": "EditorEntityIconComponent",
+                    "Id": 2367144183510810502
+                },
+                "EditorEntitySortComponent": {
+                    "$type": "EditorEntitySortComponent",
+                    "Id": 4214639344918693242
+                },
+                "EditorInspectorComponent": {
+                    "$type": "EditorInspectorComponent",
+                    "Id": 13703349599234854822
+                },
+                "EditorLockComponent": {
+                    "$type": "EditorLockComponent",
+                    "Id": 2821825903266239338
+                },
+                "EditorOnlyEntityComponent": {
+                    "$type": "EditorOnlyEntityComponent",
+                    "Id": 9480416283386826376
+                },
+                "EditorPendingCompositionComponent": {
+                    "$type": "EditorPendingCompositionComponent",
+                    "Id": 13742593734159151262
+                },
+                "EditorVisibilityComponent": {
+                    "$type": "EditorVisibilityComponent",
+                    "Id": 8555605313518401361
+                },
+                "TransformComponent": {
+                    "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
+                    "Id": 8432805947243630093,
+                    "Parent Entity": "Entity_[356758116574]",
+                    "Transform Data": {
+                        "Translate": [
+                            -9.787205696105957,
+                            -8.555549621582031,
+                            0.054884493350982666
+                        ]
+                    }
+                }
+            }
+        },
         "Entity_[412839637138]": {
             "Id": "Entity_[412839637138]",
             "Name": "Ground",
@@ -10628,11 +10535,6 @@
                                 {
                                     "Name": "Entire object"
                                 }
-                            ]
-                        },
-                        "MaterialSelection": {
-                            "MaterialIds": [
-                                {}
                             ]
                         }
                     },
@@ -10892,12 +10794,7 @@
                 },
                 "Component_[7092071161962745685]": {
                     "$type": "{CA11DA46-29FF-4083-B5F6-E02C3A8C3A3D} EditorCameraComponent",
-                    "Id": 7092071161962745685,
-                    "Controller": {
-                        "Configuration": {
-                            "EditorEntityId": 8580879564549214021
-                        }
-                    }
+                    "Id": 7092071161962745685
                 },
                 "Component_[9321193093942328270]": {
                     "$type": "EditorEntitySortComponent",
@@ -10908,79 +10805,16 @@
     },
     "Instances": {
         "Instance_[20786871709415]": {
-            "Source": "Prefabs/PlayerSpawner.prefab",
-            "Patches": [
-                {
-                    "op": "replace",
-                    "path": "/ContainerEntity/Components/Component_[8539481598264548820]/Parent Entity",
-                    "value": "../Entity_[356758116574]"
-                },
-                {
-                    "op": "replace",
-                    "path": "/ContainerEntity/Components/Component_[8539481598264548820]/Transform Data/Translate/1",
-                    "value": -10.0
-                }
-            ]
+            "Source": "Prefabs/PlayerSpawner.prefab"
         },
         "Instance_[20894245891815]": {
-            "Source": "Prefabs/PlayerSpawner.prefab",
-            "Patches": [
-                {
-                    "op": "replace",
-                    "path": "/ContainerEntity/Components/Component_[8539481598264548820]/Parent Entity",
-                    "value": "../Entity_[356758116574]"
-                },
-                {
-                    "op": "replace",
-                    "path": "/ContainerEntity/Components/Component_[8539481598264548820]/Transform Data/Translate/0",
-                    "value": 2.4932734966278076
-                },
-                {
-                    "op": "replace",
-                    "path": "/ContainerEntity/Components/Component_[8539481598264548820]/Transform Data/Translate/1",
-                    "value": 8.440384864807129
-                }
-            ]
+            "Source": "Prefabs/PlayerSpawner.prefab"
         },
         "Instance_[20907130793703]": {
-            "Source": "Prefabs/PlayerSpawner.prefab",
-            "Patches": [
-                {
-                    "op": "replace",
-                    "path": "/ContainerEntity/Components/Component_[8539481598264548820]/Parent Entity",
-                    "value": "../Entity_[356758116574]"
-                },
-                {
-                    "op": "replace",
-                    "path": "/ContainerEntity/Components/Component_[8539481598264548820]/Transform Data/Translate/0",
-                    "value": -3.681843280792236
-                },
-                {
-                    "op": "replace",
-                    "path": "/ContainerEntity/Components/Component_[8539481598264548820]/Transform Data/Translate/1",
-                    "value": -10.0
-                }
-            ]
+            "Source": "Prefabs/PlayerSpawner.prefab"
         },
         "Instance_[20920015695591]": {
-            "Source": "Prefabs/PlayerSpawner.prefab",
-            "Patches": [
-                {
-                    "op": "replace",
-                    "path": "/ContainerEntity/Components/Component_[8539481598264548820]/Parent Entity",
-                    "value": "../Entity_[356758116574]"
-                },
-                {
-                    "op": "replace",
-                    "path": "/ContainerEntity/Components/Component_[8539481598264548820]/Transform Data/Translate/0",
-                    "value": -3.681843280792236
-                },
-                {
-                    "op": "replace",
-                    "path": "/ContainerEntity/Components/Component_[8539481598264548820]/Transform Data/Translate/1",
-                    "value": 10.149028778076172
-                }
-            ]
+            "Source": "Prefabs/PlayerSpawner.prefab"
         }
     }
 }
