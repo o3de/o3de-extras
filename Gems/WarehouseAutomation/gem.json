@@ -15,8 +15,8 @@
         "WarehouseAutomation"
     ],
     "compatible_engines": [
-        "o3de-sdk>=4.1.0",
-        "o3de>=4.1.0"
+        "o3de-sdk>=2.3.0",
+        "o3de>=2.3.0"
     ],
     "platforms": [
         "Linux"
