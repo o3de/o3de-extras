@@ -14,6 +14,7 @@
 #include <AzCore/std/string/string.h>
 #include <AzFramework/Spawnable/Spawnable.h>
 #include <ROS2/Frame/ROS2FrameComponent.h>
+#include <ROS2/Georeference/GeoreferenceBus.h>
 #include <ROS2/ROS2Bus.h>
 #include <ROS2/ROS2GemUtilities.h>
 #include <ROS2/Utilities/ROS2Conversions.h>
@@ -110,11 +111,21 @@ namespace ROS2
     void ROS2SpawnerComponent::SpawnEntity(
         const SpawnEntityServiceHandle service_handle, const std::shared_ptr<rmw_request_id_t> header, const SpawnEntityRequest request)
     {
+        AZStd::string referenceFrame(request->reference_frame.c_str());
+        bool isWGS{ referenceFrame == "wgs84" };
+
+        SpawnEntityResponse response;
+
+        if (isWGS && !GeoreferenceRequestsBus::HasHandlers())
+        {
+            response.success = false;
+            response.status_message = "Level is not geographically positioned. Action aborted.";
+            return;
+        }
+
         AZStd::string spawnableName(request->name.c_str());
         AZStd::string spawnableNamespace(request->robot_namespace.c_str());
         AZStd::string spawnPointName(request->xml.c_str(), request->xml.size());
-
-        SpawnEntityResponse response;
 
         if (auto namespaceValidation = ROS2Names::ValidateNamespace(spawnableNamespace); !namespaceValidation.IsSuccess())
         {
@@ -169,19 +180,45 @@ namespace ROS2
 
         AZ::Transform transform;
 
-        if (auto spawnPoints = GetSpawnPoints(); spawnPoints.contains(spawnPointName))
+        if (isWGS)
         {
-            transform = spawnPoints.at(spawnPointName).pose;
+            ROS2::WGS::WGS84Coordinate coordinate;
+            AZ::Vector3 coordinateInLevel = AZ::Vector3(-1);
+            AZ::Quaternion rotationInENU = AZ::Quaternion::CreateZero();
+            coordinate.m_latitude = request->initial_pose.position.x;
+            coordinate.m_longitude = request->initial_pose.position.y;
+            coordinate.m_altitude = request->initial_pose.position.z;
+            ROS2::GeoreferenceRequestsBus::BroadcastResult(rotationInENU, &ROS2::GeoreferenceRequests::GetRotationFromLevelToENU);
+            ROS2::GeoreferenceRequestsBus::BroadcastResult(
+                coordinateInLevel, &ROS2::GeoreferenceRequests::ConvertFromWSG84ToLevel, coordinate);
+
+            rotationInENU = (rotationInENU.GetInverseFast() *
+                             AZ::Quaternion(
+                                 request->initial_pose.orientation.x,
+                                 request->initial_pose.orientation.y,
+                                 request->initial_pose.orientation.z,
+                                 request->initial_pose.orientation.w))
+                                .GetNormalized();
+
+            transform = { coordinateInLevel, rotationInENU, 1.0f };
         }
         else
         {
-            transform = { AZ::Vector3(request->initial_pose.position.x, request->initial_pose.position.y, request->initial_pose.position.z),
-                          AZ::Quaternion(
-                              request->initial_pose.orientation.x,
-                              request->initial_pose.orientation.y,
-                              request->initial_pose.orientation.z,
-                              request->initial_pose.orientation.w),
-                          1.0f };
+            if (auto spawnPoints = GetSpawnPoints(); spawnPoints.contains(spawnPointName))
+            {
+                transform = spawnPoints.at(spawnPointName).pose;
+            }
+            else
+            {
+                transform = { AZ::Vector3(
+                                  request->initial_pose.position.x, request->initial_pose.position.y, request->initial_pose.position.z),
+                              AZ::Quaternion(
+                                  request->initial_pose.orientation.x,
+                                  request->initial_pose.orientation.y,
+                                  request->initial_pose.orientation.z,
+                                  request->initial_pose.orientation.w),
+                              1.0f };
+            }
         }
 
         optionalArgs.m_preInsertionCallback = [this, transform, spawnableName, spawnableNamespace](auto id, auto view)
