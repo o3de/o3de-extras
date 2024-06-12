@@ -25,10 +25,11 @@
     ],
     "repo_uri": "https://raw.githubusercontent.com/o3de/o3de-extras/development",
     "compatible_engines": [
-        "o3de-sdk>=4.1.0",
-        "o3de>=4.1.0"
+        "o3de-sdk>=2.3.0",
+        "o3de>=2.3.0"
     ],
     "engine_api_dependencies": [],
     "restricted": "ProteusRobot",
     "download_source_uri": "https://github.com/o3de/o3de-extras/releases/download/2.0/proteusrobot-1.1.0-gem.zip"
 }
+

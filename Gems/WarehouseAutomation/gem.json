@@ -15,8 +15,8 @@
         "WarehouseAutomation"
     ],
     "compatible_engines": [
-        "o3de-sdk>=4.1.0",
-        "o3de>=4.1.0"
+        "o3de-sdk>=2.3.0",
+        "o3de>=2.3.0"
     ],
     "platforms": [
         "Linux"
@@ -30,3 +30,4 @@
     "restricted": "WarehouseAutomation",
     "download_source_uri": "https://github.com/o3de/o3de-extras/releases/download/2.0/warehouseautomation-1.1.0-gem.zip"
 }
+
