@@ -112,7 +112,7 @@ namespace ROS2
         const SpawnEntityServiceHandle service_handle, const std::shared_ptr<rmw_request_id_t> header, const SpawnEntityRequest request)
     {
         AZStd::string referenceFrame(request->reference_frame.c_str());
-        bool isWGS{ referenceFrame == "wgs84" };
+        const bool isWGS{ referenceFrame == "wgs84" && m_controller.GetSupportWGS() };
 
         SpawnEntityResponse response;
 
@@ -184,7 +184,7 @@ namespace ROS2
         {
             ROS2::WGS::WGS84Coordinate coordinate;
             AZ::Vector3 coordinateInLevel = AZ::Vector3(-1);
-            AZ::Quaternion rotationInENU = AZ::Quaternion::CreateZero();
+            AZ::Quaternion rotationInENU = AZ::Quaternion::CreateIdentity();
             coordinate.m_latitude = request->initial_pose.position.x;
             coordinate.m_longitude = request->initial_pose.position.y;
             coordinate.m_altitude = request->initial_pose.position.z;

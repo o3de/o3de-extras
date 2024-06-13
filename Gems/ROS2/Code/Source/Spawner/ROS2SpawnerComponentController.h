@@ -47,6 +47,7 @@ namespace ROS2
 
         ROS2SpawnerServiceNames m_serviceNames;
         AZStd::unordered_map<AZStd::string, AZ::Data::Asset<AzFramework::Spawnable>> m_spawnables;
+        bool m_supportWGS{ true };
     };
 
     class ROS2SpawnerComponentController : public SpawnerRequestsBus::Handler
@@ -77,6 +78,7 @@ namespace ROS2
         SpawnPointInfoMap GetSpawnPoints() const;
         AZ::EntityId GetEditorEntityId() const;
         AZStd::unordered_map<AZStd::string, AZ::Data::Asset<AzFramework::Spawnable>> GetSpawnables() const;
+        bool GetSupportWGS() const;
 
     private:
         ROS2SpawnerComponentConfig m_config;
