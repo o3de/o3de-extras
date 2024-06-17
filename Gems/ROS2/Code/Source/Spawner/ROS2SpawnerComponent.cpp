@@ -191,7 +191,7 @@ namespace ROS2
             coordinate.m_altitude = request->initial_pose.position.z;
             ROS2::GeoreferenceRequestsBus::BroadcastResult(rotationInENU, &ROS2::GeoreferenceRequests::GetRotationFromLevelToENU);
             ROS2::GeoreferenceRequestsBus::BroadcastResult(
-                coordinateInLevel, &ROS2::GeoreferenceRequests::ConvertFromWSG84ToLevel, coordinate);
+                coordinateInLevel, &ROS2::GeoreferenceRequests::ConvertFromWGS84ToLevel, coordinate);
 
             rotationInENU = (rotationInENU.GetInverseFast() *
                              AZ::Quaternion(
