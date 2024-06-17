@@ -120,6 +120,7 @@ namespace ROS2
         {
             response.success = false;
             response.status_message = "Level is not geographically positioned. Action aborted.";
+            service_handle->send_response(*header, response);
             return;
         }
 
