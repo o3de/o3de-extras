@@ -13,6 +13,7 @@
 #include <AzCore/Serialization/SerializeContext.h>
 #include <ImGuiBus.h>
 #include <ROS2/Manipulation/MotorizedJoints/JointMotorControllerConfiguration.h>
+#include <ROS2/ROS2Bus.h>
 
 namespace ROS2
 {
@@ -58,5 +59,6 @@ namespace ROS2
 
         // AZ::TickBus overrides
         void OnTick(float deltaTime, AZ::ScriptTimePoint time) override;
+        builtin_interfaces::msg::Time m_lastTickTime;
     };
 } // namespace ROS2

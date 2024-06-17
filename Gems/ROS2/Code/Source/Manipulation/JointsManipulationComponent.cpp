@@ -22,6 +22,7 @@
 #include <Source/HingeJointComponent.h>
 #include <Source/PrismaticJointComponent.h>
 #include <Utilities/ArticulationsUtilities.h>
+#include <ROS2/Utilities/ROS2Conversions.h>
 
 namespace ROS2
 {
@@ -182,7 +183,7 @@ namespace ROS2
         publisherContext.m_entityId = GetEntityId();
 
         m_jointStatePublisher = AZStd::make_unique<JointStatePublisher>(m_jointStatePublisherConfiguration, publisherContext);
-
+        m_lastTickTime = ROS2Interface::Get()->GetROSTimestamp();
         AZ::TickBus::Handler::BusConnect();
         JointsManipulationRequestBus::Handler::BusConnect(GetEntityId());
     }
@@ -422,7 +423,7 @@ namespace ROS2
         return frameComponent->GetNamespace();
     }
 
-    void JointsManipulationComponent::OnTick(float deltaTime, [[maybe_unused]] AZ::ScriptTimePoint time)
+    void JointsManipulationComponent::OnTick([[maybe_unused]] float deltaTime, [[maybe_unused]] AZ::ScriptTimePoint time)
     {
         if (m_manipulationJoints.empty())
         {
@@ -448,6 +449,9 @@ namespace ROS2
             }
             m_jointStatePublisher->InitializePublisher();
         }
-        MoveToSetPositions(deltaTime);
+        auto simTimestamp = ROS2Interface::Get()->GetROSTimestamp();
+        float deltaSimTime = ROS2Conversions::GetTimeDifference(m_lastTickTime, simTimestamp);
+        MoveToSetPositions(deltaSimTime);
+        m_lastTickTime = simTimestamp;
     }
 } // namespace ROS2

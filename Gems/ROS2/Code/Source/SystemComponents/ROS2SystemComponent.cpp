@@ -220,10 +220,8 @@ namespace ROS2
         }
     }
 
-    void ROS2SystemComponent::OnTick([[maybe_unused]] float deltaTime, [[maybe_unused]] AZ::ScriptTimePoint time)
-    {
-        if (rclcpp::ok())
-        {
+    void ROS2SystemComponent::OnTick([[maybe_unused]]float deltaTime, [[maybe_unused]]AZ::ScriptTimePoint time) {
+        if (rclcpp::ok()) {
             m_dynamicTFBroadcaster->sendTransform(m_frameTransforms);
             m_frameTransforms.clear();
 
