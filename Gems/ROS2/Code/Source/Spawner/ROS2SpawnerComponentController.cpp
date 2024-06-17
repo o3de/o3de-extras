@@ -74,6 +74,7 @@ namespace ROS2
             serializeContext->Class<ROS2SpawnerComponentConfig, AZ::ComponentConfig>()
                 ->Version(1)
                 ->Field("Editor entity id", &ROS2SpawnerComponentConfig::m_editorEntityId)
+                ->Field("Support WGS", &ROS2SpawnerComponentConfig::m_supportWGS)
                 ->Field("Spawnables", &ROS2SpawnerComponentConfig::m_spawnables)
                 ->Field("Default spawn pose", &ROS2SpawnerComponentConfig::m_defaultSpawnPose)
                 ->Field("Service names", &ROS2SpawnerComponentConfig::m_serviceNames)
@@ -84,6 +85,7 @@ namespace ROS2
             {
                 editContext->Class<ROS2SpawnerComponentConfig>("ROS2SpawnerComponentConfig", "Config for ROS2SpawnerComponent")
                     ->ClassElement(AZ::Edit::ClassElements::EditorData, "")
+                    ->DataElement(AZ::Edit::UIHandlers::Default, &ROS2SpawnerComponentConfig::m_supportWGS, "Support WGS", "Support for spawning entities using WGS84 coordinate system")
                     ->DataElement(AZ::Edit::UIHandlers::Default, &ROS2SpawnerComponentConfig::m_spawnables, "Spawnables", "Spawnables")
                     ->DataElement(
                         AZ::Edit::UIHandlers::Default,
@@ -114,6 +116,11 @@ namespace ROS2
     AZStd::unordered_map<AZStd::string, SpawnPointInfo> ROS2SpawnerComponentController::GetAllSpawnPointInfos() const
     {
         return GetSpawnPoints();
+    }
+
+    bool ROS2SpawnerComponentController::GetSupportWGS() const
+    {
+        return m_config.m_supportWGS;
     }
 
     void ROS2SpawnerComponentController::Reflect(AZ::ReflectContext* context)
