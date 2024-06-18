@@ -150,11 +150,18 @@ namespace ROS2
     {
         AZ::TickBus::Handler::BusDisconnect();
         ROS2RequestBus::Handler::BusDisconnect();
-        m_simulationClock->Deactivate();
+        if (m_simulationClock) {
+            m_simulationClock->Deactivate();
+        }
         m_dynamicTFBroadcaster.reset();
         m_staticTFBroadcaster.reset();
-        m_executor->remove_node(m_ros2Node);
-        m_executor.reset();
+        if (m_executor)
+        {
+            if (m_ros2Node) {
+                m_executor->remove_node(m_ros2Node);
+            }
+            m_executor.reset();
+        }
         m_simulationClock.reset();
         m_ros2Node.reset();
         m_nodeChangedEvent.Signal(m_ros2Node);
