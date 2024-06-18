@@ -200,7 +200,7 @@ All used services types are defined in gazebo_msgs package.
   - example call: `ros2 service call /get_spawn_point_info gazebo_msgs/srv/GetModelState '{model_name: 'spawn_spot'}'`
 
 ## Clock
-You can control how simulation time is handled, which affects timestamps on all the data coming from the simulation. `ROS2Clock` class captures this behavior and publishes, or not, current time to `\clock` topic based on a configuration setting .
+You can control how simulation time is handled, which affects timestamps on all the data coming from the simulation. `ROS2Clock` class captures this behavior and publishes, or not, current time to `\clock` topic based on a configuration setting.
 To modify the clock type and enable or disable time publishing, either change configuration parameters in the `clockconfiguration.setreg` file, which is located in the `Registry` directory, or pass a parameter in the console. There are three possible settings for the sources of time:
 - realtime - runs with system time but starts at 0 when the simulation starts, effectively measuring the real time elapsed since the simulation start. If you are using the Editor, then this time source starts at 0 when the Editor starts and measures how long the Editor is open.
 - ros2 - time taken from the central simulation ROS 2 node. By default, this is system time, but can be configured otherwise through node options.

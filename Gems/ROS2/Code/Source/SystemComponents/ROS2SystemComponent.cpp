@@ -146,7 +146,7 @@ namespace ROS2
                 return;
             }
         }
-        AZ_Info("ROS2SystemComponent", "Cannot read registry or the clock type is unknown, enabling simulation clock.");
+        AZ_Info("ROS2SystemComponent", "Cannot read registry or the clock type '%s' is unknown, enabling simulation clock.", clockType.c_str());
         m_simulationClock = AZStd::make_unique<ROS2Clock>(clocksMap["simulation"](), publishClock);
     }
 
