@@ -14,7 +14,7 @@ namespace ROS2::WGS
 {
 
     //! WGS84Coordinate is a 3D vector with double precision.
-    //! It is used to represent coordinates in WSG84 coordinate system.
+    //! It is used to represent coordinates in WGS84 coordinate system.
     struct WGS84Coordinate
     {
         AZ_RTTI(WGS84Coordinate, "{577a5637-b31a-44c5-a33f-50df2922af2a}");
