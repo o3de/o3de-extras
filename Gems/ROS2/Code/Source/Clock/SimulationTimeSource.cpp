@@ -7,15 +7,13 @@
  */
 
 #include <AzCore/Time/ITime.h>
-#include <ROS2/Clock/PhysicallyStableClock.h>
-
+#include <ROS2/Clock/SimulationTimeSource.h>
 #include <ROS2/ROS2Bus.h>
-#include <rclcpp/qos.hpp>
 
 namespace ROS2
 {
 
-    void PhysicallyStableClock::Activate()
+    void SimulationTimeSource::Activate()
     {
         auto* systemInterface = AZ::Interface<AzPhysics::SystemInterface>::Get();
         if (!systemInterface)
@@ -57,12 +55,12 @@ namespace ROS2
         systemInterface->RegisterSceneRemovedEvent(m_onSceneRemoved);
     }
 
-    void PhysicallyStableClock::Deactivate()
+    void SimulationTimeSource::Deactivate()
     {
         m_onSceneSimulationEvent.Disconnect();
     };
 
-    builtin_interfaces::msg::Time PhysicallyStableClock::GetROSTimestamp() const
+    builtin_interfaces::msg::Time SimulationTimeSource::GetROSTimestamp() const
     {
         builtin_interfaces::msg::Time timeStamp;
         timeStamp.sec = static_cast<int32_t>(AZStd::floor(m_elapsed));

@@ -10,7 +10,7 @@
 #include <AzCore/EBus/EBus.h>
 #include <AzCore/EBus/Event.h>
 #include <AzCore/Interface/Interface.h>
-#include <ROS2/Clock/SimulationClock.h>
+#include <ROS2/Clock/ROS2Clock.h>
 #include <builtin_interfaces/msg/time.hpp>
 #include <geometry_msgs/msg/transform_stamped.hpp>
 #include <rclcpp/node.hpp>
@@ -63,7 +63,7 @@ namespace ROS2
 
         //! Obtains a simulation clock that is used across simulation.
         //! @returns constant reference to currently running clock.
-        virtual const SimulationClock& GetSimulationClock() const = 0;
+        virtual const ROS2Clock& GetSimulationClock() const = 0;
     };
 
     class ROS2BusTraits : public AZ::EBusTraits
