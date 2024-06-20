@@ -26,8 +26,10 @@ set(FILES
         Source/Camera/PostProcessing/ROS2ImageEncodingConversionComponent.h
         Source/Camera/CameraUtilities.cpp
         Source/Camera/CameraUtilities.h
-        Source/Clock/PhysicallyStableClock.cpp
-        Source/Clock/SimulationClock.cpp
+        Source/Clock/ROS2Clock.cpp
+        Source/Clock/ROS2TimeSource.cpp
+        Source/Clock/SimulationTimeSource.cpp
+        Source/Clock/RealTimeSource.cpp
         Source/Communication/QoS.cpp
         Source/Communication/PublisherConfiguration.cpp
         Source/Communication/TopicConfiguration.cpp

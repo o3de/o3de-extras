@@ -9,7 +9,9 @@
 
 #include "ROS2SystemComponent.h"
 #include <Lidar/LidarCore.h>
-#include <ROS2/Clock/PhysicallyStableClock.h>
+#include <ROS2/Clock/RealTimeSource.h>
+#include <ROS2/Clock/ROS2TimeSource.h>
+#include <ROS2/Clock/SimulationTimeSource.h>
 #include <ROS2/Communication/PublisherConfiguration.h>
 #include <ROS2/Communication/QoS.h>
 #include <ROS2/Communication/TopicConfiguration.h>
@@ -30,7 +32,8 @@
 
 namespace ROS2
 {
-    constexpr AZStd::string_view EnablePhysicsSteadyClockConfigurationKey = "/O3DE/ROS2/SteadyClock";
+    constexpr AZStd::string_view ClockTypeConfigurationKey = "/O3DE/ROS2/ClockType";
+    constexpr AZStd::string_view PublishClockConfigurationKey = "/O3DE/ROS2/PublishClock";
 
     void ROS2SystemComponent::Reflect(AZ::ReflectContext* context)
     {
@@ -113,21 +116,38 @@ namespace ROS2
 
     void ROS2SystemComponent::InitClock()
     {
-        bool useSteadyTime = false;
+        AZStd::unordered_map<AZStd::string, AZStd::function<AZStd::unique_ptr<ITimeSource>()>> clocksMap;
+        clocksMap["realtime"] = []()
+        {
+            AZ_Info("ROS2SystemComponent", "Enabling realtime clock.");
+            return AZStd::make_unique<RealTimeSource>();
+        };
+        clocksMap["simulation"] = []()
+        {
+            AZ_Info("ROS2SystemComponent", "Enabling simulation clock.");
+            return AZStd::make_unique<SimulationTimeSource>();
+        };
+        clocksMap["ros2"] = []()
+        {
+            AZ_Info("ROS2SystemComponent", "Enabling ros 2 clock.");
+            return AZStd::make_unique<ROS2TimeSource>();
+        };
+        AZStd::string clockType{ "" };
+        bool publishClock{ true };
         auto* registry = AZ::SettingsRegistry::Get();
         AZ_Assert(registry, "No Registry available");
         if (registry)
         {
-            registry->Get(useSteadyTime, EnablePhysicsSteadyClockConfigurationKey);
-            if (useSteadyTime)
+            registry->Get(publishClock, PublishClockConfigurationKey);
+            registry->Get(clockType, ClockTypeConfigurationKey);
+            if (clocksMap.contains(clockType))
             {
-                AZ_Printf("ROS2SystemComponent", "Enabling Physical steady clock");
-                m_simulationClock = AZStd::make_unique<PhysicallyStableClock>();
+                m_simulationClock = AZStd::make_unique<ROS2Clock>(clocksMap[clockType](), publishClock);
                 return;
             }
         }
-        AZ_Printf("ROS2SystemComponent", "Enabling realtime clock");
-        m_simulationClock = AZStd::make_unique<SimulationClock>();
+        AZ_Info("ROS2SystemComponent", "Cannot read registry or the clock type '%s' is unknown, enabling simulation clock.", clockType.c_str());
+        m_simulationClock = AZStd::make_unique<ROS2Clock>(clocksMap["simulation"](), publishClock);
     }
 
     void ROS2SystemComponent::Activate()
@@ -182,7 +202,7 @@ namespace ROS2
         handler.Connect(m_nodeChangedEvent);
     }
 
-    const SimulationClock& ROS2SystemComponent::GetSimulationClock() const
+    const ROS2Clock& ROS2SystemComponent::GetSimulationClock() const
     {
         return *m_simulationClock;
     }

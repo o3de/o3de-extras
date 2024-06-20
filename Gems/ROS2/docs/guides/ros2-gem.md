@@ -34,6 +34,11 @@ You can browse Doxygen-generated documentation on [Gem's GitHub page](https://ro
   - WheelControllerComponent
 - __Robot Import (URDF) system component__
   - ROS2RobotImporterSystemComponent
+- __Clock__
+  - ROS2Clock
+  - RealTimeSource
+  - ROS2TimeSource
+  - RealTimeSource
   
 # The Gem and ROS 2 ecosystem
 
@@ -193,6 +198,21 @@ All used services types are defined in gazebo_msgs package.
   - example call: `ros2 service call /get_spawn_points_names gazebo_msgs/srv/GetWorldProperties`
 - Detailed spawn point info access: spawn point name should be passed in request.model_name. Defined pose is sent in response.pose.
   - example call: `ros2 service call /get_spawn_point_info gazebo_msgs/srv/GetModelState '{model_name: 'spawn_spot'}'`
+
+## Clock
+You can control how simulation time is handled, which affects timestamps on all the data coming from the simulation. `ROS2Clock` class captures this behavior and publishes, or not, current time to `\clock` topic based on a configuration setting.
+To modify the clock type and enable or disable time publishing, either change configuration parameters in the `clockconfiguration.setreg` file, which is located in the `Registry` directory, or pass a parameter in the console. There are three possible settings for the sources of time:
+- realtime - runs with system time but starts at 0 when the simulation starts, effectively measuring the real time elapsed since the simulation start. If you are using the Editor, then this time source starts at 0 when the Editor starts and measures how long the Editor is open.
+- ros2 - time taken from the central simulation ROS 2 node. By default, this is system time, but can be configured otherwise through node options.
+- simulation - this is virtual time that follows a stable step and eliminates jitter from the data. It can be configured to be slower or faster than real time. This is a default clock.
+
+You can change the clock type via the `.setreg` file by changing the value of the ClockType parameter to one of the above. You can also enable or disable time publishing by changing the value of the PublishClock parameter.
+You can change the clock type via the console by adding the `--regset=` flag to the call to the simulation binary file, e.g:  
+`./build/linux_working/bin/profile/Editor --regset="/O3DE/ROS2/ClockType=realtime"`  
+You can enable or disable the time publishing in the same way, e.g:  
+`./build/linux_working/bin/profile/Editor --regset="/O3DE/ROS2/PublishClock=false"`  
+You can modify both parameters in one command, e.g:  
+`./build/linux_working/bin/profile/Editor --regset="/O3DE/ROS2/ClockType=realtime" --regset="/O3DE/ROS2/PublishClock=false`
 
 ## Handling custom ROS 2 dependencies
 
