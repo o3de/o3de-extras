@@ -11,7 +11,7 @@
 #include <AzCore/Component/TickBus.h>
 #include <AzCore/std/smart_ptr/unique_ptr.h>
 #include <Lidar/LidarSystem.h>
-#include <ROS2/Clock/SimulationClock.h>
+#include <ROS2/Clock/ROS2Clock.h>
 #include <ROS2/ROS2Bus.h>
 #include <builtin_interfaces/msg/time.hpp>
 #include <memory>
@@ -63,7 +63,7 @@ namespace ROS2
         void ConnectOnNodeChanged(NodeChangedEvent::Handler& handler) override;
         builtin_interfaces::msg::Time GetROSTimestamp() const override;
         void BroadcastTransform(const geometry_msgs::msg::TransformStamped& t, bool isDynamic) override;
-        const SimulationClock& GetSimulationClock() const override;
+        const ROS2Clock& GetSimulationClock() const override;
         //////////////////////////////////////////////////////////////////////////
 
     protected:
@@ -87,7 +87,7 @@ namespace ROS2
         AZStd::shared_ptr<rclcpp::executors::SingleThreadedExecutor> m_executor;
         AZStd::unique_ptr<tf2_ros::TransformBroadcaster> m_dynamicTFBroadcaster;
         AZStd::unique_ptr<tf2_ros::StaticTransformBroadcaster> m_staticTFBroadcaster;
-        AZStd::unique_ptr<SimulationClock> m_simulationClock;
+        AZStd::unique_ptr<ROS2Clock> m_simulationClock;
         NodeChangedEvent m_nodeChangedEvent;
     };
 } // namespace ROS2
