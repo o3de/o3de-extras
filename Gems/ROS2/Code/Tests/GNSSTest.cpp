@@ -80,7 +80,7 @@ namespace UnitTest
         }
     }
 
-    TEST_F(GNSSTest, ECEFToWSG84)
+    TEST_F(GNSSTest, ECEFToWGS84)
     {
         using namespace ROS2::WGS;
         const AZStd::vector<AZStd::pair<Vector3d, WGS84Coordinate>> inputGoldSet = {
