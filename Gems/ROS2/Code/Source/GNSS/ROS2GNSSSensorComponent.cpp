@@ -97,7 +97,7 @@ namespace ROS2
 
         WGS::WGS84Coordinate currentPositionWGS84;
         ROS2::GeoreferenceRequestsBus::BroadcastResult(
-            currentPositionWGS84, &GeoreferenceRequests::ConvertFromLevelToWSG84, currentPosition);
+            currentPositionWGS84, &GeoreferenceRequests::ConvertFromLevelToWGS84, currentPosition);
 
         m_gnssMsg.latitude = currentPositionWGS84.m_latitude;
         m_gnssMsg.longitude = currentPositionWGS84.m_longitude;

@@ -49,8 +49,8 @@ namespace ROS2
         void OnEntityActivated(const AZ::EntityId& entityId) override;
 
         // GeoreferenceRequestsBus::Handler overrides ...
-        WGS::WGS84Coordinate ConvertFromLevelToWSG84(const AZ::Vector3& xyz) override;
-        AZ::Vector3 ConvertFromWSG84ToLevel(const WGS::WGS84Coordinate& latLon) override;
+        WGS::WGS84Coordinate ConvertFromLevelToWGS84(const AZ::Vector3& xyz) override;
+        AZ::Vector3 ConvertFromWGS84ToLevel(const WGS::WGS84Coordinate& latLon) override;
         AZ::Quaternion GetRotationFromLevelToENU() override;
 
         GeoReferenceLevelConfig m_config;

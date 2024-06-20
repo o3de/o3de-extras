@@ -15,20 +15,20 @@
 
 namespace ROS2
 {
-    //! Interface that allows to convert between level and WSG84 coordinates.
+    //! Interface that allows to convert between level and WGS84 coordinates.
     class GeoreferenceRequests
     {
     public:
 
-        //! Function converts from Level's coordinate system to WSG84.
+        //! Function converts from Level's coordinate system to WGS84.
         //! @param xyz Vector3 in Level's coordinate system.
-        //! @return Vector3 in WSG84 coordinate system as @class WGS::WGS84Coordinate.
-        virtual WGS::WGS84Coordinate ConvertFromLevelToWSG84(const AZ::Vector3& xyz) = 0;
+        //! @return Vector3 in WGS84 coordinate system as @class WGS::WGS84Coordinate.
+        virtual WGS::WGS84Coordinate ConvertFromLevelToWGS84(const AZ::Vector3& xyz) = 0;
 
-        //! Function converts from WSG84 coordinate system to Level's.
-        //!  @param latLon Vector3 in WSG84 coordinate system, where x is latitude, y is longitude and z is altitude.
+        //! Function converts from WGS84 coordinate system to Level's.
+        //!  @param latLon Vector3 in WGS84 coordinate system, where x is latitude, y is longitude and z is altitude.
         //!  @return Vector3 in Level's coordinate system.
-        virtual AZ::Vector3 ConvertFromWSG84ToLevel(const WGS::WGS84Coordinate& latLon) = 0;
+        virtual AZ::Vector3 ConvertFromWGS84ToLevel(const WGS::WGS84Coordinate& latLon) = 0;
 
         //! Function returns rotation from Level's frame to ENU's (East-North-Up) rotation.
         //! Function is useful to fin georeference rotation of the level.

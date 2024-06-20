@@ -23,7 +23,7 @@ namespace ROS2
         {
             serialize->Class<GeoReferenceLevelConfig, AZ::ComponentConfig>()
                 ->Version(1)
-                ->Field("EnuOriginWSG84", &GeoReferenceLevelConfig::m_originLocation)
+                ->Field("EnuOriginWGS84", &GeoReferenceLevelConfig::m_originLocation)
                 ->Field("EnuOriginLocationEntityId", &GeoReferenceLevelConfig::m_enuOriginLocationEntityId);
 
             if (auto* editContext = serialize->GetEditContext())
@@ -92,7 +92,7 @@ namespace ROS2
         AZ::EntityBus::Handler::BusDisconnect();
     }
 
-    WGS::WGS84Coordinate GeoReferenceLevelController::ConvertFromLevelToWSG84(const AZ::Vector3& xyz)
+    WGS::WGS84Coordinate GeoReferenceLevelController::ConvertFromLevelToWGS84(const AZ::Vector3& xyz)
     {
         using namespace ROS2::Utils::GeodeticConversions;
         const auto enu = WGS::Vector3d(m_enuOriginTransform.TransformPoint(xyz));
@@ -100,7 +100,7 @@ namespace ROS2
         return ECEFToWGS84(ecef);
     }
 
-    AZ::Vector3 GeoReferenceLevelController::ConvertFromWSG84ToLevel(const WGS::WGS84Coordinate& latLon)
+    AZ::Vector3 GeoReferenceLevelController::ConvertFromWGS84ToLevel(const WGS::WGS84Coordinate& latLon)
     {
         using namespace ROS2::Utils::GeodeticConversions;
         const auto ecef = WGS84ToECEF(latLon);
