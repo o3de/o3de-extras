@@ -70,6 +70,7 @@ namespace ROS2
 
     void ROS2LidarSensorComponent::Activate()
     {
+        ROS2SensorComponentBase::Activate();
         m_lidarCore.Init(GetEntityId());
 
         m_lidarRaycasterId = m_lidarCore.GetLidarRaycasterId();
@@ -127,6 +128,7 @@ namespace ROS2
         StopSensor();
         m_pointCloudPublisher.reset();
         m_lidarCore.Deinit();
+        ROS2SensorComponentBase::Deactivate();
     }
 
     void ROS2LidarSensorComponent::FrequencyTick()

@@ -29,6 +29,7 @@
 #include <AzCore/std/smart_ptr/make_shared.h>
 #include <AzCore/std/string/string_view.h>
 #include <AzFramework/API/ApplicationAPI.h>
+#include <ROS2/Sensor/SensorConfigurationRequestBus.h>
 
 namespace ROS2
 {
