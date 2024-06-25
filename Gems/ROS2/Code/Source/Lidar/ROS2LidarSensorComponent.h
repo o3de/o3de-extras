@@ -29,7 +29,7 @@ namespace ROS2
     class ROS2LidarSensorComponent : public ROS2SensorComponentBase<TickBasedSource>
     {
     public:
-        AZ_COMPONENT(ROS2LidarSensorComponent, "{502A955F-7742-4E23-AD77-5E4063739DCA}", SensorBaseType);
+        AZ_COMPONENT(ROS2LidarSensorComponent, ROS2LidarSensorComponentTypeId, SensorBaseType);
         ROS2LidarSensorComponent();
         ROS2LidarSensorComponent(const SensorConfiguration& sensorConfiguration, const LidarSensorConfiguration& lidarConfiguration);
         ~ROS2LidarSensorComponent() = default;

@@ -81,6 +81,7 @@ namespace ROS2
 
     void ROS2ImuSensorComponent::Activate()
     {
+        ROS2SensorComponentBase::Activate();
         auto ros2Node = ROS2Interface::Get()->GetNode();
         AZ_Assert(m_sensorConfiguration.m_publishersConfigurations.size() == 1, "Invalid configuration of publishers for IMU sensor");
         m_imuMsg.header.frame_id = GetFrameID().c_str();
@@ -113,6 +114,7 @@ namespace ROS2
         StopSensor();
         m_bodyHandle = AzPhysics::InvalidSimulatedBodyHandle;
         m_imuPublisher.reset();
+        ROS2SensorComponentBase::Deactivate();
     }
 
     void ROS2ImuSensorComponent::OnPhysicsEvent(AzPhysics::SceneHandle sceneHandle)

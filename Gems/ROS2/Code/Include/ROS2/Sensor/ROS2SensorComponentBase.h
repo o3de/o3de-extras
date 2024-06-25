@@ -12,6 +12,7 @@
 #include <AzCore/Serialization/EditContext.h>
 #include <ROS2/Frame/ROS2FrameComponent.h>
 #include <ROS2/ROS2GemUtilities.h>
+#include <ROS2/ROS2SensorTypesIds.h>
 #include <ROS2/Sensor/Events/EventSourceAdapter.h>
 #include <ROS2/Sensor/SensorConfiguration.h>
 #include <ROS2/Sensor/SensorConfigurationRequestBus.h>
@@ -68,19 +69,50 @@ namespace ROS2
             return m_sensorConfiguration;
         }
 
+        void EnableSensor(bool sensorEnabled) override
+        {
+            if (sensorEnabled)
+            {
+                m_eventSourceAdapter.Start();
+            }
+            else
+            {
+                m_eventSourceAdapter.Stop();
+            }
+        }
+
         void EnablePublishing(bool publishingEnabled) override
         {
             m_sensorConfiguration.m_publishingEnabled = publishingEnabled;
+        }
+
+        void EnableVisualize(bool visualizeEnabled) override
+        {
+            m_sensorConfiguration.m_visualize = visualizeEnabled;
+        }
+
+        float GetEffectiveFrequency() const override
+        {
+            return m_eventSourceAdapter.GetEffectiveFrequency();
+        }
+
+        void SetDesiredFrequency(float frequency) override
+        {
+            m_sensorConfiguration.m_frequency = frequency;
+            m_eventSourceAdapter.SetFrequency(frequency);
         }
 
         virtual ~ROS2SensorComponentBase() = default;
 
         void Activate() override
         {
+            AZ::EntityComponentIdPair entityComponentIdPair(GetEntityId(), GetId());
+            SensorConfigurationRequestBus::Handler::BusConnect(entityComponentIdPair);
         }
 
         void Deactivate() override
         {
+            SensorConfigurationRequestBus::Handler::BusDisconnect();
         }
 
     protected:
