@@ -33,6 +33,7 @@ namespace ROS2
 
     void ROS2CameraSensorComponent::Activate()
     {
+        ROS2SensorComponentBase::Activate();
         if (m_cameraConfiguration.m_colorCamera && m_cameraConfiguration.m_depthCamera)
         {
             SetImageSource<CameraRGBDSensor>();
@@ -68,6 +69,7 @@ namespace ROS2
         StopSensor();
         m_cameraSensor.reset();
         ROS2::CameraCalibrationRequestBus::Handler::BusDisconnect(GetEntityId());
+        ROS2SensorComponentBase::Deactivate();
     }
 
     AZ::Matrix3x3 ROS2CameraSensorComponent::GetCameraMatrix() const
