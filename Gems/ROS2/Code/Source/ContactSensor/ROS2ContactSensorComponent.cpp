@@ -59,6 +59,7 @@ namespace ROS2
 
     void ROS2ContactSensorComponent::Activate()
     {
+        ROS2SensorComponentBase::Activate();
         m_entityId = GetEntityId();
         AZ::Entity* entity = nullptr;
         AZ::ComponentApplicationBus::BroadcastResult(entity, &AZ::ComponentApplicationRequests::FindEntity, m_entityId);
@@ -109,6 +110,7 @@ namespace ROS2
         m_onCollisionBeginHandler.Disconnect();
         m_onCollisionPersistHandler.Disconnect();
         m_onCollisionEndHandler.Disconnect();
+        ROS2SensorComponentBase::Deactivate();
     }
 
     void ROS2ContactSensorComponent::FrequencyTick()

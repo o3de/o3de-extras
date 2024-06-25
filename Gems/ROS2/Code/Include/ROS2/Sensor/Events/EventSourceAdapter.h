@@ -107,6 +107,7 @@ namespace ROS2
                         return;
                     }
 
+                    m_lastDeltaTime =  m_adaptedDeltaTime;
                     m_sensorAdaptedEvent.Signal(m_adaptedDeltaTime, AZStd::forward<decltype(args)>(args)...);
                     m_adaptedDeltaTime = 0.0f;
                 });
@@ -132,6 +133,17 @@ namespace ROS2
         void SetFrequency(float adaptedFrequency)
         {
             m_adaptedFrequency = adaptedFrequency;
+        }
+
+        //! Gets adapter working frequency, based on the last obtained delta time between adapted events.
+        //! If the adapter has not been started yet, the frequency will be zero.
+        [[nodiscard]] float GetEffectiveFrequency() const
+        {
+            if (m_lastDeltaTime == 0.0f)
+            {
+                return 0.0f;
+            }
+            return 1.0f / m_lastDeltaTime;
         }
 
         //! Connects given event handler to source event (ROS2::SensorEventSource). That event is signalled regardless of adapted frequency
@@ -185,6 +197,7 @@ namespace ROS2
         typename EventSourceT::AdaptedEventType m_sensorAdaptedEvent{};
 
         float m_adaptedFrequency{ 30.0f }; ///< Adapted frequency value.
+        float m_lastDeltaTime{ 0.0f }; ///< Effective frequency value.
         float m_adaptedDeltaTime{ 0.0f }; ///< Accumulator for calculating adapted delta time.
         int m_tickCounter{ 0 }; ///< Internal counter for controlling adapter frequency.
     };

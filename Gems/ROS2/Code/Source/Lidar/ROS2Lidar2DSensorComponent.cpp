@@ -65,6 +65,7 @@ namespace ROS2
 
     void ROS2Lidar2DSensorComponent::Activate()
     {
+        ROS2SensorComponentBase::Activate();
         m_lidarCore.Init(GetEntityId());
 
         auto ros2Node = ROS2Interface::Get()->GetNode();
@@ -99,6 +100,7 @@ namespace ROS2
         StopSensor();
         m_laserScanPublisher.reset();
         m_lidarCore.Deinit();
+        ROS2SensorComponentBase::Deactivate();
     }
 
     void ROS2Lidar2DSensorComponent::GetRequiredServices(AZ::ComponentDescriptor::DependencyArrayType& required)
