@@ -22,7 +22,7 @@ namespace ROS2
         if (entity)
         {
             auto components = entity->GetComponents();
-            for (auto component : components)
+            for (const auto* component : components)
             {
                 if (IsComponentROS2Sensor(component))
                 {
@@ -41,7 +41,7 @@ namespace ROS2
         if (entity)
         {
             auto components = entity->GetComponents();
-            for (auto component : components)
+            for (const auto* component : components)
             {
                 AZ_Assert(component, "Component not found");
                 if (component->RTTI_IsTypeOf(sensorType))
