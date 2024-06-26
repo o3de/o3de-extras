@@ -44,8 +44,7 @@ namespace ROS2
             for (auto component : components)
             {
                 AZ_Assert(component, "Component not found");
-                const auto ptr = component->RTTI_IsTypeOf(sensorType);
-                if (ptr)
+                if (component->RTTI_IsTypeOf(sensorType))
                 {
                     sensors.push_back(AZ::EntityComponentIdPair(entityId, component->GetId()));
                 }
