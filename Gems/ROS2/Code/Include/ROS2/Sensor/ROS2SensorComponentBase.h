@@ -69,7 +69,7 @@ namespace ROS2
             return m_sensorConfiguration;
         }
 
-        void EnableSensor(bool sensorEnabled) override
+        void SetSensorEnabled(bool sensorEnabled) override
         {
             if (sensorEnabled)
             {
@@ -81,12 +81,12 @@ namespace ROS2
             }
         }
 
-        void EnablePublishing(bool publishingEnabled) override
+        void SetPublishingEnabled(bool publishingEnabled) override
         {
             m_sensorConfiguration.m_publishingEnabled = publishingEnabled;
         }
 
-        void EnableVisualize(bool visualizeEnabled) override
+        void SetVisualizeEnabled(bool visualizeEnabled) override
         {
             m_sensorConfiguration.m_visualize = visualizeEnabled;
         }
