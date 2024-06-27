@@ -17,18 +17,21 @@ namespace ROS2
     AZStd::vector<AZ::EntityComponentIdPair> GetSensorsForEntity(const AZ::EntityId& entityId)
     {
         AZStd::vector<AZ::EntityComponentIdPair> sensors;
-        AZ::Entity* entity = AZ::Interface<AZ::ComponentApplicationRequests>::Get()->FindEntity(entityId);
-        AZ_Assert(entity, "Entity not found");
-        if (entity)
+        if (AZ::Entity* entity = AZ::Interface<AZ::ComponentApplicationRequests>::Get()->FindEntity(entityId))
         {
             auto components = entity->GetComponents();
             for (const auto* component : components)
             {
+                AZ_Assert(component, "Component not found");
                 if (IsComponentROS2Sensor(component))
                 {
                     sensors.push_back(AZ::EntityComponentIdPair(entityId, component->GetId()));
                 }
             }
+        }
+        else
+        {
+            AZ_Warning("SensorHelpers", false, "Entity not found");
         }
         return sensors;
     }
@@ -36,9 +39,7 @@ namespace ROS2
     AZStd::vector<AZ::EntityComponentIdPair> GetSensorsOfType(const AZ::EntityId& entityId, const AZ::Uuid& sensorType)
     {
         AZStd::vector<AZ::EntityComponentIdPair> sensors;
-        AZ::Entity* entity = AZ::Interface<AZ::ComponentApplicationRequests>::Get()->FindEntity(entityId);
-        AZ_Assert(entity, "Entity not found");
-        if (entity)
+        if (AZ::Entity* entity = AZ::Interface<AZ::ComponentApplicationRequests>::Get()->FindEntity(entityId))
         {
             auto components = entity->GetComponents();
             for (const auto* component : components)
@@ -49,6 +50,10 @@ namespace ROS2
                     sensors.push_back(AZ::EntityComponentIdPair(entityId, component->GetId()));
                 }
             }
+        }
+        else
+        {
+            AZ_Warning("SensorHelpers", false, "Entity not found");
         }
         return sensors;
     }
