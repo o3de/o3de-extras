@@ -26,15 +26,15 @@ namespace ROS2
         virtual SensorConfiguration GetSensorConfiguration() const = 0;
 
         //! Enable or disable the sensor, completely stopping the sensor from running.
-        virtual void EnableSensor(bool enable) = 0;
+        virtual void SetSensorEnabled(bool enable) = 0;
 
         //! Enable or disable publishing of the sensor to ROS2.
         //! The sensor implemntation will still be running, but the data will not be published.
-        virtual void EnablePublishing(bool publishingEnabled) = 0;
+        virtual void SetPublishingEnabled(bool publishingEnabled) = 0;
 
         //! Enable or disable visualization of the sensor.
         //! The sensor implemntation will still be running, but the data will not be visualized in the viewport.
-        virtual void EnableVisualize(bool visualizeEnabled) = 0;
+        virtual void SetVisualizeEnabled(bool visualizeEnabled) = 0;
 
         //! Get the the current frequency of the sensor in hertz.
         virtual float GetEffectiveFrequency() const = 0;
