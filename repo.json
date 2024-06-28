@@ -185,24 +185,6 @@
                     "sha256": "93a51bebd7d5b931996025d6622bb09a6c20d6071da625d57eddf80f285444af"
                 },
                 {
-                    "version": "3.1.0",
-                    "compatible_engines": [
-                        "o3de-sdk>=4.1.0",
-                        "o3de>=4.1.0"
-                    ],
-                    "dependencies": [
-                        "Atom_RPI",
-                        "Atom_Feature_Common",
-                        "Atom_Component_DebugCamera",
-                        "CommonFeaturesAtom",
-                        "PhysX5",
-                        "PrimitiveAssets",
-                        "StartingPointInput"
-                    ],
-                    "download_source_uri": "https://github.com/o3de/o3de-extras/releases/download/2.0/ros2-3.1.0-gem.zip",
-                    "sha256": "53399b4d7dad90832369e1b05baabf1f1900138a639b1119693952d781a1cb30"
-                },
-                {
                     "version": "2.3.0",
                     "compatible_engines": [
                         "o3de-sdk>=2.3.0",
