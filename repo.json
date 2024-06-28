@@ -115,6 +115,21 @@
                     ],
                     "download_source_uri": "https://github.com/o3de/o3de-extras/releases/download/2.0/proteusrobot-1.1.0-gem.zip",
                     "sha256": "dec32d93221e2514b59e1ac056b74c771dc4109b4599b5cf290f27a3f2486615"
+                },
+                {
+                    "version": "2.0.0",
+                    "license": "Apache-2.0 or MIT",
+                    "origin_url": "https://robotec.ai",
+                    "requirements": "Requires ROS 2 Gem",
+                    "dependencies": [
+                        "ROS2>=2.3.0"
+                    ],
+                    "compatible_engines": [
+                        "o3de-sdk>=2.3.0",
+                        "o3de>=2.3.0"
+                    ],
+                    "download_source_uri": "https://github.com/o3de/o3de-extras/releases/download/2.0/proteusrobot-2.0.0-gem.zip",
+                    "sha256": "aacf5d8ded3f064ce8410ecb765017bf28b276146ae4c38c29c2f13d2bfc8db7"
                 }
             ]
         },
@@ -186,6 +201,24 @@
                     ],
                     "download_source_uri": "https://github.com/o3de/o3de-extras/releases/download/2.0/ros2-3.1.0-gem.zip",
                     "sha256": "53399b4d7dad90832369e1b05baabf1f1900138a639b1119693952d781a1cb30"
+                },
+                {
+                    "version": "2.3.0",
+                    "compatible_engines": [
+                        "o3de-sdk>=2.3.0",
+                        "o3de>=2.3.0"
+                    ],
+                    "dependencies": [
+                        "Atom_RPI",
+                        "Atom_Feature_Common",
+                        "Atom_Component_DebugCamera",
+                        "CommonFeaturesAtom",
+                        "PhysX5",
+                        "PrimitiveAssets",
+                        "StartingPointInput"
+                    ],
+                    "download_source_uri": "https://github.com/o3de/o3de-extras/releases/download/2.0/ros2-2.3.0-gem.zip",
+                    "sha256": "11ade311818f0947bdf44f95dcf34e2498814faa411440d17d499cbdc91a61a4"
                 }
             ]
         },
@@ -239,6 +272,22 @@
                     ],
                     "download_source_uri": "https://github.com/o3de/o3de-extras/releases/download/2.0/rosrobotsample-1.1.0-gem.zip",
                     "sha256": "9911d92616bc975a2b490c2190b087e92c2260c98431f13f1a431b9bd8e2ec59"
+                },
+                {
+                    "version": "2.0.0",
+                    "origin": "RobotecAI",
+                    "origin_url": "https://robotec.ai",
+                    "summary": "Husarion ROSbot XL robot assets.",
+                    "requirements": "Requires ROS 2 Gem",
+                    "dependencies": [
+                        "ROS2>=2.3.0"
+                    ],
+                    "compatible_engines": [
+                        "o3de-sdk>=2.3.0",
+                        "o3de>=2.3.0"
+                    ],
+                    "download_source_uri": "https://github.com/o3de/o3de-extras/releases/download/2.0/rosrobotsample-2.0.0-gem.zip",
+                    "sha256": "f08aba6c203131ec4d40145aa2c12b86159e1bcda0dd01c8890db5668ff64d4e"
                 }
             ]
         },
@@ -372,7 +421,7 @@
         },
         {
             "gem_name": "WarehouseAutomation",
-            "version": "1.1.0",
+            "version": "2.0.0",
             "display_name": "Warehouse Automation",
             "license": "Apache-2.0",
             "license_url": "https://opensource.org/licenses/Apache-2.0",
@@ -387,8 +436,8 @@
                 "WarehouseAutomation"
             ],
             "compatible_engines": [
-                "o3de-sdk>=4.1.0",
-                "o3de>=4.1.0"
+                "o3de-sdk>=2.3.0",
+                "o3de>=2.3.0"
             ],
             "platforms": [
                 "Linux"
@@ -396,12 +445,26 @@
             "icon_path": "preview.png",
             "requirements": "This gem requires ROS 2 gem and PhysX5 gem.",
             "dependencies": [
-                "ROS2>=3.1.0"
+                "ROS2>=2.3.0"
             ],
             "repo_uri": "https://raw.githubusercontent.com/o3de/o3de-extras/development",
             "restricted": "WarehouseAutomation",
             "download_source_uri": "https://github.com/o3de/o3de-extras/releases/download/2.0/warehouseautomation-1.1.0-gem.zip",
-            "sha256": "21dad916ebb07232d901bbdc80ba376369e3ce4e580dcbae7d69132558357eb8"
+            "sha256": "21dad916ebb07232d901bbdc80ba376369e3ce4e580dcbae7d69132558357eb8",
+            "versions_data": [
+                {
+                    "version": "2.0.0",
+                    "compatible_engines": [
+                        "o3de-sdk>=2.3.0",
+                        "o3de>=2.3.0"
+                    ],
+                    "dependencies": [
+                        "ROS2>=2.3.0"
+                    ],
+                    "download_source_uri": "https://github.com/o3de/o3de-extras/releases/download/2.0/warehouseautomation-2.0.0-gem.zip",
+                    "sha256": "6c34e53013adf5cb8d3d20ea92cc3f3365fa526438b2ba407ff9ada118b273ad"
+                }
+            ]
         }
     ],
     "templates": [
@@ -2605,8 +2668,7 @@
                             "dir": "Examples/ros2_ws/src/o3de_fleet_nav/test"
                         }
                     ],
-                    "download_source_uri": "https://github.com/o3de/o3de-extras/releases/download/2.0/ros2fleetrobottemplate-1.2.0-template.zip",
-                    "sha256": "cd6f252c18dff6dfa34247eb11ba19feb5247874e36ed6482f11e0eae7ef84f4"
+                    "download_source_uri": "https://github.com/o3de/o3de-extras/releases/download/2.0/ros2fleetrobottemplate-1.2.0-template.zip"
                 }
             ]
         },
@@ -3569,8 +3631,7 @@
                             "isTemplated": false
                         }
                     ],
-                    "download_source_uri": "https://github.com/o3de/o3de-extras/releases/download/2.0/ros2projecttemplate-1.1.0-template.zip",
-                    "sha256": "bb58695b13a8eca3675a25afe6a1832140ef3fa4a14ea1701ff127a50e36e066"
+                    "download_source_uri": "https://github.com/o3de/o3de-extras/releases/download/2.0/ros2projecttemplate-1.1.0-template.zip"
                 }
             ]
         },
@@ -3691,10 +3752,6 @@
                     "isTemplated": "false"
                 },
                 {
-                    "file": "Assets/Factory/ConveyorLine/ConveyorBelt_effector_short.fbx.assetinfo",
-                    "isTemplated": "false"
-                },
-                {
                     "file": "Assets/Factory/ConveyorLine/ConveyorBelt.fbx",
                     "isTemplated": "false"
                 },
@@ -3704,6 +3761,14 @@
                 },
                 {
                     "file": "Assets/Factory/ConveyorLine/conveyor_guards.physxmaterial",
+                    "isTemplated": "false"
+                },
+                {
+                    "file": "Assets/Factory/ConveyorLine/ConveyorBelt_effector.fbx",
+                    "isTemplated": "false"
+                },
+                {
+                    "file": "Assets/Factory/ConveyorLine/ConveyorBelt_effector.fbx.assetinfo",
                     "isTemplated": "false"
                 },
                 {
@@ -3900,6 +3965,10 @@
                 },
                 {
                     "file": "Assets/UrdfImporter/1440394708_panda/link7.dae.assetinfo",
+                    "isTemplated": "false"
+                },
+                {
+                    "file": "Assets/Gripper/Gripper_collider.stl",
                     "isTemplated": "false"
                 },
                 {
@@ -4430,9 +4499,12 @@
             ],
             "versions_data": [
                 {
-                    "sha256": "36e7ad0359f4e91ec287f409732e35c223bfeed47ab6f84109f80a56bf34e1fd",
-                    "version": "1.0.0",
-                    "download_source_uri": "https://github.com/o3de/o3de-extras/releases/download/2.0/openxrtest-1.0.0-project.zip"
+                    "download_source_uri": "https://github.com/o3de/o3de-extras/releases/download/2.0/openxrtest-1.0.0-project.zip",
+                    "gem_names": [
+                        "XR>=1.0.1",
+                        "OpenXRVk>=1.0.1"
+                    ],
+                    "version": "1.0.0"
                 }
             ]
         }
