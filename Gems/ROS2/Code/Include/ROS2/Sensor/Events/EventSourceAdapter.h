@@ -197,7 +197,7 @@ namespace ROS2
         typename EventSourceT::AdaptedEventType m_sensorAdaptedEvent{};
 
         float m_adaptedFrequency{ 30.0f }; ///< Adapted frequency value.
-        float m_lastDeltaTime{ 0.0f }; ///< Effective frequency value.
+        float m_lastDeltaTime{ 0.0f }; ///< Last difference in time between adapted events, used to compute effective frequency value.
         float m_adaptedDeltaTime{ 0.0f }; ///< Accumulator for calculating adapted delta time.
         int m_tickCounter{ 0 }; ///< Internal counter for controlling adapter frequency.
     };

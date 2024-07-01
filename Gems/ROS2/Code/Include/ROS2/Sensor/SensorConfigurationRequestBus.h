@@ -28,12 +28,12 @@ namespace ROS2
         //! Enable or disable the sensor, completely stopping the sensor from running.
         virtual void SetSensorEnabled(bool enable) = 0;
 
-        //! Enable or disable publishing of the sensor to ROS2.
-        //! The sensor implemntation will still be running, but the data will not be published.
+        //! Enable or disable publishing of the sensor to ROS 2.
+        //! The sensor implementation will still be running, but the data will not be published.
         virtual void SetPublishingEnabled(bool publishingEnabled) = 0;
 
         //! Enable or disable visualization of the sensor.
-        //! The sensor implemntation will still be running, but the data will not be visualized in the viewport.
+        //! The sensor implementation will still be running, but the data will not be visualized in the viewport.
         virtual void SetVisualizeEnabled(bool visualizeEnabled) = 0;
 
         //! Get the the current frequency of the sensor in hertz.
