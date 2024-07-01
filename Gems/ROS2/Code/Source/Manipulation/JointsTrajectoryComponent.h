@@ -66,5 +66,6 @@ namespace ROS2
         rclcpp::Time m_trajectoryExecutionStartTime;
         ManipulationJoints m_manipulationJoints;
         bool m_trajectoryInProgress{ false };
+        builtin_interfaces::msg::Time m_lastTickTime;
     };
 } // namespace ROS2
