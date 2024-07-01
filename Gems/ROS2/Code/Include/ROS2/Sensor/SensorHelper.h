@@ -11,12 +11,12 @@
 
 namespace ROS2
 {
-    //! Function to check if the component is a sensor component
+    //! Function to check if the component is a sensor component.
     //! @param component Component to check
     //! @return True if the component is a sensor component
     bool IsComponentROS2Sensor(const AZ::Component* component);
 
-    //! Function to get Ids of all sensors attached to the entity
+    //! Function to get Ids of all sensors attached to the entity.
     //! @param entityId Id of the entity
     //! @return Vector of EntityComponentIdPair of all sensors attached to the entity
     AZStd::vector<AZ::EntityComponentIdPair> GetSensorsForEntity(const AZ::EntityId& entityId);
