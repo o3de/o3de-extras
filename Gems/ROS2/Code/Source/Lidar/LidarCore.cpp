@@ -99,6 +99,18 @@ namespace ROS2
                 &LidarRaycasterRequestBus::Events::ConfigureMaxRangePointAddition,
                 m_lidarConfiguration.m_addPointsAtMax);
         }
+
+        if (m_lidarConfiguration.m_lidarSystemFeatures & LidarSystemFeatures::Segmentation) {
+            AZStd::unordered_set<AZStd::pair<AZStd::string, uint8_t> > classTags;
+            for (const auto &segmentation_class: m_lidarConfiguration.m_segmentationClasses) {
+                classTags.insert({segmentation_class.m_className, segmentation_class.m_classId});
+            }
+
+            LidarRaycasterRequestBus::Event(
+                m_lidarRaycasterId,
+                &LidarRaycasterRequestBus::Events::ConfigureSegmentationClasses,
+                classTags);
+        }
     }
 
     LidarCore::LidarCore(const AZStd::vector<LidarTemplate::LidarModel>& availableModels)

@@ -133,6 +133,8 @@ namespace ROS2
         if (handlePoints)
         {
             results.m_points.reserve(rayDirections.size());
+            results.m_ids = {};
+            results.m_classes = {};
         }
         if (handleRanges)
         {
