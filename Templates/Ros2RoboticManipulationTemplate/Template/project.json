@@ -40,6 +40,7 @@
         "Compression",
         "WarehouseAssets",
         "WarehouseAutomation>=1.1.0",
-        "ROS2>=3.1.0"
+        "ROS2>=3.1.0",
+        "${Name}"
     ]
 }

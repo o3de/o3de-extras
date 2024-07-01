@@ -2,7 +2,7 @@
 #include <AzCore/Memory/SystemAllocator.h>
 #include <AzCore/Module/Module.h>
 
-#include "${SanitizedCppName}SystemComponent.h"
+#include "${Name}SystemComponent.h"
 
 namespace ${SanitizedCppName}
 {

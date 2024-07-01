@@ -12,7 +12,7 @@
 #include <AzCore/Module/Module.h>
 
 #include "${Name}SystemComponent.h"
-#include "${SanitizedCppName}SampleComponent.h"
+#include "${Name}SampleComponent.h"
 
 namespace ${SanitizedCppName}
 {

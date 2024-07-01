@@ -11,7 +11,7 @@
 #include <${Name}ModuleInterface.h>
 #include "${Name}EditorSystemComponent.h"
 
-#include "${SanitizedCppName}SampleComponent.h"
+#include "${Name}SampleComponent.h"
 namespace ${SanitizedCppName}
 {
     class ${SanitizedCppName}EditorModule

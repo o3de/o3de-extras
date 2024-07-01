@@ -3,7 +3,7 @@
 #include <AzCore/Serialization/EditContext.h>
 #include <AzCore/Serialization/EditContextConstants.inl>
 
-#include "${SanitizedCppName}SystemComponent.h"
+#include "${Name}SystemComponent.h"
 
 namespace ${SanitizedCppName}
 {

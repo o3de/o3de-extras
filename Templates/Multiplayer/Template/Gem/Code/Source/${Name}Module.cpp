@@ -11,7 +11,7 @@
 #include <Components//NetworkPrefabSpawnerComponent.h>
 #include <Source/AutoGen/AutoComponentTypes.h>
 
-#include "${SanitizedCppName}SystemComponent.h"
+#include "${Name}SystemComponent.h"
 
 namespace ${SanitizedCppName}
 {

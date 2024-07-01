@@ -9,7 +9,7 @@
  */
 // {END_LICENSE}
 
-#include "${SanitizedCppName}SampleComponent.h"
+#include "${Name}SampleComponent.h"
 #include <AzCore/Component/ComponentApplicationBus.h>
 #include <AzCore/Component/TransformBus.h>
 #include <AzCore/Math/Transform.h>

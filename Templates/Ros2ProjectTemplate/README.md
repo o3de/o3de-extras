@@ -6,7 +6,7 @@ It is designed to help you quickly start simulating robots in Open 3D Engine (O3
 This template has the following characteristics:
 - It is the simplest and using the least resources among templates.
 - Comes with Husarion ROSBot XL model, equipped with lidar and a differential drive.
-- The interior scene does not look photorealistic but is quite simple.
+- The warehouse assets used in the template are modular and well-suited for reconfiguration to match a custom warehouse.
 
 An example ROS 2 navigation stack launch file is bundled with the template.
 

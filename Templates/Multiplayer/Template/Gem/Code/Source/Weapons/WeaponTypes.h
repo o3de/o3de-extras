@@ -7,7 +7,7 @@
 
 #pragma once
 
-#include <Source/${SanitizedCppName}Types.h>
+#include <Source/${Name}Types.h>
 #include <Multiplayer/MultiplayerTypes.h>
 #include <AzCore/RTTI/TypeSafeIntegral.h>
 #include <AzFramework/Physics/ShapeConfiguration.h>
