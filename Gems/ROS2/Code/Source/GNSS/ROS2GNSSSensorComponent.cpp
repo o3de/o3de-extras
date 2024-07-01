@@ -58,6 +58,7 @@ namespace ROS2
 
     void ROS2GNSSSensorComponent::Activate()
     {
+        ROS2SensorComponentBase::Activate();
         auto ros2Node = ROS2Interface::Get()->GetNode();
         AZ_Assert(m_sensorConfiguration.m_publishersConfigurations.size() == 1, "Invalid configuration of publishers for GNSS sensor");
 
@@ -88,6 +89,7 @@ namespace ROS2
     {
         StopSensor();
         m_gnssPublisher.reset();
+        ROS2SensorComponentBase::Deactivate();
     }
 
     void ROS2GNSSSensorComponent::FrequencyTick()

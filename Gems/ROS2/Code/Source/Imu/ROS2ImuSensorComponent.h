@@ -28,7 +28,7 @@ namespace ROS2
     class ROS2ImuSensorComponent : public ROS2SensorComponentBase<PhysicsBasedSource>
     {
     public:
-        AZ_COMPONENT(ROS2ImuSensorComponent, "{502A955E-7742-4E23-AD77-5E4063739DCA}", SensorBaseType);
+        AZ_COMPONENT(ROS2ImuSensorComponent, ROS2ImuSensorComponentTypeId, SensorBaseType);
         ROS2ImuSensorComponent();
         ROS2ImuSensorComponent(const SensorConfiguration& sensorConfiguration, const ImuSensorConfiguration& imuConfiguration);
         ~ROS2ImuSensorComponent() = default;
