@@ -1,0 +1,18 @@
+{
+    "Amazon": {
+        "AssetProcessor": {
+            "Settings": {
+                "ScanFolder ColorGrading/Assets": {
+                    "watch": "@GEMROOT:ColorGrading@/Assets",
+                    "recursive": 1,
+                    "order": 101
+                },
+                "ScanFolder ColorGrading/Registry": {
+                    "watch": "@GEMROOT:ColorGrading@/Registry",
+                    "recursive": 1,
+                    "order": 102
+                }
+            }
+        }
+    }
+}
