@@ -10,19 +10,9 @@
 #include <AzCore/Component/Component.h>
 #include <AzCore/Component/TickBus.h>
 
-#include <Multiplayer/IMultiplayerSpawner.h>
-#include <Source/Spawners/IPlayerSpawner.h>
-
 namespace AzFramework
 {
     struct PlayerConnectionConfig;
-}
-
-namespace Multiplayer
-{
-    struct EntityReplicationData;
-    using ReplicationSet = AZStd::map<ConstNetworkEntityHandle, EntityReplicationData>;
-    struct MultiplayerAgentDatum;
 }
 
 namespace ${SanitizedCppName}
@@ -30,7 +20,6 @@ namespace ${SanitizedCppName}
     class ${SanitizedCppName}SystemComponent
         : public AZ::Component
         , public AZ::TickBus::Handler
-        , public Multiplayer::IMultiplayerSpawner
     {
     public:
         AZ_COMPONENT(${SanitizedCppName}SystemComponent, "${SysCompClassId}");
@@ -55,15 +44,5 @@ namespace ${SanitizedCppName}
         int GetTickOrder() override;
         ////////////////////////////////////////////////////////////////////////
 
-        ////////////////////////////////////////////////////////////////////////
-        // IMultiplayerSpawner overrides
-        Multiplayer::NetworkEntityHandle OnPlayerJoin(uint64_t userId, const Multiplayer::MultiplayerAgentDatum& agentDatum) override;
-        void OnPlayerLeave(
-            Multiplayer::ConstNetworkEntityHandle entityHandle,
-            const Multiplayer::ReplicationSet& replicationSet,
-            AzNetworking::DisconnectReason reason) override;
-        ////////////////////////////////////////////////////////////////////////
-
-        AZStd::unique_ptr<${SanitizedCppName}::IPlayerSpawner> m_playerSpawner;
     };
 }

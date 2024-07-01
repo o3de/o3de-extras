@@ -15,8 +15,6 @@ set(FILES
     Source/Components/NetworkAnimationComponent.h
     Source/Components/NetworkHealthComponent.cpp
     Source/Components/NetworkHealthComponent.h
-    Source/Components/NetworkPlayerSpawnerComponent.cpp
-    Source/Components/NetworkPlayerSpawnerComponent.h
     Source/Components/NetworkRandomComponent.cpp
     Source/Components/NetworkRandomComponent.h
     Source/Components/NetworkWeaponsComponent.cpp
@@ -27,9 +25,6 @@ set(FILES
     Source/Components/NetworkPrefabSpawnerComponent.h
     Source/Components/NetworkPlayerMovementComponent.cpp
     Source/Components/NetworkPlayerMovementComponent.h
-    Source/Spawners/IPlayerSpawner.h
-    Source/Spawners/RoundRobinSpawner.h
-    Source/Spawners/RoundRobinSpawner.cpp
     Source/Weapons/BaseWeapon.cpp
     Source/Weapons/BaseWeapon.h
     Source/Weapons/IWeapon.h
