@@ -171,12 +171,6 @@ namespace ROS2
             return;
         }
 
-        if (!m_isFollowingEnabled)
-        {
-            AZ::TransformBus::Event(GetEntityId(), &AZ::TransformBus::Events::SetWorldTM, m_frozenTransform);
-            return; // Do not update the camera's position to follow the target
-        }
-
         // Follow the target
         // obtain the current view transform
         AZ::Transform target_local_transform;
@@ -201,13 +195,12 @@ namespace ROS2
         AZ::Vector3 weightedSum = AZ::Vector3::CreateZero();
         float totalWeight = 0.0f;
         float currentWeight = 1.0f; // Start with a weight of 1 for the oldest entry
-        float weightIncreaseFactor = m_configuration.m_smoothFactor; // Increase each subsequent weight by 10%
 
         for (const auto& entry : buffer)
         {
             weightedSum += entry.first * currentWeight; // Apply current weight to the vector
             totalWeight += currentWeight; // Accumulate total weight for normalization
-            currentWeight *= weightIncreaseFactor; // Increase weight for the next, more recent entry
+            currentWeight *= m_configuration.m_smoothFactor; // Increase weight for the next, more recent entry
         }
 
         if (totalWeight > 0.0f)
@@ -240,8 +233,6 @@ namespace ROS2
         AZ::Quaternion smoothedRotation = m_lastRotationsBuffer.front().first;
         float totalWeight = 0.0f;
         float currentWeight = 1.0f; // Initial weight
-        const float weightIncreaseFactor =
-            m_configuration.m_smoothFactor; // Determines how much more influence each subsequent rotation has
 
         for (size_t i = 1; i < m_lastRotationsBuffer.size(); ++i)
         {
@@ -254,7 +245,7 @@ namespace ROS2
             // Interpolates between series of rotations to get a smooth rotation with new rotations having more influence (less lag)
             smoothedRotation = smoothedRotation.Slerp(m_lastRotationsBuffer[i].first, t);
 
-            currentWeight *= weightIncreaseFactor; // Increase the weight for the next rotation
+            currentWeight *= m_configuration.m_smoothFactor; // Increase the weight for the next rotation
         }
 
         return smoothedRotation;
@@ -267,18 +258,18 @@ namespace ROS2
         // Handle mouse events
         if (AzFramework::InputDeviceMouse::IsMouseDevice(deviceId))
         {
-            mouseEvent(inputChannel);
+            MouseEvent(inputChannel);
         }
 
         if (AzFramework::InputDeviceKeyboard::IsKeyboardDevice(deviceId))
         {
-            keyboardEvent(inputChannel);
+            KeyboardEvent(inputChannel);
         }
 
         return false;
     }
 
-    void FollowingCameraComponent::mouseEvent(const AzFramework::InputChannel& inputChannel)
+    void FollowingCameraComponent::MouseEvent(const AzFramework::InputChannel& inputChannel)
     {
         const AzFramework::InputChannelId& channelId = inputChannel.GetInputChannelId();
 
@@ -345,11 +336,9 @@ namespace ROS2
 
     void FollowingCameraComponent::RotateCameraOnMouse(const AZ::Vector2& mouseDelta)
     {
-        const float& rotationSensitivity = m_configuration.m_rotationSensitivity;
-
         // Convert mouse delta to rotation angles
-        float yawRotation = -mouseDelta.GetX() * rotationSensitivity; // Inverted X for reversed yaw rotation
-        float pitchRotation = -mouseDelta.GetY() * rotationSensitivity; // Inverted Y for pitch, adjust as needed
+        float yawRotation = -mouseDelta.GetX() * m_configuration.m_rotationSensitivity; // Inverted X for reversed yaw rotation
+        float pitchRotation = -mouseDelta.GetY() * m_configuration.m_rotationSensitivity; // Inverted Y for pitch, adjust as needed
 
         // Fetch the current camera orientation from m_cameraOffset
         const AZ::Quaternion currentRotation = AZ::Quaternion::CreateFromMatrix4x4(m_cameraOffset);
@@ -366,53 +355,50 @@ namespace ROS2
 
         // Apply pitch rotation
         auto newRotation = pitchQuat * tempRotation;
-        newRotation.Normalize();  // Normalize the quaternion to prevent drift and ensure no numerical instability
+        newRotation.Normalize(); // Normalize the quaternion to prevent drift and ensure no numerical instability
 
         // Update the camera's offset matrix with the new orientation, keeping the position unchanged
         const AZ::Vector3 currentPosition = m_cameraOffset.GetTranslation();
         m_cameraOffset = AZ::Matrix4x4::CreateFromQuaternionAndTranslation(newRotation, currentPosition);
     }
 
-    void FollowingCameraComponent::MoveCameraOnKeys()
+    void FollowingCameraComponent::MoveCameraOnKeys(const AzFramework::InputChannelId& channelId)
     {
         auto localCamPoseChange = AZ::Vector3::CreateZero();
-        const auto translationSpeed = m_configuration.m_translationSpeed;
 
         // Check each key state and adjust the camera pose change accordingly
-        if (m_keyStates[Key::AlphanumericW])
+        if (channelId == Key::AlphanumericW)
         {
-            localCamPoseChange += AZ::Vector3::CreateAxisY() * translationSpeed;
+            localCamPoseChange += AZ::Vector3::CreateAxisY() * m_configuration.m_translationSpeed;
         }
-        if (m_keyStates[Key::AlphanumericS])
+        if (channelId == Key::AlphanumericS)
         {
-            localCamPoseChange -= AZ::Vector3::CreateAxisY() * translationSpeed;
+            localCamPoseChange -= AZ::Vector3::CreateAxisY() * m_configuration.m_translationSpeed;
         }
-        if (m_keyStates[Key::AlphanumericA])
+        if (channelId == Key::AlphanumericA)
         {
-            localCamPoseChange -= AZ::Vector3::CreateAxisX() * translationSpeed;
+            localCamPoseChange -= AZ::Vector3::CreateAxisX() * m_configuration.m_translationSpeed;
         }
-        if (m_keyStates[Key::AlphanumericD])
+        if (channelId == Key::AlphanumericD)
         {
-            localCamPoseChange += AZ::Vector3::CreateAxisX() * translationSpeed;
+            localCamPoseChange += AZ::Vector3::CreateAxisX() * m_configuration.m_translationSpeed;
         }
 
         const auto localCamPoseChangeMatrix = AZ::Matrix4x4::CreateTranslation(localCamPoseChange);
         m_cameraOffset = m_cameraOffset * localCamPoseChangeMatrix;
     }
 
-    void FollowingCameraComponent::RotateCameraOnKeys()
+    void FollowingCameraComponent::RotateCameraOnKeys(const AzFramework::InputChannelId& channelId)
     {
-        const float rotationSpeed = m_configuration.m_rotationSpeed; // Reduce rotation speed for keys
-
         float yawRotation = 0.0f; // Initialize yaw rotation to 0
 
-        if (m_keyStates[Key::AlphanumericQ])
+        if (channelId == Key::AlphanumericQ)
         {
-            yawRotation = rotationSpeed; // Rotate left
+            yawRotation = m_configuration.m_rotationSpeed; // Rotate left
         }
-        else if (m_keyStates[Key::AlphanumericE])
+        else if (channelId == Key::AlphanumericE)
         {
-            yawRotation = -rotationSpeed; // Rotate right
+            yawRotation = -m_configuration.m_rotationSpeed; // Rotate right
         }
 
         if (yawRotation != 0.0f) // Only proceed if there's a rotation to apply
@@ -431,58 +417,29 @@ namespace ROS2
         }
     }
 
-    void FollowingCameraComponent::keyboardEvent(const AzFramework::InputChannel& inputChannel)
+    void FollowingCameraComponent::KeyboardEvent(const AzFramework::InputChannel& inputChannel)
     {
         const AzFramework::InputChannelId& channelId = inputChannel.GetInputChannelId();
-        // Determine if the key was pressed down or released
-        bool isKeyDown = inputChannel.IsStateBegan(); // true if the key was pressed down
-        bool isKeyUp = inputChannel.IsStateEnded(); // true if the key was released
 
-        // Update the key state in the map
-        if (isKeyDown)
+        if (m_moveKeys.find(channelId) != m_moveKeys.end())
         {
-            m_keyStates[channelId] = true;
+            MoveCameraOnKeys(channelId);
         }
-        else if (isKeyUp)
+        else if (m_rotateKeys.find(channelId) != m_rotateKeys.end())
         {
-            m_keyStates[channelId] = false;
+            RotateCameraOnKeys(channelId);
         }
 
-        // Manage camera following based on Shift key state
-        if (shiftKeys.find(channelId) != shiftKeys.end())
+        // Handle view switching with numeric keys
+        if (auto it = KeysToView.find(channelId); it != KeysToView.end())
         {
-            if (isKeyDown)
+            if (int viewId = it->second; viewId < m_configuration.m_predefinedViews.size())
             {
-                FreezeCamera();
-            }
-            else if (isKeyUp)
-            {
-                ResumeCamera();
-            }
-        }
+                m_currentView = m_configuration.m_predefinedViews[viewId];
+                m_lastTranslationsBuffer.clear();
+                m_lastRotationsBuffer.clear();
 
-        if (isKeyDown) // Only proceed if a key was pressed down
-        {
-            if (moveKeys.find(channelId) != moveKeys.end())
-            {
-                MoveCameraOnKeys();
-            }
-            else if (rotateKeys.find(channelId) != rotateKeys.end())
-            {
-                RotateCameraOnKeys();
-            }
-
-            // Handle view switching with numeric keys
-            if (auto it = KeysToView.find(channelId); it != KeysToView.end())
-            {
-                if (int viewId = it->second; viewId < m_configuration.m_predefinedViews.size())
-                {
-                    m_currentView = m_configuration.m_predefinedViews[viewId];
-                    m_lastTranslationsBuffer.clear();
-                    m_lastRotationsBuffer.clear();
-
-                    m_cameraOffset = GetEntityLocalPose(m_currentView); // Reset camera offset to the view's pose
-                }
+                m_cameraOffset = GetEntityLocalPose(m_currentView); // Reset camera offset to the view's pose
             }
         }
     }
@@ -501,20 +458,4 @@ namespace ROS2
         AZ::Matrix4x4 matrix = AZ::Matrix4x4::CreateFromTransform(target_local_transform);
         return matrix;
     }
-
-    void FollowingCameraComponent::FreezeCamera()
-    {
-        // Capture the current transform
-        m_isFollowingEnabled = false;
-        m_frozenTransform = { SmoothTranslation(), SmoothRotation(), 1.f };
-    }
-
-    void FollowingCameraComponent::ResumeCamera()
-    {
-        // Resume following without trying to catch up
-        m_isFollowingEnabled = true;
-        m_lastTranslationsBuffer.clear();
-        m_lastRotationsBuffer.clear();
-    }
-
 } // namespace ROS2

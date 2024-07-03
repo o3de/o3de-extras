@@ -17,26 +17,6 @@
 #include <AzFramework/Input/Devices/Keyboard/InputDeviceKeyboard.h>
 #include <AzFramework/Input/Events/InputChannelEventListener.h>
 
-namespace std
-{
-    template<>
-    struct hash<AzFramework::InputChannelId>
-    {
-        size_t operator()(const AzFramework::InputChannelId& channelId) const noexcept
-        {
-            return hash<string>()(channelId.GetName());
-        }
-    };
-} // namespace std
-
-struct InputChannelIdHash
-{
-    std::size_t operator()(const AzFramework::InputChannelId& channelId) const noexcept
-    {
-        return std::hash<std::string>()(channelId.GetName());
-    }
-};
-
 namespace ROS2
 {
     using Key = AzFramework::InputDeviceKeyboard::Key;
@@ -71,8 +51,8 @@ namespace ROS2
 
         // AzFramework::InputChannelEventListener overrides ...
         bool OnInputChannelEventFiltered(const AzFramework::InputChannel& inputChannel) override;
-        void keyboardEvent(const AzFramework::InputChannel& inputChannel);
-        void mouseEvent(const AzFramework::InputChannel& inputChannel);
+        void KeyboardEvent(const AzFramework::InputChannel& inputChannel);
+        void MouseEvent(const AzFramework::InputChannel& inputChannel);
 
         //! Rotate the camera in the screen space.
         //! @param mouseDelta The mouse move delta in the screen space.
@@ -82,10 +62,12 @@ namespace ROS2
         AZ::Vector2 GetCurrentMousePosition();
 
         //! Move the camera on the keys WSAD.
-        void MoveCameraOnKeys();
+        //! @param channelId The id of the channel to check which key is pressed
+        void MoveCameraOnKeys(const AzFramework::InputChannelId& channelId);
 
         //! Rotate the camera around the axis up (yaw rotation) QE.
-        void RotateCameraOnKeys();
+        //! @param channelId The id of the channel to check which key is pressed
+        void RotateCameraOnKeys(const AzFramework::InputChannelId& channelId);
 
         //! Get the pose of the entity.
         //! @param entityId The entity to get the pose.
@@ -118,9 +100,6 @@ namespace ROS2
         //! @param deltaTime The time between the last frame and the current frame.
         void CacheTransform(const AZ::Transform& transform, float deltaTime);
 
-        void FreezeCamera(); //! Freeze the camera in current position.
-        void ResumeCamera(); //! Resume the camera to follow the target.
-
         //! The smoothing buffer for translation, the first element is the translation, the second element is the weight.
         AZStd::deque<AZStd::pair<AZ::Vector3, float>> m_lastTranslationsBuffer;
 
@@ -128,27 +107,18 @@ namespace ROS2
         AZStd::deque<AZStd::pair<AZ::Quaternion, float>> m_lastRotationsBuffer;
 
         AZ::EntityId m_currentView; //!< Current used view point.
-        AZ::Transform m_frozenTransform;
-        bool m_isFollowingEnabled = true;
         bool m_isRightMouseButtonPressed = false; //!< Apply mouse rotation whether the right mouse button is pressed.
         AZ::Vector2 m_initialMousePosition; //!< The initial mouse position when the right mouse button is pressed.
         AZ::Vector2 m_lastMousePosition = AZ::Vector2(0.0f, 0.0f);
-        float m_mouseDeltaX = 0.0f;
-        float m_mouseDeltaY = 0.0f;
         bool m_ignoreNextMovement = false; //!< Ignore the next mouse movement to avoid camera jump.
 
         AZ::Matrix4x4 m_cameraOffset = AZ::Matrix4x4::CreateIdentity(); //!< The current relative camera pose.
-        AZStd::unordered_map<AzFramework::InputChannelId, bool, InputChannelIdHash> m_keyStates; //!< For multiple key press detection.
-
         FollowingCameraConfiguration m_configuration; //!< The configuration of the following camera.
 
         // The keys for camera movement and rotation.
-
-        const AZStd::unordered_set<AzFramework::InputChannelId> moveKeys = {
+        const AZStd::unordered_set<AzFramework::InputChannelId> m_moveKeys = {
             Key::AlphanumericW, Key::AlphanumericS, Key::AlphanumericA, Key::AlphanumericD
         };
-        const AZStd::unordered_set<AzFramework::InputChannelId> rotateKeys = { Key::AlphanumericQ, Key::AlphanumericE };
-        const AZStd::unordered_set<AzFramework::InputChannelId> shiftKeys = { Key::ModifierShiftL, Key::ModifierShiftR };
+        const AZStd::unordered_set<AzFramework::InputChannelId> m_rotateKeys = { Key::AlphanumericQ, Key::AlphanumericE };
     };
-
 } // namespace ROS2
