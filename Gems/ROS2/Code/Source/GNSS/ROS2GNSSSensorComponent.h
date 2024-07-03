@@ -9,6 +9,7 @@
 
 #include <AzCore/Math/Transform.h>
 #include <AzCore/Serialization/SerializeContext.h>
+#include <ROS2/ROS2SensorTypesIds.h>
 #include <ROS2/Sensor/Events/TickBasedSource.h>
 #include <ROS2/Sensor/ROS2SensorComponentBase.h>
 #include <rclcpp/publisher.hpp>
@@ -23,7 +24,7 @@ namespace ROS2
     class ROS2GNSSSensorComponent : public ROS2SensorComponentBase<TickBasedSource>
     {
     public:
-        AZ_COMPONENT(ROS2GNSSSensorComponent, "{55B4A299-7FA3-496A-88F0-764C75B0E9A7}", SensorBaseType);
+        AZ_COMPONENT(ROS2GNSSSensorComponent, ROS2GNSSSensorComponentTypeId, SensorBaseType);
         ROS2GNSSSensorComponent();
         ROS2GNSSSensorComponent(const SensorConfiguration& sensorConfiguration);
         ~ROS2GNSSSensorComponent() = default;
