@@ -79,10 +79,6 @@ namespace ROS2
             m_sensorConfiguration.m_frequency,
             [this]([[maybe_unused]] auto&&... args)
             {
-                if (!m_sensorConfiguration.m_publishingEnabled)
-                {
-                    return;
-                }
                 FrequencyTick();
             },
             [this]([[maybe_unused]] auto&&... args)
@@ -111,6 +107,11 @@ namespace ROS2
     void ROS2Lidar2DSensorComponent::FrequencyTick()
     {
         RaycastResult lastScanResults = m_lidarCore.PerformRaycast();
+
+        if (!m_sensorConfiguration.m_publishingEnabled)
+        { // Skip publishing when it is disabled.
+            return;
+        }
 
         auto* ros2Frame = GetEntity()->FindComponent<ROS2FrameComponent>();
         auto message = sensor_msgs::msg::LaserScan();
