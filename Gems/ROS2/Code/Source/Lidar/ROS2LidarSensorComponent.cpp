@@ -107,10 +107,6 @@ namespace ROS2
             m_sensorConfiguration.m_frequency,
             [this]([[maybe_unused]] auto&&... args)
             {
-                if (!m_sensorConfiguration.m_publishingEnabled)
-                {
-                    return;
-                }
                 FrequencyTick();
             },
             [this]([[maybe_unused]] auto&&... args)
@@ -135,7 +131,7 @@ namespace ROS2
     {
         auto entityTransform = GetEntity()->FindComponent<AzFramework::TransformComponent>();
 
-        if (m_canRaycasterPublish)
+        if (m_canRaycasterPublish && m_sensorConfiguration.m_publishingEnabled)
         {
             const builtin_interfaces::msg::Time timestamp = ROS2Interface::Get()->GetROSTimestamp();
             LidarRaycasterRequestBus::Event(
@@ -146,8 +142,8 @@ namespace ROS2
 
         auto lastScanResults = m_lidarCore.PerformRaycast();
 
-        if (m_canRaycasterPublish)
-        { // Skip publishing when it can be handled by the raycaster.
+        if (m_canRaycasterPublish || !m_sensorConfiguration.m_publishingEnabled)
+        { // Skip publishing when it is disabled or can be handled by the raycaster.
             return;
         }
 
