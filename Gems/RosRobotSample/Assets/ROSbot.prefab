@@ -284,7 +284,8 @@
                                         "MaterialAsset": {
                                             "assetId": {
                                                 "guid": "{D5BE771A-53A9-534E-8DCC-A91D6127540D}"
-                                            }
+                                            },
+                                            "assetHint": "robot/rosbot_xl_description/meshes/materials/antenna_plastic_-_matte_black_.azmaterial"
                                         }
                                     }
                                 }
@@ -332,7 +333,8 @@
                                         "MaterialAsset": {
                                             "assetId": {
                                                 "guid": "{D5BE771A-53A9-534E-8DCC-A91D6127540D}"
-                                            }
+                                            },
+                                            "assetHint": "robot/rosbot_xl_description/meshes/materials/antenna_plastic_-_matte_black_.azmaterial"
                                         }
                                     }
                                 }
@@ -1306,7 +1308,7 @@
                                     "guid": "{7F445A99-8C11-5417-9D63-8BCC7DCA76C8}",
                                     "subId": 1509562746
                                 },
-                                "assetHint": "robot/rosbot_xl_description/meshes/body_colision.pxmesh"
+                                "assetHint": "robot/rosbot_xl_description/meshes/body_colision.stl.pxmesh"
                             },
                             "Configuration": {
                                 "PhysicsAsset": {
@@ -1315,7 +1317,7 @@
                                         "subId": 1509562746
                                     },
                                     "loadBehavior": "QueueLoad",
-                                    "assetHint": "robot/rosbot_xl_description/meshes/body_colision.pxmesh"
+                                    "assetHint": "robot/rosbot_xl_description/meshes/body_colision.stl.pxmesh"
                                 },
                                 "UseMaterialsFromAsset": false
                             }
@@ -1389,8 +1391,8 @@
                                     "IsDrive": true
                                 }
                             ],
-                            "Track": 0.17000000178813934,
-                            "Wheelbase": 0.24799999594688416
+                            "Track": 0.27000001072883606,
+                            "Wheelbase": 0.3319999873638153
                         },
                         "DriveModel": {
                             "Limits": {
@@ -2032,8 +2034,7 @@
                     "Id": 16056351394850261418,
                     "Controller": {
                         "Configuration": {
-                            "Field of View": 60.0,
-                            "EditorEntityId": 15598184734561212878
+                            "Field of View": 60.0
                         }
                     }
                 },
