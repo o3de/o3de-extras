@@ -1,0 +1,66 @@
+{
+    "values": [
+        {
+            "$type": "MotionGroup",
+            "name": "Left Strafe",
+            "selectedRootBone": "RootNode",
+            "id": "{2C22FEFA-1838-5345-AB0B-F71085DA6DD4}",
+            "rules": {
+                "rules": [
+                    {
+                        "$type": "MotionSamplingRule"
+                    },
+                    {
+                        "$type": "EMotionFX::Pipeline::Rule::MotionMetaDataRule",
+                        "data": {
+                            "motionEventTable": {
+                                "tracks": [
+                                    {
+                                        "$type": "AnimGraphSyncTrack",
+                                        "name": "Sync",
+                                        "deletable": false,
+                                        "events": [
+                                            {
+                                                "eventDatas": [
+                                                    {
+                                                        "$type": "TwoStringEventData",
+                                                        "subject": "LeftFoot",
+                                                        "mirrorSubject": "RightFoot"
+                                                    }
+                                                ],
+                                                "startTime": 0.2054794579744339,
+                                                "endTime": 0.2054794579744339
+                                            },
+                                            {
+                                                "eventDatas": [
+                                                    {
+                                                        "$type": "TwoStringEventData",
+                                                        "subject": "RightFoot",
+                                                        "mirrorSubject": "LeftFoot"
+                                                    }
+                                                ],
+                                                "startTime": 0.5479452013969421,
+                                                "endTime": 0.5479452013969421
+                                            }
+                                        ]
+                                    }
+                                ]
+                            }
+                        }
+                    },
+                    {
+                        "$type": "EMotionFX::Pipeline::Rule::RootMotionExtractionRule",
+                        "data": {
+                            "sampleJoint": "mixamorig:Hips"
+                        }
+                    }
+                ]
+            }
+        },
+        {
+            "$type": "PrefabGroup",
+            "name": "Mixamo/Animations/Left Strafe_fbx.procprefab",
+            "id": "{4B0D9660-06EA-562E-902F-A18C893FAAE0}"
+        }
+    ]
+}

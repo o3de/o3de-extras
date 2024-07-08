@@ -1,0 +1,30 @@
+{
+    "materialType": "@gemroot:Atom_Feature_Common@/Assets/Materials/Types/StandardPBR.materialtype",
+    "materialTypeVersion": 5,
+    "propertyValues": {
+        "baseColor.color": [
+            0.5,
+            0.5,
+            0.5,
+            1.0
+        ],
+        "baseColor.textureBlendMode": "Lerp",
+        "baseColor.textureMap": "textures/mixamo_logo_basecolor.png",
+        "emissive.color": [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+        ],
+        "emissive.intensity": 0.0,
+        "emissive.useTexture": false,
+        "irradiance.irradianceColorSource": "BaseColor",
+        "metallic.useTexture": false,
+        "occlusion.diffuseUseTexture": false,
+        "opacity.alphaSource": "Split",
+        "opacity.mode": "Cutout",
+        "opacity.textureMap": "textures/mixamo_logo_alpha.png",
+        "roughness.factor": 0.33000001311302185,
+        "roughness.useTexture": false
+    }
+}

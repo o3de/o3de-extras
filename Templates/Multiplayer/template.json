@@ -1,554 +1,637 @@
 {
     "template_name": "Multiplayer",
-    "version": "2.0.0",
-    "origin": "Open 3D Engine - o3de.org",
-    "repo_uri": "https://raw.githubusercontent.com/o3de/o3de-extras/development",
-    "license": "https://opensource.org/licenses/MIT",
+    "origin": "The primary repo for Multiplayer goes here: i.e. http://www.mydomain.com",
+    "license": "What license Multiplayer uses goes here: i.e. https://opensource.org/licenses/MIT",
     "display_name": "Multiplayer",
-    "summary": "A multiplayer project template. Includes a built in network 3rd person player, player spawner, and network filtering example.",
-    "canonical_tags": [
-        "Template",
-        "Networking"
-    ],
+    "summary": "A short description of Multiplayer.",
+    "canonical_tags": [],
     "user_tags": [
         "Multiplayer"
     ],
     "icon_path": "preview.png",
     "copyFiles": [
         {
-            "file": "${NameLower}_asset_files.cmake",
+            "file": ".DS_Store",
             "isTemplated": false
         },
         {
-            "file": "BURT/BURT.motionset",
+            "file": ".command_settings",
             "isTemplated": false
         },
         {
-            "file": "BURT/BURTActor.fbx",
+            "file": ".gitignore",
             "isTemplated": false
         },
         {
-            "file": "BURT/BURTActor.fbx.assetinfo",
+            "file": "AssetBundling/SeedLists/DefaultLevel.seed",
             "isTemplated": false
         },
         {
-            "file": "BURT/HumanoidCharacter.animgraph",
+            "file": "Assets/.DS_Store",
             "isTemplated": false
         },
         {
-            "file": "BURT/Motions/AimStrafe_Backwards.fbx",
+            "file": "Assets/Characters/.DS_Store",
             "isTemplated": false
         },
         {
-            "file": "BURT/Motions/AimStrafe_Draw.fbx",
+            "file": "Assets/Characters/Mixamo/.DS_Store",
             "isTemplated": false
         },
         {
-            "file": "BURT/Motions/AimStrafe_Forwards.fbx",
+            "file": "Assets/Characters/Mixamo/Animations/Climbing Ladder.fbx",
             "isTemplated": false
         },
         {
-            "file": "BURT/Motions/AimStrafe_Holster.fbx",
+            "file": "Assets/Characters/Mixamo/Animations/Climbing Ladder.fbx.assetinfo",
             "isTemplated": false
         },
         {
-            "file": "BURT/Motions/AimStrafe_Idle.fbx",
+            "file": "Assets/Characters/Mixamo/Animations/Dying.fbx",
             "isTemplated": false
         },
         {
-            "file": "BURT/Motions/AimStrafe_Left_Backwards.fbx",
+            "file": "Assets/Characters/Mixamo/Animations/Dying.fbx.assetinfo",
             "isTemplated": false
         },
         {
-            "file": "BURT/Motions/AimStrafe_Left_Forwards.fbx",
+            "file": "Assets/Characters/Mixamo/Animations/Fall A Land To Run Forward.fbx",
             "isTemplated": false
         },
         {
-            "file": "BURT/Motions/AimStrafe_Right_Backwards.fbx",
+            "file": "Assets/Characters/Mixamo/Animations/Fall A Land To Run Forward.fbx.assetinfo",
             "isTemplated": false
         },
         {
-            "file": "BURT/Motions/AimStrafe_Right_Forwards.fbx",
+            "file": "Assets/Characters/Mixamo/Animations/Fall A Land To Standing Idle 01.fbx",
             "isTemplated": false
         },
         {
-            "file": "BURT/Motions/AimStrafe_Run_Backwards.fbx",
+            "file": "Assets/Characters/Mixamo/Animations/Fall A Land To Standing Idle 01.fbx.assetinfo",
             "isTemplated": false
         },
         {
-            "file": "BURT/Motions/AimStrafe_Run_Forwards.fbx",
+            "file": "Assets/Characters/Mixamo/Animations/Fall A Loop.fbx",
             "isTemplated": false
         },
         {
-            "file": "BURT/Motions/AimStrafe_Run_Left_Forwards.fbx",
+            "file": "Assets/Characters/Mixamo/Animations/Fall A Loop.fbx.assetinfo",
             "isTemplated": false
         },
         {
-            "file": "BURT/Motions/AimStrafe_Run_Right_Forwards.fbx",
+            "file": "Assets/Characters/Mixamo/Animations/Getting Up.fbx",
             "isTemplated": false
         },
         {
-            "file": "BURT/Motions/AimStrafe_Shoot.fbx",
+            "file": "Assets/Characters/Mixamo/Animations/Getting Up.fbx.assetinfo",
             "isTemplated": false
         },
         {
-            "file": "BURT/Motions/AimStrafe_Shoot.fbx.assetinfo",
+            "file": "Assets/Characters/Mixamo/Animations/Hit Reaction Pistol Front.fbx",
             "isTemplated": false
         },
         {
-            "file": "BURT/Motions/Aim_1D_Level.fbx",
+            "file": "Assets/Characters/Mixamo/Animations/Hit Reaction Pistol Front.fbx.assetinfo",
             "isTemplated": false
         },
         {
-            "file": "BURT/Motions/Crouch_Idle.fbx",
+            "file": "Assets/Characters/Mixamo/Animations/Hit Reaction Pistol Left.fbx",
             "isTemplated": false
         },
         {
-            "file": "BURT/Motions/Crouch_Walk.fbx",
+            "file": "Assets/Characters/Mixamo/Animations/Hit Reaction Pistol Left.fbx.assetinfo",
             "isTemplated": false
         },
         {
-            "file": "BURT/Motions/Crouch_Walk_Backwards.fbx",
+            "file": "Assets/Characters/Mixamo/Animations/Idle.fbx",
             "isTemplated": false
         },
         {
-            "file": "BURT/Motions/Crouch_Walk_Down.fbx",
+            "file": "Assets/Characters/Mixamo/Animations/Idle.fbx.assetinfo",
             "isTemplated": false
         },
         {
-            "file": "BURT/Motions/Crouch_Walk_Down.fbx.assetinfo",
+            "file": "Assets/Characters/Mixamo/Animations/Jump.fbx",
             "isTemplated": false
         },
         {
-            "file": "BURT/Motions/Crouch_Walk_Up.fbx",
+            "file": "Assets/Characters/Mixamo/Animations/Jump.fbx.assetinfo",
             "isTemplated": false
         },
         {
-            "file": "BURT/Motions/Death_Fall_Back.fbx",
+            "file": "Assets/Characters/Mixamo/Animations/Knocked Down.fbx",
             "isTemplated": false
         },
         {
-            "file": "BURT/Motions/Death_Fall_Forward.fbx",
+            "file": "Assets/Characters/Mixamo/Animations/Left Strafe Walking.fbx",
             "isTemplated": false
         },
         {
-            "file": "BURT/Motions/Idle.fbx",
+            "file": "Assets/Characters/Mixamo/Animations/Left Strafe Walking.fbx.assetinfo",
             "isTemplated": false
         },
         {
-            "file": "BURT/Motions/Idle_Alt_A.fbx",
+            "file": "Assets/Characters/Mixamo/Animations/Left Strafe.fbx",
             "isTemplated": false
         },
         {
-            "file": "BURT/Motions/Idle_To_Run.fbx",
+            "file": "Assets/Characters/Mixamo/Animations/Left Strafe.fbx.assetinfo",
             "isTemplated": false
         },
         {
-            "file": "BURT/Motions/Idle_To_Run_Down.fbx",
+            "file": "Assets/Characters/Mixamo/Animations/Left Turn 90.fbx",
             "isTemplated": false
         },
         {
-            "file": "BURT/Motions/Idle_To_Run_Left.fbx",
+            "file": "Assets/Characters/Mixamo/Animations/Left Turn 90.fbx.assetinfo",
             "isTemplated": false
         },
         {
-            "file": "BURT/Motions/Idle_To_Run_Right.fbx",
+            "file": "Assets/Characters/Mixamo/Animations/Left Turn.fbx",
             "isTemplated": false
         },
         {
-            "file": "BURT/Motions/Idle_To_Run_Up.fbx",
+            "file": "Assets/Characters/Mixamo/Animations/Left Turn.fbx.assetinfo",
             "isTemplated": false
         },
         {
-            "file": "BURT/Motions/Idle_To_Walk.fbx",
+            "file": "Assets/Characters/Mixamo/Animations/Opening.fbx",
             "isTemplated": false
         },
         {
-            "file": "BURT/Motions/Idle_To_Walk_Down.fbx",
+            "file": "Assets/Characters/Mixamo/Animations/Opening.fbx.assetinfo",
             "isTemplated": false
         },
         {
-            "file": "BURT/Motions/Idle_To_Walk_Left.fbx",
+            "file": "Assets/Characters/Mixamo/Animations/Picking Up.fbx",
             "isTemplated": false
         },
         {
-            "file": "BURT/Motions/Idle_To_Walk_Right.fbx",
+            "file": "Assets/Characters/Mixamo/Animations/Picking Up.fbx.assetinfo",
             "isTemplated": false
         },
         {
-            "file": "BURT/Motions/Idle_To_Walk_Up.fbx",
+            "file": "Assets/Characters/Mixamo/Animations/Pistol Idle.fbx",
             "isTemplated": false
         },
         {
-            "file": "BURT/Motions/Interact.fbx",
+            "file": "Assets/Characters/Mixamo/Animations/Pistol Idle.fbx.assetinfo",
             "isTemplated": false
         },
         {
-            "file": "BURT/Motions/Interact_In.fbx",
+            "file": "Assets/Characters/Mixamo/Animations/Pistol Jump 2.fbx",
             "isTemplated": false
         },
         {
-            "file": "BURT/Motions/Interact_Out.fbx",
+            "file": "Assets/Characters/Mixamo/Animations/Pistol Jump 2.fbx.assetinfo",
             "isTemplated": false
         },
         {
-            "file": "BURT/Motions/Jump_DoubleJump_Float.fbx",
+            "file": "Assets/Characters/Mixamo/Animations/Pistol Jump.fbx",
             "isTemplated": false
         },
         {
-            "file": "BURT/Motions/Jump_DoubleJump_Land_To_Idle.fbx",
+            "file": "Assets/Characters/Mixamo/Animations/Pistol Jump.fbx.assetinfo",
             "isTemplated": false
         },
         {
-            "file": "BURT/Motions/Jump_DoubleJump_Launch.fbx",
+            "file": "Assets/Characters/Mixamo/Animations/Pistol Kneel To Stand.fbx",
             "isTemplated": false
         },
         {
-            "file": "BURT/Motions/Jump_Fall.fbx",
+            "file": "Assets/Characters/Mixamo/Animations/Pistol Kneel To Stand.fbx.assetinfo",
             "isTemplated": false
         },
         {
-            "file": "BURT/Motions/Jump_Land_Hard.fbx",
+            "file": "Assets/Characters/Mixamo/Animations/Pistol Kneeling Idle.fbx",
             "isTemplated": false
         },
         {
-            "file": "BURT/Motions/Jump_Land_Medium.fbx",
+            "file": "Assets/Characters/Mixamo/Animations/Pistol Kneeling Idle.fbx.assetinfo",
             "isTemplated": false
         },
         {
-            "file": "BURT/Motions/Jump_Land_Soft.fbx",
+            "file": "Assets/Characters/Mixamo/Animations/Pistol Recoil.fbx",
             "isTemplated": false
         },
         {
-            "file": "BURT/Motions/Jump_Running_Land_To_Idle.fbx",
+            "file": "Assets/Characters/Mixamo/Animations/Pistol Recoil.fbx.assetinfo",
             "isTemplated": false
         },
         {
-            "file": "BURT/Motions/Jump_Running_Launch.fbx",
+            "file": "Assets/Characters/Mixamo/Animations/Pistol Run Arc 2.fbx",
             "isTemplated": false
         },
         {
-            "file": "BURT/Motions/Jump_Up.fbx",
+            "file": "Assets/Characters/Mixamo/Animations/Pistol Run Arc 2.fbx.assetinfo",
             "isTemplated": false
         },
         {
-            "file": "BURT/Motions/MotionTurn_Run_Left_180.fbx",
+            "file": "Assets/Characters/Mixamo/Animations/Pistol Run Arc.fbx",
             "isTemplated": false
         },
         {
-            "file": "BURT/Motions/MotionTurn_Run_Left_180_Aim.fbx",
+            "file": "Assets/Characters/Mixamo/Animations/Pistol Run Arc.fbx.assetinfo",
             "isTemplated": false
         },
         {
-            "file": "BURT/Motions/MotionTurn_Run_Left_90.fbx",
+            "file": "Assets/Characters/Mixamo/Animations/Pistol Run Backward Arc 2.fbx",
             "isTemplated": false
         },
         {
-            "file": "BURT/Motions/MotionTurn_Run_Left_90_Aim.fbx",
+            "file": "Assets/Characters/Mixamo/Animations/Pistol Run Backward Arc 2.fbx.assetinfo",
             "isTemplated": false
         },
         {
-            "file": "BURT/Motions/MotionTurn_Run_Right_180.fbx",
+            "file": "Assets/Characters/Mixamo/Animations/Pistol Run Backward Arc.fbx",
             "isTemplated": false
         },
         {
-            "file": "BURT/Motions/MotionTurn_Run_Right_180_Aim.fbx",
+            "file": "Assets/Characters/Mixamo/Animations/Pistol Run Backward Arc.fbx.assetinfo",
             "isTemplated": false
         },
         {
-            "file": "BURT/Motions/MotionTurn_Run_Right_90.fbx",
+            "file": "Assets/Characters/Mixamo/Animations/Pistol Run Backward.fbx",
             "isTemplated": false
         },
         {
-            "file": "BURT/Motions/MotionTurn_Run_Right_90_Aim.fbx",
+            "file": "Assets/Characters/Mixamo/Animations/Pistol Run Backward.fbx.assetinfo",
             "isTemplated": false
         },
         {
-            "file": "BURT/Motions/MotionTurn_Walk_Left_180.fbx",
+            "file": "Assets/Characters/Mixamo/Animations/Pistol Run.fbx",
             "isTemplated": false
         },
         {
-            "file": "BURT/Motions/MotionTurn_Walk_Left_180_Aim.fbx",
+            "file": "Assets/Characters/Mixamo/Animations/Pistol Run.fbx.assetinfo",
             "isTemplated": false
         },
         {
-            "file": "BURT/Motions/MotionTurn_Walk_Left_90.fbx",
+            "file": "Assets/Characters/Mixamo/Animations/Pistol Stand To Kneel.fbx",
             "isTemplated": false
         },
         {
-            "file": "BURT/Motions/MotionTurn_Walk_Left_90_Aim.fbx",
+            "file": "Assets/Characters/Mixamo/Animations/Pistol Stand To Kneel.fbx.assetinfo",
             "isTemplated": false
         },
         {
-            "file": "BURT/Motions/MotionTurn_Walk_Right_180.fbx",
+            "file": "Assets/Characters/Mixamo/Animations/Pistol Strafe 2.fbx",
             "isTemplated": false
         },
         {
-            "file": "BURT/Motions/MotionTurn_Walk_Right_180_Aim.fbx",
+            "file": "Assets/Characters/Mixamo/Animations/Pistol Strafe 2.fbx.assetinfo",
             "isTemplated": false
         },
         {
-            "file": "BURT/Motions/MotionTurn_Walk_Right_90.fbx",
+            "file": "Assets/Characters/Mixamo/Animations/Pistol Strafe.fbx",
             "isTemplated": false
         },
         {
-            "file": "BURT/Motions/MotionTurn_Walk_Right_90_Aim.fbx",
+            "file": "Assets/Characters/Mixamo/Animations/Pistol Strafe.fbx.assetinfo",
             "isTemplated": false
         },
         {
-            "file": "BURT/Motions/Run_To_Idle.fbx",
+            "file": "Assets/Characters/Mixamo/Animations/Pistol Walk Arc 2.fbx",
             "isTemplated": false
         },
         {
-            "file": "BURT/Motions/Run_To_Idle_Down.fbx",
+            "file": "Assets/Characters/Mixamo/Animations/Pistol Walk Arc 2.fbx.assetinfo",
             "isTemplated": false
         },
         {
-            "file": "BURT/Motions/Run_To_Idle_Up.fbx",
+            "file": "Assets/Characters/Mixamo/Animations/Pistol Walk Arc.fbx",
             "isTemplated": false
         },
         {
-            "file": "BURT/Motions/Shoot.fbx",
+            "file": "Assets/Characters/Mixamo/Animations/Pistol Walk Arc.fbx.assetinfo",
             "isTemplated": false
         },
         {
-            "file": "BURT/Motions/Shoot.fbx.assetinfo",
+            "file": "Assets/Characters/Mixamo/Animations/Pistol Walk Backward Arc 2.fbx",
             "isTemplated": false
         },
         {
-            "file": "BURT/Motions/Strafe_Left.fbx",
+            "file": "Assets/Characters/Mixamo/Animations/Pistol Walk Backward Arc 2.fbx.assetinfo",
             "isTemplated": false
         },
         {
-            "file": "BURT/Motions/Strafe_Right.fbx",
+            "file": "Assets/Characters/Mixamo/Animations/Pistol Walk Backward Arc.fbx",
             "isTemplated": false
         },
         {
-            "file": "BURT/Motions/Strafe_Run_Forwards 001.fbx",
+            "file": "Assets/Characters/Mixamo/Animations/Pistol Walk Backward Arc.fbx.assetinfo",
             "isTemplated": false
         },
         {
-            "file": "BURT/Motions/Strafe_Run_Forwards.fbx",
+            "file": "Assets/Characters/Mixamo/Animations/Pistol Walk Backward.fbx",
             "isTemplated": false
         },
         {
-            "file": "BURT/Motions/Strafe_Run_Forwards.fbx.assetinfo",
+            "file": "Assets/Characters/Mixamo/Animations/Pistol Walk Backward.fbx.assetinfo",
             "isTemplated": false
         },
         {
-            "file": "BURT/Motions/Strafe_Run_Forwards_Down.fbx",
+            "file": "Assets/Characters/Mixamo/Animations/Pistol Walk.fbx",
             "isTemplated": false
         },
         {
-            "file": "BURT/Motions/Strafe_Run_Forwards_Down.fbx.assetinfo",
+            "file": "Assets/Characters/Mixamo/Animations/Pistol Walk.fbx.assetinfo",
             "isTemplated": false
         },
         {
-            "file": "BURT/Motions/Strafe_Run_Forwards_DupA.fbx",
+            "file": "Assets/Characters/Mixamo/Animations/Pull Heavy Object.fbx",
             "isTemplated": false
         },
         {
-            "file": "BURT/Motions/Strafe_Run_Forwards_DupB.fbx",
+            "file": "Assets/Characters/Mixamo/Animations/Pull Heavy Object.fbx.assetinfo",
             "isTemplated": false
         },
         {
-            "file": "BURT/Motions/Strafe_Run_Forwards_Left_45.fbx",
+            "file": "Assets/Characters/Mixamo/Animations/Pushing.fbx",
             "isTemplated": false
         },
         {
-            "file": "BURT/Motions/Strafe_Run_Forwards_Right_45.fbx",
+            "file": "Assets/Characters/Mixamo/Animations/Pushing.fbx.assetinfo",
             "isTemplated": false
         },
         {
-            "file": "BURT/Motions/Strafe_Run_Forwards_Up.fbx",
+            "file": "Assets/Characters/Mixamo/Animations/Right Strafe Walking.fbx",
             "isTemplated": false
         },
         {
-            "file": "BURT/Motions/Strafe_Run_Forwards_Up.fbx.assetinfo",
+            "file": "Assets/Characters/Mixamo/Animations/Right Strafe Walking.fbx.assetinfo",
             "isTemplated": false
         },
         {
-            "file": "BURT/Motions/Strafe_Run_Left45.fbx",
+            "file": "Assets/Characters/Mixamo/Animations/Right Strafe.fbx",
             "isTemplated": false
         },
         {
-            "file": "BURT/Motions/Strafe_Run_Right45.fbx",
+            "file": "Assets/Characters/Mixamo/Animations/Right Strafe.fbx.assetinfo",
             "isTemplated": false
         },
         {
-            "file": "BURT/Motions/Strafe_Walk_Backwards.fbx",
+            "file": "Assets/Characters/Mixamo/Animations/Right Turn 90.fbx",
             "isTemplated": false
         },
         {
-            "file": "BURT/Motions/Strafe_Walk_Forwards.fbx",
+            "file": "Assets/Characters/Mixamo/Animations/Right Turn 90.fbx.assetinfo",
             "isTemplated": false
         },
         {
-            "file": "BURT/Motions/Strafe_Walk_Forwards.fbx.assetinfo",
+            "file": "Assets/Characters/Mixamo/Animations/Right Turn.fbx",
             "isTemplated": false
         },
         {
-            "file": "BURT/Motions/Strafe_Walk_Forwards_Down.fbx",
+            "file": "Assets/Characters/Mixamo/Animations/Right Turn.fbx.assetinfo",
             "isTemplated": false
         },
         {
-            "file": "BURT/Motions/Strafe_Walk_Forwards_Down.fbx.assetinfo",
+            "file": "Assets/Characters/Mixamo/Animations/Running Backward.fbx",
             "isTemplated": false
         },
         {
-            "file": "BURT/Motions/Strafe_Walk_Forwards_DupA.fbx",
+            "file": "Assets/Characters/Mixamo/Animations/Running Backward.fbx.assetinfo",
             "isTemplated": false
         },
         {
-            "file": "BURT/Motions/Strafe_Walk_Forwards_DupB.fbx",
+            "file": "Assets/Characters/Mixamo/Animations/Running Jump.fbx",
             "isTemplated": false
         },
         {
-            "file": "BURT/Motions/Strafe_Walk_Forwards_Left_45.fbx",
+            "file": "Assets/Characters/Mixamo/Animations/Running Jump.fbx.assetinfo",
             "isTemplated": false
         },
         {
-            "file": "BURT/Motions/Strafe_Walk_Forwards_Right_45.fbx",
+            "file": "Assets/Characters/Mixamo/Animations/Running.fbx.assetinfo",
             "isTemplated": false
         },
         {
-            "file": "BURT/Motions/Strafe_Walk_Forwards_Up.fbx",
+            "file": "Assets/Characters/Mixamo/Animations/Stunned.fbx",
             "isTemplated": false
         },
         {
-            "file": "BURT/Motions/Strafe_Walk_Forwards_Up.fbx.assetinfo",
+            "file": "Assets/Characters/Mixamo/Animations/Stunned.fbx.assetinfo",
             "isTemplated": false
         },
         {
-            "file": "BURT/Motions/Strafe_Walk_InPlace.fbx",
+            "file": "Assets/Characters/Mixamo/Animations/Victory.fbx",
             "isTemplated": false
         },
         {
-            "file": "BURT/Motions/Strafe_Walk_InPlace_LeftTransition.fbx",
+            "file": "Assets/Characters/Mixamo/Animations/Victory.fbx.assetinfo",
             "isTemplated": false
         },
         {
-            "file": "BURT/Motions/Strafe_Walk_InPlace_RightTransition.fbx",
+            "file": "Assets/Characters/Mixamo/Animations/Walking Backwards.fbx",
             "isTemplated": false
         },
         {
-            "file": "BURT/Motions/Take_Damage_Front.fbx",
+            "file": "Assets/Characters/Mixamo/Animations/Walking Backwards.fbx.assetinfo",
             "isTemplated": false
         },
         {
-            "file": "BURT/Motions/Take_Damage_Front_Additive.fbx",
+            "file": "Assets/Characters/Mixamo/Animations/Walking.fbx",
             "isTemplated": false
         },
         {
-            "file": "BURT/Motions/Take_Damage_Left.fbx",
+            "file": "Assets/Characters/Mixamo/Animations/Walking.fbx.assetinfo",
             "isTemplated": false
         },
         {
-            "file": "BURT/Motions/Take_Damage_Left_Additive.fbx",
+            "file": "Assets/Characters/Mixamo/Animations/running.fbx",
             "isTemplated": false
         },
         {
-            "file": "BURT/Motions/Take_Damage_Rear.fbx",
+            "file": "Assets/Characters/Mixamo/Animations/stub",
             "isTemplated": false
         },
         {
-            "file": "BURT/Motions/Take_Damage_Rear_Additive.fbx",
+            "file": "Assets/Characters/Mixamo/LICENSE.txt",
+            "isTemplated": true
+        },
+        {
+            "file": "Assets/Characters/Mixamo/Ybot/.DS_Store",
+            "isTemplated": false
+        },
+        {
+            "file": "Assets/Characters/Mixamo/Ybot/YBot.animgraph",
+            "isTemplated": false
+        },
+        {
+            "file": "Assets/Characters/Mixamo/Ybot/YBot.emfxworkspace",
+            "isTemplated": false
+        },
+        {
+            "file": "Assets/Characters/Mixamo/Ybot/YBot.motionset",
+            "isTemplated": false
+        },
+        {
+            "file": "Assets/Characters/Mixamo/Ybot/skins/mixamo_logo.material",
+            "isTemplated": false
+        },
+        {
+            "file": "Assets/Characters/Mixamo/Ybot/skins/ybot_body_base.material",
+            "isTemplated": false
+        },
+        {
+            "file": "Assets/Characters/Mixamo/Ybot/skins/ybot_head_base.material",
+            "isTemplated": false
+        },
+        {
+            "file": "Assets/Characters/Mixamo/Ybot/skins/ybot_joints_base.material",
+            "isTemplated": false
+        },
+        {
+            "file": "Assets/Characters/Mixamo/Ybot/test_data/ybot_mesh_test.fbx",
+            "isTemplated": false
+        },
+        {
+            "file": "Assets/Characters/Mixamo/Ybot/test_data/ybot_mesh_test_Body_MAT.material",
+            "isTemplated": false
+        },
+        {
+            "file": "Assets/Characters/Mixamo/Ybot/test_data/ybot_mesh_test_Head_MAT.material",
+            "isTemplated": false
+        },
+        {
+            "file": "Assets/Characters/Mixamo/Ybot/test_data/ybot_mesh_test_Joints_MAT.material",
+            "isTemplated": false
+        },
+        {
+            "file": "Assets/Characters/Mixamo/Ybot/test_data/ybot_mesh_test_Left_Arm_MAT.material",
+            "isTemplated": false
+        },
+        {
+            "file": "Assets/Characters/Mixamo/Ybot/test_data/ybot_mesh_test_Left_Leg_MAT.material",
+            "isTemplated": false
+        },
+        {
+            "file": "Assets/Characters/Mixamo/Ybot/test_data/ybot_mesh_test_Logo_Plate_MAT.material",
+            "isTemplated": false
+        },
+        {
+            "file": "Assets/Characters/Mixamo/Ybot/test_data/ybot_mesh_test_Right_Arm_MAT.material",
+            "isTemplated": false
+        },
+        {
+            "file": "Assets/Characters/Mixamo/Ybot/test_data/ybot_mesh_test_Right_Leg_MAT.material",
+            "isTemplated": false
+        },
+        {
+            "file": "Assets/Characters/Mixamo/Ybot/textures/Alpha_base_Joints_AO.png",
+            "isTemplated": false
+        },
+        {
+            "file": "Assets/Characters/Mixamo/Ybot/textures/Alpha_base_Joints_basecolor.png",
+            "isTemplated": false
+        },
+        {
+            "file": "Assets/Characters/Mixamo/Ybot/textures/Alpha_base_Joints_cavity.png",
+            "isTemplated": false
+        },
+        {
+            "file": "Assets/Characters/Mixamo/Ybot/textures/Alpha_base_Joints_normal.png",
+            "isTemplated": false
+        },
+        {
+            "file": "Assets/Characters/Mixamo/Ybot/textures/Alpha_base_body_ao.png",
             "isTemplated": false
         },
         {
-            "file": "BURT/Motions/Take_Damage_Right.fbx",
+            "file": "Assets/Characters/Mixamo/Ybot/textures/Alpha_base_body_basecolor.png",
             "isTemplated": false
         },
         {
-            "file": "BURT/Motions/Take_Damage_Right_Additive.fbx",
+            "file": "Assets/Characters/Mixamo/Ybot/textures/Alpha_base_body_cavity.png",
             "isTemplated": false
         },
         {
-            "file": "BURT/Motions/Turn_OnSpot_180_Left.fbx",
+            "file": "Assets/Characters/Mixamo/Ybot/textures/Alpha_base_body_normal.png",
             "isTemplated": false
         },
         {
-            "file": "BURT/Motions/Turn_OnSpot_180_Right.fbx",
+            "file": "Assets/Characters/Mixamo/Ybot/textures/Alpha_base_head_ao.png",
             "isTemplated": false
         },
         {
-            "file": "BURT/Motions/Turn_OnSpot_90_Left.fbx",
+            "file": "Assets/Characters/Mixamo/Ybot/textures/Alpha_base_head_basecolor.png",
             "isTemplated": false
         },
         {
-            "file": "BURT/Motions/Turn_OnSpot_90_Right.fbx",
+            "file": "Assets/Characters/Mixamo/Ybot/textures/Alpha_base_head_cavity.png",
             "isTemplated": false
         },
         {
-            "file": "BURT/Motions/Turn_OnSpot_Crouch_180_Left.fbx",
+            "file": "Assets/Characters/Mixamo/Ybot/textures/Alpha_base_head_normal.png",
             "isTemplated": false
         },
         {
-            "file": "BURT/Motions/Turn_OnSpot_Crouch_180_Right.fbx",
+            "file": "Assets/Characters/Mixamo/Ybot/textures/mixamo_logo_alpha.png",
             "isTemplated": false
         },
         {
-            "file": "BURT/Motions/Turn_OnSpot_Crouch_90_Left.fbx",
+            "file": "Assets/Characters/Mixamo/Ybot/textures/mixamo_logo_basecolor.png",
             "isTemplated": false
         },
         {
-            "file": "BURT/Motions/Turn_OnSpot_Crouch_90_Right.fbx",
+            "file": "Assets/Characters/Mixamo/Ybot/textures/ps838.tmp",
             "isTemplated": false
         },
         {
-            "file": "BURT/Motions/Turn_Tight_Crouch_Left.fbx",
+            "file": "Assets/Characters/Mixamo/Ybot/ybot.fbx",
             "isTemplated": false
         },
         {
-            "file": "BURT/Motions/Turn_Tight_Crouch_Right.fbx",
+            "file": "Assets/Characters/Mixamo/Ybot/ybot.fbx.assetinfo",
             "isTemplated": false
         },
         {
-            "file": "BURT/Motions/Turn_Tight_Run_Left.fbx",
+            "file": "Assets/Characters/Mixamo/Ybot/ybot_Body_MAT.material",
             "isTemplated": false
         },
         {
-            "file": "BURT/Motions/Turn_Tight_Run_Right.fbx",
+            "file": "Assets/Characters/Mixamo/Ybot/ybot_Head_MAT.material",
             "isTemplated": false
         },
         {
-            "file": "BURT/Motions/Turn_Tight_Walk_Left.fbx",
+            "file": "Assets/Characters/Mixamo/Ybot/ybot_Joints_MAT.material",
             "isTemplated": false
         },
         {
-            "file": "BURT/Motions/Turn_Tight_Walk_Left_Backwards.fbx",
+            "file": "Assets/Characters/Mixamo/Ybot/ybot_Left_Arm_MAT.material",
             "isTemplated": false
         },
         {
-            "file": "BURT/Motions/Turn_Tight_Walk_Right.fbx",
+            "file": "Assets/Characters/Mixamo/Ybot/ybot_Left_Leg_MAT.material",
             "isTemplated": false
         },
         {
-            "file": "BURT/Motions/Turn_Tight_Walk_Right_Backwards.fbx",
+            "file": "Assets/Characters/Mixamo/Ybot/ybot_Logo_Plate_MAT.material",
             "isTemplated": false
         },
         {
-            "file": "BURT/Motions/Victory.fbx",
+            "file": "Assets/Characters/Mixamo/Ybot/ybot_Right_Arm_MAT.material",
             "isTemplated": false
         },
         {
-            "file": "BURT/Textures/BURT_ddn.tif",
+            "file": "Assets/Characters/Mixamo/Ybot/ybot_Right_Leg_MAT.material",
             "isTemplated": false
         },
         {
-            "file": "BURT/Textures/BURT_diff.tif",
+            "file": "Assets/Characters/Mixamo/readme.md",
             "isTemplated": false
         },
         {
-            "file": "BURT/Textures/BURT_emis.tif",
+            "file": "Assets/Prefabs/4x4x4BoxGrid.prefab",
             "isTemplated": false
         },
         {
-            "file": "BURT/Textures/BURT_spec_02_spec.tif",
+            "file": "Assets/Prefabs/Player.prefab",
             "isTemplated": false
         },
         {
-            "file": "BURT/burtactor.material",
+            "file": "Assets/Prefabs/laser_pistol.prefab",
             "isTemplated": false
         },
         {
@@ -556,27 +639,11 @@
             "isTemplated": true
         },
         {
-            "file": "Config/AtomImageBuilder/Test_Linear_to_Auto.preset",
+            "file": "CMakePresets.json",
             "isTemplated": false
         },
         {
-            "file": "Config/AtomImageBuilder/Test_Linear_to_Linear.preset",
-            "isTemplated": false
-        },
-        {
-            "file": "Config/AtomImageBuilder/Test_Linear_to_sRGB.preset",
-            "isTemplated": false
-        },
-        {
-            "file": "Config/AtomImageBuilder/Test_sRGB_to_Auto.preset",
-            "isTemplated": false
-        },
-        {
-            "file": "Config/AtomImageBuilder/Test_sRGB_to_Linear.preset",
-            "isTemplated": false
-        },
-        {
-            "file": "Config/AtomImageBuilder/Test_sRGB_to_sRGB.preset",
+            "file": "Config/default_aws_resource_mappings.json",
             "isTemplated": false
         },
         {
@@ -584,399 +651,331 @@
             "isTemplated": false
         },
         {
+            "file": "Gem/${NameLower}_autogen_files.cmake",
+            "isTemplated": false
+        },
+        {
+            "file": "Gem/${NameLower}_client_files.cmake",
+            "isTemplated": false
+        },
+        {
+            "file": "Gem/${NameLower}_files.cmake",
+            "isTemplated": true
+        },
+        {
+            "file": "Gem/${NameLower}_server_files.cmake",
+            "isTemplated": false
+        },
+        {
+            "file": "Gem/${NameLower}_shared_files.cmake",
+            "isTemplated": true
+        },
+        {
+            "file": "Gem/.DS_Store",
+            "isTemplated": false
+        },
+        {
             "file": "Gem/CMakeLists.txt",
+            "isTemplated": true
+        },
+        {
+            "file": "Gem/Include/${Name}/${Name}Bus.h",
+            "isTemplated": true
+        },
+        {
+            "file": "Gem/Include/${Name}/${Name}TypeIds.h",
+            "isTemplated": true
+        },
+        {
+            "file": "Gem/Include/${Name}/GameplayEffectsNotificationBus.h",
+            "isTemplated": true
+        },
+        {
+            "file": "Gem/Include/${Name}/NetworkPrefabSpawnerInterface.h",
+            "isTemplated": true
+        },
+        {
+            "file": "Gem/Include/${Name}/WeaponNotificationBus.h",
+            "isTemplated": true
+        },
+        {
+            "file": "Gem/Include/.DS_Store",
             "isTemplated": false
         },
         {
-            "file": "Gem/Code/${NameLower}_autogen_files.cmake",
+            "file": "Gem/Platform/Android/${NameLower}_android_files.cmake",
+            "isTemplated": true
+        },
+        {
+            "file": "Gem/Platform/Android/${NameLower}_shared_android_files.cmake",
+            "isTemplated": true
+        },
+        {
+            "file": "Gem/Platform/Android/PAL_android.cmake",
+            "isTemplated": true
+        },
+        {
+            "file": "Gem/Platform/Linux/${NameLower}_linux_files.cmake",
+            "isTemplated": true
+        },
+        {
+            "file": "Gem/Platform/Linux/${NameLower}_shared_linux_files.cmake",
+            "isTemplated": true
+        },
+        {
+            "file": "Gem/Platform/Linux/PAL_linux.cmake",
+            "isTemplated": true
+        },
+        {
+            "file": "Gem/Platform/Mac/${NameLower}_mac_files.cmake",
+            "isTemplated": true
+        },
+        {
+            "file": "Gem/Platform/Mac/${NameLower}_shared_mac_files.cmake",
+            "isTemplated": true
+        },
+        {
+            "file": "Gem/Platform/Mac/PAL_mac.cmake",
+            "isTemplated": true
+        },
+        {
+            "file": "Gem/Platform/Windows/${NameLower}_shared_windows_files.cmake",
+            "isTemplated": true
+        },
+        {
+            "file": "Gem/Platform/Windows/${NameLower}_windows_files.cmake",
+            "isTemplated": true
+        },
+        {
+            "file": "Gem/Platform/Windows/PAL_windows.cmake",
+            "isTemplated": true
+        },
+        {
+            "file": "Gem/Platform/iOS/${NameLower}_ios_files.cmake",
+            "isTemplated": true
+        },
+        {
+            "file": "Gem/Platform/iOS/${NameLower}_shared_ios_files.cmake",
+            "isTemplated": true
+        },
+        {
+            "file": "Gem/Platform/iOS/PAL_ios.cmake",
+            "isTemplated": true
+        },
+        {
+            "file": "Gem/Registry/assetprocessor_settings.setreg",
+            "isTemplated": true
+        },
+        {
+            "file": "Gem/Source/${Name}Module.cpp",
+            "isTemplated": true
+        },
+        {
+            "file": "Gem/Source/${Name}SystemComponent.cpp",
+            "isTemplated": true
+        },
+        {
+            "file": "Gem/Source/${Name}SystemComponent.h",
+            "isTemplated": true
+        },
+        {
+            "file": "Gem/Source/${Name}Types.h",
+            "isTemplated": true
+        },
+        {
+            "file": "Gem/Source/.DS_Store",
             "isTemplated": false
         },
         {
-            "file": "Gem/Code/${NameLower}_files.cmake",
-            "isTemplated": true
-        },
-        {
-            "file": "Gem/Code/${NameLower}_shared_files.cmake",
-            "isTemplated": true
-        },
-        {
-            "file": "Gem/Code/CMakeLists.txt",
-            "isTemplated": true
-        },
-        {
-            "file": "Gem/Code/Include/NetworkPrefabSpawnerInterface.h",
-            "isTemplated": true
-        },
-        {
-            "file": "Gem/Code/Platform/Android/${NameLower}_android_files.cmake",
+            "file": "Gem/Source/AutoGen/.DS_Store",
             "isTemplated": false
         },
         {
-            "file": "Gem/Code/Platform/Linux/${NameLower}_linux_files.cmake",
+            "file": "Gem/Source/AutoGen/GameplayEffectsComponent.AutoComponent.xml",
+            "isTemplated": true
+        },
+        {
+            "file": "Gem/Source/AutoGen/NetworkAiComponent.AutoComponent.xml",
+            "isTemplated": true
+        },
+        {
+            "file": "Gem/Source/AutoGen/NetworkAnimationComponent.AutoComponent.xml",
+            "isTemplated": true
+        },
+        {
+            "file": "Gem/Source/AutoGen/NetworkHealthComponent.AutoComponent.xml",
+            "isTemplated": true
+        },
+        {
+            "file": "Gem/Source/AutoGen/NetworkPlayerMovementComponent.AutoComponent.xml",
+            "isTemplated": true
+        },
+        {
+            "file": "Gem/Source/AutoGen/NetworkRandomComponent.AutoComponent.xml",
+            "isTemplated": true
+        },
+        {
+            "file": "Gem/Source/AutoGen/NetworkSimplePlayerCameraComponent.AutoComponent.xml",
+            "isTemplated": true
+        },
+        {
+            "file": "Gem/Source/AutoGen/NetworkWeaponsComponent.AutoComponent.xml",
+            "isTemplated": true
+        },
+        {
+            "file": "Gem/Source/AutoGen/ScriptingPlayerMovementComponent.AutoComponent.xml",
+            "isTemplated": true
+        },
+        {
+            "file": "Gem/Source/Components/.DS_Store",
             "isTemplated": false
         },
         {
-            "file": "Gem/Code/Platform/Mac/${NameLower}_mac_files.cmake",
-            "isTemplated": false
-        },
-        {
-            "file": "Gem/Code/Platform/Windows/${NameLower}_windows_files.cmake",
-            "isTemplated": false
-        },
-        {
-            "file": "Gem/Code/Platform/iOS/${NameLower}_ios_files.cmake",
-            "isTemplated": false
-        },
-        {
-            "file": "Gem/Code/Source/${Name}Module.cpp",
+            "file": "Gem/Source/Components/AttachPlayerWeaponComponent.cpp",
             "isTemplated": true
         },
         {
-            "file": "Gem/Code/Source/${Name}SystemComponent.cpp",
+            "file": "Gem/Source/Components/AttachPlayerWeaponComponent.h",
             "isTemplated": true
         },
         {
-            "file": "Gem/Code/Source/${Name}SystemComponent.h",
+            "file": "Gem/Source/Components/ExampleFilteredEntityComponent.cpp",
             "isTemplated": true
         },
         {
-            "file": "Gem/Code/Source/${Name}Types.h",
+            "file": "Gem/Source/Components/ExampleFilteredEntityComponent.h",
             "isTemplated": true
         },
         {
-            "file": "Gem/Code/Source/AutoGen/AnimatedHitVolumesComponent.AutoComponent.xml",
+            "file": "Gem/Source/Components/GameplayEffectsComponent.cpp",
             "isTemplated": true
         },
         {
-            "file": "Gem/Code/Source/AutoGen/MultiplayerAutoComponentSchema.xsd",
-            "isTemplated": false
-        },
-        {
-            "file": "Gem/Code/Source/AutoGen/NetworkAiComponent.AutoComponent.xml",
+            "file": "Gem/Source/Components/GameplayEffectsComponent.h",
             "isTemplated": true
         },
         {
-            "file": "Gem/Code/Source/AutoGen/NetworkAnimationComponent.AutoComponent.xml",
+            "file": "Gem/Source/Components/NetworkAiComponent.cpp",
             "isTemplated": true
         },
         {
-            "file": "Gem/Code/Source/AutoGen/NetworkHealthComponent.AutoComponent.xml",
+            "file": "Gem/Source/Components/NetworkAiComponent.h",
             "isTemplated": true
         },
         {
-            "file": "Gem/Code/Source/AutoGen/NetworkPlayerMovementComponent.AutoComponent.xml",
+            "file": "Gem/Source/Components/NetworkAnimationComponent.cpp",
             "isTemplated": true
         },
         {
-            "file": "Gem/Code/Source/AutoGen/NetworkPlayerSpawnerComponent.AutoComponent.xml",
+            "file": "Gem/Source/Components/NetworkAnimationComponent.h",
             "isTemplated": true
         },
         {
-            "file": "Gem/Code/Source/AutoGen/NetworkRandomComponent.AutoComponent.xml",
+            "file": "Gem/Source/Components/NetworkHealthComponent.cpp",
             "isTemplated": true
         },
         {
-            "file": "Gem/Code/Source/AutoGen/NetworkSimplePlayerCameraComponent.AutoComponent.xml",
+            "file": "Gem/Source/Components/NetworkHealthComponent.h",
             "isTemplated": true
         },
         {
-            "file": "Gem/Code/Source/AutoGen/NetworkWeaponsComponent.AutoComponent.xml",
+            "file": "Gem/Source/Components/NetworkPlayerMovementComponent.cpp",
             "isTemplated": true
         },
         {
-            "file": "Gem/Code/Source/Components/ExampleFilteredEntityComponent.cpp",
+            "file": "Gem/Source/Components/NetworkPlayerMovementComponent.h",
             "isTemplated": true
         },
         {
-            "file": "Gem/Code/Source/Components/ExampleFilteredEntityComponent.h",
+            "file": "Gem/Source/Components/NetworkPrefabSpawnerComponent.cpp",
             "isTemplated": true
         },
         {
-            "file": "Gem/Code/Source/Components/NetworkAiComponent.cpp",
+            "file": "Gem/Source/Components/NetworkPrefabSpawnerComponent.h",
             "isTemplated": true
         },
         {
-            "file": "Gem/Code/Source/Components/NetworkAiComponent.h",
+            "file": "Gem/Source/Components/NetworkRandomComponent.cpp",
             "isTemplated": true
         },
         {
-            "file": "Gem/Code/Source/Components/NetworkAnimationComponent.cpp",
+            "file": "Gem/Source/Components/NetworkRandomComponent.h",
             "isTemplated": true
         },
         {
-            "file": "Gem/Code/Source/Components/NetworkAnimationComponent.h",
+            "file": "Gem/Source/Components/NetworkSimplePlayerCameraComponent.cpp",
             "isTemplated": true
         },
         {
-            "file": "Gem/Code/Source/Components/NetworkHealthComponent.cpp",
+            "file": "Gem/Source/Components/NetworkSimplePlayerCameraComponent.h",
             "isTemplated": true
         },
         {
-            "file": "Gem/Code/Source/Components/NetworkHealthComponent.h",
+            "file": "Gem/Source/Components/NetworkWeaponsComponent.cpp",
             "isTemplated": true
         },
         {
-            "file": "Gem/Code/Source/Components/NetworkPlayerMovementComponent.cpp",
+            "file": "Gem/Source/Components/NetworkWeaponsComponent.h",
             "isTemplated": true
         },
         {
-            "file": "Gem/Code/Source/Components/NetworkPlayerMovementComponent.h",
+            "file": "Gem/Source/Effects/GameEffect.cpp",
             "isTemplated": true
         },
         {
-            "file": "Gem/Code/Source/Components/NetworkPlayerSpawnerComponent.cpp",
+            "file": "Gem/Source/Effects/GameEffect.h",
             "isTemplated": true
         },
         {
-            "file": "Gem/Code/Source/Components/NetworkPlayerSpawnerComponent.h",
+            "file": "Gem/Source/Weapons/BaseWeapon.cpp",
             "isTemplated": true
         },
         {
-            "file": "Gem/Code/Source/Components/NetworkRandomComponent.cpp",
+            "file": "Gem/Source/Weapons/BaseWeapon.h",
             "isTemplated": true
         },
         {
-            "file": "Gem/Code/Source/Components/NetworkRandomComponent.h",
+            "file": "Gem/Source/Weapons/IWeapon.h",
             "isTemplated": true
         },
         {
-            "file": "Gem/Code/Source/Components/NetworkSimplePlayerCameraComponent.cpp",
+            "file": "Gem/Source/Weapons/ProjectileWeapon.cpp",
             "isTemplated": true
         },
         {
-            "file": "Gem/Code/Source/Components/NetworkSimplePlayerCameraComponent.h",
+            "file": "Gem/Source/Weapons/ProjectileWeapon.h",
             "isTemplated": true
         },
         {
-            "file": "Gem/Code/Source/Components/NetworkWeaponsComponent.cpp",
+            "file": "Gem/Source/Weapons/SceneQuery.cpp",
             "isTemplated": true
         },
         {
-            "file": "Gem/Code/Source/Components/NetworkWeaponsComponent.h",
+            "file": "Gem/Source/Weapons/SceneQuery.h",
             "isTemplated": true
         },
         {
-            "file": "Gem/Code/Source/Components/NetworkPrefabSpawnerComponent.cpp",
+            "file": "Gem/Source/Weapons/TraceWeapon.cpp",
             "isTemplated": true
         },
         {
-            "file": "Gem/Code/Source/Components/NetworkPrefabSpawnerComponent.h",
+            "file": "Gem/Source/Weapons/TraceWeapon.h",
             "isTemplated": true
         },
         {
-            "file": "Gem/Code/Source/Spawners/IPlayerSpawner.h",
+            "file": "Gem/Source/Weapons/WeaponGathers.cpp",
             "isTemplated": true
         },
         {
-            "file": "Gem/Code/Source/Spawners/RoundRobinSpawner.cpp",
+            "file": "Gem/Source/Weapons/WeaponGathers.h",
             "isTemplated": true
         },
         {
-            "file": "Gem/Code/Source/Spawners/RoundRobinSpawner.h",
+            "file": "Gem/Source/Weapons/WeaponTypes.cpp",
             "isTemplated": true
         },
         {
-            "file": "Gem/Code/Source/Weapons/BaseWeapon.cpp",
-            "isTemplated": true
-        },
-        {
-            "file": "Gem/Code/Source/Weapons/BaseWeapon.h",
-            "isTemplated": true
-        },
-        {
-            "file": "Gem/Code/Source/Weapons/IWeapon.h",
-            "isTemplated": true
-        },
-        {
-            "file": "Gem/Code/Source/Weapons/ProjectileWeapon.cpp",
-            "isTemplated": true
-        },
-        {
-            "file": "Gem/Code/Source/Weapons/ProjectileWeapon.h",
-            "isTemplated": true
-        },
-        {
-            "file": "Gem/Code/Source/Weapons/SceneQuery.cpp",
-            "isTemplated": true
-        },
-        {
-            "file": "Gem/Code/Source/Weapons/SceneQuery.h",
-            "isTemplated": true
-        },
-        {
-            "file": "Gem/Code/Source/Weapons/TraceWeapon.cpp",
-            "isTemplated": true
-        },
-        {
-            "file": "Gem/Code/Source/Weapons/TraceWeapon.h",
-            "isTemplated": true
-        },
-        {
-            "file": "Gem/Code/Source/Weapons/WeaponGathers.cpp",
-            "isTemplated": true
-        },
-        {
-            "file": "Gem/Code/Source/Weapons/WeaponGathers.h",
-            "isTemplated": true
-        },
-        {
-            "file": "Gem/Code/Source/Weapons/WeaponTypes.cpp",
-            "isTemplated": true
-        },
-        {
-            "file": "Gem/Code/Source/Weapons/WeaponTypes.h",
-            "isTemplated": true
-        },
-        {
-            "file": "Gem/Code/enabled_gems.cmake",
-            "isTemplated": true
-        },
-        {
-            "file": "Gem/Resources/GameSDK.ico",
-            "isTemplated": false
-        },
-        {
-            "file": "Gem/Resources/IOSLauncher/Images.xcassets/${Name}AppIcon.appiconset/Contents.json",
-            "isTemplated": false
-        },
-        {
-            "file": "Gem/Resources/IOSLauncher/Images.xcassets/${Name}AppIcon.appiconset/iPadAppIcon152x152.png",
-            "isTemplated": false
-        },
-        {
-            "file": "Gem/Resources/IOSLauncher/Images.xcassets/${Name}AppIcon.appiconset/iPadAppIcon76x76.png",
-            "isTemplated": false
-        },
-        {
-            "file": "Gem/Resources/IOSLauncher/Images.xcassets/${Name}AppIcon.appiconset/iPadProAppIcon167x167.png",
-            "isTemplated": false
-        },
-        {
-            "file": "Gem/Resources/IOSLauncher/Images.xcassets/${Name}AppIcon.appiconset/iPadSettingsIcon29x29.png",
-            "isTemplated": false
-        },
-        {
-            "file": "Gem/Resources/IOSLauncher/Images.xcassets/${Name}AppIcon.appiconset/iPadSettingsIcon58x58.png",
-            "isTemplated": false
-        },
-        {
-            "file": "Gem/Resources/IOSLauncher/Images.xcassets/${Name}AppIcon.appiconset/iPadSpotlightIcon40x40.png",
-            "isTemplated": false
-        },
-        {
-            "file": "Gem/Resources/IOSLauncher/Images.xcassets/${Name}AppIcon.appiconset/iPadSpotlightIcon80x80.png",
-            "isTemplated": false
-        },
-        {
-            "file": "Gem/Resources/IOSLauncher/Images.xcassets/${Name}AppIcon.appiconset/iPhoneAppIcon120x120.png",
-            "isTemplated": false
-        },
-        {
-            "file": "Gem/Resources/IOSLauncher/Images.xcassets/${Name}AppIcon.appiconset/iPhoneAppIcon180x180.png",
-            "isTemplated": false
-        },
-        {
-            "file": "Gem/Resources/IOSLauncher/Images.xcassets/${Name}AppIcon.appiconset/iPhoneSettingsIcon58x58.png",
-            "isTemplated": false
-        },
-        {
-            "file": "Gem/Resources/IOSLauncher/Images.xcassets/${Name}AppIcon.appiconset/iPhoneSettingsIcon87x87.png",
-            "isTemplated": false
-        },
-        {
-            "file": "Gem/Resources/IOSLauncher/Images.xcassets/${Name}AppIcon.appiconset/iPhoneSpotlightIcon120x120.png",
-            "isTemplated": false
-        },
-        {
-            "file": "Gem/Resources/IOSLauncher/Images.xcassets/${Name}AppIcon.appiconset/iPhoneSpotlightIcon80x80.png",
-            "isTemplated": false
-        },
-        {
-            "file": "Gem/Resources/IOSLauncher/Images.xcassets/Contents.json",
-            "isTemplated": false
-        },
-        {
-            "file": "Gem/Resources/IOSLauncher/Images.xcassets/LaunchImage.launchimage/Contents.json",
-            "isTemplated": false
-        },
-        {
-            "file": "Gem/Resources/IOSLauncher/Images.xcassets/LaunchImage.launchimage/iPadLaunchImage1024x768.png",
-            "isTemplated": false
-        },
-        {
-            "file": "Gem/Resources/IOSLauncher/Images.xcassets/LaunchImage.launchimage/iPadLaunchImage1536x2048.png",
-            "isTemplated": false
-        },
-        {
-            "file": "Gem/Resources/IOSLauncher/Images.xcassets/LaunchImage.launchimage/iPadLaunchImage2048x1536.png",
-            "isTemplated": false
-        },
-        {
-            "file": "Gem/Resources/IOSLauncher/Images.xcassets/LaunchImage.launchimage/iPadLaunchImage768x1024.png",
-            "isTemplated": false
-        },
-        {
-            "file": "Gem/Resources/IOSLauncher/Images.xcassets/LaunchImage.launchimage/iPhoneLaunchImage640x1136.png",
-            "isTemplated": false
-        },
-        {
-            "file": "Gem/Resources/IOSLauncher/Images.xcassets/LaunchImage.launchimage/iPhoneLaunchImage640x960.png",
-            "isTemplated": false
-        },
-        {
-            "file": "Gem/Resources/IOSLauncher/Info.plist",
-            "isTemplated": true
-        },
-        {
-            "file": "Gem/Resources/MacLauncher/Images.xcassets/CMakeTestbedAppIcon.appiconset/Contents.json",
-            "isTemplated": false
-        },
-        {
-            "file": "Gem/Resources/MacLauncher/Images.xcassets/CMakeTestbedAppIcon.appiconset/icon_128 _2x.png",
-            "isTemplated": false
-        },
-        {
-            "file": "Gem/Resources/MacLauncher/Images.xcassets/CMakeTestbedAppIcon.appiconset/icon_128.png",
-            "isTemplated": false
-        },
-        {
-            "file": "Gem/Resources/MacLauncher/Images.xcassets/CMakeTestbedAppIcon.appiconset/icon_16.png",
-            "isTemplated": false
-        },
-        {
-            "file": "Gem/Resources/MacLauncher/Images.xcassets/CMakeTestbedAppIcon.appiconset/icon_16_2x.png",
-            "isTemplated": false
-        },
-        {
-            "file": "Gem/Resources/MacLauncher/Images.xcassets/CMakeTestbedAppIcon.appiconset/icon_256 _2x.png",
-            "isTemplated": false
-        },
-        {
-            "file": "Gem/Resources/MacLauncher/Images.xcassets/CMakeTestbedAppIcon.appiconset/icon_256.png",
-            "isTemplated": false
-        },
-        {
-            "file": "Gem/Resources/MacLauncher/Images.xcassets/CMakeTestbedAppIcon.appiconset/icon_32.png",
-            "isTemplated": false
-        },
-        {
-            "file": "Gem/Resources/MacLauncher/Images.xcassets/CMakeTestbedAppIcon.appiconset/icon_32_2x.png",
-            "isTemplated": false
-        },
-        {
-            "file": "Gem/Resources/MacLauncher/Images.xcassets/CMakeTestbedAppIcon.appiconset/icon_512.png",
-            "isTemplated": false
-        },
-        {
-            "file": "Gem/Resources/MacLauncher/Images.xcassets/CMakeTestbedAppIcon.appiconset/icon_512_2x.png",
-            "isTemplated": false
-        },
-        {
-            "file": "Gem/Resources/MacLauncher/Images.xcassets/Contents.json",
-            "isTemplated": false
-        },
-        {
-            "file": "Gem/Resources/MacLauncher/Info.plist",
+            "file": "Gem/Source/Weapons/WeaponTypes.h",
             "isTemplated": true
         },
         {
@@ -984,103 +983,263 @@
             "isTemplated": true
         },
         {
-            "file": "Gem/preview.png",
-            "isTemplated": false
-        },
-        {
-            "file": "InputBindings/player.inputbindings",
-            "isTemplated": false
-        },
-        {
-            "file": "LICENSE.txt",
-            "isTemplated": false
-        },
-        {
-            "file": "LICENSE_APACHE2.TXT",
-            "isTemplated": false
-        },
-        {
-            "file": "LICENSE_MIT.TXT",
+            "file": "Levels/DefaultLevel/DefaultLevel.prefab",
             "isTemplated": false
         },
         {
             "file": "Levels/Demo/Demo.prefab",
+            "isTemplated": false
+        },
+        {
+            "file": "Platform/Android/android_project.cmake",
             "isTemplated": true
-        },
-        {
-            "file": "Levels/Demo/tags.txt",
-            "isTemplated": false
-        },
-        {
-            "file": "LightingPresets/greenwich_park_02.lightingconfig.json",
-            "isTemplated": false
-        },
-        {
-            "file": "LightingPresets/greenwich_park_02_4k_iblskyboxcm.exr",
-            "isTemplated": false
-        },
-        {
-            "file": "Materials/Default/AM_UV_v1_1K_source.png",
-            "isTemplated": false
-        },
-        {
-            "file": "Materials/Default/UVchart_1_basecolor.png",
-            "isTemplated": false
-        },
-        {
-            "file": "Materials/Default/UVchart_2_basecolor.png",
-            "isTemplated": false
-        },
-        {
-            "file": "Materials/Default/UVchart_3_basecolor.png",
-            "isTemplated": false
-        },
-        {
-            "file": "Materials/DefaultPBR.material",
-            "isTemplated": false
-        },
-        {
-            "file": "Materials/UVs.azsl",
-            "isTemplated": false
-        },
-        {
-            "file": "Materials/UVs.material",
-            "isTemplated": false
-        },
-        {
-            "file": "Materials/UVs.materialtype",
-            "isTemplated": false
-        },
-        {
-            "file": "Materials/UVs.shader",
-            "isTemplated": false
-        },
-        {
-            "file": "Objects/cube.fbx",
-            "isTemplated": false
         },
         {
             "file": "Platform/Android/android_project.json",
             "isTemplated": true
         },
         {
-            "file": "Prefabs/NetworkRigidBodyCube.prefab",
+            "file": "Platform/Linux/linux_project.cmake",
             "isTemplated": true
         },
         {
-            "file": "Prefabs/Player.prefab",
+            "file": "Platform/Linux/linux_project.json",
+            "isTemplated": false
+        },
+        {
+            "file": "Platform/Mac/mac_project.cmake",
             "isTemplated": true
         },
         {
-            "file": "Prefabs/PlayerSpawner.prefab",
+            "file": "Platform/Mac/mac_project.json",
+            "isTemplated": false
+        },
+        {
+            "file": "Platform/Windows/windows_project.cmake",
             "isTemplated": true
         },
         {
-            "file": "Registry/editorpreferences.setreg",
+            "file": "Platform/Windows/windows_project.json",
+            "isTemplated": false
+        },
+        {
+            "file": "Platform/iOS/ios_project.cmake",
+            "isTemplated": true
+        },
+        {
+            "file": "Platform/iOS/ios_project.json",
+            "isTemplated": false
+        },
+        {
+            "file": "Registry/Platform/Android/quality.setreg",
+            "isTemplated": false
+        },
+        {
+            "file": "Registry/Platform/Linux/quality.setreg",
+            "isTemplated": false
+        },
+        {
+            "file": "Registry/Platform/Mac/quality.setreg",
+            "isTemplated": false
+        },
+        {
+            "file": "Registry/Platform/Windows/quality.setreg",
+            "isTemplated": false
+        },
+        {
+            "file": "Registry/Platform/iOS/quality.setreg",
+            "isTemplated": false
+        },
+        {
+            "file": "Registry/assetprocessor_settings.setreg",
+            "isTemplated": false
+        },
+        {
+            "file": "Registry/awscoreconfiguration.setreg",
+            "isTemplated": false
+        },
+        {
+            "file": "Registry/load_level.setreg",
+            "isTemplated": false
+        },
+        {
+            "file": "Registry/physxdebugconfiguration.setreg",
+            "isTemplated": false
+        },
+        {
+            "file": "Registry/physxdefaultsceneconfiguration.setreg",
             "isTemplated": false
         },
         {
             "file": "Registry/physxsystemconfiguration.setreg",
+            "isTemplated": false
+        },
+        {
+            "file": "Registry/quality.client.setreg",
+            "isTemplated": false
+        },
+        {
+            "file": "Registry/quality.headless.setreg",
+            "isTemplated": false
+        },
+        {
+            "file": "Registry/quality.server.setreg",
+            "isTemplated": false
+        },
+        {
+            "file": "Registry/quality.setreg",
+            "isTemplated": false
+        },
+        {
+            "file": "Resources/GameSDK.ico",
+            "isTemplated": false
+        },
+        {
+            "file": "Resources/Platform/Mac/Images.xcassets/${Name}AppIcon.appiconset/Contents.json",
+            "isTemplated": false
+        },
+        {
+            "file": "Resources/Platform/Mac/Images.xcassets/${Name}AppIcon.appiconset/icon_128.png",
+            "isTemplated": false
+        },
+        {
+            "file": "Resources/Platform/Mac/Images.xcassets/${Name}AppIcon.appiconset/icon_128_2x.png",
+            "isTemplated": false
+        },
+        {
+            "file": "Resources/Platform/Mac/Images.xcassets/${Name}AppIcon.appiconset/icon_16.png",
+            "isTemplated": false
+        },
+        {
+            "file": "Resources/Platform/Mac/Images.xcassets/${Name}AppIcon.appiconset/icon_16_2x.png",
+            "isTemplated": false
+        },
+        {
+            "file": "Resources/Platform/Mac/Images.xcassets/${Name}AppIcon.appiconset/icon_256.png",
+            "isTemplated": false
+        },
+        {
+            "file": "Resources/Platform/Mac/Images.xcassets/${Name}AppIcon.appiconset/icon_256_2x.png",
+            "isTemplated": false
+        },
+        {
+            "file": "Resources/Platform/Mac/Images.xcassets/${Name}AppIcon.appiconset/icon_32.png",
+            "isTemplated": false
+        },
+        {
+            "file": "Resources/Platform/Mac/Images.xcassets/${Name}AppIcon.appiconset/icon_32_2x.png",
+            "isTemplated": false
+        },
+        {
+            "file": "Resources/Platform/Mac/Images.xcassets/${Name}AppIcon.appiconset/icon_512.png",
+            "isTemplated": false
+        },
+        {
+            "file": "Resources/Platform/Mac/Images.xcassets/${Name}AppIcon.appiconset/icon_512_2x.png",
+            "isTemplated": false
+        },
+        {
+            "file": "Resources/Platform/Mac/Images.xcassets/Contents.json",
+            "isTemplated": false
+        },
+        {
+            "file": "Resources/Platform/Mac/Info.plist",
+            "isTemplated": true
+        },
+        {
+            "file": "Resources/Platform/iOS/Images.xcassets/${Name}AppIcon.appiconset/Contents.json",
+            "isTemplated": false
+        },
+        {
+            "file": "Resources/Platform/iOS/Images.xcassets/${Name}AppIcon.appiconset/iPadAppIcon152x152.png",
+            "isTemplated": false
+        },
+        {
+            "file": "Resources/Platform/iOS/Images.xcassets/${Name}AppIcon.appiconset/iPadAppIcon76x76.png",
+            "isTemplated": false
+        },
+        {
+            "file": "Resources/Platform/iOS/Images.xcassets/${Name}AppIcon.appiconset/iPadProAppIcon167x167.png",
+            "isTemplated": false
+        },
+        {
+            "file": "Resources/Platform/iOS/Images.xcassets/${Name}AppIcon.appiconset/iPadSettingsIcon29x29.png",
+            "isTemplated": false
+        },
+        {
+            "file": "Resources/Platform/iOS/Images.xcassets/${Name}AppIcon.appiconset/iPadSettingsIcon58x58.png",
+            "isTemplated": false
+        },
+        {
+            "file": "Resources/Platform/iOS/Images.xcassets/${Name}AppIcon.appiconset/iPadSpotlightIcon40x40.png",
+            "isTemplated": false
+        },
+        {
+            "file": "Resources/Platform/iOS/Images.xcassets/${Name}AppIcon.appiconset/iPadSpotlightIcon80x80.png",
+            "isTemplated": false
+        },
+        {
+            "file": "Resources/Platform/iOS/Images.xcassets/${Name}AppIcon.appiconset/iPhoneAppIcon120x120.png",
+            "isTemplated": false
+        },
+        {
+            "file": "Resources/Platform/iOS/Images.xcassets/${Name}AppIcon.appiconset/iPhoneAppIcon180x180.png",
+            "isTemplated": false
+        },
+        {
+            "file": "Resources/Platform/iOS/Images.xcassets/${Name}AppIcon.appiconset/iPhoneSettingsIcon58x58.png",
+            "isTemplated": false
+        },
+        {
+            "file": "Resources/Platform/iOS/Images.xcassets/${Name}AppIcon.appiconset/iPhoneSettingsIcon87x87.png",
+            "isTemplated": false
+        },
+        {
+            "file": "Resources/Platform/iOS/Images.xcassets/${Name}AppIcon.appiconset/iPhoneSpotlightIcon120x120.png",
+            "isTemplated": false
+        },
+        {
+            "file": "Resources/Platform/iOS/Images.xcassets/${Name}AppIcon.appiconset/iPhoneSpotlightIcon80x80.png",
+            "isTemplated": false
+        },
+        {
+            "file": "Resources/Platform/iOS/Images.xcassets/Contents.json",
+            "isTemplated": false
+        },
+        {
+            "file": "Resources/Platform/iOS/Images.xcassets/LaunchImage.launchimage/Contents.json",
+            "isTemplated": false
+        },
+        {
+            "file": "Resources/Platform/iOS/Images.xcassets/LaunchImage.launchimage/iPadLaunchImage1024x768.png",
+            "isTemplated": false
+        },
+        {
+            "file": "Resources/Platform/iOS/Images.xcassets/LaunchImage.launchimage/iPadLaunchImage1536x2048.png",
+            "isTemplated": false
+        },
+        {
+            "file": "Resources/Platform/iOS/Images.xcassets/LaunchImage.launchimage/iPadLaunchImage2048x1536.png",
+            "isTemplated": false
+        },
+        {
+            "file": "Resources/Platform/iOS/Images.xcassets/LaunchImage.launchimage/iPadLaunchImage768x1024.png",
+            "isTemplated": false
+        },
+        {
+            "file": "Resources/Platform/iOS/Images.xcassets/LaunchImage.launchimage/iPhoneLaunchImage640x1136.png",
+            "isTemplated": false
+        },
+        {
+            "file": "Resources/Platform/iOS/Images.xcassets/LaunchImage.launchimage/iPhoneLaunchImage640x960.png",
+            "isTemplated": false
+        },
+        {
+            "file": "Resources/Platform/iOS/Info.plist",
+            "isTemplated": true
+        },
+        {
+            "file": "Resources/Splash.bmp",
             "isTemplated": false
         },
         {
@@ -1089,18 +1248,14 @@
         },
         {
             "file": "ShaderLib/scenesrg.srgi",
-            "isTemplated": false
+            "isTemplated": true
         },
         {
             "file": "ShaderLib/viewsrg.srgi",
-            "isTemplated": false
+            "isTemplated": true
         },
         {
-            "file": "Shaders/CommonVS.azsli",
-            "isTemplated": false
-        },
-        {
-            "file": "cmake/CompilerSettings.cmake",
+            "file": "autoexec.cfg",
             "isTemplated": false
         },
         {
@@ -1108,44 +1263,20 @@
             "isTemplated": false
         },
         {
-            "file": "cmake/Platform/Linux/CompilerSettings_linux.cmake",
-            "isTemplated": false
-        },
-        {
             "file": "editor.cfg",
             "isTemplated": false
         },
         {
+            "file": "export.bat",
+            "isTemplated": false
+        },
+        {
+            "file": "export.sh",
+            "isTemplated": false
+        },
+        {
             "file": "game.cfg",
-            "isTemplated": true
-        },
-        {
-            "file": "generate_asset_cmake.bat",
-            "isTemplated": true
-        },
-        {
-            "file": "launch_client.cfg",
             "isTemplated": false
-        },
-        {
-            "file": "launch_client.cmd",
-            "isTemplated": true
-        },
-        {
-            "file": "launch_client.sh",
-            "isTemplated": true
-        },
-        {
-            "file": "launch_server.cfg",
-            "isTemplated": false
-        },
-        {
-            "file": "launch_server.cmd",
-            "isTemplated": true
-        },
-        {
-            "file": "launch_server.sh",
-            "isTemplated": true
         },
         {
             "file": "preview.png",
@@ -1158,109 +1289,100 @@
     ],
     "createDirectories": [
         {
-            "dir": "BURT"
+            "dir": "AssetBundling"
         },
         {
-            "dir": "BURT/Motions"
+            "dir": "AssetBundling/SeedLists"
         },
         {
-            "dir": "BURT/Textures"
+            "dir": "Assets"
+        },
+        {
+            "dir": "Assets/Characters"
+        },
+        {
+            "dir": "Assets/Characters/Mixamo"
+        },
+        {
+            "dir": "Assets/Characters/Mixamo/Animations"
+        },
+        {
+            "dir": "Assets/Characters/Mixamo/Ybot"
+        },
+        {
+            "dir": "Assets/Characters/Mixamo/Ybot/skins"
+        },
+        {
+            "dir": "Assets/Characters/Mixamo/Ybot/test_data"
+        },
+        {
+            "dir": "Assets/Characters/Mixamo/Ybot/textures"
+        },
+        {
+            "dir": "Assets/Prefabs"
         },
         {
             "dir": "Config"
         },
         {
-            "dir": "Config/AtomImageBuilder"
-        },
-        {
             "dir": "Gem"
         },
         {
-            "dir": "Gem/Code"
+            "dir": "Gem/Include"
         },
         {
-            "dir": "Gem/Code/Include"
+            "dir": "Gem/Include/${Name}"
         },
         {
-            "dir": "Gem/Code/Platform"
+            "dir": "Gem/Platform"
         },
         {
-            "dir": "Gem/Code/Platform/Android"
+            "dir": "Gem/Platform/Android"
         },
         {
-            "dir": "Gem/Code/Platform/Linux"
+            "dir": "Gem/Platform/Linux"
         },
         {
-            "dir": "Gem/Code/Platform/Mac"
+            "dir": "Gem/Platform/Mac"
         },
         {
-            "dir": "Gem/Code/Platform/Windows"
+            "dir": "Gem/Platform/Windows"
         },
         {
-            "dir": "Gem/Code/Platform/iOS"
+            "dir": "Gem/Platform/iOS"
         },
         {
-            "dir": "Gem/Code/Source"
+            "dir": "Gem/Registry"
         },
         {
-            "dir": "Gem/Code/Source/AutoGen"
+            "dir": "Gem/Source"
         },
         {
-            "dir": "Gem/Code/Source/Components"
+            "dir": "Gem/Source/AutoGen"
         },
         {
-            "dir": "Gem/Code/Source/Spawners"
+            "dir": "Gem/Source/Components"
         },
         {
-            "dir": "Gem/Code/Source/Weapons"
+            "dir": "Gem/Source/Effects"
         },
         {
-            "dir": "Gem/Resources"
-        },
-        {
-            "dir": "Gem/Resources/IOSLauncher"
-        },
-        {
-            "dir": "Gem/Resources/IOSLauncher/Images.xcassets"
-        },
-        {
-            "dir": "Gem/Resources/IOSLauncher/Images.xcassets/${Name}AppIcon.appiconset"
-        },
-        {
-            "dir": "Gem/Resources/IOSLauncher/Images.xcassets/LaunchImage.launchimage"
-        },
-        {
-            "dir": "Gem/Resources/MacLauncher"
-        },
-        {
-            "dir": "Gem/Resources/MacLauncher/Images.xcassets"
-        },
-        {
-            "dir": "Gem/Resources/MacLauncher/Images.xcassets/CMakeTestbedAppIcon.appiconset"
-        },
-        {
-            "dir": "InputBindings"
+            "dir": "Gem/Source/Weapons"
         },
         {
             "dir": "Levels"
         },
         {
+            "dir": "Levels/DefaultLevel"
+        },
+        {
             "dir": "Levels/Demo"
         },
         {
-            "dir": "LightingPresets"
+            "dir": "Levels/Demo/_savebackup"
         },
         {
-            "dir": "Materials"
-        },
-        {
-            "dir": "Materials/Default"
-        },
-        {
-            "dir": "Materials/decal"
-        },
-        {
-            "dir": "Objects"
+            "dir": "Levels/Demo/_savebackup/2024-07-01 [15.04.04]"
         },
         {
             "dir": "Platform"
@@ -1269,19 +1391,64 @@
             "dir": "Platform/Android"
         },
         {
-            "dir": "Prefabs"
+            "dir": "Platform/Linux"
+        },
+        {
+            "dir": "Platform/Mac"
+        },
+        {
+            "dir": "Platform/Windows"
+        },
+        {
+            "dir": "Platform/iOS"
         },
         {
             "dir": "Registry"
         },
         {
-            "dir": "Scripts"
+            "dir": "Registry/Platform"
         },
         {
-            "dir": "Scripts/build"
+            "dir": "Registry/Platform/Android"
         },
         {
-            "dir": "Scripts/build/Jenkins"
+            "dir": "Registry/Platform/Linux"
+        },
+        {
+            "dir": "Registry/Platform/Mac"
+        },
+        {
+            "dir": "Registry/Platform/Windows"
+        },
+        {
+            "dir": "Registry/Platform/iOS"
+        },
+        {
+            "dir": "Resources"
+        },
+        {
+            "dir": "Resources/Platform"
+        },
+        {
+            "dir": "Resources/Platform/Mac"
+        },
+        {
+            "dir": "Resources/Platform/Mac/Images.xcassets"
+        },
+        {
+            "dir": "Resources/Platform/Mac/Images.xcassets/${Name}AppIcon.appiconset"
+        },
+        {
+            "dir": "Resources/Platform/iOS"
+        },
+        {
+            "dir": "Resources/Platform/iOS/Images.xcassets"
+        },
+        {
+            "dir": "Resources/Platform/iOS/Images.xcassets/${Name}AppIcon.appiconset"
+        },
+        {
+            "dir": "Resources/Platform/iOS/Images.xcassets/LaunchImage.launchimage"
         },
         {
             "dir": "ShaderLib"
@@ -1290,14 +1457,10 @@
             "dir": "Shaders"
         },
         {
+            "dir": "Shaders/ShaderResourceGroups"
+        },
+        {
             "dir": "cmake"
-        },
-        {
-            "dir": "cmake/Platform"
-        },
-        {
-            "dir": "cmake/Platform/Linux"
         }
-    ],
-    "download_source_uri": "https://github.com/o3de/o3de-extras/releases/download/2.0/multiplayer-2.0.0-template.zip"
+    ]
 }

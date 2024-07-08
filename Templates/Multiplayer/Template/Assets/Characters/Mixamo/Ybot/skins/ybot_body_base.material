@@ -1,0 +1,41 @@
+{
+    "materialType": "@projectroot@/Cache/Intermediate Assets/materials/types/standardpbr_generated.materialtype",
+    "materialTypeVersion": 5,
+    "propertyValues": {
+        "baseColor.color": [
+            0.21568627655506134,
+            0.8235294222831726,
+            1.0,
+            1.0
+        ],
+        "baseColor.textureBlendMode": "Overlay",
+        "baseColor.textureMap": "../textures/Alpha_base_body_basecolor.png",
+        "clearCoat.enable": true,
+        "clearCoat.influenceMap": "../textures/Alpha_base_body_cavity.png",
+        "clearCoat.roughness": 0.10000000149011612,
+        "emissive.color": [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+        ],
+        "emissive.intensity": 0.0,
+        "emissive.useTexture": false,
+        "irradiance.irradianceColorSource": "BaseColorTint",
+        "irradiance.manualColor": [
+            0.09803920239210129,
+            0.42352938652038574,
+            0.5215687155723572,
+            1.0
+        ],
+        "metallic.factor": 0.33000001311302185,
+        "metallic.useTexture": false,
+        "normal.textureMap": "../textures/Alpha_base_body_normal.png",
+        "occlusion.diffuseTextureMap": "../textures/Alpha_base_body_ao.png",
+        "occlusion.specularTextureMap": "../textures/Alpha_base_body_cavity.png",
+        "opacity.factor": 1.0,
+        "roughness.factor": 0.33000001311302185,
+        "roughness.useTexture": false,
+        "specularF0.enableMultiScatterCompensation": true
+    }
+}

@@ -1,0 +1,66 @@
+{
+    "values": [
+        {
+            "$type": "MotionGroup",
+            "name": "Right Strafe Walking",
+            "selectedRootBone": "RootNode",
+            "id": "{C6B0DC11-AA0D-532A-A254-401DE834CDF6}",
+            "rules": {
+                "rules": [
+                    {
+                        "$type": "MotionSamplingRule"
+                    },
+                    {
+                        "$type": "EMotionFX::Pipeline::Rule::MotionMetaDataRule",
+                        "data": {
+                            "motionEventTable": {
+                                "tracks": [
+                                    {
+                                        "$type": "AnimGraphSyncTrack",
+                                        "name": "Sync",
+                                        "deletable": false,
+                                        "events": [
+                                            {
+                                                "eventDatas": [
+                                                    {
+                                                        "$type": "TwoStringEventData",
+                                                        "subject": "LeftFoot",
+                                                        "mirrorSubject": "RightFoot"
+                                                    }
+                                                ],
+                                                "startTime": 0.31495437026023865,
+                                                "endTime": 0.31495437026023865
+                                            },
+                                            {
+                                                "eventDatas": [
+                                                    {
+                                                        "$type": "TwoStringEventData",
+                                                        "subject": "RightFoot",
+                                                        "mirrorSubject": "LeftFoot"
+                                                    }
+                                                ],
+                                                "startTime": 0.799771785736084,
+                                                "endTime": 0.799771785736084
+                                            }
+                                        ]
+                                    }
+                                ]
+                            }
+                        }
+                    },
+                    {
+                        "$type": "EMotionFX::Pipeline::Rule::RootMotionExtractionRule",
+                        "data": {
+                            "sampleJoint": "mixamorig:Hips"
+                        }
+                    }
+                ]
+            }
+        },
+        {
+            "$type": "PrefabGroup",
+            "name": "Mixamo/Animations/Right Strafe Walking_fbx.procprefab",
+            "id": "{2B9D0B5C-F2F7-5B6F-8F91-CC6E98B24964}"
+        }
+    ]
+}
