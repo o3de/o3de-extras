@@ -64,7 +64,12 @@ namespace ROS2
     void LidarRaycaster::ConfigureRayOrientations(const AZStd::vector<AZ::Vector3>& orientations)
     {
         ValidateRayOrientations(orientations);
-        m_rayRotations = orientations;
+
+        m_rayRotations.reserve(orientations.size());
+        for (const auto& angle : orientations)
+        {
+            m_rayRotations.emplace_back(AZ::Quaternion::CreateFromEulerRadiansZYX({ 0.0f, -angle.GetY(), angle.GetZ() }));
+        }
     }
 
     void LidarRaycaster::ConfigureRayRange(float range)
