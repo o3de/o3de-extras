@@ -46,10 +46,10 @@ namespace ROS2
                         "Publish Transform")
                     ->ClassElement(AZ::Edit::ClassElements::Group, "Info")
                     ->Attribute(AZ::Edit::Attributes::AutoExpand, true)
-                                ->UIElement(AZ::Edit::UIHandlers::Label, "Effective namespace", "")
-                                ->Attribute(AZ::Edit::Attributes::ValueText, &ROS2FrameConfiguration::m_effectiveNamespace)
-                                ->UIElement(AZ::Edit::UIHandlers::Label, "Full name", "")
-                                ->Attribute(AZ::Edit::Attributes::ValueText, &ROS2FrameConfiguration::m_fullName);
+                    ->UIElement(AZ::Edit::UIHandlers::Label, "Effective namespace", "")
+                    ->Attribute(AZ::Edit::Attributes::ValueText, &ROS2FrameConfiguration::m_effectiveNamespace)
+                    ->UIElement(AZ::Edit::UIHandlers::Label, "Full name", "")
+                    ->Attribute(AZ::Edit::Attributes::ValueText, &ROS2FrameConfiguration::m_fullName);
             }
         }
     }
