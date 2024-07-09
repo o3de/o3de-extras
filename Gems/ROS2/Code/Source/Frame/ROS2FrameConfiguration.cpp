@@ -44,8 +44,12 @@ namespace ROS2
                         &ROS2FrameConfiguration::m_publishTransform,
                         "Publish Transform",
                         "Publish Transform")
+                    ->ClassElement(AZ::Edit::ClassElements::Group, "Info")
+                    ->Attribute(AZ::Edit::Attributes::AutoExpand, true)
                     ->UIElement(AZ::Edit::UIHandlers::Label, "Effective namespace", "")
-                    ->Attribute(AZ::Edit::Attributes::ValueText, &ROS2FrameConfiguration::m_effectiveNamespace);
+                    ->Attribute(AZ::Edit::Attributes::ValueText, &ROS2FrameConfiguration::m_effectiveNamespace)
+                    ->UIElement(AZ::Edit::UIHandlers::Label, "Full name", "")
+                    ->Attribute(AZ::Edit::Attributes::ValueText, &ROS2FrameConfiguration::m_fullName);
             }
         }
     }
@@ -53,6 +57,7 @@ namespace ROS2
     void ROS2FrameConfiguration::SetEffectiveNamespace(const AZStd::string& effectiveNamespace)
     {
         m_effectiveNamespace = effectiveNamespace;
+        m_fullName = effectiveNamespace + '/' + m_frameName;
     }
 
 } // namespace ROS2
