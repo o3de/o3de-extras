@@ -1,6 +1,6 @@
 {
     "template_name": "Ros2RoboticManipulationTemplate",
-    "version": "1.1.0",
+    "version": "2.0.0",
     "origin": "https://github.com/o3de/o3de-extras",
     "license": "https://github.com/o3de/o3de-extras/tree/development/Templates/Ros2RoboticManipulationTemplate/Template/LICENSE.txt",
     "display_name": "ROS2 Robotic Manipulation",
@@ -830,5 +830,5 @@
         }
     ],
     "repo_uri": "https://raw.githubusercontent.com/o3de/o3de-extras/development",
-    "download_source_uri": "https://github.com/o3de/o3de-extras/releases/download/2.0/ros2roboticmanipulationtemplate-1.1.0-template.zip"
+    "download_source_uri": "https://github.com/o3de/o3de-extras/releases/download/2.0/ros2roboticmanipulationtemplate-2.0.0-template.zip"
 }
