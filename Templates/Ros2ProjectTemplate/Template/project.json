@@ -34,7 +34,7 @@
         "PrimitiveAssets",
         "PrefabBuilder",
         "ROS2>=3.1.0",
-        "RosRobotSample>=1.1.0",
+        "RosRobotSample>=2.0.0",
         "SaveData",
         "ScriptCanvasPhysics",
         "ScriptEvents",
