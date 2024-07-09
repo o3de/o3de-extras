@@ -34,6 +34,7 @@ namespace ROS2
 
     private:
         AZStd::string m_effectiveNamespace = "";
+        AZStd::string m_fullName = m_frameName;
     };
 
 } // namespace ROS2
