@@ -18,7 +18,7 @@
         "Gem"
     ],
     "restricted": "${Name}",
-    "engine_version": "1.0.0",
+    "engine_version": "2.3.0",
     "gem_names": [
         "Atom",
         "CameraFramework",
@@ -32,7 +32,7 @@
         "PhysX5",
         "PrimitiveAssets",
         "PrefabBuilder",
-        "ProteusRobot>=1.1.0",
+        "ProteusRobot>=2.0.0",
         "ROS2>=3.1.0",
         "ScriptCanvasPhysics",
         "ScriptEvents",

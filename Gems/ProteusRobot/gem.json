@@ -1,6 +1,6 @@
 {
     "gem_name": "ProteusRobot",
-    "version": "1.1.0",
+    "version": "2.0.0",
     "display_name": "Proteus Robot",
     "license": "Apache-2.0 or MIT",
     "license_url": "https://opensource.org/licenses/Apache-2.0",
@@ -30,6 +30,6 @@
     ],
     "engine_api_dependencies": [],
     "restricted": "ProteusRobot",
-    "download_source_uri": "https://github.com/o3de/o3de-extras/releases/download/2.0/proteusrobot-1.1.0-gem.zip"
+    "download_source_uri": "https://github.com/o3de/o3de-extras/releases/download/2.0/proteusrobot-2.0.0-gem.zip"
 }
 

@@ -115,6 +115,21 @@
                     ],
                     "download_source_uri": "https://github.com/o3de/o3de-extras/releases/download/2.0/proteusrobot-1.1.0-gem.zip",
                     "sha256": "dec32d93221e2514b59e1ac056b74c771dc4109b4599b5cf290f27a3f2486615"
+                },
+                {
+                    "version": "2.0.0",
+                    "license": "Apache-2.0 or MIT",
+                    "origin_url": "https://robotec.ai",
+                    "requirements": "Requires ROS 2 Gem",
+                    "dependencies": [
+                        "ROS2>=3.1.0"
+                    ],
+                    "compatible_engines": [
+                        "o3de-sdk>=2.3.0",
+                        "o3de>=2.3.0"
+                    ],
+                    "download_source_uri": "https://github.com/o3de/o3de-extras/releases/download/2.0/proteusrobot-2.0.0-gem.zip",
+                    "sha256": "29eab27f4b78e43e157a9e5eb4565f5d29cecaf08b0c1f36ea40f03aa1640452"
                 }
             ]
         },
@@ -172,8 +187,8 @@
                 {
                     "version": "3.1.0",
                     "compatible_engines": [
-                        "o3de-sdk>=4.1.0",
-                        "o3de>=4.1.0"
+                        "o3de-sdk>=2.3.0",
+                        "o3de>=2.3.0"
                     ],
                     "dependencies": [
                         "Atom_RPI",
@@ -185,7 +200,7 @@
                         "StartingPointInput"
                     ],
                     "download_source_uri": "https://github.com/o3de/o3de-extras/releases/download/2.0/ros2-3.1.0-gem.zip",
-                    "sha256": "53399b4d7dad90832369e1b05baabf1f1900138a639b1119693952d781a1cb30"
+                    "sha256": "aace14afcbe3feda0be0b11cb3610d93ec8e3e55a7b2f185df51ea468e7e7554"
                 }
             ]
         },
@@ -239,6 +254,22 @@
                     ],
                     "download_source_uri": "https://github.com/o3de/o3de-extras/releases/download/2.0/rosrobotsample-1.1.0-gem.zip",
                     "sha256": "9911d92616bc975a2b490c2190b087e92c2260c98431f13f1a431b9bd8e2ec59"
+                },
+                {
+                    "version": "2.0.0",
+                    "origin": "RobotecAI",
+                    "origin_url": "https://robotec.ai",
+                    "summary": "Husarion ROSbot XL robot assets.",
+                    "requirements": "Requires ROS 2 Gem",
+                    "dependencies": [
+                        "ROS2>=3.1.0"
+                    ],
+                    "compatible_engines": [
+                        "o3de-sdk>=2.3.0",
+                        "o3de>=2.3.0"
+                    ],
+                    "download_source_uri": "https://github.com/o3de/o3de-extras/releases/download/2.0/rosrobotsample-2.0.0-gem.zip",
+                    "sha256": "92ddad5fea49a0ac615c5cea417a858f49a2a1fbed24b3b878ee3bff8f538827"
                 }
             ]
         },
@@ -372,7 +403,7 @@
         },
         {
             "gem_name": "WarehouseAutomation",
-            "version": "1.1.0",
+            "version": "2.0.0",
             "display_name": "Warehouse Automation",
             "license": "Apache-2.0",
             "license_url": "https://opensource.org/licenses/Apache-2.0",
@@ -387,8 +418,8 @@
                 "WarehouseAutomation"
             ],
             "compatible_engines": [
-                "o3de-sdk>=4.1.0",
-                "o3de>=4.1.0"
+                "o3de-sdk>=2.3.0",
+                "o3de>=2.3.0"
             ],
             "platforms": [
                 "Linux"
@@ -396,12 +427,22 @@
             "icon_path": "preview.png",
             "requirements": "This gem requires ROS 2 gem and PhysX5 gem.",
             "dependencies": [
-                "ROS2>=3.1.0"
+                "ROS2>=2.3.0"
             ],
             "repo_uri": "https://raw.githubusercontent.com/o3de/o3de-extras/development",
             "restricted": "WarehouseAutomation",
             "download_source_uri": "https://github.com/o3de/o3de-extras/releases/download/2.0/warehouseautomation-1.1.0-gem.zip",
-            "sha256": "21dad916ebb07232d901bbdc80ba376369e3ce4e580dcbae7d69132558357eb8"
+            "sha256": "21dad916ebb07232d901bbdc80ba376369e3ce4e580dcbae7d69132558357eb8",
+            "versions_data": [
+                {
+                    "dependencies": [
+                        "ROS2>=3.1.0"
+                    ],
+                    "download_source_uri": "https://github.com/o3de/o3de-extras/releases/download/2.0/warehouseautomation-2.0.0-gem.zip",
+                    "sha256": "8cccbe7fa40300683d210d70fc9867c0713ae2e1fd05656c84992a31123098f4",
+                    "version": "2.0.0"
+                }
+            ]
         }
     ],
     "templates": [
@@ -2606,7 +2647,487 @@
                         }
                     ],
                     "download_source_uri": "https://github.com/o3de/o3de-extras/releases/download/2.0/ros2fleetrobottemplate-1.2.0-template.zip",
-                    "sha256": "cd6f252c18dff6dfa34247eb11ba19feb5247874e36ed6482f11e0eae7ef84f4"
+                    "sha256": "15976b73a541146d48c13026986259161b0304e89501775bde7deab7518aadf1"
+                },
+                {
+                    "version": "2.0.0",
+                    "copyFiles": [
+                        {
+                            "file": ".gitignore",
+                            "isTemplated": false
+                        },
+                        {
+                            "file": "CMakeLists.txt",
+                            "isTemplated": true
+                        },
+                        {
+                            "file": "Config/shader_global_build_options.json",
+                            "isTemplated": false
+                        },
+                        {
+                            "file": "Gem/${Name}_files.cmake",
+                            "isTemplated": true
+                        },
+                        {
+                            "file": "Gem/${Name}_shared_files.cmake",
+                            "isTemplated": true
+                        },
+                        {
+                            "file": "Gem/CMakeLists.txt",
+                            "isTemplated": true
+                        },
+                        {
+                            "file": "Gem/Include/${Name}/${Name}Bus.h",
+                            "isTemplated": true
+                        },
+                        {
+                            "file": "Gem/Platform/Linux/${Name}_linux_files.cmake",
+                            "isTemplated": true
+                        },
+                        {
+                            "file": "Gem/Platform/Linux/${Name}_shared_linux_files.cmake",
+                            "isTemplated": true
+                        },
+                        {
+                            "file": "Gem/Platform/Linux/PAL_linux.cmake",
+                            "isTemplated": true
+                        },
+                        {
+                            "file": "Gem/Platform/Mac/${Name}_mac_files.cmake",
+                            "isTemplated": true
+                        },
+                        {
+                            "file": "Gem/Platform/Mac/${Name}_shared_mac_files.cmake",
+                            "isTemplated": true
+                        },
+                        {
+                            "file": "Gem/Platform/Mac/PAL_mac.cmake",
+                            "isTemplated": true
+                        },
+                        {
+                            "file": "Gem/Platform/Windows/${Name}_shared_windows_files.cmake",
+                            "isTemplated": true
+                        },
+                        {
+                            "file": "Gem/Platform/Windows/${Name}_windows_files.cmake",
+                            "isTemplated": true
+                        },
+                        {
+                            "file": "Gem/Platform/Windows/PAL_windows.cmake",
+                            "isTemplated": true
+                        },
+                        {
+                            "file": "Gem/Registry/assetprocessor_settings.setreg",
+                            "isTemplated": true
+                        },
+                        {
+                            "file": "Gem/Source/${Name}Module.cpp",
+                            "isTemplated": true
+                        },
+                        {
+                            "file": "Gem/Source/${Name}SystemComponent.cpp",
+                            "isTemplated": true
+                        },
+                        {
+                            "file": "Gem/Source/${Name}SystemComponent.h",
+                            "isTemplated": true
+                        },
+                        {
+                            "file": "Gem/gem.json",
+                            "isTemplated": true
+                        },
+                        {
+                            "file": "Levels/Warehouse/Warehouse.prefab",
+                            "isTemplated": false
+                        },
+                        {
+                            "file": "Levels/playground/playground.prefab",
+                            "isTemplated": false
+                        },
+                        {
+                            "file": "Platform/Linux/linux_project.cmake",
+                            "isTemplated": true
+                        },
+                        {
+                            "file": "Platform/Linux/linux_project.json",
+                            "isTemplated": false
+                        },
+                        {
+                            "file": "Platform/Mac/mac_project.cmake",
+                            "isTemplated": true
+                        },
+                        {
+                            "file": "Platform/Mac/mac_project.json",
+                            "isTemplated": false
+                        },
+                        {
+                            "file": "Platform/Windows/windows_project.cmake",
+                            "isTemplated": true
+                        },
+                        {
+                            "file": "Platform/Windows/windows_project.json",
+                            "isTemplated": false
+                        },
+                        {
+                            "file": "Registry/assetprocessor_settings.setreg",
+                            "isTemplated": false
+                        },
+                        {
+                            "file": "Registry/awscoreconfiguration.setreg",
+                            "isTemplated": false
+                        },
+                        {
+                            "file": "Registry/physxdebugconfiguration.setreg",
+                            "isTemplated": false
+                        },
+                        {
+                            "file": "Registry/physxdefaultsceneconfiguration.setreg",
+                            "isTemplated": false
+                        },
+                        {
+                            "file": "Registry/physxsystemconfiguration.setreg",
+                            "isTemplated": false
+                        },
+                        {
+                            "file": "Resources/GameSDK.ico",
+                            "isTemplated": false
+                        },
+                        {
+                            "file": "Resources/LegacyLogoLauncher.bmp",
+                            "isTemplated": false
+                        },
+                        {
+                            "file": "Resources/Platform/Mac/Images.xcassets/AppIcon.appiconset/Contents.json",
+                            "isTemplated": false
+                        },
+                        {
+                            "file": "Resources/Platform/Mac/Images.xcassets/AppIcon.appiconset/icon_128.png",
+                            "isTemplated": false
+                        },
+                        {
+                            "file": "Resources/Platform/Mac/Images.xcassets/AppIcon.appiconset/icon_128_2x.png",
+                            "isTemplated": false
+                        },
+                        {
+                            "file": "Resources/Platform/Mac/Images.xcassets/AppIcon.appiconset/icon_16.png",
+                            "isTemplated": false
+                        },
+                        {
+                            "file": "Resources/Platform/Mac/Images.xcassets/AppIcon.appiconset/icon_16_2x.png",
+                            "isTemplated": false
+                        },
+                        {
+                            "file": "Resources/Platform/Mac/Images.xcassets/AppIcon.appiconset/icon_256.png",
+                            "isTemplated": false
+                        },
+                        {
+                            "file": "Resources/Platform/Mac/Images.xcassets/AppIcon.appiconset/icon_256_2x.png",
+                            "isTemplated": false
+                        },
+                        {
+                            "file": "Resources/Platform/Mac/Images.xcassets/AppIcon.appiconset/icon_32.png",
+                            "isTemplated": false
+                        },
+                        {
+                            "file": "Resources/Platform/Mac/Images.xcassets/AppIcon.appiconset/icon_32_2x.png",
+                            "isTemplated": false
+                        },
+                        {
+                            "file": "Resources/Platform/Mac/Images.xcassets/AppIcon.appiconset/icon_512.png",
+                            "isTemplated": false
+                        },
+                        {
+                            "file": "Resources/Platform/Mac/Images.xcassets/AppIcon.appiconset/icon_512_2x.png",
+                            "isTemplated": false
+                        },
+                        {
+                            "file": "Resources/Platform/Mac/Images.xcassets/Contents.json",
+                            "isTemplated": false
+                        },
+                        {
+                            "file": "Resources/Platform/Mac/Info.plist",
+                            "isTemplated": true
+                        },
+                        {
+                            "file": "ShaderLib/README.md",
+                            "isTemplated": false
+                        },
+                        {
+                            "file": "ShaderLib/scenesrg.srgi",
+                            "isTemplated": true
+                        },
+                        {
+                            "file": "ShaderLib/viewsrg.srgi",
+                            "isTemplated": true
+                        },
+                        {
+                            "file": "Passes/ContrastAdaptiveSharpening.pass",
+                            "isTemplated": false
+                        },
+                        {
+                            "file": "Passes/MainRenderPipeline.azasset",
+                            "isTemplated": false
+                        },
+                        {
+                            "file": "Passes/PostProcessParent.pass",
+                            "isTemplated": false
+                        },
+                        {
+                            "file": "Passes/SMAAConfiguration.azasset",
+                            "isTemplated": false
+                        },
+                        {
+                            "file": "Passes/Taa.pass",
+                            "isTemplated": false
+                        },
+                        {
+                            "file": "Prefabs/ProteusLaserScanner.prefab",
+                            "isTemplated": false
+                        },
+                        {
+                            "file": "autoexec.cfg",
+                            "isTemplated": false
+                        },
+                        {
+                            "file": "cmake/EngineFinder.cmake",
+                            "isTemplated": false
+                        },
+                        {
+                            "file": "game.cfg",
+                            "isTemplated": false
+                        },
+                        {
+                            "file": "preview.png",
+                            "isTemplated": false
+                        },
+                        {
+                            "file": "project.json",
+                            "isTemplated": true
+                        },
+                        {
+                            "file": "Examples/ros2_ws/src/o3de_fleet_nav/maps/map_warehouse.yaml",
+                            "isTemplated": false
+                        },
+                        {
+                            "file": "Examples/ros2_ws/src/o3de_fleet_nav/maps/map_warehouse.pgm",
+                            "isTemplated": false
+                        },
+                        {
+                            "file": "Examples/ros2_ws/src/o3de_fleet_nav/resource/o3de_fleet_nav",
+                            "isTemplated": false
+                        },
+                        {
+                            "file": "Examples/ros2_ws/src/o3de_fleet_nav/params/humble/nav2_multirobot_params.yaml",
+                            "isTemplated": false
+                        },
+                        {
+                            "file": "Examples/ros2_ws/src/o3de_fleet_nav/params/humble/nav2_params.yaml",
+                            "isTemplated": false
+                        },
+                        {
+                            "file": "Examples/ros2_ws/src/o3de_fleet_nav/params/iron/nav2_multirobot_params.yaml",
+                            "isTemplated": false
+                        },
+                        {
+                            "file": "Examples/ros2_ws/src/o3de_fleet_nav/params/iron/nav2_params.yaml",
+                            "isTemplated": false
+                        },
+                        {
+                            "file": "Examples/ros2_ws/src/o3de_fleet_nav/setup.py",
+                            "isTemplated": false
+                        },
+                        {
+                            "file": "Examples/ros2_ws/src/o3de_fleet_nav/package.xml",
+                            "isTemplated": false
+                        },
+                        {
+                            "file": "Examples/ros2_ws/src/o3de_fleet_nav/NOTICE",
+                            "isTemplated": false
+                        },
+                        {
+                            "file": "Examples/ros2_ws/src/o3de_fleet_nav/config/fleet_config.yaml",
+                            "isTemplated": false
+                        },
+                        {
+                            "file": "Examples/ros2_ws/src/o3de_fleet_nav/launch/o3de_rviz_launch.py",
+                            "isTemplated": false
+                        },
+                        {
+                            "file": "Examples/ros2_ws/src/o3de_fleet_nav/launch/o3de_nav_launch.py",
+                            "isTemplated": false
+                        },
+                        {
+                            "file": "Examples/ros2_ws/src/o3de_fleet_nav/launch/o3de_fleet_nav_launch.py",
+                            "isTemplated": false
+                        },
+                        {
+                            "file": "Examples/ros2_ws/src/o3de_fleet_nav/o3de_fleet_nav/__init__.py",
+                            "isTemplated": false
+                        },
+                        {
+                            "file": "Examples/ros2_ws/src/o3de_fleet_nav/o3de_fleet_nav/robot_spawner.py",
+                            "isTemplated": false
+                        },
+                        {
+                            "file": "Examples/ros2_ws/src/o3de_fleet_nav/test/test_pep257.py",
+                            "isTemplated": false
+                        },
+                        {
+                            "file": "Examples/ros2_ws/src/o3de_fleet_nav/test/test_flake8.py",
+                            "isTemplated": false
+                        },
+                        {
+                            "file": "Examples/ros2_ws/src/o3de_fleet_nav/test/test_copyright.py",
+                            "isTemplated": false
+                        },
+                        {
+                            "file": "Examples/ros2_ws/src/o3de_fleet_nav/setup.cfg",
+                            "isTemplated": false
+                        },
+                        {
+                            "file": "Examples/ros2_ws/src/o3de_fleet_nav/rviz/nav2_namespaced_view.rviz",
+                            "isTemplated": false
+                        }
+                    ],
+                    "createDirectories": [
+                        {
+                            "dir": "Assets"
+                        },
+                        {
+                            "dir": "Config"
+                        },
+                        {
+                            "dir": "Gem"
+                        },
+                        {
+                            "dir": "Gem/Include"
+                        },
+                        {
+                            "dir": "Gem/Include/${Name}"
+                        },
+                        {
+                            "dir": "Gem/Platform"
+                        },
+                        {
+                            "dir": "Gem/Platform/Linux"
+                        },
+                        {
+                            "dir": "Gem/Platform/Mac"
+                        },
+                        {
+                            "dir": "Gem/Platform/Windows"
+                        },
+                        {
+                            "dir": "Gem/Registry"
+                        },
+                        {
+                            "dir": "Gem/Source"
+                        },
+                        {
+                            "dir": "Levels"
+                        },
+                        {
+                            "dir": "Levels/Warehouse"
+                        },
+                        {
+                            "dir": "Levels/playground"
+                        },
+                        {
+                            "dir": "Levels/playground/_savebackup"
+                        },
+                        {
+                            "dir": "Levels/playground/_savebackup/2023-02-21 [13.25.33]"
+                        },
+                        {
+                            "dir": "Passes"
+                        },
+                        {
+                            "dir": "Platform"
+                        },
+                        {
+                            "dir": "Platform/Android"
+                        },
+                        {
+                            "dir": "Platform/Linux"
+                        },
+                        {
+                            "dir": "Platform/Mac"
+                        },
+                        {
+                            "dir": "Platform/Windows"
+                        },
+                        {
+                            "dir": "Registry"
+                        },
+                        {
+                            "dir": "Resources"
+                        },
+                        {
+                            "dir": "Resources/Platform"
+                        },
+                        {
+                            "dir": "Resources/Platform/Mac"
+                        },
+                        {
+                            "dir": "Resources/Platform/Mac/Images.xcassets"
+                        },
+                        {
+                            "dir": "Resources/Platform/Mac/Images.xcassets/AppIcon.appiconset"
+                        },
+                        {
+                            "dir": "ShaderLib"
+                        },
+                        {
+                            "dir": "Shaders"
+                        },
+                        {
+                            "dir": "Prefabs"
+                        },
+                        {
+                            "dir": "Shaders/ShaderResourceGroups"
+                        },
+                        {
+                            "dir": "cmake"
+                        },
+                        {
+                            "dir": "Examples"
+                        },
+                        {
+                            "dir": "Examples/ros2_ws"
+                        },
+                        {
+                            "dir": "Examples/ros2_ws/src"
+                        },
+                        {
+                            "dir": "Examples/ros2_ws/src/o3de_fleet_nav"
+                        },
+                        {
+                            "dir": "Examples/ros2_ws/src/o3de_fleet_nav/config"
+                        },
+                        {
+                            "dir": "Examples/ros2_ws/src/o3de_fleet_nav/launch"
+                        },
+                        {
+                            "dir": "Examples/ros2_ws/src/o3de_fleet_nav/maps"
+                        },
+                        {
+                            "dir": "Examples/ros2_ws/src/o3de_fleet_nav/o3de_fleet_nav"
+                        },
+                        {
+                            "dir": "Examples/ros2_ws/src/o3de_fleet_nav/params"
+                        },
+                        {
+                            "dir": "Examples/ros2_ws/src/o3de_fleet_nav/resource"
+                        },
+                        {
+                            "dir": "Examples/ros2_ws/src/o3de_fleet_nav/rviz"
+                        },
+                        {
+                            "dir": "Examples/ros2_ws/src/o3de_fleet_nav/test"
+                        }
+                    ],
+                    "download_source_uri": "https://github.com/o3de/o3de-extras/releases/download/2.0/ros2fleetrobottemplate-2.0.0-template.zip",
+                    "sha256": "a788901be9a503165050345be940dcbd5a02d6eea9cd0b6a4cb1a92ae12b2170"
                 }
             ]
         },
@@ -3569,8 +4090,438 @@
                             "isTemplated": false
                         }
                     ],
-                    "download_source_uri": "https://github.com/o3de/o3de-extras/releases/download/2.0/ros2projecttemplate-1.1.0-template.zip",
-                    "sha256": "bb58695b13a8eca3675a25afe6a1832140ef3fa4a14ea1701ff127a50e36e066"
+                    "download_source_uri": "https://github.com/o3de/o3de-extras/releases/download/2.0/ros2projecttemplate-1.1.0-template.zip"
+                },
+                {
+                    "version": "2.0.0",
+                    "copyFiles": [
+                        {
+                            "file": ".clang-format",
+                            "isTemplated": false
+                        },
+                        {
+                            "file": ".gitattributes",
+                            "isTemplated": false
+                        },
+                        {
+                            "file": ".gitignore",
+                            "isTemplated": false
+                        },
+                        {
+                            "file": "CMakeLists.txt",
+                            "isTemplated": true
+                        },
+                        {
+                            "file": "cmake/EngineFinder.cmake",
+                            "isTemplated": true
+                        },
+                        {
+                            "file": "Config/default_aws_resource_mappings.json",
+                            "isTemplated": false
+                        },
+                        {
+                            "file": "Config/shader_global_build_options.json",
+                            "isTemplated": false
+                        },
+                        {
+                            "file": "Gem/${NameLower}_files.cmake",
+                            "isTemplated": true
+                        },
+                        {
+                            "file": "Gem/${NameLower}_editor_files.cmake",
+                            "isTemplated": true
+                        },
+                        {
+                            "file": "Gem/${NameLower}_shared_files.cmake",
+                            "isTemplated": true
+                        },
+                        {
+                            "file": "Gem/${NameLower}_editor_shared_files.cmake",
+                            "isTemplated": true
+                        },
+                        {
+                            "file": "Gem/CMakeLists.txt",
+                            "isTemplated": true
+                        },
+                        {
+                            "file": "Gem/Include/${Name}/${Name}Bus.h",
+                            "isTemplated": true
+                        },
+                        {
+                            "file": "Gem/Platform/Android/${NameLower}_android_files.cmake",
+                            "isTemplated": false
+                        },
+                        {
+                            "file": "Gem/Platform/Android/${NameLower}_shared_android_files.cmake",
+                            "isTemplated": false
+                        },
+                        {
+                            "file": "Gem/Platform/Android/PAL_android.cmake",
+                            "isTemplated": true
+                        },
+                        {
+                            "file": "Gem/Platform/Linux/${NameLower}_linux_files.cmake",
+                            "isTemplated": false
+                        },
+                        {
+                            "file": "Gem/Platform/Linux/${NameLower}_shared_linux_files.cmake",
+                            "isTemplated": false
+                        },
+                        {
+                            "file": "Gem/Platform/Linux/PAL_linux.cmake",
+                            "isTemplated": true
+                        },
+                        {
+                            "file": "Gem/Platform/Mac/${NameLower}_mac_files.cmake",
+                            "isTemplated": false
+                        },
+                        {
+                            "file": "Gem/Platform/Mac/${NameLower}_shared_mac_files.cmake",
+                            "isTemplated": false
+                        },
+                        {
+                            "file": "Gem/Platform/Mac/PAL_mac.cmake",
+                            "isTemplated": true
+                        },
+                        {
+                            "file": "Gem/Platform/Windows/${NameLower}_shared_windows_files.cmake",
+                            "isTemplated": false
+                        },
+                        {
+                            "file": "Gem/Platform/Windows/${NameLower}_windows_files.cmake",
+                            "isTemplated": false
+                        },
+                        {
+                            "file": "Gem/Platform/Windows/PAL_windows.cmake",
+                            "isTemplated": true
+                        },
+                        {
+                            "file": "Gem/Platform/iOS/${NameLower}_ios_files.cmake",
+                            "isTemplated": false
+                        },
+                        {
+                            "file": "Gem/Platform/iOS/${NameLower}_shared_ios_files.cmake",
+                            "isTemplated": false
+                        },
+                        {
+                            "file": "Gem/Platform/iOS/PAL_ios.cmake",
+                            "isTemplated": true
+                        },
+                        {
+                            "file": "Gem/Registry/assetprocessor_settings.setreg",
+                            "isTemplated": true
+                        },
+                        {
+                            "file": "Gem/Source/${Name}Module.cpp",
+                            "isTemplated": true
+                        },
+                        {
+                            "file": "Gem/Source/${Name}EditorModule.cpp",
+                            "isTemplated": true
+                        },
+                        {
+                            "file": "Gem/Source/${Name}ModuleInterface.h",
+                            "isTemplated": true
+                        },
+                        {
+                            "file": "Gem/Source/${Name}SystemComponent.cpp",
+                            "isTemplated": true
+                        },
+                        {
+                            "file": "Gem/Source/${Name}SystemComponent.h",
+                            "isTemplated": true
+                        },
+                        {
+                            "file": "Gem/Source/${Name}EditorSystemComponent.cpp",
+                            "isTemplated": true
+                        },
+                        {
+                            "file": "Gem/Source/${Name}EditorSystemComponent.h",
+                            "isTemplated": true
+                        },
+                        {
+                            "file": "Gem/Source/${Name}SampleComponent.cpp",
+                            "isTemplated": true
+                        },
+                        {
+                            "file": "Gem/Source/${Name}SampleComponent.h",
+                            "isTemplated": true
+                        },
+                        {
+                            "file": "Gem/gem.json",
+                            "isTemplated": true
+                        },
+                        {
+                            "file": "Levels/DemoLevel/DemoLevel.prefab",
+                            "isTemplated": true
+                        },
+                        {
+                            "file": "Platform/Android/android_project.cmake",
+                            "isTemplated": false
+                        },
+                        {
+                            "file": "Platform/Android/android_project.json",
+                            "isTemplated": true
+                        },
+                        {
+                            "file": "Platform/Linux/linux_project.cmake",
+                            "isTemplated": false
+                        },
+                        {
+                            "file": "Platform/Linux/linux_project.json",
+                            "isTemplated": false
+                        },
+                        {
+                            "file": "Platform/Mac/mac_project.cmake",
+                            "isTemplated": false
+                        },
+                        {
+                            "file": "Platform/Mac/mac_project.json",
+                            "isTemplated": false
+                        },
+                        {
+                            "file": "Platform/Windows/windows_project.cmake",
+                            "isTemplated": false
+                        },
+                        {
+                            "file": "Platform/Windows/windows_project.json",
+                            "isTemplated": false
+                        },
+                        {
+                            "file": "Platform/iOS/ios_project.cmake",
+                            "isTemplated": false
+                        },
+                        {
+                            "file": "Platform/iOS/ios_project.json",
+                            "isTemplated": false
+                        },
+                        {
+                            "file": "Registry/assetprocessor_settings.setreg",
+                            "isTemplated": true
+                        },
+                        {
+                            "file": "Registry/awscoreconfiguration.setreg",
+                            "isTemplated": false
+                        },
+                        {
+                            "file": "Registry/editorpreferences.setreg",
+                            "isTemplated": false
+                        },
+                        {
+                            "file": "Registry/physxsystemconfiguration.setreg",
+                            "isTemplated": false
+                        },
+                        {
+                            "file": "Registry/sceneassetimporter.setreg",
+                            "isTemplated": false
+                        },
+                        {
+                            "file": "Resources/GameSDK.ico",
+                            "isTemplated": false
+                        },
+                        {
+                            "file": "Resources/LegacyLogoLauncher.bmp",
+                            "isTemplated": false
+                        },
+                        {
+                            "file": "Resources/Platform/Mac/Images.xcassets/Contents.json",
+                            "isTemplated": false
+                        },
+                        {
+                            "file": "Resources/Platform/Mac/Images.xcassets/AppIcon.appiconset/Contents.json",
+                            "isTemplated": false
+                        },
+                        {
+                            "file": "Resources/Platform/Mac/Images.xcassets/AppIcon.appiconset/icon_128.png",
+                            "isTemplated": false
+                        },
+                        {
+                            "file": "Resources/Platform/Mac/Images.xcassets/AppIcon.appiconset/icon_128_2x.png",
+                            "isTemplated": false
+                        },
+                        {
+                            "file": "Resources/Platform/Mac/Images.xcassets/AppIcon.appiconset/icon_16.png",
+                            "isTemplated": false
+                        },
+                        {
+                            "file": "Resources/Platform/Mac/Images.xcassets/AppIcon.appiconset/icon_16_2x.png",
+                            "isTemplated": false
+                        },
+                        {
+                            "file": "Resources/Platform/Mac/Images.xcassets/AppIcon.appiconset/icon_256.png",
+                            "isTemplated": false
+                        },
+                        {
+                            "file": "Resources/Platform/Mac/Images.xcassets/AppIcon.appiconset/icon_256_2x.png",
+                            "isTemplated": false
+                        },
+                        {
+                            "file": "Resources/Platform/Mac/Images.xcassets/AppIcon.appiconset/icon_32.png",
+                            "isTemplated": false
+                        },
+                        {
+                            "file": "Resources/Platform/Mac/Images.xcassets/AppIcon.appiconset/icon_32_2x.png",
+                            "isTemplated": false
+                        },
+                        {
+                            "file": "Resources/Platform/Mac/Images.xcassets/AppIcon.appiconset/icon_512.png",
+                            "isTemplated": false
+                        },
+                        {
+                            "file": "Resources/Platform/Mac/Images.xcassets/AppIcon.appiconset/icon_512_2x.png",
+                            "isTemplated": false
+                        },
+                        {
+                            "file": "Resources/Platform/Mac/Info.plist",
+                            "isTemplated": true
+                        },
+                        {
+                            "file": "Resources/Platform/iOS/Images.xcassets/Contents.json",
+                            "isTemplated": false
+                        },
+                        {
+                            "file": "Resources/Platform/iOS/Images.xcassets/LaunchImage.launchimage/Contents.json",
+                            "isTemplated": false
+                        },
+                        {
+                            "file": "Resources/Platform/iOS/Images.xcassets/LaunchImage.launchimage/iPadLaunchImage1024x768.png",
+                            "isTemplated": false
+                        },
+                        {
+                            "file": "Resources/Platform/iOS/Images.xcassets/LaunchImage.launchimage/iPadLaunchImage1536x2048.png",
+                            "isTemplated": false
+                        },
+                        {
+                            "file": "Resources/Platform/iOS/Images.xcassets/LaunchImage.launchimage/iPadLaunchImage2048x1536.png",
+                            "isTemplated": false
+                        },
+                        {
+                            "file": "Resources/Platform/iOS/Images.xcassets/LaunchImage.launchimage/iPadLaunchImage768x1024.png",
+                            "isTemplated": false
+                        },
+                        {
+                            "file": "Resources/Platform/iOS/Images.xcassets/LaunchImage.launchimage/iPhoneLaunchImage640x1136.png",
+                            "isTemplated": false
+                        },
+                        {
+                            "file": "Resources/Platform/iOS/Images.xcassets/LaunchImage.launchimage/iPhoneLaunchImage640x960.png",
+                            "isTemplated": false
+                        },
+                        {
+                            "file": "Resources/Platform/iOS/Images.xcassets/AppIcon.appiconset/Contents.json",
+                            "isTemplated": false
+                        },
+                        {
+                            "file": "Resources/Platform/iOS/Images.xcassets/AppIcon.appiconset/iPadAppIcon152x152.png",
+                            "isTemplated": false
+                        },
+                        {
+                            "file": "Resources/Platform/iOS/Images.xcassets/AppIcon.appiconset/iPadAppIcon76x76.png",
+                            "isTemplated": false
+                        },
+                        {
+                            "file": "Resources/Platform/iOS/Images.xcassets/AppIcon.appiconset/iPadProAppIcon167x167.png",
+                            "isTemplated": false
+                        },
+                        {
+                            "file": "Resources/Platform/iOS/Images.xcassets/AppIcon.appiconset/iPadSettingsIcon29x29.png",
+                            "isTemplated": false
+                        },
+                        {
+                            "file": "Resources/Platform/iOS/Images.xcassets/AppIcon.appiconset/iPadSettingsIcon58x58.png",
+                            "isTemplated": false
+                        },
+                        {
+                            "file": "Resources/Platform/iOS/Images.xcassets/AppIcon.appiconset/iPadSpotlightIcon40x40.png",
+                            "isTemplated": false
+                        },
+                        {
+                            "file": "Resources/Platform/iOS/Images.xcassets/AppIcon.appiconset/iPadSpotlightIcon80x80.png",
+                            "isTemplated": false
+                        },
+                        {
+                            "file": "Resources/Platform/iOS/Images.xcassets/AppIcon.appiconset/iPhoneAppIcon120x120.png",
+                            "isTemplated": false
+                        },
+                        {
+                            "file": "Resources/Platform/iOS/Images.xcassets/AppIcon.appiconset/iPhoneAppIcon180x180.png",
+                            "isTemplated": false
+                        },
+                        {
+                            "file": "Resources/Platform/iOS/Images.xcassets/AppIcon.appiconset/iPhoneSettingsIcon58x58.png",
+                            "isTemplated": false
+                        },
+                        {
+                            "file": "Resources/Platform/iOS/Images.xcassets/AppIcon.appiconset/iPhoneSettingsIcon87x87.png",
+                            "isTemplated": false
+                        },
+                        {
+                            "file": "Resources/Platform/iOS/Images.xcassets/AppIcon.appiconset/iPhoneSpotlightIcon120x120.png",
+                            "isTemplated": false
+                        },
+                        {
+                            "file": "Resources/Platform/iOS/Images.xcassets/AppIcon.appiconset/iPhoneSpotlightIcon80x80.png",
+                            "isTemplated": false
+                        },
+                        {
+                            "file": "Resources/Platform/iOS/Info.plist",
+                            "isTemplated": true
+                        },
+                        {
+                            "file": "ShaderLib/README.md",
+                            "isTemplated": false
+                        },
+                        {
+                            "file": "ShaderLib/scenesrg.srgi",
+                            "isTemplated": true
+                        },
+                        {
+                            "file": "ShaderLib/viewsrg.srgi",
+                            "isTemplated": true
+                        },
+                        {
+                            "file": "autoexec.cfg",
+                            "isTemplated": false
+                        },
+                        {
+                            "file": "game.cfg",
+                            "isTemplated": false
+                        },
+                        {
+                            "file": "preview.png",
+                            "isTemplated": false
+                        },
+                        {
+                            "file": "project.json",
+                            "isTemplated": true
+                        },
+                        {
+                            "file": "Examples/slam_navigation/launch/config/config.rviz",
+                            "isTemplated": false
+                        },
+                        {
+                            "file": "Examples/slam_navigation/README.md",
+                            "isTemplated": false
+                        },
+                        {
+                            "file": "Examples/slam_navigation/launch/config/navigation_params.yaml",
+                            "isTemplated": false
+                        },
+                        {
+                            "file": "Examples/slam_navigation/launch/config/slam_params.yaml",
+                            "isTemplated": false
+                        },
+                        {
+                            "file": "Examples/slam_navigation/launch/navigation.launch.py",
+                            "isTemplated": false
+                        },
+                        {
+                            "file": "Examples/slam_navigation/launch/slam.launch.py",
+                            "isTemplated": false
+                        }
+                    ],
+                    "download_source_uri": "https://github.com/o3de/o3de-extras/releases/download/2.0/ros2projecttemplate-2.0.0-template.zip",
+                    "sha256": "51bbdcc2b24016a8ec9d005a35fa31139f3fae30c5ae84df54e6b73318b20744"
                 }
             ]
         },
@@ -4407,7 +5358,14 @@
             ],
             "repo_uri": "https://raw.githubusercontent.com/o3de/o3de-extras/development",
             "download_source_uri": "https://github.com/o3de/o3de-extras/releases/download/2.0/ros2roboticmanipulationtemplate-1.1.0-template.zip",
-            "sha256": "c709ef54a98710cb12554604251022079a40571674e28d14580805a3d78e6997"
+            "sha256": "7efe89a56731ad2efda60eb302fc73ec9ddf4f1bbb89d9b3cd9a9e357e64d9d3",
+            "versions_data": [
+                {
+                    "version": "2.0.0",
+                    "download_source_uri": "https://github.com/o3de/o3de-extras/releases/download/2.0/ros2roboticmanipulationtemplate-2.0.0-template.zip",
+                    "sha256": "0534490ddee493b0744a76493c1551879fb803890ed123c786e1699c5ddd1e13"
+                }
+            ]
         }
     ],
     "projects_data": [
@@ -4438,9 +5396,12 @@
             ],
             "versions_data": [
                 {
-                    "sha256": "36e7ad0359f4e91ec287f409732e35c223bfeed47ab6f84109f80a56bf34e1fd",
-                    "version": "1.0.0",
-                    "download_source_uri": "https://github.com/o3de/o3de-extras/releases/download/2.0/openxrtest-1.0.0-project.zip"
+                    "download_source_uri": "https://github.com/o3de/o3de-extras/releases/download/2.0/openxrtest-1.0.0-project.zip",
+                    "gem_names": [
+                        "XR>=1.0.1",
+                        "OpenXRVk>=1.0.1"
+                    ],
+                    "version": "1.0.0"
                 }
             ]
         }
