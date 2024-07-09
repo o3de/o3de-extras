@@ -12,6 +12,7 @@
 
 namespace ROS2
 {
+    //! A class for managing Lidar
     class LidarSystem : protected ROS2::LidarSystemRequestBus::Handler
     {
     public:

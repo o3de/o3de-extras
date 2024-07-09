@@ -20,9 +20,9 @@
 
 namespace ROS2
 {
-    // Handler class for the ROS2FrameEditorComponent. It watches for changes in the entity tree and notifies about moves.
-    // Used by the ROS2FrameSystemComponent, to track changes in the entity tree. It notifies the ROS2FrameSystemComponent
-    // and calls the appropriate functions to update the changes.
+    //! Handler class for the ROS2FrameEditorComponent. It watches for changes in the entity tree and notifies about moves.
+    //! Used by the ROS2FrameSystemComponent, to track changes in the entity tree. It notifies the ROS2FrameSystemComponent
+    //! and calls the appropriate functions to update the changes.
     class ROS2FrameSystemTransformHandler : public AZ::TransformNotificationBus::Handler
     {
     public:

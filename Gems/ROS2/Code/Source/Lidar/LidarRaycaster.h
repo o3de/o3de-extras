@@ -16,6 +16,7 @@
 
 namespace ROS2
 {
+    //! A class for executing lidar raycast.
     class LidarRaycaster : protected LidarRaycasterRequestBus::Handler
     {
     public:
