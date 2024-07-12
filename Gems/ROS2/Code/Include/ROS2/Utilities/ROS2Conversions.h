@@ -14,6 +14,7 @@
 #include <geometry_msgs/msg/pose.hpp>
 #include <geometry_msgs/msg/vector3.hpp>
 #include <builtin_interfaces/msg/time.hpp>
+
 namespace ROS2
 {
     //! Utility class for conversions between ROS2 types and O3DE (AZ::) types.

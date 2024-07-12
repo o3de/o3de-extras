@@ -183,7 +183,7 @@ namespace ROS2
         publisherContext.m_entityId = GetEntityId();
 
         m_jointStatePublisher = AZStd::make_unique<JointStatePublisher>(m_jointStatePublisherConfiguration, publisherContext);
-        m_lastTickTime = ROS2Interface::Get()->GetROSTimestamp();
+        m_lastTickTimestamp = ROS2Interface::Get()->GetROSTimestamp();
         AZ::TickBus::Handler::BusConnect();
         JointsManipulationRequestBus::Handler::BusConnect(GetEntityId());
     }
@@ -450,8 +450,8 @@ namespace ROS2
             m_jointStatePublisher->InitializePublisher();
         }
         auto simTimestamp = ROS2Interface::Get()->GetROSTimestamp();
-        float deltaSimTime = ROS2Conversions::GetTimeDifference(m_lastTickTime, simTimestamp);
+        float deltaSimTime = ROS2Conversions::GetTimeDifference(m_lastTickTimestamp, simTimestamp);
         MoveToSetPositions(deltaSimTime);
-        m_lastTickTime = simTimestamp;
+        m_lastTickTimestamp = simTimestamp;
     }
 } // namespace ROS2

@@ -60,6 +60,6 @@ namespace ROS2
         // AZ::TickBus overrides
         void OnTick(float deltaTime, AZ::ScriptTimePoint time) override;
 
-        builtin_interfaces::msg::Time m_lastTickTime; //!< ROS 2 Timestamp during last OnTick call
+        builtin_interfaces::msg::Time m_lastTickTimestamp; //!< ROS 2 Timestamp during last OnTick call
     };
 } // namespace ROS2

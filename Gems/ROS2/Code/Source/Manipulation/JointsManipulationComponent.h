@@ -86,6 +86,6 @@ namespace ROS2
         ManipulationJoints m_manipulationJoints; //!< Map of JointInfo where the key is a joint name (with namespace included)
         AZStd::vector<AZStd::pair<AZStd::string, float>> 
             m_initialPositions; //!< Initial positions per joint name (without namespace included)
-        builtin_interfaces::msg::Time m_lastTickTime; //!< ROS 2 Timestamp during last OnTick call
+        builtin_interfaces::msg::Time m_lastTickTimestamp; //!< ROS 2 Timestamp during last OnTick call
     };
 } // namespace ROS2

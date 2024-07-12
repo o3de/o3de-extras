@@ -25,7 +25,7 @@ namespace ROS2
         m_followTrajectoryServer = AZStd::make_unique<FollowJointTrajectoryActionServer>(namespacedAction, GetEntityId());
         AZ::TickBus::Handler::BusConnect();
         JointsTrajectoryRequestBus::Handler::BusConnect(GetEntityId());
-        m_lastTickTime = ROS2Interface::Get()->GetROSTimestamp();
+        m_lastTickTimestamp = ROS2Interface::Get()->GetROSTimestamp();
     }
 
     ManipulationJoints& JointsTrajectoryComponent::GetManipulationJoints()
@@ -256,8 +256,8 @@ namespace ROS2
             return;
         }
         const auto simTimestamp = ROS2Interface::Get()->GetROSTimestamp();
-        const float deltaSimulatedTime = ROS2Conversions::GetTimeDifference(simTimestamp, m_lastTickTime);
-        m_lastTickTime = simTimestamp;
+        const float deltaSimulatedTime = ROS2Conversions::GetTimeDifference(simTimestamp, m_lastTickTimestamp);
+        m_lastTickTimestamp = simTimestamp;
         const uint64_t deltaTimeNs = deltaSimulatedTime * 1'000'000'000;
         FollowTrajectory(deltaTimeNs);
         UpdateFeedback();
