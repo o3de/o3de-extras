@@ -45,7 +45,7 @@ namespace ROS2::SDFormat
             ">ray>range>max",
         };
         importerHook.m_pluginNames = AZStd::unordered_set<AZStd::string>{ "libgazebo_ros_ray_sensor.so", "libgazebo_ros_laser.so" };
-        importerHook.m_supportedPluginParams = AZStd::unordered_set<AZStd::string>{};
+        importerHook.m_supportedPluginParams = AZStd::unordered_set<AZStd::string>{ ">topicName", ">ros>remapping", ">ros>argument" };
         importerHook.m_sdfSensorToComponentCallback = [](AZ::Entity& entity,
                                                          const sdf::Sensor& sdfSensor) -> SensorImporterHook::ConvertSensorOutcome
         {
@@ -60,7 +60,20 @@ namespace ROS2::SDFormat
             SensorConfiguration sensorConfiguration;
             sensorConfiguration.m_frequency = sdfSensor.UpdateRate();
             const AZStd::string messageType = is2DLidar ? "sensor_msgs::msg::LaserScan" : "sensor_msgs::msg::PointCloud2";
-            const AZStd::string messageTopic = is2DLidar ? "scan" : "pc";
+
+            const auto lidarPlugins = sdfSensor.Plugins();
+
+            // setting lidar topic
+            AZStd::string messageTopic = is2DLidar ? "scan" : "pc";
+            if (!lidarPlugins.empty()) {
+                HooksUtils::Remaps lidarRemaps = HooksUtils::GetSensorRemaps(lidarPlugins[0]);
+                if (lidarRemaps.contains("out")) messageTopic = lidarRemaps["out"];
+                else if (lidarRemaps.contains("topicName")) {
+                    messageTopic = HooksUtils::PluginParser::LastOnPath(lidarRemaps["topicName"]);
+                }
+            }
+
+
             HooksUtils::AddTopicConfiguration(sensorConfiguration, messageTopic, messageType, messageType);
 
             LidarSensorConfiguration lidarConfiguration{ is2DLidar ? LidarTemplateUtils::Get2DModels()

@@ -111,5 +111,19 @@ namespace ROS2::SDFormat
 
             return nullptr;
         }
+
+        namespace PluginParser
+        {
+            AZStd::string LastOnPath(AZStd::string path);
+        } // namespace PluginParser
+
+        using Remaps = AZStd::unordered_map<AZStd::string, AZStd::string>;
+
+        //! Find all potential remaps present in given plugin.
+        //! Returns both ROS1 and ROS2 remappings.
+        //! @param plugin plugin to extract remaps from.
+        //! @return a map of remaps present in plugin.
+        Remaps GetSensorRemaps(const sdf::Plugin &plugin);
+
     } // namespace HooksUtils
 } // namespace ROS2::SDFormat

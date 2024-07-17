@@ -36,7 +36,7 @@ namespace ROS2::SDFormat
                                                                                     ">imu>linear_acceleration>z>noise>mean",
                                                                                     ">imu>linear_acceleration>z>noise>stddev" };
         importerHook.m_pluginNames = AZStd::unordered_set<AZStd::string>{ "libgazebo_ros_imu_sensor.so" };
-        importerHook.m_supportedPluginParams = AZStd::unordered_set<AZStd::string>{};
+        importerHook.m_supportedPluginParams = AZStd::unordered_set<AZStd::string>{ ">topicName", ">ros>remapping", ">ros>argument" };
         importerHook.m_sdfSensorToComponentCallback = [](AZ::Entity& entity,
                                                          const sdf::Sensor& sdfSensor) -> SensorImporterHook::ConvertSensorOutcome
         {
@@ -80,7 +80,20 @@ namespace ROS2::SDFormat
             SensorConfiguration sensorConfiguration;
             sensorConfiguration.m_frequency = sdfSensor.UpdateRate();
             const AZStd::string messageType = "sensor_msgs::msg::Imu";
-            HooksUtils::AddTopicConfiguration(sensorConfiguration, "imu", messageType, messageType);
+
+            const auto imuPlugins = sdfSensor.Plugins();
+
+            // setting lidar topic
+            AZStd::string messageTopic = "imu";
+            if (!imuPlugins.empty()) {
+                HooksUtils::Remaps imuRemaps = HooksUtils::GetSensorRemaps(imuPlugins[0]);
+                if (imuRemaps.contains("out")) messageTopic = imuRemaps["out"];
+                else if (imuRemaps.contains("topicName")) {
+                    messageTopic = HooksUtils::PluginParser::LastOnPath(imuRemaps["topicName"]);
+                }
+            }
+
+            HooksUtils::AddTopicConfiguration(sensorConfiguration, messageTopic, messageType, messageType);
 
             // Create required components
             HooksUtils::CreateComponent<ROS2FrameEditorComponent>(entity);

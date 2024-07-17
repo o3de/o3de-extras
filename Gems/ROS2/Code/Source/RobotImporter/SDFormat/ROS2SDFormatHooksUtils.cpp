@@ -98,4 +98,70 @@ namespace ROS2::SDFormat
                 "CreatePrefabFromUrdfOrSdf", "Setting transform failed: %s does not have transform interface\n", sdfSensor.Name().c_str());
         }
     }
+
+    namespace HooksUtils::PluginParser
+    {
+        AZStd::string LastOnPath(AZStd::string path) {
+            if (path.contains('/')) {
+                int startPos = path.find_last_of('/') + 1;
+                path = path.substr(startPos, path.size() - startPos);
+            }
+            return path;
+        }
+
+
+        void ParseRegularContent(const sdf::Element &content, HooksUtils::Remaps &remappings) {
+            std::string contentName = content.GetName();
+            AZStd::string key(contentName.begin(), contentName.end());
+            std::string contentValue = content.GetValue()->GetAsString();
+            AZStd::string val(contentValue.begin(), contentValue.end());
+            remappings[key] = val;
+        }
+
+        void ParseRos2Content(const sdf::Element &rosContent, HooksUtils::Remaps &remappings) {
+            if (rosContent.GetName() != "remapping" && rosContent.GetName() != "argument") {
+                ParseRegularContent(rosContent, remappings);
+                return;
+            }
+            std::string contentValue = rosContent.GetValue()->GetAsString();
+
+            // get new name of the topic
+            int startVal = std::max(contentValue.find_last_of('/'), contentValue.find_last_of('=')) + 1;
+            std::string newTopic = contentValue.substr(startVal, contentValue.size() - startVal);
+
+            // get previous name of the topic
+            contentValue = contentValue.substr(0, contentValue.find_first_of(':'));
+            int startKey = contentValue.find_last_of('/') + 1;
+            std::string prevTopic = contentValue.substr(startKey, contentValue.size() - startKey);
+
+            // insert data into the map
+            AZStd::string key(prevTopic.begin(), prevTopic.end());
+            AZStd::string val(newTopic.begin(), newTopic.end());
+            remappings[key] = val;
+        }
+    } // namespace PluginParser
+
+    HooksUtils::Remaps HooksUtils::GetSensorRemaps(const sdf::Plugin &plugin)
+    {
+        HooksUtils::Remaps remappings;
+
+        for (const auto &content : plugin.Contents())
+        {
+            std::string contentName = content->GetName();
+            if (contentName == "ros") {
+                auto rosContent = content->GetFirstElement();
+                while (rosContent != nullptr) {
+                    PluginParser::ParseRos2Content(*rosContent, remappings);
+                    rosContent = rosContent->GetNextElement();
+                }
+            }
+            else {
+                PluginParser::ParseRegularContent(*content, remappings);
+            }
+        }
+
+        return remappings;
+    }
+    
+
 } // namespace ROS2::SDFormat

@@ -29,7 +29,10 @@ namespace ROS2::SDFormat
         importerHook.m_pluginNames = AZStd::unordered_set<AZStd::string>{ "libgazebo_ros_camera.so",
                                                                           "libgazebo_ros_depth_camera.so",
                                                                           "libgazebo_ros_openni_kinect.so" };
-        importerHook.m_supportedPluginParams = AZStd::unordered_set<AZStd::string>{};
+        importerHook.m_supportedPluginParams = AZStd::unordered_set<AZStd::string>{
+            ">imageTopicName", ">cameraInfoTopicName", ">depthImageTopicName", ">depthImageCameraInfoTopicName",
+            ">ros>remapping", ">ros>argument"
+        };
         importerHook.m_sdfSensorToComponentCallback = [](AZ::Entity& entity,
                                                          const sdf::Sensor& sdfSensor) -> SensorImporterHook::ConvertSensorOutcome
         {
@@ -63,19 +66,55 @@ namespace ROS2::SDFormat
 
             SensorConfiguration sensorConfiguration;
             sensorConfiguration.m_frequency = sdfSensor.UpdateRate();
+
+            const auto cameraPlugins = sdfSensor.Plugins();
+            HooksUtils::Remaps cameraRemaps = cameraPlugins.empty() ? HooksUtils::Remaps() : HooksUtils::GetSensorRemaps(cameraPlugins[0]);
+
             if (sdfSensor.Type() != sdf::SensorType::DEPTH_CAMERA)
             { // COLOR_CAMERA and RGBD_CAMERA
+                AZStd::string imageColor = "camera_image_color", colorInfo = "camera_color_info";
+
+                if (cameraRemaps.contains("image_raw")) {
+                    imageColor = cameraRemaps["image_raw"];
+                }
+                else if (cameraRemaps.contains("imageTopicName")) {
+                    imageColor = HooksUtils::PluginParser::LastOnPath(cameraRemaps["imageTopicName"]);
+                }
+
+                if (cameraRemaps.contains("camera_info")) {
+                    colorInfo = cameraRemaps["camera_info"];
+                }
+                else if (cameraRemaps.contains("cameraInfoTopicName")) {
+                    colorInfo = HooksUtils::PluginParser::LastOnPath(cameraRemaps["cameraInfoTopicName"]);
+                }
+
                 HooksUtils::AddTopicConfiguration(
-                    sensorConfiguration, "camera_image_color", CameraConstants::ImageMessageType, CameraConstants::ColorImageConfig);
+                    sensorConfiguration, imageColor, CameraConstants::ImageMessageType, CameraConstants::ColorImageConfig);
                 HooksUtils::AddTopicConfiguration(
-                    sensorConfiguration, "color_camera_info", CameraConstants::CameraInfoMessageType, CameraConstants::ColorInfoConfig);
+                    sensorConfiguration, colorInfo, CameraConstants::CameraInfoMessageType, CameraConstants::ColorInfoConfig);
             }
             if (sdfSensor.Type() != sdf::SensorType::CAMERA)
             { // DEPTH_CAMERA and RGBD_CAMERA
+                AZStd::string imageDepth = "camera_image_depth", depthInfo = "depth_camera_info";
+
+                if (cameraRemaps.contains("image_depth")) {
+                    imageDepth = cameraRemaps["image_depth"];
+                }
+                else if (cameraRemaps.contains("depthImageTopicName")) {
+                    imageDepth = HooksUtils::PluginParser::LastOnPath(cameraRemaps["depthImageTopicName"]);
+                }
+
+                if (cameraRemaps.contains("camera_info_depth")) {
+                    depthInfo = cameraRemaps["camera_info_depth"];
+                }
+                else if (cameraRemaps.contains("depthImageCameraInfoTopicName")) {
+                    depthInfo = HooksUtils::PluginParser::LastOnPath(cameraRemaps["depthImageCameraInfoTopicName"]);
+                }
+
                 HooksUtils::AddTopicConfiguration(
-                    sensorConfiguration, "camera_image_depth", CameraConstants::ImageMessageType, CameraConstants::DepthImageConfig);
+                    sensorConfiguration, imageDepth, CameraConstants::ImageMessageType, CameraConstants::DepthImageConfig);
                 HooksUtils::AddTopicConfiguration(
-                    sensorConfiguration, "depth_camera_info", CameraConstants::CameraInfoMessageType, CameraConstants::DepthInfoConfig);
+                    sensorConfiguration, depthInfo, CameraConstants::CameraInfoMessageType, CameraConstants::DepthInfoConfig);
             }
 
             // Create required components

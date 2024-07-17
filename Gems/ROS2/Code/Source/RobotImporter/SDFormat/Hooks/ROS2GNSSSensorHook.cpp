@@ -21,7 +21,7 @@ namespace ROS2::SDFormat
         importerHook.m_sensorTypes = AZStd::unordered_set<sdf::SensorType>{ sdf::SensorType::NAVSAT };
         importerHook.m_supportedSensorParams = AZStd::unordered_set<AZStd::string>{ ">pose", ">update_rate" };
         importerHook.m_pluginNames = AZStd::unordered_set<AZStd::string>{ "libgazebo_ros_gps_sensor.so" };
-        importerHook.m_supportedPluginParams = AZStd::unordered_set<AZStd::string>{};
+        importerHook.m_supportedPluginParams = AZStd::unordered_set<AZStd::string>{ ">ros>remapping", ">ros>argument" };
         importerHook.m_sdfSensorToComponentCallback = [](AZ::Entity& entity,
                                                          const sdf::Sensor& sdfSensor) -> SensorImporterHook::ConvertSensorOutcome
         {
@@ -33,7 +33,17 @@ namespace ROS2::SDFormat
             SensorConfiguration sensorConfiguration;
             sensorConfiguration.m_frequency = sdfSensor.UpdateRate();
             const AZStd::string messageType = "sensor_msgs::msg::NavSatFix";
-            HooksUtils::AddTopicConfiguration(sensorConfiguration, "gnss", messageType, messageType);
+
+            const auto gnssPlugins = sdfSensor.Plugins();
+            
+            // setting gnss topic
+            AZStd::string messageTopic = "gnss";
+            if (!gnssPlugins.empty()) {
+                HooksUtils::Remaps gnssRemaps = HooksUtils::GetSensorRemaps(gnssPlugins[0]);
+                if (gnssRemaps.contains("out")) messageTopic = gnssRemaps["out"];
+            }
+
+            HooksUtils::AddTopicConfiguration(sensorConfiguration, messageTopic, messageType, messageType);
 
             if (HooksUtils::CreateComponent<ROS2GNSSSensorComponent>(entity, sensorConfiguration))
             {
