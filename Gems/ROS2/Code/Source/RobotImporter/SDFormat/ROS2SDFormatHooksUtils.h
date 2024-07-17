@@ -114,16 +114,21 @@ namespace ROS2::SDFormat
 
         namespace PluginParser
         {
+            //! For given path, extracts only it's last element.
+            //! Especially useful when parsing ROS2 remappings.
+            //! @param path string representing the path
+            //! @return last element on the path
             AZStd::string LastOnPath(AZStd::string path);
         } // namespace PluginParser
 
-        using Remaps = AZStd::unordered_map<AZStd::string, AZStd::string>;
+        using PluginParams = AZStd::unordered_map<AZStd::string, AZStd::string>;
 
-        //! Find all potential remaps present in given plugin.
-        //! Returns both ROS1 and ROS2 remappings.
-        //! @param plugin plugin to extract remaps from.
-        //! @return a map of remaps present in plugin.
-        Remaps GetSensorRemaps(const sdf::Plugin &plugin);
+        //! Find all parameters given in plugin element.
+        //! Given a ROS2 remapping argument, extracts only names of
+        //! elements to be remapped, ignoring their namespaces.
+        //! @param plugin plugin to extract parameters from.
+        //! @return a map of parameters present in plugin.
+        PluginParams GetPluginParams(const sdf::Plugin &plugin);
 
     } // namespace HooksUtils
 } // namespace ROS2::SDFormat

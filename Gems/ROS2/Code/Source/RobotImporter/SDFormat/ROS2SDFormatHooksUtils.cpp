@@ -109,8 +109,8 @@ namespace ROS2::SDFormat
             return path;
         }
 
-
-        void ParseRegularContent(const sdf::Element &content, HooksUtils::Remaps &remappings) {
+        // Inserts name (key) and value (val) of given parameter to map.
+        void ParseRegularContent(const sdf::Element &content, HooksUtils::PluginParams &remappings) {
             std::string contentName = content.GetName();
             AZStd::string key(contentName.begin(), contentName.end());
             std::string contentValue = content.GetValue()->GetAsString();
@@ -118,8 +118,10 @@ namespace ROS2::SDFormat
             remappings[key] = val;
         }
 
-        void ParseRos2Content(const sdf::Element &rosContent, HooksUtils::Remaps &remappings) {
+        // Parses parameters present in <ros> element, inserting them to map.
+        void ParseRos2Content(const sdf::Element &rosContent, HooksUtils::PluginParams &remappings) {
             if (rosContent.GetName() != "remapping" && rosContent.GetName() != "argument") {
+                // parameter other than <remapping> or <argument> can be handled as regular parameter
                 ParseRegularContent(rosContent, remappings);
                 return;
             }
@@ -134,21 +136,22 @@ namespace ROS2::SDFormat
             int startKey = contentValue.find_last_of('/') + 1;
             std::string prevTopic = contentValue.substr(startKey, contentValue.size() - startKey);
 
-            // insert data into the map
+            // insert data into the map - previous topic name as key and new topic name as val
             AZStd::string key(prevTopic.begin(), prevTopic.end());
             AZStd::string val(newTopic.begin(), newTopic.end());
             remappings[key] = val;
         }
     } // namespace PluginParser
 
-    HooksUtils::Remaps HooksUtils::GetSensorRemaps(const sdf::Plugin &plugin)
+    HooksUtils::PluginParams HooksUtils::GetPluginParams(const sdf::Plugin &plugin)
     {
-        HooksUtils::Remaps remappings;
+        HooksUtils::PluginParams remappings;
 
         for (const auto &content : plugin.Contents())
         {
             std::string contentName = content->GetName();
             if (contentName == "ros") {
+                // when <ros> tag is present, parse it's elements and insert them into the map
                 auto rosContent = content->GetFirstElement();
                 while (rosContent != nullptr) {
                     PluginParser::ParseRos2Content(*rosContent, remappings);

@@ -68,24 +68,24 @@ namespace ROS2::SDFormat
             sensorConfiguration.m_frequency = sdfSensor.UpdateRate();
 
             const auto cameraPlugins = sdfSensor.Plugins();
-            HooksUtils::Remaps cameraRemaps = cameraPlugins.empty() ? HooksUtils::Remaps() : HooksUtils::GetSensorRemaps(cameraPlugins[0]);
+            HooksUtils::PluginParams cameraPluginParams = cameraPlugins.empty() ? HooksUtils::PluginParams() : HooksUtils::GetPluginParams(cameraPlugins[0]);
 
             if (sdfSensor.Type() != sdf::SensorType::DEPTH_CAMERA)
             { // COLOR_CAMERA and RGBD_CAMERA
                 AZStd::string imageColor = "camera_image_color", colorInfo = "camera_color_info";
 
-                if (cameraRemaps.contains("image_raw")) {
-                    imageColor = cameraRemaps["image_raw"];
+                if (cameraPluginParams.contains("image_raw")) {
+                    imageColor = cameraPluginParams["image_raw"];
                 }
-                else if (cameraRemaps.contains("imageTopicName")) {
-                    imageColor = HooksUtils::PluginParser::LastOnPath(cameraRemaps["imageTopicName"]);
+                else if (cameraPluginParams.contains("imageTopicName")) {
+                    imageColor = HooksUtils::PluginParser::LastOnPath(cameraPluginParams["imageTopicName"]);
                 }
 
-                if (cameraRemaps.contains("camera_info")) {
-                    colorInfo = cameraRemaps["camera_info"];
+                if (cameraPluginParams.contains("camera_info")) {
+                    colorInfo = cameraPluginParams["camera_info"];
                 }
-                else if (cameraRemaps.contains("cameraInfoTopicName")) {
-                    colorInfo = HooksUtils::PluginParser::LastOnPath(cameraRemaps["cameraInfoTopicName"]);
+                else if (cameraPluginParams.contains("cameraInfoTopicName")) {
+                    colorInfo = HooksUtils::PluginParser::LastOnPath(cameraPluginParams["cameraInfoTopicName"]);
                 }
 
                 HooksUtils::AddTopicConfiguration(
@@ -97,18 +97,18 @@ namespace ROS2::SDFormat
             { // DEPTH_CAMERA and RGBD_CAMERA
                 AZStd::string imageDepth = "camera_image_depth", depthInfo = "depth_camera_info";
 
-                if (cameraRemaps.contains("image_depth")) {
-                    imageDepth = cameraRemaps["image_depth"];
+                if (cameraPluginParams.contains("image_depth")) {
+                    imageDepth = cameraPluginParams["image_depth"];
                 }
-                else if (cameraRemaps.contains("depthImageTopicName")) {
-                    imageDepth = HooksUtils::PluginParser::LastOnPath(cameraRemaps["depthImageTopicName"]);
+                else if (cameraPluginParams.contains("depthImageTopicName")) {
+                    imageDepth = HooksUtils::PluginParser::LastOnPath(cameraPluginParams["depthImageTopicName"]);
                 }
 
-                if (cameraRemaps.contains("camera_info_depth")) {
-                    depthInfo = cameraRemaps["camera_info_depth"];
+                if (cameraPluginParams.contains("camera_info_depth")) {
+                    depthInfo = cameraPluginParams["camera_info_depth"];
                 }
-                else if (cameraRemaps.contains("depthImageCameraInfoTopicName")) {
-                    depthInfo = HooksUtils::PluginParser::LastOnPath(cameraRemaps["depthImageCameraInfoTopicName"]);
+                else if (cameraPluginParams.contains("depthImageCameraInfoTopicName")) {
+                    depthInfo = HooksUtils::PluginParser::LastOnPath(cameraPluginParams["depthImageCameraInfoTopicName"]);
                 }
 
                 HooksUtils::AddTopicConfiguration(

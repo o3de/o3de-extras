@@ -39,8 +39,8 @@ namespace ROS2::SDFormat
             // setting gnss topic
             AZStd::string messageTopic = "gnss";
             if (!gnssPlugins.empty()) {
-                HooksUtils::Remaps gnssRemaps = HooksUtils::GetSensorRemaps(gnssPlugins[0]);
-                if (gnssRemaps.contains("out")) messageTopic = gnssRemaps["out"];
+                HooksUtils::PluginParams gnssPluginParams = HooksUtils::GetPluginParams(gnssPlugins[0]);
+                if (gnssPluginParams.contains("out")) messageTopic = gnssPluginParams["out"];
             }
 
             HooksUtils::AddTopicConfiguration(sensorConfiguration, messageTopic, messageType, messageType);
