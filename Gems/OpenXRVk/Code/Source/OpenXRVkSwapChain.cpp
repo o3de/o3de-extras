@@ -187,7 +187,12 @@ namespace OpenXRVk
                     swapchainCreateInfo.mipCount = m_mipCount;
                     swapchainCreateInfo.faceCount = m_faceCount;
                     swapchainCreateInfo.sampleCount = m_sampleCount;
-                    swapchainCreateInfo.usageFlags = XR_SWAPCHAIN_USAGE_SAMPLED_BIT | XR_SWAPCHAIN_USAGE_COLOR_ATTACHMENT_BIT;
+                    swapchainCreateInfo.usageFlags = XR_SWAPCHAIN_USAGE_SAMPLED_BIT |
+                                                     XR_SWAPCHAIN_USAGE_COLOR_ATTACHMENT_BIT |
+                                                     XR_SWAPCHAIN_USAGE_TRANSFER_SRC_BIT |
+                                                     XR_SWAPCHAIN_USAGE_TRANSFER_DST_BIT |
+                                                     XR_SWAPCHAIN_USAGE_INPUT_ATTACHMENT_BIT_KHR
+                                                     ;
 
                     XrSwapchain handle = XR_NULL_HANDLE;
                     result = xrCreateSwapchain(xrSession, &swapchainCreateInfo, &handle);
