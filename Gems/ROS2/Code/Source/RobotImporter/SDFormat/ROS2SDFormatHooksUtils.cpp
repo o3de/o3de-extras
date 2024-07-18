@@ -102,6 +102,13 @@ namespace ROS2::SDFormat
     namespace HooksUtils::PluginParser
     {
         AZStd::string LastOnPath(AZStd::string path) {
+            if (path.empty()) {
+                AZ_Warning(
+                    "PluginParser",
+                    false,
+                    "Encountered empty parameter value while parsing URDF/SDF plugin.");
+                return "";
+            }
             if (path.contains('/')) {
                 int startPos = path.find_last_of('/') + 1;
                 path = path.substr(startPos, path.size() - startPos);
@@ -127,8 +134,23 @@ namespace ROS2::SDFormat
             }
             std::string contentValue = rosContent.GetValue()->GetAsString();
 
+            if (contentValue.find_last_of('=') == -1 || contentValue.find_last_of(':') == -1) {
+                AZ_Warning(
+                    "PluginParser",
+                    false,
+                    "Encountered invalid remapping while parsing URDF/SDF plugin.");
+                return;
+            }
+
             // get new name of the topic
             int startVal = std::max(contentValue.find_last_of('/'), contentValue.find_last_of('=')) + 1;
+            if (startVal >= contentValue.size()) {
+                AZ_Warning(
+                    "PluginParser",
+                    false,
+                    "Encountered invalid (empty) remapping while parsing URDF/SDF plugin.");
+                return;
+            }
             std::string newTopic = contentValue.substr(startVal, contentValue.size() - startVal);
 
             // get previous name of the topic
