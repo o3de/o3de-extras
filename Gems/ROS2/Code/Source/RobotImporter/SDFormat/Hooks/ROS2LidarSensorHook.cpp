@@ -45,7 +45,7 @@ namespace ROS2::SDFormat
             ">ray>range>max",
         };
         importerHook.m_pluginNames = AZStd::unordered_set<AZStd::string>{ "libgazebo_ros_ray_sensor.so", "libgazebo_ros_laser.so" };
-        importerHook.m_supportedPluginParams = AZStd::unordered_set<AZStd::string>{ ">topicName", ">ros>remapping", ">ros>argument" };
+        importerHook.m_supportedPluginParams = AZStd::unordered_set<AZStd::string>{ ">topicName", ">ros>remapping", ">ros>argument", ">updateRate" };
         importerHook.m_sdfSensorToComponentCallback = [](AZ::Entity& entity,
                                                          const sdf::Sensor& sdfSensor) -> SensorImporterHook::ConvertSensorOutcome
         {
@@ -70,6 +70,12 @@ namespace ROS2::SDFormat
                 if (lidarPluginParams.contains("out")) messageTopic = lidarPluginParams["out"];
                 else if (lidarPluginParams.contains("topicName")) {
                     messageTopic = HooksUtils::PluginParser::LastOnPath(lidarPluginParams["topicName"]);
+                }
+                // in ros1, updateRate is an element of the plugin, not a sensor parameter
+                if (lidarPluginParams.contains("updateRate"))
+                {
+                    std::string freqFromPlugin(lidarPluginParams["updateRate"].begin(), lidarPluginParams["updateRate"].size());
+                    sensorConfiguration.m_frequency = std::stof(freqFromPlugin);
                 }
             }
 
