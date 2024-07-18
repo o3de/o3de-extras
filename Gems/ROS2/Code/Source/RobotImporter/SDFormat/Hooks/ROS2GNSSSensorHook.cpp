@@ -7,6 +7,7 @@
  */
 
 #include <GNSS/ROS2GNSSSensorComponent.h>
+#include <ROS2/Frame/ROS2FrameEditorComponent.h>
 #include <RobotImporter/SDFormat/ROS2SDFormatHooksUtils.h>
 #include <RobotImporter/SDFormat/ROS2SensorHooks.h>
 
@@ -44,6 +45,9 @@ namespace ROS2::SDFormat
             }
 
             HooksUtils::AddTopicConfiguration(sensorConfiguration, messageTopic, messageType, messageType);
+
+            // Create required components
+            HooksUtils::CreateComponent<ROS2FrameEditorComponent>(entity);
 
             if (HooksUtils::CreateComponent<ROS2GNSSSensorComponent>(entity, sensorConfiguration))
             {

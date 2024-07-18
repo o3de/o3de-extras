@@ -10,7 +10,7 @@
 #include <ROS2/Frame/ROS2FrameEditorComponent.h>
 #include <RobotImporter/SDFormat/ROS2SDFormatHooksUtils.h>
 #include <RobotImporter/SDFormat/ROS2SensorHooks.h>
-#include <Source/EditorStaticRigidBodyComponent.h>
+#include <Source/EditorArticulationLinkComponent.h>
 
 #include <sdf/Imu.hh>
 #include <sdf/Sensor.hh>
@@ -97,7 +97,7 @@ namespace ROS2::SDFormat
 
             // Create required components
             HooksUtils::CreateComponent<ROS2FrameEditorComponent>(entity);
-            HooksUtils::CreateComponent<PhysX::EditorStaticRigidBodyComponent>(entity);
+            HooksUtils::CreateComponent<PhysX::EditorArticulationLinkComponent>(entity);
 
             // Create Imu component
             if (HooksUtils::CreateComponent<ROS2ImuSensorComponent>(entity, sensorConfiguration, imuConfiguration))
