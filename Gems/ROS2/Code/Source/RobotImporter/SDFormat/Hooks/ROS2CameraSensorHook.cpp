@@ -73,8 +73,8 @@ namespace ROS2::SDFormat
             // add depth_camera for plugins kinnect and depth_camera
             // check only the 1st plugin as it's the only one considered afterwards
             if (!cameraPlugins.empty() &&
-                cameraPlugins[0].Filename() == "libgazebo_ros_depth_camera.so" ||
-                cameraPlugins[0].Filename() == "libgazebo_ros_openni_kinect.so")
+                (cameraPlugins[0].Filename() == "libgazebo_ros_depth_camera.so" ||
+                cameraPlugins[0].Filename() == "libgazebo_ros_openni_kinect.so"))
             {
                 cameraConfiguration.m_depthCamera = true;
             }
