@@ -8,6 +8,7 @@
 
 #include "ROS2SDFormatHooksUtils.h"
 #include <AzToolsFramework/ToolsComponents/TransformComponent.h>
+#include <ROS2/Frame/ROS2FrameEditorComponent.h>
 #include <ROS2/Communication/TopicConfiguration.h>
 #include <RobotImporter/Utils/RobotImporterUtils.h>
 #include <RobotImporter/Utils/TypeConversions.h>
@@ -164,6 +165,32 @@ namespace ROS2::SDFormat
             remappings[key] = val;
         }
     } // namespace PluginParser
+
+    void HooksUtils::ConfigureFrame(ROS2FrameEditorComponent& frameComponent, const HooksUtils::PluginParams& pluginParams) {
+        if (pluginParams.contains("robotNamespace")) {
+            frameComponent.UpdateNamespaceConfiguration(pluginParams.at("robotNamespace"), NamespaceConfiguration::NamespaceStrategy::Custom);
+        }
+        else if (pluginParams.contains("namespace")) {
+            frameComponent.UpdateNamespaceConfiguration(PluginParser::LastOnPath(pluginParams.at("namespace")), NamespaceConfiguration::NamespaceStrategy::Custom);
+        }
+        if (pluginParams.contains("frameName")) {
+            frameComponent.SetFrameID(pluginParams.at("frameName"));
+        }
+        else if (pluginParams.contains("frame_name")) {
+            frameComponent.SetFrameID(pluginParams.at("frame_name"));
+        }
+    }
+
+    void HooksUtils::ConfigureFrame(AZ::Component& frameComponent, const HooksUtils::PluginParams& pluginParams) {
+        ConfigureFrame(*dynamic_cast<ROS2FrameEditorComponent*>(&frameComponent), pluginParams);
+    }
+
+    void HooksUtils::ConfigureFrame(AZ::Component* frameComponent, const HooksUtils::PluginParams& pluginParams) {
+        if (frameComponent) {
+            ConfigureFrame(*dynamic_cast<ROS2FrameEditorComponent*>(frameComponent), pluginParams);
+        }
+    }
+
 
     HooksUtils::PluginParams HooksUtils::GetPluginParams(const sdf::Plugin &plugin)
     {

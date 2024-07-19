@@ -127,7 +127,8 @@ namespace ROS2::SDFormat
             }
 
             // Create required components
-            HooksUtils::CreateComponent<ROS2FrameEditorComponent>(entity);
+            auto frameComponent = HooksUtils::CreateComponent<ROS2FrameEditorComponent>(entity);
+            HooksUtils::ConfigureFrame(frameComponent, cameraPluginParams);
 
             // Create Camera component
             if (HooksUtils::CreateComponent<ROS2CameraSensorEditorComponent>(entity, sensorConfiguration, cameraConfiguration))

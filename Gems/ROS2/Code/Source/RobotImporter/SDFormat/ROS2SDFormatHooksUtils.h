@@ -14,6 +14,7 @@
 #include <AzCore/RTTI/RTTI.h>
 #include <AzCore/std/string/string.h>
 #include <AzToolsFramework/ToolsComponents/EditorComponentBase.h>
+#include <ROS2/Frame/ROS2FrameEditorComponent.h>
 #include <AzToolsFramework/ToolsComponents/GenericComponentWrapper.h>
 #include <ROS2/RobotImporter/SDFormatModelPluginImporterHook.h>
 #include <ROS2/Sensor/SensorConfiguration.h>
@@ -122,6 +123,15 @@ namespace ROS2::SDFormat
         } // namespace PluginParser
 
         using PluginParams = AZStd::unordered_map<AZStd::string, AZStd::string>;
+
+        //! Configure a frame attached to the entity basing on plugin parameters
+        //! @param frameComponent frame to be configured
+        //! @param componentParams parameters of the plugin for which frame is created
+        void ConfigureFrame(ROS2FrameEditorComponent& frameComponent, const PluginParams& pluginParams);
+        
+        void ConfigureFrame(AZ::Component& frameComponent, const PluginParams& pluginParams);
+
+        void ConfigureFrame(AZ::Component* frameComponent, const PluginParams& pluginParams);
 
         //! Find all parameters given in plugin element.
         //! Given a ROS2 remapping argument, extracts only names of

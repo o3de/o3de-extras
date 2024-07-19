@@ -36,18 +36,18 @@ namespace ROS2::SDFormat
             const AZStd::string messageType = "sensor_msgs::msg::NavSatFix";
 
             const auto gnssPlugins = sdfSensor.Plugins();
+            HooksUtils::PluginParams gnssPluginParams = gnssPlugins.empty() ? HooksUtils::PluginParams() : HooksUtils::GetPluginParams(gnssPlugins[0]);
             
             // setting gnss topic
             AZStd::string messageTopic = "gnss";
-            if (!gnssPlugins.empty()) {
-                HooksUtils::PluginParams gnssPluginParams = HooksUtils::GetPluginParams(gnssPlugins[0]);
-                if (gnssPluginParams.contains("out")) messageTopic = gnssPluginParams["out"];
-            }
+            if (gnssPluginParams.contains("out")) messageTopic = gnssPluginParams["out"];
 
             HooksUtils::AddTopicConfiguration(sensorConfiguration, messageTopic, messageType, messageType);
 
             // Create required components
-            HooksUtils::CreateComponent<ROS2FrameEditorComponent>(entity);
+            auto frameComponent = HooksUtils::CreateComponent<ROS2FrameEditorComponent>(entity);
+            HooksUtils::ConfigureFrame(frameComponent, gnssPluginParams);
+
 
             if (HooksUtils::CreateComponent<ROS2GNSSSensorComponent>(entity, sensorConfiguration))
             {

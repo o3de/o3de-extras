@@ -82,21 +82,20 @@ namespace ROS2::SDFormat
             const AZStd::string messageType = "sensor_msgs::msg::Imu";
 
             const auto imuPlugins = sdfSensor.Plugins();
+            HooksUtils::PluginParams imuPluginParams = imuPlugins.empty() ? HooksUtils::PluginParams() : HooksUtils::GetPluginParams(imuPlugins[0]);
 
             // setting lidar topic
             AZStd::string messageTopic = "imu";
-            if (!imuPlugins.empty()) {
-                HooksUtils::PluginParams imuPluginParams = HooksUtils::GetPluginParams(imuPlugins[0]);
-                if (imuPluginParams.contains("out")) messageTopic = imuPluginParams["out"];
-                else if (imuPluginParams.contains("topicName")) {
-                    messageTopic = HooksUtils::PluginParser::LastOnPath(imuPluginParams["topicName"]);
-                }
+            if (imuPluginParams.contains("out")) messageTopic = imuPluginParams["out"];
+            else if (imuPluginParams.contains("topicName")) {
+                messageTopic = HooksUtils::PluginParser::LastOnPath(imuPluginParams["topicName"]);
             }
 
             HooksUtils::AddTopicConfiguration(sensorConfiguration, messageTopic, messageType, messageType);
 
             // Create required components
-            HooksUtils::CreateComponent<ROS2FrameEditorComponent>(entity);
+            auto frameComponent = HooksUtils::CreateComponent<ROS2FrameEditorComponent>(entity);
+            HooksUtils::ConfigureFrame(frameComponent, imuPluginParams);
             HooksUtils::CreateComponent<PhysX::EditorArticulationLinkComponent>(entity);
 
             // Create Imu component

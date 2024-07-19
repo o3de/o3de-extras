@@ -62,21 +62,19 @@ namespace ROS2::SDFormat
             const AZStd::string messageType = is2DLidar ? "sensor_msgs::msg::LaserScan" : "sensor_msgs::msg::PointCloud2";
 
             const auto lidarPlugins = sdfSensor.Plugins();
+            HooksUtils::PluginParams lidarPluginParams = lidarPlugins.empty() ? HooksUtils::PluginParams() : HooksUtils::GetPluginParams(lidarPlugins[0]);
 
             // setting lidar topic
             AZStd::string messageTopic = is2DLidar ? "scan" : "pc";
-            if (!lidarPlugins.empty()) {
-                HooksUtils::PluginParams lidarPluginParams = HooksUtils::GetPluginParams(lidarPlugins[0]);
-                if (lidarPluginParams.contains("out")) messageTopic = lidarPluginParams["out"];
-                else if (lidarPluginParams.contains("topicName")) {
-                    messageTopic = HooksUtils::PluginParser::LastOnPath(lidarPluginParams["topicName"]);
-                }
-                // in ros1, updateRate is an element of the plugin, not a sensor parameter
-                if (lidarPluginParams.contains("updateRate"))
-                {
-                    std::string freqFromPlugin(lidarPluginParams["updateRate"].begin(), lidarPluginParams["updateRate"].size());
-                    sensorConfiguration.m_frequency = std::stof(freqFromPlugin);
-                }
+            if (lidarPluginParams.contains("out")) messageTopic = lidarPluginParams["out"];
+            else if (lidarPluginParams.contains("topicName")) {
+                messageTopic = HooksUtils::PluginParser::LastOnPath(lidarPluginParams["topicName"]);
+            }
+            // in ros1, updateRate is an element of the plugin, not a sensor parameter
+            if (lidarPluginParams.contains("updateRate"))
+            {
+                std::string freqFromPlugin(lidarPluginParams["updateRate"].begin(), lidarPluginParams["updateRate"].size());
+                sensorConfiguration.m_frequency = std::stof(freqFromPlugin);
             }
 
 
@@ -114,7 +112,8 @@ namespace ROS2::SDFormat
             }
 
             // Create required components
-            HooksUtils::CreateComponent<ROS2FrameEditorComponent>(entity);
+            auto frameComponent = HooksUtils::CreateComponent<ROS2FrameEditorComponent>(entity);
+            HooksUtils::ConfigureFrame(frameComponent, lidarPluginParams);
 
             // Create Lidar component
             const auto lidarComponent = is2DLidar
