@@ -22,7 +22,8 @@ namespace ROS2::SDFormat
         importerHook.m_sensorTypes = AZStd::unordered_set<sdf::SensorType>{ sdf::SensorType::NAVSAT };
         importerHook.m_supportedSensorParams = AZStd::unordered_set<AZStd::string>{ ">pose", ">update_rate" };
         importerHook.m_pluginNames = AZStd::unordered_set<AZStd::string>{ "libgazebo_ros_gps_sensor.so" };
-        importerHook.m_supportedPluginParams = AZStd::unordered_set<AZStd::string>{ ">ros>remapping", ">ros>argument" };
+        importerHook.m_supportedPluginParams = AZStd::unordered_set<AZStd::string>{ ">ros>remapping", ">ros>argument", ">ros>frame_name",
+                                                                                    ">ros>namespace", ">frameName",    ">robotNamespace" };
         importerHook.m_sdfSensorToComponentCallback = [](AZ::Entity& entity,
                                                          const sdf::Sensor& sdfSensor) -> SensorImporterHook::ConvertSensorOutcome
         {
@@ -36,18 +37,19 @@ namespace ROS2::SDFormat
             const AZStd::string messageType = "sensor_msgs::msg::NavSatFix";
 
             const auto gnssPlugins = sdfSensor.Plugins();
-            HooksUtils::PluginParams gnssPluginParams = gnssPlugins.empty() ? HooksUtils::PluginParams() : HooksUtils::GetPluginParams(gnssPlugins[0]);
-            
+            HooksUtils::PluginParams gnssPluginParams =
+                gnssPlugins.empty() ? HooksUtils::PluginParams() : HooksUtils::GetPluginParams(gnssPlugins[0]);
+
             // setting gnss topic
             AZStd::string messageTopic = "gnss";
-            if (gnssPluginParams.contains("out")) messageTopic = gnssPluginParams["out"];
+            if (gnssPluginParams.contains("out"))
+                messageTopic = gnssPluginParams["out"];
 
             HooksUtils::AddTopicConfiguration(sensorConfiguration, messageTopic, messageType, messageType);
 
             // Create required components
             auto frameComponent = HooksUtils::CreateComponent<ROS2FrameEditorComponent>(entity);
             HooksUtils::ConfigureFrame(frameComponent, gnssPluginParams);
-
 
             if (HooksUtils::CreateComponent<ROS2GNSSSensorComponent>(entity, sensorConfiguration))
             {

@@ -14,8 +14,8 @@
 #include <AzCore/RTTI/RTTI.h>
 #include <AzCore/std/string/string.h>
 #include <AzToolsFramework/ToolsComponents/EditorComponentBase.h>
-#include <ROS2/Frame/ROS2FrameEditorComponent.h>
 #include <AzToolsFramework/ToolsComponents/GenericComponentWrapper.h>
+#include <ROS2/Frame/ROS2FrameEditorComponent.h>
 #include <ROS2/RobotImporter/SDFormatModelPluginImporterHook.h>
 #include <ROS2/Sensor/SensorConfiguration.h>
 #include <Source/EditorArticulationLinkComponent.h>
@@ -128,7 +128,7 @@ namespace ROS2::SDFormat
         //! @param frameComponent frame to be configured
         //! @param componentParams parameters of the plugin for which frame is created
         void ConfigureFrame(ROS2FrameEditorComponent& frameComponent, const PluginParams& pluginParams);
-        
+
         void ConfigureFrame(AZ::Component& frameComponent, const PluginParams& pluginParams);
 
         void ConfigureFrame(AZ::Component* frameComponent, const PluginParams& pluginParams);
@@ -138,7 +138,7 @@ namespace ROS2::SDFormat
         //! elements to be remapped, ignoring their namespaces.
         //! @param plugin plugin to extract parameters from.
         //! @return a map of parameters present in plugin.
-        PluginParams GetPluginParams(const sdf::Plugin &plugin);
+        PluginParams GetPluginParams(const sdf::Plugin& plugin);
 
     } // namespace HooksUtils
 } // namespace ROS2::SDFormat

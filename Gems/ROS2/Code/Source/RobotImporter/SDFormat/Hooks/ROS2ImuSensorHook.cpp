@@ -36,7 +36,9 @@ namespace ROS2::SDFormat
                                                                                     ">imu>linear_acceleration>z>noise>mean",
                                                                                     ">imu>linear_acceleration>z>noise>stddev" };
         importerHook.m_pluginNames = AZStd::unordered_set<AZStd::string>{ "libgazebo_ros_imu_sensor.so" };
-        importerHook.m_supportedPluginParams = AZStd::unordered_set<AZStd::string>{ ">topicName", ">ros>remapping", ">ros>argument" };
+        importerHook.m_supportedPluginParams =
+            AZStd::unordered_set<AZStd::string>{ ">topicName",     ">ros>remapping", ">ros>argument",  ">ros>frame_name",
+                                                 ">ros>namespace", ">frameName",     ">robotNamespace" };
         importerHook.m_sdfSensorToComponentCallback = [](AZ::Entity& entity,
                                                          const sdf::Sensor& sdfSensor) -> SensorImporterHook::ConvertSensorOutcome
         {
@@ -82,12 +84,15 @@ namespace ROS2::SDFormat
             const AZStd::string messageType = "sensor_msgs::msg::Imu";
 
             const auto imuPlugins = sdfSensor.Plugins();
-            HooksUtils::PluginParams imuPluginParams = imuPlugins.empty() ? HooksUtils::PluginParams() : HooksUtils::GetPluginParams(imuPlugins[0]);
+            HooksUtils::PluginParams imuPluginParams =
+                imuPlugins.empty() ? HooksUtils::PluginParams() : HooksUtils::GetPluginParams(imuPlugins[0]);
 
             // setting lidar topic
             AZStd::string messageTopic = "imu";
-            if (imuPluginParams.contains("out")) messageTopic = imuPluginParams["out"];
-            else if (imuPluginParams.contains("topicName")) {
+            if (imuPluginParams.contains("out"))
+                messageTopic = imuPluginParams["out"];
+            else if (imuPluginParams.contains("topicName"))
+            {
                 messageTopic = HooksUtils::PluginParser::LastOnPath(imuPluginParams["topicName"]);
             }
 

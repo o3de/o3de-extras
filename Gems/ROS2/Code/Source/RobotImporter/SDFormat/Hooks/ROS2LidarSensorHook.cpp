@@ -45,7 +45,9 @@ namespace ROS2::SDFormat
             ">ray>range>max",
         };
         importerHook.m_pluginNames = AZStd::unordered_set<AZStd::string>{ "libgazebo_ros_ray_sensor.so", "libgazebo_ros_laser.so" };
-        importerHook.m_supportedPluginParams = AZStd::unordered_set<AZStd::string>{ ">topicName", ">ros>remapping", ">ros>argument", ">updateRate" };
+        importerHook.m_supportedPluginParams =
+            AZStd::unordered_set<AZStd::string>{ ">topicName",      ">ros>remapping", ">ros>argument", ">updateRate",
+                                                 ">ros>frame_name", ">ros>namespace", ">frameName",    ">robotNamespace" };
         importerHook.m_sdfSensorToComponentCallback = [](AZ::Entity& entity,
                                                          const sdf::Sensor& sdfSensor) -> SensorImporterHook::ConvertSensorOutcome
         {
@@ -62,12 +64,15 @@ namespace ROS2::SDFormat
             const AZStd::string messageType = is2DLidar ? "sensor_msgs::msg::LaserScan" : "sensor_msgs::msg::PointCloud2";
 
             const auto lidarPlugins = sdfSensor.Plugins();
-            HooksUtils::PluginParams lidarPluginParams = lidarPlugins.empty() ? HooksUtils::PluginParams() : HooksUtils::GetPluginParams(lidarPlugins[0]);
+            HooksUtils::PluginParams lidarPluginParams =
+                lidarPlugins.empty() ? HooksUtils::PluginParams() : HooksUtils::GetPluginParams(lidarPlugins[0]);
 
             // setting lidar topic
             AZStd::string messageTopic = is2DLidar ? "scan" : "pc";
-            if (lidarPluginParams.contains("out")) messageTopic = lidarPluginParams["out"];
-            else if (lidarPluginParams.contains("topicName")) {
+            if (lidarPluginParams.contains("out"))
+                messageTopic = lidarPluginParams["out"];
+            else if (lidarPluginParams.contains("topicName"))
+            {
                 messageTopic = HooksUtils::PluginParser::LastOnPath(lidarPluginParams["topicName"]);
             }
             // in ros1, updateRate is an element of the plugin, not a sensor parameter
@@ -76,7 +81,6 @@ namespace ROS2::SDFormat
                 std::string freqFromPlugin(lidarPluginParams["updateRate"].begin(), lidarPluginParams["updateRate"].size());
                 sensorConfiguration.m_frequency = std::stof(freqFromPlugin);
             }
-
 
             HooksUtils::AddTopicConfiguration(sensorConfiguration, messageTopic, messageType, messageType);
 

@@ -229,9 +229,14 @@ namespace ROS2::Utils::SDFormat
     //! Allows to store the list of unsupported parameters in metadata and logs. It is typically used with sensors and plugins.
     //! @param rootElement pointer to a root Element in parsed XML data that will be a subject to heuristics
     //! @param supportedParams set of predefined parameters that are supported
+    //! @param supportedPlugins set of predefined plugins that are supported
+    //! @param supportedPluginParams set of predefined supported plugin params that are supported
     //! @returns list of unsupported parameters defined for given element
     AZStd::vector<AZStd::string> GetUnsupportedParams(
-        const sdf::ElementPtr& rootElement, const AZStd::unordered_set<AZStd::string>& supportedParams);
+        const sdf::ElementPtr& rootElement,
+        const AZStd::unordered_set<AZStd::string>& supportedParams,
+        const AZStd::unordered_set<AZStd::string>& supportedPlugins = AZStd::unordered_set<AZStd::string>(),
+        const AZStd::unordered_set<AZStd::string>& supportedPluginParams = AZStd::unordered_set<AZStd::string>());
 
     //! Check if plugin is supported by using it's filename. The filepath is converted into the filename if necessary.
     //! @param plugin plugin in the parsed SDFormat data

@@ -954,18 +954,22 @@ namespace ROS2::Utils::SDFormat
     }
 
     AZStd::vector<AZStd::string> GetUnsupportedParams(
-        const sdf::ElementPtr& rootElement, const AZStd::unordered_set<AZStd::string>& supportedParams)
+        const sdf::ElementPtr& rootElement,
+        const AZStd::unordered_set<AZStd::string>& supportedParams,
+        const AZStd::unordered_set<AZStd::string>& pluginNames,
+        const AZStd::unordered_set<AZStd::string>& supportedPluginParams)
     {
         AZStd::vector<AZStd::string> unsupportedParams;
 
-        AZStd::function<void(const sdf::ElementPtr& elementPtr, const std::string& prefix)> elementVisitor =
-            [&](const sdf::ElementPtr& elementPtr, const std::string& prefix) -> void
+        AZStd::function<void(const sdf::ElementPtr& elementPtr, const std::string& info, const std::string& prefix, const AZStd::unordered_set<AZStd::string>& supportedMap)> elementVisitor =
+            [&](const sdf::ElementPtr& elementPtr, const std::string& info, const std::string& prefix, const AZStd::unordered_set<AZStd::string>& supportedMap) -> void
         {
             auto childPtr = elementPtr->GetFirstElement();
 
             AZStd::string prefixAz(prefix.c_str(), prefix.size());
-            if (!childPtr && !prefixAz.empty() && !supportedParams.contains(prefixAz))
+            if (!childPtr && !prefixAz.empty() && !supportedMap.contains(prefixAz))
             {
+                prefixAz.insert(0, AZStd::string(info.c_str(), info.size()));
                 unsupportedParams.push_back(prefixAz);
             }
 
@@ -980,12 +984,33 @@ namespace ROS2::Utils::SDFormat
                 currentName.append(">");
                 currentName.append(childPtr->GetName());
 
-                elementVisitor(childPtr, currentName);
+                elementVisitor(childPtr, info, currentName, supportedMap);
                 childPtr = childPtr->GetNextElement();
             }
         };
 
-        elementVisitor(rootElement, "");
+        elementVisitor(rootElement, "", "", supportedParams);
+
+        auto pluginPtr = rootElement->GetFirstElement();
+        while(pluginPtr)
+        {
+            if (pluginPtr->GetName() == "plugin") {
+                if (pluginPtr->HasAttribute("filename")) {
+                    std::string fileName = pluginPtr->GetAttribute("filename")->GetAsString();
+                    std::string info = "plugin \"" + fileName + "\"";
+                    
+                    AZStd::string fileNameAz(fileName.c_str(), fileName.size());
+                    if (!pluginNames.contains(fileNameAz)) {
+                        unsupportedParams.push_back(AZStd::string(info.c_str(), info.size()));
+                    }
+                    else {
+                        info.append(": ");
+                        elementVisitor(pluginPtr, info, "", supportedPluginParams);
+                    }
+                }
+            }
+            pluginPtr = pluginPtr->GetNextElement();
+        }
 
         return unsupportedParams;
     }

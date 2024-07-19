@@ -31,7 +31,8 @@ namespace ROS2::SDFormat
                                                                           "libgazebo_ros_openni_kinect.so" };
         importerHook.m_supportedPluginParams = AZStd::unordered_set<AZStd::string>{
             ">imageTopicName", ">cameraInfoTopicName", ">depthImageTopicName", ">depthImageCameraInfoTopicName",
-            ">ros>remapping", ">ros>argument"
+            ">ros>remapping",  ">ros>argument",        ">ros>frame_name",      ">ros>namespace",
+            ">frameName",      ">robotNamespace"
         };
         importerHook.m_sdfSensorToComponentCallback = [](AZ::Entity& entity,
                                                          const sdf::Sensor& sdfSensor) -> SensorImporterHook::ConvertSensorOutcome
@@ -68,13 +69,14 @@ namespace ROS2::SDFormat
             sensorConfiguration.m_frequency = sdfSensor.UpdateRate();
 
             const auto cameraPlugins = sdfSensor.Plugins();
-            HooksUtils::PluginParams cameraPluginParams = cameraPlugins.empty() ? HooksUtils::PluginParams() : HooksUtils::GetPluginParams(cameraPlugins[0]);
+            HooksUtils::PluginParams cameraPluginParams =
+                cameraPlugins.empty() ? HooksUtils::PluginParams() : HooksUtils::GetPluginParams(cameraPlugins[0]);
 
             // add depth_camera for plugins kinnect and depth_camera
             // check only the 1st plugin as it's the only one considered afterwards
             if (!cameraPlugins.empty() &&
                 (cameraPlugins[0].Filename() == "libgazebo_ros_depth_camera.so" ||
-                cameraPlugins[0].Filename() == "libgazebo_ros_openni_kinect.so"))
+                 cameraPlugins[0].Filename() == "libgazebo_ros_openni_kinect.so"))
             {
                 cameraConfiguration.m_depthCamera = true;
             }
@@ -83,17 +85,21 @@ namespace ROS2::SDFormat
             { // COLOR_CAMERA and RGBD_CAMERA
                 AZStd::string imageColor = "camera_image_color", colorInfo = "camera_color_info";
 
-                if (cameraPluginParams.contains("image_raw")) {
+                if (cameraPluginParams.contains("image_raw"))
+                {
                     imageColor = cameraPluginParams["image_raw"];
                 }
-                else if (cameraPluginParams.contains("imageTopicName")) {
+                else if (cameraPluginParams.contains("imageTopicName"))
+                {
                     imageColor = HooksUtils::PluginParser::LastOnPath(cameraPluginParams["imageTopicName"]);
                 }
 
-                if (cameraPluginParams.contains("camera_info")) {
+                if (cameraPluginParams.contains("camera_info"))
+                {
                     colorInfo = cameraPluginParams["camera_info"];
                 }
-                else if (cameraPluginParams.contains("cameraInfoTopicName")) {
+                else if (cameraPluginParams.contains("cameraInfoTopicName"))
+                {
                     colorInfo = HooksUtils::PluginParser::LastOnPath(cameraPluginParams["cameraInfoTopicName"]);
                 }
 
@@ -106,17 +112,21 @@ namespace ROS2::SDFormat
             { // DEPTH_CAMERA and RGBD_CAMERA
                 AZStd::string imageDepth = "camera_image_depth", depthInfo = "depth_camera_info";
 
-                if (cameraPluginParams.contains("image_depth")) {
+                if (cameraPluginParams.contains("image_depth"))
+                {
                     imageDepth = cameraPluginParams["image_depth"];
                 }
-                else if (cameraPluginParams.contains("depthImageTopicName")) {
+                else if (cameraPluginParams.contains("depthImageTopicName"))
+                {
                     imageDepth = HooksUtils::PluginParser::LastOnPath(cameraPluginParams["depthImageTopicName"]);
                 }
 
-                if (cameraPluginParams.contains("camera_info_depth")) {
+                if (cameraPluginParams.contains("camera_info_depth"))
+                {
                     depthInfo = cameraPluginParams["camera_info_depth"];
                 }
-                else if (cameraPluginParams.contains("depthImageCameraInfoTopicName")) {
+                else if (cameraPluginParams.contains("depthImageCameraInfoTopicName"))
+                {
                     depthInfo = HooksUtils::PluginParser::LastOnPath(cameraPluginParams["depthImageCameraInfoTopicName"]);
                 }
 
