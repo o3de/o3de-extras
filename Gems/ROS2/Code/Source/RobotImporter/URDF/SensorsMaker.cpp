@@ -49,10 +49,8 @@ namespace ROS2
         if (sensorResult.IsSuccess())
         {
             const auto sensorElement = sensor->Element();
-            const auto& unsupportedSensorParams = Utils::SDFormat::GetUnsupportedParams(sensorElement,
-                                                                                        hook->m_supportedSensorParams,
-                                                                                        hook->m_pluginNames,
-                                                                                        hook->m_supportedPluginParams);
+            const auto& unsupportedSensorParams = Utils::SDFormat::GetUnsupportedParams(
+                sensorElement, hook->m_supportedSensorParams, hook->m_pluginNames, hook->m_supportedPluginParams);
             AZStd::string status;
             if (unsupportedSensorParams.empty())
             {

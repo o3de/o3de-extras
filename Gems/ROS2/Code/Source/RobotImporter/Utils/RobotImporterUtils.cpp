@@ -961,8 +961,15 @@ namespace ROS2::Utils::SDFormat
     {
         AZStd::vector<AZStd::string> unsupportedParams;
 
-        AZStd::function<void(const sdf::ElementPtr& elementPtr, const std::string& info, const std::string& prefix, const AZStd::unordered_set<AZStd::string>& supportedMap)> elementVisitor =
-            [&](const sdf::ElementPtr& elementPtr, const std::string& info, const std::string& prefix, const AZStd::unordered_set<AZStd::string>& supportedMap) -> void
+        AZStd::function<void(
+            const sdf::ElementPtr& elementPtr,
+            const std::string& info,
+            const std::string& prefix,
+            const AZStd::unordered_set<AZStd::string>& supportedMap)>
+            elementVisitor = [&](const sdf::ElementPtr& elementPtr,
+                                 const std::string& info,
+                                 const std::string& prefix,
+                                 const AZStd::unordered_set<AZStd::string>& supportedMap) -> void
         {
             auto childPtr = elementPtr->GetFirstElement();
 
@@ -992,18 +999,22 @@ namespace ROS2::Utils::SDFormat
         elementVisitor(rootElement, "", "", supportedParams);
 
         auto pluginPtr = rootElement->GetFirstElement();
-        while(pluginPtr)
+        while (pluginPtr)
         {
-            if (pluginPtr->GetName() == "plugin") {
-                if (pluginPtr->HasAttribute("filename")) {
+            if (pluginPtr->GetName() == "plugin")
+            {
+                if (pluginPtr->HasAttribute("filename"))
+                {
                     std::string fileName = pluginPtr->GetAttribute("filename")->GetAsString();
                     std::string info = "plugin \"" + fileName + "\"";
-                    
+
                     AZStd::string fileNameAz(fileName.c_str(), fileName.size());
-                    if (!pluginNames.contains(fileNameAz)) {
+                    if (!pluginNames.contains(fileNameAz))
+                    {
                         unsupportedParams.push_back(AZStd::string(info.c_str(), info.size()));
                     }
-                    else {
+                    else
+                    {
                         info.append(": ");
                         elementVisitor(pluginPtr, info, "", supportedPluginParams);
                     }
@@ -1049,20 +1060,21 @@ namespace ROS2::Utils::SDFormat
 
         // If any files couldn't be found using our supplied prefix mappings, this callback will get called.
         // Attempt to use our full path resolution, and print a warning if it still couldn't be resolved.
-        sdfConfig.SetFindCallback([settings, baseFilePath](const std::string &fileName) -> std::string
-        {
-            auto amentPrefixPath = Utils::GetAmentPrefixPath();
-
-            auto resolved = Utils::ResolveAssetPath(AZ::IO::Path(fileName.c_str()), baseFilePath, amentPrefixPath, settings);
-            if (!resolved.empty())
+        sdfConfig.SetFindCallback(
+            [settings, baseFilePath](const std::string& fileName) -> std::string
             {
-                AZ_Trace("SdfParserConfig", "SDF SetFindCallback resolved '%s' -> '%s'", fileName.c_str(), resolved.c_str());
-                return resolved.c_str();
-            }
+                auto amentPrefixPath = Utils::GetAmentPrefixPath();
 
-            AZ_Warning("SdfParserConfig", false, "SDF SetFindCallback failed to resolve '%s'", fileName.c_str());
-            return fileName;
-        });
+                auto resolved = Utils::ResolveAssetPath(AZ::IO::Path(fileName.c_str()), baseFilePath, amentPrefixPath, settings);
+                if (!resolved.empty())
+                {
+                    AZ_Trace("SdfParserConfig", "SDF SetFindCallback resolved '%s' -> '%s'", fileName.c_str(), resolved.c_str());
+                    return resolved.c_str();
+                }
+
+                AZ_Warning("SdfParserConfig", false, "SDF SetFindCallback failed to resolve '%s'", fileName.c_str());
+                return fileName;
+            });
 
         return sdfConfig;
     }
