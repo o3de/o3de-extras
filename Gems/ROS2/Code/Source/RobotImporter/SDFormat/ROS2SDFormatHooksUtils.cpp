@@ -121,9 +121,9 @@ namespace ROS2::SDFormat
         void ParseRegularContent(const sdf::Element& content, HooksUtils::PluginParams& remappings)
         {
             std::string contentName = content.GetName();
-            AZStd::string key(contentName.begin(), contentName.end());
+            AZStd::string key(contentName.c_str(), contentName.size());
             std::string contentValue = content.GetValue()->GetAsString();
-            AZStd::string val(contentValue.begin(), contentValue.end());
+            AZStd::string val(contentValue.c_str(), contentValue.size());
             remappings[key] = val;
         }
 
@@ -159,8 +159,8 @@ namespace ROS2::SDFormat
             std::string prevTopic = contentValue.substr(startKey, contentValue.size() - startKey);
 
             // insert data into the map - previous topic name as key and new topic name as val
-            AZStd::string key(prevTopic.begin(), prevTopic.end());
-            AZStd::string val(newTopic.begin(), newTopic.end());
+            AZStd::string key(prevTopic.c_str(), prevTopic.size());
+            AZStd::string val(newTopic.c_str(), newTopic.size());
             remappings[key] = val;
         }
     } // namespace HooksUtils::PluginParser
