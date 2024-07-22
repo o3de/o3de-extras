@@ -1,11 +1,11 @@
 {
     "project_name": "${Name}",
     "version": "1.0.0",
-    "project_id": "{2E0A13FA-A316-44A1-BD84-2AE120C5A54E}",
-    "origin": "The primary repo for ${Name} goes here: i.e. http://www.mydomain.com",
-    "license": "What license ${Name} uses goes here: i.e. https://opensource.org/licenses/Apache-2.0 Or https://opensource.org/licenses/MIT etc.",
+    "project_id": "{16D27830-D7FF-4124-B20B-2CF0387E8C7D}",
+    "origin": "https://github.com/o3de/o3de-${NameLower}",
+    "license": "For terms please see the LICENSE*.TXT file at the root of this distribution.",
     "display_name": "${Name}",
-    "summary": "A short description of ${Name}.",
+    "summary": "A simple third-person multiplayer sample for O3DE.",
     "canonical_tags": [
         "Project"
     ],
