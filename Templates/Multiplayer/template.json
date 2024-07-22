@@ -1292,14 +1292,6 @@
         {
             "file": "project.json",
             "isTemplated": true
-        },
-        {
-            "file": "user/Registry/Platform/Windows/build_path.setreg",
-            "isTemplated": true
-        },
-        {
-            "file": "user/cmake/engine/CMakePresets.json",
-            "isTemplated": false
         }
     ],
     "createDirectories": [
