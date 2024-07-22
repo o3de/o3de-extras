@@ -13,6 +13,7 @@
 #include <geometry_msgs/msg/point.hpp>
 #include <geometry_msgs/msg/pose.hpp>
 #include <geometry_msgs/msg/vector3.hpp>
+#include <builtin_interfaces/msg/time.hpp>
 
 namespace ROS2
 {
@@ -28,5 +29,6 @@ namespace ROS2
         AZ::Vector3 FromROS2Point(const geometry_msgs::msg::Point& ros2point);
         AZ::Quaternion FromROS2Quaternion(const geometry_msgs::msg::Quaternion& ros2quaternion);
         std::array<double, 9> ToROS2Covariance(const AZ::Matrix3x3& covariance);
+        float GetTimeDifference(const builtin_interfaces::msg::Time& start, const builtin_interfaces::msg::Time& end);
     }; // namespace ROS2Conversions
 } // namespace ROS2
