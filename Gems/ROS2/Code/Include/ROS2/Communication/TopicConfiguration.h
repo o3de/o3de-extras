@@ -31,6 +31,12 @@ namespace ROS2
             return m_qos.GetQoS();
         }
 
+        //! Set above-mentioned topic QoS.
+        void SetQos(rclcpp::QoS qos)
+        {
+            m_qos = qos;
+        }
+
     private:
         QoS m_qos = rclcpp::SensorDataQoS();
     };
