@@ -1478,31 +1478,7 @@
             "dir": "ShaderLib"
         },
         {
-            "dir": "Shaders"
-        },
-        {
-            "dir": "Shaders/ShaderResourceGroups"
-        },
-        {
             "dir": "cmake"
-        },
-        {
-            "dir": "user"
-        },
-        {
-            "dir": "user/Registry"
-        },
-        {
-            "dir": "user/Registry/Platform"
-        },
-        {
-            "dir": "user/Registry/Platform/Windows"
-        },
-        {
-            "dir": "user/cmake"
-        },
-        {
-            "dir": "user/cmake/engine"
         }
     ]
 }
