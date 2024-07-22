@@ -1,10 +1,13 @@
 {
     "template_name": "Multiplayer",
-    "origin": "The primary repo for Multiplayer goes here: i.e. http://www.mydomain.com",
-    "license": "What license Multiplayer uses goes here: i.e. https://opensource.org/licenses/MIT",
+    "origin": "Open 3D Engine - o3de.org",
+    "license": "https://opensource.org/licenses/MIT",
     "display_name": "Multiplayer",
-    "summary": "A short description of Multiplayer.",
-    "canonical_tags": [],
+    "summary": "A multiplayer project template. Includes a built in network 3rd person player, player spawner, and network filtering example.",
+    "canonical_tags": [
+        "Template",
+        "Networking"
+    ],
     "user_tags": [
         "Multiplayer"
     ],
