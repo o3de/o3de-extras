@@ -70,7 +70,9 @@ namespace ROS2::SDFormat
             // setting lidar topic
             AZStd::string messageTopic = is2DLidar ? "scan" : "pc";
             if (lidarPluginParams.contains("out"))
+            {
                 messageTopic = lidarPluginParams["out"];
+            }
             else if (lidarPluginParams.contains("topicName"))
             {
                 messageTopic = HooksUtils::PluginParser::LastOnPath(lidarPluginParams["topicName"]);
