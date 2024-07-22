@@ -13,6 +13,7 @@
 #include <ROS2/Manipulation/JointsManipulationRequests.h>
 #include <ROS2/ROS2Bus.h>
 #include <ROS2/Utilities/ROS2Names.h>
+#include <ROS2/Utilities/ROS2Conversions.h>
 
 namespace ROS2
 {
@@ -24,6 +25,7 @@ namespace ROS2
         m_followTrajectoryServer = AZStd::make_unique<FollowJointTrajectoryActionServer>(namespacedAction, GetEntityId());
         AZ::TickBus::Handler::BusConnect();
         JointsTrajectoryRequestBus::Handler::BusConnect(GetEntityId());
+        m_lastTickTimestamp = ROS2Interface::Get()->GetROSTimestamp();
     }
 
     ManipulationJoints& JointsTrajectoryComponent::GetManipulationJoints()
@@ -246,14 +248,17 @@ namespace ROS2
         }
     }
 
-    void JointsTrajectoryComponent::OnTick(float deltaTime, [[maybe_unused]] AZ::ScriptTimePoint time)
+    void JointsTrajectoryComponent::OnTick([[maybe_unused]] float deltaTime, [[maybe_unused]] AZ::ScriptTimePoint time)
     {
         if (m_manipulationJoints.empty())
         {
             GetManipulationJoints();
             return;
         }
-        uint64_t deltaTimeNs = deltaTime * 1'000'000'000;
+        const auto simTimestamp = ROS2Interface::Get()->GetROSTimestamp();
+        const float deltaSimulatedTime = ROS2Conversions::GetTimeDifference(simTimestamp, m_lastTickTimestamp);
+        m_lastTickTimestamp = simTimestamp;
+        const uint64_t deltaTimeNs = deltaSimulatedTime * 1'000'000'000;
         FollowTrajectory(deltaTimeNs);
         UpdateFeedback();
     }
