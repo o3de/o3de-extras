@@ -7,6 +7,8 @@
                         "Layers": {
                             "LayerNames": [
                                 "Default",
+                                "HitVolumes",
+                                "JumpPads",
                                 {},
                                 {},
                                 {},
@@ -67,9 +69,7 @@
                                 {},
                                 {},
                                 {},
-                                {},
-                                {},
-                                {}
+                                "TouchBend"
                             ]
                         },
                         "Groups": {
@@ -80,13 +80,50 @@
                                 },
                                 {
                                     "Id": {
-                                        "GroupId": "{659C0F41-2A32-4D87-95AA-92D2FB42B6A0}"
+                                        "GroupId": "{B89BE1B7-62B5-4FE5-B58D-C91D66F7D250}"
                                     },
                                     "Name": "None",
                                     "Group": {
                                         "Mask": 0
                                     },
                                     "ReadOnly": true
+                                },
+                                {
+                                    "Id": {
+                                        "GroupId": "{CB525A65-D000-4A38-8462-CEB3EA8D3303}"
+                                    },
+                                    "Name": "All_NoTouchBend",
+                                    "Group": {
+                                        "Mask": 9223372036854775807
+                                    },
+                                    "ReadOnly": true
+                                },
+                                {
+                                    "Id": {
+                                        "GroupId": "{FE20AF05-2602-45C6-BF4D-FA497B971061}"
+                                    },
+                                    "Name": "AllButHitVolumes",
+                                    "Group": {
+                                        "Mask": 18446744073709551613
+                                    }
+                                },
+                                {
+                                    "Id": {
+                                        "GroupId": "{678782A2-7719-4E6D-AF9E-9C90843B66B7}"
+                                    },
+                                    "Name": "Players",
+                                    "Group": {
+                                        "Mask": 9223372036854775802
+                                    }
+                                },
+                                {
+                                    "Id": {
+                                        "GroupId": "{759C364D-E383-4079-8AF6-3B9DC9A4AC4B}"
+                                    },
+                                    "Name": "JumpPads",
+                                    "Group": {
+                                        "Mask": 9223372036854775804
+                                    }
                                 }
                             ]
                         }

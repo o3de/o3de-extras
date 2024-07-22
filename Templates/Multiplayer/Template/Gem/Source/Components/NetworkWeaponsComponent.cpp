@@ -340,8 +340,11 @@ namespace ${SanitizedCppName}
             {
                 if (const AZ::Entity* entity = handle.GetEntity())
                 {
-                    // Hit confirmed on a player
-                    WeaponNotificationBus::Broadcast(&WeaponNotificationBus::Events::OnConfirmedHitPlayer, GetEntityId(), entity->GetId());
+                    if (entity->FindComponent<NetworkPlayerMovementComponent>())
+                    {
+                        // Hit confirmed on a player
+                        WeaponNotificationBus::Broadcast(&WeaponNotificationBus::Events::OnConfirmedHitPlayer, GetEntityId(), entity->GetId());
+                    }
                 }
             }
 

@@ -51,7 +51,8 @@ namespace ${SanitizedCppName}
 
         if (IsNetEntityRoleAutonomous())
         {
-            m_aiEnabled = FindComponent<NetworkAiComponent>()->GetEnabled();
+            const auto* networkAiComponent = FindComponent<NetworkAiComponent>();
+            m_aiEnabled = networkAiComponent && networkAiComponent->GetEnabled();
             if (!m_aiEnabled)
             {
                 AZ::EntityId activeCameraId;

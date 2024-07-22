@@ -484,6 +484,106 @@
                             ]
                         }
                     }
+                },
+                "${Name}::AttachPlayerWeaponComponent": {
+                    "$type": "GenericComponentWrapper",
+                    "Id": 5697568613687465938,
+                    "m_template": {
+                        "$type": "${Name}::AttachPlayerWeaponComponent",
+                        "WeaponAsset": {
+                            "assetId": {
+                                "guid": "{4B358BE5-26BC-5462-AA8A-38F9AF5D2D0B}",
+                                "subId": 992460137
+                            },
+                            "assetHint": "assets/prefabs/laser_pistol.spawnable"
+                        },
+                        "Bone To Attach To": "mixamorig:RightHand",
+                        "Transform": {
+                            "Translation": [
+                                -0.05999999865889549,
+                                0.03999999910593033,
+                                0.17000000178813934
+                            ],
+                            "Rotation": [
+                                0.0,
+                                0.0,
+                                0.0,
+                                1.0
+                            ],
+                            "Scale": 1.0
+                        }
+                    }
+                },
+                "${Name}::NetworkAnimationComponent": {
+                    "$type": "GenericComponentWrapper",
+                    "Id": 8962712398833988332,
+                    "m_template": {
+                        "$type": "${Name}::NetworkAnimationComponent",
+                        "MovementDirectionParamName": "movement_direction",
+                        "MovementSpeedParamName": "movement_speed",
+                        "AimTargetParamName": "aim_target",
+                        "CrouchParamName": "crouching",
+                        "AimingParamName": "aiming",
+                        "ShootParamName": "attacking",
+                        "JumpParamName": "jumping",
+                        "FallParamName": "falling",
+                        "LandParamName": "landing",
+                        "HitParamName": "hit",
+                        "DeathParamName": "death_state_index"
+                    }
+                },
+                "${Name}::NetworkPlayerMovementComponent": {
+                    "$type": "GenericComponentWrapper",
+                    "Id": 14371235535355148386,
+                    "m_template": {
+                        "$type": "${Name}::NetworkPlayerMovementComponent",
+                        "SprintSpeed": 6.0,
+                        "MaxJumpHeight": 1.625
+                    }
+                },
+                "${Name}::NetworkSimplePlayerCameraComponent": {
+                    "$type": "GenericComponentWrapper",
+                    "Id": 15298635055737856859,
+                    "m_template": {
+                        "$type": "${Name}::NetworkSimplePlayerCameraComponent"
+                    }
+                },
+                "${Name}::NetworkWeaponsComponent": {
+                    "$type": "GenericComponentWrapper",
+                    "Id": 7684530501405980471,
+                    "m_template": {
+                        "$type": "${Name}::NetworkWeaponsComponent",
+                        "WeaponParams": [
+                            {
+                                "WeaponType": 1,
+                                "WeaponMaxAimDistance": 50.0,
+                                "CooldownTimeMs": 250,
+                                "GatherParams": {
+                                    "CastDistance": 2000.0,
+                                    "TravelSpeed": 200.0
+                                },
+                                "DamageEffect": {
+                                    "HitMagnitude": 10.0
+                                }
+                            },
+                            {
+                                "WeaponMaxAimDistance": 25.0,
+                                "CooldownTimeMs": 2000,
+                                "GatherParams": {
+                                    "CastDistance": 100.0,
+                                    "TravelSpeed": 50.0,
+                                    "Multihit": true
+                                },
+                                "DamageEffect": {
+                                    "HitMagnitude": 50.0
+                                }
+                            }
+                        ],
+                        "FireBoneNames": [
+                            "mixamorig:RightHand",
+                            "mixamorig:RightHand"
+                        ]
+                    }
                 }
             }
         }

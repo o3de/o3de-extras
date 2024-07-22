@@ -55,6 +55,11 @@
                     "$type": "EditorColliderComponent",
                     "Id": 11384954117619258935,
                     "ColliderConfiguration": {
+                        "Position": [
+                            0.0,
+                            0.0,
+                            0.5
+                        ],
                         "MaterialSlots": {
                             "Slots": [
                                 {
@@ -89,10 +94,10 @@
                         "Configuration": {
                             "ModelAsset": {
                                 "assetId": {
-                                    "guid": "{593006BE-FE73-5A4B-A0A6-06C02EFFE458}",
+                                    "guid": "{B991E03B-F50D-552E-9E2D-64FA6DAB1CCB}",
                                     "subId": 285127096
                                 },
-                                "assetHint": "objects/cube.azmodel"
+                                "assetHint": "materialeditor/viewportmodels/cube.fbx.azmodel"
                             }
                         }
                     }
@@ -229,6 +234,11 @@
                     "$type": "EditorColliderComponent",
                     "Id": 11384954117619258935,
                     "ColliderConfiguration": {
+                        "Position": [
+                            0.0,
+                            0.0,
+                            0.5
+                        ],
                         "MaterialSlots": {
                             "Slots": [
                                 {
@@ -263,10 +273,10 @@
                         "Configuration": {
                             "ModelAsset": {
                                 "assetId": {
-                                    "guid": "{593006BE-FE73-5A4B-A0A6-06C02EFFE458}",
+                                    "guid": "{B991E03B-F50D-552E-9E2D-64FA6DAB1CCB}",
                                     "subId": 285127096
                                 },
-                                "assetHint": "objects/cube.azmodel"
+                                "assetHint": "materialeditor/viewportmodels/cube.fbx.azmodel"
                             }
                         }
                     }
@@ -403,6 +413,11 @@
                     "$type": "EditorColliderComponent",
                     "Id": 11384954117619258935,
                     "ColliderConfiguration": {
+                        "Position": [
+                            0.0,
+                            0.0,
+                            0.5
+                        ],
                         "MaterialSlots": {
                             "Slots": [
                                 {
@@ -437,10 +452,10 @@
                         "Configuration": {
                             "ModelAsset": {
                                 "assetId": {
-                                    "guid": "{593006BE-FE73-5A4B-A0A6-06C02EFFE458}",
+                                    "guid": "{B991E03B-F50D-552E-9E2D-64FA6DAB1CCB}",
                                     "subId": 285127096
                                 },
-                                "assetHint": "objects/cube.azmodel"
+                                "assetHint": "materialeditor/viewportmodels/cube.fbx.azmodel"
                             }
                         }
                     }
@@ -577,6 +592,11 @@
                     "$type": "EditorColliderComponent",
                     "Id": 11384954117619258935,
                     "ColliderConfiguration": {
+                        "Position": [
+                            0.0,
+                            0.0,
+                            0.5
+                        ],
                         "MaterialSlots": {
                             "Slots": [
                                 {
@@ -611,10 +631,10 @@
                         "Configuration": {
                             "ModelAsset": {
                                 "assetId": {
-                                    "guid": "{593006BE-FE73-5A4B-A0A6-06C02EFFE458}",
+                                    "guid": "{B991E03B-F50D-552E-9E2D-64FA6DAB1CCB}",
                                     "subId": 285127096
                                 },
-                                "assetHint": "objects/cube.azmodel"
+                                "assetHint": "materialeditor/viewportmodels/cube.fbx.azmodel"
                             }
                         }
                     }
@@ -751,6 +771,11 @@
                     "$type": "EditorColliderComponent",
                     "Id": 11384954117619258935,
                     "ColliderConfiguration": {
+                        "Position": [
+                            0.0,
+                            0.0,
+                            0.5
+                        ],
                         "MaterialSlots": {
                             "Slots": [
                                 {
@@ -785,10 +810,10 @@
                         "Configuration": {
                             "ModelAsset": {
                                 "assetId": {
-                                    "guid": "{593006BE-FE73-5A4B-A0A6-06C02EFFE458}",
+                                    "guid": "{B991E03B-F50D-552E-9E2D-64FA6DAB1CCB}",
                                     "subId": 285127096
                                 },
-                                "assetHint": "objects/cube.azmodel"
+                                "assetHint": "materialeditor/viewportmodels/cube.fbx.azmodel"
                             }
                         }
                     }
@@ -925,6 +950,11 @@
                     "$type": "EditorColliderComponent",
                     "Id": 11384954117619258935,
                     "ColliderConfiguration": {
+                        "Position": [
+                            0.0,
+                            0.0,
+                            0.5
+                        ],
                         "MaterialSlots": {
                             "Slots": [
                                 {
@@ -959,10 +989,10 @@
                         "Configuration": {
                             "ModelAsset": {
                                 "assetId": {
-                                    "guid": "{593006BE-FE73-5A4B-A0A6-06C02EFFE458}",
+                                    "guid": "{B991E03B-F50D-552E-9E2D-64FA6DAB1CCB}",
                                     "subId": 285127096
                                 },
-                                "assetHint": "objects/cube.azmodel"
+                                "assetHint": "materialeditor/viewportmodels/cube.fbx.azmodel"
                             }
                         }
                     }
@@ -1099,6 +1129,11 @@
                     "$type": "EditorColliderComponent",
                     "Id": 11384954117619258935,
                     "ColliderConfiguration": {
+                        "Position": [
+                            0.0,
+                            0.0,
+                            0.5
+                        ],
                         "MaterialSlots": {
                             "Slots": [
                                 {
@@ -1133,10 +1168,10 @@
                         "Configuration": {
                             "ModelAsset": {
                                 "assetId": {
-                                    "guid": "{593006BE-FE73-5A4B-A0A6-06C02EFFE458}",
+                                    "guid": "{B991E03B-F50D-552E-9E2D-64FA6DAB1CCB}",
                                     "subId": 285127096
                                 },
-                                "assetHint": "objects/cube.azmodel"
+                                "assetHint": "materialeditor/viewportmodels/cube.fbx.azmodel"
                             }
                         }
                     }
@@ -1273,6 +1308,11 @@
                     "$type": "EditorColliderComponent",
                     "Id": 11384954117619258935,
                     "ColliderConfiguration": {
+                        "Position": [
+                            0.0,
+                            0.0,
+                            0.5
+                        ],
                         "MaterialSlots": {
                             "Slots": [
                                 {
@@ -1307,10 +1347,10 @@
                         "Configuration": {
                             "ModelAsset": {
                                 "assetId": {
-                                    "guid": "{593006BE-FE73-5A4B-A0A6-06C02EFFE458}",
+                                    "guid": "{B991E03B-F50D-552E-9E2D-64FA6DAB1CCB}",
                                     "subId": 285127096
                                 },
-                                "assetHint": "objects/cube.azmodel"
+                                "assetHint": "materialeditor/viewportmodels/cube.fbx.azmodel"
                             }
                         }
                     }
@@ -1447,6 +1487,11 @@
                     "$type": "EditorColliderComponent",
                     "Id": 11384954117619258935,
                     "ColliderConfiguration": {
+                        "Position": [
+                            0.0,
+                            0.0,
+                            0.5
+                        ],
                         "MaterialSlots": {
                             "Slots": [
                                 {
@@ -1481,10 +1526,10 @@
                         "Configuration": {
                             "ModelAsset": {
                                 "assetId": {
-                                    "guid": "{593006BE-FE73-5A4B-A0A6-06C02EFFE458}",
+                                    "guid": "{B991E03B-F50D-552E-9E2D-64FA6DAB1CCB}",
                                     "subId": 285127096
                                 },
-                                "assetHint": "objects/cube.azmodel"
+                                "assetHint": "materialeditor/viewportmodels/cube.fbx.azmodel"
                             }
                         }
                     }
@@ -1621,6 +1666,11 @@
                     "$type": "EditorColliderComponent",
                     "Id": 11384954117619258935,
                     "ColliderConfiguration": {
+                        "Position": [
+                            0.0,
+                            0.0,
+                            0.5
+                        ],
                         "MaterialSlots": {
                             "Slots": [
                                 {
@@ -1655,10 +1705,10 @@
                         "Configuration": {
                             "ModelAsset": {
                                 "assetId": {
-                                    "guid": "{593006BE-FE73-5A4B-A0A6-06C02EFFE458}",
+                                    "guid": "{B991E03B-F50D-552E-9E2D-64FA6DAB1CCB}",
                                     "subId": 285127096
                                 },
-                                "assetHint": "objects/cube.azmodel"
+                                "assetHint": "materialeditor/viewportmodels/cube.fbx.azmodel"
                             }
                         }
                     }
@@ -1795,6 +1845,11 @@
                     "$type": "EditorColliderComponent",
                     "Id": 11384954117619258935,
                     "ColliderConfiguration": {
+                        "Position": [
+                            0.0,
+                            0.0,
+                            0.5
+                        ],
                         "MaterialSlots": {
                             "Slots": [
                                 {
@@ -1829,10 +1884,10 @@
                         "Configuration": {
                             "ModelAsset": {
                                 "assetId": {
-                                    "guid": "{593006BE-FE73-5A4B-A0A6-06C02EFFE458}",
+                                    "guid": "{B991E03B-F50D-552E-9E2D-64FA6DAB1CCB}",
                                     "subId": 285127096
                                 },
-                                "assetHint": "objects/cube.azmodel"
+                                "assetHint": "materialeditor/viewportmodels/cube.fbx.azmodel"
                             }
                         }
                     }
@@ -1969,6 +2024,11 @@
                     "$type": "EditorColliderComponent",
                     "Id": 11384954117619258935,
                     "ColliderConfiguration": {
+                        "Position": [
+                            0.0,
+                            0.0,
+                            0.5
+                        ],
                         "MaterialSlots": {
                             "Slots": [
                                 {
@@ -2003,10 +2063,10 @@
                         "Configuration": {
                             "ModelAsset": {
                                 "assetId": {
-                                    "guid": "{593006BE-FE73-5A4B-A0A6-06C02EFFE458}",
+                                    "guid": "{B991E03B-F50D-552E-9E2D-64FA6DAB1CCB}",
                                     "subId": 285127096
                                 },
-                                "assetHint": "objects/cube.azmodel"
+                                "assetHint": "materialeditor/viewportmodels/cube.fbx.azmodel"
                             }
                         }
                     }
@@ -2143,6 +2203,11 @@
                     "$type": "EditorColliderComponent",
                     "Id": 11384954117619258935,
                     "ColliderConfiguration": {
+                        "Position": [
+                            0.0,
+                            0.0,
+                            0.5
+                        ],
                         "MaterialSlots": {
                             "Slots": [
                                 {
@@ -2177,10 +2242,10 @@
                         "Configuration": {
                             "ModelAsset": {
                                 "assetId": {
-                                    "guid": "{593006BE-FE73-5A4B-A0A6-06C02EFFE458}",
+                                    "guid": "{B991E03B-F50D-552E-9E2D-64FA6DAB1CCB}",
                                     "subId": 285127096
                                 },
-                                "assetHint": "objects/cube.azmodel"
+                                "assetHint": "materialeditor/viewportmodels/cube.fbx.azmodel"
                             }
                         }
                     }
@@ -2317,6 +2382,11 @@
                     "$type": "EditorColliderComponent",
                     "Id": 11384954117619258935,
                     "ColliderConfiguration": {
+                        "Position": [
+                            0.0,
+                            0.0,
+                            0.5
+                        ],
                         "MaterialSlots": {
                             "Slots": [
                                 {
@@ -2351,10 +2421,10 @@
                         "Configuration": {
                             "ModelAsset": {
                                 "assetId": {
-                                    "guid": "{593006BE-FE73-5A4B-A0A6-06C02EFFE458}",
+                                    "guid": "{B991E03B-F50D-552E-9E2D-64FA6DAB1CCB}",
                                     "subId": 285127096
                                 },
-                                "assetHint": "objects/cube.azmodel"
+                                "assetHint": "materialeditor/viewportmodels/cube.fbx.azmodel"
                             }
                         }
                     }
@@ -2491,6 +2561,11 @@
                     "$type": "EditorColliderComponent",
                     "Id": 11384954117619258935,
                     "ColliderConfiguration": {
+                        "Position": [
+                            0.0,
+                            0.0,
+                            0.5
+                        ],
                         "MaterialSlots": {
                             "Slots": [
                                 {
@@ -2525,10 +2600,10 @@
                         "Configuration": {
                             "ModelAsset": {
                                 "assetId": {
-                                    "guid": "{593006BE-FE73-5A4B-A0A6-06C02EFFE458}",
+                                    "guid": "{B991E03B-F50D-552E-9E2D-64FA6DAB1CCB}",
                                     "subId": 285127096
                                 },
-                                "assetHint": "objects/cube.azmodel"
+                                "assetHint": "materialeditor/viewportmodels/cube.fbx.azmodel"
                             }
                         }
                     }
@@ -2665,6 +2740,11 @@
                     "$type": "EditorColliderComponent",
                     "Id": 11384954117619258935,
                     "ColliderConfiguration": {
+                        "Position": [
+                            0.0,
+                            0.0,
+                            0.5
+                        ],
                         "MaterialSlots": {
                             "Slots": [
                                 {
@@ -2699,10 +2779,10 @@
                         "Configuration": {
                             "ModelAsset": {
                                 "assetId": {
-                                    "guid": "{593006BE-FE73-5A4B-A0A6-06C02EFFE458}",
+                                    "guid": "{B991E03B-F50D-552E-9E2D-64FA6DAB1CCB}",
                                     "subId": 285127096
                                 },
-                                "assetHint": "objects/cube.azmodel"
+                                "assetHint": "materialeditor/viewportmodels/cube.fbx.azmodel"
                             }
                         }
                     }
@@ -2839,6 +2919,11 @@
                     "$type": "EditorColliderComponent",
                     "Id": 11384954117619258935,
                     "ColliderConfiguration": {
+                        "Position": [
+                            0.0,
+                            0.0,
+                            0.5
+                        ],
                         "MaterialSlots": {
                             "Slots": [
                                 {
@@ -2873,10 +2958,10 @@
                         "Configuration": {
                             "ModelAsset": {
                                 "assetId": {
-                                    "guid": "{593006BE-FE73-5A4B-A0A6-06C02EFFE458}",
+                                    "guid": "{B991E03B-F50D-552E-9E2D-64FA6DAB1CCB}",
                                     "subId": 285127096
                                 },
-                                "assetHint": "objects/cube.azmodel"
+                                "assetHint": "materialeditor/viewportmodels/cube.fbx.azmodel"
                             }
                         }
                     }
@@ -3013,6 +3098,11 @@
                     "$type": "EditorColliderComponent",
                     "Id": 11384954117619258935,
                     "ColliderConfiguration": {
+                        "Position": [
+                            0.0,
+                            0.0,
+                            0.5
+                        ],
                         "MaterialSlots": {
                             "Slots": [
                                 {
@@ -3047,10 +3137,10 @@
                         "Configuration": {
                             "ModelAsset": {
                                 "assetId": {
-                                    "guid": "{593006BE-FE73-5A4B-A0A6-06C02EFFE458}",
+                                    "guid": "{B991E03B-F50D-552E-9E2D-64FA6DAB1CCB}",
                                     "subId": 285127096
                                 },
-                                "assetHint": "objects/cube.azmodel"
+                                "assetHint": "materialeditor/viewportmodels/cube.fbx.azmodel"
                             }
                         }
                     }
@@ -3187,6 +3277,11 @@
                     "$type": "EditorColliderComponent",
                     "Id": 11384954117619258935,
                     "ColliderConfiguration": {
+                        "Position": [
+                            0.0,
+                            0.0,
+                            0.5
+                        ],
                         "MaterialSlots": {
                             "Slots": [
                                 {
@@ -3221,10 +3316,10 @@
                         "Configuration": {
                             "ModelAsset": {
                                 "assetId": {
-                                    "guid": "{593006BE-FE73-5A4B-A0A6-06C02EFFE458}",
+                                    "guid": "{B991E03B-F50D-552E-9E2D-64FA6DAB1CCB}",
                                     "subId": 285127096
                                 },
-                                "assetHint": "objects/cube.azmodel"
+                                "assetHint": "materialeditor/viewportmodels/cube.fbx.azmodel"
                             }
                         }
                     }
@@ -3361,6 +3456,11 @@
                     "$type": "EditorColliderComponent",
                     "Id": 11384954117619258935,
                     "ColliderConfiguration": {
+                        "Position": [
+                            0.0,
+                            0.0,
+                            0.5
+                        ],
                         "MaterialSlots": {
                             "Slots": [
                                 {
@@ -3395,10 +3495,10 @@
                         "Configuration": {
                             "ModelAsset": {
                                 "assetId": {
-                                    "guid": "{593006BE-FE73-5A4B-A0A6-06C02EFFE458}",
+                                    "guid": "{B991E03B-F50D-552E-9E2D-64FA6DAB1CCB}",
                                     "subId": 285127096
                                 },
-                                "assetHint": "objects/cube.azmodel"
+                                "assetHint": "materialeditor/viewportmodels/cube.fbx.azmodel"
                             }
                         }
                     }
@@ -3535,6 +3635,11 @@
                     "$type": "EditorColliderComponent",
                     "Id": 11384954117619258935,
                     "ColliderConfiguration": {
+                        "Position": [
+                            0.0,
+                            0.0,
+                            0.5
+                        ],
                         "MaterialSlots": {
                             "Slots": [
                                 {
@@ -3569,10 +3674,10 @@
                         "Configuration": {
                             "ModelAsset": {
                                 "assetId": {
-                                    "guid": "{593006BE-FE73-5A4B-A0A6-06C02EFFE458}",
+                                    "guid": "{B991E03B-F50D-552E-9E2D-64FA6DAB1CCB}",
                                     "subId": 285127096
                                 },
-                                "assetHint": "objects/cube.azmodel"
+                                "assetHint": "materialeditor/viewportmodels/cube.fbx.azmodel"
                             }
                         }
                     }
@@ -3709,6 +3814,11 @@
                     "$type": "EditorColliderComponent",
                     "Id": 11384954117619258935,
                     "ColliderConfiguration": {
+                        "Position": [
+                            0.0,
+                            0.0,
+                            0.5
+                        ],
                         "MaterialSlots": {
                             "Slots": [
                                 {
@@ -3743,10 +3853,10 @@
                         "Configuration": {
                             "ModelAsset": {
                                 "assetId": {
-                                    "guid": "{593006BE-FE73-5A4B-A0A6-06C02EFFE458}",
+                                    "guid": "{B991E03B-F50D-552E-9E2D-64FA6DAB1CCB}",
                                     "subId": 285127096
                                 },
-                                "assetHint": "objects/cube.azmodel"
+                                "assetHint": "materialeditor/viewportmodels/cube.fbx.azmodel"
                             }
                         }
                     }
@@ -3885,6 +3995,11 @@
                     "$type": "EditorColliderComponent",
                     "Id": 11384954117619258935,
                     "ColliderConfiguration": {
+                        "Position": [
+                            0.0,
+                            0.0,
+                            0.5
+                        ],
                         "MaterialSlots": {
                             "Slots": [
                                 {
@@ -3919,10 +4034,10 @@
                         "Configuration": {
                             "ModelAsset": {
                                 "assetId": {
-                                    "guid": "{593006BE-FE73-5A4B-A0A6-06C02EFFE458}",
+                                    "guid": "{B991E03B-F50D-552E-9E2D-64FA6DAB1CCB}",
                                     "subId": 285127096
                                 },
-                                "assetHint": "objects/cube.azmodel"
+                                "assetHint": "materialeditor/viewportmodels/cube.fbx.azmodel"
                             }
                         }
                     }
@@ -4060,6 +4175,11 @@
                     "$type": "EditorColliderComponent",
                     "Id": 11384954117619258935,
                     "ColliderConfiguration": {
+                        "Position": [
+                            0.0,
+                            0.0,
+                            0.5
+                        ],
                         "MaterialSlots": {
                             "Slots": [
                                 {
@@ -4094,10 +4214,10 @@
                         "Configuration": {
                             "ModelAsset": {
                                 "assetId": {
-                                    "guid": "{593006BE-FE73-5A4B-A0A6-06C02EFFE458}",
+                                    "guid": "{B991E03B-F50D-552E-9E2D-64FA6DAB1CCB}",
                                     "subId": 285127096
                                 },
-                                "assetHint": "objects/cube.azmodel"
+                                "assetHint": "materialeditor/viewportmodels/cube.fbx.azmodel"
                             }
                         }
                     }
@@ -4234,6 +4354,11 @@
                     "$type": "EditorColliderComponent",
                     "Id": 11384954117619258935,
                     "ColliderConfiguration": {
+                        "Position": [
+                            0.0,
+                            0.0,
+                            0.5
+                        ],
                         "MaterialSlots": {
                             "Slots": [
                                 {
@@ -4268,10 +4393,10 @@
                         "Configuration": {
                             "ModelAsset": {
                                 "assetId": {
-                                    "guid": "{593006BE-FE73-5A4B-A0A6-06C02EFFE458}",
+                                    "guid": "{B991E03B-F50D-552E-9E2D-64FA6DAB1CCB}",
                                     "subId": 285127096
                                 },
-                                "assetHint": "objects/cube.azmodel"
+                                "assetHint": "materialeditor/viewportmodels/cube.fbx.azmodel"
                             }
                         }
                     }
@@ -4408,6 +4533,11 @@
                     "$type": "EditorColliderComponent",
                     "Id": 11384954117619258935,
                     "ColliderConfiguration": {
+                        "Position": [
+                            0.0,
+                            0.0,
+                            0.5
+                        ],
                         "MaterialSlots": {
                             "Slots": [
                                 {
@@ -4442,10 +4572,10 @@
                         "Configuration": {
                             "ModelAsset": {
                                 "assetId": {
-                                    "guid": "{593006BE-FE73-5A4B-A0A6-06C02EFFE458}",
+                                    "guid": "{B991E03B-F50D-552E-9E2D-64FA6DAB1CCB}",
                                     "subId": 285127096
                                 },
-                                "assetHint": "objects/cube.azmodel"
+                                "assetHint": "materialeditor/viewportmodels/cube.fbx.azmodel"
                             }
                         }
                     }
@@ -4582,6 +4712,11 @@
                     "$type": "EditorColliderComponent",
                     "Id": 11384954117619258935,
                     "ColliderConfiguration": {
+                        "Position": [
+                            0.0,
+                            0.0,
+                            0.5
+                        ],
                         "MaterialSlots": {
                             "Slots": [
                                 {
@@ -4616,10 +4751,10 @@
                         "Configuration": {
                             "ModelAsset": {
                                 "assetId": {
-                                    "guid": "{593006BE-FE73-5A4B-A0A6-06C02EFFE458}",
+                                    "guid": "{B991E03B-F50D-552E-9E2D-64FA6DAB1CCB}",
                                     "subId": 285127096
                                 },
-                                "assetHint": "objects/cube.azmodel"
+                                "assetHint": "materialeditor/viewportmodels/cube.fbx.azmodel"
                             }
                         }
                     }
@@ -4756,6 +4891,11 @@
                     "$type": "EditorColliderComponent",
                     "Id": 11384954117619258935,
                     "ColliderConfiguration": {
+                        "Position": [
+                            0.0,
+                            0.0,
+                            0.5
+                        ],
                         "MaterialSlots": {
                             "Slots": [
                                 {
@@ -4790,10 +4930,10 @@
                         "Configuration": {
                             "ModelAsset": {
                                 "assetId": {
-                                    "guid": "{593006BE-FE73-5A4B-A0A6-06C02EFFE458}",
+                                    "guid": "{B991E03B-F50D-552E-9E2D-64FA6DAB1CCB}",
                                     "subId": 285127096
                                 },
-                                "assetHint": "objects/cube.azmodel"
+                                "assetHint": "materialeditor/viewportmodels/cube.fbx.azmodel"
                             }
                         }
                     }
@@ -4930,6 +5070,11 @@
                     "$type": "EditorColliderComponent",
                     "Id": 11384954117619258935,
                     "ColliderConfiguration": {
+                        "Position": [
+                            0.0,
+                            0.0,
+                            0.5
+                        ],
                         "MaterialSlots": {
                             "Slots": [
                                 {
@@ -4964,10 +5109,10 @@
                         "Configuration": {
                             "ModelAsset": {
                                 "assetId": {
-                                    "guid": "{593006BE-FE73-5A4B-A0A6-06C02EFFE458}",
+                                    "guid": "{B991E03B-F50D-552E-9E2D-64FA6DAB1CCB}",
                                     "subId": 285127096
                                 },
-                                "assetHint": "objects/cube.azmodel"
+                                "assetHint": "materialeditor/viewportmodels/cube.fbx.azmodel"
                             }
                         }
                     }
@@ -5104,6 +5249,11 @@
                     "$type": "EditorColliderComponent",
                     "Id": 11384954117619258935,
                     "ColliderConfiguration": {
+                        "Position": [
+                            0.0,
+                            0.0,
+                            0.5
+                        ],
                         "MaterialSlots": {
                             "Slots": [
                                 {
@@ -5138,10 +5288,10 @@
                         "Configuration": {
                             "ModelAsset": {
                                 "assetId": {
-                                    "guid": "{593006BE-FE73-5A4B-A0A6-06C02EFFE458}",
+                                    "guid": "{B991E03B-F50D-552E-9E2D-64FA6DAB1CCB}",
                                     "subId": 285127096
                                 },
-                                "assetHint": "objects/cube.azmodel"
+                                "assetHint": "materialeditor/viewportmodels/cube.fbx.azmodel"
                             }
                         }
                     }
@@ -5278,6 +5428,11 @@
                     "$type": "EditorColliderComponent",
                     "Id": 11384954117619258935,
                     "ColliderConfiguration": {
+                        "Position": [
+                            0.0,
+                            0.0,
+                            0.5
+                        ],
                         "MaterialSlots": {
                             "Slots": [
                                 {
@@ -5312,10 +5467,10 @@
                         "Configuration": {
                             "ModelAsset": {
                                 "assetId": {
-                                    "guid": "{593006BE-FE73-5A4B-A0A6-06C02EFFE458}",
+                                    "guid": "{B991E03B-F50D-552E-9E2D-64FA6DAB1CCB}",
                                     "subId": 285127096
                                 },
-                                "assetHint": "objects/cube.azmodel"
+                                "assetHint": "materialeditor/viewportmodels/cube.fbx.azmodel"
                             }
                         }
                     }
@@ -5452,6 +5607,11 @@
                     "$type": "EditorColliderComponent",
                     "Id": 11384954117619258935,
                     "ColliderConfiguration": {
+                        "Position": [
+                            0.0,
+                            0.0,
+                            0.5
+                        ],
                         "MaterialSlots": {
                             "Slots": [
                                 {
@@ -5486,10 +5646,10 @@
                         "Configuration": {
                             "ModelAsset": {
                                 "assetId": {
-                                    "guid": "{593006BE-FE73-5A4B-A0A6-06C02EFFE458}",
+                                    "guid": "{B991E03B-F50D-552E-9E2D-64FA6DAB1CCB}",
                                     "subId": 285127096
                                 },
-                                "assetHint": "objects/cube.azmodel"
+                                "assetHint": "materialeditor/viewportmodels/cube.fbx.azmodel"
                             }
                         }
                     }
@@ -5626,6 +5786,11 @@
                     "$type": "EditorColliderComponent",
                     "Id": 11384954117619258935,
                     "ColliderConfiguration": {
+                        "Position": [
+                            0.0,
+                            0.0,
+                            0.5
+                        ],
                         "MaterialSlots": {
                             "Slots": [
                                 {
@@ -5660,10 +5825,10 @@
                         "Configuration": {
                             "ModelAsset": {
                                 "assetId": {
-                                    "guid": "{593006BE-FE73-5A4B-A0A6-06C02EFFE458}",
+                                    "guid": "{B991E03B-F50D-552E-9E2D-64FA6DAB1CCB}",
                                     "subId": 285127096
                                 },
-                                "assetHint": "objects/cube.azmodel"
+                                "assetHint": "materialeditor/viewportmodels/cube.fbx.azmodel"
                             }
                         }
                     }
@@ -5800,6 +5965,11 @@
                     "$type": "EditorColliderComponent",
                     "Id": 11384954117619258935,
                     "ColliderConfiguration": {
+                        "Position": [
+                            0.0,
+                            0.0,
+                            0.5
+                        ],
                         "MaterialSlots": {
                             "Slots": [
                                 {
@@ -5834,10 +6004,10 @@
                         "Configuration": {
                             "ModelAsset": {
                                 "assetId": {
-                                    "guid": "{593006BE-FE73-5A4B-A0A6-06C02EFFE458}",
+                                    "guid": "{B991E03B-F50D-552E-9E2D-64FA6DAB1CCB}",
                                     "subId": 285127096
                                 },
-                                "assetHint": "objects/cube.azmodel"
+                                "assetHint": "materialeditor/viewportmodels/cube.fbx.azmodel"
                             }
                         }
                     }
@@ -5974,6 +6144,11 @@
                     "$type": "EditorColliderComponent",
                     "Id": 11384954117619258935,
                     "ColliderConfiguration": {
+                        "Position": [
+                            0.0,
+                            0.0,
+                            0.5
+                        ],
                         "MaterialSlots": {
                             "Slots": [
                                 {
@@ -6008,10 +6183,10 @@
                         "Configuration": {
                             "ModelAsset": {
                                 "assetId": {
-                                    "guid": "{593006BE-FE73-5A4B-A0A6-06C02EFFE458}",
+                                    "guid": "{B991E03B-F50D-552E-9E2D-64FA6DAB1CCB}",
                                     "subId": 285127096
                                 },
-                                "assetHint": "objects/cube.azmodel"
+                                "assetHint": "materialeditor/viewportmodels/cube.fbx.azmodel"
                             }
                         }
                     }
@@ -6148,6 +6323,11 @@
                     "$type": "EditorColliderComponent",
                     "Id": 11384954117619258935,
                     "ColliderConfiguration": {
+                        "Position": [
+                            0.0,
+                            0.0,
+                            0.5
+                        ],
                         "MaterialSlots": {
                             "Slots": [
                                 {
@@ -6182,10 +6362,10 @@
                         "Configuration": {
                             "ModelAsset": {
                                 "assetId": {
-                                    "guid": "{593006BE-FE73-5A4B-A0A6-06C02EFFE458}",
+                                    "guid": "{B991E03B-F50D-552E-9E2D-64FA6DAB1CCB}",
                                     "subId": 285127096
                                 },
-                                "assetHint": "objects/cube.azmodel"
+                                "assetHint": "materialeditor/viewportmodels/cube.fbx.azmodel"
                             }
                         }
                     }
@@ -6322,6 +6502,11 @@
                     "$type": "EditorColliderComponent",
                     "Id": 11384954117619258935,
                     "ColliderConfiguration": {
+                        "Position": [
+                            0.0,
+                            0.0,
+                            0.5
+                        ],
                         "MaterialSlots": {
                             "Slots": [
                                 {
@@ -6356,10 +6541,10 @@
                         "Configuration": {
                             "ModelAsset": {
                                 "assetId": {
-                                    "guid": "{593006BE-FE73-5A4B-A0A6-06C02EFFE458}",
+                                    "guid": "{B991E03B-F50D-552E-9E2D-64FA6DAB1CCB}",
                                     "subId": 285127096
                                 },
-                                "assetHint": "objects/cube.azmodel"
+                                "assetHint": "materialeditor/viewportmodels/cube.fbx.azmodel"
                             }
                         }
                     }
@@ -6496,6 +6681,11 @@
                     "$type": "EditorColliderComponent",
                     "Id": 11384954117619258935,
                     "ColliderConfiguration": {
+                        "Position": [
+                            0.0,
+                            0.0,
+                            0.5
+                        ],
                         "MaterialSlots": {
                             "Slots": [
                                 {
@@ -6530,10 +6720,10 @@
                         "Configuration": {
                             "ModelAsset": {
                                 "assetId": {
-                                    "guid": "{593006BE-FE73-5A4B-A0A6-06C02EFFE458}",
+                                    "guid": "{B991E03B-F50D-552E-9E2D-64FA6DAB1CCB}",
                                     "subId": 285127096
                                 },
-                                "assetHint": "objects/cube.azmodel"
+                                "assetHint": "materialeditor/viewportmodels/cube.fbx.azmodel"
                             }
                         }
                     }
@@ -6670,6 +6860,11 @@
                     "$type": "EditorColliderComponent",
                     "Id": 11384954117619258935,
                     "ColliderConfiguration": {
+                        "Position": [
+                            0.0,
+                            0.0,
+                            0.5
+                        ],
                         "MaterialSlots": {
                             "Slots": [
                                 {
@@ -6704,10 +6899,10 @@
                         "Configuration": {
                             "ModelAsset": {
                                 "assetId": {
-                                    "guid": "{593006BE-FE73-5A4B-A0A6-06C02EFFE458}",
+                                    "guid": "{B991E03B-F50D-552E-9E2D-64FA6DAB1CCB}",
                                     "subId": 285127096
                                 },
-                                "assetHint": "objects/cube.azmodel"
+                                "assetHint": "materialeditor/viewportmodels/cube.fbx.azmodel"
                             }
                         }
                     }
@@ -6844,6 +7039,11 @@
                     "$type": "EditorColliderComponent",
                     "Id": 11384954117619258935,
                     "ColliderConfiguration": {
+                        "Position": [
+                            0.0,
+                            0.0,
+                            0.5
+                        ],
                         "MaterialSlots": {
                             "Slots": [
                                 {
@@ -6878,10 +7078,10 @@
                         "Configuration": {
                             "ModelAsset": {
                                 "assetId": {
-                                    "guid": "{593006BE-FE73-5A4B-A0A6-06C02EFFE458}",
+                                    "guid": "{B991E03B-F50D-552E-9E2D-64FA6DAB1CCB}",
                                     "subId": 285127096
                                 },
-                                "assetHint": "objects/cube.azmodel"
+                                "assetHint": "materialeditor/viewportmodels/cube.fbx.azmodel"
                             }
                         }
                     }
@@ -7018,6 +7218,11 @@
                     "$type": "EditorColliderComponent",
                     "Id": 11384954117619258935,
                     "ColliderConfiguration": {
+                        "Position": [
+                            0.0,
+                            0.0,
+                            0.5
+                        ],
                         "MaterialSlots": {
                             "Slots": [
                                 {
@@ -7052,10 +7257,10 @@
                         "Configuration": {
                             "ModelAsset": {
                                 "assetId": {
-                                    "guid": "{593006BE-FE73-5A4B-A0A6-06C02EFFE458}",
+                                    "guid": "{B991E03B-F50D-552E-9E2D-64FA6DAB1CCB}",
                                     "subId": 285127096
                                 },
-                                "assetHint": "objects/cube.azmodel"
+                                "assetHint": "materialeditor/viewportmodels/cube.fbx.azmodel"
                             }
                         }
                     }
@@ -7192,6 +7397,11 @@
                     "$type": "EditorColliderComponent",
                     "Id": 11384954117619258935,
                     "ColliderConfiguration": {
+                        "Position": [
+                            0.0,
+                            0.0,
+                            0.5
+                        ],
                         "MaterialSlots": {
                             "Slots": [
                                 {
@@ -7226,10 +7436,10 @@
                         "Configuration": {
                             "ModelAsset": {
                                 "assetId": {
-                                    "guid": "{593006BE-FE73-5A4B-A0A6-06C02EFFE458}",
+                                    "guid": "{B991E03B-F50D-552E-9E2D-64FA6DAB1CCB}",
                                     "subId": 285127096
                                 },
-                                "assetHint": "objects/cube.azmodel"
+                                "assetHint": "materialeditor/viewportmodels/cube.fbx.azmodel"
                             }
                         }
                     }
@@ -7366,6 +7576,11 @@
                     "$type": "EditorColliderComponent",
                     "Id": 11384954117619258935,
                     "ColliderConfiguration": {
+                        "Position": [
+                            0.0,
+                            0.0,
+                            0.5
+                        ],
                         "MaterialSlots": {
                             "Slots": [
                                 {
@@ -7400,10 +7615,10 @@
                         "Configuration": {
                             "ModelAsset": {
                                 "assetId": {
-                                    "guid": "{593006BE-FE73-5A4B-A0A6-06C02EFFE458}",
+                                    "guid": "{B991E03B-F50D-552E-9E2D-64FA6DAB1CCB}",
                                     "subId": 285127096
                                 },
-                                "assetHint": "objects/cube.azmodel"
+                                "assetHint": "materialeditor/viewportmodels/cube.fbx.azmodel"
                             }
                         }
                     }
@@ -7540,6 +7755,11 @@
                     "$type": "EditorColliderComponent",
                     "Id": 11384954117619258935,
                     "ColliderConfiguration": {
+                        "Position": [
+                            0.0,
+                            0.0,
+                            0.5
+                        ],
                         "MaterialSlots": {
                             "Slots": [
                                 {
@@ -7574,10 +7794,10 @@
                         "Configuration": {
                             "ModelAsset": {
                                 "assetId": {
-                                    "guid": "{593006BE-FE73-5A4B-A0A6-06C02EFFE458}",
+                                    "guid": "{B991E03B-F50D-552E-9E2D-64FA6DAB1CCB}",
                                     "subId": 285127096
                                 },
-                                "assetHint": "objects/cube.azmodel"
+                                "assetHint": "materialeditor/viewportmodels/cube.fbx.azmodel"
                             }
                         }
                     }
@@ -7714,6 +7934,11 @@
                     "$type": "EditorColliderComponent",
                     "Id": 11384954117619258935,
                     "ColliderConfiguration": {
+                        "Position": [
+                            0.0,
+                            0.0,
+                            0.5
+                        ],
                         "MaterialSlots": {
                             "Slots": [
                                 {
@@ -7748,10 +7973,10 @@
                         "Configuration": {
                             "ModelAsset": {
                                 "assetId": {
-                                    "guid": "{593006BE-FE73-5A4B-A0A6-06C02EFFE458}",
+                                    "guid": "{B991E03B-F50D-552E-9E2D-64FA6DAB1CCB}",
                                     "subId": 285127096
                                 },
-                                "assetHint": "objects/cube.azmodel"
+                                "assetHint": "materialeditor/viewportmodels/cube.fbx.azmodel"
                             }
                         }
                     }
@@ -7888,6 +8113,11 @@
                     "$type": "EditorColliderComponent",
                     "Id": 11384954117619258935,
                     "ColliderConfiguration": {
+                        "Position": [
+                            0.0,
+                            0.0,
+                            0.5
+                        ],
                         "MaterialSlots": {
                             "Slots": [
                                 {
@@ -7922,10 +8152,10 @@
                         "Configuration": {
                             "ModelAsset": {
                                 "assetId": {
-                                    "guid": "{593006BE-FE73-5A4B-A0A6-06C02EFFE458}",
+                                    "guid": "{B991E03B-F50D-552E-9E2D-64FA6DAB1CCB}",
                                     "subId": 285127096
                                 },
-                                "assetHint": "objects/cube.azmodel"
+                                "assetHint": "materialeditor/viewportmodels/cube.fbx.azmodel"
                             }
                         }
                     }
@@ -8062,6 +8292,11 @@
                     "$type": "EditorColliderComponent",
                     "Id": 11384954117619258935,
                     "ColliderConfiguration": {
+                        "Position": [
+                            0.0,
+                            0.0,
+                            0.5
+                        ],
                         "MaterialSlots": {
                             "Slots": [
                                 {
@@ -8096,10 +8331,10 @@
                         "Configuration": {
                             "ModelAsset": {
                                 "assetId": {
-                                    "guid": "{593006BE-FE73-5A4B-A0A6-06C02EFFE458}",
+                                    "guid": "{B991E03B-F50D-552E-9E2D-64FA6DAB1CCB}",
                                     "subId": 285127096
                                 },
-                                "assetHint": "objects/cube.azmodel"
+                                "assetHint": "materialeditor/viewportmodels/cube.fbx.azmodel"
                             }
                         }
                     }
@@ -8236,6 +8471,11 @@
                     "$type": "EditorColliderComponent",
                     "Id": 11384954117619258935,
                     "ColliderConfiguration": {
+                        "Position": [
+                            0.0,
+                            0.0,
+                            0.5
+                        ],
                         "MaterialSlots": {
                             "Slots": [
                                 {
@@ -8270,10 +8510,10 @@
                         "Configuration": {
                             "ModelAsset": {
                                 "assetId": {
-                                    "guid": "{593006BE-FE73-5A4B-A0A6-06C02EFFE458}",
+                                    "guid": "{B991E03B-F50D-552E-9E2D-64FA6DAB1CCB}",
                                     "subId": 285127096
                                 },
-                                "assetHint": "objects/cube.azmodel"
+                                "assetHint": "materialeditor/viewportmodels/cube.fbx.azmodel"
                             }
                         }
                     }
@@ -8410,6 +8650,11 @@
                     "$type": "EditorColliderComponent",
                     "Id": 11384954117619258935,
                     "ColliderConfiguration": {
+                        "Position": [
+                            0.0,
+                            0.0,
+                            0.5
+                        ],
                         "MaterialSlots": {
                             "Slots": [
                                 {
@@ -8444,10 +8689,10 @@
                         "Configuration": {
                             "ModelAsset": {
                                 "assetId": {
-                                    "guid": "{593006BE-FE73-5A4B-A0A6-06C02EFFE458}",
+                                    "guid": "{B991E03B-F50D-552E-9E2D-64FA6DAB1CCB}",
                                     "subId": 285127096
                                 },
-                                "assetHint": "objects/cube.azmodel"
+                                "assetHint": "materialeditor/viewportmodels/cube.fbx.azmodel"
                             }
                         }
                     }
@@ -8584,6 +8829,11 @@
                     "$type": "EditorColliderComponent",
                     "Id": 11384954117619258935,
                     "ColliderConfiguration": {
+                        "Position": [
+                            0.0,
+                            0.0,
+                            0.5
+                        ],
                         "MaterialSlots": {
                             "Slots": [
                                 {
@@ -8618,10 +8868,10 @@
                         "Configuration": {
                             "ModelAsset": {
                                 "assetId": {
-                                    "guid": "{593006BE-FE73-5A4B-A0A6-06C02EFFE458}",
+                                    "guid": "{B991E03B-F50D-552E-9E2D-64FA6DAB1CCB}",
                                     "subId": 285127096
                                 },
-                                "assetHint": "objects/cube.azmodel"
+                                "assetHint": "materialeditor/viewportmodels/cube.fbx.azmodel"
                             }
                         }
                     }
@@ -8758,6 +9008,11 @@
                     "$type": "EditorColliderComponent",
                     "Id": 11384954117619258935,
                     "ColliderConfiguration": {
+                        "Position": [
+                            0.0,
+                            0.0,
+                            0.5
+                        ],
                         "MaterialSlots": {
                             "Slots": [
                                 {
@@ -8792,10 +9047,10 @@
                         "Configuration": {
                             "ModelAsset": {
                                 "assetId": {
-                                    "guid": "{593006BE-FE73-5A4B-A0A6-06C02EFFE458}",
+                                    "guid": "{B991E03B-F50D-552E-9E2D-64FA6DAB1CCB}",
                                     "subId": 285127096
                                 },
-                                "assetHint": "objects/cube.azmodel"
+                                "assetHint": "materialeditor/viewportmodels/cube.fbx.azmodel"
                             }
                         }
                     }
@@ -8932,6 +9187,11 @@
                     "$type": "EditorColliderComponent",
                     "Id": 11384954117619258935,
                     "ColliderConfiguration": {
+                        "Position": [
+                            0.0,
+                            0.0,
+                            0.5
+                        ],
                         "MaterialSlots": {
                             "Slots": [
                                 {
@@ -8966,10 +9226,10 @@
                         "Configuration": {
                             "ModelAsset": {
                                 "assetId": {
-                                    "guid": "{593006BE-FE73-5A4B-A0A6-06C02EFFE458}",
+                                    "guid": "{B991E03B-F50D-552E-9E2D-64FA6DAB1CCB}",
                                     "subId": 285127096
                                 },
-                                "assetHint": "objects/cube.azmodel"
+                                "assetHint": "materialeditor/viewportmodels/cube.fbx.azmodel"
                             }
                         }
                     }
@@ -9106,6 +9366,11 @@
                     "$type": "EditorColliderComponent",
                     "Id": 11384954117619258935,
                     "ColliderConfiguration": {
+                        "Position": [
+                            0.0,
+                            0.0,
+                            0.5
+                        ],
                         "MaterialSlots": {
                             "Slots": [
                                 {
@@ -9140,10 +9405,10 @@
                         "Configuration": {
                             "ModelAsset": {
                                 "assetId": {
-                                    "guid": "{593006BE-FE73-5A4B-A0A6-06C02EFFE458}",
+                                    "guid": "{B991E03B-F50D-552E-9E2D-64FA6DAB1CCB}",
                                     "subId": 285127096
                                 },
-                                "assetHint": "objects/cube.azmodel"
+                                "assetHint": "materialeditor/viewportmodels/cube.fbx.azmodel"
                             }
                         }
                     }
@@ -9280,6 +9545,11 @@
                     "$type": "EditorColliderComponent",
                     "Id": 11384954117619258935,
                     "ColliderConfiguration": {
+                        "Position": [
+                            0.0,
+                            0.0,
+                            0.5
+                        ],
                         "MaterialSlots": {
                             "Slots": [
                                 {
@@ -9314,10 +9584,10 @@
                         "Configuration": {
                             "ModelAsset": {
                                 "assetId": {
-                                    "guid": "{593006BE-FE73-5A4B-A0A6-06C02EFFE458}",
+                                    "guid": "{B991E03B-F50D-552E-9E2D-64FA6DAB1CCB}",
                                     "subId": 285127096
                                 },
-                                "assetHint": "objects/cube.azmodel"
+                                "assetHint": "materialeditor/viewportmodels/cube.fbx.azmodel"
                             }
                         }
                     }
@@ -9454,6 +9724,11 @@
                     "$type": "EditorColliderComponent",
                     "Id": 11384954117619258935,
                     "ColliderConfiguration": {
+                        "Position": [
+                            0.0,
+                            0.0,
+                            0.5
+                        ],
                         "MaterialSlots": {
                             "Slots": [
                                 {
@@ -9488,10 +9763,10 @@
                         "Configuration": {
                             "ModelAsset": {
                                 "assetId": {
-                                    "guid": "{593006BE-FE73-5A4B-A0A6-06C02EFFE458}",
+                                    "guid": "{B991E03B-F50D-552E-9E2D-64FA6DAB1CCB}",
                                     "subId": 285127096
                                 },
-                                "assetHint": "objects/cube.azmodel"
+                                "assetHint": "materialeditor/viewportmodels/cube.fbx.azmodel"
                             }
                         }
                     }
@@ -9628,6 +9903,11 @@
                     "$type": "EditorColliderComponent",
                     "Id": 11384954117619258935,
                     "ColliderConfiguration": {
+                        "Position": [
+                            0.0,
+                            0.0,
+                            0.5
+                        ],
                         "MaterialSlots": {
                             "Slots": [
                                 {
@@ -9662,10 +9942,10 @@
                         "Configuration": {
                             "ModelAsset": {
                                 "assetId": {
-                                    "guid": "{593006BE-FE73-5A4B-A0A6-06C02EFFE458}",
+                                    "guid": "{B991E03B-F50D-552E-9E2D-64FA6DAB1CCB}",
                                     "subId": 285127096
                                 },
-                                "assetHint": "objects/cube.azmodel"
+                                "assetHint": "materialeditor/viewportmodels/cube.fbx.azmodel"
                             }
                         }
                     }
@@ -9802,6 +10082,11 @@
                     "$type": "EditorColliderComponent",
                     "Id": 11384954117619258935,
                     "ColliderConfiguration": {
+                        "Position": [
+                            0.0,
+                            0.0,
+                            0.5
+                        ],
                         "MaterialSlots": {
                             "Slots": [
                                 {
@@ -9836,10 +10121,10 @@
                         "Configuration": {
                             "ModelAsset": {
                                 "assetId": {
-                                    "guid": "{593006BE-FE73-5A4B-A0A6-06C02EFFE458}",
+                                    "guid": "{B991E03B-F50D-552E-9E2D-64FA6DAB1CCB}",
                                     "subId": 285127096
                                 },
-                                "assetHint": "objects/cube.azmodel"
+                                "assetHint": "materialeditor/viewportmodels/cube.fbx.azmodel"
                             }
                         }
                     }
@@ -9976,6 +10261,11 @@
                     "$type": "EditorColliderComponent",
                     "Id": 11384954117619258935,
                     "ColliderConfiguration": {
+                        "Position": [
+                            0.0,
+                            0.0,
+                            0.5
+                        ],
                         "MaterialSlots": {
                             "Slots": [
                                 {
@@ -10010,10 +10300,10 @@
                         "Configuration": {
                             "ModelAsset": {
                                 "assetId": {
-                                    "guid": "{593006BE-FE73-5A4B-A0A6-06C02EFFE458}",
+                                    "guid": "{B991E03B-F50D-552E-9E2D-64FA6DAB1CCB}",
                                     "subId": 285127096
                                 },
-                                "assetHint": "objects/cube.azmodel"
+                                "assetHint": "materialeditor/viewportmodels/cube.fbx.azmodel"
                             }
                         }
                     }
@@ -10150,6 +10440,11 @@
                     "$type": "EditorColliderComponent",
                     "Id": 11384954117619258935,
                     "ColliderConfiguration": {
+                        "Position": [
+                            0.0,
+                            0.0,
+                            0.5
+                        ],
                         "MaterialSlots": {
                             "Slots": [
                                 {
@@ -10184,10 +10479,10 @@
                         "Configuration": {
                             "ModelAsset": {
                                 "assetId": {
-                                    "guid": "{593006BE-FE73-5A4B-A0A6-06C02EFFE458}",
+                                    "guid": "{B991E03B-F50D-552E-9E2D-64FA6DAB1CCB}",
                                     "subId": 285127096
                                 },
-                                "assetHint": "objects/cube.azmodel"
+                                "assetHint": "materialeditor/viewportmodels/cube.fbx.azmodel"
                             }
                         }
                     }
@@ -10324,6 +10619,11 @@
                     "$type": "EditorColliderComponent",
                     "Id": 11384954117619258935,
                     "ColliderConfiguration": {
+                        "Position": [
+                            0.0,
+                            0.0,
+                            0.5
+                        ],
                         "MaterialSlots": {
                             "Slots": [
                                 {
@@ -10358,10 +10658,10 @@
                         "Configuration": {
                             "ModelAsset": {
                                 "assetId": {
-                                    "guid": "{593006BE-FE73-5A4B-A0A6-06C02EFFE458}",
+                                    "guid": "{B991E03B-F50D-552E-9E2D-64FA6DAB1CCB}",
                                     "subId": 285127096
                                 },
-                                "assetHint": "objects/cube.azmodel"
+                                "assetHint": "materialeditor/viewportmodels/cube.fbx.azmodel"
                             }
                         }
                     }
@@ -10498,6 +10798,11 @@
                     "$type": "EditorColliderComponent",
                     "Id": 11384954117619258935,
                     "ColliderConfiguration": {
+                        "Position": [
+                            0.0,
+                            0.0,
+                            0.5
+                        ],
                         "MaterialSlots": {
                             "Slots": [
                                 {
@@ -10532,10 +10837,10 @@
                         "Configuration": {
                             "ModelAsset": {
                                 "assetId": {
-                                    "guid": "{593006BE-FE73-5A4B-A0A6-06C02EFFE458}",
+                                    "guid": "{B991E03B-F50D-552E-9E2D-64FA6DAB1CCB}",
                                     "subId": 285127096
                                 },
-                                "assetHint": "objects/cube.azmodel"
+                                "assetHint": "materialeditor/viewportmodels/cube.fbx.azmodel"
                             }
                         }
                     }
@@ -10672,6 +10977,11 @@
                     "$type": "EditorColliderComponent",
                     "Id": 11384954117619258935,
                     "ColliderConfiguration": {
+                        "Position": [
+                            0.0,
+                            0.0,
+                            0.5
+                        ],
                         "MaterialSlots": {
                             "Slots": [
                                 {
@@ -10706,10 +11016,10 @@
                         "Configuration": {
                             "ModelAsset": {
                                 "assetId": {
-                                    "guid": "{593006BE-FE73-5A4B-A0A6-06C02EFFE458}",
+                                    "guid": "{B991E03B-F50D-552E-9E2D-64FA6DAB1CCB}",
                                     "subId": 285127096
                                 },
-                                "assetHint": "objects/cube.azmodel"
+                                "assetHint": "materialeditor/viewportmodels/cube.fbx.azmodel"
                             }
                         }
                     }
@@ -10846,6 +11156,11 @@
                     "$type": "EditorColliderComponent",
                     "Id": 11384954117619258935,
                     "ColliderConfiguration": {
+                        "Position": [
+                            0.0,
+                            0.0,
+                            0.5
+                        ],
                         "MaterialSlots": {
                             "Slots": [
                                 {
@@ -10880,10 +11195,10 @@
                         "Configuration": {
                             "ModelAsset": {
                                 "assetId": {
-                                    "guid": "{593006BE-FE73-5A4B-A0A6-06C02EFFE458}",
+                                    "guid": "{B991E03B-F50D-552E-9E2D-64FA6DAB1CCB}",
                                     "subId": 285127096
                                 },
-                                "assetHint": "objects/cube.azmodel"
+                                "assetHint": "materialeditor/viewportmodels/cube.fbx.azmodel"
                             }
                         }
                     }
@@ -11020,6 +11335,11 @@
                     "$type": "EditorColliderComponent",
                     "Id": 11384954117619258935,
                     "ColliderConfiguration": {
+                        "Position": [
+                            0.0,
+                            0.0,
+                            0.5
+                        ],
                         "MaterialSlots": {
                             "Slots": [
                                 {
@@ -11054,10 +11374,10 @@
                         "Configuration": {
                             "ModelAsset": {
                                 "assetId": {
-                                    "guid": "{593006BE-FE73-5A4B-A0A6-06C02EFFE458}",
+                                    "guid": "{B991E03B-F50D-552E-9E2D-64FA6DAB1CCB}",
                                     "subId": 285127096
                                 },
-                                "assetHint": "objects/cube.azmodel"
+                                "assetHint": "materialeditor/viewportmodels/cube.fbx.azmodel"
                             }
                         }
                     }

@@ -5,6 +5,9 @@
 #include "${SanitizedCppName}SystemComponent.h"
 
 #include <${SanitizedCppName}/${SanitizedCppName}TypeIds.h>
+#include <Components/AttachPlayerWeaponComponent.h>
+#include <Source/AutoGen/AutoComponentTypes.h>
+
 
 namespace ${SanitizedCppName}
 {
@@ -21,7 +24,11 @@ namespace ${SanitizedCppName}
             // Push results of [MyComponent]::CreateDescriptor() into m_descriptors here.
             m_descriptors.insert(m_descriptors.end(), {
                 ${SanitizedCppName}SystemComponent::CreateDescriptor(),
+                AttachPlayerWeaponComponent::CreateDescriptor(),
             });
+
+            // Register multiplayer components
+            CreateComponentDescriptors(m_descriptors);
         }
 
         /**

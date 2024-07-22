@@ -4,7 +4,10 @@
 #include "${SanitizedCppName}SystemComponent.h"
 
 #include <${SanitizedCppName}/${SanitizedCppName}TypeIds.h>
+
 #include <Source/AutoGen/AutoComponentTypes.h>
+#include <Source/Weapons/WeaponTypes.h>
+
 
 namespace ${SanitizedCppName}
 {
@@ -13,6 +16,14 @@ namespace ${SanitizedCppName}
 
     void ${SanitizedCppName}SystemComponent::Reflect(AZ::ReflectContext* context)
     {
+        ReflectWeaponEnums(context);
+        GatherParams::Reflect(context);
+        HitEffect::Reflect(context);
+        HitEntity::Reflect(context);
+        HitEvent::Reflect(context);
+        WeaponParams::Reflect(context);
+        GameEffect::Reflect(context);
+
         if (auto serializeContext = azrtti_cast<AZ::SerializeContext*>(context))
         {
             serializeContext->Class<${SanitizedCppName}SystemComponent, AZ::Component>()

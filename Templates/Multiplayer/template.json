@@ -11,10 +11,6 @@
     "icon_path": "preview.png",
     "copyFiles": [
         {
-            "file": ".DS_Store",
-            "isTemplated": false
-        },
-        {
             "file": ".command_settings",
             "isTemplated": false
         },
@@ -27,15 +23,35 @@
             "isTemplated": false
         },
         {
-            "file": "Assets/.DS_Store",
+            "file": "Assets/Characters/Attachments/Laser_Gun/gun.fbx",
             "isTemplated": false
         },
         {
-            "file": "Assets/Characters/.DS_Store",
+            "file": "Assets/Characters/Attachments/Laser_Gun/gun_gun.material",
             "isTemplated": false
         },
         {
-            "file": "Assets/Characters/Mixamo/.DS_Store",
+            "file": "Assets/Characters/Attachments/Laser_Gun/textures/gun_low_Default_BaseColor.png",
+            "isTemplated": false
+        },
+        {
+            "file": "Assets/Characters/Attachments/Laser_Gun/textures/gun_low_Default_Emissive.png",
+            "isTemplated": false
+        },
+        {
+            "file": "Assets/Characters/Attachments/Laser_Gun/textures/gun_low_Default_Height.png",
+            "isTemplated": false
+        },
+        {
+            "file": "Assets/Characters/Attachments/Laser_Gun/textures/gun_low_Default_Metallic.png",
+            "isTemplated": false
+        },
+        {
+            "file": "Assets/Characters/Attachments/Laser_Gun/textures/gun_low_Default_Normal.png",
+            "isTemplated": false
+        },
+        {
+            "file": "Assets/Characters/Attachments/Laser_Gun/textures/gun_low_Default_Roughness.png",
             "isTemplated": false
         },
         {
@@ -451,10 +467,6 @@
             "isTemplated": true
         },
         {
-            "file": "Assets/Characters/Mixamo/Ybot/.DS_Store",
-            "isTemplated": false
-        },
-        {
             "file": "Assets/Characters/Mixamo/Ybot/YBot.animgraph",
             "isTemplated": false
         },
@@ -623,15 +635,31 @@
             "isTemplated": false
         },
         {
+            "file": "Assets/InputBindings/player.inputbindings",
+            "isTemplated": false
+        },
+        {
             "file": "Assets/Prefabs/4x4x4BoxGrid.prefab",
             "isTemplated": false
         },
         {
             "file": "Assets/Prefabs/Player.prefab",
-            "isTemplated": false
+            "isTemplated": true
         },
         {
             "file": "Assets/Prefabs/laser_pistol.prefab",
+            "isTemplated": false
+        },
+        {
+            "file": "Assets/UI/BasicHUD/BasicHUD.uicanvas",
+            "isTemplated": false
+        },
+        {
+            "file": "Assets/UI/BasicHUD/Reticle.png",
+            "isTemplated": false
+        },
+        {
+            "file": "Assets/UI/BasicHUD/Reticle.sprite",
             "isTemplated": false
         },
         {
@@ -671,10 +699,6 @@
             "isTemplated": true
         },
         {
-            "file": "Gem/.DS_Store",
-            "isTemplated": false
-        },
-        {
             "file": "Gem/CMakeLists.txt",
             "isTemplated": true
         },
@@ -699,16 +723,12 @@
             "isTemplated": true
         },
         {
-            "file": "Gem/Include/.DS_Store",
+            "file": "Gem/Platform/Android/${NameLower}_android_files.cmake",
             "isTemplated": false
         },
         {
-            "file": "Gem/Platform/Android/${NameLower}_android_files.cmake",
-            "isTemplated": true
-        },
-        {
             "file": "Gem/Platform/Android/${NameLower}_shared_android_files.cmake",
-            "isTemplated": true
+            "isTemplated": false
         },
         {
             "file": "Gem/Platform/Android/PAL_android.cmake",
@@ -716,11 +736,11 @@
         },
         {
             "file": "Gem/Platform/Linux/${NameLower}_linux_files.cmake",
-            "isTemplated": true
+            "isTemplated": false
         },
         {
             "file": "Gem/Platform/Linux/${NameLower}_shared_linux_files.cmake",
-            "isTemplated": true
+            "isTemplated": false
         },
         {
             "file": "Gem/Platform/Linux/PAL_linux.cmake",
@@ -728,11 +748,11 @@
         },
         {
             "file": "Gem/Platform/Mac/${NameLower}_mac_files.cmake",
-            "isTemplated": true
+            "isTemplated": false
         },
         {
             "file": "Gem/Platform/Mac/${NameLower}_shared_mac_files.cmake",
-            "isTemplated": true
+            "isTemplated": false
         },
         {
             "file": "Gem/Platform/Mac/PAL_mac.cmake",
@@ -740,11 +760,11 @@
         },
         {
             "file": "Gem/Platform/Windows/${NameLower}_shared_windows_files.cmake",
-            "isTemplated": true
+            "isTemplated": false
         },
         {
             "file": "Gem/Platform/Windows/${NameLower}_windows_files.cmake",
-            "isTemplated": true
+            "isTemplated": false
         },
         {
             "file": "Gem/Platform/Windows/PAL_windows.cmake",
@@ -752,11 +772,11 @@
         },
         {
             "file": "Gem/Platform/iOS/${NameLower}_ios_files.cmake",
-            "isTemplated": true
+            "isTemplated": false
         },
         {
             "file": "Gem/Platform/iOS/${NameLower}_shared_ios_files.cmake",
-            "isTemplated": true
+            "isTemplated": false
         },
         {
             "file": "Gem/Platform/iOS/PAL_ios.cmake",
@@ -781,14 +801,6 @@
         {
             "file": "Gem/Source/${Name}Types.h",
             "isTemplated": true
-        },
-        {
-            "file": "Gem/Source/.DS_Store",
-            "isTemplated": false
-        },
-        {
-            "file": "Gem/Source/AutoGen/.DS_Store",
-            "isTemplated": false
         },
         {
             "file": "Gem/Source/AutoGen/GameplayEffectsComponent.AutoComponent.xml",
@@ -825,10 +837,6 @@
         {
             "file": "Gem/Source/AutoGen/ScriptingPlayerMovementComponent.AutoComponent.xml",
             "isTemplated": true
-        },
-        {
-            "file": "Gem/Source/Components/.DS_Store",
-            "isTemplated": false
         },
         {
             "file": "Gem/Source/Components/AttachPlayerWeaponComponent.cpp",
@@ -987,12 +995,8 @@
             "isTemplated": false
         },
         {
-            "file": "Levels/Demo/Demo.prefab",
-            "isTemplated": false
-        },
-        {
             "file": "Platform/Android/android_project.cmake",
-            "isTemplated": true
+            "isTemplated": false
         },
         {
             "file": "Platform/Android/android_project.json",
@@ -1000,7 +1004,7 @@
         },
         {
             "file": "Platform/Linux/linux_project.cmake",
-            "isTemplated": true
+            "isTemplated": false
         },
         {
             "file": "Platform/Linux/linux_project.json",
@@ -1008,7 +1012,7 @@
         },
         {
             "file": "Platform/Mac/mac_project.cmake",
-            "isTemplated": true
+            "isTemplated": false
         },
         {
             "file": "Platform/Mac/mac_project.json",
@@ -1016,7 +1020,7 @@
         },
         {
             "file": "Platform/Windows/windows_project.cmake",
-            "isTemplated": true
+            "isTemplated": false
         },
         {
             "file": "Platform/Windows/windows_project.json",
@@ -1024,7 +1028,7 @@
         },
         {
             "file": "Platform/iOS/ios_project.cmake",
-            "isTemplated": true
+            "isTemplated": false
         },
         {
             "file": "Platform/iOS/ios_project.json",
@@ -1248,11 +1252,11 @@
         },
         {
             "file": "ShaderLib/scenesrg.srgi",
-            "isTemplated": true
+            "isTemplated": false
         },
         {
             "file": "ShaderLib/viewsrg.srgi",
-            "isTemplated": true
+            "isTemplated": false
         },
         {
             "file": "autoexec.cfg",
@@ -1285,6 +1289,14 @@
         {
             "file": "project.json",
             "isTemplated": true
+        },
+        {
+            "file": "user/Registry/Platform/Windows/build_path.setreg",
+            "isTemplated": true
+        },
+        {
+            "file": "user/cmake/engine/CMakePresets.json",
+            "isTemplated": false
         }
     ],
     "createDirectories": [
@@ -1299,6 +1311,15 @@
         },
         {
             "dir": "Assets/Characters"
+        },
+        {
+            "dir": "Assets/Characters/Attachments"
+        },
+        {
+            "dir": "Assets/Characters/Attachments/Laser_Gun"
+        },
+        {
+            "dir": "Assets/Characters/Attachments/Laser_Gun/textures"
         },
         {
             "dir": "Assets/Characters/Mixamo"
@@ -1319,7 +1340,16 @@
             "dir": "Assets/Characters/Mixamo/Ybot/textures"
         },
         {
+            "dir": "Assets/InputBindings"
+        },
+        {
             "dir": "Assets/Prefabs"
+        },
+        {
+            "dir": "Assets/UI"
+        },
+        {
+            "dir": "Assets/UI/BasicHUD"
         },
         {
             "dir": "Config"
@@ -1374,15 +1404,6 @@
         },
         {
             "dir": "Levels/DefaultLevel"
-        },
-        {
-            "dir": "Levels/Demo"
-        },
-        {
-            "dir": "Levels/Demo/_savebackup"
-        },
-        {
-            "dir": "Levels/Demo/_savebackup/2024-07-01 [15.04.04]"
         },
         {
             "dir": "Platform"
@@ -1461,6 +1482,24 @@
         },
         {
             "dir": "cmake"
+        },
+        {
+            "dir": "user"
+        },
+        {
+            "dir": "user/Registry"
+        },
+        {
+            "dir": "user/Registry/Platform"
+        },
+        {
+            "dir": "user/Registry/Platform/Windows"
+        },
+        {
+            "dir": "user/cmake"
+        },
+        {
+            "dir": "user/cmake/engine"
         }
     ]
 }

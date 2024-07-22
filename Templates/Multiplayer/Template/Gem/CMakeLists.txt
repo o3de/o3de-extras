@@ -135,6 +135,7 @@ ly_add_target(
         ${NameLower}_shared_files.cmake
     INCLUDE_DIRECTORIES
         PRIVATE
+            ${CMAKE_CURRENT_BINARY_DIR}/Azcg/Generated/${gem_name}.Client.Static  # Used so Module.cpp can include AutoGen/AutoComponentTypes.h
             Source
             .
         PUBLIC
@@ -153,6 +154,7 @@ ly_add_target(
         ${NameLower}_shared_files.cmake
     INCLUDE_DIRECTORIES
         PRIVATE
+            ${CMAKE_CURRENT_BINARY_DIR}/Azcg/Generated/${gem_name}.Server.Static  # Used so Module.cpp can include AutoGen/AutoComponentTypes.h
             Source
             .
         PUBLIC
@@ -172,6 +174,7 @@ ly_add_target(
         ${pal_dir}/${NameLower}_shared_${PAL_PLATFORM_NAME_LOWERCASE}_files.cmake
     INCLUDE_DIRECTORIES
         PRIVATE
+            ${CMAKE_CURRENT_BINARY_DIR}/Azcg/Generated/${gem_name}.Unified.Static  # Used so Module.cpp can include AutoGen/AutoComponentTypes.h
             Source
             .
         PUBLIC

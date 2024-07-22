@@ -78,10 +78,10 @@
                         "Configuration": {
                             "ModelAsset": {
                                 "assetId": {
-                                    "guid": "{76B6FE48-1A08-53EF-92E4-A5F70A034972}",
+                                    "guid": "{E7D3739C-A796-50D3-B168-F685145804FB}",
                                     "subId": 278644059
                                 },
-                                "assetHint": "attachments/laser_gun/gun.azmodel"
+                                "assetHint": "assets/characters/attachments/laser_gun/gun.fbx.azmodel"
                             }
                         }
                     }
@@ -111,9 +111,8 @@
                                     "Value": {
                                         "MaterialAsset": {
                                             "assetId": {
-                                                "guid": "{B67B074C-11F3-5615-9C82-EE5C47630AA7}"
-                                            },
-                                            "assetHint": "attachments/laser_gun/gun_gun.azmaterial"
+                                                "guid": "{9F87E4B8-7201-5A0B-BC50-AE063892498E}"
+                                            }
                                         }
                                     }
                                 }
