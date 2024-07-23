@@ -46,6 +46,19 @@ namespace ROS2::SDFormat
         return AZ::EntityId();
     }
 
+    AZ::EntityId HooksUtils::GetLinkEntityId(
+        const std::string& linkName, const sdf::Model& sdfModel, const CreatedEntitiesMap& createdEntities)
+    {
+        const auto linkPtr = sdfModel.LinkByName(linkName);
+        if (linkPtr != nullptr && createdEntities.contains(linkPtr))
+        {
+            const auto& entityResult = createdEntities.at(linkPtr);
+            return entityResult.IsSuccess() ? entityResult.GetValue() : AZ::EntityId();
+        }
+
+        return AZ::EntityId();
+    }
+
     void HooksUtils::EnableMotor(const AZ::EntityId& entityId)
     {
         AZ::Entity* entity = nullptr;
@@ -138,14 +151,20 @@ namespace ROS2::SDFormat
             }
             std::string contentValue = rosContent.GetValue()->GetAsString();
 
-            if (contentValue.find_last_of('=') == -1 || contentValue.find_last_of(':') == -1)
+            if (contentValue.find_last_of('=') == std::string::npos || contentValue.find_last_of(':') == std::string::npos)
             {
                 AZ_Warning("PluginParser", false, "Encountered invalid remapping while parsing URDF/SDF plugin.");
                 return;
             }
 
             // get new name of the topic
-            int startVal = std::max(contentValue.find_last_of('/'), contentValue.find_last_of('=')) + 1;
+            int startVal = contentValue.find_last_of('=');
+            if (contentValue.find_last_of('/') != std::string::npos && contentValue.find_last_of('/') > startVal)
+            {
+                startVal = contentValue.find_last_of("/");
+            }
+            startVal += 1;
+            
             if (startVal >= contentValue.size())
             {
                 AZ_Warning("PluginParser", false, "Encountered invalid (empty) remapping while parsing URDF/SDF plugin.");

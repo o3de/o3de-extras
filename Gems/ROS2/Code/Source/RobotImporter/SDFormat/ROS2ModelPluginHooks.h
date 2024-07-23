@@ -20,4 +20,12 @@ namespace ROS2::SDFormat::ROS2ModelPluginHooks
     //! components.
     ModelPluginImporterHook ROS2AckermannModel();
 
+    //! Retrive a model plugin importer hook which is used to map SDFormat model plugin of type Joint state publisher into O3DE
+    //! components
+    ModelPluginImporterHook ROS2JointStatePublisherModel();
+
+    //! Retrive a model plugin importer hook which is used to map SDFormat model plugin of type Joint pose trajectory into O3DE
+    //! components
+    ModelPluginImporterHook ROS2JointPoseTrajectoryModel();
+
 } // namespace ROS2::SDFormat::ROS2ModelPluginHooks

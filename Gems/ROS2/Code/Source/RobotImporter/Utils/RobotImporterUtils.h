@@ -53,6 +53,7 @@ namespace ROS2::Utils
     //! always contain at least one element. The back() element of the stack returns the direct model the link is attached to
     //! @return Return true to continue visiting links or false to halt
     using LinkVisitorCallback = AZStd::function<bool(const sdf::Link& link, const ModelStack& modelStack)>;
+    
     //! Visit links from URDF/SDF
     //! @param sdfModel Model object of SDF document corresponding to the <model> tag. It used to query link
     //! @param visitNestedModelLinks When true recurses to any nested <model> tags of the Model object and invoke visitor on their links as
@@ -88,8 +89,17 @@ namespace ROS2::Utils
     //! @returns mapping from fully qualified joint name(such as "model_name::joint_name") to joint pointer
     AZStd::unordered_map<AZStd::string, const sdf::Joint*> GetAllJoints(const sdf::Model& sdfModel, bool gatherNestedModelJoints = false);
 
+
+    //! Check if there are any joints from URDF/SDF in which the specified link is a child in a sdf::Joint.
+    //! @param sdfModel Model object of SDF document corresponding to the <model> tag. It's used to query joints
+    //! @param linkName Name of link which to query in joint objects ChildName()
+    //! @param gatherNestedModelJoints When true recurses to any nested <model> tags of the Model object and also gathers their joints as
+    //! well
+    //! @returns true if specified link is a child to any joint, false otherwise.
+    bool IsChildLink(const sdf::Model& sdfModel, AZStd::string_view linkName, bool gatherNestedModelJoints = false);
+
     //! Retrieve all joints from URDF/SDF in which the specified link is a child in a sdf::Joint.
-    //! @param sdfModel Model object of SDF document corresponding to the <model> tag. It used to query joints
+    //! @param sdfModel Model object of SDF document corresponding to the <model> tag. It's used to query joints
     //! @param linkName Name of link which to query in joint objects ChildName()
     //! @param gatherNestedModelJoints When true recurses to any nested <model> tags of the Model object and also gathers their joints as
     //! well

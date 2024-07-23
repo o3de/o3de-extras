@@ -46,6 +46,13 @@ namespace ROS2::SDFormat
         //! @return entity id (invalid id if not found)
         AZ::EntityId GetJointEntityId(const std::string& jointName, const sdf::Model& sdfModel, const CreatedEntitiesMap& createdEntities);
 
+        //! Find O3DE entity id of the SDFormat link based on its name and a map of all created entities.
+        //! @param linkName name of the link in query
+        //! @param sdfModel reference to SDFormat model
+        //! @param createdEntities list of all created entities passed as entity creation results
+        //! @return entity id (invalid id if not found)
+        AZ::EntityId GetLinkEntityId(const std::string& linkName, const sdf::Model& sdfModel, const CreatedEntitiesMap& createdEntities);
+
         //! Enable motor in EditorHingeJointComponent if possible
         //! @param entityId entity id of the modified entity
         void EnableMotor(const AZ::EntityId& entityId);

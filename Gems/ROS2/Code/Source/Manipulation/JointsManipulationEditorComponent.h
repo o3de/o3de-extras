@@ -33,6 +33,11 @@ namespace ROS2
         // AzToolsFramework::Components::EditorComponentBase overrides
         void BuildGameEntity(AZ::Entity* gameEntity) override;
 
+        void SetPublisherConfiguration(const PublisherConfiguration& publisherConfiguration)
+        {
+            m_jointStatePublisherConfiguration = publisherConfiguration;
+        }
+
     private:
         AZ::Crc32 ReloadJoints();
 
