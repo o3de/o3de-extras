@@ -6,24 +6,24 @@
  *
  */
 
-#include <RobotImporter/SDFormat/ROS2SDFormatHooksUtils.h>
-#include <RobotImporter/SDFormat/ROS2ModelPluginHooks.h>
-#include <RobotImporter/Utils/RobotImporterUtils.h>
-#include <AzCore/std/string/string.h>
 #include <AzCore/std/containers/vector.h>
+#include <AzCore/std/string/string.h>
 #include <Manipulation/Controllers/JointsArticulationControllerComponent.h>
 #include <Manipulation/JointsManipulationEditorComponent.h>
+#include <RobotImporter/SDFormat/ROS2ModelPluginHooks.h>
+#include <RobotImporter/SDFormat/ROS2SDFormatHooksUtils.h>
+#include <RobotImporter/Utils/RobotImporterUtils.h>
 
 namespace ROS2::SDFormat
 {
     namespace StatePublisherUtils
     {
         // Find all parent links in model and return pointers to their entities
-        AZ::Entity* GetParentLinkEntity(const sdf::Model& sdfModel, const CreatedEntitiesMap& createdEntities) {
-
+        AZ::Entity* GetParentLinkEntity(const sdf::Model& sdfModel, const CreatedEntitiesMap& createdEntities)
+        {
             auto allLinks = Utils::GetAllLinks(sdfModel);
 
-            for (auto &link : allLinks)
+            for (auto& link : allLinks)
             {
                 AZStd::string linkName = link.first;
                 if (linkName.find_last_of(':') != std::string::npos)
@@ -42,7 +42,7 @@ namespace ROS2::SDFormat
             }
 
             return nullptr;
-        } 
+        }
     } // namespace StatePublisherUtils
 
     ModelPluginImporterHook ROS2ModelPluginHooks::ROS2JointStatePublisherModel()

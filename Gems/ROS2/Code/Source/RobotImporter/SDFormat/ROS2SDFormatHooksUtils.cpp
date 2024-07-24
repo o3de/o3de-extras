@@ -164,7 +164,7 @@ namespace ROS2::SDFormat
                 startVal = contentValue.find_last_of("/");
             }
             startVal += 1;
-            
+
             if (startVal >= contentValue.size())
             {
                 AZ_Warning("PluginParser", false, "Encountered invalid (empty) remapping while parsing URDF/SDF plugin.");

@@ -71,7 +71,7 @@ namespace ROS2
         m_sensorHooks.emplace_back(SDFormat::ROS2SensorHooks::ROS2GNSSSensor());
         m_sensorHooks.emplace_back(SDFormat::ROS2SensorHooks::ROS2ImuSensor());
         m_sensorHooks.emplace_back(SDFormat::ROS2SensorHooks::ROS2LidarSensor());
-	    m_modelPluginHooks.emplace_back(SDFormat::ROS2ModelPluginHooks::ROS2AckermannModel());
+        m_modelPluginHooks.emplace_back(SDFormat::ROS2ModelPluginHooks::ROS2AckermannModel());
         m_modelPluginHooks.emplace_back(SDFormat::ROS2ModelPluginHooks::ROS2SkidSteeringModel());
         m_modelPluginHooks.emplace_back(SDFormat::ROS2ModelPluginHooks::ROS2JointStatePublisherModel());
         m_modelPluginHooks.emplace_back(SDFormat::ROS2ModelPluginHooks::ROS2JointPoseTrajectoryModel());

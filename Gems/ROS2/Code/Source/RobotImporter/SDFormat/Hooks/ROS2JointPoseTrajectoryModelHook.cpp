@@ -6,8 +6,8 @@
  *
  */
 
-#include <RobotImporter/SDFormat/ROS2SDFormatHooksUtils.h>
 #include <RobotImporter/SDFormat/ROS2ModelPluginHooks.h>
+#include <RobotImporter/SDFormat/ROS2SDFormatHooksUtils.h>
 
 namespace ROS2::SDFormat
 {
@@ -15,7 +15,7 @@ namespace ROS2::SDFormat
     {
         ModelPluginImporterHook importerHook;
         importerHook.m_pluginNames = AZStd::unordered_set<AZStd::string>{ "libgazebo_ros_joint_pose_trajectory.so" };
-        importerHook.m_supportedPluginParams = AZStd::unordered_set<AZStd::string>{ };
+        importerHook.m_supportedPluginParams = AZStd::unordered_set<AZStd::string>{};
 
         importerHook.m_sdfPluginToComponentCallback =
             [](AZ::Entity& entity, const sdf::Plugin& sdfPlugin, const sdf::Model& sdfModel, const CreatedEntitiesMap& createdEntities)
