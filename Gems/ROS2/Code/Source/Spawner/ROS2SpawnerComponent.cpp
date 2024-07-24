@@ -189,8 +189,14 @@ namespace ROS2
             PreSpawn(id, view, transform, spawnableName, spawnableNamespace);
         };
 
-        optionalArgs.m_completionCallback = [service_handle, header, ticketName](auto id, auto view)
+        optionalArgs.m_completionCallback = [service_handle, header, ticketName, parentId = GetEntityId()](auto id, auto view)
         {
+            if (!view.empty())
+            {
+                const AZ::Entity* root = *view.begin();
+                auto* transformInterface = root->FindComponent<AzFramework::TransformComponent>();
+                transformInterface->SetParent(parentId);
+            }
             SpawnEntityResponse response;
             response.success = true;
             response.status_message = ticketName.c_str();
@@ -215,7 +221,6 @@ namespace ROS2
 
         auto* transformInterface = root->FindComponent<AzFramework::TransformComponent>();
         transformInterface->SetWorldTM(transform);
-        transformInterface->SetParent(GetEntityId());
 
         AZStd::string instanceName = AZStd::string::format("%s_%d", spawnableName.c_str(), m_counter++);
         for (AZ::Entity* entity : view)
