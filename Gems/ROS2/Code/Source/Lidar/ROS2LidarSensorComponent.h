@@ -44,6 +44,7 @@ namespace ROS2
     private:
         //////////////////////////////////////////////////////////////////////////
         void FrequencyTick();
+        void PublishRaycastResults(const RaycastResult& results);
 
         bool m_canRaycasterPublish = false;
         std::shared_ptr<rclcpp::Publisher<sensor_msgs::msg::PointCloud2>> m_pointCloudPublisher;
@@ -51,5 +52,7 @@ namespace ROS2
         LidarCore m_lidarCore;
 
         LidarId m_lidarRaycasterId;
+
+        AZStd::vector<AZ::u8> m_rosMessageData;
     };
 } // namespace ROS2
