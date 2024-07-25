@@ -16,35 +16,6 @@
 
 namespace ROS2::SDFormat
 {
-    namespace StatePublisherUtils
-    {
-        // Find all parent links in model and return pointers to their entities
-        AZ::Entity* GetParentLinkEntity(const sdf::Model& sdfModel, const CreatedEntitiesMap& createdEntities)
-        {
-            auto allLinks = Utils::GetAllLinks(sdfModel);
-
-            for (auto& link : allLinks)
-            {
-                AZStd::string linkName = link.first;
-                if (linkName.find_last_of(':') != std::string::npos)
-                {
-                    int nameBeginning = linkName.find_last_of(':') + 1;
-                    linkName = linkName.substr(nameBeginning, linkName.size() - nameBeginning);
-                }
-                if (!Utils::IsChildLink(sdfModel, linkName))
-                {
-                    auto entityId = HooksUtils::GetLinkEntityId(std::string(linkName.c_str(), linkName.size()), sdfModel, createdEntities);
-                    if (entityId.IsValid())
-                    {
-                        return AzToolsFramework::GetEntityById(entityId);
-                    }
-                }
-            }
-
-            return nullptr;
-        }
-    } // namespace StatePublisherUtils
-
     ModelPluginImporterHook ROS2ModelPluginHooks::ROS2JointStatePublisherModel()
     {
         ModelPluginImporterHook importerHook;
@@ -55,16 +26,14 @@ namespace ROS2::SDFormat
             [](AZ::Entity& entity, const sdf::Plugin& sdfPlugin, const sdf::Model& sdfModel, const CreatedEntitiesMap& createdEntities)
             -> ModelPluginImporterHook::ConvertPluginOutcome
         {
-            auto parentLinkEntity = StatePublisherUtils::GetParentLinkEntity(sdfModel, createdEntities);
-
             HooksUtils::PluginParams statePublisherParams = HooksUtils::GetPluginParams(sdfPlugin);
 
             // add components necessary for publishing to parent link
-            if (!HooksUtils::CreateComponent<JointsArticulationControllerComponent>(*parentLinkEntity))
+            if (!HooksUtils::CreateComponent<JointsArticulationControllerComponent>(entity))
             {
                 return AZ::Failure(AZStd::string("Failed to create ROS2 Joint State Publisher"));
             }
-            auto manipulationElement = HooksUtils::CreateComponent<JointsManipulationEditorComponent>(*parentLinkEntity);
+            auto manipulationElement = HooksUtils::CreateComponent<JointsManipulationEditorComponent>(entity);
             if (manipulationElement)
             {
                 auto manipulationComponent = dynamic_cast<JointsManipulationEditorComponent*>(manipulationElement);
