@@ -9,20 +9,26 @@
 #include "LidarSensorConfiguration.h"
 #include <AzCore/Serialization/EditContext.h>
 #include <AzCore/Serialization/EditContextConstants.inl>
+#include <AzCore/std/string/string.h>
+#include <AzCore/std/containers/vector.h>
 
 namespace ROS2
 {
+
     void LidarSensorConfiguration::Reflect(AZ::ReflectContext* context)
     {
+        LidarSegmentationClassConfiguration::Reflect(context);
         if (auto serializeContext = azrtti_cast<AZ::SerializeContext*>(context))
         {
             serializeContext->Class<LidarSensorConfiguration>()
-                ->Version(1)
+                ->Version(2)
                 ->Field("lidarModelName", &LidarSensorConfiguration::m_lidarModelName)
                 ->Field("lidarImplementation", &LidarSensorConfiguration::m_lidarSystem)
                 ->Field("LidarParameters", &LidarSensorConfiguration::m_lidarParameters)
                 ->Field("IgnoredLayerIndices", &LidarSensorConfiguration::m_ignoredCollisionLayers)
                 ->Field("ExcludedEntities", &LidarSensorConfiguration::m_excludedEntities)
+                ->Field("SegmentationClasses", &LidarSensorConfiguration::m_segmentationClasses)
+                ->Field("IsSegmentationEnabled", &LidarSensorConfiguration::m_isSegmentationEnabled)
                 ->Field("PointsAtMax", &LidarSensorConfiguration::m_addPointsAtMax);
 
             if (AZ::EditContext* ec = serializeContext->GetEditContext())
@@ -60,11 +66,83 @@ namespace ROS2
                     ->Attribute(AZ::Edit::Attributes::Visibility, &LidarSensorConfiguration::IsEntityExclusionVisible)
                     ->DataElement(
                         AZ::Edit::UIHandlers::Default,
+                        &LidarSensorConfiguration::m_isSegmentationEnabled,
+                        "Enable Segmentation",
+                        "Enable segmentation of point cloud")
+                    ->Attribute(AZ::Edit::Attributes::Visibility, &LidarSensorConfiguration::IsSegmentationConfigurationVisible)
+                    ->DataElement(
+                        AZ::Edit::UIHandlers::Default,
+                        &LidarSensorConfiguration::m_segmentationClasses,
+                        "Segmentation classes",
+                        "Segmentation classes and their colors.")
+                    ->Attribute(AZ::Edit::Attributes::AutoExpand, true)
+                    ->Attribute(AZ::Edit::Attributes::ContainerCanBeModified, true)
+                    ->Attribute(AZ::Edit::Attributes::Visibility,
+                                &LidarSensorConfiguration::IsSegmentationConfigurationVisible)
+                    ->Attribute(
+                        AZ::Edit::Attributes::DefaultAsset,
+                        AZStd::vector<LidarSegmentationClassConfiguration>(
+                        { LidarSegmentationClassConfiguration::UnknownClass(),
+                          LidarSegmentationClassConfiguration::GroundClass() }))
+                    ->Attribute(AZ::Edit::Attributes::ChangeNotify, &LidarSensorConfiguration::SegmentationClassesChangeNotify)
+                    ->DataElement(
+                        AZ::Edit::UIHandlers::Default,
                         &LidarSensorConfiguration::m_addPointsAtMax,
                         "Points at Max",
                         "If set true LiDAR will produce points at max range for free space")
                     ->Attribute(AZ::Edit::Attributes::Visibility, &LidarSensorConfiguration::IsMaxPointsConfigurationVisible);
             }
+        }
+    }
+
+    AZ::Crc32 LidarSensorConfiguration::SegmentationClassesChangeNotify()
+    {
+        bool unknown_present = false;
+        bool ground_present = false;
+        bool changed = false;
+        const LidarSegmentationClassConfiguration unknownClass = LidarSegmentationClassConfiguration::UnknownClass();
+        const LidarSegmentationClassConfiguration groundClass = LidarSegmentationClassConfiguration::GroundClass();
+        for (auto& m_segmentationClasse : m_segmentationClasses)
+        {
+            if (m_segmentationClasse.m_className == unknownClass.m_className)
+            {
+                if (m_segmentationClasse.m_classId != unknownClass.m_classId)
+                {
+                    m_segmentationClasse.m_classId = unknownClass.m_classId;
+                    changed = true;
+                }
+
+                unknown_present = true;
+            }
+            if (m_segmentationClasse.m_className == groundClass.m_className)
+            {
+                if (m_segmentationClasse.m_classId != groundClass.m_classId)
+                {
+                    m_segmentationClasse.m_classId = groundClass.m_classId;
+                    changed = true;
+                }
+                ground_present = true;
+            }
+        }
+        if (!unknown_present)
+        {
+            m_segmentationClasses.push_back({ unknownClass.m_className, unknownClass.m_classId, unknownClass.m_classColor });
+        }
+        if (!ground_present)
+        {
+            m_segmentationClasses.push_back({ groundClass.m_className, groundClass.m_classId, groundClass.m_classColor });
+        }
+        if (changed)
+        {
+            return AZ::Edit::PropertyRefreshLevels::ValuesOnly;
+        }
+        else if (!unknown_present || !ground_present)
+        {
+            return AZ::Edit::PropertyRefreshLevels::EntireTree;
+        }
+        else
+        {
+            return AZ::Edit::PropertyRefreshLevels::None;
         }
     }
 
@@ -120,6 +198,18 @@ namespace ROS2
         m_lidarParameters = LidarTemplateUtils::GetTemplate(m_lidarModel);
     }
 
+    AZStd::array<AZ::Color, LidarSensorConfiguration::maxClass> LidarSensorConfiguration::GenerateSegmentationColorsLookupTable() const {
+        AZStd::array<AZ::Color, maxClass> colors;
+        for (auto &color: colors) {
+            color = AZ::Colors::White;
+        }
+
+        for (const auto &[name, segment, color]: m_segmentationClasses) {
+            colors[segment] = color;
+        }
+        return colors;
+    }
+
     bool LidarSensorConfiguration::IsConfigurationVisible() const
     {
         return m_lidarModel == LidarTemplate::LidarModel::Custom3DLidar || m_lidarModel == LidarTemplate::LidarModel::Custom2DLidar;
@@ -138,6 +228,10 @@ namespace ROS2
     bool LidarSensorConfiguration::IsMaxPointsConfigurationVisible() const
     {
         return m_lidarSystemFeatures & LidarSystemFeatures::MaxRangePoints;
+    }
+
+    bool LidarSensorConfiguration::IsSegmentationConfigurationVisible() const {
+        return m_lidarSystemFeatures & LidarSystemFeatures::Segmentation;
     }
 
     AZ::Crc32 LidarSensorConfiguration::OnLidarModelSelected()
