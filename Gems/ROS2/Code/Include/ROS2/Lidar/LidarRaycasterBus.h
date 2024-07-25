@@ -97,6 +97,8 @@ namespace ROS2
     {
         AZStd::vector<AZ::Vector3> m_points;
         AZStd::vector<float> m_ranges;
+        AZStd::optional<AZStd::vector<int32_t>> m_ids;
+        AZStd::optional<AZStd::vector<AZ::u8>> m_classes;
     };
 
     //! Interface class that allows for communication with a single Lidar instance.
@@ -164,6 +166,14 @@ namespace ROS2
         virtual void ExcludeEntities([[maybe_unused]] const AZStd::vector<AZ::EntityId>& excludedEntities)
         {
             AZ_Assert(false, "This Lidar Implementation does not support entity exclusion!");
+        }
+
+        //! Configures segmentation classes.
+        //! @param classTags Set of pairs of class names and their corresponding class indices.
+        virtual void ConfigureSegmentationClasses(
+            [[maybe_unused]] const AZStd::unordered_set<AZStd::pair<AZStd::string, uint8_t>>& classTags)
+        {
+            AZ_Assert(false, "This Lidar Implementation does not support segmentation class configuration!");
         }
 
         //! Configures max range point addition.

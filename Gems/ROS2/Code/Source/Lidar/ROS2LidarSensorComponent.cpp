@@ -12,6 +12,7 @@
 #include <Lidar/ROS2LidarSensorComponent.h>
 #include <ROS2/Frame/ROS2FrameComponent.h>
 #include <ROS2/Utilities/ROS2Names.h>
+#include <AzCore/Jobs/Algorithms.h>
 
 namespace ROS2
 {
@@ -101,6 +102,11 @@ namespace ROS2
             const TopicConfiguration& publisherConfig = m_sensorConfiguration.m_publishersConfigurations[PointCloudType];
             AZStd::string fullTopic = ROS2Names::GetNamespacedName(GetNamespace(), publisherConfig.m_topic);
             m_pointCloudPublisher = ros2Node->create_publisher<sensor_msgs::msg::PointCloud2>(fullTopic.data(), publisherConfig.GetQoS());
+            if (m_lidarCore.m_lidarConfiguration.m_lidarSystemFeatures & LidarSystemFeatures::Segmentation && m_lidarCore.m_lidarConfiguration.m_isSegmentationEnabled) {
+                 m_segmentationClassesPublisher = ros2Node->create_publisher<vision_msgs::msg::LabelInfo>(
+                    ROS2Names::GetNamespacedName(GetNamespace(), "segmentation_classes").data(),
+                    publisherConfig.GetQoS());
+            }
         }
 
         StartSensor(
@@ -153,30 +159,133 @@ namespace ROS2
             point = inverseLidarTM.TransformPoint(point);
         }
 
-        auto* ros2Frame = GetEntity()->FindComponent<ROS2FrameComponent>();
+        AZStd::vector<AZStd::function<unsigned char*(unsigned char* pointBeginPointer, const size_t pointIdx)>> pointFillers;
+        auto* ros2Frame = Utils::GetGameOrEditorComponent<ROS2FrameComponent>(GetEntity());
         auto message = sensor_msgs::msg::PointCloud2();
+        const auto pointCount = lastScanResults.m_points.size();
         message.header.frame_id = ros2Frame->GetFrameID().data();
         message.header.stamp = ROS2Interface::Get()->GetROSTimestamp();
         message.height = 1;
-        message.width = lastScanResults.m_points.size();
-        message.point_step = sizeof(AZ::Vector3);
-        message.row_step = message.width * message.point_step;
+        message.width = pointCount;
+        message.point_step = 0;
 
-        AZStd::array<const char*, 3> point_field_names = { "x", "y", "z" };
-        for (int i = 0; i < point_field_names.size(); i++)
-        {
+        auto AddField = [&message](const char* name, const size_t fieldSize, const sensor_msgs::msg::PointField::_datatype_type datatype, const size_t count) {
             sensor_msgs::msg::PointField pf;
-            pf.name = point_field_names[i];
-            pf.offset = i * 4;
-            pf.datatype = sensor_msgs::msg::PointField::FLOAT32;
-            pf.count = 1;
+            pf.name = name;
+            pf.offset = message.point_step;
+            pf.datatype = datatype;
+            pf.count = count;
             message.fields.push_back(pf);
+            message.point_step += count * fieldSize;
+        };
+
+        auto HandleXYZ = [&AddField, &lastScanResults]() -> AZStd::function<unsigned char*(
+            unsigned char* pointBeginPointer,
+            const size_t pointIdx)>
+        {
+            for (auto&& pointFieldName : { "x", "y", "z" })
+            {
+                AddField(pointFieldName, sizeof(float), sensor_msgs::msg::PointField::FLOAT32, 1);
+            }
+
+            return [&lastScanResults](unsigned char* pointBeginPointer, const size_t pointIdx) -> unsigned char* {
+                memcpy(pointBeginPointer, &lastScanResults.m_points[pointIdx], 3 * sizeof(float));
+                pointBeginPointer += 3 * sizeof(float);
+                return pointBeginPointer;
+            };
+        };
+
+        auto HandleEntityId = [&AddField, &lastScanResults,this]() -> AZStd::optional<AZStd::function<unsigned char*(
+            unsigned char* pointBeginPointer,
+            const size_t pointIdx)>>
+        {
+            if (!(this->m_lidarCore.m_lidarConfiguration.m_isSegmentationEnabled && lastScanResults.m_ids.has_value() && lastScanResults.
+                m_ids.value().size() == lastScanResults.m_points.size()))
+            {
+                return {};
+            }
+
+            constexpr size_t fieldSize = sizeof(int32_t);
+            AddField("entity_id", fieldSize, sensor_msgs::msg::PointField::INT32, 1);
+
+            return { [&lastScanResults](unsigned char* pointBeginPointer, size_t pointIdx) -> unsigned char* {
+                memcpy(pointBeginPointer, &lastScanResults.m_ids.value()[pointIdx], fieldSize);
+                pointBeginPointer += fieldSize;
+                return pointBeginPointer;
+            } };
+        };
+
+        auto HandleClassAndClassColor = [&AddField, &lastScanResults,this](
+            ) -> AZStd::optional<AZStd::function<unsigned char*(unsigned char* pointBeginPointer, const size_t pointIdx)>>
+        {
+            if (!(this->m_lidarCore.m_lidarConfiguration.m_isSegmentationEnabled && lastScanResults.m_classes.has_value()))
+            {
+                return {};
+            }
+
+            constexpr size_t classIdSize = sizeof(uint8_t);
+            AddField("class_id", classIdSize, sensor_msgs::msg::PointField::UINT8, 1);
+            AddField("rgba", sizeof(uint32_t), sensor_msgs::msg::PointField::UINT32, 1);
+
+            AZStd::array<AZ::Color, LidarSensorConfiguration::maxClass> colorLookupTable = m_lidarCore.m_lidarConfiguration.
+                GenerateSegmentationColorsLookupTable();
+
+            return { [&lastScanResults,colorLookupTable](unsigned char* pointBeginPointer, const size_t pointIdx) -> unsigned char* {
+                memcpy(pointBeginPointer, &lastScanResults.m_classes.value()[pointIdx], classIdSize);
+                pointBeginPointer += classIdSize;
+                const AZ::Color color = colorLookupTable[lastScanResults.m_classes.value()[pointIdx]];
+                unsigned int rgbColor = 0;
+                for (int j = 0; j < 4; j++)
+                {
+                    float channelValue = color.GetElement(j);
+                    rgbColor |= static_cast<unsigned int>(channelValue * 255) << (j * 8);
+                }
+                memcpy(pointBeginPointer, &rgbColor, sizeof(uint32_t));
+                return pointBeginPointer;
+            } };
+        };
+
+        pointFillers.emplace_back(HandleXYZ());
+        if (auto pointFiller = HandleEntityId())
+        {
+            pointFillers.emplace_back(pointFiller.value());
+        }
+        if (auto pointFiller = HandleClassAndClassColor())
+        {
+            pointFillers.emplace_back(pointFiller.value());
         }
 
-        size_t sizeInBytes = lastScanResults.m_points.size() * sizeof(AZ::Vector3);
+        const auto sizeInBytes = pointCount * message.point_step;
         message.data.resize(sizeInBytes);
+        message.row_step = message.width * message.point_step;
         AZ_Assert(message.row_step * message.height == sizeInBytes, "Inconsistency in the size of point cloud data");
-        memcpy(message.data.data(), lastScanResults.m_points.data(), sizeInBytes);
+
+        parallel_for(
+            static_cast<size_t>(0),
+            pointCount,
+            [&message,&pointFillers](size_t i)
+            {
+                unsigned char* start = message.data.data() + static_cast<size_t>(message.point_step * i);
+                for (auto& filler : pointFillers)
+                {
+                    start = filler(start, i);
+                }
+            },
+            AZ::simple_partitioner(1 << 18));
+
         m_pointCloudPublisher->publish(message);
+
+        if (m_segmentationClassesPublisher)
+        {
+            vision_msgs::msg::LabelInfo segmentationClasses;
+            for (const auto& segmentation_class : m_lidarCore.m_lidarConfiguration.m_segmentationClasses)
+            {
+                vision_msgs::msg::VisionClass visionClass;
+                visionClass.class_id = segmentation_class.m_classId;
+                visionClass.class_name = segmentation_class.m_className.c_str();
+                segmentationClasses.class_map.push_back(visionClass);
+            }
+            m_segmentationClassesPublisher->publish(segmentationClasses);
+        }
     }
 } // namespace ROS2
