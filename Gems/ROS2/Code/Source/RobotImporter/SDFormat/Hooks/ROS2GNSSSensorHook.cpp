@@ -55,7 +55,10 @@ namespace ROS2::SDFormat
 
             // Create required components
             auto frameComponent = HooksUtils::CreateComponent<ROS2FrameEditorComponent>(entity);
-            HooksUtils::ConfigureFrame(frameComponent, gnssPluginParams);
+            if (frameComponent)
+            {
+                HooksUtils::ConfigureFrame(frameComponent, gnssPluginParams);
+            }
 
             if (HooksUtils::CreateComponent<ROS2GNSSSensorComponent>(entity, sensorConfiguration))
             {

@@ -102,7 +102,10 @@ namespace ROS2::SDFormat
 
             // Create required components
             auto frameComponent = HooksUtils::CreateComponent<ROS2FrameEditorComponent>(entity);
-            HooksUtils::ConfigureFrame(frameComponent, imuPluginParams);
+            if (frameComponent)
+            {
+                HooksUtils::ConfigureFrame(frameComponent, imuPluginParams);
+            }
             HooksUtils::CreateComponent<PhysX::EditorArticulationLinkComponent>(entity);
 
             // Create Imu component

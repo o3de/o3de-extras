@@ -119,7 +119,10 @@ namespace ROS2::SDFormat
 
             // Create required components
             auto frameComponent = HooksUtils::CreateComponent<ROS2FrameEditorComponent>(entity);
-            HooksUtils::ConfigureFrame(frameComponent, lidarPluginParams);
+            if (frameComponent)
+            {
+                HooksUtils::ConfigureFrame(frameComponent, lidarPluginParams);
+            }
 
             // Create Lidar component
             const auto lidarComponent = is2DLidar
