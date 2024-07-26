@@ -83,25 +83,11 @@ namespace ROS2::SDFormat
 
             if (sdfSensor.Type() != sdf::SensorType::DEPTH_CAMERA)
             { // COLOR_CAMERA and RGBD_CAMERA
-                AZStd::string imageColor = "camera_image_color", colorInfo = "camera_color_info";
+                AZStd::string imageColor = HooksUtils::PluginParser::LastOnPath(
+                    HooksUtils::ValueOfAny(cameraPluginParams, { "image_raw", "imageTopicName" }, "camera_image_color"));
 
-                if (cameraPluginParams.contains("image_raw"))
-                {
-                    imageColor = cameraPluginParams["image_raw"];
-                }
-                else if (cameraPluginParams.contains("imageTopicName"))
-                {
-                    imageColor = HooksUtils::PluginParser::LastOnPath(cameraPluginParams["imageTopicName"]);
-                }
-
-                if (cameraPluginParams.contains("camera_info"))
-                {
-                    colorInfo = cameraPluginParams["camera_info"];
-                }
-                else if (cameraPluginParams.contains("cameraInfoTopicName"))
-                {
-                    colorInfo = HooksUtils::PluginParser::LastOnPath(cameraPluginParams["cameraInfoTopicName"]);
-                }
+                AZStd::string colorInfo = HooksUtils::PluginParser::LastOnPath(
+                    HooksUtils::ValueOfAny(cameraPluginParams, { "camera_info", "cameraInfoTopicName" }, "camera_color_info"));
 
                 HooksUtils::AddTopicConfiguration(
                     sensorConfiguration, imageColor, CameraConstants::ImageMessageType, CameraConstants::ColorImageConfig);
@@ -110,25 +96,11 @@ namespace ROS2::SDFormat
             }
             if (cameraConfiguration.m_depthCamera)
             { // DEPTH_CAMERA and RGBD_CAMERA
-                AZStd::string imageDepth = "camera_image_depth", depthInfo = "depth_camera_info";
+                AZStd::string imageDepth = HooksUtils::PluginParser::LastOnPath(
+                    HooksUtils::ValueOfAny(cameraPluginParams, { "image_depth", "depthImageTopicName" }, "camera_image_depth"));
 
-                if (cameraPluginParams.contains("image_depth"))
-                {
-                    imageDepth = cameraPluginParams["image_depth"];
-                }
-                else if (cameraPluginParams.contains("depthImageTopicName"))
-                {
-                    imageDepth = HooksUtils::PluginParser::LastOnPath(cameraPluginParams["depthImageTopicName"]);
-                }
-
-                if (cameraPluginParams.contains("camera_info_depth"))
-                {
-                    depthInfo = cameraPluginParams["camera_info_depth"];
-                }
-                else if (cameraPluginParams.contains("depthImageCameraInfoTopicName"))
-                {
-                    depthInfo = HooksUtils::PluginParser::LastOnPath(cameraPluginParams["depthImageCameraInfoTopicName"]);
-                }
+                AZStd::string depthInfo = HooksUtils::PluginParser::LastOnPath(
+                    HooksUtils::ValueOfAny(cameraPluginParams, { "camera_info_depth", "depthImageCameraInfoTopicName" }, "depth_camera_info"));
 
                 HooksUtils::AddTopicConfiguration(
                     sensorConfiguration, imageDepth, CameraConstants::ImageMessageType, CameraConstants::DepthImageConfig);

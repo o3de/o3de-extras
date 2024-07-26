@@ -69,14 +69,9 @@ namespace ROS2::SDFormat
 
             // setting lidar topic
             AZStd::string messageTopic = is2DLidar ? "scan" : "pc";
-            if (lidarPluginParams.contains("out"))
-            {
-                messageTopic = lidarPluginParams["out"];
-            }
-            else if (lidarPluginParams.contains("topicName"))
-            {
-                messageTopic = HooksUtils::PluginParser::LastOnPath(lidarPluginParams["topicName"]);
-            }
+            messageTopic = HooksUtils::PluginParser::LastOnPath(
+                    HooksUtils::ValueOfAny(lidarPluginParams, { "topicName", "out" }, messageTopic));
+
             // in ros1, updateRate is an element of the plugin, not a sensor parameter
             if (lidarPluginParams.contains("updateRate"))
             {

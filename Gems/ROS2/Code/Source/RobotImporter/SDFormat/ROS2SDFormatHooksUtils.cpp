@@ -232,4 +232,17 @@ namespace ROS2::SDFormat
         return remappings;
     }
 
+    AZStd::string HooksUtils::ValueOfAny(
+        const HooksUtils::PluginParams& pluginParams, AZStd::vector<AZStd::string> paramNameVec, AZStd::string defaultVal)
+    {
+        for (auto paramName : paramNameVec)
+        {
+            if (pluginParams.contains(paramName))
+            {
+                return pluginParams.at(paramName);
+            }
+        }
+        return defaultVal;
+    }
+
 } // namespace ROS2::SDFormat

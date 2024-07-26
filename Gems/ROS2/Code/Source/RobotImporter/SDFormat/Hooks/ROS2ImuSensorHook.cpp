@@ -87,16 +87,9 @@ namespace ROS2::SDFormat
             HooksUtils::PluginParams imuPluginParams =
                 imuPlugins.empty() ? HooksUtils::PluginParams() : HooksUtils::GetPluginParams(imuPlugins[0]);
 
-            // setting lidar topic
-            AZStd::string messageTopic = "imu";
-            if (imuPluginParams.contains("out"))
-            {
-                messageTopic = imuPluginParams["out"];
-            }
-            else if (imuPluginParams.contains("topicName"))
-            {
-                messageTopic = HooksUtils::PluginParser::LastOnPath(imuPluginParams["topicName"]);
-            }
+            // setting imu topic
+            AZStd::string messageTopic = HooksUtils::PluginParser::LastOnPath(
+                    HooksUtils::ValueOfAny(imuPluginParams, { "topicName", "out" }, "imu"));
 
             HooksUtils::AddTopicConfiguration(sensorConfiguration, messageTopic, messageType, messageType);
 

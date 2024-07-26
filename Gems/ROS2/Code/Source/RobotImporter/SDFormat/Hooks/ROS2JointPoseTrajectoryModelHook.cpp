@@ -50,15 +50,8 @@ namespace ROS2::SDFormat
                 manipulationComponent->SetPublisherConfiguration(publisherConfiguration);
             }
 
-            AZStd::string trajectoryActionName("arm_controller/follow_joint_trajectory");
-            if (poseTrajectoryParams.contains("set_joint_trajectory"))
-            {
-                trajectoryActionName = HooksUtils::PluginParser::LastOnPath(poseTrajectoryParams["set_joint_trajectory"]);
-            }
-            else if (poseTrajectoryParams.contains("topicName"))
-            {
-                trajectoryActionName = HooksUtils::PluginParser::LastOnPath(poseTrajectoryParams["topicName"]);
-            }
+            AZStd::string trajectoryActionName = HooksUtils::PluginParser::LastOnPath(
+                    HooksUtils::ValueOfAny(poseTrajectoryParams, { "set_joint_trajectory", "topicName" }, "arm_controller/follow_joint_trajectory"));
 
             if (HooksUtils::CreateComponent<JointsTrajectoryComponent>(entity, trajectoryActionName))
             {

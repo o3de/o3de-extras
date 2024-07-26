@@ -41,15 +41,8 @@ namespace ROS2::SDFormat
                 gnssPlugins.empty() ? HooksUtils::PluginParams() : HooksUtils::GetPluginParams(gnssPlugins[0]);
 
             // setting gnss topic
-            AZStd::string messageTopic = "gnss";
-            if (gnssPluginParams.contains("out"))
-            {
-                messageTopic = gnssPluginParams["out"];
-            }
-            else if (gnssPluginParams.contains("topicName"))
-            {
-                messageTopic = HooksUtils::PluginParser::LastOnPath(gnssPluginParams["topicName"]);
-            }
+            AZStd::string messageTopic = HooksUtils::PluginParser::LastOnPath(
+                    HooksUtils::ValueOfAny(gnssPluginParams, { "topicName", "out" }, "gnss"));
 
             HooksUtils::AddTopicConfiguration(sensorConfiguration, messageTopic, messageType, messageType);
 

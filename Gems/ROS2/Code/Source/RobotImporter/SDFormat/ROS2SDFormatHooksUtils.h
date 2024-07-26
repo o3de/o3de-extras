@@ -140,5 +140,12 @@ namespace ROS2::SDFormat
         //! @return a map of parameters present in plugin.
         PluginParams GetPluginParams(const sdf::Plugin& plugin);
 
+        //! Find value of any of specified plugin parameters.
+        //! @param pluginParams map of plugin parameters
+        //! @param paramNameVec vector of specified parameter names
+        //! @param defaultVal value to be return when none of the parameters are present in the map
+        //! @return value on any of the specified parameters of defaultVal when none were present
+        AZStd::string ValueOfAny(const PluginParams& pluginParams, AZStd::vector<AZStd::string> paramNameVec, AZStd::string defaultVal = "");
+
     } // namespace HooksUtils
 } // namespace ROS2::SDFormat
