@@ -33,7 +33,7 @@ namespace ROS2::SDFormat
             auto manipulationElement = HooksUtils::CreateComponent<JointsManipulationEditorComponent>(entity);
             if (manipulationElement)
             {
-                //auto manipulationComponent = dynamic_cast<JointsManipulationEditorComponent*>(manipulationElement);
+                auto manipulationComponent = dynamic_cast<JointsManipulationEditorComponent*>(manipulationElement);
                 PublisherConfiguration publisherConfiguration;
                 if (poseTrajectoryParams.contains("update_rate"))
                 {
@@ -47,6 +47,7 @@ namespace ROS2::SDFormat
                 }
                 publisherConfiguration.m_topicConfiguration.m_type = "sensor_msgs::msg::JointState";
                 publisherConfiguration.m_topicConfiguration.m_topic = "joint_states";
+                manipulationComponent->SetPublisherConfiguration(publisherConfiguration);
             }
 
             AZStd::string trajectoryActionName("arm_controller/follow_joint_trajectory");

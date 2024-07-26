@@ -21,7 +21,7 @@ namespace ROS2::SDFormat
     {
         ModelPluginImporterHook importerHook;
         importerHook.m_pluginNames = AZStd::unordered_set<AZStd::string>{ "libgazebo_ros_joint_state_publisher.so" };
-        importerHook.m_supportedPluginParams = AZStd::unordered_set<AZStd::string>{ ">update_rate", ">ros>namespace", ">ros>argument", ">ros>remapping" };
+        importerHook.m_supportedPluginParams = AZStd::unordered_set<AZStd::string>{ ">update_rate", ">ros>argument", ">ros>remapping" };
 
         importerHook.m_sdfPluginToComponentCallback =
             [](AZ::Entity& entity, const sdf::Plugin& sdfPlugin, const sdf::Model& sdfModel, const CreatedEntitiesMap& createdEntities)
@@ -36,7 +36,7 @@ namespace ROS2::SDFormat
             auto manipulationElement = HooksUtils::CreateComponent<JointsManipulationEditorComponent>(entity);
             if (manipulationElement)
             {
-                //auto manipulationComponent = dynamic_cast<JointsManipulationEditorComponent*>(manipulationElement);
+                auto manipulationComponent = dynamic_cast<JointsManipulationEditorComponent*>(manipulationElement);
                 PublisherConfiguration publisherConfiguration;
                 if (statePublisherParams.contains("update_rate"))
                 {
@@ -51,7 +51,7 @@ namespace ROS2::SDFormat
                     messageTopic = HooksUtils::PluginParser::LastOnPath(statePublisherParams["joint_states"]);
                 }
                 publisherConfiguration.m_topicConfiguration.m_topic = messageTopic;
-                // manipulationComponent->SetPublisherConfiguration(publisherConfiguration);
+                manipulationComponent->SetPublisherConfiguration(publisherConfiguration);
                 return AZ::Success();
             }
             else
