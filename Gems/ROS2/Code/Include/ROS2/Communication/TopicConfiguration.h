@@ -21,6 +21,12 @@ namespace ROS2
         AZ_TYPE_INFO(TopicConfiguration, "{7535D58F-5284-4657-A799-1F69D3F5AA42}");
         static void Reflect(AZ::ReflectContext* context);
 
+        TopicConfiguration() = default;
+        TopicConfiguration(const QoS& qos)
+        {
+            m_qos = qos;
+        }
+
         AZStd::string m_type = "std_msgs::msg::Empty"; //!< descriptive topic type for identification.
         AZStd::string m_topic = "default_topic"; //!< Topic to publish. Final topic will have a namespace added.
 
@@ -29,12 +35,6 @@ namespace ROS2
         rclcpp::QoS GetQoS() const
         {
             return m_qos.GetQoS();
-        }
-
-        //! Set above-mentioned topic QoS.
-        void SetQos(rclcpp::QoS qos)
-        {
-            m_qos = qos;
         }
 
     private:
