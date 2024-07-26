@@ -46,19 +46,6 @@ namespace ROS2::SDFormat
         return AZ::EntityId();
     }
 
-    AZ::EntityId HooksUtils::GetLinkEntityId(
-        const std::string& linkName, const sdf::Model& sdfModel, const CreatedEntitiesMap& createdEntities)
-    {
-        const auto linkPtr = sdfModel.LinkByName(linkName);
-        if (linkPtr != nullptr && createdEntities.contains(linkPtr))
-        {
-            const auto& entityResult = createdEntities.at(linkPtr);
-            return entityResult.IsSuccess() ? entityResult.GetValue() : AZ::EntityId();
-        }
-
-        return AZ::EntityId();
-    }
-
     void HooksUtils::EnableMotor(const AZ::EntityId& entityId)
     {
         AZ::Entity* entity = nullptr;

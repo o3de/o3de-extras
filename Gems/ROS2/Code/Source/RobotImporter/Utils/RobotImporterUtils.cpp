@@ -281,23 +281,6 @@ namespace ROS2::Utils
         return joints;
     }
 
-    bool IsChildLink(const sdf::Model& sdfModel, AZStd::string_view linkName, bool gatherNestedModelJoints)
-    {
-        bool isChild = false;
-        auto GatherJointsWhereLinkIsChild = [&isChild, linkName](const sdf::Joint& joint, const ModelStack& modelStack)
-        {
-            if (AZStd::string_view jointChildName{ joint.ChildName().c_str(), joint.ChildName().size() }; jointChildName == linkName)
-            {
-                isChild = true;
-            }
-
-            return true;
-        };
-
-        VisitJoints(sdfModel, GatherJointsWhereLinkIsChild, gatherNestedModelJoints);
-        return isChild;
-    }
-
     AZStd::vector<const sdf::Joint*> GetJointsForChildLink(
         const sdf::Model& sdfModel, AZStd::string_view linkName, bool gatherNestedModelJoints)
     {
