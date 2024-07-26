@@ -10,6 +10,7 @@
 #include <AzCore/std/string/string.h>
 #include <Manipulation/Controllers/JointsArticulationControllerComponent.h>
 #include <Manipulation/JointsManipulationEditorComponent.h>
+#include <ROS2/Frame/ROS2FrameEditorComponent.h>
 #include <RobotImporter/SDFormat/ROS2ModelPluginHooks.h>
 #include <RobotImporter/SDFormat/ROS2SDFormatHooksUtils.h>
 #include <RobotImporter/Utils/RobotImporterUtils.h>
@@ -28,15 +29,14 @@ namespace ROS2::SDFormat
         {
             HooksUtils::PluginParams statePublisherParams = HooksUtils::GetPluginParams(sdfPlugin);
 
-            // add components necessary for publishing to parent link
-            if (!HooksUtils::CreateComponent<JointsArticulationControllerComponent>(entity))
-            {
-                return AZ::Failure(AZStd::string("Failed to create ROS2 Joint State Publisher"));
-            }
+            // add required components
+            HooksUtils::CreateComponent<JointsArticulationControllerComponent>(entity);
+            HooksUtils::CreateComponent<ROS2FrameEditorComponent>(entity);
+
             auto manipulationElement = HooksUtils::CreateComponent<JointsManipulationEditorComponent>(entity);
             if (manipulationElement)
             {
-                auto manipulationComponent = dynamic_cast<JointsManipulationEditorComponent*>(manipulationElement);
+                //auto manipulationComponent = dynamic_cast<JointsManipulationEditorComponent*>(manipulationElement);
                 PublisherConfiguration publisherConfiguration;
                 if (statePublisherParams.contains("update_rate"))
                 {
@@ -51,7 +51,7 @@ namespace ROS2::SDFormat
                     messageTopic = HooksUtils::PluginParser::LastOnPath(statePublisherParams["joint_states"]);
                 }
                 publisherConfiguration.m_topicConfiguration.m_topic = messageTopic;
-                manipulationComponent->SetPublisherConfiguration(publisherConfiguration);
+                // manipulationComponent->SetPublisherConfiguration(publisherConfiguration);
                 return AZ::Success();
             }
             else
