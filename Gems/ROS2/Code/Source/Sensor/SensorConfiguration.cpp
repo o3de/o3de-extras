@@ -43,7 +43,8 @@ namespace ROS2
                     ->Attribute(AZ::Edit::Attributes::AutoExpand, true)
                     ->Attribute(AZ::Edit::Attributes::Visibility, AZ::Edit::PropertyVisibility::ShowChildrenOnly)
                     ->Attribute(AZ::Edit::Attributes::ContainerCanBeModified, false)
-                    ->ElementAttribute(AZ::Edit::Attributes::AutoExpand, true);
+                    ->ElementAttribute(AZ::Edit::Attributes::AutoExpand, true)
+                    ->ElementAttribute(AZ::Edit::Attributes::NameLabelOverride, "Publisher configuration");
             }
         }
     }
