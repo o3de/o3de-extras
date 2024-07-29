@@ -109,9 +109,14 @@ namespace ROS2::SDFormat
                 AZ_Warning("PluginParser", false, "Encountered empty parameter value while parsing URDF/SDF plugin.");
                 return "";
             }
-            if (path.contains('/'))
+            else if (path.contains('/'))
             {
                 int startPos = path.find_last_of('/') + 1;
+                if (startPos >= path.size())
+                {
+                    AZ_Warning("PluginParser", false, "Encountered empty parameter value while parsing URDF/SDF plugin.");
+                    return "";
+                }
                 path = path.substr(startPos, path.size() - startPos);
             }
             return path;
@@ -121,8 +126,13 @@ namespace ROS2::SDFormat
         void ParseRegularContent(const sdf::Element& content, HooksUtils::PluginParams& remappings)
         {
             std::string contentName = content.GetName();
-            AZStd::string key(contentName.c_str(), contentName.size());
             std::string contentValue = content.GetValue()->GetAsString();
+            if (contentName.empty() || contentValue.empty())
+            {
+                AZ_Warning("PluginParser", false, "Encountered empty parameter value while parsing URDF/SDF plugin.");
+                return;
+            }
+            AZStd::string key(contentName.c_str(), contentName.size());
             AZStd::string val(contentValue.c_str(), contentValue.size());
             remappings[key] = val;
         }
@@ -161,7 +171,14 @@ namespace ROS2::SDFormat
 
             // get previous name of the topic
             contentValue = contentValue.substr(0, contentValue.find_first_of(':'));
-            int startKey = contentValue.find_last_of('/') + 1;
+
+            int startKey = contentValue.find_last_of('/') != std::string::npos ? contentValue.find_last_of('/') + 1 : 0;
+            if (startKey >= contentValue.size())
+            {
+                AZ_Warning("PluginParser", false, "Encountered invalid (empty) remapping while parsing URDF/SDF plugin.");
+                return;
+            }
+
             std::string prevTopic = contentValue.substr(startKey, contentValue.size() - startKey);
 
             // insert data into the map - previous topic name as key and new topic name as val

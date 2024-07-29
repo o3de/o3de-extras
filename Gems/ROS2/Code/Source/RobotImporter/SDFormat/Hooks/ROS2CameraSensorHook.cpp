@@ -22,10 +22,14 @@ namespace ROS2::SDFormat
         SensorImporterHook importerHook;
         importerHook.m_sensorTypes =
             AZStd::unordered_set<sdf::SensorType>{ sdf::SensorType::CAMERA, sdf::SensorType::DEPTH_CAMERA, sdf::SensorType::RGBD_CAMERA };
-        importerHook.m_supportedSensorParams = AZStd::unordered_set<AZStd::string>{
-            ">pose",           ">update_rate", ">camera>horizontal_fov", ">camera>image>width", ">camera>image>height", ">camera>clip>near",
-            ">camera>clip>far"
-        };
+        importerHook.m_supportedSensorParams = AZStd::unordered_set<AZStd::string>{ ">pose",
+                                                                                    ">update_rate",
+                                                                                    ">camera>horizontal_fov",
+                                                                                    ">camera>image>width",
+                                                                                    ">camera>image>height",
+                                                                                    ">camera>clip>near",
+                                                                                    ">camera>clip>far",
+                                                                                    ">visualize" };
         importerHook.m_pluginNames = AZStd::unordered_set<AZStd::string>{ "libgazebo_ros_camera.so",
                                                                           "libgazebo_ros_depth_camera.so",
                                                                           "libgazebo_ros_openni_kinect.so" };
@@ -71,6 +75,7 @@ namespace ROS2::SDFormat
             const auto cameraPlugins = sdfSensor.Plugins();
             HooksUtils::PluginParams cameraPluginParams =
                 cameraPlugins.empty() ? HooksUtils::PluginParams() : HooksUtils::GetPluginParams(cameraPlugins[0]);
+            const sdf::ElementPtr element = sdfSensor.Element();
 
             // add depth_camera for plugins kinnect and depth_camera
             // check only the 1st plugin as it's the only one considered afterwards
@@ -99,13 +104,17 @@ namespace ROS2::SDFormat
                 AZStd::string imageDepth = HooksUtils::PluginParser::LastOnPath(
                     HooksUtils::ValueOfAny(cameraPluginParams, { "image_depth", "depthImageTopicName" }, "camera_image_depth"));
 
-                AZStd::string depthInfo = HooksUtils::PluginParser::LastOnPath(
-                    HooksUtils::ValueOfAny(cameraPluginParams, { "camera_info_depth", "depthImageCameraInfoTopicName" }, "depth_camera_info"));
+                AZStd::string depthInfo = HooksUtils::PluginParser::LastOnPath(HooksUtils::ValueOfAny(
+                    cameraPluginParams, { "camera_info_depth", "depthImageCameraInfoTopicName" }, "depth_camera_info"));
 
                 HooksUtils::AddTopicConfiguration(
                     sensorConfiguration, imageDepth, CameraConstants::ImageMessageType, CameraConstants::DepthImageConfig);
                 HooksUtils::AddTopicConfiguration(
                     sensorConfiguration, depthInfo, CameraConstants::CameraInfoMessageType, CameraConstants::DepthInfoConfig);
+            }
+            if (element->HasElement("visualize"))
+            {
+                sensorConfiguration.m_visualize = element->Get<bool>("visualize");
             }
 
             // Create required components

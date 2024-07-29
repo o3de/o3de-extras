@@ -20,7 +20,7 @@ namespace ROS2::SDFormat
     {
         SensorImporterHook importerHook;
         importerHook.m_sensorTypes = AZStd::unordered_set<sdf::SensorType>{ sdf::SensorType::NAVSAT };
-        importerHook.m_supportedSensorParams = AZStd::unordered_set<AZStd::string>{ ">pose", ">update_rate" };
+        importerHook.m_supportedSensorParams = AZStd::unordered_set<AZStd::string>{ ">pose", ">update_rate", ">topic", ">visualize" };
         importerHook.m_pluginNames = AZStd::unordered_set<AZStd::string>{ "libgazebo_ros_gps_sensor.so" };
         importerHook.m_supportedPluginParams = AZStd::unordered_set<AZStd::string>{ ">ros>remapping", ">ros>argument", ">ros>frame_name",
                                                                                     ">ros>namespace", ">frameName",    ">robotNamespace" };
@@ -39,10 +39,20 @@ namespace ROS2::SDFormat
             const auto gnssPlugins = sdfSensor.Plugins();
             HooksUtils::PluginParams gnssPluginParams =
                 gnssPlugins.empty() ? HooksUtils::PluginParams() : HooksUtils::GetPluginParams(gnssPlugins[0]);
+            const sdf::ElementPtr element = sdfSensor.Element();
 
             // setting gnss topic
-            AZStd::string messageTopic = HooksUtils::PluginParser::LastOnPath(
-                    HooksUtils::ValueOfAny(gnssPluginParams, { "topicName", "out" }, "gnss"));
+            AZStd::string messageTopic =
+                HooksUtils::PluginParser::LastOnPath(HooksUtils::ValueOfAny(gnssPluginParams, { "topicName", "out" }, "gnss"));
+            if (element->HasElement("topic"))
+            {
+                std::string topicParam = element->Get<std::string>("topic");
+                messageTopic = AZStd::string(topicParam.c_str(), topicParam.size());
+            }
+            if (element->HasElement("visualize"))
+            {
+                sensorConfiguration.m_visualize = element->Get<bool>("visualize");
+            }
 
             HooksUtils::AddTopicConfiguration(sensorConfiguration, messageTopic, messageType, messageType);
 

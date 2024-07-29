@@ -34,7 +34,9 @@ namespace ROS2::SDFormat
                                                                                     ">imu>linear_acceleration>y>noise>mean",
                                                                                     ">imu>linear_acceleration>y>noise>stddev",
                                                                                     ">imu>linear_acceleration>z>noise>mean",
-                                                                                    ">imu>linear_acceleration>z>noise>stddev" };
+                                                                                    ">imu>linear_acceleration>z>noise>stddev",
+                                                                                    ">topic",
+                                                                                    ">visualize" };
         importerHook.m_pluginNames = AZStd::unordered_set<AZStd::string>{ "libgazebo_ros_imu_sensor.so" };
         importerHook.m_supportedPluginParams =
             AZStd::unordered_set<AZStd::string>{ ">topicName",     ">ros>remapping", ">ros>argument",  ">ros>frame_name",
@@ -86,10 +88,20 @@ namespace ROS2::SDFormat
             const auto imuPlugins = sdfSensor.Plugins();
             HooksUtils::PluginParams imuPluginParams =
                 imuPlugins.empty() ? HooksUtils::PluginParams() : HooksUtils::GetPluginParams(imuPlugins[0]);
+            const sdf::ElementPtr element = sdfSensor.Element();
 
             // setting imu topic
-            AZStd::string messageTopic = HooksUtils::PluginParser::LastOnPath(
-                    HooksUtils::ValueOfAny(imuPluginParams, { "topicName", "out" }, "imu"));
+            AZStd::string messageTopic =
+                HooksUtils::PluginParser::LastOnPath(HooksUtils::ValueOfAny(imuPluginParams, { "topicName", "out" }, "imu"));
+            if (element->HasElement("topic"))
+            {
+                std::string topicParam = element->Get<std::string>("topic");
+                messageTopic = AZStd::string(topicParam.c_str(), topicParam.size());
+            }
+            if (element->HasElement("visualize"))
+            {
+                sensorConfiguration.m_visualize = element->Get<bool>("visualize");
+            }
 
             HooksUtils::AddTopicConfiguration(sensorConfiguration, messageTopic, messageType, messageType);
 

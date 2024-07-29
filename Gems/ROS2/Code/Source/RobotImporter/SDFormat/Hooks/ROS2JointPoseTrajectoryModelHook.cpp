@@ -8,8 +8,8 @@
 
 #include <Manipulation/Controllers/JointsArticulationControllerComponent.h>
 #include <Manipulation/JointsManipulationEditorComponent.h>
-#include <ROS2/Frame/ROS2FrameEditorComponent.h>
 #include <Manipulation/JointsTrajectoryComponent.h>
+#include <ROS2/Frame/ROS2FrameEditorComponent.h>
 #include <RobotImporter/SDFormat/ROS2ModelPluginHooks.h>
 #include <RobotImporter/SDFormat/ROS2SDFormatHooksUtils.h>
 
@@ -19,7 +19,8 @@ namespace ROS2::SDFormat
     {
         ModelPluginImporterHook importerHook;
         importerHook.m_pluginNames = AZStd::unordered_set<AZStd::string>{ "libgazebo_ros_joint_pose_trajectory.so" };
-        importerHook.m_supportedPluginParams = AZStd::unordered_set<AZStd::string>{ ">topicName", ">ros>remapping", ">ros>argument", ">updateRate", ">update_rate" };
+        importerHook.m_supportedPluginParams =
+            AZStd::unordered_set<AZStd::string>{ ">topicName", ">ros>remapping", ">ros>argument", ">updateRate", ">update_rate" };
 
         importerHook.m_sdfPluginToComponentCallback =
             [](AZ::Entity& entity, const sdf::Plugin& sdfPlugin, const sdf::Model& sdfModel, const CreatedEntitiesMap& createdEntities)
@@ -50,8 +51,8 @@ namespace ROS2::SDFormat
                 manipulationComponent->SetPublisherConfiguration(publisherConfiguration);
             }
 
-            AZStd::string trajectoryActionName = HooksUtils::PluginParser::LastOnPath(
-                    HooksUtils::ValueOfAny(poseTrajectoryParams, { "set_joint_trajectory", "topicName" }, "arm_controller/follow_joint_trajectory"));
+            AZStd::string trajectoryActionName = HooksUtils::PluginParser::LastOnPath(HooksUtils::ValueOfAny(
+                poseTrajectoryParams, { "set_joint_trajectory", "topicName" }, "arm_controller/follow_joint_trajectory"));
 
             if (HooksUtils::CreateComponent<JointsTrajectoryComponent>(entity, trajectoryActionName))
             {
@@ -61,8 +62,6 @@ namespace ROS2::SDFormat
             {
                 return AZ::Failure(AZStd::string("Failed to create ROS2 Joint Pose Trajectory"));
             }
-            
-
         };
 
         return importerHook;
