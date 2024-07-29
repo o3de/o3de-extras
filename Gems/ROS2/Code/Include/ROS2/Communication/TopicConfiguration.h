@@ -22,9 +22,9 @@ namespace ROS2
         static void Reflect(AZ::ReflectContext* context);
 
         TopicConfiguration() = default;
-        TopicConfiguration(const QoS& qos)
+        TopicConfiguration(const QoS& qos) :
+            m_qos(qos)
         {
-            m_qos = qos;
         }
 
         AZStd::string m_type = "std_msgs::msg::Empty"; //!< descriptive topic type for identification.
