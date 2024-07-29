@@ -1,0 +1,591 @@
+{
+    "ContainerEntity": {
+        "Id": "ContainerEntity",
+        "Name": "Player",
+        "Components": {
+            "Component_[10254217550286296355]": {
+                "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
+                "Id": 10254217550286296355,
+                "Parent Entity": ""
+            },
+            "Component_[13086311059094224002]": {
+                "$type": "EditorEntitySortComponent",
+                "Id": 13086311059094224002,
+                "Child Entity Order": [
+                    "Entity_[79122787930156]"
+                ]
+            },
+            "Component_[14225502674289323976]": {
+                "$type": "EditorOnlyEntityComponent",
+                "Id": 14225502674289323976
+            },
+            "Component_[15750276199834488007]": {
+                "$type": "EditorInspectorComponent",
+                "Id": 15750276199834488007
+            },
+            "Component_[16696873040101846091]": {
+                "$type": "EditorPendingCompositionComponent",
+                "Id": 16696873040101846091
+            },
+            "Component_[17414489336828493639]": {
+                "$type": "EditorPrefabComponent",
+                "Id": 17414489336828493639
+            },
+            "Component_[453846173343743716]": {
+                "$type": "EditorEntityIconComponent",
+                "Id": 453846173343743716
+            },
+            "Component_[6603596367842682577]": {
+                "$type": "EditorLockComponent",
+                "Id": 6603596367842682577
+            },
+            "Component_[7885978563416506242]": {
+                "$type": "EditorDisabledCompositionComponent",
+                "Id": 7885978563416506242
+            },
+            "Component_[9595765441943917410]": {
+                "$type": "EditorVisibilityComponent",
+                "Id": 9595765441943917410
+            }
+        }
+    },
+    "Entities": {
+        "Entity_[79122787930156]": {
+            "Id": "Entity_[79122787930156]",
+            "Name": "Player",
+            "Components": {
+                "Component_[10752091759919038477]": {
+                    "$type": "EditorInspectorComponent",
+                    "Id": 10752091759919038477,
+                    "ComponentOrderEntryArray": [
+                        {
+                            "ComponentId": 7672425355040569134
+                        },
+                        {
+                            "ComponentId": 9435594912102554786,
+                            "SortIndex": 1
+                        },
+                        {
+                            "ComponentId": 5984669395829237154,
+                            "SortIndex": 2
+                        },
+                        {
+                            "ComponentId": 14650897891489430105,
+                            "SortIndex": 3
+                        },
+                        {
+                            "ComponentId": 5329091026602047821,
+                            "SortIndex": 4
+                        },
+                        {
+                            "ComponentId": 9102179976553247749,
+                            "SortIndex": 5
+                        },
+                        {
+                            "ComponentId": 4186588317358117667,
+                            "SortIndex": 6
+                        },
+                        {
+                            "ComponentId": 17172141579586985375,
+                            "SortIndex": 7
+                        },
+                        {
+                            "ComponentId": 2596368806843971783,
+                            "SortIndex": 8
+                        },
+                        {
+                            "ComponentId": 13362124592556856876,
+                            "SortIndex": 9
+                        },
+                        {
+                            "ComponentId": 5307034937237072373,
+                            "SortIndex": 10
+                        },
+                        {
+                            "ComponentId": 10227101122471384676,
+                            "SortIndex": 11
+                        },
+                        {
+                            "ComponentId": 6252367322126438780,
+                            "SortIndex": 12
+                        },
+                        {
+                            "ComponentId": 5250619091527933772,
+                            "SortIndex": 13
+                        },
+                        {
+                            "ComponentId": 8068531680783328727,
+                            "SortIndex": 14
+                        },
+                        {
+                            "ComponentId": 3651951460255600248,
+                            "SortIndex": 15
+                        },
+                        {
+                            "ComponentId": 10949504725335319493,
+                            "SortIndex": 16
+                        },
+                        {
+                            "ComponentId": 11573337348143243531,
+                            "SortIndex": 17
+                        },
+                        {
+                            "ComponentId": 8136603864068018120,
+                            "SortIndex": 18
+                        },
+                        {
+                            "ComponentId": 3191544009700536030,
+                            "SortIndex": 19
+                        },
+                        {
+                            "ComponentId": 1673121106304051384,
+                            "SortIndex": 20
+                        },
+                        {
+                            "ComponentId": 11996978980717063697,
+                            "SortIndex": 21
+                        },
+                        {
+                            "ComponentId": 4526255451914182701,
+                            "SortIndex": 22
+                        },
+                        {
+                            "ComponentId": 14925070260434397195,
+                            "SortIndex": 23
+                        },
+                        {
+                            "ComponentId": 7398251875150394377,
+                            "SortIndex": 24
+                        },
+                        {
+                            "ComponentId": 5387953310772448141,
+                            "SortIndex": 25
+                        },
+                        {
+                            "ComponentId": 4325721995654492049,
+                            "SortIndex": 26
+                        },
+                        {
+                            "ComponentId": 85365725485717905,
+                            "SortIndex": 27
+                        }
+                    ]
+                },
+                "Component_[13362124592556856876]": {
+                    "$type": "GenericComponentWrapper",
+                    "Id": 13362124592556856876,
+                    "m_template": {
+                        "$type": "Multiplayer::NetworkHitVolumesComponent"
+                    }
+                },
+                "Component_[14925070260434397195]": {
+                    "$type": "EditorCharacterControllerComponent",
+                    "Id": 14925070260434397195,
+                    "Configuration": {
+                        "entityId": "",
+                        "CollisionGroupId": {
+                            "GroupId": "{FE20AF05-2602-45C6-BF4D-FA497B971061}"
+                        },
+                        "MaterialSlots": {
+                            "Slots": [
+                                {
+                                    "Name": "Entire object"
+                                }
+                            ]
+                        },
+                        "MaximumSlopeAngle": 45.0,
+                        "StepHeight": 0.30000001192092896,
+                        "ColliderTag": "Player",
+                        "ApplyMoveOnPhysicsTick": false,
+                        "SlopeBehaviour": 1,
+                        "ScaleCoeff": 0.8999999761581421
+                    },
+                    "ShapeConfig": {
+                        "Capsule": {
+                            "Height": 1.7999999523162842,
+                            "Radius": 0.30000001192092896
+                        }
+                    }
+                },
+                "Component_[16870214955717717317]": {
+                    "$type": "EditorEntitySortComponent",
+                    "Id": 16870214955717717317
+                },
+                "Component_[17019293261405199280]": {
+                    "$type": "EditorLockComponent",
+                    "Id": 17019293261405199280
+                },
+                "Component_[17057124452563381137]": {
+                    "$type": "EditorOnlyEntityComponent",
+                    "Id": 17057124452563381137
+                },
+                "Component_[17993245065130330388]": {
+                    "$type": "EditorDisabledCompositionComponent",
+                    "Id": 17993245065130330388
+                },
+                "Component_[2596368806843971783]": {
+                    "$type": "GenericComponentWrapper",
+                    "Id": 2596368806843971783,
+                    "m_template": {
+                        "$type": "NetBindComponent"
+                    }
+                },
+                "Component_[3191544009700536030]": {
+                    "$type": "GenericComponentWrapper",
+                    "Id": 3191544009700536030,
+                    "m_template": {
+                        "$type": "Multiplayer::LocalPredictionPlayerInputComponent"
+                    }
+                },
+                "Component_[3873700008294568875]": {
+                    "$type": "EditorPendingCompositionComponent",
+                    "Id": 3873700008294568875
+                },
+                "Component_[4186588317358117667]": {
+                    "$type": "EditorAnimGraphComponent",
+                    "Id": 4186588317358117667,
+                    "AnimGraphAsset": {
+                        "assetId": {
+                            "guid": "{59B59DC1-F828-5B5A-AC21-4A7C9A2D9AA0}"
+                        },
+                        "assetHint": "assets/characters/mixamo/ybot/ybot.animgraph"
+                    },
+                    "MotionSetAsset": {
+                        "assetId": {
+                            "guid": "{D7D77C3C-EB84-572A-BB00-2E049B04F3AC}"
+                        },
+                        "assetHint": "assets/characters/mixamo/ybot/ybot.motionset"
+                    },
+                    "ActiveMotionSetName": "YBotMotionSet",
+                    "ParameterDefaults": {
+                        "Parameters": [
+                            {
+                                "$type": "AzFramework::ScriptPropertyBoolean",
+                                "id": 1084884419,
+                                "name": "aiming",
+                                "value": true
+                            },
+                            {
+                                "$type": "AzFramework::ScriptPropertyNumber",
+                                "id": 4070320611,
+                                "name": "movement_speed"
+                            },
+                            {
+                                "$type": "AzFramework::ScriptPropertyBoolean",
+                                "id": 2356543930,
+                                "name": "jumping"
+                            },
+                            {
+                                "$type": "AzFramework::ScriptPropertyBoolean",
+                                "id": 60754182,
+                                "name": "attacking"
+                            },
+                            {
+                                "$type": "AzFramework::ScriptPropertyBoolean",
+                                "id": 70061904,
+                                "name": "crouching"
+                            },
+                            {
+                                "$type": "AzFramework::ScriptPropertyBoolean",
+                                "id": 4097764052,
+                                "name": "falling"
+                            },
+                            {
+                                "$type": "AzFramework::ScriptPropertyBoolean",
+                                "id": 4013608469,
+                                "name": "landing"
+                            },
+                            {
+                                "$type": "AzFramework::ScriptPropertyNumber",
+                                "id": 23391511,
+                                "name": "death_state_index"
+                            },
+                            {
+                                "$type": "AzFramework::ScriptPropertyNumber",
+                                "id": 3656193794,
+                                "name": "hit_direction_index"
+                            },
+                            {
+                                "$type": "AzFramework::ScriptPropertyBoolean",
+                                "id": 713582873,
+                                "name": "stunned"
+                            },
+                            {
+                                "$type": "AzFramework::ScriptPropertyBoolean",
+                                "id": 1523721793,
+                                "name": "hit"
+                            }
+                        ]
+                    }
+                },
+                "Component_[4325721995654492049]": {
+                    "$type": "EditorCharacterGameplayComponent",
+                    "Id": 4325721995654492049,
+                    "GameplayConfig": {
+                        "GravityMultiplier": 2.0,
+                        "GroundDetectionBoxHeight": 0.05000000074505806
+                    }
+                },
+                "Component_[5329091026602047821]": {
+                    "$type": "EditorActorComponent",
+                    "Id": 5329091026602047821,
+                    "ActorAsset": {
+                        "assetId": {
+                            "guid": "{1AB9B51C-07A9-5A49-98E7-FE8DBDABBF95}",
+                            "subId": 196688939
+                        },
+                        "loadBehavior": "QueueLoad",
+                        "assetHint": "assets/characters/mixamo/ybot/ybot.actor"
+                    },
+                    "AttachmentTarget": ""
+                },
+                "Component_[5984669395829237154]": {
+                    "$type": "EditorCommentComponent",
+                    "Id": 5984669395829237154,
+                    "Configuration": "Do not add an InputBinding component to this prefab, only add it to your level or load the bindings some other way.  Multiple InputBinding components will lead to input events getting sent per-component and cause input spam."
+                },
+                "Component_[6252367322126438780]": {
+                    "$type": "GenericComponentWrapper",
+                    "Id": 6252367322126438780,
+                    "m_template": {
+                        "$type": "Multiplayer::NetworkTransformComponent"
+                    }
+                },
+                "Component_[7398251875150394377]": {
+                    "$type": "GenericComponentWrapper",
+                    "Id": 7398251875150394377,
+                    "m_template": {
+                        "$type": "Multiplayer::NetworkCharacterComponent"
+                    }
+                },
+                "Component_[7411749707748254874]": {
+                    "$type": "EditorVisibilityComponent",
+                    "Id": 7411749707748254874
+                },
+                "Component_[7478691996646188034]": {
+                    "$type": "EditorEntityIconComponent",
+                    "Id": 7478691996646188034
+                },
+                "Component_[7672425355040569134]": {
+                    "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
+                    "Id": 7672425355040569134,
+                    "Parent Entity": "ContainerEntity"
+                },
+                "Component_[9102179976553247749]": {
+                    "$type": "EditorMaterialComponent",
+                    "Id": 9102179976553247749,
+                    "Controller": {
+                        "Configuration": {
+                            "materials": [
+                                {
+                                    "Key": {
+                                        "materialSlotStableId": 1599611083
+                                    },
+                                    "Value": {
+                                        "MaterialAsset": {
+                                            "assetId": {
+                                                "guid": "{BAB59DFB-1326-5D07-B552-9CB59A7F6A61}"
+                                            },
+                                            "assetHint": "mixamo/ybot/skins/ybot_body_base.azmaterial"
+                                        }
+                                    }
+                                },
+                                {
+                                    "Key": {
+                                        "materialSlotStableId": 2106362150
+                                    },
+                                    "Value": {
+                                        "MaterialAsset": {
+                                            "assetId": {
+                                                "guid": "{BAB59DFB-1326-5D07-B552-9CB59A7F6A61}"
+                                            },
+                                            "assetHint": "mixamo/ybot/skins/ybot_body_base.azmaterial"
+                                        }
+                                    }
+                                },
+                                {
+                                    "Key": {
+                                        "materialSlotStableId": 2810781130
+                                    },
+                                    "Value": {
+                                        "MaterialAsset": {
+                                            "assetId": {
+                                                "guid": "{BAB59DFB-1326-5D07-B552-9CB59A7F6A61}"
+                                            },
+                                            "assetHint": "mixamo/ybot/skins/ybot_body_base.azmaterial"
+                                        }
+                                    }
+                                },
+                                {
+                                    "Key": {
+                                        "materialSlotStableId": 2821398715
+                                    },
+                                    "Value": {
+                                        "MaterialAsset": {
+                                            "assetId": {
+                                                "guid": "{BAB59DFB-1326-5D07-B552-9CB59A7F6A61}"
+                                            },
+                                            "assetHint": "mixamo/ybot/skins/ybot_body_base.azmaterial"
+                                        }
+                                    }
+                                },
+                                {
+                                    "Key": {
+                                        "materialSlotStableId": 2825923043
+                                    },
+                                    "Value": {
+                                        "MaterialAsset": {
+                                            "assetId": {
+                                                "guid": "{37CE36DF-D4DF-5653-B137-B2A17069B7B8}"
+                                            },
+                                            "assetHint": "mixamo/ybot/skins/ybot_head_base.azmaterial"
+                                        }
+                                    }
+                                },
+                                {
+                                    "Key": {
+                                        "materialSlotStableId": 3204802744
+                                    },
+                                    "Value": {
+                                        "MaterialAsset": {
+                                            "assetId": {
+                                                "guid": "{BAB59DFB-1326-5D07-B552-9CB59A7F6A61}"
+                                            },
+                                            "assetHint": "mixamo/ybot/skins/ybot_body_base.azmaterial"
+                                        }
+                                    }
+                                },
+                                {
+                                    "Key": {
+                                        "materialSlotStableId": 3562450033
+                                    },
+                                    "Value": {
+                                        "MaterialAsset": {
+                                            "assetId": {
+                                                "guid": "{98AC2D11-901B-5559-8FBF-B5D48EDA6150}"
+                                            },
+                                            "assetHint": "mixamo/ybot/skins/ybot_joints_base.azmaterial"
+                                        }
+                                    }
+                                },
+                                {
+                                    "Key": {
+                                        "materialSlotStableId": 3617808779
+                                    },
+                                    "Value": {
+                                        "MaterialAsset": {
+                                            "assetId": {
+                                                "guid": "{227BF31B-A8D6-5B51-80B7-B8FC37E9C781}"
+                                            },
+                                            "assetHint": "mixamo/ybot/skins/mixamo_logo.azmaterial"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                },
+                "${Name}::AttachPlayerWeaponComponent": {
+                    "$type": "GenericComponentWrapper",
+                    "Id": 5697568613687465938,
+                    "m_template": {
+                        "$type": "${Name}::AttachPlayerWeaponComponent",
+                        "WeaponAsset": {
+                            "assetId": {
+                                "guid": "{4B358BE5-26BC-5462-AA8A-38F9AF5D2D0B}",
+                                "subId": 992460137
+                            },
+                            "assetHint": "assets/prefabs/laser_pistol.spawnable"
+                        },
+                        "Bone To Attach To": "mixamorig:RightHand",
+                        "Transform": {
+                            "Translation": [
+                                -0.05999999865889549,
+                                0.03999999910593033,
+                                0.17000000178813934
+                            ],
+                            "Rotation": [
+                                0.0,
+                                0.0,
+                                0.0,
+                                1.0
+                            ],
+                            "Scale": 1.0
+                        }
+                    }
+                },
+                "${Name}::NetworkAnimationComponent": {
+                    "$type": "GenericComponentWrapper",
+                    "Id": 8962712398833988332,
+                    "m_template": {
+                        "$type": "${Name}::NetworkAnimationComponent",
+                        "MovementDirectionParamName": "movement_direction",
+                        "MovementSpeedParamName": "movement_speed",
+                        "AimTargetParamName": "aim_target",
+                        "CrouchParamName": "crouching",
+                        "AimingParamName": "aiming",
+                        "ShootParamName": "attacking",
+                        "JumpParamName": "jumping",
+                        "FallParamName": "falling",
+                        "LandParamName": "landing",
+                        "HitParamName": "hit",
+                        "DeathParamName": "death_state_index"
+                    }
+                },
+                "${Name}::NetworkPlayerMovementComponent": {
+                    "$type": "GenericComponentWrapper",
+                    "Id": 14371235535355148386,
+                    "m_template": {
+                        "$type": "${Name}::NetworkPlayerMovementComponent",
+                        "SprintSpeed": 6.0,
+                        "MaxJumpHeight": 1.625
+                    }
+                },
+                "${Name}::NetworkSimplePlayerCameraComponent": {
+                    "$type": "GenericComponentWrapper",
+                    "Id": 15298635055737856859,
+                    "m_template": {
+                        "$type": "${Name}::NetworkSimplePlayerCameraComponent"
+                    }
+                },
+                "${Name}::NetworkWeaponsComponent": {
+                    "$type": "GenericComponentWrapper",
+                    "Id": 7684530501405980471,
+                    "m_template": {
+                        "$type": "${Name}::NetworkWeaponsComponent",
+                        "WeaponParams": [
+                            {
+                                "WeaponType": 1,
+                                "WeaponMaxAimDistance": 50.0,
+                                "CooldownTimeMs": 250,
+                                "GatherParams": {
+                                    "CastDistance": 2000.0,
+                                    "TravelSpeed": 200.0
+                                },
+                                "DamageEffect": {
+                                    "HitMagnitude": 10.0
+                                }
+                            },
+                            {
+                                "WeaponMaxAimDistance": 25.0,
+                                "CooldownTimeMs": 2000,
+                                "GatherParams": {
+                                    "CastDistance": 100.0,
+                                    "TravelSpeed": 50.0,
+                                    "Multihit": true
+                                },
+                                "DamageEffect": {
+                                    "HitMagnitude": 50.0
+                                }
+                            }
+                        ],
+                        "FireBoneNames": [
+                            "mixamorig:RightHand",
+                            "mixamorig:RightHand"
+                        ]
+                    }
+                }
+            }
+        }
+    }
+}

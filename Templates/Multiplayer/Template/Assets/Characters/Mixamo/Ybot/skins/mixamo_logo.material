@@ -1,0 +1,12 @@
+{
+    "materialType": "@gemroot:Atom_Feature_Common@/Assets/Materials/Types/StandardPBR.materialtype",
+    "materialTypeVersion": 5,
+    "propertyValues": {
+        "baseColor.textureBlendMode": "Lerp",
+        "baseColor.textureMap": "../textures/mixamo_logo_basecolor.png",
+        "opacity.alphaSource": "Split",
+        "opacity.mode": "Cutout",
+        "opacity.textureMap": "../textures/mixamo_logo_alpha.png",
+        "roughness.factor": 0.5
+    }
+}
