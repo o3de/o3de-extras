@@ -28,31 +28,29 @@ namespace ROS2::SDFormat
         {
             HooksUtils::PluginParams poseTrajectoryParams = HooksUtils::GetPluginParams(sdfPlugin);
 
+            // configure JointsManipulationEditorComponent publisher
+            PublisherConfiguration publisherConfiguration;
+            if (poseTrajectoryParams.contains("update_rate"))
+            {
+                std::string freqFromPlugin(poseTrajectoryParams["update_rate"].begin(), poseTrajectoryParams["update_rate"].size());
+                publisherConfiguration.m_frequency = std::stof(freqFromPlugin);
+            }
+            else if (poseTrajectoryParams.contains("updateRate"))
+            {
+                std::string freqFromPlugin(poseTrajectoryParams["updateRate"].begin(), poseTrajectoryParams["updateRate"].size());
+                publisherConfiguration.m_frequency = std::stof(freqFromPlugin);
+            }
+            publisherConfiguration.m_topicConfiguration.m_type = "sensor_msgs::msg::JointState";
+            publisherConfiguration.m_topicConfiguration.m_topic = "joint_states";
+
+            // configure trajectory action name
+            AZStd::string trajectoryActionName = HooksUtils::PluginParser::LastOnPath(HooksUtils::ValueOfAny(
+                poseTrajectoryParams, { "set_joint_trajectory", "topicName" }, "arm_controller/follow_joint_trajectory"));
+
             // add required components
             HooksUtils::CreateComponent<JointsArticulationControllerComponent>(entity);
             HooksUtils::CreateComponent<ROS2FrameEditorComponent>(entity);
-            auto manipulationElement = HooksUtils::CreateComponent<JointsManipulationEditorComponent>(entity);
-            if (manipulationElement)
-            {
-                auto manipulationComponent = dynamic_cast<JointsManipulationEditorComponent*>(manipulationElement);
-                PublisherConfiguration publisherConfiguration;
-                if (poseTrajectoryParams.contains("update_rate"))
-                {
-                    std::string freqFromPlugin(poseTrajectoryParams["update_rate"].begin(), poseTrajectoryParams["update_rate"].size());
-                    publisherConfiguration.m_frequency = std::stof(freqFromPlugin);
-                }
-                else if (poseTrajectoryParams.contains("updateRate"))
-                {
-                    std::string freqFromPlugin(poseTrajectoryParams["updateRate"].begin(), poseTrajectoryParams["updateRate"].size());
-                    publisherConfiguration.m_frequency = std::stof(freqFromPlugin);
-                }
-                publisherConfiguration.m_topicConfiguration.m_type = "sensor_msgs::msg::JointState";
-                publisherConfiguration.m_topicConfiguration.m_topic = "joint_states";
-                manipulationComponent->SetPublisherConfiguration(publisherConfiguration);
-            }
-
-            AZStd::string trajectoryActionName = HooksUtils::PluginParser::LastOnPath(HooksUtils::ValueOfAny(
-                poseTrajectoryParams, { "set_joint_trajectory", "topicName" }, "arm_controller/follow_joint_trajectory"));
+            HooksUtils::CreateComponent<JointsManipulationEditorComponent>(entity, publisherConfiguration);
 
             if (HooksUtils::CreateComponent<JointsTrajectoryComponent>(entity, trajectoryActionName))
             {

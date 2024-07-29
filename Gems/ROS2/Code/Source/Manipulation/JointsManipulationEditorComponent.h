@@ -22,6 +22,10 @@ namespace ROS2
     {
     public:
         JointsManipulationEditorComponent();
+        JointsManipulationEditorComponent(const PublisherConfiguration& publisherConfiguration)
+        {
+            m_jointStatePublisherConfiguration = publisherConfiguration;
+        }
         ~JointsManipulationEditorComponent() = default;
         AZ_EDITOR_COMPONENT(JointsManipulationEditorComponent, "{BF2F77FD-92FB-4730-92C7-DDEE54F508BF}");
 
@@ -32,13 +36,6 @@ namespace ROS2
 
         // AzToolsFramework::Components::EditorComponentBase overrides
         void BuildGameEntity(AZ::Entity* gameEntity) override;
-
-        //! publisherConfiguration seter
-        //! @param publisherConfiguration configuration to be set
-        void SetPublisherConfiguration(const PublisherConfiguration& publisherConfiguration)
-        {
-            m_jointStatePublisherConfiguration = publisherConfiguration;
-        }
 
     private:
         AZ::Crc32 ReloadJoints();

@@ -29,29 +29,28 @@ namespace ROS2::SDFormat
         {
             HooksUtils::PluginParams statePublisherParams = HooksUtils::GetPluginParams(sdfPlugin);
 
+            // configure publisher
+            PublisherConfiguration publisherConfiguration;
+            if (statePublisherParams.contains("update_rate"))
+            {
+                std::string freqFromPlugin(statePublisherParams["update_rate"].begin(), statePublisherParams["update_rate"].size());
+                publisherConfiguration.m_frequency = std::stof(freqFromPlugin);
+            }
+
+            publisherConfiguration.m_topicConfiguration.m_type = "sensor_msgs::msg::JointState";
+            AZStd::string messageTopic = "joint_states";
+            if (statePublisherParams.contains("joint_states"))
+            {
+                messageTopic = HooksUtils::PluginParser::LastOnPath(statePublisherParams["joint_states"]);
+            }
+            publisherConfiguration.m_topicConfiguration.m_topic = messageTopic;
+
             // add required components
             HooksUtils::CreateComponent<JointsArticulationControllerComponent>(entity);
             HooksUtils::CreateComponent<ROS2FrameEditorComponent>(entity);
 
-            auto manipulationElement = HooksUtils::CreateComponent<JointsManipulationEditorComponent>(entity);
-            if (manipulationElement)
+            if (HooksUtils::CreateComponent<JointsManipulationEditorComponent>(entity, publisherConfiguration))
             {
-                auto manipulationComponent = dynamic_cast<JointsManipulationEditorComponent*>(manipulationElement);
-                PublisherConfiguration publisherConfiguration;
-                if (statePublisherParams.contains("update_rate"))
-                {
-                    std::string freqFromPlugin(statePublisherParams["update_rate"].begin(), statePublisherParams["update_rate"].size());
-                    publisherConfiguration.m_frequency = std::stof(freqFromPlugin);
-                }
-
-                publisherConfiguration.m_topicConfiguration.m_type = "sensor_msgs::msg::JointState";
-                AZStd::string messageTopic = "joint_states";
-                if (statePublisherParams.contains("joint_states"))
-                {
-                    messageTopic = HooksUtils::PluginParser::LastOnPath(statePublisherParams["joint_states"]);
-                }
-                publisherConfiguration.m_topicConfiguration.m_topic = messageTopic;
-                manipulationComponent->SetPublisherConfiguration(publisherConfiguration);
                 return AZ::Success();
             }
             else
