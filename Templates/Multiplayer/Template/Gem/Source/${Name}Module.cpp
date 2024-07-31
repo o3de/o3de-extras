@@ -2,7 +2,7 @@
 #include <AzCore/Memory/SystemAllocator.h>
 #include <AzCore/Module/Module.h>
 
-#include "${Name}SystemComponent.h"
+#include "${SanitizedCppName}SystemComponent.h"
 
 #include <${SanitizedCppName}/${SanitizedCppName}TypeIds.h>
 #include <Components/AttachPlayerWeaponComponent.h>
