@@ -77,7 +77,7 @@ namespace ROS2
         RaycastResultFlags requestedFlags = RaycastResultFlags::Ranges | RaycastResultFlags::Points;
         if (m_lidarConfiguration.m_lidarSystemFeatures & LidarSystemFeatures::Intensity)
         {
-            requestedFlags |= RaycastResultFlags::Intensity;
+            requestedFlags |= RaycastResultFlags::Intensities;
         }
 
         LidarRaycasterRequestBus::Event(m_lidarRaycasterId, &LidarRaycasterRequestBus::Events::ConfigureRaycastResultFlags, requestedFlags);

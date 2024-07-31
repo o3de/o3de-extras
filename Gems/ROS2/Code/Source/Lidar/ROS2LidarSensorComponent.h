@@ -52,7 +52,5 @@ namespace ROS2
         LidarCore m_lidarCore;
 
         LidarId m_lidarRaycasterId;
-
-        AZStd::vector<AZ::u8> m_rosMessageData;
     };
 } // namespace ROS2
