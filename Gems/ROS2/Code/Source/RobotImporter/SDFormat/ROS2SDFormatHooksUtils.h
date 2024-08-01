@@ -146,7 +146,7 @@ namespace ROS2::SDFormat
         //! @param defaultVal value to be returned when none of the parameters are present in the map
         //! @return value on any of the specified parameters or defaultVal when none were present
         AZStd::string ValueOfAny(
-            const PluginParams& pluginParams, AZStd::vector<AZStd::string> paramNameVec, AZStd::string defaultVal = "");
+            const PluginParams& pluginParams, AZStd::vector<AZStd::string> paramNames, const AZStd::string& defaultVal = "");
 
     } // namespace HooksUtils
 } // namespace ROS2::SDFormat

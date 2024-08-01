@@ -21,29 +21,30 @@ namespace ROS2::SDFormat
     {
         SensorImporterHook importerHook;
         importerHook.m_sensorTypes = AZStd::unordered_set<sdf::SensorType>{ sdf::SensorType::LIDAR, sdf::SensorType::GPU_LIDAR };
-        importerHook.m_supportedSensorParams = AZStd::unordered_set<AZStd::string>{ ">pose",
-                                                                                    ">update_rate",
-                                                                                    ">lidar>scan>horizontal>samples",
-                                                                                    ">lidar>scan>horizontal>min_angle",
-                                                                                    ">lidar>scan>horizontal>max_angle",
-                                                                                    ">lidar>scan>vertical>samples",
-                                                                                    ">lidar>scan>vertical>min_angle",
-                                                                                    ">lidar>scan>vertical>max_angle",
-                                                                                    ">lidar>range>min",
-                                                                                    ">lidar>range>max",
-                                                                                    // Gazebo-classic
-                                                                                    ">ray>scan>horizontal>resolution",
-                                                                                    ">ray>scan>horizontal>samples",
-                                                                                    ">ray>scan>horizontal>min_angle",
-                                                                                    ">ray>scan>horizontal>max_angle",
-                                                                                    ">ray>scan>vertical>samples",
-                                                                                    ">ray>scan>vertical>min_angle",
-                                                                                    ">ray>scan>vertical>max_angle",
-                                                                                    ">ray>scan>vertical>resolution",
-                                                                                    ">ray>range>min",
-                                                                                    ">ray>range>max",
-                                                                                    ">topic",
-                                                                                    ">visualize" };
+        importerHook.m_supportedSensorParams = AZStd::unordered_set<AZStd::string>{
+            ">pose",
+            ">update_rate",
+            ">lidar>scan>horizontal>samples",
+            ">lidar>scan>horizontal>min_angle",
+            ">lidar>scan>horizontal>max_angle",
+            ">lidar>scan>vertical>samples",
+            ">lidar>scan>vertical>min_angle",
+            ">lidar>scan>vertical>max_angle",
+            ">lidar>range>min",
+            ">lidar>range>max",
+            // Gazebo-classic
+            ">ray>scan>horizontal>resolution",
+            ">ray>scan>horizontal>samples",
+            ">ray>scan>horizontal>min_angle",
+            ">ray>scan>horizontal>max_angle",
+            ">ray>scan>vertical>samples",
+            ">ray>scan>vertical>min_angle",
+            ">ray>scan>vertical>max_angle",
+            ">ray>scan>vertical>resolution",
+            ">ray>range>min",
+            ">ray>range>max",
+            ">topic",
+            ">visualize" };
         importerHook.m_pluginNames = AZStd::unordered_set<AZStd::string>{ "libgazebo_ros_ray_sensor.so", "libgazebo_ros_laser.so" };
         importerHook.m_supportedPluginParams =
             AZStd::unordered_set<AZStd::string>{ ">topicName",      ">ros>remapping", ">ros>argument", ">updateRate",

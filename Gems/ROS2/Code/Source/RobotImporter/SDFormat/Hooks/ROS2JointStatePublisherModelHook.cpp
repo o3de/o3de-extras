@@ -33,7 +33,7 @@ namespace ROS2::SDFormat
             PublisherConfiguration publisherConfiguration;
             if (statePublisherParams.contains("update_rate"))
             {
-                std::string freqFromPlugin(statePublisherParams["update_rate"].begin(), statePublisherParams["update_rate"].size());
+                const std::string freqFromPlugin(statePublisherParams["update_rate"].begin(), statePublisherParams["update_rate"].size());
                 publisherConfiguration.m_frequency = std::stof(freqFromPlugin);
             }
 

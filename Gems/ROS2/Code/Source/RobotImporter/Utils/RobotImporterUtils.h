@@ -90,7 +90,7 @@ namespace ROS2::Utils
     AZStd::unordered_map<AZStd::string, const sdf::Joint*> GetAllJoints(const sdf::Model& sdfModel, bool gatherNestedModelJoints = false);
 
     //! Retrieve all joints from URDF/SDF in which the specified link is a child in a sdf::Joint.
-    //! @param sdfModel Model object of SDF document corresponding to the <model> tag. It's used to query joints
+    //! @param sdfModel Model object of SDF document corresponding to the <model> tag. It is used to query joints
     //! @param linkName Name of link which to query in joint objects ChildName()
     //! @param gatherNestedModelJoints When true recurses to any nested <model> tags of the Model object and also gathers their joints as
     //! well

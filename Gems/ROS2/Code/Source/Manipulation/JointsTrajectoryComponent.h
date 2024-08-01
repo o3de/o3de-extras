@@ -26,7 +26,7 @@ namespace ROS2
     {
     public:
         JointsTrajectoryComponent() = default;
-        JointsTrajectoryComponent(AZStd::string followTrajectoryActionName);
+        JointsTrajectoryComponent(const AZStd::string& followTrajectoryActionName);
         ~JointsTrajectoryComponent() = default;
         AZ_COMPONENT(JointsTrajectoryComponent, "{429DE04C-6B6D-4B2D-9D6C-3681F23CBF90}", AZ::Component);
 

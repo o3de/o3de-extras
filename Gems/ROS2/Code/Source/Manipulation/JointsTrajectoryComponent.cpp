@@ -17,7 +17,7 @@
 
 namespace ROS2
 {
-    JointsTrajectoryComponent::JointsTrajectoryComponent(AZStd::string followTrajectoryActionName)
+    JointsTrajectoryComponent::JointsTrajectoryComponent(const AZStd::string& followTrajectoryActionName)
         : m_followTrajectoryActionName(followTrajectoryActionName)
     {
     }

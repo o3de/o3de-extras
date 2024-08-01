@@ -250,9 +250,9 @@ namespace ROS2::SDFormat
     }
 
     AZStd::string HooksUtils::ValueOfAny(
-        const HooksUtils::PluginParams& pluginParams, AZStd::vector<AZStd::string> paramNameVec, AZStd::string defaultVal)
+        const HooksUtils::PluginParams& pluginParams, const AZStd::vector<AZStd::string>& paramNames, const AZStd::string& defaultVal)
     {
-        for (auto paramName : paramNameVec)
+        for (const auto &paramName : paramNames)
         {
             if (pluginParams.contains(paramName))
             {
