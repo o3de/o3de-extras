@@ -965,16 +965,16 @@ namespace ROS2::Utils::SDFormat
             const sdf::ElementPtr& elementPtr,
             const std::string& info,
             const std::string& prefix,
-            const AZStd::unordered_set<AZStd::string>& supportedMap)>
+            const AZStd::unordered_set<AZStd::string>& supportedSet)>
             elementVisitor = [&](const sdf::ElementPtr& elementPtr,
                                  const std::string& info,
                                  const std::string& prefix,
-                                 const AZStd::unordered_set<AZStd::string>& supportedMap) -> void
+                                 const AZStd::unordered_set<AZStd::string>& supportedSet) -> void
         {
             auto childPtr = elementPtr->GetFirstElement();
 
             AZStd::string prefixAz(prefix.c_str(), prefix.size());
-            if (!childPtr && !prefixAz.empty() && !supportedMap.contains(prefixAz))
+            if (!childPtr && !prefixAz.empty() && !supportedSet.contains(prefixAz))
             {
                 prefixAz.insert(0, AZStd::string(info.c_str(), info.size()));
                 unsupportedParams.push_back(prefixAz);
@@ -991,7 +991,7 @@ namespace ROS2::Utils::SDFormat
                 currentName.append(">");
                 currentName.append(childPtr->GetName());
 
-                elementVisitor(childPtr, info, currentName, supportedMap);
+                elementVisitor(childPtr, info, currentName, supportedSet);
                 childPtr = childPtr->GetNextElement();
             }
         };

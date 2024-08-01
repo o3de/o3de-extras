@@ -77,15 +77,6 @@ namespace ROS2::SDFormat
                 cameraPlugins.empty() ? HooksUtils::PluginParams() : HooksUtils::GetPluginParams(cameraPlugins[0]);
             const sdf::ElementPtr element = sdfSensor.Element();
 
-            // add depth_camera for plugins kinnect and depth_camera
-            // check only the 1st plugin as it's the only one considered afterwards
-            if (!cameraPlugins.empty() &&
-                (cameraPlugins[0].Filename() == "libgazebo_ros_depth_camera.so" ||
-                 cameraPlugins[0].Filename() == "libgazebo_ros_openni_kinect.so"))
-            {
-                cameraConfiguration.m_depthCamera = true;
-            }
-
             if (sdfSensor.Type() != sdf::SensorType::DEPTH_CAMERA)
             { // COLOR_CAMERA and RGBD_CAMERA
                 const AZStd::string imageColor = HooksUtils::PluginParser::LastOnPath(
@@ -99,7 +90,7 @@ namespace ROS2::SDFormat
                 HooksUtils::AddTopicConfiguration(
                     sensorConfiguration, colorInfo, CameraConstants::CameraInfoMessageType, CameraConstants::ColorInfoConfig);
             }
-            if (cameraConfiguration.m_depthCamera)
+            if (sdfSensor.Type() != sdf::SensorType::CAMERA)
             { // DEPTH_CAMERA and RGBD_CAMERA
                 const AZStd::string imageDepth = HooksUtils::PluginParser::LastOnPath(
                     HooksUtils::ValueOfAny(cameraPluginParams, { "image_depth", "depthImageTopicName" }, "camera_image_depth"));
