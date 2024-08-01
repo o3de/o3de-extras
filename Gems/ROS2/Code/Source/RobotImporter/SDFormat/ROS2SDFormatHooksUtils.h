@@ -119,7 +119,7 @@ namespace ROS2::SDFormat
             //! Especially useful when parsing ROS2 remappings.
             //! @param path string representing the path
             //! @return last element on the path
-            AZStd::string LastOnPath(AZStd::string path);
+            AZStd::string LastOnPath(const AZStd::string& path);
         } // namespace PluginParser
 
         using PluginParams = AZStd::unordered_map<AZStd::string, AZStd::string>;
@@ -138,7 +138,7 @@ namespace ROS2::SDFormat
 
         //! Find value of any of specified plugin parameters.
         //! @param pluginParams map of plugin parameters
-        //! @param paramNameVec vector of specified parameter names
+        //! @param paramNames vector of specified parameter names
         //! @param defaultVal value to be returned when none of the parameters are present in the map
         //! @return value on any of the specified parameters or defaultVal when none were present
         AZStd::string ValueOfAny(

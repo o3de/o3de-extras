@@ -102,24 +102,9 @@ namespace ROS2::SDFormat
 
     namespace HooksUtils::PluginParser
     {
-        AZStd::string LastOnPath(AZStd::string path)
+        AZStd::string LastOnPath(const AZStd::string& path)
         {
-            if (path.empty())
-            {
-                AZ_Warning("PluginParser", false, "Encountered empty parameter value while parsing URDF/SDF plugin.");
-                return "";
-            }
-            else if (path.contains('/'))
-            {
-                int startPos = path.find_last_of('/') + 1;
-                if (startPos >= path.size())
-                {
-                    AZ_Warning("PluginParser", false, "Encountered empty parameter value while parsing URDF/SDF plugin.");
-                    return "";
-                }
-                path = path.substr(startPos, path.size() - startPos);
-            }
-            return path;
+            return AZ::IO::PathView(path).Filename().String();
         }
 
         // Inserts name (key) and value (val) of given parameter to map.
@@ -146,7 +131,7 @@ namespace ROS2::SDFormat
                 ParseRegularContent(rosContent, remappings);
                 return;
             }
-            std::string contentValue = rosContent.GetValue()->GetAsString();
+            AZStd::string contentValue = rosContent.GetValue()->GetAsString().c_str();
 
             if (contentValue.find_last_of('=') == std::string::npos || contentValue.find_last_of(':') == std::string::npos)
             {
@@ -167,7 +152,7 @@ namespace ROS2::SDFormat
                 AZ_Warning("PluginParser", false, "Encountered invalid (empty) remapping while parsing URDF/SDF plugin.");
                 return;
             }
-            std::string newTopic = contentValue.substr(startVal, contentValue.size() - startVal);
+            AZStd::string newTopic = contentValue.substr(startVal, contentValue.size() - startVal);
 
             // get previous name of the topic
             contentValue = contentValue.substr(0, contentValue.find_first_of(':'));
@@ -179,12 +164,9 @@ namespace ROS2::SDFormat
                 return;
             }
 
-            std::string prevTopic = contentValue.substr(startKey, contentValue.size() - startKey);
-
-            // insert data into the map - previous topic name as key and new topic name as val
-            AZStd::string key(prevTopic.c_str(), prevTopic.size());
-            AZStd::string val(newTopic.c_str(), newTopic.size());
-            remappings[key] = val;
+            AZStd::string prevTopic = contentValue.substr(startKey, contentValue.size() - startKey);
+            
+            remappings[prevTopic] = newTopic;
         }
     } // namespace HooksUtils::PluginParser
 

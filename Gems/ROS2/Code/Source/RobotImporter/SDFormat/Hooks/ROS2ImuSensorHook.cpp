@@ -95,8 +95,7 @@ namespace ROS2::SDFormat
                 HooksUtils::PluginParser::LastOnPath(HooksUtils::ValueOfAny(imuPluginParams, { "topicName", "out" }, "imu"));
             if (element->HasElement("topic"))
             {
-                std::string topicParam = element->Get<std::string>("topic");
-                messageTopic = AZStd::string(topicParam.c_str(), topicParam.size());
+                messageTopic = element->Get<std::string>("topic").c_str();
             }
             element->Get<bool>("visualize", sensorConfiguration.m_visualize, false);
 

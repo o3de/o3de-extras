@@ -75,16 +75,14 @@ namespace ROS2::SDFormat
                 HooksUtils::PluginParser::LastOnPath(HooksUtils::ValueOfAny(lidarPluginParams, { "topicName", "out" }, messageTopic));
             if (element->HasElement("topic"))
             {
-                std::string topicParam = element->Get<std::string>("topic");
-                messageTopic = AZStd::string(topicParam.c_str(), topicParam.size());
+                messageTopic = element->Get<std::string>("topic").c_str();
             }
             element->Get<bool>("visualize", sensorConfiguration.m_visualize, false);
 
             // in ros1, updateRate is an element of the plugin, not a sensor parameter
             if (lidarPluginParams.contains("updateRate"))
             {
-                std::string freqFromPlugin(lidarPluginParams["updateRate"].begin(), lidarPluginParams["updateRate"].size());
-                sensorConfiguration.m_frequency = std::stof(freqFromPlugin);
+                sensorConfiguration.m_frequency = AZStd::stof(lidarPluginParams["updateRate"]);
             }
 
             HooksUtils::AddTopicConfiguration(sensorConfiguration, messageTopic, messageType, messageType);

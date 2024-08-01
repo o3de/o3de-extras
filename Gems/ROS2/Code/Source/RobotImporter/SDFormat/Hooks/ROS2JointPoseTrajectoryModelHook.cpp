@@ -32,13 +32,11 @@ namespace ROS2::SDFormat
             PublisherConfiguration publisherConfiguration;
             if (poseTrajectoryParams.contains("update_rate"))
             {
-                const std::string freqFromPlugin(poseTrajectoryParams["update_rate"].begin(), poseTrajectoryParams["update_rate"].size());
-                publisherConfiguration.m_frequency = std::stof(freqFromPlugin);
+                publisherConfiguration.m_frequency = AZStd::stof(poseTrajectoryParams["update_rate"]);
             }
             else if (poseTrajectoryParams.contains("updateRate"))
             {
-                const std::string freqFromPlugin(poseTrajectoryParams["updateRate"].begin(), poseTrajectoryParams["updateRate"].size());
-                publisherConfiguration.m_frequency = std::stof(freqFromPlugin);
+                publisherConfiguration.m_frequency = AZStd::stof(poseTrajectoryParams["updateRate"]);
             }
             publisherConfiguration.m_topicConfiguration.m_type = "sensor_msgs::msg::JointState";
             publisherConfiguration.m_topicConfiguration.m_topic = "joint_states";

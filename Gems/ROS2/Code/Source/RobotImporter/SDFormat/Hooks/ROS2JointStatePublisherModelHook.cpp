@@ -33,8 +33,7 @@ namespace ROS2::SDFormat
             PublisherConfiguration publisherConfiguration;
             if (statePublisherParams.contains("update_rate"))
             {
-                const std::string freqFromPlugin(statePublisherParams["update_rate"].begin(), statePublisherParams["update_rate"].size());
-                publisherConfiguration.m_frequency = std::stof(freqFromPlugin);
+                publisherConfiguration.m_frequency = AZStd::stof(statePublisherParams["update_rate"]);
             }
 
             publisherConfiguration.m_topicConfiguration.m_type = "sensor_msgs::msg::JointState";
