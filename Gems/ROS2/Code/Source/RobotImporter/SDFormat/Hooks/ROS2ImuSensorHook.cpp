@@ -105,13 +105,11 @@ namespace ROS2::SDFormat
 
             HooksUtils::AddTopicConfiguration(sensorConfiguration, messageTopic, messageType, messageType);
 
+            // Get frame configuration
+            auto frameConfiguration = HooksUtils::GetFrameConfiguration(imuPluginParams);
+
             // Create required components
-            auto frameComponent = HooksUtils::CreateComponent<ROS2FrameEditorComponent>(entity);
-            if (frameComponent)
-            {
-                HooksUtils::ConfigureFrame(frameComponent, imuPluginParams);
-            }
-            HooksUtils::CreateComponent<PhysX::EditorArticulationLinkComponent>(entity);
+            HooksUtils::CreateComponent<ROS2FrameEditorComponent>(entity, frameConfiguration);
 
             // Create Imu component
             if (HooksUtils::CreateComponent<ROS2ImuSensorComponent>(entity, sensorConfiguration, imuConfiguration))

@@ -123,12 +123,11 @@ namespace ROS2::SDFormat
                     "GPU Lidar requires RGL Gem, see https://github.com/RobotecAI/o3de-rgl-gem for more details.\n");
             }
 
+            // Get frame configuration
+            auto frameConfiguration = HooksUtils::GetFrameConfiguration(lidarPluginParams);
+
             // Create required components
-            auto frameComponent = HooksUtils::CreateComponent<ROS2FrameEditorComponent>(entity);
-            if (frameComponent)
-            {
-                HooksUtils::ConfigureFrame(frameComponent, lidarPluginParams);
-            }
+            HooksUtils::CreateComponent<ROS2FrameEditorComponent>(entity, frameConfiguration);
 
             // Create Lidar component
             const auto lidarComponent = is2DLidar

@@ -124,14 +124,10 @@ namespace ROS2::SDFormat
 
         using PluginParams = AZStd::unordered_map<AZStd::string, AZStd::string>;
 
-        //! Configure a frame attached to the entity basing on plugin parameters
-        //! @param frameComponent frame to be configured
-        //! @param componentParams parameters of the plugin for which frame is created
-        void ConfigureFrame(ROS2FrameEditorComponent& frameComponent, const PluginParams& pluginParams);
-
-        void ConfigureFrame(AZ::Component& frameComponent, const PluginParams& pluginParams);
-
-        void ConfigureFrame(AZ::Component* frameComponent, const PluginParams& pluginParams);
+        //! Get frame configuration from given plugin params
+        //! @param pluginParams parameters of the plugin for which frame is created
+        //! @return configuration of the frame
+        ROS2FrameConfiguration GetFrameConfiguration(const HooksUtils::PluginParams& pluginParams);
 
         //! Find all parameters given in plugin element.
         //! Given a ROS2 remapping argument, extracts only names of
@@ -146,7 +142,7 @@ namespace ROS2::SDFormat
         //! @param defaultVal value to be returned when none of the parameters are present in the map
         //! @return value on any of the specified parameters or defaultVal when none were present
         AZStd::string ValueOfAny(
-            const PluginParams& pluginParams, AZStd::vector<AZStd::string> paramNames, const AZStd::string& defaultVal = "");
+            const PluginParams& pluginParams, const AZStd::vector<AZStd::string>& paramNames, const AZStd::string& defaultVal = "");
 
     } // namespace HooksUtils
 } // namespace ROS2::SDFormat

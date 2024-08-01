@@ -188,39 +188,31 @@ namespace ROS2::SDFormat
         }
     } // namespace HooksUtils::PluginParser
 
-    void HooksUtils::ConfigureFrame(ROS2FrameEditorComponent& frameComponent, const HooksUtils::PluginParams& pluginParams)
+    ROS2FrameConfiguration HooksUtils::GetFrameConfiguration(const HooksUtils::PluginParams& pluginParams)
     {
+        ROS2FrameConfiguration frameConfiguration;
+
         if (pluginParams.contains("robotNamespace"))
         {
-            frameComponent.UpdateNamespaceConfiguration(
+            frameConfiguration.m_namespaceConfiguration.SetNamespace(
                 pluginParams.at("robotNamespace"), NamespaceConfiguration::NamespaceStrategy::Custom);
         }
         else if (pluginParams.contains("namespace"))
         {
-            frameComponent.UpdateNamespaceConfiguration(
+            frameConfiguration.m_namespaceConfiguration.SetNamespace(
                 PluginParser::LastOnPath(pluginParams.at("namespace")), NamespaceConfiguration::NamespaceStrategy::Custom);
         }
+
         if (pluginParams.contains("frameName"))
         {
-            frameComponent.SetFrameID(pluginParams.at("frameName"));
+            frameConfiguration.m_frameName = pluginParams.at("frameName");
         }
         else if (pluginParams.contains("frame_name"))
         {
-            frameComponent.SetFrameID(pluginParams.at("frame_name"));
+            frameConfiguration.m_frameName = pluginParams.at("frame_name");
         }
-    }
 
-    void HooksUtils::ConfigureFrame(AZ::Component& frameComponent, const HooksUtils::PluginParams& pluginParams)
-    {
-        ConfigureFrame(*dynamic_cast<ROS2FrameEditorComponent*>(&frameComponent), pluginParams);
-    }
-
-    void HooksUtils::ConfigureFrame(AZ::Component* frameComponent, const HooksUtils::PluginParams& pluginParams)
-    {
-        if (frameComponent)
-        {
-            ConfigureFrame(*dynamic_cast<ROS2FrameEditorComponent*>(frameComponent), pluginParams);
-        }
+        return frameConfiguration;
     }
 
     HooksUtils::PluginParams HooksUtils::GetPluginParams(const sdf::Plugin& plugin)

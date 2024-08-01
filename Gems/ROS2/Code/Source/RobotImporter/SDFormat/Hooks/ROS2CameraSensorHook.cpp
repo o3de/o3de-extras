@@ -108,12 +108,11 @@ namespace ROS2::SDFormat
                 sensorConfiguration.m_visualize = element->Get<bool>("visualize");
             }
 
+            // Get frame configuration
+            auto frameConfiguration = HooksUtils::GetFrameConfiguration(cameraPluginParams);
+
             // Create required components
-            auto frameComponent = HooksUtils::CreateComponent<ROS2FrameEditorComponent>(entity);
-            if (frameComponent)
-            {
-                HooksUtils::ConfigureFrame(frameComponent, cameraPluginParams);
-            }
+            HooksUtils::CreateComponent<ROS2FrameEditorComponent>(entity, frameConfiguration);
 
             // Create Camera component
             if (HooksUtils::CreateComponent<ROS2CameraSensorEditorComponent>(entity, sensorConfiguration, cameraConfiguration))
