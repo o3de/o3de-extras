@@ -78,10 +78,7 @@ namespace ROS2::SDFormat
                 std::string topicParam = element->Get<std::string>("topic");
                 messageTopic = AZStd::string(topicParam.c_str(), topicParam.size());
             }
-            if (element->HasElement("visualize"))
-            {
-                sensorConfiguration.m_visualize = element->Get<bool>("visualize");
-            }
+            element->Get<bool>("visualize", sensorConfiguration.m_visualize, false);
 
             // in ros1, updateRate is an element of the plugin, not a sensor parameter
             if (lidarPluginParams.contains("updateRate"))

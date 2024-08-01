@@ -49,10 +49,7 @@ namespace ROS2::SDFormat
                 std::string topicParam = element->Get<std::string>("topic");
                 messageTopic = AZStd::string(topicParam.c_str(), topicParam.size());
             }
-            if (element->HasElement("visualize"))
-            {
-                sensorConfiguration.m_visualize = element->Get<bool>("visualize");
-            }
+            element->Get<bool>("visualize", sensorConfiguration.m_visualize, false);
 
             HooksUtils::AddTopicConfiguration(sensorConfiguration, messageTopic, messageType, messageType);
 

@@ -103,10 +103,7 @@ namespace ROS2::SDFormat
                 HooksUtils::AddTopicConfiguration(
                     sensorConfiguration, depthInfo, CameraConstants::CameraInfoMessageType, CameraConstants::DepthInfoConfig);
             }
-            if (element->HasElement("visualize"))
-            {
-                sensorConfiguration.m_visualize = element->Get<bool>("visualize");
-            }
+            element->Get<bool>("visualize", sensorConfiguration.m_visualize, false);
 
             // Get frame configuration
             auto frameConfiguration = HooksUtils::GetFrameConfiguration(cameraPluginParams);
