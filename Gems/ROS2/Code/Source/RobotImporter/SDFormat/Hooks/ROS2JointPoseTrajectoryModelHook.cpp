@@ -26,18 +26,11 @@ namespace ROS2::SDFormat
             [](AZ::Entity& entity, const sdf::Plugin& sdfPlugin, const sdf::Model& sdfModel, const CreatedEntitiesMap& createdEntities)
             -> ModelPluginImporterHook::ConvertPluginOutcome
         {
-            HooksUtils::PluginParams poseTrajectoryParams = HooksUtils::GetPluginParams(sdfPlugin);
+            const auto poseTrajectoryParams = HooksUtils::GetPluginParams({ sdfPlugin });
 
             // configure JointsManipulationEditorComponent publisher
             PublisherConfiguration publisherConfiguration;
-            if (poseTrajectoryParams.contains("update_rate"))
-            {
-                publisherConfiguration.m_frequency = AZStd::stof(poseTrajectoryParams["update_rate"]);
-            }
-            else if (poseTrajectoryParams.contains("updateRate"))
-            {
-                publisherConfiguration.m_frequency = AZStd::stof(poseTrajectoryParams["updateRate"]);
-            }
+            publisherConfiguration.m_frequency = HooksUtils::GetFrequency(poseTrajectoryParams);
             publisherConfiguration.m_topicConfiguration.m_type = "sensor_msgs::msg::JointState";
             publisherConfiguration.m_topicConfiguration.m_topic = "joint_states";
 

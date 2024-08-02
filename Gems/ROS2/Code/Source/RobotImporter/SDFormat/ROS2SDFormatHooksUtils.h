@@ -125,13 +125,13 @@ namespace ROS2::SDFormat
         //! elements to be remapped, ignoring their namespaces.
         //! @param plugin plugin to extract parameters from
         //! @return a map of parameters present in plugin
-        PluginParams GetPluginParams(const sdf::Plugin& plugin);
+        PluginParams GetPluginParams(const sdf::Plugins& plugins);
 
         //! Find value of any of specified plugin parameters.
-        //! @param pluginParams map of plugin parameters
-        //! @param paramNames vector of specified parameter names
+        //! @param pluginParams map of plugin parameters defined in model description
+        //! @param paramNames vector parameter names in query
         //! @param defaultVal value to be returned when none of the parameters are present in the map
-        //! @return value on any of the specified parameters or defaultVal when none were present
+        //! @return value on any of the query parameters or defaultVal when none were present
         AZStd::string ValueOfAny(
             const PluginParams& pluginParams, const AZStd::vector<AZStd::string>& paramNames, const AZStd::string& defaultVal = "");
 
@@ -139,7 +139,14 @@ namespace ROS2::SDFormat
         //! @param pluginParams map of plugin parameters
         //! @param element pointer to the sdf element
         //! @param defaultVal value to be returned when no remaps of the topic are present in the map
+        //! @return remapped topic name or defaultVal when no remaps are present
         AZStd::string GetTopicName(const PluginParams& pluginParams, sdf::ElementPtr element, const AZStd::string& defaultVal = "");
+
+        //! Get publisher frequency from plugin.
+        //! @param pluginParams map of plugin parameters
+        //! @param defaultVal value to be returned when frequency param does not appear in pluginParams
+        //! @return publisher frequency or defaultVal when frequency is not specified by element description
+        float GetFrequency(const PluginParams& pluginParams, const float defaultVal = 10.0);
 
     } // namespace HooksUtils
 } // namespace ROS2::SDFormat

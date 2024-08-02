@@ -188,9 +188,15 @@ namespace ROS2::SDFormat
         return frameConfiguration;
     }
 
-    HooksUtils::PluginParams HooksUtils::GetPluginParams(const sdf::Plugin& plugin)
+    HooksUtils::PluginParams HooksUtils::GetPluginParams(const sdf::Plugins& plugins)
     {
         HooksUtils::PluginParams remappings;
+        if (plugins.empty())
+        {
+            return remappings;
+        }
+
+        const auto plugin = plugins[0];
 
         for (const auto& content : plugin.Contents())
         {
@@ -237,6 +243,12 @@ namespace ROS2::SDFormat
 
         const static AZStd::vector<AZStd::string> remapParamNames = { "topicName", "out" };
         return ValueOfAny(pluginParams, remapParamNames, defaultVal);
+    }
+
+    float HooksUtils::GetFrequency(const PluginParams& pluginParams, const float defaultVal)
+    {
+        const static AZStd::vector<AZStd::string> frequencyParamNames = { "updateRate", "update_rate" };
+        return AZStd::stof(ValueOfAny(pluginParams, frequencyParamNames, AZStd::to_string(defaultVal)));
     }
 
 } // namespace ROS2::SDFormat

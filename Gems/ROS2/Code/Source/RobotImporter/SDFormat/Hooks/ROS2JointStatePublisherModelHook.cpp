@@ -21,27 +21,23 @@ namespace ROS2::SDFormat
     {
         ModelPluginImporterHook importerHook;
         importerHook.m_pluginNames = AZStd::unordered_set<AZStd::string>{ "libgazebo_ros_joint_state_publisher.so" };
-        importerHook.m_supportedPluginParams = AZStd::unordered_set<AZStd::string>{ ">update_rate", ">ros>argument", ">ros>remapping" };
+        importerHook.m_supportedPluginParams =
+            AZStd::unordered_set<AZStd::string>{ ">updateRate", ">update_rate", ">ros>argument", ">ros>remapping", ">topicName" };
 
         importerHook.m_sdfPluginToComponentCallback =
             [](AZ::Entity& entity, const sdf::Plugin& sdfPlugin, const sdf::Model& sdfModel, const CreatedEntitiesMap& createdEntities)
             -> ModelPluginImporterHook::ConvertPluginOutcome
         {
-            HooksUtils::PluginParams statePublisherParams = HooksUtils::GetPluginParams(sdfPlugin);
+            const auto statePublisherParams = HooksUtils::GetPluginParams({ sdfPlugin });
 
             // configure publisher
             PublisherConfiguration publisherConfiguration;
-            if (statePublisherParams.contains("update_rate"))
-            {
-                publisherConfiguration.m_frequency = AZStd::stof(statePublisherParams["update_rate"]);
-            }
-
+            publisherConfiguration.m_frequency = HooksUtils::GetFrequency(statePublisherParams);
             publisherConfiguration.m_topicConfiguration.m_type = "sensor_msgs::msg::JointState";
 
-            const static AZStd::vector<AZStd::string> topicParamNames = { "joint_states" };
-            const AZStd::string messageTopic = HooksUtils::ValueOfAny(statePublisherParams, topicParamNames, "joint_states");
-
-            publisherConfiguration.m_topicConfiguration.m_topic = messageTopic;
+            const static AZStd::vector<AZStd::string> topicParamNames = { "topicName", "joint_states" };
+            publisherConfiguration.m_topicConfiguration.m_topic =
+                HooksUtils::ValueOfAny(statePublisherParams, topicParamNames, "joint_states");
 
             // add required components
             HooksUtils::CreateComponent<JointsArticulationControllerComponent>(entity);

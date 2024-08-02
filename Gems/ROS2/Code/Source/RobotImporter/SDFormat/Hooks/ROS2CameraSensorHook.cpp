@@ -72,10 +72,8 @@ namespace ROS2::SDFormat
             SensorConfiguration sensorConfiguration;
             sensorConfiguration.m_frequency = sdfSensor.UpdateRate();
 
-            const auto cameraPlugins = sdfSensor.Plugins();
-            HooksUtils::PluginParams cameraPluginParams =
-                cameraPlugins.empty() ? HooksUtils::PluginParams() : HooksUtils::GetPluginParams(cameraPlugins[0]);
-            const sdf::ElementPtr element = sdfSensor.Element();
+            const auto cameraPluginParams = HooksUtils::GetPluginParams(sdfSensor.Plugins());
+            const auto element = sdfSensor.Element();
 
             if (sdfSensor.Type() != sdf::SensorType::DEPTH_CAMERA)
             { // COLOR_CAMERA and RGBD_CAMERA

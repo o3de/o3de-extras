@@ -64,10 +64,8 @@ namespace ROS2::SDFormat
             sensorConfiguration.m_frequency = sdfSensor.UpdateRate();
             const AZStd::string messageType = is2DLidar ? "sensor_msgs::msg::LaserScan" : "sensor_msgs::msg::PointCloud2";
 
-            const auto lidarPlugins = sdfSensor.Plugins();
-            HooksUtils::PluginParams lidarPluginParams =
-                lidarPlugins.empty() ? HooksUtils::PluginParams() : HooksUtils::GetPluginParams(lidarPlugins[0]);
-            const sdf::ElementPtr element = sdfSensor.Element();
+            const auto lidarPluginParams = HooksUtils::GetPluginParams(sdfSensor.Plugins());
+            const auto element = sdfSensor.Element();
 
             // setting lidar topic
             AZStd::string messageTopic = is2DLidar ? "scan" : "pc";
@@ -75,10 +73,7 @@ namespace ROS2::SDFormat
             element->Get<bool>("visualize", sensorConfiguration.m_visualize, false);
 
             // in ros1, updateRate is an element of the plugin, not a sensor parameter
-            if (lidarPluginParams.contains("updateRate"))
-            {
-                sensorConfiguration.m_frequency = AZStd::stof(lidarPluginParams["updateRate"]);
-            }
+            sensorConfiguration.m_frequency = HooksUtils::GetFrequency(lidarPluginParams, sensorConfiguration.m_frequency);
 
             HooksUtils::AddTopicConfiguration(sensorConfiguration, messageTopic, messageType, messageType);
 

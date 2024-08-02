@@ -85,13 +85,11 @@ namespace ROS2::SDFormat
             sensorConfiguration.m_frequency = sdfSensor.UpdateRate();
             const AZStd::string messageType = "sensor_msgs::msg::Imu";
 
-            const auto imuPlugins = sdfSensor.Plugins();
-            HooksUtils::PluginParams imuPluginParams =
-                imuPlugins.empty() ? HooksUtils::PluginParams() : HooksUtils::GetPluginParams(imuPlugins[0]);
-            const sdf::ElementPtr element = sdfSensor.Element();
+            const auto imuPluginParams = HooksUtils::GetPluginParams(sdfSensor.Plugins());
+            const auto element = sdfSensor.Element();
 
             // setting imu topic
-            AZStd::string messageTopic = HooksUtils::GetTopicName(imuPluginParams, element, "imu");
+            const AZStd::string messageTopic = HooksUtils::GetTopicName(imuPluginParams, element, "imu");
             element->Get<bool>("visualize", sensorConfiguration.m_visualize, false);
 
             HooksUtils::AddTopicConfiguration(sensorConfiguration, messageTopic, messageType, messageType);

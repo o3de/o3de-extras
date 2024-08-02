@@ -36,13 +36,11 @@ namespace ROS2::SDFormat
             sensorConfiguration.m_frequency = sdfSensor.UpdateRate();
             const AZStd::string messageType = "sensor_msgs::msg::NavSatFix";
 
-            const auto gnssPlugins = sdfSensor.Plugins();
-            HooksUtils::PluginParams gnssPluginParams =
-                gnssPlugins.empty() ? HooksUtils::PluginParams() : HooksUtils::GetPluginParams(gnssPlugins[0]);
-            const sdf::ElementPtr element = sdfSensor.Element();
+            const auto gnssPluginParams = HooksUtils::GetPluginParams(sdfSensor.Plugins());
+            const auto element = sdfSensor.Element();
 
             // setting gnss topic
-            AZStd::string messageTopic = HooksUtils::GetTopicName(gnssPluginParams, element, "gnss");
+            const AZStd::string messageTopic = HooksUtils::GetTopicName(gnssPluginParams, element, "gnss");
             element->Get<bool>("visualize", sensorConfiguration.m_visualize, false);
 
             HooksUtils::AddTopicConfiguration(sensorConfiguration, messageTopic, messageType, messageType);
