@@ -204,12 +204,14 @@ namespace ROS2
             intensityIt = sensor_msgs::PointCloud2Iterator<float>(message, "intensity");
         }
 
+        const auto entityTransform = GetEntity()->FindComponent<AzFramework::TransformComponent>();
+        const auto inverseLidarTM = entityTransform->GetWorldTM().GetInverse();
         for (size_t i = 0; i < results.m_points.size(); ++i)
         {
-            AZ::Vector3 position = results.m_points[i];
-            *xIt = position.GetX();
-            *yIt = position.GetY();
-            *zIt = position.GetZ();
+            const AZ::Vector3 globalPoint = inverseLidarTM.TransformPoint(results.m_points[i]);
+            *xIt = globalPoint.GetX();
+            *yIt = globalPoint.GetY();
+            *zIt = globalPoint.GetZ();
 
             if (isIntensityEnabled)
             {
