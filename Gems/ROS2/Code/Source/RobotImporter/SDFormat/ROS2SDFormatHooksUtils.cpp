@@ -14,6 +14,7 @@
 #include <RobotImporter/Utils/TypeConversions.h>
 #include <SdfAssetBuilder/SdfAssetBuilderSettings.h>
 #include <VehicleDynamics/WheelControllerComponent.h>
+#include <ROS2/Utilities/ROS2Names.h>
 
 #include <sdf/Joint.hh>
 
@@ -160,7 +161,14 @@ namespace ROS2::SDFormat
             }
             AZStd::string prevTopic = contentValue.substr(startKey, contentValue.size() - startKey);
 
-            remappings[prevTopic] = newTopic;
+            if (ROS2Names::ValidateTopic(newTopic).IsSuccess() && ROS2Names::ValidateTopic(prevTopic).IsSuccess())
+            {
+                remappings[prevTopic] = newTopic;
+            }
+            else
+            {
+                AZ_Warning("PluginParser", false, "Encountered invalid topic name while parsing URDF/SDF plugin.");
+            }
         }
     } // namespace HooksUtils::PluginParser
 
@@ -170,8 +178,11 @@ namespace ROS2::SDFormat
 
         const static AZStd::vector<AZStd::string> namespaceRemapNames = { "robotNamespace", "namespace" };
         const AZStd::string remappedNamespace = HooksUtils::ValueOfAny(pluginParams, namespaceRemapNames);
-
-        if (!remappedNamespace.empty())
+        if (!ROS2Names::ValidateNamespace(remappedNamespace).IsSuccess())
+        {
+            AZ_Warning("PluginParser", false, "Encountered invalid namespace name while parsing URDF/SDF plugin.");
+        }
+        else if (!remappedNamespace.empty())
         {
             frameConfiguration.m_namespaceConfiguration.SetNamespace(remappedNamespace, NamespaceConfiguration::NamespaceStrategy::Custom);
         }
