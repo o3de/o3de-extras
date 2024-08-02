@@ -113,15 +113,6 @@ namespace ROS2::SDFormat
             return nullptr;
         }
 
-        namespace PluginParser
-        {
-            //! For given path, extracts only it's last element.
-            //! Especially useful when parsing ROS2 remappings.
-            //! @param path string representing the path
-            //! @return last element on the path
-            AZStd::string LastOnPath(const AZStd::string& path);
-        } // namespace PluginParser
-
         using PluginParams = AZStd::unordered_map<AZStd::string, AZStd::string>;
 
         //! Get frame configuration from given plugin params
@@ -132,8 +123,8 @@ namespace ROS2::SDFormat
         //! Find all parameters given in plugin element.
         //! Given a ROS2 remapping argument, extracts only names of
         //! elements to be remapped, ignoring their namespaces.
-        //! @param plugin plugin to extract parameters from.
-        //! @return a map of parameters present in plugin.
+        //! @param plugin plugin to extract parameters from
+        //! @return a map of parameters present in plugin
         PluginParams GetPluginParams(const sdf::Plugin& plugin);
 
         //! Find value of any of specified plugin parameters.
@@ -143,6 +134,12 @@ namespace ROS2::SDFormat
         //! @return value on any of the specified parameters or defaultVal when none were present
         AZStd::string ValueOfAny(
             const PluginParams& pluginParams, const AZStd::vector<AZStd::string>& paramNames, const AZStd::string& defaultVal = "");
+
+        //! Get the name of element's general topic after remapping.
+        //! @param pluginParams map of plugin parameters
+        //! @param element pointer to the sdf element
+        //! @param defaultVal value to be returned when no remaps of the topic are present in the map
+        AZStd::string GetTopicName(const PluginParams& pluginParams, sdf::ElementPtr element, const AZStd::string& defaultVal = "");
 
     } // namespace HooksUtils
 } // namespace ROS2::SDFormat

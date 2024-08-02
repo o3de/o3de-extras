@@ -102,11 +102,6 @@ namespace ROS2::SDFormat
 
     namespace HooksUtils::PluginParser
     {
-        AZStd::string LastOnPath(const AZStd::string& path)
-        {
-            return AZ::IO::PathView(path).Filename().String();
-        }
-
         // Inserts name (key) and value (val) of given parameter to map.
         void ParseRegularContent(const sdf::Element& content, HooksUtils::PluginParams& remappings)
         {
@@ -123,7 +118,7 @@ namespace ROS2::SDFormat
         }
 
         // Parses parameters present in <ros> element, inserting them to map.
-        void ParseRos2Content(const sdf::Element& rosContent, HooksUtils::PluginParams& remappings)
+        void ParseRos2Remapping(const sdf::Element& rosContent, HooksUtils::PluginParams& remappings)
         {
             if (rosContent.GetName() != "remapping" && rosContent.GetName() != "argument")
             {
@@ -163,9 +158,8 @@ namespace ROS2::SDFormat
                 AZ_Warning("PluginParser", false, "Encountered invalid (empty) remapping while parsing URDF/SDF plugin.");
                 return;
             }
-
             AZStd::string prevTopic = contentValue.substr(startKey, contentValue.size() - startKey);
-            
+
             remappings[prevTopic] = newTopic;
         }
     } // namespace HooksUtils::PluginParser
@@ -174,15 +168,12 @@ namespace ROS2::SDFormat
     {
         ROS2FrameConfiguration frameConfiguration;
 
-        if (pluginParams.contains("robotNamespace"))
+        const static AZStd::vector<AZStd::string> namespaceRemapNames = { "robotNamespace", "namespace" };
+        const AZStd::string remappedNamespace = HooksUtils::ValueOfAny(pluginParams, namespaceRemapNames);
+
+        if (!remappedNamespace.empty())
         {
-            frameConfiguration.m_namespaceConfiguration.SetNamespace(
-                pluginParams.at("robotNamespace"), NamespaceConfiguration::NamespaceStrategy::Custom);
-        }
-        else if (pluginParams.contains("namespace"))
-        {
-            frameConfiguration.m_namespaceConfiguration.SetNamespace(
-                PluginParser::LastOnPath(pluginParams.at("namespace")), NamespaceConfiguration::NamespaceStrategy::Custom);
+            frameConfiguration.m_namespaceConfiguration.SetNamespace(remappedNamespace, NamespaceConfiguration::NamespaceStrategy::Custom);
         }
 
         if (pluginParams.contains("frameName"))
@@ -210,7 +201,7 @@ namespace ROS2::SDFormat
                 auto rosContent = content->GetFirstElement();
                 while (rosContent != nullptr)
                 {
-                    PluginParser::ParseRos2Content(*rosContent, remappings);
+                    PluginParser::ParseRos2Remapping(*rosContent, remappings);
                     rosContent = rosContent->GetNextElement();
                 }
             }
@@ -226,14 +217,26 @@ namespace ROS2::SDFormat
     AZStd::string HooksUtils::ValueOfAny(
         const HooksUtils::PluginParams& pluginParams, const AZStd::vector<AZStd::string>& paramNames, const AZStd::string& defaultVal)
     {
-        for (const auto &paramName : paramNames)
+        for (const auto& paramName : paramNames)
         {
             if (pluginParams.contains(paramName))
             {
-                return pluginParams.at(paramName);
+                const AZStd::string paramValue = pluginParams.at(paramName);
+                return AZ::IO::PathView(paramValue).Filename().String();
             }
         }
         return defaultVal;
+    }
+
+    AZStd::string HooksUtils::GetTopicName(const PluginParams& pluginParams, sdf::ElementPtr element, const AZStd::string& defaultVal)
+    {
+        if (element->HasElement("topic"))
+        {
+            return element->Get<std::string>("topic").c_str();
+        }
+
+        const static AZStd::vector<AZStd::string> remapParamNames = { "topicName", "out" };
+        return ValueOfAny(pluginParams, remapParamNames, defaultVal);
     }
 
 } // namespace ROS2::SDFormat

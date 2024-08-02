@@ -42,12 +42,7 @@ namespace ROS2::SDFormat
             const sdf::ElementPtr element = sdfSensor.Element();
 
             // setting gnss topic
-            AZStd::string messageTopic =
-                HooksUtils::PluginParser::LastOnPath(HooksUtils::ValueOfAny(gnssPluginParams, { "topicName", "out" }, "gnss"));
-            if (element->HasElement("topic"))
-            {
-                messageTopic = element->Get<std::string>("topic").c_str();
-            }
+            AZStd::string messageTopic = HooksUtils::GetTopicName(gnssPluginParams, element, "gnss");
             element->Get<bool>("visualize", sensorConfiguration.m_visualize, false);
 
             HooksUtils::AddTopicConfiguration(sensorConfiguration, messageTopic, messageType, messageType);

@@ -79,11 +79,11 @@ namespace ROS2::SDFormat
 
             if (sdfSensor.Type() != sdf::SensorType::DEPTH_CAMERA)
             { // COLOR_CAMERA and RGBD_CAMERA
-                const AZStd::string imageColor = HooksUtils::PluginParser::LastOnPath(
-                    HooksUtils::ValueOfAny(cameraPluginParams, { "image_raw", "imageTopicName" }, "camera_image_color"));
+                const static AZStd::vector<AZStd::string> rawImageParamNames = { "image_raw", "imageTopicName" };
+                const static AZStd::vector<AZStd::string> rawInfoParamNames = { "camera_info", "cameraInfoTopicName" };
 
-                const AZStd::string colorInfo = HooksUtils::PluginParser::LastOnPath(
-                    HooksUtils::ValueOfAny(cameraPluginParams, { "camera_info", "cameraInfoTopicName" }, "camera_color_info"));
+                const AZStd::string imageColor = HooksUtils::ValueOfAny(cameraPluginParams, rawImageParamNames, "camera_image_color");
+                const AZStd::string colorInfo = HooksUtils::ValueOfAny(cameraPluginParams, rawInfoParamNames, "camera_color_info");
 
                 HooksUtils::AddTopicConfiguration(
                     sensorConfiguration, imageColor, CameraConstants::ImageMessageType, CameraConstants::ColorImageConfig);
@@ -92,11 +92,11 @@ namespace ROS2::SDFormat
             }
             if (sdfSensor.Type() != sdf::SensorType::CAMERA)
             { // DEPTH_CAMERA and RGBD_CAMERA
-                const AZStd::string imageDepth = HooksUtils::PluginParser::LastOnPath(
-                    HooksUtils::ValueOfAny(cameraPluginParams, { "image_depth", "depthImageTopicName" }, "camera_image_depth"));
+                const static AZStd::vector<AZStd::string> depthImageParamNames = { "image_depth", "depthImageTopicName" };
+                const static AZStd::vector<AZStd::string> depthInfoParamNames = { "camera_info_depth", "depthImageCameraInfoTopicName" };
 
-                const AZStd::string depthInfo = HooksUtils::PluginParser::LastOnPath(HooksUtils::ValueOfAny(
-                    cameraPluginParams, { "camera_info_depth", "depthImageCameraInfoTopicName" }, "depth_camera_info"));
+                const AZStd::string imageDepth = HooksUtils::ValueOfAny(cameraPluginParams, depthImageParamNames, "camera_image_depth");
+                const AZStd::string depthInfo = HooksUtils::ValueOfAny(cameraPluginParams, depthInfoParamNames, "depth_camera_info");
 
                 HooksUtils::AddTopicConfiguration(
                     sensorConfiguration, imageDepth, CameraConstants::ImageMessageType, CameraConstants::DepthImageConfig);

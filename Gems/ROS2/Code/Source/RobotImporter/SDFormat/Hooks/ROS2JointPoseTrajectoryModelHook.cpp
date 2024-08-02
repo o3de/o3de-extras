@@ -42,8 +42,9 @@ namespace ROS2::SDFormat
             publisherConfiguration.m_topicConfiguration.m_topic = "joint_states";
 
             // configure trajectory action name
-            const AZStd::string trajectoryActionName = HooksUtils::PluginParser::LastOnPath(HooksUtils::ValueOfAny(
-                poseTrajectoryParams, { "set_joint_trajectory", "topicName" }, "arm_controller/follow_joint_trajectory"));
+            const static AZStd::vector<AZStd::string> trajectoryTopicParamNames = { "set_joint_trajectory", "topicName" };
+            const AZStd::string trajectoryActionName =
+                HooksUtils::ValueOfAny(poseTrajectoryParams, trajectoryTopicParamNames, "arm_controller/follow_joint_trajectory");
 
             // add required components
             HooksUtils::CreateComponent<JointsArticulationControllerComponent>(entity);

@@ -158,12 +158,12 @@ namespace ROS2::SDFormat
         VehicleDynamics::VehicleConfiguration GetConfiguration(
             const sdf::ElementPtr element, const sdf::Model& sdfModel, const CreatedEntitiesMap& createdEntities)
         {
-            const AZStd::array<std::string, Wheels::Total> jointNamesSDFormat{ { "front_left_joint",
-                                                                                 "front_right_joint",
-                                                                                 "rear_left_joint",
-                                                                                 "rear_right_joint",
-                                                                                 "left_steering_joint",
-                                                                                 "right_steering_joint" } };
+            const static AZStd::array<std::string, Wheels::Total> jointNamesSDFormat{ { "front_left_joint",
+                                                                                        "front_right_joint",
+                                                                                        "rear_left_joint",
+                                                                                        "rear_right_joint",
+                                                                                        "left_steering_joint",
+                                                                                        "right_steering_joint" } };
             // Stores description of all joints in the SDF and a mapping to O3DE entities
             struct JointMapping
             {

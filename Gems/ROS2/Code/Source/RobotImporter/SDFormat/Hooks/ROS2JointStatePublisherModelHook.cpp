@@ -37,11 +37,10 @@ namespace ROS2::SDFormat
             }
 
             publisherConfiguration.m_topicConfiguration.m_type = "sensor_msgs::msg::JointState";
-            AZStd::string messageTopic = "joint_states";
-            if (statePublisherParams.contains("joint_states"))
-            {
-                messageTopic = HooksUtils::PluginParser::LastOnPath(statePublisherParams["joint_states"]);
-            }
+
+            const static AZStd::vector<AZStd::string> topicParamNames = { "joint_states" };
+            const AZStd::string messageTopic = HooksUtils::ValueOfAny(statePublisherParams, topicParamNames, "joint_states");
+
             publisherConfiguration.m_topicConfiguration.m_topic = messageTopic;
 
             // add required components
