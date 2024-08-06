@@ -95,7 +95,7 @@ namespace ROS2::SDFormat
             HooksUtils::AddTopicConfiguration(sensorConfiguration, messageTopic, messageType, messageType);
 
             // Get frame configuration
-            auto frameConfiguration = HooksUtils::GetFrameConfiguration(imuPluginParams);
+            const auto frameConfiguration = HooksUtils::GetFrameConfiguration(imuPluginParams);
 
             // Create required components
             HooksUtils::CreateComponent<ROS2FrameEditorComponent>(entity, frameConfiguration);

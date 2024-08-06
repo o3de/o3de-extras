@@ -109,7 +109,7 @@ namespace ROS2::SDFormat
             }
 
             // Get frame configuration
-            auto frameConfiguration = HooksUtils::GetFrameConfiguration(lidarPluginParams);
+            const auto frameConfiguration = HooksUtils::GetFrameConfiguration(lidarPluginParams);
 
             // Create required components
             HooksUtils::CreateComponent<ROS2FrameEditorComponent>(entity, frameConfiguration);

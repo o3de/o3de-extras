@@ -129,7 +129,7 @@ namespace ROS2::SDFormat
 
         //! Find value of any of specified plugin parameters.
         //! @param pluginParams map of plugin parameters defined in model description
-        //! @param paramNames vector parameter names in query
+        //! @param paramNames vector of parameter names in query
         //! @param defaultVal value to be returned when none of the parameters are present in the map
         //! @return value on any of the query parameters or defaultVal when none were present
         AZStd::string ValueOfAny(
