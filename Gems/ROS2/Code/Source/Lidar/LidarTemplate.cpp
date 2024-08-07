@@ -98,11 +98,9 @@ namespace ROS2
                     ->Attribute(AZ::Edit::Attributes::Max, 90.0f)
                     ->Attribute(AZ::Edit::Attributes::Visibility, &LidarTemplate::IsLayersVisible)
                     ->DataElement(AZ::Edit::UIHandlers::Default, &LidarTemplate::m_minRange, "Min range", "Minimum beam range [m]")
-                    ->Attribute(AZ::Edit::Attributes::Min, 0.0f)
-                    ->Attribute(AZ::Edit::Attributes::Max, 1000.0f)
+                    ->Attribute(AZ::Edit::Attributes::ChangeValidate, &LidarTemplate::ValidateMinRange)
                     ->DataElement(AZ::Edit::UIHandlers::Default, &LidarTemplate::m_maxRange, "Max range", "Maximum beam range [m]")
-                    ->Attribute(AZ::Edit::Attributes::Min, 0.001f)
-                    ->Attribute(AZ::Edit::Attributes::Max, 1000.0f)
+                    ->Attribute(AZ::Edit::Attributes::ChangeValidate, &LidarTemplate::ValidateMaxRange)
                     ->DataElement(
                         AZ::Edit::UIHandlers::Default,
                         &LidarTemplate::m_isNoiseEnabled,
@@ -124,4 +122,41 @@ namespace ROS2
     {
         return m_showNoiseConfig && m_isNoiseEnabled;
     }
+
+    AZ::Outcome<void, AZStd::string> LidarTemplate::ValidateRange(float minRange, float maxRange)
+    {
+        if (0.0f <= minRange && minRange <= maxRange)
+        {
+            return AZ::Success();
+        }
+
+        return AZ::Failure(AZStd::string::format(
+            "Provided ray range (%.2f, %.2f) was of incorrect value: Max range must be greater than min range, and both must be greater "
+            "than zero.",
+            minRange,
+            maxRange));
+    }
+
+    AZ::Outcome<void, AZStd::string> LidarTemplate::ValidateMinRange(void* newValue, const AZ::TypeId& valueType) const
+    {
+        if (azrtti_typeid<float>() != valueType)
+        {
+            AZ_Assert(false, "Unexpected value type");
+            return AZ::Failure(AZStd::string("Unexpectedly received a non-float type for the min range!"));
+        }
+
+        return ValidateRange(*reinterpret_cast<float*>(newValue), m_maxRange);
+    }
+
+    AZ::Outcome<void, AZStd::string> LidarTemplate::ValidateMaxRange(void* newValue, const AZ::TypeId& valueType) const
+    {
+        if (azrtti_typeid<float>() != valueType)
+        {
+            AZ_Assert(false, "Unexpected value type");
+            return AZ::Failure(AZStd::string("Unexpectedly received a non-float type for the max range!"));
+        }
+
+        return ValidateRange(m_minRange, *reinterpret_cast<float*>(newValue));
+    }
+
 } // namespace ROS2

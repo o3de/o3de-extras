@@ -101,6 +101,14 @@ namespace ROS2
         AZStd::vector<float> m_intensities;
     };
 
+    //! Structure used to describe both minimal and maximal
+    //! ray travel distance in meters.
+    struct Range
+    {
+        float m_min{ 0.0f };
+        float m_max{ 0.0f };
+    };
+
     //! Interface class that allows for communication with a single Lidar instance.
     class LidarRaycasterRequests
     {
@@ -112,16 +120,9 @@ namespace ROS2
         //! vector in the positive z direction first by the y, next by the z axis. The x axis is currently not included in calculations.
         virtual void ConfigureRayOrientations(const AZStd::vector<AZ::Vector3>& orientations) = 0;
 
-        //! Configures ray maximum travel distance.
-        //! @param range Ray range in meters.
-        virtual void ConfigureRayRange(float range) = 0;
-
-        //! Configures ray minimum travel distance.
-        //! @param range Ray range in meters.
-        virtual void ConfigureMinimumRayRange(float range)
-        {
-            AZ_Assert(false, "This Lidar Implementation does not support minimum ray range configurations!");
-        }
+        //! Configures ray range.
+        //! @param range Ray range.
+        virtual void ConfigureRayRange(Range range) = 0;
 
         //! Configures result flags.
         //! @param flags Raycast result flags define set of data types returned by lidar.
@@ -211,11 +212,6 @@ namespace ROS2
 
     protected:
         ~LidarRaycasterRequests() = default;
-
-        static void ValidateRayRange([[maybe_unused]] float range)
-        {
-            AZ_Assert(range > 0.0f, "Provided ray range was of incorrect value: Ray range value must be greater than zero.")
-        }
 
         static void ValidateRayOrientations([[maybe_unused]] const AZStd::vector<AZ::Vector3>& orientations)
         {

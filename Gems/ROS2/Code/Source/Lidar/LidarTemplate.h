@@ -81,5 +81,10 @@ namespace ROS2
     private:
         bool IsLayersVisible() const;
         [[nodiscard]] bool IsNoiseConfigVisible() const;
+
+        static AZ::Outcome<void, AZStd::string> ValidateRange(float minRange, float maxRange);
+
+        AZ::Outcome<void, AZStd::string> ValidateMinRange(void* newValue, const AZ::TypeId& valueType) const;
+        AZ::Outcome<void, AZStd::string> ValidateMaxRange(void* newValue, const AZ::TypeId& valueType) const;
     };
 } // namespace ROS2
