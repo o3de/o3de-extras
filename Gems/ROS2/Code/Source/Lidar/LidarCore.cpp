@@ -75,6 +75,10 @@ namespace ROS2
         }
 
         RaycastResultFlags requestedFlags = RaycastResultFlags::Ranges | RaycastResultFlags::Points;
+        if (m_lidarConfiguration.m_lidarSystemFeatures & LidarSystemFeatures::Intensity)
+        {
+            requestedFlags |= RaycastResultFlags::Intensities;
+        }
 
         LidarRaycasterRequestBus::Event(m_lidarRaycasterId, &LidarRaycasterRequestBus::Events::ConfigureRaycastResultFlags, requestedFlags);
 
@@ -161,8 +165,10 @@ namespace ROS2
         return m_lidarRaycasterId;
     }
 
-    RaycastResult LidarCore::PerformRaycast()
+    const RaycastResult& LidarCore::PerformRaycast()
     {
+        static const RaycastResult EmptyResults{};
+
         AZ::Entity* entity = nullptr;
         AZ::ComponentApplicationBus::BroadcastResult(entity, &AZ::ComponentApplicationRequests::FindEntity, m_entityId);
         const auto entityTransform = entity->FindComponent<AzFramework::TransformComponent>();
@@ -172,7 +178,7 @@ namespace ROS2
         if (m_lastScanResults.m_points.empty())
         {
             AZ_TracePrintf("Lidar Sensor Component", "No results from raycast\n");
-            return RaycastResult();
+            return EmptyResults;
         }
         return m_lastScanResults;
     }

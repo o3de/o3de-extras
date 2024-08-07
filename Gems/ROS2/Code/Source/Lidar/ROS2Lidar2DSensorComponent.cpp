@@ -106,7 +106,7 @@ namespace ROS2
 
     void ROS2Lidar2DSensorComponent::FrequencyTick()
     {
-        RaycastResult lastScanResults = m_lidarCore.PerformRaycast();
+        const RaycastResult& lastScanResults = m_lidarCore.PerformRaycast();
 
         if (!m_sensorConfiguration.m_publishingEnabled)
         { // Skip publishing when it is disabled.

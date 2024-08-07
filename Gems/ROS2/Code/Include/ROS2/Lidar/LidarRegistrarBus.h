@@ -22,6 +22,7 @@ namespace ROS2
         EntityExclusion         = 1 << 2,
         MaxRangePoints          = 1 << 3,
         PointcloudPublishing    = 1 << 4,
+        Intensity               = 1 << 5,
         All                     = 0b1111111111111111,
     };
 

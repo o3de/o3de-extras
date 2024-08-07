@@ -12,6 +12,7 @@
 #include <Lidar/ROS2LidarSensorComponent.h>
 #include <ROS2/Frame/ROS2FrameComponent.h>
 #include <ROS2/Utilities/ROS2Names.h>
+#include <sensor_msgs/point_cloud2_iterator.hpp>
 
 namespace ROS2
 {
@@ -129,8 +130,6 @@ namespace ROS2
 
     void ROS2LidarSensorComponent::FrequencyTick()
     {
-        auto entityTransform = GetEntity()->FindComponent<AzFramework::TransformComponent>();
-
         if (m_canRaycasterPublish && m_sensorConfiguration.m_publishingEnabled)
         {
             const builtin_interfaces::msg::Time timestamp = ROS2Interface::Get()->GetROSTimestamp();
@@ -140,43 +139,91 @@ namespace ROS2
                 aznumeric_cast<AZ::u64>(timestamp.sec) * aznumeric_cast<AZ::u64>(1.0e9f) + timestamp.nanosec);
         }
 
-        auto lastScanResults = m_lidarCore.PerformRaycast();
+        const RaycastResult& lastScanResults = m_lidarCore.PerformRaycast();
 
         if (m_canRaycasterPublish || !m_sensorConfiguration.m_publishingEnabled)
         { // Skip publishing when it is disabled or can be handled by the raycaster.
             return;
         }
 
-        const auto inverseLidarTM = entityTransform->GetWorldTM().GetInverse();
-        for (auto& point : lastScanResults.m_points)
-        {
-            point = inverseLidarTM.TransformPoint(point);
-        }
+        PublishRaycastResults(lastScanResults);
+    }
+
+    void ROS2LidarSensorComponent::PublishRaycastResults(const RaycastResult& results)
+    {
+        const bool isIntensityEnabled = m_lidarCore.m_lidarConfiguration.m_lidarSystemFeatures & LidarSystemFeatures::Intensity;
 
         auto* ros2Frame = GetEntity()->FindComponent<ROS2FrameComponent>();
         auto message = sensor_msgs::msg::PointCloud2();
         message.header.frame_id = ros2Frame->GetFrameID().data();
         message.header.stamp = ROS2Interface::Get()->GetROSTimestamp();
         message.height = 1;
-        message.width = lastScanResults.m_points.size();
-        message.point_step = sizeof(AZ::Vector3);
-        message.row_step = message.width * message.point_step;
+        message.width = results.m_points.size();
 
-        AZStd::array<const char*, 3> point_field_names = { "x", "y", "z" };
-        for (int i = 0; i < point_field_names.size(); i++)
+        sensor_msgs::PointCloud2Modifier modifier(message);
+        if (isIntensityEnabled)
         {
-            sensor_msgs::msg::PointField pf;
-            pf.name = point_field_names[i];
-            pf.offset = i * 4;
-            pf.datatype = sensor_msgs::msg::PointField::FLOAT32;
-            pf.count = 1;
-            message.fields.push_back(pf);
+            modifier.setPointCloud2Fields(
+                4,
+                "x",
+                1,
+                sensor_msgs::msg::PointField::FLOAT32,
+                "y",
+                1,
+                sensor_msgs::msg::PointField::FLOAT32,
+                "z",
+                1,
+                sensor_msgs::msg::PointField::FLOAT32,
+                "intensity",
+                1,
+                sensor_msgs::msg::PointField::FLOAT32);
+        }
+        else
+        {
+            modifier.setPointCloud2Fields(
+                3,
+                "x",
+                1,
+                sensor_msgs::msg::PointField::FLOAT32,
+                "y",
+                1,
+                sensor_msgs::msg::PointField::FLOAT32,
+                "z",
+                1,
+                sensor_msgs::msg::PointField::FLOAT32);
+        }
+        modifier.resize(results.m_points.size());
+
+        sensor_msgs::PointCloud2Iterator<float> xIt(message, "x");
+        sensor_msgs::PointCloud2Iterator<float> yIt(message, "y");
+        sensor_msgs::PointCloud2Iterator<float> zIt(message, "z");
+
+        AZStd::optional<sensor_msgs::PointCloud2Iterator<float>> intensityIt;
+        if (isIntensityEnabled)
+        {
+            intensityIt = sensor_msgs::PointCloud2Iterator<float>(message, "intensity");
         }
 
-        size_t sizeInBytes = lastScanResults.m_points.size() * sizeof(AZ::Vector3);
-        message.data.resize(sizeInBytes);
-        AZ_Assert(message.row_step * message.height == sizeInBytes, "Inconsistency in the size of point cloud data");
-        memcpy(message.data.data(), lastScanResults.m_points.data(), sizeInBytes);
+        const auto entityTransform = GetEntity()->FindComponent<AzFramework::TransformComponent>();
+        const auto inverseLidarTM = entityTransform->GetWorldTM().GetInverse();
+        for (size_t i = 0; i < results.m_points.size(); ++i)
+        {
+            const AZ::Vector3 globalPoint = inverseLidarTM.TransformPoint(results.m_points[i]);
+            *xIt = globalPoint.GetX();
+            *yIt = globalPoint.GetY();
+            *zIt = globalPoint.GetZ();
+
+            if (isIntensityEnabled)
+            {
+                *intensityIt.value() = results.m_intensities[i];
+                ++intensityIt.value();
+            }
+
+            ++xIt;
+            ++yIt;
+            ++zIt;
+        }
+
         m_pointCloudPublisher->publish(message);
     }
 } // namespace ROS2

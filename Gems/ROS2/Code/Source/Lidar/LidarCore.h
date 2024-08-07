@@ -37,7 +37,7 @@ namespace ROS2
 
         //! Perform a raycast.
         //! @return Results of the raycast.
-        RaycastResult PerformRaycast();
+        const RaycastResult& PerformRaycast();
         //! Visualize the results of the last performed raycast.
         void VisualizeResults() const;
 
