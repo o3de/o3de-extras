@@ -219,7 +219,9 @@ namespace ROS2
                 ++intensityIt.value();
             }
 
-            ++xIt; ++yIt; ++ zIt;
+            ++xIt;
+            ++yIt;
+            ++zIt;
         }
 
         m_pointCloudPublisher->publish(message);
