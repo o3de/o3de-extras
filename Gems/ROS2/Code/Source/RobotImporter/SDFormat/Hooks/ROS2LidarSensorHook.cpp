@@ -68,8 +68,7 @@ namespace ROS2::SDFormat
             const auto element = sdfSensor.Element();
 
             // setting lidar topic
-            AZStd::string messageTopic = is2DLidar ? "scan" : "pc";
-            messageTopic = HooksUtils::GetTopicName(lidarPluginParams, element, messageTopic);
+            const AZStd::string messageTopic = HooksUtils::GetTopicName(lidarPluginParams, element, (is2DLidar ? "scan" : "pc"));
             element->Get<bool>("visualize", sensorConfiguration.m_visualize, false);
 
             // in ros1, updateRate is an element of the plugin, not a sensor parameter
