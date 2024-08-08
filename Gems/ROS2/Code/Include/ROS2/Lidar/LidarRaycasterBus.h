@@ -103,7 +103,7 @@ namespace ROS2
 
     //! Structure used to describe both minimal and maximal
     //! ray travel distance in meters.
-    struct Range
+    struct RayRange
     {
         float m_min{ 0.0f };
         float m_max{ 0.0f };
@@ -122,7 +122,7 @@ namespace ROS2
 
         //! Configures ray range.
         //! @param range Ray range.
-        virtual void ConfigureRayRange(Range range) = 0;
+        virtual void ConfigureRayRange(RayRange range) = 0;
 
         //! Configures result flags.
         //! @param flags Raycast result flags define set of data types returned by lidar.

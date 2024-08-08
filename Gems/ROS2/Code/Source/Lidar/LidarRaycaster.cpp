@@ -71,7 +71,7 @@ namespace ROS2
         }
     }
 
-    void LidarRaycaster::ConfigureRayRange(Range range)
+    void LidarRaycaster::ConfigureRayRange(RayRange range)
     {
         m_range = range;
     }

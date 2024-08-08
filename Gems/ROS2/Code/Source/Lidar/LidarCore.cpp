@@ -59,7 +59,7 @@ namespace ROS2
         LidarRaycasterRequestBus::Event(
             m_lidarRaycasterId,
             &LidarRaycasterRequestBus::Events::ConfigureRayRange,
-            Range{ m_lidarConfiguration.m_lidarParameters.m_minRange, m_lidarConfiguration.m_lidarParameters.m_maxRange });
+            RayRange{ m_lidarConfiguration.m_lidarParameters.m_minRange, m_lidarConfiguration.m_lidarParameters.m_maxRange });
 
         if ((m_lidarConfiguration.m_lidarSystemFeatures & LidarSystemFeatures::Noise) &&
             m_lidarConfiguration.m_lidarParameters.m_isNoiseEnabled)

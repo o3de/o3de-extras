@@ -28,7 +28,7 @@ namespace ROS2
     protected:
         // LidarRaycasterRequestBus overrides
         void ConfigureRayOrientations(const AZStd::vector<AZ::Vector3>& orientations) override;
-        void ConfigureRayRange(Range range) override;
+        void ConfigureRayRange(RayRange range) override;
         void ConfigureRaycastResultFlags(RaycastResultFlags flags) override;
 
         RaycastResult PerformRaycast(const AZ::Transform& lidarTransform) override;
@@ -45,7 +45,7 @@ namespace ROS2
         AzPhysics::SceneHandle m_sceneHandle{ AzPhysics::InvalidSceneHandle };
 
         RaycastResultFlags m_resultFlags{ RaycastResultFlags::Points };
-        AZStd::optional<Range> m_range{};
+        AZStd::optional<RayRange> m_range{};
         bool m_addMaxRangePoints{ false };
         AZStd::vector<AZ::Quaternion> m_rayRotations{ { AZ::Quaternion::CreateZero() } };
 
