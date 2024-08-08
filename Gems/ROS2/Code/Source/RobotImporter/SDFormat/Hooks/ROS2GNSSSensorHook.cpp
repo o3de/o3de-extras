@@ -23,7 +23,8 @@ namespace ROS2::SDFormat
         importerHook.m_supportedSensorParams = AZStd::unordered_set<AZStd::string>{ ">pose", ">update_rate", ">topic", ">visualize" };
         importerHook.m_pluginNames = AZStd::unordered_set<AZStd::string>{ "libgazebo_ros_gps_sensor.so" };
         importerHook.m_supportedPluginParams = AZStd::unordered_set<AZStd::string>{ ">ros>remapping", ">ros>argument", ">ros>frame_name",
-                                                                                    ">ros>namespace", ">frameName",    ">robotNamespace" };
+                                                                                    ">ros>namespace", ">frameName",    ">robotNamespace",
+                                                                                    ">updateRate" };
         importerHook.m_sdfSensorToComponentCallback = [](AZ::Entity& entity,
                                                          const sdf::Sensor& sdfSensor) -> SensorImporterHook::ConvertSensorOutcome
         {
@@ -32,12 +33,12 @@ namespace ROS2::SDFormat
                 return AZ::Failure(AZStd::string("Failed to read parsed SDFormat data of %s NavSat sensor", sdfSensor.Name().c_str()));
             }
 
-            SensorConfiguration sensorConfiguration;
-            sensorConfiguration.m_frequency = sdfSensor.UpdateRate();
-            const AZStd::string messageType = "sensor_msgs::msg::NavSatFix";
-
             const auto gnssPluginParams = HooksUtils::GetPluginParams(sdfSensor.Plugins());
             const auto element = sdfSensor.Element();
+
+            SensorConfiguration sensorConfiguration;
+            sensorConfiguration.m_frequency = HooksUtils::GetFrequency(gnssPluginParams);
+            const AZStd::string messageType = "sensor_msgs::msg::NavSatFix";
 
             // setting gnss topic
             const AZStd::string messageTopic = HooksUtils::GetTopicName(gnssPluginParams, element, "gnss");

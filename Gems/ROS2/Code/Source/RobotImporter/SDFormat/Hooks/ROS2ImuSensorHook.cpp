@@ -39,8 +39,8 @@ namespace ROS2::SDFormat
                                                                                     ">visualize" };
         importerHook.m_pluginNames = AZStd::unordered_set<AZStd::string>{ "libgazebo_ros_imu_sensor.so" };
         importerHook.m_supportedPluginParams =
-            AZStd::unordered_set<AZStd::string>{ ">topicName",     ">ros>remapping", ">ros>argument",  ">ros>frame_name",
-                                                 ">ros>namespace", ">frameName",     ">robotNamespace" };
+            AZStd::unordered_set<AZStd::string>{ ">topicName",     ">ros>remapping", ">ros>argument",   ">ros>frame_name",
+                                                 ">ros>namespace", ">frameName",     ">robotNamespace", ">updateRate" };
         importerHook.m_sdfSensorToComponentCallback = [](AZ::Entity& entity,
                                                          const sdf::Sensor& sdfSensor) -> SensorImporterHook::ConvertSensorOutcome
         {
@@ -81,12 +81,12 @@ namespace ROS2::SDFormat
                 }
             }
 
-            SensorConfiguration sensorConfiguration;
-            sensorConfiguration.m_frequency = sdfSensor.UpdateRate();
-            const AZStd::string messageType = "sensor_msgs::msg::Imu";
-
             const auto imuPluginParams = HooksUtils::GetPluginParams(sdfSensor.Plugins());
             const auto element = sdfSensor.Element();
+
+            SensorConfiguration sensorConfiguration;
+            sensorConfiguration.m_frequency = HooksUtils::GetFrequency(imuPluginParams);
+            const AZStd::string messageType = "sensor_msgs::msg::Imu";
 
             // setting imu topic
             const AZStd::string messageTopic = HooksUtils::GetTopicName(imuPluginParams, element, "imu");

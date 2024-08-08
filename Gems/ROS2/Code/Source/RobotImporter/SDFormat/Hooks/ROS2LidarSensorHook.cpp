@@ -58,21 +58,17 @@ namespace ROS2::SDFormat
                 return AZ::Failure(AZStd::string("Failed to read parsed SDFormat data of %s Lidar sensor", sdfSensor.Name().c_str()));
             }
 
-            const bool is2DLidar = (lidarSensor->VerticalScanSamples() == 1);
-
-            SensorConfiguration sensorConfiguration;
-            sensorConfiguration.m_frequency = sdfSensor.UpdateRate();
-            const AZStd::string messageType = is2DLidar ? "sensor_msgs::msg::LaserScan" : "sensor_msgs::msg::PointCloud2";
-
             const auto lidarPluginParams = HooksUtils::GetPluginParams(sdfSensor.Plugins());
             const auto element = sdfSensor.Element();
+
+            SensorConfiguration sensorConfiguration;
+            sensorConfiguration.m_frequency = HooksUtils::GetFrequency(lidarPluginParams);
+            const bool is2DLidar = (lidarSensor->VerticalScanSamples() == 1);
+            const AZStd::string messageType = is2DLidar ? "sensor_msgs::msg::LaserScan" : "sensor_msgs::msg::PointCloud2";
 
             // setting lidar topic
             const AZStd::string messageTopic = HooksUtils::GetTopicName(lidarPluginParams, element, (is2DLidar ? "scan" : "pc"));
             element->Get<bool>("visualize", sensorConfiguration.m_visualize, false);
-
-            // in ros1, updateRate is an element of the plugin, not a sensor parameter
-            sensorConfiguration.m_frequency = HooksUtils::GetFrequency(lidarPluginParams, sensorConfiguration.m_frequency);
 
             HooksUtils::AddTopicConfiguration(sensorConfiguration, messageTopic, messageType, messageType);
 

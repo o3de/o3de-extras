@@ -35,7 +35,7 @@ namespace ROS2::SDFormat
                                                                           "libgazebo_ros_openni_kinect.so" };
         importerHook.m_supportedPluginParams = AZStd::unordered_set<AZStd::string>{
             ">imageTopicName", ">cameraInfoTopicName", ">depthImageTopicName", ">depthImageCameraInfoTopicName",
-            ">ros>remapping",  ">ros>argument",        ">ros>frame_name",      ">ros>namespace",
+            ">ros>remapping",  ">ros>argument",        ">ros>frame_name",      ">ros>namespace", ">updateRate",
             ">frameName",      ">robotNamespace"
         };
         importerHook.m_sdfSensorToComponentCallback = [](AZ::Entity& entity,
@@ -69,11 +69,11 @@ namespace ROS2::SDFormat
                 cameraConfiguration.m_farClipDistance = static_cast<float>(cameraSensor->DepthFarClip());
             }
 
-            SensorConfiguration sensorConfiguration;
-            sensorConfiguration.m_frequency = sdfSensor.UpdateRate();
-
             const auto cameraPluginParams = HooksUtils::GetPluginParams(sdfSensor.Plugins());
             const auto element = sdfSensor.Element();
+
+            SensorConfiguration sensorConfiguration;
+            sensorConfiguration.m_frequency = HooksUtils::GetFrequency(cameraPluginParams);
 
             if (sdfSensor.Type() != sdf::SensorType::DEPTH_CAMERA)
             { // COLOR_CAMERA and RGBD_CAMERA
