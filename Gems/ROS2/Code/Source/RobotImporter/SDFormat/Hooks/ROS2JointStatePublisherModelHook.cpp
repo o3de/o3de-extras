@@ -8,6 +8,7 @@
 
 #include <AzCore/std/containers/vector.h>
 #include <AzCore/std/string/string.h>
+#include <Source/EditorArticulationLinkComponent.h>
 #include <Manipulation/Controllers/JointsArticulationControllerComponent.h>
 #include <Manipulation/Controllers/JointsPIDControllerComponent.h>
 #include <Manipulation/JointsManipulationEditorComponent.h>
@@ -41,11 +42,12 @@ namespace ROS2::SDFormat
                 HooksUtils::ValueOfAny(statePublisherParams, topicParamNames, "joint_states");
 
             // add required components
-            if (!HooksUtils::CreateComponent<JointsArticulationControllerComponent>(entity))
-            {
-                HooksUtils::CreateComponent<JointsPIDControllerComponent>(entity);
-            }
             HooksUtils::CreateComponent<ROS2FrameEditorComponent>(entity);
+
+            // create controllerComponent based on model joints/articulations
+            entity.FindComponent<PhysX::EditorArticulationLinkComponent>()
+                ? HooksUtils::CreateComponent<JointsArticulationControllerComponent>(entity)
+                : HooksUtils::CreateComponent<JointsPIDControllerComponent>(entity);
 
             if (HooksUtils::CreateComponent<JointsManipulationEditorComponent>(entity, publisherConfiguration))
             {

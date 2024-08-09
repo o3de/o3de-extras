@@ -8,6 +8,7 @@
 
 #include <Manipulation/Controllers/JointsArticulationControllerComponent.h>
 #include <Manipulation/Controllers/JointsPIDControllerComponent.h>
+#include <Source/EditorArticulationLinkComponent.h>
 #include <Manipulation/JointsManipulationEditorComponent.h>
 #include <Manipulation/JointsTrajectoryComponent.h>
 #include <ROS2/Frame/ROS2FrameEditorComponent.h>
@@ -41,11 +42,13 @@ namespace ROS2::SDFormat
                 HooksUtils::ValueOfAny(poseTrajectoryParams, trajectoryTopicParamNames, "arm_controller/follow_joint_trajectory");
 
             // add required components
-            if (!HooksUtils::CreateComponent<JointsArticulationControllerComponent>(entity))
-            {
-                HooksUtils::CreateComponent<JointsPIDControllerComponent>(entity);
-            }
             HooksUtils::CreateComponent<ROS2FrameEditorComponent>(entity);
+
+            // create controllerComponent based on model joints/articulations
+            entity.FindComponent<PhysX::EditorArticulationLinkComponent>()
+                ? HooksUtils::CreateComponent<JointsArticulationControllerComponent>(entity)
+                : HooksUtils::CreateComponent<JointsPIDControllerComponent>(entity);
+
             HooksUtils::CreateComponent<JointsManipulationEditorComponent>(entity, publisherConfiguration);
 
             if (HooksUtils::CreateComponent<JointsTrajectoryComponent>(entity, trajectoryActionName))
