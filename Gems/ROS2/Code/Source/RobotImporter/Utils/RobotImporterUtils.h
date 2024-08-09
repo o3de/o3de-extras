@@ -231,7 +231,7 @@ namespace ROS2::Utils::SDFormat
     //! @param rootElement pointer to a root Element in parsed XML data that will be a subject to heuristics
     //! @param supportedParams set of predefined parameters that are supported
     //! @param supportedPlugins set of predefined plugins that are supported
-    //! @param supportedPluginParams set of predefined supported plugin params that are supported
+    //! @param supportedPluginParams set of supported plugin params
     //! @returns list of unsupported parameters defined for given element
     AZStd::vector<AZStd::string> GetUnsupportedParams(
         const sdf::ElementPtr& rootElement,

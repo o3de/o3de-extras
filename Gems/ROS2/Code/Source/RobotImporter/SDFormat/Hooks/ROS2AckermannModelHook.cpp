@@ -314,7 +314,7 @@ namespace ROS2::SDFormat
             }
             else
             {
-                return AZ::Failure(AZStd::string("Failed to create ROS2 Ackermann Control Component"));
+                return AZ::Failure(AZStd::string("Failed to create ROS 2 Ackermann Control Component"));
             }
         };
 

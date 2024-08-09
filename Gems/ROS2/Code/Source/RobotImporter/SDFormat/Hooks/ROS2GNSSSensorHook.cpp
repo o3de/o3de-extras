@@ -58,7 +58,7 @@ namespace ROS2::SDFormat
             }
             else
             {
-                return AZ::Failure(AZStd::string("Failed to create ROS2 GNSS Sensor component"));
+                return AZ::Failure(AZStd::string("Failed to create ROS 2 GNSS Sensor component"));
             }
         };
 

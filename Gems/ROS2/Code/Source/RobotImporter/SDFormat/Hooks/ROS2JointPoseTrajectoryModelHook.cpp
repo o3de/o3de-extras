@@ -50,7 +50,7 @@ namespace ROS2::SDFormat
             }
             else
             {
-                return AZ::Failure(AZStd::string("Failed to create ROS2 Joint Pose Trajectory Component"));
+                return AZ::Failure(AZStd::string("Failed to create ROS 2 Joint Pose Trajectory Component"));
             }
         };
 

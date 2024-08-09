@@ -12,20 +12,16 @@
 
 namespace ROS2::SDFormat::ROS2ModelPluginHooks
 {
-    //! Retrieve a model plugin importer hook which is used to map SDFormat model plugin of type skid steering drive into O3DE
-    //! components.
+    //! Get a mapping of SDFormat skid_steer_drive and diff_drive plugins into O3DE components.
     ModelPluginImporterHook ROS2SkidSteeringModel();
 
-    //! Retrieve a model plugin importer hook which is used to map SDFormat model plugin of type Ackermann model drive into O3DE
-    //! components.
+    //! Get a mapping of SDFormat ackermann_drive plugin into O3DE components.
     ModelPluginImporterHook ROS2AckermannModel();
 
-    //! Retrive a model plugin importer hook which is used to map SDFormat model plugin of type Joint state publisher into O3DE
-    //! components
+    //! Get a mapping of SDFormat joint_state_publisher plugin into O3DE components.
     ModelPluginImporterHook ROS2JointStatePublisherModel();
 
-    //! Retrive a model plugin importer hook which is used to map SDFormat model plugin of type Joint pose trajectory into O3DE
-    //! components
+     //! Get a mapping of SDFormat joint_pose_trajectory plugin into O3DE components.
     ModelPluginImporterHook ROS2JointPoseTrajectoryModel();
 
 } // namespace ROS2::SDFormat::ROS2ModelPluginHooks

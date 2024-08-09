@@ -118,7 +118,7 @@ namespace ROS2::SDFormat
             remappings[key] = val;
         }
 
-        // Parses parameters present in <ros> element, inserting them to the map.
+        // Parses parameters present in ros element, inserting them to the map.
         void ParseRos2Remapping(const sdf::Element& rosContent, HooksUtils::PluginParams& remappings)
         {
             if (rosContent.GetName() != "remapping" && rosContent.GetName() != "argument")
@@ -214,7 +214,7 @@ namespace ROS2::SDFormat
             std::string contentName = content->GetName();
             if (contentName == "ros")
             {
-                // when <ros> tag is present, parse it's elements and insert them into the map
+                // when ros tag is present, parse it's elements and insert them into the map
                 auto rosContent = content->GetFirstElement();
                 while (rosContent != nullptr)
                 {

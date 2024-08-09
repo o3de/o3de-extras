@@ -121,7 +121,7 @@ namespace ROS2::SDFormat
         ROS2FrameConfiguration GetFrameConfiguration(const HooksUtils::PluginParams& pluginParams);
 
         //! Find all parameters given in plugin element.
-        //! Given a ROS2 remapping argument, extracts only names of
+        //! Given a ROS 2 remapping argument, extracts only names of
         //! elements to be remapped, ignoring their namespaces.
         //! @param plugin plugin to extract parameters from
         //! @return a map of parameters present in plugin

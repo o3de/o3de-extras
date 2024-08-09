@@ -119,7 +119,7 @@ namespace ROS2::SDFormat
             }
             else
             {
-                return AZ::Failure(AZStd::string("Failed to create ROS2 Lidar Sensor component"));
+                return AZ::Failure(AZStd::string("Failed to create ROS 2 Lidar Sensor component"));
             }
         };
 
