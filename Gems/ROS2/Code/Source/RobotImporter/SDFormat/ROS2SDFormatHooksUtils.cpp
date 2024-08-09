@@ -123,7 +123,7 @@ namespace ROS2::SDFormat
         {
             if (rosContent.GetName() != "remapping" && rosContent.GetName() != "argument")
             {
-                // parameter other than <remapping> or <argument> can be handled as regular parameter
+                // parameter other than remapping or argument can be handled as regular parameter
                 ParseRegularContent(rosContent, remappings);
                 return;
             }
