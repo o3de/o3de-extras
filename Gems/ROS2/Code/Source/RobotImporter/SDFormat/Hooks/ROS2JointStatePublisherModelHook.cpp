@@ -9,6 +9,7 @@
 #include <AzCore/std/containers/vector.h>
 #include <AzCore/std/string/string.h>
 #include <Manipulation/Controllers/JointsArticulationControllerComponent.h>
+#include <Manipulation/Controllers/JointsPIDControllerComponent.h>
 #include <Manipulation/JointsManipulationEditorComponent.h>
 #include <ROS2/Frame/ROS2FrameEditorComponent.h>
 #include <RobotImporter/SDFormat/ROS2ModelPluginHooks.h>
@@ -40,7 +41,10 @@ namespace ROS2::SDFormat
                 HooksUtils::ValueOfAny(statePublisherParams, topicParamNames, "joint_states");
 
             // add required components
-            HooksUtils::CreateComponent<JointsArticulationControllerComponent>(entity);
+            if (!HooksUtils::CreateComponent<JointsArticulationControllerComponent>(entity))
+            {
+                HooksUtils::CreateComponent<JointsPIDControllerComponent>(entity);
+            }
             HooksUtils::CreateComponent<ROS2FrameEditorComponent>(entity);
 
             if (HooksUtils::CreateComponent<JointsManipulationEditorComponent>(entity, publisherConfiguration))

@@ -7,6 +7,7 @@
  */
 
 #include <Manipulation/Controllers/JointsArticulationControllerComponent.h>
+#include <Manipulation/Controllers/JointsPIDControllerComponent.h>
 #include <Manipulation/JointsManipulationEditorComponent.h>
 #include <Manipulation/JointsTrajectoryComponent.h>
 #include <ROS2/Frame/ROS2FrameEditorComponent.h>
@@ -40,7 +41,10 @@ namespace ROS2::SDFormat
                 HooksUtils::ValueOfAny(poseTrajectoryParams, trajectoryTopicParamNames, "arm_controller/follow_joint_trajectory");
 
             // add required components
-            HooksUtils::CreateComponent<JointsArticulationControllerComponent>(entity);
+            if (!HooksUtils::CreateComponent<JointsArticulationControllerComponent>(entity))
+            {
+                HooksUtils::CreateComponent<JointsPIDControllerComponent>(entity);
+            }
             HooksUtils::CreateComponent<ROS2FrameEditorComponent>(entity);
             HooksUtils::CreateComponent<JointsManipulationEditorComponent>(entity, publisherConfiguration);
 
