@@ -53,6 +53,7 @@ namespace ROS2::Utils
     //! always contain at least one element. The back() element of the stack returns the direct model the link is attached to
     //! @return Return true to continue visiting links or false to halt
     using LinkVisitorCallback = AZStd::function<bool(const sdf::Link& link, const ModelStack& modelStack)>;
+
     //! Visit links from URDF/SDF
     //! @param sdfModel Model object of SDF document corresponding to the <model> tag. It used to query link
     //! @param visitNestedModelLinks When true recurses to any nested <model> tags of the Model object and invoke visitor on their links as
@@ -89,7 +90,7 @@ namespace ROS2::Utils
     AZStd::unordered_map<AZStd::string, const sdf::Joint*> GetAllJoints(const sdf::Model& sdfModel, bool gatherNestedModelJoints = false);
 
     //! Retrieve all joints from URDF/SDF in which the specified link is a child in a sdf::Joint.
-    //! @param sdfModel Model object of SDF document corresponding to the <model> tag. It used to query joints
+    //! @param sdfModel Model object of SDF document corresponding to the <model> tag. It is used to query joints
     //! @param linkName Name of link which to query in joint objects ChildName()
     //! @param gatherNestedModelJoints When true recurses to any nested <model> tags of the Model object and also gathers their joints as
     //! well
@@ -229,9 +230,14 @@ namespace ROS2::Utils::SDFormat
     //! Allows to store the list of unsupported parameters in metadata and logs. It is typically used with sensors and plugins.
     //! @param rootElement pointer to a root Element in parsed XML data that will be a subject to heuristics
     //! @param supportedParams set of predefined parameters that are supported
+    //! @param supportedPlugins set of predefined plugins that are supported
+    //! @param supportedPluginParams set of supported plugin params
     //! @returns list of unsupported parameters defined for given element
     AZStd::vector<AZStd::string> GetUnsupportedParams(
-        const sdf::ElementPtr& rootElement, const AZStd::unordered_set<AZStd::string>& supportedParams);
+        const sdf::ElementPtr& rootElement,
+        const AZStd::unordered_set<AZStd::string>& supportedParams,
+        const AZStd::unordered_set<AZStd::string>& supportedPlugins = AZStd::unordered_set<AZStd::string>(),
+        const AZStd::unordered_set<AZStd::string>& supportedPluginParams = AZStd::unordered_set<AZStd::string>());
 
     //! Check if plugin is supported by using it's filename. The filepath is converted into the filename if necessary.
     //! @param plugin plugin in the parsed SDFormat data

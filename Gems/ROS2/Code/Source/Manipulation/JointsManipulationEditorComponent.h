@@ -22,6 +22,7 @@ namespace ROS2
     {
     public:
         JointsManipulationEditorComponent();
+        JointsManipulationEditorComponent(const PublisherConfiguration& publisherConfiguration);
         ~JointsManipulationEditorComponent() = default;
         AZ_EDITOR_COMPONENT(JointsManipulationEditorComponent, "{BF2F77FD-92FB-4730-92C7-DDEE54F508BF}");
 
