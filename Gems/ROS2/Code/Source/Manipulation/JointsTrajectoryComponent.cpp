@@ -17,6 +17,11 @@
 
 namespace ROS2
 {
+    JointsTrajectoryComponent::JointsTrajectoryComponent(const AZStd::string& followTrajectoryActionName)
+        : m_followTrajectoryActionName(followTrajectoryActionName)
+    {
+    }
+
     void JointsTrajectoryComponent::Activate()
     {
         auto* ros2Frame = GetEntity()->FindComponent<ROS2FrameComponent>();

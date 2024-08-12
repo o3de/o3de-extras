@@ -9,10 +9,12 @@
 #include "ROS2SDFormatHooksUtils.h"
 #include <AzToolsFramework/ToolsComponents/TransformComponent.h>
 #include <ROS2/Communication/TopicConfiguration.h>
+#include <ROS2/Frame/ROS2FrameEditorComponent.h>
 #include <RobotImporter/Utils/RobotImporterUtils.h>
 #include <RobotImporter/Utils/TypeConversions.h>
 #include <SdfAssetBuilder/SdfAssetBuilderSettings.h>
 #include <VehicleDynamics/WheelControllerComponent.h>
+#include <ROS2/Utilities/ROS2Names.h>
 
 #include <sdf/Joint.hh>
 
@@ -98,4 +100,166 @@ namespace ROS2::SDFormat
                 "CreatePrefabFromUrdfOrSdf", "Setting transform failed: %s does not have transform interface\n", sdfSensor.Name().c_str());
         }
     }
+
+    namespace HooksUtils::PluginParser
+    {
+        // Inserts name (key) and value (val) of given parameter to map.
+        void ParseRegularContent(const sdf::Element& content, HooksUtils::PluginParams& remappings)
+        {
+            std::string contentName = content.GetName();
+            std::string contentValue = content.GetValue()->GetAsString();
+            if (contentName.empty() || contentValue.empty())
+            {
+                AZ_Warning("PluginParser", false, "Encountered empty parameter value while parsing URDF/SDF plugin.");
+                return;
+            }
+            AZStd::string key(contentName.c_str(), contentName.size());
+            AZStd::string val(contentValue.c_str(), contentValue.size());
+            remappings[key] = val;
+        }
+
+        // Parses parameters present in ros element, inserting them to the map.
+        void ParseRos2Remapping(const sdf::Element& rosContent, HooksUtils::PluginParams& remappings)
+        {
+            if (rosContent.GetName() != "remapping" && rosContent.GetName() != "argument")
+            {
+                // parameter other than remapping or argument can be handled as regular parameter
+                ParseRegularContent(rosContent, remappings);
+                return;
+            }
+            AZStd::string contentValue = rosContent.GetValue()->GetAsString().c_str();
+
+            if (contentValue.find_last_of('=') == std::string::npos || contentValue.find_last_of(':') == std::string::npos)
+            {
+                AZ_Warning("PluginParser", false, "Encountered invalid remapping while parsing URDF/SDF plugin.");
+                return;
+            }
+
+            // get new name of the topic
+            int startVal = contentValue.find_last_of('=');
+            if (contentValue.find_last_of('/') != std::string::npos && contentValue.find_last_of('/') > startVal)
+            {
+                startVal = contentValue.find_last_of("/");
+            }
+            startVal += 1;
+
+            if (startVal >= contentValue.size())
+            {
+                AZ_Warning("PluginParser", false, "Encountered invalid (empty) remapping while parsing URDF/SDF plugin.");
+                return;
+            }
+            AZStd::string newTopic = contentValue.substr(startVal, contentValue.size() - startVal);
+
+            // get previous name of the topic
+            contentValue = contentValue.substr(0, contentValue.find_first_of(':'));
+
+            int startKey = contentValue.find_last_of('/') != std::string::npos ? contentValue.find_last_of('/') + 1 : 0;
+            if (startKey >= contentValue.size())
+            {
+                AZ_Warning("PluginParser", false, "Encountered invalid (empty) remapping while parsing URDF/SDF plugin.");
+                return;
+            }
+            AZStd::string prevTopic = contentValue.substr(startKey, contentValue.size() - startKey);
+
+            if (ROS2Names::ValidateTopic(newTopic).IsSuccess() && ROS2Names::ValidateTopic(prevTopic).IsSuccess())
+            {
+                remappings[prevTopic] = newTopic;
+            }
+            else
+            {
+                AZ_Warning("PluginParser", false, "Encountered invalid topic name while parsing URDF/SDF plugin.");
+            }
+        }
+    } // namespace HooksUtils::PluginParser
+
+    ROS2FrameConfiguration HooksUtils::GetFrameConfiguration(const HooksUtils::PluginParams& pluginParams)
+    {
+        ROS2FrameConfiguration frameConfiguration;
+
+        const static AZStd::vector<AZStd::string> namespaceRemapNames = { "robotNamespace", "namespace" };
+        const AZStd::string remappedNamespace = HooksUtils::ValueOfAny(pluginParams, namespaceRemapNames);
+        if (!ROS2Names::ValidateNamespace(remappedNamespace).IsSuccess())
+        {
+            AZ_Warning("PluginParser", false, "Encountered invalid namespace name while parsing URDF/SDF plugin.");
+        }
+        else if (!remappedNamespace.empty())
+        {
+            frameConfiguration.m_namespaceConfiguration.SetNamespace(remappedNamespace, NamespaceConfiguration::NamespaceStrategy::Custom);
+        }
+
+        if (pluginParams.contains("frameName"))
+        {
+            frameConfiguration.m_frameName = pluginParams.at("frameName");
+        }
+        else if (pluginParams.contains("frame_name"))
+        {
+            frameConfiguration.m_frameName = pluginParams.at("frame_name");
+        }
+
+        return frameConfiguration;
+    }
+
+    HooksUtils::PluginParams HooksUtils::GetPluginParams(const sdf::Plugins& plugins)
+    {
+        HooksUtils::PluginParams remappings;
+        if (plugins.empty())
+        {
+            return remappings;
+        }
+
+        const auto plugin = plugins[0];
+
+        for (const auto& content : plugin.Contents())
+        {
+            std::string contentName = content->GetName();
+            if (contentName == "ros")
+            {
+                // when ros tag is present, parse it's elements and insert them into the map
+                auto rosContent = content->GetFirstElement();
+                while (rosContent != nullptr)
+                {
+                    PluginParser::ParseRos2Remapping(*rosContent, remappings);
+                    rosContent = rosContent->GetNextElement();
+                }
+            }
+            else
+            {
+                PluginParser::ParseRegularContent(*content, remappings);
+            }
+        }
+
+        return remappings;
+    }
+
+    AZStd::string HooksUtils::ValueOfAny(
+        const HooksUtils::PluginParams& pluginParams, const AZStd::vector<AZStd::string>& paramNames, const AZStd::string& defaultVal)
+    {
+        for (const auto& paramName : paramNames)
+        {
+            if (pluginParams.contains(paramName))
+            {
+                const AZStd::string paramValue = pluginParams.at(paramName);
+                return AZ::IO::PathView(paramValue).Filename().String();
+            }
+        }
+        return defaultVal;
+    }
+
+    AZStd::string HooksUtils::GetTopicName(const PluginParams& pluginParams, sdf::ElementPtr element, const AZStd::string& defaultVal)
+    {
+        if (element->HasElement("topic"))
+        {
+            return element->Get<std::string>("topic").c_str();
+        }
+
+        const static AZStd::vector<AZStd::string> remapParamNames = { "topicName", "out" };
+        return ValueOfAny(pluginParams, remapParamNames, defaultVal);
+    }
+
+    float HooksUtils::GetFrequency(const PluginParams& pluginParams, const float defaultVal)
+    {
+        const static AZStd::vector<AZStd::string> frequencyParamNames = { "updateRate", "update_rate" };
+        return AZStd::stof(ValueOfAny(pluginParams, frequencyParamNames, AZStd::to_string(defaultVal)));
+    }
+
 } // namespace ROS2::SDFormat
