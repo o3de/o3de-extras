@@ -15,6 +15,7 @@
 #include <AzCore/std/string/string.h>
 #include <AzToolsFramework/ToolsComponents/EditorComponentBase.h>
 #include <AzToolsFramework/ToolsComponents/GenericComponentWrapper.h>
+#include <ROS2/Frame/ROS2FrameEditorComponent.h>
 #include <ROS2/RobotImporter/SDFormatModelPluginImporterHook.h>
 #include <ROS2/Sensor/SensorConfiguration.h>
 #include <Source/EditorArticulationLinkComponent.h>
@@ -111,5 +112,41 @@ namespace ROS2::SDFormat
 
             return nullptr;
         }
+
+        using PluginParams = AZStd::unordered_map<AZStd::string, AZStd::string>;
+
+        //! Get frame configuration from given plugin params
+        //! @param pluginParams parameters of the plugin for which frame is created
+        //! @return configuration of the frame
+        ROS2FrameConfiguration GetFrameConfiguration(const HooksUtils::PluginParams& pluginParams);
+
+        //! Find all parameters given in plugin element.
+        //! Given a ROS 2 remapping argument, extracts only names of
+        //! elements to be remapped, ignoring their namespaces.
+        //! @param plugin plugin to extract parameters from
+        //! @return a map of parameters present in plugin
+        PluginParams GetPluginParams(const sdf::Plugins& plugins);
+
+        //! Find value of any of specified plugin parameters.
+        //! @param pluginParams map of plugin parameters defined in model description
+        //! @param paramNames vector of parameter names in query
+        //! @param defaultVal value to be returned when none of the parameters are present in the map
+        //! @return value on any of the query parameters or defaultVal when none were present
+        AZStd::string ValueOfAny(
+            const PluginParams& pluginParams, const AZStd::vector<AZStd::string>& paramNames, const AZStd::string& defaultVal = "");
+
+        //! Get the name of element's general topic after remapping.
+        //! @param pluginParams map of plugin parameters
+        //! @param element pointer to the sdf element
+        //! @param defaultVal value to be returned when no remaps of the topic are present in the map
+        //! @return remapped topic name or defaultVal when no remaps are present
+        AZStd::string GetTopicName(const PluginParams& pluginParams, sdf::ElementPtr element, const AZStd::string& defaultVal = "");
+
+        //! Get publisher frequency from plugin.
+        //! @param pluginParams map of plugin parameters
+        //! @param defaultVal value to be returned when frequency param does not appear in pluginParams
+        //! @return publisher frequency or defaultVal when frequency is not specified by element description
+        float GetFrequency(const PluginParams& pluginParams, const float defaultVal = 10.0);
+
     } // namespace HooksUtils
 } // namespace ROS2::SDFormat

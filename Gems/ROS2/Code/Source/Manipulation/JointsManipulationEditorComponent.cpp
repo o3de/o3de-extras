@@ -29,6 +29,11 @@ namespace ROS2
         m_jointStatePublisherConfiguration.m_frequency = 25.0f;
     }
 
+    JointsManipulationEditorComponent::JointsManipulationEditorComponent(const PublisherConfiguration& publisherConfiguration)
+    {
+        m_jointStatePublisherConfiguration = publisherConfiguration;
+    }
+
     void JointsManipulationEditorComponent::BuildGameEntity(AZ::Entity* gameEntity)
     {
         gameEntity->CreateComponent<JointsManipulationComponent>(

@@ -43,9 +43,12 @@ namespace ROS2::SDFormat
             ">ray>scan>vertical>resolution",
             ">ray>range>min",
             ">ray>range>max",
-        };
+            ">topic",
+            ">visualize" };
         importerHook.m_pluginNames = AZStd::unordered_set<AZStd::string>{ "libgazebo_ros_ray_sensor.so", "libgazebo_ros_laser.so" };
-        importerHook.m_supportedPluginParams = AZStd::unordered_set<AZStd::string>{};
+        importerHook.m_supportedPluginParams =
+            AZStd::unordered_set<AZStd::string>{ ">topicName",      ">ros>remapping", ">ros>argument", ">updateRate",
+                                                 ">ros>frame_name", ">ros>namespace", ">frameName",    ">robotNamespace" };
         importerHook.m_sdfSensorToComponentCallback = [](AZ::Entity& entity,
                                                          const sdf::Sensor& sdfSensor) -> SensorImporterHook::ConvertSensorOutcome
         {
@@ -55,12 +58,18 @@ namespace ROS2::SDFormat
                 return AZ::Failure(AZStd::string("Failed to read parsed SDFormat data of %s Lidar sensor", sdfSensor.Name().c_str()));
             }
 
-            const bool is2DLidar = (lidarSensor->VerticalScanSamples() == 1);
+            const auto lidarPluginParams = HooksUtils::GetPluginParams(sdfSensor.Plugins());
+            const auto element = sdfSensor.Element();
 
             SensorConfiguration sensorConfiguration;
-            sensorConfiguration.m_frequency = sdfSensor.UpdateRate();
+            sensorConfiguration.m_frequency = HooksUtils::GetFrequency(lidarPluginParams);
+            const bool is2DLidar = (lidarSensor->VerticalScanSamples() == 1);
             const AZStd::string messageType = is2DLidar ? "sensor_msgs::msg::LaserScan" : "sensor_msgs::msg::PointCloud2";
-            const AZStd::string messageTopic = is2DLidar ? "scan" : "pc";
+
+            // setting lidar topic
+            const AZStd::string messageTopic = HooksUtils::GetTopicName(lidarPluginParams, element, (is2DLidar ? "scan" : "pc"));
+            element->Get<bool>("visualize", sensorConfiguration.m_visualize, false);
+
             HooksUtils::AddTopicConfiguration(sensorConfiguration, messageTopic, messageType, messageType);
 
             LidarSensorConfiguration lidarConfiguration{ is2DLidar ? LidarTemplateUtils::Get2DModels()
@@ -94,8 +103,11 @@ namespace ROS2::SDFormat
                     "GPU Lidar requires RGL Gem, see https://github.com/RobotecAI/o3de-rgl-gem for more details.\n");
             }
 
+            // Get frame configuration
+            const auto frameConfiguration = HooksUtils::GetFrameConfiguration(lidarPluginParams);
+
             // Create required components
-            HooksUtils::CreateComponent<ROS2FrameEditorComponent>(entity);
+            HooksUtils::CreateComponent<ROS2FrameEditorComponent>(entity, frameConfiguration);
 
             // Create Lidar component
             const auto lidarComponent = is2DLidar
@@ -107,7 +119,7 @@ namespace ROS2::SDFormat
             }
             else
             {
-                return AZ::Failure(AZStd::string("Failed to create ROS2 Lidar Sensor component"));
+                return AZ::Failure(AZStd::string("Failed to create ROS 2 Lidar Sensor component"));
             }
         };
 
