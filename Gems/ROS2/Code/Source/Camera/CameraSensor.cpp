@@ -123,6 +123,7 @@ namespace ROS2
             m_entityId.ToString().c_str());
         AZ::RPI::RenderPipelineDescriptor pipelineDesc;
         pipelineDesc.m_mainViewTagName = "MainCamera";
+        pipelineDesc.m_allowModification = true;
         pipelineDesc.m_name = m_pipelineName;
 
         pipelineDesc.m_rootPassTemplate = GetPipelineTemplateName();
