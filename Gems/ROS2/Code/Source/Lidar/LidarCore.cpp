@@ -58,10 +58,8 @@ namespace ROS2
         LidarRaycasterRequestBus::Event(m_lidarRaycasterId, &LidarRaycasterRequestBus::Events::ConfigureRayOrientations, m_lastRotations);
         LidarRaycasterRequestBus::Event(
             m_lidarRaycasterId,
-            &LidarRaycasterRequestBus::Events::ConfigureMinimumRayRange,
-            m_lidarConfiguration.m_lidarParameters.m_minRange);
-        LidarRaycasterRequestBus::Event(
-            m_lidarRaycasterId, &LidarRaycasterRequestBus::Events::ConfigureRayRange, m_lidarConfiguration.m_lidarParameters.m_maxRange);
+            &LidarRaycasterRequestBus::Events::ConfigureRayRange,
+            RayRange{ m_lidarConfiguration.m_lidarParameters.m_minRange, m_lidarConfiguration.m_lidarParameters.m_maxRange });
 
         if ((m_lidarConfiguration.m_lidarSystemFeatures & LidarSystemFeatures::Noise) &&
             m_lidarConfiguration.m_lidarParameters.m_isNoiseEnabled)

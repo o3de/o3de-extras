@@ -44,7 +44,6 @@ namespace ROS2
         , m_sceneEntityId{ lidarRaycaster.m_sceneEntityId }
         , m_sceneHandle{ lidarRaycaster.m_sceneHandle }
         , m_resultFlags{ lidarRaycaster.m_resultFlags }
-        , m_minRange{ lidarRaycaster.m_minRange }
         , m_range{ lidarRaycaster.m_range }
         , m_addMaxRangePoints{ lidarRaycaster.m_addMaxRangePoints }
         , m_rayRotations{ AZStd::move(lidarRaycaster.m_rayRotations) }
@@ -72,15 +71,9 @@ namespace ROS2
         }
     }
 
-    void LidarRaycaster::ConfigureRayRange(float range)
+    void LidarRaycaster::ConfigureRayRange(RayRange range)
     {
-        ValidateRayRange(range);
         m_range = range;
-    }
-
-    void LidarRaycaster::ConfigureMinimumRayRange(float range)
-    {
-        m_minRange = range;
     }
 
     void LidarRaycaster::ConfigureRaycastResultFlags(RaycastResultFlags flags)
@@ -101,7 +94,7 @@ namespace ROS2
             AZStd::shared_ptr<AzPhysics::RayCastRequest> request = AZStd::make_shared<AzPhysics::RayCastRequest>();
             request->m_start = lidarPosition;
             request->m_direction = direction;
-            request->m_distance = m_range;
+            request->m_distance = m_range->m_max;
             request->m_reportMultipleHits = false;
 
             request->m_filterCallback = [ignoredCollisionLayers = this->m_ignoredCollisionLayers](
@@ -122,7 +115,7 @@ namespace ROS2
     RaycastResult LidarRaycaster::PerformRaycast(const AZ::Transform& lidarTransform)
     {
         AZ_Assert(!m_rayRotations.empty(), "Ray poses are not configured. Unable to Perform a raycast.");
-        AZ_Assert(m_range > 0.0f, "Ray range is not configured. Unable to Perform a raycast.");
+        AZ_Assert(m_range.has_value(), "Ray range is not configured. Unable to Perform a raycast.");
 
         if (m_sceneHandle == AzPhysics::InvalidSceneHandle)
         {
@@ -149,13 +142,13 @@ namespace ROS2
         AZ_Assert(requestResults.size() == rayDirections.size(), "Request size should be equal to directions size");
         const auto localTransform =
             AZ::Transform::CreateFromQuaternionAndTranslation(lidarTransform.GetRotation(), lidarTransform.GetTranslation()).GetInverse();
-        const float maxRange = m_addMaxRangePoints ? m_range : AZStd::numeric_limits<float>::infinity();
+        const float maxRange = m_addMaxRangePoints ? m_range->m_max : AZStd::numeric_limits<float>::infinity();
 
         for (int i = 0; i < requestResults.size(); i++)
         {
             const auto& requestResult = requestResults[i];
             float hitRange = requestResult ? requestResult.m_hits[0].m_distance : maxRange;
-            if (hitRange < m_minRange)
+            if (hitRange < m_range->m_min)
             {
                 hitRange = -AZStd::numeric_limits<float>::infinity();
             }
