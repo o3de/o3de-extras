@@ -72,13 +72,10 @@ namespace ROS2
                 m_lidarConfiguration.m_lidarParameters.m_noiseParameters.m_distanceNoiseStdDevRisePerMeter);
         }
 
-        RaycastResultFlags requestedFlags = RaycastResultFlags::Ranges | RaycastResultFlags::Points;
-        if (m_lidarConfiguration.m_lidarSystemFeatures & LidarSystemFeatures::Intensity)
-        {
-            requestedFlags |= RaycastResultFlags::Intensities;
-        }
-
-        LidarRaycasterRequestBus::Event(m_lidarRaycasterId, &LidarRaycasterRequestBus::Events::ConfigureRaycastResultFlags, requestedFlags);
+        LidarRaycasterRequestBus::Event(
+            m_lidarRaycasterId,
+            &LidarRaycasterRequestBus::Events::ConfigureRaycastResultFlags,
+            GetRaycastResultFlagsForConfig(m_lidarConfiguration));
 
         if (m_lidarConfiguration.m_lidarSystemFeatures & LidarSystemFeatures::CollisionLayers)
         {
@@ -103,6 +100,23 @@ namespace ROS2
         }
     }
 
+    void LidarCore::UpdatePoints(const RaycastResults& results)
+    {
+        const auto pointsField = results.GetConstFieldSpan<RaycastResultFlags::Point>().value();
+        m_lastPoints.assign(pointsField.begin(), pointsField.end());
+    }
+
+    RaycastResultFlags LidarCore::GetRaycastResultFlagsForConfig(const LidarSensorConfiguration& configuration)
+    {
+        RaycastResultFlags flags = RaycastResultFlags::Range | RaycastResultFlags::Point;
+        if (configuration.m_lidarSystemFeatures & LidarSystemFeatures::Intensity)
+        {
+            flags |= RaycastResultFlags::Intensity;
+        }
+
+        return flags;
+    }
+
     LidarCore::LidarCore(const AZStd::vector<LidarTemplate::LidarModel>& availableModels)
         : m_lidarConfiguration(availableModels)
     {
@@ -115,7 +129,7 @@ namespace ROS2
 
     void LidarCore::VisualizeResults() const
     {
-        if (m_lastScanResults.m_points.empty())
+        if (m_lastPoints.empty())
         {
             return;
         }
@@ -124,8 +138,8 @@ namespace ROS2
         {
             const uint8_t pixelSize = 2;
             AZ::RPI::AuxGeomDraw::AuxGeomDynamicDrawArguments drawArgs;
-            drawArgs.m_verts = m_lastScanResults.m_points.data();
-            drawArgs.m_vertCount = m_lastScanResults.m_points.size();
+            drawArgs.m_verts = m_lastPoints.data();
+            drawArgs.m_vertCount = m_lastPoints.size();
             drawArgs.m_colors = &AZ::Colors::Red;
             drawArgs.m_colorCount = 1;
             drawArgs.m_opacityType = AZ::RPI::AuxGeomDraw::OpacityType::Opaque;
@@ -163,21 +177,28 @@ namespace ROS2
         return m_lidarRaycasterId;
     }
 
-    const RaycastResult& LidarCore::PerformRaycast()
+    AZStd::optional<RaycastResults> LidarCore::PerformRaycast()
     {
-        static const RaycastResult EmptyResults{};
-
         AZ::Entity* entity = nullptr;
         AZ::ComponentApplicationBus::BroadcastResult(entity, &AZ::ComponentApplicationRequests::FindEntity, m_entityId);
         const auto entityTransform = entity->FindComponent<AzFramework::TransformComponent>();
 
+        AZ::Outcome<RaycastResults, const char*> results = AZ::Failure("EBus failure occured.");
         LidarRaycasterRequestBus::EventResult(
-            m_lastScanResults, m_lidarRaycasterId, &LidarRaycasterRequestBus::Events::PerformRaycast, entityTransform->GetWorldTM());
-        if (m_lastScanResults.m_points.empty())
+            results, m_lidarRaycasterId, &LidarRaycasterRequestBus::Events::PerformRaycast, entityTransform->GetWorldTM());
+        if (!results.IsSuccess())
+        {
+            AZ_Error(__func__, false, "Unable to obtain raycast results. %s", results.GetError());
+            return {};
+        }
+
+        if (results.GetValue().IsEmpty())
         {
             AZ_TracePrintf("Lidar Sensor Component", "No results from raycast\n");
-            return EmptyResults;
         }
-        return m_lastScanResults;
+
+        UpdatePoints(results.GetValue());
+
+        return results.GetValue();
     }
 } // namespace ROS2

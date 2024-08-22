@@ -9,6 +9,7 @@
 #include <Atom/RPI.Public/AuxGeom/AuxGeomFeatureProcessorInterface.h>
 #include <Atom/RPI.Public/Scene.h>
 #include <Lidar/LidarRegistrarSystemComponent.h>
+#include <Lidar/PointCloudMessageBuilder.h>
 #include <Lidar/ROS2LidarSensorComponent.h>
 #include <ROS2/Frame/ROS2FrameComponent.h>
 #include <ROS2/Utilities/ROS2Names.h>
@@ -139,89 +140,70 @@ namespace ROS2
                 aznumeric_cast<AZ::u64>(timestamp.sec) * aznumeric_cast<AZ::u64>(1.0e9f) + timestamp.nanosec);
         }
 
-        const RaycastResult& lastScanResults = m_lidarCore.PerformRaycast();
+        AZStd::optional<RaycastResults> lastScanResults = m_lidarCore.PerformRaycast();
 
-        if (m_canRaycasterPublish || !m_sensorConfiguration.m_publishingEnabled)
-        { // Skip publishing when it is disabled or can be handled by the raycaster.
+        if (!lastScanResults.has_value() || m_canRaycasterPublish || !m_sensorConfiguration.m_publishingEnabled)
+        {
             return;
         }
 
-        PublishRaycastResults(lastScanResults);
+        PublishRaycastResults(lastScanResults.value());
     }
 
-    void ROS2LidarSensorComponent::PublishRaycastResults(const RaycastResult& results)
+    void ROS2LidarSensorComponent::PublishRaycastResults(const RaycastResults& results)
     {
         const bool isIntensityEnabled = m_lidarCore.m_lidarConfiguration.m_lidarSystemFeatures & LidarSystemFeatures::Intensity;
 
-        auto* ros2Frame = GetEntity()->FindComponent<ROS2FrameComponent>();
-        auto message = sensor_msgs::msg::PointCloud2();
-        message.header.frame_id = ros2Frame->GetFrameID().data();
-        message.header.stamp = ROS2Interface::Get()->GetROSTimestamp();
-        message.height = 1;
-        message.width = results.m_points.size();
+        auto builder = PointCloud2MessageBuilder(
+            GetEntity()->FindComponent<ROS2FrameComponent>()->GetFrameID(), ROS2Interface::Get()->GetROSTimestamp(), results.GetCount());
 
-        sensor_msgs::PointCloud2Modifier modifier(message);
+        builder.AddField("x", sensor_msgs::msg::PointField::FLOAT32)
+            .AddField("y", sensor_msgs::msg::PointField::FLOAT32)
+            .AddField("z", sensor_msgs::msg::PointField::FLOAT32);
+
         if (isIntensityEnabled)
         {
-            modifier.setPointCloud2Fields(
-                4,
-                "x",
-                1,
-                sensor_msgs::msg::PointField::FLOAT32,
-                "y",
-                1,
-                sensor_msgs::msg::PointField::FLOAT32,
-                "z",
-                1,
-                sensor_msgs::msg::PointField::FLOAT32,
-                "intensity",
-                1,
-                sensor_msgs::msg::PointField::FLOAT32);
+            builder.AddField("intensity", sensor_msgs::msg::PointField::FLOAT32);
         }
-        else
-        {
-            modifier.setPointCloud2Fields(
-                3,
-                "x",
-                1,
-                sensor_msgs::msg::PointField::FLOAT32,
-                "y",
-                1,
-                sensor_msgs::msg::PointField::FLOAT32,
-                "z",
-                1,
-                sensor_msgs::msg::PointField::FLOAT32);
-        }
-        modifier.resize(results.m_points.size());
+        sensor_msgs::msg::PointCloud2 message = builder.Build();
 
-        sensor_msgs::PointCloud2Iterator<float> xIt(message, "x");
-        sensor_msgs::PointCloud2Iterator<float> yIt(message, "y");
-        sensor_msgs::PointCloud2Iterator<float> zIt(message, "z");
 
-        AZStd::optional<sensor_msgs::PointCloud2Iterator<float>> intensityIt;
+        sensor_msgs::PointCloud2Iterator<float> messageXIt(message, "x");
+        sensor_msgs::PointCloud2Iterator<float> messageYIt(message, "y");
+        sensor_msgs::PointCloud2Iterator<float> messageZIt(message, "z");
+
+        const auto positionField = results.GetConstFieldSpan<RaycastResultFlags::Point>().value();
+        auto positionIt = positionField.begin();
+
+        AZStd::optional<sensor_msgs::PointCloud2Iterator<float>> messageIntensityIt;
+        AZStd::optional<RaycastResults::FieldSpan<RaycastResultFlags::Intensity>::const_iterator> intensityIt;
         if (isIntensityEnabled)
         {
-            intensityIt = sensor_msgs::PointCloud2Iterator<float>(message, "intensity");
+            messageIntensityIt = sensor_msgs::PointCloud2Iterator<float>(message, "intensity");
+            intensityIt = results.GetConstFieldSpan<RaycastResultFlags::Intensity>().value().begin();
         }
 
         const auto entityTransform = GetEntity()->FindComponent<AzFramework::TransformComponent>();
         const auto inverseLidarTM = entityTransform->GetWorldTM().GetInverse();
-        for (size_t i = 0; i < results.m_points.size(); ++i)
+        for (size_t i = 0; i < results.GetCount(); ++i)
         {
-            const AZ::Vector3 globalPoint = inverseLidarTM.TransformPoint(results.m_points[i]);
-            *xIt = globalPoint.GetX();
-            *yIt = globalPoint.GetY();
-            *zIt = globalPoint.GetZ();
+            AZ::Vector3 point = *positionIt;
+            const AZ::Vector3 globalPoint = inverseLidarTM.TransformPoint(point);
+            *messageXIt = globalPoint.GetX();
+            *messageYIt = globalPoint.GetY();
+            *messageZIt = globalPoint.GetZ();
 
-            if (isIntensityEnabled)
+            if (messageIntensityIt.has_value() && intensityIt.has_value())
             {
-                *intensityIt.value() = results.m_intensities[i];
+                *messageIntensityIt.value() = *intensityIt.value();
                 ++intensityIt.value();
+                ++messageIntensityIt.value();
             }
 
-            ++xIt;
-            ++yIt;
-            ++zIt;
+            ++positionIt;
+            ++messageXIt;
+            ++messageYIt;
+            ++messageZIt;
         }
 
         m_pointCloudPublisher->publish(message);

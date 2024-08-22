@@ -11,7 +11,9 @@
 #include <AzCore/EBus/EBus.h>
 #include <AzCore/Math/Transform.h>
 #include <AzCore/Math/Vector3.h>
+#include <AzCore/Outcome/Outcome.h>
 #include <ROS2/Communication/QoS.h>
+#include <ROS2/Lidar/RaycastResults.h>
 
 namespace ROS2
 {
@@ -84,23 +86,6 @@ namespace ROS2
     //! Unique id used by lidar raycasters.
     using LidarId = StronglyTypedUuid<struct LidarIdTag>;
 
-    enum class RaycastResultFlags : AZ::u8
-    {
-        Points = (1 << 0), //!< return 3D point coordinates
-        Ranges = (1 << 1), //!< return array of distances
-        Intensities = (1 << 2), //!< return intensity data
-    };
-
-    //! Bitwise operators for RaycastResultFlags
-    AZ_DEFINE_ENUM_BITWISE_OPERATORS(RaycastResultFlags)
-
-    struct RaycastResult
-    {
-        AZStd::vector<AZ::Vector3> m_points;
-        AZStd::vector<float> m_ranges;
-        AZStd::vector<float> m_intensities;
-    };
-
     //! Structure used to describe both minimal and maximal
     //! ray travel distance in meters.
     struct RayRange
@@ -134,8 +119,10 @@ namespace ROS2
         //! Schedules a raycast that originates from the point described by the lidarTransform.
         //! @param lidarTransform Current transform from global to lidar reference frame.
         //! @param flags Used to request different kinds of data returned by raycast query
-        //! @return Results of the raycast in the requested form including 3D space coordinates and/or ranges.
-        virtual RaycastResult PerformRaycast(const AZ::Transform& lidarTransform) = 0;
+        //! @return Results of the raycast in the requested form if the raycast was successfull or an error message if it was not.
+        //! The returned error messages are c-style string literals which are statically allocated and therefore do not need to be
+        //! dealocated.
+        virtual AZ::Outcome<RaycastResults, const char*> PerformRaycast(const AZ::Transform& lidarTransform) = 0;
 
         //! Configures ray Gaussian Noise parameters.
         //! Each call overrides the previous configuration.
