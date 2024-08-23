@@ -192,10 +192,7 @@ namespace ROS2
             return {};
         }
 
-        if (results.GetValue().IsEmpty())
-        {
-            AZ_TracePrintf("Lidar Sensor Component", "No results from raycast\n");
-        }
+        AZ_Warning("Lidar Sensor Component", !results.GetValue().IsEmpty(), "No results from raycast\n");
 
         UpdatePoints(results.GetValue());
 

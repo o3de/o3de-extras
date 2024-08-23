@@ -21,10 +21,9 @@ namespace ROS2
     //! Bitwise operators for RaycastResultFlags
     AZ_DEFINE_ENUM_BITWISE_OPERATORS(RaycastResultFlags)
 
-    template<RaycastResultFlags F>
-    bool IsFlagEnabled(RaycastResultFlags flags)
+    inline bool IsFlagEnabled(RaycastResultFlags flag, RaycastResultFlags flags)
     {
-        return (flags & F) == F;
+        return (flags & flag) == flag;
     }
 
     template<RaycastResultFlags F>
@@ -113,7 +112,7 @@ namespace ROS2
     template<RaycastResultFlags F>
     bool RaycastResults::IsFlagSatisfied(RaycastResultFlags requestedFlags) const
     {
-        return !IsFlagEnabled<F>(requestedFlags) || IsFieldPresent<F>();
+        return !IsFlagEnabled(F, requestedFlags) || IsFieldPresent<F>();
     }
 
     template<RaycastResultFlags F>
@@ -198,7 +197,7 @@ namespace ROS2
     template<RaycastResultFlags F>
     void RaycastResults::EnsureFlagSatisfied(RaycastResultFlags flags, size_t count)
     {
-        if (!IsFlagEnabled<F>(flags))
+        if (!IsFlagEnabled(F, flags))
         {
             return;
         }
