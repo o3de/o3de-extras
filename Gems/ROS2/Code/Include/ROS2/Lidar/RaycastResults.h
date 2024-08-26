@@ -63,9 +63,6 @@ namespace ROS2
         RaycastResults(RaycastResults&& other);
 
         [[nodiscard]] bool IsEmpty() const;
-        template<RaycastResultFlags F>
-        [[nodiscard]] bool IsFlagSatisfied(RaycastResultFlags requestedFlags) const;
-        [[nodiscard]] bool SatisfiesResultFlags(RaycastResultFlags flags) const;
 
         template<RaycastResultFlags F>
         [[nodiscard]] bool IsFieldPresent() const;
@@ -108,12 +105,6 @@ namespace ROS2
         FieldInternal<RaycastResultFlags::Range> m_ranges;
         FieldInternal<RaycastResultFlags::Intensity> m_intensities;
     };
-
-    template<RaycastResultFlags F>
-    bool RaycastResults::IsFlagSatisfied(RaycastResultFlags requestedFlags) const
-    {
-        return !IsFlagEnabled(F, requestedFlags) || IsFieldPresent<F>();
-    }
 
     template<RaycastResultFlags F>
     bool RaycastResults::IsFieldPresent() const

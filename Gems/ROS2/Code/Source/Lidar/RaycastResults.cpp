@@ -18,8 +18,12 @@ namespace ROS2
     }
 
     RaycastResults::RaycastResults(RaycastResults&& other)
+        : m_count{ other.m_count }
+        , m_points{ AZStd::move(other.m_points) }
+        , m_ranges{ AZStd::move(other.m_ranges) }
+        , m_intensities{ AZStd::move(other.m_intensities) }
     {
-        *this = other;
+        other.m_count = 0U;
     }
 
     void RaycastResults::Clear()
@@ -58,12 +62,6 @@ namespace ROS2
     bool RaycastResults::IsEmpty() const
     {
         return GetCount() == 0U;
-    }
-
-    bool RaycastResults::SatisfiesResultFlags(RaycastResultFlags flags) const
-    {
-        return IsFlagSatisfied<RaycastResultFlags::Point>(flags) && IsFlagSatisfied<RaycastResultFlags::Range>(flags) &&
-            IsFlagSatisfied<RaycastResultFlags::Intensity>(flags);
     }
 
     size_t RaycastResults::GetCount() const

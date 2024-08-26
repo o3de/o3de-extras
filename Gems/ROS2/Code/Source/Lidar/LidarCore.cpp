@@ -183,7 +183,7 @@ namespace ROS2
         AZ::ComponentApplicationBus::BroadcastResult(entity, &AZ::ComponentApplicationRequests::FindEntity, m_entityId);
         const auto entityTransform = entity->FindComponent<AzFramework::TransformComponent>();
 
-        AZ::Outcome<RaycastResults, const char*> results = AZ::Failure("EBus failure occured.");
+        AZ::Outcome<RaycastResults, const char*> results = AZ::Failure("EBus failure occurred.");
         LidarRaycasterRequestBus::EventResult(
             results, m_lidarRaycasterId, &LidarRaycasterRequestBus::Events::PerformRaycast, entityTransform->GetWorldTM());
         if (!results.IsSuccess())

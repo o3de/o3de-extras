@@ -165,7 +165,7 @@ namespace ROS2
         {
             builder.AddField("intensity", sensor_msgs::msg::PointField::FLOAT32);
         }
-        sensor_msgs::msg::PointCloud2 message = builder.Build();
+        sensor_msgs::msg::PointCloud2 message = builder.Get();
 
 
         sensor_msgs::PointCloud2Iterator<float> messageXIt(message, "x");

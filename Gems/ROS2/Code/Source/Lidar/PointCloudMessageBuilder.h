@@ -17,10 +17,10 @@ namespace ROS2
     public:
         PointCloud2MessageBuilder(const AZStd::string& frameId, builtin_interfaces::msg::Time timeStamp, size_t count);
         PointCloud2MessageBuilder& AddField(const char* name, uint8_t dataType, size_t count = 1);
-        sensor_msgs::msg::PointCloud2 Build();
+        sensor_msgs::msg::PointCloud2 Get();
 
     private:
         size_t m_offset = 0U;
-        AZStd::optional<sensor_msgs::msg::PointCloud2> m_message;
+        sensor_msgs::msg::PointCloud2 m_message;
     };
 } // namespace ROS2
