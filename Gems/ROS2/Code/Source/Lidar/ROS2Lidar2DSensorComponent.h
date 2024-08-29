@@ -44,6 +44,8 @@ namespace ROS2
         //////////////////////////////////////////////////////////////////////////
         void FrequencyTick();
 
+        void PublishRaycastResults(const RaycastResults& results);
+
         std::shared_ptr<rclcpp::Publisher<sensor_msgs::msg::LaserScan>> m_laserScanPublisher;
 
         LidarCore m_lidarCore;

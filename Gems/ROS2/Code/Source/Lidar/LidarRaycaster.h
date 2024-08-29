@@ -31,7 +31,7 @@ namespace ROS2
         void ConfigureRayRange(RayRange range) override;
         void ConfigureRaycastResultFlags(RaycastResultFlags flags) override;
 
-        RaycastResult PerformRaycast(const AZ::Transform& lidarTransform) override;
+        AZ::Outcome<RaycastResults, const char*> PerformRaycast(const AZ::Transform& lidarTransform) override;
 
         void ConfigureIgnoredCollisionLayers(const AZStd::unordered_set<AZ::u32>& layerIndices) override;
         void ConfigureMaxRangePointAddition(bool addMaxRangePoints) override;
@@ -44,7 +44,7 @@ namespace ROS2
         AZ::EntityId m_sceneEntityId;
         AzPhysics::SceneHandle m_sceneHandle{ AzPhysics::InvalidSceneHandle };
 
-        RaycastResultFlags m_resultFlags{ RaycastResultFlags::Points };
+        RaycastResultFlags m_resultFlags{ RaycastResultFlags::Point };
         AZStd::optional<RayRange> m_range{};
         bool m_addMaxRangePoints{ false };
         AZStd::vector<AZ::Quaternion> m_rayRotations{ { AZ::Quaternion::CreateZero() } };

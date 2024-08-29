@@ -112,7 +112,7 @@ namespace ROS2
         return requests;
     }
 
-    RaycastResult LidarRaycaster::PerformRaycast(const AZ::Transform& lidarTransform)
+    AZ::Outcome<RaycastResults, const char*> LidarRaycaster::PerformRaycast(const AZ::Transform& lidarTransform)
     {
         AZ_Assert(!m_rayRotations.empty(), "Ray poses are not configured. Unable to Perform a raycast.");
         AZ_Assert(m_range.has_value(), "Ray range is not configured. Unable to Perform a raycast.");
@@ -125,16 +125,19 @@ namespace ROS2
         const AZStd::vector<AZ::Vector3> rayDirections = LidarTemplateUtils::RotationsToDirections(m_rayRotations, lidarTransform);
         AzPhysics::SceneQueryRequests requests = prepareRequests(lidarTransform, rayDirections);
 
-        RaycastResult results;
-        const bool handlePoints = (m_resultFlags & RaycastResultFlags::Points) == RaycastResultFlags::Points;
-        const bool handleRanges = (m_resultFlags & RaycastResultFlags::Ranges) == RaycastResultFlags::Ranges;
+        const bool handlePoints = (m_resultFlags & RaycastResultFlags::Point) == RaycastResultFlags::Point;
+        const bool handleRanges = (m_resultFlags & RaycastResultFlags::Range) == RaycastResultFlags::Range;
+        RaycastResults results(m_resultFlags, rayDirections.size());
+
+        AZStd::optional<RaycastResults::FieldSpan<RaycastResultFlags::Point>::iterator> pointIt;
+        AZStd::optional<RaycastResults::FieldSpan<RaycastResultFlags::Range>::iterator> rangeIt;
         if (handlePoints)
         {
-            results.m_points.reserve(rayDirections.size());
+            pointIt = results.GetFieldSpan<RaycastResultFlags::Point>().value().begin();
         }
         if (handleRanges)
         {
-            results.m_ranges.reserve(rayDirections.size());
+            rangeIt = results.GetFieldSpan<RaycastResultFlags::Range>().value().begin();
         }
 
         auto* sceneInterface = AZ::Interface<AzPhysics::SceneInterface>::Get();
@@ -144,7 +147,8 @@ namespace ROS2
             AZ::Transform::CreateFromQuaternionAndTranslation(lidarTransform.GetRotation(), lidarTransform.GetTranslation()).GetInverse();
         const float maxRange = m_addMaxRangePoints ? m_range->m_max : AZStd::numeric_limits<float>::infinity();
 
-        for (int i = 0; i < requestResults.size(); i++)
+        size_t usedSize = 0U;
+        for (size_t i = 0U; i < requestResults.size(); i++)
         {
             const auto& requestResult = requestResults[i];
             float hitRange = requestResult ? requestResult.m_hits[0].m_distance : maxRange;
@@ -152,25 +156,40 @@ namespace ROS2
             {
                 hitRange = -AZStd::numeric_limits<float>::infinity();
             }
+
+            bool assigned = false;
             if (handleRanges)
             {
-                results.m_ranges.push_back(hitRange);
+                *rangeIt.value() = hitRange;
+                ++rangeIt.value();
+                assigned = true;
             }
+
             if (handlePoints)
             {
                 if (hitRange == maxRange)
                 {
                     // to properly visualize max points they need to be transformed to local coordinate system before applying maxRange
                     const AZ::Vector3 maxPoint = lidarTransform.TransformPoint(localTransform.TransformVector(rayDirections[i]) * hitRange);
-                    results.m_points.push_back(maxPoint);
+                    *pointIt.value() = maxPoint;
+                    ++pointIt.value();
+                    assigned = true;
                 }
                 else if (!AZStd::isinf(hitRange))
                 {
                     // otherwise they are already calculated by PhysX
-                    results.m_points.push_back(requestResult.m_hits[0].m_position);
+                    *pointIt.value() = requestResult.m_hits[0].m_position;
+                    ++pointIt.value();
+                    assigned = true;
                 }
             }
+
+            if (assigned)
+            {
+                ++usedSize;
+            }
         }
+        results.Resize(usedSize);
 
         return results;
     }
