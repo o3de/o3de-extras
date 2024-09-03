@@ -19,6 +19,7 @@
 #include <Gripper/GripperActionServerComponent.h>
 #include <Gripper/VacuumGripperComponent.h>
 #include <Imu/ROS2ImuSensorComponent.h>
+#include <Lidar/ClassSegmentationConfigurationComponent.h>
 #include <Lidar/LidarRegistrarSystemComponent.h>
 #include <Lidar/ROS2Lidar2DSensorComponent.h>
 #include <Lidar/ROS2LidarSensorComponent.h>
@@ -99,6 +100,7 @@ namespace ROS2
                     ROS2ContactSensorComponent::CreateDescriptor(),
                     FollowingCameraComponent::CreateDescriptor(),
                     GeoReferenceLevelComponent::CreateDescriptor(),
+                    ClassSegmentationConfigurationComponent::CreateDescriptor(),
                 });
         }
 

@@ -7,15 +7,15 @@
  */
 #pragma once
 
+#include "ROS2/Lidar/LidarRegistrarBus.h"
 #include <AzCore/Component/EntityId.h>
+#include <AzCore/Math/Color.h>
 #include <AzCore/RTTI/RTTI.h>
 #include <AzCore/Serialization/SerializeContext.h>
 #include <AzCore/std/string/string.h>
-
-#include "LidarRegistrarSystemComponent.h"
-#include "LidarTemplate.h"
-#include "LidarTemplateUtils.h"
-#include "LidarSegmentationClassConfiguration.h"
+#include <Lidar/LidarRegistrarSystemComponent.h>
+#include <Lidar/LidarTemplate.h>
+#include <Lidar/LidarTemplateUtils.h>
 
 namespace ROS2
 {
@@ -30,9 +30,6 @@ namespace ROS2
 
         //! Update the lidar system features based on the current lidar system selected.
         void FetchLidarImplementationFeatures();
-        static constexpr size_t maxClass = 256;
-        [[nodiscard]] AZStd::array<AZ::Color, maxClass> GenerateSegmentationColorsLookupTable() const;
-
 
         LidarSystemFeatures m_lidarSystemFeatures;
 
@@ -43,7 +40,6 @@ namespace ROS2
         AZStd::unordered_set<AZ::u32> m_ignoredCollisionLayers;
         AZStd::vector<AZ::EntityId> m_excludedEntities;
 
-        AZStd::vector<LidarSegmentationClassConfiguration> m_segmentationClasses;
         bool m_isSegmentationEnabled = false;
         bool m_addPointsAtMax = false;
 
@@ -58,7 +54,6 @@ namespace ROS2
 
         AZ::Crc32 OnLidarModelSelected();
         AZ::Crc32 OnLidarImplementationSelected();
-        AZ::Crc32 SegmentationClassesChangeNotify();
 
         //! Get all models this configuration can be set to (for example all 2D lidar models).
         AZStd::vector<AZStd::string> GetAvailableModels() const;
