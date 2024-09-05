@@ -9,7 +9,6 @@
 
 #include "ROS2/Lidar/LidarRegistrarBus.h"
 #include <AzCore/Component/EntityId.h>
-#include <AzCore/Math/Color.h>
 #include <AzCore/RTTI/RTTI.h>
 #include <AzCore/Serialization/SerializeContext.h>
 #include <AzCore/std/string/string.h>

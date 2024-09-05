@@ -20,14 +20,26 @@ namespace ROS2
     static constexpr uint8_t TerrainClassId = 1U;
     using SegmentationClassConfigList = AZStd::vector<SegmentationClassConfiguration>;
 
+    //! Interface class that allows for retrieval of segmentation class information.
     class ClassSegmentationRequests
     {
     public:
         AZ_RTTI(ClassSegmentationRequests, "{69b4109e-25ff-482f-b92e-f19cdf06bce2}");
 
-        [[nodiscard]] virtual AZ::Color GetClassColor(uint8_t classId) const = 0;
-        [[nodiscard]] virtual AZStd::optional<uint8_t> GetClassIdForTag(LmbrCentral::Tag tag) const = 0;
-        [[nodiscard]] virtual const SegmentationClassConfigList& GetClassConfigList() const = 0;
+        //! Returns the color of segmentation class with the provided class ID.
+        //! If no segmentation class is found with provided class ID, returns AZ::Colors::White.
+        //! @param classId Class ID of the segmentation class.
+        //! @return Color of the class with provided ID.
+        virtual AZ::Color GetClassColor(uint8_t classId) const = 0;
+
+        //! If segmentation class exists that is associated with provided tag,
+        //! returns ID of this class. Otherwise, returns AZStd::nullopt;
+        //! @param tag Tag associated with the segmentation class.
+        //! @return ID of found class or AZStd::nullopt.
+        virtual AZStd::optional<uint8_t> GetClassIdForTag(LmbrCentral::Tag tag) const = 0;
+
+        //! Returns a reference to the segmentation config list.
+        virtual const SegmentationClassConfigList& GetClassConfigList() const = 0;
 
     protected:
         virtual ~ClassSegmentationRequests() = default;
@@ -46,6 +58,7 @@ namespace ROS2
     using ClassSegmentationRequestBus = AZ::EBus<ClassSegmentationRequests, ClassSegmentationRequestBusTraits>;
     using ClassSegmentationInterface = AZ::Interface<ClassSegmentationRequests>;
 
+    //! Notification bus for segmentation class global configuration.
     class ClassSegmentationNotifications : public AZ::EBusTraits
     {
     private:

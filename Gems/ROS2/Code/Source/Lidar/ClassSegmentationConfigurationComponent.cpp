@@ -93,8 +93,7 @@ namespace ROS2
 
         const auto& segmentationClasses = *reinterpret_cast<SegmentationClassConfigList*>(newValue);
 
-        bool unknownPresent, groundPresent;
-        unknownPresent = groundPresent = false;
+        bool unknownPresent{ false }, groundPresent{ false };
         for (const auto& segmentationClass : segmentationClasses)
         {
             if (segmentationClass.m_classId == SegmentationClassConfiguration::UnknownClass.m_classId &&

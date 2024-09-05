@@ -37,9 +37,9 @@ namespace ROS2
         }
 
         // ClassSegmentationRequestBus overrides
-        [[nodiscard]] AZ::Color GetClassColor(uint8_t classId) const;
-        [[nodiscard]] AZStd::optional<uint8_t> GetClassIdForTag(LmbrCentral::Tag tag) const;
-        [[nodiscard]] const SegmentationClassConfigList& GetClassConfigList() const;
+        AZ::Color GetClassColor(uint8_t classId) const;
+        AZStd::optional<uint8_t> GetClassIdForTag(LmbrCentral::Tag tag) const;
+        const SegmentationClassConfigList& GetClassConfigList() const;
 
         // AZ::Component overrides
         void Activate() override;
