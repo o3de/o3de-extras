@@ -131,7 +131,8 @@ namespace ROS2::VehicleDynamics::Utilities
                 if (articulation)
                 {
                     steeringData.m_steeringJoint = articulation->GetId();
-                    const bool hasFreeAxis = Utils::TryGetFreeArticulationAxis(steeringData.m_steeringEntity, steeringData.m_axis);
+                    [[maybe_unused]] const bool hasFreeAxis =
+                        Utils::TryGetFreeArticulationAxis(steeringData.m_steeringEntity, steeringData.m_axis);
 
                     AZ_Error("VehicleDynamics::Utilities", hasFreeAxis, "Articulation steering has no free axis somehow");
                 }
