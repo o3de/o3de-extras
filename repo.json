@@ -3524,7 +3524,11 @@
                     "isTemplated": false
                 },
                 {
-                    "file": "Examples/slam_navigation/launch/config/navigation_params.yaml",
+                    "file": "Examples/slam_navigation/launch/config/navigation_params_humble.yaml",
+                    "isTemplated": false
+                },
+                {
+                    "file": "Examples/slam_navigation/launch/config/navigation_params_jazzy.yaml",
                     "isTemplated": false
                 },
                 {
@@ -4074,7 +4078,11 @@
                             "isTemplated": false
                         },
                         {
-                            "file": "Examples/slam_navigation/launch/config/navigation_params.yaml",
+                            "file": "Examples/slam_navigation/launch/config/navigation_params_humble.yaml",
+                            "isTemplated": false
+                        },
+                        {
+                            "file": "Examples/slam_navigation/launch/config/navigation_params_jazzy.yaml",
                             "isTemplated": false
                         },
                         {
@@ -4504,7 +4512,11 @@
                             "isTemplated": false
                         },
                         {
-                            "file": "Examples/slam_navigation/launch/config/navigation_params.yaml",
+                            "file": "Examples/slam_navigation/launch/config/navigation_params_humble.yaml",
+                            "isTemplated": false
+                        },
+                        {
+                            "file": "Examples/slam_navigation/launch/config/navigation_params_jazzy.yaml",
                             "isTemplated": false
                         },
                         {

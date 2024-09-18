@@ -30,7 +30,7 @@ Open a bash console terminal (always make sure your [ROS 2 is sourced](https://d
 cd #{O3DE_EXTRAS_HOME}/Templates/Ros2ProjectTemplate/Template/Examples/slam_navigation/launch
 ros2 launch navigation.launch.py
 ```
-You should see RViz2, a ROS 2 visualisation tool.
+You should see RViz2, a ROS 2 visualization tool.
 
 ### Set the goal 
 
