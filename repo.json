@@ -2445,11 +2445,11 @@
                             "isTemplated": false
                         },
                         {
-                            "file": "Examples/ros2_ws/src/o3de_fleet_nav/params/iron/nav2_multirobot_params.yaml",
+                            "file": "Examples/ros2_ws/src/o3de_fleet_nav/params/jazzy/nav2_multirobot_params.yaml",
                             "isTemplated": false
                         },
                         {
-                            "file": "Examples/ros2_ws/src/o3de_fleet_nav/params/iron/nav2_params.yaml",
+                            "file": "Examples/ros2_ws/src/o3de_fleet_nav/params/jazzy/nav2_params.yaml",
                             "isTemplated": false
                         },
                         {
@@ -2925,11 +2925,11 @@
                             "isTemplated": false
                         },
                         {
-                            "file": "Examples/ros2_ws/src/o3de_fleet_nav/params/iron/nav2_multirobot_params.yaml",
+                            "file": "Examples/ros2_ws/src/o3de_fleet_nav/params/jazzy/nav2_multirobot_params.yaml",
                             "isTemplated": false
                         },
                         {
-                            "file": "Examples/ros2_ws/src/o3de_fleet_nav/params/iron/nav2_params.yaml",
+                            "file": "Examples/ros2_ws/src/o3de_fleet_nav/params/jazzy/nav2_params.yaml",
                             "isTemplated": false
                         },
                         {
