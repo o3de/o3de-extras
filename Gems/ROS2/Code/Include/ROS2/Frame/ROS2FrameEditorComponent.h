@@ -40,6 +40,7 @@ namespace ROS2
         ROS2FrameEditorComponent(const ROS2FrameConfiguration ros2FrameConfiguration);
 
         // AzToolsFramework::Components::EditorComponentBase overrides
+        void Init() override;
         void Activate() override;
         void Deactivate() override;
         void BuildGameEntity(AZ::Entity* gameEntity) override;

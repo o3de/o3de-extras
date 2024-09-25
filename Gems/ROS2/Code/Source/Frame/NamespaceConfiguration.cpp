@@ -34,7 +34,7 @@ namespace ROS2
             m_namespace = ROS2Names::RosifyName(m_entityName);
             break;
         case NamespaceStrategy::Custom:
-            // Leave the namespace as is
+            m_namespace = m_customNamespace;
             break;
         default:
             AZ_Assert(false, "Unhandled namespace strategy");
@@ -96,6 +96,12 @@ namespace ROS2
         return m_namespaceStrategy == NamespaceConfiguration::NamespaceStrategy::Custom;
     }
 
+    void NamespaceConfiguration::Init()
+    {
+        // Make sure that the namespace is up to date.
+        OnNamespaceStrategySelected();
+    }
+
     void NamespaceConfiguration::Reflect(AZ::ReflectContext* context)
     {
         if (auto serializeContext = azrtti_cast<AZ::SerializeContext*>(context))
@@ -103,7 +109,7 @@ namespace ROS2
             serializeContext->Class<NamespaceConfiguration>()
                 ->Version(1)
                 ->Field("Namespace Strategy", &NamespaceConfiguration::m_namespaceStrategy)
-                ->Field("Namespace", &NamespaceConfiguration::m_namespace);
+                ->Field("Namespace", &NamespaceConfiguration::m_customNamespace);
 
             if (AZ::EditContext* ec = serializeContext->GetEditContext())
             {
@@ -117,9 +123,10 @@ namespace ROS2
                     ->EnumAttribute(NamespaceConfiguration::NamespaceStrategy::Empty, "Empty")
                     ->EnumAttribute(NamespaceConfiguration::NamespaceStrategy::FromEntityName, "Generate from entity name")
                     ->EnumAttribute(NamespaceConfiguration::NamespaceStrategy::Custom, "Custom")
-                    ->DataElement(AZ::Edit::UIHandlers::Default, &NamespaceConfiguration::m_namespace, "Namespace", "Namespace")
+                    ->DataElement(AZ::Edit::UIHandlers::Default, &NamespaceConfiguration::m_customNamespace, "Namespace", "Namespace")
                     ->Attribute(AZ::Edit::Attributes::Visibility, &NamespaceConfiguration::IsNamespaceCustom)
-                    ->Attribute(AZ::Edit::Attributes::ChangeValidate, &ROS2Names::ValidateNamespaceField);
+                    ->Attribute(AZ::Edit::Attributes::ChangeValidate, &ROS2Names::ValidateNamespaceField)
+                    ->Attribute(AZ::Edit::Attributes::ChangeNotify, &NamespaceConfiguration::UpdateNamespace);
             }
         }
     }

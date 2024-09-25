@@ -58,8 +58,13 @@ namespace ROS2
         //! @param parentNamespace parent namespace.
         void SetParentNamespace(const AZStd::string& parentNamespace);
 
+        //! Initializes the namespace configuration.
+        //! This function should be called in the Init functions of frame components.
+        void Init();
+
     private:
         AZStd::string m_namespace;
+        AZStd::string m_customNamespace = "";
         AZStd::string m_parentNamespace;
         NamespaceStrategy m_namespaceStrategy = NamespaceStrategy::Default;
         bool m_isRoot;

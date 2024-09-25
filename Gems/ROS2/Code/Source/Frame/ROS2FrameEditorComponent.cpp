@@ -30,6 +30,11 @@ namespace ROS2
         m_configuration = ros2FrameConfiguration;
     }
 
+    void ROS2FrameEditorComponent::Init()
+    {
+        m_configuration.m_namespaceConfiguration.Init();
+    }
+
     void ROS2FrameEditorComponent::Activate()
     {
         ROS2FrameComponentBus::Handler::BusConnect(GetEntityId());
