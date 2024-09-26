@@ -43,6 +43,7 @@ set(FILES
         Include/ROS2/Lidar/LidarRegistrarBus.h
         Include/ROS2/Lidar/RaycastResults.h
         Include/ROS2/Lidar/SegmentationClassConfiguration.h
+        Include/ROS2/Lidar/SegmentationUtils.h
         Include/ROS2/ROS2Bus.h
         Include/ROS2/ROS2GemUtilities.h
         Include/ROS2/Sensor/Events/EventSourceAdapter.h
@@ -58,4 +59,4 @@ set(FILES
         Include/ROS2/Utilities/ROS2Conversions.h
         Include/ROS2/Utilities/ROS2Names.h
         Include/ROS2/VehicleDynamics/VehicleInputControlBus.h
-        )
+)

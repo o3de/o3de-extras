@@ -14,6 +14,7 @@
 #include <AzFramework/Physics/Shape.h>
 #include <Lidar/LidarRaycaster.h>
 #include <Lidar/LidarTemplateUtils.h>
+#include <ROS2/Lidar/SegmentationUtils.h>
 
 namespace ROS2
 {
@@ -37,6 +38,7 @@ namespace ROS2
         , m_sceneEntityId{ sceneEntityId }
     {
         ROS2::LidarRaycasterRequestBus::Handler::BusConnect(busId);
+        AZ_Printf(__func__, "Created");
     }
 
     LidarRaycaster::LidarRaycaster(LidarRaycaster&& lidarRaycaster)
@@ -53,10 +55,12 @@ namespace ROS2
         lidarRaycaster.m_busId = LidarId::CreateNull();
 
         ROS2::LidarRaycasterRequestBus::Handler::BusConnect(m_busId);
+        AZ_Printf(__func__, "Created");
     }
 
     LidarRaycaster::~LidarRaycaster()
     {
+        AZ_Printf(__func__, "Destroyed");
         ROS2::LidarRaycasterRequestBus::Handler::BusDisconnect();
     }
 
@@ -112,6 +116,18 @@ namespace ROS2
         return requests;
     }
 
+    uint8_t LidarRaycaster::GetClassIdForEntity(AZ::EntityId entityId)
+    {
+        if (auto it = m_entityIdToClassIdCache.find(entityId); it != m_entityIdToClassIdCache.end())
+        {
+            return it->second;
+        }
+
+        const uint8_t classId = SegmentationUtils::FetchClassIdForEntity(entityId);
+        m_entityIdToClassIdCache.emplace(entityId, classId);
+        return classId;
+    }
+
     AZ::Outcome<RaycastResults, const char*> LidarRaycaster::PerformRaycast(const AZ::Transform& lidarTransform)
     {
         AZ_Assert(!m_rayRotations.empty(), "Ray poses are not configured. Unable to Perform a raycast.");
@@ -127,10 +143,12 @@ namespace ROS2
 
         const bool handlePoints = (m_resultFlags & RaycastResultFlags::Point) == RaycastResultFlags::Point;
         const bool handleRanges = (m_resultFlags & RaycastResultFlags::Range) == RaycastResultFlags::Range;
+        const bool handleSegmentation = (m_resultFlags & RaycastResultFlags::SegmentationData) == RaycastResultFlags::SegmentationData;
         RaycastResults results(m_resultFlags, rayDirections.size());
 
         AZStd::optional<RaycastResults::FieldSpan<RaycastResultFlags::Point>::iterator> pointIt;
         AZStd::optional<RaycastResults::FieldSpan<RaycastResultFlags::Range>::iterator> rangeIt;
+        AZStd::optional<RaycastResults::FieldSpan<RaycastResultFlags::SegmentationData>::iterator> segmentationIt;
         if (handlePoints)
         {
             pointIt = results.GetFieldSpan<RaycastResultFlags::Point>().value().begin();
@@ -138,6 +156,10 @@ namespace ROS2
         if (handleRanges)
         {
             rangeIt = results.GetFieldSpan<RaycastResultFlags::Range>().value().begin();
+        }
+        if (handleSegmentation)
+        {
+            segmentationIt = results.GetFieldSpan<RaycastResultFlags::SegmentationData>().value().begin();
         }
 
         auto* sceneInterface = AZ::Interface<AzPhysics::SceneInterface>::Get();
@@ -157,35 +179,68 @@ namespace ROS2
                 hitRange = -AZStd::numeric_limits<float>::infinity();
             }
 
-            bool assigned = false;
-            if (handleRanges)
+            bool wasUsed = false;
+            if (rangeIt.has_value())
             {
                 *rangeIt.value() = hitRange;
-                ++rangeIt.value();
-                assigned = true;
+                wasUsed = true;
             }
 
-            if (handlePoints)
+            if (pointIt.has_value())
             {
                 if (hitRange == maxRange)
                 {
                     // to properly visualize max points they need to be transformed to local coordinate system before applying maxRange
                     const AZ::Vector3 maxPoint = lidarTransform.TransformPoint(localTransform.TransformVector(rayDirections[i]) * hitRange);
                     *pointIt.value() = maxPoint;
-                    ++pointIt.value();
-                    assigned = true;
+                    wasUsed = true;
                 }
                 else if (!AZStd::isinf(hitRange))
                 {
                     // otherwise they are already calculated by PhysX
                     *pointIt.value() = requestResult.m_hits[0].m_position;
-                    ++pointIt.value();
-                    assigned = true;
+                    wasUsed = true;
                 }
             }
 
-            if (assigned)
+            if (segmentationIt.has_value())
             {
+                segmentationIt.value()->m_classId = 0;
+                segmentationIt.value()->m_entityId = 0;
+
+                if (requestResult)
+                {
+                    const auto entityId = requestResult.m_hits[0].m_entityId;
+                    const uint8_t classId = GetClassIdForEntity(entityId);
+                    // We have to map existing entity IDs from the original 64 bits onto 32 bits.
+                    // This may result in collisions but the chances are slim.
+                    const int32_t compressedEntityId =
+                        (aznumeric_cast<AZ::u64>(entityId) >> 32) ^ (aznumeric_cast<AZ::u64>(entityId) & 0xFFFFFFFF);
+
+                    segmentationIt.value()->m_classId = classId;
+                    segmentationIt.value()->m_entityId = compressedEntityId;
+                }
+
+                wasUsed = true;
+            }
+
+            if (wasUsed)
+            {
+                if (rangeIt.has_value())
+                {
+                    ++rangeIt.value();
+                }
+
+                if (pointIt.has_value())
+                {
+                    ++pointIt.value();
+                }
+
+                if (segmentationIt.has_value())
+                {
+                    ++segmentationIt.value();
+                }
+
                 ++usedSize;
             }
         }
