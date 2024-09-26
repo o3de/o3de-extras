@@ -7,6 +7,7 @@
  */
 
 #include "FollowingCameraComponent.h"
+#include <AtomBridge/FlyCameraInputBus.h>
 #include <AzCore/Serialization/EditContext.h>
 #include <AzCore/Serialization/SerializeContext.h>
 #include <AzFramework/Input/Devices/Keyboard/InputDeviceKeyboard.h>
@@ -28,8 +29,6 @@ namespace ROS2
         : m_configuration(configuration)
     {
     }
-
-
 
     void FollowingCameraComponent::Reflect(AZ::ReflectContext* reflection)
     {
@@ -89,6 +88,8 @@ namespace ROS2
         if (m_configuration.m_defaultView < m_configuration.m_predefinedViews.size())
         {
             m_currentView = m_configuration.m_predefinedViews[m_configuration.m_defaultView];
+            AZ::AtomBridge::FlyCameraInputBus::EventResult(
+                m_disableCameraMove, m_currentView, &AZ::AtomBridge::FlyCameraInputBus::Events::GetIsEnabled);
         }
         InputChannelEventListener::Connect();
         AZ::TickBus::Handler::BusConnect();
@@ -105,7 +106,8 @@ namespace ROS2
         const AZ::Vector3 axisX = transform.GetBasisX();
         const AZ::Vector3 axisY = transform.GetBasisY();
 
-        const AZ::Matrix3x3 projectionOnXY {AZ::Matrix3x3::CreateFromColumns(AZ::Vector3::CreateAxisX(), AZ::Vector3::CreateAxisY(), AZ::Vector3::CreateZero())};
+        const AZ::Matrix3x3 projectionOnXY{ AZ::Matrix3x3::CreateFromColumns(
+            AZ::Vector3::CreateAxisX(), AZ::Vector3::CreateAxisY(), AZ::Vector3::CreateZero()) };
 
         const AZ::Vector3 newAxisZ = AZ::Vector3::CreateAxisZ(); // new axis Z points up
 
@@ -226,26 +228,29 @@ namespace ROS2
     void FollowingCameraComponent::OnKeyboardEvent(const AzFramework::InputChannel& inputChannel)
     {
         const AzFramework::InputChannelId& channelId = inputChannel.GetInputChannelId();
-        if (channelId == AzFramework::InputDeviceKeyboard::Key::AlphanumericW)
+        if (!m_disableCameraMove)
         {
-            m_opticalAxisTranslation += m_configuration.m_zoomSpeed;
-            m_opticalAxisTranslation = AZStd::min(m_opticalAxisTranslation, m_configuration.m_opticalAxisTranslationMin);
-            return;
-        }
-        if (channelId == AzFramework::InputDeviceKeyboard::Key::AlphanumericS)
-        {
-            m_opticalAxisTranslation -= m_configuration.m_zoomSpeed;
-            return;
-        }
-        if (channelId == AzFramework::InputDeviceKeyboard::Key::AlphanumericA)
-        {
-            m_rotationOffset -= m_configuration.m_rotationSpeed;
-            return;
-        }
-        if (channelId == AzFramework::InputDeviceKeyboard::Key::AlphanumericD)
-        {
-            m_rotationOffset += m_configuration.m_rotationSpeed;
-            return;
+            if (channelId == AzFramework::InputDeviceKeyboard::Key::AlphanumericW)
+            {
+                m_opticalAxisTranslation += m_configuration.m_zoomSpeed;
+                m_opticalAxisTranslation = AZStd::min(m_opticalAxisTranslation, m_configuration.m_opticalAxisTranslationMin);
+                return;
+            }
+            if (channelId == AzFramework::InputDeviceKeyboard::Key::AlphanumericS)
+            {
+                m_opticalAxisTranslation -= m_configuration.m_zoomSpeed;
+                return;
+            }
+            if (channelId == AzFramework::InputDeviceKeyboard::Key::AlphanumericA)
+            {
+                m_rotationOffset -= m_configuration.m_rotationSpeed;
+                return;
+            }
+            if (channelId == AzFramework::InputDeviceKeyboard::Key::AlphanumericD)
+            {
+                m_rotationOffset += m_configuration.m_rotationSpeed;
+                return;
+            }
         }
 
         // channelId is a numeric key (Key::Alphanumeric0-Key::Alphanumeric9)
@@ -256,6 +261,12 @@ namespace ROS2
                 m_currentView = m_configuration.m_predefinedViews[viewId];
                 m_lastTranslationsBuffer.clear();
                 m_lastRotationsBuffer.clear();
+                m_rotationOffset = 0.0f;
+                m_opticalAxisTranslation = 0.0f;
+
+                m_disableCameraMove = false; // reset value before reading
+                AZ::AtomBridge::FlyCameraInputBus::EventResult(
+                    m_disableCameraMove, m_currentView, &AZ::AtomBridge::FlyCameraInputBus::Events::GetIsEnabled);
             }
         }
     }
