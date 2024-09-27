@@ -12,8 +12,8 @@
 #include <ROS2/Frame/ROS2FrameComponent.h>
 #include <ROS2/Manipulation/JointsManipulationRequests.h>
 #include <ROS2/ROS2Bus.h>
-#include <ROS2/Utilities/ROS2Names.h>
 #include <ROS2/Utilities/ROS2Conversions.h>
+#include <ROS2/Utilities/ROS2Names.h>
 
 namespace ROS2
 {
@@ -103,6 +103,37 @@ namespace ROS2
         m_trajectoryGoal = *trajectoryGoal;
         m_trajectoryExecutionStartTime = rclcpp::Time(ROS2::ROS2Interface::Get()->GetROSTimestamp());
         m_trajectoryInProgress = true;
+
+        for (auto& manipulationJoint : m_manipulationJoints)
+        { // Update current joint states and joint limits
+            auto& jointInfo = manipulationJoint.second;
+            auto& jointLimit = m_manipulationJointsLimits[manipulationJoint.first];
+            auto& isJointLimited = m_limitedJoints[manipulationJoint.first];
+            JointsManipulationRequestBus::EventResult(m_manipulationJointsPositions, GetEntityId(), &JointsManipulationRequests::GetAllJointsPositions);
+            if (jointInfo.m_isArticulation)
+            {
+                PhysX::ArticulationJointRequestBus::EventResult(
+                    jointLimit,
+                    jointInfo.m_entityComponentIdPair.GetEntityId(),
+                    &PhysX::ArticulationJointRequests::GetLimit,
+                    jointInfo.m_axis);
+                PhysX::ArticulationJointMotionType jointMotion;
+                PhysX::ArticulationJointRequestBus::EventResult(
+                    jointMotion,
+                    jointInfo.m_entityComponentIdPair.GetEntityId(),
+                    &PhysX::ArticulationJointRequests::GetMotion,
+                    jointInfo.m_axis
+                );
+                isJointLimited = (jointMotion == PhysX::ArticulationJointMotionType::Limited ? true : false);
+            }
+            else
+            {
+                PhysX::JointRequestBus::EventResult(
+                    jointLimit, jointInfo.m_entityComponentIdPair, &PhysX::JointRequests::GetLimits);
+                isJointLimited = false;
+            }
+        }
+
         return AZ::Success();
     }
 
@@ -190,7 +221,7 @@ namespace ROS2
         return m_followTrajectoryServer->GetGoalStatus();
     }
 
-    void JointsTrajectoryComponent::FollowTrajectory(const uint64_t deltaTimeNs)
+    void JointsTrajectoryComponent::FollowTrajectory(const float deltaTime)
     {
         auto goalStatus = GetGoalStatus();
         if (goalStatus == JointsTrajectoryRequests::TrajectoryActionStatus::Cancelled)
@@ -226,25 +257,80 @@ namespace ROS2
         if (m_trajectoryExecutionStartTime + targetGoalTime <= timeNow + threshold)
         { // Jump to the next point if current simulation time is ahead of timeFromStart
             m_trajectoryGoal.trajectory.points.erase(m_trajectoryGoal.trajectory.points.begin());
-            FollowTrajectory(deltaTimeNs);
+            FollowTrajectory(deltaTime);
             return;
         }
 
-        MoveToNextPoint(desiredGoal);
+        MoveToNextPoint(desiredGoal, deltaTime);
     }
 
-    void JointsTrajectoryComponent::MoveToNextPoint(const trajectory_msgs::msg::JointTrajectoryPoint currentTrajectoryPoint)
+    void JointsTrajectoryComponent::MoveToNextPoint(
+        const trajectory_msgs::msg::JointTrajectoryPoint currentTrajectoryPoint, const float deltaTime)
     {
+
+        auto NormalizePosition = [](float deg)
+        {
+            deg = AZStd::fmod(deg, 2 * M_PI);
+            if (deg > M_PI) deg -= 2 * M_PI;
+            else if (deg < -M_PI) deg += 2 * M_PI;
+            return deg;
+        };
+
+        auto TargetAchievable = [](float currPos, float targetPos, float clampedPos, float maxDelta)
+        {
+            if (maxDelta >= 2 * M_PI || maxDelta <= 2 * M_PI || currPos == targetPos) return true;
+            if (currPos < 0) currPos += 2 * M_PI;
+            if (targetPos < 0) currPos += 2 * M_PI;
+            if (clampedPos < 0) currPos += 2 * M_PI;
+
+            if (maxDelta >= 0)
+            {
+                if (currPos <= targetPos && clampedPos >= targetPos) return true;
+                if (currPos >= clampedPos &&
+                    (targetPos >= currPos || clampedPos <= targetPos)) return true;
+            }
+            else if (maxDelta < 0)
+            {
+                if (currPos >= targetPos && clampedPos <= targetPos) return true;
+                if (currPos <= targetPos &&
+                    (targetPos <= currPos || clampedPos >= targetPos)) return true;
+            }
+            return false;
+        };
+
         for (int jointIndex = 0; jointIndex < m_trajectoryGoal.trajectory.joint_names.size(); jointIndex++)
         { // Order each joint to be moved
             AZStd::string jointName(m_trajectoryGoal.trajectory.joint_names[jointIndex].c_str());
             AZ_Assert(m_manipulationJoints.find(jointName) != m_manipulationJoints.end(), "Invalid trajectory executing");
 
-            float targetPos = currentTrajectoryPoint.positions[jointIndex];
+            const float velocity = currentTrajectoryPoint.velocities[jointIndex];
+            const float maxDelta = velocity * deltaTime;
+            float targetPos = NormalizePosition(currentTrajectoryPoint.positions[jointIndex]);
+            
+            const float currentPos = NormalizePosition(m_manipulationJointsPositions[jointName]);
+            const auto jointLimits = m_manipulationJointsLimits[jointName];
+
+            float clampedTargetPosition = NormalizePosition(currentPos + maxDelta);
+
+            if (m_limitedJoints[jointName])
+            { // Check if articulation limits are not exceeded
+                if (maxDelta > 0 && TargetAchievable(currentPos, jointLimits.second, clampedTargetPosition, maxDelta))
+                    clampedTargetPosition = jointLimits.second;
+                else if (maxDelta < 0 && TargetAchievable(currentPos, jointLimits.first, clampedTargetPosition, maxDelta))
+                    clampedTargetPosition = jointLimits.first;
+            }
+
+            if (TargetAchievable(currentPos, targetPos, clampedTargetPosition, maxDelta))
+            { // The target is achievable in current tick
+                clampedTargetPosition = targetPos;
+            }
+            
+
             AZ::Outcome<void, AZStd::string> result;
             JointsManipulationRequestBus::EventResult(
-                result, GetEntityId(), &JointsManipulationRequests::MoveJointToPosition, jointName, targetPos);
-            AZ_Warning("JointTrajectoryComponent", result, "Joint move cannot be realized: %s", result.GetError().c_str());
+                result, GetEntityId(), &JointsManipulationRequests::MoveJointToPosition, jointName, clampedTargetPosition);
+            AZ_Warning("JointTrajectoryComponent", result, "Joint move cannot be completed: %s", result.GetError().c_str());
+            m_manipulationJointsPositions[jointName] = clampedTargetPosition;
         }
     }
 
@@ -253,13 +339,15 @@ namespace ROS2
         if (m_manipulationJoints.empty())
         {
             GetManipulationJoints();
+            for (auto manipulationJoint : m_manipulationJoints)
+            {
+                m_manipulationJointsPositions.insert_key(manipulationJoint.first);
+            }
             return;
         }
         const auto simTimestamp = ROS2Interface::Get()->GetROSTimestamp();
-        const float deltaSimulatedTime = ROS2Conversions::GetTimeDifference(simTimestamp, m_lastTickTimestamp);
         m_lastTickTimestamp = simTimestamp;
-        const uint64_t deltaTimeNs = deltaSimulatedTime * 1'000'000'000;
-        FollowTrajectory(deltaTimeNs);
+        FollowTrajectory(deltaTime);
         UpdateFeedback();
     }
 } // namespace ROS2

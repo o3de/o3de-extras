@@ -52,19 +52,25 @@ namespace ROS2
 
         //! Follow set trajectory.
         //! @param deltaTimeNs frame time step, to advance trajectory by.
-        void FollowTrajectory(const uint64_t deltaTimeNs);
+        void FollowTrajectory(const float deltaTime);
         AZ::Outcome<void, TrajectoryResult> ValidateGoal(TrajectoryGoalPtr trajectoryGoal);
-        void MoveToNextPoint(const trajectory_msgs::msg::JointTrajectoryPoint currentTrajectoryPoint);
+        void MoveToNextPoint(const trajectory_msgs::msg::JointTrajectoryPoint currentTrajectoryPoint, const float deltaTime);
         void UpdateFeedback();
 
         //! Lazy initialize Manipulation joints on the start of simulation.
         ManipulationJoints& GetManipulationJoints();
+
+        using ManipulationJointsLimits = AZStd::unordered_map<AZStd::string, AZStd::pair<float, float>>;
+        using JointsPositionsMap = AZStd::unordered_map<AZStd::string, JointPosition>;
 
         AZStd::string m_followTrajectoryActionName{ "arm_controller/follow_joint_trajectory" };
         AZStd::unique_ptr<FollowJointTrajectoryActionServer> m_followTrajectoryServer;
         TrajectoryGoal m_trajectoryGoal;
         rclcpp::Time m_trajectoryExecutionStartTime;
         ManipulationJoints m_manipulationJoints;
+        JointsPositionsMap m_manipulationJointsPositions;
+        ManipulationJointsLimits m_manipulationJointsLimits;
+        AZStd::unordered_map<AZStd::string, bool> m_limitedJoints;
         bool m_trajectoryInProgress{ false };
         builtin_interfaces::msg::Time m_lastTickTimestamp; //!< ROS 2 Timestamp during last OnTick call
     };
