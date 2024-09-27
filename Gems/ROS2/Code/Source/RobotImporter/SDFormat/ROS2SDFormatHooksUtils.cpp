@@ -10,12 +10,13 @@
 #include <AzToolsFramework/ToolsComponents/TransformComponent.h>
 #include <ROS2/Communication/TopicConfiguration.h>
 #include <ROS2/Frame/ROS2FrameEditorComponent.h>
+#include <ROS2/Utilities/ROS2Names.h>
 #include <RobotImporter/Utils/RobotImporterUtils.h>
 #include <RobotImporter/Utils/TypeConversions.h>
 #include <SdfAssetBuilder/SdfAssetBuilderSettings.h>
 #include <VehicleDynamics/WheelControllerComponent.h>
-#include <ROS2/Utilities/ROS2Names.h>
 
+#include <sdf/Element.hh>
 #include <sdf/Joint.hh>
 
 namespace ROS2::SDFormat
@@ -106,16 +107,19 @@ namespace ROS2::SDFormat
         // Inserts name (key) and value (val) of given parameter to map.
         void ParseRegularContent(const sdf::Element& content, HooksUtils::PluginParams& remappings)
         {
-            std::string contentName = content.GetName();
-            std::string contentValue = content.GetValue()->GetAsString();
-            if (contentName.empty() || contentValue.empty())
+            const AZStd::string contentName = content.GetName().c_str();
+            const sdf::ParamPtr contentValuePtr = content.GetValue();
+            if (!contentValuePtr || contentName.empty())
             {
-                AZ_Warning("PluginParser", false, "Encountered empty parameter value while parsing URDF/SDF plugin.");
+                AZ_Warning("PluginParser", false, "Encountered invalid (empty) remapping while parsing URDF/SDF plugin.");
                 return;
             }
-            AZStd::string key(contentName.c_str(), contentName.size());
-            AZStd::string val(contentValue.c_str(), contentValue.size());
-            remappings[key] = val;
+
+            const AZStd::string contentValue = contentValuePtr->GetAsString().c_str();
+            if (!contentValue.empty())
+            {
+                remappings[contentName] = contentValue;
+            }
         }
 
         // Parses parameters present in ros element, inserting them to the map.
@@ -127,9 +131,17 @@ namespace ROS2::SDFormat
                 ParseRegularContent(rosContent, remappings);
                 return;
             }
-            AZStd::string contentValue = rosContent.GetValue()->GetAsString().c_str();
 
-            if (contentValue.find_last_of('=') == std::string::npos || contentValue.find_last_of(':') == std::string::npos)
+            const sdf::ParamPtr contentValuePtr = rosContent.GetValue();
+            if (!contentValuePtr)
+            {
+                AZ_Warning("PluginParser", false, "ROS 2 content in parsing URDF/SDF plugin data not available.");
+                return;
+            }
+
+            AZStd::string contentValue = contentValuePtr->GetAsString().c_str();
+
+            if (contentValue.find_last_of('=') == AZStd::string::npos || contentValue.find_last_of(':') == AZStd::string::npos)
             {
                 AZ_Warning("PluginParser", false, "Encountered invalid remapping while parsing URDF/SDF plugin.");
                 return;
@@ -137,7 +149,7 @@ namespace ROS2::SDFormat
 
             // get new name of the topic
             int startVal = contentValue.find_last_of('=');
-            if (contentValue.find_last_of('/') != std::string::npos && contentValue.find_last_of('/') > startVal)
+            if (contentValue.find_last_of('/') != AZStd::string::npos && contentValue.find_last_of('/') > startVal)
             {
                 startVal = contentValue.find_last_of("/");
             }
