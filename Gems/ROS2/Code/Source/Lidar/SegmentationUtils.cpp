@@ -20,7 +20,11 @@ namespace ROS2::SegmentationUtils
         auto* segmentationInterface = ClassSegmentationInterface::Get();
         if (!segmentationInterface)
         {
-            AZ_Assert(false, "Segmentation Interface was not accessible.");
+            AZ_Error(
+                __func__,
+                false,
+                "Segmentation Interface was not accessible. Unable to fetch class ID for entity. Assigning default class ID: %u",
+                DefaultClassID);
             return DefaultClassID;
         }
 
@@ -34,7 +38,7 @@ namespace ROS2::SegmentationUtils
                     AZ_Warning(
                         "EntityManager",
                         false,
-                        "Entity with ID: %s has more than one class tag. Assigning first class id %d",
+                        "Entity with ID: %s has more than one class tag. Assigning first class ID %u",
                         entityId.ToString().c_str(),
                         classId.value());
                 }

@@ -26,10 +26,12 @@ namespace ROS2
 
         SegmentationClassConfiguration() = default;
 
-        SegmentationClassConfiguration(AZStd::string className, const uint8_t classId, const AZ::Color& classColor)
-            : m_className(AZStd::move(className))
+        SegmentationClassConfiguration(const AZStd::string& className, const uint8_t classId, const AZ::Color& classColor)
+            : m_className(className)
             , m_classId(classId)
-            , m_classColor(classColor){};
+            , m_classColor(classColor)
+        {
+        }
 
         AZStd::string m_className = "Default";
         uint8_t m_classId = 0;

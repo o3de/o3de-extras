@@ -13,16 +13,16 @@
 namespace ROS2
 {
     const SegmentationClassConfiguration SegmentationClassConfiguration::UnknownClass =
-        SegmentationClassConfiguration{ "Unknown", UnknownClassId, AZ::Color(1.0f, 1.0f, 1.0f, 1.0f) };
+        SegmentationClassConfiguration{ "Unknown", UnknownClassId, AZ::Colors::White };
     const SegmentationClassConfiguration SegmentationClassConfiguration::GroundClass =
-        SegmentationClassConfiguration{ "Ground", TerrainClassId, AZ::Color(0.5f, 0.25f, 0.0f, 1.0f) };
+        SegmentationClassConfiguration{ "Ground", TerrainClassId, AZ::Colors::Brown };
 
     void SegmentationClassConfiguration::Reflect(AZ::ReflectContext* context)
     {
         if (auto serializeContext = azrtti_cast<AZ::SerializeContext*>(context))
         {
             serializeContext->Class<SegmentationClassConfiguration>()
-                ->Version(2)
+                ->Version(0)
                 ->Field("className", &SegmentationClassConfiguration::m_className)
                 ->Field("classId", &SegmentationClassConfiguration::m_classId)
                 ->Field("classColor", &SegmentationClassConfiguration::m_classColor);

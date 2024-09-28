@@ -38,7 +38,6 @@ namespace ROS2
         , m_sceneEntityId{ sceneEntityId }
     {
         ROS2::LidarRaycasterRequestBus::Handler::BusConnect(busId);
-        AZ_Printf(__func__, "Created");
     }
 
     LidarRaycaster::LidarRaycaster(LidarRaycaster&& lidarRaycaster)
@@ -55,12 +54,10 @@ namespace ROS2
         lidarRaycaster.m_busId = LidarId::CreateNull();
 
         ROS2::LidarRaycasterRequestBus::Handler::BusConnect(m_busId);
-        AZ_Printf(__func__, "Created");
     }
 
     LidarRaycaster::~LidarRaycaster()
     {
-        AZ_Printf(__func__, "Destroyed");
         ROS2::LidarRaycasterRequestBus::Handler::BusDisconnect();
     }
 
