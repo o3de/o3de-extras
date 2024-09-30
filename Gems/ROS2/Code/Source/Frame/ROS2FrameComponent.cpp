@@ -139,6 +139,11 @@ namespace ROS2
 
     AZ_CLASS_ALLOCATOR_IMPL(JsonFrameComponentConfigSerializer, AZ::SystemAllocator);
 
+    void ROS2FrameComponent::Init()
+    {
+        m_namespaceConfiguration.Init();
+    }
+
     void ROS2FrameComponent::Activate()
     {
         m_namespaceConfiguration.PopulateNamespace(IsTopLevel(), GetEntity()->GetName());
