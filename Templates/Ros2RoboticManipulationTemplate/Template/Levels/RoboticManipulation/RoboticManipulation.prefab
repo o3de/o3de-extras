@@ -1903,24 +1903,7 @@
                     "$type": "EditorRigidBodyComponent",
                     "Id": 6554809807315683945,
                     "Configuration": {
-                        "entityId": "",
-                        "Mass": 0.07601521909236908,
-                        "Centre of mass offset": [
-                            1.7074251734694457e-10,
-                            -5.035076799941862e-9,
-                            0.025298872962594032
-                        ],
-                        "Inertia tensor": [
-                            0.000027028370823245496,
-                            0.0,
-                            0.0,
-                            0.0,
-                            0.00002738683542702347,
-                            0.0,
-                            0.0,
-                            0.0,
-                            0.000021981184545438737
-                        ]
+                        "entityId": ""
                     }
                 },
                 "EditorVisibilityComponent": {
@@ -5994,16 +5977,6 @@
                     "op": "replace",
                     "path": "/Entities/Entity_[807479467760]/Components/EditorMeshColliderComponent/ShapeConfiguration/PhysicsAsset/Configuration/PhysicsAsset/assetHint",
                     "value": "assets/urdfimporter/1440394708_panda/finger.stl.pxmesh"
-                },
-                {
-                    "op": "replace",
-                    "path": "/Entities/Entity_[730170056432]/Components/ROS2FrameEditorComponent/ROS2FrameConfiguration/Namespace Configuration/Namespace",
-                    "value": "panda_link3"
-                },
-                {
-                    "op": "replace",
-                    "path": "/Entities/Entity_[747349925616]/Components/ROS2FrameEditorComponent/ROS2FrameConfiguration/Namespace Configuration/Namespace",
-                    "value": "panda_link2"
                 }
             ]
         }

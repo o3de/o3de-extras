@@ -13,6 +13,7 @@
 # limitations under the License.
 
 import pathlib
+import os
 
 from ament_index_python.packages import get_package_share_directory
 
@@ -22,6 +23,7 @@ from launch.launch_description_sources import PythonLaunchDescriptionSource
 from launch_ros.actions import Node
 
 def generate_launch_description():
+    ros_distro = os.getenv('ROS_DISTRO', 'humble')
     return LaunchDescription([
         IncludeLaunchDescription(
             PythonLaunchDescriptionSource([str(pathlib.Path(__file__).parent.absolute().joinpath('slam.launch.py'))])
@@ -29,7 +31,7 @@ def generate_launch_description():
         IncludeLaunchDescription(
             PythonLaunchDescriptionSource([str(pathlib.Path(get_package_share_directory("nav2_bringup")).joinpath('launch', 'navigation_launch.py'))]),
             launch_arguments = {
-                'params_file': str(pathlib.Path(__file__).parent.absolute().joinpath('config', 'navigation_params.yaml'))
+                'params_file': str(pathlib.Path(__file__).parent.absolute().joinpath('config', f'navigation_params_{ros_distro}.yaml'))
             }.items()
         ),
         Node(
