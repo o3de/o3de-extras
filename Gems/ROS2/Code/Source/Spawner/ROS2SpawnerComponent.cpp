@@ -8,6 +8,7 @@
 
 #include "ROS2SpawnerComponent.h"
 #include "Spawner/ROS2SpawnerComponentController.h"
+#include <AzCore/Math/Quaternion.h>
 #include <AzCore/Serialization/EditContext.h>
 #include <AzCore/Serialization/SerializeContext.h>
 #include <AzCore/std/string/conversions.h>
@@ -124,6 +125,20 @@ namespace ROS2
             return;
         }
 
+        AZ::Quaternion rotation(
+            request->initial_pose.orientation.x,
+            request->initial_pose.orientation.y,
+            request->initial_pose.orientation.z,
+            request->initial_pose.orientation.w);
+
+        if (rotation.IsZero())
+        {
+            response.success = false;
+            response.status_message = "Rotation is undefined. Action aborted.";
+            service_handle->send_response(*header, response);
+            return;
+        }
+
         AZStd::string spawnableName(request->name.c_str());
         AZStd::string spawnableNamespace(request->robot_namespace.c_str());
         AZStd::string spawnPointName(request->xml.c_str(), request->xml.size());
@@ -217,7 +232,8 @@ namespace ROS2
                                   request->initial_pose.orientation.x,
                                   request->initial_pose.orientation.y,
                                   request->initial_pose.orientation.z,
-                                  request->initial_pose.orientation.w),
+                                  request->initial_pose.orientation.w)
+                                  .GetNormalized(),
                               1.0f };
             }
         }
