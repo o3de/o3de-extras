@@ -13,6 +13,7 @@
 #include <AzCore/Serialization/SerializeContext.h>
 #include <AzFramework/Physics/RigidBodyBus.h>
 #include <HingeJointComponent.h>
+#include <PhysX/ArticulationJointBus.h>
 #include <PhysX/Joint/PhysXJointRequestsBus.h>
 #include <VehicleDynamics/Utilities.h>
 
@@ -40,6 +41,12 @@ namespace ROS2::VehicleDynamics
                     ->DataElement(AZ::Edit::UIHandlers::Default, &AckermannDriveModel::m_limits, "Vehicle Limits", "Limits");
             }
         }
+    }
+
+    AckermannDriveModel::AckermannDriveModel(const AckermannModelLimits& limits, const ROS2::Controllers::PidConfiguration& steeringPid)
+        : m_limits(limits)
+        , m_steeringPid(steeringPid)
+    {
     }
 
     void AckermannDriveModel::Activate(const VehicleConfiguration& vehicleConfig)
@@ -70,18 +77,32 @@ namespace ROS2::VehicleDynamics
     void AckermannDriveModel::ApplyWheelSteering(SteeringDynamicsData& wheelData, float steering, double deltaTimeNs)
     {
         const auto& steeringEntity = wheelData.m_steeringEntity;
-        const auto& hingeComponent = wheelData.m_hingeJoint;
+        const auto& jointComponent = wheelData.m_steeringJoint;
 
-        auto id = AZ::EntityComponentIdPair(steeringEntity, hingeComponent);
+        auto id = AZ::EntityComponentIdPair(steeringEntity, jointComponent);
 
-        PhysX::JointRequestBus::Event(
-            id,
-            [&](PhysX::JointRequests* joint)
-            {
-                double currentSteeringAngle = joint->GetPosition();
-                const double pidCommand = m_steeringPid.ComputeCommand(steering - currentSteeringAngle, deltaTimeNs);
-                joint->SetVelocity(pidCommand);
-            });
+        if (wheelData.m_isArticulation)
+        {
+            PhysX::ArticulationJointRequestBus::Event(
+                steeringEntity,
+                [&](PhysX::ArticulationJointRequests* joint)
+                {
+                    double currentSteeringAngle = joint->GetJointPosition(wheelData.m_axis);
+                    const double pidCommand = m_steeringPid.ComputeCommand(steering - currentSteeringAngle, deltaTimeNs);
+                    joint->SetDriveTargetVelocity(wheelData.m_axis, pidCommand);
+                });
+        }
+        else
+        {
+            PhysX::JointRequestBus::Event(
+                id,
+                [&](PhysX::JointRequests* joint)
+                {
+                    double currentSteeringAngle = joint->GetPosition();
+                    const double pidCommand = m_steeringPid.ComputeCommand(steering - currentSteeringAngle, deltaTimeNs);
+                    joint->SetVelocity(pidCommand);
+                });
+        }
     }
 
     void AckermannDriveModel::ApplySteering(float steering, AZ::u64 deltaTimeNs)
@@ -119,19 +140,16 @@ namespace ROS2::VehicleDynamics
 
         if (m_driveWheelsData.empty())
         {
-            AZ_Warning("ApplySpeed", false, "Cannot apply speed since no diving wheels are defined in the model");
+            AZ_Warning("ApplySpeed", false, "Cannot apply speed since no driving wheels are defined in the model");
             return;
         }
 
         for (const auto& wheelData : m_driveWheelsData)
         {
-            const auto wheelEntity = wheelData.m_wheelEntity;
             float wheelRadius = wheelData.m_wheelRadius;
-            const auto hingeComponent = wheelData.m_hingeJoint;
-            const auto id = AZ::EntityComponentIdPair(wheelEntity, hingeComponent);
             AZ_Assert(wheelRadius != 0, "wheelRadius must be non-zero");
             auto desiredAngularSpeedX = (m_speedCommand / wheelRadius);
-            PhysX::JointRequestBus::Event(id, &PhysX::JointRequests::SetVelocity, desiredAngularSpeedX);
+            VehicleDynamics::Utilities::SetWheelRotationSpeed(wheelData, desiredAngularSpeedX);
         }
     }
 

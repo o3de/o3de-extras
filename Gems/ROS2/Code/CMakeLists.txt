@@ -65,7 +65,7 @@ ly_add_target(
             Gem::Atom_Feature_Common.Static
             Gem::Atom_Component_DebugCamera.Static
             Gem::StartingPointInput
-            Gem::PhysX.Static
+            Gem::PhysX5.Static
             Gem::LmbrCentral.API
 )
 
@@ -130,9 +130,9 @@ if(PAL_TRAIT_BUILD_HOST_TOOLS)
         BUILD_DEPENDENCIES
             PUBLIC
                 AZ::AzToolsFramework
-                Gem::AtomLyIntegration_CommonFeatures.Editor.Static
+                Gem::CommonFeaturesAtom.Editor.Static
                 Gem::LmbrCentral.API
-                Gem::PhysX.Editor.Static
+                Gem::PhysX5.Editor.Static
                 Gem::${gem_name}.Static
             PRIVATE
                 AZ::AssetBuilderSDK
@@ -193,6 +193,34 @@ if(PAL_TRAIT_BUILD_TESTS_SUPPORTED)
         ly_add_googletest(
             NAME Gem::${gem_name}.Tests
         )
+        
+        # integration test for URDF importer
+        ly_add_target(
+            NAME ROS2.Frame.Tests ${PAL_TRAIT_TEST_TARGET_TYPE}
+                NAMESPACE Gem
+            FILES_CMAKE
+                frame_test_files.cmake
+            INCLUDE_DIRECTORIES
+                PRIVATE
+                    Source
+                    Tests
+            BUILD_DEPENDENCIES
+                PRIVATE
+                    AZ::AzTestShared
+                    AZ::AzToolsFramework
+                    Legacy::CryCommon
+                    Legacy::EditorCommon
+                    Legacy::Editor.Headers
+                    AZ::AzManipulatorTestFramework.Static
+                    Gem::ROS2.Static
+                RUNTIME_DEPENDENCIES
+                    Gem::PhysX5.Editor
+        )
+
+        ly_add_googletest(
+                NAME Gem::ROS2.Frame.Tests
+        )
+
     endif()
 
     # If we are a host platform we want to add tools test like editor tests here
@@ -213,7 +241,9 @@ if(PAL_TRAIT_BUILD_TESTS_SUPPORTED)
                 BUILD_DEPENDENCIES
                     PRIVATE
                         AZ::AzTest
-                        Gem::${gem_name}.Editor
+                        AZ::AzTestShared
+                        AZ::AzToolsFramework
+                        Gem::${gem_name}.Editor.Static
                         3rdParty::sdformat
             )
 

@@ -22,7 +22,7 @@ namespace ROS2::VehicleDynamics
                 ->Field("LinearLimit", &SkidSteeringModelLimits::m_linearLimit)
                 ->Field("AngularLimit", &SkidSteeringModelLimits::m_angularLimit)
                 ->Field("LinearAcceleration", &SkidSteeringModelLimits::m_linearAcceleration)
-                ->Field("AngularAcceleration", &SkidSteeringModelLimits::m_angularAccleration);
+                ->Field("AngularAcceleration", &SkidSteeringModelLimits::m_angularAcceleration);
 
             if (AZ::EditContext* ec = serialize->GetEditContext())
             {
@@ -45,7 +45,7 @@ namespace ROS2::VehicleDynamics
                     ->Attribute(AZ::Edit::Attributes::Max, 10.0f)
                     ->DataElement(
                         AZ::Edit::UIHandlers::Default,
-                        &SkidSteeringModelLimits::m_angularAccleration,
+                        &SkidSteeringModelLimits::m_angularAcceleration,
                         "Angular acceleration",
                         "Acceleration in rad/s²")
                     ->Attribute(AZ::Edit::Attributes::Min, 0.0f)
@@ -84,7 +84,7 @@ namespace ROS2::VehicleDynamics
 
     float SkidSteeringModelLimits::GetAngularAcceleration() const
     {
-        return m_angularAccleration;
+        return m_angularAcceleration;
     }
 
     float SkidSteeringModelLimits::GetLinearSpeedLimit() const
@@ -97,5 +97,9 @@ namespace ROS2::VehicleDynamics
         return m_angularLimit;
     }
 
+    void SkidSteeringModelLimits::SetAngularAccelerationLimit(const float limit)
+    {
+        m_angularAcceleration = AZStd::clamp(limit, 0.0f, 100.0f);
+    }
 
 } // namespace ROS2::VehicleDynamics

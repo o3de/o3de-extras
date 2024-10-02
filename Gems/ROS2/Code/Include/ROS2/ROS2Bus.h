@@ -8,10 +8,11 @@
 #pragma once
 
 #include <AzCore/EBus/EBus.h>
+#include <AzCore/EBus/Event.h>
 #include <AzCore/Interface/Interface.h>
+#include <ROS2/Clock/ROS2Clock.h>
 #include <builtin_interfaces/msg/time.hpp>
 #include <geometry_msgs/msg/transform_stamped.hpp>
-#include <ROS2/Clock/SimulationClock.h>
 #include <rclcpp/node.hpp>
 
 namespace ROS2
@@ -24,6 +25,8 @@ namespace ROS2
     class ROS2Requests
     {
     public:
+        using NodeChangedEvent = AZ::Event<std::shared_ptr<rclcpp::Node>>;
+
         AZ_RTTI(ROS2Requests, "{a9bdbff6-e644-430d-8096-cdb53c88e8fc}");
         virtual ~ROS2Requests() = default;
 
@@ -32,6 +35,12 @@ namespace ROS2
         //! @return The central ROS2 node which holds default publishers for core topics such as /clock and /tf.
         //! @note Alternatively, you can use your own node along with an executor.
         virtual std::shared_ptr<rclcpp::Node> GetNode() const = 0;
+
+        //! Attach handler to ROS2 node change events.
+        //! You can use this method to correctly initialize SystemComponents that depend on ROS2Node.
+        //! @param handler which will be connected to NodeChangedEvent.
+        //! @note callback is active as long as handler is not destroyed.
+        virtual void ConnectOnNodeChanged(NodeChangedEvent::Handler& handler) = 0;
 
         //! Acquire current time as ROS2 timestamp.
         //! Timestamps provide temporal context for messages such as sensor data.
@@ -54,8 +63,7 @@ namespace ROS2
 
         //! Obtains a simulation clock that is used across simulation.
         //! @returns constant reference to currently running clock.
-        virtual const SimulationClock& GetSimulationClock() const = 0;
-
+        virtual const ROS2Clock& GetSimulationClock() const = 0;
     };
 
     class ROS2BusTraits : public AZ::EBusTraits

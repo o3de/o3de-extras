@@ -100,10 +100,9 @@
                     "Id": 3851762681488325524
                 },
                 "Component_[8878329651331184965]": {
-                    "$type": "GenericComponentWrapper",
+                    "$type": "ROS2FrameEditorComponent",
                     "Id": 8878329651331184965,
-                    "m_template": {
-                        "$type": "ROS2FrameComponent",
+                    "ROS2FrameConfiguration": {
                         "Frame Name": "antenna_connector_link"
                     }
                 }
@@ -138,10 +137,9 @@
                     }
                 },
                 "Component_[16813726449267049556]": {
-                    "$type": "GenericComponentWrapper",
+                    "$type": "ROS2FrameEditorComponent",
                     "Id": 16813726449267049556,
-                    "m_template": {
-                        "$type": "ROS2FrameComponent",
+                    "ROS2FrameConfiguration": {
                         "Frame Name": "base_link"
                     }
                 },
@@ -188,10 +186,9 @@
                     "Id": 16447311042575248794
                 },
                 "Component_[17231421001772784968]": {
-                    "$type": "GenericComponentWrapper",
+                    "$type": "ROS2FrameEditorComponent",
                     "Id": 17231421001772784968,
-                    "m_template": {
-                        "$type": "ROS2FrameComponent",
+                    "ROS2FrameConfiguration": {
                         "Frame Name": "antenna_link"
                     }
                 },
@@ -287,7 +284,8 @@
                                         "MaterialAsset": {
                                             "assetId": {
                                                 "guid": "{D5BE771A-53A9-534E-8DCC-A91D6127540D}"
-                                            }
+                                            },
+                                            "assetHint": "robot/rosbot_xl_description/meshes/materials/antenna_plastic_-_matte_black_.azmaterial"
                                         }
                                     }
                                 }
@@ -335,7 +333,8 @@
                                         "MaterialAsset": {
                                             "assetId": {
                                                 "guid": "{D5BE771A-53A9-534E-8DCC-A91D6127540D}"
-                                            }
+                                            },
+                                            "assetHint": "robot/rosbot_xl_description/meshes/materials/antenna_plastic_-_matte_black_.azmaterial"
                                         }
                                     }
                                 }
@@ -508,10 +507,9 @@
                     "Id": 12817635789820242289
                 },
                 "Component_[16631022530508227057]": {
-                    "$type": "GenericComponentWrapper",
+                    "$type": "ROS2FrameEditorComponent",
                     "Id": 16631022530508227057,
-                    "m_template": {
-                        "$type": "ROS2FrameComponent",
+                    "ROS2FrameConfiguration": {
                         "Namespace Configuration": {
                             "Namespace Strategy": 1
                         },
@@ -698,10 +696,9 @@
                     "Id": 6497592996458875625
                 },
                 "Component_[6705011311823060782]": {
-                    "$type": "GenericComponentWrapper",
+                    "$type": "ROS2FrameEditorComponent",
                     "Id": 6705011311823060782,
-                    "m_template": {
-                        "$type": "ROS2FrameComponent",
+                    "ROS2FrameConfiguration": {
                         "Namespace Configuration": {
                             "Namespace Strategy": 1
                         },
@@ -832,10 +829,9 @@
                     "Id": 13926183244050639695
                 },
                 "Component_[14800267193018934160]": {
-                    "$type": "GenericComponentWrapper",
+                    "$type": "ROS2FrameEditorComponent",
                     "Id": 14800267193018934160,
-                    "m_template": {
-                        "$type": "ROS2FrameComponent",
+                    "ROS2FrameConfiguration": {
                         "Namespace Configuration": {
                             "Namespace Strategy": 1
                         },
@@ -997,10 +993,9 @@
                     "Id": 11085442933955290538
                 },
                 "Component_[11140033146597625082]": {
-                    "$type": "GenericComponentWrapper",
+                    "$type": "ROS2FrameEditorComponent",
                     "Id": 11140033146597625082,
-                    "m_template": {
-                        "$type": "ROS2FrameComponent",
+                    "ROS2FrameConfiguration": {
                         "Frame Name": "cover_link"
                     }
                 },
@@ -1313,7 +1308,7 @@
                                     "guid": "{7F445A99-8C11-5417-9D63-8BCC7DCA76C8}",
                                     "subId": 1509562746
                                 },
-                                "assetHint": "robot/rosbot_xl_description/meshes/body_colision.pxmesh"
+                                "assetHint": "robot/rosbot_xl_description/meshes/body_colision.stl.pxmesh"
                             },
                             "Configuration": {
                                 "PhysicsAsset": {
@@ -1322,7 +1317,7 @@
                                         "subId": 1509562746
                                     },
                                     "loadBehavior": "QueueLoad",
-                                    "assetHint": "robot/rosbot_xl_description/meshes/body_colision.pxmesh"
+                                    "assetHint": "robot/rosbot_xl_description/meshes/body_colision.stl.pxmesh"
                                 },
                                 "UseMaterialsFromAsset": false
                             }
@@ -1355,10 +1350,9 @@
                     }
                 },
                 "Component_[1565757778877990578]": {
-                    "$type": "GenericComponentWrapper",
+                    "$type": "ROS2FrameEditorComponent",
                     "Id": 1565757778877990578,
-                    "m_template": {
-                        "$type": "ROS2FrameComponent",
+                    "ROS2FrameConfiguration": {
                         "Namespace Configuration": {
                             "Namespace Strategy": 1
                         },
@@ -1397,8 +1391,8 @@
                                     "IsDrive": true
                                 }
                             ],
-                            "Track": 0.17000000178813934,
-                            "Wheelbase": 0.24799999594688416
+                            "Track": 0.27000001072883606,
+                            "Wheelbase": 0.3319999873638153
                         },
                         "DriveModel": {
                             "Limits": {
@@ -1553,10 +1547,9 @@
                     ]
                 },
                 "Component_[1759320886263250000]": {
-                    "$type": "GenericComponentWrapper",
+                    "$type": "ROS2FrameEditorComponent",
                     "Id": 1759320886263250000,
-                    "m_template": {
-                        "$type": "ROS2FrameComponent",
+                    "ROS2FrameConfiguration": {
                         "Namespace Configuration": {
                             "Namespace Strategy": 1
                         },
@@ -1809,10 +1802,9 @@
                     "Id": 17955271677359408921
                 },
                 "Component_[2261530743973655842]": {
-                    "$type": "GenericComponentWrapper",
+                    "$type": "ROS2FrameEditorComponent",
                     "Id": 2261530743973655842,
-                    "m_template": {
-                        "$type": "ROS2FrameComponent",
+                    "ROS2FrameConfiguration": {
                         "Namespace Configuration": {
                             "Namespace Strategy": 1
                         },
@@ -2042,8 +2034,7 @@
                     "Id": 16056351394850261418,
                     "Controller": {
                         "Configuration": {
-                            "Field of View": 60.0,
-                            "EditorEntityId": 15598184734561212878
+                            "Field of View": 60.0
                         }
                     }
                 },

@@ -20,6 +20,7 @@ namespace ROS2::VehicleDynamics
     public:
         AZ_COMPONENT(AckermannVehicleModelComponent, "{7618dbb9-fad4-44b3-8587-0d4f97336d3c}", VehicleModelComponent);
         AckermannVehicleModelComponent() = default;
+        AckermannVehicleModelComponent(const VehicleConfiguration& vehicleConfiguration, const AckermannDriveModel& driveModel);
 
         static void Reflect(AZ::ReflectContext* context);
 
@@ -29,10 +30,10 @@ namespace ROS2::VehicleDynamics
         void Activate() override;
 
     private:
-        VehicleDynamics::AckermannDriveModel m_driveModel;
+        AckermannDriveModel m_driveModel;
 
     protected:
         // VehicleModelComponent overrides
-        VehicleDynamics::DriveModel* GetDriveModel() override;
+        DriveModel* GetDriveModel() override;
     };
 } // namespace ROS2::VehicleDynamics

@@ -12,6 +12,9 @@
 #include <AzCore/Component/EntityBus.h>
 #include <AzCore/Component/TickBus.h>
 #include <AzCore/Name/Name.h>
+#include <AzCore/std/containers/vector.h>
+#include <AzCore/std/string/string.h>
+#include <AzCore/std/utility/pair.h>
 
 #include "JointStatePublisher.h"
 #include <ROS2/Manipulation/JointsManipulationRequests.h>
@@ -28,7 +31,8 @@ namespace ROS2
     public:
         JointsManipulationComponent();
         JointsManipulationComponent(
-            const PublisherConfiguration& configuration, const AZStd::unordered_map<AZStd::string, JointPosition>& initialPositions);
+            const PublisherConfiguration& publisherConfiguration,
+            const AZStd::vector<AZStd::pair<AZStd::string, float>>& initialPositions);
         ~JointsManipulationComponent() = default;
         AZ_COMPONENT(JointsManipulationComponent, "{3da9abfc-0028-4e3e-8d04-4e4440d2e319}", AZ::Component);
 
@@ -80,7 +84,8 @@ namespace ROS2
         AZStd::unique_ptr<JointStatePublisher> m_jointStatePublisher;
         PublisherConfiguration m_jointStatePublisherConfiguration;
         ManipulationJoints m_manipulationJoints; //!< Map of JointInfo where the key is a joint name (with namespace included)
-        AZStd::unordered_map<AZStd::string, JointPosition>
-            m_initialPositions; //!< Initial positions where the key is joint name (without namespace included)
+        AZStd::vector<AZStd::pair<AZStd::string, float>> 
+            m_initialPositions; //!< Initial positions per joint name (without namespace included)
+        builtin_interfaces::msg::Time m_lastTickTimestamp; //!< ROS 2 Timestamp during last OnTick call
     };
 } // namespace ROS2

@@ -110,7 +110,7 @@ namespace ROS2::UrdfParser
         // regular expression to escape console's color codes
         const AZStd::regex escapeColor("\x1B\\[[0-9;]*[A-Za-z]");
 
-        parseResult.m_parseMessages =  AZStd::regex_replace(AZStd::string(parseMessages.c_str(), parseMessages.size()),escapeColor, "");
+        parseResult.m_parseMessages = AZStd::regex_replace(AZStd::string(parseMessages.c_str(), parseMessages.size()), escapeColor, "");
 
         // if there are no parse errors return the sdf Root object otherwise return the errors
         return parseResult;

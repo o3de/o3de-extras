@@ -122,7 +122,7 @@
                                 "assetId": {
                                     "guid": "{8DE38686-852C-5110-96BB-BB1361502266}"
                                 },
-                                "assetHint": "assets/warehouse/floor_markings/markings_blue.azmaterial"
+                                "assetHint": "assets/warehouse/floor_markings/markings_blue.material.azmaterial"
                             }
                         }
                     }

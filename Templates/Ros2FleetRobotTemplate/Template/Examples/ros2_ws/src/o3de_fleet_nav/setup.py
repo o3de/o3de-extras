@@ -15,8 +15,8 @@ setup(
         (os.path.join('share', package_name, 'launch'), glob(os.path.join('launch', '*launch.[pxy][yma]*'))),
         (os.path.join('share', package_name, 'maps'), glob(os.path.join('maps', '*.pgm'))),
         (os.path.join('share', package_name, 'maps'), glob(os.path.join('maps', '*.yaml'))),
-        (os.path.join('share', package_name, 'params', 'iron'), glob(os.path.join('params', 'iron', '*.yaml'))),
         (os.path.join('share', package_name, 'params', 'humble'), glob(os.path.join('params', 'humble', '*.yaml'))),
+        (os.path.join('share', package_name, 'params', 'jazzy'), glob(os.path.join('params', 'jazzy', '*.yaml'))),
         (os.path.join('share', package_name, 'rviz'), glob(os.path.join('rviz', '*.rviz'))),
         (os.path.join('share', package_name, 'config'), glob(os.path.join('config', '*.yaml')))
     ],

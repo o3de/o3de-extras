@@ -1,0 +1,56 @@
+#
+# Copyright (c) Contributors to the Open 3D Engine Project.
+# For complete copyright and license terms please see the LICENSE at the root of this distribution.
+#
+# SPDX-License-Identifier: Apache-2.0 OR MIT
+#
+#
+
+set(FILES
+    Source/MachineLearningModuleInterface.cpp
+    Source/MachineLearningModuleInterface.h
+    Source/MachineLearningSystemComponent.cpp
+    Source/MachineLearningSystemComponent.h
+    Source/Algorithms/Activations.cpp
+    Source/Algorithms/Activations.h
+    Source/Algorithms/LossFunctions.cpp
+    Source/Algorithms/LossFunctions.h
+    Source/Algorithms/Training.cpp
+    Source/Algorithms/Training.h
+    Source/Assets/MnistDataLoader.cpp
+    Source/Assets/MnistDataLoader.h
+    Source/Assets/ModelAsset.cpp
+    Source/Assets/ModelAsset.h
+    Source/Assets/TrainingDataView.cpp
+    Source/Assets/TrainingDataView.h
+    Source/Components/MultilayerPerceptronComponent.cpp
+    Source/Components/MultilayerPerceptronComponent.h
+    Source/Models/Layer.cpp
+    Source/Models/Layer.h
+    Source/Models/MultilayerPerceptron.cpp
+    Source/Models/MultilayerPerceptron.h
+    Source/Nodes/ArgMax.ScriptCanvasNodeable.xml
+    Source/Nodes/ArgMax.cpp
+    Source/Nodes/ArgMax.h
+    Source/Nodes/ComputeCost.ScriptCanvasNodeable.xml
+    Source/Nodes/ComputeCost.cpp
+    Source/Nodes/ComputeCost.h
+    Source/Nodes/FeedForward.ScriptCanvasNodeable.xml
+    Source/Nodes/FeedForward.cpp
+    Source/Nodes/FeedForward.h
+    Source/Nodes/LoadModel.ScriptCanvasNodeable.xml
+    Source/Nodes/LoadModel.cpp
+    Source/Nodes/LoadModel.h
+    Source/Nodes/LoadTrainingData.ScriptCanvasNodeable.xml
+    Source/Nodes/LoadTrainingData.cpp
+    Source/Nodes/LoadTrainingData.h
+    Source/Nodes/OneHot.ScriptCanvasNodeable.xml
+    Source/Nodes/OneHot.cpp
+    Source/Nodes/OneHot.h
+    Source/Nodes/SaveModel.ScriptCanvasNodeable.xml
+    Source/Nodes/SaveModel.cpp
+    Source/Nodes/SaveModel.h
+    Source/Nodes/SupervisedLearning.ScriptCanvasNodeable.xml
+    Source/Nodes/SupervisedLearning.cpp
+    Source/Nodes/SupervisedLearning.h
+)

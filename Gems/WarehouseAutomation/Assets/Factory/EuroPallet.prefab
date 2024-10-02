@@ -115,7 +115,7 @@
                                     "guid": "{734BADE7-2978-560D-B3F9-9CB9A0CBE432}",
                                     "subId": 647865614
                                 },
-                                "assetHint": "factory/conveyorline/europallet.pxmesh"
+                                "assetHint": "factory/conveyorline/europallet.fbx.pxmesh"
                             },
                             "Configuration": {
                                 "PhysicsAsset": {
@@ -124,7 +124,7 @@
                                         "subId": 647865614
                                     },
                                     "loadBehavior": "QueueLoad",
-                                    "assetHint": "factory/conveyorline/europallet.pxmesh"
+                                    "assetHint": "factory/conveyorline/europallet.fbx.pxmesh"
                                 }
                             }
                         }
@@ -154,7 +154,7 @@
                             0.0,
                             0.0,
                             0.0,
-                            14.414010047912598,
+                            14.414012908935547,
                             0.0,
                             0.0,
                             0.0,
@@ -184,10 +184,10 @@
                         "Configuration": {
                             "ModelAsset": {
                                 "assetId": {
-                                    "guid": "{EDD73FE5-D4E2-588A-8BE7-E4C60B5C3745}",
-                                    "subId": 283569929
+                                    "guid": "{734BADE7-2978-560D-B3F9-9CB9A0CBE432}",
+                                    "subId": 279044290
                                 },
-                                "assetHint": "assets/factory/conveyorline/default_europallet_891b819b_706f_596f_8fd1_04c894deb906_.azmodel"
+                                "assetHint": "factory/conveyorline/default_europallet_42675f1e_b39c_540f_9096_4698b5d106dd_.fbx.azmodel"
                             }
                         }
                     }
@@ -225,9 +225,8 @@
                                     "Value": {
                                         "MaterialAsset": {
                                             "assetId": {
-                                                "guid": "{F7420A61-B47F-5EE6-A8D8-3658C0908C97}"
-                                            },
-                                            "assetHint": "assets/factory/conveyorline/europallet_pallet.azmaterial"
+                                                "guid": "{ADF6997D-B880-53A8-8198-D69FE4258AEF}"
+                                            }
                                         }
                                     }
                                 }

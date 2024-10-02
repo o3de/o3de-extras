@@ -9,7 +9,9 @@
 #pragma once
 
 #include <AzCore/std/containers/unordered_map.h>
+#include <AzCore/std/containers/vector.h>
 #include <AzCore/std/string/string.h>
+#include <AzCore/std/utility/pair.h>
 #include <AzToolsFramework/ToolsComponents/EditorComponentBase.h>
 #include <ROS2/Communication/PublisherConfiguration.h>
 
@@ -20,6 +22,7 @@ namespace ROS2
     {
     public:
         JointsManipulationEditorComponent();
+        JointsManipulationEditorComponent(const PublisherConfiguration& publisherConfiguration);
         ~JointsManipulationEditorComponent() = default;
         AZ_EDITOR_COMPONENT(JointsManipulationEditorComponent, "{BF2F77FD-92FB-4730-92C7-DDEE54F508BF}");
 
@@ -32,7 +35,9 @@ namespace ROS2
         void BuildGameEntity(AZ::Entity* gameEntity) override;
 
     private:
+        AZ::Crc32 ReloadJoints();
+
         PublisherConfiguration m_jointStatePublisherConfiguration;
-        AZStd::unordered_map<AZStd::string, float> m_initialPositions;
+        AZStd::vector<AZStd::pair<AZStd::string, float>> m_initialPositions;
     };
 } // namespace ROS2

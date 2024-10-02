@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<ScriptCanvas Include="Nodes/ArgMax.h" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <Class Name="ArgMax"
+           QualifiedName="MachineLearning::ArgMax"
+           PreferredClassName="ArgMax"
+           Category="MachineLearning"
+           Description="Reverses one-hot encoding by returning the index of the element from a VectorN with the largest magnitude.">
+
+        <Input Name="In" DisplayGroup="In" Description="Parameters controlling the arg-max decoding">
+            <Parameter Name="oneHot" Type="AZ::VectorN" Description="The one-hot vector to decode."/>
+            <Return Name="argmax" Type="AZStd::size_t" Shared="true"/>
+        </Input>
+    </Class>
+</ScriptCanvas>

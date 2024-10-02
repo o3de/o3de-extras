@@ -150,12 +150,7 @@ namespace OpenXRVk
     ////////////////////////////////////////////////////////////////////////////////////////////////
     void InputDeviceOculusTouch::TickInputDevice()
     {
-        if (m_tickCallback)
-        {
-            m_tickCallback();
-
-            ProcessRawControllerState(m_rawControllerState);
-        }
+        // DEPRECATED. This whole file will be removed soon.
     }
 
 } // namespace OpenXRVk

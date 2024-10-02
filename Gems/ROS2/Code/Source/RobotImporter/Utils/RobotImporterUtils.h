@@ -39,10 +39,10 @@ namespace ROS2::Utils
     bool IsWheelURDFHeuristics(const sdf::Model& model, const sdf::Link* link);
 
     //! Returns an AZ::Transform converted from the link pose defined relative to another frame.
-    //! @param link pointer to URDF/SDF link
+    //! @param semanticPose pointer to URDF/SDF link
     //! @param t initial transform, multiplied against link transform
     //! @returns Transform of link
-    AZ::Transform GetLocalTransformURDF(const sdf::Link* link, AZ::Transform t = AZ::Transform::Identity());
+    AZ::Transform GetLocalTransformURDF(const sdf::SemanticPose& semanticPose, AZ::Transform t = AZ::Transform::Identity());
 
     //! Type Alias representing a "stack" of Model object that were visited on the way to the current Link/Joint Visitor Callback
     using ModelStack = AZStd::deque<AZStd::reference_wrapper<const sdf::Model>>;
@@ -53,6 +53,7 @@ namespace ROS2::Utils
     //! always contain at least one element. The back() element of the stack returns the direct model the link is attached to
     //! @return Return true to continue visiting links or false to halt
     using LinkVisitorCallback = AZStd::function<bool(const sdf::Link& link, const ModelStack& modelStack)>;
+
     //! Visit links from URDF/SDF
     //! @param sdfModel Model object of SDF document corresponding to the <model> tag. It used to query link
     //! @param visitNestedModelLinks When true recurses to any nested <model> tags of the Model object and invoke visitor on their links as
@@ -75,21 +76,24 @@ namespace ROS2::Utils
     using JointVisitorCallback = AZStd::function<bool(const sdf::Joint& joint, const ModelStack& modelStack)>;
     //! Visit joints from URDF/SDF
     //! @param sdfModel Model object of SDF document corresponding to the <model> tag. It used to query joints
-    //! @param visitNestedModelJoints When true recurses to any nested <model> tags of the Model object and invoke visitor on their joint as well
+    //! @param visitNestedModelJoints When true recurses to any nested <model> tags of the Model object and invoke visitor on their joint as
+    //! well
     //! @returns void
     void VisitJoints(const sdf::Model& sdfModel, const JointVisitorCallback& jointVisitorCB, bool visitNestedModelJoints = false);
 
     //! Retrieve all joints in URDF/SDF where the key is the full composed path following the name scoping proposal in SDF 1.8
     //! http://sdformat.org/tutorials?tut=composition_proposal#1-nesting-and-encapsulation
     //! @param sdfModel Model object of SDF document corresponding to the <model> tag. It used to query joints
-    //! @param gatherNestedModelJoints When true recurses to any nested <model> tags of the Model object and also gathers their joints as well
+    //! @param gatherNestedModelJoints When true recurses to any nested <model> tags of the Model object and also gathers their joints as
+    //! well
     //! @returns mapping from fully qualified joint name(such as "model_name::joint_name") to joint pointer
     AZStd::unordered_map<AZStd::string, const sdf::Joint*> GetAllJoints(const sdf::Model& sdfModel, bool gatherNestedModelJoints = false);
 
     //! Retrieve all joints from URDF/SDF in which the specified link is a child in a sdf::Joint.
-    //! @param sdfModel Model object of SDF document corresponding to the <model> tag. It used to query joints
+    //! @param sdfModel Model object of SDF document corresponding to the <model> tag. It is used to query joints
     //! @param linkName Name of link which to query in joint objects ChildName()
-    //! @param gatherNestedModelJoints When true recurses to any nested <model> tags of the Model object and also gathers their joints as well
+    //! @param gatherNestedModelJoints When true recurses to any nested <model> tags of the Model object and also gathers their joints as
+    //! well
     //! @returns vector of joints where link is a child
     AZStd::vector<const sdf::Joint*> GetJointsForChildLink(
         const sdf::Model& sdfModel, AZStd::string_view linkName, bool gatherNestedModelJoints = false);
@@ -97,7 +101,8 @@ namespace ROS2::Utils
     //! Retrieve all joints from URDF/SDF in which the specified link is a parent in a sdf::Joint.
     //! @param sdfModel Model object of SDF document corresponding to the <model> tag. It used to query joints
     //! @param linkName Name of link which to query in joint objects ParentName()
-    //! @param gatherNestedModelJoints When true recurses to any nested <model> tags of the Model object and also gathers their joints as well
+    //! @param gatherNestedModelJoints When true recurses to any nested <model> tags of the Model object and also gathers their joints as
+    //! well
     //! @returns vector of joints where link is a parent
     AZStd::vector<const sdf::Joint*> GetJointsForParentLink(
         const sdf::Model& sdfModel, AZStd::string_view linkName, bool gatherNestedModelJoints = false);
@@ -141,16 +146,19 @@ namespace ROS2::Utils
     //! Retrieve all models in URDF/SDF where the key is the fully composed path following the name scoping proposal in SDF 1.8
     //! http://sdformat.org/tutorials?tut=composition_proposal#1-nesting-and-encapsulation
     //! @param sdfRoot Root object of SDF document. The SDF <world> and <model> tags are recursed to locate SDF models
-    //! @param gatherNestedModelsForModel When true recurses to any nested <model> tags of the Model object and also gathers their models as well
+    //! @param gatherNestedModelsForModel When true recurses to any nested <model> tags of the Model object and also gathers their models as
+    //! well
     //! @returns mapping from fully qualified model name(such as "model_name::nested_model_name") to model pointer
     //! NOTE: For the SDF world object if gatherNestedModelsForModel=false, then only the direct models of the world are gathered
     ModelMap GetAllModels(const sdf::Root& sdfRoot, bool gatherNestedModelsForModel = false);
     //! @param sdfWorld World object of SDF document corresponding to the <world> tag. It used to query models
-    //! @param gatherNestedModelsForModel When true recurses to any nested <model> tags of the Model object and also gathers their models as well
+    //! @param gatherNestedModelsForModel When true recurses to any nested <model> tags of the Model object and also gathers their models as
+    //! well
     //! @returns mapping from fully qualified model name(such as "model_name::nested_model_name") to model pointer
     ModelMap GetAllModels(const sdf::World& sdfWorld, bool gatherNestedModelsForModel = false);
     //! @param sdfModel Model object corresponding to a <model> tag in the SDF. It used to query nested models
-    //! @param gatherNestedModelsForModel When true recurses to any nested <model> tags of the Model object and also gathers their models as well
+    //! @param gatherNestedModelsForModel When true recurses to any nested <model> tags of the Model object and also gathers their models as
+    //! well
     //! @returns mapping from fully qualified model name(such as "model_name::nested_model_name") to model pointer
     ModelMap GetAllModels(const sdf::Model& sdfModel, bool gatherNestedModelsForModel = false);
 
@@ -222,9 +230,14 @@ namespace ROS2::Utils::SDFormat
     //! Allows to store the list of unsupported parameters in metadata and logs. It is typically used with sensors and plugins.
     //! @param rootElement pointer to a root Element in parsed XML data that will be a subject to heuristics
     //! @param supportedParams set of predefined parameters that are supported
+    //! @param supportedPlugins set of predefined plugins that are supported
+    //! @param supportedPluginParams set of supported plugin params
     //! @returns list of unsupported parameters defined for given element
     AZStd::vector<AZStd::string> GetUnsupportedParams(
-        const sdf::ElementPtr& rootElement, const AZStd::unordered_set<AZStd::string>& supportedParams);
+        const sdf::ElementPtr& rootElement,
+        const AZStd::unordered_set<AZStd::string>& supportedParams,
+        const AZStd::unordered_set<AZStd::string>& supportedPlugins = AZStd::unordered_set<AZStd::string>(),
+        const AZStd::unordered_set<AZStd::string>& supportedPluginParams = AZStd::unordered_set<AZStd::string>());
 
     //! Check if plugin is supported by using it's filename. The filepath is converted into the filename if necessary.
     //! @param plugin plugin in the parsed SDFormat data

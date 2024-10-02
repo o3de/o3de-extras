@@ -11,6 +11,10 @@
 #include <OpenXRVk/OpenXRVkSystemComponent.h>
 #include <XRCameraMovementComponent.h>
 
+#if defined (OPENXRVK_BUILDERS)
+#include "Builders/OpenXRVkAssetsBuilderSystemComponent.h"
+#endif
+
 namespace OpenXRVk
 {   
     //! This module is in charge of loading system components related to Openxrvk. 
@@ -27,6 +31,9 @@ namespace OpenXRVk
             m_descriptors.insert(m_descriptors.end(), {
                 SystemComponent::CreateDescriptor(),
                 XRCameraMovementComponent::CreateDescriptor(),
+                #if defined (OPENXRVK_BUILDERS)
+                OpenXRVkBuilders::OpenXRAssetsBuilderSystemComponent::CreateDescriptor(),
+                #endif
             });
         }
 
@@ -34,14 +41,15 @@ namespace OpenXRVk
         {
             return
             {
-                azrtti_typeid<OpenXRVk::SystemComponent>()
+                azrtti_typeid<OpenXRVk::SystemComponent>(),
             };
         }
     };
 }
 
 
-// DO NOT MODIFY THIS LINE UNLESS YOU RENAME THE GEM
-// The first parameter should be GemName_GemIdLower
-// The second should be the fully qualified name of the class above
+#if defined(O3DE_GEM_NAME)
+AZ_DECLARE_MODULE_CLASS(AZ_JOIN(Gem_, O3DE_GEM_NAME), OpenXRVk::Module)
+#else
 AZ_DECLARE_MODULE_CLASS(Gem_OpenXRVk, OpenXRVk::Module)
+#endif

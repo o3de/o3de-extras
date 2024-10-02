@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<ScriptCanvas Include="Nodes/OneHot.h" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <Class Name="OneHot"
+           QualifiedName="MachineLearning::OneHot"
+           PreferredClassName="One hot encoder"
+           Category="MachineLearning"
+           Description="One-hot encodes a value.">
+
+        <Input Name="In" DisplayGroup="In" Description="Parameters controlling the one-hot encoding">
+            <Parameter Name="value" Type="AZStd::size_t" Description="The value to encode."/>
+            <Parameter Name="maxValue" Type="AZStd::size_t" Description="The maximum value possible."/>
+            <Return Name="oneHot" Type="AZ::VectorN" Shared="true"/>
+        </Input>
+    </Class>
+</ScriptCanvas>

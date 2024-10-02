@@ -54,8 +54,8 @@ ly_add_target(
         PUBLIC
             AZ::AzCore
             AZ::AzFramework
-            Gem::AtomLyIntegration_CommonFeatures.Static
-            Gem::PhysX.Static
+            Gem::CommonFeaturesAtom.Static
+            Gem::PhysX5.Static
 )
 
 # Here add ${gem_name} target, it depends on the Private Object library and Public API interface
@@ -179,8 +179,7 @@ if(PAL_TRAIT_BUILD_TESTS_SUPPORTED)
     if(PAL_TRAIT_BUILD_HOST_TOOLS)
         # We are a host platform, see if Editor tests are supported on this platform
         if(PAL_TRAIT_WAREHOUSEAUTOMATION_EDITOR_TEST_SUPPORTED)
-            # We support ${gem_name}.Editor.Tests on this platform, add ${gem_name}.Editor.Tests target which depends on
-            # private ${gem_name}.Editor.Private.Object target
+            # We support ${gem_name}.Editor.Tests on this platform
             ly_add_target(
                 NAME ${gem_name}.Editor.Tests ${PAL_TRAIT_TEST_TARGET_TYPE}
                 NAMESPACE Gem
@@ -194,7 +193,8 @@ if(PAL_TRAIT_BUILD_TESTS_SUPPORTED)
                 BUILD_DEPENDENCIES
                     PRIVATE
                         AZ::AzTest
-                        Gem::${gem_name}.Editor.Private.Object
+                        AZ::AzToolsFramework
+                        Gem::PhysX5.Editor.Static
             )
 
             # Add ${gem_name}.Editor.Tests to googletest

@@ -1,0 +1,84 @@
+{
+    "entries": [
+        {
+            "base": "{B7433D60-ECE2-3970-773F-D71FD979B9E3}",
+            "context": "ScriptCanvas::Node",
+            "variant": "",
+            "details": {
+                "name": "Supervised learning",
+                "category": "MachineLearning",
+                "tooltip": "Performs a fully supervised training session of a neural network using stochastic gradient descent."
+            },
+            "slots": [
+                {
+                    "base": "Input_In_0",
+                    "details": {
+                        "name": "In",
+                        "tooltip": "Parameters controlling model training"
+                    }
+                },
+                {
+                    "base": "DataInput_Model_0",
+                    "details": {
+                        "name": "Model"
+                    }
+                },
+                {
+                    "base": "DataInput_TrainingData_1",
+                    "details": {
+                        "name": "TrainingData"
+                    }
+                },
+                {
+                    "base": "DataInput_TestData_2",
+                    "details": {
+                        "name": "TestData"
+                    }
+                },
+                {
+                    "base": "DataInput_CostFunction_3",
+                    "details": {
+                        "name": "CostFunction"
+                    }
+                },
+                {
+                    "base": "DataInput_TotalIterations_4",
+                    "details": {
+                        "name": "TotalIterations"
+                    }
+                },
+                {
+                    "base": "DataInput_BatchSize_5",
+                    "details": {
+                        "name": "BatchSize"
+                    }
+                },
+                {
+                    "base": "DataInput_LearningRate_6",
+                    "details": {
+                        "name": "LearningRate"
+                    }
+                },
+                {
+                    "base": "DataInput_EarlyStopCost_7",
+                    "details": {
+                        "name": "EarlyStopCost"
+                    }
+                },
+                {
+                    "base": "Output_On In_0",
+                    "details": {
+                        "name": "On In",
+                        "tooltip": "Parameters controlling model training"
+                    }
+                },
+                {
+                    "base": "DataOutput_Model_0",
+                    "details": {
+                        "name": "Model"
+                    }
+                }
+            ]
+        }
+    ]
+}

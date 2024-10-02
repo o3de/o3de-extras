@@ -339,11 +339,7 @@
                     "Id": 7311879232144269420
                 },
                 "Component_[9031766191400117669]": {
-                    "$type": "GenericComponentWrapper",
-                    "Id": 9031766191400117669,
-                    "m_template": {
-                        "$type": "ROS2FrameComponent"
-                    }
+                    "$type": "ROS2FrameEditorComponent"
                 }
             }
         },
@@ -373,7 +369,7 @@
                                     "guid": "{8A2E7A82-D7C3-5E9C-A56C-6EDA70876347}",
                                     "subId": 268721130
                                 },
-                                "assetHint": "materialeditor/viewportmodels/cylinder.azmodel"
+                                "assetHint": "materialeditor/viewportmodels/cylinder.fbx.azmodel"
                             }
                         }
                     }
@@ -652,7 +648,7 @@
                                     "guid": "{D8E41FF6-BF62-5D4A-B4C3-B980586B3AB3}",
                                     "subId": 1612379007
                                 },
-                                "assetHint": "proteus_chassis.pxmesh"
+                                "assetHint": "proteus_chassis.fbx.pxmesh"
                             },
                             "Configuration": {
                                 "PhysicsAsset": {
@@ -661,7 +657,7 @@
                                         "subId": 1612379007
                                     },
                                     "loadBehavior": "QueueLoad",
-                                    "assetHint": "proteus_chassis.pxmesh"
+                                    "assetHint": "proteus_chassis.fbx.pxmesh"
                                 },
                                 "UseMaterialsFromAsset": false
                             }
@@ -697,8 +693,8 @@
                                     "IsDrive": true
                                 }
                             ],
-                            "Track": 0.0,
-                            "Wheelbase": 0.5299999713897705
+                            "Track": 0.5299999713897705,
+                            "Wheelbase": 0.0
                         },
                         "DriveModel": {
                             "Limits": {
@@ -731,10 +727,12 @@
                     "Id": 5852749630011233946
                 },
                 "Component_[639102350977932618]": {
-                    "$type": "GenericComponentWrapper",
-                    "Id": 639102350977932618,
-                    "m_template": {
-                        "$type": "ROS2FrameComponent",
+                    "$type": "ROS2FrameEditorComponent",
+                    "Id": 1381491360893018223,
+                    "ROS2FrameConfiguration": {
+                        "Namespace Configuration": {
+                            "Namespace": "base_link"
+                        },
                         "Frame Name": "base_link"
                     }
                 },
@@ -1402,7 +1400,7 @@
                                     "guid": "{42648578-F5A3-52BC-89BF-0D5FC8608250}",
                                     "subId": 276024436
                                 },
-                                "assetHint": "proteus2_lift.azmodel"
+                                "assetHint": "proteus2_lift.fbx.azmodel"
                             }
                         }
                     }
@@ -1699,7 +1697,7 @@
                         ],
                         "Parent Entity": "Entity_[15659718982176]",
                         "Child Entity": "Entity_[15706963622432]",
-                        "Display Debug": 0
+                        "Display Debug": "Never"
                     },
                     "Linear Limit": {
                         "Standard Limit Configuration": {
@@ -1761,7 +1759,7 @@
                                     "guid": "{F9B95287-0FA8-5624-92A1-217B33F08280}",
                                     "subId": 277942675
                                 },
-                                "assetHint": "proteus_wheel.azmodel"
+                                "assetHint": "proteus_wheel.fbx.azmodel"
                             }
                         }
                     }
@@ -1877,7 +1875,7 @@
                                     "guid": "{F9B95287-0FA8-5624-92A1-217B33F08280}",
                                     "subId": 277942675
                                 },
-                                "assetHint": "proteus_wheel.azmodel"
+                                "assetHint": "proteus_wheel.fbx.azmodel"
                             }
                         }
                     }
@@ -2038,7 +2036,7 @@
                                     "guid": "{60318C54-1D60-53EC-85AA-2CADBFD83ED9}",
                                     "subId": 278773777
                                 },
-                                "assetHint": "proteus2_chassis.azmodel"
+                                "assetHint": "proteus2_chassis.fbx.azmodel"
                             }
                         }
                     }
@@ -2238,8 +2236,7 @@
                                     "Topic": "pc"
                                 }
                             }
-                        },
-                        "lidarImplementation": "Scene Queries"
+                        }
                     }
                 },
                 "Component_[1828080485137528399]": {
@@ -2259,10 +2256,8 @@
                     "Id": 2877360700288979240
                 },
                 "Component_[3344702525066984561]": {
-                    "$type": "GenericComponentWrapper",
-                    "Id": 3344702525066984561,
-                    "m_template": {
-                        "$type": "ROS2FrameComponent",
+                    "$type": "ROS2FrameEditorComponent",
+                    "ROS2FrameConfiguration": {
                         "Frame Name": "lidar"
                     }
                 },

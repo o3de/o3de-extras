@@ -556,25 +556,41 @@ namespace UnitTest
 
         {
             const auto& unsupportedCameraParams = ROS2::Utils::SDFormat::GetUnsupportedParams(cameraElement, cameraSupportedParams);
-            EXPECT_EQ(unsupportedCameraParams.size(), 3U);
+            EXPECT_EQ(unsupportedCameraParams.size(), 4U);
             EXPECT_EQ(unsupportedCameraParams[0U], ">pose");
             EXPECT_EQ(unsupportedCameraParams[1U], ">camera>clip>near");
             EXPECT_EQ(unsupportedCameraParams[2U], ">camera>clip>far");
+            EXPECT_EQ(unsupportedCameraParams[3U], "plugin \"libgazebo_ros_camera.so\"");
         }
 
         cameraSupportedParams.emplace(">pose");
         {
             const auto& unsupportedCameraParams = ROS2::Utils::SDFormat::GetUnsupportedParams(cameraElement, cameraSupportedParams);
-            EXPECT_EQ(unsupportedCameraParams.size(), 2U);
+            EXPECT_EQ(unsupportedCameraParams.size(), 3U);
             EXPECT_EQ(unsupportedCameraParams[0U], ">camera>clip>near");
             EXPECT_EQ(unsupportedCameraParams[1U], ">camera>clip>far");
+            EXPECT_EQ(unsupportedCameraParams[2U], "plugin \"libgazebo_ros_camera.so\"");
         }
 
         cameraSupportedParams.emplace(">camera>clip>near");
         cameraSupportedParams.emplace(">camera>clip>far");
         {
             const auto& unsupportedCameraParams = ROS2::Utils::SDFormat::GetUnsupportedParams(cameraElement, cameraSupportedParams);
-            EXPECT_EQ(unsupportedCameraParams.size(), 0U);
+            EXPECT_EQ(unsupportedCameraParams.size(), 1U);
+            EXPECT_EQ(unsupportedCameraParams[0U], "plugin \"libgazebo_ros_camera.so\"");
+        }
+
+        {
+            const auto& unsupportedCameraParams = ROS2::Utils::SDFormat::GetUnsupportedParams(cameraElement, cameraSupportedParams, supportedPlugins);
+            EXPECT_EQ(unsupportedCameraParams.size(), 1U);
+            EXPECT_EQ(unsupportedCameraParams[0U], "plugin \"libgazebo_ros_camera.so\": >camera_name");
+        }
+
+        AZStd::unordered_set<AZStd::string> supportedCameraPluginParams = {">camera_name", ">ros>remapping"};
+        {
+          const auto& unsupportedCameraParams = ROS2::Utils::SDFormat::GetUnsupportedParams(
+              cameraElement, cameraSupportedParams, supportedPlugins, supportedCameraPluginParams);
+          EXPECT_EQ(unsupportedCameraParams.size(), 0U);
         }
 
         const AZStd::unordered_set<AZStd::string> laserSupportedParams{ ">pose",
@@ -588,8 +604,9 @@ namespace UnitTest
                                                                         ">ray>range>resolution",
                                                                         ">always_on",
                                                                         ">visualize" };
-        const auto& unsupportedLaserParams = ROS2::Utils::SDFormat::GetUnsupportedParams(laserElement, laserSupportedParams);
-        EXPECT_EQ(unsupportedLaserParams.size(), 0U);
+        const auto& unsupportedLaserParams = ROS2::Utils::SDFormat::GetUnsupportedParams(laserElement, laserSupportedParams, supportedPlugins);
+        EXPECT_EQ(unsupportedLaserParams.size(), 1U);
+        EXPECT_EQ(unsupportedLaserParams[0U], "plugin \"librayplugin.so\"");
     }
 
     TEST_F(SdfParserTest, SensorPluginImporterHookCheck)
@@ -604,10 +621,10 @@ namespace UnitTest
             const sdf::ElementPtr cameraElement = sdfModel->LinkByName("link1")->SensorByIndex(0U)->Element();
             const auto& cameraImporterHook = ROS2::SDFormat::ROS2SensorHooks::ROS2CameraSensor();
 
-            const auto& unsupportedCameraParams =
-                ROS2::Utils::SDFormat::GetUnsupportedParams(cameraElement, cameraImporterHook.m_supportedSensorParams);
+            const auto& unsupportedCameraParams = ROS2::Utils::SDFormat::GetUnsupportedParams(
+                cameraElement, cameraImporterHook.m_supportedSensorParams, cameraImporterHook.m_pluginNames, cameraImporterHook.m_supportedPluginParams);
             EXPECT_EQ(unsupportedCameraParams.size(), 1U);
-            EXPECT_EQ(unsupportedCameraParams[0U], ">pose");
+            EXPECT_EQ(unsupportedCameraParams[0U], "plugin \"libgazebo_ros_camera.so\": >camera_name");
 
             sdf::Plugin plug;
             plug.SetName("test_camera");
@@ -626,14 +643,12 @@ namespace UnitTest
 
             const sdf::ElementPtr lidarElement = sdfModel->LinkByName("link2")->SensorByIndex(0U)->Element();
             const auto& lidarImporterHook = ROS2::SDFormat::ROS2SensorHooks::ROS2LidarSensor();
-            const auto& unsupportedLidarParams =
-                ROS2::Utils::SDFormat::GetUnsupportedParams(lidarElement, lidarImporterHook.m_supportedSensorParams);
-            EXPECT_EQ(unsupportedLidarParams.size(), 5U);
+            const auto& unsupportedLidarParams = ROS2::Utils::SDFormat::GetUnsupportedParams(
+                lidarElement, lidarImporterHook.m_supportedSensorParams, lidarImporterHook.m_pluginNames, lidarImporterHook.m_supportedPluginParams);
+            EXPECT_EQ(unsupportedLidarParams.size(), 3U);
             EXPECT_EQ(unsupportedLidarParams[0U], ">always_on");
-            EXPECT_EQ(unsupportedLidarParams[1U], ">visualize");
-            EXPECT_EQ(unsupportedLidarParams[2U], ">pose");
-            EXPECT_EQ(unsupportedLidarParams[3U], ">ray>scan>horizontal>resolution");
-            EXPECT_EQ(unsupportedLidarParams[4U], ">ray>range>resolution");
+            EXPECT_EQ(unsupportedLidarParams[1U], ">ray>range>resolution");
+            EXPECT_EQ(unsupportedLidarParams[2U], "plugin \"librayplugin.so\"");
         }
         {
             const auto xmlStr = GetSdfWithImuSensor();
@@ -645,8 +660,8 @@ namespace UnitTest
             const sdf::ElementPtr imuElement = sdfModel->LinkByName("link1")->SensorByIndex(0U)->Element();
             const auto& importerHook = ROS2::SDFormat::ROS2SensorHooks::ROS2ImuSensor();
 
-            const auto& unsupportedImuParams =
-                ROS2::Utils::SDFormat::GetUnsupportedParams(imuElement, importerHook.m_supportedSensorParams);
+            const auto& unsupportedImuParams = ROS2::Utils::SDFormat::GetUnsupportedParams(
+                  imuElement, importerHook.m_supportedSensorParams, importerHook.m_pluginNames, importerHook.m_supportedPluginParams);
             EXPECT_EQ(unsupportedImuParams.size(), 1U);
             EXPECT_EQ(unsupportedImuParams[0U], ">always_on");
         }

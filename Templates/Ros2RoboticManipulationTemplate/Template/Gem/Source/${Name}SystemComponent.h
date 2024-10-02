@@ -3,7 +3,7 @@
 
 #include <AzCore/Component/Component.h>
 
-#include <${SanitizedCppName}/${SanitizedCppName}Bus.h>
+#include <${Name}/${Name}Bus.h>
 
 namespace ${SanitizedCppName}
 {

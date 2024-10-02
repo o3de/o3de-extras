@@ -39,6 +39,13 @@ namespace ROS2::VehicleDynamics
         }
     }
 
+    AckermannVehicleModelComponent::AckermannVehicleModelComponent(
+        const VehicleConfiguration& vehicleConfiguration, const AckermannDriveModel& driveModel)
+        : m_driveModel(driveModel)
+    {
+        m_vehicleConfiguration = vehicleConfiguration;
+    }
+
     void AckermannVehicleModelComponent::GetProvidedServices(AZ::ComponentDescriptor::DependencyArrayType& provided)
     {
         provided.push_back(AZ_CRC_CE("AckermannModelService"));
