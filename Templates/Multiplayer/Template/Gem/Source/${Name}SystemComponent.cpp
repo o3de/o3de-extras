@@ -44,6 +44,8 @@ namespace ${SanitizedCppName}
 
     void ${SanitizedCppName}SystemComponent::GetRequiredServices([[maybe_unused]] AZ::ComponentDescriptor::DependencyArrayType& required)
     {
+        required.push_back(AZ_CRC_CE("NetworkingService"));
+        required.push_back(AZ_CRC_CE("MultiplayerService"));  // Ensure Multiplayer gem calls RegisterMultiplayerComponents() before this project.
     }
 
     void ${SanitizedCppName}SystemComponent::GetDependentServices([[maybe_unused]] AZ::ComponentDescriptor::DependencyArrayType& dependent)
