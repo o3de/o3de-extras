@@ -4,7 +4,7 @@
     "repo_uri": "https://raw.githubusercontent.com/o3de/o3de-extras/development",
     "summary": "A repository to hold various gems, projects, and templates for the O3DE engine.",
     "additional_info": "Extras gems, projects, and templates for O3DE. See the README.md at the root of this repository for more information",
-    "last_updated": "2022-09-27",
+    "last_updated": "2024-10-08",
     "$schemaVersion": "1.0.0",
     "gems_data": [
         {
