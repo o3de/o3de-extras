@@ -100,6 +100,7 @@ namespace ROS2
 
     void ROS2WheelOdometryComponent::Activate()
     {
+        ROS2SensorComponentBase::Activate();
         m_robotPose = AZ::Vector3{ 0 };
         m_robotRotation = AZ::Quaternion{ 0, 0, 0, 1 };
 
@@ -134,5 +135,6 @@ namespace ROS2
     {
         StopSensor();
         m_odometryPublisher.reset();
+        ROS2SensorComponentBase::Deactivate();
     }
 } // namespace ROS2

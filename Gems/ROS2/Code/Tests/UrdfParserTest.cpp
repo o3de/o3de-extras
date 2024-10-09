@@ -56,42 +56,44 @@ namespace UnitTest
 
         AZStd::string GetUrdfWithTwoLinksAndJoint(AZStd::string_view jointType = "fixed")
         {
-            return AZStd::string::format("<robot name=\"test_two_links_one_joint\">  "
-                   "  <material name=\"some_material\">\n"
-                   "    <color rgba=\"0 0 0 1\"/>\n"
-                   "  </material>"
-                   "  <link name=\"link1\">"
-                   "    <inertial>"
-                   "      <mass value=\"1.0\"/>"
-                   "      <inertia ixx=\"1.0\" iyy=\"1.0\" izz=\"1.0\" ixy=\"0\" ixz=\"0\" iyz=\"0\"/>"
-                   "    </inertial>"
-                   "    <visual>"
-                   "      <geometry>"
-                   "        <box size=\"1.0 2.0 1.0\"/>"
-                   "      </geometry>"
-                   "      <material name=\"some_material\"/>"
-                   "    </visual>"
-                   "  </link>"
-                   "  <link name=\"link2\">"
-                   "    <inertial>"
-                   "      <mass value=\"1.0\"/>"
-                   "      <inertia ixx=\"1.0\" iyy=\"1.0\" izz=\"1.0\" ixy=\"0\" ixz=\"0\" iyz=\"0\"/>"
-                   "    </inertial>"
-                   "    <visual>"
-                   "      <geometry>"
-                   "        <box size=\"1.0 1.0 1.0\"/>"
-                   "      </geometry>"
-                   "      <material name=\"some_material\"/>"
-                   "    </visual>"
-                   "  </link>"
-                   R"(  <joint name="joint12" type="%.*s">)"
-                   "    <parent link=\"link1\"/>"
-                   "    <child link=\"link2\"/>"
-                   "    <origin rpy=\"0 0 0\" xyz=\"1.0 0.5 0.0\"/>"
-                   "    <dynamics damping=\"10.0\" friction=\"5.0\"/>"
-                   "    <limit lower=\"10.0\" upper=\"20.0\" effort=\"90.0\" velocity=\"10.0\"/>"
-                   "  </joint>"
-                   "</robot>", AZ_STRING_ARG(jointType));
+            return AZStd::string::format(
+                "<robot name=\"test_two_links_one_joint\">  "
+                "  <material name=\"some_material\">\n"
+                "    <color rgba=\"0 0 0 1\"/>\n"
+                "  </material>"
+                "  <link name=\"link1\">"
+                "    <inertial>"
+                "      <mass value=\"1.0\"/>"
+                "      <inertia ixx=\"1.0\" iyy=\"1.0\" izz=\"1.0\" ixy=\"0\" ixz=\"0\" iyz=\"0\"/>"
+                "    </inertial>"
+                "    <visual>"
+                "      <geometry>"
+                "        <box size=\"1.0 2.0 1.0\"/>"
+                "      </geometry>"
+                "      <material name=\"some_material\"/>"
+                "    </visual>"
+                "  </link>"
+                "  <link name=\"link2\">"
+                "    <inertial>"
+                "      <mass value=\"1.0\"/>"
+                "      <inertia ixx=\"1.0\" iyy=\"1.0\" izz=\"1.0\" ixy=\"0\" ixz=\"0\" iyz=\"0\"/>"
+                "    </inertial>"
+                "    <visual>"
+                "      <geometry>"
+                "        <box size=\"1.0 1.0 1.0\"/>"
+                "      </geometry>"
+                "      <material name=\"some_material\"/>"
+                "    </visual>"
+                "  </link>"
+                R"(  <joint name="joint12" type="%.*s">)"
+                "    <parent link=\"link1\"/>"
+                "    <child link=\"link2\"/>"
+                "    <origin rpy=\"0 0 0\" xyz=\"1.0 0.5 0.0\"/>"
+                "    <dynamics damping=\"10.0\" friction=\"5.0\"/>"
+                "    <limit lower=\"10.0\" upper=\"20.0\" effort=\"90.0\" velocity=\"10.0\"/>"
+                "  </joint>"
+                "</robot>",
+                AZ_STRING_ARG(jointType));
         }
 
         AZStd::string GetURDFWithTwoLinksAndBaseLinkNoInertia()
@@ -125,7 +127,8 @@ namespace UnitTest
 
         AZStd::string GetURDFWithFourLinksAndRootLinkNoInertia(AZStd::string_view rootLinkName)
         {
-            return AZStd::string::format(R"(<?xml version="1.0" ?>
+            return AZStd::string::format(
+                R"(<?xml version="1.0" ?>
                 <robot name="FooRobot">
                   <link name="%.*s"/>
                   <link name="base_link"/>
@@ -167,14 +170,16 @@ namespace UnitTest
                     <dynamics damping="10.0" friction="5.0"/>
                     <limit lower="10.0" upper="20.0" effort="90.0" velocity="10.0"/>
                   </joint>
-                </robot>)", AZ_STRING_ARG(rootLinkName), AZ_STRING_ARG(rootLinkName));
+                </robot>)",
+                AZ_STRING_ARG(rootLinkName),
+                AZ_STRING_ARG(rootLinkName));
         }
 
         // A URDF <model> can only represent structure which is configurable though the <joint> tags
         // Therefore link can only appear as a child of a single joint.
         // It cannot be a child of multiple joints
         // https://wiki.ros.org/urdf/XML/model
-        AZStd::string GetURDFWithTranforms()
+        AZStd::string GetURDFWithTransforms()
         {
             return "<?xml version=\"1.0\"?>\n"
                    "<robot name=\"complicated\">\n"
@@ -726,7 +731,7 @@ namespace UnitTest
 
     TEST_F(UrdfParserTest, TestLinkListing)
     {
-        const auto xmlStr = GetURDFWithTranforms();
+        const auto xmlStr = GetURDFWithTransforms();
         sdf::ParserConfig parserConfig;
         const auto sdfRootOutcome = ROS2::UrdfParser::Parse(xmlStr, parserConfig);
         ASSERT_TRUE(sdfRootOutcome);
@@ -753,7 +758,7 @@ namespace UnitTest
 
     TEST_F(UrdfParserTest, TestJointLink)
     {
-        const auto xmlStr = GetURDFWithTranforms();
+        const auto xmlStr = GetURDFWithTransforms();
         sdf::ParserConfig parserConfig;
         const auto sdfRootOutcome = ROS2::UrdfParser::Parse(xmlStr, parserConfig);
         ASSERT_TRUE(sdfRootOutcome);
@@ -768,7 +773,7 @@ namespace UnitTest
 
     TEST_F(UrdfParserTest, TestTransforms)
     {
-        const auto xmlStr = GetURDFWithTranforms();
+        const auto xmlStr = GetURDFWithTransforms();
         sdf::ParserConfig parserConfig;
         const auto sdfRootOutcome = ROS2::UrdfParser::Parse(xmlStr, parserConfig);
         ASSERT_TRUE(sdfRootOutcome);
@@ -791,17 +796,20 @@ namespace UnitTest
         const AZ::Vector3 expected_translation_link2{ -1.2000000476837158, 2.0784599781036377, 0.0 };
         const AZ::Vector3 expected_translation_link3{ -2.4000000953674316, 0.0, 0.0 };
 
-        const AZ::Transform transform_from_urdf_link1 = ROS2::Utils::GetLocalTransformURDF(base_link_ptr);
+        const auto base_link_pose = base_link_ptr->SemanticPose();
+        const AZ::Transform transform_from_urdf_link1 = ROS2::Utils::GetLocalTransformURDF(base_link_pose);
         EXPECT_NEAR(expected_translation_link1.GetX(), transform_from_urdf_link1.GetTranslation().GetX(), 1e-5);
         EXPECT_NEAR(expected_translation_link1.GetY(), transform_from_urdf_link1.GetTranslation().GetY(), 1e-5);
         EXPECT_NEAR(expected_translation_link1.GetZ(), transform_from_urdf_link1.GetTranslation().GetZ(), 1e-5);
 
-        const AZ::Transform transform_from_urdf_link2 = ROS2::Utils::GetLocalTransformURDF(link2_ptr);
+        const auto link2_pose = link2_ptr->SemanticPose();
+        const AZ::Transform transform_from_urdf_link2 = ROS2::Utils::GetLocalTransformURDF(link2_pose);
         EXPECT_NEAR(expected_translation_link2.GetX(), transform_from_urdf_link2.GetTranslation().GetX(), 1e-5);
         EXPECT_NEAR(expected_translation_link2.GetY(), transform_from_urdf_link2.GetTranslation().GetY(), 1e-5);
         EXPECT_NEAR(expected_translation_link2.GetZ(), transform_from_urdf_link2.GetTranslation().GetZ(), 1e-5);
 
-        const AZ::Transform transform_from_urdf_link3 = ROS2::Utils::GetLocalTransformURDF(link3_ptr);
+        const auto link3_pose = link3_ptr->SemanticPose();
+        const AZ::Transform transform_from_urdf_link3 = ROS2::Utils::GetLocalTransformURDF(link3_pose);
         EXPECT_NEAR(expected_translation_link3.GetX(), transform_from_urdf_link3.GetTranslation().GetX(), 1e-5);
         EXPECT_NEAR(expected_translation_link3.GetY(), transform_from_urdf_link3.GetTranslation().GetY(), 1e-5);
         EXPECT_NEAR(expected_translation_link3.GetZ(), transform_from_urdf_link3.GetTranslation().GetZ(), 1e-5);
@@ -809,7 +817,7 @@ namespace UnitTest
 
     TEST_F(UrdfParserTest, TestQueryJointsForParentLink_Succeeds)
     {
-        const auto xmlStr = GetURDFWithTranforms();
+        const auto xmlStr = GetURDFWithTransforms();
         sdf::ParserConfig parserConfig;
         const auto sdfRootOutcome = ROS2::UrdfParser::Parse(xmlStr, parserConfig);
         ASSERT_TRUE(sdfRootOutcome);
@@ -834,7 +842,7 @@ namespace UnitTest
 
     TEST_F(UrdfParserTest, TestQueryJointsForChildLink_Succeeds)
     {
-        const auto xmlStr = GetURDFWithTranforms();
+        const auto xmlStr = GetURDFWithTransforms();
         sdf::ParserConfig parserConfig;
         const auto sdfRootOutcome = ROS2::UrdfParser::Parse(xmlStr, parserConfig);
         ASSERT_TRUE(sdfRootOutcome);

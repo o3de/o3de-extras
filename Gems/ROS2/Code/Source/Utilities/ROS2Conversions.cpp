@@ -83,4 +83,9 @@ namespace ROS2
         return ros2Covariance;
     }
 
+    float ROS2Conversions::GetTimeDifference(const builtin_interfaces::msg::Time &start,
+                                             const builtin_interfaces::msg::Time &end) {
+        return static_cast<float>(end.sec - start.sec) + static_cast<float>(end.nanosec - start.nanosec) / 1e9;
+    }
+
 } // namespace ROS2

@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<SoundBanksInfo Platform="Windows" BasePlatform="Windows" SchemaVersion="12" SoundbankVersion="140">
+	<RootPaths>
+		<ProjectRoot>C:\O3DE\project\Sounds\wwise_project\</ProjectRoot>
+		<SourceFilesRoot>C:\O3DE\project\Sounds\wwise_project\.cache\Windows\</SourceFilesRoot>
+		<SoundBanksRoot>C:\O3DE\project\gg\Sounds\wwise\</SoundBanksRoot>
+		<ExternalSourcesInputFile></ExternalSourcesInputFile>
+		<ExternalSourcesOutputRoot>C:\O3DE\project\Sounds\wwise_project\GeneratedSoundBanks\Windows</ExternalSourcesOutputRoot>
+	</RootPaths>
+	<DialogueEvents/>
+	<StreamedFiles/>
+	<MediaFilesNotInAnyBank/>
+	<SoundBanks>
+		<SoundBank Id="782826392" Language="SFX" Hash="3283667599">
+			<ObjectPath>\SoundBanks\Default Work Unit\default</ObjectPath>
+			<ShortName>default</ShortName>
+			<Path>default.bnk</Path>
+			<IncludedEvents>
+				<Event Id="3057162532" Name="Play_Blaster_Shot" ObjectPath="\Events\Default Work Unit\Play_Blaster_Shot">
+					<IncludedMemoryFiles>
+						<File Id="228546115" Language="SFX">
+							<ShortName>gun_blaster_no_trigger_shot_1.wav</ShortName>
+							<Path>SFX\gun_blaster_no_trigger_shot_1_10C4C929.wem</Path>
+						</File>
+					</IncludedMemoryFiles>
+				</Event>
+			</IncludedEvents>
+			<IncludedMemoryFiles>
+				<File Id="228546115" Language="SFX">
+					<ShortName>gun_blaster_no_trigger_shot_1.wav</ShortName>
+					<Path>SFX\gun_blaster_no_trigger_shot_1_10C4C929.wem</Path>
+				</File>
+			</IncludedMemoryFiles>
+		</SoundBank>
+		<SoundBank Id="1355168291" Language="SFX" Hash="3690994985">
+			<ObjectPath>Init</ObjectPath>
+			<ShortName>Init</ShortName>
+			<Path>Init.bnk</Path>
+		</SoundBank>
+	</SoundBanks>
+</SoundBanksInfo>

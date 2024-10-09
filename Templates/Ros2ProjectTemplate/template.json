@@ -1,6 +1,6 @@
 {
     "template_name": "Ros2ProjectTemplate",
-    "version": "1.0.0",
+    "version": "2.0.0",
     "origin": "Open 3D Engine Extras",
     "origin_url": "https://github.com/o3de/o3de-extras",
     "license": "https://github.com/o3de/o3de-extras/tree/development/Templates/Ros2ProjectTemplate/Template/LICENSE.txt",
@@ -58,7 +58,6 @@
             "file": "Gem/${NameLower}_editor_shared_files.cmake",
             "isTemplated": true
         },
-        
         {
             "file": "Gem/CMakeLists.txt",
             "isTemplated": true
@@ -165,10 +164,6 @@
         },
         {
             "file": "Gem/Source/${Name}SampleComponent.h",
-            "isTemplated": true
-        },
-        {
-            "file": "Gem/enabled_gems.cmake",
             "isTemplated": true
         },
         {
@@ -428,7 +423,11 @@
             "isTemplated": false
         },
         {
-            "file": "Examples/slam_navigation/launch/config/navigation_params.yaml",
+            "file": "Examples/slam_navigation/launch/config/navigation_params_humble.yaml",
+            "isTemplated": false
+        },
+        {
+            "file": "Examples/slam_navigation/launch/config/navigation_params_jazzy.yaml",
             "isTemplated": false
         },
         {
@@ -558,5 +557,5 @@
         }
     ],
     "repo_uri": "https://raw.githubusercontent.com/o3de/o3de-extras/development",
-    "download_source_uri": "https://github.com/o3de/o3de-extras/releases/download/2.0/ros2projecttemplate-1.0.0-template.zip"
+    "download_source_uri": "https://github.com/o3de/o3de-extras/releases/download/2.0/ros2projecttemplate-2.0.0-template.zip"
 }

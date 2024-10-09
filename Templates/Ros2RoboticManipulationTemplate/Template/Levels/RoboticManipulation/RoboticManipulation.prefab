@@ -21,14 +21,9 @@
                 "Child Entity Order": [
                     "Entity_[1176639161715]",
                     "Instance_[712990187248]/ContainerEntity",
-                    "Instance_[1713717567216]/ContainerEntity",
                     "Entity_[4189935783732]",
                     "Entity_[20588120919860]",
-                    "Entity_[3876413040103]",
-                    "Entity_[14557996705255]",
-                    "Entity_[15885141599719]",
-                    "Entity_[484576747758]",
-                    "Entity_[436811952090]"
+                    "Entity_[3876413040103]"
                 ]
             },
             "Component_[15230859088967841193]": {
@@ -256,106 +251,6 @@
                                 8.0
                             ]
                         }
-                    }
-                }
-            }
-        },
-        "Entity_[14557996705255]": {
-            "Id": "Entity_[14557996705255]",
-            "Name": "BoxToyPuzzleTop_fbx",
-            "Components": {
-                "EditorDisabledCompositionComponent": {
-                    "$type": "EditorDisabledCompositionComponent",
-                    "Id": 16447843520015956185
-                },
-                "EditorEntityIconComponent": {
-                    "$type": "EditorEntityIconComponent",
-                    "Id": 5412712108684681399
-                },
-                "EditorEntitySortComponent": {
-                    "$type": "EditorEntitySortComponent",
-                    "Id": 5832346418426045634
-                },
-                "EditorInspectorComponent": {
-                    "$type": "EditorInspectorComponent",
-                    "Id": 8895421155462401079
-                },
-                "EditorLockComponent": {
-                    "$type": "EditorLockComponent",
-                    "Id": 17544727551629391639
-                },
-                "EditorOnlyEntityComponent": {
-                    "$type": "EditorOnlyEntityComponent",
-                    "Id": 13825700678797605356
-                },
-                "EditorPendingCompositionComponent": {
-                    "$type": "EditorPendingCompositionComponent",
-                    "Id": 3430321196794176168
-                },
-                "EditorVisibilityComponent": {
-                    "$type": "EditorVisibilityComponent",
-                    "Id": 14980166663454313356
-                },
-                "TransformComponent": {
-                    "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
-                    "Id": 1306750680690913903,
-                    "Parent Entity": "Entity_[1146574390643]",
-                    "Transform Data": {
-                        "Translate": [
-                            1.9491205215454102,
-                            2.1650495529174805,
-                            0.7113156318664551
-                        ]
-                    }
-                }
-            }
-        },
-        "Entity_[15885141599719]": {
-            "Id": "Entity_[15885141599719]",
-            "Name": "BoxToyPuzzleTop_fbx",
-            "Components": {
-                "EditorDisabledCompositionComponent": {
-                    "$type": "EditorDisabledCompositionComponent",
-                    "Id": 9111216009922193751
-                },
-                "EditorEntityIconComponent": {
-                    "$type": "EditorEntityIconComponent",
-                    "Id": 11772806891623077377
-                },
-                "EditorEntitySortComponent": {
-                    "$type": "EditorEntitySortComponent",
-                    "Id": 7564283448946957139
-                },
-                "EditorInspectorComponent": {
-                    "$type": "EditorInspectorComponent",
-                    "Id": 3207714258029394869
-                },
-                "EditorLockComponent": {
-                    "$type": "EditorLockComponent",
-                    "Id": 17544727551629391639
-                },
-                "EditorOnlyEntityComponent": {
-                    "$type": "EditorOnlyEntityComponent",
-                    "Id": 9994561945877040969
-                },
-                "EditorPendingCompositionComponent": {
-                    "$type": "EditorPendingCompositionComponent",
-                    "Id": 15854080196249704133
-                },
-                "EditorVisibilityComponent": {
-                    "$type": "EditorVisibilityComponent",
-                    "Id": 14980166663454313356
-                },
-                "TransformComponent": {
-                    "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
-                    "Id": 1306750680690913903,
-                    "Parent Entity": "Entity_[1146574390643]",
-                    "Transform Data": {
-                        "Translate": [
-                            1.7471706867218018,
-                            2.294935464859009,
-                            0.7113156914710999
-                        ]
                     }
                 }
             }
@@ -617,7 +512,7 @@
                                     "guid": "{7E95DBDB-AD16-52F1-9CFE-D3A0762BC9DA}",
                                     "subId": 275653734
                                 },
-                                "assetHint": "assets/room/desk.azmodel"
+                                "assetHint": "assets/room/desk.fbx.azmodel"
                             }
                         }
                     }
@@ -793,7 +688,7 @@
                     "Transform Data": {
                         "Translate": [
                             -1.604369878768921,
-                            1.6861903667449951,
+                            0.013725638389587402,
                             0.0
                         ]
                     }
@@ -1196,7 +1091,7 @@
         },
         "Entity_[3876413040103]": {
             "Id": "Entity_[3876413040103]",
-            "Name": "BoxToyPuzzle_fbx",
+            "Name": "BoxToyPuzzle",
             "Components": {
                 "EditorDisabledCompositionComponent": {
                     "$type": "EditorDisabledCompositionComponent",
@@ -1210,8 +1105,10 @@
                     "$type": "EditorEntitySortComponent",
                     "Id": 5003866656785933011,
                     "Child Entity Order": [
+                        "Entity_[436811952090]",
                         "Entity_[3897887876583]",
-                        "Entity_[3889297941991]"
+                        "Entity_[3889297941991]",
+                        "Entity_[488871715054]"
                     ]
                 },
                 "EditorInspectorComponent": {
@@ -1359,7 +1256,7 @@
                         "Translate": [
                             -0.04077768325805664,
                             0.28824615478515625,
-                            0.014144837856292725
+                            0.0
                         ]
                     }
                 }
@@ -1475,9 +1372,9 @@
                     "Parent Entity": "Entity_[3876413040103]",
                     "Transform Data": {
                         "Translate": [
-                            0.04460740089416504,
+                            -0.1062307357788086,
                             0.16232848167419434,
-                            0.19426113367080688
+                            0.0
                         ]
                     }
                 }
@@ -1852,12 +1749,12 @@
                 "TransformComponent": {
                     "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
                     "Id": 4486871887464016633,
-                    "Parent Entity": "Entity_[1146574390643]",
+                    "Parent Entity": "Entity_[3876413040103]",
                     "Transform Data": {
                         "Translate": [
-                            2.0183868408203125,
-                            2.3767786026000977,
-                            0.8473936319351196
+                            -0.06522011756896973,
+                            -0.18006682395935059,
+                            0.0
                         ]
                     }
                 }
@@ -1877,7 +1774,7 @@
                                     "guid": "{679EA477-5687-5A31-B71E-123375DFDEFD}",
                                     "subId": 281833686
                                 },
-                                "assetHint": "assets/boxtoypuzzle/toybox.azmodel"
+                                "assetHint": "assets/boxtoypuzzle/toybox.fbx.azmodel"
                             }
                         }
                     }
@@ -1918,59 +1815,6 @@
                     "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
                     "Id": 5799169851909827941,
                     "Parent Entity": "Entity_[436811952090]"
-                }
-            }
-        },
-        "Entity_[484576747758]": {
-            "Id": "Entity_[484576747758]",
-            "Name": "BoxTriangle_fbx",
-            "Components": {
-                "EditorDisabledCompositionComponent": {
-                    "$type": "EditorDisabledCompositionComponent",
-                    "Id": 10877441642721818800
-                },
-                "EditorEntityIconComponent": {
-                    "$type": "EditorEntityIconComponent",
-                    "Id": 18018453693906076449
-                },
-                "EditorEntitySortComponent": {
-                    "$type": "EditorEntitySortComponent",
-                    "Id": 7844031036681075183,
-                    "Child Entity Order": [
-                        "Entity_[488871715054]"
-                    ]
-                },
-                "EditorInspectorComponent": {
-                    "$type": "EditorInspectorComponent",
-                    "Id": 10954661422639764533
-                },
-                "EditorLockComponent": {
-                    "$type": "EditorLockComponent",
-                    "Id": 8035291812709109427
-                },
-                "EditorOnlyEntityComponent": {
-                    "$type": "EditorOnlyEntityComponent",
-                    "Id": 3644456411738663966
-                },
-                "EditorPendingCompositionComponent": {
-                    "$type": "EditorPendingCompositionComponent",
-                    "Id": 13372385876431998140
-                },
-                "EditorVisibilityComponent": {
-                    "$type": "EditorVisibilityComponent",
-                    "Id": 4475965045144674994
-                },
-                "TransformComponent": {
-                    "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
-                    "Id": 8109560823071279615,
-                    "Parent Entity": "Entity_[1146574390643]",
-                    "Transform Data": {
-                        "Translate": [
-                            1.9133661985397339,
-                            2.775738477706909,
-                            0.7113156318664551
-                        ]
-                    }
                 }
             }
         },
@@ -2059,24 +1903,7 @@
                     "$type": "EditorRigidBodyComponent",
                     "Id": 6554809807315683945,
                     "Configuration": {
-                        "entityId": "",
-                        "Mass": 0.07601521909236908,
-                        "Centre of mass offset": [
-                            1.7074251734694457e-10,
-                            -5.035076799941862e-9,
-                            0.025298872962594032
-                        ],
-                        "Inertia tensor": [
-                            0.000027028370823245496,
-                            0.0,
-                            0.0,
-                            0.0,
-                            0.00002738683542702347,
-                            0.0,
-                            0.0,
-                            0.0,
-                            0.000021981184545438737
-                        ]
+                        "entityId": ""
                     }
                 },
                 "EditorVisibilityComponent": {
@@ -2086,16 +1913,11 @@
                 "TransformComponent": {
                     "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
                     "Id": 12409578498921728782,
-                    "Parent Entity": "Entity_[484576747758]",
+                    "Parent Entity": "Entity_[3876413040103]",
                     "Transform Data": {
                         "Translate": [
-                            0.0,
-                            0.15386652946472168,
-                            0.22249889373779297
-                        ],
-                        "Rotate": [
-                            145.76766967773438,
-                            0.0,
+                            0.04960751533508301,
+                            0.20310592651367188,
                             0.0
                         ]
                     }
@@ -2382,11 +2204,10 @@
                     "$type": "EditorVisibilityComponent",
                     "Id": 4403913835617255944
                 },
-                "ROS2FrameComponent": {
-                    "$type": "GenericComponentWrapper",
+                "ROS2FrameEditorComponent": {
+                    "$type": "ROS2FrameEditorComponent",
                     "Id": 17561012789858645084,
-                    "m_template": {
-                        "$type": "ROS2FrameComponent",
+                    "ROS2FrameConfiguration": {
                         "Namespace Configuration": {
                             "Namespace Strategy": 1
                         },
@@ -2988,11 +2809,10 @@
                     "$type": "EditorVisibilityComponent",
                     "Id": 4403913835617255944
                 },
-                "ROS2FrameComponent": {
-                    "$type": "GenericComponentWrapper",
+                "ROS2FrameEditorComponent": {
+                    "$type": "ROS2FrameEditorComponent",
                     "Id": 17561012789858645084,
-                    "m_template": {
-                        "$type": "ROS2FrameComponent",
+                    "ROS2FrameConfiguration": {
                         "Namespace Configuration": {
                             "Namespace Strategy": 1
                         },
@@ -3594,11 +3414,10 @@
                     "$type": "EditorVisibilityComponent",
                     "Id": 4403913835617255944
                 },
-                "ROS2FrameComponent": {
-                    "$type": "GenericComponentWrapper",
+                "ROS2FrameEditorComponent": {
+                    "$type": "ROS2FrameEditorComponent",
                     "Id": 17561012789858645084,
-                    "m_template": {
-                        "$type": "ROS2FrameComponent",
+                    "ROS2FrameConfiguration": {
                         "Namespace Configuration": {
                             "Namespace Strategy": 1
                         },
@@ -4200,11 +4019,10 @@
                     "$type": "EditorVisibilityComponent",
                     "Id": 4403913835617255944
                 },
-                "ROS2FrameComponent": {
-                    "$type": "GenericComponentWrapper",
+                "ROS2FrameEditorComponent": {
+                    "$type": "ROS2FrameEditorComponent",
                     "Id": 17561012789858645084,
-                    "m_template": {
-                        "$type": "ROS2FrameComponent",
+                    "ROS2FrameConfiguration": {
                         "Namespace Configuration": {
                             "Namespace Strategy": 1
                         },
@@ -4806,11 +4624,10 @@
                     "$type": "EditorVisibilityComponent",
                     "Id": 4403913835617255944
                 },
-                "ROS2FrameComponent": {
-                    "$type": "GenericComponentWrapper",
+                "ROS2FrameEditorComponent": {
+                    "$type": "ROS2FrameEditorComponent",
                     "Id": 17561012789858645084,
-                    "m_template": {
-                        "$type": "ROS2FrameComponent",
+                    "ROS2FrameConfiguration": {
                         "Namespace Configuration": {
                             "Namespace Strategy": 1
                         },
@@ -5412,11 +5229,10 @@
                     "$type": "EditorVisibilityComponent",
                     "Id": 4403913835617255944
                 },
-                "ROS2FrameComponent": {
-                    "$type": "GenericComponentWrapper",
+                "ROS2FrameEditorComponent": {
+                    "$type": "ROS2FrameEditorComponent",
                     "Id": 17561012789858645084,
-                    "m_template": {
-                        "$type": "ROS2FrameComponent",
+                    "ROS2FrameConfiguration": {
                         "Namespace Configuration": {
                             "Namespace Strategy": 1
                         },
@@ -6019,31 +5835,6 @@
         }
     },
     "Instances": {
-        "Instance_[1713717567216]": {
-            "Source": "Assets/Factory/TableUnderRobot.prefab",
-            "Patches": [
-                {
-                    "op": "replace",
-                    "path": "/ContainerEntity/Components/TransformComponent/Parent Entity",
-                    "value": "../Entity_[1146574390643]"
-                },
-                {
-                    "op": "replace",
-                    "path": "/ContainerEntity/Components/TransformComponent/Transform Data/Translate/0",
-                    "value": -1.859347343444824
-                },
-                {
-                    "op": "replace",
-                    "path": "/ContainerEntity/Components/TransformComponent/Transform Data/Translate/1",
-                    "value": 0.0
-                },
-                {
-                    "op": "replace",
-                    "path": "/ContainerEntity/Components/TransformComponent/Transform Data/Rotate/0",
-                    "value": 89.99994659423828
-                }
-            ]
-        },
         "Instance_[712990187248]": {
             "Source": "Prefabs/PandaRobot.prefab",
             "Patches": [
@@ -6149,16 +5940,6 @@
                 },
                 {
                     "op": "replace",
-                    "path": "/Entities/Entity_[747349925616]/Components/EditorMeshColliderComponent/ShapeConfiguration/PhysicsAsset/Asset/assetHint",
-                    "value": "assets/urdfimporter/1440394708_panda/link2.stl.pxmesh"
-                },
-                {
-                    "op": "replace",
-                    "path": "/Entities/Entity_[747349925616]/Components/EditorMeshColliderComponent/ShapeConfiguration/PhysicsAsset/Configuration/PhysicsAsset/assetHint",
-                    "value": "assets/urdfimporter/1440394708_panda/link2.stl.pxmesh"
-                },
-                {
-                    "op": "replace",
                     "path": "/Entities/Entity_[751644892912]/Components/EditorMeshColliderComponent/ShapeConfiguration/PhysicsAsset/Asset/assetHint",
                     "value": "assets/urdfimporter/1440394708_panda/hand.stl.pxmesh"
                 },
@@ -6186,16 +5967,6 @@
                     "op": "replace",
                     "path": "/Entities/Entity_[721580121840]/Components/EditorMeshColliderComponent/ShapeConfiguration/PhysicsAsset/Configuration/PhysicsAsset/assetHint",
                     "value": "assets/urdfimporter/1440394708_panda/link5.stl.pxmesh"
-                },
-                {
-                    "op": "replace",
-                    "path": "/Entities/Entity_[730170056432]/Components/EditorMeshColliderComponent/ShapeConfiguration/PhysicsAsset/Asset/assetHint",
-                    "value": "assets/urdfimporter/1440394708_panda/link3.stl.pxmesh"
-                },
-                {
-                    "op": "replace",
-                    "path": "/Entities/Entity_[730170056432]/Components/EditorMeshColliderComponent/ShapeConfiguration/PhysicsAsset/Configuration/PhysicsAsset/assetHint",
-                    "value": "assets/urdfimporter/1440394708_panda/link3.stl.pxmesh"
                 },
                 {
                     "op": "replace",

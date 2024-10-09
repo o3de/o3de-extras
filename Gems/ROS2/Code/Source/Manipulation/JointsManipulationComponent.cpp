@@ -21,6 +21,8 @@
 #include <Source/ArticulationLinkComponent.h>
 #include <Source/HingeJointComponent.h>
 #include <Source/PrismaticJointComponent.h>
+#include <Utilities/ArticulationsUtilities.h>
+#include <ROS2/Utilities/ROS2Conversions.h>
 
 namespace ROS2
 {
@@ -41,26 +43,10 @@ namespace ROS2
             joints[jointName] = jointInfo;
         }
 
-        bool TryGetFreeArticulationAxis(const AZ::EntityId& entityId, PhysX::ArticulationJointAxis& axis)
-        {
-            for (AZ::u8 i = 0; i <= static_cast<AZ::u8>(PhysX::ArticulationJointAxis::Z); i++)
-            {
-                PhysX::ArticulationJointMotionType type = PhysX::ArticulationJointMotionType::Locked;
-                axis = static_cast<PhysX::ArticulationJointAxis>(i);
-                // Use bus to prevent compilation error without PhysX Articulation support.
-                PhysX::ArticulationJointRequestBus::EventResult(type, entityId, &PhysX::ArticulationJointRequests::GetMotion, axis);
-                if (type != PhysX::ArticulationJointMotionType::Locked)
-                {
-                    return true;
-                }
-            }
-            return false;
-        }
-
         void AddArticulationJointInfo(const AZ::EntityComponentIdPair& idPair, const AZStd::string& jointName, ManipulationJoints& joints)
         {
             PhysX::ArticulationJointAxis freeAxis;
-            bool hasFreeAxis = TryGetFreeArticulationAxis(idPair.GetEntityId(), freeAxis);
+            bool hasFreeAxis = Utils::TryGetFreeArticulationAxis(idPair.GetEntityId(), freeAxis);
             if (!hasFreeAxis)
             { // Do not add a joint since it is a fixed one
                 AZ_Printf("JointsManipulationComponent", "Articulation joint %s is fixed, skipping\n", jointName.c_str());
@@ -113,7 +99,7 @@ namespace ROS2
                 AZ_Assert(entity, "Unknown entity %s", descendantID.ToString().c_str());
 
                 // If there is a Frame Component, take joint name stored in it.
-                auto* frameComponent = Utils::GetGameOrEditorComponent<ROS2FrameComponent>(entity);
+                auto* frameComponent = entity->FindComponent<ROS2FrameComponent>();
                 if (!frameComponent)
                 { // Frame Component is required for joints.
                     continue;
@@ -181,22 +167,23 @@ namespace ROS2
     }
 
     JointsManipulationComponent::JointsManipulationComponent(
-        const PublisherConfiguration& configuration, const AZStd::unordered_map<AZStd::string, JointPosition>& initialPositions)
-        : m_jointStatePublisherConfiguration(configuration)
+        const PublisherConfiguration& publisherConfiguration,
+        const AZStd::vector<AZStd::pair<AZStd::string, float>>& initialPositions)
+        : m_jointStatePublisherConfiguration(publisherConfiguration)
         , m_initialPositions(initialPositions)
     {
     }
 
     void JointsManipulationComponent::Activate()
     {
-        auto* ros2Frame = Utils::GetGameOrEditorComponent<ROS2FrameComponent>(GetEntity());
+        auto* ros2Frame = GetEntity()->FindComponent<ROS2FrameComponent>();
         JointStatePublisherContext publisherContext;
         publisherContext.m_publisherNamespace = ros2Frame->GetNamespace();
         publisherContext.m_frameId = ros2Frame->GetFrameID();
         publisherContext.m_entityId = GetEntityId();
 
         m_jointStatePublisher = AZStd::make_unique<JointStatePublisher>(m_jointStatePublisherConfiguration, publisherContext);
-
+        m_lastTickTimestamp = ROS2Interface::Get()->GetROSTimestamp();
         AZ::TickBus::Handler::BusConnect();
         JointsManipulationRequestBus::Handler::BusConnect(GetEntityId());
     }
@@ -386,9 +373,9 @@ namespace ROS2
         if (AZ::SerializeContext* serialize = azrtti_cast<AZ::SerializeContext*>(context))
         {
             serialize->Class<JointsManipulationComponent, AZ::Component>()
-                ->Version(1)
+                ->Version(2)
                 ->Field("JointStatesPublisherConfiguration", &JointsManipulationComponent::m_jointStatePublisherConfiguration)
-                ->Field("InitialJointPosition", &JointsManipulationComponent::m_initialPositions);
+                ->Field("OrderedInitialJointPositions", &JointsManipulationComponent::m_initialPositions);
         }
     }
 
@@ -431,21 +418,21 @@ namespace ROS2
 
     AZStd::string JointsManipulationComponent::GetManipulatorNamespace() const
     {
-        auto* frameComponent = Utils::GetGameOrEditorComponent<ROS2FrameComponent>(m_entity);
+        auto* frameComponent = GetEntity()->FindComponent<ROS2FrameComponent>();
         AZ_Assert(frameComponent, "ROS2FrameComponent is required for joints.");
         return frameComponent->GetNamespace();
     }
 
-    void JointsManipulationComponent::OnTick(float deltaTime, [[maybe_unused]] AZ::ScriptTimePoint time)
+    void JointsManipulationComponent::OnTick([[maybe_unused]] float deltaTime, [[maybe_unused]] AZ::ScriptTimePoint time)
     {
         if (m_manipulationJoints.empty())
         {
             const AZStd::string manipulatorNamespace = GetManipulatorNamespace();
-            AZStd::unordered_map<AZStd::string, JointPosition> intialPositonNamespaced;
+            AZStd::unordered_map<AZStd::string, JointPosition> initialPositionNamespaced;
             AZStd::transform(
                 m_initialPositions.begin(),
                 m_initialPositions.end(),
-                AZStd::inserter(intialPositonNamespaced, intialPositonNamespaced.end()),
+                AZStd::inserter(initialPositionNamespaced, initialPositionNamespaced.end()),
                 [&manipulatorNamespace](const auto& pair)
                 {
                     return AZStd::make_pair(ROS2::ROS2Names::GetNamespacedName(manipulatorNamespace, pair.first), pair.second);
@@ -453,7 +440,7 @@ namespace ROS2
 
             m_manipulationJoints = Internal::GetAllEntityHierarchyJoints(GetEntityId());
 
-            Internal::SetInitialPositions(m_manipulationJoints, intialPositonNamespaced);
+            Internal::SetInitialPositions(m_manipulationJoints, initialPositionNamespaced);
             if (m_manipulationJoints.empty())
             {
                 AZ_Warning("JointsManipulationComponent", false, "No manipulation joints to handle!");
@@ -462,6 +449,9 @@ namespace ROS2
             }
             m_jointStatePublisher->InitializePublisher();
         }
-        MoveToSetPositions(deltaTime);
+        auto simTimestamp = ROS2Interface::Get()->GetROSTimestamp();
+        float deltaSimTime = ROS2Conversions::GetTimeDifference(m_lastTickTimestamp, simTimestamp);
+        MoveToSetPositions(deltaSimTime);
+        m_lastTickTimestamp = simTimestamp;
     }
 } // namespace ROS2

@@ -86,4 +86,10 @@ namespace ROS2::VehicleDynamics
             }
         }
     }
+
+    WheelControllerComponent::WheelControllerComponent(const AZ::EntityId& steeringEntity, const float steeringScale)
+        : m_steeringEntity(steeringEntity)
+        , m_steeringScale(steeringScale)
+    {
+    }
 } // namespace ROS2::VehicleDynamics

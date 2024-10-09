@@ -40,9 +40,10 @@ namespace ROS2
         AZStd::vector<AZ::Vector3> PopulateRayRotations(const LidarTemplate& lidarTemplate);
 
         //! Compute ray directions from rotations.
-        //! @param rotations Rotations as Euler angles in radians to compute directions from.
-        //! @param rootRotation Root rotation as Euler angles in radians.
+        //! @param rotations Rotations as quaternions to compute directions from.
+        //! @param rootTransform root transformation of Lidar sensor.
         //! @return Ray directions constructed by transforming an X axis unit vector by the provided rotations.
-        AZStd::vector<AZ::Vector3> RotationsToDirections(const AZStd::vector<AZ::Vector3>& rotations, const AZ::Transform& rootTransform);
+        AZStd::vector<AZ::Vector3> RotationsToDirections(
+            const AZStd::vector<AZ::Quaternion>& rotations, const AZ::Transform& rootTransform);
     }; // namespace LidarTemplateUtils
 } // namespace ROS2

@@ -6,16 +6,24 @@
  *
  */
 
-#include <OpenXRVk/OpenXRVkSession.h>
+#include <AzCore/Debug/Trace.h>
+#include <AzCore/Casting/numeric_cast.h>
+
+#include <XR/XRBase.h>
+
 #include <OpenXRVk/OpenXRVkDevice.h>
 #include <OpenXRVk/OpenXRVkInput.h>
 #include <OpenXRVk/OpenXRVkInstance.h>
 #include <OpenXRVk/OpenXRVkSpace.h>
 #include <OpenXRVk/OpenXRVkUtils.h>
-#include <AzCore/Debug/Trace.h>
-#include <AzCore/Casting/numeric_cast.h>
+#include <OpenXRVk/OpenXRVkSession.h>
+
 #include <Atom/RHI.Reflect/Vulkan/XRVkDescriptors.h>
-#include <XR/XRBase.h>
+#include <Atom/RPI.Public/XR/XRSpaceNotificationBus.h>
+
+#include "OpenXRVkReferenceSpacesManager.h"
+#include "OpenXRVkActionsManager.h"
+
 
 namespace OpenXRVk
 {
@@ -46,14 +54,17 @@ namespace OpenXRVk
         createInfo.systemId = xrVkInstance->GetXRSystemId();
         XrResult result = xrCreateSession(m_xrInstance, &createInfo, &m_session);
         ASSERT_IF_UNSUCCESSFUL(result);
-        
-        LogReferenceSpaces();
-        Input* xrVkInput = GetNativeInput();
-        xrVkInput->InitializeActionSpace(m_session);
-        xrVkInput->InitializeActionSets(m_session);
 
-        Space* xrVkSpace = static_cast<Space*>(GetSpace());
-        xrVkSpace->CreateVisualizedSpaces(m_session);
+        m_referenceSpacesMgr = AZStd::make_unique<ReferenceSpacesManager>();
+        bool success = m_referenceSpacesMgr->Init(m_xrInstance, m_session, xrVkInstance->GetViewConfigType(), xrVkInstance->GetViewCount());
+        AZ_Error("OpenXRVk::Session", success, "Failed to instantiate the visualized Spaces manager.");
+        
+        m_actionsMgr = AZStd::make_unique<ActionsManager>();
+        success = m_actionsMgr->Init(m_xrInstance, m_session);
+        AZ_Error("OpenXRVk::Session", success, "Failed to instantiate the actions manager");
+
+        LogReferenceSpaces();
+
         return ConvertResult(result);
     }
 
@@ -112,12 +123,7 @@ namespace OpenXRVk
                 XrResult result = xrBeginSession(m_session, &sessionBeginInfo);
                 WARN_IF_UNSUCCESSFUL(result);
                 m_sessionRunning = true;
-                // It's important to reset the spaces when this event is received.
-                // Typically the Proximity Sensor is ON, which reduces battery usage when the user
-                // is not wearing the headset. Each time the proximity sensor is disabled or the user
-                // decides to wear the headset, the XrSpaces need to be recreated, otherwise their
-                // poses would be corrupted.
-                ResetSpaces();
+                m_referenceSpacesMgr->OnSessionReady();
                 break;
             }
             case XR_SESSION_STATE_STOPPING:
@@ -149,12 +155,6 @@ namespace OpenXRVk
         }
     }
 
-    void Session::ResetSpaces()
-    {
-        Space* xrVkSpace = static_cast<Space*>(GetSpace());
-        xrVkSpace->ShutdownInternal();
-        xrVkSpace->CreateVisualizedSpaces(m_session);
-    }
     
     const XrEventDataBaseHeader* Session::TryReadNextEvent()
     {
@@ -209,16 +209,7 @@ namespace OpenXRVk
                 }
                 case XR_TYPE_EVENT_DATA_INTERACTION_PROFILE_CHANGED:
                 {
-                    if (GetDescriptor().m_validationMode == AZ::RHI::ValidationMode::Enabled)
-                    {
-                        Input* xrVkInput = GetNativeInput();
-                        LogActionSourceName(xrVkInput->GetSqueezeAction(static_cast<AZ::u32>(XR::Side::Left)), "Squeeze Left");
-                        LogActionSourceName(xrVkInput->GetSqueezeAction(static_cast<AZ::u32>(XR::Side::Right)), "Squeeze Right");
-                        LogActionSourceName(xrVkInput->GetQuitAction(), "Quit");
-                        LogActionSourceName(xrVkInput->GetPoseAction(static_cast<AZ::u32>(XR::Side::Left)), "Pose Left");
-                        LogActionSourceName(xrVkInput->GetPoseAction(static_cast<AZ::u32>(XR::Side::Right)), "Pose Right");
-                        LogActionSourceName(xrVkInput->GetVibrationAction(), "Vibrate");
-                    }
+                    m_actionsMgr->OnInteractionProfileChanged();
                     break;
                 }
                 case XR_TYPE_EVENT_DATA_REFERENCE_SPACE_CHANGE_PENDING:
@@ -390,6 +381,16 @@ namespace OpenXRVk
         return space->GetXrSpace(spaceType);
     }
 
+    const AZStd::vector<XrView>& Session::GetXrViews() const
+    {
+        return m_referenceSpacesMgr->GetXrViews();
+    }
+
+    XrSpace Session::GetViewSpaceXrSpace() const
+    {
+        return m_referenceSpacesMgr->GetViewSpaceXrSpace();
+    }
+
     bool Session::IsSessionRunning() const
     {
         return m_sessionRunning;
@@ -423,8 +424,20 @@ namespace OpenXRVk
         return static_cast<Input*>(GetInput());
     }
 
-    void Session::UpdateXrSpaceLocations(const OpenXRVk::Device& device, XrTime predictedDisplayTime, AZStd::vector<XrView>& xrViews)
+    void Session::OnBeginFrame([[maybe_unused]] XrTime predictedDisplayTime)
     {
-        GetNativeInput()->UpdateXrSpaceLocations(device, predictedDisplayTime, xrViews);
+        if (IsSessionFocused())
+        {
+            // Syncing actions only works if the session is in focused state
+            m_actionsMgr->SyncActions(predictedDisplayTime);
+        }
+
+        m_referenceSpacesMgr->SyncViews(predictedDisplayTime);
+        
+        //Notify the rest of the engine.
+        const auto& viewPoses = m_referenceSpacesMgr->GetViewPoses();
+        AZ::RPI::XRSpaceNotificationBus::Broadcast(&AZ::RPI::XRSpaceNotifications::OnXRSpaceLocationsChanged,
+            m_referenceSpacesMgr->GetViewSpacePose(),
+            viewPoses[0], viewPoses[1]);
     }
 }

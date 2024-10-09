@@ -19,6 +19,7 @@ namespace ROS2::VehicleDynamics
     public:
         AZ_COMPONENT(SkidSteeringModelComponent, "{57950C15-F7CF-422B-A452-E4487118F53E}", VehicleModelComponent);
         SkidSteeringModelComponent() = default;
+        SkidSteeringModelComponent(const VehicleConfiguration& vehicleConfiguration, const SkidSteeringDriveModel& driveModel);
 
         static void Reflect(AZ::ReflectContext* context);
 
@@ -30,10 +31,10 @@ namespace ROS2::VehicleDynamics
         void Activate() override;
 
     private:
-        VehicleDynamics::SkidSteeringDriveModel m_driveModel;
+        SkidSteeringDriveModel m_driveModel;
 
     protected:
         // VehicleModelComponent overrides
-        VehicleDynamics::DriveModel* GetDriveModel() override;
+        DriveModel* GetDriveModel() override;
     };
 } // namespace ROS2::VehicleDynamics

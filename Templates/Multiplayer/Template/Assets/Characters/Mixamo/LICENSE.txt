@@ -1,0 +1,26 @@
+MIXAMO ASSETS: "o3de-${Name}-assets/Gems/character_mps/Assets/Mixamo/"
+URL: https://github.com/o3de/o3de-${Name}-assets/tree/main/Gems/character_mps/Assets/Mixamo
+The contents of the Mixamo directory, including the Y-bot character model and animation were used with express permission from Adobe for use in the o3de-multiplayer game. Use is limited and assets cannot be redistributed. Users must download original data in order to modify the assets.
+
+You can find the original Mixamo source assets here
+URL:https://www.mixamo.com/
+
+And the Mixamo Terms if Use here
+URL: https://wwwimages2.adobe.com/content/dam/cc/en/legal/servicetou/Mixamo-Addl-Terms-en_US-20210623.pdf
+If you would like to know more about terms of use for Mixamo assets, you can view their FAQ here
+URL: https://helpx.adobe.com/creative-cloud/faq/mixamo-faq.html
+
+And the Adobe Gemeral Terms of Use here
+URL: https://www.adobe.com/legal/terms.html
+
+© 2022 Adobe and its licensors. All rights reserved.
+
+This content is protected under copyright law, furnished for informational use only, is subject to change without notice, and should not be construed as a commitment by Adobe. Adobe assumes no responsibility or liability for any errors or inaccuracies that may appear in the informational content contained in this content.
+
+Adobe Inc, 345 Park Avenue, San Jose, California 95110, USA.
+
+Product-specific notices
+
+Adobe Mixamo FAQ: https://helpx.adobe.com/creative-cloud/faq/mixamo-faq.html
+
+Adobe Legal Notices: https://helpx.adobe.com/legal/legal-notices.html

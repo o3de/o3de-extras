@@ -1,6 +1,6 @@
 {
     "gem_name": "ROS2",
-    "version": "2.0.0",
+    "version": "3.2.1",
     "platforms": [
         "Linux"
     ],
@@ -8,7 +8,8 @@
     "license": "Apache-2.0",
     "license_url": "https://opensource.org/licenses/Apache-2.0",
     "origin": "RobotecAI",
-    "origin_url": "https://github.com/o3de/o3de-extras/development/Gems/ROS2",
+    "origin_url": "https://robotec.ai",
+    "source_control_uri": "https://github.com/o3de/o3de-extras/development/Gems/ROS2",
     "type": "Code",
     "summary": "Tools and components to support creating simulations for ROS 2 systems such as robots",
     "canonical_tags": [
@@ -18,23 +19,22 @@
         "ROS2"
     ],
     "compatible_engines": [
-        "o3de-sdk>=2.1.0",
-        "o3de>=2.1.0"
+        "o3de-sdk>=2.3.0",
+        "o3de>=2.3.0"
     ],
     "icon_path": "preview.png",
     "requirements": "Requires ROS 2 installation (supported distributions: Humble). Source your workspace before building the Gem",
-    "documentation_url": "https://o3de.org/docs/user-guide/gems/reference/design/ros2/",
+    "documentation_url": "https://docs.o3de.org/docs/user-guide/gems/reference/robotics/ros2/",
     "dependencies": [
         "Atom_RPI",
         "Atom_Feature_Common",
         "Atom_Component_DebugCamera",
         "CommonFeaturesAtom",
-        "PhysX",
+        "PhysX5",
         "PrimitiveAssets",
         "StartingPointInput"
-
     ],
     "restricted": "ROS2",
     "repo_uri": "https://raw.githubusercontent.com/o3de/o3de-extras/development",
-    "download_source_uri": "https://github.com/o3de/o3de-extras/releases/download/2.0/ros2-2.0.0-gem.zip"
+    "download_source_uri": "https://github.com/o3de/o3de-extras/releases/download/2.0//ros2-3.2.1-gem.zip"
 }

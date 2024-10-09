@@ -266,14 +266,13 @@ namespace ROS2
     }
 
     AZStd::vector<AZ::Vector3> LidarTemplateUtils::RotationsToDirections(
-        const AZStd::vector<AZ::Vector3>& rotations, const AZ::Transform& rootTransform)
+        const AZStd::vector<AZ::Quaternion>& rotations, const AZ::Transform& rootTransform)
     {
         AZStd::vector<AZ::Vector3> directions;
         directions.reserve(rotations.size());
         for (const auto& angle : rotations)
         {
-            const AZ::Quaternion rotation =
-                rootTransform.GetRotation() * AZ::Quaternion::CreateFromEulerRadiansZYX({ 0.0f, -angle.GetY(), angle.GetZ() });
+            const AZ::Quaternion rotation = rootTransform.GetRotation() * angle;
             directions.emplace_back(rotation.TransformVector(AZ::Vector3::CreateAxisX()));
         }
 

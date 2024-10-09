@@ -1,0 +1,36 @@
+{
+    "entries": [
+        {
+            "base": "{73A0AA0F-C71C-2FA9-0D04-B0927EB81CEC}",
+            "context": "ScriptCanvas::Node",
+            "variant": "",
+            "details": {
+                "name": "Load training data",
+                "category": "MachineLearning",
+                "tooltip": "Loads a set of labeled training data."
+            },
+            "slots": [
+                {
+                    "base": "Input_In_0",
+                    "details": {
+                        "name": "In",
+                        "tooltip": "Parameters controlling what data to load"
+                    }
+                },
+                {
+                    "base": "Output_On In_0",
+                    "details": {
+                        "name": "On In",
+                        "tooltip": "Parameters controlling what data to load"
+                    }
+                },
+                {
+                    "base": "DataOutput_Data_0",
+                    "details": {
+                        "name": "Data"
+                    }
+                }
+            ]
+        }
+    ]
+}

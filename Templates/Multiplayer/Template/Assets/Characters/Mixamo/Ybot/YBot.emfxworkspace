@@ -1,0 +1,3 @@
+[General]
+version=1
+startScript=ImportActor -filename \"mixamo/ybot/ybot.actor\"\nLoadMotionSet -filename \"@products@/Mixamo/Ybot/YBot.motionset\"\nLoadAnimGraph -filename \"@products@/Mixamo/Ybot/YBot.animgraph\"\nActivateAnimGraph -actorInstanceID -1 -animGraphID %LASTRESULT1% -motionSetID %LASTRESULT2% -visualizeScale 1.000000\n

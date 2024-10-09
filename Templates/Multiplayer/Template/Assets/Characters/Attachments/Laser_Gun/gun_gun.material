@@ -1,0 +1,32 @@
+{
+    "materialType": "@projectroot@/Cache/Intermediate Assets/materials/types/standardpbr_generated.materialtype",
+    "materialTypeVersion": 5,
+    "propertyValues": {
+        "baseColor.color": [
+            0.9243610501289368,
+            0.9243610501289368,
+            0.9243610501289368,
+            1.0
+        ],
+        "baseColor.textureBlendMode": "Lerp",
+        "baseColor.textureMap": "textures/gun_low_Default_BaseColor.png",
+        "emissive.color": [
+            0.18448157608509064,
+            1.0,
+            0.0,
+            1.0
+        ],
+        "emissive.enable": true,
+        "emissive.intensity": 8.300000190734863,
+        "emissive.textureMap": "textures/gun_low_Default_Emissive.png",
+        "irradiance.irradianceColorSource": "BaseColor",
+        "metallic.factor": 0.05999999865889549,
+        "normal.textureMap": "textures/gun_low_Default_Normal.png",
+        "opacity.factor": 1.0,
+        "roughness.factor": -0.6000000238418579,
+        "roughness.lowerBound": 0.4000000059604645,
+        "roughness.textureMap": "textures/gun_low_Default_Roughness.png",
+        "roughness.upperBound": 0.28999999165534973,
+        "specularF0.factor": 0.47999998927116394
+    }
+}

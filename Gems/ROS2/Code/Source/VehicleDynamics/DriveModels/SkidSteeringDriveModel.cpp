@@ -35,76 +35,103 @@ namespace ROS2::VehicleDynamics
         }
     }
 
+    SkidSteeringDriveModel::SkidSteeringDriveModel(const SkidSteeringModelLimits& limits)
+        : m_limits(limits)
+    {
+    }
+
     void SkidSteeringDriveModel::Activate(const VehicleConfiguration& vehicleConfig)
     {
         m_config = vehicleConfig;
         m_wheelsData.clear();
-        m_wheelColumns.clear();
+        m_initialized = false;
     }
 
-    AZStd::tuple<VehicleDynamics::WheelControllerComponent*, AZ::Vector2, AZ::Vector3> SkidSteeringDriveModel::ProduceWheelColumn(
-        int wheelNumber, const AxleConfiguration& axle, const int axisCount) const
+    void SkidSteeringDriveModel::ComputeWheelsData()
     {
-        const auto wheelCount = axle.m_axleWheels.size();
-        const auto wheelEntityId = axle.m_axleWheels[wheelNumber];
-        AZ::Entity* wheelEntityPtr = nullptr;
-        AZ::ComponentApplicationBus::BroadcastResult(wheelEntityPtr, &AZ::ComponentApplicationRequests::FindEntity, wheelEntityId);
-        AZ_Assert(wheelEntityPtr, "The wheelEntity should not be null here");
-        auto* wheelControllerComponentPtr = Utils::GetGameOrEditorComponent<WheelControllerComponent>(wheelEntityPtr);
-        auto hingeId = VehicleDynamics::Utilities::GetWheelPhysxHinge(wheelEntityId);
-        AZ::Transform hingeTransform{ AZ::Transform::Identity() };
-        PhysX::JointRequestBus::EventResult(hingeTransform, hingeId, &PhysX::JointRequests::GetTransform);
-        if (wheelControllerComponentPtr)
+        // Compute number of drive axles to scale the contribution of each wheel to vehicle's velocity
+        int driveAxlesCount = 0;
+        for (const auto& axle : m_config.m_axles)
         {
-            const float normalizedWheelId = -1.f + 2.f * wheelNumber / (wheelCount - 1);
-            AZ::Vector3 axis = hingeTransform.TransformVector({ 0.f, 1.f, 0.f });
-            float wheelBase = normalizedWheelId * m_config.m_wheelbase;
-            AZ_Assert(axle.m_wheelRadius != 0, "axle.m_wheelRadius must be non-zero");
-            float dX = axle.m_wheelRadius / (wheelCount * axisCount);
-            float dPhi = axle.m_wheelRadius / (wheelBase * axisCount);
-            return { wheelControllerComponentPtr, AZ::Vector2{ dX, dPhi }, axis };
-        }
-        return { nullptr, AZ::Vector2::CreateZero(), AZ::Vector3::CreateZero() };
-    }
-
-    AZStd::pair<AZ::Vector3, AZ::Vector3> SkidSteeringDriveModel::GetVelocityFromModel()
-    {
-        // compute every wheel contribution to vehicle velocity
-        if (m_wheelColumns.empty())
-        {
-            for (const auto& axle : m_config.m_axles)
+            if (axle.m_isDrive && axle.m_axleWheels.size() > 1)
             {
-                const auto wheelCount = axle.m_axleWheels.size();
-                if (!axle.m_isDrive || wheelCount < 1)
+                driveAxlesCount++;
+            }
+            AZ_Warning(
+                "SkidSteeringDriveModel",
+                axle.m_axleWheels.size() > 1,
+                "Axle %s has not enough wheels (%d)",
+                axle.m_axleTag.c_str(),
+                axle.m_axleWheels.size());
+        }
+        AZ_Warning("SkidSteeringDriveModel", driveAxlesCount != 0, "Skid steering model does not have any drive wheels.");
+
+        // Find the contribution of each wheel to vehicle's velocity
+        for (const auto& axle : m_config.m_axles)
+        {
+            const auto wheelCount = axle.m_axleWheels.size();
+            if (!axle.m_isDrive || wheelCount <= 1)
+            {
+                continue;
+            }
+            for (size_t wheelId = 0; wheelId < wheelCount; wheelId++)
+            {
+                const auto data = ComputeSingleWheelData(wheelId, axle, driveAxlesCount);
+                if (data.wheelControllerComponentPtr != nullptr)
                 {
-                    continue;
-                }
-                for (size_t wheelId = 0; wheelId < wheelCount; wheelId++)
-                {
-                    const auto column = ProduceWheelColumn(wheelId, axle, m_config.m_axles.size());
-                    if (AZStd::get<0>(column))
-                    {
-                        m_wheelColumns.emplace_back(column);
-                    }
+                    m_wheelsData.emplace_back(AZStd::move(data));
                 }
             }
         }
 
-        //! accumulated contribution to vehicle's linear movements of every wheel
-        float d_x = 0;
+        m_initialized = true;
+    }
 
-        //! accumulated contribution to vehicle's rotational movements of every wheel
-        float d_fi = 0;
+    SkidSteeringDriveModel::SkidSteeringWheelData SkidSteeringDriveModel::ComputeSingleWheelData(
+        const int wheelId, const AxleConfiguration& axle, const int axlesCount) const
+    {
+        SkidSteeringDriveModel::SkidSteeringWheelData out;
 
-        // It is basically multiplication of matrix by a vector.
-        for (auto& [wheel, column, axis] : m_wheelColumns)
+        AZ_Assert(axle.m_wheelRadius != 0, "axle.m_wheelRadius must be non-zero");
+        const auto wheelEntityId = axle.m_axleWheels[wheelId];
+        AZ::Entity* wheelEntityPtr = nullptr;
+        AZ::ComponentApplicationBus::BroadcastResult(wheelEntityPtr, &AZ::ComponentApplicationRequests::FindEntity, wheelEntityId);
+        AZ_Assert(wheelEntityPtr, "The wheelEntity should not be null here");
+        out.wheelControllerComponentPtr = Utils::GetGameOrEditorComponent<WheelControllerComponent>(wheelEntityPtr);
+        out.wheelData = VehicleDynamics::Utilities::GetWheelData(wheelEntityId, axle.m_wheelRadius);
+        if (out.wheelControllerComponentPtr)
         {
-            const float omega = axis.Dot(wheel->GetRotationVelocity());
-            d_x += omega * column.GetX();
-            d_fi += omega * column.GetY();
+            const auto wheelsCount = axle.m_axleWheels.size();
+            const float normalizedWheelId = -1.f + 2.f * wheelId / (wheelsCount - 1);
+            out.wheelPosition = normalizedWheelId * (m_config.m_track / 2.f);
+            out.dX = axle.m_wheelRadius / (wheelsCount * axlesCount);
+            out.dPhi = axle.m_wheelRadius / (out.wheelPosition * axlesCount * axle.m_axleWheels.size());
+
+            AZ::Transform hingeTransform = Utilities::GetJointTransform(out.wheelData);
+            out.axis = hingeTransform.TransformVector({ 0.f, 1.f, 0.f });
         }
 
-        return AZStd::pair<AZ::Vector3, AZ::Vector3>{ { d_x, 0, 0 }, { 0, 0, d_fi } };
+        return out;
+    }
+
+    AZStd::pair<AZ::Vector3, AZ::Vector3> SkidSteeringDriveModel::GetVelocityFromModel()
+    {
+        if (!m_initialized)
+        {
+            ComputeWheelsData();
+        }
+
+        float dX = 0; // accumulated contribution to vehicle's linear movements of every wheel
+        float dPhi = 0; // accumulated contribution to vehicle's rotational movements of every wheel
+
+        for (const auto& wheel : m_wheelsData)
+        {
+            const float omega = wheel.axis.Dot(wheel.wheelControllerComponentPtr->GetRotationVelocity());
+            dX += omega * wheel.dX;
+            dPhi += omega * wheel.dPhi;
+        }
+
+        return AZStd::pair<AZ::Vector3, AZ::Vector3>{ { dX, 0, 0 }, { 0, 0, dPhi } };
     }
 
     void SkidSteeringDriveModel::ApplyState(const VehicleInputs& inputs, AZ::u64 deltaTimeNs)
@@ -113,6 +140,12 @@ namespace ROS2::VehicleDynamics
         {
             return;
         }
+
+        if (!m_initialized)
+        {
+            ComputeWheelsData();
+        }
+
         const float angularTargetSpeed = inputs.m_angularRates.GetZ();
         const float linearTargetSpeed = inputs.m_speed.GetX();
         const float angularAcceleration = m_limits.GetAngularAcceleration();
@@ -124,52 +157,12 @@ namespace ROS2::VehicleDynamics
             angularTargetSpeed, m_currentAngularVelocity, deltaTimeNs, angularAcceleration, maxAngularVelocity);
         m_currentLinearVelocity =
             Utilities::ComputeRampVelocity(linearTargetSpeed, m_currentLinearVelocity, deltaTimeNs, linearAcceleration, maxLinearVelocity);
-        // cache PhysX Hinge component IDs
-        if (m_wheelsData.empty())
-        {
-            int driveAxesCount = 0;
-            for (const auto& axle : m_config.m_axles)
-            {
-                if (axle.m_isDrive)
-                {
-                    driveAxesCount++;
-                }
-                for (const auto& wheel : axle.m_axleWheels)
-                {
-                    auto hinge = VehicleDynamics::Utilities::GetWheelPhysxHinge(wheel);
-                    m_wheelsData[wheel] = hinge;
-                }
-                AZ_Warning(
-                    "SkidSteeringDriveModel",
-                    axle.m_axleWheels.size() > 1,
-                    "Axle %s has not enough wheels (%d)",
-                    axle.m_axleTag.c_str(),
-                    axle.m_axleWheels.size());
-            }
-            AZ_Warning("SkidSteeringDriveModel", driveAxesCount != 0, "Skid steering model does not have any drive wheels.");
-        }
 
-        for (const auto& axle : m_config.m_axles)
+        for (const auto& wheel : m_wheelsData)
         {
-            const auto wheelCount = axle.m_axleWheels.size();
-            if (!axle.m_isDrive || wheelCount < 1)
-            {
-                continue;
-            }
-            for (size_t wheelId = 0; wheelId < wheelCount; wheelId++)
-            {
-                const auto& wheel = axle.m_axleWheels[wheelId];
-                auto hingePtr = m_wheelsData.find(wheel);
-                if (hingePtr == m_wheelsData.end())
-                {
-                    continue;
-                }
-                float normalizedWheelId = -1.f + 2.f * wheelId / (wheelCount - 1);
-                float wheelBase = normalizedWheelId * m_config.m_wheelbase / 2.f;
-                AZ_Assert(axle.m_wheelRadius != 0, "axle.m_wheelRadius must be non-zero");
-                float wheelRate = (m_currentLinearVelocity + m_currentAngularVelocity * wheelBase) / axle.m_wheelRadius;
-                PhysX::JointRequestBus::Event(hingePtr->second, &PhysX::JointRequests::SetVelocity, wheelRate);
-            }
+            const float wheelRate =
+                (m_currentLinearVelocity + m_currentAngularVelocity * wheel.wheelPosition) / wheel.wheelData.m_wheelRadius;
+            VehicleDynamics::Utilities::SetWheelRotationSpeed(wheel.wheelData, wheelRate);
         }
     }
 

@@ -26,6 +26,7 @@ namespace ROS2
     {
     public:
         JointsTrajectoryComponent() = default;
+        JointsTrajectoryComponent(const AZStd::string& followTrajectoryActionName);
         ~JointsTrajectoryComponent() = default;
         AZ_COMPONENT(JointsTrajectoryComponent, "{429DE04C-6B6D-4B2D-9D6C-3681F23CBF90}", AZ::Component);
 
@@ -66,5 +67,6 @@ namespace ROS2
         rclcpp::Time m_trajectoryExecutionStartTime;
         ManipulationJoints m_manipulationJoints;
         bool m_trajectoryInProgress{ false };
+        builtin_interfaces::msg::Time m_lastTickTimestamp; //!< ROS 2 Timestamp during last OnTick call
     };
 } // namespace ROS2

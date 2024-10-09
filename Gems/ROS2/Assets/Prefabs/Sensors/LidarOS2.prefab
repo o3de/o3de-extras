@@ -55,10 +55,9 @@
             "Name": "Sensor",
             "Components": {
                 "Component_[1058300359310703890]": {
-                    "$type": "GenericComponentWrapper",
+                    "$type": "ROS2FrameEditorComponent",
                     "Id": 1058300359310703890,
-                    "m_template": {
-                        "$type": "ROS2FrameComponent",
+                    "ROS2FrameConfiguration": {
                         "Namespace Configuration": {
                             "Namespace Strategy": 1
                         },
@@ -175,7 +174,7 @@
                                     "guid": "{99D850A3-8E59-5E78-93FE-AE8DB228684D}",
                                     "subId": 2574200790
                                 },
-                                "assetHint": "models/sensors/lidaros2/lidaros2.pxmesh"
+                                "assetHint": "models/sensors/lidaros2/lidaros2.fbx.pxmesh"
                             },
                             "Configuration": {
                                 "PhysicsAsset": {
@@ -184,7 +183,7 @@
                                         "subId": 2574200790
                                     },
                                     "loadBehavior": "QueueLoad",
-                                    "assetHint": "models/sensors/lidaros2/lidaros2.pxmesh"
+                                    "assetHint": "models/sensors/lidaros2/lidaros2.fbx.pxmesh"
                                 }
                             }
                         }

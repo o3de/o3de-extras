@@ -24,9 +24,8 @@
 #include <AzToolsFramework/Prefab/Procedural/ProceduralPrefabAsset.h>
 #include <AzToolsFramework/ToolsComponents/GenericComponentWrapper.h>
 #include <AzToolsFramework/ToolsComponents/TransformComponent.h>
-#include <ROS2/Frame/ROS2FrameComponent.h>
+#include <ROS2/Frame/ROS2FrameEditorComponent.h>
 #include <ROS2/ROS2GemUtilities.h>
-#include <RobotControl/ROS2RobotControlComponent.h>
 #include <RobotImporter/Utils/ErrorUtils.h>
 #include <RobotImporter/Utils/RobotImporterUtils.h>
 #include <RobotImporter/Utils/TypeConversions.h>
@@ -57,6 +56,7 @@ namespace ROS2
         {
             AZStd::lock_guard<AZStd::mutex> lck(m_statusLock);
             m_status.clear();
+            m_articulationsCounter = 0u;
         }
 
         if (!ContainsModel())
@@ -142,7 +142,8 @@ namespace ROS2
         };
         ModelMapper modelMapper;
 
-        auto GetAllLinksAndSetModelHierarchy = [&linksMapper, &modelMapper](const sdf::Model& model, const Utils::ModelStack& modelStack) -> Utils::VisitModelResponse
+        auto GetAllLinksAndSetModelHierarchy =
+            [&linksMapper, &modelMapper](const sdf::Model& model, const Utils::ModelStack& modelStack) -> Utils::VisitModelResponse
         {
             // As the VisitModels function visits nested models by default, gatherNestedModelLinks is set to false
             constexpr bool gatherNestedModelLinks = false;
@@ -188,25 +189,34 @@ namespace ROS2
         for ([[maybe_unused]] const auto& [fullModelName, modelPtr, _] : modelMapper.m_models)
         {
             // Create entities for each model in the SDF
+            const std::string modelName = modelPtr->Name();
+            const AZStd::string azModelName(modelName.c_str(), modelName.size());
             if (AzToolsFramework::Prefab::PrefabEntityResult createModelEntityResult = CreateEntityForModel(*modelPtr);
                 createModelEntityResult)
             {
                 AZ::EntityId createdModelEntityId = createModelEntityResult.GetValue();
                 // Add the model entity to the created entity list so that it gets added to the prefab
                 createdEntities.emplace_back(createdModelEntityId);
-
-                std::string modelName = modelPtr->Name();
-                AZStd::string azModelName(modelName.c_str(), modelName.size());
-                AZStd::lock_guard<AZStd::mutex> lck(m_statusLock);
-                m_status.emplace(azModelName, AZStd::string::format("[model] created as: %s", createdModelEntityId.ToString().c_str()));
                 createdModels.emplace(modelPtr, createModelEntityResult);
+
+                AZStd::lock_guard<AZStd::mutex> lck(m_statusLock);
+                m_status.emplace(
+                    StatusMessageType::Model,
+                    AZStd::string::format("%s created as: %s", azModelName.c_str(), createdModelEntityId.ToString().c_str()));
+            }
+            else
+            {
+                AZStd::lock_guard<AZStd::mutex> lck(m_statusLock);
+                m_status.emplace(
+                    StatusMessageType::Model,
+                    AZStd::string::format("%s failed: %s", azModelName.c_str(), createModelEntityResult.GetError().c_str()));
             }
         }
 
         //! Setup the parent hierarchy for the nested models
         for ([[maybe_unused]] const auto& [_, modelPtr, parentModelPtr] : modelMapper.m_models)
         {
-            // If there is no parent model, then the model would be at the top level of the hiearachy
+            // If there is no parent model, then the model would be at the top level of the hierarchy
             if (parentModelPtr == nullptr || modelPtr == nullptr)
             {
                 continue;
@@ -264,11 +274,14 @@ namespace ROS2
             AZStd::lock_guard<AZStd::mutex> lck(m_statusLock);
             if (result.IsSuccess())
             {
-                m_status.emplace(azLinkName, AZStd::string::format("[link] created as: %s", result.GetValue().ToString().c_str()));
+                m_status.emplace(
+                    StatusMessageType::Link,
+                    AZStd::string::format("%s created as: %s", azLinkName.c_str(), result.GetValue().ToString().c_str()));
             }
             else
             {
-                m_status.emplace(azLinkName, AZStd::string::format("[link] failed : %s", result.GetError().c_str()));
+                m_status.emplace(
+                    StatusMessageType::Link, AZStd::string::format("%s failed : %s", azLinkName.c_str(), result.GetError().c_str()));
             }
         }
 
@@ -279,7 +292,8 @@ namespace ROS2
             {
                 AZ::EntityId createdEntityId = createLinkEntityResult.GetValue();
                 std::string linkName = linkPtr->Name();
-                AZ::Transform tf = Utils::GetLocalTransformURDF(linkPtr);
+                const auto linkSemanticPose = linkPtr->SemanticPose();
+                AZ::Transform tf = Utils::GetLocalTransformURDF(linkSemanticPose);
                 auto* entity = AzToolsFramework::GetEntityById(createdEntityId);
                 if (entity)
                 {
@@ -312,7 +326,7 @@ namespace ROS2
         }
 
         // Set the hierarchy
-        AZStd::vector<AZ::EntityId> linkEntityIdsWithoutParent;
+        AZStd::vector<AZStd::pair<AZ::EntityId, const sdf::Model*>> linkEntityIdsWithoutParent;
         for (const auto& [fullLinkName, linkPtr, attachedModel] : linksMapper.m_links)
         {
             std::string linkName = linkPtr->Name();
@@ -331,11 +345,15 @@ namespace ROS2
             if (jointsWhereLinkIsChild.empty())
             {
                 // emplace unique entry to the container of links that don't have a parent link associated with it
+                auto linkPrefabTest = [&linkPrefabResult](const AZStd::pair<AZ::EntityId, const sdf::Model*>& query)
+                {
+                    return (query.first == linkPrefabResult.GetValue());
+                };
                 if (auto existingLinkIt =
-                        AZStd::find(linkEntityIdsWithoutParent.begin(), linkEntityIdsWithoutParent.end(), linkPrefabResult.GetValue());
+                        AZStd::find_if(linkEntityIdsWithoutParent.begin(), linkEntityIdsWithoutParent.end(), linkPrefabTest);
                     existingLinkIt == linkEntityIdsWithoutParent.end())
                 {
-                    linkEntityIdsWithoutParent.emplace_back(linkPrefabResult.GetValue());
+                    linkEntityIdsWithoutParent.emplace_back(AZStd::make_pair(linkPrefabResult.GetValue(), attachedModel));
                 }
                 AZ_Trace("CreatePrefabFromUrdfOrSdf", "Link %s has no parents\n", linkName.c_str());
                 continue;
@@ -385,7 +403,7 @@ namespace ROS2
                 parentEntityIter->second.GetValue().ToString().c_str());
             AZ_Trace("CreatePrefabFromUrdfOrSdf", "Link %s setting parent to %s\n", linkName.c_str(), parentName.c_str());
             // The joint hierarchy which specifies how a parent and child link hierarchy is represented in an SDF document
-            // is used to establish the entity parent child hiearachy, but does not modify the world location of the link entities
+            // is used to establish the entity parent child hierarchy, but does not modify the world location of the link entities
             // therefore SetEntityParent is used to maintain the world transform of the child link
             PrefabMakerUtils::SetEntityParent(linkPrefabResult.GetValue(), parentEntityIter->second.GetValue());
         }
@@ -441,7 +459,7 @@ namespace ROS2
             AZ::Entity* childEntityPtr = AzToolsFramework::GetEntityById(childEntity.GetValue());
             if (childEntityPtr)
             {
-                auto* component = Utils::GetGameOrEditorComponent<ROS2FrameComponent>(childEntityPtr);
+                auto* component = childEntityPtr->FindComponent<ROS2FrameEditorComponent>();
                 if (component)
                 {
                     component->SetJointName(azJointName);
@@ -454,8 +472,17 @@ namespace ROS2
                 {
                     AZStd::lock_guard<AZStd::mutex> lck(m_statusLock);
                     auto result = m_jointsMaker.AddJointComponent(jointPtr, childEntity.GetValue(), leadEntity.GetValue());
-                    m_status.emplace(
-                        azJointName, AZStd::string::format("[joint] %s: %llu", result.IsSuccess() ? "created as" : "failed", result.GetValue()));
+                    if (result.IsSuccess())
+                    {
+                        m_status.emplace(
+                            StatusMessageType::Joint, AZStd::string::format("%s created as: %llu", azJointName.c_str(), result.GetValue()));
+                    }
+                    else
+                    {
+                        m_status.emplace(
+                            StatusMessageType::Joint,
+                            AZStd::string::format("%s failed : %s", azJointName.c_str(), result.GetError().c_str()));
+                    }
                 }
                 else
                 {
@@ -464,11 +491,32 @@ namespace ROS2
             }
         }
 
-        // Use the first entity based on a link that is not parented to any other link
-        if (!linkEntityIdsWithoutParent.empty() && linkEntityIdsWithoutParent.front().IsValid())
+        // Add control components to links that are not parented to any other link (first link of each model) based on SDFormat data.
+        if (!linkEntityIdsWithoutParent.empty())
         {
-            AZ::EntityId contentEntityId = linkEntityIdsWithoutParent.front();
-            AddRobotControl(contentEntityId);
+            for (const auto& [contentEntityId, modelPtr] : linkEntityIdsWithoutParent)
+            {
+                if (contentEntityId.IsValid())
+                {
+                    m_controlMaker.AddControlPlugins(*modelPtr, contentEntityId, createdLinks);
+                }
+            }
+        }
+
+        // Get the remaining log information (sensors, plugins)
+        {
+            AZStd::lock_guard<AZStd::mutex> lck(m_statusLock);
+            const auto& modelPluginStatus = m_controlMaker.GetStatusMessages();
+            for (const auto& mps : modelPluginStatus)
+            {
+                m_status.emplace(StatusMessageType::ModelPlugin, mps);
+            }
+
+            const auto& sensorStatus = m_sensorsMaker.GetStatusMessages();
+            for (const auto& ss : sensorStatus)
+            {
+                m_status.emplace(StatusMessageType::Sensor, ss);
+            }
         }
 
         // Create prefab, save it to disk immediately
@@ -602,10 +650,10 @@ namespace ROS2
 
         createdEntities.emplace_back(entityId);
 
-        const auto frameComponentId = Utils::CreateComponent(entityId, ROS2FrameComponent::TYPEINFO_Uuid());
+        const auto frameComponentId = Utils::CreateComponent(entityId, ROS2FrameEditorComponent::TYPEINFO_Uuid());
         if (frameComponentId)
         {
-            auto* component = Utils::GetGameOrEditorComponent<ROS2FrameComponent>(entity);
+            auto* component = entity->FindComponent<ROS2FrameEditorComponent>();
             AZ_Assert(component, "ROS2 Frame Component does not exist for %s", entityId.ToString().c_str());
             component->SetFrameID(AZStd::string(link.Name().c_str(), link.Name().size()));
         }
@@ -620,31 +668,34 @@ namespace ROS2
         {
             if (attachedModel != nullptr)
             {
-                m_articulationsMaker.AddArticulationLink(*attachedModel, &link, entityId);
+                const auto linkResult = m_articulationsMaker.AddArticulationLink(*attachedModel, &link, entityId);
+                std::string linkName = link.Name();
+                AZStd::string azLinkName(linkName.c_str(), linkName.size());
+                if (linkResult.IsSuccess())
+                {
+                    AZStd::lock_guard<AZStd::mutex> lck(m_statusLock);
+                    m_status.emplace(
+                        StatusMessageType::Joint,
+                        AZStd::string::format("%s created as articulation link: %llu", azLinkName.c_str(), linkResult.GetValue()));
+                    m_articulationsCounter++;
+                }
+                else
+                {
+                    AZStd::lock_guard<AZStd::mutex> lck(m_statusLock);
+                    m_status.emplace(
+                        StatusMessageType::Joint,
+                        AZStd::string::format("%s as articulation link failed: %s", azLinkName.c_str(), linkResult.GetError().c_str()));
+                }
             }
         }
 
         if (attachedModel != nullptr)
         {
             m_collidersMaker.AddColliders(*attachedModel, &link, entityId);
-            m_sensorsMaker.AddSensors(*attachedModel, &link, entityId);
+            auto createdSensorEntities = m_sensorsMaker.AddSensors(*attachedModel, &link, entityId);
+            createdEntities.insert(createdEntities.end(), createdSensorEntities.begin(), createdSensorEntities.end());
         }
         return AZ::Success(entityId);
-    }
-
-    void URDFPrefabMaker::AddRobotControl(AZ::EntityId rootEntityId)
-    {
-        const auto componentId = Utils::CreateComponent(rootEntityId, ROS2RobotControlComponent::TYPEINFO_Uuid());
-        if (componentId)
-        {
-            ControlConfiguration controlConfiguration;
-            TopicConfiguration subscriberConfiguration;
-            subscriberConfiguration.m_topic = "cmd_vel";
-            AZ::Entity* rootEntity = AzToolsFramework::GetEntityById(rootEntityId);
-            auto* component = Utils::GetGameOrEditorComponent<ROS2RobotControlComponent>(rootEntity);
-            component->SetControlConfiguration(controlConfiguration);
-            component->SetSubscriberConfiguration(subscriberConfiguration);
-        }
     }
 
     const AZStd::string& URDFPrefabMaker::GetPrefabPath() const
@@ -677,13 +728,42 @@ namespace ROS2
 
     AZStd::string URDFPrefabMaker::GetStatus()
     {
-        AZStd::string str;
+        AZStd::string report;
         AZStd::lock_guard<AZStd::mutex> lck(m_statusLock);
-        for (const auto& [entry, entryStatus] : m_status)
+
+        // Print warnings first
+        constexpr unsigned int articulationsLimit = 64;
+        if (m_articulationsCounter >= articulationsLimit)
         {
-            str += entry + " " + entryStatus + "\n";
+            report += "\n## 💡 Note: the number of articulations (" + AZStd::to_string(m_articulationsCounter) +
+                ") might not be supported by the physics engine.\n";
         }
-        return str;
+
+        report += "# The following components were found and parsed:\n";
+
+        const AZStd::unordered_map<StatusMessageType, AZStd::string> names = { { StatusMessageType::Model, "Models" },
+                                                                               { StatusMessageType::Link, "Links" },
+                                                                               { StatusMessageType::Joint, "Joints" },
+                                                                               { StatusMessageType::Sensor, "Sensors" },
+                                                                               { StatusMessageType::SensorPlugin, "Sensor plugins" },
+                                                                               { StatusMessageType::ModelPlugin, "Model plugins" } };
+        auto it = m_status.begin();
+        auto end = m_status.end();
+        while (it != end)
+        {
+            const auto key = it->first;
+            report += "\n## " + names.at(key) + ":\n";
+
+            do
+            {
+                report += "- " + it->second + "\n";
+                if (++it == end)
+                {
+                    break;
+                }
+            } while (it->first == key);
+        }
+        return report;
     }
 
     bool URDFPrefabMaker::ContainsModel() const

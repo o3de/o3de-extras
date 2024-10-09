@@ -1,0 +1,22 @@
+{
+    "values": [
+        {
+            "$type": "MotionGroup",
+            "name": "Pistol Recoil",
+            "selectedRootBone": "RootNode",
+            "id": "{1EA1654B-C24A-5AFB-BD1B-CFFE9D366395}",
+            "rules": {
+                "rules": [
+                    {
+                        "$type": "MotionSamplingRule"
+                    }
+                ]
+            }
+        },
+        {
+            "$type": "PrefabGroup",
+            "name": "Mixamo/Animations/Pistol Recoil_fbx.procprefab",
+            "id": "{31168FDC-875A-53A1-AFF7-DC89285C93A8}"
+        }
+    ]
+}

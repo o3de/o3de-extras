@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<ScriptCanvas Include="Nodes/SupervisedLearning.h" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <Class Name="SupervisedLearning"
+           QualifiedName="MachineLearning::SupervisedLearning"
+           PreferredClassName="Supervised learning"
+           Category="MachineLearning"
+           Description="Performs a fully supervised training session of a neural network using stochastic gradient descent.">
+
+        <Input Name="In" DisplayGroup="In" Description="Parameters controlling model training">
+            <Parameter Name="Model" Type="MachineLearning::INeuralNetworkPtr" Description="The model to perform a gradient descent step on."/>
+            <Parameter Name="TrainingData" Type="MachineLearning::ILabeledTrainingDataPtr" Description="The set of labeled training data to use."/>
+            <Parameter Name="TestData" Type="MachineLearning::ILabeledTrainingDataPtr" Description="The set of labeled test data to evaluate against."/>
+            <!-- Can't enable this until script canvas supports enumeration-type pins -->
+            <!-- Parameter Name="CostFunction" Type="MachineLearning::LossFunctions" Description="The loss function to use to compute the cost."/ -->
+            <Parameter Name="CostFunction" Type="AZStd::size_t" Description="The loss function to use to compute the cost."/>
+            <Parameter Name="TotalIterations" Type="AZStd::size_t" Description="The total number of times to iterate (epochs) when training."/>
+            <Parameter Name="BatchSize" Type="AZStd::size_t" Description="The batch size to use."/>
+            <Parameter Name="LearningRate" Type="float" Description="The learning rate to use."/>
+            <Parameter Name="LearningRateDecay" Type="float" Description="The decay factor to use after each iteration (epoch) of training."/>
+            <Parameter Name="EarlyStopCost" Type="float" Description="If the total cost of the model drops below this value, training will halt. 0 will always complete the whole training cycle."/>
+            <Return Name="Model" Type="MachineLearning::INeuralNetworkPtr" Shared="true"/>
+        </Input>
+    </Class>
+</ScriptCanvas>

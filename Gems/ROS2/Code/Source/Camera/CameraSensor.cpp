@@ -30,21 +30,15 @@ namespace ROS2
         /// @FormatMappings - contains the mapping from RHI to ROS image encodings. List of supported
         /// ROS image encodings lives in `sensor_msgs/image_encodings.hpp`
         /// We are not including `image_encodings.hpp` since it uses exceptions.
-        AZStd::unordered_map<AZ::RHI::Format, const char*> FormatMappings{
-            { AZ::RHI::Format::R8G8B8A8_UNORM, "rgba8" },     { AZ::RHI::Format::R16G16B16A16_UNORM, "rgba16" },
-            { AZ::RHI::Format::R32G32B32A32_FLOAT, "32FC4" }, // Unsupported by RVIZ2
-            { AZ::RHI::Format::R8_UNORM, "mono8" },           { AZ::RHI::Format::R16_UNORM, "mono16" },
+        const AZStd::unordered_map<AZ::RHI::Format, const char*> FormatMappings{
+            { AZ::RHI::Format::R8G8B8A8_UNORM, "rgba8" },
             { AZ::RHI::Format::R32_FLOAT, "32FC1" },
         };
 
         /// @BitDepth - contains the mapping from RHI to size used in `step` size computation.
         /// It is some equivalent to `bitDepth()` function from `sensor_msgs/image_encodings.hpp`
-        AZStd::unordered_map<AZ::RHI::Format, int> BitDepth{
+        const AZStd::unordered_map<AZ::RHI::Format, int> BitDepth{
             { AZ::RHI::Format::R8G8B8A8_UNORM, 4 * sizeof(uint8_t) },
-            { AZ::RHI::Format::R16G16B16A16_UNORM, 4 * sizeof(uint16_t) },
-            { AZ::RHI::Format::R32G32B32A32_FLOAT, 4 * sizeof(float) }, // Unsupported by RVIZ2
-            { AZ::RHI::Format::R8_UNORM, sizeof(uint8_t) },
-            { AZ::RHI::Format::R16_UNORM, sizeof(uint16_t) },
             { AZ::RHI::Format::R32_FLOAT, sizeof(float) },
         };
 
@@ -63,16 +57,7 @@ namespace ROS2
             imageMessage.data =
                 std::vector<uint8_t>(result.m_dataBuffer->data(), result.m_dataBuffer->data() + result.m_dataBuffer->size());
             imageMessage.header = header;
-            bool registeredPostProcessingSupportsEncoding = false;
-            CameraPostProcessingRequestBus::EventResult(
-                registeredPostProcessingSupportsEncoding,
-                entityId,
-                &CameraPostProcessingRequests::SupportsFormat,
-                AZStd::string(Internal::FormatMappings.at(format)));
-            if (registeredPostProcessingSupportsEncoding)
-            {
-                CameraPostProcessingRequestBus::Event(entityId, &CameraPostProcessingRequests::ApplyPostProcessing, imageMessage);
-            }
+            CameraPostProcessingRequestBus::Event(entityId, &CameraPostProcessingRequests::ApplyPostProcessing, imageMessage);
             return imageMessage;
         }
 
@@ -138,6 +123,7 @@ namespace ROS2
             m_entityId.ToString().c_str());
         AZ::RPI::RenderPipelineDescriptor pipelineDesc;
         pipelineDesc.m_mainViewTagName = "MainCamera";
+        pipelineDesc.m_allowModification = true;
         pipelineDesc.m_name = m_pipelineName;
 
         pipelineDesc.m_rootPassTemplate = GetPipelineTemplateName();

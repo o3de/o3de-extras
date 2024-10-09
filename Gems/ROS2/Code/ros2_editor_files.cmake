@@ -8,16 +8,24 @@ set(FILES
     ../Assets/Editor/Images/Icons/ROS_import_icon.svg
     Source/Camera/ROS2CameraSensorEditorComponent.cpp
     Source/Camera/ROS2CameraSensorEditorComponent.h
+    Source/Camera/ROS2EditorCameraSystemComponent.cpp
+    Source/Camera/ROS2EditorCameraSystemComponent.h
+    Source/Georeference/GeoreferenceLevelEditorComponent.cpp
+    Source/Georeference/GeoreferenceLevelEditorComponent.h
     Source/Lidar/LidarRegistrarEditorSystemComponent.cpp
     Source/Lidar/LidarRegistrarEditorSystemComponent.h
+    Source/Manipulation/JointsPositionsEditorComponent.cpp
+    Source/Manipulation/JointsPositionsEditorComponent.h
     Source/Manipulation/JointsManipulationEditorComponent.cpp
     Source/Manipulation/JointsManipulationEditorComponent.h
     Source/RobotImporter/FixURDF/FixURDF.cpp
     Source/RobotImporter/FixURDF/FixURDF.h
+    Source/RobotImporter/Pages/ModifiedURDFWindow.cpp
+    Source/RobotImporter/Pages/ModifiedURDFWindow.h
     Source/RobotImporter/Pages/CheckAssetPage.cpp
     Source/RobotImporter/Pages/CheckAssetPage.h
-    Source/RobotImporter/Pages/CheckUrdfPage.cpp
-    Source/RobotImporter/Pages/CheckUrdfPage.h
+    Source/RobotImporter/Pages/RobotDescriptionPage.cpp
+    Source/RobotImporter/Pages/RobotDescriptionPage.h
     Source/RobotImporter/Pages/FileSelectionPage.cpp
     Source/RobotImporter/Pages/FileSelectionPage.h
     Source/RobotImporter/Pages/PrefabMakerPage.cpp
@@ -30,12 +38,17 @@ set(FILES
     Source/RobotImporter/RobotImporterWidget.h
     Source/RobotImporter/ROS2RobotImporterEditorSystemComponent.cpp
     Source/RobotImporter/ROS2RobotImporterEditorSystemComponent.h
+    Source/RobotImporter/SDFormat/Hooks/ROS2AckermannModelHook.cpp
     Source/RobotImporter/SDFormat/Hooks/ROS2CameraSensorHook.cpp
     Source/RobotImporter/SDFormat/Hooks/ROS2GNSSSensorHook.cpp
     Source/RobotImporter/SDFormat/Hooks/ROS2ImuSensorHook.cpp
     Source/RobotImporter/SDFormat/Hooks/ROS2LidarSensorHook.cpp
-    Source/RobotImporter/SDFormat/ROS2SensorHooksUtils.cpp
-    Source/RobotImporter/SDFormat/ROS2SensorHooksUtils.h
+    Source/RobotImporter/SDFormat/Hooks/ROS2SkidSteeringModelHook.cpp
+    Source/RobotImporter/SDFormat/Hooks/ROS2JointPoseTrajectoryModelHook.cpp
+    Source/RobotImporter/SDFormat/Hooks/ROS2JointStatePublisherModelHook.cpp
+    Source/RobotImporter/SDFormat/ROS2ModelPluginHooks.h
+    Source/RobotImporter/SDFormat/ROS2SDFormatHooksUtils.cpp
+    Source/RobotImporter/SDFormat/ROS2SDFormatHooksUtils.h
     Source/RobotImporter/SDFormat/ROS2SensorHooks.h
     Source/RobotImporter/URDF/ArticulationsMaker.cpp
     Source/RobotImporter/URDF/ArticulationsMaker.h
@@ -47,6 +60,8 @@ set(FILES
     Source/RobotImporter/URDF/JointsMaker.h
     Source/RobotImporter/URDF/PrefabMakerUtils.cpp
     Source/RobotImporter/URDF/PrefabMakerUtils.h
+    Source/RobotImporter/URDF/RobotControlMaker.cpp
+    Source/RobotImporter/URDF/RobotControlMaker.h
     Source/RobotImporter/URDF/SensorsMaker.cpp
     Source/RobotImporter/URDF/SensorsMaker.h
     Source/RobotImporter/URDF/UrdfParser.cpp
@@ -68,8 +83,6 @@ set(FILES
     Source/RobotImporter/Utils/SourceAssetsStorage.h
     Source/RobotImporter/Utils/TypeConversions.cpp
     Source/RobotImporter/Utils/TypeConversions.h
-    Source/ROS2EditorSystemComponent.cpp
-    Source/ROS2EditorSystemComponent.h
     Source/ROS2GemUtilities.cpp
     Source/Spawner/ROS2SpawnerEditorComponent.cpp
     Source/Spawner/ROS2SpawnerEditorComponent.h
@@ -81,4 +94,10 @@ set(FILES
     Source/SdfAssetBuilder/SdfAssetBuilderSettings.h
     Source/SdfAssetBuilder/SdfAssetBuilderSystemComponent.cpp
     Source/SdfAssetBuilder/SdfAssetBuilderSystemComponent.h
+    Source/Frame/ROS2FrameEditorComponent.cpp
+    Source/Frame/ROS2FrameSystemComponent.cpp
+    Source/Frame/ROS2FrameSystemComponent.h
+    Source/Frame/ROS2FrameSystemBus.h
+    Source/SystemComponents/ROS2EditorSystemComponent.cpp
+    Source/SystemComponents/ROS2EditorSystemComponent.h
 )

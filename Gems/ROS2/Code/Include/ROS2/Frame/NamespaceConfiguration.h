@@ -39,15 +39,33 @@ namespace ROS2
         //! @param isRoot Whether or not the namespace belongs to top-level entity in the entity hierarchy.
         //! @param entityName Raw (not ros-ified) name of the entity to which the namespace belongs.
         void PopulateNamespace(bool isRoot, const AZStd::string& entityName);
+
+        //! Get the namespace of the frame, based on the parent namespace from the ROS2FrameSystemComponent.
+        //! @return namespace of the frame.
+        AZStd::string GetNamespace() const;
+
+        //! Get the namespace of the frame, based on the provided namespace.
+        //! @param parentNamespace namespace of the parent frame.
+        //! @return namespace of the frame.
         AZStd::string GetNamespace(const AZStd::string& parentNamespace) const;
 
         //! Update namespace and strategy.
-        //! @param ns Desired namespace.
+        //! @param ros2Namespace Desired namespace.
         //! @param strategy Namespace strategy.
-        void SetNamespace(const AZStd::string& ns, NamespaceStrategy strategy);
+        void SetNamespace(const AZStd::string& ros2Namespace, NamespaceStrategy strategy);
+
+        //! Update the parents namespace.
+        //! @param parentNamespace parent namespace.
+        void SetParentNamespace(const AZStd::string& parentNamespace);
+
+        //! Initializes the namespace configuration.
+        //! This function should be called in the Init functions of frame components.
+        void Init();
 
     private:
-        AZStd::string m_namespace;
+        AZStd::string m_customNamespace = ""; //!< Custom namespace that can be set by the user
+        AZStd::string m_namespace = ""; //!< Current namespace (might be custom); set automatically
+        AZStd::string m_parentNamespace = ""; //!< Parent namespace (might be custom); set automatically
         NamespaceStrategy m_namespaceStrategy = NamespaceStrategy::Default;
         bool m_isRoot;
         AZStd::string m_entityName;

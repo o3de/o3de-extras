@@ -33,6 +33,7 @@ namespace ROS2
 
     void ROS2CameraSensorComponent::Activate()
     {
+        ROS2SensorComponentBase::Activate();
         if (m_cameraConfiguration.m_colorCamera && m_cameraConfiguration.m_depthCamera)
         {
             SetImageSource<CameraRGBDSensor>();
@@ -46,7 +47,7 @@ namespace ROS2
             SetImageSource<CameraDepthSensor>();
         }
 
-        const auto* component = Utils::GetGameOrEditorComponent<ROS2FrameComponent>(GetEntity());
+        const auto* component = GetEntity()->FindComponent<ROS2FrameComponent>();
         AZ_Assert(component, "Entity has no ROS2FrameComponent");
         m_frameName = component->GetFrameID();
         ROS2::CameraCalibrationRequestBus::Handler::BusConnect(GetEntityId());
@@ -68,6 +69,7 @@ namespace ROS2
         StopSensor();
         m_cameraSensor.reset();
         ROS2::CameraCalibrationRequestBus::Handler::BusDisconnect(GetEntityId());
+        ROS2SensorComponentBase::Deactivate();
     }
 
     AZ::Matrix3x3 ROS2CameraSensorComponent::GetCameraMatrix() const
@@ -124,7 +126,7 @@ namespace ROS2
 
     AZStd::string ROS2CameraSensorComponent::GetCameraNameFromFrame(const AZ::Entity* entity) const
     {
-        const auto* component = Utils::GetGameOrEditorComponent<ROS2FrameComponent>(entity);
+        const auto* component = GetEntity()->FindComponent<ROS2FrameComponent>();
         AZ_Assert(component, "Entity %s has no ROS2CameraSensorComponent", entity->GetName().c_str());
         if (component)
         {

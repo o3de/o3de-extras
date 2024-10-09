@@ -65,6 +65,7 @@ namespace ROS2
 
     void ROS2Lidar2DSensorComponent::Activate()
     {
+        ROS2SensorComponentBase::Activate();
         m_lidarCore.Init(GetEntityId());
 
         auto ros2Node = ROS2Interface::Get()->GetNode();
@@ -78,10 +79,6 @@ namespace ROS2
             m_sensorConfiguration.m_frequency,
             [this]([[maybe_unused]] auto&&... args)
             {
-                if (!m_sensorConfiguration.m_publishingEnabled)
-                {
-                    return;
-                }
                 FrequencyTick();
             },
             [this]([[maybe_unused]] auto&&... args)
@@ -99,6 +96,7 @@ namespace ROS2
         StopSensor();
         m_laserScanPublisher.reset();
         m_lidarCore.Deinit();
+        ROS2SensorComponentBase::Deactivate();
     }
 
     void ROS2Lidar2DSensorComponent::GetRequiredServices(AZ::ComponentDescriptor::DependencyArrayType& required)
@@ -110,7 +108,12 @@ namespace ROS2
     {
         RaycastResult lastScanResults = m_lidarCore.PerformRaycast();
 
-        auto* ros2Frame = Utils::GetGameOrEditorComponent<ROS2FrameComponent>(GetEntity());
+        if (!m_sensorConfiguration.m_publishingEnabled)
+        { // Skip publishing when it is disabled.
+            return;
+        }
+
+        auto* ros2Frame = GetEntity()->FindComponent<ROS2FrameComponent>();
         auto message = sensor_msgs::msg::LaserScan();
         message.header.frame_id = ros2Frame->GetFrameID().data();
         message.header.stamp = ROS2Interface::Get()->GetROSTimestamp();

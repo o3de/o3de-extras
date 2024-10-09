@@ -12,8 +12,8 @@
 #include <AzCore/Asset/AssetManagerBus.h>
 #include <AzCore/IO/Path/Path.h>
 #include <AzCore/StringFunc/StringFunc.h>
-#include <AzCore/std/string/regex.h>
 #include <AzCore/Utils/Utils.h>
+#include <AzCore/std/string/regex.h>
 #include <AzToolsFramework/API/EditorAssetSystemAPI.h>
 #include <RobotImporter/Utils/ErrorUtils.h>
 #include <string.h>
@@ -34,7 +34,7 @@ namespace ROS2::Utils
         auto wheelMatcher = [](AZStd::string_view name)
         {
             // StringFunc matches are case-insensitive by default
-            return AZ::StringFunc::StartsWith(name, "wheel_") || AZ::StringFunc::EndsWith(name, "_wheel");
+            return AZ::StringFunc::Contains(name, "wheel");
         };
 
         const AZStd::string linkName(link->Name().c_str(), link->Name().size());
@@ -80,30 +80,23 @@ namespace ROS2::Utils
         return isWheel;
     }
 
-    AZ::Transform GetLocalTransformURDF(const sdf::Link* link, AZ::Transform t)
+    AZ::Transform GetLocalTransformURDF(const sdf::SemanticPose& semanticPose, AZ::Transform t)
     {
         // Determine if the pose is relative to another link
         // See doxygen at
         // http://osrf-distributions.s3.amazonaws.com/sdformat/api/13.2.0/classsdf_1_1SDF__VERSION__NAMESPACE_1_1Link.html#a011d84b31f584938d89ac6b8c8a09eb3
 
-        sdf::SemanticPose linkSemanticPos = link->SemanticPose();
         gz::math::Pose3d resolvedPose;
-
-        if (sdf::Errors poseResolveErrors = linkSemanticPos.Resolve(resolvedPose); !poseResolveErrors.empty())
+        if (sdf::Errors poseResolveErrors = semanticPose.Resolve(resolvedPose); !poseResolveErrors.empty())
         {
             AZStd::string poseErrorMessages = Utils::JoinSdfErrorsToString(poseResolveErrors);
 
-            AZ_Error(
-                "RobotImporter",
-                false,
-                R"(Failed to get world transform for link %s. Errors: "%s")",
-                link->Name().c_str(),
-                poseErrorMessages.c_str());
+            AZ_Error("RobotImporter", false, R"(Failed to get world transform. Errors: "%s")", poseErrorMessages.c_str());
             return {};
         }
 
-        const AZ::Transform linkTransform = URDF::TypeConversions::ConvertPose(resolvedPose);
-        const AZ::Transform resolvedTransform = linkTransform * t;
+        const AZ::Transform localTransform = URDF::TypeConversions::ConvertPose(resolvedPose);
+        const AZ::Transform resolvedTransform = localTransform * t;
         return resolvedTransform;
     }
 
@@ -161,6 +154,7 @@ namespace ROS2::Utils
         public:
             LinkVisitorCallback m_linkVisitorCB;
             bool m_recurseModels{};
+
         private:
             // Stack storing the current composition of models visited so far
             ModelStack m_modelStack;
@@ -227,6 +221,7 @@ namespace ROS2::Utils
         public:
             JointVisitorCallback m_jointVisitorCB;
             bool m_recurseModels{};
+
         private:
             // Stack storing the current composition of models visited so far
             ModelStack m_modelStack;
@@ -879,7 +874,6 @@ namespace ROS2::Utils
             }
         }
 
-
         // At this point, the path has no identified URI prefix. If it's an absolute path, try to locate and return it.
         // Otherwise, return an empty path as an error.
         if (unresolvedPath.IsAbsolute())
@@ -960,18 +954,29 @@ namespace ROS2::Utils::SDFormat
     }
 
     AZStd::vector<AZStd::string> GetUnsupportedParams(
-        const sdf::ElementPtr& rootElement, const AZStd::unordered_set<AZStd::string>& supportedParams)
+        const sdf::ElementPtr& rootElement,
+        const AZStd::unordered_set<AZStd::string>& supportedParams,
+        const AZStd::unordered_set<AZStd::string>& pluginNames,
+        const AZStd::unordered_set<AZStd::string>& supportedPluginParams)
     {
         AZStd::vector<AZStd::string> unsupportedParams;
 
-        AZStd::function<void(const sdf::ElementPtr& elementPtr, const std::string& prefix)> elementVisitor =
-            [&](const sdf::ElementPtr& elementPtr, const std::string& prefix) -> void
+        AZStd::function<void(
+            const sdf::ElementPtr& elementPtr,
+            const std::string& info,
+            const std::string& prefix,
+            const AZStd::unordered_set<AZStd::string>& supportedSet)>
+            elementVisitor = [&](const sdf::ElementPtr& elementPtr,
+                                 const std::string& info,
+                                 const std::string& prefix,
+                                 const AZStd::unordered_set<AZStd::string>& supportedSet) -> void
         {
             auto childPtr = elementPtr->GetFirstElement();
 
             AZStd::string prefixAz(prefix.c_str(), prefix.size());
-            if (!childPtr && !prefixAz.empty() && !supportedParams.contains(prefixAz))
+            if (!childPtr && !prefixAz.empty() && !supportedSet.contains(prefixAz))
             {
+                prefixAz.insert(0, AZStd::string(info.c_str(), info.size()));
                 unsupportedParams.push_back(prefixAz);
             }
 
@@ -986,12 +991,37 @@ namespace ROS2::Utils::SDFormat
                 currentName.append(">");
                 currentName.append(childPtr->GetName());
 
-                elementVisitor(childPtr, currentName);
+                elementVisitor(childPtr, info, currentName, supportedSet);
                 childPtr = childPtr->GetNextElement();
             }
         };
 
-        elementVisitor(rootElement, "");
+        elementVisitor(rootElement, "", "", supportedParams);
+
+        auto pluginPtr = rootElement->GetFirstElement();
+        while (pluginPtr)
+        {
+            if (pluginPtr->GetName() == "plugin")
+            {
+                if (pluginPtr->HasAttribute("filename"))
+                {
+                    std::string fileName = pluginPtr->GetAttribute("filename")->GetAsString();
+                    std::string info = "plugin \"" + fileName + "\"";
+
+                    AZStd::string fileNameAz(fileName.c_str(), fileName.size());
+                    if (!pluginNames.contains(fileNameAz))
+                    {
+                        unsupportedParams.push_back(AZStd::string(info.c_str(), info.size()));
+                    }
+                    else
+                    {
+                        info.append(": ");
+                        elementVisitor(pluginPtr, info, "", supportedPluginParams);
+                    }
+                }
+            }
+            pluginPtr = pluginPtr->GetNextElement();
+        }
 
         return unsupportedParams;
     }
@@ -1011,7 +1041,7 @@ namespace ROS2::Utils::SDFormat
         for (auto& [prefix, pathList] : settings.m_resolverSettings.m_uriPrefixMap)
         {
             std::string uriPath;
-            for(auto& path : pathList)
+            for (auto& path : pathList)
             {
                 if (!uriPath.empty())
                 {
@@ -1030,20 +1060,21 @@ namespace ROS2::Utils::SDFormat
 
         // If any files couldn't be found using our supplied prefix mappings, this callback will get called.
         // Attempt to use our full path resolution, and print a warning if it still couldn't be resolved.
-        sdfConfig.SetFindCallback([settings, baseFilePath](const std::string &fileName) -> std::string
-        {
-            auto amentPrefixPath = Utils::GetAmentPrefixPath();
-
-            auto resolved = Utils::ResolveAssetPath(AZ::IO::Path(fileName.c_str()), baseFilePath, amentPrefixPath, settings);
-            if (!resolved.empty())
+        sdfConfig.SetFindCallback(
+            [settings, baseFilePath](const std::string& fileName) -> std::string
             {
-                AZ_Trace("SdfParserConfig", "SDF SetFindCallback resolved '%s' -> '%s'", fileName.c_str(), resolved.c_str());
-                return resolved.c_str();
-            }
+                auto amentPrefixPath = Utils::GetAmentPrefixPath();
 
-            AZ_Warning("SdfParserConfig", false, "SDF SetFindCallback failed to resolve '%s'", fileName.c_str());
-            return fileName;
-        });
+                auto resolved = Utils::ResolveAssetPath(AZ::IO::Path(fileName.c_str()), baseFilePath, amentPrefixPath, settings);
+                if (!resolved.empty())
+                {
+                    AZ_Trace("SdfParserConfig", "SDF SetFindCallback resolved '%s' -> '%s'", fileName.c_str(), resolved.c_str());
+                    return resolved.c_str();
+                }
+
+                AZ_Warning("SdfParserConfig", false, "SDF SetFindCallback failed to resolve '%s'", fileName.c_str());
+                return fileName;
+            });
 
         return sdfConfig;
     }

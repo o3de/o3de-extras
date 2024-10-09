@@ -97,6 +97,7 @@ namespace ROS2
     }
     void ROS2OdometrySensorComponent::Activate()
     {
+        ROS2SensorComponentBase::Activate();
         // "odom" is globally fixed frame for all robots, no matter the namespace
         m_odometryMsg.header.frame_id = ROS2Names::GetNamespacedName(GetNamespace(), "odom").c_str();
         m_odometryMsg.child_frame_id = GetFrameID().c_str();
@@ -123,5 +124,6 @@ namespace ROS2
     {
         StopSensor();
         m_odometryPublisher.reset();
+        ROS2SensorComponentBase::Deactivate();
     }
 } // namespace ROS2

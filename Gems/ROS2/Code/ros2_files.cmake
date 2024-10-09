@@ -20,10 +20,16 @@ set(FILES
         Source/Camera/CameraSensorConfiguration.h
         Source/Camera/ROS2CameraSensorComponent.cpp
         Source/Camera/ROS2CameraSensorComponent.h
+        Source/Camera/ROS2CameraSystemComponent.cpp
+        Source/Camera/ROS2CameraSystemComponent.h
+        Source/Camera/PostProcessing/ROS2ImageEncodingConversionComponent.cpp
+        Source/Camera/PostProcessing/ROS2ImageEncodingConversionComponent.h
         Source/Camera/CameraUtilities.cpp
         Source/Camera/CameraUtilities.h
-        Source/Clock/PhysicallyStableClock.cpp
-        Source/Clock/SimulationClock.cpp
+        Source/Clock/ROS2Clock.cpp
+        Source/Clock/ROS2TimeSource.cpp
+        Source/Clock/SimulationTimeSource.cpp
+        Source/Clock/RealTimeSource.cpp
         Source/Communication/QoS.cpp
         Source/Communication/PublisherConfiguration.cpp
         Source/Communication/TopicConfiguration.cpp
@@ -31,7 +37,11 @@ set(FILES
         Source/ContactSensor/ROS2ContactSensorComponent.h
         Source/Frame/NamespaceConfiguration.cpp
         Source/Frame/ROS2FrameComponent.cpp
+        Source/Frame/ROS2FrameConfiguration.cpp
         Source/Frame/ROS2Transform.cpp
+        Source/Georeference/GeoreferenceStructures.cpp
+        Source/Georeference/GeoreferenceLevelComponent.cpp
+        Source/Georeference/GeoreferenceLevelComponent.h
         Source/Gripper/GripperActionServer.cpp
         Source/Gripper/GripperActionServer.h
         Source/Gripper/GripperActionServerComponent.cpp
@@ -40,10 +50,8 @@ set(FILES
         Source/Gripper/VacuumGripperComponent.cpp
         Source/Gripper/FingerGripperComponent.h
         Source/Gripper/FingerGripperComponent.cpp
-        Source/GNSS/GNSSFormatConversions.cpp
-        Source/GNSS/GNSSFormatConversions.h
-        Source/GNSS/GNSSSensorConfiguration.cpp
-        Source/GNSS/GNSSSensorConfiguration.h
+        Source/Georeference/GNSSFormatConversions.cpp
+        Source/Georeference/GNSSFormatConversions.h
         Source/GNSS/ROS2GNSSSensorComponent.cpp
         Source/GNSS/ROS2GNSSSensorComponent.h
         Source/Imu/ImuSensorConfiguration.cpp
@@ -75,6 +83,10 @@ set(FILES
         Source/Manipulation/JointInfo.cpp
         Source/Manipulation/JointStatePublisher.cpp
         Source/Manipulation/JointStatePublisher.h
+        Source/Manipulation/JointPositionsSubscriptionHandler.cpp
+        Source/Manipulation/JointPositionsSubscriptionHandler.h
+        Source/Manipulation/JointsPositionsComponent.cpp
+        Source/Manipulation/JointsPositionsComponent.h
         Source/Manipulation/JointsManipulationComponent.cpp
         Source/Manipulation/JointsManipulationComponent.h
         Source/Manipulation/JointsTrajectoryComponent.cpp
@@ -108,11 +120,10 @@ set(FILES
         Source/RobotImporter/ROS2RobotImporterSystemComponent.cpp
         Source/RobotImporter/ROS2RobotImporterSystemComponent.h
         Source/ROS2ModuleInterface.h
-        Source/ROS2SystemComponent.cpp
-        Source/ROS2SystemComponent.h
         Source/Sensor/Events/PhysicsBasedSource.cpp
         Source/Sensor/Events/TickBasedSource.cpp
         Source/Sensor/SensorConfiguration.cpp
+        Source/Sensor/SensorHelpers.cpp
         Source/SimulationUtils/FollowingCameraConfiguration.cpp
         Source/SimulationUtils/FollowingCameraConfiguration.h
         Source/SimulationUtils/FollowingCameraComponent.cpp
@@ -125,6 +136,8 @@ set(FILES
         Source/Spawner/ROS2SpawnerComponentController.h
         Source/Spawner/ROS2SpawnPointComponentController.cpp
         Source/Spawner/ROS2SpawnPointComponentController.h
+        Source/SystemComponents/ROS2SystemComponent.cpp
+        Source/SystemComponents/ROS2SystemComponent.h
         Source/Utilities/ArticulationsUtilities.cpp
         Source/Utilities/ArticulationsUtilities.h
         Source/Utilities/JointUtilities.cpp

@@ -1,0 +1,6 @@
+Event	ID	Name			Wwise Object Path	Notes
+	3057162532	Play_Blaster_Shot			\Default Work Unit\Play_Blaster_Shot	
+
+In Memory Audio	ID	Name	Audio source file		Wwise Object Path	Notes	Data Size
+	228546115	gun_blaster_no_trigger_shot_1	D:\git\test-projects\gg\Sounds\wwise_project\.cache\Windows\SFX\gun_blaster_no_trigger_shot_1_10C4C929.wem		\Actor-Mixer Hierarchy\Default Work Unit\gun_blaster_no_trigger_shot_1		204144
+

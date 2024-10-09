@@ -16,6 +16,7 @@
 
 namespace ROS2
 {
+    //! A class for executing lidar raycast.
     class LidarRaycaster : protected LidarRaycasterRequestBus::Handler
     {
     public:
@@ -48,7 +49,7 @@ namespace ROS2
         float m_minRange{ 0.0f };
         float m_range{ 1.0f };
         bool m_addMaxRangePoints{ false };
-        AZStd::vector<AZ::Vector3> m_rayRotations{ { AZ::Vector3::CreateZero() } };
+        AZStd::vector<AZ::Quaternion> m_rayRotations{ { AZ::Quaternion::CreateZero() } };
 
         AZStd::unordered_set<AZ::u32> m_ignoredCollisionLayers;
     };

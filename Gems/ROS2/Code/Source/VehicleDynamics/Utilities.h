@@ -53,10 +53,12 @@ namespace ROS2::VehicleDynamics::Utilities
     //! Wheels need a WheelControllerComponent, and the axle must be a drive axle.
     AZStd::vector<VehicleDynamics::WheelDynamicsData> GetAllDriveWheelsData(const VehicleConfiguration& vehicleConfig);
 
-    //! Get Physx Hinge Joint Component AZ::EntityComponentIdPair from Entity
-    //! @param wheelEntityId id of entity that has Physx Hinge Joint Controller
-    //! @returns EntityComponentIdPair that contains id of Hinge component and @param wheelEntityId
-    AZ::EntityComponentIdPair GetWheelPhysxHinge(const AZ::EntityId wheelEntityId);
+
+    //! Retrieve wheel data for a given wheel entity (components id for joints and free axis)
+    //! @param wheelEntityId Wheel entity to process.
+    //! @param wheelRadius Radius of the wheel in meters.
+    //! @returns struct with wheel data.
+    VehicleDynamics::WheelDynamicsData GetWheelData(const AZ::EntityId wheelEntityId, float wheelRadius);
 
     //! Computes ramped velocity.
     //! @param targetVelocity Last commanded velocity to send to robot (in eg m/s or rad/s)
@@ -66,5 +68,12 @@ namespace ROS2::VehicleDynamics::Utilities
     //! @param maxVelocity Limit for velocity to clamp to (in eg m/s or rad/s)
     //! @returns ramped velocity according to time, acceleration and clamped to @param maxVelocity
     float ComputeRampVelocity(float targetVelocity, float lastVelocity, AZ::u64 deltaTimeNs, float acceleration, float maxVelocity);
+
+
+    void SetWheelRotationSpeed(const  VehicleDynamics::WheelDynamicsData& data, float wheelRotationSpeed);
+
+    AZ::Transform GetJointTransform(const VehicleDynamics::WheelDynamicsData& data);
+
+
 
 } // namespace ROS2::VehicleDynamics::Utilities

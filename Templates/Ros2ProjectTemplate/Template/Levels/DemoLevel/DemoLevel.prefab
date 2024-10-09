@@ -252,89 +252,6 @@
                 }
             }
         },
-        "Entity_[558067385513]": {
-            "Id": "Entity_[558067385513]",
-            "Name": "marker",
-            "Components": {
-                "Component_[12345039422781644436]": {
-                    "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
-                    "Id": 12345039422781644436,
-                    "Parent Entity": "Entity_[545532067501]",
-                    "Transform Data": {
-                        "UniformScale": 0.10000000149011612
-                    }
-                },
-                "Component_[16311924938308571969]": {
-                    "$type": "AZ::Render::EditorMeshComponent",
-                    "Id": 16311924938308571969,
-                    "Controller": {
-                        "Configuration": {
-                            "ModelAsset": {
-                                "assetId": {
-                                    "guid": "{1EE46427-D1C2-5698-B30D-B4CCF46B15CD}",
-                                    "subId": 274434668
-                                },
-                                "assetHint": "objects/_primitives/_sphere_1x1.azmodel"
-                            }
-                        }
-                    }
-                },
-                "Component_[17981273470482180971]": {
-                    "$type": "EditorEntitySortComponent",
-                    "Id": 17981273470482180971
-                },
-                "Component_[2065222331617120332]": {
-                    "$type": "EditorVisibilityComponent",
-                    "Id": 2065222331617120332
-                },
-                "Component_[2096811794606887530]": {
-                    "$type": "EditorDisabledCompositionComponent",
-                    "Id": 2096811794606887530
-                },
-                "Component_[2855690690078728486]": {
-                    "$type": "EditorPendingCompositionComponent",
-                    "Id": 2855690690078728486
-                },
-                "Component_[2915573670259884143]": {
-                    "$type": "EditorMaterialComponent",
-                    "Id": 2915573670259884143,
-                    "Controller": {
-                        "Configuration": {
-                            "materials": [
-                                {
-                                    "Key": {
-                                        "materialSlotStableId": 1738373820
-                                    },
-                                    "Value": {
-                                        "MaterialAsset": {
-                                            "assetId": {
-                                                "guid": "{9C47066E-BD8F-5C1B-B935-933296BBE312}"
-                                            }
-                                        }
-                                    }
-                                }
-                            ]
-                        }
-                    }
-                },
-                "Component_[3984524579386645338]": {
-                    "$type": "EditorLockComponent",
-                    "Id": 3984524579386645338
-                },
-                "Component_[6180558729729631244]": {
-                    "$type": "EditorInspectorComponent",
-                    "Id": 6180558729729631244
-                },
-                "Component_[6203285465432256414]": {
-                    "$type": "EditorOnlyEntityComponent",
-                    "Id": 6203285465432256414
-                },
-                "Component_[7639289353853227968]": {
-                    "$type": "EditorEntityIconComponent",
-                    "Id": 7639289353853227968
-                }
-            }
-        },                
         "Entity_[541237100205]": {
             "Id": "Entity_[541237100205]",
             "Name": "Navigation Goals",
@@ -351,7 +268,7 @@
                     "$type": "GenericComponentWrapper",
                     "Id": 2318932367744128274,
                     "m_template": {
-                        "$type": "${SanitizedCppName}SampleComponent",
+                        "$type": "R2PTSampleComponent",
                         "goals": [
                             "Entity_[549827034797]",
                             "Entity_[545532067501]"
@@ -453,10 +370,7 @@
                 },
                 "Component_[9226016495091865703]": {
                     "$type": "EditorOnlyEntityComponent",
-                    "Id": 3950088389572830633,
-                    "Child Entity Order": [
-                        "Entity_[558067385513]"
-                    ]
+                    "Id": 3950088389572830633
                 }
             }
         },
@@ -519,6 +433,90 @@
                             0.16321372985839844
                         ]
                     }
+                }
+            }
+        },
+        "Entity_[558067385513]": {
+            "Id": "Entity_[558067385513]",
+            "Name": "marker",
+            "Components": {
+                "Component_[12345039422781644436]": {
+                    "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
+                    "Id": 12345039422781644436,
+                    "Parent Entity": "Entity_[545532067501]",
+                    "Transform Data": {
+                        "UniformScale": 0.10000000149011612
+                    }
+                },
+                "Component_[16311924938308571969]": {
+                    "$type": "AZ::Render::EditorMeshComponent",
+                    "Id": 16311924938308571969,
+                    "Controller": {
+                        "Configuration": {
+                            "ModelAsset": {
+                                "assetId": {
+                                    "guid": "{1EE46427-D1C2-5698-B30D-B4CCF46B15CD}",
+                                    "subId": 274434668
+                                },
+                                "assetHint": "objects/_primitives/_sphere_1x1.azmodel"
+                            }
+                        }
+                    }
+                },
+                "Component_[17981273470482180971]": {
+                    "$type": "EditorEntitySortComponent",
+                    "Id": 17981273470482180971
+                },
+                "Component_[2065222331617120332]": {
+                    "$type": "EditorVisibilityComponent",
+                    "Id": 2065222331617120332
+                },
+                "Component_[2096811794606887530]": {
+                    "$type": "EditorDisabledCompositionComponent",
+                    "Id": 2096811794606887530
+                },
+                "Component_[2855690690078728486]": {
+                    "$type": "EditorPendingCompositionComponent",
+                    "Id": 2855690690078728486
+                },
+                "Component_[2915573670259884143]": {
+                    "$type": "EditorMaterialComponent",
+                    "Id": 2915573670259884143,
+                    "Controller": {
+                        "Configuration": {
+                            "materials": [
+                                {
+                                    "Key": {
+                                        "materialSlotStableId": 1738373820
+                                    },
+                                    "Value": {
+                                        "MaterialAsset": {
+                                            "assetId": {
+                                                "guid": "{9C47066E-BD8F-5C1B-B935-933296BBE312}"
+                                            },
+                                            "assetHint": "materials/presets/macbeth/15_red.azmaterial"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                },
+                "Component_[3984524579386645338]": {
+                    "$type": "EditorLockComponent",
+                    "Id": 3984524579386645338
+                },
+                "Component_[6180558729729631244]": {
+                    "$type": "EditorInspectorComponent",
+                    "Id": 6180558729729631244
+                },
+                "Component_[6203285465432256414]": {
+                    "$type": "EditorOnlyEntityComponent",
+                    "Id": 6203285465432256414
+                },
+                "Component_[7639289353853227968]": {
+                    "$type": "EditorEntityIconComponent",
+                    "Id": 7639289353853227968
                 }
             }
         },
@@ -627,7 +625,7 @@
                 {
                     "op": "replace",
                     "path": "/Instances/Instance_[3732164110801]/Entities/Entity_[7512134816442]/Components/Component_[2887398288324076962]/Configuration/Centre of mass offset/0",
-                    "value": 8.756181335556331e-10
+                    "value": 8.75618133555633e-10
                 },
                 {
                     "op": "replace",
@@ -667,7 +665,7 @@
                 {
                     "op": "replace",
                     "path": "/Instances/Instance_[3732164110801]/Entities/Entity_[7486365012666]/Components/Component_[17075084475750345983]/Configuration/Centre of mass offset/0",
-                    "value": 8.756181335556331e-10
+                    "value": 8.75618133555633e-10
                 },
                 {
                     "op": "replace",
@@ -697,7 +695,7 @@
                 {
                     "op": "replace",
                     "path": "/Instances/Instance_[3732164110801]/Entities/Entity_[7494954947258]/Components/Component_[5546255188884728002]/Configuration/Centre of mass offset/0",
-                    "value": 8.756181335556331e-10
+                    "value": 8.75618133555633e-10
                 },
                 {
                     "op": "replace",
@@ -732,7 +730,7 @@
                 {
                     "op": "replace",
                     "path": "/Instances/Instance_[3732164110801]/Entities/Entity_[7525019718330]/Components/Component_[11685358238844952494]/Configuration/Centre of mass offset/0",
-                    "value": 8.756181335556331e-10
+                    "value": 8.75618133555633e-10
                 },
                 {
                     "op": "replace",
@@ -836,298 +834,13 @@
                 },
                 {
                     "op": "replace",
-                    "path": "/Entities/Entity_[729070309458]/Components/Component_[9485936813148123686]/ColliderConfiguration/MaterialSlots/Slots/0/MaterialAsset/assetId/guid",
-                    "value": "{07918D02-A9A8-5954-8E5D-C2FE080F8010}"
+                    "path": "/Entities/Entity_[729070309458]/Components/Component_[9485936813148123686]/ShapeConfiguration/PhysicsAsset/Asset/assetHint",
+                    "value": "o3descene/warehouse.fbx.pxmesh"
                 },
                 {
                     "op": "replace",
-                    "path": "/Entities/Entity_[729070309458]/Components/Component_[9485936813148123686]/ColliderConfiguration/MaterialSlots/Slots/0/MaterialAsset/assetHint",
-                    "value": "physx/plastic.physicsmaterial"
-                },
-                {
-                    "op": "replace",
-                    "path": "/Entities/Entity_[729070309458]/Components/Component_[9485936813148123686]/ColliderConfiguration/MaterialSlots/Slots/1/MaterialAsset/assetId/guid",
-                    "value": "{00000000-0000-0000-0000-000000000000}"
-                },
-                {
-                    "op": "replace",
-                    "path": "/Entities/Entity_[729070309458]/Components/Component_[9485936813148123686]/ColliderConfiguration/MaterialSlots/Slots/1/MaterialAsset/assetId/subId",
-                    "value": 0
-                },
-                {
-                    "op": "replace",
-                    "path": "/Entities/Entity_[729070309458]/Components/Component_[9485936813148123686]/ColliderConfiguration/MaterialSlots/Slots/1/MaterialAsset/assetHint",
-                    "value": ""
-                },
-                {
-                    "op": "replace",
-                    "path": "/Entities/Entity_[729070309458]/Components/Component_[9485936813148123686]/ColliderConfiguration/MaterialSlots/Slots/2/MaterialAsset/assetId/guid",
-                    "value": "{00000000-0000-0000-0000-000000000000}"
-                },
-                {
-                    "op": "replace",
-                    "path": "/Entities/Entity_[729070309458]/Components/Component_[9485936813148123686]/ColliderConfiguration/MaterialSlots/Slots/2/MaterialAsset/assetId/subId",
-                    "value": 0
-                },
-                {
-                    "op": "replace",
-                    "path": "/Entities/Entity_[729070309458]/Components/Component_[9485936813148123686]/ColliderConfiguration/MaterialSlots/Slots/2/MaterialAsset/assetHint",
-                    "value": ""
-                },
-                {
-                    "op": "replace",
-                    "path": "/Entities/Entity_[729070309458]/Components/Component_[9485936813148123686]/ColliderConfiguration/MaterialSlots/Slots/3/MaterialAsset/assetId/guid",
-                    "value": "{0C799856-9E0E-568D-A282-597D13A8556C}"
-                },
-                {
-                    "op": "replace",
-                    "path": "/Entities/Entity_[729070309458]/Components/Component_[9485936813148123686]/ColliderConfiguration/MaterialSlots/Slots/3/MaterialAsset/assetHint",
-                    "value": "physx/wood.physicsmaterial"
-                },
-                {
-                    "op": "replace",
-                    "path": "/Entities/Entity_[729070309458]/Components/Component_[9485936813148123686]/ColliderConfiguration/MaterialSlots/Slots/4/MaterialAsset/assetId/guid",
-                    "value": "{92A5EC27-1AC1-523E-88BB-9A6278DBD853}"
-                },
-                {
-                    "op": "replace",
-                    "path": "/Entities/Entity_[729070309458]/Components/Component_[9485936813148123686]/ColliderConfiguration/MaterialSlots/Slots/4/MaterialAsset/assetHint",
-                    "value": "physx/metal.physicsmaterial"
-                },
-                {
-                    "op": "replace",
-                    "path": "/Entities/Entity_[729070309458]/Components/Component_[9485936813148123686]/ColliderConfiguration/MaterialSlots/Slots/5/MaterialAsset/assetId/guid",
-                    "value": "{6D044767-4E3B-5116-A1A7-9C65BCF586A0}"
-                },
-                {
-                    "op": "replace",
-                    "path": "/Entities/Entity_[729070309458]/Components/Component_[9485936813148123686]/ColliderConfiguration/MaterialSlots/Slots/5/MaterialAsset/assetHint",
-                    "value": "physx/terrain_dirt.physicsmaterial"
-                },
-                {
-                    "op": "replace",
-                    "path": "/Entities/Entity_[729070309458]/Components/Component_[9485936813148123686]/ColliderConfiguration/MaterialSlots/Slots/6/MaterialAsset/assetId/guid",
-                    "value": "{92A5EC27-1AC1-523E-88BB-9A6278DBD853}"
-                },
-                {
-                    "op": "replace",
-                    "path": "/Entities/Entity_[729070309458]/Components/Component_[9485936813148123686]/ColliderConfiguration/MaterialSlots/Slots/6/MaterialAsset/assetHint",
-                    "value": "physx/metal.physicsmaterial"
-                },
-                {
-                    "op": "replace",
-                    "path": "/Entities/Entity_[729070309458]/Components/Component_[9485936813148123686]/ColliderConfiguration/MaterialSlots/Slots/7/MaterialAsset/assetId/guid",
-                    "value": "{AEFC12E4-B92E-5473-9B09-C6CDEC23EC7E}"
-                },
-                {
-                    "op": "replace",
-                    "path": "/Entities/Entity_[729070309458]/Components/Component_[9485936813148123686]/ColliderConfiguration/MaterialSlots/Slots/7/MaterialAsset/assetHint",
-                    "value": "physx/concrete.physicsmaterial"
-                },
-                {
-                    "op": "replace",
-                    "path": "/Entities/Entity_[729070309458]/Components/Component_[9485936813148123686]/ColliderConfiguration/MaterialSlots/Slots/8/MaterialAsset/assetId/guid",
-                    "value": "{AEFC12E4-B92E-5473-9B09-C6CDEC23EC7E}"
-                },
-                {
-                    "op": "replace",
-                    "path": "/Entities/Entity_[729070309458]/Components/Component_[9485936813148123686]/ColliderConfiguration/MaterialSlots/Slots/8/MaterialAsset/assetHint",
-                    "value": "physx/concrete.physicsmaterial"
-                },
-                {
-                    "op": "replace",
-                    "path": "/Entities/Entity_[729070309458]/Components/Component_[9485936813148123686]/ColliderConfiguration/MaterialSlots/Slots/10/MaterialAsset/assetId/guid",
-                    "value": "{92A5EC27-1AC1-523E-88BB-9A6278DBD853}"
-                },
-                {
-                    "op": "replace",
-                    "path": "/Entities/Entity_[729070309458]/Components/Component_[9485936813148123686]/ColliderConfiguration/MaterialSlots/Slots/10/MaterialAsset/assetHint",
-                    "value": "physx/metal.physicsmaterial"
-                },
-                {
-                    "op": "replace",
-                    "path": "/Entities/Entity_[729070309458]/Components/Component_[9485936813148123686]/ColliderConfiguration/MaterialSlots/Slots/11/MaterialAsset/assetId/guid",
-                    "value": "{92A5EC27-1AC1-523E-88BB-9A6278DBD853}"
-                },
-                {
-                    "op": "replace",
-                    "path": "/Entities/Entity_[729070309458]/Components/Component_[9485936813148123686]/ColliderConfiguration/MaterialSlots/Slots/11/MaterialAsset/assetHint",
-                    "value": "physx/metal.physicsmaterial"
-                },
-                {
-                    "op": "replace",
-                    "path": "/Entities/Entity_[729070309458]/Components/Component_[9485936813148123686]/ColliderConfiguration/MaterialSlots/Slots/12/MaterialAsset/assetId/guid",
-                    "value": "{92A5EC27-1AC1-523E-88BB-9A6278DBD853}"
-                },
-                {
-                    "op": "replace",
-                    "path": "/Entities/Entity_[729070309458]/Components/Component_[9485936813148123686]/ColliderConfiguration/MaterialSlots/Slots/12/MaterialAsset/assetHint",
-                    "value": "physx/metal.physicsmaterial"
-                },
-                {
-                    "op": "replace",
-                    "path": "/Entities/Entity_[729070309458]/Components/Component_[9485936813148123686]/ColliderConfiguration/MaterialSlots/Slots/13/MaterialAsset/assetId/guid",
-                    "value": "{AEFC12E4-B92E-5473-9B09-C6CDEC23EC7E}"
-                },
-                {
-                    "op": "replace",
-                    "path": "/Entities/Entity_[729070309458]/Components/Component_[9485936813148123686]/ColliderConfiguration/MaterialSlots/Slots/13/MaterialAsset/assetHint",
-                    "value": "physx/concrete.physicsmaterial"
-                },
-                {
-                    "op": "replace",
-                    "path": "/Entities/Entity_[729070309458]/Components/Component_[9485936813148123686]/ColliderConfiguration/MaterialSlots/Slots/14/MaterialAsset/assetId/guid",
-                    "value": "{0A945400-0986-5053-9811-D4F349E73B9C}"
-                },
-                {
-                    "op": "replace",
-                    "path": "/Entities/Entity_[729070309458]/Components/Component_[9485936813148123686]/ColliderConfiguration/MaterialSlots/Slots/14/MaterialAsset/assetHint",
-                    "value": "physx/character.physicsmaterial"
-                },
-                {
-                    "op": "replace",
-                    "path": "/Entities/Entity_[729070309458]/Components/Component_[9485936813148123686]/ColliderConfiguration/MaterialSlots/Slots/15/MaterialAsset/assetId/guid",
-                    "value": "{00000000-0000-0000-0000-000000000000}"
-                },
-                {
-                    "op": "replace",
-                    "path": "/Entities/Entity_[729070309458]/Components/Component_[9485936813148123686]/ColliderConfiguration/MaterialSlots/Slots/15/MaterialAsset/assetId/subId",
-                    "value": 0
-                },
-                {
-                    "op": "replace",
-                    "path": "/Entities/Entity_[729070309458]/Components/Component_[9485936813148123686]/ColliderConfiguration/MaterialSlots/Slots/15/MaterialAsset/assetHint",
-                    "value": ""
-                },
-                {
-                    "op": "replace",
-                    "path": "/Entities/Entity_[729070309458]/Components/Component_[9485936813148123686]/ColliderConfiguration/MaterialSlots/Slots/16/MaterialAsset/assetId/guid",
-                    "value": "{00000000-0000-0000-0000-000000000000}"
-                },
-                {
-                    "op": "replace",
-                    "path": "/Entities/Entity_[729070309458]/Components/Component_[9485936813148123686]/ColliderConfiguration/MaterialSlots/Slots/16/MaterialAsset/assetId/subId",
-                    "value": 0
-                },
-                {
-                    "op": "replace",
-                    "path": "/Entities/Entity_[729070309458]/Components/Component_[9485936813148123686]/ColliderConfiguration/MaterialSlots/Slots/16/MaterialAsset/assetHint",
-                    "value": ""
-                },
-                {
-                    "op": "replace",
-                    "path": "/Entities/Entity_[729070309458]/Components/Component_[9485936813148123686]/ColliderConfiguration/MaterialSlots/Slots/17/MaterialAsset/assetId/guid",
-                    "value": "{00000000-0000-0000-0000-000000000000}"
-                },
-                {
-                    "op": "replace",
-                    "path": "/Entities/Entity_[729070309458]/Components/Component_[9485936813148123686]/ColliderConfiguration/MaterialSlots/Slots/17/MaterialAsset/assetId/subId",
-                    "value": 0
-                },
-                {
-                    "op": "replace",
-                    "path": "/Entities/Entity_[729070309458]/Components/Component_[9485936813148123686]/ColliderConfiguration/MaterialSlots/Slots/17/MaterialAsset/assetHint",
-                    "value": ""
-                },
-                {
-                    "op": "replace",
-                    "path": "/Entities/Entity_[729070309458]/Components/Component_[9485936813148123686]/ColliderConfiguration/MaterialSlots/Slots/18/MaterialAsset/assetId/guid",
-                    "value": "{00000000-0000-0000-0000-000000000000}"
-                },
-                {
-                    "op": "replace",
-                    "path": "/Entities/Entity_[729070309458]/Components/Component_[9485936813148123686]/ColliderConfiguration/MaterialSlots/Slots/18/MaterialAsset/assetId/subId",
-                    "value": 0
-                },
-                {
-                    "op": "replace",
-                    "path": "/Entities/Entity_[729070309458]/Components/Component_[9485936813148123686]/ColliderConfiguration/MaterialSlots/Slots/18/MaterialAsset/assetHint",
-                    "value": ""
-                },
-                {
-                    "op": "replace",
-                    "path": "/Entities/Entity_[729070309458]/Components/Component_[9485936813148123686]/ColliderConfiguration/MaterialSlots/Slots/19/MaterialAsset/assetId/guid",
-                    "value": "{00000000-0000-0000-0000-000000000000}"
-                },
-                {
-                    "op": "replace",
-                    "path": "/Entities/Entity_[729070309458]/Components/Component_[9485936813148123686]/ColliderConfiguration/MaterialSlots/Slots/19/MaterialAsset/assetId/subId",
-                    "value": 0
-                },
-                {
-                    "op": "replace",
-                    "path": "/Entities/Entity_[729070309458]/Components/Component_[9485936813148123686]/ColliderConfiguration/MaterialSlots/Slots/19/MaterialAsset/assetHint",
-                    "value": ""
-                },
-                {
-                    "op": "replace",
-                    "path": "/Entities/Entity_[729070309458]/Components/Component_[9485936813148123686]/ColliderConfiguration/MaterialSlots/Slots/20/MaterialAsset/assetId/guid",
-                    "value": "{6D9F8E0A-466E-5774-8974-FC7F0872FD00}"
-                },
-                {
-                    "op": "replace",
-                    "path": "/Entities/Entity_[729070309458]/Components/Component_[9485936813148123686]/ColliderConfiguration/MaterialSlots/Slots/20/MaterialAsset/assetHint",
-                    "value": "physx/rubber.physicsmaterial"
-                },
-                {
-                    "op": "replace",
-                    "path": "/Entities/Entity_[729070309458]/Components/Component_[9485936813148123686]/ColliderConfiguration/MaterialSlots/Slots/21/MaterialAsset/assetId/guid",
-                    "value": "{00000000-0000-0000-0000-000000000000}"
-                },
-                {
-                    "op": "replace",
-                    "path": "/Entities/Entity_[729070309458]/Components/Component_[9485936813148123686]/ColliderConfiguration/MaterialSlots/Slots/21/MaterialAsset/assetId/subId",
-                    "value": 0
-                },
-                {
-                    "op": "replace",
-                    "path": "/Entities/Entity_[729070309458]/Components/Component_[9485936813148123686]/ColliderConfiguration/MaterialSlots/Slots/21/MaterialAsset/assetHint",
-                    "value": ""
-                },
-                {
-                    "op": "replace",
-                    "path": "/Entities/Entity_[729070309458]/Components/Component_[9485936813148123686]/ColliderConfiguration/MaterialSlots/Slots/22/MaterialAsset/assetId/guid",
-                    "value": "{00000000-0000-0000-0000-000000000000}"
-                },
-                {
-                    "op": "replace",
-                    "path": "/Entities/Entity_[729070309458]/Components/Component_[9485936813148123686]/ColliderConfiguration/MaterialSlots/Slots/22/MaterialAsset/assetId/subId",
-                    "value": 0
-                },
-                {
-                    "op": "replace",
-                    "path": "/Entities/Entity_[729070309458]/Components/Component_[9485936813148123686]/ColliderConfiguration/MaterialSlots/Slots/22/MaterialAsset/assetHint",
-                    "value": ""
-                },
-                {
-                    "op": "replace",
-                    "path": "/Entities/Entity_[729070309458]/Components/Component_[9485936813148123686]/ColliderConfiguration/MaterialSlots/Slots/23/MaterialAsset/assetId/guid",
-                    "value": "{00000000-0000-0000-0000-000000000000}"
-                },
-                {
-                    "op": "replace",
-                    "path": "/Entities/Entity_[729070309458]/Components/Component_[9485936813148123686]/ColliderConfiguration/MaterialSlots/Slots/23/MaterialAsset/assetId/subId",
-                    "value": 0
-                },
-                {
-                    "op": "replace",
-                    "path": "/Entities/Entity_[729070309458]/Components/Component_[9485936813148123686]/ColliderConfiguration/MaterialSlots/Slots/23/MaterialAsset/assetHint",
-                    "value": ""
-                },
-                {
-                    "op": "replace",
-                    "path": "/Entities/Entity_[729070309458]/Components/Component_[9485936813148123686]/ColliderConfiguration/MaterialSlots/Slots/24/MaterialAsset/assetId/guid",
-                    "value": "{00000000-0000-0000-0000-000000000000}"
-                },
-                {
-                    "op": "replace",
-                    "path": "/Entities/Entity_[729070309458]/Components/Component_[9485936813148123686]/ColliderConfiguration/MaterialSlots/Slots/24/MaterialAsset/assetId/subId",
-                    "value": 0
-                },
-                {
-                    "op": "replace",
-                    "path": "/Entities/Entity_[729070309458]/Components/Component_[9485936813148123686]/ColliderConfiguration/MaterialSlots/Slots/24/MaterialAsset/assetHint",
-                    "value": ""
+                    "path": "/Entities/Entity_[729070309458]/Components/Component_[9485936813148123686]/ShapeConfiguration/PhysicsAsset/Configuration/PhysicsAsset/assetHint",
+                    "value": "o3descene/warehouse.fbx.pxmesh"
                 }
             ]
         }

@@ -34,7 +34,7 @@ namespace ROS2
             m_namespace = ROS2Names::RosifyName(m_entityName);
             break;
         case NamespaceStrategy::Custom:
-            // Leave the namespace as is
+            m_namespace = m_customNamespace;
             break;
         default:
             AZ_Assert(false, "Unhandled namespace strategy");
@@ -46,6 +46,21 @@ namespace ROS2
     {
         UpdateNamespace();
         return AZ::Edit::PropertyRefreshLevels::EntireTree;
+    }
+
+    AZStd::string NamespaceConfiguration::GetNamespace() const
+    {
+        if (m_parentNamespace.empty())
+        {
+            return m_namespace;
+        }
+
+        if (m_namespace.empty())
+        {
+            return m_parentNamespace;
+        }
+
+        return ROS2Names::GetNamespacedName(m_parentNamespace, m_namespace);
     }
 
     AZStd::string NamespaceConfiguration::GetNamespace(const AZStd::string& parentNamespace) const
@@ -63,16 +78,28 @@ namespace ROS2
         return ROS2Names::GetNamespacedName(parentNamespace, m_namespace);
     }
 
-    void NamespaceConfiguration::SetNamespace(const AZStd::string& ns, NamespaceStrategy strategy)
+    void NamespaceConfiguration::SetNamespace(const AZStd::string& ros2Namespace, NamespaceStrategy strategy)
     {
-        m_namespace = ns;
+        m_namespace = ros2Namespace;
         m_namespaceStrategy = strategy;
+        UpdateNamespace();
+    }
+
+    void NamespaceConfiguration::SetParentNamespace(const AZStd::string& parentNamespace)
+    {
+        m_parentNamespace = parentNamespace;
         UpdateNamespace();
     }
 
     bool NamespaceConfiguration::IsNamespaceCustom() const
     {
         return m_namespaceStrategy == NamespaceConfiguration::NamespaceStrategy::Custom;
+    }
+
+    void NamespaceConfiguration::Init()
+    {
+        // Make sure that the namespace is up to date.
+        OnNamespaceStrategySelected();
     }
 
     void NamespaceConfiguration::Reflect(AZ::ReflectContext* context)
@@ -82,7 +109,7 @@ namespace ROS2
             serializeContext->Class<NamespaceConfiguration>()
                 ->Version(1)
                 ->Field("Namespace Strategy", &NamespaceConfiguration::m_namespaceStrategy)
-                ->Field("Namespace", &NamespaceConfiguration::m_namespace);
+                ->Field("Namespace", &NamespaceConfiguration::m_customNamespace);
 
             if (AZ::EditContext* ec = serializeContext->GetEditContext())
             {
@@ -92,14 +119,14 @@ namespace ROS2
                         &NamespaceConfiguration::m_namespaceStrategy,
                         "Namespace strategy",
                         "Determines how namespace for frames and topics is created from the hierarchy")
-                    ->Attribute(AZ::Edit::Attributes::ChangeNotify, &NamespaceConfiguration::OnNamespaceStrategySelected)
                     ->EnumAttribute(NamespaceConfiguration::NamespaceStrategy::Default, "Default")
                     ->EnumAttribute(NamespaceConfiguration::NamespaceStrategy::Empty, "Empty")
                     ->EnumAttribute(NamespaceConfiguration::NamespaceStrategy::FromEntityName, "Generate from entity name")
                     ->EnumAttribute(NamespaceConfiguration::NamespaceStrategy::Custom, "Custom")
-                    ->DataElement(AZ::Edit::UIHandlers::Default, &NamespaceConfiguration::m_namespace, "Namespace", "Namespace")
+                    ->DataElement(AZ::Edit::UIHandlers::Default, &NamespaceConfiguration::m_customNamespace, "Namespace", "Namespace")
                     ->Attribute(AZ::Edit::Attributes::Visibility, &NamespaceConfiguration::IsNamespaceCustom)
-                    ->Attribute(AZ::Edit::Attributes::ChangeValidate, &ROS2Names::ValidateNamespaceField);
+                    ->Attribute(AZ::Edit::Attributes::ChangeValidate, &ROS2Names::ValidateNamespaceField)
+                    ->Attribute(AZ::Edit::Attributes::ChangeNotify, &NamespaceConfiguration::UpdateNamespace);
             }
         }
     }

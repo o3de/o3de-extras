@@ -1,6 +1,7 @@
 {
     "project_name": "${Name}",
-    "project_id": "{16D27830-D7FF-4124-B20B-2CF0387E8C7D}",
+    "version": "${Version}",
+    "project_id": "${ProjectId}",
     "origin": "https://github.com/o3de/o3de-${NameLower}",
     "license": "For terms please see the LICENSE*.TXT file at the root of this distribution.",
     "display_name": "${Name}",
@@ -13,5 +14,34 @@
     ],
     "icon_path": "preview.png",
     "engine": "o3de",
-    "external_subdirectories": []
+    "external_subdirectories": [
+        "Gem"
+    ],
+    "restricted": "${Name}",
+    "gem_names": [
+        "${Name}",
+        "Atom",
+        "AudioSystem",
+        "CameraFramework",
+        "DebugDraw",
+        "DiffuseProbeGrid",
+        "EditorPythonBindings",
+        "EMotionFX",
+        "GameState",
+        "ImGui",
+        "LandscapeCanvas",
+        "LyShine",
+        "MiniAudio",
+        "Multiplayer",
+        "PhysX",
+        "PrimitiveAssets",
+        "PrefabBuilder",
+        "SaveData",
+        "ScriptCanvasPhysics",
+        "ScriptEvents",
+        "StartingPointInput",
+        "TextureAtlas",
+        "WhiteBox",
+        "RemoteTools"
+    ]
 }

@@ -7,10 +7,10 @@
  */
 
 #include <Imu/ROS2ImuSensorComponent.h>
-#include <ROS2/Frame/ROS2FrameComponent.h>
+#include <ROS2/Frame/ROS2FrameEditorComponent.h>
+#include <RobotImporter/SDFormat/ROS2SDFormatHooksUtils.h>
 #include <RobotImporter/SDFormat/ROS2SensorHooks.h>
-#include <RobotImporter/SDFormat/ROS2SensorHooksUtils.h>
-#include <Source/EditorStaticRigidBodyComponent.h>
+#include <Source/EditorArticulationLinkComponent.h>
 
 #include <sdf/Imu.hh>
 #include <sdf/Sensor.hh>
@@ -21,7 +21,8 @@ namespace ROS2::SDFormat
     {
         SensorImporterHook importerHook;
         importerHook.m_sensorTypes = AZStd::unordered_set<sdf::SensorType>{ sdf::SensorType::IMU };
-        importerHook.m_supportedSensorParams = AZStd::unordered_set<AZStd::string>{ ">update_rate",
+        importerHook.m_supportedSensorParams = AZStd::unordered_set<AZStd::string>{ ">pose",
+                                                                                    ">update_rate",
                                                                                     ">imu>angular_velocity>x>noise>mean",
                                                                                     ">imu>angular_velocity>x>noise>stddev",
                                                                                     ">imu>angular_velocity>y>noise>mean",
@@ -33,9 +34,13 @@ namespace ROS2::SDFormat
                                                                                     ">imu>linear_acceleration>y>noise>mean",
                                                                                     ">imu>linear_acceleration>y>noise>stddev",
                                                                                     ">imu>linear_acceleration>z>noise>mean",
-                                                                                    ">imu>linear_acceleration>z>noise>stddev" };
+                                                                                    ">imu>linear_acceleration>z>noise>stddev",
+                                                                                    ">topic",
+                                                                                    ">visualize" };
         importerHook.m_pluginNames = AZStd::unordered_set<AZStd::string>{ "libgazebo_ros_imu_sensor.so" };
-        importerHook.m_supportedPluginParams = AZStd::unordered_set<AZStd::string>{};
+        importerHook.m_supportedPluginParams =
+            AZStd::unordered_set<AZStd::string>{ ">topicName",     ">ros>remapping", ">ros>argument",   ">ros>frame_name",
+                                                 ">ros>namespace", ">frameName",     ">robotNamespace", ">updateRate" };
         importerHook.m_sdfSensorToComponentCallback = [](AZ::Entity& entity,
                                                          const sdf::Sensor& sdfSensor) -> SensorImporterHook::ConvertSensorOutcome
         {
@@ -76,23 +81,34 @@ namespace ROS2::SDFormat
                 }
             }
 
+            const auto imuPluginParams = HooksUtils::GetPluginParams(sdfSensor.Plugins());
+            const auto element = sdfSensor.Element();
+
             SensorConfiguration sensorConfiguration;
-            sensorConfiguration.m_frequency = sdfSensor.UpdateRate();
+            sensorConfiguration.m_frequency = HooksUtils::GetFrequency(imuPluginParams);
             const AZStd::string messageType = "sensor_msgs::msg::Imu";
-            Utils::AddTopicConfiguration(sensorConfiguration, "imu", messageType, messageType);
+
+            // setting imu topic
+            const AZStd::string messageTopic = HooksUtils::GetTopicName(imuPluginParams, element, "imu");
+            element->Get<bool>("visualize", sensorConfiguration.m_visualize, false);
+
+            HooksUtils::AddTopicConfiguration(sensorConfiguration, messageTopic, messageType, messageType);
+
+            // Get frame configuration
+            const auto frameConfiguration = HooksUtils::GetFrameConfiguration(imuPluginParams);
 
             // Create required components
-            Utils::CreateComponent<ROS2FrameComponent>(entity);
-            Utils::CreateComponent<PhysX::EditorStaticRigidBodyComponent>(entity);
-
+            HooksUtils::CreateComponent<ROS2FrameEditorComponent>(entity, frameConfiguration);
+            HooksUtils::CreateComponent<PhysX::EditorArticulationLinkComponent>(entity);
+            
             // Create Imu component
-            if (Utils::CreateComponent<ROS2ImuSensorComponent>(entity, sensorConfiguration, imuConfiguration))
+            if (HooksUtils::CreateComponent<ROS2ImuSensorComponent>(entity, sensorConfiguration, imuConfiguration))
             {
                 return AZ::Success();
             }
             else
             {
-                return AZ::Failure(AZStd::string("Failed to create ROS2 Imu Sensor component"));
+                return AZ::Failure(AZStd::string("Failed to create ROS 2 Imu Sensor component"));
             }
         };
 

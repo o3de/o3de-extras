@@ -22,6 +22,7 @@ namespace ROS2
                 ->Field("SmoothingLength", &FollowingCameraConfiguration::m_smoothingBuffer)
                 ->Field("ZoomSpeed", &FollowingCameraConfiguration::m_zoomSpeed)
                 ->Field("RotationSpeed", &FollowingCameraConfiguration::m_rotationSpeed)
+                ->Field("LockZAxis", &FollowingCameraConfiguration::m_lockZAxis)
                 ->Field("DefaultView", &FollowingCameraConfiguration::m_defaultView);
 
             if (AZ::EditContext* ec = serialize->GetEditContext())
@@ -43,6 +44,7 @@ namespace ROS2
                         "Rotation Speed around the target")
                     ->DataElement(
                         AZ::Edit::UIHandlers::Default, &FollowingCameraConfiguration::m_predefinedViews, "Views", "Views to follow")
+                    ->DataElement(AZ::Edit::UIHandlers::Default, &FollowingCameraConfiguration::m_lockZAxis, "Lock Z Axis", "Prevent camera from tilting")
                     ->DataElement(
                         AZ::Edit::UIHandlers::Default,
                         &FollowingCameraConfiguration::m_defaultView,

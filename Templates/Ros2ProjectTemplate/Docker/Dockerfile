@@ -4,20 +4,19 @@
 # SPDX-License-Identifier: Apache-2.0 OR MIT
 #
 
-ARG ROS_VERSION=iron
-ARG UBUNTU_VERSION=jammy
+ARG ROS_VERSION=jazzy
 
-FROM ros:${ROS_VERSION}-ros-base-${UBUNTU_VERSION}
+FROM ros:${ROS_VERSION}-ros-base
 
 # Argument to determining the image type ('simulation' or 'navstack')
 ARG IMAGE_TYPE=simulation  # Default to 'simulation'
 
 # Arguments for the source repos needed for the Ros2Template sample docker
 ARG O3DE_REPO=https://github.com/o3de/o3de.git
-ARG O3DE_BRANCH=2305.0
+ARG O3DE_BRANCH=main
 
 ARG O3DE_EXTRAS_REPO=https://github.com/o3de/o3de-extras.git
-ARG O3DE_EXTRAS_BRANCH=2305.0
+ARG O3DE_EXTRAS_BRANCH=main
 
 # Additional argument to control build concurrency
 ARG CMAKE_JOBS=8
@@ -30,22 +29,11 @@ WORKDIR $WORKSPACE
 
 RUN apt-get update && apt-get upgrade -y
 
-# For ubuntu 20.04 (focal) the default version of cmake is not supported. Update and get version 3.24.1 from kitware
-RUN if [ "${UBUNTU_VERSION}" = "focal" ]; then \
-        apt-get install -y --no-install-recommends gpg wget curl && \
-        wget -O - https://apt.kitware.com/keys/kitware-archive-latest.asc 2>/dev/null | \
-            gpg --dearmor - | \
-            tee /usr/share/keyrings/kitware-archive-keyring.gpg >/dev/null && \
-        echo 'deb [signed-by=/usr/share/keyrings/kitware-archive-keyring.gpg] https://apt.kitware.com/ubuntu/ focal main' | \
-            tee /etc/apt/sources.list.d/kitware.list >/dev/null && \
-        apt-get update; \
-    fi
-
 # Install packages needed for cloning and building from the source repos
 RUN apt-get install -y --no-install-recommends \
     git \
     git-lfs \
-    clang-12 \
+    clang \
     ninja-build \
     cmake \
     libglu1-mesa-dev \

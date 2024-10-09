@@ -12,6 +12,7 @@
 #include "CollidersMaker.h"
 #include "InertialsMaker.h"
 #include "JointsMaker.h"
+#include "RobotControlMaker.h"
 #include "SensorsMaker.h"
 #include "UrdfParser.h"
 #include "VisualsMaker.h"
@@ -66,13 +67,16 @@ namespace ROS2
         const AZStd::string& GetPrefabPath() const;
 
         //! Get descriptive status of import.
-        //! A string with the status, which can be understood by the user.
+        //! A string with the status in Markdown format.
         AZStd::string GetStatus();
 
     private:
         AzToolsFramework::Prefab::PrefabEntityResult CreateEntityForModel(const sdf::Model& model);
-        AzToolsFramework::Prefab::PrefabEntityResult AddEntitiesForLink(const sdf::Link& link, const sdf::Model* attachedModel, AZ::EntityId parentEntityId, AZStd::vector<AZ::EntityId>& createdEntities);
-        void AddRobotControl(AZ::EntityId rootEntityId);
+        AzToolsFramework::Prefab::PrefabEntityResult AddEntitiesForLink(
+            const sdf::Link& link,
+            const sdf::Model* attachedModel,
+            AZ::EntityId parentEntityId,
+            AZStd::vector<AZ::EntityId>& createdEntities);
         static void MoveEntityToDefaultSpawnPoint(const AZ::EntityId& rootEntityId, AZStd::optional<AZ::Transform> spawnPosition);
 
         // Returns if SDF document contains any model objects, be that at the root or within an <world> tag
@@ -86,9 +90,21 @@ namespace ROS2
         InertialsMaker m_inertialsMaker;
         JointsMaker m_jointsMaker;
         ArticulationsMaker m_articulationsMaker;
+        RobotControlMaker m_controlMaker;
 
+        //! Type of a status message.
+        enum class StatusMessageType
+        {
+            Model = 0,
+            Link,
+            Joint,
+            Sensor,
+            SensorPlugin,
+            ModelPlugin
+        };
         AZStd::mutex m_statusLock;
-        AZStd::multimap<AZStd::string, AZStd::string> m_status;
+        AZStd::multimap<StatusMessageType, AZStd::string> m_status;
+        unsigned int m_articulationsCounter{ 0u };
 
         AZStd::shared_ptr<Utils::UrdfAssetMap> m_urdfAssetsMapping;
         bool m_useArticulations{ false };
