@@ -209,7 +209,7 @@
                     "sha256": "aace14afcbe3feda0be0b11cb3610d93ec8e3e55a7b2f185df51ea468e7e7554"
                 },
                 {
-                    "version": "3.1.1",
+                    "version": "3.2.1",
                     "origin_url": "https://robotec.ai",
                     "source_control_uri": "https://github.com/o3de/o3de-extras/development/Gems/ROS2",
                     "compatible_engines": [
@@ -226,7 +226,7 @@
                         "PrimitiveAssets",
                         "StartingPointInput"
                     ],
-                    "download_source_uri": "https://github.com/o3de/o3de-extras/releases/download/2.0/ros2-3.1.1-gem.zip",
+                    "download_source_uri": "https://github.com/o3de/o3de-extras/releases/download/2.0/ros2-3.2.1-gem.zip",
                     "sha256": "2098559defed56d29b064dd3541dca153ecb3594bd5eeada3cb85e98309825f5"
                 }
             ]
