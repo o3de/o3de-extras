@@ -15,6 +15,6 @@
     "documentation_url": "",
     "dependencies": [],
     "repo_uri": "https://raw.githubusercontent.com/o3de/o3de-extras/development",
-    "download_source_uri": "https://github.com/o3de/o3de-extras/releases/download/2.0/xr-1.0.0-gem.zip",
+    "download_source_uri": "https://github.com/o3de/o3de-extras/releases/download/2.0/xr-1.0.1-gem.zip",
     "version": "1.0.1"
 }
