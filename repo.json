@@ -226,8 +226,8 @@
                         "PrimitiveAssets",
                         "StartingPointInput"
                     ],
-                    "download_source_uri": "https://github.com/o3de/o3de-extras/releases/download/2.0/ros2-3.2.1-gem.zip",
-                    "sha256": "2098559defed56d29b064dd3541dca153ecb3594bd5eeada3cb85e98309825f5"
+                    "download_source_uri": "https://github.com/o3de/o3de-extras/releases/download/2.0//ros2-3.2.1-gem.zip",
+                    "sha256": "9ed6ecb4897fcb38d785ff59dff7c6691a34044df7f7822ea9e4ea54e29d03f9"
                 }
             ]
         },
