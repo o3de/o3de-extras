@@ -9,6 +9,7 @@
 
 #include <sensor_msgs/msg/point_cloud2.hpp>
 #include <AzCore/std/optional.h>
+#include <AzCore/std/string/string.h>
 
 namespace ROS2
 {
