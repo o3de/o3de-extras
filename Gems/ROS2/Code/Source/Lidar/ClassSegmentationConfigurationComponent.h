@@ -26,15 +26,8 @@ namespace ROS2
 
         static void Reflect(AZ::ReflectContext* context);
 
-        static void GetProvidedServices(AZ::ComponentDescriptor::DependencyArrayType& provided)
-        {
-            provided.push_back(AZ_CRC_CE("ClassSegmentationConfig"));
-        }
-
-        static void GetIncompatibleServices(AZ::ComponentDescriptor::DependencyArrayType& incompatible)
-        {
-            incompatible.push_back(AZ_CRC_CE("ClassSegmentationConfig"));
-        }
+        static void GetProvidedServices(AZ::ComponentDescriptor::DependencyArrayType& provided);
+        static void GetIncompatibleServices(AZ::ComponentDescriptor::DependencyArrayType& incompatible);
 
         // ClassSegmentationRequestBus overrides
         AZ::Color GetClassColor(uint8_t classId) const;
@@ -45,10 +38,10 @@ namespace ROS2
         void Activate() override;
         void Deactivate() override;
 
-        AZ::Outcome<void, AZStd::string> ValidateSegmentationClasses(void* newValue, const AZ::TypeId& valueType) const;
-
     private:
+        AZ::Outcome<void, AZStd::string> ValidateSegmentationClasses(void* newValue, const AZ::TypeId& valueType) const;
         void ConstructSegmentationClassMaps();
+
         SegmentationClassConfigList m_segmentationClasses{ SegmentationClassConfiguration::UnknownClass,
                                                            SegmentationClassConfiguration::GroundClass };
         AZStd::unordered_map<LmbrCentral::Tag, uint8_t> m_tagToClassId;

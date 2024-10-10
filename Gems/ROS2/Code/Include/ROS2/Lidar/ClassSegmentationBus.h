@@ -57,44 +57,4 @@ namespace ROS2
 
     using ClassSegmentationRequestBus = AZ::EBus<ClassSegmentationRequests, ClassSegmentationRequestBusTraits>;
     using ClassSegmentationInterface = AZ::Interface<ClassSegmentationRequests>;
-
-    //! Notification bus for segmentation class global configuration.
-    class ClassSegmentationNotifications : public AZ::EBusTraits
-    {
-    private:
-        template<class Bus>
-        struct ClassSegmentationConnectionPolicy : public AZ::EBusConnectionPolicy<Bus>
-        {
-            static void Connect(
-                typename Bus::BusPtr& busPtr,
-                typename Bus::Context& context,
-                typename Bus::HandlerNode& handler,
-                typename Bus::Context::ConnectLockGuard& connectLock,
-                const typename Bus::BusIdType& id = 0)
-            {
-                AZ::EBusConnectionPolicy<Bus>::Connect(busPtr, context, handler, connectLock, id);
-
-                if (ClassSegmentationInterface::Get())
-                {
-                    handler->OnSegmentationClassesReady();
-                }
-            }
-        };
-
-    public:
-        template<typename Bus>
-        using ConnectionPolicy = ClassSegmentationConnectionPolicy<Bus>;
-
-        //////////////////////////////////////////////////////////////////////////
-        // EBusTraits overrides
-        static const AZ::EBusHandlerPolicy HandlerPolicy = AZ::EBusHandlerPolicy::Multiple;
-        static const AZ::EBusAddressPolicy AddressPolicy = AZ::EBusAddressPolicy::Single;
-        //////////////////////////////////////////////////////////////////////////
-
-        virtual void OnSegmentationClassesReady()
-        {
-        }
-        //////////////////////////////////////////////////////////////////////////
-    };
-    using ClassSegmentationNotificationBus = AZ::EBus<ClassSegmentationNotifications>;
 } // namespace ROS2

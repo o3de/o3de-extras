@@ -209,10 +209,7 @@ namespace ROS2
                 {
                     const auto entityId = requestResult.m_hits[0].m_entityId;
                     const uint8_t classId = GetClassIdForEntity(entityId);
-                    // We have to map existing entity IDs from the original 64 bits onto 32 bits.
-                    // This may result in collisions but the chances are slim.
-                    const int32_t compressedEntityId =
-                        (aznumeric_cast<AZ::u64>(entityId) >> 32) ^ (aznumeric_cast<AZ::u64>(entityId) & 0xFFFFFFFF);
+                    const int32_t compressedEntityId = CompressEntityId(entityId);
 
                     segmentationIt.value()->m_classId = classId;
                     segmentationIt.value()->m_entityId = compressedEntityId;
@@ -253,5 +250,11 @@ namespace ROS2
     void LidarRaycaster::ConfigureMaxRangePointAddition(bool addMaxRangePoints)
     {
         m_addMaxRangePoints = addMaxRangePoints;
+    }
+
+    int32_t LidarRaycaster::CompressEntityId(AZ::EntityId entityId)
+    {
+        // Mapping the 64 bit entity ID onto a 32 integer may result in collisions but the chances are slim.
+        return (aznumeric_cast<AZ::u64>(entityId) >> 32) ^ (aznumeric_cast<AZ::u64>(entityId) & 0xFFFFFFFF);
     }
 } // namespace ROS2

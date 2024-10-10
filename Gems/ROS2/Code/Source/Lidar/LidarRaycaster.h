@@ -37,6 +37,8 @@ namespace ROS2
         void ConfigureMaxRangePointAddition(bool addMaxRangePoints) override;
 
     private:
+        static int32_t CompressEntityId(AZ::EntityId entityId);
+
         AzPhysics::SceneQueryRequests prepareRequests(
             const AZ::Transform& lidarTransform, const AZStd::vector<AZ::Vector3>& rayDirections) const;
         [[nodiscard]] uint8_t GetClassIdForEntity(AZ::EntityId entityId);

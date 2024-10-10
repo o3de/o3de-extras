@@ -37,6 +37,16 @@ namespace ROS2
         }
     }
 
+    void ClassSegmentationConfigurationComponent::GetProvidedServices(AZ::ComponentDescriptor::DependencyArrayType& provided)
+    {
+        provided.push_back(AZ_CRC_CE("ClassSegmentationConfig"));
+    }
+
+    void ClassSegmentationConfigurationComponent::GetIncompatibleServices(AZ::ComponentDescriptor::DependencyArrayType& incompatible)
+    {
+        incompatible.push_back(AZ_CRC_CE("ClassSegmentationConfig"));
+    }
+
     AZ::Color ClassSegmentationConfigurationComponent::GetClassColor(uint8_t classId) const
     {
         auto it = m_classIdToColor.find(classId);
@@ -72,8 +82,6 @@ namespace ROS2
         {
             ClassSegmentationInterface::Register(this);
         }
-
-        ClassSegmentationNotificationBus::Broadcast(&ClassSegmentationNotifications::OnSegmentationClassesReady);
     }
 
     void ClassSegmentationConfigurationComponent::Deactivate()
@@ -82,18 +90,21 @@ namespace ROS2
         {
             ClassSegmentationInterface::Unregister(this);
         }
+
+        m_classIdToColor.clear();
+        m_tagToClassId.clear();
     }
 
     AZ::Outcome<void, AZStd::string> ClassSegmentationConfigurationComponent::ValidateSegmentationClasses(
         void* newValue, const AZ::TypeId& valueType) const
     {
+        AZ_Assert(azrtti_typeid<SegmentationClassConfigList>() == valueType, "Unexpected value type");
         if (azrtti_typeid<SegmentationClassConfigList>() != valueType)
         {
-            AZ_Assert(false, "Unexpected value type");
             return AZ::Failure(AZStd::string("Unexpectedly received an invalid type as segmentation classes!"));
         }
 
-        const auto& segmentationClasses = *reinterpret_cast<SegmentationClassConfigList*>(newValue);
+        const auto& segmentationClasses = *azrtti_cast<SegmentationClassConfigList*>(newValue);
 
         bool unknownPresent{ false }, groundPresent{ false };
         for (const auto& segmentationClass : segmentationClasses)
