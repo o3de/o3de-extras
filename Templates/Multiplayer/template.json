@@ -1,5 +1,6 @@
 {
     "template_name": "Multiplayer",
+    "version": "2.0.0",
     "origin": "Open 3D Engine - o3de.org",
     "license": "https://opensource.org/licenses/MIT",
     "display_name": "Multiplayer",
@@ -1472,5 +1473,7 @@
         {
             "dir": "cmake"
         }
-    ]
+    ],
+    "repo_uri": "https://raw.githubusercontent.com/o3de/o3de-extras/development",
+    "download_source_uri": "https://github.com/o3de/o3de-extras/releases/download/2.0/multiplayer-2.0.0-template.zip"
 }
