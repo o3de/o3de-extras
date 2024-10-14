@@ -82,6 +82,12 @@ namespace ROS2
     {
         m_namespace = ros2Namespace;
         m_namespaceStrategy = strategy;
+
+        if (strategy == NamespaceStrategy::Custom)
+        {
+            m_customNamespace = ros2Namespace;
+        }
+
         UpdateNamespace();
     }
 
