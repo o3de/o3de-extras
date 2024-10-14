@@ -145,7 +145,6 @@ namespace UnitTest
         entity.CreateComponent<AzFramework::TransformComponent>();
         auto frame = entity.CreateComponent<ROS2::ROS2FrameComponent>(config);
 
-
         entity.Init();
         entity.Activate();
 
