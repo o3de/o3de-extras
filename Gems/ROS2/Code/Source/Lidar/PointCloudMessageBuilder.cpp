@@ -5,6 +5,7 @@
  * SPDX-License-Identifier: Apache-2.0 OR MIT
  *
  */
+#include <AzCore/std/string/string.h>
 #include <Lidar/PointCloudMessageBuilder.h>
 #include <sensor_msgs/point_cloud2_iterator.hpp>
 

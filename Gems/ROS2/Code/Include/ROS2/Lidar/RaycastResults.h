@@ -7,8 +7,8 @@
  */
 #pragma once
 
-#include <AzCore/std/containers/span.h>
 #include <AzCore/Math/Vector3.h>
+#include <AzCore/std/containers/span.h>
 #include <AzCore/std/containers/vector.h>
 
 namespace ROS2
