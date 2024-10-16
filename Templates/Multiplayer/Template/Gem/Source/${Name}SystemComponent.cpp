@@ -44,6 +44,12 @@ namespace ${SanitizedCppName}
 
     void ${SanitizedCppName}SystemComponent::GetRequiredServices([[maybe_unused]] AZ::ComponentDescriptor::DependencyArrayType& required)
     {
+        required.push_back(AZ_CRC_CE("NetworkingService"));
+
+        // Ensure Multiplayer gem is a requirement so that MultiplayerSystemComponent calls RegisterMultiplayerComponents before this component activates.
+        // It's important for multiplayer components to be registered in a consistent order so that the server and client
+        //   assign the same component-id for each component.
+        required.push_back(AZ_CRC_CE("MultiplayerService"));
     }
 
     void ${SanitizedCppName}SystemComponent::GetDependentServices([[maybe_unused]] AZ::ComponentDescriptor::DependencyArrayType& dependent)
