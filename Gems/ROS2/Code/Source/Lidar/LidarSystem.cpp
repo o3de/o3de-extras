@@ -25,8 +25,8 @@ namespace ROS2
     void LidarSystem::Activate()
     {
         static constexpr const char* Description = "Collider-based lidar implementation that uses the PhysX engine's raycasting.";
-        static constexpr auto SupportedFeatures =
-            aznumeric_cast<LidarSystemFeatures>(LidarSystemFeatures::CollisionLayers | LidarSystemFeatures::MaxRangePoints);
+        static constexpr auto SupportedFeatures = aznumeric_cast<LidarSystemFeatures>(
+            LidarSystemFeatures::CollisionLayers | LidarSystemFeatures::MaxRangePoints | LidarSystemFeatures::Segmentation);
 
         LidarSystemRequestBus::Handler::BusConnect(AZ_CRC(SystemName));
 

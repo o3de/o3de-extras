@@ -24,6 +24,7 @@ namespace ROS2
     public:
         AZ_TYPE_INFO(LidarCore, "{e46126a2-7a86-bb65-367a-416f2cab393c}");
         static void Reflect(AZ::ReflectContext* context);
+        static RaycastResultFlags GetRaycastResultFlagsForConfig(const LidarSensorConfiguration& configuration);
 
         LidarCore(const AZStd::vector<LidarTemplate::LidarModel>& availableModels = {});
         LidarCore(const LidarSensorConfiguration& lidarConfiguration);
@@ -49,8 +50,6 @@ namespace ROS2
         LidarSensorConfiguration m_lidarConfiguration;
 
     private:
-        static RaycastResultFlags GetRaycastResultFlagsForConfig(const LidarSensorConfiguration& configuration);
-
         void ConnectToLidarRaycaster();
         void ConfigureLidarRaycaster();
 

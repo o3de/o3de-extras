@@ -7,14 +7,14 @@
  */
 #pragma once
 
+#include "ROS2/Lidar/LidarRegistrarBus.h"
 #include <AzCore/Component/EntityId.h>
 #include <AzCore/RTTI/RTTI.h>
 #include <AzCore/Serialization/SerializeContext.h>
 #include <AzCore/std/string/string.h>
-
-#include "LidarRegistrarSystemComponent.h"
-#include "LidarTemplate.h"
-#include "LidarTemplateUtils.h"
+#include <Lidar/LidarRegistrarSystemComponent.h>
+#include <Lidar/LidarTemplate.h>
+#include <Lidar/LidarTemplateUtils.h>
 
 namespace ROS2
 {
@@ -39,6 +39,7 @@ namespace ROS2
         AZStd::unordered_set<AZ::u32> m_ignoredCollisionLayers;
         AZStd::vector<AZ::EntityId> m_excludedEntities;
 
+        bool m_isSegmentationEnabled = false;
         bool m_addPointsAtMax = false;
 
     private:
@@ -46,7 +47,7 @@ namespace ROS2
         bool IsIgnoredLayerConfigurationVisible() const;
         bool IsEntityExclusionVisible() const;
         bool IsMaxPointsConfigurationVisible() const;
-
+        bool IsSegmentationConfigurationVisible() const;
         //! Update the lidar configuration based on the current lidar model selected.
         void FetchLidarModelConfiguration();
 

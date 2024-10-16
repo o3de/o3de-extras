@@ -37,8 +37,12 @@ namespace ROS2
         void ConfigureMaxRangePointAddition(bool addMaxRangePoints) override;
 
     private:
+        static int32_t CompressEntityId(AZ::EntityId entityId);
+
         AzPhysics::SceneQueryRequests prepareRequests(
             const AZ::Transform& lidarTransform, const AZStd::vector<AZ::Vector3>& rayDirections) const;
+        [[nodiscard]] uint8_t GetClassIdForEntity(AZ::EntityId entityId);
+
         LidarId m_busId;
         //! EntityId that is used to acquire the physics scene handle.
         AZ::EntityId m_sceneEntityId;
@@ -50,5 +54,6 @@ namespace ROS2
         AZStd::vector<AZ::Quaternion> m_rayRotations{ { AZ::Quaternion::CreateZero() } };
 
         AZStd::unordered_set<AZ::u32> m_ignoredCollisionLayers;
+        AZStd::unordered_map<AZ::EntityId, uint8_t> m_entityIdToClassIdCache;
     };
 } // namespace ROS2

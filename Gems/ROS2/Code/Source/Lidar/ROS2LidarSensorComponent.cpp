@@ -12,6 +12,7 @@
 #include <Lidar/PointCloudMessageBuilder.h>
 #include <Lidar/ROS2LidarSensorComponent.h>
 #include <ROS2/Frame/ROS2FrameComponent.h>
+#include <ROS2/Lidar/ClassSegmentationBus.h>
 #include <ROS2/Utilities/ROS2Names.h>
 #include <sensor_msgs/point_cloud2_iterator.hpp>
 
@@ -103,6 +104,13 @@ namespace ROS2
             const TopicConfiguration& publisherConfig = m_sensorConfiguration.m_publishersConfigurations[PointCloudType];
             AZStd::string fullTopic = ROS2Names::GetNamespacedName(GetNamespace(), publisherConfig.m_topic);
             m_pointCloudPublisher = ros2Node->create_publisher<sensor_msgs::msg::PointCloud2>(fullTopic.data(), publisherConfig.GetQoS());
+
+            const auto resultFlags = LidarCore::GetRaycastResultFlagsForConfig(m_lidarCore.m_lidarConfiguration);
+            if (IsFlagEnabled(RaycastResultFlags::SegmentationData, resultFlags))
+            {
+                m_segmentationClassesPublisher = ros2Node->create_publisher<vision_msgs::msg::LabelInfo>(
+                    ROS2Names::GetNamespacedName(GetNamespace(), "segmentation_classes").data(), publisherConfig.GetQoS());
+            }
         }
 
         StartSensor(
@@ -150,10 +158,11 @@ namespace ROS2
         PublishRaycastResults(lastScanResults.value());
     }
 
+    template<typename T>
+    using Pc2MsgIt = sensor_msgs::PointCloud2Iterator<T>;
+
     void ROS2LidarSensorComponent::PublishRaycastResults(const RaycastResults& results)
     {
-        const bool isIntensityEnabled = m_lidarCore.m_lidarConfiguration.m_lidarSystemFeatures & LidarSystemFeatures::Intensity;
-
         auto builder = PointCloud2MessageBuilder(
             GetEntity()->FindComponent<ROS2FrameComponent>()->GetFrameID(), ROS2Interface::Get()->GetROSTimestamp(), results.GetCount());
 
@@ -161,30 +170,66 @@ namespace ROS2
             .AddField("y", sensor_msgs::msg::PointField::FLOAT32)
             .AddField("z", sensor_msgs::msg::PointField::FLOAT32);
 
-        if (isIntensityEnabled)
+        if (results.IsFieldPresent<RaycastResultFlags::Intensity>())
         {
             builder.AddField("intensity", sensor_msgs::msg::PointField::FLOAT32);
         }
+
+        if (results.IsFieldPresent<RaycastResultFlags::SegmentationData>())
+        {
+            builder.AddField("entity_id", sensor_msgs::msg::PointField::INT32);
+            builder.AddField("class_id", sensor_msgs::msg::PointField::UINT8);
+            builder.AddField("rgba", sensor_msgs::msg::PointField::UINT32);
+        }
+
         sensor_msgs::msg::PointCloud2 message = builder.Get();
 
-
-        sensor_msgs::PointCloud2Iterator<float> messageXIt(message, "x");
-        sensor_msgs::PointCloud2Iterator<float> messageYIt(message, "y");
-        sensor_msgs::PointCloud2Iterator<float> messageZIt(message, "z");
+        Pc2MsgIt<float> messageXIt(message, "x");
+        Pc2MsgIt<float> messageYIt(message, "y");
+        Pc2MsgIt<float> messageZIt(message, "z");
 
         const auto positionField = results.GetConstFieldSpan<RaycastResultFlags::Point>().value();
         auto positionIt = positionField.begin();
 
-        AZStd::optional<sensor_msgs::PointCloud2Iterator<float>> messageIntensityIt;
+        AZStd::optional<Pc2MsgIt<float>> messageIntensityIt;
         AZStd::optional<RaycastResults::FieldSpan<RaycastResultFlags::Intensity>::const_iterator> intensityIt;
-        if (isIntensityEnabled)
+        if (results.IsFieldPresent<RaycastResultFlags::Intensity>())
         {
-            messageIntensityIt = sensor_msgs::PointCloud2Iterator<float>(message, "intensity");
+            messageIntensityIt = Pc2MsgIt<float>(message, "intensity");
             intensityIt = results.GetConstFieldSpan<RaycastResultFlags::Intensity>().value().begin();
+        }
+
+        struct MessageSegmentationIterators
+        {
+            Pc2MsgIt<int32_t> m_entityIdIt;
+            Pc2MsgIt<uint8_t> m_classIdIt;
+            Pc2MsgIt<uint32_t> m_rgbaIt;
+        };
+
+        AZStd::optional<MessageSegmentationIterators> messageSegDataIts;
+        AZStd::optional<RaycastResults::FieldSpan<RaycastResultFlags::SegmentationData>::const_iterator> segDataIt;
+        if (results.IsFieldPresent<RaycastResultFlags::SegmentationData>())
+        {
+            messageSegDataIts = MessageSegmentationIterators{
+                Pc2MsgIt<int32_t>(message, "entity_id"),
+                Pc2MsgIt<uint8_t>(message, "class_id"),
+                Pc2MsgIt<uint32_t>(message, "rgba"),
+            };
+
+            segDataIt = results.GetConstFieldSpan<RaycastResultFlags::SegmentationData>().value().begin();
         }
 
         const auto entityTransform = GetEntity()->FindComponent<AzFramework::TransformComponent>();
         const auto inverseLidarTM = entityTransform->GetWorldTM().GetInverse();
+
+        auto* classSegmentationInterface = ClassSegmentationInterface::Get();
+        AZ_Warning(
+            __func__,
+            !results.IsFieldPresent<RaycastResultFlags::SegmentationData>() || classSegmentationInterface,
+            "Segmentation data was requested but the Class Segmentation interface was unavailable. Unable to fetch segmentation class "
+            "data. Please make sure to add the Class Segmentation Configuration Component to the Level Entity for this feature to work "
+            "properly.");
+
         for (size_t i = 0; i < results.GetCount(); ++i)
         {
             AZ::Vector3 point = *positionIt;
@@ -200,6 +245,22 @@ namespace ROS2
                 ++messageIntensityIt.value();
             }
 
+            if (messageSegDataIts.has_value() && segDataIt.has_value() && classSegmentationInterface)
+            {
+                const ResultTraits<RaycastResultFlags::SegmentationData>::Type segmentationData = *segDataIt.value();
+                *messageSegDataIts->m_entityIdIt = segmentationData.m_entityId;
+                *messageSegDataIts->m_classIdIt = segmentationData.m_classId;
+
+                AZ::Color color = classSegmentationInterface->GetClassColor(segmentationData.m_classId);
+                AZ::u32 rvizColorFormat = color.GetA8() << 24 | color.GetR8() << 16 | color.GetG8() << 8 | color.GetB8();
+                *messageSegDataIts->m_rgbaIt = rvizColorFormat;
+
+                ++segDataIt.value();
+                ++messageSegDataIts->m_entityIdIt;
+                ++messageSegDataIts->m_classIdIt;
+                ++messageSegDataIts->m_rgbaIt;
+            }
+
             ++positionIt;
             ++messageXIt;
             ++messageYIt;
@@ -207,5 +268,19 @@ namespace ROS2
         }
 
         m_pointCloudPublisher->publish(message);
+
+        if (m_segmentationClassesPublisher && classSegmentationInterface)
+        {
+            const auto& segmentationClassConfigList = classSegmentationInterface->GetClassConfigList();
+            vision_msgs::msg::LabelInfo segmentationClasses;
+            for (const auto& segmentationClass : segmentationClassConfigList)
+            {
+                vision_msgs::msg::VisionClass visionClass;
+                visionClass.class_id = segmentationClass.m_classId;
+                visionClass.class_name = segmentationClass.m_className.c_str();
+                segmentationClasses.class_map.push_back(visionClass);
+            }
+            m_segmentationClassesPublisher->publish(segmentationClasses);
+        }
     }
 } // namespace ROS2

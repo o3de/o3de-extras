@@ -15,6 +15,7 @@ namespace ROS2
         EnsureFlagSatisfied<RaycastResultFlags::Point>(flags, count);
         EnsureFlagSatisfied<RaycastResultFlags::Range>(flags, count);
         EnsureFlagSatisfied<RaycastResultFlags::Intensity>(flags, count);
+        EnsureFlagSatisfied<RaycastResultFlags::SegmentationData>(flags, count);
     }
 
     RaycastResults::RaycastResults(RaycastResults&& other)
@@ -22,6 +23,7 @@ namespace ROS2
         , m_points{ AZStd::move(other.m_points) }
         , m_ranges{ AZStd::move(other.m_ranges) }
         , m_intensities{ AZStd::move(other.m_intensities) }
+        , m_segmentationData{ AZStd::move(other.m_segmentationData) }
     {
         other.m_count = 0U;
     }
@@ -32,6 +34,7 @@ namespace ROS2
         ClearFieldIfPresent<RaycastResultFlags::Point>();
         ClearFieldIfPresent<RaycastResultFlags::Range>();
         ClearFieldIfPresent<RaycastResultFlags::Intensity>();
+        ClearFieldIfPresent<RaycastResultFlags::SegmentationData>();
     }
 
     void RaycastResults::Resize(size_t count)
@@ -40,6 +43,7 @@ namespace ROS2
         ResizeFieldIfPresent<RaycastResultFlags::Point>(count);
         ResizeFieldIfPresent<RaycastResultFlags::Range>(count);
         ResizeFieldIfPresent<RaycastResultFlags::Intensity>(count);
+        ResizeFieldIfPresent<RaycastResultFlags::SegmentationData>(count);
     }
 
     RaycastResults& RaycastResults::operator=(RaycastResults&& other)
@@ -55,6 +59,7 @@ namespace ROS2
         m_points = AZStd::move(other.m_points);
         m_ranges = AZStd::move(other.m_ranges);
         m_intensities = AZStd::move(other.m_intensities);
+        m_segmentationData = AZStd::move(other.m_segmentationData);
 
         return *this;
     }

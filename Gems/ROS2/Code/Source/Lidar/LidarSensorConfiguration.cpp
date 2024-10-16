@@ -17,12 +17,13 @@ namespace ROS2
         if (auto serializeContext = azrtti_cast<AZ::SerializeContext*>(context))
         {
             serializeContext->Class<LidarSensorConfiguration>()
-                ->Version(1)
+                ->Version(2)
                 ->Field("lidarModelName", &LidarSensorConfiguration::m_lidarModelName)
                 ->Field("lidarImplementation", &LidarSensorConfiguration::m_lidarSystem)
                 ->Field("LidarParameters", &LidarSensorConfiguration::m_lidarParameters)
                 ->Field("IgnoredLayerIndices", &LidarSensorConfiguration::m_ignoredCollisionLayers)
                 ->Field("ExcludedEntities", &LidarSensorConfiguration::m_excludedEntities)
+                ->Field("IsSegmentationEnabled", &LidarSensorConfiguration::m_isSegmentationEnabled)
                 ->Field("PointsAtMax", &LidarSensorConfiguration::m_addPointsAtMax);
 
             if (AZ::EditContext* ec = serializeContext->GetEditContext())
@@ -58,6 +59,13 @@ namespace ROS2
                     ->Attribute(AZ::Edit::Attributes::AutoExpand, true)
                     ->Attribute(AZ::Edit::Attributes::ContainerCanBeModified, true)
                     ->Attribute(AZ::Edit::Attributes::Visibility, &LidarSensorConfiguration::IsEntityExclusionVisible)
+                    ->DataElement(
+                        AZ::Edit::UIHandlers::Default,
+                        &LidarSensorConfiguration::m_isSegmentationEnabled,
+                        "Enable Segmentation",
+                        "Enable point cloud segmentation. Note: Make sure to add the Class Segmentation Configuration Component to the "
+                        "level entity.")
+                    ->Attribute(AZ::Edit::Attributes::Visibility, &LidarSensorConfiguration::IsSegmentationConfigurationVisible)
                     ->DataElement(
                         AZ::Edit::UIHandlers::Default,
                         &LidarSensorConfiguration::m_addPointsAtMax,
@@ -138,6 +146,11 @@ namespace ROS2
     bool LidarSensorConfiguration::IsMaxPointsConfigurationVisible() const
     {
         return m_lidarSystemFeatures & LidarSystemFeatures::MaxRangePoints;
+    }
+
+    bool LidarSensorConfiguration::IsSegmentationConfigurationVisible() const
+    {
+        return m_lidarSystemFeatures & LidarSystemFeatures::Segmentation;
     }
 
     AZ::Crc32 LidarSensorConfiguration::OnLidarModelSelected()
