@@ -22,10 +22,9 @@ namespace ROS2
         CollisionLayers =       1 << 1,
         EntityExclusion =       1 << 2,
         MaxRangePoints =        1 << 3,
-        PointcloudPublishing =  1 << 4,
-        Intensity =             1 << 5,
-        Segmentation =          1 << 6,
-        All =                   (1 << 7) - 1, // All feature bits enabled.
+        Intensity =             1 << 4,
+        Segmentation =          1 << 5,
+        All =                   (1 << 6) - 1, // All feature bits enabled.
         // clang-format on
     };
 

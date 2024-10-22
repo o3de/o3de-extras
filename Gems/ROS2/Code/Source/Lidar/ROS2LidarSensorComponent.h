@@ -51,7 +51,6 @@ namespace ROS2
         AZ::Outcome<void, const char*> PublishRaycastResults(const RaycastResults& results);
         AZ::Crc32 OnMessageFormatChanged();
 
-        bool m_canRaycasterPublish = false;
         std::shared_ptr<rclcpp::Publisher<sensor_msgs::msg::PointCloud2>> m_pointCloudPublisher;
         std::shared_ptr<rclcpp::Publisher<vision_msgs::msg::LabelInfo>> m_segmentationClassesPublisher;
 

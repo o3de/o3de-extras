@@ -88,47 +88,26 @@ namespace ROS2
 
     void ROS2LidarSensorComponent::Activate()
     {
-        m_pointCloudMessageWriter = PointCloudMessageWriter(m_messageFormat);
-
         ROS2SensorComponentBase::Activate();
+
+        m_pointCloudMessageWriter = PointCloudMessageWriter(m_messageFormat);
         const RaycastResultFlags requestedFlags =
             GetNecessaryProviders(m_messageFormat) | RaycastResultFlags::Point; // We need points for visualization.
         m_lidarCore.Init(GetEntityId(), requestedFlags);
 
         m_lidarRaycasterId = m_lidarCore.GetLidarRaycasterId();
-        m_canRaycasterPublish = false;
-        if (m_lidarCore.m_lidarConfiguration.m_lidarSystemFeatures & LidarSystemFeatures::PointcloudPublishing)
+
+        auto ros2Node = ROS2Interface::Get()->GetNode();
+        AZ_Assert(m_sensorConfiguration.m_publishersConfigurations.size() == 1, "Invalid configuration of publishers for lidar sensor");
+
+        const TopicConfiguration& publisherConfig = m_sensorConfiguration.m_publishersConfigurations[PointCloudType];
+        AZStd::string fullTopic = ROS2Names::GetNamespacedName(GetNamespace(), publisherConfig.m_topic);
+        m_pointCloudPublisher = ros2Node->create_publisher<sensor_msgs::msg::PointCloud2>(fullTopic.data(), publisherConfig.GetQoS());
+
+        if (IsFlagEnabled(RaycastResultFlags::SegmentationData, m_lidarCore.GetResultFlags()))
         {
-            LidarRaycasterRequestBus::EventResult(
-                m_canRaycasterPublish, m_lidarRaycasterId, &LidarRaycasterRequestBus::Events::CanHandlePublishing);
-        }
-
-        if (m_canRaycasterPublish)
-        {
-            const TopicConfiguration& publisherConfig = m_sensorConfiguration.m_publishersConfigurations[PointCloudType];
-            auto* ros2Frame = GetEntity()->FindComponent<ROS2FrameComponent>();
-
-            LidarRaycasterRequestBus::Event(
-                m_lidarRaycasterId,
-                &LidarRaycasterRequestBus::Events::ConfigurePointCloudPublisher,
-                ROS2Names::GetNamespacedName(GetNamespace(), publisherConfig.m_topic),
-                ros2Frame->GetFrameID().data(),
-                publisherConfig.GetQoS());
-        }
-        else
-        {
-            auto ros2Node = ROS2Interface::Get()->GetNode();
-            AZ_Assert(m_sensorConfiguration.m_publishersConfigurations.size() == 1, "Invalid configuration of publishers for lidar sensor");
-
-            const TopicConfiguration& publisherConfig = m_sensorConfiguration.m_publishersConfigurations[PointCloudType];
-            AZStd::string fullTopic = ROS2Names::GetNamespacedName(GetNamespace(), publisherConfig.m_topic);
-            m_pointCloudPublisher = ros2Node->create_publisher<sensor_msgs::msg::PointCloud2>(fullTopic.data(), publisherConfig.GetQoS());
-
-            if (IsFlagEnabled(RaycastResultFlags::SegmentationData, m_lidarCore.GetResultFlags()))
-            {
-                m_segmentationClassesPublisher = ros2Node->create_publisher<vision_msgs::msg::LabelInfo>(
-                    ROS2Names::GetNamespacedName(GetNamespace(), "segmentation_classes").data(), publisherConfig.GetQoS());
-            }
+            m_segmentationClassesPublisher = ros2Node->create_publisher<vision_msgs::msg::LabelInfo>(
+                ROS2Names::GetNamespacedName(GetNamespace(), "segmentation_classes").data(), publisherConfig.GetQoS());
         }
 
         StartSensor(
@@ -167,18 +146,8 @@ namespace ROS2
 
     void ROS2LidarSensorComponent::FrequencyTick()
     {
-        if (m_canRaycasterPublish && m_sensorConfiguration.m_publishingEnabled)
-        {
-            const builtin_interfaces::msg::Time timestamp = ROS2Interface::Get()->GetROSTimestamp();
-            LidarRaycasterRequestBus::Event(
-                m_lidarRaycasterId,
-                &LidarRaycasterRequestBus::Events::UpdatePublisherTimestamp,
-                aznumeric_cast<AZ::u64>(timestamp.sec) * aznumeric_cast<AZ::u64>(1.0e9f) + timestamp.nanosec);
-        }
-
         AZStd::optional<RaycastResults> lastScanResults = m_lidarCore.PerformRaycast();
-
-        if (!lastScanResults.has_value() || m_canRaycasterPublish || !m_sensorConfiguration.m_publishingEnabled)
+        if (!lastScanResults.has_value() || !m_sensorConfiguration.m_publishingEnabled)
         {
             return;
         }
