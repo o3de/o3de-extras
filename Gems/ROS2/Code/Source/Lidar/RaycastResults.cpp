@@ -11,6 +11,7 @@ namespace ROS2
 {
     RaycastResults::RaycastResults(RaycastResultFlags flags, size_t count)
         : m_count{ count }
+        , m_flags{ flags }
     {
         EnsureFlagSatisfied<RaycastResultFlags::Point>(flags, count);
         EnsureFlagSatisfied<RaycastResultFlags::Range>(flags, count);
@@ -19,13 +20,15 @@ namespace ROS2
     }
 
     RaycastResults::RaycastResults(RaycastResults&& other)
-        : m_count{ other.m_count }
-        , m_points{ AZStd::move(other.m_points) }
+        : m_points{ AZStd::move(other.m_points) }
         , m_ranges{ AZStd::move(other.m_ranges) }
         , m_intensities{ AZStd::move(other.m_intensities) }
         , m_segmentationData{ AZStd::move(other.m_segmentationData) }
+        , m_count{ other.m_count }
+        , m_flags{ other.m_flags }
     {
         other.m_count = 0U;
+        other.m_flags = RaycastResultFlags::None;
     }
 
     void RaycastResults::Clear()
@@ -56,6 +59,9 @@ namespace ROS2
         m_count = other.m_count;
         other.m_count = 0U;
 
+        m_flags = other.m_flags;
+        other.m_flags = RaycastResultFlags::None;
+
         m_points = AZStd::move(other.m_points);
         m_ranges = AZStd::move(other.m_ranges);
         m_intensities = AZStd::move(other.m_intensities);
@@ -67,6 +73,11 @@ namespace ROS2
     bool RaycastResults::IsEmpty() const
     {
         return GetCount() == 0U;
+    }
+
+    bool RaycastResults::IsCompliant(RaycastResultFlags resultFlags) const
+    {
+        return resultFlags == m_flags;
     }
 
     size_t RaycastResults::GetCount() const

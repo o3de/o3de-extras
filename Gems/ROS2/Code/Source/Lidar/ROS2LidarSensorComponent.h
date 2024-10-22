@@ -20,6 +20,7 @@
 #include "LidarCore.h"
 #include "LidarRaycaster.h"
 #include "LidarSensorConfiguration.h"
+#include "Publishing/PointCloudMessageWriter.h"
 
 namespace ROS2
 {
@@ -38,21 +39,26 @@ namespace ROS2
         static void GetRequiredServices(AZ::ComponentDescriptor::DependencyArrayType& required);
         //////////////////////////////////////////////////////////////////////////
         // Component overrides
+        void Init() override;
         void Activate() override;
         void Deactivate() override;
         //////////////////////////////////////////////////////////////////////////
 
     private:
         //////////////////////////////////////////////////////////////////////////
+        static const Pc2MessageFormat& GetDefaultMessageFormat();
         void FrequencyTick();
-        void PublishRaycastResults(const RaycastResults& results);
+        AZ::Outcome<void, const char*> PublishRaycastResults(const RaycastResults& results);
+        AZ::Crc32 OnMessageFormatChanged();
 
         bool m_canRaycasterPublish = false;
         std::shared_ptr<rclcpp::Publisher<sensor_msgs::msg::PointCloud2>> m_pointCloudPublisher;
         std::shared_ptr<rclcpp::Publisher<vision_msgs::msg::LabelInfo>> m_segmentationClassesPublisher;
 
-        LidarCore m_lidarCore;
+        AZStd::optional<PointCloudMessageWriter> m_pointCloudMessageWriter;
+        Pc2MessageFormat m_messageFormat;
 
+        LidarCore m_lidarCore;
         LidarId m_lidarRaycasterId;
     };
 } // namespace ROS2

@@ -10,15 +10,20 @@
 #include <AzCore/Math/Vector3.h>
 #include <AzCore/std/containers/span.h>
 #include <AzCore/std/containers/vector.h>
+#include <AzCore/std/typetraits/type_identity.h>
 
 namespace ROS2
 {
     enum class RaycastResultFlags : AZ::u8
     {
-        Point = (1 << 0), //!< return 3D point coordinates
-        Range = (1 << 1), //!< return array of distances
-        Intensity = (1 << 2), //!< return intensity data
-        SegmentationData = (1 << 3), //!< return segmentation data
+        // clang-format off
+        None                    = 0,
+        Point                   = (1 << 0), //!< return 3D point coordinates
+        Range                   = (1 << 1), //!< return array of distances
+        Intensity               = (1 << 2), //!< return intensity data
+        SegmentationData        = (1 << 3), //!< return segmentation data
+        All                     = 0b0000'1111,
+        // clang-format on
     };
 
     //! Bitwise operators for RaycastResultFlags
@@ -52,7 +57,7 @@ namespace ROS2
 
     struct SegmentationIds
     {
-        int32_t m_entityId;
+        AZ::s32 m_entityId;
         AZ::u8 m_classId;
     };
 
@@ -78,6 +83,7 @@ namespace ROS2
         RaycastResults(RaycastResults&& other);
 
         [[nodiscard]] bool IsEmpty() const;
+        [[nodiscard]] bool IsCompliant(RaycastResultFlags resultFlags) const;
 
         template<RaycastResultFlags F>
         [[nodiscard]] bool IsFieldPresent() const;
@@ -115,11 +121,12 @@ namespace ROS2
         template<RaycastResultFlags F>
         void ClearFieldIfPresent();
 
-        size_t m_count{};
         FieldInternal<RaycastResultFlags::Point> m_points;
         FieldInternal<RaycastResultFlags::Range> m_ranges;
         FieldInternal<RaycastResultFlags::Intensity> m_intensities;
         FieldInternal<RaycastResultFlags::SegmentationData> m_segmentationData;
+        size_t m_count{};
+        RaycastResultFlags m_flags;
     };
 
     template<RaycastResultFlags F>
