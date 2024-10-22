@@ -32,7 +32,9 @@ namespace ROS2
                         "Segmentation classes and their colors.")
                     ->Attribute(AZ::Edit::Attributes::AutoExpand, true)
                     ->Attribute(
-                        AZ::Edit::Attributes::ChangeValidate, &ClassSegmentationConfigurationComponent::ValidateSegmentationClasses);
+                        AZ::Edit::Attributes::ChangeValidate, &ClassSegmentationConfigurationComponent::ValidateSegmentationClasses)
+                    ->Attribute(
+                        AZ::Edit::Attributes::ChangeNotify, &ClassSegmentationConfigurationComponent::OnSegmentationClassesChanged);
             }
         }
     }
@@ -141,5 +143,39 @@ namespace ROS2
             m_classIdToColor.insert(AZStd::make_pair(segmentationClass.m_classId, segmentationClass.m_classColor));
             m_tagToClassId.insert(AZStd::make_pair(LmbrCentral::Tag(segmentationClass.m_className), segmentationClass.m_classId));
         }
+    }
+
+    AZ::Crc32 ClassSegmentationConfigurationComponent::OnSegmentationClassesChanged()
+    {
+        bool unknownPresent{ false }, groundPresent{ false };
+        for (auto& segmentationClass : m_segmentationClasses)
+        {
+            if (segmentationClass.m_classId == SegmentationClassConfiguration::UnknownClass.m_classId)
+            {
+                unknownPresent = true;
+            }
+
+            if (segmentationClass.m_classId == SegmentationClassConfiguration::GroundClass.m_classId)
+            {
+                groundPresent = true;
+            }
+        }
+
+        if (unknownPresent && groundPresent)
+        {
+            return AZ::Edit::PropertyRefreshLevels::None;
+        }
+
+        if (!unknownPresent)
+        {
+            m_segmentationClasses.push_back(SegmentationClassConfiguration::UnknownClass);
+        }
+
+        if (!groundPresent)
+        {
+            m_segmentationClasses.push_back(SegmentationClassConfiguration::GroundClass);
+        }
+
+        return AZ::Edit::PropertyRefreshLevels::EntireTree;
     }
 } // namespace ROS2

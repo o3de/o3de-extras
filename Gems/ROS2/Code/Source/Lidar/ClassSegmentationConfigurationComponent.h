@@ -41,9 +41,9 @@ namespace ROS2
     private:
         AZ::Outcome<void, AZStd::string> ValidateSegmentationClasses(void* newValue, const AZ::TypeId& valueType) const;
         void ConstructSegmentationClassMaps();
+        AZ::Crc32 OnSegmentationClassesChanged();
 
-        SegmentationClassConfigList m_segmentationClasses{ SegmentationClassConfiguration::UnknownClass,
-                                                           SegmentationClassConfiguration::GroundClass };
+        SegmentationClassConfigList m_segmentationClasses;
         AZStd::unordered_map<LmbrCentral::Tag, uint8_t> m_tagToClassId;
         AZStd::unordered_map<uint8_t, AZ::Color> m_classIdToColor;
     };
