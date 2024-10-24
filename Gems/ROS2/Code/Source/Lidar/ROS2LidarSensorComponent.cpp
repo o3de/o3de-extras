@@ -105,7 +105,7 @@ namespace ROS2
             AZStd::string fullTopic = ROS2Names::GetNamespacedName(GetNamespace(), publisherConfig.m_topic);
             m_pointCloudPublisher = ros2Node->create_publisher<sensor_msgs::msg::PointCloud2>(fullTopic.data(), publisherConfig.GetQoS());
 
-            const auto resultFlags = LidarCore::GetRaycastResultFlagsForConfig(m_lidarCore.m_lidarConfiguration);
+            const auto resultFlags = m_lidarCore.GetResultFlags();
             if (IsFlagEnabled(RaycastResultFlags::SegmentationData, resultFlags))
             {
                 m_segmentationClassesPublisher = ros2Node->create_publisher<vision_msgs::msg::LabelInfo>(

@@ -45,10 +45,21 @@ namespace ROS2
             flags |= RaycastResultFlags::Intensity;
         }
 
-        if (configuration.m_lidarSystemFeatures & LidarSystemFeatures::Segmentation && configuration.m_isSegmentationEnabled &&
-            ClassSegmentationInterface::Get())
+        if (configuration.m_lidarSystemFeatures & LidarSystemFeatures::Segmentation && configuration.m_isSegmentationEnabled)
         {
-            flags |= RaycastResultFlags::SegmentationData;
+            if (ClassSegmentationInterface::Get())
+            {
+                flags |= RaycastResultFlags::SegmentationData;
+            }
+            else
+            {
+                AZ_Error(
+                    "ROS2",
+                    false,
+                    "Segmentation feature was enabled for this lidar sensor but the segmentation interface is not accessible. Make sure to "
+                    "either add the Class segmentation component to the level entity or disable the feature in the lidar component "
+                    "configuration.");
+            }
         }
 
         return flags;
@@ -90,10 +101,8 @@ namespace ROS2
                 m_lidarConfiguration.m_lidarParameters.m_noiseParameters.m_distanceNoiseStdDevRisePerMeter);
         }
 
-        LidarRaycasterRequestBus::Event(
-            m_lidarRaycasterId,
-            &LidarRaycasterRequestBus::Events::ConfigureRaycastResultFlags,
-            GetRaycastResultFlagsForConfig(m_lidarConfiguration));
+        m_resultFlags = GetRaycastResultFlagsForConfig(m_lidarConfiguration);
+        LidarRaycasterRequestBus::Event(m_lidarRaycasterId, &LidarRaycasterRequestBus::Events::ConfigureRaycastResultFlags, m_resultFlags);
 
         if (m_lidarConfiguration.m_lidarSystemFeatures & LidarSystemFeatures::CollisionLayers)
         {
@@ -182,6 +191,11 @@ namespace ROS2
     LidarId LidarCore::GetLidarRaycasterId() const
     {
         return m_lidarRaycasterId;
+    }
+
+    RaycastResultFlags LidarCore::GetResultFlags() const
+    {
+        return m_resultFlags;
     }
 
     AZStd::optional<RaycastResults> LidarCore::PerformRaycast()

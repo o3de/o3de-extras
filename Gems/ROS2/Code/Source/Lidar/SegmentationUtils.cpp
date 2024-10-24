@@ -12,7 +12,6 @@ namespace ROS2::SegmentationUtils
 {
     uint8_t FetchClassIdForEntity(AZ::EntityId entityId)
     {
-        static constexpr uint8_t DefaultClassID = 0U;
         AZStd::optional<uint8_t> classId;
 
         LmbrCentral::Tags entityTags;
@@ -20,12 +19,7 @@ namespace ROS2::SegmentationUtils
         auto* segmentationInterface = ClassSegmentationInterface::Get();
         if (!segmentationInterface)
         {
-            AZ_Error(
-                __func__,
-                false,
-                "Segmentation Interface was not accessible. Unable to fetch class ID for entity. Assigning default class ID: %u",
-                DefaultClassID);
-            return DefaultClassID;
+            return UnknownClassId;
         }
 
         for (const auto& tag : entityTags)
@@ -54,11 +48,11 @@ namespace ROS2::SegmentationUtils
             AZ_Warning(
                 "EntityManager",
                 false,
-                "Entity with ID: %s has no class tag. Assigning default class ID: %u",
+                "Entity with ID: %s has no class tag. Assigning unknown class ID: %u",
                 entityId.ToString().c_str(),
-                DefaultClassID);
+                UnknownClassId);
         }
 
-        return classId.value_or(DefaultClassID);
+        return classId.value_or(UnknownClassId);
     }
 } // namespace ROS2::SegmentationUtils
