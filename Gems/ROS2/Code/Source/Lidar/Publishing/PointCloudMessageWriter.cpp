@@ -24,23 +24,34 @@ namespace ROS2
     {
         for (size_t i = 0; i < m_message.m_fieldFlags.size(); ++i)
         {
+            const auto fielFlag = m_message.m_fieldFlags[i];
+            if (IsPadding(fielFlag))
+            {
+                continue;
+            }
+
+            bool wasWrittenTo = false;
             switch (GetFieldProvider(m_message.m_fieldFlags.at(i)))
             {
             case RaycastResultFlags::Point:
-                WriteResultIfPresent<RaycastResultFlags::Point>(results, m_message.m_fieldFlags[i], i);
+                wasWrittenTo = WriteResultIfPresent<RaycastResultFlags::Point>(results, fielFlag, i);
                 break;
             case RaycastResultFlags::Range:
-                WriteResultIfPresent<RaycastResultFlags::Range>(results, m_message.m_fieldFlags[i], i);
+                wasWrittenTo = WriteResultIfPresent<RaycastResultFlags::Range>(results, fielFlag, i);
                 break;
             case RaycastResultFlags::Intensity:
-                WriteResultIfPresent<RaycastResultFlags::Intensity>(results, m_message.m_fieldFlags[i], i);
+                wasWrittenTo = WriteResultIfPresent<RaycastResultFlags::Intensity>(results, fielFlag, i);
                 break;
             case RaycastResultFlags::SegmentationData:
-                WriteResultIfPresent<RaycastResultFlags::SegmentationData>(results, m_message.m_fieldFlags[i], i);
+                wasWrittenTo = WriteResultIfPresent<RaycastResultFlags::SegmentationData>(results, fielFlag, i);
                 break;
             default:
-                // TODO
                 break;
+            }
+
+            if (!wasWrittenTo)
+            {
+                FillWithDefaultValues(m_message.m_fieldFlags.at(i), i);
             }
         }
     }
@@ -48,5 +59,38 @@ namespace ROS2
     const Pc2Message& PointCloudMessageWriter::GetMessage()
     {
         return m_message.m_message;
+    }
+
+    void PointCloudMessageWriter::FillWithDefaultValues(FieldFlags fieldFlag, size_t fieldIndex)
+    {
+        switch (fieldFlag)
+        {
+        case FieldFlags::PositionXYZF32:
+            FillWithDefaultValues<FieldFlags::PositionXYZF32>(fieldIndex);
+            break;
+        case FieldFlags::IntensityF32:
+            FillWithDefaultValues<FieldFlags::IntensityF32>(fieldIndex);
+            break;
+        case FieldFlags::TU32:
+            FillWithDefaultValues<FieldFlags::TU32>(fieldIndex);
+            break;
+        case FieldFlags::ReflectivityU16:
+            FillWithDefaultValues<FieldFlags::ReflectivityU16>(fieldIndex);
+            break;
+        case FieldFlags::RingU16:
+            FillWithDefaultValues<FieldFlags::RingU16>(fieldIndex);
+            break;
+        case FieldFlags::AmbientU16:
+            FillWithDefaultValues<FieldFlags::AmbientU16>(fieldIndex);
+            break;
+        case FieldFlags::RangeU32:
+            FillWithDefaultValues<FieldFlags::RangeU32>(fieldIndex);
+            break;
+        case FieldFlags::SegmentationData96:
+            FillWithDefaultValues<FieldFlags::SegmentationData96>(fieldIndex);
+            break;
+        default:
+            break;
+        }
     }
 } // namespace ROS2

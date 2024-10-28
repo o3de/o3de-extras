@@ -18,6 +18,8 @@ namespace ROS2
 
     struct Pc2MessageWrapper
     {
+        [[nodiscard]] size_t GetPointCount() const;
+
         Pc2Message m_message;
         AZStd::vector<FieldFlags> m_fieldFlags; // Easier iterator generation.
         AZStd::vector<AZStd::string> m_fieldNames; // Stores copies of field names to avoid bad c-string access.

@@ -40,6 +40,9 @@ namespace ROS2
     AZStd::optional<AZStd::string> GetDefaultFieldName(FieldFlags fieldFlag);
     AZStd::optional<AZStd::string> GetDatatypeString(FieldFlags fieldFlag);
 
+    // The field types default constructor should initialize all bits to zero.
+    // This allows us to easier check if the non provided fields should be
+    // overwritten with their respective default values.
     template<FieldFlags fieldFlag>
     struct FieldTraits;
 
@@ -48,11 +51,11 @@ namespace ROS2
     {
         struct Position
         {
-            float m_x, m_y, m_z;
+            float m_x{}, m_y{}, m_z{};
         };
 
         using Type = Position;
-        static constexpr Type DefaultValue = { .m_x = 0.0f, .m_y = 0.0f, .m_z = 0.0f };
+        static constexpr Type DefaultValue{};
         static constexpr RaycastResultFlags Provider = RaycastResultFlags::Point;
     };
 
@@ -60,7 +63,7 @@ namespace ROS2
     struct FieldTraits<FieldFlags::IntensityF32>
     {
         using Type = float;
-        static constexpr Type DefaultValue = 0.0f;
+        static constexpr Type DefaultValue{};
         static constexpr RaycastResultFlags Provider = RaycastResultFlags::Intensity;
     };
 
@@ -68,7 +71,7 @@ namespace ROS2
     struct FieldTraits<FieldFlags::TU32>
     {
         using Type = AZ::u32;
-        static constexpr Type DefaultValue = 0U;
+        static constexpr Type DefaultValue{};
         static constexpr RaycastResultFlags Provider = RaycastResultFlags::None;
     };
 
@@ -76,7 +79,7 @@ namespace ROS2
     struct FieldTraits<FieldFlags::ReflectivityU16>
     {
         using Type = float;
-        static constexpr Type DefaultValue = 0.0f;
+        static constexpr Type DefaultValue{};
         static constexpr RaycastResultFlags Provider = RaycastResultFlags::None;
     };
 
@@ -84,7 +87,7 @@ namespace ROS2
     struct FieldTraits<FieldFlags::RingU16>
     {
         using Type = AZ::u16;
-        static constexpr Type DefaultValue = 0U;
+        static constexpr Type DefaultValue{};
         static constexpr RaycastResultFlags Provider = RaycastResultFlags::None;
     };
 
@@ -92,7 +95,7 @@ namespace ROS2
     struct FieldTraits<FieldFlags::AmbientU16>
     {
         using Type = AZ::u16;
-        static constexpr Type DefaultValue = 0U;
+        static constexpr Type DefaultValue{};
         static constexpr RaycastResultFlags Provider = RaycastResultFlags::None;
     };
 
@@ -100,7 +103,7 @@ namespace ROS2
     struct FieldTraits<FieldFlags::RangeU32>
     {
         using Type = AZ::u32;
-        static constexpr Type DefaultValue = 0U;
+        static constexpr Type DefaultValue{};
         static constexpr RaycastResultFlags Provider = RaycastResultFlags::Range;
     };
 

@@ -45,6 +45,11 @@ namespace ROS2
         // clang-format on
     }
 
+    size_t Pc2MessageWrapper::GetPointCount() const
+    {
+        return m_message.height * m_message.width;
+    }
+
     Pc2MessageBuilder::Pc2MessageBuilder(const Pc2MessageFormat& messageFormat)
     {
         m_messageWrapper.m_fieldNames.clear();

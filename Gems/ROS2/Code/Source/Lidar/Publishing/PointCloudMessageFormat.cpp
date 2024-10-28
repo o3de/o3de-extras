@@ -177,7 +177,7 @@ namespace ROS2
 
     bool FieldFormat::IsRegularField() const
     {
-        return m_fieldFlag != FieldFlags::Padding8 && m_fieldFlag != FieldFlags::Padding16 && m_fieldFlag != FieldFlags::Padding32;
+        return !IsPadding(m_fieldFlag);
     }
 
     AZ::Crc32 FieldFormat::OnTypeChanged()

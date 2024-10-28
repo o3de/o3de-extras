@@ -7,9 +7,11 @@
  */
 #pragma once
 
-#include <ROS2/Lidar/ClassSegmentationBus.h>
+#include "AzFramework/Input/Devices/Gamepad/InputDeviceGamepad.h"
+
 #include <Lidar/Publishing/PointCloudMessageBuilder.h>
 #include <Lidar/Publishing/PointCloudMessageFormat.h>
+#include <ROS2/Lidar/ClassSegmentationBus.h>
 #include <ROS2/Lidar/RaycastResults.h>
 
 namespace ROS2
@@ -35,21 +37,29 @@ namespace ROS2
             MessageFieldIterator& operator++();
 
             bool operator==(const MessageFieldIterator& other);
-
+            bool operator!=(const MessageFieldIterator& other);
         private:
             void* m_data{ nullptr };
             size_t m_step{};
         };
 
         template<FieldFlags F>
-        MessageFieldIterator<F> CreateMessageFieldIterator(size_t fieldIndex);
+        MessageFieldIterator<F> CreateMessageFieldIterator(size_t fieldIndex, size_t pointIndex);
+        template<FieldFlags F>
+        MessageFieldIterator<F> Begin(size_t fieldIndex);
+        template<FieldFlags F>
+        MessageFieldIterator<F> End(size_t fieldIndex);
 
         template<RaycastResultFlags R, FieldFlags F>
         AZ::Outcome<void, AZStd::string_view> AssignResultFieldValue(
             const typename ResultTraits<R>::Type& resultValue, typename FieldTraits<F>::Type& messageFieldValue);
 
         template<RaycastResultFlags R>
-        void WriteResultIfPresent(const RaycastResults& results, FieldFlags fieldFlag, size_t index);
+        bool WriteResultIfPresent(const RaycastResults& results, FieldFlags fieldFlag, size_t index);
+
+        void FillWithDefaultValues(FieldFlags fieldFlag, size_t fieldIndex);
+        template<FieldFlags F>
+        void FillWithDefaultValues(size_t fieldIndex);
 
         // Not having 1 - 1 association between raycast results and fields allows for easier incorporation
         // of new fields at the cost of a slight increase in code complexity.
@@ -90,11 +100,31 @@ namespace ROS2
         return m_data == other.m_data && m_step == other.m_step;
     }
 
-    template<FieldFlags F>
-    PointCloudMessageWriter::MessageFieldIterator<F> PointCloudMessageWriter::CreateMessageFieldIterator(size_t fieldIndex)
+    template<FieldFlags F, typename FT>
+    bool PointCloudMessageWriter::MessageFieldIterator<F, FT>::operator!=(const MessageFieldIterator& other)
     {
-        void* data = m_message.m_message.data.data() + m_message.m_fieldOffsets.at(fieldIndex);
-        return MessageFieldIterator<F>{ data, m_message.m_message.point_step };
+        return m_data != other.m_data || m_step != other.m_step;
+    }
+
+    template<FieldFlags F>
+    PointCloudMessageWriter::MessageFieldIterator<F> PointCloudMessageWriter::CreateMessageFieldIterator(
+        size_t fieldIndex, size_t pointIndex)
+    {
+        const auto pointStep = m_message.m_message.point_step;
+        void* data = m_message.m_message.data.data() + m_message.m_fieldOffsets.at(fieldIndex) + pointIndex * pointStep;
+        return MessageFieldIterator<F>(data, pointStep);
+    }
+
+    template<FieldFlags F>
+    PointCloudMessageWriter::MessageFieldIterator<F> PointCloudMessageWriter::Begin(size_t fieldIndex)
+    {
+        return CreateMessageFieldIterator<F>(fieldIndex, 0U);
+    }
+
+    template<FieldFlags F>
+    PointCloudMessageWriter::MessageFieldIterator<F> PointCloudMessageWriter::End(size_t fieldIndex)
+    {
+        return CreateMessageFieldIterator<F>(fieldIndex, m_message.GetPointCount());
     }
 
     template<>
@@ -156,11 +186,38 @@ namespace ROS2
     }
 
     template<RaycastResultFlags R>
-    void PointCloudMessageWriter::WriteResultIfPresent(const RaycastResults& results, FieldFlags fieldFlag, size_t index)
+    bool PointCloudMessageWriter::WriteResultIfPresent(const RaycastResults& results, FieldFlags fieldFlag, size_t index)
     {
         if (results.IsFieldPresent<R>())
         {
             WriteResult<R>(results, fieldFlag, index);
+            return true;
+        }
+
+        return false;
+    }
+
+    template<FieldFlags F>
+    static bool IsZeros(const typename FieldTraits<F>::Type& value)
+    {
+        typename FieldTraits<F>::Type zeroValue;
+        memset(&zeroValue, 0, sizeof(zeroValue));
+        return memcmp(&zeroValue, &value, sizeof(zeroValue)) == 0;
+    }
+
+    template<FieldFlags F>
+    void PointCloudMessageWriter::FillWithDefaultValues(size_t fieldIndex)
+    {
+        // We do this to avoid unnecessary work (i.e. only when the values are not zeros).
+        if (IsZeros<F>(FieldTraits<F>::DefaultValue))
+        {
+            return;
+        }
+
+        const auto messageFieldEndIt = End<F>(fieldIndex);
+        for (auto messageFieldIt = Begin<F>(fieldIndex); messageFieldIt != messageFieldEndIt; ++messageFieldIt)
+        {
+            *messageFieldIt = FieldTraits<F>::DefaultValue;
         }
     }
 
@@ -211,7 +268,7 @@ namespace ROS2
     template<RaycastResultFlags R, FieldFlags F>
     void PointCloudMessageWriter::WriteResultToMessageField(RaycastResults::ConstFieldSpan<R> fieldSpan, size_t fieldIndex)
     {
-        auto messageFieldIt = CreateMessageFieldIterator<F>(fieldIndex);
+        auto messageFieldIt = Begin<F>(fieldIndex);
         for (auto resultIt = fieldSpan.begin(); resultIt != fieldSpan.end(); ++resultIt, ++messageFieldIt)
         {
             if (const auto outcome = AssignResultFieldValue<R, F>(*resultIt, *messageFieldIt); !outcome.IsSuccess())
