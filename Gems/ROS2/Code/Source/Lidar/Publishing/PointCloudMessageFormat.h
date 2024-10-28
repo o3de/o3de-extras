@@ -14,7 +14,7 @@
 
 namespace ROS2
 {
-    enum class FieldFlags : uint16_t
+    enum class FieldFlags : AZ::u16
     {
         // clang-format off
         None                    = 0,
@@ -25,11 +25,11 @@ namespace ROS2
         RingU16                 = 1 << 4,
         AmbientU16              = 1 << 5,
         RangeU32                = 1 << 6,
-        SegmentationData96      = 1 << 7,
+        SegmentationData96      = 1 << 7, // A 96-bit structure is used to store segmentation data.
         Padding8                = 1 << 8,
         Padding16               = 1 << 9,
         Padding32               = 1 << 10,
-        All                     = 0b0000'0111'1111'1111,
+        All                     = (1 << 11) - 1U,
         // clang-format on
     };
 
@@ -55,7 +55,7 @@ namespace ROS2
         };
 
         using Type = Position;
-        static constexpr Type DefaultValue{};
+        static constexpr Type DefaultValue = Type{ 0.0f, 0.0f, 0.0f };
         static constexpr RaycastResultFlags Provider = RaycastResultFlags::Point;
     };
 
@@ -114,7 +114,7 @@ namespace ROS2
         {
             AZ::s32 m_entityId;
             AZ::u32 m_rgba;
-            AZ::u8  m_classId;
+            AZ::u8 m_classId;
         };
 
         using Type = SegmentationData;

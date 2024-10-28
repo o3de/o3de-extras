@@ -7,8 +7,6 @@
  */
 #pragma once
 
-#include "AzFramework/Input/Devices/Gamepad/InputDeviceGamepad.h"
-
 #include <Lidar/Publishing/PointCloudMessageBuilder.h>
 #include <Lidar/Publishing/PointCloudMessageFormat.h>
 #include <ROS2/Lidar/ClassSegmentationBus.h>

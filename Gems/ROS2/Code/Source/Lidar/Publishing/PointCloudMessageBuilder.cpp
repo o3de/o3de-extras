@@ -5,8 +5,7 @@
  * SPDX-License-Identifier: Apache-2.0 OR MIT
  *
  */
-#include "AzCore/Math/Sfmt.h"
-
+#include <AzCore/Math/Sfmt.h>
 #include <AzCore/std/string/string.h>
 #include <Lidar/Publishing/PointCloudMessageBuilder.h>
 #include <sensor_msgs/msg/point_field.h>

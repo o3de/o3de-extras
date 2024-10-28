@@ -22,7 +22,7 @@ namespace ROS2
         Range                   = (1 << 1), //!< return array of distances
         Intensity               = (1 << 2), //!< return intensity data
         SegmentationData        = (1 << 3), //!< return segmentation data
-        All                     = 0b0000'1111,
+        All                     = (1 << 4) - 1U,
         // clang-format on
     };
 
