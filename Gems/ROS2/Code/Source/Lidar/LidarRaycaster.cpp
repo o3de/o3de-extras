@@ -46,7 +46,7 @@ namespace ROS2
         , m_sceneHandle{ lidarRaycaster.m_sceneHandle }
         , m_resultFlags{ lidarRaycaster.m_resultFlags }
         , m_range{ lidarRaycaster.m_range }
-        , m_addMaxRangePoints{ lidarRaycaster.m_addMaxRangePoints }
+        , m_returnNonHits{ lidarRaycaster.m_returnNonHits }
         , m_rayRotations{ AZStd::move(lidarRaycaster.m_rayRotations) }
         , m_ignoredCollisionLayers{ lidarRaycaster.m_ignoredCollisionLayers }
     {
@@ -138,14 +138,16 @@ namespace ROS2
         const AZStd::vector<AZ::Vector3> rayDirections = LidarTemplateUtils::RotationsToDirections(m_rayRotations, lidarTransform);
         AzPhysics::SceneQueryRequests requests = prepareRequests(lidarTransform, rayDirections);
 
-        const bool handlePoints = (m_resultFlags & RaycastResultFlags::Point) == RaycastResultFlags::Point;
-        const bool handleRanges = (m_resultFlags & RaycastResultFlags::Range) == RaycastResultFlags::Range;
-        const bool handleSegmentation = (m_resultFlags & RaycastResultFlags::SegmentationData) == RaycastResultFlags::SegmentationData;
+        const bool handlePoints = IsFlagEnabled(RaycastResultFlags::Point, m_resultFlags);
+        const bool handleRanges = IsFlagEnabled(RaycastResultFlags::Range, m_resultFlags);
+        const bool handleSegmentation = IsFlagEnabled(RaycastResultFlags::SegmentationData, m_resultFlags);
+        const bool handleIsHit = IsFlagEnabled(RaycastResultFlags::IsHit, m_resultFlags);
         RaycastResults results(m_resultFlags, rayDirections.size());
 
         AZStd::optional<RaycastResults::FieldSpan<RaycastResultFlags::Point>::iterator> pointIt;
         AZStd::optional<RaycastResults::FieldSpan<RaycastResultFlags::Range>::iterator> rangeIt;
         AZStd::optional<RaycastResults::FieldSpan<RaycastResultFlags::SegmentationData>::iterator> segmentationIt;
+        AZStd::optional<RaycastResults::FieldSpan<RaycastResultFlags::IsHit>::iterator> isHitIt;
         if (handlePoints)
         {
             pointIt = results.GetFieldSpan<RaycastResultFlags::Point>().value().begin();
@@ -158,13 +160,17 @@ namespace ROS2
         {
             segmentationIt = results.GetFieldSpan<RaycastResultFlags::SegmentationData>().value().begin();
         }
+        if (handleIsHit)
+        {
+            isHitIt = results.GetFieldSpan<RaycastResultFlags::IsHit>().value().begin();
+        }
 
         auto* sceneInterface = AZ::Interface<AzPhysics::SceneInterface>::Get();
         auto requestResults = sceneInterface->QuerySceneBatch(m_sceneHandle, requests);
         AZ_Assert(requestResults.size() == rayDirections.size(), "Request size should be equal to directions size");
         const auto localTransform =
             AZ::Transform::CreateFromQuaternionAndTranslation(lidarTransform.GetRotation(), lidarTransform.GetTranslation()).GetInverse();
-        const float maxRange = m_addMaxRangePoints ? m_range->m_max : AZStd::numeric_limits<float>::infinity();
+        const float maxRange = m_returnNonHits ? m_range->m_max : AZStd::numeric_limits<float>::infinity();
 
         size_t usedSize = 0U;
         for (size_t i = 0U; i < requestResults.size(); i++)
@@ -218,6 +224,12 @@ namespace ROS2
                 wasUsed = true;
             }
 
+            if (isHitIt.has_value())
+            {
+                *isHitIt.value() = static_cast<bool>(requestResult);
+                wasUsed = true;
+            }
+
             if (wasUsed)
             {
                 if (rangeIt.has_value())
@@ -235,6 +247,11 @@ namespace ROS2
                     ++segmentationIt.value();
                 }
 
+                if (isHitIt.has_value())
+                {
+                    ++isHitIt.value();
+                }
+
                 ++usedSize;
             }
         }
@@ -247,9 +264,10 @@ namespace ROS2
     {
         m_ignoredCollisionLayers = layerIndices;
     }
-    void LidarRaycaster::ConfigureMaxRangePointAddition(bool addMaxRangePoints)
+
+    void LidarRaycaster::ConfigureNonHitReturn(bool returnNonHits)
     {
-        m_addMaxRangePoints = addMaxRangePoints;
+        m_returnNonHits = returnNonHits;
     }
 
     int32_t LidarRaycaster::CompressEntityId(AZ::EntityId entityId)

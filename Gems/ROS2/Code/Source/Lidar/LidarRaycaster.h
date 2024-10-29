@@ -34,7 +34,7 @@ namespace ROS2
         AZ::Outcome<RaycastResults, const char*> PerformRaycast(const AZ::Transform& lidarTransform) override;
 
         void ConfigureIgnoredCollisionLayers(const AZStd::unordered_set<AZ::u32>& layerIndices) override;
-        void ConfigureMaxRangePointAddition(bool addMaxRangePoints) override;
+        void ConfigureNonHitReturn(bool returnNonHits) override;
 
     private:
         static int32_t CompressEntityId(AZ::EntityId entityId);
@@ -50,8 +50,8 @@ namespace ROS2
 
         RaycastResultFlags m_resultFlags{ RaycastResultFlags::Point };
         AZStd::optional<RayRange> m_range{};
-        bool m_addMaxRangePoints{ false };
-        AZStd::vector<AZ::Quaternion> m_rayRotations{ { AZ::Quaternion::CreateZero() } };
+        bool m_returnNonHits{ false };
+        AZStd::vector<AZ::Quaternion> m_rayRotations{};
 
         AZStd::unordered_set<AZ::u32> m_ignoredCollisionLayers;
         AZStd::unordered_map<AZ::EntityId, uint8_t> m_entityIdToClassIdCache;

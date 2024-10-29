@@ -15,12 +15,12 @@ namespace ROS2
     {
     }
 
-    void PointCloudMessageWriter::Reset(const AZStd::string& frameId, builtin_interfaces::msg::Time timeStamp, size_t count)
+    void PointCloudMessageWriter::Reset(const AZStd::string& frameId, builtin_interfaces::msg::Time timeStamp, size_t width, size_t height)
     {
-        m_message = m_messageBuilder.Get(frameId, timeStamp, count);
+        m_message = m_messageBuilder.Get(frameId, timeStamp, width, height);
     }
 
-    void PointCloudMessageWriter::WriteResults(const RaycastResults& results)
+    void PointCloudMessageWriter::WriteResults(const RaycastResults& results, bool skipNonHits)
     {
         for (size_t i = 0; i < m_message.m_fieldFlags.size(); ++i)
         {
@@ -34,16 +34,16 @@ namespace ROS2
             switch (GetFieldProvider(m_message.m_fieldFlags.at(i)))
             {
             case RaycastResultFlags::Point:
-                wasWrittenTo = WriteResultIfPresent<RaycastResultFlags::Point>(results, fielFlag, i);
+                wasWrittenTo = WriteResultIfPresent<RaycastResultFlags::Point>(results, fielFlag, i, skipNonHits);
                 break;
             case RaycastResultFlags::Range:
-                wasWrittenTo = WriteResultIfPresent<RaycastResultFlags::Range>(results, fielFlag, i);
+                wasWrittenTo = WriteResultIfPresent<RaycastResultFlags::Range>(results, fielFlag, i, skipNonHits);
                 break;
             case RaycastResultFlags::Intensity:
-                wasWrittenTo = WriteResultIfPresent<RaycastResultFlags::Intensity>(results, fielFlag, i);
+                wasWrittenTo = WriteResultIfPresent<RaycastResultFlags::Intensity>(results, fielFlag, i, skipNonHits);
                 break;
             case RaycastResultFlags::SegmentationData:
-                wasWrittenTo = WriteResultIfPresent<RaycastResultFlags::SegmentationData>(results, fielFlag, i);
+                wasWrittenTo = WriteResultIfPresent<RaycastResultFlags::SegmentationData>(results, fielFlag, i, skipNonHits);
                 break;
             default:
                 break;

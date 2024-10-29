@@ -15,6 +15,7 @@
 #include <ROS2/Lidar/ClassSegmentationBus.h>
 #include <ROS2/ROS2Bus.h>
 #include <ROS2/Utilities/ROS2Names.h>
+#include <AzCore/base.h>
 
 namespace ROS2
 {
@@ -39,7 +40,7 @@ namespace ROS2
 
     RaycastResultFlags LidarCore::GetProvidedResultFlags(const LidarSensorConfiguration& configuration)
     {
-        RaycastResultFlags flags = RaycastResultFlags::Range | RaycastResultFlags::Point;
+        RaycastResultFlags flags = RaycastResultFlags::Range | RaycastResultFlags::Point | RaycastResultFlags::IsHit;
         if (configuration.m_lidarSystemFeatures & LidarSystemFeatures::Intensity)
         {
             flags |= RaycastResultFlags::Intensity;
@@ -101,11 +102,7 @@ namespace ROS2
                 m_lidarConfiguration.m_lidarParameters.m_noiseParameters.m_distanceNoiseStdDevRisePerMeter);
         }
 
-        LidarRaycasterRequestBus::Event(
-            m_lidarRaycasterId,
-            &LidarRaycasterRequestBus::Events::ConfigureRaycastResultFlags,
-            m_resultFlags
-            );
+        LidarRaycasterRequestBus::Event(m_lidarRaycasterId, &LidarRaycasterRequestBus::Events::ConfigureRaycastResultFlags, m_resultFlags);
 
         if (m_lidarConfiguration.m_lidarSystemFeatures & LidarSystemFeatures::CollisionLayers)
         {
@@ -121,12 +118,9 @@ namespace ROS2
                 m_lidarRaycasterId, &LidarRaycasterRequestBus::Events::ExcludeEntities, m_lidarConfiguration.m_excludedEntities);
         }
 
-        if (m_lidarConfiguration.m_lidarSystemFeatures & LidarSystemFeatures::MaxRangePoints)
+        if (IsFlagEnabled(RaycastResultFlags::IsHit, GetResultFlags()) || m_lidarConfiguration.m_addPointsAtMax)
         {
-            LidarRaycasterRequestBus::Event(
-                m_lidarRaycasterId,
-                &LidarRaycasterRequestBus::Events::ConfigureMaxRangePointAddition,
-                m_lidarConfiguration.m_addPointsAtMax);
+            LidarRaycasterRequestBus::Event(m_lidarRaycasterId, &LidarRaycasterRequestBus::Events::ConfigureNonHitReturn, true);
         }
     }
 

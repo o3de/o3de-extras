@@ -21,10 +21,9 @@ namespace ROS2
         Noise =                 1,
         CollisionLayers =       1 << 1,
         EntityExclusion =       1 << 2,
-        MaxRangePoints =        1 << 3,
-        Intensity =             1 << 4,
-        Segmentation =          1 << 5,
-        All =                   (1 << 6) - 1, // All feature bits enabled.
+        Intensity =             1 << 3,
+        Segmentation =          1 << 4,
+        All =                   (1 << 5) - 1, // All feature bits enabled.
         // clang-format on
     };
 

@@ -156,12 +156,10 @@ namespace ROS2
             AZ_Assert(false, "This Lidar Implementation does not support entity exclusion!");
         }
 
-        //! Configures max range point addition.
-        //! @param includeMaxRange Should the raycaster add points at max range for rays that exceeded their range?
-        virtual void ConfigureMaxRangePointAddition([[maybe_unused]] bool addMaxRangePoints)
-        {
-            AZ_Assert(false, "This Lidar Implementation does not support Max range point addition configuration!");
-        }
+        //! Configures whether the non hit rays should also be included in raycast results.
+        //! @param returnNonHits Should the non hit rays be included in returned results?
+        virtual void ConfigureNonHitReturn([[maybe_unused]] bool returnNonHits) = 0;
+
     protected:
         ~LidarRaycasterRequests() = default;
 

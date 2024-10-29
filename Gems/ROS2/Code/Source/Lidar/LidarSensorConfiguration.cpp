@@ -70,8 +70,7 @@ namespace ROS2
                         AZ::Edit::UIHandlers::Default,
                         &LidarSensorConfiguration::m_addPointsAtMax,
                         "Points at Max",
-                        "If set true LiDAR will produce points at max range for free space")
-                    ->Attribute(AZ::Edit::Attributes::Visibility, &LidarSensorConfiguration::IsMaxPointsConfigurationVisible);
+                        "If set true LiDAR will produce points at max range for free space");
             }
         }
     }
@@ -141,11 +140,6 @@ namespace ROS2
     bool LidarSensorConfiguration::IsEntityExclusionVisible() const
     {
         return m_lidarSystemFeatures & LidarSystemFeatures::EntityExclusion;
-    }
-
-    bool LidarSensorConfiguration::IsMaxPointsConfigurationVisible() const
-    {
-        return m_lidarSystemFeatures & LidarSystemFeatures::MaxRangePoints;
     }
 
     bool LidarSensorConfiguration::IsSegmentationConfigurationVisible() const

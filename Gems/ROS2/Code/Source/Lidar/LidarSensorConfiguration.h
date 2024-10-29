@@ -41,12 +41,12 @@ namespace ROS2
 
         bool m_isSegmentationEnabled = false;
         bool m_addPointsAtMax = false;
+        bool m_returnNonHits = false;
 
     private:
         bool IsConfigurationVisible() const;
         bool IsIgnoredLayerConfigurationVisible() const;
         bool IsEntityExclusionVisible() const;
-        bool IsMaxPointsConfigurationVisible() const;
         bool IsSegmentationConfigurationVisible() const;
         //! Update the lidar configuration based on the current lidar model selected.
         void FetchLidarModelConfiguration();

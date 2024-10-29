@@ -31,7 +31,8 @@ namespace ROS2
             serializeContext->Class<ROS2LidarSensorComponent, SensorBaseType>()
                 ->Version(3)
                 ->Field("lidarCore", &ROS2LidarSensorComponent::m_lidarCore)
-                ->Field("messageFormat", &ROS2LidarSensorComponent::m_messageFormat);
+                ->Field("messageFormat", &ROS2LidarSensorComponent::m_messageFormat)
+                ->Field("pointCloudOrdering", &ROS2LidarSensorComponent::m_pointcloudOrderingEnabled);
 
             if (auto* editContext = serializeContext->GetEditContext())
             {
@@ -49,7 +50,12 @@ namespace ROS2
                     ->Attribute(AZ::Edit::Attributes::Visibility, AZ::Edit::PropertyVisibility::ShowChildrenOnly)
                     ->DataElement(
                         AZ::Edit::UIHandlers::Default, &ROS2LidarSensorComponent::m_messageFormat, "Point Cloud 2 message format", "")
-                    ->Attribute(AZ::Edit::Attributes::ChangeNotify, &ROS2LidarSensorComponent::OnMessageFormatChanged);
+                    ->Attribute(AZ::Edit::Attributes::ChangeNotify, &ROS2LidarSensorComponent::OnMessageFormatChanged)
+                    ->DataElement(
+                        AZ::Edit::UIHandlers::Default,
+                        &ROS2LidarSensorComponent::m_pointcloudOrderingEnabled,
+                        "Enable or pointcloud ordering",
+                        "TODO");
             }
         }
     }
@@ -91,9 +97,7 @@ namespace ROS2
         ROS2SensorComponentBase::Activate();
 
         m_pointCloudMessageWriter = PointCloudMessageWriter(m_messageFormat);
-        const RaycastResultFlags requestedFlags =
-            GetNecessaryProviders(m_messageFormat) | RaycastResultFlags::Point; // We need points for visualization.
-        m_lidarCore.Init(GetEntityId(), requestedFlags);
+        m_lidarCore.Init(GetEntityId(), GetRequestResultFlags());
 
         m_lidarRaycasterId = m_lidarCore.GetLidarRaycasterId();
 
@@ -144,6 +148,18 @@ namespace ROS2
         return DefaultMessageFormat;
     }
 
+    RaycastResultFlags ROS2LidarSensorComponent::GetRequestResultFlags() const
+    {
+        auto flags = GetNecessaryProviders(m_messageFormat) | RaycastResultFlags::Point; // We need points for visualisation.
+
+        if (m_pointcloudOrderingEnabled)
+        {
+            flags |= RaycastResultFlags::IsHit;
+        }
+
+        return flags;
+    }
+
     void ROS2LidarSensorComponent::FrequencyTick()
     {
         AZStd::optional<RaycastResults> lastScanResults = m_lidarCore.PerformRaycast();
@@ -152,7 +168,11 @@ namespace ROS2
             return;
         }
 
-        PublishRaycastResults(lastScanResults.value());
+        const auto result = PublishRaycastResults(lastScanResults.value());
+        if (!result.IsSuccess())
+        {
+            AZ_Error("ROS2", false, "Failed to publish raycast results: %s", result.GetError());
+        }
     }
 
     template<typename T>
@@ -162,17 +182,28 @@ namespace ROS2
     {
         if (!m_pointCloudMessageWriter.has_value())
         {
-            return AZ::Failure("Point cloud message writer was uninitialized. Unable to publish the message.");
+            return AZ::Failure("Point cloud message writer was uninitialized.");
         }
 
         if (!results.IsCompliant(m_lidarCore.GetResultFlags()))
         {
-            return AZ::Failure("Received raycast results that were not expected. Publishing skipped.");
+            return AZ::Failure("Received raycast results that were not expected.");
         }
 
+        const size_t rayLayerCount = m_lidarCore.m_lidarConfiguration.m_lidarParameters.m_layers;
+        const size_t rayCountPerLayer = m_lidarCore.m_lidarConfiguration.m_lidarParameters.m_numberOfIncrements;
+        if (m_pointcloudOrderingEnabled && results.GetCount() != rayLayerCount * rayCountPerLayer)
+        {
+            return AZ::Failure("Received raycast results with dimensions that were not expected.");
+        }
+
+        const size_t pcWidth = m_pointcloudOrderingEnabled ? rayCountPerLayer : results.GetCount();
+        const size_t pcHeight = m_pointcloudOrderingEnabled ? rayLayerCount : 1U;
         m_pointCloudMessageWriter->Reset(
-            GetEntity()->FindComponent<ROS2FrameComponent>()->GetFrameID(), ROS2Interface::Get()->GetROSTimestamp(), results.GetCount());
-        m_pointCloudMessageWriter->WriteResults(results);
+            GetEntity()->FindComponent<ROS2FrameComponent>()->GetFrameID(), ROS2Interface::Get()->GetROSTimestamp(), pcWidth, pcHeight);
+
+        const bool skipNonHits = m_pointcloudOrderingEnabled && !m_lidarCore.m_lidarConfiguration.m_addPointsAtMax;
+        m_pointCloudMessageWriter->WriteResults(results, skipNonHits);
 
         m_pointCloudPublisher->publish(m_pointCloudMessageWriter->GetMessage());
 

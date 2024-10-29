@@ -47,6 +47,7 @@ namespace ROS2
     private:
         //////////////////////////////////////////////////////////////////////////
         static const Pc2MessageFormat& GetDefaultMessageFormat();
+        RaycastResultFlags GetRequestResultFlags() const;
         void FrequencyTick();
         AZ::Outcome<void, const char*> PublishRaycastResults(const RaycastResults& results);
         AZ::Crc32 OnMessageFormatChanged();
@@ -59,5 +60,7 @@ namespace ROS2
 
         LidarCore m_lidarCore;
         LidarId m_lidarRaycasterId;
+
+        bool m_pointcloudOrderingEnabled{ false };
     };
 } // namespace ROS2

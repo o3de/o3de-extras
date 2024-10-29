@@ -19,8 +19,8 @@ namespace ROS2
     public:
         explicit PointCloudMessageWriter(const Pc2MessageFormat& format);
 
-        void Reset(const AZStd::string& frameId, builtin_interfaces::msg::Time timeStamp, size_t count);
-        void WriteResults(const RaycastResults& results);
+        void Reset(const AZStd::string& frameId, builtin_interfaces::msg::Time timeStamp, size_t width, size_t height = 1U);
+        void WriteResults(const RaycastResults& results, bool skipNonHits = false);
 
         const Pc2Message& GetMessage();
 
@@ -36,6 +36,7 @@ namespace ROS2
 
             bool operator==(const MessageFieldIterator& other);
             bool operator!=(const MessageFieldIterator& other);
+
         private:
             void* m_data{ nullptr };
             size_t m_step{};
@@ -53,7 +54,7 @@ namespace ROS2
             const typename ResultTraits<R>::Type& resultValue, typename FieldTraits<F>::Type& messageFieldValue);
 
         template<RaycastResultFlags R>
-        bool WriteResultIfPresent(const RaycastResults& results, FieldFlags fieldFlag, size_t index);
+        bool WriteResultIfPresent(const RaycastResults& results, FieldFlags fieldFlag, size_t index, bool skipNonHits);
 
         void FillWithDefaultValues(FieldFlags fieldFlag, size_t fieldIndex);
         template<FieldFlags F>
@@ -62,10 +63,17 @@ namespace ROS2
         // Not having 1 - 1 association between raycast results and fields allows for easier incorporation
         // of new fields at the cost of a slight increase in code complexity.
         template<RaycastResultFlags R>
-        void WriteResult(const RaycastResults& results, FieldFlags fieldFlag, size_t index);
+        void WriteResult(
+            const RaycastResults& results,
+            FieldFlags fieldFlag,
+            size_t index,
+            AZStd::optional<RaycastResults::ConstFieldSpan<RaycastResultFlags::IsHit>> isHit);
 
         template<RaycastResultFlags R, FieldFlags F>
-        void WriteResultToMessageField(RaycastResults::ConstFieldSpan<R> fieldSpan, size_t fieldIndex);
+        void WriteResultToMessageField(
+            RaycastResults::ConstFieldSpan<R> fieldSpan,
+            size_t fieldIndex,
+            AZStd::optional<RaycastResults::ConstFieldSpan<RaycastResultFlags::IsHit>> isHit);
 
         AZStd::vector<bool> m_isSet;
         Pc2MessageWrapper m_message;
@@ -184,11 +192,12 @@ namespace ROS2
     }
 
     template<RaycastResultFlags R>
-    bool PointCloudMessageWriter::WriteResultIfPresent(const RaycastResults& results, FieldFlags fieldFlag, size_t index)
+    bool PointCloudMessageWriter::WriteResultIfPresent(const RaycastResults& results, FieldFlags fieldFlag, size_t index, bool skipNonHits)
     {
         if (results.IsFieldPresent<R>())
         {
-            WriteResult<R>(results, fieldFlag, index);
+            const auto isHit = skipNonHits ? results.GetConstFieldSpan<RaycastResultFlags::IsHit>() : AZStd::nullopt;
+            WriteResult<R>(results, fieldFlag, index, isHit);
             return true;
         }
 
@@ -221,63 +230,92 @@ namespace ROS2
 
     template<>
     inline void PointCloudMessageWriter::WriteResult<RaycastResultFlags::Point>(
-        const RaycastResults& results, FieldFlags fieldFlag, size_t fieldIndex)
+        const RaycastResults& results,
+        FieldFlags fieldFlag,
+        size_t fieldIndex,
+        AZStd::optional<RaycastResults::ConstFieldSpan<RaycastResultFlags::IsHit>> isHit)
     {
         if (fieldFlag == FieldFlags::PositionXYZF32)
         {
             WriteResultToMessageField<RaycastResultFlags::Point, FieldFlags::PositionXYZF32>(
-                results.GetConstFieldSpan<RaycastResultFlags::Point>().value(), fieldIndex);
+                results.GetConstFieldSpan<RaycastResultFlags::Point>().value(), fieldIndex, isHit);
         }
     }
 
     template<>
     inline void PointCloudMessageWriter::WriteResult<RaycastResultFlags::Intensity>(
-        const RaycastResults& results, FieldFlags fieldFlag, size_t fieldIndex)
+        const RaycastResults& results,
+        FieldFlags fieldFlag,
+        size_t fieldIndex,
+        AZStd::optional<RaycastResults::ConstFieldSpan<RaycastResultFlags::IsHit>> isHit)
     {
         if (fieldFlag == FieldFlags::IntensityF32)
         {
             WriteResultToMessageField<RaycastResultFlags::Intensity, FieldFlags::IntensityF32>(
-                results.GetConstFieldSpan<RaycastResultFlags::Intensity>().value(), fieldIndex);
+                results.GetConstFieldSpan<RaycastResultFlags::Intensity>().value(), fieldIndex, isHit);
         }
     }
 
     template<>
     inline void PointCloudMessageWriter::WriteResult<RaycastResultFlags::Range>(
-        const RaycastResults& results, FieldFlags fieldFlag, size_t fieldIndex)
+        const RaycastResults& results,
+        FieldFlags fieldFlag,
+        size_t fieldIndex,
+        AZStd::optional<RaycastResults::ConstFieldSpan<RaycastResultFlags::IsHit>> isHit)
     {
         if (fieldFlag == FieldFlags::RangeU32)
         {
             WriteResultToMessageField<RaycastResultFlags::Range, FieldFlags::RangeU32>(
-                results.GetConstFieldSpan<RaycastResultFlags::Range>().value(), fieldIndex);
+                results.GetConstFieldSpan<RaycastResultFlags::Range>().value(), fieldIndex, isHit);
         }
     }
 
     template<>
     inline void PointCloudMessageWriter::WriteResult<RaycastResultFlags::SegmentationData>(
-        const RaycastResults& results, FieldFlags fieldFlag, size_t fieldIndex)
+        const RaycastResults& results,
+        FieldFlags fieldFlag,
+        size_t fieldIndex,
+        AZStd::optional<RaycastResults::ConstFieldSpan<RaycastResultFlags::IsHit>> isHit)
     {
         if (fieldFlag == FieldFlags::SegmentationData96)
         {
             WriteResultToMessageField<RaycastResultFlags::SegmentationData, FieldFlags::SegmentationData96>(
-                results.GetConstFieldSpan<RaycastResultFlags::SegmentationData>().value(), fieldIndex);
+                results.GetConstFieldSpan<RaycastResultFlags::SegmentationData>().value(), fieldIndex, isHit);
         }
     }
 
     template<RaycastResultFlags R, FieldFlags F>
-    void PointCloudMessageWriter::WriteResultToMessageField(RaycastResults::ConstFieldSpan<R> fieldSpan, size_t fieldIndex)
+    void PointCloudMessageWriter::WriteResultToMessageField(
+        RaycastResults::ConstFieldSpan<R> fieldSpan,
+        size_t fieldIndex,
+        AZStd::optional<RaycastResults::ConstFieldSpan<RaycastResultFlags::IsHit>> isHit)
     {
+        AZStd::optional<RaycastResults::ConstFieldSpan<RaycastResultFlags::IsHit>::const_iterator> isHitIt = AZStd::nullopt;
+        if (isHit.has_value())
+        {
+            isHitIt = isHit->begin();
+        }
+
         auto messageFieldIt = Begin<F>(fieldIndex);
         for (auto resultIt = fieldSpan.begin(); resultIt != fieldSpan.end(); ++resultIt, ++messageFieldIt)
         {
-            if (const auto outcome = AssignResultFieldValue<R, F>(*resultIt, *messageFieldIt); !outcome.IsSuccess())
+            if (!isHitIt.has_value() || *isHitIt.value())
             {
-                AZ_Error(
-                    "ROS2::PointCloudMessageWriter",
-                    false,
-                    "Writing result of type %u failed with the following message: %s. Skipping",
-                    R,
-                    outcome.GetError().data());
-                return;
+                if (const auto outcome = AssignResultFieldValue<R, F>(*resultIt, *messageFieldIt); !outcome.IsSuccess())
+                {
+                    AZ_Error(
+                        "ROS2::PointCloudMessageWriter",
+                        false,
+                        "Writing result of type %u failed with the following message: %s. Skipping",
+                        R,
+                        outcome.GetError().data());
+                    return;
+                }
+            }
+
+            if (isHitIt.has_value())
+            {
+                ++(*isHitIt);
             }
         }
     }
