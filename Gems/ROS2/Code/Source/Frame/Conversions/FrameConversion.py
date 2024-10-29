@@ -12,7 +12,7 @@ import decimal
 
 def find_and_replace(data):
 
-    def search_for_components(item, foundComponents):
+    def search_for_components(item, foundComponents, insidePatches=False):
         if isinstance(item, dict):
             if "Components" in item:
                 foundComponents = True
@@ -32,13 +32,28 @@ def find_and_replace(data):
                     modifiedElement["ROS2FrameConfiguration"] = modifiedElement["m_template"]
                     del modifiedElement["m_template"]
                     item = modifiedElement
-            if "op" in item and item["op"] == "replace" and "path" in item:
-                item["path"] = item["path"].replace("ROS2FrameComponent/m_template", "ROS2FrameEditorComponent/ROS2FrameConfiguration")
-            for value in item.values():
-                search_for_components(value, foundComponents)
+
+            # Check if inside "Patches" section
+            if "Patches" in item:
+                insidePatches = True
+
+            # Only apply path changes inside "Patches"
+            if insidePatches and "op" in item and "path" in item:
+                # We directly look for the ROS2FrameComponent fields and replace "m_template" with "ROS2FrameConfiguration"
+                if any(substring in item["path"] for substring in [
+                    "m_template/Namespace Configuration",
+                    "m_template/Frame Name",
+                    "m_template/Publish Transform",
+                    "m_template/Joint Name"
+                ]):
+                    item["path"] = item["path"].replace("m_template", "ROS2FrameConfiguration")
+
+            for key, value in item.items():
+                search_for_components(value, foundComponents, insidePatches)
+
         elif isinstance(item, list):
             for element in item:
-                search_for_components(element, foundComponents)
+                search_for_components(element, foundComponents, insidePatches)
 
     search_for_components(data, False)
 
