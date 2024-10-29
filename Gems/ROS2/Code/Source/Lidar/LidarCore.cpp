@@ -6,12 +6,13 @@
  *
  */
 
-#include "LidarCore.h"
 #include <Atom/RPI.Public/AuxGeom/AuxGeomFeatureProcessorInterface.h>
 #include <Atom/RPI.Public/Scene.h>
 #include <AzFramework/Physics/PhysicsSystem.h>
+#include <Lidar/LidarCore.h>
 #include <Lidar/LidarRegistrarSystemComponent.h>
 #include <ROS2/Frame/ROS2FrameComponent.h>
+#include <ROS2/Lidar/ClassSegmentationBus.h>
 #include <ROS2/ROS2Bus.h>
 #include <ROS2/Utilities/ROS2Names.h>
 
@@ -34,6 +35,34 @@ namespace ROS2
                     ->Attribute(AZ::Edit::Attributes::Visibility, AZ::Edit::PropertyVisibility::ShowChildrenOnly);
             }
         }
+    }
+
+    RaycastResultFlags LidarCore::GetRaycastResultFlagsForConfig(const LidarSensorConfiguration& configuration)
+    {
+        RaycastResultFlags flags = RaycastResultFlags::Range | RaycastResultFlags::Point;
+        if (configuration.m_lidarSystemFeatures & LidarSystemFeatures::Intensity)
+        {
+            flags |= RaycastResultFlags::Intensity;
+        }
+
+        if (configuration.m_lidarSystemFeatures & LidarSystemFeatures::Segmentation && configuration.m_isSegmentationEnabled)
+        {
+            if (ClassSegmentationInterface::Get())
+            {
+                flags |= RaycastResultFlags::SegmentationData;
+            }
+            else
+            {
+                AZ_Error(
+                    "ROS2",
+                    false,
+                    "Segmentation feature was enabled for this lidar sensor but the segmentation interface is not accessible. Make sure to "
+                    "either add the Class segmentation component to the level entity or disable the feature in the lidar component "
+                    "configuration.");
+            }
+        }
+
+        return flags;
     }
 
     void LidarCore::ConnectToLidarRaycaster()
@@ -72,10 +101,8 @@ namespace ROS2
                 m_lidarConfiguration.m_lidarParameters.m_noiseParameters.m_distanceNoiseStdDevRisePerMeter);
         }
 
-        LidarRaycasterRequestBus::Event(
-            m_lidarRaycasterId,
-            &LidarRaycasterRequestBus::Events::ConfigureRaycastResultFlags,
-            GetRaycastResultFlagsForConfig(m_lidarConfiguration));
+        m_resultFlags = GetRaycastResultFlagsForConfig(m_lidarConfiguration);
+        LidarRaycasterRequestBus::Event(m_lidarRaycasterId, &LidarRaycasterRequestBus::Events::ConfigureRaycastResultFlags, m_resultFlags);
 
         if (m_lidarConfiguration.m_lidarSystemFeatures & LidarSystemFeatures::CollisionLayers)
         {
@@ -104,17 +131,6 @@ namespace ROS2
     {
         const auto pointsField = results.GetConstFieldSpan<RaycastResultFlags::Point>().value();
         m_lastPoints.assign(pointsField.begin(), pointsField.end());
-    }
-
-    RaycastResultFlags LidarCore::GetRaycastResultFlagsForConfig(const LidarSensorConfiguration& configuration)
-    {
-        RaycastResultFlags flags = RaycastResultFlags::Range | RaycastResultFlags::Point;
-        if (configuration.m_lidarSystemFeatures & LidarSystemFeatures::Intensity)
-        {
-            flags |= RaycastResultFlags::Intensity;
-        }
-
-        return flags;
     }
 
     LidarCore::LidarCore(const AZStd::vector<LidarTemplate::LidarModel>& availableModels)
@@ -175,6 +191,11 @@ namespace ROS2
     LidarId LidarCore::GetLidarRaycasterId() const
     {
         return m_lidarRaycasterId;
+    }
+
+    RaycastResultFlags LidarCore::GetResultFlags() const
+    {
+        return m_resultFlags;
     }
 
     AZStd::optional<RaycastResults> LidarCore::PerformRaycast()

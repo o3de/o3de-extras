@@ -18,6 +18,7 @@ namespace ROS2
         Point = (1 << 0), //!< return 3D point coordinates
         Range = (1 << 1), //!< return array of distances
         Intensity = (1 << 2), //!< return intensity data
+        SegmentationData = (1 << 3), //!< return segmentation data
     };
 
     //! Bitwise operators for RaycastResultFlags
@@ -47,6 +48,18 @@ namespace ROS2
     struct ResultTraits<RaycastResultFlags::Intensity>
     {
         using Type = float;
+    };
+
+    struct SegmentationIds
+    {
+        int32_t m_entityId;
+        AZ::u8 m_classId;
+    };
+
+    template<>
+    struct ResultTraits<RaycastResultFlags::SegmentationData>
+    {
+        using Type = SegmentationIds;
     };
 
     //! Class used for storing the results of a raycast.
@@ -106,6 +119,7 @@ namespace ROS2
         FieldInternal<RaycastResultFlags::Point> m_points;
         FieldInternal<RaycastResultFlags::Range> m_ranges;
         FieldInternal<RaycastResultFlags::Intensity> m_intensities;
+        FieldInternal<RaycastResultFlags::SegmentationData> m_segmentationData;
     };
 
     template<RaycastResultFlags F>
@@ -155,6 +169,13 @@ namespace ROS2
         const
     {
         return m_intensities;
+    }
+
+    template<>
+    inline const RaycastResults::FieldInternal<RaycastResultFlags::SegmentationData>& RaycastResults::GetField<
+        RaycastResultFlags::SegmentationData>() const
+    {
+        return m_segmentationData;
     }
 
     template<RaycastResultFlags F>

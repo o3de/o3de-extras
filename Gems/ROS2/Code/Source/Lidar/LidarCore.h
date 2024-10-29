@@ -45,6 +45,10 @@ namespace ROS2
         //! @return Used raycaster's id.
         LidarId GetLidarRaycasterId() const;
 
+        //! Get the result flags used by this lidar.
+        //! @return Used result flags.
+        RaycastResultFlags GetResultFlags() const;
+
         //! Configuration according to which the lidar performs its raycasts.
         LidarSensorConfiguration m_lidarConfiguration;
 
@@ -66,5 +70,6 @@ namespace ROS2
         AZStd::vector<AZ::Vector3> m_lastPoints;
 
         AZ::EntityId m_entityId;
+        RaycastResultFlags m_resultFlags;
     };
 } // namespace ROS2

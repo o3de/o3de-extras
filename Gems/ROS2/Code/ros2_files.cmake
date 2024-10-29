@@ -79,6 +79,10 @@ set(FILES
         Source/Lidar/ROS2Lidar2DSensorComponent.h
         Source/Lidar/ROS2LidarSensorComponent.cpp
         Source/Lidar/ROS2LidarSensorComponent.h
+        Source/Lidar/ClassSegmentationConfigurationComponent.cpp
+        Source/Lidar/ClassSegmentationConfigurationComponent.h
+        Source/Lidar/SegmentationClassConfiguration.cpp
+        Source/Lidar/SegmentationUtils.cpp
         Source/Manipulation/Controllers/JointsArticulationControllerComponent.cpp
         Source/Manipulation/Controllers/JointsArticulationControllerComponent.h
         Source/Manipulation/Controllers/JointsPIDControllerComponent.cpp
