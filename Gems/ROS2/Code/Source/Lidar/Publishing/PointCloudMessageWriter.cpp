@@ -77,6 +77,9 @@ namespace ROS2
         case FieldFlags::ReflectivityU16:
             FillWithDefaultValues<FieldFlags::ReflectivityU16>(fieldIndex);
             break;
+        case FieldFlags::RingU8:
+            FillWithDefaultValues<FieldFlags::RingU8>(fieldIndex);
+            break;
         case FieldFlags::RingU16:
             FillWithDefaultValues<FieldFlags::RingU16>(fieldIndex);
             break;

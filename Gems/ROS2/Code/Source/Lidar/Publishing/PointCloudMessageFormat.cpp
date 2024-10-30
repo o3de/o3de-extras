@@ -23,8 +23,8 @@ namespace ROS2
         switch (fieldFlag)
         {
             // clang-format off
-        case FieldFlags::PositionXYZF32:            return 12U;
-        case FieldFlags::SegmentationData96:        return 8U;
+        case FieldFlags::PositionXYZF32:
+        case FieldFlags::SegmentationData96:        return 12U;
         case FieldFlags::IntensityF32:
         case FieldFlags::TU32:
         case FieldFlags::RangeU32:
@@ -33,7 +33,8 @@ namespace ROS2
         case FieldFlags::RingU16:
         case FieldFlags::AmbientU16:
         case FieldFlags::Padding16:                 return 2U;
-        case FieldFlags::Padding8:                  return 1U;
+        case FieldFlags::Padding8:
+        case FieldFlags::RingU8:                    return 1U;
         default:                                    return AZStd::numeric_limits<size_t>::max();
             // clang-format on
         }
@@ -74,7 +75,8 @@ namespace ROS2
         case FieldFlags::IntensityF32:              return "intensity";
         case FieldFlags::TU32:                      return "t";
         case FieldFlags::ReflectivityU16:           return "reflectivity";
-        case FieldFlags::RingU16:                   return "ring";
+        case FieldFlags::RingU16:
+        case FieldFlags::RingU8:                    return "ring";
         case FieldFlags::AmbientU16:                return "ambient";
         case FieldFlags::RangeU32:                  return "range";
         case FieldFlags::SegmentationData96:        return "entity_id, class_id";
@@ -93,11 +95,12 @@ namespace ROS2
             // clang-format off
         case FieldFlags::PositionXYZF32:            return "3 x F32";
         case FieldFlags::IntensityF32:              return "F32";
-        case FieldFlags::TU32:                      return "U32";
+        case FieldFlags::TU32:
+        case FieldFlags::RangeU32:                  return "U32";
         case FieldFlags::ReflectivityU16:
         case FieldFlags::RingU16:
         case FieldFlags::AmbientU16:                return "U16";
-        case FieldFlags::RangeU32:                  return "U32";
+        case FieldFlags::RingU8:                    return "U8";
         case FieldFlags::SegmentationData96:        return "I32 + U32 (rgba) + U8 + 24-bit padding";
         case FieldFlags::Padding8:
         case FieldFlags::Padding16:
@@ -152,7 +155,8 @@ namespace ROS2
                     ->EnumAttribute(FieldFlags::IntensityF32, "Intensity")
                     ->EnumAttribute(FieldFlags::TU32, "T")
                     ->EnumAttribute(FieldFlags::ReflectivityU16, "Reflectivity")
-                    ->EnumAttribute(FieldFlags::RingU16, "Ring")
+                    ->EnumAttribute(FieldFlags::RingU16, "Ring (2 bytes)")
+                    ->EnumAttribute(FieldFlags::RingU8,  "Ring (1 byte)")
                     ->EnumAttribute(FieldFlags::AmbientU16, "Ambient")
                     ->EnumAttribute(FieldFlags::RangeU32, "Range")
                     ->EnumAttribute(FieldFlags::SegmentationData96, "Segmentation Entity ID and class ID")

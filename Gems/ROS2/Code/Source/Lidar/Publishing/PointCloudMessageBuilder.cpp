@@ -33,11 +33,12 @@ namespace ROS2
         {
             // clang-format off
         case FieldFlags::IntensityF32:              return F32;
-        case FieldFlags::TU32:                      return U32;
+        case FieldFlags::TU32:
+        case FieldFlags::RangeU32:                  return U32;
         case FieldFlags::ReflectivityU16:
         case FieldFlags::RingU16:
         case FieldFlags::AmbientU16:                return U16;
-        case FieldFlags::RangeU32:                  return U32;
+        case FieldFlags::RingU8:                    return U8;
         default:
             return AZStd::nullopt;
         }

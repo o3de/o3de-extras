@@ -29,7 +29,8 @@ namespace ROS2
         Padding8                = 1 << 8,
         Padding16               = 1 << 9,
         Padding32               = 1 << 10,
-        All                     = (1 << 11) - 1U,
+        RingU8                  = 1 << 11,
+        All                     = (1 << 12) - 1U,
         // clang-format on
     };
 
@@ -87,6 +88,14 @@ namespace ROS2
     struct FieldTraits<FieldFlags::RingU16>
     {
         using Type = AZ::u16;
+        static constexpr Type DefaultValue{};
+        static constexpr RaycastResultFlags Provider = RaycastResultFlags::None;
+    };
+
+    template<>
+    struct FieldTraits<FieldFlags::RingU8>
+    {
+        using Type = AZ::u8;
         static constexpr Type DefaultValue{};
         static constexpr RaycastResultFlags Provider = RaycastResultFlags::None;
     };
