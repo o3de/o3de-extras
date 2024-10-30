@@ -47,6 +47,7 @@ namespace ROS2
     private:
         //////////////////////////////////////////////////////////////////////////
         static const Pc2MessageFormat& GetDefaultMessageFormat();
+        void TransformToLidarLocalSpace(AZStd::span<AZ::Vector3> pointSpan) const;
         RaycastResultFlags GetRequestResultFlags() const;
         void FrequencyTick();
         AZ::Outcome<void, const char*> PublishRaycastResults(const RaycastResults& results);

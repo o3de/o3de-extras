@@ -148,6 +148,16 @@ namespace ROS2
         return DefaultMessageFormat;
     }
 
+    void ROS2LidarSensorComponent::TransformToLidarLocalSpace(AZStd::span<AZ::Vector3> pointSpan) const
+    {
+        const auto entityTransform = GetEntity()->FindComponent<AzFramework::TransformComponent>();
+        const auto inverseLidarTM = entityTransform->GetWorldTM().GetInverse();
+        for (auto pointIt = pointSpan.begin(); pointIt != pointSpan.end(); ++pointIt)
+        {
+            *pointIt = inverseLidarTM.TransformPoint(*pointIt);
+        }
+    }
+
     RaycastResultFlags ROS2LidarSensorComponent::GetRequestResultFlags() const
     {
         auto flags = GetNecessaryProviders(m_messageFormat) | RaycastResultFlags::Point; // We need points for visualisation.
@@ -168,10 +178,15 @@ namespace ROS2
             return;
         }
 
-        const auto result = PublishRaycastResults(lastScanResults.value());
-        if (!result.IsSuccess())
+        if (auto pointSpan = lastScanResults->GetFieldSpan<RaycastResultFlags::Point>(); pointSpan.has_value())
         {
-            AZ_Error("ROS2", false, "Failed to publish raycast results: %s", result.GetError());
+            TransformToLidarLocalSpace(pointSpan.value());
+        }
+
+        const auto outcome = PublishRaycastResults(lastScanResults.value());
+        if (!outcome.IsSuccess())
+        {
+            AZ_Error("ROS2", false, "Failed to publish raycast results: %s", outcome.GetError());
         }
     }
 
