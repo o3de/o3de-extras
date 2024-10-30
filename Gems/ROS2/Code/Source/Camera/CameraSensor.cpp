@@ -17,6 +17,7 @@
 #include <Atom/RPI.Public/RenderPipeline.h>
 #include <Atom/RPI.Public/Scene.h>
 #include <AzCore/Math/MatrixUtils.h>
+#include <AzCore/Settings/SettingsRegistry.h>
 #include <AzFramework/Components/TransformComponent.h>
 #include <AzFramework/Scene/SceneSystemInterface.h>
 #include <PostProcess/PostProcessFeatureProcessor.h>
@@ -27,6 +28,9 @@ namespace ROS2
 {
     namespace Internal
     {
+        constexpr AZStd::string_view AllowCameraPipelineModificationKey = "/O3DE/ROS2/Camera/AllowPipelineModification";
+
+
         /// @FormatMappings - contains the mapping from RHI to ROS image encodings. List of supported
         /// ROS image encodings lives in `sensor_msgs/image_encodings.hpp`
         /// We are not including `image_encodings.hpp` since it uses exceptions.
@@ -107,7 +111,18 @@ namespace ROS2
 
     void CameraSensor::SetupPasses()
     {
-        AZ_TracePrintf("CameraSensor", "Initializing pipeline for %s\n", m_cameraSensorDescription.m_cameraName.c_str());
+        bool allowModification = false;
+        auto* registry = AZ::SettingsRegistry::Get();
+        AZ_Assert(registry, "No Registry available");
+        if (registry)
+        {
+            registry->Get(allowModification, Internal::AllowCameraPipelineModificationKey);
+        }
+        AZ_TracePrintf(
+            "CameraSensor",
+            "Initializing pipeline for %s, pipeline modification : %d\n",
+            m_cameraSensorDescription.m_cameraName.c_str(),
+            allowModification);
 
         const AZ::Name viewName = AZ::Name("MainCamera");
         m_view = AZ::RPI::View::CreateView(viewName, AZ::RPI::View::UsageCamera);
@@ -123,7 +138,7 @@ namespace ROS2
             m_entityId.ToString().c_str());
         AZ::RPI::RenderPipelineDescriptor pipelineDesc;
         pipelineDesc.m_mainViewTagName = "MainCamera";
-        pipelineDesc.m_allowModification = true;
+        pipelineDesc.m_allowModification = allowModification;
         pipelineDesc.m_name = m_pipelineName;
 
         pipelineDesc.m_rootPassTemplate = GetPipelineTemplateName();
