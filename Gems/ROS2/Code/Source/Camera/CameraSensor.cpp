@@ -30,7 +30,6 @@ namespace ROS2
     {
         constexpr AZStd::string_view AllowCameraPipelineModificationKey = "/O3DE/ROS2/Camera/AllowPipelineModification";
 
-
         /// @FormatMappings - contains the mapping from RHI to ROS image encodings. List of supported
         /// ROS image encodings lives in `sensor_msgs/image_encodings.hpp`
         /// We are not including `image_encodings.hpp` since it uses exceptions.
@@ -118,11 +117,11 @@ namespace ROS2
         {
             registry->Get(allowModification, Internal::AllowCameraPipelineModificationKey);
         }
-        AZ_TracePrintf(
+        AZ_Trace(
             "CameraSensor",
-            "Initializing pipeline for %s, pipeline modification : %d\n",
+            "Initializing pipeline for %s, pipeline modification : %s\n",
             m_cameraSensorDescription.m_cameraName.c_str(),
-            allowModification);
+            allowModification ? "yes" : "no");
 
         const AZ::Name viewName = AZ::Name("MainCamera");
         m_view = AZ::RPI::View::CreateView(viewName, AZ::RPI::View::UsageCamera);
