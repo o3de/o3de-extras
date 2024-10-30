@@ -64,6 +64,7 @@ ly_add_target(
             Gem::Atom_RPI.Public
             Gem::Atom_Feature_Common.Static
             Gem::Atom_Component_DebugCamera.Static
+            Gem::Atom_AtomBridge.Static
             Gem::StartingPointInput
             Gem::PhysX5.Static
             Gem::LmbrCentral.API
