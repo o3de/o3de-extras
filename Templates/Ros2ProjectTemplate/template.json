@@ -1,6 +1,6 @@
 {
     "template_name": "Ros2ProjectTemplate",
-    "version": "2.0.0",
+    "version": "2.0.1",
     "origin": "Open 3D Engine Extras",
     "origin_url": "https://github.com/o3de/o3de-extras",
     "license": "https://github.com/o3de/o3de-extras/tree/development/Templates/Ros2ProjectTemplate/Template/LICENSE.txt",
@@ -232,6 +232,10 @@
         },
         {
             "file": "Registry/sceneassetimporter.setreg",
+            "isTemplated": false
+        },
+        {
+            "file": "Registry/ros2.setreg",
             "isTemplated": false
         },
         {
@@ -557,5 +561,5 @@
         }
     ],
     "repo_uri": "https://raw.githubusercontent.com/o3de/o3de-extras/development",
-    "download_source_uri": "https://github.com/o3de/o3de-extras/releases/download/2.0/ros2projecttemplate-2.0.0-template.zip"
+    "download_source_uri": "https://github.com/o3de/o3de-extras/releases/download/2.0/ros2projecttemplate-2.0.1-template.zip"
 }

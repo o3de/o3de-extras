@@ -619,6 +619,10 @@
             "isTemplated": false
         },
         {
+            "file": "Registry/ros2.setreg",
+            "isTemplated": false
+        },
+        {
             "file": "Resources/GameSDK.ico",
             "isTemplated": false
         },
