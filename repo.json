@@ -228,6 +228,27 @@
                     ],
                     "download_source_uri": "https://github.com/o3de/o3de-extras/releases/download/2.0/ros2-3.1.1-gem.zip",
                     "sha256": "063fea6c2d70a778dcbd92d9b1be2fff36a058d83002f612fcbfa6526b41fcde"
+                },
+                {
+                    "version": "3.2.2",
+                    "origin_url": "https://robotec.ai",
+                    "source_control_uri": "https://github.com/o3de/o3de-extras/development/Gems/ROS2",
+                    "compatible_engines": [
+                        "o3de-sdk>=2.3.0",
+                        "o3de>=2.3.0"
+                    ],
+                    "documentation_url": "https://docs.o3de.org/docs/user-guide/gems/reference/robotics/ros2/",
+                    "dependencies": [
+                        "Atom_RPI",
+                        "Atom_Feature_Common",
+                        "Atom_Component_DebugCamera",
+                        "CommonFeaturesAtom",
+                        "PhysX5",
+                        "PrimitiveAssets",
+                        "StartingPointInput"
+                    ],
+                    "download_source_uri": "https://github.com/o3de/o3de-extras/releases/download/2.0/ros2-3.2.2-gem.zip",
+                    "sha256": "86bf6c09c2545db10210752e7749ed9d9784e32200196f8f1110bc7a4f704636"
                 }
             ]
         },
@@ -3825,6 +3846,490 @@
                     ],
                     "download_source_uri": "https://github.com/o3de/o3de-extras/releases/download/2.0/ros2fleetrobottemplate-2.0.1-template.zip",
                     "sha256": "33023262e18e7b72e2cd78e96982fd90df9f9095a78bead6d2afb74c2ed390c4"
+                },
+                {
+                    "version": "2.0.2",
+                    "copyFiles": [
+                        {
+                            "file": ".gitignore",
+                            "isTemplated": false
+                        },
+                        {
+                            "file": "CMakeLists.txt",
+                            "isTemplated": true
+                        },
+                        {
+                            "file": "Config/shader_global_build_options.json",
+                            "isTemplated": false
+                        },
+                        {
+                            "file": "Gem/${Name}_files.cmake",
+                            "isTemplated": true
+                        },
+                        {
+                            "file": "Gem/${Name}_shared_files.cmake",
+                            "isTemplated": true
+                        },
+                        {
+                            "file": "Gem/CMakeLists.txt",
+                            "isTemplated": true
+                        },
+                        {
+                            "file": "Gem/Include/${Name}/${Name}Bus.h",
+                            "isTemplated": true
+                        },
+                        {
+                            "file": "Gem/Platform/Linux/${Name}_linux_files.cmake",
+                            "isTemplated": true
+                        },
+                        {
+                            "file": "Gem/Platform/Linux/${Name}_shared_linux_files.cmake",
+                            "isTemplated": true
+                        },
+                        {
+                            "file": "Gem/Platform/Linux/PAL_linux.cmake",
+                            "isTemplated": true
+                        },
+                        {
+                            "file": "Gem/Platform/Mac/${Name}_mac_files.cmake",
+                            "isTemplated": true
+                        },
+                        {
+                            "file": "Gem/Platform/Mac/${Name}_shared_mac_files.cmake",
+                            "isTemplated": true
+                        },
+                        {
+                            "file": "Gem/Platform/Mac/PAL_mac.cmake",
+                            "isTemplated": true
+                        },
+                        {
+                            "file": "Gem/Platform/Windows/${Name}_shared_windows_files.cmake",
+                            "isTemplated": true
+                        },
+                        {
+                            "file": "Gem/Platform/Windows/${Name}_windows_files.cmake",
+                            "isTemplated": true
+                        },
+                        {
+                            "file": "Gem/Platform/Windows/PAL_windows.cmake",
+                            "isTemplated": true
+                        },
+                        {
+                            "file": "Gem/Registry/assetprocessor_settings.setreg",
+                            "isTemplated": true
+                        },
+                        {
+                            "file": "Gem/Source/${Name}Module.cpp",
+                            "isTemplated": true
+                        },
+                        {
+                            "file": "Gem/Source/${Name}SystemComponent.cpp",
+                            "isTemplated": true
+                        },
+                        {
+                            "file": "Gem/Source/${Name}SystemComponent.h",
+                            "isTemplated": true
+                        },
+                        {
+                            "file": "Gem/gem.json",
+                            "isTemplated": true
+                        },
+                        {
+                            "file": "Levels/Warehouse/Warehouse.prefab",
+                            "isTemplated": false
+                        },
+                        {
+                            "file": "Levels/playground/playground.prefab",
+                            "isTemplated": false
+                        },
+                        {
+                            "file": "Platform/Linux/linux_project.cmake",
+                            "isTemplated": true
+                        },
+                        {
+                            "file": "Platform/Linux/linux_project.json",
+                            "isTemplated": false
+                        },
+                        {
+                            "file": "Platform/Mac/mac_project.cmake",
+                            "isTemplated": true
+                        },
+                        {
+                            "file": "Platform/Mac/mac_project.json",
+                            "isTemplated": false
+                        },
+                        {
+                            "file": "Platform/Windows/windows_project.cmake",
+                            "isTemplated": true
+                        },
+                        {
+                            "file": "Platform/Windows/windows_project.json",
+                            "isTemplated": false
+                        },
+                        {
+                            "file": "Registry/assetprocessor_settings.setreg",
+                            "isTemplated": false
+                        },
+                        {
+                            "file": "Registry/awscoreconfiguration.setreg",
+                            "isTemplated": false
+                        },
+                        {
+                            "file": "Registry/physxdebugconfiguration.setreg",
+                            "isTemplated": false
+                        },
+                        {
+                            "file": "Registry/physxdefaultsceneconfiguration.setreg",
+                            "isTemplated": false
+                        },
+                        {
+                            "file": "Registry/physxsystemconfiguration.setreg",
+                            "isTemplated": false
+                        },
+                        {
+                            "file": "Registry/ros2.setreg",
+                            "isTemplated": false
+                        },
+                        {
+                            "file": "Resources/GameSDK.ico",
+                            "isTemplated": false
+                        },
+                        {
+                            "file": "Resources/LegacyLogoLauncher.bmp",
+                            "isTemplated": false
+                        },
+                        {
+                            "file": "Resources/Platform/Mac/Images.xcassets/AppIcon.appiconset/Contents.json",
+                            "isTemplated": false
+                        },
+                        {
+                            "file": "Resources/Platform/Mac/Images.xcassets/AppIcon.appiconset/icon_128.png",
+                            "isTemplated": false
+                        },
+                        {
+                            "file": "Resources/Platform/Mac/Images.xcassets/AppIcon.appiconset/icon_128_2x.png",
+                            "isTemplated": false
+                        },
+                        {
+                            "file": "Resources/Platform/Mac/Images.xcassets/AppIcon.appiconset/icon_16.png",
+                            "isTemplated": false
+                        },
+                        {
+                            "file": "Resources/Platform/Mac/Images.xcassets/AppIcon.appiconset/icon_16_2x.png",
+                            "isTemplated": false
+                        },
+                        {
+                            "file": "Resources/Platform/Mac/Images.xcassets/AppIcon.appiconset/icon_256.png",
+                            "isTemplated": false
+                        },
+                        {
+                            "file": "Resources/Platform/Mac/Images.xcassets/AppIcon.appiconset/icon_256_2x.png",
+                            "isTemplated": false
+                        },
+                        {
+                            "file": "Resources/Platform/Mac/Images.xcassets/AppIcon.appiconset/icon_32.png",
+                            "isTemplated": false
+                        },
+                        {
+                            "file": "Resources/Platform/Mac/Images.xcassets/AppIcon.appiconset/icon_32_2x.png",
+                            "isTemplated": false
+                        },
+                        {
+                            "file": "Resources/Platform/Mac/Images.xcassets/AppIcon.appiconset/icon_512.png",
+                            "isTemplated": false
+                        },
+                        {
+                            "file": "Resources/Platform/Mac/Images.xcassets/AppIcon.appiconset/icon_512_2x.png",
+                            "isTemplated": false
+                        },
+                        {
+                            "file": "Resources/Platform/Mac/Images.xcassets/Contents.json",
+                            "isTemplated": false
+                        },
+                        {
+                            "file": "Resources/Platform/Mac/Info.plist",
+                            "isTemplated": true
+                        },
+                        {
+                            "file": "ShaderLib/README.md",
+                            "isTemplated": false
+                        },
+                        {
+                            "file": "ShaderLib/scenesrg.srgi",
+                            "isTemplated": true
+                        },
+                        {
+                            "file": "ShaderLib/viewsrg.srgi",
+                            "isTemplated": true
+                        },
+                        {
+                            "file": "Passes/ContrastAdaptiveSharpening.pass",
+                            "isTemplated": false
+                        },
+                        {
+                            "file": "Passes/MainRenderPipeline.azasset",
+                            "isTemplated": false
+                        },
+                        {
+                            "file": "Passes/PostProcessParent.pass",
+                            "isTemplated": false
+                        },
+                        {
+                            "file": "Passes/SMAAConfiguration.azasset",
+                            "isTemplated": false
+                        },
+                        {
+                            "file": "Passes/Taa.pass",
+                            "isTemplated": false
+                        },
+                        {
+                            "file": "Prefabs/ProteusLaserScanner.prefab",
+                            "isTemplated": false
+                        },
+                        {
+                            "file": "autoexec.cfg",
+                            "isTemplated": false
+                        },
+                        {
+                            "file": "cmake/EngineFinder.cmake",
+                            "isTemplated": false
+                        },
+                        {
+                            "file": "game.cfg",
+                            "isTemplated": false
+                        },
+                        {
+                            "file": "preview.png",
+                            "isTemplated": false
+                        },
+                        {
+                            "file": "project.json",
+                            "isTemplated": true
+                        },
+                        {
+                            "file": "Examples/ros2_ws/src/o3de_fleet_nav/maps/map_warehouse.yaml",
+                            "isTemplated": false
+                        },
+                        {
+                            "file": "Examples/ros2_ws/src/o3de_fleet_nav/maps/map_warehouse.pgm",
+                            "isTemplated": false
+                        },
+                        {
+                            "file": "Examples/ros2_ws/src/o3de_fleet_nav/resource/o3de_fleet_nav",
+                            "isTemplated": false
+                        },
+                        {
+                            "file": "Examples/ros2_ws/src/o3de_fleet_nav/params/humble/nav2_multirobot_params.yaml",
+                            "isTemplated": false
+                        },
+                        {
+                            "file": "Examples/ros2_ws/src/o3de_fleet_nav/params/humble/nav2_params.yaml",
+                            "isTemplated": false
+                        },
+                        {
+                            "file": "Examples/ros2_ws/src/o3de_fleet_nav/params/jazzy/nav2_multirobot_params.yaml",
+                            "isTemplated": false
+                        },
+                        {
+                            "file": "Examples/ros2_ws/src/o3de_fleet_nav/params/jazzy/nav2_params.yaml",
+                            "isTemplated": false
+                        },
+                        {
+                            "file": "Examples/ros2_ws/src/o3de_fleet_nav/setup.py",
+                            "isTemplated": false
+                        },
+                        {
+                            "file": "Examples/ros2_ws/src/o3de_fleet_nav/package.xml",
+                            "isTemplated": false
+                        },
+                        {
+                            "file": "Examples/ros2_ws/src/o3de_fleet_nav/NOTICE",
+                            "isTemplated": false
+                        },
+                        {
+                            "file": "Examples/ros2_ws/src/o3de_fleet_nav/config/fleet_config.yaml",
+                            "isTemplated": false
+                        },
+                        {
+                            "file": "Examples/ros2_ws/src/o3de_fleet_nav/launch/o3de_rviz_launch.py",
+                            "isTemplated": false
+                        },
+                        {
+                            "file": "Examples/ros2_ws/src/o3de_fleet_nav/launch/o3de_nav_launch.py",
+                            "isTemplated": false
+                        },
+                        {
+                            "file": "Examples/ros2_ws/src/o3de_fleet_nav/launch/o3de_fleet_nav_launch.py",
+                            "isTemplated": false
+                        },
+                        {
+                            "file": "Examples/ros2_ws/src/o3de_fleet_nav/o3de_fleet_nav/__init__.py",
+                            "isTemplated": false
+                        },
+                        {
+                            "file": "Examples/ros2_ws/src/o3de_fleet_nav/o3de_fleet_nav/robot_spawner.py",
+                            "isTemplated": false
+                        },
+                        {
+                            "file": "Examples/ros2_ws/src/o3de_fleet_nav/test/test_pep257.py",
+                            "isTemplated": false
+                        },
+                        {
+                            "file": "Examples/ros2_ws/src/o3de_fleet_nav/test/test_flake8.py",
+                            "isTemplated": false
+                        },
+                        {
+                            "file": "Examples/ros2_ws/src/o3de_fleet_nav/test/test_copyright.py",
+                            "isTemplated": false
+                        },
+                        {
+                            "file": "Examples/ros2_ws/src/o3de_fleet_nav/setup.cfg",
+                            "isTemplated": false
+                        },
+                        {
+                            "file": "Examples/ros2_ws/src/o3de_fleet_nav/rviz/nav2_namespaced_view.rviz",
+                            "isTemplated": false
+                        }
+                    ],
+                    "createDirectories": [
+                        {
+                            "dir": "Assets"
+                        },
+                        {
+                            "dir": "Config"
+                        },
+                        {
+                            "dir": "Gem"
+                        },
+                        {
+                            "dir": "Gem/Include"
+                        },
+                        {
+                            "dir": "Gem/Include/${Name}"
+                        },
+                        {
+                            "dir": "Gem/Platform"
+                        },
+                        {
+                            "dir": "Gem/Platform/Linux"
+                        },
+                        {
+                            "dir": "Gem/Platform/Mac"
+                        },
+                        {
+                            "dir": "Gem/Platform/Windows"
+                        },
+                        {
+                            "dir": "Gem/Registry"
+                        },
+                        {
+                            "dir": "Gem/Source"
+                        },
+                        {
+                            "dir": "Levels"
+                        },
+                        {
+                            "dir": "Levels/Warehouse"
+                        },
+                        {
+                            "dir": "Levels/playground"
+                        },
+                        {
+                            "dir": "Levels/playground/_savebackup"
+                        },
+                        {
+                            "dir": "Levels/playground/_savebackup/2023-02-21 [13.25.33]"
+                        },
+                        {
+                            "dir": "Passes"
+                        },
+                        {
+                            "dir": "Platform"
+                        },
+                        {
+                            "dir": "Platform/Android"
+                        },
+                        {
+                            "dir": "Platform/Linux"
+                        },
+                        {
+                            "dir": "Platform/Mac"
+                        },
+                        {
+                            "dir": "Platform/Windows"
+                        },
+                        {
+                            "dir": "Registry"
+                        },
+                        {
+                            "dir": "Resources"
+                        },
+                        {
+                            "dir": "Resources/Platform"
+                        },
+                        {
+                            "dir": "Resources/Platform/Mac"
+                        },
+                        {
+                            "dir": "Resources/Platform/Mac/Images.xcassets"
+                        },
+                        {
+                            "dir": "Resources/Platform/Mac/Images.xcassets/AppIcon.appiconset"
+                        },
+                        {
+                            "dir": "ShaderLib"
+                        },
+                        {
+                            "dir": "Shaders"
+                        },
+                        {
+                            "dir": "Prefabs"
+                        },
+                        {
+                            "dir": "Shaders/ShaderResourceGroups"
+                        },
+                        {
+                            "dir": "cmake"
+                        },
+                        {
+                            "dir": "Examples"
+                        },
+                        {
+                            "dir": "Examples/ros2_ws"
+                        },
+                        {
+                            "dir": "Examples/ros2_ws/src"
+                        },
+                        {
+                            "dir": "Examples/ros2_ws/src/o3de_fleet_nav"
+                        },
+                        {
+                            "dir": "Examples/ros2_ws/src/o3de_fleet_nav/config"
+                        },
+                        {
+                            "dir": "Examples/ros2_ws/src/o3de_fleet_nav/launch"
+                        },
+                        {
+                            "dir": "Examples/ros2_ws/src/o3de_fleet_nav/maps"
+                        },
+                        {
+                            "dir": "Examples/ros2_ws/src/o3de_fleet_nav/o3de_fleet_nav"
+                        },
+                        {
+                            "dir": "Examples/ros2_ws/src/o3de_fleet_nav/params"
+                        },
+                        {
+                            "dir": "Examples/ros2_ws/src/o3de_fleet_nav/resource"
+                        },
+                        {
+                            "dir": "Examples/ros2_ws/src/o3de_fleet_nav/rviz"
+                        },
+                        {
+                            "dir": "Examples/ros2_ws/src/o3de_fleet_nav/test"
+                        }
+                    ],
+                    "download_source_uri": "https://github.com/o3de/o3de-extras/releases/download/2.0/ros2fleetrobottemplate-2.0.2-template.zip",
+                    "sha256": "7ac04e30e179f36884424049c777502d08a6518f5d4306bc1834177a7927b770"
                 }
             ]
         },
@@ -5456,6 +5961,10 @@
                             "isTemplated": false
                         },
                         {
+                            "file": "Registry/ros2.setreg",
+                            "isTemplated": false
+                        },
+                        {
                             "file": "Resources/GameSDK.ico",
                             "isTemplated": false
                         },
@@ -5665,7 +6174,7 @@
                         }
                     ],
                     "download_source_uri": "https://github.com/o3de/o3de-extras/releases/download/2.0/ros2projecttemplate-2.0.1-template.zip",
-                    "sha256": "c7367b98bd6ee5305eb63e0a256899aa57ee299cb553f4ab2555b8e9fef2100b"
+                    "sha256": "dd56a62e5fa1cd7d412962382845885170edcc1373c1af4b388331f073404c9d"
                 }
             ]
         },
@@ -6508,6 +7017,721 @@
                     "version": "2.0.0",
                     "download_source_uri": "https://github.com/o3de/o3de-extras/releases/download/2.0/ros2roboticmanipulationtemplate-2.0.0-template.zip",
                     "sha256": "0534490ddee493b0744a76493c1551879fb803890ed123c786e1699c5ddd1e13"
+                },
+                {
+                    "version": "2.0.1",
+                    "copyFiles": [
+                        {
+                            "file": "CMakeLists.txt",
+                            "isTemplated": true
+                        },
+                        {
+                            "file": "Assets/Room/Room.fbx",
+                            "isTemplated": "false"
+                        },
+                        {
+                            "file": "Assets/Room/Desk_M_Desk.material",
+                            "isTemplated": "false"
+                        },
+                        {
+                            "file": "Assets/Room/Desk.fbx",
+                            "isTemplated": "false"
+                        },
+                        {
+                            "file": "Assets/Room/Textures/Floor/plane_divided_DefaultMaterial_Ambient.png",
+                            "isTemplated": "false"
+                        },
+                        {
+                            "file": "Assets/Room/Textures/Floor/plane_divided_DefaultMaterial_Height.png",
+                            "isTemplated": "false"
+                        },
+                        {
+                            "file": "Assets/Room/Textures/Floor/plane_divided_DefaultMaterial_Base_color.png",
+                            "isTemplated": "false"
+                        },
+                        {
+                            "file": "Assets/Room/Textures/Floor/plane_divided_DefaultMaterial_Normal.png",
+                            "isTemplated": "false"
+                        },
+                        {
+                            "file": "Assets/Room/Textures/Floor/plane_divided_DefaultMaterial_Metallic.png",
+                            "isTemplated": "false"
+                        },
+                        {
+                            "file": "Assets/Room/Textures/Floor/plane_divided_DefaultMaterial_Roughness.png",
+                            "isTemplated": "false"
+                        },
+                        {
+                            "file": "Assets/Room/Textures/Desk/Room_M_Desk_Normal.png",
+                            "isTemplated": "false"
+                        },
+                        {
+                            "file": "Assets/Room/Textures/Desk/Room_M_Desk_Base_color.png",
+                            "isTemplated": "false"
+                        },
+                        {
+                            "file": "Assets/Room/Textures/Desk/Room_M_Desk_Height.png",
+                            "isTemplated": "false"
+                        },
+                        {
+                            "file": "Assets/Room/Textures/Desk/Room_M_Desk_Roughness.png",
+                            "isTemplated": "false"
+                        },
+                        {
+                            "file": "Assets/Room/Textures/Desk/Room_M_Desk_Metallic.png",
+                            "isTemplated": "false"
+                        },
+                        {
+                            "file": "Assets/Room/Textures/Desk/Room_M_Desk_Ambient.png",
+                            "isTemplated": "false"
+                        },
+                        {
+                            "file": "Assets/Room/Textures/Walls/Room_M_Walls_Height.png",
+                            "isTemplated": "false"
+                        },
+                        {
+                            "file": "Assets/Room/Textures/Walls/Room_M_Walls_Normal.png",
+                            "isTemplated": "false"
+                        },
+                        {
+                            "file": "Assets/Room/Textures/Walls/Room_M_Walls_Ambient.png",
+                            "isTemplated": "false"
+                        },
+                        {
+                            "file": "Assets/Room/Textures/Walls/Room_M_Walls_Roughness.png",
+                            "isTemplated": "false"
+                        },
+                        {
+                            "file": "Assets/Room/Textures/Walls/Room_M_Walls_Base_color.png",
+                            "isTemplated": "false"
+                        },
+                        {
+                            "file": "Assets/Room/Textures/Walls/Room_M_Walls_Metallic.png",
+                            "isTemplated": "false"
+                        },
+                        {
+                            "file": "Assets/Factory/Box2.prefab",
+                            "isTemplated": "false"
+                        },
+                        {
+                            "file": "Assets/Factory/ConveyorLine/ConveyorBelt.fbx.assetinfo",
+                            "isTemplated": "false"
+                        },
+                        {
+                            "file": "Assets/Factory/ConveyorLine/ConveyorBelt_guards_segment.fbx.assetinfo",
+                            "isTemplated": "false"
+                        },
+                        {
+                            "file": "Assets/Factory/ConveyorLine/ConveyorBelt.fbx",
+                            "isTemplated": "false"
+                        },
+                        {
+                            "file": "Assets/Factory/ConveyorLine/conveyor_belt.physxmaterial",
+                            "isTemplated": "false"
+                        },
+                        {
+                            "file": "Assets/Factory/ConveyorLine/conveyor_guards.physxmaterial",
+                            "isTemplated": "false"
+                        },
+                        {
+                            "file": "Assets/Factory/ConveyorLine/ConveyorBelt_effector.fbx",
+                            "isTemplated": "false"
+                        },
+                        {
+                            "file": "Assets/Factory/ConveyorLine/ConveyorBelt_effector.fbx.assetinfo",
+                            "isTemplated": "false"
+                        },
+                        {
+                            "file": "Assets/Factory/ConveyorLine/ConveyorBelt_guards_segment.fbx",
+                            "isTemplated": "false"
+                        },
+                        {
+                            "file": "Assets/UR10_pretty/UR10_M_UR10.material",
+                            "isTemplated": "false"
+                        },
+                        {
+                            "file": "Assets/UR10_pretty/UR10.fbx",
+                            "isTemplated": "false"
+                        },
+                        {
+                            "file": "Assets/UR10_pretty/Textures/RoboticArm.json",
+                            "isTemplated": "false"
+                        },
+                        {
+                            "file": "Assets/UR10_pretty/Textures/UR10_Robotic_arm_Roughness.M_UR10.png",
+                            "isTemplated": "false"
+                        },
+                        {
+                            "file": "Assets/UR10_pretty/Textures/UR10_Robotic_arm_Metallic.M_UR10.png",
+                            "isTemplated": "false"
+                        },
+                        {
+                            "file": "Assets/UR10_pretty/Textures/UR10_Robotic_arm_BaseColor.M_UR10.png",
+                            "isTemplated": "false"
+                        },
+                        {
+                            "file": "Assets/UR10_pretty/Textures/UR10_Robotic_arm_Emissive.M_UR10.png",
+                            "isTemplated": "false"
+                        },
+                        {
+                            "file": "Assets/UR10_pretty/Textures/UR10_Robotic_arm_Height.M_UR10.png",
+                            "isTemplated": "false"
+                        },
+                        {
+                            "file": "Assets/UrdfImporter/1440394708_panda/hand_c.stl",
+                            "isTemplated": "false"
+                        },
+                        {
+                            "file": "Assets/UrdfImporter/1440394708_panda/link4_c.stl.assetinfo",
+                            "isTemplated": "false"
+                        },
+                        {
+                            "file": "Assets/UrdfImporter/1440394708_panda/link1.dae",
+                            "isTemplated": "false"
+                        },
+                        {
+                            "file": "Assets/UrdfImporter/1440394708_panda/finger_c.stl.assetinfo",
+                            "isTemplated": "false"
+                        },
+                        {
+                            "file": "Assets/UrdfImporter/1440394708_panda/hand.dae.assetinfo",
+                            "isTemplated": "false"
+                        },
+                        {
+                            "file": "Assets/UrdfImporter/1440394708_panda/link3_c.stl",
+                            "isTemplated": "false"
+                        },
+                        {
+                            "file": "Assets/UrdfImporter/1440394708_panda/link2_c.stl",
+                            "isTemplated": "false"
+                        },
+                        {
+                            "file": "Assets/UrdfImporter/1440394708_panda/link0.dae",
+                            "isTemplated": "false"
+                        },
+                        {
+                            "file": "Assets/UrdfImporter/1440394708_panda/link5_c.stl.assetinfo",
+                            "isTemplated": "false"
+                        },
+                        {
+                            "file": "Assets/UrdfImporter/1440394708_panda/link6_c.stl.assetinfo",
+                            "isTemplated": "false"
+                        },
+                        {
+                            "file": "Assets/UrdfImporter/1440394708_panda/link3_c.stl.assetinfo",
+                            "isTemplated": "false"
+                        },
+                        {
+                            "file": "Assets/UrdfImporter/1440394708_panda/link6.dae.assetinfo",
+                            "isTemplated": "false"
+                        },
+                        {
+                            "file": "Assets/UrdfImporter/1440394708_panda/link2.dae.assetinfo",
+                            "isTemplated": "false"
+                        },
+                        {
+                            "file": "Assets/UrdfImporter/1440394708_panda/link3.dae.assetinfo",
+                            "isTemplated": "false"
+                        },
+                        {
+                            "file": "Assets/UrdfImporter/1440394708_panda/link5.dae",
+                            "isTemplated": "false"
+                        },
+                        {
+                            "file": "Assets/UrdfImporter/1440394708_panda/link2_c.stl.assetinfo",
+                            "isTemplated": "false"
+                        },
+                        {
+                            "file": "Assets/UrdfImporter/1440394708_panda/finger.dae.assetinfo",
+                            "isTemplated": "false"
+                        },
+                        {
+                            "file": "Assets/UrdfImporter/1440394708_panda/finger_c.stl",
+                            "isTemplated": "false"
+                        },
+                        {
+                            "file": "Assets/UrdfImporter/1440394708_panda/link4.dae.assetinfo",
+                            "isTemplated": "false"
+                        },
+                        {
+                            "file": "Assets/UrdfImporter/1440394708_panda/hand_c.stl.assetinfo",
+                            "isTemplated": "false"
+                        },
+                        {
+                            "file": "Assets/UrdfImporter/1440394708_panda/link2.dae",
+                            "isTemplated": "false"
+                        },
+                        {
+                            "file": "Assets/UrdfImporter/1440394708_panda/link7.dae",
+                            "isTemplated": "false"
+                        },
+                        {
+                            "file": "Assets/UrdfImporter/1440394708_panda/link7_c.stl.assetinfo",
+                            "isTemplated": "false"
+                        },
+                        {
+                            "file": "Assets/UrdfImporter/1440394708_panda/link1_c.stl",
+                            "isTemplated": "false"
+                        },
+                        {
+                            "file": "Assets/UrdfImporter/1440394708_panda/link0_c.stl",
+                            "isTemplated": "false"
+                        },
+                        {
+                            "file": "Assets/UrdfImporter/1440394708_panda/link6.dae",
+                            "isTemplated": "false"
+                        },
+                        {
+                            "file": "Assets/UrdfImporter/1440394708_panda/hand.dae",
+                            "isTemplated": "false"
+                        },
+                        {
+                            "file": "Assets/UrdfImporter/1440394708_panda/finger.dae",
+                            "isTemplated": "false"
+                        },
+                        {
+                            "file": "Assets/UrdfImporter/1440394708_panda/link4.dae",
+                            "isTemplated": "false"
+                        },
+                        {
+                            "file": "Assets/UrdfImporter/1440394708_panda/link1.dae.assetinfo",
+                            "isTemplated": "false"
+                        },
+                        {
+                            "file": "Assets/UrdfImporter/1440394708_panda/link6_c.stl",
+                            "isTemplated": "false"
+                        },
+                        {
+                            "file": "Assets/UrdfImporter/1440394708_panda/link1_c.stl.assetinfo",
+                            "isTemplated": "false"
+                        },
+                        {
+                            "file": "Assets/UrdfImporter/1440394708_panda/link3.dae",
+                            "isTemplated": "false"
+                        },
+                        {
+                            "file": "Assets/UrdfImporter/1440394708_panda/link7_c.stl",
+                            "isTemplated": "false"
+                        },
+                        {
+                            "file": "Assets/UrdfImporter/1440394708_panda/link5_c.stl",
+                            "isTemplated": "false"
+                        },
+                        {
+                            "file": "Assets/UrdfImporter/1440394708_panda/link5.dae.assetinfo",
+                            "isTemplated": "false"
+                        },
+                        {
+                            "file": "Assets/UrdfImporter/1440394708_panda/link4_c.stl",
+                            "isTemplated": "false"
+                        },
+                        {
+                            "file": "Assets/UrdfImporter/1440394708_panda/link0.dae.assetinfo",
+                            "isTemplated": "false"
+                        },
+                        {
+                            "file": "Assets/UrdfImporter/1440394708_panda/link0_c.stl.assetinfo",
+                            "isTemplated": "false"
+                        },
+                        {
+                            "file": "Assets/UrdfImporter/1440394708_panda/link7.dae.assetinfo",
+                            "isTemplated": "false"
+                        },
+                        {
+                            "file": "Assets/Gripper/Gripper_collider.stl",
+                            "isTemplated": "false"
+                        },
+                        {
+                            "file": "Assets/Gripper/Gripper.dae",
+                            "isTemplated": "false"
+                        },
+                        {
+                            "file": "Assets/Gripper/Textures/Gripper-BaseColor.png",
+                            "isTemplated": "false"
+                        },
+                        {
+                            "file": "Assets/Gripper/Textures/Gripper-Specular.png",
+                            "isTemplated": "false"
+                        },
+                        {
+                            "file": "Assets/Gripper/Textures/Gripper-Roughness.png",
+                            "isTemplated": "false"
+                        },
+                        {
+                            "file": "Assets/Gripper/Textures/Gripper-Metallic.png",
+                            "isTemplated": "false"
+                        },
+                        {
+                            "file": "Assets/Gripper/Textures/Gripper-Normal.png",
+                            "isTemplated": "false"
+                        },
+                        {
+                            "file": "Assets/BoxToyPuzzle/ToyBox.fbx",
+                            "isTemplated": "false"
+                        },
+                        {
+                            "file": "Assets/BoxToyPuzzle/BoxTriangle.fbx",
+                            "isTemplated": "false"
+                        },
+                        {
+                            "file": "Assets/BoxToyPuzzle/BoxCube.fbx",
+                            "isTemplated": "false"
+                        },
+                        {
+                            "file": "Assets/BoxToyPuzzle/BoxTriangle.fbx.assetinfo",
+                            "isTemplated": "false"
+                        },
+                        {
+                            "file": "Assets/BoxToyPuzzle/BoxCyllinder.fbx",
+                            "isTemplated": "false"
+                        },
+                        {
+                            "file": "Assets/BoxToyPuzzle/texture/BoxToyPuzzle_MCube_pazzle_Glossiness.1001.png",
+                            "isTemplated": "false"
+                        },
+                        {
+                            "file": "Assets/BoxToyPuzzle/texture/BoxToyPuzzle_MCube_pazzle_Metallic.1001.png",
+                            "isTemplated": "false"
+                        },
+                        {
+                            "file": "Assets/BoxToyPuzzle/texture/BoxToyPuzzle_MCube_pazzle_Emissive.1001.png",
+                            "isTemplated": "false"
+                        },
+                        {
+                            "file": "Assets/BoxToyPuzzle/texture/BoxToyPuzzle_MCube_pazzle_Normal.1001.png",
+                            "isTemplated": "false"
+                        },
+                        {
+                            "file": "Assets/BoxToyPuzzle/texture/BoxToyPuzzle_MCube_pazzle_Height.1001.png",
+                            "isTemplated": "false"
+                        },
+                        {
+                            "file": "Assets/BoxToyPuzzle/texture/BoxToyPuzzle_MCube_pazzle_Roughness.1001.png",
+                            "isTemplated": "false"
+                        },
+                        {
+                            "file": "Assets/BoxToyPuzzle/texture/BoxToyPuzzle_MCube_pazzle_BaseMap.1001.png",
+                            "isTemplated": "false"
+                        },
+                        {
+                            "file": "Assets/BoxToyPuzzle/texture/BoxToyPuzzle_MCube_pazzle_Specular.1001.png",
+                            "isTemplated": "false"
+                        },
+                        {
+                            "file": "Assets/BoxToyPuzzle/texture/Roughness/MCube_pazzle_Roughness.1001.png",
+                            "isTemplated": "false"
+                        },
+                        {
+                            "file": "Config/shader_global_build_options.json",
+                            "isTemplated": false
+                        },
+                        {
+                            "file": "DiffuseProbeGrids/Atom Default Environment_434B3A4E-7927-4EB4-B568-D0D75E72D270_ProbeData_lutrgba16f.dds",
+                            "isTemplated": false
+                        },
+                        {
+                            "file": "DiffuseProbeGrids/Atom Default Environment_691C813B-A7DA-435B-BE78-904F41AAECDD_Distance_lutrg32f.dds",
+                            "isTemplated": false
+                        },
+                        {
+                            "file": "DiffuseProbeGrids/Atom Default Environment_9DD87531-9B21-45AC-8169-4B6209456C02_Irradiance_lutrgba16f.dds",
+                            "isTemplated": false
+                        },
+                        {
+                            "file": "DiffuseProbeGrids/GI_4C638236-E6F7-413A-B1DF-26DA87A6CDC0_ProbeData_lutrgba16f.dds",
+                            "isTemplated": false
+                        },
+                        {
+                            "file": "DiffuseProbeGrids/GI_9A063636-4E64-4E87-8052-E1427ED3EC2C_Distance_lutrg32f.dds",
+                            "isTemplated": false
+                        },
+                        {
+                            "file": "DiffuseProbeGrids/GI_C092EE63-F1F9-43CC-93B5-19168F3EEADA_Irradiance_lutrgba16f.dds",
+                            "isTemplated": false
+                        },
+                        {
+                            "file": "DiffuseProbeGrids/Diffuse_Probe_Grid_1C06FE02-367E-4D6E-B8AE-9A48F2AF5F75_Irradiance_lutrgba16f.dds",
+                            "isTemplated": false
+                        },
+                        {
+                            "file": "DiffuseProbeGrids/Diffuse_Probe_Grid_4F50E1BF-2C8C-44EB-8183-34101107473C_Distance_lutrg32f.dds",
+                            "isTemplated": false
+                        },
+                        {
+                            "file": "DiffuseProbeGrids/Diffuse_Probe_Grid_ABC8A956-D89D-4CDB-829B-EF1DD8DE5404_ProbeData_lutrgba16f.dds",
+                            "isTemplated": false
+                        },
+                        {
+                            "file": "Examples/panda_moveit_config_demo.launch.py",
+                            "isTemplated": false
+                        },
+                        {
+                            "file": "Examples/panda_moveit_config_demo.rviz",
+                            "isTemplated": false
+                        },
+                        {
+                            "file": "Gem/${Name}_files.cmake",
+                            "isTemplated": true
+                        },
+                        {
+                            "file": "Gem/${Name}_shared_files.cmake",
+                            "isTemplated": true
+                        },
+                        {
+                            "file": "Gem/CMakeLists.txt",
+                            "isTemplated": true
+                        },
+                        {
+                            "file": "Gem/Include/${Name}/${Name}Bus.h",
+                            "isTemplated": true
+                        },
+                        {
+                            "file": "Gem/Platform/Linux/${Name}_linux_files.cmake",
+                            "isTemplated": false
+                        },
+                        {
+                            "file": "Gem/Platform/Linux/${Name}_shared_linux_files.cmake",
+                            "isTemplated": false
+                        },
+                        {
+                            "file": "Gem/Platform/Linux/PAL_linux.cmake",
+                            "isTemplated": true
+                        },
+                        {
+                            "file": "Gem/Platform/Mac/${Name}_mac_files.cmake",
+                            "isTemplated": false
+                        },
+                        {
+                            "file": "Gem/Platform/Mac/${Name}_shared_mac_files.cmake",
+                            "isTemplated": false
+                        },
+                        {
+                            "file": "Gem/Platform/Mac/PAL_mac.cmake",
+                            "isTemplated": true
+                        },
+                        {
+                            "file": "Gem/Platform/Windows/${Name}_shared_windows_files.cmake",
+                            "isTemplated": false
+                        },
+                        {
+                            "file": "Gem/Platform/Windows/${Name}_windows_files.cmake",
+                            "isTemplated": false
+                        },
+                        {
+                            "file": "Gem/Platform/Windows/PAL_windows.cmake",
+                            "isTemplated": true
+                        },
+                        {
+                            "file": "Gem/Registry/assetprocessor_settings.setreg",
+                            "isTemplated": true
+                        },
+                        {
+                            "file": "Gem/Source/${Name}Module.cpp",
+                            "isTemplated": true
+                        },
+                        {
+                            "file": "Gem/Source/${Name}SystemComponent.cpp",
+                            "isTemplated": true
+                        },
+                        {
+                            "file": "Gem/Source/${Name}SystemComponent.h",
+                            "isTemplated": true
+                        },
+                        {
+                            "file": "Gem/gem.json",
+                            "isTemplated": true
+                        },
+                        {
+                            "file": "Levels/RoboticPalletization/RoboticPalletization.prefab",
+                            "isTemplated": false
+                        },
+                        {
+                            "file": "Levels/RoboticManipulation/RoboticManipulation.prefab",
+                            "isTemplated": false
+                        },
+                        {
+                            "file": "Passes/ContrastAdaptiveSharpening.pass",
+                            "isTemplated": false
+                        },
+                        {
+                            "file": "Passes/MainRenderPipeline.azasset",
+                            "isTemplated": false
+                        },
+                        {
+                            "file": "Passes/PostProcessParent.pass",
+                            "isTemplated": false
+                        },
+                        {
+                            "file": "Passes/SMAAConfiguration.azasset",
+                            "isTemplated": false
+                        },
+                        {
+                            "file": "Passes/Taa.pass",
+                            "isTemplated": false
+                        },
+                        {
+                            "file": "Platform/Linux/linux_project.cmake",
+                            "isTemplated": false
+                        },
+                        {
+                            "file": "Platform/Linux/linux_project.json",
+                            "isTemplated": false
+                        },
+                        {
+                            "file": "Platform/Mac/mac_project.cmake",
+                            "isTemplated": false
+                        },
+                        {
+                            "file": "Platform/Mac/mac_project.json",
+                            "isTemplated": false
+                        },
+                        {
+                            "file": "Platform/Windows/windows_project.cmake",
+                            "isTemplated": false
+                        },
+                        {
+                            "file": "Platform/Windows/windows_project.json",
+                            "isTemplated": false
+                        },
+                        {
+                            "file": "Prefabs/PandaRobot.prefab",
+                            "isTemplated": false
+                        },
+                        {
+                            "file": "ReflectionProbes/Entity6__8035B0D1-451A-4226-A488-0C8E6949F6F5__iblspecularcm256.dds",
+                            "isTemplated": false
+                        },
+                        {
+                            "file": "Registry/assetprocessor_settings.setreg",
+                            "isTemplated": false
+                        },
+                        {
+                            "file": "Registry/awscoreconfiguration.setreg",
+                            "isTemplated": false
+                        },
+                        {
+                            "file": "Registry/physxdebugconfiguration.setreg",
+                            "isTemplated": false
+                        },
+                        {
+                            "file": "Registry/physxdefaultsceneconfiguration.setreg",
+                            "isTemplated": false
+                        },
+                        {
+                            "file": "Registry/physxsystemconfiguration.setreg",
+                            "isTemplated": false
+                        },
+                        {
+                            "file": "Registry/sceneassetimporter.setreg",
+                            "isTemplated": false
+                        },
+                        {
+                            "file": "Registry/ros2.setreg",
+                            "isTemplated": false
+                        },
+                        {
+                            "file": "Resources/GameSDK.ico",
+                            "isTemplated": false
+                        },
+                        {
+                            "file": "Resources/LegacyLogoLauncher.bmp",
+                            "isTemplated": false
+                        },
+                        {
+                            "file": "Resources/Platform/Mac/Images.xcassets/AppIcon.appiconset/Contents.json",
+                            "isTemplated": false
+                        },
+                        {
+                            "file": "Resources/Platform/Mac/Images.xcassets/AppIcon.appiconset/icon_128.png",
+                            "isTemplated": false
+                        },
+                        {
+                            "file": "Resources/Platform/Mac/Images.xcassets/AppIcon.appiconset/icon_128_2x.png",
+                            "isTemplated": false
+                        },
+                        {
+                            "file": "Resources/Platform/Mac/Images.xcassets/AppIcon.appiconset/icon_16.png",
+                            "isTemplated": false
+                        },
+                        {
+                            "file": "Resources/Platform/Mac/Images.xcassets/AppIcon.appiconset/icon_16_2x.png",
+                            "isTemplated": false
+                        },
+                        {
+                            "file": "Resources/Platform/Mac/Images.xcassets/AppIcon.appiconset/icon_256.png",
+                            "isTemplated": false
+                        },
+                        {
+                            "file": "Resources/Platform/Mac/Images.xcassets/AppIcon.appiconset/icon_256_2x.png",
+                            "isTemplated": false
+                        },
+                        {
+                            "file": "Resources/Platform/Mac/Images.xcassets/AppIcon.appiconset/icon_32.png",
+                            "isTemplated": false
+                        },
+                        {
+                            "file": "Resources/Platform/Mac/Images.xcassets/AppIcon.appiconset/icon_32_2x.png",
+                            "isTemplated": false
+                        },
+                        {
+                            "file": "Resources/Platform/Mac/Images.xcassets/AppIcon.appiconset/icon_512.png",
+                            "isTemplated": false
+                        },
+                        {
+                            "file": "Resources/Platform/Mac/Images.xcassets/AppIcon.appiconset/icon_512_2x.png",
+                            "isTemplated": false
+                        },
+                        {
+                            "file": "Resources/Platform/Mac/Images.xcassets/Contents.json",
+                            "isTemplated": false
+                        },
+                        {
+                            "file": "Resources/Platform/Mac/Info.plist",
+                            "isTemplated": true
+                        },
+                        {
+                            "file": "ShaderLib/README.md",
+                            "isTemplated": false
+                        },
+                        {
+                            "file": "ShaderLib/scenesrg.srgi",
+                            "isTemplated": false
+                        },
+                        {
+                            "file": "ShaderLib/viewsrg.srgi",
+                            "isTemplated": false
+                        },
+                        {
+                            "file": "cmake/EngineFinder.cmake",
+                            "isTemplated": false
+                        },
+                        {
+                            "file": "user/Registry/editorpreferences.setreg",
+                            "isTemplated": false
+                        },
+                        {
+                            "file": "user/Registry/ViewBookmarks/robotic-arm_1671539006337141059.setreg",
+                            "isTemplated": false
+                        },
+                        {
+                            "file": "user/Registry/ViewBookmarks/RoboticPalletization_1691268770764352914.setreg",
+                            "isTemplated": false
+                        },
+                        {
+                            "file": "game.cfg",
+                            "isTemplated": false
+                        },
+                        {
+                            "file": "preview.png",
+                            "isTemplated": false
+                        },
+                        {
+                            "file": "project.json",
+                            "isTemplated": true
+                        }
+                    ],
+                    "download_source_uri": "https://github.com/o3de/o3de-extras/releases/download/2.0/ros2roboticmanipulationtemplate-2.0.1-template.zip",
+                    "sha256": "a78b0915bbf915c3470c95da234e49a21e6b67236ff66560a6e7ddc942c5ecd1"
                 }
             ]
         }
