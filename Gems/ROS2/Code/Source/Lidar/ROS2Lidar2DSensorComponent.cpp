@@ -66,7 +66,7 @@ namespace ROS2
     void ROS2Lidar2DSensorComponent::Activate()
     {
         ROS2SensorComponentBase::Activate();
-        m_lidarCore.Init(GetEntityId(), RaycastResultFlags::Point | RaycastResultFlags::Intensity | RaycastResultFlags::Range);
+        m_lidarCore.Init(GetEntityId(), RaycastResultFlags::Point | RaycastResultFlags::Intensity | RaycastResultFlags::Range, true);
 
         auto ros2Node = ROS2Interface::Get()->GetNode();
         AZ_Assert(m_sensorConfiguration.m_publishersConfigurations.size() == 1, "Invalid configuration of publishers for lidar sensor");

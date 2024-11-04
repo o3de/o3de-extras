@@ -118,9 +118,9 @@ namespace ROS2
                 m_lidarRaycasterId, &LidarRaycasterRequestBus::Events::ExcludeEntities, m_lidarConfiguration.m_excludedEntities);
         }
 
-        if (IsFlagEnabled(RaycastResultFlags::IsHit, GetResultFlags()) || m_lidarConfiguration.m_addPointsAtMax)
         {
-            LidarRaycasterRequestBus::Event(m_lidarRaycasterId, &LidarRaycasterRequestBus::Events::ConfigureNonHitReturn, true);
+            const bool returnNonHits = IsFlagEnabled(RaycastResultFlags::IsHit, GetResultFlags()) || m_lidarConfiguration.m_addPointsAtMax || m_is2DLidar;
+            LidarRaycasterRequestBus::Event(m_lidarRaycasterId, &LidarRaycasterRequestBus::Events::ConfigureNonHitReturn, returnNonHits);
         }
     }
 
@@ -161,8 +161,9 @@ namespace ROS2
         }
     }
 
-    void LidarCore::Init(AZ::EntityId entityId, RaycastResultFlags requestedResultFlags)
+    void LidarCore::Init(AZ::EntityId entityId, RaycastResultFlags requestedResultFlags, bool is2DLidar)
     {
+        m_is2DLidar = is2DLidar;
         m_entityId = entityId;
 
         auto* entityScene = AZ::RPI::Scene::GetSceneForEntityId(m_entityId);

@@ -15,9 +15,10 @@ namespace ROS2
     {
     }
 
-    void PointCloudMessageWriter::Reset(const AZStd::string& frameId, builtin_interfaces::msg::Time timeStamp, size_t width, size_t height)
+    void PointCloudMessageWriter::Reset(
+        const AZStd::string& frameId, builtin_interfaces::msg::Time timeStamp, size_t width, size_t height, bool isDense)
     {
-        m_message = m_messageBuilder.Get(frameId, timeStamp, width, height);
+        m_message = m_messageBuilder.Get(frameId, timeStamp, width, height, isDense);
     }
 
     void PointCloudMessageWriter::WriteResults(const RaycastResults& results, bool skipNonHits)

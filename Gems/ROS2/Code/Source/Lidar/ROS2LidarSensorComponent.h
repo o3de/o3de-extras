@@ -49,9 +49,11 @@ namespace ROS2
         static const Pc2MessageFormat& GetDefaultMessageFormat();
         void TransformToLidarLocalSpace(AZStd::span<AZ::Vector3> pointSpan) const;
         RaycastResultFlags GetRequestResultFlags() const;
+        bool IsPointcloudOrderingVisible() const;
         void FrequencyTick();
         AZ::Outcome<void, const char*> PublishRaycastResults(const RaycastResults& results);
         AZ::Crc32 OnMessageFormatChanged();
+        AZ::Crc32 OnDensePointcloudChanged();
 
         std::shared_ptr<rclcpp::Publisher<sensor_msgs::msg::PointCloud2>> m_pointCloudPublisher;
         std::shared_ptr<rclcpp::Publisher<vision_msgs::msg::LabelInfo>> m_segmentationClassesPublisher;
@@ -62,6 +64,7 @@ namespace ROS2
         LidarCore m_lidarCore;
         LidarId m_lidarRaycasterId;
 
+        bool m_pointcloudIsDense{ true };
         bool m_pointcloudOrderingEnabled{ false };
     };
 } // namespace ROS2

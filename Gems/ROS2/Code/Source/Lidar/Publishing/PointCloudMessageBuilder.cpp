@@ -66,7 +66,7 @@ namespace ROS2
     }
 
     Pc2MessageWrapper Pc2MessageBuilder::Get(
-        const AZStd::string& frameId, builtin_interfaces::msg::Time timeStamp, size_t width, size_t height)
+        const AZStd::string& frameId, builtin_interfaces::msg::Time timeStamp, size_t width, size_t height, bool isDense)
     {
         auto& message = m_messageWrapper.m_message;
         message.header.frame_id = frameId.data();
@@ -78,6 +78,8 @@ namespace ROS2
 
         message.row_step = message.width * message.point_step;
         message.data.resize(message.row_step * height);
+
+        message.is_dense = isDense;
 
         return m_messageWrapper;
     }

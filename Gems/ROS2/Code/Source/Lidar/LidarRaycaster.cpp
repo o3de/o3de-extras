@@ -46,9 +46,9 @@ namespace ROS2
         , m_sceneHandle{ lidarRaycaster.m_sceneHandle }
         , m_resultFlags{ lidarRaycaster.m_resultFlags }
         , m_range{ lidarRaycaster.m_range }
-        , m_returnNonHits{ lidarRaycaster.m_returnNonHits }
         , m_rayRotations{ AZStd::move(lidarRaycaster.m_rayRotations) }
         , m_ignoredCollisionLayers{ lidarRaycaster.m_ignoredCollisionLayers }
+        , m_returnNonHits{ lidarRaycaster.m_returnNonHits }
     {
         lidarRaycaster.BusDisconnect();
         lidarRaycaster.m_busId = LidarId::CreateNull();
@@ -176,6 +176,7 @@ namespace ROS2
         for (size_t i = 0U; i < requestResults.size(); i++)
         {
             const auto& requestResult = requestResults[i];
+            const bool isHit = static_cast<bool>(requestResult);
             float hitRange = requestResult ? requestResult.m_hits[0].m_distance : maxRange;
             if (hitRange < m_range->m_min)
             {
@@ -183,51 +184,55 @@ namespace ROS2
             }
 
             bool wasUsed = false;
-            if (rangeIt.has_value())
+            if (isHit || m_returnNonHits)
             {
-                *rangeIt.value() = hitRange;
-                wasUsed = true;
-            }
-
-            if (pointIt.has_value())
-            {
-                if (hitRange == maxRange)
+                if (rangeIt.has_value())
                 {
-                    // to properly visualize max points they need to be transformed to local coordinate system before applying maxRange
-                    const AZ::Vector3 maxPoint = lidarTransform.TransformPoint(localTransform.TransformVector(rayDirections[i]) * hitRange);
-                    *pointIt.value() = maxPoint;
+                    *rangeIt.value() = hitRange;
                     wasUsed = true;
                 }
-                else if (!AZStd::isinf(hitRange))
+
+                if (pointIt.has_value())
                 {
-                    // otherwise they are already calculated by PhysX
-                    *pointIt.value() = requestResult.m_hits[0].m_position;
+                    if (hitRange == maxRange)
+                    {
+                        // to properly visualize max points they need to be transformed to local coordinate system before applying maxRange
+                        const AZ::Vector3 maxPoint =
+                            lidarTransform.TransformPoint(localTransform.TransformVector(rayDirections[i]) * hitRange);
+                        *pointIt.value() = maxPoint;
+                        wasUsed = true;
+                    }
+                    else if (!AZStd::isinf(hitRange))
+                    {
+                        // otherwise they are already calculated by PhysX
+                        *pointIt.value() = requestResult.m_hits[0].m_position;
+                        wasUsed = true;
+                    }
+                }
+
+                if (segmentationIt.has_value())
+                {
+                    segmentationIt.value()->m_classId = 0;
+                    segmentationIt.value()->m_entityId = 0;
+
+                    if (requestResult)
+                    {
+                        const auto entityId = requestResult.m_hits[0].m_entityId;
+                        const uint8_t classId = GetClassIdForEntity(entityId);
+                        const int32_t compressedEntityId = CompressEntityId(entityId);
+
+                        segmentationIt.value()->m_classId = classId;
+                        segmentationIt.value()->m_entityId = compressedEntityId;
+                    }
+
                     wasUsed = true;
                 }
-            }
 
-            if (segmentationIt.has_value())
-            {
-                segmentationIt.value()->m_classId = 0;
-                segmentationIt.value()->m_entityId = 0;
-
-                if (requestResult)
+                if (isHitIt.has_value())
                 {
-                    const auto entityId = requestResult.m_hits[0].m_entityId;
-                    const uint8_t classId = GetClassIdForEntity(entityId);
-                    const int32_t compressedEntityId = CompressEntityId(entityId);
-
-                    segmentationIt.value()->m_classId = classId;
-                    segmentationIt.value()->m_entityId = compressedEntityId;
+                    *isHitIt.value() = isHit;
+                    wasUsed = true;
                 }
-
-                wasUsed = true;
-            }
-
-            if (isHitIt.has_value())
-            {
-                *isHitIt.value() = static_cast<bool>(requestResult);
-                wasUsed = true;
             }
 
             if (wasUsed)

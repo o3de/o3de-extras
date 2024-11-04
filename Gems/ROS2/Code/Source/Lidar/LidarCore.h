@@ -32,7 +32,8 @@ namespace ROS2
         //! Initialize when activating the lidar.
         //! @param entityId Entity from which the rays are sent.
         //! @param requestedResultFlags
-        void Init(AZ::EntityId entityId, RaycastResultFlags requestedResultFlags);
+        //! @param is2DLidar
+        void Init(AZ::EntityId entityId, RaycastResultFlags requestedResultFlags, bool is2DLidar = false);
         //! Deinitialize when deactivating the lidar.
         void Deinit();
 
@@ -73,5 +74,6 @@ namespace ROS2
         AZ::EntityId m_entityId;
 
         RaycastResultFlags m_resultFlags;
+        bool m_is2DLidar{ false };
     };
 } // namespace ROS2

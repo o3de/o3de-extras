@@ -19,7 +19,8 @@ namespace ROS2
     public:
         explicit PointCloudMessageWriter(const Pc2MessageFormat& format);
 
-        void Reset(const AZStd::string& frameId, builtin_interfaces::msg::Time timeStamp, size_t width, size_t height = 1U);
+        void Reset(
+            const AZStd::string& frameId, builtin_interfaces::msg::Time timeStamp, size_t width, size_t height, bool isDense);
         void WriteResults(const RaycastResults& results, bool skipNonHits = false);
 
         const Pc2Message& GetMessage();

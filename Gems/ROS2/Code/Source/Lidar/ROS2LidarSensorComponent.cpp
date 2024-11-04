@@ -32,6 +32,7 @@ namespace ROS2
                 ->Version(3)
                 ->Field("lidarCore", &ROS2LidarSensorComponent::m_lidarCore)
                 ->Field("messageFormat", &ROS2LidarSensorComponent::m_messageFormat)
+                ->Field("pointCloudIsDense", &ROS2LidarSensorComponent::m_pointcloudIsDense)
                 ->Field("pointCloudOrdering", &ROS2LidarSensorComponent::m_pointcloudOrderingEnabled);
 
             if (auto* editContext = serializeContext->GetEditContext())
@@ -53,9 +54,18 @@ namespace ROS2
                     ->Attribute(AZ::Edit::Attributes::ChangeNotify, &ROS2LidarSensorComponent::OnMessageFormatChanged)
                     ->DataElement(
                         AZ::Edit::UIHandlers::Default,
+                        &ROS2LidarSensorComponent::m_pointcloudIsDense,
+                        "Dense pointcloud",
+                        "If enabled, only the points that hit an obstacle are processed and published. Having this option enabled improves "
+                        "performance but disallows pointcloud ordering and points at max.")
+                    ->Attribute(AZ::Edit::Attributes::ChangeNotify, &ROS2LidarSensorComponent::OnDensePointcloudChanged)
+                    ->DataElement(
+                        AZ::Edit::UIHandlers::Default,
                         &ROS2LidarSensorComponent::m_pointcloudOrderingEnabled,
-                        "Enable or pointcloud ordering",
-                        "TODO");
+                        "Pointcloud ordering",
+                        "Message's width and height match those of the used ray pattern. Only available for sparse (non-dense) "
+                        "pointclouds.")
+                    ->Attribute(AZ::Edit::Attributes::Visibility, &ROS2LidarSensorComponent::IsPointcloudOrderingVisible);
             }
         }
     }
@@ -162,12 +172,17 @@ namespace ROS2
     {
         auto flags = GetNecessaryProviders(m_messageFormat) | RaycastResultFlags::Point; // We need points for visualisation.
 
-        if (m_pointcloudOrderingEnabled)
+        if (!m_pointcloudIsDense)
         {
             flags |= RaycastResultFlags::IsHit;
         }
 
         return flags;
+    }
+
+    bool ROS2LidarSensorComponent::IsPointcloudOrderingVisible() const
+    {
+        return !m_pointcloudIsDense;
     }
 
     void ROS2LidarSensorComponent::FrequencyTick()
@@ -215,10 +230,9 @@ namespace ROS2
         const size_t pcWidth = m_pointcloudOrderingEnabled ? rayCountPerLayer : results.GetCount();
         const size_t pcHeight = m_pointcloudOrderingEnabled ? rayLayerCount : 1U;
         m_pointCloudMessageWriter->Reset(
-            GetEntity()->FindComponent<ROS2FrameComponent>()->GetFrameID(), ROS2Interface::Get()->GetROSTimestamp(), pcWidth, pcHeight);
+            GetEntity()->FindComponent<ROS2FrameComponent>()->GetFrameID(), ROS2Interface::Get()->GetROSTimestamp(), pcWidth, pcHeight, m_pointcloudIsDense);
 
-        const bool skipNonHits = m_pointcloudOrderingEnabled && !m_lidarCore.m_lidarConfiguration.m_addPointsAtMax;
-        m_pointCloudMessageWriter->WriteResults(results, skipNonHits);
+        m_pointCloudMessageWriter->WriteResults(results, !m_pointcloudIsDense);
 
         m_pointCloudPublisher->publish(m_pointCloudMessageWriter->GetMessage());
 
@@ -253,6 +267,18 @@ namespace ROS2
             m_messageFormat.push_back(FieldFormat(FieldFlags::PositionXYZF32));
         }
 
+        return AZ::Edit::PropertyRefreshLevels::EntireTree;
+    }
+
+    AZ::Crc32 ROS2LidarSensorComponent::OnDensePointcloudChanged()
+    {
+        if (m_pointcloudIsDense)
+        {
+            m_lidarCore.m_lidarConfiguration.m_addPointsAtMax = false;
+            m_pointcloudOrderingEnabled = false;
+        }
+
+        // This is to ensure that visibility of pointcloud ordering is updated.
         return AZ::Edit::PropertyRefreshLevels::EntireTree;
     }
 } // namespace ROS2

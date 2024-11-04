@@ -50,10 +50,10 @@ namespace ROS2
 
         RaycastResultFlags m_resultFlags{ RaycastResultFlags::Point };
         AZStd::optional<RayRange> m_range{};
-        bool m_returnNonHits{ false };
         AZStd::vector<AZ::Quaternion> m_rayRotations{};
 
         AZStd::unordered_set<AZ::u32> m_ignoredCollisionLayers;
         AZStd::unordered_map<AZ::EntityId, uint8_t> m_entityIdToClassIdCache;
+        bool m_returnNonHits{ false };
     };
 } // namespace ROS2

@@ -32,7 +32,8 @@ namespace ROS2
     {
     public:
         explicit Pc2MessageBuilder(const Pc2MessageFormat& messageFormat);
-        Pc2MessageWrapper Get(const AZStd::string& frameId, builtin_interfaces::msg::Time timeStamp, size_t width, size_t height = 1U);
+        Pc2MessageWrapper Get(
+            const AZStd::string& frameId, builtin_interfaces::msg::Time timeStamp, size_t width, size_t height, bool isDense);
 
     private:
         // static AZStd::array<AZStd::string, 3> GetPositionFieldNames(const AZStd::string& name);
