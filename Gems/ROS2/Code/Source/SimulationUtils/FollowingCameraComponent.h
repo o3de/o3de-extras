@@ -81,6 +81,7 @@ namespace ROS2
         float m_rotationOffset = 0.0f; //!< The rotation change from the input.
         float m_opticalAxisTranslation = 0.0f; //!< The zoom change from the input.
         AZ::EntityId m_currentView; //!< Current used view point.
+        bool m_disableCameraMove = false; //!< Disable camera move (used when fly camera is selected).
 
         FollowingCameraConfiguration m_configuration; //!< The configuration of the following camera.
     };
