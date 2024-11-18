@@ -61,6 +61,8 @@ namespace ROS2
         case FieldFlags::IntensityF32:              return RaycastResultFlags::Intensity;
         case FieldFlags::RangeU32:                  return RaycastResultFlags::Range;
         case FieldFlags::SegmentationData96:        return RaycastResultFlags::SegmentationData;
+        case FieldFlags::RingU8:
+        case FieldFlags::RingU16:                    return RaycastResultFlags::Ring;
         default:                                    return RaycastResultFlags::None;
             // clang-format on
         }

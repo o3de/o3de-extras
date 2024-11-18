@@ -265,6 +265,21 @@ namespace ROS2
         return rotations;
     }
 
+    AZStd::vector<AZ::s32> LidarTemplateUtils::PopulateRingIds(const LidarTemplate& lidarTemplate)
+    {
+        AZStd::vector<AZ::s32> ringIds;
+        ringIds.reserve(lidarTemplate.m_numberOfIncrements * lidarTemplate.m_layers);
+        for (int incr = 0; incr < lidarTemplate.m_numberOfIncrements; incr++)
+        {
+            for (int layer = 0; layer < lidarTemplate.m_layers; layer++)
+            {
+                ringIds.push_back(layer);
+            }
+        }
+
+        return ringIds;
+    }
+
     AZStd::vector<AZ::Vector3> LidarTemplateUtils::RotationsToDirections(
         const AZStd::vector<AZ::Quaternion>& rotations, const AZ::Transform& rootTransform)
     {

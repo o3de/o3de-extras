@@ -160,6 +160,14 @@ namespace ROS2
         //! @param returnNonHits Should the non hit rays be included in returned results?
         virtual void ConfigureNonHitReturn([[maybe_unused]] bool returnNonHits) = 0;
 
+        //! Configures ring IDs of the requested rays.
+        //! ID count must be equal to that of the ray count (@see ConfigureRayOrientations).
+        //! @param ringIds List of IDs for each of the requested rays.
+        virtual void ConfigureRayRingIds(const AZStd::vector<AZ::s32>& ringIds)
+        {
+            AZ_Assert(false, "This Lidar Implementation does not support ring ids!")
+        }
+
     protected:
         ~LidarRaycasterRequests() = default;
 

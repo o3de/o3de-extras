@@ -46,6 +46,8 @@ namespace ROS2
             case RaycastResultFlags::SegmentationData:
                 wasWrittenTo = WriteResultIfPresent<RaycastResultFlags::SegmentationData>(results, fielFlag, i, skipNonHits);
                 break;
+            case RaycastResultFlags::Ring:
+                wasWrittenTo = WriteResultIfPresent<RaycastResultFlags::Ring>(results, fielFlag, i, skipNonHits);
             default:
                 break;
             }

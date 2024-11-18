@@ -68,6 +68,7 @@ namespace ROS2
 
         AZ::RPI::AuxGeomDrawPtr m_drawQueue;
 
+        AZStd::vector<AZ::s32> m_lastRingIds;
         AZStd::vector<AZ::Vector3> m_lastRotations;
         AZStd::vector<AZ::Vector3> m_lastPoints;
 

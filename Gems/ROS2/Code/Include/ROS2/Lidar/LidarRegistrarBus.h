@@ -23,7 +23,8 @@ namespace ROS2
         EntityExclusion =       1 << 2,
         Intensity =             1 << 3,
         Segmentation =          1 << 4,
-        All =                   (1 << 5) - 1, // All feature bits enabled.
+        RingIds =               1 << 5,
+        All =                   (1 << 6) - 1, // All feature bits enabled.
         // clang-format on
     };
 

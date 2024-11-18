@@ -8,6 +8,7 @@
 
 #include <Atom/RPI.Public/AuxGeom/AuxGeomFeatureProcessorInterface.h>
 #include <Atom/RPI.Public/Scene.h>
+#include <AzCore/base.h>
 #include <AzFramework/Physics/PhysicsSystem.h>
 #include <Lidar/LidarCore.h>
 #include <Lidar/LidarRegistrarSystemComponent.h>
@@ -15,7 +16,6 @@
 #include <ROS2/Lidar/ClassSegmentationBus.h>
 #include <ROS2/ROS2Bus.h>
 #include <ROS2/Utilities/ROS2Names.h>
-#include <AzCore/base.h>
 
 namespace ROS2
 {
@@ -63,6 +63,11 @@ namespace ROS2
             }
         }
 
+        if (configuration.m_lidarSystemFeatures & LidarSystemFeatures::RingIds)
+        {
+            flags |= RaycastResultFlags::Ring;
+        }
+
         return flags;
     }
 
@@ -86,6 +91,11 @@ namespace ROS2
     void LidarCore::ConfigureLidarRaycaster()
     {
         LidarRaycasterRequestBus::Event(m_lidarRaycasterId, &LidarRaycasterRequestBus::Events::ConfigureRayOrientations, m_lastRotations);
+        if (m_lidarConfiguration.m_lidarSystemFeatures & LidarSystemFeatures::RingIds)
+        {
+            LidarRaycasterRequestBus::Event(m_lidarRaycasterId, &LidarRaycasterRequestBus::Events::ConfigureRayRingIds, m_lastRingIds);
+        }
+
         LidarRaycasterRequestBus::Event(
             m_lidarRaycasterId,
             &LidarRaycasterRequestBus::Events::ConfigureRayRange,
@@ -119,7 +129,8 @@ namespace ROS2
         }
 
         {
-            const bool returnNonHits = IsFlagEnabled(RaycastResultFlags::IsHit, GetResultFlags()) || m_lidarConfiguration.m_addPointsAtMax || m_is2DLidar;
+            const bool returnNonHits =
+                IsFlagEnabled(RaycastResultFlags::IsHit, GetResultFlags()) || m_lidarConfiguration.m_addPointsAtMax || m_is2DLidar;
             LidarRaycasterRequestBus::Event(m_lidarRaycasterId, &LidarRaycasterRequestBus::Events::ConfigureNonHitReturn, returnNonHits);
         }
     }
@@ -170,6 +181,7 @@ namespace ROS2
         m_drawQueue = AZ::RPI::AuxGeomFeatureProcessorInterface::GetDrawQueueForScene(entityScene);
 
         m_lastRotations = LidarTemplateUtils::PopulateRayRotations(m_lidarConfiguration.m_lidarParameters);
+        m_lastRingIds = LidarTemplateUtils::PopulateRingIds(m_lidarConfiguration.m_lidarParameters);
 
         m_lidarConfiguration.FetchLidarImplementationFeatures();
         m_resultFlags = GetProvidedResultFlags(m_lidarConfiguration) & requestedResultFlags;

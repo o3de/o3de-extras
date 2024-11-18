@@ -19,8 +19,7 @@ namespace ROS2
     public:
         explicit PointCloudMessageWriter(const Pc2MessageFormat& format);
 
-        void Reset(
-            const AZStd::string& frameId, builtin_interfaces::msg::Time timeStamp, size_t width, size_t height, bool isDense);
+        void Reset(const AZStd::string& frameId, builtin_interfaces::msg::Time timeStamp, size_t width, size_t height, bool isDense);
         void WriteResults(const RaycastResults& results, bool skipNonHits = false);
 
         const Pc2Message& GetMessage();
@@ -192,6 +191,24 @@ namespace ROS2
         return AZ::Success();
     }
 
+    template<>
+    inline AZ::Outcome<void, AZStd::string_view> PointCloudMessageWriter::
+        AssignResultFieldValue<RaycastResultFlags::Ring, FieldFlags::RingU8>(
+            const ResultTraits<RaycastResultFlags::Ring>::Type& resultValue, FieldTraits<FieldFlags::RingU8>::Type& messageFieldValue)
+    {
+        messageFieldValue = aznumeric_cast<AZ::u8>(resultValue);
+        return AZ::Success();
+    }
+
+    template<>
+    inline AZ::Outcome<void, AZStd::string_view> PointCloudMessageWriter::
+        AssignResultFieldValue<RaycastResultFlags::Ring, FieldFlags::RingU16>(
+            const ResultTraits<RaycastResultFlags::Ring>::Type& resultValue, FieldTraits<FieldFlags::RingU16>::Type& messageFieldValue)
+    {
+        messageFieldValue = aznumeric_cast<AZ::u16>(resultValue);
+        return AZ::Success();
+    }
+
     template<RaycastResultFlags R>
     bool PointCloudMessageWriter::WriteResultIfPresent(const RaycastResults& results, FieldFlags fieldFlag, size_t index, bool skipNonHits)
     {
@@ -282,6 +299,25 @@ namespace ROS2
         {
             WriteResultToMessageField<RaycastResultFlags::SegmentationData, FieldFlags::SegmentationData96>(
                 results.GetConstFieldSpan<RaycastResultFlags::SegmentationData>().value(), fieldIndex, isHit);
+        }
+    }
+
+    template<>
+    inline void PointCloudMessageWriter::WriteResult<RaycastResultFlags::Ring>(
+        const RaycastResults& results,
+        FieldFlags fieldFlag,
+        size_t fieldIndex,
+        AZStd::optional<RaycastResults::ConstFieldSpan<RaycastResultFlags::IsHit>> isHit)
+    {
+        if (fieldFlag == FieldFlags::RingU8)
+        {
+            WriteResultToMessageField<RaycastResultFlags::Ring, FieldFlags::RingU8>(
+                results.GetConstFieldSpan<RaycastResultFlags::Ring>().value(), fieldIndex, isHit);
+        }
+        else if (fieldFlag == FieldFlags::RingU16)
+        {
+            WriteResultToMessageField<RaycastResultFlags::Ring, FieldFlags::RingU16>(
+                results.GetConstFieldSpan<RaycastResultFlags::Ring>().value(), fieldIndex, isHit);
         }
     }
 

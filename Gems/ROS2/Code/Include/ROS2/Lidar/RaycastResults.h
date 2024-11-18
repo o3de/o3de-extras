@@ -23,7 +23,8 @@ namespace ROS2
         Intensity               = (1 << 2), //!< return intensity data
         SegmentationData        = (1 << 3), //!< return segmentation data
         IsHit                   = (1 << 4), //!< return ray hit booleans
-        All                     = (1 << 5) - 1U,
+        Ring                    = (1 << 5), //!< return ray ring ids
+        All                     = (1 << 6) - 1U,
         // clang-format on
     };
 
@@ -72,6 +73,12 @@ namespace ROS2
     struct ResultTraits<RaycastResultFlags::IsHit>
     {
         using Type = bool;
+    };
+
+    template<>
+    struct ResultTraits<RaycastResultFlags::Ring>
+    {
+        using Type = AZ::u16;
     };
 
     //! Class used for storing the results of a raycast.
@@ -133,6 +140,7 @@ namespace ROS2
         FieldInternal<RaycastResultFlags::Intensity> m_intensities;
         FieldInternal<RaycastResultFlags::SegmentationData> m_segmentationData;
         FieldInternal<RaycastResultFlags::IsHit> m_isHit;
+        FieldInternal<RaycastResultFlags::Ring> m_ringId;
         size_t m_count{};
         RaycastResultFlags m_flags;
     };
@@ -197,6 +205,12 @@ namespace ROS2
     inline const RaycastResults::FieldInternal<RaycastResultFlags::IsHit>& RaycastResults::GetField<RaycastResultFlags::IsHit>() const
     {
         return m_isHit;
+    }
+
+    template<>
+    inline const RaycastResults::FieldInternal<RaycastResultFlags::Ring>& RaycastResults::GetField<RaycastResultFlags::Ring>() const
+    {
+        return m_ringId;
     }
 
     template<RaycastResultFlags F>

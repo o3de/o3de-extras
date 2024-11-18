@@ -39,6 +39,8 @@ namespace ROS2
         //! @return Ray rotations angles as Euler angles in radians.
         AZStd::vector<AZ::Vector3> PopulateRayRotations(const LidarTemplate& lidarTemplate);
 
+        AZStd::vector<AZ::s32> PopulateRingIds(const LidarTemplate& lidarTemplate);
+
         //! Compute ray directions from rotations.
         //! @param rotations Rotations as quaternions to compute directions from.
         //! @param rootTransform root transformation of Lidar sensor.
