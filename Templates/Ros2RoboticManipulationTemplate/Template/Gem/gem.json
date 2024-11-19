@@ -21,10 +21,10 @@
     "requirements": "",
     "documentation_url": "",
     "dependencies": [
+        "ROS2>=3.1.0"
     ],
     "compatible_engines": [
     ],
     "engine_api_dependencies":[
-        "ROS2>=3.1.0"
     ]
 }
