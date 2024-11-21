@@ -50,6 +50,21 @@ namespace ROS2
         return m_message.height * m_message.width;
     }
 
+    void Pc2MessageWrapper::Update(
+        const AZStd::string& frameId, builtin_interfaces::msg::Time timeStamp, size_t width, size_t height, bool isDense)
+    {
+        m_message.header.frame_id = frameId.data();
+        m_message.header.stamp = timeStamp;
+
+        m_message.width = width;
+        m_message.height = height;
+
+        m_message.row_step = m_message.width * m_message.point_step;
+        m_message.data.resize(m_message.row_step * height);
+
+        m_message.is_dense = isDense;
+    }
+
     Pc2MessageBuilder::Pc2MessageBuilder(const Pc2MessageFormat& messageFormat)
     {
         m_messageWrapper.m_fieldNames.clear();
@@ -65,21 +80,10 @@ namespace ROS2
         }
     }
 
-    Pc2MessageWrapper Pc2MessageBuilder::Get(
-        const AZStd::string& frameId, builtin_interfaces::msg::Time timeStamp, size_t width, size_t height, bool isDense)
+    Pc2MessageWrapper Pc2MessageBuilder::Get()
     {
         auto& message = m_messageWrapper.m_message;
-        message.header.frame_id = frameId.data();
-        message.header.stamp = timeStamp;
-
         message.point_step = m_offset;
-        message.width = width;
-        message.height = height;
-
-        message.row_step = message.width * message.point_step;
-        message.data.resize(message.row_step * height);
-
-        message.is_dense = isDense;
 
         return m_messageWrapper;
     }

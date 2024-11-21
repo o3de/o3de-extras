@@ -230,7 +230,11 @@ namespace ROS2
         const size_t pcWidth = m_pointcloudOrderingEnabled ? rayCountPerLayer : results.GetCount();
         const size_t pcHeight = m_pointcloudOrderingEnabled ? rayLayerCount : 1U;
         m_pointCloudMessageWriter->Reset(
-            GetEntity()->FindComponent<ROS2FrameComponent>()->GetFrameID(), ROS2Interface::Get()->GetROSTimestamp(), pcWidth, pcHeight, m_pointcloudIsDense);
+            GetEntity()->FindComponent<ROS2FrameComponent>()->GetFrameID(),
+            ROS2Interface::Get()->GetROSTimestamp(),
+            pcWidth,
+            pcHeight,
+            m_pointcloudIsDense);
 
         m_pointCloudMessageWriter->WriteResults(results, !m_pointcloudIsDense);
 

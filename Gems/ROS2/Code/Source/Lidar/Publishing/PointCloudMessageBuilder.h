@@ -19,6 +19,7 @@ namespace ROS2
     struct Pc2MessageWrapper
     {
         [[nodiscard]] size_t GetPointCount() const;
+        void Update(const AZStd::string& frameId, builtin_interfaces::msg::Time timeStamp, size_t width, size_t height, bool isDense);
 
         Pc2Message m_message;
         AZStd::vector<FieldFlags> m_fieldFlags; // Easier iterator generation.
@@ -32,8 +33,7 @@ namespace ROS2
     {
     public:
         explicit Pc2MessageBuilder(const Pc2MessageFormat& messageFormat);
-        Pc2MessageWrapper Get(
-            const AZStd::string& frameId, builtin_interfaces::msg::Time timeStamp, size_t width, size_t height, bool isDense);
+        Pc2MessageWrapper Get();
 
     private:
         // static AZStd::array<AZStd::string, 3> GetPositionFieldNames(const AZStd::string& name);
