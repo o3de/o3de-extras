@@ -1,6 +1,6 @@
 {
     "template_name": "Ros2FleetRobotTemplate",
-    "version": "2.0.1",
+    "version": "2.0.2",
     "origin": "Open 3D Engine Extras",
     "origin_url": "https://github.com/o3de/o3de-extras",
     "repo_uri": "https://raw.githubusercontent.com/o3de/o3de-extras/development",
@@ -493,5 +493,5 @@
             "dir": "Examples/ros2_ws/src/o3de_fleet_nav/test"
         }
     ],
-    "download_source_uri": "https://github.com/o3de/o3de-extras/releases/download/2.0/ros2fleetrobottemplate-2.0.1-template.zip"
+    "download_source_uri": "https://github.com/o3de/o3de-extras/releases/download/2.0/ros2fleetrobottemplate-2.0.2-template.zip"
 }
