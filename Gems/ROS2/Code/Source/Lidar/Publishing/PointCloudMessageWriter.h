@@ -22,7 +22,7 @@ namespace ROS2
         void Reset(const AZStd::string& frameId, builtin_interfaces::msg::Time timeStamp, size_t width, size_t height, bool isDense);
         void WriteResults(const RaycastResults& results, bool skipNonHits = false);
 
-        const Pc2Message& GetMessage();
+        const Pc2Message& GetMessage() const;
 
     private:
         template<FieldFlags F, typename FT = typename FieldTraits<F>::Type>

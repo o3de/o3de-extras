@@ -129,15 +129,15 @@ namespace ROS2
 
     void Pc2MessageBuilder::AddField(const AZStd::string& name, uint8_t dataType)
     {
-        sensor_msgs::msg::PointField point_field;
+        sensor_msgs::msg::PointField pointField;
         m_messageWrapper.m_fieldNames.push_back(name);
-        point_field.name = m_messageWrapper.m_fieldNames.back().c_str();
-        point_field.count = 1U;
-        point_field.datatype = dataType;
-        point_field.offset = m_offset;
-        m_messageWrapper.m_message.fields.push_back(point_field);
+        pointField.name = m_messageWrapper.m_fieldNames.back().c_str();
+        pointField.count = 1U;
+        pointField.datatype = dataType;
+        pointField.offset = m_offset;
+        m_messageWrapper.m_message.fields.push_back(pointField);
 
-        m_offset += point_field.count * sizeOfPointField(dataType);
+        m_offset += pointField.count * sizeOfPointField(dataType);
     }
 
 } // namespace ROS2

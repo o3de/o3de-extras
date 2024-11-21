@@ -90,7 +90,7 @@ namespace ROS2
         }
     }
 
-    AZStd::optional<AZStd::string> GetDatatypeString(FieldFlags fieldFlag)
+    AZStd::optional<AZStd::string> GetDataTypeString(FieldFlags fieldFlag)
     {
         switch (fieldFlag)
         {
@@ -120,7 +120,7 @@ namespace ROS2
             m_name = name.value();
         }
 
-        if (const auto dataType = GetDatatypeString(flag); dataType.has_value())
+        if (const auto dataType = GetDataTypeString(flag); dataType.has_value())
         {
             m_dataType = dataType.value();
         }
@@ -132,10 +132,10 @@ namespace ROS2
         {
             serializeContext->Class<FieldFormat>()
                 ->Version(0)
-                ->Field("fieldName", &FieldFormat::m_name)
-                ->Field("datatype", &FieldFormat::m_dataType)
-                ->Field("fieldOffset", &FieldFormat::m_fieldOffset)
-                ->Field("fieldType", &FieldFormat::m_fieldFlag);
+                ->Field("Field", &FieldFormat::m_name)
+                ->Field("DataType", &FieldFormat::m_dataType)
+                ->Field("Offset", &FieldFormat::m_fieldOffset)
+                ->Field("Type", &FieldFormat::m_fieldFlag);
 
             if (AZ::EditContext* editContext = serializeContext->GetEditContext())
             {
@@ -143,22 +143,22 @@ namespace ROS2
                     ->DataElement(
                         AZ::Edit::UIHandlers::Default,
                         &FieldFormat::m_name,
-                        "Field Name",
+                        "Name",
                         "A coma seperated list of ROS2 PC2 message field names.")
                     ->Attribute(AZ::Edit::Attributes::Visibility, &FieldFormat::IsRegularField)
                     ->Attribute(AZ::Edit::Attributes::ChangeValidate, &FieldFormat::ValidateFieldName)
                     ->DataElement(
                         AZ::Edit::UIHandlers::ComboBox,
                         &FieldFormat::m_fieldFlag,
-                        "Field Type",
-                        "Type of the field. Each field may represent multiple actual ROS2 PC2 message fields (e.g. Position field "
+                        "Field",
+                        "Each field may represent multiple actual ROS2 PC2 message fields (e.g. Position field "
                         "represents three F32 PC2 message fields).")
                     ->EnumAttribute(FieldFlags::PositionXYZF32, "Position (x,y,z)")
                     ->EnumAttribute(FieldFlags::IntensityF32, "Intensity")
                     ->EnumAttribute(FieldFlags::TU32, "T")
                     ->EnumAttribute(FieldFlags::ReflectivityU16, "Reflectivity")
                     ->EnumAttribute(FieldFlags::RingU16, "Ring (2 bytes)")
-                    ->EnumAttribute(FieldFlags::RingU8,  "Ring (1 byte)")
+                    ->EnumAttribute(FieldFlags::RingU8, "Ring (1 byte)")
                     ->EnumAttribute(FieldFlags::AmbientU16, "Ambient")
                     ->EnumAttribute(FieldFlags::RangeU32, "Range")
                     ->EnumAttribute(FieldFlags::SegmentationData96, "Segmentation Entity ID and class ID")
@@ -171,10 +171,7 @@ namespace ROS2
                     ->Attribute(AZ::Edit::Attributes::ContainerCanBeModified, false)
                     ->Attribute(AZ::Edit::Attributes::Visibility, &FieldFormat::IsRegularField)
                     ->DataElement(
-                        AZ::Edit::UIHandlers::Default,
-                        &FieldFormat::m_dataType,
-                        "Field Type",
-                        "Description of the types comprising this field.")
+                        AZ::Edit::UIHandlers::Default, &FieldFormat::m_dataType, "Type", "Description of the types comprising this field.")
                     ->Attribute(AZ::Edit::Attributes::ContainerCanBeModified, false)
                     ->Attribute(AZ::Edit::Attributes::Visibility, &FieldFormat::IsRegularField);
             }
@@ -194,7 +191,7 @@ namespace ROS2
             m_name = fieldName.value();
         }
 
-        auto dataType = GetDatatypeString(m_fieldFlag);
+        auto dataType = GetDataTypeString(m_fieldFlag);
         m_dataType = dataType.value_or("");
 
         return AZ::Edit::PropertyRefreshLevels::EntireTree;
@@ -240,8 +237,9 @@ namespace ROS2
         if (fieldName.empty() || !AZStd::regex_match(fieldName, FieldNameRegex) ||
             !NameUtils::IsNamesStringValid(fieldName, GetActualFieldCount(m_fieldFlag)))
         {
-            return AZ::Failure("Invalid field name. Configured field names should consist of PC2 field names separated by comas if the "
-                               "configured field represents multiple PC2 fields.");
+            return AZ::Failure(
+                "Invalid field name. Configured field names should consist of PC2 field names separated by comas if the "
+                "configured field represents multiple PC2 fields.");
         }
 
         return AZ::Success();

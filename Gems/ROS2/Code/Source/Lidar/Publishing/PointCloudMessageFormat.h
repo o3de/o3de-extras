@@ -1,7 +1,5 @@
 #pragma once
 
-#include "AzFramework/Physics/Common/PhysicsSceneQueries.h"
-
 #include <AzCore/Outcome/Outcome.h>
 #include <AzCore/base.h>
 #include <AzCore/std/containers/unordered_map.h>
@@ -20,7 +18,7 @@ namespace ROS2
         None                    = 0,
         PositionXYZF32          = 1,
         IntensityF32            = 1 << 1,
-        TU32                    = 1 << 2, // ?
+        TU32                    = 1 << 2,
         ReflectivityU16         = 1 << 3,
         RingU16                 = 1 << 4,
         AmbientU16              = 1 << 5,
@@ -39,7 +37,7 @@ namespace ROS2
     size_t GetActualFieldCount(FieldFlags fieldFlag);
     RaycastResultFlags GetFieldProvider(FieldFlags fieldFlag);
     AZStd::optional<AZStd::string> GetDefaultFieldName(FieldFlags fieldFlag);
-    AZStd::optional<AZStd::string> GetDatatypeString(FieldFlags fieldFlag);
+    AZStd::optional<AZStd::string> GetDataTypeString(FieldFlags fieldFlag);
 
     // The field types default constructor should initialize all bits to zero.
     // This allows us to easier check if the non provided fields should be

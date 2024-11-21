@@ -60,7 +60,7 @@ namespace ROS2
         }
     }
 
-    const Pc2Message& PointCloudMessageWriter::GetMessage()
+    const Pc2Message& PointCloudMessageWriter::GetMessage() const
     {
         return m_message.m_message;
     }
