@@ -125,7 +125,6 @@ if(PAL_TRAIT_BUILD_HOST_TOOLS)
         BUILD_DEPENDENCIES
             PUBLIC
                 ${gem_name}.Editor.Static
-                Gem::Atom_Feature_Common.Public
     )
 
     ly_create_alias(NAME ${gem_name}.Builders NAMESPACE Gem TARGETS Gem::${gem_name}.Editor)
