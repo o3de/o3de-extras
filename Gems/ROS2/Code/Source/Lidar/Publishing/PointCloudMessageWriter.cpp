@@ -65,6 +65,11 @@ namespace ROS2
         return m_message.m_message;
     }
 
+    Pc2Message& PointCloudMessageWriter::GetMessage()
+    {
+        return m_message.m_message;
+    }
+
     void PointCloudMessageWriter::FillWithDefaultValues(FieldFlags fieldFlag, size_t fieldIndex)
     {
         switch (fieldFlag)

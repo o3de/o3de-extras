@@ -40,6 +40,8 @@ set(FILES
         Include/ROS2/Lidar/ClassSegmentationBus.h
         Include/ROS2/Lidar/LidarRaycasterBus.h
         Include/ROS2/Lidar/LidarSystemBus.h
+        Include/ROS2/Lidar/PC2PostProcessingBus.h
+        Include/ROS2/Lidar/PC2PostProcessingBaseComponent.h
         Include/ROS2/Lidar/LidarRegistrarBus.h
         Include/ROS2/Lidar/RaycastResults.h
         Include/ROS2/Lidar/SegmentationClassConfiguration.h

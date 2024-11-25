@@ -23,6 +23,7 @@ namespace ROS2
         void WriteResults(const RaycastResults& results, bool skipNonHits = false);
 
         const Pc2Message& GetMessage() const;
+        Pc2Message& GetMessage();
 
     private:
         template<FieldFlags F, typename FT = typename FieldTraits<F>::Type>

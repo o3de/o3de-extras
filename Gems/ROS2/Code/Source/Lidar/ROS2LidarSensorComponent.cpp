@@ -12,6 +12,7 @@
 #include <Lidar/ROS2LidarSensorComponent.h>
 #include <ROS2/Frame/ROS2FrameComponent.h>
 #include <ROS2/Lidar/ClassSegmentationBus.h>
+#include <ROS2/Lidar/PC2PostProcessingBus.h>
 #include <ROS2/Utilities/ROS2Names.h>
 #include <sensor_msgs/point_cloud2_iterator.hpp>
 
@@ -68,6 +69,11 @@ namespace ROS2
                     ->Attribute(AZ::Edit::Attributes::Visibility, &ROS2LidarSensorComponent::IsPointcloudOrderingVisible);
             }
         }
+    }
+
+    void ROS2LidarSensorComponent::GetProvidedServices(AZ::ComponentDescriptor::DependencyArrayType& provided)
+    {
+        provided.push_back(AZ_CRC_CE( "ROS2LidarSensor" ));
     }
 
     void ROS2LidarSensorComponent::GetRequiredServices(AZ::ComponentDescriptor::DependencyArrayType& required)
@@ -237,6 +243,8 @@ namespace ROS2
             m_pointcloudIsDense);
 
         m_pointCloudMessageWriter->WriteResults(results, !m_pointcloudIsDense);
+
+        PC2PostProcessingRequestBus::Event(GetEntityId(), &PC2PostProcessingRequests::ApplyPostProcessing, m_pointCloudMessageWriter->GetMessage());
 
         m_pointCloudPublisher->publish(m_pointCloudMessageWriter->GetMessage());
 

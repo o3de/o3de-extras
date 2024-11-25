@@ -15,6 +15,7 @@
 #include <Manipulation/JointsPositionsEditorComponent.h>
 #include <QtCore/qglobal.h>
 #include <ROS2/Frame/ROS2FrameEditorComponent.h>
+#include <ROS2/Lidar/PC2PostProcessingBaseComponent.h>
 #include <ROS2ModuleInterface.h>
 #include <RobotImporter/ROS2RobotImporterEditorSystemComponent.h>
 #include <SdfAssetBuilder/SdfAssetBuilderSystemComponent.h>
@@ -54,7 +55,8 @@ namespace ROS2
                   JointsPositionsEditorComponent::CreateDescriptor(),
                   GeoReferenceLevelEditorComponent::CreateDescriptor(),
                   ROS2FrameSystemComponent::CreateDescriptor(),
-                  ROS2FrameEditorComponent::CreateDescriptor() });
+                  ROS2FrameEditorComponent::CreateDescriptor(),
+                  PC2PostProcessingBaseComponent::CreateDescriptor()});
         }
 
         AZ::ComponentTypeList GetRequiredSystemComponents() const override

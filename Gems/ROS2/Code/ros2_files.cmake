@@ -76,6 +76,7 @@ set(FILES
         Source/Lidar/LidarTemplate.h
         Source/Lidar/LidarTemplateUtils.cpp
         Source/Lidar/LidarTemplateUtils.h
+        Source/Lidar/PC2PostProcessingBaseComponent.cpp
         Source/Lidar/RaycastResults.cpp
         Source/Lidar/LidarCore.cpp
         Source/Lidar/LidarCore.h
