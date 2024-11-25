@@ -97,6 +97,8 @@ namespace ROS2
         RaycastResults(RaycastResults&& other);
 
         [[nodiscard]] bool IsEmpty() const;
+        //! Are the results specified by the resultFlags present?
+        //! @param resultFlags Flags to check against.
         [[nodiscard]] bool IsCompliant(RaycastResultFlags resultFlags) const;
 
         template<RaycastResultFlags F>
