@@ -50,6 +50,12 @@ namespace ROS2
                         "Lidar configuration",
                         "Lidar configuration")
                     ->Attribute(AZ::Edit::Attributes::Visibility, AZ::Edit::PropertyVisibility::ShowChildrenOnly)
+                    ->UIElement(
+                        AZ::Edit::UIHandlers::Button,
+                        "Generate a default message format for the enabled lidar features.")
+                    ->Attribute(AZ::Edit::Attributes::NameLabelOverride, "")
+                    ->Attribute(AZ::Edit::Attributes::ButtonText, "Generate message format")
+                    ->Attribute(AZ::Edit::Attributes::ChangeNotify, &ROS2LidarSensorComponent::GenerateMessageFormat)
                     ->DataElement(
                         AZ::Edit::UIHandlers::Default, &ROS2LidarSensorComponent::m_messageFormat, "Point Cloud 2 message format", "")
                     ->Attribute(AZ::Edit::Attributes::ChangeNotify, &ROS2LidarSensorComponent::OnMessageFormatChanged)
@@ -73,7 +79,7 @@ namespace ROS2
 
     void ROS2LidarSensorComponent::GetProvidedServices(AZ::ComponentDescriptor::DependencyArrayType& provided)
     {
-        provided.push_back(AZ_CRC_CE( "ROS2LidarSensor" ));
+        provided.push_back(AZ_CRC_CE("ROS2LidarSensor"));
     }
 
     void ROS2LidarSensorComponent::GetRequiredServices(AZ::ComponentDescriptor::DependencyArrayType& required)
@@ -244,7 +250,8 @@ namespace ROS2
 
         m_pointCloudMessageWriter->WriteResults(results, !m_pointcloudIsDense);
 
-        PC2PostProcessingRequestBus::Event(GetEntityId(), &PC2PostProcessingRequests::ApplyPostProcessing, m_pointCloudMessageWriter->GetMessage());
+        PC2PostProcessingRequestBus::Event(
+            GetEntityId(), &PC2PostProcessingRequests::ApplyPostProcessing, m_pointCloudMessageWriter->GetMessage());
 
         m_pointCloudPublisher->publish(m_pointCloudMessageWriter->GetMessage());
 
@@ -292,5 +299,21 @@ namespace ROS2
 
         // This is to ensure that visibility of pointcloud ordering is updated.
         return AZ::Edit::PropertyRefreshLevels::EntireTree;
+    }
+
+    AZ::Crc32 ROS2LidarSensorComponent::GenerateMessageFormat()
+    {
+        m_messageFormat = {
+            FieldFormat(FieldFlags::PositionXYZF32),
+            FieldFormat(FieldFlags::Padding32),
+            FieldFormat(FieldFlags::IntensityF32),
+        };
+
+        if (m_lidarCore.m_lidarConfiguration.m_isSegmentationEnabled)
+        {
+            m_messageFormat.push_back(FieldFormat(FieldFlags::SegmentationData96));
+        }
+
+        return OnMessageFormatChanged();
     }
 } // namespace ROS2
