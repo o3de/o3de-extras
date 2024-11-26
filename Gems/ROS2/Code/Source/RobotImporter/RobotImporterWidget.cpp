@@ -656,7 +656,6 @@ namespace ROS2
     {
         const auto filePath = m_robotDescriptionPage->GetModifiedUrdfName();
         const auto& streamData = m_modifiedUrdfWindow->GetUrdfData();
-        bool success = false;
         AZ::IO::FileIOBase* fileIo = AZ::IO::FileIOBase::GetInstance();
         AZ::IO::FixedMaxPathString resolvedPath;
         if (fileIo == nullptr || !fileIo->ResolvePath(filePath.c_str(), resolvedPath.data(), resolvedPath.capacity() + 1))
@@ -667,11 +666,10 @@ namespace ROS2
                 resolvedPath.c_str(),
                 AZ::IO::SystemFile::SF_OPEN_CREATE | AZ::IO::SystemFile::SF_OPEN_CREATE_PATH | AZ::IO::SystemFile::SF_OPEN_WRITE_ONLY))
         {
-            AZ::IO::SizeType bytesWritten = fileHandle.Write(streamData.data(), streamData.size());
-            success = (bytesWritten == streamData.size());
+            [[maybe_unused]] const AZ::IO::SizeType bytesWritten = fileHandle.Write(streamData.data(), streamData.size());
+            AZ_Warning(
+                "onSaveModifiedUrdfPressed", (bytesWritten == streamData.size()), "Cannot save the output file %s", filePath.c_str());
         }
-
-        AZ_Warning("onSaveModifiedUrdfPressed", success, "Cannot save the output file %s", filePath.c_str());
     }
 
     void RobotImporterWidget::onShowModifiedUrdfPressed()
