@@ -62,7 +62,7 @@ ly_add_target(
             AZ::AzCore
             AZ::AzFramework
             Gem::Atom_RPI.Public
-            Gem::Atom_Feature_Common.Static
+            Gem::Atom_Feature_Common.Public
             Gem::Atom_Component_DebugCamera.Static
             Gem::Atom_AtomBridge.Static
             Gem::StartingPointInput
@@ -97,7 +97,7 @@ ly_add_target(
     BUILD_DEPENDENCIES
         PRIVATE
             Gem::${gem_name}.Static
-            Gem::Atom_Feature_Common.Static
+            Gem::Atom_Feature_Common.Public
 )
 
 # By default, we will specify that the above target ROS2 would be used by
@@ -158,7 +158,7 @@ if(PAL_TRAIT_BUILD_HOST_TOOLS)
         BUILD_DEPENDENCIES
             PUBLIC
                 Gem::${gem_name}.Editor.Static
-                Gem::Atom_Feature_Common.Static
+                Gem::Atom_Feature_Common.Public
     )
 
     # By default, we will specify that the above target ROS2 would be used by

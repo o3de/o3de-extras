@@ -8,6 +8,7 @@
 #include "CameraSensor.h"
 #include <ROS2/Camera/CameraPostProcessingRequestBus.h>
 
+#include <Atom/Feature/PostProcess/PostProcessFeatureProcessorInterface.h>
 #include <Atom/RPI.Public/Base.h>
 #include <Atom/RPI.Public/FeatureProcessorFactory.h>
 #include <Atom/RPI.Public/Pass/PassFactory.h>
@@ -20,7 +21,6 @@
 #include <AzCore/Settings/SettingsRegistry.h>
 #include <AzFramework/Components/TransformComponent.h>
 #include <AzFramework/Scene/SceneSystemInterface.h>
-#include <PostProcess/PostProcessFeatureProcessor.h>
 
 #include <sensor_msgs/distortion_models.hpp>
 
@@ -159,7 +159,7 @@ namespace ROS2
 
         m_pipeline->SetDefaultView(m_view);
         const AZ::RPI::ViewPtr targetView = m_scene->GetDefaultRenderPipeline()->GetDefaultView();
-        if (auto* fp = m_scene->GetFeatureProcessor<AZ::Render::PostProcessFeatureProcessor>())
+        if (auto* fp = m_scene->GetFeatureProcessor<AZ::Render::PostProcessFeatureProcessorInterface>())
         {
             fp->SetViewAlias(m_view, targetView);
         }
@@ -169,7 +169,7 @@ namespace ROS2
     {
         if (m_scene)
         {
-            if (auto* fp = m_scene->GetFeatureProcessor<AZ::Render::PostProcessFeatureProcessor>())
+            if (auto* fp = m_scene->GetFeatureProcessor<AZ::Render::PostProcessFeatureProcessorInterface>())
             {
                 fp->RemoveViewAlias(m_view);
             }
