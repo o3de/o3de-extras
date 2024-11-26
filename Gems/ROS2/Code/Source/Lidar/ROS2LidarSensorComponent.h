@@ -53,6 +53,7 @@ namespace ROS2
         bool IsPointcloudOrderingVisible() const;
         void FrequencyTick();
         AZ::Outcome<void, const char*> PublishRaycastResults(const RaycastResults& results);
+        AZ::Crc32 OnLidarCoreChanged();
         AZ::Crc32 OnMessageFormatChanged();
         AZ::Crc32 OnDensePointcloudChanged();
         AZ::Crc32 GenerateMessageFormat();

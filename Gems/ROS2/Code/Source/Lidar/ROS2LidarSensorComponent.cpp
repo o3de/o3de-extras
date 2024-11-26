@@ -49,6 +49,7 @@ namespace ROS2
                         &ROS2LidarSensorComponent::m_lidarCore,
                         "Lidar configuration",
                         "Lidar configuration")
+                    ->Attribute(AZ::Edit::Attributes::ChangeNotify, &ROS2LidarSensorComponent::OnLidarCoreChanged)
                     ->Attribute(AZ::Edit::Attributes::Visibility, AZ::Edit::PropertyVisibility::ShowChildrenOnly)
                     ->UIElement(
                         AZ::Edit::UIHandlers::Button,
@@ -248,7 +249,7 @@ namespace ROS2
             pcHeight,
             m_pointcloudIsDense);
 
-        m_pointCloudMessageWriter->WriteResults(results, !m_pointcloudIsDense);
+        m_pointCloudMessageWriter->WriteResults(results, !m_pointcloudIsDense && !m_lidarCore.m_lidarConfiguration.m_addPointsAtMax);
 
         PC2PostProcessingRequestBus::Event(
             GetEntityId(), &PC2PostProcessingRequests::ApplyPostProcessing, m_pointCloudMessageWriter->GetMessage());
@@ -256,6 +257,17 @@ namespace ROS2
         m_pointCloudPublisher->publish(m_pointCloudMessageWriter->GetMessage());
 
         return AZ::Success();
+    }
+
+    AZ::Crc32 ROS2LidarSensorComponent::OnLidarCoreChanged()
+    {
+        if (m_lidarCore.m_lidarConfiguration.m_addPointsAtMax)
+        {
+            m_pointcloudIsDense = false;
+            return AZ::Edit::PropertyRefreshLevels::EntireTree;
+        }
+
+        return AZ::Edit::PropertyRefreshLevels::None;
     }
 
     AZ::Crc32 ROS2LidarSensorComponent::OnMessageFormatChanged()

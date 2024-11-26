@@ -138,6 +138,24 @@ namespace ROS2
     void LidarCore::UpdatePoints(const RaycastResults& results)
     {
         const auto pointsField = results.GetConstFieldSpan<RaycastResultFlags::Point>().value();
+        if (!m_lidarConfiguration.m_addPointsAtMax && results.IsFieldPresent<RaycastResultFlags::IsHit>())
+        {
+            m_lastPoints.clear();
+            m_lastPoints.reserve(pointsField.size());
+
+
+            const auto isHit = results.GetConstFieldSpan<RaycastResultFlags::IsHit>();
+            auto isHitIt = isHit->begin();
+            for (auto pointIt = pointsField.begin(); pointIt != pointsField.end(); ++pointIt, ++isHitIt)
+            {
+                if (*isHitIt)
+                {
+                    m_lastPoints.push_back(*pointIt);
+                }
+            }
+            return;
+        }
+
         m_lastPoints.assign(pointsField.begin(), pointsField.end());
     }
 
