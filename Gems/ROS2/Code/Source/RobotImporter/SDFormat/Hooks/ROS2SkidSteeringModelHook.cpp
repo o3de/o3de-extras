@@ -103,7 +103,6 @@ namespace ROS2::SDFormat
             if (element->HasElement("wheel_separation") && element->HasElement("wheel_diameter"))
             {
                 // ROS 2 version of either libgazebo_ros_skid_steer_drive.so or libgazebo_ros_diff_drive.so
-                const auto wheelPairs = element->Get<int>("num_wheel_pairs", 1).first;
                 int dataCount = 0;
 
                 auto wheelSeparation = element->GetElement("wheel_separation");
@@ -120,10 +119,9 @@ namespace ROS2::SDFormat
                     }
                     else
                     {
-                        constexpr float epsilon = 0.001f;
                         AZ_Warning(
                             "CreateVehicleConfiguration",
-                            AZ::IsClose(configuration.m_wheelbase, wheelSeparation->Get<float>(), epsilon),
+                            AZ::IsClose(configuration.m_wheelbase, wheelSeparation->Get<float>()),
                             "Different wheel separation distances in one model are not supported.");
                     }
 
@@ -138,6 +136,7 @@ namespace ROS2::SDFormat
                     wheelSeparation = wheelSeparation->GetNextElement("wheel_separation");
                     wheelDiameter = wheelDiameter->GetNextElement("wheel_diameter");
                 }
+                [[maybe_unused]] const auto wheelPairs = element->Get<int>("num_wheel_pairs", 1).first;
                 AZ_Warning(
                     "CreateVehicleConfiguration",
                     wheelPairs == configuration.m_axles.size(),
