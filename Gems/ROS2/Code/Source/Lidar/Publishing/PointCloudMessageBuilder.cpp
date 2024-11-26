@@ -60,6 +60,7 @@ namespace ROS2
         m_message.height = height;
 
         m_message.row_step = m_message.width * m_message.point_step;
+        m_message.data.clear();
         m_message.data.resize(m_message.row_step * height);
 
         m_message.is_dense = isDense;
