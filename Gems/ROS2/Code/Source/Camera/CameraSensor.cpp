@@ -17,8 +17,10 @@
 #include <Atom/RPI.Public/RPISystemInterface.h>
 #include <Atom/RPI.Public/RenderPipeline.h>
 #include <Atom/RPI.Public/Scene.h>
+#include <Atom/RPI.Reflect/Asset/AssetUtils.h>
 #include <AzCore/Math/MatrixUtils.h>
 #include <AzCore/Settings/SettingsRegistry.h>
+#include <AzCore/Component/ComponentApplicationBus.h>
 #include <AzFramework/Components/TransformComponent.h>
 #include <AzFramework/Scene/SceneSystemInterface.h>
 
@@ -127,6 +129,39 @@ namespace ROS2
         m_view = AZ::RPI::View::CreateView(viewName, AZ::RPI::View::UsageCamera);
         m_view->SetViewToClipMatrix(m_cameraSensorDescription.m_viewToClipMatrix);
         m_scene = AZ::RPI::RPISystemInterface::Get()->GetSceneByName(AZ::Name("Main"));
+
+        // In console mode, since there is no default pipeline, a BRDF texture needs to be manually initialized.
+        AZ::ApplicationTypeQuery appType;
+        AZ::ComponentApplicationBus::Broadcast(&AZ::ComponentApplicationBus::Events::QueryApplicationType, appType);
+        if (appType.IsConsoleMode())
+        {
+            auto brdfpipelineName = AZStd::string::format(
+                "%sBRDF_Pipeline%s",
+                m_cameraSensorDescription.m_cameraName.c_str(),
+                m_entityId.ToString().c_str());
+            AZ::RPI::RenderPipelineDescriptor brdfPipelineDesc;
+            brdfPipelineDesc.m_mainViewTagName = "MainCamera";
+            brdfPipelineDesc.m_name = brdfpipelineName;
+            brdfPipelineDesc.m_rootPassTemplate = "BRDFTexturePipeline";
+            brdfPipelineDesc.m_executeOnce = true;
+
+            const AZStd::shared_ptr<const AZ::RPI::PassTemplate> brdfTextureTemplate =
+                AZ::RPI::PassSystemInterface::Get()->GetPassTemplate(AZ::Name("BRDFTextureTemplate"));
+            AZ::Data::Asset<AZ::RPI::AttachmentImageAsset> brdfImageAsset = AZ::RPI::AssetUtils::LoadAssetById<
+                AZ::RPI::AttachmentImageAsset>(
+                brdfTextureTemplate->m_imageAttachments[0].m_assetRef.m_assetId,
+                AZ::RPI::AssetUtils::TraceLevel::Error);
+            if (brdfImageAsset.IsReady())
+            {
+                m_brdfTexture = AZ::RPI::AttachmentImage::FindOrCreate(brdfImageAsset);
+            }
+
+            if (!m_scene->GetRenderPipeline(AZ::Name(brdfPipelineDesc.m_name)))
+            {
+                AZ::RPI::RenderPipelinePtr brdfTexturePipeline = AZ::RPI::RenderPipeline::CreateRenderPipeline(brdfPipelineDesc);
+                m_scene->AddRenderPipeline(brdfTexturePipeline);
+            }
+        }
 
         auto cameraPipelineTypeName = Internal::PipelineNameFromChannelType(GetChannelType());
 

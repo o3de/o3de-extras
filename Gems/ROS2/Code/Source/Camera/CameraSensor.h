@@ -15,6 +15,8 @@
 #include <sensor_msgs/msg/camera_info.hpp>
 #include <sensor_msgs/msg/image.hpp>
 #include <std_msgs/msg/header.hpp>
+#include <AtomCore/Instance/Instance.h>
+#include <Atom/RPI.Reflect/Image/AttachmentImageAsset.h>
 
 namespace ROS2
 {
@@ -55,6 +57,7 @@ namespace ROS2
         AZ::EntityId m_entityId;
         AZ::RPI::RenderPipelinePtr m_pipeline;
         AZStd::string m_pipelineName;
+        AZ::Data::Instance<AZ::RPI::AttachmentImage> m_brdfTexture;
 
         //! Request a frame from the rendering pipeline
         //! @param cameraPose - current camera pose from which the rendering should take place
