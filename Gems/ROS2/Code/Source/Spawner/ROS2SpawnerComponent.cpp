@@ -8,6 +8,7 @@
 
 #include "ROS2SpawnerComponent.h"
 #include "Spawner/ROS2SpawnerComponentController.h"
+#include <AzCore/Component/EntityId.h>
 #include <AzCore/Math/Quaternion.h>
 #include <AzCore/Serialization/EditContext.h>
 #include <AzCore/Serialization/SerializeContext.h>
@@ -18,6 +19,7 @@
 #include <ROS2/Georeference/GeoreferenceBus.h>
 #include <ROS2/ROS2Bus.h>
 #include <ROS2/ROS2GemUtilities.h>
+#include <ROS2/Spawner/SpawnerBus.h>
 #include <ROS2/Utilities/ROS2Conversions.h>
 #include <ROS2/Utilities/ROS2Names.h>
 
@@ -243,18 +245,23 @@ namespace ROS2
             PreSpawn(id, view, transform, spawnableName, spawnableNamespace);
         };
 
-        optionalArgs.m_completionCallback = [service_handle, header, ticketName, parentId = GetEntityId()](auto id, auto view)
+        optionalArgs.m_completionCallback =
+            [service_handle, header, ticketName, spawnableName, parentId = GetEntityId()](auto id, auto view)
         {
+            AZ::EntityId rootEntityId;
             if (!view.empty())
             {
                 const AZ::Entity* root = *view.begin();
                 auto* transformInterface = root->FindComponent<AzFramework::TransformComponent>();
                 transformInterface->SetParent(parentId);
+                rootEntityId = root->GetId();
             }
             SpawnEntityResponse response;
             response.success = true;
             response.status_message = ticketName.c_str();
             service_handle->send_response(*header, response);
+
+            SpawnerNotificationBus::Broadcast(&SpawnerNotificationBus::Events::OnSpawned, spawnableName, rootEntityId, ticketName);
         };
 
         spawner->SpawnAllEntities(m_tickets.at(ticketName), optionalArgs);
@@ -308,11 +315,13 @@ namespace ROS2
 
         AzFramework::DespawnAllEntitiesOptionalArgs optionalArgs;
 
-        optionalArgs.m_completionCallback = [service_handle, header](auto id)
+        optionalArgs.m_completionCallback = [service_handle, header, deleteName](auto id)
         {
             DeleteEntityResponse response;
             response.success = true;
             service_handle->send_response(*header, response);
+
+            SpawnerNotificationBus::Broadcast(&SpawnerNotificationBus::Events::OnDespawned, deleteName);
         };
 
         spawner->DespawnAllEntities(m_tickets.at(deleteName), optionalArgs);

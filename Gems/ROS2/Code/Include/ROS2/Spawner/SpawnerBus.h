@@ -8,6 +8,7 @@
 #pragma once
 
 #include <AzCore/Component/ComponentBus.h>
+#include <AzCore/Component/EntityId.h>
 #include <AzCore/EBus/EBus.h>
 #include <AzCore/Math/Transform.h>
 #include <AzCore/RTTI/BehaviorContext.h>
@@ -33,5 +34,27 @@ namespace ROS2
         virtual AZStd::unordered_map<AZStd::string, SpawnPointInfo> GetAllSpawnPointInfos() const = 0;
     };
 
+    class SpawnerNotifications : public AZ::EBusTraits
+    {
+    public:
+        AZ_RTTI(SpawnerNotifications, "{0D22B024-48C7-457C-BFFB-D292045B68EC}");
+
+        static constexpr AZ::EBusHandlerPolicy HandlerPolicy = AZ::EBusHandlerPolicy::Multiple;
+        static constexpr AZ::EBusAddressPolicy AddressPolicy = AZ::EBusAddressPolicy::Single;
+
+        virtual ~SpawnerNotifications() = default;
+
+        //! Notifies that spawn operation was completed.
+        //! @param spawnableName name of the spawnable that was spawned.
+        //! @param rootEntity root entity of the spawned spawnable.
+        //! @param ticketName name of the ticket that was used to spawn the entity.
+        virtual void OnSpawned(const AZStd::string& spawnableName, const AZ::EntityId& rootEntity, const AZStd::string& ticketName){};
+
+        //! Notifies that despawn operation was completed.
+        //! @param ticketName name of the ticket that was used to despawn the entity.
+        virtual void OnDespawned(const AZStd::string& ticketName){};
+    };
+
     using SpawnerRequestsBus = AZ::EBus<SpawnerRequests>;
+    using SpawnerNotificationBus = AZ::EBus<SpawnerNotifications>;
 } // namespace ROS2
