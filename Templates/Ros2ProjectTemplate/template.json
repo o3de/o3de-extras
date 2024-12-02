@@ -403,10 +403,6 @@
             "isTemplated": true
         },
         {
-            "file": "autoexec.cfg",
-            "isTemplated": false
-        },
-        {
             "file": "game.cfg",
             "isTemplated": false
         },
