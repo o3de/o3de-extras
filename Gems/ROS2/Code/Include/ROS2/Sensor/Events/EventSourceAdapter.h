@@ -180,10 +180,10 @@ namespace ROS2
             {
                 return false;
             }
-
             const float sourceFrequencyEstimation = 1.0f / sourceDeltaTime;
             const float numberOfFrames =
                 m_adaptedFrequency <= sourceFrequencyEstimation ? (sourceFrequencyEstimation / m_adaptedFrequency) : 1.0f;
+            AZ_Printf("EventSourceAdapter", "Number of frames: %f", numberOfFrames);
             m_tickCounter = aznumeric_cast<int>(AZStd::round(numberOfFrames));
             return true;
         }
