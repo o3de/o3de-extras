@@ -251,16 +251,16 @@ namespace ROS2
         const float horizontalStep = (maxHorAngle - minHorAngle) / static_cast<float>(lidarTemplate.m_numberOfIncrements);
 
         AZStd::vector<AZ::Vector3> rotations;
-        for (int incr = 0; incr < lidarTemplate.m_numberOfIncrements; incr++)
+        for (int layer = 0; layer < lidarTemplate.m_layers; layer++)
         {
-            const float yaw = minHorAngle + incr * horizontalStep;
-            for (int layer = 0; layer < lidarTemplate.m_layers; layer++)
+            const float pitch = minVertAngle + layer * verticalStep;
+            for (int incr = 0; incr < lidarTemplate.m_numberOfIncrements; incr++)
             {
-                const float pitch = minVertAngle + layer * verticalStep;
-
+                const float yaw = minHorAngle + incr * horizontalStep;
                 rotations.emplace_back(0.0f, pitch, yaw);
             }
         }
+
 
         return rotations;
     }
@@ -269,9 +269,9 @@ namespace ROS2
     {
         AZStd::vector<AZ::s32> ringIds;
         ringIds.reserve(lidarTemplate.m_numberOfIncrements * lidarTemplate.m_layers);
-        for (int incr = 0; incr < lidarTemplate.m_numberOfIncrements; incr++)
+        for (int layer = 0; layer < lidarTemplate.m_layers; layer++)
         {
-            for (int layer = 0; layer < lidarTemplate.m_layers; layer++)
+            for (int incr = 0; incr < lidarTemplate.m_numberOfIncrements; incr++)
             {
                 ringIds.push_back(layer);
             }
