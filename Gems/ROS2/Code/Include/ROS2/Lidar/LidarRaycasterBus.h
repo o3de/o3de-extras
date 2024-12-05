@@ -156,45 +156,16 @@ namespace ROS2
             AZ_Assert(false, "This Lidar Implementation does not support entity exclusion!");
         }
 
-        //! Configures max range point addition.
-        //! @param includeMaxRange Should the raycaster add points at max range for rays that exceeded their range?
-        virtual void ConfigureMaxRangePointAddition([[maybe_unused]] bool addMaxRangePoints)
-        {
-            AZ_Assert(false, "This Lidar Implementation does not support Max range point addition configuration!");
-        }
+        //! Configures whether the non hit rays should also be included in raycast results.
+        //! @param returnNonHits Should the non hit rays be included in returned results?
+        virtual void ConfigureNonHitReturn([[maybe_unused]] bool returnNonHits) = 0;
 
-        //! Enables and configures raycaster-side Point Cloud Publisher.
-        //! If not called, no publishing (raycaster-side) is performed. For some implementations it might be beneficial
-        //! to publish internally (e.g. for the RGL gem, published points can be transformed from global to sensor
-        //! coordinates on the GPU and published without unnecessary data copying or CPU manipulation) This API enables
-        //! raycaster implementations that also handle publishing and provides them with necessary publisher configuration.
-        //! @param topicName Name of the ROS 2 topic the pointcloud is published on.
-        //! @param frameId Id of the ROS 2 frame of the sensor.
-        //! @param qoSPolicy QoS policy of published pointcloud messages.
-        virtual void ConfigurePointCloudPublisher(
-            [[maybe_unused]] const AZStd::string& topicName,
-            [[maybe_unused]] const AZStd::string& frameId,
-            [[maybe_unused]] const QoS& qoSPolicy)
+        //! Configures ring IDs of the requested rays.
+        //! ID count must be equal to that of the ray count (@see ConfigureRayOrientations).
+        //! @param ringIds List of IDs for each of the requested rays.
+        virtual void ConfigureRayRingIds(const AZStd::vector<AZ::s32>& ringIds)
         {
-            AZ_Assert(false, "This Lidar Implementation does not support PointCloud publishing!");
-        }
-
-        //! Updates the timestamp of the messages published by the raycaster.
-        //! @param timestampNanoseconds timestamp in nanoseconds
-        //! (Time.msg: sec = timestampNanoseconds / 10^9; nanosec = timestampNanoseconds mod 10^9).
-        virtual void UpdatePublisherTimestamp([[maybe_unused]] AZ::u64 timestampNanoseconds)
-        {
-            AZ_Assert(false, "This Lidar Implementation does not support PointCloud publishing!");
-        }
-
-        //! Can the raycaster handle publishing?
-        //! This function should be called after the raycaster has been configured.
-        //! The raycaster may not be able to handle point-cloud publishing in certain configurations (e.g. when the maxPointAddition
-        //! is selected) in which case publishing must be handled somewhere else (e.g. by the ROS2LidarComponent).
-        virtual bool CanHandlePublishing()
-        {
-            AZ_Assert(false, "This Lidar Implementation does not support PointCloud publishing!");
-            return false;
+            AZ_Assert(false, "This Lidar Implementation does not support ring ids!")
         }
 
     protected:

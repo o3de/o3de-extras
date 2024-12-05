@@ -46,9 +46,9 @@ namespace ROS2
         , m_sceneHandle{ lidarRaycaster.m_sceneHandle }
         , m_resultFlags{ lidarRaycaster.m_resultFlags }
         , m_range{ lidarRaycaster.m_range }
-        , m_addMaxRangePoints{ lidarRaycaster.m_addMaxRangePoints }
         , m_rayRotations{ AZStd::move(lidarRaycaster.m_rayRotations) }
         , m_ignoredCollisionLayers{ lidarRaycaster.m_ignoredCollisionLayers }
+        , m_returnNonHits{ lidarRaycaster.m_returnNonHits }
     {
         lidarRaycaster.BusDisconnect();
         lidarRaycaster.m_busId = LidarId::CreateNull();
@@ -138,14 +138,16 @@ namespace ROS2
         const AZStd::vector<AZ::Vector3> rayDirections = LidarTemplateUtils::RotationsToDirections(m_rayRotations, lidarTransform);
         AzPhysics::SceneQueryRequests requests = prepareRequests(lidarTransform, rayDirections);
 
-        const bool handlePoints = (m_resultFlags & RaycastResultFlags::Point) == RaycastResultFlags::Point;
-        const bool handleRanges = (m_resultFlags & RaycastResultFlags::Range) == RaycastResultFlags::Range;
-        const bool handleSegmentation = (m_resultFlags & RaycastResultFlags::SegmentationData) == RaycastResultFlags::SegmentationData;
+        const bool handlePoints = IsFlagEnabled(RaycastResultFlags::Point, m_resultFlags);
+        const bool handleRanges = IsFlagEnabled(RaycastResultFlags::Range, m_resultFlags);
+        const bool handleSegmentation = IsFlagEnabled(RaycastResultFlags::SegmentationData, m_resultFlags);
+        const bool handleIsHit = IsFlagEnabled(RaycastResultFlags::IsHit, m_resultFlags);
         RaycastResults results(m_resultFlags, rayDirections.size());
 
         AZStd::optional<RaycastResults::FieldSpan<RaycastResultFlags::Point>::iterator> pointIt;
         AZStd::optional<RaycastResults::FieldSpan<RaycastResultFlags::Range>::iterator> rangeIt;
         AZStd::optional<RaycastResults::FieldSpan<RaycastResultFlags::SegmentationData>::iterator> segmentationIt;
+        AZStd::optional<RaycastResults::FieldSpan<RaycastResultFlags::IsHit>::iterator> isHitIt;
         if (handlePoints)
         {
             pointIt = results.GetFieldSpan<RaycastResultFlags::Point>().value().begin();
@@ -158,18 +160,23 @@ namespace ROS2
         {
             segmentationIt = results.GetFieldSpan<RaycastResultFlags::SegmentationData>().value().begin();
         }
+        if (handleIsHit)
+        {
+            isHitIt = results.GetFieldSpan<RaycastResultFlags::IsHit>().value().begin();
+        }
 
         auto* sceneInterface = AZ::Interface<AzPhysics::SceneInterface>::Get();
         auto requestResults = sceneInterface->QuerySceneBatch(m_sceneHandle, requests);
         AZ_Assert(requestResults.size() == rayDirections.size(), "Request size should be equal to directions size");
         const auto localTransform =
             AZ::Transform::CreateFromQuaternionAndTranslation(lidarTransform.GetRotation(), lidarTransform.GetTranslation()).GetInverse();
-        const float maxRange = m_addMaxRangePoints ? m_range->m_max : AZStd::numeric_limits<float>::infinity();
+        const float maxRange = m_returnNonHits ? m_range->m_max : AZStd::numeric_limits<float>::infinity();
 
         size_t usedSize = 0U;
         for (size_t i = 0U; i < requestResults.size(); i++)
         {
             const auto& requestResult = requestResults[i];
+            const bool isHit = static_cast<bool>(requestResult);
             float hitRange = requestResult ? requestResult.m_hits[0].m_distance : maxRange;
             if (hitRange < m_range->m_min)
             {
@@ -177,45 +184,55 @@ namespace ROS2
             }
 
             bool wasUsed = false;
-            if (rangeIt.has_value())
+            if (isHit || m_returnNonHits)
             {
-                *rangeIt.value() = hitRange;
-                wasUsed = true;
-            }
-
-            if (pointIt.has_value())
-            {
-                if (hitRange == maxRange)
+                if (rangeIt.has_value())
                 {
-                    // to properly visualize max points they need to be transformed to local coordinate system before applying maxRange
-                    const AZ::Vector3 maxPoint = lidarTransform.TransformPoint(localTransform.TransformVector(rayDirections[i]) * hitRange);
-                    *pointIt.value() = maxPoint;
+                    *rangeIt.value() = hitRange;
                     wasUsed = true;
                 }
-                else if (!AZStd::isinf(hitRange))
+
+                if (pointIt.has_value())
                 {
-                    // otherwise they are already calculated by PhysX
-                    *pointIt.value() = requestResult.m_hits[0].m_position;
+                    if (hitRange == maxRange)
+                    {
+                        // to properly visualize max points they need to be transformed to local coordinate system before applying maxRange
+                        const AZ::Vector3 maxPoint =
+                            lidarTransform.TransformPoint(localTransform.TransformVector(rayDirections[i]) * hitRange);
+                        *pointIt.value() = maxPoint;
+                        wasUsed = true;
+                    }
+                    else if (!AZStd::isinf(hitRange))
+                    {
+                        // otherwise they are already calculated by PhysX
+                        *pointIt.value() = requestResult.m_hits[0].m_position;
+                        wasUsed = true;
+                    }
+                }
+
+                if (segmentationIt.has_value())
+                {
+                    segmentationIt.value()->m_classId = 0;
+                    segmentationIt.value()->m_entityId = 0;
+
+                    if (requestResult)
+                    {
+                        const auto entityId = requestResult.m_hits[0].m_entityId;
+                        const uint8_t classId = GetClassIdForEntity(entityId);
+                        const int32_t compressedEntityId = CompressEntityId(entityId);
+
+                        segmentationIt.value()->m_classId = classId;
+                        segmentationIt.value()->m_entityId = compressedEntityId;
+                    }
+
                     wasUsed = true;
                 }
-            }
 
-            if (segmentationIt.has_value())
-            {
-                segmentationIt.value()->m_classId = 0;
-                segmentationIt.value()->m_entityId = 0;
-
-                if (requestResult)
+                if (isHitIt.has_value())
                 {
-                    const auto entityId = requestResult.m_hits[0].m_entityId;
-                    const uint8_t classId = GetClassIdForEntity(entityId);
-                    const int32_t compressedEntityId = CompressEntityId(entityId);
-
-                    segmentationIt.value()->m_classId = classId;
-                    segmentationIt.value()->m_entityId = compressedEntityId;
+                    *isHitIt.value() = isHit;
+                    wasUsed = true;
                 }
-
-                wasUsed = true;
             }
 
             if (wasUsed)
@@ -235,6 +252,11 @@ namespace ROS2
                     ++segmentationIt.value();
                 }
 
+                if (isHitIt.has_value())
+                {
+                    ++isHitIt.value();
+                }
+
                 ++usedSize;
             }
         }
@@ -247,9 +269,10 @@ namespace ROS2
     {
         m_ignoredCollisionLayers = layerIndices;
     }
-    void LidarRaycaster::ConfigureMaxRangePointAddition(bool addMaxRangePoints)
+
+    void LidarRaycaster::ConfigureNonHitReturn(bool returnNonHits)
     {
-        m_addMaxRangePoints = addMaxRangePoints;
+        m_returnNonHits = returnNonHits;
     }
 
     int32_t LidarRaycaster::CompressEntityId(AZ::EntityId entityId)

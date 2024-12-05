@@ -11,21 +11,28 @@ namespace ROS2
 {
     RaycastResults::RaycastResults(RaycastResultFlags flags, size_t count)
         : m_count{ count }
+        , m_flags{ flags }
     {
         EnsureFlagSatisfied<RaycastResultFlags::Point>(flags, count);
         EnsureFlagSatisfied<RaycastResultFlags::Range>(flags, count);
         EnsureFlagSatisfied<RaycastResultFlags::Intensity>(flags, count);
         EnsureFlagSatisfied<RaycastResultFlags::SegmentationData>(flags, count);
+        EnsureFlagSatisfied<RaycastResultFlags::IsHit>(flags, count);
+        EnsureFlagSatisfied<RaycastResultFlags::Ring>(flags, count);
     }
 
     RaycastResults::RaycastResults(RaycastResults&& other)
-        : m_count{ other.m_count }
-        , m_points{ AZStd::move(other.m_points) }
+        : m_points{ AZStd::move(other.m_points) }
         , m_ranges{ AZStd::move(other.m_ranges) }
         , m_intensities{ AZStd::move(other.m_intensities) }
         , m_segmentationData{ AZStd::move(other.m_segmentationData) }
+        , m_isHit{ AZStd::move(other.m_isHit) }
+        , m_ringId{ AZStd::move(other.m_ringId) }
+        , m_count{ other.m_count }
+        , m_flags{ other.m_flags }
     {
         other.m_count = 0U;
+        other.m_flags = RaycastResultFlags::None;
     }
 
     void RaycastResults::Clear()
@@ -35,6 +42,8 @@ namespace ROS2
         ClearFieldIfPresent<RaycastResultFlags::Range>();
         ClearFieldIfPresent<RaycastResultFlags::Intensity>();
         ClearFieldIfPresent<RaycastResultFlags::SegmentationData>();
+        ClearFieldIfPresent<RaycastResultFlags::IsHit>();
+        ClearFieldIfPresent<RaycastResultFlags::Ring>();
     }
 
     void RaycastResults::Resize(size_t count)
@@ -44,6 +53,8 @@ namespace ROS2
         ResizeFieldIfPresent<RaycastResultFlags::Range>(count);
         ResizeFieldIfPresent<RaycastResultFlags::Intensity>(count);
         ResizeFieldIfPresent<RaycastResultFlags::SegmentationData>(count);
+        ResizeFieldIfPresent<RaycastResultFlags::IsHit>(count);
+        ResizeFieldIfPresent<RaycastResultFlags::Ring>(count);
     }
 
     RaycastResults& RaycastResults::operator=(RaycastResults&& other)
@@ -56,10 +67,15 @@ namespace ROS2
         m_count = other.m_count;
         other.m_count = 0U;
 
+        m_flags = other.m_flags;
+        other.m_flags = RaycastResultFlags::None;
+
         m_points = AZStd::move(other.m_points);
         m_ranges = AZStd::move(other.m_ranges);
         m_intensities = AZStd::move(other.m_intensities);
         m_segmentationData = AZStd::move(other.m_segmentationData);
+        m_isHit = AZStd::move(other.m_isHit);
+        m_ringId = AZStd::move(other.m_ringId);
 
         return *this;
     }
@@ -67,6 +83,11 @@ namespace ROS2
     bool RaycastResults::IsEmpty() const
     {
         return GetCount() == 0U;
+    }
+
+    bool RaycastResults::IsCompliant(RaycastResultFlags resultFlags) const
+    {
+        return resultFlags == m_flags;
     }
 
     size_t RaycastResults::GetCount() const
