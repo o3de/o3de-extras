@@ -14,6 +14,7 @@
 #include <AzCore/Component/EntityId.h>
 #include <AzCore/Memory/Memory_fwd.h>
 #include <AzCore/Memory/SystemAllocator.h>
+#include <AzCore/Serialization/EditContext.h>
 #include <AzCore/base.h>
 #include <AzFramework/Spawnable/Spawnable.h>
 
@@ -41,6 +42,10 @@ namespace ROS2
         ~ROS2SpawnerComponentConfig() = default;
 
         static void Reflect(AZ::ReflectContext* context);
+        [[nodiscard]] AZ::u32 UseReferenceCoordinationSystemVisibility()
+        {
+            return m_enableRelativeSpawning ? AZ::Edit::PropertyVisibility::Show : AZ::Edit::PropertyVisibility::Hide;
+        }
 
         AZ::EntityId m_editorEntityId;
         AZ::Transform m_defaultSpawnPose = { AZ::Vector3{ 0, 0, 0 }, AZ::Quaternion{ 0, 0, 0, 1 }, 1.0 };
@@ -48,6 +53,8 @@ namespace ROS2
         ROS2SpawnerServiceNames m_serviceNames;
         AZStd::unordered_map<AZStd::string, AZ::Data::Asset<AzFramework::Spawnable>> m_spawnables;
         bool m_supportWGS{ true };
+        bool m_enableRelativeSpawning{ false };
+        AZ::EntityId m_referenceCoordinationSystem;
     };
 
     class ROS2SpawnerComponentController : public SpawnerRequestsBus::Handler
@@ -79,6 +86,8 @@ namespace ROS2
         AZ::EntityId GetEditorEntityId() const;
         AZStd::unordered_map<AZStd::string, AZ::Data::Asset<AzFramework::Spawnable>> GetSpawnables() const;
         bool GetSupportWGS() const;
+        bool IsRelativeSpawningEnabled() const;
+        AZ::EntityId GetReferenceCoordinationSystem() const;
 
     private:
         ROS2SpawnerComponentConfig m_config;

@@ -75,6 +75,8 @@ namespace ROS2
                 ->Version(1)
                 ->Field("Editor entity id", &ROS2SpawnerComponentConfig::m_editorEntityId)
                 ->Field("Support WGS", &ROS2SpawnerComponentConfig::m_supportWGS)
+                ->Field("Enable relative spawning", &ROS2SpawnerComponentConfig::m_enableRelativeSpawning)
+                ->Field("Reference coordinate system", &ROS2SpawnerComponentConfig::m_referenceCoordinationSystem)
                 ->Field("Spawnables", &ROS2SpawnerComponentConfig::m_spawnables)
                 ->Field("Default spawn pose", &ROS2SpawnerComponentConfig::m_defaultSpawnPose)
                 ->Field("Service names", &ROS2SpawnerComponentConfig::m_serviceNames)
@@ -86,6 +88,18 @@ namespace ROS2
                 editContext->Class<ROS2SpawnerComponentConfig>("ROS2SpawnerComponentConfig", "Config for ROS2SpawnerComponent")
                     ->ClassElement(AZ::Edit::ClassElements::EditorData, "")
                     ->DataElement(AZ::Edit::UIHandlers::Default, &ROS2SpawnerComponentConfig::m_supportWGS, "Support WGS", "Support for spawning entities using WGS84 coordinate system")
+                    ->DataElement(
+                        AZ::Edit::UIHandlers::Default,
+                        &ROS2SpawnerComponentConfig::m_enableRelativeSpawning,
+                        "Enable relative spawning",
+                        "When 'reference_frame' is set to 'relative' then spawns entity in the reference coordinate system")
+                    ->Attribute(AZ::Edit::Attributes::ChangeNotify, AZ::Edit::PropertyRefreshLevels::EntireTree)
+                    ->DataElement(
+                        AZ::Edit::UIHandlers::Default,
+                        &ROS2SpawnerComponentConfig::m_referenceCoordinationSystem,
+                        "Reference coordinate system",
+                        "Reference coordinate system used for spawning")
+                    ->Attribute(AZ::Edit::Attributes::Visibility, &ROS2SpawnerComponentConfig::UseReferenceCoordinationSystemVisibility)
                     ->DataElement(AZ::Edit::UIHandlers::Default, &ROS2SpawnerComponentConfig::m_spawnables, "Spawnables", "Spawnables")
                     ->DataElement(
                         AZ::Edit::UIHandlers::Default,
@@ -121,6 +135,16 @@ namespace ROS2
     bool ROS2SpawnerComponentController::GetSupportWGS() const
     {
         return m_config.m_supportWGS;
+    }
+
+    bool ROS2SpawnerComponentController::IsRelativeSpawningEnabled() const
+    {
+        return m_config.m_enableRelativeSpawning;
+    }
+
+    AZ::EntityId ROS2SpawnerComponentController::GetReferenceCoordinationSystem() const
+    {
+        return m_config.m_referenceCoordinationSystem;
     }
 
     void ROS2SpawnerComponentController::Reflect(AZ::ReflectContext* context)
