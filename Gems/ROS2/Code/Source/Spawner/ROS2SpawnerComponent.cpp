@@ -114,6 +114,7 @@ namespace ROS2
     {
         AZStd::string referenceFrame(request->reference_frame.c_str());
         const bool isWGS{ referenceFrame == "wgs84" && m_controller.GetSupportWGS() };
+        const bool relativeSpawning{ referenceFrame == "relative" && m_controller.IsRelativeSpawningEnabled() };
 
         SpawnEntityResponse response;
 
@@ -226,15 +227,31 @@ namespace ROS2
             }
             else
             {
-                transform = { AZ::Vector3(
-                                  request->initial_pose.position.x, request->initial_pose.position.y, request->initial_pose.position.z),
-                              AZ::Quaternion(
-                                  request->initial_pose.orientation.x,
-                                  request->initial_pose.orientation.y,
-                                  request->initial_pose.orientation.z,
-                                  request->initial_pose.orientation.w)
-                                  .GetNormalized(),
-                              1.0f };
+                auto spawnPosition =
+                    AZ::Vector3(request->initial_pose.position.x, request->initial_pose.position.y, request->initial_pose.position.z);
+                auto spawnRotation = AZ::Quaternion(
+                                         request->initial_pose.orientation.x,
+                                         request->initial_pose.orientation.y,
+                                         request->initial_pose.orientation.z,
+                                         request->initial_pose.orientation.w)
+                                         .GetNormalized();
+
+                if (relativeSpawning)
+                {
+                    AZ_Error(
+                        "Spawner",
+                        m_controller.GetReferenceCoordinationSystem().IsValid(),
+                        "Can't spawn relatively, reference frame not set or is invalid");
+
+                    AZ::Transform referenceTm = AZ::Transform::CreateIdentity();
+                    AZ::TransformBus::EventResult(
+                        referenceTm, m_controller.GetReferenceCoordinationSystem(), &AZ::TransformBus::Events::GetWorldTM);
+
+                    spawnPosition = referenceTm.TransformPoint(spawnPosition);
+                    spawnRotation *= referenceTm.GetRotation();
+                }
+
+                transform = { spawnPosition, spawnRotation, 1.0f };
             }
         }
 
