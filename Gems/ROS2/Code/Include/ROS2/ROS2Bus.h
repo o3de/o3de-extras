@@ -64,6 +64,9 @@ namespace ROS2
         //! Obtains a simulation clock that is used across simulation.
         //! @returns constant reference to currently running clock.
         virtual const ROS2Clock& GetSimulationClock() const = 0;
+
+        //! Returns an expected loop time of simulation. It is an estimation from past frames.
+        virtual float GetExpectedSimulationLoopTime() const = 0;
     };
 
     class ROS2BusTraits : public AZ::EBusTraits
