@@ -32,16 +32,9 @@ namespace ROS2
         //! server documentation </a>
         FollowJointTrajectoryActionServer(const AZStd::string& actionName, const AZ::EntityId& entityId);
 
-        //! Return trajectory action status.
-        //! @return Status of the trajectory execution.
-        JointsTrajectoryRequests::TrajectoryActionStatus GetGoalStatus() const;
-
         //! Cancel the current goal.
         //! @param result Result to be passed to through action server to the client.
         void CancelGoal(std::shared_ptr<FollowJointTrajectory::Result> result);
-
-        //! Sets the goal status to success
-        void SetGoalSuccess();
 
         //! Report goal success to the action server.
         //! @param result Result which contains success code.
@@ -56,7 +49,6 @@ namespace ROS2
         using TrajectoryActionStatus = JointsTrajectoryRequests::TrajectoryActionStatus;
 
         AZ::EntityId m_entityId;
-        TrajectoryActionStatus m_goalStatus = TrajectoryActionStatus::Idle;
         rclcpp_action::Server<FollowJointTrajectory>::SharedPtr m_actionServer;
         std::shared_ptr<GoalHandle> m_goalHandle;
 
