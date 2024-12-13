@@ -20,6 +20,7 @@
 #include "LidarCore.h"
 #include "LidarRaycaster.h"
 #include "LidarSensorConfiguration.h"
+#include "Publishing/PointCloudMessageWriter.h"
 
 namespace ROS2
 {
@@ -35,24 +36,44 @@ namespace ROS2
         ROS2LidarSensorComponent(const SensorConfiguration& sensorConfiguration, const LidarSensorConfiguration& lidarConfiguration);
         ~ROS2LidarSensorComponent() = default;
         static void Reflect(AZ::ReflectContext* context);
+        static void GetProvidedServices(AZ::ComponentDescriptor::DependencyArrayType& provided);
         static void GetRequiredServices(AZ::ComponentDescriptor::DependencyArrayType& required);
         //////////////////////////////////////////////////////////////////////////
         // Component overrides
+        void Init() override;
         void Activate() override;
         void Deactivate() override;
         //////////////////////////////////////////////////////////////////////////
 
     private:
         //////////////////////////////////////////////////////////////////////////
+        static const Pc2MessageFormat& GetDefaultMessageFormat();
+        void TransformToLidarLocalSpace(AZStd::span<AZ::Vector3> pointSpan) const;
+        RaycastResultFlags GetRequestResultFlags() const;
+        bool IsPointcloudOrderingVisible() const;
+        bool IsDistanceUnitsVisible() const;
+        bool IsDistanceMultiplierVisible() const;
         void FrequencyTick();
-        void PublishRaycastResults(const RaycastResults& results);
+        AZ::Outcome<void, const char*> PublishRaycastResults(const RaycastResults& results);
+        AZ::Crc32 OnLidarCoreChanged();
+        AZ::Crc32 OnMessageFormatChanged();
+        AZ::Crc32 OnDensePointcloudChanged();
+        AZ::Crc32 GenerateMessageFormat();
+        AZ::Crc32 OnDistanceUnitsChanged();
+        void ApplyUnitConversion(RaycastResults& raycastResults);
 
-        bool m_canRaycasterPublish = false;
         std::shared_ptr<rclcpp::Publisher<sensor_msgs::msg::PointCloud2>> m_pointCloudPublisher;
         std::shared_ptr<rclcpp::Publisher<vision_msgs::msg::LabelInfo>> m_segmentationClassesPublisher;
 
-        LidarCore m_lidarCore;
+        AZStd::optional<PointCloudMessageWriter> m_pointCloudMessageWriter;
+        Pc2MessageFormat m_messageFormat;
+        DistanceUnits m_distanceUnits{ DistanceUnits::Meters };
+        float m_distanceMultiplier{ GetUnitMultiplierValue(DistanceUnits::Meters).value() };
 
+        LidarCore m_lidarCore;
         LidarId m_lidarRaycasterId;
+
+        bool m_pointcloudIsDense{ true };
+        bool m_pointcloudOrderingEnabled{ false };
     };
 } // namespace ROS2

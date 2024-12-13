@@ -9,10 +9,10 @@
 #include <Atom/RPI.Public/AuxGeom/AuxGeomFeatureProcessorInterface.h>
 #include <Atom/RPI.Public/Scene.h>
 #include <Lidar/LidarRegistrarSystemComponent.h>
-#include <Lidar/PointCloudMessageBuilder.h>
 #include <Lidar/ROS2LidarSensorComponent.h>
 #include <ROS2/Frame/ROS2FrameComponent.h>
 #include <ROS2/Lidar/ClassSegmentationBus.h>
+#include <ROS2/Lidar/PC2PostProcessingBus.h>
 #include <ROS2/Utilities/ROS2Names.h>
 #include <sensor_msgs/point_cloud2_iterator.hpp>
 
@@ -25,10 +25,18 @@ namespace ROS2
 
     void ROS2LidarSensorComponent::Reflect(AZ::ReflectContext* context)
     {
+        FieldFormat::Reflect(context);
+
         if (auto* serializeContext = azrtti_cast<AZ::SerializeContext*>(context))
         {
-            serializeContext->Class<ROS2LidarSensorComponent, SensorBaseType>()->Version(3)->Field(
-                "lidarCore", &ROS2LidarSensorComponent::m_lidarCore);
+            serializeContext->Class<ROS2LidarSensorComponent, SensorBaseType>()
+                ->Version(3)
+                ->Field("lidarCore", &ROS2LidarSensorComponent::m_lidarCore)
+                ->Field("messageFormat", &ROS2LidarSensorComponent::m_messageFormat)
+                ->Field("pointCloudIsDense", &ROS2LidarSensorComponent::m_pointcloudIsDense)
+                ->Field("pointCloudOrdering", &ROS2LidarSensorComponent::m_pointcloudOrderingEnabled)
+                ->Field("distanceUnits", &ROS2LidarSensorComponent::m_distanceUnits)
+                ->Field("distanceMultiplier", &ROS2LidarSensorComponent::m_distanceMultiplier);
 
             if (auto* editContext = serializeContext->GetEditContext())
             {
@@ -43,14 +51,67 @@ namespace ROS2
                         &ROS2LidarSensorComponent::m_lidarCore,
                         "Lidar configuration",
                         "Lidar configuration")
-                    ->Attribute(AZ::Edit::Attributes::Visibility, AZ::Edit::PropertyVisibility::ShowChildrenOnly);
+                    ->Attribute(AZ::Edit::Attributes::ChangeNotify, &ROS2LidarSensorComponent::OnLidarCoreChanged)
+                    ->Attribute(AZ::Edit::Attributes::Visibility, AZ::Edit::PropertyVisibility::ShowChildrenOnly)
+                    ->UIElement(AZ::Edit::UIHandlers::Button, "Generate a default message format for the enabled lidar features.")
+                    ->Attribute(AZ::Edit::Attributes::NameLabelOverride, "")
+                    ->Attribute(AZ::Edit::Attributes::ButtonText, "Generate message format")
+                    ->Attribute(AZ::Edit::Attributes::ChangeNotify, &ROS2LidarSensorComponent::GenerateMessageFormat)
+                    ->DataElement(
+                        AZ::Edit::UIHandlers::Default, &ROS2LidarSensorComponent::m_messageFormat, "Point Cloud 2 message format", "")
+                    ->Attribute(AZ::Edit::Attributes::ChangeNotify, &ROS2LidarSensorComponent::OnMessageFormatChanged)
+                    ->DataElement(
+                        AZ::Edit::UIHandlers::Default,
+                        &ROS2LidarSensorComponent::m_pointcloudIsDense,
+                        "Dense pointcloud",
+                        "If enabled, only the points that hit an obstacle are processed and published. Having this option enabled improves "
+                        "performance but disallows pointcloud ordering and points at max.")
+                    ->Attribute(AZ::Edit::Attributes::ChangeNotify, &ROS2LidarSensorComponent::OnDensePointcloudChanged)
+                    ->DataElement(
+                        AZ::Edit::UIHandlers::Default,
+                        &ROS2LidarSensorComponent::m_pointcloudOrderingEnabled,
+                        "Pointcloud ordering",
+                        "Message's width and height match those of the used ray pattern. Only available for sparse (non-dense) "
+                        "pointclouds.")
+                    ->Attribute(AZ::Edit::Attributes::Visibility, &ROS2LidarSensorComponent::IsPointcloudOrderingVisible)
+                    ->DataElement(
+                        AZ::Edit::UIHandlers::ComboBox,
+                        &ROS2LidarSensorComponent::m_distanceUnits,
+                        "Distance units",
+                        "Determines the units of published distance field.")
+                    ->EnumAttribute(DistanceUnits::Meters, "Meters")
+                    ->EnumAttribute(DistanceUnits::Centimeters, "Centimeters")
+                    ->EnumAttribute(DistanceUnits::Millimeters, "Millimeters")
+                    ->EnumAttribute(DistanceUnits::Custom, "Custom")
+                    ->Attribute(AZ::Edit::Attributes::Visibility, &ROS2LidarSensorComponent::IsDistanceUnitsVisible)
+                    ->Attribute(AZ::Edit::Attributes::ChangeNotify, &ROS2LidarSensorComponent::OnDistanceUnitsChanged)
+                    ->DataElement(
+                        AZ::Edit::UIHandlers::Default,
+                        &ROS2LidarSensorComponent::m_distanceMultiplier,
+                        "Distance multiplier",
+                        "Allows for custom unit configuration. Point distance (in meters) will be multiplied by provided value.")
+                    ->Attribute(AZ::Edit::Attributes::Visibility, &ROS2LidarSensorComponent::IsDistanceMultiplierVisible);
             }
         }
+    }
+
+    void ROS2LidarSensorComponent::GetProvidedServices(AZ::ComponentDescriptor::DependencyArrayType& provided)
+    {
+        provided.push_back(AZ_CRC_CE("ROS2LidarSensor"));
     }
 
     void ROS2LidarSensorComponent::GetRequiredServices(AZ::ComponentDescriptor::DependencyArrayType& required)
     {
         required.push_back(AZ_CRC_CE("ROS2Frame"));
+    }
+
+    void ROS2LidarSensorComponent::Init()
+    {
+        if (m_messageFormat.empty())
+        {
+            AZ_Warning("ROS2", false, "No message format provided. Applying default message format.");
+            m_messageFormat = GetDefaultMessageFormat();
+        }
     }
 
     ROS2LidarSensorComponent::ROS2LidarSensorComponent()
@@ -74,43 +135,23 @@ namespace ROS2
     void ROS2LidarSensorComponent::Activate()
     {
         ROS2SensorComponentBase::Activate();
-        m_lidarCore.Init(GetEntityId());
+
+        m_pointCloudMessageWriter = PointCloudMessageWriter(m_messageFormat);
+        m_lidarCore.Init(GetEntityId(), GetRequestResultFlags());
 
         m_lidarRaycasterId = m_lidarCore.GetLidarRaycasterId();
-        m_canRaycasterPublish = false;
-        if (m_lidarCore.m_lidarConfiguration.m_lidarSystemFeatures & LidarSystemFeatures::PointcloudPublishing)
+
+        auto ros2Node = ROS2Interface::Get()->GetNode();
+        AZ_Assert(m_sensorConfiguration.m_publishersConfigurations.size() == 1, "Invalid configuration of publishers for lidar sensor");
+
+        const TopicConfiguration& publisherConfig = m_sensorConfiguration.m_publishersConfigurations[PointCloudType];
+        AZStd::string fullTopic = ROS2Names::GetNamespacedName(GetNamespace(), publisherConfig.m_topic);
+        m_pointCloudPublisher = ros2Node->create_publisher<sensor_msgs::msg::PointCloud2>(fullTopic.data(), publisherConfig.GetQoS());
+
+        if (IsFlagEnabled(RaycastResultFlags::SegmentationData, m_lidarCore.GetResultFlags()))
         {
-            LidarRaycasterRequestBus::EventResult(
-                m_canRaycasterPublish, m_lidarRaycasterId, &LidarRaycasterRequestBus::Events::CanHandlePublishing);
-        }
-
-        if (m_canRaycasterPublish)
-        {
-            const TopicConfiguration& publisherConfig = m_sensorConfiguration.m_publishersConfigurations[PointCloudType];
-            auto* ros2Frame = GetEntity()->FindComponent<ROS2FrameComponent>();
-
-            LidarRaycasterRequestBus::Event(
-                m_lidarRaycasterId,
-                &LidarRaycasterRequestBus::Events::ConfigurePointCloudPublisher,
-                ROS2Names::GetNamespacedName(GetNamespace(), publisherConfig.m_topic),
-                ros2Frame->GetFrameID().data(),
-                publisherConfig.GetQoS());
-        }
-        else
-        {
-            auto ros2Node = ROS2Interface::Get()->GetNode();
-            AZ_Assert(m_sensorConfiguration.m_publishersConfigurations.size() == 1, "Invalid configuration of publishers for lidar sensor");
-
-            const TopicConfiguration& publisherConfig = m_sensorConfiguration.m_publishersConfigurations[PointCloudType];
-            AZStd::string fullTopic = ROS2Names::GetNamespacedName(GetNamespace(), publisherConfig.m_topic);
-            m_pointCloudPublisher = ros2Node->create_publisher<sensor_msgs::msg::PointCloud2>(fullTopic.data(), publisherConfig.GetQoS());
-
-            const auto resultFlags = m_lidarCore.GetResultFlags();
-            if (IsFlagEnabled(RaycastResultFlags::SegmentationData, resultFlags))
-            {
-                m_segmentationClassesPublisher = ros2Node->create_publisher<vision_msgs::msg::LabelInfo>(
-                    ROS2Names::GetNamespacedName(GetNamespace(), "segmentation_classes").data(), publisherConfig.GetQoS());
-            }
+            m_segmentationClassesPublisher = ros2Node->create_publisher<vision_msgs::msg::LabelInfo>(
+                ROS2Names::GetNamespacedName(GetNamespace(), "segmentation_classes").data(), publisherConfig.GetQoS());
         }
 
         StartSensor(
@@ -137,150 +178,214 @@ namespace ROS2
         ROS2SensorComponentBase::Deactivate();
     }
 
-    void ROS2LidarSensorComponent::FrequencyTick()
+    const Pc2MessageFormat& ROS2LidarSensorComponent::GetDefaultMessageFormat()
     {
-        if (m_canRaycasterPublish && m_sensorConfiguration.m_publishingEnabled)
+        static const Pc2MessageFormat DefaultMessageFormat = {
+            FieldFormat(FieldFlags::PositionXYZF32), FieldFormat(FieldFlags::Padding32),          FieldFormat(FieldFlags::RangeU32),
+            FieldFormat(FieldFlags::IntensityF32),   FieldFormat(FieldFlags::SegmentationData96),
+        };
+
+        return DefaultMessageFormat;
+    }
+
+    void ROS2LidarSensorComponent::TransformToLidarLocalSpace(AZStd::span<AZ::Vector3> pointSpan) const
+    {
+        const auto entityTransform = GetEntity()->FindComponent<AzFramework::TransformComponent>();
+        const auto inverseLidarTM = entityTransform->GetWorldTM().GetInverse();
+        for (auto pointIt = pointSpan.begin(); pointIt != pointSpan.end(); ++pointIt)
         {
-            const builtin_interfaces::msg::Time timestamp = ROS2Interface::Get()->GetROSTimestamp();
-            LidarRaycasterRequestBus::Event(
-                m_lidarRaycasterId,
-                &LidarRaycasterRequestBus::Events::UpdatePublisherTimestamp,
-                aznumeric_cast<AZ::u64>(timestamp.sec) * aznumeric_cast<AZ::u64>(1.0e9f) + timestamp.nanosec);
+            *pointIt = inverseLidarTM.TransformPoint(*pointIt);
+        }
+    }
+
+    RaycastResultFlags ROS2LidarSensorComponent::GetRequestResultFlags() const
+    {
+        auto flags = GetNecessaryProviders(m_messageFormat) | RaycastResultFlags::Point; // We need points for visualisation.
+
+        if (!m_pointcloudIsDense)
+        {
+            flags |= RaycastResultFlags::IsHit;
         }
 
-        AZStd::optional<RaycastResults> lastScanResults = m_lidarCore.PerformRaycast();
+        return flags;
+    }
 
-        if (!lastScanResults.has_value() || m_canRaycasterPublish || !m_sensorConfiguration.m_publishingEnabled)
+    bool ROS2LidarSensorComponent::IsPointcloudOrderingVisible() const
+    {
+        return !m_pointcloudIsDense;
+    }
+
+    bool ROS2LidarSensorComponent::IsDistanceUnitsVisible() const
+    {
+        return AZStd::any_of(
+            m_messageFormat.begin(),
+            m_messageFormat.end(),
+            [](const FieldFormat& fieldFormat)
+            {
+                return fieldFormat.m_fieldFlag == FieldFlags::RangeU32;
+            });
+    }
+
+    bool ROS2LidarSensorComponent::IsDistanceMultiplierVisible() const
+    {
+        return m_distanceUnits == DistanceUnits::Custom;
+    }
+
+    void ROS2LidarSensorComponent::FrequencyTick()
+    {
+        AZStd::optional<RaycastResults> lastScanResults = m_lidarCore.PerformRaycast();
+        if (!lastScanResults.has_value() || !m_sensorConfiguration.m_publishingEnabled)
         {
             return;
         }
 
-        PublishRaycastResults(lastScanResults.value());
+        if (auto pointSpan = lastScanResults->GetFieldSpan<RaycastResultFlags::Point>(); pointSpan.has_value())
+        {
+            TransformToLidarLocalSpace(pointSpan.value());
+        }
+
+        ApplyUnitConversion(lastScanResults.value());
+
+        const auto outcome = PublishRaycastResults(lastScanResults.value());
+        if (!outcome.IsSuccess())
+        {
+            AZ_Error("ROS2", false, "Failed to publish raycast results: %s", outcome.GetError());
+        }
     }
 
     template<typename T>
     using Pc2MsgIt = sensor_msgs::PointCloud2Iterator<T>;
 
-    void ROS2LidarSensorComponent::PublishRaycastResults(const RaycastResults& results)
+    AZ::Outcome<void, const char*> ROS2LidarSensorComponent::PublishRaycastResults(const RaycastResults& results)
     {
-        auto builder = PointCloud2MessageBuilder(
-            GetEntity()->FindComponent<ROS2FrameComponent>()->GetFrameID(), ROS2Interface::Get()->GetROSTimestamp(), results.GetCount());
-
-        builder.AddField("x", sensor_msgs::msg::PointField::FLOAT32)
-            .AddField("y", sensor_msgs::msg::PointField::FLOAT32)
-            .AddField("z", sensor_msgs::msg::PointField::FLOAT32);
-
-        if (results.IsFieldPresent<RaycastResultFlags::Intensity>())
+        if (!m_pointCloudMessageWriter.has_value())
         {
-            builder.AddField("intensity", sensor_msgs::msg::PointField::FLOAT32);
+            return AZ::Failure("Point cloud message writer was uninitialized.");
         }
 
-        if (results.IsFieldPresent<RaycastResultFlags::SegmentationData>())
+        if (!results.IsCompliant(m_lidarCore.GetResultFlags()))
         {
-            builder.AddField("entity_id", sensor_msgs::msg::PointField::INT32);
-            builder.AddField("class_id", sensor_msgs::msg::PointField::UINT8);
-            builder.AddField("rgba", sensor_msgs::msg::PointField::UINT32);
+            return AZ::Failure("Received raycast results that were not expected.");
         }
 
-        sensor_msgs::msg::PointCloud2 message = builder.Get();
-
-        Pc2MsgIt<float> messageXIt(message, "x");
-        Pc2MsgIt<float> messageYIt(message, "y");
-        Pc2MsgIt<float> messageZIt(message, "z");
-
-        const auto positionField = results.GetConstFieldSpan<RaycastResultFlags::Point>().value();
-        auto positionIt = positionField.begin();
-
-        AZStd::optional<Pc2MsgIt<float>> messageIntensityIt;
-        AZStd::optional<RaycastResults::FieldSpan<RaycastResultFlags::Intensity>::const_iterator> intensityIt;
-        if (results.IsFieldPresent<RaycastResultFlags::Intensity>())
+        const size_t rayLayerCount = m_lidarCore.m_lidarConfiguration.m_lidarParameters.m_layers;
+        const size_t rayCountPerLayer = m_lidarCore.m_lidarConfiguration.m_lidarParameters.m_numberOfIncrements;
+        if (m_pointcloudOrderingEnabled && results.GetCount() != rayLayerCount * rayCountPerLayer)
         {
-            messageIntensityIt = Pc2MsgIt<float>(message, "intensity");
-            intensityIt = results.GetConstFieldSpan<RaycastResultFlags::Intensity>().value().begin();
+            return AZ::Failure("Received raycast results with dimensions that were not expected.");
         }
 
-        struct MessageSegmentationIterators
+        const size_t pcWidth = m_pointcloudOrderingEnabled ? rayCountPerLayer : results.GetCount();
+        const size_t pcHeight = m_pointcloudOrderingEnabled ? rayLayerCount : 1U;
+        m_pointCloudMessageWriter->Reset(
+            GetEntity()->FindComponent<ROS2FrameComponent>()->GetFrameID(),
+            ROS2Interface::Get()->GetROSTimestamp(),
+            pcWidth,
+            pcHeight,
+            m_pointcloudIsDense);
+
+        m_pointCloudMessageWriter->WriteResults(results, !m_pointcloudIsDense && !m_lidarCore.m_lidarConfiguration.m_addPointsAtMax);
+
+        PC2PostProcessingRequestBus::Event(
+            GetEntityId(), &PC2PostProcessingRequests::ApplyPostProcessing, m_pointCloudMessageWriter->GetMessage());
+
+        m_pointCloudPublisher->publish(m_pointCloudMessageWriter->GetMessage());
+
+        return AZ::Success();
+    }
+
+    AZ::Crc32 ROS2LidarSensorComponent::OnLidarCoreChanged()
+    {
+        if (m_lidarCore.m_lidarConfiguration.m_addPointsAtMax)
         {
-            Pc2MsgIt<int32_t> m_entityIdIt;
-            Pc2MsgIt<uint8_t> m_classIdIt;
-            Pc2MsgIt<uint32_t> m_rgbaIt;
+            m_pointcloudIsDense = false;
+            return AZ::Edit::PropertyRefreshLevels::EntireTree;
+        }
+
+        return AZ::Edit::PropertyRefreshLevels::None;
+    }
+
+    AZ::Crc32 ROS2LidarSensorComponent::OnMessageFormatChanged()
+    {
+        size_t offset = 0U;
+        bool positionPresent = false;
+        for (FieldFormat& fieldFormat : m_messageFormat)
+        {
+            if (fieldFormat.m_name.empty())
+            {
+                if (auto fieldName = GetDefaultFieldName(fieldFormat.m_fieldFlag); fieldName.has_value())
+                {
+                    fieldFormat.m_name = fieldName.value();
+                }
+            }
+
+            if (fieldFormat.m_fieldFlag == FieldFlags::PositionXYZF32)
+            {
+                positionPresent = true;
+            }
+
+            fieldFormat.m_fieldOffset = offset;
+            offset += GetFieldByteSize(fieldFormat.m_fieldFlag);
+        }
+
+        if (!positionPresent)
+        {
+            m_messageFormat.push_back(FieldFormat(FieldFlags::PositionXYZF32));
+        }
+
+        return AZ::Edit::PropertyRefreshLevels::EntireTree;
+    }
+
+    AZ::Crc32 ROS2LidarSensorComponent::OnDensePointcloudChanged()
+    {
+        if (m_pointcloudIsDense)
+        {
+            m_lidarCore.m_lidarConfiguration.m_addPointsAtMax = false;
+            m_pointcloudOrderingEnabled = false;
+        }
+
+        // This is to ensure that visibility of pointcloud ordering is updated.
+        return AZ::Edit::PropertyRefreshLevels::EntireTree;
+    }
+
+    AZ::Crc32 ROS2LidarSensorComponent::GenerateMessageFormat()
+    {
+        m_messageFormat = {
+            FieldFormat(FieldFlags::PositionXYZF32),
+            FieldFormat(FieldFlags::Padding32),
+            FieldFormat(FieldFlags::IntensityF32),
         };
 
-        AZStd::optional<MessageSegmentationIterators> messageSegDataIts;
-        AZStd::optional<RaycastResults::FieldSpan<RaycastResultFlags::SegmentationData>::const_iterator> segDataIt;
-        if (results.IsFieldPresent<RaycastResultFlags::SegmentationData>())
+        if (m_lidarCore.m_lidarConfiguration.m_isSegmentationEnabled)
         {
-            messageSegDataIts = MessageSegmentationIterators{
-                Pc2MsgIt<int32_t>(message, "entity_id"),
-                Pc2MsgIt<uint8_t>(message, "class_id"),
-                Pc2MsgIt<uint32_t>(message, "rgba"),
-            };
-
-            segDataIt = results.GetConstFieldSpan<RaycastResultFlags::SegmentationData>().value().begin();
+            m_messageFormat.push_back(FieldFormat(FieldFlags::SegmentationData96));
         }
 
-        const auto entityTransform = GetEntity()->FindComponent<AzFramework::TransformComponent>();
-        const auto inverseLidarTM = entityTransform->GetWorldTM().GetInverse();
+        return OnMessageFormatChanged();
+    }
 
-        auto* classSegmentationInterface = ClassSegmentationInterface::Get();
-        AZ_Warning(
-            __func__,
-            !results.IsFieldPresent<RaycastResultFlags::SegmentationData>() || classSegmentationInterface,
-            "Segmentation data was requested but the Class Segmentation interface was unavailable. Unable to fetch segmentation class "
-            "data. Please make sure to add the Class Segmentation Configuration Component to the Level Entity for this feature to work "
-            "properly.");
-
-        for (size_t i = 0; i < results.GetCount(); ++i)
+    AZ::Crc32 ROS2LidarSensorComponent::OnDistanceUnitsChanged()
+    {
+        auto multiplier = GetUnitMultiplierValue(m_distanceUnits);
+        if (multiplier.has_value())
         {
-            AZ::Vector3 point = *positionIt;
-            const AZ::Vector3 globalPoint = inverseLidarTM.TransformPoint(point);
-            *messageXIt = globalPoint.GetX();
-            *messageYIt = globalPoint.GetY();
-            *messageZIt = globalPoint.GetZ();
-
-            if (messageIntensityIt.has_value() && intensityIt.has_value())
-            {
-                *messageIntensityIt.value() = *intensityIt.value();
-                ++intensityIt.value();
-                ++messageIntensityIt.value();
-            }
-
-            if (messageSegDataIts.has_value() && segDataIt.has_value() && classSegmentationInterface)
-            {
-                const ResultTraits<RaycastResultFlags::SegmentationData>::Type segmentationData = *segDataIt.value();
-                *messageSegDataIts->m_entityIdIt = segmentationData.m_entityId;
-                *messageSegDataIts->m_classIdIt = segmentationData.m_classId;
-
-                AZ::Color color = classSegmentationInterface->GetClassColor(segmentationData.m_classId);
-                AZ::u32 rvizColorFormat = color.GetA8() << 24 | color.GetR8() << 16 | color.GetG8() << 8 | color.GetB8();
-                *messageSegDataIts->m_rgbaIt = rvizColorFormat;
-
-                ++segDataIt.value();
-                ++messageSegDataIts->m_entityIdIt;
-                ++messageSegDataIts->m_classIdIt;
-                ++messageSegDataIts->m_rgbaIt;
-            }
-
-            ++positionIt;
-            ++messageXIt;
-            ++messageYIt;
-            ++messageZIt;
+            m_distanceMultiplier = multiplier.value();
         }
 
-        m_pointCloudPublisher->publish(message);
+        return AZ::Edit::PropertyRefreshLevels::EntireTree;
+    }
 
-        if (m_segmentationClassesPublisher && classSegmentationInterface)
+    void ROS2LidarSensorComponent::ApplyUnitConversion(RaycastResults& raycastResults)
+    {
+        auto distanceFieldSpan = raycastResults.GetFieldSpan<RaycastResultFlags::Range>();
+        if (!distanceFieldSpan.has_value() || m_distanceMultiplier == 1.0f)
         {
-            const auto& segmentationClassConfigList = classSegmentationInterface->GetClassConfigList();
-            vision_msgs::msg::LabelInfo segmentationClasses;
-            for (const auto& segmentationClass : segmentationClassConfigList)
-            {
-                vision_msgs::msg::VisionClass visionClass;
-                visionClass.class_id = segmentationClass.m_classId;
-                visionClass.class_name = segmentationClass.m_className.c_str();
-                segmentationClasses.class_map.push_back(visionClass);
-            }
-            m_segmentationClassesPublisher->publish(segmentationClasses);
+            return;
+        }
+
+        for (auto distanceIt = distanceFieldSpan->begin(); distanceIt != distanceFieldSpan->end(); ++distanceIt)
+        {
+            *distanceIt *= m_distanceMultiplier;
         }
     }
 } // namespace ROS2

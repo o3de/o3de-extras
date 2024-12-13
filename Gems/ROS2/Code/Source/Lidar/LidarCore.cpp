@@ -8,6 +8,7 @@
 
 #include <Atom/RPI.Public/AuxGeom/AuxGeomFeatureProcessorInterface.h>
 #include <Atom/RPI.Public/Scene.h>
+#include <AzCore/base.h>
 #include <AzFramework/Physics/PhysicsSystem.h>
 #include <Lidar/LidarCore.h>
 #include <Lidar/LidarRegistrarSystemComponent.h>
@@ -37,9 +38,9 @@ namespace ROS2
         }
     }
 
-    RaycastResultFlags LidarCore::GetRaycastResultFlagsForConfig(const LidarSensorConfiguration& configuration)
+    RaycastResultFlags LidarCore::GetProvidedResultFlags(const LidarSensorConfiguration& configuration)
     {
-        RaycastResultFlags flags = RaycastResultFlags::Range | RaycastResultFlags::Point;
+        RaycastResultFlags flags = RaycastResultFlags::Range | RaycastResultFlags::Point | RaycastResultFlags::IsHit;
         if (configuration.m_lidarSystemFeatures & LidarSystemFeatures::Intensity)
         {
             flags |= RaycastResultFlags::Intensity;
@@ -60,6 +61,11 @@ namespace ROS2
                     "either add the Class segmentation component to the level entity or disable the feature in the lidar component "
                     "configuration.");
             }
+        }
+
+        if (configuration.m_lidarSystemFeatures & LidarSystemFeatures::RingIds)
+        {
+            flags |= RaycastResultFlags::Ring;
         }
 
         return flags;
@@ -85,6 +91,11 @@ namespace ROS2
     void LidarCore::ConfigureLidarRaycaster()
     {
         LidarRaycasterRequestBus::Event(m_lidarRaycasterId, &LidarRaycasterRequestBus::Events::ConfigureRayOrientations, m_lastRotations);
+        if (m_lidarConfiguration.m_lidarSystemFeatures & LidarSystemFeatures::RingIds)
+        {
+            LidarRaycasterRequestBus::Event(m_lidarRaycasterId, &LidarRaycasterRequestBus::Events::ConfigureRayRingIds, m_lastRingIds);
+        }
+
         LidarRaycasterRequestBus::Event(
             m_lidarRaycasterId,
             &LidarRaycasterRequestBus::Events::ConfigureRayRange,
@@ -101,7 +112,6 @@ namespace ROS2
                 m_lidarConfiguration.m_lidarParameters.m_noiseParameters.m_distanceNoiseStdDevRisePerMeter);
         }
 
-        m_resultFlags = GetRaycastResultFlagsForConfig(m_lidarConfiguration);
         LidarRaycasterRequestBus::Event(m_lidarRaycasterId, &LidarRaycasterRequestBus::Events::ConfigureRaycastResultFlags, m_resultFlags);
 
         if (m_lidarConfiguration.m_lidarSystemFeatures & LidarSystemFeatures::CollisionLayers)
@@ -118,18 +128,34 @@ namespace ROS2
                 m_lidarRaycasterId, &LidarRaycasterRequestBus::Events::ExcludeEntities, m_lidarConfiguration.m_excludedEntities);
         }
 
-        if (m_lidarConfiguration.m_lidarSystemFeatures & LidarSystemFeatures::MaxRangePoints)
         {
-            LidarRaycasterRequestBus::Event(
-                m_lidarRaycasterId,
-                &LidarRaycasterRequestBus::Events::ConfigureMaxRangePointAddition,
-                m_lidarConfiguration.m_addPointsAtMax);
+            const bool returnNonHits =
+                IsFlagEnabled(RaycastResultFlags::IsHit, GetResultFlags()) || m_lidarConfiguration.m_addPointsAtMax || m_is2DLidar;
+            LidarRaycasterRequestBus::Event(m_lidarRaycasterId, &LidarRaycasterRequestBus::Events::ConfigureNonHitReturn, returnNonHits);
         }
     }
 
     void LidarCore::UpdatePoints(const RaycastResults& results)
     {
         const auto pointsField = results.GetConstFieldSpan<RaycastResultFlags::Point>().value();
+        if (!m_lidarConfiguration.m_addPointsAtMax && results.IsFieldPresent<RaycastResultFlags::IsHit>())
+        {
+            m_lastPoints.clear();
+            m_lastPoints.reserve(pointsField.size());
+
+
+            const auto isHit = results.GetConstFieldSpan<RaycastResultFlags::IsHit>();
+            auto isHitIt = isHit->begin();
+            for (auto pointIt = pointsField.begin(); pointIt != pointsField.end(); ++pointIt, ++isHitIt)
+            {
+                if (*isHitIt)
+                {
+                    m_lastPoints.push_back(*pointIt);
+                }
+            }
+            return;
+        }
+
         m_lastPoints.assign(pointsField.begin(), pointsField.end());
     }
 
@@ -164,16 +190,19 @@ namespace ROS2
         }
     }
 
-    void LidarCore::Init(AZ::EntityId entityId)
+    void LidarCore::Init(AZ::EntityId entityId, RaycastResultFlags requestedResultFlags, bool is2DLidar)
     {
+        m_is2DLidar = is2DLidar;
         m_entityId = entityId;
 
         auto* entityScene = AZ::RPI::Scene::GetSceneForEntityId(m_entityId);
         m_drawQueue = AZ::RPI::AuxGeomFeatureProcessorInterface::GetDrawQueueForScene(entityScene);
 
         m_lastRotations = LidarTemplateUtils::PopulateRayRotations(m_lidarConfiguration.m_lidarParameters);
+        m_lastRingIds = LidarTemplateUtils::PopulateRingIds(m_lidarConfiguration.m_lidarParameters);
 
         m_lidarConfiguration.FetchLidarImplementationFeatures();
+        m_resultFlags = GetProvidedResultFlags(m_lidarConfiguration) & requestedResultFlags;
         ConnectToLidarRaycaster();
         ConfigureLidarRaycaster();
     }

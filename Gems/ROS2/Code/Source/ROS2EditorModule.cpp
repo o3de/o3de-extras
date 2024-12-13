@@ -54,7 +54,7 @@ namespace ROS2
                   JointsPositionsEditorComponent::CreateDescriptor(),
                   GeoReferenceLevelEditorComponent::CreateDescriptor(),
                   ROS2FrameSystemComponent::CreateDescriptor(),
-                  ROS2FrameEditorComponent::CreateDescriptor() });
+                  ROS2FrameEditorComponent::CreateDescriptor()});
         }
 
         AZ::ComponentTypeList GetRequiredSystemComponents() const override
