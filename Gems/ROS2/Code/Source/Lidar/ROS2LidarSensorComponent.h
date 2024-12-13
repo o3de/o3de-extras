@@ -51,19 +51,24 @@ namespace ROS2
         void TransformToLidarLocalSpace(AZStd::span<AZ::Vector3> pointSpan) const;
         RaycastResultFlags GetRequestResultFlags() const;
         bool IsPointcloudOrderingVisible() const;
+        bool IsDistanceUnitsVisible() const;
+        bool IsDistanceMultiplierVisible() const;
         void FrequencyTick();
         AZ::Outcome<void, const char*> PublishRaycastResults(const RaycastResults& results);
         AZ::Crc32 OnLidarCoreChanged();
         AZ::Crc32 OnMessageFormatChanged();
         AZ::Crc32 OnDensePointcloudChanged();
         AZ::Crc32 GenerateMessageFormat();
-
+        AZ::Crc32 OnDistanceUnitsChanged();
+        void ApplyUnitConversion(RaycastResults& raycastResults);
 
         std::shared_ptr<rclcpp::Publisher<sensor_msgs::msg::PointCloud2>> m_pointCloudPublisher;
         std::shared_ptr<rclcpp::Publisher<vision_msgs::msg::LabelInfo>> m_segmentationClassesPublisher;
 
         AZStd::optional<PointCloudMessageWriter> m_pointCloudMessageWriter;
         Pc2MessageFormat m_messageFormat;
+        DistanceUnits m_distanceUnits{ DistanceUnits::Meters };
+        float m_distanceMultiplier{ GetUnitMultiplierValue(DistanceUnits::Meters).value() };
 
         LidarCore m_lidarCore;
         LidarId m_lidarRaycasterId;

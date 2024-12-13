@@ -173,4 +173,14 @@ namespace ROS2
 
     using Pc2MessageFormat = AZStd::vector<FieldFormat>;
     RaycastResultFlags GetNecessaryProviders(const Pc2MessageFormat& messageFormat);
+
+    enum class DistanceUnits
+    {
+        Meters,
+        Centimeters,
+        Millimeters,
+        Custom,
+    };
+
+    AZStd::optional<float> GetUnitMultiplierValue(DistanceUnits units);
 } // namespace ROS2

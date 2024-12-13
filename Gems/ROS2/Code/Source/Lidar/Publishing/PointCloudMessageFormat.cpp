@@ -255,4 +255,17 @@ namespace ROS2
 
         return providerFlags;
     }
+
+    AZStd::optional<float> GetUnitMultiplierValue(DistanceUnits units)
+    {
+        switch (units)
+        {
+            // clang-format off
+        case DistanceUnits::Meters: return 1.0f;
+        case DistanceUnits::Centimeters: return 1.0e2f;
+        case DistanceUnits::Millimeters: return 1.0e3f;
+        case DistanceUnits::Custom: return AZStd::nullopt;
+            // clang-format on
+        }
+    }
 } // namespace ROS2

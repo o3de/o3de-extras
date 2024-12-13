@@ -34,7 +34,9 @@ namespace ROS2
                 ->Field("lidarCore", &ROS2LidarSensorComponent::m_lidarCore)
                 ->Field("messageFormat", &ROS2LidarSensorComponent::m_messageFormat)
                 ->Field("pointCloudIsDense", &ROS2LidarSensorComponent::m_pointcloudIsDense)
-                ->Field("pointCloudOrdering", &ROS2LidarSensorComponent::m_pointcloudOrderingEnabled);
+                ->Field("pointCloudOrdering", &ROS2LidarSensorComponent::m_pointcloudOrderingEnabled)
+                ->Field("distanceUnits", &ROS2LidarSensorComponent::m_distanceUnits)
+                ->Field("distanceMultiplier", &ROS2LidarSensorComponent::m_distanceMultiplier);
 
             if (auto* editContext = serializeContext->GetEditContext())
             {
@@ -51,9 +53,7 @@ namespace ROS2
                         "Lidar configuration")
                     ->Attribute(AZ::Edit::Attributes::ChangeNotify, &ROS2LidarSensorComponent::OnLidarCoreChanged)
                     ->Attribute(AZ::Edit::Attributes::Visibility, AZ::Edit::PropertyVisibility::ShowChildrenOnly)
-                    ->UIElement(
-                        AZ::Edit::UIHandlers::Button,
-                        "Generate a default message format for the enabled lidar features.")
+                    ->UIElement(AZ::Edit::UIHandlers::Button, "Generate a default message format for the enabled lidar features.")
                     ->Attribute(AZ::Edit::Attributes::NameLabelOverride, "")
                     ->Attribute(AZ::Edit::Attributes::ButtonText, "Generate message format")
                     ->Attribute(AZ::Edit::Attributes::ChangeNotify, &ROS2LidarSensorComponent::GenerateMessageFormat)
@@ -73,7 +73,24 @@ namespace ROS2
                         "Pointcloud ordering",
                         "Message's width and height match those of the used ray pattern. Only available for sparse (non-dense) "
                         "pointclouds.")
-                    ->Attribute(AZ::Edit::Attributes::Visibility, &ROS2LidarSensorComponent::IsPointcloudOrderingVisible);
+                    ->Attribute(AZ::Edit::Attributes::Visibility, &ROS2LidarSensorComponent::IsPointcloudOrderingVisible)
+                    ->DataElement(
+                        AZ::Edit::UIHandlers::ComboBox,
+                        &ROS2LidarSensorComponent::m_distanceUnits,
+                        "Distance units",
+                        "Determines the units of published distance field.")
+                    ->EnumAttribute(DistanceUnits::Meters, "Meters")
+                    ->EnumAttribute(DistanceUnits::Centimeters, "Centimeters")
+                    ->EnumAttribute(DistanceUnits::Millimeters, "Millimeters")
+                    ->EnumAttribute(DistanceUnits::Custom, "Custom")
+                    ->Attribute(AZ::Edit::Attributes::Visibility, &ROS2LidarSensorComponent::IsDistanceUnitsVisible)
+                    ->Attribute(AZ::Edit::Attributes::ChangeNotify, &ROS2LidarSensorComponent::OnDistanceUnitsChanged)
+                    ->DataElement(
+                        AZ::Edit::UIHandlers::Default,
+                        &ROS2LidarSensorComponent::m_distanceMultiplier,
+                        "Distance multiplier",
+                        "Allows for custom unit configuration. Point distance (in meters) will be multiplied by provided value.")
+                    ->Attribute(AZ::Edit::Attributes::Visibility, &ROS2LidarSensorComponent::IsDistanceMultiplierVisible);
             }
         }
     }
@@ -198,6 +215,22 @@ namespace ROS2
         return !m_pointcloudIsDense;
     }
 
+    bool ROS2LidarSensorComponent::IsDistanceUnitsVisible() const
+    {
+        return AZStd::any_of(
+            m_messageFormat.begin(),
+            m_messageFormat.end(),
+            [](const FieldFormat& fieldFormat)
+            {
+                return fieldFormat.m_fieldFlag == FieldFlags::RangeU32;
+            });
+    }
+
+    bool ROS2LidarSensorComponent::IsDistanceMultiplierVisible() const
+    {
+        return m_distanceUnits == DistanceUnits::Custom;
+    }
+
     void ROS2LidarSensorComponent::FrequencyTick()
     {
         AZStd::optional<RaycastResults> lastScanResults = m_lidarCore.PerformRaycast();
@@ -210,6 +243,8 @@ namespace ROS2
         {
             TransformToLidarLocalSpace(pointSpan.value());
         }
+
+        ApplyUnitConversion(lastScanResults.value());
 
         const auto outcome = PublishRaycastResults(lastScanResults.value());
         if (!outcome.IsSuccess())
@@ -327,5 +362,30 @@ namespace ROS2
         }
 
         return OnMessageFormatChanged();
+    }
+
+    AZ::Crc32 ROS2LidarSensorComponent::OnDistanceUnitsChanged()
+    {
+        auto multiplier = GetUnitMultiplierValue(m_distanceUnits);
+        if (multiplier.has_value())
+        {
+            m_distanceMultiplier = multiplier.value();
+        }
+
+        return AZ::Edit::PropertyRefreshLevels::EntireTree;
+    }
+
+    void ROS2LidarSensorComponent::ApplyUnitConversion(RaycastResults& raycastResults)
+    {
+        auto distanceFieldSpan = raycastResults.GetFieldSpan<RaycastResultFlags::Range>();
+        if (!distanceFieldSpan.has_value() || m_distanceMultiplier == 1.0f)
+        {
+            return;
+        }
+
+        for (auto distanceIt = distanceFieldSpan->begin(); distanceIt != distanceFieldSpan->end(); ++distanceIt)
+        {
+            *distanceIt *= m_distanceMultiplier;
+        }
     }
 } // namespace ROS2
