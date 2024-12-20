@@ -21,7 +21,6 @@ namespace ROS2
     //! the /use_sim_time parameter set to true.
     class ROS2Clock
     {
-        static constexpr size_t FramesNumberForStats = 60;
 
     public:
         ROS2Clock();

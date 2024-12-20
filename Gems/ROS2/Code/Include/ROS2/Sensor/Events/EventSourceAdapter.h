@@ -180,7 +180,6 @@ namespace ROS2
             {
                 return false;
             }
-
             const float sourceFrequencyEstimation = 1.0f / sourceDeltaTime;
             const float numberOfFrames =
                 m_adaptedFrequency <= sourceFrequencyEstimation ? (sourceFrequencyEstimation / m_adaptedFrequency) : 1.0f;

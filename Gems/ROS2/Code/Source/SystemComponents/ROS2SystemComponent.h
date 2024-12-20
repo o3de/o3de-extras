@@ -64,6 +64,7 @@ namespace ROS2
         builtin_interfaces::msg::Time GetROSTimestamp() const override;
         void BroadcastTransform(const geometry_msgs::msg::TransformStamped& t, bool isDynamic) override;
         const ROS2Clock& GetSimulationClock() const override;
+        float GetExpectedSimulationLoopTime() const override;
         //////////////////////////////////////////////////////////////////////////
 
     protected:
@@ -89,5 +90,9 @@ namespace ROS2
         AZStd::unique_ptr<tf2_ros::StaticTransformBroadcaster> m_staticTFBroadcaster;
         AZStd::unique_ptr<ROS2Clock> m_simulationClock;
         NodeChangedEvent m_nodeChangedEvent;
+
+        AZStd::deque<float> m_simulationLoopTimes;
+        builtin_interfaces::msg::Time m_lastSimulationTime;
+        float m_currentMedian = 1.f/60.0f;
     };
 } // namespace ROS2

@@ -30,11 +30,14 @@
 #include <AzCore/std/string/string_view.h>
 #include <AzFramework/API/ApplicationAPI.h>
 #include <ROS2/Sensor/SensorConfigurationRequestBus.h>
-
+#include <ROS2/Utilities/ROS2Conversions.h>
+#include <AzCore/std/numeric.h>
+#include <AzCore/std/sort.h>
 namespace ROS2
 {
     constexpr AZStd::string_view ClockTypeConfigurationKey = "/O3DE/ROS2/ClockType";
     constexpr AZStd::string_view PublishClockConfigurationKey = "/O3DE/ROS2/PublishClock";
+    constexpr size_t FramesNumberForStats = 60;
 
     void ROS2SystemComponent::Reflect(AZ::ReflectContext* context)
     {
@@ -230,6 +233,25 @@ namespace ROS2
             m_simulationClock->Tick();
             m_executor->spin_some();
         }
+        // Calculate simulation loop time
+        const auto simTimestamp = m_simulationClock->GetROSTimestamp();
+        float deltaSimTime = ROS2Conversions::GetTimeDifference(m_lastSimulationTime, simTimestamp);
+
+        // Filter out the outliers
+        m_simulationLoopTimes.push_back(deltaSimTime);
+        if (m_simulationLoopTimes.size() > FramesNumberForStats)
+        {
+            m_simulationLoopTimes.pop_front();
+        }
+        AZStd::vector<float> frameTimeSorted{ m_simulationLoopTimes.begin(), m_simulationLoopTimes.end() };
+        AZStd::sort(frameTimeSorted.begin(), frameTimeSorted.end());
+        m_currentMedian = frameTimeSorted[frameTimeSorted.size() / 2];
+
+        m_lastSimulationTime = simTimestamp;
     }
 
+    float ROS2SystemComponent::GetExpectedSimulationLoopTime() const
+    {
+        return m_currentMedian;
+    }
 } // namespace ROS2
