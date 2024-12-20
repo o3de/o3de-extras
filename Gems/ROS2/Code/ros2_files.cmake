@@ -58,6 +58,12 @@ set(FILES
         Source/Imu/ImuSensorConfiguration.h
         Source/Imu/ROS2ImuSensorComponent.cpp
         Source/Imu/ROS2ImuSensorComponent.h
+        Source/Lidar/Publishing/PointCloudMessageBuilder.cpp
+        Source/Lidar/Publishing/PointCloudMessageBuilder.h
+        Source/Lidar/Publishing/PointCloudMessageFormat.cpp
+        Source/Lidar/Publishing/PointCloudMessageFormat.h
+        Source/Lidar/Publishing/PointCloudMessageWriter.cpp
+        Source/Lidar/Publishing/PointCloudMessageWriter.h
         Source/Lidar/LidarRaycaster.cpp
         Source/Lidar/LidarRaycaster.h
         Source/Lidar/LidarRegistrarSystemComponent.cpp
@@ -70,8 +76,6 @@ set(FILES
         Source/Lidar/LidarTemplate.h
         Source/Lidar/LidarTemplateUtils.cpp
         Source/Lidar/LidarTemplateUtils.h
-        Source/Lidar/PointCloudMessageBuilder.cpp
-        Source/Lidar/PointCloudMessageBuilder.h
         Source/Lidar/RaycastResults.cpp
         Source/Lidar/LidarCore.cpp
         Source/Lidar/LidarCore.h

@@ -31,7 +31,9 @@ namespace ROS2
 
         //! Initialize when activating the lidar.
         //! @param entityId Entity from which the rays are sent.
-        void Init(AZ::EntityId entityId);
+        //! @param requestedResultFlags
+        //! @param is2DLidar
+        void Init(AZ::EntityId entityId, RaycastResultFlags requestedResultFlags, bool is2DLidar = false);
         //! Deinitialize when deactivating the lidar.
         void Deinit();
 
@@ -45,15 +47,15 @@ namespace ROS2
         //! @return Used raycaster's id.
         LidarId GetLidarRaycasterId() const;
 
-        //! Get the result flags used by this lidar.
+        //! Get the enabled result flags.
         //! @return Used result flags.
-        RaycastResultFlags GetResultFlags() const;
+        [[nodiscard]] RaycastResultFlags GetResultFlags() const;
 
         //! Configuration according to which the lidar performs its raycasts.
         LidarSensorConfiguration m_lidarConfiguration;
 
     private:
-        static RaycastResultFlags GetRaycastResultFlagsForConfig(const LidarSensorConfiguration& configuration);
+        static RaycastResultFlags GetProvidedResultFlags(const LidarSensorConfiguration& configuration);
 
         void ConnectToLidarRaycaster();
         void ConfigureLidarRaycaster();
@@ -66,10 +68,13 @@ namespace ROS2
 
         AZ::RPI::AuxGeomDrawPtr m_drawQueue;
 
+        AZStd::vector<AZ::s32> m_lastRingIds;
         AZStd::vector<AZ::Vector3> m_lastRotations;
         AZStd::vector<AZ::Vector3> m_lastPoints;
 
         AZ::EntityId m_entityId;
+
         RaycastResultFlags m_resultFlags;
+        bool m_is2DLidar{ false };
     };
 } // namespace ROS2
