@@ -12,8 +12,8 @@
 #include <ROS2/Frame/ROS2FrameComponent.h>
 #include <ROS2/Manipulation/JointsManipulationRequests.h>
 #include <ROS2/ROS2Bus.h>
-#include <ROS2/Utilities/ROS2Names.h>
 #include <ROS2/Utilities/ROS2Conversions.h>
+#include <ROS2/Utilities/ROS2Names.h>
 
 namespace ROS2
 {
@@ -92,7 +92,7 @@ namespace ROS2
     AZ::Outcome<void, JointsTrajectoryComponent::TrajectoryResult> JointsTrajectoryComponent::StartTrajectoryGoal(
         TrajectoryGoalPtr trajectoryGoal)
     {
-        if (m_trajectoryInProgress)
+        if (m_goalStatus == JointsTrajectoryRequests::TrajectoryActionStatus::Executing)
         {
             auto result = JointsTrajectoryComponent::TrajectoryResult();
             result.error_code = JointsTrajectoryComponent::TrajectoryResult::INVALID_GOAL;
@@ -107,7 +107,7 @@ namespace ROS2
         }
         m_trajectoryGoal = *trajectoryGoal;
         m_trajectoryExecutionStartTime = rclcpp::Time(ROS2::ROS2Interface::Get()->GetROSTimestamp());
-        m_trajectoryInProgress = true;
+        m_goalStatus = JointsTrajectoryRequests::TrajectoryActionStatus::Executing;
         return AZ::Success();
     }
 
@@ -186,13 +186,13 @@ namespace ROS2
     AZ::Outcome<void, AZStd::string> JointsTrajectoryComponent::CancelTrajectoryGoal()
     {
         m_trajectoryGoal.trajectory.points.clear();
-        m_trajectoryInProgress = false;
+        m_goalStatus = JointsTrajectoryRequests::TrajectoryActionStatus::Cancelled;
         return AZ::Success();
     }
 
     JointsTrajectoryRequests::TrajectoryActionStatus JointsTrajectoryComponent::GetGoalStatus()
     {
-        return m_followTrajectoryServer->GetGoalStatus();
+        return m_goalStatus;
     }
 
     void JointsTrajectoryComponent::FollowTrajectory(const uint64_t deltaTimeNs)
@@ -205,7 +205,6 @@ namespace ROS2
             result->error_string = "User Cancelled";
             result->error_code = FollowJointTrajectoryActionServer::FollowJointTrajectory::Result::SUCCESSFUL;
             m_followTrajectoryServer->CancelGoal(result);
-            m_followTrajectoryServer->SetGoalSuccess();
             return;
         }
 
@@ -219,7 +218,7 @@ namespace ROS2
             AZ_TracePrintf("JointsManipulationComponent", "Goal Concluded: all points reached\n");
             auto successResult = std::make_shared<control_msgs::action::FollowJointTrajectory::Result>(); //!< Empty defaults to success.
             m_followTrajectoryServer->GoalSuccess(successResult);
-            m_trajectoryInProgress = false;
+            m_goalStatus = JointsTrajectoryRequests::TrajectoryActionStatus::Succeeded;
             return;
         }
 
