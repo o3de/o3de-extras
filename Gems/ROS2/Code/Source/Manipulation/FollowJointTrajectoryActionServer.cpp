@@ -23,16 +23,6 @@ namespace ROS2
             AZStd::bind(&FollowJointTrajectoryActionServer::GoalAcceptedCallback, this, AZStd::placeholders::_1));
     }
 
-    JointsTrajectoryRequests::TrajectoryActionStatus FollowJointTrajectoryActionServer::GetGoalStatus() const
-    {
-        return m_goalStatus;
-    }
-
-    void FollowJointTrajectoryActionServer::SetGoalSuccess()
-    {
-        m_goalStatus = JointsTrajectoryRequests::TrajectoryActionStatus::Succeeded;
-    }
-
     void FollowJointTrajectoryActionServer::CancelGoal(std::shared_ptr<FollowJointTrajectory::Result> result)
     {
         AZ_Assert(m_goalHandle, "Invalid goal handle!");
@@ -50,7 +40,6 @@ namespace ROS2
         {
             AZ_Trace("FollowJointTrajectoryActionServer", "Goal succeeded\n");
             m_goalHandle->succeed(result);
-            m_goalStatus = JointsTrajectoryRequests::TrajectoryActionStatus::Succeeded;
         }
     }
 
@@ -102,7 +91,6 @@ namespace ROS2
             return rclcpp_action::CancelResponse::REJECT;
         }
 
-        m_goalStatus = JointsTrajectoryRequests::TrajectoryActionStatus::Cancelled;
         return rclcpp_action::CancelResponse::ACCEPT;
     }
 
@@ -149,6 +137,5 @@ namespace ROS2
 
         m_goalHandle = goalHandle;
         // m_goalHandle->execute(); // No need to call this, as we are already executing the goal due to ACCEPT_AND_EXECUTE
-        m_goalStatus = JointsTrajectoryRequests::TrajectoryActionStatus::Executing;
     }
 } // namespace ROS2
