@@ -20,6 +20,7 @@
 #include <ROS2/ROS2Bus.h>
 #include <ROS2/ROS2GemUtilities.h>
 #include <ROS2/Spawner/SpawnerBus.h>
+#include <ROS2/Spawner/SpawnerBusHandler.h>
 #include <ROS2/Utilities/ROS2Conversions.h>
 #include <ROS2/Utilities/ROS2Names.h>
 
@@ -99,6 +100,11 @@ namespace ROS2
         if (AZ::SerializeContext* serialize = azrtti_cast<AZ::SerializeContext*>(context))
         {
             serialize->Class<ROS2SpawnerComponent, ROS2SpawnerComponentBase>()->Version(1);
+        }
+
+        if (AZ::BehaviorContext* behaviorContext = azrtti_cast<AZ::BehaviorContext*>(context))
+        {
+            behaviorContext->EBus<SpawnerNotificationBus>("SpawnerNotificationBus")->Handler<SpawnerNotificationsBusHandler>();
         }
     }
 
