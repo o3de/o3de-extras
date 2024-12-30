@@ -40,7 +40,7 @@ namespace ROS2
     {
         AZ_UNUSED(time);
         AZ_UNUSED(deltaTime);
-        auto simTimestamp = ROS2Interface::Get()->GetExpectedSimulationLoopTime();
+        const auto simTimestamp = ROS2Interface::Get()->GetExpectedSimulationLoopTime();
         m_sourceEvent.Signal(simTimestamp);
 
     }

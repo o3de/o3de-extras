@@ -235,7 +235,7 @@ namespace ROS2
         }
         // Calculate simulation loop time
         const auto simTimestamp = m_simulationClock->GetROSTimestamp();
-        float deltaSimTime = ROS2Conversions::GetTimeDifference(m_lastSimulationTime, simTimestamp);
+        const float deltaSimTime = ROS2Conversions::GetTimeDifference(m_lastSimulationTime, simTimestamp);
 
         // Filter out the outliers
         m_simulationLoopTimes.push_back(deltaSimTime);

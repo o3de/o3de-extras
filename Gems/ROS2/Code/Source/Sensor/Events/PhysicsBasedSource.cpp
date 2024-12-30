@@ -25,7 +25,7 @@ namespace ROS2
     void PhysicsBasedSource::Start()
     {
         m_onSceneSimulationEventHandler.Disconnect();
-        const auto *ros2Interface = ROS2Interface::Get();
+        const auto* ros2Interface = ROS2Interface::Get();
         AZ_Assert(ros2Interface, "ROS2 interface is not initialized.");
 
         m_onSceneSimulationEventHandler = AzPhysics::SceneEvents::OnSceneSimulationFinishHandler(
@@ -33,7 +33,7 @@ namespace ROS2
             {
                 const auto simulationTime = ros2Interface->GetROSTimestamp();
 
-                float deltaSimTime = ROS2Conversions::GetTimeDifference(m_lastSimulationTime, simulationTime);
+                const float deltaSimTime = ROS2Conversions::GetTimeDifference(m_lastSimulationTime, simulationTime);
                 m_sourceEvent.Signal(sceneHandle, deltaSimTime);
                 m_lastSimulationTime = simulationTime;
             });
