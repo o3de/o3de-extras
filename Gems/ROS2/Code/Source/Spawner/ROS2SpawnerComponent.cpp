@@ -104,7 +104,7 @@ namespace ROS2
 
         if (AZ::BehaviorContext* behaviorContext = azrtti_cast<AZ::BehaviorContext*>(context))
         {
-            behaviorContext->EBus<SpawnerNotificationBus>("SpawnerNotificationBus")->Handler<SpawnerNotificationsBusHandler>();
+            behaviorContext->EBus<SpawnerNotificationBus>("ROS2SpawnerNotificationBus")->Handler<SpawnerNotificationsBusHandler>();
         }
     }
 
