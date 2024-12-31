@@ -76,6 +76,7 @@ namespace ROS2
 
     AZ::Crc32 JointsPositionsEditorComponent::FindAllJoints()
     {
+        m_jointNames.clear();
         AZStd::function<void(const AZ::Entity* entity)> getAllJointsHierarchy = [&](const AZ::Entity* entity)
         {
             auto* frameEditorComponent =
