@@ -8,7 +8,6 @@
 
 #include "ROS2FrameSystemComponent.h"
 #include <AzCore/Component/Entity.h>
-#include <AzCore/Component/EntityUtils.h>
 #include <AzCore/RTTI/ReflectContext.h>
 #include <AzCore/Serialization/EditContext.h>
 #include <AzCore/Serialization/EditContextConstants.inl>
@@ -68,17 +67,6 @@ namespace ROS2
             // Found the component!
             return component;
         }
-
-        //! Checks whether the entity has a component of the given type
-        //! @param entity pointer to entity
-        //! @param typeId type of the component
-        //! @returns true if entity has component with given type
-        static bool CheckIfEntityHasComponentOfType(const AZ::Entity* entity, const AZ::Uuid typeId)
-        {
-            auto components = AZ::EntityUtils::FindDerivedComponents(entity, typeId);
-            return !components.empty();
-        }
-
     } // namespace Internal
 
     AZ::JsonSerializationResult::Result JsonFrameComponentConfigSerializer::Load(
@@ -160,11 +148,11 @@ namespace ROS2
             // Otherwise it'll be dynamic when it has joints and it's not a fixed joint.
             else
             {
-                const bool hasJoints = Internal::CheckIfEntityHasComponentOfType(
+                const bool hasJoints = Utils::CheckIfEntityHasComponentOfType(
                     m_entity, AZ::Uuid("{B01FD1D2-1D91-438D-874A-BF5EB7E919A8}")); // Physx::JointComponent;
-                const bool hasFixedJoints = Internal::CheckIfEntityHasComponentOfType(
+                const bool hasFixedJoints = Utils::CheckIfEntityHasComponentOfType(
                     m_entity, AZ::Uuid("{02E6C633-8F44-4CEE-AE94-DCB06DE36422}")); // Physx::FixedJointComponent
-                const bool hasArticulations = Internal::CheckIfEntityHasComponentOfType(
+                const bool hasArticulations = Utils::CheckIfEntityHasComponentOfType(
                     m_entity, AZ::Uuid("{48751E98-B35F-4A2F-A908-D9CDD5230264}")); // Physx::ArticulationComponent
                 m_isDynamic = (hasJoints && !hasFixedJoints) || hasArticulations;
             }
