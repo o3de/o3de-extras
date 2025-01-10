@@ -22,7 +22,7 @@ namespace ROS2
         //! @param entity pointer to entity
         //! @param typeId type of the component
         //! @returns true if entity has component with given type
-        inline bool CheckIfEntityHasComponentOfType(const AZ::Entity* entity, const AZ::Uuid typeId)
+        inline bool HasComponentOfType(const AZ::Entity* entity, const AZ::Uuid typeId)
         {
             auto components = AZ::EntityUtils::FindDerivedComponents(entity, typeId);
             return !components.empty();

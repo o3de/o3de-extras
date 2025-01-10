@@ -84,7 +84,7 @@ namespace ROS2
                 azrtti_cast<ROS2::ROS2FrameEditorComponent*>(Utils::GetGameOrEditorComponent<ROS2::ROS2FrameEditorComponent>(entity));
             AZ_Assert(frameEditorComponent, "ROS2FrameEditorComponent does not exist!");
 
-            const bool hasNonFixedJoints = Utils::CheckIfEntityHasNonFixedJoints(entity);
+            const bool hasNonFixedJoints = JointUtils::HasNonFixedJoints(entity);
 
             AZStd::string jointName(frameEditorComponent->GetJointName().GetCStr());
             if (!jointName.empty() && hasNonFixedJoints)

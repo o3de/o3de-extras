@@ -10,10 +10,10 @@
 
 #include <AzCore/Component/Entity.h>
 
-namespace ROS2::Utils
+namespace ROS2::JointUtils
 {
     //! Check if the entity has any of the non fixed joint or articulation components.
     //! @param entity Entity to check.
     //! @return True if the entity has any of the joint or articulation components.
-    bool CheckIfEntityHasNonFixedJoints(const AZ::Entity* entity);
+    bool HasNonFixedJoints(const AZ::Entity* entity);
 } // namespace ROS2::Utils
