@@ -9,12 +9,22 @@
 #include <AzCore/Time/ITime.h>
 #include <ROS2/Clock/SimulationTimeSource.h>
 #include <ROS2/ROS2Bus.h>
+#include <AzCore/Settings/SettingsRegistry.h>
 
 namespace ROS2
 {
-
+    namespace {
+        constexpr AZStd::string_view ResetTimestampOnLevelReload = "/O3DE/ROS2/SteadyClock/ResetTimestampOnLevelReload";
+    }
     void SimulationTimeSource::Activate()
     {
+        auto* registry = AZ::SettingsRegistry::Get();
+        AZ_Assert(registry, "No Registry available");
+        if (registry)
+        {
+            registry->Get(m_resetTimeOnRestart, ResetTimestampOnLevelReload);
+        }
+
         auto* systemInterface = AZ::Interface<AzPhysics::SystemInterface>::Get();
         if (!systemInterface)
         {
@@ -30,12 +40,16 @@ namespace ROS2
         m_onSceneAdded = AzPhysics::SystemEvents::OnSceneAddedEvent::Handler(
             [this](AzPhysics::SceneHandle sceneHandle)
             {
+
                 auto* sceneInterface = AZ::Interface<AzPhysics::SceneInterface>::Get();
                 AzPhysics::SceneHandle defaultSceneHandle = sceneInterface->GetSceneHandle(AzPhysics::DefaultPhysicsSceneName);
                 if (sceneHandle == defaultSceneHandle)
                 {
                     AZ_Printf("SimulationPhysicalClock", "Registering clock to default scene");
-                    m_elapsed = 0.0;
+                    if (m_resetTimeOnRestart)
+                    {
+                        m_elapsed = 0.0;
+                    }
                     sceneInterface->RegisterSceneSimulationFinishHandler(sceneHandle, m_onSceneSimulationEvent);
                 }
             });
