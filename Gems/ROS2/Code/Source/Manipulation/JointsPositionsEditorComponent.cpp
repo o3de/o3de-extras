@@ -9,6 +9,7 @@
 
 #include "JointsPositionsEditorComponent.h"
 #include "JointPositionsSubscriptionHandler.h"
+#include "JointUtils.h"
 #include "JointsPositionsComponent.h"
 
 #include <AzCore/Serialization/EditContext.h>
@@ -76,14 +77,17 @@ namespace ROS2
 
     AZ::Crc32 JointsPositionsEditorComponent::FindAllJoints()
     {
+        m_jointNames.clear();
         AZStd::function<void(const AZ::Entity* entity)> getAllJointsHierarchy = [&](const AZ::Entity* entity)
         {
             auto* frameEditorComponent =
                 azrtti_cast<ROS2::ROS2FrameEditorComponent*>(Utils::GetGameOrEditorComponent<ROS2::ROS2FrameEditorComponent>(entity));
             AZ_Assert(frameEditorComponent, "ROS2FrameEditorComponent does not exist!");
 
+            const bool hasNonFixedJoints = JointUtils::HasNonFixedJoints(entity);
+
             AZStd::string jointName(frameEditorComponent->GetJointName().GetCStr());
-            if (!jointName.empty())
+            if (!jointName.empty() && hasNonFixedJoints)
             {
                 m_jointNames.emplace_back(jointName);
             }
