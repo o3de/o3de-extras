@@ -18,6 +18,8 @@ set(FILES
     Source/Manipulation/JointsPositionsEditorComponent.h
     Source/Manipulation/JointsManipulationEditorComponent.cpp
     Source/Manipulation/JointsManipulationEditorComponent.h
+    Source/Manipulation/JointUtils.cpp
+    Source/Manipulation/JointUtils.h
     Source/RobotImporter/FixURDF/FixURDF.cpp
     Source/RobotImporter/FixURDF/FixURDF.h
     Source/RobotImporter/Pages/ModifiedURDFWindow.cpp

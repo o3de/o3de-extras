@@ -9,13 +9,25 @@
 
 #include <AzCore/Component/ComponentBus.h>
 #include <AzCore/Component/Entity.h>
+#include <AzCore/Component/EntityUtils.h>
 #ifdef ROS2_EDITOR
 #include <AzToolsFramework/ToolsComponents/GenericComponentWrapper.h>
 #endif
+
 namespace ROS2
 {
     namespace Utils
     {
+        //! Checks whether the entity has a component of the given type
+        //! @param entity pointer to entity
+        //! @param typeId type of the component
+        //! @returns true if entity has component with given type
+        inline bool HasComponentOfType(const AZ::Entity* entity, const AZ::Uuid typeId)
+        {
+            auto components = AZ::EntityUtils::FindDerivedComponents(entity, typeId);
+            return !components.empty();
+        }
+
         /// Create component for a given entity in safe way.
         /// @param entityId entity that will own component
         /// @param componentType Uuid of component to create
@@ -26,7 +38,6 @@ namespace ROS2
         /// We should use that that we are not sure if we access eg ROS2FrameComponent in game mode or from Editor
         /// @param entity pointer to entity eg with GetEntity()
         /// @return pointer to component with type T
-
         template<class ComponentType>
         ComponentType* GetGameOrEditorComponent(const AZ::Entity* entity)
         {

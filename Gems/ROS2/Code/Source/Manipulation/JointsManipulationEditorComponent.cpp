@@ -7,6 +7,7 @@
  */
 
 #include "JointsManipulationEditorComponent.h"
+#include "JointUtils.h"
 #include "JointsManipulationComponent.h"
 #include <AzCore/Component/ComponentApplicationBus.h>
 #include <AzCore/Component/TransformBus.h>
@@ -108,8 +109,10 @@ namespace ROS2
                 azrtti_cast<ROS2::ROS2FrameEditorComponent*>(Utils::GetGameOrEditorComponent<ROS2::ROS2FrameEditorComponent>(entity));
             AZ_Assert(frameEditorComponent, "ROS2FrameEditorComponent does not exist!");
 
+            const bool hasNonFixedJoints = JointUtils::HasNonFixedJoints(entity);
+
             AZStd::string jointName(frameEditorComponent->GetJointName().GetCStr());
-            if (!jointName.empty())
+            if (!jointName.empty() && hasNonFixedJoints)
             {
                 m_initialPositions.emplace_back(AZStd::make_pair(jointName, configBackup[jointName]));
             }
