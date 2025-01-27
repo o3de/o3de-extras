@@ -57,37 +57,39 @@ ly_add_target(
         *.AutoComponent.xml,AutoComponentTypes_Source.jinja,$path/AutoComponentTypes.cpp
 )
 
-ly_add_target(
-    NAME ${gem_name}.Server.Static STATIC
-    NAMESPACE Gem
-    FILES_CMAKE
-        ${NameLower}_autogen_files.cmake
-        ${NameLower}_files.cmake
-        ${NameLower}_server_files.cmake
-        ${pal_dir}/${NameLower}_${PAL_PLATFORM_NAME_LOWERCASE}_files.cmake
-    INCLUDE_DIRECTORIES
-        PRIVATE
-            Source
-            .
-        PUBLIC
-            Include
-    BUILD_DEPENDENCIES
-        PUBLIC
-            Gem::StartingPointInput
-            Gem::EMotionFXStaticLib
-            Gem::PhysX
-            Gem::Multiplayer.Server
-        PRIVATE
-            Gem::LmbrCentral.Static
-            Gem::Multiplayer.Server.Static
-            Gem::PhysX.Static
-            Gem::GameState.Static
-    AUTOGEN_RULES
-        *.AutoComponent.xml,AutoComponent_Header.jinja,$path/$fileprefix.AutoComponent.h
-        *.AutoComponent.xml,AutoComponent_Source.jinja,$path/$fileprefix.AutoComponent.cpp
-        *.AutoComponent.xml,AutoComponentTypes_Header.jinja,$path/AutoComponentTypes.h
-        *.AutoComponent.xml,AutoComponentTypes_Source.jinja,$path/AutoComponentTypes.cpp
-)
+if (PAL_TRAIT_BUILD_SERVER_SUPPORTED)
+    ly_add_target(
+        NAME ${gem_name}.Server.Static STATIC
+        NAMESPACE Gem
+        FILES_CMAKE
+            ${NameLower}_autogen_files.cmake
+            ${NameLower}_files.cmake
+            ${NameLower}_server_files.cmake
+            ${pal_dir}/${NameLower}_${PAL_PLATFORM_NAME_LOWERCASE}_files.cmake
+        INCLUDE_DIRECTORIES
+            PRIVATE
+                Source
+                .
+            PUBLIC
+                Include
+        BUILD_DEPENDENCIES
+            PUBLIC
+                Gem::StartingPointInput
+                Gem::EMotionFXStaticLib
+                Gem::PhysX
+                Gem::Multiplayer.Server
+            PRIVATE
+                Gem::LmbrCentral.Static
+                Gem::Multiplayer.Server.Static
+                Gem::PhysX.Static
+                Gem::GameState.Static
+        AUTOGEN_RULES
+            *.AutoComponent.xml,AutoComponent_Header.jinja,$path/$fileprefix.AutoComponent.h
+            *.AutoComponent.xml,AutoComponent_Source.jinja,$path/$fileprefix.AutoComponent.cpp
+            *.AutoComponent.xml,AutoComponentTypes_Header.jinja,$path/AutoComponentTypes.h
+            *.AutoComponent.xml,AutoComponentTypes_Source.jinja,$path/AutoComponentTypes.cpp
+    )
+endif()
 
 ly_add_target(
     NAME ${gem_name}.Unified.Static STATIC
@@ -147,24 +149,26 @@ ly_add_target(
             Gem::Atom_AtomBridge.Static
 )
 
-ly_add_target(
-    NAME ${gem_name}.Server ${PAL_TRAIT_MONOLITHIC_DRIVEN_MODULE_TYPE}
-    NAMESPACE Gem
-    FILES_CMAKE
-        ${NameLower}_shared_files.cmake
-    INCLUDE_DIRECTORIES
-        PRIVATE
-            ${CMAKE_CURRENT_BINARY_DIR}/Azcg/Generated/${gem_name}.Server.Static  # Used so Module.cpp can include AutoGen/AutoComponentTypes.h
-            Source
-            .
-        PUBLIC
-            Include
-    BUILD_DEPENDENCIES
-        PRIVATE
-            Gem::Multiplayer.Server.Static
-            Gem::${gem_name}.Server.Static
-            Gem::Atom_AtomBridge.Static
-)
+if (PAL_TRAIT_BUILD_SERVER_SUPPORTED)
+    ly_add_target(
+        NAME ${gem_name}.Server ${PAL_TRAIT_MONOLITHIC_DRIVEN_MODULE_TYPE}
+        NAMESPACE Gem
+        FILES_CMAKE
+            ${NameLower}_shared_files.cmake
+        INCLUDE_DIRECTORIES
+            PRIVATE
+                ${CMAKE_CURRENT_BINARY_DIR}/Azcg/Generated/${gem_name}.Server.Static  # Used so Module.cpp can include AutoGen/AutoComponentTypes.h
+                Source
+                .
+            PUBLIC
+                Include
+        BUILD_DEPENDENCIES
+            PRIVATE
+                Gem::Multiplayer.Server.Static
+                Gem::${gem_name}.Server.Static
+                Gem::Atom_AtomBridge.Static
+    )
+endif()
 
 ly_add_target(
     NAME ${gem_name} ${PAL_TRAIT_MONOLITHIC_DRIVEN_MODULE_TYPE}
@@ -203,7 +207,11 @@ PROPERTY COMPILE_DEFINITIONS
 ly_create_alias(NAME ${gem_name}.Builders NAMESPACE Gem TARGETS Gem::${gem_name})
 ly_create_alias(NAME ${gem_name}.Tools    NAMESPACE Gem TARGETS Gem::${gem_name})
 ly_create_alias(NAME ${gem_name}.Clients  NAMESPACE Gem TARGETS Gem::${gem_name}.Client)
-ly_create_alias(NAME ${gem_name}.Servers  NAMESPACE Gem TARGETS Gem::${gem_name}.Server)
+
+if (PAL_TRAIT_BUILD_SERVER_SUPPORTED)
+    ly_create_alias(NAME ${gem_name}.Servers  NAMESPACE Gem TARGETS Gem::${gem_name}.Server)
+endif()
+
 ly_create_alias(NAME ${gem_name}.Unified  NAMESPACE Gem TARGETS Gem::${gem_name})
 
 # Add in CMake dependencies for each gem dependency listed in this gem's gem.json file
