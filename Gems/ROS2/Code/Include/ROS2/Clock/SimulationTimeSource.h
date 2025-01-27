@@ -36,6 +36,7 @@ namespace ROS2
 
     private:
         double m_elapsed = 0;
+        bool m_resetTimeOnRestart = true;
         AzPhysics::SceneEvents::OnSceneSimulationFinishHandler m_onSceneSimulationEvent;
         AzPhysics::SystemEvents::OnSceneAddedEvent::Handler m_onSceneAdded;
         AzPhysics::SystemEvents::OnSceneRemovedEvent::Handler m_onSceneRemoved;

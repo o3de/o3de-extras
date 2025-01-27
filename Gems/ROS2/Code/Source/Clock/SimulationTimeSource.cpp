@@ -6,19 +6,31 @@
  *
  */
 
+#include <AzCore/Settings/SettingsRegistry.h>
 #include <AzCore/Time/ITime.h>
 #include <ROS2/Clock/SimulationTimeSource.h>
 #include <ROS2/ROS2Bus.h>
 
 namespace ROS2
 {
+    namespace
+    {
+        constexpr AZStd::string_view ResetTimestampOnLevelReload = "/O3DE/ROS2/SteadyClock/ResetTimestampOnLevelReload";
+    }
 
     void SimulationTimeSource::Activate()
     {
+        auto* registry = AZ::SettingsRegistry::Get();
+        AZ_Assert(registry, "No Registry available");
+        if (registry)
+        {
+            registry->Get(m_resetTimeOnRestart, ResetTimestampOnLevelReload);
+        }
+
         auto* systemInterface = AZ::Interface<AzPhysics::SystemInterface>::Get();
         if (!systemInterface)
         {
-            AZ_Warning("SimulationPhysicalClock", false, "Failed to get AzPhysics::SystemInterface");
+            AZ_Warning("SimulationTimeSource", false, "Failed to get AzPhysics::SystemInterface");
             return;
         }
         m_onSceneSimulationEvent = AzPhysics::SceneEvents::OnSceneSimulationFinishHandler(
@@ -34,8 +46,12 @@ namespace ROS2
                 AzPhysics::SceneHandle defaultSceneHandle = sceneInterface->GetSceneHandle(AzPhysics::DefaultPhysicsSceneName);
                 if (sceneHandle == defaultSceneHandle)
                 {
-                    AZ_Printf("SimulationPhysicalClock", "Registering clock to default scene");
-                    m_elapsed = 0.0;
+                    AZ_Printf("SimulationTimeSource", "Registering clock to default scene");
+                    if (m_resetTimeOnRestart)
+                    {
+                        AZ_Printf("SimulationTimeSource", "Reseting clock");
+                        m_elapsed = 0.0;
+                    }
                     sceneInterface->RegisterSceneSimulationFinishHandler(sceneHandle, m_onSceneSimulationEvent);
                 }
             });
@@ -48,7 +64,7 @@ namespace ROS2
                 AzPhysics::SceneHandle defaultSceneHandle = sceneInterface->GetSceneHandle(AzPhysics::DefaultPhysicsSceneName);
                 if (sceneHandle == defaultSceneHandle)
                 {
-                    AZ_Printf("SimulationPhysicalClock", "Removing clock to default scene");
+                    AZ_Printf("SimulationTimeSource", "Removing clock to default scene");
                     m_onSceneSimulationEvent.Disconnect();
                 }
             });
