@@ -158,15 +158,33 @@ namespace ROS2
         m_passHierarchy.push_back("CopyToSwapChain");
 
         m_pipeline->SetDefaultView(m_view);
-        const AZ::RPI::ViewPtr targetView = m_scene->GetDefaultRenderPipeline()->GetDefaultView();
-        if (auto* fp = m_scene->GetFeatureProcessor<AZ::Render::PostProcessFeatureProcessorInterface>())
+        UpdateViewAlias();
+
+        Camera::CameraNotificationBus::Handler::BusConnect();
+    }
+
+    void CameraSensor::OnCameraRemoved(const AZ::EntityId& cameraEntityId)
+    {
+        UpdateViewAlias();
+    }
+
+    void CameraSensor::OnActiveViewChanged(const AZ::EntityId& cameraEntityId)
+    {
+        UpdateViewAlias();
+    }
+
+    void CameraSensor::UpdateViewAlias()
+    {
+        if (auto* fp = m_scene->GetFeatureProcessor<AZ::Render::PostProcessFeatureProcessor>())
         {
+            const AZ::RPI::ViewPtr targetView = m_scene->GetDefaultRenderPipeline()->GetDefaultView();
             fp->SetViewAlias(m_view, targetView);
         }
     }
 
     CameraSensor::~CameraSensor()
     {
+        Camera::CameraNotificationBus::Handler::BusDisconnect();
         if (m_scene)
         {
             if (auto* fp = m_scene->GetFeatureProcessor<AZ::Render::PostProcessFeatureProcessorInterface>())
