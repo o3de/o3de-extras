@@ -6,6 +6,6 @@
 #
 #
 
-ly_associate_package(PACKAGE_NAME OpenXR-1.1.41-rev1-windows    TARGETS OpenXR  PACKAGE_HASH ce6fc4396b920b394a4e3d413a36450d3031ef19d78ecf6c776954956e2fdb81)
+ly_associate_package(PACKAGE_NAME OpenXR-1.1.41-rev1-windows    TARGETS OpenXR  PACKAGE_HASH 425a45a6a4f6a80471a18346b9f47e1a2b935c6fefce2d189abfc5b617d50281)
 set(openxr_dependency 3rdParty::OpenXR)
 

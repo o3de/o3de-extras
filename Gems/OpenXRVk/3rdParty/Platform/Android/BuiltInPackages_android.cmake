@@ -6,5 +6,5 @@
 #
 #
 
-ly_associate_package(PACKAGE_NAME OpenXR-1.1.41-rev1-android    TARGETS OpenXR  PACKAGE_HASH 298403c63576247777e81bd1382d483d156e86194a18c42bf470fe8e45679e6a)
+ly_associate_package(PACKAGE_NAME OpenXR-1.1.41-rev1-android    TARGETS OpenXR  PACKAGE_HASH 7f2c29d109947b85e70bedc3c63a0b1b758f3c4113a1d127e7fa799912bcd15e)
 set(openxr_dependency 3rdParty::OpenXR)
