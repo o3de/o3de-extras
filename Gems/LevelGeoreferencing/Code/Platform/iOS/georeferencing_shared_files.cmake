@@ -3,7 +3,10 @@
 #
 # SPDX-License-Identifier: Apache-2.0 OR MIT
 
+# Platform specific files for iOS
+# i.e. ../Source/iOS/GeoreferencingiOS.cpp
+#      ../Source/iOS/GeoreferencingiOS.h
+#      ../Include/iOS/GeoreferencingiOS.h
+
 set(FILES
-    Tests/ROS2Test.cpp
-    Tests/PIDTest.cpp
 )

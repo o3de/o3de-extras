@@ -4,6 +4,7 @@
 # SPDX-License-Identifier: Apache-2.0 OR MIT
 
 set(FILES
-    Tests/ROS2Test.cpp
-    Tests/PIDTest.cpp
+        Include/Georeferencing/GeoreferencingTypeIds.h
+        Include/Georeferencing/GeoreferenceBus.h
+        Include/Georeferencing/GeoreferenceStructures.h
 )

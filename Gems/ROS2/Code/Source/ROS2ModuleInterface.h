@@ -14,7 +14,6 @@
 #include <Camera/ROS2CameraSystemComponent.h>
 #include <ContactSensor/ROS2ContactSensorComponent.h>
 #include <GNSS/ROS2GNSSSensorComponent.h>
-#include <Georeference/GeoreferenceLevelComponent.h>
 #include <Gripper/FingerGripperComponent.h>
 #include <Gripper/GripperActionServerComponent.h>
 #include <Gripper/VacuumGripperComponent.h>
@@ -99,7 +98,6 @@ namespace ROS2
                     FingerGripperComponent::CreateDescriptor(),
                     ROS2ContactSensorComponent::CreateDescriptor(),
                     FollowingCameraComponent::CreateDescriptor(),
-                    GeoReferenceLevelComponent::CreateDescriptor(),
                     ClassSegmentationConfigurationComponent::CreateDescriptor(),
                 });
         }

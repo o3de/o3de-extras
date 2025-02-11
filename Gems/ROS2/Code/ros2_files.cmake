@@ -39,9 +39,6 @@ set(FILES
         Source/Frame/ROS2FrameComponent.cpp
         Source/Frame/ROS2FrameConfiguration.cpp
         Source/Frame/ROS2Transform.cpp
-        Source/Georeference/GeoreferenceStructures.cpp
-        Source/Georeference/GeoreferenceLevelComponent.cpp
-        Source/Georeference/GeoreferenceLevelComponent.h
         Source/Gripper/GripperActionServer.cpp
         Source/Gripper/GripperActionServer.h
         Source/Gripper/GripperActionServerComponent.cpp
@@ -50,8 +47,6 @@ set(FILES
         Source/Gripper/VacuumGripperComponent.cpp
         Source/Gripper/FingerGripperComponent.h
         Source/Gripper/FingerGripperComponent.cpp
-        Source/Georeference/GNSSFormatConversions.cpp
-        Source/Georeference/GNSSFormatConversions.h
         Source/GNSS/ROS2GNSSSensorComponent.cpp
         Source/GNSS/ROS2GNSSSensorComponent.h
         Source/Imu/ImuSensorConfiguration.cpp

@@ -9,7 +9,6 @@
 #include <Camera/ROS2CameraSensorEditorComponent.h>
 #include <Camera/ROS2EditorCameraSystemComponent.h>
 #include <Frame/ROS2FrameSystemComponent.h>
-#include <Georeference/GeoreferenceLevelEditorComponent.h>
 #include <Lidar/LidarRegistrarEditorSystemComponent.h>
 #include <Manipulation/JointsManipulationEditorComponent.h>
 #include <Manipulation/JointsPositionsEditorComponent.h>
@@ -52,7 +51,6 @@ namespace ROS2
                   SdfAssetBuilderSystemComponent::CreateDescriptor(),
                   JointsManipulationEditorComponent::CreateDescriptor(),
                   JointsPositionsEditorComponent::CreateDescriptor(),
-                  GeoReferenceLevelEditorComponent::CreateDescriptor(),
                   ROS2FrameSystemComponent::CreateDescriptor(),
                   ROS2FrameEditorComponent::CreateDescriptor() });
         }

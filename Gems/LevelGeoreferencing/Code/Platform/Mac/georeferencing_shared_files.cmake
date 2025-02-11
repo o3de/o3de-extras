@@ -3,7 +3,10 @@
 #
 # SPDX-License-Identifier: Apache-2.0 OR MIT
 
+# Platform specific files for Mac
+# i.e. ../Source/Mac/GeoreferencingMac.cpp
+#      ../Source/Mac/GeoreferencingMac.h
+#      ../Include/Mac/GeoreferencingMac.h
+
 set(FILES
-    Tests/ROS2Test.cpp
-    Tests/PIDTest.cpp
 )

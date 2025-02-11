@@ -32,7 +32,8 @@
         "CommonFeaturesAtom",
         "PhysX5",
         "PrimitiveAssets",
-        "StartingPointInput"
+        "StartingPointInput",
+        "LevelGeoreferencing"
     ],
     "restricted": "ROS2",
     "repo_uri": "https://raw.githubusercontent.com/o3de/o3de-extras/development",

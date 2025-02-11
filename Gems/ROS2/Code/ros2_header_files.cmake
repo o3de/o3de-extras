@@ -18,9 +18,6 @@ set(FILES
         Include/ROS2/Frame/ROS2FrameComponent.h
         Include/ROS2/Frame/ROS2FrameConfiguration.h
         Include/ROS2/Frame/ROS2Transform.h
-        Include/ROS2/Georeference/GeoreferenceBus.h
-        Include/ROS2/Georeference/GeoreferenceStructures.h
-        Include/ROS2/Georeference/GeoreferenceStructures.h
         Include/ROS2/GNSS/GNSSPostProcessingRequestBus.h
         Include/ROS2/Gripper/GripperRequestBus.h
         Include/ROS2/Manipulation/Controllers/JointsPositionControllerRequests.h
