@@ -8,11 +8,11 @@
 #pragma once
 
 #include <AzCore/Serialization/SerializeContext.h>
-#include <control_toolbox/pid.hpp>
 
 namespace ROS2::Controllers
 {
-    //! A wrapper for ROS 2 control_toolbox pid controller.
+    //! A PID controller.
+    //! Based on a ROS 2 control_toolbox implementation.
     //! @see <a href="https://github.com/ros-controls/control_toolbox">control_toolbox</a>.
     class PidConfiguration
     {
@@ -54,8 +54,9 @@ namespace ROS2::Controllers
         double m_iMax = 10.0; //!< maximal allowable integral term.
         double m_iMin = -10.0; //!< minimal allowable integral term.
         bool m_antiWindup = false; //!< prevents condition of integrator overflow in integral action.
+        bool m_initialized = false; //!< is PID initialized.
         double m_outputLimit = 0.0; //!< limit PID output; set to 0.0 to disable.
-
-        control_toolbox::Pid m_pid; //!< PID implementation object from control_toolbox (of ros2_control).
+        double m_previousError = 0.0; //!< previous recorded error.
+        double m_integral; //!< integral accumulator.
     };
 } // namespace ROS2::Controllers
