@@ -175,7 +175,7 @@ namespace ROS2
 
     void CameraSensor::UpdateViewAlias()
     {
-        if (auto* fp = m_scene->GetFeatureProcessor<AZ::Render::PostProcessFeatureProcessor>())
+        if (auto* fp = m_scene->GetFeatureProcessor<AZ::Render::PostProcessFeatureProcessorInterface>())
         {
             const AZ::RPI::ViewPtr targetView = m_scene->GetDefaultRenderPipeline()->GetDefaultView();
             fp->SetViewAlias(m_view, targetView);
