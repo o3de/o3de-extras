@@ -38,7 +38,7 @@ namespace ROS2::Controllers
             const bool antiWindup,
             const double outputLimit);
 
-        //! Initialize PID using member fields as set by the user.
+        //! Initialize the controller
         void InitializePid();
 
         //! Compute the value of PID command.
@@ -57,6 +57,6 @@ namespace ROS2::Controllers
         bool m_initialized = false; //!< is PID initialized.
         double m_outputLimit = 0.0; //!< limit PID output; set to 0.0 to disable.
         double m_previousError = 0.0; //!< previous recorded error.
-        double m_integral; //!< integral accumulator.
+        double m_integral = 0.0; //!< integral accumulator.
     };
 } // namespace ROS2::Controllers
