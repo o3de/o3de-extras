@@ -83,10 +83,8 @@ namespace ROS2::Controllers
 
     double PidConfiguration::ComputeCommand(double error, uint64_t deltaTimeNanoseconds)
     {
-        // Time conversion
-        double dt = static_cast<double>(deltaTimeNanoseconds) / 1.e9;
+        const double dt = aznumeric_cast<double>(deltaTimeNanoseconds) / 1.e9;
 
-        // Safety checks
         if (!m_initialized)
         {
             AZ_ErrorOnce("PidConfiguration", false, "PID not initialized, ignoring.");
@@ -99,10 +97,8 @@ namespace ROS2::Controllers
             return 0.0;
         }
 
-        // Proportional term
-        double proportionalTerm = m_p * error;
+        const double proportionalTerm = m_p * error;
 
-        // Integral term
         m_integral += error * dt;
 
         if (m_antiWindup && m_i != 0)
@@ -118,19 +114,16 @@ namespace ROS2::Controllers
             m_integral = AZStd::clamp<double>(m_integral, m_iMin, m_iMax);
         }
 
-        // Derivative term
-        double derivative = (error - m_previousError) / dt;
-        double derivativeTerm = m_d * derivative;
+        const double derivative = (error - m_previousError) / dt;
+        const double derivativeTerm = m_d * derivative;
 
-        // Save error for next iteration
         m_previousError = error;
 
-        // PID output
         double output = proportionalTerm + integralTerm + derivativeTerm;
 
         if (m_outputLimit > 0.0)
         {
-            output = AZStd::clamp<float>(output, 0.0, m_outputLimit);
+            output = AZStd::clamp<double>(output, 0.0, m_outputLimit);
         }
         return output;
     }
