@@ -111,7 +111,7 @@ namespace ROS2::Controllers
 
         if (m_antiWindup)
         {
-            m_integral = AZStd::clamp<double>(m_integral, m_iMin, m_iMax);
+            integralTerm = AZStd::clamp<double>(integralTerm, m_iMin, m_iMax);
         }
 
         const double derivative = (error - m_previousError) / dt;
