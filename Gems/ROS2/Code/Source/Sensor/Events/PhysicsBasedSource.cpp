@@ -32,9 +32,8 @@ namespace ROS2
             [this, ros2Interface](AzPhysics::SceneHandle sceneHandle, float deltaTime)
             {
                 const auto simulationTime = ros2Interface->GetROSTimestamp();
-
-                const float deltaSimTime = ROS2Conversions::GetTimeDifference(m_lastSimulationTime, simulationTime);
-                m_sourceEvent.Signal(sceneHandle, deltaSimTime);
+                const float deltaSimulationTime = ROS2Conversions::GetTimeDifference(m_lastSimulationTime, simulationTime);
+                m_sourceEvent.Signal(sceneHandle, deltaSimulationTime);
                 m_lastSimulationTime = simulationTime;
             });
 

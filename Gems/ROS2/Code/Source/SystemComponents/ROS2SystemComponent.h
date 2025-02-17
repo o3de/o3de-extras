@@ -93,6 +93,6 @@ namespace ROS2
 
         AZStd::deque<float> m_simulationLoopTimes;
         builtin_interfaces::msg::Time m_lastSimulationTime;
-        float m_currentMedian = 1.f/60.0f;
+        float m_simulationLoopTimeMedian = 1.f / 60.0f;
     };
 } // namespace ROS2

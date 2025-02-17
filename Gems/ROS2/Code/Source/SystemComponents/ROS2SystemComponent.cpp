@@ -9,8 +9,8 @@
 
 #include "ROS2SystemComponent.h"
 #include <Lidar/LidarCore.h>
-#include <ROS2/Clock/RealTimeSource.h>
 #include <ROS2/Clock/ROS2TimeSource.h>
+#include <ROS2/Clock/RealTimeSource.h>
 #include <ROS2/Clock/SimulationTimeSource.h>
 #include <ROS2/Communication/PublisherConfiguration.h>
 #include <ROS2/Communication/QoS.h>
@@ -27,12 +27,12 @@
 #include <AzCore/Settings/SettingsRegistry.h>
 #include <AzCore/Time/ITime.h>
 #include <AzCore/std/smart_ptr/make_shared.h>
+#include <AzCore/std/sort.h>
 #include <AzCore/std/string/string_view.h>
 #include <AzFramework/API/ApplicationAPI.h>
 #include <ROS2/Sensor/SensorConfigurationRequestBus.h>
 #include <ROS2/Utilities/ROS2Conversions.h>
-#include <AzCore/std/numeric.h>
-#include <AzCore/std/sort.h>
+
 namespace ROS2
 {
     constexpr AZStd::string_view ClockTypeConfigurationKey = "/O3DE/ROS2/ClockType";
@@ -108,8 +108,8 @@ namespace ROS2
     void ROS2SystemComponent::Init()
     {
         rclcpp::init(0, 0);
-        
-        // handle signals, e.g. via `Ctrl+C` hotkey or `kill` command 
+
+        // handle signals, e.g. via `Ctrl+C` hotkey or `kill` command
         auto handler = [](int sig){
             rclcpp::shutdown(); // shutdown rclcpp
             std::raise(sig); // shutdown o3de
@@ -234,8 +234,8 @@ namespace ROS2
             m_executor->spin_some();
         }
         // Calculate simulation loop time
-        const auto simTimestamp = m_simulationClock->GetROSTimestamp();
-        const float deltaSimTime = ROS2Conversions::GetTimeDifference(m_lastSimulationTime, simTimestamp);
+        const auto simulationTimestamp = m_simulationClock->GetROSTimestamp();
+        const float deltaSimTime = ROS2Conversions::GetTimeDifference(m_lastSimulationTime, simulationTimestamp);
 
         // Filter out the outliers
         m_simulationLoopTimes.push_back(deltaSimTime);
@@ -245,13 +245,13 @@ namespace ROS2
         }
         AZStd::vector<float> frameTimeSorted{ m_simulationLoopTimes.begin(), m_simulationLoopTimes.end() };
         AZStd::sort(frameTimeSorted.begin(), frameTimeSorted.end());
-        m_currentMedian = frameTimeSorted[frameTimeSorted.size() / 2];
+        m_simulationLoopTimeMedian = frameTimeSorted[frameTimeSorted.size() / 2];
 
-        m_lastSimulationTime = simTimestamp;
+        m_lastSimulationTime = simulationTimestamp;
     }
 
     float ROS2SystemComponent::GetExpectedSimulationLoopTime() const
     {
-        return m_currentMedian;
+        return m_simulationLoopTimeMedian;
     }
 } // namespace ROS2
