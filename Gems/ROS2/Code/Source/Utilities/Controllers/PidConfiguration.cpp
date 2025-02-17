@@ -87,7 +87,7 @@ namespace ROS2::Controllers
 
         if (!m_initialized)
         {
-            AZ_ErrorOnce("PidConfiguration", false, "PID not initialized, ignoring.");
+            AZ_Error("PidConfiguration", false, "PID not initialized, ignoring.");
             return 0.0;
         }
 
