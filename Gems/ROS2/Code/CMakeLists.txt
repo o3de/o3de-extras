@@ -70,8 +70,7 @@ ly_add_target(
             Gem::LmbrCentral.API
 )
 
-target_depends_on_ros2_packages(${gem_name}.Static rclcpp builtin_interfaces std_msgs sensor_msgs nav_msgs tf2_ros ackermann_msgs gazebo_msgs vision_msgs)
-target_depends_on_ros2_package(${gem_name}.Static control_toolbox 2.2.0 REQUIRED)
+target_depends_on_ros2_packages(${gem_name}.Static rclcpp builtin_interfaces std_msgs sensor_msgs nav_msgs tf2_ros ackermann_msgs gazebo_msgs vision_msgs control_msgs)
 
 ly_add_target(
     NAME ${gem_name}.API HEADERONLY
