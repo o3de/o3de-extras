@@ -6,6 +6,7 @@
  *
  */
 
+#include <AzCore/Math/MathUtils.h>
 #include <AzCore/Serialization/EditContext.h>
 #include <AzCore/Serialization/EditContextConstants.inl>
 #include <AzCore/Serialization/SerializeContext.h>
@@ -70,15 +71,59 @@ namespace ROS2::Controllers
 
     void PidConfiguration::InitializePid()
     {
-        m_pid.initPid(m_p, m_i, m_d, m_iMax, m_iMin, m_antiWindup);
+        if (m_iMin > m_iMax)
+        {
+            AZ_Error("PidConfiguration", false, "Invalid PID configuration.");
+        }
+        else
+        {
+            m_initialized = true;
+        }
     }
 
     double PidConfiguration::ComputeCommand(double error, uint64_t deltaTimeNanoseconds)
     {
-        double output = m_pid.computeCommand(error, deltaTimeNanoseconds);
+        const double dt = aznumeric_cast<double>(deltaTimeNanoseconds) / 1.e9;
+
+        if (!m_initialized)
+        {
+            AZ_Error("PidConfiguration", false, "PID not initialized, ignoring.");
+            return 0.0;
+        }
+
+        if (dt <= 0.0 || !azisfinite(error))
+        {
+            AZ_Warning("PidConfiguration", false, "Invalid PID conditions.");
+            return 0.0;
+        }
+
+        const double proportionalTerm = m_p * error;
+
+        m_integral += error * dt;
+
+        if (m_antiWindup && m_i != 0)
+        {
+            AZStd::pair<double, double> bounds = AZStd::minmax<double>(m_iMin / m_i, m_iMax / m_i);
+            m_integral = AZStd::clamp<double>(m_integral, bounds.first, bounds.second);
+        }
+
+        double integralTerm = m_i * m_integral;
+
+        if (m_antiWindup)
+        {
+            integralTerm = AZStd::clamp<double>(integralTerm, m_iMin, m_iMax);
+        }
+
+        const double derivative = (error - m_previousError) / dt;
+        const double derivativeTerm = m_d * derivative;
+
+        m_previousError = error;
+
+        double output = proportionalTerm + integralTerm + derivativeTerm;
+
         if (m_outputLimit > 0.0)
         {
-            output = AZStd::clamp<float>(output, -m_outputLimit, m_outputLimit);
+            output = AZStd::clamp<double>(output, 0.0, m_outputLimit);
         }
         return output;
     }
