@@ -356,22 +356,6 @@
                     ],
                     "download_source_uri": "https://github.com/o3de/o3de-extras/releases/download/2.0/rosrobotsample-2.0.1-gem.zip",
                     "sha256": "a4ff12f401cd24d01e68c2058da5312bc1567c72fc26389593ec2e36bdfd3858"
-                },
-                {
-                    "version": "2.0.2",
-                    "origin": "RobotecAI",
-                    "origin_url": "https://robotec.ai",
-                    "summary": "Husarion ROSbot XL robot assets.",
-                    "requirements": "Requires ROS 2 Gem",
-                    "dependencies": [
-                        "ROS2>=3.1.0"
-                    ],
-                    "compatible_engines": [
-                        "o3de-sdk>=2.3.0",
-                        "o3de>=2.3.0"
-                    ],
-                    "download_source_uri": "https://github.com/o3de/o3de-extras/releases/download/2.0/rosrobotsample-2.0.2-gem.zip",
-                    "sha256": "99f308ffb2c8d4a96da188ee08f8834abdf27b5c09f372f3965fc39543881a93"
                 }
             ]
         },
