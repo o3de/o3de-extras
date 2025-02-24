@@ -8,17 +8,49 @@
 #pragma once
 
 #include "GeoreferenceStructures.h"
+#include "GeoreferencingTypeIds.h"
 #include <AzCore/Component/EntityId.h>
 #include <AzCore/EBus/EBus.h>
-#include <AzCore/Math/Vector3.h>
 #include <AzCore/Math/Quaternion.h>
+#include <AzCore/Math/Vector3.h>
 
-namespace ROS2
+namespace Georeferencing
 {
+
+    //! Interface that allows to configure georeferencing of the level.
+    class GeoreferenceConfigurationRequests
+    {
+    public:
+        AZ_RTTI(GeoreferenceConfigurationRequests, GeoreferenceConfigurationRequestsTypeId);
+
+        //! Function sets entity that represents the origin of the georeferencing.
+        virtual void SetOriginEntity(const AZ::EntityId& entityId) = 0;
+
+        //! Function sets location of the origin in WGS84 coordinate system.
+        virtual void SetOriginCoordinates(const WGS::WGS84Coordinate& origin) = 0;
+
+        //! Function returns entity that represents the origin of the georeferencing.
+        virtual AZ::EntityId GetOriginEntity() = 0;
+
+        //! Function returns location of the origin in WGS84 coordinate system.
+        virtual WGS::WGS84Coordinate GetOriginCoordinates() = 0;
+    };
+
+    class GeoreferenceConfigurationRequestsTraits : public AZ::EBusTraits
+    {
+    public:
+        // EBusTraits overrides ...
+        static constexpr AZ::EBusHandlerPolicy HandlerPolicy = AZ::EBusHandlerPolicy::Single;
+        static constexpr AZ::EBusAddressPolicy AddressPolicy = AZ::EBusAddressPolicy::Single;
+    };
+
+    using GeoreferenceConfigurationRequestsBus = AZ::EBus<GeoreferenceConfigurationRequests, GeoreferenceConfigurationRequestsTraits>;
+
     //! Interface that allows to convert between level and WGS84 coordinates.
     class GeoreferenceRequests
     {
     public:
+        AZ_RTTI(GeoreferenceRequests, GeoreferenceRequestsTypeId);
 
         //! Function converts from Level's coordinate system to WGS84.
         //! @param xyz Vector3 in Level's coordinate system.
@@ -31,7 +63,7 @@ namespace ROS2
         virtual AZ::Vector3 ConvertFromWGS84ToLevel(const WGS::WGS84Coordinate& latLon) = 0;
 
         //! Function returns rotation from Level's frame to ENU's (East-North-Up) rotation.
-        //! Function is useful to fin georeference rotation of the level.
+        //! Function is useful to find georeferencing rotation of the level.
         //! @return Quaternion in ENU coordinate system.
         virtual AZ::Quaternion GetRotationFromLevelToENU() = 0;
     };
@@ -45,4 +77,4 @@ namespace ROS2
     };
 
     using GeoreferenceRequestsBus = AZ::EBus<GeoreferenceRequests, GeoreferenceRequestsTraits>;
-} // namespace ROS2
+} // namespace Georeferencing

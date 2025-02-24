@@ -68,6 +68,7 @@ ly_add_target(
             Gem::StartingPointInput
             Gem::PhysX5.Static
             Gem::LmbrCentral.API
+            Gem::LevelGeoreferencing.API
 )
 
 target_depends_on_ros2_packages(${gem_name}.Static rclcpp builtin_interfaces std_msgs sensor_msgs nav_msgs tf2_ros ackermann_msgs gazebo_msgs vision_msgs control_msgs)

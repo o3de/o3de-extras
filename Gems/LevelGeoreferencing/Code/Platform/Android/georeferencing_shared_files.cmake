@@ -3,7 +3,10 @@
 #
 # SPDX-License-Identifier: Apache-2.0 OR MIT
 
+# Platform specific files for Android
+# i.e. ../Source/Android/GeoreferencingAndroid.cpp
+#      ../Source/Android/GeoreferencingAndroid.h
+#      ../Include/Android/GeoreferencingAndroid.h
+
 set(FILES
-    Tests/ROS2Test.cpp
-    Tests/PIDTest.cpp
 )

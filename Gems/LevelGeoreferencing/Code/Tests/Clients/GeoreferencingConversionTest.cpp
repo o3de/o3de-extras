@@ -9,21 +9,21 @@
 #include <AzCore/UnitTest/TestTypes.h>
 #include <AzTest/AzTest.h>
 
-#include <Georeference/GNSSFormatConversions.h>
+#include "Clients/GNSSFormatConversions.h"
 
 namespace UnitTest
 {
 
-    class GNSSTest : public LeakDetectionFixture
+    class GeoreferencingConversionTest : public LeakDetectionFixture
     {
     };
 
     constexpr double OneMillimiter = 0.001; // 1 mm in meters
     constexpr double OneMillimeterInDegreesOnEquator = 360.0 / (40000.0 * 1000.0 / OneMillimiter); // 40000 km is the equator length
 
-    TEST_F(GNSSTest, WGS84ToECEF)
+    TEST_F(GeoreferencingConversionTest, WGS84ToECEF)
     {
-        using namespace ROS2::WGS;
+        using namespace Georeferencing::WGS;
         const AZStd::vector<AZStd::pair<WGS84Coordinate, Vector3d>> inputGoldSet = {
             { { 10.0, 20.0, 300.0 }, { 5903307.167667380, 2148628.092761247, 1100300.642188661 } },
             { { -70.0, 170.0, 500.0 }, { -2154856.524084172, 379959.3447517005, -5971509.853428957 } },
@@ -31,16 +31,16 @@ namespace UnitTest
         };
         for (const auto& [input, goldResult] : inputGoldSet)
         {
-            const auto result = ROS2::Utils::GeodeticConversions::WGS84ToECEF(input);
+            const auto result = Georeferencing::Utils::GeodeticConversions::WGS84ToECEF(input);
             EXPECT_NEAR(result.m_x, goldResult.m_x, OneMillimiter);
             EXPECT_NEAR(result.m_y, goldResult.m_y, OneMillimiter);
             EXPECT_NEAR(result.m_z, goldResult.m_z, OneMillimiter);
         }
     }
 
-    TEST_F(GNSSTest, ECEFToENU)
+    TEST_F(GeoreferencingConversionTest, ECEFToENU)
     {
-        using namespace ROS2::WGS;
+        using namespace Georeferencing::WGS;
         const AZStd::vector<AZStd::tuple<Vector3d, WGS84Coordinate, Vector3d>> inputGoldSet = {
             { { -2053900.0, -3557459.0, 4862712.0 }, { 50.0, -120.0, -100.0 }, { -0.076833, -0.3202, -0.2969 } },
             { { 5903307.167667380, 2148628.092761247, 1100300.642188661 },
@@ -52,16 +52,16 @@ namespace UnitTest
         };
         for (const auto& [input, refWGS84, goldResult] : inputGoldSet)
         {
-            const auto result = ROS2::Utils::GeodeticConversions::ECEFToENU(refWGS84, input);
+            const auto result = Georeferencing::Utils::GeodeticConversions::ECEFToENU(refWGS84, input);
             EXPECT_NEAR(result.m_x, goldResult.m_x, OneMillimiter);
             EXPECT_NEAR(result.m_y, goldResult.m_y, OneMillimiter);
             EXPECT_NEAR(result.m_z, goldResult.m_z, OneMillimiter);
         }
     }
 
-    TEST_F(GNSSTest, ENUToECEF)
+    TEST_F(GeoreferencingConversionTest, ENUToECEF)
     {
-        using namespace ROS2::WGS;
+        using namespace Georeferencing::WGS;
         const AZStd::vector<AZStd::tuple<Vector3d, WGS84Coordinate, Vector3d>> inputGoldSet = {
             { { -0.076833, -0.3202, -0.2969 }, { 50.0, -120.0, -100.0 }, { -2053900.0, -3557459.0, 4862712.0 } },
             { { -109638.9539891188, -110428.2398398574, -2004.501240225796 },
@@ -73,16 +73,16 @@ namespace UnitTest
         };
         for (const auto& [input, refWGS84, goldResult] : inputGoldSet)
         {
-            const auto result = ROS2::Utils::GeodeticConversions::ENUToECEF(refWGS84, input);
+            const auto result = Georeferencing::Utils::GeodeticConversions::ENUToECEF(refWGS84, input);
             EXPECT_NEAR(result.m_x, goldResult.m_x, OneMillimiter);
             EXPECT_NEAR(result.m_y, goldResult.m_y, OneMillimiter);
             EXPECT_NEAR(result.m_z, goldResult.m_z, OneMillimiter);
         }
     }
 
-    TEST_F(GNSSTest, ECEFToWGS84)
+    TEST_F(GeoreferencingConversionTest, ECEFToWGS84)
     {
-        using namespace ROS2::WGS;
+        using namespace Georeferencing::WGS;
         const AZStd::vector<AZStd::pair<Vector3d, WGS84Coordinate>> inputGoldSet = {
             { { 5903307.167667380, 2148628.092761247, 1100300.642188661 }, { 10.0, 20.0, 300.0 } },
             { { -2154856.524084172, 379959.3447517005, -5971509.853428957 }, { -70.0, 170.0, 500.0 } },
@@ -90,7 +90,7 @@ namespace UnitTest
         };
         for (const auto& [input, goldResult] : inputGoldSet)
         {
-            const auto result = ROS2::Utils::GeodeticConversions::ECEFToWGS84(input);
+            const auto result = Georeferencing::Utils::GeodeticConversions::ECEFToWGS84(input);
             EXPECT_NEAR(result.m_longitude, goldResult.m_longitude, OneMillimeterInDegreesOnEquator);
             EXPECT_NEAR(result.m_latitude, goldResult.m_latitude, OneMillimeterInDegreesOnEquator);
             EXPECT_NEAR(result.m_altitude, goldResult.m_altitude, OneMillimiter);

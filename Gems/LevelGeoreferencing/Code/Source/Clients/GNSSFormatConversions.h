@@ -7,10 +7,11 @@
  */
 
 #pragma once
+#include "GeoreferenceInternalStructures.h"
 #include <AzCore/Math/Matrix4x4.h>
-#include <ROS2/Georeference/GeoreferenceStructures.h>
+#include <Georeferencing/GeoreferenceStructures.h>
 
-namespace ROS2::Utils::GeodeticConversions
+namespace Georeferencing::Utils::GeodeticConversions
 {
 
     //! Converts point in 1984 World Geodetic System (GS84) to Earth Centred Earth Fixed (ECEF)
@@ -40,4 +41,4 @@ namespace ROS2::Utils::GeodeticConversions
     //!     latitude and longitude are in decimal degrees
     //!     altitude is in meters
     WGS::WGS84Coordinate ECEFToWGS84(const WGS::Vector3d& ECFEPoint);
-} // namespace ROS2::Utils::GeodeticConversions
+} // namespace Georeferencing::Utils::GeodeticConversions

@@ -7,34 +7,13 @@
  */
 
 #include <AzCore/Math/Vector3.h>
+#include <AzCore/RTTI/BehaviorContext.h>
 #include <AzCore/Serialization/EditContext.h>
 #include <AzCore/Serialization/SerializeContext.h>
-#include <ROS2/Georeference/GeoreferenceStructures.h>
+#include <Georeferencing/GeoreferenceStructures.h>
 
-namespace ROS2::WGS
+namespace Georeferencing::WGS
 {
-
-    WGS84Coordinate::WGS84Coordinate()
-        : m_latitude(0.0)
-        , m_longitude(0.0)
-        , m_altitude(0.0)
-    {
-    }
-
-    WGS84Coordinate::WGS84Coordinate(double latitude, double longitude, double altitude)
-        : m_latitude(latitude)
-        , m_longitude(longitude)
-        , m_altitude(altitude)
-    {
-    }
-
-    WGS84Coordinate::WGS84Coordinate(const AZ::Vector3& latLonAlt)
-        : m_latitude(latLonAlt.GetX())
-        , m_longitude(latLonAlt.GetY())
-        , m_altitude(latLonAlt.GetZ())
-    {
-    }
-
     void WGS84Coordinate::Reflect(AZ::ReflectContext* context)
     {
         if (auto* serialize = azrtti_cast<AZ::SerializeContext*>(context))
@@ -62,48 +41,21 @@ namespace ROS2::WGS
                         AZ::Edit::UIHandlers::Default, &WGS84Coordinate::m_altitude, "Altitude", "Altitude in meters, WGS84 ellipsoid");
             }
         }
+        if (auto* behaviorContext = azrtti_cast<AZ::BehaviorContext*>(context))
+        {
+            behaviorContext->Class<WGS84Coordinate>("WGS84Coordinate")
+                ->Constructor<>()
+                ->Constructor<double, double, double>()
+                ->Attribute(AZ::Script::Attributes::Category, "Georeferencing")
+                ->Method("ToVector3f", &WGS84Coordinate::ToVector3f)
+                ->Method("FromVector3f", &WGS84Coordinate::FromVector3f)
+                ->Method("SetLatitude", &WGS84Coordinate::SetLatitude)
+                ->Method("SetLongitude", &WGS84Coordinate::SetLongitude)
+                ->Method("SetAltitude", &WGS84Coordinate::SetAltitude)
+                ->Method("GetLatitude", &WGS84Coordinate::GetLatitude)
+                ->Method("GetLongitude", &WGS84Coordinate::GetLongitude)
+                ->Method("GetAltitude", &WGS84Coordinate::GetAltitude);
+        }
     }
 
-    AZ::Vector3 WGS84Coordinate::ToVector3f() const
-    {
-        return AZ::Vector3(static_cast<float>(m_latitude), static_cast<float>(m_longitude), static_cast<float>(m_altitude));
-    }
-
-    Vector3d::Vector3d(double x, double y, double z)
-        : m_x(x)
-        , m_y(y)
-        , m_z(z)
-    {
-    }
-
-    [[maybe_unused]] Vector3d::Vector3d(const AZ::Vector3& xyz)
-        : m_x(xyz.GetX())
-        , m_y(xyz.GetY())
-        , m_z(xyz.GetZ())
-    {
-    }
-
-    AZ::Vector3 Vector3d::ToVector3f() const
-    {
-        return AZ::Vector3(static_cast<float>(m_x), static_cast<float>(m_y), static_cast<float>(m_z));
-    }
-
-    Vector3d Vector3d::operator+(Vector3d const& v) const
-    {
-        Vector3d r;
-        r.m_x = m_x + v.m_x;
-        r.m_y = m_y + v.m_y;
-        r.m_z = m_z + v.m_z;
-        return r;
-    }
-
-    Vector3d Vector3d::operator-(Vector3d const& v) const
-    {
-        Vector3d r;
-        r.m_x = m_x - v.m_x;
-        r.m_y = m_y - v.m_y;
-        r.m_z = m_z - v.m_z;
-        return r;
-    }
-
-} // namespace ROS2::WGS
+} // namespace Georeferencing::WGS

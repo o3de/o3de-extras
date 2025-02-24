@@ -5,9 +5,10 @@
  * SPDX-License-Identifier: Apache-2.0 OR MIT
  *
  */
+
 #include "GeoreferenceLevelEditorComponent.h"
 
-namespace ROS2
+namespace Georeferencing
 {
 
     GeoReferenceLevelEditorComponent::GeoReferenceLevelEditorComponent(const GeoReferenceLevelConfig& configuration)
@@ -31,7 +32,7 @@ namespace ROS2
                     ->Class<GeoReferenceLevelEditorComponent>(
                         "GeoReference Level Editor Component", "Component allows to provide georeference level for the level")
                     ->ClassElement(AZ::Edit::ClassElements::EditorData, "Component allows to provide georeference level for the level")
-                    ->Attribute(AZ::Edit::Attributes::Category, "ROS2")
+                    ->Attribute(AZ::Edit::Attributes::Category, "Georeferencing")
                     ->Attribute(AZ::Edit::Attributes::AppearsInAddComponentMenu, AZ_CRC_CE("Level"))
                     ->Attribute(AZ::Edit::Attributes::Icon, "Editor/Icons/Components/ROS2GNSSSensor.svg")
                     ->Attribute(AZ::Edit::Attributes::ViewportIcon, "Editor/Icons/Components/Viewport/ROS2GNSSSensor.svg")
@@ -54,4 +55,4 @@ namespace ROS2
         return true;
     };
 
-} // namespace ROS2
+} // namespace Georeferencing

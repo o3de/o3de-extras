@@ -6,7 +6,7 @@
  *
  */
 
-#include "Georeference/GNSSFormatConversions.h"
+#include "GNSSFormatConversions.h"
 
 constexpr double earthSemimajorAxis = 6378137.0;
 constexpr double reciprocalFlattening = 1.0 / 298.257223563;
@@ -16,7 +16,7 @@ constexpr double secondEccentrictySquared =
     reciprocalFlattening * (2.0 - reciprocalFlattening) / ((1.0 - reciprocalFlattening) * (1.0 - reciprocalFlattening));
 
 // Based on http://wiki.gis.com/wiki/index.php/Geodetic_system
-namespace ROS2::Utils::GeodeticConversions
+namespace Georeferencing::Utils::GeodeticConversions
 {
     inline double DegToRad(double degrees)
     {
@@ -110,4 +110,4 @@ namespace ROS2::Utils::GeodeticConversions
         return { RadToDeg(latitude), RadToDeg(longitude), altitude };
     }
 
-} // namespace ROS2::GNSS
+} // namespace Georeferencing::Utils::GeodeticConversions
