@@ -270,7 +270,7 @@
                         "StartingPointInput"
                     ],
                     "download_source_uri": "https://github.com/o3de/o3de-extras/releases/download/2.0/ros2-3.2.3-gem.zip",
-                    "sha256": "e9af919a39b7cdbd46e2b04aff5d269495d968650c42a908346e7d9e7eff7cae"
+                    "sha256": "903ceef078984711d516ba9ab7466fb2165e9d3d447539cd10460c22d98563db"
                 }
             ]
         },
