@@ -13,7 +13,7 @@
 #include <AzCore/Serialization/EditContextConstants.inl>
 #include <AzCore/Serialization/SerializeContext.h>
 
-namespace SuperluminalProfiler
+namespace TracyProfiler
 {
     static constexpr AZ::Crc32 profilerServiceCrc = AZ_CRC_CE("ProfilerService");
 
