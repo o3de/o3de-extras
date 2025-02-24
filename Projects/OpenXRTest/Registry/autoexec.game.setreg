@@ -2,7 +2,8 @@
     "O3DE": {
         "Autoexec": {
             "ConsoleCommands": {
-                "LoadLevel": "DefaultLevel"
+                //"LoadLevel": "DefaultLevel"
+                "LoadLevel": "XR_Office"
             }
         }
     }
