@@ -10,6 +10,7 @@
 #include "CameraPublishers.h"
 #include <Atom/Feature/Utils/FrameCaptureBus.h>
 #include <AzCore/std/containers/span.h>
+#include <AzFramework/Components/CameraBus.h>
 #include <ROS2/ROS2GemUtilities.h>
 #include <rclcpp/publisher.hpp>
 #include <sensor_msgs/msg/camera_info.hpp>
@@ -20,7 +21,7 @@ namespace ROS2
 {
     //! Class to create camera sensor using Atom renderer
     //! It creates dedicated rendering pipeline for each camera
-    class CameraSensor
+    class CameraSensor : public Camera::CameraNotificationBus::Handler
     {
     public:
         //! Initializes rendering pipeline for the camera sensor.
@@ -40,6 +41,12 @@ namespace ROS2
         [[nodiscard]] const CameraSensorDescription& GetCameraSensorDescription() const;
 
     private:
+        // CameraNotificationBus overrides
+        void OnCameraRemoved(const AZ::EntityId& cameraEntityId) override;
+        void OnActiveViewChanged(const AZ::EntityId& cameraEntityId) override;
+
+        void UpdateViewAlias();
+
         AZStd::vector<AZStd::string> m_passHierarchy;
         AZ::RPI::ViewPtr m_view;
         AZ::RPI::Scene* m_scene = nullptr;

@@ -47,6 +47,8 @@ def find_and_replace(data):
                     "m_template/Joint Name"
                 ]):
                     item["path"] = item["path"].replace("m_template", "ROS2FrameConfiguration")
+                if item["op"] == "remove" and "ROS2FrameComponent" in item["path"]:
+                    item["path"] = item["path"].replace("ROS2FrameComponent", "ROS2FrameEditorComponent")
 
             for key, value in item.items():
                 search_for_components(value, foundComponents, insidePatches)

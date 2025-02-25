@@ -1,6 +1,6 @@
 {
     "gem_name": "ROS2",
-    "version": "3.2.2",
+    "version": "3.2.3",
     "platforms": [
         "Linux"
     ],
@@ -23,7 +23,7 @@
         "o3de>=2.3.0"
     ],
     "icon_path": "preview.png",
-    "requirements": "Requires ROS 2 installation (supported distributions: Humble). Source your workspace before building the Gem",
+    "requirements": "Requires ROS 2 installation (supported distributions: Humble, Jazzy). Source your workspace before building the Gem",
     "documentation_url": "https://docs.o3de.org/docs/user-guide/gems/reference/robotics/ros2/",
     "dependencies": [
         "Atom_RPI",
@@ -36,5 +36,5 @@
     ],
     "restricted": "ROS2",
     "repo_uri": "https://raw.githubusercontent.com/o3de/o3de-extras/development",
-    "download_source_uri": "https://github.com/o3de/o3de-extras/releases/download/2.0/ros2-3.2.2-gem.zip"
+    "download_source_uri": "https://github.com/o3de/o3de-extras/releases/download/2.0/ros2-3.2.3-gem.zip"
 }

@@ -64,9 +64,9 @@ namespace ROS2
         AZStd::string m_followTrajectoryActionName{ "arm_controller/follow_joint_trajectory" };
         AZStd::unique_ptr<FollowJointTrajectoryActionServer> m_followTrajectoryServer;
         TrajectoryGoal m_trajectoryGoal;
+        TrajectoryActionStatus m_goalStatus = TrajectoryActionStatus::Idle;
         rclcpp::Time m_trajectoryExecutionStartTime;
         ManipulationJoints m_manipulationJoints;
-        bool m_trajectoryInProgress{ false };
         builtin_interfaces::msg::Time m_lastTickTimestamp; //!< ROS 2 Timestamp during last OnTick call
     };
 } // namespace ROS2

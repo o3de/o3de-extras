@@ -107,6 +107,7 @@ namespace ROS2
         {
             response->model_names.emplace_back(spawnable.first.c_str());
         }
+        response->success = true;
     }
 
     void ROS2SpawnerComponent::SpawnEntity(
