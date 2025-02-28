@@ -19,6 +19,16 @@ set(OPTICK_BUILD_GUI_APP OFF)
 set(OPTICK_INSTALL_TARGETS OFF)
 
 FetchContent_MakeAvailable(Optick)
+
+# Let's not clutter the root of any IDE folder structure with 3rd party dependencies
+# Setting the FOLDER makes it show up there in the solution build in VS and similarly
+# any other IDEs that organize in folders.
+set_target_properties(
+        Optick 
+    PROPERTIES 
+        FOLDER "3rdParty Dependencies"
+)
+
 ly_add_target(
     NAME ${gem_name}.Static STATIC
     NAMESPACE Gem
