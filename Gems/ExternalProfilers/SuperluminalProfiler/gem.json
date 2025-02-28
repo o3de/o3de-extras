@@ -19,5 +19,6 @@
     "requirements": "Users will need to download Superluminal from the <a href='https://superluminal.eu/'>Superluminal Web Site</a>.",
     "documentation_url": "https://www.superluminal.eu/docs/documentation.html",
     "dependencies": [
-    ]
+    ],
+    "provided_unique_service": "Profiler"
 }

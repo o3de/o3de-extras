@@ -8,15 +8,35 @@
 
 #include <CpuProfiler.h>
 
+#include <AzCore/Debug/ProfilerBus.h>
 #include <AzCore/Interface/Interface.h>
 #include <AzCore/Serialization/SerializeContext.h>
-#include <Superluminal/PerformanceAPI.h>
+#include <AzCore/Utils/Utils.h>
+#include <AzCore/std/time.h>
+#include <optick.h>
 
-namespace SuperluminalProfiler
+namespace OptickProfiler
 {
+    bool OnOptickStateChanged(Optick::State::Type state)
+    {
+        switch (state)
+        {
+        case Optick::State::DUMP_CAPTURE:
+            {
+                auto projectName = AZ::Utils::GetProjectName();
+                Optick::AttachSummary("Project", projectName.c_str());
+            }
+            break;
+        }
+        return true;
+    }
+
     void CpuProfiler::Init()
     {
         AZ::Interface<AZ::Debug::Profiler>::Register(this);
+        AZ::SystemTickBus::Handler::BusConnect();
+
+        Optick::SetStateChangedCallback(OnOptickStateChanged);
         m_initialized = true;
     }
 
@@ -32,14 +52,19 @@ namespace SuperluminalProfiler
 
         // Wait for the remaining threads that might still be processing its profiling calls
         AZStd::unique_lock<AZStd::shared_mutex> shutdownLock(m_shutdownMutex);
+
+        AZ::SystemTickBus::Handler::BusDisconnect();
+
+        Optick::StopCapture();
+        Optick::Shutdown();
     }
 
-    void CpuProfiler::BeginRegion(const AZ::Debug::Budget* budget, const char* eventName, ...)
+    void CpuProfiler::BeginRegion([[maybe_unused]] const AZ::Debug::Budget* budget, [[maybe_unused]] const char* eventName, ...)
     {
         // Try to lock here, the shutdownMutex will only be contested when the CpuProfiler is shutting down.
         if (m_shutdownMutex.try_lock_shared())
         {
-            PerformanceAPI_BeginEvent(eventName, budget->Name(), budget->Crc());
+            Optick::Event::Push(eventName);
             m_shutdownMutex.unlock_shared();
         }
     }
@@ -49,8 +74,13 @@ namespace SuperluminalProfiler
         // Try to lock here, the shutdownMutex will only be contested when the CpuProfiler is shutting down.
         if (m_shutdownMutex.try_lock_shared())
         {
-            PerformanceAPI_EndEvent();
+            Optick::Event::Pop();
             m_shutdownMutex.unlock_shared();
         }
     }
-} // namespace SuperluminalProfiler
+
+    void CpuProfiler::OnSystemTick()
+    {
+        Optick::Update();
+    }
+} // namespace OptickProfiler

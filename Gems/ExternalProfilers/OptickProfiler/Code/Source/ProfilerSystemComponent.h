@@ -13,14 +13,14 @@
 #include <AzCore/Component/Component.h>
 #include <AzCore/Debug/ProfilerBus.h>
 
-namespace SuperluminalProfiler
+namespace OptickProfiler
 {
     class ProfilerSystemComponent
         : public AZ::Component
         , protected AZ::Debug::ProfilerRequests
     {
     public:
-        AZ_COMPONENT(ProfilerSystemComponent, "{C920A0CC-A053-4A0E-8550-DC44FF03A2D1}");
+        AZ_COMPONENT(ProfilerSystemComponent, "{E140D972-C1C0-44A7-A563-9F973944A8A1}");
 
         static void Reflect(AZ::ReflectContext* context);
 
@@ -46,8 +46,9 @@ namespace SuperluminalProfiler
         bool IsCaptureInProgress() const override;
 
     private:
+        AZStd::string m_captureFile;
         AZStd::atomic_bool m_cpuCaptureInProgress{ false };
         CpuProfiler m_cpuProfiler;
     };
 
-} // namespace SuperluminalProfiler
+} // namespace OptickProfiler

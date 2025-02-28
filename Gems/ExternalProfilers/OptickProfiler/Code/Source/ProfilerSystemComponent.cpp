@@ -8,12 +8,14 @@
 
 #include "ProfilerSystemComponent.h"
 
+#include <AzCore/IO/FileIO.h>
 #include <AzCore/RTTI/BehaviorContext.h>
 #include <AzCore/Serialization/EditContext.h>
 #include <AzCore/Serialization/EditContextConstants.inl>
 #include <AzCore/Serialization/SerializeContext.h>
+#include <optick.h>
 
-namespace TracyProfiler
+namespace OptickProfiler
 {
     static constexpr AZ::Crc32 profilerServiceCrc = AZ_CRC_CE("ProfilerService");
 
@@ -80,22 +82,33 @@ namespace TracyProfiler
 
     bool ProfilerSystemComponent::CaptureFrame([[maybe_unused]] const AZStd::string& outputFilePath)
     {
-        return true;
+        return false;
     }
 
-    bool ProfilerSystemComponent::StartCapture([[maybe_unused]] AZStd::string outputFilePath)
+    bool ProfilerSystemComponent::StartCapture(AZStd::string outputFilePath)
     {
-        return true;
+        if (!m_cpuCaptureInProgress && Optick::StartCapture())
+        {
+            m_captureFile = AZStd::move(outputFilePath);
+            m_cpuCaptureInProgress = true;
+            return true;
+        }
+        return false;
     }
 
     bool ProfilerSystemComponent::EndCapture()
     {
-        return true;
+        if (m_cpuCaptureInProgress && Optick::StopCapture())
+        {
+            m_cpuCaptureInProgress = false;
+            return Optick::SaveCapture(m_captureFile.c_str());
+        }
+        return false;
     }
 
     bool ProfilerSystemComponent::IsCaptureInProgress() const
     {
-        return false;
+        return m_cpuCaptureInProgress;
     }
 
-} // namespace TracyProfiler
+} // namespace OptickProfiler

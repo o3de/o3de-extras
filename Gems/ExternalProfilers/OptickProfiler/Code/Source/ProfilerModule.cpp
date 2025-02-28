@@ -11,12 +11,12 @@
 #include <AzCore/Memory/SystemAllocator.h>
 #include <AzCore/Module/Module.h>
 
-namespace TracyProfiler
+namespace OptickProfiler
 {
     class ProfilerModule : public AZ::Module
     {
     public:
-        AZ_RTTI(ProfilerModule, "{BCE29245-571B-44C2-94E7-84D7E06F5A1F}", AZ::Module);
+        AZ_RTTI(ProfilerModule, "{189570C0-0E0E-4826-8AEC-DCE972CFC9B2}", AZ::Module);
         AZ_CLASS_ALLOCATOR(ProfilerModule, AZ::SystemAllocator);
 
         ProfilerModule()
@@ -42,10 +42,10 @@ namespace TracyProfiler
             };
         }
     };
-} // namespace TracyProfiler
+} // namespace OptickProfiler
 
 #if defined(O3DE_GEM_NAME)
-AZ_DECLARE_MODULE_CLASS(AZ_JOIN(Gem_, O3DE_GEM_NAME), TracyProfiler::ProfilerModule)
+AZ_DECLARE_MODULE_CLASS(AZ_JOIN(Gem_, O3DE_GEM_NAME), OptickProfiler::ProfilerModule)
 #else
-AZ_DECLARE_MODULE_CLASS(Gem_TracyProfiler, TracyProfiler::ProfilerModule)
+AZ_DECLARE_MODULE_CLASS(Gem_OptickProfiler, OptickProfiler::ProfilerModule)
 #endif

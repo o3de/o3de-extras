@@ -13,17 +13,17 @@
 #include <AzCore/Memory/SystemAllocator.h>
 #include <AzCore/Name/Name.h>
 #include <AzCore/RTTI/RTTI.h>
-#include <AzCore/std/containers/vector.h>
 #include <AzCore/std/parallel/mutex.h>
 #include <AzCore/std/parallel/shared_mutex.h>
-#include <tracy/TracyC.h>
 
-namespace TracyProfiler
+namespace OptickProfiler
 {
-    class CpuProfiler final : public AZ::Debug::Profiler
+    class CpuProfiler final
+        : public AZ::Debug::Profiler
+        , public AZ::SystemTickBus::Handler
     {
     public:
-        AZ_RTTI(CpuProfiler, "{9467E3F6-0581-4E46-A98A-F3C249FD7B24}", AZ::Debug::Profiler);
+        AZ_RTTI(CpuProfiler, "{E4076EA4-EF44-499A-9750-37B623BBBF7C}", AZ::Debug::Profiler);
         AZ_CLASS_ALLOCATOR(CpuProfiler, AZ::SystemAllocator);
 
         CpuProfiler() = default;
@@ -37,13 +37,13 @@ namespace TracyProfiler
         void BeginRegion(const AZ::Debug::Budget* budget, const char* eventName, ...) final override;
         void EndRegion(const AZ::Debug::Budget* budget) final override;
 
-    private:
-        using EventIdStack = AZStd::vector<TracyCZoneCtx>;
-        static thread_local EventIdStack ms_threadLocalStorage;
+        //! AZ::SystemTickBus::Handler overrides
+        void OnSystemTick() final override;
 
+    private:
         // This lock will only be contested when the CpuProfiler's Shutdown() method has been called
         AZStd::shared_mutex m_shutdownMutex;
 
         bool m_initialized = false;
     };
-} // namespace TracyProfiler
+} // namespace OptickProfiler

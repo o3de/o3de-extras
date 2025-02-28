@@ -50,4 +50,4 @@ namespace TracyProfiler
         CpuProfiler m_cpuProfiler;
     };
 
-}
+} // namespace TracyProfiler

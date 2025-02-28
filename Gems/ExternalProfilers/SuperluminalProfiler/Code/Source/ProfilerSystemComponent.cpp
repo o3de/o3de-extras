@@ -21,8 +21,7 @@ namespace SuperluminalProfiler
     {
         if (AZ::SerializeContext* serialize = azrtti_cast<AZ::SerializeContext*>(context))
         {
-            serialize->Class<ProfilerSystemComponent, AZ::Component>()
-                ->Version(0);
+            serialize->Class<ProfilerSystemComponent, AZ::Component>()->Version(0);
         }
     }
 
@@ -99,4 +98,4 @@ namespace SuperluminalProfiler
         return false;
     }
 
-}
+} // namespace SuperluminalProfiler

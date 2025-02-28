@@ -19,5 +19,6 @@
     "requirements": "Users will need to download Tracy from the <a href='https://github.com/wolfpld/tracy/releases'>Github release</a>.",
     "documentation_url": "https://github.com/wolfpld/tracy",
     "dependencies": [
-    ]
+    ],
+    "provided_unique_service": "Profiler"
 }
