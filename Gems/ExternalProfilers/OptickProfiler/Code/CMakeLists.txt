@@ -24,7 +24,7 @@ FetchContent_MakeAvailable(Optick)
 # Setting the FOLDER makes it show up there in the solution build in VS and similarly
 # any other IDEs that organize in folders.
 set_target_properties(
-        Optick 
+        OptickCore 
     PROPERTIES 
         FOLDER "3rdParty Dependencies"
 )
