@@ -1,5 +1,6 @@
 {
     "gem_name": "WarehouseSample",
+    "version": "1.0.1",
     "display_name": "WarehouseSample",
     "license": "Apache-2.0 or MIT",
     "license_url": "https://opensource.org/licenses/Apache-2.0",
@@ -26,6 +27,5 @@
         "o3de>=1.2.0"
     ],
     "restricted": "",
-    "download_source_uri": "https://github.com/o3de/o3de-extras/releases/download/2.0/warehousesample-1.0.0-gem.zip",
-    "version": "1.0.0"
+    "download_source_uri": "https://github.com/o3de/o3de-extras/releases/download/2.0/warehousesample-1.0.1-gem.zip"
 }
