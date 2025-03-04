@@ -24,7 +24,7 @@
                 "$type": "EditorEntitySortComponent",
                 "Id": 3608898425222506107,
                 "Child Entity Order": [
-                    "Instance_[812111036889]/ContainerEntity"
+                    "Entity_[465452541274]"
                 ]
             },
             "Component_[5327346244572264003]": {
@@ -49,15 +49,58 @@
             }
         }
     },
+    "Entities": {
+        "Entity_[465452541274]": {
+            "Id": "Entity_[465452541274]",
+            "Name": "rosbot_xl",
+            "Components": {
+                "EditorDisabledCompositionComponent": {
+                    "$type": "EditorDisabledCompositionComponent",
+                    "Id": 2383491808723318171
+                },
+                "EditorEntityIconComponent": {
+                    "$type": "EditorEntityIconComponent",
+                    "Id": 18108304331946507488
+                },
+                "EditorEntitySortComponent": {
+                    "$type": "EditorEntitySortComponent",
+                    "Id": 18162337217067356831,
+                    "Child Entity Order": [
+                        "Instance_[812111036889]/ContainerEntity"
+                    ]
+                },
+                "EditorInspectorComponent": {
+                    "$type": "EditorInspectorComponent",
+                    "Id": 5225736643448429803
+                },
+                "EditorLockComponent": {
+                    "$type": "EditorLockComponent",
+                    "Id": 11117548785735244679
+                },
+                "EditorOnlyEntityComponent": {
+                    "$type": "EditorOnlyEntityComponent",
+                    "Id": 4526456886531647600
+                },
+                "EditorPendingCompositionComponent": {
+                    "$type": "EditorPendingCompositionComponent",
+                    "Id": 3703178989277381678
+                },
+                "EditorVisibilityComponent": {
+                    "$type": "EditorVisibilityComponent",
+                    "Id": 6702016649435686463
+                },
+                "TransformComponent": {
+                    "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
+                    "Id": 13117328618696151745,
+                    "Parent Entity": "ContainerEntity"
+                }
+            }
+        }
+    },
     "Instances": {
         "Instance_[812111036889]": {
             "Source": "ROSbot.prefab",
             "Patches": [
-                {
-                    "op": "add",
-                    "path": "/Entities/Entity_[7499249914554]/Components/Component_[1770764664089996465]/Child Entity Order/0",
-                    "value": "Entity_[4501487944153]"
-                },
                 {
                     "op": "add",
                     "path": "/Entities/Entity_[4501487944153]",
@@ -239,7 +282,7 @@
                                     "Breakable": false,
                                     "Maximum Force": 1.0,
                                     "Maximum Torque": 1.0,
-                                    "Display Debug": 1,
+                                    "Display Debug": "Selected",
                                     "Select Lead on Snap": true,
                                     "Self Collide": false
                                 },
@@ -344,6 +387,19 @@
                                 "Id": 17997022775023708009,
                                 "VisibilityFlag": true
                             },
+                            "ROS2FrameEditorComponent": {
+                                "$type": "ROS2FrameEditorComponent",
+                                "Id": 88600217186346884,
+                                "ROS2FrameConfiguration": {
+                                    "Namespace Configuration": {
+                                        "Namespace Strategy": 0,
+                                        "Namespace": ""
+                                    },
+                                    "Frame Name": "velodyne_puck_link",
+                                    "Joint Name": "",
+                                    "Publish Transform": true
+                                }
+                            },
                             "TransformComponent": {
                                 "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
                                 "Id": 285955374135339063,
@@ -371,29 +427,10 @@
                                 "IsStatic": false,
                                 "InterpolatePosition": 0,
                                 "InterpolateRotation": 0
-                            },
-                            "ROS2FrameEditorComponent": {
-                                "$type": "ROS2FrameEditorComponent",
-                                "Id": 88600217186346884,
-                                "ROS2FrameConfiguration": {
-                                    "Id": 0,
-                                    "Namespace Configuration": {
-                                        "Namespace Strategy": 0,
-                                        "Namespace": ""
-                                    },
-                                    "Frame Name": "velodyne_puck_link",
-                                    "Joint Name": "",
-                                    "Publish Transform": true
-                                }
                             }
                         },
                         "IsRuntimeActive": true
                     }
-                },
-                {
-                    "op": "replace",
-                    "path": "/ContainerEntity/Components/Component_[1258474389347419349]/Parent Entity",
-                    "value": "../ContainerEntity"
                 },
                 {
                     "op": "add",
@@ -466,7 +503,7 @@
                                                             "subId": 0
                                                         },
                                                         "loadBehavior": "QueueLoad",
-                                                        "assetHint": ""
+                                                        "assetHint": "robot/ros_components_description/meshes/velodyne_puck_blue.azmaterial"
                                                     },
                                                     "PropertyOverrides": [],
                                                     "ModelUvOverrides": []
@@ -544,17 +581,27 @@
                                                 "subId": 274760714
                                             },
                                             "loadBehavior": "QueueLoad",
-                                            "assetHint": "robot/ros_components_description/meshes/velodyne_puck.azmodel"
+                                            "assetHint": "robot/ros_components_description/meshes/velodyne_puck.dae.azmodel"
                                         },
                                         "SortKey": 0,
                                         "ExcludeFromReflectionCubeMaps": false,
                                         "UseForwardPassIBLSpecular": false,
                                         "IsRayTracingEnabled": true,
                                         "IsAlwaysDynamic": false,
+                                        "SupportRayIntersection": false,
                                         "LodType": 0,
                                         "LodOverride": 0,
                                         "MinimumScreenCoverage": 0.0009259000071324408,
-                                        "QualityDecayRate": 0.5
+                                        "QualityDecayRate": 0.5,
+                                        "LightingChannelConfig": {
+                                            "lightingChannelFlags": [
+                                                true,
+                                                false,
+                                                false,
+                                                false,
+                                                false
+                                            ]
+                                        }
                                     }
                                 },
                                 "meshStats": {}
@@ -567,16 +614,6 @@
                         },
                         "IsRuntimeActive": true
                     }
-                },
-                {
-                    "op": "replace",
-                    "path": "/Entities/Entity_[7507839849146]/Components/Component_[1153232506834696450]/ShapeConfiguration/PhysicsAsset/Asset/assetHint",
-                    "value": "robot/rosbot_xl_description/meshes/body_colision.stl.pxmesh"
-                },
-                {
-                    "op": "replace",
-                    "path": "/Entities/Entity_[7507839849146]/Components/Component_[1153232506834696450]/ShapeConfiguration/PhysicsAsset/Configuration/PhysicsAsset/assetHint",
-                    "value": "robot/rosbot_xl_description/meshes/body_colision.stl.pxmesh"
                 },
                 {
                     "op": "add",
@@ -628,6 +665,19 @@
                                 "Id": 6095707461105765349,
                                 "VisibilityFlag": true
                             },
+                            "ROS2FrameEditorComponent": {
+                                "$type": "ROS2FrameEditorComponent",
+                                "Id": 14365734668344824407,
+                                "ROS2FrameConfiguration": {
+                                    "Namespace Configuration": {
+                                        "Namespace Strategy": 0,
+                                        "Namespace": ""
+                                    },
+                                    "Frame Name": "velodyne",
+                                    "Joint Name": "",
+                                    "Publish Transform": true
+                                }
+                            },
                             "ROS2LidarSensorComponent_2": {
                                 "$type": "GenericComponentWrapper",
                                 "Id": 14130657555606726475,
@@ -658,17 +708,24 @@
                                                 "Name": "Velodyne Puck (VLP-16)",
                                                 "Layers": 16,
                                                 "Points per layer": 1800,
+                                                "Min horizontal angle": -180.0,
+                                                "Max horizontal angle": 180.0,
                                                 "Min vertical angle": 15.0,
                                                 "Max vertical angle": -15.0,
+                                                "Min range": 0.0,
+                                                "Max range": 100.0,
                                                 "Enable Noise": true,
                                                 "Noise Parameters": {
-                                                    "Distance noise standard deviation base": 0.029999999329447746
+                                                    "Angular noise standard deviation": 0.0,
+                                                    "Distance noise standard deviation base": 0.029999999329447746,
+                                                    "Distance noise standard deviation slope": 0.0010000000474974513
                                                 }
                                             },
                                             "IgnoredLayerIndices": [
                                                 1
                                             ],
                                             "ExcludedEntities": [],
+                                            "IsSegmentationEnabled": false,
                                             "PointsAtMax": false
                                         }
                                     }
@@ -701,24 +758,15 @@
                                 "IsStatic": false,
                                 "InterpolatePosition": 0,
                                 "InterpolateRotation": 0
-                            },
-                            "ROS2FrameEditorComponent": {
-                                "$type": "ROS2FrameEditorComponent",
-                                "Id": 14365734668344824407,
-                                "ROS2FrameConfiguration": {
-                                    "Id": 0,
-                                    "Namespace Configuration": {
-                                        "Namespace Strategy": 0,
-                                        "Namespace": ""
-                                    },
-                                    "Frame Name": "velodyne",
-                                    "Joint Name": "",
-                                    "Publish Transform": true
-                                }
                             }
                         },
                         "IsRuntimeActive": true
                     }
+                },
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/Component_[1258474389347419349]/Parent Entity",
+                    "value": "../Entity_[465452541274]"
                 }
             ]
         }
