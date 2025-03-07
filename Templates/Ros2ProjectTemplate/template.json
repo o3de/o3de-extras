@@ -235,6 +235,14 @@
             "isTemplated": false
         },
         {
+            "file": "Registry/physxdebugconfiguration.setreg",
+            "isTemplated": false
+        },
+        {
+            "file": "Registry/physxdefaultsceneconfiguration.setreg",
+            "isTemplated": false
+        },
+        {
             "file": "Registry/sceneassetimporter.setreg",
             "isTemplated": false
         },

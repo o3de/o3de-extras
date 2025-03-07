@@ -1,0 +1,9 @@
+{
+    "Amazon": {
+        "Gems": {
+            "PhysX5": {
+                "DefaultSceneConfiguration": {}
+            }
+        }
+    }
+}
