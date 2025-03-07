@@ -57,7 +57,8 @@ namespace ROS2
                 ->Field("VelocityEpsilon", &FingerGripperComponent::m_velocityEpsilon)
                 ->Field("DistanceEpsilon", &FingerGripperComponent::m_goalTolerance)
                 ->Field("StallTime", &FingerGripperComponent::m_stallTime)
-                ->Version(1);
+                ->Field("InitialPosition", &FingerGripperComponent::m_initialPosition)
+                ->Version(2);
 
             if (AZ::EditContext* ec = serialize->GetEditContext())
             {
@@ -81,7 +82,12 @@ namespace ROS2
                         AZ::Edit::UIHandlers::Default,
                         &FingerGripperComponent::m_stallTime,
                         "Stall Time",
-                        "The time to wait before considering the gripper as stalled.");
+                        "The time to wait before considering the gripper as stalled.")
+                    ->DataElement(
+                        AZ::Edit::UIHandlers::Default,
+                        &FingerGripperComponent::m_initialPosition,
+                        "Initial Position",
+                        "The initial position of the gripper.");
             }
         }
     }
@@ -179,7 +185,7 @@ namespace ROS2
     {
         m_grippingInProgress = false;
         m_cancelled = true;
-        SetPosition(0.0f, AZStd::numeric_limits<float>::infinity());
+        SetPosition(m_initialPosition, AZStd::numeric_limits<float>::infinity());
         return AZ::Success();
     }
 
@@ -268,7 +274,7 @@ namespace ROS2
         {
             m_initialised = true;
             GetFingerJoints();
-            SetPosition(0.0f, AZStd::numeric_limits<float>::infinity());
+            SetPosition(m_initialPosition, AZStd::numeric_limits<float>::infinity());
         }
 
         if (IsGripperVelocity0())

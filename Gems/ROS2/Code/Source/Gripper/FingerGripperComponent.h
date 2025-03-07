@@ -80,5 +80,6 @@ namespace ROS2
         float m_velocityEpsilon{ 0.01f }; //!< The epsilon value used to determine whether the gripper is moving
         float m_goalTolerance{ 0.001f }; //!< The epsilon value used to determine whether the gripper reached it's goal
         float m_stallTime{ 0.1f }; //!< The time in seconds to wait before determining the gripper is stalled
+        float m_initialPosition{ 0.0f };
     };
 } // namespace ROS2
