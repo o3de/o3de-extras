@@ -87,7 +87,7 @@ namespace ROS2
                         AZ::Edit::UIHandlers::Default,
                         &FingerGripperComponent::m_initialPosition,
                         "Initial Position",
-                        "The initial position of the gripper.");
+                        "The initial position of the gripper in units of the gripper's joints (meters if prismatic, radians if revolute).");
             }
         }
     }
