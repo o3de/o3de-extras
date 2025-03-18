@@ -23,7 +23,7 @@
         "o3de>=4.2.0"
     ],
     "icon_path": "preview.png",
-    "requirements": "Requires ROS 2 installation (supported distributions: Humble and Jazzy). Source your workspace before building the Gem",
+    "requirements": "Requires ROS 2 installation (supported distributions: Humble, Jazzy). Source your workspace before building the Gem",
     "documentation_url": "https://docs.o3de.org/docs/user-guide/gems/reference/robotics/ros2/",
     "dependencies": [
         "Atom_RPI",
