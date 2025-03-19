@@ -535,10 +535,6 @@
             "isTemplated": true
         },
         {
-            "file": "Levels/RoboticPalletization/RoboticPalletization.prefab",
-            "isTemplated": false
-        },
-        {
             "file": "Levels/RoboticManipulation/RoboticManipulation.prefab",
             "isTemplated": false
         },
@@ -679,18 +675,6 @@
             "isTemplated": false
         },
         {
-            "file": "user/Registry/editorpreferences.setreg",
-            "isTemplated": false
-        },
-        {
-            "file": "user/Registry/ViewBookmarks/robotic-arm_1671539006337141059.setreg",
-            "isTemplated": false
-        },
-        {
-            "file": "user/Registry/ViewBookmarks/RoboticPalletization_1691268770764352914.setreg",
-            "isTemplated": false
-        },
-        {
             "file": "game.cfg",
             "isTemplated": false
         },
@@ -744,9 +728,6 @@
             "dir": "Levels"
         },
         {
-            "dir": "Levels/RoboticPalletization"
-        },
-        {
             "dir": "Levels/RoboticManipulation"
         },
         {
@@ -793,15 +774,6 @@
         },
         {
             "dir": "Shaders"
-        },
-        {
-            "dir": "user"
-        },
-        {
-            "dir": "user/Registry"
-        },
-        {
-            "dir": "user/Registry/ViewBookmarks"
         },
         {
             "dir": "Shaders/ShaderResourceGroups"
