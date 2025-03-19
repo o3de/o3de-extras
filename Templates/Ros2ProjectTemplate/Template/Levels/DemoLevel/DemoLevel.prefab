@@ -268,7 +268,7 @@
                     "$type": "GenericComponentWrapper",
                     "Id": 2318932367744128274,
                     "m_template": {
-                        "$type": "R2PT_devSampleComponent",
+                        "$type": "${SanitizedCppName}SampleComponent",
                         "goals": [
                             "Entity_[549827034797]",
                             "Entity_[545532067501]"
