@@ -543,26 +543,6 @@
             "isTemplated": false
         },
         {
-            "file": "Passes/ContrastAdaptiveSharpening.pass",
-            "isTemplated": false
-        },
-        {
-            "file": "Passes/MainRenderPipeline.azasset",
-            "isTemplated": false
-        },
-        {
-            "file": "Passes/PostProcessParent.pass",
-            "isTemplated": false
-        },
-        {
-            "file": "Passes/SMAAConfiguration.azasset",
-            "isTemplated": false
-        },
-        {
-            "file": "Passes/Taa.pass",
-            "isTemplated": false
-        },
-        {
             "file": "Platform/Linux/linux_project.cmake",
             "isTemplated": false
         },
@@ -768,9 +748,6 @@
         },
         {
             "dir": "Levels/RoboticManipulation"
-        },
-        {
-            "dir": "Passes"
         },
         {
             "dir": "Platform"
