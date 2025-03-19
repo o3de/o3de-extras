@@ -419,18 +419,6 @@
             "isTemplated": false
         },
         {
-            "file": "DiffuseProbeGrids/Atom Default Environment_434B3A4E-7927-4EB4-B568-D0D75E72D270_ProbeData_lutrgba16f.dds",
-            "isTemplated": false
-        },
-        {
-            "file": "DiffuseProbeGrids/Atom Default Environment_691C813B-A7DA-435B-BE78-904F41AAECDD_Distance_lutrg32f.dds",
-            "isTemplated": false
-        },
-        {
-            "file": "DiffuseProbeGrids/Atom Default Environment_9DD87531-9B21-45AC-8169-4B6209456C02_Irradiance_lutrgba16f.dds",
-            "isTemplated": false
-        },
-        {
             "file": "DiffuseProbeGrids/GI_4C638236-E6F7-413A-B1DF-26DA87A6CDC0_ProbeData_lutrgba16f.dds",
             "isTemplated": false
         },
@@ -440,18 +428,6 @@
         },
         {
             "file": "DiffuseProbeGrids/GI_C092EE63-F1F9-43CC-93B5-19168F3EEADA_Irradiance_lutrgba16f.dds",
-            "isTemplated": false
-        },
-        {
-            "file": "DiffuseProbeGrids/Diffuse_Probe_Grid_1C06FE02-367E-4D6E-B8AE-9A48F2AF5F75_Irradiance_lutrgba16f.dds",
-            "isTemplated": false
-        },
-        {
-            "file": "DiffuseProbeGrids/Diffuse_Probe_Grid_4F50E1BF-2C8C-44EB-8183-34101107473C_Distance_lutrg32f.dds",
-            "isTemplated": false
-        },
-        {
-            "file": "DiffuseProbeGrids/Diffuse_Probe_Grid_ABC8A956-D89D-4CDB-829B-EF1DD8DE5404_ProbeData_lutrgba16f.dds",
             "isTemplated": false
         },
         {
