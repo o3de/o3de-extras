@@ -139,38 +139,6 @@
             "isTemplated": "false"
         },
         {
-            "file": "Assets/UR10_pretty/UR10_M_UR10.material",
-            "isTemplated": "false"
-        },
-        {
-            "file": "Assets/UR10_pretty/UR10.fbx",
-            "isTemplated": "false"
-        },
-        {
-            "file": "Assets/UR10_pretty/Textures/RoboticArm.json",
-            "isTemplated": "false"
-        },
-        {
-            "file": "Assets/UR10_pretty/Textures/UR10_Robotic_arm_Roughness.M_UR10.png",
-            "isTemplated": "false"
-        },
-        {
-            "file": "Assets/UR10_pretty/Textures/UR10_Robotic_arm_Metallic.M_UR10.png",
-            "isTemplated": "false"
-        },
-        {
-            "file": "Assets/UR10_pretty/Textures/UR10_Robotic_arm_BaseColor.M_UR10.png",
-            "isTemplated": "false"
-        },
-        {
-            "file": "Assets/UR10_pretty/Textures/UR10_Robotic_arm_Emissive.M_UR10.png",
-            "isTemplated": "false"
-        },
-        {
-            "file": "Assets/UR10_pretty/Textures/UR10_Robotic_arm_Height.M_UR10.png",
-            "isTemplated": "false"
-        },
-        {
             "file": "Assets/UrdfImporter/1440394708_panda/hand_c.stl",
             "isTemplated": "false"
         },
