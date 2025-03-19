@@ -1,8 +1,8 @@
 {
     "project_name": "${Name}",
     "version": "1.0.0",
-    "project_id": "{C930C5B9-4B70-40B7-88F4-A7E927D6A677}",
-    "origin": "The primary repo for ${Name} goes here: i.e. http://www.mydomain.com",
+    "project_id": "${ProjectId}",
+    "origin": "Open 3D Engine Extras: ${Name}",
     "license": "What license ${Name} uses goes here: i.e. https://opensource.org/licenses/Apache-2.0 Or https://opensource.org/licenses/MIT etc.",
     "display_name": "${Name}",
     "summary": "A short description of ${Name}.",
@@ -18,7 +18,6 @@
         "Gem"
     ],
     "restricted": "${Name}",
-    "engine_version": "2.3.0",
     "gem_names": [
         "Atom",
         "CameraFramework",
