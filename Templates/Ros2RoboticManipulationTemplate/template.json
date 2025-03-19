@@ -299,34 +299,6 @@
             "isTemplated": "false"
         },
         {
-            "file": "Assets/Gripper/Gripper_collider.stl",
-            "isTemplated": "false"
-        },
-        {
-            "file": "Assets/Gripper/Gripper.dae",
-            "isTemplated": "false"
-        },
-        {
-            "file": "Assets/Gripper/Textures/Gripper-BaseColor.png",
-            "isTemplated": "false"
-        },
-        {
-            "file": "Assets/Gripper/Textures/Gripper-Specular.png",
-            "isTemplated": "false"
-        },
-        {
-            "file": "Assets/Gripper/Textures/Gripper-Roughness.png",
-            "isTemplated": "false"
-        },
-        {
-            "file": "Assets/Gripper/Textures/Gripper-Metallic.png",
-            "isTemplated": "false"
-        },
-        {
-            "file": "Assets/Gripper/Textures/Gripper-Normal.png",
-            "isTemplated": "false"
-        },
-        {
             "file": "Assets/BoxToyPuzzle/ToyBox.fbx",
             "isTemplated": "false"
         },
