@@ -17,10 +17,11 @@
 #include <ROS2ModuleInterface.h>
 #include <RobotImporter/ROS2RobotImporterEditorSystemComponent.h>
 #include <SdfAssetBuilder/SdfAssetBuilderSystemComponent.h>
+#include <SystemComponents/ROS2EditorSystemComponent.h>
+#ifdef WITH_GAZEBZOMSGS
 #include <Spawner/ROS2SpawnPointEditorComponent.h>
 #include <Spawner/ROS2SpawnerEditorComponent.h>
-#include <SystemComponents/ROS2EditorSystemComponent.h>
-
+#endif
 void InitROS2Resources()
 {
     // Registration of Qt (ROS2.qrc) resources
@@ -46,8 +47,10 @@ namespace ROS2
                   LidarRegistrarEditorSystemComponent::CreateDescriptor(),
                   ROS2RobotImporterEditorSystemComponent::CreateDescriptor(),
                   ROS2CameraSensorEditorComponent::CreateDescriptor(),
+#ifdef WITH_GAZEBZOMSGS
                   ROS2SpawnerEditorComponent::CreateDescriptor(),
                   ROS2SpawnPointEditorComponent::CreateDescriptor(),
+#endif
                   SdfAssetBuilderSystemComponent::CreateDescriptor(),
                   JointsManipulationEditorComponent::CreateDescriptor(),
                   JointsPositionsEditorComponent::CreateDescriptor(),

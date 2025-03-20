@@ -5,7 +5,9 @@
  * SPDX-License-Identifier: Apache-2.0 OR MIT
  *
  */
-
+#ifndef WITH_GAZEBZOMSGS
+static_assert(false, "This file should not be included in the build, without WITH_GAZEBZOMSGS defined.");
+#endif
 #include "ROS2SpawnPointComponent.h"
 #include "Spawner/ROS2SpawnPointComponentController.h"
 #include <AzCore/Component/Entity.h>

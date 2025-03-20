@@ -7,6 +7,9 @@
  */
 
 #pragma once
+#ifndef WITH_GAZEBZOMSGS
+static_assert(false, "This file should not be included in the build, without WITH_GAZEBZOMSGS defined.");
+#endif
 
 #include <AzCore/Component/EntityId.h>
 #include <AzCore/RTTI/ReflectContext.h>

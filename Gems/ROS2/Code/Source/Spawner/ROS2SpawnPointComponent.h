@@ -6,7 +6,9 @@
  *
  */
 #pragma once
-
+#ifndef WITH_GAZEBZOMSGS
+static_assert(false, "This file should not be included in the build, without WITH_GAZEBZOMSGS defined.");
+#endif
 #include "Spawner/ROS2SpawnPointComponentController.h"
 #include <AzCore/Component/Component.h>
 #include <AzCore/Math/Transform.h>

@@ -6,7 +6,9 @@
  *
  */
 #pragma once
-
+#ifndef WITH_GAZEBZOMSGS
+static_assert(false, "This file should not be included in the build, without WITH_GAZEBZOMSGS defined.");
+#endif
 #include "Spawner/ROS2SpawnerComponent.h"
 #include "Spawner/ROS2SpawnerComponentController.h"
 #include <AzToolsFramework/ToolsComponents/EditorComponentAdapter.h>
