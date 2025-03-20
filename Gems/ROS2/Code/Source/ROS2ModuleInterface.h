@@ -43,7 +43,7 @@
 #include <VehicleDynamics/ModelComponents/SkidSteeringModelComponent.h>
 #include <VehicleDynamics/VehicleModelComponent.h>
 #include <VehicleDynamics/WheelControllerComponent.h>
-#ifdef WITH_GAZEBZOMSGS
+#ifdef WITH_GAZEBO_MSGS
 #include <Spawner/ROS2SpawnPointComponent.h>
 #include <Spawner/ROS2SpawnerComponent.h>
 #include <ContactSensor/ROS2ContactSensorComponent.h>
@@ -97,7 +97,7 @@ namespace ROS2
                     FingerGripperComponent::CreateDescriptor(),
                     FollowingCameraComponent::CreateDescriptor(),
                     ClassSegmentationConfigurationComponent::CreateDescriptor(),
-#ifdef WITH_GAZEBZOMSGS
+#ifdef WITH_GAZEBO_MSGS
                     ROS2SpawnerComponent::CreateDescriptor(),
                     ROS2SpawnPointComponent::CreateDescriptor(),
                     ROS2ContactSensorComponent::CreateDescriptor(),

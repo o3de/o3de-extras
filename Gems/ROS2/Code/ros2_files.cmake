@@ -170,7 +170,7 @@ set(FILES
         )
 
 # optional, legacy features compilation
-if (WITH_GAZEBZOMSGS)
+if (WITH_GAZEBO_MSGS)
         list(APPEND FILES
                 Source/ContactSensor/ROS2ContactSensorComponent.cpp
                 Source/ContactSensor/ROS2ContactSensorComponent.h

@@ -6,8 +6,8 @@
  *
  */
 #pragma once
-#ifndef WITH_GAZEBZOMSGS
-static_assert(false, "This file should not be included in the build, without WITH_GAZEBZOMSGS defined.");
+#ifndef WITH_GAZEBO_MSGS
+static_assert(false, "This file should not be included in the build, without WITH_GAZEBO_MSGS defined.");
 #endif
 #include <AzCore/Component/Component.h>
 #include <AzCore/Component/ComponentBus.h>

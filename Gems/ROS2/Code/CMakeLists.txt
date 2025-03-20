@@ -48,10 +48,10 @@ add_custom_target(
 find_package(gazebo_msgs QUIET)
 if (gazebo_msgs_FOUND)
     message(STATUS "Found gazebo_msgs package, enabling legacy features like ContactSensor Component and ROS2 Spawner Component")
-    SET (WITH_GAZEBZOMSGS TRUE)
+    SET (WITH_GAZEBO_MSGS TRUE)
 else()
     message(STATUS "Could not find gazebo_msgs package, will disable legacy features like ContactSensor Component and ROS2 Spawner Component")
-    SET(WITH_GAZEBZOMSGS FALSE)
+    SET(WITH_GAZEBO_MSGS FALSE)
 endif()
 
 # Add the ROS2.Static target
@@ -85,9 +85,9 @@ ly_add_target(
 
 target_depends_on_ros2_packages(${gem_name}.Static rclcpp builtin_interfaces std_msgs sensor_msgs nav_msgs tf2_ros ackermann_msgs vision_msgs control_msgs)
 
-if (WITH_GAZEBZOMSGS)
+if (WITH_GAZEBO_MSGS)
     target_depends_on_ros2_package(${gem_name}.Static gazebo_msgs REQUIRED)
-    target_compile_definitions(${gem_name}.Static PUBLIC "WITH_GAZEBZOMSGS")
+    target_compile_definitions(${gem_name}.Static PUBLIC "WITH_GAZEBO_MSGS")
 endif()
 
 ly_add_target(

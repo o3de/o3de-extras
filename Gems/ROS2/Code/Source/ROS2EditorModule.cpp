@@ -18,7 +18,7 @@
 #include <RobotImporter/ROS2RobotImporterEditorSystemComponent.h>
 #include <SdfAssetBuilder/SdfAssetBuilderSystemComponent.h>
 #include <SystemComponents/ROS2EditorSystemComponent.h>
-#ifdef WITH_GAZEBZOMSGS
+#ifdef WITH_GAZEBO_MSGS
 #include <Spawner/ROS2SpawnPointEditorComponent.h>
 #include <Spawner/ROS2SpawnerEditorComponent.h>
 #endif
@@ -47,7 +47,7 @@ namespace ROS2
                   LidarRegistrarEditorSystemComponent::CreateDescriptor(),
                   ROS2RobotImporterEditorSystemComponent::CreateDescriptor(),
                   ROS2CameraSensorEditorComponent::CreateDescriptor(),
-#ifdef WITH_GAZEBZOMSGS
+#ifdef WITH_GAZEBO_MSGS
                   ROS2SpawnerEditorComponent::CreateDescriptor(),
                   ROS2SpawnPointEditorComponent::CreateDescriptor(),
 #endif
