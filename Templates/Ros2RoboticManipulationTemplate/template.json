@@ -15,359 +15,351 @@
     "icon_path": "preview.png",
     "copyFiles": [
         {
-            "file": "CMakeLists.txt",
-            "isTemplated": true
+            "file": ".gitignore",
+            "isTemplated": false
         },
         {
-            "file": "Assets/Room/Room.fbx",
-            "isTemplated": "false"
-        },
-        {
-            "file": "Assets/Room/Desk_M_Desk.material",
-            "isTemplated": "false"
-        },
-        {
-            "file": "Assets/Room/Desk.fbx",
-            "isTemplated": "false"
-        },
-        {
-            "file": "Assets/Room/Textures/Floor/plane_divided_DefaultMaterial_Ambient.png",
-            "isTemplated": "false"
-        },
-        {
-            "file": "Assets/Room/Textures/Floor/plane_divided_DefaultMaterial_Height.png",
-            "isTemplated": "false"
-        },
-        {
-            "file": "Assets/Room/Textures/Floor/plane_divided_DefaultMaterial_Base_color.png",
-            "isTemplated": "false"
-        },
-        {
-            "file": "Assets/Room/Textures/Floor/plane_divided_DefaultMaterial_Normal.png",
-            "isTemplated": "false"
-        },
-        {
-            "file": "Assets/Room/Textures/Floor/plane_divided_DefaultMaterial_Metallic.png",
-            "isTemplated": "false"
-        },
-        {
-            "file": "Assets/Room/Textures/Floor/plane_divided_DefaultMaterial_Roughness.png",
-            "isTemplated": "false"
-        },
-        {
-            "file": "Assets/Room/Textures/Desk/Room_M_Desk_Normal.png",
-            "isTemplated": "false"
-        },
-        {
-            "file": "Assets/Room/Textures/Desk/Room_M_Desk_Base_color.png",
-            "isTemplated": "false"
-        },
-        {
-            "file": "Assets/Room/Textures/Desk/Room_M_Desk_Height.png",
-            "isTemplated": "false"
-        },
-        {
-            "file": "Assets/Room/Textures/Desk/Room_M_Desk_Roughness.png",
-            "isTemplated": "false"
-        },
-        {
-            "file": "Assets/Room/Textures/Desk/Room_M_Desk_Metallic.png",
-            "isTemplated": "false"
-        },
-        {
-            "file": "Assets/Room/Textures/Desk/Room_M_Desk_Ambient.png",
-            "isTemplated": "false"
-        },
-        {
-            "file": "Assets/Room/Textures/Walls/Room_M_Walls_Height.png",
-            "isTemplated": "false"
-        },
-        {
-            "file": "Assets/Room/Textures/Walls/Room_M_Walls_Normal.png",
-            "isTemplated": "false"
-        },
-        {
-            "file": "Assets/Room/Textures/Walls/Room_M_Walls_Ambient.png",
-            "isTemplated": "false"
-        },
-        {
-            "file": "Assets/Room/Textures/Walls/Room_M_Walls_Roughness.png",
-            "isTemplated": "false"
-        },
-        {
-            "file": "Assets/Room/Textures/Walls/Room_M_Walls_Base_color.png",
-            "isTemplated": "false"
-        },
-        {
-            "file": "Assets/Room/Textures/Walls/Room_M_Walls_Metallic.png",
-            "isTemplated": "false"
-        },
-        {
-            "file": "Assets/Factory/Box2.prefab",
-            "isTemplated": "false"
-        },
-        {
-            "file": "Assets/Factory/ConveyorLine/ConveyorBelt.fbx.assetinfo",
-            "isTemplated": "false"
-        },
-        {
-            "file": "Assets/Factory/ConveyorLine/ConveyorBelt_guards_segment.fbx.assetinfo",
-            "isTemplated": "false"
-        },
-        {
-            "file": "Assets/Factory/ConveyorLine/ConveyorBelt.fbx",
-            "isTemplated": "false"
-        },
-        {
-            "file": "Assets/Factory/ConveyorLine/conveyor_belt.physxmaterial",
-            "isTemplated": "false"
-        },
-        {
-            "file": "Assets/Factory/ConveyorLine/conveyor_guards.physxmaterial",
-            "isTemplated": "false"
-        },
-        {
-            "file": "Assets/Factory/ConveyorLine/ConveyorBelt_effector.fbx",
-            "isTemplated": "false"
-        },
-        {
-            "file": "Assets/Factory/ConveyorLine/ConveyorBelt_effector.fbx.assetinfo",
-            "isTemplated": "false"
-        },
-        {
-            "file": "Assets/Factory/ConveyorLine/ConveyorBelt_guards_segment.fbx",
-            "isTemplated": "false"
-        },
-        {
-            "file": "Assets/panda/hand_c.stl",
-            "isTemplated": "false"
-        },
-        {
-            "file": "Assets/panda/link4_c.stl.assetinfo",
-            "isTemplated": "false"
-        },
-        {
-            "file": "Assets/panda/link1.dae",
-            "isTemplated": "false"
-        },
-        {
-            "file": "Assets/panda/finger_c.stl.assetinfo",
-            "isTemplated": "false"
-        },
-        {
-            "file": "Assets/panda/hand.dae.assetinfo",
-            "isTemplated": "false"
-        },
-        {
-            "file": "Assets/panda/link3_c.stl",
-            "isTemplated": "false"
-        },
-        {
-            "file": "Assets/panda/link2_c.stl",
-            "isTemplated": "false"
-        },
-        {
-            "file": "Assets/panda/link0.dae",
-            "isTemplated": "false"
-        },
-        {
-            "file": "Assets/panda/link5_c.stl.assetinfo",
-            "isTemplated": "false"
-        },
-        {
-            "file": "Assets/panda/link6_c.stl.assetinfo",
-            "isTemplated": "false"
-        },
-        {
-            "file": "Assets/panda/link3_c.stl.assetinfo",
-            "isTemplated": "false"
-        },
-        {
-            "file": "Assets/panda/link6.dae.assetinfo",
-            "isTemplated": "false"
-        },
-        {
-            "file": "Assets/panda/link2.dae.assetinfo",
-            "isTemplated": "false"
-        },
-        {
-            "file": "Assets/panda/link3.dae.assetinfo",
-            "isTemplated": "false"
-        },
-        {
-            "file": "Assets/panda/link5.dae",
-            "isTemplated": "false"
-        },
-        {
-            "file": "Assets/panda/link2_c.stl.assetinfo",
-            "isTemplated": "false"
-        },
-        {
-            "file": "Assets/panda/finger.dae.assetinfo",
-            "isTemplated": "false"
-        },
-        {
-            "file": "Assets/panda/finger_c.stl",
-            "isTemplated": "false"
-        },
-        {
-            "file": "Assets/panda/link4.dae.assetinfo",
-            "isTemplated": "false"
-        },
-        {
-            "file": "Assets/panda/hand_c.stl.assetinfo",
-            "isTemplated": "false"
-        },
-        {
-            "file": "Assets/panda/link2.dae",
-            "isTemplated": "false"
-        },
-        {
-            "file": "Assets/panda/link7.dae",
-            "isTemplated": "false"
-        },
-        {
-            "file": "Assets/panda/link7_c.stl.assetinfo",
-            "isTemplated": "false"
-        },
-        {
-            "file": "Assets/panda/link1_c.stl",
-            "isTemplated": "false"
-        },
-        {
-            "file": "Assets/panda/link0_c.stl",
-            "isTemplated": "false"
-        },
-        {
-            "file": "Assets/panda/link6.dae",
-            "isTemplated": "false"
-        },
-        {
-            "file": "Assets/panda/hand.dae",
-            "isTemplated": "false"
-        },
-        {
-            "file": "Assets/panda/finger.dae",
-            "isTemplated": "false"
-        },
-        {
-            "file": "Assets/panda/link4.dae",
-            "isTemplated": "false"
-        },
-        {
-            "file": "Assets/panda/link1.dae.assetinfo",
-            "isTemplated": "false"
-        },
-        {
-            "file": "Assets/panda/link6_c.stl",
-            "isTemplated": "false"
-        },
-        {
-            "file": "Assets/panda/link1_c.stl.assetinfo",
-            "isTemplated": "false"
-        },
-        {
-            "file": "Assets/panda/link3.dae",
-            "isTemplated": "false"
-        },
-        {
-            "file": "Assets/panda/link7_c.stl",
-            "isTemplated": "false"
-        },
-        {
-            "file": "Assets/panda/link5_c.stl",
-            "isTemplated": "false"
-        },
-        {
-            "file": "Assets/panda/link5.dae.assetinfo",
-            "isTemplated": "false"
-        },
-        {
-            "file": "Assets/panda/link4_c.stl",
-            "isTemplated": "false"
-        },
-        {
-            "file": "Assets/panda/link0.dae.assetinfo",
-            "isTemplated": "false"
-        },
-        {
-            "file": "Assets/panda/link0_c.stl.assetinfo",
-            "isTemplated": "false"
-        },
-        {
-            "file": "Assets/panda/link7.dae.assetinfo",
-            "isTemplated": "false"
-        },
-        {
-            "file": "Assets/BoxToyPuzzle/ToyBox.fbx",
-            "isTemplated": "false"
-        },
-        {
-            "file": "Assets/BoxToyPuzzle/BoxTriangle.fbx",
-            "isTemplated": "false"
+            "file": "AssetBundling/SeedLists/DefaultLevel.seed",
+            "isTemplated": false
         },
         {
             "file": "Assets/BoxToyPuzzle/BoxCube.fbx",
-            "isTemplated": "false"
-        },
-        {
-            "file": "Assets/BoxToyPuzzle/BoxTriangle.fbx.assetinfo",
-            "isTemplated": "false"
+            "isTemplated": false
         },
         {
             "file": "Assets/BoxToyPuzzle/BoxCylinder.fbx",
-            "isTemplated": "false"
+            "isTemplated": false
         },
         {
-            "file": "Assets/BoxToyPuzzle/texture/BoxToyPuzzle_MCube_pazzle_Glossiness.1001.png",
-            "isTemplated": "false"
+            "file": "Assets/BoxToyPuzzle/BoxTriangle.fbx",
+            "isTemplated": false
         },
         {
-            "file": "Assets/BoxToyPuzzle/texture/BoxToyPuzzle_MCube_pazzle_Metallic.1001.png",
-            "isTemplated": "false"
+            "file": "Assets/BoxToyPuzzle/BoxTriangle.fbx.assetinfo",
+            "isTemplated": false
         },
         {
-            "file": "Assets/BoxToyPuzzle/texture/BoxToyPuzzle_MCube_pazzle_Emissive.1001.png",
-            "isTemplated": "false"
-        },
-        {
-            "file": "Assets/BoxToyPuzzle/texture/BoxToyPuzzle_MCube_pazzle_Normal.1001.png",
-            "isTemplated": "false"
-        },
-        {
-            "file": "Assets/BoxToyPuzzle/texture/BoxToyPuzzle_MCube_pazzle_Height.1001.png",
-            "isTemplated": "false"
-        },
-        {
-            "file": "Assets/BoxToyPuzzle/texture/BoxToyPuzzle_MCube_pazzle_Roughness.1001.png",
-            "isTemplated": "false"
+            "file": "Assets/BoxToyPuzzle/ToyBox.fbx",
+            "isTemplated": false
         },
         {
             "file": "Assets/BoxToyPuzzle/texture/BoxToyPuzzle_MCube_pazzle_BaseMap.1001.png",
-            "isTemplated": "false"
+            "isTemplated": false
+        },
+        {
+            "file": "Assets/BoxToyPuzzle/texture/BoxToyPuzzle_MCube_pazzle_Emissive.1001.png",
+            "isTemplated": false
+        },
+        {
+            "file": "Assets/BoxToyPuzzle/texture/BoxToyPuzzle_MCube_pazzle_Glossiness.1001.png",
+            "isTemplated": false
+        },
+        {
+            "file": "Assets/BoxToyPuzzle/texture/BoxToyPuzzle_MCube_pazzle_Height.1001.png",
+            "isTemplated": false
+        },
+        {
+            "file": "Assets/BoxToyPuzzle/texture/BoxToyPuzzle_MCube_pazzle_Metallic.1001.png",
+            "isTemplated": false
+        },
+        {
+            "file": "Assets/BoxToyPuzzle/texture/BoxToyPuzzle_MCube_pazzle_Normal.1001.png",
+            "isTemplated": false
+        },
+        {
+            "file": "Assets/BoxToyPuzzle/texture/BoxToyPuzzle_MCube_pazzle_Roughness.1001.png",
+            "isTemplated": false
         },
         {
             "file": "Assets/BoxToyPuzzle/texture/BoxToyPuzzle_MCube_pazzle_Specular.1001.png",
-            "isTemplated": "false"
+            "isTemplated": false
         },
         {
             "file": "Assets/BoxToyPuzzle/texture/Roughness/MCube_pazzle_Roughness.1001.png",
-            "isTemplated": "false"
+            "isTemplated": false
+        },
+        {
+            "file": "Assets/Panda/Materials/Shell_gray.material",
+            "isTemplated": false
+        },
+        {
+            "file": "Assets/Panda/Materials/Shell_white.material",
+            "isTemplated": false
+        },
+        {
+            "file": "Assets/Panda/finger.dae",
+            "isTemplated": false
+        },
+        {
+            "file": "Assets/Panda/finger.dae.assetinfo",
+            "isTemplated": false
+        },
+        {
+            "file": "Assets/Panda/finger_c.stl",
+            "isTemplated": false
+        },
+        {
+            "file": "Assets/Panda/finger_c.stl.assetinfo",
+            "isTemplated": false
+        },
+        {
+            "file": "Assets/Panda/hand.dae",
+            "isTemplated": false
+        },
+        {
+            "file": "Assets/Panda/hand.dae.assetinfo",
+            "isTemplated": false
+        },
+        {
+            "file": "Assets/Panda/hand_c.stl",
+            "isTemplated": false
+        },
+        {
+            "file": "Assets/Panda/hand_c.stl.assetinfo",
+            "isTemplated": false
+        },
+        {
+            "file": "Assets/Panda/link0.dae",
+            "isTemplated": false
+        },
+        {
+            "file": "Assets/Panda/link0.dae.assetinfo",
+            "isTemplated": false
+        },
+        {
+            "file": "Assets/Panda/link0_c.stl",
+            "isTemplated": false
+        },
+        {
+            "file": "Assets/Panda/link0_c.stl.assetinfo",
+            "isTemplated": false
+        },
+        {
+            "file": "Assets/Panda/link1.dae",
+            "isTemplated": false
+        },
+        {
+            "file": "Assets/Panda/link1.dae.assetinfo",
+            "isTemplated": false
+        },
+        {
+            "file": "Assets/Panda/link1_c.stl",
+            "isTemplated": false
+        },
+        {
+            "file": "Assets/Panda/link1_c.stl.assetinfo",
+            "isTemplated": false
+        },
+        {
+            "file": "Assets/Panda/link2.dae",
+            "isTemplated": false
+        },
+        {
+            "file": "Assets/Panda/link2.dae.assetinfo",
+            "isTemplated": false
+        },
+        {
+            "file": "Assets/Panda/link2_c.stl",
+            "isTemplated": false
+        },
+        {
+            "file": "Assets/Panda/link2_c.stl.assetinfo",
+            "isTemplated": false
+        },
+        {
+            "file": "Assets/Panda/link3.dae",
+            "isTemplated": false
+        },
+        {
+            "file": "Assets/Panda/link3.dae.assetinfo",
+            "isTemplated": false
+        },
+        {
+            "file": "Assets/Panda/link3_c.stl",
+            "isTemplated": false
+        },
+        {
+            "file": "Assets/Panda/link3_c.stl.assetinfo",
+            "isTemplated": false
+        },
+        {
+            "file": "Assets/Panda/link4.dae",
+            "isTemplated": false
+        },
+        {
+            "file": "Assets/Panda/link4.dae.assetinfo",
+            "isTemplated": false
+        },
+        {
+            "file": "Assets/Panda/link4_c.stl",
+            "isTemplated": false
+        },
+        {
+            "file": "Assets/Panda/link4_c.stl.assetinfo",
+            "isTemplated": false
+        },
+        {
+            "file": "Assets/Panda/link5.dae",
+            "isTemplated": false
+        },
+        {
+            "file": "Assets/Panda/link5.dae.assetinfo",
+            "isTemplated": false
+        },
+        {
+            "file": "Assets/Panda/link5_c.stl",
+            "isTemplated": false
+        },
+        {
+            "file": "Assets/Panda/link5_c.stl.assetinfo",
+            "isTemplated": false
+        },
+        {
+            "file": "Assets/Panda/link6.dae",
+            "isTemplated": false
+        },
+        {
+            "file": "Assets/Panda/link6.dae.assetinfo",
+            "isTemplated": false
+        },
+        {
+            "file": "Assets/Panda/link6_c.stl",
+            "isTemplated": false
+        },
+        {
+            "file": "Assets/Panda/link6_c.stl.assetinfo",
+            "isTemplated": false
+        },
+        {
+            "file": "Assets/Panda/link7.dae",
+            "isTemplated": false
+        },
+        {
+            "file": "Assets/Panda/link7.dae.assetinfo",
+            "isTemplated": false
+        },
+        {
+            "file": "Assets/Panda/link7_c.stl",
+            "isTemplated": false
+        },
+        {
+            "file": "Assets/Panda/link7_c.stl.assetinfo",
+            "isTemplated": false
+        },
+        {
+            "file": "Assets/Room/Desk.fbx",
+            "isTemplated": false
+        },
+        {
+            "file": "Assets/Room/Desk_M_Desk.material",
+            "isTemplated": false
+        },
+        {
+            "file": "Assets/Room/Room.fbx",
+            "isTemplated": false
+        },
+        {
+            "file": "Assets/Room/Room.fbx.assetinfo",
+            "isTemplated": false
+        },
+        {
+            "file": "Assets/Room/Room_M_Floor.material",
+            "isTemplated": false
+        },
+        {
+            "file": "Assets/Room/Room_M_Walls.material",
+            "isTemplated": false
+        },
+        {
+            "file": "Assets/Room/Textures/Desk/Room_M_Desk_Ambient.png",
+            "isTemplated": false
+        },
+        {
+            "file": "Assets/Room/Textures/Desk/Room_M_Desk_Base_color.png",
+            "isTemplated": false
+        },
+        {
+            "file": "Assets/Room/Textures/Desk/Room_M_Desk_Height.png",
+            "isTemplated": false
+        },
+        {
+            "file": "Assets/Room/Textures/Desk/Room_M_Desk_Metallic.png",
+            "isTemplated": false
+        },
+        {
+            "file": "Assets/Room/Textures/Desk/Room_M_Desk_Normal.png",
+            "isTemplated": false
+        },
+        {
+            "file": "Assets/Room/Textures/Desk/Room_M_Desk_Roughness.png",
+            "isTemplated": false
+        },
+        {
+            "file": "Assets/Room/Textures/Floor/plane_divided_DefaultMaterial_Ambient.png",
+            "isTemplated": false
+        },
+        {
+            "file": "Assets/Room/Textures/Floor/plane_divided_DefaultMaterial_Base_color.png",
+            "isTemplated": false
+        },
+        {
+            "file": "Assets/Room/Textures/Floor/plane_divided_DefaultMaterial_Height.png",
+            "isTemplated": false
+        },
+        {
+            "file": "Assets/Room/Textures/Floor/plane_divided_DefaultMaterial_Metallic.png",
+            "isTemplated": false
+        },
+        {
+            "file": "Assets/Room/Textures/Floor/plane_divided_DefaultMaterial_Normal.png",
+            "isTemplated": false
+        },
+        {
+            "file": "Assets/Room/Textures/Floor/plane_divided_DefaultMaterial_Roughness.png",
+            "isTemplated": false
+        },
+        {
+            "file": "Assets/Room/Textures/Walls/Room_M_Walls_Ambient.png",
+            "isTemplated": false
+        },
+        {
+            "file": "Assets/Room/Textures/Walls/Room_M_Walls_Base_color.png",
+            "isTemplated": false
+        },
+        {
+            "file": "Assets/Room/Textures/Walls/Room_M_Walls_Height.png",
+            "isTemplated": false
+        },
+        {
+            "file": "Assets/Room/Textures/Walls/Room_M_Walls_Metallic.png",
+            "isTemplated": false
+        },
+        {
+            "file": "Assets/Room/Textures/Walls/Room_M_Walls_Normal.png",
+            "isTemplated": false
+        },
+        {
+            "file": "Assets/Room/Textures/Walls/Room_M_Walls_Roughness.png",
+            "isTemplated": false
+        },
+        {
+            "file": "CMakeLists.txt",
+            "isTemplated": true
         },
         {
             "file": "Config/shader_global_build_options.json",
             "isTemplated": false
         },
         {
-            "file": "DiffuseProbeGrids/GI_4C638236-E6F7-413A-B1DF-26DA87A6CDC0_ProbeData_lutrgba16f.dds",
+            "file": "DiffuseProbeGrids/GI_10397901-C8DF-4757-A2F4-646BD2A929FF_ProbeData_lutrgba16f.dds",
             "isTemplated": false
         },
         {
-            "file": "DiffuseProbeGrids/GI_9A063636-4E64-4E87-8052-E1427ED3EC2C_Distance_lutrg32f.dds",
+            "file": "DiffuseProbeGrids/GI_6B97D93C-AF0E-4CD5-8CCE-C65F8563A707_Irradiance_lutrgba16f.dds",
             "isTemplated": false
         },
         {
-            "file": "DiffuseProbeGrids/GI_C092EE63-F1F9-43CC-93B5-19168F3EEADA_Irradiance_lutrgba16f.dds",
+            "file": "DiffuseProbeGrids/GI_89401C38-FA0A-4BA3-A166-D1F869F379D1_Distance_lutrg32f.dds",
             "isTemplated": false
         },
         {
@@ -483,15 +475,15 @@
             "isTemplated": false
         },
         {
-            "file": "ReflectionProbes/Entity6__8035B0D1-451A-4226-A488-0C8E6949F6F5__iblspecularcm256.dds",
-            "isTemplated": false
-        },
-        {
             "file": "Registry/assetprocessor_settings.setreg",
             "isTemplated": false
         },
         {
             "file": "Registry/awscoreconfiguration.setreg",
+            "isTemplated": false
+        },
+        {
+            "file": "Registry/loadlevel.setreg",
             "isTemplated": false
         },
         {
@@ -507,11 +499,11 @@
             "isTemplated": false
         },
         {
-            "file": "Registry/sceneassetimporter.setreg",
+            "file": "Registry/ros2.setreg",
             "isTemplated": false
         },
         {
-            "file": "Registry/ros2.setreg",
+            "file": "Registry/sceneassetimporter.setreg",
             "isTemplated": false
         },
         {
@@ -588,7 +580,7 @@
         },
         {
             "file": "cmake/EngineFinder.cmake",
-            "isTemplated": false
+            "isTemplated": true
         },
         {
             "file": "game.cfg",
@@ -604,6 +596,57 @@
         }
     ],
     "createDirectories": [
+        {
+            "dir": "AssetBundling"
+        },
+        {
+            "dir": "AssetBundling/AssetLists"
+        },
+        {
+            "dir": "AssetBundling/BundleSettings"
+        },
+        {
+            "dir": "AssetBundling/Bundles"
+        },
+        {
+            "dir": "AssetBundling/Rules"
+        },
+        {
+            "dir": "AssetBundling/SeedLists"
+        },
+        {
+            "dir": "Assets"
+        },
+        {
+            "dir": "Assets/BoxToyPuzzle"
+        },
+        {
+            "dir": "Assets/BoxToyPuzzle/texture"
+        },
+        {
+            "dir": "Assets/BoxToyPuzzle/texture/Roughness"
+        },
+        {
+            "dir": "Assets/Panda"
+        },
+        {
+            "dir": "Assets/Panda/Materials"
+        },
+        {
+            "dir": "Assets/Room"
+        },
+        {
+            "dir": "Assets/Room/Textures"
+        },
+        {
+            "dir": "Assets/Room/Textures/Desk"
+        },
+        {
+            "dir": "Assets/Room/Textures/Floor"
+        },
+        {
+            "dir": "Assets/Room/Textures/Walls"
+        },
         {
             "dir": "Config"
         },
