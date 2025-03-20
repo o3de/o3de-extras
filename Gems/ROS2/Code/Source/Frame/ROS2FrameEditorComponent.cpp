@@ -177,4 +177,9 @@ namespace ROS2
         gameEntity->CreateComponent<ROS2FrameComponent>(m_configuration);
     }
 
+    ROS2FrameConfiguration ROS2FrameEditorComponent::GetConfiguration() const
+    {
+        return m_configuration;
+    }
+
 } // namespace ROS2
