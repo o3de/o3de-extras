@@ -1531,7 +1531,7 @@
                                     "guid": "{2B484CB6-8011-5B56-B194-7B3110DA7629}",
                                     "subId": 280202236
                                 },
-                                "assetHint": "o3descene/warehouse.azmodel"
+                                "assetHint": "o3descene/warehouse.fbx.azmodel"
                             }
                         }
                     }
@@ -1746,7 +1746,7 @@
                                     "guid": "{2B484CB6-8011-5B56-B194-7B3110DA7629}",
                                     "subId": 2755884180
                                 },
-                                "assetHint": "o3descene/warehouse.pxmesh"
+                                "assetHint": "o3descene/warehouse.fbx.pxmesh"
                             },
                             "Configuration": {
                                 "PhysicsAsset": {
@@ -1755,7 +1755,7 @@
                                         "subId": 2755884180
                                     },
                                     "loadBehavior": "QueueLoad",
-                                    "assetHint": "o3descene/warehouse.pxmesh"
+                                    "assetHint": "o3descene/warehouse.fbx.pxmesh"
                                 }
                             }
                         }

@@ -1,6 +1,6 @@
 {
     "gem_name": "RosRobotSample",
-    "version": "2.0.1",
+    "version": "2.1.0",
     "display_name": "ROS Robot Sample",
     "license": "Apache-2.0 or MIT",
     "license_url": "https://opensource.org/licenses/Apache-2.0",
@@ -29,5 +29,5 @@
     ],
     "repo_uri": "https://raw.githubusercontent.com/o3de/o3de-extras/development",
     "restricted": "",
-    "download_source_uri": "https://github.com/o3de/o3de-extras/releases/download/2.0/rosrobotsample-2.0.1-gem.zip"
+    "download_source_uri": "https://github.com/o3de/o3de-extras/releases/download/2.0/rosrobotsample-2.1.0-gem.zip"
 }
