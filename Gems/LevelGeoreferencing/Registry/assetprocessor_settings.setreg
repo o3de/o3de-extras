@@ -3,12 +3,12 @@
         "AssetProcessor": {
             "Settings": {
                 "ScanFolder Georeferencing/Assets": {
-                    "watch": "@GEMROOT:Georeferencing@/Assets",
+                    "watch": "@GEMROOT:LevelGeoreferencing@/Assets",
                     "recursive": 1,
                     "order": 101
                 },
                 "ScanFolder Georeferencing/Registry": {
-                    "watch": "@GEMROOT:Georeferencing@/Registry",
+                    "watch": "@GEMROOT:LevelGeoreferencing@/Registry",
                     "recursive": 1,
                     "order": 102
                 }
