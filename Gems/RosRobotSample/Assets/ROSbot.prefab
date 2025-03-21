@@ -486,7 +486,7 @@
                     "$type": "EditorFixedJointComponent",
                     "Id": 11310786217061747012,
                     "Configuration": {
-                        "Parent Entity": "",
+                        "Parent Entity": "Entity_[7507839849146]",
                         "Child Entity": "Entity_[7482070045370]"
                     }
                 },
@@ -498,8 +498,7 @@
                     "$type": "EditorRigidBodyComponent",
                     "Id": 12432694652345033923,
                     "Configuration": {
-                        "entityId": "",
-                        "Kinematic": true
+                        "entityId": ""
                     }
                 },
                 "Component_[12817635789820242289]": {
@@ -1027,14 +1026,6 @@
                     "$type": "EditorDisabledCompositionComponent",
                     "Id": 17859749258720088518
                 },
-                "Component_[3303670314104435058]": {
-                    "$type": "EditorRigidBodyComponent",
-                    "Id": 3303670314104435058,
-                    "Configuration": {
-                        "entityId": "",
-                        "Kinematic": true
-                    }
-                },
                 "Component_[5503518763347768805]": {
                     "$type": "EditorInspectorComponent",
                     "Id": 5503518763347768805
@@ -1042,14 +1033,6 @@
                 "Component_[8747820045819434329]": {
                     "$type": "EditorLockComponent",
                     "Id": 8747820045819434329
-                },
-                "Component_[9934662879286617893]": {
-                    "$type": "EditorFixedJointComponent",
-                    "Id": 9934662879286617893,
-                    "Configuration": {
-                        "Parent Entity": "",
-                        "Child Entity": "Entity_[7499249914554]"
-                    }
                 }
             }
         },
