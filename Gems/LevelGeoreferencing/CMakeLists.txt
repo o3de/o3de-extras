@@ -3,7 +3,7 @@
 #
 # SPDX-License-Identifier: Apache-2.0 OR MIT
 
-o3de_gem_setup("Georeferencing")
+o3de_gem_setup("LevelGeoreferencing")
 
 ly_add_external_target_path(${CMAKE_CURRENT_SOURCE_DIR}/3rdParty)
 
