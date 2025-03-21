@@ -42,15 +42,15 @@ add_custom_target(
     COMMAND ${CMAKE_COMMAND} -DROS_DISTRO=${ROS_DISTRO} -P ${CMAKE_CURRENT_SOURCE_DIR}/checkROS2Distribution.cmake
 )
 
-# Gazebo messages are optional, so we will only add the dependants only if the package is found.
-# gazebo_msgs package is EOL and will be removed in ROS 2 Kilted Kaiju.
-# If you need to use ContactSensor and ROS2 Spawner, please consider building gazebo_msgs from source.
+# Gazebo messages are optional, so we will only add the dependents if the package is found.
+# The gazebo_msgs package is EOL and will not be available in ROS 2 Kilted Kaiju.
+# If you need to use ContactSensor and/or ROS2 Spawner, please consider building gazebo_msgs from the source.
 find_package(gazebo_msgs QUIET)
 if (gazebo_msgs_FOUND)
     message(STATUS "Found gazebo_msgs package, enabling legacy features like ContactSensor Component and ROS2 Spawner Component")
     SET (WITH_GAZEBO_MSGS TRUE)
 else()
-    message(STATUS "Could not find gazebo_msgs package, will disable legacy features like ContactSensor Component and ROS2 Spawner Component")
+    message(STATUS "Could not find gazebo_msgs package, disabling legacy features like ContactSensor Component and ROS2 Spawner Component")
     SET(WITH_GAZEBO_MSGS FALSE)
 endif()
 
