@@ -12,7 +12,6 @@
 #include <Camera/PostProcessing/ROS2ImageEncodingConversionComponent.h>
 #include <Camera/ROS2CameraSensorComponent.h>
 #include <Camera/ROS2CameraSystemComponent.h>
-#include <ContactSensor/ROS2ContactSensorComponent.h>
 #include <GNSS/ROS2GNSSSensorComponent.h>
 #include <Gripper/FingerGripperComponent.h>
 #include <Gripper/GripperActionServerComponent.h>
@@ -39,14 +38,16 @@
 #include <RobotControl/ROS2RobotControlComponent.h>
 #include <RobotImporter/ROS2RobotImporterSystemComponent.h>
 #include <SimulationUtils/FollowingCameraComponent.h>
-#include <Spawner/ROS2SpawnPointComponent.h>
-#include <Spawner/ROS2SpawnerComponent.h>
 #include <SystemComponents/ROS2SystemComponent.h>
 #include <VehicleDynamics/ModelComponents/AckermannModelComponent.h>
 #include <VehicleDynamics/ModelComponents/SkidSteeringModelComponent.h>
 #include <VehicleDynamics/VehicleModelComponent.h>
 #include <VehicleDynamics/WheelControllerComponent.h>
-
+#ifdef WITH_GAZEBO_MSGS
+#include <Spawner/ROS2SpawnPointComponent.h>
+#include <Spawner/ROS2SpawnerComponent.h>
+#include <ContactSensor/ROS2ContactSensorComponent.h>
+#endif
 namespace ROS2
 {
     class ROS2ModuleInterface : public AZ::Module
@@ -80,8 +81,6 @@ namespace ROS2
                     RigidBodyTwistControlComponent::CreateDescriptor(),
                     SkidSteeringControlComponent::CreateDescriptor(),
                     ROS2CameraSensorComponent::CreateDescriptor(),
-                    ROS2SpawnerComponent::CreateDescriptor(),
-                    ROS2SpawnPointComponent::CreateDescriptor(),
                     VehicleDynamics::AckermannVehicleModelComponent::CreateDescriptor(),
                     VehicleDynamics::WheelControllerComponent::CreateDescriptor(),
                     VehicleDynamics::SkidSteeringModelComponent::CreateDescriptor(),
@@ -96,9 +95,13 @@ namespace ROS2
                     GripperActionServerComponent::CreateDescriptor(),
                     VacuumGripperComponent::CreateDescriptor(),
                     FingerGripperComponent::CreateDescriptor(),
-                    ROS2ContactSensorComponent::CreateDescriptor(),
                     FollowingCameraComponent::CreateDescriptor(),
                     ClassSegmentationConfigurationComponent::CreateDescriptor(),
+#ifdef WITH_GAZEBO_MSGS
+                    ROS2SpawnerComponent::CreateDescriptor(),
+                    ROS2SpawnPointComponent::CreateDescriptor(),
+                    ROS2ContactSensorComponent::CreateDescriptor(),
+#endif
                 });
         }
 

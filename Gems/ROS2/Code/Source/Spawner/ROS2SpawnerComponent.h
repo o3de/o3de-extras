@@ -6,7 +6,9 @@
  *
  */
 #pragma once
-
+#ifndef WITH_GAZEBO_MSGS
+static_assert(false, "This file should not be included in the build, without WITH_GAZEBO_MSGS defined.");
+#endif
 #include "ROS2SpawnPointComponent.h"
 #include "Spawner/ROS2SpawnerComponentController.h"
 #include <AzCore/Asset/AssetCommon.h>
