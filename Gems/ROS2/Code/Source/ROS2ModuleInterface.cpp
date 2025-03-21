@@ -16,8 +16,10 @@
 #include <ROS2/Sensor/Events/TickBasedSource.h>
 #include <ROS2/Sensor/ROS2SensorComponentBase.h>
 #include <SimulationUtils/FollowingCameraComponent.h>
+#ifdef WITH_GAZEBO_MSGS
 #include <Spawner/ROS2SpawnPointComponent.h>
 #include <Spawner/ROS2SpawnerComponent.h>
+#endif
 
 namespace ROS2
 {
@@ -32,11 +34,13 @@ namespace ROS2
             {
                 ROS2SystemComponent::CreateDescriptor(),
                 ROS2FrameComponent::CreateDescriptor(),
-                ROS2SpawnerComponent::CreateDescriptor(),
-                ROS2SpawnPointComponent::CreateDescriptor(),
                 FollowingCameraComponent::CreateDescriptor(),
                 ROS2SensorComponentBase<TickBasedSource>::CreateDescriptor(),
                 ROS2SensorComponentBase<PhysicsBasedSource>::CreateDescriptor(),
+#ifdef WITH_GAZEBO_MSGS
+                ROS2SpawnerComponent::CreateDescriptor(),
+                ROS2SpawnPointComponent::CreateDescriptor(),
+#endif
             });
     }
 

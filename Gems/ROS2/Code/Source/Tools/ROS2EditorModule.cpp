@@ -11,8 +11,10 @@
 #include <ROS2/Frame/ROS2FrameEditorComponent.h>
 #include <ROS2/ROS2TypeIds.h>
 #include <ROS2ModuleInterface.h>
+#ifdef WITH_GAZEBO_MSGS
 #include <Spawner/ROS2SpawnPointEditorComponent.h>
 #include <Spawner/ROS2SpawnerEditorComponent.h>
+#endif
 
 namespace ROS2
 {
@@ -27,8 +29,10 @@ namespace ROS2
             m_descriptors.insert(
                 m_descriptors.end(),
                 { ROS2EditorSystemComponent::CreateDescriptor(),
+#ifdef WITH_GAZEBO_MSGS
                   ROS2SpawnerEditorComponent::CreateDescriptor(),
                   ROS2SpawnPointEditorComponent::CreateDescriptor(),
+#endif
                   ROS2FrameSystemComponent::CreateDescriptor(),
                   ROS2FrameEditorComponent::CreateDescriptor() });
         }

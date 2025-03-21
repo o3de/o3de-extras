@@ -13,12 +13,18 @@ set(FILES
     Source/SimulationUtils/FollowingCameraConfiguration.h
     Source/SimulationUtils/FollowingCameraComponent.cpp
     Source/SimulationUtils/FollowingCameraComponent.h
-    Source/Spawner/ROS2SpawnerComponent.cpp
-    Source/Spawner/ROS2SpawnerComponent.h
-    Source/Spawner/ROS2SpawnPointComponent.cpp
-    Source/Spawner/ROS2SpawnPointComponent.h
-    Source/Spawner/ROS2SpawnerComponentController.cpp
-    Source/Spawner/ROS2SpawnerComponentController.h
-    Source/Spawner/ROS2SpawnPointComponentController.cpp
-    Source/Spawner/ROS2SpawnPointComponentController.h
 )
+
+# optional, legacy features compilation
+if (WITH_GAZEBO_MSGS)
+        list(APPEND FILES
+                Source/Spawner/ROS2SpawnerComponent.cpp
+                Source/Spawner/ROS2SpawnerComponent.h
+                Source/Spawner/ROS2SpawnPointComponent.cpp
+                Source/Spawner/ROS2SpawnPointComponent.h
+                Source/Spawner/ROS2SpawnerComponentController.cpp
+                Source/Spawner/ROS2SpawnerComponentController.h
+                Source/Spawner/ROS2SpawnPointComponentController.cpp
+                Source/Spawner/ROS2SpawnPointComponentController.h
+        )
+endif ()

@@ -85,7 +85,14 @@ ly_add_target(
             ${gem_name}.Lidar.Static
 )
 
-target_depends_on_ros2_packages(${gem_name}.Private.Object rclcpp sensor_msgs nav_msgs)
+target_depends_on_ros2_packages(${gem_name}.Private.Object rclcpp sensor_msgs nav_msgs vision_msgs)
+
+# WITH_GAZEBO_MSGS is set in ROS 2 Gem, which is a dependency of this gem.
+# If WITH_GAZEBO_MSGS is set, legacy sensors will be compiled in.
+if (WITH_GAZEBO_MSGS)
+    target_depends_on_ros2_package(${gem_name}.Private.Object gazebo_msgs REQUIRED)
+    target_compile_definitions(${gem_name}.Private.Object PUBLIC "WITH_GAZEBO_MSGS")
+endif()
 
 # Here add ${gem_name} target, it depends on the Private Object library and Public API interface
 ly_add_target(

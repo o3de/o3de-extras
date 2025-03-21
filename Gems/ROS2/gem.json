@@ -15,11 +15,6 @@
     "user_tags": [
         "ROS2"
     ],
-    "compatible_engines": [
-        "o3de-sdk>=2.4.0",
-        "o3de>=2.4.0"
-    ],
-    "engine_api_dependencies": [],
     "platforms": [
         "Linux"
     ],
@@ -29,6 +24,11 @@
     "dependencies": [
         "LevelGeoreferencing"
     ],
+    "compatible_engines": [
+        "o3de-sdk>=2.4.0",
+        "o3de>=2.4.0"
+    ],
+    "engine_api_dependencies": [],
     "restricted": "ROS2",
     "repo_uri": "https://github.com/o3de/o3de-extras",
     "download_source_uri": "https://github.com/o3de/o3de-extras/releases/download/2.0/ros2-4.0.0-gem.zip"

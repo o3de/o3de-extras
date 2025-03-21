@@ -72,7 +72,7 @@ namespace ROS2
         incompatible.push_back(AZ_CRC_CE("ROS2Service"));
     }
 
-    void ROS2SystemComponent::GetRequiredServices([[maybe_unused]] AZ::ComponentDescriptor::DependencyArrayType& required)
+    void ROS2SystemComponent::GetRequiredServices(AZ::ComponentDescriptor::DependencyArrayType& required)
     {
         required.push_back(AZ_CRC("AssetDatabaseService", 0x3abf5601));
     }

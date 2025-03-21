@@ -53,6 +53,18 @@ add_custom_target(
     COMMAND ${CMAKE_COMMAND} -DROS_DISTRO=${ROS_DISTRO} -P ${CMAKE_CURRENT_SOURCE_DIR}/checkROS2Distribution.cmake
 )
 
+# Gazebo messages are optional, so we will only add the dependents if the package is found.
+# The gazebo_msgs package is EOL and will not be available in ROS 2 Kilted Kaiju.
+# If you need to use ContactSensor and/or ROS2 Spawner, please consider building gazebo_msgs from the source.
+find_package(gazebo_msgs QUIET)
+if (gazebo_msgs_FOUND)
+    message(STATUS "Found gazebo_msgs package, enabling legacy features like ContactSensor Component and ROS2 Spawner Component")
+    SET (WITH_GAZEBO_MSGS TRUE)
+else()
+    message(STATUS "Could not find gazebo_msgs package, disabling legacy features like ContactSensor Component and ROS2 Spawner Component")
+    SET(WITH_GAZEBO_MSGS FALSE)
+endif()
+
 # Add the static target with the API Interface and the code
 # TODO: This target should be removed after API is fully implemented with buses
 ly_add_target(
@@ -130,7 +142,12 @@ ly_add_target(
             Gem::LevelGeoreferencing.API # ROS2SpawnerComponent
 )
 
-target_depends_on_ros2_packages(${gem_name}.Private.Object rclcpp builtin_interfaces std_msgs sensor_msgs nav_msgs tf2_ros ackermann_msgs gazebo_msgs vision_msgs control_msgs)
+target_depends_on_ros2_packages(${gem_name}.Private.Object rclcpp builtin_interfaces std_msgs sensor_msgs nav_msgs tf2_ros ackermann_msgs vision_msgs control_msgs)
+
+if (WITH_GAZEBO_MSGS)
+    target_depends_on_ros2_package(${gem_name}.Private.Object gazebo_msgs REQUIRED)
+    target_compile_definitions(${gem_name}.Private.Object PUBLIC "WITH_GAZEBO_MSGS")
+endif()
 
 # Here add ${gem_name} target, it depends on the Private Object library and Public API interface
 ly_add_target(
