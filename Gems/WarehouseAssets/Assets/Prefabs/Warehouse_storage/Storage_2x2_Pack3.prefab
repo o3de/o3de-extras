@@ -15,10 +15,7 @@
                 "$type": "EditorEntitySortComponent",
                 "Id": 11768336941077621750,
                 "Child Entity Order": [
-                    "Instance_[179001829469067]/ContainerEntity",
-                    "Instance_[178009692023691]/ContainerEntity",
-                    "Instance_[178022576925579]/ContainerEntity",
-                    "Instance_[178997534501771]/ContainerEntity"
+                    "Entity_[119558076471406]"
                 ]
             },
             "Component_[15640311978395853581]": {
@@ -49,6 +46,64 @@
             "Component_[8872099175552571718]": {
                 "$type": "EditorPendingCompositionComponent",
                 "Id": 8872099175552571718
+            }
+        }
+    },
+    "Entities": {
+        "Entity_[119558076471406]": {
+            "Id": "Entity_[119558076471406]",
+            "Name": "rack",
+            "Components": {
+                "EditorDisabledCompositionComponent": {
+                    "$type": "EditorDisabledCompositionComponent",
+                    "Id": 12179771859417535218
+                },
+                "EditorEntityIconComponent": {
+                    "$type": "EditorEntityIconComponent",
+                    "Id": 1102412991495503324
+                },
+                "EditorEntitySortComponent": {
+                    "$type": "EditorEntitySortComponent",
+                    "Id": 2935740134499275716,
+                    "Child Entity Order": [
+                        "Instance_[179001829469067]/ContainerEntity",
+                        "Instance_[178009692023691]/ContainerEntity",
+                        "Instance_[178022576925579]/ContainerEntity",
+                        "Instance_[178997534501771]/ContainerEntity"
+                    ]
+                },
+                "EditorInspectorComponent": {
+                    "$type": "EditorInspectorComponent",
+                    "Id": 10213368584527593241
+                },
+                "EditorLockComponent": {
+                    "$type": "EditorLockComponent",
+                    "Id": 2751230098291157130
+                },
+                "EditorOnlyEntityComponent": {
+                    "$type": "EditorOnlyEntityComponent",
+                    "Id": 8501123644867111100
+                },
+                "EditorPendingCompositionComponent": {
+                    "$type": "EditorPendingCompositionComponent",
+                    "Id": 1313948722191668339
+                },
+                "EditorVisibilityComponent": {
+                    "$type": "EditorVisibilityComponent",
+                    "Id": 5452981068103997808
+                },
+                "TransformComponent": {
+                    "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
+                    "Id": 17947069364010001620,
+                    "Parent Entity": "ContainerEntity",
+                    "Transform Data": {
+                        "Translate": [
+                            11.54195499420166,
+                            12.742976188659668,
+                            0.0
+                        ]
+                    }
+                }
             }
         }
     },
@@ -130,23 +185,173 @@
                 },
                 {
                     "op": "replace",
+                    "path": "/Instances/Instance_[6100599962046]/Entities/Entity_[5641038461374]/Components/Component_[3144205669266579244]/Controller/Configuration/materials/0/Value/MaterialAsset/assetHint",
+                    "value": "assets/warehouse/materials/mwarehouseboxes.azmaterial"
+                },
+                {
+                    "op": "replace",
+                    "path": "/Instances/Instance_[6010405648830]/Entities/Entity_[5641038461374]/Components/Component_[3144205669266579244]/Controller/Configuration/materials/0/Value/MaterialAsset/assetHint",
+                    "value": "assets/warehouse/materials/mwarehouseboxes.azmaterial"
+                },
+                {
+                    "op": "replace",
+                    "path": "/Instances/Instance_[6134959700414]/Entities/Entity_[5641038461374]/Components/Component_[3144205669266579244]/Controller/Configuration/materials/0/Value/MaterialAsset/assetHint",
+                    "value": "assets/warehouse/materials/mwarehouseboxes.azmaterial"
+                },
+                {
+                    "op": "replace",
+                    "path": "/Instances/Instance_[5971750943166]/Entities/Entity_[5641038461374]/Components/Component_[3144205669266579244]/Controller/Configuration/materials/0/Value/MaterialAsset/assetHint",
+                    "value": "assets/warehouse/materials/mwarehouseboxes.azmaterial"
+                },
+                {
+                    "op": "replace",
+                    "path": "/Instances/Instance_[6117779831230]/Entities/Entity_[5641038461374]/Components/Component_[3144205669266579244]/Controller/Configuration/materials/0/Value/MaterialAsset/assetHint",
+                    "value": "assets/warehouse/materials/mwarehouseboxes.azmaterial"
+                },
+                {
+                    "op": "replace",
+                    "path": "/Instances/Instance_[6109189896638]/Entities/Entity_[5641038461374]/Components/Component_[3144205669266579244]/Controller/Configuration/materials/0/Value/MaterialAsset/assetHint",
+                    "value": "assets/warehouse/materials/mwarehouseboxes.azmaterial"
+                },
+                {
+                    "op": "replace",
+                    "path": "/Instances/Instance_[112220651911614]/Entities/Entity_[5722642839998]/Components/Component_[3144205669266579244]/Controller/Configuration/materials/0/Value/MaterialAsset/assetHint",
+                    "value": "assets/warehouse/materials/mwarehouseboxes.azmaterial"
+                },
+                {
+                    "op": "replace",
+                    "path": "/Instances/Instance_[246059449691897]/Entities/Entity_[5804247218622]/Components/Component_[3144205669266579244]/Controller/Configuration/materials/0/Value/MaterialAsset/assetHint",
+                    "value": "assets/warehouse/materials/mwarehouseboxes.azmaterial"
+                },
+                {
+                    "op": "replace",
+                    "path": "/Instances/Instance_[6096304994750]/Entities/Entity_[5641038461374]/Components/Component_[3144205669266579244]/Controller/Configuration/materials/0/Value/MaterialAsset/assetHint",
+                    "value": "assets/warehouse/materials/mwarehouseboxes.azmaterial"
+                },
+                {
+                    "op": "replace",
                     "path": "/ContainerEntity/Components/Component_[226710958716547824]/Parent Entity",
-                    "value": "../ContainerEntity"
+                    "value": "../Entity_[119558076471406]"
                 },
                 {
                     "op": "replace",
                     "path": "/ContainerEntity/Components/Component_[226710958716547824]/Transform Data/Translate/0",
-                    "value": 1.5328474044799805
+                    "value": -10.00910758972168
                 },
                 {
                     "op": "replace",
                     "path": "/ContainerEntity/Components/Component_[226710958716547824]/Transform Data/Translate/1",
-                    "value": -0.5562667846679688
+                    "value": -13.299242973327637
                 },
                 {
                     "op": "replace",
                     "path": "/ContainerEntity/Components/Component_[226710958716547824]/Transform Data/Rotate/2",
                     "value": 89.99994659423828
+                },
+                {
+                    "op": "replace",
+                    "path": "/Instances/Instance_[6027585518014]/Entities/Entity_[5641038461374]/Components/Component_[3144205669266579244]/Controller/Configuration/materials/0/Value/MaterialAsset/assetHint",
+                    "value": "assets/warehouse/materials/mwarehouseboxes.azmaterial"
+                },
+                {
+                    "op": "replace",
+                    "path": "/Instances/Instance_[151098695875006]/Entities/Entity_[5722642839998]/Components/Component_[3144205669266579244]/Controller/Configuration/materials/0/Value/MaterialAsset/assetHint",
+                    "value": "assets/warehouse/materials/mwarehouseboxes.azmaterial"
+                },
+                {
+                    "op": "replace",
+                    "path": "/Instances/Instance_[151085810973118]/Entities/Entity_[5722642839998]/Components/Component_[3144205669266579244]/Controller/Configuration/materials/0/Value/MaterialAsset/assetHint",
+                    "value": "assets/warehouse/materials/mwarehouseboxes.azmaterial"
+                },
+                {
+                    "op": "replace",
+                    "path": "/Instances/Instance_[5915916368318]/Entities/Entity_[5804247218622]/Components/Component_[3144205669266579244]/Controller/Configuration/materials/0/Value/MaterialAsset/assetHint",
+                    "value": "assets/warehouse/materials/mwarehouseboxes.azmaterial"
+                },
+                {
+                    "op": "replace",
+                    "path": "/Instances/Instance_[246072334593785]/Entities/Entity_[5804247218622]/Components/Component_[3144205669266579244]/Controller/Configuration/materials/0/Value/MaterialAsset/assetHint",
+                    "value": "assets/warehouse/materials/mwarehouseboxes.azmaterial"
+                },
+                {
+                    "op": "replace",
+                    "path": "/Instances/Instance_[6023290550718]/Entities/Entity_[5641038461374]/Components/Component_[3144205669266579244]/Controller/Configuration/materials/0/Value/MaterialAsset/assetHint",
+                    "value": "assets/warehouse/materials/mwarehouseboxes.azmaterial"
+                },
+                {
+                    "op": "replace",
+                    "path": "/Instances/Instance_[292737154264825]/Entities/Entity_[5722642839998]/Components/Component_[3144205669266579244]/Controller/Configuration/materials/0/Value/MaterialAsset/assetHint",
+                    "value": "assets/warehouse/materials/mwarehouseboxes.azmaterial"
+                },
+                {
+                    "op": "replace",
+                    "path": "/Instances/Instance_[5984635845054]/Entities/Entity_[5641038461374]/Components/Component_[3144205669266579244]/Controller/Configuration/materials/0/Value/MaterialAsset/assetHint",
+                    "value": "assets/warehouse/materials/mwarehouseboxes.azmaterial"
+                },
+                {
+                    "op": "replace",
+                    "path": "/Instances/Instance_[199729637469945]/Entities/Entity_[5722642839998]/Components/Component_[3144205669266579244]/Controller/Configuration/materials/0/Value/MaterialAsset/assetHint",
+                    "value": "assets/warehouse/materials/mwarehouseboxes.azmaterial"
+                },
+                {
+                    "op": "replace",
+                    "path": "/Instances/Instance_[6104894929342]/Entities/Entity_[5641038461374]/Components/Component_[3144205669266579244]/Controller/Configuration/materials/0/Value/MaterialAsset/assetHint",
+                    "value": "assets/warehouse/materials/mwarehouseboxes.azmaterial"
+                },
+                {
+                    "op": "replace",
+                    "path": "/Instances/Instance_[292732859297529]/Entities/Entity_[5722642839998]/Components/Component_[3144205669266579244]/Controller/Configuration/materials/0/Value/MaterialAsset/assetHint",
+                    "value": "assets/warehouse/materials/mwarehouseboxes.azmaterial"
+                },
+                {
+                    "op": "replace",
+                    "path": "/Instances/Instance_[6126369765822]/Entities/Entity_[5641038461374]/Components/Component_[3144205669266579244]/Controller/Configuration/materials/0/Value/MaterialAsset/assetHint",
+                    "value": "assets/warehouse/materials/mwarehouseboxes.azmaterial"
+                },
+                {
+                    "op": "replace",
+                    "path": "/Instances/Instance_[5997520746942]/Entities/Entity_[5641038461374]/Components/Component_[3144205669266579244]/Controller/Configuration/materials/0/Value/MaterialAsset/assetHint",
+                    "value": "assets/warehouse/materials/mwarehouseboxes.azmaterial"
+                },
+                {
+                    "op": "replace",
+                    "path": "/Instances/Instance_[151111580776894]/Entities/Entity_[5722642839998]/Components/Component_[3144205669266579244]/Controller/Configuration/materials/0/Value/MaterialAsset/assetHint",
+                    "value": "assets/warehouse/materials/mwarehouseboxes.azmaterial"
+                },
+                {
+                    "op": "replace",
+                    "path": "/Instances/Instance_[199742522371833]/Entities/Entity_[5641038461374]/Components/Component_[3144205669266579244]/Controller/Configuration/materials/0/Value/MaterialAsset/assetHint",
+                    "value": "assets/warehouse/materials/mwarehouseboxes.azmaterial"
+                },
+                {
+                    "op": "replace",
+                    "path": "/Instances/Instance_[112224946878910]/Entities/Entity_[5722642839998]/Components/Component_[3144205669266579244]/Controller/Configuration/materials/0/Value/MaterialAsset/assetHint",
+                    "value": "assets/warehouse/materials/mwarehouseboxes.azmaterial"
+                },
+                {
+                    "op": "replace",
+                    "path": "/Instances/Instance_[246003615117049]/Entities/Entity_[5722642839998]/Components/Component_[3144205669266579244]/Controller/Configuration/materials/0/Value/MaterialAsset/assetHint",
+                    "value": "assets/warehouse/materials/mwarehouseboxes.azmaterial"
+                },
+                {
+                    "op": "replace",
+                    "path": "/Instances/Instance_[246016500018937]/Entities/Entity_[5722642839998]/Components/Component_[3144205669266579244]/Controller/Configuration/materials/0/Value/MaterialAsset/assetHint",
+                    "value": "assets/warehouse/materials/mwarehouseboxes.azmaterial"
+                },
+                {
+                    "op": "replace",
+                    "path": "/Instances/Instance_[292719974395641]/Entities/Entity_[5722642839998]/Components/Component_[3144205669266579244]/Controller/Configuration/materials/0/Value/MaterialAsset/assetHint",
+                    "value": "assets/warehouse/materials/mwarehouseboxes.azmaterial"
+                },
+                {
+                    "op": "replace",
+                    "path": "/Instances/Instance_[5920211335614]/Entities/Entity_[5722642839998]/Components/Component_[3144205669266579244]/Controller/Configuration/materials/0/Value/MaterialAsset/assetHint",
+                    "value": "assets/warehouse/materials/mwarehouseboxes.azmaterial"
+                },
+                {
+                    "op": "replace",
+                    "path": "/Instances/Instance_[246046564790009]/Entities/Entity_[5804247218622]/Components/Component_[3144205669266579244]/Controller/Configuration/materials/0/Value/MaterialAsset/assetHint",
+                    "value": "assets/warehouse/materials/mwarehouseboxes.azmaterial"
                 }
             ]
         },
@@ -317,23 +522,143 @@
                 },
                 {
                     "op": "replace",
+                    "path": "/Instances/Instance_[6096304994750]/Entities/Entity_[5641038461374]/Components/Component_[3144205669266579244]/Controller/Configuration/materials/0/Value/MaterialAsset/assetHint",
+                    "value": "assets/warehouse/materials/mwarehouseboxes.azmaterial"
+                },
+                {
+                    "op": "replace",
+                    "path": "/Instances/Instance_[5984635845054]/Entities/Entity_[5641038461374]/Components/Component_[3144205669266579244]/Controller/Configuration/materials/0/Value/MaterialAsset/assetHint",
+                    "value": "assets/warehouse/materials/mwarehouseboxes.azmaterial"
+                },
+                {
+                    "op": "replace",
+                    "path": "/Instances/Instance_[6023290550718]/Entities/Entity_[5641038461374]/Components/Component_[3144205669266579244]/Controller/Configuration/materials/0/Value/MaterialAsset/assetHint",
+                    "value": "assets/warehouse/materials/mwarehouseboxes.azmaterial"
+                },
+                {
+                    "op": "replace",
+                    "path": "/Instances/Instance_[5920211335614]/Entities/Entity_[5722642839998]/Components/Component_[3144205669266579244]/Controller/Configuration/materials/0/Value/MaterialAsset/assetHint",
+                    "value": "assets/warehouse/materials/mwarehouseboxes.azmaterial"
+                },
+                {
+                    "op": "replace",
                     "path": "/ContainerEntity/Components/Component_[13145888225493921784]/Parent Entity",
-                    "value": "../ContainerEntity"
+                    "value": "../Entity_[119558076471406]"
                 },
                 {
                     "op": "replace",
                     "path": "/ContainerEntity/Components/Component_[13145888225493921784]/Transform Data/Translate/0",
-                    "value": 1.5301704406738281
+                    "value": -10.011784553527832
                 },
                 {
                     "op": "replace",
                     "path": "/ContainerEntity/Components/Component_[13145888225493921784]/Transform Data/Translate/1",
-                    "value": 0.5474090576171875
+                    "value": -12.19556713104248
                 },
                 {
                     "op": "replace",
                     "path": "/ContainerEntity/Components/Component_[13145888225493921784]/Transform Data/Rotate/2",
                     "value": -89.99994659423828
+                },
+                {
+                    "op": "replace",
+                    "path": "/Instances/Instance_[6027585518014]/Entities/Entity_[5641038461374]/Components/Component_[3144205669266579244]/Controller/Configuration/materials/0/Value/MaterialAsset/assetHint",
+                    "value": "assets/warehouse/materials/mwarehouseboxes.azmaterial"
+                },
+                {
+                    "op": "replace",
+                    "path": "/Instances/Instance_[151111580776894]/Entities/Entity_[5722642839998]/Components/Component_[3144205669266579244]/Controller/Configuration/materials/0/Value/MaterialAsset/assetHint",
+                    "value": "assets/warehouse/materials/mwarehouseboxes.azmaterial"
+                },
+                {
+                    "op": "replace",
+                    "path": "/Instances/Instance_[6010405648830]/Entities/Entity_[5641038461374]/Components/Component_[3144205669266579244]/Controller/Configuration/materials/0/Value/MaterialAsset/assetHint",
+                    "value": "assets/warehouse/materials/mwarehouseboxes.azmaterial"
+                },
+                {
+                    "op": "replace",
+                    "path": "/Instances/Instance_[112207767009726]/Entities/Entity_[5722642839998]/Components/Component_[3144205669266579244]/Controller/Configuration/materials/0/Value/MaterialAsset/assetHint",
+                    "value": "assets/warehouse/materials/mwarehouseboxes.azmaterial"
+                },
+                {
+                    "op": "replace",
+                    "path": "/Instances/Instance_[6109189896638]/Entities/Entity_[5641038461374]/Components/Component_[3144205669266579244]/Controller/Configuration/materials/0/Value/MaterialAsset/assetHint",
+                    "value": "assets/warehouse/materials/mwarehouseboxes.azmaterial"
+                },
+                {
+                    "op": "replace",
+                    "path": "/Instances/Instance_[151098695875006]/Entities/Entity_[5722642839998]/Components/Component_[3144205669266579244]/Controller/Configuration/materials/0/Value/MaterialAsset/assetHint",
+                    "value": "assets/warehouse/materials/mwarehouseboxes.azmaterial"
+                },
+                {
+                    "op": "replace",
+                    "path": "/Instances/Instance_[112224946878910]/Entities/Entity_[5722642839998]/Components/Component_[3144205669266579244]/Controller/Configuration/materials/0/Value/MaterialAsset/assetHint",
+                    "value": "assets/warehouse/materials/mwarehouseboxes.azmaterial"
+                },
+                {
+                    "op": "replace",
+                    "path": "/Instances/Instance_[6122074798526]/Entities/Entity_[5641038461374]/Components/Component_[3144205669266579244]/Controller/Configuration/materials/0/Value/MaterialAsset/assetHint",
+                    "value": "assets/warehouse/materials/mwarehouseboxes.azmaterial"
+                },
+                {
+                    "op": "replace",
+                    "path": "/Instances/Instance_[6100599962046]/Entities/Entity_[5641038461374]/Components/Component_[3144205669266579244]/Controller/Configuration/materials/0/Value/MaterialAsset/assetHint",
+                    "value": "assets/warehouse/materials/mwarehouseboxes.azmaterial"
+                },
+                {
+                    "op": "replace",
+                    "path": "/Instances/Instance_[5971750943166]/Entities/Entity_[5641038461374]/Components/Component_[3144205669266579244]/Controller/Configuration/materials/0/Value/MaterialAsset/assetHint",
+                    "value": "assets/warehouse/materials/mwarehouseboxes.azmaterial"
+                },
+                {
+                    "op": "replace",
+                    "path": "/Instances/Instance_[112220651911614]/Entities/Entity_[5722642839998]/Components/Component_[3144205669266579244]/Controller/Configuration/materials/0/Value/MaterialAsset/assetHint",
+                    "value": "assets/warehouse/materials/mwarehouseboxes.azmaterial"
+                },
+                {
+                    "op": "replace",
+                    "path": "/Instances/Instance_[151085810973118]/Entities/Entity_[5722642839998]/Components/Component_[3144205669266579244]/Controller/Configuration/materials/0/Value/MaterialAsset/assetHint",
+                    "value": "assets/warehouse/materials/mwarehouseboxes.azmaterial"
+                },
+                {
+                    "op": "replace",
+                    "path": "/Instances/Instance_[5997520746942]/Entities/Entity_[5641038461374]/Components/Component_[3144205669266579244]/Controller/Configuration/materials/0/Value/MaterialAsset/assetHint",
+                    "value": "assets/warehouse/materials/mwarehouseboxes.azmaterial"
+                },
+                {
+                    "op": "replace",
+                    "path": "/Instances/Instance_[6117779831230]/Entities/Entity_[5641038461374]/Components/Component_[3144205669266579244]/Controller/Configuration/materials/0/Value/MaterialAsset/assetHint",
+                    "value": "assets/warehouse/materials/mwarehouseboxes.azmaterial"
+                },
+                {
+                    "op": "replace",
+                    "path": "/Instances/Instance_[6126369765822]/Entities/Entity_[5641038461374]/Components/Component_[3144205669266579244]/Controller/Configuration/materials/0/Value/MaterialAsset/assetHint",
+                    "value": "assets/warehouse/materials/mwarehouseboxes.azmaterial"
+                },
+                {
+                    "op": "replace",
+                    "path": "/Instances/Instance_[6104894929342]/Entities/Entity_[5641038461374]/Components/Component_[3144205669266579244]/Controller/Configuration/materials/0/Value/MaterialAsset/assetHint",
+                    "value": "assets/warehouse/materials/mwarehouseboxes.azmaterial"
+                },
+                {
+                    "op": "replace",
+                    "path": "/Instances/Instance_[6134959700414]/Entities/Entity_[5641038461374]/Components/Component_[3144205669266579244]/Controller/Configuration/materials/0/Value/MaterialAsset/assetHint",
+                    "value": "assets/warehouse/materials/mwarehouseboxes.azmaterial"
+                },
+                {
+                    "op": "replace",
+                    "path": "/Instances/Instance_[112229241846206]/Entities/Entity_[5722642839998]/Components/Component_[3144205669266579244]/Controller/Configuration/materials/0/Value/MaterialAsset/assetHint",
+                    "value": "assets/warehouse/materials/mwarehouseboxes.azmaterial"
+                },
+                {
+                    "op": "replace",
+                    "path": "/Instances/Instance_[112194882107838]/Entities/Entity_[5722642839998]/Components/Component_[3144205669266579244]/Controller/Configuration/materials/0/Value/MaterialAsset/assetHint",
+                    "value": "assets/warehouse/materials/mwarehouseboxes.azmaterial"
+                },
+                {
+                    "op": "replace",
+                    "path": "/Instances/Instance_[6113484863934]/Entities/Entity_[5641038461374]/Components/Component_[3144205669266579244]/Controller/Configuration/materials/0/Value/MaterialAsset/assetHint",
+                    "value": "assets/warehouse/materials/mwarehouseboxes.azmaterial"
                 }
             ]
         },
@@ -414,23 +739,173 @@
                 },
                 {
                     "op": "replace",
+                    "path": "/Instances/Instance_[5971750943166]/Entities/Entity_[5641038461374]/Components/Component_[3144205669266579244]/Controller/Configuration/materials/0/Value/MaterialAsset/assetHint",
+                    "value": "assets/warehouse/materials/mwarehouseboxes.azmaterial"
+                },
+                {
+                    "op": "replace",
+                    "path": "/Instances/Instance_[6104894929342]/Entities/Entity_[5641038461374]/Components/Component_[3144205669266579244]/Controller/Configuration/materials/0/Value/MaterialAsset/assetHint",
+                    "value": "assets/warehouse/materials/mwarehouseboxes.azmaterial"
+                },
+                {
+                    "op": "replace",
+                    "path": "/Instances/Instance_[6096304994750]/Entities/Entity_[5641038461374]/Components/Component_[3144205669266579244]/Controller/Configuration/materials/0/Value/MaterialAsset/assetHint",
+                    "value": "assets/warehouse/materials/mwarehouseboxes.azmaterial"
+                },
+                {
+                    "op": "replace",
+                    "path": "/Instances/Instance_[292737154264825]/Entities/Entity_[5722642839998]/Components/Component_[3144205669266579244]/Controller/Configuration/materials/0/Value/MaterialAsset/assetHint",
+                    "value": "assets/warehouse/materials/mwarehouseboxes.azmaterial"
+                },
+                {
+                    "op": "replace",
+                    "path": "/Instances/Instance_[199729637469945]/Entities/Entity_[5722642839998]/Components/Component_[3144205669266579244]/Controller/Configuration/materials/0/Value/MaterialAsset/assetHint",
+                    "value": "assets/warehouse/materials/mwarehouseboxes.azmaterial"
+                },
+                {
+                    "op": "replace",
+                    "path": "/Instances/Instance_[6023290550718]/Entities/Entity_[5641038461374]/Components/Component_[3144205669266579244]/Controller/Configuration/materials/0/Value/MaterialAsset/assetHint",
+                    "value": "assets/warehouse/materials/mwarehouseboxes.azmaterial"
+                },
+                {
+                    "op": "replace",
+                    "path": "/Instances/Instance_[199742522371833]/Entities/Entity_[5641038461374]/Components/Component_[3144205669266579244]/Controller/Configuration/materials/0/Value/MaterialAsset/assetHint",
+                    "value": "assets/warehouse/materials/mwarehouseboxes.azmaterial"
+                },
+                {
+                    "op": "replace",
+                    "path": "/Instances/Instance_[6027585518014]/Entities/Entity_[5641038461374]/Components/Component_[3144205669266579244]/Controller/Configuration/materials/0/Value/MaterialAsset/assetHint",
+                    "value": "assets/warehouse/materials/mwarehouseboxes.azmaterial"
+                },
+                {
+                    "op": "replace",
+                    "path": "/Instances/Instance_[151111580776894]/Entities/Entity_[5722642839998]/Components/Component_[3144205669266579244]/Controller/Configuration/materials/0/Value/MaterialAsset/assetHint",
+                    "value": "assets/warehouse/materials/mwarehouseboxes.azmaterial"
+                },
+                {
+                    "op": "replace",
+                    "path": "/Instances/Instance_[112224946878910]/Entities/Entity_[5722642839998]/Components/Component_[3144205669266579244]/Controller/Configuration/materials/0/Value/MaterialAsset/assetHint",
+                    "value": "assets/warehouse/materials/mwarehouseboxes.azmaterial"
+                },
+                {
+                    "op": "replace",
+                    "path": "/Instances/Instance_[246072334593785]/Entities/Entity_[5804247218622]/Components/Component_[3144205669266579244]/Controller/Configuration/materials/0/Value/MaterialAsset/assetHint",
+                    "value": "assets/warehouse/materials/mwarehouseboxes.azmaterial"
+                },
+                {
+                    "op": "replace",
+                    "path": "/Instances/Instance_[112220651911614]/Entities/Entity_[5722642839998]/Components/Component_[3144205669266579244]/Controller/Configuration/materials/0/Value/MaterialAsset/assetHint",
+                    "value": "assets/warehouse/materials/mwarehouseboxes.azmaterial"
+                },
+                {
+                    "op": "replace",
+                    "path": "/Instances/Instance_[5920211335614]/Entities/Entity_[5722642839998]/Components/Component_[3144205669266579244]/Controller/Configuration/materials/0/Value/MaterialAsset/assetHint",
+                    "value": "assets/warehouse/materials/mwarehouseboxes.azmaterial"
+                },
+                {
+                    "op": "replace",
+                    "path": "/Instances/Instance_[6109189896638]/Entities/Entity_[5641038461374]/Components/Component_[3144205669266579244]/Controller/Configuration/materials/0/Value/MaterialAsset/assetHint",
+                    "value": "assets/warehouse/materials/mwarehouseboxes.azmaterial"
+                },
+                {
+                    "op": "replace",
+                    "path": "/Instances/Instance_[151085810973118]/Entities/Entity_[5722642839998]/Components/Component_[3144205669266579244]/Controller/Configuration/materials/0/Value/MaterialAsset/assetHint",
+                    "value": "assets/warehouse/materials/mwarehouseboxes.azmaterial"
+                },
+                {
+                    "op": "replace",
+                    "path": "/Instances/Instance_[292719974395641]/Entities/Entity_[5722642839998]/Components/Component_[3144205669266579244]/Controller/Configuration/materials/0/Value/MaterialAsset/assetHint",
+                    "value": "assets/warehouse/materials/mwarehouseboxes.azmaterial"
+                },
+                {
+                    "op": "replace",
+                    "path": "/Instances/Instance_[6010405648830]/Entities/Entity_[5641038461374]/Components/Component_[3144205669266579244]/Controller/Configuration/materials/0/Value/MaterialAsset/assetHint",
+                    "value": "assets/warehouse/materials/mwarehouseboxes.azmaterial"
+                },
+                {
+                    "op": "replace",
+                    "path": "/Instances/Instance_[6134959700414]/Entities/Entity_[5641038461374]/Components/Component_[3144205669266579244]/Controller/Configuration/materials/0/Value/MaterialAsset/assetHint",
+                    "value": "assets/warehouse/materials/mwarehouseboxes.azmaterial"
+                },
+                {
+                    "op": "replace",
+                    "path": "/Instances/Instance_[246059449691897]/Entities/Entity_[5804247218622]/Components/Component_[3144205669266579244]/Controller/Configuration/materials/0/Value/MaterialAsset/assetHint",
+                    "value": "assets/warehouse/materials/mwarehouseboxes.azmaterial"
+                },
+                {
+                    "op": "replace",
+                    "path": "/Instances/Instance_[6100599962046]/Entities/Entity_[5641038461374]/Components/Component_[3144205669266579244]/Controller/Configuration/materials/0/Value/MaterialAsset/assetHint",
+                    "value": "assets/warehouse/materials/mwarehouseboxes.azmaterial"
+                },
+                {
+                    "op": "replace",
+                    "path": "/Instances/Instance_[246016500018937]/Entities/Entity_[5722642839998]/Components/Component_[3144205669266579244]/Controller/Configuration/materials/0/Value/MaterialAsset/assetHint",
+                    "value": "assets/warehouse/materials/mwarehouseboxes.azmaterial"
+                },
+                {
+                    "op": "replace",
+                    "path": "/Instances/Instance_[5915916368318]/Entities/Entity_[5804247218622]/Components/Component_[3144205669266579244]/Controller/Configuration/materials/0/Value/MaterialAsset/assetHint",
+                    "value": "assets/warehouse/materials/mwarehouseboxes.azmaterial"
+                },
+                {
+                    "op": "replace",
+                    "path": "/Instances/Instance_[246003615117049]/Entities/Entity_[5722642839998]/Components/Component_[3144205669266579244]/Controller/Configuration/materials/0/Value/MaterialAsset/assetHint",
+                    "value": "assets/warehouse/materials/mwarehouseboxes.azmaterial"
+                },
+                {
+                    "op": "replace",
+                    "path": "/Instances/Instance_[5984635845054]/Entities/Entity_[5641038461374]/Components/Component_[3144205669266579244]/Controller/Configuration/materials/0/Value/MaterialAsset/assetHint",
+                    "value": "assets/warehouse/materials/mwarehouseboxes.azmaterial"
+                },
+                {
+                    "op": "replace",
+                    "path": "/Instances/Instance_[151098695875006]/Entities/Entity_[5722642839998]/Components/Component_[3144205669266579244]/Controller/Configuration/materials/0/Value/MaterialAsset/assetHint",
+                    "value": "assets/warehouse/materials/mwarehouseboxes.azmaterial"
+                },
+                {
+                    "op": "replace",
+                    "path": "/Instances/Instance_[6126369765822]/Entities/Entity_[5641038461374]/Components/Component_[3144205669266579244]/Controller/Configuration/materials/0/Value/MaterialAsset/assetHint",
+                    "value": "assets/warehouse/materials/mwarehouseboxes.azmaterial"
+                },
+                {
+                    "op": "replace",
+                    "path": "/Instances/Instance_[5997520746942]/Entities/Entity_[5641038461374]/Components/Component_[3144205669266579244]/Controller/Configuration/materials/0/Value/MaterialAsset/assetHint",
+                    "value": "assets/warehouse/materials/mwarehouseboxes.azmaterial"
+                },
+                {
+                    "op": "replace",
                     "path": "/ContainerEntity/Components/Component_[226710958716547824]/Parent Entity",
-                    "value": "../ContainerEntity"
+                    "value": "../Entity_[119558076471406]"
                 },
                 {
                     "op": "replace",
                     "path": "/ContainerEntity/Components/Component_[226710958716547824]/Transform Data/Translate/0",
-                    "value": -1.5665931701660156
+                    "value": -13.108548164367676
                 },
                 {
                     "op": "replace",
                     "path": "/ContainerEntity/Components/Component_[226710958716547824]/Transform Data/Translate/1",
-                    "value": 0.5480861663818359
+                    "value": -12.194890022277832
                 },
                 {
                     "op": "replace",
                     "path": "/ContainerEntity/Components/Component_[226710958716547824]/Transform Data/Rotate/2",
                     "value": -89.99994659423828
+                },
+                {
+                    "op": "replace",
+                    "path": "/Instances/Instance_[246046564790009]/Entities/Entity_[5804247218622]/Components/Component_[3144205669266579244]/Controller/Configuration/materials/0/Value/MaterialAsset/assetHint",
+                    "value": "assets/warehouse/materials/mwarehouseboxes.azmaterial"
+                },
+                {
+                    "op": "replace",
+                    "path": "/Instances/Instance_[6117779831230]/Entities/Entity_[5641038461374]/Components/Component_[3144205669266579244]/Controller/Configuration/materials/0/Value/MaterialAsset/assetHint",
+                    "value": "assets/warehouse/materials/mwarehouseboxes.azmaterial"
+                },
+                {
+                    "op": "replace",
+                    "path": "/Instances/Instance_[292732859297529]/Entities/Entity_[5722642839998]/Components/Component_[3144205669266579244]/Controller/Configuration/materials/0/Value/MaterialAsset/assetHint",
+                    "value": "assets/warehouse/materials/mwarehouseboxes.azmaterial"
                 }
             ]
         },
@@ -648,23 +1123,198 @@
                 },
                 {
                     "op": "replace",
+                    "path": "/Instances/Instance_[260293944408510]/Entities/Entity_[5641038461374]/Components/Component_[3144205669266579244]/Controller/Configuration/materials/0/Value/MaterialAsset/assetHint",
+                    "value": "assets/warehouse/materials/mwarehouseboxes.azmaterial"
+                },
+                {
+                    "op": "replace",
+                    "path": "/Instances/Instance_[260006181599678]/Entities/Entity_[5804247218622]/Components/Component_[3144205669266579244]/Controller/Configuration/materials/0/Value/MaterialAsset/assetHint",
+                    "value": "assets/warehouse/materials/mwarehouseboxes.azmaterial"
+                },
+                {
+                    "op": "replace",
+                    "path": "/Instances/Instance_[260040541338046]/Entities/Entity_[5641038461374]/Components/Component_[3144205669266579244]/Controller/Configuration/materials/0/Value/MaterialAsset/assetHint",
+                    "value": "assets/warehouse/materials/mwarehouseboxes.azmaterial"
+                },
+                {
+                    "op": "replace",
+                    "path": "/Instances/Instance_[260444268263870]/Entities/Entity_[5804247218622]/Components/Component_[3144205669266579244]/Controller/Configuration/materials/0/Value/MaterialAsset/assetHint",
+                    "value": "assets/warehouse/materials/mwarehouseboxes.azmaterial"
+                },
+                {
+                    "op": "replace",
+                    "path": "/Instances/Instance_[295491201399230]/Entities/Entity_[5804247218622]/Components/Component_[3144205669266579244]/Controller/Configuration/materials/0/Value/MaterialAsset/assetHint",
+                    "value": "assets/warehouse/materials/mwarehouseboxes.azmaterial"
+                },
+                {
+                    "op": "replace",
+                    "path": "/Instances/Instance_[259933167155646]/Entities/Entity_[5641038461374]/Components/Component_[3144205669266579244]/Controller/Configuration/materials/0/Value/MaterialAsset/assetHint",
+                    "value": "assets/warehouse/materials/mwarehouseboxes.azmaterial"
+                },
+                {
+                    "op": "replace",
+                    "path": "/Instances/Instance_[295529856104894]/Entities/Entity_[5804247218622]/Components/Component_[3144205669266579244]/Controller/Configuration/materials/0/Value/MaterialAsset/assetHint",
+                    "value": "assets/warehouse/materials/mwarehouseboxes.azmaterial"
+                },
+                {
+                    "op": "replace",
+                    "path": "/Instances/Instance_[259967526894014]/Entities/Entity_[5722642839998]/Components/Component_[3144205669266579244]/Controller/Configuration/materials/0/Value/MaterialAsset/assetHint",
+                    "value": "assets/warehouse/materials/mwarehouseboxes.azmaterial"
+                },
+                {
+                    "op": "replace",
+                    "path": "/Instances/Instance_[260345484016062]/Entities/Entity_[5722642839998]/Components/Component_[3144205669266579244]/Controller/Configuration/materials/0/Value/MaterialAsset/assetHint",
+                    "value": "assets/warehouse/materials/mwarehouseboxes.azmaterial"
+                },
+                {
+                    "op": "replace",
+                    "path": "/Instances/Instance_[260023361468862]/Entities/Entity_[5641038461374]/Components/Component_[3144205669266579244]/Controller/Configuration/materials/0/Value/MaterialAsset/assetHint",
+                    "value": "assets/warehouse/materials/mwarehouseboxes.azmaterial"
+                },
+                {
+                    "op": "replace",
+                    "path": "/Instances/Instance_[260036246370750]/Entities/Entity_[5722642839998]/Components/Component_[3144205669266579244]/Controller/Configuration/materials/0/Value/MaterialAsset/assetHint",
+                    "value": "assets/warehouse/materials/mwarehouseboxes.azmaterial"
+                },
+                {
+                    "op": "replace",
+                    "path": "/Instances/Instance_[260354073950654]/Entities/Entity_[5722642839998]/Components/Component_[3144205669266579244]/Controller/Configuration/materials/0/Value/MaterialAsset/assetHint",
+                    "value": "assets/warehouse/materials/mwarehouseboxes.azmaterial"
+                },
+                {
+                    "op": "replace",
+                    "path": "/Instances/Instance_[295538446039486]/Entities/Entity_[5804247218622]/Components/Component_[3144205669266579244]/Controller/Configuration/materials/0/Value/MaterialAsset/assetHint",
+                    "value": "assets/warehouse/materials/mwarehouseboxes.azmaterial"
+                },
+                {
+                    "op": "replace",
+                    "path": "/Instances/Instance_[260349778983358]/Entities/Entity_[5722642839998]/Components/Component_[3144205669266579244]/Controller/Configuration/materials/0/Value/MaterialAsset/assetHint",
+                    "value": "assets/warehouse/materials/mwarehouseboxes.azmaterial"
+                },
+                {
+                    "op": "replace",
+                    "path": "/Instances/Instance_[259976116828606]/Entities/Entity_[5641038461374]/Components/Component_[3144205669266579244]/Controller/Configuration/materials/0/Value/MaterialAsset/assetHint",
+                    "value": "assets/warehouse/materials/mwarehouseboxes.azmaterial"
+                },
+                {
+                    "op": "replace",
+                    "path": "/Instances/Instance_[259984706763198]/Entities/Entity_[5641038461374]/Components/Component_[3144205669266579244]/Controller/Configuration/materials/0/Value/MaterialAsset/assetHint",
+                    "value": "assets/warehouse/materials/mwarehouseboxes.azmaterial"
+                },
+                {
+                    "op": "replace",
+                    "path": "/Instances/Instance_[295456841660862]/Entities/Entity_[5804247218622]/Components/Component_[3144205669266579244]/Controller/Configuration/materials/0/Value/MaterialAsset/assetHint",
+                    "value": "assets/warehouse/materials/mwarehouseboxes.azmaterial"
+                },
+                {
+                    "op": "replace",
+                    "path": "/Instances/Instance_[260014771534270]/Entities/Entity_[5641038461374]/Components/Component_[3144205669266579244]/Controller/Configuration/materials/0/Value/MaterialAsset/assetHint",
+                    "value": "assets/warehouse/materials/mwarehouseboxes.azmaterial"
+                },
+                {
+                    "op": "replace",
+                    "path": "/Instances/Instance_[259946052057534]/Entities/Entity_[5722642839998]/Components/Component_[3144205669266579244]/Controller/Configuration/materials/0/Value/MaterialAsset/assetHint",
+                    "value": "assets/warehouse/materials/mwarehouseboxes.azmaterial"
+                },
+                {
+                    "op": "replace",
+                    "path": "/Instances/Instance_[259997591665086]/Entities/Entity_[5722642839998]/Components/Component_[3144205669266579244]/Controller/Configuration/materials/0/Value/MaterialAsset/assetHint",
+                    "value": "assets/warehouse/materials/mwarehouseboxes.azmaterial"
+                },
+                {
+                    "op": "replace",
+                    "path": "/Instances/Instance_[295499791333822]/Entities/Entity_[5804247218622]/Components/Component_[3144205669266579244]/Controller/Configuration/materials/0/Value/MaterialAsset/assetHint",
+                    "value": "assets/warehouse/materials/mwarehouseboxes.azmaterial"
+                },
+                {
+                    "op": "replace",
+                    "path": "/Instances/Instance_[295495496366526]/Entities/Entity_[5804247218622]/Components/Component_[3144205669266579244]/Controller/Configuration/materials/0/Value/MaterialAsset/assetHint",
+                    "value": "assets/warehouse/materials/mwarehouseboxes.azmaterial"
+                },
+                {
+                    "op": "replace",
+                    "path": "/Instances/Instance_[260431383361982]/Entities/Entity_[5804247218622]/Components/Component_[3144205669266579244]/Controller/Configuration/materials/0/Value/MaterialAsset/assetHint",
+                    "value": "assets/warehouse/materials/mwarehouseboxes.azmaterial"
+                },
+                {
+                    "op": "replace",
+                    "path": "/Instances/Instance_[259950347024830]/Entities/Entity_[5641038461374]/Components/Component_[3144205669266579244]/Controller/Configuration/materials/0/Value/MaterialAsset/assetHint",
+                    "value": "assets/warehouse/materials/mwarehouseboxes.azmaterial"
+                },
+                {
+                    "op": "replace",
+                    "path": "/Instances/Instance_[259937462122942]/Entities/Entity_[5641038461374]/Components/Component_[3144205669266579244]/Controller/Configuration/materials/0/Value/MaterialAsset/assetHint",
+                    "value": "assets/warehouse/materials/mwarehouseboxes.azmaterial"
+                },
+                {
+                    "op": "replace",
+                    "path": "/Instances/Instance_[260001886632382]/Entities/Entity_[5641038461374]/Components/Component_[3144205669266579244]/Controller/Configuration/materials/0/Value/MaterialAsset/assetHint",
+                    "value": "assets/warehouse/materials/mwarehouseboxes.azmaterial"
+                },
+                {
+                    "op": "replace",
+                    "path": "/Instances/Instance_[259989001730494]/Entities/Entity_[5641038461374]/Components/Component_[3144205669266579244]/Controller/Configuration/materials/0/Value/MaterialAsset/assetHint",
+                    "value": "assets/warehouse/materials/mwarehouseboxes.azmaterial"
+                },
+                {
+                    "op": "replace",
+                    "path": "/Instances/Instance_[260010476566974]/Entities/Entity_[5722642839998]/Components/Component_[3144205669266579244]/Controller/Configuration/materials/0/Value/MaterialAsset/assetHint",
+                    "value": "assets/warehouse/materials/mwarehouseboxes.azmaterial"
+                },
+                {
+                    "op": "replace",
+                    "path": "/Instances/Instance_[260358368917950]/Entities/Entity_[5722642839998]/Components/Component_[3144205669266579244]/Controller/Configuration/materials/0/Value/MaterialAsset/assetHint",
+                    "value": "assets/warehouse/materials/mwarehouseboxes.azmaterial"
+                },
+                {
+                    "op": "replace",
+                    "path": "/Instances/Instance_[259958936959422]/Entities/Entity_[5641038461374]/Components/Component_[3144205669266579244]/Controller/Configuration/materials/0/Value/MaterialAsset/assetHint",
+                    "value": "assets/warehouse/materials/mwarehouseboxes.azmaterial"
+                },
+                {
+                    "op": "replace",
+                    "path": "/Instances/Instance_[295534151072190]/Entities/Entity_[5804247218622]/Components/Component_[3144205669266579244]/Controller/Configuration/materials/0/Value/MaterialAsset/assetHint",
+                    "value": "assets/warehouse/materials/mwarehouseboxes.azmaterial"
+                },
+                {
+                    "op": "replace",
+                    "path": "/Instances/Instance_[295452546693566]/Entities/Entity_[5804247218622]/Components/Component_[3144205669266579244]/Controller/Configuration/materials/0/Value/MaterialAsset/assetHint",
+                    "value": "assets/warehouse/materials/mwarehouseboxes.azmaterial"
+                },
+                {
+                    "op": "replace",
                     "path": "/ContainerEntity/Components/Component_[4386105510620949505]/Parent Entity",
-                    "value": "../ContainerEntity"
+                    "value": "../Entity_[119558076471406]"
                 },
                 {
                     "op": "replace",
                     "path": "/ContainerEntity/Components/Component_[4386105510620949505]/Transform Data/Translate/0",
-                    "value": -1.5643129348754883
+                    "value": -13.106267929077148
                 },
                 {
                     "op": "replace",
                     "path": "/ContainerEntity/Components/Component_[4386105510620949505]/Transform Data/Translate/1",
-                    "value": -0.5555896759033203
+                    "value": -13.298565864562988
                 },
                 {
                     "op": "replace",
                     "path": "/ContainerEntity/Components/Component_[4386105510620949505]/Transform Data/Rotate/2",
                     "value": 89.99994659423828
+                },
+                {
+                    "op": "replace",
+                    "path": "/Instances/Instance_[260019066501566]/Entities/Entity_[5641038461374]/Components/Component_[3144205669266579244]/Controller/Configuration/materials/0/Value/MaterialAsset/assetHint",
+                    "value": "assets/warehouse/materials/mwarehouseboxes.azmaterial"
+                },
+                {
+                    "op": "replace",
+                    "path": "/Instances/Instance_[260306829310398]/Entities/Entity_[5641038461374]/Components/Component_[3144205669266579244]/Controller/Configuration/materials/0/Value/MaterialAsset/assetHint",
+                    "value": "assets/warehouse/materials/mwarehouseboxes.azmaterial"
+                },
+                {
+                    "op": "replace",
+                    "path": "/Instances/Instance_[295461136628158]/Entities/Entity_[5804247218622]/Components/Component_[3144205669266579244]/Controller/Configuration/materials/0/Value/MaterialAsset/assetHint",
+                    "value": "assets/warehouse/materials/mwarehouseboxes.azmaterial"
                 }
             ]
         }

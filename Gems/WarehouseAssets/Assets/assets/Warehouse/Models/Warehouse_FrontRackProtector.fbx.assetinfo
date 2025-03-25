@@ -7,14 +7,18 @@
             "NodeSelectionList": {
                 "selectedNodes": [
                     "RootNode",
-                    "RootNode.FrontRackProtector"
+                    "RootNode.FrontRackProtector",
+                    "RootNode.FrontRackProtector.MWarehouseProps_002",
+                    "RootNode.FrontRackProtector.UVMap",
+                    "RootNode.FrontRackProtector.custom_properties",
+                    "RootNode.FrontRackProtector.transform"
                 ]
             },
             "export method": 1,
             "PhysicsMaterialSlots": {
                 "Slots": [
                     {
-                        "Name": "MWarehouseProps"
+                        "Name": "MWarehouseProps_002"
                     }
                 ]
             }
@@ -24,9 +28,12 @@
             "name": "Warehouse_FrontRackProtector",
             "nodeSelectionList": {
                 "selectedNodes": [
-                    {},
                     "RootNode",
-                    "RootNode.FrontRackProtector"
+                    "RootNode.FrontRackProtector",
+                    "RootNode.FrontRackProtector.MWarehouseProps_002",
+                    "RootNode.FrontRackProtector.UVMap",
+                    "RootNode.FrontRackProtector.custom_properties",
+                    "RootNode.FrontRackProtector.transform"
                 ]
             },
             "rules": {
@@ -37,6 +44,9 @@
                 ]
             },
             "id": "{4A564183-173B-5AD6-9C71-4404A5BD58D2}"
+        },
+        {
+            "$type": "{41DCBEAB-203C-4A05-96FA-98E1D8A96FA1} ImportGroup"
         },
         {
             "$type": "{07B356B7-3635-40B5-878A-FAC4EFD5AD86} MeshGroup",
@@ -67,8 +77,8 @@
         },
         {
             "$type": "PrefabGroup",
-            "name": "Models/Warehouse_FrontRackProtector_fbx.procprefab",
-            "id": "{90D85585-D8C3-528B-92A6-E69C0C5D4924}"
+            "name": "assets/Warehouse/Models/Warehouse_FrontRackProtector_fbx.procprefab",
+            "id": "{67D01DC8-8CD1-5337-99CA-5864140FA7A4}"
         }
     ]
 }

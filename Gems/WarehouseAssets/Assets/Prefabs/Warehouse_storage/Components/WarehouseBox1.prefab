@@ -107,7 +107,20 @@
                                             "assetId": {
                                                 "guid": "{5468360F-1789-50A3-96FF-118192B81B48}"
                                             },
-                                            "assetHint": "assets/warehouse/materials/mwarehouseboxes.material.azmaterial"
+                                            "assetHint": "assets/warehouse/materials/mwarehouseboxes.azmaterial"
+                                        }
+                                    }
+                                },
+                                {
+                                    "Key": {
+                                        "materialSlotStableId": 4100903441
+                                    },
+                                    "Value": {
+                                        "MaterialAsset": {
+                                            "assetId": {
+                                                "guid": "{5468360F-1789-50A3-96FF-118192B81B48}"
+                                            },
+                                            "assetHint": "assets/warehouse/materials/mwarehouseboxes.azmaterial"
                                         }
                                     }
                                 }
@@ -126,7 +139,9 @@
                                     "subId": 282632013
                                 },
                                 "assetHint": "assets/warehouse/models/box1.fbx.azmodel"
-                            }
+                            },
+                            "LodType": 1,
+                            "QualityDecayRate": 0.20000000298023224
                         }
                     }
                 },

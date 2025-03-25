@@ -69,7 +69,7 @@
                         "MaterialSlots": {
                             "Slots": [
                                 {
-                                    "Name": "MWarehouseProps"
+                                    "Name": "MWarehouseProps_002"
                                 }
                             ]
                         }
@@ -112,15 +112,15 @@
                             "SortIndex": 1
                         },
                         {
-                            "ComponentId": 7141918419814582,
+                            "ComponentId": 9808839583561817672,
                             "SortIndex": 2
                         },
                         {
-                            "ComponentId": 9808839583561817672,
+                            "ComponentId": 15579174905508719867,
                             "SortIndex": 3
                         },
                         {
-                            "ComponentId": 15579174905508719867,
+                            "ComponentId": 7749217733108250140,
                             "SortIndex": 4
                         }
                     ]
@@ -137,42 +137,6 @@
                     "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
                     "Id": 4862980616049057873,
                     "Parent Entity": "ContainerEntity"
-                },
-                "Component_[7141918419814582]": {
-                    "$type": "EditorMaterialComponent",
-                    "Id": 7141918419814582,
-                    "Controller": {
-                        "Configuration": {
-                            "materials": [
-                                {
-                                    "Key": {
-                                        "materialSlotStableId": 312683670
-                                    },
-                                    "Value": {
-                                        "MaterialAsset": {
-                                            "assetId": {
-                                                "guid": "{DC927EEA-A70D-5383-96AA-665AC07DC591}"
-                                            },
-                                            "assetHint": "assets/warehouse/materials/mwarehouseprops.material.azmaterial"
-                                        }
-                                    }
-                                },
-                                {
-                                    "Key": {
-                                        "materialSlotStableId": 1518749458
-                                    },
-                                    "Value": {
-                                        "MaterialAsset": {
-                                            "assetId": {
-                                                "guid": "{DC927EEA-A70D-5383-96AA-665AC07DC591}"
-                                            },
-                                            "assetHint": "assets/warehouse/materials/mwarehouseprops.material.azmaterial"
-                                        }
-                                    }
-                                }
-                            ]
-                        }
-                    }
                 },
                 "Component_[8028669631718771573]": {
                     "$type": "EditorOnlyEntityComponent",
@@ -200,6 +164,29 @@
                 "Component_[9808839583561817672]": {
                     "$type": "EditorStaticRigidBodyComponent",
                     "Id": 9808839583561817672
+                },
+                "EditorMaterialComponent": {
+                    "$type": "EditorMaterialComponent",
+                    "Id": 7749217733108250140,
+                    "Controller": {
+                        "Configuration": {
+                            "materials": [
+                                {
+                                    "Key": {
+                                        "materialSlotStableId": 1412244510
+                                    },
+                                    "Value": {
+                                        "MaterialAsset": {
+                                            "assetId": {
+                                                "guid": "{DC927EEA-A70D-5383-96AA-665AC07DC591}"
+                                            },
+                                            "assetHint": "assets/warehouse/materials/mwarehouseprops.azmaterial"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
                 }
             }
         }
