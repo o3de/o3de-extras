@@ -6,8 +6,7 @@
 
 namespace ROS2Sensors
 {
-    class ROS2SensorsModuleInterface
-        : public AZ::Module
+    class ROS2SensorsModuleInterface : public AZ::Module
     {
     public:
         AZ_TYPE_INFO_WITH_NAME_DECL(ROS2SensorsModuleInterface)
@@ -21,4 +20,4 @@ namespace ROS2Sensors
          */
         AZ::ComponentTypeList GetRequiredSystemComponents() const override;
     };
-}// namespace ROS2Sensors
+} // namespace ROS2Sensors

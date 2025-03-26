@@ -13,6 +13,7 @@ namespace ROS2Sensors
         , protected AzToolsFramework::EditorEvents::Bus::Handler
     {
         using BaseSystemComponent = ROS2SensorsSystemComponent;
+
     public:
         AZ_COMPONENT_DECL(ROS2SensorsEditorSystemComponent);
 

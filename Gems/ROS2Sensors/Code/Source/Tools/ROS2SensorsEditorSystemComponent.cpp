@@ -1,20 +1,19 @@
 
-#include <AzCore/Serialization/SerializeContext.h>
 #include "ROS2SensorsEditorSystemComponent.h"
+#include <AzCore/Serialization/SerializeContext.h>
 
 #include <ROS2Sensors/ROS2SensorsTypeIds.h>
 
 namespace ROS2Sensors
 {
-    AZ_COMPONENT_IMPL(ROS2SensorsEditorSystemComponent, "ROS2SensorsEditorSystemComponent",
-        ROS2SensorsEditorSystemComponentTypeId, BaseSystemComponent);
+    AZ_COMPONENT_IMPL(
+        ROS2SensorsEditorSystemComponent, "ROS2SensorsEditorSystemComponent", ROS2SensorsEditorSystemComponentTypeId, BaseSystemComponent);
 
     void ROS2SensorsEditorSystemComponent::Reflect(AZ::ReflectContext* context)
     {
         if (auto serializeContext = azrtti_cast<AZ::SerializeContext*>(context))
         {
-            serializeContext->Class<ROS2SensorsEditorSystemComponent, ROS2SensorsSystemComponent>()
-                ->Version(0);
+            serializeContext->Class<ROS2SensorsEditorSystemComponent, ROS2SensorsSystemComponent>()->Version(0);
         }
     }
 

@@ -2,15 +2,10 @@
 #pragma once
 
 #include <AzCore/Component/Component.h>
-#include <AzCore/Component/TickBus.h>
-#include <ROS2Sensors/ROS2SensorsBus.h>
 
 namespace ROS2Sensors
 {
-    class ROS2SensorsSystemComponent
-        : public AZ::Component
-        , protected ROS2SensorsRequestBus::Handler
-        , public AZ::TickBus::Handler
+    class ROS2SensorsSystemComponent : public AZ::Component
     {
     public:
         AZ_COMPONENT_DECL(ROS2SensorsSystemComponent);
@@ -22,25 +17,15 @@ namespace ROS2Sensors
         static void GetRequiredServices(AZ::ComponentDescriptor::DependencyArrayType& required);
         static void GetDependentServices(AZ::ComponentDescriptor::DependencyArrayType& dependent);
 
-        ROS2SensorsSystemComponent();
-        ~ROS2SensorsSystemComponent();
+        ROS2SensorsSystemComponent() = default;
+        ~ROS2SensorsSystemComponent() = default;
 
     protected:
         ////////////////////////////////////////////////////////////////////////
-        // ROS2SensorsRequestBus interface implementation
-
-        ////////////////////////////////////////////////////////////////////////
-
-        ////////////////////////////////////////////////////////////////////////
         // AZ::Component interface implementation
-        void Init() override;
-        void Activate() override;
-        void Deactivate() override;
-        ////////////////////////////////////////////////////////////////////////
-
-        ////////////////////////////////////////////////////////////////////////
-        // AZTickBus interface implementation
-        void OnTick(float deltaTime, AZ::ScriptTimePoint time) override;
+        void Init() override{};
+        void Activate() override{};
+        void Deactivate() override{};
         ////////////////////////////////////////////////////////////////////////
     };
 

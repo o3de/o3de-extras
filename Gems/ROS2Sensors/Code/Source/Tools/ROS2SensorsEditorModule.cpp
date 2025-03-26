@@ -1,12 +1,11 @@
 
+#include "ROS2SensorsEditorSystemComponent.h"
 #include <ROS2Sensors/ROS2SensorsTypeIds.h>
 #include <ROS2SensorsModuleInterface.h>
-#include "ROS2SensorsEditorSystemComponent.h"
 
 namespace ROS2Sensors
 {
-    class ROS2SensorsEditorModule
-        : public ROS2SensorsModuleInterface
+    class ROS2SensorsEditorModule : public ROS2SensorsModuleInterface
     {
     public:
         AZ_RTTI(ROS2SensorsEditorModule, ROS2SensorsEditorModuleTypeId, ROS2SensorsModuleInterface);
@@ -16,11 +15,13 @@ namespace ROS2Sensors
         {
             // Push results of [MyComponent]::CreateDescriptor() into m_descriptors here.
             // Add ALL components descriptors associated with this gem to m_descriptors.
-            // This will associate the AzTypeInfo information for the components with the the SerializeContext, BehaviorContext and EditContext.
-            // This happens through the [MyComponent]::Reflect() function.
-            m_descriptors.insert(m_descriptors.end(), {
-                ROS2SensorsEditorSystemComponent::CreateDescriptor(),
-            });
+            // This will associate the AzTypeInfo information for the components with the the SerializeContext, BehaviorContext and
+            // EditContext. This happens through the [MyComponent]::Reflect() function.
+            m_descriptors.insert(
+                m_descriptors.end(),
+                {
+                    ROS2SensorsEditorSystemComponent::CreateDescriptor(),
+                });
         }
 
         /**
@@ -29,12 +30,12 @@ namespace ROS2Sensors
          */
         AZ::ComponentTypeList GetRequiredSystemComponents() const override
         {
-            return AZ::ComponentTypeList {
+            return AZ::ComponentTypeList{
                 azrtti_typeid<ROS2SensorsEditorSystemComponent>(),
             };
         }
     };
-}// namespace ROS2Sensors
+} // namespace ROS2Sensors
 
 #if defined(O3DE_GEM_NAME)
 AZ_DECLARE_MODULE_CLASS(AZ_JOIN(Gem_, O3DE_GEM_NAME, _Editor), ROS2Sensors::ROS2SensorsEditorModule)
