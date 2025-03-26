@@ -9,26 +9,14 @@
 
 #include <AzCore/Memory/SystemAllocator.h>
 #include <AzCore/Module/Module.h>
-#include <Camera/PostProcessing/ROS2ImageEncodingConversionComponent.h>
-#include <Camera/ROS2CameraSensorComponent.h>
-#include <Camera/ROS2CameraSystemComponent.h>
-#include <ContactSensor/ROS2ContactSensorComponent.h>
-#include <GNSS/ROS2GNSSSensorComponent.h>
 #include <Gripper/FingerGripperComponent.h>
 #include <Gripper/GripperActionServerComponent.h>
 #include <Gripper/VacuumGripperComponent.h>
-#include <Imu/ROS2ImuSensorComponent.h>
-#include <Lidar/ClassSegmentationConfigurationComponent.h>
-#include <Lidar/LidarRegistrarSystemComponent.h>
-#include <Lidar/ROS2Lidar2DSensorComponent.h>
-#include <Lidar/ROS2LidarSensorComponent.h>
 #include <Manipulation/Controllers/JointsArticulationControllerComponent.h>
 #include <Manipulation/Controllers/JointsPIDControllerComponent.h>
 #include <Manipulation/JointsManipulationComponent.h>
 #include <Manipulation/JointsPositionsComponent.h>
 #include <Manipulation/JointsTrajectoryComponent.h>
-#include <Odometry/ROS2OdometrySensorComponent.h>
-#include <Odometry/ROS2WheelOdometry.h>
 #include <ROS2/Frame/ROS2FrameComponent.h>
 #include <ROS2/Manipulation/MotorizedJoints/JointMotorControllerComponent.h>
 #include <ROS2/Manipulation/MotorizedJoints/ManualMotorControllerComponent.h>
@@ -61,25 +49,12 @@ namespace ROS2
                 m_descriptors.end(),
                 {
                     ROS2SystemComponent::CreateDescriptor(),
-                    ROS2SystemCameraComponent::CreateDescriptor(),
-                    ROS2SensorComponentBase<TickBasedSource>::CreateDescriptor(),
-                    ROS2SensorComponentBase<PhysicsBasedSource>::CreateDescriptor(),
-                    LidarRegistrarSystemComponent::CreateDescriptor(),
                     ROS2RobotImporterSystemComponent::CreateDescriptor(),
-                    ROS2ImuSensorComponent::CreateDescriptor(),
-                    ROS2GNSSSensorComponent::CreateDescriptor(),
-                    ROS2LidarSensorComponent::CreateDescriptor(),
-                    ROS2Lidar2DSensorComponent::CreateDescriptor(),
-                    ROS2OdometrySensorComponent::CreateDescriptor(),
-                    ROS2WheelOdometryComponent::CreateDescriptor(),
                     ROS2FrameComponent::CreateDescriptor(),
                     ROS2RobotControlComponent::CreateDescriptor(),
-                    ROS2CameraSensorComponent::CreateDescriptor(),
-                    ROS2ImageEncodingConversionComponent::CreateDescriptor(),
                     AckermannControlComponent::CreateDescriptor(),
                     RigidBodyTwistControlComponent::CreateDescriptor(),
                     SkidSteeringControlComponent::CreateDescriptor(),
-                    ROS2CameraSensorComponent::CreateDescriptor(),
                     ROS2SpawnerComponent::CreateDescriptor(),
                     ROS2SpawnPointComponent::CreateDescriptor(),
                     VehicleDynamics::AckermannVehicleModelComponent::CreateDescriptor(),
@@ -96,9 +71,7 @@ namespace ROS2
                     GripperActionServerComponent::CreateDescriptor(),
                     VacuumGripperComponent::CreateDescriptor(),
                     FingerGripperComponent::CreateDescriptor(),
-                    ROS2ContactSensorComponent::CreateDescriptor(),
                     FollowingCameraComponent::CreateDescriptor(),
-                    ClassSegmentationConfigurationComponent::CreateDescriptor(),
                 });
         }
 
@@ -106,8 +79,6 @@ namespace ROS2
         {
             return AZ::ComponentTypeList{
                 azrtti_typeid<ROS2SystemComponent>(),
-                azrtti_typeid<ROS2SystemCameraComponent>(),
-                azrtti_typeid<LidarRegistrarSystemComponent>(),
                 azrtti_typeid<ROS2RobotImporterSystemComponent>(),
             };
         }

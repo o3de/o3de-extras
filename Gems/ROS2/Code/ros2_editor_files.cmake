@@ -6,12 +6,6 @@
 set(FILES
     ../Assets/Editor/Images/Icons/ROS2.qrc
     ../Assets/Editor/Images/Icons/ROS_import_icon.svg
-    Source/Camera/ROS2CameraSensorEditorComponent.cpp
-    Source/Camera/ROS2CameraSensorEditorComponent.h
-    Source/Camera/ROS2EditorCameraSystemComponent.cpp
-    Source/Camera/ROS2EditorCameraSystemComponent.h
-    Source/Lidar/LidarRegistrarEditorSystemComponent.cpp
-    Source/Lidar/LidarRegistrarEditorSystemComponent.h
     Source/Manipulation/JointsPositionsEditorComponent.cpp
     Source/Manipulation/JointsPositionsEditorComponent.h
     Source/Manipulation/JointsManipulationEditorComponent.cpp

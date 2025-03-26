@@ -17,7 +17,8 @@
 #include <AzToolsFramework/ToolsComponents/GenericComponentWrapper.h>
 #include <ROS2/Frame/ROS2FrameEditorComponent.h>
 #include <ROS2/RobotImporter/SDFormatModelPluginImporterHook.h>
-#include <ROS2/Sensor/SensorConfiguration.h>
+// temporarily disable import hooks for sensors and models for https://github.com/o3de/sig-simulation/pull/96
+// #include <ROS2/Sensor/SensorConfiguration.h>
 #include <Source/EditorArticulationLinkComponent.h>
 #include <Source/EditorHingeJointComponent.h>
 
@@ -33,11 +34,13 @@ namespace ROS2::SDFormat
         //! @param topic ROS 2 topic name
         //! @param messageType ROS 2 message type
         //! @param configName name under which topic configuration is stored in sensor's configuration
-        void AddTopicConfiguration(
-            SensorConfiguration& sensorConfig,
-            const AZStd::string& topic,
-            const AZStd::string& messageType,
-            const AZStd::string& configName);
+
+        // temporarily disable import hooks for sensors and models for https://github.com/o3de/sig-simulation/pull/96
+        // void AddTopicConfiguration(
+        //     SensorConfiguration& sensorConfig,
+        //     const AZStd::string& topic,
+        //     const AZStd::string& messageType,
+        //     const AZStd::string& configName);
 
         //! Find O3DE entity id of the SDFormat joint based on its name and a map of all created entities.
         //! @param jointName name of the joint in query
