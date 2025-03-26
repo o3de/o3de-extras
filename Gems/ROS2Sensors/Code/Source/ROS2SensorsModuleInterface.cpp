@@ -9,9 +9,25 @@
 #include "ROS2SensorsModuleInterface.h"
 #include <AzCore/Memory/Memory.h>
 
-#include <ROS2Sensors/ROS2SensorsTypeIds.h>
-
 #include <Clients/ROS2SensorsSystemComponent.h>
+#include <ROS2/Sensor/Events/PhysicsBasedSource.h>
+#include <ROS2/Sensor/Events/TickBasedSource.h>
+
+#include <ROS2Sensors/ROS2SensorsTypeIds.h>
+#include <ROS2Sensors/Sensor/ROS2SensorComponentBase.h>
+
+// TEMP #include <Camera/PostProcessing/ROS2ImageEncodingConversionComponent.h>
+// TEMP #include <Camera/ROS2CameraSensorComponent.h>
+// TEMP #include <Camera/ROS2CameraSystemComponent.h>
+// TEMP #include <ContactSensor/ROS2ContactSensorComponent.h>
+#include <GNSS/ROS2GNSSSensorComponent.h>
+// TEMP #include <Imu/ROS2ImuSensorComponent.h>
+// TEMP #include <Lidar/ClassSegmentationConfigurationComponent.h>
+// TEMP #include <Lidar/LidarRegistrarSystemComponent.h>
+// TEMP #include <Lidar/ROS2Lidar2DSensorComponent.h>
+// TEMP #include <Lidar/ROS2LidarSensorComponent.h>
+// TEMP #include <Odometry/ROS2OdometrySensorComponent.h>
+// TEMP #include <Odometry/ROS2WheelOdometry.h>
 
 namespace ROS2Sensors
 {
@@ -29,6 +45,20 @@ namespace ROS2Sensors
             m_descriptors.end(),
             {
                 ROS2SensorsSystemComponent::CreateDescriptor(),
+                ROS2::ROS2SensorComponentBase<ROS2::TickBasedSource>::CreateDescriptor(),
+                ROS2::ROS2SensorComponentBase<ROS2::PhysicsBasedSource>::CreateDescriptor(),
+                // TEMP ROS2CameraSensorComponent::CreateDescriptor(),
+                // TEMP ROS2ImageEncodingConversionComponent::CreateDescriptor(),
+                // TEMP ROS2ContactSensorComponent::CreateDescriptor(),
+                // TEMP ROS2SystemCameraComponent::CreateDescriptor(),
+                ROS2::ROS2GNSSSensorComponent::CreateDescriptor(),
+                // TEMP ROS2ImuSensorComponent::CreateDescriptor(),
+                // TEMP LidarRegistrarSystemComponent::CreateDescriptor(),
+                // TEMP ROS2LidarSensorComponent::CreateDescriptor(),
+                // TEMP ROS2Lidar2DSensorComponent::CreateDescriptor(),
+                // TEMP ClassSegmentationConfigurationComponent::CreateDescriptor(),
+                // TEMP ROS2OdometrySensorComponent::CreateDescriptor(),
+                // TEMP ROS2WheelOdometryComponent::CreateDescriptor(),
             });
     }
 
@@ -36,6 +66,8 @@ namespace ROS2Sensors
     {
         return AZ::ComponentTypeList{
             azrtti_typeid<ROS2SensorsSystemComponent>(),
+            // TEMP azrtti_typeid<ROS2SystemCameraComponent>(),
+            // TEMP azrtti_typeid<LidarRegistrarSystemComponent>(),
         };
     }
 } // namespace ROS2Sensors

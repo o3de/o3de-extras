@@ -11,7 +11,7 @@
 #include <AzCore/Component/EntityId.h>
 #include <AzCore/EBus/EBus.h>
 #include <AzCore/Interface/Interface.h>
-#include <ROS2/Sensor/SensorConfiguration.h>
+#include <ROS2Sensors/Sensor/SensorConfiguration.h>
 namespace ROS2
 {
     //! Interface that allows to get sensor configuration and switch publish state.

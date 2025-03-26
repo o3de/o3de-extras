@@ -12,10 +12,10 @@
 #include <AzCore/Serialization/EditContext.h>
 #include <ROS2/Frame/ROS2FrameComponent.h>
 #include <ROS2/ROS2GemUtilities.h>
-#include <ROS2/ROS2SensorTypesIds.h>
 #include <ROS2/Sensor/Events/EventSourceAdapter.h>
-#include <ROS2/Sensor/SensorConfiguration.h>
-#include <ROS2/Sensor/SensorConfigurationRequestBus.h>
+#include <ROS2Sensors/ROS2SensorsTypeIds.h>
+#include <ROS2Sensors/Sensor/SensorConfiguration.h>
+#include <ROS2Sensors/Sensor/SensorConfigurationRequestBus.h>
 
 namespace ROS2
 {

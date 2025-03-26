@@ -10,6 +10,10 @@
 #include <ROS2Sensors/ROS2SensorsTypeIds.h>
 #include <ROS2SensorsModuleInterface.h>
 
+//TEMP #include <Camera/ROS2CameraSensorEditorComponent.h>
+//TEMP #include <Camera/ROS2EditorCameraSystemComponent.h>
+//TEMP #include <Lidar/LidarRegistrarEditorSystemComponent.h>
+
 namespace ROS2Sensors
 {
     class ROS2SensorsEditorModule : public ROS2SensorsModuleInterface
@@ -28,6 +32,9 @@ namespace ROS2Sensors
                 m_descriptors.end(),
                 {
                     ROS2SensorsEditorSystemComponent::CreateDescriptor(),
+                    //TEMP ROS2CameraSensorEditorComponent::CreateDescriptor(),
+                    //TEMP ROS2EditorCameraSystemComponent::CreateDescriptor(),
+                    //TEMP LidarRegistrarEditorSystemComponent::CreateDescriptor(),
                 });
         }
 
@@ -39,6 +46,8 @@ namespace ROS2Sensors
         {
             return AZ::ComponentTypeList{
                 azrtti_typeid<ROS2SensorsEditorSystemComponent>(),
+                //TEMP azrtti_typeid<ROS2EditorCameraSystemComponent>(),
+                //TEMP azrtti_typeid<LidarRegistrarEditorSystemComponent>(),
             };
         }
     };

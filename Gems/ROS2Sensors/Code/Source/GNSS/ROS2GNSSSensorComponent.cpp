@@ -12,9 +12,8 @@
 #include <ROS2/ROS2GemUtilities.h>
 #include <ROS2/Utilities/ROS2Names.h>
 
-
-#include <ROS2/GNSS/GNSSPostProcessingRequestBus.h>
 #include <Georeferencing/GeoreferenceBus.h>
+#include <ROS2Sensors/GNSS/GNSSPostProcessingRequestBus.h>
 
 namespace ROS2
 {
@@ -99,8 +98,7 @@ namespace ROS2
         AZ::TransformBus::EventResult(currentPosition, GetEntityId(), &AZ::TransformBus::Events::GetWorldTranslation);
 
         WGS::WGS84Coordinate currentPositionWGS84;
-        GeoreferenceRequestsBus::BroadcastResult(
-            currentPositionWGS84, &GeoreferenceRequests::ConvertFromLevelToWGS84, currentPosition);
+        GeoreferenceRequestsBus::BroadcastResult(currentPositionWGS84, &GeoreferenceRequests::ConvertFromLevelToWGS84, currentPosition);
 
         m_gnssMsg.latitude = currentPositionWGS84.m_latitude;
         m_gnssMsg.longitude = currentPositionWGS84.m_longitude;
