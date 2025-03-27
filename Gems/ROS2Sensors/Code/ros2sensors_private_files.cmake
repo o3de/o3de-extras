@@ -11,8 +11,14 @@ set(FILES
     Source/ROS2SensorsModuleInterface.h
     Source/Clients/ROS2SensorsSystemComponent.cpp
     Source/Clients/ROS2SensorsSystemComponent.h
+    Source/ContactSensor/ROS2ContactSensorComponent.cpp
+    Source/ContactSensor/ROS2ContactSensorComponent.h
     Source/GNSS/ROS2GNSSSensorComponent.cpp
     Source/GNSS/ROS2GNSSSensorComponent.h
+    Source/Imu/ImuSensorConfiguration.cpp
+    Source/Imu/ImuSensorConfiguration.h
+    Source/Imu/ROS2ImuSensorComponent.cpp
+    Source/Imu/ROS2ImuSensorComponent.h
     Source/Sensor/SensorConfiguration.cpp
     Source/Sensor/SensorHelpers.cpp
 )

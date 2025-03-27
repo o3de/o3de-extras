@@ -14,7 +14,7 @@
 #include <AzFramework/Physics/Common/PhysicsEvents.h>
 #include <AzFramework/Physics/PhysicsSystem.h>
 #include <ROS2/Sensor/Events/PhysicsBasedSource.h>
-#include <ROS2/Sensor/ROS2SensorComponentBase.h>
+#include <ROS2Sensors/Sensor/ROS2SensorComponentBase.h>
 #include <rclcpp/publisher.hpp>
 #include <sensor_msgs/msg/imu.hpp>
 
@@ -28,7 +28,7 @@ namespace ROS2
     class ROS2ImuSensorComponent : public ROS2SensorComponentBase<PhysicsBasedSource>
     {
     public:
-        AZ_COMPONENT(ROS2ImuSensorComponent, ROS2ImuSensorComponentTypeId, SensorBaseType);
+        AZ_COMPONENT(ROS2ImuSensorComponent, ROS2Sensors::ROS2ImuSensorComponentTypeId, SensorBaseType);
         ROS2ImuSensorComponent();
         ROS2ImuSensorComponent(const SensorConfiguration& sensorConfiguration, const ImuSensorConfiguration& imuConfiguration);
         ~ROS2ImuSensorComponent() = default;

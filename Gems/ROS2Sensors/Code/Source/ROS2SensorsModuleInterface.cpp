@@ -19,9 +19,9 @@
 // TEMP #include <Camera/PostProcessing/ROS2ImageEncodingConversionComponent.h>
 // TEMP #include <Camera/ROS2CameraSensorComponent.h>
 // TEMP #include <Camera/ROS2CameraSystemComponent.h>
-// TEMP #include <ContactSensor/ROS2ContactSensorComponent.h>
+#include <ContactSensor/ROS2ContactSensorComponent.h>
 #include <GNSS/ROS2GNSSSensorComponent.h>
-// TEMP #include <Imu/ROS2ImuSensorComponent.h>
+#include <Imu/ROS2ImuSensorComponent.h>
 // TEMP #include <Lidar/ClassSegmentationConfigurationComponent.h>
 // TEMP #include <Lidar/LidarRegistrarSystemComponent.h>
 // TEMP #include <Lidar/ROS2Lidar2DSensorComponent.h>
@@ -49,10 +49,10 @@ namespace ROS2Sensors
                 ROS2::ROS2SensorComponentBase<ROS2::PhysicsBasedSource>::CreateDescriptor(),
                 // TEMP ROS2CameraSensorComponent::CreateDescriptor(),
                 // TEMP ROS2ImageEncodingConversionComponent::CreateDescriptor(),
-                // TEMP ROS2ContactSensorComponent::CreateDescriptor(),
+                ROS2::ROS2ContactSensorComponent::CreateDescriptor(),
                 // TEMP ROS2SystemCameraComponent::CreateDescriptor(),
                 ROS2::ROS2GNSSSensorComponent::CreateDescriptor(),
-                // TEMP ROS2ImuSensorComponent::CreateDescriptor(),
+                ROS2::ROS2ImuSensorComponent::CreateDescriptor(),
                 // TEMP LidarRegistrarSystemComponent::CreateDescriptor(),
                 // TEMP ROS2LidarSensorComponent::CreateDescriptor(),
                 // TEMP ROS2Lidar2DSensorComponent::CreateDescriptor(),

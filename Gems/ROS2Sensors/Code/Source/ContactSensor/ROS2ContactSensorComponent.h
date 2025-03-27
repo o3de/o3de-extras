@@ -14,9 +14,9 @@
 #include <AzCore/std/parallel/mutex.h>
 #include <AzCore/std/string/string.h>
 #include <AzFramework/Physics/Common/PhysicsSimulatedBodyEvents.h>
-#include <ROS2/ROS2SensorTypesIds.h>
 #include <ROS2/Sensor/Events/TickBasedSource.h>
-#include <ROS2/Sensor/ROS2SensorComponentBase.h>
+#include <ROS2Sensors/ROS2SensorsTypeIds.h>
+#include <ROS2Sensors/Sensor/ROS2SensorComponentBase.h>
 #include <gazebo_msgs/msg/contact_state.hpp>
 #include <gazebo_msgs/msg/contacts_state.hpp>
 #include <rclcpp/publisher.hpp>
@@ -30,7 +30,7 @@ namespace ROS2
     class ROS2ContactSensorComponent : public ROS2SensorComponentBase<TickBasedSource>
     {
     public:
-        AZ_COMPONENT(ROS2ContactSensorComponent, ROS2ContactSensorComponentTypeId, SensorBaseType);
+        AZ_COMPONENT(ROS2ContactSensorComponent, ROS2Sensors::ROS2ContactSensorComponentTypeId, SensorBaseType);
         ROS2ContactSensorComponent();
         ~ROS2ContactSensorComponent() = default;
 
