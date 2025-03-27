@@ -10,7 +10,7 @@
 
 #include <AzCore/Component/Component.h>
 #include <Lidar/LidarSystem.h>
-#include <ROS2/Lidar/LidarRegistrarBus.h>
+#include <ROS2Sensors/Lidar/LidarRegistrarBus.h>
 
 namespace ROS2
 {

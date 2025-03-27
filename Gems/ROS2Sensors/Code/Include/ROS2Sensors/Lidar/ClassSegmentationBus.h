@@ -12,7 +12,7 @@
 #include <AzCore/Interface/Interface.h>
 #include <AzCore/Math/Color.h>
 #include <LmbrCentral/Scripting/TagComponentBus.h>
-#include <ROS2/Lidar/SegmentationClassConfiguration.h>
+#include <ROS2Sensors/Lidar/SegmentationClassConfiguration.h>
 
 namespace ROS2
 {

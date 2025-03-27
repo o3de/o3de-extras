@@ -7,8 +7,8 @@
  */
 #include <AzCore/Serialization/EditContext.h>
 #include <AzCore/Serialization/EditContextConstants.inl>
-#include <ROS2/Lidar/ClassSegmentationBus.h>
-#include <ROS2/Lidar/SegmentationClassConfiguration.h>
+#include <ROS2Sensors/Lidar/ClassSegmentationBus.h>
+#include <ROS2Sensors/Lidar/SegmentationClassConfiguration.h>
 
 namespace ROS2
 {

@@ -12,8 +12,8 @@
 #include <Lidar/PointCloudMessageBuilder.h>
 #include <Lidar/ROS2LidarSensorComponent.h>
 #include <ROS2/Frame/ROS2FrameComponent.h>
-#include <ROS2/Lidar/ClassSegmentationBus.h>
 #include <ROS2/Utilities/ROS2Names.h>
+#include <ROS2Sensors/Lidar/ClassSegmentationBus.h>
 #include <sensor_msgs/point_cloud2_iterator.hpp>
 
 namespace ROS2

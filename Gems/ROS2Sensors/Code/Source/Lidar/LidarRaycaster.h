@@ -12,7 +12,7 @@
 #include <AzCore/Math/Vector3.h>
 #include <AzCore/std/containers/vector.h>
 #include <AzFramework/Physics/PhysicsScene.h>
-#include <ROS2/Lidar/LidarRaycasterBus.h>
+#include <ROS2Sensors/Lidar/LidarRaycasterBus.h>
 
 namespace ROS2
 {

@@ -11,7 +11,7 @@
 #include <AzCore/Serialization/SerializeContext.h>
 #include <ROS2Sensors/ROS2SensorsTypeIds.h>
 
-// TEMP #include <Lidar/LidarCore.h>
+#include <Lidar/LidarCore.h>
 #include <ROS2Sensors/Sensor/SensorConfiguration.h>
 
 namespace ROS2Sensors
@@ -21,7 +21,7 @@ namespace ROS2Sensors
     void ROS2SensorsSystemComponent::Reflect(AZ::ReflectContext* context)
     {
         // Reflect structs not strictly owned by any single component
-        // TEMP LidarCore::Reflect(context);
+        ROS2::LidarCore::Reflect(context);
         ROS2::SensorConfiguration::Reflect(context);
 
         if (auto serializeContext = azrtti_cast<AZ::SerializeContext*>(context))

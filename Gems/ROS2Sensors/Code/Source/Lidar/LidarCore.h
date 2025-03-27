@@ -10,8 +10,8 @@
 #include <Atom/RPI.Public/AuxGeom/AuxGeomDraw.h>
 #include <AzCore/Component/EntityId.h>
 #include <AzCore/Serialization/SerializeContext.h>
-#include <ROS2/Lidar/LidarRegistrarBus.h>
-#include <ROS2/Lidar/LidarSystemBus.h>
+#include <ROS2Sensors/Lidar/LidarRegistrarBus.h>
+#include <ROS2Sensors/Lidar/LidarSystemBus.h>
 
 #include "LidarRaycaster.h"
 #include "LidarSensorConfiguration.h"

@@ -9,10 +9,10 @@
 
 #include <Atom/RPI.Public/AuxGeom/AuxGeomDraw.h>
 #include <AzCore/Serialization/SerializeContext.h>
-#include <ROS2/Lidar/LidarRegistrarBus.h>
-#include <ROS2/Lidar/LidarSystemBus.h>
 #include <ROS2/Sensor/Events/TickBasedSource.h>
-#include <ROS2/Sensor/ROS2SensorComponentBase.h>
+#include <ROS2Sensors/Lidar/LidarRegistrarBus.h>
+#include <ROS2Sensors/Lidar/LidarSystemBus.h>
+#include <ROS2Sensors/Sensor/ROS2SensorComponentBase.h>
 #include <rclcpp/publisher.hpp>
 #include <sensor_msgs/msg/laser_scan.hpp>
 
@@ -28,7 +28,7 @@ namespace ROS2
     class ROS2Lidar2DSensorComponent : public ROS2SensorComponentBase<TickBasedSource>
     {
     public:
-        AZ_COMPONENT(ROS2Lidar2DSensorComponent, ROS2Lidar2DSensorComponentTypeId, SensorBaseType);
+        AZ_COMPONENT(ROS2Lidar2DSensorComponent, ROS2Sensors::ROS2Lidar2DSensorComponentTypeId, SensorBaseType);
         ROS2Lidar2DSensorComponent();
         ROS2Lidar2DSensorComponent(const SensorConfiguration& sensorConfiguration, const LidarSensorConfiguration& lidarConfiguration);
         ~ROS2Lidar2DSensorComponent() = default;

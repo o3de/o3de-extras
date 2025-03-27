@@ -8,7 +8,7 @@
 #pragma once
 
 #include <Lidar/LidarRaycaster.h>
-#include <ROS2/Lidar/LidarSystemBus.h>
+#include <ROS2Sensors/Lidar/LidarSystemBus.h>
 
 namespace ROS2
 {

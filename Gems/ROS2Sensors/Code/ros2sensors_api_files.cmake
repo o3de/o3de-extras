@@ -15,4 +15,8 @@ set(FILES
     Include/ROS2Sensors/Camera/CameraCalibrationRequestBus.h
     Include/ROS2Sensors/Camera/CameraPostProcessingRequestBus.h
     Include/ROS2Sensors/GNSS/GNSSPostProcessingRequestBus.h
+    Include/ROS2Sensors/Lidar/ClassSegmentationBus.h
+    Include/ROS2Sensors/Lidar/LidarRaycasterBus.h
+    Include/ROS2Sensors/Lidar/LidarSystemBus.h
+    Include/ROS2Sensors/Lidar/LidarRegistrarBus.h
 )

@@ -5,7 +5,7 @@
  * SPDX-License-Identifier: Apache-2.0 OR MIT
  *
  */
-#include <ROS2/Lidar/RaycastResults.h>
+#include <ROS2Sensors/Lidar/RaycastResults.h>
 
 namespace ROS2
 {

@@ -22,10 +22,10 @@
 #include <ContactSensor/ROS2ContactSensorComponent.h>
 #include <GNSS/ROS2GNSSSensorComponent.h>
 #include <Imu/ROS2ImuSensorComponent.h>
-// TEMP #include <Lidar/ClassSegmentationConfigurationComponent.h>
-// TEMP #include <Lidar/LidarRegistrarSystemComponent.h>
-// TEMP #include <Lidar/ROS2Lidar2DSensorComponent.h>
-// TEMP #include <Lidar/ROS2LidarSensorComponent.h>
+#include <Lidar/ClassSegmentationConfigurationComponent.h>
+#include <Lidar/LidarRegistrarSystemComponent.h>
+#include <Lidar/ROS2Lidar2DSensorComponent.h>
+#include <Lidar/ROS2LidarSensorComponent.h>
 #include <Odometry/ROS2OdometrySensorComponent.h>
 #include <Odometry/ROS2WheelOdometry.h>
 
@@ -53,10 +53,10 @@ namespace ROS2Sensors
                 ROS2::ROS2ContactSensorComponent::CreateDescriptor(),
                 ROS2::ROS2GNSSSensorComponent::CreateDescriptor(),
                 ROS2::ROS2ImuSensorComponent::CreateDescriptor(),
-                // TEMP LidarRegistrarSystemComponent::CreateDescriptor(),
-                // TEMP ROS2LidarSensorComponent::CreateDescriptor(),
-                // TEMP ROS2Lidar2DSensorComponent::CreateDescriptor(),
-                // TEMP ClassSegmentationConfigurationComponent::CreateDescriptor(),
+                ROS2::ROS2LidarSensorComponent::CreateDescriptor(),
+                ROS2::ROS2Lidar2DSensorComponent::CreateDescriptor(),
+                ROS2::ClassSegmentationConfigurationComponent::CreateDescriptor(),
+                ROS2::LidarRegistrarSystemComponent::CreateDescriptor(),
                 ROS2::ROS2OdometrySensorComponent::CreateDescriptor(),
                 ROS2::ROS2WheelOdometryComponent::CreateDescriptor(),
             });
@@ -65,8 +65,9 @@ namespace ROS2Sensors
     AZ::ComponentTypeList ROS2SensorsModuleInterface::GetRequiredSystemComponents() const
     {
         return AZ::ComponentTypeList{
-            azrtti_typeid<ROS2SensorsSystemComponent>(), azrtti_typeid<ROS2::ROS2SystemCameraComponent>(),
-            // TEMP azrtti_typeid<LidarRegistrarSystemComponent>(),
+            azrtti_typeid<ROS2SensorsSystemComponent>(),
+            azrtti_typeid<ROS2::ROS2SystemCameraComponent>(),
+            azrtti_typeid<ROS2::LidarRegistrarSystemComponent>(),
         };
     }
 } // namespace ROS2Sensors

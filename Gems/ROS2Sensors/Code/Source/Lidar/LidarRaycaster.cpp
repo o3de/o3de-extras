@@ -14,7 +14,7 @@
 #include <AzFramework/Physics/Shape.h>
 #include <Lidar/LidarRaycaster.h>
 #include <Lidar/LidarTemplateUtils.h>
-#include <ROS2/Lidar/SegmentationUtils.h>
+#include <ROS2Sensors/Lidar/SegmentationUtils.h>
 
 namespace ROS2
 {

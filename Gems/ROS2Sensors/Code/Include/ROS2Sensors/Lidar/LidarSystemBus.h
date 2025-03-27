@@ -9,7 +9,7 @@
 
 #include <AzCore/Component/EntityId.h>
 #include <AzCore/EBus/EBus.h>
-#include <ROS2/Lidar/LidarRaycasterBus.h>
+#include <ROS2Sensors/Lidar/LidarRaycasterBus.h>
 
 namespace ROS2
 {

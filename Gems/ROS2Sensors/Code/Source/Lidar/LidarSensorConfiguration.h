@@ -7,7 +7,6 @@
  */
 #pragma once
 
-#include "ROS2/Lidar/LidarRegistrarBus.h"
 #include <AzCore/Component/EntityId.h>
 #include <AzCore/RTTI/RTTI.h>
 #include <AzCore/Serialization/SerializeContext.h>
@@ -15,6 +14,7 @@
 #include <Lidar/LidarRegistrarSystemComponent.h>
 #include <Lidar/LidarTemplate.h>
 #include <Lidar/LidarTemplateUtils.h>
+#include <ROS2Sensors/Lidar/LidarRegistrarBus.h>
 
 namespace ROS2
 {

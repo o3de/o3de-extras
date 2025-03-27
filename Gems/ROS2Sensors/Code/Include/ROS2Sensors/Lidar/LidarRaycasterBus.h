@@ -13,7 +13,7 @@
 #include <AzCore/Math/Vector3.h>
 #include <AzCore/Outcome/Outcome.h>
 #include <ROS2/Communication/QoS.h>
-#include <ROS2/Lidar/RaycastResults.h>
+#include <ROS2Sensors/Lidar/RaycastResults.h>
 
 namespace ROS2
 {

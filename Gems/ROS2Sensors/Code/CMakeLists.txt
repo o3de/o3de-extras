@@ -24,6 +24,26 @@ if(NOT PAL_TRAIT_ROS2SENSORS_SUPPORTED)
     return()
 endif()
 
+# Add the ROS2Sensors.Lidar.Static target
+# Note: this target will include all helper methods that are used by any Lidar implementation
+ly_add_target(
+    NAME ${gem_name}.Lidar.Static STATIC
+    NAMESPACE Gem
+    FILES_CMAKE
+        ros2sensors_lidar_api_files.cmake
+        ros2sensors_lidar_shared_files.cmake
+    INCLUDE_DIRECTORIES
+        PUBLIC
+            Include
+        PRIVATE
+            Source
+    BUILD_DEPENDENCIES
+        PUBLIC
+            AZ::AzCore
+            AZ::AzFramework
+            Gem::LmbrCentral.API
+)
+
 # The ${gem_name}.API target declares the common interface that users of this gem should depend on in their targets
 ly_add_target(
     NAME ${gem_name}.API INTERFACE
@@ -59,6 +79,7 @@ ly_add_target(
             AZ::AzFramework
             Gem::ROS2.Static
             Gem::LevelGeoreferencing.API
+            ${gem_name}.Lidar.Static
 )
 
 target_depends_on_ros2_packages(${gem_name}.Private.Object rclcpp sensor_msgs nav_msgs)

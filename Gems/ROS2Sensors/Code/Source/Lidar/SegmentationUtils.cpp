@@ -5,8 +5,8 @@
  * SPDX-License-Identifier: Apache-2.0 OR MIT
  *
  */
-#include <ROS2/Lidar/ClassSegmentationBus.h>
-#include <ROS2/Lidar/SegmentationUtils.h>
+#include <ROS2Sensors/Lidar/ClassSegmentationBus.h>
+#include <ROS2Sensors/Lidar/SegmentationUtils.h>
 
 namespace ROS2::SegmentationUtils
 {
