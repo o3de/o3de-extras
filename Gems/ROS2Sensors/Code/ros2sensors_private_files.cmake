@@ -19,6 +19,12 @@ set(FILES
     Source/Imu/ImuSensorConfiguration.h
     Source/Imu/ROS2ImuSensorComponent.cpp
     Source/Imu/ROS2ImuSensorComponent.h
+    Source/Odometry/ROS2OdometrySensorComponent.cpp
+    Source/Odometry/ROS2OdometrySensorComponent.h
+    Source/Odometry/ROS2WheelOdometry.cpp
+    Source/Odometry/ROS2WheelOdometry.h
+    Source/Odometry/ROS2OdometryCovariance.cpp
+    Source/Odometry/ROS2OdometryCovariance.h
     Source/Sensor/SensorConfiguration.cpp
     Source/Sensor/SensorHelpers.cpp
 )

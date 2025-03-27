@@ -8,10 +8,10 @@
 #pragma once
 
 #include <AzCore/Math/Transform.h>
+#include <ROS2/Sensor/Events/PhysicsBasedSource.h>
+#include <ROS2Sensors/Sensor/ROS2SensorComponentBase.h>
 #include <nav_msgs/msg/odometry.hpp>
 #include <rclcpp/publisher.hpp>
-#include <ROS2/Sensor/Events/PhysicsBasedSource.h>
-#include <ROS2/Sensor/ROS2SensorComponentBase.h>
 
 #include "ROS2OdometryCovariance.h"
 
@@ -21,11 +21,10 @@ namespace ROS2
     //! It constructs and publishes an odometry message, which contains information about the vehicle's velocity and position in space.
     //! This is a physical sensor that takes a vehicle's configuration and computes updates from the wheels' rotations.
     //! @see <a href="https://index.ros.org/p/nav_msgs/">nav_msgs package</a>.
-    class ROS2WheelOdometryComponent
-        : public ROS2SensorComponentBase<PhysicsBasedSource>
+    class ROS2WheelOdometryComponent : public ROS2SensorComponentBase<PhysicsBasedSource>
     {
     public:
-        AZ_COMPONENT(ROS2WheelOdometryComponent, ROS2WheelOdometryComponentTypeId, SensorBaseType);
+        AZ_COMPONENT(ROS2WheelOdometryComponent, ROS2Sensors::ROS2WheelOdometryComponentTypeId, SensorBaseType);
         ROS2WheelOdometryComponent();
         ~ROS2WheelOdometryComponent() = default;
         static void GetRequiredServices(AZ::ComponentDescriptor::DependencyArrayType& required);

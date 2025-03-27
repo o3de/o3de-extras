@@ -8,9 +8,9 @@
 
 #include "ROS2WheelOdometry.h"
 #include "Odometry/ROS2OdometryCovariance.h"
-#include "VehicleModelComponent.h"
 #include <ROS2/Utilities/ROS2Conversions.h>
 #include <ROS2/Utilities/ROS2Names.h>
+#include <ROS2/VehicleDynamics/VehicleInputControlBus.h>
 
 namespace ROS2
 {

@@ -11,7 +11,7 @@
 #include <AzCore/Math/Transform.h>
 #include <AzCore/Math/Vector3.h>
 #include <ROS2/Sensor/Events/PhysicsBasedSource.h>
-#include <ROS2/Sensor/ROS2SensorComponentBase.h>
+#include <ROS2Sensors/Sensor/ROS2SensorComponentBase.h>
 #include <nav_msgs/msg/odometry.hpp>
 #include <rclcpp/publisher.hpp>
 

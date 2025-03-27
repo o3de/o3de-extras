@@ -26,8 +26,8 @@
 // TEMP #include <Lidar/LidarRegistrarSystemComponent.h>
 // TEMP #include <Lidar/ROS2Lidar2DSensorComponent.h>
 // TEMP #include <Lidar/ROS2LidarSensorComponent.h>
-// TEMP #include <Odometry/ROS2OdometrySensorComponent.h>
-// TEMP #include <Odometry/ROS2WheelOdometry.h>
+#include <Odometry/ROS2OdometrySensorComponent.h>
+#include <Odometry/ROS2WheelOdometry.h>
 
 namespace ROS2Sensors
 {
@@ -57,8 +57,8 @@ namespace ROS2Sensors
                 // TEMP ROS2LidarSensorComponent::CreateDescriptor(),
                 // TEMP ROS2Lidar2DSensorComponent::CreateDescriptor(),
                 // TEMP ClassSegmentationConfigurationComponent::CreateDescriptor(),
-                // TEMP ROS2OdometrySensorComponent::CreateDescriptor(),
-                // TEMP ROS2WheelOdometryComponent::CreateDescriptor(),
+                ROS2::ROS2OdometrySensorComponent::CreateDescriptor(),
+                ROS2::ROS2WheelOdometryComponent::CreateDescriptor(),
             });
     }
 
