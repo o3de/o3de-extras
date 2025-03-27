@@ -16,11 +16,11 @@
 
 #include "CameraSensor.h"
 #include "CameraSensorConfiguration.h"
-#include <ROS2/Camera/CameraCalibrationRequestBus.h>
 #include <ROS2/ROS2Bus.h>
-#include <ROS2/ROS2SensorTypesIds.h>
 #include <ROS2/Sensor/Events/TickBasedSource.h>
-#include <ROS2/Sensor/ROS2SensorComponentBase.h>
+#include <ROS2Sensors/Camera/CameraCalibrationRequestBus.h>
+#include <ROS2Sensors/ROS2SensorsTypeIds.h>
+#include <ROS2Sensors/Sensor/ROS2SensorComponentBase.h>
 
 namespace ROS2
 {
@@ -43,7 +43,7 @@ namespace ROS2
         static void GetProvidedServices(AZ::ComponentDescriptor::DependencyArrayType& provided);
         ~ROS2CameraSensorComponent() override = default;
 
-        AZ_COMPONENT(ROS2CameraSensorComponent, ROS2CameraSensorComponentTypeId, SensorBaseType);
+        AZ_COMPONENT(ROS2CameraSensorComponent, ROS2Sensors::ROS2CameraSensorComponentTypeId, SensorBaseType);
         static void Reflect(AZ::ReflectContext* context);
 
         // AzToolsFramework::Components::EditorComponentBase overrides ..

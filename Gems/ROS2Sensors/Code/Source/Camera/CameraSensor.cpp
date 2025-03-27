@@ -6,7 +6,7 @@
  *
  */
 #include "CameraSensor.h"
-#include <ROS2/Camera/CameraPostProcessingRequestBus.h>
+#include <ROS2Sensors/Camera/CameraPostProcessingRequestBus.h>
 
 #include <Atom/Feature/PostProcess/PostProcessFeatureProcessorInterface.h>
 #include <Atom/RPI.Public/Base.h>

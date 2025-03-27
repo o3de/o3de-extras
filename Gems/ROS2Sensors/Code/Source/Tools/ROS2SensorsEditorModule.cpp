@@ -10,9 +10,9 @@
 #include <ROS2Sensors/ROS2SensorsTypeIds.h>
 #include <ROS2SensorsModuleInterface.h>
 
-//TEMP #include <Camera/ROS2CameraSensorEditorComponent.h>
-//TEMP #include <Camera/ROS2EditorCameraSystemComponent.h>
-//TEMP #include <Lidar/LidarRegistrarEditorSystemComponent.h>
+#include <Camera/ROS2CameraSensorEditorComponent.h>
+#include <Camera/ROS2EditorCameraSystemComponent.h>
+// TEMP #include <Lidar/LidarRegistrarEditorSystemComponent.h>
 
 namespace ROS2Sensors
 {
@@ -32,9 +32,9 @@ namespace ROS2Sensors
                 m_descriptors.end(),
                 {
                     ROS2SensorsEditorSystemComponent::CreateDescriptor(),
-                    //TEMP ROS2CameraSensorEditorComponent::CreateDescriptor(),
-                    //TEMP ROS2EditorCameraSystemComponent::CreateDescriptor(),
-                    //TEMP LidarRegistrarEditorSystemComponent::CreateDescriptor(),
+                    ROS2::ROS2CameraSensorEditorComponent::CreateDescriptor(),
+                    ROS2::ROS2EditorCameraSystemComponent::CreateDescriptor(),
+                    // TEMP LidarRegistrarEditorSystemComponent::CreateDescriptor(),
                 });
         }
 
@@ -45,9 +45,8 @@ namespace ROS2Sensors
         AZ::ComponentTypeList GetRequiredSystemComponents() const override
         {
             return AZ::ComponentTypeList{
-                azrtti_typeid<ROS2SensorsEditorSystemComponent>(),
-                //TEMP azrtti_typeid<ROS2EditorCameraSystemComponent>(),
-                //TEMP azrtti_typeid<LidarRegistrarEditorSystemComponent>(),
+                azrtti_typeid<ROS2SensorsEditorSystemComponent>(), azrtti_typeid<ROS2::ROS2EditorCameraSystemComponent>(),
+                // TEMP azrtti_typeid<LidarRegistrarEditorSystemComponent>(),
             };
         }
     };

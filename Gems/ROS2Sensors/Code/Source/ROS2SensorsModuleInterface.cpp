@@ -16,9 +16,9 @@
 #include <ROS2Sensors/ROS2SensorsTypeIds.h>
 #include <ROS2Sensors/Sensor/ROS2SensorComponentBase.h>
 
-// TEMP #include <Camera/PostProcessing/ROS2ImageEncodingConversionComponent.h>
-// TEMP #include <Camera/ROS2CameraSensorComponent.h>
-// TEMP #include <Camera/ROS2CameraSystemComponent.h>
+#include <Camera/PostProcessing/ROS2ImageEncodingConversionComponent.h>
+#include <Camera/ROS2CameraSensorComponent.h>
+#include <Camera/ROS2CameraSystemComponent.h>
 #include <ContactSensor/ROS2ContactSensorComponent.h>
 #include <GNSS/ROS2GNSSSensorComponent.h>
 #include <Imu/ROS2ImuSensorComponent.h>
@@ -47,10 +47,10 @@ namespace ROS2Sensors
                 ROS2SensorsSystemComponent::CreateDescriptor(),
                 ROS2::ROS2SensorComponentBase<ROS2::TickBasedSource>::CreateDescriptor(),
                 ROS2::ROS2SensorComponentBase<ROS2::PhysicsBasedSource>::CreateDescriptor(),
-                // TEMP ROS2CameraSensorComponent::CreateDescriptor(),
-                // TEMP ROS2ImageEncodingConversionComponent::CreateDescriptor(),
+                ROS2::ROS2CameraSensorComponent::CreateDescriptor(),
+                ROS2::ROS2SystemCameraComponent::CreateDescriptor(),
+                ROS2::ROS2ImageEncodingConversionComponent::CreateDescriptor(),
                 ROS2::ROS2ContactSensorComponent::CreateDescriptor(),
-                // TEMP ROS2SystemCameraComponent::CreateDescriptor(),
                 ROS2::ROS2GNSSSensorComponent::CreateDescriptor(),
                 ROS2::ROS2ImuSensorComponent::CreateDescriptor(),
                 // TEMP LidarRegistrarSystemComponent::CreateDescriptor(),
@@ -65,8 +65,7 @@ namespace ROS2Sensors
     AZ::ComponentTypeList ROS2SensorsModuleInterface::GetRequiredSystemComponents() const
     {
         return AZ::ComponentTypeList{
-            azrtti_typeid<ROS2SensorsSystemComponent>(),
-            // TEMP azrtti_typeid<ROS2SystemCameraComponent>(),
+            azrtti_typeid<ROS2SensorsSystemComponent>(), azrtti_typeid<ROS2::ROS2SystemCameraComponent>(),
             // TEMP azrtti_typeid<LidarRegistrarSystemComponent>(),
         };
     }

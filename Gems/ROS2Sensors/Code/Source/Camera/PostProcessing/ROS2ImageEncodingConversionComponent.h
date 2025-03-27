@@ -10,7 +10,7 @@
 
 #include <AzCore/Component/Component.h>
 #include <AzCore/RTTI/TypeInfoSimple.h>
-#include <ROS2/Camera/CameraPostProcessingRequestBus.h>
+#include <ROS2Sensors/Camera/CameraPostProcessingRequestBus.h>
 
 namespace ROS2
 {

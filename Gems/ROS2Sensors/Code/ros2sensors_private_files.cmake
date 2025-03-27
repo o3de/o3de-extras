@@ -11,6 +11,25 @@ set(FILES
     Source/ROS2SensorsModuleInterface.h
     Source/Clients/ROS2SensorsSystemComponent.cpp
     Source/Clients/ROS2SensorsSystemComponent.h
+    Source/Sensor/SensorConfiguration.cpp
+    Source/Sensor/SensorHelpers.cpp
+    Source/Camera/PostProcessing/ROS2ImageEncodingConversionComponent.cpp
+    Source/Camera/PostProcessing/ROS2ImageEncodingConversionComponent.h
+    Source/Camera/CameraConstants.h
+    Source/Camera/CameraPublishers.cpp
+    Source/Camera/CameraPublishers.h
+    Source/Camera/CameraSensor.cpp
+    Source/Camera/CameraSensor.h
+    Source/Camera/CameraSensorDescription.cpp
+    Source/Camera/CameraSensorDescription.h
+    Source/Camera/CameraSensorConfiguration.cpp
+    Source/Camera/CameraSensorConfiguration.h
+    Source/Camera/CameraUtilities.cpp
+    Source/Camera/CameraUtilities.h
+    Source/Camera/ROS2CameraSensorComponent.cpp
+    Source/Camera/ROS2CameraSensorComponent.h
+    Source/Camera/ROS2CameraSystemComponent.cpp
+    Source/Camera/ROS2CameraSystemComponent.h
     Source/ContactSensor/ROS2ContactSensorComponent.cpp
     Source/ContactSensor/ROS2ContactSensorComponent.h
     Source/GNSS/ROS2GNSSSensorComponent.cpp
@@ -25,6 +44,4 @@ set(FILES
     Source/Odometry/ROS2WheelOdometry.h
     Source/Odometry/ROS2OdometryCovariance.cpp
     Source/Odometry/ROS2OdometryCovariance.h
-    Source/Sensor/SensorConfiguration.cpp
-    Source/Sensor/SensorHelpers.cpp
 )

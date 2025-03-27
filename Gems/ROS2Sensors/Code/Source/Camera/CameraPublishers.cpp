@@ -11,8 +11,8 @@
 #include "CameraSensor.h"
 #include <ROS2/Communication/TopicConfiguration.h>
 #include <ROS2/ROS2Bus.h>
-#include <ROS2/Sensor/SensorConfiguration.h>
 #include <ROS2/Utilities/ROS2Names.h>
+#include <ROS2Sensors/Sensor/SensorConfiguration.h>
 
 namespace ROS2
 {

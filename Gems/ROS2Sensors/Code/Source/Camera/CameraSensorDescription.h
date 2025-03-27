@@ -8,7 +8,7 @@
 #pragma once
 
 #include "CameraSensorConfiguration.h"
-#include <ROS2/Sensor/SensorConfiguration.h>
+#include <ROS2Sensors/Sensor/SensorConfiguration.h>
 
 #include <AzCore/Math/Matrix4x4.h>
 #include <AzCore/std/containers/array.h>
