@@ -1,6 +1,6 @@
 {
     "template_name": "Ros2ProjectTemplate",
-    "version": "2.1.0",
+    "version": "2.1.1",
     "origin": "Open 3D Engine Extras",
     "origin_url": "https://github.com/o3de/o3de-extras",
     "license": "https://github.com/o3de/o3de-extras/tree/development/Templates/Ros2ProjectTemplate/Template/LICENSE.txt",
@@ -24,6 +24,10 @@
         },
         {
             "file": ".gitignore",
+            "isTemplated": false
+        },
+        {
+            "file": "AssetBundling/SeedLists/DefaultLevel.seed",
             "isTemplated": false
         },
         {
@@ -51,11 +55,11 @@
             "isTemplated": true
         },
         {
-            "file": "Gem/${NameLower}_shared_files.cmake",
+            "file": "Gem/${NameLower}_editor_shared_files.cmake",
             "isTemplated": true
         },
         {
-            "file": "Gem/${NameLower}_editor_shared_files.cmake",
+            "file": "Gem/${NameLower}_shared_files.cmake",
             "isTemplated": true
         },
         {
@@ -131,23 +135,7 @@
             "isTemplated": true
         },
         {
-            "file": "Gem/Source/${Name}Module.cpp",
-            "isTemplated": true
-        },
-        {
             "file": "Gem/Source/${Name}EditorModule.cpp",
-            "isTemplated": true
-        },
-        {
-            "file": "Gem/Source/${Name}ModuleInterface.h",
-            "isTemplated": true
-        },
-        {
-            "file": "Gem/Source/${Name}SystemComponent.cpp",
-            "isTemplated": true
-        },
-        {
-            "file": "Gem/Source/${Name}SystemComponent.h",
             "isTemplated": true
         },
         {
@@ -159,11 +147,27 @@
             "isTemplated": true
         },
         {
+            "file": "Gem/Source/${Name}Module.cpp",
+            "isTemplated": true
+        },
+        {
+            "file": "Gem/Source/${Name}ModuleInterface.h",
+            "isTemplated": true
+        },
+        {
             "file": "Gem/Source/${Name}SampleComponent.cpp",
             "isTemplated": true
         },
         {
             "file": "Gem/Source/${Name}SampleComponent.h",
+            "isTemplated": true
+        },
+        {
+            "file": "Gem/Source/${Name}SystemComponent.cpp",
+            "isTemplated": true
+        },
+        {
+            "file": "Gem/Source/${Name}SystemComponent.h",
             "isTemplated": true
         },
         {
@@ -216,7 +220,7 @@
         },
         {
             "file": "Registry/assetprocessor_settings.setreg",
-            "isTemplated": true
+            "isTemplated": false
         },
         {
             "file": "Registry/awscoreconfiguration.setreg",
@@ -231,11 +235,23 @@
             "isTemplated": false
         },
         {
+            "file": "Registry/physxdebugconfiguration.setreg",
+            "isTemplated": false
+        },
+        {
+            "file": "Registry/physxdefaultsceneconfiguration.setreg",
+            "isTemplated": false
+        },
+        {
             "file": "Registry/sceneassetimporter.setreg",
             "isTemplated": false
         },
         {
             "file": "Registry/ros2.setreg",
+            "isTemplated": false
+        },
+        {
+            "file": "Registry/loadlevel.setreg",
             "isTemplated": false
         },
         {
@@ -299,38 +315,6 @@
             "isTemplated": true
         },
         {
-            "file": "Resources/Platform/iOS/Images.xcassets/Contents.json",
-            "isTemplated": false
-        },
-        {
-            "file": "Resources/Platform/iOS/Images.xcassets/LaunchImage.launchimage/Contents.json",
-            "isTemplated": false
-        },
-        {
-            "file": "Resources/Platform/iOS/Images.xcassets/LaunchImage.launchimage/iPadLaunchImage1024x768.png",
-            "isTemplated": false
-        },
-        {
-            "file": "Resources/Platform/iOS/Images.xcassets/LaunchImage.launchimage/iPadLaunchImage1536x2048.png",
-            "isTemplated": false
-        },
-        {
-            "file": "Resources/Platform/iOS/Images.xcassets/LaunchImage.launchimage/iPadLaunchImage2048x1536.png",
-            "isTemplated": false
-        },
-        {
-            "file": "Resources/Platform/iOS/Images.xcassets/LaunchImage.launchimage/iPadLaunchImage768x1024.png",
-            "isTemplated": false
-        },
-        {
-            "file": "Resources/Platform/iOS/Images.xcassets/LaunchImage.launchimage/iPhoneLaunchImage640x1136.png",
-            "isTemplated": false
-        },
-        {
-            "file": "Resources/Platform/iOS/Images.xcassets/LaunchImage.launchimage/iPhoneLaunchImage640x960.png",
-            "isTemplated": false
-        },
-        {
             "file": "Resources/Platform/iOS/Images.xcassets/AppIcon.appiconset/Contents.json",
             "isTemplated": false
         },
@@ -387,6 +371,38 @@
             "isTemplated": false
         },
         {
+            "file": "Resources/Platform/iOS/Images.xcassets/Contents.json",
+            "isTemplated": false
+        },
+        {
+            "file": "Resources/Platform/iOS/Images.xcassets/LaunchImage.launchimage/Contents.json",
+            "isTemplated": false
+        },
+        {
+            "file": "Resources/Platform/iOS/Images.xcassets/LaunchImage.launchimage/iPadLaunchImage1024x768.png",
+            "isTemplated": false
+        },
+        {
+            "file": "Resources/Platform/iOS/Images.xcassets/LaunchImage.launchimage/iPadLaunchImage1536x2048.png",
+            "isTemplated": false
+        },
+        {
+            "file": "Resources/Platform/iOS/Images.xcassets/LaunchImage.launchimage/iPadLaunchImage2048x1536.png",
+            "isTemplated": false
+        },
+        {
+            "file": "Resources/Platform/iOS/Images.xcassets/LaunchImage.launchimage/iPadLaunchImage768x1024.png",
+            "isTemplated": false
+        },
+        {
+            "file": "Resources/Platform/iOS/Images.xcassets/LaunchImage.launchimage/iPhoneLaunchImage640x1136.png",
+            "isTemplated": false
+        },
+        {
+            "file": "Resources/Platform/iOS/Images.xcassets/LaunchImage.launchimage/iPhoneLaunchImage640x960.png",
+            "isTemplated": false
+        },
+        {
             "file": "Resources/Platform/iOS/Info.plist",
             "isTemplated": true
         },
@@ -415,11 +431,11 @@
             "isTemplated": true
         },
         {
-            "file": "Examples/slam_navigation/launch/config/config.rviz",
+            "file": "Examples/slam_navigation/README.md",
             "isTemplated": false
         },
         {
-            "file": "Examples/slam_navigation/README.md",
+            "file": "Examples/slam_navigation/launch/config/config.rviz",
             "isTemplated": false
         },
         {
@@ -445,10 +461,28 @@
     ],
     "createDirectories": [
         {
+            "dir": "AssetBundling"
+        },
+        {
+            "dir": "AssetBundling/SeedLists"
+        },
+        {
             "dir": "Assets"
         },
         {
             "dir": "Config"
+        },
+        {
+            "dir": "Examples"
+        },
+        {
+            "dir": "Examples/slam_navigation"
+        },
+        {
+            "dir": "Examples/slam_navigation/launch"
+        },
+        {
+            "dir": "Examples/slam_navigation/launch/config"
         },
         {
             "dir": "Gem"
@@ -542,21 +576,8 @@
         },
         {
             "dir": "cmake"
-        },
-        {
-            "dir": "Examples"
-        },
-        {
-            "dir": "Examples/slam_navigation"
-        },
-        {
-            "dir": "Examples/slam_navigation/launch"
-        },
-        {
-            "dir": "Examples/slam_navigation/launch/config"
         }
     ],
     "repo_uri": "https://raw.githubusercontent.com/o3de/o3de-extras/development",
-    "download_source_uri": "https://github.com/o3de/o3de-extras/releases/download/2.0/ros2projecttemplate-2.1.0-template.zip"
+    "download_source_uri": "https://github.com/o3de/o3de-extras/releases/download/2.0/ros2projecttemplate-2.1.1-template.zip"
 }
-
