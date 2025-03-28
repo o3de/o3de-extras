@@ -75,6 +75,10 @@ namespace ROS2
         AZ::EntityId GetFrameParent() const override;
         AZStd::set<AZ::EntityId> GetFrameChildren() const override;
 
+
+        //! Get the configuration of this component.
+        ROS2FrameConfiguration GetConfiguration() const;
+
     private:
         AZ::Crc32 OnFrameConfigurationChange();
 
