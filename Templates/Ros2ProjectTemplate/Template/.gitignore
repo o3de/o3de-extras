@@ -5,3 +5,5 @@
 _savebackup/
 **/__pycache__
 CMakeUserPresets.json
+backtrace.log
+imgui.ini
