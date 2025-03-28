@@ -10,6 +10,7 @@
 #include "ROS2CameraSystemComponent.h"
 
 #include <AzToolsFramework/Entity/EditorEntityContextBus.h>
+#include <ROS2Sensors/ROS2SensorsTypeIds.h>
 
 namespace ROS2
 {
@@ -21,7 +22,7 @@ namespace ROS2
         using BaseSystemComponent = ROS2SystemCameraComponent;
 
     public:
-        AZ_COMPONENT(ROS2EditorCameraSystemComponent, "{407f51c0-92c9-11ee-b9d1-0242ac120002}", BaseSystemComponent);
+        AZ_COMPONENT(ROS2EditorCameraSystemComponent, ROS2Sensors::ROS2EditorCameraSystemComponentTypeId, BaseSystemComponent);
         static void Reflect(AZ::ReflectContext* context);
 
     private:

@@ -11,6 +11,7 @@
 #include <AzCore/Component/Component.h>
 #include <AzCore/RTTI/TypeInfoSimple.h>
 #include <ROS2Sensors/Camera/CameraPostProcessingRequestBus.h>
+#include <ROS2Sensors/ROS2SensorsTypeIds.h>
 
 namespace ROS2
 {
@@ -24,7 +25,7 @@ namespace ROS2
 
     struct EncodingConversion
     {
-        AZ_TYPE_INFO(EncodingConversion, "{db361adc-b339-4a4e-a10b-c6bf6791eda6}");
+        AZ_TYPE_INFO(EncodingConversion, ROS2Sensors::EncodingConversionTypeId);
         static void Reflect(AZ::ReflectContext* context);
         AZ::Outcome<void, AZStd::string> ValidateInputEncoding(void* newValue, const AZ::Uuid& valueType);
         AZ::Outcome<void, AZStd::string> ValidateOutputEncoding(void* newValue, const AZ::Uuid& valueType);
@@ -44,7 +45,7 @@ namespace ROS2
         , public CameraPostProcessingRequestBus::Handler
     {
     public:
-        AZ_COMPONENT(ROS2ImageEncodingConversionComponent, "12449810-d179-44f1-8f72-22d8d3fa4460");
+        AZ_COMPONENT(ROS2ImageEncodingConversionComponent, ROS2Sensors::ROS2ImageEncodingConversionComponentTypeId, AZ::Component);
         static void Reflect(AZ::ReflectContext* context);
 
         ROS2ImageEncodingConversionComponent() = default;

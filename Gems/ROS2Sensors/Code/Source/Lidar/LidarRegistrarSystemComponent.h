@@ -11,6 +11,7 @@
 #include <AzCore/Component/Component.h>
 #include <Lidar/LidarSystem.h>
 #include <ROS2Sensors/Lidar/LidarRegistrarBus.h>
+#include <ROS2Sensors/ROS2SensorsTypeIds.h>
 
 namespace ROS2
 {
@@ -20,7 +21,7 @@ namespace ROS2
         , protected LidarRegistrarRequestBus::Handler
     {
     public:
-        AZ_COMPONENT(LidarRegistrarSystemComponent, "{78cba3f1-db2c-46de-9c3d-c40dd72f2f1e}");
+        AZ_COMPONENT(LidarRegistrarSystemComponent, ROS2Sensors::LidarRegistrarSystemComponentTypeId);
         static void Reflect(AZ::ReflectContext* context);
 
         static void GetProvidedServices(AZ::ComponentDescriptor::DependencyArrayType& provided);

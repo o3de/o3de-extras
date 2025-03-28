@@ -21,7 +21,13 @@ namespace ROS2Sensors
     // so they use the Same TypeId
     inline constexpr const char* ROS2SensorsEditorModuleTypeId = ROS2SensorsModuleTypeId;
 
-    // Sensors
+    // System Sensor Components TypeIds
+    inline constexpr const char* ROS2SystemCameraComponentTypeId = "{B4665D39-78FD-40DE-8518-2F6BD345A831}";
+    inline constexpr const char* ROS2EditorCameraSystemComponentTypeId = "{407F51C0-92C9-11EE-B9D1-0242AC120002}";
+    inline constexpr const char* LidarRegistrarSystemComponentTypeId = "{78CBA3F1-DB2C-46DE-9C3D-C40DD72F2F1E}";
+    inline constexpr const char* LidarRegistrarEditorSystemComponentTypeId = "{7F11B599-5ACE-4498-A9A4-AD280C92BACC}";
+
+    // Sensor Components TypeIds
     inline constexpr const char* ROS2CameraSensorComponentTypeId = "{3C6B8AE6-9721-4639-B8F9-D8D28FD7A071}";
     inline constexpr const char* ROS2ContactSensorComponentTypeId = "{91272e66-c9f1-4aa2-a9d5-98eaa4ef4e9a}";
     inline constexpr const char* ROS2GNSSSensorComponentTypeId = "{55B4A299-7FA3-496A-88F0-764C75B0E9A7}";
@@ -30,4 +36,9 @@ namespace ROS2Sensors
     inline constexpr const char* ROS2Lidar2DSensorComponentTypeId = "{F4C2D970-1D69-40F2-9D4D-B52DCFDD2704}";
     inline constexpr const char* ROS2WheelOdometryComponentTypeId = "{9bdb8c23-ac76-4c25-8d35-37aaa9f43fac}";
     inline constexpr const char* ROS2OdometrySensorComponent = "{61387448-63AA-4563-AF87-60C72B05B863}";
+
+    // Sensors Components Tools TypeIds
+    inline constexpr const char* ClassSegmentationConfigurationComponentTypeId = "{BAB1EA0C-7456-40EA-BC1E-71697137c27c}";
+    inline constexpr const char* ROS2ImageEncodingConversionComponentTypeId = "{12449810-D179-44F1-8F72-22D8d3fa4460}";
+    inline constexpr const char* EncodingConversionTypeId = "{DB361ADC-B339-4A4E-A10B-C6BF6791EDA6}";
 } // namespace ROS2Sensors

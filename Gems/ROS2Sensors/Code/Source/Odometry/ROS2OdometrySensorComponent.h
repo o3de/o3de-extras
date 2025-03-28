@@ -24,7 +24,7 @@ namespace ROS2
     class ROS2OdometrySensorComponent : public ROS2SensorComponentBase<PhysicsBasedSource>
     {
     public:
-        AZ_COMPONENT(ROS2OdometrySensorComponent, "{61387448-63AA-4563-AF87-60C72B05B863}", SensorBaseType);
+        AZ_COMPONENT(ROS2OdometrySensorComponent, ROS2Sensors::ROS2OdometrySensorComponent, SensorBaseType);
         ROS2OdometrySensorComponent();
         ~ROS2OdometrySensorComponent() = default;
         static void GetRequiredServices(AZ::ComponentDescriptor::DependencyArrayType& required);

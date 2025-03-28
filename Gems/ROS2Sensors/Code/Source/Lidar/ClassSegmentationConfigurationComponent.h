@@ -11,6 +11,7 @@
 #include <AzCore/Math/Color.h>
 #include <ROS2Sensors/Lidar/ClassSegmentationBus.h>
 #include <ROS2Sensors/Lidar/SegmentationClassConfiguration.h>
+#include <ROS2Sensors/ROS2SensorsTypeIds.h>
 
 namespace ROS2
 {
@@ -19,7 +20,7 @@ namespace ROS2
         , ClassSegmentationRequestBus::Handler
     {
     public:
-        AZ_COMPONENT(ClassSegmentationConfigurationComponent, "{bab1ea0c-7456-40ea-bc1e-71697137c27c}", AZ::Component);
+        AZ_COMPONENT(ClassSegmentationConfigurationComponent, ROS2Sensors::ClassSegmentationConfigurationComponentTypeId, AZ::Component);
 
         ClassSegmentationConfigurationComponent() = default;
         ~ClassSegmentationConfigurationComponent() override = default;

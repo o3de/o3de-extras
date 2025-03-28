@@ -10,13 +10,15 @@
 
 #include <AzToolsFramework/Entity/EditorEntityContextBus.h>
 #include <Lidar/LidarRegistrarSystemComponent.h>
+#include <ROS2Sensors/ROS2SensorsTypeIds.h>
 
 namespace ROS2
 {
     class LidarRegistrarEditorSystemComponent : public LidarRegistrarSystemComponent
     {
     public:
-        AZ_COMPONENT(LidarRegistrarEditorSystemComponent, "{7f11b599-5ace-4498-a9a4-ad280c92bacc}", LidarRegistrarSystemComponent);
+        AZ_COMPONENT(
+            LidarRegistrarEditorSystemComponent, ROS2Sensors::LidarRegistrarEditorSystemComponentTypeId, LidarRegistrarSystemComponent);
         static void Reflect(AZ::ReflectContext* context);
 
         static void GetProvidedServices(AZ::ComponentDescriptor::DependencyArrayType& provided);
