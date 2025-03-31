@@ -10,11 +10,11 @@
 
 #include <AzCore/Component/Component.h>
 #include <AzCore/Component/TickBus.h>
-#include <SimulationInterfaces/SimulationInterfacesBus.h>
+#include <AzCore/Script/ScriptTimePoint.h>
 #include <AzFramework/Entity/EntityContextBus.h>
 #include <AzFramework/Physics/PhysicsScene.h>
 #include <AzFramework/Spawnable/SpawnableEntitiesInterface.h>
-#include <AzCore/Script/ScriptTimePoint.h>
+#include <SimulationInterfaces/SimulationInterfacesBus.h>
 
 namespace SimulationInterfaces
 {
@@ -43,9 +43,12 @@ namespace SimulationInterfaces
         bool SetEntityState(const AZStd::string& name, const EntityState& state) override;
         bool DeleteEntity(const AZStd::string& name) override;
         AZStd::vector<Spawnable> GetSpawnables() override;
-        void SpawnEntity(const AZStd::string& name, const AZStd::string& uri, const AZStd::string& entityNamespace,
-                                 const AZ::Transform& initialPose,
-                                 SpawnCompletedCb completedCb) override;
+        void SpawnEntity(
+            const AZStd::string& name,
+            const AZStd::string& uri,
+            const AZStd::string& entityNamespace,
+            const AZ::Transform& initialPose,
+            SpawnCompletedCb completedCb) override;
 
         // AZ::Component interface implementation
         void Init() override;
@@ -76,17 +79,16 @@ namespace SimulationInterfaces
         AZStd::unordered_map<AZ::EntityId, AZStd::string> m_entityIdToSimulatedEntityMap;
         AZStd::unordered_set<AzPhysics::SimulatedBodyHandle> m_disabledBodies;
 
-        AZStd::unordered_set<AzFramework::EntitySpawnTicket> m_spawnedTickets;
+        AZStd::unordered_map<AzFramework::EntitySpawnTicket::Id, AzFramework::EntitySpawnTicket> m_spawnedTickets;
 
         struct SpawnCompletedCbData
         {
             AZStd::string m_userProposedName; //! Name proposed by the User in spawn request
             SpawnCompletedCb m_completedCb; //! User callback to be called when the entity is registered
             AZ::ScriptTimePoint m_spawnCompletedTime; //! Time at which the entity was spawned
-
         };
-        AZStd::unordered_map<AzFramework::EntitySpawnTicket::Id, SpawnCompletedCbData> m_spawnCompletedCallbacks; //! Callbacks to be called when the entity is registered
-
+        AZStd::unordered_map<AzFramework::EntitySpawnTicket::Id, SpawnCompletedCbData>
+            m_spawnCompletedCallbacks; //! Callbacks to be called when the entity is registered
     };
 
 } // namespace SimulationInterfaces

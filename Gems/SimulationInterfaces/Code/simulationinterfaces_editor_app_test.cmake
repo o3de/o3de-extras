@@ -7,5 +7,5 @@
 set(FILES
     Tests/Tools/TestFixture.cpp
     Tests/Tools/TestFixture.h
-    Tests/Tools/SimulationInterfaceTests.cpp
+    Tests/Tools/SimulationIterfaceAppTest.cpp
 )

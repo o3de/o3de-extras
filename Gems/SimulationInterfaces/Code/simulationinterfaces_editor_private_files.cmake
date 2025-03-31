@@ -5,6 +5,6 @@
 #
 
 set(FILES
-    Source/Tools/SimulationInterfacesEditorSystemComponent.cpp
-    Source/Tools/SimulationInterfacesEditorSystemComponent.h
+        Source/Tools/SimulationEntitiesManagerEditor.cpp
+        Source/Tools/SimulationEntitiesMangerEditor.h
 )

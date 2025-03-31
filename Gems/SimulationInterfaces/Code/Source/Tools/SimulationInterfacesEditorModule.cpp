@@ -6,14 +6,13 @@
  *
  */
 
+#include "SimulationEntitiesMangerEditor.h"
 #include <SimulationInterfaces/SimulationInterfacesTypeIds.h>
 #include <SimulationInterfacesModuleInterface.h>
-#include "SimulationInterfacesEditorSystemComponent.h"
 
 namespace SimulationInterfaces
 {
-    class SimulationInterfacesEditorModule
-        : public SimulationInterfacesModuleInterface
+    class SimulationInterfacesEditorModule : public SimulationInterfacesModuleInterface
     {
     public:
         AZ_RTTI(SimulationInterfacesEditorModule, SimulationInterfacesEditorModuleTypeId, SimulationInterfacesModuleInterface);
@@ -23,11 +22,13 @@ namespace SimulationInterfaces
         {
             // Push results of [MyComponent]::CreateDescriptor() into m_descriptors here.
             // Add ALL components descriptors associated with this gem to m_descriptors.
-            // This will associate the AzTypeInfo information for the components with the the SerializeContext, BehaviorContext and EditContext.
-            // This happens through the [MyComponent]::Reflect() function.
-            m_descriptors.insert(m_descriptors.end(), {
-                SimulationInterfacesEditorSystemComponent::CreateDescriptor(),
-            });
+            // This will associate the AzTypeInfo information for the components with the the SerializeContext, BehaviorContext and
+            // EditContext. This happens through the [MyComponent]::Reflect() function.
+            m_descriptors.insert(
+                m_descriptors.end(),
+                {
+                    SimulationEntitiesMangerEditor::CreateDescriptor(),
+                });
         }
 
         /**
@@ -36,12 +37,12 @@ namespace SimulationInterfaces
          */
         AZ::ComponentTypeList GetRequiredSystemComponents() const override
         {
-            return AZ::ComponentTypeList {
-                azrtti_typeid<SimulationInterfacesEditorSystemComponent>(),
+            return AZ::ComponentTypeList{
+                azrtti_typeid<SimulationEntitiesMangerEditor>(),
             };
         }
     };
-}// namespace SimulationInterfaces
+} // namespace SimulationInterfaces
 
 #if defined(O3DE_GEM_NAME)
 AZ_DECLARE_MODULE_CLASS(AZ_JOIN(Gem_, O3DE_GEM_NAME, _Editor), SimulationInterfaces::SimulationInterfacesEditorModule)

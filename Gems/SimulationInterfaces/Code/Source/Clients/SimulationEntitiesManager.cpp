@@ -10,21 +10,21 @@
 
 #include <SimulationInterfaces/SimulationInterfacesTypeIds.h>
 
+#include "CommonUtilities.h"
+#include "ConsoleCommands.icl"
+#include <AzCore/Asset/AssetManager.h>
 #include <AzCore/Asset/AssetManagerBus.h>
 #include <AzCore/Component/ComponentApplicationBus.h>
 #include <AzCore/Component/TransformBus.h>
 #include <AzCore/Console/IConsole.h>
 #include <AzCore/Serialization/SerializeContext.h>
 #include <AzCore/std/string/regex.h>
+#include <AzFramework/Components/TransformComponent.h>
 #include <AzFramework/Physics/PhysicsSystem.h>
 #include <AzFramework/Physics/RigidBodyBus.h>
 #include <AzFramework/Physics/SimulatedBodies/RigidBody.h>
-#include "CommonUtilities.h"
-#include "ConsoleCommands.icl"
-#include <AzCore/Asset/AssetManager.h>
 #include <AzFramework/Spawnable/Spawnable.h>
 #include <AzFramework/Spawnable/SpawnableEntitiesInterface.h>
-#include <AzFramework/Components/TransformComponent.h>
 
 namespace SimulationInterfaces
 {
@@ -45,7 +45,7 @@ namespace SimulationInterfaces
         }
     }
 
-    AZ_COMPONENT_IMPL(SimulationEntitiesManager, "SimulationEntitiesManager", SimulationInterfacesSystemComponentTypeId);
+    AZ_COMPONENT_IMPL(SimulationEntitiesManager, "SimulationEntitiesManager", SimulationEntitiesManagerTypeId);
 
     void SimulationEntitiesManager::Reflect(AZ::ReflectContext* context)
     {
@@ -68,6 +68,7 @@ namespace SimulationInterfaces
     void SimulationEntitiesManager::GetRequiredServices([[maybe_unused]] AZ::ComponentDescriptor::DependencyArrayType& required)
     {
         required.push_back(AZ_CRC_CE("PhysicsService"));
+        required.push_back(AZ_CRC_CE("AssetCatalogService"));
     }
 
     void SimulationEntitiesManager::GetDependentServices([[maybe_unused]] AZ::ComponentDescriptor::DependencyArrayType& dependent)
@@ -125,11 +126,11 @@ namespace SimulationInterfaces
                         rigidBody->GetEntityId().ToString().c_str());
                 }
                 const AZ::EntityId entityId = body->GetEntityId();
-                AZ::Entity * entity = nullptr;
+                AZ::Entity* entity = nullptr;
                 AZ::ComponentApplicationBus::BroadcastResult(entity, &AZ::ComponentApplicationRequests::FindEntity, entityId);
                 // check if entity is not spawned by this component
                 const auto ticketId = entity->GetEntitySpawnTicketId();
-                AZStd::string proposedName {};
+                AZStd::string proposedName{};
                 // check if ticket is in the unregistered list
 
                 auto spawnData = m_spawnCompletedCallbacks.find(ticketId);
@@ -137,7 +138,6 @@ namespace SimulationInterfaces
                 {
                     proposedName = spawnData->second.m_userProposedName;
                 }
-
 
                 const AZStd::string registeredName = this->AddSimulatedEntity(entityId, proposedName);
                 // call the callback
@@ -147,8 +147,6 @@ namespace SimulationInterfaces
                     spawnData->second.m_completedCb(AZ::Success(registeredName));
                     m_spawnCompletedCallbacks.erase(spawnData);
                 }
-
-
             });
         m_simulationBodyRemovedHandler = AzPhysics::SceneEvents::OnSimulationBodyRemoved::Handler(
             [this](AzPhysics::SceneHandle sceneHandle, AzPhysics::SimulatedBodyHandle bodyHandle)
@@ -198,7 +196,6 @@ namespace SimulationInterfaces
         physicsSystem->RegisterSceneAddedEvent(m_sceneAddedHandler);
         physicsSystem->RegisterSceneRemovedEvent(m_sceneRemovedHandler);
         SimulationInterfacesRequestBus::Handler::BusConnect();
-
     }
 
     void SimulationEntitiesManager::Deactivate()
@@ -399,6 +396,31 @@ namespace SimulationInterfaces
     bool SimulationEntitiesManager::DeleteEntity(const AZStd::string& name)
     {
         const auto findIt = m_simulatedEntityToEntityIdMap.find(name);
+
+        if (findIt == m_simulatedEntityToEntityIdMap.end())
+        {
+            return false;
+        }
+
+        const AZ::EntityId entityId = findIt->second;
+        AZ_Assert(entityId.IsValid(), "EntityId is not valid");
+        // get entity
+        AZ::Entity* entity = nullptr;
+        AZ::ComponentApplicationBus::BroadcastResult(entity, &AZ::ComponentApplicationRequests::FindEntity, entityId);
+        AZ_Assert(entity, "Entity is not available.");
+        // check if entity is spawned by this component
+        const auto ticketId = entity->GetEntitySpawnTicketId();
+        if (m_spawnedTickets.find(ticketId) != m_spawnedTickets.end())
+        {
+            // remove the ticket
+            m_spawnedTickets.erase(ticketId);
+        }
+        else
+        {
+            AZ_Warning("SimulationInterfaces", false, "Entity %s was not spawned by this component, wont delete it", name.c_str());
+            return false;
+        }
+#ifdef POTENTIALY_UNSAFE
         if (findIt != m_simulatedEntityToEntityIdMap.end())
         {
             const AZ::EntityId entityId = findIt->second;
@@ -414,6 +436,7 @@ namespace SimulationInterfaces
 
             return true;
         }
+#endif
         return false;
     }
 
@@ -435,7 +458,8 @@ namespace SimulationInterfaces
         const auto enumCallback = [&spawnables](const AZ::Data::AssetId assetId, const AZ::Data::AssetInfo& assetInfo)
         {
             bool isSpawnable = false;
-            AZ::Data::AssetCatalogRequestBus::BroadcastResult(isSpawnable ,&AZ::Data::AssetCatalogRequests::DoesAssetIdMatchWildcardPattern, assetId, "*.spawnable");
+            AZ::Data::AssetCatalogRequestBus::BroadcastResult(
+                isSpawnable, &AZ::Data::AssetCatalogRequests::DoesAssetIdMatchWildcardPattern, assetId, "*.spawnable");
 
             if (isSpawnable)
             {
@@ -443,24 +467,30 @@ namespace SimulationInterfaces
                 spawnable.m_uri = Utils::RelPathToUri(assetInfo.m_relativePath);
                 spawnables.push_back(spawnable);
             }
-
-
         };
 
         AZ::Data::AssetCatalogRequestBus::Broadcast(&AZ::Data::AssetCatalogRequests::EnumerateAssets, nullptr, enumCallback, nullptr);
         return spawnables;
     }
 
-    void SimulationEntitiesManager::SpawnEntity(const AZStd::string& name, const AZStd::string& uri, const AZStd::string& entityNamespace,
-                     const AZ::Transform& initialPose,
-                     SpawnCompletedCb completedCb)
+    void SimulationEntitiesManager::SpawnEntity(
+        const AZStd::string& name,
+        const AZStd::string& uri,
+        const AZStd::string& entityNamespace,
+        const AZ::Transform& initialPose,
+        SpawnCompletedCb completedCb)
     {
-        //get rel path from uri
+        // get rel path from uri
         const AZStd::string relPath = Utils::UriToRelPath(uri);
 
-        // create spanwnable
+        // create spawnnable
         AZ::Data::AssetId assetId;
-        AZ::Data::AssetCatalogRequestBus::BroadcastResult(assetId, &AZ::Data::AssetCatalogRequestBus::Events::GetAssetIdByPath, relPath.c_str(), azrtti_typeid<AZ::Data::AssetData>(), false);
+        AZ::Data::AssetCatalogRequestBus::BroadcastResult(
+            assetId,
+            &AZ::Data::AssetCatalogRequestBus::Events::GetAssetIdByPath,
+            relPath.c_str(),
+            azrtti_typeid<AZ::Data::AssetData>(),
+            false);
         AZ_Warning("SimulationInterfaces", assetId.IsValid(), "AssetId is not valid, relative path %s", relPath.c_str());
 
         auto spawner = AZ::Interface<AzFramework::SpawnableEntitiesDefinition>::Get();
@@ -473,10 +503,11 @@ namespace SimulationInterfaces
             completedCb(AZ::Failure("Failed to get spawnable asset - incorrect uri"));
             return;
         }
+
         auto ticket = AzFramework::EntitySpawnTicket(spawnableAsset);
         AzFramework::SpawnAllEntitiesOptionalArgs optionalArgs;
 
-        optionalArgs.m_preInsertionCallback = [initialPose,entityNamespace, name](auto id, auto view)
+        optionalArgs.m_preInsertionCallback = [initialPose, entityNamespace, name](auto id, auto view)
         {
             if (view.empty())
             {
@@ -484,7 +515,7 @@ namespace SimulationInterfaces
             }
             const AZ::Entity* root = *view.begin();
 
-            //change names for all entites
+            // change names for all entites
             for (auto* entity : view)
             {
                 AZStd::string entityName = AZStd::string::format("%s_%s", name.c_str(), entity->GetName().c_str());
@@ -499,12 +530,12 @@ namespace SimulationInterfaces
 
             if (!entityNamespace.empty())
             {
-                //TODO: Mpelka set ROS 2 namespace here
+                // TODO: Mpelka set ROS 2 namespace here
                 AZ_Error("SimulationInterfaces", false, "ROS 2 namespace is not implemented yet in spawning");
             }
         };
-        optionalArgs.m_completionCallback = [this](AzFramework::EntitySpawnTicket::Id ticketId,
-                                                  AzFramework::SpawnableConstEntityContainerView view)
+        optionalArgs.m_completionCallback =
+            [this](AzFramework::EntitySpawnTicket::Id ticketId, AzFramework::SpawnableConstEntityContainerView view)
         {
             // at this point the entities are spawned and should be registered in simulation interface and callback should be called
             // if that is not a case, it means that the AZFrameworrk::Pshysics::OnSimulationBodyAdded event was not called.
@@ -514,12 +545,14 @@ namespace SimulationInterfaces
             if (spawnData != m_spawnCompletedCallbacks.end())
             {
                 // call and remove the callback
-                spawnData->second.m_completedCb(AZ::Failure("Entity was not registered in simulation interface - no physics component or physics component is not enabled."));
+                spawnData->second.m_completedCb(AZ::Failure(
+                    "Entity was not registered in simulation interface - no physics component or physics component is not enabled."));
                 m_spawnCompletedCallbacks.erase(spawnData);
             }
         };
 
         spawner->SpawnAllEntities(ticket, optionalArgs);
+
         auto ticketId = ticket.GetId();
         AZ_Printf("SimulationInterfaces", "Spawning uri %s with ticket id %d\n", uri.c_str(), ticketId);
 
@@ -527,7 +560,7 @@ namespace SimulationInterfaces
         data.m_userProposedName = name;
         data.m_completedCb = completedCb;
         m_spawnCompletedCallbacks[ticketId] = data;
-        m_spawnedTickets.insert(ticket);
+        m_spawnedTickets[ticketId] = ticket;
     }
 
     AZStd::string SimulationEntitiesManager::GetSimulatedEntityName(AZ::EntityId entityId, const AZStd::string& proposedName) const

@@ -13,8 +13,7 @@
 
 namespace SimulationInterfaces
 {
-    class SimulationInterfacesModuleInterface
-        : public AZ::Module
+    class SimulationInterfacesModuleInterface : public AZ::Module
     {
     public:
         AZ_TYPE_INFO_WITH_NAME_DECL(SimulationInterfacesModuleInterface)
@@ -28,4 +27,4 @@ namespace SimulationInterfaces
          */
         AZ::ComponentTypeList GetRequiredSystemComponents() const override;
     };
-}// namespace SimulationInterfaces
+} // namespace SimulationInterfaces

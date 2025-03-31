@@ -12,6 +12,7 @@
 
 #include <AzCore/EBus/EBus.h>
 #include <AzCore/Interface/Interface.h>
+#include <AzCore/std/smart_ptr/shared_ptr.h>
 #include <AzFramework/Physics/ShapeConfiguration.h>
 
 namespace SimulationInterfaces
@@ -22,8 +23,9 @@ namespace SimulationInterfaces
     struct EntityFilter
     {
         AZStd::string m_filter; //! A posix regular expression to match against entity names
-        AZStd::shared_ptr<Physics::ShapeConfiguration> m_bounds_shape; //! A shape to use for filtering entities, null means no bounds filtering
-        AZ::Transform m_bounds_pose {AZ::Transform::CreateIdentity()};
+        AZStd::shared_ptr<Physics::ShapeConfiguration>
+            m_bounds_shape; //! A shape to use for filtering entities, null means no bounds filtering
+        AZ::Transform m_bounds_pose{ AZ::Transform::CreateIdentity() };
     };
 
     //! context : https://github.com/ros-simulation/simulation_interfaces/blob/main/msg/EntityState.msg
@@ -70,15 +72,17 @@ namespace SimulationInterfaces
 
         //! Callback for when an entity has been spawned and registered. The string is the name of the entity in the simulation interface.
         //! Note : The names is empty, if the entity could not be reigstered (e.g. prefab has no simulated entities)
-        using SpawnCompletedCb= AZStd::function<void(const AZ::Outcome<AZStd::string, AZStd::string>&)> ;
+        using SpawnCompletedCb = AZStd::function<void(const AZ::Outcome<AZStd::string, AZStd::string>&)>;
 
-        virtual void SpawnEntity(const AZStd::string& name, const AZStd::string& uri, const AZStd::string& entityNamespace,
-                                 const AZ::Transform& initialPose,
-                                 SpawnCompletedCb completedCb) = 0;
+        virtual void SpawnEntity(
+            const AZStd::string& name,
+            const AZStd::string& uri,
+            const AZStd::string& entityNamespace,
+            const AZ::Transform& initialPose,
+            SpawnCompletedCb completedCb) = 0;
     };
 
-    class SimulationInterfacesBusTraits
-        : public AZ::EBusTraits
+    class SimulationInterfacesBusTraits : public AZ::EBusTraits
     {
     public:
         //////////////////////////////////////////////////////////////////////////
@@ -86,7 +90,6 @@ namespace SimulationInterfaces
         static constexpr AZ::EBusHandlerPolicy HandlerPolicy = AZ::EBusHandlerPolicy::Single;
         static constexpr AZ::EBusAddressPolicy AddressPolicy = AZ::EBusAddressPolicy::Single;
         //////////////////////////////////////////////////////////////////////////
-
     };
 
     using SimulationInterfacesRequestBus = AZ::EBus<SimulationInterfacesRequests, SimulationInterfacesBusTraits>;

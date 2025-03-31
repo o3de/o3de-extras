@@ -15,18 +15,19 @@
 namespace SimulationInterfaces
 {
     /// System component for SimulationInterfaces editor
-    class SimulationInterfacesEditorSystemComponent
+    class SimulationEntitiesMangerEditor
         : public SimulationEntitiesManager
         , protected AzToolsFramework::EditorEvents::Bus::Handler
     {
         using BaseSystemComponent = SimulationEntitiesManager;
+
     public:
-        AZ_COMPONENT_DECL(SimulationInterfacesEditorSystemComponent);
+        AZ_COMPONENT_DECL(SimulationEntitiesMangerEditor);
 
         static void Reflect(AZ::ReflectContext* context);
 
-        SimulationInterfacesEditorSystemComponent();
-        ~SimulationInterfacesEditorSystemComponent();
+        SimulationEntitiesMangerEditor();
+        ~SimulationEntitiesMangerEditor();
 
     private:
         static void GetProvidedServices(AZ::ComponentDescriptor::DependencyArrayType& provided);

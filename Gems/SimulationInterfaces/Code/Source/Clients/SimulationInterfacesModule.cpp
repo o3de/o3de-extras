@@ -12,14 +12,13 @@
 
 namespace SimulationInterfaces
 {
-    class SimulationInterfacesModule
-        : public SimulationInterfacesModuleInterface
+    class SimulationInterfacesModule : public SimulationInterfacesModuleInterface
     {
     public:
         AZ_RTTI(SimulationInterfacesModule, SimulationInterfacesModuleTypeId, SimulationInterfacesModuleInterface);
         AZ_CLASS_ALLOCATOR(SimulationInterfacesModule, AZ::SystemAllocator);
     };
-}// namespace SimulationInterfaces
+} // namespace SimulationInterfaces
 
 #if defined(O3DE_GEM_NAME)
 AZ_DECLARE_MODULE_CLASS(AZ_JOIN(Gem_, O3DE_GEM_NAME), SimulationInterfaces::SimulationInterfacesModule)
