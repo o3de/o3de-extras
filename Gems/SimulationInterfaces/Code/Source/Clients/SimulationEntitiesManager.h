@@ -14,13 +14,13 @@
 #include <AzFramework/Entity/EntityContextBus.h>
 #include <AzFramework/Physics/PhysicsScene.h>
 #include <AzFramework/Spawnable/SpawnableEntitiesInterface.h>
-#include <SimulationInterfaces/SimulationInterfacesBus.h>
+#include <SimulationInterfaces/SimulationEntityManagerRequestBus.h>
 
 namespace SimulationInterfaces
 {
     class SimulationEntitiesManager
         : public AZ::Component
-        , protected SimulationInterfacesRequestBus::Handler
+        , protected SimulationEntityManagerRequestBus::Handler
     {
     public:
         AZ_COMPONENT_DECL(SimulationEntitiesManager);
@@ -36,10 +36,10 @@ namespace SimulationInterfaces
         ~SimulationEntitiesManager();
 
     protected:
-        // SimulationInterfacesRequestBus interface implementation
-        AZStd::vector<AZStd::string> GetEntities(const EntityFilter& filter) override;
+        // SimulationEntityManagerRequestBus interface implementation
+        AZStd::vector<AZStd::string> GetEntities(const EntityFilters& filter) override;
         EntityState GetEntityState(const AZStd::string& name) override;
-        AZStd::unordered_map<AZStd::string, EntityState> GetEntitiesStates(const EntityFilter& filter) override;
+        AZStd::unordered_map<AZStd::string, EntityState> GetEntitiesStates(const EntityFilters& filter) override;
         bool SetEntityState(const AZStd::string& name, const EntityState& state) override;
         bool DeleteEntity(const AZStd::string& name) override;
         AZStd::vector<Spawnable> GetSpawnables() override;

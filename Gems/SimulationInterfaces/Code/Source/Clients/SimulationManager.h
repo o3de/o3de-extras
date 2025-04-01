@@ -14,7 +14,7 @@
 #include <AzFramework/Entity/EntityContextBus.h>
 #include <AzFramework/Physics/PhysicsScene.h>
 #include <AzFramework/Spawnable/SpawnableEntitiesInterface.h>
-#include <SimulationInterfaces/SimulationInterfacesBus.h>
+#include <SimulationInterfaces/SimulationEntityManagerRequestBus.h>
 #include <SimulationInterfaces/SimulationMangerRequestBus.h>
 namespace SimulationInterfaces
 {

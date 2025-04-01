@@ -77,17 +77,17 @@ namespace SimulationInterfaces
 
     SimulationEntitiesManager::SimulationEntitiesManager()
     {
-        if (SimulationInterfacesInterface::Get() == nullptr)
+        if (SimulationEntityManagerInterface::Get() == nullptr)
         {
-            SimulationInterfacesInterface::Register(this);
+            SimulationEntityManagerInterface::Register(this);
         }
     }
 
     SimulationEntitiesManager::~SimulationEntitiesManager()
     {
-        if (SimulationInterfacesInterface::Get() == this)
+        if (SimulationEntityManagerInterface::Get() == this)
         {
-            SimulationInterfacesInterface::Unregister(this);
+            SimulationEntityManagerInterface::Unregister(this);
         }
     }
 
@@ -196,13 +196,13 @@ namespace SimulationInterfaces
         {
             physicsSystem->RegisterSceneAddedEvent(m_sceneAddedHandler);
             physicsSystem->RegisterSceneRemovedEvent(m_sceneRemovedHandler);
-            SimulationInterfacesRequestBus::Handler::BusConnect();
+            SimulationEntityManagerRequestBus::Handler::BusConnect();
         }
     }
 
     void SimulationEntitiesManager::Deactivate()
     {
-        SimulationInterfacesRequestBus::Handler::BusDisconnect();
+        SimulationEntityManagerRequestBus::Handler::BusDisconnect();
         if (m_simulationBodyAddedHandler.IsConnected())
         {
             m_simulationBodyAddedHandler.Disconnect();
@@ -253,7 +253,7 @@ namespace SimulationInterfaces
         }
     }
 
-    AZStd::vector<AZStd::string> SimulationEntitiesManager::GetEntities(const EntityFilter& filter)
+    AZStd::vector<AZStd::string> SimulationEntitiesManager::GetEntities(const EntityFilters& filter)
     {
         const bool reFilter = !filter.m_filter.empty();
         const bool shapeCastFilter = filter.m_bounds_shape != nullptr;
@@ -306,8 +306,7 @@ namespace SimulationInterfaces
             if (regex.Valid())
             {
                 AZStd::ranges::copy_if(
-                    prefilteredEntities.begin(),
-                    prefilteredEntities.end(),
+                    prefilteredEntities,
                     AZStd::back_inserter(entities),
                     [&regex](const AZStd::string& entityName)
                     {
@@ -380,8 +379,7 @@ namespace SimulationInterfaces
                         descendant, &Physics::RigidBodyRequests::SetLinearVelocity, AZ::Vector3::CreateZero());
                 }
             }
-            if (!state.m_twist_linear.IsClose(AZ::Vector3::CreateZero(), AZ::Constants::FloatEpsilon) ||
-                !state.m_twist_angular.IsClose(AZ::Vector3::CreateZero(), AZ::Constants::FloatEpsilon))
+            if (!state.m_twist_linear.IsZero(AZ::Constants::FloatEpsilon) || !state.m_twist_angular.IsZero(AZ::Constants::FloatEpsilon))
             {
                 // get rigid body
                 AzPhysics::RigidBody* rigidBody = nullptr;
@@ -442,13 +440,13 @@ namespace SimulationInterfaces
         return false;
     }
 
-    AZStd::unordered_map<AZStd::string, EntityState> SimulationEntitiesManager::GetEntitiesStates(const EntityFilter& filter)
+    AZStd::unordered_map<AZStd::string, EntityState> SimulationEntitiesManager::GetEntitiesStates(const EntityFilters& filter)
     {
         AZStd::unordered_map<AZStd::string, EntityState> entitiesStates;
-        const auto entities = GetEntities(filter);
+        const auto& entities = GetEntities(filter);
         for (const auto& entity : entities)
         {
-            entitiesStates[entity] = GetEntityState(entity);
+            entitiesStates.emplace(AZStd::make_pair(entity, GetEntityState(entity)));
         }
         return entitiesStates;
     }

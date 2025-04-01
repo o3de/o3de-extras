@@ -6,10 +6,10 @@
  *
  */
 
-#include "SimulationEntitiesMangerEditor.h"
+#include "SimulationEntitiesManagerEditor.h"
+#include "SimulationManagerEditor.h"
 #include <SimulationInterfaces/SimulationInterfacesTypeIds.h>
 #include <SimulationInterfacesModuleInterface.h>
-#include "SimulationManagerEditor.h"
 namespace SimulationInterfaces
 {
     class SimulationInterfacesEditorModule : public SimulationInterfacesModuleInterface
@@ -23,7 +23,7 @@ namespace SimulationInterfaces
             m_descriptors.insert(
                 m_descriptors.end(),
                 {
-                    SimulationEntitiesMangerEditor::CreateDescriptor(),
+                    SimulationEntitiesManagerEditor::CreateDescriptor(),
                     SimulationManagerEditor::CreateDescriptor(),
                 });
         }
@@ -35,7 +35,7 @@ namespace SimulationInterfaces
         AZ::ComponentTypeList GetRequiredSystemComponents() const override
         {
             return AZ::ComponentTypeList{
-                azrtti_typeid<SimulationEntitiesMangerEditor>(),
+                azrtti_typeid<SimulationEntitiesManagerEditor>(),
             };
         }
     };

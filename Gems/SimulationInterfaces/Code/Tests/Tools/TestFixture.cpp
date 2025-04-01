@@ -9,7 +9,7 @@
 
 #include "TestFixture.h"
 #include "Clients/SimulationEntitiesManager.h"
-#include <SimulationInterfaces/SimulationInterfacesBus.h>
+#include <SimulationInterfaces/SimulationEntityManagerRequestBus.h>
 namespace UnitTest
 {
     void SimulationInterfaceTestEnvironment::AddGemsAndComponents()

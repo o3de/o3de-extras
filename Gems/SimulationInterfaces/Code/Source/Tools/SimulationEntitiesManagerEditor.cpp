@@ -6,61 +6,62 @@
  *
  */
 
-#include "SimulationEntitiesMangerEditor.h"
+#include "SimulationEntitiesManagerEditor.h"
 #include <AzCore/Serialization/SerializeContext.h>
 
 #include <SimulationInterfaces/SimulationInterfacesTypeIds.h>
 
 namespace SimulationInterfaces
 {
-    AZ_COMPONENT_IMPL(SimulationEntitiesMangerEditor,
-        "SimulationEntitiesMangerEditor",
+    AZ_COMPONENT_IMPL(
+        SimulationEntitiesManagerEditor,
+        "SimulationEntitiesManagerEditor",
         SimulationEntitiesManagerEditorTypeId,
         BaseSystemComponent);
 
-    void SimulationEntitiesMangerEditor::Reflect(AZ::ReflectContext* context)
+    void SimulationEntitiesManagerEditor::Reflect(AZ::ReflectContext* context)
     {
         if (auto serializeContext = azrtti_cast<AZ::SerializeContext*>(context))
         {
-            serializeContext->Class<SimulationEntitiesMangerEditor, SimulationEntitiesManager>()->Version(0);
+            serializeContext->Class<SimulationEntitiesManagerEditor, SimulationEntitiesManager>()->Version(0);
         }
     }
 
-    SimulationEntitiesMangerEditor::SimulationEntitiesMangerEditor() = default;
+    SimulationEntitiesManagerEditor::SimulationEntitiesManagerEditor() = default;
 
-    SimulationEntitiesMangerEditor::~SimulationEntitiesMangerEditor() = default;
+    SimulationEntitiesManagerEditor::~SimulationEntitiesManagerEditor() = default;
 
-    void SimulationEntitiesMangerEditor::GetProvidedServices(AZ::ComponentDescriptor::DependencyArrayType& provided)
+    void SimulationEntitiesManagerEditor::GetProvidedServices(AZ::ComponentDescriptor::DependencyArrayType& provided)
     {
         BaseSystemComponent::GetProvidedServices(provided);
         provided.push_back(AZ_CRC_CE("SimulationInterfacesEditorService"));
     }
 
-    void SimulationEntitiesMangerEditor::GetIncompatibleServices(AZ::ComponentDescriptor::DependencyArrayType& incompatible)
+    void SimulationEntitiesManagerEditor::GetIncompatibleServices(AZ::ComponentDescriptor::DependencyArrayType& incompatible)
     {
         BaseSystemComponent::GetIncompatibleServices(incompatible);
         incompatible.push_back(AZ_CRC_CE("SimulationInterfacesEditorService"));
     }
 
-    void SimulationEntitiesMangerEditor::GetRequiredServices(
+    void SimulationEntitiesManagerEditor::GetRequiredServices(
         [[maybe_unused]] AZ::ComponentDescriptor::DependencyArrayType& required)
     {
         BaseSystemComponent::GetRequiredServices(required);
     }
 
-    void SimulationEntitiesMangerEditor::GetDependentServices(
+    void SimulationEntitiesManagerEditor::GetDependentServices(
         [[maybe_unused]] AZ::ComponentDescriptor::DependencyArrayType& dependent)
     {
         BaseSystemComponent::GetDependentServices(dependent);
     }
 
-    void SimulationEntitiesMangerEditor::Activate()
+    void SimulationEntitiesManagerEditor::Activate()
     {
         SimulationEntitiesManager::Activate();
         AzToolsFramework::EditorEvents::Bus::Handler::BusConnect();
     }
 
-    void SimulationEntitiesMangerEditor::Deactivate()
+    void SimulationEntitiesManagerEditor::Deactivate()
     {
         AzToolsFramework::EditorEvents::Bus::Handler::BusDisconnect();
         SimulationEntitiesManager::Deactivate();

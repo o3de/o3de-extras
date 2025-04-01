@@ -8,5 +8,5 @@ set(FILES
         Source/Tools/SimulationManagerEditor.cpp
         Source/Tools/SimulationManagerEditor.h
         Source/Tools/SimulationEntitiesManagerEditor.cpp
-        Source/Tools/SimulationEntitiesMangerEditor.h
+        Source/Tools/SimulationEntitiesManagerEditor.h
 )

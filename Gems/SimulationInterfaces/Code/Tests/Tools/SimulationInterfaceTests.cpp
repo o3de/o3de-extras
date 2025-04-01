@@ -8,7 +8,7 @@
  */
 
 #include "TestFixture.h"
-#include <SimulationInterfaces/SimulationInterfacesBus.h>
+#include <SimulationInterfaces/SimulationEntityManagerRequestBus.h>
 namespace UnitTest
 {
 
@@ -16,7 +16,7 @@ namespace UnitTest
     {
         using namespace SimulationInterfaces;
         AZStd::vector<AZStd::string> entities;
-        SimulationInterfacesRequestBus::BroadcastResult(entities, &SimulationInterfacesRequestBus::Events::GetEntities, EntityFilter());
+        SimulationEntityManagerRequestBus::BroadcastResult(entities, &SimulationEntityManagerRequestBus::Events::GetEntities, EntityFilters());
         EXPECT_EQ(entities.size(), 0);
     }
 
@@ -27,17 +27,17 @@ namespace UnitTest
         const AZ::EntityId entityId2 = CreateEntityWithStaticBodyComponent("Bar", AZ::Transform::CreateIdentity());
 
         AZStd::vector<AZStd::string> entities;
-        SimulationInterfacesRequestBus::BroadcastResult(entities, &SimulationInterfacesRequestBus::Events::GetEntities, EntityFilter());
+        SimulationEntityManagerRequestBus::BroadcastResult(entities, &SimulationEntityManagerRequestBus::Events::GetEntities, EntityFilters());
         AZ_Assert(entities.size() == 2, "Number of simulation entities: %d", entities.size());
         DeleteEntity(entityId1);
 
         AZStd::vector<AZStd::string> entities2;
-        SimulationInterfacesRequestBus::BroadcastResult(entities2, &SimulationInterfacesRequestBus::Events::GetEntities, EntityFilter());
+        SimulationEntityManagerRequestBus::BroadcastResult(entities2, &SimulationEntityManagerRequestBus::Events::GetEntities, EntityFilters());
         EXPECT_EQ(entities2.size(), 1);
 
         DeleteEntity(entityId2);
         AZStd::vector<AZStd::string> entities3;
-        SimulationInterfacesRequestBus::BroadcastResult(entities3, &SimulationInterfacesRequestBus::Events::GetEntities, EntityFilter());
+        SimulationEntityManagerRequestBus::BroadcastResult(entities3, &SimulationEntityManagerRequestBus::Events::GetEntities, EntityFilters());
         EXPECT_EQ(entities3.size(), 0);
     }
 
@@ -49,7 +49,7 @@ namespace UnitTest
         const AZ::EntityId entityId2 = CreateEntityWithStaticBodyComponent("Bar1", AZ::Transform::CreateIdentity());
         AZStd::vector<AZStd::string> entities;
 
-        SimulationInterfacesRequestBus::BroadcastResult(entities, &SimulationInterfacesRequestBus::Events::GetEntities, EntityFilter());
+        SimulationEntityManagerRequestBus::BroadcastResult(entities, &SimulationEntityManagerRequestBus::Events::GetEntities, EntityFilters());
         EXPECT_EQ(entities.size(), 2);
         EXPECT_NE(entities[0], entities[1]);
         DeleteEntity(entityId1);
@@ -67,11 +67,11 @@ namespace UnitTest
         const AZ::EntityId entityId2 =
             CreateEntityWithStaticBodyComponent("Outside", AZ::Transform::CreateTranslation(AZ::Vector3(10.0f, 0.0f, 0.0f)));
 
-        EntityFilter filter;
+        EntityFilters filter;
         filter.m_bounds_shape = AZStd::make_shared<Physics::SphereShapeConfiguration>(2.0f);
 
         AZStd::vector<AZStd::string> entities;
-        SimulationInterfacesRequestBus::BroadcastResult(entities, &SimulationInterfacesRequestBus::Events::GetEntities, filter);
+        SimulationEntityManagerRequestBus::BroadcastResult(entities, &SimulationEntityManagerRequestBus::Events::GetEntities, filter);
         auto* physicsSystem = AZ::Interface<AzPhysics::SystemInterface>::Get();
         physicsSystem->Simulate(1.0f / 60.0f);
 
@@ -92,11 +92,11 @@ namespace UnitTest
         const AZ::EntityId entityId2 =
             CreateEntityWithStaticBodyComponent("WontMatch", AZ::Transform::CreateTranslation(AZ::Vector3(10.0f, 0.0f, 0.0f)));
 
-        EntityFilter filter;
+        EntityFilters filter;
         filter.m_filter = "Will.*";
 
         AZStd::vector<AZStd::string> entities;
-        SimulationInterfacesRequestBus::BroadcastResult(entities, &SimulationInterfacesRequestBus::Events::GetEntities, filter);
+        SimulationEntityManagerRequestBus::BroadcastResult(entities, &SimulationEntityManagerRequestBus::Events::GetEntities, filter);
 
         EXPECT_EQ(entities.size(), 1);
         if (entities.size() > 0)
@@ -116,11 +116,11 @@ namespace UnitTest
         const AZ::EntityId entityId2 =
             CreateEntityWithStaticBodyComponent("WontMatch", AZ::Transform::CreateTranslation(AZ::Vector3(10.0f, 0.0f, 0.0f)));
 
-        EntityFilter filter;
+        EntityFilters filter;
         filter.m_filter = "[a-z";
 
         AZStd::vector<AZStd::string> entities;
-        SimulationInterfacesRequestBus::BroadcastResult(entities, &SimulationInterfacesRequestBus::Events::GetEntities, filter);
+        SimulationEntityManagerRequestBus::BroadcastResult(entities, &SimulationEntityManagerRequestBus::Events::GetEntities, filter);
 
         EXPECT_EQ(entities.size(), 0);
         DeleteEntity(entityId1);
@@ -135,9 +135,9 @@ namespace UnitTest
         const AZ::EntityId entityId1 =
             CreateEntityWithStaticBodyComponent(entityName, AZ::Transform::CreateTranslation(AZ::Vector3(2.0f, 0.0f, 10.0f)));
 
-        EntityFilter filter;
+        EntityFilters filter;
         EntityState stateBefore;
-        SimulationInterfacesRequestBus::BroadcastResult(stateBefore, &SimulationInterfacesRequestBus::Events::GetEntityState, entityName);
+        SimulationEntityManagerRequestBus::BroadcastResult(stateBefore, &SimulationEntityManagerRequestBus::Events::GetEntityState, entityName);
         EXPECT_EQ(stateBefore.m_pose.GetTranslation(), AZ::Vector3(2.0f, 0.0f, 10.0f));
         for (int i = 0; i < 10; i++)
         {
@@ -145,7 +145,7 @@ namespace UnitTest
             physicsSystem->Simulate(1.0f / 60.0f);
         }
         EntityState stateAfter;
-        SimulationInterfacesRequestBus::BroadcastResult(stateAfter, &SimulationInterfacesRequestBus::Events::GetEntityState, entityName);
+        SimulationEntityManagerRequestBus::BroadcastResult(stateAfter, &SimulationEntityManagerRequestBus::Events::GetEntityState, entityName);
         AZ::Vector3 deltaPos = stateAfter.m_pose.GetTranslation() - stateBefore.m_pose.GetTranslation();
 
         // check if the entity moved
