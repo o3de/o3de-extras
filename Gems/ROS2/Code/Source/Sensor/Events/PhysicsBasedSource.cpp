@@ -6,8 +6,8 @@
  *
  */
 
+#include <AzCore/Serialization/SerializeContext.h>
 #include <AzFramework/Physics/PhysicsSystem.h>
-
 #include <ROS2/Sensor/Events/PhysicsBasedSource.h>
 #include <ROS2/Utilities/ROS2Conversions.h>
 
