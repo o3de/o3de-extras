@@ -12,6 +12,7 @@
 #include <SimulationInterfaces/SimulationInterfacesTypeIds.h>
 
 #include <Clients/SimulationEntitiesManager.h>
+#include "Clients/SimulationManager.h"
 
 namespace SimulationInterfaces
 {
@@ -22,14 +23,11 @@ namespace SimulationInterfaces
 
     SimulationInterfacesModuleInterface::SimulationInterfacesModuleInterface()
     {
-        // Push results of [MyComponent]::CreateDescriptor() into m_descriptors here.
-        // Add ALL components descriptors associated with this gem to m_descriptors.
-        // This will associate the AzTypeInfo information for the components with the the SerializeContext, BehaviorContext and EditContext.
-        // This happens through the [MyComponent]::Reflect() function.
         m_descriptors.insert(
             m_descriptors.end(),
             {
                 SimulationEntitiesManager::CreateDescriptor(),
+                SimulationManager::CreateDescriptor(),
             });
     }
 
@@ -37,6 +35,7 @@ namespace SimulationInterfaces
     {
         return AZ::ComponentTypeList{
             azrtti_typeid<SimulationEntitiesManager>(),
+            azrtti_typeid<SimulationManager>(),
         };
     }
 } // namespace SimulationInterfaces
