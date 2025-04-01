@@ -1,0 +1,27 @@
+
+set(FILES
+    Source/SimulationInterfacesROS2ModuleInterface.cpp
+    Source/SimulationInterfacesROS2ModuleInterface.h
+    Source/Clients/SimulationInterfacesROS2SystemComponent.cpp
+    Source/Clients/SimulationInterfacesROS2SystemComponent.h
+    Source/Services/GetEntitiesServiceHandler.cpp
+    Source/Services/GetEntitiesServiceHandler.h
+    Source/Services/DeleteEntityServiceHandler.cpp
+    Source/Services/DeleteEntityServiceHandler.h
+    Source/Services/GetEntitiesServiceHandler.cpp
+    Source/Services/GetEntitiesServiceHandler.h
+    Source/Services/GetEntitiesStatesServiceHandler.cpp
+    Source/Services/GetEntitiesStatesServiceHandler.h
+    Source/Services/GetEntityStateServiceHandler.cpp
+    Source/Services/GetEntityStateServiceHandler.h
+    Source/Services/DeleteEntityServiceHandler.cpp
+    Source/Services/DeleteEntityServiceHandler.h
+    Source/Services/SetEntityStateServiceHandler.cpp
+    Source/Services/SetEntityStateServiceHandler.h
+    Source/Services/GetSpawnablesServiceHandler.cpp
+    Source/Services/GetSpawnablesServiceHandler.h
+    Source/Services/SpawnEntityServiceHandler.cpp
+    Source/Services/SpawnEntityServiceHandler.h
+    Source/Utils/ServicesConfig.h
+    Source/Utils/Utils.h
+)

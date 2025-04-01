@@ -1,0 +1,18 @@
+{
+    "Amazon": {
+        "AssetProcessor": {
+            "Settings": {
+                "ScanFolder SimulationInterfacesROS2/Assets": {
+                    "watch": "@GEMROOT:SimulationInterfacesROS2@/Assets",
+                    "recursive": 1,
+                    "order": 101
+                },
+                "ScanFolder SimulationInterfacesROS2/Registry": {
+                    "watch": "@GEMROOT:SimulationInterfacesROS2@/Registry",
+                    "recursive": 1,
+                    "order": 102
+                }
+            }
+        }
+    }
+}
