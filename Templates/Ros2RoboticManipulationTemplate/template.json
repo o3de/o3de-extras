@@ -43,39 +43,27 @@
             "isTemplated": false
         },
         {
-            "file": "Assets/BoxToyPuzzle/texture/BoxToyPuzzle_MCube_pazzle_BaseMap.1001.png",
+            "file": "Assets/BoxToyPuzzle/ToyBox_MCube_pazzle.material",
             "isTemplated": false
         },
         {
-            "file": "Assets/BoxToyPuzzle/texture/BoxToyPuzzle_MCube_pazzle_Emissive.1001.png",
+            "file": "Assets/BoxToyPuzzle/texture/BoxToyPuzzle_MCube_pazzle_BaseMap.png",
             "isTemplated": false
         },
         {
-            "file": "Assets/BoxToyPuzzle/texture/BoxToyPuzzle_MCube_pazzle_Glossiness.1001.png",
+            "file": "Assets/BoxToyPuzzle/texture/BoxToyPuzzle_MCube_pazzle_Metallic.png",
             "isTemplated": false
         },
         {
-            "file": "Assets/BoxToyPuzzle/texture/BoxToyPuzzle_MCube_pazzle_Height.1001.png",
+            "file": "Assets/BoxToyPuzzle/texture/BoxToyPuzzle_MCube_pazzle_Normal.png",
             "isTemplated": false
         },
         {
-            "file": "Assets/BoxToyPuzzle/texture/BoxToyPuzzle_MCube_pazzle_Metallic.1001.png",
+            "file": "Assets/BoxToyPuzzle/texture/BoxToyPuzzle_MCube_pazzle_Roughness.png",
             "isTemplated": false
         },
         {
-            "file": "Assets/BoxToyPuzzle/texture/BoxToyPuzzle_MCube_pazzle_Normal.1001.png",
-            "isTemplated": false
-        },
-        {
-            "file": "Assets/BoxToyPuzzle/texture/BoxToyPuzzle_MCube_pazzle_Roughness.1001.png",
-            "isTemplated": false
-        },
-        {
-            "file": "Assets/BoxToyPuzzle/texture/BoxToyPuzzle_MCube_pazzle_Specular.1001.png",
-            "isTemplated": false
-        },
-        {
-            "file": "Assets/BoxToyPuzzle/texture/Roughness/MCube_pazzle_Roughness.1001.png",
+            "file": "Assets/BoxToyPuzzle/texture/BoxToyPuzzle_MCube_pazzle_Specular.png",
             "isTemplated": false
         },
         {
@@ -279,10 +267,6 @@
             "isTemplated": false
         },
         {
-            "file": "Assets/Room/Textures/Desk/Room_M_Desk_Height.png",
-            "isTemplated": false
-        },
-        {
             "file": "Assets/Room/Textures/Desk/Room_M_Desk_Metallic.png",
             "isTemplated": false
         },
@@ -303,10 +287,6 @@
             "isTemplated": false
         },
         {
-            "file": "Assets/Room/Textures/Floor/plane_divided_DefaultMaterial_Height.png",
-            "isTemplated": false
-        },
-        {
             "file": "Assets/Room/Textures/Floor/plane_divided_DefaultMaterial_Metallic.png",
             "isTemplated": false
         },
@@ -324,10 +304,6 @@
         },
         {
             "file": "Assets/Room/Textures/Walls/Room_M_Walls_Base_color.png",
-            "isTemplated": false
-        },
-        {
-            "file": "Assets/Room/Textures/Walls/Room_M_Walls_Height.png",
             "isTemplated": false
         },
         {

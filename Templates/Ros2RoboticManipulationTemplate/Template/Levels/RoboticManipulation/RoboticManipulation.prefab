@@ -120,11 +120,87 @@
                 },
                 "EditorInspectorComponent": {
                     "$type": "EditorInspectorComponent",
-                    "Id": 11935104520774149931
+                    "Id": 11935104520774149931,
+                    "ComponentOrderEntryArray": [
+                        {
+                            "ComponentId": 13477260817399492
+                        },
+                        {
+                            "ComponentId": 8942631560345315751,
+                            "SortIndex": 1
+                        },
+                        {
+                            "ComponentId": 11935104520774149931,
+                            "SortIndex": 2
+                        },
+                        {
+                            "ComponentId": 13334401714120463320,
+                            "SortIndex": 3
+                        },
+                        {
+                            "ComponentId": 8209549994118100442,
+                            "SortIndex": 4
+                        },
+                        {
+                            "ComponentId": 13653132128783253530,
+                            "SortIndex": 5
+                        },
+                        {
+                            "ComponentId": 18050324770862529541,
+                            "SortIndex": 6
+                        },
+                        {
+                            "ComponentId": 16436622156889821729,
+                            "SortIndex": 7
+                        },
+                        {
+                            "ComponentId": 15101443497734660098,
+                            "SortIndex": 8
+                        },
+                        {
+                            "ComponentId": 1318225922969817582,
+                            "SortIndex": 9
+                        },
+                        {
+                            "ComponentId": 4231705476157799658,
+                            "SortIndex": 10
+                        },
+                        {
+                            "ComponentId": 2309191594828780673,
+                            "SortIndex": 11
+                        },
+                        {
+                            "ComponentId": 17578662658522423942,
+                            "SortIndex": 12
+                        }
+                    ]
                 },
                 "EditorLockComponent": {
                     "$type": "EditorLockComponent",
                     "Id": 13653132128783253530
+                },
+                "EditorMaterialComponent": {
+                    "$type": "EditorMaterialComponent",
+                    "Id": 17578662658522423942,
+                    "Controller": {
+                        "Configuration": {
+                            "materials": [
+                                {
+                                    "Key": {
+                                        "materialSlotStableId": 2299407914
+                                    },
+                                    "Value": {
+                                        "MaterialAsset": {
+                                            "assetId": {
+                                                "guid": "{CC9B0778-CEA4-51C5-B037-4FB37FB14BF6}"
+                                            },
+                                            "assetHint": "assets/boxtoypuzzle/toybox_mcube_pazzle.azmaterial"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
                 },
                 "EditorOnlyEntityComponent": {
                     "$type": "EditorOnlyEntityComponent",
@@ -237,11 +313,87 @@
                 },
                 "EditorInspectorComponent": {
                     "$type": "EditorInspectorComponent",
-                    "Id": 16626467716453420713
+                    "Id": 16626467716453420713,
+                    "ComponentOrderEntryArray": [
+                        {
+                            "ComponentId": 55459336814008949
+                        },
+                        {
+                            "ComponentId": 17987930223926762515,
+                            "SortIndex": 1
+                        },
+                        {
+                            "ComponentId": 16626467716453420713,
+                            "SortIndex": 2
+                        },
+                        {
+                            "ComponentId": 14522043389540492674,
+                            "SortIndex": 3
+                        },
+                        {
+                            "ComponentId": 17676787491346498224,
+                            "SortIndex": 4
+                        },
+                        {
+                            "ComponentId": 2803523533248518213,
+                            "SortIndex": 5
+                        },
+                        {
+                            "ComponentId": 5128073629665917468,
+                            "SortIndex": 6
+                        },
+                        {
+                            "ComponentId": 10061907258276659286,
+                            "SortIndex": 7
+                        },
+                        {
+                            "ComponentId": 12402425834288730138,
+                            "SortIndex": 8
+                        },
+                        {
+                            "ComponentId": 16752787871180972293,
+                            "SortIndex": 9
+                        },
+                        {
+                            "ComponentId": 17169627923973507203,
+                            "SortIndex": 10
+                        },
+                        {
+                            "ComponentId": 3177170525233598658,
+                            "SortIndex": 11
+                        },
+                        {
+                            "ComponentId": 826635809023512147,
+                            "SortIndex": 12
+                        }
+                    ]
                 },
                 "EditorLockComponent": {
                     "$type": "EditorLockComponent",
                     "Id": 2803523533248518213
+                },
+                "EditorMaterialComponent": {
+                    "$type": "EditorMaterialComponent",
+                    "Id": 826635809023512147,
+                    "Controller": {
+                        "Configuration": {
+                            "materials": [
+                                {
+                                    "Key": {
+                                        "materialSlotStableId": 2299407914
+                                    },
+                                    "Value": {
+                                        "MaterialAsset": {
+                                            "assetId": {
+                                                "guid": "{CC9B0778-CEA4-51C5-B037-4FB37FB14BF6}"
+                                            },
+                                            "assetHint": "assets/boxtoypuzzle/toybox_mcube_pazzle.azmaterial"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
                 },
                 "EditorOnlyEntityComponent": {
                     "$type": "EditorOnlyEntityComponent",
@@ -326,11 +478,87 @@
                 },
                 "EditorInspectorComponent": {
                     "$type": "EditorInspectorComponent",
-                    "Id": 4333772733389101949
+                    "Id": 4333772733389101949,
+                    "ComponentOrderEntryArray": [
+                        {
+                            "ComponentId": 12409578498921728782
+                        },
+                        {
+                            "ComponentId": 5068233441709227195,
+                            "SortIndex": 1
+                        },
+                        {
+                            "ComponentId": 4333772733389101949,
+                            "SortIndex": 2
+                        },
+                        {
+                            "ComponentId": 1465573477539645176,
+                            "SortIndex": 3
+                        },
+                        {
+                            "ComponentId": 10526186140992111270,
+                            "SortIndex": 4
+                        },
+                        {
+                            "ComponentId": 14818326815397783919,
+                            "SortIndex": 5
+                        },
+                        {
+                            "ComponentId": 14884131080116101019,
+                            "SortIndex": 6
+                        },
+                        {
+                            "ComponentId": 11936988792795716880,
+                            "SortIndex": 7
+                        },
+                        {
+                            "ComponentId": 5412228338758695767,
+                            "SortIndex": 8
+                        },
+                        {
+                            "ComponentId": 16790189735851800813,
+                            "SortIndex": 9
+                        },
+                        {
+                            "ComponentId": 6554809807315683945,
+                            "SortIndex": 10
+                        },
+                        {
+                            "ComponentId": 4648236777590715039,
+                            "SortIndex": 11
+                        },
+                        {
+                            "ComponentId": 10058217173580590723,
+                            "SortIndex": 12
+                        }
+                    ]
                 },
                 "EditorLockComponent": {
                     "$type": "EditorLockComponent",
                     "Id": 14818326815397783919
+                },
+                "EditorMaterialComponent": {
+                    "$type": "EditorMaterialComponent",
+                    "Id": 10058217173580590723,
+                    "Controller": {
+                        "Configuration": {
+                            "materials": [
+                                {
+                                    "Key": {
+                                        "materialSlotStableId": 2299407914
+                                    },
+                                    "Value": {
+                                        "MaterialAsset": {
+                                            "assetId": {
+                                                "guid": "{CC9B0778-CEA4-51C5-B037-4FB37FB14BF6}"
+                                            },
+                                            "assetHint": "assets/boxtoypuzzle/toybox_mcube_pazzle.azmaterial"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
                 },
                 "EditorMeshColliderComponent": {
                     "$type": "EditorMeshColliderComponent",
@@ -536,11 +764,87 @@
                 },
                 "EditorInspectorComponent": {
                     "$type": "EditorInspectorComponent",
-                    "Id": 16626467716453420713
+                    "Id": 16626467716453420713,
+                    "ComponentOrderEntryArray": [
+                        {
+                            "ComponentId": 55459336814008949
+                        },
+                        {
+                            "ComponentId": 17987930223926762515,
+                            "SortIndex": 1
+                        },
+                        {
+                            "ComponentId": 16626467716453420713,
+                            "SortIndex": 2
+                        },
+                        {
+                            "ComponentId": 14522043389540492674,
+                            "SortIndex": 3
+                        },
+                        {
+                            "ComponentId": 17676787491346498224,
+                            "SortIndex": 4
+                        },
+                        {
+                            "ComponentId": 2803523533248518213,
+                            "SortIndex": 5
+                        },
+                        {
+                            "ComponentId": 5128073629665917468,
+                            "SortIndex": 6
+                        },
+                        {
+                            "ComponentId": 10061907258276659286,
+                            "SortIndex": 7
+                        },
+                        {
+                            "ComponentId": 12402425834288730138,
+                            "SortIndex": 8
+                        },
+                        {
+                            "ComponentId": 16752787871180972293,
+                            "SortIndex": 9
+                        },
+                        {
+                            "ComponentId": 17169627923973507203,
+                            "SortIndex": 10
+                        },
+                        {
+                            "ComponentId": 3177170525233598658,
+                            "SortIndex": 11
+                        },
+                        {
+                            "ComponentId": 7564134830539674543,
+                            "SortIndex": 12
+                        }
+                    ]
                 },
                 "EditorLockComponent": {
                     "$type": "EditorLockComponent",
                     "Id": 2803523533248518213
+                },
+                "EditorMaterialComponent": {
+                    "$type": "EditorMaterialComponent",
+                    "Id": 7564134830539674543,
+                    "Controller": {
+                        "Configuration": {
+                            "materials": [
+                                {
+                                    "Key": {
+                                        "materialSlotStableId": 2299407914
+                                    },
+                                    "Value": {
+                                        "MaterialAsset": {
+                                            "assetId": {
+                                                "guid": "{CC9B0778-CEA4-51C5-B037-4FB37FB14BF6}"
+                                            },
+                                            "assetHint": "assets/boxtoypuzzle/toybox_mcube_pazzle.azmaterial"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
                 },
                 "EditorOnlyEntityComponent": {
                     "$type": "EditorOnlyEntityComponent",
@@ -654,11 +958,87 @@
                 },
                 "EditorInspectorComponent": {
                     "$type": "EditorInspectorComponent",
-                    "Id": 11935104520774149931
+                    "Id": 11935104520774149931,
+                    "ComponentOrderEntryArray": [
+                        {
+                            "ComponentId": 13477260817399492
+                        },
+                        {
+                            "ComponentId": 8942631560345315751,
+                            "SortIndex": 1
+                        },
+                        {
+                            "ComponentId": 11935104520774149931,
+                            "SortIndex": 2
+                        },
+                        {
+                            "ComponentId": 13334401714120463320,
+                            "SortIndex": 3
+                        },
+                        {
+                            "ComponentId": 8209549994118100442,
+                            "SortIndex": 4
+                        },
+                        {
+                            "ComponentId": 13653132128783253530,
+                            "SortIndex": 5
+                        },
+                        {
+                            "ComponentId": 18050324770862529541,
+                            "SortIndex": 6
+                        },
+                        {
+                            "ComponentId": 16436622156889821729,
+                            "SortIndex": 7
+                        },
+                        {
+                            "ComponentId": 15101443497734660098,
+                            "SortIndex": 8
+                        },
+                        {
+                            "ComponentId": 1318225922969817582,
+                            "SortIndex": 9
+                        },
+                        {
+                            "ComponentId": 4231705476157799658,
+                            "SortIndex": 10
+                        },
+                        {
+                            "ComponentId": 2309191594828780673,
+                            "SortIndex": 11
+                        },
+                        {
+                            "ComponentId": 1075136025196618364,
+                            "SortIndex": 12
+                        }
+                    ]
                 },
                 "EditorLockComponent": {
                     "$type": "EditorLockComponent",
                     "Id": 13653132128783253530
+                },
+                "EditorMaterialComponent": {
+                    "$type": "EditorMaterialComponent",
+                    "Id": 1075136025196618364,
+                    "Controller": {
+                        "Configuration": {
+                            "materials": [
+                                {
+                                    "Key": {
+                                        "materialSlotStableId": 2299407914
+                                    },
+                                    "Value": {
+                                        "MaterialAsset": {
+                                            "assetId": {
+                                                "guid": "{CC9B0778-CEA4-51C5-B037-4FB37FB14BF6}"
+                                            },
+                                            "assetHint": "assets/boxtoypuzzle/toybox_mcube_pazzle.azmaterial"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
                 },
                 "EditorOnlyEntityComponent": {
                     "$type": "EditorOnlyEntityComponent",
@@ -2297,6 +2677,28 @@
                     "$type": "EditorLockComponent",
                     "Id": 18337003591169860589
                 },
+                "EditorMaterialComponent": {
+                    "$type": "EditorMaterialComponent",
+                    "Id": 14869333633280606553,
+                    "Controller": {
+                        "Configuration": {
+                            "materials": [
+                                {
+                                    "Key": {
+                                        "materialSlotStableId": 2299407914
+                                    },
+                                    "Value": {
+                                        "MaterialAsset": {
+                                            "assetId": {
+                                                "guid": "{CC9B0778-CEA4-51C5-B037-4FB37FB14BF6}"
+                                            }
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                },
                 "EditorOnlyEntityComponent": {
                     "$type": "EditorOnlyEntityComponent",
                     "Id": 15443814488498124306
@@ -3228,11 +3630,87 @@
                 },
                 "EditorInspectorComponent": {
                     "$type": "EditorInspectorComponent",
-                    "Id": 4333772733389101949
+                    "Id": 4333772733389101949,
+                    "ComponentOrderEntryArray": [
+                        {
+                            "ComponentId": 12409578498921728782
+                        },
+                        {
+                            "ComponentId": 5068233441709227195,
+                            "SortIndex": 1
+                        },
+                        {
+                            "ComponentId": 4333772733389101949,
+                            "SortIndex": 2
+                        },
+                        {
+                            "ComponentId": 1465573477539645176,
+                            "SortIndex": 3
+                        },
+                        {
+                            "ComponentId": 10526186140992111270,
+                            "SortIndex": 4
+                        },
+                        {
+                            "ComponentId": 14818326815397783919,
+                            "SortIndex": 5
+                        },
+                        {
+                            "ComponentId": 14884131080116101019,
+                            "SortIndex": 6
+                        },
+                        {
+                            "ComponentId": 11936988792795716880,
+                            "SortIndex": 7
+                        },
+                        {
+                            "ComponentId": 5412228338758695767,
+                            "SortIndex": 8
+                        },
+                        {
+                            "ComponentId": 16790189735851800813,
+                            "SortIndex": 9
+                        },
+                        {
+                            "ComponentId": 6554809807315683945,
+                            "SortIndex": 10
+                        },
+                        {
+                            "ComponentId": 4648236777590715039,
+                            "SortIndex": 11
+                        },
+                        {
+                            "ComponentId": 12754454161336864588,
+                            "SortIndex": 12
+                        }
+                    ]
                 },
                 "EditorLockComponent": {
                     "$type": "EditorLockComponent",
                     "Id": 14818326815397783919
+                },
+                "EditorMaterialComponent": {
+                    "$type": "EditorMaterialComponent",
+                    "Id": 12754454161336864588,
+                    "Controller": {
+                        "Configuration": {
+                            "materials": [
+                                {
+                                    "Key": {
+                                        "materialSlotStableId": 2299407914
+                                    },
+                                    "Value": {
+                                        "MaterialAsset": {
+                                            "assetId": {
+                                                "guid": "{CC9B0778-CEA4-51C5-B037-4FB37FB14BF6}"
+                                            },
+                                            "assetHint": "assets/boxtoypuzzle/toybox_mcube_pazzle.azmaterial"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
                 },
                 "EditorMeshColliderComponent": {
                     "$type": "EditorMeshColliderComponent",
