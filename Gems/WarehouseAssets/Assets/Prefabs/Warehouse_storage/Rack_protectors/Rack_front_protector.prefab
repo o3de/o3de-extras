@@ -69,7 +69,7 @@
                         "MaterialSlots": {
                             "Slots": [
                                 {
-                                    "Name": "MWarehouseProps_002"
+                                    "Name": "MWarehouseProps"
                                 }
                             ]
                         }
@@ -167,13 +167,13 @@
                 },
                 "EditorMaterialComponent": {
                     "$type": "EditorMaterialComponent",
-                    "Id": 7749217733108250140,
+                    "Id": 17663134228465541270,
                     "Controller": {
                         "Configuration": {
                             "materials": [
                                 {
                                     "Key": {
-                                        "materialSlotStableId": 1412244510
+                                        "materialSlotStableId": 312683670
                                     },
                                     "Value": {
                                         "MaterialAsset": {

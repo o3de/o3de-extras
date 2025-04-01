@@ -8,7 +8,7 @@
                 "selectedNodes": [
                     "RootNode",
                     "RootNode.FrontRackProtector",
-                    "RootNode.FrontRackProtector.MWarehouseProps_002",
+                    "RootNode.FrontRackProtector.MWarehouseProps",
                     "RootNode.FrontRackProtector.UVMap",
                     "RootNode.FrontRackProtector.custom_properties",
                     "RootNode.FrontRackProtector.transform"
@@ -18,7 +18,7 @@
             "PhysicsMaterialSlots": {
                 "Slots": [
                     {
-                        "Name": "MWarehouseProps_002"
+                        "Name": "MWarehouseProps"
                     }
                 ]
             }
@@ -30,7 +30,7 @@
                 "selectedNodes": [
                     "RootNode",
                     "RootNode.FrontRackProtector",
-                    "RootNode.FrontRackProtector.MWarehouseProps_002",
+                    "RootNode.FrontRackProtector.MWarehouseProps",
                     "RootNode.FrontRackProtector.UVMap",
                     "RootNode.FrontRackProtector.custom_properties",
                     "RootNode.FrontRackProtector.transform"
