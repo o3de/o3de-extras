@@ -2,39 +2,33 @@
     "values": [
         {
             "$type": "{5B03C8E6-8CEE-4DA0-A7FA-CD88689DD45B} MeshGroup",
-            "id": "{8E73EF21-A8D8-5938-9AF0-0C65D5B13BE3}",
-            "name": "Warehouse_SideRackProtector",
+            "id": "{264B4B13-787D-5792-B239-79BAF1D89EBB}",
+            "name": "Warehouse_walls_side_short",
             "NodeSelectionList": {
                 "selectedNodes": [
-                    "RootNode",
-                    "RootNode.SideRackProtector",
-                    "RootNode.SideRackProtector.MWarehouseProps",
-                    "RootNode.SideRackProtector.UVMap",
-                    "RootNode.SideRackProtector.custom_properties",
-                    "RootNode.SideRackProtector.transform"
+                    "RootNode.Walls_side"
+                ],
+                "unselectedNodes": [
+                    {},
+                    "RootNode"
                 ]
             },
-            "export method": 1,
-            "DecomposeMeshes": true,
             "PhysicsMaterialSlots": {
                 "Slots": [
                     {
-                        "Name": "MWarehouseProps"
+                        "Name": "MWarehouseModules"
                     }
                 ]
             }
         },
         {
             "$type": "{07B356B7-3635-40B5-878A-FAC4EFD5AD86} MeshGroup",
-            "name": "Warehouse_SideRackProtector",
+            "name": "Warehouse_walls_side_short",
             "nodeSelectionList": {
                 "selectedNodes": [
+                    {},
                     "RootNode",
-                    "RootNode.SideRackProtector",
-                    "RootNode.SideRackProtector.MWarehouseProps",
-                    "RootNode.SideRackProtector.UVMap",
-                    "RootNode.SideRackProtector.custom_properties",
-                    "RootNode.SideRackProtector.transform"
+                    "RootNode.Walls_side"
                 ]
             },
             "rules": {
@@ -44,17 +38,17 @@
                     }
                 ]
             },
-            "id": "{FA33C4EC-7A39-5D81-8041-B44E90A6F50B}"
+            "id": "{B3B516B4-EE95-588E-B451-6FDB7516B6C9}"
         },
         {
             "$type": "{41DCBEAB-203C-4A05-96FA-98E1D8A96FA1} ImportGroup"
         },
         {
             "$type": "{07B356B7-3635-40B5-878A-FAC4EFD5AD86} MeshGroup",
-            "name": "default_Warehouse_SideRackProtector_371F9D31_92DD_5D01_B811_99A0E7439200_",
+            "name": "default_Warehouse_walls_side_short_6EF80D5A_C761_5839_967D_F1F412772B08_",
             "nodeSelectionList": {
                 "selectedNodes": [
-                    "RootNode.SideRackProtector"
+                    "RootNode.Walls_side"
                 ]
             },
             "rules": {
@@ -74,12 +68,12 @@
                     }
                 ]
             },
-            "id": "{371F9D31-92DD-5D01-B811-99A0E7439200}"
+            "id": "{6EF80D5A-C761-5839-967D-F1F412772B08}"
         },
         {
             "$type": "PrefabGroup",
-            "name": "assets/Warehouse/Models/Warehouse_SideRackProtector_fbx.procprefab",
-            "id": "{7B188D07-8895-58F3-B0B3-F1A736F394AC}"
+            "name": "assets/Warehouse/Models/Warehouse_walls_side_short_fbx.procprefab",
+            "id": "{34B9D7A9-CA92-515B-945A-439F5CB7521D}"
         }
     ]
 }

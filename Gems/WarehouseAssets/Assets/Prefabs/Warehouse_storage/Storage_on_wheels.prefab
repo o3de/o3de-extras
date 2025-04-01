@@ -78,6 +78,18 @@
                             "materials": [
                                 {
                                     "Key": {
+                                        "materialSlotStableId": 992873422
+                                    },
+                                    "Value": {
+                                        "MaterialAsset": {
+                                            "assetId": {
+                                                "guid": "{B59DB34C-8CCC-5B6A-8F32-749689632151}"
+                                            }
+                                        }
+                                    }
+                                },
+                                {
+                                    "Key": {
                                         "materialSlotStableId": 3528137216
                                     },
                                     "Value": {
@@ -85,7 +97,7 @@
                                             "assetId": {
                                                 "guid": "{B59DB34C-8CCC-5B6A-8F32-749689632151}"
                                             },
-                                            "assetHint": "assets/warehouse/materials/mwarehousestorageonwheels.material.azmaterial"
+                                            "assetHint": "assets/warehouse/materials/mwarehousestorageonwheels.azmaterial"
                                         }
                                     }
                                 }
@@ -112,7 +124,9 @@
                                     "subId": 281610153
                                 },
                                 "assetHint": "assets/warehouse/models/warehouse_storage_on_wheels.fbx.azmodel"
-                            }
+                            },
+                            "LodType": 1,
+                            "QualityDecayRate": 0.4000000059604645
                         }
                     }
                 },
