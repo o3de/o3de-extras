@@ -73,30 +73,9 @@
                                     "subId": 280860284
                                 },
                                 "assetHint": "assets/warehouse/models/warehouse_rack.fbx.azmodel"
-                            }
-                        }
-                    }
-                },
-                "Component_[16399451670871728784]": {
-                    "$type": "EditorMaterialComponent",
-                    "Id": 16399451670871728784,
-                    "Controller": {
-                        "Configuration": {
-                            "materials": [
-                                {
-                                    "Key": {
-                                        "materialSlotStableId": 1918630954
-                                    },
-                                    "Value": {
-                                        "MaterialAsset": {
-                                            "assetId": {
-                                                "guid": "{0F02CB79-3194-5377-808F-5EEF328D40DF}"
-                                            },
-                                            "assetHint": "assets/warehouse/materials/mwarehousestorage.material.azmaterial"
-                                        }
-                                    }
-                                }
-                            ]
+                            },
+                            "LodType": 1,
+                            "QualityDecayRate": 0.44999998807907104
                         }
                     }
                 },
@@ -179,6 +158,29 @@
                     "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
                     "Id": 7951809217182138039,
                     "Parent Entity": "ContainerEntity"
+                },
+                "EditorMaterialComponent": {
+                    "$type": "EditorMaterialComponent",
+                    "Id": 2970591034066683547,
+                    "Controller": {
+                        "Configuration": {
+                            "materials": [
+                                {
+                                    "Key": {
+                                        "materialSlotStableId": 693910858
+                                    },
+                                    "Value": {
+                                        "MaterialAsset": {
+                                            "assetId": {
+                                                "guid": "{E1FEC572-D573-5166-92A8-E246A9D8245B}"
+                                            },
+                                            "assetHint": "assets/warehouse/materials/warehouserack.azmaterial"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
                 }
             }
         }

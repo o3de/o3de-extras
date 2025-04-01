@@ -103,7 +103,7 @@
         },
         "Entity_[1614665180534621]": {
             "Id": "Entity_[1614665180534621]",
-            "Name": "visualization",
+            "Name": "SideProtector",
             "Components": {
                 "Component_[11625877342363852623]": {
                     "$type": "AZ::Render::EditorMeshComponent",
@@ -147,7 +147,7 @@
                                             "assetId": {
                                                 "guid": "{DC927EEA-A70D-5383-96AA-665AC07DC591}"
                                             },
-                                            "assetHint": "assets/warehouse/materials/mwarehouseprops.material.azmaterial"
+                                            "assetHint": "assets/warehouse/materials/mwarehouseprops.azmaterial"
                                         }
                                     }
                                 }
@@ -162,7 +162,14 @@
                         "MaterialSlots": {
                             "Slots": [
                                 {
-                                    "Name": "MWarehouseProps"
+                                    "Name": "MWarehouseProps",
+                                    "MaterialAsset": {
+                                        "assetId": {
+                                            "guid": "{2453EA64-38EF-546F-83F8-45EE0A0B6195}",
+                                            "subId": 1
+                                        },
+                                        "assetHint": "assets/materials/defaultstorage.physicsmaterial"
+                                    }
                                 }
                             ]
                         }

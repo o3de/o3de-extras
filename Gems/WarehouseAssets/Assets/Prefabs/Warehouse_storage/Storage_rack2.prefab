@@ -638,6 +638,11 @@
                     "op": "replace",
                     "path": "/ContainerEntity/Components/Component_[11645621937081874484]/Transform Data/Translate/1",
                     "value": -0.5288867950439453
+                },
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/Component_[11645621937081874484]/Transform Data/Rotate/2",
+                    "value": 181.0
                 }
             ]
         },
@@ -827,12 +832,17 @@
                 {
                     "op": "replace",
                     "path": "/ContainerEntity/Components/Component_[11645621937081874484]/Transform Data/Translate/1",
-                    "value": 1.0520672798156738
+                    "value": 0.9987945556640624
                 },
                 {
                     "op": "replace",
                     "path": "/ContainerEntity/Components/Component_[11645621937081874484]/Transform Data/Translate/2",
                     "value": 0.7265243530273438
+                },
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/Component_[11645621937081874484]/Transform Data/Rotate/2",
+                    "value": -1.6240407228469849
                 }
             ]
         },
@@ -868,6 +878,11 @@
                     "op": "replace",
                     "path": "/ContainerEntity/Components/Component_[11645621937081874484]/Transform Data/Translate/1",
                     "value": 1.0520672798156738
+                },
+                {
+                    "op": "replace",
+                    "path": "/ContainerEntity/Components/Component_[11645621937081874484]/Transform Data/Rotate/2",
+                    "value": 180.0
                 }
             ]
         }
