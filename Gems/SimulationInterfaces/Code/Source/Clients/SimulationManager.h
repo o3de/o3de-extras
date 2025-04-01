@@ -15,10 +15,12 @@
 #include <AzFramework/Physics/PhysicsScene.h>
 #include <AzFramework/Spawnable/SpawnableEntitiesInterface.h>
 #include <SimulationInterfaces/SimulationInterfacesBus.h>
-
+#include <SimulationInterfaces/SimulationMangerRequestBus.h>
 namespace SimulationInterfaces
 {
-    class SimulationManager : public AZ::Component
+    class SimulationManager :
+        public AZ::Component,
+        protected SimulationManagerRequestBus::Handler
     {
     public:
         AZ_COMPONENT_DECL(SimulationManager);
@@ -37,5 +39,11 @@ namespace SimulationInterfaces
         void Init() override;
         void Activate() override;
         void Deactivate() override;
+    protected:
+        void SetSimulationPaused(bool paused) override;
+        void StepSimulation(AZ::u32 steps) override;
+        uint32_t m_numberOfPhysicsSteps = 0;
+        AzPhysics::SceneEvents::OnSceneSimulationFinishHandler m_simulationFinishEvent;
+
     };
 } // namespace SimulationInterfaces

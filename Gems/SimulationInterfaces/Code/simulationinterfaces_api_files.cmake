@@ -6,5 +6,6 @@
 
 set(FILES
     Include/SimulationInterfaces/SimulationInterfacesBus.h
+    Include/SimulationInterfaces/SimulationMangerRequestBus.h
     Include/SimulationInterfaces/SimulationInterfacesTypeIds.h
 )

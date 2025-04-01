@@ -11,7 +11,7 @@
 #include <SimulationInterfaces/SimulationInterfacesTypeIds.h>
 
 #include "CommonUtilities.h"
-#include "ConsoleCommands.icl"
+#include "ConsoleCommands.inl"
 #include <AzCore/Asset/AssetManager.h>
 #include <AzCore/Asset/AssetManagerBus.h>
 #include <AzCore/Component/ComponentApplicationBus.h>
@@ -25,7 +25,6 @@
 #include <AzFramework/Physics/SimulatedBodies/RigidBody.h>
 #include <AzFramework/Spawnable/Spawnable.h>
 #include <AzFramework/Spawnable/SpawnableEntitiesInterface.h>
-#include <AzCore/Component/ComponentApplicationBus.h>
 
 namespace SimulationInterfaces
 {

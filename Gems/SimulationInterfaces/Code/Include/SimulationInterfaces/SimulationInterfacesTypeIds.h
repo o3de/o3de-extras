@@ -26,5 +26,6 @@ namespace SimulationInterfaces
 
     // Interface TypeIds
     inline constexpr const char* SimulationInterfacesRequestsTypeId = "{6818E5E3-BBF5-41BD-96BB-7AF57CCC7528}";
+    inline constexpr const char* SimulationManagerRequestsTypeId = "{056477BA-8153-4901-9401-0146A5E3E9ED}";
 
 } // namespace SimulationInterfaces

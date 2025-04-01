@@ -10,6 +10,7 @@
 #include <AzCore/Console/IConsole.h>
 #include <AzCore/std/smart_ptr/make_shared.h>
 #include <SimulationInterfaces/SimulationInterfacesBus.h>
+#include <SimulationInterfaces/SimulationMangerRequestBus.h>
 
 namespace SimulationInterfacesCommands
 {
@@ -25,6 +26,31 @@ namespace SimulationInterfacesCommands
             AZ_Printf("SimulationInterfacesConsole", "      - %s\n", entity.c_str());
         }
     }
+
+    static void simulationinterfaces_Pause(const AZ::ConsoleCommandContainer& arguments)
+    {
+        SimulationManagerRequestBus::Broadcast(&SimulationManagerRequestBus::Events::SetSimulationPaused, true);
+    }
+
+    static void simulationinterfaces_Resume(const AZ::ConsoleCommandContainer& arguments)
+    {
+        SimulationManagerRequestBus::Broadcast(&SimulationManagerRequestBus::Events::SetSimulationPaused, false);
+    }
+
+
+    static void simulationinterfaces_Step(const AZ::ConsoleCommandContainer& arguments)
+    {
+        if (arguments.empty())
+        {
+            AZ_Printf("SimulationInterfacesConsole", "simulationinterfaces_Step <number of steps>\n");
+            return;
+        }
+        uint32_t steps = AZStd::stoi(AZStd::string(arguments[0]));
+
+        SimulationManagerRequestBus::Broadcast(&SimulationManagerRequestBus::Events::StepSimulation, steps);
+    }
+
+
 
     static void simulationinterfaces_GetEntitiesSphere(const AZ::ConsoleCommandContainer& arguments)
     {
@@ -187,6 +213,10 @@ namespace SimulationInterfacesCommands
         SimulationInterfacesRequestBus::Broadcast(&SimulationInterfacesRequestBus::Events::SpawnEntity, name, uri, entityNamespace, initialPose, completedCb);
         AZ_Printf("SimulationInterfacesConsole", "simulationinterface_Spawn %s %s\n", name.c_str(), uri.c_str());
     }
+
+    AZ_CONSOLEFREEFUNC(simulationinterfaces_Pause, AZ::ConsoleFunctorFlags::DontReplicate, "Pause simulation.");
+    AZ_CONSOLEFREEFUNC(simulationinterfaces_Resume, AZ::ConsoleFunctorFlags::DontReplicate, "Resume simulation.");
+    AZ_CONSOLEFREEFUNC(simulationinterfaces_Step, AZ::ConsoleFunctorFlags::DontReplicate, "Step simulation.");
 
     AZ_CONSOLEFREEFUNC(
         simulationinterfaces_GetEntities, AZ::ConsoleFunctorFlags::DontReplicate, "Get all simulated entities in the scene.");
