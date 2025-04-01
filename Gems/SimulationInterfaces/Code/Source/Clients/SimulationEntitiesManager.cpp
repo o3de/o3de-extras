@@ -25,6 +25,7 @@
 #include <AzFramework/Physics/SimulatedBodies/RigidBody.h>
 #include <AzFramework/Spawnable/Spawnable.h>
 #include <AzFramework/Spawnable/SpawnableEntitiesInterface.h>
+#include <AzCore/Component/ComponentApplicationBus.h>
 
 namespace SimulationInterfaces
 {
@@ -67,12 +68,12 @@ namespace SimulationInterfaces
 
     void SimulationEntitiesManager::GetRequiredServices([[maybe_unused]] AZ::ComponentDescriptor::DependencyArrayType& required)
     {
-        required.push_back(AZ_CRC_CE("PhysicsService"));
         required.push_back(AZ_CRC_CE("AssetCatalogService"));
     }
 
     void SimulationEntitiesManager::GetDependentServices([[maybe_unused]] AZ::ComponentDescriptor::DependencyArrayType& dependent)
     {
+        dependent.push_back(AZ_CRC_CE("PhysicsService"));
     }
 
     SimulationEntitiesManager::SimulationEntitiesManager()
@@ -192,10 +193,12 @@ namespace SimulationInterfaces
                 }
             });
         AzPhysics::SystemInterface* physicsSystem = AZ::Interface<AzPhysics::SystemInterface>::Get();
-        AZ_Assert(physicsSystem, "Physics system is not available.");
-        physicsSystem->RegisterSceneAddedEvent(m_sceneAddedHandler);
-        physicsSystem->RegisterSceneRemovedEvent(m_sceneRemovedHandler);
-        SimulationInterfacesRequestBus::Handler::BusConnect();
+        if (physicsSystem)
+        {
+            physicsSystem->RegisterSceneAddedEvent(m_sceneAddedHandler);
+            physicsSystem->RegisterSceneRemovedEvent(m_sceneRemovedHandler);
+            SimulationInterfacesRequestBus::Handler::BusConnect();
+        }
     }
 
     void SimulationEntitiesManager::Deactivate()

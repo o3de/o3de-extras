@@ -158,6 +158,8 @@ if(PAL_TRAIT_BUILD_HOST_TOOLS)
                 Gem::${gem_name}.Editor.API
             PRIVATE
                 Gem::${gem_name}.Editor.Private.Object
+
+
     )
 
     # Include the gem name into the Editor Module source file
