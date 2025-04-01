@@ -8,8 +8,6 @@
 
 #include <AzCore/RTTI/RTTIMacros.h>
 #include <Frame/ROS2FrameSystemComponent.h>
-#include <Manipulation/JointsManipulationEditorComponent.h>
-#include <Manipulation/JointsPositionsEditorComponent.h>
 #include <QtCore/qglobal.h>
 #include <ROS2/Frame/ROS2FrameEditorComponent.h>
 #include <ROS2ModuleInterface.h>
@@ -44,8 +42,6 @@ namespace ROS2
                   ROS2SpawnerEditorComponent::CreateDescriptor(),
                   ROS2SpawnPointEditorComponent::CreateDescriptor(),
                   SdfAssetBuilderSystemComponent::CreateDescriptor(),
-                  JointsManipulationEditorComponent::CreateDescriptor(),
-                  JointsPositionsEditorComponent::CreateDescriptor(),
                   ROS2FrameSystemComponent::CreateDescriptor(),
                   ROS2FrameEditorComponent::CreateDescriptor() });
         }

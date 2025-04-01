@@ -10,7 +10,6 @@
 #include "Odometry/ROS2OdometryCovariance.h"
 #include <ROS2/Utilities/ROS2Conversions.h>
 #include <ROS2/Utilities/ROS2Names.h>
-#include <ROS2/VehicleDynamics/VehicleInputControlBus.h>
 
 namespace ROS2
 {
@@ -81,8 +80,9 @@ namespace ROS2
     {
         AZStd::pair<AZ::Vector3, AZ::Vector3> vt;
 
-        VehicleDynamics::VehicleInputControlRequestBus::EventResult(
-            vt, GetEntityId(), &VehicleDynamics::VehicleInputControlRequests::GetWheelsOdometry);
+        // Temporarily disabled until the ROS2Controllers gem is available
+        // VehicleDynamics::VehicleInputControlRequestBus::EventResult(
+        //     vt, GetEntityId(), &VehicleDynamics::VehicleInputControlRequests::GetWheelsOdometry);
 
         m_odometryMsg.header.stamp = ROS2Interface::Get()->GetROSTimestamp();
         m_odometryMsg.twist.twist.linear = ROS2Conversions::ToROS2Vector3(vt.first);

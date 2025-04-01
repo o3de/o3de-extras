@@ -10,7 +10,6 @@
 
 #include <AzToolsFramework/Entity/EditorEntityHelpers.h>
 #include <ROS2/RobotImporter/RobotImporterBus.h>
-#include <RobotControl/ROS2RobotControlComponent.h>
 #include <RobotImporter/Utils/RobotImporterUtils.h>
 
 namespace ROS2
