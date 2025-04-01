@@ -9,4 +9,10 @@
 set(FILES
     Source/Tools/ROS2ControllersEditorSystemComponent.cpp
     Source/Tools/ROS2ControllersEditorSystemComponent.h
+    Source/Manipulation/JointsPositionsEditorComponent.cpp
+    Source/Manipulation/JointsPositionsEditorComponent.h
+    Source/Manipulation/JointsManipulationEditorComponent.cpp
+    Source/Manipulation/JointsManipulationEditorComponent.h
+    Source/Manipulation/JointUtils.cpp
+    Source/Manipulation/JointUtils.h
 )

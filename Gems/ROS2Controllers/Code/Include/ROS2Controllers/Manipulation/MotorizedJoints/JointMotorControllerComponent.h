@@ -12,7 +12,7 @@
 #include <AzCore/Component/TickBus.h>
 #include <AzCore/Serialization/SerializeContext.h>
 #include <ImGuiBus.h>
-#include <ROS2/Manipulation/MotorizedJoints/JointMotorControllerConfiguration.h>
+#include <ROS2Controllers/Manipulation/MotorizedJoints/JointMotorControllerConfiguration.h>
 #include <builtin_interfaces/msg/time.hpp>
 
 namespace ROS2

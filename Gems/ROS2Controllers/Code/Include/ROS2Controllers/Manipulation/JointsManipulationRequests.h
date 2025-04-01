@@ -11,7 +11,7 @@
 #include <AzCore/Outcome/Outcome.h>
 #include <AzCore/std/containers/vector.h>
 #include <AzCore/std/string/string.h>
-#include <ROS2/Manipulation/JointInfo.h>
+#include <ROS2Controllers/Manipulation/JointInfo.h>
 
 namespace ROS2
 {

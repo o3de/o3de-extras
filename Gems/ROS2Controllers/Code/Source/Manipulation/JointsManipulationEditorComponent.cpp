@@ -14,10 +14,10 @@
 #include <AzCore/Serialization/EditContext.h>
 #include <AzCore/std/functional.h>
 #include <ROS2/Frame/ROS2FrameEditorComponent.h>
-#include <ROS2/Manipulation/Controllers/JointsPositionControllerRequests.h>
-#include <ROS2/Manipulation/JointInfo.h>
 #include <ROS2/ROS2GemUtilities.h>
 #include <ROS2/Utilities/ROS2Names.h>
+#include <ROS2Controllers/Manipulation/Controllers/JointsPositionControllerRequests.h>
+#include <ROS2Controllers/Manipulation/JointInfo.h>
 #include <Source/ArticulationLinkComponent.h>
 #include <Source/HingeJointComponent.h>
 
@@ -37,8 +37,7 @@ namespace ROS2
 
     void JointsManipulationEditorComponent::BuildGameEntity(AZ::Entity* gameEntity)
     {
-        gameEntity->CreateComponent<JointsManipulationComponent>(
-            m_jointStatePublisherConfiguration, m_initialPositions);
+        gameEntity->CreateComponent<JointsManipulationComponent>(m_jointStatePublisherConfiguration, m_initialPositions);
     }
 
     void JointsManipulationEditorComponent::GetRequiredServices(AZ::ComponentDescriptor::DependencyArrayType& required)

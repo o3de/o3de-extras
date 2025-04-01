@@ -28,4 +28,4 @@ namespace ROS2::JointUtils
 
         return hasJoints;
     }
-} // namespace ROS2::Utils
+} // namespace ROS2::JointUtils
