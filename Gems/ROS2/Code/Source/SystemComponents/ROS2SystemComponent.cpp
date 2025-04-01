@@ -54,8 +54,7 @@ namespace ROS2
                 ec->Class<ROS2SystemComponent>(
                       "ROS 2 System Component",
                       "This component is responsible for creating ROS 2 node and executor, provides ROS 2 interfaces, manages ROS 2 clock "
-                      "and "
-                      "publishes transforms.")
+                      "and publishes transforms.")
                     ->ClassElement(AZ::Edit::ClassElements::EditorData, "")
                     ->Attribute(AZ::Edit::Attributes::AppearsInAddComponentMenu, AZ_CRC_CE("System"))
                     ->Attribute(AZ::Edit::Attributes::Category, "ROS2")
