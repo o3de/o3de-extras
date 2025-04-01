@@ -115,19 +115,19 @@
                         "PhysicsAsset": {
                             "Asset": {
                                 "assetId": {
-                                    "guid": "{A798F307-FC5C-50FF-88DE-AECD2111ADC5}",
+                                    "guid": "{D1FAC89B-E463-5990-961E-70CDEBBBA000}",
                                     "subId": 4119093654
                                 },
-                                "assetHint": "assets/urdfimporter/1440394708_panda/link5.stl.pxmesh"
+                                "assetHint": "assets/panda/link5.stl.pxmesh"
                             },
                             "Configuration": {
                                 "PhysicsAsset": {
                                     "assetId": {
-                                        "guid": "{A798F307-FC5C-50FF-88DE-AECD2111ADC5}",
+                                        "guid": "{D1FAC89B-E463-5990-961E-70CDEBBBA000}",
                                         "subId": 4119093654
                                     },
                                     "loadBehavior": "QueueLoad",
-                                    "assetHint": "assets/urdfimporter/1440394708_panda/link5.stl.pxmesh"
+                                    "assetHint": "assets/panda/link5.stl.pxmesh"
                                 },
                                 "UseMaterialsFromAsset": false
                             }
@@ -146,6 +146,15 @@
                     "$type": "EditorVisibilityComponent",
                     "Id": 820287223997121712
                 },
+                "ROS2FrameEditorComponent": {
+                    "$type": "ROS2FrameEditorComponent",
+                    "Id": 9761024793504549028,
+                    "ROS2FrameConfiguration": {
+                        "Frame Name": "panda_link5",
+                        "Joint Name": "panda_joint5",
+                        "Publish Transform": false
+                    }
+                },
                 "TransformComponent": {
                     "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
                     "Id": 15390913156749739058,
@@ -162,15 +171,6 @@
                             0.0
                         ]
                     }
-                },
-                "ROS2FrameEditorComponent": {
-                    "$type": "ROS2FrameEditorComponent",
-                    "Id": 9761024793504549028,
-                    "ROS2FrameConfiguration": {
-                        "Frame Name": "panda_link5",
-                        "Joint Name": "panda_joint5",
-                        "Publish Transform": false
-                    }
                 }
             }
         },
@@ -185,10 +185,10 @@
                         "Configuration": {
                             "ModelAsset": {
                                 "assetId": {
-                                    "guid": "{5A6F4091-98FA-5B5E-A451-3CCBE4AE7EE9}",
+                                    "guid": "{A4261F26-CA09-5030-8506-0B413BB427B3}",
                                     "subId": 271787153
                                 },
-                                "assetHint": "assets/urdfimporter/1440394708_panda/link7.azmodel"
+                                "assetHint": "assets/panda/link7.dae.azmodel"
                             }
                         }
                     }
@@ -212,6 +212,119 @@
                 "EditorLockComponent": {
                     "$type": "EditorLockComponent",
                     "Id": 4396216151739201094
+                },
+                "EditorMaterialComponent": {
+                    "$type": "EditorMaterialComponent",
+                    "Id": 8537861957294044513,
+                    "Controller": {
+                        "Configuration": {
+                            "materials": [
+                                {
+                                    "Key": {
+                                        "materialSlotStableId": 781640656
+                                    },
+                                    "Value": {
+                                        "MaterialAsset": {
+                                            "assetId": {
+                                                "guid": "{5B0C85AF-FF99-5D49-9E70-E6CD65DDD061}"
+                                            },
+                                            "assetHint": "assets/panda/materials/shell_gray.azmaterial"
+                                        }
+                                    }
+                                },
+                                {
+                                    "Key": {
+                                        "materialSlotStableId": 909163333
+                                    },
+                                    "Value": {
+                                        "MaterialAsset": {
+                                            "assetId": {
+                                                "guid": "{5B0C85AF-FF99-5D49-9E70-E6CD65DDD061}"
+                                            },
+                                            "assetHint": "assets/panda/materials/shell_gray.azmaterial"
+                                        }
+                                    }
+                                },
+                                {
+                                    "Key": {
+                                        "materialSlotStableId": 1406900492
+                                    },
+                                    "Value": {
+                                        "MaterialAsset": {
+                                            "assetId": {
+                                                "guid": "{9F1368F4-7AE6-5DC3-AC7E-73D968157C8A}"
+                                            },
+                                            "assetHint": "assets/panda/materials/shell_white.azmaterial"
+                                        }
+                                    }
+                                },
+                                {
+                                    "Key": {
+                                        "materialSlotStableId": 1628217372
+                                    },
+                                    "Value": {
+                                        "MaterialAsset": {
+                                            "assetId": {
+                                                "guid": "{5B0C85AF-FF99-5D49-9E70-E6CD65DDD061}"
+                                            },
+                                            "assetHint": "assets/panda/materials/shell_gray.azmaterial"
+                                        }
+                                    }
+                                },
+                                {
+                                    "Key": {
+                                        "materialSlotStableId": 2196119451
+                                    },
+                                    "Value": {
+                                        "MaterialAsset": {
+                                            "assetId": {
+                                                "guid": "{9F1368F4-7AE6-5DC3-AC7E-73D968157C8A}"
+                                            },
+                                            "assetHint": "assets/panda/materials/shell_white.azmaterial"
+                                        }
+                                    }
+                                },
+                                {
+                                    "Key": {
+                                        "materialSlotStableId": 2871059975
+                                    },
+                                    "Value": {
+                                        "MaterialAsset": {
+                                            "assetId": {
+                                                "guid": "{9F1368F4-7AE6-5DC3-AC7E-73D968157C8A}"
+                                            },
+                                            "assetHint": "assets/panda/materials/shell_white.azmaterial"
+                                        }
+                                    }
+                                },
+                                {
+                                    "Key": {
+                                        "materialSlotStableId": 2928108244
+                                    },
+                                    "Value": {
+                                        "MaterialAsset": {
+                                            "assetId": {
+                                                "guid": "{5B0C85AF-FF99-5D49-9E70-E6CD65DDD061}"
+                                            },
+                                            "assetHint": "assets/panda/materials/shell_gray.azmaterial"
+                                        }
+                                    }
+                                },
+                                {
+                                    "Key": {
+                                        "materialSlotStableId": 3693722903
+                                    },
+                                    "Value": {
+                                        "MaterialAsset": {
+                                            "assetId": {
+                                                "guid": "{9F1368F4-7AE6-5DC3-AC7E-73D968157C8A}"
+                                            }
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
                 },
                 "EditorOnlyEntityComponent": {
                     "$type": "EditorOnlyEntityComponent",
@@ -297,19 +410,19 @@
                         "PhysicsAsset": {
                             "Asset": {
                                 "assetId": {
-                                    "guid": "{CBBAE050-28DA-5879-93E0-5D41C03BE691}",
+                                    "guid": "{985C1F36-AFF2-5B0F-91DD-56539B3C33BF}",
                                     "subId": 984402469
                                 },
-                                "assetHint": "assets/urdfimporter/1440394708_panda/link3.stl.pxmesh"
+                                "assetHint": "assets/panda/link3.stl.pxmesh"
                             },
                             "Configuration": {
                                 "PhysicsAsset": {
                                     "assetId": {
-                                        "guid": "{CBBAE050-28DA-5879-93E0-5D41C03BE691}",
+                                        "guid": "{985C1F36-AFF2-5B0F-91DD-56539B3C33BF}",
                                         "subId": 984402469
                                     },
                                     "loadBehavior": "QueueLoad",
-                                    "assetHint": "assets/urdfimporter/1440394708_panda/link3.stl.pxmesh"
+                                    "assetHint": "assets/panda/link3.stl.pxmesh"
                                 },
                                 "UseMaterialsFromAsset": false
                             }
@@ -328,6 +441,15 @@
                     "$type": "EditorVisibilityComponent",
                     "Id": 10015980570813024335
                 },
+                "ROS2FrameEditorComponent": {
+                    "$type": "ROS2FrameEditorComponent",
+                    "Id": 16390462809478565130,
+                    "ROS2FrameConfiguration": {
+                        "Frame Name": "panda_link3",
+                        "Joint Name": "panda_joint3",
+                        "Publish Transform": false
+                    }
+                },
                 "TransformComponent": {
                     "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
                     "Id": 1908616101616289238,
@@ -344,15 +466,6 @@
                             0.0
                         ]
                     }
-                },
-                "ROS2FrameEditorComponent": {
-                    "$type": "ROS2FrameEditorComponent",
-                    "Id": 16390462809478565130,
-                    "ROS2FrameConfiguration": {
-                        "Frame Name": "panda_link3",
-                        "Joint Name": "panda_joint3",
-                        "Publish Transform": false
-                    }
                 }
             }
         },
@@ -367,10 +480,10 @@
                         "Configuration": {
                             "ModelAsset": {
                                 "assetId": {
-                                    "guid": "{ECC5DEC5-808C-5AC0-98F2-112FB644FF21}",
+                                    "guid": "{1E1ED17F-C549-57F0-A61E-487C4203C02F}",
                                     "subId": 274321438
                                 },
-                                "assetHint": "assets/urdfimporter/1440394708_panda/link2.azmodel"
+                                "assetHint": "assets/panda/link2.dae.azmodel"
                             }
                         }
                     }
@@ -394,6 +507,28 @@
                 "EditorLockComponent": {
                     "$type": "EditorLockComponent",
                     "Id": 8333102257774854632
+                },
+                "EditorMaterialComponent": {
+                    "$type": "EditorMaterialComponent",
+                    "Id": 2471290992680258667,
+                    "Controller": {
+                        "Configuration": {
+                            "materials": [
+                                {
+                                    "Key": {
+                                        "materialSlotStableId": 1959959783
+                                    },
+                                    "Value": {
+                                        "MaterialAsset": {
+                                            "assetId": {
+                                                "guid": "{9F1368F4-7AE6-5DC3-AC7E-73D968157C8A}"
+                                            }
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
                 },
                 "EditorOnlyEntityComponent": {
                     "$type": "EditorOnlyEntityComponent",
@@ -425,10 +560,10 @@
                         "Configuration": {
                             "ModelAsset": {
                                 "assetId": {
-                                    "guid": "{A9BF7BA3-FEC0-587A-84EA-D1039CA69118}",
+                                    "guid": "{3DB96578-D521-599D-AFB2-FDB06B1BD2E9}",
                                     "subId": 272266539
                                 },
-                                "assetHint": "assets/urdfimporter/1440394708_panda/link4.azmodel"
+                                "assetHint": "assets/panda/link4.dae.azmodel"
                             }
                         }
                     }
@@ -452,6 +587,67 @@
                 "EditorLockComponent": {
                     "$type": "EditorLockComponent",
                     "Id": 6557908054556197752
+                },
+                "EditorMaterialComponent": {
+                    "$type": "EditorMaterialComponent",
+                    "Id": 6194411443192295988,
+                    "Controller": {
+                        "Configuration": {
+                            "materials": [
+                                {
+                                    "Key": {
+                                        "materialSlotStableId": 1098443863
+                                    },
+                                    "Value": {
+                                        "MaterialAsset": {
+                                            "assetId": {
+                                                "guid": "{5B0C85AF-FF99-5D49-9E70-E6CD65DDD061}"
+                                            }
+                                        }
+                                    }
+                                },
+                                {
+                                    "Key": {
+                                        "materialSlotStableId": 2240632665
+                                    },
+                                    "Value": {
+                                        "MaterialAsset": {
+                                            "assetId": {
+                                                "guid": "{9F1368F4-7AE6-5DC3-AC7E-73D968157C8A}"
+                                            },
+                                            "assetHint": "assets/panda/materials/shell_white.azmaterial"
+                                        }
+                                    }
+                                },
+                                {
+                                    "Key": {
+                                        "materialSlotStableId": 2881453951
+                                    },
+                                    "Value": {
+                                        "MaterialAsset": {
+                                            "assetId": {
+                                                "guid": "{9F1368F4-7AE6-5DC3-AC7E-73D968157C8A}"
+                                            },
+                                            "assetHint": "assets/panda/materials/shell_white.azmaterial"
+                                        }
+                                    }
+                                },
+                                {
+                                    "Key": {
+                                        "materialSlotStableId": 4049581176
+                                    },
+                                    "Value": {
+                                        "MaterialAsset": {
+                                            "assetId": {
+                                                "guid": "{9F1368F4-7AE6-5DC3-AC7E-73D968157C8A}"
+                                            },
+                                            "assetHint": "assets/panda/materials/shell_white.azmaterial"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
                 },
                 "EditorOnlyEntityComponent": {
                     "$type": "EditorOnlyEntityComponent",
@@ -483,10 +679,10 @@
                         "Configuration": {
                             "ModelAsset": {
                                 "assetId": {
-                                    "guid": "{60227F5F-F325-5F37-8EE8-97C426403D00}",
+                                    "guid": "{A9E712CB-4B99-5D72-8D7E-D2B1D6B028E8}",
                                     "subId": 272451005
                                 },
-                                "assetHint": "assets/urdfimporter/1440394708_panda/link5.azmodel"
+                                "assetHint": "assets/panda/link5.dae.azmodel"
                             }
                         }
                     }
@@ -510,6 +706,54 @@
                 "EditorLockComponent": {
                     "$type": "EditorLockComponent",
                     "Id": 16576343610999869497
+                },
+                "EditorMaterialComponent": {
+                    "$type": "EditorMaterialComponent",
+                    "Id": 10733543316290656657,
+                    "Controller": {
+                        "Configuration": {
+                            "materials": [
+                                {
+                                    "Key": {
+                                        "materialSlotStableId": 610051075
+                                    },
+                                    "Value": {
+                                        "MaterialAsset": {
+                                            "assetId": {
+                                                "guid": "{5B0C85AF-FF99-5D49-9E70-E6CD65DDD061}"
+                                            },
+                                            "assetHint": "assets/panda/materials/shell_gray.azmaterial"
+                                        }
+                                    }
+                                },
+                                {
+                                    "Key": {
+                                        "materialSlotStableId": 1011626795
+                                    },
+                                    "Value": {
+                                        "MaterialAsset": {
+                                            "assetId": {
+                                                "guid": "{9F1368F4-7AE6-5DC3-AC7E-73D968157C8A}"
+                                            }
+                                        }
+                                    }
+                                },
+                                {
+                                    "Key": {
+                                        "materialSlotStableId": 3744178109
+                                    },
+                                    "Value": {
+                                        "MaterialAsset": {
+                                            "assetId": {
+                                                "guid": "{9F1368F4-7AE6-5DC3-AC7E-73D968157C8A}"
+                                            },
+                                            "assetHint": "assets/panda/materials/shell_white.azmaterial"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
                 },
                 "EditorOnlyEntityComponent": {
                     "$type": "EditorOnlyEntityComponent",
@@ -595,19 +839,19 @@
                         "PhysicsAsset": {
                             "Asset": {
                                 "assetId": {
-                                    "guid": "{31D89E75-64A8-5E51-8A31-356B953610E8}",
+                                    "guid": "{E9CAF309-1185-56BB-917F-3D9FD6FDF322}",
                                     "subId": 1086487638
                                 },
-                                "assetHint": "assets/urdfimporter/1440394708_panda/link2.stl.pxmesh"
+                                "assetHint": "assets/panda/link2.stl.pxmesh"
                             },
                             "Configuration": {
                                 "PhysicsAsset": {
                                     "assetId": {
-                                        "guid": "{31D89E75-64A8-5E51-8A31-356B953610E8}",
+                                        "guid": "{E9CAF309-1185-56BB-917F-3D9FD6FDF322}",
                                         "subId": 1086487638
                                     },
                                     "loadBehavior": "QueueLoad",
-                                    "assetHint": "assets/urdfimporter/1440394708_panda/link2.stl.pxmesh"
+                                    "assetHint": "assets/panda/link2.stl.pxmesh"
                                 },
                                 "UseMaterialsFromAsset": false
                             }
@@ -633,6 +877,15 @@
                         "$type": "JointsArticulationControllerComponent"
                     }
                 },
+                "ROS2FrameEditorComponent": {
+                    "$type": "ROS2FrameEditorComponent",
+                    "Id": 12508960544319631443,
+                    "ROS2FrameConfiguration": {
+                        "Frame Name": "panda_link2",
+                        "Joint Name": "panda_joint2",
+                        "Publish Transform": false
+                    }
+                },
                 "TransformComponent": {
                     "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
                     "Id": 8562421802946435150,
@@ -643,15 +896,6 @@
                             0.0,
                             0.0
                         ]
-                    }
-                },
-                "ROS2FrameEditorComponent": {
-                    "$type": "ROS2FrameEditorComponent",
-                    "Id": 12508960544319631443,
-                    "ROS2FrameConfiguration": {
-                        "Frame Name": "panda_link2",
-                        "Joint Name": "panda_joint2",
-                        "Publish Transform": false
                     }
                 }
             }
@@ -710,19 +954,19 @@
                         "PhysicsAsset": {
                             "Asset": {
                                 "assetId": {
-                                    "guid": "{C418792C-AD75-5507-9BDE-BA3D9B18ECCD}",
+                                    "guid": "{FED919BD-5C47-579D-8464-1DC62FA8E2BF}",
                                     "subId": 3587006846
                                 },
-                                "assetHint": "assets/urdfimporter/1440394708_panda/hand.stl.pxmesh"
+                                "assetHint": "assets/panda/hand.stl.pxmesh"
                             },
                             "Configuration": {
                                 "PhysicsAsset": {
                                     "assetId": {
-                                        "guid": "{C418792C-AD75-5507-9BDE-BA3D9B18ECCD}",
+                                        "guid": "{FED919BD-5C47-579D-8464-1DC62FA8E2BF}",
                                         "subId": 3587006846
                                     },
                                     "loadBehavior": "QueueLoad",
-                                    "assetHint": "assets/urdfimporter/1440394708_panda/hand.stl.pxmesh"
+                                    "assetHint": "assets/panda/hand.stl.pxmesh"
                                 },
                                 "UseMaterialsFromAsset": false
                             }
@@ -756,6 +1000,15 @@
                         "ActionServerName": "panda_hand_controller/gripper_cmd"
                     }
                 },
+                "ROS2FrameEditorComponent": {
+                    "$type": "ROS2FrameEditorComponent",
+                    "Id": 15164989121167078780,
+                    "ROS2FrameConfiguration": {
+                        "Frame Name": "panda_hand",
+                        "Joint Name": "panda_hand_joint",
+                        "Publish Transform": false
+                    }
+                },
                 "TransformComponent": {
                     "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
                     "Id": 7253629312020672339,
@@ -766,15 +1019,6 @@
                             0.0,
                             -44.99999237060547
                         ]
-                    }
-                },
-                "ROS2FrameEditorComponent": {
-                    "$type": "ROS2FrameEditorComponent",
-                    "Id": 15164989121167078780,
-                    "ROS2FrameConfiguration": {
-                        "Frame Name": "panda_hand",
-                        "Joint Name": "panda_hand_joint",
-                        "Publish Transform": false
                     }
                 }
             }
@@ -849,19 +1093,19 @@
                         "PhysicsAsset": {
                             "Asset": {
                                 "assetId": {
-                                    "guid": "{68A1F12D-6DF9-545E-B0E2-F8FCB87D86D0}",
+                                    "guid": "{7F36FADC-2283-5996-B631-CFFD64228C50}",
                                     "subId": 3263612836
                                 },
-                                "assetHint": "assets/urdfimporter/1440394708_panda/finger.stl.pxmesh"
+                                "assetHint": "assets/panda/finger.stl.pxmesh"
                             },
                             "Configuration": {
                                 "PhysicsAsset": {
                                     "assetId": {
-                                        "guid": "{68A1F12D-6DF9-545E-B0E2-F8FCB87D86D0}",
+                                        "guid": "{7F36FADC-2283-5996-B631-CFFD64228C50}",
                                         "subId": 3263612836
                                     },
                                     "loadBehavior": "QueueLoad",
-                                    "assetHint": "assets/urdfimporter/1440394708_panda/finger.stl.pxmesh"
+                                    "assetHint": "assets/panda/finger.stl.pxmesh"
                                 },
                                 "UseMaterialsFromAsset": false
                             }
@@ -880,6 +1124,15 @@
                     "$type": "EditorVisibilityComponent",
                     "Id": 10786059480594589877
                 },
+                "ROS2FrameEditorComponent": {
+                    "$type": "ROS2FrameEditorComponent",
+                    "Id": 11768382110306285512,
+                    "ROS2FrameConfiguration": {
+                        "Frame Name": "panda_rightfinger",
+                        "Joint Name": "panda_finger_joint2",
+                        "Publish Transform": false
+                    }
+                },
                 "TransformComponent": {
                     "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
                     "Id": 6536106089667023420,
@@ -890,15 +1143,6 @@
                             0.0,
                             0.05840003490447998
                         ]
-                    }
-                },
-                "ROS2FrameEditorComponent": {
-                    "$type": "ROS2FrameEditorComponent",
-                    "Id": 11768382110306285512,
-                    "ROS2FrameConfiguration": {
-                        "Frame Name": "panda_rightfinger",
-                        "Joint Name": "panda_finger_joint2",
-                        "Publish Transform": false
                     }
                 }
             }
@@ -968,19 +1212,19 @@
                         "PhysicsAsset": {
                             "Asset": {
                                 "assetId": {
-                                    "guid": "{331F68E1-6239-525D-99BF-8B0AB1755EFE}",
+                                    "guid": "{A677CD9D-FCD7-560F-BBD6-6C4E46ACCB3B}",
                                     "subId": 2635181041
                                 },
-                                "assetHint": "assets/urdfimporter/1440394708_panda/link1.stl.pxmesh"
+                                "assetHint": "assets/panda/link1.stl.pxmesh"
                             },
                             "Configuration": {
                                 "PhysicsAsset": {
                                     "assetId": {
-                                        "guid": "{331F68E1-6239-525D-99BF-8B0AB1755EFE}",
+                                        "guid": "{A677CD9D-FCD7-560F-BBD6-6C4E46ACCB3B}",
                                         "subId": 2635181041
                                     },
                                     "loadBehavior": "QueueLoad",
-                                    "assetHint": "assets/urdfimporter/1440394708_panda/link1.stl.pxmesh"
+                                    "assetHint": "assets/panda/link1.stl.pxmesh"
                                 },
                                 "UseMaterialsFromAsset": false
                             }
@@ -1006,18 +1250,6 @@
                         "$type": "JointsArticulationControllerComponent"
                     }
                 },
-                "TransformComponent": {
-                    "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
-                    "Id": 8304187278466217246,
-                    "Parent Entity": "Entity_[824659336944]",
-                    "Transform Data": {
-                        "Translate": [
-                            0.0,
-                            0.0,
-                            0.3330000042915344
-                        ]
-                    }
-                },
                 "ROS2FrameEditorComponent": {
                     "$type": "ROS2FrameEditorComponent",
                     "Id": 12881829263483331296,
@@ -1028,6 +1260,18 @@
                         "Frame Name": "panda_link1",
                         "Joint Name": "panda_joint1",
                         "Publish Transform": false
+                    }
+                },
+                "TransformComponent": {
+                    "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
+                    "Id": 8304187278466217246,
+                    "Parent Entity": "Entity_[824659336944]",
+                    "Transform Data": {
+                        "Translate": [
+                            0.0,
+                            0.0,
+                            0.3330000042915344
+                        ]
                     }
                 }
             }
@@ -1043,10 +1287,10 @@
                         "Configuration": {
                             "ModelAsset": {
                                 "assetId": {
-                                    "guid": "{CA209DD6-776C-5BEA-B8D6-5F4A3967506C}",
+                                    "guid": "{FDE149CD-5E67-5F1F-A8DC-28D82621F3BF}",
                                     "subId": 271848455
                                 },
-                                "assetHint": "assets/urdfimporter/1440394708_panda/link6.azmodel"
+                                "assetHint": "assets/panda/link6.dae.azmodel"
                             }
                         }
                     }
@@ -1070,6 +1314,119 @@
                 "EditorLockComponent": {
                     "$type": "EditorLockComponent",
                     "Id": 3670572065510047955
+                },
+                "EditorMaterialComponent": {
+                    "$type": "EditorMaterialComponent",
+                    "Id": 4504455261221185068,
+                    "Controller": {
+                        "Configuration": {
+                            "materials": [
+                                {
+                                    "Key": {
+                                        "materialSlotStableId": 1184802734
+                                    },
+                                    "Value": {
+                                        "MaterialAsset": {
+                                            "assetId": {
+                                                "guid": "{5B0C85AF-FF99-5D49-9E70-E6CD65DDD061}"
+                                            },
+                                            "assetHint": "assets/panda/materials/shell_gray.azmaterial"
+                                        }
+                                    }
+                                },
+                                {
+                                    "Key": {
+                                        "materialSlotStableId": 1351927724
+                                    },
+                                    "Value": {
+                                        "MaterialAsset": {
+                                            "assetId": {
+                                                "guid": "{5B0C85AF-FF99-5D49-9E70-E6CD65DDD061}"
+                                            },
+                                            "assetHint": "assets/panda/materials/shell_gray.azmaterial"
+                                        }
+                                    }
+                                },
+                                {
+                                    "Key": {
+                                        "materialSlotStableId": 2011370642
+                                    },
+                                    "Value": {
+                                        "MaterialAsset": {
+                                            "assetId": {
+                                                "guid": "{5B0C85AF-FF99-5D49-9E70-E6CD65DDD061}"
+                                            },
+                                            "assetHint": "assets/panda/materials/shell_gray.azmaterial"
+                                        }
+                                    }
+                                },
+                                {
+                                    "Key": {
+                                        "materialSlotStableId": 2021176778
+                                    },
+                                    "Value": {
+                                        "MaterialAsset": {
+                                            "assetId": {
+                                                "guid": "{5B0C85AF-FF99-5D49-9E70-E6CD65DDD061}"
+                                            },
+                                            "assetHint": "assets/panda/materials/shell_gray.azmaterial"
+                                        }
+                                    }
+                                },
+                                {
+                                    "Key": {
+                                        "materialSlotStableId": 2104989925
+                                    },
+                                    "Value": {
+                                        "MaterialAsset": {
+                                            "assetId": {
+                                                "guid": "{9F1368F4-7AE6-5DC3-AC7E-73D968157C8A}"
+                                            }
+                                        }
+                                    }
+                                },
+                                {
+                                    "Key": {
+                                        "materialSlotStableId": 3350902349
+                                    },
+                                    "Value": {
+                                        "MaterialAsset": {
+                                            "assetId": {
+                                                "guid": "{5B0C85AF-FF99-5D49-9E70-E6CD65DDD061}"
+                                            },
+                                            "assetHint": "assets/panda/materials/shell_gray.azmaterial"
+                                        }
+                                    }
+                                },
+                                {
+                                    "Key": {
+                                        "materialSlotStableId": 3439013453
+                                    },
+                                    "Value": {
+                                        "MaterialAsset": {
+                                            "assetId": {
+                                                "guid": "{5B0C85AF-FF99-5D49-9E70-E6CD65DDD061}"
+                                            },
+                                            "assetHint": "assets/panda/materials/shell_gray.azmaterial"
+                                        }
+                                    }
+                                },
+                                {
+                                    "Key": {
+                                        "materialSlotStableId": 3949146448
+                                    },
+                                    "Value": {
+                                        "MaterialAsset": {
+                                            "assetId": {
+                                                "guid": "{9F1368F4-7AE6-5DC3-AC7E-73D968157C8A}"
+                                            },
+                                            "assetHint": "assets/panda/materials/shell_white.azmaterial"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
                 },
                 "EditorOnlyEntityComponent": {
                     "$type": "EditorOnlyEntityComponent",
@@ -1166,6 +1523,13 @@
                         }
                     }
                 },
+                "ROS2FrameEditorComponent": {
+                    "$type": "ROS2FrameEditorComponent",
+                    "Id": 3098269809650154469,
+                    "ROS2FrameConfiguration": {
+                        "Frame Name": "RGBCamera"
+                    }
+                },
                 "TransformComponent": {
                     "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
                     "Id": 1201440778110296801,
@@ -1182,13 +1546,6 @@
                             89.99695587158203
                         ]
                     }
-                },
-                "ROS2FrameEditorComponent": {
-                    "$type": "ROS2FrameEditorComponent",
-                    "Id": 3098269809650154469,
-                    "ROS2FrameConfiguration": {
-                        "Frame Name": "RGBCamera"
-                    }
                 }
             }
         },
@@ -1203,10 +1560,10 @@
                         "Configuration": {
                             "ModelAsset": {
                                 "assetId": {
-                                    "guid": "{3BBE9797-74FD-5FC6-BFD3-6AEC41AEDCA0}",
+                                    "guid": "{55A78B39-62CF-558B-A87B-699317F8FB84}",
                                     "subId": 274182450
                                 },
-                                "assetHint": "assets/urdfimporter/1440394708_panda/link0.azmodel"
+                                "assetHint": "assets/panda/link0.dae.azmodel"
                             }
                         }
                     }
@@ -1230,6 +1587,171 @@
                 "EditorLockComponent": {
                     "$type": "EditorLockComponent",
                     "Id": 8829372158655144344
+                },
+                "EditorMaterialComponent": {
+                    "$type": "EditorMaterialComponent",
+                    "Id": 12704724896669139744,
+                    "Controller": {
+                        "Configuration": {
+                            "materials": [
+                                {
+                                    "Key": {
+                                        "materialSlotStableId": 39587438
+                                    },
+                                    "Value": {
+                                        "MaterialAsset": {
+                                            "assetId": {
+                                                "guid": "{5B0C85AF-FF99-5D49-9E70-E6CD65DDD061}"
+                                            },
+                                            "assetHint": "assets/panda/materials/shell_gray.azmaterial"
+                                        }
+                                    }
+                                },
+                                {
+                                    "Key": {
+                                        "materialSlotStableId": 123369517
+                                    },
+                                    "Value": {
+                                        "MaterialAsset": {
+                                            "assetId": {
+                                                "guid": "{5B0C85AF-FF99-5D49-9E70-E6CD65DDD061}"
+                                            }
+                                        }
+                                    }
+                                },
+                                {
+                                    "Key": {
+                                        "materialSlotStableId": 402818586
+                                    },
+                                    "Value": {
+                                        "MaterialAsset": {
+                                            "assetId": {
+                                                "guid": "{9F1368F4-7AE6-5DC3-AC7E-73D968157C8A}"
+                                            },
+                                            "assetHint": "assets/panda/materials/shell_white.azmaterial"
+                                        }
+                                    }
+                                },
+                                {
+                                    "Key": {
+                                        "materialSlotStableId": 490238700
+                                    },
+                                    "Value": {
+                                        "MaterialAsset": {
+                                            "assetId": {
+                                                "guid": "{9F1368F4-7AE6-5DC3-AC7E-73D968157C8A}"
+                                            },
+                                            "assetHint": "assets/panda/materials/shell_white.azmaterial"
+                                        }
+                                    }
+                                },
+                                {
+                                    "Key": {
+                                        "materialSlotStableId": 530750034
+                                    },
+                                    "Value": {
+                                        "MaterialAsset": {
+                                            "assetId": {
+                                                "guid": "{5B0C85AF-FF99-5D49-9E70-E6CD65DDD061}"
+                                            },
+                                            "assetHint": "assets/panda/materials/shell_gray.azmaterial"
+                                        }
+                                    }
+                                },
+                                {
+                                    "Key": {
+                                        "materialSlotStableId": 670946086
+                                    },
+                                    "Value": {
+                                        "MaterialAsset": {
+                                            "assetId": {
+                                                "guid": "{5B0C85AF-FF99-5D49-9E70-E6CD65DDD061}"
+                                            },
+                                            "assetHint": "assets/panda/materials/shell_gray.azmaterial"
+                                        }
+                                    }
+                                },
+                                {
+                                    "Key": {
+                                        "materialSlotStableId": 906602881
+                                    },
+                                    "Value": {
+                                        "MaterialAsset": {
+                                            "assetId": {
+                                                "guid": "{5B0C85AF-FF99-5D49-9E70-E6CD65DDD061}"
+                                            },
+                                            "assetHint": "assets/panda/materials/shell_gray.azmaterial"
+                                        }
+                                    }
+                                },
+                                {
+                                    "Key": {
+                                        "materialSlotStableId": 2558249829
+                                    },
+                                    "Value": {
+                                        "MaterialAsset": {
+                                            "assetId": {
+                                                "guid": "{9F1368F4-7AE6-5DC3-AC7E-73D968157C8A}"
+                                            },
+                                            "assetHint": "assets/panda/materials/shell_white.azmaterial"
+                                        }
+                                    }
+                                },
+                                {
+                                    "Key": {
+                                        "materialSlotStableId": 2747844207
+                                    },
+                                    "Value": {
+                                        "MaterialAsset": {
+                                            "assetId": {
+                                                "guid": "{5B0C85AF-FF99-5D49-9E70-E6CD65DDD061}"
+                                            },
+                                            "assetHint": "assets/panda/materials/shell_gray.azmaterial"
+                                        }
+                                    }
+                                },
+                                {
+                                    "Key": {
+                                        "materialSlotStableId": 3110444855
+                                    },
+                                    "Value": {
+                                        "MaterialAsset": {
+                                            "assetId": {
+                                                "guid": "{9F1368F4-7AE6-5DC3-AC7E-73D968157C8A}"
+                                            },
+                                            "assetHint": "assets/panda/materials/shell_white.azmaterial"
+                                        }
+                                    }
+                                },
+                                {
+                                    "Key": {
+                                        "materialSlotStableId": 3150805232
+                                    },
+                                    "Value": {
+                                        "MaterialAsset": {
+                                            "assetId": {
+                                                "guid": "{5B0C85AF-FF99-5D49-9E70-E6CD65DDD061}"
+                                            },
+                                            "assetHint": "assets/panda/materials/shell_gray.azmaterial"
+                                        }
+                                    }
+                                },
+                                {
+                                    "Key": {
+                                        "materialSlotStableId": 3665754328
+                                    },
+                                    "Value": {
+                                        "MaterialAsset": {
+                                            "assetId": {
+                                                "guid": "{9F1368F4-7AE6-5DC3-AC7E-73D968157C8A}"
+                                            },
+                                            "assetHint": "assets/panda/materials/shell_white.azmaterial"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
                 },
                 "EditorOnlyEntityComponent": {
                     "$type": "EditorOnlyEntityComponent",
@@ -1261,10 +1783,10 @@
                         "Configuration": {
                             "ModelAsset": {
                                 "assetId": {
-                                    "guid": "{4652D8C0-95D4-551E-B11A-23058D7F39A5}",
+                                    "guid": "{5D58ED45-94BB-51DD-A5E0-7CB052BDBDD6}",
                                     "subId": 274653320
                                 },
-                                "assetHint": "assets/urdfimporter/1440394708_panda/link3.azmodel"
+                                "assetHint": "assets/panda/link3.dae.azmodel"
                             }
                         }
                     }
@@ -1288,6 +1810,67 @@
                 "EditorLockComponent": {
                     "$type": "EditorLockComponent",
                     "Id": 14676866961222291964
+                },
+                "EditorMaterialComponent": {
+                    "$type": "EditorMaterialComponent",
+                    "Id": 11010307720004576243,
+                    "Controller": {
+                        "Configuration": {
+                            "materials": [
+                                {
+                                    "Key": {
+                                        "materialSlotStableId": 592303335
+                                    },
+                                    "Value": {
+                                        "MaterialAsset": {
+                                            "assetId": {
+                                                "guid": "{5B0C85AF-FF99-5D49-9E70-E6CD65DDD061}"
+                                            }
+                                        }
+                                    }
+                                },
+                                {
+                                    "Key": {
+                                        "materialSlotStableId": 752905969
+                                    },
+                                    "Value": {
+                                        "MaterialAsset": {
+                                            "assetId": {
+                                                "guid": "{9F1368F4-7AE6-5DC3-AC7E-73D968157C8A}"
+                                            },
+                                            "assetHint": "assets/panda/materials/shell_white.azmaterial"
+                                        }
+                                    }
+                                },
+                                {
+                                    "Key": {
+                                        "materialSlotStableId": 3855117190
+                                    },
+                                    "Value": {
+                                        "MaterialAsset": {
+                                            "assetId": {
+                                                "guid": "{9F1368F4-7AE6-5DC3-AC7E-73D968157C8A}"
+                                            },
+                                            "assetHint": "assets/panda/materials/shell_white.azmaterial"
+                                        }
+                                    }
+                                },
+                                {
+                                    "Key": {
+                                        "materialSlotStableId": 4108953136
+                                    },
+                                    "Value": {
+                                        "MaterialAsset": {
+                                            "assetId": {
+                                                "guid": "{9F1368F4-7AE6-5DC3-AC7E-73D968157C8A}"
+                                            },
+                                            "assetHint": "assets/panda/materials/shell_white.azmaterial"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
                 },
                 "EditorOnlyEntityComponent": {
                     "$type": "EditorOnlyEntityComponent",
@@ -1373,19 +1956,19 @@
                         "PhysicsAsset": {
                             "Asset": {
                                 "assetId": {
-                                    "guid": "{E558D087-FF03-58F3-A265-93BF942FAF23}",
+                                    "guid": "{B6A92DD9-46C2-56A8-8064-0CB88AF99725}",
                                     "subId": 2534408706
                                 },
-                                "assetHint": "assets/urdfimporter/1440394708_panda/link4.stl.pxmesh"
+                                "assetHint": "assets/panda/link4.stl.pxmesh"
                             },
                             "Configuration": {
                                 "PhysicsAsset": {
                                     "assetId": {
-                                        "guid": "{E558D087-FF03-58F3-A265-93BF942FAF23}",
+                                        "guid": "{B6A92DD9-46C2-56A8-8064-0CB88AF99725}",
                                         "subId": 2534408706
                                     },
                                     "loadBehavior": "QueueLoad",
-                                    "assetHint": "assets/urdfimporter/1440394708_panda/link4.stl.pxmesh"
+                                    "assetHint": "assets/panda/link4.stl.pxmesh"
                                 },
                                 "UseMaterialsFromAsset": false
                             }
@@ -1404,6 +1987,15 @@
                     "$type": "EditorVisibilityComponent",
                     "Id": 12008370841442955950
                 },
+                "ROS2FrameEditorComponent": {
+                    "$type": "ROS2FrameEditorComponent",
+                    "Id": 15615923895396472745,
+                    "ROS2FrameConfiguration": {
+                        "Frame Name": "panda_link4",
+                        "Joint Name": "panda_joint4",
+                        "Publish Transform": false
+                    }
+                },
                 "TransformComponent": {
                     "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
                     "Id": 4221805352766771998,
@@ -1419,15 +2011,6 @@
                             0.0,
                             0.0
                         ]
-                    }
-                },
-                "ROS2FrameEditorComponent": {
-                    "$type": "ROS2FrameEditorComponent",
-                    "Id": 15615923895396472745,
-                    "ROS2FrameConfiguration": {
-                        "Frame Name": "panda_link4",
-                        "Joint Name": "panda_joint4",
-                        "Publish Transform": false
                     }
                 }
             }
@@ -1497,19 +2080,19 @@
                         "PhysicsAsset": {
                             "Asset": {
                                 "assetId": {
-                                    "guid": "{56CCE8F1-3287-5728-AB84-53FE62D316D2}",
+                                    "guid": "{96452A4A-06A9-55D9-91F6-A2063C73C566}",
                                     "subId": 1972962716
                                 },
-                                "assetHint": "assets/urdfimporter/1440394708_panda/link6.stl.pxmesh"
+                                "assetHint": "assets/panda/link6.stl.pxmesh"
                             },
                             "Configuration": {
                                 "PhysicsAsset": {
                                     "assetId": {
-                                        "guid": "{56CCE8F1-3287-5728-AB84-53FE62D316D2}",
+                                        "guid": "{96452A4A-06A9-55D9-91F6-A2063C73C566}",
                                         "subId": 1972962716
                                     },
                                     "loadBehavior": "QueueLoad",
-                                    "assetHint": "assets/urdfimporter/1440394708_panda/link6.stl.pxmesh"
+                                    "assetHint": "assets/panda/link6.stl.pxmesh"
                                 },
                                 "UseMaterialsFromAsset": false
                             }
@@ -1528,6 +2111,15 @@
                     "$type": "EditorVisibilityComponent",
                     "Id": 6646001451510833896
                 },
+                "ROS2FrameEditorComponent": {
+                    "$type": "ROS2FrameEditorComponent",
+                    "Id": 2689469090216702038,
+                    "ROS2FrameConfiguration": {
+                        "Frame Name": "panda_link6",
+                        "Joint Name": "panda_joint6",
+                        "Publish Transform": false
+                    }
+                },
                 "TransformComponent": {
                     "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
                     "Id": 6095301973554187840,
@@ -1538,15 +2130,6 @@
                             0.0,
                             0.0
                         ]
-                    }
-                },
-                "ROS2FrameEditorComponent": {
-                    "$type": "ROS2FrameEditorComponent",
-                    "Id": 2689469090216702038,
-                    "ROS2FrameConfiguration": {
-                        "Frame Name": "panda_link6",
-                        "Joint Name": "panda_joint6",
-                        "Publish Transform": false
                     }
                 }
             }
@@ -1562,10 +2145,10 @@
                         "Configuration": {
                             "ModelAsset": {
                                 "assetId": {
-                                    "guid": "{2CE65667-85BD-51FB-A496-6B3340EEFF28}",
+                                    "guid": "{BC306671-76CC-5FE3-8912-31BD9E643DDA}",
                                     "subId": 279808703
                                 },
-                                "assetHint": "assets/urdfimporter/1440394708_panda/finger.azmodel"
+                                "assetHint": "assets/panda/finger.dae.azmodel"
                             }
                         }
                     }
@@ -1589,6 +2172,41 @@
                 "EditorLockComponent": {
                     "$type": "EditorLockComponent",
                     "Id": 16611960321064366037
+                },
+                "EditorMaterialComponent": {
+                    "$type": "EditorMaterialComponent",
+                    "Id": 441105738133759889,
+                    "Controller": {
+                        "Configuration": {
+                            "materials": [
+                                {
+                                    "Key": {
+                                        "materialSlotStableId": 1061759845
+                                    },
+                                    "Value": {
+                                        "MaterialAsset": {
+                                            "assetId": {
+                                                "guid": "{9F1368F4-7AE6-5DC3-AC7E-73D968157C8A}"
+                                            },
+                                            "assetHint": "assets/panda/materials/shell_white.azmaterial"
+                                        }
+                                    }
+                                },
+                                {
+                                    "Key": {
+                                        "materialSlotStableId": 1092529903
+                                    },
+                                    "Value": {
+                                        "MaterialAsset": {
+                                            "assetId": {
+                                                "guid": "{5B0C85AF-FF99-5D49-9E70-E6CD65DDD061}"
+                                            }
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
                 },
                 "EditorOnlyEntityComponent": {
                     "$type": "EditorOnlyEntityComponent",
@@ -1673,10 +2291,10 @@
                         "Configuration": {
                             "ModelAsset": {
                                 "assetId": {
-                                    "guid": "{971EDBF3-5ADC-5DE0-92A9-33F949EB7942}",
+                                    "guid": "{01F093B2-B046-5028-A990-B489F34C848A}",
                                     "subId": 273711524
                                 },
-                                "assetHint": "assets/urdfimporter/1440394708_panda/link1.azmodel"
+                                "assetHint": "assets/panda/link1.dae.azmodel"
                             }
                         }
                     }
@@ -1700,6 +2318,28 @@
                 "EditorLockComponent": {
                     "$type": "EditorLockComponent",
                     "Id": 17334613979805077147
+                },
+                "EditorMaterialComponent": {
+                    "$type": "EditorMaterialComponent",
+                    "Id": 12505753589465282779,
+                    "Controller": {
+                        "Configuration": {
+                            "materials": [
+                                {
+                                    "Key": {
+                                        "materialSlotStableId": 1004291810
+                                    },
+                                    "Value": {
+                                        "MaterialAsset": {
+                                            "assetId": {
+                                                "guid": "{9F1368F4-7AE6-5DC3-AC7E-73D968157C8A}"
+                                            }
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
                 },
                 "EditorOnlyEntityComponent": {
                     "$type": "EditorOnlyEntityComponent",
@@ -1785,19 +2425,19 @@
                         "PhysicsAsset": {
                             "Asset": {
                                 "assetId": {
-                                    "guid": "{4AB408C6-1826-5B7A-8B2F-7F5DE22739CE}",
+                                    "guid": "{FE3F9556-74B1-54B0-8842-7A8EA2B561D2}",
                                     "subId": 382128417
                                 },
-                                "assetHint": "assets/urdfimporter/1440394708_panda/link7.stl.pxmesh"
+                                "assetHint": "assets/panda/link7.stl.pxmesh"
                             },
                             "Configuration": {
                                 "PhysicsAsset": {
                                     "assetId": {
-                                        "guid": "{4AB408C6-1826-5B7A-8B2F-7F5DE22739CE}",
+                                        "guid": "{FE3F9556-74B1-54B0-8842-7A8EA2B561D2}",
                                         "subId": 382128417
                                     },
                                     "loadBehavior": "QueueLoad",
-                                    "assetHint": "assets/urdfimporter/1440394708_panda/link7.stl.pxmesh"
+                                    "assetHint": "assets/panda/link7.stl.pxmesh"
                                 },
                                 "UseMaterialsFromAsset": false
                             }
@@ -1816,6 +2456,15 @@
                     "$type": "EditorVisibilityComponent",
                     "Id": 7693785181356171290
                 },
+                "ROS2FrameEditorComponent": {
+                    "$type": "ROS2FrameEditorComponent",
+                    "Id": 5523072711650562789,
+                    "ROS2FrameConfiguration": {
+                        "Frame Name": "panda_link7",
+                        "Joint Name": "panda_joint7",
+                        "Publish Transform": false
+                    }
+                },
                 "TransformComponent": {
                     "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
                     "Id": 2871615767882177673,
@@ -1831,15 +2480,6 @@
                             0.0,
                             0.0
                         ]
-                    }
-                },
-                "ROS2FrameEditorComponent": {
-                    "$type": "ROS2FrameEditorComponent",
-                    "Id": 5523072711650562789,
-                    "ROS2FrameConfiguration": {
-                        "Frame Name": "panda_link7",
-                        "Joint Name": "panda_joint7",
-                        "Publish Transform": false
                     }
                 }
             }
@@ -1908,19 +2548,19 @@
                         "PhysicsAsset": {
                             "Asset": {
                                 "assetId": {
-                                    "guid": "{68A1F12D-6DF9-545E-B0E2-F8FCB87D86D0}",
+                                    "guid": "{7F36FADC-2283-5996-B631-CFFD64228C50}",
                                     "subId": 3263612836
                                 },
-                                "assetHint": "assets/urdfimporter/1440394708_panda/finger.stl.pxmesh"
+                                "assetHint": "assets/panda/finger.stl.pxmesh"
                             },
                             "Configuration": {
                                 "PhysicsAsset": {
                                     "assetId": {
-                                        "guid": "{68A1F12D-6DF9-545E-B0E2-F8FCB87D86D0}",
+                                        "guid": "{7F36FADC-2283-5996-B631-CFFD64228C50}",
                                         "subId": 3263612836
                                     },
                                     "loadBehavior": "QueueLoad",
-                                    "assetHint": "assets/urdfimporter/1440394708_panda/finger.stl.pxmesh"
+                                    "assetHint": "assets/panda/finger.stl.pxmesh"
                                 },
                                 "UseMaterialsFromAsset": false
                             }
@@ -1939,6 +2579,15 @@
                     "$type": "EditorVisibilityComponent",
                     "Id": 13267010611547091870
                 },
+                "ROS2FrameEditorComponent": {
+                    "$type": "ROS2FrameEditorComponent",
+                    "Id": 6450640149148955571,
+                    "ROS2FrameConfiguration": {
+                        "Frame Name": "panda_leftfinger",
+                        "Joint Name": "panda_finger_joint1",
+                        "Publish Transform": false
+                    }
+                },
                 "TransformComponent": {
                     "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
                     "Id": 10887550008926597434,
@@ -1949,15 +2598,6 @@
                             0.0,
                             0.05840003490447998
                         ]
-                    }
-                },
-                "ROS2FrameEditorComponent": {
-                    "$type": "ROS2FrameEditorComponent",
-                    "Id": 6450640149148955571,
-                    "ROS2FrameConfiguration": {
-                        "Frame Name": "panda_leftfinger",
-                        "Joint Name": "panda_finger_joint1",
-                        "Publish Transform": false
                     }
                 }
             }
@@ -1973,10 +2613,10 @@
                         "Configuration": {
                             "ModelAsset": {
                                 "assetId": {
-                                    "guid": "{3C33A268-61A9-5688-B993-371603EA278A}",
+                                    "guid": "{18990ABB-4DE7-5278-A5D2-8DF8546BE072}",
                                     "subId": 274875023
                                 },
-                                "assetHint": "assets/urdfimporter/1440394708_panda/hand.azmodel"
+                                "assetHint": "assets/panda/hand.dae.azmodel"
                             }
                         }
                     }
@@ -2000,6 +2640,80 @@
                 "EditorLockComponent": {
                     "$type": "EditorLockComponent",
                     "Id": 3989907085291733059
+                },
+                "EditorMaterialComponent": {
+                    "$type": "EditorMaterialComponent",
+                    "Id": 7704138657479469597,
+                    "Controller": {
+                        "Configuration": {
+                            "materials": [
+                                {
+                                    "Key": {
+                                        "materialSlotStableId": 2294599312
+                                    },
+                                    "Value": {
+                                        "MaterialAsset": {
+                                            "assetId": {
+                                                "guid": "{9F1368F4-7AE6-5DC3-AC7E-73D968157C8A}"
+                                            },
+                                            "assetHint": "assets/panda/materials/shell_white.azmaterial"
+                                        }
+                                    }
+                                },
+                                {
+                                    "Key": {
+                                        "materialSlotStableId": 2481649651
+                                    },
+                                    "Value": {
+                                        "MaterialAsset": {
+                                            "assetId": {
+                                                "guid": "{5B0C85AF-FF99-5D49-9E70-E6CD65DDD061}"
+                                            }
+                                        }
+                                    }
+                                },
+                                {
+                                    "Key": {
+                                        "materialSlotStableId": 3536529303
+                                    },
+                                    "Value": {
+                                        "MaterialAsset": {
+                                            "assetId": {
+                                                "guid": "{5B0C85AF-FF99-5D49-9E70-E6CD65DDD061}"
+                                            },
+                                            "assetHint": "assets/panda/materials/shell_gray.azmaterial"
+                                        }
+                                    }
+                                },
+                                {
+                                    "Key": {
+                                        "materialSlotStableId": 3892576220
+                                    },
+                                    "Value": {
+                                        "MaterialAsset": {
+                                            "assetId": {
+                                                "guid": "{5B0C85AF-FF99-5D49-9E70-E6CD65DDD061}"
+                                            },
+                                            "assetHint": "assets/panda/materials/shell_gray.azmaterial"
+                                        }
+                                    }
+                                },
+                                {
+                                    "Key": {
+                                        "materialSlotStableId": 4254609974
+                                    },
+                                    "Value": {
+                                        "MaterialAsset": {
+                                            "assetId": {
+                                                "guid": "{5B0C85AF-FF99-5D49-9E70-E6CD65DDD061}"
+                                            },
+                                            "assetHint": "assets/panda/materials/shell_gray.azmaterial"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
                 },
                 "EditorOnlyEntityComponent": {
                     "$type": "EditorOnlyEntityComponent",
@@ -2031,10 +2745,10 @@
                         "Configuration": {
                             "ModelAsset": {
                                 "assetId": {
-                                    "guid": "{2CE65667-85BD-51FB-A496-6B3340EEFF28}",
+                                    "guid": "{BC306671-76CC-5FE3-8912-31BD9E643DDA}",
                                     "subId": 279808703
                                 },
-                                "assetHint": "assets/urdfimporter/1440394708_panda/finger.azmodel"
+                                "assetHint": "assets/panda/finger.dae.azmodel"
                             }
                         }
                     }
@@ -2058,6 +2772,41 @@
                 "EditorLockComponent": {
                     "$type": "EditorLockComponent",
                     "Id": 7864772410898454796
+                },
+                "EditorMaterialComponent": {
+                    "$type": "EditorMaterialComponent",
+                    "Id": 8692606109121465208,
+                    "Controller": {
+                        "Configuration": {
+                            "materials": [
+                                {
+                                    "Key": {
+                                        "materialSlotStableId": 1061759845
+                                    },
+                                    "Value": {
+                                        "MaterialAsset": {
+                                            "assetId": {
+                                                "guid": "{9F1368F4-7AE6-5DC3-AC7E-73D968157C8A}"
+                                            },
+                                            "assetHint": "assets/panda/materials/shell_white.azmaterial"
+                                        }
+                                    }
+                                },
+                                {
+                                    "Key": {
+                                        "materialSlotStableId": 1092529903
+                                    },
+                                    "Value": {
+                                        "MaterialAsset": {
+                                            "assetId": {
+                                                "guid": "{5B0C85AF-FF99-5D49-9E70-E6CD65DDD061}"
+                                            }
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
                 },
                 "EditorOnlyEntityComponent": {
                     "$type": "EditorOnlyEntityComponent",
@@ -2126,11 +2875,6 @@
                     "$type": "EditorVisibilityComponent",
                     "Id": 5802992234810781771
                 },
-                "TransformComponent": {
-                    "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
-                    "Id": 10107897349376162639,
-                    "Parent Entity": "ContainerEntity"
-                },
                 "ROS2FrameEditorComponent": {
                     "$type": "ROS2FrameEditorComponent",
                     "Id": 17076040275225636750,
@@ -2141,6 +2885,11 @@
                         "Frame Name": "world",
                         "Publish Transform": false
                     }
+                },
+                "TransformComponent": {
+                    "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
+                    "Id": 10107897349376162639,
+                    "Parent Entity": "ContainerEntity"
                 }
             }
         },
@@ -2196,19 +2945,19 @@
                         "PhysicsAsset": {
                             "Asset": {
                                 "assetId": {
-                                    "guid": "{5FE8F8E3-00B3-5213-981B-663E6627E99D}",
+                                    "guid": "{D0D27542-99D4-5247-9EDF-BDF9651869F7}",
                                     "subId": 2649360412
                                 },
-                                "assetHint": "assets/urdfimporter/1440394708_panda/link0.stl.pxmesh"
+                                "assetHint": "assets/panda/link0.stl.pxmesh"
                             },
                             "Configuration": {
                                 "PhysicsAsset": {
                                     "assetId": {
-                                        "guid": "{5FE8F8E3-00B3-5213-981B-663E6627E99D}",
+                                        "guid": "{D0D27542-99D4-5247-9EDF-BDF9651869F7}",
                                         "subId": 2649360412
                                     },
                                     "loadBehavior": "QueueLoad",
-                                    "assetHint": "assets/urdfimporter/1440394708_panda/link0.stl.pxmesh"
+                                    "assetHint": "assets/panda/link0.stl.pxmesh"
                                 },
                                 "UseMaterialsFromAsset": false
                             }
@@ -2291,11 +3040,6 @@
                         "Action name": "panda_arm_controller/follow_joint_trajectory"
                     }
                 },
-                "TransformComponent": {
-                    "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
-                    "Id": 18139814397266293165,
-                    "Parent Entity": "Entity_[794594565872]"
-                },
                 "ROS2FrameEditorComponent": {
                     "$type": "ROS2FrameEditorComponent",
                     "Id": 2216843157768936757,
@@ -2306,6 +3050,11 @@
                         "Frame Name": "panda_link0",
                         "Publish Transform": false
                     }
+                },
+                "TransformComponent": {
+                    "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
+                    "Id": 18139814397266293165,
+                    "Parent Entity": "Entity_[794594565872]"
                 }
             }
         },
@@ -2356,6 +3105,15 @@
                     "$type": "EditorVisibilityComponent",
                     "Id": 11477884454969487222
                 },
+                "ROS2FrameEditorComponent": {
+                    "$type": "ROS2FrameEditorComponent",
+                    "Id": 1296532423094429463,
+                    "ROS2FrameConfiguration": {
+                        "Frame Name": "panda_link8",
+                        "Joint Name": "panda_joint8",
+                        "Publish Transform": false
+                    }
+                },
                 "TransformComponent": {
                     "$type": "{27F1E1A1-8D9D-4C3B-BD3A-AFB9762449C0} TransformComponent",
                     "Id": 12608137672207484382,
@@ -2371,15 +3129,6 @@
                             0.0,
                             0.0
                         ]
-                    }
-                },
-                "ROS2FrameEditorComponent": {
-                    "$type": "ROS2FrameEditorComponent",
-                    "Id": 1296532423094429463,
-                    "ROS2FrameConfiguration": {
-                        "Frame Name": "panda_link8",
-                        "Joint Name": "panda_joint8",
-                        "Publish Transform": false
                     }
                 }
             }
