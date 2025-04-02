@@ -7,10 +7,6 @@
  */
 
 #include "GetEntitiesServiceHandler.h"
-
-#include "AzCore/std/smart_ptr/make_shared.h"
-#include "ROS2/Utilities/ROS2Conversions.h"
-
 #include "Utils/Utils.h"
 #include <AzFramework/Physics/ShapeConfiguration.h>
 #include <SimulationInterfaces/SimulationEntityManagerRequestBus.h>
@@ -28,7 +24,7 @@ namespace SimulationInterfacesROS2
             });
     }
 
-     GetEntitiesServiceHandler::~GetEntitiesServiceHandler()
+    GetEntitiesServiceHandler::~GetEntitiesServiceHandler()
     {
         if (m_getEntitiesService)
         {
@@ -36,15 +32,14 @@ namespace SimulationInterfacesROS2
         }
     }
 
-
     GetEntitiesServiceHandler::Response GetEntitiesServiceHandler::HandleServiceRequest(const Request& request)
     {
-        AZStd::vector<AZStd::string> entities;
+        AZ::Outcome<SimulationInterfaces::EntityNameList, SimulationInterfaces::FailedResult> outcome;
 
-        GetEntitiesServiceHandler::Response response;
+        Response response;
         response.result.result = simulation_interfaces::msg::Result::RESULT_OK;
 
-        const auto getFilterResult = Utils::GetEntityFilterFromRequest<Request>(request);
+        const auto getFilterResult = Utils::GetEntityFiltersFromRequest<Request>(request);
         if (!getFilterResult.IsSuccess())
         {
             response.result.result = simulation_interfaces::msg::Result::RESULT_OPERATION_FAILED;
@@ -53,11 +48,20 @@ namespace SimulationInterfacesROS2
         }
         const SimulationInterfaces::EntityFilters filter = getFilterResult.GetValue();
         SimulationInterfaces::SimulationEntityManagerRequestBus::BroadcastResult(
-            entities, &SimulationInterfaces::SimulationEntityManagerRequests::GetEntities, filter);
+            outcome, &SimulationInterfaces::SimulationEntityManagerRequests::GetEntities, filter);
         std::vector<std::string> stdEntities;
+        if (!outcome.IsSuccess())
+        {
+            const auto& failedResult = outcome.GetError();
+            response.result.result = aznumeric_cast<uint8_t>(failedResult.error_code);
+            response.result.error_message = failedResult.error_string.c_str();
+            return response;
+        }
+
+        const auto& entityNameList = outcome.GetValue();
         AZStd::transform(
-            entities.begin(),
-            entities.end(),
+            entityNameList.begin(),
+            entityNameList.end(),
             std::back_inserter(stdEntities),
             [](const AZStd::string& entityName)
             {

@@ -21,12 +21,14 @@ namespace SimulationInterfacesROS2
         using ServiceType = simulation_interfaces::srv::DeleteEntity;
         using Request = ServiceType::Request;
         using Response = ServiceType::Response;
+        using ServiceHandle = std::shared_ptr<rclcpp::Service<ServiceType>>;
 
         DeleteEntityServiceHandler() = delete;
         DeleteEntityServiceHandler(rclcpp::Node::SharedPtr& node, AZStd::string_view serviceName);
         ~DeleteEntityServiceHandler();
 
-        Response HandleServiceRequest(const Request& request);
+        void HandleServiceRequest(
+            const ServiceHandle service_handle, const std::shared_ptr<rmw_request_id_t> header, const std::shared_ptr<Request> request);
 
     private:
         rclcpp::Service<ServiceType>::SharedPtr m_deleteEntityService;

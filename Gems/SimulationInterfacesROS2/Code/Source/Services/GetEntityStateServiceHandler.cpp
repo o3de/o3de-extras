@@ -7,12 +7,8 @@
  */
 
 #include "GetEntityStateServiceHandler.h"
-
-#include "ROS2/Utilities/ROS2Conversions.h"
-
 #include <ROS2/ROS2Bus.h>
-
-#include <AzCore/std/smart_ptr/shared_ptr.h>
+#include <ROS2/Utilities/ROS2Conversions.h>
 #include <SimulationInterfaces/SimulationEntityManagerRequestBus.h>
 #include <std_msgs/msg/header.hpp>
 
@@ -41,12 +37,22 @@ namespace SimulationInterfacesROS2
     GetEntityStateServiceHandler::Response GetEntityStateServiceHandler::HandleServiceRequest(const Request& request)
     {
         AZStd::string entityName = request.entity.c_str();
-        SimulationInterfaces::EntityState entityState;
+        AZ::Outcome<SimulationInterfaces::EntityState, SimulationInterfaces::FailedResult> outcome;
 
         SimulationInterfaces::SimulationEntityManagerRequestBus::BroadcastResult(
-            entityState, &SimulationInterfaces::SimulationEntityManagerRequests::GetEntityState, entityName);
+            outcome, &SimulationInterfaces::SimulationEntityManagerRequests::GetEntityState, entityName);
 
-        GetEntityStateServiceHandler::Response response;
+        Response response;
+        response.result.result = simulation_interfaces::msg::Result::RESULT_OK;
+        if (!outcome.IsSuccess())
+        {
+            const auto& failedResult = outcome.GetError();
+            response.result.result = aznumeric_cast<uint8_t>(failedResult.error_code);
+            response.result.error_message = failedResult.error_string.c_str();
+            return response;
+        }
+
+        const auto& entityState = outcome.GetValue();
         simulation_interfaces::msg::EntityState entityStateMsg;
         std_msgs::msg::Header header;
         header.stamp = ROS2::ROS2Interface::Get()->GetROSTimestamp();

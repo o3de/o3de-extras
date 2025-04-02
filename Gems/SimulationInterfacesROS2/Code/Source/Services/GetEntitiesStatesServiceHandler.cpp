@@ -7,11 +7,9 @@
  */
 
 #include "GetEntitiesStatesServiceHandler.h"
-#include "AzCore/std/smart_ptr/make_shared.h"
-#include "ROS2/Utilities/ROS2Conversions.h"
 #include "Utils/Utils.h"
-#include <AzFramework/Physics/ShapeConfiguration.h>
 #include <ROS2/ROS2Bus.h>
+#include <ROS2/Utilities/ROS2Conversions.h>
 #include <SimulationInterfaces/SimulationEntityManagerRequestBus.h>
 #include <std_msgs/msg/header.hpp>
 
@@ -38,12 +36,12 @@ namespace SimulationInterfacesROS2
 
     GetEntitiesStatesServiceHandler::Response GetEntitiesStatesServiceHandler::HandleServiceRequest(const Request& request)
     {
-        AZStd::unordered_map<AZStd::string, SimulationInterfaces::EntityState> entitiesStates;
+        AZ::Outcome<SimulationInterfaces::MultipleEntitiesStates, SimulationInterfaces::FailedResult> outcome;
 
         GetEntitiesStatesServiceHandler::Response response;
         response.result.result = simulation_interfaces::msg::Result::RESULT_OK;
 
-        const auto getFilterResult = Utils::GetEntityFilterFromRequest<Request>(request);
+        const auto getFilterResult = Utils::GetEntityFiltersFromRequest<Request>(request);
         if (!getFilterResult.IsSuccess())
         {
             response.result.result = simulation_interfaces::msg::Result::RESULT_OPERATION_FAILED;
@@ -52,25 +50,35 @@ namespace SimulationInterfacesROS2
         }
         SimulationInterfaces::EntityFilters filter = getFilterResult.GetValue();
         SimulationInterfaces::SimulationEntityManagerRequestBus::BroadcastResult(
-            entitiesStates, &SimulationInterfaces::SimulationEntityManagerRequests::GetEntitiesStates, filter);
+            outcome, &SimulationInterfaces::SimulationEntityManagerRequests::GetEntitiesStates, filter);
+
+        if (!outcome.IsSuccess())
+        {
+            const auto& failedResult = outcome.GetError();
+            response.result.result = aznumeric_cast<uint8_t>(failedResult.error_code);
+            response.result.error_message = failedResult.error_string.c_str();
+            return response;
+        }
+
+        const auto& multipleEntitiesStates = outcome.GetValue();
         std::vector<std::string> stdEntities;
         std::vector<simulation_interfaces::msg::EntityState> stdEntityStates;
 
         AZStd::transform(
-            entitiesStates.begin(),
-            entitiesStates.end(),
+            multipleEntitiesStates.begin(),
+            multipleEntitiesStates.end(),
             std::back_inserter(stdEntities),
             [](const auto& pair)
             {
                 return pair.first.c_str();
             });
         AZStd::transform(
-            entitiesStates.begin(),
-            entitiesStates.end(),
+            multipleEntitiesStates.begin(),
+            multipleEntitiesStates.end(),
             std::back_inserter(stdEntityStates),
             [](const auto& pair)
             {
-                const SimulationInterfaces::EntityState entityState = pair.second;
+                const SimulationInterfaces::EntityState& entityState = pair.second;
                 simulation_interfaces::msg::EntityState simulationInterfaceEntityState;
                 std_msgs::msg::Header header;
                 header.stamp = ROS2::ROS2Interface::Get()->GetROSTimestamp();

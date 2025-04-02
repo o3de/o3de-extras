@@ -7,10 +7,9 @@
  */
 
 #include "SpawnEntityServiceHandler.h"
-
-#include "ROS2/Utilities/ROS2Conversions.h"
 #include <AzFramework/Physics/ShapeConfiguration.h>
 #include <ROS2/ROS2Bus.h>
+#include <ROS2/Utilities/ROS2Conversions.h>
 #include <SimulationInterfaces/SimulationEntityManagerRequestBus.h>
 
 namespace SimulationInterfacesROS2
@@ -21,11 +20,9 @@ namespace SimulationInterfacesROS2
         m_spawnEntityService = node->create_service<ServiceType>(
             serviceNameStr,
             [this](
-                const SpawnEntityServiceHandle service_handle,
-                const std::shared_ptr<rmw_request_id_t> header,
-                const std::shared_ptr<SpawnEntityRequest> request)
+                const ServiceHandle service_handle, const std::shared_ptr<rmw_request_id_t> header, const std::shared_ptr<Request> request)
             {
-                this->HandleSpawnRequest(service_handle, header, request);
+                HandleServiceRequest(service_handle, header, request);
             });
     }
 
@@ -37,10 +34,8 @@ namespace SimulationInterfacesROS2
         }
     }
 
-    void SpawnEntityServiceHandler::HandleSpawnRequest(
-        const SpawnEntityServiceHandle service_handle,
-        const std::shared_ptr<rmw_request_id_t> header,
-        const std::shared_ptr<SpawnEntityRequest> request)
+    void SpawnEntityServiceHandler::HandleServiceRequest(
+        const ServiceHandle service_handle, const std::shared_ptr<rmw_request_id_t> header, const std::shared_ptr<Request> request)
     {
         AZStd::string name = request->name.c_str();
         AZStd::string uri = request->uri.c_str();
@@ -52,9 +47,9 @@ namespace SimulationInterfacesROS2
             uri,
             entityNamespace,
             initialPose,
-            [service_handle, header](const AZ::Outcome<AZStd::string, AZStd::string>& outcome)
+            [service_handle, header](const AZ::Outcome<AZStd::string, SimulationInterfaces::FailedResult>& outcome)
             {
-                SpawnEntityResponse response;
+                Response response;
                 if (outcome.IsSuccess())
                 {
                     response.result.result = simulation_interfaces::msg::Result::RESULT_OK;
@@ -62,8 +57,9 @@ namespace SimulationInterfacesROS2
                 }
                 else
                 {
-                    response.result.result = simulation_interfaces::msg::Result::RESULT_OPERATION_FAILED;
-                    response.result.error_message = outcome.GetError().c_str();
+                    const auto& failedResult = outcome.GetError();
+                    response.result.result = aznumeric_cast<uint8_t>(failedResult.error_code);
+                    response.result.error_message = failedResult.error_string.c_str();
                 }
                 service_handle->send_response(*header, response);
             });

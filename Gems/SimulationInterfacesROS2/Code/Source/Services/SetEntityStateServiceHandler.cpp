@@ -7,10 +7,7 @@
  */
 
 #include "SetEntityStateServiceHandler.h"
-
-#include "ROS2/Utilities/ROS2Conversions.h"
-
-#include <AzCore/std/smart_ptr/shared_ptr.h>
+#include <ROS2/Utilities/ROS2Conversions.h>
 #include <SimulationInterfaces/SimulationEntityManagerRequestBus.h>
 
 namespace SimulationInterfacesROS2
@@ -36,7 +33,7 @@ namespace SimulationInterfacesROS2
 
     SetEntityStateServiceHandler::Response SetEntityStateServiceHandler::HandleServiceRequest(const Request& request)
     {
-        bool result = false;
+        AZ::Outcome<void, SimulationInterfaces::FailedResult> outcome;
         AZStd::string entityName = request.entity.c_str();
         SimulationInterfaces::EntityState entityState;
         entityState.m_pose = ROS2::ROS2Conversions::FromROS2Pose(request.state.pose);
@@ -44,11 +41,18 @@ namespace SimulationInterfacesROS2
         entityState.m_twist_linear = ROS2::ROS2Conversions::FromROS2Vector3(request.state.twist.linear);
 
         SimulationInterfaces::SimulationEntityManagerRequestBus::BroadcastResult(
-            result, &SimulationInterfaces::SimulationEntityManagerRequests::SetEntityState, entityName, entityState);
+            outcome, &SimulationInterfaces::SimulationEntityManagerRequests::SetEntityState, entityName, entityState);
 
-        SetEntityStateServiceHandler::Response response;
-        response.result.result =
-            result ? simulation_interfaces::msg::Result::RESULT_OK : simulation_interfaces::msg::Result::RESULT_OPERATION_FAILED;
+        Response response;
+        response.result.result = simulation_interfaces::msg::Result::RESULT_OK;
+        if (!outcome.IsSuccess())
+        {
+            const auto& failedResult = outcome.GetError();
+            response.result.result = aznumeric_cast<uint8_t>(failedResult.error_code);
+            response.result.error_message = failedResult.error_string.c_str();
+            return response;
+        }
+
         return response;
     }
 } // namespace SimulationInterfacesROS2

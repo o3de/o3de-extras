@@ -9,8 +9,6 @@
 #pragma once
 
 #include "Services/GetEntityStateServiceHandler.h"
-#include <ROS2/ROS2Bus.h>
-
 #include <AzCore/std/smart_ptr/make_shared.h>
 #include <ROS2/Utilities/ROS2Conversions.h>
 #include <SimulationInterfaces/SimulationEntityManagerRequestBus.h>
@@ -18,7 +16,7 @@
 namespace SimulationInterfacesROS2::Utils
 {
     template<typename RequestType>
-    AZ::Outcome<SimulationInterfaces::EntityFilters, AZStd::string> GetEntityFilterFromRequest(const RequestType& request)
+    AZ::Outcome<SimulationInterfaces::EntityFilters, AZStd::string> GetEntityFiltersFromRequest(const RequestType& request)
     {
         SimulationInterfaces::EntityFilters filter;
         filter.m_filter = request.filters.filter.c_str();

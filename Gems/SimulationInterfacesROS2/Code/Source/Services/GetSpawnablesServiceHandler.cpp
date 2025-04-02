@@ -7,7 +7,6 @@
  */
 
 #include "GetSpawnablesServiceHandler.h"
-#include <AzCore/std/smart_ptr/shared_ptr.h>
 #include <SimulationInterfaces/SimulationEntityManagerRequestBus.h>
 
 namespace SimulationInterfacesROS2
@@ -33,14 +32,24 @@ namespace SimulationInterfacesROS2
 
     GetSpawnablesServiceHandler::Response GetSpawnablesServiceHandler::HandleServiceRequest(const Request& request)
     {
-        AZStd::vector<SimulationInterfaces::Spawnable> spawnables;
+        AZ::Outcome<SimulationInterfaces::SpawnableList, SimulationInterfaces::FailedResult> outcome;
         SimulationInterfaces::SimulationEntityManagerRequestBus::BroadcastResult(
-            spawnables, &SimulationInterfaces::SimulationEntityManagerRequests::GetSpawnables);
-        GetSpawnablesServiceHandler::Response response;
+            outcome, &SimulationInterfaces::SimulationEntityManagerRequests::GetSpawnables);
+        Response response;
+        response.result.result = simulation_interfaces::msg::Result::RESULT_OK;
+        if (!outcome.IsSuccess())
+        {
+            const auto& failedResult = outcome.GetError();
+            response.result.result = aznumeric_cast<uint8_t>(failedResult.error_code);
+            response.result.error_message = failedResult.error_string.c_str();
+            return response;
+        }
+
+        const auto& spawnableList = outcome.GetValue();
         std::vector<simulation_interfaces::msg::Spawnable> simSpawnables;
         AZStd::transform(
-            spawnables.begin(),
-            spawnables.end(),
+            spawnableList.begin(),
+            spawnableList.end(),
             AZStd::back_inserter(simSpawnables),
             [](const SimulationInterfaces::Spawnable& spawnable)
             {
