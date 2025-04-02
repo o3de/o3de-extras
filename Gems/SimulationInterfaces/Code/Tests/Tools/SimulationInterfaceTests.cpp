@@ -28,7 +28,7 @@ namespace UnitTest
 
         AZStd::vector<AZStd::string> entities;
         SimulationEntityManagerRequestBus::BroadcastResult(entities, &SimulationEntityManagerRequestBus::Events::GetEntities, EntityFilters());
-        AZ_Assert(entities.size() == 2, "Number of simulation entities: %d", entities.size());
+        ASSERT_EQ(entities.size(), 2);
         DeleteEntity(entityId1);
 
         AZStd::vector<AZStd::string> entities2;
@@ -60,7 +60,7 @@ namespace UnitTest
     {
         // This test is disabled since due to some issue outside to this gem, the rigid body is created without the collider shape
         // and the filter is not applied. This test will be enabled once the issue is resolved.
-        return;
+        GTEST_SKIP()<<"Need to fix the issue with the collider shape creation.";
         using namespace SimulationInterfaces;
         const AZ::EntityId entityId1 =
             CreateEntityWithStaticBodyComponent("Inside", AZ::Transform::CreateTranslation(AZ::Vector3(0.0f, 0.0f, 0.0f)));
@@ -75,11 +75,9 @@ namespace UnitTest
         auto* physicsSystem = AZ::Interface<AzPhysics::SystemInterface>::Get();
         physicsSystem->Simulate(1.0f / 60.0f);
 
-        EXPECT_EQ(entities.size(), 1);
-        if (entities.size() > 0)
-        {
-            EXPECT_EQ(entities.front(), "Inside");
-        }
+        ASSERT_EQ(entities.size(), 1);
+        EXPECT_EQ(entities.front(), "Inside");
+
         DeleteEntity(entityId1);
         DeleteEntity(entityId2);
     }
@@ -98,11 +96,9 @@ namespace UnitTest
         AZStd::vector<AZStd::string> entities;
         SimulationEntityManagerRequestBus::BroadcastResult(entities, &SimulationEntityManagerRequestBus::Events::GetEntities, filter);
 
-        EXPECT_EQ(entities.size(), 1);
-        if (entities.size() > 0)
-        {
-            EXPECT_EQ(entities.front(), "WillMatch");
-        }
+        ASSERT_EQ(entities.size(), 1);
+        EXPECT_EQ(entities.front(), "WillMatch");
+
         DeleteEntity(entityId1);
         DeleteEntity(entityId2);
     }

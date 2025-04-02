@@ -118,7 +118,7 @@ namespace SimulationInterfaces
                 auto* rigidBody = azdynamic_cast<AzPhysics::RigidBody*>(body);
                 if (rigidBody != nullptr)
                 {
-                    auto shapeCount = rigidBody->GetShapeCount();
+                    [[maybe_unused]] auto shapeCount = rigidBody->GetShapeCount();
                     AZ_Warning(
                         "SimulationInterfaces",
                         shapeCount > 0,
@@ -128,6 +128,7 @@ namespace SimulationInterfaces
                 const AZ::EntityId entityId = body->GetEntityId();
                 AZ::Entity* entity = nullptr;
                 AZ::ComponentApplicationBus::BroadcastResult(entity, &AZ::ComponentApplicationRequests::FindEntity, entityId);
+                AZ_Assert(entity, "Entity is not available.");
                 // check if entity is not spawned by this component
                 const auto ticketId = entity->GetEntitySpawnTicketId();
                 AZStd::string proposedName{};

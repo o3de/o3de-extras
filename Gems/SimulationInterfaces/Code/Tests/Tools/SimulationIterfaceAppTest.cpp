@@ -79,7 +79,7 @@ namespace UnitTest
         SimulationEntityManagerRequestBus::BroadcastResult(entities, &SimulationEntityManagerRequestBus::Events::GetEntities, EntityFilters());
         EXPECT_EQ(entities.size(), 1);
 
-        AZ_Assert(!entities.empty(), "Simulated Entities Empty");
+        ASSERT_FALSE(entities.empty())<< "Simulated Entities Empty";
         const AZStd::string spawnedEntityName = entities.front();
         printf("Spawned entity name %s\n", spawnedEntityName.c_str());
 
@@ -91,7 +91,7 @@ namespace UnitTest
         SimulationEntityManagerRequestBus::BroadcastResult(
             entityStates, &SimulationEntityManagerRequestBus::Events::GetEntitiesStates, EntityFilters());
         auto entityState = entityStates.find(spawnedEntityName);
-        EXPECT_NE(entityState, entityStates.end());
+        ASSERT_NE(entityState, entityStates.end());
         EXPECT_EQ(entityState->first, spawnedEntityName);
 
         // check if the entity moved
