@@ -49,7 +49,6 @@ namespace UnitTest
         AZ_Assert(assetId.IsValid(), "Failed to get asset id for %s", TestSpawnable.c_str());
     }
 
-
     TEST_F(SimulationInterfaceTestFixture, SpawnAppTest)
     {
         // This is an integration test that runs the test application with the SimulationInterfaces gem enabled.
@@ -61,7 +60,7 @@ namespace UnitTest
         constexpr AZStd::string_view uri = "product_asset:///sampleasset/testsimulationentity.spawnable";
         constexpr AZStd::string_view entityNamespace = "";
         AZStd::atomic_bool completed = false;
-        SimulationEntityManagerRequests::SpawnCompletedCb completedCb = [&](const AZ::Outcome<AZStd::string, AZStd::string>& result)
+        SpawnCompletedCb completedCb = [&](const AZ::Outcome<AZStd::string, FailedResult>& result)
         {
             EXPECT_TRUE(result.IsSuccess());
             completed = true;
@@ -75,11 +74,14 @@ namespace UnitTest
         EXPECT_TRUE(completed);
 
         // list simulation entities
-        AZStd::vector<AZStd::string> entities;
-        SimulationEntityManagerRequestBus::BroadcastResult(entities, &SimulationEntityManagerRequestBus::Events::GetEntities, EntityFilters());
+        AZ::Outcome<EntityNameList, FailedResult> entitiesResult;
+        SimulationEntityManagerRequestBus::BroadcastResult(
+            entitiesResult, &SimulationEntityManagerRequestBus::Events::GetEntities, EntityFilters());
+        ASSERT_TRUE(entitiesResult.IsSuccess());
+        const auto& entities = entitiesResult.GetValue();
         EXPECT_EQ(entities.size(), 1);
 
-        ASSERT_FALSE(entities.empty())<< "Simulated Entities Empty";
+        ASSERT_FALSE(entities.empty()) << "Simulated Entities Empty";
         const AZStd::string spawnedEntityName = entities.front();
         printf("Spawned entity name %s\n", spawnedEntityName.c_str());
 
@@ -87,9 +89,12 @@ namespace UnitTest
         StepPhysics(100);
 
         // Get entity state,
-        AZStd::unordered_map<AZStd::string, EntityState> entityStates;
+        AZ::Outcome<MultipleEntitiesStates, FailedResult> entityStatesResult;
         SimulationEntityManagerRequestBus::BroadcastResult(
-            entityStates, &SimulationEntityManagerRequestBus::Events::GetEntitiesStates, EntityFilters());
+            entityStatesResult, &SimulationEntityManagerRequestBus::Events::GetEntitiesStates, EntityFilters());
+        ASSERT_TRUE(entityStatesResult.IsSuccess());
+
+        const auto& entityStates = entityStatesResult.GetValue();
         auto entityState = entityStates.find(spawnedEntityName);
         ASSERT_NE(entityState, entityStates.end());
         EXPECT_EQ(entityState->first, spawnedEntityName);
@@ -99,8 +104,11 @@ namespace UnitTest
 
         // set new entity state - move the entity to X=1000 meters
         const AZ::Vector3 newPosition = AZ::Vector3(1000.0f, 0.0f, 0.0f);
-        const EntityState newState = { AZ::Transform::CreateTranslation(newPosition), AZ::Vector3::CreateZero(), AZ::Vector3::CreateZero() };
-        SimulationEntityManagerRequestBus::Broadcast(&SimulationEntityManagerRequestBus::Events::SetEntityState, spawnedEntityName, newState);
+        const EntityState newState = { AZ::Transform::CreateTranslation(newPosition),
+                                       AZ::Vector3::CreateZero(),
+                                       AZ::Vector3::CreateZero() };
+        SimulationEntityManagerRequestBus::Broadcast(
+            &SimulationEntityManagerRequestBus::Events::SetEntityState, spawnedEntityName, newState);
 
         StepPhysics();
 
@@ -108,18 +116,27 @@ namespace UnitTest
         EntityFilters filter;
         filter.m_bounds_shape = AZStd::make_shared<Physics::SphereShapeConfiguration>(2.0f);
         filter.m_bounds_pose = AZ::Transform::CreateTranslation(AZ::Vector3(1000.0f, 0.0f, 0.0f));
-        AZStd::vector<AZStd::string> entitiesFiltered;
-        SimulationEntityManagerRequestBus::BroadcastResult(entitiesFiltered, &SimulationEntityManagerRequestBus::Events::GetEntities, filter);
-        EXPECT_EQ(entitiesFiltered.size(), 1);
+        AZ::Outcome<EntityNameList, FailedResult> entitiesFiltered;
+        SimulationEntityManagerRequestBus::BroadcastResult(
+            entitiesFiltered, &SimulationEntityManagerRequestBus::Events::GetEntities, filter);
+        ASSERT_TRUE(entitiesFiltered.IsSuccess());
+        EXPECT_EQ(entitiesFiltered.GetValue().size(), 1);
 
         // delete entity using its name
-        SimulationEntityManagerRequestBus::Broadcast(&SimulationEntityManagerRequestBus::Events::DeleteEntity, entityName);
+        DeletionCompletedCb deletionCompletedCb = [](const AZ::Outcome<void, FailedResult>& result)
+        {
+            EXPECT_TRUE(result.IsSuccess());
+        };
+        SimulationEntityManagerRequestBus::Broadcast(
+            &SimulationEntityManagerRequestBus::Events::DeleteEntity, entityName, deletionCompletedCb);
         TickApp(100);
 
         // list simulation entities after deletion, expect no simulation entities
-        AZStd::vector<AZStd::string> entities2;
-        SimulationEntityManagerRequestBus::BroadcastResult(entities2, &SimulationEntityManagerRequestBus::Events::GetEntities, EntityFilters());
-        EXPECT_EQ(entities2.size(), 0);
+        AZ::Outcome<EntityNameList, FailedResult> entitiesAfterDeletion;
+        SimulationEntityManagerRequestBus::BroadcastResult(
+            entitiesAfterDeletion, &SimulationEntityManagerRequestBus::Events::GetEntities, EntityFilters());
+        ASSERT_TRUE(entitiesAfterDeletion.IsSuccess());
+        EXPECT_EQ(entitiesAfterDeletion.GetValue().size(), 0);
     }
 
 } // namespace UnitTest

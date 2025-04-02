@@ -134,7 +134,6 @@ namespace UnitTest
             auto* physicsSystem = AZ::Interface<AzPhysics::SystemInterface>::Get();
             physicsSystem->Simulate(1.0f / 60.0f);
         }
-
     }
 
     void SimulationInterfaceTestFixture::TickApp(int numTicks)

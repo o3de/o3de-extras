@@ -121,7 +121,6 @@ namespace SimulationInterfaces
         // install handler
         scene->RegisterSceneSimulationFinishHandler(m_simulationFinishEvent);
         SetSimulationPaused(false);
-
     }
 
 } // namespace SimulationInterfaces

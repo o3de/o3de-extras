@@ -5,7 +5,9 @@
 #
 
 set(FILES
-        Include/SimulationInterfaces/SimulationEntityManagerRequestBus.h
-    Include/SimulationInterfaces/SimulationMangerRequestBus.h
+    Include/SimulationInterfaces/Result.h
+    Include/SimulationInterfaces/TagFilter.h
+    Include/SimulationInterfaces/SimulationEntityManagerRequestBus.h
     Include/SimulationInterfaces/SimulationInterfacesTypeIds.h
+    Include/SimulationInterfaces/SimulationMangerRequestBus.h
 )

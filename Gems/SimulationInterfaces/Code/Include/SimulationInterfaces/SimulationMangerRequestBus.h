@@ -24,9 +24,13 @@ namespace SimulationInterfaces
         AZ_RTTI(SimulationManagerRequests, SimulationManagerRequestsTypeId);
         virtual ~SimulationManagerRequests() = default;
 
+        //! Set the simulation to paused or unpaused,
+        //! expect always to succeed
         virtual void SetSimulationPaused(bool paused) = 0;
-        virtual void StepSimulation(AZ::u32 steps) = 0;
 
+        //! Step the simulation by a number of steps
+        //! expect always to succeed
+        virtual void StepSimulation(AZ::u32 steps) = 0;
     };
 
     class SimulationMangerRequestBusTraits : public AZ::EBusTraits
