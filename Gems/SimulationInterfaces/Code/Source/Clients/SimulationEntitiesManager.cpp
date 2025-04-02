@@ -445,7 +445,20 @@ namespace SimulationInterfaces
         if (m_spawnedTickets.find(ticketId) != m_spawnedTickets.end())
         {
             // remove the ticket
-            m_spawnedTickets.erase(ticketId);
+            //m_spawnedTickets.erase(ticketId);
+            /// get spawner
+            auto spawner = AZ::Interface<AzFramework::SpawnableEntitiesDefinition>::Get();
+            AZ_Assert(spawner, "SpawnableEntitiesDefinition is not available.");
+            // get ticket
+            auto ticket = m_spawnedTickets[ticketId];
+            // remove ticket
+            AzFramework::DespawnAllEntitiesOptionalArgs optionalArgs;
+            optionalArgs.m_completionCallback = [this, completedCb](AzFramework::EntitySpawnTicket::Id ticketId)
+            {
+                m_spawnedTickets.erase(ticketId);
+                completedCb(AZ::Success());
+            };
+            spawner->DespawnAllEntities(ticket, optionalArgs);
         }
         else
         {
@@ -469,8 +482,6 @@ namespace SimulationInterfaces
             return true;
         }
 #endif
-        // TODO: Mpelka: Implement deletion of entities is asynhronous way, it should be called when the entity is removed.
-        completedCb(AZ::Success());
     }
 
     AZ::Outcome<SpawnableList, FailedResult> SimulationEntitiesManager::GetSpawnables()
