@@ -10,6 +10,8 @@
 #include "SimulationInterfacesROS2/SimulationInterfacesROS2RequestBus.h"
 #include <AzCore/base.h>
 #include <AzCore/std/containers/unordered_set.h>
+#include <AzCore/std/containers/vector.h>
+#include <SimulationInterfaces/SimulationFeaturesAggregatorRequestBus.h>
 
 namespace SimulationInterfacesROS2
 {
@@ -45,11 +47,33 @@ namespace SimulationInterfacesROS2
         AZStd::unordered_set<AZ::u8> ros2Interfaces;
         SimulationInterfacesROS2RequestBus::BroadcastResult(ros2Interfaces, &SimulationInterfacesROS2Requests::GetSimulationFeatures);
         // call bus to get simulation features on SimulationInterfaces Gem  side
-
+        AZStd::unordered_set<SimulationInterfaces::SimulationFeatures> o3deInterfaces;
+        SimulationInterfaces::SimulationFeaturesAggregatorRequestBus::BroadcastResult(
+            o3deInterfaces, &SimulationInterfaces::SimulationFeaturesAggregatorRequests::GetSimulationFeatures);
         // create common features and return it;
+        // common features are logical AND between two sets
+        AZStd::unordered_set<AZ::u8> commonFeatures;
+        commonFeatures.insert(ros2Interfaces.begin(), ros2Interfaces.end());
+        for (auto id : o3deInterfaces)
+        {
+            commonFeatures.insert(static_cast<AZ::u8>(id));
+        }
+
+        AZStd::vector<AZ::u8> idToRemove;
+        for (auto id : commonFeatures)
+        {
+            if (!(ros2Interfaces.contains(id) && o3deInterfaces.contains(SimulationInterfaces::SimulationFeatures(id))))
+            {
+                idToRemove.push_back(id);
+            }
+        }
+        for (auto id : idToRemove)
+        {
+            commonFeatures.erase(id);
+        }
 
         Response response;
-        response.features.features.insert(response.features.features.end(), ros2Interfaces.begin(), ros2Interfaces.end());
+        response.features.features.insert(response.features.features.end(), commonFeatures.begin(), commonFeatures.end());
         return response;
     }
 } // namespace SimulationInterfacesROS2

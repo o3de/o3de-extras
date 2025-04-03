@@ -7,10 +7,12 @@
  */
 
 #include "SimulationManager.h"
+#include "SimulationInterfaces/SimulationFeatures.h"
 
 #include <AzCore/Component/ComponentApplicationBus.h>
 #include <AzCore/Serialization/SerializeContext.h>
 #include <AzFramework/Physics/PhysicsSystem.h>
+#include <SimulationInterfaces/SimulationFeaturesAggregatorRequestBus.h>
 #include <SimulationInterfaces/SimulationInterfacesTypeIds.h>
 
 namespace SimulationInterfaces
@@ -39,10 +41,12 @@ namespace SimulationInterfaces
     void SimulationManager::GetRequiredServices([[maybe_unused]] AZ::ComponentDescriptor::DependencyArrayType& required)
     {
         required.push_back(AZ_CRC_CE("PhysicsService"));
+        required.push_back(AZ_CRC_CE("SimulationFeaturesAggregator"));
     }
 
     void SimulationManager::GetDependentServices([[maybe_unused]] AZ::ComponentDescriptor::DependencyArrayType& dependent)
     {
+        dependent.push_back(AZ_CRC_CE("SimulationFeaturesAggregator"));
     }
 
     SimulationManager::SimulationManager()
@@ -68,6 +72,12 @@ namespace SimulationInterfaces
     void SimulationManager::Activate()
     {
         SimulationManagerRequestBus::Handler::BusConnect();
+        SimulationFeaturesAggregatorRequestBus::Broadcast(
+            &SimulationFeaturesAggregatorRequests::AddSimulationFeatures,
+            AZStd::unordered_set<SimulationFeatures>{ SimulationFeatures::SIMULATION_STATE_PAUSE,
+                                                      SimulationFeatures::STEP_SIMULATION_SINGLE,
+                                                      SimulationFeatures::STEP_SIMULATION_MULTIPLE,
+                                                      SimulationFeatures::STEP_SIMULATION_ACTION });
     }
 
     void SimulationManager::Deactivate()

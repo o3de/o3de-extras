@@ -10,26 +10,24 @@
 
 #include <AzToolsFramework/API/ToolsApplicationAPI.h>
 
-#include <AzToolsFramework/Entity/EditorEntityContextBus.h>
-#include <Clients/SimulationInterfacesROS2SystemComponent.h>
-#include <ROS2/ROS2Bus.h>
+#include <Clients/SimulationFeaturesAggregator.h>
 
-namespace SimulationInterfacesROS2
+namespace SimulationInterfaces
 {
-    /// System component for SimulationInterfacesROS2 editor
-    class SimulationInterfacesROS2EditorSystemComponent
-        : public SimulationInterfacesROS2SystemComponent
+    /// System component for SimulationInterfaces editor
+    class SimulationFeaturesAggregatorEditor
+        : public SimulationFeaturesAggregator
         , protected AzToolsFramework::EditorEvents::Bus::Handler
     {
-        using BaseSystemComponent = SimulationInterfacesROS2SystemComponent;
+        using BaseSystemComponent = SimulationFeaturesAggregator;
 
     public:
-        AZ_COMPONENT_DECL(SimulationInterfacesROS2EditorSystemComponent);
+        AZ_COMPONENT_DECL(SimulationFeaturesAggregatorEditor);
 
         static void Reflect(AZ::ReflectContext* context);
 
-        SimulationInterfacesROS2EditorSystemComponent();
-        ~SimulationInterfacesROS2EditorSystemComponent();
+        SimulationFeaturesAggregatorEditor();
+        ~SimulationFeaturesAggregatorEditor();
 
     private:
         static void GetProvidedServices(AZ::ComponentDescriptor::DependencyArrayType& provided);
@@ -38,10 +36,8 @@ namespace SimulationInterfacesROS2
         static void GetDependentServices(AZ::ComponentDescriptor::DependencyArrayType& dependent);
 
         // AZ::Component
+        void Init() override;
         void Activate() override;
         void Deactivate() override;
-
-        bool m_systemComponentActivated = false;
-        ROS2::ROS2Requests::NodeChangedEvent::Handler m_nodeHandler;
     };
-} // namespace SimulationInterfacesROS2
+} // namespace SimulationInterfaces

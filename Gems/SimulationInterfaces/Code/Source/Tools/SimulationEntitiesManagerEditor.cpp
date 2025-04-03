@@ -43,11 +43,13 @@ namespace SimulationInterfaces
     void SimulationEntitiesManagerEditor::GetRequiredServices([[maybe_unused]] AZ::ComponentDescriptor::DependencyArrayType& required)
     {
         BaseSystemComponent::GetRequiredServices(required);
+        required.push_back(AZ_CRC_CE("SimulationFeaturesAggregatorEditorService"));
     }
 
     void SimulationEntitiesManagerEditor::GetDependentServices([[maybe_unused]] AZ::ComponentDescriptor::DependencyArrayType& dependent)
     {
         BaseSystemComponent::GetDependentServices(dependent);
+        dependent.push_back(AZ_CRC_CE("SimulationFeaturesAggregatorEditorService"));
     }
 
     void SimulationEntitiesManagerEditor::Activate()

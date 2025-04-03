@@ -7,6 +7,7 @@
  */
 
 #include "SimulationEntitiesManagerEditor.h"
+#include "SimulationFeaturesAggregatorEditor.h"
 #include "SimulationManagerEditor.h"
 #include <SimulationInterfaces/SimulationInterfacesTypeIds.h>
 #include <SimulationInterfacesModuleInterface.h>
@@ -25,6 +26,7 @@ namespace SimulationInterfaces
                 {
                     SimulationEntitiesManagerEditor::CreateDescriptor(),
                     SimulationManagerEditor::CreateDescriptor(),
+                    SimulationFeaturesAggregatorEditor::CreateDescriptor(),
                 });
         }
 
@@ -36,6 +38,7 @@ namespace SimulationInterfaces
         {
             return AZ::ComponentTypeList{
                 azrtti_typeid<SimulationEntitiesManagerEditor>(),
+                azrtti_typeid<SimulationFeaturesAggregatorEditor>(),
             };
         }
     };

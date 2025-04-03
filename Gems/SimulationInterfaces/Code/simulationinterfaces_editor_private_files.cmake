@@ -9,4 +9,6 @@ set(FILES
         Source/Tools/SimulationManagerEditor.h
         Source/Tools/SimulationEntitiesManagerEditor.cpp
         Source/Tools/SimulationEntitiesManagerEditor.h
+        Source/Tools/SimulationFeaturesAggregatorEditor.cpp
+        Source/Tools/SimulationFeaturesAggregatorEditor.h
 )

@@ -7,7 +7,6 @@
  */
 
 #include "SimulationInterfacesROS2SystemComponent.h"
-#include "AzCore/Debug/Trace.h"
 #include "SimulationInterfacesROS2/SimulationInterfacesROS2RequestBus.h"
 #include "Utils/ServicesConfig.h"
 
@@ -56,30 +55,8 @@ namespace SimulationInterfacesROS2
 
     void SimulationInterfacesROS2SystemComponent::Activate()
     {
-        AzFramework::LevelSystemLifecycleNotificationBus::Handler::BusConnect();
         SimulationInterfacesROS2RequestBus::Handler::BusConnect();
-    }
 
-    void SimulationInterfacesROS2SystemComponent::Deactivate()
-    {
-        SimulationInterfacesROS2RequestBus::Handler::BusDisconnect();
-        AzFramework::LevelSystemLifecycleNotificationBus::Handler::BusDisconnect();
-        OnUnloadComplete(nullptr);
-    }
-
-    AZStd::unordered_set<AZ::u8> SimulationInterfacesROS2SystemComponent::GetSimulationFeatures()
-    {
-        AZStd::unordered_set<AZ::u8> result;
-        for (auto& [serviceType, serviceHandler] : m_availableRos2Interface)
-        {
-            auto features = serviceHandler->GetProvidedFeatures();
-            result.insert(features.begin(), features.end());
-        }
-        return result;
-    }
-
-    void SimulationInterfacesROS2SystemComponent::OnLoadingComplete([[maybe_unused]] const char* levelName)
-    {
         rclcpp::Node::SharedPtr ros2Node = rclcpp::Node::SharedPtr(ROS2::ROS2Interface::Get()->GetNode());
         AZ_Assert(ros2Node, "ROS2 node is not available.");
         // add all known/implemented interfaces
@@ -108,12 +85,25 @@ namespace SimulationInterfacesROS2
             AZStd::make_shared<GetSimulationFeaturesServiceHandler>(ros2Node, GetSimulationFeaturesServiceDefaultName);
     }
 
-    void SimulationInterfacesROS2SystemComponent::OnUnloadComplete([[maybe_unused]] const char* levelName)
+    void SimulationInterfacesROS2SystemComponent::Deactivate()
     {
+        SimulationInterfacesROS2RequestBus::Handler::BusDisconnect();
+
         for (auto& [serviceType, service] : m_availableRos2Interface)
         {
             service.reset();
         }
+    }
+
+    AZStd::unordered_set<AZ::u8> SimulationInterfacesROS2SystemComponent::GetSimulationFeatures()
+    {
+        AZStd::unordered_set<AZ::u8> result;
+        for (auto& [serviceType, serviceHandler] : m_availableRos2Interface)
+        {
+            auto features = serviceHandler->GetProvidedFeatures();
+            result.insert(features.begin(), features.end());
+        }
+        return result;
     }
 
 } // namespace SimulationInterfacesROS2

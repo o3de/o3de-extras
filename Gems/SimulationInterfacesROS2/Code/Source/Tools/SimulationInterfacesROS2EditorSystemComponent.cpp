@@ -27,7 +27,23 @@ namespace SimulationInterfacesROS2
         }
     }
 
-    SimulationInterfacesROS2EditorSystemComponent::SimulationInterfacesROS2EditorSystemComponent() = default;
+    SimulationInterfacesROS2EditorSystemComponent::SimulationInterfacesROS2EditorSystemComponent()
+        : m_nodeHandler(
+              [this](std::shared_ptr<rclcpp::Node> node)
+              {
+                  if (!m_systemComponentActivated)
+                  {
+                      SimulationInterfacesROS2SystemComponent::Activate();
+                      m_systemComponentActivated = true;
+                  }
+                  else
+                  {
+                      SimulationInterfacesROS2SystemComponent::Deactivate();
+                      m_systemComponentActivated = false;
+                  }
+              })
+    {
+    }
 
     SimulationInterfacesROS2EditorSystemComponent::~SimulationInterfacesROS2EditorSystemComponent() = default;
 
@@ -47,6 +63,7 @@ namespace SimulationInterfacesROS2
         [[maybe_unused]] AZ::ComponentDescriptor::DependencyArrayType& required)
     {
         BaseSystemComponent::GetRequiredServices(required);
+        required.push_back(AZ_CRC_CE("ROS2EditorService"));
     }
 
     void SimulationInterfacesROS2EditorSystemComponent::GetDependentServices(
@@ -57,14 +74,14 @@ namespace SimulationInterfacesROS2
 
     void SimulationInterfacesROS2EditorSystemComponent::Activate()
     {
-        SimulationInterfacesROS2SystemComponent::Activate();
         AzToolsFramework::EditorEvents::Bus::Handler::BusConnect();
+        ROS2::ROS2Interface::Get()->ConnectOnNodeChanged(m_nodeHandler);
     }
 
     void SimulationInterfacesROS2EditorSystemComponent::Deactivate()
     {
+        m_nodeHandler.Disconnect();
         AzToolsFramework::EditorEvents::Bus::Handler::BusDisconnect();
-        SimulationInterfacesROS2SystemComponent::Deactivate();
     }
 
 } // namespace SimulationInterfacesROS2

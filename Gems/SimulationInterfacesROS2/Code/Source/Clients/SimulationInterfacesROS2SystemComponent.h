@@ -11,7 +11,6 @@
 #include <AzCore/Component/Component.h>
 #include <AzFramework/API/ApplicationAPI.h>
 
-#include "AzCore/std/smart_ptr/shared_ptr.h"
 #include "Services/DeleteEntityServiceHandler.h"
 #include "Services/GetEntitiesServiceHandler.h"
 #include "Services/GetEntitiesStatesServiceHandler.h"
@@ -32,7 +31,6 @@ namespace SimulationInterfacesROS2
 {
     class SimulationInterfacesROS2SystemComponent
         : public AZ::Component
-        , public AzFramework::LevelSystemLifecycleNotificationBus::Handler
         , public SimulationInterfacesROS2RequestBus::Handler
     {
     public:
@@ -54,13 +52,10 @@ namespace SimulationInterfacesROS2
         void Activate() override;
         void Deactivate() override;
 
+        // SimulationInterfacesROS2RequestBus override
         AZStd::unordered_set<AZ::u8> GetSimulationFeatures() override;
 
     private:
-        // LevelSystemLifecycleNotificationBus::Handler overrides
-        void OnLoadingComplete([[maybe_unused]] const char* levelName) override;
-        void OnUnloadComplete([[maybe_unused]] const char* levelName) override;
-
         AZStd::unordered_map<AZStd::string, AZStd::shared_ptr<ROS2HandlerBase>> m_availableRos2Interface;
     };
 
