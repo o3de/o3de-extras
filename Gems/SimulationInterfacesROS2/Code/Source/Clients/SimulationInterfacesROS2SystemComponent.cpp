@@ -7,11 +7,15 @@
  */
 
 #include "SimulationInterfacesROS2SystemComponent.h"
+#include "AzCore/Debug/Trace.h"
+#include "SimulationInterfacesROS2/SimulationInterfacesROS2RequestBus.h"
+#include "Utils/ServicesConfig.h"
 
 #include <ROS2/ROS2Bus.h>
 #include <SimulationInterfacesROS2/SimulationInterfacesROS2TypeIds.h>
 
 #include <AzCore/Serialization/SerializeContext.h>
+#include <AzCore/std/smart_ptr/make_shared.h>
 
 namespace SimulationInterfacesROS2
 {
@@ -53,37 +57,63 @@ namespace SimulationInterfacesROS2
     void SimulationInterfacesROS2SystemComponent::Activate()
     {
         AzFramework::LevelSystemLifecycleNotificationBus::Handler::BusConnect();
+        SimulationInterfacesROS2RequestBus::Handler::BusConnect();
     }
 
     void SimulationInterfacesROS2SystemComponent::Deactivate()
     {
+        SimulationInterfacesROS2RequestBus::Handler::BusDisconnect();
         AzFramework::LevelSystemLifecycleNotificationBus::Handler::BusDisconnect();
         OnUnloadComplete(nullptr);
+    }
+
+    AZStd::unordered_set<AZ::u8> SimulationInterfacesROS2SystemComponent::GetSimulationFeatures()
+    {
+        AZStd::unordered_set<AZ::u8> result;
+        for (auto& [serviceType, serviceHandler] : m_availableRos2Interface)
+        {
+            auto features = serviceHandler->GetProvidedFeatures();
+            result.insert(features.begin(), features.end());
+        }
+        return result;
     }
 
     void SimulationInterfacesROS2SystemComponent::OnLoadingComplete([[maybe_unused]] const char* levelName)
     {
         rclcpp::Node::SharedPtr ros2Node = rclcpp::Node::SharedPtr(ROS2::ROS2Interface::Get()->GetNode());
         AZ_Assert(ros2Node, "ROS2 node is not available.");
+        // add all known/implemented interfaces
+        m_availableRos2Interface[DeleteEntityService] =
+            AZStd::make_shared<DeleteEntityServiceHandler>(ros2Node, DeleteEntityServiceDefaultName);
 
-        m_deleteEntityServiceHandler.emplace(ros2Node, DeleteEntityServiceName);
-        m_getEntitiesServiceHandler.emplace(ros2Node, GetEntitiesServiceName);
-        m_getSpawnablesServiceHandler.emplace(ros2Node, GetSpawnablesServiceName);
-        m_spawnEntityServiceHandler.emplace(ros2Node, SpawnEntityServiceName);
-        m_getEntitiesStatesServiceHandler.emplace(ros2Node, GetEntitiesStatesServiceName);
-        m_getEntityStateServiceHandler.emplace(ros2Node, GetEntityStateServiceName);
-        m_setEntityStateServiceHandler.emplace(ros2Node, SetEntityStateServiceName);
+        m_availableRos2Interface[GetEntitiesService] =
+            AZStd::make_shared<GetEntitiesServiceHandler>(ros2Node, GetEntitiesServiceDefaultName);
+
+        m_availableRos2Interface[GetEntitiesStatesService] =
+            AZStd::make_shared<GetEntitiesStatesServiceHandler>(ros2Node, GetEntitiesStatesServiceDefaultName);
+
+        m_availableRos2Interface[GetEntityStateService] =
+            AZStd::make_shared<GetEntityStateServiceHandler>(ros2Node, GetEntityStateServiceDefaultName);
+
+        m_availableRos2Interface[GetSpawnablesService] =
+            AZStd::make_shared<GetSpawnablesServiceHandler>(ros2Node, GetSpawnablesServiceDefaultName);
+
+        m_availableRos2Interface[SetEntityStateService] =
+            AZStd::make_shared<SetEntityStateServiceHandler>(ros2Node, SetEntityStateServiceDefaultName);
+
+        m_availableRos2Interface[SpawnEntityService] =
+            AZStd::make_shared<SpawnEntityServiceHandler>(ros2Node, SpawnEntityServiceDefaultName);
+
+        m_availableRos2Interface[GetSimulationFeaturesService] =
+            AZStd::make_shared<GetSimulationFeaturesServiceHandler>(ros2Node, GetSimulationFeaturesServiceDefaultName);
     }
 
     void SimulationInterfacesROS2SystemComponent::OnUnloadComplete([[maybe_unused]] const char* levelName)
     {
-        m_deleteEntityServiceHandler.reset();
-        m_getEntitiesServiceHandler.reset();
-        m_getSpawnablesServiceHandler.reset();
-        m_spawnEntityServiceHandler.reset();
-        m_getEntitiesStatesServiceHandler.reset();
-        m_getEntityStateServiceHandler.reset();
-        m_setEntityStateServiceHandler.reset();
+        for (auto& [serviceType, service] : m_availableRos2Interface)
+        {
+            service.reset();
+        }
     }
 
 } // namespace SimulationInterfacesROS2

@@ -7,6 +7,7 @@
  */
 
 #include "DeleteEntityServiceHandler.h"
+#include "AzCore/Debug/Trace.h"
 #include <AzCore/std/string/string.h>
 #include <SimulationInterfaces/SimulationEntityManagerRequestBus.h>
 
@@ -30,6 +31,10 @@ namespace SimulationInterfacesROS2
         {
             m_deleteEntityService.reset();
         }
+    }
+    AZStd::unordered_set<AZ::u8> DeleteEntityServiceHandler::GetProvidedFeatures()
+    {
+        return AZStd::unordered_set<AZ::u8>{ SimulationFeatures::DELETING };
     }
 
     void DeleteEntityServiceHandler::HandleServiceRequest(

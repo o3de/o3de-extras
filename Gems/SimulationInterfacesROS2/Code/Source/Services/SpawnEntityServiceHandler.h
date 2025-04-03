@@ -8,6 +8,7 @@
 
 #pragma once
 
+#include "Services/ROS2HandlerBaseClass.h"
 #include <AzCore/std/string/string_view.h>
 #include <rclcpp/rclcpp.hpp>
 #include <simulation_interfaces/srv/spawn_entity.hpp>
@@ -15,7 +16,7 @@
 namespace SimulationInterfacesROS2
 {
 
-    class SpawnEntityServiceHandler
+    class SpawnEntityServiceHandler : public ROS2HandlerBase
     {
     public:
         using ServiceType = simulation_interfaces::srv::SpawnEntity;
@@ -26,7 +27,7 @@ namespace SimulationInterfacesROS2
         SpawnEntityServiceHandler() = delete;
         SpawnEntityServiceHandler(rclcpp::Node::SharedPtr& node, AZStd::string_view serviceName);
         ~SpawnEntityServiceHandler();
-
+        AZStd::unordered_set<AZ::u8> GetProvidedFeatures() override;
         void HandleServiceRequest(
             const ServiceHandle service_handle, const std::shared_ptr<rmw_request_id_t> header, const std::shared_ptr<Request> request);
 

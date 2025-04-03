@@ -32,6 +32,14 @@ namespace SimulationInterfacesROS2
         }
     }
 
+    AZStd::unordered_set<AZ::u8> GetEntitiesServiceHandler::GetProvidedFeatures()
+    {
+        return AZStd::unordered_set<AZ::u8>{ SimulationFeatures::ENTITY_TAGS,
+                                             SimulationFeatures::ENTITY_BOUNDS_BOX,
+                                             SimulationFeatures::ENTITY_BOUNDS_CONVEX,
+                                             SimulationFeatures::ENTITY_CATEGORIES };
+    }
+
     GetEntitiesServiceHandler::Response GetEntitiesServiceHandler::HandleServiceRequest(const Request& request)
     {
         AZ::Outcome<SimulationInterfaces::EntityNameList, SimulationInterfaces::FailedResult> outcome;

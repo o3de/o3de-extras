@@ -7,30 +7,31 @@
  */
 
 #pragma once
-
 #include "Services/ROS2HandlerBaseClass.h"
 #include <AzCore/std/string/string_view.h>
 #include <rclcpp/rclcpp.hpp>
-#include <simulation_interfaces/srv/get_entities.hpp>
+#include <simulation_interfaces/srv/delete_entity.hpp>
+#include <simulation_interfaces/srv/detail/get_simulator_features__struct.hpp>
 
 namespace SimulationInterfacesROS2
 {
 
-    class GetEntitiesServiceHandler : public ROS2HandlerBase
+    class GetSimulationFeaturesServiceHandler : public ROS2HandlerBase
     {
     public:
-        using ServiceType = simulation_interfaces::srv::GetEntities;
+        using ServiceType = simulation_interfaces::srv::GetSimulatorFeatures;
         using Request = ServiceType::Request;
         using Response = ServiceType::Response;
+        using ServiceHandle = std::shared_ptr<rclcpp::Service<ServiceType>>;
 
-        GetEntitiesServiceHandler() = delete;
-        GetEntitiesServiceHandler(rclcpp::Node::SharedPtr& node, AZStd::string_view serviceName);
-        ~GetEntitiesServiceHandler();
+        GetSimulationFeaturesServiceHandler() = delete;
+        GetSimulationFeaturesServiceHandler(rclcpp::Node::SharedPtr& node, AZStd::string_view serviceName);
+        ~GetSimulationFeaturesServiceHandler();
         AZStd::unordered_set<AZ::u8> GetProvidedFeatures() override;
         Response HandleServiceRequest(const Request& request);
 
     private:
-        rclcpp::Service<ServiceType>::SharedPtr m_getEntitiesService;
+        rclcpp::Service<ServiceType>::SharedPtr m_getSimulationFeaturesService;
     };
 
 } // namespace SimulationInterfacesROS2

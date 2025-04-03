@@ -4,6 +4,7 @@ set(FILES
     Source/SimulationInterfacesROS2ModuleInterface.h
     Source/Clients/SimulationInterfacesROS2SystemComponent.cpp
     Source/Clients/SimulationInterfacesROS2SystemComponent.h
+    Source/Services/ROS2HandlerBaseClass.h
     Source/Services/GetEntitiesServiceHandler.cpp
     Source/Services/GetEntitiesServiceHandler.h
     Source/Services/DeleteEntityServiceHandler.cpp
@@ -22,6 +23,8 @@ set(FILES
     Source/Services/GetSpawnablesServiceHandler.h
     Source/Services/SpawnEntityServiceHandler.cpp
     Source/Services/SpawnEntityServiceHandler.h
+    Source/Services/GetSimulationFeaturesServiceHandler.cpp
+    Source/Services/GetSimulationFeaturesServiceHandler.h
     Source/Utils/ServicesConfig.h
-    Source/Utils/Utils.h
+    Source/Utils/Utils.h    
 )
