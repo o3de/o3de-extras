@@ -37,10 +37,10 @@ namespace SimulationInterfacesROS2
     void SpawnEntityServiceHandler::HandleServiceRequest(
         const ServiceHandle service_handle, const std::shared_ptr<rmw_request_id_t> header, const std::shared_ptr<Request> request)
     {
-        AZStd::string name = request->name.c_str();
-        AZStd::string uri = request->uri.c_str();
-        AZStd::string entityNamespace = request->entity_namespace.c_str();
-        AZ::Transform initialPose = ROS2::ROS2Conversions::FromROS2Pose(request->initial_pose.pose);
+        const AZStd::string_view name {request->name.c_str(), request->name.size()};
+        const AZStd::string_view uri {request->uri.c_str(), request->uri.size()};
+        const AZStd::string_view entityNamespace {request->entity_namespace.c_str(), request->entity_namespace.size()};
+        const AZ::Transform initialPose = ROS2::ROS2Conversions::FromROS2Pose(request->initial_pose.pose);
         SimulationInterfaces::SimulationEntityManagerRequestBus::Broadcast(
             &SimulationInterfaces::SimulationEntityManagerRequests::SpawnEntity,
             name,

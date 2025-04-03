@@ -49,7 +49,7 @@ namespace SimulationInterfacesROS2
         const SimulationInterfaces::EntityFilters filter = getFilterResult.GetValue();
         SimulationInterfaces::SimulationEntityManagerRequestBus::BroadcastResult(
             outcome, &SimulationInterfaces::SimulationEntityManagerRequests::GetEntities, filter);
-        std::vector<std::string> stdEntities;
+        std::vector<std::string>& stdEntities = response.entities;
         if (!outcome.IsSuccess())
         {
             const auto& failedResult = outcome.GetError();
