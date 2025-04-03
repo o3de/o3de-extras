@@ -7,14 +7,15 @@
  */
 
 #include "SimulationInterfacesROS2SystemComponent.h"
-#include "Services/ROS2HandlerBaseClass.h"
+
+#include "Actions/SimulateStepsServer.h"
+#include "Services/ROS2ServiceBaseClass.h"
 #include "SimulationInterfacesROS2/SimulationInterfacesROS2RequestBus.h"
 #include <AzCore/std/string/string.h>
 
 #include <ROS2/ROS2Bus.h>
 #include <SimulationInterfacesROS2/SimulationInterfacesROS2TypeIds.h>
 
-#include "Utils/RegistryUtils.h"
 #include <AzCore/Serialization/SerializeContext.h>
 #include <AzCore/std/smart_ptr/make_shared.h>
 
@@ -28,7 +29,7 @@ namespace SimulationInterfacesROS2
             AZStd::unordered_map<AZStd::string, AZStd::shared_ptr<IROS2HandlerBase>>& interfacesMap, rclcpp::Node::SharedPtr ros2Node)
         {
             AZStd::shared_ptr service = AZStd::make_shared<T>();
-            service->CreateService(ros2Node);
+            service->Initialize(ros2Node);
             interfacesMap[service->GetTypeName()] = AZStd::move(service);
             service.reset();
         };
@@ -85,6 +86,7 @@ namespace SimulationInterfacesROS2
         RegisterInterface<SetEntityStateServiceHandler>(m_availableRos2Interface, ros2Node);
         RegisterInterface<SpawnEntityServiceHandler>(m_availableRos2Interface, ros2Node);
         RegisterInterface<GetSimulationFeaturesServiceHandler>(m_availableRos2Interface, ros2Node);
+        RegisterInterface<SimulateStepsServer>(m_availableRos2Interface, ros2Node);
     }
 
     void SimulationInterfacesROS2SystemComponent::Deactivate()

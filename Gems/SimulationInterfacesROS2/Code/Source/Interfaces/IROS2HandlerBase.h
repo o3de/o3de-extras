@@ -9,6 +9,7 @@
 #pragma once
 #include <AzCore/std/containers/unordered_set.h>
 #include <AzCore/std/string/string_view.h>
+#include <rclcpp/rclcpp.hpp>
 
 namespace SimulationInterfacesROS2
 {
@@ -20,5 +21,6 @@ namespace SimulationInterfacesROS2
         virtual AZStd::unordered_set<AZ::u8> GetProvidedFeatures() = 0;
         virtual AZStd::string_view GetTypeName() const = 0;
         virtual AZStd::string_view GetDefaultName() const = 0;
+        virtual void Initialize(rclcpp::Node::SharedPtr& node) = 0;
     };
 } // namespace SimulationInterfacesROS2

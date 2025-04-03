@@ -42,7 +42,7 @@ namespace SimulationInterfacesROS2::Utils
         {
             if (request.filters.bounds.points.size() < 3)
             {
-                return AZ::Failure("Invalid number of points! Type 'TYPE_CONVEX_HULL' should have exactly 2 points.");
+                return AZ::Failure("Invalid number of points! Type 'TYPE_CONVEX_HULL' should have at least 3 points.");
             }
             filter.m_bounds_shape = AZStd::make_shared<Physics::ConvexHullShapeConfiguration>();
         }

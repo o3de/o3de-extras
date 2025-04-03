@@ -7,7 +7,7 @@
  */
 
 #pragma once
-#include "Services/ROS2HandlerBaseClass.h"
+#include "Services/ROS2ServiceBaseClass.h"
 #include <AzCore/std/string/string_view.h>
 #include <rclcpp/rclcpp.hpp>
 #include <simulation_interfaces/srv/delete_entity.hpp>
@@ -16,7 +16,7 @@
 namespace SimulationInterfacesROS2
 {
 
-    class GetSimulationFeaturesServiceHandler : public ROS2HandlerBase<simulation_interfaces::srv::GetSimulatorFeatures>
+    class GetSimulationFeaturesServiceHandler : public ROS2ServiceBase<simulation_interfaces::srv::GetSimulatorFeatures>
     {
     public:
         AZStd::string_view GetTypeName() const override

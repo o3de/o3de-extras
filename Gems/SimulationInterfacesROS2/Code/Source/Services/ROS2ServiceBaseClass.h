@@ -17,22 +17,28 @@
 #include <simulation_interfaces/msg/simulator_features.hpp>
 namespace SimulationInterfacesROS2
 {
-    //! base for each ros2 service handler, forces declaration of features provided by the handler
-    //! combined informations along all ROS 2 handlers gives information about simulation features
+    //! Base for each ROS2 service handler, forces declaration of features provided by the handler
+    //! combined information along all ROS 2 handlers gives information about simulation features
     //! @see https://github.com/ros-simulation/simulation_interfaces/blob/main/msg/SimulatorFeatures.msg
     using SimulationFeatures = simulation_interfaces::msg::SimulatorFeatures;
     template<typename RosServiceType>
-    class ROS2HandlerBase : public virtual IROS2HandlerBase
+    class ROS2ServiceBase : public virtual IROS2HandlerBase
     {
     public:
         using Request = typename RosServiceType::Request;
         using Response = typename RosServiceType::Response;
         using ServiceHandle = std::shared_ptr<rclcpp::Service<RosServiceType>>;
-        virtual ~ROS2HandlerBase() = default;
+        virtual ~ROS2ServiceBase() = default;
+
+        void Initialize(rclcpp::Node::SharedPtr& node) override
+        {
+            CreateService(node);
+        }
+
         void CreateService(rclcpp::Node::SharedPtr& node)
         {
             // get the service name from the type name
-            AZStd::string serviceName = RegistryUtilities::GetServiceName(GetTypeName());
+            AZStd::string serviceName = RegistryUtilities::GetName(GetTypeName());
 
             if (serviceName.empty())
             {

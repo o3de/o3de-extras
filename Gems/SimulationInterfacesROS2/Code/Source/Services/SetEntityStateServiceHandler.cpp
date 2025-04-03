@@ -39,7 +39,6 @@ namespace SimulationInterfacesROS2
             const auto& failedResult = outcome.GetError();
             response.result.result = aznumeric_cast<uint8_t>(failedResult.error_code);
             response.result.error_message = failedResult.error_string.c_str();
-            return response;
         }
 
         return response;

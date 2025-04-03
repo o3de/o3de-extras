@@ -42,8 +42,15 @@ namespace SimulationInterfaces
 
     protected:
         void SetSimulationPaused(bool paused) override;
-        void StepSimulation(AZ::u32 steps) override;
-        uint32_t m_numberOfPhysicsSteps = 0;
+        void StepSimulation(AZ::u64 steps) override;
+        bool IsSimulationPaused() const override;
+        void CancelStepSimulation() override;
+        bool HasSimulationStepsBeenCancelled() const override;
+        bool HasSimulationStepsFinished() const override;
+
+        bool m_isSimulationPaused = false;
+        uint64_t m_numberOfPhysicsSteps = 0;
+        bool m_hasBeenCancelled = false;
         AzPhysics::SceneEvents::OnSceneSimulationFinishHandler m_simulationFinishEvent;
     };
 } // namespace SimulationInterfaces

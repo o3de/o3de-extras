@@ -31,5 +31,6 @@ namespace SimulationInterfaces
     inline constexpr const char* SimulationInterfacesRequestsTypeId = "{6818E5E3-BBF5-41BD-96BB-7AF57CCC7528}";
     inline constexpr const char* SimulationManagerRequestsTypeId = "{056477BA-8153-4901-9401-0146A5E3E9ED}";
     inline constexpr const char* SimulationFeaturesAggregatorRequestsTypeId = "{099fd08b-b0e2-4705-9c35-cc09c8e45076}";
+    inline constexpr const char* SimulationManagerNotificationsTypeId = "{0201067b-9d52-4ab7-9a45-284287f53b00}";
 
 } // namespace SimulationInterfaces
