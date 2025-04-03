@@ -347,7 +347,7 @@ namespace SimulationInterfaces
         Physics::RigidBodyRequestBus::EventResult(angularVelocity, entityId, &Physics::RigidBodyRequests::GetAngularVelocity);
 
         // transform linear and angular velocities to entity frame
-        AZ::Transform entityTransformInv = entityState.m_pose.GetInverse();
+        const AZ::Transform entityTransformInv = entityState.m_pose.GetInverse();
         entityState.m_twist_linear = entityTransformInv.TransformVector(linearVelocity);
         entityState.m_twist_angular = entityTransformInv.TransformVector(angularVelocity);
         return AZ::Success(entityState);
@@ -355,6 +355,11 @@ namespace SimulationInterfaces
 
     AZ::Outcome<MultipleEntitiesStates, FailedResult> SimulationEntitiesManager::GetEntitiesStates(const EntityFilters& filter)
     {
+        if (!filter.m_tags_filter.m_tags.empty())
+        {
+            AZ_Warning("SimulationInterfaces", false, "Tags filter is not implemented yet");
+            return AZ::Failure(FailedResult(ErrorCode::RESULT_FEATURE_UNSUPPORTED, "Tags filter is not implemented yet"));
+        }
         MultipleEntitiesStates entitiesStates;
         const auto& entities = GetEntities(filter);
         if (!entities.IsSuccess())
@@ -462,7 +467,7 @@ namespace SimulationInterfaces
         }
         else
         {
-            auto msg = AZStd::string::format("Entity %s was not spawned by this component, wont delete it", name.c_str());
+            const auto msg = AZStd::string::format("Entity %s was not spawned by this component, wont delete it", name.c_str());
             completedCb(AZ::Failure(FailedResult(ErrorCode::RESULT_OPERATION_FAILED, msg)));
         }
 #ifdef POTENTIALY_UNSAFE
@@ -533,7 +538,7 @@ namespace SimulationInterfaces
             AZ::Data::AssetManager::Instance().GetAsset<AzFramework::Spawnable>(assetId, AZ::Data::AssetLoadBehavior::NoLoad);
         if (!spawnableAsset)
         {
-            auto msg = AZStd::string::format("Spawnable asset %s not found", uri.c_str());
+            const auto msg = AZStd::string::format("Spawnable asset %s not found", uri.c_str());
             completedCb(AZ::Failure(FailedResult(ErrorCode::RESULT_NOT_FOUND, msg)));
             return;
         }

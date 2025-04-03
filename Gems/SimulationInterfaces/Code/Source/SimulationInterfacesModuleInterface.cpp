@@ -11,7 +11,7 @@
 
 #include <SimulationInterfaces/SimulationInterfacesTypeIds.h>
 
-#include "Clients/SimulationManager.h"
+#include <Clients/SimulationManager.h>
 #include <Clients/SimulationEntitiesManager.h>
 
 namespace SimulationInterfaces
