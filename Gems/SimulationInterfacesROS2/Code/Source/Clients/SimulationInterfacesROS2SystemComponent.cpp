@@ -9,15 +9,33 @@
 #include "SimulationInterfacesROS2SystemComponent.h"
 #include "SimulationInterfacesROS2/SimulationInterfacesROS2RequestBus.h"
 #include "Utils/ServicesConfig.h"
+#include <AzCore/std/string/string.h>
 
 #include <ROS2/ROS2Bus.h>
 #include <SimulationInterfacesROS2/SimulationInterfacesROS2TypeIds.h>
 
+#include "Utils/RegistryUtils.h"
 #include <AzCore/Serialization/SerializeContext.h>
 #include <AzCore/std/smart_ptr/make_shared.h>
 
 namespace SimulationInterfacesROS2
 {
+
+    namespace
+    {
+        template<typename T>
+        void RegisterInterface(
+            AZStd::unordered_map<AZStd::string, AZStd::shared_ptr<ROS2HandlerBase>>& interfacesMap,
+            rclcpp::Node::SharedPtr ros2Node,
+            AZStd::string serviceType,
+            AZStd::string defaultName)
+        {
+            // add all known/implemented interfaces
+            auto serviceName = RegistryUtilities::GetServiceName(serviceType);
+            interfacesMap[serviceType] = AZStd::make_shared<T>(ros2Node, serviceName.empty() ? defaultName : serviceName);
+        };
+    } // namespace
+
     AZ_COMPONENT_IMPL(
         SimulationInterfacesROS2SystemComponent, "SimulationInterfacesROS2SystemComponent", SimulationInterfacesROS2SystemComponentTypeId);
 
@@ -59,30 +77,36 @@ namespace SimulationInterfacesROS2
 
         rclcpp::Node::SharedPtr ros2Node = rclcpp::Node::SharedPtr(ROS2::ROS2Interface::Get()->GetNode());
         AZ_Assert(ros2Node, "ROS2 node is not available.");
-        // add all known/implemented interfaces
-        m_availableRos2Interface[DeleteEntityService] =
-            AZStd::make_shared<DeleteEntityServiceHandler>(ros2Node, DeleteEntityServiceDefaultName);
 
-        m_availableRos2Interface[GetEntitiesService] =
-            AZStd::make_shared<GetEntitiesServiceHandler>(ros2Node, GetEntitiesServiceDefaultName);
+        RegisterInterface<DeleteEntityServiceHandler>(
+            m_availableRos2Interface, ros2Node, AZStd::string(DeleteEntityService), AZStd::string(DeleteEntityServiceDefaultName));
 
-        m_availableRos2Interface[GetEntitiesStatesService] =
-            AZStd::make_shared<GetEntitiesStatesServiceHandler>(ros2Node, GetEntitiesStatesServiceDefaultName);
+        RegisterInterface<GetEntitiesServiceHandler>(
+            m_availableRos2Interface, ros2Node, AZStd::string(GetEntitiesService), AZStd::string(GetEntitiesServiceDefaultName));
 
-        m_availableRos2Interface[GetEntityStateService] =
-            AZStd::make_shared<GetEntityStateServiceHandler>(ros2Node, GetEntityStateServiceDefaultName);
+        RegisterInterface<GetEntitiesStatesServiceHandler>(
+            m_availableRos2Interface,
+            ros2Node,
+            AZStd::string(GetEntitiesStatesService),
+            AZStd::string(GetEntitiesStatesServiceDefaultName));
 
-        m_availableRos2Interface[GetSpawnablesService] =
-            AZStd::make_shared<GetSpawnablesServiceHandler>(ros2Node, GetSpawnablesServiceDefaultName);
+        RegisterInterface<GetEntityStateServiceHandler>(
+            m_availableRos2Interface, ros2Node, AZStd::string(GetEntityStateService), AZStd::string(GetEntityStateServiceDefaultName));
 
-        m_availableRos2Interface[SetEntityStateService] =
-            AZStd::make_shared<SetEntityStateServiceHandler>(ros2Node, SetEntityStateServiceDefaultName);
+        RegisterInterface<GetSpawnablesServiceHandler>(
+            m_availableRos2Interface, ros2Node, AZStd::string(GetSpawnablesService), AZStd::string(GetSpawnablesServiceDefaultName));
 
-        m_availableRos2Interface[SpawnEntityService] =
-            AZStd::make_shared<SpawnEntityServiceHandler>(ros2Node, SpawnEntityServiceDefaultName);
+        RegisterInterface<SetEntityStateServiceHandler>(
+            m_availableRos2Interface, ros2Node, AZStd::string(SetEntityStateService), AZStd::string(SetEntityStateServiceDefaultName));
 
-        m_availableRos2Interface[GetSimulationFeaturesService] =
-            AZStd::make_shared<GetSimulationFeaturesServiceHandler>(ros2Node, GetSimulationFeaturesServiceDefaultName);
+        RegisterInterface<SpawnEntityServiceHandler>(
+            m_availableRos2Interface, ros2Node, AZStd::string(SpawnEntityService), AZStd::string(SpawnEntityServiceDefaultName));
+
+        RegisterInterface<GetSimulationFeaturesServiceHandler>(
+            m_availableRos2Interface,
+            ros2Node,
+            AZStd::string(GetSimulationFeaturesService),
+            AZStd::string(GetSimulationFeaturesServiceDefaultName));
     }
 
     void SimulationInterfacesROS2SystemComponent::Deactivate()
