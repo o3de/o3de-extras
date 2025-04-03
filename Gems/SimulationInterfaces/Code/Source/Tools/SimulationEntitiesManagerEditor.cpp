@@ -14,10 +14,7 @@
 namespace SimulationInterfaces
 {
     AZ_COMPONENT_IMPL(
-        SimulationEntitiesManagerEditor,
-        "SimulationEntitiesManagerEditor",
-        SimulationEntitiesManagerEditorTypeId,
-        BaseSystemComponent);
+        SimulationEntitiesManagerEditor, "SimulationEntitiesManagerEditor", SimulationEntitiesManagerEditorTypeId, BaseSystemComponent);
 
     void SimulationEntitiesManagerEditor::Reflect(AZ::ReflectContext* context)
     {
@@ -43,14 +40,12 @@ namespace SimulationInterfaces
         incompatible.push_back(AZ_CRC_CE("SimulationInterfacesEditorService"));
     }
 
-    void SimulationEntitiesManagerEditor::GetRequiredServices(
-        [[maybe_unused]] AZ::ComponentDescriptor::DependencyArrayType& required)
+    void SimulationEntitiesManagerEditor::GetRequiredServices([[maybe_unused]] AZ::ComponentDescriptor::DependencyArrayType& required)
     {
         BaseSystemComponent::GetRequiredServices(required);
     }
 
-    void SimulationEntitiesManagerEditor::GetDependentServices(
-        [[maybe_unused]] AZ::ComponentDescriptor::DependencyArrayType& dependent)
+    void SimulationEntitiesManagerEditor::GetDependentServices([[maybe_unused]] AZ::ComponentDescriptor::DependencyArrayType& dependent)
     {
         BaseSystemComponent::GetDependentServices(dependent);
     }

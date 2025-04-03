@@ -254,8 +254,14 @@ namespace SimulationInterfaces
         }
     }
 
-    AZStd::vector<AZStd::string> SimulationEntitiesManager::GetEntities(const EntityFilters& filter)
+    AZ::Outcome<EntityNameList, FailedResult> SimulationEntitiesManager::GetEntities(const EntityFilters& filter)
     {
+        if (!filter.m_tags_filter.m_tags.empty())
+        {
+            AZ_Warning("SimulationInterfaces", false, "Tags filter is not implemented yet");
+            return AZ::Failure(FailedResult(ErrorCode::RESULT_FEATURE_UNSUPPORTED, "Tags filter is not implemented yet"));
+        }
+
         const bool reFilter = !filter.m_filter.empty();
         const bool shapeCastFilter = filter.m_bounds_shape != nullptr;
 
@@ -280,7 +286,7 @@ namespace SimulationInterfaces
 
             if (m_physicsScenesHandle == AzPhysics::InvalidSceneHandle)
             {
-                return entities;
+                return AZ::Failure(FailedResult(ErrorCode::RESULT_OPERATION_FAILED, "Physics scene interface is not available."));
             }
 
             AzPhysics::OverlapRequest request;
@@ -304,103 +310,133 @@ namespace SimulationInterfaces
             const AZStd::vector<AZStd::string> prefilteredEntities = AZStd::move(entities);
             entities.clear();
             const AZStd::regex regex(filter.m_filter);
-            if (regex.Valid())
+            if (!regex.Valid())
             {
-                AZStd::ranges::copy_if(
-                    prefilteredEntities,
-                    AZStd::back_inserter(entities),
-                    [&regex](const AZStd::string& entityName)
-                    {
-                        return AZStd::regex_search(entityName, regex);
-                    });
+                AZ_Warning("SimulationInterfaces", false, "Invalid regex filter");
+                return AZ::Failure(FailedResult(ErrorCode::RESULT_NOT_FOUND, "Invalid regex filter"));
             }
+            AZStd::ranges::copy_if(
+                prefilteredEntities,
+                AZStd::back_inserter(entities),
+                [&regex](const AZStd::string& entityName)
+                {
+                    return AZStd::regex_search(entityName, regex);
+                });
         }
-        return entities;
+        return AZ::Success(entities);
     }
 
-    EntityState SimulationEntitiesManager::GetEntityState(const AZStd::string& name)
+    AZ::Outcome<EntityState, FailedResult> SimulationEntitiesManager::GetEntityState(const AZStd::string& name)
     {
         const auto findIt = m_simulatedEntityToEntityIdMap.find(name);
-        AZ_Error("SimulationInterfaces", findIt != m_simulatedEntityToEntityIdMap.end(), "Entity %s not found", name.c_str());
-        if (findIt != m_simulatedEntityToEntityIdMap.end())
+        if (findIt == m_simulatedEntityToEntityIdMap.end())
         {
-            EntityState entityState{};
-            const AZ::EntityId entityId = findIt->second;
-            AZ_Assert(entityId.IsValid(), "EntityId is not valid");
-            AZ::TransformBus::EventResult(entityState.m_pose, entityId, &AZ::TransformBus::Events::GetWorldTM);
-
-            AZ::Vector3 linearVelocity = AZ::Vector3::CreateZero();
-            Physics::RigidBodyRequestBus::EventResult(linearVelocity, entityId, &Physics::RigidBodyRequests::GetLinearVelocity);
-
-            AZ::Vector3 angularVelocity = AZ::Vector3::CreateZero();
-            Physics::RigidBodyRequestBus::EventResult(angularVelocity, entityId, &Physics::RigidBodyRequests::GetAngularVelocity);
-
-            // transform linear and angular velocities to entity frame
-            AZ::Transform entityTransformInv = entityState.m_pose.GetInverse();
-            entityState.m_twist_linear = entityTransformInv.TransformVector(linearVelocity);
-            entityState.m_twist_angular = entityTransformInv.TransformVector(angularVelocity);
-            return entityState;
+            AZ_Warning("SimulationInterfaces", findIt != m_simulatedEntityToEntityIdMap.end(), "Entity %s not found", name.c_str());
+            return AZ::Failure(FailedResult(ErrorCode::RESULT_NOT_FOUND, "Entity not found"));
         }
-        return {};
+        EntityState entityState{};
+        const AZ::EntityId entityId = findIt->second;
+        AZ_Assert(entityId.IsValid(), "EntityId is not valid");
+
+        AZ::TransformBus::EventResult(entityState.m_pose, entityId, &AZ::TransformBus::Events::GetWorldTM);
+
+        AZ::Vector3 linearVelocity = AZ::Vector3::CreateZero();
+        Physics::RigidBodyRequestBus::EventResult(linearVelocity, entityId, &Physics::RigidBodyRequests::GetLinearVelocity);
+
+        AZ::Vector3 angularVelocity = AZ::Vector3::CreateZero();
+        Physics::RigidBodyRequestBus::EventResult(angularVelocity, entityId, &Physics::RigidBodyRequests::GetAngularVelocity);
+
+        // transform linear and angular velocities to entity frame
+        const AZ::Transform entityTransformInv = entityState.m_pose.GetInverse();
+        entityState.m_twist_linear = entityTransformInv.TransformVector(linearVelocity);
+        entityState.m_twist_angular = entityTransformInv.TransformVector(angularVelocity);
+        return AZ::Success(entityState);
     }
 
-    bool SimulationEntitiesManager::SetEntityState(const AZStd::string& name, const EntityState& state)
+    AZ::Outcome<MultipleEntitiesStates, FailedResult> SimulationEntitiesManager::GetEntitiesStates(const EntityFilters& filter)
+    {
+        if (!filter.m_tags_filter.m_tags.empty())
+        {
+            AZ_Warning("SimulationInterfaces", false, "Tags filter is not implemented yet");
+            return AZ::Failure(FailedResult(ErrorCode::RESULT_FEATURE_UNSUPPORTED, "Tags filter is not implemented yet"));
+        }
+        MultipleEntitiesStates entitiesStates;
+        const auto& entities = GetEntities(filter);
+        if (!entities.IsSuccess())
+        {
+            return AZ::Failure(entities.GetError());
+        }
+        for (const auto& entity : entities.GetValue())
+        {
+            auto state = GetEntityState(entity);
+            if (!state.IsSuccess())
+            {
+                return AZ::Failure(state.GetError());
+            }
+            entitiesStates.emplace(AZStd::make_pair(entity, state.GetValue()));
+        }
+        return entitiesStates;
+    }
+
+    AZ::Outcome<void, FailedResult> SimulationEntitiesManager::SetEntityState(const AZStd::string& name, const EntityState& state)
     {
         const auto findIt = m_simulatedEntityToEntityIdMap.find(name);
-        if (findIt != m_simulatedEntityToEntityIdMap.end())
+        if (findIt == m_simulatedEntityToEntityIdMap.end())
         {
-            const AZ::EntityId entityId = findIt->second;
-            AZ_Assert(entityId.IsValid(), "EntityId is not valid");
+            AZ_Warning("SimulationInterfaces", false, "Entity %s not found", name.c_str());
+            return AZ::Failure(FailedResult(ErrorCode::RESULT_NOT_FOUND, "Entity not found"));
+        }
 
-            // get entity and all descendants
-            AZStd::vector<AZ::EntityId> entityAndDescendants;
-            AZ::TransformBus::EventResult(entityAndDescendants, entityId, &AZ::TransformBus::Events::GetEntityAndAllDescendants);
+        const AZ::EntityId entityId = findIt->second;
+        AZ_Assert(entityId.IsValid(), "EntityId is not valid");
 
-            if (state.m_pose.IsOrthogonal())
+        // get entity and all descendants
+        AZStd::vector<AZ::EntityId> entityAndDescendants;
+        AZ::TransformBus::EventResult(entityAndDescendants, entityId, &AZ::TransformBus::Events::GetEntityAndAllDescendants);
+
+        if (state.m_pose.IsOrthogonal())
+        {
+            // disable simulation for all entities
+            AZStd::map<AZ::EntityId, AZ::Transform> entityTransforms;
+            for (const auto& descendant : entityAndDescendants)
             {
-                // disable simulation for all entities
-                AZStd::map<AZ::EntityId, AZ::Transform> entityTransforms;
-                for (const auto& descendant : entityAndDescendants)
-                {
-                    // get name
-                    AZStd::string entityName = "Unknown";
-                    AZ::ComponentApplicationBus::BroadcastResult(entityName, &AZ::ComponentApplicationRequests::GetEntityName, descendant);
-                    AZ_Printf("SimulationInterfaces", "Disable physics for entity %s\n", entityName.c_str());
-                    Physics::RigidBodyRequestBus::Event(descendant, &Physics::RigidBodyRequests::DisablePhysics);
-                }
-
-                AZ::TransformBus::Event(entityId, &AZ::TransformBus::Events::SetLocalTM, state.m_pose);
-
-                for (const auto& descendant : entityAndDescendants)
-                {
-                    Physics::RigidBodyRequestBus::Event(descendant, &Physics::RigidBodyRequests::EnablePhysics);
-                    Physics::RigidBodyRequestBus::Event(
-                        descendant, &Physics::RigidBodyRequests::SetAngularVelocity, AZ::Vector3::CreateZero());
-                    Physics::RigidBodyRequestBus::Event(
-                        descendant, &Physics::RigidBodyRequests::SetLinearVelocity, AZ::Vector3::CreateZero());
-                }
+                // get name
+                AZStd::string entityName = "Unknown";
+                AZ::ComponentApplicationBus::BroadcastResult(entityName, &AZ::ComponentApplicationRequests::GetEntityName, descendant);
+                AZ_Printf("SimulationInterfaces", "Disable physics for entity %s\n", entityName.c_str());
+                Physics::RigidBodyRequestBus::Event(descendant, &Physics::RigidBodyRequests::DisablePhysics);
             }
-            if (!state.m_twist_linear.IsZero(AZ::Constants::FloatEpsilon) || !state.m_twist_angular.IsZero(AZ::Constants::FloatEpsilon))
+
+            AZ::TransformBus::Event(entityId, &AZ::TransformBus::Events::SetLocalTM, state.m_pose);
+
+            for (const auto& descendant : entityAndDescendants)
             {
-                // get rigid body
-                AzPhysics::RigidBody* rigidBody = nullptr;
-                Physics::RigidBodyRequestBus::EventResult(rigidBody, entityId, &Physics::RigidBodyRequests::GetRigidBody);
-                if (rigidBody != nullptr)
-                {
-                    SetRigidBodyVelocities(rigidBody, state);
-                }
+                Physics::RigidBodyRequestBus::Event(descendant, &Physics::RigidBodyRequests::EnablePhysics);
+                Physics::RigidBodyRequestBus::Event(descendant, &Physics::RigidBodyRequests::SetAngularVelocity, AZ::Vector3::CreateZero());
+                Physics::RigidBodyRequestBus::Event(descendant, &Physics::RigidBodyRequests::SetLinearVelocity, AZ::Vector3::CreateZero());
             }
         }
-        return false;
+
+        if (!state.m_twist_linear.IsZero(AZ::Constants::FloatEpsilon) || !state.m_twist_angular.IsZero(AZ::Constants::FloatEpsilon))
+        {
+            // get rigid body
+            AzPhysics::RigidBody* rigidBody = nullptr;
+            Physics::RigidBodyRequestBus::EventResult(rigidBody, entityId, &Physics::RigidBodyRequests::GetRigidBody);
+            if (rigidBody != nullptr)
+            {
+                SetRigidBodyVelocities(rigidBody, state);
+            }
+        }
+        return AZ::Success();
     }
 
-    bool SimulationEntitiesManager::DeleteEntity(const AZStd::string& name)
+    void SimulationEntitiesManager::DeleteEntity(const AZStd::string& name, DeletionCompletedCb completedCb)
     {
         const auto findIt = m_simulatedEntityToEntityIdMap.find(name);
 
         if (findIt == m_simulatedEntityToEntityIdMap.end())
         {
-            return false;
+            completedCb(AZ::Failure(FailedResult(ErrorCode::RESULT_NOT_FOUND, "Entity not found")));
         }
 
         const AZ::EntityId entityId = findIt->second;
@@ -414,12 +450,25 @@ namespace SimulationInterfaces
         if (m_spawnedTickets.find(ticketId) != m_spawnedTickets.end())
         {
             // remove the ticket
-            m_spawnedTickets.erase(ticketId);
+            //m_spawnedTickets.erase(ticketId);
+            /// get spawner
+            auto spawner = AZ::Interface<AzFramework::SpawnableEntitiesDefinition>::Get();
+            AZ_Assert(spawner, "SpawnableEntitiesDefinition is not available.");
+            // get ticket
+            auto ticket = m_spawnedTickets[ticketId];
+            // remove ticket
+            AzFramework::DespawnAllEntitiesOptionalArgs optionalArgs;
+            optionalArgs.m_completionCallback = [this, completedCb](AzFramework::EntitySpawnTicket::Id ticketId)
+            {
+                m_spawnedTickets.erase(ticketId);
+                completedCb(AZ::Success());
+            };
+            spawner->DespawnAllEntities(ticket, optionalArgs);
         }
         else
         {
-            AZ_Warning("SimulationInterfaces", false, "Entity %s was not spawned by this component, wont delete it", name.c_str());
-            return false;
+            const auto msg = AZStd::string::format("Entity %s was not spawned by this component, wont delete it", name.c_str());
+            completedCb(AZ::Failure(FailedResult(ErrorCode::RESULT_OPERATION_FAILED, msg)));
         }
 #ifdef POTENTIALY_UNSAFE
         if (findIt != m_simulatedEntityToEntityIdMap.end())
@@ -438,21 +487,9 @@ namespace SimulationInterfaces
             return true;
         }
 #endif
-        return false;
     }
 
-    AZStd::unordered_map<AZStd::string, EntityState> SimulationEntitiesManager::GetEntitiesStates(const EntityFilters& filter)
-    {
-        AZStd::unordered_map<AZStd::string, EntityState> entitiesStates;
-        const auto& entities = GetEntities(filter);
-        for (const auto& entity : entities)
-        {
-            entitiesStates.emplace(AZStd::make_pair(entity, GetEntityState(entity)));
-        }
-        return entitiesStates;
-    }
-
-    AZStd::vector<Spawnable> SimulationEntitiesManager::GetSpawnables()
+    AZ::Outcome<SpawnableList, FailedResult> SimulationEntitiesManager::GetSpawnables()
     {
         AZStd::vector<Spawnable> spawnables;
 
@@ -471,7 +508,7 @@ namespace SimulationInterfaces
         };
 
         AZ::Data::AssetCatalogRequestBus::Broadcast(&AZ::Data::AssetCatalogRequests::EnumerateAssets, nullptr, enumCallback, nullptr);
-        return spawnables;
+        return AZ::Success(spawnables);
     }
 
     void SimulationEntitiesManager::SpawnEntity(
@@ -501,7 +538,8 @@ namespace SimulationInterfaces
             AZ::Data::AssetManager::Instance().GetAsset<AzFramework::Spawnable>(assetId, AZ::Data::AssetLoadBehavior::NoLoad);
         if (!spawnableAsset)
         {
-            completedCb(AZ::Failure("Failed to get spawnable asset - incorrect uri"));
+            const auto msg = AZStd::string::format("Spawnable asset %s not found", uri.c_str());
+            completedCb(AZ::Failure(FailedResult(ErrorCode::RESULT_NOT_FOUND, msg)));
             return;
         }
 
@@ -536,18 +574,26 @@ namespace SimulationInterfaces
             }
         };
         optionalArgs.m_completionCallback =
-            [this](AzFramework::EntitySpawnTicket::Id ticketId, AzFramework::SpawnableConstEntityContainerView view)
+            [this, uri](AzFramework::EntitySpawnTicket::Id ticketId, AzFramework::SpawnableConstEntityContainerView view)
         {
             // at this point the entities are spawned and should be registered in simulation interface and callback should be called
-            // if that is not a case, it means that the AZFrameworrk::Pshysics::OnSimulationBodyAdded event was not called.
+            // if that is not a case, it means that the AZFramework::Physics::OnSimulationBodyAdded event was not called.
             // That means the prefab has no physics component or the physics component is not enabled - we need to call the callback here
             // and return the error.
             auto spawnData = m_spawnCompletedCallbacks.find(ticketId);
             if (spawnData != m_spawnCompletedCallbacks.end())
             {
                 // call and remove the callback
-                spawnData->second.m_completedCb(AZ::Failure(
-                    "Entity was not registered in simulation interface - no physics component or physics component is not enabled."));
+                const auto msg = AZStd::string::format(
+                    "Entity %s (uri : %s) was not registered in simulation interface - "
+                    "no physics component or physics component is not enabled in source prefab.\n"
+                    "Entity will be in simulation, but not available in simulation interface.\n"
+                    "Please add some physics component (at least one static rigid body component) to the prefab.\n"
+                    "Technically, it is a memory leak.\n",
+                    spawnData->second.m_userProposedName.c_str(),
+                    uri.c_str());
+                AZ_Error("SimulationInterfaces", false, msg.c_str());
+                spawnData->second.m_completedCb(msg);
                 m_spawnCompletedCallbacks.erase(spawnData);
             }
         };

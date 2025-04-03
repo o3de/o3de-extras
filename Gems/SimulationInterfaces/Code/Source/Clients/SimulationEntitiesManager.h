@@ -37,12 +37,12 @@ namespace SimulationInterfaces
 
     protected:
         // SimulationEntityManagerRequestBus interface implementation
-        AZStd::vector<AZStd::string> GetEntities(const EntityFilters& filter) override;
-        EntityState GetEntityState(const AZStd::string& name) override;
-        AZStd::unordered_map<AZStd::string, EntityState> GetEntitiesStates(const EntityFilters& filter) override;
-        bool SetEntityState(const AZStd::string& name, const EntityState& state) override;
-        bool DeleteEntity(const AZStd::string& name) override;
-        AZStd::vector<Spawnable> GetSpawnables() override;
+        AZ::Outcome<EntityNameList, FailedResult> GetEntities(const EntityFilters& filter) override;
+        AZ::Outcome<EntityState, FailedResult> GetEntityState(const AZStd::string& name) override;
+        AZ::Outcome<MultipleEntitiesStates, FailedResult> GetEntitiesStates(const EntityFilters& filter) override;
+        AZ::Outcome<void, FailedResult> SetEntityState(const AZStd::string& name, const EntityState& state) override;
+        void DeleteEntity(const AZStd::string& name, DeletionCompletedCb completedCb) override;
+        AZ::Outcome<SpawnableList, FailedResult> GetSpawnables() override;
         void SpawnEntity(
             const AZStd::string& name,
             const AZStd::string& uri,
