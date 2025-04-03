@@ -79,7 +79,7 @@ namespace SimulationInterfaces
         m_registeredFeatures.insert(features.begin(), features.end());
     }
     
-    const AZStd::unordered_set<SimulationFeatures>& SimulationFeaturesAggregator::GetSimulationFeatures() const
+    const AZStd::unordered_set<SimulationFeatures> SimulationFeaturesAggregator::GetSimulationFeatures() const
     {
         return m_registeredFeatures;
     }
