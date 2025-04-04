@@ -14,8 +14,6 @@
 #include <AzCore/EBus/EBus.h>
 #include <AzCore/Interface/Interface.h>
 #include <AzCore/std/containers/unordered_set.h>
-#include <AzCore/std/smart_ptr/shared_ptr.h>
-#include <AzFramework/Physics/ShapeConfiguration.h>
 
 namespace SimulationInterfaces
 {
@@ -27,11 +25,15 @@ namespace SimulationInterfaces
         virtual ~SimulationFeaturesAggregatorRequests() = default;
 
         //! Registers simulation features defined by caller
-        virtual void AddSimulationFeatures(AZStd::unordered_set<SimulationFeatures> features) = 0;
+        virtual void AddSimulationFeatures(const AZStd::unordered_set<SimulationFeatures>& features) = 0;
 
         //! Returns features available in the simulator, list follows definitions at
         //! @see https://github.com/ros-simulation/simulation_interfaces/blob/main/msg/SimulatorFeatures.msg
-        virtual AZStd::unordered_set<SimulationFeatures> GetSimulationFeatures() = 0;
+        virtual const AZStd::unordered_set<SimulationFeatures>& GetSimulationFeatures() const = 0;
+
+        //! Method checks if feature with given id is available in the simulation
+        //! Method is extenstion to standard defined in simulation_interfaces
+        virtual bool HasFeature(SimulationFeatures feature) const = 0;
     };
 
     class SimulationFeaturesAggregatorRequestBusTraits : public AZ::EBusTraits

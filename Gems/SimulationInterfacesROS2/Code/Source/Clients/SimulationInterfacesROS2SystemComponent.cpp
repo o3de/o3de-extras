@@ -27,8 +27,8 @@ namespace SimulationInterfacesROS2
         void RegisterInterface(
             AZStd::unordered_map<AZStd::string, AZStd::shared_ptr<ROS2HandlerBase>>& interfacesMap,
             rclcpp::Node::SharedPtr ros2Node,
-            AZStd::string serviceType,
-            AZStd::string defaultName)
+            const AZStd::string& serviceType,
+            const AZStd::string& defaultName)
         {
             // add all known/implemented interfaces
             auto serviceName = RegistryUtilities::GetServiceName(serviceType);

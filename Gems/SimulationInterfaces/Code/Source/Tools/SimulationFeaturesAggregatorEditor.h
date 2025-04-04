@@ -15,9 +15,7 @@
 namespace SimulationInterfaces
 {
     /// System component for SimulationInterfaces editor
-    class SimulationFeaturesAggregatorEditor
-        : public SimulationFeaturesAggregator
-        , protected AzToolsFramework::EditorEvents::Bus::Handler
+    class SimulationFeaturesAggregatorEditor : public SimulationFeaturesAggregator
     {
         using BaseSystemComponent = SimulationFeaturesAggregator;
 

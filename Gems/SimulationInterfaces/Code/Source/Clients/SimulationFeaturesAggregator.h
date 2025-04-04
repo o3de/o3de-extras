@@ -17,6 +17,7 @@
 #include <SimulationInterfaces/SimulationEntityManagerRequestBus.h>
 #include <SimulationInterfaces/SimulationFeaturesAggregatorRequestBus.h>
 #include <SimulationInterfaces/SimulationMangerRequestBus.h>
+
 namespace SimulationInterfaces
 {
     class SimulationFeaturesAggregator
@@ -43,8 +44,9 @@ namespace SimulationInterfaces
 
     protected:
         // SimulationFeaturesAggregatorRequestBus overrides
-        void AddSimulationFeatures(AZStd::unordered_set<SimulationFeatures> features) override;
-        AZStd::unordered_set<SimulationFeatures> GetSimulationFeatures() override;
+        void AddSimulationFeatures(const AZStd::unordered_set<SimulationFeatures>& features) override;
+        const AZStd::unordered_set<SimulationFeatures>& GetSimulationFeatures() const override;
+        bool HasFeature(SimulationFeatures feature) const override;
 
     private:
         AZStd::unordered_set<SimulationFeatures> m_registeredFeatures;

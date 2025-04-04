@@ -57,12 +57,10 @@ namespace SimulationInterfaces
     void SimulationFeaturesAggregatorEditor::Activate()
     {
         BaseSystemComponent::Activate();
-        AzToolsFramework::EditorEvents::Bus::Handler::BusConnect();
     }
 
     void SimulationFeaturesAggregatorEditor::Deactivate()
     {
-        AzToolsFramework::EditorEvents::Bus::Handler::BusDisconnect();
         BaseSystemComponent::Deactivate();
     }
 

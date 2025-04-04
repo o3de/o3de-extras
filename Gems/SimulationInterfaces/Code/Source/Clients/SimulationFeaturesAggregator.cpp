@@ -74,13 +74,19 @@ namespace SimulationInterfaces
         SimulationFeaturesAggregatorRequestBus::Handler::BusDisconnect();
     }
 
-    void SimulationFeaturesAggregator::AddSimulationFeatures(AZStd::unordered_set<SimulationFeatures> features)
+    void SimulationFeaturesAggregator::AddSimulationFeatures(const AZStd::unordered_set<SimulationFeatures>& features)
     {
         m_registeredFeatures.insert(features.begin(), features.end());
     }
-    AZStd::unordered_set<SimulationFeatures> SimulationFeaturesAggregator::GetSimulationFeatures()
+    
+    const AZStd::unordered_set<SimulationFeatures>& SimulationFeaturesAggregator::GetSimulationFeatures() const
     {
         return m_registeredFeatures;
+    }
+
+    bool SimulationFeaturesAggregator::HasFeature(SimulationFeatures feature) const
+    {
+        return m_registeredFeatures.contains(feature);
     }
 
 } // namespace SimulationInterfaces
