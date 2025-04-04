@@ -60,6 +60,7 @@ namespace SimulationInterfacesROS2
     void SimulationInterfacesROS2SystemComponent::GetRequiredServices(
         [[maybe_unused]] AZ::ComponentDescriptor::DependencyArrayType& required)
     {
+        required.push_back(AZ_CRC_CE("ROS2Service"));
     }
 
     void SimulationInterfacesROS2SystemComponent::GetDependentServices(
